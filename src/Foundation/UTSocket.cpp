@@ -15,6 +15,13 @@ Gimite 市川 <gimite@mx12.freecom.ne.jp>
 #  include <WinSock2.h>
 
 #  pragma comment(lib,"ws2_32.lib")
+#elif __linux__
+#  include <x86_64-linux-gnu/sys/socket.h>
+#  include <netinet/in.h>
+#  include <arpa/inet.h>
+#  include <netdb.h>
+#  include <unistd.h>
+   extern int close(int);
 #else
 #  include <sys/socket.h>
 #  include <netinet/in.h>
@@ -131,8 +138,14 @@ namespace gimite{
 	socket_address::socket_address(){
 		ip = new ip_address();
 	}
+#ifdef	_WIN32
 	socket_address::socket_address(ip_address& i= ip_address(), int p= 0)
 		: ip(&i), port(p){}
+#else
+	ip_address tmp_ip_address = ip_address();
+	socket_address::socket_address(ip_address& i= tmp_ip_address, int p= 0)
+		: ip(&i), port(p){}
+#endif
 	socket_address::~socket_address(){
 		delete(ip);
 		ip = 0;
@@ -402,12 +415,22 @@ namespace gimite{
 		int flags){
 			struct sockaddr_in saddr;
 			sock_len_t addr_len= sizeof(saddr);
+#ifdef	_WIN32
 			int result= ::recvfrom(socket(), (char*)buffer, size, flags,
 				(struct sockaddr *)&saddr, &addr_len);
+#else
+			int result= ::recvfrom(socket(), (char*)buffer, size, flags,
+				(struct sockaddr *)&saddr, (socklen_t*)&addr_len);
+#endif
 			//注：Winsockのrecvfromの第2パラメータ型はchar*なので
 			//    キャストが必要。
 			if (addr){
+#ifdef	_WIN32
 				(addr->ip)= &ip_address(saddr.sin_addr);
+#else
+				ip_address tmp = ip_address(saddr.sin_addr);
+				(addr->ip)= &tmp;
+#endif
 				addr->port= ntohs(saddr.sin_port);
 			}
 			return result;

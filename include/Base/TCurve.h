@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <tuple>
 #include <vector>
-#ifndef	_WIN32
+#ifdef	__linux__
   #include <float.h>
 #endif
 
@@ -307,7 +307,7 @@ public:
 
 	int	GetNearest(real_t t)const{
 		std::pair<int,int> seg = GetSegment(t);
-		return (t - points[seg.first].t < points[seg.segond].t - t) ? seg.first : seg.second;
+		return (t - points[seg.first].t < points[seg.second].t - t) ? seg.first : seg.second;
 	}
 
 };

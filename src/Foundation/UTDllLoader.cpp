@@ -1,4 +1,4 @@
-#ifdef USE_HDRSTOP
+﻿#ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 #include "UTDllLoader.h"
@@ -8,6 +8,7 @@
 # include <Windows.h>
 #else
 # include <dlfcn.h>
+# include <string.h>
 #endif
 
 namespace Spr {;
@@ -29,7 +30,7 @@ static char* GetEnv(char* buf, const char* var){
 			assert(cur - start < 1024);
 			strncpy(varstr, var+start, cur-start);
 			varstr[cur - start] = '\0';
-			char* env = getenv(varstr);
+			const char* env = getenv(varstr);
 			if (!env){
 				env = "";
 				DSTR << "UTDllLoader::Load fails to find environment value of '" << varstr << "' for resolving '" << var << "'" << std::endl;
@@ -45,7 +46,7 @@ static char* GetEnv(char* buf, const char* var){
 			assert(cur - start < 1024);
 			strncpy(varstr, var+start, cur-start);
 			varstr[cur - start] = '\0';
-			char* env = getenv(varstr);
+			const char* env = getenv(varstr);
 			if (!env){
 				env = "";
 				DSTR << "UTDllLoader::Load fails to find environment value of '" << varstr << "' for resolving '" << var << "'" << std::endl;

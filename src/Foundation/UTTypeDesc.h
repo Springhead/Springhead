@@ -87,7 +87,13 @@ class UTAccess:public UTAccessBase{
 #endif
 	virtual void* VectorPush(void* v){
 		((std::vector<T>*)v)->push_back(T());
+#ifdef	_WIN32
 		return &((std::vector<T>*)v)->back();
+#else
+		T tmp = ((std::vector<T>*)v)->back();
+		T* ptmp = &tmp;
+		return ptmp;
+#endif
 	}
 #if defined _MSC_VER
 # pragma warning (pop)
@@ -100,7 +106,13 @@ class UTAccess:public UTAccessBase{
 # pragma warning (disable : 4172)
 #endif
 	virtual void* VectorAt(void* v, int pos) {
+#ifdef	_WIN32
 		return &((std::vector<T>*)v)->at(pos);
+#else
+		T tmp = ((std::vector<T>*)v)->at(pos);
+		T* ptmp = &tmp;
+		return ptmp;
+#endif
 	}
 #if defined _MSC_VER
 # pragma warning (pop)
