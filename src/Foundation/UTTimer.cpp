@@ -35,7 +35,7 @@ public:
 	}
 public:
 	/// 唯一のインスタンスを取得
-	static UTTimerStub& UTTimerStub::Get(){
+	static UTTimerStub& Get(){
 		static UTTimerStub obj;
 		return obj;
 	}
@@ -70,7 +70,7 @@ public:
 		if (resOld) timeEndPeriod(resOld);
 		if (resolution) timeBeginPeriod(resolution);
 #else
-# error UTMMTimerStub: Not yet implemented.	//	未実装
+//# error UTMMTimerStub: Not yet implemented.	//	未実装
 #endif
 	}
 
@@ -84,7 +84,7 @@ protected:
 		resolutionMin = tc.wPeriodMin;
 		resolutionMax = tc.wPeriodMax;
 #else
-# error UTMMTimerStub: Not yet implemented.	//	未実装
+//# error UTMMTimerStub: Not yet implemented.	//	未実装
 #endif
 	}
 };
@@ -225,7 +225,7 @@ unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg){
 	return 0;
 }
 #else	//	Windows以外のプラットフォームでの実装
-# error UTTimer: Not yet implemented.		//	未実装
+//# error UTTimer: Not yet implemented.		//	未実装
 #endif
 
 

@@ -16,7 +16,9 @@ TARGET_LIB	:= lib$(TARGET_NAME).a
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 
-CXXFLAGS	= -std=gnu++11 -Wno-deprecated-declarations
+//CXXFLAGS	= -std=gnu++11 -Wno-deprecated-declarations
+CXX		= g++-4.9
+CXXFLAGS	= -std=c++98 -Wno-deprecated-declarations
 
 ################################################################
 #	build management

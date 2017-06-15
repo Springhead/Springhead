@@ -12,10 +12,44 @@
 
 #include "UTQPTimer.h"
 #include <Base/BaseDebug.h>
-#include <Windows.h>
-#include <mmsystem.h>
+#ifdef	_WIN32
+#  include <Windows.h>
+#  include <mmsystem.h>
+#else
+#  include <stdio.h>
+#  include <unistd.h>
+#  include <sys/time.h>
+#endif
 
 namespace Spr{;
+
+#ifdef	__linux__
+typedef	unsigned long	DWORD;		// 32-bit unsigned integer
+typedef	long		LONG;		// 32-bit signed integer
+typedef	long long	LONGLONG;	// 64-bit signed integer
+typedef union _LARGE_INTEGER {
+	struct {
+		DWORD	LowPart;
+		LONG	HighPart;
+	};
+	LONGLONG	QuadPart;
+} LARGE_INTEGER, *PLARGE_INTEGER;
+static void QueryPerformanceCounter(LARGE_INTEGER* c) {
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	c->QuadPart = (LONGLONG) (tv.tv_sec * 1000000) + tv.tv_usec;
+}
+extern unsigned int sleep(unsigned int);	// ??
+static int QueryPerformanceFrequency(LARGE_INTEGER* f) {
+	LARGE_INTEGER c1, c2;
+	unsigned int seconds = 1;
+	QueryPerformanceCounter(&c1);
+	sleep(seconds);
+	QueryPerformanceCounter(&c2);
+	f->QuadPart = c2.QuadPart - c1.QuadPart;
+	return (int) f->QuadPart;
+}
+#endif
 
 //周波数を読み出す
 UTQPTimer::UTQPTimer(): stopWatch(0), startFlag(false)
