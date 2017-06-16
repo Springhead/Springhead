@@ -260,13 +260,13 @@ public:
 	///	組み立て型の要素
 	Composit& GetComposit(){ return composit; }
 	///	組み立て型のフィールドの数
-	int NFields() { return composit.size(); }
+	int NFields() { return (int)composit.size(); }
 	///	フィールドのTypeDesc
 	UTTypeDesc* GetFieldType(int i) { return composit[i].type; }
 	///	Fieldが配列の場合の配列の長さを返す
 	int GetFieldLength(int i) { return composit[i].length; }
 	///	Fieldのvector場合のvectorの長さを返す
-	int GetFieldVectorSize(int i, const void* base) { return composit[i].VectorSize(base); }
+	int GetFieldVectorSize(int i, const void* base) { return (int)composit[i].VectorSize(base); }
 	///	要素数を別のフィールドからとる場合のフィールド名
 	const char* GetFieldLengthName(int i) { return composit[i].lengthFieldName.c_str(); }
 	///	vector/配列かどうか
