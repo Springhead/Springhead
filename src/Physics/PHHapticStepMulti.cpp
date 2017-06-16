@@ -35,7 +35,7 @@ void PHHapticStepMulti::StepHapticSync() {
 }
 
 void PHHapticStepMulti::SyncHapticPointers(){
-	for (size_t i = 0; i < hapticModel.hapticPointers.size(); i++) {
+	for (int i = 0; i < (int)hapticModel.hapticPointers.size(); i++) {
 		PHHapticPointer* pPointer = GetHapticPointer(i);
 		PHHapticPointer* hPointer = hapticModel.hapticPointers[i];
 		// haptic側のポインタの状態をphysics側のポインタへ反映
@@ -63,7 +63,7 @@ void PHHapticStepMulti::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー
 	// 1.力覚ポインタの増加分
-	int hNpointers = hapticModel.hapticPointers.size();	// haptic側のポインタ数
+	int hNpointers = (int)hapticModel.hapticPointers.size();	// haptic側のポインタ数
 	int pNpointers = NHapticPointers();				// physics側のポインタ数
 	for(int i = hNpointers; i < pNpointers; i++){
 		hapticModel.hapticPointers.push_back(DBG_NEW PHHapticPointer(*GetHapticPointer(i)));
@@ -73,7 +73,7 @@ void PHHapticStepMulti::SyncArrays(){
 	//DSTR << hNpointers << std::endl;
 
 	// 2. Solidの増加分
-	const int hNsolids = hapticModel.hapticSolids.size();
+	const int hNsolids = (int)hapticModel.hapticSolids.size();
 	const int pNsolids = NHapticSolids();
 	if(hNsolids == pNsolids) return;
 	for(int i = hNsolids; i < (int)pNsolids; i++){

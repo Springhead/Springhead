@@ -748,7 +748,7 @@ namespace Spr{
 				PHOpGroup  &pg = objGArr[i];
 
 
-				int Ingrpsize = dp.pInGrpList.size();
+				int Ingrpsize = (int)dp.pInGrpList.size();
 				for (int pin = 0; pin < Ingrpsize; pin++)
 				{
 

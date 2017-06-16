@@ -199,7 +199,7 @@ bool PHHapticRender::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 	double dot = dir * interpolation_normal;
 
 	sh->irs.clear();
-	sh->nIrsNormal = sh->irs.size();
+	sh->nIrsNormal = (int)sh->irs.size();
 	if (dot >= 0.0) return false;
 	if (bPoints) {
 		for (size_t i = 0; i < sh->intersectionVertices.size(); i++) {
@@ -233,11 +233,11 @@ bool PHHapticRender::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 		ir->contactPointVel = solid0->GetPointVelocity(ir->contactPointW);
 		ir->pointerPointVel = pointer->GetPointVelocity(ir->pointerPointW);
 	}
-	sh->nIrsNormal = sh->irs.size();
+	sh->nIrsNormal = (int)sh->irs.size();
 	return true;
 }
 bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
-	int Nirs = sh->irs.size();
+	int Nirs = (int)sh->irs.size();
 	if (Nirs == 0) return false;
 	bool bStatic = false;
 	double hdt = he->GetHapticTimeStep();
