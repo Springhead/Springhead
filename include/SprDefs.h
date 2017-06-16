@@ -23,3 +23,9 @@
 	ŠJ”­ŽÒˆÈŠO‚Í–¢’è‹`‚Æ‚µ‚Ä‚­‚¾‚³‚¢
  */
 #include "UseClosedSrcOrNot.h" 
+
+/** use the following definition to enable linking with lapack libraries bundled with Springhead
+    undefine it to avoid conflict with other lapack libs in your program
+	see Foundation/UTClapack.h
+ */
+#define LINK_LAPACK_LIBS
