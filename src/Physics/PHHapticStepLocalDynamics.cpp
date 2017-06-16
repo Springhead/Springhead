@@ -247,7 +247,7 @@ void PHHapticStepLocalDynamics::SyncHaptic2Physic(){
 		}
 	}
 	// LocalDynamicsSimulationの結果をシーンに反映
-	for(size_t i = 0; i < hapticModel.hapticSolids.size(); i++){
+	for(int i = 0; i < (int)hapticModel.hapticSolids.size(); i++){
 		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
 		if(hsolid->bPointer) continue;		// ポインタの場合
 		if(hsolid->doSim <= 1) continue;	// 局所シミュレーション対象でない場合

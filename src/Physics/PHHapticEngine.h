@@ -86,7 +86,7 @@ public:
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();
 	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
-	int NIrs() { return irs.size();  }
+	int NIrs() { return (int)irs.size();  }
 	int NIrsNormal() { return nIrsNormal;  }
 	Vec3d GetIrForce(int i) { return irs[i]->force;  }
 	double GetMu() { return muCur;  }

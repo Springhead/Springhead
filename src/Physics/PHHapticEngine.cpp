@@ -180,7 +180,7 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 		ir->interpolation_pose = curShapePoseW[0];
 		irs.push_back(ir);
 	}
-	nIrsNormal = irs.size();
+	nIrsNormal = (int)irs.size();
 	return true;
 }
 
