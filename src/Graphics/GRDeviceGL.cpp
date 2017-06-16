@@ -11,12 +11,11 @@
 
 // OpenGL
 #if defined(USE_GLEW)
-#ifndef _MSC_VER
-# define GLEW_STATIC		// 定義するとAPI宣言にdeclspecキーワードが付かない
-#endif
+# ifndef _MSC_VER
+#  define GLEW_STATIC		// 定義するとAPI宣言にdeclspecキーワードが付かない
+# endif
 # include <GL/glew.h>
 #endif
-
 #include <GL/glut.h>
 
 #ifdef _MSC_VER
