@@ -32,7 +32,7 @@
 # pragma warning(pop)
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && defined(LINK_LAPACK_LIBS)
  #ifdef TRACE		// Trace
   #if (_MSC_VER == 1500)    // Visual Studio 2008
     #ifdef _WIN64 
