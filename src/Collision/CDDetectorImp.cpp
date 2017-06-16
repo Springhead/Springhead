@@ -52,7 +52,7 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk);
 //	hits: 75962 21608 1731 255 284 76 84 / 100000
 //	#define HIT_COUNT
 
-bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, Vec3d& delta0, Vec3d& delta1, double dt){
+bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, const Vec3d& delta0, const Vec3d& delta1, double dt){
 #ifdef HIT_COUNT
 	static int hits[7];
 #endif
