@@ -61,7 +61,7 @@ public:
 		- pose1 Shape1の姿勢
 		- delta0 Shape0の並進移動量
 		- delta1 Shape1の並進移動量		*/
-	bool ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, Vec3d& delta0, Vec3d& delta1, double dt);
+	bool ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, const Vec3d& delta0, const Vec3d& delta1, double dt);
 
 	/// 形状を取得する
 	CDShapeIf* GetShape(int i){ return shape[i]->Cast(); }
