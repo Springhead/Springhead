@@ -1,11 +1,11 @@
-#ifndef FWOPOBJ_H
+ï»¿#ifndef FWOPOBJ_H
 #define FWOPOBJ_H
 
 
-#include <Framework\SprFWOpObj.h>
+#include <Framework/SprFWOpObj.h>
 #include <Framework/FWObject.h>
 #include "FrameworkDecl.hpp"
-#include <Graphics\GRMesh.h>
+#include <Graphics/GRMesh.h>
 #include <Physics/PHOpObj.h>
 namespace Spr{ ;
 
@@ -18,17 +18,17 @@ public :
 
 	FWOpObj(const FWOpObjDesc& d = FWOpObjDesc());
 
-	//GRMesh‚©‚çAOpƒIƒuƒWƒFƒNƒg‚ğì‚é
+	//GRMeshã‹ã‚‰ã€Opã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹
 	void CreateOpObj();
-	//’¸“_‚ğGraphics‚É”½‰f‚·‚é
+	//é ‚ç‚¹ã‚’Graphicsã«åæ˜ ã™ã‚‹
 	void Blend();
 	void Sync();
 	void CreateOpObjWithRadius(float r);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì”
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°
 	virtual size_t NChildObject() const;
-	///	qƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	virtual ObjectIf* GetChildObject(size_t pos);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o);
 	ObjectIf* GetOpObj();
 	ObjectIf* GetGRMesh();

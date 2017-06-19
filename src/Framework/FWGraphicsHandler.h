@@ -53,7 +53,7 @@ public:
 	/// カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	virtual void PostRedisplay(){}
 	/// Shift,Ctrl,Altのステートを返す
-	virtual int GetModifiers(){ return NULL; }
+	virtual int GetModifiers(){ return 0 /*NULL*/; }
 	/// 再描画時のビューポート計算
 	virtual void CalcViewport(int& l, int& t, int& w, int& h){}
 
