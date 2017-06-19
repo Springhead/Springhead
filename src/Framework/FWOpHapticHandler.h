@@ -1,4 +1,4 @@
-#ifndef FWOPHAPTICHANDLER_H
+﻿#ifndef FWOPHAPTICHANDLER_H
 #define FWOPHAPTICHANDLER_H
 
 
@@ -6,12 +6,12 @@
 //#include <Framework/FWObject.h>
 
 #include <Framework/SprFWHapticPointer.h>
-#include <Foundation\Object.h>
-#include <HumanInterface\SprHISpidar.h>
-#include <HumanInterface\SprHIDRUsb.h>
-#include <HumanInterface\SprHIKeyMouse.h>
-#include <HumanInterface\SprHISdk.h>
-#include <Physics\PHOpHapticController.h>
+#include <Foundation/Object.h>
+#include <HumanInterface/SprHISpidar.h>
+#include <HumanInterface/SprHIDRUsb.h>
+#include <HumanInterface/SprHIKeyMouse.h>
+#include <HumanInterface/SprHISdk.h>
+#include <Physics/PHOpHapticController.h>
 #include <Framework/SprFWOpHapticHandler.h>
 
 namespace Spr {

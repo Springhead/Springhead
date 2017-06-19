@@ -1,10 +1,10 @@
-#ifndef SPRFWOPHAPTICHANDLER_H
+﻿#ifndef SPRFWOPHAPTICHANDLER_H
 #define SPRFWOPHAPTICHANDLER_H
 
 
 #include <Foundation/SprObject.h>
-#include <HumanInterface\SprHISdk.h>
-#include <Physics\SprPHOpObj.h>
+#include <HumanInterface/SprHISdk.h>
+#include <Physics/SprPHOpObj.h>
 
 
 namespace Spr{;

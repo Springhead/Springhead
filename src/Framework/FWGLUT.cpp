@@ -124,7 +124,7 @@ void FWGLUT::Init(int argc, char** argv){
 
 	if(argc == 0){
 		argc = 1;
-		char* dummy[] = {"", NULL};
+		char* dummy[] = {(char*) "", NULL};
 		glutInit(&argc, dummy);
 	}
 	else glutInit(&argc, argv);

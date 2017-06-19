@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,18 +15,18 @@ namespace Spr{;
 //@{
 
 class FWConsoleDebugMonitor {
-	std::string line;						//	ƒRƒ“ƒ\[ƒ‹“ü—Í‚Ìs
-	std::vector<std::string> lineHistory;	//	“ü—Í—š—ğ
-	int lineHistoryCur;						//	Œ»İ‚ÌˆÊ’u
+	std::string line;						//	ã‚³ãƒ³ã‚½ãƒ¼ãƒ«å…¥åŠ›ã®è¡Œ
+	std::vector<std::string> lineHistory;	//	å…¥åŠ›å±¥æ­´
+	int lineHistoryCur;						//	ç¾åœ¨ã®ä½ç½®
 public:
 	FWConsoleDebugMonitor();
-	///	Idel‚ÅŒÄ‚Ño‚·‚ÆƒRƒ“ƒ\[ƒ‹ƒL[“ü—Í‚ğƒ`ƒFƒbƒN‚·‚éBƒuƒƒbƒN‚µ‚È‚¢B
+	///	Idelã§å‘¼ã³å‡ºã™ã¨ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚­ãƒ¼å…¥åŠ›ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚ãƒ–ãƒ­ãƒƒã‚¯ã—ãªã„ã€‚
 	virtual void KeyCheck();
-	///	ƒL[“ü—Í‚ğˆ—‚·‚é
+	///	ã‚­ãƒ¼å…¥åŠ›ã‚’å‡¦ç†ã™ã‚‹
 	virtual bool ProcessKey(int key);
-	///	ƒRƒ}ƒ“ƒhÀs
+	///	ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œ
 	virtual bool ExecCommand(std::string cmd, std::string arg, std::vector<std::string> args);
-	///	ƒRƒ}ƒ“ƒh‚ÌŒó•â(i=0 ƒRƒ}ƒ“ƒh, i=1.. arg1...)ƒI[ƒoƒ‰ƒCƒh—p
+	///	ã‚³ãƒãƒ³ãƒ‰ã®å€™è£œ(i=0 ã‚³ãƒãƒ³ãƒ‰, i=1.. arg1...)ã‚ªãƒ¼ãƒãƒ©ã‚¤ãƒ‰ç”¨
 	virtual const std::vector<std::string>& Candidates(int i) {
 		static std::vector<std::string> rv;
 		return rv;
@@ -36,4 +36,4 @@ public:
 //@}
 }
 
-#endif SPR_FWCONSOLEDEBUGMONITOR_H
+#endif //SPR_FWCONSOLEDEBUGMONITOR_H
