@@ -1,32 +1,40 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003 - 2011, Fumihiro Kato, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <SciLab/SprSciLab.h>
+#include <Scilab/SprScilab.h>
 #include <Physics/PHFemPorousWOMove.h>
 #include <Base/Affine.h>
 
 #define NOMINMAX
-#include "windows.h"
+#ifdef	_MSC_VER
+#  include "windows.h"
+#endif
 
 #include <Foundation/UTClapack.h>
 #include <iomanip>
 #include <time.h>
-#include <direct.h>
+#ifdef	_MSC_VER
+#  include <direct.h>
+#else
+#  include <unistd.h>
+#  include <sys/stat.h>
+#  include <sys/types.h>
+#endif
 #include <sstream>
 
 //#define Scilab
 
 //#define shrink
 
-//#define calcWOMotion	//…•ªˆÚ“®ŒvZ‚ğs‚¤ê‡‚ÍƒRƒƒ“ƒgƒAƒEƒg‚ğŠO‚·
-//#define UseBoundWater	//Œ‹‡…‚Æ©—R…‚É•ª‚¯‚éê‡‚ÍƒRƒƒ“ƒgƒAƒEƒg‚ğŠO‚·
+//#define calcWOMotion	//æ°´åˆ†ç§»å‹•è¨ˆç®—ã‚’è¡Œã†å ´åˆã¯ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã‚’å¤–ã™
+//#define UseBoundWater	//çµåˆæ°´ã¨è‡ªç”±æ°´ã«åˆ†ã‘ã‚‹å ´åˆã¯ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã‚’å¤–ã™
 #define usingG
 //#define aboutG
-#define saturationLimit	//–O˜a—¦‚ÌÅ‘å’l‚ğ1‚Éİ’è
+#define saturationLimit	//é£½å’Œç‡ã®æœ€å¤§å€¤ã‚’1ã«è¨­å®š
 
 using namespace PTM;
 
@@ -43,10 +51,10 @@ void PHFemPorousWOMoveDesc::Init(){
 	kp = 5.0 * exp(4.0);
 	alpha = 0.1;
 	gamma = 1.0;
-	rhoWater = 1000.0; //…‚Ì–§“x
-	rhoOil = 900.0; //–û‚Ì–§“x
+	rhoWater = 1000.0; //æ°´ã®å¯†åº¦
+	rhoOil = 900.0; //æ²¹ã®å¯†åº¦
 	evapoRate = 10;
-	boundWaterRatio = 0.2;	//Œ‹‡…‚ÌŠ„‡
+	boundWaterRatio = 0.2;	//çµåˆæ°´ã®å‰²åˆ
 	denatTemp = 80.0;
 	equilWaterCont = 0.0;
 	limitWaterCont = 1.0;
@@ -55,12 +63,12 @@ void PHFemPorousWOMoveDesc::Init(){
 	initWaterRatio = 0.583;
 	initOilRatio = 0.193;
 	shrinkageRatio = 0.8;
-	top = Vec3d(0.0, 0.0149, 0.0);		//—§•û‘ÌƒƒbƒVƒ…
-	center = Vec3d(0.0, 0.0, 0.0);			//—§•û‘ÌƒƒbƒVƒ…
-	bottom = Vec3d(0.0, -0.0149, 0.0);	//—§•û‘ÌƒƒbƒVƒ…
-	//top = Vec3d(0.0, 0.00749, 0.0);			//‰~’ŒƒƒbƒVƒ…
-	//center = Vec3d(0.0, 0.0, 0.0);			//‰~’ŒƒƒbƒVƒ…
-	//bottom = Vec3d(0.0, -0.00749, 0.0);		//‰~’ŒƒƒbƒVƒ…
+	top = Vec3d(0.0, 0.0149, 0.0);		//ç«‹æ–¹ä½“ãƒ¡ãƒƒã‚·ãƒ¥
+	center = Vec3d(0.0, 0.0, 0.0);			//ç«‹æ–¹ä½“ãƒ¡ãƒƒã‚·ãƒ¥
+	bottom = Vec3d(0.0, -0.0149, 0.0);	//ç«‹æ–¹ä½“ãƒ¡ãƒƒã‚·ãƒ¥
+	//top = Vec3d(0.0, 0.00749, 0.0);			//å††æŸ±ãƒ¡ãƒƒã‚·ãƒ¥
+	//center = Vec3d(0.0, 0.0, 0.0);			//å††æŸ±ãƒ¡ãƒƒã‚·ãƒ¥
+	//bottom = Vec3d(0.0, -0.00749, 0.0);		//å††æŸ±ãƒ¡ãƒƒã‚·ãƒ¥
 }
 
 PHFemPorousWOMove::PHFemPorousWOMove(const PHFemPorousWOMoveDesc& desc, SceneIf* s){
@@ -111,7 +119,11 @@ void PHFemPorousWOMove::Init(){
 	}
 
 	ss >> dataDir;
+#ifdef	_MSC_VER
 	_mkdir(dataDir.c_str());
+#else
+	mkdir(dataDir.c_str(), 0777);
+#endif
 
 
 	PHFemMeshNew* mesh = GetPHFemMesh();
@@ -136,11 +148,11 @@ void PHFemPorousWOMove::Init(){
 	///	face
 	for(unsigned faceid=0;faceid<mesh->faces.size();faceid++){
 		CalcFaceArea(faceid);
-		faceVars[faceid].deformed = true;				//‰Šúó‘Ô‚ÍA•ÏŒ`Œã‚Æ‚·‚é
+		faceVars[faceid].deformed = true;				//åˆæœŸçŠ¶æ…‹ã¯ã€å¤‰å½¢å¾Œã¨ã™ã‚‹
 		faceVars[faceid].surroundFlux = 1.0;
 		CalcFaceMaxVaporPress(faceid);
 		CalcFaceMaxVaporCont(faceid);
-		faceVars[faceid].vaporCont = faceVars[faceid].maxVaporCont * 0.6;	//‰Šú‰·“x‚Å¼“x60%
+		faceVars[faceid].vaporCont = faceVars[faceid].maxVaporCont * 0.6;	//åˆæœŸæ¸©åº¦ã§æ¹¿åº¦60%
 		if(faceid < mesh->nSurfaceFace){
 			faceVars[faceid].dryingStep = constRateDrying;
 		}
@@ -150,7 +162,7 @@ void PHFemPorousWOMove::Init(){
 	rhoOVecAll.resize(mesh->vertices.size(), 1);
 	
 	/// vertex
-	//‘SÚ“_‚ÌŠÜ…—¦‚ÆŠÜ–û—¦‚Ì‰Šú’l‚ğƒZƒbƒg‚µA©—R…•ª‚Ì‚İ‚ğŠÜ…—¦ƒxƒNƒgƒ‹‚ÉƒZƒbƒg
+	//å…¨æ¥ç‚¹ã®å«æ°´ç‡ã¨å«æ²¹ç‡ã®åˆæœŸå€¤ã‚’ã‚»ãƒƒãƒˆã—ã€è‡ªç”±æ°´åˆ†ã®ã¿ã‚’å«æ°´ç‡ãƒ™ã‚¯ãƒˆãƒ«ã«ã‚»ãƒƒãƒˆ
 	for(unsigned vtxid=0; vtxid < mesh->vertices.size(); vtxid++){
 		if(!mesh->GetPHFemThermo()){
 			vertexVars[vtxid].T = 20.0;
@@ -205,7 +217,7 @@ void PHFemPorousWOMove::Init(){
 
 		allVolume += tetVars[tetid].volume;
 	}
-	DSTR << "allVolumeF" << allVolume << std::endl;
+	DSTR << "allVolumeï¼š" << allVolume << std::endl;
 
 	rhowInit = initMassAll * initWaterRatio / allVolume;
 	rhooInit = initMassAll * initOilRatio / allVolume;
@@ -242,17 +254,17 @@ void PHFemPorousWOMove::Init(){
 		edgeVars[edgeid].b = 0.0;
 	}
 
-	//vertices.Ww‚ğ‚·‚×‚ÄAWwVecAll‚Ö‘ã“ü‚·‚é
+	//vertices.Wwã‚’ã™ã¹ã¦ã€WwVecAllã¸ä»£å…¥ã™ã‚‹
 	CreateRhoWVecAll();
-	//vertices.Wo‚ğ‚·‚×‚ÄAWoVecAll‚Ö‘ã“ü‚·‚é
+	//vertices.Woã‚’ã™ã¹ã¦ã€WoVecAllã¸ä»£å…¥ã™ã‚‹
 	CreateRhoOVecAll();
 
 	InitPcVecAll();
 
-	InitMatWO();	//MatWO‚Ì‰Šú‰»
-	InitMatC();		//MatC‚Ì‰Šú‰»
-	InitMatPc();	//MatPc‚Ì‰Šú‰»
-	InitVecF();		//VecF‚Ì‰Šú‰»
+	InitMatWO();	//MatWOã®åˆæœŸåŒ–
+	InitMatC();		//MatCã®åˆæœŸåŒ–
+	InitMatPc();	//MatPcã®åˆæœŸåŒ–
+	InitVecF();		//VecFã®åˆæœŸåŒ–
 
 	keisuWInv.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisuOInv.resize(mesh->vertices.size(),mesh->vertices.size());
@@ -267,26 +279,26 @@ void PHFemPorousWOMove::Init(){
 	gravity = Vec3d(0.0, -9.8, 0.0);
 	initSolidMass = initMassAll * (1 - initWaterRatio - initOilRatio);
 
-	//matk2w—p‚Él=0‚Ìk21,1‚Ì:k22, 2‚Ì:k23, 3‚Ì:k24	‚ğ¶¬
+	//matk2wç”¨ã«l=0ã®æ™‚k21,1ã®æ™‚:k22, 2ã®æ™‚:k23, 3ã®æ™‚:k24	ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		//matk2array[l] = matk2temp;
 		matk2array[l] = Create44Mat21();
-		//	lsi—ñ‚ğ0‚É
+		//	lè¡Œiåˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk2array[l][l][i] = 0.0;
 		}
-		//	isl—ñ‚ğ0‚É
+		//	iè¡Œlåˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk2array[l][i][l] = 0.0;
 		}
 	}
 
-	//vecf—p‚Él=0‚Ìf31,1:f32, 2:f33, 3:f34‚ğ¶¬
+	//vecfç”¨ã«l=0ã®æ™‚f31,1:f32, 2:f33, 3:f34ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		vecFarray[l] = Create41Vec1();
-		//	ls‚ğ0‚É
+		//	lè¡Œã‚’0ã«
 		vecFarray[l][l] = 0.0;
-		//array[n][m][l]	= narray[n],msl—ñ
+		//array[n][m][l]	= narray[n],mè¡Œlåˆ—
 		//	f_3	(vecf3array[0], vecf3array[1],..)
 		// =	| 0 | + | 1 |+...
 		//		| 1 |   | 0 |
@@ -294,7 +306,7 @@ void PHFemPorousWOMove::Init(){
 		//		| 1 |   | 1 |
 	}
 
-	//’PˆÊs—ñ‚ğì‚é
+	//å˜ä½è¡Œåˆ—ã‚’ä½œã‚‹
 	idMat.resize(mesh->vertices.size(),mesh->vertices.size());
 	idMat.clear();
 	for(size_t i=0; i < mesh->vertices.size(); i++){
@@ -313,33 +325,33 @@ void PHFemPorousWOMove::Init(){
 		tetVars[tetid].sDensChanged = false;
 	}
 	
-	//ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+	//ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 	COUNT = 0;
 
-	//ŠÜ…—¦EŠÜ–û—¦•Ï‰»o—Í
+	//å«æ°´ç‡ãƒ»å«æ²¹ç‡å¤‰åŒ–å‡ºåŠ›
 	checkRhoWVecAllout.open(dataDir+"/checkRhoWVecAllout.csv");
 	checkRhoOVecAllout.open(dataDir+"/checkRhoOVecAllout.csv");
 	tempAll.open(dataDir+"/tempAll.csv");
 	tempAndWater.open(dataDir+"/tempAndWater.csv");
 
-	checkRhoWVecAllout <<"ŠÔ" << COUNT<<", ";
-	checkRhoOVecAllout <<"ŠÔ" << COUNT<<", ";
-	tempAll << "ŠÔ" << COUNT << ", ";
-	tempAndWater << "ŠÔ" << COUNT << ",";
+	checkRhoWVecAllout <<"æ™‚é–“" << COUNT<<", ";
+	checkRhoOVecAllout <<"æ™‚é–“" << COUNT<<", ";
+	tempAll << "æ™‚é–“" << COUNT << ", ";
+	tempAndWater << "æ™‚é–“" << COUNT << ",";
 	for(unsigned i=0; i < mesh->vertices.size();i++){
 		if(i != mesh->vertices.size() -1){
-			checkRhoWVecAllout << "’¸“_" << i << ", ";
-			checkRhoOVecAllout << "’¸“_" << i << ", ";
-			tempAll << "’¸“_" << i << ", ";
+			checkRhoWVecAllout << "é ‚ç‚¹" << i << ", ";
+			checkRhoOVecAllout << "é ‚ç‚¹" << i << ", ";
+			tempAll << "é ‚ç‚¹" << i << ", ";
 		}
 		else{
-			checkRhoWVecAllout << "’¸“_" << i << std::endl;
-			checkRhoOVecAllout << "’¸“_" << i << std::endl;
-			tempAll << "’¸“_" << i << std::endl;
+			checkRhoWVecAllout << "é ‚ç‚¹" << i << std::endl;
+			checkRhoOVecAllout << "é ‚ç‚¹" << i << std::endl;
+			tempAll << "é ‚ç‚¹" << i << std::endl;
 		}
 	}
 
-	tempAndWater << "top,center,bottom,topW,centerW,bottomW,topO,centerO,bottomO,ŠÜ…—¦[g-waterw/g-all],ŠÜ–û—¦[g-oil/g-all],ŠÜ…—Ê[g],ŠÜ–û—Ê[g]" << std::endl;
+	tempAndWater << "top,center,bottom,topW,centerW,bottomW,topO,centerO,bottomO,å«æ°´ç‡[g-waterw/g-all],å«æ²¹ç‡[g-oil/g-all],å«æ°´é‡[g],å«æ²¹é‡[g]" << std::endl;
 	tempAndWater << 0 << ", " 
 					<< mesh->GetPHFemThermo()->GetVtxTempInTets(top) << "," 
 					<< mesh->GetPHFemThermo()->GetVtxTempInTets(center) << "," 
@@ -354,7 +366,7 @@ void PHFemPorousWOMove::Init(){
 	invCheck.open(dataDir+"/invCheck.csv");
 
 	FEMLOG.open(dataDir+"/femLogNew.csv");
-	//	CPS‚ÌŒo•Ï‰»‚ğ‘‚«o‚·
+	//	CPSã®çµŒæ™‚å¤‰åŒ–ã‚’æ›¸ãå‡ºã™
 	//cpslog.open(dataDir+"/cpslog.csv");
 	//keisuWLog.open(dataDir+"/keisuWLog.csv");
 	//keisuOLog.open(dataDir+"/keisuOLog.csv");
@@ -386,74 +398,74 @@ void PHFemPorousWOMove::Init(){
 
 	paramout.open(dataDir+"/parameter.txt");
 
-	paramout << "Z“§ŒW” KF" << K << std::endl;
-	paramout << "–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹‚ÌŒW” kcF" << kc  << std::endl;
-	paramout << "–ÑŠÇˆ³—Í‚ÌŒW” kpF" << kp << std::endl;
-	paramout << "–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹‚Ì’è” ƒ¿F" << alpha << std::endl;
-	paramout << "–ÑŠÇˆ³—Í‚Ì’è” ƒÁF" << gamma << std::endl;
-	paramout << "HŞ‚Ì‰Šú¿—ÊF" << initMassAll << "g" << std::endl;
-	paramout << "‰Šú‚Ì…•ª‚ÌŠ„‡F" << initWaterRatio*100 << "%" << std::endl;
-	paramout << "‰Šú‚Ì–û•ª‚ÌŠ„‡F" << initOilRatio*100 << "%" << std::endl;
-	paramout << "“S”ÂƒƒbƒVƒ…‚Ì‘e‚³F" << "pq2.1a1.0e-8" << std::endl;
-	paramout << "“S”Â‚Ì‰Šú‰·“xF" << "120" << std::endl;
-	paramout << "—¿ƒƒbƒVƒ…‚Ì‘e‚³F" << "pq2.1a1.0e-8" << std::endl;
-	paramout << "—¿‚Ì‰Šú‰·“xF" << "17" << std::endl;
-	paramout << "weekPow_FULLF" << mesh->GetPHFemThermo()->GetWeekPowFULL() << std::endl;
+	paramout << "æµ¸é€ä¿‚æ•° Kï¼š" << K << std::endl;
+	paramout << "æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã®ä¿‚æ•° kcï¼š" << kc  << std::endl;
+	paramout << "æ¯›ç®¡åœ§åŠ›ã®ä¿‚æ•° kpï¼š" << kp << std::endl;
+	paramout << "æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã®å®šæ•° Î±ï¼š" << alpha << std::endl;
+	paramout << "æ¯›ç®¡åœ§åŠ›ã®å®šæ•° Î³ï¼š" << gamma << std::endl;
+	paramout << "é£Ÿæã®åˆæœŸè³ªé‡ï¼š" << initMassAll << "g" << std::endl;
+	paramout << "åˆæœŸã®æ°´åˆ†ã®å‰²åˆï¼š" << initWaterRatio*100 << "%" << std::endl;
+	paramout << "åˆæœŸã®æ²¹åˆ†ã®å‰²åˆï¼š" << initOilRatio*100 << "%" << std::endl;
+	paramout << "é‰„æ¿ãƒ¡ãƒƒã‚·ãƒ¥ã®ç²—ã•ï¼š" << "pq2.1a1.0e-8" << std::endl;
+	paramout << "é‰„æ¿ã®åˆæœŸæ¸©åº¦ï¼š" << "120â„ƒ" << std::endl;
+	paramout << "è©¦æ–™ãƒ¡ãƒƒã‚·ãƒ¥ã®ç²—ã•ï¼š" << "pq2.1a1.0e-8" << std::endl;
+	paramout << "è©¦æ–™ã®åˆæœŸæ¸©åº¦ï¼š" << "17â„ƒ" << std::endl;
+	paramout << "weekPow_FULLï¼š" << mesh->GetPHFemThermo()->GetWeekPowFULL() << std::endl;
 	
-	wAll <<"ŠÔ" << COUNT<<", ";
-	oAll <<"ŠÔ" << COUNT<<", ";
+	wAll <<"æ™‚é–“" << COUNT<<", ";
+	oAll <<"æ™‚é–“" << COUNT<<", ";
 	for(unsigned i=0; i < mesh->vertices.size();i++){
 		//if(i != mesh->vertices.size() -1){
-			wAll << "’¸“_" << i << ", ";
-			oAll << "’¸“_" << i << ", ";
+			wAll << "é ‚ç‚¹" << i << ", ";
+			oAll << "é ‚ç‚¹" << i << ", ";
 		//}
 		//else{
-		//	wAll << "’¸“_" << i << std::endl;
-		//	oAll << "’¸“_" << i << std::endl;
+		//	wAll << "é ‚ç‚¹" << i << std::endl;
+		//	oAll << "é ‚ç‚¹" << i << std::endl;
 		//}
 	}
-	wAll << ",…‚Ì‘S¿—Ê,ŠÜ…—¦" << std::endl;
-	oAll << ",–û‚Ì‘S¿—Ê,ŠÜ–û—¦" << std::endl;
+	wAll << ",æ°´ã®å…¨è³ªé‡,å«æ°´ç‡" << std::endl;
+	oAll << ",æ²¹ã®å…¨è³ªé‡,å«æ²¹ç‡" << std::endl;
 
-	topS << "ŠÔ,";
-	sideS << "ŠÔ,";
-	bottomS << "ŠÔ,";
-	internalS << "ŠÔ,";
-	topOutflowWater << "ŠÔ,";
-	topOutflowOil << "ŠÔ,";
-	sideOutflowWater << "ŠÔ,";
-	sideOutflowOil << "ŠÔ,";
-	bottomOutflowWater << "ŠÔ,";
-	bottomOutflowOil << "ŠÔ,";
+	topS << "æ™‚é–“,";
+	sideS << "æ™‚é–“,";
+	bottomS << "æ™‚é–“,";
+	internalS << "æ™‚é–“,";
+	topOutflowWater << "æ™‚é–“,";
+	topOutflowOil << "æ™‚é–“,";
+	sideOutflowWater << "æ™‚é–“,";
+	sideOutflowOil << "æ™‚é–“,";
+	bottomOutflowWater << "æ™‚é–“,";
+	bottomOutflowOil << "æ™‚é–“,";
 	for(unsigned i=0; i < topVertices.size(); i++){
-		topS << "’¸“_" << topVertices[i] << ",";
-		topOutflowWater << "’¸“_" << topVertices[i] << ",";
-		topOutflowOil << "’¸“_" << topVertices[i] << ",";
+		topS << "é ‚ç‚¹" << topVertices[i] << ",";
+		topOutflowWater << "é ‚ç‚¹" << topVertices[i] << ",";
+		topOutflowOil << "é ‚ç‚¹" << topVertices[i] << ",";
 	}
 	topS << std::endl;
 	topOutflowWater << std::endl;
 	topOutflowOil << std::endl;
 
 	for(unsigned i=0; i < sideVertices.size(); i++){
-		sideS << "’¸“_" << sideVertices[i] << ",";
-		sideOutflowWater << "’¸“_" << sideVertices[i] << ",";
-		sideOutflowOil << "’¸“_" << sideVertices[i] << ",";
+		sideS << "é ‚ç‚¹" << sideVertices[i] << ",";
+		sideOutflowWater << "é ‚ç‚¹" << sideVertices[i] << ",";
+		sideOutflowOil << "é ‚ç‚¹" << sideVertices[i] << ",";
 	}
 	sideS << std::endl;
 	sideOutflowWater << std::endl;
 	sideOutflowOil << std::endl;
 
 	for(unsigned i=0; i < bottomVertices.size(); i++){
-		bottomS << "’¸“_" << bottomVertices[i] << ",";
-		bottomOutflowWater << "’¸“_" << bottomVertices[i] << ",";
-		bottomOutflowOil << "’¸“_" << bottomVertices[i] << ",";
+		bottomS << "é ‚ç‚¹" << bottomVertices[i] << ",";
+		bottomOutflowWater << "é ‚ç‚¹" << bottomVertices[i] << ",";
+		bottomOutflowOil << "é ‚ç‚¹" << bottomVertices[i] << ",";
 	}
 	bottomS << std::endl;
 	bottomOutflowWater << std::endl;
 	bottomOutflowOil << std::endl;
 
 	for(unsigned i=0; i < internalVertices.size(); i++){
-		internalS << "’¸“_" << internalVertices[i] << ",";
+		internalS << "é ‚ç‚¹" << internalVertices[i] << ",";
 	}
 	internalS << std::endl;
 
@@ -505,17 +517,17 @@ void PHFemPorousWOMove::Init(){
 	vecFwAllout << std::endl;
 	vecFoAllout << std::endl;
 	
-	// ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+	// ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 	Ndt =0;
 
-	//	‘Sface‚Ì–@ü‚ğŒvZ
-	//.	•\–Ê‚Ì’¸“_‚ÉA–@üƒxƒNƒgƒ‹‚ğ’Ç‰Á
-	//.	‚É‚Â‚¢‚ÄÄ‹A“I‚ÉÀs
-	Vec3d extp;		//	ŠOŒü‚«–@ü
-	Vec3d tempV;	//	ŠOŒü‚«”»’è”äŠr’¸“_(ŠY“–face–Êã‚É‚È‚¢’¸“_˜”)
+	//	å…¨faceã®æ³•ç·šã‚’è¨ˆç®—
+	//.	è¡¨é¢ã®é ‚ç‚¹ã«ã€æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿½åŠ 
+	//.	ã«ã¤ã„ã¦å†å¸°çš„ã«å®Ÿè¡Œ
+	Vec3d extp;		//	å¤–å‘ãæ³•ç·š
+	Vec3d tempV;	//	å¤–å‘ãåˆ¤å®šæ¯”è¼ƒé ‚ç‚¹(è©²å½“faceé¢ä¸Šã«ãªã„é ‚ç‚¹åºæ•°)
 	DSTR << "tets.size(): " << mesh->tets.size() << std::endl;
 	for(unsigned tid=0; tid < mesh->tets.size(); tid++){
-		//	‚Ç‚Ì’¸“_ID‚Åface‚ª\¬‚³‚ê‚Ä‚¢‚é‚Ì‚©
+		//	ã©ã®é ‚ç‚¹IDã§faceãŒæ§‹æˆã•ã‚Œã¦ã„ã‚‹ã®ã‹
 		unsigned idsum = 0;
 		for(unsigned i=0;i<4;i++){
 			idsum += mesh->tets[tid].vertexIDs[i];
@@ -527,7 +539,7 @@ void PHFemPorousWOMove::Init(){
 			extp = extp / extp.norm();
 			Vec3d chkN[2] = {mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[1]].pos - mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[2]].pos
 				, mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[2]].pos - mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[1]].pos};
-			if(extp * chkN[0]/(extp.norm() * chkN[0].norm()) > 1e-15 ){		// 1e-17‚­‚ç‚¢0‚æ‚è‘å‚«‚­AŠ®‘S‚È–@ü‚É‚Í‚È‚Á‚Ä‚¢‚È‚¢‚½‚ß
+			if(extp * chkN[0]/(extp.norm() * chkN[0].norm()) > 1e-15 ){		// 1e-17ãã‚‰ã„0ã‚ˆã‚Šå¤§ããã€å®Œå…¨ãªæ³•ç·šã«ã¯ãªã£ã¦ã„ãªã„ãŸã‚
 				DSTR << "this normal is invalid. make sure to check it out. " << "tid: "<< tid << ", fid: " << fid << " ; "<< this->GetName() << std::endl;
 				DSTR << "the invalid value is... " << extp * chkN[0]/(extp.norm() * chkN[0].norm()) <<", " << extp * chkN[1]/(extp.norm() * chkN[1].norm()) << std::endl;
 				assert(0);
@@ -536,14 +548,14 @@ void PHFemPorousWOMove::Init(){
 				DSTR << "ERROR: extp value == 0" << "tid = " << tid << ", fid = " << fid << std::endl;
 			}
 	
-			//unsigned expVtx =0;		//	face–Êã‚É‚È‚¢A0~3”Ô–Ú‚Ìl–Ê‘Ì’¸“_
+			//unsigned expVtx =0;		//	faceé¢ä¸Šã«ãªã„ã€0~3ç•ªç›®ã®å››é¢ä½“é ‚ç‚¹
 			unsigned idsumt =idsum;
 			for(unsigned j=0;j<3;j++){
 				idsumt -= mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[j];
 				//DSTR << "faces[" << fid << "].vertices["<<j <<"]: "<< faces[tets[tid].faces[fid]].vertices[j];
 			}
 			
-			//. facedS‚©‚çfaceŠO’¸“_‚Ö‚ÌƒxƒNƒgƒ‹tempVŒvZ
+			//. faceé‡å¿ƒã‹ã‚‰faceå¤–é ‚ç‚¹ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«tempVè¨ˆç®—
 			Vec3d jushin = mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[0]].pos + mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[1]].pos
 				+ mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[2]].pos;
 			jushin *= 1.0 / 3.0;
@@ -552,29 +564,29 @@ void PHFemPorousWOMove::Init(){
 				DSTR <<"ERROR:	for normal calculating, some vertices judging is invalids"<< std::endl;
 			}
 			if((tempV * extp / (tempV.norm() * extp.norm()) ) < 0.0){
-				//extp‚ÆtempV‚ª}‚X‚O“xˆÈã—£‚ê‚Ä‚¢‚éFextp‚ªŠOŒü‚«–@ü
-				faceVars[mesh->tets[tid].faceIDs[fid]].normal = extp / 10.0;		//	’·‚³‚ğ‚P0cm‚É
+				//extpã¨tempVãŒÂ±ï¼™ï¼åº¦ä»¥ä¸Šé›¢ã‚Œã¦ã„ã‚‹ï¼šextpãŒå¤–å‘ãæ³•ç·š
+				faceVars[mesh->tets[tid].faceIDs[fid]].normal = extp / 10.0;		//	é•·ã•ã‚’ï¼‘0cmã«
 			}else{
-				//extp‚ÆtempV‚ª‚X‚O“xˆÈ“àFextp‚ÌŒü‚«‚ğ180“x•Ï‚¦‚ÄAfaces[fid].normal‚É‘ã“ü
-				faceVars[mesh->tets[tid].faceIDs[fid]].normal = - extp / 10.0;		// ‹tƒxƒNƒgƒ‹
+				//extpã¨tempVãŒï¼™ï¼åº¦ä»¥å†…ï¼šextpã®å‘ãã‚’180åº¦å¤‰ãˆã¦ã€faces[fid].normalã«ä»£å…¥
+				faceVars[mesh->tets[tid].faceIDs[fid]].normal = - extp / 10.0;		// é€†ãƒ™ã‚¯ãƒˆãƒ«
 			}
 		}
 	}
 
-	//	’¸“_‚Ì–@ü‚ğŒvZ
-	//	’¸“_‚Ì‘®‚·‚éface–Ê‚æ‚è•½‹ÏH³‹K‰»‚µ‚½’¸“_–@ü‚ğ‹‚ß‚é
+	//	é ‚ç‚¹ã®æ³•ç·šã‚’è¨ˆç®—
+	//	é ‚ç‚¹ã®å±ã™ã‚‹faceé¢ã‚ˆã‚Šå¹³å‡ï¼Ÿæ­£è¦åŒ–ã—ãŸé ‚ç‚¹æ³•ç·šã‚’æ±‚ã‚ã‚‹
 	std::vector<Vec3d> faceNormal;
 	faceNormal.clear();
 	for(unsigned vid = 0; vid < mesh->vertices.size(); vid++ ){
 		//unsigned fsize = vertices[vid].faces.size();
 		for(unsigned fid = 0; fid < mesh->vertices[vid].faceIDs.size(); fid++ ){
-			//.	‘®‚·‚éface–@ü‚ª‚Ù‚Ú“¯‚¶•ûŒü‚ğŒü‚¢‚Ä‚é‚à‚Ì‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA1‚Â‚¾‚¯‰ÁZ‚µ‚Ä•½‹Ï‚ğ‚Æ‚é‚æ‚¤‚É•ÏX‚·‚é
-			//ŠO‘¤‚Ì’¸“_‚Ì–@ü‚¾‚¯‰ÁZ			
+			//.	å±ã™ã‚‹faceæ³•ç·šãŒã»ã¼åŒã˜æ–¹å‘ã‚’å‘ã„ã¦ã‚‹ã‚‚ã®ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€1ã¤ã ã‘åŠ ç®—ã—ã¦å¹³å‡ã‚’ã¨ã‚‹ã‚ˆã†ã«å¤‰æ›´ã™ã‚‹
+			//å¤–å´ã®é ‚ç‚¹ã®æ³•ç·šã ã‘åŠ ç®—			
 			if(mesh->vertices[vid].faceIDs[fid] < (int)mesh->nSurfaceFace){
-				vertexVars[vid].normal += faceVars[mesh->vertices[vid].faceIDs[fid]].normal;		// ‚±‚ÌƒR[ƒh‚É‘ã‚í‚Á‚ÄAã‹LvectorƒR[ƒh‚ÆˆÈ‰º‚Ì‰ÁZƒR[ƒh‚É’u‚«Š·‚¦
+				vertexVars[vid].normal += faceVars[mesh->vertices[vid].faceIDs[fid]].normal;		// ã“ã®ã‚³ãƒ¼ãƒ‰ã«ä»£ã‚ã£ã¦ã€ä¸Šè¨˜vectorã‚³ãƒ¼ãƒ‰ã¨ä»¥ä¸‹ã®åŠ ç®—ã‚³ãƒ¼ãƒ‰ã«ç½®ãæ›ãˆ
 			}
 		}
-		vertexVars[vid].normal = vertexVars[vid].normal / vertexVars[vid].normal.norm();		//	’PˆÊƒxƒNƒgƒ‹‰»
+		vertexVars[vid].normal = vertexVars[vid].normal / vertexVars[vid].normal.norm();		//	å˜ä½ãƒ™ã‚¯ãƒˆãƒ«åŒ–
 	}
 }
 
@@ -588,7 +600,7 @@ void PHFemPorousWOMove::Step(double dt){
 
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	////•\–Ê‚É‚ ‚é–Ê‚ğ\¬‚·‚é3’¸“_‚ÌŠÜ…—¦‚Ì‘Š‰Á•½‹Ï‚ğ–Ê‚ÌŠÜ…—¦‚Æ‚µA‚»‚Ì–Ê‚É‚¨‚¯‚éŠ£‘‡‚Ì’iŠK‚ğŒˆ’è‚·‚é, 
+	////è¡¨é¢ã«ã‚ã‚‹é¢ã‚’æ§‹æˆã™ã‚‹3é ‚ç‚¹ã®å«æ°´ç‡ã®ç›¸åŠ å¹³å‡ã‚’é¢ã®å«æ°´ç‡ã¨ã—ã€ãã®é¢ã«ãŠã‘ã‚‹ä¹¾ç‡¥ã®æ®µéšã‚’æ±ºå®šã™ã‚‹, 
 	//for(unsigned fid = 0; fid < mesh->nSurfaceFace; fid++){
 	//	double faceWaterContent = (vertexVars[mesh->faces[fid].vertexIDs[0]].Ww + vertexVars[mesh->faces[fid].vertexIDs[1]].Ww + vertexVars[mesh->faces[fid].vertexIDs[2]].Ww) / 3;
 	//	if(faceVars[fid].dryingStep == constRateDrying && faceWaterContent <= limitWaterCont){
@@ -604,7 +616,7 @@ void PHFemPorousWOMove::Step(double dt){
 
 #ifdef calcWOMotion
 
-	//•Ï«‚ª‹N‚±‚Á‚Ä‚¢‚È‚¢’¸“_‚É‚Â‚¢‚ÄA’¸“_‰·“x‚ğQÆ‚µ‚Ä•Ï«‚µ‚½‚©‚Ç‚¤‚©‚ğŒˆ‚ß‚é+–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹‚ğŒvZ‚·‚é
+	//å¤‰æ€§ãŒèµ·ã“ã£ã¦ã„ãªã„é ‚ç‚¹ã«ã¤ã„ã¦ã€é ‚ç‚¹æ¸©åº¦ã‚’å‚ç…§ã—ã¦å¤‰æ€§ã—ãŸã‹ã©ã†ã‹ã‚’æ±ºã‚ã‚‹+æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã‚’è¨ˆç®—ã™ã‚‹
 	for(unsigned vtxid=0; vtxid < mesh->vertices.size(); vtxid++){
 #ifdef UseBoundWater
 		if(!vertexVars[vtxid].denaturated){
@@ -640,7 +652,7 @@ void PHFemPorousWOMove::Step(double dt){
 	SAll << std::endl;
 	PcAll << std::endl;
 
-	//–O˜a—¦‚Ìo—Í‚Í‚±‚±‚ª³‚µ‚¢‚Ì‚©H
+	//é£½å’Œç‡ã®å‡ºåŠ›ã¯ã“ã“ãŒæ­£ã—ã„ã®ã‹ï¼Ÿ
 	topS << COUNT * dt << ",";
 	for(unsigned id=0; id < topVertices.size(); id++){
 		topS << vertexVars[topVertices[id]].saturation << ",";
@@ -665,7 +677,7 @@ void PHFemPorousWOMove::Step(double dt){
 	}
 	internalS << std::endl;
 
-	//Šel–Ê‘Ì‚Ì…‚Æ–û‚Ì”S“x,ŠÔŒ„—¦,ŒÅ‘Ì–§“x‚ğŒvZ
+	//å„å››é¢ä½“ã®æ°´ã¨æ²¹ã®ç²˜åº¦,é–“éš™ç‡,å›ºä½“å¯†åº¦ã‚’è¨ˆç®—
 	for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
 		CalcTetWOMu(tetid);
 		CalcTetPorosity(tetid);
@@ -749,7 +761,7 @@ void PHFemPorousWOMove::Step(double dt){
 
 #ifndef Scilab
 	
-	//’¼Ú–@‚É‚æ‚èŠÜ…—¦EŠÜ–û—¦‚ğŒvZ
+	//ç›´æ¥æ³•ã«ã‚ˆã‚Šå«æ°´ç‡ãƒ»å«æ²¹ç‡ã‚’è¨ˆç®—
 #ifndef usingG
 	//CalcWOContentDirect(dt, eps);
 	CalcWOContentDirect2(dt, eps);
@@ -952,12 +964,12 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//‚±‚ÌŒvZ‚ğŒÄ‚Ño‚·‚Æ‚«‚ÉAŠel–Ê‘Ì‚²‚Æ‚ÉŒvZ‚·‚é‚½‚ßAl–Ê‘Ì‚Ì0”Ô‚©‚ç‡‚É‚±‚ÌŒvZ‚ğs‚¤
-	//l–Ê‘Ì‚ğ\¬‚·‚é4ß“_‚ğß“_‚Ì”z—ñ(Tets‚É‚ÍAß“_‚Ì”z—ñ‚ªì‚Á‚Ä‚ ‚é)‚É“ü‚Á‚Ä‚¢‚é‡”Ô‚ğg‚Á‚ÄA–Ê‚ÌŒvZ‚ğs‚Á‚½‚èAs—ñ‚ÌŒvZ‚ğs‚Á‚½‚è‚·‚éB
-	//‚»‚Ì‚½‚ßA‚±‚ÌŠÖ”‚Ìˆø”‚ÉAl–Ê‘Ì—v‘f‚Ì”Ô†‚ğæ‚é
+	//ã“ã®è¨ˆç®—ã‚’å‘¼ã³å‡ºã™ã¨ãã«ã€å„å››é¢ä½“ã”ã¨ã«è¨ˆç®—ã™ã‚‹ãŸã‚ã€å››é¢ä½“ã®0ç•ªã‹ã‚‰é †ã«ã“ã®è¨ˆç®—ã‚’è¡Œã†
+	//å››é¢ä½“ã‚’æ§‹æˆã™ã‚‹4ç¯€ç‚¹ã‚’ç¯€ç‚¹ã®é…åˆ—(Tetsã«ã¯ã€ç¯€ç‚¹ã®é…åˆ—ãŒä½œã£ã¦ã‚ã‚‹)ã«å…¥ã£ã¦ã„ã‚‹é †ç•ªã‚’ä½¿ã£ã¦ã€é¢ã®è¨ˆç®—ã‚’è¡Œã£ãŸã‚Šã€è¡Œåˆ—ã®è¨ˆç®—ã‚’è¡Œã£ãŸã‚Šã™ã‚‹ã€‚
+	//ãã®ãŸã‚ã€ã“ã®é–¢æ•°ã®å¼•æ•°ã«ã€å››é¢ä½“è¦ç´ ã®ç•ªå·ã‚’å–ã‚‹
 	if((tetVars[tetid].tetPorosity != tetVars[tetid].preTetPorosity) || (tetVars[tetid].rhoS != tetVars[tetid].preRhoS)){
 
-		//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+		//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 		tetVars[tetid].matWw.clear();
 		tetVars[tetid].matOw.clear();
 		tetVars[tetid].matWo.clear();
@@ -967,10 +979,10 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 		tetVars[tetid].vecFw[1].clear();
 		tetVars[tetid].vecFo[1].clear();
 	
-		//	As—ñ@=	a11 a12 a13
+		//	Aè¡Œåˆ—ã€€=	a11 a12 a13
 		//				a21 a22 a23
 		//				a31 a32 a33
-		//‚ğ¶¬
+		//ã‚’ç”Ÿæˆ
 
 
 		PTM::TMatrixRow<4,4,double> matk1A;
@@ -1012,7 +1024,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 		Nz[0][2] = matk1A[2][1];
 		Nz[0][3] = matk1A[2][2];
 
-		//	Km ‚ÌZo
+		//	Km ã®ç®—å‡º
 		//tets[id].matk1 = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
 		matkm = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
 	
@@ -1056,14 +1068,14 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 
 	for(unsigned j=1; j < 4; j++){
 		int vtxid0 = mesh->tets[tetid].vertexIDs[j];
-		//	‰ºOŠps—ñ•”•ª‚É‚Â‚¢‚Ä‚Ì‚İÀs
+		//	ä¸‹ä¸‰è§’è¡Œåˆ—éƒ¨åˆ†ã«ã¤ã„ã¦ã®ã¿å®Ÿè¡Œ
 		//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 		for(unsigned k = 0; k < j; k++){
 			int vtxid1 = mesh->tets[tetid].vertexIDs[k];
 			for(unsigned l =0; l < mesh->vertices[vtxid0].edgeIDs.size(); l++){
 				for(unsigned m =0; m < mesh->vertices[vtxid1].edgeIDs.size(); m++){
 					if(mesh->vertices[vtxid0].edgeIDs[l] == mesh->vertices[vtxid1].edgeIDs[m]){
-						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].ww += tetVars[tetid].matWw[j][k];		//“¯‚¶‚à‚Ì‚ª“ñ‚Â‚ ‚é‚Í‚¸‚¾‚©‚ç”¼•ª‚É‚·‚éBãOŠp‰»‰ºOŠp‚¾‚¯‘–¸‚·‚é‚É‚ÍA‚Ç‚¤‚¢‚¤for•¶‚“‚É‚·‚ê‚Î—Ç‚¢‚Ì‚©H
+						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].ww += tetVars[tetid].matWw[j][k];		//åŒã˜ã‚‚ã®ãŒäºŒã¤ã‚ã‚‹ã¯ãšã ã‹ã‚‰åŠåˆ†ã«ã™ã‚‹ã€‚ä¸Šä¸‰è§’åŒ–ä¸‹ä¸‰è§’ã ã‘èµ°æŸ»ã™ã‚‹ã«ã¯ã€ã©ã†ã„ã†foræ–‡ï½“ã«ã™ã‚Œã°è‰¯ã„ã®ã‹ï¼Ÿ
 						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].ow += tetVars[tetid].matOw[j][k];
 						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].wo += tetVars[tetid].matWo[j][k];
 						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].oo += tetVars[tetid].matOo[j][k];
@@ -1085,15 +1097,15 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //
 //	PHFemMeshNew* mesh = GetPHFemMesh();
 //
-//	///	‰Šú‰»
+//	///	åˆæœŸåŒ–
 //	tetVars[id].matk1W[1].clear();
 //
 //	for(unsigned l= 0 ; l < 4; l++){
-//		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ämatk2array‚É“ü‚ê‚é
-//		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-//		///	s—ñŒ^‚Ì“ü‚ê•¨‚ğ—pˆÓ
+//		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦matk2arrayã«å…¥ã‚Œã‚‹
+//		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+//		///	è¡Œåˆ—å‹ã®å…¥ã‚Œç‰©ã‚’ç”¨æ„
 //
-//		//–Ê‚Ì‰·“x 3’¸“_‚Ì‘Š‰Á•½‹Ï
+//		//é¢ã®æ¸©åº¦ 3é ‚ç‚¹ã®ç›¸åŠ å¹³å‡
 //		double surfaceTemp;
 //		if(mesh->GetPHFemThermo()){
 //			surfaceTemp = (mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]) + mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]) + mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2])) / 3.0;
@@ -1101,25 +1113,25 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //			surfaceTemp = (vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].T + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].T + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].T) / 3.0;
 //		}
 //		
-//		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && surfaceTemp >= 100.0){			///	ŠOŠk‚Ì–Ê&•\–Ê‚Ì‰·“x‚ª100ˆÈã
-//			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+//		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && surfaceTemp >= 100.0){			///	å¤–æ®»ã®é¢&è¡¨é¢ã®æ¸©åº¦ãŒ100â„ƒä»¥ä¸Š
+//			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 //				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 //			}
-//			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-//			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚Æ—ñ‚ğœ‚¢‚½s—ñ‚ÌÏ‚ğ‚Æ‚é
-//			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+//			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+//			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã¨åˆ—ã‚’é™¤ã„ãŸè¡Œåˆ—ã®ç©ã‚’ã¨ã‚‹
+//			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 //			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];
 //			//DSTR << "vtx: " << vtx <<std::endl;
 //		
-//			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+//			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 //			unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 //			for(unsigned j=0;j<4;j++){
-//				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-//					///	j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ğ0‚É‚µ‚½matk2array‚ÅŒvZ‚·‚é
-//					///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
-//						///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-//					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
-//					double faceWwInit;	//–Ê‚ÌŠÜ…—¦‚Ì‰Šú’l
+//				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+//					///	jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ã‚’0ã«ã—ãŸmatk2arrayã§è¨ˆç®—ã™ã‚‹
+//					///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
+//						///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+//					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
+//					double faceWwInit;	//é¢ã®å«æ°´ç‡ã®åˆæœŸå€¤
 //					faceWwInit = (vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].WwInit + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].WwInit + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].WwInit) / 3;
 //					tetVars[id].matk1W[1] += evapoRate * (surfaceTemp-100) / faceWwInit * (1.0/12.0) * faceVars[mesh->tets[id].faceIDs[l]].area * matk2array[j];
 //				}
@@ -1131,15 +1143,15 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //void PHFemPorousWOMove::CreateMatWOLocal(unsigned id){
 //	PHFemMeshNew* mesh = GetPHFemMesh();
 //
-//	//‚·‚×‚Ä‚Ìl–Ê‘Ì—v‘f‚É‚Â‚¢‚ÄŒW”s—ñ‚ğì‚é
-//	//[K1W1]A[K2W]A[K1O]A[K2O]‚ğì‚é
+//	//ã™ã¹ã¦ã®å››é¢ä½“è¦ç´ ã«ã¤ã„ã¦ä¿‚æ•°è¡Œåˆ—ã‚’ä½œã‚‹
+//	//[K1W1]ã€[K2W]ã€[K1O]ã€[K2O]ã‚’ä½œã‚‹
 //	if(tetVars[id].sDensChanged){
 //		CreateMatk1k(id);
 //		matkChanged = true;
 //		matVecChanged = true;
 //	}
 //
-//	//[K1W2]‚ğì‚é •\–Ê‚É‘®‚·‚é–Ê‚ª‚ ‚èA‚»‚Ì–Ê‚Ì’¸“_‚Ì‚¤‚¿‰·“x‚ª•Ï‚í‚Á‚½‚à‚Ì‚ª‚ ‚ê‚Î
+//	//[K1W2]ã‚’ä½œã‚‹ è¡¨é¢ã«å±ã™ã‚‹é¢ãŒã‚ã‚Šã€ãã®é¢ã®é ‚ç‚¹ã®ã†ã¡æ¸©åº¦ãŒå¤‰ã‚ã£ãŸã‚‚ã®ãŒã‚ã‚Œã°
 //	for(unsigned i=0; i < 4; i++){
 //		unsigned faceid = mesh->tets[id].faceIDs[i];
 //		if(faceid < mesh->nSurfaceFace){
@@ -1171,7 +1183,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //		CreateMatWOPcVecF2Local(tetid);
 //	}
 //
-//	//‘S‘Ì„«s—ñ‚ğì‚é
+//	//å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
 //	if(matWOPcVecF2Changed){
 //		matWwAll.clear();
 //		matOwAll.clear();
@@ -1210,7 +1222,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 void PHFemPorousWOMove::CreateMatCLocal(unsigned tetid){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+	//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 	if((tetVars[tetid].tetPorosity != tetVars[tetid].preTetPorosity) || (tetVars[tetid].rhoS != tetVars[tetid].preRhoS)){
 		tetVars[tetid].matC.clear();
 	
@@ -1221,14 +1233,14 @@ void PHFemPorousWOMove::CreateMatCLocal(unsigned tetid){
 
 	for(unsigned j=1; j < 4; j++){
 		int vtxid0 = mesh->tets[tetid].vertexIDs[j];
-		//	‰ºOŠps—ñ•”•ª‚É‚Â‚¢‚Ä‚Ì‚İÀs
+		//	ä¸‹ä¸‰è§’è¡Œåˆ—éƒ¨åˆ†ã«ã¤ã„ã¦ã®ã¿å®Ÿè¡Œ
 		//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 		for(unsigned k = 0; k < j; k++){
 			int vtxid1 = mesh->tets[tetid].vertexIDs[k];
 				for(unsigned l =0; l < mesh->vertices[vtxid0].edgeIDs.size(); l++){
 					for(unsigned m =0; m < mesh->vertices[vtxid1].edgeIDs.size(); m++){
 						if(mesh->vertices[vtxid0].edgeIDs[l] == mesh->vertices[vtxid1].edgeIDs[m]){
-							edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].c += tetVars[tetid].matC[j][k];		//“¯‚¶‚à‚Ì‚ª“ñ‚Â‚ ‚é‚Í‚¸‚¾‚©‚ç”¼•ª‚É‚·‚éBãOŠp‰»‰ºOŠp‚¾‚¯‘–¸‚·‚é‚É‚ÍA‚Ç‚¤‚¢‚¤for•¶‚“‚É‚·‚ê‚Î—Ç‚¢‚Ì‚©H
+							edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].c += tetVars[tetid].matC[j][k];		//åŒã˜ã‚‚ã®ãŒäºŒã¤ã‚ã‚‹ã¯ãšã ã‹ã‚‰åŠåˆ†ã«ã™ã‚‹ã€‚ä¸Šä¸‰è§’åŒ–ä¸‹ä¸‰è§’ã ã‘èµ°æŸ»ã™ã‚‹ã«ã¯ã€ã©ã†ã„ã†foræ–‡ï½“ã«ã™ã‚Œã°è‰¯ã„ã®ã‹ï¼Ÿ
 							//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
 						}
 					}
@@ -1245,7 +1257,7 @@ void PHFemPorousWOMove::CreateMatCLocal(unsigned tetid){
 //
 //	PHFemMeshNew* mesh = GetPHFemMesh();
 //
-//	//‘S‘Ì„«s—ñ‚ğì‚é
+//	//å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
 //	if(matCChanged){
 //		matCAll.clear();
 //		for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
@@ -1268,14 +1280,14 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	tetVars[tetid].vecFw[0].clear();
 	tetVars[tetid].vecFo[0].clear();
 
 	for(unsigned localfaceid= 0 ; localfaceid < 4; localfaceid++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ävecf2array‚É“ü‚ê‚é
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦vecf2arrayã«å…¥ã‚Œã‚‹
 		
-		//–Ê‚Ì‰·“x:3’¸“_‚Ì‘Š‰Á•½‹Ï
+		//é¢ã®æ¸©åº¦:3é ‚ç‚¹ã®ç›¸åŠ å¹³å‡
 		int faceid = mesh->tets[tetid].faceIDs[localfaceid];
 		double surfaceTemp;
 		if(mesh->GetPHFemThermo()){
@@ -1284,23 +1296,23 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 			surfaceTemp = (vertexVars[mesh->faces[faceid].vertexIDs[0]].T + vertexVars[mesh->faces[faceid].vertexIDs[1]].T + vertexVars[mesh->faces[faceid].vertexIDs[2]].T) / 3.0;
 		}
 		
-		if(faceid < (int)mesh->nSurfaceFace && surfaceTemp < 100.0){			///	•\–Ê‚©‚Â100–¢–‚Ì‚Æ‚«
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ
-			if(faceVars[faceid].area ==0 || faceVars[faceid].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì
+		if(faceid < (int)mesh->nSurfaceFace && surfaceTemp < 100.0){			///	è¡¨é¢ã‹ã¤100â„ƒæœªæº€ã®ã¨ã
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—
+			if(faceVars[faceid].area ==0 || faceVars[faceid].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚
 				faceVars[faceid].area = CalcTriangleArea(mesh->faces[faceid].vertexIDs[0], mesh->faces[faceid].vertexIDs[1], mesh->faces[faceid].vertexIDs[2]);
 				faceVars[faceid].deformed = false;
 			}
-			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚ğœ‚¢‚½ƒxƒNƒgƒ‹‚ÌÏ‚ğ‚Æ‚é
-			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã‚’é™¤ã„ãŸãƒ™ã‚¯ãƒˆãƒ«ã®ç©ã‚’ã¨ã‚‹
+			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 			unsigned vtx = mesh->tets[tetid].vertexIDs[0] + mesh->tets[tetid].vertexIDs[1] + mesh->tets[tetid].vertexIDs[2] + mesh->tets[tetid].vertexIDs[3];
-			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 			unsigned ID = vtx -( mesh->faces[mesh->tets[tetid].faceIDs[localfaceid]].vertexIDs[0] + mesh->faces[mesh->tets[tetid].faceIDs[localfaceid]].vertexIDs[1] + mesh->faces[mesh->tets[tetid].faceIDs[localfaceid]].vertexIDs[2] );
 			for(unsigned localvtxid=0; localvtxid < 4; localvtxid++){
-				if(mesh->tets[tetid].vertexIDs[localvtxid] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-					///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
+				if(mesh->tets[tetid].vertexIDs[localvtxid] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+					///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
 					if(faceVars[faceid].dryingStep == constRateDrying){
 						tetVars[tetid].vecFw[0] -= 0.001 * wDiffAir * (faceVars[faceid].maxVaporCont - faceVars[faceid].vaporCont) / boundaryThick * (1.0/3.0) * faceVars[faceid].area * vecFarray[localvtxid];
 						/*
@@ -1321,21 +1333,21 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //	PHFemMeshNew* mesh = GetPHFemMesh();
 //
 //	if((tetVars[tetid].tetPorosity != tetVars[tetid].preTetPorosity) || (tetVars[tetid].rhoS != tetVars[tetid].preRhoS)){
-//		//‰Šú‰»
+//		//åˆæœŸåŒ–
 //		tetVars[tetid].vecFw[0].clear();
 //		tetVars[tetid].vecFo[0].clear();
 //
-//		//l=0‚Ìf31,1:f32, 2:f33, 3:f34‚ğ¶¬
+//		//l=0ã®æ™‚f31,1:f32, 2:f33, 3:f34ã‚’ç”Ÿæˆ
 //		for(unsigned l= 0 ; l < 4; l++){
 //
-//			//ŒW”‚ÌÏ‚ğ‚Æ‚é
-//			//‚±‚Ìß“_‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì–ÊÏ‚ÌÏ‚ğ‚Æ‚é
-//			//l–Ê‘Ì‚Ìß“_1,2,3(0ˆÈŠO)‚Åì‚éOŠpŒ`‚Ì–ÊÏ
-//			//l==0”Ô–Ú‚ÌA 123	‚ğ‘ã“ü‚·‚é
+//			//ä¿‚æ•°ã®ç©ã‚’ã¨ã‚‹
+//			//ã“ã®ç¯€ç‚¹ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®é¢ç©ã®ç©ã‚’ã¨ã‚‹
+//			//å››é¢ä½“ã®ç¯€ç‚¹1,2,3(0ä»¥å¤–)ã§ä½œã‚‹ä¸‰è§’å½¢ã®é¢ç©
+//			//l==0ç•ªç›®ã®æ™‚ã€ 123	ã‚’ä»£å…¥ã™ã‚‹
 //			//l==1			0 23
 //			//l==2			01 3
 //			//l==3			012
-//			//‚ğCalcTriangleArea‚É“ü‚ê‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚ÉƒAƒ‹ƒSƒŠƒYƒ€‚ğl‚¦‚éB
+//			//ã‚’CalcTriangleAreaã«å…¥ã‚Œã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è€ƒãˆã‚‹ã€‚
 //
 //			//fw11,fo1
 //			if(l==0){
@@ -1366,7 +1378,7 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //
 //	//CreateVecf1(id);
 //
-//	//[K1W2]‚ğì‚é •\–Ê‚É‘®‚·‚é–Ê‚ª‚ ‚èA‚»‚Ì–Ê‚Ì’¸“_‚Ì‚¤‚¿‰·“x‚ª•Ï‚í‚Á‚½‚à‚Ì‚ª‚ ‚ê‚Î
+//	//[K1W2]ã‚’ä½œã‚‹ è¡¨é¢ã«å±ã™ã‚‹é¢ãŒã‚ã‚Šã€ãã®é¢ã®é ‚ç‚¹ã®ã†ã¡æ¸©åº¦ãŒå¤‰ã‚ã£ãŸã‚‚ã®ãŒã‚ã‚Œã°
 //	for(unsigned i=0; i < 4; i++){
 //		unsigned faceid = mesh->tets[id].faceIDs[i];
 //		if(faceid < mesh->nSurfaceFace){
@@ -1394,8 +1406,8 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //void PHFemPorousWOMove::CreateVecFAll(){
 //	PHFemMeshNew* mesh = GetPHFemMesh();
 //
-//	//—v‘f‚Ìß“_”Ô†‚ÌêŠ‚ÉA‚»‚Ìß“_‚Ìf‚Ì’l‚ğ“ü‚ê‚é
-//	//j:—v‘f‚Ì’†‚Ì‰½”Ô–Ú‚©
+//	//è¦ç´ ã®ç¯€ç‚¹ç•ªå·ã®å ´æ‰€ã«ã€ãã®ç¯€ç‚¹ã®fã®å€¤ã‚’å…¥ã‚Œã‚‹
+//	//j:è¦ç´ ã®ä¸­ã®ä½•ç•ªç›®ã‹
 //	if(vecfChanged){
 //		vecFWAllSum.clear();
 //		vecFOAllSum.clear();
@@ -1424,7 +1436,7 @@ void PHFemPorousWOMove::CreateMatVecAll(){
 		CreateVecF1Local(tetid);
 	}
 
-	//‘S‘Ì„«s—ñ‚ğì‚é
+	//å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
 	if(matWOPcVecF2Changed){
 #ifndef usingG
 		matWwAll.clear();
@@ -1531,25 +1543,25 @@ double PHFemPorousWOMove::CalcTriangleArea(int id0, int id1, int id2){
 
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	double area=0.0;								///	—v‰ü‘P	faces[id].area‚É’l‚ğ“ü‚ê‚é 
+	double area=0.0;								///	è¦æ”¹å–„	faces[id].areaã«å€¤ã‚’å…¥ã‚Œã‚‹ 
 
-	//s—ñ®‚Ì¬•ª‚ğ—p‚¢‚Ä–ÊÏ‚ğ‹‚ß‚é
+	//è¡Œåˆ—å¼ã®æˆåˆ†ã‚’ç”¨ã„ã¦é¢ç©ã‚’æ±‚ã‚ã‚‹
 	//triarea =
 	//|  1     1     1   |
 	//|x2-x1 y2-y1 z2-z1 |
 	//|x3-x1 y3-y1 z3-z1 |
 	//|
-	PTM::TMatrixRow<3,3,double> triarea;		//OŠpŒ`‚Ì–ÊÏ@= tri + area
+	PTM::TMatrixRow<3,3,double> triarea;		//ä¸‰è§’å½¢ã®é¢ç©ã€€= tri + area
 	for(unsigned i =0 ; i < 3 ; i++){
 		triarea[0][i] = 1.0;
 	}
 	for(unsigned i =0 ; i < 3 ; i++){
-		//					x2(ß“_2‚Ìx(pos‘æi¬•ª)–Ú)	-	x1(V)
-		// i==0‚Ì	vertices[id1].pos[i]	=>	 pos[0] == pos.x
+		//					x2(ç¯€ç‚¹2ã®x(posç¬¬iæˆåˆ†)ç›®)	-	x1(ã€ƒ)
+		// i==0ã®æ™‚	vertices[id1].pos[i]	=>	 pos[0] == pos.x
 		triarea[1][i] = mesh->vertices[id1].pos[i] - mesh->vertices[id0].pos[i];
 	}
 	for(unsigned i =0 ; i < 3 ; i++){
-		//					x3(ß“_3‚Ìx(pos‘æi¬•ª)–Ú)	-	x1(V)
+		//					x3(ç¯€ç‚¹3ã®x(posç¬¬iæˆåˆ†)ç›®)	-	x1(ã€ƒ)
 		triarea[2][i] = mesh->vertices[id2].pos[i] - mesh->vertices[id0].pos[i];
 	}
 	double m1,m2,m3 = 0.0;
@@ -1560,10 +1572,10 @@ double PHFemPorousWOMove::CalcTriangleArea(int id0, int id1, int id2){
 	area = sqrt(m1 * m1 + m2 * m2 + m3 * m3) / 2.0;
 
 	//	for debug
-	//DSTR << "OŠpŒ`‚Ì–ÊÏ‚Í : " << area << std::endl; 
+	//DSTR << "ä¸‰è§’å½¢ã®é¢ç©ã¯ : " << area << std::endl; 
 
-	//0”Ô–Ú‚Ìß“_‚Í40,1”Ô–Ú‚Ìß“_‚Í134,2”Ô–Ú‚Ìß“_‚Í79 ‚ÌÀ•W‚ÅŒvZ‚µ‚Ä‚İ‚½
-	//OŠpŒ`‚ğ‹‚ß‚és—ñ : 2.75949e-005 * 1 = 2.75949 ~ 10-5(byGoogleŒvZ‹@) [m^2] = 2.75949 ~ 10-1 [cm^2]‚È‚Ì‚ÅAƒlƒM‚ÌƒƒbƒVƒ…‚ÌƒXƒP[ƒ‹‚È‚ç‘å‘Ì‚ ‚Á‚Ä‚¢‚é‚Í‚¸
+	//0ç•ªç›®ã®ç¯€ç‚¹ã¯40,1ç•ªç›®ã®ç¯€ç‚¹ã¯134,2ç•ªç›®ã®ç¯€ç‚¹ã¯79 ã®åº§æ¨™ã§è¨ˆç®—ã—ã¦ã¿ãŸ
+	//ä¸‰è§’å½¢ã‚’æ±‚ã‚ã‚‹è¡Œåˆ— : 2.75949e-005 * 1 = 2.75949 Ã— 10-5(byGoogleè¨ˆç®—æ©Ÿ) [m^2] = 2.75949 Ã— 10-1 [cm^2]ãªã®ã§ã€ãƒã‚®ã®ãƒ¡ãƒƒã‚·ãƒ¥ã®ã‚¹ã‚±ãƒ¼ãƒ«ãªã‚‰å¤§ä½“ã‚ã£ã¦ã„ã‚‹ã¯ãš
 
 	return area;
 }
@@ -1598,7 +1610,7 @@ PTM::TMatrixRow<4,4,double> PHFemPorousWOMove::Create44Mat21(){
 	//|2 1 1 1 |
 	//|1 2 1 1 |
 	//|1 1 2 1 |
-	//|1 1 1 2 |	‚ğì‚é
+	//|1 1 1 2 |	ã‚’ä½œã‚‹
 	PTM::TMatrixRow<4,4,double> MatTemp;
 	for(int i =0; i <4 ; i++){
 		for(int j=0; j < 4 ; j++){
@@ -1623,11 +1635,11 @@ PTM::TMatrixCol<4,1,double> PHFemPorousWOMove::Create41Vec1(){
 void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
 #ifdef USE_LAPACK
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	//lapack—˜—p
+	//lapackåˆ©ç”¨
 	int n = (int)mesh->vertices.size();
 
 	if(keisuChanged){
-		//	ŒW”s—ñ‚Ìì¬
+		//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 		keisuW.resize(mesh->vertices.size(),mesh->vertices.size());
 		keisuO.resize(mesh->vertices.size(),mesh->vertices.size());
 		keisuW.clear();
@@ -1637,14 +1649,14 @@ void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
 		uhenW.clear();
 		uhenO.clear();
 
-		//ƒÃ=0‚Ì‚Æ‚«
+		//Îµ=0ã®ã¨ã
 		if(eps == 0.0){
 			keisuW = 1 / dt * matCAll;
 			keisuO = 1 / dt * matCAll;
 			uhenW = (-matWwAll+1/dt*matCAll)*rhoWVecAll - matOwAll*rhoOVecAll + vecFwAll + matPcwAll*PcVecAll;
 			uhenO = -matWoAll*rhoWVecAll + (-matOoAll+1/dt*matCAll)*rhoOVecAll + vecFoAll + matPcoAll*PcVecAll;
 		}
-		////ƒÃ=1/2‚Ì‚Æ‚«
+		////Îµ=1/2ã®ã¨ã
 		//else if(eps == 0.5){
 		//	keisuW = 2 * matK2WAll.inv() * (0.5 * matK1WAll + 1/dt * matCWAll) - 0.5 * (0.5*matK2OAll + 1/dt*matCOAll).inv() *matK1OAll;
 		//	keisuO = 2 * matK1OAll.inv() * (0.5 * matK2OAll + 1/dt * matCOAll) - 0.5 * (0.5*matK1WAll + 1/dt*matCWAll).inv() *matK2WAll;
@@ -1655,7 +1667,7 @@ void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
 		//			+ (2*matK1OAll.inv()*(-0.5*matK2OAll+1/dt*matCOAll)+0.5*(0.5*matK1WAll+1/dt*matCWAll).inv()*matK2WAll)*WoVecAll
 		//													- (0.5*matK1WAll+1/dt*matCWAll).inv()*vecFWAllSum + 2*matK1OAll.inv()*vecFOAllSum;
 		//}
-		////ƒÃ=1‚Ì‚Æ‚«
+		////Îµ=1ã®ã¨ã
 		else{
 			keisuW = matWwAll + 1 / dt * matCAll;
 			keisuO = matOoAll + 1 / dt * matCAll;
@@ -1719,7 +1731,7 @@ void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
 	int n = (int)mesh->vertices.size();
 
 	if(keisuChanged){
-		//	ŒW”s—ñ‚Ìì¬
+		//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 		keisuW.resize(mesh->vertices.size(),mesh->vertices.size());
 		keisuO.resize(mesh->vertices.size(),mesh->vertices.size());
 		keisuW.clear();
@@ -1729,14 +1741,14 @@ void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
 		uhenW.clear();
 		uhenO.clear();
 
-		//ƒÃ=0‚Ì‚Æ‚«
+		//Îµ=0ã®ã¨ã
 		if(eps == 0.0){
 			keisuW = 1 / dt * matCAll;
 			keisuO = 1 / dt * matCAll;
 			uhenW = (-matWwAll+1/dt*matCAll)*rhoWVecAll - matOwAll*rhoOVecAll + vecFwAll + matPcwAll*PcVecAll;
 			uhenO = -matWoAll*rhoWVecAll + (-matOoAll+1/dt*matCAll)*rhoOVecAll + vecFoAll + matPcoAll*PcVecAll;
 		}
-		////ƒÃ=1/2‚Ì‚Æ‚«
+		////Îµ=1/2ã®ã¨ã
 		//else if(eps == 0.5){
 		//	keisuW = 2 * matK2WAll.inv() * (0.5 * matK1WAll + 1/dt * matCWAll) - 0.5 * (0.5*matK2OAll + 1/dt*matCOAll).inv() *matK1OAll;
 		//	keisuO = 2 * matK1OAll.inv() * (0.5 * matK2OAll + 1/dt * matCOAll) - 0.5 * (0.5*matK1WAll + 1/dt*matCWAll).inv() *matK2WAll;
@@ -1747,7 +1759,7 @@ void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
 		//			+ (2*matK1OAll.inv()*(-0.5*matK2OAll+1/dt*matCOAll)+0.5*(0.5*matK1WAll+1/dt*matCWAll).inv()*matK2WAll)*WoVecAll
 		//													- (0.5*matK1WAll+1/dt*matCWAll).inv()*vecFWAllSum + 2*matK1OAll.inv()*vecFOAllSum;
 		//}
-		////ƒÃ=1‚Ì‚Æ‚«
+		////Îµ=1ã®ã¨ã
 		else{
 			keisuW = matWwAll + 1 / dt * matCAll;
 			keisuO = matOoAll + 1 / dt * matCAll;
@@ -1774,18 +1786,18 @@ void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
 void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt, double eps){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	
-	double _eps = 1-eps;			// 1-eps‚ÌŒvZ‚É—˜—p
-	bool DoCalc =true;											//‰‰ñ‚¾‚¯’è”ƒxƒNƒgƒ‹b‚ÌŒvZ‚ğs‚¤bool		//NofCyc‚ª0‚Ì‚É‚·‚ê‚Î‚¢‚¢‚Ì‚©‚à
-	for(unsigned i=0; i < NofCyc; i++){							//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZƒ‹[ƒv
+	double _eps = 1-eps;			// 1-epsã®è¨ˆç®—ã«åˆ©ç”¨
+	bool DoCalc =true;											//åˆå›ã ã‘å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã®è¨ˆç®—ã‚’è¡Œã†bool		//NofCycãŒ0ã®æ™‚ã«ã™ã‚Œã°ã„ã„ã®ã‹ã‚‚
+	for(unsigned i=0; i < NofCyc; i++){							//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ãƒ«ãƒ¼ãƒ—
 		if(DoCalc){												
-			if(keisuChanged){												//D_ii‚Ìì¬@Œ`ó‚ªXV‚³‚ê‚½Û‚É1“x‚¾‚¯s‚¦‚Î‚æ‚¢
+			if(keisuChanged){												//D_iiã®ä½œæˆã€€å½¢çŠ¶ãŒæ›´æ–°ã•ã‚ŒãŸéš›ã«1åº¦ã ã‘è¡Œãˆã°ã‚ˆã„
 				for(unsigned j =0; j < mesh->vertices.size() ; j++){	
 					//for(unsigned k =0;k < vertices.size(); k++){
 					//	DSTR << "dMatCAll "<< k << " : " << dMatCAll[0][k] << std::endl;
 					//}
 					_dMatWAll.resize(1, mesh->vertices.size());
 					_dMatOAll.resize(1, mesh->vertices.size());
-					_dMatWAll[0][j] = 1.0/ (eps * dMatWwAll[0][j] + 1.0/dt * dMatCAll[0][j]);		//1 / D__ii	‚ğ‹‚ß‚é
+					_dMatWAll[0][j] = 1.0/ (eps * dMatWwAll[0][j] + 1.0/dt * dMatCAll[0][j]);		//1 / D__ii	ã‚’æ±‚ã‚ã‚‹
 					_dMatOAll[0][j] = 1.0/ (eps * dMatOoAll[0][j] + 1.0/dt * dMatCAll[0][j]);
 					int debughogeshi =0;
 				}
@@ -1793,19 +1805,19 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 			}
 			//	 1      1        1  
 			//	--- ( - - [K] + ---[C] ){T(t)} + {F} 
-			//	D_jj    2       ‡™t
+			//	D_jj    2       âŠ¿t
 			//
 
-			for(unsigned j =0; j < mesh->vertices.size() ; j++){		//‰‰ñƒ‹[ƒv‚¾‚¯	ŒW”ƒxƒNƒgƒ‹bVecAll‚Ì¬•ª‚ğŒvZ
-				bwVecAll[j][0] = 0.0;							//bVecAll[j][0]‚Ì‰Šú‰»
+			for(unsigned j =0; j < mesh->vertices.size() ; j++){		//åˆå›ãƒ«ãƒ¼ãƒ—ã ã‘	ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«bVecAllã®æˆåˆ†ã‚’è¨ˆç®—
+				bwVecAll[j][0] = 0.0;							//bVecAll[j][0]ã®åˆæœŸåŒ–
 				boVecAll[j][0] = 0.0;
-				//ß“_‚ª‘®‚·edges–ˆ‚É@‘ÎŠp¬•ª(j,j)‚Æ”ñ‘ÎŠp¬•ª(j,?)–ˆ‚ÉŒvZ
-				//‘ÎŠp¬•ª‚ÍAvertices[j].k or .c ‚É“ü‚Á‚Ä‚¢‚é’l‚ğA”ñ‘ÎŠp¬•ª‚Íedges[hoge].vertices[0] or vertices[1] .k or .c‚É“ü‚Á‚Ä‚¢‚é’l‚ğ—p‚¢‚é
-				//ú@)”ñ‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+				//ç¯€ç‚¹ãŒå±ã™edgesæ¯ã«ã€€å¯¾è§’æˆåˆ†(j,j)ã¨éå¯¾è§’æˆåˆ†(j,?)æ¯ã«è¨ˆç®—
+				//å¯¾è§’æˆåˆ†ã¯ã€vertices[j].k or .c ã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ã€éå¯¾è§’æˆåˆ†ã¯edges[hoge].vertices[0] or vertices[1] .k or .cã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ç”¨ã„ã‚‹
+				//â…°)éå¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 				for(unsigned k =0;k < mesh->vertices[j].edgeIDs.size() ; k++){
 					unsigned edgeId = mesh->vertices[j].edgeIDs[k];
-					//ƒŠƒtƒ@ƒNƒ^ƒŠƒ“ƒO	ˆÈ‰º‚ÌğŒ•ªŠò‚É‚Â‚¢‚Äj>edges[edgeId].vertices[0] ‚Æ‚»‚¤‚Å‚È‚¢‚Æ‚Å•ª‚¯‚½‚Ù‚¤‚ª˜R‚ê‚ªo‚éS”z‚Í‚È‚¢H
-					if( j != mesh->edges[edgeId].vertexIDs[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+					//ãƒªãƒ•ã‚¡ã‚¯ã‚¿ãƒªãƒ³ã‚°	ä»¥ä¸‹ã®æ¡ä»¶åˆ†å²ã«ã¤ã„ã¦j>edges[edgeId].vertices[0] ã¨ãã†ã§ãªã„æ™‚ã¨ã§åˆ†ã‘ãŸã»ã†ãŒæ¼ã‚ŒãŒå‡ºã‚‹å¿ƒé…ã¯ãªã„ï¼Ÿ
+					if( j != mesh->edges[edgeId].vertexIDs[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 						unsigned vtxid0 = mesh->edges[edgeId].vertexIDs[0];
 #ifndef aboutG
 						bwVecAll[j][0] += (-_eps * edgeVars[edgeId].ww + 1.0/dt * edgeVars[edgeId].c ) * rhoWVecAll[vtxid0][0] -_eps * edgeVars[edgeId].ow * rhoOVecAll[vtxid0][0];
@@ -1816,7 +1828,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 						boVecAll[j][0] += -1 * edgeVars[edgeId].wo * rhoWVecAll[vtxid0][0] + (-_eps * edgeVars[edgeId].oo + 1.0/dt * edgeVars[edgeId].c) * rhoOVecAll[vtxid0][0];
 #endif
 					}
-					else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+					else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 						unsigned vtxid1 = mesh->edges[edgeId].vertexIDs[1];
 #ifndef aboutG 
 						bwVecAll[j][0] += (-_eps * edgeVars[edgeId].ww + 1.0/dt * edgeVars[edgeId].c ) * rhoWVecAll[vtxid1][0] -_eps * edgeVars[edgeId].ow * rhoOVecAll[vtxid1][0];
@@ -1828,7 +1840,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 #endif
 					}
 					else{
-						//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+						//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 						DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 					}
 					//	for Debug
@@ -1836,7 +1848,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 					//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
 					//int hogeshi =0;
 				}
-				//úA)‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+				//â…±)å¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 #ifndef aboutG
 				bwVecAll[j][0] += (-_eps * dMatWwAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * rhoWVecAll[j][0] -_eps * dMatOwAll[0][j] * rhoOVecAll[j][0];
 				boVecAll[j][0] += -_eps * dMatWoAll[0][j] * rhoWVecAll[j][0] + (-_eps * dMatOoAll[0][j] + 1.0/dt * dMatCAll[0][j]) * rhoOVecAll[j][0];
@@ -1848,19 +1860,19 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 				//FEMLOG << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;		// DSTR
 				//FEMLOG << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;			// DSTR
 				//FEMLOG << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;			// DSTR
-				//  {F}‚ğ‰ÁZ
-				bwVecAll[j][0] += vecFwFinal[j][0];		//F‚ğ‰ÁZ
+				//  {F}ã‚’åŠ ç®—
+				bwVecAll[j][0] += vecFwFinal[j][0];		//Fã‚’åŠ ç®—
 				boVecAll[j][0] += vecFoFinal[j][0];
 				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
-				//D_ii‚ÅŠ„‚é Ë‚±‚ÌêŠ‚ÍA‚±‚±‚Å—Ç‚¢‚ÌH‚Ç‚±‚Ü‚ÅŠ|‚¯Z‚·‚é‚ÌH
+				//D_iiã§å‰²ã‚‹ â‡’ã“ã®å ´æ‰€ã¯ã€ã“ã“ã§è‰¯ã„ã®ï¼Ÿã©ã“ã¾ã§æ›ã‘ç®—ã™ã‚‹ã®ï¼Ÿ
 				bwVecAll[j][0] = bwVecAll[j][0] * _dMatWAll[0][j];
 				boVecAll[j][0] = boVecAll[j][0] * _dMatOAll[0][j];
 				//FEMLOG(ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl);
 				//FEMLOG(ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl);
 			}
-			DoCalc = false;			//‰‰ñ‚Ìƒ‹[ƒv‚¾‚¯‚Å—˜—p
-			//’l‚ª“ü‚Á‚Ä‚¢‚é‚©A³í‚»‚¤‚©‚ğƒ`ƒFƒbƒN
+			DoCalc = false;			//åˆå›ã®ãƒ«ãƒ¼ãƒ—ã ã‘ã§åˆ©ç”¨
+			//å€¤ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã€æ­£å¸¸ãã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 			//DSTR << "bVecAll[j][0] : " << std::endl;
 			//for(unsigned j =0;j <mesh->vertices.size() ; j++){
 			//	DSTR << j << " : "<< bVecAll[j][0] << std::endl;
@@ -1871,17 +1883,17 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 		//	 1      
 		//	--- [F]{T(t+dt)}
 		//	D_jj 		
-		//[F] = eps(ilon) [K] +1/dt [C] ‚©‚ç‘ÎŠp¬•ª‚ğœ‚µ(-1)‚ğ‚©‚¯‚½‚à‚Ì
-		//ƒGƒbƒW‚É“ü‚Á‚Ä‚¢‚é¬•ª‚É-1‚ğ‚©‚¯‚é‚Ì‚Å‚Í‚È‚­AÅŒã‚É-1‚ğ‚©‚¯‚éB
+		//[F] = eps(ilon) [K] +1/dt [C] ã‹ã‚‰å¯¾è§’æˆåˆ†ã‚’é™¤ã—(-1)ã‚’ã‹ã‘ãŸã‚‚ã®
+		//ã‚¨ãƒƒã‚¸ã«å…¥ã£ã¦ã„ã‚‹æˆåˆ†ã«-1ã‚’ã‹ã‘ã‚‹ã®ã§ã¯ãªãã€æœ€å¾Œã«-1ã‚’ã‹ã‘ã‚‹ã€‚
 		//
 		for(unsigned j =0; j < mesh->vertices.size() ; j++){
-			//T(t+dt) = ‚Ì®
-			//	‚Ü‚¸tempkj‚ğì‚é
-			double tempkjw = 0.0;			//ƒKƒEƒXƒUƒCƒfƒ‹‚Ì“r’†ŒvZ‚Åo‚Ä‚­‚éF‚Ì¬•ªŒvZ‚Ég—p‚·‚éˆê•Ï”
+			//T(t+dt) = ã®å¼
+			//	ã¾ãštempkjã‚’ä½œã‚‹
+			double tempkjw = 0.0;			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®é€”ä¸­è¨ˆç®—ã§å‡ºã¦ãã‚‹Fã®æˆåˆ†è¨ˆç®—ã«ä½¿ç”¨ã™ã‚‹ä¸€æ™‚å¤‰æ•°
 			double tempkjo = 0.0;
 			for(unsigned k =0;k < mesh->vertices[j].edgeIDs.size() ; k++){
 				unsigned edgeId = mesh->vertices[j].edgeIDs[k]; 
-				if( j != mesh->edges[edgeId].vertexIDs[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª		//OK
+				if( j != mesh->edges[edgeId].vertexIDs[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†		//OK
 					unsigned vtxid0 = mesh->edges[edgeId].vertexIDs[0];
 					//DSTR << "TVecAll["<< vtxid0<<"] : " << TVecAll[vtxid0] <<std::endl;
 					//TVecAll[j] +=_dMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0] + bVecAll[j][0]; 
@@ -1889,14 +1901,14 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 					tempkjw += (eps * edgeVars[edgeId].ww + 1.0/dt * edgeVars[edgeId].c) * rhoWVecAll[vtxid0][0];
 					tempkjo += (eps * edgeVars[edgeId].oo + 1.0/dt * edgeVars[edgeId].c) * rhoOVecAll[vtxid0][0]; 
 				}
-				else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+				else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 					unsigned vtxid1 = mesh->edges[edgeId].vertexIDs[1];
 					//DSTR << "TVecAll["<< vtxid1<<"] : " << TVecAll[vtxid1] <<std::endl;
 					tempkjw += (eps * edgeVars[edgeId].ww + 1.0/dt * edgeVars[edgeId].c) * rhoWVecAll[vtxid1][0];
 					tempkjo += (eps * edgeVars[edgeId].oo + 1.0/dt * edgeVars[edgeId].c) * rhoOVecAll[vtxid1][0];
 				}
 				else{
-					//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+					//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 					DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 				}
 				//	for Debug
@@ -1905,8 +1917,8 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 				//DSTR << "edges[" << edgeId << "].vertices[1] : " << mesh->edges[edgeId].vertexIDs[1] << std::endl;
 				//int hogeshi =0;
 			}
-			//	TVecAll‚ÌŒvZ
-			rhoWVecAll[j][0] = _dMatWAll[0][j] * (-1.0 * tempkjw) + bwVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]‚È‚Ì‚ÅAbVecAll‚Í‚½‚¾‚Ì‰ÁZ‚Å‚æ‚¢
+			//	TVecAllã®è¨ˆç®—
+			rhoWVecAll[j][0] = _dMatWAll[0][j] * (-1.0 * tempkjw) + bwVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]ãªã®ã§ã€bVecAllã¯ãŸã ã®åŠ ç®—ã§ã‚ˆã„
 			rhoOVecAll[j][0] = _dMatOAll[0][j] * (-1.0 * tempkjo) + boVecAll[j][0];
 		}
 	}
@@ -1933,7 +1945,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 //
 //	if(keisuChanged){
 //
-//		//ƒÃ=0‚Ì‚Æ‚«
+//		//Îµ=0ã®ã¨ã
 //		if(eps == 0.0){
 //			leftKeisuW = 1 / dt * matCWAll;
 //			rightKeisuWWw = -matK1WAll+1/dt*matCWAll;
@@ -1950,7 +1962,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 //				}
 //			}
 //		}
-//		//ƒÃ=1/2‚Ì‚Æ‚«
+//		//Îµ=1/2ã®ã¨ã
 //		else if(eps == 0.5){
 //			PTM::VMatrixRow<double> tmat;
 //
@@ -2185,7 +2197,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 //#endif
 //
 //		}
-//		//ƒÃ=1‚Ì‚Æ‚«
+//		//Îµ=1ã®ã¨ã
 //		else{
 //			leftKeisuW = matK2WAll.inv()*(matK1WAll+1/dt*matCWAll)-(matK2OAll+1/dt*matCOAll).inv()*matK1OAll;
 //			rightKeisuWWw = 1/dt*matK2WAll.inv()*matCWAll;
@@ -2457,8 +2469,8 @@ PTM::VMatrixRow<double> PHFemPorousWOMove::inv(PTM::VMatrixRow<double> mat){
 	result.resize(mat.height(),mat.width());
 	result.clear();
 
-	int m = (int)mat.height();//s”
-	int n = (int)mat.width();//—ñ”
+	int m = (int)mat.height();//è¡Œæ•°
+	int n = (int)mat.width();//åˆ—æ•°
 	int lda = n;
 	double *A = new double[m*n];
 	int info;
@@ -2513,71 +2525,71 @@ PTM::VMatrixRow<double> PHFemPorousWOMove::inv2(PTM::VMatrixRow<double> mat){
 double PHFemPorousWOMove::GetVtxWaterInTets(Vec3d temppos){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	PTM::TMatrixCol<4,4,double> Vertex;		//	l–Ê‘Ì‚ğ¬‚·4“_‚ÌˆÊ’uÀ•W
-	PTM::TVector<4,double> coeffk;			//	Œ`óŠÖ”“I‚ÈH
-	PTM::TVector<4,double> arbitPos;		//	”CˆÓ“_À•W
-	// [a][x] = [b]‚ğ‰ğ‚­
+	PTM::TMatrixCol<4,4,double> Vertex;		//	å››é¢ä½“ã‚’æˆã™4ç‚¹ã®ä½ç½®åº§æ¨™
+	PTM::TVector<4,double> coeffk;			//	å½¢çŠ¶é–¢æ•°çš„ãªï¼Ÿ
+	PTM::TVector<4,double> arbitPos;		//	ä»»æ„ç‚¹åº§æ¨™
+	// [a][x] = [b]ã‚’è§£ã
 	Vertex.clear();		//a
 	coeffk.clear();		//x
 	arbitPos.clear();	//b
-	// b: ax =b F’P‚É‹ts—ñ‚©‚ç‹‚ß‚é‚Æ‚«
+	// b: ax =b ï¼šå˜ã«é€†è¡Œåˆ—ã‹ã‚‰æ±‚ã‚ã‚‹ã¨ã
 	arbitPos[0] = temppos[0];
 	arbitPos[1] = temppos[1];
 	arbitPos[2] = temppos[2];
 	arbitPos[3] = 1.0;
 	for(unsigned id =0;  id < mesh->tets.size(); id++){
-		// l–Ê‘Ì‚²‚Æ‚É“_‚ªŠÜ‚Ü‚ê‚é‚©”»’è		
+		// å››é¢ä½“ã”ã¨ã«ç‚¹ãŒå«ã¾ã‚Œã‚‹ã‹åˆ¤å®š		
 		for(unsigned j=0; j < 4;j++){
 			Vertex[0][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.x;
 			Vertex[1][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.y;
 			Vertex[2][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.z;
 			Vertex[3][j] = 1.0;
 		}
-		// ‹ts—ñ‚Å‰ğ‚­
+		// é€†è¡Œåˆ—ã§è§£ã
 		coeffk = Vertex.inv() * arbitPos;
-		//	l–Ê‘Ì‚Ì
-		if( 0-1e-8 <= coeffk[0] && coeffk[0] <= 1+1e-8 && 0-1e-8 <= coeffk[1] && coeffk[1] <= 1+1e-8 && 0-1e-8 <= coeffk[2] && coeffk[2] <= 1+1e-8 && 0-1e-8 <= coeffk[3] && coeffk[3] <= 1+1e-8 ){	//	‹ßÚl–Ê‘Ì‚É“ü‚Á‚Ä‚µ‚Ü‚¤ê‡‚ª‚ ‚è‚»‚¤B‚»‚Ì‹æ•Ê‚ª‚Â‚©‚È‚¢‚Ì‚ÅA0‚â1‚Å‹æØ‚é•û‚ª—Ç‚¢‚Æv‚¤B
-			//	Œ`óŠÖ”‚©‚çAl–Ê‘Ì“à‚Ì‰·“x‚ğ‹‚ß‚é
+		//	å››é¢ä½“ã®
+		if( 0-1e-8 <= coeffk[0] && coeffk[0] <= 1+1e-8 && 0-1e-8 <= coeffk[1] && coeffk[1] <= 1+1e-8 && 0-1e-8 <= coeffk[2] && coeffk[2] <= 1+1e-8 && 0-1e-8 <= coeffk[3] && coeffk[3] <= 1+1e-8 ){	//	è¿‘æ¥å››é¢ä½“ã«å…¥ã£ã¦ã—ã¾ã†å ´åˆãŒã‚ã‚Šãã†ã€‚ãã®åŒºåˆ¥ãŒã¤ã‹ãªã„ã®ã§ã€0ã‚„1ã§åŒºåˆ‡ã‚‹æ–¹ãŒè‰¯ã„ã¨æ€ã†ã€‚
+			//	å½¢çŠ¶é–¢æ•°ã‹ã‚‰ã€å››é¢ä½“å†…ã®æ¸©åº¦ã‚’æ±‚ã‚ã‚‹
 			return CalcWaterInnerTets( id , coeffk);		
 		}
 		coeffk.clear();
 	}
-	return DBL_MAX;		//	Œ©‚Â‚©‚ç‚È‚©‚Á‚½ƒTƒCƒ“
+	return DBL_MAX;		//	è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚µã‚¤ãƒ³
 }
 
 double PHFemPorousWOMove::GetVtxOilInTets(Vec3d temppos){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	PTM::TMatrixCol<4,4,double> Vertex;		//	l–Ê‘Ì‚ğ¬‚·4“_‚ÌˆÊ’uÀ•W
-	PTM::TVector<4,double> coeffk;			//	Œ`óŠÖ”“I‚ÈH
-	PTM::TVector<4,double> arbitPos;		//	”CˆÓ“_À•W
-	// [a][x] = [b]‚ğ‰ğ‚­
+	PTM::TMatrixCol<4,4,double> Vertex;		//	å››é¢ä½“ã‚’æˆã™4ç‚¹ã®ä½ç½®åº§æ¨™
+	PTM::TVector<4,double> coeffk;			//	å½¢çŠ¶é–¢æ•°çš„ãªï¼Ÿ
+	PTM::TVector<4,double> arbitPos;		//	ä»»æ„ç‚¹åº§æ¨™
+	// [a][x] = [b]ã‚’è§£ã
 	Vertex.clear();		//a
 	coeffk.clear();		//x
 	arbitPos.clear();	//b
-	// b: ax =b F’P‚É‹ts—ñ‚©‚ç‹‚ß‚é‚Æ‚«
+	// b: ax =b ï¼šå˜ã«é€†è¡Œåˆ—ã‹ã‚‰æ±‚ã‚ã‚‹ã¨ã
 	arbitPos[0] = temppos[0];
 	arbitPos[1] = temppos[1];
 	arbitPos[2] = temppos[2];
 	arbitPos[3] = 1.0;
 	for(unsigned id =0;  id < mesh->tets.size(); id++){
-		// l–Ê‘Ì‚²‚Æ‚É“_‚ªŠÜ‚Ü‚ê‚é‚©”»’è		
+		// å››é¢ä½“ã”ã¨ã«ç‚¹ãŒå«ã¾ã‚Œã‚‹ã‹åˆ¤å®š		
 		for(unsigned j=0; j < 4;j++){
 			Vertex[0][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.x;
 			Vertex[1][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.y;
 			Vertex[2][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.z;
 			Vertex[3][j] = 1.0;
 		}
-		// ‹ts—ñ‚Å‰ğ‚­
+		// é€†è¡Œåˆ—ã§è§£ã
 		coeffk = Vertex.inv() * arbitPos;
-		//	l–Ê‘Ì‚Ì
-		if( 0-1e-8 <= coeffk[0] && coeffk[0] <= 1+1e-8 && 0-1e-8 <= coeffk[1] && coeffk[1] <= 1+1e-8 && 0-1e-8 <= coeffk[2] && coeffk[2] <= 1+1e-8 && 0-1e-8 <= coeffk[3] && coeffk[3] <= 1+1e-8 ){	//	‹ßÚl–Ê‘Ì‚É“ü‚Á‚Ä‚µ‚Ü‚¤ê‡‚ª‚ ‚è‚»‚¤B‚»‚Ì‹æ•Ê‚ª‚Â‚©‚È‚¢‚Ì‚ÅA0‚â1‚Å‹æØ‚é•û‚ª—Ç‚¢‚Æv‚¤B
-			//	Œ`óŠÖ”‚©‚çAl–Ê‘Ì“à‚Ì‰·“x‚ğ‹‚ß‚é
+		//	å››é¢ä½“ã®
+		if( 0-1e-8 <= coeffk[0] && coeffk[0] <= 1+1e-8 && 0-1e-8 <= coeffk[1] && coeffk[1] <= 1+1e-8 && 0-1e-8 <= coeffk[2] && coeffk[2] <= 1+1e-8 && 0-1e-8 <= coeffk[3] && coeffk[3] <= 1+1e-8 ){	//	è¿‘æ¥å››é¢ä½“ã«å…¥ã£ã¦ã—ã¾ã†å ´åˆãŒã‚ã‚Šãã†ã€‚ãã®åŒºåˆ¥ãŒã¤ã‹ãªã„ã®ã§ã€0ã‚„1ã§åŒºåˆ‡ã‚‹æ–¹ãŒè‰¯ã„ã¨æ€ã†ã€‚
+			//	å½¢çŠ¶é–¢æ•°ã‹ã‚‰ã€å››é¢ä½“å†…ã®æ¸©åº¦ã‚’æ±‚ã‚ã‚‹
 			return CalcOilInnerTets( id , coeffk);		
 		}
 		coeffk.clear();
 	}
-	return DBL_MAX;		//	Œ©‚Â‚©‚ç‚È‚©‚Á‚½ƒTƒCƒ“
+	return DBL_MAX;		//	è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚µã‚¤ãƒ³
 }
 
 double PHFemPorousWOMove::CalcWaterInnerTets(unsigned id,PTM::TVector<4,double> N){
@@ -2602,34 +2614,34 @@ double PHFemPorousWOMove::CalcOilInnerTets(unsigned id,PTM::TVector<4,double> N)
 
 float PHFemPorousWOMove::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 	float gvtx;
-	//ƒeƒNƒXƒ`ƒƒ‚Ìİ’è
-	//Å‚°ƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
+	//ç„¦ã’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned kogetex	= 5;
-	//…•ªƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned watex		= 2;
-	//ƒT[ƒ‚ƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//ã‚µãƒ¼ãƒ¢ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned thtex		= 6;
-	unsigned thcamtex   = 9;		//”MƒJƒƒ‰‚Á‚Û‚¢•\¦—p
-	//	ƒ[ƒhƒeƒNƒXƒ`ƒƒ[‚ªÅ‚°¨…¨‰·“x‚Ì‡	i‚Ü‚½‚Íj…¨‰·“x¨Å‚°	‚É‚à•ÏX‰Â”\iƒtƒ@ƒCƒ‹–¼‚ÌƒŠƒl[ƒ€‚ª•K—vj
+	unsigned thcamtex   = 9;		//ç†±ã‚«ãƒ¡ãƒ©ã£ã½ã„è¡¨ç¤ºç”¨
+	//	ãƒ­ãƒ¼ãƒ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ãŒç„¦ã’â†’æ°´â†’æ¸©åº¦ã®é †	ï¼ˆã¾ãŸã¯ï¼‰æ°´â†’æ¸©åº¦â†’ç„¦ã’	ã«ã‚‚å¤‰æ›´å¯èƒ½ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«åã®ãƒªãƒãƒ¼ãƒ ãŒå¿…è¦ï¼‰
 
-	//…•ªƒeƒNƒXƒ`ƒƒ‚Ì–‡”(…‚Ì‹óŠÔ–§“x‚ğ—p‚¢‚½ê‡)
+	//æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°(æ°´ã®ç©ºé–“å¯†åº¦ã‚’ç”¨ã„ãŸå ´åˆ)
 	unsigned watex2 = 5;
 
 	// num of texture layers
-	if(fwfood == "fwNegi"){		///	ƒeƒNƒXƒ`ƒƒ‚Æ‰·“xA…•ª—Ê‚Æ‚Ì‘Î‰•\‚ÍASamples/Physics/FEMThermo/ƒeƒNƒXƒ`ƒƒ‚ÌF‚Æ‰·“x‚Ì‘Î‰.xls	‚ğQÆ‚Ì‚±‚Æ
+	if(fwfood == "fwNegi"){		///	ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¨æ¸©åº¦ã€æ°´åˆ†é‡ã¨ã®å¯¾å¿œè¡¨ã¯ã€Samples/Physics/FEMThermo/ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è‰²ã¨æ¸©åº¦ã®å¯¾å¿œ.xls	ã‚’å‚ç…§ã®ã“ã¨
 		kogetex	= 5;
 	}
 	else if(fwfood == "fwNsteak"){
-		kogetex	= 5;		//7‚É‚·‚é
+		kogetex	= 5;		//7ã«ã™ã‚‹
 	}
 	else if(fwfood == "fwPan"){
 		kogetex = 5;
 	}
 
-	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex + watex2);		//	ƒeƒNƒXƒ`ƒƒ‰œsÀ•W‚Ì‘wŠÔŠu
-	double texstart = dtex /2.0;										//	ƒeƒNƒXƒ`ƒƒÀ•W‚Ì‰Šú’l = Å‚°ƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W
-	double wastart = texstart + kogetex * dtex;							//	…•ª—Ê•\¦ƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W
-	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	ƒT[ƒ‚‚ÌƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W …•ªƒeƒNƒXƒ`ƒƒ‚Ì2–‡–Ú‚©‚çƒXƒ^[ƒg
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex + watex2);		//	ãƒ†ã‚¯ã‚¹ãƒãƒ£å¥¥è¡Œåº§æ¨™ã®å±¤é–“éš”
+	double texstart = dtex /2.0;										//	ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã®åˆæœŸå€¤ = ç„¦ã’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™
+	double wastart = texstart + kogetex * dtex;							//	æ°´åˆ†é‡è¡¨ç¤ºãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	ã‚µãƒ¼ãƒ¢ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™ æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®2æšç›®ã‹ã‚‰ã‚¹ã‚¿ãƒ¼ãƒˆ
 	double thcamstart = texstart + (thtex + kogetex + watex) * dtex;	//	
 	double wastart2 = texstart + (thtex + kogetex + watex + thcamtex) * dtex;
 

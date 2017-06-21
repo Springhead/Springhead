@@ -12,6 +12,9 @@
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticRender.h>
+#ifdef	__linux__
+#  include "PHHapticStepBase.h"
+#endif
 
 using namespace PTM;
 namespace Spr{;

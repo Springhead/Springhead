@@ -29,7 +29,7 @@
 #include <Collision/CDRoundCone.h>
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDConvexMeshInterpolate.h>
-#include <Physics\PHOpHapticController.h>
+#include <Physics/PHOpHapticController.h>
 #include <stdlib.h>
 
 namespace Spr{;
