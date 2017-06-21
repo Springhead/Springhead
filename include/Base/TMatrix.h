@@ -781,7 +781,7 @@ public:
 	///@name	ストリーム入出力
 	//@{
 	///	出力
-	void print(std::ostream& os, char* sep="( )") const {
+	void print(std::ostream& os, char* sep=(char*) "( )") const {
 //		os << "sz:" << height() << "," << width() << std::endl;
 		int w = (int)os.width();
 		os.width(0);

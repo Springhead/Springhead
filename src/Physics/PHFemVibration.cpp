@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,15 +22,19 @@
 
 #if 1
 #undef SPR_OMP
-#define SPR_OMP(x) __pragma()
+#ifdef	_MSC_VER
+#  define SPR_OMP(x) __pragma()
+#else
+#  define SPR_OMP(x)
+#endif	//_MSC_VER
 #endif
 
 namespace Spr{;
 
 
 PHFemVibrationDesc::PHFemVibrationDesc(){
-	// ƒ|ƒAƒ\ƒ“”ä:0.35,ƒ„ƒ“ƒO—¦ 70GPa, –§“x2.70g/cm3
-	// Œ¸Š”ä‚Í“K“–‚Éİ’è
+	// ãƒã‚¢ã‚½ãƒ³æ¯”:0.35,ãƒ¤ãƒ³ã‚°ç‡ 70GPa, å¯†åº¦2.70g/cm3
+	// æ¸›è¡°æ¯”ã¯é©å½“ã«è¨­å®š
 	poisson = 0.25;
 	young = (2.5e9)/27;
 	density =610/3;
@@ -41,10 +45,10 @@ PHFemVibrationDesc::PHFemVibrationDesc(){
 
 
 
-UTQPTimerFileOut qtimer;	// ŒvZŠÔŒv‘ª—p
-#define EDGE_EPS 1e-7		// “àÏ‚ğ‚Æ‚Á‚½‚Æ‚«‚Ìè‡’li*–Ê‚ÌƒGƒbƒW‚Éportho‚ª‚«‚½‚Æ‚«‚ÉŒë·‚Å-‚É‚È‚é‚±‚Æ‚ª‚ ‚é‚½‚ßj
+UTQPTimerFileOut qtimer;	// è¨ˆç®—æ™‚é–“è¨ˆæ¸¬ç”¨
+#define EDGE_EPS 1e-7		// å†…ç©ã‚’ã¨ã£ãŸã¨ãã®é–¾å€¤ï¼ˆ*é¢ã®ã‚¨ãƒƒã‚¸ã«porthoãŒããŸã¨ãã«èª¤å·®ã§-ã«ãªã‚‹ã“ã¨ãŒã‚ã‚‹ãŸã‚ï¼‰
 
-//* ‰Šú‰»‚Æs—ñ‚Ìì¬
+//* åˆæœŸåŒ–ã¨è¡Œåˆ—ã®ä½œæˆ
 /////////////////////////////////////////////////////////////////////////////////////////
 PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	SetDesc(&desc);
@@ -54,7 +58,7 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	//SetAlpha(55.5071);//ƒ¿‚ÆƒÀ‚ğƒZƒbƒg
+	//SetAlpha(55.5071);//Î±ã¨Î²ã‚’ã‚»ãƒƒãƒˆ
 	//SetBeta(3.12387e-006);
 
 	//++//
@@ -66,13 +70,13 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 
 void PHFemVibration::Init(){
 	DSTR << "Initializing PHFemVibration" << std::endl;
-	/// ‚İŠÔ‚Ìİ’è
+	/// åˆ»ã¿æ™‚é–“ã®è¨­å®š
 	PHSceneIf* scene = GetPHFemMesh()->GetScene()->Cast();
 	if(scene) vdt = scene->GetTimeStep();
 	else vdt = 0.001;
 
-	/// ‘S‘Ì„«s—ñA‘S‘Ì¿—Ês—ñA‘S‘ÌŒ¸Šs—ñ‚ÌŒvZ
-	/// ‚±‚ê‚ç‚Í‚·‚×‚Äƒ[ƒJƒ‹Œn
+	/// å…¨ä½“å‰›æ€§è¡Œåˆ—ã€å…¨ä½“è³ªé‡è¡Œåˆ—ã€å…¨ä½“æ¸›è¡°è¡Œåˆ—ã®è¨ˆç®—
+	/// ã“ã‚Œã‚‰ã¯ã™ã¹ã¦ãƒ­ãƒ¼ã‚«ãƒ«ç³»
 	SPR_OMP(parallel sections)
 	{
 		SPR_OMP(section)
@@ -82,23 +86,23 @@ void PHFemVibration::Init(){
 	}	
 	CompRayleighDampingMatrix();
 
-	/// Šeí•Ï”‚Ì‰Šú‰»
+	/// å„ç¨®å¤‰æ•°ã®åˆæœŸåŒ–
 	int NDof = NVertices() * 3;
-	xdl.resize(NDof, 0.0);//FEMƒƒbƒVƒ…‚ÌÀ•WŒn‚Å‚Ì•ÏˆÊ
+	xdl.resize(NDof, 0.0);//FEMãƒ¡ãƒƒã‚·ãƒ¥ã®åº§æ¨™ç³»ã§ã®å¤‰ä½
 	vl.resize(NDof, 0.0);
 	al.resize(NDof, 0.0);
 	fl.resize(NDof, 0.0);
 	boundary.resize(NDof, 0.0);
 	boundary.clear();
-	GetVerticesDisplacement(xdl);		// FemVertex‚©‚ç•ÏˆÊ‚ğæ‚Á‚Ä‚­‚é
+	GetVerticesDisplacement(xdl);		// FemVertexã‹ã‚‰å¤‰ä½ã‚’å–ã£ã¦ãã‚‹
 	//CompInitialCondition(matMIni, matKIni, matCIni, fl, xdl, vl, al);
 
-	// ƒeƒXƒgi‹«ŠEğŒ‚Ì•t‰Áj
+	// ãƒ†ã‚¹ãƒˆï¼ˆå¢ƒç•Œæ¡ä»¶ã®ä»˜åŠ ï¼‰
 	std::vector< int > veIds, veIds1, veIds2;
 
 
 	
-	// phpipe—p
+	// phpipeç”¨
 	//veIds1 = FindVertices(521, Vec3d(1.0, 0.0, 0.0));
 	//veIds2 = FindVertices(1, Vec3d(-1.0, 0.0, 0.0));
 	//std::set_union(veIds1.begin(), veIds1.end(), veIds2.begin(), veIds2.end(), back_inserter(veIds));
@@ -106,19 +110,19 @@ void PHFemVibration::Init(){
 	//	DSTR << veIds[i] << std::endl;
 	//}
 
-	//phPipemini—p
+	//phPipeminiç”¨
 	//veIds.push_back(10);
 	//veIds.push_back(11);
 	//veIds.push_back(12);
 	//veIds.push_back(13);
 
-	//phPipeminibox—p
+	//phPipeminiboxç”¨
 	//veIds.push_back(1);
 	//veIds.push_back(2);
 	//veIds.push_back(4);
 	//veIds.push_back(5);
 
-	//// phboard—p
+	//// phboardç”¨
 	//
 	//fixedVertices.push_back(35);
 	//fixedVertices.push_back(34);
@@ -126,7 +130,7 @@ void PHFemVibration::Init(){
 	//fixedVertices.push_back(37);
 	//fixedVertices.push_back(36);
 	
-  //l“_Ú’n
+  //å››ç‚¹æ¥åœ°
 	//veIds.push_back(40);
 	//veIds.push_back(41);
 
@@ -134,18 +138,18 @@ void PHFemVibration::Init(){
 	//veIds.push_back(39);
 
 
-	//// phSphere—p
+	//// phSphereç”¨
 	//for(int i = 49; i < 58; i++){
 	//	veIds.push_back(i);
 	//}
 
-	////phBunny—p
+	////phBunnyç”¨
 	//veIds = FindVertices(123, Vec3d(0.0, -1.0, 0.0));
 	//for(int i = 0; i < (int)veIds.size(); i++){
 	//	DSTR << veIds[i] << std::endl;
 	//}
 
-	//// phRing—p
+	//// phRingç”¨
 	//veIds.push_back(24);
 	//veIds.push_back(25);
 	//veIds.push_back(44);
@@ -153,13 +157,13 @@ void PHFemVibration::Init(){
 	//	DSTR << veIds[i] << std::endl;
 	//}
 	
-	//// phStick—p
+	//// phStickç”¨
 	//veIds.push_back(54);
 	//veIds.push_back(55);
 	//veIds.push_back(46);
 	//veIds.push_back(47);
 	
-	//phStick •Ğ‚¿
+	//phStick ç‰‡æŒã¡
 	//veIds.push_back(0);
 	//veIds.push_back(7);
 	//veIds.push_back(5);
@@ -257,23 +261,23 @@ void PHFemVibration::CompStiffnessMatrix(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const int NTets = (int)mesh->tets.size();
 	const int NDof = NVertices() * 3;
-	matKIni.resize(NDof, NDof, 0.0);	// ‰Šú‰»
+	matKIni.resize(NDof, NDof, 0.0);	// åˆæœŸåŒ–
 
 	//SPR_OMP(parallel for)
 	for(int i = 0; i < NTets; i++){
-		// —v‘fs—ñ‚ÌŒvZ
-		/// tet‚ª‚Â’¸“_‡
-		/// —v‘f„«s—ñ u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)‚Æ‚µ‚ÄŒvZ
+		// è¦ç´ è¡Œåˆ—ã®è¨ˆç®—
+		/// tetãŒæŒã¤é ‚ç‚¹é †
+		/// è¦ç´ å‰›æ€§è¡Œåˆ— u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)ã¨ã—ã¦è¨ˆç®—
 
-		/// Œ`óŠÖ”‚ÌŒvZi’¸“_À•W‚É‰‚¶‚Ä•Ï‚í‚éj
+		/// å½¢çŠ¶é–¢æ•°ã®è¨ˆç®—ï¼ˆé ‚ç‚¹åº§æ¨™ã«å¿œã˜ã¦å¤‰ã‚ã‚‹ï¼‰
 		PTM::TMatrixRow< 4, 4, element_type > matCoeff;
 		matCoeff.assign(mesh->CompTetShapeFunctionCoeff(i, true));
-		TVector<4, element_type > b, c, d;	// Œ`óŠÖ”‚ÌŒW”
+		TVector<4, element_type > b, c, d;	// å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°
 		b.assign(matCoeff.col(1));
 		c.assign(matCoeff.col(2));
 		d.assign(matCoeff.col(3));
 
-		/// s—ñBi‚Ğ‚¸‚İ-•ÏˆÊj
+		/// è¡Œåˆ—Bï¼ˆã²ãšã¿-å¤‰ä½ï¼‰
 		PTM::TMatrixRow< 6, 12, element_type > matB;
 		matB.clear(0.0);
 		matB[0][0] = b[0];	matB[0][3] = b[1];	matB[0][6] = b[2];	matB[0][9] = b[3];
@@ -286,15 +290,15 @@ void PHFemVibration::CompStiffnessMatrix(){
 		element_type div = 1.0 / (6.0 * volume);
 		matB *= div;
 
-		/// ’e«ŒW”s—ñD‚ÌŒvZi‰—Í-‚Ğ‚¸‚İj
-		/// iƒ„ƒ“ƒO—¦Aƒ|ƒAƒ\ƒ“”ä‚É‰‚¶‚Ä‚©‚í‚éj
+		/// å¼¾æ€§ä¿‚æ•°è¡Œåˆ—Dã®è¨ˆç®—ï¼ˆå¿œåŠ›-ã²ãšã¿ï¼‰
+		/// ï¼ˆãƒ¤ãƒ³ã‚°ç‡ã€ãƒã‚¢ã‚½ãƒ³æ¯”ã«å¿œã˜ã¦ã‹ã‚ã‚‹ï¼‰
 		double E = GetYoungModulus();
 		double v = GetPoissonsRatio();
 		double av = 1.0 - v;
 		double bv = 1.0 - 2.0 * v;
 		double cv = 0.5 - v;
 		double Em;
-		if(bv == 0.0) Em = DBL_MAX; /// •ÏŒ`‚µ‚È‚¢B‚Ù‚ñ‚Æ‚¤‚Í+‡‚É‚È‚éB
+		if(bv == 0.0) Em = DBL_MAX; /// å¤‰å½¢ã—ãªã„ã€‚ã»ã‚“ã¨ã†ã¯+âˆã«ãªã‚‹ã€‚
 		else Em = E / ((1.0 + v) * bv);
 		PTM::TMatrixRow< 6, 6, element_type > matD;
 		PTM::TMatrixRow< 6, 6, element_type > matDs;
@@ -308,14 +312,14 @@ void PHFemVibration::CompStiffnessMatrix(){
 		matDs.assign(matD);
 		matD *= Em;
 
-		/// —v‘f„«s—ñ‚ÌŒvZ(ƒGƒlƒ‹ƒM[Œ´—j
+		/// è¦ç´ å‰›æ€§è¡Œåˆ—ã®è¨ˆç®—(ã‚¨ãƒãƒ«ã‚®ãƒ¼åŸç†ï¼‰
 		TMatrixRow< 12, 12, element_type > matKe;
 		matKe.clear(0.0);
 		matKe = matB.trans() * matD * matB * volume;
 		
-		// ‘S‘Ì„«s—ñ‚ÌŒvZ
-		// ’¸“_”Ô†‡ u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)‚Æ‚µ‚ÄŒvZ
-		// j:ƒuƒƒbƒN”Ô†, k:ƒuƒƒbƒN”Ô†
+		// å…¨ä½“å‰›æ€§è¡Œåˆ—ã®è¨ˆç®—
+		// é ‚ç‚¹ç•ªå·é † u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)ã¨ã—ã¦è¨ˆç®—
+		// j:ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·, k:ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
 		for(int j = 0; j < 4; j++){
 			for(int k = 0; k < 4; k++){
 				int id = mesh->tets[i].vertexIDs[j];
@@ -331,15 +335,15 @@ void PHFemVibration::CompStiffnessMatrix(){
 }
 
 void PHFemVibration::CompMassMatrix(){
-	/// ¿—Ês—ñ‚ÌŒvZ
+	/// è³ªé‡è¡Œåˆ—ã®è¨ˆç®—
 	double totalMass = 0.0;
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const int NTets = (int)mesh->tets.size();
 	const int NDof = NVertices() * 3;
-	matMIni.resize(NDof, NDof, 0.0);	// ‰Šú‰»
+	matMIni.resize(NDof, NDof, 0.0);	// åˆæœŸåŒ–
 
 	for(int i = 0; i < NTets; i++){
-		/// —v‘f„«s—ñ u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)‚Æ‚µ‚ÄŒvZ
+		/// è¦ç´ å‰›æ€§è¡Œåˆ— u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)ã¨ã—ã¦è¨ˆç®—
 		TMatrixRow< 12, 12, element_type > matMe;
 		matMe.clear(0.0);
 		TMatrixRow< 3, 3, element_type > I;
@@ -363,9 +367,9 @@ void PHFemVibration::CompMassMatrix(){
 		//totalMass += (density * 3 * volume);    //TAKEAHANA'S DENSITY TRICK
 		totalMass += (density * volume);
 		
-		// ‘S‘Ì¿—Ês—ñ‚ÌŒvZ
-		// ’¸“_”Ô†‡ u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)‚Æ‚µ‚ÄŒvZ
-		// j:ƒuƒƒbƒN”Ô†, k:ƒuƒƒbƒN”Ô†
+		// å…¨ä½“è³ªé‡è¡Œåˆ—ã®è¨ˆç®—
+		// é ‚ç‚¹ç•ªå·é † u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)ã¨ã—ã¦è¨ˆç®—
+		// j:ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·, k:ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
 		for(int j = 0; j < 4; j++){
 			for(int k = 0; k < 4; k++){
 				int id = mesh->tets[i].vertexIDs[j];
@@ -382,25 +386,25 @@ void PHFemVibration::CompMassMatrix(){
 }
 
 void PHFemVibration::CompRayleighDampingMatrix(){
-	/// Œ¸Šs—ñ‚ÌŒvZi”ä—áŒ¸Šj‹«ŠEğŒ“±“üÏ‚İ
+	/// æ¸›è¡°è¡Œåˆ—ã®è¨ˆç®—ï¼ˆæ¯”ä¾‹æ¸›è¡°ï¼‰å¢ƒç•Œæ¡ä»¶å°å…¥æ¸ˆã¿
 	matCIni.assign(GetAlpha() * matMIni + GetBeta() * matKIni);
 	matCp.assign(matCIni);
 }
 
 void PHFemVibration::CompRayleighDampingMatrixByDampingRatio(){
-	// Œ¸Šs—ñ‚ÌŒvZ
-	// ŒÅ—L’lEŒÅ—LƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+	// æ¸›è¡°è¡Œåˆ—ã®è¨ˆç®—
+	// å›ºæœ‰å€¤ãƒ»å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 	VVectord evalue;
 	VMatrixRd evector;
 	CompEigenValue(matMp, matKp, 0, nMode, evalue, evector);
-	// ŒÅ—LU“®”
+	// å›ºæœ‰æŒ¯å‹•æ•°
 	VVectord ew;
 	CompEigenVibrationFrequency(evalue, ew);
-	// ŒÅ—LŠpU“®”
+	// å›ºæœ‰è§’æŒ¯å‹•æ•°
 	VVectord ewrad;
 	CompEigenAngularVibrationFrequency(evalue, ewrad);
 
-	// ƒŒƒCƒŠ[Œ¸ŠŒW”
+	// ãƒ¬ã‚¤ãƒªãƒ¼æ¸›è¡°ä¿‚æ•°
 	double tw[2];
 	tw[0] = ewrad[0];
 	tw[1] = ewrad[ewrad.size() - 1];
@@ -413,7 +417,7 @@ void PHFemVibration::CompRayleighDampingMatrixByDampingRatio(){
 	SetAlpha(a);
 	SetBeta(b);
 	CompRayleighDampingMatrix();
-	// ‘S‚Ä‚ÌŒ¸Š”ä
+	// å…¨ã¦ã®æ¸›è¡°æ¯”
 	VVectord dratio;
 	dratio.resize(ewrad.size(), 0.0);
 	for(int i = 0; i < (int)dratio.size(); i++){
@@ -424,7 +428,7 @@ void PHFemVibration::CompRayleighDampingMatrixByDampingRatio(){
 }
 
 void PHFemVibration::Step(){
-	// FemVertex‚©‚ç•ÏˆÊ‚ğ‚Æ‚Á‚Ä‚­‚é
+	// FemVertexã‹ã‚‰å¤‰ä½ã‚’ã¨ã£ã¦ãã‚‹
 	qtimer.StartPoint("step");
 	qtimer.StartPoint("reduce");
 	GetVerticesDisplacement(xdl);
@@ -441,7 +445,7 @@ void PHFemVibration::Step(){
 	qtimer.EndPoint("reduce");
 
 
-	// ‘S’¸“_‚ÌXVƒtƒ‰ƒO‰Šú‰»
+	// å…¨é ‚ç‚¹ã®æ›´æ–°ãƒ•ãƒ©ã‚°åˆæœŸåŒ–
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const int NVer = NVertices() ;
 	for(int i = 0; i < NVer; i++){
@@ -471,7 +475,7 @@ void PHFemVibration::Step(){
 	qtimer.EndPoint("integration");
 
 	fl.clear(0.0);
-	// ŒvZŒ‹‰Ê‚ğFemVertex‚É”½‰f
+	// è¨ˆç®—çµæœã‚’FemVertexã«åæ˜ 
 	qtimer.StartPoint("gain");
 	AssignVector(xdlp, xdl, boundary);
 	AssignVector(vlp, vl, boundary);
@@ -507,7 +511,7 @@ void PHFemVibration::InitNumericalIntegration(const VMatrixRe& _M, const VMatrix
 
 void PHFemVibration::NumericalIntegration(const VMatrixRe& _SInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a){
-	/// ”’lÏ•ª
+	/// æ•°å€¤ç©åˆ†
 	switch(integration_mode){
 		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
 			ExplicitEuler(_SInv, _K, _C, _f, _dt, _xd, _v);
@@ -527,7 +531,7 @@ void PHFemVibration::NumericalIntegration(const VMatrixRe& _SInv, const VMatrixR
 }
 
 void PHFemVibration::InitNumericalIntegration(const double& _m, const double& _k, const double& _c, const double& _dt, double& _sInv){
-	/// ”’lÏ•ª
+	/// æ•°å€¤ç©åˆ†
 	switch(integration_mode){
 		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
 			InitExplicitEuler(_m, _sInv);
@@ -547,7 +551,7 @@ void PHFemVibration::InitNumericalIntegration(const double& _m, const double& _k
 
 void PHFemVibration::NumericalIntegration(const double& _sInv, const double& _k, const double& _c, 
 	const double& _f, const double& _dt, double& _x, double& _v, double& _a){
-	/// ”’lÏ•ª
+	/// æ•°å€¤ç©åˆ†
 	switch(integration_mode){
 		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
 			ExplicitEuler(_sInv, _k, _c, _f, _dt, _x, _v);
@@ -565,13 +569,13 @@ void PHFemVibration::NumericalIntegration(const double& _sInv, const double& _k,
 	}
 }
 
-// ƒ‚[ƒh‰ğÍ‰Šú‰»iƒŒƒCƒŠ[Œ¸ŠŒnj
+// ãƒ¢ãƒ¼ãƒ‰è§£æåˆæœŸåŒ–ï¼ˆãƒ¬ã‚¤ãƒªãƒ¼æ¸›è¡°ç³»ï¼‰
 //#define USE_MATRIX 1
 //#define USE_SUBSPACE 1
 void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode){
 
-	// ŒÅ—L’lEŒÅ—LƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+	// å›ºæœ‰å€¤ãƒ»å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 		size_t size = _M.height();
 		evalue.resize(nmode, 0.0);
 		evector.resize(size, nmode, 0.0);
@@ -588,13 +592,13 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		qf.resize(nmode,0);
 
 
-		// MKŒn‚ÌŒÅ—LU“®”
+		// MKç³»ã®å›ºæœ‰æŒ¯å‹•æ•°
 		VVectord ew;
 		CompEigenVibrationFrequency(evalue, ew);
-		// MKŒn‚ÌŒÅ—LŠpU“®”
+		// MKç³»ã®å›ºæœ‰è§’æŒ¯å‹•æ•°
 		VVectord ewrad;
 		CompEigenAngularVibrationFrequency(evalue, ewrad);
-		// ƒŒƒCƒŠ[Œ¸ŠŒW”
+		// ãƒ¬ã‚¤ãƒªãƒ¼æ¸›è¡°ä¿‚æ•°
 		double tw[2];
 		tw[0] = ewrad[0];
 		tw[1] = ewrad[ewrad.size() - 1];
@@ -605,7 +609,7 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		DSTR << "damiping ratio" << std::endl;
 		DSTR << dampingratio[0] << " " << dampingratio[1] << std::endl;
 
-		// ƒ‚[ƒh¿—ÊA„«, Œ¸Šs—ñ‚ÌŒvZ
+		// ãƒ¢ãƒ¼ãƒ‰è³ªé‡ã€å‰›æ€§, æ¸›è¡°è¡Œåˆ—ã®è¨ˆç®—
         #ifdef USE_OPENMP_PHYSICS
 		# pragma omp parallel sections
         #endif
@@ -643,7 +647,7 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		
 }
 
-// ƒ‚[ƒh‰ğÍ–@iƒŒƒCƒŠ[Œ¸ŠŒnj
+// ãƒ¢ãƒ¼ãƒ‰è§£ææ³•ï¼ˆãƒ¬ã‚¤ãƒªãƒ¼æ¸›è¡°ç³»ï¼‰
 //#define USE_MATRIX 1
 //#define USE_SUBSPACE 1
 void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
@@ -652,12 +656,12 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 
 	qtimer.StartPoint("integration core");
 	/*
-	//_xd‚È‚Ç‚ÍS‘©‚ğ“ü‚ê‚½’¸“_•ÏˆÊƒxƒNƒgƒ‹(xdlp)¨•Ï‰»‚Ì‚ ‚Á‚½’¸“_‚¾‚¯æ‚é
+	//_xdãªã©ã¯æ‹˜æŸã‚’å…¥ã‚ŒãŸé ‚ç‚¹å¤‰ä½ãƒ™ã‚¯ãƒˆãƒ«(xdlp)â†’å¤‰åŒ–ã®ã‚ã£ãŸé ‚ç‚¹ã ã‘å–ã‚‹
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const int NVer = NVertices() ;
 	VVectord  _xdp , _vp , _ap , _Mp;	
 
-	_xdp.resize(NVer * 3 , 0.0 );//‰Šú‰»
+	_xdp.resize(NVer * 3 , 0.0 );//åˆæœŸåŒ–
 	_vp.resize(NVer * 3 , 0.0 );
 	_ap.resize(NVer * 3 , 0.0 );
 	_Mp.resize(NVer * 3 , 0.0 );
@@ -665,7 +669,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	int counter = 0;
 	for(int i = 0; i < NVer; i++){
 		int id = i * 3;
-		if(mesh->vertices[i].bUpdated == true){//æ‚èo‚µ
+		if(mesh->vertices[i].bUpdated == true){//å–ã‚Šå‡ºã—
 				_xdp[counter] = _xd[id];
 			_xdp[counter + 1] = _xd[id +1];
 			_xdp[counter + 2] = _xd[id +2];
@@ -695,18 +699,18 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	}
 	*/
 
-	// ƒfƒJƒ‹ƒgÀ•W‚©‚çƒ‚[ƒhÀ•WŒn‚É•ÏŠ·
+	// ãƒ‡ã‚«ãƒ«ãƒˆåº§æ¨™ã‹ã‚‰ãƒ¢ãƒ¼ãƒ‰åº§æ¨™ç³»ã«å¤‰æ›
 	//q.assign(evector.trans() * (_M * _xd));
 	//qv.assign(evector.trans() * (_M * _v));
 	//qa.assign(evector.trans() * (_M * _a));
 	qf.assign(evector.trans() * _f);
 
-	// Ï•ª
+	// ç©åˆ†
 #ifdef USE_MATRIX
-	// s—ñ‚ÅŒvZ
+	// è¡Œåˆ—ã§è¨ˆç®—
 	NumericalIntegration(SmInv, Km, Cm, qf, _dt, q, qv, qa); 
 #else
-	// 1Ÿ“Æ—§‚Ì˜A—§•û’ö®‚È‚Ì‚ÅAŠe•û’ö®–ˆ‚ÉŒvZ
+	// 1æ¬¡ç‹¬ç«‹ã®é€£ç«‹æ–¹ç¨‹å¼ãªã®ã§ã€å„æ–¹ç¨‹å¼æ¯ã«è¨ˆç®—
 	//#pragma omp parallel for
 	VVectord  q_temp = q;
 	VVectord qv_temp = qv;
@@ -716,7 +720,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		NumericalIntegration(SmInv[i][i], Km[i][i], Cm[i][i], qf[i], _dt, q[i], qv[i], qa[i]);
 	}
 #endif
-	// ƒ‚[ƒhÀ•WŒn‚©‚çƒfƒJƒ‹ƒgÀ•WŒn‚É•ÏŠ·
+	// ãƒ¢ãƒ¼ãƒ‰åº§æ¨™ç³»ã‹ã‚‰ãƒ‡ã‚«ãƒ«ãƒˆåº§æ¨™ç³»ã«å¤‰æ›
 	
 	
 	_xd = evector * q;
@@ -729,10 +733,10 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 /*
 	const int NVer = NVertices() ;
 	int counter = 0;
-	for(int i = 0; i < NVer; i++){//160’¸“_
-		for(int j=0 ;j < nmode; j++){//55ƒ‚[ƒh
-			int id = i * 3;//480@(160 * x,y,z)
-			if(qv_temp[j]!=qv[j]){//‚»‚Ìƒ‚[ƒh‚ÌU“®ƒxƒNƒgƒ‹‚ª•Ï‰»‚µ‚Ä‚¢‚½‚ç
+	for(int i = 0; i < NVer; i++){//160é ‚ç‚¹
+		for(int j=0 ;j < nmode; j++){//55ãƒ¢ãƒ¼ãƒ‰
+			int id = i * 3;//480ã€€(160 * x,y,z)
+			if(qv_temp[j]!=qv[j]){//ãã®ãƒ¢ãƒ¼ãƒ‰ã®æŒ¯å‹•ãƒ™ã‚¯ãƒˆãƒ«ãŒå¤‰åŒ–ã—ã¦ã„ãŸã‚‰
 				_v[counter] = evector[id] * qv;
 				_v[counter+1] = evector[id+1] * qv;
 				_v[counter+2] = evector[id+2] * qv;
@@ -759,8 +763,8 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 
 void PHFemVibration::CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, const int start, const int interval, VVectord& e, VMatrixRd& v){
 #if 1
-		// ‹«ŠEğŒ“±“üÏ‚İ‚ÌmatMp, matKp‚ğ‚Â‚©‚¤
-		// ŒÅ—L’lEŒÅ—LƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+		// å¢ƒç•Œæ¡ä»¶å°å…¥æ¸ˆã¿ã®matMp, matKpã‚’ã¤ã‹ã†
+		// å›ºæœ‰å€¤ãƒ»å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 		size_t size = _M.height();
 		if (!size) return;
 		e.resize(interval, 0.0);
@@ -780,7 +784,7 @@ void PHFemVibration::CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, co
 }
 
 void PHFemVibration::CompEigenVibrationFrequency(const VVectord& e, VVectord& w){
-	// ŒÅ—LU“®”
+	// å›ºæœ‰æŒ¯å‹•æ•°
 	w.resize(e.size(), 0.0);
 	for(int i = 0; i < (int)w.size(); i++){
 		w[i] = sqrt(e[i]) / (2.0 * M_PI);
@@ -817,25 +821,25 @@ void PHFemVibration::SubSpace(const VMatrixRe& _K, const VMatrixRe& _M,
 		return;
 	}
 	if(nmode > size) assert(0);
-	/// ‰Šú‰»
-	evalue.resize(nmode, 0.0);			// ŒÅ—L’l
-	evector.resize(size, nmode, 0.0);	// ŒÅ—LƒxƒNƒgƒ‹
-	// ‰Šú’lƒxƒNƒgƒ‹
+	/// åˆæœŸåŒ–
+	evalue.resize(nmode, 0.0);			// å›ºæœ‰å€¤
+	evector.resize(size, nmode, 0.0);	// å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«
+	// åˆæœŸå€¤ãƒ™ã‚¯ãƒˆãƒ«
 	VMatrixRe y;
 	y.resize(size, nmode, 0.0);
 	VMatrixRe ylast;
 	ylast.resize(size, nmode, 0.0);
 	VVectord yini;
-	yini.resize(size, 1.0);		// ‰Šú’l‚Í1.0
+	yini.resize(size, 1.0);		// åˆæœŸå€¤ã¯1.0
 	yini.unitize();
 	for(int i = 0; i < nmode; i++){
 		y.col(i) = yini;
 		ylast.col(i) = yini;
 	}	
 
-	/// _M, _K‚ğƒRƒŒƒXƒL[•ª‰ğ
-	// _AInv‚ÌŒvZ‚ÍƒRƒŒƒXƒL[•ª‰ğ’l‚ğg‚Á‚Äfor•¶‚ÅŒvZ‚µ‚½‚Ù‚¤‚ª‘¬‚¢‚Í‚¸B
-	// ¡‚Í‘¬‚³‚ğ‹C‚É‚¹‚¸‹ts—ñ‚ğŒvZ‚µ‚Ä‚éB
+	/// _M, _Kã‚’ã‚³ãƒ¬ã‚¹ã‚­ãƒ¼åˆ†è§£
+	// _AInvã®è¨ˆç®—ã¯ã‚³ãƒ¬ã‚¹ã‚­ãƒ¼åˆ†è§£å€¤ã‚’ä½¿ã£ã¦foræ–‡ã§è¨ˆç®—ã—ãŸã»ã†ãŒé€Ÿã„ã¯ãšã€‚
+	// ä»Šã¯é€Ÿã•ã‚’æ°—ã«ã›ãšé€†è¡Œåˆ—ã‚’è¨ˆç®—ã—ã¦ã‚‹ã€‚
 	VMatrixRe _Mc;
 	_Mc.resize(size, size, 0.0);
 	cholesky(_M, _Mc);	
@@ -851,15 +855,15 @@ void PHFemVibration::SubSpace(const VMatrixRe& _K, const VMatrixRe& _M,
 	_AInv = _Mc.trans() * (_Kc.inv()).trans() * _Kc.inv() * _Mc;
 
 	qtimer.StartPoint("iteration");
-	/// ”½•œŒvZ
+	/// åå¾©è¨ˆç®—
 	for(int k = 0; k < nmode; k++){
 		VVectord z;
 		z.resize(size, 0.0);
 		int cnt = 0;
 		while(1){
-			// z‚ÌŒvZ
+			// zã®è¨ˆç®—
 			z = _AInv * y.col(k);
-			// C³ƒOƒ‰ƒ€EƒVƒ…ƒ~ƒbƒg–@‚ÅƒxƒNƒgƒ‹‚ğ’¼Œğ‰»
+			// ä¿®æ­£ã‚°ãƒ©ãƒ ãƒ»ã‚·ãƒ¥ãƒŸãƒƒãƒˆæ³•ã§ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç›´äº¤åŒ–
 			for(int i = 0; i < k; i++){
 				double a = y.col(i) * z;
 				z -= a * y.col(i);
@@ -881,13 +885,13 @@ void PHFemVibration::SubSpace(const VMatrixRe& _K, const VMatrixRe& _M,
 				break;
 			}
 		}
-		evector.col(k) = _Mc.trans().inv() * y.col(k);		// ŒÅ—LƒxƒNƒgƒ‹
-		evalue[k] = 1.0 / (y.col(k) * _AInv * y.col(k));	// ŒÅ—L’l
+		evector.col(k) = _Mc.trans().inv() * y.col(k);		// å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«
+		evalue[k] = 1.0 / (y.col(k) * _AInv * y.col(k));	// å›ºæœ‰å€¤
 	}
 	qtimer.EndPoint("iteration");
 }
 
-//* Šeíİ’èŠÖ”
+//* å„ç¨®è¨­å®šé–¢æ•°
 /////////////////////////////////////////////////////////////////////////////////////////
 void PHFemVibration::SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode){
 	analysis_mode = mode;
@@ -898,8 +902,8 @@ void PHFemVibration::SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mod
 }
 
 void PHFemVibration::GetVerticesDisplacement(VVectord& _xd){
-	/// FemVertex‚©‚ç•ÏˆÊ‚ğæ‚Á‚Ä‚­‚é
-	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)‚Ì‡
+	/// FemVertexã‹ã‚‰å¤‰ä½ã‚’å–ã£ã¦ãã‚‹
+	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)ã®é †
 	int NVer = NVertices();
 	_xd.resize(NVer * 3);
 	for(int i = 0; i < NVer; i++){
@@ -912,8 +916,8 @@ void PHFemVibration::GetVerticesDisplacement(VVectord& _xd){
 }
 
 void PHFemVibration::UpdateVerticesPosition(VVectord& _xd){
-	/// ŒvZŒ‹‰Ê‚ğFemVertex‚É–ß‚·
-	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)‚Ì‡
+	/// è¨ˆç®—çµæœã‚’FemVertexã«æˆ»ã™
+	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)ã®é †
 	int NVer = NVertices();
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	for(int i = 0; i < NVer; i++){
@@ -926,8 +930,8 @@ void PHFemVibration::UpdateVerticesPosition(VVectord& _xd){
 }
 
 void PHFemVibration::UpdateVerticesVelocity(VVectord& _v){
-	/// ŒvZŒ‹‰Ê‚ğFemVertex‚É–ß‚·
-	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)‚Ì‡
+	/// è¨ˆç®—çµæœã‚’FemVertexã«æˆ»ã™
+	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)ã®é †
 	int NVer = NVertices();
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	for(int i = 0; i < NVer; i++){
@@ -997,10 +1001,10 @@ bool PHFemVibration::AddBoundaryCondition(const std::vector< Vec3i >& bcs){
 }
 
 void PHFemVibration::ReduceMatrixSize(VMatrixRe& mat, const VVector< int >& bc){
-	int diff = 0;					// íœ‚µ‚½”
+	int diff = 0;					// å‰Šé™¤ã—ãŸæ•°
 	for(int i = 0; i < (int)bc.size(); i++){
 		if(bc[i] == 0) continue;
-		int id = i - diff;			// íœ‚µ‚½‚¢s—ñ”Ô†
+		int id = i - diff;			// å‰Šé™¤ã—ãŸã„è¡Œåˆ—ç•ªå·
 		VMatrixRe tmp;
 		tmp.resize(mat.height() - 1, mat.width() - 1, 0.0);
 		for(int j = 0; j < (int)tmp.height(); j++){
@@ -1030,10 +1034,10 @@ void PHFemVibration::ReduceMatrixSize(VMatrixRe& _M, VMatrixRe& _K, VMatrixRe& _
 }
 
 void PHFemVibration::ReduceVectorSize(VVectord& r, const VVector< int >& bc){
-	int diff = 0;					// íœ‚µ‚½”
+	int diff = 0;					// å‰Šé™¤ã—ãŸæ•°
 	for(int i = 0; i < (int)bc.size(); i++){
 		if(bc[i] == 0) continue;
-		int id = i - diff;			// íœ‚µ‚½‚¢ˆÊ’u
+		int id = i - diff;			// å‰Šé™¤ã—ãŸã„ä½ç½®
 		VVectord tmp;
 		tmp.resize(r.size() - 1, 0.0);
 		for(int j = 0; j < (int)tmp.size(); j++){
@@ -1111,7 +1115,7 @@ bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
 	mesh->CompTetShapeFunctionValue(tetId, posL, v, true);
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
-		mesh->vertices[vtxId].bUpdated=true;//XVƒtƒ‰ƒO
+		mesh->vertices[vtxId].bUpdated=true;//æ›´æ–°ãƒ•ãƒ©ã‚°
 
 
 		Vec3d fdiv = v[i] * fL;
@@ -1132,7 +1136,7 @@ bool PHFemVibration::AddForceL(int tetId, Vec3d posW, Vec3d fL){
 	//DSTR << this->GetName()  << " : " << tetId << std::endl;
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
-		mesh->vertices[vtxId].bUpdated=true;//XVƒtƒ‰ƒO  Update Flag
+		mesh->vertices[vtxId].bUpdated=true;//æ›´æ–°ãƒ•ãƒ©ã‚°  Update Flag
 
 		Vec3d fdiv = v[i] * fL;
 		AddVertexForceL(vtxId, fdiv);
@@ -1148,7 +1152,7 @@ bool PHFemVibration::Damping(int tetId, Vec3d posW, double damp_ratio){
 	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
-		mesh->vertices[vtxId].bUpdated=true;//XVƒtƒ‰ƒO
+		mesh->vertices[vtxId].bUpdated=true;//æ›´æ–°ãƒ•ãƒ©ã‚°
 		double r = pow(damp_ratio, v[i]);
 		if(0 <= vtxId && vtxId <= NVertices() -1){
 			int id = vtxId * 3;
@@ -1229,14 +1233,14 @@ bool PHFemVibration::GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform
 bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], Vec3d& cp, double& dist, bool bDeform){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const Vec3d normal = mesh->CompFaceNormal(fp);
-	const Vec3d p0 = fp[0] - p;			// p‚©‚çfp[0]‚Ü‚Å‚ÌƒxƒNƒgƒ‹
-	dist = p0 * normal;					// p‚©‚ç–Ê‚Ö‚Ì‹——£
-	const Vec3d ortho = dist * normal;	// p‚©‚ç–Ê‚Ö‚ÌƒxƒNƒgƒ‹
-	cp = p + ortho;						// p‚ğfaceã‚ÉË‰e‚µ‚½ˆÊ’u(‹ß–T“_j
+	const Vec3d p0 = fp[0] - p;			// pã‹ã‚‰fp[0]ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
+	dist = p0 * normal;					// pã‹ã‚‰é¢ã¸ã®è·é›¢
+	const Vec3d ortho = dist * normal;	// pã‹ã‚‰é¢ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«
+	cp = p + ortho;						// pã‚’faceä¸Šã«å°„å½±ã—ãŸä½ç½®(è¿‘å‚ç‚¹ï¼‰
 
-	// cp‚ª–Ê“à‚É‚ ‚é‚©‚Ç‚¤‚©”»’è
-	// ŠOÏ‚ğæ‚Á‚ÄAnormal‚Æ“¯‚¶•ûŒü(“àÏ‚ª=>0)‚È‚ç’†Anormal‚Æ‹t•ûŒü(“àÏ‚ª< 0)‚È‚çŠO
-	// –Ê‚Ì’¸“_‚Í•\–Ê‚©‚ç‚İ‚ÄŒv‚Ü‚í‚è
+	// cpãŒé¢å†…ã«ã‚ã‚‹ã‹ã©ã†ã‹åˆ¤å®š
+	// å¤–ç©ã‚’å–ã£ã¦ã€normalã¨åŒã˜æ–¹å‘(å†…ç©ãŒ=>0)ãªã‚‰ä¸­ã€normalã¨é€†æ–¹å‘(å†…ç©ãŒ< 0)ãªã‚‰å¤–
+	// é¢ã®é ‚ç‚¹ã¯è¡¨é¢ã‹ã‚‰ã¿ã¦æ™‚è¨ˆã¾ã‚ã‚Š
 	for(int j = 0; j < 3; j++){
 		int index = j + 1;
 		if(j == 2)	index = 0;
@@ -1251,7 +1255,7 @@ bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], V
 }
 
 bool PHFemVibration::FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, std::vector< Vec3d >& cpWs, bool bDeform){
-	// ƒ[ƒ‹ƒhÀ•WŒn‚ÅŒvZ
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§è¨ˆç®—
 	faceIds.clear();
 	cpWs.clear();
 	PHFemMeshNew* mesh = GetPHFemMesh();
@@ -1269,14 +1273,14 @@ bool PHFemVibration::FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, 
 		double d;
 		if(!FindClosestPointOnMesh(posW, fp, cpW, d, bDeform)) continue;
 		if(d < dist){
-			// ‘O‰ñ‚æ‚è‚à“_-–ÊŠÔ‚Ì‹——£‚ª‹ß‚¢ê‡‚Í‹ß‚¢•û‚ğ‘I‚Ô
+			// å‰å›ã‚ˆã‚Šã‚‚ç‚¹-é¢é–“ã®è·é›¢ãŒè¿‘ã„å ´åˆã¯è¿‘ã„æ–¹ã‚’é¸ã¶
 			dist = d;
 			faceIds.clear();
 			cpWs.clear();
 			faceIds.push_back(i);
 			cpWs.push_back(cpW);
 		}else if(d == dist){
-			// ‘O‰ñ‚Æ‹——£‚ª“¯‚¶ê‡‚Í‰Á‚¦‚é
+			// å‰å›ã¨è·é›¢ãŒåŒã˜å ´åˆã¯åŠ ãˆã‚‹
 			faceIds.push_back(i);
 			cpWs.push_back(cpW);
 		}
@@ -1289,11 +1293,11 @@ bool PHFemVibration::FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW,
 	std::vector< int > faceIds;
 	std::vector< Vec3d > closestPoints;
 	if(!FindNeighborFaces(posW, faceIds, closestPoints, bDeform)) return false;
-	// 1“_‚Å—Í‚ğ‰Á‚¦‚½‚èA•ÏˆÊ‚ğæ“¾‚µ‚½‚è‚·‚é‘€ì‚É‚Â‚¢‚Ä
-	// face‚ª1‚Â:“_-–Ê
-	// face‚ª2‚Â:•Ó‚ÅÚ‚µ‚Ä‚¢‚éA‚Ç‚¿‚ç‚©1‚Â‚Ì–Ê‚ğ‘I‚×‚Î—Ç‚¢
-	// face‚ª3‚Â:“_‚ÅÚ‚µ‚Ä‚¢‚éB‚±‚ê‚à‚Ç‚ê‚©1‚Â‚Ì–Ê‚ğ‘I‚×‚Î—Ç‚¢
-	// ˆÈã‚©‚ç‚Ğ‚Æ‚Â‚Ìl–Ê‘Ì‚ª‚í‚©‚ê‚Î—Ç‚¢
+	// 1ç‚¹ã§åŠ›ã‚’åŠ ãˆãŸã‚Šã€å¤‰ä½ã‚’å–å¾—ã—ãŸã‚Šã™ã‚‹æ“ä½œã«ã¤ã„ã¦
+	// faceãŒ1ã¤:ç‚¹-é¢
+	// faceãŒ2ã¤:è¾ºã§æ¥ã—ã¦ã„ã‚‹ã€ã©ã¡ã‚‰ã‹1ã¤ã®é¢ã‚’é¸ã¹ã°è‰¯ã„
+	// faceãŒ3ã¤:ç‚¹ã§æ¥ã—ã¦ã„ã‚‹ã€‚ã“ã‚Œã‚‚ã©ã‚Œã‹1ã¤ã®é¢ã‚’é¸ã¹ã°è‰¯ã„
+	// ä»¥ä¸Šã‹ã‚‰ã²ã¨ã¤ã®å››é¢ä½“ãŒã‚ã‹ã‚Œã°è‰¯ã„
 	tetId = GetPHFemMesh()->FindTetFromFace(faceIds[0]);
 	cpW = closestPoints[0];
 
@@ -1353,7 +1357,7 @@ bool PHFemVibration::searchSurfaceTetra(Vec3d commonPointW, Vec3d contactNormalU
 
 		if(!FindClosestPointOnMesh(commonPointW, fp, cpW, d, bDeform)) continue;
 		if(d < dist){
-			// ‘O‰ñ‚æ‚è‚à“_-–ÊŠÔ‚Ì‹——£‚ª‹ß‚¢ê‡‚Í‹ß‚¢•û‚ğ‘I‚Ô
+			// å‰å›ã‚ˆã‚Šã‚‚ç‚¹-é¢é–“ã®è·é›¢ãŒè¿‘ã„å ´åˆã¯è¿‘ã„æ–¹ã‚’é¸ã¶
 			dist = d;
 			faceId = i;
 			surfacePoint = cpW;

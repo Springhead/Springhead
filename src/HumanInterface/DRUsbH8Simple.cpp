@@ -27,7 +27,9 @@ namespace Spr {
 DRUsbH8Simple::DRUsbH8Simple(int ch){
 	channel = ch;
 
+#ifdef	_WIN32
 	hSpidar = INVALID_HANDLE_VALUE;
+#endif
 	int si[] = {-1, -1, 1, 1, 1, 1, -1, -1};
 	for(int i = 0; i < 8; i++){
 		sign[i]			= si[i];

@@ -1,5 +1,5 @@
-
-#include <Physics\PHOpEngine.h>
+ï»¿
+#include <Physics/PHOpEngine.h>
 #include "PHOpDecompositionMethods.h"
 
 #define CHECK_INF_ERR
@@ -355,7 +355,7 @@ namespace Spr{
 
 			//dp->pNewOrint = myHc->currSpg->GetPose().Ori().Inv();
 			if (subStepProFix){
-				//G‚Á‚Ä‚¢‚È‚¢Žž‚Ìproxyfix
+				//è§¦ã£ã¦ã„ãªã„æ™‚ã®proxyfix
 				noCtcItrNum = 0;
 				opHpRender->HpNoCtcProxyCorrection();
 				// cout << "noCtcItrNum = " << noCtcItrNum << endl;
@@ -367,10 +367,10 @@ namespace Spr{
 
 			//dp->pVelocity = (myHc->userPos - dp->pCurrCtr) / myHc->params.timeStep;
 			if (subStepProFix){
-				//G‚Á‚Ä‚¢‚é‚Æ‚«‚Ü‚¸trace‚·‚é
+				//è§¦ã£ã¦ã„ã‚‹ã¨ãã¾ãštraceã™ã‚‹
 				opHpRender->ProxyTrace();
 				// HpProxyPosFix();
-				//ProxyˆÊ’u‚ÌC³(ŠÖ”–¼‚ÍC³‚Ü‚¿)
+				//Proxyä½ç½®ã®ä¿®æ­£(é–¢æ•°åã¯ä¿®æ­£ã¾ã¡)
 
 				// if (!ProxyCorrection())
 				;// return;
@@ -385,7 +385,7 @@ namespace Spr{
 		if (subStepProSolve)
 		{
 
-			//haptic‰ðŒˆ
+			//hapticè§£æ±º
 			opHpRender->HpConstrainSolve(dp->pCurrCtr);
 			//HpConstrainSolve();
 
@@ -394,17 +394,17 @@ namespace Spr{
 		if (!FloatErrorTest::CheckBadFloatValue(dp->pNewCtr.z))
 			int u = 0;
 #endif
-		//hapticˆÚ“®‘¬“xŒvŽZ‚·‚é
+		//hapticç§»å‹•é€Ÿåº¦è¨ˆç®—ã™ã‚‹
 		PHOpObj *dpobj = opObjs[0];
 		float timeStep = dpobj->params.timeStep;
 
 		dp->pVelocity = (myHc->userPos - dp->pNewCtr) / timeStep;
 
-		//•½–Ê‚Æ‚Ìhaptic
+		//å¹³é¢ã¨ã®haptic
 		opHpRender->ProxySlvPlane();
 
 
-		//—Í‚ÌŒvŽZ
+		//åŠ›ã®è¨ˆç®—
 		opHpRender->ForceCalculation();
 
 		dp->pCurrCtr = dp->pNewCtr;

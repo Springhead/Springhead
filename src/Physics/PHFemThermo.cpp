@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003 - 2011, Fumihiro Kato, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,29 +13,33 @@
 //#include <Framework/FWObject.h>
 //#include <Framework/sprFWObject.h>
 
-#include "windows.h"
+#ifdef	_MSC_VER
+#  include "windows.h"
+#else
+#  include <limits.h>
+#endif
 
 #include <Foundation/UTClapack.h>
 
 #define FEMLOG(x)
 
-//%%%%%			ÀŒ±—pİ’èƒpƒ‰ƒ[ƒ^API‰»‚µ‚ÄˆÚ“®—\’è			%%%%%
+//%%%%%			å®Ÿé¨“ç”¨è¨­å®šãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿APIåŒ–ã—ã¦ç§»å‹•äºˆå®š			%%%%%
 
-// ã‰Î‰Á”Mƒpƒ‰ƒ[ƒ^
+// å¼±ç«åŠ ç†±ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 //#define inr 0.048
 //#define outR 0.052
-//#define weekPow 231.9 * 1e3 * 0.02 // 231.9 * 1e3:Zo‚µ‚½’lA0.02F•¨—ƒXƒeƒbƒvŠÔ 
-	//#define weekPow 107		//100:[W]=[J/s]  //50.5801 // “S”Â‚Ì1/4‚¾‚¯‚Ì–ÊÏ‚É‰Á‚í‚é‰Á”M”M—Ê  	//s—ñì¬Œã‚É[J/(m^2Esec)]‚È‚é
+//#define weekPow 231.9 * 1e3 * 0.02 // 231.9 * 1e3:ç®—å‡ºã—ãŸå€¤ã€0.02ï¼šç‰©ç†ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“ 
+	//#define weekPow 107		//100:[W]=[J/s]  //50.5801 // é‰„æ¿ã®1/4ã ã‘ã®é¢ç©ã«åŠ ã‚ã‚‹åŠ ç†±ç†±é‡  	//è¡Œåˆ—ä½œæˆå¾Œã«[J/(m^2ãƒ»sec)]ãªã‚‹
 
-//	‰Q“d—¬‰Á”M‚Ì‚½‚ß‚Ì“d‹C’ïR‚ª‰·“xˆË‘¶«‚ª‚ ‚éê‡‚Ìƒ‚ƒfƒ‹B
+//	æ¸¦é›»æµåŠ ç†±ã®ãŸã‚ã®é›»æ°—æŠµæŠ—ãŒæ¸©åº¦ä¾å­˜æ€§ãŒã‚ã‚‹å ´åˆã®ãƒ¢ãƒ‡ãƒ«ã€‚
 //#define TempDependHeat		// 
 
 #if 0
-	#define THCOND 83.5 // W/(m K) = [J/ (mEKEs)] //67
+	#define THCOND 83.5 // W/(m K) = [J/ (mãƒ»Kãƒ»s)] //67
 #endif
 	#define RHO	7874	//	
 #if 0
-	#define SPECIFICHEAT 459.94// 298.15K:447.130, 328.15K(30):459.94, 400K:490.643	
+	#define SPECIFICHEAT 459.94// 298.15K:447.130, 328.15K(30â„ƒ):459.94, 400K:490.643	
 #endif
 
 #define dMatkUp 0.015
@@ -44,29 +48,29 @@
 	//#define outR 0.079	//0.052
 //#define weekPow 231.9 * 0.02
 
-//[K][C]{F}‚Ì“®ìŠm”FÀŒ±‚Åg—p
-//#define weekPow 0.5281 / 0.02		// J/sec -> J /step sec@‚É•ÏŠ·‚·‚é•K—v‚ª‚ ‚éAİ’è’l‚Í1•b“–‚½‚è‚Ì’l‚É‚µAŒvZ‚ÅƒXƒeƒbƒvŠÔ‚É‡‚í‚¹‚é
+//[K][C]{F}ã®å‹•ä½œç¢ºèªå®Ÿé¨“ã§ä½¿ç”¨
+//#define weekPow 0.5281 / 0.02		// J/sec -> J /step secã€€ã«å¤‰æ›ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€è¨­å®šå€¤ã¯1ç§’å½“ãŸã‚Šã®å€¤ã«ã—ã€è¨ˆç®—ã§ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“ã«åˆã‚ã›ã‚‹
 
-//s—ñ‚ÌƒeƒXƒg
+//è¡Œåˆ—ã®ãƒ†ã‚¹ãƒˆ
 //#define weekPow 0.0
 
-//#define mai.cpp ‚Ì only1deg
+//#define mai.cpp ã® only1deg
 
-//…‚Ì’l
-//7.874 * 10^3	 // –§“x	7.874 * 10^3 [kg m^-3]
-//24.97@// ”ä”M	J/(KEkg)
-//#define THCOND 0.618//:… 
+//æ°´ã®å€¤
+//7.874 * 10^3	 // å¯†åº¦	7.874 * 10^3 [kg m^-3]
+//24.97ã€€// æ¯”ç†±	J/(Kãƒ»kg)
+//#define THCOND 0.618//:æ°´ 
 //#define RHO	1.0e6
 //#define SPECIFICHEAT 4.2
 
-#define WaterLatentHeat	2257000	//…‚Ìö”­ö”M [J/kg]
+#define WaterLatentHeat	2257000	//æ°´ã®è’¸ç™ºæ½œç†± [J/kg]
 
-//	%%%%%%%		“®ìğŒ@‹““®ğŒ
+//	%%%%%%%		å‹•ä½œæ¡ä»¶ã€€æŒ™å‹•æ¡ä»¶
 
-//‹«ŠEğŒ
+//å¢ƒç•Œæ¡ä»¶
 #define NOTUSE_HEATTRANS_HERE
 
-//ˆê’è‰Á”M—Ê~‚R‚É‚æ‚éƒtƒ‰ƒbƒg‚ª‚¿‚ÈƒRƒCƒ‹‰Á”M‚ğg‚¤‚©”Û‚©
+//ä¸€å®šåŠ ç†±é‡Ã—ï¼“ã«ã‚ˆã‚‹ãƒ•ãƒ©ãƒƒãƒˆãŒã¡ãªã‚³ã‚¤ãƒ«åŠ ç†±ã‚’ä½¿ã†ã‹å¦ã‹
 #define DISABLE_COIL
 
 //#define badMatK
@@ -75,9 +79,9 @@
 //#define outMatK
 //#define UseScilab
 //#define DEBUG
-//#define DumK		//debug—p‚ÌdummyK?	g‚Á‚Ä‚¢‚È‚¢
+//#define DumK		//debugç”¨ã®dummyK?	ä½¿ã£ã¦ã„ãªã„
 
-//	LMS•\¦‚È‚Ç‚ğDSTR‚·‚é‚©‚Ç‚¤‚©SW
+//	LMSè¡¨ç¤ºãªã©ã‚’DSTRã™ã‚‹ã‹ã©ã†ã‹SW
 //#define HYOKA
 
 
@@ -112,17 +116,17 @@ void PHFemThermoDesc::Init(){
 //	PHFemThermo
 
 PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
-	deformed = true;			//•Ï”‚Ì‰Šú‰»AŒ`ó‚ª•Ï‚í‚Á‚½‚©‚Ç‚¤‚©
+	deformed = true;			//å¤‰æ•°ã®åˆæœŸåŒ–ã€å½¢çŠ¶ãŒå¤‰ã‚ã£ãŸã‹ã©ã†ã‹
 	doCalc = true;
-	//%%%	ƒKƒEƒXƒUƒCƒfƒ‹ˆø”
+	//%%%	ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«å¼•æ•°
 	NofCyc = 100;
 	epsilonG = 1.0;
-	//%%%	‰ŠúğŒ
-	jout = 22.9;	//A5052”M“`’BÀŒ±:22.9, SUS430•ú”MÀŒ±:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
-	ems = 0.0;//3.8e-2;//3.63e-2;//3.58		//	ß“_‚Å‚Ì”MçtËŒW”F‰·“x‚Ì·•ª‚É”ä—á‚·‚é’l‚È‚Ì‚ÅA3.58e-2	SUS430‚Å‚Ì’l
+	//%%%	åˆæœŸæ¡ä»¶
+	jout = 22.9;	//A5052ç†±ä¼é”å®Ÿé¨“æ™‚:22.9, SUS430æ”¾ç†±å®Ÿé¨“æ™‚:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
+	ems = 0.0;//3.8e-2;//3.63e-2;//3.58		//	ç¯€ç‚¹ã§ã®ç†±è¼»å°„ä¿‚æ•°ï¼šæ¸©åº¦ã®å·®åˆ†ã«æ¯”ä¾‹ã™ã‚‹å€¤ãªã®ã§ã€3.58e-2	SUS430ã§ã®å€¤
 	ems_const = 0.0;//-1.14;//-1.1507//-1.063;
 	temp_c = 30.0;
-	temp_out = 20.0;//23.8;	//A5052—¿º‰·:23.8, SUS430•ú”MÀŒ±:29.9
+	temp_out = 20.0;//23.8;	//A5052è©¦æ–™æ™‚å®¤æ¸©:23.8, SUS430æ”¾ç†±å®Ÿé¨“æ™‚:29.9
 
 	//%%%%%4
 	weekPow_FULL = 120.0;
@@ -134,16 +138,16 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 	inr_add = 0.009;
 	outR_add = 0.03;
 	//%%%%%
-	weekPow_decr = 2.2;		//@’l‚Íƒvƒ‰ƒX‚¾‚ªAŒvZŠÖ”“à‚Åƒ}ƒCƒiƒX‚É¬‚é		//2.1
+	weekPow_decr = 2.2;		//ã€€å€¤ã¯ãƒ—ãƒ©ã‚¹ã ãŒã€è¨ˆç®—é–¢æ•°å†…ã§ãƒã‚¤ãƒŠã‚¹ã«æˆã‚‹		//2.1
 	inr_decr = 0.039;
 	outR_decr = 0.041;
 	//%%%
 	stopTime = 180.3;
-	// ƒfƒBƒXƒNƒŠƒvƒ^‚ÉƒZƒbƒg
+	// ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã«ã‚»ãƒƒãƒˆ
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
-	StepCount =0;				// ƒXƒeƒbƒv”ƒJƒEƒ“ƒ^
-	StepCount_ =0;				// ƒXƒeƒbƒv”ƒJƒEƒ“ƒ^
+	StepCount =0;				// ã‚¹ãƒ†ãƒƒãƒ—æ•°ã‚«ã‚¦ãƒ³ã‚¿
+	StepCount_ =0;				// ã‚¹ãƒ†ãƒƒãƒ—æ•°ã‚«ã‚¦ãƒ³ã‚¿
 
 }
 
@@ -158,17 +162,17 @@ void PHFemThermo::Init(){
 	int nSurfaceVtxs = NSurfaceVertices();
 	for(unsigned i=0; i < (unsigned) nSurfaceVtxs; i++){
 		int vtxid = GetSurfaceVertex(i);
-		//‰~’ŒƒƒbƒVƒ…‚Ì’ê–Êã‚É‚ ‚é’¸“_
+		//å††æŸ±ãƒ¡ãƒƒã‚·ãƒ¥ã®åº•é¢ä¸Šã«ã‚ã‚‹é ‚ç‚¹
 		if(GetVertexPose(vtxid).y < -0.00749){
 			bottomVertexNums.push_back(vtxid);
 		}
-		//‰~’ŒƒƒbƒVƒ…‚Ìã–Êã‚É‚ ‚é’¸“_
+		//å††æŸ±ãƒ¡ãƒƒã‚·ãƒ¥ã®ä¸Šé¢ä¸Šã«ã‚ã‚‹é ‚ç‚¹
 		else if(GetVertexPose(vtxid).y > 0.00749){
 			topVertexNums.push_back(vtxid);
 		}
 	}
 
-	////Šel–Ê‘Ì‚Æ’¸“_”Ô†‚ğo—Í
+	////å„å››é¢ä½“ã¨é ‚ç‚¹ç•ªå·ã‚’å‡ºåŠ›
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	for(unsigned i=0; i < mesh->NTets(); i++){
 	//		DSTR << "tetID:" << i << " vtxIDs";
@@ -179,15 +183,15 @@ void PHFemThermo::Init(){
 	//	}
 	//}
 
-	////Še’¸“_‚ÌÀ•W‚ğo—Í
+	////å„é ‚ç‚¹ã®åº§æ¨™ã‚’å‡ºåŠ›
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	for(unsigned i=0; i < mesh->NVertices(); i++){
 	//		FemVertex vtx = mesh->vertices[i];
-	//		DSTR << "’¸“_" << i << ":(" << vtx.pos.x << "," << vtx.pos.y << "," << vtx.pos.z << ")" << std::endl;
+	//		DSTR << "é ‚ç‚¹" << i << ":(" << vtx.pos.x << "," << vtx.pos.y << "," << vtx.pos.z << ")" << std::endl;
 	//	}
 	//}
 
-	////‚·‚×‚Ä‚Ì’¸“_‚ğ‰ñ“]
+	////ã™ã¹ã¦ã®é ‚ç‚¹ã‚’å›è»¢
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	Quaterniond rot = Quaterniond::Rot(Rad(80.0), 'x');
 	//	for(unsigned i=0; i < mesh->vertices.size(); i++){
@@ -195,10 +199,10 @@ void PHFemThermo::Init(){
 	//		//mesh->vertices[i].pos[0] = (-1) * mesh->vertices[i].pos[0];
 	//		//mesh->vertices[i].pos[2] = (-1) * mesh->vertices[i].pos[2];
 	//	}
-	//	//‰ñ“]Œã‚Ì’¸“_‚ÌÀ•W‚ğo—Í
+	//	//å›è»¢å¾Œã®é ‚ç‚¹ã®åº§æ¨™ã‚’å‡ºåŠ›
 	//	for(unsigned i=0; i < mesh->NVertices(); i++){
 	//		FemVertex vtx = mesh->vertices[i];
-	//		DSTR << "’¸“_" << i << ":(" << vtx.pos.x << "," << vtx.pos.y << "," << vtx.pos.z << ")" << std::endl;
+	//		DSTR << "é ‚ç‚¹" << i << ":(" << vtx.pos.x << "," << vtx.pos.y << "," << vtx.pos.z << ")" << std::endl;
 	//	}
 	//}
 
@@ -225,9 +229,9 @@ void PHFemThermo::Init(){
 		StateTet vars;
 		tetVars.push_back(vars);
 	}
-	//%%%	‰Šú‰»—Ş		%%%//
+	//%%%	åˆæœŸåŒ–é¡		%%%//
 
-	//Šeíƒƒ“ƒo•Ï”‚Ì‰Šú‰»ËƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‚Å‚«‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à‚µ‚ê‚È‚¢B
+	//å„ç¨®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–â‡’ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ã§ããŸã»ã†ãŒã„ã„ã‹ã‚‚ã—ã‚Œãªã„ã€‚
 	///	Edges
 	for(unsigned i =0; i < mesh->edges.size();i++){
 		edgeVars[i].c = 0.0;	
@@ -251,31 +255,31 @@ void PHFemThermo::Init(){
 		faceVars[i].alphaUpdated = true;
 		faceVars[i].area = 0.0;
 		faceVars[i].heatTransRatio = 0.0;
-		faceVars[i].deformed = true;				//‰Šúó‘Ô‚ÍA•ÏŒ`Œã‚Æ‚·‚é
+		faceVars[i].deformed = true;				//åˆæœŸçŠ¶æ…‹ã¯ã€å¤‰å½¢å¾Œã¨ã™ã‚‹
 		for(unsigned j=0;j<4;++j){
 			faceVars[i].fluxarea[j] =0.0;
 		}
 		faceVars[i].map = INT_MAX;	//
 		//faces[i].thermalEmissivity =0.0;
 		//faces[i].thermalEmissivity_const =0.0;
-		//faces[i].heatflux.clear();				// ‰Šú‰»
-		//faces[i].heatflux[hum]‚Ì—ÌˆæŠm•ÛF”z—ñ‚Æ‚µ‚ÄA‚©Avector‚Æ‚µ‚Ä‚Ìpush_back‚©A‚Ç‚¿‚ç‚©‚ğs‚¤B”z—ñ‚È‚ç‚±‚±‚É‹LqB
-		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// ‰Á”Mƒ‚[ƒh‚Ì”‚¾‚¯AƒxƒNƒgƒ‹‚ğ¶¬
+		//faces[i].heatflux.clear();				// åˆæœŸåŒ–
+		//faces[i].heatflux[hum]ã®é ˜åŸŸç¢ºä¿ï¼šé…åˆ—ã¨ã—ã¦ã€ã‹ã€vectorã¨ã—ã¦ã®push_backã‹ã€ã©ã¡ã‚‰ã‹ã‚’è¡Œã†ã€‚é…åˆ—ãªã‚‰ã“ã“ã«è¨˜è¿°ã€‚
+		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// åŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã®æ•°ã ã‘ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”Ÿæˆ
 			for(unsigned j=0;j<4;++j){
 				faceVars[i].heatflux[mode][j] = 0.0;
 			}
 		}
 	}
 
-	//s—ñ‚Ì¬•ª”‚È‚Ç‚ğ‰Šú‰»
+	//è¡Œåˆ—ã®æˆåˆ†æ•°ãªã©ã‚’åˆæœŸåŒ–
 	bVecAll.resize(mesh->vertices.size(),1);
 	TVecAll.resize(mesh->vertices.size());
 	preTVecAll.resize(mesh->vertices.size());
 
-	//	ƒƒbƒVƒ…ß“_‰·“x ‰Šú‰»
+	//	ãƒ¡ãƒƒã‚·ãƒ¥ç¯€ç‚¹æ¸©åº¦ åˆæœŸåŒ–
 	//SetVerticesTempAll(30.0);
 
-	//	‹ó‹C‚Ö‚Ì”M“`’B‚É‚æ‚é”MçtË‹«ŠEğŒ‚É‚æ‚éŒvZÀs‚Ìİ’è
+	//	ç©ºæ°—ã¸ã®ç†±ä¼é”ã«ã‚ˆã‚‹ç†±è¼»å°„å¢ƒç•Œæ¡ä»¶ã«ã‚ˆã‚‹è¨ˆç®—å®Ÿè¡Œã®è¨­å®š
 	SetVerticesTempAll(jout);
 	SetVerticesTempAll(initial_temp);
 	SetVerticesPreTempAll(initial_temp);
@@ -288,22 +292,22 @@ void PHFemThermo::Init(){
 //	vecFOutPan.open("vecFOutPan.csv");
 	vecFOutSteak.open("vecFOutSteak.csv");
 	
-//	vecFOutSteak << "ŠÔ" << ",";
+//	vecFOutSteak << "æ™‚é–“" << ",";
 //	for(unsigned i=0; i < mesh->vertices.size();i++){
 //		if(i != mesh->vertices.size() -1){
-//			vecFOutSteak << "’¸“_" << i << ", ";	
+//			vecFOutSteak << "é ‚ç‚¹" << i << ", ";	
 //		}
 //		else{
-//			vecFOutSteak << "’¸“_" << i << std::endl;
+//			vecFOutSteak << "é ‚ç‚¹" << i << std::endl;
 //		}
 //	}
 
 	
-	//•]‰¿ÀŒ±—pƒR[ƒh
-	//>	LMSS‚Ì‚½‚ß‚ÌƒR[ƒh
-	//	ß“_‰·“x‚Ì‰Šúİ’è(s—ñ‚ğì‚é‘O‚És‚¤)
+	//è©•ä¾¡å®Ÿé¨“ç”¨ã‚³ãƒ¼ãƒ‰
+	//>	LMSSã®ãŸã‚ã®ã‚³ãƒ¼ãƒ‰
+	//	ç¯€ç‚¹æ¸©åº¦ã®åˆæœŸè¨­å®š(è¡Œåˆ—ã‚’ä½œã‚‹å‰ã«è¡Œã†)
 
-	//	jˆÈ‰“‚Ì‰·“x‚Í‘S‘Ì‚ğ‚±‚Ì‰·“x‚É‚µ‚Äİ’è
+	//	jä»¥é ã®æ¸©åº¦ã¯å…¨ä½“ã‚’ã“ã®æ¸©åº¦ã«ã—ã¦è¨­å®š
 	//SetVerticesTempAll((158.5 + (30.0 + 158.5) /2.0)/2.0 );
 	//SetVerticesTempAll((158.5+30.0)/2.0);
 	
@@ -312,14 +316,14 @@ void PHFemThermo::Init(){
 //	jout = 77.85;
 //	ems = 4.9258;
 	
-	// main.cpp‚Å“®‚­‚æ‚¤‚Éİ’è‚·‚é
+	// main.cppã§å‹•ãã‚ˆã†ã«è¨­å®šã™ã‚‹
 	round.clear();
 	tempe.clear();
 	for(unsigned i=0;i<11;++i){
 		round.push_back(i*0.01);
 	}
-	//%%%		•ú”M‚Ìƒpƒ‰ƒ[ƒ^
-	//	200‚©‚ç•ú”M
+	//%%%		æ”¾ç†±ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	//	200â„ƒã‹ã‚‰æ”¾ç†±
 	//tempe.push_back(211.3);
 	//tempe.push_back(211.2);
 	//tempe.push_back(210.2);
@@ -332,7 +336,7 @@ void PHFemThermo::Init(){
 	//tempe.push_back(169.8);
 	//tempe.push_back(158.5);
 	
-	//	150‚©‚ç•ú”M
+	//	150â„ƒã‹ã‚‰æ”¾ç†±
 	//double tempe2[10] = {158.6, 158.3, 156.8, 153.9, 150.4, 146.0, 140.3, 134.8, 130.8, 125.7};
 	//tempe.push_back(158.6);
 	//tempe.push_back(158.3);
@@ -346,7 +350,7 @@ void PHFemThermo::Init(){
 	//tempe.push_back(130.8);
 	//tempe.push_back(125.7);
 
-	//150
+	//150â„ƒ
 	//tempe.push_back(100.0);
 	//tempe.push_back(100.0);
 	//tempe.push_back(99.4);
@@ -372,7 +376,7 @@ void PHFemThermo::Init(){
 	//tempe.push_back(48.4);
 	//tempe.push_back(48.0);
 
-	//	50	XVƒ^ƒCƒ~ƒ“ƒO 
+	//	50	æ›´æ–°ã‚¿ã‚¤ãƒŸãƒ³ã‚° 
 	//tempe.push_back(50.0);
 	//tempe.push_back(49.9);
 	//tempe.push_back(49.9);
@@ -385,8 +389,8 @@ void PHFemThermo::Init(){
 	//tempe.push_back(48.3);
 	//tempe.push_back(48.0);
 
-	//%%%		‰Á”M‚Ìƒpƒ‰ƒ[ƒ^
-	//	‚Í‚¶‚ß‚©‚ç@10sec 10:01:56
+	//%%%		åŠ ç†±ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	//	ã¯ã˜ã‚ã‹ã‚‰ã€€10sec 10:01:56
 	//tempe.push_back(29.7);
 	//tempe.push_back(29.7);
 	//tempe.push_back(29.6);
@@ -401,80 +405,80 @@ void PHFemThermo::Init(){
 
 
 
-	//%%%%%		‰Šú‰·“x‚Æ‚µ‚ÄA‰~ŠÂó‚Ì‰·“x•ª•z‚ğg‚¢‚½‚¢‚Æ‚«‚Ég‚¤	SetConcentricHeatMap()‚Æˆê‚Ég‚¤
-//	SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));		//	-0.001‚É‚µ‚Ä‚àA‰Šú‰·“x‚Í•s•Ï‚¾‚Á‚½B 7/4ƒRƒƒ“ƒgƒAƒEƒg shiba
-	//DSTR << "“ü—Í check it out" <<std::endl;
+	//%%%%%		åˆæœŸæ¸©åº¦ã¨ã—ã¦ã€å††ç’°çŠ¶ã®æ¸©åº¦åˆ†å¸ƒã‚’ä½¿ã„ãŸã„ã¨ãã«ä½¿ã†	SetConcentricHeatMap()ã¨ä¸€ç·’ã«ä½¿ã†
+//	SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));		//	-0.001ã«ã—ã¦ã‚‚ã€åˆæœŸæ¸©åº¦ã¯ä¸å¤‰ã ã£ãŸã€‚ 7/4ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ shiba
+	//DSTR << "å…¥åŠ› check it out" <<std::endl;
 	//for(unsigned i=0; i< tempe.size();++i){
 	//	DSTR << round[i] << "; "<< i*0.01 <<"; " <<  tempe[i] << std::endl;
 	//}
-	//üˆÍ‚Ö‚Ì”M“`’B‰·“x‚Ì‰Šú‰»(temp“x‚É‚·‚é)@‚@”MçtË
+	//å‘¨å›²ã¸ã®ç†±ä¼é”æ¸©åº¦ã®åˆæœŸåŒ–(tempåº¦ã«ã™ã‚‹)ã€€â‰ ã€€ç†±è¼»å°„
 	InitTcAll(temp_c);
 	InitToutAll(temp_out);
 	SetThermalEmissivityToVerticesAll(ems,ems_const);	
 	for(int id=0;id<NSurfaceVertices();++id){
 		vertexVars[id].beRadiantHeat =true;
 	}
-	///	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+	///	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 	SetHeatTransRatioToAllVertex();
 	
 	DSTR << "temp_c " << temp_c <<std::endl;
-	//>	”M•úËŠÖŒW	LMSS
+	//>	ç†±æ”¾å°„é–¢ä¿‚	LMSS
 	DSTR << "temp_out "<< temp_out <<std::endl; 
 	DSTR << "ems "<< ems <<std::endl; 
-	//SetThermalEmissivityToVerticesAll(radiantHeat);				///	b’è’l0.0‚Å‰Šú‰»	F”M•úË‚Í‚µ‚È‚¢‚—	
+	//SetThermalEmissivityToVerticesAll(radiantHeat);				///	æš«å®šå€¤0.0ã§åˆæœŸåŒ–	ï¼šç†±æ”¾å°„ã¯ã—ãªã„ï½—	
 
-	//vertices.temp‚ğ‚·‚×‚ÄATVecAll‚Ö‘ã“ü‚·‚é
+	//vertices.tempã‚’ã™ã¹ã¦ã€TVecAllã¸ä»£å…¥ã™ã‚‹
 	CreateTempVertex();
 
-	//”M“`“±—¦A–§“xA”ä”MA”M“`’B—¦@‚Ìƒpƒ‰ƒ[ƒ^[‚ğİ’èE‘ã“ü
-		//PHFemThermo‚Ìƒƒ“ƒo•Ï”‚Ì’l‚ğ‘ã“ü CADThermo‚æ‚èA0.574;//‹Ê‚Ë‚¬‚Ì’l//”M“`“±—¦[W/(‚EK)]@Cp = 1.96 * (Ndt);//‹Ê‚Ë‚¬‚Ì”ä”M[kJ/(kgEK) 1.96kJ/(kg K),i‹Ê‚Ë‚¬‚Ì–§“xjH•i‰Á”M‚Ì‰ÈŠwp64‚æ‚è970kg/m^3
-		//”M“`’B—¦‚Ì’PˆÊŒn@W/(m^2 K)Ë‚±‚ê‚ÍSI’PˆÊŒn‚È‚Ì‚©H@25‚Í˜_•¶(MEAT COOKING SIMULATION BY FINITE ELEMENTS)‚ÌƒI[ƒuƒ“‰Á”M‚ÌÀ‘ª’l
+	//ç†±ä¼å°ç‡ã€å¯†åº¦ã€æ¯”ç†±ã€ç†±ä¼é”ç‡ã€€ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’è¨­å®šãƒ»ä»£å…¥
+		//PHFemThermoã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å€¤ã‚’ä»£å…¥ CADThermoã‚ˆã‚Šã€0.574;//ç‰ã­ãã®å€¤//ç†±ä¼å°ç‡[W/(ï½ãƒ»K)]ã€€Cp = 1.96 * (Ndt);//ç‰ã­ãã®æ¯”ç†±[kJ/(kgãƒ»K) 1.96kJ/(kg K),ï¼ˆç‰ã­ãã®å¯†åº¦ï¼‰é£Ÿå“åŠ ç†±ã®ç§‘å­¦p64ã‚ˆã‚Š970kg/m^3
+		//ç†±ä¼é”ç‡ã®å˜ä½ç³»ã€€W/(m^2 K)â‡’ã“ã‚Œã¯SIå˜ä½ç³»ãªã®ã‹ï¼Ÿã€€25ã¯è«–æ–‡(MEAT COOKING SIMULATION BY FINITE ELEMENTS)ã®ã‚ªãƒ¼ãƒ–ãƒ³åŠ ç†±æ™‚ã®å®Ÿæ¸¬å€¤
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	//. ”M“`’B‚·‚é SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
-	//. ”M“`’B‚µ‚È‚¢
-//	SetInitThermoConductionParam(THCOND,RHO,SPECIFICHEAT,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw	//	SetInitThermoConductionParam(0.574,970,0.1960,0 );
+	//. ç†±ä¼é”ã™ã‚‹ SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:ç†±ä¼å°ç‡ ,roh:å¯†åº¦,	specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960 ,ã€€heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
+	//. ç†±ä¼é”ã—ãªã„
+//	SetInitThermoConductionParam(THCOND,RHO,SPECIFICHEAT,0 );		// ç†±ä¼é”ç‡=0;ã«ã—ã¦ã„ã‚‹w	//	SetInitThermoConductionParam(0.574,970,0.1960,0 );
 	DSTR << "thConduct:" << thConduct << std::endl;
 	
 
-	//’f”M‰ß’ö
-	//SetInitThermoConductionParam(0.574,970,0.1960,0.0);		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
-	//‚±‚ê‚çA•Ï”’l‚ÍŒã‚©‚çŒvZ‚Ì“r’†‚Å•ÏX‚Å‚«‚é‚æ‚¤‚ÈSetParam()ŠÖ”‚ğì‚Á‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚©‚ÈH
+	//æ–­ç†±éç¨‹
+	//SetInitThermoConductionParam(0.574,970,0.1960,0.0);		//> thConduct:ç†±ä¼å°ç‡ ,roh:å¯†åº¦,	specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960 ,ã€€heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
+	//ã“ã‚Œã‚‰ã€å¤‰æ•°å€¤ã¯å¾Œã‹ã‚‰è¨ˆç®—ã®é€”ä¸­ã§å¤‰æ›´ã§ãã‚‹ã‚ˆã†ãªSetParam()é–¢æ•°ã‚’ä½œã£ã¦ãŠã„ãŸã»ã†ãŒã„ã„ã‹ãªï¼Ÿ
 
-	//> ”M—¬‘©‚Ì‰Šú‰»
+	//> ç†±æµæŸã®åˆæœŸåŒ–
 	//SetVtxHeatFluxAll(0.0);
 
 
-	//>	s—ñ‚Ìì¬@s—ñ‚Ìì¬‚É•K—v‚È•Ï”‚Í‚±‚ÌsˆÈ‘O‚Éİ’è‚ª•K—v
-		//ŒvZ‚É—p‚¢‚éƒ}ƒgƒŠƒNƒXAƒxƒNƒgƒ‹‚ğì¬iƒƒbƒVƒ…‚²‚Æ‚Ì—v‘f„«s—ñ/ƒxƒNƒgƒ‹Ë‘S‘Ì„«s—ñ/ƒxƒNƒgƒ‹j
-		//{T}cƒxƒNƒgƒ‹‚Ìß“_‚Ì•À‚Ñ‡‚É•À‚Ô‚æ‚¤‚ÉAŒW”s—ñ‚ğ‰ÁZ‚·‚éBŒW”s—ñ‚É‚ÍA–ÊÏ‚â‘ÌÏA”M“`’B—¦‚È‚Ç‚Ìƒpƒ‰ƒ[ƒ^‚ÌÏ‚ğ‚µ‚Ä‚µ‚Ü‚Á‚½‚à‚Ì‚ğ“ü‚ê‚éB
+	//>	è¡Œåˆ—ã®ä½œæˆã€€è¡Œåˆ—ã®ä½œæˆã«å¿…è¦ãªå¤‰æ•°ã¯ã“ã®è¡Œä»¥å‰ã«è¨­å®šãŒå¿…è¦
+		//è¨ˆç®—ã«ç”¨ã„ã‚‹ãƒãƒˆãƒªã‚¯ã‚¹ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆï¼ˆãƒ¡ãƒƒã‚·ãƒ¥ã”ã¨ã®è¦ç´ å‰›æ€§è¡Œåˆ—/ãƒ™ã‚¯ãƒˆãƒ«â‡’å…¨ä½“å‰›æ€§è¡Œåˆ—/ãƒ™ã‚¯ãƒˆãƒ«ï¼‰
+		//{T}ç¸¦ãƒ™ã‚¯ãƒˆãƒ«ã®ç¯€ç‚¹ã®ä¸¦ã³é †ã«ä¸¦ã¶ã‚ˆã†ã«ã€ä¿‚æ•°è¡Œåˆ—ã‚’åŠ ç®—ã™ã‚‹ã€‚ä¿‚æ•°è¡Œåˆ—ã«ã¯ã€é¢ç©ã‚„ä½“ç©ã€ç†±ä¼é”ç‡ãªã©ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®ç©ã‚’ã—ã¦ã—ã¾ã£ãŸã‚‚ã®ã‚’å…¥ã‚Œã‚‹ã€‚
 
 
-	//> IH‰Á”M‚·‚éface‚ğ‚ ‚é’ö“x(•\–Êface && ‰º’ê–Ê)i‚éAŠÖŒW‚µ‚»‚¤‚Èfaceß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚µAface[].mayIHheated‚ğ”»’è
+	//> IHåŠ ç†±ã™ã‚‹faceã‚’ã‚ã‚‹ç¨‹åº¦(è¡¨é¢face && ä¸‹åº•é¢)çµã‚‹ã€é–¢ä¿‚ã—ãã†ãªfaceç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã—ã€face[].mayIHheatedã‚’åˆ¤å®š
 	//CalcVtxDisFromOrigin();
-	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));		// “S”Â‚ÌŒ´“_À•W‚ğˆø”‚É“ü‚êA‘ÎÌ«‚ª‡‚¤‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));		// é‰„æ¿ã®åŸç‚¹åº§æ¨™ã‚’å¼•æ•°ã«å…¥ã‚Œã€å¯¾ç§°æ€§ãŒåˆã†ã‚ˆã†ã«ãªã£ã¦ã„ã‚‹ã€‚
 	
-	//>	IH‚©‚ç‚Ì’PˆÊŠÔ“–‚½‚è‚Ì‰Á”M”M—Ê
-	//’PˆÊŠÔ“–‚½‚è‚Ì‘‰Á”M”M—Ê	231.9; //>	J/sec
+	//>	IHã‹ã‚‰ã®å˜ä½æ™‚é–“å½“ãŸã‚Šã®åŠ ç†±ç†±é‡
+	//å˜ä½æ™‚é–“å½“ãŸã‚Šã®ç·åŠ ç†±ç†±é‡	231.9; //>	J/sec
 		
 	//..debug 
-	//ƒoƒ“ƒhó‰Á”M
+	//ãƒãƒ³ãƒ‰çŠ¶åŠ ç†±
 	//	CalcIHdqdtband_(-0.02,0.20,231.9 * 0.005 * 1e6);
 
 	
-	//%%	IH‰Á”M‚Ìƒ‚[ƒhØ‘Ö
-	//	ƒ‰ƒCƒ“ó‚É‰Á”M
-	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	’l‚ğ•Ï‚¦‚ÄÀŒ±	//*1e3@//*1e4 //5e3
-	//	‰~ŠÂó‚É‰Á”M
+	//%%	IHåŠ ç†±ã®ãƒ¢ãƒ¼ãƒ‰åˆ‡æ›¿
+	//	ãƒ©ã‚¤ãƒ³çŠ¶ã«åŠ ç†±
+	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	å€¤ã‚’å¤‰ãˆã¦å®Ÿé¨“	//*1e3ã€€//*1e4 //5e3
+	//	å††ç’°çŠ¶ã«åŠ ç†±
 	
-	//CalcIHarea(0.04,0.095,231.9 * 0.005 * 1e6);		//	g‚Á‚Ä‚¢‚éH
+	//CalcIHarea(0.04,0.095,231.9 * 0.005 * 1e6);		//	ä½¿ã£ã¦ã„ã‚‹ï¼Ÿ
 
 
 
-	//	‚±‚ÌŒã‚ÅA”M—¬‘©ƒxƒNƒgƒ‹‚ğŒvZ‚·‚éŠÖ”‚ğŒÄ‚Ño‚·
-	InitCreateMatC();					///	CreateMatC‚Ì‰Šú‰»
-	InitVecFAlls();					///	VecFAll—Ş‚Ì‰Šú‰»
-	InitCreateMatk();					///	CreateMatK‚Ì‰Šú‰»
-	//..	CreateLocalMatrixAndSet();			//> ˆÈã‚Ìˆ—‚ğA‚±‚ÌŠÖ”‚ÉW–ñ
+	//	ã“ã®å¾Œã§ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°ã‚’å‘¼ã³å‡ºã™
+	InitCreateMatC();					///	CreateMatCã®åˆæœŸåŒ–
+	InitVecFAlls();					///	VecFAllé¡ã®åˆæœŸåŒ–
+	InitCreateMatk();					///	CreateMatKã®åˆæœŸåŒ–
+	//..	CreateLocalMatrixAndSet();			//> ä»¥ä¸Šã®å‡¦ç†ã‚’ã€ã“ã®é–¢æ•°ã«é›†ç´„
 
 	keisuInv.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisuInv.clear();
@@ -482,34 +486,34 @@ void PHFemThermo::Init(){
 	rightkeisu.clear();
 
 	//std::ofstream matktetout;
-	////Šel–Ê‘Ì‚ÌmatK‚ğo—Í
+	////å„å››é¢ä½“ã®matKã‚’å‡ºåŠ›
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	matktetout.open("matktetout.csv");
 	//}
 
-	//	l–Ê‘Ì‚²‚Æ‚ÉŒvZ
+	//	å››é¢ä½“ã”ã¨ã«è¨ˆç®—
 	for(unsigned i=0; i < mesh->tets.size(); i++){
 
 #if 1
-		/*¬–ìŒ´’Ç‰Á‚±‚±‚©‚ç--------------------------------------------*/
-		//•\–Êface‚Ì–ÊÏ‚ğŒvZ
+		/*å°é‡åŸè¿½åŠ ã“ã“ã‹ã‚‰--------------------------------------------*/
+		//è¡¨é¢faceã®é¢ç©ã‚’è¨ˆç®—
 		for(unsigned j= 0 ; j < 4; j++){
-			if(mesh->tets[i].faceIDs[j] < (int)mesh->nSurfaceFace){			///	ŠOŠk‚Ì–Ê
-				///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
+			if(mesh->tets[i].faceIDs[j] < (int)mesh->nSurfaceFace){			///	å¤–æ®»ã®é¢
+				///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
 				faceVars[mesh->tets[i].faceIDs[j]].area = CalcTriangleArea(mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[0], mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[1], mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[2]);
 			}
 		}
-		/*¬–ìŒ´’Ç‰Á‚±‚±‚Ü‚Å--------------------------------------------*/
+		/*å°é‡åŸè¿½åŠ ã“ã“ã¾ã§--------------------------------------------*/
 #endif
 		tetVars[i].volume = CalcTetrahedraVolume2(i);
 
-		//Šes—ñ‚ğì‚Á‚ÄAƒKƒEƒXƒUƒCƒfƒ‹‚ÅŒvZ‚·‚é‚½‚ß‚ÌŒW”‚ÌŠî–{‚ğì‚éBTimestep‚Ì“ü‚Á‚Ä‚¢‚é€‚ÍA‚±‚Ìƒ\[ƒX(SetDesc())‚Å‚ÍAÀŒ»‚Å‚«‚È‚¢‚±‚Æ‚ª•ª‚©‚Á‚½(NULL‚ª•Ô‚Á‚Ä‚­‚é)
-		CreateMatkLocal(i);				///	Matk1 Matk2(XV‚ª•K—v‚Èê‡‚ª‚ ‚é)‚ğì‚é	//ifdefƒXƒCƒbƒ`‚Å‘S‘Ì„«s—ñ‚à(•\¦—p‚¾‚ª)¶¬‰Â”\
-		//CreateMatKall();		//CreateMatkLocal();‚ÉÀ‘•‚µ‚½‚Ì‚ÅAŒã’ö•ª‚¯‚éB
+		//å„è¡Œåˆ—ã‚’ä½œã£ã¦ã€ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã®ä¿‚æ•°ã®åŸºæœ¬ã‚’ä½œã‚‹ã€‚Timestepã®å…¥ã£ã¦ã„ã‚‹é …ã¯ã€ã“ã®ã‚½ãƒ¼ã‚¹(SetDesc())ã§ã¯ã€å®Ÿç¾ã§ããªã„ã“ã¨ãŒåˆ†ã‹ã£ãŸ(NULLãŒè¿”ã£ã¦ãã‚‹)
+		CreateMatkLocal(i);				///	Matk1 Matk2(æ›´æ–°ãŒå¿…è¦ãªå ´åˆãŒã‚ã‚‹)ã‚’ä½œã‚‹	//ifdefã‚¹ã‚¤ãƒƒãƒã§å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚‚(è¡¨ç¤ºç”¨ã ãŒ)ç”Ÿæˆå¯èƒ½
+		//CreateMatKall();		//CreateMatkLocal();ã«å®Ÿè£…ã—ãŸã®ã§ã€å¾Œç¨‹åˆ†ã‘ã‚‹ã€‚
 		CreatedMatCAll(i);
 		CreateVecFAll(i);
 
-	//	//l–Ê‘Ì‚²‚Æ‚Ématk‚ğo—Í
+	//	//å››é¢ä½“ã”ã¨ã«matkã‚’å‡ºåŠ›
 	//	if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//		//matktetout << i << std::endl;
 	//		DSTR << i << std::endl;
@@ -526,7 +530,7 @@ void PHFemThermo::Init(){
 	//	}
 	}
 
-	////f‚ğ•ªŠ„‚·‚é”ä—¦‚ğ•\‚·fpat‚ğì¬
+	////fã‚’åˆ†å‰²ã™ã‚‹æ¯”ç‡ã‚’è¡¨ã™fpatã‚’ä½œæˆ
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	makeFPartition(1);
 	//	DSTR << "fpat" << std::endl;
@@ -545,7 +549,7 @@ void PHFemThermo::Init(){
 
 	//for(unsigned j =0;j<mesh->vertices.size();j++){
 	//	if(matKAll[j][j] != dMatKAll[0][j]){
-	//		DSTR << j <<" ¬•ª‚Ì—v‘f‚Í‚¨‚©‚µ‚¢I’²¸‚ª•K—v‚Å‚ ‚éB matKAllF" << matKAll[j][j] << " dMatKAllF" << dMatKAll[0][j] <<std::endl;
+	//		DSTR << j <<" æˆåˆ†ã®è¦ç´ ã¯ãŠã‹ã—ã„ï¼èª¿æŸ»ãŒå¿…è¦ã§ã‚ã‚‹ã€‚ matKAllï¼š" << matKAll[j][j] << " dMatKAllï¼š" << dMatKAll[0][j] <<std::endl;
 	//	}
 	//}
 
@@ -594,27 +598,27 @@ void PHFemThermo::Init(){
 	//}
 
 #if 1
-	//’¸“_‚Ì•\–Ê–ÊÏ‚ğŒvZi¬–ìŒ´’Ç‰Áj
+	//é ‚ç‚¹ã®è¡¨é¢é¢ç©ã‚’è¨ˆç®—ï¼ˆå°é‡åŸè¿½åŠ ï¼‰
 	calcVerticesArea();
 #endif
 
 #if 0
 
-	//	’¸“_‚P‚Ì’S“–‘ÌÏ‚É‘Î‚µA”M—Ê‚ğ‰Á‚¦‚é‚½‚ß‚ÉA’S“–‘ÌÏŠ·Z‚Å”M—Ê‚ğ’¸“_‚Ì‰·“x‚Æ‚µ‚Ä—^‚¦‚éB{F}‚ğg‚í‚È‚¢‚Ì‚ÅA”M—¬‘©‚ğg‚í‚È‚¢B
+	//	é ‚ç‚¹ï¼‘ã®æ‹…å½“ä½“ç©ã«å¯¾ã—ã€ç†±é‡ã‚’åŠ ãˆã‚‹ãŸã‚ã«ã€æ‹…å½“ä½“ç©æ›ç®—ã§ç†±é‡ã‚’é ‚ç‚¹ã®æ¸©åº¦ã¨ã—ã¦ä¸ãˆã‚‹ã€‚{F}ã‚’ä½¿ã‚ãªã„ã®ã§ã€ç†±æµæŸã‚’ä½¿ã‚ãªã„ã€‚
 	double rcv=0.0;
 	for(unsigned i=0;i<vertices[0].tets.size();i++){
 		rcv += tets[vertices[0].tets[i]].volume * RHO * SPECIFICHEAT * 5 / 20; 
 	}
-	double kuwae =1.58;	//	‰Á‚¦‚é”M—Ê
+	double kuwae =1.58;	//	åŠ ãˆã‚‹ç†±é‡
 	//vertices[0].temp = kuwae / rcv;
 	SetVertexTemp(0,kuwae / rcv);
 #endif
-	//‚±‚Ìtemp‚ğTVecAll‚Éİ’è
-	//C,K‚¾‚¯‚ÌŒvZ‚ğ‚³‚¹‚Ä—lq‚ğŒ©‚é
+	//ã“ã®tempã‚’TVecAllã«è¨­å®š
+	//C,Kã ã‘ã®è¨ˆç®—ã‚’ã•ã›ã¦æ§˜å­ã‚’è¦‹ã‚‹
 
 
 	int hogeshidebug =0;
-	//	ß“_‰·“x„ˆÚ‚Ì‘‚«o‚µ
+	//	ç¯€ç‚¹æ¸©åº¦æ¨ç§»ã®æ›¸ãå‡ºã—
 //	templog.open("templog.csv");
 
 	//matCAllout.open("matCAllout.txt"); 
@@ -628,7 +632,7 @@ void PHFemThermo::Init(){
 	//matCAllout.open("matCAll-1out.txt");
 	//matCAllout << matCAll.inv() << std::endl;
 	//matCAllout.close();
-	////scilab‚ğŒÄ‚Î‚È‚¢‚ÅASPR‚Ì‹@”\‚ÅAC.inv() K ‚ğ‹‚ß‚é
+	////scilabã‚’å‘¼ã°ãªã„ã§ã€SPRã®æ©Ÿèƒ½ã§ã€C.inv() K ã‚’æ±‚ã‚ã‚‹
 	//matCAllout.open("matCAll.inv()xmatKAll.txt");
 	//matCAllout << matCAll.inv() * matKAll << std::endl; 
 	//matCAllout.close();
@@ -645,35 +649,35 @@ void PHFemThermo::Init(){
 	//	}
 	//	rowval.push_back(tempval);
 	//}
-	//matCAllout.open("matCAll.inv()xmatKAll‚ÌŠe—ñ‚Ì˜a.txt");
+	//matCAllout.open("matCAll.inv()xmatKAllã®å„åˆ—ã®å’Œ.txt");
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	matCAllout << rowval[i] <<std::endl;
 	//}
 	//matCAllout.close();
 
-	//ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+	//ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 	COUNT = 0;
 
-	//‰·“x•Ï‰»o—Í
+	//æ¸©åº¦å¤‰åŒ–å‡ºåŠ›
 	checkTVecAllout.open("checkTVecAllout.csv");
-	checkTVecAllout <<"ŠÔ" << COUNT<<", ";
+	checkTVecAllout <<"æ™‚é–“" << COUNT<<", ";
 	for(unsigned i=0; i < mesh->vertices.size();i++){
 		if(i != mesh->vertices.size() -1){
-			checkTVecAllout << "’¸“_" << i << ", ";	
+			checkTVecAllout << "é ‚ç‚¹" << i << ", ";	
 		}
 		else{
-			checkTVecAllout << "’¸“_" << i << std::endl;
+			checkTVecAllout << "é ‚ç‚¹" << i << std::endl;
 		}
 	}
 	FEMLOG.open("femLog.csv");
 
-	//	CPS‚ÌŒo•Ï‰»‚ğ‘‚«o‚·
+	//	CPSã®çµŒæ™‚å¤‰åŒ–ã‚’æ›¸ãå‡ºã™
 	//cpslog.open("cpslog.csv");
 
-	// ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+	// ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 	Ndt =0;
 
-	//…•ªö”­ü‚è‚Ì‰Šú‰»
+	//æ°´åˆ†è’¸ç™ºå‘¨ã‚Šã®åˆæœŸåŒ–
 	//InitMoist();
 
 	//this->OutputMatKall();
@@ -699,7 +703,7 @@ void PHFemThermo::Init(){
 		convTest.resize(mesh->vertices.size());
 		ggConvOut.open("ggConvOut.csv");
 		for(unsigned i=0; i < mesh->vertices.size(); i++){
-			ggConvOut << "’¸“_" << i << ",";
+			ggConvOut << "é ‚ç‚¹" << i << ",";
 		}
 		ggConvOut << std::endl;
 	}
@@ -708,7 +712,7 @@ void PHFemThermo::Init(){
 
 void PHFemThermo::SetStopTimespan(double timespan){
 	stopTime = timespan;
-	//	–{—ˆ‚ÍAPHScene‚ªŠÔ‚ğmanage‚·‚×‚«‚È‚½‚ßAb’è“I
+	//	æœ¬æ¥ã¯ã€PHSceneãŒæ™‚é–“ã‚’manageã™ã¹ããªãŸã‚ã€æš«å®šçš„
 }
 void PHFemThermo::SetIHParamWEEK(double inr2, double outR2, double weekPow2){
 	inr_ = inr2;
@@ -745,36 +749,36 @@ double PHFemThermo::CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N){
 double PHFemThermo::GetVtxTempInTets(Vec3d temppos){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	PTM::TMatrixCol<4,4,double> Vertex;		//	l–Ê‘Ì‚ğ¬‚·4“_‚ÌˆÊ’uÀ•W
-	PTM::TVector<4,double> coeffk;			//	Œ`óŠÖ”“I‚ÈH
-	PTM::TVector<4,double> arbitPos;		//	”CˆÓ“_À•W
-	// [a][x] = [b]‚ğ‰ğ‚­
+	PTM::TMatrixCol<4,4,double> Vertex;		//	å››é¢ä½“ã‚’æˆã™4ç‚¹ã®ä½ç½®åº§æ¨™
+	PTM::TVector<4,double> coeffk;			//	å½¢çŠ¶é–¢æ•°çš„ãªï¼Ÿ
+	PTM::TVector<4,double> arbitPos;		//	ä»»æ„ç‚¹åº§æ¨™
+	// [a][x] = [b]ã‚’è§£ã
 	Vertex.clear();		//a
 	coeffk.clear();		//x
 	arbitPos.clear();	//b
-	// b: ax =b F’P‚É‹ts—ñ‚©‚ç‹‚ß‚é‚Æ‚«
+	// b: ax =b ï¼šå˜ã«é€†è¡Œåˆ—ã‹ã‚‰æ±‚ã‚ã‚‹ã¨ã
 	arbitPos[0] = temppos[0];
 	arbitPos[1] = temppos[1];
 	arbitPos[2] = temppos[2];
 	arbitPos[3] = 1.0;
 	for(unsigned id =0;  id < mesh->tets.size(); id++){
-		// l–Ê‘Ì‚²‚Æ‚É“_‚ªŠÜ‚Ü‚ê‚é‚©”»’è		
+		// å››é¢ä½“ã”ã¨ã«ç‚¹ãŒå«ã¾ã‚Œã‚‹ã‹åˆ¤å®š		
 		for(unsigned j=0; j < 4;j++){
 			Vertex[0][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.x;
 			Vertex[1][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.y;
 			Vertex[2][j] = mesh->vertices[mesh->tets[id].vertexIDs[j]].pos.z;
 			Vertex[3][j] = 1.0;
 		}
-		// ‹ts—ñ‚Å‰ğ‚­
+		// é€†è¡Œåˆ—ã§è§£ã
 		coeffk = Vertex.inv() * arbitPos;
-		//	l–Ê‘Ì‚Ì
-		if( 0-1e-8 <= coeffk[0] && coeffk[0] <= 1+1e-8 && 0-1e-8 <= coeffk[1] && coeffk[1] <= 1+1e-8 && 0-1e-8 <= coeffk[2] && coeffk[2] <= 1+1e-8 && 0-1e-8 <= coeffk[3] && coeffk[3] <= 1+1e-8 ){	//	‹ßÚl–Ê‘Ì‚É“ü‚Á‚Ä‚µ‚Ü‚¤ê‡‚ª‚ ‚è‚»‚¤B‚»‚Ì‹æ•Ê‚ª‚Â‚©‚È‚¢‚Ì‚ÅA0‚â1‚Å‹æØ‚é•û‚ª—Ç‚¢‚Æv‚¤B
-			//	Œ`óŠÖ”‚©‚çAl–Ê‘Ì“à‚Ì‰·“x‚ğ‹‚ß‚é
+		//	å››é¢ä½“ã®
+		if( 0-1e-8 <= coeffk[0] && coeffk[0] <= 1+1e-8 && 0-1e-8 <= coeffk[1] && coeffk[1] <= 1+1e-8 && 0-1e-8 <= coeffk[2] && coeffk[2] <= 1+1e-8 && 0-1e-8 <= coeffk[3] && coeffk[3] <= 1+1e-8 ){	//	è¿‘æ¥å››é¢ä½“ã«å…¥ã£ã¦ã—ã¾ã†å ´åˆãŒã‚ã‚Šãã†ã€‚ãã®åŒºåˆ¥ãŒã¤ã‹ãªã„ã®ã§ã€0ã‚„1ã§åŒºåˆ‡ã‚‹æ–¹ãŒè‰¯ã„ã¨æ€ã†ã€‚
+			//	å½¢çŠ¶é–¢æ•°ã‹ã‚‰ã€å››é¢ä½“å†…ã®æ¸©åº¦ã‚’æ±‚ã‚ã‚‹
 			return CalcTempInnerTets( id , coeffk);		
 		}
 		coeffk.clear();
 	}
-	return DBL_MAX;		//	Œ©‚Â‚©‚ç‚È‚©‚Á‚½ƒTƒCƒ“
+	return DBL_MAX;		//	è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚µã‚¤ãƒ³
 }
 
 
@@ -801,7 +805,7 @@ Vec3d PHFemThermo::GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]){
 	//	O		b   c
 	//	triedge[0] = b->a, triedge[1] = b->c,
 	//  QP =  OP - OQ = Ob + param[0] * ba + param[1] * bc - OQ
-	//	QPÛba,QPÛbc => param[0~1]‚ğ‹‚ß‚é 
+	//	QPâŠ¥ba,QPâŠ¥bc => param[0~1]ã‚’æ±‚ã‚ã‚‹ 
 	double param[2] = {0.0,0.0}; 
 	Vec3d triedge[2] = {Vec3d(0.0,0.0,0.0),Vec3d(0.0,0.0,0.0)};
 	//
@@ -814,12 +818,12 @@ Vec3d PHFemThermo::GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]){
 	return VecQP;
 }
 
-#if 1		// ˆÈ‰ºAÀ‘•‚ª“r’†?
+#if 1		// ä»¥ä¸‹ã€å®Ÿè£…ãŒé€”ä¸­?
 double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//temppos‚ª‚Ç‚Ìl–Ê‘Ì‚É‘®‚·‚é‚©
-	//l–Ê‘Ì‚Ìface–Ê‚ÌŒü‚«‚Å”»’è
+	//tempposãŒã©ã®å››é¢ä½“ã«å±ã™ã‚‹ã‹
+	//å››é¢ä½“ã®faceé¢ã®å‘ãã§åˆ¤å®š
 	DSTR << "from origin: (0.0,0.0,0.0) " << std::endl;
 	for(unsigned i=0;i<mesh->faces.size(); i++){
 		Vec3d facevtx[3] = {mesh->vertices[mesh->faces[i].vertexIDs[0]].pos,mesh->vertices[mesh->faces[i].vertexIDs[1]].pos,mesh->vertices[mesh->faces[i].vertexIDs[2]].pos};
@@ -827,19 +831,19 @@ double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
 		DSTR <<"i: " << i <<", GetDistVecDotTri(temppos,facevtx): " << GetDistVecDotTri(temppos,facevtx) << std::endl;
 		DSTR << std::endl;
 	}
-	//¬‚³‚¢‡‚Ésort‚µ‚Ä‚­‚ê‚éƒRƒ“ƒeƒi‚ğg‚¤ map? list? ’†‚É‚ÍA’·‚³‚Æ’¸“_id‚ğ“ü‚ê‚éBÅ‰‚©‚ç4‚Â‚ß‚Ü‚Å‚Ì’¸“_IDEALLY‚ğŠÜ‚Şl–Ê‘Ì‚ğŒ©‚Â‚¯‚é
-	//Å‰‚ÉAface‚Æƒ}ƒbƒ`ƒ“ƒO‚ğ‚Æ‚Á‚ÄA‚»‚ÌŒã‚ÅA‚»‚Ìface‚ğŠÜ‚Şl–Ê‘Ì‚Æ‚Ìƒ}ƒbƒ`ƒ“ƒO‚ğ‚Æ‚é•û–@‚à‚ ‚è‚»‚¤B‹ï‘Ì“I‚ÈƒAƒ‹ƒSƒŠƒYƒ€‚ª•‚‚©‚Î‚È‚¢
+	//å°ã•ã„é †ã«sortã—ã¦ãã‚Œã‚‹ã‚³ãƒ³ãƒ†ãƒŠã‚’ä½¿ã† map? list? ä¸­ã«ã¯ã€é•·ã•ã¨é ‚ç‚¹idã‚’å…¥ã‚Œã‚‹ã€‚æœ€åˆã‹ã‚‰4ã¤ã‚ã¾ã§ã®é ‚ç‚¹IDEALLYã‚’å«ã‚€å››é¢ä½“ã‚’è¦‹ã¤ã‘ã‚‹
+	//æœ€åˆã«ã€faceã¨ãƒãƒƒãƒãƒ³ã‚°ã‚’ã¨ã£ã¦ã€ãã®å¾Œã§ã€ãã®faceã‚’å«ã‚€å››é¢ä½“ã¨ã®ãƒãƒƒãƒãƒ³ã‚°ã‚’ã¨ã‚‹æ–¹æ³•ã‚‚ã‚ã‚Šãã†ã€‚å…·ä½“çš„ãªã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ãŒæµ®ã‹ã°ãªã„
 	double length = 0.0;
 	for(unsigned id=0; id < mesh->vertices.size(); id++){
-		//ˆê”Ô‹ß‚¢‡‚É‚S‚Â‚Ì“_‚ğƒ\[ƒg
+		//ä¸€ç•ªè¿‘ã„é †ã«ï¼”ã¤ã®ç‚¹ã‚’ã‚½ãƒ¼ãƒˆ
 		length = sqrt( (temppos.x - mesh->vertices[id].pos.x) * (temppos.x - mesh->vertices[id].pos.x)
 			+ (temppos.y - mesh->vertices[id].pos.y) * (temppos.y - mesh->vertices[id].pos.y)
 			+ (temppos.z - mesh->vertices[id].pos.z) * (temppos.z - mesh->vertices[id].pos.z) 
 			);
 	}
-	//AABB‚Å‚â‚é
-	//4“_‚©‚çx,y,z‚Ìmin/max
-	//¬‚³‚¢‡ˆÊ•À‚×‚é
+	//AABBã§ã‚„ã‚‹
+	//4ç‚¹ã‹ã‚‰x,y,zã®min/max
+	//å°ã•ã„é †ä½ä¸¦ã¹ã‚‹
 	ID_LENGTH idl;
 	std::vector<ID_LENGTH> id_length_x;
 	//std::vector<double> xarray,yarray,zarray;
@@ -854,7 +858,7 @@ double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
 	for(unsigned i=0; i < id_length_x.size() ; i++){
 		DSTR << "id_length_x["<< i <<"].id: " << id_length_x[i].id << " .coord: " << id_length_x[i].coord << std::endl; 
 	}
-	//temppos‚É‹ß‚¢‡‚É•À‚×‚é
+	//tempposã«è¿‘ã„é †ã«ä¸¦ã¹ã‚‹
 	std::sort( id_length_x.begin(), id_length_x.end(), LessLength());
 	
 	DSTR << "after .sort()" << std::endl;
@@ -862,17 +866,17 @@ double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
 		DSTR << "id_length_x["<< i <<"].id: " << id_length_x[i].id << " .coord: " << id_length_x[i].coord << std::endl; 
 	}
 
-	//Å‹ß‚ÆÅ‰“‚ğXminAxmax‚É“ü‚ê‚éB‚»‚ÌÛ‚ÉA’¸“_id‚ª•K—v‚È‚Ì‚ÅAã‹L\‘¢‘Ì‚Å‚ÍAÀ•W’l(param)‚ğ’²‚×‚éƒ\[ƒgƒAƒ‹ƒSƒŠƒYƒ€‚ğ‹Lq‚·‚éB
-	//param‚ªÅ¬’l‚Ì‚ÌidAÅ‘å’l‚Ì‚Æ‚«‚Ìid‚ğg‚Á‚ÄA’¸“_‚Ì¯•Ê‚ğ‚·‚é
+	//æœ€è¿‘ã¨æœ€é ã‚’Xminã€xmaxã«å…¥ã‚Œã‚‹ã€‚ãã®éš›ã«ã€é ‚ç‚¹idãŒå¿…è¦ãªã®ã§ã€ä¸Šè¨˜æ§‹é€ ä½“ã§ã¯ã€åº§æ¨™å€¤(param)ã‚’èª¿ã¹ã‚‹ã‚½ãƒ¼ãƒˆã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è¨˜è¿°ã™ã‚‹ã€‚
+	//paramãŒæœ€å°å€¤ã®æ™‚ã®idã€æœ€å¤§å€¤ã®ã¨ãã®idã‚’ä½¿ã£ã¦ã€é ‚ç‚¹ã®è­˜åˆ¥ã‚’ã™ã‚‹
 		
-	//AABB‚©‚çAtemppose‚ª‚±‚Ìl–Ê‘Ì‚Ì’†‚©A‹ß‚­‚©A”»’è‚·‚éB
-	//’†‚È‚ç—Ç‚µI
-	//’†‚¶‚á‚È‚¯‚ê‚ÎA‹ß—×‚Ìl–Ê‘Ì‚ğ’T‚·
+	//AABBã‹ã‚‰ã€tempposeãŒã“ã®å››é¢ä½“ã®ä¸­ã‹ã€è¿‘ãã‹ã€åˆ¤å®šã™ã‚‹ã€‚
+	//ä¸­ãªã‚‰è‰¯ã—ï¼
+	//ä¸­ã˜ã‚ƒãªã‘ã‚Œã°ã€è¿‘éš£ã®å››é¢ä½“ã‚’æ¢ã™
 	
 
-	//‘®‚·‚él–Ê‘Ì‚ÌŒ`óŠÖ”‚©‚çA‰·“x‚ğæ“¾ T=NT‚æ‚è
+	//å±ã™ã‚‹å››é¢ä½“ã®å½¢çŠ¶é–¢æ•°ã‹ã‚‰ã€æ¸©åº¦ã‚’å–å¾— T=NTã‚ˆã‚Š
 
-	//‰·“x‚ğæ“¾‚Å‚«‚½‚çA•Ô‚·Bƒ_ƒ‚È‚çnull‚©DBL_MAX
+	//æ¸©åº¦ã‚’å–å¾—ã§ããŸã‚‰ã€è¿”ã™ã€‚ãƒ€ãƒ¡ãªã‚‰nullã‹DBL_MAX
 	//if(temp) return temp:
 	//else	return null;
 	return 1;
@@ -882,14 +886,14 @@ double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
 void PHFemThermo::CalcVtxDisFromOrigin(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//>	nSurface‚Ì“àAx,zÀ•W‚©‚ç‹——£‚ğ‹‚ß‚Äsqrt(2æ˜a)A‚»‚ê‚ğFemVertex‚ÉŠi”[‚·‚é
-	//> “¯S‰~Œn‚ÌŒvZ‚É—˜—p‚·‚é@distance from origin
+	//>	nSurfaceã®å†…ã€x,zåº§æ¨™ã‹ã‚‰è·é›¢ã‚’æ±‚ã‚ã¦sqrt(2ä¹—å’Œ)ã€ãã‚Œã‚’FemVertexã«æ ¼ç´ã™ã‚‹
+	//> åŒå¿ƒå††ç³»ã®è¨ˆç®—ã«åˆ©ç”¨ã™ã‚‹ã€€distance from origin
 	
-	/// ”»’èƒtƒ‰ƒO‚Ì‰Šú‰»
+	/// åˆ¤å®šãƒ•ãƒ©ã‚°ã®åˆæœŸåŒ–
 	for(unsigned i=0; i<mesh->nSurfaceFace; i++){
 		faceVars[i].mayIHheated = false;
 	}
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	for(unsigned i =0;i<mesh->vertices.size();i++){
 		vertexVars[i].disFromOrigin =0.0;
 	}
@@ -897,23 +901,23 @@ void PHFemThermo::CalcVtxDisFromOrigin(){
 	/// debug
 	//DSTR << "faces.size(): " << faces.size() << std::endl;
 
-	//> •\–Êface‚Ì“àAŒ´“_‚©‚çŠeface‚Ìß“_‚Ìƒ[ƒJƒ‹(x,z)À•WŒn‚Å‚Ì•½–Êã‚Ì‹——£‚ÌŒvZ‚ğAface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚Ì‚à‚Ì‚É‘Î‚µ‚ÄAIH‰Á”M‚Ì‰Â”\«‚ğ¦‚·ƒtƒ‰ƒO‚ğİ’è
+	//> è¡¨é¢faceã®å†…ã€åŸç‚¹ã‹ã‚‰å„faceã®ç¯€ç‚¹ã®ãƒ­ãƒ¼ã‚«ãƒ«(x,z)åº§æ¨™ç³»ã§ã®å¹³é¢ä¸Šã®è·é›¢ã®è¨ˆç®—ã‚’ã€faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®ã‚‚ã®ã«å¯¾ã—ã¦ã€IHåŠ ç†±ã®å¯èƒ½æ€§ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 	for(unsigned i=0;i<mesh->nSurfaceFace;i++){
-		//> •\–Ê‚Ìface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚È‚ç‚ÎA‚»‚Ìface‚ğIH‰Á”M‚Ìface–Ê‚Æ”»’è‚µAƒtƒ‰ƒO‚ğ—^‚¦‚é
+		//> è¡¨é¢ã®faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ãªã‚‰ã°ã€ãã®faceã‚’IHåŠ ç†±ã®faceé¢ã¨åˆ¤å®šã—ã€ãƒ•ãƒ©ã‚°ã‚’ä¸ãˆã‚‹
 		if(mesh->vertices[mesh->faces[i].vertexIDs[0]].pos.y < 0.0 && mesh->vertices[mesh->faces[i].vertexIDs[1]].pos.y < 0.0 && mesh->vertices[mesh->faces[i].vertexIDs[2]].pos.y < 0.0){
 			faceVars[i].mayIHheated = true;
-			//	(x,z)•½–Ê‚É‚¨‚¯‚émayIHheated‚Ìface‘Sß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚·‚é
+			//	(x,z)å¹³é¢ã«ãŠã‘ã‚‹mayIHheatedã®faceå…¨ç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹
 			for(unsigned j=0; j<3; j++){
 				vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin = sqrt(mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x * mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x + mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z * mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z);
 			}
 		}
 	}
 
-	//	debug		//>	‚‘¬‰»‘Î‰‚É‚ÍƒRƒƒ“ƒgƒAƒEƒg‚·‚é
-	//>	À•W’l‚ğŠm”F‚·‚é
+	//	debug		//>	é«˜é€ŸåŒ–å¯¾å¿œæ™‚ã«ã¯ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹
+	//>	åº§æ¨™å€¤ã‚’ç¢ºèªã™ã‚‹
 	for(unsigned i=0; i < mesh->nSurfaceFace; i++){
 		if(faceVars[i].mayIHheated){
-			/// 3‚Â‚Ì’¸“_‚Ì‘g‚İ•Ó‚Ìx,z‚ª“¯‚¶‚ÅAyÀ•W‚¾‚¯‚ªˆÙ‚È‚é“_‚Ì‘g‚İ‚ª‚È‚¢‚±‚Æ‚ğŠm”F‚·‚é
+			/// 3ã¤ã®é ‚ç‚¹ã®çµ„ã¿ï¼è¾ºã®x,zãŒåŒã˜ã§ã€yåº§æ¨™ã ã‘ãŒç•°ãªã‚‹ç‚¹ã®çµ„ã¿ãŒãªã„ã“ã¨ã‚’ç¢ºèªã™ã‚‹
 			for(unsigned j=0;j<3;j++){
 				if(mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x == mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x
 					&& mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z == mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.z
@@ -930,26 +934,26 @@ void PHFemThermo::CalcVtxDisFromOrigin(){
 void PHFemThermo::CalcVtxDisFromVertex(Vec2d originVertexIH){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//>	nSurface‚Ì“àAx,zÀ•W‚©‚ç‹——£‚ğ‹‚ß‚Äsqrt(2æ˜a)A‚»‚ê‚ğFemVertex‚ÉŠi”[‚·‚é
-	//> “¯S‰~Œn‚ÌŒvZ‚É—˜—p‚·‚é@distance from origin
+	//>	nSurfaceã®å†…ã€x,zåº§æ¨™ã‹ã‚‰è·é›¢ã‚’æ±‚ã‚ã¦sqrt(2ä¹—å’Œ)ã€ãã‚Œã‚’FemVertexã«æ ¼ç´ã™ã‚‹
+	//> åŒå¿ƒå††ç³»ã®è¨ˆç®—ã«åˆ©ç”¨ã™ã‚‹ã€€distance from origin
 	
-	/// ”»’èƒtƒ‰ƒO‚Ì‰Šú‰»
+	/// åˆ¤å®šãƒ•ãƒ©ã‚°ã®åˆæœŸåŒ–
 	for(unsigned i=0; i<mesh->nSurfaceFace; i++){
 		faceVars[i].mayIHheated = false;
 	}
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	for(unsigned i =0;i<mesh->vertices.size();i++){
 		vertexVars[i].disFromOrigin =0.0;
 	}
-	//> •\–Êface‚Ì“àAŒ´“_‚©‚çŠeface‚Ìß“_‚Ìƒ[ƒJƒ‹(x,z)À•WŒn‚Å‚Ì•½–Êã‚Ì‹——£‚ÌŒvZ‚ğAface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚Ì‚à‚Ì‚É‘Î‚µ‚ÄAIH‰Á”M‚Ì‰Â”\«‚ğ¦‚·ƒtƒ‰ƒO‚ğİ’è
+	//> è¡¨é¢faceã®å†…ã€åŸç‚¹ã‹ã‚‰å„faceã®ç¯€ç‚¹ã®ãƒ­ãƒ¼ã‚«ãƒ«(x,z)åº§æ¨™ç³»ã§ã®å¹³é¢ä¸Šã®è·é›¢ã®è¨ˆç®—ã‚’ã€faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®ã‚‚ã®ã«å¯¾ã—ã¦ã€IHåŠ ç†±ã®å¯èƒ½æ€§ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 	for(unsigned i=0;i<mesh->nSurfaceFace;i++){
-		//> •\–Ê‚Ìface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚È‚ç‚ÎA‚»‚Ìface‚ğIH‰Á”M‚Ìface–Ê‚Æ”»’è‚µAƒtƒ‰ƒO‚ğ—^‚¦‚é
+		//> è¡¨é¢ã®faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ãªã‚‰ã°ã€ãã®faceã‚’IHåŠ ç†±ã®faceé¢ã¨åˆ¤å®šã—ã€ãƒ•ãƒ©ã‚°ã‚’ä¸ãˆã‚‹
 		if(mesh->vertices[mesh->faces[i].vertexIDs[0]].pos.y < 0.0 && mesh->vertices[mesh->faces[i].vertexIDs[1]].pos.y < 0.0 && mesh->vertices[mesh->faces[i].vertexIDs[2]].pos.y < 0.0){
 			faceVars[i].mayIHheated = true;
-			//	(x,z)•½–Ê‚É‚¨‚¯‚émayIHheated‚Ìface‘Sß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚·‚é
+			//	(x,z)å¹³é¢ã«ãŠã‘ã‚‹mayIHheatedã®faceå…¨ç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹
 			for(unsigned j=0; j<3; j++){
 				double dx = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x - originVertexIH[0];
-				double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - originVertexIH[1];	//	•\‹L‚Íy‚¾‚ªAÀ¿zÀ•W‚ª“ü‚Á‚Ä‚¢‚é
+				double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - originVertexIH[1];	//	è¡¨è¨˜ã¯yã ãŒã€å®Ÿè³ªzåº§æ¨™ãŒå…¥ã£ã¦ã„ã‚‹
 				vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
 			}
 		}
@@ -960,7 +964,7 @@ void PHFemThermo::CalcVtxDisFromVertex(Vec2d originVertexIH){
 void PHFemThermo::ScilabTest(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
 
-	//	s—ñ‚Ì“Ç‚İ‘‚«
+	//	è¡Œåˆ—ã®èª­ã¿æ›¸ã
 	Matrix2f A;
 	A.Ex() = Vec2f(1,2);
 	A.Ey() = Vec2f(3,4);
@@ -995,7 +999,7 @@ void PHFemThermo::ScilabTest(){
 	std::cout << y;
 	ScilabJob("clear;");
 
-	//	ƒOƒ‰ƒt•`‰æ
+	//	ã‚°ãƒ©ãƒ•æç”»
 	ScilabJob("t = 0:0.01:2*3.141592653;");
 	ScilabJob("x = sin(t);");
 	ScilabJob("y = cos(t);");
@@ -1007,35 +1011,35 @@ void PHFemThermo::ScilabTest(){
 }
 
 void PHFemThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
-	//‰·“xŒÅ’è‹«ŠEğŒ
+	//æ¸©åº¦å›ºå®šå¢ƒç•Œæ¡ä»¶
 	SetVertexTemp(id,temp);
 }
 
 void PHFemThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransRatio){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//”M“`’B‹«ŠEğŒ
-	//ß“_‚ÌüˆÍ—¬‘Ì‰·“x‚Ìİ’è(K,C,F‚È‚Ç‚Ìs—ñƒxƒNƒgƒ‹‚Ìì¬Œã‚ÉÀs•K—v‚ ‚è)
-//	if(vertices[id].Tc != temp){					//XV‚·‚éß“_‚ÌTc‚ª•Ï‰»‚µ‚½‚¾‚¯ATc‚âFƒxƒNƒgƒ‹‚ğXV‚·‚é
+	//ç†±ä¼é”å¢ƒç•Œæ¡ä»¶
+	//ç¯€ç‚¹ã®å‘¨å›²æµä½“æ¸©åº¦ã®è¨­å®š(K,C,Fãªã©ã®è¡Œåˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®ä½œæˆå¾Œã«å®Ÿè¡Œå¿…è¦ã‚ã‚Š)
+//	if(vertices[id].Tc != temp){					//æ›´æ–°ã™ã‚‹ç¯€ç‚¹ã®TcãŒå¤‰åŒ–ã—ãŸæ™‚ã ã‘ã€Tcã‚„Fãƒ™ã‚¯ãƒˆãƒ«ã‚’æ›´æ–°ã™ã‚‹
 	SetLocalFluidTemp(id,temp);
 	vertexVars[id].heatTransRatio = heatTransRatio;
-	//”M“`’B‹«ŠEğŒ‚ªg‚í‚ê‚é‚æ‚¤‚ÉA‚·‚éB				///	{‚µ‚ÄƒxƒNƒgƒ‹‚ğì‚Á‚Ä‚¢‚é‚Ì‚ÅA‰º‚ÌƒR[ƒh‚Å‚ÍA—]Œv‚É‘«‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚ÄA³‚µ‚¢s—ñ‚ğì‚ê‚È‚¢B
+	//ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ãŒä½¿ã‚ã‚Œã‚‹ã‚ˆã†ã«ã€ã™ã‚‹ã€‚				///	ï¼‹ï¼ã—ã¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã£ã¦ã„ã‚‹ã®ã§ã€ä¸‹ã®ã‚³ãƒ¼ãƒ‰ã§ã¯ã€ä½™è¨ˆã«è¶³ã—ã¦ã—ã¾ã£ã¦ã„ã¦ã€æ­£ã—ã„è¡Œåˆ—ã‚’ä½œã‚Œãªã„ã€‚
 	//for(unsigned i =0;i < vertices[id].tets.size();i++){
-	//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tc‚ğŠÜ‚ŞƒxƒNƒgƒ‹‚ğXV‚·‚é
+	//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tcã‚’å«ã‚€ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ›´æ–°ã™ã‚‹
 	//}
 
-	///	”M“`’B—¦‚ğŠÜ‚Ş€(K2,f3)‚Ì‚İÄŒvZ
-	InitCreateVecf_();				///	•ÏX‚·‚é•K—v‚Ì‚ ‚é€‚Ì‚İA“ü‚ê•¨‚ğ‰Šú‰»
+	///	ç†±ä¼é”ç‡ã‚’å«ã‚€é …(K2,f3)ã®ã¿å†è¨ˆç®—
+	InitCreateVecf_();				///	å¤‰æ›´ã™ã‚‹å¿…è¦ã®ã‚ã‚‹é …ã®ã¿ã€å…¥ã‚Œç‰©ã‚’åˆæœŸåŒ–
 	InitCreateMatk_();
 	for(unsigned i =0; i < mesh->edges.size();i++){
 		edgeVars[i].k = 0.0;
 	}
 	for(unsigned i=0; i< mesh->tets.size();i++){
-		CreateVecFAll(i);				///	VecF‚ÌÄì¬
-		CreateMatkLocal(i);				///	MatK2‚ÌÄì¬ ¨if(deformed==true){matk1‚ğ¶¬}		matK1‚Ímatk1‚Ì•Ï”‚É“ü‚ê‚Ä‚¨‚¢‚ÄAmatk2‚¾‚¯Aì‚Á‚ÄA‰ÁZ
+		CreateVecFAll(i);				///	VecFã®å†ä½œæˆ
+		CreateMatkLocal(i);				///	MatK2ã®å†ä½œæˆ â†’if(deformed==true){matk1ã‚’ç”Ÿæˆ}		matK1ã¯matk1ã®å¤‰æ•°ã«å…¥ã‚Œã¦ãŠã„ã¦ã€matk2ã ã‘ã€ä½œã£ã¦ã€åŠ ç®—
 	}
 //	}
-	///	ß“_‚Ì‘®‚·‚é–Ê‚ÌalphaUpdated‚ğtrue‚É‚·‚é
+	///	ç¯€ç‚¹ã®å±ã™ã‚‹é¢ã®alphaUpdatedã‚’trueã«ã™ã‚‹
 	for(unsigned i=0;i<mesh->vertices[id].faceIDs.size();i++){
 		faceVars[mesh->vertices[id].faceIDs[i]].alphaUpdated = true;
 		alphaUpdated = true;
@@ -1043,24 +1047,24 @@ void PHFemThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp,dou
 }
 
 void PHFemThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp){
-	//”M“`’B‹«ŠEğŒ
-	//ß“_‚ÌüˆÍ—¬‘Ì‰·“x‚Ìİ’è(K,C,F‚È‚Ç‚Ìs—ñƒxƒNƒgƒ‹‚Ìì¬Œã‚ÉÀs•K—v‚ ‚è)
-//	if(vertices[id].Tc != temp){					//XV‚·‚éß“_‚ÌTc‚ª•Ï‰»‚µ‚½‚¾‚¯ATc‚âFƒxƒNƒgƒ‹‚ğXV‚·‚é
+	//ç†±ä¼é”å¢ƒç•Œæ¡ä»¶
+	//ç¯€ç‚¹ã®å‘¨å›²æµä½“æ¸©åº¦ã®è¨­å®š(K,C,Fãªã©ã®è¡Œåˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®ä½œæˆå¾Œã«å®Ÿè¡Œå¿…è¦ã‚ã‚Š)
+//	if(vertices[id].Tc != temp){					//æ›´æ–°ã™ã‚‹ç¯€ç‚¹ã®TcãŒå¤‰åŒ–ã—ãŸæ™‚ã ã‘ã€Tcã‚„Fãƒ™ã‚¯ãƒˆãƒ«ã‚’æ›´æ–°ã™ã‚‹
 		SetLocalFluidTemp(id,temp);
-		//”M“`’B‹«ŠEğŒ‚ªg‚í‚ê‚é‚æ‚¤‚ÉA‚·‚éB
+		//ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ãŒä½¿ã‚ã‚Œã‚‹ã‚ˆã†ã«ã€ã™ã‚‹ã€‚
 		//for(unsigned i =0;i < vertices[id].tets.size();i++){
-		//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tc‚ğŠÜ‚ŞƒxƒNƒgƒ‹‚ğXV‚·‚é
+		//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tcã‚’å«ã‚€ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ›´æ–°ã™ã‚‹
 		//}
 		InitCreateVecf_();
 		for(unsigned i=0; i < GetPHFemMesh()->tets.size();i++){
-			CreateVecFAll(i);				///	VeecF‚ÌÄì¬
-													///	MatK2‚ÌÄì¬¨matK1‚Ímatk1‚Ì•Ï”‚É“ü‚ê‚Ä‚¨‚¢‚ÄAmatk2‚¾‚¯Aì‚Á‚ÄA‰ÁZ
+			CreateVecFAll(i);				///	VeecFã®å†ä½œæˆ
+													///	MatK2ã®å†ä½œæˆâ†’matK1ã¯matk1ã®å¤‰æ•°ã«å…¥ã‚Œã¦ãŠã„ã¦ã€matk2ã ã‘ã€ä½œã£ã¦ã€åŠ ç®—
 		}
 //	}
 }
 
 void PHFemThermo::SetRhoSpheat(double r,double Spheat){
-	//> –§“xA”ä”M of ƒƒbƒVƒ…‚ÌƒOƒ[ƒoƒ‹•Ï”(=ƒƒbƒVƒ…ŒÅ—L‚Ì’l)‚ğXV
+	//> å¯†åº¦ã€æ¯”ç†± of ãƒ¡ãƒƒã‚·ãƒ¥ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°(=ãƒ¡ãƒƒã‚·ãƒ¥å›ºæœ‰ã®å€¤)ã‚’æ›´æ–°
 	rho = r;
 	specificHeat = Spheat;
 }
@@ -1068,34 +1072,34 @@ void PHFemThermo::SetRhoSpheat(double r,double Spheat){
 std::vector<Vec2d> PHFemThermo::CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	2“_‚ğ’Ê‚é’¼ü‚Í1‚Â	2‚Â‚Ì’è”‚ğ‹‚ß‚é
+	//	2ç‚¹ã‚’é€šã‚‹ç›´ç·šã¯1ã¤	2ã¤ã®å®šæ•°ã‚’æ±‚ã‚ã‚‹
 	double constA = 0.0;
 	double constB = 0.0;
-	///	r‚ÆŒğ“_
+	///	rã¨äº¤ç‚¹
 	double constX1 = 0.0;
 	double constX1_ = 0.0;
 	double constY1 = 0.0;
-	///	R‚ÆŒğ“_
+	///	Rã¨äº¤ç‚¹
 	double constX2 = 0.0;
 	double constX2_ = 0.0;
 	double constY2 = 0.0;
 
-	//> ˆø”‚Ì‘ã‘Öˆ—	ŠÖ”‰»‚µ‚½‚Æ‚«‚ÉA•ÏŠ·‚·‚é«
+	//> å¼•æ•°ã®ä»£æ›¿å‡¦ç†	é–¢æ•°åŒ–ã—ãŸã¨ãã«ã€å¤‰æ›ã™ã‚‹â†“
 	unsigned vtxId0 = id0;
 	unsigned vtxId1 = id1;
-	/// Œ´“_‚É‹ß‚¢‡‚É•À‚Ñ‘Ö‚¦
+	/// åŸç‚¹ã«è¿‘ã„é †ã«ä¸¦ã³æ›¿ãˆ
 	if(vertexVars[vtxId0].disFromOrigin > vertexVars[vtxId1].disFromOrigin){
 		unsigned tempId = vtxId0;
 		vtxId0 = vtxId1;
 		vtxId1 = tempId;
 	}
-	/// vtxId0 < vtxId1 ‚ª•ÛØ‚³‚ê‚Ä‚¢‚é
+	/// vtxId0 < vtxId1 ãŒä¿è¨¼ã•ã‚Œã¦ã„ã‚‹
 
-	//	2“_‚ÅŒğ‚í‚é‚±‚Æ‚ª‘O’ñ
-	//> 2“_‚ÌdisFromOrigin‚ğr,R‚Æ”äŠr‚µ‚Ä‚Ç‚¿‚ç‚ÆŒğ‚í‚é‚©‚ğ”»•Ê‚·‚éB
-	//> ‰~ŠÂ‚Æ‚ÌŒğ“_‚ğ‹‚ß‚é
-	// x-z•½–Ê‚Ål‚¦‚Ä‚¢‚é
-	/// constA,B:vtxId0.vtxId1‚ğ’Ê‚é’¼ü‚ÌŒX‚«‚ÆØ•Ğ@/// aconsta,constb‚Í³•‰\‚í‚È‚¢
+	//	2ç‚¹ã§äº¤ã‚ã‚‹ã“ã¨ãŒå‰æ
+	//> 2ç‚¹ã®disFromOriginã‚’r,Rã¨æ¯”è¼ƒã—ã¦ã©ã¡ã‚‰ã¨äº¤ã‚ã‚‹ã‹ã‚’åˆ¤åˆ¥ã™ã‚‹ã€‚
+	//> å††ç’°ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
+	// x-zå¹³é¢ã§è€ƒãˆã¦ã„ã‚‹
+	/// constA,B:vtxId0.vtxId1ã‚’é€šã‚‹ç›´ç·šã®å‚¾ãã¨åˆ‡ç‰‡ã€€/// aconsta,constbã¯æ­£è² æ§‹ã‚ãªã„
 	DSTR << "id0: " << id0 << ", id1: " << id1 <<std::endl;
 	constA = ( mesh->vertices[vtxId0].pos.z - mesh->vertices[vtxId1].pos.z) / ( mesh->vertices[vtxId0].pos.x - mesh->vertices[vtxId1].pos.x);
 	DSTR << "vertices[vtxId0].pos.z: " << mesh->vertices[vtxId0].pos.z <<std::endl;
@@ -1110,60 +1114,60 @@ std::vector<Vec2d> PHFemThermo::CalcIntersectionPoint2(unsigned id0,unsigned id1
 	if(mesh->vertices[vtxId0].pos.z == mesh->vertices[vtxId1].pos.z && mesh->vertices[vtxId0].pos.x == mesh->vertices[vtxId1].pos.x){
 		DSTR << "vertices[vtxId0].pos.y: " << mesh->vertices[vtxId0].pos.y << ", vertices[vtxId1].pos.y: " << mesh->vertices[vtxId1].pos.y << std::endl;
 		if(mesh->vertices[vtxId0].pos.y == mesh->vertices[vtxId1].pos.y)
-			DSTR << "id[" << id0 <<"], id[" << id1 << "] ‚Í“¯‚¶’¸“_ !" << std::endl;
+			DSTR << "id[" << id0 <<"], id[" << id1 << "] ã¯åŒã˜é ‚ç‚¹ !" << std::endl;
 	}
 	
 	constB = mesh->vertices[vtxId0].pos.z - constA * mesh->vertices[vtxId0].pos.x;
 	DSTR << "constB = vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x : " << mesh->vertices[vtxId0].pos.z - constA * mesh->vertices[vtxId0].pos.x << std::endl;
 
-	///	Œğ“_‚ÌÀ•W‚ğŒvZ
-	if(vertexVars[vtxId0].disFromOrigin < r){		/// ”¼Œar‚Ì‰~‚ÆŒğ‚í‚é‚Æ‚«
-		//CalcYfromXatcross(vtxId0,vtxId1,r);	//ŠÖ”‰»‚µ‚È‚¢
-		//> ˆÈ‰ºAŠÖ”‰»,vtxId0,1,r:ˆø”AconstY‚ğ•Ô‚·
+	///	äº¤ç‚¹ã®åº§æ¨™ã‚’è¨ˆç®—
+	if(vertexVars[vtxId0].disFromOrigin < r){		/// åŠå¾„rã®å††ã¨äº¤ã‚ã‚‹ã¨ã
+		//CalcYfromXatcross(vtxId0,vtxId1,r);	//é–¢æ•°åŒ–ã—ãªã„
+		//> ä»¥ä¸‹ã€é–¢æ•°åŒ–,vtxId0,1,r:å¼•æ•°ã€constYã‚’è¿”ã™
 		constX1 = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
 		constX1_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-		// ‚Ç‚¿‚ç‚©‚ª’¸“_‚ÌŠÔ‚É‚ ‚é@‘å¬‚ª‚í‚©‚ç‚È‚¢‚Ì‚ÅAor‚ÅA“_1‚ÌxÀ•WA2‚ÌxÀ•W‚ÆA‚»‚Ì“ü‚ê‘Ö‚¦‚ÆAì‚é
-		//> ü•ª‚Ì—¼’[‚Ì“_‚ÌŠÔ‚É‚ ‚é‚Æ‚«
+		// ã©ã¡ã‚‰ã‹ãŒé ‚ç‚¹ã®é–“ã«ã‚ã‚‹ã€€å¤§å°ãŒã‚ã‹ã‚‰ãªã„ã®ã§ã€orã§ã€ç‚¹1ã®xåº§æ¨™ã€2ã®xåº§æ¨™ã¨ã€ãã®å…¥ã‚Œæ›¿ãˆã¨ã€ä½œã‚‹
+		//> ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®é–“ã«ã‚ã‚‹ã¨ã
 		if( (mesh->vertices[vtxId0].pos.x <= constX1 && constX1 <= mesh->vertices[vtxId1].pos.x) || (mesh->vertices[vtxId1].pos.x <= constX1 && constX1 <= mesh->vertices[vtxId0].pos.x) ){
 			constY1 = sqrt(r * r - constX1 * constX1 );
 		}else{
 			constY1 = sqrt(r * r - constX1_ * constX1_ );
-			constX1 = constX1_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+			constX1 = constX1_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 		}
-	}else if(vertexVars[vtxId0].disFromOrigin < R){		/// ”¼ŒaR‚Ì‰~‚ÆŒğ‚í‚é‚Æ‚«
+	}else if(vertexVars[vtxId0].disFromOrigin < R){		/// åŠå¾„Rã®å††ã¨äº¤ã‚ã‚‹ã¨ã
 		constX1 = (- constA * constB + sqrt(R * R *(constA * constA + 1.0) - constB * constB));
 		constX1_ = (- constA * constB - sqrt(R * R *(constA * constA + 1.0) - constB * constB));
-		// ‚Ç‚¿‚ç‚©‚ª’¸“_‚ÌŠÔ‚É‚ ‚é@‘å¬‚ª‚í‚©‚ç‚È‚¢‚Ì‚ÅAor‚ÅA“_1‚ÌxÀ•WA2‚ÌxÀ•W‚ÆA‚»‚Ì“ü‚ê‘Ö‚¦‚ÆAì‚é
-		//> ü•ª‚Ì—¼’[‚Ì“_‚ÌŠÔ‚É‚ ‚é‚Æ‚«
+		// ã©ã¡ã‚‰ã‹ãŒé ‚ç‚¹ã®é–“ã«ã‚ã‚‹ã€€å¤§å°ãŒã‚ã‹ã‚‰ãªã„ã®ã§ã€orã§ã€ç‚¹1ã®xåº§æ¨™ã€2ã®xåº§æ¨™ã¨ã€ãã®å…¥ã‚Œæ›¿ãˆã¨ã€ä½œã‚‹
+		//> ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®é–“ã«ã‚ã‚‹ã¨ã
 		if( (mesh->vertices[vtxId0].pos.x <= constX1 && constX1 <= mesh->vertices[vtxId1].pos.x) || (mesh->vertices[vtxId1].pos.x <= constX1 && constX1 <= mesh->vertices[vtxId0].pos.x) ){
 			constY1 = sqrt(R * R - constX1 * constX1 );
 		}else{
 			constY1 = sqrt(R * R - constX1_ * constX1_ );
-			constX1 = constX1_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+			constX1 = constX1_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 		}
 		
 	}
-	//> ‚Ç‚¿‚ç‚Æ‚àŒğ‚í‚é‚Æ‚«
+	//> ã©ã¡ã‚‰ã¨ã‚‚äº¤ã‚ã‚‹ã¨ã
 	else if(vertexVars[vtxId0].disFromOrigin < r && R < vertexVars[vtxId1].disFromOrigin){
-		//> ’è”‚ª2‚Â—~‚µ‚¢
+		//> å®šæ•°ãŒ2ã¤æ¬²ã—ã„
 		constX1 = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
 		constX1_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-		// ‚Ç‚¿‚ç‚©‚ª’¸“_‚ÌŠÔ‚É‚ ‚é@‘å¬‚ª‚í‚©‚ç‚È‚¢‚Ì‚ÅAor‚ÅA“_1‚ÌxÀ•WA2‚ÌxÀ•W‚ÆA‚»‚Ì“ü‚ê‘Ö‚¦‚ÆAì‚é
-		//> ü•ª‚Ì—¼’[‚Ì“_‚ÌŠÔ‚É‚ ‚é‚Æ‚«
+		// ã©ã¡ã‚‰ã‹ãŒé ‚ç‚¹ã®é–“ã«ã‚ã‚‹ã€€å¤§å°ãŒã‚ã‹ã‚‰ãªã„ã®ã§ã€orã§ã€ç‚¹1ã®xåº§æ¨™ã€2ã®xåº§æ¨™ã¨ã€ãã®å…¥ã‚Œæ›¿ãˆã¨ã€ä½œã‚‹
+		//> ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®é–“ã«ã‚ã‚‹ã¨ã
 		if( (mesh->vertices[vtxId0].pos.x <= constX1 && constX1 <= mesh->vertices[vtxId1].pos.x) || (mesh->vertices[vtxId1].pos.x <= constX1 && constX1 <= mesh->vertices[vtxId0].pos.x) ){
 			constY1 = sqrt(r * r - constX1 * constX1 );
 		}else{
 			constY1 = sqrt(r * r - constX1_ * constX1_ );
-			constX1 = constX1_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+			constX1 = constX1_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 		}
 		constX2 = (- constA * constB + sqrt(R * R *(constA * constA + 1.0) - constB * constB));
 		constX2_ = (- constA * constB - sqrt(R * R *(constA * constA + 1.0) - constB * constB));
-		//> ü•ª‚Ì—¼’[‚Ì“_‚ÌŠÔ‚É‚ ‚é‚Æ‚«
+		//> ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®é–“ã«ã‚ã‚‹ã¨ã
 		if( (mesh->vertices[vtxId0].pos.x <= constX2 && constX2 <= mesh->vertices[vtxId1].pos.x) || (mesh->vertices[vtxId1].pos.x <= constX2 && constX2 <= mesh->vertices[vtxId0].pos.x) ){
 			constY2 = sqrt(R * R - constX2 * constX2 );
 		}else{
 			constY2 = sqrt(R * R - constX2_ * constX2_ );
-			constX2 = constX2_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+			constX2 = constX2_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 		}
 	}
 	std::vector<Vec2d> intersection;
@@ -1191,54 +1195,54 @@ Vec2d PHFemThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,doub
 	double constX_ = 0.0;
 	double constY = 0.0;
 
-	//> ˆø”‚Ì‘ã‘Öˆ—	ŠÖ”‰»‚µ‚½‚Æ‚«‚ÉA•ÏŠ·‚·‚é«
+	//> å¼•æ•°ã®ä»£æ›¿å‡¦ç†	é–¢æ•°åŒ–ã—ãŸã¨ãã«ã€å¤‰æ›ã™ã‚‹â†“
 	unsigned vtxId0 = id0;
 	unsigned vtxId1 = id1;
-	/// Œ´“_‚É‹ß‚¢‡‚É•À‚Ñ‘Ö‚¦
+	/// åŸç‚¹ã«è¿‘ã„é †ã«ä¸¦ã³æ›¿ãˆ
 	if(vertexVars[vtxId0].disFromOrigin > vertexVars[vtxId1].disFromOrigin){
 		unsigned tempId = vtxId0;
 		vtxId0 = vtxId1;
 		vtxId1 = tempId;
 	}
-	/// vtxId0 < vtxId1 ‚ª•ÛØ‚³‚ê‚Ä‚¢‚é
+	/// vtxId0 < vtxId1 ãŒä¿è¨¼ã•ã‚Œã¦ã„ã‚‹
 
-	//> 2“_‚ÌdisFromOrigin‚ğr,R‚Æ”äŠr‚µ‚Ä‚Ç‚¿‚ç‚ÆŒğ‚í‚é‚©‚ğ”»•Ê‚·‚éB
+	//> 2ç‚¹ã®disFromOriginã‚’r,Rã¨æ¯”è¼ƒã—ã¦ã©ã¡ã‚‰ã¨äº¤ã‚ã‚‹ã‹ã‚’åˆ¤åˆ¥ã™ã‚‹ã€‚
 	if( (r <= vertexVars[vtxId0].disFromOrigin && vertexVars[vtxId0].disFromOrigin <= R) ^ (r <= vertexVars[vtxId1].disFromOrigin && vertexVars[vtxId1].disFromOrigin <= R)){
-		//> ‰~ŠÂ‚Æ‚ÌŒğ“_‚ğ‹‚ß‚é
-		// x-z•½–Ê‚Ål‚¦‚Ä‚¢‚é
-		/// constA,B:vtxId0.vtxId1‚ğ’Ê‚é’¼ü‚ÌŒX‚«‚ÆØ•Ğ@/// aconsta,constb‚Í³•‰\‚í‚È‚¢
+		//> å††ç’°ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
+		// x-zå¹³é¢ã§è€ƒãˆã¦ã„ã‚‹
+		/// constA,B:vtxId0.vtxId1ã‚’é€šã‚‹ç›´ç·šã®å‚¾ãã¨åˆ‡ç‰‡ã€€/// aconsta,constbã¯æ­£è² æ§‹ã‚ãªã„
 		constA = ( mesh->vertices[vtxId0].pos.z - mesh->vertices[vtxId1].pos.z) / ( mesh->vertices[vtxId0].pos.x - mesh->vertices[vtxId1].pos.x);
 		constB = mesh->vertices[vtxId0].pos.z - constA * mesh->vertices[vtxId0].pos.x;
 
-		///	Œğ“_‚ÌÀ•W‚ğŒvZ
-		if(vertexVars[vtxId0].disFromOrigin < r){		/// ”¼Œar‚Ì‰~‚ÆŒğ‚í‚é‚Æ‚«
-			//CalcYfromXatcross(vtxId0,vtxId1,r);	//ŠÖ”‰»‚µ‚È‚¢
-			//> ˆÈ‰ºAŠÖ”‰»,vtxId0,1,r:ˆø”AconstY‚ğ•Ô‚·
+		///	äº¤ç‚¹ã®åº§æ¨™ã‚’è¨ˆç®—
+		if(vertexVars[vtxId0].disFromOrigin < r){		/// åŠå¾„rã®å††ã¨äº¤ã‚ã‚‹ã¨ã
+			//CalcYfromXatcross(vtxId0,vtxId1,r);	//é–¢æ•°åŒ–ã—ãªã„
+			//> ä»¥ä¸‹ã€é–¢æ•°åŒ–,vtxId0,1,r:å¼•æ•°ã€constYã‚’è¿”ã™
 			constX = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
 			constX_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-			// ‚Ç‚¿‚ç‚©‚ª’¸“_‚ÌŠÔ‚É‚ ‚é@‘å¬‚ª‚í‚©‚ç‚È‚¢‚Ì‚ÅAor‚ÅA“_1‚ÌxÀ•WA2‚ÌxÀ•W‚ÆA‚»‚Ì“ü‚ê‘Ö‚¦‚ÆAì‚é
-			//> ü•ª‚Ì—¼’[‚Ì“_‚ÌŠÔ‚É‚ ‚é‚Æ‚«
+			// ã©ã¡ã‚‰ã‹ãŒé ‚ç‚¹ã®é–“ã«ã‚ã‚‹ã€€å¤§å°ãŒã‚ã‹ã‚‰ãªã„ã®ã§ã€orã§ã€ç‚¹1ã®xåº§æ¨™ã€2ã®xåº§æ¨™ã¨ã€ãã®å…¥ã‚Œæ›¿ãˆã¨ã€ä½œã‚‹
+			//> ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®é–“ã«ã‚ã‚‹ã¨ã
 			if( (mesh->vertices[vtxId0].pos.x <= constX && constX <= mesh->vertices[vtxId1].pos.x) || (mesh->vertices[vtxId1].pos.x <= constX && constX <= mesh->vertices[vtxId0].pos.x) ){
 				constY = sqrt(r * r - constX * constX );
 			}else{
 				constY = sqrt(r * r - constX_ * constX_ );
-				constX = constX_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+				constX = constX_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 			}
-		}else if(r < vertexVars[vtxId0].disFromOrigin && vertexVars[vtxId0].disFromOrigin < R){		/// ”¼ŒaR‚Ì‰~‚ÆŒğ‚í‚é‚Æ‚«
+		}else if(r < vertexVars[vtxId0].disFromOrigin && vertexVars[vtxId0].disFromOrigin < R){		/// åŠå¾„Rã®å††ã¨äº¤ã‚ã‚‹ã¨ã
 			constX = (- constA * constB + sqrt(r * R *(constA * constA + 1.0) - constB * constB));
 			constX_ = (- constA * constB - sqrt(r * R *(constA * constA + 1.0) - constB * constB));
-			// ‚Ç‚¿‚ç‚©‚ª’¸“_‚ÌŠÔ‚É‚ ‚é@‘å¬‚ª‚í‚©‚ç‚È‚¢‚Ì‚ÅAor‚ÅA“_1‚ÌxÀ•WA2‚ÌxÀ•W‚ÆA‚»‚Ì“ü‚ê‘Ö‚¦‚ÆAì‚é
-			//> ü•ª‚Ì—¼’[‚Ì“_‚ÌŠÔ‚É‚ ‚é‚Æ‚«
+			// ã©ã¡ã‚‰ã‹ãŒé ‚ç‚¹ã®é–“ã«ã‚ã‚‹ã€€å¤§å°ãŒã‚ã‹ã‚‰ãªã„ã®ã§ã€orã§ã€ç‚¹1ã®xåº§æ¨™ã€2ã®xåº§æ¨™ã¨ã€ãã®å…¥ã‚Œæ›¿ãˆã¨ã€ä½œã‚‹
+			//> ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®é–“ã«ã‚ã‚‹ã¨ã
 			if( (mesh->vertices[vtxId0].pos.x <= constX && constX <= mesh->vertices[vtxId1].pos.x) || (mesh->vertices[vtxId1].pos.x <= constX && constX <= mesh->vertices[vtxId0].pos.x) ){
 				constY = sqrt(R * R - constX * constX );
 			}else{
 				constY = sqrt(R * R - constX_ * constX_ );
-				constX = constX_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+				constX = constX_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 			}
 		}
-		//> ‚Ç‚¿‚ç‚Æ‚àŒğ‚í‚é‚Æ‚«
+		//> ã©ã¡ã‚‰ã¨ã‚‚äº¤ã‚ã‚‹ã¨ã
 		else if(vertexVars[vtxId0].disFromOrigin < r && R < vertexVars[vtxId1].disFromOrigin){
-			//> ’è”‚ª2‚Â—~‚µ‚¢
+			//> å®šæ•°ãŒ2ã¤æ¬²ã—ã„
 		}
 	}
 		Vec2d interSection;
@@ -1252,8 +1256,8 @@ Vec2d PHFemThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,doub
 void PHFemThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	///	3“_‚ğŒ´“_‚É‹ß‚¢‡‚É•À‚×‚é		//>	ƒNƒCƒbƒNƒ\[ƒg‚É‚µ‚½‚¢‚©‚àH
-	int vtxmin[3];		///	’Ê‚µ‚Ì’¸“_”Ô†‚ğ“ü‚ê‚é
+	///	3ç‚¹ã‚’åŸç‚¹ã«è¿‘ã„é †ã«ä¸¦ã¹ã‚‹		//>	ã‚¯ã‚¤ãƒƒã‚¯ã‚½ãƒ¼ãƒˆã«ã—ãŸã„ã‹ã‚‚ï¼Ÿ
+	int vtxmin[3];		///	é€šã—ã®é ‚ç‚¹ç•ªå·ã‚’å…¥ã‚Œã‚‹
 	vtxmin[0] = mesh->faces[faceID].vertexIDs[0];
 	vtxmin[1] = 0;
 	vtxmin[2] = 0;
@@ -1273,75 +1277,75 @@ void PHFemThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	}else if(vertexVars[vtxmin[1]].disFromOrigin < vertexVars[mesh->faces[faceID].vertexIDs[2]].disFromOrigin ){
 		vtxmin[2] = mesh->faces[faceID].vertexIDs[2];
 	}
-	//>	¬‚³‚¢‡‚É‚È‚Á‚Ä‚¢‚È‚¢‚Æ‚«‚ÍAassert(0)
+	//>	å°ã•ã„é †ã«ãªã£ã¦ã„ãªã„ã¨ãã¯ã€assert(0)
 	if( !(vertexVars[vtxmin[0]].disFromOrigin < vertexVars[vtxmin[1]].disFromOrigin && vertexVars[vtxmin[1]].disFromOrigin < vertexVars[vtxmin[2]].disFromOrigin )
 		){	assert(0);}
 	/// debug
-	//DSTR << "¬‚³‚¢‡ ";
+	//DSTR << "å°ã•ã„é † ";
 	//for(unsigned j=0; j <3; j++){
 	//	DSTR << vertices[vtxmin[j]].disFromOrigin;
 	//	if(j<2){ DSTR << ", ";}
 	//}
 	//DSTR << std::endl;
-	/// face“à‚Ì”z—ñ‚Éface“à‚Å‚ÌŒ´“_‚©‚ç‹ß‚¢‡”Ô‚ğŠi”[
+	/// faceå†…ã®é…åˆ—ã«faceå†…ã§ã®åŸç‚¹ã‹ã‚‰è¿‘ã„é †ç•ªã‚’æ ¼ç´
 	for(unsigned i=0;i<3;i++){
 		faceVars[faceID].ascendVtx[i] = vtxmin[i];
 	}
 	//DSTR << "vtxmin[0~2]:  " << vtxmin[0] <<" ," << vtxmin[1] << " ,"  << vtxmin[2] << std::endl;	
-	//vtxmin[0~2]:  11 ,324 ,281 ,vtxmin[0~2]:  353 ,11 ,324 ‚±‚Ì‡‚ÉŒ´“_‚É‹ß‚¢
+	//vtxmin[0~2]:  11 ,324 ,281 ,vtxmin[0~2]:  353 ,11 ,324 ã“ã®é †ã«åŸç‚¹ã«è¿‘ã„
 
-	//	ˆÈ‰ºAíœ
-	//> •Ô‚·€”õ
+	//	ä»¥ä¸‹ã€å‰Šé™¤
+	//> è¿”ã™æº–å‚™
 	//Vec3i vtxarray = Vec3i(vtxmin[0],vtxmin[1],vtxmin[2]);
 	//	ex	vtxarray: (    11    324    281)	,vtxarray: (   353     11    324)
 	//DSTR << "vtxarray: " << vtxarray << std::endl; 
-	//return vtxarray;		///	’Ê‚µ‚Ì’¸“_”Ô†‚ğ•Ô‚·
+	//return vtxarray;		///	é€šã—ã®é ‚ç‚¹ç•ªå·ã‚’è¿”ã™
 }
 
 Vec2d PHFemThermo::CalcIntersectionOfCircleAndLine(unsigned id0,unsigned id1,double radius){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	x-z•½–Ê‚Å‚Ì”¼Œar‚Ì‰~ŠÂ‚Æü•ª‚ÌŒğ“_‚ÌÀ•W‚ğ‹‚ß‚é
-	//	ŠÖ”‚ªŒÄ‚Î‚ê‚éğŒFŒğ‚í‚é‚±‚Æ‚ª–¾”’‚È‚Æ‚«AŒğ‚í‚é‰~ŒÊ‚Ì”¼Œa‚ÆA‰~ŒÊ‚Ì“àEŠO‘¤‚Ì’¸“_‚ğˆøó‚¯ŒvZ
+	//	x-zå¹³é¢ã§ã®åŠå¾„rã®å††ç’°ã¨ç·šåˆ†ã®äº¤ç‚¹ã®åº§æ¨™ã‚’æ±‚ã‚ã‚‹
+	//	é–¢æ•°ãŒå‘¼ã°ã‚Œã‚‹æ¡ä»¶ï¼šäº¤ã‚ã‚‹ã“ã¨ãŒæ˜ç™½ãªã¨ãã€äº¤ã‚ã‚‹å††å¼§ã®åŠå¾„ã¨ã€å††å¼§ã®å†…ãƒ»å¤–å´ã®é ‚ç‚¹ã‚’å¼•å—ã‘è¨ˆç®—
 
-	// ...2“_‚ğ’Ê‚é’¼ü‚Ì•û’ö®‚ÌŒX‚«‚ÆØ•Ğ‚ğ‹‚ß‚é
-	double constA = 0.0;	//	ŒX‚«
-	double constB = 0.0;	//	Ø•Ğ
-	double constX1 = 0.0;	//	Œğ“_‚Ìx À•W‚P
-	double constX1_ = 0.0;	//		  x À•WŒó•â‚Q
-	double constZ1 = 0.0;	//		  Y À•W
-	double constZ1_ = 0.0;	//		  Y À•WŒó•â‚Q
-	double constx = 0.0;	//	1ŸŠÖ”‚É‚È‚ç‚È‚¢ê‡‚Ì’è”
-	double constz = 0.0;	//@		“¯ã
+	// ...2ç‚¹ã‚’é€šã‚‹ç›´ç·šã®æ–¹ç¨‹å¼ã®å‚¾ãã¨åˆ‡ç‰‡ã‚’æ±‚ã‚ã‚‹
+	double constA = 0.0;	//	å‚¾ã
+	double constB = 0.0;	//	åˆ‡ç‰‡
+	double constX1 = 0.0;	//	äº¤ç‚¹ã®x åº§æ¨™ï¼‘
+	double constX1_ = 0.0;	//		  x åº§æ¨™å€™è£œï¼’
+	double constZ1 = 0.0;	//		  Y åº§æ¨™
+	double constZ1_ = 0.0;	//		  Y åº§æ¨™å€™è£œï¼’
+	double constx = 0.0;	//	1æ¬¡é–¢æ•°ã«ãªã‚‰ãªã„å ´åˆã®å®šæ•°
+	double constz = 0.0;	//ã€€		åŒä¸Š
 
-	//	...’¸“_”Ô†‚ğŒ´“_‚É‹ß‚¢¬‚³‚¢‡( id0 < id1 )‚É•À‚Ñ‘Ö‚¦
+	//	...é ‚ç‚¹ç•ªå·ã‚’åŸç‚¹ã«è¿‘ã„ï¼å°ã•ã„é †( id0 < id1 )ã«ä¸¦ã³æ›¿ãˆ
 	if( vertexVars[ id1 ].disFromOrigin	<	vertexVars[ id0 ].disFromOrigin ){
 		unsigned farfromOriginId = id0;
 		id0 = id1;
 		id1 = farfromOriginId;
-	}	// id0 < id1 ‚ğ•ÛØ
+	}	// id0 < id1 ã‚’ä¿è¨¼
 
-	// 1ŸŠÖ”‚É‚È‚ç‚È‚¢ê‡
+	// 1æ¬¡é–¢æ•°ã«ãªã‚‰ãªã„å ´åˆ
 	// .. x == const
 	if(mesh->vertices[id0].pos.x == mesh->vertices[id1].pos.x && mesh->vertices[id0].pos.z != mesh->vertices[id1].pos.z ){
-		//	x == const ‚Ì®
+		//	x == const ã®å¼
 
 	}
 	// .. z == const
 
-	// ...ŒX‚«‚ÆØ•Ğ‚ğ‹‚ß‚é
+	// ...å‚¾ãã¨åˆ‡ç‰‡ã‚’æ±‚ã‚ã‚‹
 	//
 	constA = ( mesh->vertices[id0].pos.z - mesh->vertices[id1].pos.z) / ( mesh->vertices[id0].pos.x - mesh->vertices[id1].pos.x);
 	constB = mesh->vertices[id0].pos.z - constA * mesh->vertices[id0].pos.x;
 	
 	
-	// ..Ÿ‚ÌğŒ‚ÍAˆÈ~‚Ìˆ—‚ÅƒGƒ‰[‚ªo‚éê‡‚ğ’m‚ç‚¹‚é‚½‚ß‚ÌAƒfƒoƒbƒO—p
+	// ..æ¬¡ã®æ¡ä»¶ã¯ã€ä»¥é™ã®å‡¦ç†ã§ã‚¨ãƒ©ãƒ¼ãŒå‡ºã‚‹å ´åˆã‚’çŸ¥ã‚‰ã›ã‚‹ãŸã‚ã®ã€ãƒ‡ãƒãƒƒã‚°ç”¨
 	if(!constA && !constB){
 		//if( id0 != id1)
 		//	vertices[id0].pos.z != 0 && vertices[id1].pos.z!= 0 && vertices[id0].pos.x
-		// z == 0‚Æ‚¢‚¤’¼ü‚Ì®‚Å‚ ‚éB‚Æ‚˜‚O‚Æ‚¢‚¤’¼ü‚Ì®‚Ì‚à‚ ‚ë‚¤B
-		//	‚±‚ÌğŒ•ªŠò‚ÌˆÓ–¡‚ÍAü•ª‚Ì—¼’[‚Ì“_‚Ìx,zÀ•W‚ª(0,0)‚âA’¼ü‚Ì®‚ª‚PŸŠÖ”‚É‚È‚ç‚È‚¢‚Æ‹L‚ğœ‚­‚±‚Æ‚ª‚Å‚«‚é‚Æ‚«‚ÉA—p‚¢‚éB
-		DSTR << "’¼ü‚Ì®‚ÌØ•Ğ‚ÆŒX‚«‚ª‹¤‚É0" << std::endl;
+		// z == 0ã¨ã„ã†ç›´ç·šã®å¼ã§ã‚ã‚‹ã€‚ã¨ï½˜ï¼ï¼ï¼ã¨ã„ã†ç›´ç·šã®å¼ã®æ™‚ã‚‚ã‚ã‚ã†ã€‚
+		//	ã“ã®æ¡ä»¶åˆ†å²ã®æ„å‘³ã¯ã€ç·šåˆ†ã®ä¸¡ç«¯ã®ç‚¹ã®x,zåº§æ¨™ãŒ(0,0)ã‚„ã€ç›´ç·šã®å¼ãŒï¼‘æ¬¡é–¢æ•°ã«ãªã‚‰ãªã„ã¨è¨˜ã‚’é™¤ãã“ã¨ãŒã§ãã‚‹ã¨ãã«ã€ç”¨ã„ã‚‹ã€‚
+		DSTR << "ç›´ç·šã®å¼ã®åˆ‡ç‰‡ã¨å‚¾ããŒå…±ã«0" << std::endl;
 		DSTR << "id0: " << id0 << ", id1: " << id1 << "radius: " << radius << std::endl;
 		DSTR << "vertices[id0].pos.x: " << mesh->vertices[id0].pos.x << ", vertices[id1].pos.x: " << mesh->vertices[id1].pos.x << std::endl;
 		DSTR << "vertices[id0].pos.z: " << mesh->vertices[id0].pos.z << ", vertices[id1].pos.z: " << mesh->vertices[id1].pos.z << std::endl;
@@ -1363,38 +1367,38 @@ Vec2d PHFemThermo::CalcIntersectionOfCircleAndLine(unsigned id0,unsigned id1,dou
 	//if(vertices[id0].pos.z == vertices[id1].pos.z && vertices[id0].pos.x == vertices[id1].pos.x){
 	//	DSTR << "vertices[id0].pos.y: " << vertices[id0].pos.y << ", vertices[id1].pos.y: " << vertices[id1].pos.y << std::endl;
 	//	if(vertices[id0].pos.y == vertices[id1].pos.y)
-	//		DSTR << "id[" << id0 <<"], id[" << id1 << "] ‚Í“¯‚¶’¸“_ !" << std::endl;
+	//		DSTR << "id[" << id0 <<"], id[" << id1 << "] ã¯åŒã˜é ‚ç‚¹ !" << std::endl;
 	//}
 	//DSTR << "constB = vertices[id0].pos.z - constA * vertices[id0].pos.x : " << vertices[id0].pos.z - constA * vertices[id0].pos.x << std::endl;
 	//DSTR << "constA: " << constA << std::endl;
 	//DSTR << "constB: " << constB << std::endl;
 	//DSTR << std::endl;
 
-	///	.Œğ“_‚ÌÀ•W‚ğŒvZ
-	// .‚PŸŠÖ”‚Ìê‡Ax,z²‚É•½s‚È’¼ü‚Ìê‡‚ª‚ ‚é
-	if(vertexVars[id0].disFromOrigin <= radius && radius <= vertexVars[id1].disFromOrigin ){		/// ”¼Œar‚Ì‰~‚ÆŒğ‚í‚é‚×‚«
+	///	.äº¤ç‚¹ã®åº§æ¨™ã‚’è¨ˆç®—
+	// .ï¼‘æ¬¡é–¢æ•°ã®å ´åˆã€x,zè»¸ã«å¹³è¡Œãªç›´ç·šã®å ´åˆãŒã‚ã‚‹
+	if(vertexVars[id0].disFromOrigin <= radius && radius <= vertexVars[id1].disFromOrigin ){		/// åŠå¾„rã®å††ã¨äº¤ã‚ã‚‹ã¹ã
 		double radius2 = radius * radius;
 		constX1  = (- constA * constB + sqrt(radius2 * (constA * constA + 1.0) - constB * constB )  )  /  (constA * constA + 1);
 		constX1_ = (- constA * constB - sqrt(radius2 * (constA * constA + 1.0) - constB * constB )  )  /  (constA * constA + 1);
-		// Œğ“_‚ÌxÀ•W‚ªü•ª‚Ì—¼’[“_‚ÌxÀ•WŠÔ‚É‚ ‚é‚Æ‚«
+		// äº¤ç‚¹ã®xåº§æ¨™ãŒç·šåˆ†ã®ä¸¡ç«¯ç‚¹ã®xåº§æ¨™é–“ã«ã‚ã‚‹ã¨ã
 		if( (mesh->vertices[id0].pos.x <= constX1 && constX1 <= mesh->vertices[id1].pos.x) || (mesh->vertices[id1].pos.x <= constX1 && constX1 <= mesh->vertices[id0].pos.x) ){
 			constZ1 = sqrt(radius2 - constX1  * constX1  );
 			constZ1_ = - sqrt(radius2 - constX1  * constX1  );
-			//	Œğ“_‚ÌzÀ•W‚à—¼’[“_‚ÌzÀ•WŠÔ‚É‚ ‚é‚Æ‚«
+			//	äº¤ç‚¹ã®zåº§æ¨™ã‚‚ä¸¡ç«¯ç‚¹ã®zåº§æ¨™é–“ã«ã‚ã‚‹ã¨ã
 			if( (mesh->vertices[id0].pos.z <= constZ1_ && constZ1_ <= mesh->vertices[id1].pos.z) || (mesh->vertices[id1].pos.z <= constZ1_ && constZ1_ <= mesh->vertices[id0].pos.z) ){
 				constZ1 = constZ1_;
 			}
 		}else{
-			constX1 = constX1_;		///		“_‚ÌxÀ•W‚ÍconstX_‚ª³‚µ‚¢–‚ª‚í‚©‚Á‚½B
+			constX1 = constX1_;		///		ç‚¹ã®xåº§æ¨™ã¯constX_ãŒæ­£ã—ã„äº‹ãŒã‚ã‹ã£ãŸã€‚
 			constZ1  =   sqrt(radius2 - constX1  * constX1  );
 			constZ1_ = - sqrt(radius2 - constX1  * constX1  );
-			//	Œğ“_‚ÌzÀ•W‚à—¼’[“_‚ÌzÀ•WŠÔ‚É‚ ‚é‚Æ‚«
+			//	äº¤ç‚¹ã®zåº§æ¨™ã‚‚ä¸¡ç«¯ç‚¹ã®zåº§æ¨™é–“ã«ã‚ã‚‹ã¨ã
 			if( (mesh->vertices[id0].pos.z <= constZ1_ && constZ1_ <= mesh->vertices[id1].pos.z) || (mesh->vertices[id1].pos.z <= constZ1_ && constZ1_ <= mesh->vertices[id0].pos.z) ){
 				constZ1 = constZ1_;
 			}
 		}
 	}else{
-		DSTR << "CalcVtxCircleAndLine()ŠÖ”‚Ì‚±‚Ì’¸“_‘g‚İ‚Æ‰~ŒÊ‚ÍŒğ‚í‚è‚Ü‚¹‚ñ" << std::endl;
+		DSTR << "CalcVtxCircleAndLine()é–¢æ•°ã®ã“ã®é ‚ç‚¹çµ„ã¿ã¨å††å¼§ã¯äº¤ã‚ã‚Šã¾ã›ã‚“" << std::endl;
 		constX1 = 0.0;
 		constZ1 = 0.0;
 		DSTR << "(id0, vertices[id0].disFromOrigin): (" << id0 << ", " << vertexVars[id0].disFromOrigin << "), (id1, vertices[id1].disFromOrigin): (" << id1 << ", " << vertexVars[id1].disFromOrigin << "), radius: " << radius << std::endl;  
@@ -1413,19 +1417,19 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 	DSTR << "ascendVtx[" << j << "]: " << faceVars[i].ascendVtx[j] << ", " << "[ " << (j+1)%3 << "]: " << faceVars[i].ascendVtx[(j+1)%3] << "; ";
 	DSTR << " (vertices[" << faceVars[i].ascendVtx[j] << "].pos.x, .z) = ( " <<  mesh->vertices[faceVars[i].ascendVtx[j]].pos.x << ", "<<  mesh->vertices[faceVars[i].ascendVtx[j]].pos.z  << "), " ;
 	DSTR << " (vertices[" << faceVars[i].ascendVtx[(j+1)%3] << "].pos.x, .z) : ( " <<  mesh->vertices[faceVars[i].ascendVtx[(j+1)%3]].pos.x << ", "<<  mesh->vertices[faceVars[i].ascendVtx[(j+1)%3]].pos.z << "), " <<std::endl;
-	DSTR <<"face[i].[(" << j << "], [" << (j+1)%3 << "]FŠeX‚ÌŒ´“_‚©‚ç‚Ì‹——£" << vertexVars[faceVars[i].ascendVtx[j]].disFromOrigin << ", " << vertexVars[faceVars[i].ascendVtx[(j+1)%3]].disFromOrigin << ", "; 
-	DSTR << " radius: " << radius <<" ‚Æ2“_‚Å\¬‚³‚ê‚éü•ª‚Æ‚ÌŒğ“_‚Í‰º‹L"<< std::endl;
+	DSTR <<"face[i].[(" << j << "], [" << (j+1)%3 << "]ï¼šå„ã€…ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢" << vertexVars[faceVars[i].ascendVtx[j]].disFromOrigin << ", " << vertexVars[faceVars[i].ascendVtx[(j+1)%3]].disFromOrigin << ", "; 
+	DSTR << " radius: " << radius <<" ã¨2ç‚¹ã§æ§‹æˆã•ã‚Œã‚‹ç·šåˆ†ã¨ã®äº¤ç‚¹ã¯ä¸‹è¨˜"<< std::endl;
 	DSTR << __FILE__  << "(" <<  __LINE__ << "):"<< "Intersection Vtx (x,z)= " << CalcIntersectionOfCircleAndLine( faceVars[i].ascendVtx[ j ] , faceVars[i].ascendVtx[ (j+1)%3 ] , radius) << std::endl;
 	DSTR << std::endl;
 }
 
 //void PHFemThermo::CalcIHarea(double radius,double Radius,double dqdtAll){
-//	//	face\‘¢‘Ìƒƒ“ƒoiharea‚ğŒvZ
-//	//AƒƒbƒVƒ…‘S‘Ì‚Ìiharea‚Ì‡Œv‚ğŒvZ
-//	//	...dqdtRatio(”M—¬‘©—¦)‚ğ‘–ÊÏ‚É‘Î‚·‚éiharea–ÊÏ”ä‚©‚çã‰Î‚Ì‚ÉAface‚ªó‚¯æ‚é‚×‚«dqdt‚ğŒvZ‚µ‚Ä•Ô‚·
+//	//	faceæ§‹é€ ä½“ãƒ¡ãƒ³ãƒihareaã‚’è¨ˆç®—
+//	//ã€ãƒ¡ãƒƒã‚·ãƒ¥å…¨ä½“ã®ihareaã®åˆè¨ˆã‚’è¨ˆç®—
+//	//	...dqdtRatio(ç†±æµæŸç‡)ã‚’ç·é¢ç©ã«å¯¾ã™ã‚‹ihareaé¢ç©æ¯”ã‹ã‚‰å¼±ç«ã®æ™‚ã«ã€faceãŒå—ã‘å–ã‚‹ã¹ãdqdtã‚’è¨ˆç®—ã—ã¦è¿”ã™
 //
-//	//	Œ`óŠÖ”‚ÌŒvZ‚ÍAiharea ‚ğ—p‚¢‚ÄACalcVecf2surface()“™‚Ås‚¤,face.shapefunk‚Ås‚¤		¨ƒNƒ‰ƒX‰»‚µ‚æ‚¤‚©H
-//		//	.... Œ`óŠÖ”‚ğŠi”[‚·‚é		// ‚±‚±‚Å•ª‚©‚éŒ`óŠÖ”‚ÍA’¸“_ŠÔ‚Ì‹——£‚©‚ç•ª‚©‚éüŒ`•âŠÔŒW”@‚·‚È‚í‚¿AŠ„‡@‚Oƒ`ƒ‚P‚Å—Ç‚­‚ÄAÅŒã‚ÉAs—ñ‚É“ü‚ê‚é‘O‚ÉAŠ„‡ˆÈŠO‚ğ“ü‚ê‚ê‚Î‚¢‚¢‚Ì‚©‚ÈH
+//	//	å½¢çŠ¶é–¢æ•°ã®è¨ˆç®—ã¯ã€iharea ã‚’ç”¨ã„ã¦ã€CalcVecf2surface()ç­‰ã§è¡Œã†,face.shapefunkã§è¡Œã†		â†’ã‚¯ãƒ©ã‚¹åŒ–ã—ã‚ˆã†ã‹ï¼Ÿ
+//		//	.... å½¢çŠ¶é–¢æ•°ã‚’æ ¼ç´ã™ã‚‹		// ã“ã“ã§åˆ†ã‹ã‚‹å½¢çŠ¶é–¢æ•°ã¯ã€é ‚ç‚¹é–“ã®è·é›¢ã‹ã‚‰åˆ†ã‹ã‚‹ç·šå½¢è£œé–“ä¿‚æ•°ã€€ã™ãªã‚ã¡ã€å‰²åˆã€€ï¼ï¼œï¼ã€œï¼œï¼ï¼‘ã§è‰¯ãã¦ã€æœ€å¾Œã«ã€è¡Œåˆ—ã«å…¥ã‚Œã‚‹å‰ã«ã€å‰²åˆä»¥å¤–ã‚’å…¥ã‚Œã‚Œã°ã„ã„ã®ã‹ãªï¼Ÿ
 //
 //	// radius value check
 //	if(Radius <= radius){
@@ -1433,14 +1437,14 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //		DSTR << "check and set another value" << std::endl;
 //		assert(0);
 //	}
-//	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-//	//> l–Ê‘Ì–Ê‚ÌOŠpŒ`‚Æ‰~ŠÂ—Ìˆæ‚Ìd•¡•”•ª‚ÌŒ`óE–ÊÏ‚ğ‹‚ß‚é“–‚½‚è”»’è‚ğŒvZ‚·‚éB
-//	//>	Ø‚èæ‚èŒ`ó‚É‰‚¶‚½Œ`óŠÖ”‚ğ‹‚ßA”M—¬‘©ƒxƒNƒgƒ‹‚Ì¬•ª‚É‘ã“ü‚µAŒvZ‚·‚é
+//	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+//	//> å››é¢ä½“é¢ã®ä¸‰è§’å½¢ã¨å††ç’°é ˜åŸŸã®é‡è¤‡éƒ¨åˆ†ã®å½¢çŠ¶ãƒ»é¢ç©ã‚’æ±‚ã‚ã‚‹å½“ãŸã‚Šåˆ¤å®šã‚’è¨ˆç®—ã™ã‚‹ã€‚
+//	//>	åˆ‡ã‚Šå–ã‚Šå½¢çŠ¶ã«å¿œã˜ãŸå½¢çŠ¶é–¢æ•°ã‚’æ±‚ã‚ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã®æˆåˆ†ã«ä»£å…¥ã—ã€è¨ˆç®—ã™ã‚‹
 //
-//	//> 1.‰~ŠÂ—Ìˆæ‚Æd‚È‚éfaceOŠpŒ`‚ÌŒ`ó‚ğZo‚·‚éB—Ìˆæ‚ÉŠÜ‚Ü‚ê‚é’¸“_AfaceOŠpŒ`‚Ì•Ó‚Æ‚ÌŒğ“_‚ğ‹‚ß‚Ävecteor‚ÉŠi”[‚·‚é
-//	//>	2.vector‚É‚ÍA•Ó0,1,2‚Ì‡‚É—Ìˆæ“à‚Ì’¸“_‚âŒğ“_‚ª“ü‚Á‚Ä‚¢‚é‚ªA‚±‚ê‚ğŒ³‚ÉOŠpŒ`•ªŠ„‚ğs‚¤BOŠpŒ`•ªŠ„‚ª‚Å‚«‚½‚çAŠeOŠpŒ`‚ğ‹‚ß‚éBOŠpŒ`‚Ì‘˜a‚ğA‚±‚Ìface‚Ì‰Á”M—Ìˆæ‚Æ‚·‚éB
-//	//>	3.vector‚Ì“_‚É‚¨‚¯‚éŒ`óŠÖ”‚ğ‹‚ß‚ÄA‹[—‘ÌÏid‚È‚Á‚Ä‚¢‚é–ÊÏ~Œ`óŠÖ”‚Ì’lj‚ğg‚Á‚ÄAl–Ê‘Ì“à‚ÌŠe“_‚É‚¨‚¯‚éŒ`óŠÖ”‚Ì–ÊÏ•ª‚ğ‹‚ß‚éB‹‚ß‚½’l‚ÍA”M—¬‘©ƒxƒNƒgƒ‹‚Ì¬•ª‚Æ‚µ‚Ä—v‘f„«s—ñ‚Ì¬•ª‚É‘ã“ü‚·‚éB
-//	//>	4.–ˆƒXƒeƒbƒvA“¯‚¶”M—¬‘©‚Ì’l‚ğƒxƒNƒgƒ‹¬•ª‚É‰Á‚¦‚é
+//	//> 1.å††ç’°é ˜åŸŸã¨é‡ãªã‚‹faceä¸‰è§’å½¢ã®å½¢çŠ¶ã‚’ç®—å‡ºã™ã‚‹ã€‚é ˜åŸŸã«å«ã¾ã‚Œã‚‹é ‚ç‚¹ã€faceä¸‰è§’å½¢ã®è¾ºã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã¦vecteorã«æ ¼ç´ã™ã‚‹
+//	//>	2.vectorã«ã¯ã€è¾º0,1,2ã®é †ã«é ˜åŸŸå†…ã®é ‚ç‚¹ã‚„äº¤ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹ãŒã€ã“ã‚Œã‚’å…ƒã«ä¸‰è§’å½¢åˆ†å‰²ã‚’è¡Œã†ã€‚ä¸‰è§’å½¢åˆ†å‰²ãŒã§ããŸã‚‰ã€å„ä¸‰è§’å½¢ã‚’æ±‚ã‚ã‚‹ã€‚ä¸‰è§’å½¢ã®ç·å’Œã‚’ã€ã“ã®faceã®åŠ ç†±é ˜åŸŸã¨ã™ã‚‹ã€‚
+//	//>	3.vectorã®ç‚¹ã«ãŠã‘ã‚‹å½¢çŠ¶é–¢æ•°ã‚’æ±‚ã‚ã¦ã€æ“¬ä¼¼ä½“ç©ï¼ˆé‡ãªã£ã¦ã„ã‚‹é¢ç©Ã—å½¢çŠ¶é–¢æ•°ã®å€¤ï¼‰ã‚’ä½¿ã£ã¦ã€å››é¢ä½“å†…ã®å„ç‚¹ã«ãŠã‘ã‚‹å½¢çŠ¶é–¢æ•°ã®é¢ç©åˆ†ã‚’æ±‚ã‚ã‚‹ã€‚æ±‚ã‚ãŸå€¤ã¯ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã®æˆåˆ†ã¨ã—ã¦è¦ç´ å‰›æ€§è¡Œåˆ—ã®æˆåˆ†ã«ä»£å…¥ã™ã‚‹ã€‚
+//	//>	4.æ¯ã‚¹ãƒ†ãƒƒãƒ—ã€åŒã˜ç†±æµæŸã®å€¤ã‚’ãƒ™ã‚¯ãƒˆãƒ«æˆåˆ†ã«åŠ ãˆã‚‹
 //	
 //	/// debug
 //	//unsigned numIHheated0 = 0; 
@@ -1450,9 +1454,9 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //	//		numIHheated0 +=1;
 //	//	}
 //	//}
-//	//DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;	////	761 / 980	‚Á‚Ä‚Ù‚Æ‚ñ‚Ç‚¶‚á‚È‚¢‚©I”¼•ªˆÊ‚É‚È‚ç‚È‚¢‚Æ‚¨‚©‚µ‚¢‚Í‚¸‚¾‚ªEEE@ƒ[ƒJƒ‹yÀ•W’l‚ªƒ}ƒCƒiƒX‚Ì‚à‚Ì‚ğ‘I‚ñ‚Å‚¢‚é‚Ì‚Å
+//	//DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;	////	761 / 980	ã£ã¦ã»ã¨ã‚“ã©ã˜ã‚ƒãªã„ã‹ï¼åŠåˆ†ä½ã«ãªã‚‰ãªã„ã¨ãŠã‹ã—ã„ã¯ãšã ãŒãƒ»ãƒ»ãƒ»ã€€ãƒ­ãƒ¼ã‚«ãƒ«yåº§æ¨™å€¤ãŒãƒã‚¤ãƒŠã‚¹ã®ã‚‚ã®ã‚’é¸ã‚“ã§ã„ã‚‹ã®ã§
 //
-//	//	debug	mayIHheated‚ÌŠm“x‚ğã‚°‚é‘O‚Ì”‚ğ’m‚è‚½‚¢
+//	//	debug	mayIHheatedã®ç¢ºåº¦ã‚’ä¸Šã’ã‚‹å‰ã®æ•°ã‚’çŸ¥ã‚ŠãŸã„
 //	unsigned numIHheated0 = 0; 
 //	for(unsigned i=0; i < nSurfaceFace;i++){
 //		if(faces[i].mayIHheated){	
@@ -1462,34 +1466,34 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //	}
 //	DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;
 //
-//	//	face’¸“_‚Ì‚Ç‚ê‚©1‚Â‚ªA‰~ŠÂ—Ìˆæ‚É“ü‚Á‚Ä‚¢‚éface‚¾‚¯Atrue‚ÉA‚»‚êˆÈŠO‚ÍAfalse‚É
-//	//> raius,Radius‚É‚Â‚¢‚ÄmayIHheated‚ÌŠm“x‚ğã‚°‚Ä‚©‚çA‰~ŠÂ—Ìˆæ‚Æd‚È‚Á‚Ä‚¢‚éŒ`ó‚ğ‹‚ß‚é
+//	//	faceé ‚ç‚¹ã®ã©ã‚Œã‹1ã¤ãŒã€å††ç’°é ˜åŸŸã«å…¥ã£ã¦ã„ã‚‹faceã ã‘ã€trueã«ã€ãã‚Œä»¥å¤–ã¯ã€falseã«
+//	//> raius,Radiusã«ã¤ã„ã¦mayIHheatedã®ç¢ºåº¦ã‚’ä¸Šã’ã¦ã‹ã‚‰ã€å††ç’°é ˜åŸŸã¨é‡ãªã£ã¦ã„ã‚‹å½¢çŠ¶ã‚’æ±‚ã‚ã‚‹
 //	for(unsigned i=0;i < nSurfaceFace; i++){
-//		if(faces[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_ ‰~ŠÂ‚Ì”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚é‚Æ‚ÍŒÀ‚ç‚È‚¢
+//		if(faces[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹ å††ç’°ã®ç¯„å›²å†…ã«å…¥ã£ã¦ã„ã‚‹ã¨ã¯é™ã‚‰ãªã„
 //			for(unsigned j=0;j<3;j++){
-//				/// ‰~ŠÂ—Ìˆæ“à‚Éface’¸“_‚ªŠÜ‚Ü‚ê‚é
+//				/// å††ç’°é ˜åŸŸå†…ã«faceé ‚ç‚¹ãŒå«ã¾ã‚Œã‚‹
 //				if(radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= Radius){
 //					faces[i].mayIHheated = true;
-//					break;		//>	Œ©‚Â‚©‚Á‚½‚çA”»’è‚Ítrue‚Ì‚Ü‚Ü‚Å—Ç‚¢BÅ“à‘¤‚Ìfor‚ğ”²‚¯‚é
+//					break;		//>	è¦‹ã¤ã‹ã£ãŸã‚‰ã€åˆ¤å®šã¯trueã®ã¾ã¾ã§è‰¯ã„ã€‚æœ€å†…å´ã®forã‚’æŠœã‘ã‚‹
 //				}
 //				else{
 //					faces[i].mayIHheated = false;
 //				}
-//				//> i‰~ŠÂ—Ìˆæ‚É‚ÍŠÜ‚Ü‚ê‚¸j‰~ŠÂ—Ìˆæ‚æ‚è“à‘¤‚ÆŠO‘¤‚Éface‚Ì•Ó‚Ì’¸“_‚ª‚ ‚é	vertices[j%3] ‚Æ vertices[(j+1)%3]@‚Åì‚é•Ó‚ª‚ ‚é‚Æ‚«
+//				//> ï¼ˆå††ç’°é ˜åŸŸã«ã¯å«ã¾ã‚Œãšï¼‰å††ç’°é ˜åŸŸã‚ˆã‚Šå†…å´ã¨å¤–å´ã«faceã®è¾ºã®é ‚ç‚¹ãŒã‚ã‚‹	vertices[j%3] ã¨ vertices[(j+1)%3]ã€€ã§ä½œã‚‹è¾ºãŒã‚ã‚‹ã¨ã
 //				if(vertices[faces[i].vertices[j]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin 
 //					|| vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin){
 //						faces[i].mayIHheated = true;
-//						break;		//>	“¯ã
+//						break;		//>	åŒä¸Š
 //				}else{
 //					faces[i].mayIHheated = false;
 //				}
-//				//>	‰~ŠÂ—Ìˆæ“à‚Éface•Ó‚Ì‚Ç‚¿‚ç‚©‚Ì’¸“_‚ªŠÜ‚Ü‚ê‚é‚Æ‚«(r<P1<R<P2,P1<r<P2<R,(‚ÆPa1,P2‚ğ“ü‚ê‘Ö‚¦‚½‚à‚Ì))
+//				//>	å††ç’°é ˜åŸŸå†…ã«faceè¾ºã®ã©ã¡ã‚‰ã‹ã®é ‚ç‚¹ãŒå«ã¾ã‚Œã‚‹ã¨ã(r<P1<R<P2,P1<r<P2<R,(ã¨Pa1,P2ã‚’å…¥ã‚Œæ›¿ãˆãŸã‚‚ã®))
 //				if(radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin
 //					|| radius <= vertices[faces[i].vertices[(j+1)%3]].disFromOrigin && vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin
 //					|| vertices[faces[i].vertices[j]].disFromOrigin <= radius && radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin && vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < Radius
 //					|| vertices[faces[i].vertices[(j+1)%3]].disFromOrigin <= radius && radius < vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin < Radius){
 //						faces[i].mayIHheated = true;
-//						break;		//>	“¯ã
+//						break;		//>	åŒä¸Š
 //				}else{
 //					faces[i].mayIHheated = false;
 //				}
@@ -1497,7 +1501,7 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //		}		//	if
 //	}		//	for
 //	//> debug
-//	//>	mayIHheated‚Ìƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚éface‚É‚»‚Ì–ÊÏ‚ÌŒ`óŠÖ”‚ğ—^‚¦‚Ä‚İ‚éB	d‚È‚é–ÊÏ‚ğ‚«‚¿‚ñ‚ÆŒvZ‚ÆA­‚µ‚Å‚àˆø‚Á‚©‚©‚Á‚Ä‚¢‚ê‚ÎA‰Á”M–Ê‚É“ü‚ê‚Ä‚µ‚Ü‚¤ŒvZA‚·
+//	//>	mayIHheatedã®ãƒ•ãƒ©ã‚°ãŒç«‹ã£ã¦ã„ã‚‹faceã«ãã®é¢ç©ã®å½¢çŠ¶é–¢æ•°ã‚’ä¸ãˆã¦ã¿ã‚‹ã€‚	é‡ãªã‚‹é¢ç©ã‚’ãã¡ã‚“ã¨è¨ˆç®—ã¨ã€å°‘ã—ã§ã‚‚å¼•ã£ã‹ã‹ã£ã¦ã„ã‚Œã°ã€åŠ ç†±é¢ã«å…¥ã‚Œã¦ã—ã¾ã†è¨ˆç®—ã€è©¦ã™
 //	//> CalcIHdqdt3 or 4
 //
 //	/// debug
@@ -1508,31 +1512,31 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //			numIHheated +=1;
 //		}
 //	}
-//	DSTR << "numIHheated / nSurfaceFace: " << numIHheated << " / " << nSurfaceFace << std::endl;		///:	•\–Êface‚Ì“àA‰Á”Mß“_‚ğŠÜ‚Şface‚Ì”A“S”Â:264/980@‚±‚ñ‚È‚à‚ñ‚©‚È 
+//	DSTR << "numIHheated / nSurfaceFace: " << numIHheated << " / " << nSurfaceFace << std::endl;		///:	è¡¨é¢faceã®å†…ã€åŠ ç†±ç¯€ç‚¹ã‚’å«ã‚€faceã®æ•°ã€é‰„æ¿:264/980ã€€ã“ã‚“ãªã‚‚ã‚“ã‹ãª 
 //	
-//	//	.. Œğ“_‚ğ‹‚ßAfaces\‘¢‘Ì‚Ìvector‚É—Ìˆæ“à‚Ì’¸“_‚âŒğ“_‚ğŠi”[
+//	//	.. äº¤ç‚¹ã‚’æ±‚ã‚ã€facesæ§‹é€ ä½“ã®vectorã«é ˜åŸŸå†…ã®é ‚ç‚¹ã‚„äº¤ç‚¹ã‚’æ ¼ç´
 //	for(unsigned i=0;i < nSurfaceFace; i++){
-//		if(faces[i].mayIHheated){		//	may ¨ uŠmÀv‚É•Ï‰»Ï‚İ‚Ìƒtƒ‰ƒO
-//			//	area:face–ÊÏ‚ğŒvZ‚³‚ê‚Ä‚È‚¯‚ê‚ÎAŒvZ
+//		if(faces[i].mayIHheated){		//	may â†’ ã€Œç¢ºå®Ÿã€ã«å¤‰åŒ–æ¸ˆã¿ã®ãƒ•ãƒ©ã‚°
+//			//	area:faceé¢ç©ã‚’è¨ˆç®—ã•ã‚Œã¦ãªã‘ã‚Œã°ã€è¨ˆç®—
 //			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
-//			////	face“à‚Ì’¸“_‚ÌdisFromOrigin‚Ì’l‚Åƒ\[ƒg
-//			//unsigned nearestvtxnum		=	0;				///	Œ´“_‚Éˆê”Ô‹ß‚¢’¸“_‚Ìface’¸“_”Ô†(0~2)
+//			////	faceå†…ã®é ‚ç‚¹ã®disFromOriginã®å€¤ã§ã‚½ãƒ¼ãƒˆ
+//			//unsigned nearestvtxnum		=	0;				///	åŸç‚¹ã«ä¸€ç•ªè¿‘ã„é ‚ç‚¹ã®faceé ‚ç‚¹ç•ªå·(0~2)
 //			//for(unsigned j=0;j<3;j++){
 //			//	double hikaku = DBL_MAX;
 //			//	if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
 //			//}
 //			
-//			// ... 3“_‚ğŒ´“_‚É‹ß‚¢‡‚É•À‚×‚é		vtxOrder:‹ß‚¢‡‚ÉŠi”[,”Ô–Ú‚ª‹ß‚¢‡”ÔAŠi”[’l‚ª’¸“_”Ô† ==	faces[i].ascendVtx[3]
+//			// ... 3ç‚¹ã‚’åŸç‚¹ã«è¿‘ã„é †ã«ä¸¦ã¹ã‚‹		vtxOrder:è¿‘ã„é †ã«æ ¼ç´,ç•ªç›®ãŒè¿‘ã„é †ç•ªã€æ ¼ç´å€¤ãŒé ‚ç‚¹ç•ªå· ==	faces[i].ascendVtx[3]
 //			ArrangeFacevtxdisAscendingOrder(i);		///	ArrangeVtxdisAscendingOrder(int faceID,int vtx0,int vtx1,int vtx2)
-//			//DSTR <<  "¬‚³‚¢‡‚©Šm”F: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
+//			//DSTR <<  "å°ã•ã„é †ã‹ç¢ºèª: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
 //			
-//			// ... face“à‚ÌŠe’¸“_‚ª‘®‚µ‚Ä‚¢‚é—Ìˆæ‚ğ”»’è 0 | 1 | 2	///	faces[i].ascendVtx[0~2]‚ÉŠY“–‚·‚é’¸“_‚ª@‰~ŠÂ—Ìˆæ‚Ì‘OŒã‚Ì‚Ç‚±‚É‘¶İ‚µ‚Ä‚¢‚é‚©
-//			// ... vtxdiv[0~2]‚É‹ß‚¢‡‚É•À‚ñ‚¾’¸“_‚Ì—ÌˆæID(0~2)‚ğŠ„‚èU‚è  faces[i].ascendVtx[j] ‚Ì‡‚Æ‘Î‰
-//			unsigned vtxdiv[3];		//	Œ´“_‚©‚ç‹ß‚¢‡:0~2‚É•À‚×‘Ö‚¦‚ç‚ê‚½’¸“_ID‚É‘Î‰‚·‚é—Ìˆæ“àŠO‚Ì‹æ•ª‚¯@”z—ñ
+//			// ... faceå†…ã®å„é ‚ç‚¹ãŒå±ã—ã¦ã„ã‚‹é ˜åŸŸã‚’åˆ¤å®š 0 | 1 | 2	///	faces[i].ascendVtx[0~2]ã«è©²å½“ã™ã‚‹é ‚ç‚¹ãŒã€€å††ç’°é ˜åŸŸã®å‰å¾Œã®ã©ã“ã«å­˜åœ¨ã—ã¦ã„ã‚‹ã‹
+//			// ... vtxdiv[0~2]ã«è¿‘ã„é †ã«ä¸¦ã‚“ã é ‚ç‚¹ã®é ˜åŸŸID(0~2)ã‚’å‰²ã‚ŠæŒ¯ã‚Š ï¼ faces[i].ascendVtx[j] ã®é †ã¨å¯¾å¿œ
+//			unsigned vtxdiv[3];		//	åŸç‚¹ã‹ã‚‰è¿‘ã„é †:0~2ã«ä¸¦ã¹æ›¿ãˆã‚‰ã‚ŒãŸé ‚ç‚¹IDã«å¯¾å¿œã™ã‚‹é ˜åŸŸå†…å¤–ã®åŒºåˆ†ã‘ã€€é…åˆ—
 //			//DSTR << "faces[i].ascendVtx[0~2]:" ;
 //			for(unsigned j=0;j<3;j++){
 //				if( vertices[faces[i].ascendVtx[j]].disFromOrigin < radius){			vtxdiv[j] = 0;
-//				/// ‰~ŒÊã‚ğŠÜ‚İA‰~ŒÊã‚à‰~ŠÂ—Ìˆæ“à‚Æ’è‹`‚·‚é
+//				/// å††å¼§ä¸Šã‚’å«ã¿ã€å††å¼§ä¸Šã‚‚å††ç’°é ˜åŸŸå†…ã¨å®šç¾©ã™ã‚‹
 //				}else if(radius <= vertices[faces[i].ascendVtx[j]].disFromOrigin && vertices[faces[i].ascendVtx[j]].disFromOrigin <= Radius ){	vtxdiv[j] = 1;
 //				}else if(Radius < vertices[faces[i].ascendVtx[j]].disFromOrigin){		vtxdiv[j] = 2;	}
 //				//DSTR << faces[i].ascendVtx[j] ;
@@ -1541,162 +1545,162 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //			//DSTR << std::endl;
 //
 //			//> debug
-//			//DSTR << "’¸“_‚Ì—Ìˆæ”Ô†: " ;
+//			//DSTR << "é ‚ç‚¹ã®é ˜åŸŸç•ªå·: " ;
 //			//for(unsigned j =0;j<3;j++){
 //			//	DSTR << vtxexistarea[j];
 //			//	if(j<2) DSTR << ", ";
 //			//}
 //			//DSTR << std::endl;
 //			//int vtxexistareadebug =0;
-//			//... 2012.2.14‚±‚±‚Ü‚Å...
+//			//... 2012.2.14ã“ã“ã¾ã§...
 //
-//			//...	”z—ñ‚Ì¬•ª‚Ì’l‚Ì•Ï‰»‚ğŒ©‚ÄAn“_AŒğ“_A•Ó‘Î‚Æ‚È‚é“_‚ğ‡‚Évector‚ÉŠi”[‚µ‚Ä‚¢‚­
+//			//...	é…åˆ—ã®æˆåˆ†ã®å€¤ã®å¤‰åŒ–ã‚’è¦‹ã¦ã€å§‹ç‚¹ã€äº¤ç‚¹ã€è¾ºå¯¾ã¨ãªã‚‹ç‚¹ã‚’é †ã«vectorã«æ ¼ç´ã—ã¦ã„ã
 //			
-//			//	vector‚É“ü‚ê‚éÛ‚Ì’ˆÓ!!! %%%%%%%%%%%%%%%%%%
-//			// %%%	vtxOrder[ Œ´“_‚©‚ç‹ß‚¢’¸“_‚Ì‡(0,1,2) ]:‚»‚Ì’¸“_ID‚ÌŒ´“_‚É‹ß‚¢‡‚É•À‚×‘Ö‚¦‚ÄID‚ğŠi”[		(—á:vtxOrder[0] = (ID)278, [1] = (ID)35, [2] = (ID)76 etc)
-//			// %%%	vtxdiv[ Œ´“_‚©‚ç‹ß‚¢’¸“_‚Ì‡(0,1,2) ]:‚»‚Ì’¸“_‚ª‰~ŠÂ—Ìˆæ‚Ì“à‘¤i1j‚©ŠO‘¤(0,2)‚©‚ğ•\‚·
+//			//	vectorã«å…¥ã‚Œã‚‹éš›ã®æ³¨æ„!!! %%%%%%%%%%%%%%%%%%
+//			// %%%	vtxOrder[ åŸç‚¹ã‹ã‚‰è¿‘ã„é ‚ç‚¹ã®é †(0,1,2) ]:ãã®é ‚ç‚¹IDã®åŸç‚¹ã«è¿‘ã„é †ã«ä¸¦ã¹æ›¿ãˆã¦IDã‚’æ ¼ç´		(ä¾‹:vtxOrder[0] = (ID)278, [1] = (ID)35, [2] = (ID)76 etc)
+//			// %%%	vtxdiv[ åŸç‚¹ã‹ã‚‰è¿‘ã„é ‚ç‚¹ã®é †(0,1,2) ]:ãã®é ‚ç‚¹ãŒå††ç’°é ˜åŸŸã®å†…å´ï¼ˆ1ï¼‰ã‹å¤–å´(0,2)ã‹ã‚’è¡¨ã™
 //
-//			//>	face‚Ì•Ó‚²‚Æ‚Éê‡•ª‚¯
-//			///	 j ‚Æ(—×‚Ì) (j+1)%3 ‚Æ‚Å‘Î‚ğ¬‚·•Ó‚É‚Â‚¢‚Ä
+//			//>	faceã®è¾ºã”ã¨ã«å ´åˆåˆ†ã‘
+//			///	 j ã¨(éš£ã®) (j+1)%3 ã¨ã§å¯¾ã‚’æˆã™è¾ºã«ã¤ã„ã¦
 //			for(unsigned j=0;j<3;j++){
-//				double f[3]={0.0, 0.0, 0.0};	// ’¸“_0,1,2,3‚©‚çŒ©‚½Œ`óŠÖ” 
+//				double f[3]={0.0, 0.0, 0.0};	// é ‚ç‚¹0,1,2,3ã‹ã‚‰è¦‹ãŸå½¢çŠ¶é–¢æ•° 
 //				//debug
 //				//DSTR <<"j: " << j << ", faces[i].ascendVtx[j]: " << faces[i].ascendVtx[j] << ", faces[i].ascendVtx[(j+1)%3]: " << faces[i].ascendVtx[(j+1)%3] << std::endl;
 //				//DSTR << "vertices[faces[i].ascendVtx[j]].pos: (" << vertices[faces[i].ascendVtx[j]].pos.x  << ", "<< vertices[faces[i].ascendVtx[j]].pos.z << ") " << std::endl;
 //				//DSTR << "vertices[faces[i].ascendVtx[(j+1)%3]].pos: (" << vertices[faces[i].ascendVtx[(j+1)%3]].pos.x  << ", "<< vertices[faces[i].ascendVtx[(j+1)%3]].pos.z << ") " << std::endl; 
 //				//DSTR << std::endl;
 //
-//				//	0‚Ì—Ìˆæ‚É‚ ‚é•Ó:
+//				//	0ã®é ˜åŸŸã«ã‚ã‚‹è¾º:
 //				if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] == 0){
-//					//	‚¢‚¸‚ê‚Ì“_‚ğ‚à—Ìˆæ“àvector‚É‚Í“ü‚ê‚È‚¢
+//					//	ã„ãšã‚Œã®ç‚¹ã‚’ã‚‚é ˜åŸŸå†…vectorã«ã¯å…¥ã‚Œãªã„
 //				}
-//				//	“à”¼Œa‚Æ‚¾‚¯Œğ‚í‚é•Ó(“à:0¨ŠO:1‚ÆŠO:1¨“à:0):
+//				//	å†…åŠå¾„ã¨ã ã‘äº¤ã‚ã‚‹è¾º(å†…:0â†’å¤–:1ã¨å¤–:1â†’å†…:0):
 //				else if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] - vtxdiv[j] > 0 || vtxdiv[j] == 1 && vtxdiv[(j+1)%3] - vtxdiv[j] < 0){
-//					//	(n“_iª‚Å“ü‚ê‚Ä‚¢‚éê‡‚É‚Í•s—vjj‚Æ“à”¼Œa‚Æ‚ğA‘Î‚Ì“_‚É“ü‚ê‚é
-//					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){	//“à¨ŠO
-//						//	“à”¼Œa‚Æ‚ÌŒğ“_‚ğ‹‚ß‚ÄAÀ•W‚ğ“ü‚ê‚é
-//						//%%%	ü•ª‚ğ\¬‚·‚é’¸“_‚Æ”¼ŒaAŒğ“_‚Ìƒ`ƒFƒbƒNŠÖ”¨DSTR•\¦	%%%//		//faceID,face“àß“_”Ô†A”¼Œa‚ğ—p‚¢‚ÄA—×‚è‡‚¤ß“_‚Åì‚éü•ª‚Æ‰~ŒÊ‚ÌŒğ“_‚ğ‹‚ß‚Ä•\¦
+//					//	(å§‹ç‚¹ï¼ˆâ†‘ã§å…¥ã‚Œã¦ã„ã‚‹å ´åˆã«ã¯ä¸è¦ï¼‰ï¼‰ã¨å†…åŠå¾„ã¨ã‚’ã€å¯¾ã®ç‚¹ã«å…¥ã‚Œã‚‹
+//					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){	//å†…â†’å¤–
+//						//	å†…åŠå¾„ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã¦ã€åº§æ¨™ã‚’å…¥ã‚Œã‚‹
+//						//%%%	ç·šåˆ†ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã¨åŠå¾„ã€äº¤ç‚¹ã®ãƒã‚§ãƒƒã‚¯é–¢æ•°â†’DSTRè¡¨ç¤º	%%%//		//faceID,faceå†…ç¯€ç‚¹ç•ªå·ã€åŠå¾„ã‚’ç”¨ã„ã¦ã€éš£ã‚Šåˆã†ç¯€ç‚¹ã§ä½œã‚‹ç·šåˆ†ã¨å††å¼§ã®äº¤ç‚¹ã‚’æ±‚ã‚ã¦è¡¨ç¤º
 //						ShowIntersectionVtxDSTR(i,j,radius);
-//						//	..“à”¼Œa‚Æ‚ÌŒğ“_‚Ìx,zÀ•W‚ğ“ü‚ê‚é
+//						//	..å†…åŠå¾„ã¨ã®äº¤ç‚¹ã®x,zåº§æ¨™ã‚’å…¥ã‚Œã‚‹
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) );
-//						//	..‘g‘Î“_‚ÌÀ•W‚ğintersection‚É“ü‚ê‚é
+//						//	..çµ„å¯¾ç‚¹ã®åº§æ¨™ã‚’intersectionã«å…¥ã‚Œã‚‹
 //						faces[i].ihvtx.push_back( Vec2d( vertices[ faces[i].ascendVtx[ (j+1)%3 ] ].pos.x, vertices[faces[i].ascendVtx[ (j+1)%3 ] ].pos.z) );
-//						//	....‚±‚Ì“_ˆÊ’u‚Å‚ÌŒ`óŠÖ”‚ğ“±o
-//					}else if(vtxdiv[(j+1)%3] - vtxdiv[j] < 0){		//ŠO¨“à
-//						//	“à”¼Œa‚Æ‚ÌŒğ“_‚ğ‹‚ßAŒğ“_‚ÌÀ•W‚ğ“ü‚ê‚é
+//						//	....ã“ã®ç‚¹ä½ç½®ã§ã®å½¢çŠ¶é–¢æ•°ã‚’å°å‡º
+//					}else if(vtxdiv[(j+1)%3] - vtxdiv[j] < 0){		//å¤–â†’å†…
+//						//	å†…åŠå¾„ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã€äº¤ç‚¹ã®åº§æ¨™ã‚’å…¥ã‚Œã‚‹
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) );
-//						//..‘g‘Î“_‚ÍA“à”¼Œa‚Ì“à‘¤F‰~ŠÂ—ÌˆæŠO‚È‚Ì‚ÅA‘g‘Î“_‚ğvector‚É‚Í“ü‚ê‚È‚¢
+//						//..çµ„å¯¾ç‚¹ã¯ã€å†…åŠå¾„ã®å†…å´ï¼šå††ç’°é ˜åŸŸå¤–ãªã®ã§ã€çµ„å¯¾ç‚¹ã‚’vectorã«ã¯å…¥ã‚Œãªã„
 //					}
 //				}
-//				//	‰~ŠÂ—Ìˆæ(:1)“à‚É‚ ‚é•Ó
+//				//	å††ç’°é ˜åŸŸ(:1)å†…ã«ã‚ã‚‹è¾º
 //				else if(vtxdiv[j] == 1 && vtxdiv[(j+1)%3] == 1){
-//					//	(n“_‚ğ“ü‚ê‚Ä‚¢‚é‚Ì‚È‚çA)•Ó‘Î“_‚ğvector‚É“ü‚ê‚é
-//					//	n“_‚Í“ü‚ê‚¸‚Æ‚àAÅŒã‚É“ü‚é‚Í‚¸
+//					//	(å§‹ç‚¹ã‚’å…¥ã‚Œã¦ã„ã‚‹ã®ãªã‚‰ã€)è¾ºå¯¾ç‚¹ã‚’vectorã«å…¥ã‚Œã‚‹
+//					//	å§‹ç‚¹ã¯å…¥ã‚Œãšã¨ã‚‚ã€æœ€å¾Œã«å…¥ã‚‹ã¯ãš
 //					////intersection.push_back(Vec2d(vertices[vtxdiv[(j+1)%3]].pos.x,vertices[vtxdiv[(j+1)%3]].pos.z));
 //					faces[i].ihvtx.push_back(Vec2d(vertices[faces[i].ascendVtx[(j+1)%3]].pos.x,	vertices[faces[i].ascendVtx[(j+1)%3]].pos.z));
 //				}
-//				//	ŠO”¼Œa‚ÆŒğ‚í‚é•Ó(“à¨ŠOAŠO¨“à)
+//				//	å¤–åŠå¾„ã¨äº¤ã‚ã‚‹è¾º(å†…â†’å¤–ã€å¤–â†’å†…)
 //				else if(vtxdiv[j] == 1 && vtxdiv[(j+1)%3] == 2 || vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 1){
-//					// “àŒü‚«‚©ŠOŒü‚«‚©‚ğA•„†‚Å”»’è‚·‚é‚±‚Æ‚ÅAã‚Ì	or	‚Ì‚Ç‚¿‚ç‚©‚ğ”»’è‚µAvector‚É“ü‚ê‚é‡”Ô‚ğ•Ï‚¦‚é
-//					//	ŠO”¼Œa‚Æ‚ÌŒğ“_‚ğ‹‚ß‚é
-//					//	“à¨ŠO 2 - 1 = 1 > 0
+//					// å†…å‘ãã‹å¤–å‘ãã‹ã‚’ã€ç¬¦å·ã§åˆ¤å®šã™ã‚‹ã“ã¨ã§ã€ä¸Šã®	or	ã®ã©ã¡ã‚‰ã‹ã‚’åˆ¤å®šã—ã€vectorã«å…¥ã‚Œã‚‹é †ç•ªã‚’å¤‰ãˆã‚‹
+//					//	å¤–åŠå¾„ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
+//					//	å†…â†’å¤– 2 - 1 = 1 > 0
 //					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){
-//						//	Œğ“_‚ğŠi”[
+//						//	äº¤ç‚¹ã‚’æ ¼ç´
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , Radius) );
-//						////	‘g‘Î“_‚ÌX,ZÀ•W‚ğŠi”[¨Ši”[‚µ‚¿‚áƒ_ƒ‚Å‚µ‚åI
+//						////	çµ„å¯¾ç‚¹ã®X,Zåº§æ¨™ã‚’æ ¼ç´â†’æ ¼ç´ã—ã¡ã‚ƒãƒ€ãƒ¡ã§ã—ã‚‡ï¼
 //						//faces[i].ihvtx.push_back(Vec2d(vertices[faces[i].ascendVtx[(j+1)%3]].pos.x,	vertices[faces[i].ascendVtx[(j+1)%3]].pos.z));
-//						////	?¨	intersection.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,vertices[vtxOrder[(j+1)%3]].pos.z));
+//						////	?â†’	intersection.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,vertices[vtxOrder[(j+1)%3]].pos.z));
 //						
 //					}
-//					//	ŠO¨“à 1 - 2 = -1 < 0
+//					//	å¤–â†’å†… 1 - 2 = -1 < 0
 //					else if(vtxdiv[(j+1)%3] - vtxdiv[j] < 0){
-//						// ŠO”¼Œa‚Æ‚ÌŒğ“_‚ÌÀ•W‚ğŠi”[‚·‚é
+//						// å¤–åŠå¾„ã¨ã®äº¤ç‚¹ã®åº§æ¨™ã‚’æ ¼ç´ã™ã‚‹
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , Radius) );
-//						// ‘g‘Î“_‚ğŠi”[‚·‚é
+//						// çµ„å¯¾ç‚¹ã‚’æ ¼ç´ã™ã‚‹
 //						faces[i].ihvtx.push_back( Vec2d( vertices[ faces[i].ascendVtx[ (j+1)%3 ] ].pos.x, vertices[faces[i].ascendVtx[ (j+1)%3 ] ].pos.z) );
 //					}
 //					else if(vtxdiv[(j+1)%3] - vtxdiv[j] == 0) assert(0);
-//					//	(n“_‚ªvector‚É“ü‚Á‚Ä‚¢‚é‚±‚Æ‚ğŠm”F‚·‚é)Œğ“_‚ğvector‚É“ü‚ê‚é
+//					//	(å§‹ç‚¹ãŒvectorã«å…¥ã£ã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèªã™ã‚‹)äº¤ç‚¹ã‚’vectorã«å…¥ã‚Œã‚‹
 //					faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , Radius) );
 //				}
-//				//	“à”¼Œa‚ÆŠO”¼Œa‚Æ‚Ì‚Ç‚¿‚ç‚Æ‚àŒğ‚í‚é•Ó(“à¨ŠOAŠO¨“à)
+//				//	å†…åŠå¾„ã¨å¤–åŠå¾„ã¨ã®ã©ã¡ã‚‰ã¨ã‚‚äº¤ã‚ã‚‹è¾º(å†…â†’å¤–ã€å¤–â†’å†…)
 //				else if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] == 2 || vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 0){
-//					// “àŒü‚«‚©ŠOŒü‚«‚©‚ğA•„†‚Å”»’è‚·‚é‚±‚Æ‚ÅAã‚Ì	or	‚Ì‚Ç‚¿‚ç‚©‚ğ”»’è‚µAvector‚É“ü‚ê‚é‡”Ô‚ğ•Ï‚¦‚é
-//					//%%%	‚Ç‚¿‚ç‚Æ‚àŒğ‚í‚éğŒ
-//					// “à”¼Œa‰~ŒÊ‚æ‚èŒ´“_‚æ‚è¨ŠOF0¨‚Q: 2 - 0 > 0
+//					// å†…å‘ãã‹å¤–å‘ãã‹ã‚’ã€ç¬¦å·ã§åˆ¤å®šã™ã‚‹ã“ã¨ã§ã€ä¸Šã®	or	ã®ã©ã¡ã‚‰ã‹ã‚’åˆ¤å®šã—ã€vectorã«å…¥ã‚Œã‚‹é †ç•ªã‚’å¤‰ãˆã‚‹
+//					//%%%	ã©ã¡ã‚‰ã¨ã‚‚äº¤ã‚ã‚‹æ¡ä»¶
+//					// å†…åŠå¾„å††å¼§ã‚ˆã‚ŠåŸç‚¹ã‚ˆã‚Šâ†’å¤–ï¼š0â†’ï¼’: 2 - 0 > 0
 //					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){
-//						//“à”¼Œa‚ÆŒğ‚í‚èAŒğ“_‚ğŠi”[
+//						//å†…åŠå¾„ã¨äº¤ã‚ã‚Šã€äº¤ç‚¹ã‚’æ ¼ç´
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) );
-//						//ŠO”ÂŒn‚ÆŒğ‚í‚èAŒğ“_‚ğŠi”[
+//						//å¤–æ¿ç³»ã¨äº¤ã‚ã‚Šã€äº¤ç‚¹ã‚’æ ¼ç´
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , Radius) );
-//					}else{	// ŠO¨“à”¼Œa‰~ŒÊ‚æ‚èŒ´“_‚æ‚èF2¨‚O
-//						//ŠO”¼Œa‚ÆŒğ‚í‚èAŒğ“_‚ğŠi”[
+//					}else{	// å¤–â†’å†…åŠå¾„å††å¼§ã‚ˆã‚ŠåŸç‚¹ã‚ˆã‚Šï¼š2â†’ï¼
+//						//å¤–åŠå¾„ã¨äº¤ã‚ã‚Šã€äº¤ç‚¹ã‚’æ ¼ç´
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , Radius) );
-//						//“à”ÂŒn‚ÆŒğ‚í‚èAŒğ“_‚ğŠi”[
+//						//å†…æ¿ç³»ã¨äº¤ã‚ã‚Šã€äº¤ç‚¹ã‚’æ ¼ç´
 //						faces[i].ihvtx.push_back( CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) );
 //					}
 //				}
-//				//	“à”¼Œa‚ÆŠO”¼Œa‚ÆŒğ‚í‚é•Ó(ŠO‘¤‚©‚ç“à‘¤‚Ö)
+//				//	å†…åŠå¾„ã¨å¤–åŠå¾„ã¨äº¤ã‚ã‚‹è¾º(å¤–å´ã‹ã‚‰å†…å´ã¸)
 //				//else if(){
 //				//}
-//					//	if•¶‚Ì’†‚ÅA·•ª‚ªƒvƒ‰ƒX‚©ƒ}ƒCƒiƒX‚Å”»’è‚Å‚«‚»‚¤
+//					//	ifæ–‡ã®ä¸­ã§ã€å·®åˆ†ãŒãƒ—ãƒ©ã‚¹ã‹ãƒã‚¤ãƒŠã‚¹ã§åˆ¤å®šã§ããã†
 //				
-//				//	ŠO”¼Œa‚ÌŠO‘¤‚É‚ ‚é•Ó
+//				//	å¤–åŠå¾„ã®å¤–å´ã«ã‚ã‚‹è¾º
 //				else if(vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 2){
-//					//	‚¢‚¸‚ê‚Ì“_‚ğ‚à—Ìˆæ“àvector‚É‚Í“ü‚ê‚È‚¢
+//					//	ã„ãšã‚Œã®ç‚¹ã‚’ã‚‚é ˜åŸŸå†…vectorã«ã¯å…¥ã‚Œãªã„
 //				}
-//				//	“à‘¤‚©‚çŠO‘¤‚És‚­•Ó‚Íã‚Å‹Lq‚Å‚«‚é‚ªAŠO‘¤‚©‚ç“à‘¤‚ÉŒü‚©‚¤•Ó‚ğ‚±‚ê‚Å‹Lq‚Å‚«‚é‚Ì‚©H
+//				//	å†…å´ã‹ã‚‰å¤–å´ã«è¡Œãè¾ºã¯ä¸Šã§è¨˜è¿°ã§ãã‚‹ãŒã€å¤–å´ã‹ã‚‰å†…å´ã«å‘ã‹ã†è¾ºã‚’ã“ã‚Œã§è¨˜è¿°ã§ãã‚‹ã®ã‹ï¼Ÿ
 //			}	//	for(unsigned j=0;j<3;j++){
 //
-//			//	..vector‚ğOŠpŒ`•ªŠ„‚·‚é
-//			//	..•ªŠ„‚µ‚½OŠpŒ`‚Ì–ÊÏ‚ğŠeX‹‚ß‚é
-//			// ..IH–ÊÏ‚É’Ç‰Á
+//			//	..vectorã‚’ä¸‰è§’å½¢åˆ†å‰²ã™ã‚‹
+//			//	..åˆ†å‰²ã—ãŸä¸‰è§’å½¢ã®é¢ç©ã‚’å„ã€…æ±‚ã‚ã‚‹
+//			// ..IHé¢ç©ã«è¿½åŠ 
 //
 //			//faces[i].iharea = 
 //
-//			//	ƒfƒoƒbƒO€–ÚFface‚Ìihvtx(vector)‚ÉAmayihheated‚Åƒtƒ‰ƒO‚Ì—§‚Á‚½face–”‚Íß“_‚ª‘S‚ÄŠÜ‚Ü‚ê‚Ä‚¢‚é‚©B
+//			//	ãƒ‡ãƒãƒƒã‚°é …ç›®ï¼šfaceã®ihvtx(vector)ã«ã€mayihheatedã§ãƒ•ãƒ©ã‚°ã®ç«‹ã£ãŸfaceåˆã¯ç¯€ç‚¹ãŒå…¨ã¦å«ã¾ã‚Œã¦ã„ã‚‹ã‹ã€‚
 //		}	//	if(mayIHheated)
 //	}	//	for(faces[i]
 //
 //
-//	//>	Step	1.‚ÌÀ‘•
-//	//>	radius:“à”¼ŒaARadius:ŠO”¼Œa,@dqdtAll:’PˆÊŠÔ‚ ‚½‚è‚É“ü‚Á‚Ä‚­‚é‘S”M—Ê
+//	//>	Step	1.ã®å®Ÿè£…
+//	//>	radius:å†…åŠå¾„ã€Radius:å¤–åŠå¾„,ã€€dqdtAll:å˜ä½æ™‚é–“ã‚ãŸã‚Šã«å…¥ã£ã¦ãã‚‹å…¨ç†±é‡
 //
-//	//%%	è‡ 
-//	//> isHeated(->nearIHHeater)‚Ìfaces‚Ì“àA3‚Â‚Ìß“_‘S•”‚É‚Â‚¢‚ÄA“Á’è”¼Œa‚Ì’†‚É“ü‚Á‚Ä‚¢‚é‚à‚Ì‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB
-//	//>	“ü‚Á‚Ä‚¢‚é‚à‚Ì‚ğAŒ©‚Â‚¯‚½‚çA–ÊÏŒvZ‚ğ‚µ‚½‚¢‚ªA‚±‚±‚ÅA‰½ŒÂ‚Ìß“_‚ª“ü‚Á‚Ä‚¢‚é‚©‚É‚æ‚Á‚Äê‡•ª‚¯‚ğs‚¤B
-//	//>	‚R‚Â:face‚Ì–ÊÏ‚ğfaceS‚É‘ã“ü‚·‚é	1~2‚Â:–ÊÏ‚ğ‹ß—ŒvZ‚·‚é‚½‚ß‚ÉA3ß“_‚Ì“àA‚Ç‚Ìß“_‚Æß“_‚Å\¬‚³‚ê‚½•Ó‚ª“à”¼Œar‚Ü‚½‚ÍAŠO”¼ŒaR‚ÆŒğ‚í‚Á‚Ä‚¢‚é‚©”»’è
-//	//>	Œğ‚í‚Á‚Ä‚¢‚éê‡‚É‚ÍA‚»‚ÌŒğ“_‚ğ‹‚ß‚éB‹‚ß‚½Œğ“_‚Æ“à”¼ŒaˆÈãŠO”¼ŒaˆÈ“à‚Ì—Ìˆæ‚É‚ ‚éface“à‚Ìß“_‚ğ—p‚¢‚ÄAOŠpŒ`‚ğì‚èA‚»‚Ì–ÊÏ‚ğ‹‚ß‚éB
+//	//%%	æ‰‹é † 
+//	//> isHeated(->nearIHHeater)ã®facesã®å†…ã€3ã¤ã®ç¯€ç‚¹å…¨éƒ¨ã«ã¤ã„ã¦ã€ç‰¹å®šåŠå¾„ã®ä¸­ã«å…¥ã£ã¦ã„ã‚‹ã‚‚ã®ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
+//	//>	å…¥ã£ã¦ã„ã‚‹ã‚‚ã®ã‚’ã€è¦‹ã¤ã‘ãŸã‚‰ã€é¢ç©è¨ˆç®—ã‚’ã—ãŸã„ãŒã€ã“ã“ã§ã€ä½•å€‹ã®ç¯€ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã«ã‚ˆã£ã¦å ´åˆåˆ†ã‘ã‚’è¡Œã†ã€‚
+//	//>	ï¼“ã¤:faceã®é¢ç©ã‚’faceSã«ä»£å…¥ã™ã‚‹	1~2ã¤:é¢ç©ã‚’è¿‘ä¼¼è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€3ç¯€ç‚¹ã®å†…ã€ã©ã®ç¯€ç‚¹ã¨ç¯€ç‚¹ã§æ§‹æˆã•ã‚ŒãŸè¾ºãŒå†…åŠå¾„rã¾ãŸã¯ã€å¤–åŠå¾„Rã¨äº¤ã‚ã£ã¦ã„ã‚‹ã‹åˆ¤å®š
+//	//>	äº¤ã‚ã£ã¦ã„ã‚‹å ´åˆã«ã¯ã€ãã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹ã€‚æ±‚ã‚ãŸäº¤ç‚¹ã¨å†…åŠå¾„ä»¥ä¸Šå¤–åŠå¾„ä»¥å†…ã®é ˜åŸŸã«ã‚ã‚‹faceå†…ã®ç¯€ç‚¹ã‚’ç”¨ã„ã¦ã€ä¸‰è§’å½¢ã‚’ä½œã‚Šã€ãã®é¢ç©ã‚’æ±‚ã‚ã‚‹ã€‚
 //}
 
 
 //
 //void PHFemThermo::CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num){
-//	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-//	//> ‰~ŠÂ‚Å‹æØ‚ç‚ê‚él–Ê‘Ì–Ê‚Ì—Ìˆæ‚ğOŠpŒ`‚Å‹ß—‚·‚é
+//	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+//	//> å††ç’°ã§åŒºåˆ‡ã‚‰ã‚Œã‚‹å››é¢ä½“é¢ã®é ˜åŸŸã‚’ä¸‰è§’å½¢ã§è¿‘ä¼¼ã™ã‚‹
 //
-//	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+//	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 //
-//	//%%	è‡ 
-//	//> isHeated(->nearIHHeater)‚Ìfaces‚Ì“àA3‚Â‚Ìß“_‘S•”‚É‚Â‚¢‚ÄA“Á’è”¼Œa‚Ì’†‚É“ü‚Á‚Ä‚¢‚é‚à‚Ì‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB
-//	//>	“ü‚Á‚Ä‚¢‚é‚à‚Ì‚ğAŒ©‚Â‚¯‚½‚çA–ÊÏŒvZ‚ğ‚µ‚½‚¢‚ªA‚±‚±‚ÅA‰½ŒÂ‚Ìß“_‚ª“ü‚Á‚Ä‚¢‚é‚©‚É‚æ‚Á‚Äê‡•ª‚¯‚ğs‚¤B
-//	//>	‚R‚Â:face‚Ì–ÊÏ‚ğfaceS‚É‘ã“ü‚·‚é	1~2‚Â:–ÊÏ‚ğ‹ß—ŒvZ‚·‚é‚½‚ß‚ÉA3ß“_‚Ì“àA‚Ç‚Ìß“_‚Æß“_‚Å\¬‚³‚ê‚½•Ó‚ª“à”¼Œar‚Ü‚½‚ÍAŠO”¼ŒaR‚ÆŒğ‚í‚Á‚Ä‚¢‚é‚©”»’è
-//	//>	Œğ‚í‚Á‚Ä‚¢‚éê‡‚É‚ÍA‚»‚ÌŒğ“_‚ğ‹‚ß‚éB‹‚ß‚½Œğ“_‚Æ“à”¼ŒaˆÈãŠO”¼ŒaˆÈ“à‚Ì—Ìˆæ‚É‚ ‚éface“à‚Ìß“_‚ğ—p‚¢‚ÄAOŠpŒ`‚ğì‚èA‚»‚Ì–ÊÏ‚ğ‹‚ß‚éB
+//	//%%	æ‰‹é † 
+//	//> isHeated(->nearIHHeater)ã®facesã®å†…ã€3ã¤ã®ç¯€ç‚¹å…¨éƒ¨ã«ã¤ã„ã¦ã€ç‰¹å®šåŠå¾„ã®ä¸­ã«å…¥ã£ã¦ã„ã‚‹ã‚‚ã®ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
+//	//>	å…¥ã£ã¦ã„ã‚‹ã‚‚ã®ã‚’ã€è¦‹ã¤ã‘ãŸã‚‰ã€é¢ç©è¨ˆç®—ã‚’ã—ãŸã„ãŒã€ã“ã“ã§ã€ä½•å€‹ã®ç¯€ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã«ã‚ˆã£ã¦å ´åˆåˆ†ã‘ã‚’è¡Œã†ã€‚
+//	//>	ï¼“ã¤:faceã®é¢ç©ã‚’faceSã«ä»£å…¥ã™ã‚‹	1~2ã¤:é¢ç©ã‚’è¿‘ä¼¼è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€3ç¯€ç‚¹ã®å†…ã€ã©ã®ç¯€ç‚¹ã¨ç¯€ç‚¹ã§æ§‹æˆã•ã‚ŒãŸè¾ºãŒå†…åŠå¾„rã¾ãŸã¯ã€å¤–åŠå¾„Rã¨äº¤ã‚ã£ã¦ã„ã‚‹ã‹åˆ¤å®š
+//	//>	äº¤ã‚ã£ã¦ã„ã‚‹å ´åˆã«ã¯ã€ãã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹ã€‚æ±‚ã‚ãŸäº¤ç‚¹ã¨å†…åŠå¾„ä»¥ä¸Šå¤–åŠå¾„ä»¥å†…ã®é ˜åŸŸã«ã‚ã‚‹faceå†…ã®ç¯€ç‚¹ã‚’ç”¨ã„ã¦ã€ä¸‰è§’å½¢ã‚’ä½œã‚Šã€ãã®é¢ç©ã‚’æ±‚ã‚ã‚‹ã€‚
 //
 //	double faceS = 0.0;
 //	for(unsigned i=0;i < nSurfaceFace; i++){
-//		if(faces[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_ ‰~ŠÂ‚Ì”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚é‚Æ‚ÍŒÀ‚ç‚È‚¢
+//		if(faces[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹ å††ç’°ã®ç¯„å›²å†…ã«å…¥ã£ã¦ã„ã‚‹ã¨ã¯é™ã‚‰ãªã„
 //			unsigned nObinnerVtx = 0;
 //			unsigned inner[3] = {0,0,0};
-//			unsigned judge[2] = {0,0};		///	judge[0],[1]‚Ì‡‚ÉŒ´“_‚É‹ß‚¢“_‚Ì”»’èŒ‹‰Ê
-//			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);		// –ÊÏŒvZ‚ªÏ‚ñ‚Å‚È‚¯‚ê‚ÎŒvZ‚·‚é
-//				//> ’u‚«Š·‚¦‚Æ0,1‚ğ“ü‚ê‘Ö‚¦‚é‚¾‚¯(=ƒ|ƒŠƒ‚[ƒtƒBƒYƒ€)‚Åc‚è‚ÌÀ‘•‚àì‚é
-//				// ‰º‹Lˆ—‚ğŠÖ”‰»‚·‚é?B“_‚ÌID‚ğ“ü‚ê‚ê‚ÎA“¯‚¶ˆ—‚ğ‚·‚éŠÖ”
-//				//> 0-1‚ÅŒğ“_‚ğì‚Á‚Ä‚¢‚é‚Æ‚« true false ‚Í˜_‰‰Z‚Ì”r‘¼“I˜_—˜aXOR‚ÅtrueAŒğ“_‚ğŒvZ‚·‚é 00=0,01=10=1,11=0; •Ğ•û‚Ì“_‚ª”ÍˆÍ“à‚ÅA‚à‚¤ˆê•û‚ª”ÍˆÍŠO‚Ìê‡Atrue‚É‚È‚é
+//			unsigned judge[2] = {0,0};		///	judge[0],[1]ã®é †ã«åŸç‚¹ã«è¿‘ã„ç‚¹ã®åˆ¤å®šçµæœ
+//			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);		// é¢ç©è¨ˆç®—ãŒæ¸ˆã‚“ã§ãªã‘ã‚Œã°è¨ˆç®—ã™ã‚‹
+//				//> ç½®ãæ›ãˆã¨0,1ã‚’å…¥ã‚Œæ›¿ãˆã‚‹ã ã‘(=ãƒãƒªãƒ¢ãƒ¼ãƒ•ã‚£ã‚ºãƒ )ã§æ®‹ã‚Šã®å®Ÿè£…ã‚‚ä½œã‚‹
+//				// ä¸‹è¨˜å‡¦ç†ã‚’é–¢æ•°åŒ–ã™ã‚‹?ã€‚ç‚¹ã®IDã‚’å…¥ã‚Œã‚Œã°ã€åŒã˜å‡¦ç†ã‚’ã™ã‚‹é–¢æ•°
+//				//> 0-1ã§äº¤ç‚¹ã‚’ä½œã£ã¦ã„ã‚‹ã¨ã true false ã¯è«–æ¼”ç®—ã®æ’ä»–çš„è«–ç†å’ŒXORã§trueæ™‚ã€äº¤ç‚¹ã‚’è¨ˆç®—ã™ã‚‹ 00=0,01=10=1,11=0; ç‰‡æ–¹ã®ç‚¹ãŒç¯„å›²å†…ã§ã€ã‚‚ã†ä¸€æ–¹ãŒç¯„å›²å¤–ã®å ´åˆã€trueã«ãªã‚‹
 //			
-//				//> ‰~ŠÂ‚Ì”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚½‚çAmayIHheated‚ğtrue‚ÉA‚ ‚é‚¢‚ÍAfalse‚É‚·‚é(ˆê‰)
+//				//> å††ç’°ã®ç¯„å›²å†…ã«å…¥ã£ã¦ã„ãŸã‚‰ã€mayIHheatedã‚’trueã«ã€ã‚ã‚‹ã„ã¯ã€falseã«ã™ã‚‹(ä¸€å¿œ)
 //
-//				/// faces[i]‚Ì’¸“_‚ª‰½ŒÂA—Ìˆæ“à‚É“ü‚Á‚Ä‚¢‚é‚©‚ğŒ©‚Â‚¯‚é
+//				/// faces[i]ã®é ‚ç‚¹ãŒä½•å€‹ã€é ˜åŸŸå†…ã«å…¥ã£ã¦ã„ã‚‹ã‹ã‚’è¦‹ã¤ã‘ã‚‹
 //				for(unsigned j=0;j<3;j++){
 //					if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
 //						nObinnerVtx += 1;
@@ -1704,22 +1708,22 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //					}
 //				}
 //
-//				//> nObinnerVtx‚Ì’l‚ÅğŒ•ªŠò
+//				//> nObinnerVtxã®å€¤ã§æ¡ä»¶åˆ†å²
 //			
 //				///	
 //				if(nObinnerVtx == 1){
-//					Vec2d vtxXY[3];			/// face‚Ì•Ó‚Æ”¼Œar,R‚Æ‚ÌŒğ“_‚Ìx,zÀ•W@Å‘å‚R“_
-//					for(unsigned j=0;j<3;j++){		///	face‚ğ\¬‚·‚é3’¸“_‚É‚Â‚¢‚Ä
+//					Vec2d vtxXY[3];			/// faceã®è¾ºã¨åŠå¾„r,Rã¨ã®äº¤ç‚¹ã®x,zåº§æ¨™ã€€æœ€å¤§ï¼“ç‚¹
+//					for(unsigned j=0;j<3;j++){		///	faceã‚’æ§‹æˆã™ã‚‹3é ‚ç‚¹ã«ã¤ã„ã¦
 //						unsigned k = 0;
 //						unsigned m = 0;
 //						k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
 //						m = (j+2)%3;
 //						//vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[k],r,R);
 //						//DSTR << "vtxXY[" << j << "]: " << vtxXY[j] << std::endl; 
-//						if(inner[j] ==1){			/// faces[i]‚Ìj”Ô–Ú‚Ìß“_‚ª‰~ŠÂ—Ìˆæ“à‚É“ü‚Á‚Ä‚¢‚é
-//						/// j”Ô–Ú‚Ì’¸“_‚ÆƒGƒbƒW‚ğ\¬‚·‚é“_(‘¼‚Ì‚Q“_)‚ğg‚Á‚ÄA”¼Œar,R‚ÆŒğ‚í‚é“_‚ğZo‚·‚é						
+//						if(inner[j] ==1){			/// faces[i]ã®jç•ªç›®ã®ç¯€ç‚¹ãŒå††ç’°é ˜åŸŸå†…ã«å…¥ã£ã¦ã„ã‚‹
+//						/// jç•ªç›®ã®é ‚ç‚¹ã¨ã‚¨ãƒƒã‚¸ã‚’æ§‹æˆã™ã‚‹ç‚¹(ä»–ã®ï¼’ç‚¹)ã‚’ä½¿ã£ã¦ã€åŠå¾„r,Rã¨äº¤ã‚ã‚‹ç‚¹ã‚’ç®—å‡ºã™ã‚‹						
 //						//> j 0,1,2
-//							if(j == 0){	/// ’¸“_j‚Æ•Ó‚ğì‚é’¸“_‚ğg‚Á‚ÄA•Ó‚ÆŒğ‚í‚éŒğ“_‚ğ‹‚ß‚é
+//							if(j == 0){	/// é ‚ç‚¹jã¨è¾ºã‚’ä½œã‚‹é ‚ç‚¹ã‚’ä½¿ã£ã¦ã€è¾ºã¨äº¤ã‚ã‚‹äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
 //								//k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
 //							vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[k],r,R);
 //							vtxXY[k] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[m],r,R);
@@ -1734,20 +1738,20 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //							}
 //							else{
 //								assert(0);
-//								DSTR << "Error in PHFemThermo::CalcIHdqdt2(hogehoge) —Ìˆæ”»’è‚Éƒ~ƒX" << std::endl;
+//								DSTR << "Error in PHFemThermo::CalcIHdqdt2(hogehoge) é ˜åŸŸåˆ¤å®šã«ãƒŸã‚¹" << std::endl;
 //							}
 //						 }
 //					}
 //				}
 //
 //				//for(unsigned j=0;j<3;j++){
-//				//	/// face“à‚Ìß“_‚ğ‡”Ô‚Éƒ`ƒFƒbƒN‚·‚é
+//				//	/// faceå†…ã®ç¯€ç‚¹ã‚’é †ç•ªã«ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 //				//	unsigned k =0;
 //				//	k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
 //				//	if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
 //				//	}
 //				//	if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
-//				//		//> j,k‚ğfaces[i].vertices[j],faces[i].vertices[k]‚Æ‚µ‚Ä‘ã“ü
+//				//		//> j,kã‚’faces[i].vertices[j],faces[i].vertices[k]ã¨ã—ã¦ä»£å…¥
 //				//		CalcIntersectionPoint(faces[i].vertices[0],faces[i].vertices[1],r,R);
 //				//	}
 //				//}
@@ -1755,19 +1759,19 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //				//> r -> radius
 //				//> R -> Radius
 //			
-//				/// À•W(consX ,constY)‚ª‰~‚ÆOŠpŒ`‚Ì•Ó‚Æ‚ÌŒğ“_
+//				/// åº§æ¨™(consX ,constY)ãŒå††ã¨ä¸‰è§’å½¢ã®è¾ºã¨ã®äº¤ç‚¹
 //			
 //				//unsigned vtxId0 = faces[i].vertices[0];
 //				//unsigned vtxId1 = faces[i].vertices[1];
 //			}
-//			////> 1-2‚ÅŒğ“_‚ğì‚Á‚Ä‚¢‚é‚Æ‚«	//
+//			////> 1-2ã§äº¤ç‚¹ã‚’ä½œã£ã¦ã„ã‚‹ã¨ã	//
 //			//else if( (r <= vertices[faces[i].vertices[1]].disFromOrigin && vertices[faces[i].vertices[1]].disFromOrigin <= R) ^ (vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin <= R)){
-//			//	//> ‰~ŠÂ‚Æ‚ÌŒğ“_‚ğ‹‚ß‚é
+//			//	//> å††ç’°ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
 //			//	int katoon00 =0;
 //			//}
-//			////> 0-2‚ÅŒğ“_‚ğì‚Á‚Ä‚¢‚é‚Æ‚«
+//			////> 0-2ã§äº¤ç‚¹ã‚’ä½œã£ã¦ã„ã‚‹ã¨ã
 //			//else if( (r <= vertices[faces[i].vertices[0]].disFromOrigin && vertices[faces[i].vertices[0]].disFromOrigin <= R) ^ (vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin <= R)){
-//			//	//> ‰~ŠÂ‚Æ‚ÌŒğ“_‚ğ‹‚ß‚é
+//			//	//> å††ç’°ã¨ã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
 //			//	int katoon000 =0;
 //			//}
 //
@@ -1784,7 +1788,7 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //
 //			//if(faces[i].fluxarea >= 0){	
 //			//	faceS += faces[i].fluxarea;
-//			//}else{	assert(0);	}		//	faces[i].fluxarea‚É0–¢–‚Ì”š‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚É‰ÁZ‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é
+//			//}else{	assert(0);	}		//	faces[i].fluxareaã«0æœªæº€ã®æ•°å­—ãŒå…¥ã£ã¦ã„ã‚‹ã®ã«åŠ ç®—ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹
 //			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 //		}
 //
@@ -1793,32 +1797,32 @@ void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,do
 //	//}
 //
 //	if(faceS > 0){
-//		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+//		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 //		double dqdtds = dqdtAll / faceS;
 ////		DSTR << "dqdtds:  " << dqdtds << std::endl;
-//		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-//		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+//		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+//		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 //		for(unsigned i=0;i < nSurfaceFace; i++){
 //			if(faces[i].mayIHheated){
-//				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ
+//				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—
 ////				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 //			}
 //		}
 //	}
-//	//@ˆÈãA’l‚Í“ü‚Á‚Ä‚¢‚é‚æ‚¤‚¾
+//	//ã€€ä»¥ä¸Šã€å€¤ã¯å…¥ã£ã¦ã„ã‚‹ã‚ˆã†ã 
 //	int katoon =0;
-//	//ª‚ğ‚Â‚©‚Á‚ÄACreateMatk2t‚ğƒRƒs[‚µ‚½ŠÖ”‚ÅAVecf2?‚ğì‚éŠî‚É
+//	//â†‘ã‚’ã¤ã‹ã£ã¦ã€CreateMatk2tã‚’ã‚³ãƒ”ãƒ¼ã—ãŸé–¢æ•°ã§ã€Vecf2?ã‚’ä½œã‚‹åŸºã«
 //
-//	//>	”M—Ê‚ÍAdqdtds‚ğ—p‚¢‚é
+//	//>	ç†±é‡ã¯ã€dqdtdsã‚’ç”¨ã„ã‚‹
 //
-//	//> r <= <= R‚Ì’†S‚©‚ç•úËó‚É‰Á”M
+//	//> r <= <= Rã®ä¸­å¿ƒã‹ã‚‰æ”¾å°„çŠ¶ã«åŠ ç†±
 //
-//	//	ß“_‚Ådqdt‚Ì’l‚ğXV‚·‚é
+//	//	ç¯€ç‚¹ã§dqdtã®å€¤ã‚’æ›´æ–°ã™ã‚‹
 //
-//	//@ˆÈ‰º‚ÍAƒxƒNƒgƒ‹‚ğì‚éŠÖ”‚Ìd–
-//	//	ß“_‚Ì‘®‚·‚é•\–Ê‚Ì–Ê‚ÅAŒvZ‚·‚é
-//	//  vertices[].heatFluxValue‚ğŠî‚ÉŒvZ‚ği‚ß‚é
-//	//	ƒKƒEƒXƒUƒCƒfƒ‹ŒvZ‚Å‚«‚é‚æ‚¤‚Éˆ—‚È‚ÇA€”õ‚·‚é
+//	//ã€€ä»¥ä¸‹ã¯ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹é–¢æ•°ã®ä»•äº‹
+//	//	ç¯€ç‚¹ã®å±ã™ã‚‹è¡¨é¢ã®é¢ã§ã€è¨ˆç®—ã™ã‚‹
+//	//  vertices[].heatFluxValueã‚’åŸºã«è¨ˆç®—ã‚’é€²ã‚ã‚‹
+//	//	ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—ã§ãã‚‹ã‚ˆã†ã«å‡¦ç†ãªã©ã€æº–å‚™ã™ã‚‹
 //}
 
 Vec2d PHFemThermo::GetIHbandDrawVtx(){	return IHLineVtxX;	}
@@ -1830,27 +1834,27 @@ void PHFemThermo::SetIHbandDrawVtx(double xS, double xE){
 void PHFemThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	///	xÀ•WFxS~xE‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	// xS,‚˜E‚ÌŠÔ‚É‚¢‚¸‚ê‚©ˆê“_‚ª‚ ‚éA
+	///	xåº§æ¨™ï¼šxS~xEã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	// xS,ï½˜Eã®é–“ã«ã„ãšã‚Œã‹ä¸€ç‚¹ãŒã‚ã‚‹ã€
 	// 
-	// mayIHheated‚Íg‚í‚È‚¢	:‚±‚ÌğŒ“à‚ÅAface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚Ì‚à‚Ì‚É‚Â‚¢‚Ä‚Ì‚İAfacesS‚É‰ÁZ
+	// mayIHheatedã¯ä½¿ã‚ãªã„	:ã“ã®æ¡ä»¶å†…ã§ã€faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®ã‚‚ã®ã«ã¤ã„ã¦ã®ã¿ã€facesSã«åŠ ç®—
 
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;			// initialize
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		//if(faces[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		//if(faces[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			unsigned nObinnerVtx = 0;
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
-			//..‘Sß“_‚Åy<0‚È‚çAfluxarea‚É‰ÁZ
+			//..å…¨ç¯€ç‚¹ã§y<0ãªã‚‰ã€fluxareaã«åŠ ç®—
 			if(mesh->vertices[mesh->faces[i].vertexIDs[0]].pos.y < 0 && mesh->vertices[mesh->faces[i].vertexIDs[1]].pos.y < 0 && mesh->vertices[mesh->faces[i].vertexIDs[2]].pos.y < 0){
 				for(unsigned j=0;j<3;j++){
 					// ||.. :x, |.|.:o , .|.|:o ,   .||.:o  , ..||:x 
-					//. ‚Ç‚ê‚©‚P“_‚ªxS~xE‚ÌŠÔ‚É‚ ‚éA–”‚ÍA—×‚è‡‚¤2“_‚ªƒoƒ“ƒh‚ÌŠO‘¤‚É‚ ‚éAIHarea‚ÉZ“ü
+					//. ã©ã‚Œã‹ï¼‘ç‚¹ãŒxS~xEã®é–“ã«ã‚ã‚‹ã€åˆã¯ã€éš£ã‚Šåˆã†2ç‚¹ãŒãƒãƒ³ãƒ‰ã®å¤–å´ã«ã‚ã‚‹ã€IHareaã«ç®—å…¥
 					if( xS <= mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x && mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x <= xE){
 						faceVars[i].fluxarea[0] = faceVars[i].area;
 						break;
 					}
-					//.’¸“_‘Î‚ªƒoƒ“ƒh‚ğ‹²‚Ş‚Æ‚«
+					//.é ‚ç‚¹å¯¾ãŒãƒãƒ³ãƒ‰ã‚’æŒŸã‚€ã¨ã
 					if(mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x <= xS && xE <= mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x 
 						|| mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x <= xS && xE <= mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x ){
 							faceVars[i].fluxarea[0] = faceVars[i].area;
@@ -1860,21 +1864,21 @@ void PHFemThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned nu
 			}
 			if(faceVars[i].fluxarea >= 0){	
 				faceS += faceVars[i].fluxarea[0];
-			}else{		assert(0);	}		//	faces[i].fluxarea‚É0–¢–‚Ì”š‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚É‰ÁZ‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é
+			}else{		assert(0);	}		//	faces[i].fluxareaã«0æœªæº€ã®æ•°å­—ãŒå…¥ã£ã¦ã„ã‚‹ã®ã«åŠ ç®—ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹
 			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 		//}
 	}
 
-	//..face–ÊÏ‚É‰‚¶‚½”M—¬‘©‚ğ‘S‘Ì‚Ì–ÊÏŠ„‡‚æ‚è‹‚ß‚é
+	//..faceé¢ç©ã«å¿œã˜ãŸç†±æµæŸã‚’å…¨ä½“ã®é¢ç©å‰²åˆã‚ˆã‚Šæ±‚ã‚ã‚‹
 	if(faceS > 0){
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		//double dqdt_ds = dqdtAll / faceS;
 //		DSTR << "dqdtds:  " << dqdtds << std::endl;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].fluxarea){
-				faceVars[i].heatflux[num][0] = faceVars[i].fluxarea[0] / faceS * dqdtAll;		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ
+				faceVars[i].heatflux[num][0] = faceVars[i].fluxarea[0] / faceS * dqdtAll;		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;			
 				// debug
 				//for(unsigned j = 0; j < 3;++j){
@@ -1884,19 +1888,19 @@ void PHFemThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned nu
 		}
 	}
 
-	//	ƒfƒoƒbƒOE•\¦—p
+	//	ãƒ‡ãƒãƒƒã‚°ãƒ»è¡¨ç¤ºç”¨
 	SetIHbandDrawVtx(xS,xE);
 }
 
 void PHFemThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	///	xÀ•WFxS~xE‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
+	///	xåº§æ¨™ï¼šxS~xEã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
 
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			unsigned nObinnerVtx = 0;
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
@@ -1911,7 +1915,7 @@ void PHFemThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num
 
 			if(faceVars[i].fluxarea >= 0){	
 				faceS += faceVars[i].fluxarea[0];
-			}else{		assert(0);	}		//	faces[i].fluxarea‚É0–¢–‚Ì”š‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚É‰ÁZ‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é
+			}else{		assert(0);	}		//	faces[i].fluxareaã«0æœªæº€ã®æ•°å­—ãŒå…¥ã£ã¦ã„ã‚‹ã®ã«åŠ ç®—ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹
 			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 		}
 	}
@@ -1923,40 +1927,40 @@ void PHFemThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num
 
 
 	if(faceS > 0){
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
 //		DSTR << "dqdtds:  " << dqdtds << std::endl;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
-				faceVars[i].heatflux[num][0] = dqdtds * faceVars[i].fluxarea[0];		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ
+				faceVars[i].heatflux[num][0] = dqdtds * faceVars[i].fluxarea[0];		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
 	}
 	
-	//@ˆÈãA’l‚Í“ü‚Á‚Ä‚¢‚é‚æ‚¤‚¾
+	//ã€€ä»¥ä¸Šã€å€¤ã¯å…¥ã£ã¦ã„ã‚‹ã‚ˆã†ã 
 	int katoon =0;
 }
 
 void PHFemThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//dqdtAll‚ğ’PˆÊ–ÊÏ•Ó‚èˆÊ‚É’¼‚·
+	//dqdtAllã‚’å˜ä½é¢ç©è¾ºã‚Šä½ã«ç›´ã™
 	double dqdtdsAll =0.0;
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	//	­‚µ‚Å‚à—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚ê‚ÎAIH‰Á”M‚ÉŠÜ‚ß‚é
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	//	å°‘ã—ã§ã‚‚é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ã‚Œã°ã€IHåŠ ç†±ã«å«ã‚ã‚‹
 	int cnt = 0;
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->faces.size();i++){
 		faceVars[i].fluxarea[2] = 0.0;
 	}
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
 				if( r <= vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin && vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin <= R){
@@ -1972,10 +1976,10 @@ void PHFemThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsi
 	double debugdq=0.0;
 	if(faceS > 0){
 		//dqdtdsAll = dqdtAll / faceS;
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
 				double avgTemp=0.0;
@@ -1994,7 +1998,7 @@ void PHFemThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsi
 					ohm = (avgTemp -302.0) * 7.5e-10 + 8.62e-7;
 				}
 				if(avgTemp > 25.0){
-					faceVars[i].heatflux[mode][0] = dqdtds * (5.86e-7)/(ohm);		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB
+					faceVars[i].heatflux[mode][0] = dqdtds * (5.86e-7)/(ohm);		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚
 				}else{
 					faceVars[i].heatflux[mode][0] = dqdtds;
 				}
@@ -2005,26 +2009,26 @@ void PHFemThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsi
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "–ÊÏ‚ª‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢" <<std::endl;} 	//‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢‚Æ‚«‚ÉAŒx			‘å‘Ì“¯‚¶‚Æ‚«‚ÌğŒ”»’è@dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: ‘å‘Ì“¯‚¶ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "é¢ç©ãŒå¤§ä½“åŒã˜ã§ã¯ãªã„" <<std::endl;} 	//å¤§ä½“åŒã˜ã§ã¯ãªã„ã¨ãã«ã€è­¦å‘Š			å¤§ä½“åŒã˜ã¨ãã®æ¡ä»¶åˆ¤å®šã€€dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: å¤§ä½“åŒã˜ 
 }		// /*CalcIHdqdt_decrease*/
 
 void PHFemThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//dqdtAll‚ğ’PˆÊ–ÊÏ•Ó‚èˆÊ‚É’¼‚·
+	//dqdtAllã‚’å˜ä½é¢ç©è¾ºã‚Šä½ã«ç›´ã™
 	double dqdtdsAll =0.0;
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	//	­‚µ‚Å‚à—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚ê‚ÎAIH‰Á”M‚ÉŠÜ‚ß‚é
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	//	å°‘ã—ã§ã‚‚é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ã‚Œã°ã€IHåŠ ç†±ã«å«ã‚ã‚‹
 	int cnt = 0;
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->faces.size();i++){
 		faceVars[i].fluxarea[2] = 0.0;
 	}
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
 				if( r <= vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin && vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin <= R){
@@ -2040,13 +2044,13 @@ void PHFemThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned 
 	double debugdq=0.0;
 	if(faceS > 0){
 		//dqdtdsAll = dqdtAll / faceS;
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
-				faceVars[i].heatflux[mode][2] = -dqdtds;		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB
+				faceVars[i].heatflux[mode][2] = -dqdtds;		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚
 				//debug
 				debugdq += dqdtds * faceVars[i].fluxarea[2];
 				debugS += faceVars[i].fluxarea[2];
@@ -2054,28 +2058,28 @@ void PHFemThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned 
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "–ÊÏ‚ª‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢" <<std::endl;} 	//‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢‚Æ‚«‚ÉAŒx			‘å‘Ì“¯‚¶‚Æ‚«‚ÌğŒ”»’è@dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: ‘å‘Ì“¯‚¶ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "é¢ç©ãŒå¤§ä½“åŒã˜ã§ã¯ãªã„" <<std::endl;} 	//å¤§ä½“åŒã˜ã§ã¯ãªã„ã¨ãã«ã€è­¦å‘Š			å¤§ä½“åŒã˜ã¨ãã®æ¡ä»¶åˆ¤å®šã€€dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: å¤§ä½“åŒã˜ 
 }		// /*CalcIHdqdt_decrease*/
 
 
 void PHFemThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//%%%			[1]‚É‚Â‚¢‚ÄŒvZ
-	//dqdtAll‚ğ’PˆÊ–ÊÏ•Ó‚èˆÊ‚É’¼‚·
+	//%%%			[1]ã«ã¤ã„ã¦è¨ˆç®—
+	//dqdtAllã‚’å˜ä½é¢ç©è¾ºã‚Šä½ã«ç›´ã™
 	double dqdtdsAll =0.0;
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	//	­‚µ‚Å‚à—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚ê‚ÎAIH‰Á”M‚ÉŠÜ‚ß‚é
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	//	å°‘ã—ã§ã‚‚é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ã‚Œã°ã€IHåŠ ç†±ã«å«ã‚ã‚‹
 	int cnt = 0;
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->faces.size();i++){
 		faceVars[i].fluxarea[1] = 0.0;
 	}
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
 				if( r <= vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin && vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin <= R){
@@ -2091,10 +2095,10 @@ void PHFemThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned 
 	double debugdq=0.0;
 	if(faceS > 0){
 		//dqdtdsAll = dqdtAll / faceS;
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
 				double avgTemp=0.0;
@@ -2113,7 +2117,7 @@ void PHFemThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned 
 					ohm = (avgTemp -302.0) * 7.5e-10 + 8.62e-7;
 				}
 				if(avgTemp > 25.0){
-					faceVars[i].heatflux[mode][0] = dqdtds * (5.86e-7)/(ohm);		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB
+					faceVars[i].heatflux[mode][0] = dqdtds * (5.86e-7)/(ohm);		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚
 				}else{
 					faceVars[i].heatflux[mode][0] = dqdtds;
 				}
@@ -2124,27 +2128,27 @@ void PHFemThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned 
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "–ÊÏ‚ª‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢" <<std::endl;} 	//‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢‚Æ‚«‚ÉAŒx			‘å‘Ì“¯‚¶‚Æ‚«‚ÌğŒ”»’è@dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: ‘å‘Ì“¯‚¶ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "é¢ç©ãŒå¤§ä½“åŒã˜ã§ã¯ãªã„" <<std::endl;} 	//å¤§ä½“åŒã˜ã§ã¯ãªã„ã¨ãã«ã€è­¦å‘Š			å¤§ä½“åŒã˜ã¨ãã®æ¡ä»¶åˆ¤å®šã€€dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: å¤§ä½“åŒã˜ 
 }		// /*CalcIHdqdt_add*/
 
 void PHFemThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//%%%			[1]‚É‚Â‚¢‚ÄŒvZ
-	//dqdtAll‚ğ’PˆÊ–ÊÏ•Ó‚èˆÊ‚É’¼‚·
+	//%%%			[1]ã«ã¤ã„ã¦è¨ˆç®—
+	//dqdtAllã‚’å˜ä½é¢ç©è¾ºã‚Šä½ã«ç›´ã™
 	double dqdtdsAll =0.0;
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	//	­‚µ‚Å‚à—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚ê‚ÎAIH‰Á”M‚ÉŠÜ‚ß‚é
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	//	å°‘ã—ã§ã‚‚é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ã‚Œã°ã€IHåŠ ç†±ã«å«ã‚ã‚‹
 	int cnt = 0;
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->faces.size();i++){
 		faceVars[i].fluxarea[1] = 0.0;
 	}
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
 				if( r <= vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin && vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin <= R){
@@ -2160,13 +2164,13 @@ void PHFemThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode)
 	double debugdq=0.0;
 	if(faceS > 0){
 		//dqdtdsAll = dqdtAll / faceS;
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
-				faceVars[i].heatflux[mode][1] = dqdtds;		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB
+				faceVars[i].heatflux[mode][1] = dqdtds;		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚
 				//debug
 				debugdq += dqdtds * faceVars[i].fluxarea[1];
 				debugS += faceVars[i].fluxarea[1];
@@ -2174,18 +2178,18 @@ void PHFemThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode)
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "–ÊÏ‚ª‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢" <<std::endl;} 	//‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢‚Æ‚«‚ÉAŒx			‘å‘Ì“¯‚¶‚Æ‚«‚ÌğŒ”»’è@dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: ‘å‘Ì“¯‚¶ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "é¢ç©ãŒå¤§ä½“åŒã˜ã§ã¯ãªã„" <<std::endl;} 	//å¤§ä½“åŒã˜ã§ã¯ãªã„ã¨ãã«ã€è­¦å‘Š			å¤§ä½“åŒã˜ã¨ãã®æ¡ä»¶åˆ¤å®šã€€dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: å¤§ä½“åŒã˜ 
 }		// /*CalcIHdqdt_add*/
 
 void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	double faceSq[10] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};								//@‰~ŠÂ–ˆ‚Ì–ÊÏ•Û‘¶
-	// 10sec
-	//double ratio[10] = {0.016646849,	0.022592152,	0.051129608,	0.087990488,	0.12960761,	0.162901308,	0.180737218,	0.168846611,	0.122473246,	0.057074911};		//	‰Á”M—¬‘©•ª’SŠ„‡
-	// 5sec
+	double faceSq[10] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};								//ã€€å††ç’°æ¯ã®é¢ç©ä¿å­˜
+	// 10secæ™‚
+	//double ratio[10] = {0.016646849,	0.022592152,	0.051129608,	0.087990488,	0.12960761,	0.162901308,	0.180737218,	0.168846611,	0.122473246,	0.057074911};		//	åŠ ç†±æµæŸåˆ†æ‹…å‰²åˆ
+	// 5secæ™‚
 	double ratio[10] = {0.007653061,	0.015306122,	0.043367347,	0.084183673,	0.130102041,	0.168367347,	0.18877551,	0.181122449,	0.130102041,	0.051020408};
-	//	Å‰‚Ì4€‚©‚ç0.01‚Ğ‚¢‚ÄAŒã‚ë‚É‰ÁZ
+	//	æœ€åˆã®4é …ã‹ã‚‰0.01ã²ã„ã¦ã€å¾Œã‚ã«åŠ ç®—
 	//double ratio[10] = {0.002653061,	0.010306122,	0.038367347,	0.079183673,	0.130102041,	0.168367347,	0.18977551,	0.182122449,	0.131102041,	0.052020408};
 	ratio[5] += ratio[0];
 	ratio[0] -= ratio[0];
@@ -2197,7 +2201,7 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 	}
 	double areaQ[10] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	for(unsigned i=0;i<10;++i){
-		areaQ[i] = ratio[i] * dqdtAll;		//	‚±‚±‚Í1sec“–‚½‚è‚Ì’l‚Å—Ç‚¢BŠÔÏ•ª‚Å’²®‚·‚é‚½‚ß
+		areaQ[i] = ratio[i] * dqdtAll;		//	ã“ã“ã¯1secå½“ãŸã‚Šã®å€¤ã§è‰¯ã„ã€‚æ™‚é–“ç©åˆ†ã§èª¿æ•´ã™ã‚‹ãŸã‚
 	}
 	//double rsum=0;
 	//double Qsum=0;
@@ -2207,32 +2211,32 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 	//}
 	//DSTR << "rsum:"<<rsum<<std::endl;
 	//DSTR << "Qsum:"<<Qsum<<std::endl;
-	//@ŒvZ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚É”õ‚¦‚Ä
+	//ã€€è¨ˆç®—ã•ã‚Œã¦ã„ãªã„å ´åˆã«å‚™ãˆã¦
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 		}
 	}
 
-	//> •\–Êface‚Ì“àAŒ´“_‚©‚çŠeface‚Ìß“_‚Ìƒ[ƒJƒ‹(x,z)À•WŒn‚Å‚Ì•½–Êã‚Ì‹——£‚ÌŒvZ‚ğAface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚Ì‚à‚Ì‚É‘Î‚µ‚ÄAIH‰Á”M‚Ì‰Â”\«‚ğ¦‚·ƒtƒ‰ƒO‚ğİ’è
+	//> è¡¨é¢faceã®å†…ã€åŸç‚¹ã‹ã‚‰å„faceã®ç¯€ç‚¹ã®ãƒ­ãƒ¼ã‚«ãƒ«(x,z)åº§æ¨™ç³»ã§ã®å¹³é¢ä¸Šã®è·é›¢ã®è¨ˆç®—ã‚’ã€faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®ã‚‚ã®ã«å¯¾ã—ã¦ã€IHåŠ ç†±ã®å¯èƒ½æ€§ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 	for(unsigned i=0;i<mesh->nSurfaceFace;i++){
-		//	(x,z)•½–Ê‚É‚¨‚¯‚émayIHheated‚Ìface‘Sß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚·‚é
+		//	(x,z)å¹³é¢ã«ãŠã‘ã‚‹mayIHheatedã®faceå…¨ç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹
 		for(unsigned j=0; j<3; j++){
 			double dx = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x - origin[0];
-			double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - origin[1];	//	•\‹L‚Íy‚¾‚ªAÀ¿zÀ•W‚ª“ü‚Á‚Ä‚¢‚é
+			double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - origin[1];	//	è¡¨è¨˜ã¯yã ãŒã€å®Ÿè³ªzåº§æ¨™ãŒå…¥ã£ã¦ã„ã‚‹
 			vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
 		}
 	}
-	//‹‚ß‚½‹——£‚É‰‚¶‚ÄAİ’è‚³‚ê‚½‰ŠúğŒ‚ğ–‚½‚·‚æ‚¤‚È‰·“x•ª•z‚ğì‚é
-	float r[11];		//	10‚±‚ß‚ÌŠO‘¤‚ª•K—v‚È‚½‚ß
+	//æ±‚ã‚ãŸè·é›¢ã«å¿œã˜ã¦ã€è¨­å®šã•ã‚ŒãŸåˆæœŸæ¡ä»¶ã‚’æº€ãŸã™ã‚ˆã†ãªæ¸©åº¦åˆ†å¸ƒã‚’ä½œã‚‹
+	float r[11];		//	10ã“ã‚ã®å¤–å´ãŒå¿…è¦ãªãŸã‚
 	for(unsigned i=0;i<11;++i){
 		r[i] = 0.01 * i;
 	}
 
-	//	’†S‚©‚çˆê’è”ÍˆÍ“à‚Ì–ÊÏ˜a‚ğ‹‚ß‚é	faceŒ´“_‚Å”»’f
+	//	ä¸­å¿ƒã‹ã‚‰ä¸€å®šç¯„å›²å†…ã®é¢ç©å’Œã‚’æ±‚ã‚ã‚‹	faceåŸç‚¹ã§åˆ¤æ–­
 	for(unsigned id=0;id<mesh->nSurfaceFace;++id){
 		if(faceVars[id].mayIHheated){
-			//	face‚ÌdS‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğ‹‚ß‚é
+			//	faceã®é‡å¿ƒã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’æ±‚ã‚ã‚‹
 			double grvPnt = 1.0 / 3.0 * (vertexVars[mesh->faces[id].vertexIDs[0]].disFromOrigin + vertexVars[mesh->faces[id].vertexIDs[1]].disFromOrigin +vertexVars[mesh->faces[id].vertexIDs[2]].disFromOrigin);
 			for(unsigned i=0; i < 10;++i){
 				if(i>0){
@@ -2255,7 +2259,7 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 			}
 		}		
 	}
-	//faceß“_‚Ì‚¤‚¿A1“_‚Å‚à”ÍˆÍ“à‚É“ü‚Á‚½‚çA’Tõ‚ğ~‚ß‚ÄA‚»‚Ì”ÍˆÍ‚Ìface‚ÆŠm’è‚·‚éB‘S•”‚Ìƒ^ƒO•t‚¯Œã‚ÉA“–ŠY—Ìˆæ‚Ì–ÊÏ˜a‚ğ‹‚ß‚È‚¢‚ÆƒYƒŒ‚»‚¤
+	//faceç¯€ç‚¹ã®ã†ã¡ã€1ç‚¹ã§ã‚‚ç¯„å›²å†…ã«å…¥ã£ãŸã‚‰ã€æ¢ç´¢ã‚’æ­¢ã‚ã¦ã€ãã®ç¯„å›²ã®faceã¨ç¢ºå®šã™ã‚‹ã€‚å…¨éƒ¨ã®ã‚¿ã‚°ä»˜ã‘å¾Œã«ã€å½“è©²é ˜åŸŸã®é¢ç©å’Œã‚’æ±‚ã‚ãªã„ã¨ã‚ºãƒ¬ãã†
 	//double debugfaceSum=0;
 	//for(unsigned i=0;i<10;i++){
 	//	DSTR <<"faceSq["<< i << "]:"<<  faceSq[i] << std::endl;
@@ -2266,9 +2270,9 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 		if(faceVars[id].mayIHheated){
 			for(unsigned i=0;i < 10; ++i){
 				if(faceSq[i]>0){
-					//	‰Á”M—¬‘©‘ÎÛfacei”ÍˆÍ“àfacej‚Ì‚İ
+					//	åŠ ç†±æµæŸå¯¾è±¡faceï¼ˆç¯„å›²å†…faceï¼‰ã®ã¿
 					if(faceVars[id].map<10){
-						faceVars[id].heatflux[mode][3] = areaQ[faceVars[id].map] / faceSq[i] ;		// J/m^2‚É’¼‚·Batleast‚¾‚¯‚Ìƒ\[ƒXQÆ(”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB)
+						faceVars[id].heatflux[mode][3] = areaQ[faceVars[id].map] / faceSq[i] ;		// J/m^2ã«ç›´ã™ã€‚atleastã ã‘ã®ã‚½ãƒ¼ã‚¹å‚ç…§(ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚)
 						//debugW += faceSq[i] * faces[id].heatflux[mode][3];
 					}
 				}
@@ -2282,30 +2286,30 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 	//		DSTR << faceSq[i] / faceSq[i] <<std::endl;
 	//	}
 	//}
-	//DSTR << "–ÊÏ˜a[m^2]:"<<debugfaceSum<<std::endl;
-	//DSTR << "‰Á”M˜a[W]:" << debugW <<std::endl;
+	//DSTR << "é¢ç©å’Œ[m^2]:"<<debugfaceSum<<std::endl;
+	//DSTR << "åŠ ç†±å’Œ[W]:" << debugW <<std::endl;
 
 }		// /*CalcIHdqdt_atleast_hogehoge*/
 
 void PHFemThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//dqdtAll‚ğ’PˆÊ–ÊÏ•Ó‚èˆÊ‚É’¼‚·
+	//dqdtAllã‚’å˜ä½é¢ç©è¾ºã‚Šä½ã«ç›´ã™
 	double dqdtdsAll =0.0;
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	//	­‚µ‚Å‚à—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚ê‚ÎAIH‰Á”M‚ÉŠÜ‚ß‚é
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	//	å°‘ã—ã§ã‚‚é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ã‚Œã°ã€IHåŠ ç†±ã«å«ã‚ã‚‹
 	int cnt = 0;
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->faces.size();i++){
 		faceVars[i].fluxarea[0] = 0.0;
 		faceVars[i].fluxarea[1] = 0.0;
 		faceVars[i].fluxarea[2] = 0.0;
 	}
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
 				if( r <= vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin && vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin <= R){
@@ -2323,10 +2327,10 @@ void PHFemThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsig
 	double powerRatio =0.0;
 	if(faceS > 0){
 		//dqdtdsAll = dqdtAll / faceS;
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
 				double avgTemp = 0.0;
@@ -2350,7 +2354,7 @@ void PHFemThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsig
 				//	int katton=0;
 				//}
 				if(avgTemp > 25.0){
-					faceVars[i].heatflux[mode][0] = dqdtds * (5.86e-7)/(ohm);		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB
+					faceVars[i].heatflux[mode][0] = dqdtds * (5.86e-7)/(ohm);		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚
 				}else{
 					faceVars[i].heatflux[mode][0] = dqdtds;
 				}
@@ -2361,31 +2365,31 @@ void PHFemThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsig
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "–ÊÏ‚ª‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢" <<std::endl;} 	//‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢‚Æ‚«‚ÉAŒx			‘å‘Ì“¯‚¶‚Æ‚«‚ÌğŒ”»’è@dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: ‘å‘Ì“¯‚¶ 
-	//@ˆÈãA’l‚Í“ü‚Á‚Ä‚¢‚é‚æ‚¤‚¾
-	//DSTR << "face ‰Á”M–Ê”cnt: " << cnt<<std::endl;
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "é¢ç©ãŒå¤§ä½“åŒã˜ã§ã¯ãªã„" <<std::endl;} 	//å¤§ä½“åŒã˜ã§ã¯ãªã„ã¨ãã«ã€è­¦å‘Š			å¤§ä½“åŒã˜ã¨ãã®æ¡ä»¶åˆ¤å®šã€€dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: å¤§ä½“åŒã˜ 
+	//ã€€ä»¥ä¸Šã€å€¤ã¯å…¥ã£ã¦ã„ã‚‹ã‚ˆã†ã 
+	//DSTR << "face åŠ ç†±é¢æ•°cnt: " << cnt<<std::endl;
 }		// /*CalcIHdqdt_atleast*/
 
 void PHFemThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
 
-	//dqdtAll‚ğ’PˆÊ–ÊÏ•Ó‚èˆÊ‚É’¼‚·
+	//dqdtAllã‚’å˜ä½é¢ç©è¾ºã‚Šä½ã«ç›´ã™
 	double dqdtdsAll =0.0;
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
-	//	­‚µ‚Å‚à—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚ê‚ÎAIH‰Á”M‚ÉŠÜ‚ß‚é
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
+	//	å°‘ã—ã§ã‚‚é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ã‚Œã°ã€IHåŠ ç†±ã«å«ã‚ã‚‹
 	int cnt = 0;
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->faces.size();i++){
 		faceVars[i].fluxarea[0] = 0.0;
 		faceVars[i].fluxarea[1] = 0.0;
 		faceVars[i].fluxarea[2] = 0.0;
 	}
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
 				if( r <= vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin && vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin <= R){
@@ -2402,13 +2406,13 @@ void PHFemThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned m
 	double debugdq=0.0;
 	if(faceS > 0){
 		//dqdtdsAll = dqdtAll / faceS;
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
-				faceVars[i].heatflux[mode][0] = dqdtds;		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ‚µAJ/m^2‚É’¼‚³‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢¨s—ñ‚ÅŒvZ‚·‚é‚½‚ß‚ÉB
+				faceVars[i].heatflux[mode][0] = dqdtds;		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—ã—ã€J/m^2ã«ç›´ã•ãªã‘ã‚Œã°ã„ã‘ãªã„â†’è¡Œåˆ—ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã«ã€‚
 				//debug
 				debugdq += dqdtds * faceVars[i].fluxarea[0];
 				debugS += faceVars[i].fluxarea[0];
@@ -2416,20 +2420,20 @@ void PHFemThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned m
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "–ÊÏ‚ª‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢" <<std::endl;} 	//‘å‘Ì“¯‚¶‚Å‚Í‚È‚¢‚Æ‚«‚ÉAŒx			‘å‘Ì“¯‚¶‚Æ‚«‚ÌğŒ”»’è@dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: ‘å‘Ì“¯‚¶ 
-	//@ˆÈãA’l‚Í“ü‚Á‚Ä‚¢‚é‚æ‚¤‚¾
-	//DSTR << "face ‰Á”M–Ê”cnt: " << cnt<<std::endl;
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "é¢ç©ãŒå¤§ä½“åŒã˜ã§ã¯ãªã„" <<std::endl;} 	//å¤§ä½“åŒã˜ã§ã¯ãªã„ã¨ãã«ã€è­¦å‘Š			å¤§ä½“åŒã˜ã¨ãã®æ¡ä»¶åˆ¤å®šã€€dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: å¤§ä½“åŒã˜ 
+	//ã€€ä»¥ä¸Šã€å€¤ã¯å…¥ã£ã¦ã„ã‚‹ã‚ˆã†ã 
+	//DSTR << "face åŠ ç†±é¢æ•°cnt: " << cnt<<std::endl;
 }		// /*CalcIHdqdt_atleast*/
 
 void PHFemThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	///	“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
+	///	å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
 
-	//> ‰Á”M‚·‚él–Ê‘Ì–Ê‚Ì–ÊÏ‚Ì‘˜a‚ğ‹‚ß‚é
+	//> åŠ ç†±ã™ã‚‹å››é¢ä½“é¢ã®é¢ç©ã®ç·å’Œã‚’æ±‚ã‚ã‚‹
 	double faceS = 0.0;
 	for(unsigned i=0;i < mesh->nSurfaceFace; i++){
-		if(faceVars[i].mayIHheated){			// face‚Ìß“_‚ÌyÀ•W‚ª•‰‚Ìê‡¨IH‰Á”M‚Ì‘ÎÛß“_
+		if(faceVars[i].mayIHheated){			// faceã®ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®å ´åˆâ†’IHåŠ ç†±ã®å¯¾è±¡ç¯€ç‚¹
 			unsigned nObinnerVtx = 0;
 			if(faceVars[i].area==0) faceVars[i].area = CalcTriangleArea(mesh->faces[i].vertexIDs[0],mesh->faces[i].vertexIDs[1],mesh->faces[i].vertexIDs[2]);
 			for(unsigned j=0;j<3;j++){
@@ -2444,7 +2448,7 @@ void PHFemThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 
 			if(faceVars[i].fluxarea >= 0){	
 				faceS += faceVars[i].fluxarea[0];
-			}else{		assert(0);	}		//	faces[i].fluxarea‚É0–¢–‚Ì”š‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚É‰ÁZ‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é
+			}else{		assert(0);	}		//	faces[i].fluxareaã«0æœªæº€ã®æ•°å­—ãŒå…¥ã£ã¦ã„ã‚‹ã®ã«åŠ ç®—ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹
 			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 		}
 	}
@@ -2454,37 +2458,37 @@ void PHFemThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 	//}
 
 	if(faceS > 0){
-		//> dqdt ‚ğ’PˆÊ–ÊÏ‚ ‚½‚è‚É’¼‚·([1/m^2])
+		//> dqdt ã‚’å˜ä½é¢ç©ã‚ãŸã‚Šã«ç›´ã™([1/m^2])
 		double dqdtds = dqdtAll / faceS;
 //		DSTR << "dqdtds:  " << dqdtds << std::endl;
-		//>	ˆÈ‰ºA”M—¬‘©‚ğfaces‚ÉŠi”[‚·‚é
-		//>	”M—¬‘©‚Ì–ÊÏŒvZ‚Ífluxarea‚ğ—p‚¢‚Äs‚¤
+		//>	ä»¥ä¸‹ã€ç†±æµæŸã‚’facesã«æ ¼ç´ã™ã‚‹
+		//>	ç†±æµæŸã®é¢ç©è¨ˆç®—ã¯fluxareaã‚’ç”¨ã„ã¦è¡Œã†
 		for(unsigned i=0;i < mesh->nSurfaceFace; i++){
 			if(faceVars[i].mayIHheated){
-				faceVars[i].heatflux[num][0] = dqdtds * faceVars[i].fluxarea[0];		//	”M—¬‘©‚Ì—Ê‚ğheatflux‚Ì–ÊÏ‚©‚çŒvZ
+				faceVars[i].heatflux[num][0] = dqdtds * faceVars[i].fluxarea[0];		//	ç†±æµæŸã®é‡ã‚’heatfluxã®é¢ç©ã‹ã‚‰è¨ˆç®—
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
 	}
 	
-	//@ˆÈãA’l‚Í“ü‚Á‚Ä‚¢‚é‚æ‚¤‚¾
+	//ã€€ä»¥ä¸Šã€å€¤ã¯å…¥ã£ã¦ã„ã‚‹ã‚ˆã†ã 
 
 	int katoon =0;
-	//ª‚ğ‚Â‚©‚Á‚ÄACreateMatk2t‚ğƒRƒs[‚µ‚½ŠÖ”‚ÅAVecf2?‚ğì‚éŠî‚É
+	//â†‘ã‚’ã¤ã‹ã£ã¦ã€CreateMatk2tã‚’ã‚³ãƒ”ãƒ¼ã—ãŸé–¢æ•°ã§ã€Vecf2?ã‚’ä½œã‚‹åŸºã«
 
-	//>	”M—Ê‚ÍAdqdtds‚ğ—p‚¢‚é
+	//>	ç†±é‡ã¯ã€dqdtdsã‚’ç”¨ã„ã‚‹
 
-	//> r <= <= R‚Ì’†S‚©‚ç•úËó‚É‰Á”M
+	//> r <= <= Rã®ä¸­å¿ƒã‹ã‚‰æ”¾å°„çŠ¶ã«åŠ ç†±
 
-	//	ß“_‚Ådqdt‚Ì’l‚ğXV‚·‚é
+	//	ç¯€ç‚¹ã§dqdtã®å€¤ã‚’æ›´æ–°ã™ã‚‹
 
-	//@ˆÈ‰º‚ÍAƒxƒNƒgƒ‹‚ğì‚éŠÖ”‚Ìd–
-	//	ß“_‚Ì‘®‚·‚é•\–Ê‚Ì–Ê‚ÅAŒvZ‚·‚é
-	//  vertices[].heatFluxValue‚ğŠî‚ÉŒvZ‚ği‚ß‚é
-	//	ƒKƒEƒXƒUƒCƒfƒ‹ŒvZ‚Å‚«‚é‚æ‚¤‚Éˆ—‚È‚ÇA€”õ‚·‚é
+	//ã€€ä»¥ä¸‹ã¯ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹é–¢æ•°ã®ä»•äº‹
+	//	ç¯€ç‚¹ã®å±ã™ã‚‹è¡¨é¢ã®é¢ã§ã€è¨ˆç®—ã™ã‚‹
+	//  vertices[].heatFluxValueã‚’åŸºã«è¨ˆç®—ã‚’é€²ã‚ã‚‹
+	//	ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—ã§ãã‚‹ã‚ˆã†ã«å‡¦ç†ãªã©ã€æº–å‚™ã™ã‚‹
 
 }
-/// face–ˆ‚Éì‚Á‚Ä‚µ‚Ü‚¤‚Ì‚ª—Ç‚¢‚Ì‚©Avertices‚²‚Æ‚É‚â‚é‚Ì‚ª‚¢‚¢‚Ì‚©B‚Ç‚Á‚¿‚ª‚¢‚¢‚©•ª‚©‚ç‚È‚¢‚Ì‚ÅA‚Ğ‚Æ‚Ü‚¸Avertices–ˆ‚Éì‚Á‚Ä‚µ‚Ü‚¨‚¤
+/// faceæ¯ã«ä½œã£ã¦ã—ã¾ã†ã®ãŒè‰¯ã„ã®ã‹ã€verticesã”ã¨ã«ã‚„ã‚‹ã®ãŒã„ã„ã®ã‹ã€‚ã©ã£ã¡ãŒã„ã„ã‹åˆ†ã‹ã‚‰ãªã„ã®ã§ã€ã²ã¨ã¾ãšã€verticesæ¯ã«ä½œã£ã¦ã—ã¾ãŠã†
 
 //void PHFemThermo::SetVertexHeatFlux(int id,double heatFlux){
 //	vertices[id].heatFluxValue = heatFlux;
@@ -2501,11 +2505,11 @@ void PHFemThermo::CalcHeatTransDirect2(double dt){
 #ifdef USE_LAPACK
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//lapack—˜—p
+	//lapackåˆ©ç”¨
 	int n = (int)mesh->vertices.size();
 
 	double eps =0.5;
-	//	ŒW”s—ñ‚Ìì¬
+	//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 	keisu.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisu.clear();
 
@@ -2577,7 +2581,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 		DSTR << std::endl;
 	}
 
-	//’¼Ú–@—˜—p
+	//ç›´æ¥æ³•åˆ©ç”¨
 
 	double eps =0.5;
 	double eps2 = 0.5;
@@ -2596,7 +2600,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 	TVecAll3 = TVecAll;
 
 
-	//	ŒW”s—ñ‚Ìì¬
+	//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 	keisu.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisu.clear();
 
@@ -2615,7 +2619,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 
 	keisu = eps * matKAll + 1 / dt * matCAll;
 
-	////vecf‚Ì•ªŠ„‚ğ“K—p
+	////vecfã®åˆ†å‰²ã‚’é©ç”¨
 	//PTM::VVector<double> vecFAllTemp;
 	//vecFAllTemp.resize(mesh->vertices.size());
 	//vecFAllTemp.clear();
@@ -2648,7 +2652,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 
 	//DSTR << "keisu * keisuInv" <<std::endl;
 	//DSTR << VV << std::endl;
-	//DSTR << "VV‘ÎŠp¬•ª" <<std::endl;
+	//DSTR << "VVå¯¾è§’æˆåˆ†" <<std::endl;
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	DSTR << VV[i][i] <<std::endl;
 	//}
@@ -2708,7 +2712,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 
 	//TVecAll = keisuIA * TVecAll;
 
-	////”ñ‘ÎŠp‚æ‚¤‚»‚ÌŒvZŒã‚É‘ÎŠp—v‘f‚ğ‘«‚·
+	////éå¯¾è§’ã‚ˆã†ãã®è¨ˆç®—å¾Œã«å¯¾è§’è¦ç´ ã‚’è¶³ã™
 	//PTM::VVector<double> pT;
 	//pT.resize(mesh->vertices.size());
 	//pT.clear();
@@ -2758,7 +2762,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 	//DSTR << "keisuInvInv";
 	//DSTR << keisu2 << std::endl;
 
-	// ŒW”s—ñ‚Ì”ñ0¬•ª‚ª‹t‹ts—ñ‚Å0‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğcheck
+	// ä¿‚æ•°è¡Œåˆ—ã®é0æˆåˆ†ãŒé€†é€†è¡Œåˆ—ã§0ã«ãªã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’check
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	for(unsigned j=0;j<vertices.size();j++){
 	//		if(keisu[i][j]!=0){
@@ -2767,7 +2771,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 	//	}
 	//}
 
-	//// ‚O¬•ª‚Í0‚©H
+	//// ï¼æˆåˆ†ã¯0ã‹ï¼Ÿ
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	for(unsigned j=0;j<vertices.size();j++){
 	//		if(keisu[i][j] ==0){
@@ -2795,7 +2799,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 
 	//DSTR << keisuInv2 << std::endl;
 
-	//PTM::VMatrixRow<double> keisu3;			//	’¼Ú–@‚ÅŒvZ‚ÌT(t+dt)ŒW”s—ñ
+	//PTM::VMatrixRow<double> keisu3;			//	ç›´æ¥æ³•ã§è¨ˆç®—æ™‚ã®T(t+dt)ä¿‚æ•°è¡Œåˆ—
 	//PTM::VMatrixRow<double> keisuInv3;
 	//PTM::VVector<double> uhen3;
 	//keisu3.resize(vertices.size(),vertices.size());
@@ -2871,7 +2875,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//’¼Ú–@—˜—p
+	//ç›´æ¥æ³•åˆ©ç”¨
 
 	//PTM::TMatrixRow<1,1,double> dtMat;
 	//PTM::TMatrixRow<1,1,double> epsMat;
@@ -2897,7 +2901,7 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 	TVecAll3 = TVecAll;
 
 
-	//	ŒW”s—ñ‚Ìì¬
+	//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 	keisu.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisu.clear();
 
@@ -2937,13 +2941,13 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 	double sumtemp=0.0;
 }
 
-//// ƒKƒEƒXƒUƒCƒfƒ‹–@‚ğg‚¢Ax+b>0‚ğ‰ğ‚­
+//// ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã‚’ä½¿ã„Ax+b>0ã‚’è§£ã
 //	template <class AD, class XD, class BD>
 //	void GaussSeidel(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b){
-//		int nIter = 15;					// ”½•œ‰ñ”‚ÌãŒÀ
+//		int nIter = 15;					// åå¾©å›æ•°ã®ä¸Šé™
 //		double error = 0.0;
-//		double errorRange = 10e-8;		// ‹–—eŒë·
-//		int n = (int)a.height();		// ˜A—§•û’ö®‚Ì”(s—ña‚Ìs”)
+//		double errorRange = 10e-8;		// è¨±å®¹èª¤å·®
+//		int n = (int)a.height();		// é€£ç«‹æ–¹ç¨‹å¼ã®æ•°(è¡Œåˆ—aã®è¡Œæ•°)
 //		std::vector< double > lastx;
 //		for(int i = 0; i < n; i++){
 //			lastx.push_back(x[i]);
@@ -2960,12 +2964,12 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 //				for(int j = i+1; j < n; j++){
 //					term2 += a[i][j] * lastx[j];
 //				}
-//				// x‚ÌXV(ŒJ‚è•Ô‚µŒvZ‚Ì®‚ğg—p)
+//				// xã®æ›´æ–°(ç¹°ã‚Šè¿”ã—è¨ˆç®—ã®å¼ã‚’ä½¿ç”¨)
 //				x[i] =  (-b[i] - term1 - term2) / a[i][i];
 //				if(x[i] < 0) x[i] = 0.0;
 //			}
 //
-//			// (lastx - x)‚Ì2æ‚Ì‘˜a‚ÆŒë·”ÍˆÍ‚ğ”äŠr
+//			// (lastx - x)ã®2ä¹—ã®ç·å’Œã¨èª¤å·®ç¯„å›²ã‚’æ¯”è¼ƒ
 //			error = 0.0;
 //			for(int i = 0; i < n; i++){
 //				error += pow(x[i] - lastx[i], 2);
@@ -2977,10 +2981,10 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 //				return;
 //			}
 //
-//			// ŒJ‚è•Ô‚µŒvZ‚Ì‚½‚ß‚ÉXVŒã‚Ìx‚ğlastx‚É•Û‘¶
+//			// ç¹°ã‚Šè¿”ã—è¨ˆç®—ã®ãŸã‚ã«æ›´æ–°å¾Œã®xã‚’lastxã«ä¿å­˜
 //			for(int i = 0; i < n; i++) lastx[i] = x[i];
 //		}
-//		//nIter‚ÅŒvZ‚ªI‚í‚ç‚È‚©‚Á‚½‚Ì‚Å‘Å‚¿Ø‚è
+//		//nIterã§è¨ˆç®—ãŒçµ‚ã‚ã‚‰ãªã‹ã£ãŸã®ã§æ‰“ã¡åˆ‡ã‚Š
 //		//static int iterError = 0;
 //		//iterError += 1;
 //		//DSTR << iterError << "Could not converge in iteration steps. Error = " << error << std::endl;
@@ -2995,14 +2999,14 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 //		lastx.push_back(TVecAll[i]);
 //	}
 //	
-//	double _eps = 1-eps;			// 1-eps‚ÌŒvZ‚É—˜—p
-//	bool DoCalc =true;											//‰‰ñ‚¾‚¯’è”ƒxƒNƒgƒ‹b‚ÌŒvZ‚ğs‚¤bool		//NofCyc‚ª0‚Ì‚É‚·‚ê‚Î‚¢‚¢‚Ì‚©‚à
-//	for(unsigned i=0; i < NofCyc; i++){							//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZƒ‹[ƒv
+//	double _eps = 1-eps;			// 1-epsã®è¨ˆç®—ã«åˆ©ç”¨
+//	bool DoCalc =true;											//åˆå›ã ã‘å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã®è¨ˆç®—ã‚’è¡Œã†bool		//NofCycãŒ0ã®æ™‚ã«ã™ã‚Œã°ã„ã„ã®ã‹ã‚‚
+//	for(unsigned i=0; i < NofCyc; i++){							//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ãƒ«ãƒ¼ãƒ—
 //		if(DoCalc){												
-//			if(deformed || alphaUpdated ){												//D_ii‚Ìì¬@Œ`ó‚ªXV‚³‚ê‚½Û‚É1“x‚¾‚¯s‚¦‚Î‚æ‚¢
+//			if(deformed || alphaUpdated ){												//D_iiã®ä½œæˆã€€å½¢çŠ¶ãŒæ›´æ–°ã•ã‚ŒãŸéš›ã«1åº¦ã ã‘è¡Œãˆã°ã‚ˆã„
 //				for(unsigned j =0; j < vertices.size() ; j++){
 //					_dMatAll.resize(1,vertices.size());
-//					_dMatAll[0][j] = 1.0/ ( eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] );		//1 / D__ii	‚ğ‹‚ß‚é
+//					_dMatAll[0][j] = 1.0/ ( eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] );		//1 / D__ii	ã‚’æ±‚ã‚ã‚‹
 //					//DSTR << "_dMatAll[0][" << j << "] : " << _dMatAll[0][j]  << std::endl;
 //					int debughogeshi =0;
 //				}
@@ -3010,44 +3014,44 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 //			}
 //			//	 1      1        1  
 //			//	--- ( - - [K] + ---[C] ){T(t)} + {F} 
-//			//	D_jj    2       ‡™t
+//			//	D_jj    2       âŠ¿t
 //			//
 //
-//			for(unsigned j =0; j < vertices.size() ; j++){		//‰‰ñƒ‹[ƒv‚¾‚¯	ŒW”ƒxƒNƒgƒ‹bVecAll‚Ì¬•ª‚ğŒvZ
-//				bVecAll[j][0] = 0.0;							//bVecAll[j][0]‚Ì‰Šú‰»
-//				//ß“_‚ª‘®‚·edges–ˆ‚É@‘ÎŠp¬•ª(j,j)‚Æ”ñ‘ÎŠp¬•ª(j,?)–ˆ‚ÉŒvZ
-//				//‘ÎŠp¬•ª‚ÍAvertices[j].k or .c ‚É“ü‚Á‚Ä‚¢‚é’l‚ğA”ñ‘ÎŠp¬•ª‚Íedges[hoge].vertices[0] or vertices[1] .k or .c‚É“ü‚Á‚Ä‚¢‚é’l‚ğ—p‚¢‚é
-//				//ú@)”ñ‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+//			for(unsigned j =0; j < vertices.size() ; j++){		//åˆå›ãƒ«ãƒ¼ãƒ—ã ã‘	ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«bVecAllã®æˆåˆ†ã‚’è¨ˆç®—
+//				bVecAll[j][0] = 0.0;							//bVecAll[j][0]ã®åˆæœŸåŒ–
+//				//ç¯€ç‚¹ãŒå±ã™edgesæ¯ã«ã€€å¯¾è§’æˆåˆ†(j,j)ã¨éå¯¾è§’æˆåˆ†(j,?)æ¯ã«è¨ˆç®—
+//				//å¯¾è§’æˆåˆ†ã¯ã€vertices[j].k or .c ã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ã€éå¯¾è§’æˆåˆ†ã¯edges[hoge].vertices[0] or vertices[1] .k or .cã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ç”¨ã„ã‚‹
+//				//â…°)éå¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 //				for(unsigned k =0;k < vertices[j].edges.size() ; k++){
 //					unsigned edgeId = vertices[j].edges[k];
-//					//ƒŠƒtƒ@ƒNƒ^ƒŠƒ“ƒO	ˆÈ‰º‚ÌğŒ•ªŠò‚É‚Â‚¢‚Äj>edges[edgeId].vertices[0] ‚Æ‚»‚¤‚Å‚È‚¢‚Æ‚Å•ª‚¯‚½‚Ù‚¤‚ª˜R‚ê‚ªo‚éS”z‚Í‚È‚¢H
-//					if( j != edges[edgeId].vertices[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+//					//ãƒªãƒ•ã‚¡ã‚¯ã‚¿ãƒªãƒ³ã‚°	ä»¥ä¸‹ã®æ¡ä»¶åˆ†å²ã«ã¤ã„ã¦j>edges[edgeId].vertices[0] ã¨ãã†ã§ãªã„æ™‚ã¨ã§åˆ†ã‘ãŸã»ã†ãŒæ¼ã‚ŒãŒå‡ºã‚‹å¿ƒé…ã¯ãªã„ï¼Ÿ
+//					if( j != edges[edgeId].vertices[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 //						unsigned vtxid0 = edges[edgeId].vertices[0];
 //						bVecAll[j][0] += (-_eps * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0];
 //					}
-//					else if( j != edges[edgeId].vertices[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+//					else if( j != edges[edgeId].vertices[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 //						unsigned vtxid1 = edges[edgeId].vertices[1];
 //						bVecAll[j][0] += (-_eps * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid1];
 //
 //					}
 //					else{
-//						//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+//						//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 //						DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 //					}
 //				}
-//				//úA)‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+//				//â…±)å¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 //				bVecAll[j][0] += (-_eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
-//				//  {F}‚ğ‰ÁZ
-//				bVecAll[j][0] += vecFAllSum[j];		//F‚ğ‰ÁZ
-//				//D_ii‚ÅŠ„‚é Ë‚±‚ÌêŠ‚ÍA‚±‚±‚Å—Ç‚¢‚ÌH‚Ç‚±‚Ü‚ÅŠ|‚¯Z‚·‚é‚ÌH
+//				//  {F}ã‚’åŠ ç®—
+//				bVecAll[j][0] += vecFAllSum[j];		//Fã‚’åŠ ç®—
+//				//D_iiã§å‰²ã‚‹ â‡’ã“ã®å ´æ‰€ã¯ã€ã“ã“ã§è‰¯ã„ã®ï¼Ÿã©ã“ã¾ã§æ›ã‘ç®—ã™ã‚‹ã®ï¼Ÿ
 //				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
 //			}
-//			DoCalc = false;			//‰‰ñ‚Ìƒ‹[ƒv‚¾‚¯‚Å—˜—p
+//			DoCalc = false;			//åˆå›ã®ãƒ«ãƒ¼ãƒ—ã ã‘ã§åˆ©ç”¨
 //			int debughogeshi =0;
 //		}		//if(DoCalc){...}
 //
 //#ifdef DEBUG
-//		//	”O‚Ì‚½‚ßAŒvZ‘O‚Ì‰Šú‰·“x‚ğ0‚É‚µ‚Ä‚¢‚éB
+//		//	å¿µã®ãŸã‚ã€è¨ˆç®—å‰ã®åˆæœŸæ¸©åº¦ã‚’0ã«ã—ã¦ã„ã‚‹ã€‚
 //		if(i == 0){
 //				for(unsigned j=0;j <vertices.size() ;j++){
 //					TVecAll[j] = 0.0;
@@ -3057,33 +3061,33 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 //		//	 1      
 //		//	--- [F]{T(t+dt)}
 //		//	D_jj 		
-//		//[F] = eps(ilon) [K] +1/dt [C] ‚©‚ç‘ÎŠp¬•ª‚ğœ‚µ(-1)‚ğ‚©‚¯‚½‚à‚Ì
-//		//ƒGƒbƒW‚É“ü‚Á‚Ä‚¢‚é¬•ª‚É-1‚ğ‚©‚¯‚é‚Ì‚Å‚Í‚È‚­AÅŒã‚É-1‚ğ‚©‚¯‚éB
+//		//[F] = eps(ilon) [K] +1/dt [C] ã‹ã‚‰å¯¾è§’æˆåˆ†ã‚’é™¤ã—(-1)ã‚’ã‹ã‘ãŸã‚‚ã®
+//		//ã‚¨ãƒƒã‚¸ã«å…¥ã£ã¦ã„ã‚‹æˆåˆ†ã«-1ã‚’ã‹ã‘ã‚‹ã®ã§ã¯ãªãã€æœ€å¾Œã«-1ã‚’ã‹ã‘ã‚‹ã€‚
 //		//
 //		for(unsigned j =0; j < vertices.size() ; j++){
-//			//T(t+dt) = ‚Ì®
-//			//	‚Ü‚¸tempkj‚ğì‚é
-//			double tempkj = 0.0;			//ƒKƒEƒXƒUƒCƒfƒ‹‚Ì“r’†ŒvZ‚Åo‚Ä‚­‚éF‚Ì¬•ªŒvZ‚Ég—p‚·‚éˆê•Ï”
+//			//T(t+dt) = ã®å¼
+//			//	ã¾ãštempkjã‚’ä½œã‚‹
+//			double tempkj = 0.0;			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®é€”ä¸­è¨ˆç®—ã§å‡ºã¦ãã‚‹Fã®æˆåˆ†è¨ˆç®—ã«ä½¿ç”¨ã™ã‚‹ä¸€æ™‚å¤‰æ•°
 //			for(unsigned k =0;k < vertices[j].edges.size() ; k++){
 //				unsigned edgeId = vertices[j].edges[k]; 
-//				if( j != edges[edgeId].vertices[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª		//OK
+//				if( j != edges[edgeId].vertices[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†		//OK
 //					unsigned vtxid0 = edges[edgeId].vertices[0];
 //					//DSTR << "TVecAll["<< vtxid0<<"] : " << TVecAll[vtxid0] <<std::endl;
 //					//TVecAll[j] +=_dMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0] + bVecAll[j][0]; 
 //					//DSTR << "j : " << j << ", vtxid0 : " << vtxid0 <<", edges[edgeId].vertices[0] : " << edges[edgeId].vertices[0] <<  std::endl;
 //					tempkj += (eps * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0];
 //				}
-//				else if( j != edges[edgeId].vertices[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+//				else if( j != edges[edgeId].vertices[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 //					unsigned vtxid1 = edges[edgeId].vertices[1];
 //					//DSTR << "TVecAll["<< vtxid1<<"] : " << TVecAll[vtxid1] <<std::endl;
 //					tempkj += (eps * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid1];
 //				}
 //				else{
-//					//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+//					//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 //					DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 //				}
 //			}
-//			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]‚È‚Ì‚ÅAbVecAll‚Í‚½‚¾‚Ì‰ÁZ‚Å‚æ‚¢
+//			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]ãªã®ã§ã€bVecAllã¯ãŸã ã®åŠ ç®—ã§ã‚ˆã„
 //		}
 //		int piyopiyoyo =0;
 //	}
@@ -3093,27 +3097,27 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//dt = 0.0000000000001 * dt;		//ƒfƒoƒbƒO—p‚ÉAdt‚ğ‚à‚Ì‚·‚²‚­¬‚³‚­‚µ‚Ä‚àAß“_0‚ªƒ}ƒCƒiƒX‚É‚È‚é‚Ì‚©A’²‚×‚½
+	//dt = 0.0000000000001 * dt;		//ãƒ‡ãƒãƒƒã‚°ç”¨ã«ã€dtã‚’ã‚‚ã®ã™ã”ãå°ã•ãã—ã¦ã‚‚ã€ç¯€ç‚¹0ãŒãƒã‚¤ãƒŠã‚¹ã«ãªã‚‹ã®ã‹ã€èª¿ã¹ãŸ
 	
-	//dt‚ÍPHFemEngine.cpp‚Åæ“¾‚·‚é“®—ÍŠwƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌƒXƒeƒbƒvŠÔ
-	bool DoCalc =true;											//‰‰ñ‚¾‚¯’è”ƒxƒNƒgƒ‹b‚ÌŒvZ‚ğs‚¤bool		//NofCyc‚ª0‚Ì‚É‚·‚ê‚Î‚¢‚¢‚Ì‚©‚à
+	//dtã¯PHFemEngine.cppã§å–å¾—ã™ã‚‹å‹•åŠ›å­¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“
+	bool DoCalc =true;											//åˆå›ã ã‘å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã®è¨ˆç®—ã‚’è¡Œã†bool		//NofCycãŒ0ã®æ™‚ã«ã™ã‚Œã°ã„ã„ã®ã‹ã‚‚
 	//std::ofstream ofs("log.txt");
-	for(unsigned i=0; i < NofCyc; i++){							//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZƒ‹[ƒv
+	for(unsigned i=0; i < NofCyc; i++){							//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ãƒ«ãƒ¼ãƒ—
 		if(DoCalc){		
-			if(deformed || alphaUpdated){												//D_ii‚Ìì¬@Œ`ó‚â”M“`’B—¦‚ªXV‚³‚ê‚½Û‚É1“x‚¾‚¯s‚¦‚Î‚æ‚¢
+			if(deformed || alphaUpdated){												//D_iiã®ä½œæˆã€€å½¢çŠ¶ã‚„ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸéš›ã«1åº¦ã ã‘è¡Œãˆã°ã‚ˆã„
 				for(unsigned j =0; j < mesh->vertices.size() ; j++){
 					//for(unsigned k =0;k < vertices.size(); k++){
 					//	DSTR << "dMatCAll "<< k << " : " << dMatCAll[0][k] << std::endl;
 					//}
 					_dMatAll.resize(1,mesh->vertices.size());
-					_dMatAll[0][j] = 1.0/ ( 1.0/2.0 * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] );		//1 / D__ii	‚ğ‹‚ß‚é
+					_dMatAll[0][j] = 1.0/ ( 1.0/2.0 * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] );		//1 / D__ii	ã‚’æ±‚ã‚ã‚‹
 					//1.0/dt = 500 d
 					//DSTR << "dMatKAll : "  << dMatKAll << std::endl;
 					//DSTR << "dMatCAll : "  << dMatCAll << std::endl;
 					//DSTR << "1.0/dt : " << 1.0/dt <<std::endl;
-					//DSTR <<  1.0/dt *dMatCAll[0][j] << std::endl;		//0.001‚ÌƒI[ƒ_[
-					//DSTR << 1.0/2.0 * dMatKAll[0][j] << std::endl;		//0.0003‘OŒã‚ÌƒI[ƒ_[
-					//’l‚ª“ü‚Á‚Ä‚¢‚é‚©‚ğƒ`ƒFƒbƒN
+					//DSTR <<  1.0/dt *dMatCAll[0][j] << std::endl;		//0.001ã®ã‚ªãƒ¼ãƒ€ãƒ¼
+					//DSTR << 1.0/2.0 * dMatKAll[0][j] << std::endl;		//0.0003å‰å¾Œã®ã‚ªãƒ¼ãƒ€ãƒ¼
+					//å€¤ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 					//DSTR << "_dMatAll[0][" << j << "] : " << _dMatAll[0][j]  << std::endl;
 					int debughogeshi =0;
 				}
@@ -3128,29 +3132,29 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 			}
 			//	 1      1        1  
 			//	--- ( - - [K] + ---[C] ){T(t)} + {F} 
-			//	D_jj    2       ‡™t
+			//	D_jj    2       âŠ¿t
 			//
 
-			for(unsigned j =0; j < mesh->vertices.size() ; j++){		//‰‰ñƒ‹[ƒv‚¾‚¯	ŒW”ƒxƒNƒgƒ‹bVecAll‚Ì¬•ª‚ğŒvZ
-				bVecAll[j][0] = 0.0;							//bVecAll[j][0]‚Ì‰Šú‰»
+			for(unsigned j =0; j < mesh->vertices.size() ; j++){		//åˆå›ãƒ«ãƒ¼ãƒ—ã ã‘	ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«bVecAllã®æˆåˆ†ã‚’è¨ˆç®—
+				bVecAll[j][0] = 0.0;							//bVecAll[j][0]ã®åˆæœŸåŒ–
 				bVecAll_IH[j][0] = 0.0;
-				//ß“_‚ª‘®‚·edges–ˆ‚É@‘ÎŠp¬•ª(j,j)‚Æ”ñ‘ÎŠp¬•ª(j,?)–ˆ‚ÉŒvZ
-				//‘ÎŠp¬•ª‚ÍAvertices[j].k or .c ‚É“ü‚Á‚Ä‚¢‚é’l‚ğA”ñ‘ÎŠp¬•ª‚Íedges[hoge].vertices[0] or vertices[1] .k or .c‚É“ü‚Á‚Ä‚¢‚é’l‚ğ—p‚¢‚é
-				//ú@)”ñ‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+				//ç¯€ç‚¹ãŒå±ã™edgesæ¯ã«ã€€å¯¾è§’æˆåˆ†(j,j)ã¨éå¯¾è§’æˆåˆ†(j,?)æ¯ã«è¨ˆç®—
+				//å¯¾è§’æˆåˆ†ã¯ã€vertices[j].k or .c ã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ã€éå¯¾è§’æˆåˆ†ã¯edges[hoge].vertices[0] or vertices[1] .k or .cã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ç”¨ã„ã‚‹
+				//â…°)éå¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 				for(unsigned k =0;k < mesh->vertices[j].edgeIDs.size() ; k++){
 					unsigned edgeId = mesh->vertices[j].edgeIDs[k];
-					//ƒŠƒtƒ@ƒNƒ^ƒŠƒ“ƒO	ˆÈ‰º‚ÌğŒ•ªŠò‚É‚Â‚¢‚Äj>edges[edgeId].vertices[0] ‚Æ‚»‚¤‚Å‚È‚¢‚Æ‚Å•ª‚¯‚½‚Ù‚¤‚ª˜R‚ê‚ªo‚éS”z‚Í‚È‚¢H
-					if( j != mesh->edges[edgeId].vertexIDs[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+					//ãƒªãƒ•ã‚¡ã‚¯ã‚¿ãƒªãƒ³ã‚°	ä»¥ä¸‹ã®æ¡ä»¶åˆ†å²ã«ã¤ã„ã¦j>edges[edgeId].vertices[0] ã¨ãã†ã§ãªã„æ™‚ã¨ã§åˆ†ã‘ãŸã»ã†ãŒæ¼ã‚ŒãŒå‡ºã‚‹å¿ƒé…ã¯ãªã„ï¼Ÿ
+					if( j != mesh->edges[edgeId].vertexIDs[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 						unsigned vtxid0 = mesh->edges[edgeId].vertexIDs[0];
 						bVecAll[j][0] += (-1.0/2.0 * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid0];
 					}
-					else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+					else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 						unsigned vtxid1 = mesh->edges[edgeId].vertexIDs[1];
 						bVecAll[j][0] += (-1.0/2.0 * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid1];
 
 					}
 					else{
-						//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+						//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 						DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 					}
 					//	for Debug
@@ -3158,22 +3162,22 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 					//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
 					//int hogeshi =0;
 				}
-				//úA)‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+				//â…±)å¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 				bVecAll[j][0] += (-1.0/2.0 * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
 				//ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;			// DSTR
-				//{F}‚ğ‰ÁZ
-				bVecAll[j][0] += vecFAllSum[j];		//F‚ğ‰ÁZ
+				//{F}ã‚’åŠ ç®—
+				bVecAll[j][0] += vecFAllSum[j];		//Fã‚’åŠ ç®—
 				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
-				//D_ii‚ÅŠ„‚é Ë‚±‚ÌêŠ‚ÍA‚±‚±‚Å—Ç‚¢‚ÌH‚Ç‚±‚Ü‚ÅŠ|‚¯Z‚·‚é‚ÌH
+				//D_iiã§å‰²ã‚‹ â‡’ã“ã®å ´æ‰€ã¯ã€ã“ã“ã§è‰¯ã„ã®ï¼Ÿã©ã“ã¾ã§æ›ã‘ç®—ã™ã‚‹ã®ï¼Ÿ
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
 				//ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
 				//	DSTR <<  "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
 				//ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
 				//	DSTR << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
 			}
-			DoCalc = false;			//‰‰ñ‚Ìƒ‹[ƒv‚¾‚¯‚Å—˜—p
-			//’l‚ª“ü‚Á‚Ä‚¢‚é‚©A³í‚»‚¤‚©‚ğƒ`ƒFƒbƒN
+			DoCalc = false;			//åˆå›ã®ãƒ«ãƒ¼ãƒ—ã ã‘ã§åˆ©ç”¨
+			//å€¤ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã€æ­£å¸¸ãã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 			//DSTR << "bVecAll[j][0] : " << std::endl;
 			//for(unsigned j =0;j <vertices.size() ; j++){
 			//	DSTR << j << " : "<< bVecAll[j][0] << std::endl;
@@ -3182,7 +3186,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		}		//if(DoCalc){...}
 
 #ifdef DEBUG
-		//	”O‚Ì‚½‚ßAŒvZ‘O‚Ì‰Šú‰·“x‚ğ0‚É‚µ‚Ä‚¢‚éB
+		//	å¿µã®ãŸã‚ã€è¨ˆç®—å‰ã®åˆæœŸæ¸©åº¦ã‚’0ã«ã—ã¦ã„ã‚‹ã€‚
 		if(i == 0){
 				for(unsigned j=0;j <vertices.size() ;j++){
 					TVecAll[j] = 0.0;
@@ -3192,29 +3196,29 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		//	 1      
 		//	--- [F]{T(t+dt)}
 		//	D_jj 		
-		//[F] = 1/2 [K] +1/dt [C] ‚©‚ç‘ÎŠp¬•ª‚ğœ‚µ(-1)‚ğ‚©‚¯‚½‚à‚Ì
-		//ƒGƒbƒW‚É“ü‚Á‚Ä‚¢‚é¬•ª‚É-1‚ğ‚©‚¯‚é‚Ì‚Å‚Í‚È‚­AÅŒã‚É-1‚ğ‚©‚¯‚éB
+		//[F] = 1/2 [K] +1/dt [C] ã‹ã‚‰å¯¾è§’æˆåˆ†ã‚’é™¤ã—(-1)ã‚’ã‹ã‘ãŸã‚‚ã®
+		//ã‚¨ãƒƒã‚¸ã«å…¥ã£ã¦ã„ã‚‹æˆåˆ†ã«-1ã‚’ã‹ã‘ã‚‹ã®ã§ã¯ãªãã€æœ€å¾Œã«-1ã‚’ã‹ã‘ã‚‹ã€‚
 		//
 		for(unsigned j =0; j < mesh->vertices.size() ; j++){
-			//T(t+dt) = ‚Ì®
-			//	‚Ü‚¸tempkj‚ğì‚é
-			double tempkj = 0.0;			//ƒKƒEƒXƒUƒCƒfƒ‹‚Ì“r’†ŒvZ‚Åo‚Ä‚­‚éF‚Ì¬•ªŒvZ‚Ég—p‚·‚éˆê•Ï”
+			//T(t+dt) = ã®å¼
+			//	ã¾ãštempkjã‚’ä½œã‚‹
+			double tempkj = 0.0;			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®é€”ä¸­è¨ˆç®—ã§å‡ºã¦ãã‚‹Fã®æˆåˆ†è¨ˆç®—ã«ä½¿ç”¨ã™ã‚‹ä¸€æ™‚å¤‰æ•°
 			for(unsigned k =0;k < mesh->vertices[j].edgeIDs.size() ; k++){
 				unsigned edgeId = mesh->vertices[j].edgeIDs[k]; 
-				if( j != mesh->edges[edgeId].vertexIDs[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª		//OK
+				if( j != mesh->edges[edgeId].vertexIDs[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†		//OK
 					unsigned vtxid0 = mesh->edges[edgeId].vertexIDs[0];
 					//DSTR << "TVecAll["<< vtxid0<<"] : " << TVecAll[vtxid0] <<std::endl;
 					//TVecAll[j] +=_dMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0] + bVecAll[j][0]; 
 					//DSTR << "j : " << j << ", vtxid0 : " << vtxid0 <<", edges[edgeId].vertices[0] : " << edges[edgeId].vertices[0] <<  std::endl;
 					tempkj += (1.0/2.0 * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid0];
 				}
-				else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+				else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 					unsigned vtxid1 = mesh->edges[edgeId].vertexIDs[1];
 					//DSTR << "TVecAll["<< vtxid1<<"] : " << TVecAll[vtxid1] <<std::endl;
 					tempkj += (1.0/2.0 * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid1];
 				}
 				else{
-					//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+					//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 					DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 				}
 				//	for Debug
@@ -3223,15 +3227,15 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
 				//int hogeshi =0;
 			}
-			//	TVecAll‚ÌŒvZ
-			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]‚È‚Ì‚ÅAbVecAll‚Í‚½‚¾‚Ì‰ÁZ‚Å‚æ‚¢
+			//	TVecAllã®è¨ˆç®—
+			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]ãªã®ã§ã€bVecAllã¯ãŸã ã®åŠ ç®—ã§ã‚ˆã„
 
 			////	for DEBUG
 			//int hofgeshi =0;
 			//if(TVecAll[j] != 0.0){
 			//	DSTR << "!=0 TVecAll["<< j<<"] : " << TVecAll[j] <<std::endl;
 			//}
-			//DSTR << i << "‰ñ–Ú‚ÌŒvZA" << j <<"s–Ú‚Ìtempkj: " << tempkj << std::endl;
+			//DSTR << i << "å›ç›®ã®è¨ˆç®—ã€" << j <<"è¡Œç›®ã®tempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
 
 			//ofs << j << std::endl;
@@ -3245,23 +3249,23 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		//for(unsigned j=0;j < vertices.size();j++){
 		//	//DSTR << "tempk" << j << " : " << tempkj << std::endl;
 		//	int hogeshi__ =0;
-		//	//TVecAll[j]‚ÌŒvZŒ‹‰Ê‚ğ‘ã“ü‚·‚é
-		//	//’è”ƒxƒNƒgƒ‹b‚ğã‚ÅŒvZA–ˆs‚ÅbVecAll‚ğŒ¸Z‚·‚ê‚Î‚æ‚¢B
-		//	DSTR << i << "‰ñ–Ú‚ÌŒvZ‚Ì " << "TVecAll[" << j << "] : " << TVecAll[j] << std::endl;
+		//	//TVecAll[j]ã®è¨ˆç®—çµæœã‚’ä»£å…¥ã™ã‚‹
+		//	//å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã‚’ä¸Šã§è¨ˆç®—ã€æ¯è¡Œã§bVecAllã‚’æ¸›ç®—ã™ã‚Œã°ã‚ˆã„ã€‚
+		//	DSTR << i << "å›ç›®ã®è¨ˆç®—ã® " << "TVecAll[" << j << "] : " << TVecAll[j] << std::endl;
 		//}
 		//for(unsigned j=0;j < vertices.size();j++){
 		//	//DSTR << "tempk" << j << " : " << tempkj << std::endl;
 		//	int hogeshi__ =0;
-		//	//TVecAll[j]‚ÌŒvZŒ‹‰Ê‚ğ‘ã“ü‚·‚é
-		//	//’è”ƒxƒNƒgƒ‹b‚ğã‚ÅŒvZA–ˆs‚ÅbVecAll‚ğŒ¸Z‚·‚ê‚Î‚æ‚¢B
-		//	DSTR << i << "‰ñ–Ú‚ÌŒvZ‚Ì " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
+		//	//TVecAll[j]ã®è¨ˆç®—çµæœã‚’ä»£å…¥ã™ã‚‹
+		//	//å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã‚’ä¸Šã§è¨ˆç®—ã€æ¯è¡Œã§bVecAllã‚’æ¸›ç®—ã™ã‚Œã°ã‚ˆã„ã€‚
+		//	DSTR << i << "å›ç›®ã®è¨ˆç®—ã® " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
 		//}
 
 		//DSTR << i <<  "th Cyc" << std::endl; 
-		//DSTR << i << "‰ñ–Ú‚ÌŒvZATVecAll : " <<std::endl;
+		//DSTR << i << "å›ç›®ã®è¨ˆç®—ã€TVecAll : " <<std::endl;
 		//DSTR << TVecAll << std::endl;
 		//ofs << i <<  "th Cyc" << std::endl;
-		//ofs << i << "‰ñ–Ú‚ÌŒvZATVecAll : " <<std::endl;
+		//ofs << i << "å›ç›®ã®è¨ˆç®—ã€TVecAll : " <<std::endl;
 		//ofs << TVecAll << std::endl;
 		//ofs << "bVecAll: " <<std::endl;
 		//ofs << bVecAll << std::endl;
@@ -3273,7 +3277,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		//	tempTemp += TVecAll[j];
 		//}
 		//	DSTR
-		//ofs << i <<"‰ñ–Ú‚ÌŒvZ‚Ì@‘Sß“_‚Ì‰·“x‚Ì˜a : " << tempTemp << std::endl;
+		//ofs << i <<"å›ç›®ã®è¨ˆç®—æ™‚ã®ã€€å…¨ç¯€ç‚¹ã®æ¸©åº¦ã®å’Œ : " << tempTemp << std::endl;
 		//ofs << std::endl;
 	}
 //	deformed = true;
@@ -3286,28 +3290,28 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 	//	FEMLOG << vertices[i].k <<","<< vertices[i].c << std::endl;
 	//}
 	//FEMLOG << vecFAllSum << std::endl;
-	//dt = 0.0000000000001 * dt;		//ƒfƒoƒbƒO—p‚ÉAdt‚ğ‚à‚Ì‚·‚²‚­¬‚³‚­‚µ‚Ä‚àAß“_0‚ªƒ}ƒCƒiƒX‚É‚È‚é‚Ì‚©A’²‚×‚½
-	double _eps = 1-eps;			// 1-eps‚ÌŒvZ‚É—˜—p
-	//dt‚ÍPHFemEngine.cpp‚Åæ“¾‚·‚é“®—ÍŠwƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌƒXƒeƒbƒvŠÔ
-	bool DoCalc =true;											//‰‰ñ‚¾‚¯’è”ƒxƒNƒgƒ‹b‚ÌŒvZ‚ğs‚¤bool		//NofCyc‚ª0‚Ì‚É‚·‚ê‚Î‚¢‚¢‚Ì‚©‚à
+	//dt = 0.0000000000001 * dt;		//ãƒ‡ãƒãƒƒã‚°ç”¨ã«ã€dtã‚’ã‚‚ã®ã™ã”ãå°ã•ãã—ã¦ã‚‚ã€ç¯€ç‚¹0ãŒãƒã‚¤ãƒŠã‚¹ã«ãªã‚‹ã®ã‹ã€èª¿ã¹ãŸ
+	double _eps = 1-eps;			// 1-epsã®è¨ˆç®—ã«åˆ©ç”¨
+	//dtã¯PHFemEngine.cppã§å–å¾—ã™ã‚‹å‹•åŠ›å­¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“
+	bool DoCalc =true;											//åˆå›ã ã‘å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã®è¨ˆç®—ã‚’è¡Œã†bool		//NofCycãŒ0ã®æ™‚ã«ã™ã‚Œã°ã„ã„ã®ã‹ã‚‚
 	//FEMLOG( std::ofstream ofs("log.txt") ) ;
-	for(unsigned i=0; i < NofCyc; i++){							//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZƒ‹[ƒv
+	for(unsigned i=0; i < NofCyc; i++){							//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ãƒ«ãƒ¼ãƒ—
 		convTest = TVecAll;
 		if(DoCalc){												
-			if(deformed || alphaUpdated ){												//D_ii‚Ìì¬@Œ`ó‚ªXV‚³‚ê‚½Û‚É1“x‚¾‚¯s‚¦‚Î‚æ‚¢
+			if(deformed || alphaUpdated ){												//D_iiã®ä½œæˆã€€å½¢çŠ¶ãŒæ›´æ–°ã•ã‚ŒãŸéš›ã«1åº¦ã ã‘è¡Œãˆã°ã‚ˆã„
 				for(unsigned j =0; j < mesh->vertices.size() ; j++){
 					//for(unsigned k =0;k < vertices.size(); k++){
 					//	DSTR << "dMatCAll "<< k << " : " << dMatCAll[0][k] << std::endl;
 					//}
 					_dMatAll.resize(1,mesh->vertices.size());
-					_dMatAll[0][j] = 1.0/ ( eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] );		//1 / D__ii	‚ğ‹‚ß‚é
+					_dMatAll[0][j] = 1.0/ ( eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] );		//1 / D__ii	ã‚’æ±‚ã‚ã‚‹
 					//1.0/dt = 500 d
 					//DSTR << "dMatKAll : "  << dMatKAll << std::endl;
 					//DSTR << "dMatCAll : "  << dMatCAll << std::endl;
 					//DSTR << "1.0/dt : " << 1.0/dt <<std::endl;
-					//DSTR <<  1.0/dt *dMatCAll[0][j] << std::endl;		//0.001‚ÌƒI[ƒ_[
-					//DSTR << 1.0/2.0 * dMatKAll[0][j] << std::endl;		//0.0003‘OŒã‚ÌƒI[ƒ_[
-					//’l‚ª“ü‚Á‚Ä‚¢‚é‚©‚ğƒ`ƒFƒbƒN
+					//DSTR <<  1.0/dt *dMatCAll[0][j] << std::endl;		//0.001ã®ã‚ªãƒ¼ãƒ€ãƒ¼
+					//DSTR << 1.0/2.0 * dMatKAll[0][j] << std::endl;		//0.0003å‰å¾Œã®ã‚ªãƒ¼ãƒ€ãƒ¼
+					//å€¤ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 					//DSTR << "_dMatAll[0][" << j << "] : " << _dMatAll[0][j]  << std::endl;
 					int debughogeshi =0;
 				}
@@ -3321,28 +3325,28 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 			}
 			//	 1      1        1  
 			//	--- ( - - [K] + ---[C] ){T(t)} + {F} 
-			//	D_jj    2       ‡™t
+			//	D_jj    2       âŠ¿t
 			//
 
-			for(unsigned j =0; j < mesh->vertices.size() ; j++){		//‰‰ñƒ‹[ƒv‚¾‚¯	ŒW”ƒxƒNƒgƒ‹bVecAll‚Ì¬•ª‚ğŒvZ
-				bVecAll[j][0] = 0.0;							//bVecAll[j][0]‚Ì‰Šú‰»
-				//ß“_‚ª‘®‚·edges–ˆ‚É@‘ÎŠp¬•ª(j,j)‚Æ”ñ‘ÎŠp¬•ª(j,?)–ˆ‚ÉŒvZ
-				//‘ÎŠp¬•ª‚ÍAvertices[j].k or .c ‚É“ü‚Á‚Ä‚¢‚é’l‚ğA”ñ‘ÎŠp¬•ª‚Íedges[hoge].vertices[0] or vertices[1] .k or .c‚É“ü‚Á‚Ä‚¢‚é’l‚ğ—p‚¢‚é
-				//ú@)”ñ‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+			for(unsigned j =0; j < mesh->vertices.size() ; j++){		//åˆå›ãƒ«ãƒ¼ãƒ—ã ã‘	ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«bVecAllã®æˆåˆ†ã‚’è¨ˆç®—
+				bVecAll[j][0] = 0.0;							//bVecAll[j][0]ã®åˆæœŸåŒ–
+				//ç¯€ç‚¹ãŒå±ã™edgesæ¯ã«ã€€å¯¾è§’æˆåˆ†(j,j)ã¨éå¯¾è§’æˆåˆ†(j,?)æ¯ã«è¨ˆç®—
+				//å¯¾è§’æˆåˆ†ã¯ã€vertices[j].k or .c ã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ã€éå¯¾è§’æˆåˆ†ã¯edges[hoge].vertices[0] or vertices[1] .k or .cã«å…¥ã£ã¦ã„ã‚‹å€¤ã‚’ç”¨ã„ã‚‹
+				//â…°)éå¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 				for(unsigned k =0;k < mesh->vertices[j].edgeIDs.size() ; k++){
 					unsigned edgeId = mesh->vertices[j].edgeIDs[k];
-					//ƒŠƒtƒ@ƒNƒ^ƒŠƒ“ƒO	ˆÈ‰º‚ÌğŒ•ªŠò‚É‚Â‚¢‚Äj>edges[edgeId].vertices[0] ‚Æ‚»‚¤‚Å‚È‚¢‚Æ‚Å•ª‚¯‚½‚Ù‚¤‚ª˜R‚ê‚ªo‚éS”z‚Í‚È‚¢H
-					if( j != mesh->edges[edgeId].vertexIDs[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+					//ãƒªãƒ•ã‚¡ã‚¯ã‚¿ãƒªãƒ³ã‚°	ä»¥ä¸‹ã®æ¡ä»¶åˆ†å²ã«ã¤ã„ã¦j>edges[edgeId].vertices[0] ã¨ãã†ã§ãªã„æ™‚ã¨ã§åˆ†ã‘ãŸã»ã†ãŒæ¼ã‚ŒãŒå‡ºã‚‹å¿ƒé…ã¯ãªã„ï¼Ÿ
+					if( j != mesh->edges[edgeId].vertexIDs[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 						unsigned vtxid0 = mesh->edges[edgeId].vertexIDs[0];
 						bVecAll[j][0] += (-_eps * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid0];
 					}
-					else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+					else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 						unsigned vtxid1 = mesh->edges[edgeId].vertexIDs[1];
 						bVecAll[j][0] += (-_eps * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid1];
 
 					}
 					else{
-						//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+						//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 						DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 					}
 					//	for Debug
@@ -3350,19 +3354,19 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 					//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
 					//int hogeshi =0;
 				}
-				//úA)‘ÎŠp¬•ª‚É‚Â‚¢‚Ä
+				//â…±)å¯¾è§’æˆåˆ†ã«ã¤ã„ã¦
 				bVecAll[j][0] += (-_eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
 
-				//  {F}‚ğ‰ÁZ
-				bVecAll[j][0] += vecFAllSum[j];		//F‚ğ‰ÁZ
+				//  {F}ã‚’åŠ ç®—
+				bVecAll[j][0] += vecFAllSum[j];		//Fã‚’åŠ ç®—
 
-				//D_ii‚ÅŠ„‚é Ë‚±‚ÌêŠ‚ÍA‚±‚±‚Å—Ç‚¢‚ÌH‚Ç‚±‚Ü‚ÅŠ|‚¯Z‚·‚é‚ÌH
+				//D_iiã§å‰²ã‚‹ â‡’ã“ã®å ´æ‰€ã¯ã€ã“ã“ã§è‰¯ã„ã®ï¼Ÿã©ã“ã¾ã§æ›ã‘ç®—ã™ã‚‹ã®ï¼Ÿ
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
 				//FEMLOG(ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl);
 				//FEMLOG(ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl);
 			}
-			DoCalc = false;			//‰‰ñ‚Ìƒ‹[ƒv‚¾‚¯‚Å—˜—p
-			//’l‚ª“ü‚Á‚Ä‚¢‚é‚©A³í‚»‚¤‚©‚ğƒ`ƒFƒbƒN
+			DoCalc = false;			//åˆå›ã®ãƒ«ãƒ¼ãƒ—ã ã‘ã§åˆ©ç”¨
+			//å€¤ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã€æ­£å¸¸ãã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 			//DSTR << "bVecAll[j][0] : " << std::endl;
 			//for(unsigned j =0;j <vertices.size() ; j++){
 			//	DSTR << j << " : "<< bVecAll[j][0] << std::endl;
@@ -3371,7 +3375,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 		}		//if(DoCalc){...}
 
 #ifdef DEBUG
-		//	”O‚Ì‚½‚ßAŒvZ‘O‚Ì‰Šú‰·“x‚ğ0‚É‚µ‚Ä‚¢‚éB
+		//	å¿µã®ãŸã‚ã€è¨ˆç®—å‰ã®åˆæœŸæ¸©åº¦ã‚’0ã«ã—ã¦ã„ã‚‹ã€‚
 		if(i == 0){
 				for(unsigned j=0;j <vertices.size() ;j++){
 					TVecAll[j] = 0.0;
@@ -3381,29 +3385,29 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 		//	 1      
 		//	--- [F]{T(t+dt)}
 		//	D_jj 		
-		//[F] = eps(ilon) [K] +1/dt [C] ‚©‚ç‘ÎŠp¬•ª‚ğœ‚µ(-1)‚ğ‚©‚¯‚½‚à‚Ì
-		//ƒGƒbƒW‚É“ü‚Á‚Ä‚¢‚é¬•ª‚É-1‚ğ‚©‚¯‚é‚Ì‚Å‚Í‚È‚­AÅŒã‚É-1‚ğ‚©‚¯‚éB
+		//[F] = eps(ilon) [K] +1/dt [C] ã‹ã‚‰å¯¾è§’æˆåˆ†ã‚’é™¤ã—(-1)ã‚’ã‹ã‘ãŸã‚‚ã®
+		//ã‚¨ãƒƒã‚¸ã«å…¥ã£ã¦ã„ã‚‹æˆåˆ†ã«-1ã‚’ã‹ã‘ã‚‹ã®ã§ã¯ãªãã€æœ€å¾Œã«-1ã‚’ã‹ã‘ã‚‹ã€‚
 		//
 		for(unsigned j =0; j < mesh->vertices.size() ; j++){
-			//T(t+dt) = ‚Ì®
-			//	‚Ü‚¸tempkj‚ğì‚é
-			double tempkj = 0.0;			//ƒKƒEƒXƒUƒCƒfƒ‹‚Ì“r’†ŒvZ‚Åo‚Ä‚­‚éF‚Ì¬•ªŒvZ‚Ég—p‚·‚éˆê•Ï”
+			//T(t+dt) = ã®å¼
+			//	ã¾ãštempkjã‚’ä½œã‚‹
+			double tempkj = 0.0;			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®é€”ä¸­è¨ˆç®—ã§å‡ºã¦ãã‚‹Fã®æˆåˆ†è¨ˆç®—ã«ä½¿ç”¨ã™ã‚‹ä¸€æ™‚å¤‰æ•°
 			for(unsigned k =0;k < mesh->vertices[j].edgeIDs.size() ; k++){
 				unsigned edgeId = mesh->vertices[j].edgeIDs[k]; 
-				if( j != mesh->edges[edgeId].vertexIDs[0]){					//ß“_”Ô†j‚Æedges.vertices[0]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª		//OK
+				if( j != mesh->edges[edgeId].vertexIDs[0]){					//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[0]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†		//OK
 					unsigned vtxid0 = mesh->edges[edgeId].vertexIDs[0];
 					//DSTR << "TVecAll["<< vtxid0<<"] : " << TVecAll[vtxid0] <<std::endl;
 					//TVecAll[j] +=_dMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0] + bVecAll[j][0]; 
 					//DSTR << "j : " << j << ", vtxid0 : " << vtxid0 <<", edges[edgeId].vertices[0] : " << edges[edgeId].vertices[0] <<  std::endl;
 					tempkj += (eps * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid0];
 				}
-				else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ß“_”Ô†j‚Æedges.vertices[1]‚ªˆÙ‚È‚éß“_”Ô†‚Ì:”ñ‘ÎŠp¬•ª
+				else if( j != mesh->edges[edgeId].vertexIDs[1] ){			//ç¯€ç‚¹ç•ªå·jã¨edges.vertices[1]ãŒç•°ãªã‚‹ç¯€ç‚¹ç•ªå·ã®æ™‚:éå¯¾è§’æˆåˆ†
 					unsigned vtxid1 = mesh->edges[edgeId].vertexIDs[1];
 					//DSTR << "TVecAll["<< vtxid1<<"] : " << TVecAll[vtxid1] <<std::endl;
 					tempkj += (eps * edgeVars[edgeId].k + 1.0/dt * edgeVars[edgeId].c ) * TVecAll[vtxid1];
 				}
 				else{
-					//ã‹L‚Ì‚Ç‚¿‚ç‚Å‚à‚È‚¢ê‡AƒGƒ‰[
+					//ä¸Šè¨˜ã®ã©ã¡ã‚‰ã§ã‚‚ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼
 					DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 				}
 				//	for Debug
@@ -3412,16 +3416,16 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 				//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
 				//int hogeshi =0;
 			}
-			//	TVecAll‚ÌŒvZ
-			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]‚È‚Ì‚ÅAbVecAll‚Í‚½‚¾‚Ì‰ÁZ‚Å‚æ‚¢
-			//TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];   // -b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]‚È‚Ì‚ÅAbVecAll‚Í‚½‚¾‚Ì‰ÁZ‚Å‚æ‚¢
-//			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//‚±‚ÌŒvZ®‚¾‚ÆA‚Ü‚Æ‚à‚»‚¤‚È’l‚ªo‚é‚ªEEE—˜_“I‚É‚Í‚Ç‚¤‚È‚Ì‚©A•ª‚©‚ç‚È‚¢BBB
+			//	TVecAllã®è¨ˆç®—
+			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]ãªã®ã§ã€bVecAllã¯ãŸã ã®åŠ ç®—ã§ã‚ˆã„
+			//TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];   // -b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]ãªã®ã§ã€bVecAllã¯ãŸã ã®åŠ ç®—ã§ã‚ˆã„
+//			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//ã“ã®è¨ˆç®—å¼ã ã¨ã€ã¾ã¨ã‚‚ãã†ãªå€¤ãŒå‡ºã‚‹ãŒãƒ»ãƒ»ãƒ»ç†è«–çš„ã«ã¯ã©ã†ãªã®ã‹ã€åˆ†ã‹ã‚‰ãªã„ã€‚ã€‚ã€‚
 			////	for DEBUG
 			//int hofgeshi =0;
 			//if(TVecAll[j] != 0.0){
 			//	DSTR << "!=0 TVecAll["<< j<<"] : " << TVecAll[j] <<std::endl;
 			//}
-			//DSTR << i << "‰ñ–Ú‚ÌŒvZA" << j <<"s–Ú‚Ìtempkj: " << tempkj << std::endl;
+			//DSTR << i << "å›ç›®ã®è¨ˆç®—ã€" << j <<"è¡Œç›®ã®tempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
 
 			//FEMLOG(ofs << j << std::endl);
@@ -3435,24 +3439,24 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 		//for(unsigned j=0;j < vertices.size();j++){
 		//	//DSTR << "tempk" << j << " : " << tempkj << std::endl;
 		//	int hogeshi__ =0;
-		//	//TVecAll[j]‚ÌŒvZŒ‹‰Ê‚ğ‘ã“ü‚·‚é
-		//	//’è”ƒxƒNƒgƒ‹b‚ğã‚ÅŒvZA–ˆs‚ÅbVecAll‚ğŒ¸Z‚·‚ê‚Î‚æ‚¢B
-		//	DSTR << i << "‰ñ–Ú‚ÌŒvZ‚Ì " << "TVecAll[" << j << "] : " << TVecAll[j] << std::endl;
+		//	//TVecAll[j]ã®è¨ˆç®—çµæœã‚’ä»£å…¥ã™ã‚‹
+		//	//å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã‚’ä¸Šã§è¨ˆç®—ã€æ¯è¡Œã§bVecAllã‚’æ¸›ç®—ã™ã‚Œã°ã‚ˆã„ã€‚
+		//	DSTR << i << "å›ç›®ã®è¨ˆç®—ã® " << "TVecAll[" << j << "] : " << TVecAll[j] << std::endl;
 		//}
 		//for(unsigned j=0;j < vertices.size();j++){
 		//	//DSTR << "tempk" << j << " : " << tempkj << std::endl;
 		//	int hogeshi__ =0;
-		//	//TVecAll[j]‚ÌŒvZŒ‹‰Ê‚ğ‘ã“ü‚·‚é
-		//	//’è”ƒxƒNƒgƒ‹b‚ğã‚ÅŒvZA–ˆs‚ÅbVecAll‚ğŒ¸Z‚·‚ê‚Î‚æ‚¢B
-		//	DSTR << i << "‰ñ–Ú‚ÌŒvZ‚Ì " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
+		//	//TVecAll[j]ã®è¨ˆç®—çµæœã‚’ä»£å…¥ã™ã‚‹
+		//	//å®šæ•°ãƒ™ã‚¯ãƒˆãƒ«bã‚’ä¸Šã§è¨ˆç®—ã€æ¯è¡Œã§bVecAllã‚’æ¸›ç®—ã™ã‚Œã°ã‚ˆã„ã€‚
+		//	DSTR << i << "å›ç›®ã®è¨ˆç®—ã® " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
 		//}
 
 		//DSTR << i <<  "th Cyc" << std::endl; 
-		//DSTR << i << "‰ñ–Ú‚ÌŒvZATVecAll : " <<std::endl;
+		//DSTR << i << "å›ç›®ã®è¨ˆç®—ã€TVecAll : " <<std::endl;
 		//DSTR << TVecAll << std::endl;
 
 		//FEMLOG(ofs << i <<  "th Cyc" << std::endl;)
-		//FEMLOG(ofs << i << "‰ñ–Ú‚ÌŒvZATVecAll : " <<std::endl;)
+		//FEMLOG(ofs << i << "å›ç›®ã®è¨ˆç®—ã€TVecAll : " <<std::endl;)
 		//FEMLOG(ofs << TVecAll << std::endl;)
 		//FEMLOG(ofs << "bVecAll: " <<std::endl;)
 		//FEMLOG(ofs << bVecAll << std::endl;)
@@ -3464,7 +3468,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 		//	tempTemp += TVecAll[j];
 		//}
 		//	DSTR
-		//FEMLOG(ofs << i <<"‰ñ–Ú‚ÌŒvZ‚Ì@‘Sß“_‚Ì‰·“x‚Ì˜a : " << tempTemp << std::endl;)
+		//FEMLOG(ofs << i <<"å›ç›®ã®è¨ˆç®—æ™‚ã®ã€€å…¨ç¯€ç‚¹ã®æ¸©åº¦ã®å’Œ : " << tempTemp << std::endl;)
 		//FEMLOG(ofs << std::endl;)
 		if(strcmp(mesh->GetName(), "femNsteak") == 0){
 			for(unsigned vtxid=0; vtxid < mesh->vertices.size(); vtxid++){
@@ -3496,10 +3500,10 @@ void PHFemThermo::Step(double dt){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
 
-	//// cps•\¦—p
+	//// cpsè¡¨ç¤ºç”¨
 	//static bool bOneSecond = false;
 	//{
-	//	static DWORD lastTick = GetTickCount();			//DWORD:unsigned long ‚Ì‚±‚Æ
+	//	static DWORD lastTick = GetTickCount();			//DWORD:unsigned long ã®ã“ã¨
 	//	static int cpsCount = 0;
 	//	int ellapsed = GetTickCount() - lastTick;
 	//	++cpsCount;
@@ -3514,56 +3518,56 @@ void PHFemThermo::Step(double dt){
 	//	if(cpsCount){	cpstime	= 1 / cpsCount;		}
 	//}
 	//static DWORD stepStart = GetTickCount();
-	////“r’†ŠÔ
+	////é€”ä¸­æ™‚é–“
 	//if (bOneSecond) {
 	//	std::cout << "1: " << GetTickCount() - stepStart << std::endl;
 	//	cpslog << GetTickCount() - stepStart << ",";
 	//} 
 	//stepStart = GetTickCount();
-	//“r’†ŠÔ
+	//é€”ä¸­æ™‚é–“
 	//if (bOneSecond) { std::cout << "1: " << GetTickCount() - stepStart << std::endl; }
-	// %%% CPS•\¦
+	// %%% CPSè¡¨ç¤º
 
-	//ScilabTest();									//	Scilab‚ğg‚¤ƒeƒXƒg
-	//‹«ŠEğŒ‚ğİ’è:‰·“x‚Ìİ’è
+	//ScilabTest();									//	Scilabã‚’ä½¿ã†ãƒ†ã‚¹ãƒˆ
+	//å¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š:æ¸©åº¦ã®è¨­å®š
 	//UsingFixedTempBoundaryCondition(0,200.0);
 
-	//	ÀŒ±—p‚ÌƒR[ƒh
-	//	a) ŠÔ—£U‰»‚É‘äŒ`Œö®—˜—pA‘OiEŒã‘Ş·•ª‚ÅU“®‚·‚é‰Á”M•û®
+	//	å®Ÿé¨“ç”¨ã®ã‚³ãƒ¼ãƒ‰
+	//	a) æ™‚é–“é›¢æ•£åŒ–æ™‚ã«å°å½¢å…¬å¼åˆ©ç”¨ã€å‰é€²ãƒ»å¾Œé€€å·®åˆ†ã§æŒ¯å‹•ã™ã‚‹åŠ ç†±æ–¹å¼
 	//if(StepCount == 0){
 	//	unsigned texid_ =7;
 	//	UsingFixedTempBoundaryCondition(texid_,200.0);
 	//}
 
-	//	b) ’f”M‰ß’ö‚ÌÀŒ±
-	//	”M“`’B—¦‚ğ0‚É‚·‚éB‰·“xŒÅ’è‹«ŠEğŒ‚Å‰Á”MB
+	//	b) æ–­ç†±éç¨‹ã®å®Ÿé¨“
+	//	ç†±ä¼é”ç‡ã‚’0ã«ã™ã‚‹ã€‚æ¸©åº¦å›ºå®šå¢ƒç•Œæ¡ä»¶ã§åŠ ç†±ã€‚
 
 	//	UsingFixedTempBoundaryCondition(3,50.0);
 	//for(unsigned i=0 ;i<1;i++){
 	//	UsingFixedTempBoundaryCondition(i,200.0);
 	//}
 
-	//%%%%		”M“`’B‹«ŠEğŒ		%%%%//
-	//	HŞƒƒbƒVƒ…‚Ì•\–Ê‚Ìß“_‚ÉAüˆÍ‚Ì—¬‘Ì‰·“x‚ğ—^‚¦‚é
-	//	üˆÍ‚Ì—¬‘Ì‰·“x‚ÍAƒtƒ‰ƒCƒpƒ“‚Ì•\–Ê‰·“x‚âAHŞ‚ÌUsingFixedTempBoundaryCondition(0,200.0);‰t‘Ì“à‚Ì‰·“x‚Ì•ª•z‚©‚çA‚»‚ÌêŠ‚Å‚ÌüˆÍ—¬‘Ì‰·“x‚ğ”»•Ê‚·‚éB
-	//	ˆÊ’uÀ•W‚©‚ç”»•Ê‚·‚éƒR[ƒh‚ğ‚±‚±‚É‹Lq
+	//%%%%		ç†±ä¼é”å¢ƒç•Œæ¡ä»¶		%%%%//
+	//	é£Ÿæãƒ¡ãƒƒã‚·ãƒ¥ã®è¡¨é¢ã®ç¯€ç‚¹ã«ã€å‘¨å›²ã®æµä½“æ¸©åº¦ã‚’ä¸ãˆã‚‹
+	//	å‘¨å›²ã®æµä½“æ¸©åº¦ã¯ã€ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã®è¡¨é¢æ¸©åº¦ã‚„ã€é£Ÿæã®UsingFixedTempBoundaryCondition(0,200.0);æ¶²ä½“å†…ã®æ¸©åº¦ã®åˆ†å¸ƒã‹ã‚‰ã€ãã®å ´æ‰€ã§ã®å‘¨å›²æµä½“æ¸©åº¦ã‚’åˆ¤åˆ¥ã™ã‚‹ã€‚
+	//	ä½ç½®åº§æ¨™ã‹ã‚‰åˆ¤åˆ¥ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã‚’ã“ã“ã«è¨˜è¿°
 	//UsingHeatTransferBoundaryCondition(unsigned id,double temp);
-	//ƒGƒlƒ‹ƒM[•Û‘¶‘¥‚æ‚èAüˆÍ—¬‘Ì‰·“x‚Ì’á‰º‚âA—¬‘Ì‚Ö‚Ì‹Ÿ‹‹”M—Ê‚Í§ŒÀ‚³‚ê‚é‚×‚«
+	//ã‚¨ãƒãƒ«ã‚®ãƒ¼ä¿å­˜å‰‡ã‚ˆã‚Šã€å‘¨å›²æµä½“æ¸©åº¦ã®ä½ä¸‹ã‚„ã€æµä½“ã¸ã®ä¾›çµ¦ç†±é‡ã¯åˆ¶é™ã•ã‚Œã‚‹ã¹ã
 
-	//dt = dt *0.01;		Œë·1“x’ö“x‚É‚È‚é
-	//dt = dt;				û‘©‚µ‚½‚ÌAŒvZŒë·Hiƒ}ƒCƒiƒX‚É‚È‚Á‚Ä‚¢‚éß“_‰·“x‚ª‚»‚ê‚È‚è‚É‘å‚«‚­‚È‚éBj
+	//dt = dt *0.01;		èª¤å·®1åº¦ç¨‹åº¦ã«ãªã‚‹
+	//dt = dt;				åæŸã—ãŸæ™‚ã®ã€è¨ˆç®—èª¤å·®ï¼Ÿï¼ˆãƒã‚¤ãƒŠã‚¹ã«ãªã£ã¦ã„ã‚‹ç¯€ç‚¹æ¸©åº¦ãŒãã‚Œãªã‚Šã«å¤§ãããªã‚‹ã€‚ï¼‰
 	
-	///>	ƒKƒEƒXƒUƒCƒfƒ‹–@‚Ìİ’è
-	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ƒKƒEƒXƒUƒCƒfƒ‹–@‚Å”M“`“±ŒvZ‚ğ‰ğ‚­@ƒNƒ‰ƒ“ƒNƒjƒRƒ‹ƒ\ƒ“–@‚Ì‚İ‚ğg‚¢‚½‚¢ê‡
+	///>	ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã®è¨­å®š
+	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã§ç†±ä¼å°è¨ˆç®—ã‚’è§£ãã€€ã‚¯ãƒ©ãƒ³ã‚¯ãƒ‹ã‚³ãƒ«ã‚½ãƒ³æ³•ã®ã¿ã‚’ä½¿ã„ãŸã„å ´åˆ
 
 //	dNdt = 10.0 * dt;
 
 #if 0
-	// ‰ğ‚­‘O‚É‚©‚È‚ç‚¸s‚¤
-	UpdateVecFAll_frypan(WEEK);				// ˆø”‚É‰Á”M‹­‚³‚ğ—^‚¦‚éB(OFF/WEEK/MIDDLE/HIGH)
+	// è§£ãå‰ã«ã‹ãªã‚‰ãšè¡Œã†
+	UpdateVecFAll_frypan(WEEK);				// å¼•æ•°ã«åŠ ç†±å¼·ã•ã‚’ä¸ãˆã‚‹ã€‚(OFF/WEEK/MIDDLE/HIGH)
 #endif
 
-	//{F}‚ğg‚í‚¸‚ÉA”M“`“±ŒvZÀŒ±‚ğ‚·‚é‚½‚ß‚ÌƒeƒXƒg
+	//{F}ã‚’ä½¿ã‚ãšã«ã€ç†±ä¼å°è¨ˆç®—å®Ÿé¨“ã‚’ã™ã‚‹ãŸã‚ã®ãƒ†ã‚¹ãƒˆ
 #if 1
 	//checkTVecAllout << COUNT * dt << ", "; 
 	//for(unsigned i=0;i<mesh->vertices.size();i++){
@@ -3578,7 +3582,7 @@ void PHFemThermo::Step(double dt){
 
 	if(COUNT * dt == 1 * dt){
 		if(tempe.size()){
-			DSTR << "‰Šú‰·“x•\¦F" << std::endl;
+			DSTR << "åˆæœŸæ¸©åº¦è¡¨ç¤ºï¼š" << std::endl;
 			for(unsigned i=0;i<tempe.size();i++){
 				Vec3d hyoukaPos =Vec3d(i*0.01, 0.0015, -0.005);
 				DSTR << i << ":" << GetVtxTempInTets(hyoukaPos) << std::endl;
@@ -3586,16 +3590,16 @@ void PHFemThermo::Step(double dt){
 		}
 	}
 #ifdef HYOKA
-	//	•]‰¿ÀŒ±—p
+	//	è©•ä¾¡å®Ÿé¨“ç”¨
 	if(COUNT * dt >= stopTime -0.02  ){
 		checkTVecAllout.close();
 		DSTR << "STOP:" <<COUNT * dt<<"Sec passed" << std::endl;
 		std::cout << "stopTime are set as" << stopTime <<"[sec]" << std::endl;
-		//	LMSR‚ğ‹‚ß‚é
+		//	LMSRã‚’æ±‚ã‚ã‚‹
 		double LMS[10] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		std::vector<double> hyouka;
 		hyouka.clear();
-		//%%%		•ú”M
+		//%%%		æ”¾ç†±
 		//200
 		//hyouka.push_back(207.7);
 		//hyouka.push_back(207.5);
@@ -3645,7 +3649,7 @@ void PHFemThermo::Step(double dt){
 		//hyouka.push_back(48.3);
 		//hyouka.push_back(47.9);
 
-		//	50.0	XVƒ^ƒCƒ~ƒ“ƒO 10sec
+		//	50.0	æ›´æ–°ã‚¿ã‚¤ãƒŸãƒ³ã‚° 10sec
 		//hyouka.push_back(49.9);
 		//hyouka.push_back(49.8);
 		//hyouka.push_back(49.7);
@@ -3658,7 +3662,7 @@ void PHFemThermo::Step(double dt){
 		//hyouka.push_back(48.2);
 		//hyouka.push_back(47.8);
 
-		//	50 60sec
+		//	50â„ƒ 60sec
 		//hyouka.push_back(49.3);
 		//hyouka.push_back(49.3);
 		//hyouka.push_back(49.3);
@@ -3671,7 +3675,7 @@ void PHFemThermo::Step(double dt){
 		//hyouka.push_back(47.8);
 		//hyouka.push_back(47.5);
 
-		//%%%	‰Á”M“¯’è@Å‰‚©‚ç10sec
+		//%%%	åŠ ç†±åŒå®šã€€æœ€åˆã‹ã‚‰10sec
 		//hyouka.push_back(31.1);
 		//hyouka.push_back(31.6);
 		//hyouka.push_back(33.9);
@@ -3684,7 +3688,7 @@ void PHFemThermo::Step(double dt){
 		//hyouka.push_back(40.1);
 		//hyouka.push_back(34.6);
 
-		//%%%	‰Á”M“¯’è@Å‰‚©‚ç60sec
+		//%%%	åŠ ç†±åŒå®šã€€æœ€åˆã‹ã‚‰60sec
 		hyouka.push_back(59.6);
 		hyouka.push_back(61.6);
 		hyouka.push_back(68.7);
@@ -3697,7 +3701,7 @@ void PHFemThermo::Step(double dt){
 		hyouka.push_back(79.6);
 		hyouka.push_back(62.1);
 
-		//%%%	j‚ÌŠO‘¤‚ª’á‚¢‰·“x‚Éİ’è‚µ‚Ä‚ ‚é‚Ì‚ÅAj‚Ì’l‚ÍM—po—ˆ‚È‚¢Bi‚àM—po—ˆ‚È‚¢‚Æ‚µ‚ÄA-2
+		//%%%	jã®å¤–å´ãŒä½ã„æ¸©åº¦ã«è¨­å®šã—ã¦ã‚ã‚‹ã®ã§ã€jã®å€¤ã¯ä¿¡ç”¨å‡ºæ¥ãªã„ã€‚iã‚‚ä¿¡ç”¨å‡ºæ¥ãªã„ã¨ã—ã¦ã€-2
 		for(unsigned i=0;i<tempe.size() - 9; i++){
 			Vec3d hyoukaPos =Vec3d(i*0.01, 0.0015, -0.001);
 			LMS[0] += (GetVtxTempInTets(hyoukaPos) - hyouka[i] ) * (GetVtxTempInTets(hyoukaPos) - hyouka[i] ); 
@@ -3734,42 +3738,42 @@ void PHFemThermo::Step(double dt){
 			Vec3d hyoukaPos =Vec3d(i*0.01, 0.0015, -0.001);
 			LMS[8] += (GetVtxTempInTets(hyoukaPos) - hyouka[i] ) * (GetVtxTempInTets(hyoukaPos) - hyouka[i] ); 
 		}
-		DSTR << "‰Šúİ’è‰·“x" << std::endl;
+		DSTR << "åˆæœŸè¨­å®šæ¸©åº¦" << std::endl;
 		for(unsigned i=0; i < tempe.size(); ++i){
 			DSTR << tempe[i] << ",";
 		}
 		DSTR << std::endl;
-		DSTR << "–Ú•W‰·“x" << std::endl;
+		DSTR << "ç›®æ¨™æ¸©åº¦" << std::endl;
 		for(unsigned i=0; i < hyouka.size(); ++i){
 			DSTR << hyouka[i] << ",";
 		}
 		DSTR << std::endl;
-		DSTR << "‘ª’è“_‚Ì‰·“x," << std::endl;
+		DSTR << "æ¸¬å®šç‚¹ã®æ¸©åº¦," << std::endl;
 		for(unsigned i=0;i<tempe.size(); i++){
 			Vec3d hyoukaPos =Vec3d(i*0.01, 0.0015, -0.001);
 			LMS[9] += (GetVtxTempInTets(hyoukaPos) - hyouka[i] ) * (GetVtxTempInTets(hyoukaPos) - hyouka[i] ); 
 			DSTR << GetVtxTempInTets(hyoukaPos) << ", ";
 		}
 		DSTR << std::endl;
-		DSTR << "”M•úË—¦@”ä—áŒW”,Ø•Ğ" << "Tout," <<  "jˆÈ‰“‰·“x," << std::endl;
+		DSTR << "ç†±æ”¾å°„ç‡ã€€æ¯”ä¾‹ä¿‚æ•°,åˆ‡ç‰‡" << "Tout," <<  "jä»¥é æ¸©åº¦," << std::endl;
 		DSTR << ems <<"," << ems_const <<"," << vertices[0].Tout <<"," << jout << std::endl;
 		DSTR << vertices[0].Tc <<"," << vertices[0].Tout <<"," << vertices[0].heatTransRatio << "," << vertices[0].thermalEmissivity << std::endl;
-		DSTR << "‰Á”Mo—Í," << "“à”¼Œa," <<  "ŠO”¼Œa," << std::endl;
+		DSTR << "åŠ ç†±å‡ºåŠ›," << "å†…åŠå¾„," <<  "å¤–åŠå¾„," << std::endl;
 		DSTR << weekPow_ <<  "," << inr_ << "," << outR_ << std::endl;
-		DSTR << "’Ç‰Áo—Í," << "“à”¼Œa," <<  "ŠO”¼Œa," << std::endl;
+		DSTR << "è¿½åŠ å‡ºåŠ›," << "å†…åŠå¾„," <<  "å¤–åŠå¾„," << std::endl;
 		DSTR << weekPow_add <<  "," << inr_add << "," << outR_add << std::endl;
-		DSTR << "o—Í‘Å‚¿Á‚µ," << "“à”¼Œa," <<  "ŠO”¼Œa," << std::endl;
+		DSTR << "å‡ºåŠ›æ‰“ã¡æ¶ˆã—," << "å†…åŠå¾„," <<  "å¤–åŠå¾„," << std::endl;
 		DSTR << weekPow_decr <<  "," << inr_decr << "," << outR_decr << std::endl;
 
 		for(unsigned i=0;i<10;++i){
 			DSTR << "LMS" << i+1 <<":"  << LMS[i] <<std::endl;
 		}
-		DSTR << "LMS‰¡‘‚«" <<std::endl;
+		DSTR << "LMSæ¨ªæ›¸ã" <<std::endl;
 		for(unsigned i=0;i<10;++i){
 			DSTR << LMS[i] <<",";
 		}
 		DSTR << std::endl;
-		DSTR << "–Ú•W’l‚Æ‚Ì·•ª" << std::endl;
+		DSTR << "ç›®æ¨™å€¤ã¨ã®å·®åˆ†" << std::endl;
 		for(unsigned i=0;i<tempe.size(); i++){
 			Vec3d hyoukaPos =Vec3d(i*0.01, 0.0015, -0.001);
 			DSTR << hyouka[i] - GetVtxTempInTets(hyoukaPos) << ", ";
@@ -3779,23 +3783,23 @@ void PHFemThermo::Step(double dt){
 		DSTR<<"------------------"<<std::endl;
 
 	}
-#endif HYOKA
+#endif //HYOKA
 	if(COUNT * dt >= stopTime + 0.1){
-		//assert(0);			//	~‚ß‚½‚¢
+		//assert(0);			//	æ­¢ã‚ãŸã„
 
 	}
 #endif
 	doCalc =true;
 	
 	if(doCalc){
-	//ƒKƒEƒXƒUƒCƒfƒ‹–@‚Å‰ğ‚­
+	//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã§è§£ã
 		if(strcmp(mesh->GetName(), "femNsteak") == 0){
 			
 			//vecFOutToFile();
 			//vecFTopOutToFile();
 			//vecFBottomOutToFile();
 
-			CalcHeatTransUsingGaussSeidel(NofCyc,dt,epsilonG);			//ƒKƒEƒXƒUƒCƒfƒ‹–@‚Å”M“`“±ŒvZ‚ğ‰ğ‚­ ‘æOˆø”‚ÍA‘OiEƒNƒ‰ƒ“ƒNƒjƒRƒ‹ƒ\ƒ“EŒã‘ŞÏ•ª‚Ì‚¢‚¸‚ê‚©‚ğ”’l‚Å‘I‘ğ
+			CalcHeatTransUsingGaussSeidel(NofCyc,dt,epsilonG);			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã§ç†±ä¼å°è¨ˆç®—ã‚’è§£ã ç¬¬ä¸‰å¼•æ•°ã¯ã€å‰é€²ãƒ»ã‚¯ãƒ©ãƒ³ã‚¯ãƒ‹ã‚³ãƒ«ã‚½ãƒ³ãƒ»å¾Œé€€ç©åˆ†ã®ã„ãšã‚Œã‹ã‚’æ•°å€¤ã§é¸æŠ
 			//CalcHeatTransDirect(dt);
 			//CalcHeatTransDirect3(dt);
 			//CalcHeatTransDirect4(dt);
@@ -3803,7 +3807,7 @@ void PHFemThermo::Step(double dt){
 			//CalcHeatTransUsingScilab(dt, epsilonG);
 
 		}else{
-			CalcHeatTransUsingGaussSeidel(NofCyc,dt,epsilonG);			//ƒKƒEƒXƒUƒCƒfƒ‹–@‚Å”M“`“±ŒvZ‚ğ‰ğ‚­ ‘æOˆø”‚ÍA‘OiEƒNƒ‰ƒ“ƒNƒjƒRƒ‹ƒ\ƒ“EŒã‘ŞÏ•ª‚Ì‚¢‚¸‚ê‚©‚ğ”’l‚Å‘I‘ğ
+			CalcHeatTransUsingGaussSeidel(NofCyc,dt,epsilonG);			//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã§ç†±ä¼å°è¨ˆç®—ã‚’è§£ã ç¬¬ä¸‰å¼•æ•°ã¯ã€å‰é€²ãƒ»ã‚¯ãƒ©ãƒ³ã‚¯ãƒ‹ã‚³ãƒ«ã‚½ãƒ³ãƒ»å¾Œé€€ç©åˆ†ã®ã„ãšã‚Œã‹ã‚’æ•°å€¤ã§é¸æŠ
 			//CalcHeatTransDirect(dt);
 			//CalcHeatTransDirect2(dt);
 			//CalcHeatTransUsingScilab(dt, epsilonG);
@@ -3829,7 +3833,7 @@ void PHFemThermo::Step(double dt){
 //		}
 //		vecFOutSteak << std::endl;
 //	}
-	//‰·“x‚ÌƒxƒNƒgƒ‹‚©‚çß“_‚Ö‰·“x‚Ì”½‰f
+	//æ¸©åº¦ã®ãƒ™ã‚¯ãƒˆãƒ«ã‹ã‚‰ç¯€ç‚¹ã¸æ¸©åº¦ã®åæ˜ 
 	UpdateVertexTempAll();
 	StepCount += 1;
 	if(StepCount >= 1000*1000*1000){
@@ -3837,12 +3841,12 @@ void PHFemThermo::Step(double dt){
 		StepCount_ += 1;
 	}
 
-	/*¬–ìŒ´’Ç‰Á‚±‚±‚©‚ç--------------------------------------------*/
-	//beCondVtxs‚Ætoofar‚ÉFalse‚ğ‚¢‚ê‚Ä‚¨‚­B‰Šú‰»
+	/*å°é‡åŸè¿½åŠ ã“ã“ã‹ã‚‰--------------------------------------------*/
+	//beCondVtxsã¨toofarã«Falseã‚’ã„ã‚Œã¦ãŠãã€‚åˆæœŸåŒ–
 	for(unsigned i=0; i<mesh->surfaceVertices.size(); i++){
 		vertexVars[mesh->surfaceVertices[i]].beCondVtxs = vertexVars[mesh->surfaceVertices[i]].toofar = false;
 	}
-	/*¬–ìŒ´’Ç‰Á‚±‚±‚Ü‚Å--------------------------------------------*/
+	/*å°é‡åŸè¿½åŠ ã“ã“ã¾ã§--------------------------------------------*/
 
 //#ifdef UseMatAll
 //	if(strcmp(mesh->GetName(), "femNsteak") == 0){
@@ -3899,34 +3903,34 @@ void PHFemThermo::InitToutAll(double temp){
 }
 
 void PHFemThermo::InitCreateMatC(){
-	/// MatC‚É‚Â‚¢‚Ä	//	g—p‚·‚és—ñ‚Ì‰Šú‰»
-	//dMatCAllF‘ÎŠps—ñ‚Ì¬•ª‚Ì“ü‚Á‚½s—ñ‚ÌƒTƒCƒY‚ğ’è‹`:”z—ñ‚Æ‚µ‚Ä—˜—p	•:vertices.size(),‚‚³:1
+	/// MatCã«ã¤ã„ã¦	//	ä½¿ç”¨ã™ã‚‹è¡Œåˆ—ã®åˆæœŸåŒ–
+	//dMatCAllï¼šå¯¾è§’è¡Œåˆ—ã®æˆåˆ†ã®å…¥ã£ãŸè¡Œåˆ—ã®ã‚µã‚¤ã‚ºã‚’å®šç¾©:é…åˆ—ã¨ã—ã¦åˆ©ç”¨	å¹…:vertices.size(),é«˜ã•:1
 	dMatCAll.resize(1,GetPHFemMesh()->vertices.size()); //(h,w)
-	dMatCAll.clear();								///	’l‚Ì‰Šú‰»
-	//matc‚Ì‰Šú‰»‚ÍAmatc‚ğì‚éŠÖ”‚Å‚â‚Á‚Ä‚¢‚é‚Ì‚ÅAÈ—ª
+	dMatCAll.clear();								///	å€¤ã®åˆæœŸåŒ–
+	//matcã®åˆæœŸåŒ–ã¯ã€matcã‚’ä½œã‚‹é–¢æ•°ã§ã‚„ã£ã¦ã„ã‚‹ã®ã§ã€çœç•¥
 	matCAll.resize(GetPHFemMesh()->vertices.size(),GetPHFemMesh()->vertices.size());
 	matCAll.clear();
 }
 
 void PHFemThermo::InitCreateMatk_(){
-	///	MatK‚É‚Â‚¢‚Ä
-	//matk‚Ì‰Šú‰»
+	///	MatKã«ã¤ã„ã¦
+	//matkã®åˆæœŸåŒ–
 	for(unsigned i =0; i < 4 ; i++){
 		for(unsigned j =0; j < 4 ; j++){
 			matk[i][j] = 0.0;
 		}
 	}
-	dMatKAll.clear();		///	‰Šú‰»
+	dMatKAll.clear();		///	åˆæœŸåŒ–
 #ifdef UseMatAll
-	//matKAll.resize(vertices.size(),vertices.size());	///	matKAll‚ÌƒTƒCƒY‚Ì‘ã“ü
-	matKAll.clear();									///	matKAll‚Ì‰Šú‰»
+	//matKAll.resize(vertices.size(),vertices.size());	///	matKAllã®ã‚µã‚¤ã‚ºã®ä»£å…¥
+	matKAll.clear();									///	matKAllã®åˆæœŸåŒ–
 	//DSTR << "matKAll: " << matKAll <<std::endl;
-#endif UseMatAll
+#endif //UseMatAll
 
 #ifdef DumK
-	//matKAll‚Ì‰Šú‰»
+	//matKAllã®åˆæœŸåŒ–
 	matKAll.resize(vertices.size(),vertices.size());
-	matkAll.clear();					///	‰Šú‰»A‰º‚Ì‰Šú‰»ƒR[ƒh‚Í•s—v
+	matkAll.clear();					///	åˆæœŸåŒ–ã€ä¸‹ã®åˆæœŸåŒ–ã‚³ãƒ¼ãƒ‰ã¯ä¸è¦
 #endif
 
 
@@ -3935,8 +3939,8 @@ void PHFemThermo::InitCreateMatk_(){
 void PHFemThermo::InitCreateMatk(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	///	MatK‚É‚Â‚¢‚Ä
-	//matk‚Ì‰Šú‰»
+	///	MatKã«ã¤ã„ã¦
+	//matkã®åˆæœŸåŒ–
 	for(unsigned i =0; i < 4 ; i++){
 		for(unsigned j =0; j < 4 ; j++){
 			matk[i][j] = 0.0;
@@ -3945,28 +3949,28 @@ void PHFemThermo::InitCreateMatk(){
 	//for(unsigned i=0;i<3;i++){
 	//tets.matk[i]
 	//}
-	//DMatAllF‘ÎŠps—ñ‚Ì¬•ª‚Ì“ü‚Á‚½s—ñ‚ÌƒTƒCƒY‚ğ’è‹`:”z—ñ‚Æ‚µ‚Ä—˜—p	•:vertices.size(),‚‚³:1
+	//DMatAllï¼šå¯¾è§’è¡Œåˆ—ã®æˆåˆ†ã®å…¥ã£ãŸè¡Œåˆ—ã®ã‚µã‚¤ã‚ºã‚’å®šç¾©:é…åˆ—ã¨ã—ã¦åˆ©ç”¨	å¹…:vertices.size(),é«˜ã•:1
 	dMatKAll.resize(1,mesh->vertices.size()); //(h,w)
-	dMatKAll.clear();		///	‰Šú‰»
-	////’l‚Ì‰Šú‰»
+	dMatKAll.clear();		///	åˆæœŸåŒ–
+	////å€¤ã®åˆæœŸåŒ–
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	dMatKAll[0][i] = 0.0;
 	//}
 #ifdef UseMatAll
 	
-	matKAll.resize(mesh->vertices.size(),mesh->vertices.size());	///	matKAll‚ÌƒTƒCƒY‚Ì‘ã“ü
-	matKAll.clear();									///	matKAll‚Ì‰Šú‰»
+	matKAll.resize(mesh->vertices.size(),mesh->vertices.size());	///	matKAllã®ã‚µã‚¤ã‚ºã®ä»£å…¥
+	matKAll.clear();									///	matKAllã®åˆæœŸåŒ–
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	for(unsigned j=0;j<vertices.size();j++){
 	//		matKAll[i][j] = 0.0;
 	//	}
 	//}
-#endif UseMatAll
+#endif //UseMatAll
 
 #ifdef DumK
-	//matKAll‚Ì‰Šú‰»
+	//matKAllã®åˆæœŸåŒ–
 	matKAll.resize(vertices.size(),vertices.size());
-	matkAll.clear();					///	‰Šú‰»A‰º‚Ì‰Šú‰»ƒR[ƒh‚Í•s—v
+	matkAll.clear();					///	åˆæœŸåŒ–ã€ä¸‹ã®åˆæœŸåŒ–ã‚³ãƒ¼ãƒ‰ã¯ä¸è¦
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	for(unsigned j=0;j<vertices.size();j++){
 	//		matKAll[i][j] = 0.0;
@@ -3976,32 +3980,32 @@ void PHFemThermo::InitCreateMatk(){
 }
 
 void PHFemThermo::InitCreateVecf_(){
-	///	Vecf‚É‚Â‚¢‚Ä
-	//Vecf‚Ì‰Šú‰»
+	///	Vecfã«ã¤ã„ã¦
+	//Vecfã®åˆæœŸåŒ–
 	for(unsigned i =0; i < 4 ; i++){
 			vecf[i] = 0.0;
 	}
-	vecFAllSum.clear();						///	‰Šú‰»
+	vecFAllSum.clear();						///	åˆæœŸåŒ–
 }
 
 void PHFemThermo::InitVecFAlls(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	for(unsigned i =0; i < 4 ; i++){ vecf[i] = 0.0;}	/// Vecf‚Ì‰Šú‰»
-	vecFAllSum.resize(mesh->vertices.size());					///	‘S‘Ì„«ƒxƒNƒgƒ‹F‚ÌƒTƒCƒY‚ğ‹K’è
-	vecFAllSum.clear();									///		V			‚Ì‰Šú‰»
+	for(unsigned i =0; i < 4 ; i++){ vecf[i] = 0.0;}	/// Vecfã®åˆæœŸåŒ–
+	vecFAllSum.resize(mesh->vertices.size());					///	å…¨ä½“å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«Fã®ã‚µã‚¤ã‚ºã‚’è¦å®š
+	vecFAllSum.clear();									///		ã€ƒ			ã®åˆæœŸåŒ–
 
-	for(unsigned i=0;i < HIGH +1 ; i++){				/// IH‰Á”Mƒ‚[ƒh‚ÌŠeƒxƒNƒgƒ‹‚ğ‰Šú‰»
+	for(unsigned i=0;i < HIGH +1 ; i++){				/// IHåŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã®å„ãƒ™ã‚¯ãƒˆãƒ«ã‚’åˆæœŸåŒ–
 		vecFAll_f2IH[i].resize(mesh->vertices.size(),1);
 		vecFAll_f2IH[i].clear();
 	}
-	// tets.vecf[4]‚Ì‰Šú‰»
+	// tets.vecf[4]ã®åˆæœŸåŒ–
 	for(unsigned i=0;i<mesh->tets.size();i++){
 		for(unsigned j=0; j <4;j++){
 			tetVars[i].vecf[j].clear();
 		}
 	}
-	// vecFAll‚Ì‰Šú‰»
+	// vecFAllã®åˆæœŸåŒ–
 	//initialize
 	for(unsigned i =0;i<4;i++){
 		vecFAll[i].resize(mesh->vertices.size());
@@ -4012,17 +4016,17 @@ void PHFemThermo::InitVecFAlls(){
 void PHFemThermo::UpdateVecF_frypan(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// mode‚Í•K—v‚©H
+	// modeã¯å¿…è¦ã‹ï¼Ÿ
 
 	//	Initialize
-	//InitVecFAlls();		// ‚±‚Ì’†‚Ì‰Šú‰»‚Ì‚·‚×‚Ä‚ª•K—v‚©H
+	//InitVecFAlls();		// ã“ã®ä¸­ã®åˆæœŸåŒ–ã®ã™ã¹ã¦ãŒå¿…è¦ã‹ï¼Ÿ
 
-//. 1)Å‰‚Ì2‚Â({F2},{F3})‚ÍAF2,F3‚Ì‚Ç‚¿‚ç‚©‚¾‚¯XV‚·‚ê‚Î—Ç‚¢ê‡‚É—p‚¢‚é
+//. 1)æœ€åˆã®2ã¤({F2},{F3})ã¯ã€F2,F3ã®ã©ã¡ã‚‰ã‹ã ã‘æ›´æ–°ã™ã‚Œã°è‰¯ã„å ´åˆã«ç”¨ã„ã‚‹
 #if 0
 	// {F2}
 	for(unsigned tetsid = 0; tetsid < mesh->tets.size();tetsid++){
 		unsigned id = tetsid;
-		CreateVecf2surface(id);			// tets[id].vecf[1];‚ÉŒ‹‰ÊŠi”[
+		CreateVecf2surface(id);			// tets[id].vecf[1];ã«çµæœæ ¼ç´
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = mesh->tets[id].vertexIDs[j];
 			//vecFAll[1][vtxid0] += vecf[j];
@@ -4035,7 +4039,7 @@ void PHFemThermo::UpdateVecF_frypan(){
 	// {F3}
 	for(unsigned tetsid = 0; tetsid < mesh->tets.size();tetsid++){
 		unsigned id = tetsid;
-		CreateVecf3(id);		// tets[id].vecf[2];‚ÉŒ‹‰ÊŠi”[
+		CreateVecf3(id);		// tets[id].vecf[2];ã«çµæœæ ¼ç´
 		//vecf = tets[id].vecf[2];
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = mesh->tets[id].vertexIDs[j];
@@ -4045,7 +4049,7 @@ void PHFemThermo::UpdateVecF_frypan(){
 	}	
 #endif
 
-//. 2) {F2,F3}‚Ì—¼•û‹¤XV‚µ‚Ä—Ç‚¢ê‡
+//. 2) {F2,F3}ã®ä¸¡æ–¹å…±æ›´æ–°ã—ã¦è‰¯ã„å ´åˆ
 #if 1
 	for(unsigned tetsid = 0; tetsid < mesh->tets.size();tetsid++){
 		unsigned id = tetsid;
@@ -4055,7 +4059,7 @@ void PHFemThermo::UpdateVecF_frypan(){
 		CreateVecf3surface(id);
 #endif
 #ifndef NOTUSE_HEATTRANS_HERE
-		CreateVecf3(id);		// tets[id].vecf[2];‚ÉŒ‹‰ÊŠi”[
+		CreateVecf3(id);		// tets[id].vecf[2];ã«çµæœæ ¼ç´
 #endif
 		//vecf = tets[id].vecf[2];
 		for(unsigned j =0;j < 4; j++){
@@ -4071,44 +4075,44 @@ void PHFemThermo::UpdateVecF_frypan(){
 	}
 #endif
 
-	//ƒ°{F[i]}_{i=1}^{4}
+	//Î£{F[i]}_{i=1}^{4}
 #ifndef NOTUSE_HEATTRANS_HERE
 	vecFAllSum = vecFAll[1] + vecFAll[2];
 #else
 
 	vecFAllSum += vecFAll[1] + vecFAll[3];
 
-	// VecFAll ‚ªweekpow‚Å“ü‚ê‚½‘”M—Ê‚Æ‡’v‚·‚é‚©ƒ`ƒFƒbƒNƒR[ƒh
+	// VecFAll ãŒweekpowã§å…¥ã‚ŒãŸç·ç†±é‡ã¨åˆè‡´ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã‚³ãƒ¼ãƒ‰
 	//double tempSumVECF=0.0;
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	tempSumVECF += vecFAllSum[i];
 	//}
-	//DSTR <<"vecFAllSum ‚Ì Sum: " << tempSumVECF << std::endl;
+	//DSTR <<"vecFAllSum ã® Sum: " << tempSumVECF << std::endl;
 
 #endif
 	//DSTR << "vecFAll[1]: " << vecFAll[1] << std::endl;
 
 
-//%%%% ‚±‚ÌŠÖ”‚Í‚±‚±‚Ü‚Å‚Å‚Æ‚è‚ ‚¦‚¸Š®¬ 2012.10.09
+//%%%% ã“ã®é–¢æ•°ã¯ã“ã“ã¾ã§ã§ã¨ã‚Šã‚ãˆãšå®Œæˆ 2012.10.09
 
-	//	Á‹—\’è
+	//	æ¶ˆå»äºˆå®š
 #if 0
 //depend on mode, I don't need to use mode state.Because mode state cause different calc result of heatflus.
 // I just use the result of IHdqdt Function.
-	//vecFAll[1],[2]‚É‘ã“ü
+	//vecFAll[1],[2]ã«ä»£å…¥
 	for(unsigned id = 0; id < mesh->vertices.size();id++){
 		if(mode == OFF){ 
-			// F2‚Í‰ÁZ‚µ‚È‚¢
+			// F2ã¯åŠ ç®—ã—ãªã„
 			vecFAllSum[id] = vecFAllSum[id]; //F3
 		}
 		else if(mode == WEEK){
-			vecFAllSum[id] =  vecFAll_f2IH[mode][id][0] + vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2‚ÌWEEK‚Ì‹­‚³
+			vecFAllSum[id] =  vecFAll_f2IH[mode][id][0] + vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2ã®WEEKã®å¼·ã•
 		}
 		else if(mode == MIDDLE){
-			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2‚Ìmiddle‚Ì‹­‚³
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2ã®middleã®å¼·ã•
 		}
 		else if(mode == HIGH){
-			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2‚Ìhigh‚Ì‹­‚³
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2ã®highã®å¼·ã•
 		}
 	}
 
@@ -4116,9 +4120,9 @@ void PHFemThermo::UpdateVecF_frypan(){
 
 #if 0
 	for(unsigned i =0; i< 4;i++){
-		vecFAllSum += vecFAll[i];				//‘S‘Ì„«s—ñ‚Ì˜a‚ğæ‚é
+		vecFAllSum += vecFAll[i];				//å…¨ä½“å‰›æ€§è¡Œåˆ—ã®å’Œã‚’å–ã‚‹
 	}
-	// F2,F3‚ğ‰ÁZ‚·‚é
+	// F2,F3ã‚’åŠ ç®—ã™ã‚‹
 #endif
 }
 
@@ -4126,15 +4130,15 @@ void PHFemThermo::UpdateVecF_frypan(){
 void PHFemThermo::UpdateVecF(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// ˆø”‚Éenum mode‚ğ“ü‚ê‚Äƒ‚[ƒhw’è‚ğs‚¤d—l‚É•Ï‚¦‚é
+	// å¼•æ•°ã«enum modeã‚’å…¥ã‚Œã¦ãƒ¢ãƒ¼ãƒ‰æŒ‡å®šã‚’è¡Œã†ä»•æ§˜ã«å¤‰ãˆã‚‹
 
 
-//. 1)Å‰‚Ì2‚Â({F2},{F3})‚ÍAF2,F3‚Ì‚Ç‚¿‚ç‚©‚¾‚¯XV‚·‚ê‚Î—Ç‚¢ê‡‚É—p‚¢‚é
+//. 1)æœ€åˆã®2ã¤({F2},{F3})ã¯ã€F2,F3ã®ã©ã¡ã‚‰ã‹ã ã‘æ›´æ–°ã™ã‚Œã°è‰¯ã„å ´åˆã«ç”¨ã„ã‚‹
 #if 0
 	// {F2}
 	for(unsigned tetsid = 0; tetsid < mesh->tets.size();tetsid++){
 		unsigned id = tetsid;
-		CreateVecf2surface(id);			// tets[id].vecf[1];‚ÉŒ‹‰ÊŠi”[
+		CreateVecf2surface(id);			// tets[id].vecf[1];ã«çµæœæ ¼ç´
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = mesh->tets[id].vertexIDs[j];
 			//vecFAll[1][vtxid0] += vecf[j];
@@ -4147,7 +4151,7 @@ void PHFemThermo::UpdateVecF(){
 	// {F3}
 	for(unsigned tetsid = 0; tetsid < mesh->tets.size();tetsid++){
 		unsigned id = tetsid;
-		CreateVecf3(id);		// tets[id].vecf[2];‚ÉŒ‹‰ÊŠi”[
+		CreateVecf3(id);		// tets[id].vecf[2];ã«çµæœæ ¼ç´
 		//vecf = tets[id].vecf[2];
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = mesh->tets[id].vertexIDs[j];
@@ -4157,7 +4161,7 @@ void PHFemThermo::UpdateVecF(){
 	}	
 #endif
 
-//. 2) {F2,F3}‚Ì—¼•û‹¤XV‚µ‚Ä—Ç‚¢ê‡
+//. 2) {F2,F3}ã®ä¸¡æ–¹å…±æ›´æ–°ã—ã¦è‰¯ã„å ´åˆ
 #if 1
 	for(unsigned tetsid = 0; tetsid < mesh->tets.size();tetsid++){
 		unsigned id = tetsid;
@@ -4167,7 +4171,7 @@ void PHFemThermo::UpdateVecF(){
 		CreateVecf3surface(id);
 #endif
 #ifndef NOTUSE_HEATTRANS_HERE
-		CreateVecf3(id);		// tets[id].vecf[2];‚ÉŒ‹‰ÊŠi”[
+		CreateVecf3(id);		// tets[id].vecf[2];ã«çµæœæ ¼ç´
 #endif
 		//vecf = tets[id].vecf[2];
 		for(unsigned j =0;j < 4; j++){
@@ -4183,44 +4187,44 @@ void PHFemThermo::UpdateVecF(){
 	}
 #endif
 
-	//ƒ°{F[i]}_{i=1}^{4}
+	//Î£{F[i]}_{i=1}^{4}
 #ifndef NOTUSE_HEATTRANS_HERE
 	vecFAllSum = vecFAll[1] + vecFAll[2];
 #else
 
 	vecFAllSum += vecFAll[1] + vecFAll[3];
 
-	// VecFAll ‚ªweekpow‚Å“ü‚ê‚½‘”M—Ê‚Æ‡’v‚·‚é‚©ƒ`ƒFƒbƒNƒR[ƒh
+	// VecFAll ãŒweekpowã§å…¥ã‚ŒãŸç·ç†±é‡ã¨åˆè‡´ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã‚³ãƒ¼ãƒ‰
 	//double tempSumVECF=0.0;
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	tempSumVECF += vecFAllSum[i];
 	//}
-	//DSTR <<"vecFAllSum ‚Ì Sum: " << tempSumVECF << std::endl;
+	//DSTR <<"vecFAllSum ã® Sum: " << tempSumVECF << std::endl;
 
 #endif
 	//DSTR << "vecFAll[1]: " << vecFAll[1] << std::endl;
 
 
-//%%%% ‚±‚ÌŠÖ”‚Í‚±‚±‚Ü‚Å‚Å‚Æ‚è‚ ‚¦‚¸Š®¬ 2012.10.09
+//%%%% ã“ã®é–¢æ•°ã¯ã“ã“ã¾ã§ã§ã¨ã‚Šã‚ãˆãšå®Œæˆ 2012.10.09
 
-	//	Á‹—\’è
+	//	æ¶ˆå»äºˆå®š
 #if 0
 //depend on mode, I don't need to use mode state.Because mode state cause different calc result of heatflus.
 // I just use the result of IHdqdt Function.
-	//vecFAll[1],[2]‚É‘ã“ü
+	//vecFAll[1],[2]ã«ä»£å…¥
 	for(unsigned id = 0; id < vertices.size();id++){
 		if(mode == OFF){ 
-			// F2‚Í‰ÁZ‚µ‚È‚¢
+			// F2ã¯åŠ ç®—ã—ãªã„
 			vecFAllSum[id] = vecFAllSum[id]; //F3
 		}
 		else if(mode == WEEK){
-			vecFAllSum[id] =  vecFAll_f2IH[mode][id][0] + vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2‚ÌWEEK‚Ì‹­‚³
+			vecFAllSum[id] =  vecFAll_f2IH[mode][id][0] + vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2ã®WEEKã®å¼·ã•
 		}
 		else if(mode == MIDDLE){
-			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2‚Ìmiddle‚Ì‹­‚³
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2ã®middleã®å¼·ã•
 		}
 		else if(mode == HIGH){
-			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2‚Ìhigh‚Ì‹­‚³
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2ã®highã®å¼·ã•
 		}
 	}
 
@@ -4228,16 +4232,16 @@ void PHFemThermo::UpdateVecF(){
 
 #if 0
 	for(unsigned i =0; i< 4;i++){
-		vecFAllSum += vecFAll[i];				//‘S‘Ì„«s—ñ‚Ì˜a‚ğæ‚é
+		vecFAllSum += vecFAll[i];				//å…¨ä½“å‰›æ€§è¡Œåˆ—ã®å’Œã‚’å–ã‚‹
 	}
-	// F2,F3‚ğ‰ÁZ‚·‚é
+	// F2,F3ã‚’åŠ ç®—ã™ã‚‹
 #endif
 }
 
 //void PHFemThermo::UpdateMatK(){
 //
-//	//%%%	‰Šú‰»—Ş		%%%//
-//	//Šeíƒƒ“ƒo•Ï”‚Ì‰Šú‰»ËƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‚Å‚«‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à‚µ‚ê‚È‚¢B
+//	//%%%	åˆæœŸåŒ–é¡		%%%//
+//	//å„ç¨®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–â‡’ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ã§ããŸã»ã†ãŒã„ã„ã‹ã‚‚ã—ã‚Œãªã„ã€‚
 //	///	Edges
 //	for(unsigned i =0; i < edges.size();i++){
 //		edges[i].c = 0.0;	
@@ -4249,31 +4253,31 @@ void PHFemThermo::UpdateVecF(){
 //		faces[i].alphaUpdated = true;
 //		faces[i].area = 0.0;
 //		faces[i].heatTransRatio = 0.0;
-//		faces[i].deformed = true;				//‰Šúó‘Ô‚ÍA•ÏŒ`Œã‚Æ‚·‚é
+//		faces[i].deformed = true;				//åˆæœŸçŠ¶æ…‹ã¯ã€å¤‰å½¢å¾Œã¨ã™ã‚‹
 //		faces[i].fluxarea =0.0;
 //		faces[i].thermalEmissivity =0.0;
-//		//faces[i].heatflux.clear();				// ‰Šú‰»
-//		//faces[i].heatflux[hum]‚Ì—ÌˆæŠm•ÛF”z—ñ‚Æ‚µ‚ÄA‚©Avector‚Æ‚µ‚Ä‚Ìpush_back‚©A‚Ç‚¿‚ç‚©‚ğs‚¤B”z—ñ‚È‚ç‚±‚±‚É‹LqB
-//		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// ‰Á”Mƒ‚[ƒh‚Ì”‚¾‚¯AƒxƒNƒgƒ‹‚ğ¶¬
+//		//faces[i].heatflux.clear();				// åˆæœŸåŒ–
+//		//faces[i].heatflux[hum]ã®é ˜åŸŸç¢ºä¿ï¼šé…åˆ—ã¨ã—ã¦ã€ã‹ã€vectorã¨ã—ã¦ã®push_backã‹ã€ã©ã¡ã‚‰ã‹ã‚’è¡Œã†ã€‚é…åˆ—ãªã‚‰ã“ã“ã«è¨˜è¿°ã€‚
+//		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// åŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã®æ•°ã ã‘ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”Ÿæˆ
 //			faces[i].heatflux[mode] = 0.0;
 //		}
 //	}
 //
-//	//s—ñ‚Ì¬•ª”‚È‚Ç‚ğ‰Šú‰»
+//	//è¡Œåˆ—ã®æˆåˆ†æ•°ãªã©ã‚’åˆæœŸåŒ–
 //	bVecAll.resize(vertices.size(),1);
 //	TVecAll.resize(vertices.size());
 //
-//	//	ƒƒbƒVƒ…ß“_‰·“x ‰Šú‰»
+//	//	ãƒ¡ãƒƒã‚·ãƒ¥ç¯€ç‚¹æ¸©åº¦ åˆæœŸåŒ–
 //	SetVerticesTempAll(30.0);
 //
-//	//•]‰¿ÀŒ±—pƒR[ƒh
-//	//>	LMS‚Ì‚½‚ß‚ÌƒR[ƒh
-//	//	ß“_‰·“x‚Ì‰Šúİ’è(s—ñ‚ğì‚é‘O‚És‚¤)
+//	//è©•ä¾¡å®Ÿé¨“ç”¨ã‚³ãƒ¼ãƒ‰
+//	//>	LMSã®ãŸã‚ã®ã‚³ãƒ¼ãƒ‰
+//	//	ç¯€ç‚¹æ¸©åº¦ã®åˆæœŸè¨­å®š(è¡Œåˆ—ã‚’ä½œã‚‹å‰ã«è¡Œã†)
 //	//SetVerticesTempAll((158.5 + (30.0 + 158.5) /2.0)/2.0 );
 //	//SetVerticesTempAll((158.5+30.0)/2.0);
 //	
 //	
-//	// main.cpp‚Å“®‚­‚æ‚¤‚Éİ’è‚·‚é
+//	// main.cppã§å‹•ãã‚ˆã†ã«è¨­å®šã™ã‚‹
 //	round.clear();
 //	tempe.clear();
 //	for(unsigned i=0;i<11;++i){
@@ -4319,46 +4323,46 @@ void PHFemThermo::UpdateVecF(){
 //	tempe.push_back(48.4);
 //	tempe.push_back(48.0);
 //
-//	SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));		//	-0.001‚É‚µ‚Ä‚àA‰Šú‰·“x‚Í•s•Ï‚¾‚Á‚½B
-//	DSTR << "“ü—Í check it out" <<std::endl;
+//	SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));		//	-0.001ã«ã—ã¦ã‚‚ã€åˆæœŸæ¸©åº¦ã¯ä¸å¤‰ã ã£ãŸã€‚
+//	DSTR << "å…¥åŠ› check it out" <<std::endl;
 //	for(unsigned i=0; i< tempe.size();++i){
 //		DSTR << round[i] << "; "<< i*0.01 <<"; " <<  tempe[i] << std::endl;
 //	}
 //
 //	InitTcAll(temp_c);
-//	//>	”M•úËŠÖŒW	LMSS
+//	//>	ç†±æ”¾å°„é–¢ä¿‚	LMSS
 //	InitToutAll(temp_out);
 //	SetThermalEmissivityToVerticesAll(ems);	
 //
-//	//vertices.temp‚ğ‚·‚×‚ÄATVecAll‚Ö‘ã“ü‚·‚é
+//	//vertices.tempã‚’ã™ã¹ã¦ã€TVecAllã¸ä»£å…¥ã™ã‚‹
 //	CreateTempVertex();
-//	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));		// “S”Â‚ÌŒ´“_À•W‚ğˆø”‚É“ü‚êA‘ÎÌ«‚ª‡‚¤‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
-//	InitCreateMatk();					///	CreateMatK‚Ì‰Šú‰»
+//	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));		// é‰„æ¿ã®åŸç‚¹åº§æ¨™ã‚’å¼•æ•°ã«å…¥ã‚Œã€å¯¾ç§°æ€§ãŒåˆã†ã‚ˆã†ã«ãªã£ã¦ã„ã‚‹ã€‚
+//	InitCreateMatk();					///	CreateMatKã®åˆæœŸåŒ–
 //	keisuInv.resize(vertices.size(),vertices.size());
 //	keisuInv.clear();
-//	///	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+//	///	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 //	SetHeatTransRatioToAllVertex();
 //	for(unsigned i=0; i < this->tets.size(); i++){
 //
-//		/*¬–ìŒ´’Ç‰Á‚±‚±‚©‚ç--------------------------------------------*/
-//		//•\–Êface‚Ì–ÊÏ‚ğŒvZ
+//		/*å°é‡åŸè¿½åŠ ã“ã“ã‹ã‚‰--------------------------------------------*/
+//		//è¡¨é¢faceã®é¢ç©ã‚’è¨ˆç®—
 //		for(unsigned j= 0 ; j < 4; j++){
-//			if(tets[i].faces[j] < (int)nSurfaceFace){			///	ŠOŠk‚Ì–Ê
-//				///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
+//			if(tets[i].faces[j] < (int)nSurfaceFace){			///	å¤–æ®»ã®é¢
+//				///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
 //				faces[tets[i].faces[j]].area = CalcTriangleArea(faces[tets[i].faces[j]].vertices[0], faces[tets[i].faces[j]].vertices[1], faces[tets[i].faces[j]].vertices[2]);
 //			}
 //		}
-//		/*¬–ìŒ´’Ç‰Á‚±‚±‚Ü‚Å--------------------------------------------*/
+//		/*å°é‡åŸè¿½åŠ ã“ã“ã¾ã§--------------------------------------------*/
 //
 //		tets[i].volume = CalcTetrahedraVolume2(i);
 //
-//		//Šes—ñ‚ğì‚Á‚ÄAƒKƒEƒXƒUƒCƒfƒ‹‚ÅŒvZ‚·‚é‚½‚ß‚ÌŒW”‚ÌŠî–{‚ğì‚éBTimestep‚Ì“ü‚Á‚Ä‚¢‚é€‚ÍA‚±‚Ìƒ\[ƒX(SetDesc())‚Å‚ÍAÀŒ»‚Å‚«‚È‚¢‚±‚Æ‚ª•ª‚©‚Á‚½(NULL‚ª•Ô‚Á‚Ä‚­‚é)
-//		CreateMatkLocal(i);				///	Matk1 Matk2(XV‚ª•K—v‚Èê‡‚ª‚ ‚é)‚ğì‚é	//ifdefƒXƒCƒbƒ`‚Å‘S‘Ì„«s—ñ‚à(•\¦—p‚¾‚ª)¶¬‰Â”\
+//		//å„è¡Œåˆ—ã‚’ä½œã£ã¦ã€ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã®ä¿‚æ•°ã®åŸºæœ¬ã‚’ä½œã‚‹ã€‚Timestepã®å…¥ã£ã¦ã„ã‚‹é …ã¯ã€ã“ã®ã‚½ãƒ¼ã‚¹(SetDesc())ã§ã¯ã€å®Ÿç¾ã§ããªã„ã“ã¨ãŒåˆ†ã‹ã£ãŸ(NULLãŒè¿”ã£ã¦ãã‚‹)
+//		CreateMatkLocal(i);				///	Matk1 Matk2(æ›´æ–°ãŒå¿…è¦ãªå ´åˆãŒã‚ã‚‹)ã‚’ä½œã‚‹	//ifdefã‚¹ã‚¤ãƒƒãƒã§å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚‚(è¡¨ç¤ºç”¨ã ãŒ)ç”Ÿæˆå¯èƒ½
 //	}
-//	//’¸“_‚Ì•\–Ê–ÊÏ‚ğŒvZi¬–ìŒ´’Ç‰Áj
+//	//é ‚ç‚¹ã®è¡¨é¢é¢ç©ã‚’è¨ˆç®—ï¼ˆå°é‡åŸè¿½åŠ ï¼‰
 //	calcVerticesArea();
 //
-//	//ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+//	//ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 //	COUNT = 0;
 //
 //
@@ -4422,32 +4426,32 @@ void PHFemThermo::UpdateMatk_RadiantHeatToAir(){
 
 void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 
-	//•ûjF”M—¬‘©ƒxƒNƒgƒ‹ŒvZ‚Ì‚İ‚ğŠÜ‚ß‚éBi”M“`“±‚â”M—e—Ê‚Í‹¤’Ê‚È‚Ì‚Å‚±‚ÌŠÖ”‚É‚ÍŠÜ‚ß‚È‚¢j
+	//æ–¹é‡ï¼šç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«è¨ˆç®—ã®ã¿ã‚’å«ã‚ã‚‹ã€‚ï¼ˆç†±ä¼å°ã‚„ç†±å®¹é‡ã¯å…±é€šãªã®ã§ã“ã®é–¢æ•°ã«ã¯å«ã‚ãªã„ï¼‰
 
-	//”M“`“±—¦A–§“xA”ä”MA”M“`’B—¦@‚Ìƒpƒ‰ƒ[ƒ^[‚ğİ’èE‘ã“ü
-		//PHFemThermo‚Ìƒƒ“ƒo•Ï”‚Ì’l‚ğ‘ã“ü CADThermo‚æ‚èA0.574;//‹Ê‚Ë‚¬‚Ì’l//”M“`“±—¦[W/(‚EK)]@Cp = 1.96 * (Ndt);//‹Ê‚Ë‚¬‚Ì”ä”M[kJ/(kgEK) 1.96kJ/(kg K),i‹Ê‚Ë‚¬‚Ì–§“xjH•i‰Á”M‚Ì‰ÈŠwp64‚æ‚è970kg/m^3
-		//”M“`’B—¦‚Ì’PˆÊŒn@W/(m^2 K)Ë‚±‚ê‚ÍSI’PˆÊŒn‚È‚Ì‚©H@25‚Í˜_•¶(MEAT COOKING SIMULATION BY FINITE ELEMENTS)‚ÌƒI[ƒuƒ“‰Á”M‚ÌÀ‘ª’l
+	//ç†±ä¼å°ç‡ã€å¯†åº¦ã€æ¯”ç†±ã€ç†±ä¼é”ç‡ã€€ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’è¨­å®šãƒ»ä»£å…¥
+		//PHFemThermoã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å€¤ã‚’ä»£å…¥ CADThermoã‚ˆã‚Šã€0.574;//ç‰ã­ãã®å€¤//ç†±ä¼å°ç‡[W/(ï½ãƒ»K)]ã€€Cp = 1.96 * (Ndt);//ç‰ã­ãã®æ¯”ç†±[kJ/(kgãƒ»K) 1.96kJ/(kg K),ï¼ˆç‰ã­ãã®å¯†åº¦ï¼‰é£Ÿå“åŠ ç†±ã®ç§‘å­¦p64ã‚ˆã‚Š970kg/m^3
+		//ç†±ä¼é”ç‡ã®å˜ä½ç³»ã€€W/(m^2 K)â‡’ã“ã‚Œã¯SIå˜ä½ç³»ãªã®ã‹ï¼Ÿã€€25ã¯è«–æ–‡(MEAT COOKING SIMULATION BY FINITE ELEMENTS)ã®ã‚ªãƒ¼ãƒ–ãƒ³åŠ ç†±æ™‚ã®å®Ÿæ¸¬å€¤
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	//SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
-		//‚±‚ê‚çA•Ï”’l‚ÍŒã‚©‚çŒvZ‚Ì“r’†‚Å•ÏX‚Å‚«‚é‚æ‚¤‚ÈSetParam()ŠÖ”‚ğì‚Á‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚©‚ÈH
+	//SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:ç†±ä¼å°ç‡ ,roh:å¯†åº¦,	specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960 ,ã€€heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
+		//ã“ã‚Œã‚‰ã€å¤‰æ•°å€¤ã¯å¾Œã‹ã‚‰è¨ˆç®—ã®é€”ä¸­ã§å¤‰æ›´ã§ãã‚‹ã‚ˆã†ãªSetParam()é–¢æ•°ã‚’ä½œã£ã¦ãŠã„ãŸã»ã†ãŒã„ã„ã‹ãªï¼Ÿ
 
-	//.		”M—¬‘©‚Ìİ’è
-	//..	‰Šú‰»
+	//.		ç†±æµæŸã®è¨­å®š
+	//..	åˆæœŸåŒ–
 	//SetVtxHeatFluxAll(0.0);
 
-	//	CalcIHdqdt‚Ì‘O‚É•K—v
+	//	CalcIHdqdtã®å‰ã«å¿…è¦
 	//faces[i].fluxarea = 0.0;
 	
 
-	//1.ƒtƒ‰ƒCƒpƒ“ˆÊ’u‚ğæ‚Á‚Ä‚­‚é
-		//ih‰Á”M‰~ŠÂ’†S‚©‚ç‚Ì“¯S‰~ó‰Á”M—Ìˆæ‚ğŒvZ‚µAihdqdt‚É“–‚Ä‚Í‚ß‚éƒƒbƒVƒ…î•ñ‚ğ¶¬
-		//@if(ƒtƒ‰ƒCƒpƒ“‚ª“®‚¢‚½‚©)	“®‚¢‚Ä‚¢‚È‚¯‚ê‚ÎAvecf‚àA1step‘O‚Ì’l‚ğg‚¦‚é‚æ‚¤‚É‚µ‚Ä‚¨‚«‚½‚¢B
+	//1.ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ä½ç½®ã‚’å–ã£ã¦ãã‚‹
+		//ihåŠ ç†±å††ç’°ä¸­å¿ƒã‹ã‚‰ã®åŒå¿ƒå††çŠ¶åŠ ç†±é ˜åŸŸã‚’è¨ˆç®—ã—ã€ihdqdtã«å½“ã¦ã¯ã‚ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ã‚’ç”Ÿæˆ
+		//ã€€if(ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ãŒå‹•ã„ãŸã‹)	å‹•ã„ã¦ã„ãªã‘ã‚Œã°ã€vecfã‚‚ã€1stepå‰ã®å€¤ã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã—ã¦ãŠããŸã„ã€‚
 
 	
 
-	//2...	face–Ê‚Å‚Ì”M—¬‘©—Ê‚ğŒvZiƒtƒ‰ƒCƒpƒ“ˆÊ’u–”‚Íƒ|ƒCƒ“ƒ^‚ğˆø”‚É‘ã“üF–ˆ‰ñƒtƒ‰ƒCƒpƒ“‚ÌˆÊ’u‚ª•Ï‰»‚·‚é‚Ì‚ÅAƒtƒ‰ƒCƒpƒ“ˆÊ’u‚Ì•Ï‰»‚Ì“x‚É¶¬‚·‚éj
+	//2...	faceé¢ã§ã®ç†±æµæŸé‡ã‚’è¨ˆç®—ï¼ˆãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ä½ç½®åˆã¯ãƒã‚¤ãƒ³ã‚¿ã‚’å¼•æ•°ã«ä»£å…¥ï¼šæ¯å›ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã®ä½ç½®ãŒå¤‰åŒ–ã™ã‚‹ã®ã§ã€ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ä½ç½®ã®å¤‰åŒ–ã®åº¦ã«ç”Ÿæˆã™ã‚‹ï¼‰
 	if(heatingMODE == OFF){
-		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH‰Á”Ms—ñ‚ÌŒW”0‚Æ‚È‚é‚½‚ßAŒvZ‚³‚ê‚È‚¢
+		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IHåŠ ç†±è¡Œåˆ—ã®ä¿‚æ•°0ã¨ãªã‚‹ãŸã‚ã€è¨ˆç®—ã•ã‚Œãªã„
 	}
 	else if(heatingMODE == WEEK){	
 #ifdef TempDependHeat
@@ -4459,12 +4463,12 @@ void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 		//CalcIHdqdt_atleast_map(Vec2d(0.0, -0.005),weekPow_FULL,WEEK);
 		CalcIHdqdt_atleast_map(Vec2d(0.0425, -0.0425),weekPow_FULL,WEEK);
 	#else
-		CalcIHdqdt_atleast(inr_,outR_,weekPow_, WEEK);		//	API‰»Ï‚İ
+		CalcIHdqdt_atleast(inr_,outR_,weekPow_, WEEK);		//	APIåŒ–æ¸ˆã¿
 		CalcIHdqdt_add(inr_add,outR_add,weekPow_add, WEEK);
 		CalcIHdqdt_decrease(inr_decr,outR_decr,weekPow_decr, WEEK);
 	#endif
 
-	//>ŒÂ•Ê‚ÉŒÄ‚Ôd—l‚É•ÏX	//UpdateMatk_RadiantHeatToAir();				//	”M“`’B‹«ŠEğŒ‚Å‹ó‹C‚Ö‚Ì”M“`’B€‚¾‚¯XV‚·‚é
+	//>å€‹åˆ¥ã«å‘¼ã¶ä»•æ§˜ã«å¤‰æ›´	//UpdateMatk_RadiantHeatToAir();				//	ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã§ç©ºæ°—ã¸ã®ç†±ä¼é”é …ã ã‘æ›´æ–°ã™ã‚‹
 #endif
 	}	
 	else if(heatingMODE == MIDDLE){
@@ -4474,21 +4478,21 @@ void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 	else if(heatingMODE == HIGH){
 		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5, HIGH);		//
 	}
-	// GaussSeidelŒvZ‚·‚é
+	// GaussSeidelè¨ˆç®—ã™ã‚‹
 	doCalc = true;
 
-	//3.Še–Ê‚Å‚Ì”M—¬‘©—Ê‚©‚ç‘S‘Ì„«ƒxƒNƒgƒ‹‚ğì‚éB{F}‚É‘ã“ü
+	//3.å„é¢ã§ã®ç†±æµæŸé‡ã‹ã‚‰å…¨ä½“å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹ã€‚{F}ã«ä»£å…¥
 
 #if 1			// switch1
-	//UpdateVecF_frypan();		//	ŠÖ”‚ÌŠO‚ÉˆÚ“®2014.3.12
+	//UpdateVecF_frypan();		//	é–¢æ•°ã®å¤–ã«ç§»å‹•2014.3.12
 #endif
-	//%%	IH‰Á”M‚Ìƒ‚[ƒhØ‘Ö
-	//	ƒ‰ƒCƒ“ó‚É‰Á”M
-	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	’l‚ğ•Ï‚¦‚ÄÀŒ±	//*1e3@//*1e4 //5e3
-	//	‰~ŠÂó‚É‰Á”M
+	//%%	IHåŠ ç†±ã®ãƒ¢ãƒ¼ãƒ‰åˆ‡æ›¿
+	//	ãƒ©ã‚¤ãƒ³çŠ¶ã«åŠ ç†±
+	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	å€¤ã‚’å¤‰ãˆã¦å®Ÿé¨“	//*1e3ã€€//*1e4 //5e3
+	//	å††ç’°çŠ¶ã«åŠ ç†±
 
-	//	‚±‚ÌŒã‚ÅA”M—¬‘©ƒxƒNƒgƒ‹‚ğŒvZ‚·‚éŠÖ”‚ğŒÄ‚Ño‚·
-	///	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+	//	ã“ã®å¾Œã§ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°ã‚’å‘¼ã³å‡ºã™
+	///	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 	//SetHeatTransRatioToAllVertex();
 #if 0			//!switch1
 	InitVecFAlls();
@@ -4498,32 +4502,32 @@ void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 #endif
 
 #if 0
-	CreateVecF2surfaceAll();		//	CreateVecFAll(i);‚Ì‘ã‚í‚è
-	CreateVecF3surfaceAll();		//	CreateVecFAll(i);‚Ì‘ã‚í‚è
+	CreateVecF2surfaceAll();		//	CreateVecFAll(i);ã®ä»£ã‚ã‚Š
+	CreateVecF3surfaceAll();		//	CreateVecFAll(i);ã®ä»£ã‚ã‚Š
 #endif
 }
 
-//¬–ìŒ´’Ç‰Á‚±‚±‚©‚ç==========================================
-void PHFemThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE){////xÀ•WFxS~xE‚ÌŠÔ‚Ìß“_‚É”M—¬‘©‹«ŠEğŒ‚ğİ’è
+//å°é‡åŸè¿½åŠ ã“ã“ã‹ã‚‰==========================================
+void PHFemThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE){////xåº§æ¨™ï¼šxS~xEã®é–“ã®ç¯€ç‚¹ã«ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’è¨­å®š
 
-	//”M“`“±—¦A–§“xA”ä”MA”M“`’B—¦@‚Ìƒpƒ‰ƒ[ƒ^[‚ğİ’èE‘ã“ü
-		//PHFemThermo‚Ìƒƒ“ƒo•Ï”‚Ì’l‚ğ‘ã“ü CADThermo‚æ‚èA0.574;//‹Ê‚Ë‚¬‚Ì’l//”M“`“±—¦[W/(‚EK)]@Cp = 1.96 * (Ndt);//‹Ê‚Ë‚¬‚Ì”ä”M[kJ/(kgEK) 1.96kJ/(kg K),i‹Ê‚Ë‚¬‚Ì–§“xjH•i‰Á”M‚Ì‰ÈŠwp64‚æ‚è970kg/m^3
-		//”M“`’B—¦‚Ì’PˆÊŒn@W/(m^2 K)Ë‚±‚ê‚ÍSI’PˆÊŒn‚È‚Ì‚©H@25‚Í˜_•¶(MEAT COOKING SIMULATION BY FINITE ELEMENTS)‚ÌƒI[ƒuƒ“‰Á”M‚ÌÀ‘ª’l
+	//ç†±ä¼å°ç‡ã€å¯†åº¦ã€æ¯”ç†±ã€ç†±ä¼é”ç‡ã€€ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’è¨­å®šãƒ»ä»£å…¥
+		//PHFemThermoã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å€¤ã‚’ä»£å…¥ CADThermoã‚ˆã‚Šã€0.574;//ç‰ã­ãã®å€¤//ç†±ä¼å°ç‡[W/(ï½ãƒ»K)]ã€€Cp = 1.96 * (Ndt);//ç‰ã­ãã®æ¯”ç†±[kJ/(kgãƒ»K) 1.96kJ/(kg K),ï¼ˆç‰ã­ãã®å¯†åº¦ï¼‰é£Ÿå“åŠ ç†±ã®ç§‘å­¦p64ã‚ˆã‚Š970kg/m^3
+		//ç†±ä¼é”ç‡ã®å˜ä½ç³»ã€€W/(m^2 K)â‡’ã“ã‚Œã¯SIå˜ä½ç³»ãªã®ã‹ï¼Ÿã€€25ã¯è«–æ–‡(MEAT COOKING SIMULATION BY FINITE ELEMENTS)ã®ã‚ªãƒ¼ãƒ–ãƒ³åŠ ç†±æ™‚ã®å®Ÿæ¸¬å€¤
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	//SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
-		//‚±‚ê‚çA•Ï”’l‚ÍŒã‚©‚çŒvZ‚Ì“r’†‚Å•ÏX‚Å‚«‚é‚æ‚¤‚ÈSetParam()ŠÖ”‚ğì‚Á‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚©‚ÈH
+	//SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:ç†±ä¼å°ç‡ ,roh:å¯†åº¦,	specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960 ,ã€€heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
+		//ã“ã‚Œã‚‰ã€å¤‰æ•°å€¤ã¯å¾Œã‹ã‚‰è¨ˆç®—ã®é€”ä¸­ã§å¤‰æ›´ã§ãã‚‹ã‚ˆã†ãªSetParam()é–¢æ•°ã‚’ä½œã£ã¦ãŠã„ãŸã»ã†ãŒã„ã„ã‹ãªï¼Ÿ
 
-	//.		”M—¬‘©‚Ìİ’è
-	//..	‰Šú‰»
+	//.		ç†±æµæŸã®è¨­å®š
+	//..	åˆæœŸåŒ–
 	//SetVtxHeatFluxAll(0.0);
 
-	//1.ƒtƒ‰ƒCƒpƒ“ˆÊ’u‚ğæ‚Á‚Ä‚­‚é
-		//ih‰Á”M‰~ŠÂ’†S‚©‚ç‚Ì“¯S‰~ó‰Á”M—Ìˆæ‚ğŒvZ‚µAihdqdt‚É“–‚Ä‚Í‚ß‚éƒƒbƒVƒ…î•ñ‚ğ¶¬
-		//@if(ƒtƒ‰ƒCƒpƒ“‚ª“®‚¢‚½‚©)	“®‚¢‚Ä‚¢‚È‚¯‚ê‚ÎAvecf‚àA1step‘O‚Ì’l‚ğg‚¦‚é‚æ‚¤‚É‚µ‚Ä‚¨‚«‚½‚¢B
+	//1.ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ä½ç½®ã‚’å–ã£ã¦ãã‚‹
+		//ihåŠ ç†±å††ç’°ä¸­å¿ƒã‹ã‚‰ã®åŒå¿ƒå††çŠ¶åŠ ç†±é ˜åŸŸã‚’è¨ˆç®—ã—ã€ihdqdtã«å½“ã¦ã¯ã‚ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ã‚’ç”Ÿæˆ
+		//ã€€if(ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ãŒå‹•ã„ãŸã‹)	å‹•ã„ã¦ã„ãªã‘ã‚Œã°ã€vecfã‚‚ã€1stepå‰ã®å€¤ã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã—ã¦ãŠããŸã„ã€‚
 
-	//2...	face–Ê‚Å‚Ì”M—¬‘©—Ê‚ğŒvZiƒtƒ‰ƒCƒpƒ“ˆÊ’u–”‚Íƒ|ƒCƒ“ƒ^‚ğˆø”‚É‘ã“üF–ˆ‰ñƒtƒ‰ƒCƒpƒ“‚ÌˆÊ’u‚ª•Ï‰»‚·‚é‚Ì‚ÅAƒtƒ‰ƒCƒpƒ“ˆÊ’u‚Ì•Ï‰»‚Ì“x‚É¶¬‚·‚éj
+	//2...	faceé¢ã§ã®ç†±æµæŸé‡ã‚’è¨ˆç®—ï¼ˆãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ä½ç½®åˆã¯ãƒã‚¤ãƒ³ã‚¿ã‚’å¼•æ•°ã«ä»£å…¥ï¼šæ¯å›ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã®ä½ç½®ãŒå¤‰åŒ–ã™ã‚‹ã®ã§ã€ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ä½ç½®ã®å¤‰åŒ–ã®åº¦ã«ç”Ÿæˆã™ã‚‹ï¼‰
 	if(heatingMODE == OFF){
-		CalcIHdqdtband(xS,xE,0.0, OFF);		//	IH‰Á”Ms—ñ‚ÌŒW”0‚Æ‚È‚é‚½‚ßAŒvZ‚³‚ê‚È‚¢
+		CalcIHdqdtband(xS,xE,0.0, OFF);		//	IHåŠ ç†±è¡Œåˆ—ã®ä¿‚æ•°0ã¨ãªã‚‹ãŸã‚ã€è¨ˆç®—ã•ã‚Œãªã„
 	}
 	else if(heatingMODE == WEEK){	
 		CalcIHdqdtband(xS,xE,231.9 * 1e1, WEEK);		//
@@ -4535,18 +4539,18 @@ void PHFemThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE){///
 		CalcIHdqdtband(xS,xE,231.9 * 0.005 * 1e5, HIGH);		//
 	}
 
-	//3.Še–Ê‚Å‚Ì”M—¬‘©—Ê‚©‚ç‘S‘Ì„«ƒxƒNƒgƒ‹‚ğì‚éB{F}‚É‘ã“ü
+	//3.å„é¢ã§ã®ç†±æµæŸé‡ã‹ã‚‰å…¨ä½“å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹ã€‚{F}ã«ä»£å…¥
 
 #if 1			// switch1
 	UpdateVecF_frypan();
 #endif
-	//%%	IH‰Á”M‚Ìƒ‚[ƒhØ‘Ö
-	//	ƒ‰ƒCƒ“ó‚É‰Á”M
-	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	’l‚ğ•Ï‚¦‚ÄÀŒ±	//*1e3@//*1e4 //5e3
-	//	‰~ŠÂó‚É‰Á”M
+	//%%	IHåŠ ç†±ã®ãƒ¢ãƒ¼ãƒ‰åˆ‡æ›¿
+	//	ãƒ©ã‚¤ãƒ³çŠ¶ã«åŠ ç†±
+	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	å€¤ã‚’å¤‰ãˆã¦å®Ÿé¨“	//*1e3ã€€//*1e4 //5e3
+	//	å††ç’°çŠ¶ã«åŠ ç†±
 
-	//	‚±‚ÌŒã‚ÅA”M—¬‘©ƒxƒNƒgƒ‹‚ğŒvZ‚·‚éŠÖ”‚ğŒÄ‚Ño‚·
-	///	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+	//	ã“ã®å¾Œã§ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°ã‚’å‘¼ã³å‡ºã™
+	///	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 	//SetHeatTransRatioToAllVertex();
 #if 0			//!switch1
 	InitVecFAlls();
@@ -4556,15 +4560,15 @@ void PHFemThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE){///
 #endif
 
 #if 0
-	CreateVecF2surfaceAll();		//	CreateVecFAll(i);‚Ì‘ã‚í‚è
-	CreateVecF3surfaceAll();		//	CreateVecFAll(i);‚Ì‘ã‚í‚è
+	CreateVecF2surfaceAll();		//	CreateVecFAll(i);ã®ä»£ã‚ã‚Š
+	CreateVecF3surfaceAll();		//	CreateVecFAll(i);ã®ä»£ã‚ã‚Š
 #endif
 }
-//¬–ìŒ´’Ç‰Á‚±‚±‚Ü‚Å==========================================
+//å°é‡åŸè¿½åŠ ã“ã“ã¾ã§==========================================
 
 void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0){
-	// ƒfƒoƒbƒO‚Ì‚½‚ß@&&@g‚í‚ê‚Ä‚¢‚È‚©‚Á‚½‚Ì‚ÅAƒRƒƒ“ƒgƒAƒEƒg
-	DSTR << "‚±‚ÌŠÖ”‚ÍƒfƒoƒbƒO‚Ì‚½‚ßAƒRƒƒ“ƒgƒAƒEƒg‚µ‚Ä‚¢‚Ü‚·B—p‚¢‚éê‡‚É‚ÍAÀ‘•‚ğ—Ç‚­Œ©‚Ä•œŠˆ‚³‚¹‚Ä‚­‚¾‚³‚¢B" <<std::endl;
+	// ãƒ‡ãƒãƒƒã‚°ã®ãŸã‚ã€€&&ã€€ä½¿ã‚ã‚Œã¦ã„ãªã‹ã£ãŸã®ã§ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
+	DSTR << "ã“ã®é–¢æ•°ã¯ãƒ‡ãƒãƒƒã‚°ã®ãŸã‚ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã—ã¦ã„ã¾ã™ã€‚ç”¨ã„ã‚‹å ´åˆã«ã¯ã€å®Ÿè£…ã‚’è‰¯ãè¦‹ã¦å¾©æ´»ã•ã›ã¦ãã ã•ã„ã€‚" <<std::endl;
 	
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	PHFemThermoIf* phm = mesh->GetPHFemThermo();
@@ -4581,84 +4585,84 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 		faceVars[i].alphaUpdated = true;
 		faceVars[i].area = 0.0;
 		faceVars[i].heatTransRatio = 0.0;
-		faceVars[i].deformed = true;				//‰Šúó‘Ô‚ÍA•ÏŒ`Œã‚Æ‚·‚é
+		faceVars[i].deformed = true;				//åˆæœŸçŠ¶æ…‹ã¯ã€å¤‰å½¢å¾Œã¨ã™ã‚‹
 		for(unsigned j=0;j<4;++j){
 			faceVars[i].fluxarea[j] =0.0;
 		}
 		faceVars[i].map = INT_MAX;	//
 		//faces[i].thermalEmissivity =0.0;
 		//faces[i].thermalEmissivity_const =0.0;
-		//faces[i].heatflux.clear();				// ‰Šú‰»
-		//faces[i].heatflux[hum]‚Ì—ÌˆæŠm•ÛF”z—ñ‚Æ‚µ‚ÄA‚©Avector‚Æ‚µ‚Ä‚Ìpush_back‚©A‚Ç‚¿‚ç‚©‚ğs‚¤B”z—ñ‚È‚ç‚±‚±‚É‹LqB
-		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// ‰Á”Mƒ‚[ƒh‚Ì”‚¾‚¯AƒxƒNƒgƒ‹‚ğ¶¬
+		//faces[i].heatflux.clear();				// åˆæœŸåŒ–
+		//faces[i].heatflux[hum]ã®é ˜åŸŸç¢ºä¿ï¼šé…åˆ—ã¨ã—ã¦ã€ã‹ã€vectorã¨ã—ã¦ã®push_backã‹ã€ã©ã¡ã‚‰ã‹ã‚’è¡Œã†ã€‚é…åˆ—ãªã‚‰ã“ã“ã«è¨˜è¿°ã€‚
+		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// åŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã®æ•°ã ã‘ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”Ÿæˆ
 			for(unsigned j=0;j<4;++j){
 				faceVars[i].heatflux[mode][j] = 0.0;
 			}
 		}
 	}
 
-	////s—ñ‚Ì¬•ª”‚È‚Ç‚ğ‰Šú‰»
+	////è¡Œåˆ—ã®æˆåˆ†æ•°ãªã©ã‚’åˆæœŸåŒ–
 	bVecAll.resize(mesh->vertices.size(),1);
 	TVecAll.resize(mesh->vertices.size());
 	preTVecAll.resize(mesh->vertices.size());
 
-	////ß“_‰·“x‚Ì‰Šúİ’è(s—ñ‚ğì‚é‘O‚És‚¤)
-	//SetVerticesTempAll(0.0);			///	‰Šú‰·“x‚Ìİ’è
+	////ç¯€ç‚¹æ¸©åº¦ã®åˆæœŸè¨­å®š(è¡Œåˆ—ã‚’ä½œã‚‹å‰ã«è¡Œã†)
+	//SetVerticesTempAll(0.0);			///	åˆæœŸæ¸©åº¦ã®è¨­å®š
 
-	////üˆÍ—¬‘Ì‰·“x‚Ì‰Šú‰»(temp“x‚É‚·‚é)
+	////å‘¨å›²æµä½“æ¸©åº¦ã®åˆæœŸåŒ–(tempåº¦ã«ã™ã‚‹)
 	//InitTcAll(0.0);
 
-	////dmnN ŸŒ³‚Ì‰·“x‚Ìci—ñjƒxƒNƒgƒ‹
+	////dmnN æ¬¡å…ƒã®æ¸©åº¦ã®ç¸¦ï¼ˆåˆ—ï¼‰ãƒ™ã‚¯ãƒˆãƒ«
 	CreateTempVertex();
 
-	////”M“`“±—¦A–§“xA”ä”MA”M“`’B—¦@‚Ìƒpƒ‰ƒ[ƒ^[‚ğİ’èE‘ã“ü
-	//	//PHFemThermo‚Ìƒƒ“ƒo•Ï”‚Ì’l‚ğ‘ã“ü CADThermo‚æ‚èA0.574;//‹Ê‚Ë‚¬‚Ì’l//”M“`“±—¦[W/(‚EK)]@Cp = 1.96 * (Ndt);//‹Ê‚Ë‚¬‚Ì”ä”M[kJ/(kgEK) 1.96kJ/(kg K),i‹Ê‚Ë‚¬‚Ì–§“xjH•i‰Á”M‚Ì‰ÈŠwp64‚æ‚è970kg/m^3
-	//	//”M“`’B—¦‚Ì’PˆÊŒn@W/(m^2 K)Ë‚±‚ê‚ÍSI’PˆÊŒn‚È‚Ì‚©H@25‚Í˜_•¶(MEAT COOKING SIMULATION BY FINITE ELEMENTS)‚ÌƒI[ƒuƒ“‰Á”M‚ÌÀ‘ª’l
-	////. ”M“`’B‚·‚é SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
-	////. ”M“`’B‚µ‚È‚¢
-	SetInitThermoConductionParam(thConduct0,roh0,specificHeat0,0);		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
+	////ç†±ä¼å°ç‡ã€å¯†åº¦ã€æ¯”ç†±ã€ç†±ä¼é”ç‡ã€€ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’è¨­å®šãƒ»ä»£å…¥
+	//	//PHFemThermoã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å€¤ã‚’ä»£å…¥ CADThermoã‚ˆã‚Šã€0.574;//ç‰ã­ãã®å€¤//ç†±ä¼å°ç‡[W/(ï½ãƒ»K)]ã€€Cp = 1.96 * (Ndt);//ç‰ã­ãã®æ¯”ç†±[kJ/(kgãƒ»K) 1.96kJ/(kg K),ï¼ˆç‰ã­ãã®å¯†åº¦ï¼‰é£Ÿå“åŠ ç†±ã®ç§‘å­¦p64ã‚ˆã‚Š970kg/m^3
+	//	//ç†±ä¼é”ç‡ã®å˜ä½ç³»ã€€W/(m^2 K)â‡’ã“ã‚Œã¯SIå˜ä½ç³»ãªã®ã‹ï¼Ÿã€€25ã¯è«–æ–‡(MEAT COOKING SIMULATION BY FINITE ELEMENTS)ã®ã‚ªãƒ¼ãƒ–ãƒ³åŠ ç†±æ™‚ã®å®Ÿæ¸¬å€¤
+	////. ç†±ä¼é”ã™ã‚‹ SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:ç†±ä¼å°ç‡ ,roh:å¯†åº¦,	specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960 ,ã€€heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
+	////. ç†±ä¼é”ã—ãªã„
+	SetInitThermoConductionParam(thConduct0,roh0,specificHeat0,0);		// ç†±ä¼é”ç‡=0;ã«ã—ã¦ã„ã‚‹w
 	//
-	////> ”M—¬‘©‚Ì‰Šú‰»
-	////SetVtxHeatFluxAll(0.0);			// ’¸“_‚Ì”M—¬‘©‚Ì‰Šú‰»
+	////> ç†±æµæŸã®åˆæœŸåŒ–
+	////SetVtxHeatFluxAll(0.0);			// é ‚ç‚¹ã®ç†±æµæŸã®åˆæœŸåŒ–
 
-	////>	”M•úË—¦‚Ìİ’è
-	SetThermalEmissivityToVerticesAll(ems,ems_const);				///	b’è’l0.0‚Å‰Šú‰»	F”M•úË‚Í‚µ‚È‚¢‚—
+	////>	ç†±æ”¾å°„ç‡ã®è¨­å®š
+	SetThermalEmissivityToVerticesAll(ems,ems_const);				///	æš«å®šå€¤0.0ã§åˆæœŸåŒ–	ï¼šç†±æ”¾å°„ã¯ã—ãªã„ï½—
 
-	////> IH‰Á”M‚·‚éface‚ğ‚ ‚é’ö“x(•\–Êface && ‰º’ê–Ê)i‚éAŠÖŒW‚µ‚»‚¤‚Èfaceß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚µAface[].mayIHheated‚ğ”»’è
+	////> IHåŠ ç†±ã™ã‚‹faceã‚’ã‚ã‚‹ç¨‹åº¦(è¡¨é¢face && ä¸‹åº•é¢)çµã‚‹ã€é–¢ä¿‚ã—ãã†ãªfaceç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã—ã€face[].mayIHheatedã‚’åˆ¤å®š
 	//CalcVtxDisFromOrigin();
 	////CalcVtxDisFromVertex(0.0,-1.2);
-	////>	IH‚©‚ç‚Ì’PˆÊŠÔ“–‚½‚è‚Ì‰Á”M”M—Ê	//’PˆÊŠÔ“–‚½‚è‚Ì‘‰Á”M”M—Ê	231.9; //>	J/sec
+	////>	IHã‹ã‚‰ã®å˜ä½æ™‚é–“å½“ãŸã‚Šã®åŠ ç†±ç†±é‡	//å˜ä½æ™‚é–“å½“ãŸã‚Šã®ç·åŠ ç†±ç†±é‡	231.9; //>	J/sec
 	//
-	////	‚±‚ÌŒã‚ÅA”M—¬‘©ƒxƒNƒgƒ‹‚ğŒvZ‚·‚éŠÖ”‚ğŒÄ‚Ño‚·
-	InitCreateMatC();					///	CreateMatC‚Ì‰Šú‰»
-	InitVecFAlls();					///	VecFAll—Ş‚Ì‰Šú‰»
-	InitCreateMatk();					///	CreateMatK‚Ì‰Šú‰»
+	////	ã“ã®å¾Œã§ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°ã‚’å‘¼ã³å‡ºã™
+	InitCreateMatC();					///	CreateMatCã®åˆæœŸåŒ–
+	InitVecFAlls();					///	VecFAllé¡ã®åˆæœŸåŒ–
+	InitCreateMatk();					///	CreateMatKã®åˆæœŸåŒ–
 
-	/////	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+	/////	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 	SetHeatTransRatioToAllVertex();
 	for(unsigned i=0; i < mesh->tets.size(); i++){
 
-		/*¬–ìŒ´’Ç‰Á‚±‚±‚©‚ç--------------------------------------------*/
-		//•\–Êface‚Ì–ÊÏ‚ğŒvZ
+		/*å°é‡åŸè¿½åŠ ã“ã“ã‹ã‚‰--------------------------------------------*/
+		//è¡¨é¢faceã®é¢ç©ã‚’è¨ˆç®—
 		for(unsigned j= 0 ; j < 4; j++){
-			if(mesh->tets[i].faceIDs[j] < (int)mesh->nSurfaceFace){			///	ŠOŠk‚Ì–Ê
-				///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
+			if(mesh->tets[i].faceIDs[j] < (int)mesh->nSurfaceFace){			///	å¤–æ®»ã®é¢
+				///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
 				faceVars[mesh->tets[i].faceIDs[j]].area = CalcTriangleArea(mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[0], mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[1], mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[2]);
 			}
 		}
-		/*¬–ìŒ´’Ç‰Á‚±‚±‚Ü‚Å--------------------------------------------*/
+		/*å°é‡åŸè¿½åŠ ã“ã“ã¾ã§--------------------------------------------*/
 
 		tetVars[i].volume = CalcTetrahedraVolume2(i);
-		//Šes—ñ‚ğì‚Á‚ÄAƒKƒEƒXƒUƒCƒfƒ‹‚ÅŒvZ‚·‚é‚½‚ß‚ÌŒW”‚ÌŠî–{‚ğì‚éBTimestep‚Ì“ü‚Á‚Ä‚¢‚é€‚ÍA‚±‚Ìƒ\[ƒX(SetDesc())‚Å‚ÍAÀŒ»‚Å‚«‚È‚¢‚±‚Æ‚ª•ª‚©‚Á‚½(NULL‚ª•Ô‚Á‚Ä‚­‚é)
-		CreateMatkLocal(i);				///	Matk1 Matk2(XV‚ª•K—v‚Èê‡‚ª‚ ‚é)‚ğì‚é	//ifdefƒXƒCƒbƒ`‚Å‘S‘Ì„«s—ñ‚à(•\¦—p‚¾‚ª)¶¬‰Â”\
+		//å„è¡Œåˆ—ã‚’ä½œã£ã¦ã€ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã®ä¿‚æ•°ã®åŸºæœ¬ã‚’ä½œã‚‹ã€‚Timestepã®å…¥ã£ã¦ã„ã‚‹é …ã¯ã€ã“ã®ã‚½ãƒ¼ã‚¹(SetDesc())ã§ã¯ã€å®Ÿç¾ã§ããªã„ã“ã¨ãŒåˆ†ã‹ã£ãŸ(NULLãŒè¿”ã£ã¦ãã‚‹)
+		CreateMatkLocal(i);				///	Matk1 Matk2(æ›´æ–°ãŒå¿…è¦ãªå ´åˆãŒã‚ã‚‹)ã‚’ä½œã‚‹	//ifdefã‚¹ã‚¤ãƒƒãƒã§å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚‚(è¡¨ç¤ºç”¨ã ãŒ)ç”Ÿæˆå¯èƒ½
 		CreatedMatCAll(i);
 		CreateVecFAll(i);
 	}
 	//
-	//// ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+	//// ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 	////Ndt =0;
 
-	////…•ªö”­ü‚è‚Ì‰Šú‰»
+	////æ°´åˆ†è’¸ç™ºå‘¨ã‚Šã®åˆæœŸåŒ–
 	//InitMoist();
 
 	//SetVerticesTempAll(0.0);
@@ -4674,62 +4678,62 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 	//	faces[i].alphaUpdated = true;
 	//	faces[i].area = 0.0;
 	//	faces[i].heatTransRatio = 0.0;
-	//	faces[i].deformed = true;				//‰Šúó‘Ô‚ÍA•ÏŒ`Œã‚Æ‚·‚é
+	//	faces[i].deformed = true;				//åˆæœŸçŠ¶æ…‹ã¯ã€å¤‰å½¢å¾Œã¨ã™ã‚‹
 	//	faces[i].fluxarea =0.0;
-	//	for(unsigned j =0; j < HIGH +1 ; j++){			// ‰Á”Mƒ‚[ƒh‚Ì”‚¾‚¯AƒxƒNƒgƒ‹‚ğ¶¬
+	//	for(unsigned j =0; j < HIGH +1 ; j++){			// åŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã®æ•°ã ã‘ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”Ÿæˆ
 	//		faces[i].heatflux[j] = 0.0;
 	//	}
 	//}
 
-	////s—ñ‚Ì¬•ª”‚È‚Ç‚ğ‰Šú‰»
+	////è¡Œåˆ—ã®æˆåˆ†æ•°ãªã©ã‚’åˆæœŸåŒ–
 	//bVecAll.resize(vertices.size(),1);
 
-	////ß“_‰·“x‚Ì‰Šúİ’è(s—ñ‚ğì‚é‘O‚És‚¤)
-	//SetVerticesTempAll(0.0);			///	‰Šú‰·“x‚Ìİ’è
+	////ç¯€ç‚¹æ¸©åº¦ã®åˆæœŸè¨­å®š(è¡Œåˆ—ã‚’ä½œã‚‹å‰ã«è¡Œã†)
+	//SetVerticesTempAll(0.0);			///	åˆæœŸæ¸©åº¦ã®è¨­å®š
 
-	////üˆÍ—¬‘Ì‰·“x‚Ì‰Šú‰»(temp“x‚É‚·‚é)
+	////å‘¨å›²æµä½“æ¸©åº¦ã®åˆæœŸåŒ–(tempåº¦ã«ã™ã‚‹)
 	//InitTcAll(0.0);
 
-	////dmnN ŸŒ³‚Ì‰·“x‚Ìci—ñjƒxƒNƒgƒ‹
+	////dmnN æ¬¡å…ƒã®æ¸©åº¦ã®ç¸¦ï¼ˆåˆ—ï¼‰ãƒ™ã‚¯ãƒˆãƒ«
 	//CreateTempVertex();
 
-	////”M“`“±—¦A–§“xA”ä”MA”M“`’B—¦@‚Ìƒpƒ‰ƒ[ƒ^[‚ğİ’èE‘ã“ü
-	//	//PHFemThermo‚Ìƒƒ“ƒo•Ï”‚Ì’l‚ğ‘ã“ü CADThermo‚æ‚èA0.574;//‹Ê‚Ë‚¬‚Ì’l//”M“`“±—¦[W/(‚EK)]@Cp = 1.96 * (Ndt);//‹Ê‚Ë‚¬‚Ì”ä”M[kJ/(kgEK) 1.96kJ/(kg K),i‹Ê‚Ë‚¬‚Ì–§“xjH•i‰Á”M‚Ì‰ÈŠwp64‚æ‚è970kg/m^3
-	//	//”M“`’B—¦‚Ì’PˆÊŒn@W/(m^2 K)Ë‚±‚ê‚ÍSI’PˆÊŒn‚È‚Ì‚©H@25‚Í˜_•¶(MEAT COOKING SIMULATION BY FINITE ELEMENTS)‚ÌƒI[ƒuƒ“‰Á”M‚ÌÀ‘ª’l
-	////. ”M“`’B‚·‚é SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
-	////. ”M“`’B‚µ‚È‚¢
-	//SetInitThermoConductionParam(thConduct0,roh0,specificHeat0,0);		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
+	////ç†±ä¼å°ç‡ã€å¯†åº¦ã€æ¯”ç†±ã€ç†±ä¼é”ç‡ã€€ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’è¨­å®šãƒ»ä»£å…¥
+	//	//PHFemThermoã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å€¤ã‚’ä»£å…¥ CADThermoã‚ˆã‚Šã€0.574;//ç‰ã­ãã®å€¤//ç†±ä¼å°ç‡[W/(ï½ãƒ»K)]ã€€Cp = 1.96 * (Ndt);//ç‰ã­ãã®æ¯”ç†±[kJ/(kgãƒ»K) 1.96kJ/(kg K),ï¼ˆç‰ã­ãã®å¯†åº¦ï¼‰é£Ÿå“åŠ ç†±ã®ç§‘å­¦p64ã‚ˆã‚Š970kg/m^3
+	//	//ç†±ä¼é”ç‡ã®å˜ä½ç³»ã€€W/(m^2 K)â‡’ã“ã‚Œã¯SIå˜ä½ç³»ãªã®ã‹ï¼Ÿã€€25ã¯è«–æ–‡(MEAT COOKING SIMULATION BY FINITE ELEMENTS)ã®ã‚ªãƒ¼ãƒ–ãƒ³åŠ ç†±æ™‚ã®å®Ÿæ¸¬å€¤
+	////. ç†±ä¼é”ã™ã‚‹ SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:ç†±ä¼å°ç‡ ,roh:å¯†åº¦,	specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960 ,ã€€heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
+	////. ç†±ä¼é”ã—ãªã„
+	//SetInitThermoConductionParam(thConduct0,roh0,specificHeat0,0);		// ç†±ä¼é”ç‡=0;ã«ã—ã¦ã„ã‚‹w
 	//
-	////> ”M—¬‘©‚Ì‰Šú‰»
-	////SetVtxHeatFluxAll(0.0);			// ’¸“_‚Ì”M—¬‘©‚Ì‰Šú‰»
+	////> ç†±æµæŸã®åˆæœŸåŒ–
+	////SetVtxHeatFluxAll(0.0);			// é ‚ç‚¹ã®ç†±æµæŸã®åˆæœŸåŒ–
 
-	////>	”M•úË—¦‚Ìİ’è
-	//SetThermalEmissivityToVerticesAll(0.0);				///	b’è’l0.0‚Å‰Šú‰»	F”M•úË‚Í‚µ‚È‚¢‚—
+	////>	ç†±æ”¾å°„ç‡ã®è¨­å®š
+	//SetThermalEmissivityToVerticesAll(0.0);				///	æš«å®šå€¤0.0ã§åˆæœŸåŒ–	ï¼šç†±æ”¾å°„ã¯ã—ãªã„ï½—
 
-	////> IH‰Á”M‚·‚éface‚ğ‚ ‚é’ö“x(•\–Êface && ‰º’ê–Ê)i‚éAŠÖŒW‚µ‚»‚¤‚Èfaceß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚µAface[].mayIHheated‚ğ”»’è
+	////> IHåŠ ç†±ã™ã‚‹faceã‚’ã‚ã‚‹ç¨‹åº¦(è¡¨é¢face && ä¸‹åº•é¢)çµã‚‹ã€é–¢ä¿‚ã—ãã†ãªfaceç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã—ã€face[].mayIHheatedã‚’åˆ¤å®š
 	//CalcVtxDisFromOrigin();
 	////CalcVtxDisFromVertex(0.0,-1.2);
-	////>	IH‚©‚ç‚Ì’PˆÊŠÔ“–‚½‚è‚Ì‰Á”M”M—Ê	//’PˆÊŠÔ“–‚½‚è‚Ì‘‰Á”M”M—Ê	231.9; //>	J/sec
+	////>	IHã‹ã‚‰ã®å˜ä½æ™‚é–“å½“ãŸã‚Šã®åŠ ç†±ç†±é‡	//å˜ä½æ™‚é–“å½“ãŸã‚Šã®ç·åŠ ç†±ç†±é‡	231.9; //>	J/sec
 	//
-	////	‚±‚ÌŒã‚ÅA”M—¬‘©ƒxƒNƒgƒ‹‚ğŒvZ‚·‚éŠÖ”‚ğŒÄ‚Ño‚·
-	//InitCreateMatC();					///	CreateMatC‚Ì‰Šú‰»
-	//InitVecFAlls();					///	VecFAll—Ş‚Ì‰Šú‰»
-	//InitCreateMatk();					///	CreateMatK‚Ì‰Šú‰»
+	////	ã“ã®å¾Œã§ã€ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°ã‚’å‘¼ã³å‡ºã™
+	//InitCreateMatC();					///	CreateMatCã®åˆæœŸåŒ–
+	//InitVecFAlls();					///	VecFAllé¡ã®åˆæœŸåŒ–
+	//InitCreateMatk();					///	CreateMatKã®åˆæœŸåŒ–
 
-	/////	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+	/////	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 	//SetHeatTransRatioToAllVertex();
 	//for(unsigned i=0; i < this->tets.size(); i++){
 	//	tets[i].volume = CalcTetrahedraVolume2(i);
-	//	//Šes—ñ‚ğì‚Á‚ÄAƒKƒEƒXƒUƒCƒfƒ‹‚ÅŒvZ‚·‚é‚½‚ß‚ÌŒW”‚ÌŠî–{‚ğì‚éBTimestep‚Ì“ü‚Á‚Ä‚¢‚é€‚ÍA‚±‚Ìƒ\[ƒX(SetDesc())‚Å‚ÍAÀŒ»‚Å‚«‚È‚¢‚±‚Æ‚ª•ª‚©‚Á‚½(NULL‚ª•Ô‚Á‚Ä‚­‚é)
-	//	CreateMatkLocal(i);				///	Matk1 Matk2(XV‚ª•K—v‚Èê‡‚ª‚ ‚é)‚ğì‚é	//ifdefƒXƒCƒbƒ`‚Å‘S‘Ì„«s—ñ‚à(•\¦—p‚¾‚ª)¶¬‰Â”\
+	//	//å„è¡Œåˆ—ã‚’ä½œã£ã¦ã€ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã§è¨ˆç®—ã™ã‚‹ãŸã‚ã®ä¿‚æ•°ã®åŸºæœ¬ã‚’ä½œã‚‹ã€‚Timestepã®å…¥ã£ã¦ã„ã‚‹é …ã¯ã€ã“ã®ã‚½ãƒ¼ã‚¹(SetDesc())ã§ã¯ã€å®Ÿç¾ã§ããªã„ã“ã¨ãŒåˆ†ã‹ã£ãŸ(NULLãŒè¿”ã£ã¦ãã‚‹)
+	//	CreateMatkLocal(i);				///	Matk1 Matk2(æ›´æ–°ãŒå¿…è¦ãªå ´åˆãŒã‚ã‚‹)ã‚’ä½œã‚‹	//ifdefã‚¹ã‚¤ãƒƒãƒã§å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚‚(è¡¨ç¤ºç”¨ã ãŒ)ç”Ÿæˆå¯èƒ½
 	//	CreatedMatCAll(i);
 	//	CreateVecFAll(i);
 	//}
 	//
-	//// ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+	//// ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 	////Ndt =0;
 
-	////…•ªö”­ü‚è‚Ì‰Šú‰»
+	////æ°´åˆ†è’¸ç™ºå‘¨ã‚Šã®åˆæœŸåŒ–
 	//InitMoist();
 
 	//SetVerticesTempAll(0.0);
@@ -4738,9 +4742,9 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 
 //void PHFemThermo::ReProduceMat_Vec_ThermalRadiation() {	
 //
-//	//%%%	‰Šú‰»—Ş		%%%//
+//	//%%%	åˆæœŸåŒ–é¡		%%%//
 //
-//	//Šeíƒƒ“ƒo•Ï”‚Ì‰Šú‰»ËƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‚Å‚«‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à‚µ‚ê‚È‚¢B
+//	//å„ç¨®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–â‡’ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ã§ããŸã»ã†ãŒã„ã„ã‹ã‚‚ã—ã‚Œãªã„ã€‚
 //	///	Edges
 //	for(unsigned i =0; i < edges.size();i++){
 //		edges[i].c = 0.0;	
@@ -4752,65 +4756,65 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 //		faces[i].alphaUpdated = true;
 //		faces[i].area = 0.0;
 //		faces[i].heatTransRatio = 0.0;
-//		faces[i].deformed = true;				//‰Šúó‘Ô‚ÍA•ÏŒ`Œã‚Æ‚·‚é
+//		faces[i].deformed = true;				//åˆæœŸçŠ¶æ…‹ã¯ã€å¤‰å½¢å¾Œã¨ã™ã‚‹
 //		faces[i].fluxarea =0.0;
 //		faces[i].thermalEmissivity =0.0;
-//		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// ‰Á”Mƒ‚[ƒh‚Ì”‚¾‚¯AƒxƒNƒgƒ‹‚ğ¶¬
+//		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// åŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã®æ•°ã ã‘ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”Ÿæˆ
 //			faces[i].heatflux[mode] = 0.0;
 //		}
 //	}
 //
-//	//s—ñ‚Ì¬•ª”‚È‚Ç‚ğ‰Šú‰»
+//	//è¡Œåˆ—ã®æˆåˆ†æ•°ãªã©ã‚’åˆæœŸåŒ–
 //	bVecAll.resize(vertices.size(),1);	
 //	TVecAll.resize(vertices.size());
 //
 //	SetVerticesTempAll(jout);
 //
-//	//üˆÍ‚Ö‚Ì”M“`’B‰·“x‚Ì‰Šú‰»(temp“x‚É‚·‚é)@‚@”MçtË
+//	//å‘¨å›²ã¸ã®ç†±ä¼é”æ¸©åº¦ã®åˆæœŸåŒ–(tempåº¦ã«ã™ã‚‹)ã€€â‰ ã€€ç†±è¼»å°„
 //	InitTcAll(temp_c);
-//	//>	”M•úËŠÖŒW	LM SS
+//	//>	ç†±æ”¾å°„é–¢ä¿‚	LM SS
 //	InitToutAll(temp_out);
-//	//SetThermalEmissivityToVerticesAll(radiantHeat);				///	b’è’l0.0‚Å‰Šú‰»	F”M•úË‚Í‚µ‚È‚¢‚—	
+//	//SetThermalEmissivityToVerticesAll(radiantHeat);				///	æš«å®šå€¤0.0ã§åˆæœŸåŒ–	ï¼šç†±æ”¾å°„ã¯ã—ãªã„ï½—	
 //	SetThermalEmissivityToVerticesAll(ems);	
 //
-//	//vertices.temp‚ğ‚·‚×‚ÄATVecAll‚Ö‘ã“ü‚·‚é
+//	//vertices.tempã‚’ã™ã¹ã¦ã€TVecAllã¸ä»£å…¥ã™ã‚‹
 //	CreateTempVertex();
 //
 //	DSTR << "thConduct:" << thConduct << std::endl;
 //	
-//	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));		// “S”Â‚ÌŒ´“_À•W‚ğˆø”‚É“ü‚êA‘ÎÌ«‚ª‡‚¤‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
-//	InitCreateMatC();					///	CreateMatC‚Ì‰Šú‰»
-//	InitVecFAlls();					///	VecFAll—Ş‚Ì‰Šú‰»
-//	InitCreateMatk();					///	CreateMatK‚Ì‰Šú‰»
+//	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));		// é‰„æ¿ã®åŸç‚¹åº§æ¨™ã‚’å¼•æ•°ã«å…¥ã‚Œã€å¯¾ç§°æ€§ãŒåˆã†ã‚ˆã†ã«ãªã£ã¦ã„ã‚‹ã€‚
+//	InitCreateMatC();					///	CreateMatCã®åˆæœŸåŒ–
+//	InitVecFAlls();					///	VecFAllé¡ã®åˆæœŸåŒ–
+//	InitCreateMatk();					///	CreateMatKã®åˆæœŸåŒ–
 //
 //	keisuInv.resize(vertices.size(),vertices.size());
 //	keisuInv.clear();
 //
-//	///	”M“`’B—¦‚ğŠeß“_‚ÉŠi”[
+//	///	ç†±ä¼é”ç‡ã‚’å„ç¯€ç‚¹ã«æ ¼ç´
 //	SetHeatTransRatioToAllVertex();
 //	for(unsigned i=0; i < this->tets.size(); i++){
 //		tets[i].volume = CalcTetrahedraVolume2(i);
-//		CreateMatkLocal(i);				///	Matk1 Matk2(XV‚ª•K—v‚Èê‡‚ª‚ ‚é)‚ğì‚é	//ifdefƒXƒCƒbƒ`‚Å‘S‘Ì„«s—ñ‚à(•\¦—p‚¾‚ª)¶¬‰Â”\
+//		CreateMatkLocal(i);				///	Matk1 Matk2(æ›´æ–°ãŒå¿…è¦ãªå ´åˆãŒã‚ã‚‹)ã‚’ä½œã‚‹	//ifdefã‚¹ã‚¤ãƒƒãƒã§å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚‚(è¡¨ç¤ºç”¨ã ãŒ)ç”Ÿæˆå¯èƒ½
 //		CreatedMatCAll(i);
 //		CreateVecFAll(i);
 //	}
 //#if 0
 //
-//	//	’¸“_‚P‚Ì’S“–‘ÌÏ‚É‘Î‚µA”M—Ê‚ğ‰Á‚¦‚é‚½‚ß‚ÉA’S“–‘ÌÏŠ·Z‚Å”M—Ê‚ğ’¸“_‚Ì‰·“x‚Æ‚µ‚Ä—^‚¦‚éB{F}‚ğg‚í‚È‚¢‚Ì‚ÅA”M—¬‘©‚ğg‚í‚È‚¢B
+//	//	é ‚ç‚¹ï¼‘ã®æ‹…å½“ä½“ç©ã«å¯¾ã—ã€ç†±é‡ã‚’åŠ ãˆã‚‹ãŸã‚ã«ã€æ‹…å½“ä½“ç©æ›ç®—ã§ç†±é‡ã‚’é ‚ç‚¹ã®æ¸©åº¦ã¨ã—ã¦ä¸ãˆã‚‹ã€‚{F}ã‚’ä½¿ã‚ãªã„ã®ã§ã€ç†±æµæŸã‚’ä½¿ã‚ãªã„ã€‚
 //	double rcv=0.0;
 //	for(unsigned i=0;i<vertices[0].tets.size();i++){
 //		rcv += tets[vertices[0].tets[i]].volume * RHO * SPECIFICHEAT * 5 / 20; 
 //	}
-//	double kuwae =1.58;	//	‰Á‚¦‚é”M—Ê
+//	double kuwae =1.58;	//	åŠ ãˆã‚‹ç†±é‡
 //	//vertices[0].temp = kuwae / rcv;
 //	SetVertexTemp(0,kuwae / rcv);
 //#endif
-//	//‚±‚Ìtemp‚ğTVecAll‚Éİ’è
-//	//C,K‚¾‚¯‚ÌŒvZ‚ğ‚³‚¹‚Ä—lq‚ğŒ©‚é
+//	//ã“ã®tempã‚’TVecAllã«è¨­å®š
+//	//C,Kã ã‘ã®è¨ˆç®—ã‚’ã•ã›ã¦æ§˜å­ã‚’è¦‹ã‚‹
 //
 //
 //	int hogeshidebug =0;
-//	//	ß“_‰·“x„ˆÚ‚Ì‘‚«o‚µ
+//	//	ç¯€ç‚¹æ¸©åº¦æ¨ç§»ã®æ›¸ãå‡ºã—
 ////	templog.open("templog.csv");
 //
 //	//matCAllout.open("matCAllout.txt"); 
@@ -4824,7 +4828,7 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 //	//matCAllout.open("matCAll-1out.txt");
 //	//matCAllout << matCAll.inv() << std::endl;
 //	//matCAllout.close();
-//	////scilab‚ğŒÄ‚Î‚È‚¢‚ÅASPR‚Ì‹@”\‚ÅAC.inv() K ‚ğ‹‚ß‚é
+//	////scilabã‚’å‘¼ã°ãªã„ã§ã€SPRã®æ©Ÿèƒ½ã§ã€C.inv() K ã‚’æ±‚ã‚ã‚‹
 //	//matCAllout.open("matCAll.inv()xmatKAll.txt");
 //	//matCAllout << matCAll.inv() * matKAll << std::endl; 
 //	//matCAllout.close();
@@ -4841,35 +4845,35 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 //	//	}
 //	//	rowval.push_back(tempval);
 //	//}
-//	//matCAllout.open("matCAll.inv()xmatKAll‚ÌŠe—ñ‚Ì˜a.txt");
+//	//matCAllout.open("matCAll.inv()xmatKAllã®å„åˆ—ã®å’Œ.txt");
 //	//for(unsigned i=0;i<vertices.size();i++){
 //	//	matCAllout << rowval[i] <<std::endl;
 //	//}
 //	//matCAllout.close();
 //
-//	//ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+//	//ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 //	COUNT = 0;
 //
-//	//‰·“x•Ï‰»o—Í
+//	//æ¸©åº¦å¤‰åŒ–å‡ºåŠ›
 //	checkTVecAllout.open("checkTVecAllout.csv");
-//	checkTVecAllout <<"ŠÔ" << COUNT<<", ";
+//	checkTVecAllout <<"æ™‚é–“" << COUNT<<", ";
 //	for(unsigned i=0; i < vertices.size();i++){
 //		if(i != vertices.size() -1){
-//			checkTVecAllout << "’¸“_" << i << ", ";	
+//			checkTVecAllout << "é ‚ç‚¹" << i << ", ";	
 //		}
 //		else{
-//			checkTVecAllout << "’¸“_" << i << std::endl;
+//			checkTVecAllout << "é ‚ç‚¹" << i << std::endl;
 //		}
 //	}
 //	FEMLOG.open("femLog.csv");
 //
-//	//	CPS‚ÌŒo•Ï‰»‚ğ‘‚«o‚·
+//	//	CPSã®çµŒæ™‚å¤‰åŒ–ã‚’æ›¸ãå‡ºã™
 //	//cpslog.open("cpslog.csv");
 //
-//	// ƒJƒEƒ“ƒg‚Ì‰Šú‰»
+//	// ã‚«ã‚¦ãƒ³ãƒˆã®åˆæœŸåŒ–
 //	Ndt =0;
 //
-//	//…•ªö”­ü‚è‚Ì‰Šú‰»
+//	//æ°´åˆ†è’¸ç™ºå‘¨ã‚Šã®åˆæœŸåŒ–
 //	InitMoist();
 //
 //}
@@ -4881,15 +4885,15 @@ void PHFemThermo::AfterSetDesc() {
 }
 
 //void PHFemThermo::CreateLocalMatrixAndSet(){
-//	//K,C,F‚Ìs—ñ‚ğì‚éŠÖ”‚ğŒÄ‚Ño‚µ‚ÄAì‚ç‚¹‚é
+//	//K,C,Fã®è¡Œåˆ—ã‚’ä½œã‚‹é–¢æ•°ã‚’å‘¼ã³å‡ºã—ã¦ã€ä½œã‚‰ã›ã‚‹
 //	for(unsigned i = 0; i< tets.size() ; i++){
-//		//tets‚ğˆø”‚É‚¢‚ê‚é‚ÆA‚»‚Ìs—ñEƒxƒNƒgƒ‹‚ğì‚Á‚Ä‚­‚ê‚ÄA‚Å‚«‚½s—ñAƒxƒNƒgƒ‹‚ğŠî‚ÉŒW”‚ğİ’è‚µ‚­‚ê‚é
-//		//‚±‚¤‚·‚ê‚ÎAŠe—v‘f„«s—ñ‚Åfor•¶‚ğ‰ñ‚³‚È‚­‚Ä‚à‚æ‚­‚È‚é
+//		//tetsã‚’å¼•æ•°ã«ã„ã‚Œã‚‹ã¨ã€ãã®è¡Œåˆ—ãƒ»ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã£ã¦ãã‚Œã¦ã€ã§ããŸè¡Œåˆ—ã€ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŸºã«ä¿‚æ•°ã‚’è¨­å®šã—ãã‚Œã‚‹
+//		//ã“ã†ã™ã‚Œã°ã€å„è¦ç´ å‰›æ€§è¡Œåˆ—ã§foræ–‡ã‚’å›ã•ãªãã¦ã‚‚ã‚ˆããªã‚‹
 //		//CreateMatkLocal(tets);
 //		//CreateMatcLocal(tets);
 //		//CreateVecfLocal(tets);
 //
-//		//tets‚ğ“ü‚ê‚Äì‚ç‚¹‚é
+//		//tetsã‚’å…¥ã‚Œã¦ä½œã‚‰ã›ã‚‹
 ////		SetkcfParam(tets);
 //
 //	}
@@ -4940,7 +4944,7 @@ void PHFemThermo::OutputMatKall(){
 			}
 		}
 		if(total >= fabs(matKAll[i][i])){
-			matkprop << i << "s–ÚF@‘ÎŠp¬•ªF" << matKAll[i][i] << "@”ñ‘ÎŠp¬•ª‚Ì˜aF" << total << std::endl;
+			matkprop << i << "è¡Œç›®ï¼šã€€å¯¾è§’æˆåˆ†ï¼š" << matKAll[i][i] << "ã€€éå¯¾è§’æˆåˆ†ã®å’Œï¼š" << total << std::endl;
 		}else{
 			if((total - matKAll[i][i]) > maxgap){
 				maxgap = total - matKAll[i][i];
@@ -4949,27 +4953,27 @@ void PHFemThermo::OutputMatKall(){
 			}
 		}
 	}
-	matkprop << "‘ÎŠp¬•ª‚Æ”ñ‘ÎŠp¬•ª‚Ì˜a‚Ì·‚ÌÅ‘å’lF"<< maxgap << std::endl;
-	//matkprop << maxvtx << "s–ÚF@‘ÎŠp¬•ªF" << matKAll[maxvtx][maxvtx] << "@”ñ‘ÎŠp¬•ª‚Ì˜aF" << maxtotal;
+	matkprop << "å¯¾è§’æˆåˆ†ã¨éå¯¾è§’æˆåˆ†ã®å’Œã®å·®ã®æœ€å¤§å€¤ï¼š"<< maxgap << std::endl;
+	//matkprop << maxvtx << "è¡Œç›®ï¼šã€€å¯¾è§’æˆåˆ†ï¼š" << matKAll[maxvtx][maxvtx] << "ã€€éå¯¾è§’æˆåˆ†ã®å’Œï¼š" << maxtotal;
 	matkprop.close();
 }
 
 void PHFemThermo::CreateMatc(unsigned id){
-	//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+	//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 	for(unsigned i =0; i < 4 ;i++){
 		for(unsigned j =0; j < 4 ;j++){
 			matc[i][j] = 0.0;
 		}
 	}
-	//matc ‚É21‚Å‚Å‚«‚½s—ñ‚ğ“ü‚ê‚é
+	//matc ã«21ã§ã§ããŸè¡Œåˆ—ã‚’å…¥ã‚Œã‚‹
 	matc = Create44Mat21();
 	//matc = Create44Mat50();
 	//	for debug
-		//DSTR << "matc " << matc << " Ë ";
+		//DSTR << "matc " << matc << " â‡’ ";
 	
 	matc = rho * specificHeat * CalcTetrahedraVolume2(id) / 20.0 * matc;
 	
-	//	debug	//ŒW”‚ÌÏ‚ğ‚Æ‚é
+	//	debug	//ä¿‚æ•°ã®ç©ã‚’ã¨ã‚‹
 		//DSTR << matc << std::endl;
 		//int hogemat =0 ;
 }
@@ -4977,39 +4981,39 @@ void PHFemThermo::CreateMatc(unsigned id){
 void PHFemThermo::CreatedMatCAll(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//‚·‚×‚Ä‚Ì—v‘f‚É‚Â‚¢‚ÄŒW”s—ñ‚ğì‚é
+	//ã™ã¹ã¦ã®è¦ç´ ã«ã¤ã„ã¦ä¿‚æ•°è¡Œåˆ—ã‚’ä½œã‚‹
 		//c
 	CreateMatc(id);
 	int mathoge=0;
-	//	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚Á‚½ŒvZ)—v‘f–ˆ‚Éì‚Á‚½s—ñ‚Ì¬•ª‚æ‚èAƒGƒbƒW‚ÉŒW”‚ğŠi”[‚·‚é
-	//	or	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚í‚È‚¢ŒvZ)—v‘f‚²‚Æ‚ÌŒvZ‚ªI‚í‚é‚½‚Ñ‚ÉA—v‘f„«s—ñ‚Ì¬•ª‚¾‚¯‚ğƒGƒbƒW‚â“_‚Éì‚é•Ï”‚ÉŠi”[‚µ‚Ä‚¨‚­	#ifedef‚Åƒ‚[ƒhì‚Á‚ÄA‚Ç‚¿‚ç‚à‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¨‚¢‚Ä‚à—Ç‚¢‚¯‚Çw
+	//	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã£ãŸè¨ˆç®—æ™‚)è¦ç´ æ¯ã«ä½œã£ãŸè¡Œåˆ—ã®æˆåˆ†ã‚ˆã‚Šã€ã‚¨ãƒƒã‚¸ã«ä¿‚æ•°ã‚’æ ¼ç´ã™ã‚‹
+	//	or	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã‚ãªã„è¨ˆç®—æ™‚)è¦ç´ ã”ã¨ã®è¨ˆç®—ãŒçµ‚ã‚ã‚‹ãŸã³ã«ã€è¦ç´ å‰›æ€§è¡Œåˆ—ã®æˆåˆ†ã ã‘ã‚’ã‚¨ãƒƒã‚¸ã‚„ç‚¹ã«ä½œã‚‹å¤‰æ•°ã«æ ¼ç´ã—ã¦ãŠã	#ifedefã§ãƒ¢ãƒ¼ãƒ‰ä½œã£ã¦ã€ã©ã¡ã‚‰ã‚‚ã§ãã‚‹ã‚ˆã†ã«ã—ã¦ãŠã„ã¦ã‚‚è‰¯ã„ã‘ã©w
 #ifdef UseGaussSeidel
 	for(unsigned j=1; j < 4; j++){
 		int vtxid0 = mesh->tets[id].vertexIDs[j];
-		//	‰ºOŠps—ñ•”•ª‚É‚Â‚¢‚Ä‚Ì‚İÀs
+		//	ä¸‹ä¸‰è§’è¡Œåˆ—éƒ¨åˆ†ã«ã¤ã„ã¦ã®ã¿å®Ÿè¡Œ
 		//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 		for(unsigned k = 0; k < j; k++){
 			int vtxid1 = mesh->tets[id].vertexIDs[k];
 				for(unsigned l =0; l < mesh->vertices[vtxid0].edgeIDs.size(); l++){
 					for(unsigned m =0; m < mesh->vertices[vtxid1].edgeIDs.size(); m++){
 						if(mesh->vertices[vtxid0].edgeIDs[l] == mesh->vertices[vtxid1].edgeIDs[m]){
-							edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].c += matc[j][k];		//“¯‚¶‚à‚Ì‚ª“ñ‚Â‚ ‚é‚Í‚¸‚¾‚©‚ç”¼•ª‚É‚·‚éBãOŠp‰»‰ºOŠp‚¾‚¯‘–¸‚·‚é‚É‚ÍA‚Ç‚¤‚¢‚¤for•¶‚“‚É‚·‚ê‚Î—Ç‚¢‚Ì‚©H
+							edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].c += matc[j][k];		//åŒã˜ã‚‚ã®ãŒäºŒã¤ã‚ã‚‹ã¯ãšã ã‹ã‚‰åŠåˆ†ã«ã™ã‚‹ã€‚ä¸Šä¸‰è§’åŒ–ä¸‹ä¸‰è§’ã ã‘èµ°æŸ»ã™ã‚‹ã«ã¯ã€ã©ã†ã„ã†foræ–‡ï½“ã«ã™ã‚Œã°è‰¯ã„ã®ã‹ï¼Ÿ
 							//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
 						}
 					}
 				}
 		}
 	}
-	//‘ÎŠp¬•ª‚ğ‘ÎŠp¬•ª‚Ì‘S‘Ì„«s—ñ‚©‚ç”²‚«o‚µ‚½1~n‚Ìs—ñ‚É‘ã“ü‚·‚é
-	//j=0~4‚Ü‚Å‘ã“ü(ã‚Ìƒ‹[ƒv‚Å‚ÍAj‚Í‘ÎŠp¬•ª‚Ì”ÍˆÍ‚µ‚©‚È‚¢‚Ì‚ÅA’l‚ª“ü‚ç‚È‚¢¬•ª‚ªo‚Ä‚µ‚Ü‚¤)
+	//å¯¾è§’æˆåˆ†ã‚’å¯¾è§’æˆåˆ†ã®å…¨ä½“å‰›æ€§è¡Œåˆ—ã‹ã‚‰æŠœãå‡ºã—ãŸ1Ã—nã®è¡Œåˆ—ã«ä»£å…¥ã™ã‚‹
+	//j=0~4ã¾ã§ä»£å…¥(ä¸Šã®ãƒ«ãƒ¼ãƒ—ã§ã¯ã€jã¯å¯¾è§’æˆåˆ†ã®ç¯„å›²ã—ã‹ãªã„ã®ã§ã€å€¤ãŒå…¥ã‚‰ãªã„æˆåˆ†ãŒå‡ºã¦ã—ã¾ã†)
 	for(unsigned j =0;j<4;j++){
 		dMatCAll[0][mesh->tets[id].vertexIDs[j]] += matc[j][j];
 	}
 #endif
 
 #ifdef UseMatAll
-	//SciLab‚Åg‚¤‚½‚ß‚ÉA‘S‘Ì„«s—ñ‚ğì‚é
-	//matk‚©‚çì‚é
+	//SciLabã§ä½¿ã†ãŸã‚ã«ã€å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
+	//matkã‹ã‚‰ä½œã‚‹
 	for(unsigned j=0; j<4 ; j++){
 		for(unsigned k=0; k<4 ;k++){
 			matCAll[mesh->tets[id].vertexIDs[j]][mesh->tets[id].vertexIDs[k]] += matc[j][k];
@@ -5022,11 +5026,11 @@ void PHFemThermo::CreatedMatCAll(unsigned id){
 	//for(unsigned j =0;j < vertices.size();j++){
 	//	DSTR << j << "th : " << dMatCAll[0][j] << std::endl;
 	//}
-	// ƒlƒM‚É‚Â‚¢‚Ä”ñ0¬•ª‚É‚È‚Á‚½B
+	// ãƒã‚®ã«ã¤ã„ã¦é0æˆåˆ†ã«ãªã£ãŸã€‚
 
-	//	’²‚×‚é
-	//dMatKAll‚Ì¬•ª‚Ì‚¤‚¿A0‚Æ‚È‚é—v‘f‚ª‚ ‚Á‚½‚çAƒGƒ‰[•\¦‚ğ‚·‚éƒR[ƒh‚ğ‘‚­
-	// try catch•¶‚É‚·‚é
+	//	èª¿ã¹ã‚‹
+	//dMatKAllã®æˆåˆ†ã®ã†ã¡ã€0ã¨ãªã‚‹è¦ç´ ãŒã‚ã£ãŸã‚‰ã€ã‚¨ãƒ©ãƒ¼è¡¨ç¤ºã‚’ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã‚’æ›¸ã
+	// try catchæ–‡ã«ã™ã‚‹
 	//for(unsigned j = 0; j < vertices.size() ; j++){
 	//	if(dMatCAll[0][j] ==0.0){
 	//		DSTR << "dMatCAll[0][" << j << "] element is blank" << std::endl;
@@ -5038,53 +5042,53 @@ void PHFemThermo::CreatedMatCAll(unsigned id){
 void PHFemThermo::CreateVecFAll(unsigned id){
 
 	vecf.clear();
-	//	’ˆÓ
-	//	f3‚ğg—p‚·‚éê‡:üˆÍ—¬‘Ì‰·“xTc‚ª0‚Ìß“_‚Ì—v‘f‚Í0‚É‚È‚é‚½‚ßA‰·“x‚Ìİ’è‚ª•K—v
+	//	æ³¨æ„
+	//	f3ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆ:å‘¨å›²æµä½“æ¸©åº¦TcãŒ0ã®ç¯€ç‚¹ã®è¦ç´ ã¯0ã«ãªã‚‹ãŸã‚ã€æ¸©åº¦ã®è¨­å®šãŒå¿…è¦
 	
-	//‚·‚×‚Ä‚Ì—v‘f‚É‚Â‚¢‚ÄŒW”s—ñ‚ğì‚é
-	//f1‚ğì‚é
-	//>	”M—¬‘©‹«ŠEğŒ	vecf2‚ğì‚é			
-	CreateVecf2surface(id);				//l–Ê‘Ì‚ÌŠe–Ê‚É‚Â‚¢‚ÄŒvZ‚µ‰ÁZid‚Ë‚ ‚í‚¹j‚·‚é
+	//ã™ã¹ã¦ã®è¦ç´ ã«ã¤ã„ã¦ä¿‚æ•°è¡Œåˆ—ã‚’ä½œã‚‹
+	//f1ã‚’ä½œã‚‹
+	//>	ç†±æµæŸå¢ƒç•Œæ¡ä»¶	vecf2ã‚’ä½œã‚‹			
+	CreateVecf2surface(id);				//å››é¢ä½“ã®å„é¢ã«ã¤ã„ã¦è¨ˆç®—ã—åŠ ç®—ï¼ˆé‡ã­ã‚ã‚ã›ï¼‰ã™ã‚‹
 	
 	//DSTR << "tets[id].vecf[2]: " << tets[id].vecf[2] << std::endl;
 	CreateVecf4surface(id);			//produce vecf[3]
 
-	//>	”M“`’B‹«ŠEğŒ	f3‚ğì‚é
+	//>	ç†±ä¼é”å¢ƒç•Œæ¡ä»¶	f3ã‚’ä½œã‚‹
 #ifndef NOTUSE_HEATTRANS_HERE
-	CreateVecf3(id);			// surface‰»‚·‚×‚«‚¾‚æ‚Ë	//>	tets[id].vecf[2] ‚ğ‰Šú‰»,‘ã“ü		”M“`’B—¦‚Í‘Š‰Á•½‹ÏAüˆÍ—¬‘Ì‰·“x‚Íß“_‚ÌŒ`óŠÖ”H‚²‚Æ‚É‹‚ß‚é
+	CreateVecf3(id);			// surfaceåŒ–ã™ã¹ãã ã‚ˆã­	//>	tets[id].vecf[2] ã‚’åˆæœŸåŒ–,ä»£å…¥		ç†±ä¼é”ç‡ã¯ç›¸åŠ å¹³å‡ã€å‘¨å›²æµä½“æ¸©åº¦ã¯ç¯€ç‚¹ã®å½¢çŠ¶é–¢æ•°ï¼Ÿã”ã¨ã«æ±‚ã‚ã‚‹
 	
-	CreateVecf3surface(id);			//À‘•‚·‚é
+	CreateVecf3surface(id);			//å®Ÿè£…ã™ã‚‹
 #endif
-	//CreateVecf3_(id);			//>	tets[id].vecf[2] ‚ğ‰Šú‰»,‘ã“ü		”M“`’B—¦AüˆÍ—¬‘Ì‰·“x‚ğ‘Š‰Á•½‹Ï‚Å‹‚ß‚é
-	//f4‚ğì‚é
-	//f1:vecf[0],f2:vecf[1],f3:vecf[2],f4:vecf[3]‚ğ‰ÁZ‚·‚é
+	//CreateVecf3_(id);			//>	tets[id].vecf[2] ã‚’åˆæœŸåŒ–,ä»£å…¥		ç†±ä¼é”ç‡ã€å‘¨å›²æµä½“æ¸©åº¦ã‚’ç›¸åŠ å¹³å‡ã§æ±‚ã‚ã‚‹
+	//f4ã‚’ä½œã‚‹
+	//f1:vecf[0],f2:vecf[1],f3:vecf[2],f4:vecf[3]ã‚’åŠ ç®—ã™ã‚‹
 
 #ifndef NOTUSE_HEATTRANS_HERE
-	vecf = tets[id].vecf[1] + tets[id].vecf[2] + tets[id].vecf[3];		//>	+ tets[id].vecf[0] +  tets[id].vecf[3] ‚Ì—\’è
-#else	//	”MçtË‚â”M“`’B‚ÍØ‚è‘Ö‚¦‚ç‚ê‚é‚æ‚¤‚É‚·‚é‚×‚«B—ƒAƒvƒŠƒP[ƒVƒ‡ƒ“
+	vecf = tets[id].vecf[1] + tets[id].vecf[2] + tets[id].vecf[3];		//>	+ tets[id].vecf[0] +  tets[id].vecf[3] ã®äºˆå®š
+#else	//	ç†±è¼»å°„ã‚„ç†±ä¼é”ã¯åˆ‡ã‚Šæ›¿ãˆã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹ã¹ãã€‚ï¼ ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³
 	vecf += tetVars[id].vecf[1] + tetVars[id].vecf[3];
 #endif
 
-	//	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚Á‚½ŒvZ)—v‘f–ˆ‚Éì‚Á‚½s—ñ‚Ì¬•ª‚æ‚èAƒGƒbƒW‚ÉŒW”‚ğŠi”[‚·‚é
-	//	or	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚í‚È‚¢ŒvZ)—v‘f‚²‚Æ‚ÌŒvZ‚ªI‚í‚é‚½‚Ñ‚ÉA—v‘f„«s—ñ‚Ì¬•ª‚¾‚¯‚ğƒGƒbƒW‚â“_‚Éì‚é•Ï”‚ÉŠi”[‚µ‚Ä‚¨‚­	#ifedef‚Åƒ‚[ƒhì‚Á‚ÄA‚Ç‚¿‚ç‚à‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¨‚¢‚Ä‚à—Ç‚¢‚¯‚Çw
+	//	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã£ãŸè¨ˆç®—æ™‚)è¦ç´ æ¯ã«ä½œã£ãŸè¡Œåˆ—ã®æˆåˆ†ã‚ˆã‚Šã€ã‚¨ãƒƒã‚¸ã«ä¿‚æ•°ã‚’æ ¼ç´ã™ã‚‹
+	//	or	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã‚ãªã„è¨ˆç®—æ™‚)è¦ç´ ã”ã¨ã®è¨ˆç®—ãŒçµ‚ã‚ã‚‹ãŸã³ã«ã€è¦ç´ å‰›æ€§è¡Œåˆ—ã®æˆåˆ†ã ã‘ã‚’ã‚¨ãƒƒã‚¸ã‚„ç‚¹ã«ä½œã‚‹å¤‰æ•°ã«æ ¼ç´ã—ã¦ãŠã	#ifedefã§ãƒ¢ãƒ¼ãƒ‰ä½œã£ã¦ã€ã©ã¡ã‚‰ã‚‚ã§ãã‚‹ã‚ˆã†ã«ã—ã¦ãŠã„ã¦ã‚‚è‰¯ã„ã‘ã©w
 
-	//—v‘f‚Ìß“_”Ô†‚ÌêŠ‚ÉA‚»‚Ìß“_‚Ìf‚Ì’l‚ğ“ü‚ê‚é
-	//j:—v‘f‚Ì’†‚Ì‰½”Ô–Ú‚©
+	//è¦ç´ ã®ç¯€ç‚¹ç•ªå·ã®å ´æ‰€ã«ã€ãã®ç¯€ç‚¹ã®fã®å€¤ã‚’å…¥ã‚Œã‚‹
+	//j:è¦ç´ ã®ä¸­ã®ä½•ç•ªç›®ã‹
 	for(unsigned j =0;j < 4; j++){
 		int vtxid0 = GetPHFemMesh()->tets[id].vertexIDs[j];
 		vecFAllSum[vtxid0] += vecf[j];
 		//vecFAll_f2IH[num][vtxid0][0] += vecf[j];
 	}
 	//	for debug
-	//vecFAllSum‚É’l‚ª“ü‚Á‚½‚Ì‚©‚Ç‚¤‚©‚ğ’²‚×‚é 2011.09.21‘S•”‚É’l‚ª“ü‚Á‚Ä‚¢‚é‚±‚Æ‚ğŠm”F‚µ‚½
+	//vecFAllSumã«å€¤ãŒå…¥ã£ãŸã®ã‹ã©ã†ã‹ã‚’èª¿ã¹ã‚‹ 2011.09.21å…¨éƒ¨ã«å€¤ãŒå…¥ã£ã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèªã—ãŸ
 	//DSTR << "vecFAllSum : " << std::endl;
 	//for(unsigned j =0; j < vertices.size() ; j++){
 	//	DSTR << j << " ele is :  " << vecFAllSum[j] << std::endl;
 	//}
 
-	////	’²‚×‚é
-	////vecFAllSum‚Ì¬•ª‚Ì‚¤‚¿A0‚Æ‚È‚é—v‘f‚ª‚ ‚Á‚½‚çAƒGƒ‰[•\¦‚ğ‚·‚éƒR[ƒh‚ğ‘‚­
-	//// try catch•¶‚É‚·‚é
+	////	èª¿ã¹ã‚‹
+	////vecFAllSumã®æˆåˆ†ã®ã†ã¡ã€0ã¨ãªã‚‹è¦ç´ ãŒã‚ã£ãŸã‚‰ã€ã‚¨ãƒ©ãƒ¼è¡¨ç¤ºã‚’ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã‚’æ›¸ã
+	//// try catchæ–‡ã«ã™ã‚‹
 	//for(unsigned j = 0; j < vertices.size() ; j++){
 	//	if(vecFAllSum[j] ==0.0){
 	//		DSTR << "vecFAllSum[" << j << "] element is blank" << std::endl;
@@ -5096,31 +5100,31 @@ void PHFemThermo::CreateVecFAll(unsigned id){
 
 void PHFemThermo::CreateMatkLocal_update(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	//	l–Ê‘Ì—v‘f‚É‚Â‚¢‚ÄŒW”s—ñ[k]‚ğì‚é			–½–¼‹K‘¥	
-	//..	k1‚ğì‚é	k1k‚Å‚àAk1b‚Å‚à‚Ç‚¿‚ç‚Å‚à\‚í‚È‚¢	‚Ç‚¿‚ç‚ª‘¬‚¢‚©’²‚×‚é
-	///....		•ÏŒ`‚µ‚½‚¾‚¯¶¬‚·‚é
+	//	å››é¢ä½“è¦ç´ ã«ã¤ã„ã¦ä¿‚æ•°è¡Œåˆ—[k]ã‚’ä½œã‚‹			å‘½åè¦å‰‡	
+	//..	k1ã‚’ä½œã‚‹	k1kã§ã‚‚ã€k1bã§ã‚‚ã©ã¡ã‚‰ã§ã‚‚æ§‹ã‚ãªã„	ã©ã¡ã‚‰ãŒé€Ÿã„ã‹èª¿ã¹ã‚‹
+	///....		å¤‰å½¢ã—ãŸæ™‚ã ã‘ç”Ÿæˆã™ã‚‹
 	//if(deformed){	
 		//CreateMatk1k(id);
-	//}			//  K‘æˆê€iƒƒbƒVƒ…“à”M“`“±j‚Ìs—ñì¬	//k—˜_‚ğª‹’‚ÉA‰Á•M‚µ‚ÄAŒ`óŠÖ”‚ğ“±o	
-	//if(deformed){	CreateMatk1b(id);}			//	‘Ğ‚Ì—˜_‚ğª‹’‚ÉAŒö®‚ğ—p‚¢‚ÄŒ`óŠÖ”‚ğ“±o
+	//}			//  Kç¬¬ä¸€é …ï¼ˆãƒ¡ãƒƒã‚·ãƒ¥å†…ç†±ä¼å°ï¼‰ã®è¡Œåˆ—ä½œæˆ	//kç†è«–ã‚’æ ¹æ‹ ã«ã€åŠ ç­†ã—ã¦ã€å½¢çŠ¶é–¢æ•°ã‚’å°å‡º	
+	//if(deformed){	CreateMatk1b(id);}			//	æ›¸ç±ã®ç†è«–ã‚’æ ¹æ‹ ã«ã€å…¬å¼ã‚’ç”¨ã„ã¦å½¢çŠ¶é–¢æ•°ã‚’å°å‡º
 	
-	//....		”M“`’B‹«ŠEğŒ‚É•K—v‚Èk2
-	//CreateMatk2t(id);					///	K2: ”M “`’B ‹«ŠEğŒ
-	//CreateMatk3t(id);					///	K3: ”M çtË ‹«ŠEğŒ(‹ó‹C‚Ö‚Ì”M“`’B—¦)
-	CreateMatk3t_nonRadiantHeat(id);	//>	ã‹LK3‚É‘Î‚µA”M“`’Bface‚Å‚ÍA
+	//....		ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã«å¿…è¦ãªk2
+	//CreateMatk2t(id);					///	K2: ç†± ä¼é” å¢ƒç•Œæ¡ä»¶
+	//CreateMatk3t(id);					///	K3: ç†± è¼»å°„ å¢ƒç•Œæ¡ä»¶(ç©ºæ°—ã¸ã®ç†±ä¼é”ç‡)
+	CreateMatk3t_nonRadiantHeat(id);	//>	ä¸Šè¨˜K3ã«å¯¾ã—ã€ç†±ä¼é”faceã§ã¯ã€
 
-	//k1,k2,k3‚ğ‰ÁZ‚·‚é(g‚Á‚Ä‚¢‚é”’l‚¾‚¯)
+	//k1,k2,k3ã‚’åŠ ç®—ã™ã‚‹(ä½¿ã£ã¦ã„ã‚‹æ•°å€¤ã ã‘)
 	matk = tetVars[id].matk[0] + tetVars[id].matk[1] + tetVars[id].matk[2];	
-	//<’ˆÓ>	matk[0]:K1, matk[1]:K2, matk[2]:K3
+	//<æ³¨æ„>	matk[0]:K1, matk[1]:K2, matk[2]:K3
 
 #ifdef UseGaussSeidel
-	//	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚Á‚½ŒvZ)—v‘f–ˆ‚Éì‚Á‚½s—ñ‚Ì¬•ª‚æ‚èAƒGƒbƒW‚ÉŒW”‚ğŠi”[‚·‚é
-	//	or	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚í‚È‚¢ŒvZ)—v‘f‚²‚Æ‚ÌŒvZ‚ªI‚í‚é‚½‚Ñ‚ÉA—v‘f„«s—ñ‚Ì¬•ª‚¾‚¯‚ğƒGƒbƒW‚â“_‚Éì‚é•Ï”‚ÉŠi”[‚µ‚Ä‚¨‚­	#ifedef‚Åƒ‚[ƒhì‚Á‚ÄA‚Ç‚¿‚ç‚à‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¨‚¢‚Ä‚à—Ç‚¢‚¯‚Çw
-	//	Edges ‚Ì‚±‚Ì—v‘f‚ÅŒvZ‚µ‚½Ks—ñ‚Ì¬•ª‚ğk‚ÉŒW”‚Æ‚µ‚ÄŠi”[‚·‚é		
-	//matk‚Ì‘ÎŠp¬•ªˆÈŠO‚ÅA‰ºOŠp‚Ì•”•ª‚Ì’l‚ğAedge‚Ìk‚É‘ã“ü‚·‚é
+	//	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã£ãŸè¨ˆç®—æ™‚)è¦ç´ æ¯ã«ä½œã£ãŸè¡Œåˆ—ã®æˆåˆ†ã‚ˆã‚Šã€ã‚¨ãƒƒã‚¸ã«ä¿‚æ•°ã‚’æ ¼ç´ã™ã‚‹
+	//	or	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã‚ãªã„è¨ˆç®—æ™‚)è¦ç´ ã”ã¨ã®è¨ˆç®—ãŒçµ‚ã‚ã‚‹ãŸã³ã«ã€è¦ç´ å‰›æ€§è¡Œåˆ—ã®æˆåˆ†ã ã‘ã‚’ã‚¨ãƒƒã‚¸ã‚„ç‚¹ã«ä½œã‚‹å¤‰æ•°ã«æ ¼ç´ã—ã¦ãŠã	#ifedefã§ãƒ¢ãƒ¼ãƒ‰ä½œã£ã¦ã€ã©ã¡ã‚‰ã‚‚ã§ãã‚‹ã‚ˆã†ã«ã—ã¦ãŠã„ã¦ã‚‚è‰¯ã„ã‘ã©w
+	//	Edges ã®ã“ã®è¦ç´ ã§è¨ˆç®—ã—ãŸKè¡Œåˆ—ã®æˆåˆ†ã‚’kã«ä¿‚æ•°ã¨ã—ã¦æ ¼ç´ã™ã‚‹		
+	//matkã®å¯¾è§’æˆåˆ†ä»¥å¤–ã§ã€ä¸‹ä¸‰è§’ã®éƒ¨åˆ†ã®å€¤ã‚’ã€edgeã®kã«ä»£å…¥ã™ã‚‹
 	for(unsigned j=1; j < 4; j++){
 		int vtxid0 = mesh->tets[id].vertexIDs[j];
-		//	‰ºOŠps—ñ•”•ª‚É‚Â‚¢‚Ä‚Ì‚İÀs
+		//	ä¸‹ä¸‰è§’è¡Œåˆ—éƒ¨åˆ†ã«ã¤ã„ã¦ã®ã¿å®Ÿè¡Œ
 		//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 
 		for(unsigned k = 0; k < j; k++){
@@ -5128,11 +5132,11 @@ void PHFemThermo::CreateMatkLocal_update(unsigned id){
 			for(unsigned l =0; l < mesh->vertices[vtxid0].edgeIDs.size(); l++){
 				for(unsigned m =0; m < mesh->vertices[vtxid1].edgeIDs.size(); m++){
 					if(mesh->vertices[vtxid0].edgeIDs[l] == mesh->vertices[vtxid1].edgeIDs[m]){
-						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].k += matk[j][k];		//“¯‚¶‚à‚Ì‚ª“ñ‚Â‚ ‚é‚Í‚¸‚¾‚©‚ç”¼•ª‚É‚·‚éBãOŠp‰»‰ºOŠp‚¾‚¯‘–¸‚·‚é‚É‚ÍA‚Ç‚¤‚¢‚¤for•¶‚“‚É‚·‚ê‚Î—Ç‚¢‚Ì‚©H
+						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].k += matk[j][k];		//åŒã˜ã‚‚ã®ãŒäºŒã¤ã‚ã‚‹ã¯ãšã ã‹ã‚‰åŠåˆ†ã«ã™ã‚‹ã€‚ä¸Šä¸‰è§’åŒ–ä¸‹ä¸‰è§’ã ã‘èµ°æŸ»ã™ã‚‹ã«ã¯ã€ã©ã†ã„ã†foræ–‡ï½“ã«ã™ã‚Œã°è‰¯ã„ã®ã‹ï¼Ÿ
 						//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
 #ifdef DumK
 						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].k = 0.0;
-#endif DumK
+#endif //DumK
 					}
 				}
 			}
@@ -5141,18 +5145,18 @@ void PHFemThermo::CreateMatkLocal_update(unsigned id){
 #endif
 
 #ifdef UseMatAll
-	//SciLab‚Åg‚¤‚½‚ß‚ÉA‘S‘Ì„«s—ñ‚ğì‚é
-	//matk‚©‚çì‚é
+	//SciLabã§ä½¿ã†ãŸã‚ã«ã€å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
+	//matkã‹ã‚‰ä½œã‚‹
 	for(unsigned j=0; j<4 ; j++){
 		for(unsigned k=0; k<4 ;k++){
 			matKAll[mesh->tets[id].vertexIDs[j]][mesh->tets[id].vertexIDs[k]] += matk[j][k];
 		}
 	}
-#endif UseMatAll
+#endif //UseMatAll
 
 #ifdef DumK
-	//SciLab‚Åg‚¤‚½‚ß‚ÉA‘S‘Ì„«s—ñ‚ğì‚é
-	//matk‚©‚çì‚é
+	//SciLabã§ä½¿ã†ãŸã‚ã«ã€å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
+	//matkã‹ã‚‰ä½œã‚‹
 	for(unsigned j=0; j<4 ; j++){
 		for(unsigned k=0; k<4 ;k++){
 			matKAll[tets.vertices[j]][tets.vertices[k]] = 0.0;;
@@ -5161,8 +5165,8 @@ void PHFemThermo::CreateMatkLocal_update(unsigned id){
 #endif
 
 #ifdef UseGaussSeidel
-	//‘ÎŠp¬•ª‚ğ‘ÎŠp¬•ª‚Ì‘S‘Ì„«s—ñ‚©‚ç”²‚«o‚µ‚½1~n‚Ìs—ñ‚É‘ã“ü‚·‚é
-	//j=0~4‚Ü‚Å‘ã“ü(ã‚Ìƒ‹[ƒv‚Å‚ÍAj‚Í‘ÎŠp¬•ª‚Ì”ÍˆÍ‚µ‚©‚È‚¢‚Ì‚ÅA’l‚ª“ü‚ç‚È‚¢¬•ª‚ªo‚Ä‚µ‚Ü‚¤)
+	//å¯¾è§’æˆåˆ†ã‚’å¯¾è§’æˆåˆ†ã®å…¨ä½“å‰›æ€§è¡Œåˆ—ã‹ã‚‰æŠœãå‡ºã—ãŸ1Ã—nã®è¡Œåˆ—ã«ä»£å…¥ã™ã‚‹
+	//j=0~4ã¾ã§ä»£å…¥(ä¸Šã®ãƒ«ãƒ¼ãƒ—ã§ã¯ã€jã¯å¯¾è§’æˆåˆ†ã®ç¯„å›²ã—ã‹ãªã„ã®ã§ã€å€¤ãŒå…¥ã‚‰ãªã„æˆåˆ†ãŒå‡ºã¦ã—ã¾ã†)
 	for(unsigned j =0;j<4;j++){
 		dMatKAll[0][mesh->tets[id].vertexIDs[j]] += matk[j][j];
 		int hoge4 =0;
@@ -5174,13 +5178,13 @@ void PHFemThermo::CreateMatkLocal_update(unsigned id){
 		dMatKAll[0][mesh->tets[id].vertexID[j]] = 0.0;
 		int hogeshi =0;
 	} 
-#endif DumK
+#endif //DumK
 	
 //#ifdef UseMatAll
 //#ifdef UseGaussSeidel
 //	for(unsigned j =0;j<mesh->vertices.size();j++){
 //		if(matKAll[j][j] != dMatKAll[0][j]){
-//			DSTR << j <<" ¬•ª‚Ì—v‘f‚Í‚¨‚©‚µ‚¢I’²¸‚ª•K—v‚Å‚ ‚éB matKAllF" << matKAll[j][j] << " dMatKAllF" << dMatKAll[0][j] <<std::endl;
+//			DSTR << j <<" æˆåˆ†ã®è¦ç´ ã¯ãŠã‹ã—ã„ï¼èª¿æŸ»ãŒå¿…è¦ã§ã‚ã‚‹ã€‚ matKAllï¼š" << matKAll[j][j] << " dMatKAllï¼š" << dMatKAll[0][j] <<std::endl;
 //		}
 //	}
 //#endif
@@ -5191,18 +5195,18 @@ void PHFemThermo::CreateMatkLocal_update(unsigned id){
 void PHFemThermo::CreateMatkLocal(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	l–Ê‘Ì—v‘f‚É‚Â‚¢‚ÄŒW”s—ñ[k]‚ğì‚é			–½–¼‹K‘¥	
-	//..	k1‚ğì‚é	k1k‚Å‚àAk1b‚Å‚à‚Ç‚¿‚ç‚Å‚à\‚í‚È‚¢	‚Ç‚¿‚ç‚ª‘¬‚¢‚©’²‚×‚é
-	///....		•ÏŒ`‚µ‚½‚¾‚¯¶¬‚·‚é
-	if(deformed){	CreateMatk1k(id);}			//  K‘æˆê€iƒƒbƒVƒ…“à”M“`“±j‚Ìs—ñì¬	//k—˜_‚ğª‹’‚ÉA‰Á•M‚µ‚ÄAŒ`óŠÖ”‚ğ“±o	
-	//if(deformed){	CreateMatk1b(id);}			//	‘Ğ‚Ì—˜_‚ğª‹’‚ÉAŒö®‚ğ—p‚¢‚ÄŒ`óŠÖ”‚ğ“±o
+	//	å››é¢ä½“è¦ç´ ã«ã¤ã„ã¦ä¿‚æ•°è¡Œåˆ—[k]ã‚’ä½œã‚‹			å‘½åè¦å‰‡	
+	//..	k1ã‚’ä½œã‚‹	k1kã§ã‚‚ã€k1bã§ã‚‚ã©ã¡ã‚‰ã§ã‚‚æ§‹ã‚ãªã„	ã©ã¡ã‚‰ãŒé€Ÿã„ã‹èª¿ã¹ã‚‹
+	///....		å¤‰å½¢ã—ãŸæ™‚ã ã‘ç”Ÿæˆã™ã‚‹
+	if(deformed){	CreateMatk1k(id);}			//  Kç¬¬ä¸€é …ï¼ˆãƒ¡ãƒƒã‚·ãƒ¥å†…ç†±ä¼å°ï¼‰ã®è¡Œåˆ—ä½œæˆ	//kç†è«–ã‚’æ ¹æ‹ ã«ã€åŠ ç­†ã—ã¦ã€å½¢çŠ¶é–¢æ•°ã‚’å°å‡º	
+	//if(deformed){	CreateMatk1b(id);}			//	æ›¸ç±ã®ç†è«–ã‚’æ ¹æ‹ ã«ã€å…¬å¼ã‚’ç”¨ã„ã¦å½¢çŠ¶é–¢æ•°ã‚’å°å‡º
 	
-	//....		”M“`’B‹«ŠEğŒ‚É•K—v‚Èk2
-	CreateMatk2t(id);					///	K2: ”M “`’B ‹«ŠEğŒ
-	CreateMatk3t(id);					///	K3: ”M çtË ‹«ŠEğŒ(‹ó‹C‚Ö‚Ì”M“`’B—¦)
-	//k1,k2,k3‚ğ‰ÁZ‚·‚é(g‚Á‚Ä‚¢‚é”’l‚¾‚¯)
+	//....		ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã«å¿…è¦ãªk2
+	CreateMatk2t(id);					///	K2: ç†± ä¼é” å¢ƒç•Œæ¡ä»¶
+	CreateMatk3t(id);					///	K3: ç†± è¼»å°„ å¢ƒç•Œæ¡ä»¶(ç©ºæ°—ã¸ã®ç†±ä¼é”ç‡)
+	//k1,k2,k3ã‚’åŠ ç®—ã™ã‚‹(ä½¿ã£ã¦ã„ã‚‹æ•°å€¤ã ã‘)
 	matk = tetVars[id].matk[0] + tetVars[id].matk[1] + tetVars[id].matk[2];	
-	//<’ˆÓ>	matk[0]:K1, matk[1]:K2, matk[2]:K3
+	//<æ³¨æ„>	matk[0]:K1, matk[1]:K2, matk[2]:K3
 	matkcheck << id << std::endl;
 	matkcheck << tetVars[id].matk[2] << std::endl;
 	//if(id == 0){
@@ -5217,27 +5221,27 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 	//DSTR << tets[id].matk[2] << std::endl;
 
 #ifdef UseGaussSeidel
-	//	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚Á‚½ŒvZ)—v‘f–ˆ‚Éì‚Á‚½s—ñ‚Ì¬•ª‚æ‚èAƒGƒbƒW‚ÉŒW”‚ğŠi”[‚·‚é
-	//	or	(ƒKƒEƒXƒUƒCƒfƒ‹‚ğg‚í‚È‚¢ŒvZ)—v‘f‚²‚Æ‚ÌŒvZ‚ªI‚í‚é‚½‚Ñ‚ÉA—v‘f„«s—ñ‚Ì¬•ª‚¾‚¯‚ğƒGƒbƒW‚â“_‚Éì‚é•Ï”‚ÉŠi”[‚µ‚Ä‚¨‚­	#ifedef‚Åƒ‚[ƒhì‚Á‚ÄA‚Ç‚¿‚ç‚à‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¨‚¢‚Ä‚à—Ç‚¢‚¯‚Çw
-	//	Edges ‚Ì‚±‚Ì—v‘f‚ÅŒvZ‚µ‚½Ks—ñ‚Ì¬•ª‚ğk‚ÉŒW”‚Æ‚µ‚ÄŠi”[‚·‚é
+	//	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã£ãŸè¨ˆç®—æ™‚)è¦ç´ æ¯ã«ä½œã£ãŸè¡Œåˆ—ã®æˆåˆ†ã‚ˆã‚Šã€ã‚¨ãƒƒã‚¸ã«ä¿‚æ•°ã‚’æ ¼ç´ã™ã‚‹
+	//	or	(ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã‚’ä½¿ã‚ãªã„è¨ˆç®—æ™‚)è¦ç´ ã”ã¨ã®è¨ˆç®—ãŒçµ‚ã‚ã‚‹ãŸã³ã«ã€è¦ç´ å‰›æ€§è¡Œåˆ—ã®æˆåˆ†ã ã‘ã‚’ã‚¨ãƒƒã‚¸ã‚„ç‚¹ã«ä½œã‚‹å¤‰æ•°ã«æ ¼ç´ã—ã¦ãŠã	#ifedefã§ãƒ¢ãƒ¼ãƒ‰ä½œã£ã¦ã€ã©ã¡ã‚‰ã‚‚ã§ãã‚‹ã‚ˆã†ã«ã—ã¦ãŠã„ã¦ã‚‚è‰¯ã„ã‘ã©w
+	//	Edges ã®ã“ã®è¦ç´ ã§è¨ˆç®—ã—ãŸKè¡Œåˆ—ã®æˆåˆ†ã‚’kã«ä¿‚æ•°ã¨ã—ã¦æ ¼ç´ã™ã‚‹
 		
-	//matk‚Ì‘ÎŠp¬•ªˆÈŠO‚ÅA‰ºOŠp‚Ì•”•ª‚Ì’l‚ğAedge‚Ìk‚É‘ã“ü‚·‚é
+	//matkã®å¯¾è§’æˆåˆ†ä»¥å¤–ã§ã€ä¸‹ä¸‰è§’ã®éƒ¨åˆ†ã®å€¤ã‚’ã€edgeã®kã«ä»£å…¥ã™ã‚‹
 	//
 	//DSTR << i <<"th tetrahedra element'edges[vertices[vtxid0].edges[l]].k (All edges.k' value): " << std::endl;
 	for(unsigned j=1; j < 4; j++){
 		int vtxid0 = mesh->tets[id].vertexIDs[j];
-		//	‰ºOŠps—ñ•”•ª‚É‚Â‚¢‚Ä‚Ì‚İÀs
+		//	ä¸‹ä¸‰è§’è¡Œåˆ—éƒ¨åˆ†ã«ã¤ã„ã¦ã®ã¿å®Ÿè¡Œ
 		//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 		for(unsigned k = 0; k < j; k++){
 			int vtxid1 = mesh->tets[id].vertexIDs[k];
 			for(unsigned l =0; l < mesh->vertices[vtxid0].edgeIDs.size(); l++){
 				for(unsigned m =0; m < mesh->vertices[vtxid1].edgeIDs.size(); m++){
 					if(mesh->vertices[vtxid0].edgeIDs[l] == mesh->vertices[vtxid1].edgeIDs[m]){
-						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].k += matk[j][k];		//“¯‚¶‚à‚Ì‚ª“ñ‚Â‚ ‚é‚Í‚¸‚¾‚©‚ç”¼•ª‚É‚·‚éBãOŠp‰»‰ºOŠp‚¾‚¯‘–¸‚·‚é‚É‚ÍA‚Ç‚¤‚¢‚¤for•¶‚“‚É‚·‚ê‚Î—Ç‚¢‚Ì‚©H
+						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].k += matk[j][k];		//åŒã˜ã‚‚ã®ãŒäºŒã¤ã‚ã‚‹ã¯ãšã ã‹ã‚‰åŠåˆ†ã«ã™ã‚‹ã€‚ä¸Šä¸‰è§’åŒ–ä¸‹ä¸‰è§’ã ã‘èµ°æŸ»ã™ã‚‹ã«ã¯ã€ã©ã†ã„ã†foræ–‡ï½“ã«ã™ã‚Œã°è‰¯ã„ã®ã‹ï¼Ÿ
 						//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
 #ifdef DumK
 						edgeVars[mesh->vertices[vtxid0].edgeIDs[l]].k = 0.0;
-#endif DumK
+#endif //DumK
 					}
 				}
 			}
@@ -5246,8 +5250,8 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 #endif
 
 #ifdef UseMatAll
-	//SciLab‚Åg‚¤‚½‚ß‚ÉA‘S‘Ì„«s—ñ‚ğì‚é
-	//matk‚©‚çì‚é
+	//SciLabã§ä½¿ã†ãŸã‚ã«ã€å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
+	//matkã‹ã‚‰ä½œã‚‹
 	for(unsigned j=0; j<4 ; j++){
 		for(unsigned k=0; k<4 ;k++){
 			matKAll[mesh->tets[id].vertexIDs[j]][mesh->tets[id].vertexIDs[k]] += matk[j][k];
@@ -5265,22 +5269,22 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 	//	DSTR << std::endl;
 	//}
 
-	//matKAll‚Ì”ñ‘ÎŠp¬•ª‚Ì‚¤‚¿³‚Ì‚à‚Ì‚Ì•„†‚ğ”½“]‚µAs‚Ì’l‚Ì‡Œv‚ª•Ï‰»‚µ‚È‚¢‚æ‚¤‚É‘ÎŠp¬•ª‚Ì’l‚Å’²ß‚·‚é
+	//matKAllã®éå¯¾è§’æˆåˆ†ã®ã†ã¡æ­£ã®ã‚‚ã®ã®ç¬¦å·ã‚’åè»¢ã—ã€è¡Œã®å€¤ã®åˆè¨ˆãŒå¤‰åŒ–ã—ãªã„ã‚ˆã†ã«å¯¾è§’æˆåˆ†ã®å€¤ã§èª¿ç¯€ã™ã‚‹
 	if(strcmp(mesh->GetName(), "femNsteak") == 0){
 		//matKModif();
 	}
 
-	////edges‚É“ü‚Á‚½ŒW”‚©‚çì‚é
+	////edgesã«å…¥ã£ãŸä¿‚æ•°ã‹ã‚‰ä½œã‚‹
 	//for(unsigned j=1; j < 4; j++){
 	//	int vtxid0 = tets[i].vertices[j];
-	//	//	‰ºOŠps—ñ•”•ª‚É‚Â‚¢‚Ä‚Ì‚İÀs
+	//	//	ä¸‹ä¸‰è§’è¡Œåˆ—éƒ¨åˆ†ã«ã¤ã„ã¦ã®ã¿å®Ÿè¡Œ
 	//	//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 	//	for(unsigned k = 0; k < j; k++){
 	//		int vtxid1 = tets[i].vertices[k];
 	//			for(unsigned l =0; l < vertices[vtxid0].edges.size(); l++){
 	//				for(unsigned m =0; m < vertices[vtxid1].edges.size(); m++){
 	//					if(vertices[vtxid0].edges[l] == vertices[vtxid1].edges[m]){
-	//						edges[vertices[vtxid0].edges[l]].k += matk[j][k];		//“¯‚¶‚à‚Ì‚ª“ñ‚Â‚ ‚é‚Í‚¸‚¾‚©‚ç”¼•ª‚É‚·‚éBãOŠp‰»‰ºOŠp‚¾‚¯‘–¸‚·‚é‚É‚ÍA‚Ç‚¤‚¢‚¤for•¶‚“‚É‚·‚ê‚Î—Ç‚¢‚Ì‚©H
+	//						edges[vertices[vtxid0].edges[l]].k += matk[j][k];		//åŒã˜ã‚‚ã®ãŒäºŒã¤ã‚ã‚‹ã¯ãšã ã‹ã‚‰åŠåˆ†ã«ã™ã‚‹ã€‚ä¸Šä¸‰è§’åŒ–ä¸‹ä¸‰è§’ã ã‘èµ°æŸ»ã™ã‚‹ã«ã¯ã€ã©ã†ã„ã†foræ–‡ï½“ã«ã™ã‚Œã°è‰¯ã„ã®ã‹ï¼Ÿ
 	//						//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
 	//					}
 	//				}
@@ -5288,11 +5292,11 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 	//	}
 	//}
 
-#endif UseMatAll
+#endif //UseMatAll
 
 #ifdef DumK
-	//SciLab‚Åg‚¤‚½‚ß‚ÉA‘S‘Ì„«s—ñ‚ğì‚é
-	//matk‚©‚çì‚é
+	//SciLabã§ä½¿ã†ãŸã‚ã«ã€å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹
+	//matkã‹ã‚‰ä½œã‚‹
 	for(unsigned j=0; j<4 ; j++){
 		for(unsigned k=0; k<4 ;k++){
 			matKAll[tets.vertices[j]][tets.vertices[k]] = 0.0;;
@@ -5301,8 +5305,8 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 #endif
 
 #ifdef UseGaussSeidel
-	//‘ÎŠp¬•ª‚ğ‘ÎŠp¬•ª‚Ì‘S‘Ì„«s—ñ‚©‚ç”²‚«o‚µ‚½1~n‚Ìs—ñ‚É‘ã“ü‚·‚é
-	//j=0~4‚Ü‚Å‘ã“ü(ã‚Ìƒ‹[ƒv‚Å‚ÍAj‚Í‘ÎŠp¬•ª‚Ì”ÍˆÍ‚µ‚©‚È‚¢‚Ì‚ÅA’l‚ª“ü‚ç‚È‚¢¬•ª‚ªo‚Ä‚µ‚Ü‚¤)
+	//å¯¾è§’æˆåˆ†ã‚’å¯¾è§’æˆåˆ†ã®å…¨ä½“å‰›æ€§è¡Œåˆ—ã‹ã‚‰æŠœãå‡ºã—ãŸ1Ã—nã®è¡Œåˆ—ã«ä»£å…¥ã™ã‚‹
+	//j=0~4ã¾ã§ä»£å…¥(ä¸Šã®ãƒ«ãƒ¼ãƒ—ã§ã¯ã€jã¯å¯¾è§’æˆåˆ†ã®ç¯„å›²ã—ã‹ãªã„ã®ã§ã€å€¤ãŒå…¥ã‚‰ãªã„æˆåˆ†ãŒå‡ºã¦ã—ã¾ã†)
 	for(unsigned j =0;j<4;j++){
 		dMatKAll[0][mesh->tets[id].vertexIDs[j]] += matk[j][j];
 		//DSTR << "matk[" << j << "][" << j << "] : " << matk[j][j] << std::endl;
@@ -5310,7 +5314,7 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 		int hoge4 =0;
 	}
 #endif
-	//DSTR << std::endl;	//‰üs
+	//DSTR << std::endl;	//æ”¹è¡Œ
 
 	//std::ofstream matKAll("matKAll.csv");
 	//for(){
@@ -5323,24 +5327,24 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 		dMatKAll[0][tets.vertices[j]] = 0.0;
 		int hogeshi =0;
 	} 
-#endif DumK
+#endif //DumK
 
 	
 	//	for debug
-	//—v‘f25‚Ì0~3”Ô–Ú‚Ìß“_‚ª‰½‚©•\¦‚·‚é
+	//è¦ç´ 25ã®0~3ç•ªç›®ã®ç¯€ç‚¹ãŒä½•ã‹è¡¨ç¤ºã™ã‚‹
 	//if(i == 25){
 	//		for(unsigned n=0;n < 4;n++){
-	//			DSTR << n << " : " << tets[25].vertices[n] << std::endl;	//—v‘f25‚Ì0”Ô–Ú‚Ìß“_‚ª63‚Å‚ ‚éB
+	//			DSTR << n << " : " << tets[25].vertices[n] << std::endl;	//è¦ç´ 25ã®0ç•ªç›®ã®ç¯€ç‚¹ãŒ63ã§ã‚ã‚‹ã€‚
 	//		}
 	//}
-	//ß“_”Ô†‚ª63‚Ì“_‚ª‚Ç‚Ì—v‘f‚É“ü‚Á‚Ä‚¢‚é‚Ì‚©‚ğ’²‚×‚éË25,57‚¾‚Á‚½
+	//ç¯€ç‚¹ç•ªå·ãŒ63ã®ç‚¹ãŒã©ã®è¦ç´ ã«å…¥ã£ã¦ã„ã‚‹ã®ã‹ã‚’èª¿ã¹ã‚‹â‡’25,57ã ã£ãŸ
 	//for(unsigned j=0;j < vertices[63].tets.size();j++){
 	//	DSTR << vertices[63].tets[j] <<std::endl;
 	//}
 		
-	//	’²‚×‚é
-	//dMatKAll‚Ì¬•ª‚Ì‚¤‚¿A0‚Æ‚È‚é—v‘f‚ª‚ ‚Á‚½‚çAƒGƒ‰[‚©H@“ü‚Á‚Ä‚¢‚È‚¢¬•ª‚ª‚ ‚Á‚Ä‚àA–â‘è‚È‚¢‹C‚à‚·‚é
-	// try catch•¶‚É‚·‚é
+	//	èª¿ã¹ã‚‹
+	//dMatKAllã®æˆåˆ†ã®ã†ã¡ã€0ã¨ãªã‚‹è¦ç´ ãŒã‚ã£ãŸã‚‰ã€ã‚¨ãƒ©ãƒ¼ã‹ï¼Ÿã€€å…¥ã£ã¦ã„ãªã„æˆåˆ†ãŒã‚ã£ã¦ã‚‚ã€å•é¡Œãªã„æ°—ã‚‚ã™ã‚‹
+	// try catchæ–‡ã«ã™ã‚‹
 //	for(unsigned j = 0; j < vertices.size() ; j++){
 //		if(dMatKAll[0][j] ==0.0){
 //			DSTR << "Creating dMatKAll error!? : dMatKAll[0][" << j << "] == 0.0 " << std::endl;
@@ -5361,7 +5365,7 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 //#ifdef UseGaussSeidel
 //	for(unsigned j =0;j<mesh->vertices.size();j++){
 //		if(matKAll[j][j] != dMatKAll[0][j]){
-//			DSTR << j <<" ¬•ª‚Ì—v‘f‚Í‚¨‚©‚µ‚¢I’²¸‚ª•K—v‚Å‚ ‚éB matKAllF" << matKAll[j][j] << " dMatKAllF" << dMatKAll[0][j] <<std::endl;
+//			DSTR << j <<" æˆåˆ†ã®è¦ç´ ã¯ãŠã‹ã—ã„ï¼èª¿æŸ»ãŒå¿…è¦ã§ã‚ã‚‹ã€‚ matKAllï¼š" << matKAll[j][j] << " dMatKAllï¼š" << dMatKAll[0][j] <<std::endl;
 //		}
 //	}
 //#endif
@@ -5373,23 +5377,23 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 void PHFemThermo::CreateMatk1b(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//yagawa1983‚ğŠî‚Éƒm[ƒg‚É®“WŠJ‚µ‚½ŒvZ®
+	//yagawa1983ã‚’åŸºã«ãƒãƒ¼ãƒˆã«å¼å±•é–‹ã—ãŸè¨ˆç®—å¼
 	unsigned i=0;
 	unsigned j=0;
 	unsigned k=0;
 	unsigned l=0;
 
-	//a_1~a_4, ... , c_4	‚ğì¬
-	//ŒW”(•„†)~s—ñ®‚Ì“ü‚ê•¨
+	//a_1~a_4, ... , c_4	ã‚’ä½œæˆ
+	//ä¿‚æ•°(ç¬¦å·)Ã—è¡Œåˆ—å¼ã®å…¥ã‚Œç‰©
 	double a[4];
 	double b[4];
 	double c[4];
 
-	//—v‘f‚ğ\¬‚·‚éß“_‚ÌÀ•W‚Ì“ü‚ê•¨
+	//è¦ç´ ã‚’æ§‹æˆã™ã‚‹ç¯€ç‚¹ã®åº§æ¨™ã®å…¥ã‚Œç‰©
 	double x[4];
 	double y[4];
 	double z[4];
-	//—v‘f“à‚Ì4ß“_‚Ìx,y,zÀ•W‚ğŠi”[
+	//è¦ç´ å†…ã®4ç¯€ç‚¹ã®x,y,zåº§æ¨™ã‚’æ ¼ç´
 	for(unsigned m=0; m < 4;m++){
 		x[m] = mesh->vertices[mesh->tets[id].vertexIDs[m]].pos.x;
 		y[m] = mesh->vertices[mesh->tets[id].vertexIDs[m]].pos.y;
@@ -5399,24 +5403,24 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 	//mata~matc
 	//a[i]
 	for(unsigned i =0;i<4;i++){
-		double fugou =0.0;				// (-1)^i ‚Ì•„†‚Ì’è‹`
+		double fugou =0.0;				// (-1)^i ã®ç¬¦å·ã®å®šç¾©
 
-		//	fugou ‚Ì•„†”»’è
-		if(i == 0 || i == 2){		//0,2‚ÌA(-1)^1,3 = -1
+		//	fugou ã®ç¬¦å·åˆ¤å®š
+		if(i == 0 || i == 2){		//0,2ã®æ™‚ã€(-1)^1,3 = -1
 			fugou = -1.0;
 		}
-		else{					//1,3‚ÌA(-1)^0,2 = 1
+		else{					//1,3ã®æ™‚ã€(-1)^0,2 = 1
 			fugou = 1.0;
 		}
 		
-		//i,j,k,l‚ÌŠÖŒWƒZƒbƒgË”z—ñ‚Ì—v‘f‚É‚µ‚Ä‚à‚¢‚¢‚©‚àBi[4],if(i[0]=0){i[1](=j)=1, i[2](=k)=2, i[3](=l)=3}	if(i[0]=1){i[1](=j)=2, i[2](=k)=3, i[3](=l)=0}
+		//i,j,k,lã®é–¢ä¿‚ã‚»ãƒƒãƒˆâ‡’é…åˆ—ã®è¦ç´ ã«ã—ã¦ã‚‚ã„ã„ã‹ã‚‚ã€‚i[4],if(i[0]=0){i[1](=j)=1, i[2](=k)=2, i[3](=l)=3}	if(i[0]=1){i[1](=j)=2, i[2](=k)=3, i[3](=l)=0}
 		if(i==0){		j=1;	k=2;	l=3;	}
 		else if(i==1){	j=2;	k=3;	l=0;	}
 		else if(i==2){	j=3;	k=0;	l=1;	}
 		else if(i==3){	j=0;	k=1;	l=2;	}
 
-		// a_i‚Ìì¬
-		for(unsigned m =0;m<3;m++){						//	1‚Ì¬•ª‚Ö‚Ì‘ã“ü‚Í‚Â‚¢‚Å
+		// a_iã®ä½œæˆ
+		for(unsigned m =0;m<3;m++){						//	1ã®æˆåˆ†ã¸ã®ä»£å…¥ã¯ã¤ã„ã§
 			mata[m][0] = 1.0;
 		}
 		mata[0][1] = y[j];
@@ -5439,12 +5443,12 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 		//DSTR << a[i] << std::endl;
 
 
-		// b_i‚Ìì¬
+		// b_iã®ä½œæˆ
 		matb[0][0]=x[j];
 		matb[1][0]=x[k];
 		matb[2][0]=x[l];
 
-		for(unsigned m =0;m<3;m++){						//	1‚Ì¬•ª‚Ö‚Ì‘ã“ü‚Í‚Â‚¢‚Å
+		for(unsigned m =0;m<3;m++){						//	1ã®æˆåˆ†ã¸ã®ä»£å…¥ã¯ã¤ã„ã§
 			matb[m][1] = 1.0;
 		}
 
@@ -5462,7 +5466,7 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 		//DSTR << "b[" << i << "] : " <<std::endl;
 		//DSTR << b[i] << std::endl;
 
-		// c_i‚Ìì¬
+		// c_iã®ä½œæˆ
 		matcc[0][0]=x[j];
 		matcc[1][0]=x[k];
 		matcc[2][0]=x[l];
@@ -5471,7 +5475,7 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 		matcc[1][1]=y[k];
 		matcc[2][1]=y[l];
 
-		for(unsigned m =0;m<3;m++){						//	1‚Ì¬•ª‚Ö‚Ì‘ã“ü‚Í‚Â‚¢‚Å
+		for(unsigned m =0;m<3;m++){						//	1ã®æˆåˆ†ã¸ã®ä»£å…¥ã¯ã¤ã„ã§
 			matcc[m][2] = 1.0;
 		}
 
@@ -5482,7 +5486,7 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 
 		c[i] = fugou * matcc.det();
 		
-		//	for debug@—v‘f‚²‚Æ‚Ìa_i~c_i‚ÌZo
+		//	for debugã€€è¦ç´ ã”ã¨ã®a_i~c_iã®ç®—å‡º
 		//DSTR << "a["<< i << "] : " << a[i] << std::endl;
 		//DSTR << "b["<< i << "] : " << b[i] << std::endl;
 		//DSTR << "c["<< i << "] : " << c[i] << std::endl;
@@ -5490,15 +5494,15 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 		int debughogeshi =0;
 	}
 	
-	//	matk1‚Ì¬•ª‚Éa_i ~ c_i‚Ì‘½€®‚ğ‘ã“ü	‚«‚ê‚¢‚·‚¬‚é‚ªA‰º‚ÌƒR[ƒh‚Å—Ç‚¢I	‘ÎŠp¬•ª‚à”ñ‘ÎŠp¬•ª‚àA‘S•”A‰º‚ÌƒR[ƒh
-	//	‰ü‘PˆÄ		‰ºOŠp‚Æ‘ÎŠp¬•ª‚¾‚¯AŒvZ‚µAãOŠp‚Í‰ºOŠp‚ğ‘ã“ü‚Å‚à‚æ‚¢B
+	//	matk1ã®æˆåˆ†ã«a_i ~ c_iã®å¤šé …å¼ã‚’ä»£å…¥	ãã‚Œã„ã™ãã‚‹ãŒã€ä¸‹ã®ã‚³ãƒ¼ãƒ‰ã§è‰¯ã„ï¼	å¯¾è§’æˆåˆ†ã‚‚éå¯¾è§’æˆåˆ†ã‚‚ã€å…¨éƒ¨ã€ä¸‹ã®ã‚³ãƒ¼ãƒ‰
+	//	æ”¹å–„æ¡ˆ		ä¸‹ä¸‰è§’ã¨å¯¾è§’æˆåˆ†ã ã‘ã€è¨ˆç®—ã—ã€ä¸Šä¸‰è§’ã¯ä¸‹ä¸‰è§’ã‚’ä»£å…¥ã§ã‚‚ã‚ˆã„ã€‚
 	for(unsigned i =0;i<4;i++){
 		for(unsigned j =0;j<4;j++){
 			tetVars[id].matk[0][i][j] = a[i] * a[j] +b[i] * b[j] + c[i] * c[j];
 		}
 	}
 
-	////	ã‹L‚æ‚èƒRƒXƒg‚Ì­‚È‚¢ƒR[ƒh?
+	////	ä¸Šè¨˜ã‚ˆã‚Šã‚³ã‚¹ãƒˆã®å°‘ãªã„ã‚³ãƒ¼ãƒ‰?
 	//matk[0][0] = a[0] * a[0] +b[0] * b[0] + c[0] * c[0];
 	//matk[1][1] = a[1] * a[1] +b[1] * b[1] + c[1] * c[1];
 	//matk[2][2] = a[2] * a[2] +b[2] * b[2] + c[2] * c[2];
@@ -5518,29 +5522,29 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 	//DSTR << matk1 << std::endl;
 	//int debughogeshi2 =0;
 	
-	//ŒW”‚ÌÏ
-//	tets[id].matk[0]= thConduct / (36 *  CalcTetrahedraVolume(tets[id])) * tets[id].matk[0];		//—˜_‚ªŠÔˆá‚Á‚Ä‚¢‚½‚Ì‚ÅAC³
-	tetVars[id].matk[0]= thConduct / (36 *  tetVars[id].volume) * tetVars[id].matk[0];		//—˜_‚ªŠÔˆá‚Á‚Ä‚¢‚½‚Ì‚ÅAC³
+	//ä¿‚æ•°ã®ç©
+//	tets[id].matk[0]= thConduct / (36 *  CalcTetrahedraVolume(tets[id])) * tets[id].matk[0];		//ç†è«–ãŒé–“é•ã£ã¦ã„ãŸã®ã§ã€ä¿®æ­£
+	tetVars[id].matk[0]= thConduct / (36 *  tetVars[id].volume) * tetVars[id].matk[0];		//ç†è«–ãŒé–“é•ã£ã¦ã„ãŸã®ã§ã€ä¿®æ­£
 
 	//	for DEBUG
-	//DSTR << "ŒW”ÏŒã‚Ì matk1 : " << std::endl;
+	//DSTR << "ä¿‚æ•°ç©å¾Œã® matk1 : " << std::endl;
 	//DSTR << matk1 << std::endl;
 	int debughogeshi3 =0;
 
 	DSTR << "Inner Function matk1b _ tets["<< id << "].matk[0] "<< tetVars[id].matk[0] << std::endl;  
-	//a~c‚Ì‘½€®‚ğK1‚É‘ã“ü
-	//matk1(4x4)‚É‘ã“ü
+	//a~cã®å¤šé …å¼ã‚’K1ã«ä»£å…¥
+	//matk1(4x4)ã«ä»£å…¥
 
 }
 
 void PHFemThermo::CreateMatk1k(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//‚±‚ÌŒvZ‚ğŒÄ‚Ño‚·‚Æ‚«‚ÉAŠel–Ê‘Ì‚²‚Æ‚ÉŒvZ‚·‚é‚½‚ßAl–Ê‘Ì‚Ì0”Ô‚©‚ç‡‚É‚±‚ÌŒvZ‚ğs‚¤
-	//l–Ê‘Ì‚ğ\¬‚·‚é4ß“_‚ğß“_‚Ì”z—ñ(Tets‚É‚ÍAß“_‚Ì”z—ñ‚ªì‚Á‚Ä‚ ‚é)‚É“ü‚Á‚Ä‚¢‚é‡”Ô‚ğg‚Á‚ÄA–Ê‚ÌŒvZ‚ğs‚Á‚½‚èAs—ñ‚ÌŒvZ‚ğs‚Á‚½‚è‚·‚éB
-	//‚»‚Ì‚½‚ßA‚±‚ÌŠÖ”‚Ìˆø”‚ÉAl–Ê‘Ì—v‘f‚Ì”Ô†‚ğæ‚é
+	//ã“ã®è¨ˆç®—ã‚’å‘¼ã³å‡ºã™ã¨ãã«ã€å„å››é¢ä½“ã”ã¨ã«è¨ˆç®—ã™ã‚‹ãŸã‚ã€å››é¢ä½“ã®0ç•ªã‹ã‚‰é †ã«ã“ã®è¨ˆç®—ã‚’è¡Œã†
+	//å››é¢ä½“ã‚’æ§‹æˆã™ã‚‹4ç¯€ç‚¹ã‚’ç¯€ç‚¹ã®é…åˆ—(Tetsã«ã¯ã€ç¯€ç‚¹ã®é…åˆ—ãŒä½œã£ã¦ã‚ã‚‹)ã«å…¥ã£ã¦ã„ã‚‹é †ç•ªã‚’ä½¿ã£ã¦ã€é¢ã®è¨ˆç®—ã‚’è¡Œã£ãŸã‚Šã€è¡Œåˆ—ã®è¨ˆç®—ã‚’è¡Œã£ãŸã‚Šã™ã‚‹ã€‚
+	//ãã®ãŸã‚ã€ã“ã®é–¢æ•°ã®å¼•æ•°ã«ã€å››é¢ä½“è¦ç´ ã®ç•ªå·ã‚’å–ã‚‹
 
-	//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+	//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 	tetVars[id].matk[0].clear();
 	//for(unsigned i =0; i < 4 ;i++){
 	//	for(unsigned j =0; j < 4 ;j++){
@@ -5549,10 +5553,10 @@ void PHFemThermo::CreateMatk1k(unsigned id){
 	//	}
 	//}
 
-	//	As—ñ@=	a11 a12 a13
+	//	Aè¡Œåˆ—ã€€=	a11 a12 a13
 	//				a21 a22 a23
 	//				a31 a32 a33
-	//‚ğ¶¬
+	//ã‚’ç”Ÿæˆ
 	PTM::TMatrixRow<4,4,double> matk1A;
 	FemVertex p[4];
 	for(unsigned i = 0; i< 4 ; i++){
@@ -5576,7 +5580,7 @@ void PHFemThermo::CreateMatk1k(unsigned id){
 	//DSTR << "matk1A : " << matk1A << std::endl; 
 	//int hogeshi =0;
 
-	//a11 ~ a33 ‚ğs—ñ‚É“ü‚ê‚ÄA[N~T] [N] ‚ğŒvZ‚³‚¹‚é
+	//a11 ~ a33 ã‚’è¡Œåˆ—ã«å…¥ã‚Œã¦ã€[N~T] [N] ã‚’è¨ˆç®—ã•ã›ã‚‹
 	
 	PTM::TMatrixRow<1,4,double> Nx;
 	PTM::TMatrixRow<1,4,double> Ny;
@@ -5597,17 +5601,17 @@ void PHFemThermo::CreateMatk1k(unsigned id){
 	Nz[0][2] = matk1A[2][1];
 	Nz[0][3] = matk1A[2][2];
 
-	//	Km ‚ÌZo
+	//	Km ã®ç®—å‡º
 	//tets[id].matk1 = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
 #if 0
 	tets[id].matk[0] = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
 #else
-	//	ˆÙ•û«”M“`“±—¦‚É‘Î‰
+	//	ç•°æ–¹æ€§ç†±ä¼å°ç‡ã«å¯¾å¿œ
 	//DSTR << "thConduct_x:" << thConduct_x <<"," << "thConduct_y:" << thConduct_y <<"," << "thConduct_z:" << thConduct_z <<std::endl;
 	tetVars[id].matk[0] = thConduct_x * Nx.trans() * Nx + thConduct_y * Ny.trans() * Ny + thConduct_z * Nz.trans() * Nz;
 #endif
 
-	////Nx,Ny,Nz‚ğo—Í
+	////Nx,Ny,Nzã‚’å‡ºåŠ›
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	PTM::TMatrixRow<4,4,double> NxtNx;
 	//	PTM::TMatrixRow<4,4,double> NytNy;
@@ -5701,72 +5705,72 @@ PTM::TMatrixRow<4,4,double> PHFemThermo::GetKMatInTet(unsigned id){
 	//}
 }
 
-///*¬–ìŒ´’Ç‰Á‚±‚±‚©‚ç--------------------------------------------*/
-/////’¸“_‚Ì’S“–‚·‚é–ÊÏ‚ÌŒvZ‚ğ—\‚ß‚µ‚Ä‚¨‚­Bi•¨‘Ì‚ª„‘Ì‚È‚Ì‚ÅƒƒbƒVƒ…î•ñ‚Í•Ï‰»‚µ‚È‚¢‘O’ñj
+///*å°é‡åŸè¿½åŠ ã“ã“ã‹ã‚‰--------------------------------------------*/
+/////é ‚ç‚¹ã®æ‹…å½“ã™ã‚‹é¢ç©ã®è¨ˆç®—ã‚’äºˆã‚ã—ã¦ãŠãã€‚ï¼ˆç‰©ä½“ãŒå‰›ä½“ãªã®ã§ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ã¯å¤‰åŒ–ã—ãªã„å‰æï¼‰
 void PHFemThermo::calcVerticesArea(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
 	for(unsigned i=0; i<mesh->surfaceVertices.size(); i++){
-		vertexVars[mesh->surfaceVertices[i]].area = 0; //‚±‚ê‚ğ‹‚ß‚é
+		vertexVars[mesh->surfaceVertices[i]].area = 0; //ã“ã‚Œã‚’æ±‚ã‚ã‚‹
 		for(unsigned j=0; j<mesh->vertices[mesh->surfaceVertices[i]].faceIDs.size(); ++j){
-			if(mesh->vertices[mesh->surfaceVertices[i]].faceIDs[j] < (int) mesh->nSurfaceFace){ //‚à‚µface‚ª•\–Ê‚Ì–Ê‚Å‚ ‚Á‚½‚ç
+			if(mesh->vertices[mesh->surfaceVertices[i]].faceIDs[j] < (int) mesh->nSurfaceFace){ //ã‚‚ã—faceãŒè¡¨é¢ã®é¢ã§ã‚ã£ãŸã‚‰
 				unsigned faceId = mesh->vertices[mesh->surfaceVertices[i]].faceIDs[j];
 				vertexVars[mesh->surfaceVertices[i]].area += faceVars[faceId].area / 3 ;
 			}
 		}
 	}
 }
-///*¬–ìŒ´’Ç‰Á‚±‚±‚Ü‚Å--------------------------------------------*/
+///*å°é‡åŸè¿½åŠ ã“ã“ã¾ã§--------------------------------------------*/
 
 void PHFemThermo::CreateVecf2surface(unsigned id,unsigned num){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	tetVars[id].vecf[1].clear();
-	//l=0‚Ìf21,1‚Ì:f22, 2‚Ì:f23, 3‚Ì:f24	‚ğ¶¬
-	///	..j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ª0‚ÌƒxƒNƒgƒ‹‚ğì¬
+	//l=0ã®æ™‚f21,1ã®æ™‚:f22, 2ã®æ™‚:f23, 3ã®æ™‚:f24	ã‚’ç”Ÿæˆ
+	///	..jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ãŒ0ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		vecf2array[l] = Create41Vec1();
-		vecf2array[l][l] = 0.0;			//	ls‚ğ0‚É
+		vecf2array[l][l] = 0.0;			//	lè¡Œã‚’0ã«
 	}
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ävecf2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-		///	..s—ñŒ^‚Ì“ü‚ê•¨‚ğ—pˆÓ
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦vecf2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+		///	..è¡Œåˆ—å‹ã®å…¥ã‚Œç‰©ã‚’ç”¨æ„
 		//faces[tets.faces[l]].vertices;
-		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].fluxarea > 0 ){			///	ŠOŠk‚Ì–Ê Š‚Â ”M“`’B—¦‚ªXV‚³‚ê‚½‚ç matk2‚ğXV‚·‚é•K—v‚ª‚ ‚é
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].fluxarea > 0 ){			///	å¤–æ®»ã®é¢ ä¸”ã¤ ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ matk2ã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 			}
-			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚ğœ‚¢‚½ƒxƒNƒgƒ‹‚ÌÏ‚ğ‚Æ‚é
-			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã‚’é™¤ã„ãŸãƒ™ã‚¯ãƒˆãƒ«ã®ç©ã‚’ã¨ã‚‹
+			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];			
-			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 			unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 			for(unsigned j=0;j<4;j++){
-				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-					///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
+				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+					///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
 					for(unsigned i =0;i<3;++i){
 						tetVars[id].vecf[1] += faceVars[mesh->tets[id].faceIDs[l]].heatflux[num][i] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].area * vecf2array[j];
 					}
 //					DSTR << vecf2array[j] << std::endl;
-					//DSTR << "tets[id].matk2‚Éfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "‚ğ‰ÁZ: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
+					//DSTR << "tets[id].matk2ã«faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "ã‚’åŠ ç®—: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
 				//else{
-				//	///	ID‚Æˆê’v‚µ‚È‚¢ê‡‚É‚ÍAmatk2array[j]‚É‚Í‘S¬•ª0‚ğ“ü‚ê‚é
-				//	///	‚Æ‚µ‚½‚¢‚Æ‚±‚ë‚¾‚ªA
+				//	///	IDã¨ä¸€è‡´ã—ãªã„å ´åˆã«ã¯ã€matk2array[j]ã«ã¯å…¨æˆåˆ†0ã‚’å…¥ã‚Œã‚‹
+				//	///	ã¨ã—ãŸã„ã¨ã“ã‚ã ãŒã€
 				//	//matk2array[j] =0.0 * matk2array[j];
 				//	//DSTR << "matk2array[" << j << "]: " << matk2array[j] << std::endl;
 				//}
 			}
 		}
-		///	SurfaceFace‚¶‚á‚È‚©‚Á‚½‚çAmatk2array‚É‚Í0‚ğ“ü‚ê‚é
+		///	SurfaceFaceã˜ã‚ƒãªã‹ã£ãŸã‚‰ã€matk2arrayã«ã¯0ã‚’å…¥ã‚Œã‚‹
 		//else{
 		//	//matk2array[l];
 		//}
@@ -5776,58 +5780,58 @@ void PHFemThermo::CreateVecf2surface(unsigned id,unsigned num){
 void PHFemThermo::CreateVecf2surface(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	tetVars[id].vecf[1].clear();
-	//l=0‚Ìf21,1‚Ì:f22, 2‚Ì:f23, 3‚Ì:f24	‚ğ¶¬
-	///	..j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ª0‚ÌƒxƒNƒgƒ‹‚ğì¬
+	//l=0ã®æ™‚f21,1ã®æ™‚:f22, 2ã®æ™‚:f23, 3ã®æ™‚:f24	ã‚’ç”Ÿæˆ
+	///	..jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ãŒ0ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		vecf2array[l] = Create41Vec1();
-		vecf2array[l][l] = 0.0;			//	ls‚ğ0‚É
+		vecf2array[l][l] = 0.0;			//	lè¡Œã‚’0ã«
 	}
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ävecf2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-		///	..s—ñŒ^‚Ì“ü‚ê•¨‚ğ—pˆÓ
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦vecf2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+		///	..è¡Œåˆ—å‹ã®å…¥ã‚Œç‰©ã‚’ç”¨æ„
 		//faces[tets.faces[l]].vertices;
-		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].fluxarea > 0 ){			///	ŠOŠk‚Ì–Ê Š‚Â ”M“`’B—¦‚ªXV‚³‚ê‚½‚ç matk2‚ğXV‚·‚é•K—v‚ª‚ ‚é
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].fluxarea > 0 ){			///	å¤–æ®»ã®é¢ ä¸”ã¤ ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ matk2ã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 			}
-			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚ğœ‚¢‚½ƒxƒNƒgƒ‹‚ÌÏ‚ğ‚Æ‚é
+			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã‚’é™¤ã„ãŸãƒ™ã‚¯ãƒˆãƒ«ã®ç©ã‚’ã¨ã‚‹
 			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];			
-			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 			unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 			for(unsigned j=0;j<4;j++){
-				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
-					//	•¡”‚Ì”M—¬‘©‚É‘Î‰:i
+				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
+					//	è¤‡æ•°ã®ç†±æµæŸã«å¯¾å¿œ:i
 #ifdef DISABLE_COIL
-					tetVars[id].vecf[1] += faceVars[mesh->tets[id].faceIDs[l]].heatflux[1][3] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].fluxarea[3] * vecf2array[j];	//+=:j=0~3‚Ìvecf2array‚ğ‰ÁZ										
+					tetVars[id].vecf[1] += faceVars[mesh->tets[id].faceIDs[l]].heatflux[1][3] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].fluxarea[3] * vecf2array[j];	//+=:j=0~3ã®vecf2arrayã‚’åŠ ç®—										
 #else 
 					for(unsigned i=0;i<3;++i){
-						tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[1][i] * (1.0/3.0) * faces[tets[id].faces[l]].fluxarea[i] * vecf2array[j];	//+=:j=0~3‚Ìvecf2array‚ğ‰ÁZ
+						tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[1][i] * (1.0/3.0) * faces[tets[id].faces[l]].fluxarea[i] * vecf2array[j];	//+=:j=0~3ã®vecf2arrayã‚’åŠ ç®—
 					}
 #endif
 				}
 			}
 		}
 
-		//Èq”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚È‚¯‚ê‚Î‚ ‚è‚¤‚é«Á‚·
+		//æ§“å­ç¯„å›²å†…ã«å…¥ã£ã¦ã„ãªã‘ã‚Œã°ã‚ã‚Šã†ã‚‹â†“æ¶ˆã™
 		//else if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].fluxarea <= 0 ){
-		//	DSTR << "faces[tets[id].faces[l]].fluxarea‚ª³‚µ‚­ŒvZ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ" <<std::endl;
+		//	DSTR << "faces[tets[id].faces[l]].fluxareaãŒæ­£ã—ãè¨ˆç®—ã•ã‚Œã¦ã„ã¾ã›ã‚“" <<std::endl;
 		//}
 
-		///	SurfaceFace‚¶‚á‚È‚©‚Á‚½‚çAmatk2array‚É‚Í0‚ğ“ü‚ê‚é
+		///	SurfaceFaceã˜ã‚ƒãªã‹ã£ãŸã‚‰ã€matk2arrayã«ã¯0ã‚’å…¥ã‚Œã‚‹
 		//else{
 		//	//matk2array[l];
 		//}
 	}
 
-	// ®‚ÌŒŸZƒR[ƒh
+	// å¼ã®æ¤œç®—ã‚³ãƒ¼ãƒ‰
 	//double m1=0.0;
 	//double m2=0.0;
 	//double m3=0.0;
@@ -5848,40 +5852,40 @@ void PHFemThermo::CreateVecf2surface(unsigned id){
 void PHFemThermo::CreateVecf3surface(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	tetVars[id].vecf[2].clear();
 	double Tc[4];
 	double TcAll =0;
 	for(unsigned l=0;l<4;++l){
 		TcAll += vertexVars[mesh->tets[id].vertexIDs[l]].Tc;
 	}
-	//l=0‚Ìf21,1‚Ì:f22, 2‚Ì:f23, 3‚Ì:f24	‚ğ¶¬
-	///	..j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ª0‚ÌƒxƒNƒgƒ‹‚ğì¬
+	//l=0ã®æ™‚f21,1ã®æ™‚:f22, 2ã®æ™‚:f23, 3ã®æ™‚:f24	ã‚’ç”Ÿæˆ
+	///	..jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ãŒ0ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		vecf3array[l] = Create41Vec1();
-		vecf3array[l][l] = 0.0;			//	ls‚ğ0‚É
+		vecf3array[l][l] = 0.0;			//	lè¡Œã‚’0ã«
 		Tc[l] =  (TcAll - vertexVars[mesh->tets[id].vertexIDs[l]].Tc) * 1.0/3.0;
 	}
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ävecf2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].heatTransRatios.size() ){		///	ŠOŠk‚Ì–Ê‚Å‚Ì‚İÀs && i‚P‚ÂˆÈã‚Ìj”M“`’B—¦‚ªİ’è‚³‚ê‚Ä‚¢‚é‚Æ‚«
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦vecf2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].heatTransRatios.size() ){		///	å¤–æ®»ã®é¢ã§ã®ã¿å®Ÿè¡Œ && ï¼ˆï¼‘ã¤ä»¥ä¸Šã®ï¼‰ç†±ä¼é”ç‡ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ã¨ã
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 			}
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚ğœ‚¢‚½ƒxƒNƒgƒ‹‚ÌÏ‚ğ‚Æ‚é
-			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã‚’é™¤ã„ãŸãƒ™ã‚¯ãƒˆãƒ«ã®ç©ã‚’ã¨ã‚‹
+			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];			
-			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 			unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 			for(unsigned j=0;j<4;j++){
-				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
+				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
 					for(unsigned k =0 ; k < faceVars[mesh->tets[id].faceIDs[l]].heatTransRatios.size(); ++k){
-						tetVars[id].vecf[2] +=  faceVars[mesh->tets[id].faceIDs[l]].heatTransRatios[k] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].area * vecf3array[j];	//+=:j=0~3‚Ìvecf2array‚ğ‰ÁZ			
+						tetVars[id].vecf[2] +=  faceVars[mesh->tets[id].faceIDs[l]].heatTransRatios[k] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].area * vecf3array[j];	//+=:j=0~3ã®vecf2arrayã‚’åŠ ç®—			
 					}
 				}
 			}
@@ -5892,10 +5896,10 @@ void PHFemThermo::CreateVecf3surface(unsigned id){
 void PHFemThermo::CreateVecf4surface(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	tetVars[id].vecf[3].clear();
-	//l=0‚Ìf21,1‚Ì:f22, 2‚Ì:f23, 3‚Ì:f24	‚ğ¶¬
-	///	..j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ª0‚ÌƒxƒNƒgƒ‹‚ğì¬
+	//l=0ã®æ™‚f21,1ã®æ™‚:f22, 2ã®æ™‚:f23, 3ã®æ™‚:f24	ã‚’ç”Ÿæˆ
+	///	..jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ãŒ0ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆ
 	double Tout[4];
 	double ToutAll =0;
 	for(unsigned l=0;l<4;++l){
@@ -5903,33 +5907,33 @@ void PHFemThermo::CreateVecf4surface(unsigned id){
 	}
 	for(unsigned l= 0 ; l < 4; l++){
 		vecf4array[l] = Create41Vec1();
-		vecf4array[l][l] = 0.0;			//	ls‚ğ0‚É
+		vecf4array[l][l] = 0.0;			//	lè¡Œã‚’0ã«
 		Tout[l] =  (ToutAll - vertexVars[mesh->tets[id].vertexIDs[l]].Tout) * 1.0/3.0;
 	}
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ävecf2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace){	// && faces[tets[id].faces[l]].thermalEmissivity != 0 ){		///	ŠOŠk‚Ì–Ê‚Å‚Ì‚İÀs && i‚P‚ÂˆÈã‚Ìj”M“`’B—¦‚ªİ’è‚³‚ê‚Ä‚¢‚é‚Æ‚«
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦vecf2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace){	// && faces[tets[id].faces[l]].thermalEmissivity != 0 ){		///	å¤–æ®»ã®é¢ã§ã®ã¿å®Ÿè¡Œ && ï¼ˆï¼‘ã¤ä»¥ä¸Šã®ï¼‰ç†±ä¼é”ç‡ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ã¨ã
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 			}
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚ğœ‚¢‚½ƒxƒNƒgƒ‹‚ÌÏ‚ğ‚Æ‚é
-			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã‚’é™¤ã„ãŸãƒ™ã‚¯ãƒˆãƒ«ã®ç©ã‚’ã¨ã‚‹
+			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];			
-			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 			unsigned ID = vtx - ( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 			for(unsigned j=0;j<4;j++){
-				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
+				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
 					double ems_temp = ( 	
 						vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].thermalEmissivity_const
 						+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].thermalEmissivity_const
 						+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].thermalEmissivity_const
 						) / 3.0;
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
-					tetVars[id].vecf[3] +=  ems_temp * Tout[j] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].area * vecf4array[j];	//+=:j=0~3‚Ìvecf2array‚ğ‰ÁZ								
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
+					tetVars[id].vecf[3] +=  ems_temp * Tout[j] * (1.0/3.0) * faceVars[mesh->tets[id].faceIDs[l]].area * vecf4array[j];	//+=:j=0~3ã®vecf2arrayã‚’åŠ ç®—								
 				}
 			}
 		}
@@ -5940,96 +5944,96 @@ void PHFemThermo::CreateVecf4surface(unsigned id){
 void PHFemThermo::CreateVecF3surfaceAll(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	‰Šú‰»
-	//	ã‰ÎA’†‰ÎA‹­‰Î‚É‚Â‚¢‚Ä‰Šú‰»(ƒxƒNƒgƒ‹‚Ìs”İ’èA‰Šú‰»)
-	vecFAll_f3.resize(mesh->vertices.size(),1);			//•\–Ê‚¾‚¯‚Å‚È‚­A‘Sß“_‚É‚Â‚¢‚ÄŒvZ‚µ‚È‚¢‚ÆAƒxƒNƒgƒ‹~s—ñ‚ÌŒvZ‚ª•s¬—§‚Ì‚½‚ßB
+	//	åˆæœŸåŒ–
+	//	å¼±ç«ã€ä¸­ç«ã€å¼·ç«ã«ã¤ã„ã¦åˆæœŸåŒ–(ãƒ™ã‚¯ãƒˆãƒ«ã®è¡Œæ•°è¨­å®šã€åˆæœŸåŒ–)
+	vecFAll_f3.resize(mesh->vertices.size(),1);			//è¡¨é¢ã ã‘ã§ãªãã€å…¨ç¯€ç‚¹ã«ã¤ã„ã¦è¨ˆç®—ã—ãªã„ã¨ã€ãƒ™ã‚¯ãƒˆãƒ«Ã—è¡Œåˆ—ã®è¨ˆç®—ãŒä¸æˆç«‹ã®ãŸã‚ã€‚
 	vecFAll_f3.clear();
 	
-	//l–Ê‘Ì—v‘f‚²‚Æ‚És—ñ‚ğì‚èA‚Ç‚±‚©‚Å‡¬‚·‚é
-	//id‚ğ“ü‚ê‚ÄAÄ‹A“I‚Éì‚Á‚Ä‚¢‚é
+	//å››é¢ä½“è¦ç´ ã”ã¨ã«è¡Œåˆ—ã‚’ä½œã‚Šã€ã©ã“ã‹ã§åˆæˆã™ã‚‹
+	//idã‚’å…¥ã‚Œã¦ã€å†å¸°çš„ã«ä½œã£ã¦ã„ã‚‹
 	for(unsigned id =0; id < mesh->tets.size();id++){ 
-		//s—ñ‚ğì‚é
-		CreateVecf3(id);//;		// f3surface‚Å‚Í‚È‚¢‚¯‚ê‚ÇA‚¢‚¢‚Ì‚©H	//CreateVecf2surface(id,num);	//	‚±‚ÌŠÖ”‚àAˆø”‚Éw’è‚µ‚½ƒxƒNƒgƒ‹‚É“ü‚ê‚ç‚ê‚é‚æ‚¤‚É‚·‚é?
+		//è¡Œåˆ—ã‚’ä½œã‚‹
+		CreateVecf3(id);//;		// f3surfaceã§ã¯ãªã„ã‘ã‚Œã©ã€ã„ã„ã®ã‹ï¼Ÿ	//CreateVecf2surface(id,num);	//	ã“ã®é–¢æ•°ã‚‚ã€å¼•æ•°ã«æŒ‡å®šã—ãŸãƒ™ã‚¯ãƒˆãƒ«ã«å…¥ã‚Œã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹?
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = mesh->tets[id].vertexIDs[j];
-			//vecFAllSum[vtxid0] = vecf[j];			//‘S‘Ì„«ƒxƒNƒgƒ‹‚ğì¬FƒKƒEƒXƒUƒCƒfƒ‹ŒvZ“à‚Å‚â‚Á‚Ä‚¢‚éˆ—E‚±‚ê‚ğs‚¤B‚±‚±‚Ü‚Å‚ğVecf2‚Å‚â‚éB
-			vecFAll_f3[vtxid0][0] += tetVars[id].vecf[2][j];		//	+= ‚¶‚á‚È‚­‚Ä‚à‚¢‚¢‚Ì‚©H“¯—l‚ÉAŒ³‚Ìƒ\[ƒX‚Å‚à += ‚Ì•K—v‚ª‚ ‚é‚Ì‚Å‚ÍH
+			//vecFAllSum[vtxid0] = vecf[j];			//å…¨ä½“å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆï¼šã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—å†…ã§ã‚„ã£ã¦ã„ã‚‹å‡¦ç†ãƒ»ã“ã‚Œã‚’è¡Œã†ã€‚ã“ã“ã¾ã§ã‚’Vecf2ã§ã‚„ã‚‹ã€‚
+			vecFAll_f3[vtxid0][0] += tetVars[id].vecf[2][j];		//	+= ã˜ã‚ƒãªãã¦ã‚‚ã„ã„ã®ã‹ï¼ŸåŒæ§˜ã«ã€å…ƒã®ã‚½ãƒ¼ã‚¹ã§ã‚‚ += ã®å¿…è¦ãŒã‚ã‚‹ã®ã§ã¯ï¼Ÿ
 		}
 	}
-	//ì‚Á‚½Œã‚ÉAƒKƒEƒXƒUƒCƒfƒ‹ŒvZ‚ÅAVecFAll‚ÉƒZƒbƒg‚·‚éŠÖ”‚ğì‚éB
-	//vecFAllSum‚É‰ÁZ‚Æ‚©‚·‚é‚ÆA‚Ç‚ñ‚Ç‚ñ‘‚¦‚Ä‚µ‚Ü‚¤‚µA‹t‚ÉA‘¼‚ÌA•Ï‰»‚µ‚È‚¢—v‘f{F_3}‚È‚ÇA‘S‘ÌƒxƒNƒgƒ‹‚àì‚Á‚ÄA•Û‘¶‚µ‚Ä‚¨‚­•K—v
-	//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZ‚Ì’†‚ÅA‚±‚ê‚Ü‚Å‚ÌŒvZ‚ÅFƒxƒNƒgƒ‹‚ğg‚¤‚Ì‚É‘ã‚¦‚ÄAƒ}ƒCƒXƒeƒbƒv‚ÅAVecF‚ğF1,F2‚©‚çì‚é•K—v‚ª‚ ‚éB
+	//ä½œã£ãŸå¾Œã«ã€ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—ã§ã€VecFAllã«ã‚»ãƒƒãƒˆã™ã‚‹é–¢æ•°ã‚’ä½œã‚‹ã€‚
+	//vecFAllSumã«åŠ ç®—ã¨ã‹ã™ã‚‹ã¨ã€ã©ã‚“ã©ã‚“å¢—ãˆã¦ã—ã¾ã†ã—ã€é€†ã«ã€ä»–ã®ã€å¤‰åŒ–ã—ãªã„è¦ç´ {F_3}ãªã©ã€å…¨ä½“ãƒ™ã‚¯ãƒˆãƒ«ã‚‚ä½œã£ã¦ã€ä¿å­˜ã—ã¦ãŠãå¿…è¦
+	//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ã®ä¸­ã§ã€ã“ã‚Œã¾ã§ã®è¨ˆç®—ã§Fãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½¿ã†ã®ã«ä»£ãˆã¦ã€ãƒã‚¤ã‚¹ãƒ†ãƒƒãƒ—ã§ã€VecFã‚’F1,F2ã‹ã‚‰ä½œã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 }
 
 void PHFemThermo::CreateVecF2surfaceAll(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	‰Šú‰»
-	//	ã‰ÎA’†‰ÎA‹­‰Î‚É‚Â‚¢‚Ä‰Šú‰»(ƒxƒNƒgƒ‹‚Ìs”İ’èA‰Šú‰») initVecFAlls()‚ÅÀs
+	//	åˆæœŸåŒ–
+	//	å¼±ç«ã€ä¸­ç«ã€å¼·ç«ã«ã¤ã„ã¦åˆæœŸåŒ–(ãƒ™ã‚¯ãƒˆãƒ«ã®è¡Œæ•°è¨­å®šã€åˆæœŸåŒ–) initVecFAlls()ã§å®Ÿè¡Œ
 	//for(unsigned i =0; i < 4 ;i++){
-	//	vecFAll_f2IH[i].resize(vertices.size(),1);			//•\–Ê‚¾‚¯‚Å‚È‚­A‘Sß“_‚É‚Â‚¢‚ÄŒvZ‚µ‚È‚¢‚ÆAƒxƒNƒgƒ‹~s—ñ‚ÌŒvZ‚ª•s¬—§‚Ì‚½‚ßB
+	//	vecFAll_f2IH[i].resize(vertices.size(),1);			//è¡¨é¢ã ã‘ã§ãªãã€å…¨ç¯€ç‚¹ã«ã¤ã„ã¦è¨ˆç®—ã—ãªã„ã¨ã€ãƒ™ã‚¯ãƒˆãƒ«Ã—è¡Œåˆ—ã®è¨ˆç®—ãŒä¸æˆç«‹ã®ãŸã‚ã€‚
 	//	vecFAll_f2IH[i].clear();
 	//}
 	
-	//l–Ê‘Ì—v‘f‚²‚Æ‚És—ñ‚ğì‚èA‚Ç‚±‚©‚Å‡¬‚·‚é
-	//id‚ğ“ü‚ê‚ÄAÄ‹A“I‚Éì‚Á‚Ä‚¢‚é
+	//å››é¢ä½“è¦ç´ ã”ã¨ã«è¡Œåˆ—ã‚’ä½œã‚Šã€ã©ã“ã‹ã§åˆæˆã™ã‚‹
+	//idã‚’å…¥ã‚Œã¦ã€å†å¸°çš„ã«ä½œã£ã¦ã„ã‚‹
 	for(unsigned id =0; id < mesh->tets.size();id++){ 
-		//s—ñ‚ğì‚é
-		for(unsigned num =0; num <4 ; num++){	//‘S‰Î—Í(OFF/WEEK/MIDDLE/HIGH)‚É‚Â‚¢‚Ä
-			CreateVecf2surface(id,num);			//	‚±‚ÌŠÖ”‚àAˆø”‚Éw’è‚µ‚½ƒxƒNƒgƒ‹‚É“ü‚ê‚ç‚ê‚é‚æ‚¤‚É‚·‚é?
-			//num–ˆ‚ÉA“ü‚ê•¨‚É“ü‚ê‚éB
+		//è¡Œåˆ—ã‚’ä½œã‚‹
+		for(unsigned num =0; num <4 ; num++){	//å…¨ç«åŠ›(OFF/WEEK/MIDDLE/HIGH)ã«ã¤ã„ã¦
+			CreateVecf2surface(id,num);			//	ã“ã®é–¢æ•°ã‚‚ã€å¼•æ•°ã«æŒ‡å®šã—ãŸãƒ™ã‚¯ãƒˆãƒ«ã«å…¥ã‚Œã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹?
+			//numæ¯ã«ã€å…¥ã‚Œç‰©ã«å…¥ã‚Œã‚‹ã€‚
 			for(unsigned j =0;j < 4; j++){
 				int vtxid0 = mesh->tets[id].vertexIDs[j];
-				//vecFAllSum[vtxid0][0] = vecf[j];			//‘S‘Ì„«ƒxƒNƒgƒ‹‚ğì¬FƒKƒEƒXƒUƒCƒfƒ‹ŒvZ“à‚Å‚â‚Á‚Ä‚¢‚éˆ—E‚±‚ê‚ğs‚¤B‚±‚±‚Ü‚Å‚ğVecf2‚Å‚â‚éB
+				//vecFAllSum[vtxid0][0] = vecf[j];			//å…¨ä½“å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆï¼šã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—å†…ã§ã‚„ã£ã¦ã„ã‚‹å‡¦ç†ãƒ»ã“ã‚Œã‚’è¡Œã†ã€‚ã“ã“ã¾ã§ã‚’Vecf2ã§ã‚„ã‚‹ã€‚
 				//vecFAll_f2IHw[vtxid0][0] = vecf[j];
-				vecFAll_f2IH[num][vtxid0][0] += tetVars[id].vecf[1][j];		//f2‚Ì[num(‰Î—Í)]	+= ‚¶‚á‚È‚­‚Ä‚à‚¢‚¢‚Ì‚©H“¯—l‚ÉAŒ³‚Ìƒ\[ƒX‚Å‚à += ‚Ì•K—v‚ª‚ ‚é‚Ì‚Å‚ÍH
+				vecFAll_f2IH[num][vtxid0][0] += tetVars[id].vecf[1][j];		//f2ã®[num(ç«åŠ›)]	+= ã˜ã‚ƒãªãã¦ã‚‚ã„ã„ã®ã‹ï¼ŸåŒæ§˜ã«ã€å…ƒã®ã‚½ãƒ¼ã‚¹ã§ã‚‚ += ã®å¿…è¦ãŒã‚ã‚‹ã®ã§ã¯ï¼Ÿ
 			}
 		}
 
-		////—v‘f‚Ìß“_”Ô†‚ÌêŠ‚ÉA‚»‚Ìß“_‚Ìf‚Ì’l‚ğ“ü‚ê‚é
-		////j:—v‘f‚Ì’†‚Ì‰½”Ô–Ú‚©
+		////è¦ç´ ã®ç¯€ç‚¹ç•ªå·ã®å ´æ‰€ã«ã€ãã®ç¯€ç‚¹ã®fã®å€¤ã‚’å…¥ã‚Œã‚‹
+		////j:è¦ç´ ã®ä¸­ã®ä½•ç•ªç›®ã‹
 		//for(unsigned j =0;j < 4; j++){
 		//	int vtxid0 = tets[id].vertices[j]
-		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];tets[id].vecf[1]//‚Ìj—v‘f
+		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];tets[id].vecf[1]//ã®jè¦ç´ 
 		//}
 
 		//
-		////“ü‚ê•¨‚É“ü‚ê‚é
-		////j:—v‘f‚Ì’†‚Ì‰½”Ô–Ú‚©
+		////å…¥ã‚Œç‰©ã«å…¥ã‚Œã‚‹
+		////j:è¦ç´ ã®ä¸­ã®ä½•ç•ªç›®ã‹
 		//for(unsigned j =0;j < 4; j++){
 		//	int vtxid0 = tets[id].vertices[j];
-		//	vecFAllSum[vtxid0] = vecf[j];			//‘S‘Ì„«ƒxƒNƒgƒ‹‚ğì¬FƒKƒEƒXƒUƒCƒfƒ‹ŒvZ“à‚Å‚â‚Á‚Ä‚¢‚éˆ—E‚±‚ê‚ğs‚¤B‚±‚±‚Ü‚Å‚ğVecf2‚Å‚â‚éB
+		//	vecFAllSum[vtxid0] = vecf[j];			//å…¨ä½“å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆï¼šã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—å†…ã§ã‚„ã£ã¦ã„ã‚‹å‡¦ç†ãƒ»ã“ã‚Œã‚’è¡Œã†ã€‚ã“ã“ã¾ã§ã‚’Vecf2ã§ã‚„ã‚‹ã€‚
 		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];
 		//	
 		//}
 
-	//ì‚Á‚½Œã‚ÉAƒKƒEƒXƒUƒCƒfƒ‹ŒvZ‚ÅAvecFAllSum‚ÉƒZƒbƒg‚·‚éŠÖ”‚ğì‚éB
-	//vecFAllSum‚É‰ÁZ‚Æ‚©‚·‚é‚ÆA‚Ç‚ñ‚Ç‚ñ‘‚¦‚Ä‚µ‚Ü‚¤‚µA‹t‚ÉA‘¼‚ÌA•Ï‰»‚µ‚È‚¢—v‘f{F_3}‚È‚ÇA‘S‘ÌƒxƒNƒgƒ‹‚àì‚Á‚ÄA•Û‘¶‚µ‚Ä‚¨‚­•K—v
-	//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZ‚Ì’†‚ÅA‚±‚ê‚Ü‚Å‚ÌŒvZ‚ÅFƒxƒNƒgƒ‹‚ğg‚¤‚Ì‚É‘ã‚¦‚ÄAƒ}ƒCƒXƒeƒbƒv‚ÅAVecF‚ğF1,F2‚©‚çì‚é•K—v‚ª‚ ‚éB
+	//ä½œã£ãŸå¾Œã«ã€ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—ã§ã€vecFAllSumã«ã‚»ãƒƒãƒˆã™ã‚‹é–¢æ•°ã‚’ä½œã‚‹ã€‚
+	//vecFAllSumã«åŠ ç®—ã¨ã‹ã™ã‚‹ã¨ã€ã©ã‚“ã©ã‚“å¢—ãˆã¦ã—ã¾ã†ã—ã€é€†ã«ã€ä»–ã®ã€å¤‰åŒ–ã—ãªã„è¦ç´ {F_3}ãªã©ã€å…¨ä½“ãƒ™ã‚¯ãƒˆãƒ«ã‚‚ä½œã£ã¦ã€ä¿å­˜ã—ã¦ãŠãå¿…è¦
+	//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ã®ä¸­ã§ã€ã“ã‚Œã¾ã§ã®è¨ˆç®—ã§Fãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½¿ã†ã®ã«ä»£ãˆã¦ã€ãƒã‚¤ã‚¹ãƒ†ãƒƒãƒ—ã§ã€VecFã‚’F1,F2ã‹ã‚‰ä½œã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 
 	}
 
-	//ˆÈ‰ºACreateVecfLocal‚©‚çƒRƒsƒy@2012.9.25
-	//‚·‚×‚Ä‚Ì—v‘f‚É‚Â‚¢‚ÄŒW”s—ñ‚ğì‚é
-	//f1‚ğì‚é
-	//>	”M—¬‘©‹«ŠEğŒ	vecf2‚ğì‚é			
+	//ä»¥ä¸‹ã€CreateVecfLocalã‹ã‚‰ã‚³ãƒ”ãƒšã€€2012.9.25
+	//ã™ã¹ã¦ã®è¦ç´ ã«ã¤ã„ã¦ä¿‚æ•°è¡Œåˆ—ã‚’ä½œã‚‹
+	//f1ã‚’ä½œã‚‹
+	//>	ç†±æµæŸå¢ƒç•Œæ¡ä»¶	vecf2ã‚’ä½œã‚‹			
 }
 #endif
 
 //void PHFemThermo::CreateVecf2(unsigned id){
-//	//	‰Šú‰»
+//	//	åˆæœŸåŒ–
 //	for(unsigned i =0; i < 4 ;i++){
-//		//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+//		//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 //		tets[id].vecf[1][i] =0.0;				//>	f3 = vecf[1] 
 //	}	
-//	//l=0‚Ìf31,1:f32, 2:f33, 3:f34	‚ğ¶¬
+//	//l=0ã®æ™‚f31,1:f32, 2:f33, 3:f34	ã‚’ç”Ÿæˆ
 //	for(unsigned l= 0 ; l < 4; l++){
 //		//matk2array[l] = matk2temp;
 //		vecf2array[l] = Create41Vec1();
-//		//	ls‚ğ0‚É
+//		//	lè¡Œã‚’0ã«
 //		vecf2array[l][l] = 0.0;
 //
-//		//array[n][m][l]	= narray[n],msl—ñ
+//		//array[n][m][l]	= narray[n],mè¡Œlåˆ—
 //		//	f_3	(vecf3array[0], vecf3array[1],..)
 //		// =	| 0 | + | 1 |+...
 //		//		| 1 |   | 0 |
@@ -6040,25 +6044,25 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 //		//DSTR << "vecf3array[" << l << "] : " << std::endl;
 //		//DSTR << vecf3array[l] << std::endl;
 //
-//		//ŒW”‚ÌÏ‚ğ‚Æ‚é
-//		//‚±‚Ìß“_‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì–ÊÏ‚ÌÏ‚ğ‚Æ‚é
-//		//l–Ê‘Ì‚Ìß“_1,2,3(0ˆÈŠO)‚Åì‚éOŠpŒ`‚Ì–ÊÏ
-//		//l==0”Ô–Ú‚ÌA 123	‚ğ‘ã“ü‚·‚é
+//		//ä¿‚æ•°ã®ç©ã‚’ã¨ã‚‹
+//		//ã“ã®ç¯€ç‚¹ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®é¢ç©ã®ç©ã‚’ã¨ã‚‹
+//		//å››é¢ä½“ã®ç¯€ç‚¹1,2,3(0ä»¥å¤–)ã§ä½œã‚‹ä¸‰è§’å½¢ã®é¢ç©
+//		//l==0ç•ªç›®ã®æ™‚ã€ 123	ã‚’ä»£å…¥ã™ã‚‹
 //		//l==1			0 23
 //		//l==2			01 3
 //		//l==3			012
-//		//‚ğCalcTriangleArea‚É“ü‚ê‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚ÉƒAƒ‹ƒSƒŠƒYƒ€‚ğl‚¦‚éB
+//		//ã‚’CalcTriangleAreaã«å…¥ã‚Œã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è€ƒãˆã‚‹ã€‚
 //
-//		//>	CreateMatk2t‚Ì‚æ‚¤‚ÈƒAƒ‹ƒSƒŠƒYƒ€‚É•ÏX—\’è
+//		//>	CreateMatk2tã®ã‚ˆã†ãªã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã«å¤‰æ›´äºˆå®š
 //		//k21
 //		if(l==0){
-//			//>	OŠpŒ`–Ê‚ğ\¬‚·‚é3’¸“_‚Ì”M—¬‘©‚Ì‘Š‰Á•½‹Ï
+//			//>	ä¸‰è§’å½¢é¢ã‚’æ§‹æˆã™ã‚‹3é ‚ç‚¹ã®ç†±æµæŸã®ç›¸åŠ å¹³å‡
 //			double tempHF = (vertices[tets[id].vertices[1]].heatFluxValue + vertices[tets[id].vertices[2]].heatFluxValue + vertices[tets[id].vertices[3]].heatFluxValue ) / 3.0;		//HTR:HeatTransRatio
 //			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[1],tets[id].vertices[2],tets[id].vertices[3] ) * vecf2array[l];
 //			//DSTR << "vecf2array[" << l << "] : " << vecf2array[l] << std::endl;
-//			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+//			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 //			
-//			////>	•s—vH
+//			////>	ä¸è¦ï¼Ÿ
 //			//for(unsigned m=0; m<4; m++){
 //			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
 //			//}
@@ -6069,7 +6073,7 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 //			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[2],tets[id].vertices[3] ) * vecf2array[l];
 //			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[2],tets[id].vertices[3] ) * vecf3array[l];
 //			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-//			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+//			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 //			//for(unsigned m=0; m<4; m++){
 //			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
 //			//}
@@ -6080,7 +6084,7 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 //			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf2array[l];
 //			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf3array[l];
 //			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-//			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+//			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 //			//for(unsigned m=0; m<4; m++){
 //			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
 //			//}
@@ -6091,13 +6095,13 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 //			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[2] ) * vecf2array[l];
 //			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[2] ) * vecf3array[l];
 //			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-//			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+//			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 //			//for(unsigned m=0; m<4; m++){
 //			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
 //			//}
 //		}
 //		//for debug
-//		//DSTR << "vecf3array[" << l << "]‚ÌŠ®¬”Å‚Í«" << std::endl;
+//		//DSTR << "vecf3array[" << l << "]ã®å®Œæˆç‰ˆã¯â†“" << std::endl;
 //		//DSTR << vecf3array[l] << std::endl;
 //		//if(dMatCAll == NULL){
 //		//	//DSTR <<"i : "<< i << ", l : " << l << std::endl;
@@ -6111,19 +6115,19 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 //		//vecf3 += vecf3array[i];
 //		tets[id].vecf[1] += vecf2array[i];
 //		//	for debug
-//		//DSTR << "vecf3 ‚É vecf3array = f3" << i+1 <<"‚Ü‚Å‰ÁZ‚µ‚½s—ñ" << std::endl;
+//		//DSTR << "vecf3 ã« vecf3array = f3" << i+1 <<"ã¾ã§åŠ ç®—ã—ãŸè¡Œåˆ—" << std::endl;
 //		//DSTR << vecf3 << std::endl;
 //	}
 //	
-//	//	f1,f2,f3,f4	‚ğŒvZ‚·‚éÛ‚ÉA[0][0]¬•ª‚©‚ç[3][0]¬•ª‚Ü‚Å‚Ì”ñ0¬•ª‚É‚Â‚¢‚ÄAæ‚ÉTc‚ğ‚©‚¯‚Ä‚µ‚Ü‚¤
+//	//	f1,f2,f3,f4	ã‚’è¨ˆç®—ã™ã‚‹éš›ã«ã€[0][0]æˆåˆ†ã‹ã‚‰[3][0]æˆåˆ†ã¾ã§ã®é0æˆåˆ†ã«ã¤ã„ã¦ã€å…ˆã«Tcã‚’ã‹ã‘ã¦ã—ã¾ã†
 //
 //
 //	//for debug
-//	//DSTR << "ß“_i";
+//	//DSTR << "ç¯€ç‚¹ï¼ˆ";
 //	//for(unsigned i =0; i < 4; i++){
 //	//	DSTR << tets[id].vertices[i] << "," ;
 //	//}
-//	//DSTR << ")‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì" << std::endl;
+//	//DSTR << ")ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®" << std::endl;
 //	//DSTR << "vecf3 : " << std::endl;
 //	//DSTR << vecf3 << std::endl;
 //	//int hogeshishi =0;
@@ -6132,21 +6136,21 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 void PHFemThermo::CreateVecf3_(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i =0; i < 4 ;i++){
-		//vecf3[i] = 0.0;		//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+		//vecf3[i] = 0.0;		//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 		tetVars[id].vecf[2][i] =0.0;
 	}	
-	//l=0‚Ìf31,1:f32, 2:f33, 3:f34	‚ğ¶¬
+	//l=0ã®æ™‚f31,1:f32, 2:f33, 3:f34	ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		//matk2array[l] = matk2temp;
 		vecf3array[l] = Create41Vec1();
-		//	ls‚ğ0‚É
+		//	lè¡Œã‚’0ã«
 		//for(int i=0;i<4;i++){
 		//	vecf3array[l][l][i] = 0.0;
 		//}
 		vecf3array[l][l] = 0.0;
-		//array[n][m][l]	= narray[n],msl—ñ
+		//array[n][m][l]	= narray[n],mè¡Œlåˆ—
 		//	f_3	(vecf3array[0], vecf3array[1],..)
 		// =	| 0 | + | 1 |+...
 		//		| 1 |   | 0 |
@@ -6156,24 +6160,24 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 		//DSTR << "vecf3array[" << l << "] : " << std::endl;
 		//DSTR << vecf3array[l] << std::endl;
 
-		//ŒW”‚ÌÏ‚ğ‚Æ‚é
-		//‚±‚Ìß“_‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì–ÊÏ‚ÌÏ‚ğ‚Æ‚é
-		//l–Ê‘Ì‚Ìß“_1,2,3(0ˆÈŠO)‚Åì‚éOŠpŒ`‚Ì–ÊÏ
-		//l==0”Ô–Ú‚ÌA 123	‚ğ‘ã“ü‚·‚é
+		//ä¿‚æ•°ã®ç©ã‚’ã¨ã‚‹
+		//ã“ã®ç¯€ç‚¹ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®é¢ç©ã®ç©ã‚’ã¨ã‚‹
+		//å››é¢ä½“ã®ç¯€ç‚¹1,2,3(0ä»¥å¤–)ã§ä½œã‚‹ä¸‰è§’å½¢ã®é¢ç©
+		//l==0ç•ªç›®ã®æ™‚ã€ 123	ã‚’ä»£å…¥ã™ã‚‹
 		//l==1			0 23
 		//l==2			01 3
 		//l==3			012
-		//‚ğCalcTriangleArea‚É“ü‚ê‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚ÉƒAƒ‹ƒSƒŠƒYƒ€‚ğl‚¦‚éB
+		//ã‚’CalcTriangleAreaã«å…¥ã‚Œã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è€ƒãˆã‚‹ã€‚
 		//k21
 		if(l==0){
-			//OŠpŒ`–Ê‚ğ\¬‚·‚é3’¸“_‚Ì”M“`’B—¦‚Ì‘Š‰Á•½‹Ï
+			//ä¸‰è§’å½¢é¢ã‚’æ§‹æˆã™ã‚‹3é ‚ç‚¹ã®ç†±ä¼é”ç‡ã®ç›¸åŠ å¹³å‡
 			double tempHTR = (vertexVars[mesh->tets[id].vertexIDs[1]].heatTransRatio + vertexVars[mesh->tets[id].vertexIDs[2]].heatTransRatio + vertexVars[mesh->tets[id].vertexIDs[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
 			double avgTc = (vertexVars[mesh->tets[id].vertexIDs[1]].Tc + vertexVars[mesh->tets[id].vertexIDs[2]].Tc + vertexVars[mesh->tets[id].vertexIDs[3]].Tc ) / 3.0;
 			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[1],mesh->tets[id].vertexIDs[2],mesh->tets[id].vertexIDs[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
 			
-			//>	«‚Í–{“–H
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//>	â†“ã¯æœ¬å½“ï¼Ÿ
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			//for(unsigned m=0; m<4; m++){
 			//	vecf3array[l][m] = vertices[tets[id].vertices[m]] * vecf3array[l][m];
 			//}
@@ -6184,7 +6188,7 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 			double avgTc = (vertexVars[mesh->tets[id].vertexIDs[0]].Tc + vertexVars[mesh->tets[id].vertexIDs[2]].Tc + vertexVars[mesh->tets[id].vertexIDs[3]].Tc ) / 3.0;		//HTR:HeatTransRatio
 			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[0],mesh->tets[id].vertexIDs[2],mesh->tets[id].vertexIDs[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			//for(unsigned m=0; m<4; m++){
 			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
 			//}
@@ -6196,7 +6200,7 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[0],mesh->tets[id].vertexIDs[1],mesh->tets[id].vertexIDs[3] ) * vecf3array[l];
 			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			//for(unsigned m=0; m<4; m++){
 			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
 			//}
@@ -6207,13 +6211,13 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 			double avgTc = (vertexVars[mesh->tets[id].vertexIDs[0]].Tc + vertexVars[mesh->tets[id].vertexIDs[1]].Tc + vertexVars[mesh->tets[id].vertexIDs[2]].Tc ) / 3.0;		//HTR:HeatTransRatio
 			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[0],mesh->tets[id].vertexIDs[1],mesh->tets[id].vertexIDs[2] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			//for(unsigned m=0; m<4; m++){
 			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
 			//}
 		}
 		//for debug
-		//DSTR << "vecf3array[" << l << "]‚ÌŠ®¬”Å‚Í«" << std::endl;
+		//DSTR << "vecf3array[" << l << "]ã®å®Œæˆç‰ˆã¯â†“" << std::endl;
 		//DSTR << vecf3array[l] << std::endl;
 		//if(dMatCAll == NULL){
 		//	//DSTR <<"i : "<< i << ", l : " << l << std::endl;
@@ -6227,19 +6231,19 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 		//vecf3 += vecf3array[i];
 		tetVars[id].vecf[2] += vecf3array[i];
 		//	for debug
-		//DSTR << "vecf3 ‚É vecf3array = f3" << i+1 <<"‚Ü‚Å‰ÁZ‚µ‚½s—ñ" << std::endl;
+		//DSTR << "vecf3 ã« vecf3array = f3" << i+1 <<"ã¾ã§åŠ ç®—ã—ãŸè¡Œåˆ—" << std::endl;
 		//DSTR << vecf3 << std::endl;
 	}
 	
-	//	f1,f2,f3,f4	‚ğŒvZ‚·‚éÛ‚ÉA[0][0]¬•ª‚©‚ç[3][0]¬•ª‚Ü‚Å‚Ì”ñ0¬•ª‚É‚Â‚¢‚ÄAæ‚ÉTc‚ğ‚©‚¯‚Ä‚µ‚Ü‚¤
+	//	f1,f2,f3,f4	ã‚’è¨ˆç®—ã™ã‚‹éš›ã«ã€[0][0]æˆåˆ†ã‹ã‚‰[3][0]æˆåˆ†ã¾ã§ã®é0æˆåˆ†ã«ã¤ã„ã¦ã€å…ˆã«Tcã‚’ã‹ã‘ã¦ã—ã¾ã†
 
 
 	//for debug
-	//DSTR << "ß“_i";
+	//DSTR << "ç¯€ç‚¹ï¼ˆ";
 	//for(unsigned i =0; i < 4; i++){
 	//	DSTR << tets[id].vertices[i] << "," ;
 	//}
-	//DSTR << ")‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì" << std::endl;
+	//DSTR << ")ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®" << std::endl;
 	//DSTR << "vecf3 : " << std::endl;
 	//DSTR << vecf3 << std::endl;
 	//int hogeshishi =0;
@@ -6248,21 +6252,21 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 void PHFemThermo::CreateVecf3(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	for(unsigned i =0; i < 4 ;i++){
-		//vecf3[i] = 0.0;		//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+		//vecf3[i] = 0.0;		//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 		tetVars[id].vecf[2][i] =0.0;
 	}	
-	//l=0‚Ìf31,1:f32, 2:f33, 3:f34	‚ğ¶¬
+	//l=0ã®æ™‚f31,1:f32, 2:f33, 3:f34	ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		//matk2array[l] = matk2temp;
 		vecf3array[l] = Create41Vec1();
-		//	ls‚ğ0‚É
+		//	lè¡Œã‚’0ã«
 		//for(int i=0;i<4;i++){
 		//	vecf3array[l][l][i] = 0.0;
 		//}
 		vecf3array[l][l] = 0.0;
-		//array[n][m][l]	= narray[n],msl—ñ
+		//array[n][m][l]	= narray[n],mè¡Œlåˆ—
 		//	f_3	(vecf3array[0], vecf3array[1],..)
 		// =	| 0 | + | 1 |+...
 		//		| 1 |   | 0 |
@@ -6272,22 +6276,22 @@ void PHFemThermo::CreateVecf3(unsigned id){
 		//DSTR << "vecf3array[" << l << "] : " << std::endl;
 		//DSTR << vecf3array[l] << std::endl;
 
-		//ŒW”‚ÌÏ‚ğ‚Æ‚é
-		//‚±‚Ìß“_‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì–ÊÏ‚ÌÏ‚ğ‚Æ‚é
-		//l–Ê‘Ì‚Ìß“_1,2,3(0ˆÈŠO)‚Åì‚éOŠpŒ`‚Ì–ÊÏ
-		//l==0”Ô–Ú‚ÌA 123	‚ğ‘ã“ü‚·‚é
+		//ä¿‚æ•°ã®ç©ã‚’ã¨ã‚‹
+		//ã“ã®ç¯€ç‚¹ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®é¢ç©ã®ç©ã‚’ã¨ã‚‹
+		//å››é¢ä½“ã®ç¯€ç‚¹1,2,3(0ä»¥å¤–)ã§ä½œã‚‹ä¸‰è§’å½¢ã®é¢ç©
+		//l==0ç•ªç›®ã®æ™‚ã€ 123	ã‚’ä»£å…¥ã™ã‚‹
 		//l==1			0 23
 		//l==2			01 3
 		//l==3			012
-		//‚ğCalcTriangleArea‚É“ü‚ê‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚ÉƒAƒ‹ƒSƒŠƒYƒ€‚ğl‚¦‚éB
+		//ã‚’CalcTriangleAreaã«å…¥ã‚Œã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è€ƒãˆã‚‹ã€‚
 		//k21
 		if(l==0){
-			//OŠpŒ`–Ê‚ğ\¬‚·‚é3’¸“_‚Ì”M“`’B—¦‚Ì‘Š‰Á•½‹Ï
+			//ä¸‰è§’å½¢é¢ã‚’æ§‹æˆã™ã‚‹3é ‚ç‚¹ã®ç†±ä¼é”ç‡ã®ç›¸åŠ å¹³å‡
 			double tempHTR = (vertexVars[mesh->tets[id].vertexIDs[1]].heatTransRatio + vertexVars[mesh->tets[id].vertexIDs[2]].heatTransRatio + vertexVars[mesh->tets[id].vertexIDs[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
 			vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[1],mesh->tets[id].vertexIDs[2],mesh->tets[id].vertexIDs[3] ) * vecf3array[l];
 			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			for(unsigned m=0; m<4; m++){
 				vecf3array[l][m] = vertexVars[mesh->tets[id].vertexIDs[m]].Tc * vecf3array[l][m];
 			}
@@ -6298,7 +6302,7 @@ void PHFemThermo::CreateVecf3(unsigned id){
 			vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[0],mesh->tets[id].vertexIDs[2],mesh->tets[id].vertexIDs[3] ) * vecf3array[l];
 			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[2],tets[id].vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			for(unsigned m=0; m<4; m++){
 				vecf3array[l][m] = vertexVars[mesh->tets[id].vertexIDs[m]].Tc * vecf3array[l][m];
 			}
@@ -6309,7 +6313,7 @@ void PHFemThermo::CreateVecf3(unsigned id){
 			vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[0],mesh->tets[id].vertexIDs[1],mesh->tets[id].vertexIDs[3] ) * vecf3array[l];
 			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			for(unsigned m=0; m<4; m++){
 				vecf3array[l][m] = vertexVars[mesh->tets[id].vertexIDs[m]].Tc * vecf3array[l][m];
 			}
@@ -6320,13 +6324,13 @@ void PHFemThermo::CreateVecf3(unsigned id){
 			vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( mesh->tets[id].vertexIDs[0],mesh->tets[id].vertexIDs[1],mesh->tets[id].vertexIDs[2] ) * vecf3array[l];
 			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[2] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
-			//Vec‚Ìß“_–ˆ‚É‚»‚Ìß“_‚Å‚ÌüˆÍ—¬‘Ì‰·“xTc‚Æ‚ÌÏ‚ğs‚¤
+			//Vecã®ç¯€ç‚¹æ¯ã«ãã®ç¯€ç‚¹ã§ã®å‘¨å›²æµä½“æ¸©åº¦Tcã¨ã®ç©ã‚’è¡Œã†
 			for(unsigned m=0; m<4; m++){
 				vecf3array[l][m] = vertexVars[mesh->tets[id].vertexIDs[m]].Tc * vecf3array[l][m];
 			}
 		}
 		//for debug
-		//DSTR << "vecf3array[" << l << "]‚ÌŠ®¬”Å‚Í«" << std::endl;
+		//DSTR << "vecf3array[" << l << "]ã®å®Œæˆç‰ˆã¯â†“" << std::endl;
 		//DSTR << vecf3array[l] << std::endl;
 		//if(dMatCAll == NULL){
 		//	//DSTR <<"i : "<< i << ", l : " << l << std::endl;
@@ -6340,19 +6344,19 @@ void PHFemThermo::CreateVecf3(unsigned id){
 		//vecf3 += vecf3array[i];
 		tetVars[id].vecf[2] += vecf3array[i];
 		//	for debug
-		//DSTR << "vecf3 ‚É vecf3array = f3" << i+1 <<"‚Ü‚Å‰ÁZ‚µ‚½s—ñ" << std::endl;
+		//DSTR << "vecf3 ã« vecf3array = f3" << i+1 <<"ã¾ã§åŠ ç®—ã—ãŸè¡Œåˆ—" << std::endl;
 		//DSTR << vecf3 << std::endl;
 	}
 	
-	//	f1,f2,f3,f4	‚ğŒvZ‚·‚éÛ‚ÉA[0][0]¬•ª‚©‚ç[3][0]¬•ª‚Ü‚Å‚Ì”ñ0¬•ª‚É‚Â‚¢‚ÄAæ‚ÉTc‚ğ‚©‚¯‚Ä‚µ‚Ü‚¤
+	//	f1,f2,f3,f4	ã‚’è¨ˆç®—ã™ã‚‹éš›ã«ã€[0][0]æˆåˆ†ã‹ã‚‰[3][0]æˆåˆ†ã¾ã§ã®é0æˆåˆ†ã«ã¤ã„ã¦ã€å…ˆã«Tcã‚’ã‹ã‘ã¦ã—ã¾ã†
 
 
 	//for debug
-	//DSTR << "ß“_i";
+	//DSTR << "ç¯€ç‚¹ï¼ˆ";
 	//for(unsigned i =0; i < 4; i++){
 	//	DSTR << tets[id].vertices[i] << "," ;
 	//}
-	//DSTR << ")‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì" << std::endl;
+	//DSTR << ")ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®" << std::endl;
 	//DSTR << "vecf3 : " << std::endl;
 	//DSTR << vecf3 << std::endl;
 	//int hogeshishi =0;
@@ -6425,25 +6429,25 @@ double PHFemThermo::CalcTetrahedraVolume(FemTet tet){
 double PHFemThermo::CalcTriangleArea(int id0, int id1, int id2){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	double area=0.0;								///	—v‰ü‘P	faces[id].area‚É’l‚ğ“ü‚ê‚é 
+	double area=0.0;								///	è¦æ”¹å–„	faces[id].areaã«å€¤ã‚’å…¥ã‚Œã‚‹ 
 
-	//s—ñ®‚Ì¬•ª‚ğ—p‚¢‚Ä–ÊÏ‚ğ‹‚ß‚é
+	//è¡Œåˆ—å¼ã®æˆåˆ†ã‚’ç”¨ã„ã¦é¢ç©ã‚’æ±‚ã‚ã‚‹
 	//triarea =
 	//|  1     1     1   |
 	//|x2-x1 y2-y1 z2-z1 |
 	//|x3-x1 y3-y1 z3-z1 |
 	//|
-	PTM::TMatrixRow<3,3,double> triarea;		//OŠpŒ`‚Ì–ÊÏ@= tri + area
+	PTM::TMatrixRow<3,3,double> triarea;		//ä¸‰è§’å½¢ã®é¢ç©ã€€= tri + area
 	for(unsigned i =0 ; i < 3 ; i++){
 		triarea[0][i] = 1.0;
 	}
 	for(unsigned i =0 ; i < 3 ; i++){
-		//					x2(ß“_2‚Ìx(pos‘æi¬•ª)–Ú)	-	x1(V)
-		// i==0‚Ì	vertices[id1].pos[i]	=>	 pos[0] == pos.x
+		//					x2(ç¯€ç‚¹2ã®x(posç¬¬iæˆåˆ†)ç›®)	-	x1(ã€ƒ)
+		// i==0ã®æ™‚	vertices[id1].pos[i]	=>	 pos[0] == pos.x
 		triarea[1][i] = mesh->vertices[id1].pos[i] - mesh->vertices[id0].pos[i];
 	}
 	for(unsigned i =0 ; i < 3 ; i++){
-		//					x3(ß“_3‚Ìx(pos‘æi¬•ª)–Ú)	-	x1(V)
+		//					x3(ç¯€ç‚¹3ã®x(posç¬¬iæˆåˆ†)ç›®)	-	x1(ã€ƒ)
 		triarea[2][i] = mesh->vertices[id2].pos[i] - mesh->vertices[id0].pos[i];
 	}
 	double m1,m2,m3 = 0.0;
@@ -6454,10 +6458,10 @@ double PHFemThermo::CalcTriangleArea(int id0, int id1, int id2){
 	area = sqrt(m1 * m1 + m2 * m2 + m3 * m3) / 2.0;
 
 	//	for debug
-	//DSTR << "OŠpŒ`‚Ì–ÊÏ‚Í : " << area << std::endl; 
+	//DSTR << "ä¸‰è§’å½¢ã®é¢ç©ã¯ : " << area << std::endl; 
 
-	//0”Ô–Ú‚Ìß“_‚Í40,1”Ô–Ú‚Ìß“_‚Í134,2”Ô–Ú‚Ìß“_‚Í79 ‚ÌÀ•W‚ÅŒvZ‚µ‚Ä‚İ‚½
-	//OŠpŒ`‚ğ‹‚ß‚és—ñ : 2.75949e-005 * 1 = 2.75949 ~ 10-5(byGoogleŒvZ‹@) [m^2] = 2.75949 ~ 10-1 [cm^2]‚È‚Ì‚ÅAƒlƒM‚ÌƒƒbƒVƒ…‚ÌƒXƒP[ƒ‹‚È‚ç‘å‘Ì‚ ‚Á‚Ä‚¢‚é‚Í‚¸
+	//0ç•ªç›®ã®ç¯€ç‚¹ã¯40,1ç•ªç›®ã®ç¯€ç‚¹ã¯134,2ç•ªç›®ã®ç¯€ç‚¹ã¯79 ã®åº§æ¨™ã§è¨ˆç®—ã—ã¦ã¿ãŸ
+	//ä¸‰è§’å½¢ã‚’æ±‚ã‚ã‚‹è¡Œåˆ— : 2.75949e-005 * 1 = 2.75949 Ã— 10-5(byGoogleè¨ˆç®—æ©Ÿ) [m^2] = 2.75949 Ã— 10-1 [cm^2]ãªã®ã§ã€ãƒã‚®ã®ãƒ¡ãƒƒã‚·ãƒ¥ã®ã‚¹ã‚±ãƒ¼ãƒ«ãªã‚‰å¤§ä½“ã‚ã£ã¦ã„ã‚‹ã¯ãš
 
 	return area;
 }
@@ -6474,7 +6478,7 @@ PTM::TMatrixRow<4,4,double> PHFemThermo::Create44Mat21(){
 	//|2 1 1 1 |
 	//|1 2 1 1 |
 	//|1 1 2 1 |
-	//|1 1 1 2 |	‚ğì‚é
+	//|1 1 1 2 |	ã‚’ä½œã‚‹
 	PTM::TMatrixRow<4,4,double> MatTemp;
 	for(int i =0; i <4 ; i++){
 		for(int j=0; j < 4 ; j++){
@@ -6498,58 +6502,58 @@ void PHFemThermo::ActivateVtxbeRadiantHeat(){
 void PHFemThermo::CreateMatk3t_nonRadiantHeat(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//l=0‚Ìk21,1‚Ì:k22, 2‚Ì:k23, 3‚Ì:k24	‚ğ¶¬
+	//l=0ã®æ™‚k21,1ã®æ™‚:k22, 2ã®æ™‚:k23, 3ã®æ™‚:k24	ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		//matk2array[l] = matk2temp;
 		matk3array[l] = Create44Mat21();
-		//	1si—ñ‚ğ0‚É
+		//	1è¡Œiåˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk3array[l][l][i] = 0.0;
 		}
-		//	is1—ñ‚ğ0‚É
+		//	iè¡Œ1åˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk3array[l][i][l] = 0.0;
 		}
 	}
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	tetVars[id].matk[2].clear();
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ämatk2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦matk2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
 
-		///	ŠOŠk‚Ì–Ê Š‚Â ”M“`’B—¦‚ªXV‚³‚ê‚½‚ç matk2‚ğXV‚·‚é•K—v‚ª‚ ‚é	//2014.3.12‰Á“¡’Ç‹L	”M“`’B’¸“_‚ğŠÜ‚Şface‚Å‚ÍAs—ñ‚ÉQ“ü‚µ‚È‚¢
+		///	å¤–æ®»ã®é¢ ä¸”ã¤ ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ matk2ã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹	//2014.3.12åŠ è—¤è¿½è¨˜	ç†±ä¼é”é ‚ç‚¹ã‚’å«ã‚€faceã§ã¯ã€è¡Œåˆ—ã«å‚å…¥ã—ãªã„
 		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].alphaUpdated){
 			if(vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].beRadiantHeat && vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].beRadiantHeat 
 				&& vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].beRadiantHeat	){
 
-				//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+				//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 				for(unsigned i =0; i < 4 ;i++){
 					for(unsigned j =0; j < 4 ;j++){
 						tetVars[id].matk[2][i][j] = 0.0;
 					}
 				}
-				///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-				if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+				///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+				if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 					faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 					faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 				}
-				///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-				///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚Æ—ñ‚ğœ‚¢‚½s—ñ‚ÌÏ‚ğ‚Æ‚é
-				///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+				///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+				///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã¨åˆ—ã‚’é™¤ã„ãŸè¡Œåˆ—ã®ç©ã‚’ã¨ã‚‹
+				///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 				unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];
 				unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 				for(unsigned j=0;j<4;j++){
-					if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-						///	j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ğ0‚É‚µ‚½matk2array‚ÅŒvZ‚·‚é
-						///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+					if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+						///	jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ã‚’0ã«ã—ãŸmatk2arrayã§è¨ˆç®—ã™ã‚‹
+						///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
 						//faces[tets[id].faces[l]].thermalEmissivity = 
 						double ems_temp = ( 	
 							vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].thermalEmissivity_const
 							+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].thermalEmissivity_const
 							+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].thermalEmissivity_const
-							) / 3.0;		///	“–ŠYface‚Ì”M“`’B—¦‚ğ\¬ß“_‚Å‚Ì’l‚Ì‘Š‰Á•½‹Ï‚ğ‚Æ‚é
-						///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-						///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
+							) / 3.0;		///	å½“è©²faceã®ç†±ä¼é”ç‡ã‚’æ§‹æˆç¯€ç‚¹ã§ã®å€¤ã®ç›¸åŠ å¹³å‡ã‚’ã¨ã‚‹
+						///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+						///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
 						tetVars[id].matk[2] += ems_temp * (1.0/12.0) * faceVars[mesh->tets[id].faceIDs[l]].area * matk3array[j];
 					}
 				}
@@ -6562,53 +6566,53 @@ void PHFemThermo::CreateMatk3t_nonRadiantHeat(unsigned id){
 void PHFemThermo::CreateMatk3t(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//l=0‚Ìk21,1‚Ì:k22, 2‚Ì:k23, 3‚Ì:k24	‚ğ¶¬
+	//l=0ã®æ™‚k21,1ã®æ™‚:k22, 2ã®æ™‚:k23, 3ã®æ™‚:k24	ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		//matk2array[l] = matk2temp;
 		matk3array[l] = Create44Mat21();
-		//	1si—ñ‚ğ0‚É
+		//	1è¡Œiåˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk3array[l][l][i] = 0.0;
 		}
-		//	is1—ñ‚ğ0‚É
+		//	iè¡Œ1åˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk3array[l][i][l] = 0.0;
 		}
 	}
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	tetVars[id].matk[2].clear();
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ämatk2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].alphaUpdated ){			///	ŠOŠk‚Ì–Ê Š‚Â ”M“`’B—¦‚ªXV‚³‚ê‚½‚ç matk2‚ğXV‚·‚é•K—v‚ª‚ ‚é
-			//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦matk2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].alphaUpdated ){			///	å¤–æ®»ã®é¢ ä¸”ã¤ ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ matk2ã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+			//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 			for(unsigned i =0; i < 4 ;i++){
 				for(unsigned j =0; j < 4 ;j++){
 					tetVars[id].matk[2][i][j] = 0.0;
 				}
 			}
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 			}
-			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚Æ—ñ‚ğœ‚¢‚½s—ñ‚ÌÏ‚ğ‚Æ‚é
-			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã¨åˆ—ã‚’é™¤ã„ãŸè¡Œåˆ—ã®ç©ã‚’ã¨ã‚‹
+			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];
 			unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
 			for(unsigned j=0;j<4;j++){
-				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-					///	j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ğ0‚É‚µ‚½matk2array‚ÅŒvZ‚·‚é
-					///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+					///	jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ã‚’0ã«ã—ãŸmatk2arrayã§è¨ˆç®—ã™ã‚‹
+					///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
 					//faces[tets[id].faces[l]].thermalEmissivity = 
 					double ems_temp = ( 	
 						vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].thermalEmissivity_const
 						+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].thermalEmissivity_const
 						+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].thermalEmissivity * vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].temp + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].thermalEmissivity_const
-						) / 3.0;		///	“–ŠYface‚Ì”M“`’B—¦‚ğ\¬ß“_‚Å‚Ì’l‚Ì‘Š‰Á•½‹Ï‚ğ‚Æ‚é
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
+						) / 3.0;		///	å½“è©²faceã®ç†±ä¼é”ç‡ã‚’æ§‹æˆç¯€ç‚¹ã§ã®å€¤ã®ç›¸åŠ å¹³å‡ã‚’ã¨ã‚‹
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
 					tetVars[id].matk[2] += ems_temp * (1.0/12.0) * faceVars[mesh->tets[id].faceIDs[l]].area * matk3array[j];
 				}
 			}
@@ -6619,21 +6623,21 @@ void PHFemThermo::CreateMatk3t(unsigned id){
 void PHFemThermo::CreateMatk2t(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//l=0‚Ìk21,1‚Ì:k22, 2‚Ì:k23, 3‚Ì:k24	‚ğ¶¬
+	//l=0ã®æ™‚k21,1ã®æ™‚:k22, 2ã®æ™‚:k23, 3ã®æ™‚:k24	ã‚’ç”Ÿæˆ
 	for(unsigned l= 0 ; l < 4; l++){
 		//matk2array[l] = matk2temp;
 		matk2array[l] = Create44Mat21();
-		//	1si—ñ‚ğ0‚É
+		//	1è¡Œiåˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk2array[l][l][i] = 0.0;
 		}
-		//	is1—ñ‚ğ0‚É
+		//	iè¡Œ1åˆ—ã‚’0ã«
 		for(int i=0;i<4;i++){
 			matk2array[l][i][l] = 0.0;
 		}
 	}
 
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	tetVars[id].matk[1].clear();
 	//for(unsigned i =0; i < 4 ;i++){
 	//	for(unsigned j =0; j < 4 ;j++){
@@ -6654,51 +6658,51 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 
 
 	for(unsigned l= 0 ; l < 4; l++){
-		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ämatk2array‚É“ü‚ê‚é
-		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-		///	s—ñŒ^‚Ì“ü‚ê•¨‚ğ—pˆÓ
+		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦matk2arrayã«å…¥ã‚Œã‚‹
+		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+		///	è¡Œåˆ—å‹ã®å…¥ã‚Œç‰©ã‚’ç”¨æ„
 
 		//faces[tets.faces[l]].vertices;
-		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].alphaUpdated ){			///	ŠOŠk‚Ì–Ê Š‚Â ”M“`’B—¦‚ªXV‚³‚ê‚½‚ç matk2‚ğXV‚·‚é•K—v‚ª‚ ‚é
-			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].alphaUpdated ){			///	å¤–æ®»ã®é¢ ä¸”ã¤ ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ matk2ã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);
 				faceVars[mesh->tets[id].faceIDs[l]].deformed = false;
 			}
-			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚Æ—ñ‚ğœ‚¢‚½s—ñ‚ÌÏ‚ğ‚Æ‚é
-			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã¨åˆ—ã‚’é™¤ã„ãŸè¡Œåˆ—ã®ç©ã‚’ã¨ã‚‹
+			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 			unsigned vtx = mesh->tets[id].vertexIDs[0] + mesh->tets[id].vertexIDs[1] + mesh->tets[id].vertexIDs[2] + mesh->tets[id].vertexIDs[3];
 			//DSTR << "vtx: " << vtx <<std::endl;
 			
-			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 			unsigned ID = vtx -( mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1] + mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2] );
-			//DSTR << "ƒƒbƒVƒ…•\–Ê‚Ì–Ê‚ÍŸ‚Ì3’¸“_‚©‚ç‚È‚éB" << std::endl;
+			//DSTR << "ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã®é¢ã¯æ¬¡ã®3é ‚ç‚¹ã‹ã‚‰ãªã‚‹ã€‚" << std::endl;
 			//DSTR << "faces[tets.faces[l]].vertices[0]: " << faces[tets.faces[l]].vertices[0] <<std::endl;
 			//DSTR << "faces[tets.faces[l]].vertices[1]: " << faces[tets.faces[l]].vertices[1] <<std::endl;
 			//DSTR << "faces[tets.faces[l]].vertices[2]: " << faces[tets.faces[l]].vertices[2] <<std::endl;
-			//DSTR << "ID: " << ID <<"‚Ì‚Æ‚«‚Ìß“_‚Æ‘Î–Ê‚·‚é–Ê‚Å–ÊÏ•ª‚ğŒvZ‚·‚é"<<std::endl;
+			//DSTR << "ID: " << ID <<"ã®ã¨ãã®ç¯€ç‚¹ã¨å¯¾é¢ã™ã‚‹é¢ã§é¢ç©åˆ†ã‚’è¨ˆç®—ã™ã‚‹"<<std::endl;
 			for(unsigned j=0;j<4;j++){
-				if(mesh->tets[id].vertexIDs[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-					///	j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ğ0‚É‚µ‚½matk2array‚ÅŒvZ‚·‚é
-					///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+				if(mesh->tets[id].vertexIDs[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+					///	jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ã‚’0ã«ã—ãŸmatk2arrayã§è¨ˆç®—ã™ã‚‹
+					///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
 					faceVars[mesh->tets[id].faceIDs[l]].heatTransRatio = (vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0]].heatTransRatio + vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1]].heatTransRatio 
-						+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].heatTransRatio ) / 3.0;		///	“–ŠYface‚Ì”M“`’B—¦‚ğ\¬ß“_‚Å‚Ì’l‚Ì‘Š‰Á•½‹Ï‚ğ‚Æ‚é
-					///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-					///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
-					tetVars[id].matk[1] += faceVars[mesh->tets[id].faceIDs[l]].heatTransRatio * (1.0/12.0) * faceVars[mesh->tets[id].faceIDs[l]].area * matk2array[j];		//Œ³‚Ítets[id].matk2 +=
-					//DSTR << "tets[id].matk2‚Éfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "‚ğ‰ÁZ: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
+						+ vertexVars[mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]].heatTransRatio ) / 3.0;		///	å½“è©²faceã®ç†±ä¼é”ç‡ã‚’æ§‹æˆç¯€ç‚¹ã§ã®å€¤ã®ç›¸åŠ å¹³å‡ã‚’ã¨ã‚‹
+					///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+					///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
+					tetVars[id].matk[1] += faceVars[mesh->tets[id].faceIDs[l]].heatTransRatio * (1.0/12.0) * faceVars[mesh->tets[id].faceIDs[l]].area * matk2array[j];		//å…ƒã¯tets[id].matk2 +=
+					//DSTR << "tets[id].matk2ã«faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "ã‚’åŠ ç®—: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
 				//else{
-				//	///	ID‚Æˆê’v‚µ‚È‚¢ê‡‚É‚ÍAmatk2array[j]‚É‚Í‘S¬•ª0‚ğ“ü‚ê‚é
-				//	///	‚Æ‚µ‚½‚¢‚Æ‚±‚ë‚¾‚ªA
+				//	///	IDã¨ä¸€è‡´ã—ãªã„å ´åˆã«ã¯ã€matk2array[j]ã«ã¯å…¨æˆåˆ†0ã‚’å…¥ã‚Œã‚‹
+				//	///	ã¨ã—ãŸã„ã¨ã“ã‚ã ãŒã€
 				//	//matk2array[j] =0.0 * matk2array[j];
 				//	//DSTR << "matk2array[" << j << "]: " << matk2array[j] << std::endl;
 				//}
 			}
 		}
-		///	SurfaceFace‚¶‚á‚È‚©‚Á‚½‚çAmatk2array‚É‚Í0‚ğ“ü‚ê‚é
+		///	SurfaceFaceã˜ã‚ƒãªã‹ã£ãŸã‚‰ã€matk2arrayã«ã¯0ã‚’å…¥ã‚Œã‚‹
 		//else{
 		//	//matk2array[l];
 		//}
@@ -6713,16 +6717,16 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 	//for(unsigned i=0; i < 4; i++){
 	//	matk2 += matk2array[i];
 	//	//	for debug
-	//	//DSTR << "matk2 ‚É matk2array = k2" << i+1 <<"‚Ü‚Å‰ÁZ‚µ‚½s—ñ" << std::endl;
+	//	//DSTR << "matk2 ã« matk2array = k2" << i+1 <<"ã¾ã§åŠ ç®—ã—ãŸè¡Œåˆ—" << std::endl;
 	//	//DSTR << matk2 << std::endl;
 	//}
 	
 	//for debug
-	//DSTR << "ß“_i";
+	//DSTR << "ç¯€ç‚¹ï¼ˆ";
 	//for(unsigned i =0; i < 4; i++){
 	//	DSTR << tets[id].vertices[i] << "," ;
 	//}
-	//DSTR << ")‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì" << std::endl;
+	//DSTR << ")ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®" << std::endl;
 	//DSTR << "matk2 : " << std::endl;
 	//DSTR << matk2 << std::endl;
 	//int hogeshishi =0;
@@ -6732,21 +6736,21 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 
 //void PHFemThermo::CreateMatk2t_(unsigned id){
 //
-//	//l=0‚Ìk21,1‚Ì:k22, 2‚Ì:k23, 3‚Ì:k24	‚ğ¶¬
+//	//l=0ã®æ™‚k21,1ã®æ™‚:k22, 2ã®æ™‚:k23, 3ã®æ™‚:k24	ã‚’ç”Ÿæˆ
 //	for(unsigned l= 0 ; l < 4; l++){
 //		//matk2array[l] = matk2temp;
 //		matk2array[l] = Create44Mat21();
-//		//	1si—ñ‚ğ0‚É
+//		//	1è¡Œiåˆ—ã‚’0ã«
 //		for(int i=0;i<4;i++){
 //			matk2array[l][l][i] = 0.0;
 //		}
-//		//	is1—ñ‚ğ0‚É
+//		//	iè¡Œ1åˆ—ã‚’0ã«
 //		for(int i=0;i<4;i++){
 //			matk2array[l][i][l] = 0.0;
 //		}
 //	}
 //
-//	///	‰Šú‰»
+//	///	åˆæœŸåŒ–
 //	tets[id].matk[1].clear();
 //	//for(unsigned i =0; i < 4 ;i++){
 //	//	for(unsigned j =0; j < 4 ;j++){
@@ -6767,13 +6771,13 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 //
 //
 //	for(unsigned l= 0 ; l < 4; l++){
-//		///	l–Ê‘Ì‚ÌŠe–Ê(l = 0 ` 3) ‚É‚Â‚¢‚ÄƒƒbƒVƒ…•\–Ê‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éB•\–Ê‚È‚çAs—ñ‚ğì‚Á‚Ämatk2array‚É“ü‚ê‚é
-//		//faces[tets.faces[i]].sorted;		/// 1,24,58‚İ‚½‚¢‚Èß“_”Ô†‚ª“ü‚Á‚Ä‚¢‚é
-//		///	s—ñŒ^‚Ì“ü‚ê•¨‚ğ—pˆÓ
+//		///	å››é¢ä½“ã®å„é¢(l = 0 ã€œ 3) ã«ã¤ã„ã¦ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚è¡¨é¢ãªã‚‰ã€è¡Œåˆ—ã‚’ä½œã£ã¦matk2arrayã«å…¥ã‚Œã‚‹
+//		//faces[tets.faces[i]].sorted;		/// 1,24,58ã¿ãŸã„ãªç¯€ç‚¹ç•ªå·ãŒå…¥ã£ã¦ã„ã‚‹
+//		///	è¡Œåˆ—å‹ã®å…¥ã‚Œç‰©ã‚’ç”¨æ„
 //
 //		//faces[tets.faces[l]].vertices;
-//		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	ŠOŠk‚Ì–Ê Š‚Â ”M“`’B—¦‚ªXV‚³‚ê‚½‚ç matk2‚ğXV‚·‚é•K—v‚ª‚ ‚é
-//			//ÅŒã‚É“ü‚ê‚és—ñ‚ğ‰Šú‰»
+//		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	å¤–æ®»ã®é¢ ä¸”ã¤ ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ matk2ã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+//			//æœ€å¾Œã«å…¥ã‚Œã‚‹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 //			for(unsigned i =0; i < 4 ;i++){
 //				for(unsigned j =0; j < 4 ;j++){
 //					//matk2[i][j] = 0.0;
@@ -6781,47 +6785,47 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 //					tets[id].matk[1][i][j] = 0.0;
 //				}
 //			}
-//			///	l–Ê‘Ì‚ÌOŠpŒ`‚Ì–ÊÏ‚ğŒvZ		///	‚±‚ÌŠÖ”‚ÌŠO‚Å–ÊÏ•ª‚Ì–ÊÏŒvZ‚ğÀ‘•‚·‚éBˆÚ“®‚·‚é
-//			if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	–ÊÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚È‚¢i‚Í‚¶‚ßj or deformed(•ÏŒ`‚µ‚½E‰Šúó‘Ô)‚ªtrue‚Ì		///	ğŒ‚Ì’Ç‰Á	–ÊÏ‚ª0‚© ||(OR) ƒ¿‚ªXV‚³‚ê‚½‚©
+//			///	å››é¢ä½“ã®ä¸‰è§’å½¢ã®é¢ç©ã‚’è¨ˆç®—		///	ã“ã®é–¢æ•°ã®å¤–ã§é¢ç©åˆ†ã®é¢ç©è¨ˆç®—ã‚’å®Ÿè£…ã™ã‚‹ã€‚ç§»å‹•ã™ã‚‹
+//			if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	é¢ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ãªã„æ™‚ï¼ˆã¯ã˜ã‚ï¼‰ or deformed(å¤‰å½¢ã—ãŸæ™‚ãƒ»åˆæœŸçŠ¶æ…‹)ãŒtrueã®æ™‚		///	æ¡ä»¶ã®è¿½åŠ 	é¢ç©ãŒ0ã‹ ||(OR) Î±ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 //				faces[tets[id].faces[l]].area = CalcTriangleArea(faces[tets[id].faces[l]].vertices[0], faces[tets[id].faces[l]].vertices[1], faces[tets[id].faces[l]].vertices[2]);
 //				faces[tets[id].faces[l]].deformed = false;
 //			}
-//			///	ŒvZŒ‹‰Ê‚ğs—ñ‚É‘ã“ü
-//			///	area‚ÌŒvZ‚Ég‚Á‚Ä‚¢‚È‚¢“_‚ª“ü‚Á‚Ä‚¢‚és‚Æ—ñ‚ğœ‚¢‚½s—ñ‚ÌÏ‚ğ‚Æ‚é
-//			///	Ï•ªŒvZ‚ğª–{‚©‚çl‚¦‚é
+//			///	è¨ˆç®—çµæœã‚’è¡Œåˆ—ã«ä»£å…¥
+//			///	areaã®è¨ˆç®—ã«ä½¿ã£ã¦ã„ãªã„ç‚¹ãŒå…¥ã£ã¦ã„ã‚‹è¡Œã¨åˆ—ã‚’é™¤ã„ãŸè¡Œåˆ—ã®ç©ã‚’ã¨ã‚‹
+//			///	ç©åˆ†è¨ˆç®—ã‚’æ ¹æœ¬ã‹ã‚‰è€ƒãˆã‚‹
 //			unsigned vtx = tets[id].vertices[0] + tets[id].vertices[1] + tets[id].vertices[2] + tets[id].vertices[3];
 //			//DSTR << "vtx: " << vtx <<std::endl;
 //			
-//			///	areaŒvZ‚Ég‚í‚ê‚Ä‚¢‚È‚¢ß“_IDFID
+//			///	areaè¨ˆç®—ã«ä½¿ã‚ã‚Œã¦ã„ãªã„ç¯€ç‚¹IDï¼šID
 //			unsigned ID = vtx -( faces[tets[id].faces[l]].vertices[0] + faces[tets[id].faces[l]].vertices[1] + faces[tets[id].faces[l]].vertices[2] );
-//			//DSTR << "ƒƒbƒVƒ…•\–Ê‚Ì–Ê‚ÍŸ‚Ì3’¸“_‚©‚ç‚È‚éB" << std::endl;
+//			//DSTR << "ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã®é¢ã¯æ¬¡ã®3é ‚ç‚¹ã‹ã‚‰ãªã‚‹ã€‚" << std::endl;
 //			//DSTR << "faces[tets.faces[l]].vertices[0]: " << faces[tets.faces[l]].vertices[0] <<std::endl;
 //			//DSTR << "faces[tets.faces[l]].vertices[1]: " << faces[tets.faces[l]].vertices[1] <<std::endl;
 //			//DSTR << "faces[tets.faces[l]].vertices[2]: " << faces[tets.faces[l]].vertices[2] <<std::endl;
-//			//DSTR << "ID: " << ID <<"‚Ì‚Æ‚«‚Ìß“_‚Æ‘Î–Ê‚·‚é–Ê‚Å–ÊÏ•ª‚ğŒvZ‚·‚é"<<std::endl;
+//			//DSTR << "ID: " << ID <<"ã®ã¨ãã®ç¯€ç‚¹ã¨å¯¾é¢ã™ã‚‹é¢ã§é¢ç©åˆ†ã‚’è¨ˆç®—ã™ã‚‹"<<std::endl;
 //			for(unsigned k=0; k < faces[tets[id].faces[l]].heatTransRatios.size();++k){
 //				for(unsigned j=0;j<4;j++){
-//						if(tets[id].vertices[j] == ID){					///	Œ`óŠÖ”‚ª‚PAi‚·‚È‚í‚¿j‚±‚Ìface‚É‘Î–Ê‚·‚é’¸“_@‚Æˆê’v‚µ‚½‚ç@‚»‚Ì‚Ìface‚Å–ÊÏ•ª‚·‚é
-//							///	j”Ô–Ú‚Ìs—ñ‚Ì¬•ª‚ğ0‚É‚µ‚½matk2array‚ÅŒvZ‚·‚é
-//							///	ŠOŠk‚É‚È‚¢ƒƒbƒVƒ…–Ê‚Ì–ÊÏ‚Í0‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+//						if(tets[id].vertices[j] == ID){					///	å½¢çŠ¶é–¢æ•°ãŒï¼‘ã€ï¼ˆã™ãªã‚ã¡ï¼‰ã“ã®faceã«å¯¾é¢ã™ã‚‹é ‚ç‚¹ã€€ã¨ä¸€è‡´ã—ãŸã‚‰ã€€ãã®æ™‚ã®faceã§é¢ç©åˆ†ã™ã‚‹
+//							///	jç•ªç›®ã®è¡Œåˆ—ã®æˆåˆ†ã‚’0ã«ã—ãŸmatk2arrayã§è¨ˆç®—ã™ã‚‹
+//							///	å¤–æ®»ã«ãªã„ãƒ¡ãƒƒã‚·ãƒ¥é¢ã®é¢ç©ã¯0ã§åˆæœŸåŒ–ã—ã¦ãŠã
 //							faces[tets[id].faces[l]].heatTransRatio = (vertices[faces[tets[id].faces[l]].vertices[0]].heatTransRatio + vertices[faces[tets[id].faces[l]].vertices[1]].heatTransRatio 
-//								+ vertices[faces[tets[id].faces[l]].vertices[2]].heatTransRatio ) / 3.0;		///	“–ŠYface‚Ì”M“`’B—¦‚ğ\¬ß“_‚Å‚Ì’l‚Ì‘Š‰Á•½‹Ï‚ğ‚Æ‚é
-//							///	ˆÈ‰º‚Ì[]‚Íã‚Ü‚Å‚Ì[l]‚ÆˆÙ‚È‚éB
-//							///	ID‚ª‰½”Ô–Ú‚©‚É‚æ‚Á‚ÄAŒ`óŠÖ”‚ÌŒW”‚ªˆÙ‚È‚é‚Ì‚ÅA
-//							tets[id].matk[1] += faces[tets[id].faces[l]].heatTransRatios[k] * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];		//Œ³‚Ítets[id].matk2 +=
-//							//DSTR << "tets[id].matk2‚Éfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "‚ğ‰ÁZ: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
+//								+ vertices[faces[tets[id].faces[l]].vertices[2]].heatTransRatio ) / 3.0;		///	å½“è©²faceã®ç†±ä¼é”ç‡ã‚’æ§‹æˆç¯€ç‚¹ã§ã®å€¤ã®ç›¸åŠ å¹³å‡ã‚’ã¨ã‚‹
+//							///	ä»¥ä¸‹ã®[]ã¯ä¸Šã¾ã§ã®[l]ã¨ç•°ãªã‚‹ã€‚
+//							///	IDãŒä½•ç•ªç›®ã‹ã«ã‚ˆã£ã¦ã€å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ãŒç•°ãªã‚‹ã®ã§ã€
+//							tets[id].matk[1] += faces[tets[id].faces[l]].heatTransRatios[k] * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];		//å…ƒã¯tets[id].matk2 +=
+//							//DSTR << "tets[id].matk2ã«faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "ã‚’åŠ ç®—: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 //							//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 //						}
 //					//else{
-//					//	///	ID‚Æˆê’v‚µ‚È‚¢ê‡‚É‚ÍAmatk2array[j]‚É‚Í‘S¬•ª0‚ğ“ü‚ê‚é
-//					//	///	‚Æ‚µ‚½‚¢‚Æ‚±‚ë‚¾‚ªA
+//					//	///	IDã¨ä¸€è‡´ã—ãªã„å ´åˆã«ã¯ã€matk2array[j]ã«ã¯å…¨æˆåˆ†0ã‚’å…¥ã‚Œã‚‹
+//					//	///	ã¨ã—ãŸã„ã¨ã“ã‚ã ãŒã€
 //					//	//matk2array[j] =0.0 * matk2array[j];
 //					//	//DSTR << "matk2array[" << j << "]: " << matk2array[j] << std::endl;
 //					//}
 //				}
 //			}
 //		}
-//		///	SurfaceFace‚¶‚á‚È‚©‚Á‚½‚çAmatk2array‚É‚Í0‚ğ“ü‚ê‚é
+//		///	SurfaceFaceã˜ã‚ƒãªã‹ã£ãŸã‚‰ã€matk2arrayã«ã¯0ã‚’å…¥ã‚Œã‚‹
 //		//else{
 //		//	//matk2array[l];
 //		//}
@@ -6836,16 +6840,16 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 //	//for(unsigned i=0; i < 4; i++){
 //	//	matk2 += matk2array[i];
 //	//	//	for debug
-//	//	//DSTR << "matk2 ‚É matk2array = k2" << i+1 <<"‚Ü‚Å‰ÁZ‚µ‚½s—ñ" << std::endl;
+//	//	//DSTR << "matk2 ã« matk2array = k2" << i+1 <<"ã¾ã§åŠ ç®—ã—ãŸè¡Œåˆ—" << std::endl;
 //	//	//DSTR << matk2 << std::endl;
 //	//}
 //	
 //	//for debug
-//	//DSTR << "ß“_i";
+//	//DSTR << "ç¯€ç‚¹ï¼ˆ";
 //	//for(unsigned i =0; i < 4; i++){
 //	//	DSTR << tets[id].vertices[i] << "," ;
 //	//}
-//	//DSTR << ")‚Å\¬‚³‚ê‚él–Ê‘Ì‚Ì" << std::endl;
+//	//DSTR << ")ã§æ§‹æˆã•ã‚Œã‚‹å››é¢ä½“ã®" << std::endl;
 //	//DSTR << "matk2 : " << std::endl;
 //	//DSTR << matk2 << std::endl;
 //	//int hogeshishi =0;
@@ -6858,7 +6862,7 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 bool PHFemThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//’†S‚©‚ç‚Ì‹——£‚ğ‹‚ß‚é
+	//ä¸­å¿ƒã‹ã‚‰ã®è·é›¢ã‚’æ±‚ã‚ã‚‹
 	double dx = 0.0;
 	double dz = 0.0;
 	for(unsigned i = 0; i < mesh->vertices.size(); ++i){
@@ -6868,22 +6872,22 @@ bool PHFemThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<double
 			vertexVars[i].disFromOrigin = sqrt(dx * dx + dz * dz);
 		}
 	}
-	//	‚±‚±‚Ü‚Å
-	//> •\–Êface‚Ì“àAŒ´“_‚©‚çŠeface‚Ìß“_‚Ìƒ[ƒJƒ‹(x,z)À•WŒn‚Å‚Ì•½–Êã‚Ì‹——£‚ÌŒvZ‚ğAface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚Ì‚à‚Ì‚É‘Î‚µ‚ÄAIH‰Á”M‚Ì‰Â”\«‚ğ¦‚·ƒtƒ‰ƒO‚ğİ’è
+	//	ã“ã“ã¾ã§
+	//> è¡¨é¢faceã®å†…ã€åŸç‚¹ã‹ã‚‰å„faceã®ç¯€ç‚¹ã®ãƒ­ãƒ¼ã‚«ãƒ«(x,z)åº§æ¨™ç³»ã§ã®å¹³é¢ä¸Šã®è·é›¢ã®è¨ˆç®—ã‚’ã€faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ã®ã‚‚ã®ã«å¯¾ã—ã¦ã€IHåŠ ç†±ã®å¯èƒ½æ€§ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 	for(unsigned i=0;i<mesh->nSurfaceFace;i++){
-		//> •\–Ê‚Ìface‚Ì‘Sß“_‚ÌyÀ•W‚ª•‰‚È‚ç‚ÎA‚»‚Ìface‚ğIH‰Á”M‚Ìface–Ê‚Æ”»’è‚µAƒtƒ‰ƒO‚ğ—^‚¦‚é
+		//> è¡¨é¢ã®faceã®å…¨ç¯€ç‚¹ã®yåº§æ¨™ãŒè² ãªã‚‰ã°ã€ãã®faceã‚’IHåŠ ç†±ã®faceé¢ã¨åˆ¤å®šã—ã€ãƒ•ãƒ©ã‚°ã‚’ä¸ãˆã‚‹
 		//if(faces[i].mayIHheated = true){
-			//	(x,z)•½–Ê‚É‚¨‚¯‚émayIHheated‚Ìface‘Sß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚·‚é
+			//	(x,z)å¹³é¢ã«ãŠã‘ã‚‹mayIHheatedã®faceå…¨ç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹
 			for(unsigned j=0; j<3; j++){
 				double dx = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x - origin[0];
-				double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - origin[1];	//	•\‹L‚Íy‚¾‚ªAÀ¿zÀ•W‚ª“ü‚Á‚Ä‚¢‚é
+				double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - origin[1];	//	è¡¨è¨˜ã¯yã ãŒã€å®Ÿè³ªzåº§æ¨™ãŒå…¥ã£ã¦ã„ã‚‹
 				vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
 			}
 		//}
 	}
-	//‹‚ß‚½‹——£‚É‰‚¶‚ÄAİ’è‚³‚ê‚½‰ŠúğŒ‚ğ–‚½‚·‚æ‚¤‚È‰·“x•ª•z‚ğì‚é
+	//æ±‚ã‚ãŸè·é›¢ã«å¿œã˜ã¦ã€è¨­å®šã•ã‚ŒãŸåˆæœŸæ¡ä»¶ã‚’æº€ãŸã™ã‚ˆã†ãªæ¸©åº¦åˆ†å¸ƒã‚’ä½œã‚‹
 
-	//ƒCƒ“ƒ^ƒtƒF[ƒX‰»‚µ‚ÄA—p‚¢‚éB
+	//ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åŒ–ã—ã¦ã€ç”¨ã„ã‚‹ã€‚
 	for(unsigned k=0; k < mesh->vertices.size(); ++k){
 		for(size_t i=0; i < r.size()-1;++i){
 			if(i>0 ){
@@ -6935,9 +6939,9 @@ void PHFemThermo::SetHeatTransRatioToAllVertex(double heatTransR_){
 	for(unsigned i =0; i < GetPHFemMesh()->vertices.size() ; i++){
 		vertexVars[i].heatTransRatio = heatTransR_;
 	}
-	//s—ñ‚Ævecf‚Ì”M“`’B€‚ğì‚è’¼‚·
-	std::cout << "s—ñ‚Ì”M“`’B€‚ğì‚è‚È‚¨‚¹I"<<std::endl;
-	DSTR << "s—ñ‚Ì”M“`’B€‚ğì‚è‚È‚¨‚¹I"<<std::endl;
+	//è¡Œåˆ—ã¨vecfã®ç†±ä¼é”é …ã‚’ä½œã‚Šç›´ã™
+	std::cout << "è¡Œåˆ—ã®ç†±ä¼é”é …ã‚’ä½œã‚ŠãªãŠã›ï¼"<<std::endl;
+	DSTR << "è¡Œåˆ—ã®ç†±ä¼é”é …ã‚’ä½œã‚ŠãªãŠã›ï¼"<<std::endl;
 }
 
 void PHFemThermo::SetHeatTransRatioToAllVertex(){
@@ -6963,9 +6967,9 @@ void PHFemThermo::SetTempToTVecAll(unsigned vtxid){
 }
 
 void PHFemThermo::UpdateheatTransRatio(unsigned id,double heatTransRatio){
-	//if(vertices[id].heatTransRatio != heatTransRatio){	//ˆÙ‚È‚Á‚Ä‚¢‚½‚ç
+	//if(vertices[id].heatTransRatio != heatTransRatio){	//ç•°ãªã£ã¦ã„ãŸã‚‰
 	//	vertices[id].heatTransRatio = heatTransRatio;	
-	//	///	ƒ¿‚ğŠÜ‚Şs—ñ‚ÌXV	K2,f3
+	//	///	Î±ã‚’å«ã‚€è¡Œåˆ—ã®æ›´æ–°	K2,f3
 	//	///	f3
 	//	for(unsigned i =0; i < vertices[1].tets.size(); i++){
 	//		CreateVecf3(tets[vertices[id].tets[i]]);
@@ -6973,11 +6977,11 @@ void PHFemThermo::UpdateheatTransRatio(unsigned id,double heatTransRatio){
 	//	///	K3
 
 	//}
-	///	“¯‚¶‚È‚ç‰½‚à‚µ‚È‚¢
+	///	åŒã˜ãªã‚‰ä½•ã‚‚ã—ãªã„
 }
 
 void PHFemThermo::SetLocalFluidTemp(unsigned i,double temp){
-	vertexVars[i].Tc = temp;			//ß“_‚ÌüˆÍ—¬‘Ì‰·“x‚Ìİ’è
+	vertexVars[i].Tc = temp;			//ç¯€ç‚¹ã®å‘¨å›²æµä½“æ¸©åº¦ã®è¨­å®š
 }
 
 void PHFemThermo::SetVertexTemp(unsigned i,double temp){
@@ -6988,24 +6992,24 @@ void PHFemThermo::SetVertexTemp(unsigned i,double temp){
 void PHFemThermo::SetVerticesTempAll(double temp){
 	for(std::vector<unsigned int>::size_type i=0; i < GetPHFemMesh()->vertices.size() ; i++){
 		vertexVars[i].temp = temp;
-		SetTempToTVecAll((unsigned)i);	// —vŒŸ“¢FAftersetdesk‚Ì’†‚ÅŒÄ‚Î‚ê‚éATVecAll‚Ì—v‘f‚Ì”‚ªŒÅ‚Ü‚Á‚Ä‚¨‚ç‚¸AƒAƒNƒZƒXˆá”½‚Ì‰Â”\«‚ª‚ ‚é
+		SetTempToTVecAll((unsigned)i);	// è¦æ¤œè¨ï¼šAftersetdeskã®ä¸­ã§å‘¼ã°ã‚Œã‚‹æ™‚ã€TVecAllã®è¦ç´ ã®æ•°ãŒå›ºã¾ã£ã¦ãŠã‚‰ãšã€ã‚¢ã‚¯ã‚»ã‚¹é•åã®å¯èƒ½æ€§ãŒã‚ã‚‹
 	}
 }
 
 void PHFemThermo::AddvecFAll(unsigned id,double dqdt){
-	vecFAllSum[id] += dqdt;		//	+=‚É•ÏX
+	vecFAllSum[id] += dqdt;		//	+=ã«å¤‰æ›´
 	doCalc =true;
 }
 
 void PHFemThermo::SetvecFAll(unsigned id,double dqdt){
-	vecFAllSum[id] = dqdt;		//	+=‚É•ÏX‚·‚×‚«‚ÅAíœ—\’è
+	vecFAllSum[id] = dqdt;		//	+=ã«å¤‰æ›´ã™ã¹ãã§ã€å‰Šé™¤äºˆå®š
 }
 
 void PHFemThermo::InitAllVertexTemp(){
-	//	‚±‚ÌƒƒbƒVƒ…‚Ì‘S’·“_‚Ì‰·“x‚ğ0‚É‚·‚é
+	//	ã“ã®ãƒ¡ãƒƒã‚·ãƒ¥ã®å…¨é•·ç‚¹ã®æ¸©åº¦ã‚’0ã«ã™ã‚‹
 	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
 		vertexVars[i].temp = 0.0;
-		//	‚Ç‚ÌƒƒbƒVƒ…‚ÅƒŠƒZƒbƒg‚©‚¯‚½‚©@GetMe()->
+		//	ã©ã®ãƒ¡ãƒƒã‚·ãƒ¥ã§ãƒªã‚»ãƒƒãƒˆã‹ã‘ãŸã‹ã€€GetMe()->
 	}
 }
 
@@ -7014,10 +7018,10 @@ void PHFemThermo::InitMoist(){
 		tetVars[id].wratio = 0.917;
 		double rho = 970;
 		if(tetVars[id].volume){
-			tetVars[id].tetsMg = tetVars[id].volume * rho;	//¿—Ê*–§“x
+			tetVars[id].tetsMg = tetVars[id].volume * rho;	//è³ªé‡*å¯†åº¦
 			tetVars[id].wmass = tetVars[id].tetsMg * tetVars[id].wratio;
 		}else if(tetVars[id].volume < 0.0){
-			DSTR << "tets[" << id << "]‚Ì‘ÌÏ‚ªŒvZ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ" << std::endl;
+			DSTR << "tets[" << id << "]ã®ä½“ç©ãŒè¨ˆç®—ã•ã‚Œã¦ã„ã¾ã›ã‚“" << std::endl;
 			tetVars[id].volume;
 		}
 	}
@@ -7026,17 +7030,17 @@ void PHFemThermo::InitMoist(){
 void PHFemThermo::DecrMoist_velo(double vel){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//§ŒÀ‘¬“xver
+	//åˆ¶é™é€Ÿåº¦ver
 	for(unsigned id =0; id < mesh->tets.size() ; id++){
-		////’¸“_‚ª100“xˆÈã‚Åc…—Ê‚ª‚O‚Å‚Í‚È‚¢‚Æ‚«
-		double tempAdd = 0.0;	//	‰ÁZ‰·“x
+		////é ‚ç‚¹ãŒ100åº¦ä»¥ä¸Šã§æ®‹æ°´é‡ãŒï¼ã§ã¯ãªã„ã¨ã
+		double tempAdd = 0.0;	//	åŠ ç®—æ¸©åº¦
 		for(unsigned i=0; i < 4; i++){
 			tempAdd += vertexVars[mesh->tets[id].vertexIDs[i]].temp;
 		}
-		//’PˆÊŠ·Z‚Í‡‚Á‚Ä‚¢‚é‚©H
-		double wlatheat = 2.26 * 1000;		//…1kg“–‚½‚è‚Ìö”M(latent heat)[WEs]=[J] …‚Ìö”M‚ª540cal/g‚æ‚èJ‚É•ÏŠ·‚µ‚Äg—p   W=J/s 2.26[kJ/kg]
-		tetVars[id].tetsMg = tetVars[id].volume * rho;		//l–Ê‘Ì‚Ì¿—Ê
-		//’PˆÊŠÔ‚ ‚½‚èö”­—Ê‚ÍAdw/dt = A/W * Rc  A:Œ©‚©‚¯•\–ÊÏAW:Œ©‚©‚¯‚Ì–³…•¨¿—Ê
+		//å˜ä½æ›ç®—ã¯åˆã£ã¦ã„ã‚‹ã‹ï¼Ÿ
+		double wlatheat = 2.26 * 1000;		//æ°´1kgå½“ãŸã‚Šã®æ½œç†±(latent heat)[Wãƒ»s]=[J] æ°´ã®æ½œç†±ãŒ540cal/gã‚ˆã‚ŠJã«å¤‰æ›ã—ã¦ä½¿ç”¨   W=J/s 2.26[kJ/kg]
+		tetVars[id].tetsMg = tetVars[id].volume * rho;		//å››é¢ä½“ã®è³ªé‡
+		//å˜ä½æ™‚é–“ã‚ãŸã‚Šè’¸ç™ºé‡ã¯ã€dw/dt = A/W * Rc  A:è¦‹ã‹ã‘è¡¨é¢ç©ã€W:è¦‹ã‹ã‘ã®ç„¡æ°´ç‰©è³ªé‡
 		double faceS=0.0;
 		for(int ii=0;ii<4;ii++){
 			int facet = mesh->tets[id].faceIDs[ii];
@@ -7044,33 +7048,33 @@ void PHFemThermo::DecrMoist_velo(double vel){
 				faceS += faceVars[facet].area;
 			}
 		}
-		//double surfaceS = tets[id].faces[  //	l–Ê‘Ì‚É‘®‚·‚éface‚ªnSurfaceface‚æ‚è¬‚³‚¢”Ô†‚Ìface‚È‚çA•\–Ê‚Ìface
+		//double surfaceS = tets[id].faces[  //	å››é¢ä½“ã«å±ã™ã‚‹faceãŒnSurfacefaceã‚ˆã‚Šå°ã•ã„ç•ªå·ã®faceãªã‚‰ã€è¡¨é¢ã®face
 		double sokudo = vel;
-		double dwdt = faceS / tetVars[id].tetsMg * sokudo;//’PˆÊŠÔ‚ ‚½‚è‚È‚Ì‚Ådt—v‘f‚ğ“ü‚ê‚é		//1step‚ÅŒ¸‚é…‚Ì—Ê
-		//double wlat = (tempAdd / 4.0) - 100.0;	//100“x‚ğ’´‚¦‚½‚¾‚¯ö”­‚·‚éB
-		//double dw = dwdt * specificHeat *  tets[id].tetsMg / wlatheat;	//	…•ªö”­—Ê	//	(‰·“x‚Æ•¦“_100“x‚Æ‚Ì·•ª‚Ì”M—Ê)€…‚Ìö”M‚Åö”­‚·‚é…‚Ì—Ê‚ª•ª‚©‚éB;		//	…•ªö”­—Ê
-		double exwater	= 0;	//—¬o‚·‚é…‚Ì—Ê‘S‘Ì(ö”­ + —¬o + …•ªˆÚ“®)
-		//•½‹Ï‰·“x‚ª100“x’´‰ß
+		double dwdt = faceS / tetVars[id].tetsMg * sokudo;//å˜ä½æ™‚é–“ã‚ãŸã‚Šãªã®ã§dtè¦ç´ ã‚’å…¥ã‚Œã‚‹		//1stepã§æ¸›ã‚‹æ°´ã®é‡
+		//double wlat = (tempAdd / 4.0) - 100.0;	//100åº¦ã‚’è¶…ãˆãŸã ã‘è’¸ç™ºã™ã‚‹ã€‚
+		//double dw = dwdt * specificHeat *  tets[id].tetsMg / wlatheat;	//	æ°´åˆ†è’¸ç™ºé‡	//	(æ¸©åº¦ã¨æ²¸ç‚¹100åº¦ã¨ã®å·®åˆ†ã®ç†±é‡)Ã·æ°´ã®æ½œç†±ã§è’¸ç™ºã™ã‚‹æ°´ã®é‡ãŒåˆ†ã‹ã‚‹ã€‚;		//	æ°´åˆ†è’¸ç™ºé‡
+		double exwater	= 0;	//æµå‡ºã™ã‚‹æ°´ã®é‡å…¨ä½“(è’¸ç™º + æµå‡º + æ°´åˆ†ç§»å‹•)
+		//å¹³å‡æ¸©åº¦ãŒ100åº¦è¶…é
 
-		//100“x–¢–Fö‹Cˆ³·@‚É‚æ‚éö”­EŠ£‘‡
-			//¿—Ê‚ğŒ¸‚¶
+		//100åº¦æœªæº€ï¼šè’¸æ°—åœ§å·®ã€€ã«ã‚ˆã‚‹è’¸ç™ºãƒ»ä¹¾ç‡¥
+			//è³ªé‡ã‚’æ¸›ã˜
 			tetVars[id].tetsMg -= dwdt;
-			//”M—Ê‚ğ’D‚¤	l–Ê‘Ì‚Ì¿—Ê‚ª‚Á‚Ä‚¢‚é”M—Ê‚©‚çAdwdt•ª‚ğí‚é		//	4ß“_‚Ì•½‹Ï‰·“x‚Å‚¢‚¢‚Ì‚©H	//‚±‚±‚É–³—‚ª‚ ‚è‚»‚¤B
+			//ç†±é‡ã‚’å¥ªã†	å››é¢ä½“ã®è³ªé‡ãŒæŒã£ã¦ã„ã‚‹ç†±é‡ã‹ã‚‰ã€dwdtåˆ†ã‚’å‰Šã‚‹		//	4ç¯€ç‚¹ã®å¹³å‡æ¸©åº¦ã§ã„ã„ã®ã‹ï¼Ÿ	//ã“ã“ã«ç„¡ç†ãŒã‚ã‚Šãã†ã€‚
 			double tetsheating = rho * specificHeat * tetVars[id].volume * (vertexVars[mesh->tets[id].vertexIDs[0]].temp + vertexVars[mesh->tets[id].vertexIDs[1]].temp + vertexVars[mesh->tets[id].vertexIDs[2]].temp + vertexVars[mesh->tets[id].vertexIDs[3]].temp)/4.0;
 
 			//
 
 
-		//100“xˆÈãFö”M‚É‚æ‚éö”­EŠ£‘‡
+		//100åº¦ä»¥ä¸Šï¼šæ½œç†±ã«ã‚ˆã‚‹è’¸ç™ºãƒ»ä¹¾ç‡¥
 
 
-		//•Ï«‚ÉˆË‚é—¬o@ƒ^ƒ“ƒpƒN¿•Ï«E\‘¢•Ï‰»‚Æ…•ª—¬o
+		//å¤‰æ€§ã«ä¾ã‚‹æµå‡ºã€€ã‚¿ãƒ³ãƒ‘ã‚¯è³ªå¤‰æ€§ãƒ»æ§‹é€ å¤‰åŒ–ã¨æ°´åˆ†æµå‡º
 
 
 
-		//	‘½•ªAˆÈ‰º‚ÌƒR[ƒh‚ª–â‘èB
+		//	å¤šåˆ†ã€ä»¥ä¸‹ã®ã‚³ãƒ¼ãƒ‰ãŒå•é¡Œã€‚
 		//if( tempAdd / 4.0 >= 100.0){
-		//	//dw‚Ì•ª‚¾‚¯A¿—Ê‚â…•ª—Ê‚©‚çˆø‚­
+		//	//dwã®åˆ†ã ã‘ã€è³ªé‡ã‚„æ°´åˆ†é‡ã‹ã‚‰å¼•ã
 		//	//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
 		//	double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
 		//	exwater = delw * 500;
@@ -7078,15 +7082,15 @@ void PHFemThermo::DecrMoist_velo(double vel){
 		//	if(tets[id].wmass > dw - exwater){
 		//		tets[id].wmass -= dw - exwater;
 		//	}else{
-		//		DSTR << "…•ª—¬o—Ê‚ª‘½‚·‚¬‚Ü‚·" << std::endl;
+		//		DSTR << "æ°´åˆ†æµå‡ºé‡ãŒå¤šã™ãã¾ã™" << std::endl;
 		//	}
-		//	//ŒŸØ‚·‚é:‚Ğ‚Æ‚Ü‚¸Aexwater‚ª‚O‚Å‚È‚¯‚ê‚ÎA‰¹‚ğÄ¶‚³‚¹‚é‚±‚Æ‚É‚µ‚æ‚¤‚©B‰¹‚ğo‚µ‚½‚çA‚»‚ÌƒƒbƒVƒ…‚Ìexwater‚Ì’l‚ğ‚O‚É‚µ‚æ‚¤B
-		//	//wlat‚Ì•ª‚¾‚¯A‰·“x‚©‚çˆø‚­
+		//	//æ¤œè¨¼ã™ã‚‹:ã²ã¨ã¾ãšã€exwaterãŒï¼ã§ãªã‘ã‚Œã°ã€éŸ³ã‚’å†ç”Ÿã•ã›ã‚‹ã“ã¨ã«ã—ã‚ˆã†ã‹ã€‚éŸ³ã‚’å‡ºã—ãŸã‚‰ã€ãã®ãƒ¡ãƒƒã‚·ãƒ¥ã®exwaterã®å€¤ã‚’ï¼ã«ã—ã‚ˆã†ã€‚
+		//	//wlatã®åˆ†ã ã‘ã€æ¸©åº¦ã‹ã‚‰å¼•ã
 		//	for(unsigned j=0; j < 4; j++){
 		//		vertices[j].temp -= dwdt;
 		//	}
 		//}
-		//‚Æ‚è‚ ‚¦‚¸AŠÈ’P‚ÉA…•ª‚ğŒ¸‚ç‚·ƒR[ƒh
+		//ã¨ã‚Šã‚ãˆãšã€ç°¡å˜ã«ã€æ°´åˆ†ã‚’æ¸›ã‚‰ã™ã‚³ãƒ¼ãƒ‰
 		//if(tets[id].wmass >= tets[id].wmass_start *0.01){
 		//	tets[id].wmass -= tets[id].wmass_start * 0.01;
 		//}
@@ -7097,17 +7101,17 @@ void PHFemThermo::DecrMoist_velo(double vel){
 void PHFemThermo::DecrMoist_vel(double dt){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//§ŒÀ‘¬“xver
+	//åˆ¶é™é€Ÿåº¦ver
 	for(unsigned id =0; id < mesh->tets.size() ; id++){
-		////’¸“_‚ª100“xˆÈã‚Åc…—Ê‚ª‚O‚Å‚Í‚È‚¢‚Æ‚«
-		double tempAdd = 0.0;	//	‰ÁZ‰·“x
+		////é ‚ç‚¹ãŒ100åº¦ä»¥ä¸Šã§æ®‹æ°´é‡ãŒï¼ã§ã¯ãªã„ã¨ã
+		double tempAdd = 0.0;	//	åŠ ç®—æ¸©åº¦
 		for(unsigned i=0; i < 4; i++){
 			tempAdd += vertexVars[mesh->tets[id].vertexIDs[i]].temp;
 		}
-		//’PˆÊŠ·Z‚Í‡‚Á‚Ä‚¢‚é‚©H
-		double wlatheat = 2.26 * 1000;		//…1kg“–‚½‚è‚Ìö”M(latent heat)[WEs]=[J] …‚Ìö”M‚ª540cal/g‚æ‚èJ‚É•ÏŠ·‚µ‚Äg—p   W=J/s 2.26[kJ/kg]
-		tetVars[id].tetsMg = tetVars[id].volume * rho;		//l–Ê‘Ì‚Ì¿—Ê
-		//’PˆÊŠÔ‚ ‚½‚èö”­—Ê‚ÍAdw/dt = A/W * Rc  A:Œ©‚©‚¯•\–ÊÏAW:Œ©‚©‚¯‚Ì–³…•¨¿—Ê
+		//å˜ä½æ›ç®—ã¯åˆã£ã¦ã„ã‚‹ã‹ï¼Ÿ
+		double wlatheat = 2.26 * 1000;		//æ°´1kgå½“ãŸã‚Šã®æ½œç†±(latent heat)[Wãƒ»s]=[J] æ°´ã®æ½œç†±ãŒ540cal/gã‚ˆã‚ŠJã«å¤‰æ›ã—ã¦ä½¿ç”¨   W=J/s 2.26[kJ/kg]
+		tetVars[id].tetsMg = tetVars[id].volume * rho;		//å››é¢ä½“ã®è³ªé‡
+		//å˜ä½æ™‚é–“ã‚ãŸã‚Šè’¸ç™ºé‡ã¯ã€dw/dt = A/W * Rc  A:è¦‹ã‹ã‘è¡¨é¢ç©ã€W:è¦‹ã‹ã‘ã®ç„¡æ°´ç‰©è³ªé‡
 		double faceS=0.0;
 		for(int ii=0;ii<4;ii++){
 			int facet = mesh->tets[id].faceIDs[ii];
@@ -7115,15 +7119,15 @@ void PHFemThermo::DecrMoist_vel(double dt){
 				faceS += faceVars[facet].area;
 			}
 		}
-		//double surfaceS = tets[id].faces[  //	l–Ê‘Ì‚É‘®‚·‚éface‚ªnSurfaceface‚æ‚è¬‚³‚¢”Ô†‚Ìface‚È‚çA•\–Ê‚Ìface
+		//double surfaceS = tets[id].faces[  //	å››é¢ä½“ã«å±ã™ã‚‹faceãŒnSurfacefaceã‚ˆã‚Šå°ã•ã„ç•ªå·ã®faceãªã‚‰ã€è¡¨é¢ã®face
 		double sokudo = 1.0;
-		double dwdt = faceS / tetVars[id].tetsMg * sokudo;//’PˆÊŠÔ‚ ‚½‚è‚È‚Ì‚Ådt—v‘f‚ğ“ü‚ê‚é
-		//double wlat = (tempAdd / 4.0) - 100.0;	//100“x‚ğ’´‚¦‚½‚¾‚¯ö”­‚·‚éB
-		double dw = dwdt * specificHeat *  tetVars[id].tetsMg / wlatheat;	//	…•ªö”­—Ê	//	(‰·“x‚Æ•¦“_100“x‚Æ‚Ì·•ª‚Ì”M—Ê)€…‚Ìö”M‚Åö”­‚·‚é…‚Ì—Ê‚ª•ª‚©‚éB;		//	…•ªö”­—Ê
-		double exwater	= 0;	//—¬o‚·‚é…‚Ì—Ê‘S‘Ì(ö”­ + —¬o + …•ªˆÚ“®)
-		//•½‹Ï‰·“x‚ª100“x’´‰ß
+		double dwdt = faceS / tetVars[id].tetsMg * sokudo;//å˜ä½æ™‚é–“ã‚ãŸã‚Šãªã®ã§dtè¦ç´ ã‚’å…¥ã‚Œã‚‹
+		//double wlat = (tempAdd / 4.0) - 100.0;	//100åº¦ã‚’è¶…ãˆãŸã ã‘è’¸ç™ºã™ã‚‹ã€‚
+		double dw = dwdt * specificHeat *  tetVars[id].tetsMg / wlatheat;	//	æ°´åˆ†è’¸ç™ºé‡	//	(æ¸©åº¦ã¨æ²¸ç‚¹100åº¦ã¨ã®å·®åˆ†ã®ç†±é‡)Ã·æ°´ã®æ½œç†±ã§è’¸ç™ºã™ã‚‹æ°´ã®é‡ãŒåˆ†ã‹ã‚‹ã€‚;		//	æ°´åˆ†è’¸ç™ºé‡
+		double exwater	= 0;	//æµå‡ºã™ã‚‹æ°´ã®é‡å…¨ä½“(è’¸ç™º + æµå‡º + æ°´åˆ†ç§»å‹•)
+		//å¹³å‡æ¸©åº¦ãŒ100åº¦è¶…é
 		if( tempAdd / 4.0 >= 100.0){
-			//dw‚Ì•ª‚¾‚¯A¿—Ê‚â…•ª—Ê‚©‚çˆø‚­
+			//dwã®åˆ†ã ã‘ã€è³ªé‡ã‚„æ°´åˆ†é‡ã‹ã‚‰å¼•ã
 			//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
 			double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
 			exwater = delw * 500;
@@ -7131,15 +7135,15 @@ void PHFemThermo::DecrMoist_vel(double dt){
 			if(tetVars[id].wmass > dw - exwater){
 				tetVars[id].wmass -= dw - exwater;
 			}else{
-				DSTR << "…•ª—¬o—Ê‚ª‘½‚·‚¬‚Ü‚·" << std::endl;
+				DSTR << "æ°´åˆ†æµå‡ºé‡ãŒå¤šã™ãã¾ã™" << std::endl;
 			}
-			//ŒŸØ‚·‚é:‚Ğ‚Æ‚Ü‚¸Aexwater‚ª‚O‚Å‚È‚¯‚ê‚ÎA‰¹‚ğÄ¶‚³‚¹‚é‚±‚Æ‚É‚µ‚æ‚¤‚©B‰¹‚ğo‚µ‚½‚çA‚»‚ÌƒƒbƒVƒ…‚Ìexwater‚Ì’l‚ğ‚O‚É‚µ‚æ‚¤B
-			//wlat‚Ì•ª‚¾‚¯A‰·“x‚©‚çˆø‚­
+			//æ¤œè¨¼ã™ã‚‹:ã²ã¨ã¾ãšã€exwaterãŒï¼ã§ãªã‘ã‚Œã°ã€éŸ³ã‚’å†ç”Ÿã•ã›ã‚‹ã“ã¨ã«ã—ã‚ˆã†ã‹ã€‚éŸ³ã‚’å‡ºã—ãŸã‚‰ã€ãã®ãƒ¡ãƒƒã‚·ãƒ¥ã®exwaterã®å€¤ã‚’ï¼ã«ã—ã‚ˆã†ã€‚
+			//wlatã®åˆ†ã ã‘ã€æ¸©åº¦ã‹ã‚‰å¼•ã
 			for(unsigned j=0; j < 4; j++){
 				vertexVars[j].temp -= dwdt;
 			}
 		}
-		//‚Æ‚è‚ ‚¦‚¸AŠÈ’P‚ÉA…•ª‚ğŒ¸‚ç‚·ƒR[ƒh
+		//ã¨ã‚Šã‚ãˆãšã€ç°¡å˜ã«ã€æ°´åˆ†ã‚’æ¸›ã‚‰ã™ã‚³ãƒ¼ãƒ‰
 		//if(tets[id].wmass >= tets[id].wmass_start *0.01){
 		//	tets[id].wmass -= tets[id].wmass_start * 0.01;
 		//}
@@ -7151,21 +7155,21 @@ void PHFemThermo::DecrMoist(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
 	for(unsigned id =0; id < mesh->tets.size() ; id++){
-		////’¸“_‚ª100“xˆÈã‚Åc…—Ê‚ª‚O‚Å‚Í‚È‚¢‚Æ‚«
-		double tempAdd = 0.0;	//	‰ÁZ‰·“x
+		////é ‚ç‚¹ãŒ100åº¦ä»¥ä¸Šã§æ®‹æ°´é‡ãŒï¼ã§ã¯ãªã„ã¨ã
+		double tempAdd = 0.0;	//	åŠ ç®—æ¸©åº¦
 		for(unsigned i=0; i < 4; i++){
 			tempAdd += vertexVars[mesh->tets[id].vertexIDs[i]].temp;
 		}
-		//’PˆÊŠ·Z‚Í‡‚Á‚Ä‚¢‚é‚©H
-		double wlatheat = 2.26 * 1000;		//…1kg“–‚½‚è‚Ìö”M(latent heat)[WEs]=[J] …‚Ìö”M‚ª540cal/g‚æ‚èJ‚É•ÏŠ·‚µ‚Äg—p   W=J/s 2.26[kJ/kg]
-		tetVars[id].tetsMg = tetVars[id].volume * rho;		//l–Ê‘Ì‚Ì¿—Ê
-		//’PˆÊŠÔ‚ ‚½‚èö”­—Ê‚ÍA
-		double wlat = (tempAdd / 4.0) - 100.0;	//100“x‚ğ’´‚¦‚½‚¾‚¯ö”­‚·‚éB
-		double dw = wlat * specificHeat *  tetVars[id].tetsMg / wlatheat;	//	…•ªö”­—Ê	//	(‰·“x‚Æ•¦“_100“x‚Æ‚Ì·•ª‚Ì”M—Ê)€…‚Ìö”M‚Åö”­‚·‚é…‚Ì—Ê‚ª•ª‚©‚éB;		//	…•ªö”­—Ê
-		double exwater	= 0;	//—¬o‚·‚é…‚Ì—Ê‘S‘Ì(ö”­ + —¬o + …•ªˆÚ“®)
-		//•½‹Ï‰·“x‚ª100“x’´‰ß
+		//å˜ä½æ›ç®—ã¯åˆã£ã¦ã„ã‚‹ã‹ï¼Ÿ
+		double wlatheat = 2.26 * 1000;		//æ°´1kgå½“ãŸã‚Šã®æ½œç†±(latent heat)[Wãƒ»s]=[J] æ°´ã®æ½œç†±ãŒ540cal/gã‚ˆã‚ŠJã«å¤‰æ›ã—ã¦ä½¿ç”¨   W=J/s 2.26[kJ/kg]
+		tetVars[id].tetsMg = tetVars[id].volume * rho;		//å››é¢ä½“ã®è³ªé‡
+		//å˜ä½æ™‚é–“ã‚ãŸã‚Šè’¸ç™ºé‡ã¯ã€
+		double wlat = (tempAdd / 4.0) - 100.0;	//100åº¦ã‚’è¶…ãˆãŸã ã‘è’¸ç™ºã™ã‚‹ã€‚
+		double dw = wlat * specificHeat *  tetVars[id].tetsMg / wlatheat;	//	æ°´åˆ†è’¸ç™ºé‡	//	(æ¸©åº¦ã¨æ²¸ç‚¹100åº¦ã¨ã®å·®åˆ†ã®ç†±é‡)Ã·æ°´ã®æ½œç†±ã§è’¸ç™ºã™ã‚‹æ°´ã®é‡ãŒåˆ†ã‹ã‚‹ã€‚;		//	æ°´åˆ†è’¸ç™ºé‡
+		double exwater	= 0;	//æµå‡ºã™ã‚‹æ°´ã®é‡å…¨ä½“(è’¸ç™º + æµå‡º + æ°´åˆ†ç§»å‹•)
+		//å¹³å‡æ¸©åº¦ãŒ100åº¦è¶…é
 		if( tempAdd / 4.0 >= 100.0){
-			//dw‚Ì•ª‚¾‚¯A¿—Ê‚â…•ª—Ê‚©‚çˆø‚­
+			//dwã®åˆ†ã ã‘ã€è³ªé‡ã‚„æ°´åˆ†é‡ã‹ã‚‰å¼•ã
 			//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
 			double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
 			exwater = delw * 500;
@@ -7173,15 +7177,15 @@ void PHFemThermo::DecrMoist(){
 			if(tetVars[id].wmass > dw - exwater){
 				tetVars[id].wmass -= dw - exwater;
 			}else{
-				DSTR << "…•ª—¬o—Ê‚ª‘½‚·‚¬‚Ü‚·" << std::endl;
+				DSTR << "æ°´åˆ†æµå‡ºé‡ãŒå¤šã™ãã¾ã™" << std::endl;
 			}
-			//ŒŸØ‚·‚é:‚Ğ‚Æ‚Ü‚¸Aexwater‚ª‚O‚Å‚È‚¯‚ê‚ÎA‰¹‚ğÄ¶‚³‚¹‚é‚±‚Æ‚É‚µ‚æ‚¤‚©B‰¹‚ğo‚µ‚½‚çA‚»‚ÌƒƒbƒVƒ…‚Ìexwater‚Ì’l‚ğ‚O‚É‚µ‚æ‚¤B
-			//wlat‚Ì•ª‚¾‚¯A‰·“x‚©‚çˆø‚­
+			//æ¤œè¨¼ã™ã‚‹:ã²ã¨ã¾ãšã€exwaterãŒï¼ã§ãªã‘ã‚Œã°ã€éŸ³ã‚’å†ç”Ÿã•ã›ã‚‹ã“ã¨ã«ã—ã‚ˆã†ã‹ã€‚éŸ³ã‚’å‡ºã—ãŸã‚‰ã€ãã®ãƒ¡ãƒƒã‚·ãƒ¥ã®exwaterã®å€¤ã‚’ï¼ã«ã—ã‚ˆã†ã€‚
+			//wlatã®åˆ†ã ã‘ã€æ¸©åº¦ã‹ã‚‰å¼•ã
 			for(unsigned j=0; j < 4; j++){
 				vertexVars[j].temp -= wlat;
 			}
 		}
-		//‚Æ‚è‚ ‚¦‚¸AŠÈ’P‚ÉA…•ª‚ğŒ¸‚ç‚·ƒR[ƒh
+		//ã¨ã‚Šã‚ãˆãšã€ç°¡å˜ã«ã€æ°´åˆ†ã‚’æ¸›ã‚‰ã™ã‚³ãƒ¼ãƒ‰
 		//if(tets[id].wmass >= tets[id].wmass_start *0.01){
 		//	tets[id].wmass -= tets[id].wmass_start * 0.01;
 		//}
@@ -7201,8 +7205,8 @@ void PHFemThermo::VertexWaterBoiling(unsigned vtxid){
 	unsigned vtxID = mesh->surfaceVertices[vtxid];
 	
 	if(TVecAll[vtxID] >= 100){
-		double calorieOver100 = specificHeat * rho * vertexVars[vtxID].vVolume * (TVecAll[vtxID] - 100.0);	//100‚ğ’´‚¦‚Ä‚¢‚é•ª‚Ì”M—Ê
-		double maxEvapoWaterMass = calorieOver100 / WaterLatentHeat;	//ö”­‚³‚¹‚é–‚ª‚Å‚«‚é…‚Ì¿—Ê(kg)
+		double calorieOver100 = specificHeat * rho * vertexVars[vtxID].vVolume * (TVecAll[vtxID] - 100.0);	//100â„ƒã‚’è¶…ãˆã¦ã„ã‚‹åˆ†ã®ç†±é‡
+		double maxEvapoWaterMass = calorieOver100 / WaterLatentHeat;	//è’¸ç™ºã•ã›ã‚‹äº‹ãŒã§ãã‚‹æ°´ã®è³ªé‡(kg)
 		if(mesh->GetPHFemPorousWOMove()->GetVertexMw(vtxID) > maxEvapoWaterMass){
 			TVecAll[vtxID] = 100.0;
 			mesh->GetPHFemPorousWOMove()->SetVertexMw(vtxID, mesh->GetPHFemPorousWOMove()->GetVertexMw(vtxID) - maxEvapoWaterMass);
@@ -7223,44 +7227,44 @@ void PHFemThermo::SetThermoCameraScale(double minTemp,double maxTemp){
 
 float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 	float gvtx = 0.0f;
-	//ƒeƒNƒXƒ`ƒƒ‚Ìİ’è
-	//Å‚°ƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
+	//ç„¦ã’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned kogetex	= 5;
-	//…•ªƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned watex		= 2;
-	//ƒT[ƒ‚ƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//ã‚µãƒ¼ãƒ¢ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned thtex		= 6;
-	unsigned thcamtex   = 9;		//”MƒJƒƒ‰‚Á‚Û‚¢•\¦—p
-	//	ƒ[ƒhƒeƒNƒXƒ`ƒƒ[‚ªÅ‚°¨…¨‰·“x‚Ì‡	i‚Ü‚½‚Íj…¨‰·“x¨Å‚°	‚É‚à•ÏX‰Â”\iƒtƒ@ƒCƒ‹–¼‚ÌƒŠƒl[ƒ€‚ª•K—vj
+	unsigned thcamtex   = 9;		//ç†±ã‚«ãƒ¡ãƒ©ã£ã½ã„è¡¨ç¤ºç”¨
+	//	ãƒ­ãƒ¼ãƒ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ãŒç„¦ã’â†’æ°´â†’æ¸©åº¦ã®é †	ï¼ˆã¾ãŸã¯ï¼‰æ°´â†’æ¸©åº¦â†’ç„¦ã’	ã«ã‚‚å¤‰æ›´å¯èƒ½ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«åã®ãƒªãƒãƒ¼ãƒ ãŒå¿…è¦ï¼‰
 
-	//…•ªƒeƒNƒXƒ`ƒƒ‚Ì–‡”(…‚Ì‹óŠÔ–§“x‚ğ—p‚¢‚½ê‡)
+	//æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°(æ°´ã®ç©ºé–“å¯†åº¦ã‚’ç”¨ã„ãŸå ´åˆ)
 	unsigned watex2 = 5;
 
 	// num of texture layers
-	if(fwfood == "fwNegi"){		///	ƒeƒNƒXƒ`ƒƒ‚Æ‰·“xA…•ª—Ê‚Æ‚Ì‘Î‰•\‚ÍASamples/Physics/FEMThermo/ƒeƒNƒXƒ`ƒƒ‚ÌF‚Æ‰·“x‚Ì‘Î‰.xls	‚ğQÆ‚Ì‚±‚Æ
+	if(fwfood == "fwNegi"){		///	ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¨æ¸©åº¦ã€æ°´åˆ†é‡ã¨ã®å¯¾å¿œè¡¨ã¯ã€Samples/Physics/FEMThermo/ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è‰²ã¨æ¸©åº¦ã®å¯¾å¿œ.xls	ã‚’å‚ç…§ã®ã“ã¨
 		kogetex	= 5;
 	}
 	else if(fwfood == "fwNsteak"){
-		kogetex	= 7;		//7‚É‚·‚é
+		kogetex	= 7;		//7ã«ã™ã‚‹
 	}
 	else if(fwfood == "fwPan"){
 		kogetex = 5;
 	}
 
-	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex);		//	ƒeƒNƒXƒ`ƒƒ‰œsÀ•W‚Ì‘wŠÔŠu
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex);		//	ãƒ†ã‚¯ã‚¹ãƒãƒ£å¥¥è¡Œåº§æ¨™ã®å±¤é–“éš”
 	if(fwfood == "fwNsteak"){
 		dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex + watex2);
 	}
-	double texstart = dtex /2.0;										//	ƒeƒNƒXƒ`ƒƒÀ•W‚Ì‰Šú’l = Å‚°ƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W
-	double wastart = texstart + kogetex * dtex;							//	…•ª—Ê•\¦ƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W
-	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	ƒT[ƒ‚‚ÌƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W …•ªƒeƒNƒXƒ`ƒƒ‚Ì2–‡–Ú‚©‚çƒXƒ^[ƒg
+	double texstart = dtex /2.0;										//	ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã®åˆæœŸå€¤ = ç„¦ã’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™
+	double wastart = texstart + kogetex * dtex;							//	æ°´åˆ†é‡è¡¨ç¤ºãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	ã‚µãƒ¼ãƒ¢ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™ æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®2æšç›®ã‹ã‚‰ã‚¹ã‚¿ãƒ¼ãƒˆ
 	double thcamstart = texstart + (thtex + kogetex + watex) * dtex;	//	
 
 	if(texture_mode == 1){
 		if(fwfood == "fwPan"){
-			gvtx = texstart;// + dtex;		// ‚Ë‚¸‚İF‚Ì’ê–Ê
+			gvtx = texstart;// + dtex;		// ã­ãšã¿è‰²ã®åº•é¢
 		}else if(fwfood == "fwNegi"){
-			// ‰·“x•Ï‰»‚Æ“¯‚¶‚Å@
+			// æ¸©åº¦å¤‰åŒ–ã¨åŒã˜ã§ã€€
 			double temp = vertexVars[pv].temp;
 			// -50.0~0.0:aqua to blue
 			if(temp <= -50.0){
@@ -7301,7 +7305,7 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 			}
 		}
 		else if(fwfood == "fwNsteak"){
-			// ‰·“x•Ï‰»‚Æ“¯‚¶‚Å@
+			// æ¸©åº¦å¤‰åŒ–ã¨åŒã˜ã§ã€€
 			double temp = vertexVars[pv].temp;
 			// -50.0~0.0:aqua to blue
 			if(temp <= 50.0){
@@ -7343,11 +7347,11 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 		}
 		int phmeshdebug =0;
 	}else if(texture_mode == 3){
-		//	…•ªö”­•\¦ƒ‚[ƒh
-		//	c…—¦‚É‰ˆ‚Á‚½•Ï‰»
+		//	æ°´åˆ†è’¸ç™ºè¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰
+		//	æ®‹æ°´ç‡ã«æ²¿ã£ãŸå¤‰åŒ–
 		gvtx = wastart + 2 * dtex;
 		for(unsigned j =0; j < GetPHFemMesh()->tets.size(); j++){
-			//	Š„‡’¼‘Å‚¿‚Å‚¢‚¢‚â
+			//	å‰²åˆç›´æ‰“ã¡ã§ã„ã„ã‚„
 			if(0.5 < tetVars[j].wratio && tetVars[j].wratio < 1.0){
 				gvtx = wastart + 2 * dtex - ( (tetVars[j].wratio -0.5) * (dtex / 0.5) );
 			}
@@ -7405,7 +7409,7 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 			///	250~:only purple
 			else if(250.0 < temp){
 				gvtx = dtex * 6.0 + thstart;
-				//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	‚Ü‚¾‚ç‚É‚È‚Á‚¿‚á‚¤
+				//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	ã¾ã ã‚‰ã«ãªã£ã¡ã‚ƒã†
 			}
 			else{
 				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
@@ -7486,14 +7490,14 @@ void PHFemThermo::CreateVecFAll(){
 void PHFemThermo::CalcFaceNormalAll(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	face‚Ì–@ü‚ğŒvZ
-	//.	•\–Ê‚Ì’¸“_‚ÉA–@üƒxƒNƒgƒ‹‚ğ’Ç‰Á
-	//.	‚É‚Â‚¢‚ÄÄ‹A“I‚ÉÀs
-	Vec3d extp;		//	ŠOŒü‚«–@ü
-	Vec3d tempV;	//	ŠOŒü‚«”»’è”äŠr’¸“_(ŠY“–face–Êã‚É‚È‚¢’¸“_˜”)
+	//	faceã®æ³•ç·šã‚’è¨ˆç®—
+	//.	è¡¨é¢ã®é ‚ç‚¹ã«ã€æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿½åŠ 
+	//.	ã«ã¤ã„ã¦å†å¸°çš„ã«å®Ÿè¡Œ
+	Vec3d extp;		//	å¤–å‘ãæ³•ç·š
+	Vec3d tempV;	//	å¤–å‘ãåˆ¤å®šæ¯”è¼ƒé ‚ç‚¹(è©²å½“faceé¢ä¸Šã«ãªã„é ‚ç‚¹åºæ•°)
 	DSTR << "tets.size(): " << mesh->tets.size() << std::endl;
 	for(unsigned tid=0; tid < mesh->tets.size(); tid++){
-		//	‚Ç‚Ì’¸“_ID‚Åface‚ª\¬‚³‚ê‚Ä‚¢‚é‚Ì‚©
+		//	ã©ã®é ‚ç‚¹IDã§faceãŒæ§‹æˆã•ã‚Œã¦ã„ã‚‹ã®ã‹
 		unsigned idsum = 0;
 		for(unsigned i=0;i<4;i++){
 			idsum += mesh->tets[tid].vertexIDs[i];
@@ -7505,7 +7509,7 @@ void PHFemThermo::CalcFaceNormalAll(){
 			extp = extp / extp.norm();
 			Vec3d chkN[2] = {mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[1]].pos - mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[2]].pos
 				, mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[2]].pos - mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[1]].pos};
-			if(extp * chkN[0]/(extp.norm() * chkN[0].norm()) > 1e-15 ){		// 1e-17‚­‚ç‚¢0‚æ‚è‘å‚«‚­AŠ®‘S‚È–@ü‚É‚Í‚È‚Á‚Ä‚¢‚È‚¢‚½‚ß
+			if(extp * chkN[0]/(extp.norm() * chkN[0].norm()) > 1e-15 ){		// 1e-17ãã‚‰ã„0ã‚ˆã‚Šå¤§ããã€å®Œå…¨ãªæ³•ç·šã«ã¯ãªã£ã¦ã„ãªã„ãŸã‚
 				DSTR << "this normal is invalid. make sure to check it out. " << "tid: "<< tid << ", fid: " << fid << " ; "<< this->GetName() << std::endl;
 				DSTR << "the invalid value is... " << extp * chkN[0]/(extp.norm() * chkN[0].norm()) <<", " << extp * chkN[1]/(extp.norm() * chkN[1].norm()) << std::endl;
 				assert(0);
@@ -7514,14 +7518,14 @@ void PHFemThermo::CalcFaceNormalAll(){
 				DSTR << "ERROR: extp value == 0" << "tid = " << tid << ", fid = " << fid << std::endl;
 			}
 	
-			//unsigned expVtx =0;		//	face–Êã‚É‚È‚¢A0~3”Ô–Ú‚Ìl–Ê‘Ì’¸“_
+			//unsigned expVtx =0;		//	faceé¢ä¸Šã«ãªã„ã€0~3ç•ªç›®ã®å››é¢ä½“é ‚ç‚¹
 			unsigned idsumt =idsum;
 			for(unsigned j=0;j<3;j++){
 				idsumt -= mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[j];
 				//DSTR << "faces[" << fid << "].vertices["<<j <<"]: "<< faces[tets[tid].faces[fid]].vertices[j];
 			}
 			
-			//. facedS‚©‚çfaceŠO’¸“_‚Ö‚ÌƒxƒNƒgƒ‹tempVŒvZ
+			//. faceé‡å¿ƒã‹ã‚‰faceå¤–é ‚ç‚¹ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«tempVè¨ˆç®—
 			Vec3d jushin = mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[0]].pos + mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[1]].pos
 				+ mesh->vertices[mesh->faces[mesh->tets[tid].faceIDs[fid]].vertexIDs[2]].pos;
 			jushin *= 1.0 / 3.0;
@@ -7531,57 +7535,57 @@ void PHFemThermo::CalcFaceNormalAll(){
 				DSTR <<"ERROR:	for normal calculating, some vertices judging is invalids"<< std::endl;
 			}
 			if((tempV * extp / (tempV.norm() * extp.norm()) ) < 0.0){
-				//extp‚ÆtempV‚ª}‚X‚O“xˆÈã—£‚ê‚Ä‚¢‚éFextp‚ªŠOŒü‚«–@ü
-				faceVars[mesh->tets[tid].faceIDs[fid]].normal = extp / 10.0;		//	’·‚³‚ğ‚P0cm‚É
+				//extpã¨tempVãŒÂ±ï¼™ï¼åº¦ä»¥ä¸Šé›¢ã‚Œã¦ã„ã‚‹ï¼šextpãŒå¤–å‘ãæ³•ç·š
+				faceVars[mesh->tets[tid].faceIDs[fid]].normal = extp / 10.0;		//	é•·ã•ã‚’ï¼‘0cmã«
 			}else{
-				//extp‚ÆtempV‚ª‚X‚O“xˆÈ“àFextp‚ÌŒü‚«‚ğ180“x•Ï‚¦‚ÄAfaces[fid].normal‚É‘ã“ü
-				faceVars[mesh->tets[tid].faceIDs[fid]].normal = - extp / 10.0;		// ‹tƒxƒNƒgƒ‹
+				//extpã¨tempVãŒï¼™ï¼åº¦ä»¥å†…ï¼šextpã®å‘ãã‚’180åº¦å¤‰ãˆã¦ã€faces[fid].normalã«ä»£å…¥
+				faceVars[mesh->tets[tid].faceIDs[fid]].normal = - extp / 10.0;		// é€†ãƒ™ã‚¯ãƒˆãƒ«
 			}
 			
 			int debughogeshi=0;
 		}
 		//Debug
-		//‘Sface‚ÉAŠOŒü‚«–@üƒxƒNƒgƒ‹‚ğ•\¦‚³‚¹‚Ä‚İ‚ÄA—lq‚ğŒ©‚ê‚ÎAŠm”F‚Å‚«‚é‚©‚ÈH–”‚ÍAƒVƒ“ƒvƒ‹‚ÈƒƒbƒVƒ…‚Å•\¦‚µ‚Ä‚İ‚é‚©
+		//å…¨faceã«ã€å¤–å‘ãæ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’è¡¨ç¤ºã•ã›ã¦ã¿ã¦ã€æ§˜å­ã‚’è¦‹ã‚Œã°ã€ç¢ºèªã§ãã‚‹ã‹ãªï¼Ÿåˆã¯ã€ã‚·ãƒ³ãƒ—ãƒ«ãªãƒ¡ãƒƒã‚·ãƒ¥ã§è¡¨ç¤ºã—ã¦ã¿ã‚‹ã‹
 	}
 
-	//	’¸“_‚Ì–@ü‚ğŒvZ
-	//	’¸“_‚Ì‘®‚·‚éface–Ê‚æ‚è•½‹ÏH³‹K‰»‚µ‚½’¸“_–@ü‚ğ‹‚ß‚é
+	//	é ‚ç‚¹ã®æ³•ç·šã‚’è¨ˆç®—
+	//	é ‚ç‚¹ã®å±ã™ã‚‹faceé¢ã‚ˆã‚Šå¹³å‡ï¼Ÿæ­£è¦åŒ–ã—ãŸé ‚ç‚¹æ³•ç·šã‚’æ±‚ã‚ã‚‹
 	std::vector<Vec3d> faceNormal;
 	faceNormal.clear();
 	for(unsigned vid = 0; vid < mesh->vertices.size(); vid++ ){
 		//unsigned fsize = vertices[vid].faces.size();
 		for(unsigned fid = 0; fid < mesh->vertices[vid].faceIDs.size(); fid++ ){
-			//.	‘®‚·‚éface–@ü‚ª‚Ù‚Ú“¯‚¶•ûŒü‚ğŒü‚¢‚Ä‚é‚à‚Ì‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA1‚Â‚¾‚¯‰ÁZ‚µ‚Ä•½‹Ï‚ğ‚Æ‚é‚æ‚¤‚É•ÏX‚·‚é
+			//.	å±ã™ã‚‹faceæ³•ç·šãŒã»ã¼åŒã˜æ–¹å‘ã‚’å‘ã„ã¦ã‚‹ã‚‚ã®ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€1ã¤ã ã‘åŠ ç®—ã—ã¦å¹³å‡ã‚’ã¨ã‚‹ã‚ˆã†ã«å¤‰æ›´ã™ã‚‹
 
-			//ŠO‘¤‚Ì’¸“_‚Ì–@ü‚¾‚¯‰ÁZ			
+			//å¤–å´ã®é ‚ç‚¹ã®æ³•ç·šã ã‘åŠ ç®—			
 			if(mesh->vertices[vid].faceIDs[fid] < (int)mesh->nSurfaceFace){
-				vertexVars[vid].normal += faceVars[mesh->vertices[vid].faceIDs[fid]].normal;		// ‚±‚ÌƒR[ƒh‚É‘ã‚í‚Á‚ÄAã‹LvectorƒR[ƒh‚ÆˆÈ‰º‚Ì‰ÁZƒR[ƒh‚É’u‚«Š·‚¦
+				vertexVars[vid].normal += faceVars[mesh->vertices[vid].faceIDs[fid]].normal;		// ã“ã®ã‚³ãƒ¼ãƒ‰ã«ä»£ã‚ã£ã¦ã€ä¸Šè¨˜vectorã‚³ãƒ¼ãƒ‰ã¨ä»¥ä¸‹ã®åŠ ç®—ã‚³ãƒ¼ãƒ‰ã«ç½®ãæ›ãˆ
 			}
 
 		}
-		vertexVars[vid].normal = vertexVars[vid].normal / vertexVars[vid].normal.norm();		//	’PˆÊƒxƒNƒgƒ‹‰»
+		vertexVars[vid].normal = vertexVars[vid].normal / vertexVars[vid].normal.norm();		//	å˜ä½ãƒ™ã‚¯ãƒˆãƒ«åŒ–
 	}
 }
 
 void PHFemThermo::CalcVertexNormalAll(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 
-	//	’¸“_‚Ì–@ü‚ğŒvZ
-	//	’¸“_‚Ì‘®‚·‚éface–Ê‚æ‚è•½‹ÏH³‹K‰»‚µ‚½’¸“_–@ü‚ğ‹‚ß‚é
+	//	é ‚ç‚¹ã®æ³•ç·šã‚’è¨ˆç®—
+	//	é ‚ç‚¹ã®å±ã™ã‚‹faceé¢ã‚ˆã‚Šå¹³å‡ï¼Ÿæ­£è¦åŒ–ã—ãŸé ‚ç‚¹æ³•ç·šã‚’æ±‚ã‚ã‚‹
 	std::vector<Vec3d> faceNormal;
 	faceNormal.clear();
 	for(unsigned vid = 0; vid < mesh->vertices.size(); vid++ ){
 		//unsigned fsize = vertices[vid].faces.size();
 		for(unsigned fid = 0; fid < mesh->vertices[vid].faceIDs.size(); fid++ ){
-			//.	‘®‚·‚éface–@ü‚ª‚Ù‚Ú“¯‚¶•ûŒü‚ğŒü‚¢‚Ä‚é‚à‚Ì‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA1‚Â‚¾‚¯‰ÁZ‚µ‚Ä•½‹Ï‚ğ‚Æ‚é‚æ‚¤‚É•ÏX‚·‚é
+			//.	å±ã™ã‚‹faceæ³•ç·šãŒã»ã¼åŒã˜æ–¹å‘ã‚’å‘ã„ã¦ã‚‹ã‚‚ã®ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€1ã¤ã ã‘åŠ ç®—ã—ã¦å¹³å‡ã‚’ã¨ã‚‹ã‚ˆã†ã«å¤‰æ›´ã™ã‚‹
 
-			//ŠO‘¤‚Ì’¸“_‚Ì–@ü‚¾‚¯‰ÁZ			
+			//å¤–å´ã®é ‚ç‚¹ã®æ³•ç·šã ã‘åŠ ç®—			
 			if(mesh->vertices[vid].faceIDs[fid] < (int)mesh->nSurfaceFace){
-				vertexVars[vid].normal += faceVars[mesh->vertices[vid].faceIDs[fid]].normal;		// ‚±‚ÌƒR[ƒh‚É‘ã‚í‚Á‚ÄAã‹LvectorƒR[ƒh‚ÆˆÈ‰º‚Ì‰ÁZƒR[ƒh‚É’u‚«Š·‚¦
+				vertexVars[vid].normal += faceVars[mesh->vertices[vid].faceIDs[fid]].normal;		// ã“ã®ã‚³ãƒ¼ãƒ‰ã«ä»£ã‚ã£ã¦ã€ä¸Šè¨˜vectorã‚³ãƒ¼ãƒ‰ã¨ä»¥ä¸‹ã®åŠ ç®—ã‚³ãƒ¼ãƒ‰ã«ç½®ãæ›ãˆ
 			}
 
 		}
-		vertexVars[vid].normal = vertexVars[vid].normal / vertexVars[vid].normal.norm();		//	’PˆÊƒxƒNƒgƒ‹‰»
+		vertexVars[vid].normal = vertexVars[vid].normal / vertexVars[vid].normal.norm();		//	å˜ä½ãƒ™ã‚¯ãƒˆãƒ«åŒ–
 	}
 }
 
@@ -7668,7 +7672,12 @@ void PHFemThermo::OutEig(){
 	else DSTR << "ScilabStart \n";
 #endif
 	ScilabSetMatrix("c", matCAll);
+#ifdef	_MSC_VER
 	ScilabSetMatrix("k", tdt*matKAll);
+#else
+	VMatrixRow<double> tmp = tdt *matKAll;
+	ScilabSetMatrix("k", tmp);
+#endif
 	ScilabJob("eig = spec(inv(k+c)*c)");
 	ScilabGetMatrix(eig, "eig");
 #ifndef UseScilab
@@ -7706,7 +7715,7 @@ PTM::TMatrixRow<4,4,double> PHFemThermo::Create44Mat50(){
 	//|5 0 0 0 |
 	//|0 5 0 0 |
 	//|0 0 5 0 |
-	//|0 0 0 5 |	‚ğì‚é
+	//|0 0 0 5 |	ã‚’ä½œã‚‹
 	PTM::TMatrixRow<4,4,double> MatTemp;
 	for(int i =0; i <4 ; i++){
 		for(int j=0; j < 4 ; j++){
@@ -7836,7 +7845,7 @@ void PHFemThermo::CalcHeatTransDirect3(double dt){
 	//	DSTR << std::endl;
 	//}
 
-	//’¼Ú–@—˜—p
+	//ç›´æ¥æ³•åˆ©ç”¨
 
 	double eps =0.5;
 	double eps2 = 0.5;
@@ -7855,7 +7864,7 @@ void PHFemThermo::CalcHeatTransDirect3(double dt){
 	TVecAll3 = TVecAll;
 
 
-	//	ŒW”s—ñ‚Ìì¬
+	//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 	keisu.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisu.clear();
 
@@ -7927,7 +7936,7 @@ void PHFemThermo::CalcHeatTransDirect4(double dt){
 	//	DSTR << std::endl;
 	//}
 
-	//’¼Ú–@—˜—p
+	//ç›´æ¥æ³•åˆ©ç”¨
 
 	double eps =0.5;
 	double eps2 = 0.5;
@@ -7946,7 +7955,7 @@ void PHFemThermo::CalcHeatTransDirect4(double dt){
 	TVecAll3 = TVecAll;
 
 
-	//	ŒW”s—ñ‚Ìì¬
+	//	ä¿‚æ•°è¡Œåˆ—ã®ä½œæˆ
 	keisu.resize(mesh->vertices.size(),mesh->vertices.size());
 	keisu.clear();
 
@@ -8056,8 +8065,8 @@ void PHFemThermo::vecFTopOutToFile(){
 //	result.resize(mat.height(),mat.width());
 //	result.clear();
 //
-//	int m = mat.height();//s”
-//	int n = mat.width();//—ñ”
+//	int m = mat.height();//è¡Œæ•°
+//	int n = mat.width();//åˆ—æ•°
 //	int lda = n;
 //	double *A = new double[m*n];
 //	int info;
