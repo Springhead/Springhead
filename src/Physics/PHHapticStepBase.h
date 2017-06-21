@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2011, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -10,6 +10,10 @@
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRender.h>
 
+#ifdef	__linux__
+class PHSolidForHaptic;		// ??
+#endif
+
 namespace Spr{;
 
 class PHHapticEngine;
@@ -20,9 +24,9 @@ public:
 	SPR_OBJECTDEF_ABST_NOIF(PHHapticStepBase);
 	PHHapticEngine* engine;
 	PHHapticStepBase(){}
-	///	•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ìdt
+	///	ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®dt
 	double GetPhysicsTimeStep();
-	///	—ÍŠoƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ìdt
+	///	åŠ›è¦šãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®dt
 	double GetHapticTimeStep();
 	///	
 	virtual void Step1(){};
@@ -45,19 +49,19 @@ public:
 	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j)=0;
 	virtual void ReleaseState(PHSceneIf* scene) {}
 
-	///< „‘Ì‚Æ—ÍŠoƒ|ƒCƒ“ƒ^‚ÌƒyƒA‚ğæ“¾‚·‚éii:„‘ÌAj:—ÍŠoƒ|ƒCƒ“ƒ^j
-	// i‚É‚Í—ÍŠoƒ|ƒCƒ“ƒ^‚àŠÜ‚Ü‚ê‚éB
+	///< å‰›ä½“ã¨åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®ãƒšã‚¢ã‚’å–å¾—ã™ã‚‹ï¼ˆi:å‰›ä½“ã€j:åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ï¼‰
+	// iã«ã¯åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚‚å«ã¾ã‚Œã‚‹ã€‚
 	PHHapticRender*        GetHapticRender();
 
-	///< ƒfƒoƒbƒN—pƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Às
+	///< ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å®Ÿè¡Œ
 	virtual void StepPhysicsSimulation();
-	/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğÀs‚·‚é’¼‘O‚ÉÀs‚³‚ê‚éƒR[ƒ‹ƒoƒbƒN‚ğ“o˜^‚·‚é
+	/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã™ã‚‹ç›´å‰ã«å®Ÿè¡Œã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’ç™»éŒ²ã™ã‚‹
 	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg);
-	/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğÀs‚µ‚½’¼Œã‚ÉÀs‚³‚ê‚éƒR[ƒ‹ƒoƒbƒN‚ğ“o˜^‚·‚é
+	/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã—ãŸç›´å¾Œã«å®Ÿè¡Œã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’ç™»éŒ²ã™ã‚‹
 	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
-	///	•¨—ƒXƒeƒbƒv‚Ì’†‚Ì‰½“x–Ú‚ÌHapticStep‚©‚ğ•Ô‚·
+	///	ç‰©ç†ã‚¹ãƒ†ãƒƒãƒ—ã®ä¸­ã®ä½•åº¦ç›®ã®HapticStepã‹ã‚’è¿”ã™
 	virtual int GetLoopCount() = 0;
-	///	’†ŠÔ•\Œ»‚ğ•âŠÔ‚·‚éê‡ true
+	///	ä¸­é–“è¡¨ç¾ã‚’è£œé–“ã™ã‚‹å ´åˆ true
 	virtual bool IsInterporate() = 0;
 };
 

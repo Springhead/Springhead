@@ -240,7 +240,12 @@ void PHOpParticle::buildEllipRadius(Vec3f *mPos)
 	*/
 	Matrix3f *PHOpParticle::GetAellipMtrx()
 	{
+#ifdef	_MSC_VER
 		Spr::TQuaternion<float> &tquat = pNewOrint * pOrigOrint.Inv();
+#else
+		Spr::TQuaternion<float> tmp = pNewOrint * pOrigOrint.Inv();
+		Spr::TQuaternion<float> &tquat = tmp;
+#endif
 		//calculate orthonormal matrix R
 
 		Matrix3f Rot;

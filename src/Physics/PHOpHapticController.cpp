@@ -1,4 +1,8 @@
-#include "Physics\PHOpHapticController.h"
+Ôªø#include "Physics/PHOpHapticController.h"
+
+#ifdef	__linux__
+#  define fopen_s(fptr,name,mode)	*(fptr) = fopen(name,mode)
+#endif
 
 
 namespace Spr {
@@ -251,7 +255,7 @@ namespace Spr {
 		//}
 		//objOrigPos = new Vec3f[vtsNum];
 		//initialOrgP = true;
-		//objTargetVts = vts;//TetgenÇΩÇﬂégÇ§
+		//objTargetVts = vts;//Tetgen„Åü„ÇÅ‰Ωø„ÅÜ
 		//objTargetVtsNum = vtsNum;
 
 		//initialDeformVertex(vts, vtsNum);
