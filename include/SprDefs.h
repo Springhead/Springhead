@@ -22,10 +22,9 @@
 /** Springhead2/closed のソースを使用するかどうか
 	開発者以外は未定義としてください
  */
-#include "UseClosedSrcOrNot.h" 
+#include "UseClosedSrcOrNot.h"
 
-/** use the following definition to enable linking with lapack libraries bundled with Springhead
-    undefine it to avoid conflict with other lapack libs in your program
-	see Foundation/UTClapack.h
+/** use this definition to use functions that use boost::numeric::bindings::lapack.
+    see Foundation/UTClapack.h
  */
-#define LINK_LAPACK_LIBS
+#define USE_LAPACK

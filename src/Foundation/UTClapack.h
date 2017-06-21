@@ -1,25 +1,147 @@
 #ifndef UT_CLAPACK_H
 #define UT_CLAPACK_H
 
-//#include <Springhead.h>
+#include <SprDefs.h>
 
 #include <float.h>  // DBL_MIN DBL_MAX
 
-#define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
-
-#if defined _MSC_VER
-# pragma warning(push)
-# pragma warning(disable:4267)
-# pragma warning(disable:4005)
-#endif
+#ifdef USE_LAPACK
+# define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
+# if defined _MSC_VER
+#  pragma warning(push)
+#  pragma warning(disable:4267)
+#  pragma warning(disable:4005)
+# endif
 //#include <boost/numeric/ublas/fwd.hpp>
-#include <boost/numeric/bindings/lapack/driver/sygv.hpp>
-#include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
-#include <boost/numeric/bindings/lapack/driver/gesv.hpp>
-#include <boost/numeric/bindings/lapack/driver/gels.hpp>
-#include <boost/numeric/bindings/lapack/driver/gelsd.hpp>
-#include <boost/numeric/bindings/lapack/driver/gesdd.hpp>
-#include <boost/numeric/bindings/noop.hpp>
+# include <boost/numeric/bindings/lapack/driver/sygv.hpp>
+# include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
+# include <boost/numeric/bindings/lapack/driver/gesv.hpp>
+# include <boost/numeric/bindings/lapack/driver/gels.hpp>
+# include <boost/numeric/bindings/lapack/driver/gelsd.hpp>
+# include <boost/numeric/bindings/lapack/driver/gesdd.hpp>
+# include <boost/numeric/bindings/noop.hpp>
+# if defined _MSC_VER
+#  pragma warning(pop)
+# endif
+# if defined(_MSC_VER)
+#  ifdef TRACE		// Trace
+#   if (_MSC_VER == 1500)    // Visual Studio 2008
+#    ifdef _WIN64 
+#     pragma comment(lib, "LIBF2C10x64.lib")
+#     pragma comment(lib, "BLAS10x64.lib")
+#     pragma comment(lib, "CLAPACK10x64.lib")
+#    else
+#     pragma comment(lib, "LIBF2C10.lib")
+#     pragma comment(lib, "BLAS10.lib")
+#     pragma comment(lib, "CLAPACK10.lib")
+#    endif
+#   else			    // after Visual Studio 2010
+#    if (_MSC_VER == 1900)	// Visual Studio 2015
+#     ifdef _WIN64 
+#      pragma comment(lib, "LIBF2C14.0Tx64.lib")
+#      pragma comment(lib, "BLAS14.0Tx64.lib")
+#      pragma comment(lib, "CLAPACK14.0Tx64.lib")
+#     else
+#      pragma comment(lib, "LIBF2C14.0T.lib")
+#      pragma comment(lib, "BLAS14.0T.lib")
+#      pragma comment(lib, "CLAPACK14.0T.lib")
+#     endif
+#    else /* _MSC_VER */
+#     ifdef _WIN64 
+#      pragma comment(lib, "LIBF2C10Tx64.lib")
+#      pragma comment(lib, "BLAS10Tx64.lib")
+#      pragma comment(lib, "CLAPACK10Tx64.lib")
+#     else
+#      pragma comment(lib, "LIBF2C10T.lib")
+#      pragma comment(lib, "BLAS10T.lib")
+#      pragma comment(lib, "CLAPACK10T.lib")
+#     endif
+#    endif /* _MSC_VER */
+#   endif
+#  else /* TRACE */
+#   if (_MSC_VER == 1900)    // Visual Studio 2015
+#    ifdef _DEBUG
+#     ifdef _DLL		// Debug (former DebugDll)
+#      ifdef _WIN64
+#       pragma comment(lib, "LIBF2C14.0MDx64.lib")
+#       pragma comment(lib, "BLAS14.0MDx64.lib")
+#       pragma comment(lib, "CLAPACK14.0MDx64.lib")
+#      else
+#       pragma comment(lib, "LIBF2C14.0MD.lib")
+#       pragma comment(lib, "BLAS14.0MD.lib")
+#       pragma comment(lib, "CLAPACK14.0MD.lib")
+#      endif
+#     endif
+#    else
+#     ifdef _DLL		// Debug (former DebugDll)
+#      ifdef _WIN64
+#       pragma comment(lib, "LIBF2C14.0Mx64.lib")
+#       pragma comment(lib, "BLAS14.0Mx64.lib")
+#       pragma comment(lib, "CLAPACK14.0Mx64.lib")
+#      else
+#       pragma comment(lib, "LIBF2C14.0M.lib")
+#       pragma comment(lib, "BLAS14.0M.lib")
+#       pragma comment(lib, "CLAPACK14.0M.lib")
+#      endif
+#     endif
+#    endif
+#   else	/* _MSC_VER */
+#    ifdef _DEBUG
+#     ifdef _DLL		// Debug (former DebugDll)
+#      ifdef _WIN64 
+#       pragma comment(lib, "LIBF2C10MDx64.lib")
+#       pragma comment(lib, "BLAS10MDx64.lib")
+#       pragma comment(lib, "CLAPACK10MDx64.lib")
+#      else
+#       pragma comment(lib, "LIBF2C10MD.lib")
+#       pragma comment(lib, "BLAS10MD.lib")
+#       pragma comment(lib, "CLAPACK10MD.lib")
+#      endif
+#     else		// (former Debug)
+#      ifdef _WIN64 
+#       pragma comment(lib, "LIBF2C10Dx64.lib")
+#       pragma comment(lib, "BLAS10Dx64.lib")
+#       pragma comment(lib, "CLAPACK10Dx64.lib")
+#      else
+#       pragma comment(lib, "LIBF2C10D.lib")
+#       pragma comment(lib, "BLAS10D.lib")
+#       pragma comment(lib, "CLAPACK10D.lib")
+#      endif
+#     endif
+#    else /* _DEBUG */
+#     ifdef _DLL		// Release (former ReleaseDll)
+#      ifdef _WIN64 
+#       pragma comment(lib, "LIBF2C10Mx64.lib")
+#       pragma comment(lib, "BLAS10Mx64.lib")
+#       pragma comment(lib, "CLAPACK10Mx64.lib")
+#      else
+#       pragma comment(lib, "LIBF2C10M.lib")
+#       pragma comment(lib, "BLAS10M.lib")
+#       pragma comment(lib, "CLAPACK10M.lib")
+#      endif
+#     else		// (former Release)
+#      ifdef _WIN64 
+#       pragma comment(lib, "LIBF2C10x64.lib")
+#       pragma comment(lib, "BLAS10x64.lib")
+#       pragma comment(lib, "CLAPACK10x64.lib")
+#      else
+#       pragma comment(lib, "LIBF2C10.lib")
+#       pragma comment(lib, "BLAS10.lib")
+#       pragma comment(lib, "CLAPACK10.lib")
+#      endif
+#     endif
+#    endif /* _DEBUG */
+#   endif /* _MSC_VER */
+#  endif /* TRACE */
+# endif /* ifdef _MSC_VER */
+#endif /* USE_LAPACK */
+
+/*
+/ リンクするlibファイルは_cdeclで呼び出し
+/ _fastcallでリンクしたい場合はpringhead2\src\boost\numeric\bindings\lapack\lapack.h
+/ の関数をすべて_cdecl呼び出しにすること
+*/
+
 #include <boost/numeric/bindings/ublas/banded.hpp>
 #include <boost/numeric/bindings/ublas/matrix.hpp>
 #include <boost/numeric/bindings/ublas/matrix_proxy.hpp>
@@ -28,127 +150,6 @@
 #include <boost/numeric/bindings/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
-#if defined _MSC_VER
-# pragma warning(pop)
-#endif
-
-#if defined(_MSC_VER) && defined(LINK_LAPACK_LIBS)
- #ifdef TRACE		// Trace
-  #if (_MSC_VER == 1500)    // Visual Studio 2008
-    #ifdef _WIN64 
-      # pragma comment(lib, "LIBF2C10x64.lib")
-      # pragma comment(lib, "BLAS10x64.lib")
-      # pragma comment(lib, "CLAPACK10x64.lib")
-    #else
-      # pragma comment(lib, "LIBF2C10.lib")
-      # pragma comment(lib, "BLAS10.lib")
-      # pragma comment(lib, "CLAPACK10.lib")
-    #endif
-  #else			    // after Visual Studio 2010
-    #if (_MSC_VER == 1900)	// Visual Studio 2015
-      #ifdef _WIN64 
-        # pragma comment(lib, "LIBF2C14.0Tx64.lib")
-        # pragma comment(lib, "BLAS14.0Tx64.lib")
-        # pragma comment(lib, "CLAPACK14.0Tx64.lib")
-      #else
-        # pragma comment(lib, "LIBF2C14.0T.lib")
-        # pragma comment(lib, "BLAS14.0T.lib")
-        # pragma comment(lib, "CLAPACK14.0T.lib")
-      #endif
-    #else /* _MSC_VER */
-      #ifdef _WIN64 
-        # pragma comment(lib, "LIBF2C10Tx64.lib")
-        # pragma comment(lib, "BLAS10Tx64.lib")
-        # pragma comment(lib, "CLAPACK10Tx64.lib")
-      #else
-        # pragma comment(lib, "LIBF2C10T.lib")
-        # pragma comment(lib, "BLAS10T.lib")
-        # pragma comment(lib, "CLAPACK10T.lib")
-      #endif
-    #endif /* _MSC_VER */
-  #endif
- #else /* TRACE */
-  #if (_MSC_VER == 1900)    // Visual Studio 2015
-    #ifdef _DEBUG
-      #ifdef _DLL		// Debug (former DebugDll)
-        #ifdef _WIN64
-          # pragma comment(lib, "LIBF2C14.0MDx64.lib")
-          # pragma comment(lib, "BLAS14.0MDx64.lib")
-          # pragma comment(lib, "CLAPACK14.0MDx64.lib")
-        #else
-          # pragma comment(lib, "LIBF2C14.0MD.lib")
-          # pragma comment(lib, "BLAS14.0MD.lib")
-          # pragma comment(lib, "CLAPACK14.0MD.lib")
-        #endif
-      #endif
-    #else
-      #ifdef _DLL		// Debug (former DebugDll)
-        #ifdef _WIN64
-          # pragma comment(lib, "LIBF2C14.0Mx64.lib")
-          # pragma comment(lib, "BLAS14.0Mx64.lib")
-          # pragma comment(lib, "CLAPACK14.0Mx64.lib")
-        #else
-          # pragma comment(lib, "LIBF2C14.0M.lib")
-          # pragma comment(lib, "BLAS14.0M.lib")
-          # pragma comment(lib, "CLAPACK14.0M.lib")
-        #endif
-      #endif
-    #endif
-  #else	/* _MSC_VER */
-    #ifdef _DEBUG
-      #ifdef _DLL		// Debug (former DebugDll)
-        #ifdef _WIN64 
-          # pragma comment(lib, "LIBF2C10MDx64.lib")
-          # pragma comment(lib, "BLAS10MDx64.lib")
-          # pragma comment(lib, "CLAPACK10MDx64.lib")
-        #else
-          # pragma comment(lib, "LIBF2C10MD.lib")
-          # pragma comment(lib, "BLAS10MD.lib")
-          # pragma comment(lib, "CLAPACK10MD.lib")
-        #endif
-      #else		// (former Debug)
-        #ifdef _WIN64 
-          # pragma comment(lib, "LIBF2C10Dx64.lib")
-          # pragma comment(lib, "BLAS10Dx64.lib")
-          # pragma comment(lib, "CLAPACK10Dx64.lib")
-        #else
-          # pragma comment(lib, "LIBF2C10D.lib")
-          # pragma comment(lib, "BLAS10D.lib")
-          # pragma comment(lib, "CLAPACK10D.lib")
-        #endif
-      #endif
-    #else /* _DEBUG */
-      #ifdef _DLL		// Release (former ReleaseDll)
-        #ifdef _WIN64 
-          # pragma comment(lib, "LIBF2C10Mx64.lib")
-          # pragma comment(lib, "BLAS10Mx64.lib")
-          # pragma comment(lib, "CLAPACK10Mx64.lib")
-        #else
-          # pragma comment(lib, "LIBF2C10M.lib")
-          # pragma comment(lib, "BLAS10M.lib")
-          # pragma comment(lib, "CLAPACK10M.lib")
-        #endif
-      #else		// (former Release)
-        #ifdef _WIN64 
-          # pragma comment(lib, "LIBF2C10x64.lib")
-          # pragma comment(lib, "BLAS10x64.lib")
-          # pragma comment(lib, "CLAPACK10x64.lib")
-        #else
-          # pragma comment(lib, "LIBF2C10.lib")
-          # pragma comment(lib, "BLAS10.lib")
-          # pragma comment(lib, "CLAPACK10.lib")
-        #endif
-      #endif
-    #endif /* _DEBUG */
-  #endif /* _MSC_VER */
- #endif /* TRACE */
-#endif /* ifdef _MSC_VER */
-
-/*
-/ リンクするlibファイルは_cdeclで呼び出し
-/ _fastcallでリンクしたい場合はpringhead2\src\boost\numeric\bindings\lapack\lapack.h
-/ の関数をすべて_cdecl呼び出しにすること
-*/
 
 #define ublas boost::numeric::ublas
 #define bindings boost::numeric::bindings
@@ -165,6 +166,7 @@ namespace Spr{;
 */
 template <class AD, class BD> 
 int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::VectorImp<BD>& e, PTM::MatrixImp<AD>& v){
+#ifdef USE_LAPACK
 	e.clear();
 	v.clear();
 	int size = a.height();
@@ -200,6 +202,10 @@ int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vecto
 		for(int j = 0; j < esize; j++)
 			v.item(i, j) = la(i, j);
 	return info;
+#else
+# pragma message("sprsygv: define USE_LAPACK in SprDefs.h to use this function")
+	return 0;
+#endif
 }
 
 /** @brief 一般化固有値問題（選択分）を解くAx = lamda Bx (inv(B)Ax = lamda x)
@@ -213,6 +219,7 @@ int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vecto
 */
 template <class AD, class BD> 
 int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::VectorImp<BD>& e, PTM::MatrixImp<AD>& v, int start, int interval){
+#ifdef USE_LAPACK
 	e.clear();
 	v.clear();
 	int size = (int)a.height();
@@ -254,10 +261,15 @@ int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vect
 		for(int j = 0; j < interval; j++)
 			v.item(i, j) = z(i, j);
 	return info;
+#else
+# pragma message("sprsygvx: define USE_LAPACK in SprDefs.h to use this function")
+	return 0;
+#endif
 }
 
 // c.f.) http://d.hatena.ne.jp/blono/20081118/1227001319
 inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<double>& b, ublas::vector<double>& x, ublas::vector<double>& S, double rcond=0.01) {
+#ifdef USE_LAPACK
     BOOST_UBLAS_CHECK(A.size1() == b.size(), ublas::external_logic());
 
     ublas::matrix<double> B(b.size(), 1), X;
@@ -280,10 +292,15 @@ inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<dou
     x = ublas::column(X, 0);
 
 	return rank;
+#else
+# pragma message("least_squares: define USE_LAPACK in SprDefs.h to use this function")
+	return 0;
+#endif
 }
 
 // c.f.) http://d.hatena.ne.jp/blono/20080922/1222049807
 inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas::diagonal_matrix<double>& D, ublas::matrix<double>& VT) {
+#ifdef USE_LAPACK
 	ublas::vector<double> s((std::min)(A.size1(), A.size2()));
     ublas::matrix<double, ublas::column_major> CA(A), CU(A.size1(), A.size1()), CVT(A.size2(), A.size2());
     int info;
@@ -308,12 +325,15 @@ inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas:
     U.assign_temporary(CCU);
     D.assign_temporary(CD);
     VT.assign_temporary(CCVT);
+#else
+# pragma message("svd: define USE_LAPACK in SprDefs.h to use this function")
+#endif
 }
-
 
 // c.f.) http://d.hatena.ne.jp/blono/20080913/1221328687
 template <class M, class MI>
 void invert(const M& m, MI& mi) {
+#ifdef USE_LAPACK
     BOOST_UBLAS_CHECK(m.size1() == m.size2(), ublas::external_logic());
 
     ublas::matrix<double>       lhs(m);
@@ -339,6 +359,9 @@ void invert(const M& m, MI& mi) {
     mi.resize(rhs.size1(), rhs.size2(), false);
     mi.assign(rhs);
     // mi.assign_temporary(rhs);
+#else
+# pragma message("invert: define USE_LAPACK in SprDefs.h to use this function")
+#endif
 }
 
 }

@@ -1621,6 +1621,7 @@ PTM::TMatrixCol<4,1,double> PHFemPorousWOMove::Create41Vec1(){
 }
 
 void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
+#ifdef USE_LAPACK
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	//lapack—˜—p
 	int n = (int)mesh->vertices.size();
@@ -1707,6 +1708,9 @@ void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
 	for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
 		tetVars[tetid].sDensChanged = false;
 	}
+#else
+# pragma message("CalcWOContentDirect: define USE_LAPACK in SprDefs.h to use this function")
+#endif
 }
 
 void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
@@ -2447,6 +2451,7 @@ double PHFemPorousWOMove::GetTetSolidDensity(unsigned tetid){
 }
 
 PTM::VMatrixRow<double> PHFemPorousWOMove::inv(PTM::VMatrixRow<double> mat){
+#ifdef USE_LAPACK
 	PTM::VMatrixRow<double> result;
 
 	result.resize(mat.height(),mat.width());
@@ -2481,6 +2486,9 @@ PTM::VMatrixRow<double> PHFemPorousWOMove::inv(PTM::VMatrixRow<double> mat){
 	delete[] work;
 
 	return result;
+#else
+	return mat.inv();
+#endif
 }
 
 PTM::VMatrixRow<double> PHFemPorousWOMove::inv2(PTM::VMatrixRow<double> mat){
