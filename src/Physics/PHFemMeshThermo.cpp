@@ -1883,6 +1883,7 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 
 
 void PHFemMeshThermo::CalcHeatTransDirect2(double dt){
+#ifdef USE_LAPACK
 	//lapack—˜—p
 	int n = (int)vertices.size();
 
@@ -1943,8 +1944,10 @@ void PHFemMeshThermo::CalcHeatTransDirect2(double dt){
 	for(int i=0; i<n; ++i){
 		TVecAll[i] = x[i];
 	}
-//	DSTR << "TVecAll: " << TVecAll <<  std::endl;
-
+	//	DSTR << "TVecAll: " << TVecAll <<  std::endl;
+#else
+# pragma message("CalcHeatTransDirect2: define USE_LAPACK in SprDefs.h to use this function")
+#endif
 }
 
 void PHFemMeshThermo::CalcHeatTransDirect(double dt){
