@@ -1,4 +1,4 @@
-#include <Physics\PHOpObj.h>
+ï»¿#include <Physics/PHOpObj.h>
 #include "PHOpDecompositionMethods.h"
 #define CHECK_INF_ERR
 
@@ -25,9 +25,9 @@ void PHOpObj::groupStep()
 	if (!isRigid){
 		for (int it = 0; it < objitrTime; it++)
 		{
-			//gAgroupŒvZgroupCurrCenterŒvZ
+			//gAgroupè¨ˆç®—groupCurrCenterè¨ˆç®—
 			summationTogAgroup();
-			//•ÏŒ`ŒãV‚µ‚¢’†S‚ğŒvZ
+			//å¤‰å½¢å¾Œæ–°ã—ã„ä¸­å¿ƒã‚’è¨ˆç®—
 
 			if (objUseReducedPP)
 				ReducedPositionProject();
@@ -41,7 +41,7 @@ void PHOpObj::groupStep()
 	}
 }
 /*
-@brief ‹——£S‘©
+@brief è·é›¢æ‹˜æŸ
 */
 void PHOpObj::DistanceConstrain()
 {
@@ -59,12 +59,24 @@ void PHOpObj::DistanceConstrain()
 			float ctrW = 1.0f / dp1.pTotalMass;
 			float sideW = 1.0f / dp2.pTotalMass;
 			float sumW = ctrW + sideW;
+#ifdef	_MSC_VER
 			Vec3f &vN = dp1.pNewCtr - dp2.pNewCtr;
+#else
+			Vec3f tmp1 = dp1.pNewCtr - dp2.pNewCtr;
+			Vec3f &vN = tmp1;
+#endif
 			float currLength = vN.norm();
 			float orinLength = (dp1.pOrigCtr - dp2.pOrigCtr).norm();
 
+#ifdef	_MSC_VER
 			Vec3f &dx1 = - (1.0f/sumW) * (currLength - orinLength) * (vN/currLength) * inextenCoe;
 			Vec3f &dx2 = -dx1;
+#else
+			Vec3f tmp2 = - (1.0f/sumW) * (currLength - orinLength) * (vN/currLength) * inextenCoe;
+			Vec3f tmp3 = -tmp2;
+			Vec3f &dx1 = tmp2;
+			Vec3f &dx2 = tmp3;
+#endif
 				
 			dp1.pNewCtr += dx1 * ctrW;
 			dp2.pNewCtr += dx2 * sideW;
@@ -74,7 +86,7 @@ void PHOpObj::DistanceConstrain()
 }
 
 /*
-@brief ˆÊ’u‚Ì—\‘ª
+@brief ä½ç½®ã®äºˆæ¸¬
 */
 void PHOpObj::positionPredict()
 {
@@ -110,11 +122,11 @@ void PHOpObj::positionPredict()
 		dp.pExternalForce.clear();
 	}
 	
-	//‘¬“xDamp
+	//é€Ÿåº¦Damp
 	dampVelocities();
 
 	for (i = 0; i < assPsNum; i++) {
-		//‰ü—ÇIÀÛ‚Íd—Í‰Á‘¬“x‚Æ¿—Ê‚Ìæ‚Å‚ÍH
+		//æ”¹è‰¯ï¼å®Ÿéš›ã¯é‡åŠ›åŠ é€Ÿåº¦ã¨è³ªé‡ã®ä¹—ã§ã¯ï¼Ÿ
 		PHOpParticle &dp = objPArr[i];
 		dp.pNewCtr = dp.pCurrCtr + dp.pVelocity * params.timeStep;
 		
@@ -176,7 +188,7 @@ void PHOpObj::positionPredict()
 
 }
 /*
-@brief ƒOƒ‹[ƒvMatrix‚ÌŒvZ
+@brief ã‚°ãƒ«ãƒ¼ãƒ—Matrixã®è¨ˆç®—
 */
 void PHOpObj::summationTogAgroup()
 {
@@ -236,7 +248,7 @@ void PHOpObj::summationTogAgroup()
 				Agroup += dp.pMomentR;
 				Agroup += Axxb;
 				
-				//Œ»İƒOƒ‹[ƒv’†S‚ğŒvZ
+				//ç¾åœ¨ã‚°ãƒ«ãƒ¼ãƒ—ä¸­å¿ƒã‚’è¨ˆç®—
 
 				gCurrentCenter += x ;
 			}
@@ -275,7 +287,7 @@ void PHOpObj::summationTogAgroup()
 
 void PHOpObj::newReducedPositionProject()
 {
-	//—±q‚ÌŠµ«ƒ}ƒgƒŠƒNƒX‚ğŒvZ‚·‚éi–ˆSTEPˆê‰ñj
+	//ç²’å­ã®æ…£æ€§ãƒãƒˆãƒªã‚¯ã‚¹ã‚’è¨ˆç®—ã™ã‚‹ï¼ˆæ¯STEPä¸€å›ï¼‰
 	for (int im = 0; im<assPsNum; im++)
 	{
 		PHOpParticle &dp = objPArr[im];
@@ -291,7 +303,7 @@ void PHOpObj::newReducedPositionProject()
 	//polarDecomposition pd;
 
 	float m = 0.0f;
-	//ŒvZ‚Í–ˆƒOƒ‹[ƒv‚Ås‚í‚ê‚Ä‚¢‚é
+	//è¨ˆç®—ã¯æ¯ã‚°ãƒ«ãƒ¼ãƒ—ã§è¡Œã‚ã‚Œã¦ã„ã‚‹
 	for (int i = 0; i < assPsNum; i++)
 	{
 
@@ -305,7 +317,7 @@ void PHOpObj::newReducedPositionProject()
 
 		Matrix3f Agroup;
 		Agroup.clear();
-		//ƒOƒ‹[ƒv‚Ì‘«‚µZ
+		//ã‚°ãƒ«ãƒ¼ãƒ—ã®è¶³ã—ç®—
 		int pcount = pg.gNptcl;
 		for (int j = 0; j<pcount; j++)
 		{
@@ -331,7 +343,7 @@ void PHOpObj::newReducedPositionProject()
 			Agroup += dp.pMomentR;
 			Agroup += Axxb;
 
-			//Œ»İƒOƒ‹[ƒv’†S‚ÌŒvZ
+			//ç¾åœ¨ã‚°ãƒ«ãƒ¼ãƒ—ä¸­å¿ƒã®è¨ˆç®—
 
 			gCurrentCenter += x;
 		}
@@ -360,9 +372,9 @@ void PHOpObj::newReducedPositionProject()
 		pg.gAgroup = Agroup - Mccb;
 
 
-		//PolardecompositionA‚±‚±‚ÍJacobi‚Å‰ğ‚­
+		//Polardecompositionã€ã“ã“ã¯Jacobiã§è§£ã
 
-		//‰ñ“]s—ñ‚ğ’Šo
+		//å›è»¢è¡Œåˆ—ã‚’æŠ½å‡º
 		//avoid bug of infinite in polardecom
 		R = SolveShpMchByJacobi(pg);
 		//pd.polarDecom(R, S, pg.gAgroup);
@@ -376,11 +388,11 @@ void PHOpObj::newReducedPositionProject()
 		MatrixExtension me;
 
 
-		//‚±‚Ì‰ñ“]s—ñ‚ÍƒOƒ‹[ƒv’†S—±q‚Å•Û‘¶
+		//ã“ã®å›è»¢è¡Œåˆ—ã¯ã‚°ãƒ«ãƒ¼ãƒ—ä¸­å¿ƒç²’å­ã§ä¿å­˜
 		PHOpParticle &centerDp = objPArr[pg.getParticleGlbIndex(0)];
 		centerDp.pSmR = R;
 
-		//‚Ü‚½center—±q‚ÌŒü‚«‚Íshape-matching‚Ì‰ñ“]s—ñ‚ÅŒˆ‚ß‚éi˜_•¶5.1@‘æOßj
+		//ã¾ãŸcenterç²’å­ã®å‘ãã¯shape-matchingã®å›è»¢è¡Œåˆ—ã§æ±ºã‚ã‚‹ï¼ˆè«–æ–‡5.1ã€€ç¬¬ä¸‰ç¯€ï¼‰
 		Spr::TQuaternion<float> orin;
 		orin.FromMatrix(R);
 		orin = orin * centerDp.pOrigOrint;
@@ -410,7 +422,7 @@ void PHOpObj::newReducedPositionProject()
 
 }
 /*
-@brief Œ³‚Ìparticle“’BˆÊ’uŒvZ
+@brief å…ƒã®particleåˆ°é”ä½ç½®è¨ˆç®—
 */
 void PHOpObj::positionProject()
 {
@@ -471,7 +483,7 @@ void PHOpObj::positionProject()
 				{
 					continue;
 				}
-				int goalsize = (int)dp.pGoalCtr.size();//d‚È‚Á‚½ŒvZ”
+				int goalsize = (int)dp.pGoalCtr.size();//é‡ãªã£ãŸè¨ˆç®—æ•°
 				float scale = 1.0f / (float)goalsize;
 				newpSum = dp.pNewCtr;
 				newpSum1 = newpSum1.Zero();
@@ -495,7 +507,7 @@ void PHOpObj::positionProject()
 	
 }
 /*
-@brief Å“K‰»‚µ‚½Particle“’BˆÊ’uŒvZ
+@brief æœ€é©åŒ–ã—ãŸParticleåˆ°é”ä½ç½®è¨ˆç®—
 */
 void PHOpObj::ReducedPositionProject()
 {
@@ -587,8 +599,8 @@ void PHOpObj::ReducedPositionProject()
 	
 }
 /*
-@brief ŠÔÏ•ª
-pNewCtr‚©‚çpCurrCtr‚ÖXV
+@brief æ™‚é–“ç©åˆ†
+pNewCtrã‹ã‚‰pCurrCtrã¸æ›´æ–°
 */
 void PHOpObj::integrationStep()
 {
@@ -611,7 +623,12 @@ void PHOpObj::integrationStep()
 	
 		// angular velocity
 		Spr::TQuaternion<float>	&newOrint = dp.pNewOrint;
+#ifdef	_MSC_VER
 		Spr::TQuaternion<float>	&currInv = dp.pCurrOrint.Inv();
+#else
+		Spr::TQuaternion<float>	tmp1 = dp.pCurrOrint.Inv();
+		Spr::TQuaternion<float>	&currInv = tmp1;
+#endif
 
 		
 		float dotProd = newOrint.dot(currInv);
@@ -620,7 +637,12 @@ void PHOpObj::integrationStep()
 			newOrint = -1.0f * newOrint;
 		}
 
+#ifdef	_MSC_VER
 		Spr::TQuaternion<float>	&tmp = newOrint * currInv;
+#else
+		Spr::TQuaternion<float>	tmp2 = newOrint * currInv;
+		Spr::TQuaternion<float>	&tmp = tmp2;
+#endif
 		Vec3f axis = tmp.Axis();
 		//angle Velocity calculate
 		float angle = 0.0;
@@ -696,7 +718,7 @@ Matrix3f PHOpObj::SolveShpMchByJacobi(PHOpGroup &pg)
 		return R;
 }
 /*
-@brief ‘¬“xDamper
+@brief é€Ÿåº¦Damper
 */
 void PHOpObj::dampVelocities()
 {

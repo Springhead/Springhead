@@ -1,5 +1,5 @@
-#include "PHOpSpHashColliAgent.h"
-#include "Physics\PHOpEngine.h"
+ï»¿#include "PHOpSpHashColliAgent.h"
+#include "Physics/PHOpEngine.h"
 
 namespace Spr{
 	;
@@ -158,7 +158,7 @@ namespace Spr{
 		{
 			if (dfmObj[obji]->objNoMeshObj)
 				continue;
-			//ƒRƒŠƒWƒ‡ƒ“—§•û‘Ì‚ğ‚Â‚­‚éinot use nowj
+			//ã‚³ãƒªã‚¸ãƒ§ãƒ³ç«‹æ–¹ä½“ã‚’ã¤ãã‚‹ï¼ˆnot use nowï¼‰
 			//buildColliCube();
 			//if(colliCheckedByCube)
 			//{
@@ -168,7 +168,7 @@ namespace Spr{
 				std::vector<int> swap;
 				swap.swap(spTable->ColliedHashIndexList);
 
-				//—]Œv‚ÈŒvZ‚Å‚·,maxradiusg‚¤‚©‚Ç‚¤‚©Ÿ‘æ
+				//ä½™è¨ˆãªè¨ˆç®—ã§ã™,maxradiusä½¿ã†ã‹ã©ã†ã‹æ¬¡ç¬¬
 #ifdef USE_MAX_RADIUS
 				float maxradius = 0.0f;
 				for (int obji = 0; obji<objNum; obji++)
@@ -177,14 +177,14 @@ namespace Spr{
 						maxradius = dfmObj[obji]->maxRadius;
 				};
 #endif							
-				//‘È‰~‚Ìbox‚ğHashCell‚É‰Á“ü
+				//æ¥•å††ã®boxã‚’HashCellã«åŠ å…¥
 				for (int j = 0; j<dfmObj[obji]->assPsNum; j++)
 				{
 					PHOpParticle &dp = dfmObj[obji]->objPArr[j];
 					//	if(isIntheBox(dp.pCurrCtr,dp.pMainRadius))
 					//	{
 					colliNum++;
-					//‚Ç‚ñ‚È”¼Œa‚ÅÕ“ËŒŸo‚ğ‚·‚é
+					//ã©ã‚“ãªåŠå¾„ã§è¡çªæ¤œå‡ºã‚’ã™ã‚‹
 					//if(spTable->selectPointsToAdd(dp.pCurrCtr,dp.pMainRadius,obji,j,myTimeStamp))
 #ifdef USE_AVE_RADIUS
 					//if(spTable->selectPointsToAdd(dp.pNewCtr,dfmObj[obji]->averRadius,obji,j,myTimeStamp))
@@ -228,7 +228,7 @@ namespace Spr{
 
 		//					
 		
-		//Hash’†g‚ğƒ`ƒƒƒbƒN
+		//Hashä¸­èº«ã‚’ãƒãƒ£ãƒƒã‚¯
 		ReducedSpHashColliCheck();
 		
 
@@ -238,7 +238,7 @@ namespace Spr{
 
 
 	/*
-	@brief Hash’†g‚ğƒ`ƒƒƒbƒN
+	@brief Hashä¸­èº«ã‚’ãƒãƒ£ãƒƒã‚¯
 	*/
 	void PHOpSpHashColliAgent::ReducedSpHashColliCheck()
 	{
@@ -261,7 +261,7 @@ namespace Spr{
 			int size = (int)spTable->ColliedHashIndexList.size();
 			//vector<int> colliedIndexes;
 			std::vector<solvedColliPair> solvedColliPairs;
-			//ƒ`ƒFƒbƒN•K—v‚È
+			//ãƒã‚§ãƒƒã‚¯å¿…è¦ãª
 			for (int i = 0; i < size; i++)
 			{
 
@@ -288,7 +288,7 @@ namespace Spr{
 
 
 				}
-				//“ñ‚Â–Ú‚Ìobj‚ª”­Œ©‚µ‚½ê‡
+				//äºŒã¤ç›®ã®objãŒç™ºè¦‹ã—ãŸå ´åˆ
 				if (twoObjExist)
 				{
 					for (int cli = 0; cli < colliLength; cli++)
@@ -421,7 +421,7 @@ namespace Spr{
 	}
 
 	/*
-	@brief Õ“Ë‚ª‚ ‚éê‡‚ÌŠÖ”
+	@brief è¡çªãŒã‚ã‚‹å ´åˆã®é–¢æ•°
 	*/
 	void PHOpSpHashColliAgent::spHashColliContact(int objIndex1, int ptclindex1, int objIndex2, int ptclindex2, Vec3f &linkVec)
 	{
@@ -543,7 +543,13 @@ namespace Spr{
 				}*/
 				//else
 				//solve
+#ifdef	_MSC_VER
 				pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, -dir * ellRadius1 + dpCtr1, dir * ellRadius2 + dpCtr2);
+#else
+				Vec3f tmp1 = -dir * ellRadius1 + dpCtr1;
+				Vec3f tmp2 = dir * ellRadius2 + dpCtr2;
+				pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, tmp1, tmp2);
+#endif
 				Vec3f &dpCtr1 = dp1->pNewCtr;
 				Vec3f &dpCtr2 = dp2->pNewCtr;
 				float mindeltaT = 1.0f;
@@ -647,7 +653,13 @@ namespace Spr{
 			}
 			else*/
 			//solve
+#ifdef	_MSC_VER
 				pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, x1 + dpCtr1, x2 + dpCtr2);
+#else
+				Vec3f tmp1 = x1 + dpCtr1;
+				Vec3f tmp2 = x2 + dpCtr2;
+				pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, tmp1, tmp2);
+#endif
 
 			solveCount++;
 		}
@@ -663,7 +675,7 @@ namespace Spr{
 		return useDebugInfo;
 	}
 	/*
-	@brief Õ“Ë‚Ì‰ğŒˆ
+	@brief è¡çªã®è§£æ±º
 	*/
 	void PHOpSpHashColliAgent::pctlColliSolve(int objIndex1, int ptclindex1, int objIndex2, int ptclindex2, Vec3f &ctc1, Vec3f &ctc2)
 	{
@@ -826,7 +838,7 @@ namespace Spr{
 #endif
 						{
 						MatrixExtension me;
-						//ellip:AInverse ‚ğŒvZ‚·‚é
+						//ellip:AInverse ã‚’è¨ˆç®—ã™ã‚‹
 						Matrix3f ellip;
 						ellip = ellip.Zero();
 #ifdef USE_AVE_RADIUS
