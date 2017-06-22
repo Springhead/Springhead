@@ -1,4 +1,7 @@
-﻿#include <Physics/PHHapticEngine.h>
+﻿#ifdef	__linux__
+#  include "PHHapticStepBase.h"
+#endif
+#include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRender.h>
 #include <Physics/PHHapticStepMulti.h>
 #include <Physics/PHHapticStepImpulse.h>
