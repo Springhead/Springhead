@@ -64,5 +64,6 @@ RunSwig:
 		$(PYTHON) $(BINDIR)/$(SCRIPT)
 
 clean:		
+		$(PYTHON) $(BINDIR)/$(SCRIPT) --clean
 		/bin/rm -f $(SCILABSTUBHDR)
 		/bin/rm -f $(FWOLDSPRSTUB)
