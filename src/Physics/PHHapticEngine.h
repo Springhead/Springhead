@@ -8,13 +8,9 @@
 #ifndef PH_HAPTICENGINE_H
 #define PH_HAPTICENGINE_H
 
-#include <HumanInterface/SprHIBase.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticRender.h>
-#ifdef	__linux__
-#  include "PHHapticStepBase.h"
-#endif
 
 using namespace PTM;
 namespace Spr{;
@@ -151,9 +147,6 @@ public:
 	PHHapticPointers                        hapticPointers;
 	PHSolidsForHaptic                       hapticSolids;
 
-	typedef std::vector< HIBaseIf* > HIBaseIfs;
-	HIBaseIfs humanInterfaces;
-	
 	///描画アクセスで落ちる場合があるかもで追加 2012.12.11 susa
 	PHSolidPairs solidPairsTemp;	///< hapticsの情報をグラフィクスで表示するためのキャッシュ
 
