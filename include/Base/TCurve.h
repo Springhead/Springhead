@@ -11,9 +11,7 @@
 #include <algorithm>
 #include <tuple>
 #include <vector>
-#ifdef	__linux__
-  #include <float.h>
-#endif
+#include <float.h>
 
 namespace Spr{;
 

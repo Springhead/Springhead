@@ -15,20 +15,17 @@ Gimite 市川 <gimite@mx12.freecom.ne.jp>
 #  include <WinSock2.h>
 
 #  pragma comment(lib,"ws2_32.lib")
-#elif __linux__
-#  include <x86_64-linux-gnu/sys/socket.h>
-#  include <netinet/in.h>
-#  include <arpa/inet.h>
-#  include <netdb.h>
-#  include <unistd.h>
-   extern int close(int);
 #else
 #  include <sys/socket.h>
 #  include <netinet/in.h>
 #  include <arpa/inet.h>
 #  include <netdb.h>
 #  include <unistd.h>
+#  ifdef __linux__
+     extern int close(int);
+#  endif
 #endif
+
 //---------------------------------------------------------------------------
 namespace gimite{
 //ソケットシステムを初期化
