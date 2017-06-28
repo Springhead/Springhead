@@ -14,9 +14,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <vector>
-#ifdef	__linux__
-#  include <string.h>
-#endif
+#include <string.h>
 
 /** \addtogroup gpLinearAlgebra */
 //@{

@@ -10,9 +10,7 @@
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRender.h>
 
-#ifdef	__linux__
-class PHSolidForHaptic;		// ??
-#endif
+class PHSolidForHaptic;
 
 namespace Spr{;
 

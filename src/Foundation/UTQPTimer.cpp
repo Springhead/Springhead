@@ -12,7 +12,7 @@
 
 #include "UTQPTimer.h"
 #include <Base/BaseDebug.h>
-#ifdef	_WIN32
+#ifdef	_MSC_VER
 #  include <Windows.h>
 #  include <mmsystem.h>
 #else
