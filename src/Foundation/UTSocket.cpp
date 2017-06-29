@@ -21,10 +21,8 @@ Gimite 市川 <gimite@mx12.freecom.ne.jp>
 #  include <arpa/inet.h>
 #  include <netdb.h>
 #  include <unistd.h>
-#  ifdef __linux__
-     extern int close(int);
-#  endif
 #endif
+extern int close(int);		// なぜかubuntuで必要
 
 //---------------------------------------------------------------------------
 namespace gimite{
