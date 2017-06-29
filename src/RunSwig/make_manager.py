@@ -27,6 +27,7 @@
 #  Version:
 #	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
 #	Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
+#	Ver 1.1a 2017/06/29 F.Kanehori	Revise some messages.
 # ==============================================================================
 version = 1.0
 
@@ -108,36 +109,31 @@ def create(fname, proj, dept):
 def do_process(proj, dept):
 	# proj:	    Project name.
 	# dept:	    Dependent projects.
-	print()
-	print('    *** %s ***' % proj)
 
 	#  Option '-d': Delete makefile.
 	if options.delete:
 		if os.path.exists(makefile):
 			if verbose:
-				print('removing "%s"' % makefile)
+				print('    *** %s: removing "%s"' % (proj, makefile))
 			Util.rm(makefile)
 		if os.path.exists(one_file):
 			if verbose:
-				print('removing "%s"' % one_file)
+				print('    *** %s: removing "%s"' % (proj, one_file))
 			Util.rm(one_file)
 
 	#  Option '-c': Create makefile.
 	if options.create:
-		if verbose:
-			print('creating "%s"' % makefile)
+		print('    *** %s: creating "%s"' % (proj, makefile))
 		create(makefile, proj, dept)
 
 	#  Option '-t': Create temporary makefile.
 	if options.maketmp:
-		if verbose:
-			print('creating "%s"' % tempfile)
+		print('    *** %s: creating "%s"' % (proj, tempfile))
 		create(tempfile, proj, dept)
 
 	#  Option '-r': Rename temporary makefile to makefile.
 	if options.rename:
-		if verbose:
-			print('renaming "%s" -> "%s"' % (tempfile, makefile))
+		print('    *** %s: renaming "%s -> %s"' % (proj, tempfile, makefile))
 		Util.mv(tempfile, makefile)
 
 # ---------------------------------------------------------------------
