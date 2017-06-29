@@ -44,6 +44,7 @@
 #	Ver 1.0	 2012/10/25 F.Kanehori	First release version.
 #	Ver 2.0	 2013/01/07 F.Kanehori	全面改訂
 #	Ver 3.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
+#	Ver 3.0a 2017/06/29 F.Kanehori	Revise some messages.
 # ==============================================================================
 version = 3.0
 
@@ -181,10 +182,12 @@ for line in lines:
 
 	#  Do make.
 	if clean:
-		U.rm(makefile, force=True)
+		print('    %s: clean' % prog)
+		U.rm('%s.i' % proj, force=True)
 		U.rm('%sStub.cpp' % proj, force=True)
 		U.rm('%sStub.mak.txt' % proj, force=True)
 	else:
+		print('    %s: make' % prog)
 		cmd = '%s -f %s' % (make, makefile)
 		U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
 		cmd = '%s -r' % U.pathconv(makemanager)

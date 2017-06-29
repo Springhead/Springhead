@@ -14,6 +14,7 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0a 2017/06/29 F.Kanehori	Add messages.
 # ==============================================================================
 version = 1.0
 
@@ -174,9 +175,8 @@ def output(fname, lines):
 		E.print(fobj.error())
 	fobj.close()
 #
-if verbose:
-	path = '%s/%s' % (os.getcwd(), interfacefile)
-	print('  creating "%s"' % U.pathconv(path, 'unix'))
+path = '%s/%s' % (os.getcwd(), interfacefile)
+print('    *** %s: creating "%s"' % (prog, U.pathconv(path, 'unix')))
 output(interfacefile, lines)
 
 # ----------------------------------------------------------------------
@@ -195,9 +195,8 @@ line += ' -spr -w305,312,319,325,401,402'
 line += ' -DSWIG_%s -c++ %s' % (module, interfacefile)
 lines.append(line)
 #
-if verbose:
-	path = '%s/%s' % (os.getcwd(), makefile)
-	print('  creating "%s"' % U.pathconv(path, 'unix'))
+path = '%s/%s' % (os.getcwd(), makefile)
+print('    *** %s: creating "%s"' % (prog, U.pathconv(path, 'unix')))
 lines = U.pathconv(lines)
 output(makefile, lines)
 
