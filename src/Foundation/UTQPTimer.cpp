@@ -24,6 +24,9 @@
 namespace Spr{;
 
 #ifdef	__linux__
+/*
+ *  unix対応のための暫定措置です。どなたか正しいコードに直してください。
+ */
 typedef	unsigned long	DWORD;		// 32-bit unsigned integer
 typedef	long		LONG;		// 32-bit signed integer
 typedef	long long	LONGLONG;	// 64-bit signed integer
