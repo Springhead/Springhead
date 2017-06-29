@@ -2,7 +2,6 @@
 #define PH_HAPTICRENDERBASE_H
 
 #include <Physics/PHHapticPointer.h>
-#include <Physics/PHContactDetector.h>
 
 using namespace PTM;
 namespace Spr{;
@@ -11,6 +10,9 @@ class PHSolidsForHaptic;
 class PHSolidPairForHaptic;
 //class PHSolidPairsForHaptic;
 class PHShapePairForHaptic;
+#if 0
+class PHContactDetector;
+#endif
 
 struct PHIntermediateRepresentation :public UTRefCount{
 	int solidID;				///< 剛体のID(PHSolidsForHapitcとPHSolidPairForHaptic)と侵入しているか
