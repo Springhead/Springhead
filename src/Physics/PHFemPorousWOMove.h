@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,7 +9,7 @@
 #define PH_FEM_WOMOVE_H
 
 #include "PHFemBase.h"
-#include "../Foundation/Object.h"
+#include "Foundation/Object.h"
 #include "PhysicsDecl.hpp"
 
 #define constRateDrying 0
@@ -17,6 +17,8 @@
 #define fallRateDrying2nd 2
 
 namespace Spr{;
+
+class FemTet;
 
 class PHFemPorousWOMove: public PHFemPorousWOMoveDesc, public PHFemBase {
 	SPR_OBJECTDEF(PHFemPorousWOMove);
@@ -26,28 +28,28 @@ public:
 	double tdt;
 	
 	struct StateVertex{
-		double T;		//‰·“x
-		double preT;	//1step‘O‚Ì‰·“x
-		double Tc;		//ß“_ü‚è‚Ì—¬‘Ì‰·“x
-		double rhoWInit;//…‚Ì‹óŠÔ–§“x‚Ì‰Šú’l
-		double rhoOInit;//ŠÜ–û—¦‚Ì‰Šú’l
-		double rhoW;	//…‚Ì‹óŠÔ–§“x
-		double rhoO;	//–û‚Ì‹óŠÔ–§“x
-		double Pc;		//–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹
-		double muW;		//…‚Ì”S“x
-		double muO;		//–û‚Ì”S“x
-		double vVolume;	//’¸“_‚ªx”z‚·‚é‘ÌÏ
-		double mw;		//’¸“_‚ª‚Â…‚Ì¿—Ê
-		double mo;		//’¸“_‚ª‚Â–û‚Ì¿—Ê
-		double porosity;//ŠÔŒ„—¦
-		double saturation;//–O˜a—¦
-		double rhoS;		//ŒÅŒ`•ª‚Ì–§“x
-		double rhoS0;		//ŒÅŒ`•ª‚Ì–§“x‚Ì‰Šú’l
-		double preRhoS;		//1step‘O‚ÌŒÅŒ`•ª‚Ì–§“x
-		double outflowWater;	//—¬o‚µ‚Ä‚¢‚é…•ª—Ê[kg]
-		double outflowOil;		//—¬o‚µ‚Ä‚¢‚é–û•ª—Ê[kg]
+		double T;		//æ¸©åº¦
+		double preT;	//1stepå‰ã®æ¸©åº¦
+		double Tc;		//ç¯€ç‚¹å‘¨ã‚Šã®æµä½“æ¸©åº¦
+		double rhoWInit;//æ°´ã®ç©ºé–“å¯†åº¦ã®åˆæœŸå€¤
+		double rhoOInit;//å«æ²¹ç‡ã®åˆæœŸå€¤
+		double rhoW;	//æ°´ã®ç©ºé–“å¯†åº¦
+		double rhoO;	//æ²¹ã®ç©ºé–“å¯†åº¦
+		double Pc;		//æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«
+		double muW;		//æ°´ã®ç²˜åº¦
+		double muO;		//æ²¹ã®ç²˜åº¦
+		double vVolume;	//é ‚ç‚¹ãŒæ”¯é…ã™ã‚‹ä½“ç©
+		double mw;		//é ‚ç‚¹ãŒæŒã¤æ°´ã®è³ªé‡
+		double mo;		//é ‚ç‚¹ãŒæŒã¤æ²¹ã®è³ªé‡
+		double porosity;//é–“éš™ç‡
+		double saturation;//é£½å’Œç‡
+		double rhoS;		//å›ºå½¢åˆ†ã®å¯†åº¦
+		double rhoS0;		//å›ºå½¢åˆ†ã®å¯†åº¦ã®åˆæœŸå€¤
+		double preRhoS;		//1stepå‰ã®å›ºå½¢åˆ†ã®å¯†åº¦
+		double outflowWater;	//æµå‡ºã—ã¦ã„ã‚‹æ°´åˆ†é‡[kg]
+		double outflowOil;		//æµå‡ºã—ã¦ã„ã‚‹æ²¹åˆ†é‡[kg]
 		Vec3d normal;
-		bool denaturated;	//•Ï«‚µ‚½‚©‚Ç‚¤‚©
+		bool denaturated;	//å¤‰æ€§ã—ãŸã‹ã©ã†ã‹
 		double boundWaterMass;
 	};
 
@@ -61,35 +63,35 @@ public:
 	};
 
 	struct StateFace{
-		int dryingStep;			//Š£‘‡‚Ì’iŠK
-		double area;			//l–Ê‘Ì‚ÌŠe–Ê‚Ì–ÊÏ
-		double surroundFlux;	//ü‚è‚Ì—¬‘Ì‚Ì‘¬“x
-		double surroundHu;		//ü‚è‚Ì¼“x
-		double vaporPress;		//ü‚è‚Ì…ö‹Cˆ³
-		double vaporCont;		//ü‚è‚Ì…ö‹C—Ê(g/m^3)
-		double maxVaporPress;	//•\–Ê‰·“x‚Å‚Ì–O˜a…ö‹Cˆ³
-		double maxVaporCont;	//•\–Ê‰·“x‚Å‚Ì–O˜a…ö‹C—Ê(g/m^3)
-		double K1;				//Œ¸—¦‘æ1’iŠ£‘‡Šú‚Å‚Ì”ä—á’è”
-		bool evapoRateUpdated;	//ö”­‘¬“x’è”‚ª•Ï‰»‚µ‚½‚Æ‚«‚Étrue
-		bool deformed;			//	‘®‚·‚é’¸“_‚ÌˆÚ“®‚É‚æ‚èA•ÏŒ`‚³‚ê‚½‚Æ‚«
+		int dryingStep;			//ä¹¾ç‡¥ã®æ®µéš
+		double area;			//å››é¢ä½“ã®å„é¢ã®é¢ç©
+		double surroundFlux;	//å‘¨ã‚Šã®æµä½“ã®é€Ÿåº¦
+		double surroundHu;		//å‘¨ã‚Šã®æ¹¿åº¦
+		double vaporPress;		//å‘¨ã‚Šã®æ°´è’¸æ°—åœ§
+		double vaporCont;		//å‘¨ã‚Šã®æ°´è’¸æ°—é‡(g/m^3)
+		double maxVaporPress;	//è¡¨é¢æ¸©åº¦ã§ã®é£½å’Œæ°´è’¸æ°—åœ§
+		double maxVaporCont;	//è¡¨é¢æ¸©åº¦ã§ã®é£½å’Œæ°´è’¸æ°—é‡(g/m^3)
+		double K1;				//æ¸›ç‡ç¬¬1æ®µä¹¾ç‡¥æœŸã§ã®æ¯”ä¾‹å®šæ•°
+		bool evapoRateUpdated;	//è’¸ç™ºé€Ÿåº¦å®šæ•°ãŒå¤‰åŒ–ã—ãŸã¨ãã«true
+		bool deformed;			//	å±ã™ã‚‹é ‚ç‚¹ã®ç§»å‹•ã«ã‚ˆã‚Šã€å¤‰å½¢ã•ã‚ŒãŸã¨ã
 		Vec3d normal;
-		Vec3d normal_origin;	//–@ü‚Ìn“_
+		Vec3d normal_origin;	//æ³•ç·šã®å§‹ç‚¹
 	};
 
 	struct StateTet{
 		double volume;
-		double tetPorosity;	//l–Ê‘Ì‚ÌŠÔŒ„—¦F4’¸“_‚ÌŠÔŒ„—¦‚Ì‘Š‰Á•½‹Ï
+		double tetPorosity;	//å››é¢ä½“ã®é–“éš™ç‡ï¼š4é ‚ç‚¹ã®é–“éš™ç‡ã®ç›¸åŠ å¹³å‡
 		double preTetPorosity;
-		double tetMuW;		//l–Ê‘Ì’†‚Ì…‚Ì”S“xF4’¸“_‚Ì…‚Ì”S“x‚Ì‘Š‰Á•½‹Ï
-		double tetMuO;		//l–Ê‘Ì’†‚Ì–û‚Ì”S“xF4’¸“_‚Ì–û‚Ì”S“x‚Ì‘Š‰Á•½‹Ï
-		double preTetMuW;	//1step‘O‚Ì…‚Ì”S“x
-		double preTetMuO;	//1step‘O‚Ì–û‚Ì”S“x
-		double rhoS;		//ŒÅŒ`•ª‚Ì–§“x
-		double rhoS0;		//ŒÅŒ`•ª‚Ì–§“x‚Ì‰Šú’l
-		double preRhoS;		//1step‘O‚ÌŒÅŒ`•ª‚Ì–§“x
+		double tetMuW;		//å››é¢ä½“ä¸­ã®æ°´ã®ç²˜åº¦ï¼š4é ‚ç‚¹ã®æ°´ã®ç²˜åº¦ã®ç›¸åŠ å¹³å‡
+		double tetMuO;		//å››é¢ä½“ä¸­ã®æ²¹ã®ç²˜åº¦ï¼š4é ‚ç‚¹ã®æ²¹ã®ç²˜åº¦ã®ç›¸åŠ å¹³å‡
+		double preTetMuW;	//1stepå‰ã®æ°´ã®ç²˜åº¦
+		double preTetMuO;	//1stepå‰ã®æ²¹ã®ç²˜åº¦
+		double rhoS;		//å›ºå½¢åˆ†ã®å¯†åº¦
+		double rhoS0;		//å›ºå½¢åˆ†ã®å¯†åº¦ã®åˆæœŸå€¤
+		double preRhoS;		//1stepå‰ã®å›ºå½¢åˆ†ã®å¯†åº¦
 		double wFlux[4];
 		double oFlux[4];
-		bool sDensChanged;	//ŒÅŒ`•ª‚Ì–§“x•Ï‰»ƒtƒ‰ƒO
+		bool sDensChanged;	//å›ºå½¢åˆ†ã®å¯†åº¦å¤‰åŒ–ãƒ•ãƒ©ã‚°
 
 		PTM::TMatrixRow<4,4,double> matWw;
 		PTM::TMatrixRow<4,4,double> matOw;
@@ -110,17 +112,17 @@ public:
 
 protected:
 
-	//ß“_ŠÜ…—¦ƒxƒNƒgƒ‹
+	//ç¯€ç‚¹å«æ°´ç‡ãƒ™ã‚¯ãƒˆãƒ«
 	PTM::TVector<4,double> rhoWVecEle;
 	PTM::VMatrixRow<double> rhoWVecAll;
-	//ß“_ŠÜ–û—¦ƒxƒNƒgƒ‹
+	//ç¯€ç‚¹å«æ²¹ç‡ãƒ™ã‚¯ãƒˆãƒ«
 	PTM::TVector<4,double> rhoOVecEle;
 	PTM::VMatrixRow<double> rhoOVecAll;
-	//ß“_–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹ƒxƒNƒgƒ‹
+	//ç¯€ç‚¹æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ãƒ™ã‚¯ãƒˆãƒ«
 	PTM::TVector<4,double> PcEle;
 	PTM::VMatrixRow<double> PcVecAll;
 
-	//‘S‘Ì‚ÌŒW”s—ñ
+	//å…¨ä½“ã®ä¿‚æ•°è¡Œåˆ—
 	PTM::VMatrixRow<double> matWwAll;
 	PTM::VMatrixRow<double> matOwAll;
 	PTM::VMatrixRow<double> matWoAll;
@@ -135,7 +137,7 @@ protected:
 	PTM::VMatrixRow<double> vecFwFinal;	//vecFw + vecPcw * matPc
 	PTM::VMatrixRow<double> vecFoFinal;	//vecFo + vecPco * matPc
 	
-	//‘S‘Ì„«s—ñ‚Ì‘ã‚í‚è
+	//å…¨ä½“å‰›æ€§è¡Œåˆ—ã®ä»£ã‚ã‚Š
 	PTM::VMatrixRow<double> dMatWwAll;
 	PTM::VMatrixRow<double> dMatOwAll;
 	PTM::VMatrixRow<double> dMatWoAll;
@@ -146,22 +148,22 @@ protected:
 	PTM::VMatrixCol<double> bwVecAll;
 	PTM::VMatrixCol<double> boVecAll;
 
-	//Km‚Ì3‚Â‚Ì4~4s—ñ‚Ì“ü‚ê•¨@Matk1‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
+	//Kmã®3ã¤ã®4Ã—4è¡Œåˆ—ã®å…¥ã‚Œç‰©ã€€Matk1ã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
 	PTM::TMatrixRow<4,4,double> matk1array[4];
-	//k21,k22,k23,k24‚Ì4~4s—ñ‚Ì“ü‚ê•¨@Matk‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
+	//k21,k22,k23,k24ã®4Ã—4è¡Œåˆ—ã®å…¥ã‚Œç‰©ã€€Matkã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
 	PTM::TMatrixRow<4,4,double> matk2array[4];
-	//matcì¬—p
+	//matcä½œæˆç”¨
 	PTM::TMatrixRow<4,4,double> matCTemp;
-	//F‚Ì4~1ƒxƒNƒgƒ‹‚Ì“ü‚ê•¨
+	//Fã®4Ã—1ãƒ™ã‚¯ãƒˆãƒ«ã®å…¥ã‚Œç‰©
 	PTM::TVector<4,double> vecFarray[4];
-	//’PˆÊs—ñ vertex”~vertex”
+	//å˜ä½è¡Œåˆ— vertexæ•°Ã—vertexæ•°
 	PTM::VMatrixRow<double> idMat;
-	//dt—p‚Ìs—ñ(1~1)
+	//dtç”¨ã®è¡Œåˆ—(1Ã—1)
 	PTM::TMatrixRow<1,1,double> dtMat;
 
-	Vec3d gravity;	//d—Í‰Á‘¬“xƒxƒNƒgƒ‹
+	Vec3d gravity;	//é‡åŠ›åŠ é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«
 
-	//%%%%%%%%		ƒoƒCƒiƒŠƒXƒCƒbƒ`‚ÌéŒ¾		%%%%%%%%//
+	//%%%%%%%%		ãƒã‚¤ãƒŠãƒªã‚¹ã‚¤ãƒƒãƒã®å®£è¨€		%%%%%%%%//
 	bool doCalc;
 	bool matWOPcVecF2Changed;
 	bool matCChanged;
@@ -177,30 +179,30 @@ public:
 	void Step(double dt);
 
 	double eps;
-	//ŠÖ”‚ÌéŒ¾
+	//é–¢æ•°ã®å®£è¨€
 
 	void InitMatWO();
 	void InitMatC();
 	void InitMatPc();
 	void InitVecF();
 
-	//[Ww],[Ow],[Wo],[Oo]‚ğì‚é
+	//[Ww],[Ow],[Wo],[Oo]ã‚’ä½œã‚‹
 	void CreateMatWOPcVecF2Local(unsigned tetid);
-	////[K1W2]‚ğì‚é
+	////[K1W2]ã‚’ä½œã‚‹
 	//void CreateMatk2(unsigned id);
-	//void CreateMatWOLocal(unsigned i);			//	edges‚É“ü‚ê‚Â‚ÂAƒ`ƒFƒbƒN—p‚Ì‘S‘Ì„«s—ñ‚àAifdefƒXƒCƒbƒ`‚Åì‚ê‚éd—l
+	//void CreateMatWOLocal(unsigned i);			//	edgesã«å…¥ã‚Œã¤ã¤ã€ãƒã‚§ãƒƒã‚¯ç”¨ã®å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚‚ã€ifdefã‚¹ã‚¤ãƒƒãƒã§ä½œã‚Œã‚‹ä»•æ§˜
 	//void CreateMatWOPcVecF2All();
 
-	//[C]‚ğì‚é
-	//void CreateMatCAll();			//C‚Ì‘S‘Ì„«s—ñ‚ğì‚éŠÖ”
-	void CreateMatCLocal(unsigned tetid);	//C‚Ì—v‘f„«s—ñ‚ğì‚éŠÖ”
+	//[C]ã‚’ä½œã‚‹
+	//void CreateMatCAll();			//Cã®å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹é–¢æ•°
+	void CreateMatCLocal(unsigned tetid);	//Cã®è¦ç´ å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹é–¢æ•°
 
-	//{FWw},{Fo1}‚ğì‚é
+	//{FWw},{Fo1}ã‚’ä½œã‚‹
 	void CreateVecF1Local(unsigned tetid);
-	////{F2W}‚ğì‚é
+	////{F2W}ã‚’ä½œã‚‹
 	//void CreateVecF2(unsigned tetid);
 	//void CreateVecFLocal(unsigned id);
-	//void CreateVecFAll();				//	l–Ê‘ÌƒƒbƒVƒ…‚ÌID‚ğˆø”‚É
+	//void CreateVecFAll();				//	å››é¢ä½“ãƒ¡ãƒƒã‚·ãƒ¥ã®IDã‚’å¼•æ•°ã«
 
 	void CreateMatVecAll();
 
@@ -208,33 +210,33 @@ public:
 	void CreateRhoOVecAll();
 	void InitPcVecAll();
 
-	void InitTcAll(double temp);							//	Tc‚Ì‰·“x‚ğ‰Šú‰»
+	void InitTcAll(double temp);							//	Tcã®æ¸©åº¦ã‚’åˆæœŸåŒ–
 
 	void SetTimeStep(double dt){ tdt = dt; }
 	double GetTimeStep(){ return tdt; }
 
 
-	PTM::TMatrixRow<4,4,double> Create44Mat21();	//‹¤’Ê‚Å—p‚¢‚éA4~4‚Ì2‚Æ1‚Å‚Å‚«‚½s—ñ‚ğ•Ô‚·ŠÖ”
+	PTM::TMatrixRow<4,4,double> Create44Mat21();	//å…±é€šã§ç”¨ã„ã‚‹ã€4Ã—4ã®2ã¨1ã§ã§ããŸè¡Œåˆ—ã‚’è¿”ã™é–¢æ•°
 	PTM::TMatrixCol<4,1,double> Create41Vec1();
 
 
-	PTM::VMatrixRow<double> keisuW;			//	’¼Ú–@‚ÅŒvZ‚ÌWw(t+dt)ŒW”s—ñ
+	PTM::VMatrixRow<double> keisuW;			//	ç›´æ¥æ³•ã§è¨ˆç®—æ™‚ã®Ww(t+dt)ä¿‚æ•°è¡Œåˆ—
 	PTM::VMatrixRow<double> keisuWInv;
-	PTM::VMatrixRow<double> keisuO;			//	’¼Ú–@‚ÅŒvZ‚ÌWo(t+dt)ŒW”s—ñ
+	PTM::VMatrixRow<double> keisuO;			//	ç›´æ¥æ³•ã§è¨ˆç®—æ™‚ã®Wo(t+dt)ä¿‚æ•°è¡Œåˆ—
 	PTM::VMatrixRow<double> keisuOInv;
 	PTM::VVector<double> uhenW;
 	PTM::VVector<double> uhenO;
 
-	PTM::VMatrixRow<double> leftKeisuW;		//ŠÜ…—¦‚Ì‘Q‰»®¶•Ó‚ÌWw(t+dt)‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuWWw;	//ŠÜ…—¦‚Ì‘Q‰»®‰E•Ó‚ÌWw(t)‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuWWo;	//ŠÜ…—¦‚Ì‘Q‰»®‰E•Ó‚ÌWo(t)‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuWFw;	//ŠÜ…—¦‚Ì‘Q‰»®‰E•Ó‚ÌFw‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuWFo;	//ŠÜ…—¦‚Ì‘Q‰»®‰E•Ó‚ÌFo‚ÌŒW”
-	PTM::VMatrixRow<double> leftKeisuO;		//ŠÜ–û—¦‚Ì‘Q‰»®¶•Ó‚ÌWo(t+dt)‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuOWw;	//ŠÜ–û—¦‚Ì‘Q‰»®‰E•Ó‚ÌWw(t)‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuOWo;	//ŠÜ–û—¦‚Ì‘Q‰»®‰E•Ó‚ÌWo(t)‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuOFw;	//ŠÜ–û—¦‚Ì‘Q‰»®‰E•Ó‚ÌFw‚ÌŒW”
-	PTM::VMatrixRow<double> rightKeisuOFo;	//ŠÜ–û—¦‚Ì‘Q‰»®‰E•Ó‚ÌFo‚ÌŒW”
+	PTM::VMatrixRow<double> leftKeisuW;		//å«æ°´ç‡ã®æ¼¸åŒ–å¼å·¦è¾ºã®Ww(t+dt)ã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuWWw;	//å«æ°´ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Ww(t)ã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuWWo;	//å«æ°´ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Wo(t)ã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuWFw;	//å«æ°´ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Fwã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuWFo;	//å«æ°´ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Foã®ä¿‚æ•°
+	PTM::VMatrixRow<double> leftKeisuO;		//å«æ²¹ç‡ã®æ¼¸åŒ–å¼å·¦è¾ºã®Wo(t+dt)ã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuOWw;	//å«æ²¹ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Ww(t)ã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuOWo;	//å«æ²¹ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Wo(t)ã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuOFw;	//å«æ²¹ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Fwã®ä¿‚æ•°
+	PTM::VMatrixRow<double> rightKeisuOFo;	//å«æ²¹ç‡ã®æ¼¸åŒ–å¼å³è¾ºã®Foã®ä¿‚æ•°
 
 
 	std::ofstream matWwAllout;
@@ -271,10 +273,10 @@ public:
 	std::ofstream tempAndWater;
 	unsigned long long COUNT;
 	
-	unsigned long StepCount;			//	Step”ƒJƒEƒ“ƒgƒAƒbƒv‚Ì‰ÁZŒW”	
-	unsigned long StepCount_;			//	Step”ƒJƒEƒ“ƒgƒAƒbƒv‚Ì‰ÁZŒW”	StepCount‚ª‰½T–Ú‚©‚ğ•\‚·ƒJƒEƒ“ƒg 
+	unsigned long StepCount;			//	Stepæ•°ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã®åŠ ç®—ä¿‚æ•°	
+	unsigned long StepCount_;			//	Stepæ•°ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã®åŠ ç®—ä¿‚æ•°	StepCountãŒä½•é€±ç›®ã‹ã‚’è¡¨ã™ã‚«ã‚¦ãƒ³ãƒˆ 
 
-	/// dt‚ğ’è””{‚·‚é
+	/// dtã‚’å®šæ•°å€ã™ã‚‹
 	unsigned Ndt;
 	double dNdt;
 
@@ -283,13 +285,13 @@ public:
 protected:
 
 	double CalcTriangleArea(int id0, int id1, int id2);
-	double CalcTetrahedraVolume(FemTet tet); 		// l–Ê‘Ì‚ÌID‚ğ“ü‚ê‚é‚ÆA‚»‚Ì‘ÌÏ‚ğŒvZ‚µ‚Ä‚­‚ê‚éŠÖ”
-	void CalcWOContentDirect(double dt, double eps);			// dt:ƒXƒeƒbƒvŠÔ
+	double CalcTetrahedraVolume(FemTet tet); 		// å››é¢ä½“ã®IDã‚’å…¥ã‚Œã‚‹ã¨ã€ãã®ä½“ç©ã‚’è¨ˆç®—ã—ã¦ãã‚Œã‚‹é–¢æ•°
+	void CalcWOContentDirect(double dt, double eps);			// dt:ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“
 	void CalcWOContentDirect2(double dt, double eps);
 	void CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt, double eps);
 	void CalcWOContentUsingScilab(double dt);
-	void SetRhoWAllToRhoWVecAll();			//WwVecAll‚É‘SÚ“_‚ÌŠÜ…—¦‚ğİ’è
-	void SetRhoOAllToRhoOVecAll();			//WoVecAll‚É‘SÚ“_‚ÌŠÜ–û—¦‚ğİ’è
+	void SetRhoWAllToRhoWVecAll();			//WwVecAllã«å…¨æ¥ç‚¹ã®å«æ°´ç‡ã‚’è¨­å®š
+	void SetRhoOAllToRhoOVecAll();			//WoVecAllã«å…¨æ¥ç‚¹ã®å«æ²¹ç‡ã‚’è¨­å®š
 	void InitAllVertexRhoW();
 	void InitAllVertexRhoO();
 
@@ -298,7 +300,7 @@ public:
 	void UpdateVertexRhoWAll();
 	void UpdateVertexRhoOAll();
 
-	//’¸“_‚ª‚à‚Â•Ï”‚ÖƒAƒNƒZƒX
+	//é ‚ç‚¹ãŒã‚‚ã¤å¤‰æ•°ã¸ã‚¢ã‚¯ã‚»ã‚¹
 	void SetVertexTemp(unsigned vtxid, double temp);
 	void SetVertexTc(unsigned vtxid, double tc);
 	void SetVertexRhoW(unsigned vtxid, double rhow);
@@ -322,7 +324,7 @@ public:
 	double GetVertexMw(unsigned vtxid);
 	double GetVertexMo(unsigned vtxid);
 	
-	//–Ê‚ª‚Â•Ï”‚ÖƒAƒNƒZƒX
+	//é¢ãŒæŒã¤å¤‰æ•°ã¸ã‚¢ã‚¯ã‚»ã‚¹
 	void CalcFaceArea(unsigned faceid);
 	void SetFaceEvaporationRate(unsigned faceid, double evapoRate);
 	void SetFaceSurroundFlux(unsigned faceid, double surroundFlux);
@@ -335,7 +337,7 @@ public:
 	double GetFaceVaporPress(unsigned faceid);
 	double GetFaceMaxVaporPress(unsigned faceid);
 
-	//l–Ê‘Ì‚ª‚Â•Ï”‚ÖƒAƒNƒZƒX
+	//å››é¢ä½“ãŒæŒã¤å¤‰æ•°ã¸ã‚¢ã‚¯ã‚»ã‚¹
 	void CalcTetVolume(unsigned tetid);
 	void CalcTetPorosity(unsigned tetid);
 	void CalcTetWOMu(unsigned tetid);

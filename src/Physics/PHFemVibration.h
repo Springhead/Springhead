@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,7 +9,7 @@
 #ifndef PH_FEM_VIBRATION_H
 #define PH_FEM_VIBRATION_H
 
-#include <Physics/PHFemBase.h>
+#include "PHFemBase.h"
 #include <Foundation/Object.h>
 
 namespace Spr{;
@@ -22,51 +22,51 @@ public:
 	typedef double element_type;
 	typedef VMatrixRow< element_type > VMatrixRe;
 	typedef VVector< double > VVectord;
-	#define element_limit std::numeric_limits< element_type >::max_digits10 	// stream‚Ì¸“x
+	#define element_limit std::numeric_limits< element_type >::max_digits10 	// streamã®ç²¾åº¦
 
 	double vdt;
 	PHFemVibrationDesc::ANALYSIS_MODE analysis_mode;
 	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
-	bool bRecomp;		// ‘S‘Ìs—ñ‚ªÄŒvZ‚³‚ê‚½ê‡‚Ìƒtƒ‰ƒO
-	VMatrixRe matKIni;	// ‘S‘Ì„«s—ñ‚Ì‰Šú’l
-	VMatrixRe matMIni;	// ‘S‘Ì¿—Ês—ñ‚Ì‰Šú’l
-	VMatrixRe matCIni;	// ‘S‘ÌŒ¸Šs—ñ‚Ì‰Šú’l
-	VVectord xdl;		// ’¸“_•ÏˆÊ(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
-	VVectord vl;		// ’¸“_‘¬“x
-	VVectord al;		// ’¸“_‰Á‘¬“xiˆê•”‚ÌÏ•ª‚Å‚Í‚Â‚©‚í‚È‚¢j
-	VVectord fl;		// ŒvZ—p‚ÌŠO—Í
-	VMatrixRe matKp;	// ‘S‘Ì„«s—ñ‚Ìˆê•”
-	VMatrixRe matMp;	// ‘S‘Ì¿—Ês—ñ‚Ìˆê•”
-	VMatrixRe matCp;	// ‘S‘ÌŒ¸Šs—ñ‚Ìˆê•”
-	VVectord xdlp;		// ’¸“_•ÏˆÊ‚Ìˆê•”(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
-	VVectord vlp;		// ’¸“_‘¬“x‚Ìˆê•”
-	VVectord alp;		// ’¸“_‰Á‘¬“x‚Ìˆê•”
-	VVectord flp;		// ŒvZ—p‚ÌŠO—Í‚Ìˆê•”
+	bool bRecomp;		// å…¨ä½“è¡Œåˆ—ãŒå†è¨ˆç®—ã•ã‚ŒãŸå ´åˆã®ãƒ•ãƒ©ã‚°
+	VMatrixRe matKIni;	// å…¨ä½“å‰›æ€§è¡Œåˆ—ã®åˆæœŸå€¤
+	VMatrixRe matMIni;	// å…¨ä½“è³ªé‡è¡Œåˆ—ã®åˆæœŸå€¤
+	VMatrixRe matCIni;	// å…¨ä½“æ¸›è¡°è¡Œåˆ—ã®åˆæœŸå€¤
+	VVectord xdl;		// é ‚ç‚¹å¤‰ä½(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
+	VVectord vl;		// é ‚ç‚¹é€Ÿåº¦
+	VVectord al;		// é ‚ç‚¹åŠ é€Ÿåº¦ï¼ˆä¸€éƒ¨ã®ç©åˆ†ã§ã¯ã¤ã‹ã‚ãªã„ï¼‰
+	VVectord fl;		// è¨ˆç®—ç”¨ã®å¤–åŠ›
+	VMatrixRe matKp;	// å…¨ä½“å‰›æ€§è¡Œåˆ—ã®ä¸€éƒ¨
+	VMatrixRe matMp;	// å…¨ä½“è³ªé‡è¡Œåˆ—ã®ä¸€éƒ¨
+	VMatrixRe matCp;	// å…¨ä½“æ¸›è¡°è¡Œåˆ—ã®ä¸€éƒ¨
+	VVectord xdlp;		// é ‚ç‚¹å¤‰ä½ã®ä¸€éƒ¨(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
+	VVectord vlp;		// é ‚ç‚¹é€Ÿåº¦ã®ä¸€éƒ¨
+	VVectord alp;		// é ‚ç‚¹åŠ é€Ÿåº¦ã®ä¸€éƒ¨
+	VVectord flp;		// è¨ˆç®—ç”¨ã®å¤–åŠ›ã®ä¸€éƒ¨
 
-	//ƒ‚[ƒhÀ•WŒn@ n:©—R“xAm:ƒ‚[ƒhŸ”
-	VVectord q;			// ƒ‚[ƒhU“®ƒxƒNƒgƒ‹(m)
-	VVectord qv;		// ƒ‚[ƒhU“®‘¬“xƒxƒNƒgƒ‹(m)
-	VVectord qa;		// ƒ‚[ƒhU“®‰Á‘¬“xƒxƒNƒgƒ‹(m)
-	VVectord qf;		// ƒ‚[ƒhŠO—Í(m)
+	//ãƒ¢ãƒ¼ãƒ‰åº§æ¨™ç³»ã€€ n:è‡ªç”±åº¦ã€m:ãƒ¢ãƒ¼ãƒ‰æ¬¡æ•°
+	VVectord q;			// ãƒ¢ãƒ¼ãƒ‰æŒ¯å‹•ãƒ™ã‚¯ãƒˆãƒ«(m)
+	VVectord qv;		// ãƒ¢ãƒ¼ãƒ‰æŒ¯å‹•é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«(m)
+	VVectord qa;		// ãƒ¢ãƒ¼ãƒ‰æŒ¯å‹•åŠ é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«(m)
+	VVectord qf;		// ãƒ¢ãƒ¼ãƒ‰å¤–åŠ›(m)
 		
-	VVectord evalue;	// ŒÅ—L’l(m)
-	VMatrixRe evector;	// ŒÅ—LƒxƒNƒgƒ‹(n*m)
-	VVectord ewrad;		// MKŒn‚ÌŒÅ—LŠpU“®”(m)
-	VMatrixRe Mm;		// ƒ‚[ƒh¿—Ês—ñ(m*m)
-	VMatrixRe Km;		// ƒ‚[ƒh„«s—ñ(m*m)
-	VMatrixRe Cm;		// ƒ‚[ƒhŒ¸Šs—ñ(m*m)
-	VMatrixRe SmInv;	// M,K,Cs—ñ‚ª•Ï‰»‚µ‚È‚¢ŒÀ‚è’è”‚Ìs—ñ(ŠÔÏ•ª‚Åg‚¤)(m*m)
+	VVectord evalue;	// å›ºæœ‰å€¤(m)
+	VMatrixRe evector;	// å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«(n*m)
+	VVectord ewrad;		// MKç³»ã®å›ºæœ‰è§’æŒ¯å‹•æ•°(m)
+	VMatrixRe Mm;		// ãƒ¢ãƒ¼ãƒ‰è³ªé‡è¡Œåˆ—(m*m)
+	VMatrixRe Km;		// ãƒ¢ãƒ¼ãƒ‰å‰›æ€§è¡Œåˆ—(m*m)
+	VMatrixRe Cm;		// ãƒ¢ãƒ¼ãƒ‰æ¸›è¡°è¡Œåˆ—(m*m)
+	VMatrixRe SmInv;	// M,K,Cè¡Œåˆ—ãŒå¤‰åŒ–ã—ãªã„é™ã‚Šå®šæ•°ã®è¡Œåˆ—(æ™‚é–“ç©åˆ†ã§ä½¿ã†)(m*m)
 
 
-//	VMatrixRe evalue;	// ŒÅ—L’l
-//	VMatrixRe evector;	// ŒÅ—LƒxƒNƒgƒ‹
-	double dampingRatio[2];	// Œ¸Š”ä
-	int nMode;			// ƒ‚[ƒh”
+//	VMatrixRe evalue;	// å›ºæœ‰å€¤
+//	VMatrixRe evector;	// å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«
+	double dampingRatio[2];	// æ¸›è¡°æ¯”
+	int nMode;			// ãƒ¢ãƒ¼ãƒ‰æ•°
 
-	VVector< int > boundary;	// ‹«ŠEğŒID
+	VVector< int > boundary;	// å¢ƒç•Œæ¡ä»¶ID
 
 	PHFemVibration(const PHFemVibrationDesc& desc = PHFemVibrationDesc());
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	virtual void Init();
 	virtual void CompStiffnessMatrix();
 	virtual void CompMassMatrix();
@@ -74,13 +74,13 @@ public:
 	virtual void CompRayleighDampingMatrixByDampingRatio();
 
 
-	/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ƒXƒeƒbƒv
+	/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒ†ãƒƒãƒ—
 	virtual void Step();
-	// ŠÔÏ•ª•û–@‚ÌƒXƒCƒbƒ`is—ñj
+	// æ™‚é–“ç©åˆ†æ–¹æ³•ã®ã‚¹ã‚¤ãƒƒãƒï¼ˆè¡Œåˆ—ï¼‰
 	virtual void InitNumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, const double& _dt, VMatrixRe& _SInv);
 	virtual void NumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a);
-	// ŠÔÏ•ª•û–@‚ÌƒXƒCƒbƒ`(1©—R“x)
+	// æ™‚é–“ç©åˆ†æ–¹æ³•ã®ã‚¹ã‚¤ãƒƒãƒ(1è‡ªç”±åº¦)
 	virtual void InitNumericalIntegration(const double& _m, const double& _k, const double& _c, const double& _dt, double& _sInv);
 	virtual void NumericalIntegration(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a);
@@ -90,17 +90,17 @@ public:
 		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
 
 
-	/// ŒÅ—L’l‰ğÍ(Kx = lamda M x)‚ğ‰ğ‚­
+	/// å›ºæœ‰å€¤è§£æ(Kx = lamda M x)ã‚’è§£ã
 	virtual void CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, const int start, const int interval, VVectord& e, VMatrixRd& v);
 	virtual void CompEigenVibrationFrequency(const VVectord& e, VVectord& w);
 	virtual void CompEigenAngularVibrationFrequency(const VVectord& e, VVectord& wrad);
 	double CompModalDampingRatio(double wrad);
 	void CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b);
-	// Subspace–@‚ÌÀ‘•
+	// Subspaceæ³•ã®å®Ÿè£…
 	virtual void SubSpace(const VMatrixRe& _K, const VMatrixRe& _M, 
 							const int nmode, const double epsilon, VVectord& e, VMatrixRe& v);
 
-	/// Šeíİ’èAŒvZ
+	/// å„ç¨®è¨­å®šã€è¨ˆç®—
 	void SetTimeStep(double dt){ vdt = dt; }
 	double GetTimeStep(){ return vdt; }
 	void SetYoungModulus(double value){ young = value; }
@@ -120,64 +120,64 @@ public:
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 
-	// FemVertex‚©‚ç’¸“_•ÏˆÊ‚ğæ“¾‚µAŒvZ‚Å‚«‚éŒ`‚É•ÏŠ·‚·‚é
+	// FemVertexã‹ã‚‰é ‚ç‚¹å¤‰ä½ã‚’å–å¾—ã—ã€è¨ˆç®—ã§ãã‚‹å½¢ã«å¤‰æ›ã™ã‚‹
 	void GetVerticesDisplacement(VVectord& _xd);
-	// FemVertex‚É’¸“_•ÏˆÊ‚ğ‰Á‚¦‚é
+	// FemVertexã«é ‚ç‚¹å¤‰ä½ã‚’åŠ ãˆã‚‹
 	void UpdateVerticesPosition(VVectord& _xd);
-	// FemVertex‚É’¸“_‘¬“x‚ğ‰Á‚¦‚é
+	// FemVertexã«é ‚ç‚¹é€Ÿåº¦ã‚’åŠ ãˆã‚‹
 	void UpdateVerticesVelocity(VVectord& _v);
 
 	std::vector< int > FindVertices(const int vtxId, const Vec3d _vecl);
-	// ‹«ŠEğŒ‚ğ‰Á‚¦‚é(s—ñ‚Æ”Ô†j
+	// å¢ƒç•Œæ¡ä»¶ã‚’åŠ ãˆã‚‹(è¡Œåˆ—ã¨ç•ªå·ï¼‰
 	bool AddBoundaryCondition(VMatrixRe& mat, const int id);
-	// ‹«ŠEğŒ‚ğ‰Á‚¦‚é(’¸“_j
+	// å¢ƒç•Œæ¡ä»¶ã‚’åŠ ãˆã‚‹(é ‚ç‚¹ï¼‰
 	bool AddBoundaryCondition(const int vtxId, const Vec3i dof);
-	//‹«ŠEğŒ‚ğÁ‚·(’¸“_)
+	//å¢ƒç•Œæ¡ä»¶ã‚’æ¶ˆã™(é ‚ç‚¹)
 	void DeleteBoundaryCondition(){fixedVertices.pop_back();}
-	// ‹«ŠEğŒ‚ğ‰Á‚¦‚é(’¸“_‡j
+	// å¢ƒç•Œæ¡ä»¶ã‚’åŠ ãˆã‚‹(é ‚ç‚¹é †ï¼‰
 	bool AddBoundaryCondition(const std::vector< Vec3i >& bcs);
-	// ‹«ŠEğŒ‚É‰‚¶‚Äs—ñ‚Ì©—R“x‚ğíŒ¸‚·‚é
+	// å¢ƒç•Œæ¡ä»¶ã«å¿œã˜ã¦è¡Œåˆ—ã®è‡ªç”±åº¦ã‚’å‰Šæ¸›ã™ã‚‹
 	void ReduceMatrixSize(VMatrixRe& mat, const VVector< int >& bc);
-	// ‹«ŠEğŒ‚É‰‚¶‚Äs—ñ©—R“x‚ğíŒ¸‚·‚é
+	// å¢ƒç•Œæ¡ä»¶ã«å¿œã˜ã¦è¡Œåˆ—è‡ªç”±åº¦ã‚’å‰Šæ¸›ã™ã‚‹
 	void ReduceMatrixSize(VMatrixRe& _M, VMatrixRe& _K, VMatrixRe& _C, const VVector< int >& bc);
-	// ‹«ŠEğŒ‚É‰‚¶‚ÄƒxƒNƒgƒ‹‚Ì©—R“x‚ğíŒ¸‚·‚é
+	// å¢ƒç•Œæ¡ä»¶ã«å¿œã˜ã¦ãƒ™ã‚¯ãƒˆãƒ«ã®è‡ªç”±åº¦ã‚’å‰Šæ¸›ã™ã‚‹
 	void ReduceVectorSize(VVectord& r, const VVector< int >& bc);
-	// ‹«ŠEğŒ‚É‰‚¶‚ÄƒxƒNƒgƒ‹‚Ì©—R“x‚ğíŒ¸‚·‚é
+	// å¢ƒç•Œæ¡ä»¶ã«å¿œã˜ã¦ãƒ™ã‚¯ãƒˆãƒ«ã®è‡ªç”±åº¦ã‚’å‰Šæ¸›ã™ã‚‹
 	void ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, VVectord& _f,const VVector< int >& bc);
-	// íŒ¸‚µ‚½ƒxƒNƒgƒ‹‚ğŒ³‚ÌƒxƒNƒgƒ‹‚É–ß‚·
+	// å‰Šæ¸›ã—ãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’å…ƒã®ãƒ™ã‚¯ãƒˆãƒ«ã«æˆ»ã™
 	void AssignVector(const VVectord& from, VVectord& to, const VVector< int >& bc);
 
-	// ’¸“_‚É—Í‚ğ‰Á‚¦‚éiƒ[ƒJƒ‹À•WŒnj
+	// é ‚ç‚¹ã«åŠ›ã‚’åŠ ãˆã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	bool AddVertexForceL(int vtxId, Vec3d fL);
-	// ’¸“_‚É—Í‚ğ‰Á‚¦‚éiƒ[ƒ‹ƒhÀ•WŒnj
+	// é ‚ç‚¹ã«åŠ›ã‚’åŠ ãˆã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰
 	bool AddVertexForceW(int vtxId, Vec3d fW);
-	// ’¸“_ŒQ‚É—Í‚ğ‰Á‚¦‚éiƒ[ƒ‹ƒhÀ•WŒnj
+	// é ‚ç‚¹ç¾¤ã«åŠ›ã‚’åŠ ãˆã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰
 	bool AddVertexForceW(std::vector< Vec3d > fWs);
-	// —Í‚ğ‰Á‚¦‚é
+	// åŠ›ã‚’åŠ ãˆã‚‹
 	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
-	// U“®‚ğ—}‚¦‚é
+	// æŒ¯å‹•ã‚’æŠ‘ãˆã‚‹
 	bool Damping(int tetId, Vec3d posW, double damp_ratio);
-	// Œ¸ŠŒW”‚Ìİ’è
+	// æ¸›è¡°ä¿‚æ•°ã®è¨­å®š
 	bool SetDampingRatio();
 
-	// Œ`óŠÖ”‚ğg‚Á‚Ä”CˆÓ‚Ì“_‚Ì•ÏˆÊ‚ğæ“¾‚·‚é
+	// å½¢çŠ¶é–¢æ•°ã‚’ä½¿ã£ã¦ä»»æ„ã®ç‚¹ã®å¤‰ä½ã‚’å–å¾—ã™ã‚‹
 	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform);
 
-	// Œ`óŠÖ”‚ğg‚Á‚Ä”CˆÓ‚Ì“_‚Ì‘¬“x‚ğæ“¾‚·‚é
+	// å½¢çŠ¶é–¢æ•°ã‚’ä½¿ã£ã¦ä»»æ„ã®ç‚¹ã®é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
 	bool GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform);
 
-	// Œ`óŠÖ”‚ğg‚Á‚Ä”CˆÓ‚Ì“_‚ÌˆÊ’u(•Ï‰»Œã)‚ğæ“¾‚·‚é
+	// å½¢çŠ¶é–¢æ•°ã‚’ä½¿ã£ã¦ä»»æ„ã®ç‚¹ã®ä½ç½®(å¤‰åŒ–å¾Œ)ã‚’å–å¾—ã™ã‚‹
 	bool GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform);
 
 
-	/// À‘•’†
+	/// å®Ÿè£…ä¸­
 	bool FindClosestPointOnMesh( const Vec3d& posW, const Vec3d pos[3], Vec3d& cp, double& dist, bool bDeform);
-	/// ‚ ‚é“_‚©‚ç‹ß‚¢–Ê‚Æ–Êã‚Ì“_‚ğ’T‚·
+	/// ã‚ã‚‹ç‚¹ã‹ã‚‰è¿‘ã„é¢ã¨é¢ä¸Šã®ç‚¹ã‚’æ¢ã™
 	bool FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, std::vector< Vec3d >& cpWs, bool bDeform);
-	/// ‚ ‚é“_‚©‚ç‹ß‚¢l–Ê‘Ì‚Æl–Ê‘Ìã‚Ì“_‚ğ’T‚·
+	/// ã‚ã‚‹ç‚¹ã‹ã‚‰è¿‘ã„å››é¢ä½“ã¨å››é¢ä½“ä¸Šã®ç‚¹ã‚’æ¢ã™
 	bool FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW, bool bDeform);
 
-	/// s—ñ‚Ìƒtƒ@ƒCƒ‹o—Í
+	/// è¡Œåˆ—ã®ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›
 	void MatrixFileOut(VMatrixRe mat, std::string filename);
 
 	//For FEM implementations FUNCTIONS

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,13 +9,15 @@
 #ifndef PH_FEM_BASE_H
 #define PH_FEM_BASE_H
 
-#include "PHFemMeshNew.h"
-#include "../Foundation/Object.h"
+#include "Foundation/Object.h"
 #include "PHScene.h"
+#include "PHFemMeshNew.h"
 
 namespace Spr{;
 
-/// ŒvZƒ‚ƒWƒ…[ƒ‹‚Ì‹¤’Ê•”•ª
+class PHFemMeshNew;
+
+/// è¨ˆç®—ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®å…±é€šéƒ¨åˆ†
 class PHFemBase: public SceneObject{
 public:
 	SPR_OBJECTDEF_ABST(PHFemBase);
@@ -33,20 +35,20 @@ public:
 	PHFemMeshNew* GetPHFemMesh();
 	int NVertices();
 
-	/// “ñŠK‚ÌŠÔÏ•ª
-	/// _M:¿—Ês—ñA_K:„«s—ñA_C:Œ¸Šs—ñA_f:ŠO—ÍA_dt:Ï•ª‚İA_xd:•ÏˆÊA_v:‘¬“x
-	/// s—ñ”Å
+	/// äºŒéšã®æ™‚é–“ç©åˆ†
+	/// _M:è³ªé‡è¡Œåˆ—ã€_K:å‰›æ€§è¡Œåˆ—ã€_C:æ¸›è¡°è¡Œåˆ—ã€_f:å¤–åŠ›ã€_dt:ç©åˆ†åˆ»ã¿ã€_xd:å¤‰ä½ã€_v:é€Ÿåº¦
+	/// è¡Œåˆ—ç‰ˆ
 	virtual void CompInitialCondition(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C,
 		const VVectord& _f, VVectord& _x, VVectord& _v, VVectord& _a);
-	// ‘OiƒIƒCƒ‰[
+	// å‰é€²ã‚ªã‚¤ãƒ©ãƒ¼
 	virtual void InitExplicitEuler(const VMatrixRd& _M, VMatrixRd& _MInv);
 	virtual void ExplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	// Œã‘ŞƒIƒCƒ‰[0
+	// å¾Œé€€ã‚ªã‚¤ãƒ©ãƒ¼0
 	//virtual void InitImplicitEuler(VMatrixRd& _M, double& _SInv);
 	virtual void ImplicitEuler(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	// ƒVƒ“ƒvƒŒƒNƒeƒBƒbƒN
+	// ã‚·ãƒ³ãƒ—ãƒ¬ã‚¯ãƒ†ã‚£ãƒƒã‚¯
 	virtual void InitSimplectic(const VMatrixRd& _M, VMatrixRd& _MInv);
 	virtual void Simplectic(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
@@ -55,12 +57,12 @@ public:
 		const double& _dt, VMatrixRd& _SInv, const double b = 1.0/6.0);
 	virtual void NewmarkBeta(const VMatrixRd& _SInv, const VMatrixRd& _K, const VMatrixRd& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const double b = 1.0 /6.0);
-	/// 1©—R“x”Å
-	// ‘OiƒIƒCƒ‰[
+	/// 1è‡ªç”±åº¦ç‰ˆ
+	// å‰é€²ã‚ªã‚¤ãƒ©ãƒ¼
 	virtual void InitExplicitEuler(const double& _m, double& _sInv);
 	virtual void ExplicitEuler(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v);
-	// ƒVƒ“ƒvƒŒƒNƒeƒBƒbƒN
+	// ã‚·ãƒ³ãƒ—ãƒ¬ã‚¯ãƒ†ã‚£ãƒƒã‚¯
 	virtual void InitSimplectic(const double& _m, double& _sInv);
 	virtual void Simplectic(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v);	
