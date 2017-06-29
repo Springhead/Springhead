@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,15 +9,15 @@
 #ifndef PH_FEMMESH_NEW_H
 #define PH_FEMMESH_NEW_H
 
-#include <Physics/SprPHFemMeshNew.h>
-#include "../Foundation/Object.h"
+#include "Physics/SprPHFemMeshNew.h"
+#include "Foundation/Object.h"
 #include "PHScene.h"
 
 namespace Spr{;
 using namespace PTM;
 
-/* l–Ê‘Ì‚ğ•\‚·‚½‚ß‚ÌƒNƒ‰ƒXA\‘¢‘Ì‚ÌéŒ¾ */
-//	’¸“_
+/* å››é¢ä½“ã‚’è¡¨ã™ãŸã‚ã®ã‚¯ãƒ©ã‚¹ã€æ§‹é€ ä½“ã®å®£è¨€ */
+//	é ‚ç‚¹
 class FemVertex{
 public:
 	Vec3d pos;
@@ -31,25 +31,25 @@ public:
 	//For multiple FEM objects
 	double centerDist;    //The distance to the closest neighbour
 };
-//	l–Ê‘Ì
+//	å››é¢ä½“
 class FemTet{
 public:
-	int vertexIDs[4];	///< ’¸“_ID																																	  
-	int faceIDs[4];		///< •\–Ê‚S‚Â
-	int edgeIDs[6];		///< ‘Î‰‚·‚é•Ó‚ÌIDB0:•Ó01, 1:•Ó12, 2:•Ó20, 3:•Ó03, 4:•Ó13, 5:•Ó23
-	PTM::TVector<4,double> vecf[4];		//>	{f1}:vecf[0],{f2(”M—¬‘©)}:vecf[1],{f3(”M“`’B)}:vecf[2],{f4(”MçtË)}:vecf[3]
+	int vertexIDs[4];	///< é ‚ç‚¹ID																																	  
+	int faceIDs[4];		///< è¡¨é¢ï¼”ã¤
+	int edgeIDs[6];		///< å¯¾å¿œã™ã‚‹è¾ºã®IDã€‚0:è¾º01, 1:è¾º12, 2:è¾º20, 3:è¾º03, 4:è¾º13, 5:è¾º23
+	PTM::TVector<4,double> vecf[4];		//>	{f1}:vecf[0],{f2(ç†±æµæŸ)}:vecf[1],{f3(ç†±ä¼é”)}:vecf[2],{f4(ç†±è¼»å°„)}:vecf[3]
 	int& edge(int i, int j);
 };
 
-// –Ê
+// é¢
 class FemFace{
-	int sorted[3];		///< ”äŠr‚·‚é‚½‚ß‚ÌAƒ\[ƒgÏ‚İ‚Ì’¸“_idBUpdate()‚ÅXVB
+	int sorted[3];		///< æ¯”è¼ƒã™ã‚‹ãŸã‚ã®ã€ã‚½ãƒ¼ãƒˆæ¸ˆã¿ã®é ‚ç‚¹idã€‚Update()ã§æ›´æ–°ã€‚
 public:
-	int vertexIDs[3];	///<’¸“_IDB‡”Ô‚Å–Ê‚Ì•\— ‚ğ•\‚·B
-	//i*•\‚©‚çŒ©‚ÄŒv‰ñ‚èB‚½‚¾‚µ‘S‘ÌŒ`ónSurfaceFace‚Ì•\–Ê‚Ì‚İ³‚µ‚¢B“à•”‚Í2‚Â‚Ìl–Ê‘Ì‚ª‹¤—L‚·‚é‚½‚ßA•\— ‚ª‚¢‚¦‚È‚¢Bj
+	int vertexIDs[3];	///<é ‚ç‚¹IDã€‚é †ç•ªã§é¢ã®è¡¨è£ã‚’è¡¨ã™ã€‚
+	//ï¼ˆ*è¡¨ã‹ã‚‰è¦‹ã¦æ™‚è¨ˆå›ã‚Šã€‚ãŸã ã—å…¨ä½“å½¢çŠ¶nSurfaceFaceã®è¡¨é¢ã®ã¿æ­£ã—ã„ã€‚å†…éƒ¨ã¯2ã¤ã®å››é¢ä½“ãŒå…±æœ‰ã™ã‚‹ãŸã‚ã€è¡¨è£ãŒã„ãˆãªã„ã€‚ï¼‰
 	void Update();
-	bool operator < (const FemFace& f2);	///< ’¸“_ID‚Å”äŠr
-	bool operator == (const FemFace& f2);	///< ’¸“_ID‚Å”äŠr
+	bool operator < (const FemFace& f2);	///< é ‚ç‚¹IDã§æ¯”è¼ƒ
+	bool operator == (const FemFace& f2);	///< é ‚ç‚¹IDã§æ¯”è¼ƒ
 
 	//added for the FEM implementation
 	Vec3d centroid;  /// Face centroid
@@ -57,11 +57,11 @@ public:
 	Vec3d normal;	//Face normal
 	int tetraId;    //Saves the FaceId
 };
-//	•Ó
+//	è¾º
 struct FemEdge{
 	int vertexIDs[2];
-	bool operator < (const FemEdge& e2); 	///< ’¸“_ID‚Å”äŠr
-	bool operator == (const FemEdge& e2);	///< ’¸“_ID‚Å”äŠr
+	bool operator < (const FemEdge& e2); 	///< é ‚ç‚¹IDã§æ¯”è¼ƒ
+	bool operator == (const FemEdge& e2);	///< é ‚ç‚¹IDã§æ¯”è¼ƒ
 	FemEdge(int v1=-1, int v2=-1);
 };
 
@@ -114,92 +114,92 @@ class PHFemThermo;
 class PHFemPorousWOMove;
 class PHFemMeshNew : public SceneObject{//, public PHFemMeshNewDesc{
 public:
-	/* PHFemMeshNew‚Ìƒƒ“ƒo•Ï”AŠÖ”ŒQ */
+	/* PHFemMeshNewã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã€é–¢æ•°ç¾¤ */
 	SPR_OBJECTDEF(PHFemMeshNew);
 	//SPR_DECLMEMBEROF_PHFemMeshNewDesc;
 protected:
-	///	Šî–{î•ñ(¶¬‚ÉƒfƒXƒNƒŠƒvƒ^‚©‚ç—^‚¦‚ç‚ê‚éî•ñ)
-	PHSolidIf* solid;					///< ŠÖ˜A‚Ã‚¯‚ç‚ê‚Ä‚¢‚é„‘Ì
+	///	åŸºæœ¬æƒ…å ±(ç”Ÿæˆæ™‚ã«ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‹ã‚‰ä¸ãˆã‚‰ã‚Œã‚‹æƒ…å ±)
+	PHSolidIf* solid;					///< é–¢é€£ã¥ã‘ã‚‰ã‚Œã¦ã„ã‚‹å‰›ä½“
 public:
-	std::vector<FemVertex> vertices;	///< ’¸“_
-	std::vector<FemTet> tets;			///< l–Ê‘Ì
+	std::vector<FemVertex> vertices;	///< é ‚ç‚¹
+	std::vector<FemTet> tets;			///< å››é¢ä½“
 	
-	/// ’Ç‰Áî•ñ	Šî–{î•ñ‚©‚çSetDesc()‚ªŒvZ‚µ‚Ä‹‚ß‚éB
-	std::vector<int> surfaceVertices;	///< •¨‘Ì•\–Ê‚Ì’¸“_‚ÌID
-	std::vector<FemFace> faces;	///< –Ê
-	unsigned nSurfaceFace;		///< •¨‘Ì•\–Ê‚É‘¶İ‚·‚é–Ê‚Ì”B•\–ÊFfaces[0],..,faces[nSurfaceFace-1]A“à–Ê:faces[nSurfaceFace],..,faces[faces.size()]
-	std::vector<FemEdge> edges;	///< •Ó
-	unsigned nSurfaceEdge;		///< •¨‘Ì•\–Ê‚É‘¶İ‚·‚é•ÓB•\–Ê:edges[0],..,edges[nSurfaceEdge-1]A“à–Ê:edges[nSurfaceEdge],..,edges[edges.size()]
+	/// è¿½åŠ æƒ…å ±	åŸºæœ¬æƒ…å ±ã‹ã‚‰SetDesc()ãŒè¨ˆç®—ã—ã¦æ±‚ã‚ã‚‹ã€‚
+	std::vector<int> surfaceVertices;	///< ç‰©ä½“è¡¨é¢ã®é ‚ç‚¹ã®ID
+	std::vector<FemFace> faces;	///< é¢
+	unsigned nSurfaceFace;		///< ç‰©ä½“è¡¨é¢ã«å­˜åœ¨ã™ã‚‹é¢ã®æ•°ã€‚è¡¨é¢ï¼šfaces[0],..,faces[nSurfaceFace-1]ã€å†…é¢:faces[nSurfaceFace],..,faces[faces.size()]
+	std::vector<FemEdge> edges;	///< è¾º
+	unsigned nSurfaceEdge;		///< ç‰©ä½“è¡¨é¢ã«å­˜åœ¨ã™ã‚‹è¾ºã€‚è¡¨é¢:edges[0],..,edges[nSurfaceEdge-1]ã€å†…é¢:edges[nSurfaceEdge],..,edges[edges.size()]
 
-	/// ŒvZƒ‚ƒWƒ…[ƒ‹
+	/// è¨ˆç®—ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
 	PHFemBases femBases;
 	UTRef< PHFemVibration > femVibration;
 	UTRef< PHFemThermo > femThermo;
 	UTRef< PHFemPorousWOMove > femPorousWOMove;
 
-	///	ƒfƒXƒNƒŠƒvƒ^
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 	PHFemMeshNew(const PHFemMeshNewDesc& desc = PHFemMeshNewDesc(), SceneIf* s=NULL);
-	///	ƒfƒXƒNƒŠƒvƒ^‚ÌƒTƒCƒY
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®ã‚µã‚¤ã‚º
 	virtual size_t GetDescSize() const ;
-	///	ƒfƒXƒNƒŠƒvƒ^‚Ì“Ç‚İo‚µ(ƒRƒs[”Å)
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®èª­ã¿å‡ºã—(ã‚³ãƒ”ãƒ¼ç‰ˆ)
 	virtual bool GetDesc(void* p) const ;
-	///	ƒfƒXƒNƒŠƒvƒ^‚Ìİ’èB‚±‚±‚ÅA’¸“_À•W‚Æl–Ê‘Ì‚Ì4’¸“_‚ÌID‚Ìî•ñ‚©‚çA–Ê‚â•Ó‚É‚Â‚¢‚Ä‚Ìî•ñ‚ğŒvZ‚µ‚Ä‚¨‚­B
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®è¨­å®šã€‚ã“ã“ã§ã€é ‚ç‚¹åº§æ¨™ã¨å››é¢ä½“ã®4é ‚ç‚¹ã®IDã®æƒ…å ±ã‹ã‚‰ã€é¢ã‚„è¾ºã«ã¤ã„ã¦ã®æƒ…å ±ã‚’è¨ˆç®—ã—ã¦ãŠãã€‚
 	virtual void SetDesc(const void* p);
-	/// qƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+	/// å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o);
 
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	virtual void Init();
-	///	‚ğdti‚ß‚éBPHFemEngine‚ªŒÄ‚Ño‚·B
+	///	æ™‚åˆ»ã‚’dté€²ã‚ã‚‹ã€‚PHFemEngineãŒå‘¼ã³å‡ºã™ã€‚
 	virtual void Step(double dt);
-	/// „‘Ì‚ğŠÖ˜A‚Ã‚¯‚é
+	/// å‰›ä½“ã‚’é–¢é€£ã¥ã‘ã‚‹
 	void SetPHSolid(PHSolidIf* s);
-	/// ŠÖ˜A•t‚¯‚³‚ê‚Ä‚¢‚é„‘Ì‚ğ•Ô‚·
+	/// é–¢é€£ä»˜ã‘ã•ã‚Œã¦ã„ã‚‹å‰›ä½“ã‚’è¿”ã™
 	PHSolidIf* GetPHSolid();
-	/// PHFemVibrationIf‚ğ•Ô‚·
+	/// PHFemVibrationIfã‚’è¿”ã™
 	PHFemVibrationIf* GetPHFemVibration();
-	/// PHFemThermoIf‚ğ•Ô‚·
+	/// PHFemThermoIfã‚’è¿”ã™
 	PHFemThermoIf* GetPHFemThermo();
-	/// PHFemPorousWOMoveIf‚ğ•Ô‚·
+	/// PHFemPorousWOMoveIfã‚’è¿”ã™
 	PHFemPorousWOMoveIf* GetPHFemPorousWOMove();
 
-	/// ’¸“_‚Ì‘”‚ğ•Ô‚·
+	/// é ‚ç‚¹ã®ç·æ•°ã‚’è¿”ã™
 	int NVertices();
-	///	–Ê‚Ì‘”‚ğ•Ô‚·
+	///	é¢ã®ç·æ•°ã‚’è¿”ã™
 	int NFaces();
-	/// l–Ê‘Ì‚Ì‘”‚ğ•Ô‚·
+	/// å››é¢ä½“ã®ç·æ•°ã‚’è¿”ã™
 	int NTets();
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	//* ’¸“_‚ÉŠÖ‚·‚éŠÖ” */
-	/// ’¸“_‚Ì‰ŠúˆÊ’u‚ğæ“¾‚·‚éiƒ[ƒJƒ‹À•WŒnj
+	//* é ‚ç‚¹ã«é–¢ã™ã‚‹é–¢æ•° */
+	/// é ‚ç‚¹ã®åˆæœŸä½ç½®ã‚’å–å¾—ã™ã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	Vec3d GetVertexInitalPositionL(int vtxId);
-	/// ’¸“_‚ÌˆÊ’u‚ğæ“¾‚·‚éiƒ[ƒJƒ‹À•WŒnj
+	/// é ‚ç‚¹ã®ä½ç½®ã‚’å–å¾—ã™ã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	Vec3d GetVertexPositionL(int vtxId);
-	/// ’¸“_‚Ì•ÏˆÊ‚ğæ“¾‚·‚éiƒ[ƒJƒ‹À•WŒnj
+	/// é ‚ç‚¹ã®å¤‰ä½ã‚’å–å¾—ã™ã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	Vec3d GetVertexDisplacementL(int vtxId);
-	/// ’¸“_‚Ì‘¬“x‚ğæ“¾‚·‚éiƒ[ƒJƒ‹À•WŒnj
+	/// é ‚ç‚¹ã®é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	Vec3d GetVertexVelocityL(int vtxId);
-	/// ’¸“_‚É•ÏˆÊ‚ğ—^‚¦‚éiƒ[ƒ‹ƒhÀ•WŒnj
+	/// é ‚ç‚¹ã«å¤‰ä½ã‚’ä¸ãˆã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
-	/// ’¸“_‚É•ÏˆÊ‚ğ—^‚¦‚éiƒ[ƒJƒ‹À•WŒnj
+	/// é ‚ç‚¹ã«å¤‰ä½ã‚’ä¸ãˆã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
-	/// ’¸“_‚ÌˆÊ’u‚ğw’è‚·‚éiƒ[ƒ‹ƒhÀ•WŒnj
+	/// é ‚ç‚¹ã®ä½ç½®ã‚’æŒ‡å®šã™ã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰
 	bool SetVertexPositionW(int vtxId, Vec3d posW);
-	/// ’¸“_‚ÌˆÊ’u‚ğw’è‚·‚éiƒ[ƒJƒ‹À•WŒnj
+	/// é ‚ç‚¹ã®ä½ç½®ã‚’æŒ‡å®šã™ã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
 	bool SetVertexPositionL(int vtxId, Vec3d posL);
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	//* l–Ê‘Ì‚ÉŠÖ‚·‚éŠÖ” */
-	/// l–Ê‘Ì‚ÌŒvZ(‘ÎÛ‚É‚æ‚ç‚¸‚É•K—v‚É‚È‚éŒ`óŠÖ”‚ÌXX‚ğŒvZ‚·‚éŠÖ”)
+	//* å››é¢ä½“ã«é–¢ã™ã‚‹é–¢æ•° */
+	/// å››é¢ä½“ã®è¨ˆç®—(å¯¾è±¡ã«ã‚ˆã‚‰ãšã«å¿…è¦ã«ãªã‚‹å½¢çŠ¶é–¢æ•°ã®XXã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°)
 
-	/// l–Ê‘Ì‚Ì‘ÌÏ‚ğ•Ô‚·
+	/// å››é¢ä½“ã®ä½“ç©ã‚’è¿”ã™
 	double CompTetVolume(const Vec3d pos[4]);
 	double CompTetVolume(const int& tetID, const bool& bDeform);
 
-	/// Œ`óŠÖ”‚ÌŒW”‚ğ•Ô‚·
+	/// å½¢çŠ¶é–¢æ•°ã®ä¿‚æ•°ã‚’è¿”ã™
 	/*
-		(‰º‹L‚Ìa, b, c, d‚Ìs—ñj
+		(ä¸‹è¨˜ã®a, b, c, dã®è¡Œåˆ—ï¼‰
 		|N0|			|a0 b0 c0 d0||1|
 		|N1|=	1/6V *	|a1 b1 c1 d1||x|
 		|N2|			|a2 b2 c2 d2||y|
@@ -208,27 +208,27 @@ public:
 	TMatrixRow< 4, 4, double > CompTetShapeFunctionCoeff(Vec3d pos[4]);
 	TMatrixRow< 4, 4, double > CompTetShapeFunctionCoeff(const int& tetId, const bool& bDeform);
 
-	/// l–Ê‘Ì“à‚Ì‚ ‚é“_‚É‚¨‚¯‚éŒ`óŠÖ”’l‚ğ•Ô‚·
-	/// (l–Ê‘ÌŠO‚ÌˆÊ’u‚ğw’è‚·‚é‚Æ•‰’l‚ª‚Å‚é‚Ìfalse‚ğ•Ô‚·j
+	/// å››é¢ä½“å†…ã®ã‚ã‚‹ç‚¹ã«ãŠã‘ã‚‹å½¢çŠ¶é–¢æ•°å€¤ã‚’è¿”ã™
+	/// (å››é¢ä½“å¤–ã®ä½ç½®ã‚’æŒ‡å®šã™ã‚‹ã¨è² å€¤ãŒã§ã‚‹ã®falseã‚’è¿”ã™ï¼‰
 	bool CompTetShapeFunctionValue(const TMatrixRow< 4, 4, double >& sf, const double& vol, const Vec3d& posL, Vec4d& value);
 	bool CompTetShapeFunctionValue(const int& tetId, const Vec3d& posL, Vec4d& value, const bool& bDeform);
 
-	/// –Ê‚©‚çl–Ê‘Ì‚ğ’T‚·
+	/// é¢ã‹ã‚‰å››é¢ä½“ã‚’æ¢ã™
 	int FindTetFromFace(int faceId);
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	//* –Ê‚ÉŠÖ‚·‚éŠÖ” */
-	///	Face•Ó‚Ì—¼’[“_‚ÌÀ•W‚ğ•Ô‚·?
+	//* é¢ã«é–¢ã™ã‚‹é–¢æ•° */
+	///	Faceè¾ºã®ä¸¡ç«¯ç‚¹ã®åº§æ¨™ã‚’è¿”ã™?
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
-	///	Face•Ó‚Ì—¼’[“_‚ÌÀ•W‚ğ•Ô‚·?
+	///	Faceè¾ºã®ä¸¡ç«¯ç‚¹ã®åº§æ¨™ã‚’è¿”ã™?
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
 
-	/// –ÊÏ‚ğ•Ô‚·
-	double CompFaceArea(const Vec3d pos[3]);		// ”CˆÓ‚Ì’¸“_
+	/// é¢ç©ã‚’è¿”ã™
+	double CompFaceArea(const Vec3d pos[3]);		// ä»»æ„ã®é ‚ç‚¹
 	double CompFaceArea(const int& faceId, const bool& bDeform);
 
-	/// –Ê‚Ì–@ü‚ğ•Ô‚·
-	Vec3d CompFaceNormal(const Vec3d pos[3]);		// ”CˆÓ‚Ì’¸“_
+	/// é¢ã®æ³•ç·šã‚’è¿”ã™
+	Vec3d CompFaceNormal(const Vec3d pos[3]);		// ä»»æ„ã®é ‚ç‚¹
 	Vec3d CompFaceNormal(const int& faceId, const bool& bDeform);
 	unsigned GetnSurfaceFace(){return nSurfaceFace;}
 

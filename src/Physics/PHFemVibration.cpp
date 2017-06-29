@@ -5,7 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Physics/PHFemVibration.h>
+#include "PHFemVibration.h"
+#include "PHFemMeshNew.h"
+#include "PHFemBase.h"
 #include <Foundation/UTQPTimer.h>
 //#include <Foundation/UTOpenMP.h>
 #include <Foundation/UTClapack.h>
@@ -30,7 +32,6 @@
 #endif
 
 namespace Spr{;
-
 
 PHFemVibrationDesc::PHFemVibrationDesc(){
 	// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3

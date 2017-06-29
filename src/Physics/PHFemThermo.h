@@ -9,7 +9,7 @@
 #define PH_FEM_THERMO_H
 
 #include "PHFemBase.h"
-#include "../Foundation/Object.h"
+#include "Foundation/Object.h"
 #include "PhysicsDecl.hpp"
 
 namespace Spr{;
