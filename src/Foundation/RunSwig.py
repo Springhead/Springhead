@@ -42,7 +42,7 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Constants
 #
-prog = sys.argv[0].split('\\')[-1].split('.')[0]
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 python_version = 34
 
 # ----------------------------------------------------------------------
@@ -204,6 +204,7 @@ output(makefile, lines)
 #  make を実行する.
 #
 cmd = '%s -f %s' % (make, U.pathconv(makefile))
+print('    *** %s: execute %s' % (prog, cmd))
 status = U.exec(cmd, addpath=addpath, shell=True, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (make, status))
