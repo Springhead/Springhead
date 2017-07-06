@@ -18,7 +18,8 @@ OBJS 		= ${SRCS:.cpp=.o}
 
 CXXFLAGS	= -std=gnu++11 \
 		-DWINGDIAPI= -DAPIENTRY= -DCALLBACK= \
-                -DGLUTCALLBACK= -D__cdecl=
+		-DGLUTCALLBACK= -D__cdecl=\
+		-Wno-deprecated-declarations
 
 
 ################################################################

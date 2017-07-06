@@ -70,7 +70,7 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Constants
 #
-prog = sys.argv[0].split('\\')[-1].split('.')[0]
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 python_version = 34
 debug = False
 
@@ -186,8 +186,10 @@ for line in lines:
 		U.rm('%s.i' % proj, force=True)
 		U.rm('%sStub.cpp' % proj, force=True)
 		U.rm('%sStub.mak.txt' % proj, force=True)
+		#cmd = 'touch %s/%s' % (runswigdir, projfile)
+		#U.exec(cmd, shell=True, dry_run=debug)
 	else:
-		print('    %s: make' % prog)
+		print('    %s: make -f %s' % (prog, makefile))
 		cmd = '%s -f %s' % (make, makefile)
 		U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
 		cmd = '%s -r' % U.pathconv(makemanager)

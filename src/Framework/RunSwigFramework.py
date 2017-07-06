@@ -19,6 +19,7 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
+#	Ver 1.1	 2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
 # ==============================================================================
 version = 1.0
 debug = True
@@ -44,7 +45,7 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Constants
 #
-prog = sys.argv[0].split('\\')[-1].split('.')[0]
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 python_version = 34
 verbose = 1 if debug else 0
 dry_run = 1 if debug else 0
@@ -180,6 +181,7 @@ for file in srcf_names:
 # ----------------------------------------------------------------------
 #  ここからは swigtemp/src/Foundation に移って作業する.
 #
+oldcwd = os.getcwd()
 os.chdir('%s/Foundation' % tmp_src)
 if verbose:
 	print('  chdir to %s' % U.pathconv(os.getcwd(), 'unix'))
@@ -241,6 +243,14 @@ if clean:
 status = U.exec(cmd, shell=True, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (make, status))
+
+# ----------------------------------------------------------------------
+#  ファイルの後始末
+#
+os.chdir(oldcwd)
+U.rm('Framework.i', force=True)
+U.rm('FrameworkStub.cpp', force=True)
+U.rm('FrameworkStub.mak.txt', force=True)
 
 # ----------------------------------------------------------------------
 #  処理終了.

@@ -48,7 +48,7 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Constants
 #
-prog = sys.argv[0].split('\\')[-1].split('.')[0]
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 python_version = 34
 
 # ----------------------------------------------------------------------
@@ -214,6 +214,7 @@ for f in srchdrs:
 lines.append('')
 
 lines.append('all:\t%s%s' % (project, stubfile))
+lines.append('\t@echo "    "%s: done' % makefile)
 lines.append('')
 
 lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
