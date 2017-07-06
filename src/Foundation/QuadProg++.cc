@@ -59,7 +59,7 @@ namespace Spr {
 		VVector<double>& x)
 	{
 		std::ostringstream msg;
-		int n = G.width(), p = CE.width(), m = CI.width();
+		int n = (int) G.width(), p = (int) CE.width(), m = (int) CI.width();
 		if (G.height() != n)
 		{
 			msg << "The matrix G is not a squared matrix (" << G.height() << " x " << G.width() << ")";
@@ -466,7 +466,7 @@ namespace Spr {
 
 	inline void compute_d(VVector<double>& d, const VMatrixRow<double>& J, const VVector<double>& np)
 	{
-		register int i, j, n = d.size();
+		register int i, j, n = (int) d.size();
 		register double sum;
 
 		/* compute d = H^T * np */
@@ -481,7 +481,7 @@ namespace Spr {
 
 	inline void update_z(VVector<double>& z, const VMatrixRow<double>& J, const VVector<double>& d, int iq)
 	{
-		register int i, j, n = z.size();
+		register int i, j, n = (int) z.size();
 
 		/* setting of z = H * d */
 		for (i = 0; i < n; i++)
@@ -494,7 +494,7 @@ namespace Spr {
 
 	inline void update_r(const VMatrixRow<double>& R, VVector<double>& r, const VVector<double>& d, int iq)
 	{
-		register int i, j, n = d.size();
+		register int i, j, n = (int) d.size();
 		register double sum;
 
 		/* setting of r = R^-1 d */
@@ -509,7 +509,7 @@ namespace Spr {
 
 	bool add_constraint(VMatrixRow<double>& R, VMatrixRow<double>& J, VVector<double>& d, int& iq, double& R_norm)
 	{
-		int n = d.size();
+		int n = (int) d.size();
 #ifdef TRACE_SOLVER
 		std::cout << "Add constraint " << iq << '/';
 #endif
@@ -677,7 +677,7 @@ namespace Spr {
 
 	inline double scalar_product(const VVector<double>& x, const VVector<double>& y)
 	{
-		register int i, n = x.size();
+		register int i, n = (int) x.size();
 		register double sum;
 
 		sum = 0.0;
@@ -688,7 +688,7 @@ namespace Spr {
 
 	void cholesky_decomposition(VMatrixRow<double>& A)
 	{
-		register int i, j, k, n = A.height();
+		register int i, j, k, n = (int) A.height();
 		register double sum;
 
 		for (i = 0; i < n; i++)
@@ -721,7 +721,7 @@ namespace Spr {
 
 	void cholesky_solve(const VMatrixRow<double>& L, VVector<double>& x, const VVector<double>& b)
 	{
-		int n = L.height();
+		int n = (int) L.height();
 		VVector<double> y;
 		y.resize(n);
 
@@ -733,7 +733,7 @@ namespace Spr {
 
 	inline void forward_elimination(const VMatrixRow<double>& L, VVector<double>& y, const VVector<double>& b)
 	{
-		register int i, j, n = L.height();
+		register int i, j, n = (int) L.height();
 
 		y[0] = b[0] / L[0][0];
 		for (i = 1; i < n; i++)
@@ -747,7 +747,7 @@ namespace Spr {
 
 	inline void backward_elimination(const VMatrixRow<double>& U, VVector<double>& x, const VVector<double>& y)
 	{
-		register int i, j, n = U.height();
+		register int i, j, n = (int) U.height();
 
 		x[n - 1] = y[n - 1] / U[n - 1][n - 1];
 		for (i = n - 2; i >= 0; i--)
@@ -764,9 +764,9 @@ namespace Spr {
 		std::ostringstream s;
 		std::string t;
 		if (n == -1)
-			n = A.height();
+			n = (int) A.height();
 		if (m == -1)
-			m = A.width();
+			m = (int) A.width();
 
 		s << name << ": " << std::endl;
 		for (int i = 0; i < n; i++)
