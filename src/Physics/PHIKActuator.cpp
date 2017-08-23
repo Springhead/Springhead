@@ -20,6 +20,7 @@ bool PHIKActuator::AddChildObject(ObjectIf* o){
 	if (endeffector) {
 		DCAST(PHSceneIf,GetScene())->GetIKEngine()->AddChildObject(endeffector->Cast());
 		this->eef = endeffector;
+		endeffector->SetParentActuator(DCAST(PHIKActuatorIf, this));
 		return true;
 	}
 
@@ -188,6 +189,12 @@ void PHIKActuator::FK()  {
 						 + PTM::cross(soParentAVel, soParentPose.Ori() * socketPose.Pos())
 						 + PTM::cross(soParentAVel+jointTempAngVel, -(solidTempPose.Ori() * plugPose.Pos()));
 	solidAngularVelocity = soParentAVel + jointTempAngVel;
+
+	//DSTR << this->GetName() << "(" << this << ")" << std::endl;
+	//DSTR << this->GetName() << "sock : " << joint->GetSocketSolid()->GetName() << "(" << joint->GetSocketSolid() << ")" << " : " << joint->GetSocketSolid()->GetPose() << std::endl;
+	//DSTR << this->GetName() << "sockpose : " << socketPose << std::endl;
+	//DSTR << this->GetName() << "plug : " << joint->GetPlugSolid()->GetName() << "(" << joint->GetPlugSolid() << ")" << " : " << joint->GetPlugSolid()->GetPose() << std::endl;
+	//DSTR << this->GetName() << "plugpose : " << plugPose << std::endl;
 
 	for (size_t i=0; i<children.size(); ++i) {
 		children[i]->FK();
