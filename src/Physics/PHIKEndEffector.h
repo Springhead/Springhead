@@ -39,6 +39,10 @@ public:
 	/// 制御点のある剛体
 	PHSolidIf* solid;
 
+	//直近Actuator
+	//SprPHIK.h、PHIKActuator.cppの23行目、およびこの下にも変更がありますので不要なら関係部削除を
+	PHIKActuatorIf* ika;
+
 	/// IK Iterationの1回前でのsolidTempPose
 	Posed lastSolidTempPose;
 
@@ -46,6 +50,7 @@ public:
 	*/
 	void Init() {
 		solid = NULL;
+		ika = NULL;
 		ndof = 3;
 		bNDOFChanged = true;
 		solidTempPose = Posed();
@@ -75,6 +80,11 @@ public:
 	/** @brief 動作対象として設定された剛体を取得する
 	*/
 	PHSolidIf* GetSolid() { return this->solid; }
+
+	//取り合えず直近のActuatorを親認定しときます
+	void SetParentActuator(PHIKActuatorIf* ika){ this->ika = ika; }
+
+	PHIKActuatorIf* GetParentActuator(){ return this->ika; }
 
 	// --- --- --- --- ---
 
