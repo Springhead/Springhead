@@ -56,20 +56,25 @@ protected:
 	friend class PHTreeNode1D;
 	friend class PH1DJointLimit;
 	friend class PH1DJointMotor;
+	friend class PH1DJointNonLinearMotor;
 
 public:
 	SPR_OBJECTDEF_ABST1(PH1DJoint, PHJoint);
 	SPR_DECLMEMBEROF_PH1DJointDesc;
 
 	UTRef<PH1DJointLimit> limit;			///< 可動範囲拘束
-	UTRef<PH1DJointMotor> motor;			///< モータ
+	//UTRef<PH1DJointMotor> motor;			///< モータ
+	UTRefArray<PH1DJointMotor> motors;
+	int motorPDcount;
 
 	/// コンストラクタ
 	PH1DJoint(){
 		limit = DBG_NEW PH1DJointLimit();
-		motor = DBG_NEW PH1DJointMotor();
+		motors.push_back(DBG_NEW PH1DJointMotor());
+		//motor = DBG_NEW PH1DJointMotor();
 		limit->joint = this;
-		motor->joint = this;
+		motors[0]->joint = this;
+		//motor->joint = this;
 	}
 
 	// ----- このクラスと，このクラスから派生するクラスの機能
@@ -84,6 +89,9 @@ public:
 	virtual size_t    NChildObject  () const;
 	virtual ObjectIf* GetChildObject(size_t i);
 	PH1DJointLimitIf* CreateLimit   (const PH1DJointLimitDesc& desc);
+	PH1DJointMotorIf* CreateMotor(const IfInfo* ii, const PH1DJointMotorDesc& desc);
+	bool              AddMotor      (PH1DJointMotorIf* m);
+	bool              RemoveMotor(int n);
 
 	double	GetPosition() { UpdateState(); return position[0]; }
 	double	GetVelocity() { UpdateState(); return velocity[0]; }
@@ -105,15 +113,46 @@ public:
 	double GetTargetVelocity() { return targetVelocity; }
 	void   SetOffsetForce   (const double& offsetForce) { this->offsetForce = offsetForce * GetScene()->GetTimeStep(); }
 	double GetOffsetForce   () { return offsetForce * GetScene()->GetTimeStepInv(); }
+	void   SetOffsetForceN  (int n, const double& offsetForce){
+		if (n < 0 || n >= motors.size()) return;
+		if (DCAST(PH1DJointNonLinearMotor, motors[n])){
+			DCAST(PH1DJointNonLinearMotor, motors[n])->offset = offsetForce * GetScene()->GetTimeStep();
+		}
+		else{
+			this->offsetForce = (offsetForce * GetScene()->GetTimeStep());
+		}
+	}
+	double GetOffsetForceN(int n){
+		if (n < 0 || n >= motors.size()) return 0;
+		if (DCAST(PH1DJointNonLinearMotor, motors[n])){
+			return DCAST(PH1DJointNonLinearMotor, motors[n])->offset * GetScene()->GetTimeStepInv();
+		}
+		return offsetForce * GetScene()->GetTimeStepInv();
+	}
 	void   SetYieldStress   (const double& yieldStress) { this->yieldStress = yieldStress; }
 	double GetYieldStress   () { return yieldStress; }
 	void   SetHardnessRate  (const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	double GetHardnessRate  () { return hardnessRate; }
 	void   SetSecondMoment  (double sM) { secondMoment = sM; }
 	double GetSecondMoment  () { return secondMoment; }
-	double GetMotorForce    () {
-		return motor->f[0] * GetScene()->GetTimeStepInv();
+	int         NMotors(){ return motors.size(); }
+	PH1DJointMotorIf** GetMotors(){
+		return motors.empty() ? NULL : (PH1DJointMotorIf**)&*motors.begin();
+	}
+	double GetMotorForce    () { //要変更
+		double force = 0;
+		//DSTR << motors.size() << " " << GetPosition() << std::endl;
+		for (int i = 0; i < motors.size(); i++){
+			force += motors[i]->f[0];
+			//DSTR << this->GetName() << "motor" << i << ":" << motors[i]->f[0] << std::endl;
+		}
+		return force * GetScene()->GetTimeStepInv();
+		//return motor->f[0] * GetScene()->GetTimeStepInv();
 	//	if (limit) { if (limit->IsOnLimit()) return 0; } return(f[movableAxes[0]] / GetScene()->GetTimeStep());
+	}
+	double GetMotorForceN(int n){
+		if (n < 0 || n >= motors.size()) return 0;
+		return motors[n]->f[0];
 	}
 };
 

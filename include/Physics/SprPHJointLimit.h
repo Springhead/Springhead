@@ -277,6 +277,42 @@ struct PHBallJointSplineLimitDesc : public PHBallJointLimitDesc {
 	}
 };
 
+// -----  -----  -----  -----  -----
+
+//ボールジョイントの各軸独立で下限上限を決めるリミットのインタフェース（実装中）
+//4種の拘束のどれにも入らない可能性
+struct PHBallJointIndependentLimitIf : public PHBallJointLimitIf {
+	SPR_IFDEF(PHBallJointIndependentLimit);
+
+	bool IsOnLimit();
+	int AxesEnabled();
+
+	/** @brief 角の可動範囲を設定する(n=0:x, n=1:y, n=2:z)
+	@param lower 最小角度
+	@param upper 最大角度
+	*/
+	void SetLimitRangeN(int n, Vec2d range);
+	/** @brief 角の可動範囲を取得する(n=0:x, n=1:y, n=2:z)
+	@param lower 最小角度
+	@param upper 最大角度
+	*/
+	void GetLimitRangeN(int n, Vec2d& range);
+};
+
+//ボールジョイントの関節抵抗特性制限のデスクリプタ
+struct PHBallJointIndependentLimitDesc : public PHBallJointLimitDesc {
+	SPR_DESCDEF(PHBallJointIndependentLimit);
+	Vec2d limitX;
+	Vec2d limitY;
+	Vec2d limitZ;
+
+	PHBallJointIndependentLimitDesc() {
+		limitX = Vec2d(-FLT_MAX, FLT_MAX);
+		limitY = Vec2d(-FLT_MAX, FLT_MAX);
+		limitZ = Vec2d(-FLT_MAX, FLT_MAX);
+	}
+};
+
 //@}
 
 }

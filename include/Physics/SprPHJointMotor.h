@@ -13,6 +13,7 @@
 #define SPR_PHJOINTMOTORIf_H
 
 #include <Foundation/SprObject.h>
+#include <functional>
 
 namespace Spr{;
 
@@ -22,11 +23,27 @@ namespace Spr{;
 /// 1自由度関節モータのインタフェース
 struct PH1DJointMotorIf : public SceneObjectIf{
 	SPR_IFDEF(PH1DJointMotor);
-
 };
 ///	1自由度関節モータのデスクリプタ
 struct PH1DJointMotorDesc{
+	SPR_DESCDEF(PH1DJointMotor);
 	PH1DJointMotorDesc() {}
+};
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+
+/// 1自由度関節非線形モータのインタフェース
+struct PH1DJointNonLinearMotorIf : public PH1DJointMotorIf{
+	SPR_IFDEF(PH1DJointNonLinearMotor);
+
+	//void SetFunc(std::function<double(double)> func);
+	void SetFuncFromDatabase(int i, void* param);
+	void SetFuncFromDatabase(int i, int j, void* sparam, void* dparam);
+};
+///	1自由度関節非線形モータのデスクリプタ
+struct PH1DJointNonLinearMotorDesc : public PH1DJointMotorDesc{
+	SPR_DESCDEF(PH1DJointNonLinearMotor);
+	PH1DJointNonLinearMotorDesc() {}
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -42,6 +59,23 @@ struct PHBallJointMotorDesc{
 	SPR_DESCDEF(PHBallJointMotor);
 
 	PHBallJointMotorDesc() {
+	}
+};
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+
+/// ボールジョイント非線形モータのインタフェース
+struct PHBallJointNonLinearMotorIf : public PHBallJointMotorIf {
+	SPR_IFDEF(PHBallJointNonLinearMotor);
+
+	void SetFuncFromDatabaseN(int n, int i, int j, void* sparam, void* dparam);
+};
+
+/// ボールジョイント非線形モータのデスクリプタ
+struct PHBallJointNonLinearMotorDesc : public PHBallJointMotorDesc{
+	SPR_DESCDEF(PHBallJointNonLinearMotor);
+
+	PHBallJointNonLinearMotorDesc() {
 	}
 };
 

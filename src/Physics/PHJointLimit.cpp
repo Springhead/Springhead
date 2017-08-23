@@ -616,6 +616,35 @@ int PHBallJointSplineLimit::CheckIntersection(Vec2d base, Vec2d curr, double& mi
 }
 
 // -----  -----  -----  -----  -----
+void PHBallJointIndependentLimit::SetupAxisIndex(){
+	Vec2d limit[3] = { limitX, limitY, limitZ };
+
+	axes.Clear();
+	Vec3d delta;
+	joint->GetPosition().ToEuler(delta);
+	ax = 0;
+	DSTR << delta << std::endl;
+	for (int i = 0; i<3; ++i) {
+		if ((limit[i][0] < FLT_MAX*0.1) && delta[i] < limit[i][0]) {
+			axes.Enable(i);
+			joint->targetAxes.Enable(joint->movableAxes[i]);
+			bOnLimit = true;
+			diff[i] = delta[i] - limit[i][0];
+			fMinDt[i] = 0;
+			ax += pow(2, i);
+		}
+		else if ((limit[i][1] < FLT_MAX*0.1) && delta[i] > limit[i][1]) {
+			axes.Enable(i);
+			joint->targetAxes.Enable(joint->movableAxes[i]);
+			bOnLimit = true;
+			diff[i] = delta[i] - limit[i][1];
+			fMaxDt[i] = 0;
+			ax += pow(2, i);
+		}
+	}
+}
+
+// -----  -----  -----  -----  -----
 
 /// ３次方程式を解く関数
 Vec3d SolveCubicFunction(Vec4d eq3){

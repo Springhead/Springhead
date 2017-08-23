@@ -230,7 +230,7 @@ public:
 
 	// ----- PHBallJointLimitの派生クラスで実装する機能
 
-	/// 拘束座標系のJabocianを計算
+	/// 拘束座標系のJacobianを計算
 	virtual void CompJacobian();
 
 	/// どの自由度を速度拘束するかを設定
@@ -259,6 +259,55 @@ public:
 	}
 	void SetPoleTwistRange(Vec2d range) { poleTwist = range; }
 	void GetPoleTwistRange(Vec2d& range){ range = poleTwist; }
+};
+
+class PHBallJointIndependentLimit : public PHBallJointLimit{
+public:
+    SPR_OBJECTDEF(PHBallJointIndependentLimit);
+	SPR_DECLMEMBEROF_PHBallJointIndependentLimitDesc;
+
+	///
+	/// 可動範囲外に出ているか
+	bool bOnLimit;
+	int ax;
+
+	/// コンストラクタ
+	PHBallJointIndependentLimit(const PHBallJointIndependentLimitDesc& desc = PHBallJointIndependentLimitDesc()) {
+		SetDesc(&desc);
+	}
+
+	// ----- PHBallJointLimitの派生クラスで実装する機能
+
+	//構想座標系のヤコビアンを計算(今回は不要)
+	//virtual void CompJacobian();
+
+	/// どの自由度を速度拘束するかを設定
+	virtual void SetupAxisIndex();  //使うかわからないけどとりあえず
+
+	// ----- インタフェースの実装
+	bool IsOnLimit(){ return bOnLimit; }
+	int AxesEnabled(){ return ax; }
+	void SetLimitRangeN(int n, Vec2d range){
+		switch (n){
+		case 0:
+			limitX = range;
+			break;
+		case 1:
+			limitY = range;
+			break;
+		case 2:
+			limitZ = range;
+			break;
+		default:
+			break;
+		}
+	}
+	void GetLimitRangeN(int n, Vec2d& range){
+		Vec2d limit[3] = { limitX, limitY, limitZ };
+		if (n >= 0 && n < 3){
+			range = limit[n];
+		}
+	}
 };
 
 // ----- ユーティリティ

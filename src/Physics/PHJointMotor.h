@@ -15,6 +15,16 @@
 
 namespace Spr{;
 
+Vec2d ResistanceTorque(PH1DJointIf* jo, void* param);
+Vec2d PD(PH1DJointIf* jo, void* param);
+//非線形モータで使う関数のデータベース的なやつ
+Vec2d (*PH1DJointFunc[])(PH1DJointIf*, void*);
+
+Vec2d ResistanceTorque(int a, PHBallJointIf* jo, void* param);
+Vec2d PD(int a, PHBallJointIf* jo, void* param);
+//非線形モータで使う関数のデータベース的なやつ
+Vec2d(*PHBallJointFunc[])(int a, PHBallJointIf*, void*);
+
 template<int NDOF> class PHNDJoint;
 
 class PHJoint;
@@ -102,10 +112,10 @@ public:
 	SPR_DECLMEMBEROF_PH1DJointMotorDesc;
 
 	/// コンストラクタ
-	PH1DJointMotor() {}
+	PH1DJointMotor(const PH1DJointMotorDesc& desc = PH1DJointMotorDesc()) { SetDesc(&desc); }
 
 	// ----- PHNDJointMotorの派生クラスで実装する機能
-	/// propVを計算する
+	/// propVを計算する(位置差分)
 	virtual PTM::TVector<1,double> GetPropV();
 
 	/// パラメータを取得する
@@ -115,6 +125,42 @@ public:
 	virtual void SetParams(PHNDJointMotorParam<1>& p);
 };
 
+//非線形の親クラス作ろうか？
+class PH1DJointNonLinearMotor : public PH1DJointMotor {
+public:
+	SPR_OBJECTDEF(PH1DJointNonLinearMotor);
+	SPR_DECLMEMBEROF_PH1DJointNonLinearMotorDesc;
+
+	PH1DJointNonLinearMotor(const PH1DJointNonLinearMotorDesc& desc = PH1DJointNonLinearMotorDesc()) { 
+		SetDesc(&desc); 
+		//m_func = [](double d){return d; };
+		springFunc = 0;
+		damperFunc = 0;
+		offset = 0;
+	}
+
+	std::function<double(double)> m_func;
+	Vec2d (*fpFunc)(PH1DJointIf* , void* );
+	int springFunc;
+	int damperFunc;
+
+	void SetFunc(std::function<double(double)> func){ this->m_func = func; }  //不安しかない
+	void SetFuncFromDatabase(int i, void* param);
+	void SetFuncFromDatabase(int i, int j, void* sparam, void* dparam);
+
+	double targetPos;
+	void* springParam;
+	void* damperParam;
+
+	double offset;
+
+	// ----- PHNDJointMotorの派生クラスで実装する機能(この二つはオーバーライドしないとダメそう)
+	/// propVを計算する(位置差分)
+	virtual PTM::TVector<1, double> GetPropV();
+	/// パラメータを取得する
+	virtual void GetParams(PHNDJointMotorParam<1>& p);
+};
+
 ///	球関節の関節コントローラ
 class PHBallJointMotor : public SceneObject, public PHNDJointMotor<3> {
 public:
@@ -122,7 +168,7 @@ public:
 	SPR_DECLMEMBEROF_PHBallJointMotorDesc;
 
 	/// コンストラクタ
-	PHBallJointMotor() {}
+	PHBallJointMotor(const PHBallJointMotorDesc& desc = PHBallJointMotorDesc()) { SetDesc(&desc); }
 
 	// ----- PHNDJointMotorの派生クラスで実装する機能
 	/// propVを計算する
@@ -133,6 +179,40 @@ public:
 
 	/// パラメータを反映する
 	virtual void SetParams(PHNDJointMotorParam<3>& p);
+};
+
+class PHBallJointNonLinearMotor : public PHBallJointMotor {
+public:
+	SPR_OBJECTDEF(PHBallJointNonLinearMotor);
+	SPR_DECLMEMBEROF_PHBallJointNonLinearMotorDesc;
+
+	PHBallJointNonLinearMotor(const PHBallJointNonLinearMotorDesc& desc = PHBallJointNonLinearMotorDesc()) { 
+		SetDesc(&desc);
+		springFunc = Vec3i();
+		damperFunc = Vec3i();
+		offset = Vec3d();
+	}
+
+	Vec3i springFunc;
+	Vec3i damperFunc;
+
+	//void SetFunc(std::function<double(double)> func){ this->m_func = func; }  //不安しかない
+	//void SetFuncFromDatabase(int i, void* param);
+	void SetFuncFromDatabase(Vec3i i, Vec3i j, void* sparam[], void* dparam[]);
+	void SetFuncFromDatabaseN(int n, int i, int j, void* sparam, void* dparam);
+
+	Vec3d targetPos;
+	void* springParam[3];
+	void* damperParam[3];
+
+	Vec3d offset;
+
+	// ----- PHNDJointMotorの派生クラスで実装する機能(この二つはオーバーライドしないとダメそう)
+	/// propVを計算する(位置差分)
+	virtual PTM::TVector<3, double> GetPropV();
+	/// パラメータを取得する
+	virtual void GetParams(PHNDJointMotorParam<3>& p);
+
 };
 
 ///	バネダンパのコントローラ

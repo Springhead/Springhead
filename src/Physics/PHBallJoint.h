@@ -42,14 +42,16 @@ protected:
 	friend class PHBallJointConeLimit;
 	friend class PHBallJointSplineLimit;
 	friend class PHBallJointMotor;
+	friend class PHBallJointNonLinearMotor;
 	friend class PHBallJointNode;
 
 public:
 	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
 	SPR_DECLMEMBEROF_PHBallJointDesc;
 
-	UTRef<PHBallJointLimit>		limit;		///< 可動範囲拘束
-	UTRef<PHBallJointMotor>		motor;		///< 関節コントローラ
+	UTRef<PHBallJointLimit>		 limit;		///< 可動範囲拘束
+	UTRefArray<PHBallJointMotor> motors;		///< 関節コントローラ
+	int motorPDcount;
 
 	/// コンストラクタ
 	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());
@@ -73,15 +75,43 @@ public:
 	
 	/// ChildObject．可動域を追加できる
 	virtual bool AddChildObject(ObjectIf* o) {
-		if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
+		PHBallJointLimit* l = o->Cast();
+		PHBallJointMotor* m = o->Cast();
+		if (l){
+			limit = l;
+			limit->joint = this;
+			return true;
+		}
+
+		if (m){
+			motors.push_back(m);
+			motors.back()->joint = this;
+			return true;
+		}
+		//if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
 		return PHConstraint::AddChildObject(o);
 	}
 	virtual size_t NChildObject() const {
-		return((limit?1:0)+PHConstraint::NChildObject());
+		return((limit?1:0) + motors.size() + PHConstraint::NChildObject());
+		//return((limit ? 1 : 0) + PHConstraint::NChildObject());
 	}
 	virtual ObjectIf* GetChildObject(size_t i) {
-		if (i==0 && limit) { return limit->Cast(); }
-		return PHConstraint::GetChildObject(i - (limit ? 1 : 0));
+		if (limit){
+			if (i == 0)
+				return limit->Cast();
+			i--;
+		}
+
+		if (motors.size() != 0){
+			for (int j = 0; j < motors.size(); j++){
+				if (i == 0)
+					return motors[j]->Cast();
+				i--;
+			}
+		}
+		return PHConstraint::GetChildObject(i);
+		//if (i==0 && limit) { return limit->Cast(); }
+		//return PHConstraint::GetChildObject(i - (limit ? 1 : 0));
 	}
 
 	PHBallJointLimitIf* CreateLimit(const IfInfo* ii, const PHBallJointLimitDesc& desc) {
@@ -90,11 +120,29 @@ public:
 		return limit;
 	}
 
+	PHBallJointMotorIf* CreateMotor(const IfInfo* ii, const PHBallJointMotorDesc& desc){
+		PHBallJointMotorIf* m = GetScene()->CreateObject(ii, &desc)->Cast();
+		if (m)
+			AddChildObject(m);
+		return m;
+	}
+
+	bool              AddMotor(PHBallJointMotorIf* m){
+		return AddChildObject(m);
+	}
+
+	bool RemoveMotor(int n){
+		if (n > motors.size() - 1) return false;
+		PHBallJointMotorIf* m = motors[n]->Cast();
+		motors.erase(motors.begin() + n);
+		return GetScene()->DelChildObject(m);
+	}
+
 	PHBallJointLimitIf* GetLimit() { return limit->Cast(); }
 
-	Vec3d		GetAngle   (){ return Vec3d(position[0], position[1], position[2]); }
-	Quaterniond GetPosition(){ return Xjrel.q; }
-	Vec3d		GetVelocity(){ return Vec3d(velocity[0], velocity[1], velocity[2]); }
+	Vec3d		GetAngle(){ UpdateState();  return Vec3d(position[0], position[1], position[2]); }
+	Quaterniond GetPosition(){ UpdateState(); return Xjrel.q; }
+	Vec3d		GetVelocity(){ UpdateState(); return Vec3d(velocity[0], velocity[1], velocity[2]); }
 	void        SetSpring(const double& spring) { this->spring = spring; }
 	double      GetSpring() { return spring; }
 	void        SetDamper(const double& damper) { this->damper = damper; }
@@ -107,17 +155,48 @@ public:
 	Vec3d       GetTargetVelocity() { return targetVelocity; }
 	void        SetOffsetForce(const Vec3d& offsetForce) { this->offsetForce = offsetForce; }
 	Vec3d       GetOffsetForce() { return offsetForce; }
+	void   SetOffsetForceN(int n, const Vec3d& offsetForce){
+		if (n < 0 || n >= motors.size()) return;
+		if (DCAST(PHBallJointNonLinearMotor, motors[n])){
+			DCAST(PHBallJointNonLinearMotor, motors[n])->offset = offsetForce;
+		}
+		else{
+			this->offsetForce = offsetForce;
+		}
+	}
+	Vec3d GetOffsetForceN(int n){
+		if (n < 0 || n >= motors.size()) return Vec3d();
+		if (DCAST(PHBallJointNonLinearMotor, motors[n])){
+			return DCAST(PHBallJointNonLinearMotor, motors[n])->offset;
+		}
+		return offsetForce;
+	}
 	void        SetYieldStress(const double& yieldStress) { this->yieldStress = yieldStress; }
 	double      GetYieldStress() { return yieldStress; }
 	void        SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	double      GetHardnessRate() { return hardnessRate; }
 	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
 	Vec3d       GetSecondMoment() { return secondMoment; }
+	int         NMotors(){ return motors.size(); }
+	PHBallJointMotorIf** GetMotors(){
+		return motors.empty() ? NULL : (PHBallJointMotorIf**)&*motors.begin();
+	}
 	Vec3d       GetMotorForce() {
 		//if (limit && limit->IsOnLimit())
 		//	return Vec3d();
 		//return f.w() *  GetScene()->GetTimeStepInv();
-		return Vec3d(motor->f[0], motor->f[1], motor->f[2]) * GetScene()->GetTimeStepInv();
+		Vec3d force = Vec3d();
+		for (int i = 0; i < motors.size(); i++){
+			force += Vec3d(motors[i]->f[0], motors[i]->f[1], motors[i]->f[2]);
+			/*if (force.norm() > 1000000000 || isnan(force.norm())){
+				DSTR << "Something wrong" << std::endl;
+			}*/
+		}
+		return force * GetScene()->GetTimeStepInv();
+	}
+	Vec3d GetMotorForceN(int n){
+		if (n < 0 || n >= motors.size()) return Vec3d();
+		return Vec3d(motors[n]->f[0], motors[n]->f[1], motors[n]->f[2]);
 	}
 };
 

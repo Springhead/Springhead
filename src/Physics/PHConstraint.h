@@ -58,7 +58,7 @@ public:
 	SpatialVector dv;
 	SpatialVector dF;
 	SpatialVector dV;
-	SpatialVector res;
+	SpatialVector res;  //response
 	
 	AxisIndex<6> axes;		///< 拘束軸管理クラス
 	bool         dv_changed[6];
@@ -236,6 +236,8 @@ public:
 
 	void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
 	void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
+
+	bool         IsYielded(){ return this->bYielded; }
 
 	/// Objectの仮想関数
 	virtual bool		 AddChildObject(ObjectIf* o);
