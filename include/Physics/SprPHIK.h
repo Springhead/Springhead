@@ -23,6 +23,7 @@ namespace Spr{;
 struct PHSolidIf;
 struct PHHingeJointIf;
 struct PHBallJointIf;
+struct PHIKActuatorIf;
 
 /** \defgroup gpIK 逆運動学(IK)計算*/
 //@{
@@ -86,6 +87,9 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief 動作対象として設定された剛体を取得する
 	*/
 	PHSolidIf* GetSolid();
+
+	void SetParentActuator(PHIKActuatorIf* ika);
+	PHIKActuatorIf* GetParentActuator();
 
 	// --- --- --- --- ---
 
@@ -323,14 +327,20 @@ struct PHIKActuatorIf : SceneObjectIf{
 struct PHIKActuatorState{
 	Posed       solidTempPose;    ///< IK-FK計算用の一時変数：プラグ剛体姿勢	
 	Quaterniond jointTempOri;     ///< IK-FK計算用の一時変数：関節角度
+	/// 補間後の関節角度（in 回転ベクトル）（IK条件の変更等によるTargetPositionの急激な変化を避けるため）
+	Vec3d jointTempOriIntp;
 
 	// <!!> ヒンジでしか使わないが，Stateの多重継承を防ぐためここに入れてある．(13/07/08 mitake)
 	double      jointTempAngle; ///< IK-FK計算用の一時変数：関節角度（ヒンジ用）
+	/// 補間後の関節角度（IK条件の変更等によるTargetPositionの急激な変化を避けるため）
+	double jointTempAngleIntp;
 
 	PHIKActuatorState() {
 		solidTempPose    = Posed();
-		jointTempOri     = Quaterniond();
+		jointTempOri = Quaterniond();
+		jointTempOriIntp = Vec3d();
 		jointTempAngle = 0.0;
+		jointTempAngleIntp = 0;
 	}
 };
 
