@@ -22,16 +22,25 @@ bool PH1DJoint::AddChildObject(ObjectIf* o) {
 		limit->joint = this;
 		return true;
 	}
+	
 	if(m){
+		motors.push_back(m);
+		motors.back()->joint = this;
+		return true;
+	}
+	/*
+	if (m){
 		motor = m;
 		motor->joint = this;
 		return true;
 	}
+	*/
 	return PHConstraint::AddChildObject(o);
 }
 
 size_t PH1DJoint::NChildObject() const {
-	return (limit?1:0) + (motor?1:0) + PHConstraint::NChildObject();
+	return (limit?1:0) + motors.size() + PHConstraint::NChildObject();
+	//return (limit ? 1 : 0) + (motor ? 1 : 0) + PHConstraint::NChildObject();
 }
 
 ObjectIf* PH1DJoint::GetChildObject(size_t i) {
@@ -40,11 +49,21 @@ ObjectIf* PH1DJoint::GetChildObject(size_t i) {
 			return limit->Cast();
 		i--;
 	}
-	if(motor){
-		if(i == 0)
+	
+	if(motors.size() != 0){
+		for (int j = 0; j < motors.size(); j++){
+			if (i == 0)
+				return motors[j]->Cast();
+			i--;
+		}
+	}
+	/*
+	if (motor){
+		if (i == 0)
 			return motor->Cast();
 		i--;
 	}
+	*/
 	return PHConstraint::GetChildObject(i);
 }
 
@@ -53,6 +72,27 @@ PH1DJointLimitIf* PH1DJoint::CreateLimit(const PH1DJointLimitDesc& desc) {
 	if(l)
 		AddChildObject(l);
 	return l;
+}
+
+PH1DJointMotorIf* PH1DJoint::CreateMotor(const IfInfo* ii, const PH1DJointMotorDesc& desc) {
+	PH1DJointMotorIf* m = GetScene()->CreateObject(ii, &desc)->Cast();
+	if (m)
+		AddChildObject(m);
+	return m;
+}
+
+bool PH1DJoint::AddMotor(PH1DJointMotorIf* m){
+	PH1DJoint* motor = m->Cast();
+	//motors.push_back(m);
+	//	motors.back()->joint = this;
+		return true;
+}
+
+bool PH1DJoint::RemoveMotor(int n){
+	if (n > motors.size() - 1) return false;
+	PH1DJointMotorIf* m = motors[n]->Cast();
+	motors.erase(motors.begin() + n);
+	return GetScene()->DelChildObject(m);
 }
 
 //-------------------------------------------------------------------------------------------------

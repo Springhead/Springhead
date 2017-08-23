@@ -484,17 +484,23 @@ public:\
 protected:\
 	Posed	solidTempPose;	\
 	Quaterniond	jointTempOri;	\
+	Vec3d	jointTempOriIntp;	\
 	double	jointTempAngle;	\
+	double	jointTempAngleIntp;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		solidTempPose = ((PHIKActuatorState*)ptr)->solidTempPose;	\
 		jointTempOri = ((PHIKActuatorState*)ptr)->jointTempOri;	\
+		jointTempOriIntp = ((PHIKActuatorState*)ptr)->jointTempOriIntp;	\
 		jointTempAngle = ((PHIKActuatorState*)ptr)->jointTempAngle;	\
+		jointTempAngleIntp = ((PHIKActuatorState*)ptr)->jointTempAngleIntp;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHIKActuatorState*)ptr)->solidTempPose = solidTempPose;	\
 		((PHIKActuatorState*)ptr)->jointTempOri = jointTempOri;	\
+		((PHIKActuatorState*)ptr)->jointTempOriIntp = jointTempOriIntp;	\
 		((PHIKActuatorState*)ptr)->jointTempAngle = jointTempAngle;	\
+		((PHIKActuatorState*)ptr)->jointTempAngleIntp = jointTempAngleIntp;	\
 		return true;	\
 	}\
 
@@ -1145,6 +1151,29 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHBallJointIndependentLimitDesc \
+protected:\
+	Vec2d	limitX;	\
+	Vec2d	limitY;	\
+	Vec2d	limitZ;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointIndependentLimitDesc*)ptr);	\
+		limitX = ((PHBallJointIndependentLimitDesc*)ptr)->limitX;	\
+		limitY = ((PHBallJointIndependentLimitDesc*)ptr)->limitY;	\
+		limitZ = ((PHBallJointIndependentLimitDesc*)ptr)->limitZ;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointIndependentLimitDesc*)ptr);	\
+		((PHBallJointIndependentLimitDesc*)ptr)->limitX = limitX;	\
+		((PHBallJointIndependentLimitDesc*)ptr)->limitY = limitY;	\
+		((PHBallJointIndependentLimitDesc*)ptr)->limitZ = limitZ;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PH1DJointMotorDesc \
 protected:\
 public:\
@@ -1157,6 +1186,20 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PH1DJointNonLinearMotorDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PH1DJointMotor::SetDesc((PH1DJointMotorDesc*)(PH1DJointNonLinearMotorDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PH1DJointMotor::GetDesc((PH1DJointMotorDesc*)(PH1DJointNonLinearMotorDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHBallJointMotorDesc \
 protected:\
 public:\
@@ -1166,6 +1209,20 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointNonLinearMotorDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointMotor::SetDesc((PHBallJointMotorDesc*)(PHBallJointNonLinearMotorDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointMotor::GetDesc((PHBallJointMotorDesc*)(PHBallJointNonLinearMotorDesc*)ptr);	\
 		return true;	\
 	}\
 

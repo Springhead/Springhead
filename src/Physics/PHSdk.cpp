@@ -13,6 +13,7 @@
 #include <Physics/PHPathJoint.h>
 #include <Physics/PHSpring.h>
 #include <Physics/PHJointLimit.h>
+#include <Physics/PHJointMotor.h>
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHGear.h>
 #include <Physics/PHOpObj.h>
@@ -68,6 +69,12 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PH1DJointLimit));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointConeLimit));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointSplineLimit));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointIndependentLimit));
+
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PH1DJointMotor));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PH1DJointNonLinearMotor));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointMotor));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNonLinearMotor));
 	
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHHingeJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJointNode));

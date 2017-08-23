@@ -56,10 +56,12 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	movableAxes.Enable(5);
 	
 	limit = 0;
-	motor = 0;
+	//motor = 0;
 	// limit = NULL;
-	motor = DBG_NEW PHBallJointMotor();
-	motor->joint = this;
+	motors.push_back(DBG_NEW PHBallJointMotor());
+	motors[0]->joint = this;
+	//motor = DBG_NEW PHBallJointMotor();
+	//motor->joint = this;
 }
 /*
 void PHBallJoint::Setup(){

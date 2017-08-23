@@ -14,6 +14,7 @@
 
 #include <Foundation/SprObject.h>
 #include <Physics/SprPHJointLimit.h>
+#include <Physics/SprPHJointMotor.h>
 
 #include <float.h>  // FLT_MAX
 
@@ -114,6 +115,9 @@ struct PHConstraintIf : public SceneObjectIf{
 	/** @brief 拘束トルクを取得
 	 */
 	//Vec3d GetTorque();
+	/**
+	 */
+	bool IsYielded();
 };
 
 /// 拘束の集合のインタフェース
@@ -204,6 +208,15 @@ struct PH1DJointIf : public PHJointIf{
 	 */
 	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc());
 
+	/** @brief 駆動モータを追加・削除する
+	 */
+	PH1DJointMotorIf* CreateMotor(const IfInfo* ii, const PH1DJointMotorDesc& desc = PH1DJointMotorDesc());
+	template <class T> PH1DJointMotorIf* CreateMotor(const T& desc){
+		return CreateMotor(T::GetIfInfo(), desc);
+	}
+	bool              AddMotor(PH1DJointMotorIf* m);
+	bool              RemoveMotor(int n);
+
 	/** @brief cyclicかどうかを取得
 		trueの場合，positionが[-pi, pi]の範囲で循環する．
 	 */
@@ -290,6 +303,16 @@ struct PH1DJointIf : public PHJointIf{
 	*/
 	double GetOffsetForce();
 
+	/** @brief N番モータの定数項を代入する
+	@param N番モータに代入する値
+	*/
+	void SetOffsetForceN(int n, double dat);
+
+	/** @brief N番モータの補正力を得る
+	@return N番モータの補正値
+	*/
+	double GetOffsetForceN(int n);
+
 	/** @brief 降伏応力を設定する
 		@return 降伏応力
 	 */
@@ -320,10 +343,25 @@ struct PH1DJointIf : public PHJointIf{
 	 */
 	double GetSecondMoment();
 
+	/** @brief モータ数を返す
+	@return モータ数
+	*/
+	int NMotors();
+
+	/** @brief モータ群を返す
+	    @return motors
+	*/
+	PH1DJointMotorIf** GetMotors();
+
 	/** @brief Motorの出力した力を返す
 		@return 力
 	*/
 	double GetMotorForce();
+
+	/** @brief N番Motorの出力した力を返す
+	@ return 力
+	*/
+	double GetMotorForceN(int n);
 };
 
 /// ヒンジのインタフェース
@@ -453,6 +491,15 @@ struct PHBallJointIf : public PHJointIf{
 		return CreateLimit(T::GetIfInfo(), desc);
 	}
 
+	/** @brief 駆動モータを追加・削除する
+	*/
+	PHBallJointMotorIf* CreateMotor(const IfInfo* ii, const PHBallJointMotorDesc& desc = PHBallJointMotorDesc());
+	template <class T> PHBallJointMotorIf* CreateMotor(const T& desc){
+		return CreateMotor(T::GetIfInfo(), desc);
+	}
+	bool              AddMotor(PHBallJointMotorIf* m);
+	bool              RemoveMotor(int n);
+
 	/** @brief 関節変位を取得する
 		@return スイング方位角，スイング角，ツイスト角からなるベクトル
 	 */
@@ -527,6 +574,16 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	Vec3d GetOffsetForce();
 
+	/** @brief N番モータの定数項を代入する
+	@param N番モータに代入する値
+	*/
+	void SetOffsetForceN(int n, Vec3d ofst);
+
+	/** @brief N番モータの補正力を得る
+	@return N番モータの補正値
+	*/
+	Vec3d GetOffsetForceN(int n);
+
 	/** @brief 降伏応力を取得する
 		@param input 降伏応力
 	 */
@@ -557,10 +614,25 @@ struct PHBallJointIf : public PHJointIf{
 	 */
 	Vec3d	GetSecondMoment();	
 
+	/** @brief モータ数を返す
+	    @return モータ数
+	*/
+	int NMotors();
+
+	/** @brief モータ群を返す
+	@return motors
+	*/
+	PHBallJointMotorIf** GetMotors();
+
 	/** @brief Motorの出力した力を返す
 		@return 力
 	*/
 	Vec3d GetMotorForce();
+
+	/** @brief N番Motorの出力した力を返す
+	    @ return 力
+	*/
+	Vec3d GetMotorForceN(int n);
 };
 
 /// ボールジョイントのデスクリプタ
