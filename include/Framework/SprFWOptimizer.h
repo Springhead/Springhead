@@ -601,10 +601,10 @@ class TrajectoryPlanner : public UTRefCount{
 			double b1 = 1.0 - cos(omega);
 			double b2 = (1.0 - cos(omega)) / 2.0;
 
-			for (int i = 0; i < input.height(); i++){
+			for (size_t i = 0; i < input.height(); i++){
 				output[i][0] = b0 / a0 * input[i][0];
 				output[i][1] = b0 / a0 * input[i][1] + b1 / a0 * input[i][0] - a1 / a0 * output[i][0];
-				for (int j = 0; j < input.width(); j++){
+				for (size_t j = 0; j < input.width(); j++){
 					output[i][j] = b0 / a0 * input[i][j] + b1 / a0 * input[i][j - 1] + b2 / a0 * input[i][j - 2]
 						- a1 / a0 * output[i][j - 1] - a2 / a0 * output[i][j - 2];
 				}
@@ -621,15 +621,15 @@ class TrajectoryPlanner : public UTRefCount{
 			output.clear();
 			DSTR << n << std::endl;
 
-			if (input.width() < n){
+			if (input.width() < (size_t) n){
 				return input;
 			}
 			else{
-				for (int i = 0; i < input.height(); i++){
-					int j = 0;
+				for (size_t i = 0; i < input.height(); i++){
+					size_t j = 0;
 					double sum = s[i] * n;
 					DSTR << s[i] << std::endl;
-					for (; j < n; j++){
+					for (; j < (size_t) n; j++){
 						sum = sum + input[i][j] - s[i];
 						output[i][j] = sum / n;
 					}
