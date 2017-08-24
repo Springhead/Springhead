@@ -546,7 +546,7 @@ void PHConstraintEngine::Setup(){
 				if(jnt1D){
 					// Motorを先に入れないとMotorに対してLimitがかからない
 					
-					for (int j = 0; j < jnt1D->motors.size(); j++){
+					for (size_t j = 0; j < jnt1D->motors.size(); j++){
 						if (jnt1D->motors[j]){
 							cons_base.push_back(jnt1D->motors[j]);
 						}
@@ -562,7 +562,7 @@ void PHConstraintEngine::Setup(){
 				if(ball){
 					// Motorを先に入れないとMotorに対してLimitがかからない
 
-					for (int j = 0; j < ball->motors.size(); j++){
+					for (size_t j = 0; j < ball->motors.size(); j++){
 						if (ball->motors[j]){
 							cons_base.push_back(ball->motors[j]);
 						}

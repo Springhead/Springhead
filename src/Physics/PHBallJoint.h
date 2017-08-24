@@ -103,7 +103,7 @@ public:
 		}
 
 		if (motors.size() != 0){
-			for (int j = 0; j < motors.size(); j++){
+			for (size_t j = 0; j < motors.size(); j++){
 				if (i == 0)
 					return motors[j]->Cast();
 				i--;
@@ -132,7 +132,7 @@ public:
 	}
 
 	bool RemoveMotor(int n){
-		if (n > motors.size() - 1) return false;
+		if ((size_t) n > motors.size() - 1) return false;
 		PHBallJointMotorIf* m = motors[n]->Cast();
 		motors.erase(motors.begin() + n);
 		return GetScene()->DelChildObject(m);
@@ -156,7 +156,7 @@ public:
 	void        SetOffsetForce(const Vec3d& offsetForce) { this->offsetForce = offsetForce; }
 	Vec3d       GetOffsetForce() { return offsetForce; }
 	void   SetOffsetForceN(int n, const Vec3d& offsetForce){
-		if (n < 0 || n >= motors.size()) return;
+		if (n < 0 || (size_t) n >= motors.size()) return;
 		if (DCAST(PHBallJointNonLinearMotor, motors[n])){
 			DCAST(PHBallJointNonLinearMotor, motors[n])->offset = offsetForce;
 		}
@@ -165,7 +165,7 @@ public:
 		}
 	}
 	Vec3d GetOffsetForceN(int n){
-		if (n < 0 || n >= motors.size()) return Vec3d();
+		if (n < 0 || (size_t) n >= motors.size()) return Vec3d();
 		if (DCAST(PHBallJointNonLinearMotor, motors[n])){
 			return DCAST(PHBallJointNonLinearMotor, motors[n])->offset;
 		}
@@ -186,7 +186,7 @@ public:
 		//	return Vec3d();
 		//return f.w() *  GetScene()->GetTimeStepInv();
 		Vec3d force = Vec3d();
-		for (int i = 0; i < motors.size(); i++){
+		for (size_t i = 0; i < motors.size(); i++){
 			force += Vec3d(motors[i]->f[0], motors[i]->f[1], motors[i]->f[2]);
 			/*if (force.norm() > 1000000000 || isnan(force.norm())){
 				DSTR << "Something wrong" << std::endl;
@@ -195,7 +195,7 @@ public:
 		return force * GetScene()->GetTimeStepInv();
 	}
 	Vec3d GetMotorForceN(int n){
-		if (n < 0 || n >= motors.size()) return Vec3d();
+		if (n < 0 || (size_t) n >= motors.size()) return Vec3d();
 		return Vec3d(motors[n]->f[0], motors[n]->f[1], motors[n]->f[2]);
 	}
 };

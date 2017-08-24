@@ -51,7 +51,7 @@ ObjectIf* PH1DJoint::GetChildObject(size_t i) {
 	}
 	
 	if(motors.size() != 0){
-		for (int j = 0; j < motors.size(); j++){
+		for (size_t j = 0; j < motors.size(); j++){
 			if (i == 0)
 				return motors[j]->Cast();
 			i--;
@@ -89,7 +89,7 @@ bool PH1DJoint::AddMotor(PH1DJointMotorIf* m){
 }
 
 bool PH1DJoint::RemoveMotor(int n){
-	if (n > motors.size() - 1) return false;
+	if ((size_t) n > motors.size() - 1) return false;
 	PH1DJointMotorIf* m = motors[n]->Cast();
 	motors.erase(motors.begin() + n);
 	return GetScene()->DelChildObject(m);

@@ -662,13 +662,13 @@ void FWStaticTorqueOptimizer::Init() {
 			dof += 1;
 		}
 	}
-	for (int i = 0; i < groundConst.size(); i++){
+	for (size_t i = 0; i < groundConst.size(); i++){
 		groundConst[i].Init();
 	}
-	for (int i = 0; i < ungroundedConst.size(); i++){
+	for (size_t i = 0; i < ungroundedConst.size(); i++){
 		ungroundedConst[i].Init();
 	}
-	for (int i = jointWeights.size(); i < nJoints; i++){
+	for (size_t i = jointWeights.size(); i < (size_t) nJoints; i++){
 		jointWeights.push_back(1.0);
 	}
 	/*  graham“®ìŠm”F
@@ -812,7 +812,7 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 	
 	//gronded solids evaluation
 	tmp = obj;
-	for (int i = 0; i < groundConst.size(); i++){
+	for (size_t i = 0; i < groundConst.size(); i++){
 		DSTR << groundConst[i].GetSolid()->GetName() << " " << groundConst[i].GetWeight() << " " << groundConst[i].GetInitialPose() << std::endl;
 		DSTR << groundConst[i].GetSolid()->GetPose() << std::endl;
 		double e = groundConst[i].CalcEvalFunc();
@@ -843,7 +843,7 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 
 	//position constraint evaluation
 	tmp = obj;
-	for (int i = 0; i < ungroundedConst.size(); i++){
+	for (size_t i = 0; i < ungroundedConst.size(); i++){
 		DSTR << ungroundedConst[i].GetSolid()->GetName() << " " << ungroundedConst[i].GetWeight() << " " << ungroundedConst[i].GetInitialPose() << std::endl;
 		DSTR << ungroundedConst[i].GetSolid()->GetPose() << std::endl;
 		double e = ungroundedConst[i].CalcEvalFunc();
@@ -1004,7 +1004,7 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 	}
 	else{
 		double mag = nJoints / specificJoints.size();
-		for (int i = 0; i < specificJoints.size(); ++i) {
+		for (size_t i = 0; i < specificJoints.size(); ++i) {
 			if (DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(specificJoints[i]))) {
 				Vec3d torque = DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(specificJoints[i]))->GetJoint()->GetMotorForce();
 				DSTR << "torque[" << specificJoints[i] << "](normal):" << torque << std::endl;
@@ -1718,7 +1718,7 @@ void TrajectoryPlanner::TrajStep(bool step){
 	//Posed nowTarget = minjerk.GetCurrentPose(now);
 	//eef->SetTargetPosition(nowTarget.Pos());
 	if (moving){
-		if (now >= 0 && now < trajData.width()){
+		if (now >= 0 && (size_t) now < trajData.width()){
 			eef->SetTargetPosition(trajData[ite][now].Pos());
 			eef->SetTargetOrientation(trajData[ite][now].Ori());
 			if (jointCorFlag){

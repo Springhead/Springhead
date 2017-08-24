@@ -114,7 +114,7 @@ public:
 	void   SetOffsetForce   (const double& offsetForce) { this->offsetForce = offsetForce * GetScene()->GetTimeStep(); }
 	double GetOffsetForce   () { return offsetForce * GetScene()->GetTimeStepInv(); }
 	void   SetOffsetForceN  (int n, const double& offsetForce){
-		if (n < 0 || n >= motors.size()) return;
+		if (n < 0 || (size_t) n >= motors.size()) return;
 		if (DCAST(PH1DJointNonLinearMotor, motors[n])){
 			DCAST(PH1DJointNonLinearMotor, motors[n])->offset = offsetForce * GetScene()->GetTimeStep();
 		}
@@ -123,7 +123,7 @@ public:
 		}
 	}
 	double GetOffsetForceN(int n){
-		if (n < 0 || n >= motors.size()) return 0;
+		if (n < 0 || (size_t) n >= motors.size()) return 0;
 		if (DCAST(PH1DJointNonLinearMotor, motors[n])){
 			return DCAST(PH1DJointNonLinearMotor, motors[n])->offset * GetScene()->GetTimeStepInv();
 		}
@@ -142,7 +142,7 @@ public:
 	double GetMotorForce    () { //要変更
 		double force = 0;
 		//DSTR << motors.size() << " " << GetPosition() << std::endl;
-		for (int i = 0; i < motors.size(); i++){
+		for (size_t i = 0; i < motors.size(); i++){
 			force += motors[i]->f[0];
 			//DSTR << this->GetName() << "motor" << i << ":" << motors[i]->f[0] << std::endl;
 		}
@@ -151,7 +151,7 @@ public:
 	//	if (limit) { if (limit->IsOnLimit()) return 0; } return(f[movableAxes[0]] / GetScene()->GetTimeStep());
 	}
 	double GetMotorForceN(int n){
-		if (n < 0 || n >= motors.size()) return 0;
+		if (n < 0 || (size_t) n >= motors.size()) return 0;
 		return motors[n]->f[0];
 	}
 };
