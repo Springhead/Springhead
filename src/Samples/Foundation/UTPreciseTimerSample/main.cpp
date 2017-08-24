@@ -32,7 +32,7 @@ int mt = 5000;			// 測定時間ms
 
 UTPreciseTimer pTimer;		// μs単位で計測可能なタイマ
 UTQPTimer qTimer;			// マルチスレッド対応版
-std::vector< Vec2d > time;	// 計測時間
+std::vector< Vec2d > m_time;	// 計測時間
 
 void CPSCounter(double intervalms, double periodms);
 void SPR_CDECL CallBack(int id, void* arg){
@@ -41,7 +41,7 @@ void SPR_CDECL CallBack(int id, void* arg){
 	// 1ループ間の計測用
 	sec.x = pTimer.Stop() * 1e-6;
 	sec.y = qTimer.Stop() * 1e-6;
-	time.push_back(sec);
+	m_time.push_back(sec);
 	pTimer.Clear();
 	qTimer.Clear();
 	pTimer.Start();
@@ -56,7 +56,7 @@ void SPR_CDECL CallBack(int id, void* arg){
 		std::cout << "Springhead2!" << std::endl;
 	sec.x = pTimer.Stop() * 1e-6;
 	sec.y = qTimer.Stop() * 1e-6;
-	time.push_back(sec);
+	m_time.push_back(sec);
 #endif
 	//CPSCounter(dt, 1000);
 }
@@ -97,8 +97,8 @@ int _cdecl main(int argc, char* argv[]){
 
 	// 計測データをcsvで出力
 	CSVOUT << "count" << "," << "Precise timer [s]" << "," << "QPTimer [s]" << std::endl;
-	for(size_t i = 0; i < time.size(); i++){
-		CSVOUT << i << "," << time[i].x << "," << time[i].y << std::endl;
+	for(size_t i = 0; i < m_time.size(); i++){
+		CSVOUT << i << "," << m_time[i].x << "," << m_time[i].y << std::endl;
 	}
 
 	// 計測完了
