@@ -611,9 +611,11 @@ double* FWOptimizer::GetProvisionalResults() {
 void FWOptimizer::SetESParameters(double xs, double st, double tf, double la, double mi){
 	ixstart = xs;
 	istddev = st;
+#ifdef USE_CLOSED_SRC
 	iTolFun = tf;
 	ilambda = la;
 	iMaxIter = mi;
+#endif
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
