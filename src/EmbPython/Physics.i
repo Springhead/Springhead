@@ -42,6 +42,10 @@
 %ignore Spr::PHOpObjIf;
 %ignore Spr::PHOpEngineIf;
 
+// 2017/08/24 for dailybuild
+%ignore Spr::PHBallJointIf::GetMotors;
+%ignore Spr::PH1DJointIf::GetMotors;
+
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)
@@ -82,6 +86,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 %include "../../include/Physics/SprPHIK.h"
 %include "../../include/Physics/SprPHJoint.h"
 %include "../../include/Physics/SprPHJointLimit.h"
+%include "../../include/Physics/SprPHJointMotor.h"
 %include "../../include/Physics/SprPHNodeHandlers.h"
 %include "../../include/Physics/SprPHOpSpHashAgent.h"
 %include "../../include/Physics/SprPHScene.h"
