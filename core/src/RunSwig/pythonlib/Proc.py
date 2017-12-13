@@ -21,6 +21,7 @@
 #	Ver 1.1  2017/09/14 F.Kanehori	Bug fixed.
 #	Ver 1.11 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
 #	Ver 1.12 2017/10/13 F.Kanehori	Set default encoding.
+<<<<<<< HEAD
 #	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
 #	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
 #					when dry_run flag specified.
@@ -30,6 +31,8 @@
 #	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
 #	Ver 1.32 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
 #	Ver 1.33 2018/06/28 F.Kanehori	Fixes spaces in homedir.
+=======
+>>>>>>> 0984c6a1c... dailybuild: Process does not have terminal if run as task.
 # ======================================================================
 import sys
 import os
@@ -67,7 +70,11 @@ class Proc:
 	#
 	def __init__(self, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
+<<<<<<< HEAD
 		self.version = 1.14
+=======
+		self.version = 1.12
+>>>>>>> 0984c6a1c... dailybuild: Process does not have terminal if run as task.
 		#
 		self.verbose = verbose
 		self.dry_run = dry_run
@@ -286,7 +293,11 @@ class Proc:
 			out, err = self.proc.communicate()
 			status = Proc.ETIME
 		encoding = os.device_encoding(1)
+<<<<<<< HEAD
 		if encoding is None:
+=======
+		if encodig is None:
+>>>>>>> 0984c6a1c... dailybuild: Process does not have terminal if run as task.
 			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None
