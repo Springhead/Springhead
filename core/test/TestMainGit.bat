@@ -76,7 +76,7 @@ if %$status% == 0 (
 cd core\test
 call :check_condition DAILYBUILD_EXECUTE_TESTALL
 if %$status% == 0 (
-    call bat\TestAll.bat %TOOLSET_ID% %CONFIGURATION% %PLATFORM% %TEST_REPOSITORY%
+    call bat\TestAllGit.bat %TOOLSET_ID% %CONFIGURATION% %PLATFORM% %TEST_REPOSITORY%
     if not !$status! == 0 (
 	goto :done
     )
