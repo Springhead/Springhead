@@ -116,6 +116,11 @@ void PHBallJoint::UpdateJointState(){
 	if (qTwist.z < 0) { position[2] *= -1; } ///< Twist回転軸が反対を向くことがあるのでその対策
 	if (position[2] < -M_PI) { position[2] += 2*M_PI; }
 	if (position[2] >  M_PI) { position[2] -= 2*M_PI; }
+
+	// velocityの更新
+	for (int i = 0; i < 3; i++) {
+		velocity[i] = vjrel[i + 3];
+	}
 }
 
 void PHBallJoint::CompError(){

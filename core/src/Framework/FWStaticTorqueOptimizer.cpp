@@ -75,7 +75,7 @@ void GrahamConvexHull::Sort::quicksort(std::vector<Vec3f>& ver, int i, int j, Ve
 }
 
 void GrahamConvexHull::Sort::simplesort(std::vector<Vec3f>& ver, Vec3d normal) {
-	int size = ver.size();
+	int size = (int)ver.size();
 	double checker;
 	for (int i = 1; i < size; i++) {
 		for (int j = i; j < size; j++) {
