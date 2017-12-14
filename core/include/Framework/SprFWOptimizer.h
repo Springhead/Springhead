@@ -20,9 +20,6 @@ namespace Spr{;
 
 */
 
-// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// FWStaticTorqueOptimizerに使う拘束クラス
-
 class FWGroundConstraint{
 public:
 	Vec3d cNormal;
@@ -41,13 +38,12 @@ public:
 class FWUngroundedConstraint{
 public:
 	Vec3i cAxis;
-	Vec3d normal;
 	PHSolidIf* cSolid;
 	Posed initialPose;
 	double cWeight;
 public:
 	FWUngroundedConstraint();
-	FWUngroundedConstraint(double w, Vec3i a, Vec3d n = Vec3d());
+	FWUngroundedConstraint(double w, Vec3i a);
 	double CalcEvalFunc();
 	void Init();
 };
@@ -60,7 +56,6 @@ struct JointPos {
 	JointPos(double a);
 };
 
-// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 //Unityで評価値の内訳を表示するための転送用構造体
 struct FWObjectiveValues{
 	double errorvalue = 0;
@@ -72,9 +67,6 @@ struct FWObjectiveValues{
 	double initialorivalue = 0;
 };
 
-// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// Frameworkの最適化計算の基底クラス
-// インタフェース
 struct FWOptimizerIf : public ObjectIf {
 	SPR_IFDEF(FWOptimizer);
 
@@ -123,121 +115,153 @@ struct FWOptimizerIf : public ObjectIf {
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 };
 
-// デスクリプタ
 struct FWOptimizerDesc{
 	SPR_DESCDEF(FWOptimizer);
 
-	/// Initial search space vector
-	double ixstart;
-	/// Inital standard deviation of the samples
-	double istddev;
-	/// Minimal value difference
-	double iTolFun;
-	/// Population size
-	double ilambda;
-	/// Max iteration
-	double iMaxIter;
-
 	FWOptimizerDesc() {
-		ixstart = 0.3;
-		istddev = 0.3;
-		iTolFun = 0.1;
-		ilambda = 30;
-		iMaxIter = 500;
+
 	}
 };
 
-
-// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// 姿勢最適化計算のインタフェース
 struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	SPR_IFDEF(FWStaticTorqueOptimizer);
 	
-	/// Init
 	void Init();
 
-	/// 
 	void Iterate();
 
-	/// 
 	void ApplyResult(PHSceneIf* phScene);
 
-	/// 
 	double ApplyPop(PHSceneIf* phScene, double const *x, int n);
 
-	/// 
 	double Objective(double const *x, int n);
 
-	/// 
 	void SetScene(PHSceneIf* phSceneInput);
 
-	/// 
 	void Optimize();
 
-	/// 
 	bool TestForTermination();
 
-	/// 
 	void TakeFinalValue();
 	
-	// Set/Get errorWeight
+	double CalcErrorCriterion();
+	double CalcGroundedCriterion();
+	double CalcPositionCriterion();
+	double CalcCOGCriterion();
+	double CalcDifferenceCriterion();
+	double CalcTorqueCriterion();
+	double CalcStabilityCriterion();
+
+	double CenterOfGravity(PHIKActuatorIf* root, Vec3d& point);
+	double CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& forceInChildren);
+	
 	void SetErrorWeight(double v);
 	double GetErrorWeight();
 
-	// Set/Get stabilityWeight
 	void SetStabilityWeight(double v);
 	double GetStabilityWeight();
 
-	// Set/Get torqueWeight
 	void SetTorqueWeight(double v);
 	double GetTorqueWeight();
 
-	// Set/Get  constWeight
+	void SetResistWeight(double v);
+	double GetResistWeight();
+
 	void SetConstWeight(double v);
 	double GetConstWeight();
 
-	// Set/Get gravcenterWeight
 	void SetGravcenterWeight(double v);
 	double GetGravcenterWeight();
 
-	// Set/Get  differentialWeight
 	void SetDifferentialWeight(double v);
 	double GetDifferentialWeight();
 
-	// GroundConstraintの追加、取得、全消去
+	//構造体の配列を外部から取れないので１要素ずつpush
 	void AddPositionConst(FWGroundConstraint* f);
 	FWGroundConstraint GetGroundConst(int n);
 	void ClearGroundConst();
-
-	// UngroundedConstraintの追加、取得、全消去
 	void AddPositionConst(FWUngroundedConstraint* f);
 	FWUngroundedConstraint GetUngroundConst(int n);
 	void ClearUngroundedConst();
 
-	// トルク評価時の関節ウェイトの設定
-	void SetJointWeight(PHJointIf* jo, double w);
-
-	/// CMAESのパラメータの設定
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 
-	/// 評価値を取得
 	FWObjectiveValues GetObjectiveValues();
 	
-	/// 重心位置取得
 	Vec3f GetCenterOfGravity();
 
-	/// 支持多角形に使われている点の数
 	int NSupportPolygonVertices();
 
-	/// 支持多角形に使われている点の取得
 	Vec3f GetSupportPolygonVerticesN(int n);
 };
 
-// 姿勢最適化計算のデスクリプタ
-struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
+struct FWStaticTorqueOptimizerDesc {
 	SPR_DESCDEF(FWStaticTorqueOptimizer);
 
 	FWStaticTorqueOptimizerDesc() {
+
+	}
+};
+
+//複数点指定用に必要そうなデータ
+struct ControlPoint{
+	Posed pose;
+	Vec6d vel;
+	Vec6d acc;
+	int step;
+	double time;
+	bool velControl;
+	bool accControl;
+	bool timeControl;
+	ControlPoint();
+	ControlPoint(Posed p, int s, double t);
+	ControlPoint(Posed p, Vec6d v, int s, double t);
+	//ControlPoint(ControlPoint& c);
+};
+
+struct FWTrajectoryPlannerIf : public ObjectIf{
+	SPR_IFDEF(FWTrajectoryPlanner);
+
+	//初期化系
+	void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true);
+	void Init();
+	void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65);
+	//jointの深さのチェックと投げ込み
+	//void CheckAndSetJoints();
+	//エンドエフェクタ設定
+	void SetControlTarget(PHIKEndEffectorIf* e);
+	//シーン設定
+	void SetScene(PHSceneIf* s);
+	//指定点通過軌道計算
+	void CalcTrajectoryWithViaPoint(ControlPoint tpoint, ControlPoint vpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
+	//連続軌道計算
+	void CalcContinuousTrajectory(int LPFmode, int smoothCount, std::string filename, bool bChange, bool pChange, bool staticTarget, bool jmjt);
+	void AddControlPoint(ControlPoint c); //実装移動
+										  //関節角度次元軌道計算
+	void JointCalcTrajectory(Posed tPose, double mt, int LPFmode, int smoothCount, std::string output, bool bChange = false, bool pChange = false, bool staticTarget = false, bool jmjt = false);
+	void CalcTrajectory(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
+	//N回目の繰り返しから再計算
+	void RecalcFromIterationN(int n);
+	//生成された軌道を実際適用
+	void JointTrajStep(bool step);
+	//補正
+	//void JointTrajCorrection(int k);
+	//
+	bool Moving();
+	//spring, damper set
+	void SetPD(double s = 1e10, double d = 1e10, bool mul = true);
+	//replay
+	void Replay(int ite, bool noncorrected = false);
+	//return totalChange
+	double GetTotalChange();
+	//return best
+	int GetBest();
+};
+
+struct FWTrajectoryPlannerDesc {
+	SPR_DESCDEF(FWTrajectoryPlanner);
+
+	FWTrajectoryPlannerDesc() {
 
 	}
 };
