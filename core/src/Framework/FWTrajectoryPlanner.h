@@ -57,6 +57,7 @@ namespace Spr {
 		AngleMinJerkTrajectory(double vAngle, int time, int vtime, double per);
 		double GetCurrentAngle(int t);
 		double GetDeltaAngle(int t);
+		double GetCurrentVelocity(int t);
 	};
 
 	class QuaMinJerkTrajectory {
@@ -70,6 +71,7 @@ namespace Spr {
 		Vec3d axis;
 		double angle;
 		AngleMinJerkTrajectory* amjt;
+		PTM::VVector<Quaterniond> velToQua;
 		PTM::TMatrixRow<6, 1, double> coeffToV;
 		PTM::TMatrixRow<6, 1, double> coeffToF;
 	public:
@@ -138,10 +140,12 @@ namespace Spr {
 			bool mul = true;
 			double vel = 0;
 			PTM::VVector<double> tChanges;
+			bool viaCorrect;
+			PTM::VMatrixRow<double> CorrTraj;
 		public:
 			HingeJoint(PHIKHingeActuatorIf* hinge);
 			//~HingeJoint();
-			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0);
+			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0, bool vCorr = true);
 			void SaveTorque(int n);
 			void SaveTarget();
 			void SetTarget(int k, int n);
@@ -194,10 +198,11 @@ namespace Spr {
 			bool mul = true;
 			Vec3d vel = Vec3d();
 			PTM::VVector<double> tChanges;
+			bool viaCorrect;
 		public:
 			BallJoint(PHIKBallActuatorIf* ball);
 			~BallJoint();
-			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0);
+			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0, bool vCorr = true);
 			void SaveTorque(int n);
 			void SaveTarget();
 			void SetTarget(int k, int n);
@@ -232,7 +237,7 @@ namespace Spr {
 			~Joints();
 			void RemoveAll();
 			void Add(PHIKActuatorIf* j);
-			void initialize(int iterate, int movetime, int nVia, double rate = 1.0);
+			void initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true);
 			void SetTarget(int k, int n);
 			void SaveTorque(int n);
 			void SaveTarget();
@@ -313,6 +318,7 @@ namespace Spr {
 		PTM::VMatrixRow<Posed> trajData;
 		PTM::VMatrixRow<Posed> trajDataNotCorrected;
 		PTM::VMatrixRow<Vec4d> trajVel;
+		PTM::VMatrixRow<Vec4d> trajVelNotCorrected;
 		PTM::VMatrixRow<Posed> ContinuousTrajData;
 
 		//再生時にまだ移動中かどうか
@@ -359,6 +365,8 @@ namespace Spr {
 		bool jointMJT;
 		//ローパスウェイトを動的に変化させるかのフラグ
 		bool dynamicalWeight;
+		//
+		bool viaCorrect;
 
 		//トルク変化
 		PTM::VVector<double> torquechange;
@@ -420,7 +428,7 @@ namespace Spr {
 		//-----インタフェースの実装-----
 
 		//初期化系
-		void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65) {
+		void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true) {
 			this->depth = d;
 			this->iterate = i;
 			this->iterateViaAdjust = iv;
@@ -431,11 +439,12 @@ namespace Spr {
 			this->viaAdjustRate = vRate;
 			this->waitFlag = wf;
 			this->saveNotCorrected = snc;
+			this->viaCorrect = vCorr;
 		}
 
 		void Init();
 
-		void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65);
+		void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool vCorr = true);
 		
 		//エンドエフェクタ設定
 		void SetControlTarget(PHIKEndEffectorIf* e);

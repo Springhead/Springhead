@@ -223,7 +223,7 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	SPR_IFDEF(FWTrajectoryPlanner);
 
 	//初期化系
-	void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65);
+	void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true);
 	void Init();
 	void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65);
 	//jointの深さのチェックと投げ込み
