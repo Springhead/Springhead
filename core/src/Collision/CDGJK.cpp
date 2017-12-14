@@ -657,7 +657,7 @@ float FASTCALL RaycastOreOre(Vec3d o, Vec3d ray, Vec3d tri1, Vec3d tri2, Vec3d t
 	return -1;
 }
 
-int FASTCALL ContFindCommonPointAccel( CDConvex* a,  CDConvex* b,
+int FASTCALL ContFindCommonPointAccel(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist) {
 nSupport = 0;
@@ -1806,7 +1806,7 @@ void FASTCALL CalcEPA(Vec3d &v, CDConvex* a, CDConvex* b, const Posed &a2w, cons
  	pb = dec[0] * (Vec3d)tris[0].bidx[0] + dec[1] * (Vec3d)tris[0].bidx[1] + dec[2] * (Vec3d)tris[0].bidx[2];
 }
 
-int FASTCALL ContFindCommonPointGino(CDConvex* a, CDConvex* b,
+int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist)
 {
