@@ -5,33 +5,33 @@ setlocal enabledelayedexpansion
 ::	TestMain [/t toolset_id] [/c config] [/p platform] [/r test_rep] [/h]
 ::
 ::  DESCRIPTION
-::	dailybuild ‚ğÀs‚·‚é.
+::	dailybuild ã‚’å®Ÿè¡Œã™ã‚‹.
 ::	
 ::  ARGUMENTS
-::	/t toolset_id	ƒc[ƒ‹ƒZƒbƒg‚Ì¯•Ê { 14.0 <default> | .. }
-::	/c config	ƒrƒ‹ƒh\¬ { Debug | Release <default> | .. }
-::	/p platform	ƒrƒ‹ƒhƒvƒ‰ƒbƒgƒtƒH[ƒ€ { Win32 | x64 <default> }
-::	/r test_rep	ì‹ÆƒŠƒ|ƒWƒgƒŠ‚Ìƒ‹[ƒg <default: SpringheadTest>
-::	/h              g—p•û–@‚Ì•\¦
+::	/t toolset_id	ãƒ„ãƒ¼ãƒ«ã‚»ãƒƒãƒˆã®è­˜åˆ¥ { 14.0 <default> | .. }
+::	/c config	ãƒ“ãƒ«ãƒ‰æ§‹æˆ { Debug | Release <default> | .. }
+::	/p platform	ãƒ“ãƒ«ãƒ‰ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ  { Win32 | x64 <default> }
+::	/r test_rep	ä½œæ¥­ãƒªãƒã‚¸ãƒˆãƒªã®ãƒ«ãƒ¼ãƒˆ <default: SpringheadTest>
+::	/h              ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 ::
 ::  CAUTION
-::	E/r ƒIƒvƒVƒ‡ƒ“‚Åw’è‚·‚éƒfƒBƒŒƒNƒgƒŠ‚Í, ..\..\ ‚ğ‹N“_‚Æ‚µ‚Äw’è‚·‚é.
-::	E/r ƒIƒvƒVƒ‡ƒ“‚Åw’è‚µ‚½ƒfƒBƒŒƒNƒgƒŠ‚ª‚·‚Å‚É‘¶İ‚·‚é‚Æ‚«‚Í, ‚»‚Ì“à—e
-::	@‚Í‚·‚×‚Ä”jŠü‚³‚ê‚é.
-::	EVisual Studio 10.0 ˆÈ~‚Ì‚İ‚É‘Î‰
+::	ãƒ»/r ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§æŒ‡å®šã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¯, ..\..\ ã‚’èµ·ç‚¹ã¨ã—ã¦æŒ‡å®šã™ã‚‹.
+::	ãƒ»/r ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§æŒ‡å®šã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒã™ã§ã«å­˜åœ¨ã™ã‚‹ã¨ãã¯, ãã®å†…å®¹
+::	ã€€ã¯ã™ã¹ã¦ç ´æ£„ã•ã‚Œã‚‹.
+::	ãƒ»Visual Studio 10.0 ä»¥é™ã®ã¿ã«å¯¾å¿œ
 ::
 ::  VERSION
-::	Ver 1.0  2013/09/18 F.Kanehori	ƒoƒbƒ`ƒtƒ@ƒCƒ‹‚ÌÄ\¬
-::	Ver 1.1	 2013/10/09 F.Kanehori	svn co ‚É¸”s‚µ‚½‚çˆ—‚ğ’†~‚·‚é
-::	Ver 1.2	 2013/11/20 F.Kanehori	ŠO•”ŒöŠJ—pƒA[ƒJƒCƒu‚ğì¬‚·‚é
-::	Ver 1.3	 2014/10/23 F.Kanehori	ˆø” /y ’Ç‰Á
-::	Ver 1.4  2014/11/20 F.Kanehori	ƒfƒtƒHƒ‹ƒg•ÏX (toolset_id, python_ver)
-::	Ver 1.5  2016/06/02 F.Kanehori	V§Œä•Ï”‚Ì“±“ü (.._ELIMINATE_CLOSED)
-::	Ver 2.0  2017/07/31 F.Kanehori	Directory\‘¢‹y‚ÑƒfƒtƒHƒ‹ƒg‚Ì•ÏX
-::	Ver 2.0  2017/08/30 F.Kanehori	ƒfƒtƒHƒ‹ƒg•ÏX (x64, Release)
-::	Ver 3.0  2017/09/04 F.Kanehori	VƒcƒŠ[\‘¢‚É‘Î‰, python_ver ”p~
-::	Ver 3.1  2017/11/20 F.Kanehori	ƒhƒLƒ…ƒƒ“ƒg¶¬êŠ•ÏX‚É‘Î‰
-::	Ver 3.11 2017/11/22 F.Kanehori	ŠJn/I—¹‚ğ•\¦
+::	Ver 1.0  2013/09/18 F.Kanehori	ãƒãƒƒãƒãƒ•ã‚¡ã‚¤ãƒ«ã®å†æ§‹æˆ
+::	Ver 1.1	 2013/10/09 F.Kanehori	svn co ã«å¤±æ•—ã—ãŸã‚‰å‡¦ç†ã‚’ä¸­æ­¢ã™ã‚‹
+::	Ver 1.2	 2013/11/20 F.Kanehori	å¤–éƒ¨å…¬é–‹ç”¨ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã‚’ä½œæˆã™ã‚‹
+::	Ver 1.3	 2014/10/23 F.Kanehori	å¼•æ•° /y è¿½åŠ 
+::	Ver 1.4  2014/11/20 F.Kanehori	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå¤‰æ›´ (toolset_id, python_ver)
+::	Ver 1.5  2016/06/02 F.Kanehori	æ–°åˆ¶å¾¡å¤‰æ•°ã®å°å…¥ (.._ELIMINATE_CLOSED)
+::	Ver 2.0  2017/07/31 F.Kanehori	Directoryæ§‹é€ åŠã³ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å¤‰æ›´
+::	Ver 2.0  2017/08/30 F.Kanehori	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå¤‰æ›´ (x64, Release)
+::	Ver 3.0  2017/09/04 F.Kanehori	æ–°ãƒ„ãƒªãƒ¼æ§‹é€ ã«å¯¾å¿œ, python_ver å»ƒæ­¢
+::	Ver 3.1  2017/11/20 F.Kanehori	ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆç”Ÿæˆå ´æ‰€å¤‰æ›´ã«å¯¾å¿œ
+::	Ver 3.11 2017/11/22 F.Kanehori	é–‹å§‹/çµ‚äº†æ™‚åˆ»ã‚’è¡¨ç¤º
 ::	Ver 3.12 2017/11/22 F.Kanehori	Bug fixed.
 :: ============================================================================
 set PROG=%~n0
@@ -39,7 +39,7 @@ set CWD=%cd%
 echo %PROG%: started at %date% %time%
 
 ::----------------------------------------------
-:: ˆø”‚Ìˆ—
+:: å¼•æ•°ã®å‡¦ç†
 ::
 set TOOLSET_ID=14.0
 set CONFIGURATION=Release
@@ -72,7 +72,7 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: SpringheadTest ‚Éƒ\[ƒXƒcƒŠ[‚ğæ“¾‚·‚é
+:: SpringheadTest ã«ã‚½ãƒ¼ã‚¹ãƒ„ãƒªãƒ¼ã‚’å–å¾—ã™ã‚‹
 ::
 cd ..
 call :check_condition DAILYBUILD_CLEANUP_WORKSPACE
@@ -90,7 +90,7 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ƒrƒ‹ƒh‚ÆƒeƒXƒg‚ÍŸ‚ÌƒtƒHƒ‹ƒ_‚Ås‚È‚¤
+:: ãƒ“ãƒ«ãƒ‰ã¨ãƒ†ã‚¹ãƒˆã¯æ¬¡ã®ãƒ•ã‚©ãƒ«ãƒ€ã§è¡Œãªã†
 ::
 echo changing directory to [%TEST_REPOSITORY%]
 cd /D %TEST_REPOSITORY%
@@ -104,7 +104,7 @@ if %MAYBE_EMPTY% == 1 (
 )
 
 ::----------------------------------------------
-:: ŒöŠJ‚Å‚«‚È‚¢ƒtƒ@ƒCƒ‹‚Ìíœ‚Æİ’è•ÏX
+:: å…¬é–‹ã§ããªã„ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤ã¨è¨­å®šå¤‰æ›´
 ::
 call :check_condition DAILYBUILD_ELIMINATE_CLOSED
 if %$status% == 0 (
@@ -115,7 +115,7 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ƒeƒXƒg‚ğs‚È‚¤
+:: ãƒ†ã‚¹ãƒˆã‚’è¡Œãªã†
 ::
 cd core\test
 call :check_condition DAILYBUILD_EXECUTE_TESTALL
@@ -127,7 +127,7 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ƒhƒLƒ…ƒƒ“ƒg(doxygen)‚ğì‚é
+:: ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ(doxygen)ã‚’ä½œã‚‹
 ::
 call :check_condition DAILYBUILD_EXECUTE_MAKEDOC
 if %$status% == 0 (
@@ -136,9 +136,9 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ƒ\[ƒXƒcƒŠ[(%TEST_REPOSITORY%ˆÈ‰º)‚ğ Web ‚ÉƒRƒs[
+:: ã‚½ãƒ¼ã‚¹ãƒ„ãƒªãƒ¼(%TEST_REPOSITORY%ä»¥ä¸‹)ã‚’ Web ã«ã‚³ãƒ”ãƒ¼
 :: ************************************************
-::@ƒ\[ƒXƒcƒŠ[‚ÌƒRƒs[‚Í GitHub ˆÚsŒã‚Í”p~‚·‚é
+::ã€€ã‚½ãƒ¼ã‚¹ãƒ„ãƒªãƒ¼ã®ã‚³ãƒ”ãƒ¼ã¯ GitHub ç§»è¡Œå¾Œã¯å»ƒæ­¢ã™ã‚‹
 :: ************************************************
 ::
 set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\daily_build
@@ -161,7 +161,7 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: dailybuild ‚Å¶¬‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ğ Web ‚ÉƒRƒs[
+:: dailybuild ã§ç”Ÿæˆã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’ Web ã«ã‚³ãƒ”ãƒ¼
 ::
 set WEBBASE_G=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild_generated
 
@@ -181,7 +181,7 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ŠO•”ŒöŠJ—p‚ÌƒA[ƒJƒCƒu‚ğì‚é
+:: å¤–éƒ¨å…¬é–‹ç”¨ã®ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã‚’ä½œã‚‹
 ::
 call :check_condition DAILYBUILD_MAKE_ARCHIVE
 if %$status% == 0 (
@@ -199,7 +199,7 @@ set $status=0
 echo done.
 
 ::----------------------------------------------
-:: ˆ—I—¹
+:: å‡¦ç†çµ‚äº†
 ::
 :done
 echo %PROG%: teminated at %date% %time%
@@ -209,7 +209,7 @@ exit /b
 
 ::=============================================================================
 ::----------------------------------------------
-:: ƒRƒ}ƒ“ƒhˆø”‚Ìˆ—
+:: ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã®å‡¦ç†
 ::
 :get_args
     set $status=0
@@ -226,7 +226,7 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ƒfƒBƒŒƒNƒgƒŠ‘S‘Ì‚ÌƒRƒs[
+:: ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå…¨ä½“ã®ã‚³ãƒ”ãƒ¼
 ::
 :copy_dir
     echo copying directory %cd%\%1\ to %2\%1\
@@ -237,7 +237,7 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ƒtƒ@ƒCƒ‹‚ÌƒRƒs[
+:: ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ”ãƒ¼
 ::
 :copy_file
     echo copying file %cd%\%1 to %WEBBASE%\%1
@@ -248,8 +248,8 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ŠÂ‹«•Ï”‚É‚æ‚éÀs§Œä
-::	arg1:	ÀsŠÂ‹«§Œä•Ï”–¼
+:: ç’°å¢ƒå¤‰æ•°ã«ã‚ˆã‚‹å®Ÿè¡Œåˆ¶å¾¡
+::	arg1:	å®Ÿè¡Œç’°å¢ƒåˆ¶å¾¡å¤‰æ•°å
 ::
 :check_condition
     setlocal
@@ -265,14 +265,14 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: g—p•û–@‚Ì•\¦
+:: ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 ::
 :usage
     echo Usage: %PROG% [/t toolset] [/c config] [/p platform] [/r test_rep] [/h]
-    echo        /t toolset         ƒc[ƒ‹ƒZƒbƒg‚Ì¯•Ê { 14.0 ^<default^> ^| .. }
-    echo        /c configuration   ƒrƒ‹ƒh\¬ { Debug ^| Release ^<default^> ^| .. }
-    echo        /p platform        ƒrƒ‹ƒhƒvƒ‰ƒbƒgƒtƒH[ƒ€ { Win32 ^| x64 ^<default^>}
-    echo        /r test_rep        ì‹ÆƒŠƒ|ƒWƒgƒŠ‚Ìƒ‹[ƒg ^<default: SpringheadTest^>
-    echo        /h                 g—p•û–@‚Ì•\¦
+    echo        /t toolset         ãƒ„ãƒ¼ãƒ«ã‚»ãƒƒãƒˆã®è­˜åˆ¥ { 14.0 ^<default^> ^| .. }
+    echo        /c configuration   ãƒ“ãƒ«ãƒ‰æ§‹æˆ { Debug ^| Release ^<default^> ^| .. }
+    echo        /p platform        ãƒ“ãƒ«ãƒ‰ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ  { Win32 ^| x64 ^<default^>}
+    echo        /r test_rep        ä½œæ¥­ãƒªãƒã‚¸ãƒˆãƒªã®ãƒ«ãƒ¼ãƒˆ ^<default: SpringheadTest^>
+    echo        /h                 ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 exit /b
 
