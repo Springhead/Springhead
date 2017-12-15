@@ -5,26 +5,23 @@ setlocal enabledelayedexpansion
 ::	TestMainGit [/t toolset_id] [/c config] [/p platform] [/h]
 ::
 ::  DESCRIPTION
-::	dailybuild ‚ğÀs‚·‚é.
+::	dailybuild ã‚’å®Ÿè¡Œã™ã‚‹.
 ::	
 ::  ARGUMENTS
-::	/t toolset_id	ƒc[ƒ‹ƒZƒbƒg‚Ì¯•Ê { 14.0 <default> | .. }
-::	/c config	ƒrƒ‹ƒh\¬ { Debug | Release <default> | .. }
-::	/p platform	ƒrƒ‹ƒhƒvƒ‰ƒbƒgƒtƒH[ƒ€ { Win32 | x64 <default> }
-::	/r repository	ƒeƒXƒgƒŒƒ|ƒWƒgƒŠw’è
-::	/h              g—p•û–@‚Ì•\¦
+::	/t toolset_id	ãƒ„ãƒ¼ãƒ«ã‚»ãƒƒãƒˆã®è­˜åˆ¥ { 14.0 <default> | .. }
+::	/c config	ãƒ“ãƒ«ãƒ‰æ§‹æˆ { Debug | Release <default> | .. }
+::	/p platform	ãƒ“ãƒ«ãƒ‰ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ  { Win32 | x64 <default> }
+::	/r repository	ãƒ†ã‚¹ãƒˆãƒ¬ãƒã‚¸ãƒˆãƒªæŒ‡å®š
+::	/h              ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 ::
 ::  VERSION
-::	Ver 1.0  2017/12/03 F.Kanehori	GitHub ‰¼‘Î‰”ÅiPython”Å‚ğì‚é‚Ü‚Åj.
-::	Ver 1.1  2017/12/20 F.Kanehori	Springhead ƒ}ƒjƒ…ƒAƒ‹ì¬’Ç‰Á.
-::	Ver 1.2  2017/12/21 F.Kanehori	Generated dir on web server changed.
-::	Ver 1.21 2017/12/25 F.Kanehori	Bug fixed.
+::	Ver 1.0  2017/12/03 F.Kanehori	GitHub ä»®å¯¾å¿œç‰ˆï¼ˆPythonç‰ˆã‚’ä½œã‚‹ã¾ã§ï¼‰ã€‚
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
 
 ::----------------------------------------------
-:: ˆø”‚Ìˆ—
+:: å¼•æ•°ã®å‡¦ç†
 ::
 set TOOLSET_ID=14.0
 set CONFIGURATION=Release
@@ -41,7 +38,7 @@ echo.   PLATFORM:        [%PLATFORM%]
 echo.   TEST_REPOSITORY: [%TEST_REPOSITORY%]
 
 ::----------------------------------------------
-:: ƒeƒXƒgƒŠƒ|ƒWƒgƒŠ‚Ìƒ`ƒFƒbƒN
+:: ãƒ†ã‚¹ãƒˆãƒªãƒã‚¸ãƒˆãƒªã®ãƒã‚§ãƒƒã‚¯
 ::
 if not exist ..\..\..\%TEST_REPOSITORY% (
     echo %PROG%: test repository "%TEST_REPOSITORY%" does not exist!
@@ -51,7 +48,7 @@ if not exist ..\..\..\%TEST_REPOSITORY% (
 cd ..\..\..\%TEST_REPOSITORY%
 
 ::----------------------------------------------
-:: ƒrƒ‹ƒh‚ÆƒeƒXƒg‚ÍŸ‚ÌƒtƒHƒ‹ƒ_‚Ås‚È‚¤
+:: ãƒ“ãƒ«ãƒ‰ã¨ãƒ†ã‚¹ãƒˆã¯æ¬¡ã®ãƒ•ã‚©ãƒ«ãƒ€ã§è¡Œãªã†
 ::
 set MAYBE_EMPTY=0
 if not exist core\test       set MAYBE_EMPTY=1
@@ -63,7 +60,7 @@ if %MAYBE_EMPTY% == 1 (
 )
 
 ::----------------------------------------------
-:: ŒöŠJ‚Å‚«‚È‚¢ƒtƒ@ƒCƒ‹‚Ìíœ‚Æİ’è•ÏX
+:: å…¬é–‹ã§ããªã„ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤ã¨è¨­å®šå¤‰æ›´
 ::
 call :check_condition DAILYBUILD_ELIMINATE_CLOSED
 if %$status% == 0 (
@@ -74,10 +71,9 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ƒeƒXƒg‚ğs‚È‚¤
+:: ãƒ†ã‚¹ãƒˆã‚’è¡Œãªã†
 ::
 cd core\test
-set TESTBASE=%cd%
 call :check_condition DAILYBUILD_EXECUTE_TESTALL
 if %$status% == 0 (
     call bat\TestAllGit.bat %TOOLSET_ID% %CONFIGURATION% %PLATFORM% %TEST_REPOSITORY%
@@ -87,35 +83,31 @@ if %$status% == 0 (
 )
 
 ::----------------------------------------------
-:: ƒhƒLƒ…ƒƒ“ƒg(doxygen)‚ğì‚é
+:: ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ(doxygen)ã‚’ä½œã‚‹
 ::
 call :check_condition DAILYBUILD_EXECUTE_MAKEDOC
 if %$status% == 0 (
     echo making documents
     call bat\MakeDoc.bat
-    cd ..\doc\SprManual
-    cmd /c make
-    cd %TESTBASE%
 )
 
 ::----------------------------------------------
-:: dailybuild ‚Å¶¬‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ğ Web ‚ÉƒRƒs[
+:: dailybuild ã§ç”Ÿæˆã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’ Web ã«ã‚³ãƒ”ãƒ¼
 ::
-set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\generated
+set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild_generated
+
 call :check_condition DAILYBUILD_COPYTO_WEBBASE
 if %$status% == 0 (
     echo copying generated files to web
 
     cd ..\..\generated
-    set TMPCWD=!cd!
     set DIRLIST=bin doc lib
     set FILELIST=
-    echo.   WEBBASE:  [!WEBBASE!]
-    echo.   DIRLIST:  [!DIRLIST!]
-    echo.   FILELIST: [!FILELIST!]
-    for %%d in (!DIRLIST!) do call :copy_dir !TMPCWD! %%d !WEBBASE!
-    for %%f in (!FILELIST!) do call :copy_file !TMPCWD! %%f !WEBBASE!
-    cd %TESTBASE%
+    echo DIRLIST:  [!DIRLIST!]
+    echo FILELIST: [!FILELIST!]
+    for %%d in (!DIRLIST!) do call :copy_dir %%d !WEBBASE!
+    for %%f in (!FILELIST!) do call :copy_file %%f !WEBBASE!
+    cd ..\core\test
 )
 
 ::----------------------------------------------
@@ -125,7 +117,7 @@ set $status=0
 echo done.
 
 ::----------------------------------------------
-:: ˆ—I—¹
+:: å‡¦ç†çµ‚äº†
 ::
 :done
 endlocal && set $status=%$status%
@@ -134,7 +126,7 @@ exit /b
 
 ::=============================================================================
 ::----------------------------------------------
-:: ƒRƒ}ƒ“ƒhˆø”‚Ìˆ—
+:: ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã®å‡¦ç†
 ::
 :get_args
     set $status=0
@@ -151,35 +143,30 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ƒfƒBƒŒƒNƒgƒŠ‘S‘Ì‚ÌƒRƒs[
+:: ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå…¨ä½“ã®ã‚³ãƒ”ãƒ¼
 ::
 :copy_dir
-    echo copying directory %1\%2\ to %3\
-    if "%2" neq "" (
-	if exist %3\%2 (
-		pushd %3\%2
-		for /f %%d in ('dir /ad /b /w *') do rmdir /s /q %%d
-		del /f /q *
-		popd
-	)
-	xcopy /e/c/f/h/i/y %1\%2 %3\%2 > NUL
+    echo copying directory %cd%\%1\ to %2\%1\
+    if "%1" neq "" (
+	rmdir /s /q %2\%1 > NUL
+	xcopy /e/c/f/h/i/y %1 %2\%1 > NUL
     )
 exit /b
 
 ::----------------------------------------------
-:: ƒtƒ@ƒCƒ‹‚ÌƒRƒs[
+:: ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ”ãƒ¼
 ::
 :copy_file
-    echo copying file %1\%2 to %3\%2
-    if "%2" neq "" (
-	del %3\%2 > NUL
-	copy /y %1\%2 %3\%2 > NUL
+    echo copying file %cd%\%1 to %WEBBASE%\%1
+    if "%1" neq "" (
+	del %WEBBASE%\%1 > NUL
+	copy /y %1 %WEBBASE%\%1 > NUL
     )
 exit /b
 
 ::----------------------------------------------
-:: ŠÂ‹«•Ï”‚É‚æ‚éÀs§Œä
-::	arg1:	ÀsŠÂ‹«§Œä•Ï”–¼
+:: ç’°å¢ƒå¤‰æ•°ã«ã‚ˆã‚‹å®Ÿè¡Œåˆ¶å¾¡
+::	arg1:	å®Ÿè¡Œç’°å¢ƒåˆ¶å¾¡å¤‰æ•°å
 ::
 :check_condition
     setlocal
@@ -195,15 +182,15 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: g—p•û–@‚Ì•\¦
+:: ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 ::
 :usage
     echo Usage: %PROG% [/t toolset] [/c config] [/p platform] [/h]
-    echo        /t toolset         ƒc[ƒ‹ƒZƒbƒg‚Ì¯•Ê { 14.0 ^<default^> ^| .. }
-    echo        /c configuration   ƒrƒ‹ƒh\¬ { Debug ^| Release ^<default^> ^| .. }
-    echo        /p platform        ƒrƒ‹ƒhƒvƒ‰ƒbƒgƒtƒH[ƒ€ { Win32 ^| x64 ^<default^>}
-    echo        /r                 ƒeƒXƒgƒŠƒ|ƒWƒgƒŠ (SpringheadTest ^<default^>)
-    echo        /h                 g—p•û–@‚Ì•\¦
+    echo        /t toolset         ãƒ„ãƒ¼ãƒ«ã‚»ãƒƒãƒˆã®è­˜åˆ¥ { 14.0 ^<default^> ^| .. }
+    echo        /c configuration   ãƒ“ãƒ«ãƒ‰æ§‹æˆ { Debug ^| Release ^<default^> ^| .. }
+    echo        /p platform        ãƒ“ãƒ«ãƒ‰ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ  { Win32 ^| x64 ^<default^>}
+    echo        /r                 ãƒ†ã‚¹ãƒˆãƒªãƒã‚¸ãƒˆãƒª (SpringheadTest ^<default^>)
+    echo        /h                 ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 exit /b
 
 ::end TestMainGit.bat

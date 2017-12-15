@@ -12,7 +12,7 @@ set HPP=EP%MODULE%.h
 set SPRH=SprEP%MODULE%.h
 set API_INCLUDE=../../include
 
-rem makefileÇÃçÏê¨Ç∆MakeÇÃé¿çs
+rem makefile„ÅÆ‰ΩúÊàê„Å®Make„ÅÆÂÆüË°å
 set PATHORG=%PATH%;
 
 set BINDIR=..\..\..\buildtool
@@ -23,7 +23,7 @@ rem for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUD
 
 :swig
 echo Swig Part
-call swig.exe -cpperraswarn -sprpy -DSWIG_PY_SPR -c++ %MODULE%.i & if errorlevel 1 echo !!!!SWIG FAILED!!!!! & @pause
+call swig.exe -cpperraswarn -sprpy -c++ %MODULE%.i & if errorlevel 1 echo !!!!SWIG FAILED!!!!! & @pause
 
 :astyle
 echo AStyle Part

@@ -5,34 +5,31 @@ setlocal enabledelayedexpansion
 ::	TestAllGit toolset_id configuration platform test_repository
 ::
 ::  DESCRIPTION
-::	dailybuild ‚ðŽÀs‚·‚é.
+::	dailybuild ã‚’å®Ÿè¡Œã™ã‚‹.
 ::	
 ::  ARGUMENTS
-::	toolset_id	ƒc[ƒ‹ƒZƒbƒg‚ÌŽ¯•Ê { 10.0 | 11.0 | .. }
-::	configuration	ƒrƒ‹ƒh\¬ { Debug | Release | .. }
-::	platform	ƒrƒ‹ƒhƒvƒ‰ƒbƒgƒtƒH[ƒ€ { Win32 | x64 }
-::	test_repository	ì‹ÆƒŠƒ|ƒWƒgƒŠ‚Ìƒ‹[ƒg
+::	toolset_id	ãƒ„ãƒ¼ãƒ«ã‚»ãƒƒãƒˆã®è­˜åˆ¥ { 10.0 | 11.0 | .. }
+::	configuration	ãƒ“ãƒ«ãƒ‰æ§‹æˆ { Debug | Release | .. }
+::	platform	ãƒ“ãƒ«ãƒ‰ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ  { Win32 | x64 }
+::	test_repository	ä½œæ¥­ãƒªãƒã‚¸ãƒˆãƒªã®ãƒ«ãƒ¼ãƒˆ
 ::
 ::  CAUTION
-::	E/r ƒIƒvƒVƒ‡ƒ“‚ÅŽw’è‚·‚éƒfƒBƒŒƒNƒgƒŠ‚Í, ..\..\ ‚ð‹N“_‚Æ‚µ‚ÄŽw’è‚·‚é.
-::	E/r ƒIƒvƒVƒ‡ƒ“‚ÅŽw’è‚µ‚½ƒfƒBƒŒƒNƒgƒŠ‚ª‚·‚Å‚É‘¶Ý‚·‚é‚Æ‚«‚Í, ‚»‚Ì“à—e
-:: 	  ‚Í‚·‚×‚Ä”jŠü‚³‚ê‚é.
-::	EVisual Studio 10.0 ˆÈ~‚Ì‚Ý‚É‘Î‰ž
+::	ãƒ»/r ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§æŒ‡å®šã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¯, ..\..\ ã‚’èµ·ç‚¹ã¨ã—ã¦æŒ‡å®šã™ã‚‹.
+::	ãƒ»/r ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§æŒ‡å®šã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒã™ã§ã«å­˜åœ¨ã™ã‚‹ã¨ãã¯, ãã®å†…å®¹
+:: 	  ã¯ã™ã¹ã¦ç ´æ£„ã•ã‚Œã‚‹.
+::	ãƒ»Visual Studio 10.0 ä»¥é™ã®ã¿ã«å¯¾å¿œ
 ::
 ::  VERSION
-::	Ver 1.0  2013/09/19 F.Kanehori	ƒoƒbƒ`ƒtƒ@ƒCƒ‹‚ÌÄ\¬
-::	Ver 2.0	 2014/02/19 F.Kanehori	result.log ‚Ìo—Ís‡˜‰ü’ù
-::	Ver 3.0  2017/10/26 F.Kanehori	VƒcƒŠ[\‘¢‚É‘Î‰ž
-::	Ver 4.0  2017/12/13 F.Kanehori	GitHub ‘Î‰ž
-::	Ver 4.1  2017/12/21 F.Kanehori	Log directory on web server changed.
-::	Ver 4.2  2017/12/25 F.Kanehori	“ú•tî•ñƒtƒ@ƒCƒ‹‚ðì¬
-::	Ver 4.3  2018/01/18 F.Kanehori	result.log —š—ðƒtƒ@ƒCƒ‹‚ðì¬
+::	Ver 1.0  2013/09/19 F.Kanehori	ãƒãƒƒãƒãƒ•ã‚¡ã‚¤ãƒ«ã®å†æ§‹æˆ
+::	Ver 2.0	 2014/02/19 F.Kanehori	result.log ã®å‡ºåŠ›è¡Œé †åºæ”¹è¨‚
+::	Ver 3.0  2017/10/26 F.Kanehori	æ–°ãƒ„ãƒªãƒ¼æ§‹é€ ã«å¯¾å¿œ
+::	Ver 4.0  2017/12/13 F.Kanehori	GitHub å¯¾å¿œ
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
 
 ::----------------------------------------------
-:: ˆø”‚Ìˆ—
+:: å¼•æ•°ã®å‡¦ç†
 ::
 set TOOLSET_ID=%1
 set CONFIGURATION=%2
@@ -47,9 +44,9 @@ for %%a in (%ARGS%) do (
 		exit /b
 	)
 )
-rem if "%TOOLSET_ID%" equ "9" set TOOLSET_ID=9.0
-rem if "%TOOLSET_ID%" equ "10" set TOOLSET_ID=10.0
-rem if "%TOOLSET_ID%" equ "12" set TOOLSET_ID=12.0
+if "%TOOLSET_ID%" equ "9" set TOOLSET_ID=9.0
+if "%TOOLSET_ID%" equ "10" set TOOLSET_ID=10.0
+if "%TOOLSET_ID%" equ "12" set TOOLSET_ID=12.0
 if "%TOOLSET_ID%" equ "14" set TOOLSET_ID=14.0
 rem echo TOOLSET_ID:      [%TOOLSET_ID%]
 rem echo CONFIGURATION:   [%CONFIGURATION%]
@@ -57,22 +54,22 @@ rem echo PLATFORM:        [%PLATFORM%]
 rem echo TEST_REPOSITORY: [%TEST_REPOSITORY%]
 
 set SOLUTIONFILE_ID=%TOOLSET_ID%
-rem if "%SOLUTIONFILE_ID%" equ "9.0" set SOLUTIONFILE_ID=9
-rem if "%SOLUTIONFILE_ID%" equ "10.0" set SOLUTIONFILE_ID=10
+if "%SOLUTIONFILE_ID%" equ "9.0" set SOLUTIONFILE_ID=9
+if "%SOLUTIONFILE_ID%" equ "10.0" set SOLUTIONFILE_ID=10
 rem echo SOLUTIONFILE_ID: [%SOLUTIONFILE_ID%]
 
 ::----------------------------------------------
-:: ‘åˆæ•Ï”‚Ì‰Šú‰»
+:: å¤§åŸŸå¤‰æ•°ã®åˆæœŸåŒ–
 ::
 set DATEORG=%DATE:~2,10%
 set DATESTR=%DATEORG:/=.%
 set LOGDIR=log
 
 ::----------------------------------------------
-:: ƒeƒXƒgƒ^[ƒQƒbƒg‚ÌÝ’è
+:: ãƒ†ã‚¹ãƒˆã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è¨­å®š
 ::
 set TARGET_LIST=Stub	tests	Samples
-set TRGTID_LIST=ƒXƒ^ƒu	empty	ƒTƒ“ƒvƒ‹
+set TRGTID_LIST=ã‚¹ã‚¿ãƒ–	empty	ã‚µãƒ³ãƒ—ãƒ«
 set DO_BLD_LIST=yes	yes	yes
 set DO_RUN_LIST=no	yes	no
 call :list_to_array TARGETS %TARGET_LIST%
@@ -85,12 +82,12 @@ rem call :array_dump DO_BLDS
 rem call :array_dump DO_RUNS
 
 ::----------------------------------------------
-:: ƒ^ƒO“o˜^‚Ì§Œä
+:: ã‚¿ã‚°ç™»éŒ²ã®åˆ¶å¾¡
 ::
 set AT_LEAST_ONE_BLD_SUCC=0
 
 ::----------------------------------------------
-:: ƒƒOƒtƒ@ƒCƒ‹–¼‚ÌÝ’è
+:: ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«åã®è¨­å®š
 ::
 set BLD_SUCC_LOG_LIST=StubBuild.log Build.log SamplesBuild.log
 set BLD_FAIL_LOG_LIST=StubBuildError.log BuildError.log SamplesBuildError.log
@@ -98,14 +95,12 @@ set RUN_SUCC_LOG_LIST=dummy_s.log Run.log SamplesRun.log
 set RUN_FAIL_LOG_LIST=dummy_f.log RunError.log SamplesRunError.log
 set RESULT_LOG=result.log
 set HISTORY_LOG=History.log
-set DATE_LOG=Test.date
 call :prepend_logdir BLD_SUCC_LOG_LIST %LOGDIR%
 call :prepend_logdir BLD_FAIL_LOG_LIST %LOGDIR%
 call :prepend_logdir RUN_SUCC_LOG_LIST %LOGDIR%
 call :prepend_logdir RUN_FAIL_LOG_LIST %LOGDIR%
 set RESULT_LOG=%LOGDIR%\%RESULT_LOG%
 set HISTORY_LOG=%LOGDIR%\%HISTORY_LOG%
-set DATE_LOG=%LOGDIR%\%DATE_LOG%
 call :list_to_array BLD_SUCC_LOGS %BLD_SUCC_LOG_LIST%
 call :list_to_array BLD_FAIL_LOGS %BLD_FAIL_LOG_LIST%
 call :list_to_array RUN_SUCC_LOGS %RUN_SUCC_LOG_LIST%
@@ -116,13 +111,11 @@ rem call :array_dump RUN_SUCC_LOGS
 rem call :array_dump RUN_FAIL_LOGS
 rem echo.  [RESULT_LOG]: %RESULT_LOG%
 rem echo.  [HISTORY_LOG]: %HISTORY_LOG%
-rem echo.  [DATE_LOG]: %DATE_LOG%
 
 if exist %RESULT_LOG% del %RESULT_LOG%
-if exist %DATE_LOG% del %DATE_LOG%
 
 rem ------------------------------
-rem  •K—v‚ÈƒpƒX‚ÌÝ’è
+rem  å¿…è¦ãªãƒ‘ã‚¹ã®è¨­å®š
 rem 
 set DEVENVPATH=Microsoft Visual Studio %TOOLSET_ID%\Common7\IDE
 set X64PATH="C:\Program Files (x86)\%DEVENVPATH%"
@@ -136,7 +129,7 @@ if exist "%X32PATH:"=%\%PROG%" echo System: 32 bits
 if exist "%X64PATH:"=%\%PROG%" echo System: 64 bits
 
 ::----------------------------------------------
-:: ŽÀs§Œä•Ï”
+:: å®Ÿè¡Œåˆ¶å¾¡å¤‰æ•°
 ::
 set DO_CONTROL_LIST=DAILYBUILD_EXECUTE_STUBBUILD
 set DO_CONTROL_LIST=%DO_CONTROL_LIST% DAILYBUILD_EXECUTE_BUILDRUN
@@ -144,8 +137,8 @@ set DO_CONTROL_LIST=%DO_CONTROL_LIST% DAILYBUILD_EXECUTE_SAMPLEBUILD
 call :list_to_array DO_CONTROLS %DO_CONTROL_LIST%
 rem call :array_dump DO_CONTROLS
 
-rem ** ‰º‹Lƒtƒ@ƒCƒ‹‚Ì‘¶Ý—L–³‚Åƒ^[ƒQƒbƒg‘S‘Ì‚ÌŽÀs‚ð§Œä‚Å‚«‚é **
-rem **** ‚½‚¾‚µ, FORCE_DONT_xx ‚Ì•û‚ª—Dæ‚·‚é ********************
+rem ** ä¸‹è¨˜ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨æœ‰ç„¡ã§ã‚¿ãƒ¼ã‚²ãƒƒãƒˆå…¨ä½“ã®å®Ÿè¡Œã‚’åˆ¶å¾¡ã§ãã‚‹ **
+rem **** ãŸã ã—, FORCE_DONT_xx ã®æ–¹ãŒå„ªå…ˆã™ã‚‹ ********************
 set FOECE_DO_BLD=dailybuild.do.build
 set FORCE_DO_RUN=dailybuild.do.run
 set FORCE_DONT_BLD=dailybuild.dont.build
@@ -156,13 +149,13 @@ set SRCDIR=..\src
 set SCRIPT=bat\BuildVC.bat
 
 ::----------------------------------------------
-:: ƒrƒ‹ƒh•ŽÀs
+:: ãƒ“ãƒ«ãƒ‰ï¼†å®Ÿè¡Œ
 ::
 set INDEX=0
 for %%t in (%TARGET_LIST%) do (
 
 	rem ------------------------------
-	rem  ƒ^[ƒQƒbƒg‚ÌŽ¯•Ê
+	rem  ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è­˜åˆ¥
 	rem 
 	set /a INDEX+=1
 	call :nth_element TARGET TARGETS !INDEX!
@@ -179,12 +172,12 @@ for %%t in (%TARGET_LIST%) do (
 	rem echo TARGET: !TARGET!	^(!JOB!^)
 
 	rem ------------------------------
-	rem  •Ï”‚Ì‰Šú‰»
+	rem  å¤‰æ•°ã®åˆæœŸåŒ–
 	rem 
-	set BLD_SUCC_LIST_INIT=ƒrƒ‹ƒh¬Œ÷ (
-	set BLD_FAIL_LIST_INIT=ƒrƒ‹ƒhŽ¸”s (
-	set RUN_SUCC_LIST_INIT=ŽÀs¬Œ÷ (
-	set RUN_FAIL_LIST_INIT=ŽÀsŽ¸”s (
+	set BLD_SUCC_LIST_INIT=ãƒ“ãƒ«ãƒ‰æˆåŠŸ (
+	set BLD_FAIL_LIST_INIT=ãƒ“ãƒ«ãƒ‰å¤±æ•— (
+	set RUN_SUCC_LIST_INIT=å®Ÿè¡ŒæˆåŠŸ (
+	set RUN_FAIL_LIST_INIT=å®Ÿè¡Œå¤±æ•— (
 
 	set BLD_SUCC=
 	set BLD_FAIL=
@@ -197,7 +190,7 @@ for %%t in (%TARGET_LIST%) do (
 	set RUN_FAIL_LIST=!RUN_FAIL_LIST_INIT!
 
 	rem ------------------------------
-	rem  ƒƒOƒtƒ@ƒCƒ‹‚Ì‰Šú‰»
+	rem  ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã®åˆæœŸåŒ–
 	rem 
 	call :nth_element TARGETID_STR TRGTIDS !INDEX!
 	rem echo.  TARGETID_STR: !TARGETID_STR!
@@ -207,26 +200,26 @@ for %%t in (%TARGET_LIST%) do (
 		call :nth_element BLD_FAIL_LOG BLD_FAIL_LOGS !INDEX!
 		rem echo.  BLD_SUCC_LOG: !BLD_SUCC_LOG!
 		rem echo.  BLD_FAIL_LOG: !BLD_FAIL_LOG!
-		call :init_logfile !BLD_SUCC_LOG! !TARGETID_STR!ƒrƒ‹ƒh
-		call :init_logfile !BLD_FAIL_LOG! !TARGETID_STR!ƒrƒ‹ƒhƒGƒ‰[
+		call :init_logfile !BLD_SUCC_LOG! !TARGETID_STR!ãƒ“ãƒ«ãƒ‰
+		call :init_logfile !BLD_FAIL_LOG! !TARGETID_STR!ãƒ“ãƒ«ãƒ‰ã‚¨ãƒ©ãƒ¼
 	)
 	if "!DO_RUN!" equ "yes" (
 		call :nth_element RUN_SUCC_LOG RUN_SUCC_LOGS !INDEX!
 		call :nth_element RUN_FAIL_LOG RUN_FAIL_LOGS !INDEX!
 		rem echo.  RUN_SUCC_LOG: !RUN_SUCC_LOG!
 		rem echo.  RUN_FAIL_LOG: !RUN_FAIL_LOG!
-		call :init_logfile !RUN_SUCC_LOG! !TARGETID_STR!ŽÀs
-		call :init_logfile !RUN_FAIL_LOG! !TARGETID_STR!ŽÀsƒGƒ‰[
+		call :init_logfile !RUN_SUCC_LOG! !TARGETID_STR!å®Ÿè¡Œ
+		call :init_logfile !RUN_FAIL_LOG! !TARGETID_STR!å®Ÿè¡Œã‚¨ãƒ©ãƒ¼
 	)
 
 	call set CONTROL=%%DO_CONTROLS[!INDEX!]%%
 
 	rem ------------------------------
-	rem  INDEX ‚É‚æ‚èˆ—‚ªˆÙ‚È‚é
+	rem  INDEX ã«ã‚ˆã‚Šå‡¦ç†ãŒç•°ãªã‚‹
 	rem 
 	if !INDEX! == 1 (
 		rem ------------------------------
-		rem  stub/library ‚Ìì¬
+		rem  stub/library ã®ä½œæˆ
 		rem 
 		call :check_condition !CONTROL!
 		if !$status! == 0 (
@@ -238,7 +231,7 @@ for %%t in (%TARGET_LIST%) do (
 		)
 	) else (
 		rem ------------------------------
-		rem  ƒrƒ‹ƒh•ŽÀs
+		rem  ãƒ“ãƒ«ãƒ‰ï¼†å®Ÿè¡Œ
 		rem 
 		call :check_condition !CONTROL!
 		if !$status! == 0 (
@@ -269,8 +262,8 @@ for %%t in (%TARGET_LIST%) do (
 					call !SCRIPT! !ARGS!
 				)
 			)
-			if "!BLD_SUCC!" equ "ƒrƒ‹ƒh¬Œ÷" (
-				rem ** ƒ^ƒO“o˜^‚Ì—\–ñ‚ð‚·‚é **
+			if "!BLD_SUCC!" equ "ãƒ“ãƒ«ãƒ‰æˆåŠŸ" (
+				rem ** ã‚¿ã‚°ç™»éŒ²ã®äºˆç´„ã‚’ã™ã‚‹ **
 				set AT_LEAST_ONE_BLD_SUCC=1
 			)
 			call :append_r_paren BLD_SUCC_LIST
@@ -282,8 +275,8 @@ for %%t in (%TARGET_LIST%) do (
 			rem echo RUN_SUCC_LIST: [!RUN_SUCC_LIST!]
 			rem echo RUN_FAIL_LIST: [!RUN_FAIL_LIST!]
 
-			rem %RESULT_LOG% ‚Éo—Í‚·‚é‡˜‚ÍŽŸ‚Ì‚Æ‚¨‚è‚Æ‚·‚é
-			rem   ¦ ƒEƒFƒuƒy[ƒW‚Ìì¬(plugin)‚Å‚±‚Ì‡˜‚ª‰¼’è‚³‚ê‚Ä‚¢‚é
+			rem %RESULT_LOG% ã«å‡ºåŠ›ã™ã‚‹é †åºã¯æ¬¡ã®ã¨ãŠã‚Šã¨ã™ã‚‹
+			rem   â€» ã‚¦ã‚§ãƒ–ãƒšãƒ¼ã‚¸ã®ä½œæˆ(plugin)ã§ã“ã®é †åºãŒä»®å®šã•ã‚Œã¦ã„ã‚‹
 			echo !TARGET!>> %RESULT_LOG%
 			echo !BLD_SUCC_LIST!>>%RESULT_LOG%
 			echo !BLD_FAIL_LIST!>>%RESULT_LOG%
@@ -294,36 +287,46 @@ for %%t in (%TARGET_LIST%) do (
 	)
 )
 
+goto :skip1
 ::----------------------------------------------
-:: —š—ðî•ñ‚ðo—Í
+:: ã‚¿ã‚°ã‚’ç™»éŒ²   ==> GitHub ç§»è¡Œå¾Œã¯ä¸­æ­¢
 ::
-call :check_condition DAILYBUILD_GEN_HISTORY
+call :check_condition DAILYBUILD_COPYTO_TAGS
 if %$status% == 0 (
-	rem ** —š—ðî•ñ‚ðo—Í **
-	cd bin
-	set FNAME=core/test/log/result.log
-	python VersionControlSystem.py -g -f !FNAME! all > ..\%HISTORY_LOG%
-	cd ..
+	rem ** ã‚¿ã‚°ã‚’ç™»éŒ² **
+	set SVN=http://springhead.info/spr2/Springhead/trunk
+	set TAG=http://springhead.info/spr2/Springhead/tags/BuildSucceed%date%
+	if %AT_LEAST_ONE_BLD_SUCC% == 1 (
+		svn copy !SVN! !TAG! -m "%BLD_SUCC_LIST% %RUN_SUCC_LIST%"
+	)
+	rem ** Springhead2 ã®æ›´æ–°å±¥æ­´ã‚’ %HISTORY_LOG% ã«å‡ºåŠ› **
+	svn log !SVN! > %HISTORY_LOG%
 )
+:skip1
 
 ::----------------------------------------------
-:: ƒƒO‚ð Samba ‚ÉƒRƒs[‚·‚é
+:: ãƒ­ã‚°ã‚’ Samba ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹
 ::
 call :check_condition DAILYBUILD_COPYTO_BUILDLOG
 if %$status% == 0 (
-	:: “ú•tî•ñ
-	set DATESTR=%DATE:~0,4%-%DATE:~5,2%%DATE:~8,2%
-	set TIMESTR=%TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%
-	echo This file was generated by "TestAllGit.bat".		>  %DATE_LOG%
-	echo Format of next line: "any any any (YYYY-MMDD hh:mm:ss)".	>> %DATE_LOG%
-	echo any any any ^(!DATESTR! !TIMESTR!^)			>> %DATE_LOG%
-
-	set SMBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\log
+	set SMBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\daily_build
 	echo copying logs to !SMBBASE!
 	del !SMBBASE!\*.log
 	xcopy /C/F/I/Y log\*.log !SMBBASE!
-	copy /Y %DATE_LOG% !SMBBASE!
 )
+
+goto :skip2
+::----------------------------------------------
+:: ãƒ­ã‚°ã‚’ SVN ã«ã‚³ãƒŸãƒˆã™ã‚‹   ==> GitHub ç§»è¡Œå¾Œã¯ä¸­æ­¢
+::
+call :check_condition DAILYBUILD_COMMIT_BUILDLOG
+if %$status% == 0 (
+	echo comitting logs to subversion
+	cd log
+	svn commit -m "Autobuild done."
+	cd ..
+)
+:skip2
 
 endlocal && set $status=0
 exit /b 0
@@ -331,9 +334,9 @@ exit /b 0
 
 :: ============================================================================
 ::----------------------------------------------
-:: ƒŠƒXƒg‚ð‹[Ž—”z—ñ‚É‚·‚éiì‹Æ•Ï” _I, _J ‚ðŽg—pj
-::	arg1:	‹[Ž—”z—ñ–¼
-::	arg2:	‹[Ž—”z—ñ‚ÉÝ’è‚·‚é’l‚ÌƒŠƒXƒg
+:: ãƒªã‚¹ãƒˆã‚’æ“¬ä¼¼é…åˆ—ã«ã™ã‚‹ï¼ˆä½œæ¥­å¤‰æ•° _I, _J ã‚’ä½¿ç”¨ï¼‰
+::	arg1:	æ“¬ä¼¼é…åˆ—å
+::	arg2:	æ“¬ä¼¼é…åˆ—ã«è¨­å®šã™ã‚‹å€¤ã®ãƒªã‚¹ãƒˆ
 ::
 :list_to_array
 	set _I=0
@@ -345,9 +348,9 @@ exit /b 0
 exit /b
 
 ::----------------------------------------------
-:: ‹[Ž—”z—ñ‚Ì n ”Ô–Ú‚Ì—v‘f‚ðŽæo‚·
-::	arg1:	’l‚ð•Ô‚·ŠÂ‹«•Ï”–¼
-::	arg2:	‹[Ž—”z—ñ–¼
+:: æ“¬ä¼¼é…åˆ—ã® n ç•ªç›®ã®è¦ç´ ã‚’å–å‡ºã™
+::	arg1:	å€¤ã‚’è¿”ã™ç’°å¢ƒå¤‰æ•°å
+::	arg2:	æ“¬ä¼¼é…åˆ—å
 ::	arg3:	n
 ::
 :nth_element
@@ -358,9 +361,9 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ƒƒOƒtƒ@ƒCƒ‹–¼‚ÉƒfƒBƒŒƒNƒgƒŠ–¼‚ð‘O’u‚·‚é
-::	arg1:	ƒƒOƒtƒ@ƒCƒ‹‚ÌƒŠƒXƒg–¼
-::	arg2:	ƒƒOƒfƒBƒŒƒNƒgƒŠ–¼
+:: ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«åã«ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã‚’å‰ç½®ã™ã‚‹
+::	arg1:	ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªã‚¹ãƒˆå
+::	arg2:	ãƒ­ã‚°ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå
 ::
 :prepend_logdir
 	setlocal
@@ -374,20 +377,20 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ƒƒOƒtƒ@ƒCƒ‹‚Ì‰Šú‰»
-::	arg1:	ƒƒOƒtƒ@ƒCƒ‹–¼
-::	arg2:	ƒƒO‚ÌŽí•ÊiŽ¯•Ê—pj
+:: ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã®åˆæœŸåŒ–
+::	arg1:	ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«å
+::	arg2:	ãƒ­ã‚°ã®ç¨®åˆ¥ï¼ˆè­˜åˆ¥ç”¨ï¼‰
 ::
 :init_logfile
-	echo “ú•t : %DATESTR% > %1
-	echo --- %2‚ÌƒƒO --- >> %1
+	echo æ—¥ä»˜ : %DATESTR% > %1
+	echo --- %2ã®ãƒ­ã‚° --- >> %1
 	echo. >> %1
 exit /b
 
 ::----------------------------------------------
-:: ƒfƒBƒŒƒNƒgƒŠ–¼‚ÌŽæo‚µ
-::	arg1:	Œ‹‰Ê‚ð•Ô‚·•Ï”–¼
-::	arg2:	ƒpƒX–¼
+:: ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã®å–å‡ºã—
+::	arg1:	çµæžœã‚’è¿”ã™å¤‰æ•°å
+::	arg2:	ãƒ‘ã‚¹å
 ::
 :get_directory_name
 	setlocal
@@ -397,10 +400,10 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: •¶Žš—ñ‚ÌƒAƒyƒ“ƒh
-::	arg1:	ŠÂ‹«•Ï”–¼
-::	arg2:	’Ç‰Á‚·‚é•¶Žš—ñ
-::	arg3:	‹æØ‚è‹L†•¶Žš
+:: æ–‡å­—åˆ—ã®ã‚¢ãƒšãƒ³ãƒ‰
+::	arg1:	ç’°å¢ƒå¤‰æ•°å
+::	arg2:	è¿½åŠ ã™ã‚‹æ–‡å­—åˆ—
+::	arg3:	åŒºåˆ‡ã‚Šè¨˜å·æ–‡å­—
 ::
 :append
 	setlocal
@@ -414,8 +417,8 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: •¶Žš—ñ‚Ì––”ö‚É')'‚ð•t‰Á‚·‚éi––”ö‚Ì','‚Íœ‹Žj
-::	arg1:	ŠÂ‹«•Ï”–¼
+:: æ–‡å­—åˆ—ã®æœ«å°¾ã«')'ã‚’ä»˜åŠ ã™ã‚‹ï¼ˆæœ«å°¾ã®','ã¯é™¤åŽ»ï¼‰
+::	arg1:	ç’°å¢ƒå¤‰æ•°å
 ::
 :append_r_paren
 	setlocal
@@ -425,9 +428,9 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ŠÂ‹«•Ï”‚É‚æ‚éŽÀs§Œä
-::	arg1:	ŽÀsŠÂ‹«§Œä•Ï”–¼
-::	$status	ŽÀsŒ‹‰Ê
+:: ç’°å¢ƒå¤‰æ•°ã«ã‚ˆã‚‹å®Ÿè¡Œåˆ¶å¾¡
+::	arg1:	å®Ÿè¡Œç’°å¢ƒåˆ¶å¾¡å¤‰æ•°å
+::	$status	å®Ÿè¡Œçµæžœ
 ::
 :check_condition
 	setlocal
@@ -443,8 +446,8 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: ‹[Ž—”z—ñ‚Ìƒ_ƒ“ƒviƒfƒoƒbƒO—pj
-::	arg1:	‹[Ž—”z—ñ–¼
+:: æ“¬ä¼¼é…åˆ—ã®ãƒ€ãƒ³ãƒ—ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
+::	arg1:	æ“¬ä¼¼é…åˆ—å
 ::
 :array_dump
 	setlocal

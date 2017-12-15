@@ -2,45 +2,47 @@
 setlocal enabledelayedexpansion
 :: ============================================================================
 ::  SYNOPSIS
-::	set _SPRTOP_=<SpringheadÇÃÉgÉbÉvÉfÉBÉåÉNÉgÉä>
-::	do_python.bat script.py [args..]	ÅiWindows êÍópÅj
+::	python_adapter.bat script [-SprTop dir] [args..]	ÔºàWindows Â∞ÇÁî®Ôºâ
 ::
 ::  DESCRIPTION
-::	Python script Çé¿çsÇ∑ÇÈÇΩÇﬂÇÃ Windows ópÉAÉ_ÉvÉ^ÅB
-::	"Springhead/buildtool" Ç™óòópÇ≈Ç´ÇÈÇ∆Ç´ÇÕÅAÇªÇÍÇégÇ¡Çƒé¿çsÇ∑ÇÈÅB
-::	Ç≥Ç‡Ç»ÇØÇÍÇŒÅAÉfÉtÉHÉãÉgÇ≈óòópÇ≈Ç´ÇÈ python ÇégÇ¡Çƒé¿çsÇ∑ÇÈÅB
-::	ÉfÉtÉHÉãÉgÇ≈ python Ç™óòópÇ≈Ç´Ç»Ç¢èÍçáÅAÇ‹ÇΩÇÕ python ÇÃÉoÅ[ÉWÉáÉìÇ™
-::	3 ÇÊÇËå√Ç¢èÍçáÇÕÅAÉÅÉbÉZÅ[ÉWÇï\é¶ÇµÇƒèàóùÇíÜé~Ç∑ÇÈÅB
+::	Python script „ÇíÂÆüË°å„Åô„Çã„Åü„ÇÅ„ÅÆ Windows Áî®„Ç¢„ÉÄ„Éó„Çø„ÄÇ
+::	"Springhead/buildtool" „ÅåÂà©Áî®„Åß„Åç„Çã„Å®„Åç„ÅØ„ÄÅ„Åù„Çå„Çí‰Ωø„Å£„Å¶ÂÆüË°å„Åô„Çã„ÄÇ
+::	„Åï„ÇÇ„Å™„Åë„Çå„Å∞„ÄÅ„Éá„Éï„Ç©„É´„Éà„ÅßÂà©Áî®„Åß„Åç„Çã python „Çí‰Ωø„Å£„Å¶ÂÆüË°å„Åô„Çã„ÄÇ
+::	„Éá„Éï„Ç©„É´„Éà„Åß python „ÅåÂà©Áî®„Åß„Åç„Å™„ÅÑÂ†¥Âêà„ÄÅ„Åæ„Åü„ÅØ python „ÅÆ„Éê„Éº„Ç∏„Éß„É≥„Åå
+::	3 „Çà„ÇäÂè§„ÅÑÂ†¥Âêà„ÅØ„ÄÅ„É°„ÉÉ„Çª„Éº„Ç∏„ÇíË°®Á§∫„Åó„Å¶Âá¶ÁêÜ„Çí‰∏≠Ê≠¢„Åô„Çã„ÄÇ
 ::	
-::	Ç±ÇÃÉtÉ@ÉCÉãÇÕ Windows êÍópÇ≈Ç†ÇÈÅBÇ‹ÇΩSpringehadÇÃÉgÉbÉvÉfÉBÉåÉNÉgÉä
-::	ÇéÊìæÇ∑ÇÈÇΩÇﬂÇ…ä¬ã´ïœêî "_SPRTOP_" ÇégópÇ∑ÇÈÅBñ{ÉXÉNÉäÉvÉgÇåƒÇ‘ëOÇ…
-::	Ç±ÇÃä¬ã´ïœêîÇê›íËÇµÇƒÇ®Ç≠Ç±Ç∆ÅB
-::	unix ÇÃèÍçáÇÕÉfÉtÉHÉãÉgÇ≈ Python Ç™égópÇ≈Ç´ÇÈÇÊÇ§Ç…ÇµÇƒÇ®Ç©Ç»ÇØÇÍÇŒ
-::	Ç»ÇÁÇ»Ç¢ÅB
+::	„Åì„ÅÆ„Éï„Ç°„Ç§„É´„ÅØ Windows Â∞ÇÁî®„Åß„ÅÇ„Çã„ÄÇunix „ÅÆÂ†¥Âêà„ÅØ„Éá„Éï„Ç©„É´„Éà„Åß Python „Åå
+::	‰ΩøÁî®„Åß„Åç„Çã„Çà„ÅÜ„Å´„Åó„Å¶„Åä„Åã„Å™„Åë„Çå„Å∞„Å™„Çâ„Å™„ÅÑ„ÄÇ
 ::
 ::  VERSION
-::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig Ç©ÇÁà⁄ìÆ. -SprTop ÇÕîpé~.
-::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ ÇÃÉfÉtÉHÉãÉgÇïœçX
+::	Ver 1.0  2017/07/24 F.Kanehori	ÂàùÁâà
+::	Ver 1.1  2017/08/02 F.Kanehori	ÂºïÊï∞ -SprTop ËøΩÂä†.
+::	Ver 2.0  2017/09/07 F.Kanehori	„Éë„Çπ„ÅÆÊ§úÁ¥¢ÊñπÊ≥ï„ÇíÂ§âÊõ¥.
+::	Ver 2.01 2017/09/11 F.Kanehori	Âêå‰∏äÔºà„Ç≥„Éº„Éâ„ÅÆÊï¥ÁêÜÔºâ.
+::	Ver 3.0  2017/11/06 F.Kanehori	directoryÂêçÂ§âÊõ¥ (buildtools -> buildtool)
 :: ============================================================================
-set verbose=0
+set verbose=2
 
 ::----------------------------------------------
-::  buildtool ÇÃëäëŒÉpÉX
-::	"%1"=="-src"Ç»ÇÁÅA"_SPRTOP_=..\..\"Ç∆Ç∑ÇÈ
+::  buildtool „ÅÆÁõ∏ÂØæ„Éë„Çπ
 ::
-if "%_SPRTOP_%" equ "" (
-	set _SPRTOP_=..\..
-	rem echo Need environment variable "_SPRTOP_" be set".
-	rem endlocal
-	rem exit /b
+set TOOLPATH=..\..\..\buildtool\win32
+if "%1" equ "-SprTop" (
+	set TOOLPATH=%2\buildtool\win32
+	shift && shift
 )
-set TOOLPATH=%_SPRTOP_%\buildtool\win32
-
-:: à¯êîÇÕÇªÇÃÇ‹Ç‹ìnÇ∑
-set ARGS=%*
+:: ÂºïÊï∞„ÅÆË™øÊï¥
+set ARGS=
+:next_arg
+if "%1" == "" goto :end_arg
+	set ARGS=!ARGS! %1
+	shift
+	goto :next_arg
+:end_arg
+if "%ARGS%" neq "" set ARGS=!ARGS:~1!
 
 ::----------------------------------------------
-::  Python Çé¿çsÇ≈Ç´ÇÈÇÊÇ§Ç…Ç∑ÇÈ
+::  Python „ÇíÂÆüË°å„Åß„Åç„Çã„Çà„ÅÜ„Å´„Åô„Çã
 ::
 if exist "%TOOLPATH%\python.exe" (
 	PATH=!TOOLPATH!;!PATH!
@@ -48,7 +50,6 @@ if exist "%TOOLPATH%\python.exe" (
 	where python >NUL 2>& 1
 	if !ERRORLEVEL! neq 0 (
 		echo Python not found.
-		endlocal
 		exit /b
 	)
 	for /f "tokens=*" %%a in ('python -V') do set OUT=%%a
@@ -68,16 +69,15 @@ if %verbose% geq 1 (
 )
 
 ::----------------------------------------------
-::  Python Çé¿çsÇ∑ÇÈ
+::  Python „ÇíÂÆüË°å„Åô„Çã
 ::
 if %verbose% geq 2 (
 	echo cwd: %CD%
 	echo python %ARGS%
 )
-rem if %verbose% geq 1 (
-rem 	echo.
-rem )
-rem echo python %ARGS%
+if %verbose% geq 1 (
+	echo.
+)
 python %ARGS%
 
 endlocal

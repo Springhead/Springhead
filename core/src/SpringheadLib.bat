@@ -1,31 +1,32 @@
 @echo off
 setlocal enabledelayedexpansion
 rem ===========================================================================
-rem @echo ƒ‰ƒCƒuƒ‰ƒŠ‚ğƒ}[ƒW‚µ‚Ü‚·DVisualC++‚Ìƒ‰ƒCƒuƒ‰ƒŠŠÇ—ƒc[ƒ‹ LIB.EXE ‚ÉƒpƒX‚ğ’Ê‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢D
+rem @echo ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ãƒãƒ¼ã‚¸ã—ã¾ã™ï¼VisualC++ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªç®¡ç†ãƒ„ãƒ¼ãƒ« LIB.EXE ã«ãƒ‘ã‚¹ã‚’é€šã—ã¦ãŠã„ã¦ãã ã•ã„ï¼
 
-rem ˆø”‚Ìˆ—
-rem	‘æ1ˆø”F@platform (x86|win32 ‚Ü‚½‚Í x64|win64)
-rem	‘æ2ˆø”F@ƒ‰ƒCƒuƒ‰ƒŠ–¼ ([VS-version]+[configuration]+[platform])
+rem å¼•æ•°ã®å‡¦ç†
+rem	ç¬¬1å¼•æ•°ï¼šã€€platform (x86|win32 ã¾ãŸã¯ x64|win64)
+rem	ç¬¬2å¼•æ•°ï¼šã€€ãƒ©ã‚¤ãƒ–ãƒ©ãƒªå ([VS-version]+[configuration]+[platform])
 rem 
 set SUBDIR=%1
-if "!%SUBDIR!"=="x64" set SUBDIR=win64
+if "!%SUBDIR!"=="x64" set SUBDIR=win64 
 set EXT=%2
 
-rem o—Íæ
+rem å‡ºåŠ›å…ˆ
 rem	$(SPR_TOP)/generated/lib/{win32|win64}
 rem 
-set OUTTOP=..\..\generated\lib
-set OUTDIR=%OUTTOP%\%SUBDIR%
+set GENTOP=..\..\generated\lib
+set GENDIR=%GENTOP%\%SUBDIR%
+call :create_dir OUTDIR %GENDIR%
 if not exist %OUTDIR% (
     mkdir %OUTDIR%
 )
-set OUTPUT=%OUTDIR%\Springhead%EXT%.lib
-echo output to "%OUTPUT%"
+set OUTPUT=%OUTDIR%/Springhead%EXT%.lib
 
+echo off
 rem echo param [%1],[%2]
-rem echo GENIR,EXT [%OUTDIR%],[%EXT%]
+rem echo GENIR,EXT [%GENDIR%],[%EXT%]
 
-rem “ü—Íƒtƒ@ƒCƒ‹
+rem å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«
 rem 
 set INPUT=Base/Base%EXT%.lib
 set INPUT=%INPUT% Foundation/Foundation%EXT%.lib 
@@ -37,14 +38,14 @@ set INPUT=%INPUT% Framework/Framework%EXT%.lib
 set INPUT=%INPUT% HumanInterface/HumanInterface%EXT%.lib
 set INPUT=%INPUT% Creature/Creature%EXT%.lib
 
-if "%INPUT%"=="" echo ŠÂ‹«•Ï”—pƒƒ‚ƒŠ‚Ì‹ó‚«‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·D
-if "%INPUT%"=="" echo ‹ó‚«‚ğ‘‚â‚µ‚Ä‚à‚¤ˆê“xÀs‚µ‚Ü‚·D
-if "%INPUT%"=="" echo ‚±‚ÌƒƒbƒZ[ƒW‚ª‘±‚¯‚Ä•\¦‚³‚ê‚éê‡‚ÍC
-if "%INPUT%"=="" echo ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚Ìİ’è‚ğC³‚µ‚Ä‚­‚¾‚³‚¢D
+if "%INPUT%"=="" echo ç’°å¢ƒå¤‰æ•°ç”¨ãƒ¡ãƒ¢ãƒªã®ç©ºããŒä¸è¶³ã—ã¦ã„ã¾ã™ï¼
+if "%INPUT%"=="" echo ç©ºãã‚’å¢—ã‚„ã—ã¦ã‚‚ã†ä¸€åº¦å®Ÿè¡Œã—ã¾ã™ï¼
+if "%INPUT%"=="" echo ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒç¶šã‘ã¦è¡¨ç¤ºã•ã‚Œã‚‹å ´åˆã¯ï¼Œ
+if "%INPUT%"=="" echo ã‚³ãƒãƒ³ãƒ‰ãƒ—ãƒ­ãƒ³ãƒ—ãƒˆã®è¨­å®šã‚’ä¿®æ­£ã—ã¦ãã ã•ã„ï¼
 if "%INPUT%"=="" command /e:4096 /c%0 %1 %2 %3
 
 
-rem lib‚ÌÀs
+rem libã®å®Ÿè¡Œ
 rem 
 if not "%INPUT%"=="" (
     LIB /OUT:%OUTPUT% %INPUT%
@@ -53,3 +54,11 @@ if not "%INPUT%"=="" (
 
 endlocal
 exit /b
+
+rem ===========================================================================
+rem  çµ¶å¯¾ãƒ‘ã‚¹ã®è¨­å®š
+rem 
+:create_dir
+    set %1=%~f2
+exit /b
+

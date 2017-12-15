@@ -1,39 +1,31 @@
 @echo off
 setlocal enabledelayedexpansion
 :: ============================================================================
-::  SYNOPSIS	SetMakePath
-::
-::  ARGUMENTS
-::	‚È‚µ
+::  SYNOPSIS
+::	SetMakePath
 ::
 ::  DESCRIPTION
-::	nmake ‚ğg—p‚·‚é‚½‚ß‚Ì path ‚ğ‹‚ß, ŠÂ‹«•Ï” MAKEPATH ‚Éİ’è‚·‚é.
+::	nmake ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã® path ã‚’æ±‚ã‚, ç’°å¢ƒå¤‰æ•° MAKEPATH ã«è¨­å®šã™ã‚‹.
+::
+::  ARGUMENTS
+::	ãªã—
 ::
 ::  VERSION
-::	Ver 1.0  2017/01/16 F.Kanehori	‰”Å
-::	Ver 1.1  2019/08/25 F.Kanehori	ŒŸõƒpƒX’Ç‰Á (15.0) yb’èz
-::	Ver 2.0  2019/08/29 F.Kanehori	ŒŸõ•û®•ÏX
-::	Ver 2.1  2019/09/18 F.Kanehori	Bug fixed (default python ‚ª‚È‚¢‚Æ‚«)
-::	Ver 2.2  2020/09/18 F.Kanehori	python_adapter ‚ğ do_python ‚É“ü‚ê‘Ö‚¦
+::	Ver 1.0  2017/01/16 F.Kanehori	åˆç‰ˆ
 :: ============================================================================
 set PROG=%~n0
 
-set CWD=%CD%
-set SRCDIR=..\..
-set SPRTOP=%SRCDIR%\..\..
-set RUNSWIG_DIR=%SRCDIR%\RunSwig
-set PYTHON=do_python.bat
-set SCRIPT=%RUNSWIG_DIR%\find_path.py
+set X32=c:\Program Files
+set X64=c:\Program Files (x86)
+set ARCH=
+if exist "%X32%" set ARCH=%X32%
+if exist "%X64%" set ARCH=%X64%
 
-echo %PROG%: wait a moment ..
-cd %SRCDIR%
-for /f "usebackq" %%o in (`do_python.bat RunSwig\find_path.py -s nmake.exe`) do set OUT="%%o"
-cd %CWD%
-if "%OUT%" equ "" (
-	set MAKEPATH=
-) else (
-	set MAKEPATH=!OUT:/= !
+for %%v in (14.0 12.0 10.0) do (
+	set MAKEPATH="%ARCH%\Microsoft Visual Studio %%v\VC\bin"
+	if exist !MAKEPATH! goto :done
 )
+set MAKEPATH=
 
 :done
 endlocal && (set MAKEPATH=%MAKEPATH%)
