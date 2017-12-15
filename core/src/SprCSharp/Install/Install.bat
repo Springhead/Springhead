@@ -5,23 +5,23 @@ setlocal enabledelayedexpansion
 ::	Install src-path dst-path [dry-run]
 ::
 ::  DESCRIPTION
-::	src-path �Ŏw�肵���t�@�C���� dst-path �ɃR�s�[����.
-::	������, dst-path ��u���ׂ��f�B���N�g�������݂��Ȃ���Ή������Ȃ�.
+::	src-path で指定したファイルを dst-path にコピーする.
+::	ただし, dst-path を置くべきディレクトリが存在しなければ何もしない.
 ::
 ::  ARGUMENTS
-::	src-oath	�R�s�[���̃t�@�C���p�X
-::	dst-path	�R�s�[��̃f�B���N�g���p�X�܂��̓t�@�C���p�X
-::	control		�o�ߑ[�u�p�����F
-::			    "copy" �ȊO���w�肷��ƃR�s�[�͍s�Ȃ�Ȃ�.
+::	src-oath	コピー元のファイルパス
+::	dst-path	コピー先のディレクトリパスまたはファイルパス
+::	control		経過措置用引数：
+::			    "copy" 以外を指定するとコピーは行なわない.
 ::
 ::  VERSION
-::	Ver 1.0  2017/08/09 F.Kanehori	����
-::	Ver 1.1  2017/11/08 F.Kanehori	�R�s�[��f�B���N�g�����Ȃ���΍쐬����.
+::	Ver 1.0  2017/08/09 F.Kanehori	初版
+::	Ver 1.1  2017/11/08 F.Kanehori	コピー先ディレクトリがなければ作成する.
 :: ============================================================================
 set PROG=%~n0
 
 ::----------------------------------------------
-:: �����̏���
+:: 引数の処理
 ::----------------------------------------------
 set SRC=%~1
 set DST=%~2
@@ -39,7 +39,7 @@ if exist %DST%\ (
 )
 
 ::----------------------------------------------
-:: �R�s�[��̃f�B���N�g�����Ȃ���΍쐬����
+:: コピー先のディレクトリがなければ作成する
 ::----------------------------------------------
 if not exist %DST_DIR% (
 	echo creating directory "%DST_DIR%"
@@ -47,7 +47,7 @@ if not exist %DST_DIR% (
 )
 
 ::----------------------------------------------
-:: �R�s�[�̎��s
+:: コピーの実行
 ::----------------------------------------------
 set DO_COPY=
 if "%COPYCONTROL%" == ""	set DO_COPY=yes
@@ -61,7 +61,7 @@ exit /b
 
 
 ::----------------------------------------------
-:: �G���[���b�Z�[�W�Ǝg�p���@���o�͂���
+:: エラーメッセージと使用方法を出力する
 ::----------------------------------------------
 :error
 	echo Error: %*
@@ -70,7 +70,7 @@ exit /b
 exit /b 
 
 ::----------------------------------------------
-:: �g�p���@���o�͂���
+:: 使用方法を出力する
 ::----------------------------------------------
 :usage
 	echo Usage: %PROG% src-path dst-path

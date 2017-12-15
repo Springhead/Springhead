@@ -5,47 +5,47 @@ setlocal enabledelayedexpansion
 ::	BuildVC args (see below)
 ::
 ::  DESCRIPTION
-::	ˆø” solution ‚ÅŽw’è‚µ‚½ƒ\ƒŠƒ…[ƒVƒ‡ƒ“ƒtƒ@ƒCƒ‹‚É‚Â‚¢‚Ä Build (and Run)
-::	ƒeƒXƒg‚ðs‚È‚¤.
+::	å¼•æ•° solution ã§æŒ‡å®šã—ãŸã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã«ã¤ã„ã¦ Build (and Run)
+::	ãƒ†ã‚¹ãƒˆã‚’è¡Œãªã†.
 ::
 ::  ARGUMENTS
-::	toolset_id	ƒc[ƒ‹ƒZƒbƒg‚ÌŽ¯•Ê { 10.0 | 11.0 | .. }
-::	testset		ƒeƒXƒgƒZƒbƒg–¼i•\Ž¦—pj
-::	category	ƒeƒXƒgƒJƒeƒSƒŠ[–¼i•\Ž¦—pj
-::	solution_dir	ƒ\ƒŠƒ…[ƒVƒ‡ƒ“–¼iƒfƒBƒŒƒNƒgƒŠ–¼j
-::	build_conf	ƒrƒ‹ƒhƒIƒvƒVƒ‡ƒ“i\¬j
-::	build_plat	ƒrƒ‹ƒhƒIƒvƒVƒ‡ƒ“iƒvƒ‰ƒbƒgƒtƒH[ƒ€j
-::	do_build	ƒrƒ‹ƒhŽw’è { yes | no }
-::	do_run		ŽÀsŽw’è { yes | no }
-::	log_1		ƒrƒ‹ƒhŒ‹‰Ê‚ÌƒƒOƒtƒ@ƒCƒ‹–¼i’Ç‹LŒ`Ž®j
-::	log_2		ƒrƒ‹ƒhƒGƒ‰[‚ÌƒƒOƒtƒ@ƒCƒ‹–¼i’Ç‹LŒ`Ž®j
-::	log_3		ŽÀsŒ‹‰Ê‚ÌƒƒOƒtƒ@ƒCƒ‹–¼i’Ç‹LŒ`Ž®j
-::	log_4		ŽÀsƒGƒ‰[‚ÌƒƒOƒtƒ@ƒCƒ‹–¼i’Ç‹LŒ`Ž®j
-::	python_ver	Python ‚Ìƒo[ƒWƒ‡ƒ“
+::	toolset_id	ãƒ„ãƒ¼ãƒ«ã‚»ãƒƒãƒˆã®è­˜åˆ¥ { 10.0 | 11.0 | .. }
+::	testset		ãƒ†ã‚¹ãƒˆã‚»ãƒƒãƒˆåï¼ˆè¡¨ç¤ºç”¨ï¼‰
+::	category	ãƒ†ã‚¹ãƒˆã‚«ãƒ†ã‚´ãƒªãƒ¼åï¼ˆè¡¨ç¤ºç”¨ï¼‰
+::	solution_dir	ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³åï¼ˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåï¼‰
+::	build_conf	ãƒ“ãƒ«ãƒ‰ã‚ªãƒ—ã‚·ãƒ§ãƒ³ï¼ˆæ§‹æˆï¼‰
+::	build_plat	ãƒ“ãƒ«ãƒ‰ã‚ªãƒ—ã‚·ãƒ§ãƒ³ï¼ˆãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ï¼‰
+::	do_build	ãƒ“ãƒ«ãƒ‰æŒ‡å®š { yes | no }
+::	do_run		å®Ÿè¡ŒæŒ‡å®š { yes | no }
+::	log_1		ãƒ“ãƒ«ãƒ‰çµæžœã®ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆè¿½è¨˜å½¢å¼ï¼‰
+::	log_2		ãƒ“ãƒ«ãƒ‰ã‚¨ãƒ©ãƒ¼ã®ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆè¿½è¨˜å½¢å¼ï¼‰
+::	log_3		å®Ÿè¡Œçµæžœã®ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆè¿½è¨˜å½¢å¼ï¼‰
+::	log_4		å®Ÿè¡Œã‚¨ãƒ©ãƒ¼ã®ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆè¿½è¨˜å½¢å¼ï¼‰
+::	python_ver	Python ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 ::
 ::  CAUTION
-::	ŽÀs‚É•K—v‚È PATH ‚ª³‚µ‚­Ý’è‚³‚ê‚Ä‚¢‚é‚±‚Æ.
-::	ŽŸ‚ÌŠÂ‹«•Ï”‚ÍŒÄo‚µŒ³‚Æ‹¤—L‚·‚é‚Ì‚Å’ˆÓ‚·‚é‚±‚Æ.
+::	å®Ÿè¡Œã«å¿…è¦ãª PATH ãŒæ­£ã—ãè¨­å®šã•ã‚Œã¦ã„ã‚‹ã“ã¨.
+::	æ¬¡ã®ç’°å¢ƒå¤‰æ•°ã¯å‘¼å‡ºã—å…ƒã¨å…±æœ‰ã™ã‚‹ã®ã§æ³¨æ„ã™ã‚‹ã“ã¨.
 ::	    BLD_SUCC, BLD_FAIL, BLD_SUCC_LIST, BLD_FAIL_LIST
 ::	    RUN_SUCC, RUN_FAIL, RUN_SUCC_LIST, RUN_FAIL_LIST
-::	Visual Studio 10.0 ˆÈ~‚Ì‚Ý‚É‘Î‰ž
+::	Visual Studio 10.0 ä»¥é™ã®ã¿ã«å¯¾å¿œ
 ::
 ::  VERSION
-::	Ver 1.0  2013/09/18 F.Kanehori	ƒoƒbƒ`ƒtƒ@ƒCƒ‹‚ÌÄ\¬
-::	Ver 1.1  2013/12/05 F.Kanehori	Visual Studio 2008 ‘Î‰ž
-::	Ver 1.2	 2014/06/11 F.Kanehori	ƒ\ƒŠƒ…[ƒVƒ‡ƒ“ƒtƒ@ƒCƒ‹‚Ì•Ê–¼“±“ü
-::	Ver 1.3	 2014/10/23 F.Kanehori	o—ÍƒfƒBƒŒƒNƒgƒŠŽw’èƒtƒ@ƒCƒ‹‚Ì“±“ü
-::	Ver 1.4	 2014/11/20 F.Kanehori	ƒrƒ‹ƒh\¬‚É python_ver ‚ð”½‰f
-::	Ver 1.5  2016/06/02 F.Kanehori	Visual Studio 2015 ‘Î‰ž
-::	Ver 1.6  2017/07/27 F.Kanehori	EmbPython configuration ‚Ì•ÏX
-::	Ver 1.7  2017/07/27 F.Kanehori	ƒfƒBƒŒƒNƒgƒŠ–¼•ÏX‚É‘Î‰ž (->dependency)
+::	Ver 1.0  2013/09/18 F.Kanehori	ãƒãƒƒãƒãƒ•ã‚¡ã‚¤ãƒ«ã®å†æ§‹æˆ
+::	Ver 1.1  2013/12/05 F.Kanehori	Visual Studio 2008 å¯¾å¿œ
+::	Ver 1.2	 2014/06/11 F.Kanehori	ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã®åˆ¥åå°Žå…¥
+::	Ver 1.3	 2014/10/23 F.Kanehori	å‡ºåŠ›ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæŒ‡å®šãƒ•ã‚¡ã‚¤ãƒ«ã®å°Žå…¥
+::	Ver 1.4	 2014/11/20 F.Kanehori	ãƒ“ãƒ«ãƒ‰æ§‹æˆã« python_ver ã‚’åæ˜ 
+::	Ver 1.5  2016/06/02 F.Kanehori	Visual Studio 2015 å¯¾å¿œ
+::	Ver 1.6  2017/07/27 F.Kanehori	EmbPython configuration ã®å¤‰æ›´
+::	Ver 1.7  2017/07/27 F.Kanehori	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåå¤‰æ›´ã«å¯¾å¿œ (->dependency)
 :: ============================================================================
 call :leaf_name PROG %0
 set CWD=%cd%
 set RET=0
 
 ::----------------------------------------------
-:: ˆø”‚Ìˆ—
+:: å¼•æ•°ã®å‡¦ç†
 ::
 call bat\BuildVC_ArgCheck.bat %*
 if not %$status% == 0 goto :done
@@ -76,7 +76,7 @@ if "%TOOLSETID%" equ "12" set TOOLSETID=12.0
 if "%TOOLSETID%" equ "14" set TOOLSETID=14.0
 
 ::----------------------------------------------
-:: PATH ‚ÌŠm”F
+:: PATH ã®ç¢ºèª
 ::
 set VS_PATH=Microsoft Visual Studio %VS_DIR%
 rem if not exist "C:\Program Files\Microsoft Visual Studio %VS_DIR%\" (
@@ -89,14 +89,14 @@ if not exist "C:\Program Files\%VS_PATH%\" (
 )
 
 ::----------------------------------------------
-:: ˆ—ŠJŽn
+:: å‡¦ç†é–‹å§‹
 ::
 call :fixed STR %SOLUTION%
 set /p=.  %TESTSET%: %CATEGORY%: %STR%	.< NUL
 cd %SOLUTIONDIR%
 
-rem ** ‰º‹Lƒtƒ@ƒCƒ‹‚Ì‘¶Ý—L–³‚ÅŽÀs‚ð§Œä‚Å‚«‚é **
-rem **** ‚½‚¾‚µ, FORCE_DONT_xx ‚Ì•û‚ª—Dæ‚·‚é ****
+rem ** ä¸‹è¨˜ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨æœ‰ç„¡ã§å®Ÿè¡Œã‚’åˆ¶å¾¡ã§ãã‚‹ **
+rem **** ãŸã ã—, FORCE_DONT_xx ã®æ–¹ãŒå„ªå…ˆã™ã‚‹ ****
 set FOECE_DO_BLD=dailybuild.do.build
 set FORCE_DO_RUN=dailybuild.do.run
 set FORCE_DONT_BLD=dailybuild.dont.build
@@ -106,17 +106,17 @@ if exist %FORCE_DO_RUN% set DO_RUN=yes
 if exist %FORCE_DONT_BLD% set DO_BLD=no
 if exist %FORCE_DONT_RUN% set DO_RUN=no
 
-rem **** o—ÍƒfƒBƒŒƒNƒgƒŠ‚ÌŽw’è *******************************************
-rem **** Žw’è‚ª‚È‚¯‚ê‚Î "$TOOLSET/$PLATFORM/$CONFIGURATION" ‚Æ‰¼’è‚·‚é ****
-rem **** Žw’è‚Ì’†‚É $PYTHON_VERSION ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚½‚È‚ç‚ÎAƒrƒ‹ƒh\¬‚ð ****
-rem **** %CONFIGURATION%_Py%PYTHOON_VERSION% ‚É•ÏX‚·‚é *******************
+rem **** å‡ºåŠ›ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®æŒ‡å®š *******************************************
+rem **** æŒ‡å®šãŒãªã‘ã‚Œã° "$TOOLSET/$PLATFORM/$CONFIGURATION" ã¨ä»®å®šã™ã‚‹ ****
+rem **** æŒ‡å®šã®ä¸­ã« $PYTHON_VERSION ãŒå«ã¾ã‚Œã¦ã„ãŸãªã‚‰ã°ã€ãƒ“ãƒ«ãƒ‰æ§‹æˆã‚’ ****
+rem **** %CONFIGURATION%_Py%PYTHOON_VERSION% ã«å¤‰æ›´ã™ã‚‹ *******************
 set OUTDIR_ALIAS_FILE=dailybuild.outdir
 
 set OUTDIRSPEC=$TOOLSET/$PLATFORM/$CONFIGURATION
 if exist %OUTDIR_ALIAS_FILE% (
 	for /f %%l in (%OUTDIR_ALIAS_FILE%) do set OUTDIRSPEC=%%l
 	rem if "%PYTHON_VERSION%" neq "32" (
-	rem 	rem ‚½‚¾‚µ python32 ‚¾‚¯‚Í—áŠO
+	rem 	rem ãŸã ã— python32 ã ã‘ã¯ä¾‹å¤–
 	rem 	set CONFIGURATION=%CONFIGURATION%_Py%PYTHON_VERSION%
 	rem 	set /p <nul=!CONFIGURATION! 
 	rem )
@@ -127,8 +127,8 @@ call set OUTDIRSPEC=%%OUTDIRSPEC:$PLATFORM=%PLATFORM%%%
 call set OUTDIRSPEC=%%OUTDIRSPEC:$CONFIGURATION=%CONFIGURATION%%%
 call set OUTDIRSPEC=%%OUTDIRSPEC:$PYTHON_VERSION=py%PYTHON_VERSION%%%
 
-rem **** ƒ\ƒŠƒ…[ƒVƒ‡ƒ“ƒtƒ@ƒCƒ‹–¼‚ÌŽw’è ******************
-rem **** Žw’è‚ª‚È‚¯‚ê‚ÎƒfƒBƒŒƒNƒgƒŠ–¼‚Æ“¯‚¶‚Æ‰¼’è‚·‚é ****
+rem **** ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«åã®æŒ‡å®š ******************
+rem **** æŒ‡å®šãŒãªã‘ã‚Œã°ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã¨åŒã˜ã¨ä»®å®šã™ã‚‹ ****
 set SOLUTION_ALIAS_FILE=dailybuild.alias
 
 set SOLUTIONNAME=%SOLUTION%
@@ -141,7 +141,7 @@ set OUTDIR=%OUTDIRSPEC:/=\%
 set EXEFILE=%OUTDIR%\%SOLUTIONNAME%.exe
 
 ::----------------------------------------------
-:: ƒrƒ‹ƒh
+:: ãƒ“ãƒ«ãƒ‰
 ::
 if /i "%DO_BLD%" equ "yes" (
 	set SOLUTIONFILE=%SOLUTIONNAME%%TOOLSETID%.sln
@@ -154,7 +154,7 @@ if /i "%DO_BLD%" equ "yes" (
 	set ERRORLOG=%CWD%\%LOG_BLDERROR%
 	set /p=build.< NUL
 
-	rem ƒrƒ‹ƒh‚ð‚µ‚ÄŒ‹‰Ê‚ðƒƒOƒtƒ@ƒCƒ‹‚Éo—Í
+	rem ãƒ“ãƒ«ãƒ‰ã‚’ã—ã¦çµæžœã‚’ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›
 	echo *** %CATEGORY%: %SOLUTION% *** >> !LOG!
 	echo %% devenv !SOLUTIONFILE! /build %BUILD_OPTION% > !LOG!.tmp
 	devenv !SOLUTIONFILE! /build %BUILD_OPTION% >> !LOG!.tmp
@@ -162,7 +162,7 @@ if /i "%DO_BLD%" equ "yes" (
 	echo. >> !LOG!
 	echo. >> !LOG!
 
-	rem ƒGƒ‰[‚ª‚ ‚és‚¾‚¯‚ðƒGƒ‰[ƒƒOƒtƒ@ƒCƒ‹‚Éo—Í
+	rem ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚‹è¡Œã ã‘ã‚’ã‚¨ãƒ©ãƒ¼ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›
 	echo *** %CATEGORY%: %SOLUTION% *** >> !ERRORLOG!
 	type !LOG!.tmp | find " error " >> !ERRORLOG!
 	echo. >> !ERRORLOG!
@@ -170,11 +170,11 @@ if /i "%DO_BLD%" equ "yes" (
 	del !LOG!.tmp
 
 	if exist %EXEFILE% (
-		set BLD_SUCC=ƒrƒ‹ƒh¬Œ÷
+		set BLD_SUCC=ãƒ“ãƒ«ãƒ‰æˆåŠŸ
 		set BLD_SUCC_LIST=%BLD_SUCC_LIST%%CATEGORY%:%SOLUTION%,
 	)
 	if not exist %EXEFILE% (
-		set BLD_FAIL=ƒrƒ‹ƒhŽ¸”s
+		set BLD_FAIL=ãƒ“ãƒ«ãƒ‰å¤±æ•—
 		set BLD_FAIL_LIST=%BLD_FAIL_LIST%%CATEGORY%:%SOLUTION%,
 	)
 ) else (
@@ -182,7 +182,7 @@ if /i "%DO_BLD%" equ "yes" (
 )
 
 ::----------------------------------------------
-:: ŽÀs
+:: å®Ÿè¡Œ
 ::
 if /i "%DO_RUN%" equ "yes" (
 	if not exist %EXEFILE% goto :done
@@ -200,7 +200,7 @@ if /i "%DO_RUN%" equ "yes" (
 	set ERRORLOG=%CWD%\%LOG_RUNERROR%
 	set /p=run< NUL
 
-	rem ŽÀs‚ð‚µ‚ÄŒ‹‰Ê‚ðƒƒOƒtƒ@ƒCƒ‹‚Éo—Í
+	rem å®Ÿè¡Œã‚’ã—ã¦çµæžœã‚’ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›
 	echo *** %CATEGORY%: %SOLUTION% *** >> !LOG!
 	rem set ERRORLEVEL=
 	%EXEFILE% > !LOG!.tmp
@@ -209,7 +209,7 @@ if /i "%DO_RUN%" equ "yes" (
 	echo. >> !LOG!
 	echo. >> !LOG!
 
-	rem ƒGƒ‰[‚ª‚ ‚és‚¾‚¯‚ðƒGƒ‰[ƒƒOƒtƒ@ƒCƒ‹‚Éo—Í
+	rem ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚‹è¡Œã ã‘ã‚’ã‚¨ãƒ©ãƒ¼ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›
 	echo *** %CATEGORY%: %SOLUTION% *** >> !ERRORLOG!
 	if not !ERROR! == 0 (
 		type !LOG!.tmp | find " error " >> !ERRORLOG!
@@ -219,11 +219,11 @@ if /i "%DO_RUN%" equ "yes" (
 	del !LOG!.tmp
 
 	if !ERROR! == 0 (
-		set RUN_SUCC=ŽÀs¬Œ÷
+		set RUN_SUCC=å®Ÿè¡ŒæˆåŠŸ
 		set RUN_SUCC_LIST=%RUN_SUCC_LIST%%CATEGORY%:%SOLUTION%,
 	)
 	if not !ERROR! == 0 (
-		set RUN_FAIL=ŽÀsŽ¸”s
+		set RUN_FAIL=å®Ÿè¡Œå¤±æ•—
 		set RUN_FAIL_LIST=%RUN_FAIL_LIST%%CATEGORY%:%SOLUTION%,
 	)
 )
@@ -246,18 +246,18 @@ exit /b
 
 
 ::----------------------------------------------
-:: ƒŠ[ƒt–¼‚ÌŽæo‚µ
-::	arg1:	’l‚ð•Ô‚·ŠÂ‹«•Ï”–¼
-::	arg2:	ƒpƒX–¼
+:: ãƒªãƒ¼ãƒ•åã®å–å‡ºã—
+::	arg1:	å€¤ã‚’è¿”ã™ç’°å¢ƒå¤‰æ•°å
+::	arg2:	ãƒ‘ã‚¹å
 ::
 :leaf_name
 	set %1=%~n2
 exit /b
 
 ::----------------------------------------------
-:: •¶Žš—ñ’·‚ðŒÅ’è‚É‚·‚éi•\Ž¦—pF”Ä—p«‚È‚µj
-::	arg1:	’l‚ð•Ô‚·ŠÂ‹«•Ï”–¼
-::	arg2:	•¶Žš—ñ
+:: æ–‡å­—åˆ—é•·ã‚’å›ºå®šã«ã™ã‚‹ï¼ˆè¡¨ç¤ºç”¨ï¼šæ±Žç”¨æ€§ãªã—ï¼‰
+::	arg1:	å€¤ã‚’è¿”ã™ç’°å¢ƒå¤‰æ•°å
+::	arg2:	æ–‡å­—åˆ—
 ::
 :fixed
 	setlocal
@@ -268,8 +268,8 @@ exit /b
 exit /b
 
 ::----------------------------------------------
-:: •Ï”‚Ìƒ_ƒ“ƒv
-::	arg1:	•Ï”‚ÌƒŠƒXƒg
+:: å¤‰æ•°ã®ãƒ€ãƒ³ãƒ—
+::	arg1:	å¤‰æ•°ã®ãƒªã‚¹ãƒˆ
 ::
 :vars_dump
 	setlocal

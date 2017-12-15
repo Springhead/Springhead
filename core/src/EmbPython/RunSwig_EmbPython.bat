@@ -4,16 +4,16 @@
 ::      RunSwig_EmbPython.bat
 ::
 ::  Description:
-::      �t�@�C���̈ˑ��֌W�𒲂ׂāAEmbPythonSwig.bat ���œK�Ɏ��s����.
+::      ファイルの依存関係を調べて、EmbPythonSwig.bat を最適に実行する.
 ::
-::	    ���s����v���W�F�N�g�� ..\..\src\RunSwig\do_swigall.projs �ɒ�`����Ă���
-::      ���̂��g�p����. �������v���W�F�N�g Base �͒�`�̗L���Ɋւ��Ȃ����s����.
+::	    実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
+::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0  2014/10/29 F.Kanehori  ����
-::	Ver 1.1  2017/06/15 F.Kanehori  �ˑ����X�g�� ".i" �t�@�C����ǉ�
-::	Ver 2.0  2017/10/04 F.Kanehori  Visual Studio 2015 �Ή�
+::	Ver 1.0  2014/10/29 F.Kanehori  初版
+::	Ver 1.1  2017/06/15 F.Kanehori  依存リストに ".i" ファイルを追加
+::	Ver 2.0  2017/10/04 F.Kanehori  Visual Studio 2015 対応
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -21,9 +21,9 @@ set CWD=%cd%
 set DEBUG=0
 
 :: ----------
-::  �e���`
+::  各種定義
 :: ----------
-:: �f�B���N�g���̒�`
+:: ディレクトリの定義
 ::
 set BASEDIR=..\..
 set BINDIR=%BASEDIR%\bin
@@ -33,26 +33,26 @@ set ETCDIR=%SRCDIR%\RunSwig
 
 set EMBPYTHONDIR=.
 
-:: �ˑ��֌W�ɂ͂Ȃ��ƌ��􂷃t�@�C���̈ꗗ
+:: 依存関係にはないと見做すファイルの一覧
 ::
 set EXCLUDES=
 
-:: makefile �ɏo�͂���Ƃ��̃p�X
+:: makefile に出力するときのパス
 set INCDIROUT=..\..\include
 set SRCDIROUT=..\..\src
 set EMBDIROUT=..\..\src\EmbPython
 
-:: �g�p����t�@�C����
+:: 使用するファイル名
 ::
 set PROJFILE=do_swigall.projs
 set MAKEFILE=Makefile_EmbPython.swig
 
-:: �g�p����v���O������
+:: 使用するプログラム名
 ::
 set MAKE=nmake
 set SWIG=EmbPythonSwig.bat
 
-:: �g�p����p�X
+:: 使用するパス
 ::
 set X32=c:\Program Files
 set X64=c:\Program Files (x86)
@@ -71,14 +71,14 @@ set SWIGPATH=%EMBPYTHONDIR%
 set PATH=.;%SWIGPATH%;%MAKEPATH%;%PATH%
 
 :: ------------------------------
-::  �������郂�W���[���ꗗ���쐬
+::  処理するモジュール一覧を作成
 :: ------------------------------
 set PROJECTS=Base
 for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do set PROJECTS=!PROJECTS! %%m
 if %DEBUG% == 1 echo Projects are: %PROJECTS%
 
 :: ----------
-::  �����J�n
+::  処理開始
 :: ----------
 for %%p in (%PROJECTS%) do (
     echo   Project: %%p
@@ -89,18 +89,18 @@ for %%p in (%PROJECTS%) do (
 )
 
 :: ----------
-::  �����I��
+::  処理終了
 :: ----------
 endlocal
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  ����1 �ŗ^����ꂽ�v���W�F�N�g�̃w�b�_�������W����
+::  引数1 で与えられたプロジェクトのヘッダ情報を収集する
 :: -----------------------------------------------------------------------------------
 :collect_headers
     set PROJECT=%1
 
-    :: �ˑ��t�@�C�������W�߂�
+    :: 依存ファイル情報を集める
     ::
     ::   swig interface files
     set INTERFS1=
@@ -143,12 +143,12 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  makefile ���쐬����
-::      ����1   ���W���[����
-::      ����2   makefile ��
-::      ����3   "�ˑ��C���^�[�t�F�C�X�t�@�C�������X�g"
-::      ����4   "�ˑ��w�b�_�t�@�C�������X�g"
-::      ����5   "�ˑ��\�[�X�t�@�C�������X�g"
+::  makefile を作成する
+::      引数1   モジュール名
+::      引数2   makefile 名
+::      引数3   "依存インターフェイスファイル名リスト"
+::      引数4   "依存ヘッダファイル名リスト"
+::      引数5   "依存ソースファイル名リスト"
 :: -----------------------------------------------------------------------------------
 :make_makefile
     setlocal enabledelayedexpansion
@@ -186,8 +186,8 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  ����2 �ŗ^����ꂽ���O�� ����1 �ŗ^����ꂽ���X�g���ɂ��邩���ׂ�
-::  ���ʂ� $result �ɕԂ��iyes �܂��� no�j
+::  引数2 で与えられた名前が 引数1 で与えられたリスト中にあるか調べる
+::  結果は $result に返す（yes または no）
 :: -----------------------------------------------------------------------------------
 :one_of
     set $result=no
@@ -195,8 +195,8 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  ����1 �ŗ^����ꂽ�ϐ��ɁA����2 �Ŏw�肳�ꂽ prefix ��ǉ�����
-::  ���ʂ� $string �ɕԂ�
+::  引数1 で与えられた変数に、引数2 で指定された prefix を追加する
+::  結果は $string に返す
 :: -----------------------------------------------------------------------------------
 :add_prefix
     set $string=
