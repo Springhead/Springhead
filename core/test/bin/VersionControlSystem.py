@@ -22,10 +22,20 @@
 #  METHODS:
 #	code, rev, err = revision()
 #	    Get revision number string.
+#	    returns:
+#		code:	    0: success, other: failure (int).
+#		rev:	    Revision (str).
+#		err:	    Error message got from stderr (str).
+#
+#	short_id, full_id, date = revision_info(commit_id='HEAD')
+#	    Get commit information.
 #	    arguments:
-#	      code:	    0: success, other: failure (int).
-#	      rev:	    Revision (str).
-#	      err:	    Error message got from stderr (str).
+#		commit_id:  Commit short name to retrieve (str).
+#			    If None, get HEAD information.
+#	    returns:
+#		short_id:   Commit id in short form (str).
+#		full_id:    Commit id in full form (str).
+#		date:	    Date of commit in 'YYYY-MM-DD' from (str).
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -37,6 +47,7 @@
 import sys
 import os
 import re
+import datetime
 
 # local python library
 #
@@ -82,6 +93,23 @@ class VersionControlSystem:
 			os.chdir(cwd)
 		return revision
 
+	#  Get revision information.
+	#
+	def revision_info(self, dir=None, revision='HEAD'):
+		if dir:
+			cwd = os.getcwd()
+			os.chdir(dir)
+		if system == 'Subversion':
+			r = -1
+			s = 'NOT IMPLEMENTED'
+			f = None
+			d = None
+		elif system == 'GitHub':
+			r, s, f, d = self.obj.revision_info(revision)
+		if dir:
+			os.chdir(cwd)
+		return r, s, f, d
+
 	#  Subclass: Subversion
 	#
 	class Subversion:
@@ -116,7 +144,72 @@ class VersionControlSystem:
 
 		def revision(self):
 			url = self.url
-			cmnd1 = 'git log --abbrev-commit --oneline --max-count=1'
+			cmnd = 'git log --abbrev-commit --oneline --max-count=1'
+			status, out, err = self.__exec(url, cmnd)
+			#
+			revision = "can't get current revision"
+			if status == 0:
+				pattern = '(^[0-9a-f]+\s)'
+				m = re.match(pattern, out)
+				if m:
+					revision = m.group(1)
+			return status, revision, err
+
+		def revision_info(self, commit_id='HEAD'):
+			print('REV-INFO (%s)' % commit_id)
+			url = self.url
+
+			# Get commit-id of HEAD.
+			if commit_id == 'HEAD':
+				cmnd = 'git show'
+				status, out, err = self.__exec(url, cmnd)
+				if status != 0:
+					msg = "can't get HEAD info"
+					return status, msg, None, None
+				line = out.split('\\')[0]
+				pattern = 'commit\s(\w+)'
+				m = re.match(pattern, line)
+				if m:
+					commit_id = m.group(1)
+					if self.verbose == 0:
+						print('HEAD -> %s' % commit_id)
+
+			cmnd = 'git log'
+			########cmnd = 'git show %s' % commit_id
+			status, out, err = self.__exec(url, cmnd)
+			if status != 0:
+				msg = "can't get revision info"
+				return status, msg, None, None
+			#
+			"""
+			findstr = commit_id if commit_id != 'HEAD' else '.+'
+			lines = out.split('\\')[0]
+			for line in lines.split('\n'):
+				print('LINE: [%s]' % line)	#############
+				pattern = 'commit\s+(%s)' % findstr
+				print('PATTERN: [%s]' % pattern)	#############
+				m = re.match(pattern, line)
+				if m:
+					print('MATCH(1)')	#############
+					full_id = m.group(1)
+					short_id = full_id[:7]
+					continue
+				pattern = 'Date:\s+(.+)'
+				m = re.match(pattern, line)
+				if m:
+					print('MATCH(2)')	#############
+					ifmt = '%a %b %d %H:%M:%S %Y %z'
+					ofmt = '%Y-%m-%d'
+					mstr = m.group(1)
+					dt = datetime.strptime(mstr, ifmt)
+					date = dt.strftime(ofmt)
+					break
+			return status, short_id, full_id, date
+			"""
+			return 0, "x", "y", "z"
+
+		def __exec(self, url, cmnd):
+			cmnd1 = cmnd
 			cmnd2 = 'nkf -s'
 			proc1 = Proc(verbose=self.verbose)	# git
 			proc2 = Proc(verbose=self.verbose)	# nkf
@@ -127,14 +220,7 @@ class VersionControlSystem:
 			status1 = proc1.wait()
 			status = status1 + status2
 			out, err = proc2.output()
-			#
-			revision = "can't get current revision"
-			if status == 0:
-				pattern = '(^[0-9a-f]+\s)'
-				m = re.match(pattern, out)
-				if m:
-					revision = m.group(1)
-			return status, revision, err
+			return status, out, err
 
 # ----------------------------------------------------------------------
 #  Test main
@@ -143,7 +229,7 @@ if __name__ == '__main__':
 
 	verbose = 0
 	topdir_svn = '../../..'
-	topdir_git = '../../../../Git-Springhead/Springhead'
+	topdir_git = '../../../../Springhead'
 
 	def test(sys, args, topdir, verbose):
 		vcs = VersionControlSystem(sys, args, verbose)
@@ -152,6 +238,13 @@ if __name__ == '__main__':
 			print('%s: revision: %s' % (sys, rev))
 		else:
 			print('%s: Error: %s (%s)' % (sys, rev, err))
+		if sys == 'Subversion':
+			return
+		#
+		r, s, f, d = vcs.revision_info(topdir)
+		print('default(%d): %s, %s, %s' % (r, s, f, d))
+		r, s, f, d = vcs.revision_info(topdir, '5a314')
+		print('+5a314+(%d): %s, %s, %s' % (r, s, f, d))
 
 	system = 'Subversion'
 	args = {'url': 'http://springhead.info/spr2/Springhead/trunk/'}
