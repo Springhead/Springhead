@@ -27,22 +27,25 @@
 #		rev:	    Revision (str).
 #		err:	    Error message got from stderr (str).
 #
-#	short_id, full_id, date = revision_info(commit_id='HEAD')
+#	info = revision_info(commit_id='HEAD')
 #	    Get commit information.
 #	    arguments:
 #		commit_id:  Commit short name to retrieve (str).
-#			    If None, get HEAD information.
+#			    If 'all', get all commit info.
 #	    returns:
-#		short_id:   Commit id in short form (str).
-#		full_id:    Commit id in full form (str).
-#		date:	    Date of commit in 'YYYY-MM-DD' from (str).
+#		'all':	    List of triplets.
+#		other:	    Triplet [short-id, long-id, date]
+#				short_id:   Short form commit id (str).
+#				full_id:    Long form commit id (str).
+#				date:	    Commit date ('YYYY-MM-DD').
+#			    [] if can not get information.
 #
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2017/01/11 F.Kanehori	First version (Subversion only).
 #	Ver 1.1  2017/09/13 F.Kanehori	Python library revised.
 #	Ver 1.2  2017/11/16 F.Kanehori	Python library path ‚Ì•ÏX.
-#	Ver 1.3  2017/12/07 F.Kanehori	GitHub ”ÅŽÀ‘•.
+#	Ver 1.3  2017/12/17 F.Kanehori	GitHub ”ÅŽÀ‘•.
 # ======================================================================
 import sys
 import os
@@ -105,10 +108,10 @@ class VersionControlSystem:
 			f = None
 			d = None
 		elif system == 'GitHub':
-			r, s, f, d = self.obj.revision_info(revision)
+			revisions = self.obj.revision_info(revision)
 		if dir:
 			os.chdir(cwd)
-		return r, s, f, d
+		return revisions
 
 	#  Subclass: Subversion
 	#
@@ -147,66 +150,55 @@ class VersionControlSystem:
 			cmnd = 'git log --abbrev-commit --oneline --max-count=1'
 			status, out, err = self.__exec(url, cmnd)
 			#
-			revision = "can't get current revision"
+			rev = None
+			err = "can't get current revision"
 			if status == 0:
 				pattern = '(^[0-9a-f]+\s)'
 				m = re.match(pattern, out)
 				if m:
-					revision = m.group(1)
-			return status, revision, err
+					rev = m.group(1)
+			return status, rev, err
 
 		def revision_info(self, commit_id='HEAD'):
-			print('REV-INFO (%s)' % commit_id)
 			url = self.url
 
 			# Get commit-id of HEAD.
 			if commit_id == 'HEAD':
-				cmnd = 'git show'
-				status, out, err = self.__exec(url, cmnd)
+				status, rev, err = self.revision()
 				if status != 0:
-					msg = "can't get HEAD info"
-					return status, msg, None, None
-				line = out.split('\\')[0]
-				pattern = 'commit\s(\w+)'
-				m = re.match(pattern, line)
-				if m:
-					commit_id = m.group(1)
-					if self.verbose == 0:
-						print('HEAD -> %s' % commit_id)
+					return []
+				commit_id = rev
+				if self.verbose:
+					print('HEAD -> %s' % commit_id)
 
 			cmnd = 'git log'
-			########cmnd = 'git show %s' % commit_id
 			status, out, err = self.__exec(url, cmnd)
 			if status != 0:
-				msg = "can't get revision info"
-				return status, msg, None, None
+				return []
 			#
-			"""
-			findstr = commit_id if commit_id != 'HEAD' else '.+'
-			lines = out.split('\\')[0]
-			for line in lines.split('\n'):
-				print('LINE: [%s]' % line)	#############
-				pattern = 'commit\s+(%s)' % findstr
-				print('PATTERN: [%s]' % pattern)	#############
-				m = re.match(pattern, line)
-				if m:
-					print('MATCH(1)')	#############
-					full_id = m.group(1)
-					short_id = full_id[:7]
-					continue
-				pattern = 'Date:\s+(.+)'
-				m = re.match(pattern, line)
-				if m:
-					print('MATCH(2)')	#############
+			infos = []
+			for lines in out.split('\\'):
+				for line in lines.split('\n'):
+					pattern = 'commit\s+([0-9a-f]+)'
+					m = re.match(pattern, line)
+					if m:
+						long_id = m.group(1)
+						short_id = long_id[:7]
+						continue
+					pattern = 'Date:\s+(.+)'
+					m = re.match(pattern, line)
+					if not m:
+						continue
 					ifmt = '%a %b %d %H:%M:%S %Y %z'
 					ofmt = '%Y-%m-%d'
 					mstr = m.group(1)
 					dt = datetime.strptime(mstr, ifmt)
 					date = dt.strftime(ofmt)
-					break
-			return status, short_id, full_id, date
-			"""
-			return 0, "x", "y", "z"
+					info = [short_id, long_id, date]
+					if commit_id != 'all':
+						return info
+					infos.append(info)
+			return infos
 
 		def __exec(self, url, cmnd):
 			cmnd1 = cmnd
@@ -241,14 +233,20 @@ if __name__ == '__main__':
 		if sys == 'Subversion':
 			return
 		#
-		r, s, f, d = vcs.revision_info(topdir)
-		print('default(%d): %s, %s, %s' % (r, s, f, d))
-		r, s, f, d = vcs.revision_info(topdir, '5a314')
-		print('+5a314+(%d): %s, %s, %s' % (r, s, f, d))
+		revisions = vcs.revision_info(topdir)
+		print('default: %s' % revisions)
+		revisions = vcs.revision_info(topdir, '7813b94')
+		print('7813b94: %s' % revisions)
+		revisions = vcs.revision_info(topdir, 'all')
+		print('all:')
+		for rev in revisions:
+			print('         %s' % rev)
 
+	"""
 	system = 'Subversion'
 	args = {'url': 'http://springhead.info/spr2/Springhead/trunk/'}
 	test(system, args, topdir_svn, verbose)
+	"""
 
 	system = 'GitHub'
 	args = {'url': 'http://github.com/sprphys/Springhead/'}

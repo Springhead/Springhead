@@ -7,24 +7,24 @@
 ::	RunSwig_CSharp target
 ::
 ::  ARGUMENTS:
-::	target		リンクするプロジェクトの指定
-::	    ALL		すべてのプロジェクトを含む構成とする.
-::	    Physics	Physics を含む最小の構成とするを含む構成とする.
+::	target		�����N����v���W�F�N�g�̎w��
+::	    ALL		���ׂẴv���W�F�N�g���܂ލ\���Ƃ���.
+::	    Physics	Physics ���܂ލŏ��̍\���Ƃ�����܂ލ\���Ƃ���.
 ::	
 ::  DESCRIPTION:
-::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
-::	※ このスクリプトで作成した makefile を実行する.
+::      �t�@�C���̈ˑ��֌W�𒲂ׂāACSharpSWig.bat ���œK�Ɏ��s����.
+::	�� ���̃X�N���v�g�ō쐬���� makefile �����s����.
 ::
-::    　実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
-::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
+::    �@���s����v���W�F�N�g�� ..\..\src\RunSwig\do_swigall.projs �ɒ�`����Ă���
+::      ���̂��g�p����. �������v���W�F�N�g Base �͒�`�̗L���Ɋւ��Ȃ����s����.
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	 2015/03/18 F.Kanehori  初版
-::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
-::	Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
-::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
-::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
+::	Ver 1.0	 2015/03/18 F.Kanehori  ����
+::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file ����
+::	Ver 3.0	 2016/12/07 F.Kanehori  �����N�\���w�����
+::	Ver 3.1  2016/12/15 F.Kanehori	���b�p�t�@�C���쐬�����ύX
+::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger ����
 ::	Ver 3.2a 2017/01/18 F.Kanehori	Bug fixed.
 ::	Ver 3.3  2017/08/07 F.Kanehori	Bug fixed.
 :: ***********************************************************************************
@@ -34,7 +34,7 @@ set CWD=%cd%
 set DEBUG=1
 
 :: ------------
-::  引数の処理
+::  �����̏���
 :: ------------
 set TARGET=%1
 if "%TARGET%" equ "" (
@@ -47,7 +47,7 @@ if %DEBUG% == 1 (
 )
 
 :: ------------------------
-::  共通環境変数を読み込む
+::  ���ʊ��ϐ���ǂݍ���
 :: ------------------------
 call ..\NameManager\NameManager.bat
 if %DEBUG% == 1 (
@@ -62,20 +62,20 @@ if %DEBUG% == 1 (
     echo. 
 )
 
-:: 依存関係にはないと見做すファイルの一覧
+:: �ˑ��֌W�ɂ͂Ȃ��ƌ��􂷃t�@�C���̈ꗗ
 ::
 set EXCLUDES=
 
-:: makefile に出力するときのパス
+:: makefile �ɏo�͂���Ƃ��̃p�X
 set INCDIROUT=..\..\include
 set SRCDIROUT=..\..\src
 set CSHARPSWIG=RunSwig_CSharp\%CSHARPSWIG%
 
-:: 使用するファイル名
+:: �g�p����t�@�C����
 ::
 set MAKEFILE=Makefile_CSharp.swig
 
-:: 使用するパス
+:: �g�p����p�X
 ::
 call ..\NameManager\SetMakePath.bat
 if not exist %MAKEPATH% (
@@ -84,7 +84,7 @@ if not exist %MAKEPATH% (
 )
 
 :: ------------------------------
-::  処理するモジュール一覧を作成
+::  �������郂�W���[���ꗗ���쐬
 :: ------------------------------
 set PROJECTS=Base
 set SWIGMACRO=
@@ -99,13 +99,13 @@ if /i "%TARGET%" equ "ALL" (
 			if "%%m" equ "%%t" (
 	    			set PROJECTS=!PROJECTS! %%n %%m
 	    			set PROJECTS=!PROJECTS:,= !
-	    			:: 重複要素を取り除く
+	    			:: �d���v�f����菜��
 	    			call :bag_to_set PROJECTS_tmp "!PROJECTS!"
 	    			set PROJECTS=!PROJECTS_tmp!
 			)
     		)
 	)
-	:: swig用のマクロを定義する
+	:: swig�p�̃}�N�����`����
 	if "!TARGET!" equ "!TARGET:,= !" (
 		set SWIGMACRO=%TARGET%_ONLY
 	) else (
@@ -118,7 +118,7 @@ if "%PROJECTS%" equ "" (
 )
 
 :: ------------------------------
-::  .i ファイルの一覧を作成
+::  .i �t�@�C���̈ꗗ���쐬
 :: ------------------------------
 set IFILES=
 for %%p in (%PROJECTS%) do (
@@ -132,13 +132,13 @@ echo SWIGMACRO: [%SWIGMACRO%]
 echo IFiles:    [%IFILES%]
 
 :: ------------------------------
-::  モジュールにまたがる初期化
+::  ���W���[���ɂ܂����鏉����
 :: ------------------------------
 call :truncate_file %SIGNATUREFILE%
 del /f %WRAPPERSBUILTFILE% > NUL 2>&1
 
 :: ------------------------------
-::  作業ディレクトリの作成
+::  ��ƃf�B���N�g���̍쐬
 :: ------------------------------
 for %%d in (%CS_SRC% %CS_IMP% %CS_EXP%) do (
 	set TMPDIR=%%d\tmp
@@ -149,7 +149,7 @@ for %%d in (%CS_SRC% %CS_IMP% %CS_EXP%) do (
 )
 
 :: ----------
-::  処理開始
+::  �����J�n
 :: ----------
 echo making ...
 for %%p in (%PROJECTS%) do (
@@ -167,7 +167,7 @@ for %%p in (%PROJECTS%) do (
 )
 
 :: -------------------------
-::  wrapper file をまとめる
+::  wrapper file ���܂Ƃ߂�
 :: -------------------------
 if exist %WRAPPERSBUILTFILE% (
     echo combining wrapper files
@@ -187,19 +187,19 @@ if exist %WRAPPERSBUILTFILE% (
 )
 
 :: -----------------------------
-::  TARGET をファイルに記録する
+::  TARGET ���t�@�C���ɋL�^����
 :: -----------------------------
 echo last target: %TARGET%
 echo %TARGET% > %TARGETFILE%
 
 :: ----------
-::  処理終了
+::  �����I��
 :: ----------
 endlocal
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  ファイルの初期化（空のファイルとする）
+::  �t�@�C���̏������i��̃t�@�C���Ƃ���j
 :: -----------------------------------------------------------------------------------
 :truncate_file
     if exist %1 del /F %1
@@ -207,19 +207,19 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  ファイルへの追加
+::  �t�@�C���ւ̒ǉ�
 :: -----------------------------------------------------------------------------------
 :append_file
     if exist %1 type %1 >> %2
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  引数1 で与えられたプロジェクトのヘッダ情報を収集する
+::  ����1 �ŗ^����ꂽ�v���W�F�N�g�̃w�b�_�������W����
 :: -----------------------------------------------------------------------------------
 :collect_headers
     set PROJECT=%1
 
-    :: 依存ファイル情報を集める
+    :: �ˑ��t�@�C�������W�߂�
     ::
     set INCHDRS=
     for %%f in (%INCDIR%\%PROJECT%\*.h) do (
@@ -242,11 +242,11 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  makefile を作成する
-::      引数1   モジュール名
-::      引数2   makefile 名
-::      引数3   "依存ヘッダファイル名リスト"
-::      引数4   "依存ソースファイル名リスト"
+::  makefile ���쐬����
+::      ����1   ���W���[����
+::      ����2   makefile ��
+::      ����3   "�ˑ��w�b�_�t�@�C�������X�g"
+::      ����4   "�ˑ��\�[�X�t�@�C�������X�g"
 :: -----------------------------------------------------------------------------------
 :make_makefile
     setlocal enabledelayedexpansion
@@ -325,8 +325,8 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  引数2 で与えられた名前が 引数1 で与えられたリスト中にあるか調べる
-::  結果は $result に返す（yes または no）
+::  ����2 �ŗ^����ꂽ���O�� ����1 �ŗ^����ꂽ���X�g���ɂ��邩���ׂ�
+::  ���ʂ� $result �ɕԂ��iyes �܂��� no�j
 :: -----------------------------------------------------------------------------------
 :one_of
     set $result=no
@@ -334,8 +334,8 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  引数1 で与えられた変数に、引数2 で指定された prefix を追加する
-::  結果は $string に返す
+::  ����1 �ŗ^����ꂽ�ϐ��ɁA����2 �Ŏw�肳�ꂽ prefix ��ǉ�����
+::  ���ʂ� $string �ɕԂ�
 :: -----------------------------------------------------------------------------------
 :add_prefix
     set $string=
@@ -344,7 +344,7 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  集合から重複した要素を取り除く
+::  �W������d�������v�f����菜��
 :: -----------------------------------------------------------------------------------
 :bag_to_set
 	setlocal enabledelayedexpansion
@@ -360,7 +360,7 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  デバッグ用
+::  �f�o�b�O�p
 :: -----------------------------------------------------------------------------------
 :show_abspath
     echo %1:  [%~f2]
