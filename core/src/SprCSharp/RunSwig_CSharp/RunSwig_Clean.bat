@@ -4,16 +4,16 @@
 ::      RunSwig_Clean.bat
 ::
 ::  DESCRIPTION:
-::      RunSwig_CSharp ã§ä½œæˆã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã™ã‚‹.
-::      ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ RunSwig_CSharp ã® [ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¯ãƒªãƒ¼ãƒ³] ã‹ã‚‰å‘¼ã°ã‚Œã‚‹.
+::      RunSwig_CSharp ‚Åì¬‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ðíœ‚·‚é.
+::      ƒvƒƒWƒFƒNƒg RunSwig_CSharp ‚Ì [ƒ\ƒŠƒ…[ƒVƒ‡ƒ“‚ÌƒNƒŠ[ƒ“] ‚©‚çŒÄ‚Î‚ê‚é.
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	 2015/03/18 F.Kanehori	åˆç‰ˆ
-::	Ver 2.0	 2016/12/05 F.Kanehori	ãƒªãƒ³ã‚¯æ§‹æˆæŒ‡å®šå®Ÿè£…
-::	Ver 2.1	 2017/01/16 F.Kanehori	NameManger å°Žå…¥
-::	Ver 2.2	 2017/08/09 F.Kanehori	å‰Šé™¤ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ 
-::	Ver 2.3	 2017/08/28 F.Kanehori	NameManager.bat ãŒãªã„ã¨ãã®å‡¦ç†ã‚’è¿½åŠ .
+::	Ver 1.0	 2015/03/18 F.Kanehori	‰”Å
+::	Ver 2.0	 2016/12/05 F.Kanehori	ƒŠƒ“ƒN\¬Žw’èŽÀ‘•
+::	Ver 2.1	 2017/01/16 F.Kanehori	NameManger “±“ü
+::	Ver 2.2	 2017/08/09 F.Kanehori	íœ‚·‚éƒtƒ@ƒCƒ‹‚ð’Ç‰Á
+::	Ver 2.3	 2017/08/28 F.Kanehori	NameManager.bat ‚ª‚È‚¢‚Æ‚«‚Ìˆ—‚ð’Ç‰Á.
 ::	Ver 2.31 2017/09/07 F.Kanehori	Bug fixed.
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
@@ -22,11 +22,11 @@ set CWD=%cd%
 set DEBUG=1
 
 :: ------------------------
-::  å…±é€šç’°å¢ƒå¤‰æ•°ã‚’èª­ã¿è¾¼ã‚€
+::  ‹¤’ÊŠÂ‹«•Ï”‚ð“Ç‚Ýž‚Þ
 :: ------------------------
 set NAMEMANAGER=..\NameManager\NameManager.bat
 if not exist %NAMEMANAGER% (
-	:: NameManager.bat ãŒå­˜åœ¨ã—ãªã„ã¨ãã¯ä½•ã‚‚ã—ãªã„
+	:: NameManager.bat ‚ª‘¶Ý‚µ‚È‚¢‚Æ‚«‚Í‰½‚à‚µ‚È‚¢
 	echo "NameManager.bat" does not exist.
 	exit /b
 )
@@ -44,20 +44,20 @@ if %DEBUG% == 1 (
 )
 
 :: --------------------
-::  ä½¿ç”¨ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«å
+::  Žg—p‚·‚éƒtƒ@ƒCƒ‹–¼
 :: --------------------
 set PROJFILE=do_swigall.projs
 set TARGETFILE=..\TargetManager\target.last
 
 :: ------------------------------
-::  å‡¦ç†ã™ã‚‹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ä¸€è¦§ã‚’ä½œæˆ
+::  ˆ—‚·‚éƒ‚ƒWƒ…[ƒ‹ˆê——‚ðì¬
 :: ------------------------------
 set PROJECTS=Base
 for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do set PROJECTS=!PROJECTS! %%m
 if %DEBUG% == 1 echo Projects are: %PROJECTS%
 
 :: ----------
-::  å‡¦ç†é–‹å§‹
+::  ˆ—ŠJŽn
 :: ----------
 for %%p in (%PROJECTS%) do (
     del %CS_SRC%\CS%%p*.cs  > NUL 2>&1
@@ -77,13 +77,13 @@ for %%s in (%SUFFIX%) do (
 echo. > %TARGETFILE%
 
 :: ----------
-::  å‡¦ç†çµ‚äº†
+::  ˆ—I—¹
 :: ----------
 endlocal
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  ãƒ‡ãƒãƒƒã‚°ç”¨
+::  ƒfƒoƒbƒO—p
 :: -----------------------------------------------------------------------------------
 :show_abspath
     echo %1:  [%~f2]

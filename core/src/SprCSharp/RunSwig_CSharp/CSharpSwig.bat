@@ -7,19 +7,19 @@
 ::	CSharpSwig module [swigmacro]
 ::
 ::  ARGUMENTS:
-::	module		ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å
-::	swigmacro	swig ã«æ¸¡ã™ãƒã‚¯ãƒ­ï¼ˆ#ifdef swigmacro ã¨ã—ã¦ä½¿ã†ï¼‰
+::	module		ƒ‚ƒWƒ…[ƒ‹–¼
+::	swigmacro	swig ‚É“n‚·ƒ}ƒNƒi#ifdef swigmacro ‚Æ‚µ‚Äg‚¤j
 ::
 ::  Description:
-::	Springhead ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒª(DLL) ã‚’ C# ã‹ã‚‰åˆ©ç”¨ã™ã‚‹ãŸã‚ã®ã‚³ãƒ¼ãƒ‰ã‚’ç”Ÿæˆã™ã‚‹ã€‚
+::	Springhead ‚Ìƒ‰ƒCƒuƒ‰ƒŠ(DLL) ‚ğ C# ‚©‚ç—˜—p‚·‚é‚½‚ß‚ÌƒR[ƒh‚ğ¶¬‚·‚éB
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	 2015/01/26 F.Kanehori  åˆç‰ˆ
-::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file çµ±åˆ
-::	Ver 3.0	 2016/12/01 F.Kanehori  ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæŒ‡å®šå®Ÿè£…
-::	Ver 3.1  2016/12/15 F.Kanehori	ãƒ©ãƒƒãƒ‘ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆæ–¹å¼å¤‰æ›´
-::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger å°å…¥
+::	Ver 1.0	 2015/01/26 F.Kanehori  ‰”Å
+::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file “‡
+::	Ver 3.0	 2016/12/01 F.Kanehori  ƒ^[ƒQƒbƒgw’èÀ‘•
+::	Ver 3.1  2016/12/15 F.Kanehori	ƒ‰ƒbƒpƒtƒ@ƒCƒ‹ì¬•û®•ÏX
+::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger “±“ü
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -49,7 +49,7 @@ if %DEBUG% == 1 (
 )
 
 :: ------------------------
-::  å…±é€šç’°å¢ƒå¤‰æ•°ã‚’èª­ã¿è¾¼ã‚€
+::  ‹¤’ÊŠÂ‹«•Ï”‚ğ“Ç‚İ‚Ş
 :: ------------------------
 call .\NameManager\NameManager.bat
 echo. 
@@ -57,13 +57,13 @@ echo *** %MODULE% ***
 echo using src directory: %SRCDIR%
 
 :: ----------
-::  å„ç¨®å®šç¾©
+::  Šeí’è‹`
 :: ----------
 set PATH=%SWIGDIR%;%PATH% 
 set ARGS=-sprcs -DSWIG_CS_SPR -c++ -I%SWIGPATH%\Lib -w305,312,319,325,401,402
 
 :: ----------
-::  å‡¦ç†é–‹å§‹
+::  ˆ—ŠJn
 :: ----------
 if exist %MODULE%.i (
     if %DUMPTREE% == 1 (
@@ -89,7 +89,7 @@ if exist %MODULE%.i (
 echo. 
 
 :: ----------
-::  å‡¦ç†çµ‚äº†
+::  ˆ—I—¹
 :: ----------
 endlocal
 exit /b

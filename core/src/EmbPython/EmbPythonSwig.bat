@@ -12,7 +12,7 @@ set HPP=EP%MODULE%.h
 set SPRH=SprEP%MODULE%.h
 set API_INCLUDE=../../include
 
-rem makefileã®ä½œæˆã¨Makeã®å®Ÿè¡Œ
+rem makefile‚Ìì¬‚ÆMake‚ÌÀs
 set PATHORG=%PATH%;
 
 set BINDIR=..\..\..\buildtool

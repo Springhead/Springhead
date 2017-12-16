@@ -5,13 +5,13 @@ setlocal enabledelayedexpansion
 ::	SetMakePath
 ::
 ::  DESCRIPTION
-::	nmake ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã® path ã‚’æ±‚ã‚, ç’°å¢ƒå¤‰æ•° MAKEPATH ã«è¨­å®šã™ã‚‹.
+::	nmake ‚ğg—p‚·‚é‚½‚ß‚Ì path ‚ğ‹‚ß, ŠÂ‹«•Ï” MAKEPATH ‚Éİ’è‚·‚é.
 ::
 ::  ARGUMENTS
-::	ãªã—
+::	‚È‚µ
 ::
 ::  VERSION
-::	Ver 1.0  2017/01/16 F.Kanehori	åˆç‰ˆ
+::	Ver 1.0  2017/01/16 F.Kanehori	‰”Å
 :: ============================================================================
 set PROG=%~n0
 
