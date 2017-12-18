@@ -16,6 +16,7 @@ setlocal enabledelayedexpansion
 ::
 ::  VERSION
 ::	Ver 1.0  2017/12/03 F.Kanehori	GitHub 仮対応版（Python版を作るまで）。
+::	Ver 1.1  2017/12/18 F.Kanehori	Springhead マニュアル作成追加
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -89,6 +90,9 @@ call :check_condition DAILYBUILD_EXECUTE_MAKEDOC
 if %$status% == 0 (
     echo making documents
     call bat\MakeDoc.bat
+    cd ..\doc\SprManual
+    make
+    cd ..\..\test
 )
 
 ::----------------------------------------------
@@ -148,7 +152,13 @@ exit /b
 :copy_dir
     echo copying directory %cd%\%1\ to %2\%1\
     if "%1" neq "" (
-	rmdir /s /q %2\%1 > NUL
+	rem rmdir /s /q %2\%1 > NUL
+	if exist %2\%1 (
+		cd %2\%1
+		for /f %%d in ('dir /ad /b /w *') do rmdir /s /q %%d
+		del /f /q *
+		cd ..\..
+	)
 	xcopy /e/c/f/h/i/y %1 %2\%1 > NUL
     )
 exit /b
