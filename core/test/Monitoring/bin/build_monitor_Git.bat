@@ -16,11 +16,11 @@ setlocal enabledelayedexpansion
 ::
 ::  VERSION
 ::	Ver 1.0  2013/01/16 F.Kanehori	Unix 版より移植
-::	Ver 2.0  2017/12/20 F.Kanehori	GitHub 版に改造
-::	Ver 2.1  2017/12/27 F.Kanehori	レポートファイル名を変更
-::	Ver 2.2  2018/01/02 F.Kanehori	NEWREV ログはテスト結果から直接得る
-::	Ver 2.3  2018/05/10 F.Kanehori	変更：VersionControlSystem 呼出し
-::	Ver 2.4  2018/12/25 F.Kanehori	変更：RevisionInfo 呼出し
+::	Ver 1.1	 2014/02/03 F.Kanehori	Samples については ErrorLog に変更
+::	Ver 1.2	 2017/10/18 F.Kanehori	新レポジトリに対応（URLの変更等）
+::	Ver 1.3	 2017/11/20 F.Kanehori	エンコーディングを utf8 に変更
+::	Ver 1.31 2017/11/22 F.Kanehori	エンコーディングを utf8 BOM付き に変更
+::	Ver 1.32 2017/11/27 F.Kanehori	書式の些細な変更
 :: ============================================================================
 set PROG=%~n0
 
@@ -78,15 +78,14 @@ rem if %OPT_M% == 1 ( set REPORTBYMAIL=1 )
 ::----------------------------------------------
 ::  現在の日付と時刻
 ::
-set DATESTR=%date:~0,4%-%date:~5,2%%date:~8,2%
-set TIMESTR=%time:~0,8%
+set DATESTR=%date:~0,4%-%date:~5,2%%date:~8,2% %time:~0,8%
 
 ::----------------------------------------------
 ::  結果を報告するメールに関して
 ::	  REPORTBYMAIL	1 (引数 -m を指定) なら結果をメールで知らせる
 ::
 set REPORTBYMAIL=0
-set MAILSUBJECT=Daily-build Report on %DATESTR% %TIMESTR%
+set MAILSUBJECT=Daily-build Report on %DATESTR%
 set MAILTOADDR=
 set MAILFMADDR=
 
@@ -98,7 +97,6 @@ set BINDIR=%BASEDIR%\bin
 set REPDIR=%BASEDIR%\..\report
 set ETCDIR=%BASEDIR%\etc
 set TMPDIR=%REPDIR%\tmp
-if not exist %TMPDIR% ( mkdir %TMPDIR% )
 
 ::----------------------------------------------
 ::  使用するプログラムの定義
@@ -110,20 +108,14 @@ set NKF=%BINDIR%\nkf.exe
 set AWK=%BINDIR%\gawk.exe
 ::SENDMAIL=/usr/sbin/sendmail
 
-rem set VCS=python ..\bin\VersionControlSystem.py
-set VCS=python ..\bin\RevisionInfo.py
-set GETFIELD=%AWK% -f %BINDIR%\field.awk
-set GREP=%AWK% -f %BINDIR%\grep.awk
-set EXCLUDE=%AWK% -f %BINDIR%\exclude.awk
-
 ::----------------------------------------------
 ::  レビジョン範囲の決定
 ::
 set OLDREV=0
 set NEWREV=0
 if %ARGC% == 1 (
-    call :backquote OLDREV "echo %1 ^| %GETFIELD% -v sep1=":" -v field=1"
-    call :backquote NEWREV "echo %1 ^| %GETFIELD% -v sep1=":" -v field=2"
+    call :backquote OLDREV "echo %1 ^| %AWK% -f %BINDIR%\field.awk -v sep1=":" -v field=1"
+    call :backquote NEWREV "echo %1 ^| %AWK% -f %BINDIR%\field.awk -v sep1=":" -v field=2"
 )
 if %VAL_D% geq 1 (
     echo -- OLDREV-1 [%OLDREV%]
@@ -134,14 +126,15 @@ if %VAL_D% geq 1 (
 ::----------------------------------------------
 ::  次のsvn(URL)を使用する
 ::
-set STBLOGURL=core/test/log/StubBuild.log
-set BLDLOGURL=core/test/log/Build.log
-set RUNLOGURL=core/test/log/Run.log
-set SPLLOGURL=core/test/log/SamplesBuild.log
-set STBERRURL=core/test/log/StubBuildError.log
-set BLDERRURL=core/test/log/BuildError.log
-set RUNERRURL=core/test/log/RunError.log
-set SPLERRURL=core/test/log/SamplesBuildError.log
+set REPOSITORY=http://springhead.info/spr2/Springhead/trunk/
+set STBLOGURL=%REPOSITORY%core/test/log/StubBuild.log
+set BLDLOGURL=%REPOSITORY%core/test/log/Build.log
+set RUNLOGURL=%REPOSITORY%core/test/log/Run.log
+set SPLLOGURL=%REPOSITORY%core/test/log/SamplesBuild.log
+set STBERRURL=%REPOSITORY%core/test/log/StubBuildError.log
+set BLDERRURL=%REPOSITORY%core/test/log/BuildError.log
+set RUNERRURL=%REPOSITORY%core/test/log/RunError.log
+set SPLERRURL=%REPOSITORY%core/test/log/SamplesBuildError.log
 if %OPT_V% == 1 (
     echo use following URLs:
     echo   %STBLOGURL%
@@ -160,6 +153,7 @@ if %OPT_V% == 1 (
 ::
 set OLDREVFILE=%ETCDIR%\revision.old
 set NEWREVFILE=%ETCDIR%\revision.new
+set SVNLOGTMP=%TMPDIR%\svnlog.tmp
 
 ::----------------------------------------------
 ::  シグナルトラップの設定
@@ -172,7 +166,8 @@ rem trap "cleanup 1" SIGHUP SIGINT SIGQUIT SIGTERM
 if %OLDREV% == 0 (
     :: old-revision ファイルが存在すればそこから取り出す
     if exist %OLDREVFILE% (
-	call :backquote OLDREV "%GETFIELD% %OLDREVFILE%"
+	echo EXISTS!
+	call :backquote OLDREV "%AWK% -f %BINDIR%\field.awk -v start=2 %OLDREVFILE%"
 	if "!OLDREV!" == "" ( set OLDREV=0 )
     )
     if !OLDREV! == 0 (
@@ -180,6 +175,8 @@ if %OLDREV% == 0 (
 	exit /b
     )
 )
+echo OLDREV: %OLDREV%
+exit /b
 
 ::----------------------------------------------
 ::  比較するレビジョン(new-revision)の決定
@@ -187,15 +184,17 @@ if %OLDREV% == 0 (
 if %NEWREV% == 0 (
     :: new-revision ファイルが存在すればそこから取り出す
     if exist %NEWREVFILE% (
-	call :backquote NEWREV "%GREP% -v pat=rev %NEWREVFILE%"
-	if "!NEWREV!" == "HEAD" (
+	call :backquote NEWREV "%AWK% -f %BINDIR%\grep.awk -v pat=rev %NEWREVFILE%"
+	call :backquote NEWREV "echo !NEWREV! ^| %AWK% -f %BINDIR%\field.awk -v start=2"
+	if !NEWREV! == 0 (
 	    :: レビジョンの代わりに HEAD と指定されていたら最新のレビジョンを使用する
-	    call :backquote NEWREV "%GREP% -v pat=head %NEWREVFILE%"
-	    call :backquote NEWREV "echo !NEWREV! ^| %GETFIELD% -v field=1"
+	    call :backquote NEWREV "%AWK% -f %BINDIR%\grep.awk -v pat=head %NEWREVFILE%"
+	    call :backquote NEWREV "echo !NEWREV! ^| %AWK% -f %BINDIR%\field.awk"
 	    if "!NEWREV!" == "HEAD" (
-		if %OPT_V% == 1 ( set /p=extracting HEAD info from GitHub ... < NUL )
-		call :backquote NEWREV "%VCS% -S HEAD"
-		call :backquote NEWREV "echo !NEWREV! ^| %GETFIELD% -v sep1=,"
+		if %OPT_V% == 1 ( set /p=extracting HEAD revision from svn ... < NUL )
+		svn log -q %REPOSITORY% -r HEAD > %SVNLOGTMP% 2> NUL
+		call :backquote NEWREV "%AWK% -f %BINDIR%\line.awk -v line=2 %SVNLOGTMP%"
+		call :backquote NEWREV "echo !NEWREV! ^| %AWK% -f %BINDIR%\field.awk -v start=2"
 		if %OPT_V% == 1 ( echo done )
 	    )
 	)
@@ -213,16 +212,21 @@ if %VAL_D% geq 1 (
 ::----------------------------------------------
 ::  svn から OLDREV の日付と時刻を取得する
 ::
-call :backquote TMPDATA "%VCS% -S %OLDREV%"
-call :backquote OLDDATE "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=3"
-call :backquote OLDTIME "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=4"
+svn log -r %OLDREV% %REPOSITORY% > %SVNLOGTMP% 2> NUL
+call :backquote TMPDATE "%AWK% -f %BINDIR%\line.awk -v line=2 %SVNLOGTMP% ^| %AWK% -f %BINDIR%\field.awk -v block=3 field=1"
+call :backquote TMPTIME "%AWK% -f %BINDIR%\line.awk -v line=2 %SVNLOGTMP% ^| %AWK% -f %BINDIR%\field.awk -v block=3 field=2"
+set OLDDATE=%TMPDATE:~0,7%%TMPDATE:~8,2%
+set OLDTIME=%TMPTIME%
  
 ::----------------------------------------------
 ::  svn から NEWREV の日付と時刻を取得する
 ::
-call :backquote TMPDATA "%VCS% -S %NEWREV%"
-call :backquote NEWDATE "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=3"
-call :backquote NEWTIME "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=4"
+svn log -r %NEWREV% %REPOSITORY% > %SVNLOGTMP% 2> NUL
+call :backquote TMPDATE "%AWK% -f %BINDIR%\line.awk -v line=2 %SVNLOGTMP% ^| %AWK% -f %BINDIR%\field.awk -v block=3 field=1"
+call :backquote TMPTIME "%AWK% -f %BINDIR%\line.awk -v line=2 %SVNLOGTMP% ^| %AWK% -f %BINDIR%\field.awk -v block=3 field=2"
+set NEWDATE=%TMPDATE:~0,7%%TMPDATE:~8,2%
+set NEWTIME=%TMPTIME%
+
 if %OPT_V% == 1 (
     echo OLD-revision: %OLDREV% ^(%OLDDATE% %OLDTIME%^)
     echo NEW-revision: %NEWREV% ^(%NEWDATE% %NEWTIME%^)
@@ -250,61 +254,49 @@ set TMPNEWBLDERRF=%TMPDIR%\r%NEWREV%.blderrlog.new
 set TMPNEWRUNERRF=%TMPDIR%\r%NEWREV%.runerrlog.new
 set TMPNEWSPLERRF=%TMPDIR%\r%NEWREV%.splerrlog.new
 ::     REPROTFILE	レポートファイル
-set REPORTFILE=%REPDIR%\%DATESTR%.report
+set REPORTFILE=%REPDIR%\%NEWDATE%.report
 ::     参考情報ファイル
-set STBLOGDIFFFILE=%REPDIR%\%DATESTR%.stblog.diff
-set BLDLOGDIFFFILE=%REPDIR%\%DATESTR%.bldlog.diff
-set RUNLOGDIFFFILE=%REPDIR%\%DATESTR%.runlog.diff
-set SPLLOGDIFFFILE=%REPDIR%\%DATESTR%.spllog.diff
+set STBLOGDIFFFILE=%REPDIR%\%NEWDATE%.stblog.diff
+set BLDLOGDIFFFILE=%REPDIR%\%NEWDATE%.bldlog.diff
+set RUNLOGDIFFFILE=%REPDIR%\%NEWDATE%.runlog.diff
+set SPLLOGDIFFFILE=%REPDIR%\%NEWDATE%.spllog.diff
 ::     TMPFILE		作業ファイル
 set TMPFILE=%TMPDIR%\build_monitor.tmp
-set TMPSTBLOGDIFFFILE=%TMPDIR%\%DATESTR%.stblog.diff
-set TMPBLDLOGDIFFFILE=%TMPDIR%\%DATESTR%.bldlog.diff
-set TMPRUNLOGDIFFFILE=%TMPDIR%\%DATESTR%.runlog.diff
-set TMPSPLLOGDIFFFILE=%TMPDIR%\%DATESTR%.spllog.diff
-set TMPSTBERRDIFFFILE=%TMPDIR%\%DATESTR%.stberrlog.diff
-set TMPBLDERRDIFFFILE=%TMPDIR%\%DATESTR%.blderrlog.diff
-set TMPRUNERRDIFFFILE=%TMPDIR%\%DATESTR%.runerrlog.diff
-set TMPSPLERRDIFFFILE=%TMPDIR%\%DATESTR%.splerrlog.diff
+set TMPSTBLOGDIFFFILE=%TMPDIR%\%NEWDATE%.stblog.diff
+set TMPBLDLOGDIFFFILE=%TMPDIR%\%NEWDATE%.bldlog.diff
+set TMPRUNLOGDIFFFILE=%TMPDIR%\%NEWDATE%.runlog.diff
+set TMPSPLLOGDIFFFILE=%TMPDIR%\%NEWDATE%.spllog.diff
+set TMPSTBERRDIFFFILE=%TMPDIR%\%NEWDATE%.stberrlog.diff
+set TMPBLDERRDIFFFILE=%TMPDIR%\%NEWDATE%.blderrlog.diff
+set TMPRUNERRDIFFFILE=%TMPDIR%\%NEWDATE%.runerrlog.diff
+set TMPSPLERRDIFFFILE=%TMPDIR%\%NEWDATE%.splerrlog.diff
 
 if %OPT_V% == 1 (
-    call :abs_path REPORTFILE_ABS %REPORTFILE%
-    echo output to:
-    echo   !REPORTFILE_ABS!
+    echo outout to:
+    echo   %REPORTFILE%
 )
 
 ::----------------------------------------------
 ::  OLDREV と NEWREV のログファイルを取り出す
 ::
 if %OPT_V% == 1 ( set /p=extracting log info ... < NUL )
-::  OLDREV のログは GitHub から取り出す.
-git show %OLDREV%:%STBLOGURL% | %ORDER% > %TMPOLDSTBFILE%
-git show %OLDREV%:%BLDLOGURL% | %ORDER% > %TMPOLDBLDFILE%
-git show %OLDREV%:%RUNLOGURL% | %ORDER% > %TMPOLDRUNFILE%
-git show %OLDREV%:%SPLLOGURL% | %ORDER% > %TMPOLDSPLFILE%
-git show %OLDREV%:%STBERRURL% | %ORDER% > %TMPOLDSTBERRF%
-git show %OLDREV%:%BLDERRURL% | %ORDER% > %TMPOLDBLDERRF%
-git show %OLDREV%:%RUNERRURL% | %ORDER% > %TMPOLDRUNERRF%
-git show %OLDREV%:%SPLERRURL% | %ORDER% > %TMPOLDSPLERRF%
+svn cat -r %OLDREV% %STBLOGURL% | %ORDER% > %TMPOLDSTBFILE%
+svn cat -r %OLDREV% %BLDLOGURL% | %ORDER% > %TMPOLDBLDFILE%
+svn cat -r %OLDREV% %RUNLOGURL% | %ORDER% > %TMPOLDRUNFILE%
+svn cat -r %OLDREV% %SPLLOGURL% | %ORDER% > %TMPOLDSPLFILE%
+svn cat -r %OLDREV% %STBERRURL% | %ORDER% > %TMPOLDSTBERRF%
+svn cat -r %OLDREV% %BLDERRURL% | %ORDER% > %TMPOLDBLDERRF%
+svn cat -r %OLDREV% %RUNERRURL% | %ORDER% > %TMPOLDRUNERRF%
+svn cat -r %OLDREV% %SPLERRURL% | %ORDER% > %TMPOLDSPLERRF%
 
-::  NEWREV のログは DailyBuild の結果から直接取り出す.
-set TOPDIR=..\..\..
-rem git show %NEWREV%:%STBLOGURL% | %ORDER% > %TMPNEWSTBFILE%
-rem git show %NEWREV%:%BLDLOGURL% | %ORDER% > %TMPNEWBLDFILE%
-rem git show %NEWREV%:%RUNLOGURL% | %ORDER% > %TMPNEWRUNFILE%
-rem git show %NEWREV%:%SPLLOGURL% | %ORDER% > %TMPNEWSPLFILE%
-rem git show %NEWREV%:%STBERRURL% | %ORDER% > %TMPNEWSTBERRF%
-rem git show %NEWREV%:%BLDERRURL% | %ORDER% > %TMPNEWBLDERRF%
-rem git show %NEWREV%:%RUNERRURL% | %ORDER% > %TMPNEWRUNERRF%
-rem git show %NEWREV%:%SPLERRURL% | %ORDER% > %TMPNEWSPLERRF%
-type %TOPDIR%\%STBLOGURL:/=\% | %ORDER% > %TMPNEWSTBFILE%
-type %TOPDIR%\%BLDLOGURL:/=\% | %ORDER% > %TMPNEWBLDFILE%
-type %TOPDIR%\%RUNLOGURL:/=\% | %ORDER% > %TMPNEWRUNFILE%
-type %TOPDIR%\%SPLLOGURL:/=\% | %ORDER% > %TMPNEWSPLFILE%
-type %TOPDIR%\%STBERRURL:/=\% | %ORDER% > %TMPNEWSTBERRF%
-type %TOPDIR%\%BLDERRURL:/=\% | %ORDER% > %TMPNEWBLDERRF%
-type %TOPDIR%\%RUNERRURL:/=\% | %ORDER% > %TMPNEWRUNERRF%
-type %TOPDIR%\%SPLERRURL:/=\% | %ORDER% > %TMPNEWSPLERRF%
+svn cat -r %NEWREV% %STBLOGURL% | %ORDER% > %TMPNEWSTBFILE%
+svn cat -r %NEWREV% %BLDLOGURL% | %ORDER% > %TMPNEWBLDFILE%
+svn cat -r %NEWREV% %RUNLOGURL% | %ORDER% > %TMPNEWRUNFILE%
+svn cat -r %NEWREV% %SPLLOGURL% | %ORDER% > %TMPNEWSPLFILE%
+svn cat -r %NEWREV% %STBERRURL% | %ORDER% > %TMPNEWSTBERRF%
+svn cat -r %NEWREV% %BLDERRURL% | %ORDER% > %TMPNEWBLDERRF%
+svn cat -r %NEWREV% %RUNERRURL% | %ORDER% > %TMPNEWRUNERRF%
+svn cat -r %NEWREV% %SPLERRURL% | %ORDER% > %TMPNEWSPLERRF%
 if %OPT_V% == 1 ( echo done )
 
 ::----------------------------------------------
@@ -331,40 +323,41 @@ if %OPT_V% == 1 ( set /p=converting to utf8 ... < NUL )
 %NKF% -w8 %TMPBLDLOGDIFFFILE%	> %BLDLOGDIFFFILE%
 %NKF% -w8 %TMPRUNLOGDIFFFILE% 	> %RUNLOGDIFFFILE%
 %NKF% -w8 %TMPSPLLOGDIFFFILE%	> %SPLLOGDIFFFILE%
-if %OPT_V% == 1 ( echo done )
+rem if %OPT_V% == 1 ( echo done )
 
 ::----------------------------------------------
 ::  レポートファイルにまとめる
 ::     ただし日付行は除く(pattern is /日付 : [0-9]{2}\.[0-9]{2}\.[0-9]{2}/)
+::     漢字は Shift-JIS である
 ::
 if %OPT_V% == 1 ( set /p=making report file ... < NUL )
-echo Report on %DATESTR% %TIMESTR%			>  %REPORTFILE%
-echo old log revision: %OLDREV% (%OLDDATE% %OLDTIME%)	>> %REPORTFILE%
-echo new log revision: %NEWREV% (%NEWDATE% %NEWTIME%)	>> %REPORTFILE%
+echo Report on %DATESTR%				>  %REPORTFILE%
+echo old revision: %OLDREV% (%OLDDATE% %OLDTIME%)	>> %REPORTFILE%
+echo new revision: %NEWREV% (%NEWDATE% %NEWTIME%)	>> %REPORTFILE%
 
-echo.					>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-echo. StubBuildError.log  		>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-%EXCLUDE% %TMPNEWSTBERRF%		>> %REPORTFILE%
+echo.							>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+echo. StubBuildError.log  				>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+%AWK% -f %BINDIR%\exclude.awk %TMPNEWSTBERRF%		>> %REPORTFILE%
 
-echo.					>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-echo. BuildError.log			>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-%EXCLUDE% %TMPNEWBLDERRF%		>> %REPORTFILE%
+echo.							>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+echo. BuildError.log					>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+%AWK% -f %BINDIR%\exclude.awk %TMPNEWBLDERRF%		>> %REPORTFILE%
 
-echo.					>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-echo. Run.log の差分			>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-%EXCLUDE% %TMPRUNLOGDIFFFILE%		>> %REPORTFILE%
+echo.							>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+echo. Run.log の差分					>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+%AWK% -f %BINDIR%\exclude.awk %TMPRUNLOGDIFFFILE%	>> %REPORTFILE%
 
-echo.					>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-echo. SamplesBuildError.log		>> %REPORTFILE%
-echo.====================		>> %REPORTFILE%
-%EXCLUDE% %TMPNEWSPLERRF%		>> %REPORTFILE%
+echo.							>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+echo. SamplesBuildError.log				>> %REPORTFILE%
+echo.====================				>> %REPORTFILE%
+%AWK% -f %BINDIR%\exclude.awk %TMPNEWSPLERRF%		>> %REPORTFILE%
 
 ::----------------------------------------------
 ::  エンコーディングを utf8 にする
@@ -381,7 +374,7 @@ if %REPORTBYMAIL% == 1 (
     if %OPT_V% == 1 ( set /p=mailing report file to ... < NUL )
     rem echo From: %MAILFMADDR%		>  %TMPFILE%
     rem echo To: %MAILTOADDR%		>> %TMPFILE%
-    rem echo Subject: %MAILSUBJECT%	>> %TMPFILE%
+    rem echo Subject: %MAILSUBJECT%		>> %TMPFILE%
     rem echo 				>> %TMPFILE%
     rem %NKF% -j %REPORTFILE%		>> %TMPFILE%
     rem %SENDMAIL% -t			<  %TMPFILE%
@@ -407,7 +400,7 @@ exit /b
 	rem del %SPLLOGDIFFFILE%
 	set DELLIST=
 	for %%f in (%TMPDIR%^\*) do ( set DELLIST=!DELLIST! %%f )
-	if not "!DELLIST!" == "" ( del !DELLIST! )
+	del !DELLIST!
 	if %OPT_V% == 1 ( echo done )
     )
 exit /b
@@ -442,13 +435,6 @@ exit /b
 	goto :trim_again_2
     )
     set %1=%TRIM_ARG%
-exit /b
-
-:: ====================
-::  絶対パスを返す
-:: ====================
-:abs_path
-	set %1=%~f2
 exit /b
 
 :: ====================

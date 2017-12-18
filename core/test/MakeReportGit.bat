@@ -15,7 +15,7 @@ setlocal enabledelayedexpansion
 ::	Ver 2.0  2013/02/07 F.Kanehori	Windows 移植初版
 ::	Ver 3.0  2017/10/18 F.Kanehori	新レポジトリ構造対応
 ::	Ver 3.1  2017/11/22 F.Kanehori	開始/終了時刻を表示
-::	Ver 3.2  2017/12/21 F.Kanehori	Log directory on the web changed.
+::	Ver 3.11 2017/12/06 F.Kanehori	Bug fixed
 :: ==============================================================================
 set PROG=%~n0
 echo %PROG%: started at %date% %time%
@@ -98,8 +98,8 @@ cd %CWD%
 ::
 set SELFPATH=%~dp0
 set REPBASE=%SELFPATH%report
-set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\log
-set WEBREPT=%WEBBASE%
+set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\daily_build
+set WEBREPT=%WEBBASE%\report
 
 ::----------------------------------------------
 ::  ウェブにコピーするファイルの定義

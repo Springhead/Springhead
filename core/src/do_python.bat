@@ -2,36 +2,36 @@
 setlocal enabledelayedexpansion
 :: ============================================================================
 ::  SYNOPSIS
-::	python_adapter.bat script [-SprTop dir] [args..]	ï¼ˆWindows å°‚ç”¨ï¼‰
+::	python_adapter.bat script [-SprTop dir] [args..]	iWindows ê—pj
 ::
 ::  DESCRIPTION
-::	Python script ã‚’å®Ÿè¡Œã™ã‚‹ãŸã‚ã® Windows ç”¨ã‚¢ãƒ€ãƒ—ã‚¿ã€‚
-::	"Springhead/buildtool" ãŒåˆ©ç”¨ã§ãã‚‹ã¨ãã¯ã€ãã‚Œã‚’ä½¿ã£ã¦å®Ÿè¡Œã™ã‚‹ã€‚
-::	ã•ã‚‚ãªã‘ã‚Œã°ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§åˆ©ç”¨ã§ãã‚‹ python ã‚’ä½¿ã£ã¦å®Ÿè¡Œã™ã‚‹ã€‚
-::	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ python ãŒåˆ©ç”¨ã§ããªã„å ´åˆã€ã¾ãŸã¯ python ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãŒ
-::	3 ã‚ˆã‚Šå¤ã„å ´åˆã¯ã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¦å‡¦ç†ã‚’ä¸­æ­¢ã™ã‚‹ã€‚
+::	Python script ‚ğÀs‚·‚é‚½‚ß‚Ì Windows —pƒAƒ_ƒvƒ^B
+::	"Springhead/buildtool" ‚ª—˜—p‚Å‚«‚é‚Æ‚«‚ÍA‚»‚ê‚ğg‚Á‚ÄÀs‚·‚éB
+::	‚³‚à‚È‚¯‚ê‚ÎAƒfƒtƒHƒ‹ƒg‚Å—˜—p‚Å‚«‚é python ‚ğg‚Á‚ÄÀs‚·‚éB
+::	ƒfƒtƒHƒ‹ƒg‚Å python ‚ª—˜—p‚Å‚«‚È‚¢ê‡A‚Ü‚½‚Í python ‚Ìƒo[ƒWƒ‡ƒ“‚ª
+::	3 ‚æ‚èŒÃ‚¢ê‡‚ÍAƒƒbƒZ[ƒW‚ğ•\¦‚µ‚Äˆ—‚ğ’†~‚·‚éB
 ::	
-::	ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ Windows å°‚ç”¨ã§ã‚ã‚‹ã€‚unix ã®å ´åˆã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ Python ãŒ
-::	ä½¿ç”¨ã§ãã‚‹ã‚ˆã†ã«ã—ã¦ãŠã‹ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+::	‚±‚Ìƒtƒ@ƒCƒ‹‚Í Windows ê—p‚Å‚ ‚éBunix ‚Ìê‡‚ÍƒfƒtƒHƒ‹ƒg‚Å Python ‚ª
+::	g—p‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¨‚©‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
 ::
 ::  VERSION
-::	Ver 1.0  2017/07/24 F.Kanehori	åˆç‰ˆ
-::	Ver 1.1  2017/08/02 F.Kanehori	å¼•æ•° -SprTop è¿½åŠ .
-::	Ver 2.0  2017/09/07 F.Kanehori	ãƒ‘ã‚¹ã®æ¤œç´¢æ–¹æ³•ã‚’å¤‰æ›´.
-::	Ver 2.01 2017/09/11 F.Kanehori	åŒä¸Šï¼ˆã‚³ãƒ¼ãƒ‰ã®æ•´ç†ï¼‰.
-::	Ver 3.0  2017/11/06 F.Kanehori	directoryåå¤‰æ›´ (buildtools -> buildtool)
+::	Ver 1.0  2017/07/24 F.Kanehori	‰”Å
+::	Ver 1.1  2017/08/02 F.Kanehori	ˆø” -SprTop ’Ç‰Á.
+::	Ver 2.0  2017/09/07 F.Kanehori	ƒpƒX‚ÌŒŸõ•û–@‚ğ•ÏX.
+::	Ver 2.01 2017/09/11 F.Kanehori	“¯ãiƒR[ƒh‚Ì®—j.
+::	Ver 3.0  2017/11/06 F.Kanehori	directory–¼•ÏX (buildtools -> buildtool)
 :: ============================================================================
 set verbose=2
 
 ::----------------------------------------------
-::  buildtool ã®ç›¸å¯¾ãƒ‘ã‚¹
+::  buildtool ‚Ì‘Š‘ÎƒpƒX
 ::
 set TOOLPATH=..\..\..\buildtool\win32
 if "%1" equ "-SprTop" (
 	set TOOLPATH=%2\buildtool\win32
 	shift && shift
 )
-:: å¼•æ•°ã®èª¿æ•´
+:: ˆø”‚Ì’²®
 set ARGS=
 :next_arg
 if "%1" == "" goto :end_arg
@@ -42,7 +42,7 @@ if "%1" == "" goto :end_arg
 if "%ARGS%" neq "" set ARGS=!ARGS:~1!
 
 ::----------------------------------------------
-::  Python ã‚’å®Ÿè¡Œã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
+::  Python ‚ğÀs‚Å‚«‚é‚æ‚¤‚É‚·‚é
 ::
 if exist "%TOOLPATH%\python.exe" (
 	PATH=!TOOLPATH!;!PATH!
@@ -69,7 +69,7 @@ if %verbose% geq 1 (
 )
 
 ::----------------------------------------------
-::  Python ã‚’å®Ÿè¡Œã™ã‚‹
+::  Python ‚ğÀs‚·‚é
 ::
 if %verbose% geq 2 (
 	echo cwd: %CD%
