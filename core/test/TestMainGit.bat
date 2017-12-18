@@ -90,11 +90,9 @@ call :check_condition DAILYBUILD_EXECUTE_MAKEDOC
 if %$status% == 0 (
     echo making documents
     call bat\MakeDoc.bat
-
-    path="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin";%path%
-    cd ..\doc\SprManual
-    make
-    cd ..\..\test
+    rem cd ..\doc\SprManual
+    rem make
+    rem cd ..\..\test
 )
 
 ::----------------------------------------------
