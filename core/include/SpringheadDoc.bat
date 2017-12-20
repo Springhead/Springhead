@@ -15,7 +15,7 @@ set PATH=%CORE%\bin;%TOOL%;%TOOL%\Graphviz\bin;%TOOL%\HHW;%PATH%
 
 mkdir HTML
 
-(type %DOXYFILE% & echo GENERATE_HTMLHELP=YES& echo GENERATE_TREEVIEW=NO& echo OUTPUT_DIRECTORY=%ODIR%& echo CHM_FILE=..\%TARGETNAME%.chm) | doxygen - 2> doxygen_chm.log
+rem (type %DOXYFILE% & echo GENERATE_HTMLHELP=YES& echo GENERATE_TREEVIEW=NO& echo OUTPUT_DIRECTORY=%ODIR%& echo CHM_FILE=..\%TARGETNAME%.chm) | doxygen - 2> doxygen_chm.log
 (type %DOXYFILE% & echo OUTPUT_DIRECTORY=%ODIR%) | doxygen - 2> doxygen.log
 
 if exist %TARGETDIR% rmdir /Q /S %TARGETDIR% 2>NUL
