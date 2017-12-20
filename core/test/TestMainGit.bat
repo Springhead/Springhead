@@ -16,7 +16,7 @@ setlocal enabledelayedexpansion
 ::
 ::  VERSION
 ::	Ver 1.0  2017/12/03 F.Kanehori	GitHub 仮対応版（Python版を作るまで）。
-::	Ver 1.1  2017/12/18 F.Kanehori	Springhead マニュアル作成追加
+::	Ver 1.1  2017/12/20 F.Kanehori	Springhead マニュアル作成追加
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -90,9 +90,9 @@ call :check_condition DAILYBUILD_EXECUTE_MAKEDOC
 if %$status% == 0 (
     echo making documents
     call bat\MakeDoc.bat
-    rem cd ..\doc\SprManual
-    rem make
-    rem cd ..\..\test
+    cd ..\doc\SprManual
+    make
+    cd ..\..\test
 )
 
 ::----------------------------------------------

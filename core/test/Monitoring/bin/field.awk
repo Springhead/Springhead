@@ -4,6 +4,7 @@ BEGIN {
     if (field == 0) field = 1
     if (start == 0) start = 1
     if (sep1 == "") sep1 = " "
+    if (sep1 == 1) sep1 = "|"
 }
 /.*/ {
     if (sep2 == "") {
@@ -13,6 +14,6 @@ BEGIN {
 	if (sep2 == "") sep2 = " "
 	split(blocks[block], fields, sep2)
     }
-    data = fields[field]
+    data = substr(fields[field], start)
     print data
 }
