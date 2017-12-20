@@ -99,7 +99,6 @@ if %$status% == 0 (
 :: dailybuild で生成されたファイルを Web にコピー
 ::
 set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild_generated
-
 call :check_condition DAILYBUILD_COPYTO_WEBBASE
 if %$status% == 0 (
     echo copying generated files to web
@@ -107,11 +106,13 @@ if %$status% == 0 (
     cd ..\..\generated
     set DIRLIST=bin doc lib
     set FILELIST=
-    echo DIRLIST:  [!DIRLIST!]
-    echo FILELIST: [!FILELIST!]
+    echo.   WEBBASE:  [!WEBBASE!]
+    echo.   DIRLIST:  [!DIRLIST!]
+    echo.   FILELIST: [!FILELIST!]
+    set TMPDIR=%cd%
     for %%d in (!DIRLIST!) do call :copy_dir %%d !WEBBASE!
     for %%f in (!FILELIST!) do call :copy_file %%f !WEBBASE!
-    cd ..\core\test
+    cd !TMPDIR!
 )
 
 ::----------------------------------------------
