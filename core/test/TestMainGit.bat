@@ -105,8 +105,7 @@ call :check_condition DAILYBUILD_COPYTO_WEBBASE
 if %$status% == 0 (
     echo copying generated files to web
 
-    cd ..\..\generated
-    set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\generated
+    cd generated
     set DIRLIST=bin doc lib
     set FILELIST=
     echo.   WEBBASE:  [!WEBBASE!]

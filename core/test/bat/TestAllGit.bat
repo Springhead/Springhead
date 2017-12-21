@@ -294,7 +294,9 @@ for %%t in (%TARGET_LIST%) do (
 call :check_condition DAILYBUILD_GEN_HISTORY
 if %$status% == 0 (
 	rem ** —š—ðî•ñ‚ðo—Í **
-	call :backquote HISTORY "python test\bin\VersionControlsystem.py -g all"
+	cd bin
+	call :backquote HISTORY "python VersionControlSystem.py -g all"
+	cd ..
 	echo !HISTORY! > %HISTORY_LOG%
 )
 
