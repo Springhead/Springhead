@@ -288,22 +288,15 @@ for %%t in (%TARGET_LIST%) do (
 	)
 )
 
-goto :skip1
 ::----------------------------------------------
-:: タグを登録   ==> GitHub 移行後は中止
+:: 履歴情報を出力
 ::
-call :check_condition DAILYBUILD_COPYTO_TAGS
+call :check_condition DAILYBUILD_GEN_HISTORY
 if %$status% == 0 (
-	rem ** タグを登録 **
-	set SVN=http://springhead.info/spr2/Springhead/trunk
-	set TAG=http://springhead.info/spr2/Springhead/tags/BuildSucceed%date%
-	if %AT_LEAST_ONE_BLD_SUCC% == 1 (
-		svn copy !SVN! !TAG! -m "%BLD_SUCC_LIST% %RUN_SUCC_LIST%"
-	)
-	rem ** Springhead2 の更新履歴を %HISTORY_LOG% に出力 **
-	svn log !SVN! > %HISTORY_LOG%
+	rem ** 履歴情報を出力 **
+	call :backquote HISTORY "python test\bin\VersionControlsystem.py -g all"
+	echo !HISTORY! > %HISTORY_LOG%
 )
-:skip1
 
 ::----------------------------------------------
 :: ログを Samba にコピーする
@@ -316,24 +309,18 @@ if %$status% == 0 (
 	xcopy /C/F/I/Y log\*.log !SMBBASE!
 )
 
-goto :skip2
-::----------------------------------------------
-:: ログを SVN にコミトする   ==> GitHub 移行後は中止
-::
-call :check_condition DAILYBUILD_COMMIT_BUILDLOG
-if %$status% == 0 (
-	echo comitting logs to subversion
-	cd log
-	svn commit -m "Autobuild done."
-	cd ..
-)
-:skip2
-
 endlocal && set $status=0
 exit /b 0
 
 
 :: ============================================================================
+::----------------------------------------------
+::  コマンドの実行結果を変数に設定する
+::    call :backquote 変数名 "コマンド"
+:backquote
+    for /f %%i in ('%2') do set %1=%%i
+exit /b
+
 ::----------------------------------------------
 :: リストを擬似配列にする（作業変数 _I, _J を使用）
 ::	arg1:	擬似配列名
