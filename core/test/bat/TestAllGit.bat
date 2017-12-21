@@ -295,9 +295,8 @@ call :check_condition DAILYBUILD_GEN_HISTORY
 if %$status% == 0 (
 	rem ** —š—ðî•ñ‚ðo—Í **
 	cd bin
-	call :backquote HISTORY "python VersionControlSystem.py -g all"
+	python VersionControlSystem.py -g all > %HISTORY_LOG%
 	cd ..
-	echo !HISTORY! > %HISTORY_LOG%
 )
 
 ::----------------------------------------------
