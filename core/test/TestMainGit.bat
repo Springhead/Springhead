@@ -15,8 +15,9 @@ setlocal enabledelayedexpansion
 ::	/h              使用方法の表示
 ::
 ::  VERSION
-::	Ver 1.0  2017/12/03 F.Kanehori	GitHub 仮対応版（Python版を作るまで）。
-::	Ver 1.1  2017/12/20 F.Kanehori	Springhead マニュアル作成追加
+::	Ver 1.0  2017/12/03 F.Kanehori	GitHub 仮対応版（Python版を作るまで）.
+::	Ver 1.1  2017/12/20 F.Kanehori	Springhead マニュアル作成追加.
+::	Ver 1.11 2017/12/21 F.Kanehori	Bug fixed.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -75,6 +76,7 @@ if %$status% == 0 (
 :: テストを行なう
 ::
 cd core\test
+set TESTBASE=%cd%
 call :check_condition DAILYBUILD_EXECUTE_TESTALL
 if %$status% == 0 (
     call bat\TestAllGit.bat %TOOLSET_ID% %CONFIGURATION% %PLATFORM% %TEST_REPOSITORY%
@@ -92,7 +94,7 @@ if %$status% == 0 (
     call bat\MakeDoc.bat
     cd ..\doc\SprManual
     make
-    cd ..\..\test
+    cd %TESTBASE%
 )
 
 ::----------------------------------------------
@@ -109,10 +111,9 @@ if %$status% == 0 (
     echo.   WEBBASE:  [!WEBBASE!]
     echo.   DIRLIST:  [!DIRLIST!]
     echo.   FILELIST: [!FILELIST!]
-    set TMPDIR=%cd%
     for %%d in (!DIRLIST!) do call :copy_dir %%d !WEBBASE!
     for %%f in (!FILELIST!) do call :copy_file %%f !WEBBASE!
-    cd !TMPDIR!
+    cd %TESTBASE%
 )
 
 ::----------------------------------------------
