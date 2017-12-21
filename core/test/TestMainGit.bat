@@ -154,7 +154,6 @@ exit /b
 :copy_dir
     echo copying directory %cd%\%1\ to %2\%1\
     if "%1" neq "" (
-	rem rmdir /s /q %2\%1 > NUL
 	if exist %2\%1 (
 		cd %2\%1
 		for /f %%d in ('dir /ad /b /w *') do rmdir /s /q %%d
