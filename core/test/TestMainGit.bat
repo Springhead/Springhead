@@ -106,6 +106,7 @@ if %$status% == 0 (
     echo copying generated files to web
 
     cd ..\..\generated
+    set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\generated
     set DIRLIST=bin doc lib
     set FILELIST=
     echo.   WEBBASE:  [!WEBBASE!]
