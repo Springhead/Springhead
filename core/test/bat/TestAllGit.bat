@@ -24,6 +24,7 @@ setlocal enabledelayedexpansion
 ::	Ver 2.0	 2014/02/19 F.Kanehori	result.log の出力行順序改訂
 ::	Ver 3.0  2017/10/26 F.Kanehori	新ツリー構造に対応
 ::	Ver 4.0  2017/12/13 F.Kanehori	GitHub 対応
+::	Ver 4.1  2017/12/21 F.Kanehori	Log directory on web server changed.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -309,7 +310,7 @@ if %$status% == 0 (
 ::
 call :check_condition DAILYBUILD_COPYTO_BUILDLOG
 if %$status% == 0 (
-	set SMBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\daily_build
+	set SMBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\log
 	echo copying logs to !SMBBASE!
 	del !SMBBASE!\*.log
 	xcopy /C/F/I/Y log\*.log !SMBBASE!
