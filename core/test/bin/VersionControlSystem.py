@@ -199,7 +199,9 @@ class VersionControlSystem:
 			proc1.exec(cmnd1, stdout=Proc.PIPE, stderr=Proc.STDOUT)
 			proc2.exec(cmnd2, stdin=proc1.proc.stdout,
 					  stdout=Proc.PIPE, stderr=Proc.STDOUT)
-			status2 = proc2.wait()
+			status1 = 0
+			status2 = 0
+			#status2 = proc2.wait()		# Why?
 			status1 = proc1.wait()
 			status = status1 + status2
 			out, err = proc2.output()
