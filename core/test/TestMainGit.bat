@@ -17,7 +17,7 @@ setlocal enabledelayedexpansion
 ::  VERSION
 ::	Ver 1.0  2017/12/03 F.Kanehori	GitHub 仮対応版（Python版を作るまで）.
 ::	Ver 1.1  2017/12/20 F.Kanehori	Springhead マニュアル作成追加.
-::	Ver 1.11 2017/12/21 F.Kanehori	Bug fixed.
+::	Ver 1.2  2017/12/21 F.Kanehori	Generated dir on web server changed.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -100,7 +100,7 @@ if %$status% == 0 (
 ::----------------------------------------------
 :: dailybuild で生成されたファイルを Web にコピー
 ::
-set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild_generated
+set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\generated
 call :check_condition DAILYBUILD_COPYTO_WEBBASE
 if %$status% == 0 (
     echo copying generated files to web
