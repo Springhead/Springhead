@@ -202,7 +202,9 @@ void PHScene::CreateTreeNodesRecurs(PHTreeNodeIf* node, PHSolidIf* solid){
 		plugSolid = jnt->GetPlugSolid  ();
 		if(sockSolid == solid && !DCAST(PHSolid, plugSolid)->IsArticulated()){
 			PHTreeNodeIf* childNode = CreateTreeNode(node, plugSolid);
-			CreateTreeNodesRecurs(childNode, plugSolid);
+			// joint types not supporting treenode returns null
+			if(childNode)
+				CreateTreeNodesRecurs(childNode, plugSolid);
 		}
 	}
 }
@@ -413,7 +415,12 @@ int PHScene::GetNumIteration(){
 void PHScene::SetNumIteration(int n){
 	constraintEngine->numIter = n;
 }
-
+int PHScene::GetNumIterationCorrection(){
+	return constraintEngine->numIterCorrection;
+}
+void PHScene::SetNumIterationCorrection(int n){
+	constraintEngine->numIterCorrection = n;
+}
 void PHScene::SetGravity(const Vec3d& accel){
 	PHGravityEngine* ge;
 	engines.Find(ge);

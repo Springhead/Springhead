@@ -54,6 +54,7 @@ public:
 	SpatialVector f;
 	SpatialVector F;
 	SpatialVector fnew;
+	SpatialVector Fnew;
 	SpatialVector df;
 	SpatialVector dv;
 	SpatialVector dF;
@@ -66,11 +67,11 @@ public:
 
 	virtual void SetupAxisIndex    (){}
 	virtual void Setup             (){}	///< 速度LCPの前処理
-	virtual	bool Iterate           (){ return true; }	///< 速度LCP(GS)の繰り返し計算
 	virtual void SetupCorrection   (){}	///< 位置LCPの前処理
-	virtual void IterateCorrection (){}	///< 位置LCP(GS)の繰り返し計算
+	virtual	bool Iterate           (){ return true; }	///< 速度LCP(GS)の繰り返し計算
+	virtual bool IterateCorrection (){ return true; }	///< 位置LCP(GS)の繰り返し計算
+	virtual void CompResponseMatrix(){}
 	virtual void CompResponse      (double df, int i){}
-	virtual void CompResponseDirect(double df, int i){}
 };
 
 /// 拘束
@@ -84,36 +85,14 @@ public:
 
 	/// 拘束する剛体
 	PHSolid* solid[2];
-
-	/// 隣接する拘束とA行列
-	struct Adjacent{
-		PHConstraint* con;
-		SpatialMatrix A;
-	};
-	struct Adjacents : std::vector<Adjacent>{
-		int num;
-		void Add(PHConstraint* _con, const SpatialMatrix& _A) {
-			if((int) size() < num+1) { resize(2*(num+1)); }
-			at(num).con = _con;
-			at(num).A   = _A;
-			num++;
-		}
-		Adjacent* Find(PHConstraint* con){
-			for(int i=0; i != num; ++i){
-				if(at(i).con == con) return &at(i);
-			}
-			return 0;
-		}
-		Adjacents():std::vector<Adjacent>(12), num(0){
-		}
-	};
-	Adjacents	adj;
 	
-	/// 関節系を構成している場合true
+	/// 関節系を構成している場合のツリーノード
 	PHTreeNode*		treeNode;
 
 	/// 剛体が解析法に従う場合true	
 	bool bInactive[2];
+
+	int solidState[2];
 
 	// ----- 計算用変数
 
@@ -157,10 +136,6 @@ public:
 	AxisIndex<6>	movableAxes;		///< 可動自由度
 	AxisIndex<6>	targetAxes;			///< 関節自身，可動範囲，モータのいずれかによって拘束される自由度
 
-#ifdef USE_OPENMP_PHYSICS
-	omp_lock_t		dv_lock;			///< dvを排他アクセスするためのロック
-#endif
-
 public:
 	// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
@@ -180,17 +155,16 @@ public:
 	void UpdateState();
 	
 	/// PHConstraintBaseの仮想関数
-	virtual void Setup                       ();
-	virtual void SetupCorrection             ();
-	virtual	bool Iterate                     ();
-	virtual void IterateCorrection           ();
-	virtual bool Projection                  (double& f_, int i);
-	virtual bool ProjectionCorrection        (double& F_, int i){ return false; }
-	virtual void CompResponse                (double df, int i); ///< (M^-1 J^T) df
-	virtual void CompResponseCorrection      (double dF, int i); ///< (M^-1 J^T) dF
-	virtual void CompResponseDirect          (double df, int i); ///< (J M^-1 J^T) df
-	virtual void CompResponseDirectCorrection(double dF, int i); ///< (J M^-1 J^T) dF
-
+	virtual void Setup                 ();
+	virtual void SetupCorrection       ();
+	virtual	bool Iterate               ();
+	virtual bool IterateCorrection     ();
+	virtual bool Projection            (double& f_, int i);
+	virtual bool ProjectionCorrection  (double& F_, int i){ return false; }
+	virtual void CompResponse          (double  df, int i); ///< (M^-1 J^T) df
+	virtual void CompResponseCorrection(double  dF, int i); ///< (M^-1 J^T) dF
+	virtual void CompResponseMatrix    ();
+	
 	// ----- このクラスで実装する機能
 
 	/// 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算

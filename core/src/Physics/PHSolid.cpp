@@ -396,7 +396,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	else{
 		dv0.clear();
 	}
-	dv = dv0;
+	dv.clear();
 	dV.clear();
 }
 /*
@@ -458,7 +458,7 @@ void PHSolid::UpdateVelocity(double* dt){
 		return;
 		
 	SpatialVector vold = v;
-	v += dv;
+	v += dv0 + dv;
 
 	// 空気抵抗係数をかける
 	PHSceneIf* scene = GetScene()->Cast();

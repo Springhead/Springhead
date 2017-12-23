@@ -102,8 +102,10 @@ public:
 	void					SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	int                     GetLCPSolver();
 	void                    SetLCPSolver(int method);
-	virtual int				GetNumIteration();
-	virtual void			SetNumIteration(int n);
+	int	                    GetNumIteration();
+	void                    SetNumIteration(int n);
+	int	                    GetNumIterationCorrection();
+	void                    SetNumIterationCorrection(int n);
 	PHJointIf*				CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
 	int						NJoints() const;
 	PHJointIf*				GetJoint(int i);

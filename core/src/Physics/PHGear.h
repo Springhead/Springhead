@@ -58,7 +58,6 @@ public:
 	virtual void Setup             ();
 	virtual bool Iterate           ();
 	virtual void CompResponse      (double df, int i);
-	virtual void CompResponseDirect(double df, int i);
 	
 	PHGear(const PHGearDesc& desc = PHGearDesc());
 };

@@ -25,28 +25,14 @@ PHConstraint::PHConstraint() {
 
 	f .clear();
 	F .clear();
-	dv.clear();
-	dV.clear();
-
+	
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
 	treeNode = 0;
-
-	for (int i = 0; i < 6; i++) {
-		dv_changed     [i] = true;
-		dv_changed_next[i] = true;
-	}
-
-    #ifdef USE_OPENMP_PHYSICS
-	omp_init_lock(&dv_lock);
-    #endif
 }
 
 PHConstraint::~PHConstraint(){
-    #ifdef USE_OPENMP_PHYSICS
-	omp_destroy_lock(&dv_lock);
-    #endif
 }
 
 // ----- エンジンから呼び出される関数
@@ -90,7 +76,76 @@ void PHConstraint::SetupAxisIndex(){
 	targetAxes = axes;
 }
 
+inline double Dot6(const double* v1, const double* v2){
+	__m256d vec11, vec12;
+	__m256d vec21, vec22;
+	__m256d y1, y2;
+	__m256d y;
+	vec11 = _mm256_loadu_pd(v1);
+	vec12 = _mm256_loadu_pd(v1+4);
+	vec21 = _mm256_loadu_pd(v2);
+	vec22 = _mm256_loadu_pd(v2+4);
+	y1 = _mm256_mul_pd(vec11, vec21);
+	y2 = _mm256_mul_pd(vec12, vec22);
+	y  = _mm256_hadd_pd(y1, y2);
+	double* _y = (double*)&y;
+	return _y[0] + _y[1] + _y[2];
+}
+
+inline double QuadForm(const double* v1, const double* M, const double* v2){
+	double y = 0.0;
+	int k = 0;
+	for(int i = 0; i < 6; i++)for(int j = 0; j < 6; j++, k++)
+		y += v1[i] * M[k] * v2[j];
+	return y;
+}
+
+void PHConstraint::CompResponseMatrix(){
+	bool sameTree = (solid[0]->IsArticulated() && solid[1]->IsArticulated() && solid[0]->treeNode == solid[1]->treeNode);
+	SpatialVector J0  ;
+	SpatialVector J1  ;
+	Vec3d Jv, Jw;
+	const double* Minv;
+
+	for(int n = 0; n < targetAxes.size(); n++){
+		int j = targetAxes[n];
+	
+		A[j] = 0.0;
+		
+		for(int k = 0; k < 2; k++){
+			if(!solid[k]->IsDynamical())
+				continue;
+	
+			(Vec6d&)J0 = J[ k].row(j);
+			(Vec6d&)J1 = J[!k].row(j);
+			if(solid[k]->IsArticulated()){
+				Minv = solid[k]->treeNode->dZdv_map[solid[k]->treeNode->id];
+				A[j] += (-1.0) * QuadForm((const double*)&J0, Minv, (const double*)&J0);
+			}
+			else{
+				Jv = J0.v();
+				Jw = J0.w();
+				A[j] += solid[k]->minv * Jv.square() +  Jw * (solid[k]->Iinv * Jw);
+			}
+			
+			// 剛体が同じABAツリーに属する場合
+			if(sameTree){
+				Minv = solid[!k]->treeNode->dZdv_map[solid[k]->treeNode->id];
+				A[j] += (-1.0) * QuadForm(J1, Minv, J0);
+			}
+		}
+	}
+}
+
 void PHConstraint::Setup() {
+	for(int k = 0; k < 2; k++){
+		if(!solid[k]->IsDynamical() || !IsInactive(k))
+			 solidState[k] = 0;
+		else if(solid[k]->IsArticulated())
+			 solidState[k] = 1;
+		else solidState[k] = 2;
+	}
+
 	double fmax = GetScene()->GetMaxForce ();
 	double tmax = GetScene()->GetMaxMoment();
 	double dt   = GetScene()->GetTimeStep ();
@@ -105,19 +160,24 @@ void PHConstraint::Setup() {
 		fMaxDt[i] =  tmax * dt;
 	}
 
+	// A行列の対角成分
+	CompResponseMatrix();
+
 	// LCPの係数A, bの補正値dA, dbを計算
 	dA.clear();
 	db.clear();
 	CompBias();
 
 	// LCPのbベクトル == 論文中のw[t]を計算
-	b  = J[0] * solid[0]->v  + J[1] * solid[1]->v;
-	dv = J[0] * solid[0]->dv + J[1] * solid[1]->dv;
-
+	b  = J[0] * (solid[0]->v + solid[0]->dv0)
+	   + J[1] * (solid[1]->v + solid[1]->dv0);
+    b  += db;
+	
 	for(int n = 0; n < axes.size(); ++n) {
 		int j = axes[n];
 
-		Ainv[j] = 1.0 / (A[j] + dA[j]);
+		dA[j] += 0.001;
+		Ainv[j] = engine->accelSOR / (A[j] + dA[j]);
 
 		// 拘束力の初期値を更新
 		//   拘束力は前回の値を縮小したものを初期値とする．
@@ -132,12 +192,12 @@ bool PHConstraint::Iterate() {
 	bool updated = false;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
-		if(!dv_changed[i])
-			continue;
-
+		
 		// Gauss-Seidel Update
-		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
-		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
+		dv[i] = Dot6((const double*)J[0].row(i), (const double*)solid[0]->dv)
+			  + Dot6((const double*)J[1].row(i), (const double*)solid[1]->dv);
+		res [i] = b[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - Ainv[i] * res[i];
 
 		// Projection
 		Projection(fnew[i], i);
@@ -148,7 +208,7 @@ bool PHConstraint::Iterate() {
 
 		if(std::abs(df[i]) > engine->dfEps){
 			updated = true;
-			CompResponseDirect(df[i], i);
+			CompResponse(df[i], i);
 		}
 	}
 	return updated;
@@ -162,22 +222,29 @@ void PHConstraint::SetupCorrection() {
 	CompError();
 	
 	// velocity updateによる影響を加算
-	B += (J[0] * (solid[0]->v + solid[0]->dv) + J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
+	B += ( J[0] * (solid[0]->v + solid[0]->dv0 + solid[0]->dv)
+		 + J[1] * (solid[1]->v + solid[1]->dv0 + solid[1]->dv) ) * GetScene()->GetTimeStep();
 	B *= engine->posCorrectionRate;
-		
 }
 
-void PHConstraint::IterateCorrection() {
-	SpatialVector Fnew;
+bool PHConstraint::IterateCorrection() {
+	bool updated = false;
 
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
-		Fnew[i] = F[i] - Ainv[i] * (B[i] + J[0].row(i) * solid[0]->dV + J[1].row(i) * solid[1]->dV);
+		dV[i] = J[0].row(i) * solid[0]->dV + J[1].row(i) * solid[1]->dV;
+		Fnew[i] = F[i] - Ainv[i] * (B[i] + dV[i]);
 		ProjectionCorrection(Fnew[i], i);
 		dF[i] = Fnew[i] - F[i];
-		CompResponseDirectCorrection(dF[i], i);
 		F[i] = Fnew[i];
+			
+		if(std::abs(dF[i]) > engine->dfEps){
+			updated = true;
+			CompResponseCorrection(dF[i], i);
+		}
 	}
+
+	return updated;
 }
 
 // ----- このクラスで実装する機能
@@ -205,66 +272,35 @@ void PHConstraint::CompJacobian(){
 }
 
 void PHConstraint::CompResponse(double df, int i) {
-	SpatialVector dfs;
-	for (int k=0; k<2; ++k) {
-		if (!solid[k]->IsDynamical() || !IsInactive(k)) { continue; }
-		(Vec6d&)dfs = J[k].row(i) * df;
-		if (solid[k]->IsArticulated()) {
-			solid[k]->treeNode->CompResponse(dfs);
-		}
-		else {
-			solid[k]->dv += solid[k]->Minv * dfs;
+	SpatialVector Jrow;
+	
+	for(int k = 0; k < 2; k++){
+		switch(solidState[k]){
+		case 0:
+			break;
+		case 1:
+			(Vec6d&)Jrow = J[k].row(i);
+			solid[k]->treeNode->CompResponse(Jrow * df);
+			break;
+		case 2:
+			(Vec6d&)Jrow = J[k].row(i);
+			solid[k]->dv.v() += (solid[k]->minv * df) * Jrow.v();
+			solid[k]->dv.w() += (solid[k]->Iinv * Jrow.w()) * df;
 		}
 	}
-} 
+}
+
 void PHConstraint::CompResponseCorrection(double dF, int i){
 	SpatialVector dFs;
 	for (int k=0; k<2; ++k) {
 		if (!solid[k]->IsDynamical() || !IsInactive(k)) { continue; }
 		(Vec6d&)dFs = J[k].row(i) * dF;
-		if (solid[k]->IsArticulated())
-			 solid[k]->treeNode->CompResponse(dFs);
-		else solid[k]->dV += solid[k]->Minv * dFs;
-	}
-}
-void PHConstraint::CompResponseDirect(double df, int i){
-	PHConstraint* dest;
-	
-	for(int j = 0; j < adj.num; j++){
-		dest = adj[j].con;
-
-		for(int n1 = 0; n1 < dest->targetAxes.size(); n1++){
-			int i1 = dest->targetAxes[n1];
-			
-			#ifdef USE_OPENMP_PHYSICS
-			while(!omp_test_lock(&dest->dv_lock));
-			#endif
-			
-			dest->dv[i1] += adj[j].A[i1][i] * df;
-			dest->dv_changed_next[i1] = true;
-
-			#ifdef USE_OPENMP_PHYSICS
-			omp_unset_lock(&dest->dv_lock);
-			#endif
+		if (solid[k]->IsArticulated()){
+			solid[k]->treeNode->CompResponse(dFs);
 		}
-
-	}
-}
-void PHConstraint::CompResponseDirectCorrection(double dF, int i){
-	for(int j = 0; j < adj.num; j++){
-		PHConstraint* dest = adj[j].con;
-		for(int n1 = 0; n1 < dest->targetAxes.size(); n1++){
-			int i1 = dest->targetAxes[n1];
-			
-			#ifdef USE_OPENMP_PHYSICS
-			while(!omp_test_lock(&dest->dv_lock));
-			#endif
-			
-			dest->dV[i1] += adj[j].A[i1][i] * dF;
-
-			#ifdef USE_OPENMP_PHYSICS
-			omp_unset_lock(&dest->dv_lock);
-			#endif
+		else{
+			solid[k]->dV.v() += solid[k]->minv * dFs.v();
+			solid[k]->dV.w() += solid[k]->Iinv * dFs.w();
 		}
 	}
 }

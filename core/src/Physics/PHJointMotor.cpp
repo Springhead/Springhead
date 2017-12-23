@@ -86,11 +86,6 @@ Vec2d JointFunctions::ResistanceTorque(int a, PHBallJointIf* jo, void* param){
 			delta = range[1];
 		}
 	}
-	double dt = jo->GetScene()->GetTimeStep();
-	double torque = resistCalc(delta, k_1, k_2, k_3, k_4);
-	if (abs(torque) > (jo->GetMaxForce() / 2)) { 
-		DSTR << "over:" << torque << std::endl; 
-	}
 	double k = k_1 * exp(k_1 * (delta - k_2)) + k_3 * exp(k_3 * (k_4 - delta));
 	double t = (k == 0 ? 0 : delta - (exp(k_1 * (delta - k_2)) - exp(k_3 * (k_4 - delta))) / k);
 	return Vec2d(abs(k), t);
@@ -196,9 +191,9 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		int j = joint->movableAxes[i];
-		if(!joint->dv_changed[j])
-			continue;
 
+		joint->dv[j] = joint->J[0].row(j) * (joint->solid[0]->dv /*+ joint->solid[0]->ddv*/)
+			         + joint->J[1].row(j) * (joint->solid[1]->dv /*+ joint->solid[1]->ddv*/);
 		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
@@ -210,7 +205,7 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 
 		if(std::abs(df[i]) > joint->engine->dfEps){
 			updated = true;
-			CompResponseDirect(df[i], i);
+			CompResponse(df[i], i);
 		}
 	}
 	return updated;
@@ -219,11 +214,6 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 template<int NDOF>
 void PHNDJointMotor<NDOF>::CompResponse(double df, int i){
 	joint->CompResponse(df, joint->movableAxes[i]);
-}
-
-template<int NDOF>
-void PHNDJointMotor<NDOF>::CompResponseDirect(double df, int i){
-	joint->CompResponseDirect(df, joint->movableAxes[i]);
 }
 
 /// 弾性変形用のCompBias
