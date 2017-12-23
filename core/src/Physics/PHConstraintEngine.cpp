@@ -33,31 +33,27 @@ namespace Spr{;
  */
 const char*    reportFilename = "PHConstraintEngineReport.csv";
 
-int		colcounter; //サポート探索回数のカウント
+//coltime
+int		coltimePhase1;
+int		coltimePhase2;
+int		coltimePhase3;
+int		colcounter;
+UTPreciseTimer *p_timer;
 
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
-	PHSolidPair::OnDetect(_sp, ct, dt);
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
 	//	法線を求める
 	sp->CalcNormal();
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-	PHSolid* solid0 = body[0]->Cast();
-	PHSolid* solid1 = body[1]->Cast();
-	if (solid0 && solid1) {
-		sp->EnumVertex(ct, solid0, solid1);
-	}
+	sp->EnumVertex(ct, solid[0], solid[1]);
 }			
 
 void PHSolidPairForLCP::OnContDetect(PHShapePair* _sp, unsigned ct, double dt){
-	PHSolidPair::OnContDetect(_sp, ct, dt);
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
 
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-	PHSolid* solid0 = body[0]->Cast();
-	PHSolid* solid1 = body[1]->Cast();
-	if (solid0 && solid1) {
-		sp->EnumVertex(ct, solid0, solid1);
-	}
+	sp->EnumVertex(ct, solid[0], solid[1]);
+	
 	//	HASE_REPORT
 /*	DSTR << "st:" << sp->state << " depth:" << sp->depth;
 	DSTR << " n:" << sp->normal;
@@ -227,16 +223,28 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 //----------------------------------------------------------------------------
 // PHConstraintEngine
 
-PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasureIf* pm):
-	timeCollision(pm->Count("collision")), 
-	timeSetup(pm->Count("setup")),
-	timeIterate(pm->Count("iterate"))
-{
-	dfEps         = 1.0e-12;
-	renderContact = true;
+PHConstraintEngine::PHConstraintEngine(){
+	dfEps      = 1.0e-12;
+	reportFile = 0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
+	EnableReport(false);
+}
+
+void PHConstraintEngine::EnableReport(bool on){
+	if(!on && reportFile){
+		fclose(reportFile);
+	}
+	if(on && !reportFile){
+		reportFile = fopen(reportFilename, "w");
+		if(reportFile)
+			fprintf(reportFile, "col, sup, ite\n");
+	}
+
+	bReport = on;
+	renderContact = true;
+
 }
 
 void PHConstraintEngine::Clear(){
@@ -250,9 +258,9 @@ void PHConstraintEngine::Clear(){
 }
 
 PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs, PHSolid* rhs){
-	if(std::find(bodies.begin(), bodies.end(), lhs) == bodies.end())
+	if(std::find(solids.begin(), solids.end(), lhs) == solids.end())
 		return 0;
-	if(std::find(bodies.begin(), bodies.end(), rhs) == bodies.end())
+	if(std::find(solids.begin(), solids.end(), rhs) == solids.end())
 		return 0;
 
 	PHJoint* joint = NULL;
@@ -290,7 +298,7 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 
 PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid){
 	// コンテナに含まれない剛体はNG
-	if(find(bodies.begin(), bodies.end(), solid) == bodies.end())
+	if(find(solids.begin(), solids.end(), solid) == solids.end())
 		return NULL;
 
 	// 既存のツリーに含まれる剛体
@@ -646,10 +654,10 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 
 	// 速度の更新 (dtを渡すので並列化しない）
 	dt = GetScene()->GetTimeStep();
-	for(int i = 0; i < (int)bodies.size(); i++){
-		PHSolid* s = bodies[i]->Cast();
-		if (!s || s->IsArticulated()) continue;
-		s->UpdateVelocity(&dt);
+	for(int i = 0; i < (int)solids.size(); i++){
+		if(solids[i]->IsArticulated())
+			continue;
+		solids[i]->UpdateVelocity(&dt);
 	}
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		(*it)->UpdateVelocity(&dt);
@@ -659,11 +667,10 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 
 	// 位置の更新
 	//# pragma omp for
-	for(int i = 0; i < (int)bodies.size(); i++){
-		PHSolid* s = bodies[i]->Cast();
-		if(!s || s->IsArticulated())
+	for(int i = 0; i < (int)solids.size(); i++){
+		if(solids[i]->IsArticulated())
 			continue;
-		s->UpdatePosition(dt);
+		solids[i]->UpdatePosition(dt);
 	}
 	//# pragma omp for
 	for(int i = 0; i < (int)trees.size(); i++)
@@ -671,23 +678,30 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 }
 
 void PHConstraintEngine::StepPart1(){
-	#ifdef USE_OPENMP_PHYSICS
+    #ifdef USE_OPENMP_PHYSICS
 	# pragma omp single
     #endif
 	{
 		//交差を検知
 		points.clear();
 
+		if(bReport)
+			ptimer.CountUS();
+		coltimePhase1 = 0;
+		coltimePhase2 = 0;
+		coltimePhase3 = 0;
+		colcounter = 0;
+		p_timer = &ptimer2;
+
 		PHSceneIf* scene = GetScene();
 		if(scene->IsContactDetectionEnabled()){
-			colcounter = 0;
-			ptimer.CountUS();
 			Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
-			timeCollision = ptimer.CountUS();
-			if (bReport) {
-				DSTR << " col:" << timeCollision;
-			}
 			if (renderContact) UpdateContactInfoQueue();
+		}
+
+		if(bReport){
+			timeCollision = ptimer.CountUS();
+			DSTR << " col:" << timeCollision;
 		}
 	}
 }
@@ -709,10 +723,8 @@ void PHConstraintEngine::StepPart2(){
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp for
     #endif
-	for (int i = 0; i < (int)bodies.size(); i++) {
-		PHSolid* s = bodies[i]->Cast();
-		if (s) s->UpdateCacheLCP(dt);
-	}
+	for(int i = 0; i < (int)solids.size(); i++)
+		solids[i]->UpdateCacheLCP(dt);
     
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp for
@@ -783,6 +795,10 @@ void PHConstraintEngine::Step(){
 	{
 		StepPart1();	// 接触判定
 		StepPart2();	// 拘束力計算，積分
+	}
+
+	if(bReport && reportFile){
+		fprintf(reportFile, "%d, %d, %d\n", timeCollision, timeSetup, timeIterate);
 	}
 }
 

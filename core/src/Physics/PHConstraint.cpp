@@ -77,7 +77,6 @@ void PHConstraint::SetupAxisIndex(){
 }
 
 inline double Dot6(const double* v1, const double* v2){
-#ifdef USE_AVX
 	__m256d vec11, vec12;
 	__m256d vec21, vec22;
 	__m256d y1, y2;
@@ -91,9 +90,6 @@ inline double Dot6(const double* v1, const double* v2){
 	y  = _mm256_hadd_pd(y1, y2);
 	double* _y = (double*)&y;
 	return _y[0] + _y[1] + _y[2];
-#else
-	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2] + v1[3]*v2[3] + v1[4]*v2[4] + v1[5]*v2[5];
-#endif
 }
 
 inline double QuadForm(const double* v1, const double* M, const double* v2){
@@ -180,7 +176,7 @@ void PHConstraint::Setup() {
 	for(int n = 0; n < axes.size(); ++n) {
 		int j = axes[n];
 
-		dA[j] += engine->regularization;
+		dA[j] += 0.001;
 		Ainv[j] = engine->accelSOR / (A[j] + dA[j]);
 
 		// 拘束力の初期値を更新
@@ -290,12 +286,6 @@ void PHConstraint::CompResponse(double df, int i) {
 			(Vec6d&)Jrow = J[k].row(i);
 			solid[k]->dv.v() += (solid[k]->minv * df) * Jrow.v();
 			solid[k]->dv.w() += (solid[k]->Iinv * Jrow.w()) * df;
-#if 0
-			if (!isfinite(solid[k]->dv.norm())) {
-				DSTR << " df" << df << " jrow" << Jrow << std::endl;
-				DSTR << "dv is not finite" << std::endl;
-			}
-#endif
 		}
 	}
 }
@@ -306,7 +296,7 @@ void PHConstraint::CompResponseCorrection(double dF, int i){
 		if (!solid[k]->IsDynamical() || !IsInactive(k)) { continue; }
 		(Vec6d&)dFs = J[k].row(i) * dF;
 		if (solid[k]->IsArticulated()){
-			solid[k]->treeNode->CompResponseCorrection(dFs);
+			solid[k]->treeNode->CompResponse(dFs);
 		}
 		else{
 			solid[k]->dV.v() += solid[k]->minv * dFs.v();

@@ -119,27 +119,30 @@ public:
 };
 
 //非線形の親クラス作ろうか？
-class PH1DJointNonLinearMotor : public PH1DJointMotor, public PH1DJointNonLinearMotorDesc {
+class PH1DJointNonLinearMotor : public PH1DJointMotor {
 public:
 	SPR_OBJECTDEF(PH1DJointNonLinearMotor);
-	//SPR_DECLMEMBEROF_PH1DJointNonLinearMotorDesc;
-	ACCESS_DESC(PH1DJointNonLinearMotor);
+	SPR_DECLMEMBEROF_PH1DJointNonLinearMotorDesc;
 
 	PH1DJointNonLinearMotor(const PH1DJointNonLinearMotorDesc& desc = PH1DJointNonLinearMotorDesc()) { 
 		SetDesc(&desc); 
+		springFunc = 0;
+		damperFunc = 0;
+		offset = 0;
 	}
 
-	FunctionMode springMode;
-	FunctionMode damperMode;
+	Vec2d (*fpFunc)(PH1DJointIf* , void* );
+	int springFunc;
+	int damperFunc;
+
+	void SetFuncFromDatabase(int i, void* param);
+	void SetFuncFromDatabase(int i, int j, void* sparam, void* dparam);
+
+	double targetPos;
 	void* springParam;
 	void* damperParam;
 
-	double targetPos;
 	double offset;
-
-	void SetSpring(FunctionMode m, void* param);
-	void SetDamper(FunctionMode m, void* param);
-	void SetSpringDamper(FunctionMode smode, FunctionMode dmode, void* sparam, void* dparam);
 
 	// ----- PHNDJointMotorの派生クラスで実装する機能(この二つはオーバーライドしないとダメそう)
 	/// propVを計算する(位置差分)
@@ -156,8 +159,8 @@ public:
 
 	PHHuman1DJointResistance(const PHHuman1DJointResistanceDesc& desc = PHHuman1DJointResistanceDesc()) {
 		SetDesc(&desc);
-		springMode = HUMANJOINTRESITANCE;
-		damperMode = HUMANJOINTRESITANCE;
+		springFunc = 1;
+		damperFunc = 1;
 		springParam = new Vec4d(desc.coefficient);
 		damperParam = new Vec4d(desc.coefficient);
 		offset = 0;

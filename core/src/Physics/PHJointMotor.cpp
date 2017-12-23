@@ -29,9 +29,6 @@ double JointFunctions::resistCalc(double d, double k_1, double k_2, double k_3, 
 
 // PH1DJointNonLinearMotorのFuncDatabase
 
-// <!!> マクローリン展開での近似にして係数を渡す？より広範囲だとテイラー
-// <!!>データ点と傾きを与えて、スプライン近似？ 
-
 Vec2d JointFunctions::ResistanceTorque(PH1DJointIf* jo, void* param){
 	double k_1 = ((double*)param)[0];
 	double k_2 = ((double*)param)[1];
@@ -88,11 +85,6 @@ Vec2d JointFunctions::ResistanceTorque(int a, PHBallJointIf* jo, void* param){
 		else if (delta > range[1]){
 			delta = range[1];
 		}
-	}
-	double dt = jo->GetScene()->GetTimeStep();
-	double torque = resistCalc(delta, k_1, k_2, k_3, k_4);
-	if (abs(torque) > (jo->GetMaxForce() / 2)) { 
-		DSTR << "over:" << torque << std::endl; 
 	}
 	double k = k_1 * exp(k_1 * (delta - k_2)) + k_3 * exp(k_3 * (k_4 - delta));
 	double t = (k == 0 ? 0 : delta - (exp(k_1 * (delta - k_2)) - exp(k_3 * (k_4 - delta))) / k);
@@ -200,8 +192,8 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 		int i = axes[n];
 		int j = joint->movableAxes[i];
 
-		joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
-			         + joint->J[1].row(j) * joint->solid[1]->dv;
+		joint->dv[j] = joint->J[0].row(j) * (joint->solid[0]->dv /*+ joint->solid[0]->ddv*/)
+			         + joint->J[1].row(j) * (joint->solid[1]->dv /*+ joint->solid[1]->ddv*/);
 		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
@@ -362,21 +354,22 @@ void PH1DJointMotor::SetParams(PHNDJointMotorParam<1>& p) {
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PH1DJointNonLinearMotor
-void PH1DJointNonLinearMotor::SetSpring(FunctionMode m, void* param){
-	if (!(m < 0 || m > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0]))) {
-		springMode = m;
+void PH1DJointNonLinearMotor::SetFuncFromDatabase(int i, void* param){
+	if (i < 0 || i > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0])) {
+		fpFunc = PH1DJointFunc[i];
 		this->springParam = param;
 	}
 }
-void PH1DJointNonLinearMotor::SetDamper(FunctionMode m, void* param) {
-	if (!(m < 0 || m > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0]))) {
-		damperMode = m;
-		this->damperParam = param;
+
+void PH1DJointNonLinearMotor::SetFuncFromDatabase(int i, int j, void* sparam, void* dparam){
+	if (!(i < 0 || i > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0]))) {
+		springFunc = i;
+		this->springParam = sparam;
 	}
-}
-void PH1DJointNonLinearMotor::SetSpringDamper(FunctionMode smode, FunctionMode dmode, void* sparam, void* dparam){
-	SetSpring(smode, sparam);
-	SetDamper(dmode, dparam);
+	if (!(j < 0 || j > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0]))) {
+		damperFunc = j;
+		this->damperParam = dparam;
+	}
 }
 
 /// propVを計算する
@@ -403,10 +396,10 @@ void PH1DJointNonLinearMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	p.yieldStress = j->yieldStress;
 	p.hardnessRate = j->hardnessRate;
 	//関数存在するならそれに合わせてspringとdamper, 各targetを変更
-	Vec2d sp = PH1DJointFunc[springMode](joint->Cast(), springParam);
+	Vec2d sp = PH1DJointFunc[springFunc](joint->Cast(), springParam);
 	p.spring[0] = sp[0];
 	targetPos = sp[1];
-	Vec2d da = PH1DJointFunc[damperMode](joint->Cast(), damperParam);
+	Vec2d da = PH1DJointFunc[damperFunc](joint->Cast(), damperParam);
 	p.damper[0] = da[0];
 	p.targetVelocity[0] = da[1];
 }
@@ -460,11 +453,11 @@ void PHBallJointMotor::SetParams(PHNDJointMotorParam<3>& p) {
 
 void PHBallJointNonLinearMotor::SetFuncFromDatabaseN(int n, int i, int j, void* sparam, void* dparam){
 	if (n >= 0 && n < 3){
-		if (!(i < 0 || i > sizeof(PHBallJointFunc) / sizeof(PHBallJointFunc[0]))) {
+		if (!(i < 0 || i > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0]))) {
 			springFunc[n] = i;
 			this->springParam[n] = sparam;
 		}
-		if (!(j < 0 || j > sizeof(PHBallJointFunc) / sizeof(PHBallJointFunc[0]))) {
+		if (!(j < 0 || j > sizeof(PH1DJointFunc) / sizeof(PH1DJointFunc[0]))) {
 			damperFunc[n] = j;
 			this->damperParam[n] = dparam;
 		}
@@ -472,9 +465,7 @@ void PHBallJointNonLinearMotor::SetFuncFromDatabaseN(int n, int i, int j, void* 
 }
 
 void PHBallJointNonLinearMotor::SetFuncFromDatabase(Vec3i i, Vec3i j, void* sparam[], void* dparam[]){
-	for (int n = 0; n < 3; n++) {
-		SetFuncFromDatabaseN(n, i[n], j[n], sparam[n], dparam[n]);
-	}
+
 }
 
 /// propVを計算する
@@ -535,8 +526,8 @@ Vec3d PHHumanBallJointResistance::GetCurrentResistance() {
 /// propVを計算する
 PTM::TVector<6,double> PHSpringMotor::GetPropV() {
 	Vec6d propV;
-	Quaterniond diff = DCAST(PHSpring,joint)->targetOrientation * joint->Xjrel.q.Inv();
-	propV.SUBVEC(0,3) = DCAST(PHSpring, joint)->targetPosition - joint->Xjrel.r;
+	Quaterniond diff = joint->Xjrel.q.Inv();
+	propV.SUBVEC(0,3) = -joint->Xjrel.r;
 	propV.SUBVEC(3,3) = diff.RotationHalf();
 	return propV;
 }
@@ -554,8 +545,8 @@ void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	for(int i=0;i<3;++i){ p.damper[i+3]       = j->damperOri; }
 	for(int i=0;i<3;++i){ p.secondDamper[i]   = j->secondDamper[i]; }
 	for(int i=0;i<3;++i){ p.secondDamper[i+3] = j->secondDamperOri; }
-	for(int i=0;i<6;++i){ p.targetVelocity[i] = j->targetVelocity[i]; } 
-	for(int i=0;i<6;++i){ p.offsetForce[i]    = j->offsetForce[i]; } 
+	for(int i=0;i<6;++i){ p.targetVelocity[i] = 0.0; } // PHSpringには無い
+	for(int i=0;i<6;++i){ p.offsetForce[i]    = 0.0; } // PHSpringには無い
 	p.yieldStress    = j->yieldStress;
 	p.hardnessRate   = j->hardnessRate;
 }

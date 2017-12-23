@@ -18,7 +18,7 @@
 #include <Physics/PHOpEngine.h>
 #include <sstream>
 
-#include <Foundation/UTQPTimer.h>
+#include <Foundation/UTPreciseTimer.h>
 
 namespace Spr{;
 
@@ -27,8 +27,7 @@ namespace Spr{;
 void PHSceneDesc::Init(){
 	PHSceneState::Init();
 	gravity				     = Vec3d(0.0, -9.8, 0.0);
-	airResistanceRateForVelocity	 = 1.0;
-	airResistanceRateForAngularVelocity	 = 1.0;
+	airResistanceRate	     = 1.0;
 	contactTolerance         = 0.002;
 	impactThreshold          = 10.0;
 	frictionThreshold        = 0.01;
@@ -53,11 +52,9 @@ PHScene::~PHScene() {
 PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }
-
 void PHScene::Init(){
 	engines.scene = this;
 	Scene::Clear();
-	performanceMeasure = UTPerformanceMeasureIf::CreateInstance("PHScene");
 
 	// エンジン作成
 	solids = DBG_NEW PHSolidContainer;
@@ -72,7 +69,7 @@ void PHScene::Init(){
 	penaltyEngine = DBG_NEW PHPenaltyEngine;
 	engines.Add(penaltyEngine);
 	
-	constraintEngine = DBG_NEW PHConstraintEngine(performanceMeasure);
+	constraintEngine = DBG_NEW PHConstraintEngine;
 	engines.Add(constraintEngine);
 
 	ikEngine = DBG_NEW PHIKEngine;
@@ -124,18 +121,10 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 int PHScene::NSolids()const{
 	return (int)solids->solids.size();
 }
-PHSolidIf* PHScene::GetSolid(int idx){
-	return solids->solids[idx]->Cast();
-}
 PHSolidIf** PHScene::GetSolids(){
 	return solids->solids.empty() ? NULL : (PHSolidIf**)&*solids->solids.begin();
 }
-int PHScene::GetSolidIndex(PHSolidIf* s) {
-	for (int i = 0; i != (int)(solids->solids.size()); ++i) {
-		if (solids->solids[i]->Cast() == s) return i;
-	}
-	return -1;
-}
+
 CDShapeIf* PHScene::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 	return GetSdk()->CreateShape(ii, desc);
 }
@@ -320,19 +309,19 @@ void PHScene::SetTimeStep(double dt){
 	timeStepInv = 1.0/dt;
 }
 
-static UTQPTimer ptimerSce;
+static UTPreciseTimer ptimer;
 
 void PHScene::Step(){
 	int t0, t1, t2;
-	ptimerSce.CountUS();
+	ptimer.CountUS();
 	ClearForce();
-	t0 = ptimerSce.CountUS();
-	ptimerSce.CountUS();
+	t0 = ptimer.CountUS();
+	ptimer.CountUS();
 	GenerateForce();
-	t1 = ptimerSce.CountUS();
-	ptimerSce.CountUS();
+	t1 = ptimer.CountUS();
+	ptimer.CountUS();
 	Integrate();
-	t2 = ptimerSce.CountUS();
+	t2 = ptimer.CountUS();
 	//DSTR << "clear: " << t0 << " gen: " << t1 << " int: " << t2 << std::endl;
 }
 void PHScene::ClearForce(){
