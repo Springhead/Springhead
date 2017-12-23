@@ -312,9 +312,6 @@
     <ClInclude Include="PHSolid.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="PHSpatial.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="PHSpring.h">
       <Filter>src</Filter>
     </ClInclude>

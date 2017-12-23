@@ -19,11 +19,23 @@ namespace Spr{;
 PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1, std::vector<Vec3d> sec):
     PHContactPoint(local, sp, p, s0, s1){
 	
-	section   = sec;
+	int n = (int)sec.size();
+	section.resize(n);
+	normal .resize(n);
+	for(int i = 0; i < n; i++){
+		section[i] = sec[i];
+	}
+	for(int i = 0; i < n; i++){
+		Vec3d p0 = section[i];
+		Vec3d p1 = section[(i+1)%n];
+		Vec3d d  = p1 - p0;
+		normal[i] = Vec3d(0.0, d.z, -d.y);
+		normal[i].unitize();
+	}
 
 	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		rjabs[i] = pose.Pos() - solid[i]->GetCenterPosition();	//剛体の中心から接触点までのベクトル
 	}
 	// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
 	Quaterniond qlocal;
@@ -38,7 +50,7 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 	contactRadius = 0.0;
 	for(int i = 0; i < (int)section.size(); i++){
 		if(i != section.size()-1)
-			contactArea += 0.5 * std::abs((section[i] % section[i+1]).norm());
+			contactArea += 0.5 * (section[i] % section[i+1]).norm();
 		contactRadius = std::max(contactRadius, section[i].norm());
 	}
 
@@ -48,144 +60,236 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 bool PHContactSurface::Iterate() {
 	bool updated = false;
 
-	// -- 力
-	for (int i=0; i<3; ++i) {
-		if(!dv_changed[i])
-			continue;
-		dv_changed[i] = false;
-
+	// 垂直力 0
+	for(int i = 0; i <= 0; ++i){
+		//if(!dv_changed[i]) continue;
+		//dv_changed[i] = false;
+		dv  [i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
 
-		Projection(fnew[i], i);
+		ProjectNormalForce(fnew);
 
 		df[i] = fnew[i] - f[i];
 		f [i] = fnew[i];
 		
 		if(std::abs(df[i]) > engine->dfEps){
 			updated = true;
-			CompResponseDirect(df[i], i);
+			CompResponse(df[i], i);
 		}
 	}
-
-	// -- トルク
-	for (int i=3; i<6; ++i) {
-		if(!dv_changed[i])
-			continue;
-		dv_changed[i] = false;
-
+	// 摩擦力 1,2
+	for(int i = 1; i <= 2; i++){
+		//if(!dv_changed[i]) continue;
+		//dv_changed[i] = false;
+		dv  [i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
 	}
+	ProjectFrictionForce(fnew);
+	for(int i = 1; i <= 2; i++){
+		df[i] = fnew[i] - f[i];
+		f [i] = fnew[i];
+		
+		if(std::abs(df[i]) > engine->dfEps){
+			updated = true;
+			CompResponse(df[i], i);
+		}
+	}
 
-	// Projection
-	ProjectionTorque(fnew);
-
-	// Comp Response & Update f
-	for (int i=3; i<6; ++i) {
+	// 横モーメント 4,5
+	for(int i = 4; i <= 5; ++i){
+		//if(!dv_changed[i]) continue;
+		//dv_changed[i] = false;
+		dv  [i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
+		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
+	}
+	ProjectLateralMoment(fnew);
+	for(int i = 4; i <= 5; ++i) {
 		df[i] = fnew[i] - f[i];
 		f [i] = fnew[i];
 
 		if(std::abs(df[i]) > engine->dfEps){
 			updated = true;
-			CompResponseDirect(df[i], i);
+			CompResponse(df[i], i);
 		}
 	}
+
+	// 法線モーメント
+	for(int i = 3; i <= 3; ++i){
+		//if(!dv_changed[i]) continue;
+		//dv_changed[i] = false;
+		dv  [i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
+		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
+
+		ProjectNormalMoment(fnew);
+	
+		df[i] = fnew[i] - f[i];
+		f [i] = fnew[i];
+
+		if(std::abs(df[i]) > engine->dfEps){
+			updated = true;
+			CompResponse(df[i], i);
+		}
+	}
+
 	return updated;
 }
 
-void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
-	PHConstraint::Projection(fnew[3], 3);
-	PHConstraint::Projection(fnew[4], 4);
-	PHConstraint::Projection(fnew[5], 5);
-	fnew[3] = fnew[4] = fnew[5] = 0.0;
-	return;
+void PHContactSurface::ProjectNormalForce(SpatialVector& fnew){
+	// 接触深度が許容値以下なら反力を出さない
+	if(shapePair->depth < GetScene()->GetContactTolerance()){
+		fnew[0] = 0.0;
+		return;
+	}
+	//垂直抗力 >= 0の制約
+	if(fnew[0] < 0.0){
+		fnew[0] = 0.0;
+		return;
+	}
+}
 
+void PHContactSurface::ProjectFrictionForce(SpatialVector& fnew){
+	// 接触断面内での最大横速度
+	double vmax = sqrt(vjrel[1]*vjrel[1] + vjrel[2]*vjrel[2]) + contactRadius*std::abs(vjrel[3]);
+	double vth  = GetScene()->GetFrictionThreshold();
+	
+	double ftmax = (vmax < vth ? mu0 : mu) * fnew[0];
+	double ft    = sqrt(fnew[1]*fnew[1] + fnew[2]*fnew[2]);
+
+	frictionMargin = ftmax - ft;
+
+	if(frictionMargin < 0.0){
+		double k = ftmax / ft;
+		fnew[1] *= k;
+		fnew[2] *= k;
+		frictionMargin = 0.0;
+	}
+}
+
+void PHContactSurface::ProjectLateralMoment(SpatialVector& fnew){
 	PHSceneIf* scene = GetScene();
 
 	const double eps = 1.0e-10;
-	if(f[0] < eps){
-		fnew[3] = fnew[4] = fnew[5] = 0.0;
+	if(fnew[0] < eps){
+		fnew[4] = fnew[5] = 0.0;
 		return;
 	}
 	
-	// 回転摩擦の制限
-	double Nlim0 = contactRadius * mu0 * f[0];
-	double Nlim  = contactRadius * mu  * f[0];
-
-	// 静止摩擦
-	double vth = scene->GetImpactThreshold();
-	double vn  = vjrel[3] * contactRadius;
-	if (-vth < vn && vn < vth){
-		fnew[3] = std::min(fnew[3],  Nlim0);
-		fnew[3] = std::max(fnew[3], -Nlim0);
-	}
-	// 動摩擦
-	else{
-		fnew[3] = std::min(fnew[3],  Nlim);
-		fnew[3] = std::max(fnew[3], -Nlim);
-	}
-
 	//回転摩擦以外のトルクの制限
 	// ZMPを求める
-	fpoint = Vec3d(0.0, -fnew[5]/f[0], fnew[4]/f[0]);
+	cop = Vec3d(0.0, fnew[5]/fnew[0], -fnew[4]/fnew[0]);
+	copMargin = 1.0e10;
 
-	Vec2d s;
-	Vec3d d;
 	Matrix2d A;
-	double k = 0;
+	Vec2d    b, s;
+	Vec3d    p0, p1, n0, n1, d, c;
 	int n = (int)section.size();
 	for(int i = 0; i < n; i++){
-		d = section[(i+1)%n] - section[i];
-		A.col(0) = Vec2d(d.y, d.z);
-		A.col(1) = Vec2d(-fpoint.y, -fpoint.z);
+		p0 = section[i];
+		p1 = section[(i+1)%n];
+		n0 = normal [(i-1+n)%n];
+		n1 = normal [i];
+		d  = p1  - p0;
+		c  = cop - p0;
+		
+		// p0が最近点か判定
+		A.col(0) = Vec2d(n0.y, n0.z);
+		A.col(1) = Vec2d(n1.y, n1.z);
+		b        = Vec2d(c .y, c .z);
 		if(std::abs(A.det()) < eps)
 			continue;
-		s = - A.inv() * Vec2d(section[i].y, section[i].z);
+		s = A.inv() * b;
+		if(s[0] >= 0.0 && s[1] >= 0.0){
+			// copを射影
+			cop = p0;
+			copMargin = 0.0;
+			break;
+		}
+
+		// p0-p1上に最近点があるか判定
+		A.col(0) = Vec2d(d .y, d .z);
+		A.col(1) = Vec2d(n1.y, n1.z);
+		if(std::abs(A.det()) < eps)
+			continue;
+		s = A.inv() * b;
 		if(0.0 <= s[0] && s[0] <= 1.0 && s[1] >= 0.0){
-			k = std::max(k, s[1]);
+			cop = (1.0-s[0])*p0 + s[0]*p1;
+			copMargin = 0.0;
 			break;
 		}
 	}
 
-	if(k < 1.0){
-		fnew[4] *= k;
-		fnew[5] *= k;
-	}
-	//DSTR << k << " " << section.size() << " " << contactArea << endl;
-
-	/*
-	// 接触断面の境界上のZMP最近点
-	double d, dmin = numeric_limits<double>::max();
-	Vec3d p0, p1, pmid, pmin;
-	for(int i = 0; i < (int)section.size()-1; i++){
-		p0 = section[i+0];
-		p1 = section[i+1];
-		d = (p0 - fpoint).square();
-		if(d < dmin){
-			pmin = p0;
-			dmin = d;
+	if(copMargin != 0.0){
+		for(int i = 0; i < n; i++){
+			p0 = section[i];
+			n1 = normal [i];
+			c  = cop - p0;
+			copMargin = std::min(copMargin, -c * n1);
 		}
-		double l = (p1 - p0).square();
-		if(l > eps){
-			double s = (fpoint - p0) * (p1 - p0) / l;
-			pmid = (1-s) * p0 + s * p1;
-			d = (pmid - fpoint).square();
-			if(d < dmin){
-				pmin = pmid;
-				dmin = d;
+	}
+
+	/*if(std::abs(cop.y) > 0.1 || std::abs(cop.z) > 0.1){
+		int hoge = 0;
+		int n = (int)section.size();
+		for(int i = 0; i < n; i++){
+			p0 = section[i];
+			p1 = section[(i+1)%n];
+			n0 = normal [(i-1+n)%n];
+			n1 = normal [i];
+			d  = p1  - p0;
+			c  = cop - p0;
+		
+			// p0が最近点か判定
+			A.col(0) = Vec2d(n0.y, n0.z);
+			A.col(1) = Vec2d(n1.y, n1.z);
+			b        = Vec2d(c .y, c .z);
+			if(std::abs(A.det()) < eps)
+				continue;
+			s = A.inv() * b;
+			if(s[0] >= 0.0 && s[1] >= 0.0){
+				// copを射影
+				cop = p0;
+				break;
+			}
+
+			// p0-p1上に最近点があるか判定
+			A.col(0) = Vec2d(d .y, d .z);
+			A.col(1) = Vec2d(n1.y, n1.z);
+			if(std::abs(A.det()) < eps)
+				continue;
+			s = A.inv() * b;
+			if(0.0 <= s[0] && s[0] <= 1.0 && s[1] >= 0.0){
+				cop = (1.0-s[0])*p0 + s[0]*p1;
+				break;
 			}
 		}
-	}
 
-	// ZMPが境界上の最近点よりも遠ければ射影
-	pmin = section[0];
-	if((pmin - contactCenter).square() < (fpoint - contactCenter).square()){
-		fpoint = pmin;
-		fnew[4] =  fpoint.z * f[0];
-		fnew[5] = -fpoint.y * f[0];
 	}
 	*/
+	// 射影したcopからモーメントを逆算
+	fnew[4] = -cop.z * fnew[0];
+	fnew[5] =  cop.y * fnew[0];
+}
+
+void PHContactSurface::ProjectNormalMoment(SpatialVector& fnew){
+	PHSceneIf* scene = GetScene();
+
+	const double eps = 1.0e-10;
+	if(fnew[0] < eps){
+		fnew[3] = 0.0;
+		return;
+	}
+
+	// 横力によってcopに作用する法線モーメント
+	double ncop   = cop.y*fnew[2] - cop.z*fnew[1];
+	double margin = (2.0/3.0)*copMargin*frictionMargin; 
+	//double margin = (2.0/3.0)*contactRadius*frictionMargin;
+
+	if(fnew[3] - ncop >  margin) fnew[3] = ncop + margin;
+	if(fnew[3] - ncop < -margin) fnew[3] = ncop - margin;
 }
 
 }

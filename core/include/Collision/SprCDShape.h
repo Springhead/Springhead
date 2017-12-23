@@ -193,6 +193,20 @@ struct PHMaterial{
 	float timeVaryFrictionC;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	float frictionViscosity;
+
+	struct VelocityField{
+		enum{
+			NONE,
+			LINEAR,
+			CYLINDER,
+		};
+	};
+	int    velocityFieldMode;
+	Vec3d  velocityFieldAxis;
+	double velocityFieldMagnitude;
+
+	Vec3d  CalcVelocity(const Vec3d& pos, const Vec3d& normal) const;
+	
 };
 
 ///	形状のディスクリプタ(基本クラス)
