@@ -34,11 +34,10 @@ namespace Spr{;
 const char*    reportFilename = "PHConstraintEngineReport.csv";
 
 //coltime
-//連続判定のプロセスごとに分けて時間を保存
 int		coltimePhase1;
 int		coltimePhase2;
 int		coltimePhase3;
-int		colcounter; //サポート探索回数カウントに使っている
+int		colcounter;
 UTPreciseTimer *p_timer;
 
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
@@ -236,7 +235,6 @@ PHConstraintEngine::~PHConstraintEngine(){
 void PHConstraintEngine::EnableReport(bool on){
 	if(!on && reportFile){
 		fclose(reportFile);
-		reportFile = nullptr;
 	}
 	if(on && !reportFile){
 		reportFile = fopen(reportFilename, "w");
@@ -554,7 +552,6 @@ void PHConstraintEngine::Setup(){
 				PH1DJoint* jnt1D = joints[i]->Cast();
 				if(jnt1D){
 					// Motorを先に入れないとMotorに対してLimitがかからない
-					
 					for (size_t j = 0; j < jnt1D->motors.size(); j++){
 						if (jnt1D->motors[j]){
 							cons_base.push_back(jnt1D->motors[j]);
@@ -570,7 +567,6 @@ void PHConstraintEngine::Setup(){
 				PHBallJoint* ball = joints[i]->Cast();
 				if(ball){
 					// Motorを先に入れないとMotorに対してLimitがかからない
-
 					for (size_t j = 0; j < ball->motors.size(); j++){
 						if (ball->motors[j]){
 							cons_base.push_back(ball->motors[j]);
@@ -600,9 +596,6 @@ void PHConstraintEngine::Setup(){
 		for(int i = 0; i < (int)cons_base.size(); i++)
 			cons_base[i]->SetupAxisIndex();
 		
-		// 拘束間の A = J M^-1 J^T を計算
-		CompResponseMatrix();
-		
 	} //< omp single
 
 	// 拘束毎の前処理（J, b, db, dA, ...）
@@ -614,179 +607,15 @@ void PHConstraintEngine::Setup(){
 		
 	// 拘束力初期値による速度変化を計算 (dv = A * f)
     #ifdef USE_OPENMP_PHYSICS
-	# pragma omp for
+	# pragma omp single
     #endif
 	for(int i = 0; i < (int)cons_base.size(); i++){
 		PHConstraintBase* con = cons_base[i];
 		for(int n = 0; n < (int)con->axes.size(); n++){
 			int j = con->axes[n];
-			con->CompResponseDirect(con->f[j], j);
+			con->CompResponse(con->f[j], j);
 		}
 	}
-}
-
-inline double QuadForm(const double* v1, const double* M, const double* v2){
-	double y = 0.0;
-	int k = 0;
-	for(int i = 0; i < 6; i++)for(int j = 0; j < 6; j++, k++)
-		y += v1[i] * M[k] * v2[j];
-	return y;
-}
-
-void PHConstraintEngine::CompResponseMatrix(){
-	struct Aux{
-		int i;	//< 拘束のインデックス
-		int k;	//< solid[0] or solid[1]
-		Aux(){}
-		Aux(int _i, int _k):i(_i), k(_k){}
-	};
-	struct Auxs : vector<Aux>{
-		int num;
-		void Add(const Aux& a){
-			at(num) = a;
-			num++;
-		}
-	};
-	static vector<Auxs>	solidMap;	//< 各剛体を拘束している拘束の配列
-	static vector<Auxs>	treeMap;    //< 各ツリーに属する剛体を拘束している拘束の配列
-
-	UTPreciseTimer p, pQ;
-	int TQ = 0;
-	p.CountUS();
-
-	solidMap.resize(solids.size());
-	treeMap .resize(trees .size());
-
-	// 剛体とツリーにシリアル番号を振る
-	for(int i = 0; i < (int)solids.size(); i++){
-		solidMap[i].resize(2*cons.size());
-		solidMap[i].num = 0;
-		solids[i]->id = i;
-	}
-	for(int i = 0; i < (int)trees.size(); i++){
-		treeMap[i].resize(2*cons.size());
-		treeMap[i].num = 0;
-		trees[i]->treeId = i;
-	}
-
-	// 拘束をつながっている剛体/ツリー別に分類
-	for(int i = 0; i < (int)cons.size(); i++){
-		PHConstraint* con = cons[i];
-		for(int k = 0; k < 2; k++){
-			PHSolid* s = con->solid[k];
-			if(!s->IsDynamical())
-				continue;
-			if(s->IsArticulated())
-				 treeMap [s->treeNode->root->treeId].Add(Aux(i, k));
-			else solidMap[s->id]                    .Add(Aux(i, k));
-		}
-	}
-
-	// A行列計算
-	PHConstraint *con0, *con1;
-	PHSolid      *s0,   *s1;
-	SpatialMatrix A;
-
-	vector<int> idx;
-				
-	p.CountUS();
-	for(int i0 = 0; i0 < (int)cons.size(); i0++){
-		if(idx.size() < cons.size())
-			idx.resize(cons.size());
-		con0 = cons[i0];
-		con0->adj.num = 0;
-		fill(idx.begin(), idx.end(), -1);
-
-		for(int k0 = 0; k0 < 2; k0++){
-			s0 = con0->solid[k0];
-			if(!s0->IsDynamical())
-				continue;
-
-			Auxs* auxs;
-			if(s0->IsArticulated())
-				 auxs = &treeMap [s0->treeNode->root->treeId];
-			else auxs = &solidMap[s0->id];
-				
-			for(int j = 0; j < auxs->num; j++){
-				int i1 = (*auxs)[j].i;
-				int k1 = (*auxs)[j].k;
-				con1   = cons[i1];
-				s1     = con1->solid[k1];
-
-				const double* Minv;
-				if(s0->IsArticulated())
-				     Minv = (const double*)&s1->treeNode->dZdv_map[s0->treeNode->id];
-				else Minv = (const double*)&s0->Minv;
-				
-				A.clear();
-				for(int n0 = 0; n0 < con0->targetAxes.size(); n0++)for(int n1 = 0; n1 < con1->targetAxes.size(); n1++){
-					int j0 = con0->targetAxes[n0];
-					int j1 = con1->targetAxes[n1];
-					const double* J0 = (const double*)&con0->J[k0].row(j0);
-					const double* J1 = (const double*)&con1->J[k1].row(j1);
-					A[j1][j0] = QuadForm(J1, Minv, J0);
-					
-					if(s0->IsArticulated())
-						A[j1][j0] = -A[j1][j0];
-				}
-				
-				if(idx[i1] == -1){
-					con0->adj.Add(con1, A);
-					idx[i1] = (int)(con0->adj.num-1);
-				}
-				else{
-					con0->adj[idx[i1]].A += A;
-				}
-			}
-		}		
-	}
-
-	// Aの対角成分とその逆数
-	double Ad_eps    = /*1.0e-20;*/1.0e-10;		///< 対角成分の許容最小値
-	double Ad_ratio  = /*1.0e-10;*/1.0e-5;		///< 対角成分の最小/最大の許容値
-	double And_ratio = /*1.0e-10;*/1.0e-1;		///< 対角成分/非対角成分の許容値
-
-	double And_max;			// 非対角成分の最大値
-	double Ad_max  = 0.0;	// 対角成分の最大値
-
-	for(int i0 = 0; i0 < (int)cons.size(); i0++){
-		PHConstraint* con0 = cons[i0];
-		for(int n0 = 0; n0 < con0->targetAxes.size(); n0++) {
-			int j0 = con0->targetAxes[n0];
-		
-			And_max = 0.0;
-				
-			for(int i1 = 0; i1 < (int)con0->adj.num; i1++){
-				PHConstraint::Adjacent& adj = con0->adj[i1];
-				PHConstraint* con1 = adj.con;
-				SpatialMatrix& A   = adj.A;
-				for(int n1 = 0; n1 < con1->targetAxes.size(); n1++){
-					int j1 = con1->targetAxes[n1];
-		
-					if(con0 == con1 && j0 == j1){
-						con0->A[j0] = A[j1][j0];
-					}
-					else{
-						And_max = std::max(And_max, std::abs(A[j1][j0]));
-					}
-				}
-			}
-
-			con0->A[j0] = std::max(con0->A[j0], Ad_eps);
-			con0->A[j0] = std::max(con0->A[j0], And_ratio * And_max);
-			
-			Ad_max = std::max(Ad_max, con0->A[j0]);
-		}
-	}
-
-	for(int i = 0; i < (int)cons.size(); i++){
-		PHConstraint* con = cons[i];
-		for(int n = 0; n < con->targetAxes.size(); n++) {
-			int j = con->targetAxes[n];
-			con->A[j] = std::max(con->A[j], Ad_ratio * Ad_max);
-		}
-	}
-
 }
 
 void PHConstraintEngine::SetupCorrection(){
@@ -801,45 +630,27 @@ void PHConstraintEngine::Iterate(){
 	int n;
 	for(n = 0; n < numIter; n++){
 		int nupdated = 0;
-        #ifdef USE_OPENMP_PHYSICS
-		# pragma omp for
-        #endif
-		for(int i = 0; i < (int)cons_base.size(); i++)
+        for(int i = 0; i < (int)cons_base.size(); i++)
 			nupdated += (int)cons_base[i]->Iterate();
 
 		if(nupdated == 0)
 			break;
-
-		for(int i = 0; i < (int)cons_base.size(); i++){
-			for(int j = 0; j < 6; j++){
-				cons_base[i]->dv_changed[j] = cons_base[i]->dv_changed_next[j];
-				cons_base[i]->dv_changed_next[j] = false;
-			}
-		}
 	}
 }
 
 void PHConstraintEngine::IterateCorrection(){
 	for(int n = 0; n != numIterCorrection; ++n){
-        #ifdef USE_OPENMP_PHYSICS
-		# pragma omp for
-        #endif
-		for(int i = 0; i < (int)cons_base.size(); i++)
-			cons_base[i]->IterateCorrection();
+        int nupdated = 0;
+        for(int i = 0; i < (int)cons_base.size(); i++)
+			nupdated += cons_base[i]->IterateCorrection();
+
+		if(nupdated == 0)
+			break;
 	}
 }
 
 void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	double dt;
-
-	// 拘束力に対する速度変化を計算
-	for(int i = 0; i < (int)cons_base.size(); i++){
-		PHConstraintBase* con = cons_base[i];
-		for(int n = 0; n < (int)con->axes.size(); n++){
-			int j = con->axes[n];
-			con->CompResponse(con->f[j], j);
-		}
-	}
 
 	// 速度の更新 (dtを渡すので並列化しない）
 	dt = GetScene()->GetTimeStep();
@@ -864,7 +675,6 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	//# pragma omp for
 	for(int i = 0; i < (int)trees.size(); i++)
 		trees[i]->UpdatePosition(dt);
-
 }
 
 void PHConstraintEngine::StepPart1(){
@@ -875,14 +685,14 @@ void PHConstraintEngine::StepPart1(){
 		//交差を検知
 		points.clear();
 
-		if (bReport) {
+		if(bReport)
 			ptimer.CountUS();
-			coltimePhase1 = 0;
-			coltimePhase2 = 0;
-			coltimePhase3 = 0;
-			colcounter = 0;
-			p_timer = &ptimer2;
-		}
+		coltimePhase1 = 0;
+		coltimePhase2 = 0;
+		coltimePhase3 = 0;
+		colcounter = 0;
+		p_timer = &ptimer2;
+
 		PHSceneIf* scene = GetScene();
 		if(scene->IsContactDetectionEnabled()){
 			Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
@@ -942,7 +752,12 @@ void PHConstraintEngine::StepPart2(){
 		}
 	}
 
-	Iterate();
+	#ifdef USE_OPENMP_PHYSICS
+	# pragma omp single
+    #endif
+	{
+		Iterate();
+	}
 	
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp single
@@ -956,8 +771,14 @@ void PHConstraintEngine::StepPart2(){
 
 	// 位置LCP
 	SetupCorrection();
-	IterateCorrection();
-	
+
+	#ifdef USE_OPENMP_PHYSICS
+	# pragma omp single
+    #endif
+	{
+		IterateCorrection();
+	}
+
 	// 位置・速度の更新
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp single
@@ -977,7 +798,7 @@ void PHConstraintEngine::Step(){
 	}
 
 	if(bReport && reportFile){
-		fprintf(reportFile, "%d, %d, %d, %d\n", timeCollision, timeSetup, timeIterate,coltimePhase1);
+		fprintf(reportFile, "%d, %d, %d\n", timeCollision, timeSetup, timeIterate);
 	}
 }
 

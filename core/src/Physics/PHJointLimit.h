@@ -46,8 +46,7 @@ public:
 	virtual void SetupAxisIndex();
 	virtual void Setup         ();
 	virtual bool Iterate       ();
-	virtual void CompResponse      (double df, int i);
-	virtual void CompResponseDirect(double df, int i);
+	virtual void CompResponse  (double df, int i);
 	
 	// ----- インタフェースの実装
 	void    SetRange(Vec2d  range)    { this->range = range; }
@@ -86,10 +85,10 @@ public:
 	PHBallJointLimit();
 	
 	// ----- PHConstraintBaseの仮想関数
-	virtual void Setup         ();
-	virtual bool Iterate       ();
+	virtual void Setup             ();
+	virtual bool Iterate           ();
 	virtual void CompResponse      (double df, int i);
-	virtual void CompResponseDirect(double df, int i);
+	virtual void CompResponseMatrix();
 
 	// ----- このクラスで実装する機能
 	/// LCPの補正値の計算．誤差修正用

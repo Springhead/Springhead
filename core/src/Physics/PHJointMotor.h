@@ -74,14 +74,7 @@ public:
 	virtual void SetupAxisIndex();
 	virtual void Setup         ();
 	virtual bool Iterate       ();
-	virtual void CompResponse      (double df, int i);
-	virtual void CompResponseDirect(double df, int i);
-
-	/// 拘束軸を決定する
-	//virtual void SetupAxisIndex();
-
-	/// dA, dbを計算する
-	//virtual void CompBias();
+	virtual void CompResponse  (double df, int i);
 
 	// ----- このクラスの機能
 

@@ -103,8 +103,9 @@ bool PHGear::Iterate(){
 	bool updated = false;
 	int i0 = joint[0]->movableAxes[0];
 	int i1 = joint[1]->movableAxes[0];
-	if(!joint[0]->dv_changed[i0] && !joint[1]->dv_changed[i1])
-		return false;
+	
+	joint[0]->dv[i0] = joint[0]->J[0].row(i0) * joint[0]->solid[0]->dv + joint[0]->J[1].row(i0) * joint[0]->solid[1]->dv;
+	joint[1]->dv[i1] = joint[1]->J[0].row(i1) * joint[1]->solid[0]->dv + joint[1]->J[1].row(i1) * joint[1]->solid[1]->dv;
 
 	dv  [0] = ratio * joint[0]->dv[i0] - joint[1]->dv[i1];
 	res [0] = b[0] + db[0] + dv[0];
@@ -114,7 +115,7 @@ bool PHGear::Iterate(){
 
 	if(df[0] > engine->dfEps){
 		updated = true;
-		CompResponseDirect(df[0], 0);
+		CompResponse(df[0], 0);
 	}
 	return updated;
 }
@@ -122,11 +123,6 @@ bool PHGear::Iterate(){
 void PHGear::CompResponse(double df, int i){
 	joint[0]->CompResponse(ratio * df, joint[0]->movableAxes[0]);
 	joint[1]->CompResponse(-df       , joint[1]->movableAxes[0]);
-}
-
-void PHGear::CompResponseDirect(double df, int i){
-	joint[0]->CompResponseDirect(ratio * df, joint[0]->movableAxes[0]);
-	joint[1]->CompResponseDirect(-df       , joint[1]->movableAxes[0]);
 }
 
 }

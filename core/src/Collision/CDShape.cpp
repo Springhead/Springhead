@@ -34,6 +34,31 @@ PHMaterial::PHMaterial(){
 	timeVaryFrictionC = 0.0f;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	frictionViscosity = 0.0f;
+
+	velocityFieldMode      = VelocityField::NONE;
+	velocityFieldAxis      = Vec3d();
+	velocityFieldMagnitude = 0.0;
+}
+
+Vec3d PHMaterial::CalcVelocity(const Vec3d& pos, const Vec3d& normal) const{
+	if(velocityFieldMode == VelocityField::NONE){
+		return Vec3d();
+	}
+	if(velocityFieldMode == VelocityField::LINEAR){
+		return velocityFieldAxis * velocityFieldMagnitude;
+	}
+	if(velocityFieldMode == VelocityField::CYLINDER){
+		Vec3d  v  = velocityFieldAxis % pos;
+		double vn = v * normal;
+		Vec3d  vt = v - vn * normal;
+		const double eps = 1.0e-10;
+		double vtnorm = vt.norm();
+		if(vtnorm < eps)
+			return Vec3d();
+		vt *= (velocityFieldMagnitude/vtnorm);
+		return vt;
+	}
+	return Vec3d();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -59,9 +59,7 @@ bool PH1DJointLimit::Iterate(){
 		return false;
 
 	int i = joint->movableAxes[0];
-	if(!joint->dv_changed[i])
-		return false;
-
+	
 	// Gauss-Seidel Update
 	res [0] = joint->b[i] + db[0] + dA[0]*f[0] + joint->dv[i];
 	fnew[0] = f[0] - joint->engine->accelSOR * Ainv[0] * res[0];
@@ -77,7 +75,7 @@ bool PH1DJointLimit::Iterate(){
 	f [0] = fnew[0];
 
 	if(std::abs(df[0]) > joint->engine->dfEps){
-		CompResponseDirect(df[0], 0);
+		CompResponse(df[0], 0);
 		return true;
 	}
 	return false;
@@ -86,53 +84,6 @@ bool PH1DJointLimit::Iterate(){
 void PH1DJointLimit::CompResponse(double df, int i){
 	joint->CompResponse(df, joint->movableAxes[0]);
 }
-
-void PH1DJointLimit::CompResponseDirect(double df, int i){
-	joint->CompResponseDirect(df, joint->movableAxes[0]);
-}
-
-
-/*
-void PH1DJointLimit::SetupAxisIndex() {
-	bOnLimit = false;
-	if (range[0] >= range[1]){ return; }
-
-	if(joint->GetPosition() <= range[0]){
-		joint->axes.Enable(joint->movableAxes[0]);
-		bOnLimit = true;
-
-		diff = joint->GetPosition() - range[0];
-
-		//joint->fMaxDt[joint->movableAxes[0]] =  FLT_MAX;
-		joint->fMinDt[joint->movableAxes[0]] =  0;
-	}
-
-	if(joint->GetPosition() >= range[1]){
-		joint->axes.Enable(joint->movableAxes[0]);
-		bOnLimit = true;
-		
-		diff = joint->GetPosition() - range[1];
-
-		joint->fMaxDt[joint->movableAxes[0]] =  0;
-		//joint->fMinDt[joint->movableAxes[0]] = -FLT_MAX;
-	}
-}
-
-void PH1DJointLimit::CompBias() {
-	if (!bOnLimit) { return; }
-
-	double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
-
-	joint->dA[joint->movableAxes[0]] += tmp * joint->GetScene()->GetTimeStepInv();
-	joint->db[joint->movableAxes[0]] += tmp * spring * diff;
-
-	joint->db[joint->movableAxes[0]] += tmp * (
-		  joint->GetSpring() * (joint->GetPosition() - joint->GetTargetPosition())
-		- joint->GetDamper() * joint->GetTargetVelocity()
-		- joint->GetOffsetForce() * joint->GetScene()->GetTimeStepInv()
-		);
-}
-*/
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHBallJointLimit
@@ -151,23 +102,14 @@ void PHBallJointLimit::Setup() {
 		fMinDt[i] = -FLT_MAX;
 	}
 	
+	CompResponseMatrix();
+	
 	// LCPの係数A, bの補正値dA, dbを計算
 	double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
 	for(int n = 0; n < axes.size(); n++){
 		int j = axes[n];
 		dA[j] = tmp * joint->GetScene()->GetTimeStepInv();
 		db[j] = tmp * spring * diff[j];
-	}
-
-	// LCPのA行列の対角成分を計算
-	SpatialMatrix Aj = joint->adj.Find(joint)->A;
-	Matrix3d _A = Jcinv * Aj.ww() * Jcinv.trans();
-	Vec3d    _b = Jcinv * joint->b.w();
-	for (int n=0; n<axes.size(); ++n){
-		int j = axes[n];
-		A   [j] = _A[j][j];
-		Ainv[j] = 1.0 / (A[j] + dA[j]);
-		b   [j] = _b[j];
 	}
 
 	// 拘束力の初期値を更新
@@ -200,7 +142,7 @@ bool PHBallJointLimit::Iterate() {
 
 		if(std::abs(df[i]) > joint->engine->dfEps){
 			updated = true;
-			CompResponseDirect(df[i], i);
+			CompResponse(df[i], i);
 		}
 	}
 	return updated;
@@ -211,14 +153,9 @@ void PHBallJointLimit::CompResponse(double df, int i){
 		joint->CompResponse(Jcinv[i][j] * df, 3+j);
 }
 
-void PHBallJointLimit::CompResponseDirect(double df, int i){
-	for(int j = 0; j < 3; j++)
-		joint->CompResponseDirect(Jcinv[i][j] * df, 3+j);
-}
-
-/*
 /// Aの対角成分を計算する．A = J * M^-1 * J^T
 void PHBallJointLimit::CompResponseMatrix() {
+	/*
 	A.clear();
 	PHRootNode* root[2] = {
 		joint->solid[0]->IsArticulated() ? DCAST(PHRootNode, joint->solid[0]->treeNode->GetRootNode()) : NULL,
@@ -273,8 +210,8 @@ void PHBallJointLimit::CompResponseMatrix() {
 			}
 		}
 	}
-}
 */
+}
 /*
 void PHBallJointLimit::CompResponse(double df, int i) {
 	SpatialVector dfs;
@@ -312,7 +249,6 @@ void PHBallJointConeLimit::CompJacobian() {
 /// 可動域制限にかかっているか確認しどの自由度を速度拘束するかを設定
 void PHBallJointConeLimit::SetupAxisIndex() {
 	Vec2d limit[3] = { limitSwing, limitSwingDir, limitTwist };
-	bOnLimit = false;
 
 	axes.Clear();
 	for (int i=0; i<3; ++i) {
@@ -620,7 +556,6 @@ int PHBallJointSplineLimit::CheckIntersection(Vec2d base, Vec2d curr, double& mi
 void PHBallJointIndependentLimit::SetupAxisIndex(){
 	Vec2d limit[3] = { limitX, limitY, limitZ };
 
-	bOnLimit = false;
 	axes.Clear();
 	Vec3d delta;
 	joint->GetPosition().ToEuler(delta);
