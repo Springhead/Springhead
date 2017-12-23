@@ -185,7 +185,7 @@ public:
 	virtual	bool Iterate                     ();
 	virtual void IterateCorrection           ();
 	virtual bool Projection                  (double& f_, int i);
-	virtual void ProjectionCorrection        (double& F, int k){}
+	virtual bool ProjectionCorrection        (double& F_, int i){ return false; }
 	virtual void CompResponse                (double df, int i); ///< (M^-1 J^T) df
 	virtual void CompResponseCorrection      (double dF, int i); ///< (M^-1 J^T) dF
 	virtual void CompResponseDirect          (double df, int i); ///< (J M^-1 J^T) df

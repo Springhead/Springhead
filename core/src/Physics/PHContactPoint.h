@@ -24,11 +24,14 @@ public:
 	SPR_OBJECTDEF(PHContactPoint);
 
 	PHShapePairForLCP* shapePair;
-	Vec3d pos;
+	Posed  pose;
 	double mu0, mu, e;
 	double spring, damper;
 
-	double fx, flim;
+	double fx, flim0, flim;
+	bool   isStatic;
+
+	Vec3d  velField;  ///< contact motor velocity (in local coord)
 
 public:
 	/// コンストラクタ
@@ -37,9 +40,9 @@ public:
 
 	// ----- PHConstraintの派生クラスで実装する機能
 	virtual void CompBias();
-	virtual bool Projection(double& f_, int i);
 	virtual void CompError();
-	virtual void ProjectionCorrection(double& F, int k);
+	virtual bool Projection(double& f_, int i);
+	virtual bool ProjectionCorrection(double& F, int k);
 };
 
 }

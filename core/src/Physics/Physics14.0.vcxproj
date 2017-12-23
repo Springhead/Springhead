@@ -518,7 +518,6 @@
     <ClInclude Include="PHSkeleton.h" />
     <ClInclude Include="PHSliderJoint.h" />
     <ClInclude Include="PHSolid.h" />
-    <ClInclude Include="PHSpatial.h" />
     <ClInclude Include="PHSpring.h" />
     <ClInclude Include="PHTreeNode.h" />
     <ClInclude Include="Physics.h" />

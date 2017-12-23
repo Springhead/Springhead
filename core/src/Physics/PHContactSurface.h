@@ -19,11 +19,13 @@ public:
 	double	contactArea;
 	double  contactRadius;
 
-	/// ZMP
-	Vec3d	fpoint;
+	Vec3d	cop;              ///< CoP center of pressure
+	double  frictionMargin;   ///< 最大摩擦力と作用している摩擦力とのマージン
+	double  copMargin;        ///< CoPから接触多角形境界までのマージン
 
 	/// 交差断面の頂点（接触座標系での値）．トルクの制限のために保持
 	std::vector<Vec3d>	section;
+	std::vector<Vec3d>  normal ;
 
 	/// コンストラクタ
 	PHContactSurface(){}
@@ -33,7 +35,10 @@ public:
 	virtual bool Iterate();
 
 	// ----- このクラスで実装する機能
-	void	ProjectionTorque  (SpatialVector& fnew);		///< トルク用Projection
+	void    ProjectNormalForce  (SpatialVector& fnew);
+	void    ProjectFrictionForce(SpatialVector& fnew);
+	void    ProjectLateralMoment(SpatialVector& fnew);
+	void	ProjectNormalMoment (SpatialVector& fnew);
 };
 
 }

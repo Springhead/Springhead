@@ -19,70 +19,85 @@ namespace Spr{;
 
 PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
 	shapePair = sp;
-	const PHMaterial& mat0 = sp->shape[0]->GetMaterial();
-	const PHMaterial& mat1 = sp->shape[1]->GetMaterial();
+	const PHMaterial* mat[2];
+	mat[0] = &sp->shape[0]->GetMaterial();
+	mat[1] = &sp->shape[1]->GetMaterial();
 	
 	PHScene* s = DCAST(PHScene, s0->GetScene());
 	switch(s->blendMode){
 	case PHSceneDesc::BLEND_MIN:
-		mu0 = std::min(mat0.mu0, mat1.mu0);
-		mu  = std::min(mat0.mu , mat1.mu );
-		e   = std::min(mat0.e  , mat1.e  );
+		mu0 = std::min(mat[0]->mu0, mat[1]->mu0);
+		mu  = std::min(mat[0]->mu , mat[1]->mu );
+		e   = std::min(mat[0]->e  , mat[1]->e  );
 		break;
 	case PHSceneDesc::BLEND_MAX:
-		mu0 = std::max(mat0.mu0, mat1.mu0);
-		mu  = std::max(mat0.mu , mat1.mu );
-		e   = std::max(mat0.e  , mat1.e  );
+		mu0 = std::max(mat[0]->mu0, mat[1]->mu0);
+		mu  = std::max(mat[0]->mu , mat[1]->mu );
+		e   = std::max(mat[0]->e  , mat[1]->e  );
 		break;
 	case PHSceneDesc::BLEND_AVE_ADD:
-		mu0 = 0.5 * (mat0.mu0 + mat1.mu0);
-		mu  = 0.5 * (mat0.mu  + mat1.mu );
-		e   = 0.5 * (mat0.e   + mat1.e  );
+		mu0 = 0.5 * (mat[0]->mu0 + mat[1]->mu0);
+		mu  = 0.5 * (mat[0]->mu  + mat[1]->mu );
+		e   = 0.5 * (mat[0]->e   + mat[1]->e  );
 		break;
 	case PHSceneDesc::BLEND_AVE_MUL:
-		mu0 = sqrt(mat0.mu0 * mat1.mu0);
-		mu  = sqrt(mat0.mu  * mat1.mu );
-		e   = sqrt(mat0.e   * mat1.e  );
+		mu0 = sqrt(mat[0]->mu0 * mat[1]->mu0);
+		mu  = sqrt(mat[0]->mu  * mat[1]->mu );
+		e   = sqrt(mat[0]->e   * mat[1]->e  );
 		break;
 	}
 	
-	if(mat0.spring == 0.0f){
-		if(mat1.spring == 0.0f)
+	if(mat[0]->spring == 0.0f){
+		if(mat[1]->spring == 0.0f)
 			 spring = 0.0;
-		else spring = mat1.spring;
+		else spring = mat[1]->spring;
 	}
 	else{
-		if(mat1.spring == 0.0f)
-			 spring = mat0.spring;
-		else spring = (mat0.spring * mat1.spring) / (mat0.spring + mat1.spring);
+		if(mat[1]->spring == 0.0f)
+			 spring = mat[0]->spring;
+		else spring = (mat[0]->spring * mat[1]->spring) / (mat[0]->spring + mat[1]->spring);
 	}
 	
-	if(mat0.damper == 0.0f){
-		if(mat1.damper == 0.0f)
+	if(mat[0]->damper == 0.0f){
+		if(mat[1]->damper == 0.0f)
 			 damper = 0.0;
-		else damper = mat1.damper;
+		else damper = mat[1]->damper;
 	}
 	else{
-		if(mat1.damper == 0.0f)
-			 damper = mat0.damper;
-		else damper = (mat0.damper * mat1.damper) / (mat0.damper + mat1.damper);
+		if(mat[1]->damper == 0.0f)
+			 damper = mat[0]->damper;
+		else damper = (mat[0]->damper * mat[1]->damper) / (mat[0]->damper + mat[1]->damper);
 	}
 
-	pos = p;
-	solid[0] = s0, solid[1] = s1;
+	Posed  poseSolid[2];
+	Posed  poseRel  [2];
+	Vec3d  vc   [2];
+	Vec3d  vcabs[2];
+	
+	pose.Pos() = p;
+	pose.Ori().FromMatrix(local);
+	
+	solid[0] = s0;
+	solid[1] = s1;
 
-	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->GetCenterPosition();	//剛体の中心から接触点までのベクトル
-	}
-	// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
-	Quaterniond qlocal;
-	qlocal.FromMatrix(local);
-	for(int i = 0; i < 2; i++){
-		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qlocal;
-		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
+		poseSolid[i].Pos() = solid[i]->GetCenterPosition();
+		poseSolid[i].Ori() = solid[i]->GetOrientation   ();
+		poseRel  [i] = sp->frame[i]->pose_abs.Inv() * pose;
+
+		// 接触点での速度場
+		Vec3d normal = (i == 0 ? 1.0 : -1.0) * poseRel[i].Ori() * Vec3d(1.0, 0.0, 0.0);
+		vc   [i] = mat[i]->CalcVelocity(poseRel[i].Pos(), normal);
+		vcabs[i] = poseRel[i].Ori().Conjugated() * vc[i];
+	
+		// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
+		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = poseSolid[i].Ori().Conjugated() * pose.Ori();
+		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
 	}
 
+	// relative velocity of contact motor in local coord
+	velField = vcabs[1] - vcabs[0];
+	
 	movableAxes.Enable(3);
 	movableAxes.Enable(4);
 	movableAxes.Enable(5);
@@ -104,7 +119,7 @@ void PHContactPoint::CompBias(){
 		}
 		// 粘弾性あり
 		else{
-			double tmp = 1.0 / (damper + spring * dt);
+			double tmp = (shapePair->depth > tol) ? (1.0 / (damper + spring * dt)) : (1.0 / damper);
 			dA[0] = tmp * dtinv;
 			db[0] = - tmp * spring * diff;
 		}
@@ -113,18 +128,18 @@ void PHContactPoint::CompBias(){
 		//	跳ね返るときは補正なし
 		db[0] = e * vjrel[0];
 	}
+
+	db[1] = velField[1];
+	db[2] = velField[2];
+
+	// determine static/dynamic friction based on tangential relative velocity
+	double vt = vjrel[1] + velField[1];
+	isStatic = (-vth < vt && vt < vth);
 }
 
 bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
 	if(i == 0){	
-#if 0	// hase:以下があると、0になった瞬間重力分落ちてしまうため振動する。特に数センチの物体のシミュレーションで支障あり。
-		// 接触深度が許容値以下なら反力を出さない
-		if(shapePair->depth < GetScene()->GetContactTolerance()){
-			f_ = fx = flim = 0.0;
-			return true;
-		}
-#endif
 		//垂直抗力 >= 0の制約
 		if(f_ < 0.0){
 			f_ = fx = flim = 0.0;
@@ -133,15 +148,26 @@ bool PHContactPoint::Projection(double& f_, int i) {
 		// 垂直抗力
 		fx = f_;
 		// 最大静止摩擦力
-		flim = mu0 * fx;
+		flim0 = mu0 * fx;
+		flim  = mu  * fx;
 
 		return false;
 	}
 	else{
-		double fu = mu * fx;
-		//if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	静止摩擦
-		double vth = GetScene()->GetFrictionThreshold();
-		if(-vth < vjrel[1] && vjrel[1] < vth){
+		// 静止摩擦
+		if(isStatic){
+			if (f_ > flim0){
+				f_ = flim0;
+				return true;
+			}
+			if (f_ < -flim0){
+				f_ = -flim0;
+				return true;
+			}
+			return false;
+		}
+		// 動摩擦
+		else{
 			if (f_ > flim){
 				f_ = flim;
 				return true;
@@ -152,33 +178,27 @@ bool PHContactPoint::Projection(double& f_, int i) {
 			}
 			return false;
 		}
-		else{					//	動摩擦
-			if (f_ > fu){
-				f_ = fu;
-				return true;
-			}
-			if (f_ < -fu){
-				f_ = -fu;
-				return true;
-			}
-			return false;
-		}
 	}
 }
 
 void PHContactPoint::CompError(){
-	const double eps = 0.001;
+	PHSceneIf* scene = GetScene();
+	
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる
-	B[0] = min(0.0, -shapePair->depth + eps) * engine->posCorrectionRate;
+	double tol  = scene->GetContactTolerance();
+	double diff = std::max(shapePair->depth - tol, 0.0);
+	B[0] = -diff;
 }
 
-void PHContactPoint::ProjectionCorrection(double& F, int k){
-	if(k == 0){	//垂直抗力 >= 0の制約
-		F = max((double)0.0, F);
+bool PHContactPoint::ProjectionCorrection(double& F_, int i){
+	if(i == 0){	//垂直抗力 >= 0の制約
+		F_ = max((double)0.0, F_);
 	}
-	else if(k == 1 || k == 2)
-		F = 0;
+	else if(i == 1 || i == 2){
+		//F = 0;
+	}
+	return false;
 }
 
 }
