@@ -24,6 +24,8 @@ setlocal enabledelayedexpansion
 ::	Ver 2.0	 2014/02/19 F.Kanehori	result.log の出力行順序改訂
 ::	Ver 3.0  2017/10/26 F.Kanehori	新ツリー構造に対応
 ::	Ver 4.0  2017/12/13 F.Kanehori	GitHub 対応
+::	Ver 4.1  2017/12/21 F.Kanehori	Log directory on web server changed.
+::	Ver 4.11 2017/12/25 F.Kanehori	Bug fixed (History.log out path).
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -44,9 +46,9 @@ for %%a in (%ARGS%) do (
 		exit /b
 	)
 )
-if "%TOOLSET_ID%" equ "9" set TOOLSET_ID=9.0
-if "%TOOLSET_ID%" equ "10" set TOOLSET_ID=10.0
-if "%TOOLSET_ID%" equ "12" set TOOLSET_ID=12.0
+rem if "%TOOLSET_ID%" equ "9" set TOOLSET_ID=9.0
+rem if "%TOOLSET_ID%" equ "10" set TOOLSET_ID=10.0
+rem if "%TOOLSET_ID%" equ "12" set TOOLSET_ID=12.0
 if "%TOOLSET_ID%" equ "14" set TOOLSET_ID=14.0
 rem echo TOOLSET_ID:      [%TOOLSET_ID%]
 rem echo CONFIGURATION:   [%CONFIGURATION%]
@@ -54,8 +56,8 @@ rem echo PLATFORM:        [%PLATFORM%]
 rem echo TEST_REPOSITORY: [%TEST_REPOSITORY%]
 
 set SOLUTIONFILE_ID=%TOOLSET_ID%
-if "%SOLUTIONFILE_ID%" equ "9.0" set SOLUTIONFILE_ID=9
-if "%SOLUTIONFILE_ID%" equ "10.0" set SOLUTIONFILE_ID=10
+rem if "%SOLUTIONFILE_ID%" equ "9.0" set SOLUTIONFILE_ID=9
+rem if "%SOLUTIONFILE_ID%" equ "10.0" set SOLUTIONFILE_ID=10
 rem echo SOLUTIONFILE_ID: [%SOLUTIONFILE_ID%]
 
 ::----------------------------------------------
@@ -287,46 +289,27 @@ for %%t in (%TARGET_LIST%) do (
 	)
 )
 
-goto :skip1
 ::----------------------------------------------
-:: タグを登録   ==> GitHub 移行後は中止
+:: 履歴情報を出力
 ::
-call :check_condition DAILYBUILD_COPYTO_TAGS
+call :check_condition DAILYBUILD_GEN_HISTORY
 if %$status% == 0 (
-	rem ** タグを登録 **
-	set SVN=http://springhead.info/spr2/Springhead/trunk
-	set TAG=http://springhead.info/spr2/Springhead/tags/BuildSucceed%date%
-	if %AT_LEAST_ONE_BLD_SUCC% == 1 (
-		svn copy !SVN! !TAG! -m "%BLD_SUCC_LIST% %RUN_SUCC_LIST%"
-	)
-	rem ** Springhead2 の更新履歴を %HISTORY_LOG% に出力 **
-	svn log !SVN! > %HISTORY_LOG%
+	rem ** 履歴情報を出力 **
+	cd bin
+	python VersionControlSystem.py -g all > ..\%HISTORY_LOG%
+	cd ..
 )
-:skip1
 
 ::----------------------------------------------
 :: ログを Samba にコピーする
 ::
 call :check_condition DAILYBUILD_COPYTO_BUILDLOG
 if %$status% == 0 (
-	set SMBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\daily_build
+	set SMBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\log
 	echo copying logs to !SMBBASE!
 	del !SMBBASE!\*.log
 	xcopy /C/F/I/Y log\*.log !SMBBASE!
 )
-
-goto :skip2
-::----------------------------------------------
-:: ログを SVN にコミトする   ==> GitHub 移行後は中止
-::
-call :check_condition DAILYBUILD_COMMIT_BUILDLOG
-if %$status% == 0 (
-	echo comitting logs to subversion
-	cd log
-	svn commit -m "Autobuild done."
-	cd ..
-)
-:skip2
 
 endlocal && set $status=0
 exit /b 0
