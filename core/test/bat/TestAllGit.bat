@@ -25,6 +25,7 @@ setlocal enabledelayedexpansion
 ::	Ver 3.0  2017/10/26 F.Kanehori	新ツリー構造に対応
 ::	Ver 4.0  2017/12/13 F.Kanehori	GitHub 対応
 ::	Ver 4.1  2017/12/21 F.Kanehori	Log directory on web server changed.
+::	Ver 4.11 2017/12/25 F.Kanehori	Bug fixed (History.log out path).
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -45,9 +46,9 @@ for %%a in (%ARGS%) do (
 		exit /b
 	)
 )
-if "%TOOLSET_ID%" equ "9" set TOOLSET_ID=9.0
-if "%TOOLSET_ID%" equ "10" set TOOLSET_ID=10.0
-if "%TOOLSET_ID%" equ "12" set TOOLSET_ID=12.0
+rem if "%TOOLSET_ID%" equ "9" set TOOLSET_ID=9.0
+rem if "%TOOLSET_ID%" equ "10" set TOOLSET_ID=10.0
+rem if "%TOOLSET_ID%" equ "12" set TOOLSET_ID=12.0
 if "%TOOLSET_ID%" equ "14" set TOOLSET_ID=14.0
 rem echo TOOLSET_ID:      [%TOOLSET_ID%]
 rem echo CONFIGURATION:   [%CONFIGURATION%]
@@ -55,8 +56,8 @@ rem echo PLATFORM:        [%PLATFORM%]
 rem echo TEST_REPOSITORY: [%TEST_REPOSITORY%]
 
 set SOLUTIONFILE_ID=%TOOLSET_ID%
-if "%SOLUTIONFILE_ID%" equ "9.0" set SOLUTIONFILE_ID=9
-if "%SOLUTIONFILE_ID%" equ "10.0" set SOLUTIONFILE_ID=10
+rem if "%SOLUTIONFILE_ID%" equ "9.0" set SOLUTIONFILE_ID=9
+rem if "%SOLUTIONFILE_ID%" equ "10.0" set SOLUTIONFILE_ID=10
 rem echo SOLUTIONFILE_ID: [%SOLUTIONFILE_ID%]
 
 ::----------------------------------------------
@@ -295,7 +296,7 @@ call :check_condition DAILYBUILD_GEN_HISTORY
 if %$status% == 0 (
 	rem ** 履歴情報を出力 **
 	cd bin
-	python VersionControlSystem.py -g all > %HISTORY_LOG%
+	python VersionControlSystem.py -g all > ..\%HISTORY_LOG%
 	cd ..
 )
 
@@ -315,13 +316,6 @@ exit /b 0
 
 
 :: ============================================================================
-::----------------------------------------------
-::  コマンドの実行結果を変数に設定する
-::    call :backquote 変数名 "コマンド"
-:backquote
-    for /f %%i in ('%2') do set %1=%%i
-exit /b
-
 ::----------------------------------------------
 :: リストを擬似配列にする（作業変数 _I, _J を使用）
 ::	arg1:	擬似配列名

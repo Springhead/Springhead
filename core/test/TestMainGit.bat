@@ -18,6 +18,7 @@ setlocal enabledelayedexpansion
 ::	Ver 1.0  2017/12/03 F.Kanehori	GitHub 仮対応版（Python版を作るまで）.
 ::	Ver 1.1  2017/12/20 F.Kanehori	Springhead マニュアル作成追加.
 ::	Ver 1.2  2017/12/21 F.Kanehori	Generated dir on web server changed.
+::	Ver 1.21 2017/12/25 F.Kanehori	Bug fixed.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -93,7 +94,7 @@ if %$status% == 0 (
     echo making documents
     call bat\MakeDoc.bat
     cd ..\doc\SprManual
-    make
+    cmd /c make
     cd %TESTBASE%
 )
 
@@ -105,14 +106,15 @@ call :check_condition DAILYBUILD_COPYTO_WEBBASE
 if %$status% == 0 (
     echo copying generated files to web
 
-    cd generated
+    cd ..\..\generated
+    set TMPCWD=!cd!
     set DIRLIST=bin doc lib
     set FILELIST=
     echo.   WEBBASE:  [!WEBBASE!]
     echo.   DIRLIST:  [!DIRLIST!]
     echo.   FILELIST: [!FILELIST!]
-    for %%d in (!DIRLIST!) do call :copy_dir %%d !WEBBASE!
-    for %%f in (!FILELIST!) do call :copy_file %%f !WEBBASE!
+    for %%d in (!DIRLIST!) do call :copy_dir !TMPCWD! %%d !WEBBASE!
+    for %%f in (!FILELIST!) do call :copy_file !TMPCWD! %%f !WEBBASE!
     cd %TESTBASE%
 )
 
@@ -152,15 +154,15 @@ exit /b
 :: ディレクトリ全体のコピー
 ::
 :copy_dir
-    echo copying directory %cd%\%1\ to %2\%1\
-    if "%1" neq "" (
-	if exist %2\%1 (
-		cd %2\%1
+    echo copying directory %1\%2\ to %3\
+    if "%2" neq "" (
+	if exist %3\%2 (
+		pushd %3\%2
 		for /f %%d in ('dir /ad /b /w *') do rmdir /s /q %%d
 		del /f /q *
-		cd ..\..
+		popd
 	)
-	xcopy /e/c/f/h/i/y %1 %2\%1 > NUL
+	xcopy /e/c/f/h/i/y %1\%2 %3\%2 > NUL
     )
 exit /b
 
@@ -168,10 +170,10 @@ exit /b
 :: ファイルのコピー
 ::
 :copy_file
-    echo copying file %cd%\%1 to %WEBBASE%\%1
-    if "%1" neq "" (
-	del %WEBBASE%\%1 > NUL
-	copy /y %1 %WEBBASE%\%1 > NUL
+    echo copying file %1\%2 to %3\%2
+    if "%2" neq "" (
+	del %3\%2 > NUL
+	copy /y %1\%2 %3\%2 > NUL
     )
 exit /b
 
