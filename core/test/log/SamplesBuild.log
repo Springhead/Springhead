@@ -1,4 +1,4 @@
-日付 : 17.12.13 
+日付 : 17.12.27 
 --- サンプルビルドのログ --- 
  
 *** Creature: ShoulderJointLimit *** 
@@ -115,10 +115,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -243,15 +243,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>------ Build started: Project: FileIO, Configuration: Release x64 ------
 6>------ Build started: Project: Graphics, Configuration: Release x64 ------
 7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+4>    Collision14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -301,15 +301,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
 1>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>  	call EmbPythonSwig.bat Base
-1>
-1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-1>  Copyright (C) Microsoft Corporation.  All rights reserved.
-1>
 2>  Swig Part
 1>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 1>
@@ -329,11 +329,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  (Alert) inv : "ignored:'not public'"
 2>  (Alert) trans : "ignored:'not public'"
 1>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
-2>  AStyle Part
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
+2>  AStyle Part
 1>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -354,10 +354,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
-2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPBase.cpp
-2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPBase.h
 1>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
-2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\SprEPBase.h
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
@@ -370,7 +367,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
 1>      do_swigall: make_manager.py -P python -r
-2>  Arrange Part
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
@@ -379,7 +375,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
 1>      do_swigall: make_manager.py -P python -r
-2>          1 個のファイルを移動しました。
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
@@ -392,17 +387,22 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
 1>      do_swigall: make_manager.py -P python -r
+2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPBase.cpp
+2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPBase.h
+2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\SprEPBase.h
+2>  Arrange Part
+2>          1 個のファイルを移動しました。
 2>          1 個のファイルを移動しました。
 2>    Project: Collision
 3>------ Build started: Project: Base, Configuration: Release x64 ------
-3>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
-3>    Base14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>  	call EmbPythonSwig.bat Collision
+3>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>  Swig Part
+3>    Base14.0x64.lib done
 2>  AStyle Part
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPCollision.cpp
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPCollision.h
@@ -418,16 +418,16 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  	call EmbPythonSwig.bat Creature
 2>  Swig Part
 2>  AStyle Part
-4>------ Build started: Project: Foundation, Configuration: Release x64 ------
-4>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPCreature.cpp
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPCreature.h
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\SprEPCreature.h
 2>  Arrange Part
 2>          1 個のファイルを移動しました。
-4>    Foundation14.0x64.lib done
 2>          1 個のファイルを移動しました。
 2>    Project: FileIO
+4>------ Build started: Project: Foundation, Configuration: Release x64 ------
+4>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+4>    Foundation14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -458,11 +458,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  (Alert) SetCallback : "ignored"
 2>  (Alert) SetCallback : "ignored"
 2>  (Alert) GetCallback : "ignored"
-5>------ Build started: Project: Collision, Configuration: Release x64 ------
-6>------ Build started: Project: FileIO, Configuration: Release x64 ------
 2>  AStyle Part
-7>------ Build started: Project: Graphics, Configuration: Release x64 ------
-8>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPFoundation.cpp
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPFoundation.h
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\SprEPFoundation.h
@@ -470,23 +466,19 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Arrange Part
 2>          1 個のファイルを移動しました。
 2>          1 個のファイルを移動しました。
-6>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 2>    Project: Framework
-6>    FileIO14.0x64.lib done
-5>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-5>    Collision14.0x64.lib done
-8>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-8>    HumanInterface14.0x64.lib done
-9>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-7>    Graphics14.0x64.lib done
+5>------ Build started: Project: Collision, Configuration: Release x64 ------
+6>------ Build started: Project: FileIO, Configuration: Release x64 ------
+7>------ Build started: Project: Graphics, Configuration: Release x64 ------
+8>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+5>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 2>
 2>  	call EmbPythonSwig.bat Framework
+5>    Collision14.0x64.lib done
 2>  Swig Part
-9>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 2>  (Alert) GetObjects : "ignored"
 2>  (Alert) AddHumanInterface : "ignored"
 2>  (Alert) CreateOpHapticHandler : "ignored"
@@ -524,10 +516,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  (Alert) afterStepFunc : "ignored:'not public'"
 2>  (Alert) bPhysicsEnabled : "ignored:'not public'"
 2>  AStyle Part
+6>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+6>    FileIO14.0x64.lib done
+9>------ Build started: Project: Physics, Configuration: Release x64 ------
+8>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+8>    HumanInterface14.0x64.lib done
+7>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+7>    Graphics14.0x64.lib done
+9>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 9>    Physics14.0x64.lib done
-10>------ Build started: Project: Framework, Configuration: Release x64 ------
-10>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
-10>    Framework14.0x64.lib done
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPFramework.cpp
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPFramework.h
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\SprEPFramework.h
@@ -536,6 +533,9 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>          1 個のファイルを移動しました。
 2>          1 個のファイルを移動しました。
 2>    Project: Graphics
+10>------ Build started: Project: Framework, Configuration: Release x64 ------
+10>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
+10>    Framework14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -573,9 +573,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  (Alert) vfT2fC4fN3fP3fB4f : "ignored"
 2>  (Alert) typicalBlendFormats : "ignored"
 2>  AStyle Part
-11>------ Build started: Project: Creature, Configuration: Release x64 ------
-11>  Creature14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Creature\Creature14.0x64.lib
-11>    Creature14.0x64.lib done
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPGraphics.cpp
 2>  unchanged* I:\DailyBuild\SpringheadTest\core\src\EmbPython\EPGraphics.h
 2>  formatted  I:\DailyBuild\SpringheadTest\core\src\EmbPython\SprEPGraphics.h
@@ -583,6 +580,9 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>          1 個のファイルを移動しました。
 2>          1 個のファイルを移動しました。
 2>    Project: HumanInterface
+11>------ Build started: Project: Creature, Configuration: Release x64 ------
+11>  Creature14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Creature\Creature14.0x64.lib
+11>    Creature14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -667,10 +667,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 12>  EPFoundation.cpp
 12>  EPFramework.cpp
 12>  EPGraphics.cpp
-12>  EPHumanInterface.cpp
-12>  EPInterpreter.cpp
-12>  EPPhysics.cpp
-12>  EPUtility.cpp
 12>EPGraphics.cpp(27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(58): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(89): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
@@ -680,34 +676,23 @@ Copyright (C) Microsoft Corp. All rights reserved.
 12>EPGraphics.cpp(213): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(244): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPCollision.cpp(3444): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPBase.cpp(2824): warning C4477: 'sprintf_s' : format string '%.20lf' requires an argument of type 'double', but variadic argument 2 has type 'int'
-12>EPPhysics.cpp(3674): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(2569): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(3705): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPBase.cpp(2824): warning C4477: 'sprintf_s' : format string '%.20lf' requires an argument of type 'double', but variadic argument 2 has type 'int'
 12>EPGraphics.cpp(2802): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(3736): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>  SprPythonDLL.cpp
-12>EPPhysics.cpp(4786): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(3424): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPBase.cpp(5655): warning C4477: 'sprintf_s' : format string '%.20lf' requires an argument of type 'double', but variadic argument 2 has type 'int'
 12>EPGraphics.cpp(5375): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(5406): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(6546): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(6577): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(6608): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPBase.cpp(8357): warning C4477: 'sprintf_s' : format string '%.20lf' requires an argument of type 'double', but variadic argument 2 has type 'int'
 12>EPGraphics.cpp(6333): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(6364): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(6395): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>  EPHumanInterface.cpp
 12>EPGraphics.cpp(6426): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(6457): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(6488): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>EPGraphics.cpp(6519): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPHumanInterface.cpp(11925): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(8663): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(9059): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPBase.cpp(8357): warning C4477: 'sprintf_s' : format string '%.20lf' requires an argument of type 'double', but variadic argument 2 has type 'int'
 12>EPBase.cpp(11157): warning C4477: 'sprintf_s' : format string '%.20lf' requires an argument of type 'double', but variadic argument 2 has type 'int'
-12>EPPhysics.cpp(23718): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>i:\dailybuild\springheadtest\core\include\embpython\Utility/SprEPCast.h(27): warning C4311: 'type cast': pointer truncation from 'int *' to 'long' (compiling source file EPCollision.cpp)
 12>  EPCollision.cpp(1832): note: see reference to function template instantiation 'PyObject *PyLong_fromAny<int*>(T)' being compiled
 12>          with
@@ -715,8 +700,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 12>              T=int *
 12>          ]
 12>i:\dailybuild\springheadtest\core\include\embpython\Utility/SprEPCast.h(27): warning C4302: 'type cast': truncation from 'int *' to 'long' (compiling source file EPCollision.cpp)
-12>EPPhysics.cpp(38252): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-12>EPPhysics.cpp(39075): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>i:\dailybuild\springheadtest\core\include\embpython\Utility/SprEPCast.h(27): warning C4311: 'type cast': pointer truncation from 'int *' to 'long' (compiling source file EPGraphics.cpp)
 12>  EPGraphics.cpp(5845): note: see reference to function template instantiation 'PyObject *PyLong_fromAny<int*>(T)' being compiled
 12>          with
@@ -724,8 +707,25 @@ Copyright (C) Microsoft Corp. All rights reserved.
 12>              T=int *
 12>          ]
 12>i:\dailybuild\springheadtest\core\include\embpython\Utility/SprEPCast.h(27): warning C4302: 'type cast': truncation from 'int *' to 'long' (compiling source file EPGraphics.cpp)
+12>  EPInterpreter.cpp
+12>  EPPhysics.cpp
+12>  EPUtility.cpp
+12>  SprPythonDLL.cpp
 12>  EPCast.cpp
+12>EPHumanInterface.cpp(11925): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>  EPObject.cpp
+12>EPPhysics.cpp(3674): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(3705): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(3736): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(4786): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(6546): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(6577): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(6608): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(8663): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(9059): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(23718): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(38252): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+12>EPPhysics.cpp(39075): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 12>  EPUTTimer.cpp
 12>i:\dailybuild\springheadtest\core\include\embpython\Utility/SprEPCast.h(27): warning C4311: 'type cast': pointer truncation from 'int *' to 'long' (compiling source file EPPhysics.cpp)
 12>  EPPhysics.cpp(7100): note: see reference to function template instantiation 'PyObject *PyLong_fromAny<int*>(T)' being compiled
@@ -790,26 +790,21 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>    Project: Creature
 1>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>    Project: Creature
 1>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>    Project: FileIO
 1>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -819,13 +814,23 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-2>    Project: Foundation
+2>    Project: FileIO
 1>      *** Framework: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
 1>      *** Graphics: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>    Project: Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>      *** HumanInterface: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -834,13 +839,8 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-2>    Project: Framework
-1>      *** HumanInterface: renaming "makefile.swig.tmp -> makefile.swig"
-1>
-1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-1>  Copyright (C) Microsoft Corporation.  All rights reserved.
-1>
 1>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
+2>    Project: Framework
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
@@ -879,13 +879,13 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>
 2>    Project: Graphics
 3>------ Build started: Project: Base, Configuration: Release x64 ------
+3>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+3>    Base14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Project: HumanInterface
-3>    Base14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -896,23 +896,23 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 4>------ Build started: Project: Foundation, Configuration: Release x64 ------
-4>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
-4>    Foundation14.0x64.lib done
 5>------ Build started: Project: EmbPython, Configuration: Release x64 ------
+4>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+5>  EmbPython14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\EmbPython\14.0\x64\Release\EmbPython14.0x64.lib
+4>    Foundation14.0x64.lib done
 6>------ Build started: Project: Collision, Configuration: Release x64 ------
 7>------ Build started: Project: FileIO, Configuration: Release x64 ------
 8>------ Build started: Project: Graphics, Configuration: Release x64 ------
 9>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  EmbPython14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\EmbPython\14.0\x64\Release\EmbPython14.0x64.lib
-6>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-8>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Collision14.0x64.lib done
-8>    Graphics14.0x64.lib done
-10>------ Build started: Project: Physics, Configuration: Release x64 ------
 7>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
-10>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
-10>    Physics14.0x64.lib done
+6>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+6>    Collision14.0x64.lib done
 7>    FileIO14.0x64.lib done
+10>------ Build started: Project: Physics, Configuration: Release x64 ------
+8>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+10>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
+8>    Graphics14.0x64.lib done
+10>    Physics14.0x64.lib done
 9>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 9>    HumanInterface14.0x64.lib done
 11>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -938,15 +938,11 @@ Microsoft Visual Studio 2015 Version 14.0.25420.1.
 Copyright (C) Microsoft Corp. All rights reserved.
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 2>------ Build started: Project: EmbPython_RunSwig14.0, Configuration: Release x64 ------
-2>    Project: Base
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 1>  python make_manager.py -A -c
 1>
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
+2>    Project: Base
 1>      *** Collision: creating "makefile.swig"
 1>      *** Creature: creating "makefile.swig"
 1>      *** FileIO: creating "makefile.swig"
@@ -955,7 +951,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>      *** Graphics: creating "makefile.swig"
 1>      *** HumanInterface: creating "makefile.swig"
 1>      *** Physics: creating "makefile.swig"
-2>    Project: Collision
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -973,13 +968,28 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-2>    Project: Creature
+2>    Project: Collision
 1>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
 1>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>    Project: Creature
+1>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -989,7 +999,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
-1>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+1>      *** Framework: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -999,36 +1009,21 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>    Project: Foundation
-1>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
-1>
-1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-1>  Copyright (C) Microsoft Corporation.  All rights reserved.
-1>
-1>      *** Framework: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>    Project: Framework
-1>
-1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-1>  Copyright (C) Microsoft Corporation.  All rights reserved.
-1>
 1>      *** Graphics: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
 1>      *** HumanInterface: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 1>  Copyright (C) Microsoft Corporation.  All rights reserved.
 1>
-2>    Project: Graphics
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>    Project: Framework
 1>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
 1>
 1>  *** Collision ***
@@ -1066,9 +1061,14 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-2>    Project: HumanInterface
+2>    Project: Graphics
 3>------ Build started: Project: Base, Configuration: Release x64 ------
 3>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>    Project: HumanInterface
 3>    Base14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -1088,15 +1088,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>------ Build started: Project: FileIO, Configuration: Release x64 ------
 8>------ Build started: Project: Graphics, Configuration: Release x64 ------
 9>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-7>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 6>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-7>    FileIO14.0x64.lib done
+9>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 6>    Collision14.0x64.lib done
+7>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+7>    FileIO14.0x64.lib done
+10>------ Build started: Project: Physics, Configuration: Release x64 ------
+9>    HumanInterface14.0x64.lib done
 8>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 8>    Graphics14.0x64.lib done
-10>------ Build started: Project: Physics, Configuration: Release x64 ------
-9>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-9>    HumanInterface14.0x64.lib done
 10>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 10>    Physics14.0x64.lib done
 11>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -1685,9 +1685,9 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
@@ -1817,10 +1817,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -1948,10 +1948,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -2077,8 +2077,8 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
@@ -2234,11 +2234,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
 2>
-1>    Base14.0x64.lib done
 2>      *** Collision: creating "makefile.swig"
 2>      *** Creature: creating "makefile.swig"
 2>      *** FileIO: creating "makefile.swig"
@@ -2260,20 +2260,20 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
-3>    Foundation14.0x64.lib done
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+3>    Foundation14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -2298,10 +2298,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-4>------ Build started: Project: Collision, Configuration: Release x64 ------
-5>------ Build started: Project: FileIO, Configuration: Release x64 ------
-6>------ Build started: Project: Graphics, Configuration: Release x64 ------
-7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 2>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  *** Collision ***
@@ -2335,17 +2331,21 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
 2>      do_swigall: make_manager.py -P python -r
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-4>    Collision14.0x64.lib done
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
-8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
+4>------ Build started: Project: Collision, Configuration: Release x64 ------
+5>------ Build started: Project: FileIO, Configuration: Release x64 ------
+6>------ Build started: Project: Graphics, Configuration: Release x64 ------
+7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
-8>    Physics14.0x64.lib done
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 5>    FileIO14.0x64.lib done
+4>    Collision14.0x64.lib done
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
+8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
+8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
 9>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
 9>    Framework14.0x64.lib done
@@ -2388,6 +2388,8 @@ Microsoft Visual Studio 2015 Version 14.0.25420.1.
 Copyright (C) Microsoft Corp. All rights reserved.
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
+1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
@@ -2405,8 +2407,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>  	..\RunSwig\python_adapter.bat do_swigall.py
-1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
-1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python do_swigall.py
@@ -2427,8 +2427,8 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
-2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 3>    Foundation14.0x64.lib done
+2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -2627,8 +2627,8 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
@@ -2757,10 +2757,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -3732,10 +3732,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 3>    Foundation14.0x64.lib done
 4>------ Build started: Project: Collision, Configuration: Release x64 ------
 5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-4>    Collision14.0x64.lib done
 5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 5>    HumanInterface14.0x64.lib done
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+4>    Collision14.0x64.lib done
 6>------ Build started: Project: SpidarG6MMTimer, Configuration: Release x64 ------
 6>  main.cpp
 6>  SpidarG6MMTimer14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Samples\HumanInterface\SpidarG6MMTimer\14.0\x64\Release\SpidarG6MMTimer.exe
@@ -3750,6 +3750,8 @@ Microsoft Visual Studio 2015 Version 14.0.25420.1.
 Copyright (C) Microsoft Corp. All rights reserved.
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
+1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
@@ -3762,13 +3764,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>      *** Graphics: creating "makefile.swig"
 2>      *** HumanInterface: creating "makefile.swig"
 2>      *** Physics: creating "makefile.swig"
-1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>  	..\RunSwig\python_adapter.bat do_swigall.py
-1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python do_swigall.py
@@ -3782,19 +3782,19 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
-3>    Foundation14.0x64.lib done
 2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>    Foundation14.0x64.lib done
 2>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -3850,10 +3850,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>      do_swigall: make_manager.py -P python -r
 4>------ Build started: Project: Collision, Configuration: Release x64 ------
 5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-5>    HumanInterface14.0x64.lib done
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
+5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+5>    HumanInterface14.0x64.lib done
 6>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 6>    Physics14.0x64.lib done
@@ -3976,12 +3976,12 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>    Graphics14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4001,8 +4001,6 @@ Microsoft Visual Studio 2015 Version 14.0.25420.1.
 Copyright (C) Microsoft Corp. All rights reserved.
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
-1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
-1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
@@ -4015,11 +4013,13 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>      *** Graphics: creating "makefile.swig"
 2>      *** HumanInterface: creating "makefile.swig"
 2>      *** Physics: creating "makefile.swig"
+1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>  	..\RunSwig\python_adapter.bat do_swigall.py
+1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python do_swigall.py
@@ -4107,11 +4107,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 5>    FileIO14.0x64.lib done
 4>    Collision14.0x64.lib done
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4238,10 +4238,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4363,15 +4363,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>------ Build started: Project: FileIO, Configuration: Release x64 ------
 6>------ Build started: Project: Graphics, Configuration: Release x64 ------
 7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+4>    Collision14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4498,10 +4498,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4628,10 +4628,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4759,10 +4759,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>    Graphics14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -4890,8 +4890,8 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
@@ -5018,11 +5018,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-7>    HumanInterface14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>    Graphics14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -5149,8 +5149,8 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
