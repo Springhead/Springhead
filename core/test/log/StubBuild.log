@@ -1,4 +1,4 @@
-日付 : 17.12.13 
+日付 : 17.12.27 
 --- スタブビルドのログ --- 
  
 [ SwigAll.bat ]
@@ -260,11 +260,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>  CDCutRing.cpp
 4>  CDDetectorImp.cpp
 4>  CDGJK.cpp
-4>  CDRegisterTypeDesc.cpp
-4>  CDRoundCone.cpp
-4>  CDShape.cpp
-4>  CDSpatialHashTable.cpp
-4>  CDSphere.cpp
 5>  FIFile.cpp
 5>  FIFileBinary.cpp
 5>  FIFileCOLLADA.cpp
@@ -273,10 +268,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FIFileX.cpp
 5>  FIImport.cpp
 5>  FILoadContext.cpp
-5>  FIOpStateHandler.cpp
-5>  FIRegisterTypeDesc.cpp
-5>  FISaveContext.cpp
-5>  FISdk.cpp
 6>  GRBlendMesh.cpp
 6>  GRDeviceGL.cpp
 6>  GRFrame.cpp
@@ -285,10 +276,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 6>  GRRegisterTypeDesc.cpp
 6>  GRRender.cpp
 6>  GRScene.cpp
-6>  GRSdk.cpp
-6>  GRSphere.cpp
-6>  GRVertex.cpp
-6>  GraphicsStub.cpp
 7>  DRADAPIO.cpp
 7>  DRContecIsaCounter.cpp
 7>  DRContecIsaDa.cpp
@@ -300,26 +287,39 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  DRPortIO.cpp
 7>  DRTokin3D.cpp
 7>  DRUPP.CPP
+6>  GRSdk.cpp
+4>  CDRegisterTypeDesc.cpp
 7>  DRUsb20Sh4.cpp
 7>  DRUsb20Simple.cpp
+4>  CDRoundCone.cpp
 7>  DRUsbH8Simple.cpp
+4>  CDShape.cpp
 7>  DRWinDriver.cpp
+4>  CDSpatialHashTable.cpp
 7>  HIBase.cpp
+4>  CDSphere.cpp
 4>  CollisionStub.cpp
 7>  HIDevice.cpp
 7>  HILeap.cpp
 7>  HINovintFalcon.cpp
+6>  GRSphere.cpp
+5>  FIOpStateHandler.cpp
+5>  FIRegisterTypeDesc.cpp
 7>  HIRegisterTypeDesc.cpp
+5>  FISaveContext.cpp
+6>  GRVertex.cpp
+6>  GraphicsStub.cpp
 7>  HISdk.cpp
+5>  FISdk.cpp
 7>  HISpaceNavigator.cpp
 7>  HISpidar.cpp
-5>  FISpirit.cpp
 7>  HISpidarCalc.cpp
 7>  HISpidarMotor.cpp
 7>  HITrackball.cpp
-5>  FileIOStub.cpp
+5>  FISpirit.cpp
 7>  HIXbox360Controller.cpp
 7>  HumanInterfaceStub.cpp
+5>  FileIOStub.cpp
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
@@ -331,15 +331,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 8>  PHContactSurface.cpp
 8>  PHFemEngine.cpp
 8>  PHForceField.cpp
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
 8>  PHGear.cpp
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  PHGenericJoint.cpp
 8>  PHHapticEngine.cpp
 8>  PHHapticEngineRender.cpp
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 8>  PHHapticPointer.cpp
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 8>  PHHapticStepBase.cpp
 8>  PHHapticStepImpulse.cpp
 8>  PHHapticStepLocalDynamics.cpp
@@ -412,25 +412,27 @@ Copyright (C) Microsoft Corp. All rights reserved.
 9>  FWStaticTorqueOptimizer.cpp
 9>  FWTrajectoryPlanner.cpp
 9>  FWWin.cpp
-9>FWTrajectoryPlanner.cpp(1012): warning C4101: 'total': unreferenced local variable
-9>FWTrajectoryPlanner.cpp(1506): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(1890): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(1891): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2009): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2010): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2185): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2186): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2204): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2205): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2239): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2240): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2511): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2562): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2644): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2645): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2855): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2856): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWStaticTorqueOptimizer.cpp(78): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(1562): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(1948): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(1949): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2067): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2068): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2243): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2244): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2262): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2263): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2297): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2298): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2443): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2444): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2591): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2643): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2728): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2729): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2870): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2871): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2950): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2951): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 9>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
 9>    Framework14.0x64.lib done
 10>------ Build started: Project: Creature, Configuration: Release x64 ------
