@@ -142,7 +142,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	if(i == 0){	
 		//垂直抗力 >= 0の制約
 		if(f_ < 0.0){
-			f_ = fx = flim = 0.0;
+			f_ = fx = flim0 = flim = 0.0;
 			return true;
 		}
 		// 垂直抗力
