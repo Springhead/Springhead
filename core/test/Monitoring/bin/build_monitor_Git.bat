@@ -18,6 +18,7 @@ setlocal enabledelayedexpansion
 ::	Ver 1.0  2013/01/16 F.Kanehori	Unix 版より移植
 ::	Ver 2.0  2017/12/20 F.Kanehori	GitHub 版に改造
 ::	Ver 2.1  2017/12/27 F.Kanehori	レポートファイル名を変更
+::	Ver 2.2  2018/01/02 F.Kanehori	NEWREV ログはテスト結果から直接得る
 :: ============================================================================
 set PROG=%~n0
 
@@ -272,6 +273,7 @@ if %OPT_V% == 1 (
 ::  OLDREV と NEWREV のログファイルを取り出す
 ::
 if %OPT_V% == 1 ( set /p=extracting log info ... < NUL )
+::  OLDREV のログは GitHub から取り出す.
 git show %OLDREV%:%STBLOGURL% | %ORDER% > %TMPOLDSTBFILE%
 git show %OLDREV%:%BLDLOGURL% | %ORDER% > %TMPOLDBLDFILE%
 git show %OLDREV%:%RUNLOGURL% | %ORDER% > %TMPOLDRUNFILE%
@@ -281,14 +283,24 @@ git show %OLDREV%:%BLDERRURL% | %ORDER% > %TMPOLDBLDERRF%
 git show %OLDREV%:%RUNERRURL% | %ORDER% > %TMPOLDRUNERRF%
 git show %OLDREV%:%SPLERRURL% | %ORDER% > %TMPOLDSPLERRF%
 
-git show %NEWREV%:%STBLOGURL% | %ORDER% > %TMPNEWSTBFILE%
-git show %NEWREV%:%BLDLOGURL% | %ORDER% > %TMPNEWBLDFILE%
-git show %NEWREV%:%RUNLOGURL% | %ORDER% > %TMPNEWRUNFILE%
-git show %NEWREV%:%SPLLOGURL% | %ORDER% > %TMPNEWSPLFILE%
-git show %NEWREV%:%STBERRURL% | %ORDER% > %TMPNEWSTBERRF%
-git show %NEWREV%:%BLDERRURL% | %ORDER% > %TMPNEWBLDERRF%
-git show %NEWREV%:%RUNERRURL% | %ORDER% > %TMPNEWRUNERRF%
-git show %NEWREV%:%SPLERRURL% | %ORDER% > %TMPNEWSPLERRF%
+::  NEWREV のログは DailyBuild の結果から直接取り出す.
+set TOPDIR=..\..\..
+rem git show %NEWREV%:%STBLOGURL% | %ORDER% > %TMPNEWSTBFILE%
+rem git show %NEWREV%:%BLDLOGURL% | %ORDER% > %TMPNEWBLDFILE%
+rem git show %NEWREV%:%RUNLOGURL% | %ORDER% > %TMPNEWRUNFILE%
+rem git show %NEWREV%:%SPLLOGURL% | %ORDER% > %TMPNEWSPLFILE%
+rem git show %NEWREV%:%STBERRURL% | %ORDER% > %TMPNEWSTBERRF%
+rem git show %NEWREV%:%BLDERRURL% | %ORDER% > %TMPNEWBLDERRF%
+rem git show %NEWREV%:%RUNERRURL% | %ORDER% > %TMPNEWRUNERRF%
+rem git show %NEWREV%:%SPLERRURL% | %ORDER% > %TMPNEWSPLERRF%
+type %TOPDIR%\%STBLOGURL:/=\% | %ORDER% > %TMPNEWSTBFILE%
+type %TOPDIR%\%BLDLOGURL:/=\% | %ORDER% > %TMPNEWBLDFILE%
+type %TOPDIR%\%RUNLOGURL:/=\% | %ORDER% > %TMPNEWRUNFILE%
+type %TOPDIR%\%SPLLOGURL:/=\% | %ORDER% > %TMPNEWSPLFILE%
+type %TOPDIR%\%STBERRURL:/=\% | %ORDER% > %TMPNEWSTBERRF%
+type %TOPDIR%\%BLDERRURL:/=\% | %ORDER% > %TMPNEWBLDERRF%
+type %TOPDIR%\%RUNERRURL:/=\% | %ORDER% > %TMPNEWRUNERRF%
+type %TOPDIR%\%SPLERRURL:/=\% | %ORDER% > %TMPNEWSPLERRF%
 if %OPT_V% == 1 ( echo done )
 
 ::----------------------------------------------
