@@ -205,13 +205,14 @@ void __cdecl display(){
 			double dirLength = 5;
 			int res;
 			colcounter = 0;
+			float maxSurf = mesh[0]->GetMaxSurf();
 			switch (colMethod)
 			{
 			case 0:
 				res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
 				break;
 			case 1:
-				res = ContFindCommonPointAccel(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
+				res = ContFindCommonPointAccel(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);				
 				break;
 			case 2:
 				res = ContFindCommonPointGino(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);

@@ -85,7 +85,9 @@ public:
 	virtual int               Support(Vec3f& w, const Vec3f& v) const;
 	virtual bool              FindCutRing(CDCutRing& r, const Posed& toW);
 	virtual std::vector<int>& FindNeighbors(int vtx);
-	virtual Vec3f*            GetBase(){return &*base.begin();}	
+	virtual Vec3f*            GetBase() { return &*base.begin(); };
+
+	virtual int		GetVtxCount() { return base.size(); };
 
 	CDFaceIf* GetFace(int i);
 	int       NFace();

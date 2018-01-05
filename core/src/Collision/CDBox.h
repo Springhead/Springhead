@@ -60,6 +60,8 @@ public:
 	virtual std::vector<int>& FindNeighbors(int vtx);
 	///	頂点バッファを返す。
 	virtual Vec3f* GetBase(){return &*base.begin();}	
+
+	virtual int GetVtxCount() { return 8; };
 	
 	/// 直方体のサイズを取得
 	Vec3f GetBoxSize();

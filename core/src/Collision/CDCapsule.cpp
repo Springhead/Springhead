@@ -15,6 +15,7 @@ CDCapsule::CDCapsule(const CDCapsuleDesc& desc){
 	material	= desc.material;
 	radius		= desc.radius;
 	length		= desc.length;
+	maxSurfArea = length*(2 * radius*M_PI);
 }
 
 bool CDCapsule::IsInside(const Vec3f& p){

@@ -106,6 +106,13 @@ void CDBox::Recalc(){
 		qfaces[5].vtxs[1] = 3;
 		qfaces[5].vtxs[2] = 7;
 		qfaces[5].vtxs[3] = 4;
+		maxSurfArea = 0;
+		for (CDQuadFaces::iterator it = qfaces.begin(); it != qfaces.end(); ++it) {
+			
+			float area = ((base[it->vtxs[2]] - base[it->vtxs[0]]) % (base[it->vtxs[1]] - base[it->vtxs[0]])).norm()/2.f;
+			if (maxSurfArea < area) maxSurfArea = area;
+		}
+
 	}
 	curPos = 0;
 }

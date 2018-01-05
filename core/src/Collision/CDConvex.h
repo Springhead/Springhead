@@ -30,7 +30,7 @@ public:
 		Boxel(float v, const Vec3f& c, const Matrix3f& I):volume(v), center(c), inertia(I){}
 	};
 	std::vector<Boxel> boxels;
-
+	float   maxSurfArea;
 	bool	bboxReady;
 	
 	void	AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float eps);
@@ -46,7 +46,10 @@ public:
 	virtual std::vector<int>& FindNeighbors(int vtx);
 	///	頂点バッファを返す。
 	virtual Vec3f* GetBase(){return NULL;}
-	
+
+	// 頂点数を返す
+	virtual int GetVtxCount() { return -1; };
+	virtual float GetMaxSurf() { return maxSurfArea; };
 	///	バウンディングボックスを求める．
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
 	/// 表面上の点pにおける曲率半径を求める
