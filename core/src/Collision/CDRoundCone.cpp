@@ -18,6 +18,7 @@ CDRoundCone::CDRoundCone(const CDRoundConeDesc& desc){
 	radius = desc.radius;
 	length = desc.length;
 	material = desc.material;
+	maxSurfArea = length*((radius[0]+radius[1])*M_PI);
 }
 
 bool CDRoundCone::IsInside(const Vec3f& p){

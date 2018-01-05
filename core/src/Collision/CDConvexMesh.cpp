@@ -133,6 +133,7 @@ public:
 Vec3f* CDQhullVtx::base;
 
 void CDConvexMesh::CalcFace(){
+	maxSurfArea = 0;
 	curPos = 0;
 	faces.clear();
 	neighbor.clear();
@@ -191,6 +192,8 @@ void CDConvexMesh::CalcFace(){
 		it->normal.unitize();
 		if(it->normal * (base[it->vtxs[0]] - average) < 0.0f)
 			it->normal *= -1.0f;
+		float area = ((base[it->vtxs[2]] - base[it->vtxs[0]]) % (base[it->vtxs[1]] - base[it->vtxs[0]])).norm()/2.f;
+		if (maxSurfArea < area) maxSurfArea = area;
 	}
 	//	隣の頂点リストを作る．(GJKのSupportに使用)
 	neighbor.resize(vtxIds.size());

@@ -16,6 +16,7 @@ namespace Spr{;
 
 CDConvex::CDConvex(){
 	bboxReady = false;
+	maxSurfArea = FLT_EPSILON;
 }
 
 std::vector<int>& CDConvex::FindNeighbors(int vtx){
