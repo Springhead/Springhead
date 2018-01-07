@@ -76,9 +76,6 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
 
-//EPAでGJKの衝突情報を計算する
-void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed &a2w, const Posed &b2w, Vec3d& pa, Vec3d& pb);
-
 /**	GJKで共有点を見つける．連続版
 	startからendの間に接触点があるか調べる。
 	@return 0:まったく接触なし。-2:startより前に接触あり。-1: endより先に接触あり。
