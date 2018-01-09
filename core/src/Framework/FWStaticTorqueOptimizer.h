@@ -16,24 +16,24 @@ namespace Spr {
 			static void simplesort(std::vector<Vec3f>& ver, Vec3d normal);
 		};
 	public:
-		//“ÊW‡Œ`¬‚Ì“_W‡
+		//å‡¸é›†åˆå½¢æˆã®ç‚¹é›†åˆ
 		std::vector<Vec3f> hull;
-		//‘½ŠpŒ`‚Ì‰¼’†S
+		//å¤šè§’å½¢ã®ä»®ä¸­å¿ƒ
 		Vec3f center;
-		//‘½ŠpŒ`–@ü
+		//å¤šè§’å½¢æ³•ç·š
 		Vec3d normal;
-		//–Ê‚ÌŒ´“_‚©‚ç‚Ì‹——£
+		//é¢ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢
 		double dist;
 	public:
 		GrahamConvexHull();
 		~GrahamConvexHull();
-		//—^‚¦‚ç‚ê‚½“_W‡‚©‚çƒOƒ‰ƒnƒ€“Ê‘½ŠpŒ`‚ğÄŒvZ
+		//ä¸ãˆã‚‰ã‚ŒãŸç‚¹é›†åˆã‹ã‚‰ã‚°ãƒ©ãƒãƒ å‡¸å¤šè§’å½¢ã‚’å†è¨ˆç®—
 		void Recalc(std::vector<Vec3f> vertices);
-		//ƒOƒ‰ƒnƒ€“Ê‘½ŠpŒ`“à‚É—^‚¦‚½“_‚ª“ü‚é‚©
+		//ã‚°ãƒ©ãƒãƒ å‡¸å¤šè§’å½¢å†…ã«ä¸ãˆãŸç‚¹ãŒå…¥ã‚‹ã‹
 		bool InsideGrahamConvexHull(Vec3f v);
-		//‘½ŠpŒ`’†S‚©‚ç‚Ì‹——£‚É‰‚¶‚½•]‰¿’li‰“->‘åj
+		//å¤šè§’å½¢ä¸­å¿ƒã‹ã‚‰ã®è·é›¢ã«å¿œã˜ãŸè©•ä¾¡å€¤ï¼ˆé ->å¤§ï¼‰
 		double Eval(Vec3f v);
-		//‘½ŠpŒ`‚ğ‚È‚·“_W‡‚ğ•Ô‚·
+		//å¤šè§’å½¢ã‚’ãªã™ç‚¹é›†åˆã‚’è¿”ã™
 		Vec3f* GetVertices();
 	};
 
@@ -50,37 +50,23 @@ namespace Spr {
 		Vec3d normal;
 		Vec3d dist;
 	};
-
-	// ŠÖß‚²‚Æ‚ÌƒEƒFƒCƒg•Û‘¶—p‚Ì\‘¢‘Ì
-	struct JointWeight {
-	public:
-		PHJointIf* joint;
-		double weight;
-		JointWeight() : joint(NULL), weight(1.0) {}
-		JointWeight(PHJointIf*jo, double w) {
-			joint = jo;
-			weight = w;
-		}
-	};
 	
 	class FWStaticTorqueOptimizer : public FWOptimizer {
 		std::vector<JointPos> initialPos;
 		Vec3d initialRootPos;
 
-		double errorWeight, stabilityWeight, torqueWeight, constWeight, gravcenterWeight, differentialWeight;    // Še•]‰¿’lWeight
+		double errorWeight, stabilityWeight, torqueWeight, resistWeight, constWeight, gravcenterWeight, differentialWeight;    //å„è©•ä¾¡å€¤Weight
 
-		std::vector<FWGroundConstraint*> groundConst;               // Ú’nS‘©W‡A‚Æ‚è‚ ‚¦‚¸‘‚«‚â‚·‚©‚Á‚½‚Ì‚Åvector
-		std::vector<FWUngroundedConstraint*> ungroundedConst;       // ”ñÚ’nS‘©
+		std::vector<FWGroundConstraint*> groundConst;               //æ¥åœ°æ‹˜æŸé›†åˆã€ã¨ã‚Šã‚ãˆãšæ›¸ãã‚„ã™ã‹ã£ãŸã®ã§vector
+		std::vector<FWUngroundedConstraint*> ungroundedConst;       //éæ¥åœ°æ‹˜æŸ
 
-		std::vector<int> bodyIndex;            // g‘Ì\¬„‘Ì‚Ìindex
+		std::vector<int> bodyIndex;            //èº«ä½“æ§‹æˆå‰›ä½“ã®index
 
-		std::vector<JointWeight> jointWeights;
-
-		// ƒf[ƒ^‘—M—p
-		FWObjectiveValues val;                 // •]‰¿’l“à–ó•Û‘¶\‘¢‘Ì
-		Vec3d cog;                             // dSÀ•W
+											   //ãƒ‡ãƒ¼ã‚¿é€ä¿¡ç”¨
+		FWObjectiveValues val;                 //è©•ä¾¡å€¤å†…è¨³ä¿å­˜æ§‹é€ ä½“
+		Vec3d cog;                             //é‡å¿ƒåº§æ¨™
 		double mass;
-		std::vector<Vec3f> supportPolygon;     // x‘½ŠpŒ`Œ`¬’¸“_W‡
+		std::vector<Vec3f> supportPolygon;     //æ”¯æŒå¤šè§’å½¢å½¢æˆé ‚ç‚¹é›†åˆ
 
 	public:
 		SPR_OBJECTDEF(FWStaticTorqueOptimizer);
@@ -108,8 +94,6 @@ namespace Spr {
 
 		void TakeFinalValue();
 
-		void SetESParameters(double xs, double st, double tf, double la, double mi) { FWOptimizer::SetESParameters(xs, st, tf, la, mi); }
-
 
 		double CalcErrorCriterion();
 		double CalcGroundedCriterion();
@@ -120,54 +104,46 @@ namespace Spr {
 		double CalcStabilityCriterion();
 
 		double CenterOfGravity(PHIKActuatorIf* root, Vec3d& point);
-		double CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& forceInChildren);
+		double CalcTorqueInChildren(PHIKActuatorIf* root, const Vec3d& point, const Vec3d& forceInChildren);
 
-		void SetErrorWeight(double v) { errorWeight = v; }
-		double GetErrorWeight() { return errorWeight; }
+		void SetErrorWeight(double v);
+		double GetErrorWeight();
 
-		void SetStabilityWeight(double v) { stabilityWeight = v; }
-		double GetStabilityWeight() { return stabilityWeight; }
+		void SetStabilityWeight(double v);
+		double GetStabilityWeight();
 
-		void SetTorqueWeight(double v) { torqueWeight = v; }
-		double GetTorqueWeight() { return torqueWeight; }
+		void SetTorqueWeight(double v);
+		double GetTorqueWeight();
 
-		void SetConstWeight(double v) { constWeight = v; }
-		double GetConstWeight() { return constWeight; }
+		void SetResistWeight(double v);
+		double GetResistWeight();
 
-		void SetGravcenterWeight(double v) { gravcenterWeight = v; }
-		double GetGravcenterWeight() { return gravcenterWeight; }
+		void SetConstWeight(double v);
+		double GetConstWeight();
 
-		void SetDifferentialWeight(double v) { differentialWeight = v; }
-		double GetDifferentialWeight() { return differentialWeight; }
+		void SetGravcenterWeight(double v);
+		double GetGravcenterWeight();
 
-		// GroundConstraint‚Ì‘€ì
+		void SetDifferentialWeight(double v);
+		double GetDifferentialWeight();
+
+		//æ§‹é€ ä½“ã®é…åˆ—ã‚’å¤–éƒ¨ã‹ã‚‰å–ã‚Œãªã„ã®ã§ï¼‘è¦ç´ ãšã¤push
 		void AddPositionConst(FWGroundConstraint* f);
 		FWGroundConstraint GetGroundConst(int n);
 		void ClearGroundConst();
-
-		// UngroundedConstraint‚Ì‘€ì
 		void AddPositionConst(FWUngroundedConstraint* f);
 		FWUngroundedConstraint GetUngroundConst(int n);
 		void ClearUngroundedConst();
 
-		void SetJointWeight(PHJointIf* jo, double w) {
-			int n = (int)jointWeights.size();
-			for (int i = 0; i < n; i++) {
-				if (jointWeights[i].joint == jo) {
-					jointWeights[i].weight = w;
-					return;
-				}
-			}
-			jointWeights.push_back(JointWeight(jo, w));
-		}
+		void SetESParameters(double xs, double st, double tf, double la, double mi);
 
-		FWObjectiveValues GetObjectiveValues() { return this->val; }
+		FWObjectiveValues GetObjectiveValues();
 
-		Vec3f GetCenterOfGravity() { return this->cog; }
+		Vec3f GetCenterOfGravity();
 
-		int NSupportPolygonVertices() { return (int)(this->supportPolygon.size()); }
+		int NSupportPolygonVertices();
 
-		Vec3f GetSupportPolygonVerticesN(int n) { return this->supportPolygon[n]; }
+		Vec3f GetSupportPolygonVerticesN(int n);
 	};
 	
 }
