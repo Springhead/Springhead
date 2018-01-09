@@ -111,10 +111,10 @@ public:
 		simtask->decay    = d.decay;		
 		PHScene* phScene = FindPHScene(fc);		
 		if (phScene){		// phSceneを検索できた場合は、timeStepを設定. 
-			fc->mapObj.insert(UTPairObject(simtask->Cast(), phScene->Cast()));
+			fc->mapObj.insert(UTPairObject((ObjectIf*)simtask->Cast(), (ObjectIf*)phScene->Cast()));
 			phScene->SetTimeStep(d.timeStep);
 		}else{				// Sceneロード時に、mapを検索し、timeStepを設定 			
-			fc->mapObj.insert(UTPairObject(simtask->Cast(), (ObjectIf*)NULL));
+			fc->mapObj.insert(UTPairObject((ObjectIf*)simtask->Cast(), (ObjectIf*)NULL));
 		}
 	}
 };
@@ -633,7 +633,7 @@ public:
 			phmtask->SetName(fc->datas.Top()->GetName().c_str());
 		}		
 		fc->links.push_back(phmtask);
-		fc->mapObj.insert(UTPairObject(fc->objects.Top(), phmtask->Cast()));
+		fc->mapObj.insert(UTPairObject((ObjectIf*)fc->objects.Top(), (ObjectIf*)phmtask->Cast()));
 	}
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){	
 	}
