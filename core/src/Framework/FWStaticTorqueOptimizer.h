@@ -104,7 +104,7 @@ namespace Spr {
 		double CalcStabilityCriterion();
 
 		double CenterOfGravity(PHIKActuatorIf* root, Vec3d& point);
-		double CalcTorqueInChildren(PHIKActuatorIf* root, const Vec3d& point, const Vec3d& forceInChildren);
+		double CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& forceInChildren);
 
 		void SetErrorWeight(double v);
 		double GetErrorWeight();
