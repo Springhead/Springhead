@@ -77,6 +77,7 @@ void PHConstraint::SetupAxisIndex(){
 }
 
 inline double Dot6(const double* v1, const double* v2){
+#ifdef USE_AVX
 	__m256d vec11, vec12;
 	__m256d vec21, vec22;
 	__m256d y1, y2;
@@ -90,6 +91,9 @@ inline double Dot6(const double* v1, const double* v2){
 	y  = _mm256_hadd_pd(y1, y2);
 	double* _y = (double*)&y;
 	return _y[0] + _y[1] + _y[2];
+#else
+	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2] + v1[3]*v2[3] + v1[4]*v2[4] + v1[5]*v2[5];
+#endif
 }
 
 inline double QuadForm(const double* v1, const double* M, const double* v2){

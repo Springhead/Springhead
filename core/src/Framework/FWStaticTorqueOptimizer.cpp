@@ -647,7 +647,8 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 		groundConst[i]->contactForce = Vec3d(F_[3 * i], F_[3 * i + 1], F_[3 * i + 2]) + assumptionForce[i];
 	}
 
-	t = CalcTorqueInChildren(root, Vec3d(), Vec3d());
+	Vec3d dummy;
+	t = CalcTorqueInChildren(root, dummy, dummy);
 	for (int i = 0; i < nContacts; i++) {
 		double penalty = dot(groundConst[i]->contactForce, groundConst[i]->cNormal);
 		if (penalty < 0) {
@@ -693,7 +694,7 @@ double FWStaticTorqueOptimizer::CenterOfGravity(PHIKActuatorIf* root, Vec3d& poi
 	return mass;
 }
 
-double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, const Vec3d& point, const Vec3d& f) {
+double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& f) {
 	Vec3d force;
 	double torque = 0;
 
