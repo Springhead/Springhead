@@ -1,4 +1,4 @@
-﻿#include <Framework/FWStaticTorqueOptimizer.h>
+#include <Framework/FWStaticTorqueOptimizer.h>
 
 namespace Spr { ;
 
@@ -134,13 +134,13 @@ void GrahamConvexHull::Recalc(std::vector<Vec3f> vertices) {
 		vertices[0] = vertices[xmax];
 		vertices[xmax] = tmp;
 		DSTR << "before sort" << std::endl;
-		for (int i = 0; i < (int)vertices.size(); i++) {
+		for (int i = 0; i < vertices.size(); i++) {
 			DSTR << vertices[i] << std::endl;
 		}
 		Sort::simplesort(vertices, normal);
 		//Sort::quicksort(vertices, 1, n - 1, normal);
 		DSTR << "after sort" << std::endl;
-		for (int i = 0; i < (int)vertices.size(); i++) {
+		for (int i = 0; i < vertices.size(); i++) {
 			DSTR << vertices[i] << std::endl;
 		}
 		vertices.push_back(vertices[0]);
@@ -417,7 +417,7 @@ void FWStaticTorqueOptimizer::TakeFinalValue() {
 
 double FWStaticTorqueOptimizer::CalcErrorCriterion() {
 	//EndEffectorによるエラー評価
-	double e = 0;
+	double e;
 	for (int i = 0; i < phScene->NIKEndEffectors(); ++i) {
 		PHIKEndEffectorIf* eef = phScene->GetIKEndEffector(i);
 		if (eef->IsPositionControlEnabled()) {
@@ -647,9 +647,7 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 		groundConst[i]->contactForce = Vec3d(F_[3 * i], F_[3 * i + 1], F_[3 * i + 2]) + assumptionForce[i];
 	}
 
-	Vec3d force = Vec3d();
-	Vec3d point = Vec3d();
-	t = CalcTorqueInChildren(root, point, force);
+	t = CalcTorqueInChildren(root, Vec3d(), Vec3d());
 	for (int i = 0; i < nContacts; i++) {
 		double penalty = dot(groundConst[i]->contactForce, groundConst[i]->cNormal);
 		if (penalty < 0) {
@@ -690,12 +688,12 @@ double FWStaticTorqueOptimizer::CenterOfGravity(PHIKActuatorIf* root, Vec3d& poi
 		thisCOG = (childMass / (mass + childMass)) * childCOG + (mass / (mass + childMass)) * thisCOG;
 		mass += childMass;
 	}
-	point = thisCOG;
+	point = *new Vec3d(thisCOG);
 
 	return mass;
 }
 
-double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& f) {
+double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, const Vec3d& point, const Vec3d& f) {
 	Vec3d force;
 	double torque = 0;
 
@@ -725,7 +723,7 @@ double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d
 		force += forceInChildren;
 	}
 	//接地剛体の抗力の合成
-	for (int i = 0; i < (int)groundConst.size(); i++) {
+	for (int i = 0; i < groundConst.size(); i++) {
 		if (rootSolid == groundConst[i]->cSolid) {
 			DSTR << "match : " << rootSolid->GetName() << "&groundConst[" << i << "]" << std::endl;
 			double t = groundConst[i]->contactForce.norm() / (force.norm() + groundConst[i]->contactForce.norm());
@@ -752,8 +750,8 @@ double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d
 		}
 	}
 
-	point = thisCOF;
-	f = force;
+	point = *new Vec3d(thisCOF);
+	f = *new Vec3d(force);
 
 	return torque;
 }
