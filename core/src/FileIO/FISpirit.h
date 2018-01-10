@@ -61,7 +61,12 @@ namespace Spr{;
 ///	FISpiritで使用する入力文字列のイタレータの型
 typedef const char* FIIteratorT;
 
-
+template <typename T>
+inline void cp_swap(T& t1, T& t2) {
+	using std::swap;
+    using boost::swap;
+    swap(t1, t2);
+}
 
 //----------------------------------------------------------------------------
 //	アクションによる，パースツリーを作らないパーサ
@@ -189,13 +194,6 @@ struct FIPTMatchAttr<boost::spirit::classic::nil_t>{
 	static boost::spirit::classic::nil_t get(MatchT const& /*m*/) { return boost::spirit::classic::nil_t(); }
     static boost::spirit::classic::nil_t get_default() { return boost::spirit::classic::nil_t(); }
 };
-
-template <typename T>
-inline void cp_swap(T& t1, T& t2) {
-	using std::swap;
-    using boost::swap;
-    swap(t1, t2);
-}
 
 struct FIPTNode{
 	typedef std::vector<FIPTNode> container_t;
