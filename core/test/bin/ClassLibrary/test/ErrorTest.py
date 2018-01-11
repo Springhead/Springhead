@@ -1,11 +1,11 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  FILE:
 #	ErrorTest.py
 #
 #  DESCRIPTION:
-#	Test program for class Error (Ver 3.0).
+#	Test program for class Error (Ver 2.3).
 # ======================================================================
 import sys
 import os
@@ -18,24 +18,20 @@ verbose = 1
 
 # ----------------------------------------------------------------------
 E = Error(prog, verbose=verbose)
+E.set_testcase(True)
 print('Test program for class: %s, Ver %s\n' % (E.clsname, E.version))
 
-E.put('This is information.', prompt=None, alive=True)
-E.put('This is warning', prompt='Warning', alive=True)
-E.put('This is fatal', prompt='Fatal', alive=True)
-E.put('This is error', alive=True)
-E.put('This is abort', prompt='Abort', alive=True)
-E.put('This is panic', prompt='Pan', alive=True)
-print()
-E.info('Error.info() called')
-E.warn('Error.warn() called')
-E.error('Error.error() called')
+E.print('This is information.', prompt=None)
+E.print('This is warning', prompt='Warning')
+E.print('This is fatal', prompt='Fatal')
+E.print('This is error')
+E.print('This is abort', prompt='Abort')
+E.print('This is panic', prompt='Pan')
 print()
 
-E.put('Must return to this program.', alive=True)
-print()
-print('Exit code should be 99. Try "echo %ERRORLEVEL%"')
-E.abort('Must abort program.', prompt='Pan', exitcode=99)
+E.set_testcase(False)
+E.print('Must return to this program.', alive=True)
+E.print('Must abort program.')
 print('Should not come here')
 
 sys.exit(0)

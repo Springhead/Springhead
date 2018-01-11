@@ -1,18 +1,68 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:	Proc(self, verbose=0, dry_run=False)
+#  CLASS:
+#	Proc
+#	    Process handling wrapper class.
 #
-#  CONSTANTS:
-#	STDOUT, PIPE, NULL
-#	EINTR, EINVAL, ETIME, EPROTO, ECANCELED, ENEEDHELP
+#  CLASS CONSTANTS:
+#	-- abbreviations --
+#	STDOUT	= subprocess.STDOUT
+#	PIPE	= subprocess.PIPE
+#	NULL	= subprocess.DEVNULL
+#	-- error status code --
+#	EINTR	  = -4			Interrupted system call
+#	EINVAL	  = -22			Invalid argument
+#	ETIME	  = -62			Time expired
+#	EPROTO	  = -71			Protocol error
+#	ECANCELED = -125		Operation canceled
+#	ENEEDHELP = -99999		Need intervention
+#
+#  INITIALIZER:
+#	obj = Proc(verbose=0, dry_run=False)
+#	  arguments:
+#	    verbose:	Verbose level (silent if 0) (int).
+#	    dry_run:	Show command but do not execute it (bool).
 #
 #  METHODS:
-#	proc = execute(self, args, stdin=None, stdout=None, stderr=None,
-#		       shell=False, env=None, addpath=None, append=False)
-#	status = wait(self, timeout=None)
-#	kill(self, pid=None, image=None, verbose=0)
-#	status, out, err = output(self, timeout=None)
+#	proc = exec(args, stdin=None, stdout=None, stderr=None,
+#			  shell=False, env=None, addpath=None,
+#			  append=False)
+#	  arguments:
+#	    args:	command and its arguments (str or str[]).
+#	    stdout,stderr:
+#			File object or file name to redirect.
+#			Also followings are OK.
+#			    Proc.STDOUT, Proc.PIPE, Proc.NULL
+#	    shell:	Set True when executing DOS command.
+#			Also set True if stdout/stderr/redirect specified.
+#	    env:	Environment for new process (dict).
+#	    addpath:	Additional path needed for execution (str).
+#	    append:	Append open if True (bool) (for stdout/stderr).
+#	  returns:	ProcInfo object (obj).
+#
+#	stat = wait(timeout=None)
+#	    Wait for process termination. Process sure to be terminated
+#	    on return even if timeout has occurred.
+#	  arguments:
+#	    timeout:	Time out value in seconds (int).
+#	  returns:	Process termination status (int).
+#
+#	out, err = output()
+#	    Get both stdout and stderr output from the process.
+#	  returns:
+#	    out:	Output string got from stdout stream (str).
+#	    err:	Output string got from stderr stream (str).
+#
+#	kill(pid=-1, image=None)
+#	    Kill specified process.
+#	  CAUTION:
+#	    It's extreamly dangerous to kill by 'image' because there
+#	    may be the process(es) having the same process image name
+#	    which you never want to kill.
+#	  arguments:
+#	    pid:	Process-ID to kill (int).
+#	    image:	Process image name to kill (str).
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -21,18 +71,7 @@
 #	Ver 1.1  2017/09/14 F.Kanehori	Bug fixed.
 #	Ver 1.11 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
 #	Ver 1.12 2017/10/13 F.Kanehori	Set default encoding.
-<<<<<<< HEAD
 #	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
-#	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
-#					when dry_run flag specified.
-#	Ver 1.15 2018/03/12 F.Kanehori	Now OK for doxygen.
-#	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
-#	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
-#	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
-#	Ver 1.32 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
-#	Ver 1.33 2018/06/28 F.Kanehori	Fixes spaces in homedir.
-=======
->>>>>>> 0984c6a1c... dailybuild: Process does not have terminal if run as task.
 # ======================================================================
 import sys
 import os
@@ -42,39 +81,25 @@ import copy
 sys.path.append('/usr/local/lib')
 from Util import *
 
-##  Process handling class (Wrapper class for 'subprocess' module).
-#
 class Proc:
-	#  Class constants
+	#  Class constants.
 	#
 	STDOUT	  = subprocess.STDOUT
 	PIPE	  = subprocess.PIPE
 	NULL	  = subprocess.DEVNULL
 	#
-	##  Interrupted by system call.
-	EINTR	  = -4
-	##  Invalid argument.
-	EINVAL	  = -22
-	##  Time expired.
-	ETIME	  = -62
-	##  Protocol error.
-	EPROTO	  = -71
-	##  Operation canceled.
-	ECANCELED = -125
-	##  Need intervention.
-	ENEEDHELP = -99999
+	EINTR	  = -4			# Interrupted system call
+	EINVAL	  = -22			# Invalid argument
+	ETIME	  = -62			# Time expired
+	EPROTO	  = -71			# Protocol error
+	ECANCELED = -125		# Operation canceled
+	ENEEDHELP = -99999		# Need intervention
 
-	##  The initializer.
-	#   @param verbose	Verbose level (0: silent) (int).
-	#   @param dry_run	Show command but do not execute it (bool).
+	#  Initializer
 	#
 	def __init__(self, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-<<<<<<< HEAD
-		self.version = 1.14
-=======
-		self.version = 1.12
->>>>>>> 0984c6a1c... dailybuild: Process does not have terminal if run as task.
+		self.version = 1.13
 		#
 		self.verbose = verbose
 		self.dry_run = dry_run
@@ -85,24 +110,9 @@ class Proc:
 		self.pid = None
 		self.creationflags = 0
 
-	##  Execute program.
-	#   @n		Should be followed by self.wait() or self.output().
-	#   @n		e.g.
-	#   @n		rc = Proc(cmnd, ...).wait(...) or
-	#   @n		rc, out, err = Proc(cmnd, ...).output(...)
-	#   @param args		Command and its arguments (str or str[]).
-	#   @param stdin	File object, file name or pipe (obj or str).
-	#   @param stdout	File object, file name or pipe (obj or str).
-	#   @param stderr	File object, file name or pipe (obj or str).
-	#   @param shell	Set True when executing DOS command,
-	#			or pipe is used for process input/output (bool).
-	#   @param env		Environment for new process (dict).
-	#   @param addpath	Additional path to prepend env['PATH'] (str).
-	#   @param append	Set output redirect file open mode to 'append'
-	#			(bool).
-	#   @returns		Self object.
+	#  Execute program and returns process object.
 	#
-	def execute(self, args,
+	def exec(self, args,
 		       stdin=None, stdout=None, stderr=None,
 		       shell=False, env=None, addpath=None,
 		       append=False):
@@ -116,7 +126,6 @@ class Proc:
 		if isinstance(args, str):
 			args = args.split()
 		args = ' '.join(args)
-		args = self.__space_in_homedir(args)
 
 		# prepare output redirection file
 		rmode = 'r'			# open mode for input
@@ -131,7 +140,7 @@ class Proc:
 
 		# execute command
 		if self.dry_run or self.verbose:
-			a = ['<', '>', '2>']
+			a = ['<', '>', '>']
 			redirect = ''
 			for n in range(3):
 				if self.fd[n]:
@@ -141,13 +150,7 @@ class Proc:
 			if addpath:
 				print('        addpath: %s' % Util.upath(addpath))
 		if self.dry_run:
-			class dummy:
-				stdin = 0
-				stdout = 1
-				stderr = 2
-			self.proc = dummy()	# dummy!
 			return self
-
 		if self.verbose > 1:
 			print('args to Popen')
 			print('  args: %s' % args)
@@ -161,7 +164,6 @@ class Proc:
 				stdout=self.fd[1],
 				stderr=self.fd[2],
 				creationflags=self.creationflags,
-				start_new_session=True,
 				env=new_env,
 				shell=shell)
 		self.pid = self.proc.pid
@@ -169,9 +171,7 @@ class Proc:
 			print('  (pid: %d)' % self.pid)
 		return self
 
-	##  Wait for process termination then return termination code.
-	#   @param timeout	Time out value in seconds (int).
-	#   @returns		Process termination code (int).
+	#  Wait for process termination.
 	#
 	def wait(self, timeout=None):
 		if self.dry_run:
@@ -207,10 +207,8 @@ class Proc:
 			if self.verbose:
 				pid = self.proc.pid
 				print('  kill process (pid %d)' % pid)
-			if Util.is_unix():
-				os.killpg(self.proc.pid, signal.SIGTERM)
-			else:
-				os.kill(self.proc.pid, signal.SIGTERM)
+			#os.kill(proc.pid, signal.CTRL_BREAK_EVENT)
+			self.proc.terminate()
 
 		# cleanup
 		self.__close(self.fd[0], self.pipe[0])
@@ -222,15 +220,7 @@ class Proc:
 		self.status = self.__s16(status)
 		return self.status
 
-	##  Kill specified process.
-	#   @param pid		Process-ID to kill (int).
-	#   @param image	Process image name to kill (str).
-	#   @param verbose	Verbose level (0: silent) (int).
-	#
-	#   CAUTION:
-	#   @n	It's extreamly dangerous to kill by 'image'
-	#	because there may be the process(es) having the same
-	#	process image name which you never want to kill.
+	#  Kill process.
 	#
 	def kill(self, pid=None, image=None, verbose=0):
 		if pid is None and image is None:
@@ -266,95 +256,53 @@ class Proc:
 				if self.verbose:
 					print('  %s' % e)
 
-	##  Get both stdout and stderr output from the process.
-	#   @param timeout	Time out value in seconds (int).
-	#   @returns		rc, out, err
-	#   @n status:		Process termination code (int).
-	#   @n out:		Output string got from stdout stream (str).
-	#   @n err:		Output string got from stderr stream (str).
+	#  Get output of process.
 	#
-	def output(self, timeout=None):
+	def output(self):
 		if self.dry_run:
-			return 0, None, None
+			return None, None
 		if self.proc is None:
 			if self.verbose:
 				print('  invalid process')
-			return 1, None, None
+			return None, None
 		if self.pipe[1] != Proc.PIPE and self.pipe[2] != Proc.PIPE:
 			if self.verbose:
-				print('  output is not redirected')
-			return 0, None, None
+				print('  output is no redirected')
+			return None, None
 		#
-		try:
-			out, err = self.proc.communicate(timeout=timeout)
-			status = self.proc.returncode
-		except subprocess.TimeoutExpired:
-			self.proc.kill()
-			out, err = self.proc.communicate()
-			status = Proc.ETIME
+		out, err = self.proc.communicate()
 		encoding = os.device_encoding(1)
-<<<<<<< HEAD
 		if encoding is None:
-=======
-		if encodig is None:
->>>>>>> 0984c6a1c... dailybuild: Process does not have terminal if run as task.
 			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None
-
-		# cleanup
-		self.__close(self.fd[0], self.pipe[0])
-		self.__close(self.fd[1], self.pipe[1])
-		self.__close(self.fd[2], self.pipe[2])
-		self.__revive_envirnment(self.org_env)
-
-		# only lower 16 bits are meaningful
-		self.status = self.__s16(status)
-		return self.status, out, err
+		return out, err
 
 	# --------------------------------------------------------------
 	#  For class private use
 	# --------------------------------------------------------------
 
-	##  Double quote path in args if home dir name has space(s).
-	#   @param args		command args (str).
-	#   @returns		Replaced args if needed (str).
-	#
-	def __space_in_homedir(self, args):
-		new_args = args
-		homedir = Util.upath(os.path.expanduser('~'))
-		if args.find(homedir) >= 0 and homedir.find(' ') >= 0:
-			tmp_home = homedir.replace(' ', '@')
-			tmp_repl = args.replace(homedir, tmp_home)
-			org_list = tmp_repl.split()
-			new_list = []
-			for item in org_list:
-				if item.find('@') >= 0:
-					item = '"%s"' % item.replace('@', ' ')
-				new_list.append(item)
-			new_args = ' '.join(new_list)
-			#print('==> args replaced to [%s]' % new_args)
-		return new_args
-
-	##  Convert zero-extended-16bit-signed-int into 32bit-signed-int.
-	#   @param value	32-bit-unsigend-int value (int).
-	#   @n			upper 16 bits:  all zeors
-	#   @n			lower 16 bits:  16-bit-signed-int value
-	#   @returns		32-bit-signed-int value (int).
+	#  Convert zero-extended-16bit-signed-int into 32bit-signed-int.
 	#
 	def __s16(self, value):
 		# arguments:
+		#   s16_value:	32-bit-unsigend-int value (int).
+		#		    upper 16 bits:  all zeors
+		#		    lower 16 bits:  16-bit-signed-int value
+		# returns:	32-bit-signed-int value (int).
 
 		return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
 
-	##  Get current task list.
-	#   @returns		List of [pid, task_name]
+	#  Get current task list.
 	#
 	def __tasklist(self):
+		# returns:	List of [pid, task_name]
+
 		cmnd = 'ps a' if Util.is_unix() else 'tasklist'
 		proc = Proc()
-		proc.execute(cmnd, stdout=Proc.PIPE, shell=True)
-		stat, out, err = proc.output()
+		proc.exec(cmnd, stdout=Proc.PIPE, shell=True)
+		out, err = proc.output()
+		proc.wait()
 		outlist = out.replace('\r', '').split('\n')
 		tasks = []
 		for line in outlist:
@@ -369,14 +317,14 @@ class Proc:
 		#print(tasks)
 		return tasks
 
-	##  Set new enviroment variables.
-	#   @param env		Enviroment to set (dict).
-	#   @param addpath	Path to prepend env['PATH'] (str).
-	#   @returns		new_env, org_env
-	#   @n new_env:		New environment (dict).
-	#   @n org_env:		Old environment (dict).
+	#  Set enviroment variable.
 	#
 	def __set_environment(self, env, addpath):
+		# arguments:
+		#   env:	Enviroment to set (dict).
+		#   addpath:	Path to prepend env['PATH'] (str).
+		# returns:	New environment and old environment.
+
 		if self.dry_run:
 			return None, None
 		if env is None and addpath is None:
@@ -387,42 +335,40 @@ class Proc:
 			new_env['PATH'] = addpath + ';' + new_env['PATH']
 		return new_env, org_env
 
-	##  Revive old enviroment variables set by self.__set_environment().
-	#   @param org_env	Environment to revive (dict).
+	#  Set enviroment variable.
 	#
 	def __revive_envirnment(self, org_env):
+		# org_env:	Enviroment to revive.
 		if org_env is not None:
 			os.environ = copy.deepcopy(org_env)
 
-	##  Get file object.
-	#   @param file		File name string or file object.
-	#   @param mode		File open mode (str).
-	#   @param dry_run	Show command but do not execute it (bool).
-	#   @retval obj		File object if dry_run is False.
-	#   @retval None	If dry_run is True.
+	#  Get and release file object.
 	#
 	def __open(self, file, mode, dry_run):
+		# arguments:
+		#   file:	File name string or file object.
+		#   mode:	File open mode (str).
+		# returns:	File object.
+
 		if self.dry_run:
 			return None
 		if not isinstance(file, str):
 			return file
 		try:
 			f = open(file, mode)
-		except IOError as err:
+		except Error as err:
 			f = None
 		return f
 
-	##  Release file object.
-	#   @param object	File object returned by self.__open().
-	#   @param file		The same argument passed to self.__open().
-	#
 	def __close(self, object, file):
-		if isinstance(file, str) and object:
+		# arguments:
+		#   object:	File object returned by __open().
+		#   file:	The same argument passed to __open().
+
+		if isinstance(file, str):
 			object.close()
 
-	##  Device name for verbose message.
-	#   @param dev		Device descriptor (int).
-	#   @returns		Device name (str).
+	#  Device name for verbose message.
 	#
 	def __dev_name(self, dev):
 		if dev == -1:	return 'pipe'
