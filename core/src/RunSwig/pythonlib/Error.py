@@ -13,9 +13,11 @@
 #	    verose:	Verbose mode level (int; 0: silence).
 #
 #  METHODS:
-#	print(msg, prompt='Error', exitcode=-1)
-#	    Print error message to output stream.  If prompt is one of
-#	    follows, program will be terminated with given exitcode.
+#	print(msg, prompt='Error', exitcode=-1, alive=False)
+#	    Print error message to output stream.
+#	    If 'prompt' is one of 'Error', 'Fatal', 'Abort' or 'Pan',
+#	    program will be terminated with given exitcode.  Argument
+#	    'alive' cancels this behaviour.
 #	  arguments:
 #	    msg:	Error message to print (str).
 #			Message format is;
@@ -26,6 +28,7 @@
 #			    None:    Prompt is not printed.
 #			    others:  Program will continue.
 #	    exitcode:	Exit code (int).
+#	    alive:	Force return to the caller (bool).
 #
 #	abort(msg, prompt='Error', exitcode=-1)
 #	    Synonym for print() method.
@@ -39,6 +42,7 @@
 #	Ver 2.01 2017/08/15 F.Kanehori	Change test case message.
 #	Ver 2.1  2017/09/11 F.Kanehori	Update print().
 #	Ver 2.2  2017/09/13 F.Kanehori	Add abort().
+#	Ver 2.3  2018/01/10 F.Kanehori	Add arg 'alive' to print().
 # ======================================================================
 import sys
 
@@ -47,7 +51,7 @@ class Error:
 	#
 	def __init__(self, prog, out=sys.stderr, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.2
+		self.version = 2.3
 		#
 		self.prog = prog
 		self.out  = out
@@ -57,15 +61,15 @@ class Error:
 
 	#  Print message.
 	#
-	def print(self, msg, prompt='Error', exitcode=-1, die=False):
-		if exitcode != 0:
-			if prompt in ['Error', 'Fatal', 'Abort', 'Pan']:
-				die = True
+	def print(self, msg, prompt='Error', exitcode=-1, alive=False):
+		die = False
+		if prompt in ['Error', 'Fatal', 'Abort', 'Pan']:
+			die = True if not alive else die
 		str1 = '%s: ' % self.prog if self.prog else ''
 		str2 = '%s: ' % prompt if prompt else ''
 		msg_str = '%s%s%s' % (str1, str2, msg)
 		if self.testcase and die:
-			msg_str += '-> exit code %d' % exitcode
+			msg_str += ' -> exit code %d' % exitcode
 		#
 		print(msg_str, file=self.out)
 		self.out.flush()
@@ -75,7 +79,7 @@ class Error:
 	#  Print message and die.
 	#
 	def abort(self, msg, prompt='Error', exitcode=-1):
-		self.print(msg, prompt, exitcode, die=True)
+		self.print(msg, prompt, exitcode)
 
 	#  For debug only.
 	#

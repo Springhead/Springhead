@@ -7,59 +7,28 @@
 #	    Should be called from where a solution file exists.
 #
 #  INITIALIZER:
-#	obj = ControlParams(cc_version, fname, section=None, verbose=0)
+#	obj = ControlParams(fname, section=None, verbose=0)
 #	arguments:
-#	    cc_version:	Visual Studio version.  Should be obtained by
-#			VisualStudio.get(VisualStudio.VERSION)
-#	    fname:	test control file name (str).
+#	    fname:	Test control file name (str).
 #	    section:	Test control section name (str).
 #	    verbose:	Verbose level (0: silent) (int).
 #
 #  METHODS:
-#	set(ControlParams.CONFIGS, platform, config)
-#	set(ControlParams.RECOMPILE, flag=True)
-#	set(ControlParams.LOGFILES, comp=True, run=True)
-#	set(ControlParams.USE_CLOSED_SRC_FLAG, usage)
-#	set(ControlParams.DRYRUN, flag=True)
-#	    CONFIGS:		Set build option.
-#				Output file name and temporary log file
-#				names are also regenerated.
-#	    RECOMPILE:		Force recompile by removing binary files.
-#	    LOGFILES:		Set flags for generating log file or not.
+#	set(ControlParams.PLATFORM, str)
+#	set(ControlParams.CONFIG, str)
+#	set(ControlParams.USE_CLOSED_SRC_FLAG, str)
+#	set(ControlParams.RECOMPILE, bool)
+#	set(ControlParams.LOG_OUTPUT, bool, bool)	# (build, run)
+#	set(ControlParams.DRYRUN, bool)
+#	    Set or override the control parameter.
+#	    PLATFORM:	    Set build option (platform).
+#	    CONFIG:	    Set build option (config).
 #	    USE_CLOSED_SRC_FLAG:
-#				Set usage of closed source files.
-#	    DRYRUN:	Set/unset dry run flag.  If this flag is True
-#			show command but do not execute it (for debug).
-"""
-#	build_option(platform, config)
-#	    Set build options and generate executable/log file name.
-#	    arguments:
-#		platform:   'Win32' or 'x64'
-#		config:	    'Debug', 'Release', 'Trace', ...
+#			    Set usage of closed source files.
+#	    RECOMPILE:	    Force recompile by removing binary files.
+#	    LOG_OUTPUT:	    Generate log file or not.
+#	    DRYRUN:	    Set/unset dry run flag.
 #
-#	force_rebuild(clean)
-#	    Force 'rebuild' instead of normal 'build'.
-#	    arguments:
-#		clean:	    Force rebuild or not (bool).
-#
-#	log_option(build, run)
-#	    Make log file or not.
-#	    arguments:
-#		build:	    For build log (bool) (default: True).
-#		run:	    For run log   (bool) (default: True).
-#
-#	closed_src_control(control)
-#	    Set closed soruce control value.
-#	    arguments:
-#		control:    USE, UNUSE or AUTO. 
-#
-#	override_exe_control(build, run)
-#	    Override execution control flags got from control file.
-#	    arguments:
-#	      build:	    Execute build step (bool)
-#	      run:	    Execute run step   (bool)
-#
-"""
 #	value = get(key)
 #	    Get value associated with the key.
 #	    arguments:
@@ -72,25 +41,13 @@
 #
 #	info()
 #	    Print information of this instance.
-"""
-#	set_dry_run(flag=True)
-#	    Set/unset dry run flag.  If this flag is set, show command
-#	    line but do not execute it (for debug use only).
-#	    arguments:
-#		flag:	    Set dry_run or not (bool).
-"""
 #
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2016/10/05 F.Kanehori	First version.
-#	Ver 1.1  2016/10/19 F.Kanehori	Key 'pipeprocess' introduced.
-#	Ver 1.2  2016/11/17 F.Kanehori	Add new control keywords.
 #	Ver 2.0  2017/08/10 F.Kanehori	Name changed: script, param file.
 #	Ver 3.0  2017/09/13 F.Kanehori	Python library revised.
-#	Ver 3.1  2017/09/20 F.Kanehori	Change use_closed_src control.
-#	Ver 3.2  2017/11/16 F.Kanehori	Python library path の変更.
-#	Ver 3.3  2017/11/30 F.Kanehori	Python library path の変更.
-#	Ver 4.0  2017/12/11 F.Kanehori	全体の見直し.
+#	Ver 4.0  2018/01/11 F.Kanehori	全体の見直し.
 # ======================================================================
 import sys
 import os
@@ -111,11 +68,29 @@ class ControlParams:
 
 	#  Keywords
 	#
+	EXCLUDE		    = 1
+	DECEND		    = 2
+	ALIAS		    = 3
+	BUILD		    = 11
+	USE_CLOSE_SRC	    = 12
+	CPPMACRO	    = 13
+	OUTDIR		    = 14	# Directory where executable to put.
+	BUILD_LOG	    = 15	# Build log file path
+	BUILD_ERRLOG	    = 16
+	RUN		    = 21
+	TIMEOUT		    = 22
+	EXPECTED	    = 23
+	PIPE_PROCESS	    = 24
+	KILL_PROCESS	    = 25
+	NEED_INTERVENTION   = 26
+	RUN_LOG		    = 27
+	RUN_ERRLOG	    = 28
+	LOG_CONTROL	    = 31
+
+	"""
 	SOLUTION	    = 1		# Name of the solution.
-	OUTDIR		    = 2		# Directory where executable to put.
 	PLATFORM	    = 3		# Platform name (e.g. '14.0'). (*)
 	CONFIG		    = 4		# Configuration name.
-	OUTFILE 	    = 5		# Output file path.
 	LOGFILES	    = 6		# Log file path [BLD, RUN].
 	EXCLUDE		    = 7		# Exclude this directory form the test.
 	USE_CLOSED_SRC	    = 8		# Use closed source or not.
@@ -136,6 +111,7 @@ class ControlParams:
 	EXE_CONTROLS	    = 55	# Execution control [BLD, RUN].
 	LOG_CONTROLS	    = 56	# Log output control [BLD, RUN].
 	LIBDIR		    = 54	# Directory where related binaries are.
+	"""
 
 	# list indices
 	ERR	= 0		#
@@ -152,7 +128,7 @@ class ControlParams:
 
 	#  Class initializer
 	#
-	def __init__(self, cc_version, fname, section, verbose=0):
+	def __init__(self, ccver, fname, section, verbose=0):
 		self.clsname = self.__class__.__name__
 		self.version = 4.0
 		#
@@ -213,7 +189,7 @@ class ControlParams:
 
 		# compiler
 		self.cc = {}
-		self.cc['version'] = cc_version
+		self.cc['version'] = ccver
 
 		#
 		self.solution = self.dir['solution'].split(os.sep)[-1]

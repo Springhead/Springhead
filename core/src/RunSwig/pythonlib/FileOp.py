@@ -29,11 +29,12 @@
 #	    If specified file exists, change its access time.
 #	    If specified file does not exit and 'no_create' is False,
 #	  arguments:
-#	    create new file with file mode 'mode'.
+#	    Create new file with file mode 'mode'.
 #	    path:	File path to touch.
 #	    mode:	File mode.
 #	    no_create:	Do not create a file even the case.
-#	  returns:	Always 0.
+#	  returns:	-1: Can't create file when 'no_create' is False.
+#			 0: Otherwise.
 #
 #	string = ls(path, sort='name', show='mtime')
 #	    Get given file information.
@@ -53,6 +54,7 @@
 #	Ver 1.2  2017/09/11 F.Kanehori	Implement move() for unix.
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.31 2017/12/07 F.Kanehori	Add spaces to dry_run message.
+#	Ver 1.32 2018/01/11 F.Kanehori	Change return code of touch.
 # ======================================================================
 import sys
 import os
@@ -127,6 +129,7 @@ class FileOp:
 		except:
 			if no_create:
 				return 0
+			return -1
 		#
 		ns_atime, ns_mtime = self.__time_to_set()
 		if not isinstance(fd, int):
