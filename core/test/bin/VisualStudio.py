@@ -65,7 +65,7 @@
 #	Ver 1.3  2017/09/14 F.Kanehori	Change return value: has_error().
 #	Ver 1.4  2017/11/16 F.Kanehori	Python library path 変更.
 #	Ver 1.5  2017/11/30 F.Kanehori	Python library path 変更.
-#	Ver 2.0  2017/12/11 F.Kanehori	全体の見直し.
+#	Ver 2.0  2018/01/11 F.Kanehori	全体の見直し.
 # ======================================================================
 import sys
 import os
@@ -137,17 +137,16 @@ class VisualStudio:
 	def set(self, func, arg1, arg2=True):
 		if func == self.OUTDIR:
 			self.__need_arg(1, arg1)
-			self.__type_check(1, str)
+			self.__type_check(1, arg1, str)
 			self.outdir = Util.upath(arg1)
 			self.clean = arg2
 
 		elif func == self.LOGFILE:
 			self.__need_arg(1, arg1)
-			self.__type_check(1, str)
+			self.__type_check(1, arg1, str)
 			self.logfile = Util.upath(arg1)
 
 		elif func == self.DRYRUN:
-			arg1 = self.__set_default(arg1, True)
 			self.dry_run = arg1
 		else:
 			msg = 'set: invalid function specified: %s' % str(func)
@@ -162,9 +161,6 @@ class VisualStudio:
 		if not isinstance(arg, type):
 			msg = 'set: invalid argument: arg%d' % num
 			Error(self.clsname).print(msg)
-
-	def __set_default(self, arg, default):
-		retrun arg if arg else default
 
 	#  Build solution.
 	#
@@ -324,7 +320,6 @@ class VisualStudio:
 # ----------------------------------------------------------------------
 if __name__ == '__main__':
 	from optparse import OptionParser
-	from ControlParams import *
 
 	usage = 'Usage: %prog [options]'
 	parser = OptionParser(usage = usage)
@@ -376,33 +371,24 @@ if __name__ == '__main__':
 			sys.exit(-1)
 		if verbose: print('')
 
-		platform = 'x86'
-		config = 'Debug'
-		outdir = os.sep.join([vs_version, platform, config])
-		logfile = 'log\\' + solution_name + '_' + toolset + '_'
-		logfile += platform + '_' + config + '_' + 'build.log'
-		vs.set(vs.OUTDIR, outdir)
-		vs.set(vs.LOGFILE, logfile)
-		vs.set(vs.DRYRUN, dry_run)	# default: False
+		def test(platform, config):
+			outdir = os.sep.join([vs_version, platform, config])
+			logfile = 'log/' + vs.clsname + '_' + toolset + '_'
+			logfile += platform + '_' + config + '_' + 'build.log'
+			vs.set(vs.OUTDIR, outdir)
+			vs.set(vs.LOGFILE, logfile)
+			vs.set(vs.DRYRUN, dry_run)	# default: False
 
-		print('=> (%s, %s)' % (platform, config))
-		status = vs.build(platform, config)
-		print('status: %d' % status)
+			print('=> (%s, %s)' % (platform, config))
+			status = vs.build(platform, config)
+			print('status: %d' % status)
+			return status
+
+		status = test('x86', 'Debug')
 		if status != 0:
 			input('Hit any key')
 		print('')
-
-		# Change parameters.
-		platform = 'x64'
-		config = 'Release'
-		outdir = os.sep.join([vs_version, platform, config])
-		logfile = 'log\\' + solution_name + '_' + toolset + '_'
-		logfile += platform + '_' + config + '_' + 'build.log'
-		vs.set(vs.OUTDIR, outdir)
-		vs.set(vs.LOGFILE, logfile)
-		print('=> (%s, %s)' % (platform, config))
-		status = vs.build(platform, config)
-		print('status: %d' % status)
+		status = test('x64', 'Release')
 
 		os.chdir(cwd)
 	# end if

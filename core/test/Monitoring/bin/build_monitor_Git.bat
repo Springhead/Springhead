@@ -19,6 +19,7 @@ setlocal enabledelayedexpansion
 ::	Ver 2.0  2017/12/20 F.Kanehori	GitHub 版に改造
 ::	Ver 2.1  2017/12/27 F.Kanehori	レポートファイル名を変更
 ::	Ver 2.2  2018/01/02 F.Kanehori	NEWREV ログはテスト結果から直接得る
+::	Ver 2.21 2018/01/10 F.Kanehori	レポート表記を一部変更
 :: ============================================================================
 set PROG=%~n0
 
@@ -335,8 +336,8 @@ if %OPT_V% == 1 ( echo done )
 ::
 if %OPT_V% == 1 ( set /p=making report file ... < NUL )
 echo Report on %DATESTR% %TIMESTR%			>  %REPORTFILE%
-echo old revision: %OLDREV% (%OLDDATE% %OLDTIME%)	>> %REPORTFILE%
-echo new revision: %NEWREV% (%NEWDATE% %NEWTIME%)	>> %REPORTFILE%
+echo old log revision: %OLDREV% (%OLDDATE% %OLDTIME%)	>> %REPORTFILE%
+echo new log revision: %NEWREV% (%NEWDATE% %NEWTIME%)	>> %REPORTFILE%
 
 echo.					>> %REPORTFILE%
 echo.====================		>> %REPORTFILE%

@@ -70,6 +70,8 @@
 #					Separated from class Util.
 #	Ver 1.1  2017/09/14 F.Kanehori	Bug fixed.
 #	Ver 1.11 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
+#	Ver 1.12 2017/10/13 F.Kanehori	Set default encoding.
+#	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
 # ======================================================================
 import sys
 import os
@@ -97,7 +99,7 @@ class Proc:
 	#
 	def __init__(self, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.11
+		self.version = 1.13
 		#
 		self.verbose = verbose
 		self.dry_run = dry_run
@@ -257,6 +259,8 @@ class Proc:
 	#  Get output of process.
 	#
 	def output(self):
+		if self.dry_run:
+			return None, None
 		if self.proc is None:
 			if self.verbose:
 				print('  invalid process')
@@ -268,6 +272,8 @@ class Proc:
 		#
 		out, err = self.proc.communicate()
 		encoding = os.device_encoding(1)
+		if encoding is None:
+			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None
 		return out, err

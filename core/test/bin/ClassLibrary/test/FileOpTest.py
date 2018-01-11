@@ -5,7 +5,7 @@
 #	FileOpTest.py
 #
 #  DESCRIPTION:
-#	Test program for class FileOp (Ver 1.0).
+#	Test program for class FileOp (for Ver 1.3 and after).
 # ======================================================================
 import sys
 import os
@@ -43,19 +43,22 @@ print('Test program for class: %s, Ver %s\n' % (F.clsname, F.version))
 # ls
 #
 print('-- ls --')
-files = F.ls('test')
+files = F.ls('.')
 print('sorted by name')
 for f in files:
 	print(f)
 print()
 
-print('sorted by ctime')
-files = F.ls('test', sort='ctime', show='ctime')
+#print('sorted by ctime')
+#files = F.ls('.', sort='ctime', show='ctime')
+print('sorted by mtime')
+files = F.ls('.', sort='mtime', show='mtime')
 for f in files:
 	print(f)
 print()
 
 # touch
+os.makedirs('test/test1', exist_ok=True)
 print('-- touch no_create -- ')
 fname = '%s/%s' % (testdir1, testfile)
 if os.path.exists(fname):
@@ -104,6 +107,7 @@ Ls(F, checkpath1)
 print()
 
 print('-- mv --')
+os.makedirs('test/test1/test2', exist_ok=True)
 F.mv(testpath2, testpath3)
 Ls(F, checkpath1)
 print()

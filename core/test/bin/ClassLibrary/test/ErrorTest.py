@@ -5,7 +5,7 @@
 #	ErrorTest.py
 #
 #  DESCRIPTION:
-#	Test program for class Error (Ver 2.01).
+#	Test program for class Error (Ver 2.3).
 # ======================================================================
 import sys
 import os
@@ -30,7 +30,7 @@ E.print('This is panic', prompt='Pan')
 print()
 
 E.set_testcase(False)
-E.print('Must return to this program.', exitcode=0)
+E.print('Must return to this program.', alive=True)
 E.print('Must abort program.')
 print('Should not come here')
 
