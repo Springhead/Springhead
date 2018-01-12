@@ -72,6 +72,10 @@ int hitCount = 0;
 int outCount = 0;
 bool recordHit=false;
 
+vector<int> testShapes;
+const string testCSVPath = "testsetting.csv";
+int caseCount = 0;
+
 Vec2d lastMouse;
 
 namespace Spr {
@@ -264,14 +268,21 @@ void __cdecl display(){
 						}						
 						if (transCount >= 36) {
 							ofstream ofs(filename, ios::app);
+							float hitTimeAve = 0;
+							float outTimeAve = 0;
 							if (hitCount > 0)
-								hitTimePool = hitTimePool / hitCount;
+								hitTimeAve = hitTimePool / (float)hitCount;
 							if (outCount > 0)
-								outTimePool = outTimePool / outCount;
-							ofs << colMethod << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << "," << hitTimePool << "," << outTimePool << std::endl;
+								outTimeAve = outTimePool / (float)outCount;
+							ofs << colMethod << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << "," << hitTimeAve << "," << outTimeAve << std::endl;
 							automode = false;
-							if (superAuto && colMethod < 2) {
-								colMethod++;
+							if (superAuto && caseCount < testShapes.size()) {
+								if (colMethod == 2) {
+									caseCount += 2;
+									obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
+									obj[1].SetShape(stage.GetShape((ShapeID)testShapes[caseCount+1]), (ShapeID)testShapes[caseCount+1]);
+								}
+								colMethod = (colMethod+1)%3;
 								StartAutomode(true);
 							}
 							else {
@@ -415,8 +426,12 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 	if (key == 'n') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_DODECA), ShapeID::SHAPE_DODECA);
 	if (key == 'p') {
 		colMethod = 0;
+		caseCount = 0;
 		StartAutomode(false);
 		superAuto = true;
+		testShapes = LoadTestCSV(testCSVPath);
+		obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
+		obj[1].SetShape(stage.GetShape((ShapeID)testShapes[caseCount + 1]), (ShapeID)testShapes[caseCount + 1]);
 	}
 	if (key == 'l') StartAutomode(false);
 	if (key == 'o') RecordHit();
