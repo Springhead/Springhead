@@ -169,6 +169,34 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 	glPopMatrix();
 }
 
+vector<string> split(string& input, char delimiter)
+{
+	istringstream stream(input);
+	string field;
+	vector<string> result;
+	while (getline(stream, field, delimiter)) {
+		result.push_back(field);
+	}
+	return result;
+}
+
+
+vector<int> LoadTestCSV(string path)
+{
+	vector<int> shapes;
+	ifstream ifs(path);
+	string line;
+	while (getline(ifs,line))
+	{
+		vector<string> word = split(line, ',');
+		for (int i = 0; i < word.size();i++)
+		{
+			shapes.push_back(stoi(word[i]));
+		}
+	}
+	return shapes;
+}
+
 class TestObj {
 public:
 	CDShapeIf* m_shape;

@@ -831,7 +831,7 @@ coltimePhase2 += frameTime2;
 	Vec3d lastTriV;
 	double lastZ = DBL_MAX;
 	int finalCount = 0;
-	double cbiasParam = biasParam;
+	double cbiasParam = 0;
 	while (1) {
 		count++;
 		if (count > 1000) {
@@ -855,17 +855,17 @@ coltimePhase2 += frameTime2;
 			lastTriV = s.unit();
 			
 			if (cbiasParam >= 0) {
-				cbiasParam *= (lastTriV.Z());
+				cbiasParam = lastTriV.z;
 			}
 			
 			if (cbiasParam > 0) {
-#define NORM_BIAS 5 //バイアスflag
+#define NORM_BIAS 1 //バイアスflag
 #if NORM_BIAS == 1
 				
 				//二次元上での原点と三角形頂点の距離でバイアスを掛ける 3点のサポートベクトル比版
 				Vec3d tridec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
 				Vec3d newSup = v[ids[0]] * tridec[0] + v[ids[1]] * tridec[1] + v[ids[2]] * tridec[2];
-				newSup = newSup*cbiasParam + lastTriV*(1 - cbiasParam);
+				newSup = newSup*cbiasParam + lastTriV;
 				newSup.unitize();
 				//newSup.z = lastTriV.z;
 				v[ids[3]] = newSup;
@@ -1065,7 +1065,7 @@ coltimePhase2 += frameTime2;
 #endif
 			}
 			else {
-				lastTriV = v[ids[3]] = s.unit();
+				v[ids[3]] = lastTriV;
 			}
 			//	新しい w w[3] を求める
 			CalcSupport(ids[3]);
@@ -1092,7 +1092,7 @@ coltimePhase2 += frameTime2;
 			else {
 				//	初めて線分になる場合。
 
-#if NORM_BIAS >= 1 //バイアス失敗なので前のノーマルに戻す
+#if NORM_BIAS >= 10 //バイアス
 				if (lastTriV.square() > 0) {
 					v[ids[3]] = lastTriV;
 					CalcSupport(ids[3]);
@@ -1147,8 +1147,19 @@ coltimePhase2 += frameTime2;
 					__debugbreak();
 				}
 				else {
+#if NORM_BIAS >= 1
+					double p = ave.z / 2.0;
+					double w0len = w[ids[id0]].XY().norm();
+					double w1len = w[ids[id1]].XY().norm();
+					double rate = 1-(w0len / (w0len+w1len));
+					Vec3d acc = (v[ids[id0]] * rate + v[ids[id1]] * (1 - rate));
 					line /= len;
 					ave = ave - (ave * line) * line;
+					ave = ave * (1 - p) + acc * p;
+#else
+					line /= len;
+					ave = ave - (ave * line) * line;
+#endif
 				}
 				v[ids[3]] = ave.unit();
 #endif
@@ -1185,7 +1196,10 @@ coltimePhase2 += frameTime2;
 			if (bGJKDebug) {
 				DSTR << " newZ:" << newZ << "  dec:" << dec << std::endl;
 			}
-			if (newZ + epsilon >= lastZ) goto final2;
+			if (newZ + epsilon >= lastZ) {
+				notuse = -1;
+				goto final2;
+			}
 			lastZ = newZ;
 			std::swap(ids[notuse], ids[3]);
 		}
@@ -1230,7 +1244,7 @@ coltimePhase2 += frameTime2;
 
 					goto final2;
 				}
-				lastZ = newZ;
+				//lastZ = newZ;
 				//v[amariID] = lastTriV;
 				//CalcSupport(amariID);
 				//Vec3d newSup = w[amariID];
@@ -1252,12 +1266,14 @@ coltimePhase2 += frameTime2;
 			}
 			lastZ = newZ;
 			std::swap(ids[(i + 2) % 3], ids[3]);
+			
 			if (cbiasParam >= 0)
 			{
-				cbiasParam *= 0.8;
+				cbiasParam += biasParam*0.4;
 				//cbiasParam = biasParam;
 				if (cbiasParam > biasParam) cbiasParam = biasParam;
 			}
+			
 		}
 	}
 	//	無事停止
@@ -1267,8 +1283,9 @@ coltimePhase2 += frameTime2;
 	if (notuse >= 0) {
 		int id0 = ids[(notuse + 1) % 3];	
 		int id1 = ids[(notuse + 2) % 3];
-		double a = w[id0].norm();		
-		double b = w[id1].norm();
+		double a = w[id0].XY().norm();		
+		double b = w[id1].XY().norm();
+		Vec3d dec;
 		if (a + b > 1e-10) {
 			dec[0] = b / (a + b); dec[1] = a / (a + b);
 			}
@@ -1295,7 +1312,7 @@ coltimePhase2 += frameTime2;
 		normal = w2z.Conjugated() * lastTriV;
 	}
 	else {
-		normal = w2z.Conjugated() * lastTriV;
+		normal = w2z.Conjugated() * v[ids[3]];
 	}
 #else
 	normal = w2z.Conjugated() * v[ids[3]];
@@ -1872,7 +1889,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 		if (count > 100) break;
 		//GJKの計算
 		
-		if (cdist < 0.001) {
+		if (cdist < 0.0001) {
 			//uint32_t frameTime1 = p_timer->CountUS();
 			//coltimePhase1 += frameTime1;
 			//ここでめり込み量を計算できるか?
