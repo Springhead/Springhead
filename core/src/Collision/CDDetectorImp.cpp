@@ -16,6 +16,41 @@ const double epsilon2 = epsilon*epsilon;
 
 bool bUseContactVolume=true;
 
+int s_methodSW = 0; //0=通常,1=加速,2=Gino,3=GJK
+//衝突判定メソッドのインターフェース
+int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist)
+{
+	int res;
+	Vec3d v;
+	switch (s_methodSW)
+	{
+	case 0:
+		res = ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		break;
+	case 1:
+		res = ContFindCommonPointAccel(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		break;
+	case 2:
+		res = ContFindCommonPointGino(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		break;
+	case 3:	
+		res = FindCommonPoint(a, b, a2w, b2w, v, pa, pb);
+		if (res >= 1) {
+			v.clear();
+			CalcEPA(v, a, b, a2w, b2w, pa, pb);
+			dist = v.norm();
+			normal = v.unit();
+		}
+		break;
+	default:
+		res = ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		break;
+	}
+	return res;
+}
+
 bool CDShapePair::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;
@@ -65,7 +100,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		//	法線向きに判定するとどれだけ戻ると離れるか調べる．
 		//　end = -epsilonとすることで、侵入していない状態(dist == 0)も接触に含むようにした(2012/5/22susa)
 		double dist;
-		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+		int res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-normal, -DBL_MAX, -epsilon, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) {	//	範囲内では、接触していない場合
 			return false;
@@ -83,7 +118,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 			shapePoseW[0].Pos() -= delta0;
 			shapePoseW[1].Pos() -= delta1;
 			double dist;
-			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			int res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 				dir, 0, end, normal, closestPoint[0], closestPoint[1], dist);
 			if (res == 0 || res==-1) return false;	//	前の位置から速度の向きに動かしても接触しない場合
 			if (res == 1){	//	今回の移動で接触していれば
@@ -115,7 +150,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		double dist;
 		if (lastNormal.square() > epsilon) tmpN[0] = lastNormal;
 		else tmpN[0] = Vec3d(0,1,0);
-		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+		int res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpN[0], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;
 		int foundId = 0;
@@ -129,7 +164,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 			tmpN[4] = tmpN[0] ^ tmpN[2];
 			tmpN[5] = -tmpN[4];
 			for(int i=1; i<6; ++i){
-				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				int res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 					-tmpN[i], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 				if (res <=0) return false;
 				if (-dist <= end){	//	この向きに決定
@@ -146,7 +181,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		hits[foundId+1] ++;
 #endif
 		//	tmpN[foundId]を仮法線として、接触位置・侵入量・法線を求める
-		res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+		res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpN[foundId], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;	//	法線の向きに離してから現在位置まで近づけても接触が起きない場合なので、接触なし。
 		depth = -dist;
@@ -215,7 +250,7 @@ void CDShapePair::CalcNormal(){
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
 	Vec3d n = normal;
-	int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+	int res = FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 		-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], depth);
 	if (res <= 0){
 		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << n << std::endl;
@@ -574,7 +609,7 @@ void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
 	Vec3d n = cp->normal;
-	int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
+	int res = FindCommonPointInterface(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
 		-cp->normal, -DBL_MAX, 0, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	// 離れた向きで検出された時のエラー表示
 	// 頻繁に表示されるのでコメントアウトしました susa

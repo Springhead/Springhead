@@ -1278,8 +1278,6 @@ coltimePhase2 += frameTime2;
 	}
 	//	無事停止
 	final2:
-	//uint32_t frameTime3 = p_timer->CountUS();
-	//coltimePhase3 += frameTime3;
 	if (notuse >= 0) {
 		int id0 = ids[(notuse + 1) % 3];	
 		int id1 = ids[(notuse + 2) % 3];
@@ -1709,7 +1707,7 @@ inline Vec3d TriNaibun(Vec3d p1, Vec3d p2, Vec3d p3,Vec3d sep) {
 }
 
 const int EPAsize = 10;
-void FASTCALL CalcEPA(Vec3d &v, CDConvex* a, CDConvex* b, const Posed &a2w, const Posed &b2w, Vec3d& pa, Vec3d& pb) {
+void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed &a2w, const Posed &b2w, Vec3d& pa, Vec3d& pb) {
 	v.clear();
 	int counter = 0;
 	Vec3d origin;
