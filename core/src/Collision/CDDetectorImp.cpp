@@ -9,10 +9,14 @@
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
+#include <Foundation/UTPreciseTimer.h>
 
 namespace Spr {;
 const double epsilon = 1e-16;	//1e-8
 const double epsilon2 = epsilon*epsilon;
+
+extern UTPreciseTimer* p_timer;
+extern int		coltimePhase1;
 
 bool bUseContactVolume=true;
 
@@ -250,8 +254,55 @@ void CDShapePair::CalcNormal(){
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
 	Vec3d n = normal;
+
+	// contだぞ
+	/*
 	int res = FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 		-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], depth);
+		*/
+	//以前の方式
+	/*
+	if (state == NEW) {
+		//	新たな接触の場合は，法線を積分して初期値を求める
+		normal = iNormal;
+		depth = 1e-2;
+	}
+	int count = 0;
+	int res = 0;
+	while (count < 100) {
+		depth *= 2;						//	余裕を見て，深さの2倍動かす
+		Posed trans = shapePoseW[1];			//	動かす行列
+		trans.Pos() += depth * normal;
+		Vec3d v;
+		FindClosestPoints(shape[0], shape[1], shapePoseW[0], trans, v, closestPoint[0], closestPoint[1]);
+		center = shapePoseW[0] * closestPoint[0];
+		n = trans *closestPoint[1] - center;
+		if (n.square() > 1e-10) {
+			res = 1;
+			break;
+		}
+		count++;
+	}
+	depth = depth - n.norm();			//	動かした距離 - 2点の距離
+	normal = n.unit();
+	//center += 0.5f*depth*normal;
+	*/
+
+	//EPA使う
+	
+	int res = FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -n, closestPoint[0], closestPoint[1]);
+	if (res >= 1) {
+		p_timer->CountUS();
+
+		CalcEPA(n, shape[0], shape[1], shapePoseW[0], shapePoseW[1], closestPoint[0], closestPoint[1]);
+		depth = n.norm();
+		normal = n.unit();
+
+		coltimePhase1 += p_timer->CountUS();
+	}
+	
+	
+
 	if (res <= 0){
 		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << n << std::endl;
 		ContFindCommonPointSaveParam(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
