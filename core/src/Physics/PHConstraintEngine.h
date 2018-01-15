@@ -174,6 +174,7 @@ public:
 	void	SetShrinkRateCorrection  (double data){shrinkRateCorrection = data;}
 	double	GetShrinkRateCorrection  (){return shrinkRateCorrection;}
 	void    EnableReport             (bool on);
+	int		GetCollisionTime		 (){return timeCollision;}
 
 	//	接触領域を表示するための情報を更新するかどうか
 	virtual void	EnableRenderContact	(bool enable);

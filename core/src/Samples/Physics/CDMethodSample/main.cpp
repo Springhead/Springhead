@@ -60,11 +60,13 @@ public:
 		ID_SHAKE,
 		ID_METHOD,
 		ID_CCD,
+		ID_SHOWTIME,
 	};
 
 	PHSolidIf*				soFloor;
 	std::vector<PHSolidIf*> soBox;
 
+	bool showColtime;
 	double					floorShakeAmplitude;
 
 public:
@@ -92,11 +94,15 @@ public:
 		AddHotKey(MENU_MAIN, ID_METHOD, 'z');
 		AddAction(MENU_MAIN, ID_CCD, "switch CCD");
 		AddHotKey(MENU_MAIN, ID_CCD, 'x');
+		AddAction(MENU_MAIN, ID_SHOWTIME, "Show Time");
+		AddHotKey(MENU_MAIN, ID_SHOWTIME, 'n');
+
 	}
 	~MyApp(){}
 
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
+		GetPHScene()->SetGravity(Vec3d(0, -1, 0));
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
@@ -111,6 +117,12 @@ public:
 			double omega = 2.0 * M_PI;
 			soFloor->SetFramePosition(Vec3d(floorShakeAmplitude*sin(time*omega),0,0));			
 			soFloor->SetVelocity(Vec3d(floorShakeAmplitude*omega*cos(time*omega),0,0));
+		}
+
+		if (showColtime)
+		{
+			int time = GetPHScene()->GetConstraintEngine()->GetCollisionTime();
+			message = "Collision Time : " + to_string(time);
 		}
 	}
 
@@ -207,6 +219,12 @@ public:
 				if (CCDstate) message = "CCD : Enable";
 				else message = "CCD : Disable";
 				GetPHScene()->EnableCCD(CCDstate);
+			}
+
+			if (id == ID_SHOWTIME) 
+			{
+				showColtime = !showColtime;
+				GetPHScene()->GetConstraintEngine()->EnableReport(showColtime);
 			}
 		}
 		SampleApp::OnAction(menu, id);

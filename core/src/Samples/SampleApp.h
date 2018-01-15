@@ -456,8 +456,11 @@ public: /** 派生クラスが実装する関数 **/
 				exit(0);
 			if(id == ID_RUN)
 				ToggleAction(menu, id);
-			if(id == ID_STEP)
+			if (id == ID_STEP)
+			{
 				GetFWScene()->Step();
+				Display();
+			}
 		}
 		if(menu == MENU_STATE){
 			if(id == ID_LOAD_STATE)
