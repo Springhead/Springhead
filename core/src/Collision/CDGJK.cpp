@@ -855,7 +855,7 @@ coltimePhase2 += frameTime2;
 			lastTriV = s.unit();
 			
 			if (cbiasParam >= 0) {
-				cbiasParam = lastTriV.z;
+				cbiasParam = lastTriV.z * 0.9;
 			}
 			
 			if (cbiasParam > 0) {

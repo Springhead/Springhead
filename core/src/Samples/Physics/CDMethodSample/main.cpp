@@ -102,7 +102,7 @@ public:
 
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
-		GetPHScene()->SetGravity(Vec3d(0, -1, 0));
+		GetPHScene()->SetGravity(Vec3d(0, -2, 0));
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる

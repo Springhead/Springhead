@@ -290,12 +290,12 @@ void CDShapePair::CalcNormal(){
 
 	//EPA使う
 	
-	int res = FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -n, closestPoint[0], closestPoint[1]);
+	int res = FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], n, closestPoint[0], closestPoint[1]);
 	if (res >= 1) {
 		p_timer->CountUS();
 
 		CalcEPA(n, shape[0], shape[1], shapePoseW[0], shapePoseW[1], closestPoint[0], closestPoint[1]);
-		depth = n.norm();
+		depth = -1 * n.norm();
 		normal = n.unit();
 
 		coltimePhase1 += p_timer->CountUS();
