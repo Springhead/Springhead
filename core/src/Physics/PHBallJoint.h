@@ -134,6 +134,7 @@ public:
 		return GetScene()->DelChildObject(m);
 	}
 
+	bool HasLimit() { return limit != NULL; }
 	PHBallJointLimitIf* GetLimit() { return limit->Cast(); }
 
 	Vec3d		GetAngle(){ UpdateState();  return Vec3d(position[0], position[1], position[2]); }
@@ -187,6 +188,10 @@ public:
 	Vec3d GetMotorForceN(int n){
 		if (n < 0 || (size_t) n >= motors.size()) return Vec3d();
 		return Vec3d(motors[n]->f[0], motors[n]->f[1], motors[n]->f[2])* GetScene()->GetTimeStepInv();
+	}
+	Vec3d       GetLimitForce() {
+		if (limit == NULL) return Vec3d();
+		return Vec3d(limit->f[0], limit->f[1], limit->f[2])* GetScene()->GetTimeStepInv();
 	}
 };
 

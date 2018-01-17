@@ -94,6 +94,7 @@ public:
 	double	GetPosition() { UpdateState(); return position[0]; }
 	double	GetVelocity() { UpdateState(); return velocity[0]; }
 
+	bool HasLimit() { return limit != NULL; }
 	PH1DJointLimitIf* GetLimit() { return limit->Cast(); }
 
 	// ----- インタフェースの実装
@@ -147,6 +148,10 @@ public:
 	double GetMotorForceN(int n){
 		if (n < 0 || (size_t) n >= motors.size()) return 0;
 		return motors[n]->f[0] * GetScene()->GetTimeStepInv();
+	}
+	double GetLimitForce() {
+		if (limit == NULL) return 0;
+		return limit->f[0] * GetScene()->GetTimeStepInv();
 	}
 };
 

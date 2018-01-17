@@ -237,6 +237,11 @@ struct PH1DJointIf : public PHJointIf{
 	double	GetVelocity();
 
 	/** @brief 関節可動域拘束を取得する
+	@return 関節可動域拘束
+	*/
+	bool HasLimit();
+
+	/** @brief 関節可動域拘束を取得する
 		@return 関節可動域拘束
 	 */
 	PH1DJointLimitIf* GetLimit();
@@ -362,6 +367,11 @@ struct PH1DJointIf : public PHJointIf{
 	@ return 力
 	*/
 	double GetMotorForceN(int n);
+
+	/** @brief Limitの出力した力を返す
+	@ return 力
+	*/
+	double GetLimitForce();
 };
 
 /// ヒンジのインタフェース
@@ -516,6 +526,11 @@ struct PHBallJointIf : public PHJointIf{
 	Vec3d GetVelocity();
 
 	/** @brief 関節可動域拘束を取得する
+	@return 関節可動域拘束
+	*/
+	bool HasLimit();
+
+	/** @brief 関節可動域拘束を取得する
 		@return 関節可動域拘束
 	 */
 	PHBallJointLimitIf* GetLimit();
@@ -633,6 +648,11 @@ struct PHBallJointIf : public PHJointIf{
 	    @ return 力
 	*/
 	Vec3d GetMotorForceN(int n);
+
+	/** @brief Limitの出力した力を返す
+	@ return 力
+	*/
+	Vec3d GetLimitForce();
 };
 
 /// ボールジョイントのデスクリプタ
