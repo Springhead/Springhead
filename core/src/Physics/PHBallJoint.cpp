@@ -85,6 +85,7 @@ void PHBallJoint::UpdateJointState(){
 	// Swing角の計算
 	Vec3d  lD = Vec3d(); if(limit){ lD = limit->GetLimitDir(); }
 	Vec3d  ez = Xjrel.q * Vec3d(0.0, 0.0, 1.0);
+	//Vec3d  ez = Xjrel.q * lD;
 	double  c = dot(lD, ez); c = max(-1.0, min(c, 1.0));
 	position[0] = acos(c);
 

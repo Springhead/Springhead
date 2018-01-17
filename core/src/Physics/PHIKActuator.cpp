@@ -321,14 +321,15 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 
 void PHIKBallActuator::Move(){
 	if (!bEnabled) { return; }
-
+	/*
 	Vec3d dir = (jointTempOri.RotationHalf() - jointTempOriIntp);
 	double limit = DCAST(PHSceneIf,GetScene())->GetIKEngine()->GetMaxActuatorVelocity();
 	if (dir.norm() > limit) { dir = dir.unit() * limit; }
 	jointTempOriIntp += dir;
 	if (jointVelocity.norm() > limit) { jointVelocity = jointVelocity.unit() * limit; }
-
-	DCAST(PHBallJoint,joint)->SetTargetPosition(Quaterniond::Rot(jointTempOriIntp));
+	*/
+	//DCAST(PHBallJoint,joint)->SetTargetPosition(Quaterniond::Rot(jointTempOriIntp));
+	DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
 
 	/*
@@ -354,11 +355,12 @@ bool PHIKBallActuator::LimitTempJoint() {
 	PHBallJointConeLimitIf* limit = DCAST(PHBallJointIf,joint)->GetLimit()->Cast(); 
 	if (limit) {
 		Vec2d range; limit->GetSwingRange(range);
-		Vec3d   dir  = (jointTempOri * Vec3d(0,0,1)).unit();
-		Vec3d  axis  = PTM::cross(Vec3d(0,0,1), dir);
+		Vec3d limitDir = limit->GetLimitDir();
+		Vec3d   dir  = (jointTempOri * Vec3d(0, 0, 1)).unit();
+		Vec3d  axis  = PTM::cross(limitDir, dir);
 		if (axis.norm() > 1e-5) {
 			axis.unitize();
-			double angle = acos(PTM::dot(Vec3d(0,0,1), dir));
+			double angle = acos(PTM::dot(limitDir, dir));
 
 			if (range[1] <= angle) {
 				Quaterniond pullback = Quaterniond::Rot( axis * (range[1] - angle) );
@@ -500,14 +502,16 @@ void PHIKHingeActuator::CalcPullbackVelocity() {
 void PHIKHingeActuator::Move(){
 	if (!bEnabled) { return; }
 	PHHingeJointIf* hj = joint->Cast();
-
+	/*
 	double limit = DCAST(PHSceneIf,GetScene())->GetIKEngine()->GetMaxActuatorVelocity();
 	double diff = jointTempAngle - jointTempAngleIntp;
 	if (abs(diff) > limit) { diff = diff / abs(diff) * limit; }
 	jointTempAngleIntp += diff;
 	jointVelocity = std::max(-limit, std::min(jointVelocity, limit));
-
+	
 	hj->SetTargetPosition(jointTempAngleIntp);
+	*/
+	hj->SetTargetPosition(jointTempAngle);
 	hj->SetTargetVelocity(jointVelocity);
 
 	/*
