@@ -40,12 +40,20 @@
 #				date:	    Commit date ('YYYY-MM-DD').
 #			    [] if can not get information.
 #
+#	content = get_file_content(path, commit_id)
+#	    Get file contents of specified revision.
+#	    arguments:
+#		path:	    File path relative to repository top dir (str).
+#		commit_id:  Commit id (short form will do) (str).
+#	    returns:	    File contents (str).
+#
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2017/01/11 F.Kanehori	First version (Subversion only).
 #	Ver 1.1  2017/09/13 F.Kanehori	Python library revised.
 #	Ver 1.2  2017/11/16 F.Kanehori	Python library path ÇÃïœçX.
 #	Ver 1.3  2017/12/20 F.Kanehori	GitHub î≈é¿ëï.
+#	Ver 1.4  2018/01/17 F.Kanehori	Add get_file_content().
 # ======================================================================
 import sys
 import os
@@ -113,6 +121,14 @@ class VersionControlSystem:
 		if dir:
 			os.chdir(cwd)
 		return revisions
+
+	#  Get file contents of specified revision.
+	#
+	def get_file_content(self, path, revision):
+		if system == 'GitHub':
+			return self.obj.get_file_content(path, revision)
+		# not implemented.
+		return None
 
 	#  Subclass: Subversion
 	#
@@ -191,6 +207,15 @@ class VersionControlSystem:
 					infos.append(info)
 			return infos
 
+		def get_file_content(self, path, commit_id):
+			url = self.url
+			contents = []
+			cmnd = 'git show %s:%s' % (commit_id, path)
+			status, out, err = self.__exec(url, cmnd)
+			if status != 0:
+				return None
+			return out
+
 		def __exec(self, url, cmnd):
 			cmnd1 = cmnd
 			cmnd2 = 'nkf -s'
@@ -211,8 +236,9 @@ class VersionControlSystem:
 #  Test main
 #
 #  ** CAUTION **
-#	This test program is used by "MakeReportXXX.bat" of DailyBuild.
-#	So do not DELETE nor CHANGE INTERFACE of this program.
+#	This test program is used by DailyBuild task.
+#	    "TestAllGit.bat" and "MakeReport{Git|SVN}.bat"
+#	So do not DELETE nor MODIFY this program.
 # ----------------------------------------------------------------------
 if __name__ == '__main__':
 
@@ -220,7 +246,7 @@ if __name__ == '__main__':
 	topdir_git = '../../../../Springhead'
 
 	# --------------------------------------------------------------
-	usage = 'Usage: %prog [options] {HEAD | all | test}'
+	usage = 'Usage: %prog [options] {HEAD | all | commit-id}'
 	parser = OptionParser(usage = usage)
 	parser.add_option('-s', '--subversion',
 				dest='subversion', action='store_true', default=False,
@@ -228,6 +254,9 @@ if __name__ == '__main__':
 	parser.add_option('-g', '--github',
 				dest='github', action='store_true', default=False,
 				help='use GitHub')
+	parser.add_option('-f', '--fname',
+				dest='fname', default=None,
+				help='get file content')
 	parser.add_option('-v', '--verbose',
 				dest='verbose', action='count', default=0,
 				help='set verbose mode')
@@ -280,6 +309,14 @@ if __name__ == '__main__':
 				print('%s,%s,%s' % (rev[0], rev[1], rev[2]))
 		else:
 			print('%s,%s,%s' % (revs[0], revs[1], revs[2]))
+		return revs
+
+	def contents(topdir, fname, commit_id):
+		vcs = VersionControlSystem(system, args, verbose)
+		revs = vcs.revision_info(topdir, commit_id)
+		contents = vcs.get_file_content(fname, commit_id)
+		print('----[%s]----' % commit_id)
+		print(contents)
 
 	# --------------------------------------------------------------
 	if system == 'Subversion':
@@ -288,7 +325,10 @@ if __name__ == '__main__':
 
 	if system == 'GitHub':
 		args = {'url': 'http://github.com/sprphys/Springhead/'}
-		revisions = info(system, args, topdir_git, revision)
+		if options.fname:
+			contents(topdir_git, options.fname, revision)
+		else:
+			revisions = info(system, args, topdir_git, revision)
 
 	sys.exit(0)
 
