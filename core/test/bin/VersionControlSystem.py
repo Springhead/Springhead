@@ -53,7 +53,7 @@
 #	Ver 1.1  2017/09/13 F.Kanehori	Python library revised.
 #	Ver 1.2  2017/11/16 F.Kanehori	Python library path ÇÃïœçX.
 #	Ver 1.3  2017/12/20 F.Kanehori	GitHub î≈é¿ëï.
-#	Ver 1.4  2018/01/17 F.Kanehori	Add get_file_content().
+#	Ver 1.4  2018/01/18 F.Kanehori	Add get_file_content().
 # ======================================================================
 import sys
 import os
@@ -301,22 +301,21 @@ if __name__ == '__main__':
 		for rev in revisions:
 			print('         %s' % rev)
 
-	def info(system, args, topdir, commit_id):
+	def info(system, args, topdir, commit_id, out=True):
 		vcs = VersionControlSystem(system, args, verbose)
 		revs = vcs.revision_info(topdir, commit_id)
-		if commit_id == 'all':
+		if out:
+			if commit_id != 'all':
+				revs = [revs]
 			for rev in revs:
 				print('%s,%s,%s' % (rev[0], rev[1], rev[2]))
-		else:
-			print('%s,%s,%s' % (revs[0], revs[1], revs[2]))
 		return revs
 
-	def contents(topdir, fname, commit_id):
+	def contents(topdir, fname, rev):
 		vcs = VersionControlSystem(system, args, verbose)
-		revs = vcs.revision_info(topdir, commit_id)
-		contents = vcs.get_file_content(fname, commit_id)
-		print('----[%s]----' % commit_id)
-		print(contents)
+		contents = vcs.get_file_content(fname, rev[0])
+		print('--[%s,%s,%s]--' % (rev[0], rev[1], rev[2]))
+		print(contents.replace('\r', ''))
 
 	# --------------------------------------------------------------
 	if system == 'Subversion':
@@ -326,7 +325,11 @@ if __name__ == '__main__':
 	if system == 'GitHub':
 		args = {'url': 'http://github.com/sprphys/Springhead/'}
 		if options.fname:
-			contents(topdir_git, options.fname, revision)
+			revs = info(system, args, topdir_git, revision, out=False)
+			if not isinstance(revs[0], list):
+				revs = [revs]
+			for rev in revs:
+				contents(topdir_git, options.fname, rev)
 		else:
 			revisions = info(system, args, topdir_git, revision)
 
