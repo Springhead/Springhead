@@ -26,6 +26,7 @@ setlocal enabledelayedexpansion
 ::	Ver 4.0  2017/12/13 F.Kanehori	GitHub 対応
 ::	Ver 4.1  2017/12/21 F.Kanehori	Log directory on web server changed.
 ::	Ver 4.2  2017/12/25 F.Kanehori	日付情報ファイルを作成
+::	Ver 4.3  2018/01/17 F.Kanehori	result.log 履歴ファイルを作成
 :: ============================================================================
 set PROG=%~n0
 set CWD=%cd%
@@ -96,6 +97,7 @@ set BLD_FAIL_LOG_LIST=StubBuildError.log BuildError.log SamplesBuildError.log
 set RUN_SUCC_LOG_LIST=dummy_s.log Run.log SamplesRun.log
 set RUN_FAIL_LOG_LIST=dummy_f.log RunError.log SamplesRunError.log
 set RESULT_LOG=result.log
+set RESULT_HISTORY=%RESULT_LOG%.history
 set HISTORY_LOG=History.log
 set DATE_LOG=Test.date
 call :prepend_logdir BLD_SUCC_LOG_LIST %LOGDIR%
@@ -103,6 +105,7 @@ call :prepend_logdir BLD_FAIL_LOG_LIST %LOGDIR%
 call :prepend_logdir RUN_SUCC_LOG_LIST %LOGDIR%
 call :prepend_logdir RUN_FAIL_LOG_LIST %LOGDIR%
 set RESULT_LOG=%LOGDIR%\%RESULT_LOG%
+set RESULT_HISTORY=%LOGDIR%\%RESULT_HISTORY%
 set HISTORY_LOG=%LOGDIR%\%HISTORY_LOG%
 set DATE_LOG=%LOGDIR%\%DATE_LOG%
 call :list_to_array BLD_SUCC_LOGS %BLD_SUCC_LOG_LIST%
@@ -301,6 +304,14 @@ if %$status% == 0 (
 	rem ** 履歴情報を出力 **
 	cd bin
 	python VersionControlSystem.py -g all > ..\%HISTORY_LOG%
+
+	rem ** 過去の result.log の内容を出力 **
+	if exist ..\%RESULT_HISTORY% del ..\%RESULT_HISTORY%
+	for /f "delims=" %%a in (..\%HISTORY_LOG%) do (
+		set TMP=%%a
+		set ARGS=-f core/test/log/result.log !TMP:~0,7!
+		python VersionControlSystem.py -g !ARGS! >> ..\%RESULT_HISTORY%
+	)
 	cd ..
 )
 
