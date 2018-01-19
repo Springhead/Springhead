@@ -21,6 +21,7 @@ extern int		coltimePhase1;
 bool bUseContactVolume=true;
 
 int s_methodSW = 0; //0=通常,1=加速,2=Gino,3=GJK
+int s_accelThreshold = 24;
 //衝突判定メソッドのインターフェース
 int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
@@ -34,7 +35,12 @@ int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
 		res = ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 		break;
 	case 1:
-		res = ContFindCommonPointAccel(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		if (a->GetVtxCount() < s_accelThreshold || b->GetVtxCount() < s_accelThreshold) {
+			res = ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		}
+		else {
+			res = ContFindCommonPointAccel(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		}
 		break;
 	case 2:
 		res = ContFindCommonPointGino(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);

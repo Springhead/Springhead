@@ -37,6 +37,8 @@ public:
 	///< 表面上の点pにおける法線
 	virtual Vec3d Normal(Vec3d p);
 
+	virtual int GetVtxCount() const { return INT32_MAX; };
+
 	Vec2f GetRadius();
 	float GetLength();
 	void SetRadius(Vec2f r);

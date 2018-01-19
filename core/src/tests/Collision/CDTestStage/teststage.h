@@ -261,7 +261,7 @@ public:
 		shapeBox = sdk->CreateShape(bd)->Cast();
 
 		CDSphereDesc sd;
-		sd.radius = 1;
+		sd.radius = 2;
 		shapeSphere = sdk->CreateShape(sd)->Cast();
 
 		CDCapsuleDesc cd;
