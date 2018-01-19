@@ -48,7 +48,7 @@ public:
 	virtual Vec3f* GetBase(){return NULL;}
 
 	// 頂点数を返す
-	virtual int GetVtxCount() { return -1; };
+	virtual int GetVtxCount() const = 0;
 	virtual float GetMaxSurf() { return maxSurfArea; };
 	///	バウンディングボックスを求める．
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);

@@ -41,6 +41,7 @@ using namespace Spr;
 #define COLTIME_AVE_FRAME 90	//衝突判定時間の平均を何フレームごとに出すか
 
 const double epsilon = 1e-16;	//1e-8
+const float testHeight = 5;
 const float moverate = 0.05f;
 const float rotaterate = M_PI/180; //1°刻み
 
@@ -131,7 +132,7 @@ void StartAutomode(bool sameFile) {
 	outCount = 0;
 	if(!sameFile) SetFileName();
 	obj[0].SetRot(Quaternionf());
-	obj[0].SetPos(Vec3f(-3, 3, -3));
+	obj[0].SetPos(Vec3f(-3, testHeight, -3));
 	if (!superAuto) {
 		ofstream ofs(filename, ios::app);
 		ofs << colMethod << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << "," << biasParam << std::endl;
@@ -206,7 +207,7 @@ void __cdecl display(){
 			Vec3d pos[2];
 			double dist = 0;
 			Vec3d dir(0, -1, 0);
-			double dirLength = 5;
+			double dirLength = testHeight*2;
 			int res;
 			colcounter = 0;
 			float maxSurf = mesh[0]->GetMaxSurf();
@@ -252,7 +253,7 @@ void __cdecl display(){
 						recordCount = 0;
 						transCount++;
 						obj[0].SetRot(Quaternionf());
-						obj[0].SetPos(Vec3f(transCount % 6 - 3, 3, transCount / 6 - 3));
+						obj[0].SetPos(Vec3f(transCount % 6 - 3, testHeight, transCount / 6 - 3));
 						if (!superAuto) {
 							ofstream ofs(filename, ios::app);
 							if (hitCount > 0)

@@ -36,6 +36,8 @@ public:
 
 	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 
+	virtual int GetVtxCount() const { return INT32_MAX; };
+
 	float	GetRadius(){ return radius; }
 	void	SetRadius(float r){ radius = r; bboxReady = false; }
 };

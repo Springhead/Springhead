@@ -31,6 +31,8 @@ public:
 	/// ただし、球体に関しては、切り口は求めない。接触解析時には最近傍の１点さえあればいい。
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
+
+	virtual int GetVtxCount() const { return INT32_MAX; };
 	
 	float	GetRadius()       { return radius; }
 	void	SetRadius(float r){ radius = r; bboxReady = false; }

@@ -1136,9 +1136,9 @@ coltimePhase2 += frameTime2;
 			}
 			else {
 				//	初めてならば、2頂点の法線の平均の線分に垂直な成分をつかう。
-				Vec3d ave = v[ids[id0]] + v[ids[id1]];
+				Vec3d ave = (v[ids[id0]] + v[ids[id1]])/2.0;
 				Vec3d line = (w[ids[id1]] - w[ids[id0]]);
-				double len = line.norm();
+				double len = line.XY().norm();
 				if (len == 0) {
 					DSTR << "id0:" << id0 << " id1:" << id1 << std::endl;
 					DSTR << "ids:"; for (int i = 0; i < 4; ++i) DSTR << ids[i]; DSTR << std::endl;
@@ -1148,13 +1148,13 @@ coltimePhase2 += frameTime2;
 				}
 				else {
 #if NORM_BIAS >= 1
-					double p = ave.z / 2.0;
+					double p = ave.z;
 					double w0len = w[ids[id0]].XY().norm();
-					double w1len = w[ids[id1]].XY().norm();
-					double rate = 1-(w0len / (w0len+w1len));
+					//double w1len = w[ids[id1]].XY().norm();
+					double rate = 1-(w0len / len);
 					Vec3d acc = (v[ids[id0]] * rate + v[ids[id1]] * (1 - rate));
-					line /= len;
-					ave = ave - (ave * line) * line;
+					//line /= len;
+					//ave = ave - (ave * line) * line;
 					ave = ave * (1 - p) + acc * p;
 #else
 					line /= len;
@@ -1873,10 +1873,10 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	Posed a2l = a2w;
 	Posed b2l = b2w;
 	dist = 0;
-	if (start < -epsilon) start = -epsilon;
+	if (start < -10e+3) start = -10e+3;
 	double cdist = end - start;
-	bool rangeSw = abs(end - start) > 1e+300 ;
 	Vec3d r = dir*(end-start);
+	a2l.Pos() += r;
 	Vec3d tmpV;
 	//近づくまで繰り返し
 	int count = 0;
@@ -1887,15 +1887,9 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 		if (count > 100) break;
 		//GJKの計算
 		
+		tmpV.clear();
+		cdist = FindClosestPoints(a, b, a2l, b2l, tmpV, pa, pb);
 		if (cdist < 0.0001) {
-			//uint32_t frameTime1 = p_timer->CountUS();
-			//coltimePhase1 += frameTime1;
-			//ここでめり込み量を計算できるか?
-			//calcEPAのイテレーションが問題っぽい．最後の単体ののーまるだとそこそこうまくいく
-			//ただ接触点はやはり重要っぽい
-			//CalcEPA(tmpV, a, b, a2l, b2l,pa,pb);
-			//if (tmpV.square() > 0) {
-				//normal = tmpV.unit();
 				if (start < 0) {
 					dist += -tmpV.norm();
 				}
@@ -1906,11 +1900,8 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 			ret = 1;
 			break;
 		}
-		tmpV.clear();
-		cdist = FindClosestPoints(a, b, a2l, b2l, tmpV, pa, pb);
-		//if (rangeSw) {
-			
-		//}
+		
+		
 
 		CalcNormal(normal,a2l.Pos()-b2l.Pos());
 		//ramuda
@@ -1925,8 +1916,8 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 		double lambda = vw/vr;
 		cdist = (r*lambda).norm();
 		r -= dir*cdist;	
-		dist += cdist;//めり込み量(-)が出せない
-		if (dist > end + epsilon) { ret = -1; break; }
+		dist += cdist;
+		if (dist > end + (end - start) + epsilon) { ret = -1; break; }
 		if (dist < start) { ret = -2; break; }
 		//if (cdist < 0.00001) cdist += 0.0001;
 
@@ -1935,6 +1926,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 		b2l.Pos() +=   dir * cdist*0.5f;
 	}
 	//CalcContactPoint(pa, pb);
+	dist -= (end - start);
 	uint32_t frameTime1 = p_timer->CountUS();
 	coltimePhase1 += frameTime1;
 	if (normal.square() < epsilon2) return 0;
