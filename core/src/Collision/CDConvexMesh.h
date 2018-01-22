@@ -87,7 +87,7 @@ public:
 	virtual std::vector<int>& FindNeighbors(int vtx);
 	virtual Vec3f*            GetBase() { return &*base.begin(); };
 
-	virtual int		GetVtxCount() const { return base.size(); };
+	virtual int		GetVtxCount() const { return (int)base.size(); };
 
 	CDFaceIf* GetFace(int i);
 	int       NFace();
