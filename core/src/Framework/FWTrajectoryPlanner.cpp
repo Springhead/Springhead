@@ -793,7 +793,7 @@ void FWTrajectoryPlanner::HingeJoint::TrajectoryCorrection(int k, bool s) {
 	double start = 0;
 	int last = 0;
 	if (viaCorrect) {
-		for (int i = 0; i < viaAngles.size(); i++) {
+		for (int i = 0; i < (int)viaAngles.size(); i++) {
 			end = viaAngles[i] - angleLPF[k][viatimes[i] - 1];
 			int starttime = ((i == 0) ? 0 : viatimes[i - 1]);
 			time = viatimes[i] - starttime;
@@ -859,7 +859,7 @@ double FWTrajectoryPlanner::HingeJoint::CalcTotalTorqueChange() {
 double FWTrajectoryPlanner::HingeJoint::CalcTorqueChangeInSection(int n) {
 	//n = 0, ..., nVia - 1(経由点としては最後), nVia(目標点だけど経由点同様に扱う)
 	double total = 0;
-	if (n >= 0 && n < viatimes.size()) {
+	if (n >= 0 && n < (int)viatimes.size()) {
 		int start = (n == 0) ? 0 : viatimes[n - 1];
 		int end = viatimes[n];
 		for (int i = start; i < end; i++) {
@@ -870,7 +870,7 @@ double FWTrajectoryPlanner::HingeJoint::CalcTorqueChangeInSection(int n) {
 	return total * weight;
 }
 void FWTrajectoryPlanner::HingeJoint::SetBestTorqueChange() {
-	for (int n = 0; n < viatimes.size(); n++) {
+	for (int n = 0; n < (int)viatimes.size(); n++) {
 		tChanges[n] = CalcTorqueChangeInSection(n);
 	}
 }
@@ -976,7 +976,7 @@ void FWTrajectoryPlanner::BallJoint::TrajectoryCorrection(int k, bool s) {
 	Quaterniond start = Quaterniond();
 	int last = 0;
 	if (viaCorrect) {
-		for (int i = 0; i < viaOris.size(); i++) {
+		for (int i = 0; i < (int)viaOris.size(); i++) {
 			end = viaOris[i] * oriLPF[k][viatimes[i] - 1].Inv();
 			int starttime = ((i == 0) ? 0 : viatimes[i - 1]);
 			time = viatimes[i] - starttime;
@@ -1048,7 +1048,7 @@ double FWTrajectoryPlanner::BallJoint::CalcTotalTorqueChange() {
 }
 double FWTrajectoryPlanner::BallJoint::CalcTorqueChangeInSection(int n) {
 	double total = 0;
-	if (n >= 0 && n < viatimes.size()) {
+	if (n >= 0 && n < (int)viatimes.size()) {
 		int start = (n == 0) ? 0 : viatimes[n - 1];
 		int end = viatimes[n];
 		for (int i = start; i < end; i++) {
@@ -1062,7 +1062,7 @@ double FWTrajectoryPlanner::BallJoint::CalcTorqueChangeInSection(int n) {
 	return total * weight;
 }
 void FWTrajectoryPlanner::BallJoint::SetBestTorqueChange() {
-	for(int n = 0; n < viatimes.size(); n++) {
+	for(int n = 0; n < (int)viatimes.size(); n++) {
 		tChanges[n] = CalcTorqueChangeInSection(n);
 	}
 }
@@ -1144,11 +1144,11 @@ void FWTrajectoryPlanner::Joints::SaveTorque(int n) {
 }
 
 void FWTrajectoryPlanner::Joints::SaveTarget() {
-	for (int i = 0; i < balls.size(); i++)
+	for (int i = 0; i < (int)balls.size(); i++)
 	{
 		balls[i].SaveTarget();
 	}
-	for (int i = 0; i < hinges.size(); i++)
+	for (int i = 0; i < (int)hinges.size(); i++)
 	{
 		hinges[i].SaveTarget();
 	}
@@ -1559,7 +1559,7 @@ void FWTrajectoryPlanner::Init() {
 	CheckAndSetJoints();
 
 	//jointsの初期化
-	joints.initialize(iterate, movtime, viaPoints.size(), rate, viaCorrect);
+	joints.initialize(iterate, movtime, (int)viaPoints.size(), rate, viaCorrect);
 	joints.SetWeight();
 	joints.SetPD(spring, damper, mul);
 
@@ -1573,7 +1573,7 @@ void FWTrajectoryPlanner::Init() {
 	states = ObjectStatesIf::Create();
 	cstates = ObjectStatesIf::Create();
 	tmpstates.clear();
-	for (int i = 0; i < viaPoints.size(); i++) {
+	for (int i = 0; i < (int)viaPoints.size(); i++) {
 		tmpstates.push_back(ObjectStatesIf::Create());
 	}
 	DSTR << scene->GetCount() << std::endl;
@@ -1945,8 +1945,8 @@ void FWTrajectoryPlanner::MakeMinJerkAndSave() {
 		//trajData[0][reach].Ori() = eef->GetSolid()->GetPose().Ori();
 	} //多分他の方法を使うべき
 
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < nBall; i++)
 	{
 		joints.balls[i].targetOri = joints.balls[i].ball->GetJoint()->GetPosition();
@@ -2064,8 +2064,8 @@ void FWTrajectoryPlanner::MakeMinJerkAndSaveWithViaPoint() {
 		//trajData[0][reach].Ori() = eef->GetSolid()->GetPose().Ori();
 	} //多分他の方法を使うべき
 
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < nBall; i++)
 	{
 		joints.balls[i].targetOri = joints.balls[i].ball->GetJoint()->GetPosition();
@@ -2240,8 +2240,8 @@ void FWTrajectoryPlanner::JointTrajStep(bool step) {
 			}
 		}
 		else {
-			int nBall = joints.balls.size();
-			int nHinge = joints.hinges.size();
+			int nBall = (int)joints.balls.size();
+			int nHinge = (int)joints.hinges.size();
 			for (int i = 0; i < nBall; i++)
 			{
 				BallJoint* bj = &joints.balls[i];
@@ -2259,8 +2259,8 @@ void FWTrajectoryPlanner::JointTrajStep(bool step) {
 }
 
 void FWTrajectoryPlanner::JointTrajCorrection(int k) {   //目標と暫定終端間でMinJerkを作り修正
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < nBall; i++)
 	{
 		joints.balls[i].vel = joints.balls[i].ball->GetJoint()->GetVelocity();
@@ -2294,8 +2294,8 @@ void FWTrajectoryPlanner::JointTrajCorrection(int k) {   //目標と暫定終端間でMin
 }
 
 void FWTrajectoryPlanner::JointTrajCorrectionWithViaPoint(int k) {
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < nBall; i++)
 	{
 		joints.balls[i].vel = joints.balls[i].ball->GetJoint()->GetVelocity();
@@ -2409,7 +2409,7 @@ void FWTrajectoryPlanner::OutputTrajectory(std::string filename) {
 	//とりあえず可視化しやすい手先軌道を出力して軌道可視化に使う
 	std::ofstream outfile(filename + ".csv");
 	for (int i = 0; i < iterate + 1; i++) {
-		for (int j = 0; j < trajData.width(); j++) {
+		for (int j = 0; j < (int)trajData.width(); j++) {
 			outfile << trajData[i][j].Pos().x << "," << trajData[i][j].Pos().y << "," << trajData[i][j].Pos().z << "," << std::endl;
 		}
 	}
@@ -2440,8 +2440,8 @@ void FWTrajectoryPlanner::OutputVelocity(std::string filename) {
 		}
 	}
 	std::ofstream outfile3(filename + "VelocityDelta.csv");
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < iterate; i++) {
 		for (int j = 0; j < movtime; j++) {
 			for (int k = 0; k < nBall; k++)
@@ -2588,7 +2588,7 @@ void FWTrajectoryPlanner::FIRM(ControlPoint tpoint, int LPFmode, int smoothCount
 bool FWTrajectoryPlanner::ViatimeAdjustment() {
 	//トルクの総変化量と各セクションでの変化量を取得
 	//目標点前のセクションだけ別にするのは変かもしれない
-	int nVia = viaPoints.size();
+	int nVia = (int)viaPoints.size();
 	double* tChange = new double[nVia + 1];
 	for (int i = 0; i < nVia + 1; i++) {
 		tChange[i] = joints.GetBestTorqueChangeInSection(i);
@@ -2640,7 +2640,7 @@ bool FWTrajectoryPlanner::ViatimeAdjustment() {
 
 void FWTrajectoryPlanner::ViatimeInitialize() {
 	//各経由点の通過時間を等間隔に初期化
-	int nVia = viaPoints.size();
+	int nVia = (int)viaPoints.size();
 	for (int i = 0; i < nVia; i++) {
 		viaPoints[i].time = movtime * scene->GetTimeStep() * (i + 1) / (nVia + 1);
 		viaPoints[i].step = TimeToStep(viaPoints[i].time);
@@ -2667,7 +2667,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 	}
 	/*/
 	//境界条件満足の部分軌道を足し合わせて経由点を通る軌道実現
-	for (int i = 0; i < viaPoints.size(); i++) {
+	for (int i = 0; i < (int)viaPoints.size(); i++) {
 		ControlPoint s = ControlPoint(Posed(), Vec6d(), (i == 0) ? startPoint.step : viaPoints[i - 1].step, (i == 0) ? startPoint.time : viaPoints[i - 1].time);
 		ControlPoint f = ControlPoint(Posed(), Vec6d(), movtime, targetPoint.time);
 		ControlPoint c = viaPoints[i];
@@ -2708,7 +2708,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 		for (int i = 0; i < 1; i++) {
 			scene->Step();
 		}
-		if (count < viaPoints.size()) {
+		if (count < (int)viaPoints.size()) {
 			if (reach == (viaPoints[count].step - 1)) {
 				joints.SaveViaPoint(count, (viaPoints[count].step));
 				count++;
@@ -2725,8 +2725,8 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 
 	joints.SaveViaPoint(count, movtime);
 
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	/*
 	for (int i = 0; i < nBall; i++)
 	{
@@ -2754,7 +2754,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 			for (int j = 0; j < movtime; j++) {
 				bj->ori[0][j] = qmjt.GetCurrentQuaternion(j + 1);
 			}
-			for (int j = 0; j < viaPoints.size(); j++) {
+			for (int j = 0; j < (int)viaPoints.size(); j++) {
 				int st = (j == 0) ? startPoint.step : viaPoints[j - 1].step;
 				Quaterniond v = bj->viaOris[j] * bj->ori[0][viaPoints[j].step - 1].Inv();
 				int t = movtime - st;
@@ -2791,7 +2791,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 			for (int j = 0; j < movtime; j++) {
 				hj->angle[0][j] = hmjt.GetCurrentAngle(j + 1);
 			}
-			for (int j = 0; j < viaPoints.size(); j++) {
+			for (int j = 0; j < (int)viaPoints.size(); j++) {
 				int st = (j == 0) ? startPoint.step : viaPoints[j - 1].step;
 				double v = hj->viaAngles[j] - hj->angle[0][viaPoints[j].step - 1];
 				int t = movtime - st;
@@ -2839,7 +2839,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 		//joints.SetTargetCurrent();
 		Debug();
 		scene->Step();
-		if (count < viaPoints.size()) {
+		if (count < (int)viaPoints.size()) {
 			if (i == (viaPoints[count].step - 1)) {
 				joints.SaveViaPoint(count, (viaPoints[count].step));
 				cstates->SaveState(scene);
@@ -2867,8 +2867,8 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 void FWTrajectoryPlanner::Forward(int k) {
 	scene->GetIKEngine()->Enable(false);
 	joints.Soften();
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < nBall; i++)
 	{
 		DSTR << joints.balls[i].initialTorque << " ";
@@ -2914,7 +2914,7 @@ void FWTrajectoryPlanner::Inverse(int k) {
 		//Stepで軌道再生
 		scene->Step();
 
-		if (count < viaPoints.size()) {
+		if (count < (int)viaPoints.size()) {
 			if (i == (viaPoints[count].step - 1)) {
 				tmpstates[count++]->SaveState(scene);
 			}
@@ -2947,8 +2947,8 @@ void FWTrajectoryPlanner::Inverse(int k) {
 void FWTrajectoryPlanner::Correction(int k) {
 	//この前のFDMの終了時には目標到達時間における状態で終了しているはず(多分未到達だが)
 	//なので、ここで到達位置や速度を保存しておく
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < nBall; i++)
 	{
 		joints.balls[i].vel = joints.balls[i].ball->GetJoint()->GetVelocity();
@@ -2992,7 +2992,7 @@ void FWTrajectoryPlanner::Correction(int k) {
 	}
 
 	//以降では経由点の通過保証修正を行う
-	for (int n = 0; n < viaPoints.size(); n++) {
+	for (int n = 0; n < (int)viaPoints.size(); n++) {
 		tmpstates[n]->LoadState(scene);
 		scene->GetIKEngine()->ApplyExactState();
 		eef->SetTargetPosition(viaPoints[n].pose.Pos());
@@ -3051,7 +3051,7 @@ void FWTrajectoryPlanner::CalcTrajectory(ControlPoint tpoint, int LPFmode, int s
 	bool cont = true;
 	for (int i = 0; i < (iterateViaAdjust + 1) && cont; i++) {
 		//現在の経由点通過時間を記録
-		for (int j = 0; j < viaPoints.size(); j++) {
+		for (int j = 0; j < (int)viaPoints.size(); j++) {
 			outfile << viaPoints[j].step << ",";
 		}
 		outfile << std::endl;

@@ -40,6 +40,16 @@ class CDFaces:public std::vector<CDFace>{
 
 ///	凸多面体
 class CDConvexMesh : public CDConvex{
+protected:
+	/// 全頂点の平均
+	Vec3f average;
+	/// 体積
+	float volume;
+	/// 重心
+	Vec3f center;
+	/// 慣性行列
+	Matrix3f inertia;
+
 public:
 	SPR_OBJECTDEF(CDConvexMesh);
 	//	Descのメンバ、SPR_DECLMEMBEROF_CDConvexMeshDesc は使わない。代わりにGetDesc, SetDesc, GetDescSizeを使う
@@ -62,12 +72,13 @@ public:
 
 	///	頂点から面や接続情報を生成する．
 	void CalcFace();
+	/// 体積, 重心, 慣性行列の計算
+	void CalcMetric();
 
 	/// CDShapeの仮想関数
 	virtual float    CalcVolume();
 	virtual Vec3f    CalcCenterOfMass();
 	virtual Matrix3f CalcMomentOfInertia();
-	virtual void	 CalcMetrics();
 	virtual bool     IsInside(const Vec3f& p);
 	virtual int      LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 	
@@ -93,6 +104,12 @@ public:
 protected:
 	///	同一平面上で接続されている3角形をマージする
 	void MergeFace();
+	/// 面の法線を計算(Inside用)
+	void CalcFaceNormals();
+
+	///	平均座標を計算する。
+	void CalcAverage();
+
 };
 
 }	//	namespace Spr
