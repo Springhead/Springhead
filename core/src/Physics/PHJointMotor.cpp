@@ -86,6 +86,11 @@ Vec2d JointFunctions::ResistanceTorque(int a, PHBallJointIf* jo, void* param){
 			delta = range[1];
 		}
 	}
+	double dt = jo->GetScene()->GetTimeStep();
+	double torque = resistCalc(delta, k_1, k_2, k_3, k_4);
+	if (abs(torque) > (jo->GetMaxForce() / 2)) { 
+		DSTR << "over:" << torque << std::endl; 
+	}
 	double k = k_1 * exp(k_1 * (delta - k_2)) + k_3 * exp(k_3 * (k_4 - delta));
 	double t = (k == 0 ? 0 : delta - (exp(k_1 * (delta - k_2)) - exp(k_3 * (k_4 - delta))) / k);
 	return Vec2d(abs(k), t);
