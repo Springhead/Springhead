@@ -34,7 +34,7 @@ namespace Spr {
 		MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, ControlPoint vpoint, double per);
 		Posed GetCurrentPose(int t);
 		Posed GetDeltaPose(int t);
-		Vec6d GetVelocity(int t);
+		Vec6d GetCurrentVelocity(int t);
 		double GetCurrentActiveness(int t);
 	};
 
@@ -96,7 +96,7 @@ namespace Spr {
 		class Joint {
 		public:
 			virtual void Initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true) = 0;
-			virtual void MakeJointMinjerk() = 0;
+			virtual void MakeJointMinjerk(int cnt) = 0;
 			virtual void CloseFile() = 0;
 			virtual void SaveTorque(int n) = 0;
 			virtual void SaveTarget() = 0;
@@ -174,7 +174,7 @@ namespace Spr {
 			HingeJoint(PHIKHingeActuatorIf* hinge, std::string path, bool oe);
 			~HingeJoint();
 			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0, bool vCorr = true);
-			void MakeJointMinjerk();
+			void MakeJointMinjerk(int cnt);
 			void CloseFile();
 			void SaveTorque(int n);
 			void SaveTarget();
@@ -252,7 +252,7 @@ namespace Spr {
 			BallJoint(PHIKBallActuatorIf* ball, std::string path, bool oe);
 			~BallJoint();
 			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0, bool vCorr = true);
-			void MakeJointMinjerk();
+			void MakeJointMinjerk(int cnt);
 			void CloseFile();
 			void SaveTorque(int n);
 			void SaveTarget();
@@ -298,7 +298,7 @@ namespace Spr {
 			void RemoveAll();
 			void Add(PHIKActuatorIf* j, std::string path, bool oe = true);
 			void Initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true);
-			void MakeJointMinjerk();
+			void MakeJointMinjerk(int cnt);
 			void CloseFile();
 			void SetTarget(int k, int n);
 			void SetTargetVelocity(int k, int n);
