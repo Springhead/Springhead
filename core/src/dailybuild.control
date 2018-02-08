@@ -25,24 +25,14 @@ Run		False
 #RunErrLog	# Run error log file path
 #Intervention	False
 
-UseCMake	True
-CMakeBuildDir	build
-CMakeTopDir	$(SprTop)
-#CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
-#CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
-CMakeOutputDir	$(CMakeBuildDir)/$CONFIGURATION
-
 [Windows]
 BuildLog	$(SprTest)/log/StubBuild.log
 BuildErrLog	$(SprTest)/log/StubBuildError.log
 
 [unix]
 SolutionAlias	Makefile
-MakeTarget	install
 BuildLog	$(SprTest)/log/springhead.lib.log
 BuildErrLog	$(SprTest)/log/springhead.lib.error.log
 #OutputDir	.
-CMakeOutputDir	$(CMakeBuildDir)
 #BinaryOutName	a.out
-#UseCMake	False
 

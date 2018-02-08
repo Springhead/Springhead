@@ -1,11 +1,11 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  FILE:
 #	TextFioTest.py
 #
 #  DESCRIPTION:
-#	Test program for class TextFio (Ver 2.2).
+#	Test program for class TextFio (Ver 2.04).
 # ======================================================================
 import sys
 import os
@@ -62,7 +62,7 @@ print('Test program for class: %s, Ver %s\n' % (T.clsname, T.version))
 #
 print('---- encoding ----')
 print()
-encs = ['utf8', 'sjis', 'unicode', 'jis', 'euc', 'ascii', 'utf8-bom', 'utf16']
+encs = ['utf8', 'sjis', 'unicode', 'jis', 'euc', 'ascii', 'utf8-bom']
 for enc in encs:
 	fname = 'test/TextFioTest.' + enc
 	f = TextFio(fname, verbose=verbose)

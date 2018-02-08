@@ -1,4 +1,4 @@
-Ôªø#!/usr/local/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -9,8 +9,8 @@
 #	    ctl-file:	Test control file name (leaf name).
 #	    section:	Test control section name.
 #	options:
-#	    -c CONFIGS:	    Configurations to be tested (CONFS).
-#	    -p PLATFORMS:   Platforms to be tested (PLATS).
+#	    -c CONFIG:	    Configurations to be tested (Debug, Release, Trace).
+#	    -p PLATFORM:    Platforms to be tested (x86, x64).
 #	    -r:		    Force rebuild.
 #	    -s:		    No progress report.
 #	    -t TOOLSET:	    C-compiler version.
@@ -24,8 +24,6 @@
 #	    -v:		    Set verbose level (0: silent).
 #	    -V:		    Show version.
 #
-#	* see "ConstDefs.py" for CONFS and PLATS.
-#
 #  DESCRIPTION:
 #	Test program for Splinghead library and its applications.
 #	This program was intended to run 'dailybuild' test promarily, but is
@@ -37,12 +35,9 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2016/11/17 F.Kanehori	First version.
-#	Ver 2.0  2018/02/22 F.Kanehori	ÂÖ®‰Ωì„ÅÆË¶ãÁõ¥„Åó.
-#	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
-#	Ver 2.02 2018/03/22 F.Kanehori	Change date/time info format.
-#	Ver 2.03 2018/04/24 F.Kanehori	Omit redundant code.
+#	Ver 2.0  2018/02/08 F.Kanehori	ëSëÃÇÃå©íºÇµ.
 # =============================================================================
-version = 2.03
+version = 2.0
 
 import sys
 import os
@@ -52,6 +47,7 @@ from optparse import OptionParser
 import signal
 
 from ConstDefs import *
+from ControlParams import *
 from Traverse import *
 from TestResult import *
 from ClosedSrcControl import *
@@ -61,7 +57,6 @@ from KeyInterruption import *
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-date_format = '%Y/%m/%d %H:%M:%S'
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
@@ -98,7 +93,7 @@ def make_list(obj, default=None):
 #  Options
 #
 usage = 'Usage: %prog [options] '\
-	+ 'test-dir res-file ctl-file section\n'\
+	+ 'test-dir res-file ctl-file [section]\n'\
 	+ '    test-dir:\ttest directory (relative to ".../core/src")\n'\
 	+ '    res-file:\ttest result file path (relative to ".../core/test")\n'\
 	+ '    ctl-file:\ttest control file name (leaf name)\n'\
@@ -107,12 +102,14 @@ parser = OptionParser(usage = usage)
 parser.add_option('-a', '--audit', dest='audit',
 			action='store_true', default=False,
 			help='audit trail [default: %default]')
-parser.add_option('-c', '--configs', dest='configs',
+parser.add_option('-c', '--config', dest='configs',
 			action='append', default=None,
-			help='configurations to be tested')
-parser.add_option('-p', '--platforms', dest='platforms',
+			help='configurations to be tested',
+			metavar='CONFIG')
+parser.add_option('-p', '--platform', dest='platforms',
 			action='append', default=None,
-			help='platforms to be tested')
+			help='platforms to be tested',
+			metavar='PLATFORM')
 parser.add_option('-r', '--rebuild',
 			dest='rebuild', action='store_true', default=False,
 			help='force rebuild')
@@ -153,6 +150,7 @@ if options.version:
 if len(args) != 4:
 	parser.error("incorrect number of arguments")
 
+
 # get arguments
 test_dir = args[0]
 res_file = '%s/%s' % (spr_path.abspath('test'), args[1])
@@ -163,17 +161,19 @@ top = Util.pathconv(test_dir)
 if not os.path.exists(top):
 	top = '%s/%s' % (spr_path.abspath('src'), top)
 	if not os.path.exists(top):
-		Error(prog).abort('bad test directory: "%s"' % test_dir)
+		Error(prog).print('bad test directory: "%s"' % test_dir)
 top = Util.upath(top)
 
 # get options
 toolset = options.toolset
+if toolset is None and Util.is_windows():
+	Error(prog).print('invalid option: %s' % csusage)
 platforms = make_list(options.platforms, PLATS)
 configs = make_list(options.configs, CONFS)
 csusage = options.closed_src_usage
 csusage_list = {'auto': CSU.AUTO, 'use': CSU.USE, 'unuse': CSU.UNUSE}
 if csusage not in csusage_list.keys():
-	Error(prog).abort('invalid option: %s' % csusage)
+	Error(prog).print('invalid option: %s' % csusage)
 csusage = csusage_list[csusage]
 rebuild= options.rebuild
 timeout= options.timeout
@@ -204,8 +204,7 @@ if verbose:
 #  Test start.
 #
 print()
-print('test start at: %s' % Util.now(format=date_format))
-print('with args: %s' % args)
+print('test start at: %s' % Util.now())
 
 # test id
 #	'Test_id' affects only log file header.
@@ -237,7 +236,7 @@ unuse_tmpl = '%s/UnuseClosedSrc.h.template' % tmpl_dir
 if scratch:
 	print('scratch result file')
 res = TestResult(res_file, scratch, verbose=1)
-csc = ClosedSrcControl(csc_head, use_tmpl, unuse_tmpl, dry_run, verbose)
+csc = ClosedSrcControl(csc_head, use_tmpl, unuse_tmpl, dry_run, verbose=1)
 
 # traverse start
 trv = Traverse(testid,
@@ -249,17 +248,9 @@ stat = trv.traverse(top)
 res.finish()
 csc.revive()
 
-# back to start directory and make "result.log".
+# back to start directory and stop.
 os.chdir(cwd)
-cmnd = 'python GenResultLog.py'
-outf = '-o ../log/result.log'
-args = 'r %s %s %s' % (res_file, platforms[0], configs[0])
-print(' '.join([cmnd, outf, args]))
-proc = Proc(dry_run=options.dry_run, verbose=options.verbose)
-proc.execute([cmnd, outf, args], shell=True).wait()
-
-# done
-print('test ended at: %s' % Util.now(format=date_format))
+print('test ended at: %s' % Util.now())
 sys.exit(0)
 
 # end: SpringheadTest.py

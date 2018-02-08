@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -29,7 +29,6 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
-#	Ver 1.01 2018/02/14 F.Kanehori	Dealt with new Error class.
 # ======================================================================
 import sys
 import os
@@ -54,7 +53,7 @@ class ClosedSrcControl:
 	#
 	def __init__(self, path, use_path, unuse_path, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.01
+		self.version = 1.0
 		#
 		self.org_path = self.__normalize_path(path)
 		self.template = { CSU.USE:   self.__normalize_path(use_path),
@@ -63,12 +62,13 @@ class ClosedSrcControl:
 		self.verbose = verbose
 		#
 		self.fop = FileOp(dry_run=dry_run, verbose=verbose)
+		self.err = Error(self.clsname)
 		#
 		self.saved_path = '%s.org' % Util.upath(path)
 		self.org_usage = self.__read_usage(path)
 		self.curr_usage = self.org_usage
 		self.file_changed = False
-		self.fop.cp(path, self.saved_path)
+		self.fop.cp(path, self.saved_path, force=True)
 		#
 		if verbose:
 			self.__print('file saved to "%s"' % self.saved_path)
@@ -78,8 +78,7 @@ class ClosedSrcControl:
 	#
 	def set_usage(self, usage):
 		if usage not in [CSU.USE, CSU.UNUSE]:
-			msg = 'set_usage: bad usage (%s)' % usage
-			Error(self.clsname).abort(msg)
+			self.err.print('set_usage: bad usage (%s)' % usage)
 		#
 		if usage == self.curr_usage:
 			if self.verbose > 1:
@@ -87,7 +86,7 @@ class ClosedSrcControl:
 			return
 		#
 		path = self.template[usage]
-		self.fop.cp(path, self.org_path)
+		self.fop.cp(path, self.org_path, force=True)
 		self.curr_usage = usage
 		self.file_changed = True
 		if self.verbose:
@@ -99,12 +98,12 @@ class ClosedSrcControl:
 	#
 	def revive(self):
 		if not self.file_changed:
-			self.fop.rm(self.saved_path)
+			self.fop.rm(self.saved_path, force=True)
 			if self.verbose:
 				self.__print('no need to revive')
 			return
 		#self.set_usage(self.org_usage)
-		self.fop.mv(self.saved_path, self.org_path)
+		self.fop.mv(self.saved_path, self.org_path, force=True)
 		self.curr_usage = self.org_usage
 		self.file_changed = False
 		if self.verbose:
@@ -122,13 +121,12 @@ class ClosedSrcControl:
 
 	def __read_usage(self, path):
 		if not os.path.exists(path):
-			msg = 'no such file: "%s"' % path
-			Error(self.clsname).abort(msg)
+			self.err.print('no such file: "%s"' % path)
 
 		# read the file
 		f = TextFio(path)
 		if f.open() < 0:
-			Error(self.clsname).abort(f.error())
+			self.err.print(f.error())
 		lines = f.read()
 		f.close()
 
@@ -145,8 +143,7 @@ class ClosedSrcControl:
 					usage = CSU.UNUSE
 				break
 		if usage is None:
-			msg = 'bad closed-src-header'
-			Error(self.clsname).abort(msg)
+			self.err.print('bad closed-src-header')
 		return usage
 
 	def __print(self, msg):
@@ -171,7 +168,7 @@ if __name__ == '__main__':
 	def grep(path, patt):
 		f = TextFio(path)
 		if f.open() < 0:
-			Error(prog).abort(f.error())
+			Error(prog).print(f.error())
 		lines = f.read()
 		f.close()
 		#

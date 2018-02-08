@@ -14,10 +14,10 @@ UseClosedSrc	False
 #BuildErrLog	# Build error log file path
 
 Run		False
-OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
 #BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
 Timeout		15
-Expected	0
+#Expected	0
 #AddPath
 #PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
 #KillProcess
@@ -25,27 +25,14 @@ Expected	0
 #RunErrLog	# Run error log file path
 #Intervention	False
 
-#UseCMake	True
-#CMakeBuildDir	build
-#CMakeTopDir	$(SprTop)
-#CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
-#CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
-CMakeOutputDir	$(CMakeBuildDir)/$CONFIGURATION
-
 [Windows]
 BuildLog	$(SprTest)/log/SamplesBuild.log
 BuildErrLog	$(SprTest)/log/SamplesBuildError.log
 
 [unix]
 SolutionAlias	Makefile
-Build		False
 BuildLog	$(SprTest)/log/samples.build.log
 BuildErrLog	$(SprTest)/log/samples.build.error.log
-#OutputDir	.
-CMakeOutputDir	$(CMakeBuildDir)
-#BinaryOutName	a.out
-Run		False
-RunLog		$(SprTest)/log/samples.run.log
-RunErrLog	$(SprTest)/log/samples.run.error.log
-#UseCMake	True
+OutputDir	.
+BinaryOutName	a.out
 

@@ -1,26 +1,108 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:	TextFio(path, mode='r', encoding='utf8', size=8192, 
-#			nl=None, verbose=0)
+#  CLASS:
+#	TextFio(Fio)
+#	    Text file I/O wrapper class.
 #
-#  CONSTANTS:
-#	ELIM, WRAP
-#	NUMB, DATA
+#  INITIALIZER:
+#	obj = TextFio(path, mode='r', encoding='utf8', size=8192, 
+#				nl=None, verbose=0)
+#	  arguments:
+#	    path:	File path to open (str) or system stream object
+#			(sys.stdin|sys.stdout|sys.stderr).
+#	    mode:	File open mode ('r'|'w'|'a')
+#	    encoding:	Character encoding (write open only).
+#			    'ascii'	   (or 'us-ascii')
+#			    'utf-8'	   (or 'utf_8', 'utf8')
+#			    'utf-8-bom'	   (or 'utf_8_bom', 'utf8-bom)
+#			    'cp932'	   (or 'shift_jis', 'sjis')
+#			    'utf-16'	   (or 'unicode', 'utf16')
+#			    'iso-2022-jp'  (or 'jis')
+#			    'euc-jp'	   (or 'euc')
+#	    size:	Read buffer size for encoding check (int).
+#	    nl:		Newline code (str).
+#	    verbose:	Verbose mode (int).
+#
+#  CLASS CONSTANTS:
+#	ELIM = 0	Filter name: Eliminate comments.
+#	WRAP = 1	Filter name: Wrap continuation lines.
+#	NUMB = 0	Index of line data list: Line number
+#	DATA = 1	Index of line data list: Line data
 #
 #  METHODS:
 #	status = open()
+#	    Open the file.
+#	  returns:	0: suaccess, -1: failure
+#
 #	truncate(size=0)
+#	    Truncate the file to specified amount.
+#	  arguments:
+#	    size:	Size to truncate (int).
+#
 #	obj = add_filter(name, [opts]=[])
-#	lines = read(maxlines=sys.maxsize)
+#	    Add filter which will be applied in reading the file.
+#	  arguments:
+#	    name:	Filter name.  One of TextFio.ELIM or TextFio.WRAP.
+#	    opts[]:	Options of the filter specified by 'name'.
+#			ELIM: opts[0]: comment designator ('#')
+#			      opts[1]: eliminate empty lines or not (True)
+#			WRAP: opts[0]: line continuation symbol ('\\')
+#	  returns:	Self object.
+#
+#	lines[] = read(maxlines=sys.maxsize)
+#	    Read all lines from the file (filters are applied here).
+#	  arguments:
+#	    maxlines:	Number of maxmum lines to be read in.
+#	  returns:	List of line data (list of str).
+#
 #	replaced, count = replace(patterns, lines=self.lines)
-#	info = lineinfo()
+#	    Replace string in the lines.
+#	  arguments:
+#	    patterns:	List of pattern trio ([[from, to, search], ...]).
+#	      from:	Pattern to replace from (str)
+#			Used as search pattern if 'search' is omitted.
+#	      to:	Pattern to replace to (str).
+#	      search:	Pattern to search (re) (optional).
+#	    lines:	Original line data (str or line info structure).
+#	  returns:
+#	    replaced:	Replaced line data (str or line info structure).
+#	    count:	Number of replaced lines (int).
+#
+#	info[] = lineinfo()
+#	    Get list of line info.  Must call read() first.
+#	  returns:	List of line info structure as follows;
+#			info structure: [line#(int), line_data(str)].
+#
 #	set_lines(lines)
+#	    Set list of string to self.lines to write out to the file.
+#	  arguments:
+#	    lines[]:	List of string (NOT line info structure).
+#
 #	encoding = get_encoding()
+#	    Get currently opened file encoding.
+#	  returns:	Encoding string ('utf-8'|'cp932'|...).
+#
 #	status = writelines(lines=None, nl=None)
+#	    Write lines data to the file.
+#	  arguments:
+#	    lines[]:	List of string or line info structure.
+#			e.g. [str, ...] or [[int, str], ...]
+#	    nl:		Newline code ('\n' or '\r\n').
+#	  returns:	0 if successfully written, otherwise -1.
+#
 #	status = writeline(line, nl=None)
+#	    Write one line data to the file.
+#	  arguments:
+#	    lines:	(str)
+#	    nl:		Newline code ('\n' or '\r\n').
+#	  returns:	0 if successfully written, otherwise -1.
+#
 #	flush()
+#	    Flushes the file.
+#
 #	close()
+#	    Close the file.
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -32,10 +114,6 @@
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 2.1  2017/09/13 F.Kanehori	Add flush().
 #	Ver 2.2  2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
-#	Ver 2.21 2018/02/22 F.Kanehori	writeline(): allow line=None.
-#	Ver 2.22 2018/03/12 F.Kanehori	Now OK for doxygen.
-#	Ver 2.23 2018/04/05 F.Kanehori	Bug fixed.
-#	Ver 2.24 2018/04/12 F.Kanehori	Bug fixed (encoding: utf-16).
 # ======================================================================
 import sys
 import io
@@ -45,22 +123,16 @@ import inspect
 from Fio import *
 from Util import *
 
-##  Text file I/O class.
-#
 class TextFio(Fio):
 	#  Class constants
 	#
-	##  Filter name: Eliminate comments.
-	ELIM = 0
-	##  Filter name: Wrap continuation lines.
-	WRAP = 1
+	ELIM = 0	# filter name: eliminate comments
+	WRAP = 1	# filter name: wrap continuation lines
 	#
-	##  Index of lines: Line number.
-	NUMB = 0
-	##  Index of lines: Line data.
-	DATA = 1
+	NUMB = 0	# index of lines: line number
+	DATA = 1	# index of lines: line data
 
-	##  Encoding name dictionary.
+	#  Encoding name dictionary
 	#
 	ENCODINGS = {
 		'ascii':	'ascii',
@@ -88,23 +160,7 @@ class TextFio(Fio):
 		'euc':		'euc-jp'
 	}
 
-	##  The initializer.
-	#   @param path		File path to open (str)
-	#			or system stream object
-	#			    (sys.stdin|sys.stdout|sys.stderr).
-	#   @param mode		File open mode ('r'|'w'|'a').
-	#   @param encoding	Character encoding (write open only).
-	#
-	#			'ascii'       (or 'us-ascii')
-	#			'utf-8'       (or 'utf_8', 'utf8')
-	#			'utf-8-bom'	  (or 'utf_8_bom', 'utf8-bom)
-	#			'cp932'       (or 'shift_jis', 'sjis')
-	#			'utf-16'      (or 'unicode', 'utf16')
-	#			'iso-2022-jp' (or 'jis')
-	#			'euc-jp'      (or 'euc')
-	#   @param size		Read buffer size for encod:ing check (int).
-	#   @param nl		Newline code (str).
-	#   @param verbose	Verbose level (0: silent) (int).
+	#  Class initializer
 	#
 	def __init__(self, path, mode='r', encoding=None, size=8192,
 		     nl=None, verbose=0):
@@ -112,7 +168,8 @@ class TextFio(Fio):
 		self.clsname = self.__class__.__name__
 		self.version = 2.2
 		#
-		super().__init__(path, mode, verbose=verbose)
+		disp_mode = 'r' if mode == 'r' else mode	# for error msg
+		super().__init__(path, mode, disp_mode=disp_mode, verbose=verbose)
 		self.mode = mode	# override
 		self.encoding = encoding
 		self.size = size
@@ -130,7 +187,7 @@ class TextFio(Fio):
 		#self.nl = nl if nl is not None else os.linesep
 		self.nl = nl if nl is not None else '\n'
 
-	##  Open the file.
+	#  Open
 	#
 	def open(self):
 		org_mode = self.mode
@@ -152,20 +209,12 @@ class TextFio(Fio):
 			print('"%s": encoding: %s' % (self.name, self.encoding))
 		return status
 
-	##  Trauncate the file to specified amount.
-	#   @param size		Size to truncate (int).
+	#  Trauncate
 	#
 	def truncate(self, size=0):
 		self.obj.truncate(size)
 
-	##  Add filter which will be applied in reading the file.
-	#   @param name		Filter name.
-	#			One of TextFio.ELIM or TextFio.WRAP.
-	#   @param opts		Options of the filter specified by 'name'.
-	#   @n			for ELIM: opts[0]: comment designator ('#'),
-	#   @n			          opts[1]: eliminate empty lines or not (True)
-	#   @n			for WRAP: opts[0]: line continuation symbol ('\\')
-	#   @returns		Self object.
+	#  Set filters.
 	#
 	def add_filter(self, name, opts=[]):
 		filter_names = [self.ELIM, self.WRAP]
@@ -181,10 +230,7 @@ class TextFio(Fio):
 			print('add_filter: %s, opts=%s' % (repl, opts))
 		return self
 
-	##  Read all lines from the file (filters are applied here).
-	#   Newline is stripped.
-	#   @param maxlines	Number of maxmum lines to be read in.
-	#   @returns		List of line data (list of str).
+	#  Read entire lines (newline stripped).
 	#
 	def read(self, maxlines=sys.maxsize):
 		if not self.opened:
@@ -195,28 +241,19 @@ class TextFio(Fio):
 		self.lines = []
 		count = 0
 		#
-		need_decode = True
 		try:
 			data = self.obj.read()
 			if isinstance(data, str):
 				# case: system stream
 				data = data.encode(self.encoding)
-				need_decode = False
 		except IOError as err:
 			msg = 'file read error: "%s" (line %d)\n%s' \
 					% (self.path, count, err)
 			self.errmsg = msg
 			return self.lines
 		#
-		if need_decode:
-			try:
-				lines = data.decode(self.encoding).split('\n')
-			except UnicodeDecodeError:
-				fmt = '%s: decode error (encoding=%s)'
-				print(fmt % (self.clsname, self.encoding))
-				# Kludge: just want to convert byte to string.
-				lines = data.decode('utf-8').split('\n')
-
+		#lines = data.decode(self.encoding).split('\n')[0:-1]
+		lines = data.decode(self.encoding).split('\n')
 		if lines[-1] == '\n':
 			lines = lines[:-1]
 		for line in lines:
@@ -239,15 +276,7 @@ class TextFio(Fio):
 		#
 		return list(map(lambda x: x[self.DATA], self.lines))
 
-	##  Replace string in the lines.
-	#   @param patterns	List of pattern trio ([[from, to, search], ...]).
-	#   @n			from:   Pattern to replace from (str).
-	#   @n			        Used as search pattern if 'search' is omitted.
-	#   @n			to:     Pattern to replace to (str).
-	#   @n			search:	Pattern to search (re) (optional).
-	#   @param lines	Original line data (str or line info structure).
-	#   @retval replaced	Replaced line data (str or line info structure).
-	#   @retval count	Number of replaced lines (int).
+	#  Replace string in the lines.
 	#
 	def replace(self, patterns, lines=None):
 		if lines is None:
@@ -257,23 +286,35 @@ class TextFio(Fio):
 		for line in lines:
 			if isinstance(line, list):
 				numb, data = line
-				repl, c = self.__replace_sub(patterns, data)
+				repl, c = self.replace_sub(patterns, data)
 				data = [numb, repl]
 			else:
-				data, c = self.__replace_sub(patterns, line)
+				data, c = self.replace_sub(patterns, line)
 			replaced.append(data)
 			count += c
 		return replaced, count
 
-	##  Get list of line info.  Must call read() first.
-	#   @returns		List of line info structure as follows;
+	def replace_sub(self, patts, data):
+		if not isinstance(patts, list):
+			return data
+		patts = patts if isinstance(patts[0], list) else [patts]
+		replaced = data
+		for patt in patts:
+			patt_s = patt[2] if len(patt) ==3 else patt[0]
+			patt_f = patt[0]	# form
+			patt_t = patt[1]	# to
+			m = re.search(patt_s, replaced)
+			if m:
+				replaced = replaced.replace(patt_f, patt_t)
+		changed = 1 if replaced != data else 0
+		return replaced, changed
+
+	#  Get list of line info.
 	#
-	#			info structure: [line#(int), line_data(str)].
 	def lineinfo(self):
 		return self.lines
 
-	##  Set list of string to self.lines for writing out to the file.<br>
-	#   @param lines	List of string (NOT line info structure).
+	#  Set lines (convert list of str into list of line info).
 	#
 	def set_lines(self, lines):
 		count = 0
@@ -284,18 +325,12 @@ class TextFio(Fio):
 			for x in self.lines:
 				print('set_lines: %s' % x)
 
-	##  Get currently opened file encoding.
-	#   @returns		Encoding string ('utf-8'|'cp932'|...).
+	#  Return detecte character encoding of this file.
 	#
 	def get_encoding(self):
 		return self.encoding
 
-	##  Write lines data to the file.
-	#  @param lines		List of string or line info structure.
-	#
-	#			e.g. [str, ...] or [[int, str], ...]
-	#  @param nl		Newline code ('\\n' or '\\r\\n').
-	#  @returns		0 if successfully written, otherwise -1.
+	#  Write lines
 	#
 	def writelines(self, lines=None, nl=None):
 		if lines is None:
@@ -319,35 +354,26 @@ class TextFio(Fio):
 			print('"%s": %d line(s) written' % (self.name, count))
 		return 0
 
-	##  Write one line data to the file.
-	#  @param line		Line data (str).
-	#  @param nl		Newline code ('\\n' or '\\r\\n').
-	#  @returns		0 if successfully written, otherwise -1.
+	#  Write one line
 	#
 	def writeline(self, line, nl=None):
 		if nl is None:
 			nl = self.nl
 		try:
-			if line is None:
-				return 0
 			self.obj.write(line + nl)
 		except IOError:
 			msg = 'file write error: "%s"' % self.path
 			self.errmsg = msg
 			return -1
-		except UnicodeEncodeError:
-			msg = 'unicode encode error: "%s"' % self.path
-			self.errmsg = msg
-			return -1
 		return 0
 
-	##  Flush the file.
+	#  Flush
 	#
 	def flush(self):
 		if self.opened:
 			self.obj.flush()
 
-	##  Close the file.
+	#  Close
 	#
 	def close(self):
 		if self.opened:
@@ -360,12 +386,16 @@ class TextFio(Fio):
 	#  For class private use
 	# --------------------------------------------------------------
 
-	##  Determine the character encoding of this file.
-	#   @returns		Determined character encoding (str).
+	#  Determine the character encoding of this file.
 	#
 	def __check_encoding(self):
-		lookup = ['iso-2022-jp', 'ascii', 'euc-jp', 'unicode',
-			  'utf-8', 'utf-16-le', 'utf-16-be', 'cp932']
+		# arguments:
+		#   path:	File path to be checked.
+		#   size:	Buffer size for checking.
+		# returns:	Determined character encoding.
+
+		lookup = ['iso-2022-jp', 'ascii', 'euc-jp',
+			  'utf-8', 'utf-16', 'cp932']
 		try:
 			f = open(self.path, 'rb')
 			data = f.read(self.size)
@@ -380,22 +410,20 @@ class TextFio(Fio):
 				break
 			except:
 				pass
-		#
+
 		if encoding == 'utf-8':
-			# check if with BOM
-			f = open(self.path, encoding=encoding)
-			line = f.readline()
-			f.close()
-			if line[0] == 'ufeff':
+			# check if with BOM.
+			line = open(self.path, encoding='utf-8').readline()
+			if line[0] == '\ufeff':
 				encoding = 'utf-8-sig'
 		return encoding
 
-	##  Wrap continued lines.
-	#   @param opts		Options of the filter.
-	#   @n			opts[0]: line continuation symbol ('\\').
-	#   @returns		Filter applied line data ([str]).
+	#  Wrap continued lines.
 	#
 	def __wrap_lines(self, opts=['\\']):
+		# arguments:
+		#   symbol:	Line continuation symbol.
+
 		pat = '(.*)(.)\s*$'	# last symbol of the line
 		symbol = opts[0] if opts and len(opts) > 0 else '\\'
 		lines = []
@@ -420,13 +448,15 @@ class TextFio(Fio):
 			print('apply filter: %s' % info)
 		self.lines = lines
 	
-	##  Eliminate both comment lines and inline commnet.
-	#   @param opts		Options of the filter.
-	#   @n			[0] designator:	Comment designator (str).
-	#   @n			[1] emptyline:	Eliminate empty lines or not (bool).
-	#   @returns		Filter applied line data ([str]).
+	#  Eliminate both comment lines and inline commnet.
 	#
 	def __elim_comments(self, opts=['#', True]):
+		# arguments:
+		#   opts:
+		#     [0] designator:	Comment designator.
+		#     [1] emptyline:	Eliminate empty lines or not.
+		# returns:	Self object.
+
 		designator = opts[0] if opts and len(opts) > 0 else '#'
 		emptyline  = opts[1] if opts and len(opts) > 1 else True
 		designator = designator.replace('*', '\*')
@@ -450,30 +480,5 @@ class TextFio(Fio):
 			info = '%s: %d lines left' % (func, len(lines))
 			print('apply filter: %s' % info)
 		self.lines = lines
-
-	##  Replace string in the line (Helper metho of self.replace()).
-	#   @param patts	List of pattern trio ([[from, to, search], ...]).
-	#   @n			from:   Pattern to replace from (str).
-	#		        Used as search pattern if 'search' is omitted.
-	#   @n			to:     Pattern to replace to (str).
-	#   @n			search:	Pattern to search (re) (optional).
-	#   @param data		Line data (str).
-	#   @retval 1		If replacement occurred.
-	#   @retval 0		No replacement occurred.
-	#
-	def __replace_sub(self, patts, data):
-		if not isinstance(patts, list):
-			return data
-		patts = patts if isinstance(patts[0], list) else [patts]
-		replaced = data
-		for patt in patts:
-			patt_s = patt[2] if len(patt) ==3 else patt[0]
-			patt_f = patt[0]	# form
-			patt_t = patt[1]	# to
-			m = re.search(patt_s, replaced)
-			if m:
-				replaced = replaced.replace(patt_f, patt_t)
-		changed = 1 if replaced != data else 0
-		return replaced, changed
 
 # end: TextFio.py
