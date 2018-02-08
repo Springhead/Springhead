@@ -20,12 +20,21 @@ mkdir HTML
 :: If HTML Help Compiler exists..
 goto :skip
 set SRCHDIR="C:\Program Files (x86)"
-set SRCHEXE="hhc.exe"
+set SRCHEXE=hhc.exe
 set HHCPATH=
-set FINDCMD=dir /a-d /b /s %SRCHDIR% ^^^| findstr %SRCHEXE%
+set FINDCMD=dir /a-d /b /s %SRCHDIR% ^^^| findstr "%SRCHEXE%"
 for /f "usebackq delims=" %%a in (`%FINDCMD%`) do set HHCPATH=%%a
+call set HHCDIR=!HHCPATH:\%SRCHEXE%=!
 if "%HHCPATH%" neq "" (
-	(type %DOXYFILE% & echo HHC_LOCATION=!HHCPATH!& echo GENERATE_HTMLHELP=YES& echo GENERATE_TREEVIEW=NO& echo OUTPUT_DIRECTORY=%ODIR%& echo CHM_FILE=..\%TARGETNAME%.chm) | doxygen - 2> doxygen_chm.log
+	rem Don't laugh!  Need these stupid code actually!
+	set PATH="%HHCDIR%";!PATH!
+	set PATH=!PATH:"=!
+)
+if "%HHCPATH%" neq "" (
+	rem (type %DOXYFILE% & echo HHC_LOCATION=!HHCPATH!& echo GENERATE_HTMLHELP=YES& echo GENERATE_TREEVIEW=NO& echo OUTPUT_DIRECTORY=%ODIR%& echo CHM_FILE=..\%TARGETNAME%.chm) | doxygen - 2> doxygen_chm.log
+	(type %DOXYFILE% & echo HHC_LOCATION=!HHCPATH!& echo GENERATE_HTMLHELP=YES& echo GENERATE_TREEVIEW=NO& echo CHM_FILE=%TARGETNAME%.chm) | doxygen - 2> doxygen_chm.log
+	rem Output file is put on ./HTML
+	rem Copy it to generated/doc and rm ./HTML
 )
 :skip
 

@@ -1,14 +1,34 @@
 # dailybuild.control
 
-#Exclude
-#SolutionAlias
-#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-#UseClosedSrc
-CppMacro	DAILYBUILD
-#DontBuild
-#DontRun
-#Timeout
-#ExpectedStatus	0
-#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
-#NeedIntervention
+#SprTop		# Set automatically.
+#SprTest	# Set automatically [$(SptTop)/core/test].
+
+Exclude		True
+Descend		False
+#SolutionAlias	# Ailas name for solution file
+
+#Build		True
+#UseClosedSrc	True
+#CppMacro	DAILYBUILD
+#BuildLog	# Build log file path
+#BuildErrLog	# Build error log file path
+
+#Run		True
+#OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
+#BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
+#Timeout	# time out value in sec
+#Expected	0
+#AddPath
+#PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
 #KillProcess
+#RunLog		# Run log file path
+#RunErrLog	# Run error log file path
+#Intervention	False
+
+#[Windows]
+
+#[unix]
+#SolutionAlias	Makefile
+#OutputDir	.
+#BinaryOutName	a.out
+

@@ -15,6 +15,7 @@
 #	    encoding:	Character encoding (write open only).
 #			    'ascii'	   (or 'us-ascii')
 #			    'utf-8'	   (or 'utf_8', 'utf8')
+#			    'utf-8-bom'	   (or 'utf_8_bom', 'utf8-bom)
 #			    'cp932'	   (or 'shift_jis', 'sjis')
 #			    'utf-16'	   (or 'unicode', 'utf16')
 #			    'iso-2022-jp'  (or 'jis')
@@ -112,6 +113,7 @@
 #	Ver 1.3  2017/04/06 F.Kanehori	Newline code depends os.
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 2.1  2017/09/13 F.Kanehori	Add flush().
+#	Ver 2.2  2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
 # ======================================================================
 import sys
 import io
@@ -138,6 +140,14 @@ class TextFio(Fio):
 		'utf-8':	'utf-8',
 		'utf_8':	'utf-8',
 		'utf8':		'utf-8',
+		'utf-8-bom':	'utf-8-sig',
+		'utf_8_bom':	'utf-8-sig',
+		'utf8-bom':	'utf-8-sig',
+		'utf8_bom':	'utf-8-sig',
+		'utf-8-sig':	'utf-8-sig',
+		'utf_8_sig':	'utf-8-sig',
+		'utf8-sig':	'utf-8-sig',
+		'utf8_sig':	'utf-8-sig',
 		'cp932':	'cp932',
 		'shift_jis':	'cp932',
 		'sjis':		'cp932',
@@ -156,7 +166,7 @@ class TextFio(Fio):
 		     nl=None, verbose=0):
 		#
 		self.clsname = self.__class__.__name__
-		self.version = 2.1
+		self.version = 2.2
 		#
 		disp_mode = 'r' if mode == 'r' else mode	# for error msg
 		super().__init__(path, mode, disp_mode=disp_mode, verbose=verbose)
@@ -242,7 +252,10 @@ class TextFio(Fio):
 			self.errmsg = msg
 			return self.lines
 		#
-		lines = data.decode(self.encoding).split('\n')[0:-1]
+		#lines = data.decode(self.encoding).split('\n')[0:-1]
+		lines = data.decode(self.encoding).split('\n')
+		if lines[-1] == '\n':
+			lines = lines[:-1]
 		for line in lines:
 			count += 1
 			line = line.rstrip()
@@ -383,7 +396,6 @@ class TextFio(Fio):
 
 		lookup = ['iso-2022-jp', 'ascii', 'euc-jp',
 			  'utf-8', 'utf-16', 'cp932']
-			  #'utf-8-sig', 'utf-16', 'cp932']
 		try:
 			f = open(self.path, 'rb')
 			data = f.read(self.size)
@@ -398,6 +410,12 @@ class TextFio(Fio):
 				break
 			except:
 				pass
+
+		if encoding == 'utf-8':
+			# check if with BOM.
+			line = open(self.path, encoding='utf-8').readline()
+			if line[0] == '\ufeff':
+				encoding = 'utf-8-sig'
 		return encoding
 
 	#  Wrap continued lines.

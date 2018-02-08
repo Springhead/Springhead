@@ -62,7 +62,7 @@ print('Test program for class: %s, Ver %s\n' % (T.clsname, T.version))
 #
 print('---- encoding ----')
 print()
-encs = ['utf8', 'sjis', 'unicode', 'jis', 'euc', 'ascii']
+encs = ['utf8', 'sjis', 'unicode', 'jis', 'euc', 'ascii', 'utf8-bom']
 for enc in encs:
 	fname = 'test/TextFioTest.' + enc
 	f = TextFio(fname, verbose=verbose)

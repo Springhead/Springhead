@@ -90,8 +90,10 @@
 #	Ver 1.0  2016/06/13 F.Kanehori	Release version.
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 3.0  2017/12/06 F.Kanehori	Section construction introduced.
+#	Ver 3.1  2018/02/05 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
+import os
 import re
 from TextFio import *
 from Util import *
@@ -105,8 +107,9 @@ class KvFile:
 	#
 	def __init__(self, path, sep=None, overwrite=True, desig='#', verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 3.0
+		self.version = 3.1
 		#
+		self.path = path
 		self.sep = sep
 		self.overwrite = overwrite
 		self.desig = desig
@@ -121,6 +124,9 @@ class KvFile:
 	#  Read file and make dictionary.
 	#
 	def read(self, dic=None):
+		if self.verbose:
+			abspath = Util.upath(os.path.abspath(self.path))
+			print('%s: "%s"' % (self.clsname, abspath))
 		f = self.fobj
 		if f.open() < 0:
 			self.errmsg = f.error()
@@ -131,6 +137,8 @@ class KvFile:
 		lines = f.lineinfo()
 		f.close()
 		if lines is None:
+			if self.verbose:
+				print('%s: empty' % self.clsname)
 			return 0
 		dic = self.__initial_dict(dic)
 		self.dict = self.__make_dict(lines, dic)
@@ -161,7 +169,7 @@ class KvFile:
 	def get(self, key, section=None):
 		if section is None:
 			section = self.curr_section
-		if key in self.dict[section]:
+		if section in self.dict and key in self.dict[section]:
 			return self.dict[section][key]
 		if key in self.dict[self.DEFAULT]:
 			return self.dict[self.DEFAULT][key]
@@ -216,15 +224,16 @@ class KvFile:
 		wid = self.__max_wid(sections, line_by_line) + 1
 		indent = ' ' * line_by_line
 		for s in sections:
+			if s not in self.dict:
+				continue
 			disp_dict = self.__make_disp_dict(s)
-			if s != self.DEFAULT:
-				print('[%s]' % s)
+			print('[%s]' % s)
 			if line_by_line:
 				for key in sorted(disp_dict):
 					key_part = indent + key
 					kp = key_part.ljust(wid, ' ')
 					vp = str(disp_dict[key])
-					print('%s\t%s' % (kp, vp))
+					print(' %s\t%s' % (kp, vp))
 			else:
 				print(disp_dict)
 
@@ -265,8 +274,10 @@ class KvFile:
 		#   lines:	Line data read from the file (list).
 		# returns:	Dictionary (dict).
 
-		dict = dic if dic is not None else {self.DEFAULT: {}}
+		dict = dic if dic else {self.DEFAULT: {}}
 		section = self.curr_section
+		if self.verbose:
+			print('[%s]' % section)
 		for numb, line in lines:
 			# %include
 			m = re.match('^%include\s+([\w/\\.]+)', line)
@@ -307,12 +318,13 @@ class KvFile:
 			else:
 				pair = line.rstrip().split(self.sep)
 			if len(pair) < 2:
-				self.__register(pair[0], True, dict)
+				dict = self.__register(section, pair[0], True, dict)
 			else:
 				key = pair[0].strip()
 				val = ' '.join(pair[1:]).strip()
 				val = self.__expand(val, dict)
-				self.__register(key, self.__convert(val), dict)
+				val = self.__convert(val)
+				dict = self.__register(section, key, val, dict)
 		return dict
 
 	#  Expand macros.
@@ -328,7 +340,7 @@ class KvFile:
 		section = self.curr_section
 		m = re.match('([^\$]*)\$\(([^\)]+)\)(.*$)', str)
 		if m:
-			if self.verbose:
+			if self.verbose > 1:
 				group = [m.group(1), m.group(2), m.group(3)]
 				msg = 'MATCH: \'' + m.group(0) + '\' => '
 				msg += '[ ' + ', '.join(group) + ' ]'
@@ -346,13 +358,13 @@ class KvFile:
 
 	#  Register to the dictionary.
 	#
-	def __register(self, key, value, dict):
+	def __register(self, section, key, value, dict):
 		# arguments:
+		#   section:	Section name (str).
 		#   key:	Register key (str).
 		#   value:	Value to be registered (str).
 		#   dict:	Dictionary to register the value (dict).
 
-		section = self.curr_section
 		if self.overwrite:
 			# override previous value (if exists).
 			dict[section][key] = value
@@ -366,6 +378,9 @@ class KvFile:
 					dict[section][key] = [prev, value]
 			else:
 				dict[section][key] = value
+		if self.verbose:
+			print('    %s[%s] = %s' % (section, key, value))
+		return dict
 
 	#  Convert 'True'/'False' to corresponding boolean value.
 	#
@@ -427,6 +442,8 @@ class KvFile:
 
 		wid = 0
 		for s in sections:
+			if s not in self.dict:
+				continue
 			keys = list(self.dict[s].keys())
 			for k in keys:
 				keylen = len(k) + offset

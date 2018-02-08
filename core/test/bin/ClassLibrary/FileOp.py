@@ -6,11 +6,11 @@
 #	    Class for file operation functions.
 #
 #  INITIALIZER:
-#	obj = FileOp(info=0, verbose=0, dry_run=False)
+#	obj = FileOp(info=0, dry_run=False, verbose=0)
 #	  arguments:
 #	    info:	Show operation information (silent if 0) (int).
-#	    verbose:	Verbose level (silent if 0) (int).
 #	    dry_run:	Show command but do not execute it (bool).
+#	    verbose:	Verbose level (silent if 0) (int).
 #
 #  METHODS:
 #	status = cp(fm_path, to_path, force=False)
@@ -55,6 +55,7 @@
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.31 2017/12/07 F.Kanehori	Add spaces to dry_run message.
 #	Ver 1.32 2018/01/11 F.Kanehori	Change return code of touch.
+#	Ver 1.33 2018/02/01 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -69,13 +70,13 @@ from Util import *
 class FileOp:
 	#  These are class instance methods.
 	#
-	def __init__(self, info=0, verbose=0, dry_run=False):
+	def __init__(self, info=0, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
 		self.version = 1.3
 		#
 		self.info = info
-		self.verbose = verbose
 		self.dry_run = dry_run
+		self.verbose = verbose
 
 	#  File copy command.
 	#
@@ -93,7 +94,9 @@ class FileOp:
 			fm_dir, fm_leaf = self.__split_path(fm_path)
 			to_dir, to_leaf = self.__split_path(to_path)
 			if fm_dir == to_dir:
-				rc = fos.rename(fm_path, to_leaf, force)
+				rc = fos.remove(to_path, force)
+				if rc == 0:
+					rc = fos.rename(fm_path, to_leaf, force)
 			else:
 				rc = fos.copy(fm_path, to_path, force)
 				if rc == 0:

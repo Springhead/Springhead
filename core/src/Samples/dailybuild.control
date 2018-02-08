@@ -1,32 +1,38 @@
 # dailybuild.control
 
-#Exclude
-Descend
-#SolutionAlias
+#SprTop		# Set automatically.
+#SprTest	# Set automatically [$(SptTop)/core/test].
 
-Compile
-#Platform
-#Configuration
-UseClosedSrc	unuse
+Exclude		False
+Descend		True
+SolutionAlias	** DO NOT INHERIT **
+
+Build		True
+UseClosedSrc	False
 #CppMacro	DAILYBUILD
-CompileLog	SamplesBuild.log
-CompileErrLog	SamplesBuildErro.log
+#BuildLog	# Build log file path
+#BuildErrLog	# Build error log file path
 
-Run
-OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-#RunLog
-#RunErrLog
-Timeout		15
-ExpectedStatus	0
-#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
-#NeedIntervention
-#KillProcess
-
-[dailybuild]
-Platform	x64
-Configuration	Release
 Run		False
+#OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
+#BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
+Timeout		15
+#Expected	0
+#AddPath
+#PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#KillProcess
+#RunLog		# Run log file path
+#RunErrLog	# Run error log file path
+#Intervention	False
 
-[all]
-Platform	x86,x64
-Configuration	Debug,Release,Trace
+[Windows]
+BuildLog	$(SprTest)/log/SamplesBuild.log
+BuildErrLog	$(SprTest)/log/SamplesBuildError.log
+
+[unix]
+SolutionAlias	Makefile
+BuildLog	$(SprTest)/log/samples.build.log
+BuildErrLog	$(SprTest)/log/samples.build.error.log
+OutputDir	.
+BinaryOutName	a.out
+
