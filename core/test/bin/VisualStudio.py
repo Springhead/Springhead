@@ -35,7 +35,7 @@
 #		fname:	    Log file name (str).
 #		flag:	    Dry_run flag (bool).
 #
-#	msg = has_error()
+#	msg = error()
 #	    Check if something wrong has occured in setup process.
 #	    returns:	Error message if error has occurred so far.
 #			None if recorded no error.
@@ -62,10 +62,10 @@
 #	Ver 1.0  2016/10/06 F.Kanehori	First version.
 #	Ver 1.1  2016/11/09 F.Kanehori	Add method: get_toolset.
 #	Ver 1.2  2017/09/07 F.Kanehori	Python library revised.
-#	Ver 1.3  2017/09/14 F.Kanehori	Change return value: has_error().
+#	Ver 1.3  2017/09/14 F.Kanehori	Change return value: error().
 #	Ver 1.4  2017/11/16 F.Kanehori	Python library path 変更.
 #	Ver 1.5  2017/11/30 F.Kanehori	Python library path 変更.
-#	Ver 2.0  2018/01/11 F.Kanehori	全体の見直し.
+#	Ver 2.0  2018/02/07 F.Kanehori	全体の見直し.
 # ======================================================================
 import sys
 import os
@@ -91,6 +91,7 @@ class VisualStudio:
 	DRYRUN		= 3
 	OUTDIR		= 4
 	LOGFILE		= 5
+	COMMAND		= 6
 
 	#  Class initializer.
 	#
@@ -115,7 +116,8 @@ class VisualStudio:
 		self.logfile = None
 		self.dry_run = False
 		#
-		self.error = None
+		self.cmnd = None
+		self.errmsg = None
 
 	#  Set solution file name.
 	#
@@ -126,7 +128,8 @@ class VisualStudio:
 		if name[-4:] == '.sln':	name = name[0:-4]
 		# solution file name includes VS version.
 		self.solution_name = name
-		self.solution_file = name + vs_version + '.sln'
+		#### self.solution_file = name + vs_version + '.sln'
+		self.solution_file = name + '.sln'
 		solution_path = '%s/%s' % (self.solution_dir, self.solution_file)
 		if not os.path.exists(solution_path):
 			# no such solution file
@@ -170,7 +173,7 @@ class VisualStudio:
 		status = -1
 		if self.vs_path is None:
 			msg = self.vs_name + ' (' + self.pf_toolset + ')'
-			self.error = 'devenv not found: ' + msg
+			self.errmsg = 'devenv not found: ' + msg
 			return status
 		# prepare log directory
 		#
@@ -185,7 +188,7 @@ class VisualStudio:
 		self.config = config
 		status = self.__build()
 		if status != 0:
-			self.error = 'build failed (%d)' % status
+			self.errmsg = 'build failed (%d)' % status
 		#
 		return status
 
@@ -196,6 +199,8 @@ class VisualStudio:
 			return self.vs_version
 		elif kind == self.TOOLSET:
 			return self.pf_toolset, self.vs_name
+		elif kind == self.COMMAND:
+			return self.cmnd
 		msg = 'set: invalid argument'
 		Error(self.clsname).print(msg)
 
@@ -210,7 +215,7 @@ class VisualStudio:
 
 	#  Check if some error has occured so far.
 	#
-	def has_error(self):
+	def error(self):
 		msg = None
 		if self.vs_version is None:
 			msg = 'Visual Studio version is not specified'
@@ -238,7 +243,7 @@ class VisualStudio:
 			pts, vsv, vsn = ('v140', '14.0', 'Visual Studio 2015')
 		#
 		if pts is None:
-			self.error = 'invalid platform toolset: %s' % (toolset)
+			self.errmsg = 'invalid platform toolset: %s' % (toolset)
 		if self.verbose and pts is not None:
 			print('  platform toolset: %s (%s)' % (vsn, pts))
 			print('  VisualStudio ver: %s' % (vsv))
@@ -262,7 +267,7 @@ class VisualStudio:
 			print('  devenv path: %s' % devenvpath)
 		if not os.path.exists(Util.pathconv('%s/devenv.exe' % devenvpath)):
 			msg = Util.pathconv(devenvpath)
-			self.error = 'devenv not found: ' + msg
+			self.errmsg = 'devenv not found: ' + msg
 			return None
 		#
 		return devenvpath
@@ -283,16 +288,17 @@ class VisualStudio:
 			status = fop.rm(self.outdir, force=True)
 			status = fop.rm(self.logfile, force=True)
 			if status != 0 and not self.dry_run:
-				self.error = 'file deletion failed (%d)' % status
+				self.errmsg = 'file deletion failed (%d)' % status
 				return status
 
 		# build
 		cmnd = 'devenv %s /build %s' % (self.solution_file, build_opt)
+		self.cmnd = cmnd	# for log output
 		cmnd += ' /Out %s' % Util.pathconv(self.logfile)
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
 		proc.exec(cmnd, addpath=Util.pathconv(self.vs_path))
 		status = proc.wait()
-		if status != 0:
+		if status != 0 and self.verbose > 1:
 			self.__show_error(self.logfile)
 		if self.verbose:
 			print('  result is %d' % status)
@@ -310,7 +316,7 @@ class VisualStudio:
 		except IOError as err:
 			return None
 		for line in f:
-			if 'error' in line or 'Eorror' in line:
+			if 'error' in line or 'Error' in line:
 				print(line.strip())
 		f.close()
 
@@ -345,7 +351,7 @@ if __name__ == '__main__':
 			vs = VisualStudio(ver, verbose)
 			#vs.solution('test/Quaternion')
 			vs.solution('test/test')
-			if not vs.has_error():
+			if not vs.error():
 				vs.info()
 		print('-- normal case --')
 		__vs(vs_version)
@@ -353,8 +359,6 @@ if __name__ == '__main__':
 		print('-- error case --')
 		__vs('11.0')
 	else:
-		# Dailybuild control system is unavailable for this test.
-
 		cwd = os.getcwd()
 		os.chdir(options.directory)
 		toolset = options.toolset
@@ -365,8 +369,8 @@ if __name__ == '__main__':
 		vs = VisualStudio(toolset, verbose)
 		solution_name = os.getcwd().split(os.sep)[-1:][0]
 		print(solution_name)
-		vs.solution(solution_name)
-		if vs.has_error():
+		vs.solution(solution_name + options.toolset)
+		if vs.error():
 			os.chdir(cwd)
 			sys.exit(-1)
 		if verbose: print('')

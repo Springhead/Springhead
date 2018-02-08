@@ -1,30 +1,38 @@
 # dailybuild.control
 
-#Exclude
-#Descend
+#SprTop		# Set automatically.
+#SprTest	# Set automatically [$(SptTop)/core/test].
+
+Exclude		False
+Descend		False
 SolutionAlias	Springhead
 
-Compile
-#Platform
-#Configuration
-UseClosedSrc	unuse
+Build		True
+UseClosedSrc	False
 #CppMacro	DAILYBUILD
-CompileLog	StubBuild.log
-CompileErrLog	StubBuildError.log
+#BuildLog	# Build log file path
+#BuildErrLog	# Build error log file path
 
-#Run
-#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-#RunLog
-#RunErrLog
-#Timeout
-#ExpectedStatus	0
-#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
-#NeedIntervention
+Run		False
+#OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
+#BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
+#Timeout	# time out value in sec
+#Expected	0
+#AddPath
+#PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
 #KillProcess
+#RunLog		# Run log file path
+#RunErrLog	# Run error log file path
+#Intervention	False
 
-[dailybuild]
-Platform	x64
-Configuration	Release
+[Windows]
+BuildLog	$(SprTest)/log/StubBuild.log
+BuildErrLog	$(SprTest)/log/StubBuildError.log
 
-[all]
-Exclude
+[unix]
+SolutionAlias	Makefile
+BuildLog	$(SprTest)/log/springhead.lib.log
+BuildErrLog	$(SprTest)/log/springhead.lib.error.log
+#OutputDir	.
+#BinaryOutName	a.out
+

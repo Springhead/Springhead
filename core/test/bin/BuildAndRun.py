@@ -6,29 +6,31 @@
 #	    Build the solution and/or run the program.
 #
 #  INITIALIZER:
-#	obj = BuildAndRun(ccver, arch, verbose=0, dry_run=False)
+#	obj = BuildAndRun(ccver, verbose=0, dry_run=False)
 #	arguments:
 #	    ccver:	C-compiler version (str).
 #			    Windows: Visual Studio version (str).
 #			    unix:    gcc version (dummy).
-#	    arch:	Target architecture ('x86' or 'x64').
 #	    verbose:	Verbose level (int) (0: silent).
 #	    dry_run:	Show command but do not execute (bool).
 #
 #  METHODS:
-#	stat = build(dirpath, slnfile, opts, outfile, logfile, force=False)
+#	stat = build(dirpath, slnfile, platform, opts, outfile,
+#			logfile, errlogfile, force=False)
 #	    Change directory to 'dirpath' temporarily and build the
 #	    solution.  'Outfile'/'logfile' should be absolute path or
 #	    relative path to 'dirpath'.
 #	    arguments:
-#	    dirpath:    Directory path where 'slnfile' exists.
+#	        dirpath:    Directory path where 'slnfile' exists.
 #		slnfile:    Solution/make file name.
+#	        platform:   Target platform ('x86' or 'x64').
 #		opts:	    Compiler option.
-#			        Windows: 'Debug'/'Release'
+#			        Windows: 'Debug'/'Release/Trace' (config)
 #			        unix:	 '-g'/'-O2' (any option is OK)
 #		outfile:    Output binary file path.
 #			    NOTE: Leaf file name is dummy for Windows.
 #		logfile:    Log file path (log will be appended).
+#		errlogfile: Error log file path (log will be appended).
 #		force:	    Force recompile (bool).
 #	    returns:	 0: OK
 #			-1: compile error.
@@ -48,12 +50,18 @@
 #	    returns:	 0: OK
 #			-1: compile error.
 #
+#	msg = error()
+#	    Check if something wrong has occured in setup process.
+#	    returns:	Error message if error has occurred so far.
+#			None if recorded no error.
+#
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/01/11 F.Kanehori	First version.
+#	Ver 1.0  2018/02/08 F.Kanehori	First version.
 # ======================================================================
 import sys
 import os
+import re
 from VisualStudio import *
 
 # local python library
@@ -68,26 +76,31 @@ from Util import *
 from Proc import *
 from TextFio import *
 from FileOp import *
+from ConstDefs import *
 
 class BuildAndRun:
 
 	#  Class initializer.
 	#
-	def __init__(self, ccver, arch, verbose=0, dry_run=False):
+	def __init__(self, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
 		self.version = 1.0
 		#
 		self.ccver = ccver
-		self.arch = arch
 		self.dry_run = dry_run
 		self.verbose = verbose
 		#
-		self.E = Error(self.clsname)
+		self.errmsg = None
+		self.err = Error(self.clsname)
 
 	#  Compile the solution.
 	#
-	def build(self, dirpath, slnfile, opts, outfile, logfile, force=False):
-		self.config = opts
+	def build(self, dirpath, slnfile, platform, opts, outfile,
+			logfile, errlogfile, force=False):
+		self.dirpath = dirpath
+		self.slnfile = slnfile
+		self.platform = platform	# used by run()
+		self.config = opts		# used by run()
 		if self.verbose:
 			print('build solution')
 			print('  dirpath: %s' % dirpath)
@@ -96,33 +109,41 @@ class BuildAndRun:
 			print('  outfile: %s' % outfile)
 			print('  force:   %s' % force)
 			print('  logfile: %s' % logfile)
+			print('  errlog:  %s' % errlogfile)
+		self.verbose = 0
 
 		# go to target directory.
-		dirsave = self.__chdir('build', dirpath)
+		if dirpath:
+			dirsave = self.__chdir('build', dirpath)
 		if self.verbose:
 			cwd = Util.upath(os.getcwd())
 			print('build: in directory "%s"' % cwd)
 
 		# prepare log file (append mode).
-		logf = self.__open_log(logfile, 'a', 'build')
+		logf = self.__open_log(logfile, 'a', RST.BLD)
+		errlogf = self.__open_log(errlogfile, 'a', RST.BLD)
 
 		# call compiler
-		self.args = [slnfile, opts, outfile, force]
+		args = [slnfile, platform, opts, outfile, force]
 		if Util.is_unix():
-			stat = self.__build_u(logf)
+			stat, loginfo = self.__build_u(args)
 		else:
-			tmpdir = self.__dirpart(logfile)
-			stat = self.__build_w(logf, tmpdir)
-		if logf:
-			logf.close()
-		self.args = list(map(lambda x:0, self.args))
+			stat, loginfo = self.__build_w(args)
 
-		os.chdir(dirsave)
+		# merge log data
+		dtype, cmnd, data = loginfo
+		errors = self.__select_errors(data, RST.BLD)
+		self.__merge_log(dtype, data, logf, cmnd, RST.BLD)
+		self.__merge_log(1, errors, errlogf, cmnd, RST.ERR)
+
+		# return to previous directory
+		if dirpath:
+			os.chdir(dirsave)
 		return stat
 				
 	#  Execute the program.
 	#
-	def run(self, dirpath, exefile, args, logfile,
+	def run(self, dirpath, exefile, args, logfile, errlogfile,
 			addpath=None, timeout=None, pipeprocess=None):
 		if self.verbose:
 			print('run program')
@@ -130,35 +151,35 @@ class BuildAndRun:
 			print('  exefile: %s' % exefile)
 			print('  args:    %s' % args)
 			print('  logfile: %s' % logfile)
+			print('  errlog:  %s' % errlogfile)
 			print('  addpath: %s' % addpath)
 			print('  timeout: %s' % timeout)
 			print('  pipe:    %s' % pipeprocess)
 
 		# go to target directory.
-		dirsave = self.__chdir('run', dirpath)
+		if dirpath:
+			dirsave = self.__chdir('run', dirpath)
 		if self.verbose:
 			cwd = Util.upath(os.getcwd())
 			print('run: in directory "%s"' % cwd)
-
 		if Util.is_windows():
-			arch = 'x64' if self.arch == 'x64' else 'Win32'
-			bindir = '%s/%s/%s' % (self.ccver, arch, self.config)
-			exefile = '%s/%s' % (bindir, exefile)
+			if exefile[-4:] != '.exe':
+				exefile = '%s.exe' % exefile
 		if self.verbose:
 			print('  exefile: %s' % exefile)
 		if not os.path.exists(exefile):
-			print('fun: no such file "%s"' % exefile)
+			print('run: no such file "%s"' % exefile)
 			return -1
 		
 		# use following temporary log file.
-		tmpdir = self.__dirpart(logfile)
 		if Util.is_unix():
 			config = config.replace('-', '')
 		tmplog = 'log/%s_%s_%s_%s_run.log' % \
-				(self.clsname, self.ccver, self.arch, self.config)
+				(self.clsname, self.ccver, self.platform, self.config)
 
 		# prepare log file (append mode).
-		logf = self.__open_log(logfile, 'a', 'go')
+		logf = self.__open_log(logfile, 'a', RST.RUN)
+		errlogf = self.__open_log(errlogfile, 'a', RST.RUN)
 
 		# execute program.
 		if pipeprocess:
@@ -174,23 +195,24 @@ class BuildAndRun:
 		else:
 			proc1 = Proc(self.verbose, self.dry_run)
 			proc1.exec('%s %s' % (exefile, args),
+				addpath=addpath,
 				stdout=tmplog, stderr=Proc.STDOUT)
 			stat = proc1.wait(timeout)
 
 		# merge log info.
-		if logf:
-			tmpf = TextFio(tmplog)
-			if tmpf.open() < 0:
-				msg = '__run: open error: "%s"' % tmplog
-				self.E.print(msg, alive=True)
-			else:
-				lines = tmpf.read()	
-				logf.writelines(lines)
-				tmpf.close()
-			logf.close()
+		cmnd = '%s %s' % (exefile, args)
+		errors = self.__select_errors(tmplog, RST.RUN)
+		self.__merge_log(2, tmplog, logf, cmnd, RST.RUN)
+		self.__merge_log(1, errors, errlogf, cmnd, RST.ERR)
 
-		os.chdir(dirsave)
+		if dirpath:
+			os.chdir(dirsave)
 		return stat
+
+	#  Check if some error has occured so far.
+	#
+	def error(self):
+		return self.errmsg
 
 
 	# --------------------------------------------------------------
@@ -205,7 +227,7 @@ class BuildAndRun:
 			os.chdir(path)
 		except:
 			msg = "%s: chdir failed (%s)" % (func, path)
-			self.E.print(msg, alive=True)
+			self.err.print(msg, alive=True)
 		return dirsave
 
 	#  Take directory part of the path.
@@ -218,13 +240,17 @@ class BuildAndRun:
 
 	#  Open log file.
 	#
-	def __open_log(self, fname, fmode, prefix):
+	def __open_log(self, fname, fmode, step):
 		# arguments:
-		#   logfile:	Log file path.
-		# returns:	Log file object.
+		#   fname:	Log file path.
+		#   fmode:	File open mode ('r', 'w' or 'a').
+		#   prefix:	Error message prefix (str).
+		# returns:	File object.
 
 		if self.dry_run:
 			print('  open log file "%s"' % fname)
+			return None
+		if fname is None:
 			return None
 
 		logdir = self.__dirpart(fname)
@@ -232,18 +258,18 @@ class BuildAndRun:
 			os.makedirs(logdir, exist_ok=True)
 		logf = TextFio(fname, mode=fmode)
 		if logf.open() < 0:
-			msg = '%s: open error: "%s"' % (prefix, fname)
-			self.E.print(msg, alive=True)
+			msg = 'build' if step == RST.BLD else 'run'
+			msg += ': open error: "%s"' % fname
+			self.err.print(msg, alive=True)
 			logf = None
 		return logf
 
 	#  Call compiler (for unix).
 	#
-	def __build_u(self, logf):
+	def __build_u(self, args):
 		# arguments:
-		#   logf:	Log file object.
-		#   self.args:	Other parameters.
-		[slnfile, opts, outfile, force] = self.args
+		#   args:	Parameters to compiler (list).
+		[slnfile, platform, opts, outfile, force] = args
 
 		cmnd = 'make -f %s' % slnfile
 		args = '%s -o %s' % (opts, outfile)
@@ -252,29 +278,27 @@ class BuildAndRun:
 				stdout=Proc.PIPE, stderr=Proc.STDOUT)
 		stat = proc.wait()
 		out, err = proc.output()
-		if logf:
-			logf.witelines(out)
-		return stat
+
+		cmnd = '%s %s' % (cmnd, args)
+		loginfo = [1, cmnd, out]
+		return stat, loginfo
 
 	#  Call compiler (for Windows).
 	#
-	def __build_w(self, logf, tmpdir):
+	def __build_w(self, args):
 		# arguments:
-		#   logf:	Log file object.
-		#   tmpdir:	Temporary directory for logging.
-		#   self.args:	Other parameters.
-		[slnfile, opts, outfile, force] = self.args
+		#   args:	Parameters to compiler (list).
+		[slnfile, platform, opts, outfile, force] = args
 
 		outdir = self.__dirpart(outfile).replace('x86', 'Win32')
 		tmplog = 'log/%s_%s_%s_%s_build.log' % \
-				(self.clsname, self.ccver, self.arch, config)
+				(self.clsname, self.ccver, self.platform, self.config)
 		FileOp().rm(tmplog)
 		if self.verbose > 1:
 			print('build solution (Windows)')
 			print('  slnfile: %s' % slnfile)
 			print('  opts:    %s' % opts)
 			print('  outdir:  %s' % outdir)
-			print('  errlog:  %s' % errlog)
 			print('  tmplog:  %s' % tmplog)
 			print('  force:   %s' % force)
 
@@ -283,19 +307,79 @@ class BuildAndRun:
 		vs.set(VisualStudio.OUTDIR, outdir, force)
 		vs.set(VisualStudio.LOGFILE, tmplog)
 		vs.set(VisualStudio.DRYRUN, self.dry_run)
-		if vs.has_error():
-			self.E.print(vs.has_error())
-		stat = vs.build(self.arch, opts)
-		if logf:
-			tmpf = TextFio(tmplog)
+		if vs.error():
+			self.err.print(vs.error())
+		stat = vs.build(platform, opts)
+
+		cmnd = vs.get(VisualStudio.COMMAND)
+		loginfo = [2, cmnd, tmplog]
+		return stat, loginfo
+
+	def __select_errors(self, fname, step):
+		# arguments:
+		#   fname:	Log file name (str).
+		#   step:	Execute step (RST.BLD or RST.RUN).
+		# returns:	List of error messages (str[]).
+
+		fobj = TextFio(fname)
+		if fobj.open() < 0:
+			msg = 'build' if step == RST.BLD else 'run'
+			msg += '%s: open error: "%s"' % (step, fname)
+			self.err.print(msg, alive=True)
+		lines = fobj.read()
+		fobj.close()
+
+		patt = re.compile(' error ', re.I)
+		errors = []
+		for line in lines:
+			if patt.search(line):
+				errors.append(line)
+		return errors
+
+	def __merge_log(self, kind, data, logf, cmnd, step):
+		# arguments:
+		#   kind:	Kind of process.
+		#		    1: Next arg 'data' is a list of log data.
+		#		    2: Read log data from the file named 'data'.
+		#   data:	See above.
+		#   logf:	Log file object.
+		#   step:	Execution step (RST.BLD or RST.RUN).
+		#   cmnd:	Command string to be executed (str).
+
+		if logf is None:
+			return
+
+		# make header part
+		cwd = self.dirpath if self.dirpath else os.getcwd()
+		cwd = Util.upath(cwd).split('/')
+		head1 = '*** %s: %s ***' % (cwd[-2], cwd[-1])
+		head2 = '%% %s' % cmnd
+		if step == RST.BLD:
+			title = [head1, head2, '']
+		else:
+			title = [head1]
+
+		# merge
+		if kind == 1:
+			# data is a list of string
+			logf.writelines(title)
+			logf.writelines(data)
+		elif kind == 2:
+			# data is the file name to be read
+			tmpf = TextFio(data)
 			if tmpf.open() < 0:
-				msg = '__build_w: open error: "%s"' % tmplog
-				self.E.print(msg, alive=True)
+				msg = 'build' if step == RST.BLD else 'run'
+				msg += '_w: open error: "%s"' % (name, data)
+				self.err.print(msg, alive=True)
 			else:
+				logf.writelines(title)
 				lines = tmpf.read()	
 				logf.writelines(lines)
 				tmpf.close()
-		return stat
+		else:
+			self.err.print('merge_log: bad kind: %s' % kind)
+		logf.close()
+
 
 # ----------------------------------------------------------------------
 #  Test main
@@ -303,11 +387,8 @@ class BuildAndRun:
 if __name__ == '__main__':
 	from optparse import OptionParser
 
-	usage = 'Usage: %prog [options]'
+	usage = 'Usage: %prog [options] directory'
 	parser = OptionParser(usage = usage)
-	parser.add_option('-d', '--directory', dest='directory',
-			default=None,
-			help='solution directory', metavar='DIR')
 	parser.add_option('-t', '--toolset', dest='toolset',
 			default='14.0',
 			help='Visual Studio version [default: %default]')
@@ -337,7 +418,15 @@ if __name__ == '__main__':
 			help='set verbose mode')
 	(options, args) = parser.parse_args()
 
-	directory = options.directory
+	if len(args) != 1:
+		prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+		Proc().exec('python %s.py -h' % prog).wait()
+		sys.exit(-1)
+	if not options.toolset:
+		prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+		Proc().exec('python %s.py -h' % prog).wait()
+		sys.exit(-1)
+	directory = args[0]
 	toolset = options.toolset
 	config = options.config
 	platform = options.platform
@@ -375,19 +464,26 @@ if __name__ == '__main__':
 	if Util.is_windows():
 		if solution:
 			if solution[-4:] != '.sln':
-				solution += '.sln'
-		bar = BuildAndRun(toolset, platform, verbose, dry_run)
+				solution += '%s.sln' % toolset
+		bar = BuildAndRun(toolset, verbose, dry_run)
 		stat = bar.build(directory,
 				solution,
+				platform,
 				config,
 				'%s/%s/%s/%s.exe' % \
 					(toolset, platform, config, solution[:-4]),
 				bldlog,
 				force)
 		print('build: stat %d' % stat)
+		if stat != 0:
+			print(bar.error())
 		if stat == 0:
+			outbase = solution[:-4].replace(toolset, '')
+			outpath = '%s/%s/%s/%s/%s.exe' % \
+				(directory, toolset, platform, config, outbase),
+			print('outpath: %s' % outpath)
 			stat = bar.run(directory,
-				solution[:-4] + '.exe',
+				Util.pathconv(outpath),
 				'',
 				runlog,
 				timeout)
