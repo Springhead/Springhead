@@ -790,15 +790,15 @@ void FWTrajectoryPlanner::HingeJoint::MakeJointMinjerk(int cnt) {
 		}
 	}
 	/*/
-	for (int j = 0; j < viaPoints.size() + 1; j++) {
+	for (int j = 0; j < (int)viaPoints.size() + 1; j++) {
 	double s = (j == 0) ? hj->initialAngle : hj->viaAngles[j - 1];
 	double vs = (j == 0) ? hj->initialVel : hj->viaVels[j - 1];
 	double f = hj->viaAngles[j];
 	double vf = hj->viaVels[j];
-	//double f = (j == viaPoints.size()) ? hj->targetAngle : hj->viaAngles[j];
-	//double vf = (j == viaPoints.size()) ? hj->targetVel : hj->viaVels[j];
+	//double f = (j == (int)viaPoints.size()) ? hj->targetAngle : hj->viaAngles[j];
+	//double vf = (j == (int)viaPoints.size()) ? hj->targetVel : hj->viaVels[j];
 	int st = (j == 0 ? 0 : viaPoints[j - 1].step);
-	int time = (j == viaPoints.size() ? movtime : viaPoints[j].step) - st;
+	int time = (j == (int)viaPoints.size() ? movtime : viaPoints[j].step) - st;
 	DSTR << s << " " << vs << " " << f << " " << vf << " " << st << " " << time << std::endl;
 	AngleMinJerkTrajectory mjt = AngleMinJerkTrajectory(s, f, vs, vf, 0, 0, time, scene->GetTimeStep());
 	for (int k = 0; k < time; k++) {
@@ -1441,11 +1441,11 @@ void FWTrajectoryPlanner::Joints::RemoveAll() {
 }
 void FWTrajectoryPlanner::Joints::Add(PHIKActuatorIf* j, std::string path, bool oe) {
 	if (DCAST(PHIKBallActuatorIf, j)) {
-		BallJoint* b = new BallJoint(DCAST(PHIKBallActuatorIf, j), path + "Ball" + std::to_string(joints.size()), oe);
+		BallJoint* b = new BallJoint(DCAST(PHIKBallActuatorIf, j), path + "Ball" + std::to_string((int)joints.size()), oe);
 		joints.push_back(b);
 	}
 	if (DCAST(PHIKHingeActuatorIf, j)) {
-		HingeJoint* h = new HingeJoint(DCAST(PHIKHingeActuatorIf, j), path + "Hinge" + std::to_string(joints.size()), oe);
+		HingeJoint* h = new HingeJoint(DCAST(PHIKHingeActuatorIf, j), path + "Hinge" + std::to_string((int)joints.size()), oe);
 		joints.push_back(h);
 	}
 }
@@ -2056,15 +2056,15 @@ void FWTrajectoryPlanner::Init() {
 	}
 	*/
 	//jointsの初期化
-	joints.Initialize(iterate, movtime, viaPoints.size(), rate, viaCorrect);
+	joints.Initialize(iterate, movtime, (int)viaPoints.size(), rate, viaCorrect);
 	joints.SetWeight();
 	/*
 	int cnt = 0;
-	for (int i = 0; i < joints.balls.size(); i++) {
+	for (int i = 0; i < (int)joints.balls.size(); i++) {
 		joints.balls[i].weight = weights[cnt];
 		cnt++;
 	}
-	for (int i = 0; i < joints.hinges.size(); i++) {
+	for (int i = 0; i < (int)joints.hinges.size(); i++) {
 		joints.hinges[i].weight = weights[cnt];
 		cnt++;
 	}
@@ -2081,7 +2081,7 @@ void FWTrajectoryPlanner::Init() {
 	states = ObjectStatesIf::Create();
 	cstates = ObjectStatesIf::Create();
 	tmpstates.clear();
-	for (int i = 0; i < viaPoints.size(); i++) {
+	for (int i = 0; i < (int)viaPoints.size(); i++) {
 		tmpstates.push_back(ObjectStatesIf::Create());
 	}
 	for (int i = 0; i < iterate; i++) {
@@ -2288,8 +2288,8 @@ void FWTrajectoryPlanner::OutputVelocity(std::string filename) {
 	}
 	/*
 	std::ofstream outfile3(filename + "VelocityDelta.csv");
-	int nBall = joints.balls.size();
-	int nHinge = joints.hinges.size();
+	int nBall = (int)joints.balls.size();
+	int nHinge = (int)joints.hinges.size();
 	for (int i = 0; i < iterate; i++) {
 		for (int j = 0; j < movtime; j++) {
 			for (int k = 0; k < nBall; k++)
@@ -2304,7 +2304,7 @@ void FWTrajectoryPlanner::OutputVelocity(std::string filename) {
 		}
 	}
 
-	for (int k = 0; k < joints.hinges.size(); k++) {
+	for (int k = 0; k < (int)joints.hinges.size(); k++) {
 		std::ofstream outfile4(filename + "Hinge" + std::to_string(k) + "Velocity.csv");
 		for (int i = 0; i < iterate + 1; i++) {
 			for (int j = 0; j < movtime + 1; j++) {
@@ -2314,7 +2314,7 @@ void FWTrajectoryPlanner::OutputVelocity(std::string filename) {
 		}
 		outfile4.close();
 	}
-	for (int k = 0; k < joints.balls.size(); k++) {
+	for (int k = 0; k < (int)joints.balls.size(); k++) {
 		std::ofstream outfile4(filename + "Ball" + std::to_string(k) + "Velocity.csv");
 		for (int i = 0; i < iterate + 1; i++) {
 			for (int j = 0; j < movtime + 1; j++) {
@@ -2473,7 +2473,7 @@ void FWTrajectoryPlanner::FIRM(ControlPoint tpoint, int LPFmode, int smoothCount
 bool FWTrajectoryPlanner::ViatimeAdjustment() {
 	if (viaPoints.empty()) return false;
 	//トルクの総変化量と各セクションでの変化量を取得
-	int nVia = viaPoints.size();
+	int nVia = (int)viaPoints.size();
 	double* tChange = new double[nVia + 1];
 	for (int i = 0; i < nVia + 1; i++) {
 		tChange[i] = joints.GetBestTorqueChangeInSection(i);
@@ -2525,7 +2525,7 @@ bool FWTrajectoryPlanner::ViatimeAdjustment() {
 
 void FWTrajectoryPlanner::ViatimeInitialize() {
 	//各経由点の通過時間を等間隔に初期化
-	int nVia = viaPoints.size();
+	int nVia = (int)viaPoints.size();
 	for (int i = 0; i < nVia; i++) {
 		viaPoints[i].time = movtime * scene->GetTimeStep() * (i + 1) / (nVia + 1);
 		viaPoints[i].step = TimeToStep(viaPoints[i].time);
@@ -2545,7 +2545,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 	}
 	/*
 	//各点を単純な躍度最小軌道で接続
-	for (int i = 0; i < viaPoints.size() + 1; i++) {
+	for (int i = 0; i < (int)viaPoints.size() + 1; i++) {
 		ControlPoint s = (i == 0) ? startPoint : viaPoints[i - 1];
 		ControlPoint f = (i == viaPoints.size()) ? targetPoint : viaPoints[i];
 		MinJerkTrajectory mjt = MinJerkTrajectory(s, f, scene->GetTimeStep());
@@ -2555,7 +2555,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 	}
 	/*/
 	//境界条件満足の部分軌道を足し合わせて経由点を通る軌道実現
-	for (int i = 0; i < viaPoints.size(); i++) {
+	for (int i = 0; i < (int)viaPoints.size(); i++) {
 		ControlPoint s = ControlPoint(Posed(), Vec6d(), Vec6d(), (i == 0) ? startPoint.step : viaPoints[i - 1].step, (i == 0) ? startPoint.time : viaPoints[i - 1].time);
 		ControlPoint f = ControlPoint(Posed(), Vec6d(), Vec6d(), movtime, targetPoint.time);
 		ControlPoint c = viaPoints[i];
@@ -2606,7 +2606,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 		for (int i = 0; i < 1; i++) {
 			scene->Step();
 		}
-		if (count < viaPoints.size()) {
+		if (count < (int)viaPoints.size()) {
 			if (reach == (viaPoints[count].step - 1)) {
 				joints.SaveViaPoint(count, (viaPoints[count].step));
 				count++;
@@ -2664,7 +2664,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 		DSTR << "in minjerk " << i << "step" << std::endl;
 		Debug();
 		scene->Step();
-		if (count < viaPoints.size()) {
+		if (count < (int)viaPoints.size()) {
 			if (i == (viaPoints[count].step - 1)) {
 				joints.SaveViaPoint(count, (viaPoints[count].step));
 				cstates->SaveState(scene);
@@ -2762,7 +2762,7 @@ void FWTrajectoryPlanner::Inverse(int k) {
 			DSTR << std::endl;
 		}
 
-		if (count < viaPoints.size()) {
+		if (count < (int)viaPoints.size()) {
 			if (i == (viaPoints[count].step - 1)) {
 				tmpstates[count++]->SaveState(scene);
 			}
@@ -2798,7 +2798,7 @@ void FWTrajectoryPlanner::Correction(int k) {
 	//なので、ここで到達位置や速度を
 	beforecorstates[k - 1]->SaveState(scene);
 
-	double dist;
+	double dist = 0;
 	int count;
 	if (!springCor) {
 		scene->GetIKEngine()->Enable(true);
@@ -2836,7 +2836,7 @@ void FWTrajectoryPlanner::Correction(int k) {
 		}
 
 		//以降では経由点の通過保証修正を行う
-		for (int n = 0; n < viaPoints.size(); n++) {
+		for (int n = 0; n < (int)viaPoints.size(); n++) {
 			tmpstates[n]->LoadState(scene);
 			scene->GetIKEngine()->ApplyExactState();
 			eef->SetTargetPosition(viaPoints[n].pose.Pos());
@@ -2879,7 +2879,7 @@ void FWTrajectoryPlanner::Correction(int k) {
 		}
 
 		//以降では経由点の通過保証修正を行う
-		for (int n = 0; n < viaPoints.size(); n++) {
+		for (int n = 0; n < (int)viaPoints.size(); n++) {
 			tmpstates[n]->LoadState(scene);
 			scene->GetIKEngine()->ApplyExactState();
 			joints.SetTargetCurrent();
@@ -2947,7 +2947,7 @@ void FWTrajectoryPlanner::PrepareSprings() {
 	scene->SetContactMode(targetSolid, eef->GetSolid(), PHSceneDesc::ContactMode::MODE_NONE);
 	
 	//経由点の剛体とバネの設定
-	for (size_t i = 0; i < viaPoints.size(); i++) {
+	for (size_t i = 0; i < (int)viaPoints.size(); i++) {
 		PHSolidDesc vDesc = PHSolidDesc();
 		vDesc.pose = viaPoints[i].pose;
 		vDesc.mass = 1.0;
@@ -3038,7 +3038,7 @@ void FWTrajectoryPlanner::CalcTrajectory(ControlPoint tpoint, int LPFmode, int s
 	bool cont = true;
 	for (int i = 0; i < (iterateViaAdjust + 1) && cont; i++) {
 		//現在の経由点通過時間を記録
-		for (int j = 0; j < viaPoints.size(); j++) {
+		for (int j = 0; j < (int)viaPoints.size(); j++) {
 			outfile << viaPoints[j].step << ",";
 		}
 		outfile << std::endl;

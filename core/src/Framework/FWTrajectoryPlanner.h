@@ -548,7 +548,7 @@ namespace Spr {
 		//
 		void SetWeights(std::vector<double> w) {
 			//int l = sizeof(w) / sizeof(w[0]);
-			int l = w.size();
+			int l = (int)w.size();
 			weights.resize(depth, 1);
 			l = (l > depth) ? depth : l;
 			for (int i = 0; i < l; i++) {
