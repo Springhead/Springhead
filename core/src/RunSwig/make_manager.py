@@ -32,6 +32,7 @@
 #	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
+#	Ver 1.61 2018/02/09 F.Kanehori	Bug fixed.
 # ==============================================================================
 version = 1.6
 
@@ -238,6 +239,8 @@ curr_proj = os.getcwd().split(os.sep)[-1].lower()
 for line in lines:
 	vprint('Def: [%s]' % line, 1)
 	fields = line.split()
+	if len(fields) < 1:
+		continue
 	proj = fields[0]
 	dept = fields[1] if len(fields) > 1 else None
 	vprint('proj: %s <- %s' % (proj, dept), 1)
