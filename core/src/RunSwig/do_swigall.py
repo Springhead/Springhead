@@ -50,6 +50,7 @@
 #	Ver 3.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 3.4  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 3.5  2017/11/29 F.Kanehori	Python library path の変更.
+#	Ver 3.51 2018/02/09 F.Kanehori	Bug fixed.
 # ==============================================================================
 version = 3.5
 
@@ -176,6 +177,8 @@ fio.close()
 #
 for line in lines:
 	fields = line.split()
+	if len(fields) < 1:
+		continue
 	proj = fields[0]
 	dept = fields[1] if len(fields) > 1 else None
 	if debug:
