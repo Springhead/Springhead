@@ -1,5 +1,8 @@
 @echo off
 
+python DailyBuild.py %*
+exit /b
+
 set PLAT=-p x64
 set CONF=-c Release
 set RESULT=result/dailybuild.result
