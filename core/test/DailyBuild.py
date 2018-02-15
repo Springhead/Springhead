@@ -13,8 +13,10 @@
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
+#	Ver 1.2  2018/02/25 F.Kanehori	TestMainGit.py test.
 # ======================================================================
-version = '1.1'
+version = '1.2'
+python_test = False
 
 import sys
 import os
@@ -43,23 +45,14 @@ from Util import *
 from Error import *
 
 # ----------------------------------------------------------------------
-#  Globals
-#
-spr_topdir = spr_path.abspath()
-start_dir = spr_path.abspath('test')
-prep_dir = os.path.abspath('%s/..' % spr_topdir)
-proc = Proc(verbose=0)
-err = Error(prog)
-
-# ----------------------------------------------------------------------
 #  Options
 #
 usage = 'Usage: python %prog [options] test-repository'
 parser = OptionParser(usage = usage)
-parser.add_option('-C', '--configuration',
+parser.add_option('-c', '--configuration',
 			dest='conf', default='Release',
 			help='configuration {Debug | <Release>}')
-parser.add_option('-P', '--platform',
+parser.add_option('-p', '--platform',
 			dest='plat', default='x64',
 			help='platform {x86 | <x64>}')
 parser.add_option('-r', '--repository',
@@ -84,7 +77,7 @@ if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 if len(args) != 1:
-	err.print('incorrect number of arguments\n', prompt='error')
+	Error(prog).print('incorrect number of arguments\n', alive=True)
 	proc.exec('python %s.py -h' % prog).wait()
 	sys.exit(-1)
 
@@ -102,6 +95,14 @@ if repository == 'Springhead':
 	if ans != 'y':
 		print('abort')
 		exit(-1)
+
+# ----------------------------------------------------------------------
+#  Globals
+#
+spr_topdir = spr_path.abspath()
+start_dir = spr_path.abspath('test')
+prep_dir = os.path.abspath('%s/..' % spr_topdir)
+proc = Proc(verbose=verbose)
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -149,7 +150,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 		Print('-- error --')
 		Print(errstr.split('\n'))
 	if rc != 0:
-		err.print('updating failed: status %d' % rc)
+		Error(prog).print('updating failed: status %d' % rc)
 	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
@@ -185,7 +186,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	cmnd = 'git clone %s %s' % (url_git, repository)
 	rc = proc.exec(cmnd).wait()
 	if rc != 0:
-		err.print('cloning failed: status %d' % rc)
+		Error(prog).print('cloning failed: status %d' % rc)
 
 	os.chdir(repository)
 	pwd()
@@ -193,14 +194,14 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	cmnd = 'git submodule update --init'
 	rc = proc.exec(cmnd).wait()
 	if rc != 0:
-		err.print('cloning failed: status %d' % rc)
+		Error(prog).print('cloning failed: status %d' % rc)
 
 	"""
 	print('checking out "closed"')
 	cmnd = 'svn co %s %s' % (url_svn, 'closed')
 	rc = proc.exec(cmnd).wait()
 	if rc != 0:
-		err.print('cloning failed: status %d' % rc)
+		Error(prog).print('cloning failed: status %d' % rc)
 	"""
 	os.chdir(prep_dir)
 
@@ -215,8 +216,12 @@ os.chdir('%s/%s' % (prep_dir, repository))
 os.chdir('core/test')
 pwd()
 print('Test start:')
-args = '/r %s /t %s /c %s /p %s' % (repository, tool, conf, plat)
-cmnd = 'TestMainGit.bat %s' % args
+if python_test:
+	cmnd = 'python TestMainGit.py'
+	args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
+else:
+	cmnd = 'TestMainGit.bat %s' % args
+	args = '/r %s /t %s /c %s /p %s' % (repository, tool, conf, plat)
 rc = proc.exec(cmnd, shell=True).wait()
 Print('rc: %s' % rc)
 

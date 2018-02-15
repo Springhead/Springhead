@@ -187,6 +187,13 @@ if not os.path.exists('core/test/bin'):
 if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 	os.chdir('core/test')
 	#
+	test_dirs = [
+		['.', '-S'],	# Springhead library (need result init'ed)
+		['tests'],	# src/tests
+		['Samples']	# src/Samples
+	]
+	init_opts = ['-S', None, None]
+	#
 	csusage = 'unuse'	#  We do not use closed sources.
 	cmnd = 'python bin/SpringheadTest.py'
 	opts = '-p %s -c %s -C %s' % (platform, config, csusage)
@@ -197,11 +204,17 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		args += 'Windows'
 		opts += ' -t %s' % toolset
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec('%s %s %s' % (cmnd, opts, args))
-	stat = proc.wait()
-	if (stat != 0):
-		msg = 'test failed (%d)' % stat
-		Error(proc).print(msg, exitcode=stat)
+	for tmp in test_dirs:
+		t_opts = opts
+		t_args = args
+		if len(tmp) == 2:
+			t_opts = '%s %s' % (opts, tmp[1])
+		t_args = '%s %s' % (tmp[0], args)
+		proc.exec('%s %s %s' % (cmnd, t_opts, t_args))
+		stat = proc.wait()
+		if (stat != 0):
+			msg = 'test failed (%d)' % stat
+			Error(proc).print(msg, exitcode=stat)
 	#
 	os.chdir(repository)
 
