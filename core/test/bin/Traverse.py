@@ -36,7 +36,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/08 F.Kanehori	First version.
+#	Ver 1.0  2018/02/14 F.Kanehori	First version.
 # ======================================================================
 import sys
 import os
@@ -142,12 +142,14 @@ class Traverse:
 			print('skip: -%s (%s)' % (cwd, msg))
 
 		# process for all subdirectories
-		if descend:
+		if descend and stat != Proc.ECANCELED:
 			for item in os.listdir(cwd):
 				if not os.path.isdir(item):
 					continue
 				subdir = '%s/%s' % (cwd, item)
 				stat = self.traverse(subdir)
+				if stat == Proc.ECANCELED:
+					break
 
 		# all done for this directory and decsendants.
 		if self.audit and do_this:
@@ -193,11 +195,13 @@ class Traverse:
 			self.__report(' %s:' % platform, None, False)
 			self.platform = platform
 
+			stat = 0
 			for config in self.configs:
-				# build (compile and link)
+				#
+				# Build (compile and link)
+				#
 				self.__report('%s' % config, '.build', False)
 				self.config = config
-				#
 				outpath = self.__make_outpath(ctl, slnfile)
 				stat = bar.build(None,
 						slnfile,
@@ -219,18 +223,21 @@ class Traverse:
 					print(self.__status_str(RST.BLD, stat))
 				if stat != 0:
 					self.__report(None, None, False, True)
+					if stat == Proc.ECANCELED:
+						print('interrupted')
+						break
 					if self.verbose:
 						print('build error (%d)' % stat)
 					continue
-
-				# need run?
+				#
+				# Run
+				#
 				if not ctl.get(CFK.RUN):
 					self.__report(',', 'skip. ', False)
 					continue
 				if ctl.get(CFK.INTERVENTION):
 					self.__report(',', 'intervention. ', False)
 					continue
-				#
 				self.__report(None, 'run', False)
 				#
 				addpath = self.__runtime_addpath(ctl, platform)
@@ -251,11 +258,19 @@ class Traverse:
 				self.result.set_result(name, RST.RUN,
 						platform, config,
 						stat)
+				if stat == Proc.ECANCELED:
+					self.__report(None, None, False, True)
+					if self.verbose:
+						print('interrupted')
+					break
 				#
 				self.__report(',', '.', False, False)
 				if self.verbose:
 					print(self.__status_str(RST.RUN, stat))
+
 			# end config
+			if stat == Proc.ECANCELED:
+				break
 		# end platform
 
 		self.__report_1(None, False, True)
@@ -470,6 +485,8 @@ class Traverse:
 		for n in range(len(tmp)):
 			if tmp[n] == 'core':
 				name = '/'.join(tmp[n+2:])
+		if name == '':
+			name = tmp[-1]
 		if header:
 			sys.stdout.write('%s:\t' % name.replace('/', ': '))
 		if msg:

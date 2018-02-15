@@ -15,13 +15,15 @@
 #  METHODS:
 #	status = cp(fm_path, to_path, force=False)
 #	status = mv(fm_path, to_path, force=False)
-#	status = rm(path, force=False)
+#	status = rm(path, recurse=False, force=False)
 #	    OS independent copy/move/remove command.
 #	  arguments:
 #	    fm_path:	Source file path to copy.
 #	    to_path:	Destination file path to copy.
 #	    path:	File path to move (rename) or remove.
 #	    force:	Force operation if True.
+#	    recurse:	Remove directory itself and all subdirectories.
+#			NOT IMPLEMENTED
 #	  returns:	Process return code.
 #
 #	touch(path, mode=0o666, no_create=False)
@@ -107,7 +109,7 @@ class FileOp:
 
 	#  File remove command.
 	#
-	def rm(self, path, force=False):
+	def rm(self, path, recurse=False, force=False):
 		fos = self.__fileop(self.info, self.verbose, self.dry_run)
 		if os.path.isdir(path):
 			path += '/*'

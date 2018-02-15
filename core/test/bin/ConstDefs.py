@@ -26,7 +26,7 @@ class CFK():		#  Control File Keywords.
 	OUTPUT_DIR	= 'OutputDir'
 	BINARY_OUT	= 'BinaryOut'
 	TIMEOUT		= 'Timeout'
-	EXPECTED	= 'Expeted'
+	EXPECTED	= 'Expected'
 	ADD_PATH	= 'AddPath'
 	PIPE_PROCESS	= 'PipeProcess'
 	KILL_PROCESS	= 'KillProcess'
