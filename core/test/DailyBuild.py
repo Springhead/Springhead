@@ -220,7 +220,7 @@ if python_test:
 	cmnd = 'python TestMainGit.py'
 	args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
 else:
-	cmnd = 'TestMainGit.bat %s'
+	cmnd = 'TestMainGit.bat'
 	args = '/r %s /t %s /c %s /p %s' % (repository, tool, conf, plat)
 rc = proc.exec('%s %s' % (cmnd, args), shell=True).wait()
 Print('rc: %s' % rc)
