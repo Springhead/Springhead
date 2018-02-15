@@ -220,7 +220,6 @@ cmnd = 'TestMainGit.bat %s' % args
 rc = proc.exec(cmnd, shell=True).wait()
 Print('rc: %s' % rc)
 
-sys.exit(0)
 # ----------------------------------------------------------------------
 #  Process end.
 #

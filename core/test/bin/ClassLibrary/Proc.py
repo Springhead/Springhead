@@ -72,6 +72,7 @@
 #	Ver 1.11 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
 #	Ver 1.12 2017/10/13 F.Kanehori	Set default encoding.
 #	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
+#	Ver 1.14 2018/02/14 F.Kanehori	Improve verbose message.
 # ======================================================================
 import sys
 import os
@@ -140,7 +141,7 @@ class Proc:
 
 		# execute command
 		if self.dry_run or self.verbose:
-			a = ['<', '>', '>']
+			a = ['<', '>', '2>']
 			redirect = ''
 			for n in range(3):
 				if self.fd[n]:

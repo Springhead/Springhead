@@ -117,12 +117,25 @@ Ls(F, checkpath1)
 #Ls(F, checkpath2)
 print()
 
-print('-- rm --')
+print('-- rm dir --')
 Ls(F, checkpath1)
-F.rm('%s/*' % testdir1)
-F.rm('%s/*' % testdir2)
+F.rm(testdir1)
 Ls(F, checkpath1)
 print()
+"""
+print('-- rm dir/* --')
+F.touch('%s/%s' % (testdir1, testfile))
+F.touch('%s/%s' % (testdir2, testfile))
+F.rm('%s/*' % testdir1)
+Ls(F, checkpath1)
+print()
+print('-- rm -r dir --')
+F.touch('%s/%s' % (testdir1, testfile))
+F.touch('%s/%s' % (testdir2, testfile))
+F.rm('%s' % testdir1, recurse=True)
+Ls(F, checkpath1)
+print()
+"""
 
 #  dry_run
 #
