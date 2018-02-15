@@ -19,12 +19,12 @@ protected:
 	int						dimension;
 	double					*arFunvals, *xfinal, *xstart, *stddev, *xprovisional;
 	double					*const*pop;
-	double                  ixstart = 0.3, istddev = 0.3;
+	//double                  ixstart = 0.3, istddev = 0.3;
 
 #ifdef USE_CLOSED_SRC
 	Parameters<double>		*parameters;
 	CMAES<double>			*evo;
-	double                  iTolFun = 10, ilambda = 30, iMaxIter = 500;
+	//double                  iTolFun = 10, ilambda = 30, iMaxIter = 500;
 #endif
 
 	static void SPR_CDECL FWOptimizer_ThreadCallback(int id, void* arg);
@@ -32,6 +32,7 @@ protected:
 public:
 	SPR_OBJECTDEF(FWOptimizer);
 	SPR_DECLMEMBEROF_FWOptimizerDesc;
+
 	/// Constructor
 	FWOptimizer(const FWOptimizerDesc& desc = FWOptimizerDesc());
 
