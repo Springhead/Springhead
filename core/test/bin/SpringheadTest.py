@@ -9,8 +9,8 @@
 #	    ctl-file:	Test control file name (leaf name).
 #	    section:	Test control section name.
 #	options:
-#	    -c CONFIG:	    Configurations to be tested (Debug, Release, Trace).
-#	    -p PLATFORM:    Platforms to be tested (x86, x64).
+#	    -c CONFIGS:	    Configurations to be tested (CONFS).
+#	    -p PLATFORMS:   Platforms to be tested (PLATS).
 #	    -r:		    Force rebuild.
 #	    -s:		    No progress report.
 #	    -t TOOLSET:	    C-compiler version.
@@ -24,6 +24,8 @@
 #	    -v:		    Set verbose level (0: silent).
 #	    -V:		    Show version.
 #
+#	* see "ConstDefs.py" for CONFS and PLATS.
+#
 #  DESCRIPTION:
 #	Test program for Splinghead library and its applications.
 #	This program was intended to run 'dailybuild' test promarily, but is
@@ -35,7 +37,7 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2016/11/17 F.Kanehori	First version.
-#	Ver 2.0  2018/02/08 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
+#	Ver 2.0  2018/02/15 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
 # =============================================================================
 version = 2.0
 
@@ -102,14 +104,12 @@ parser = OptionParser(usage = usage)
 parser.add_option('-a', '--audit', dest='audit',
 			action='store_true', default=False,
 			help='audit trail [default: %default]')
-parser.add_option('-c', '--config', dest='configs',
+parser.add_option('-c', '--configs', dest='configs',
 			action='append', default=None,
-			help='configurations to be tested',
-			metavar='CONFIG')
-parser.add_option('-p', '--platform', dest='platforms',
+			help='configurations to be tested')
+parser.add_option('-p', '--platforms', dest='platforms',
 			action='append', default=None,
-			help='platforms to be tested',
-			metavar='PLATFORM')
+			help='platforms to be tested')
 parser.add_option('-r', '--rebuild',
 			dest='rebuild', action='store_true', default=False,
 			help='force rebuild')
@@ -166,8 +166,6 @@ top = Util.upath(top)
 
 # get options
 toolset = options.toolset
-if toolset is None and Util.is_windows():
-	Error(prog).print('invalid option: %s' % csusage)
 platforms = make_list(options.platforms, PLATS)
 configs = make_list(options.configs, CONFS)
 csusage = options.closed_src_usage
@@ -236,7 +234,7 @@ unuse_tmpl = '%s/UnuseClosedSrc.h.template' % tmpl_dir
 if scratch:
 	print('scratch result file')
 res = TestResult(res_file, scratch, verbose=1)
-csc = ClosedSrcControl(csc_head, use_tmpl, unuse_tmpl, dry_run, verbose=1)
+csc = ClosedSrcControl(csc_head, use_tmpl, unuse_tmpl, dry_run, verbose)
 
 # traverse start
 trv = Traverse(testid,
@@ -248,8 +246,15 @@ stat = trv.traverse(top)
 res.finish()
 csc.revive()
 
-# back to start directory and stop.
+# back to start directory and make "result.log".
 os.chdir(cwd)
+cmnd = 'python GenResultLog.py'
+args = 'r %s %s %s' % (res_file, platforms[0], configs[0])
+print('CWD: %s' % os.getcwd())
+print(' '.join([cmnd, args]))
+Proc(dry_run=False).exec([cmnd, args]).wait()
+
+# done
 print('test ended at: %s' % Util.now())
 sys.exit(0)
 

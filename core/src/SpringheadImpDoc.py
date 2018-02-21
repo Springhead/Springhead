@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -12,11 +12,9 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/03/01 F.Kanehori	First version.
-#	Ver 1.01 2018/03/12 F.Kanehori	Dealt with new Proc class.
-#	Ver 1.02 2018/04/05 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.0  2018/02/21 F.Kanehori	First version.
 # =============================================================================
-version = 1.01
+version = 1.0
 
 import sys
 import os
@@ -107,40 +105,36 @@ fop = FileOp(dry_run=dry_run, verbose=verbose)
 #
 if not os.path.exists(wrkdir):
 	os.mkdir(wrkdir)
-if os.path.exists(target_dir):
-	fop.rm(target_dir, recurse=True)
 #
 overrides = list(map(lambda x: 'echo %s' % x, [
 	'OUTPUT_DIRECTORY=%s' % out_dir,
 	'GENERATE_HTMLHELP=',
 	'HHC_LOCATION='
 ]))
-if Util.is_unix():
-	cmnd1 = 'cat %s && %s' % (doxy_file, '&'.join(overrides))
-else:
-	cmnd1 = 'cmd /c type %s &%s' % (doxy_file, '&'.join(overrides))
+cmnd1 = 'cmd /c type %s &%s' % (doxy_file, '&'.join(overrides))
 cmnd2 = 'doxygen -'
 log_file = 'doxgen.log'
 #
-shell = True if Util.is_unix() else False
 proc1 = Proc(verbose=verbose, dry_run=dry_run)
 proc2 = Proc(verbose=verbose, dry_run=dry_run)
-proc1.execute(cmnd1, shell=shell, addpath=addpath, stdout=Proc.PIPE)
-proc2.execute(cmnd2, shell=shell, addpath=addpath,
+proc1.exec(cmnd1, addpath=addpath, stdout=Proc.PIPE)
+proc2.exec(cmnd2, addpath=addpath,
 		  stdin=proc1.proc.stdout, stderr=log_file)
 stat1 = proc1.wait()
 stat2 = proc2.wait()
 if stat2 != 0:
 	msg = 'making html files failed.'
-	Error(prog).error(msg)
+	Error(prog).print(msg, alive=True)
 #
-src = '%s/%s' % (out_dir, wrkdir)
-dst = '%s/%s' % (out_dir, target_name)
-fop.mv(src, dst)
+if os.path.exists(target_dir):
+	fop.rm('%s/*' % target_dir, recurse=True)
+	os.rmdir(target_dir)
+fop.mv('%s/%s' % (out_dir, wrkdir), target_name)
 fop.cp('%s/MathJax.js' % dpt_dir, js_dir)
 #
 if os.path.exists(wrkdir):
 	fop.rm(wrkdir, recurse=True)
+	os.rmdir(wrkdir)
 files = glob.glob('doxygen*.tmp')
 for f in files:
 	fop.rm(f, force=True)

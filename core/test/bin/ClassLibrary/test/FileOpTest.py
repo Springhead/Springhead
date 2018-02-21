@@ -12,6 +12,7 @@ import os
 import glob
 import datetime
 import time
+import shutil
 sys.path.append('..')
 from FileOp import *
 
@@ -19,6 +20,8 @@ from FileOp import *
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 testdir1 = 'test/test1'
 testdir2 = 'test/test1/test2'
+testdir3 = 'test/test1/test3'
+testdir4 = 'test/test1/test4'
 testfile = 'file_op_test'
 
 # ----------------------------------------------------------------------
@@ -26,6 +29,7 @@ def Print(msg, indent=2):
 	print('%s%s' % (' '*indent, msg))
 
 def Ls(fop, path, show='mtime'):
+	Print(path)
 	lslist = fop.ls(path)
 	if not lslist:
 		Print('no such file: "%s"' % path)
@@ -72,12 +76,11 @@ F.touch(fname)
 Ls(F, fname)
 print()
 
-#print('wait 60 seconds')
 print('wait until next minute')
-now = datetime.today()
+now = datetime.datetime.today()
 start = str(now.hour) + str(now.minute)
 for n in range(60):
-	now = datetime.today()
+	now = datetime.datetime.today()
 	check = str(now.hour) + str(now.minute)
 	if check != start:
 		break
@@ -117,21 +120,57 @@ Ls(F, checkpath1)
 #Ls(F, checkpath2)
 print()
 
-print('-- rm --')
-Ls(F, checkpath1)
+os.makedirs(testdir3, exist_ok=True)
+F.mv(testdir3, testdir4)
+Ls(F, 'test/test1')
+os.rmdir(testdir4)
+print()
+
+os.makedirs(testdir3, exist_ok=True)
+F.mv(testdir3, testdir2)
+Ls(F, 'test/test1')
+os.rmdir(testdir3)
+print()
+
+print('-- rm original --')
+def make_tree():
+	if os.path.exists(testdir1):
+		F.rm('%s/*' % testdir1)
+	#os.mkdir(testdir1)
+	#os.mkdir(testdir2)
+	F.touch('%s/%s' % (testdir1, testfile))
+	F.touch('%s/%s' % (testdir2, testfile))
+make_tree()
+Ls(F, testdir1)
+print()
+print('-- rm %s --' % testdir1)
+make_tree()
+F.rm('%s' % testdir1)
+Ls(F, testdir1)
+print()
+
+print('-- rm %s/* --' % testdir1)
+make_tree()
+Ls(F, testdir1)
 F.rm('%s/*' % testdir1)
-F.rm('%s/*' % testdir2)
-Ls(F, checkpath1)
+Ls(F, testdir1)
+print()
+
+print('-- rm -r %s --' % testdir1)
+make_tree()
+F.rm('%s' % testdir1, recurse=True)
+Ls(F, testdir1)
 print()
 
 #  dry_run
 #
 print('-- dry_run --')
+F.touch('%s/%s' % (testdir1, testfile))
 F = FileOp(info=1, dry_run=True)
 F.cp(testpath1, testpath2)
 Ls(F, checkpath1)
 print()
-F.mv(testpath2, testpath3)
+F.mv(testpath1, testpath3)
 Ls(F, checkpath1)
 print()
 F.rm('%s/*' % testdir1)

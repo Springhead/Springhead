@@ -55,7 +55,7 @@
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.31 2017/12/07 F.Kanehori	Add spaces to dry_run message.
 #	Ver 1.32 2018/01/11 F.Kanehori	Change return code of touch.
-#	Ver 1.33 2018/02/01 F.Kanehori	Bug fixed.
+#	Ver 1.4  2018/02/21 F.Kanehori	rm(): introduce recurse arg.
 # ======================================================================
 import sys
 import os
@@ -72,7 +72,7 @@ class FileOp:
 	#
 	def __init__(self, info=0, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.3
+		self.version = 1.4
 		#
 		self.info = info
 		self.dry_run = dry_run
@@ -91,6 +91,16 @@ class FileOp:
 		if Util.is_unix():
 			rc = fos.move(fm_path, to_path, force)
 		else:
+			fm_isdir = os.path.isdir(fm_path)
+			if fm_isdir:
+				if os.path.exists(to_path):
+					msg = '"%s" exists' % Util.upath(to_path)
+					print(msg, file=sys.stderr)
+					return 1
+				to_leaf = self.__split_path(to_path)[-1]
+				rc = fos.rename(fm_path, to_leaf, force)
+				return rc
+			#
 			fm_dir, fm_leaf = self.__split_path(fm_path)
 			to_dir, to_leaf = self.__split_path(to_path)
 			if fm_dir == to_dir:
@@ -109,17 +119,46 @@ class FileOp:
 	#
 	def rm(self, path, force=False):
 		fos = self.__fileop(self.info, self.verbose, self.dry_run)
-		if os.path.isdir(path):
-			path += '/*'
-		filelist = glob.glob(path)
+		isabs = os.path.isabs(path)
+		abspath = Util.upath(os.path.abspath(path))
+		return self.__rm(fos, path, recurse, force, isabs)
+
+	def __rm(self, fos, path, recurse, force, isabs, nest=0):
+		if self.verbose:
+			indent = '    ' * nest
+			fmt = '%s__rm: "%s", -r %s, -f %s, isabs %s'
+			print(fmt % (indent, path,recurse,force,isabs))
+		isdir = os.path.isdir(path)
+		if isdir and not recurse:
+			fmt = "rm: cannot remove `%s': is a directory"
+			t_path = path
+			if not isabs:
+				t_path = Util.upath(os.path.relpath(path))
+			print(fmt % t_path, file=sys.stderr)
+			return 1
+		#
+		if isdir:
+			tmp = glob.glob('%s/*' % path)
+		else:
+			tmp = glob.glob(path)
+		flist = Util.upath(list(map(lambda x: os.path.abspath(x), tmp)))
+		#
 		rc = 0
-		for f in filelist:
-			if os.path.isdir(f):
-				continue
-			rc = fos.remove(f, force)
-			if rc != 0:
-				break
-		return rc
+		for f in flist:
+			if self.verbose:
+				print('%s* %s' % (indent, f))
+			if os.path.isdir(f) and recurse:
+				rc += self.__rm(fos, f, True, force, isabs, nest+1)
+				if self.dry_run:
+					f_rel = Util.upath(os.path.relpath(f))
+					print('rm: %s' % f if isabs else f_rel)
+				else:
+					os.rmdir(f)
+			if os.path.isfile(f):
+				rc += fos.remove(f, force)
+		if self.verbose:
+			print('%sreturning %d' % (indent, rc))
+		return min(rc, 0)
 
 	#  Touch command.
 	#
@@ -150,7 +189,7 @@ class FileOp:
 			path += '/*'
 		filelist = glob.glob(path)
 		if len(filelist) == 0:
-			return ''
+			return 'total 0'
 		if len(filelist) == 1:
 			return self.__ls_one(filelist[0], show)
 		lslist = []
@@ -161,6 +200,8 @@ class FileOp:
 				lslist.append(self.__ls_one(f, show))
 				sublist = self.ls(f)
 				if not sublist:
+					continue
+				if sublist[0:5] == 'total':
 					continue
 				if isinstance(sublist, str):
 					lslist.append(sublist)
@@ -258,14 +299,14 @@ class FileOp:
 		#   verbose	Verbose option.
 		# returns:	Time stamp.
 
-		d = datetime.today()
+		d = datetime.datetime.today()
 		CC, YY, MM, DD = 20, d.year%100, d.month, d.day
 		hh, mm, ss, ms = d.hour, d.minute, d.second, d.microsecond
 		if self.verbose > 1:
 			fmt = '  current time: %s' % datetime_format
 			print(fmt % (CC, YY, MM, DD, hh, mm, ss, ms))
 		yy = CC * 100 + YY
-		dt = datetime(yy, MM, DD, hh, mm, ss, ms)
+		dt = datetime.datetime(yy, MM, DD, hh, mm, ss, ms)
 		ts = int(dt.timestamp() * 1000000 + 0.0000005) * 1000
 		return ts, ts
 
@@ -287,7 +328,7 @@ class FileOp:
 		if show == 'mtime': timemode = fstat.st_mtime
 		if show == 'ctime': timemode = fstat.st_ctime
 		if show == 'atime': timemode = fstat.st_atime
-		dt = datetime.fromtimestamp(int(timemode))
+		dt = datetime.datetime.fromtimestamp(int(timemode))
 		ftime = dt.strftime('%Y-%m-%d %H:%M')
 		fmt = '{0} {1} {2:>8} {3} {4}'
 		ls = fmt.format(fmode, nlink, fsize, ftime, fname)
