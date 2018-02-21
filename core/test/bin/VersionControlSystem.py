@@ -54,6 +54,7 @@
 #	Ver 1.2  2017/11/16 F.Kanehori	Python library path ÇÃïœçX.
 #	Ver 1.3  2017/12/20 F.Kanehori	GitHub î≈é¿ëï.
 #	Ver 1.4  2018/01/18 F.Kanehori	Add get_file_content().
+#	Ver 1.41 2018/02/19 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -80,7 +81,7 @@ class VersionControlSystem:
 	#
 	def __init__(self, system, args=None, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.3
+		self.version = 1.4
 		#
 		self.system = system
 		self.verbose = verbose
@@ -199,7 +200,7 @@ class VersionControlSystem:
 					ifmt = '%a %b %d %H:%M:%S %Y %z'
 					ofmt = '%Y-%m%d,%H:%M:%S'
 					mstr = m.group(1)
-					dt = datetime.strptime(mstr, ifmt)
+					dt = datetime.datetime.strptime(mstr, ifmt)
 					date = dt.strftime(ofmt)
 					info = [short_id, long_id, date]
 					if short_id == commit_id or commit_id == 'HEAD':
@@ -315,7 +316,10 @@ if __name__ == '__main__':
 		vcs = VersionControlSystem(system, args, verbose)
 		contents = vcs.get_file_content(fname, rev[0])
 		print('--[%s,%s,%s]--' % (rev[0], rev[1], rev[2]))
-		print(contents.replace('\r', ''))
+		if contents is None:
+			return
+		if isinstance(contents, str):
+			print(contents.replace('\r', ''))
 
 	# --------------------------------------------------------------
 	if system == 'Subversion':

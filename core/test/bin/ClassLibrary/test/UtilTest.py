@@ -5,7 +5,7 @@
 #	UtilTest.py
 #
 #  DESCRIPTION:
-#	Test program for class Util (Ver 2.0).
+#	Test program for class Util (Ver 2.0 and later).
 # ======================================================================
 import sys
 import os
@@ -53,6 +53,9 @@ Print('date: %s' % Util.date())
 Print('time: %s' % Util.time())
 Print('now:  %s' % Util.now())
 print('')
+Print('date: %s' % Util.date('%Y/%m%d'))
+Print('time: %s' % Util.time('%H.%M.%S'))
+Print('now:  %s' % Util.now('%Y/%m%d %H.%M.%S'))
 
 sys.exit(0)
 

@@ -4,8 +4,8 @@
 #  SYNOPSIS:
 #	TestMainGit [options]
 #	options:
-#	    -c CONFIG:	    Configuration to test (Debug, Release or Trace).
-#	    -p PLATFORM:    Platform to test (x86, x64)
+#	    -c CONF:	    Configuration to test (Debug, Release or Trace).
+#	    -p PLAT:	    Platform to test (x86, x64)
 #	    -t TOOLSET:	    C-compiler version.
 #				Windows: Visual Studio version (str).
 #				unix:    gcc version (dummy).
@@ -17,7 +17,7 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/15 F.Kanehori	First version.
+#	Ver 1.0  2018/02/19 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 
@@ -31,6 +31,9 @@ from optparse import OptionParser
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+result_log = 'result.log'
+history_log = 'History.log'
+date_record = 'Test.date'
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
@@ -78,47 +81,41 @@ def check_exec(name, os_type=True):
 		print('skip ..%s..' % name)
 	return judge
 
+def make_dir(newdir):
+	if dry_run:
+		print('  mkdir: %s' % Util.upath(newdir))
+		return
+	os.mkdir(newdir)
+
 def copy_dir(fop, dir, copyto):
 	for root, dirs, files in os.walk(dir, topdown=False):
 		for f in files:
-			copy_file(fop, f, copyto)
+			copy_file(fop, f, copyto, debug=True)
 		for d in dirs:
-			os.makedirs(os.path.abspath(d))
-			copy_dir(fop, d, copyto)
+			todir = '%s/%s' % (copyto, d)
+			make_dir(os.path.abspath(todir))
+			copy_dir(fop, d, todir)
 
-def copy_file(fop, f, copyto):
-	leaf = fmpath.split('/')[-1]
+def copy_file(fop, f, copyto, debug=False):
+	leaf = f.split('/')[-1]
 	path = '%s/%s' % (copyto, leaf)
-	print('  copying file "%s" to "%s"' % (f, path))
+	if debug:
+		print('    copying "%s" -> "%s"' % (leaf, path))
 	fop.cp(f, path, force=True)
-
-def remove_dir(dir):
-	for root, dirs, files in os.walk(dir, topdown=False):
-		for f in files:
-			path = '%s/%s' % (root, f)
-			os.chmod(path, stat.S_IWRITE)
-			os.unlink(path)
-		for d in dirs:
-			path = '%s/%s' % (root, d)
-			remove_dir(path)
-	if Util.is_windows(): sleep(1)
-	os.rmdir(dir)
 
 # ----------------------------------------------------------------------
 #  Options
 #
 usage = 'Usage: %prog [options] test-repositoy'
 parser = OptionParser(usage = usage)
-parser.add_option('-c', '--config', dest='config',
-			action='append', default='Release',
-			help='test configurations [default: %default]',
-			metavar='CONFIG')
-parser.add_option('-p', '--platform', dest='platform',
-			action='append', default='x64',
-			help='test platforms [default: %default]',
-			metavar='PLATFORM')
+parser.add_option('-c', '--conf', dest='conf',
+			action='store', default='Release',
+			help='test configuration [default: %default]')
+parser.add_option('-p', '--plat', dest='plat',
+			action='store', default='x64',
+			help='test platform [default: %default]')
 parser.add_option('-t', '--toolset', dest='toolset',
-			default='14.0',
+			action='store', default='14.0',
 			help='Visual Studio version [default: %default]')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
@@ -150,13 +147,13 @@ if not os.path.isdir(repository):
 
 # get options
 toolset = options.toolset
-platform = options.platform
-config = options.config
-if platform not in ['x86', 'x64']:
-	msg = 'invalid platform name "%s"' % platform
+plat = options.plat
+conf = options.conf
+if plat not in ['x86', 'x64']:
+	msg = 'invalid platform name "%s"' % plat
 	Error(prog).print(msg)
-if config not in ['Debug', 'Release', 'Trace']:
-	msg = 'invalid configuration name "%s"' % config
+if conf not in ['Debug', 'Release', 'Trace']:
+	msg = 'invalid configuration name "%s"' % conf
 	Error(prog).print(msg)
 verbose = options.verbose
 dry_run = options.dry_run
@@ -164,8 +161,8 @@ dry_run = options.dry_run
 print('Test parameters:')
 if Util.is_windows():
 	print('   toolset id:      [%s]' % toolset)
-print('   platform:        [%s]' % platform)
-print('   configuration:   [%s]' % config)
+print('   platform:        [%s]' % plat)
+print('   configuration:   [%s]' % conf)
 print('   test repository: [%s]' % repository)
 
 # ----------------------------------------------------------------------
@@ -174,6 +171,7 @@ print('   test repository: [%s]' % repository)
 if not os.path.exists(repository):
 	print('making test repository: [%s]' % repository)
 	os.makedirs(repository, exist_ok=True)
+testdir = spr_path.abspath('test')
 start_dir = os.getcwd()
 os.chdir(repository)
 
@@ -185,18 +183,19 @@ if not os.path.exists('core/test/bin'):
 #  Test Go!
 #
 if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
-	os.chdir('core/test')
+	os.chdir('core/test/bin')
 	#
-	test_dirs = [
-		['.', '-S'],	# Springhead library (need result init'ed)
-		['tests'],	# src/tests
-		['Samples']	# src/Samples
-	]
-	init_opts = ['-S', None, None]
+	test_dirs = []
+	if check_exec('DAILYBUILD_EXECUTE_STUBBUILD'):
+		test_dirs.append(['.', '-S'])
+	if check_exec('DAILYBUILD_EXECUTE_BUILDRUN'):
+		test_dirs.append(['tests'])
+	if check_exec('DAILYBUILD_EXECUTE_SAMPLEBUILD'):
+		test_dirs.append(['Samples'])
 	#
 	csusage = 'unuse'	#  We do not use closed sources.
-	cmnd = 'python bin/SpringheadTest.py'
-	opts = '-p %s -c %s -C %s' % (platform, config, csusage)
+	cmnd = 'python SpringheadTest.py'
+	opts = '-p %s -c %s -C %s' % (plat, conf, csusage)
 	args = 'result/dailybuild.result dailybuild.control '
 	if Util.is_unix():
 		args += 'unix'
@@ -216,6 +215,62 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 			msg = 'test failed (%d)' % stat
 			Error(proc).print(msg, exitcode=stat)
 	#
+	os.chdir(repository)
+
+# ----------------------------------------------------------------------
+#  Make history log file.
+#
+if check_exec('DAILYBUILD_GEN_HISTORY', Util.is_windows()):
+	print('making history log')
+	os.chdir('%s/bin' % testdir)
+	#
+	rslt_path = '../log/%s' % result_log
+	hist_path = '../log/%s' % history_log
+	cmnd = 'python VersionControlSystem.py -g -f %s all' % rslt_path
+	Proc().exec(cmnd, stdout=hist_path).wait()
+	os.chdir(repository)
+
+# ----------------------------------------------------------------------
+#  Make test date/time information file.
+#
+if check_exec('DAILYBUILD_GEN_HISTORY', Util.is_windows()):
+	print('making test date information')
+	os.chdir('%s/log' % testdir)
+	#
+	date_and_time = Util.now('%Y-%m%d %H:%M:%S')
+	lines = [
+		'** DO NOT EDIT THIS FILE **',
+		'generated by "%s"' % prog,
+		'- - - %s' % date_and_time
+	]
+	fio = TextFio(date_record, 'w')
+	if fio.open() == 0:
+		fio.writelines(lines)
+		fio.close()
+	else:
+		Error(prog).print('cannot make "Test.date".', alive=True)
+	os.chdir(repository)
+
+# ----------------------------------------------------------------------
+#  Copy log files to the server.
+#
+if check_exec('DAILYBUILD_COPYTO_BUILDLOG', Util.is_windows()):
+	os.chdir('%s/log' % testdir)
+	#
+	docroot = '//haselab/HomeDirs/WWW/docroots'
+	webbase = '%s/springhead/dailybuild/log' % docroot
+	print('web base: %s' % webbase)
+	#
+	print('  clearing...')
+	fop = FileOp(dry_run=dry_run, verbose=verbose)
+	fop.rm('%s/*' % webbase)
+	#
+	print('  copying to %s' % webbase)
+	flist = glob.glob('*.log')
+	for f in flist:
+		print('    %s' % Util.upath(f))
+		f_abs = Util.upath(os.path.abspath(f))
+		copy_file(fop, f_abs, webbase)
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
@@ -245,7 +300,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', Util.is_windows()):
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
-#  Copy files generated by dailybuild to Web.
+#  Copy generated files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', Util.is_windows()):
 	print('copying generated files to web')
@@ -268,8 +323,10 @@ if check_exec('DAILYBUILD_COPYTO_WEBBASE', Util.is_windows()):
 	fop = FileOp(dry_run=dry_run, verbose=verbose)
 	for d in dlist:
 		d_abs = Util.upath(os.path.abspath(d))
-		remove_dir(d_abs)
-		os.makedirs(d_abs)
+		print('  clearing %s...' % d_abs)
+		fop.rm('%s' % d_abs, recurse=True)
+		make_dir(d_abs)
+		print('  copying directory %s -> %s' % (d_abs, webbase))
 		copy_dir(fop, d_abs, webbase)
 	for f in flist:
 		f_abs = Util.upath(os.path.abspath(f))
