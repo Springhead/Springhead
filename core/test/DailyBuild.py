@@ -49,19 +49,16 @@ from Error import *
 #
 usage = 'Usage: python %prog [options] test-repository'
 parser = OptionParser(usage = usage)
-parser.add_option('-c', '--configuration',
-			dest='conf', default='Release',
-			help='configuration {Debug | <Release>}')
-parser.add_option('-p', '--platform',
-			dest='plat', default='x64',
-			help='platform {x86 | <x64>}')
-parser.add_option('-r', '--repository',
-			dest='repository', default='SpringheadTest',
-			help='test repository name')
+parser.add_option('-c', '--conf', dest='conf',
+			action='store', default='Release',
+			help='test configuration [default: %default]')
+parser.add_option('-p', '--plat', dest='plat',
+			action='store', default='x64',
+			help='test platform [default: %default]')
 if Util.is_windows():
-	parser.add_option('-t', '--toolset-id',
-			dest='tool', default='14.0',
-			help='toolset ID {<14.0>}')
+	parser.add_option('-t', '--toolset-id', dest='tool',
+			action='store', default='14.0',
+			help='toolset ID [default: %default]')
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose mode')
@@ -78,11 +75,11 @@ if options.version:
 	sys.exit(0)
 if len(args) != 1:
 	Error(prog).print('incorrect number of arguments\n', alive=True)
-	proc.exec('python %s.py -h' % prog).wait()
+	Proc().exec('python %s.py -h' % prog).wait()
 	sys.exit(-1)
 
 # get test repository name
-repository = args[0]
+repository = Util.upath(args[0])
 conf = options.conf
 plat = options.plat
 if Util.is_windows():
@@ -214,7 +211,6 @@ os.chdir('%s/%s' % (prep_dir, repository))
 #  4th step: Execute DailyBuild test.
 #
 os.chdir('core/test')
-pwd()
 print('Test start:')
 if python_test:
 	cmnd = 'python TestMainGit.py'
@@ -222,7 +218,7 @@ if python_test:
 else:
 	cmnd = 'TestMainGit.bat'
 	args = '/r %s /t %s /c %s /p %s' % (repository, tool, conf, plat)
-rc = proc.exec('%s %s' % (cmnd, args), shell=True).wait()
+rc = proc.exec([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 
 # ----------------------------------------------------------------------

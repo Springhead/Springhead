@@ -72,7 +72,8 @@
 #	Ver 1.11 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
 #	Ver 1.12 2017/10/13 F.Kanehori	Set default encoding.
 #	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
-#	Ver 1.14 2018/02/14 F.Kanehori	Improve verbose message.
+#	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
+#					when dry_run flag specified.
 # ======================================================================
 import sys
 import os
@@ -151,6 +152,11 @@ class Proc:
 			if addpath:
 				print('        addpath: %s' % Util.upath(addpath))
 		if self.dry_run:
+			class dummy:
+				stdin = 0
+				stdout = 1
+				stderr = 2
+			self.proc = dummy()	# dummy!
 			return self
 		if self.verbose > 1:
 			print('args to Popen')
@@ -357,7 +363,7 @@ class Proc:
 			return file
 		try:
 			f = open(file, mode)
-		except Error as err:
+		except IOError as err:
 			f = None
 		return f
 

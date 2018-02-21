@@ -28,13 +28,14 @@
 #	    Alias for pathconv(path, 'windows') 
 #
 #	string = date()
-#	    Returns date string ('yyyy-mm-dd')
+#	    Returns date string (format='%Y-%m-%d'). ['yyyy-mm-dd'].
 #
 #	string = time()
-#	    Returns time string ('hh:mm:ss')
+#	    Returns time string (format='%H:%M:%S'). ['hh:mm:ss']
 #
 #	string = now()
-#	    Returns date and time string ('yyyy-mm-dd hh:mm:ss')
+#	    Returns date and time string (format='%Y-%m-%d %H:%M:%S').
+#					['yyyy-mm-dd hh:mm:ss']
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -42,10 +43,11 @@
 #	Ver 2.0  2017/08/19 F.Kanehori	Some methods are moved to
 #					Proc class and FileOp class.
 #	Ver 2.1  2017/09/11 F.Kanehori	Add alias method for pathconv().
+#	Ver 2.2  2018/02/19 F.Kanehori	Change default date/time format.
 # ======================================================================
 import sys
 import os
-from datetime import datetime
+import datetime
 
 class Util:
 	#  These are class instance methods.
@@ -56,9 +58,9 @@ class Util:
 	def is_unix(self): return Util.is_unix()
 	def is_windows(self): return Util.is_windows()
 	def pathconv(self, **keywords): return Util.pathconv(**keywords)
-	def date(self): return Util.date()
-	def time(self): return Util.time()
-	def now(self): return Util.now()
+	def date(self, **keywords): return Util.date(**keywords)
+	def time(self, **keywords): return Util.time(**keywords)
+	def now(self, **keywords): return Util.now(**keywords)
 
 	#  Judges if running under unix or Windows.
 	#
@@ -107,15 +109,15 @@ class Util:
 	#  Get current date and/or time string.
 	#
 	@staticmethod
-	def date():
-		return str(datetime.today())[0:10].replace('-', '/')
+	def date(format='%Y-%m-%d'):
+		return Util.now(format)
 
 	@staticmethod
-	def time():
-		return str(datetime.today())[11:19]
+	def time(format='%H:%M:%S'):
+		return Util.now(format)
 
 	@staticmethod
-	def now():
-		return str(datetime.today())[0:19].replace('-', '/')
+	def now(format='%Y-%m-%d %H:%M:%S'):
+		return datetime.datetime.now().strftime(format)
 
 # end: Util.py
