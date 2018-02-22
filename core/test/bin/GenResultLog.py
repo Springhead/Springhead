@@ -19,7 +19,7 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/14 F.Kanehori	First version.
+#	Ver 1.0  2018/02/22 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 
@@ -78,18 +78,18 @@ if ((args[0] == 'd' and len(args) != 2) or \
 
 # get arguments
 out_type = args[0]
-res_file = '%s/%s' % (spr_path.abspath('test'), args[1])
+res_file = args[1]
 if out_type == 'r':
 	platform = args[2]
 	config = args[3]
 
 # get options
-outfile = '%s/%s' % (spr_path.abspath('test'), options.outfile)
+outfile = options.outfile
 verbose = options.verbose
 
 if verbose:
 	print('%s:' % prog)
-	print('  report file:  %s' % report)
+	print('  report file:  %s' % res_file)
 	print('  output file:  %s' % outfile)
 	print('  out_type:     %s' % out_type)
 	if out_type == 'r':

@@ -13,7 +13,7 @@
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#	Ver 1.2  2018/02/25 F.Kanehori	TestMainGit.py test.
+#	Ver 1.2  2018/02/22 F.Kanehori	TestMainGit.py に移行.
 # ======================================================================
 version = '1.2'
 python_test = False
@@ -126,6 +126,10 @@ def Print(data, indent=2):
 		indent_str = ' ' * indent
 		print('%s%s' % (indent_str, data))
 
+def flush():
+	sys.stdout.flush()
+	sys.stderr.flush()
+
 # ----------------------------------------------------------------------
 #  Process start.
 #
@@ -148,6 +152,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 		Print(errstr.split('\n'))
 	if rc != 0:
 		Error(prog).print('updating failed: status %d' % rc)
+	flush()
 	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
@@ -170,8 +175,9 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 		os.rmdir(repository)
 	else:
 		print('test repository "%s" not exist' % repository)
-	os.chdir(start_dir)
 	print()
+	flush()
+	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
 #  3rd step: Clone repository.
@@ -192,14 +198,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	rc = proc.exec(cmnd).wait()
 	if rc != 0:
 		Error(prog).print('cloning failed: status %d' % rc)
-
-	"""
-	print('checking out "closed"')
-	cmnd = 'svn co %s %s' % (url_svn, 'closed')
-	rc = proc.exec(cmnd).wait()
-	if rc != 0:
-		Error(prog).print('cloning failed: status %d' % rc)
-	"""
+	flush()
 	os.chdir(prep_dir)
 
 # ----------------------------------------------------------------------
@@ -210,7 +209,7 @@ os.chdir('%s/%s' % (prep_dir, repository))
 # ----------------------------------------------------------------------
 #  4th step: Execute DailyBuild test.
 #
-os.chdir('core/test')
+os.chdir(start_dir)
 print('Test start:')
 if python_test:
 	cmnd = 'python TestMainGit.py'
