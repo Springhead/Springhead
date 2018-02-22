@@ -37,7 +37,7 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2016/11/17 F.Kanehori	First version.
-#	Ver 2.0  2018/02/15 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
+#	Ver 2.0  2018/02/22 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
 # =============================================================================
 version = 2.0
 
@@ -249,10 +249,10 @@ csc.revive()
 # back to start directory and make "result.log".
 os.chdir(cwd)
 cmnd = 'python GenResultLog.py'
+outf = '-o ../log/result.log'
 args = 'r %s %s %s' % (res_file, platforms[0], configs[0])
-print('CWD: %s' % os.getcwd())
-print(' '.join([cmnd, args]))
-Proc(dry_run=False).exec([cmnd, args]).wait()
+print(' '.join([cmnd, outf, args]))
+Proc(dry_run=False).exec([cmnd, outf, args]).wait()
 
 # done
 print('test ended at: %s' % Util.now())

@@ -114,6 +114,7 @@
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 2.1  2017/09/13 F.Kanehori	Add flush().
 #	Ver 2.2  2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
+#	Ver 2.21 2018/02/22 F.Kanehori	writeline(): allow line=None.
 # ======================================================================
 import sys
 import io
@@ -360,6 +361,8 @@ class TextFio(Fio):
 		if nl is None:
 			nl = self.nl
 		try:
+			if line is None:
+				return 0
 			self.obj.write(line + nl)
 		except IOError:
 			msg = 'file write error: "%s"' % self.path
