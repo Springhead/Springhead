@@ -206,15 +206,15 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 #
 os.chdir('%s/%s' % (prep_dir, repository))
 pwd()
-print('moved to test repository')
-print()
+Print('moved to test repository')
+Print()
 
 # ----------------------------------------------------------------------
 #  4th step: Execute DailyBuild test.
 #
 os.chdir('core/test')
 pwd()
-print('Test start:')
+Print('Test start:')
 if python_test:
 	cmnd = 'python TestMainGit.py'
 	args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)

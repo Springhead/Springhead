@@ -106,7 +106,8 @@ def make_dir(newdir):
 def copy_dir(fop, dir, copyto):
 	for root, dirs, files in os.walk(dir, topdown=False):
 		for f in files:
-			copy_file(fop, f, copyto, debug=False)
+			src = '%s/%s' % (root, f)
+			copy_file(fop, src, copyto, debug=True)
 		for d in dirs:
 			todir = '%s/%s' % (copyto, d)
 			make_dir(os.path.abspath(todir))
