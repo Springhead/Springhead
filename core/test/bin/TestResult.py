@@ -68,7 +68,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/14 F.Kanehori	First version.
+#	Ver 1.0  2018/02/26 F.Kanehori	First version.
 # ======================================================================
 import sys
 import os
@@ -214,6 +214,8 @@ class TestResult:
 				continue
 			stat = r[v][RST.RUN][p][c]
 			if str(stat) == r[v][RST.RUN][RST.EXP]:
+				succs[RST.RUN].append(module)
+			elif stat == Proc.ETIME:	# assume success
 				succs[RST.RUN].append(module)
 			elif stat:
 				fails[RST.RUN].append(module)
