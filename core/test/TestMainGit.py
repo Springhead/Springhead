@@ -14,26 +14,26 @@
 #
 #  DESCRIPTION:
 #	Execute dailybuild test.
+#	On unix machine, some test steps' execution can be controlled by
+#	following parameters;
+#	    unix_gen_history:	    Generate "History.log" and "Test.date".
+#	    unix_copyto_buildlog:   Copy log files to the server.
+#	    unix_execute_makedoc:   Make cocumentations.
+#	    unix_copyto_webbase:    Copy generated files to the server.
+#	These control parameters are hard coded on this file.
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/19 F.Kanehori	First version.
+#	Ver 1.0  2018/02/26 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
+python_test = True
 
 import sys
 import os
 import glob
 from time import sleep
 from optparse import OptionParser
-
-# ----------------------------------------------------------------------
-#  Constants
-#
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-result_log = 'result.log'
-history_log = 'History.log'
-date_record = 'Test.date'
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
@@ -48,6 +48,22 @@ from Util import *
 from Proc import *
 from FileOp import *
 from TextFio import *
+
+# ----------------------------------------------------------------------
+#  Control parameter for test on unix.
+#
+unix_gen_history	= Util.is_windows()
+unix_copyto_buildlog	= Util.is_windows()
+unix_execute_makedoc	= True
+unix_copyto_webbase	= Util.is_windows()
+
+# ----------------------------------------------------------------------
+#  Constants
+#
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+result_log = 'result.log'
+history_log = 'History.log'
+date_record = 'Test.date'
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -85,7 +101,7 @@ def make_dir(newdir):
 	if dry_run:
 		print('  mkdir: %s' % Util.upath(newdir))
 		return
-	os.mkdir(newdir)
+	os.makedirs(newdir, exist_ok=True)
 
 def copy_dir(fop, dir, copyto):
 	for root, dirs, files in os.walk(dir, topdown=False):
@@ -102,6 +118,10 @@ def copy_file(fop, f, copyto, debug=False):
 	if debug:
 		print('    copying "%s" -> "%s"' % (leaf, path))
 	fop.cp(f, path, force=True)
+
+def flush():
+	sys.stdout.flush()
+	sys.stderr.flush()
 
 # ----------------------------------------------------------------------
 #  Options
@@ -183,7 +203,7 @@ if not os.path.exists('core/test/bin'):
 #  Test Go!
 #
 if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
-	os.chdir('core/test/bin')
+	os.chdir('%s/bin' % testdir)
 	#
 	test_dirs = []
 	if check_exec('DAILYBUILD_EXECUTE_STUBBUILD'):
@@ -214,13 +234,14 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		if (stat != 0):
 			msg = 'test failed (%d)' % stat
 			Error(proc).print(msg, exitcode=stat)
+		flush()
 	#
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Make history log file.
 #
-if check_exec('DAILYBUILD_GEN_HISTORY', Util.is_windows()):
+if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	print('making history log')
 	os.chdir('%s/bin' % testdir)
 	#
@@ -228,12 +249,13 @@ if check_exec('DAILYBUILD_GEN_HISTORY', Util.is_windows()):
 	hist_path = '../log/%s' % history_log
 	cmnd = 'python VersionControlSystem.py -g -f %s all' % rslt_path
 	Proc().exec(cmnd, stdout=hist_path).wait()
+	flush()
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Make test date/time information file.
 #
-if check_exec('DAILYBUILD_GEN_HISTORY', Util.is_windows()):
+if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	print('making test date information')
 	os.chdir('%s/log' % testdir)
 	#
@@ -249,12 +271,13 @@ if check_exec('DAILYBUILD_GEN_HISTORY', Util.is_windows()):
 		fio.close()
 	else:
 		Error(prog).print('cannot make "Test.date".', alive=True)
+	flush()
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Copy log files to the server.
 #
-if check_exec('DAILYBUILD_COPYTO_BUILDLOG', Util.is_windows()):
+if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	os.chdir('%s/log' % testdir)
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
@@ -271,38 +294,46 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', Util.is_windows()):
 		print('    %s' % Util.upath(f))
 		f_abs = Util.upath(os.path.abspath(f))
 		copy_file(fop, f_abs, webbase)
+	flush()
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Make document (doxygen).
 #
-if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', Util.is_windows()):
+if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	print('making documents')
 	#
 	os.chdir('core/include')
-	cmnd = 'python SpringheadDoc.py'
-	cmnd = 'cmd /c SpringheadDoc.bat'
+	if python_test:
+		cmnd = 'python SpringheadDoc.py'
+	else:
+		cmnd = 'cmd /c SpringheadDoc.bat'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../include')
-	cmnd = 'python SpringheadImpDoc.py'
-	cmnd = 'cmd /c SpringheadImpDoc.bat'
+	if python_test:
+		cmnd = 'python SpringheadImpDoc.py'
+	else:
+		cmnd = 'cmd /c SpringheadImpDoc.bat'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../doc/SprManual')
-	cmnd = 'python MakeDoc.py'
-	cmnd = 'cmd /c make.bat'
+	if python_test:
+		cmnd = 'python MakeDoc.py'
+	else:
+		cmnd = 'cmd /c make.bat'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
+	flush()
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Copy generated files to the server.
 #
-if check_exec('DAILYBUILD_COPYTO_WEBBASE', Util.is_windows()):
+if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 	print('copying generated files to web')
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'

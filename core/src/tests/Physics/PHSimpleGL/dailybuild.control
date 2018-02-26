@@ -28,7 +28,8 @@ Expected	1
 
 #[Windows]
 
-[unix]
-Build		True
-Run		True
+#[unix]
+#SolutionAlias	Makefile
+#OutputDir	.
+#BinaryOutName	a.out
 
