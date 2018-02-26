@@ -16,7 +16,7 @@
 #	Ver 1.2  2018/02/22 F.Kanehori	TestMainGit.py �Ɉڍs.
 # ======================================================================
 version = '1.2'
-python_test = False
+python_test = True
 
 import sys
 import os
@@ -133,7 +133,7 @@ def flush():
 # ----------------------------------------------------------------------
 #  Process start.
 #
-print('%s: start: %s' % (prog, Util.now()))
+print('%s: start: %s' % (prog, Util.now(format='%Y/%m/%d')))
 
 # ----------------------------------------------------------------------
 #  1st step: Make Springhead up-to-date.
@@ -224,7 +224,7 @@ Print('rc: %s' % rc)
 #  Process end.
 #
 os.chdir(start_dir)
-print('%s: end: %s' % (prog, Util.now()))
+print('%s: end: %s' % (prog, Util.now(format='%Y/%m/%d')))
 sys.exit(0)
 
 # end: DailyBuild.py

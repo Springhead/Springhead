@@ -36,7 +36,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/14 F.Kanehori	First version.
+#	Ver 1.0  2018/02/26 F.Kanehori	First version.
 # ======================================================================
 import sys
 import os
@@ -103,9 +103,14 @@ class Traverse:
 	def traverse(self, top):
 		if not os.path.isdir(top):
 			self.err.print('not a directory: %s' % top, alive=True)
+			return 0
 	
+		# go to test directory
+		dirsave = self.__chdir(top)
+		cwd = Util.upath(os.getcwd())
+		
 		# read control file
-		ctl = ControlParams(self.control, self.section)
+		ctl = ControlParams(self.control, self.section, verbose=self.verbose)
 		if ctl.error():
 			self.err.print(ctl.error(), alive=True)
 			return -1
@@ -117,10 +122,6 @@ class Traverse:
 			self.once = False
 			print()
 
-		# go to test directory
-		dirsave = self.__chdir(top)
-		cwd = Util.upath(os.getcwd())
-		
 		# check test condition
 		is_cand = self.__is_candidate_dir(cwd)
 		exclude = ctl.get(CFK.EXCLUDE, False)
@@ -145,6 +146,8 @@ class Traverse:
 		if descend and stat != Proc.ECANCELED:
 			for item in os.listdir(cwd):
 				if not os.path.isdir(item):
+					continue
+				if not self.__is_candidate_dir(item):
 					continue
 				subdir = '%s/%s' % (cwd, item)
 				stat = self.traverse(subdir)
@@ -233,7 +236,7 @@ class Traverse:
 				# Run
 				#
 				if not ctl.get(CFK.RUN):
-					self.__report(',', 'skip. ', False)
+					self.__report(',', '(skip). ', False)
 					continue
 				if ctl.get(CFK.INTERVENTION):
 					self.__report(',', 'intervention. ', False)
@@ -264,9 +267,11 @@ class Traverse:
 						print('interrupted')
 					break
 				#
-				self.__report(',', '.', False, False)
 				if self.verbose:
 					print(self.__status_str(RST.RUN, stat))
+				if stat == Proc.ETIME:
+					self.__report('', '(timedout)', False, False)
+				self.__report(',', '.', False, False)
 
 			# end config
 			if stat == Proc.ECANCELED:

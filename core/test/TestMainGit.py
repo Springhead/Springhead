@@ -24,9 +24,10 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/22 F.Kanehori	First version.
+#	Ver 1.0  2018/02/26 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
+python_test = True
 
 import sys
 import os
@@ -303,20 +304,26 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	print('making documents')
 	#
 	os.chdir('core/include')
-	cmnd = 'python SpringheadDoc.py'
-	cmnd = 'cmd /c SpringheadDoc.bat'
+	if python_test:
+		cmnd = 'python SpringheadDoc.py'
+	else:
+		cmnd = 'cmd /c SpringheadDoc.bat'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../include')
-	cmnd = 'python SpringheadImpDoc.py'
-	cmnd = 'cmd /c SpringheadImpDoc.bat'
+	if python_test:
+		cmnd = 'python SpringheadImpDoc.py'
+	else:
+		cmnd = 'cmd /c SpringheadImpDoc.bat'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../doc/SprManual')
-	cmnd = 'python MakeDoc.py'
-	cmnd = 'cmd /c make.bat'
+	if python_test:
+		cmnd = 'python MakeDoc.py'
+	else:
+		cmnd = 'cmd /c make.bat'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
