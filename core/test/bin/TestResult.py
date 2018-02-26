@@ -58,17 +58,17 @@
 #	    Dump test result.
 #
 #  DATA STRUCTURE:
-#	results[name][RST.ERR]:		    error information
-#	results[name][RST.SKP]:		    test skip information
-#	results[name][RST.BLD][p][c]:	    build result
-#	results[name][RST.RUN][p][c]:	    run result
-#	results[name][RST.RUN][RST.EXP]:    expected result status
-#	visited[]:			    executed test name list
+#	results[name][RST.ERR]:		  info (not build/run error)
+#	results[name][RST.SKP]:		  info (this test is skipped)
+#	results[name][RST.BLD][p][c]:	  result code of build step
+#	results[name][RST.RUN][p][c]:	  result code of run step
+#	results[name][RST.RUN][RST.EXP]:  expected result status
+#	visited[]:			  executed test name list
 #	    where p and c stands for platform and config for each.
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/08 F.Kanehori	First version.
+#	Ver 1.0  2018/02/26 F.Kanehori	First version.
 # ======================================================================
 import sys
 import os
@@ -105,10 +105,13 @@ class TestResult:
 			self.results = self.__deserialize(self.rfname)
 			self.visited = self.__deserialize(self.vfname)
 		else:
+			dirname = os.path.dirname(os.path.abspath(self.rfname))
+			os.makedirs(dirname, exist_ok=True)
 			self.results = {}
 			self.visited = []
-		print('results file: "%s"' % self.rfname)
-		print('visited file: "%s"' % self.vfname)
+		if verbose:
+			print('results file: "%s"' % self.rfname)
+			print('visited file: "%s"' % self.vfname)
 
 	#  Set error/skip/expcted information.
 	#
@@ -142,10 +145,6 @@ class TestResult:
 			msg = 'bad config: %s' % config
 			self.E.print(msg, alive=True)
 			return
-		#
-		if name not in self.visited:
-			self.results[name] = self.__init_result()
-			self.visited.append(name)
 		#
 		self.results[name][category][platform][config] = result
 
@@ -185,40 +184,44 @@ class TestResult:
 		for v in self.visited:
 			data = v.split('/')
 			if len(data) != 3:
+				# must be 'tests/x/y' or 'Samples/x/y'
 				continue
 			if data[0] != name:
 				if dirty:
-					self.__put_result_file(lines, name, succs, fails)
+					self.__edit_log_data(lines, name, succs, fails)
 				succs = {RST.BLD: [], RST.RUN: []}
 				fails = {RST.BLD: [], RST.RUN: []}
 				name = data[0]
 				dirty = False
-				continue
 			#
-			if RST.ERR in r[v]:
-				print('error: %s (%s)' % (v, r[v][RST.ERR]))
+			if r[v][RST.ERR]:
+				msg = 'error: %s (%s)' % (v, r[v][RST.ERR])
+				print(msg, file=sys.stderr)
 				continue
-			if RST.SKP in r[v]:
-				print('skip:  %s (%s)' % (v, r[v][RST.SKP]))
+			if r[v][RST.SKP]:
+				msg = 'skip:  %s (%s)' % (v, r[v][RST.SKP])
+				print(msg, file=sys.stderr)
+				continue
 			#
 			module = '%s:%s' % (data[1], data[2])
-			if RST.BLD in r[v]:
-				stat = r[v][RST.BLD][p][c]
-				if stat == 0:
-					succs[RST.BLD].append(module)
-				else:
-					fails[RST.BLD].append(module)
-			if RST.RUN in r[v]:
-				stat = r[v][RST.RUN][p][c]
-				if stat == r[v][RST.RUN][RST.EXP]:
-					succs[RST.RUN].append(module)
-				else:
-					fails[RST.RUN].append(module)
+			stat = r[v][RST.BLD][p][c]
+			if stat == 0:
+				succs[RST.BLD].append(module)
+			else:
+				fails[RST.BLD].append(module)
 			dirty = True
+			if stat != 0:
+				continue
+			stat = r[v][RST.RUN][p][c]
+			if str(stat) == r[v][RST.RUN][RST.EXP]:
+				succs[RST.RUN].append(module)
+			elif stat == Proc.ETIME:	# assume success
+				succs[RST.RUN].append(module)
+			elif stat:
+				fails[RST.RUN].append(module)
 		# end visited	
 
-		if dirty:
-			self.__put_result_file(lines, name, succs, fails)
+		self.__edit_log_data(lines, name, succs, fails)
 		return lines
 
 	#  Dump test result.
@@ -235,14 +238,16 @@ class TestResult:
 			if err: print('  ERR: %s' % err)
 			if skp: print('  SKP: %s' % skp)
 			if exp: print('  EXP: %s' % exp)
-			if skp: continue
+			if skp or err: continue
+			fmt = '  %s: %s-%-7s: %s'
 			for s in [RST.BLD, RST.RUN]:
 				if r[name][s] is None: continue
 				for p in PLATS:
 					for c in CONFS:
 						v = r[name][s][p][c]
-						fmt = '  %s: %s-%-7s: %s'
 						print(fmt % (s, p, c, v))
+			v = r[name][RST.RUN][RST.EXP]
+			print('  %s: %s' % (RST.EXP, v))
 
 
 	# --------------------------------------------------------------
@@ -256,6 +261,8 @@ class TestResult:
 		# returns:	Initialized result list (obj).
 
 		result = {}
+		result[RST.ERR] = None
+		result[RST.SKP] = None
 		for s in [RST.BLD, RST.RUN]:
 			result[s] = {}
 			for p in PLATS:
@@ -268,6 +275,11 @@ class TestResult:
 	#  Serialize/desierialize object.
 	#
 	def __serialize(self, obj, fname):
+		# arguments:
+		#   obj:	Instance of TestResult class (obj).
+		#   fname:	File name to store serialized data (str).
+		# returns:	0: succ, -1: fail.
+
 		if self.verbose:
 			print('serializing data to "%s"' % fname)
 		f = Fio(fname, 'wb')
@@ -284,6 +296,10 @@ class TestResult:
 		return 0
 	
 	def __deserialize(self, fname):
+		# arguments:
+		#   fname:	File name to read serialized data (str).
+		# returns:	Deserialized object (TestResult class).
+
 		if self.verbose:
 			print('deserializing data from "%s"' % fname)
 		f = Fio(fname, 'rb')
@@ -301,13 +317,20 @@ class TestResult:
 
 	#  Put editted lines ("result.log" format).
 	#
-	def __put_result_file(self, lines, name, succs, fails):
+	def __edit_log_data(self, lines, name, succs, fails):
+		# arguments:
+		#   lines:	Edit result log data lines ([str]).
+		#   name:	Test module name (str).
+		#   succs:	List of success module names ([str]).
+		#   fails:	List of failure module names ([str]).
+
 		lines.append(name)
 		lines.append('ビルド成功 (%s)' % ','.join(succs[RST.BLD]))
 		lines.append('ビルド失敗 (%s)' % ','.join(fails[RST.BLD]))
 		lines.append('実行成功 (%s)' % ','.join(succs[RST.RUN]))
 		lines.append('実行失敗 (%s)' % ','.join(fails[RST.RUN]))
 		lines.append(' ')
+
 
 # ----------------------------------------------------------------------
 #  Test main
@@ -331,9 +354,14 @@ if __name__ == '__main__':
 
 	# Self test program
 	#
+	def init_for_test_only(res, name):
+		res.set_info(name, RST.ERR, 'dummy')
+		res.set_info(name, RST.ERR, None)
+
 	fname = 'TestResult_test'
 	res = TestResult(fname, scratch=True, verbose=verbose)
 	name = 'test1'
+	init_for_test_only(res, name)
 	for p in PLATS:
 		for c in CONFS:
 			res.set_result(name, RST.BLD, p, c, 1)
@@ -349,6 +377,7 @@ if __name__ == '__main__':
 
 	res = TestResult(fname, scratch=False, verbose=verbose)
 	name = 'test3'
+	init_for_test_only(res, name)
 	for p in PLATS:
 		for c in CONFS:
 			res.set_result(name, RST.BLD, p, c, 11)
@@ -361,6 +390,7 @@ if __name__ == '__main__':
 
 	res = TestResult(fname, scratch=True, verbose=verbose)
 	name = 'test4'
+	init_for_test_only(res, name)
 	for p in PLATS:
 		for c in CONFS:
 			res.set_result(name, RST.BLD, p, c, 111)
