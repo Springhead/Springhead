@@ -13,7 +13,7 @@
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#	Ver 1.2  2018/02/22 F.Kanehori	TestMainGit.py に移行.
+#	Ver 1.2  2018/02/26 F.Kanehori	TestMainGit.py に移行.
 # ======================================================================
 version = '1.2'
 python_test = True
@@ -205,11 +205,15 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 #  The process hereafter will be executed under test-repository.
 #
 os.chdir('%s/%s' % (prep_dir, repository))
+pwd()
+print('moved to test repository')
+print()
 
 # ----------------------------------------------------------------------
 #  4th step: Execute DailyBuild test.
 #
-os.chdir(start_dir)
+os.chdir('core/test')
+pwd()
 print('Test start:')
 if python_test:
 	cmnd = 'python TestMainGit.py'

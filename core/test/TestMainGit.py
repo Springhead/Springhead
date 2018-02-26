@@ -106,7 +106,7 @@ def make_dir(newdir):
 def copy_dir(fop, dir, copyto):
 	for root, dirs, files in os.walk(dir, topdown=False):
 		for f in files:
-			copy_file(fop, f, copyto, debug=True)
+			copy_file(fop, f, copyto, debug=False)
 		for d in dirs:
 			todir = '%s/%s' % (copyto, d)
 			make_dir(os.path.abspath(todir))
@@ -122,6 +122,10 @@ def copy_file(fop, f, copyto, debug=False):
 def flush():
 	sys.stdout.flush()
 	sys.stderr.flush()
+
+def Print(msg):
+	print(msg)
+	flush()
 
 # ----------------------------------------------------------------------
 #  Options
@@ -242,7 +246,7 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 #  Make history log file.
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
-	print('making history log')
+	Print('making history log')
 	os.chdir('%s/bin' % testdir)
 	#
 	rslt_path = '../log/%s' % result_log
@@ -256,7 +260,7 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 #  Make test date/time information file.
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
-	print('making test date information')
+	Print('making test date information')
 	os.chdir('%s/log' % testdir)
 	#
 	date_and_time = Util.now('%Y-%m%d %H:%M:%S')
@@ -291,7 +295,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	print('  copying to %s' % webbase)
 	flist = glob.glob('*.log')
 	for f in flist:
-		print('    %s' % Util.upath(f))
+		Print('    %s' % Util.upath(f))
 		f_abs = Util.upath(os.path.abspath(f))
 		copy_file(fop, f_abs, webbase)
 	flush()
@@ -304,6 +308,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	print('making documents')
 	#
 	os.chdir('core/include')
+	Print('  SpringheadDoc')
 	if python_test:
 		cmnd = 'python SpringheadDoc.py'
 	else:
@@ -311,7 +316,8 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
-	os.chdir('../include')
+	os.chdir('../src')
+	Print('  SpringheadImpDoc')
 	if python_test:
 		cmnd = 'python SpringheadImpDoc.py'
 	else:
@@ -320,6 +326,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../doc/SprManual')
+	Print('  SprManual')
 	if python_test:
 		cmnd = 'python MakeDoc.py'
 	else:
@@ -334,7 +341,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 #  Copy generated files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
-	print('copying generated files to web')
+	Print('copying generated files to web')
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/generated' % docroot
