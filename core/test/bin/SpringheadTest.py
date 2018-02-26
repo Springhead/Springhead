@@ -202,7 +202,7 @@ if verbose:
 #  Test start.
 #
 print()
-print('test start at: %s' % Util.now())
+print('test start at: %s' % Util.now(format='%Y/%m/%d'))
 
 # test id
 #	'Test_id' affects only log file header.
@@ -255,7 +255,7 @@ print(' '.join([cmnd, outf, args]))
 Proc(dry_run=False).exec([cmnd, outf, args]).wait()
 
 # done
-print('test ended at: %s' % Util.now())
+print('test ended at: %s' % Util.now(format='%Y/%m/%d'))
 sys.exit(0)
 
 # end: SpringheadTest.py

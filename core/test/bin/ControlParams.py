@@ -37,7 +37,7 @@
 #	Ver 1.0  2016/10/05 F.Kanehori	First version.
 #	Ver 2.0  2017/08/10 F.Kanehori	Name changed: script, param file.
 #	Ver 3.0  2017/09/13 F.Kanehori	Python library revised.
-#	Ver 4.0  2018/02/05 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
+#	Ver 4.0  2018/02/26 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
 # ======================================================================
 import sys
 import os
@@ -113,19 +113,17 @@ class ControlParams:
 		#   section:	Control section name.
 
 		cwd = os.getcwd().split(os.sep)
-		top = len(cwd)
-		for n in range(len(cwd)):
+		siz = len(cwd)
+		top = siz
+		for n in range(siz):
 			if cwd[n] in ['core']:
 				top = n + 1
-		for n in range(top, len(cwd)):
-			up = len(cwd) - n - 1
-			prefix = ''
-			for n in range(up):
-				prefix += '..' + os.sep
+		for n in range(top, siz):
+			prefix = '../' * (siz - n - 1)
 			if os.path.exists(prefix + fname):
 				path = Util.upath(os.path.abspath(prefix + fname))
 				if self.verbose:
-					prinit('read: %s' % path)
+					print('read: %s' % path)
 				kvf = KvFile(path, verbose=0)
 				num_sections = kvf.read(self.control)
 				self.__set_control_values(kvf, section)
