@@ -346,22 +346,24 @@ if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 	for g in glist:
 		if os.path.isdir(g):
 			dlist.append(g)
-		elif os.isfile(g):
+		elif os.path.isfile(g):
 			flist.append(g)
 	print('  web base:  [%s]' % webbase)
 	print('  dir list:  [%s]' % ' '.join(dlist))
 	print('  file list: [%s]' % ' '.join(flist))
 	fop = FileOp(dry_run=dry_run, verbose=verbose)
 	for d in dlist:
-		d_abs = Util.upath(os.path.abspath(d))
-		print('  clearing %s...' % d_abs)
-		fop.rm('%s' % d_abs, recurse=True)
-		make_dir(d_abs)
-		print('  copying directory %s -> %s' % (d_abs, webbase))
-		copy_dir(fop, d_abs, webbase)
+		d_local = Util.upath(os.path.abspath(d))
+		d_remote = '%s/%s' % (webbase, d)
+		print('  clearing %s...' % d_remote)
+		fop.rm('%s' % d_remote, recurse=True)
+		make_dir(d_remote)
+		print('  copying directory %s -> %s' % (d_local, d_remote))
+		copy_dir(fop, d_local, d_remote)
 	for f in flist:
-		f_abs = Util.upath(os.path.abspath(f))
-		copy_file(fop, f_abs, webbase)
+		f_local = Util.upath(os.path.abspath(f))
+		print('  copying file %s -> %s' % (f_local, webbase))
+		copy_file(fop, f_local, webbase)
 	#
 	os.chdir(repository)
 
