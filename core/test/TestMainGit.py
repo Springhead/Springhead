@@ -24,7 +24,7 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/26 F.Kanehori	First version.
+#	Ver 1.0  2018/02/28 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 python_test = True
@@ -294,11 +294,14 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	fop.rm('%s/*' % webbase)
 	#
 	print('  copying to %s' % webbase)
+	"""
 	flist = glob.glob('*.log')
 	for f in flist:
 		Print('    %s' % Util.upath(f))
 		f_abs = Util.upath(os.path.abspath(f))
 		copy_file(fop, f_abs, webbase)
+	"""
+	fop.cp('*.log', webbase)
 	flush()
 	os.chdir(repository)
 
@@ -348,6 +351,7 @@ if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 	webbase = '%s/springhead/dailybuild/generated' % docroot
 	#
 	os.chdir('generated')
+	"""
 	glist = glob.glob('*')
 	dlist = []
 	flist = []
@@ -372,6 +376,10 @@ if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 		f_local = Util.upath(os.path.abspath(f))
 		print('  copying file %s -> %s' % (f_local, webbase))
 		copy_file(fop, f_local, webbase)
+	"""
+	fop = FileOp(dry_run=dry_run, verbose=verbose)
+	fop.rm('%s/doc' % webbase)
+	fop.cp('doc', webbase)
 	#
 	os.chdir(repository)
 

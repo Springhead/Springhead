@@ -13,18 +13,16 @@
 #	    verbose:	Verbose level (silent if 0) (int).
 #
 #  METHODS:
-#	status = cp(fm_path, to_path, force=False)
-#	status = mv(fm_path, to_path, force=False)
-#	status = rm(path, recurse=False, force=False)
+#	status = cp(fm_path, to_path)
+#	status = mv(fm_path, to_path)
+#	status = rm(path, recurse=False)
 #	    OS independent copy/move/remove command.
 #	  arguments:
 #	    fm_path:	Source file path to copy.
 #	    to_path:	Destination file path to copy.
 #	    path:	File path to move (rename) or remove.
-#	    force:	Force operation if True.
 #	    recurse:	Remove directory itself and all subdirectories.
-#			NOT IMPLEMENTED
-#	  returns:	Process return code.
+#	  returns:	0: succ, 1: fail.
 #
 #	touch(path, mode=0o666, no_create=False)
 #	    Method version of 'touch' command.
@@ -55,19 +53,21 @@
 #	Ver 1.1  2017/09/11 F.Kanehori	Aargument 'dry_run' added.
 #	Ver 1.2  2017/09/11 F.Kanehori	Implement move() for unix.
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
-#	Ver 1.31 2017/12/07 F.Kanehori	Add spaces to dry_run message.
-#	Ver 1.32 2018/01/11 F.Kanehori	Change return code of touch.
-#	Ver 1.4  2018/02/21 F.Kanehori	rm(): introduce recurse arg.
+#	Ver 1.4  2018/02/28 F.Kanehori	Rewrite cp/mv/rm using shutil.
 # ======================================================================
 import sys
 import os
 import datetime
 import stat
-import subprocess
 import glob
+import shutil
+from pathlib import Path
+from time import sleep
+
 sys.path.append('/usr/local/lib')
 from Proc import *
 from Util import *
+from Error import *
 
 class FileOp:
 	#  These are class instance methods.
@@ -80,87 +80,65 @@ class FileOp:
 		self.dry_run = dry_run
 		self.verbose = verbose
 
-	#  File copy command.
+	#  Copy
 	#
-	def cp(self, fm_path, to_path, force=False):
-		fos = self.__fileop(self.info, self.verbose, self.dry_run)
-		return fos.copy(fm_path, to_path, force)
-
-	#  Unix like file move command.
-	#
-	def mv(self, fm_path, to_path, force=False):
-		fos = self.__fileop(self.info, self.verbose, self.dry_run)
-		if Util.is_unix():
-			rc = fos.move(fm_path, to_path, force)
-		else:
-			fm_isdir = os.path.isdir(fm_path)
-			if fm_isdir:
-				if os.path.exists(to_path):
-					msg = '"%s" exists' % Util.upath(to_path)
-					print(msg, file=sys.stderr)
-					return 1
-				to_leaf = self.__split_path(to_path)[-1]
-				rc = fos.rename(fm_path, to_leaf, force)
-				return rc
-			#
-			fm_dir, fm_leaf = self.__split_path(fm_path)
-			to_dir, to_leaf = self.__split_path(to_path)
-			if fm_dir == to_dir:
-				rc = fos.remove(to_path, force)
-				if rc == 0:
-					rc = fos.rename(fm_path, to_leaf, force)
-			else:
-				rc = fos.copy(fm_path, to_path, force)
-				if rc == 0:
-					info = fos.set_info(0)
-					rc = fos.remove(fm_path, force)
-					fos.set_info(info)
-		return rc
-
-	#  File remove command.
-	#
-	def rm(self, path, recurse=False, force=False):
-		fos = self.__fileop(self.info, self.verbose, self.dry_run)
-		isabs = os.path.isabs(path)
-		abspath = Util.upath(os.path.abspath(path))
-		return self.__rm(fos, path, recurse, force, isabs)
-
-	def __rm(self, fos, path, recurse, force, isabs, nest=0):
-		if self.verbose:
-			indent = '    ' * nest
-			fmt = '%s__rm: "%s", -r %s, -f %s, isabs %s'
-			print(fmt % (indent, path,recurse,force,isabs))
-		isdir = os.path.isdir(path)
-		if isdir and not recurse:
-			fmt = "rm: cannot remove `%s': is a directory"
-			t_path = path
-			if not isabs:
-				t_path = Util.upath(os.path.relpath(path))
-			print(fmt % t_path, file=sys.stderr)
-			return 1
+	def cp(self, src, dst, follow_symlinks=True):
+		u_src = Util.upath(src)
+		u_dst = Util.upath(dst)
+		a_dst = os.path.abspath(dst)
+		if self.dry_run or self.info:
+			print('cp: %s -> %s' % (u_src, u_dst))
+			if self.dry_run:
+				return 0
 		#
-		if isdir:
-			tmp = glob.glob('%s/*' % path)
-		else:
-			tmp = glob.glob(path)
-		flist = Util.upath(list(map(lambda x: os.path.abspath(x), tmp)))
+		plist = u_src.split('/')
+		src_pdir = '/'.join(plist[:-1])
+		src_leaf = plist[-1]
+		cwd = os.getcwd()
+		os.chdir(src_pdir)
 		#
 		rc = 0
-		for f in flist:
-			if self.verbose:
-				print('%s* %s' % (indent, f))
-			if os.path.isdir(f) and recurse:
-				rc += self.__rm(fos, f, True, force, isabs, nest+1)
-				if self.dry_run:
-					f_rel = Util.upath(os.path.relpath(f))
-					print('rm: %s' % f if isabs else f_rel)
-				else:
-					os.rmdir(f)
-			if os.path.isfile(f):
-				rc += fos.remove(f, force)
-		if self.verbose:
-			print('%sreturning %d' % (indent, rc))
-		return min(rc, 0)
+		for name in glob.glob(src_leaf):
+			u_name = Util.upath(name)
+			rc = self.__cp(name, a_dst, follow_symlinks)
+		#
+		os.chdir(cwd)
+		return rc
+
+	#  Move
+	#
+	def mv(self, src, dst):
+		msg = 'mv: %s -> %s' % (Util.upath(src), Util.upath(dst))
+		if self.dry_run or self.info:
+			print(msg)
+			if self.dry_run:
+				return 0
+		#
+		try:
+			shutil.move(src, dst)
+			rc = 0
+		except OSError as why:
+			prog = '%s: mv' % self.clsname
+			msg = str(why)
+			Error(prog).print(msg, alive=True)
+			rc = 1
+			#
+		return rc
+
+	#  Remove
+	#
+	def rm(self, path, recurse=False, use_shutil=True):
+		msg = 'rm: %s' % Util.upath(path)
+		if self.dry_run or self.info:
+			print(msg)
+			if self.dry_run:
+				return 0
+		#
+		for name in glob.glob(path):
+			u_name = Util.upath(name)
+			rc = self.__rm(u_name, use_shutil)
+		#
+		return rc
 
 	#  Touch command.
 	#
@@ -217,82 +195,114 @@ class FileOp:
 	#  For class private use
 	# --------------------------------------------------------------
 
-	class __fileop:
-		def __init__(self, info, verbose, dry_run):
-			self.info = info
-			self.verbose = verbose
-			self.dry_run = dry_run
-
-		def copy(self, fm_path, to_path, force):
-			cmnd = 'cp' if Util.is_unix() else 'copy /V'
-			if force:
-				args = self.__select('-f', '/Y')
-				cmnd += ' %s' % args
-			return self.__exec(cmnd, fm_path, to_path)
-
-		def rename(self, fm_path, to_path, force):
-			#  This applies to Windows only.
-			cmnd = 'rename'
-			return self.__exec(cmnd, fm_path, to_path)
-
-		def move(self, fm_path, to_path, force):
-			#  This applies to unix only.
-			cmnd = 'mv'
-			if force:
-				args = '-f'
-				cmnd += ' %s' % args
-			return self.__exec(cmnd, fm_path, to_path)
-
-		def remove(self, path, force):
-			cmnd = 'rm' if Util.is_unix() else 'del'
-			if force:
-				args = self.__select('-f', '/F /Q')
-				cmnd += ' %s' % args
-			return self.__exec(cmnd, path)
-
-		def __select(self, unix, win):
-			return unix if Util.is_unix() else win
-
-		def __exec(self, cmnd, path1, path2=None):
-			if self.dry_run:
-				msg = '  %s %s' % (cmnd, Util.pathconv(path1))
-				if path2:
-					msg += ' ' + Util.pathconv(path2)
-				print(msg)
-				return 0
-			if self.info:
-				if cmnd[0:2] == 'rm' or cmnd[0:3] == 'del':
-					msg = "removed `%s'" % path1
-				else:
-					msg = "`%s' -> `%s'" % (path1, path2)
-				print(Util.upath(msg))
-			args = [cmnd]
-			args.append(Util.pathconv(path1))
-			if path2:
-				args.append(Util.pathconv(path2))
-			#
-			null = Proc.NULL
-			proc = Proc(self.verbose)
-			proc.exec(args, stdout=null, stderr=null, shell=True)
-			return proc.wait()
-
-		def set_info(self, info):
-			old_info = self.info
-			self.info = info
-			return old_info
-
-	#  Split file path into directory part and file leaf part.
+	#  Copy files and directories.
 	#
-	def __split_path(self, path):
+	def __cp(self, src, dst, follow_symlinks=True):
 		# argument:
-		#   path	File path.
-		# returns:	Directory part (str) and leaf name (str).
+		#   src:	Soruce path (file or directory).
+		#   dst:	Destination path (file or direcoty).
+		#   follow_symlinks:
+		#		When False and src is symbolic link,
+		#		make symbolic link instead of copying
+		#		body of src.
+		# returns:	0: succ, 1: fail
 
-		abspath = os.path.abspath(path)
-		parts = Util.upath(abspath).split('/')
-		dpart = parts[:len(parts)-1]
-		fpart = parts[-1]
-		return '/'.join(dpart), fpart
+		if self.verbose:
+			print('__cp: %s -> %s' % (src, dst))
+		#
+		try:
+			if self.verbose:
+				print('    cwd: %s' % Util.upath(os.getcwd()))
+				print('    src: %s' % src)
+				print('    dst: %s' % dst)
+			if os.path.isdir(src):
+				if os.path.exists(dst):
+					prog = '%s: cp' % self.clsname
+					msg = '"%s" exists' % dst
+					Error(prog).print(msg, alive=True)
+					return 1
+				if self.verbose:
+					print('    shutil.copytree()')
+				shutil.copytree(src, dst, follow_symlinks)
+			else:
+				if self.verbose:
+					print('  shutil.copy2()')
+				shutil.copy2(src, dst)
+			rc = 0
+		except OSError as why:
+			prog = '%s: cp' % self.clsname
+			Error(prog).print(str(why), alive=True)
+			rc = 1
+		#
+		return rc
+
+	#  Remove files and directories.
+	#
+	def __rm(self, path, use_shutil):
+		# argument:
+		#   path:	File or directory path to remove.
+		# returns:	0: succ, 1: fail
+		
+		try:
+			if os.path.isdir(path):
+				if use_shutil:
+					shutil.rmtree(path, ignore_errors=True)
+				else:
+					rc = self.__remove_all(path)
+					if Util.is_windows():
+						sleep(1)	# Kludge
+					os.rmdir(path)
+			else:
+				os.remove(path)
+			rc = 0
+		except OSError as why:
+			prog = '%s: rm' % self.clsname
+			Error(prog).print(str(why), alive=True)
+			rc = 1
+		return rc
+
+	#  Remove all files/directories under specified directory.
+	#
+	def __remove_all(self, path):
+		# argument:
+		#   path:	Directory path to remove its contents.
+		# returns:	0: succ, 1: fail
+
+		another_drive = False
+		if Util.is_windows():
+			t_drive = os.path.abspath(path)[0]
+			c_drive = os.getcwd()[0]
+			another_drive = t_drive != c_drive
+		#print('remove_all: %s (another drive: %s)' % (path, another_drive))
+		if another_drive:
+			# os.walk() seemes to work on current drive only.
+			dlist = Util.upath(path).split('/')
+			wrkdir = '/'.join(dlist[:-1])
+			path = dlist[-1]
+			cwd = os.getcwd()
+			os.chdir(wrkdir)
+		#
+		#print('remove_all: path: %s' % path)
+		try:
+			for root, dirs, files in os.walk(path, topdown=False):
+				for name in files:
+					fpath = '%s/%s' % (root, name)
+					os.chmod(fpath, stat.S_IWRITE)
+					os.unlink(fpath)
+				for name in dirs:
+					dpath = '%s/%s' % (root, name)
+					os.rmdir(dpath)
+			rc = 0
+		except OSError as why:
+			prog = '%s: rm' % self.clsname
+			msg = str(why)
+			Error(prog).print(msg, alive=True)
+			rc = 1
+		#
+		if another_drive:
+			os.chdir(cwd)
+
+		return rc
 
 	#  Get current time (for touch method).
 	#
