@@ -68,7 +68,7 @@ class ClosedSrcControl:
 		self.org_usage = self.__read_usage(path)
 		self.curr_usage = self.org_usage
 		self.file_changed = False
-		self.fop.cp(path, self.saved_path, force=True)
+		self.fop.cp(path, self.saved_path)
 		#
 		if verbose:
 			self.__print('file saved to "%s"' % self.saved_path)
@@ -86,7 +86,7 @@ class ClosedSrcControl:
 			return
 		#
 		path = self.template[usage]
-		self.fop.cp(path, self.org_path, force=True)
+		self.fop.cp(path, self.org_path)
 		self.curr_usage = usage
 		self.file_changed = True
 		if self.verbose:
@@ -98,12 +98,12 @@ class ClosedSrcControl:
 	#
 	def revive(self):
 		if not self.file_changed:
-			self.fop.rm(self.saved_path, force=True)
+			self.fop.rm(self.saved_path)
 			if self.verbose:
 				self.__print('no need to revive')
 			return
 		#self.set_usage(self.org_usage)
-		self.fop.mv(self.saved_path, self.org_path, force=True)
+		self.fop.mv(self.saved_path, self.org_path)
 		self.curr_usage = self.org_usage
 		self.file_changed = False
 		if self.verbose:

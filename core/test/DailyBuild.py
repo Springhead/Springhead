@@ -13,7 +13,7 @@
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#	Ver 1.2  2018/02/26 F.Kanehori	TestMainGit.py に移行.
+#	Ver 1.2  2018/02/28 F.Kanehori	TestMainGit.py に移行.
 # ======================================================================
 version = '1.2'
 python_test = True
@@ -40,6 +40,7 @@ from FindSprPath import *
 spr_path = FindSprPath(prog)
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
+from FileOp import *
 from Proc import *
 from Util import *
 from Error import *
@@ -117,7 +118,9 @@ def pwd():
 	# Print current workind directory.
 	print('[%s]' % Util.upath(os.getcwd()))
 
-def Print(data, indent=2):
+def Print(data=None, indent=2):
+	if data is None:
+		return
 	# Print with indent.
 	if isinstance(data, list):
 		for d in data:
@@ -141,6 +144,7 @@ print('%s: start: %s' % (prog, Util.now(format='%Y/%m/%d')))
 if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 	pwd()
 	print('updating "Springhead"')
+	flush()
 	os.chdir(spr_topdir)
 	cmnd = 'git pull --all'
 	proc.exec(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT)
@@ -152,7 +156,6 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 		Print(errstr.split('\n'))
 	if rc != 0:
 		Error(prog).print('updating failed: status %d' % rc)
-	flush()
 	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
@@ -163,20 +166,11 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	pwd()
 	if os.path.exists(repository):
 		print('clearing "%s"' % repository)
-		for root, dirs, files in os.walk(repository, topdown=False):
-			for f in files:
-				path = '%s/%s' % (root, f)
-				os.chmod(path, stat.S_IWRITE)
-				os.unlink(path)
-			for d in dirs:
-				path = '%s/%s' % (root, d)
-				os.rmdir(path)
-		if Util.is_windows(): sleep(1)
-		os.rmdir(repository)
+		flush()
+		FileOp().rm(repository)
 	else:
 		print('test repository "%s" not exist' % repository)
 	print()
-	flush()
 	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
@@ -186,6 +180,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	os.chdir(prep_dir)
 	pwd()
 	print('cloning test repository')
+	flush()
 	cmnd = 'git clone %s %s' % (url_git, repository)
 	rc = proc.exec(cmnd).wait()
 	if rc != 0:
@@ -198,7 +193,6 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	rc = proc.exec(cmnd).wait()
 	if rc != 0:
 		Error(prog).print('cloning failed: status %d' % rc)
-	flush()
 	os.chdir(prep_dir)
 
 # ----------------------------------------------------------------------

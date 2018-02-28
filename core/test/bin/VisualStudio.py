@@ -285,8 +285,8 @@ class VisualStudio:
 		# delete all files in outdir before build (rebuild)
 		if self.clean:
 			fop = FileOp(verbose=self.verbose, dry_run=self.dry_run)
-			status = fop.rm(self.outdir, force=True)
-			status = fop.rm(self.logfile, force=True)
+			status = fop.rm(self.outdir)
+			status = fop.rm(self.logfile)
 			if status != 0 and not self.dry_run:
 				self.errmsg = 'file deletion failed (%d)' % status
 				return status
