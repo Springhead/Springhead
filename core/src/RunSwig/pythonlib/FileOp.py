@@ -53,7 +53,7 @@
 #	Ver 1.1  2017/09/11 F.Kanehori	Aargument 'dry_run' added.
 #	Ver 1.2  2017/09/11 F.Kanehori	Implement move() for unix.
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
-#	Ver 1.4  2018/02/28 F.Kanehori	Rewrite cp/mv/rm using shutil.
+#	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
 # ======================================================================
 import sys
 import os
@@ -127,16 +127,17 @@ class FileOp:
 
 	#  Remove
 	#
-	def rm(self, path, recurse=False, use_shutil=True):
+	def rm(self, path, recurse=False, use_shutil=True, idle_time=0):
 		msg = 'rm: %s' % Util.upath(path)
 		if self.dry_run or self.info:
 			print(msg)
 			if self.dry_run:
 				return 0
 		#
+		rc = 0
 		for name in glob.glob(path):
 			u_name = Util.upath(name)
-			rc = self.__rm(u_name, use_shutil)
+			rc = self.__rm(u_name, use_shutil, idle_time)
 		#
 		return rc
 
@@ -238,7 +239,7 @@ class FileOp:
 
 	#  Remove files and directories.
 	#
-	def __rm(self, path, use_shutil):
+	def __rm(self, path, use_shutil, idle_time):
 		# argument:
 		#   path:	File or directory path to remove.
 		# returns:	0: succ, 1: fail
@@ -249,8 +250,8 @@ class FileOp:
 					shutil.rmtree(path, ignore_errors=True)
 				else:
 					rc = self.__remove_all(path)
-					if Util.is_windows():
-						sleep(1)	# Kludge
+					if Util.is_windows() and idle_time > 0:
+						sleep(idle_time)  # Kludge
 					os.rmdir(path)
 			else:
 				os.remove(path)
