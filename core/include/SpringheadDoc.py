@@ -12,7 +12,7 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/21 F.Kanehori	First version.
+#	Ver 1.0  2018/03/01 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 
@@ -114,7 +114,7 @@ if verbose:
 	print('  addpath:    %s' % addpath)
 
 # for global use
-fop = FileOp(dry_run=dry_run, verbose=verbose)
+fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
 
 # ----------------------------------------------------------------------
 #  Make compiled HTML file (.chm) if HTML help compiler installed.
@@ -148,9 +148,11 @@ if Util.is_windows() and generate_chm:
 		stat1 = proc1.wait()
 		stat2 = proc2.wait()
 		if stat2 == 0:
-			fop.mv('%s/%s' % (wrkdir, chm_file), target_dir)
-			fop.rm('%s/*' % wrkdir, recurse=True)
-			os.rmdir(wrkdir)
+			src = '%s/%s' % (wrkdir, chm_file)
+			dst = '%s/%s' % (target_dir, chm_file)
+			fop.mv(src, dst)
+			if os.path.exists(wrkdir):
+				fop.rm(wrkdir, recurse=True)
 		else:
 			msg = 'making chm file failed.'
 			Error(prog).print(msg, alive=True)
@@ -160,6 +162,8 @@ if Util.is_windows() and generate_chm:
 #
 if not os.path.exists(wrkdir):
 	os.mkdir(wrkdir)
+if os.path.exists(target_dir):
+	fop.rm(target_dir, recurse=True)
 #
 overrides = list(map(lambda x: 'echo %s' % x, [
 	'OUTPUT_DIRECTORY=%s' % out_dir
@@ -179,15 +183,13 @@ if stat2 != 0:
 	msg = 'making html files failed.'
 	Error(prog).print(msg, alive=True)
 #
-if os.path.exists(target_dir):
-	fop.rm('%s/*' % target_dir, recurse=True)
-	os.rmdir(target_dir)
-fop.mv('%s/%s' % (out_dir, wrkdir), target_name)
+src = '%s/%s' % (out_dir, wrkdir)
+dst = '%s/%s' % (out_dir, target_name)
+fop.mv(src, dst)
 fop.cp('%s/MathJax.js' % dpt_dir, js_dir)
 #
 if os.path.exists(wrkdir):
 	fop.rm(wrkdir, recurse=True)
-	os.rmdir(wrkdir)
 files = glob.glob('doxygen*.tmp')
 for f in files:
 	fop.rm(f, force=True)
