@@ -30,6 +30,8 @@ def remove_tree(top):
 		os.rmdir(top)
 
 def remove_all(top):
+	if not os.path.exists(top):
+		return
 	another_drive = False
 	if Util.is_windows():
 		t_drive = os.path.abspath(top)[0]
@@ -62,6 +64,8 @@ def make_tree(top):
 	FileOp().touch('%s/test1/file_op_test_x' % top)
 	FileOp().touch('%s/test1/file_op_test_y' % top)
 
+def testpath(top, path):
+	return '%s/%s' % (top, path)
 
 def Ls(fop, path, show='mtime'):
 	Print(path)
@@ -85,7 +89,9 @@ another_fs = 'C:/tmp/FileOpTest'
 
 verbose = 0
 dry_run = True
-top = 'test'
+top = 'test/file_op_test'
+remove_tree(top)
+os.makedirs(top)
 
 # ls
 #
@@ -153,23 +159,23 @@ if 'cp' in test_suit:
 		print('-- cp (%s) --' % opt)
 		F = FileOp(info=1, dry_run=dry_run, verbose=0)
 
-		src = 'test/test1/file_op_test_x'
-		F.cp(src, 'test/test1/file_op_test_1')
-		F.cp(src, 'test/test1/file_op_test_1')
-		F.cp(src, 'test/test1/test1/file_op_test_11')
-		F.cp(src, 'test/test2/file_op_test_2')
-		F.cp(src, 'test/test3')
-		F.cp('test/test1', 'test/test4')
+		src = testpath(top, 'test1/file_op_test_x')
+		F.cp(src, testpath(top, 'test1/file_op_test_1'))
+		F.cp(src, testpath(top, 'test1/file_op_test_1'))
+		F.cp(src, testpath(top, 'test1/test1/file_op_test_11'))
+		F.cp(src, testpath(top, 'test2/file_op_test_2'))
+		F.cp(src, testpath(top, 'test3'))
+		F.cp(testpath(top, 'test1'), testpath(top, 'test4'))
 		Ls(F, top)
 		print()
 
-		F.cp('test/test1', another_fs)
+		F.cp(testpath(top, 'test1'), another_fs)
 		Ls(F, another_fs)
 		remove_tree(another_fs)
 		print()
 
-		src = 'test/test1'
-		F.cp(src, 'test/test5')
+		src = testpath(top, 'test1')
+		F.cp(src, testpath(top, 'test5'))
 		Ls(F, top)
 		print()
 
@@ -184,29 +190,29 @@ if 'mv' in test_suit:
 		print('-- mv (%s) --' % opt)
 		F = FileOp(info=1, dry_run=dry_run, verbose=0)
 
-		src = 'test/test1/file_op_test_x'
-		dst = 'test/test1/file_op_test_1'
+		src = testpath(top, 'test1/file_op_test_x')
+		dst = testpath(top, 'test1/file_op_test_1')
 		F.mv(src, dst)
 		Ls(F, top)
 		print()
 
 		src = dst
-		dst = 'test/test1/test1/file_op_test_11'
+		dst = testpath(top, 'test1/test1/file_op_test_11')
 		F.mv(src, dst)
 		Ls(F, top)
 		print()
 
 		src = dst
-		dst = 'test/test2/file_op_test_2'
+		dst = testpath(top, 'test2/file_op_test_2')
 		F.mv(src, dst)
 		Ls(F, top)
 		print()
 
-		src = 'test/test2'
-		dst = 'test/test3'
+		src = testpath(top, 'test2')
+		dst = testpath(top, 'test3')
 		F.mv(src, dst)
 		Ls(F, top)
-		Ls(F, 'test/test3/test2')
+		Ls(F, testpath(top, 'test3/test2'))
 		print()
 
 # rm
@@ -220,26 +226,27 @@ if 'rm' in test_suit:
 		print('-- rm (%s) --' % opt)
 		F = FileOp(info=1, dry_run=dry_run, verbose=0)
 
-		F.rm('test/test1/file_op_test_x')
+		F.rm(testpath(top, 'test1/file_op_test_x'))
 		Ls(F, top)
 		print()
 
 		make_tree(top)
-		F.rm('test/test1/file_op_test_*')
+		F.rm(testpath(top, 'test1/file_op_test_*'))
 		Ls(F, top)
 		print()
 
 		make_tree(top)
-		F.rm('test/test1/*')
+		F.rm(testpath(top, 'test1/*'))
 		Ls(F, top)
-		Ls(F, 'test/test1')
+		Ls(F, testpath(top, 'test1'))
 		print()
 
 		make_tree(top)
-		F.rm('test/test1')
+		F.rm(testpath(top, 'test1'))
 		Ls(F, top)
 		print()
 
+remove_tree(top)
 sys.exit(0)
 
 # end: FileOpTest.py

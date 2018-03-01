@@ -13,7 +13,7 @@
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#	Ver 1.2  2018/02/28 F.Kanehori	TestMainGit.py に移行.
+#	Ver 1.2  2018/03/01 F.Kanehori	TestMainGit.py に移行.
 # ======================================================================
 version = '1.2'
 python_test = True
@@ -167,7 +167,11 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	if os.path.exists(repository):
 		print('clearing "%s"' % repository)
 		flush()
-		FileOp().rm(repository)
+		# There are some files that shutil.rmtree() can not
+		# remove.  And also some idle time needs to remove
+		# top directory after all its contents are removed
+		# -- mistery.. (Windows only?).
+		FileOp().rm(repository, use_shutil=False, idle_time=1)
 	else:
 		print('test repository "%s" not exist' % repository)
 	print()
