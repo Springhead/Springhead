@@ -13,21 +13,30 @@
 #	    verbose:	Verbose level (silent if 0) (int).
 #
 #  METHODS:
-#	status = cp(fm_path, to_path)
-#	status = mv(fm_path, to_path)
-#	status = rm(path, recurse=False)
-#	    OS independent copy/move/remove command.
+#	status = cp(src, dst, follow_symlinks)
+#	status = mv(src, dst)
+#	status = rm(path, recurse=False, use_shutil=True, idle_time=0)
+#	    OS independent unix like copy/move/remove command.
 #	  arguments:
-#	    fm_path:	Source file path to copy.
-#	    to_path:	Destination file path to copy.
-#	    path:	File path to move (rename) or remove.
-#	    recurse:	Remove directory itself and all subdirectories.
+#	    src:	Source file path (cp and mv).
+#	    dst:	Destination file path (cp and mv).
+#	    path:	File path (rm).
+#	    recurse:	Remove all subdirectories and directory itself.
+#	    use_shutil:	Use shutil.rmtree() to remove directory or not.
+#			Some files can not removed by shutil.rmtree().
+#			In that case, set this argument False and use
+#			os.unlink() and os.rmdir().
+#	    idle_time:	When use_shutil is False, removing directory
+#			'path' just after removing all of its contents
+#			may cause 'path' remains and inaccessible.
+#			This argument i(in second) set idleing time
+#			before removing 'path' directory itself.
 #	  returns:	0: succ, 1: fail.
 #
 #	touch(path, mode=0o666, no_create=False)
 #	    Method version of 'touch' command.
-#	    If specified file exists, change its access time.
-#	    If specified file does not exit and 'no_create' is False,
+#	    If the file exists, change its access time.
+#	    Otherwise, create a empty file unless 'no_create' is True.
 #	  arguments:
 #	    Create new file with file mode 'mode'.
 #	    path:	File path to touch.
@@ -94,15 +103,18 @@ class FileOp:
 		plist = u_src.split('/')
 		src_pdir = '/'.join(plist[:-1])
 		src_leaf = plist[-1]
-		cwd = os.getcwd()
-		os.chdir(src_pdir)
+		need_chdir = len(plist) > 1
+		if need_chdir:
+			cwd = os.getcwd()
+			os.chdir(src_pdir)
 		#
 		rc = 0
 		for name in glob.glob(src_leaf):
 			u_name = Util.upath(name)
 			rc = self.__cp(name, a_dst, follow_symlinks)
 		#
-		os.chdir(cwd)
+		if need_chdir:
+			os.chdir(cwd)
 		return rc
 
 	#  Move

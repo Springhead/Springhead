@@ -24,7 +24,7 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/28 F.Kanehori	First version.
+#	Ver 1.0  2018/03/01 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 python_test = True
@@ -276,7 +276,6 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 		fio.close()
 	else:
 		Error(prog).print('cannot make "Test.date".', alive=True)
-	flush()
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
@@ -289,20 +288,12 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	webbase = '%s/springhead/dailybuild/log' % docroot
 	print('web base: %s' % webbase)
 	#
-	print('  clearing...')
+	Print('  clearing...')
 	fop = FileOp(dry_run=dry_run, verbose=verbose)
 	fop.rm('%s/*' % webbase)
 	#
-	print('  copying to %s' % webbase)
-	"""
-	flist = glob.glob('*.log')
-	for f in flist:
-		Print('    %s' % Util.upath(f))
-		f_abs = Util.upath(os.path.abspath(f))
-		copy_file(fop, f_abs, webbase)
-	"""
+	Print('  copying to %s' % webbase)
 	fop.cp('*.log', webbase)
-	flush()
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
@@ -345,40 +336,20 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 #  Copy generated files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
-	Print('copying generated files to web')
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
-	webbase = '%s/springhead/dailybuild/generated' % docroot
+	webbase = '%s/springhead/dailybuild/generated/doc' % docroot
 	#
+	Print('clearing "%s"' % webbase)
+	fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
+	fop.rm('%s/*' % webbase, recurse=True)
+	if os.path.exists(webbase):
+		if Util.is_windows(): sleep(1)	# Kludge
+		os.rmdir(webbase)
+		if Util.is_windows(): sleep(1)	# Kludge
+	#
+	Print('copying generated files to web')
 	os.chdir('generated')
-	"""
-	glist = glob.glob('*')
-	dlist = []
-	flist = []
-	for g in glist:
-		if os.path.isdir(g):
-			dlist.append(g)
-		elif os.path.isfile(g):
-			flist.append(g)
-	print('  web base:  [%s]' % webbase)
-	print('  dir list:  [%s]' % ' '.join(dlist))
-	print('  file list: [%s]' % ' '.join(flist))
-	fop = FileOp(dry_run=dry_run, verbose=verbose)
-	for d in dlist:
-		d_local = Util.upath(os.path.abspath(d))
-		d_remote = '%s/%s' % (webbase, d)
-		print('  clearing %s...' % d_remote)
-		fop.rm('%s' % d_remote, recurse=True)
-		make_dir(d_remote)
-		print('  copying directory %s -> %s' % (d_local, d_remote))
-		copy_dir(fop, d_local, d_remote)
-	for f in flist:
-		f_local = Util.upath(os.path.abspath(f))
-		print('  copying file %s -> %s' % (f_local, webbase))
-		copy_file(fop, f_local, webbase)
-	"""
-	fop = FileOp(dry_run=dry_run, verbose=verbose)
-	fop.rm('%s/doc' % webbase)
 	fop.cp('doc', webbase)
 	#
 	os.chdir(repository)
