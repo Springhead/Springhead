@@ -1,4 +1,4 @@
-#ifndef FWTRAJECTORYPLANNER_H
+﻿#ifndef FWTRAJECTORYPLANNER_H
 #define FWTRAJECTORYPLANNER_H
 
 #include <Framework/SprFWOptimizer.h>

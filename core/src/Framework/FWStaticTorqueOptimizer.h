@@ -1,4 +1,4 @@
-#ifndef FWSTATICTORQUEOPTIMIZER_H
+﻿#ifndef FWSTATICTORQUEOPTIMIZER_H
 #define FWSTATICTORQUEOPTIMIZER_H
 
 #include <Framework/SprFWOptimizer.h>
