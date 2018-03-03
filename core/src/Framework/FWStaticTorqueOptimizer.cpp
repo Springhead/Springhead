@@ -1,4 +1,4 @@
-#include <Framework/FWStaticTorqueOptimizer.h>
+﻿#include <Framework/FWStaticTorqueOptimizer.h>
 
 namespace Spr { ;
 
