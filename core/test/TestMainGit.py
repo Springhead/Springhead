@@ -96,11 +96,11 @@ def check_exec(name, os_type=True):
 		print('skip ..%s..' % name)
 	return judge
 
-def copy_all(src, dst, dry_run=False, verbose=0):
+def copy_all(src, dst, rm_topdir=True, dry_run=False, verbose=0):
 	Print('  clearing "%s"' % dst)
 	fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
 	fop.rm('%s/*' % dst, recurse=True)
-	if os.path.exists(dst):
+	if os.path.exists(dst) and rm_topdir:
 		if Util.is_windows(): sleep(1)	# Kludge
 		fop.rmdir(dst)
 		if Util.is_windows(): sleep(1)	# Kludge
@@ -283,7 +283,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	logdir = '%s/log' % testdir
 	#
 	Print('copying log files to web')
-	copy_all(logdir, webbase, dry_run)
+	copy_all(logdir, webbase, False, dry_run)
 
 	os.chdir(repository)
 
@@ -323,7 +323,7 @@ if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 	webbase = '%s/springhead/dailybuild/generated' % docroot
 	#
 	Print('copying generated files to web')
-	copy_all('generated', webbase, dry_run)
+	copy_all('generated', webbase, True, dry_run)
 	#
 	os.chdir(repository)
 
