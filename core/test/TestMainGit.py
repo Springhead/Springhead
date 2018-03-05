@@ -24,10 +24,9 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/03/01 F.Kanehori	First version.
+#	Ver 1.0  2018/03/05 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
-python_test = True
 
 import sys
 import os
@@ -97,28 +96,24 @@ def check_exec(name, os_type=True):
 		print('skip ..%s..' % name)
 	return judge
 
-def make_dir(newdir):
-	if dry_run:
-		print('  mkdir: %s' % Util.upath(newdir))
-		return
-	os.makedirs(newdir, exist_ok=True)
-
-def copy_dir(fop, dir, copyto):
-	for root, dirs, files in os.walk(dir, topdown=False):
-		for f in files:
-			src = '%s/%s' % (root, f)
-			copy_file(fop, src, copyto, debug=True)
-		for d in dirs:
-			todir = '%s/%s' % (copyto, d)
-			make_dir(os.path.abspath(todir))
-			copy_dir(fop, d, todir)
-
-def copy_file(fop, f, copyto, debug=False):
-	leaf = f.split('/')[-1]
-	path = '%s/%s' % (copyto, leaf)
-	if debug:
-		print('    copying "%s" -> "%s"' % (leaf, path))
-	fop.cp(f, path, force=True)
+def copy_all(src, dst, dry_run=False, verbose=0):
+	Print('  clearing "%s"' % dst)
+	fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
+	fop.rm('%s/*' % dst, recurse=True)
+	if os.path.exists(dst):
+		if Util.is_windows(): sleep(1)	# Kludge
+		fop.rmdir(dst)
+		if Util.is_windows(): sleep(1)	# Kludge
+	#
+	os.chdir(src)
+	Print('  copying "%s" to "%s"' % (src, dst))
+	names = os.listdir()
+	for name in names:
+		if os.path.isfile(name):
+			fop.cp(name, dst)
+		elif os.path.isdir(name):
+			dst_dir = '%s/%s' % (dst, name)
+			fop.cp(name, dst_dir)
 
 def flush():
 	sys.stdout.flush()
@@ -282,18 +277,14 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 #  Copy log files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
-	os.chdir('%s/log' % testdir)
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/log' % docroot
-	print('web base: %s' % webbase)
+	logdir = '%s/log' % testdir
 	#
-	Print('  clearing...')
-	fop = FileOp(dry_run=dry_run, verbose=verbose)
-	fop.rm('%s/*' % webbase)
-	#
-	Print('  copying to %s' % webbase)
-	fop.cp('*.log', webbase)
+	Print('copying log files to web')
+	copy_all(logdir, webbase, dry_run)
+
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
@@ -304,28 +295,19 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	#
 	os.chdir('core/include')
 	Print('  SpringheadDoc')
-	if python_test:
-		cmnd = 'python SpringheadDoc.py'
-	else:
-		cmnd = 'cmd /c SpringheadDoc.bat'
+	cmnd = 'python SpringheadDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../src')
 	Print('  SpringheadImpDoc')
-	if python_test:
-		cmnd = 'python SpringheadImpDoc.py'
-	else:
-		cmnd = 'cmd /c SpringheadImpDoc.bat'
+	cmnd = 'python SpringheadImpDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
 	os.chdir('../doc/SprManual')
 	Print('  SprManual')
-	if python_test:
-		cmnd = 'python MakeDoc.py'
-	else:
-		cmnd = 'cmd /c make.bat'
+	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.exec(cmnd).wait()
 	#
@@ -338,19 +320,10 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
-	webbase = '%s/springhead/dailybuild/generated/doc' % docroot
-	#
-	Print('clearing "%s"' % webbase)
-	fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
-	fop.rm('%s/*' % webbase, recurse=True)
-	if os.path.exists(webbase):
-		if Util.is_windows(): sleep(1)	# Kludge
-		os.rmdir(webbase)
-		if Util.is_windows(): sleep(1)	# Kludge
+	webbase = '%s/springhead/dailybuild/generated' % docroot
 	#
 	Print('copying generated files to web')
-	os.chdir('generated')
-	fop.cp('doc', webbase)
+	copy_all('generated', webbase, dry_run)
 	#
 	os.chdir(repository)
 

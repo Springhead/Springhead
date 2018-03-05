@@ -33,6 +33,11 @@
 #			before removing 'path' directory itself.
 #	  returns:	0: succ, 1: fail.
 #
+#	mkdir(path, mode=0o777, dir_fd=None)
+#	rmdir(path, dir_fd=None)
+#	makedirs(path, mode=0o777, exist_ok=False)
+#	    Wrapper of os.mkdir(), os.rmdir() and os.makedirs().
+#
 #	touch(path, mode=0o666, no_create=False)
 #	    Method version of 'touch' command.
 #	    If the file exists, change its access time.
@@ -63,6 +68,7 @@
 #	Ver 1.2  2017/09/11 F.Kanehori	Implement move() for unix.
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
+#	Ver 1.5  2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
 # ======================================================================
 import sys
 import os
@@ -152,6 +158,29 @@ class FileOp:
 			rc = self.__rm(u_name, use_shutil, idle_time)
 		#
 		return rc
+
+	#  Make directory
+	#
+	def mkdir(self, path, mode=0o777, dir_fd=None):
+		if self.dry_run or self.info:
+			print('mkdir: %s' % Util.upath(path))
+			if self.dry_run:
+				return 0
+		os.mkdir(path, mode, dir_fd)
+
+	def rmdir(self, path, dir_fd=None):
+		if self.dry_run or self.info:
+			print('rmdir: %s' % Util.upath(path))
+			if self.dry_run:
+				return 0
+		os.rmdir(path, mode, dir_fd)
+
+	def makedirs(self, path, mode=0o777, exist_ok=False):
+		if self.dry_run or self.info:
+			print('makedirs: %s' % Util.upath(path))
+			if self.dry_run:
+				return 0
+		os.makedirs(path, mode, exist_ok)
 
 	#  Touch command.
 	#
