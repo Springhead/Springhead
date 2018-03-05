@@ -13,10 +13,9 @@
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#	Ver 1.2  2018/03/01 F.Kanehori	TestMainGit.py に移行.
+#	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
 # ======================================================================
 version = '1.2'
-python_test = True
 
 import sys
 import os
@@ -213,12 +212,8 @@ Print()
 os.chdir('core/test')
 pwd()
 Print('Test start:')
-if python_test:
-	cmnd = 'python TestMainGit.py'
-	args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
-else:
-	cmnd = 'TestMainGit.bat'
-	args = '/r %s /t %s /c %s /p %s' % (repository, tool, conf, plat)
+cmnd = 'python TestMainGit.py'
+args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
 rc = proc.exec([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 

@@ -33,6 +33,7 @@
 #	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 1.61 2018/02/09 F.Kanehori	Bug fixed.
+#	Ver 1.62 2018/03/05 F.Kanehori	Bug fixed.
 # ==============================================================================
 version = 1.6
 
@@ -144,6 +145,8 @@ def do_process(proj, dept):
 
 	#  Option '-r': Rename temporary makefile to makefile.
 	if options.rename:
+		if not os.path.exists(tempfile):
+			return
 		print('    *** %s: renaming "%s -> %s"' % (proj, tempfile, makefile))
 		f_op.mv(tempfile, makefile)
 

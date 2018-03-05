@@ -166,21 +166,21 @@ class FileOp:
 			print('mkdir: %s' % Util.upath(path))
 			if self.dry_run:
 				return 0
-		os.mkdir(path, mode, dir_fd)
+		os.mkdir(path, mode=mode, dir_fd=dir_fd)
 
 	def rmdir(self, path, dir_fd=None):
 		if self.dry_run or self.info:
 			print('rmdir: %s' % Util.upath(path))
 			if self.dry_run:
 				return 0
-		os.rmdir(path, dir_fd)
+		os.rmdir(path, dir_fd=dir_fd)
 
 	def makedirs(self, path, mode=0o777, exist_ok=False):
 		if self.dry_run or self.info:
 			print('makedirs: %s' % Util.upath(path))
 			if self.dry_run:
 				return 0
-		os.makedirs(path, mode, exist_ok)
+		os.makedirs(path, mode=mode, exist_ok=exist_ok)
 
 	#  Touch command.
 	#
