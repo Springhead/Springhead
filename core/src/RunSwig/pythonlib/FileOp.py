@@ -173,7 +173,7 @@ class FileOp:
 			print('rmdir: %s' % Util.upath(path))
 			if self.dry_run:
 				return 0
-		os.rmdir(path, mode, dir_fd)
+		os.rmdir(path, dir_fd)
 
 	def makedirs(self, path, mode=0o777, exist_ok=False):
 		if self.dry_run or self.info:
