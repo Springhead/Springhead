@@ -26,9 +26,11 @@
 #	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.5  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
 #	Ver 1.6  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
+#	Ver 1.61 2018/03/07 F.Kanehori	FileOp.rm() 引数変更に対応.
 # ==============================================================================
-version = 1.6
-debug = True
+version = 1.61
+debug = False
+trace = False
 
 import sys
 import os
@@ -39,6 +41,9 @@ from optparse import OptionParser
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+if trace:
+	print('ENTER: %s: %s' % (prog, sys.argv))
+	sys.stdout.flush()
 verbose = 1 if debug else 0
 dry_run = 1 if debug else 0
 
@@ -268,6 +273,8 @@ output(makefile, lines)
 cmd = '%s -f %s' % (make, makefile)
 if clean:
 	cmd += ' clean'
+if trace:
+	print('exec: %s' % cmd)
 proc.exec(cmd, shell=True)
 status = proc.wait()
 if status != 0:
@@ -277,13 +284,16 @@ if status != 0:
 #  ファイルの後始末
 #
 os.chdir(oldcwd)
-f_op.rm('Framework.i', force=True)
-f_op.rm('FrameworkStub.cpp', force=True)
-f_op.rm('FrameworkStub.mak.txt', force=True)
+f_op.rm('Framework.i')
+f_op.rm('FrameworkStub.cpp')
+f_op.rm('FrameworkStub.mak.txt')
 
 # ----------------------------------------------------------------------
 #  処理終了.
 #
+if trace:
+	print('LEAVE: %s' % prog)
+	sys.stdout.flush()
 sys.exit(0)
 
 # end: RunSwigFramework.py

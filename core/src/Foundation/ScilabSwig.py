@@ -23,9 +23,11 @@
 #	Ver 1.2	 2017/09/06 F.Kanehori	New python library に対応.
 #	Ver 1.3  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.4  2017/11/29 F.Kanehori	Python library path の変更.
+#	Ver 1.41 2018/03/07 F.Kanehori	Add trace code.
 # ==============================================================================
-version = 1.4
+version = 1.41
 debug = False
+trace = False
 
 import sys
 import os
@@ -37,6 +39,9 @@ from optparse import OptionParser
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 module = 'Scilab'
+if trace:
+	print('ENTER: %s: %s' % (prog, sys.argv))
+	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
 #  Import Springhead2 python library.
@@ -169,9 +174,14 @@ if unix: sys.exit(0)
 cmd = '%s -f %s' % (make, util.pathconv(makefile))
 if clean:
 	cmd += ' clean'
+if trace:
+	print('exec: %s' % cmd)
 proc.exec(cmd)
 proc.wait()
 
+if trace:
+	print('LEAVE: %s' % prog)
+	sys.stdout.flush()
 sys.exit(0)
 
 # end: ScilabSwig.py
