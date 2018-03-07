@@ -66,7 +66,7 @@ from optparse import OptionParser
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
-	print('ENTER: %s: %s' % (prog, sys.argv))
+	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
@@ -210,8 +210,8 @@ for line in lines:
 		print('    %s: %s' % (prog, cmd))
 		proc.exec(cmd, addpath=addpath, shell=True)
 		proc.wait()
-		cmd = '%s -r' % util.upath(makemanager)
-		print('    %s: %s' % (prog, cmd))
+		cmd = '%s -r' % util.pathconv(makemanager)
+		print('    %s: %s' % (prog, Util.upath(cmd)))
 		proc.exec(cmd, addpath=addpath, shell=True)
 		proc.wait()
 

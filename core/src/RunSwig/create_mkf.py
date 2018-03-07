@@ -25,9 +25,11 @@
 #	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
+#	Ver 1.61 2018/03/07 F.Kanehori	Add trece code.
 # ==============================================================================
-version = 1.6
+version = 1.61
 debug = False
+trace = False
 
 import sys
 import os
@@ -39,6 +41,9 @@ from optparse import OptionParser
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+if trace:
+	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
+	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
@@ -225,7 +230,7 @@ lines.append('')
 lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
 lines.append(util.pathconv('\t' + ECHO(4, 'make_manager.py -P %s -t' % python)))
 lines.append(util.pathconv('\t%s -t' % makemanager))
-lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py %s -P %s' % (swigargs, python))))
+lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py -P %s %s' % (python, swigargs))))
 lines.append(util.pathconv('\t%s %s' % (swig, swigargs)))
 lines.append('')
 
@@ -258,6 +263,9 @@ fobj.close()
 # ----------------------------------------------------------------------
 #  処理終了.
 #
+if trace:
+	print('LEAVE: %s' % prog)
+	sys.stdout.flush()
 sys.exit(0)
 
 # end create_mkf.py

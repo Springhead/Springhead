@@ -42,7 +42,7 @@ from optparse import OptionParser
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
-	print('ENTER: %s: %s' % (prog, sys.argv))
+	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 verbose = 1 if debug else 0
 dry_run = 1 if debug else 0
