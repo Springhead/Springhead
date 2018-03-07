@@ -49,7 +49,7 @@ from optparse import OptionParser
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
-	print('ENTER: %s: %s' % (prog, sys.argv))
+	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
@@ -151,6 +151,10 @@ def do_process(proj, dept):
 	#  Option '-r': Rename temporary makefile to makefile.
 	if options.rename:
 		print('    *** %s: renaming "%s -> %s"' % (proj, tempfile, makefile))
+		if not os.path.exists(tempfile):
+			if os.path.exists(makefile):
+				# OK, nothing to do.
+				return
 		f_op.mv(tempfile, makefile)
 
 # ---------------------------------------------------------------------
