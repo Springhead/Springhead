@@ -18,18 +18,16 @@ verbose = 1
 
 # ----------------------------------------------------------------------
 E = Error(prog, verbose=verbose)
-E.set_testcase(True)
 print('Test program for class: %s, Ver %s\n' % (E.clsname, E.version))
 
-E.print('This is information.', prompt=None)
-E.print('This is warning', prompt='Warning')
-E.print('This is fatal', prompt='Fatal')
-E.print('This is error')
-E.print('This is abort', prompt='Abort')
-E.print('This is panic', prompt='Pan')
+E.print('This is information.', prompt=None, alive=True)
+E.print('This is warning', prompt='Warning', alive=True)
+E.print('This is fatal', prompt='Fatal', alive=True)
+E.print('This is error', alive=True)
+E.print('This is abort', prompt='Abort', alive=True)
+E.print('This is panic', prompt='Pan', alive=True)
 print()
 
-E.set_testcase(False)
 E.print('Must return to this program.', alive=True)
 E.print('Must abort program.')
 print('Should not come here')

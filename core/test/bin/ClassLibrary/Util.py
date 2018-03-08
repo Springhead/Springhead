@@ -1,41 +1,17 @@
 #!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:
-#	Util
-#	    Class for miscelaneous utility methods.
-#	    Both 'member' and 'static' methods are available.
+#  CLASS:	Util()
 #
 #  METHODS:
 #	bool = is_unix()
 #	bool = is_windows()
-#	    Judges if running under unix or Windows.
-#	    returns:	True or False
-#
 #	string = pathconv(path, to=None)
-#	    Change path separators according to given OS name 'to'.
-#	    If OS name is not given, current OS is assumed.
-#	  arguments:
-#	    path:	Original path string.
-#	    to:		Destination OS name. One of follows;
-#			    'unix', 'linux', 'posix',
-#			    'windows', 'win', 'nt'
-#	    returns:	Converted path string.
-#
 #	string = upath(path)
-#	    Alias for pathconv(path, 'unix') 
 #	string = wpath(path)
-#	    Alias for pathconv(path, 'windows') 
-#
 #	string = date()
-#	    Returns date string (format='%Y-%m-%d'). ['yyyy-mm-dd'].
-#
 #	string = time()
-#	    Returns time string (format='%H:%M:%S'). ['hh:mm:ss']
-#
 #	string = now()
-#	    Returns date and time string (format='%Y-%m-%d %H:%M:%S').
-#					['yyyy-mm-dd hh:mm:ss']
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -44,35 +20,53 @@
 #					Proc class and FileOp class.
 #	Ver 2.1  2017/09/11 F.Kanehori	Add alias method for pathconv().
 #	Ver 2.2  2018/02/19 F.Kanehori	Change default date/time format.
+#	Ver 2.21 2018/03/07 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
 import datetime
 
+##  Miscelaneous utility method class.
+#
 class Util:
-	#  These are class instance methods.
+	##  The initializer.
 	#
 	def __init__(self):
 		self.clsname = self.__class__.__name__
 		self.version = 2.1
+	##  Class instance version.
 	def is_unix(self): return Util.is_unix()
+	##  Class instance version.
 	def is_windows(self): return Util.is_windows()
+	##  Class instance version.
 	def pathconv(self, **keywords): return Util.pathconv(**keywords)
+	##  Class instance version.
 	def date(self, **keywords): return Util.date(**keywords)
+	##  Class instance version.
 	def time(self, **keywords): return Util.time(**keywords)
+	##  Class instance version.
 	def now(self, **keywords): return Util.now(**keywords)
 
-	#  Judges if running under unix or Windows.
+	##  Determine if currently running under unix.
+	#   @returns		True if yes, False otherwise.
 	#
 	@staticmethod
 	def is_unix():
 		return os.name == 'posix'
 
+	##  Determine if currently running under Windws.
+	#   @returns		True if yes, False otherwise.
+	#
 	@staticmethod
 	def is_windows():
 		return os.name == 'nt'
 
-	#  Change directory separators (slashes and back-slashes).
+	##  Change path separators according to given OS name 'to'.
+	#   @param path		Path string to convert.
+	#   @param to		Target OS name. One of follows;
+	#			'unix', 'linux', 'posix',
+	#			'windows, 'win', 'nt'.
+	#   @returns		Separator replaced string.
 	#
 	@staticmethod
 	def pathconv(path, to=None):
@@ -97,25 +91,42 @@ class Util:
 				sep = sep_w
 		return path.replace(sep[0], sep[1])
 
-	#  Aliases for pathconv().
+	##  Aliases for pathconv(path, to='unix').
+	#   @param path		Path string to convert.
+	#   @returns		Path string using '/' as path separator.
 	#
 	@staticmethod
 	def upath(path):
 		return Util.pathconv(path, 'unix')
+
+	##  Aliases for pathconv(path, to='windows').
+	#   @param path		Path string to convert.
+	#   @returns		Path string using '\\' as path separator.
+	#
 	@staticmethod
 	def wpath(path):
 		return Util.pathconv(path, 'windows')
 
-	#  Get current date and/or time string.
+	##  Get current date string.
+	#   @param format	Date string format.
+	#   @returns		Date string (default: 'yyyy-mm-dd').
 	#
 	@staticmethod
 	def date(format='%Y-%m-%d'):
 		return Util.now(format)
 
+	##  Get current time string.
+	#   @param format	Time string format.
+	#   @returns		Time string (default: 'hh:mm:ss').
+	#
 	@staticmethod
 	def time(format='%H:%M:%S'):
 		return Util.now(format)
 
+	##  Get current date and time string.
+	#   @param format	Date and time string format.
+	#   @returns		Date and time string (default: 'yyyy-mm-dd hh:mm:ss').
+	#
 	@staticmethod
 	def now(format='%Y-%m-%d %H:%M:%S'):
 		return datetime.datetime.now().strftime(format)
