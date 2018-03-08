@@ -169,8 +169,11 @@ class TextFio(Fio):
 		self.clsname = self.__class__.__name__
 		self.version = 2.2
 		#
+		"""
 		disp_mode = 'r' if mode == 'r' else mode	# for error msg
 		super().__init__(path, mode, disp_mode=disp_mode, verbose=verbose)
+		"""
+		super().__init__(path, mode, verbose=verbose)
 		self.mode = mode	# override
 		self.encoding = encoding
 		self.size = size
