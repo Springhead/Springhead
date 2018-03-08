@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Trace|Win32">
+      <Configuration>Trace</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Trace|x64">
+      <Configuration>Trace</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{05138F41-5673-4E19-A5C7-2A684488B23A}</ProjectGuid>
+    <RootNamespace>HumanInterface</RootNamespace>
+    <ProjectName>HumanInterface</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\SpringheadMacros.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\SpringheadMacros.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\SpringheadMacros.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\SpringheadMacros.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\SpringheadMacros.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\SpringheadMacros.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfDebug)$(Platform)</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfDebug)$(Platform)</TargetName>
+    <TargetExt>.lib</TargetExt>
+    <OutDir>$(ProjectDir)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfRelease)$(Platform)</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfRelease)$(Platform)</TargetName>
+    <TargetExt>.lib</TargetExt>
+    <OutDir>$(ProjectDir)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
+    <OutDir>$(ProjectDir)</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfTrace)$(Platform)</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfTrace)$(Platform)</TargetName>
+    <TargetExt>.lib</TargetExt>
+    <OutDir>$(ProjectDir)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <StringPooling>false</StringPooling>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OmitFramePointers>false</OmitFramePointers>
+      <OpenMPSupport>true</OpenMPSupport>
+      <StringPooling>false</StringPooling>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <CallingConvention>FastCall</CallingConvention>
+      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <StringPooling>false</StringPooling>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
+    <Lib />
+    <Lib>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <CallingConvention>FastCall</CallingConvention>
+      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <StringPooling>false</StringPooling>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+    <Lib />
+    <Lib>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <CallingConvention>FastCall</CallingConvention>
+      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <StringPooling>false</StringPooling>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+    <Lib />
+    <Lib>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <CallingConvention>FastCall</CallingConvention>
+      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <StringPooling>false</StringPooling>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Xdcmake>
+      <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+    <Lib />
+    <Lib>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="DRADAPIO.cpp" />
+    <ClCompile Include="DRContecIsaCounter.cpp" />
+    <ClCompile Include="DRContecIsaDa.cpp" />
+    <ClCompile Include="DRCyUsb20Sh4.cpp" />
+    <ClCompile Include="DRJoyStickGLUT.cpp" />
+    <ClCompile Include="DRKeyMouseGLUT.cpp" />
+    <ClCompile Include="DRKeyMouseWin32.cpp" />
+    <ClCompile Include="DRNittaForce.cpp" />
+    <ClCompile Include="DRPortIO.cpp" />
+    <ClCompile Include="DRTokin3D.cpp" />
+    <ClCompile Include="DRUPP.CPP" />
+    <ClCompile Include="DRUsb20Sh4.cpp" />
+    <ClCompile Include="DRUsb20Simple.cpp" />
+    <ClCompile Include="DRUsbH8Simple.cpp" />
+    <ClCompile Include="DRWinDriver.cpp" />
+    <ClCompile Include="HIBase.cpp" />
+    <ClCompile Include="HIDevice.cpp" />
+    <ClCompile Include="HILeap.cpp" />
+    <ClCompile Include="HINovintFalcon.cpp" />
+    <ClCompile Include="HIRegisterTypeDesc.cpp" />
+    <ClCompile Include="HISdk.cpp" />
+    <ClCompile Include="HISpaceNavigator.cpp" />
+    <ClCompile Include="HISpidar.cpp" />
+    <ClCompile Include="HISpidarCalc.cpp" />
+    <ClCompile Include="HISpidarMotor.cpp" />
+    <ClCompile Include="HITrackball.cpp" />
+    <ClCompile Include="HIXbox360Controller.cpp" />
+    <ClCompile Include="HumanInterfaceStub.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\HumanInterface\SprHILeap.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISkeletonSensor.h" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="DRADAPIO.h" />
+    <ClInclude Include="DRContecIsaCounter.h" />
+    <ClInclude Include="DRContecIsaDa.h" />
+    <ClInclude Include="DRCyUsb20Sh4.h" />
+    <ClInclude Include="DRJoyStickGLUT.h" />
+    <ClInclude Include="DRKeyMouseGLUT.h" />
+    <ClInclude Include="DRKeyMouseWin32.h" />
+    <ClInclude Include="DRNittaForce.h" />
+    <ClInclude Include="DRPortIO.h" />
+    <ClInclude Include="DRTokin3D.h" />
+    <ClInclude Include="DRUPP.h" />
+    <ClInclude Include="DRUsb20Sh4.h" />
+    <ClInclude Include="DRUsb20Simple.h" />
+    <ClInclude Include="DRUsbH8Simple.h" />
+    <ClInclude Include="DRUsbH8SimpleDef.h" />
+    <ClInclude Include="DRWinDriver.h" />
+    <ClInclude Include="HIBase.h" />
+    <ClInclude Include="HIDevice.h" />
+    <ClInclude Include="HILeap.h" />
+    <ClInclude Include="HINovintFalcon.h" />
+    <ClInclude Include="HISdk.h" />
+    <ClInclude Include="HISkeletonSensor.h" />
+    <ClInclude Include="HISpaceNavigator.h" />
+    <ClInclude Include="HISpidar.h" />
+    <ClInclude Include="HISpidarCalc.h" />
+    <ClInclude Include="HISpidarMotor.h" />
+    <ClInclude Include="HITrackball.h" />
+    <ClInclude Include="HIXbox360Controller.h" />
+    <ClInclude Include="HumanInterface.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIJoyStick.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISpaceNavigator.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHITrackball.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIXbox360Controller.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIBase.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDevice.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDRUsb.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIKeyMouse.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHINovint.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISdk.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISpidar.h" />
+    <ClInclude Include="..\..\include\SprHumanInterface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation\Foundation14.0.vcxproj">
+      <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
