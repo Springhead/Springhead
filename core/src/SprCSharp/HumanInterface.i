@@ -1,9 +1,9 @@
 #	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::HIRealDeviceIf::Rent;
-%ignore Spr::HISdkIf::AddRealDevice;
+// %ignore Spr::HISdkIf::AddRealDevice;
 %ignore Spr::HISdkIf::FindRealDevice;
 %ignore Spr::HISdkIf::RentVirtualDevice;
-%ignore Spr::HISdkIf::CreateHumanInterface;
+//%ignore Spr::HISdkIf::CreateHumanInterface;
 //?
 %ignore Spr::HISkeletonIf::GetTrackID;
 %module HumanInterface
