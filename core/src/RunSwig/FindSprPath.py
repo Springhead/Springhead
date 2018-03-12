@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python3.4
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -39,6 +39,7 @@
 #	Ver 1.2  2017/10/19 F.Kanehori	Add test case (non-exist).
 #	Ver 1.3  2017/11/08 F.Kanehori	Add 'buildtool' to selector.
 #	Ver 1.4  2017/11/29 F.Kanehori	Add 'pythonlib' to selector.
+#	Ver 1.41 2018/03/09 F.Kanehori	Bug fixed.
 # ----------------------------------------------------------------------
 import sys
 import os
@@ -53,6 +54,7 @@ class FindSprPath:
 		#
 		cwd = os.getcwd().split(os.sep)[::-1]
 		lookup = 'core'
+		top = None
 		for n in range(len(cwd)):
 			if not cwd[n].startswith(lookup): continue
 			top = '/'.join(cwd[::-1][0:len(cwd)-n-1])

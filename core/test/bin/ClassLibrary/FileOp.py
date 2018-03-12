@@ -1,65 +1,17 @@
 #!/usr/local/bin/python3.6
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:
-#	FileOp
-#	    Class for file operation functions.
-#
-#  INITIALIZER:
-#	obj = FileOp(info=0, dry_run=False, verbose=0)
-#	  arguments:
-#	    info:	Show operation information (silent if 0) (int).
-#	    dry_run:	Show command but do not execute it (bool).
-#	    verbose:	Verbose level (silent if 0) (int).
+#  CLASS:	FileOp(info=0, dry_run=False, verbose=0)
 #
 #  METHODS:
 #	status = cp(src, dst, follow_symlinks)
 #	status = mv(src, dst)
 #	status = rm(path, recurse=False, use_shutil=True, idle_time=0)
-#	    OS independent unix like copy/move/remove command.
-#	  arguments:
-#	    src:	Source file path (cp and mv).
-#	    dst:	Destination file path (cp and mv).
-#	    path:	File path (rm).
-#	    recurse:	Remove all subdirectories and directory itself.
-#	    use_shutil:	Use shutil.rmtree() to remove directory or not.
-#			Some files can not removed by shutil.rmtree().
-#			In that case, set this argument False and use
-#			os.unlink() and os.rmdir().
-#	    idle_time:	When use_shutil is False, removing directory
-#			'path' just after removing all of its contents
-#			may cause 'path' remains and inaccessible.
-#			This argument i(in second) set idleing time
-#			before removing 'path' directory itself.
-#	  returns:	0: succ, 1: fail.
-#
 #	mkdir(path, mode=0o777, dir_fd=None)
 #	rmdir(path, dir_fd=None)
 #	makedirs(path, mode=0o777, exist_ok=False)
-#	    Wrapper of os.mkdir(), os.rmdir() and os.makedirs().
-#
 #	touch(path, mode=0o666, no_create=False)
-#	    Method version of 'touch' command.
-#	    If the file exists, change its access time.
-#	    Otherwise, create a empty file unless 'no_create' is True.
-#	  arguments:
-#	    Create new file with file mode 'mode'.
-#	    path:	File path to touch.
-#	    mode:	File mode.
-#	    no_create:	Do not create a file even the case.
-#	  returns:	-1: Can't create file when 'no_create' is False.
-#			 0: Otherwise.
-#
 #	string = ls(path, sort='name', show='mtime')
-#	    Get given file information.
-#	  arguments:
-#	    path:	File path to get/print info.
-#	    sort:	Sort key (str).
-#			One of 'name', 'ctime', 'mtime' or 'atime'.
-#	    show:	Time to show (str).
-#			One of 'ctime', 'mtime' or 'atime'.
-#	  returns:	File information (str).
-#			Empty string if path does not exist.
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -69,6 +21,7 @@
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
 #	Ver 1.5  2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
+#	Ver 1.51 2018/03/09 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -84,18 +37,31 @@ from Proc import *
 from Util import *
 from Error import *
 
+##  File operation support class.
+#
 class FileOp:
-	#  These are class instance methods.
+	##  The initializer.
+	#   @param info		Print operation to perform or not (bool).
+	#   @param dry_run	Show command but do not execute it (bool).
+	#   @param verbose	Verbose level (0: silent) (int).
 	#
 	def __init__(self, info=0, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.4
+		self.version = 1.51
 		#
 		self.info = info
 		self.dry_run = dry_run
 		self.verbose = verbose
 
-	#  Copy
+	##  Unix like copy (cp) command.
+	#   @param src		Source file path (str).
+	#   @param dst		Destination file path (str).
+	#   @param follow_symlinks
+	#			When False and argument 'src' is symbolic link,
+	#			make new symbolic link instead of copying file
+	#			body linked by 'src'.
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def cp(self, src, dst, follow_symlinks=True):
 		u_src = Util.upath(src)
@@ -123,7 +89,11 @@ class FileOp:
 			os.chdir(cwd)
 		return rc
 
-	#  Move
+	##  Unix like move (mv) command.
+	#   @param src		Source file path (str).
+	#   @param dst		Destination file path (str).
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def mv(self, src, dst):
 		msg = 'mv: %s -> %s' % (Util.upath(src), Util.upath(dst))
@@ -143,7 +113,23 @@ class FileOp:
 			#
 		return rc
 
-	#  Remove
+	##  Unix like remove (rm) command.
+	#   @param path		File path (str).
+	#   @param recurse	Remove all subdirectories and directory itself.
+	#   @param use_shutil	Use shutil.rmtree() to remove directory or not.
+	#   @n			Some files can not removed by shutil.rmtree().
+	#			In that case, set this argument False
+	#			and use os.unlink() and os.rmdir() instead.
+	#   @param idle_time	Set idling time in second.
+	#
+	#   NOTE
+	#   @n			When use_shutil is False, removing directory
+	#			'path' just after removing all of its contents
+	#			may cause 'path' remains and inaccessible.
+	#			If the case, set 'idle_time' to wait before
+	#			removing the 'path' directory itself.
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def rm(self, path, recurse=False, use_shutil=True, idle_time=0):
 		msg = 'rm: %s' % Util.upath(path)
@@ -159,7 +145,12 @@ class FileOp:
 		#
 		return rc
 
-	#  Make directory
+	##  Make new directory (Wrapper of os.mkdir())
+	#   @param path		New directory path to create (str).
+	#   @param mode		Access mode of the directory (int).
+	#   @param dir_fd	File descriptor open to a directory or None.
+	#   @n			If dir_fd is not None, path should be relative;
+	#			path will then be relative to that directory.
 	#
 	def mkdir(self, path, mode=0o777, dir_fd=None):
 		if self.dry_run or self.info:
@@ -168,6 +159,12 @@ class FileOp:
 				return 0
 		os.mkdir(path, mode=mode, dir_fd=dir_fd)
 
+	##  Remove directory (Wrapper of os.rmdir())
+	#   @param path		Directory path to remove (str).
+	#   @param dir_fd	File descriptor open to a directory, or None.
+	#   @n			If dir_fd is not None, path should be relative;
+	#			path will then be relative to that directory.
+	#
 	def rmdir(self, path, dir_fd=None):
 		if self.dry_run or self.info:
 			print('rmdir: %s' % Util.upath(path))
@@ -175,6 +172,12 @@ class FileOp:
 				return 0
 		os.rmdir(path, dir_fd=dir_fd)
 
+	##  Make new directory recursively (Wrapper of os.makedirs())
+	#   @param path		New directory path to create (str).
+	#   @param mode		Access mode of the directory (int).
+	#   @param exist_ok	If exist_ok is False and target directory
+	#			already exist, exception OSError is raised.
+	#
 	def makedirs(self, path, mode=0o777, exist_ok=False):
 		if self.dry_run or self.info:
 			print('makedirs: %s' % Util.upath(path))
@@ -182,7 +185,13 @@ class FileOp:
 				return 0
 		os.makedirs(path, mode=mode, exist_ok=exist_ok)
 
-	#  Touch command.
+	##  Change file access/modification time.
+	#   @param path		File path (str).
+	#   @param mode		File creation mode (int).
+	#   @param no_create	If no_create is False and file does not exist,
+	#   @n			new file will be created with specified 'mode'.
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def touch(self, path, mode=0o666, no_create=False):
 		flags = os.O_APPEND
@@ -193,7 +202,7 @@ class FileOp:
 		except:
 			if no_create:
 				return 0
-			return -1
+			return 1
 		#
 		ns_atime, ns_mtime = self.__time_to_set()
 		if not isinstance(fd, int):
@@ -204,7 +213,16 @@ class FileOp:
 		os.close(fd)
 		return 0
 
-	#  Ls like command.
+	##  List contents of directory.
+	#   @param path		Path to show list (str).
+	#   @param sort		Sort key (str).
+	#   @n			If soret is 'name', list is sorted by file name.
+	#			Otherwise, sorted by date and time.
+	#   @param show		Specify time kind showed in the list.
+	#   @n			'mtime': show last modification time.
+	#   @n			'ctime': show last status change time.
+	#   @n			'atime': show last access time.
+	#   @returns		List of file informations ([str]).
 	#
 	def ls(self, path, sort='name', show='mtime'):
 		if os.path.isdir(path):
@@ -237,18 +255,17 @@ class FileOp:
 	#  For class private use
 	# --------------------------------------------------------------
 
-	#  Copy files and directories.
+	##  Copy files and directories (Helper method of self.cp()).
+	#   @param src		Source file path (str).
+	#   @param dst		Destination file path (str).
+	#   @param follow_symlinks
+	#   @n			When False and argument 'src' is symbolic link,
+	#			make new symbolic link instead of copying file
+	#			body linked by 'src'.
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def __cp(self, src, dst, follow_symlinks=True):
-		# argument:
-		#   src:	Soruce path (file or directory).
-		#   dst:	Destination path (file or direcoty).
-		#   follow_symlinks:
-		#		When False and src is symbolic link,
-		#		make symbolic link instead of copying
-		#		body of src.
-		# returns:	0: succ, 1: fail
-
 		if self.verbose:
 			print('__cp: %s -> %s' % (src, dst))
 		#
@@ -278,13 +295,16 @@ class FileOp:
 		#
 		return rc
 
-	#  Remove files and directories.
+	##  Remove files and directories (Helper method of self.rm()).
+	#   @param path		File path (str).
+	#   @param use_shutil	Use shutil.rmtree() to remove directory or not.
+	#   @n			See self.rm() for detail.
+	#   @param idle_time	Set idling time in second.
+	#   @n			See self.rm() for detail.
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def __rm(self, path, use_shutil, idle_time):
-		# argument:
-		#   path:	File or directory path to remove.
-		# returns:	0: succ, 1: fail
-		
 		try:
 			if os.path.isdir(path):
 				if use_shutil:
@@ -303,13 +323,12 @@ class FileOp:
 			rc = 1
 		return rc
 
-	#  Remove all files/directories under specified directory.
+	##  Remove all files/directories under specified directory.
+	#   @param path		Directory path to remove its contents (str).
+	#   @retval 0		successful
+	#   @retval 1		failure
 	#
 	def __remove_all(self, path):
-		# argument:
-		#   path:	Directory path to remove its contents.
-		# returns:	0: succ, 1: fail
-
 		another_drive = False
 		if Util.is_windows():
 			t_drive = os.path.abspath(path)[0]
@@ -346,13 +365,13 @@ class FileOp:
 
 		return rc
 
-	#  Get current time (for touch method).
+	##  Get current time (for touch method).
+	#   @retval		Last access time (in msec).
+	#   @retval		Last modification time (in msec).
+	#
+	#		This method returns the same time as atime and mtime.
 	#
 	def __time_to_set(self):
-		# argument:
-		#   verbose	Verbose option.
-		# returns:	Time stamp.
-
 		d = datetime.datetime.today()
 		CC, YY, MM, DD = 20, d.year%100, d.month, d.day
 		hh, mm, ss, ms = d.hour, d.minute, d.second, d.microsecond
@@ -364,7 +383,13 @@ class FileOp:
 		ts = int(dt.timestamp() * 1000000 + 0.0000005) * 1000
 		return ts, ts
 
-	#  Ls for one file.
+	##  List information for one file (Helper method of ls()).
+	#   @param path		File path to show (str).
+	#   @param show		Specify time kind showed in the list.
+	#   @n			'mtime': show last modification time.
+	#   @n			'ctime': show last status change time.
+	#   @n			'atime': show last access time.
+	#   @returns		File information (str).
 	#
 	def __ls_one(self, path, show='mtime'):
 		# argument:
@@ -388,6 +413,11 @@ class FileOp:
 		ls = fmt.format(fmode, nlink, fsize, ftime, fname)
 		return Util.upath(ls)
 
+	##  Add file modifier to given path string.
+	#   @param path		Path string.
+	#   @param mode		File permission string.
+	#   @returns		Modifier added path string.
+	#
 	def __add_modifier(self, path, mode):
 		# argument:
 		#   path	File path.
@@ -411,12 +441,16 @@ class FileOp:
 			return '%s -> %s' % (path, info)
 		return path
 
+	##  Sort ls list by specified field.
+	#   @param lslist	File list ([str]).
+	#   @n			List format is;
+	#   @n			<perm> <link> <size> <date> <time> <name>
+	#   @param sort		Sort key.
+	#   @n			If 'name', list is sorted by file name.
+	#			Otherwise, sorted by date and time.
+	#   @returns		Sorted file list ([str]).
+	#
 	def __ls_sort(self, lslist, sort):
-		# argument:
-		#   lslist	Unsorted file list.
-		#   sort	Sort key.
-		# returns:	Sorted file list.
-
 		if sort == 'name':
 			return sorted(lslist, key=lambda f: f.split()[5])
 		return sorted(lslist, key=lambda f: f.split()[3]+f.split()[4])

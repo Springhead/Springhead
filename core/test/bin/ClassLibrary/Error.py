@@ -15,6 +15,7 @@
 #	Ver 2.1  2017/09/11 F.Kanehori	Update print().
 #	Ver 2.2  2017/09/13 F.Kanehori	Add abort().
 #	Ver 2.3  2018/01/10 F.Kanehori	Add arg 'alive' to print().
+#	Ver 2.21 2018/03/09 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 
@@ -35,17 +36,17 @@ class Error:
 		self.verbose = verbose
 		#
 
-	##  Print error message to output stream.
+	##  Print error message to output stream self.out.
 	#   @param msg		Error message to print (str).
-	#			Message format is;
-	#			'<prog>:[ <prompt>:] <msg>'.
+	#   @n			Output format: 	'<prog>:[ <prompt>:] <msg>'.
 	#   @param prompt	Prompt string or None.
-	#			If 'prompt' is one of 'Error', 'Fatal',
+	#   @n			If 'prompt' is one of 'Error', 'Fatal',
 	#			'Abort' or 'Pan', program will be terminated
 	#			with given exitcode.
-	#			Argument 'alive' cancels this behaviour.
+	#   @n			Argument 'alive' cancels this behaviour.
 	#   @param exitcode	Exit code (int).
 	#   @param alive	Force return to caller (bool).
+	#
 	def print(self, msg, prompt='Error', exitcode=-1, alive=False):
 		die = False
 		if prompt in ['Error', 'Fatal', 'Abort', 'Pan']:
@@ -61,11 +62,13 @@ class Error:
 		if die and not alive:
 			sys.exit(exitcode)
 
-	##  Print message and die (Synonym for print() method).
-	#   If you do not want to ceise program, you should not call
-	#   this method to avoid confusion arises from method name!
-	#   @param prompt	See print() method.
-	#   @param exitcode	See print() method.
+	##  Print error message and die (Synonym for self.print()).
+	#   NOTE
+	#   @n	If you do not want to ceise program, you should not call
+	#	this method to avoid confusion arises from method name!
+	#   @param msg		Error message (str).
+	#   @param prompt	See self.print().
+	#   @param exitcode	See self.print().
 	#
 	def abort(self, msg, prompt='Error', exitcode=-1):
 		self.print(msg, prompt, exitcode)

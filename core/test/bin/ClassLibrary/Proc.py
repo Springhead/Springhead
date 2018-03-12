@@ -24,7 +24,7 @@
 #	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
 #	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
 #					when dry_run flag specified.
-#	Ver 1.15 2018/03/07 F.Kanehori	Now OK for doxygen.
+#	Ver 1.15 2018/03/09 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -34,9 +34,11 @@ import copy
 sys.path.append('/usr/local/lib')
 from Util import *
 
-##  Process handling class (Wrapper class for subprocess module).
+##  Process handling class (Wrapper class for 'subprocess' module).
 #
 class Proc:
+	#  Class constants
+	#
 	STDOUT	  = subprocess.STDOUT
 	PIPE	  = subprocess.PIPE
 	NULL	  = subprocess.DEVNULL
@@ -80,8 +82,9 @@ class Proc:
 	#			or pipe is used for process input/output (bool).
 	#   @param env		Environment for new process (dict).
 	#   @param addpath	Additional path to prepend env['PATH'] (str).
-	#   @param append	Set output redirect file open mode to 'append' (bool).
-	#   @returns		Self (Proc obj).
+	#   @param append	Set output redirect file open mode to 'append'
+	#			(bool).
+	#   @returns		Self object.
 	#
 	def exec(self, args,
 		       stdin=None, stdout=None, stderr=None,
@@ -147,7 +150,7 @@ class Proc:
 			print('  (pid: %d)' % self.pid)
 		return self
 
-	##  Wait for process termination then return status code.
+	##  Wait for process termination then return termination code.
 	#   @param timeout	Time out value in seconds (int).
 	#   @returns		Process termination code (int).
 	#
@@ -201,10 +204,12 @@ class Proc:
 	##  Kill specified process.
 	#   @param pid		Process-ID to kill (int).
 	#   @param image	Process image name to kill (str).
-	#   @brief
-	#	    CAUTION: It's extreamly dangerous to kill by 'image'
-	#	    because there may be the process(es) having the same
-	#	    process image name which you never want to kill.
+	#   @param verbose	Verbose level (0: silent) (int).
+	#
+	#   CAUTION:
+	#   @n	It's extreamly dangerous to kill by 'image'
+	#	because there may be the process(es) having the same
+	#	process image name which you never want to kill.
 	#
 	def kill(self, pid=None, image=None, verbose=0):
 		if pid is None and image is None:
@@ -241,8 +246,10 @@ class Proc:
 					print('  %s' % e)
 
 	##  Get both stdout and stderr output from the process.
-	#   @retval out		Output string got from stdout stream (str).
-	#   @retval err		Output string got from stderr stream (str).
+	#   @returns		out, err
+	#   @n out:		Output string got from stdout stream (str).
+	#   @n err:		Output string got from stderr stream (str).
+	#
 	def output(self):
 		if self.dry_run:
 			return None, None
@@ -304,8 +311,9 @@ class Proc:
 	##  Set enviroment variable.
 	#   @param env		Enviroment to set (dict).
 	#   @param addpath	Path to prepend env['PATH'] (str).
-	#   @retval new_env	New environment (dict).
-	#   @retval org_env	Old environment (dict).
+	#   @returns		new_env, org_env
+	#   @n new_env:		New environment (dict).
+	#   @n org_env:		Old environment (dict).
 	#
 	def __set_environment(self, env, addpath):
 		if self.dry_run:
@@ -343,7 +351,7 @@ class Proc:
 
 	##  Release file object.
 	#   @param object	File object returned by __open().
-	#   @param file		The same argument passed to __open().
+	#   @param file		The same argument passed to self.__open().
 	#
 	def __close(self, object, file):
 		if isinstance(file, str):

@@ -1,96 +1,26 @@
 #!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:
-#	KvFile
-#	    Class for making dictionary from key-value pair file.
-#
-#  INITIALIZER:
-#	obj = KvFile(path, sep=None, overwrite=True, desig='#', verbose=0)
-#	  arguments:
-#	    path:	Key-value pair file path (str).
-#	    sep:	Separator of key and value (str, len=1).
-#	    overwrite:	Overwrite previous value if key duplicates (bool).
-#			If False, make list of values for the same key.
-#	    desig:	Comment designator (str, len=1).
-#	    verbose:	Verbose level (int).
+#  CLASS:	KvFile(path, sep=None, overwrite=True, desig='#', verbose=0)
 #
 #  METHODS:
 #	nsections = read(dic=None)
-#	  Read the file named 'path' and construct a dictionary.
-#	  arguments:
-#	    dic:	Dictionary having predefined key-value pair.
-#			If 'dic' has no sections, all k-v pairs are
-#			assumed to belong default section.
-#	  returns:	Number of sections in the dictionary (int).
-#			Note: Default section is not counted.
-#
 #	set(key, value, section=None)
-#	  Add arbitraly key-value pair to the dictionary.
-#	  arguments:
-#	    key:	Key to add the dictionary (str).
-#	    value:	Value associated with the key (obj).
-#	    section:	Section name to add key-value pair (str).
-#			Default section is assumed if no section is given.
-#
 #	sections_list = sections()
-#	  Get section name list defined in the dictionary excluding
-#	  default section name 'default'.
-#	  returns:	List of section names (str[]).
-#
 #	change_section(name)
-#	  Set current section name.
-#	  arguments:
-#	    name:	section name (str).
-#
 #	value = get(key, section=None)
-#	  Get value associated with the key.  Key is searched by
-#	  following order:
-#		(1) in the section specified by argument.
-#		(2) in the section specified by section() method.
-#		(3) in the default section.
-#	  arguments:
-#	    key:	Key to get value from the dictionary (str).
-#	    section:	Section name in which key is searched (str).
-#	  returns:	Value associated with the key (obj).
-#
 #	keys = keys(section=None)
-#	  Get all keys defined in the current section and defaule
-#	  section.  Current section is determined by following order:
-#		(1) if present, specified section by the argument.
-#		(2) otherwise, specified section by section() method.
-#		(3) if both none, empty.
-#	  arguments:
-#	    section:	Section name (str).
-#	  returns:	List of keys (str[]).
-#
 #	result = check(keys, section=None)
-#	  Check if all of specified keys are defiend in the dictionary.
-#	  If argument 'section' is specifed, check is limited to the
-#	  specified section and default section.  Method section() has
-#	  no effect in this method.
-#	  arguments:
-#	    section:	Section name (str).
-#	    keys:	List of keys to check (str[]).
-#	  returns:	0: all are in the dictionary, -1: else
-#
 #	show(line_by_line=0, section=None)
-#	  Show contents of the dictionary.  Argument 'section' has the
-#	  same meaning as check() method.
-#	  arguments:
-#	    line_by_line:	>= 0: Number of preceeding spaces.
-#				      (line-by-line mode)
-#				else: Use system format.
-#	    section:	Section name (str).
-#
 #	errmsg = error()
-#	  returns:	Error message (most recent one only) (str).
 #	
+# ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2016/06/13 F.Kanehori	Release version.
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 3.0  2017/12/06 F.Kanehori	Section construction introduced.
 #	Ver 3.1  2018/02/05 F.Kanehori	Bug fixed.
+#	Ver 3.11 2018/03/09 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -98,12 +28,21 @@ import re
 from TextFio import *
 from Util import *
 
+##  Making dictionary from key-value pair file class.
+#
 class KvFile:
-	#  Class constant
+	##  Default section name.
 	#
-	DEFAULT = '__default__'		# default section name
+	DEFAULT = '__default__'
 
-	#  Initializer
+	##  The initializer.
+	#   @param path		Path of key-value pair file (str).
+	#   @param sep		Separator between key and value (str, len=1).
+	#   @param overwrite	Overwrite previous value if key duplicates
+	#			(bool).
+	#   @n			If False, make list of values for the same key.
+	#   @param desig	Comment designator (str, len=1).
+	#   @param verbose	Verbose level (0: silent) (int).
 	#
 	def __init__(self, path, sep=None, overwrite=True, desig='#', verbose=0):
 		self.clsname = self.__class__.__name__
@@ -121,7 +60,13 @@ class KvFile:
 		self.fobj = TextFio(path, verbose=verbose)
 		self.errmsg = None
 
-	#  Read file and make dictionary.
+	##  Read the file specified by 'path' and construct a dictionary.
+	#   @param dic		Dictionary having predefined key-value pair.
+	#   @n			If 'dic' has no sections, all key-value
+	#			pairs are assumed to belong to the default
+	#			section.
+	#   @returns		Number of sections in the dictionary (int).
+	#   @n			Note: Default section is not counted.
 	#
 	def read(self, dic=None):
 		if self.verbose:
@@ -144,7 +89,12 @@ class KvFile:
 		self.dict = self.__make_dict(lines, dic)
 		return len(self.defined_sections) - 1
 		
-	#  Add new key-value-pair to the dictionary.
+	##  Add arbitraly key-value pair to the dictionary.
+	#   @param key		Key to add the dictionary (str).
+	#   @param value	Value associated with the key (obj).
+	#   @param section	Section name to add key-value pair (str).
+	#			Default section is assumed if no section
+	#			is given.
 	#
 	def set(self, key, value, section=None):
 		if section is None:
@@ -154,17 +104,26 @@ class KvFile:
 			self.defined_sections.append(section)
 		self.dict[section][key] = value
 
-	#  Get section name list defined in the dictionary.
+	##  Get section name list defined in the dictionary (default section is excluded).
+	#   @returns		List of section names ([str]).
 	#
 	def sections(self):
 		return self.defined_sections[1:]
 
-	#  Set current section name.
+	##  Set current section name.
+	#   @param name		New section name.
 	#
 	def change_section(self, name):
 		self.curr_section = name
 
-	#  Get the value associated with the key.
+	##  Get the value associated with the key.
+	#	 Key is searched by following order:
+	#   @n		(1) in the section specified by argument.
+	#   @n		(2) in the section specified by section() method.
+	#   @n		(3) in the default section.
+	#   @param key		Key to get value from the dictionary (str).
+	#   @param section	Section name in which key is searched (str).
+	#   @returns		Value associated with the key (obj).
 	#
 	def get(self, key, section=None):
 		if section is None:
@@ -175,7 +134,13 @@ class KvFile:
 			return self.dict[self.DEFAULT][key]
 		return None
 
-	#  Get list of the keys in the dictionary.
+	##  Get all keys defined in the current section and default section.
+	#	Current section is determined by following order:
+	#   @n		(1) if present, specified section by the argument.
+	#   @n		(2) otherwise, specified section by section() method.
+	#   @n		(3) if both none, empty.
+	#   @param section	Section name (str).
+	#   @returns		List of keys (str[]).
 	#
 	def keys(self, section=None):
 		if section is None:
@@ -191,7 +156,14 @@ class KvFile:
 					keylist.append(k)
 		return keylist
 
-	#  Check if all of specified keys are defiend.
+	##  Check if all of specified keys are defiend in the dictionary.
+	#	If argument 'section' is specifed, check is limited to the
+	#	specified section and default section.  Method section()
+	#	has no effect in this method.
+	#   @param section	Section name (str).
+	#   @param keys:	List of keys to check (str[]).
+	#   @retval 0		all are in the dictionary
+	#   @retval -1		otherwise
 	#
 	def check(self, keys, section=None):
 		if section is None:
@@ -212,7 +184,13 @@ class KvFile:
 			return -1
 		return 0
 
-	#  Show the contents of dictionary.
+	##  Show contents of the dictionary.
+	#	Argument 'section' has the same meaning as check() method.
+	#   @param line_by_line
+	#			non-negative: Number of preceeding spaces.
+	#			(line-by-line mode)
+	#   @n			else: Use system format.
+	#   @param section	Section name (str).
 	#
 	def show(self, line_by_line=0, section=None):
 		if section is None:
@@ -237,7 +215,8 @@ class KvFile:
 			else:
 				print(disp_dict)
 
-	#  Error message adapter.
+	##  Error message adapter.
+	#   @returns		Error message (most recent one only) (str).
 	#
 	def error(self):
 		return self.errmsg
@@ -247,13 +226,11 @@ class KvFile:
 	#  For class private use
 	# --------------------------------------------------------------
 
-	#  Make unsectioned kv-pair belong to default section.
+	##  Make unsectioned key-value pair (belong to default section).
+	#   @param dic		Given dictionary (may be empty) (dict).
+	#   @returns		Initial dictionary (dict).
 	#
 	def __initial_dict(self, dic):
-		# arguments:
-		#   dic:	Given dictionary (may be empty) (dict).
-		# returns:	Initial dictionary (dict).
-
 		if dic is None or len(dic) <= 0:
 			return None
 		k = list(dic.keys())[0]		# first key
@@ -267,13 +244,11 @@ class KvFile:
 			print('initial dictionary: %s' % newdic)
 		return newdic
 
-	#  Make dictionary.
+	##  Make dictionary.
+	#   @param lines	Line data read from the file (list).
+	#   @returns		Dictionary (dict).
 	#
 	def __make_dict(self, lines, dic):
-		# arguments:
-		#   lines:	Line data read from the file (list).
-		# returns:	Dictionary (dict).
-
 		dict = dic if dic else {self.DEFAULT: {}}
 		section = self.curr_section
 		if self.verbose:
@@ -327,16 +302,15 @@ class KvFile:
 				dict = self.__register(section, key, val, dict)
 		return dict
 
-	#  Expand macros.
-	#  Only already registered keys are valid for macro expansion.
+	##  Expand macros.
+	#   Only already registered keys are valid for macro expansion.
+	#   @param str		Original line data (str).
+	#   @param dict		Dictionary to lookup prior to self.dict.
+	#   @returns		Expanded line data (str).
+	#   @n			Same that input data if no macros met.
+	#   @returns		Expanded line data (str).
 	#
 	def __expand(self, str, dict):
-		# arguments:
-		#   str:	Original line data (str).
-		#   dict:	Dictionary to lookup prior to self.dict.
-		# returns:	Expanded line data (str).
-		#		Same that input data if no macros met.
-
 		section = self.curr_section
 		m = re.match('([^\$]*)\$\(([^\)]+)\)(.*$)', str)
 		if m:
@@ -356,15 +330,14 @@ class KvFile:
 				str = self.__expand(str, dict)
 		return str
 
-	#  Register to the dictionary.
+	##  Register to the dictionary.
+	#   @pram section	Section name (str).
+	#   @param key		Register key (str).
+	#   @param value	Value to be registered (str).
+	#   @param dict		Dictionary to register the value (dict).
+	#   @returns		Processed dictionary.
 	#
 	def __register(self, section, key, value, dict):
-		# arguments:
-		#   section:	Section name (str).
-		#   key:	Register key (str).
-		#   value:	Value to be registered (str).
-		#   dict:	Dictionary to register the value (dict).
-
 		if self.overwrite:
 			# override previous value (if exists).
 			dict[section][key] = value
@@ -382,7 +355,11 @@ class KvFile:
 			print('    %s[%s] = %s' % (section, key, value))
 		return dict
 
-	#  Convert 'True'/'False' to corresponding boolean value.
+	##  Convert 'True'/'False' to corresponding boolean value.
+	#   @param value	Boolean value.
+	#   @retval True	If value is 'True'.
+	#   @retval False	If value is 'False'.
+	#   @retval 'value'	Otherwise.
 	#
 	def __convert(self, value):
 		# arguments:
@@ -394,13 +371,11 @@ class KvFile:
 			return True if value == 'True' else False
 		return value
 
-	#  Make dictionary for display.
+	##  Make dictionary for display.
+	#   @param sections	Name of targeted sections (str[]).
+	#   @returns		Dictionary for display (dict).
 	#
 	def __make_disp_dict(self, section):
-		# arguments:
-		#   sections:	Name of targeted sections (str[]).
-		# returns:	Dictionary for display (dict).
-
 		disp_dict = {}
 		keys = list(self.dict[section].keys())
 		if section != self.DEFAULT:
@@ -421,25 +396,21 @@ class KvFile:
 				disp_dict[key] = self.__disp_elem(value)
 		return disp_dict
 
-	#  Make display string for specified object.
+	##  Make display string for specified object.
+	#   @param value:	Any object (obj).
+	#   @returns		Display string (str).
 	#
 	def __disp_elem(self, value):
-		# arguments:
-		#   vale:	Any object (obj).
-		# returns:	Display string (str).
-
 		disp_elem = str(value)
 		if isinstance(value, bool):
 			disp_elem += ' <bool>'
 		return disp_elem
 
-	#  Find maximun key length.
+	##  Find maximun key length.
+	#   @param sections	Name of targeted sections (str[]).
+	#   @returns		Maximum key length (int).
 	#
 	def __max_wid(self, sections, offset=0):
-		# arguments:
-		#   sections:	Name of targeted sections (str[]).
-		# returns:	Maximum key length (int).
-
 		wid = 0
 		for s in sections:
 			if s not in self.dict:
