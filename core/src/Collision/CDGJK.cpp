@@ -266,7 +266,8 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 #define CalcSupport(n)														\
 	p_id[n] = a->Support(p[n], a2z.Ori().Conjugated() * (v[n]));			\
 	q_id[n] = b->Support(q[n], b2z.Ori().Conjugated() * -(v[n]));			\
-	w[n] = b2z * ((Vec3d)q[n]) - a2z * ((Vec3d)p[n]);
+	w[n] = b2z * ((Vec3d)q[n]) - a2z * ((Vec3d)p[n]);						\
+	colcounter++;
 
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
@@ -618,7 +619,7 @@ final:
 	//	HASE_REPORT
 	uint32_t frameTime3 = p_timer->CountUS();
 	coltimePhase3 += frameTime3;
-	colcounter += count;
+	//colcounter += count;
 	static bool bSave = false;
 	if (bSave){
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -866,200 +867,9 @@ coltimePhase2 += frameTime2;
 				Vec3d tridec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
 				Vec3d newSup = v[ids[0]] * tridec[0] + v[ids[1]] * tridec[1] + v[ids[2]] * tridec[2];
 				newSup = newSup*cbiasParam + lastTriV;
-				newSup.unitize();
+				//newSup.unitize();
 				//newSup.z = lastTriV.z;
 				v[ids[3]] = newSup;
-#elif NORM_BIAS == 2
-				//二次元上での原点と三角形頂点の距離でバイアスを掛ける 最短距離頂点とノーマル比版
-				double length[3];
-				double all = 0;
-				int vCheck = 0;
-				int minId = 0;
-				double minLen = 1e+8;
-				while (vCheck < 3) {
-					length[vCheck] = w[ids[vCheck]].XY().norm();
-					all += length[vCheck];
-					if (minLen > length[vCheck]) {
-						minLen = length[vCheck];
-						minId = vCheck;
-					}
-					vCheck++;
-				}
-				double bias;
-				bias = ((1 - (minLen / all)) - 0.66666) * 3;
-				if (bias > 0) {
-					bias = pow(bias, 1. / cbiasParam);
-				}
-				else { bias = 0; }
-
-				Vec3d selectV = v[ids[minId]];//サポートベクトルだと飛び出すのでは
-				//selectV = (w[ids[minId]] - (b2z.Pos() - a2z.Pos())).unit();//近傍点-中心のベクトルを使う
-				Vec3d newSup = selectV * bias + s.unit()*(1 - bias);
-				lastTriV = s.unit();
-				//if (lastTriV.z > newSup.z) {
-					//newSup.z = lastTriV.z;
-				//}
-				v[ids[3]] = newSup.unit();
-
-#elif NORM_BIAS == 3
-				//二次元上での原点と三角形頂点の距離でバイアスを掛ける 最短距離頂点と原点を結ぶベクトル方向の長さを使う
-				double length[3];
-				double longLen = 0;
-				int vCheck = 0;
-				int minId = 0;
-				double minLen = 1e+8;
-
-				while (vCheck < 3) {
-					length[vCheck] = w[ids[vCheck]].XY().norm();
-					if (minLen > length[vCheck]) {
-						minLen = length[vCheck];
-						minId = vCheck;
-					}
-					vCheck++;
-				}
-				Vec2d minV = w[ids[minId]].XY().unit();
-				longLen = abs((w[ids[(minId + 1) % 3]].XY()*-minV + w[ids[(minId + 2) % 3]].XY()*-minV) / 2.0) + minLen;
-
-				double bias;
-				bias = (minLen / longLen);
-				if (cbiasParam > 0) {
-					bias = pow(bias, 1. / cbiasParam);
-				}
-				else { bias = 0; }
-				Vec3d sunit = s.unit();
-				Vec3d selectV = v[ids[minId]];//サポートベクトルだと飛び出すのでは
-											  //selectV = (w[ids[minId]] - (b2z.Pos() - a2z.Pos())).unit();//近傍点-中心のベクトルを使う
-				//selectV = rayV + 2 * (-rayV*sunit)*sunit;  //反射ベクトルを使ってみる
-				Vec3d newSup = selectV * bias + sunit;
-				lastTriV = s.unit();
-				if (lastTriV.z > newSup.z) {
-					//newSup = lastTriV;
-				}
-				v[ids[3]] = newSup.unit();
-
-#elif NORM_BIAS ==4
-				//頂点のサポートベクトルに直交平面の交点を使う　⇒　交点が三角形外に存在する場合が多いので厳しい
-				bool skip = false;
-
-
-				Vec3d supV[3];
-				supV[0] = v[ids[0]];
-				supV[1] = v[ids[1]];
-				supV[2] = v[ids[2]];
-				Vec3d sup[3];
-				sup[0] = w[ids[0]];
-				sup[1] = w[ids[1]];
-				sup[2] = w[ids[2]];
-
-
-				Vec3d triNorm = s.unit();
-				/*ver1
-				Vec3d estSup = (w[ids[0]] * v[ids[0]])*(v[ids[1]] ^ v[ids[2]])
-					+ (w[ids[1]] * v[ids[1]])*(v[ids[2]] ^ v[ids[0]])
-					+ (w[ids[2]] * v[ids[2]])*(v[ids[0]] ^ v[ids[1]]);
-				double waru = ((v[ids[0]] ^ v[ids[1]]) * v[ids[2]]);
-				*/
-				//ver2
-				/*
-				float det = v[ids[0]][0] * v[ids[1]][1] * v[ids[2]][2] + v[ids[1]][0] * v[ids[2]][1] * v[ids[0]][2] + v[ids[2]][0] * v[ids[0]][1] * v[ids[1]][2]
-					- (v[ids[0]][0] * v[ids[2]][1] * v[ids[1]][2] + v[ids[1]][0] * v[ids[0]][1] * v[ids[2]][2] + v[ids[2]][0] * v[ids[1]][1] * v[ids[0]][2]);
-				*/
-
-				double d[3];
-				d[0] = v[ids[0]] * w[ids[0]];
-				d[1] = v[ids[1]] * w[ids[1]];
-				d[2] = v[ids[2]] * w[ids[2]];
-
-
-				Vec3d estSup = (supV[0] * sup[0])*(supV[1] ^ supV[2])
-					+ (supV[1] * sup[1])*(supV[2] ^ supV[0])
-					+ (supV[2] * sup[2])*(supV[0] ^ supV[1]);
-				double waru = supV[0] * (supV[1] ^ supV[2]);
-				if (abs(waru) <= epsilon) {
-					skip = true;
-				}
-				else {
-					estSup = estSup / waru;
-					/*
-					for (int i = 0; i < 3; i++)
-					{
-						if (((w[ids[i]] - estSup).XY() ^ (w[ids[(i + 1) % 3]] - w[ids[i]]).XY()) < epsilon)
-						{
-							//	skip = true;
-						}
-					}
-					*/
-				}
-				if (!skip) {
-
-					int useIdx = -1;
-					int innerCount = 0;
-					for (int i = 0; i<3; i++) {
-						if ((estSup.XY() ^ w[ids[i]].XY()) > -epsilon && (w[ids[(i + 1) % 3]].XY() ^ estSup.XY()) > -epsilon) {
-							useIdx = i;
-							innerCount++;
-						}
-					}
-					if (useIdx < 0) assert("yabee");
-					if (innerCount > 1) assert("oosugi");
-					Vec3d estTriDec = TriDecompose(estSup.XY(), w[ids[useIdx]].XY(), w[ids[(useIdx + 1) % 3]].XY());
-					if (estTriDec[0] * estTriDec[1] * estTriDec[2] < 0) {
-						yabaiCount++;
-						v[ids[3]] = triNorm;
-					}
-					else {
-						Vec3d newSup = triNorm * estTriDec[0] + v[ids[useIdx]] * estTriDec[1] + v[ids[(useIdx + 1) % 3]] * estTriDec[2];
-						//Vec3d newSup = triNorm * (1-estTriDec[0]) + v[ids[useIdx]] * (1 - estTriDec[1]) + v[ids[(useIdx + 1) % 3]] * (1 - estTriDec[2]);
-						newSup = newSup*cbiasParam + triNorm;
-						v[ids[3]] = newSup.unit();
-					}
-				}
-				else {
-					v[ids[3]] = triNorm;
-				}
-				lastTriV = triNorm;
-
-#elif NORM_BIAS == 5
-//辺の平面とレイの交点でどうよ
-			bool skip = false;
-			Vec3d triNorm = s.unit();
-
-				Vec3d supV[3];
-				supV[0] = (v[ids[0]] + v[ids[1]]) / 2;
-				supV[1] = (v[ids[1]] + v[ids[2]]) / 2;
-				supV[2] = (v[ids[2]] + v[ids[0]]) / 2;
-				//supV[0] = v[ids[0]];
-				//supV[1] = v[ids[1]];
-				//supV[2] = v[ids[2]];
-				Vec3d sup[3];
-				sup[0] = w[ids[0]];
-				sup[1] = w[ids[1]];
-				sup[2] = w[ids[2]];
-
-				Vec3d rayV = Vec3d(0, 0, 1);
-				Vec3d inter[3];
-				int hitInt = -1;
-				inter[0] = (supV[0] * sup[0]) / (supV[0] * rayV) * rayV;
-				inter[1] = (supV[1] * sup[1]) / (supV[1] * rayV) * rayV;
-				inter[2] = (supV[2] * sup[2]) / (supV[2] * rayV) * rayV;
-				Vec3d estSup = Vec3d::Zero();
-				if (abs(inter[0].z) < 100000) estSup = inter[0];
-				if (estSup.z < inter[1].z && abs(inter[1].z) < 100000) { estSup = inter[1]; hitInt = 1; }
-				if (estSup.z < inter[2].z && abs(inter[2].z) < 100000) { estSup = inter[2]; hitInt = 2; }
-				if (hitInt < 0) skip = true;
-				if (!skip) 
-				{
-					//Vec3d newSup = (estSup - (a2z.Pos() - b2z.Pos())).unit(); //予想地点へのベクトル
-					float estDist = abs((estSup - sup[hitInt]) * triNorm);
-					Vec3d estOnTri = estSup - triNorm * estDist;
-					Vec3d newDec = TriDecompose(estOnTri.XY(), sup[hitInt ].XY(), sup[(hitInt + 1) % 3].XY());
-					Vec3d newSup = (triNorm*newDec[0] + v[hitInt] * newDec[1] + v[(hitInt + 1) % 3] * newDec[2])*cbiasParam + triNorm*(1-cbiasParam);
-					v[ids[3]] = newSup;
-				}
-				else {
-					v[ids[3]] = triNorm;
-				}
-				lastTriV = triNorm;
 #else
 				lastTriV = v[ids[3]] = s.unit();
 #endif
@@ -1092,7 +902,7 @@ coltimePhase2 += frameTime2;
 			else {
 				//	初めて線分になる場合。
 
-#if NORM_BIAS >= 10 //バイアス
+#if NORM_BIAS >= 10 //バイアスかかっていたら戻す（球に対応できないので無効化中）
 				if (lastTriV.square() > 0) {
 					v[ids[3]] = lastTriV;
 					CalcSupport(ids[3]);
@@ -1244,20 +1054,6 @@ coltimePhase2 += frameTime2;
 
 					goto final2;
 				}
-				//lastZ = newZ;
-				//v[amariID] = lastTriV;
-				//CalcSupport(amariID);
-				//Vec3d newSup = w[amariID];
-				//Vec3d curSup = w[nid2];
-				//Vec3d vecdiff = (newSup - curSup);
-				//double zdiff = vecdiff.z;
-					//dec = TriDecompose(w[nid0].XY(), w[nid1].XY(), w[amariID].XY());
-					//newZ = w[nid0].z * dec[0] + w[nid1].z * dec[1] + w[amariID].z * dec[2];
-					//std::swap(ids[(i + 2) % 3], ids[3]);
-					//if (newSup.z <= curSup.z + epsilon || newZ  <= lastZ + epsilon) {
-					//	std::swap(ids[(i + 2) % 3], ids[3]);
-					//	goto final;
-					//}
 				cbiasParam = -1;
 				continue;
 #else			
@@ -1318,7 +1114,7 @@ coltimePhase2 += frameTime2;
 	normal.unitize();
 	uint32_t frameTime3 = p_timer->CountUS();
 	coltimePhase3 += frameTime3;
-	colcounter += count;
+	//colcounter += count;
 	static bool bSave = false;
 	if (bSave) {
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -1504,6 +1300,7 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 
 		p_id[lastId] = a->Support(p[lastId], a2w.Ori().Conjugated() * (-v));
 		q_id[lastId] = b->Support(q[lastId], b2w.Ori().Conjugated() * v);
+		colcounter++;
 		lastNormal = v;
 		w = a2w * p[lastId]  -  b2w * q[lastId];
 		if (v*w > 0) return false;			//	原点がsupport面の外側
@@ -1594,6 +1391,7 @@ double FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		while (usedBits & lastBit) { ++lastId; lastBit <<= 1; }
 		p_id[lastId] = a->Support(p[lastId], a2w.Ori().Conjugated() * (-v));
 		q_id[lastId] = b->Support(q[lastId], b2w.Ori().Conjugated() * v);
+		colcounter++;
 		lastNormal = v;
 		w = a2w * p[lastId]  -  b2w * q[lastId];
 		double supportDist = w*v/dist;
@@ -1789,6 +1587,7 @@ void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed 
 		Vec3f newp, newq;
 		p_id[lastId] = a->Support(newp, a2w.Ori().Conjugated() * (tris[0].normal));
 		q_id[lastId] = b->Support(newq, b2w.Ori().Conjugated() * -tris[0].normal);
+		colcounter++;
 		Vec3d w = (a2w * (Vec3d)newp) - (b2w * (Vec3d)newq);
 		//同じサポートが出たら抜ける →ノーマルの向きで判断
 		//if (CalcTaiseki(w, tris[0].vert[0], tris[0].vert[1],tris[0].vert[2]) < epsilon) break;
@@ -1883,7 +1682,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	int ret = 1;
 	while (1) {
 		count++;
-		colcounter++;
+		//colcounter++;
 		if (count > 100) break;
 		//GJKの計算
 		
