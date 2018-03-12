@@ -11,9 +11,10 @@
 #  DESCRIPTION:
 #
 #  VERSION:
-#	Ver 1.0  2017/12/03 F.Kanehori	ÉAÉ_ÉvÉ^Ç∆ÇµÇƒêVãKçÏê¨.
-#	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat ÇÕñ≥èåèÇ…é¿çs.
-#	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py Ç…à⁄çs.
+#	Ver 1.0  2017/12/03 F.Kanehori	„Ç¢„ÉÄ„Éó„Çø„Å®„Åó„Å¶Êñ∞Ë¶è‰ΩúÊàê.
+#	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat „ÅØÁÑ°Êù°‰ª∂„Å´ÂÆüË°å.
+#	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py „Å´ÁßªË°å.
+#	Ver 1.21 2018/03/12 F.Kanehori	Test on unix.
 # ======================================================================
 version = '1.2'
 
@@ -82,8 +83,7 @@ if len(args) != 1:
 repository = Util.upath(args[0])
 conf = options.conf
 plat = options.plat
-if Util.is_windows():
-	tool = options.tool
+tool = options.tool if Util().is_windows() else None
 verbose = options.verbose
 
 if repository == 'Springhead':
@@ -146,7 +146,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 	flush()
 	os.chdir(spr_topdir)
 	cmnd = 'git pull --all'
-	proc.exec(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT)
+	proc.exec(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
 	rc = proc.wait()
 	outstr, errstr = proc.output()
 	Print(outstr.split('\n'))
@@ -185,7 +185,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	print('cloning test repository')
 	flush()
 	cmnd = 'git clone %s %s' % (url_git, repository)
-	rc = proc.exec(cmnd).wait()
+	rc = proc.exec(cmnd, shell=True).wait()
 	if rc != 0:
 		Error(prog).print('cloning failed: status %d' % rc)
 
@@ -193,7 +193,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	pwd()
 	print('updating submodules')
 	cmnd = 'git submodule update --init'
-	rc = proc.exec(cmnd).wait()
+	rc = proc.exec(cmnd, shell=True).wait()
 	if rc != 0:
 		Error(prog).print('cloning failed: status %d' % rc)
 	os.chdir(prep_dir)
