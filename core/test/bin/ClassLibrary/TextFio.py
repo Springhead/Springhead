@@ -33,7 +33,7 @@
 #	Ver 2.1  2017/09/13 F.Kanehori	Add flush().
 #	Ver 2.2  2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
 #	Ver 2.21 2018/02/22 F.Kanehori	writeline(): allow line=None.
-#	Ver 2.22 2018/03/08 F.Kanehori	Now OK for doxygen.
+#	Ver 2.22 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import io
@@ -160,10 +160,9 @@ class TextFio(Fio):
 	#   @param name		Filter name.
 	#			One of TextFio.ELIM or TextFio.WRAP.
 	#   @param opts		Options of the filter specified by 'name'.
-	#
-	#			for ELIM: opts[0]: comment designator ('#'),
-	#			          opts[1]: eliminate empty lines or not (True)
-	#			for WRAP: opts[0]: line continuation symbol ('\\')
+	#   @n			for ELIM: opts[0]: comment designator ('#'),
+	#   @n			          opts[1]: eliminate empty lines or not (True)
+	#   @n			for WRAP: opts[0]: line continuation symbol ('\\')
 	#   @returns		Self object.
 	#
 	def add_filter(self, name, opts=[]):
@@ -231,11 +230,10 @@ class TextFio(Fio):
 
 	##  Replace string in the lines.
 	#   @param patterns	List of pattern trio ([[from, to, search], ...]).
-	#
-	#			from:   Pattern to replace from (str).
-	#			        Used as search pattern if 'search' is omitted.
-	#			to:     Pattern to replace to (str).
-	#			search:	Pattern to search (re) (optional).
+	#   @n			from:   Pattern to replace from (str).
+	#   @n			        Used as search pattern if 'search' is omitted.
+	#   @n			to:     Pattern to replace to (str).
+	#   @n			search:	Pattern to search (re) (optional).
 	#   @param lines	Original line data (str or line info structure).
 	#   @retval replaced	Replaced line data (str or line info structure).
 	#   @retval count	Number of replaced lines (int).
@@ -348,9 +346,7 @@ class TextFio(Fio):
 	# --------------------------------------------------------------
 
 	##  Determine the character encoding of this file.
-	#   @param path		File path to be checked (str).
-	#   @param size		Buffer size for checking (int).
-	#   @areturns		Determined character encoding (str).
+	#   @returns		Determined character encoding (str).
 	#
 	def __check_encoding(self):
 		lookup = ['iso-2022-jp', 'ascii', 'euc-jp',
@@ -378,7 +374,9 @@ class TextFio(Fio):
 		return encoding
 
 	##  Wrap continued lines.
-	#   @param symbol		Line continuation symbol (str).
+	#   @param opts		Options of the filter.
+	#   @n			opts[0]: line continuation symbol ('\\').
+	#   @returns		Filter applied line data ([str]).
 	#
 	def __wrap_lines(self, opts=['\\']):
 		pat = '(.*)(.)\s*$'	# last symbol of the line
@@ -406,17 +404,12 @@ class TextFio(Fio):
 		self.lines = lines
 	
 	##  Eliminate both comment lines and inline commnet.
-	#   @param opts		[0] designator:	Comment designator.
-	#			[1] emptyline:	Eliminate empty lines or not.
-	#   @returns		Self object.
+	#   @param opts		Options of the filter.
+	#   @n			[0] designator:	Comment designator (str).
+	#   @n			[1] emptyline:	Eliminate empty lines or not (bool).
+	#   @returns		Filter applied line data ([str]).
 	#
-	def __elim_comments(self, opts=['#', True]):
-		# arguments:
-		#   opts:
-		#     [0] designator:	Comment designator.
-		#     [1] emptyline:	Eliminate empty lines or not.
-		# returns:	Self object.
-
+	def __elim_comments(self, opts=[ '#', True ]):
 		designator = opts[0] if opts and len(opts) > 0 else '#'
 		emptyline  = opts[1] if opts and len(opts) > 1 else True
 		designator = designator.replace('*', '\*')
@@ -441,6 +434,16 @@ class TextFio(Fio):
 			print('apply filter: %s' % info)
 		self.lines = lines
 
+	##  Replace string in the line (Helper metho of self.replace()).
+	#   @param patts	List of pattern trio ([[from, to, search], ...]).
+	#   @n			from:   Pattern to replace from (str).
+	#		        Used as search pattern if 'search' is omitted.
+	#   @n			to:     Pattern to replace to (str).
+	#   @n			search:	Pattern to search (re) (optional).
+	#   @param data		Line data (str).
+	#   @retval 1		If replacement occurred.
+	#   @retval 0		No replacement occurred.
+	#
 	def __replace_sub(self, patts, data):
 		if not isinstance(patts, list):
 			return data
