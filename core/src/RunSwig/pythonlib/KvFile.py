@@ -20,7 +20,7 @@
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 3.0  2017/12/06 F.Kanehori	Section construction introduced.
 #	Ver 3.1  2018/02/05 F.Kanehori	Bug fixed.
-#	Ver 3.11 2018/03/09 F.Kanehori	Now OK for doxygen.
+#	Ver 3.11 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -246,6 +246,7 @@ class KvFile:
 
 	##  Make dictionary.
 	#   @param lines	Line data read from the file (list).
+	#   @param dic		Initial members to be registered (dict).
 	#   @returns		Dictionary (dict).
 	#
 	def __make_dict(self, lines, dic):
@@ -303,7 +304,8 @@ class KvFile:
 		return dict
 
 	##  Expand macros.
-	#   Only already registered keys are valid for macro expansion.
+	# NOTE
+	# @n	Only already registered keys are valid for macro expansion.
 	#   @param str		Original line data (str).
 	#   @param dict		Dictionary to lookup prior to self.dict.
 	#   @returns		Expanded line data (str).
@@ -331,7 +333,7 @@ class KvFile:
 		return str
 
 	##  Register to the dictionary.
-	#   @pram section	Section name (str).
+	#   @param section	Section name (str).
 	#   @param key		Register key (str).
 	#   @param value	Value to be registered (str).
 	#   @param dict		Dictionary to register the value (dict).
@@ -372,7 +374,7 @@ class KvFile:
 		return value
 
 	##  Make dictionary for display.
-	#   @param sections	Name of targeted sections (str[]).
+	#   @param section	Name of targeted sections ([str]).
 	#   @returns		Dictionary for display (dict).
 	#
 	def __make_disp_dict(self, section):
@@ -407,7 +409,8 @@ class KvFile:
 		return disp_elem
 
 	##  Find maximun key length.
-	#   @param sections	Name of targeted sections (str[]).
+	#   @param sections	Name of targeted sections ([str]).
+	#   @param offset	Offset value added to key length (int).
 	#   @returns		Maximum key length (int).
 	#
 	def __max_wid(self, sections, offset=0):

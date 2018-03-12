@@ -15,7 +15,7 @@
 #	Ver 1.2  2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 2.01 2017/09/08 F.Kanehori	Some subtle change.
-#	Ver 2.02 2018/03/09 F.Kanehori	Now OK for doxygen.
+#	Ver 2.02 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -105,13 +105,14 @@ class Fio:
 
 	##  Check if given stream is system stream or not.
 	#   @param stream	Stream object.
-	#   @returns		True if yes, otherwise False.
+	#   @retval True	If given stream is a system stream.
+	#   @retval False	Otherwise.
 	#
 	def __is_system_stream(self, stream):
 		return isinstance(stream, io.TextIOWrapper)
 
 	##  Return stream name string.
-	#   @param strem	Stream object.
+	#   @param stream	Stream object.
 	#   @returns		Stream name string.
 	#
 	def __stream_name(self, stream):

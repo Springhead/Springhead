@@ -21,7 +21,7 @@
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
 #	Ver 1.5  2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
-#	Ver 1.51 2018/03/09 F.Kanehori	Now OK for doxygen.
+#	Ver 1.51 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -446,7 +446,7 @@ class FileOp:
 	#   @n			List format is;
 	#   @n			<perm> <link> <size> <date> <time> <name>
 	#   @param sort		Sort key.
-	#   @n			If 'name', list is sorted by file name.
+	#   @n			If key is 'name', list is sorted by file name.
 	#			Otherwise, sorted by date and time.
 	#   @returns		Sorted file list ([str]).
 	#

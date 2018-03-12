@@ -15,7 +15,7 @@
 #	Names are read from definition file (e.g. NameManager.ini) and
 #	wrritten to Windows batch file (e.g. NameManager.bat).
 #	To define these names as environment variables, call created
-#	file like:
+#	batch file like:
 #	    call NameManager.bat
 #	from batch script using these names.
 #
@@ -26,7 +26,9 @@
 #	Ver 1.2  2017/01/27 F.Kanehori	Bug fixed.
 #	Ver 1.3  2017/09/07 F.Kanehori	Change to new python library.
 #	Ver 1.4  2017/11/29 F.Kanehori	Change python library path.
+#	Ver 1.41 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
+##  Program version.
 version = 1.4
 
 import sys
@@ -36,31 +38,23 @@ from optparse import OptionParser
 # ----------------------------------------------------------------------
 #  Constants
 #
+##  Program name.
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import Springhead python library.
 #
 sys.path.append('../../RunSwig')
 from FindSprPath import *
+##  Path finder object.
 spr_path = FindSprPath(prog)
+##  Local python library path.
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from KvFile import *
 from Util import *
 from Proc import *
 from Error import *
-
-# ----------------------------------------------------------------------
-#  Constants and error wrapper
-#
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-
-# ----------------------------------------------------------------------
-#  Globals (part 1)
-#
-error = Error(prog)
-util = Util()
 
 # ----------------------------------------------------------------------
 #  Options
@@ -92,21 +86,27 @@ parser.add_option('-V', '--version',
 # ----------------------------------------------------------------------
 #  Process for command line
 #
+##  Command line options and arguments.
 (options, args) = parser.parse_args()
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 if len(args) != 0:
-	proc = Proc().exec('python %s.py -h' % prog)
-	proc.wait()
+	proc = Proc(verbose=options.verbose)
+	proc.exec('python %s.py -h' % prog).wait()
 	parser.error("incorrect number of arguments")
 	sys.exit(0)
 
-# get options
+# Options.
+##  Top diredctory of src tree.
 srctop	= options.srctop
+##  Initial file name.
 inifile	= options.inifile
+##  Output file name.
 outfile	= options.outfile
+##  Do not make outfile (for debug).
 test_only = options.test_only
+##  Verbose level (0: silent).
 verbose	= options.verbose
 
 if verbose:
@@ -118,11 +118,6 @@ if verbose:
 	print()
 
 # ----------------------------------------------------------------------
-#  Globals (part 2)
-#
-proc = Proc(verbose=verbose)
-
-# ----------------------------------------------------------------------
 #  Find base directory's absolute path.
 #
 dirlist = os.getcwd().split(os.sep)
@@ -132,7 +127,8 @@ for n in range(len(dirlist)):
 		found = True
 		break
 if not found:
-	error.print('no such directory "%s"' % srctop)
+	Error(prog).print('no such directory "%s"' % srctop)
+##  Absolute path of base directory.
 topdir = os.sep.join(dirlist[0:n]) if found else None
 
 # ----------------------------------------------------------------------
@@ -141,10 +137,15 @@ topdir = os.sep.join(dirlist[0:n]) if found else None
 kvf = KvFile(inifile, sep='=')
 count = kvf.read(dic={'TOPDIR': topdir})
 if count < 0:
-	error.print(kvf.error())
+	Error(prog).print(kvf.error())
+##  List of keys in the inifile.
 keys = sorted(kvf.keys())
 
 if verbose:
+	##  Make fixed length string.
+	#   @param name		Any string.
+	#   @param width	Field width (int).
+	#   @returns		Fixed width string.
 	def fixed(name, width):
 		name += ':'
 		if len(name) < width-1:
@@ -153,7 +154,7 @@ if verbose:
 
 	print('names defined (%d):' % count)
 	for key in keys:
-		value = util.pathconv(kvf.get(key), 'unix')
+		value = Util().pathconv(kvf.get(key), 'unix')
 		if os.path.isfile(value):	kind = 'file'
 		elif os.path.isdir(value):	kind = 'dir'
 		else:				kind = 'name'
@@ -166,16 +167,18 @@ if verbose:
 if test_only:
 	sys.exit(0)
 
+##  Header strings of output file.
 headers	 = [ '@echo off', 'rem FILE: %s' % outfile, '' ]
+##  Trailer strings of output file.
 trailers = [ '', 'rem end: %s' % outfile ]
 
 f = TextFio(outfile, 'w')
 if f.open() < 0:
-	error.print(f.error())
+	Error(prog).print(f.error())
 #
 f.writelines(headers)
 for key in keys:
-	line = 'set %s=%s' % (key, util.pathconv(kvf.get(key)))
+	line = 'set %s=%s' % (key, Util().pathconv(kvf.get(key)))
 	if verbose > 1:
 		print(line)
 	f.writeline(line)
