@@ -1,39 +1,11 @@
 #!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:
-#	Error
-#	    Error handling wrapper class.
-#
-#  INITIALIZER:
-#	obj = Error(prog, out=sys.stderr, verbose=0)
-#	  arguments:
-#	    prog:	Program name to precede message (str).
-#	    out:	Output stream (obj).
-#	    verose:	Verbose mode level (int; 0: silence).
+#  CLASS:	Error(prog, out=sys.stderr, verbose=0)
 #
 #  METHODS:
 #	print(msg, prompt='Error', exitcode=-1, alive=False)
-#	    Print error message to output stream.
-#	    If 'prompt' is one of 'Error', 'Fatal', 'Abort' or 'Pan',
-#	    program will be terminated with given exitcode.  Argument
-#	    'alive' cancels this behaviour.
-#	  arguments:
-#	    msg:	Error message to print (str).
-#			Message format is;
-#			    '<prog>:[ <prompt>:] <msg>'
-#	    prompt:	Prompt string (str) or None.
-#			    'Error'|'Fatal'|'Abort'|'Pan':
-#				     Program terminates with exitcode.
-#			    None:    Prompt is not printed.
-#			    others:  Program will continue.
-#	    exitcode:	Exit code (int).
-#	    alive:	Force return to the caller (bool).
-#
 #	abort(msg, prompt='Error', exitcode=-1)
-#	    Synonym for print() method.
-#	    If you do not want to ceise program, you should not call
-#	    this method to avoid confusion arises from method name!
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -43,11 +15,17 @@
 #	Ver 2.1  2017/09/11 F.Kanehori	Update print().
 #	Ver 2.2  2017/09/13 F.Kanehori	Add abort().
 #	Ver 2.3  2018/01/10 F.Kanehori	Add arg 'alive' to print().
+#	Ver 2.21 2018/03/09 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 
+##  Error handling class.
+#
 class Error:
-	#  Class initializer
+	##  The initializer.
+	#   @param prog		Program name to place in message (str).
+	#   @param out		Output stream (obj).
+	#   @param verbose	Verbose level (0: silent) (int).
 	#
 	def __init__(self, prog, out=sys.stderr, verbose=0):
 		self.clsname = self.__class__.__name__
@@ -57,34 +35,43 @@ class Error:
 		self.out  = out
 		self.verbose = verbose
 		#
-		self.testcase = False
 
-	#  Print message.
+	##  Print error message to output stream self.out.
+	#   @param msg		Error message to print (str).
+	#   @n			Output format: 	'<prog>:[ <prompt>:] <msg>'.
+	#   @param prompt	Prompt string or None.
+	#   @n			If 'prompt' is one of 'Error', 'Fatal',
+	#			'Abort' or 'Pan', program will be terminated
+	#			with given exitcode.
+	#   @n			Argument 'alive' cancels this behaviour.
+	#   @param exitcode	Exit code (int).
+	#   @param alive	Force return to caller (bool).
 	#
 	def print(self, msg, prompt='Error', exitcode=-1, alive=False):
 		die = False
 		if prompt in ['Error', 'Fatal', 'Abort', 'Pan']:
-			die = True if not alive else die
+			die = True if not alive else False
 		str1 = '%s: ' % self.prog if self.prog else ''
 		str2 = '%s: ' % prompt if prompt else ''
 		msg_str = '%s%s%s' % (str1, str2, msg)
-		if self.testcase and die:
+		if alive and self.verbose and die:
 			msg_str += ' -> exit code %d' % exitcode
 		#
 		print(msg_str, file=self.out)
 		self.out.flush()
-		if die and self.testcase is False:
+		if die and not alive:
 			sys.exit(exitcode)
 
-	#  Print message and die.
+	##  Print error message and die (Synonym for self.print()).
+	#   NOTE
+	#   @n	If you do not want to ceise program, you should not call
+	#	this method to avoid confusion arises from method name!
+	#   @param msg		Error message (str).
+	#   @param prompt	See self.print().
+	#   @param exitcode	See self.print().
 	#
 	def abort(self, msg, prompt='Error', exitcode=-1):
 		self.print(msg, prompt, exitcode)
-
-	#  For debug only.
-	#
-	def set_testcase(self, testcase):
-		self.testcase = testcase
 
 	# --------------------------------------------------------------
 	#  For class private use

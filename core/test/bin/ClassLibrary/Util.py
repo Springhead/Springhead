@@ -20,7 +20,7 @@
 #					Proc class and FileOp class.
 #	Ver 2.1  2017/09/11 F.Kanehori	Add alias method for pathconv().
 #	Ver 2.2  2018/02/19 F.Kanehori	Change default date/time format.
-#	Ver 2.21 2018/03/07 F.Kanehori	Now OK for doxygen.
+#	Ver 2.21 2018/03/08 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -33,18 +33,30 @@ class Util:
 	#
 	def __init__(self):
 		self.clsname = self.__class__.__name__
-		self.version = 2.1
-	##  Class instance version.
+		self.version = 2.21
+	##  Determine if currently running under unix.
+	#   Class instance version of Util.is_unix().
+	#   @returns		True if yes, False otherwise.
 	def is_unix(self): return Util.is_unix()
-	##  Class instance version.
+	##  Determine if currently running under Windws.
+	#   Class instance version of Util.is_windows().
+	#   @returns		True if yes, False otherwise.
 	def is_windows(self): return Util.is_windows()
-	##  Class instance version.
+	##  Change path separators according to given OS name 'to'.
+	#   Class instance version of Util.pathconv().
+	#   @returns		Separator replaced string.
 	def pathconv(self, **keywords): return Util.pathconv(**keywords)
-	##  Class instance version.
+	##  Get current date string.
+	#   Class instance version of Util.date().
+	#   @returns		Date string.
 	def date(self, **keywords): return Util.date(**keywords)
-	##  Class instance version.
+	##  Get current time string.
+	#   Class instance version of Util.time().
+	#   @returns		Time string.
 	def time(self, **keywords): return Util.time(**keywords)
-	##  Class instance version.
+	##  Get current date and time string.
+	#   Class instance version of Util.now().
+	#   @returns		Date and time string.
 	def now(self, **keywords): return Util.now(**keywords)
 
 	##  Determine if currently running under unix.
@@ -101,7 +113,7 @@ class Util:
 
 	##  Aliases for pathconv(path, to='windows').
 	#   @param path		Path string to convert.
-	#   @returns		Path string using '\\' as path separator.
+	#   @returns		Path string using '\\\\' as path separator.
 	#
 	@staticmethod
 	def wpath(path):
@@ -109,7 +121,9 @@ class Util:
 
 	##  Get current date string.
 	#   @param format	Date string format.
-	#   @returns		Date string (default: 'yyyy-mm-dd').
+	#   @returns		Date string.
+	#
+	#			Default format is 'yyyy-mm-dd'.
 	#
 	@staticmethod
 	def date(format='%Y-%m-%d'):
@@ -117,7 +131,9 @@ class Util:
 
 	##  Get current time string.
 	#   @param format	Time string format.
-	#   @returns		Time string (default: 'hh:mm:ss').
+	#   @returns		Time string.
+	#
+	#			Default format is 'hh:mm:ss'.
 	#
 	@staticmethod
 	def time(format='%H:%M:%S'):
@@ -125,7 +141,9 @@ class Util:
 
 	##  Get current date and time string.
 	#   @param format	Date and time string format.
-	#   @returns		Date and time string (default: 'yyyy-mm-dd hh:mm:ss').
+	#   @returns		Date and time string.
+	#
+	#			Default format is 'yyyy-mm-dd hh:mm:ss'.
 	#
 	@staticmethod
 	def now(format='%Y-%m-%d %H:%M:%S'):

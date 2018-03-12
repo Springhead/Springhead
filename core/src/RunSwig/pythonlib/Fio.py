@@ -1,36 +1,12 @@
 #!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ======================================================================
-#  CLASS:
-#	Fio
-#	    Base class for file input/output.
-#
-#  INITIALIZER:
-#	obj = Fio(path, mode='r', verbose=0)
-#	    path:	File path to open (str) or system stream object
-#			(sys.stdin|sys.stdout|sys.stderr).
-#	    mode:	File open mode ('r'|'w'|'a' with optional 'b').
-#	    verbose:	Verbose mode (int).
+#  CLASS:	Fio(path, mode='r', verbose=0)
 #
 #  METHODS:
 #	status = open(encoding=None)
-#	    Open the file.  Argument 'encoding' is effective only for
-#	    text file write mode.
-#	  arguments:
-#	    encoding:	Character encoding (text file, write open only)
-#			    'ascii'	   (or 'us-ascii')
-#			    'utf-8'	   (or 'utf_8', 'utf8')
-#			    'cp932'	   (or 'shift_jis', 'sjis')
-#			    'utf-16'	   (or 'unicode', 'utf16')
-#			    'iso-2022-jp'  (or 'jis')
-#			    'euc-jp'	   (or 'euc')
-#	  returns:	0: suaccess, -1: failure
-#
 #	close()
-#	    Close the file.
-#
 #	errmsg = error()
-#	    Returns error message (most recent one only).
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -39,15 +15,24 @@
 #	Ver 1.2  2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
 #	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
 #	Ver 2.01 2017/09/08 F.Kanehori	Some subtle change.
+#	Ver 2.02 2018/03/09 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
 import io
 
+##  Base class for file input/output.
+#
 class Fio:
-	#  Class initializer
+	##  The initializer.
+	#   @param path		File path to open (str)
+	#			or system stream object
+	#			    (sys.stdin | sys.stdout | sys.stderr).
+	#   @param mode		File open mode
+	#			    ('r' | 'w' | 'a' with optional 'b').
+	#   @param verbose	Verbose level (0: silent) (int).
 	#
-	def __init__(self, path, mode='r', disp_mode=None, verbose=0):
+	def __init__(self, path, mode='r', verbose=0):
 		self.clsname = self.__class__.__name__
 		self.version = 2.01
 		#
@@ -55,14 +40,26 @@ class Fio:
 		self.path = path
 		self.name = self.__stream_name(path)
 		self.mode = mode
-		self.disp_mode = disp_mode
 		self.verbose = verbose
 		#
 		self.obj = None		# file object
 		self.opened = False
 		self.errmsg = None
 
-	#  Open
+	##  Open the the file.
+	#   @param encoding	Character encoding (text file, write open only).
+	#   @n			One of
+	#   @n			    'ascii'       (or 'us-ascii'),
+	#   @n			    'utf-8'       (or 'utf_8', 'utf8'),
+	#   @n			    'cp932'       (or 'shift_jis', 'sjis'),
+	#   @n			    'utf-16'      (or 'unicode', 'utf16'),
+	#   @n			    'iso-2022-jp' (or 'jis'),
+	#   @n			    'euc-jp'      (or 'euc').
+	#
+	#   NOTE
+	#   @n	This argument is effective only for text file write mode.
+	#   @retval 0		successful
+	#   @retval -1		failure
 	#
 	def open(self, encoding=None):
 		if self.sys_stream:
@@ -87,7 +84,7 @@ class Fio:
 			status = -1
 		return status
 
-	#  Close
+	##  Close the file.
 	#
 	def close(self):
 		if self.opened:
@@ -96,7 +93,8 @@ class Fio:
 		self.pened = False
 		self.errmsg = None
 
-	#  Return error message
+	##  Return error message (most recent one only).
+	#   @returns		Error message if any (str).
 	#
 	def error(self):
 		return self.errmsg
@@ -105,22 +103,18 @@ class Fio:
 	#  For class private use
 	# --------------------------------------------------------------
 
-	#  Check if system stream.
+	##  Check if given stream is system stream or not.
+	#   @param stream	Stream object.
+	#   @returns		True if yes, otherwise False.
 	#
 	def __is_system_stream(self, stream):
-		# arguments:
-		#   stream:	Stream object to cjeck.
-		# returns:	True if yes, otherwise False.
-
 		return isinstance(stream, io.TextIOWrapper)
 
-	#  Returns stream name string.
+	##  Return stream name string.
+	#   @param strem	Stream object.
+	#   @returns		Stream name string.
 	#
 	def __stream_name(self, stream):
-		# arguments:
-		#   stream:	Stream object to cjeck.
-		# returns:	Stream name string.
-
 		if isinstance(stream, str):
 			name = os.path.basename(stream)
 		elif isinstance(stream, io.TextIOWrapper):
@@ -129,12 +123,10 @@ class Fio:
 			name = 'unknown'
 		return name
 
-	#  Returns readable file mode.
+	##  Return readable file mode.
+	#   @returns		File mode string.
 	#
 	def __mode_str(self):
-		# arguments:	None
-		# returns:	File mode string.
-
 		modes = { 'r':	'read',
 			  'w':	'write',
 			  'a':	'append',
@@ -143,8 +135,7 @@ class Fio:
 			  'ab':	'append binary',
 			  'invalid': 'invalid mode: %s' % self.mode
 			}		      
-		mode = self.disp_mode if self.disp_mode else self.mode
-		key = mode if mode in modes else 'invalid'
+		key = self.mode if self.mode in modes else 'invalid'
 		return modes[key]
 
 # end: Fio.py
