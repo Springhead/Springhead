@@ -24,7 +24,7 @@
 #	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
 #	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
 #					when dry_run flag specified.
-#	Ver 1.15 2018/03/09 F.Kanehori	Now OK for doxygen.
+#	Ver 1.15 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 import sys
 import os
@@ -275,9 +275,9 @@ class Proc:
 	# --------------------------------------------------------------
 
 	##  Convert zero-extended-16bit-signed-int into 32bit-signed-int.
-	#   @param s16_value	32-bit-unsigend-int value (int).
-	#			upper 16 bits:  all zeors
-	#			lower 16 bits:  16-bit-signed-int value
+	#   @param value	32-bit-unsigend-int value (int).
+	#   @n			upper 16 bits:  all zeors
+	#   @n			lower 16 bits:  16-bit-signed-int value
 	#   @returns		32-bit-signed-int value (int).
 	#
 	def __s16(self, value):
@@ -308,7 +308,7 @@ class Proc:
 		#print(tasks)
 		return tasks
 
-	##  Set enviroment variable.
+	##  Set new enviroment variables.
 	#   @param env		Enviroment to set (dict).
 	#   @param addpath	Path to prepend env['PATH'] (str).
 	#   @returns		new_env, org_env
@@ -326,7 +326,7 @@ class Proc:
 			new_env['PATH'] = addpath + ';' + new_env['PATH']
 		return new_env, org_env
 
-	##  Set enviroment variable.
+	##  Revive old enviroment variables set by self.__set_environment().
 	#   @param org_env	Environment to revive (dict).
 	#
 	def __revive_envirnment(self, org_env):
@@ -336,7 +336,9 @@ class Proc:
 	##  Get file object.
 	#   @param file		File name string or file object.
 	#   @param mode		File open mode (str).
-	#   @returns		File object.
+	#   @param dry_run	Show command but do not execute it (bool).
+	#   @retval obj		File object if dry_run is False.
+	#   @retval None	If dry_run is True.
 	#
 	def __open(self, file, mode, dry_run):
 		if self.dry_run:
@@ -350,7 +352,7 @@ class Proc:
 		return f
 
 	##  Release file object.
-	#   @param object	File object returned by __open().
+	#   @param object	File object returned by self.__open().
 	#   @param file		The same argument passed to self.__open().
 	#
 	def __close(self, object, file):

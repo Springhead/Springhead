@@ -5,7 +5,7 @@ import sys
 import os
 import glob
 
-sys.path.append('../../../src/RunSwig')
+sys.path.append('../RunSwig')
 from FindSprPath import *
 spr_path = FindSprPath('SpringheadTest')
 libdir = spr_path.abspath('pythonlib')
@@ -15,7 +15,7 @@ from Proc import *
 outdir = './html'
 logfile = 'doxygen.log'
 os.makedirs(outdir, exist_ok=True)
-Proc().exec('doxygen ClassLibrary.doxy', stdout=logfile).wait()
+Proc().exec('doxygen SprCSharp.doxy', stdout=logfile).wait()
 
 sys.exit(0)
 
