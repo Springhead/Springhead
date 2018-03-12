@@ -229,7 +229,7 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		if len(tmp) == 2:
 			t_opts = '%s %s' % (opts, tmp[1])
 		t_args = '%s %s' % (tmp[0], args)
-		proc.exec('%s %s %s' % (cmnd, t_opts, t_args))
+		proc.exec('%s %s %s' % (cmnd, t_opts, t_args), shell=True)
 		stat = proc.wait()
 		if (stat != 0):
 			msg = 'test failed (%d)' % stat
