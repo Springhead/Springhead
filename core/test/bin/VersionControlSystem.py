@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -51,10 +51,11 @@
 #  VERSION:
 #	Ver 1.0  2017/01/11 F.Kanehori	First version (Subversion only).
 #	Ver 1.1  2017/09/13 F.Kanehori	Python library revised.
-#	Ver 1.2  2017/11/16 F.Kanehori	Python library path �̕ύX.
-#	Ver 1.3  2017/12/20 F.Kanehori	GitHub �Ŏ���.
+#	Ver 1.2  2017/11/16 F.Kanehori	Python library path の変更.
+#	Ver 1.3  2017/12/20 F.Kanehori	GitHub 版実装.
 #	Ver 1.4  2018/01/18 F.Kanehori	Add get_file_content().
 #	Ver 1.41 2018/02/19 F.Kanehori	Bug fixed.
+#	Ver 1.42 2018/03/14 F.Kanehori	Deal with new Proc class.
 # ======================================================================
 import sys
 import os
@@ -81,7 +82,7 @@ class VersionControlSystem:
 	#
 	def __init__(self, system, args=None, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.4
+		self.version = 1.42
 		#
 		self.system = system
 		self.verbose = verbose
@@ -142,7 +143,7 @@ class VersionControlSystem:
 			url = self.url
 			cmnd = 'svn info'
 			proc = Proc(verbose=self.verbose)
-			proc.exec(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT)
+			proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT)
 			status = proc.wait()
 			out, err = proc.output()
 			#
@@ -222,9 +223,9 @@ class VersionControlSystem:
 			cmnd2 = 'nkf -s'
 			proc1 = Proc(verbose=self.verbose)	# git
 			proc2 = Proc(verbose=self.verbose)	# nkf
-			proc1.exec(cmnd1, stdout=Proc.PIPE, stderr=Proc.STDOUT)
-			proc2.exec(cmnd2, stdin=proc1.proc.stdout,
-					  stdout=Proc.PIPE, stderr=Proc.STDOUT)
+			proc1.execute(cmnd1, stdout=Proc.PIPE, stderr=Proc.STDOUT)
+			proc2.execute(cmnd2, stdin=proc1.proc.stdout,
+					     stdout=Proc.PIPE, stderr=Proc.STDOUT)
 			status1 = 0
 			status2 = 0
 			#status2 = proc2.wait()		# Why?

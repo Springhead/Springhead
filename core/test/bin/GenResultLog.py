@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -20,8 +20,9 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/22 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 # =============================================================================
-version = 1.0
+version = 1.01
 
 import sys
 import os
@@ -107,7 +108,7 @@ if out_type == 'r':
 	if outfile:
 		fio = TextFio(outfile, 'w', encoding='cp932')
 		if fio.open() < 0:
-			Error(prog).print('can\'t open "%s"' % outfile)
+			Error(prog).abort('can\'t open "%s"' % outfile)
 		fio.writelines(lines)
 		fio.close()
 

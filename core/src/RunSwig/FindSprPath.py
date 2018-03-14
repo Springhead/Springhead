@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -40,6 +40,7 @@
 #	Ver 1.3  2017/11/08 F.Kanehori	Add 'buildtool' to selector.
 #	Ver 1.4  2017/11/29 F.Kanehori	Add 'pythonlib' to selector.
 #	Ver 1.41 2018/03/09 F.Kanehori	Bug fixed.
+#	Ver 1.42 2018/03/14 F.Kanehori	Change code for error message.
 # ----------------------------------------------------------------------
 import sys
 import os
@@ -83,7 +84,7 @@ class FindSprPath:
 			return '%s/core/src/RunSwig/pythonlib' % self.top
 		elif select is 'buildtool':
 			return '%s/buildtool' % self.top
-		print('%s: bad selector "%s"' % (self.prog, select), file=sys.stderr)
+		self.__err('%s: bad selector "%s"' % (self.prog, select))
 		return None
 
 	#  Get relative path.

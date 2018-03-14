@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:	Proc(self, verbose=0, dry_run=False)
@@ -8,8 +8,8 @@
 #	EINTR, EINVAL, ETIME, EPROTO, ECANCELED, ENEEDHELP
 #
 #  METHODS:
-#	proc = exec(self, args, stdin=None, stdout=None, stderr=None,
-#		    shell=False, env=None, addpath=None, append=False)
+#	proc = execute(self, args, stdin=None, stdout=None, stderr=None,
+#		       shell=False, env=None, addpath=None, append=False)
 #	status = wait(self, timeout=None)
 #	kill(self, pid=None, image=None, verbose=0)
 #	out, err = output(self)
@@ -25,6 +25,7 @@
 #	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
 #					when dry_run flag specified.
 #	Ver 1.15 2018/03/12 F.Kanehori	Now OK for doxygen.
+#	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
 # ======================================================================
 import sys
 import os
@@ -86,7 +87,7 @@ class Proc:
 	#			(bool).
 	#   @returns		Self object.
 	#
-	def exec(self, args,
+	def execute(self, args,
 		       stdin=None, stdout=None, stderr=None,
 		       shell=False, env=None, addpath=None,
 		       append=False):
@@ -291,7 +292,7 @@ class Proc:
 	def __tasklist(self):
 		cmnd = 'ps a' if Util.is_unix() else 'tasklist'
 		proc = Proc()
-		proc.exec(cmnd, stdout=Proc.PIPE, shell=True)
+		proc.execute(cmnd, stdout=Proc.PIPE, shell=True)
 		out, err = proc.output()
 		proc.wait()
 		outlist = out.replace('\r', '').split('\n')

@@ -1,11 +1,11 @@
-#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  FILE:
 #	ProcTest.py
 #
 #  DESCRIPTION:
-#	Test program for class Proc (Ver 1.0).
+#	Test program for class Proc (Ver 1.2).
 # ======================================================================
 import sys
 import os
@@ -32,7 +32,7 @@ def PrintResult(status, out, err):
 	print(err if err else '  (nil)')
 
 def Exec(proc, cmnd, **keywords):
-	proc.exec(cmnd, **keywords)
+	proc.execute(cmnd, **keywords)
 	stat = proc.wait()
 	Print('-> returned status: %d' % stat)
 
@@ -80,10 +80,10 @@ Ls(fname)
 Ls('test/proc.[12]')
 cmd = 'diff %s %s' % (fname, 'test/proc.1')
 Print(cmd)
-Ps.exec(cmd, shell=True)
+Ps.execute(cmd, shell=True)
 cmd = 'diff %s %s' % (fname, 'test/proc.2')
 Print(cmd)
-Ps.exec(cmd, shell=True)
+Ps.execute(cmd, shell=True)
 print()
 
 # (environ)
@@ -93,11 +93,11 @@ print('---- before ----')
 print(os.environ['PATH'])
 print('---- in proc ----')
 cmd = commands['path']
-P.exec(cmd, stdout='test/proc.3', addpath=addpath, shell=True)
+P.execute(cmd, stdout='test/proc.3', addpath=addpath, shell=True)
 st = P.wait()
 Print('-> returned status: %d' % st)
 cmd = '%s %s' % (commands['cat'], Util.pathconv('test/proc.3'))
-P.exec(cmd, shell=True)
+P.execute(cmd, shell=True)
 stat = P.wait()
 print('---- after ----')
 print(os.environ['PATH'])
@@ -118,12 +118,12 @@ timeout_test_go = False
 if timeout_test_go:
 	print('-- exec (sleep 10, timeout 15) --')
 	cmd = '%s 10' % ('sleep' if Util.is_unix() else 'timeout')
-	P.exec(cmd, shell=True, stdout=Proc.NULL)
+	P.execute(cmd, shell=True, stdout=Proc.NULL)
 	st = P.wait(timeout=15)
 	Print('  status = %d %s' %(st, '(timeout)' if st == Proc.ETIME else ''))
 	print()
 	Print('-- exec (sleep 10, timeout 5) --')
-	P.exec(cmd, shell=True, stdout=Proc.NULL)
+	P.execute(cmd, shell=True, stdout=Proc.NULL)
 	st = P.wait(timeout=5)
 	Print('  status = %d %s' %(st, '(timeout)' if st == Proc.ETIME else ''))
 	print()
@@ -135,7 +135,7 @@ if Util.is_unix():
 	cmnd1 = 'cat tool/head.py'
 	cmnd2 = 'cat -n'
 	#cmnd3 = 'python tool/head.py -10'
-	cmnd3 = '/usr/local/bin/python3.4 tool/head.py -10'
+	cmnd3 = '/usr/local/bin/python tool/head.py -10'
 else:
 	cmnd1 = 'type tool\\head.py'
 	cmnd2 = 'python tool\\cat.py -n'
@@ -145,9 +145,9 @@ proc1 = Proc(verbose=1)
 proc2 = Proc(verbose=1)
 proc3 = Proc(verbose=1)
 
-proc1.exec(cmnd1, stdout=Proc.PIPE, shell=True)
-proc2.exec(cmnd2, stdin=proc1.proc.stdout, stdout=Proc.PIPE, shell=True)
-proc3.exec(cmnd3, stdin=proc2.proc.stdout, shell=True)
+proc1.execute(cmnd1, stdout=Proc.PIPE, shell=True)
+proc2.execute(cmnd2, stdin=proc1.proc.stdout, stdout=Proc.PIPE, shell=True)
+proc3.execute(cmnd3, stdin=proc2.proc.stdout, shell=True)
 stat1 = proc1.wait()
 stat2 = proc2.wait()
 stat3 = proc3.wait()
@@ -159,9 +159,9 @@ print()
 # (pipe and redirect)
 print('-- exec (pipe and redirect) --')
 infile = Util.pathconv('tool/head.py')
-proc1.exec(cmnd1, stdin=infile, stdout=Proc.PIPE, shell=True)
-proc2.exec(cmnd2, stdin=proc1.proc.stdout, stdout=Proc.PIPE, shell=True)
-proc3.exec(cmnd3, stdin=proc2.proc.stdout, stdout=Proc.PIPE, shell=True)
+proc1.execute(cmnd1, stdin=infile, stdout=Proc.PIPE, shell=True)
+proc2.execute(cmnd2, stdin=proc1.proc.stdout, stdout=Proc.PIPE, shell=True)
+proc3.execute(cmnd3, stdin=proc2.proc.stdout, stdout=Proc.PIPE, shell=True)
 stat1 = proc1.wait()
 stat2 = proc2.wait()
 stat3 = proc3.wait()
@@ -178,7 +178,7 @@ if kill_test_go:
 	cmnd = '%s' % ('sleep' if Util.is_unix() else 'timeout')
 	args = '%s 10' % cmnd
 	Print('running command "%s"' % args)
-	P.exec(args, stdout=Proc.NULL, shell=True)
+	P.execute(args, stdout=Proc.NULL, shell=True)
 	Print('  sleep %d seconds' % waittime)
 	time.sleep(waittime)
 	P.kill()
@@ -187,7 +187,7 @@ if kill_test_go:
 	#
 	'''
 	imagename = 'sleep' if Util.is_unix() else 'cmd.exe'
-	P.exec(args, stdout=Proc.NULL, shell=True)
+	P.execute(args, stdout=Proc.NULL, shell=True)
 	Print('  sleep %d seconds' % waittime)
 	time.sleep(waittime)
 	P.kill(image='%s' % imagename)

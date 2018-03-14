@@ -1,5 +1,7 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
+# =============================================================================
+#  Make documentation of python local library.
 # =============================================================================
 import sys
 import os
@@ -15,7 +17,7 @@ from Proc import *
 outdir = './html'
 logfile = 'doxygen.log'
 os.makedirs(outdir, exist_ok=True)
-Proc().exec('doxygen ClassLibrary.doxy', stdout=logfile).wait()
+Proc().execute('doxygen ClassLibrary.doxy', stdout=logfile).wait()
 
 sys.exit(0)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -25,8 +25,9 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 # =============================================================================
-version = 1.0
+version = 1.01
 
 import sys
 import os
@@ -163,7 +164,7 @@ repository = '%s/../%s' % (topdir, args[0])
 repository = Util.upath(os.path.abspath(repository))
 if not os.path.isdir(repository):
 	msg = '"%s" is not a directory' % repository
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 
 # get options
 toolset = options.toolset
@@ -171,10 +172,10 @@ plat = options.plat
 conf = options.conf
 if plat not in ['x86', 'x64']:
 	msg = 'invalid platform name "%s"' % plat
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 if conf not in ['Debug', 'Release', 'Trace']:
 	msg = 'invalid configuration name "%s"' % conf
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 verbose = options.verbose
 dry_run = options.dry_run
 
@@ -197,7 +198,7 @@ os.chdir(repository)
 
 if not os.path.exists('core/test/bin'):
 	msg = 'test repository "%s/core" may be empty' % repository
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 
 # ----------------------------------------------------------------------
 #  Test Go!
@@ -229,11 +230,11 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		if len(tmp) == 2:
 			t_opts = '%s %s' % (opts, tmp[1])
 		t_args = '%s %s' % (tmp[0], args)
-		proc.exec('%s %s %s' % (cmnd, t_opts, t_args), shell=True)
+		proc.execute('%s %s %s' % (cmnd, t_opts, t_args), shell=True)
 		stat = proc.wait()
 		if (stat != 0):
 			msg = 'test failed (%d)' % stat
-			Error(proc).print(msg, exitcode=stat)
+			Error(proc).abort(msg, exitcode=stat)
 		flush()
 	#
 	os.chdir(repository)
@@ -248,7 +249,7 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	rslt_path = '../log/%s' % result_log
 	hist_path = '../log/%s' % history_log
 	cmnd = 'python VersionControlSystem.py -g -f %s all' % rslt_path
-	Proc().exec(cmnd, stdout=hist_path).wait()
+	Proc().execute(cmnd, stdout=hist_path).wait()
 	flush()
 	os.chdir(repository)
 
@@ -270,7 +271,7 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 		fio.writelines(lines)
 		fio.close()
 	else:
-		Error(prog).print('cannot make "Test.date".', alive=True)
+		Error(prog).error('cannot make "Test.date".')
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
@@ -297,19 +298,19 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	Print('  SpringheadDoc')
 	cmnd = 'python SpringheadDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec(cmnd).wait()
+	proc.execute(cmnd).wait()
 	#
 	os.chdir('../src')
 	Print('  SpringheadImpDoc')
 	cmnd = 'python SpringheadImpDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec(cmnd).wait()
+	proc.execute(cmnd).wait()
 	#
 	os.chdir('../doc/SprManual')
 	Print('  SprManual')
 	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec(cmnd).wait()
+	proc.execute(cmnd).wait()
 	#
 	flush()
 	os.chdir(repository)

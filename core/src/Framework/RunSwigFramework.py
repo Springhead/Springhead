@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -27,8 +27,9 @@
 #	Ver 1.5  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
 #	Ver 1.6  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
 #	Ver 1.61 2018/03/07 F.Kanehori	FileOp.rm() 引数変更に対応.
+#	Ver 1.62 2018/03/14 F.Kanehori	Deal with new Proc class.
 # ==============================================================================
-version = 1.61
+version = 1.62
 debug = False
 trace = False
 
@@ -157,7 +158,7 @@ f_op = FileOp(verbose=verbose)
 #  src/Foundation へ移って RunSwig を実行する.
 #
 cmd = '%s Framework Foundation' % runswig_foundation
-proc.exec(cmd, shell=True)
+proc.execute(cmd, shell=True)
 status = proc.wait()
 if status != 0:
 	msg = '%s failed (%d)' % (runswig_foundation, status)
@@ -195,14 +196,14 @@ srcf_names = ['Foundation/UTTypeDesc.h', 'Framework/FWOldSpringheadNodeHandler.h
 for file in incf_names:
 	cmnd = '%s -s -O %s/%s %s/include/%s' % (nkf, incdir, file, swigtmp, file)
 	cmnd = util.pathconv(cmnd)
-	proc.exec(cmnd, addpath=addpath, shell=True)
+	proc.execute(cmnd, addpath=addpath, shell=True)
 	status = proc.wait()
 	if status != 0:
 		error.print('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
 for file in srcf_names:
 	cmnd = '%s -s -O %s/%s %s/src/%s' % (nkf, srcdir, file, swigtmp, file)
 	cmnd = util.pathconv(cmnd)
-	proc.exec(cmnd, addpath=addpath, shell=True)
+	proc.execute(cmnd, addpath=addpath, shell=True)
 	status = proc.wait()
 	if status != 0:
 		error.print('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
@@ -275,7 +276,7 @@ if clean:
 	cmd += ' clean'
 if trace:
 	print('exec: %s' % cmd)
-proc.exec(cmd, shell=True)
+proc.execute(cmd, shell=True)
 status = proc.wait()
 if status != 0:
 	error.print('%s failed (%d)' % (make, status))

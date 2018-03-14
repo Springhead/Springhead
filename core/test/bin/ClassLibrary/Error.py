@@ -1,10 +1,10 @@
-#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:	Error(prog, out=sys.stderr, verbose=0)
 #
 #  METHODS:
-#	print(msg, prompt='Error', exitcode=-1, alive=False)
+#	put(msg, prompt='Error', exitcode=-1, alive=False)
 #	abort(msg, prompt='Error', exitcode=-1)
 #
 # ----------------------------------------------------------------------
@@ -16,6 +16,8 @@
 #	Ver 2.2  2017/09/13 F.Kanehori	Add abort().
 #	Ver 2.3  2018/01/10 F.Kanehori	Add arg 'alive' to print().
 #	Ver 2.21 2018/03/09 F.Kanehori	Now OK for doxygen.
+#	Ver 3.0  2018/03/14 F.Kanehori	Change method name (print->put).
+#					Add error(), warn(), info().
 # ======================================================================
 import sys
 
@@ -29,27 +31,29 @@ class Error:
 	#
 	def __init__(self, prog, out=sys.stderr, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.3
+		self.version = 3.0
 		#
 		self.prog = prog
 		self.out  = out
 		self.verbose = verbose
+		self.to_die = ['Error', 'Abort', 'Fatal', 'Pan', 'Panic']
 		#
 
 	##  Print error message to output stream self.out.
-	#   @param msg		Error message to print (str).
+	#   @param msg		Message to print (str).
 	#   @n			Output format: 	'<prog>:[ <prompt>:] <msg>'.
 	#   @param prompt	Prompt string or None.
 	#   @n			If 'prompt' is one of 'Error', 'Fatal',
-	#			'Abort' or 'Pan', program will be terminated
-	#			with given exitcode.
+	#			'Abort' or 'Pan' (or 'Panic'), program will
+	#			be terminated with given exitcode.
 	#   @n			Argument 'alive' cancels this behaviour.
 	#   @param exitcode	Exit code (int).
 	#   @param alive	Force return to caller (bool).
 	#
-	def print(self, msg, prompt='Error', exitcode=-1, alive=False):
+	def put(self, msg, prompt='Error', exitcode=-1, alive=False):
 		die = False
-		if prompt in ['Error', 'Fatal', 'Abort', 'Pan']:
+		#if prompt in ['Error', 'Fatal', 'Abort', 'Pan', 'Panic']:
+		if prompt in self.to_die:
 			die = True if not alive else False
 		str1 = '%s: ' % self.prog if self.prog else ''
 		str2 = '%s: ' % prompt if prompt else ''
@@ -62,19 +66,53 @@ class Error:
 		if die and not alive:
 			sys.exit(exitcode)
 
-	##  Print error message and die (Synonym for self.print()).
-	#   NOTE
-	#   @n	If you do not want to ceise program, you should not call
-	#	this method to avoid confusion arises from method name!
+	##  Print information message.
+	#   @n	Abbreviation for:
+	#	self.put(msg, prompt=None, alive=True)
+	#   @n	NOTE:
+	#   @n	Always output to sys.stdout nevertheless out parameter
+	#	to the initializer.
+	#   @param msg		Information message (str).
+	#
+	def info(self, msg):
+		__out_save = self.out
+		self.out = sys.stdout
+		self.put(msg, prompt=None, alive=True)
+		self.out = __out_save
+
+	##  Print warning message.
+	#   @n	Abbreviation for:
+	#	self.put(msg, prompt='Warning', alive=True)
+	#   @param msg		Warning message (str).
+	#
+	def warn(self, msg, alive=True):
+		self.put(msg, prompt='Warning', alive=True)
+
+	##  Print error message.
+	#   @n	Abbreviation for:
+	#	self.put(msg, prompt='Error', alive=True)
+	#   @n	Control always return to the caller.
 	#   @param msg		Error message (str).
-	#   @param prompt	See self.print().
-	#   @param exitcode	See self.print().
+	#   @param prompt	See self.put().
+	#   @param exitcode	See self.put().
+	#
+	def error(self, msg, prompt='Error'):
+		self.put(msg, prompt=prompt, alive=True)
+
+	##  Print error message and die.
+	#   @n	Abbreviation for:
+	#	self.put(msg, prompt='Error', exitcode=-1, alive=False)
+	#   @n	Prompt should be one of
+	#	'Error', 'Fatal', 'Abort', 'Pan' or 'Panic'.
+	#	If other prompt is given, use 'Error' as default one.
+	#   @n	Control never return to the caller.
+	#   @param msg		Error message (str).
+	#   @param prompt	See self.put().
+	#   @param exitcode	See self.put().
 	#
 	def abort(self, msg, prompt='Error', exitcode=-1):
-		self.print(msg, prompt, exitcode)
-
-	# --------------------------------------------------------------
-	#  For class private use
-	# --------------------------------------------------------------
+		if prompt not in self.to_die:
+			prompt = 'Error'
+		self.put(msg, prompt=prompt, exitcode=exitcode)
 
 # end: Error.py

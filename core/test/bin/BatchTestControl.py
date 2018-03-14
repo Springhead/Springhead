@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -43,11 +43,12 @@
 #	Ver 2.1  2017/09/14 F.Kanehori	Python library revised.
 #	Ver 2.2  2017/09/27 F.Kanehori	Log file format changed.
 #					Introduce serialization facility.
-#	Ver 2.3  2017/11/16 F.Kanehori	Python library path �̕ύX.
-#	Ver 2.4  2017/11/30 F.Kanehori	Python library path �̕ύX.
-#	Ver 2.5  2017/12/07 F.Kanehori	Interface �̌�����.
+#	Ver 2.3  2017/11/16 F.Kanehori	Python library path の変更.
+#	Ver 2.4  2017/11/30 F.Kanehori	Python library path の変更.
+#	Ver 2.5  2017/12/07 F.Kanehori	Interface の見直し.
+#	Ver 2.51 2018/03/14 F.Kanehori	Dealt with new Error class.
 # =============================================================================
-version = '2.5'
+version = 2.51
 
 import sys
 import os
@@ -354,7 +355,7 @@ c_run   = ControlParams.RUN
 vs_name = vs.get_toolset()[1].split()[-1]
 returncode, revision, err = vcs_revision()
 if returncode != 0:
-	Error(prog).print('can not get current revision', exitcode=0)
+	Error(prog).error('can not get current revision')
 	Error(prog).abort(err)
 environ = 'VS %s, Revision %s, ClosedSrc %s, Configs %s' \
 		% (vs_name, revision, csc_str, ','.join(configs))

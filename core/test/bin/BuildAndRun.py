@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -58,6 +58,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 # ======================================================================
 import sys
 import os
@@ -84,14 +85,13 @@ class BuildAndRun:
 	#
 	def __init__(self, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.0
+		self.version = 1.01
 		#
 		self.ccver = ccver
 		self.dry_run = dry_run
 		self.verbose = verbose
 		#
 		self.errmsg = None
-		self.err = Error(self.clsname)
 
 	#  Compile the solution.
 	#
@@ -185,18 +185,18 @@ class BuildAndRun:
 		if pipeprocess:
 			proc1 = Proc(self.verbose, self.dry_run)
 			proc2 = Proc(self.verbose, self.dry_run)
-			proc1.exec('%s %s' % (exefile, args),
-				   addpath=addpath, stdin=Proc.PIPE,
-				   stdout=tmplog, stderr=Proc.STDOUT)
-			proc2.exec(pipeprocess, addpath=addpath,
-				   stdout=Proc.PIPE)
+			proc1.execute('%s %s' % (exefile, args),
+				      addpath=addpath, stdin=Proc.PIPE,
+				      stdout=tmplog, stderr=Proc.STDOUT)
+			proc2.execute(pipeprocess, addpath=addpath,
+				      stdout=Proc.PIPE)
 			proc2.wait()
 			stat = proc1.wait(timeout)
 		else:
 			proc1 = Proc(self.verbose, self.dry_run)
-			proc1.exec('%s %s' % (exefile, args),
-				addpath=addpath,
-				stdout=tmplog, stderr=Proc.STDOUT)
+			proc1.execute('%s %s' % (exefile, args),
+				   addpath=addpath,
+				   stdout=tmplog, stderr=Proc.STDOUT)
 			stat = proc1.wait(timeout)
 
 		# merge log info.
@@ -227,7 +227,7 @@ class BuildAndRun:
 			os.chdir(path)
 		except:
 			msg = "%s: chdir failed (%s)" % (func, path)
-			self.err.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 		return dirsave
 
 	#  Take directory part of the path.
@@ -260,7 +260,7 @@ class BuildAndRun:
 		if logf.open() < 0:
 			msg = 'build' if step == RST.BLD else 'run'
 			msg += ': open error: "%s"' % fname
-			self.err.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 			logf = None
 		return logf
 
@@ -274,7 +274,7 @@ class BuildAndRun:
 		cmnd = 'make -f %s' % slnfile
 		args = '%s -o %s' % (opts, outfile)
 		proc = Proc(self.verbose, self.dry_run)
-		proc.exec('%s %s' % (cmnd, args),
+		proc.execute('%s %s' % (cmnd, args),
 				stdout=Proc.PIPE, stderr=Proc.STDOUT)
 		stat = proc.wait()
 		out, err = proc.output()
@@ -308,7 +308,7 @@ class BuildAndRun:
 		vs.set(VisualStudio.LOGFILE, tmplog)
 		vs.set(VisualStudio.DRYRUN, self.dry_run)
 		if vs.error():
-			self.err.print(vs.error())
+			Error(self.clsname).abort(vs.error())
 		stat = vs.build(platform, opts)
 
 		cmnd = vs.get(VisualStudio.COMMAND)
@@ -325,7 +325,7 @@ class BuildAndRun:
 		if fobj.open() < 0:
 			msg = 'build' if step == RST.BLD else 'run'
 			msg += '%s: open error: "%s"' % (step, fname)
-			self.err.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 		lines = fobj.read()
 		fobj.close()
 
@@ -370,14 +370,15 @@ class BuildAndRun:
 			if tmpf.open() < 0:
 				msg = 'build' if step == RST.BLD else 'run'
 				msg += '_w: open error: "%s"' % (name, data)
-				self.err.print(msg, alive=True)
+				Error(self.clsname).error(msg)
 			else:
 				logf.writelines(title)
 				lines = tmpf.read()	
 				logf.writelines(lines)
 				tmpf.close()
 		else:
-			self.err.print('merge_log: bad kind: %s' % kind)
+			msg = 'merge_log: bad kind: %s' % kind
+			Error(self.clsname).abort(msg)
 		logf.close()
 
 
@@ -420,11 +421,11 @@ if __name__ == '__main__':
 
 	if len(args) != 1:
 		prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-		Proc().exec('python %s.py -h' % prog).wait()
+		Proc().execute('python %s.py -h' % prog).wait()
 		sys.exit(-1)
 	if not options.toolset:
 		prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-		Proc().exec('python %s.py -h' % prog).wait()
+		Proc().execute('python %s.py -h' % prog).wait()
 		sys.exit(-1)
 	directory = args[0]
 	toolset = options.toolset
@@ -440,7 +441,7 @@ if __name__ == '__main__':
 	if not os.path.exists(directory):
 		try_dir = '../../src/' + directory
 		if not os.path.exists(try_dir):
-			Error('test').print('no such directory: %s' % directory)
+			Error('test').abort('no such directory: %s' % directory)
 		directory = try_dir
 	if not solution:
 		solution = directory.split('/')[-1]
