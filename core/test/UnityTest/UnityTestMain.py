@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ï»¿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  SYNOPSIS:
@@ -15,11 +15,11 @@
 #	Build and run sepcified scenes automatically.
 #
 #  VERSION:
-#	Ver 1.0  2016/06/20 F.Kanehori	‰”Å
-#	Ver 1.1  2016/10/12 F.Kanehori	Python module ‚Ì‰ü’è‚É‘Î‰
-#	Ver 1.2  2017/09/06 F.Kanehori	Python module ‚Ì‰ü’è‚É‘Î‰
-#	Ver 1.3  2017/11/16 F.Kanehori	Python module ‚ÌˆÚ“®‚É‘Î‰
-#	Ver 1.4  2017/12/06 F.Kanehori	Python module ‚ÌˆÚ“®‚É‘Î‰
+#	Ver 1.0  2016/06/20 F.Kanehori	åˆç‰ˆ
+#	Ver 1.1  2016/10/12 F.Kanehori	Python module ã®æ”¹å®šã«å¯¾å¿œ
+#	Ver 1.2  2017/09/06 F.Kanehori	Python module ã®æ”¹å®šã«å¯¾å¿œ
+#	Ver 1.3  2017/11/16 F.Kanehori	Python module ã®ç§»å‹•ã«å¯¾å¿œ
+#	Ver 1.4  2017/12/06 F.Kanehori	Python module ã®ç§»å‹•ã«å¯¾å¿œ
 # ======================================================================
 version = 1.4
 import sys

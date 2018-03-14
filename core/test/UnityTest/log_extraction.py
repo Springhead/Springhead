@@ -1,4 +1,4 @@
-#! C:/Python34/python
+﻿#!/usr/local/bin/python
 # ==============================================================================
 #  SYNOPSIS:
 #       log_extraction [options]
