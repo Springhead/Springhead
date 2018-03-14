@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -13,8 +13,9 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/21 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Proc class.
 # =============================================================================
-version = 1.0
+version = 1.01
 
 import sys
 import os
@@ -79,7 +80,7 @@ opts = 'DATE=%s TIME=%s' % (curr_date, curr_time)
 cmnd = '%s %s' % (make, opts)
 
 proc = Proc(dry_run=dry_run, verbose=verbose)
-stat = proc.exec(cmnd).wait()
+stat = proc.execute(cmnd).wait()
 if stat == 0:
 	print('%s: SprManual generated.' % prog)
 
@@ -88,7 +89,7 @@ if stat == 0:
 #
 cmnd = '%s clean' % make
 proc = Proc(dry_run=dry_run, verbose=verbose)
-stat = proc.exec(cmnd).wait()
+stat = proc.execute(cmnd).wait()
 
 sys.exit(0)
 
