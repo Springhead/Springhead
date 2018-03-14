@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -35,8 +35,9 @@
 #	Ver 1.61 2018/02/09 F.Kanehori	Bug fixed.
 #	Ver 1.62 2018/03/05 F.Kanehori	Bug fixed.
 #	Ver 1.63 2018/03/07 F.Kanehori	Add trace code.
+#	Ver 1.64 2018/03/14 F.Kanehori	Deal with new Proc class.
 # ==============================================================================
-version = 1.63
+version = 1.64
 trace = False
 
 import sys
@@ -108,7 +109,7 @@ def create(fname, proj, dept):
 	cmnd = '%s%s' % (createmkf, flag)
 	args = '%s %s %s' % (fname, proj, dept)
 	#print('create_mkf.py%s %s' % (flag, args))
-	proc.exec('%s %s' % (cmnd, args), shell=True)
+	proc.execute('%s %s' % (cmnd, args), shell=True)
 	proc.wait()
 
 #  Do the job for one project.

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.6
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:	FileOp(info=0, dry_run=False, verbose=0)
@@ -21,7 +21,7 @@
 #	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
 #	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
 #	Ver 1.5  2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
-#	Ver 1.51 2018/03/12 F.Kanehori	Now OK for doxygen.
+#	Ver 1.6  2018/03/14 F.Kanehori	Dealt with new Error class.
 # ======================================================================
 import sys
 import os
@@ -33,7 +33,6 @@ from pathlib import Path
 from time import sleep
 
 sys.path.append('/usr/local/lib')
-from Proc import *
 from Util import *
 from Error import *
 
@@ -108,7 +107,7 @@ class FileOp:
 		except OSError as why:
 			prog = '%s: mv' % self.clsname
 			msg = str(why)
-			Error(prog).print(msg, alive=True)
+			Error(prog).error(msg)
 			rc = 1
 			#
 		return rc
@@ -278,7 +277,7 @@ class FileOp:
 				if os.path.exists(dst):
 					prog = '%s: cp' % self.clsname
 					msg = '"%s" exists' % dst
-					Error(prog).print(msg, alive=True)
+					Error(prog).error(msg)
 					return 1
 				if self.verbose:
 					print('    shutil.copytree()')
@@ -290,7 +289,7 @@ class FileOp:
 			rc = 0
 		except OSError as why:
 			prog = '%s: cp' % self.clsname
-			Error(prog).print(str(why), alive=True)
+			Error(prog).error(str(why))
 			rc = 1
 		#
 		return rc
@@ -319,7 +318,7 @@ class FileOp:
 			rc = 0
 		except OSError as why:
 			prog = '%s: rm' % self.clsname
-			Error(prog).print(str(why), alive=True)
+			Error(prog).error(str(why))
 			rc = 1
 		return rc
 
@@ -357,7 +356,7 @@ class FileOp:
 		except OSError as why:
 			prog = '%s: rm' % self.clsname
 			msg = str(why)
-			Error(prog).print(msg, alive=True)
+			Error(prog).error(msg)
 			rc = 1
 		#
 		if another_drive:

@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -24,6 +24,7 @@
 #	Ver 1.3  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.4  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 1.41 2018/03/07 F.Kanehori	Add trace code.
+#	Ver 1.42 2018/03/14 F.Kanehori	Deal with new Proc class.
 # ==============================================================================
 version = 1.41
 debug = False
@@ -176,7 +177,7 @@ if clean:
 	cmd += ' clean'
 if trace:
 	print('exec: %s' % cmd)
-proc.exec(cmd)
+proc.execute(cmd)
 proc.wait()
 
 if trace:

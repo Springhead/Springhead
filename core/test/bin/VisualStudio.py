@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ï»¿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -63,9 +63,10 @@
 #	Ver 1.1  2016/11/09 F.Kanehori	Add method: get_toolset.
 #	Ver 1.2  2017/09/07 F.Kanehori	Python library revised.
 #	Ver 1.3  2017/09/14 F.Kanehori	Change return value: error().
-#	Ver 1.4  2017/11/16 F.Kanehori	Python library path •ÏX.
-#	Ver 1.5  2017/11/30 F.Kanehori	Python library path •ÏX.
-#	Ver 2.0  2018/02/07 F.Kanehori	‘S‘Ì‚ÌŒ©’¼‚µ.
+#	Ver 1.4  2017/11/16 F.Kanehori	Python library path å¤‰æ›´.
+#	Ver 1.5  2017/11/30 F.Kanehori	Python library path å¤‰æ›´.
+#	Ver 2.0  2018/02/07 F.Kanehori	å…¨ä½“ã®è¦‹ç›´ã—.
+#	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 # ======================================================================
 import sys
 import os
@@ -97,7 +98,7 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.0
+		self.version = 2.01
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)
@@ -153,17 +154,17 @@ class VisualStudio:
 			self.dry_run = arg1
 		else:
 			msg = 'set: invalid function specified: %s' % str(func)
-			Error(self.clsname).print(msg)
+			Error(self.clsname).abort(msg)
 
 	def __need_arg(self, num, arg):
 		if arg is None:
 			msg = 'set: argument required: arg%d' % num
-			Error(self.clsname).print(msg)
+			Error(self.clsname).abort(msg)
 
 	def __type_check(self, num, arg, type):
 		if not isinstance(arg, type):
 			msg = 'set: invalid argument: arg%d' % num
-			Error(self.clsname).print(msg)
+			Error(self.clsname).abort(msg)
 
 	#  Build solution.
 	#
@@ -202,7 +203,7 @@ class VisualStudio:
 		elif kind == self.COMMAND:
 			return self.cmnd
 		msg = 'set: invalid argument'
-		Error(self.clsname).print(msg)
+		Error(self.clsname).abort(msg)
 
 	#  Print setup information.
 	#
@@ -296,7 +297,7 @@ class VisualStudio:
 		self.cmnd = cmnd	# for log output
 		cmnd += ' /Out %s' % Util.pathconv(self.logfile)
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
-		proc.exec(cmnd, addpath=Util.pathconv(self.vs_path))
+		proc.execute(cmnd, addpath=Util.pathconv(self.vs_path))
 		status = proc.wait()
 		if status != 0 and self.verbose > 1:
 			self.__show_error(self.logfile)

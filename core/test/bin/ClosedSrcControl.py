@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -29,6 +29,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
+#	Ver 1.01 2018/02/14 F.Kanehori	Dealt with new Error class.
 # ======================================================================
 import sys
 import os
@@ -53,7 +54,7 @@ class ClosedSrcControl:
 	#
 	def __init__(self, path, use_path, unuse_path, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.0
+		self.version = 1.01
 		#
 		self.org_path = self.__normalize_path(path)
 		self.template = { CSU.USE:   self.__normalize_path(use_path),
@@ -62,7 +63,6 @@ class ClosedSrcControl:
 		self.verbose = verbose
 		#
 		self.fop = FileOp(dry_run=dry_run, verbose=verbose)
-		self.err = Error(self.clsname)
 		#
 		self.saved_path = '%s.org' % Util.upath(path)
 		self.org_usage = self.__read_usage(path)
@@ -78,7 +78,8 @@ class ClosedSrcControl:
 	#
 	def set_usage(self, usage):
 		if usage not in [CSU.USE, CSU.UNUSE]:
-			self.err.print('set_usage: bad usage (%s)' % usage)
+			msg = 'set_usage: bad usage (%s)' % usage
+			Error(self.clsname).abort(msg)
 		#
 		if usage == self.curr_usage:
 			if self.verbose > 1:
@@ -121,12 +122,13 @@ class ClosedSrcControl:
 
 	def __read_usage(self, path):
 		if not os.path.exists(path):
-			self.err.print('no such file: "%s"' % path)
+			msg = 'no such file: "%s"' % path
+			Error(self.clsname).abort(msg)
 
 		# read the file
 		f = TextFio(path)
 		if f.open() < 0:
-			self.err.print(f.error())
+			Error(self.clsname).abort(f.error())
 		lines = f.read()
 		f.close()
 
@@ -143,7 +145,8 @@ class ClosedSrcControl:
 					usage = CSU.UNUSE
 				break
 		if usage is None:
-			self.err.print('bad closed-src-header')
+			msg = 'bad closed-src-header'
+			Error(self.clsname).abort(msg)
 		return usage
 
 	def __print(self, msg):
@@ -168,7 +171,7 @@ if __name__ == '__main__':
 	def grep(path, patt):
 		f = TextFio(path)
 		if f.open() < 0:
-			Error(prog).print(f.error())
+			Error(prog).abort(f.error())
 		lines = f.read()
 		f.close()
 		#

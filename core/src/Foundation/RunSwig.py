@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -20,8 +20,9 @@
 #	Ver 1.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.5  2017/11/29 F.Kanehori	Python library path の変更.
+#	Ver 1.51 2018/03/14 F.Kanehori	Deal with New Proc class.
 # ==============================================================================
-version = 1.4
+version = 1.51
 
 import sys
 import os
@@ -213,7 +214,7 @@ output(makefile, lines)
 #  make を実行する.
 #
 cmd = '%s -f %s' % (make, util.pathconv(makefile))
-proc.exec(cmd, addpath=addpath, shell=True)
+proc.execute(cmd, addpath=addpath, shell=True)
 status = proc.wait()
 if status != 0:
 	msg = '%s failed (%d)' % (make, status)

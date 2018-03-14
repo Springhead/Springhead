@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  SYNOPSIS:
@@ -14,9 +14,9 @@
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
 #	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
-#	Ver 1.21 2018/03/12 F.Kanehori	Test on unix.
+#	Ver 1.21 2018/03/14 F.Kanehori	Dealt with new Error class.
 # ======================================================================
-version = '1.2'
+version = 1.21
 
 import sys
 import os
@@ -75,8 +75,8 @@ if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 if len(args) != 1:
-	Error(prog).print('incorrect number of arguments\n', alive=True)
-	Proc().exec('python %s.py -h' % prog).wait()
+	Error(prog).error('incorrect number of arguments\n')
+	Proc().execute('python %s.py -h' % prog).wait()
 	sys.exit(-1)
 
 # get test repository name
@@ -146,7 +146,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 	flush()
 	os.chdir(spr_topdir)
 	cmnd = 'git pull --all'
-	proc.exec(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
+	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
 	rc = proc.wait()
 	outstr, errstr = proc.output()
 	Print(outstr.split('\n'))
@@ -154,7 +154,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 		Print('-- error --')
 		Print(errstr.split('\n'))
 	if rc != 0:
-		Error(prog).print('updating failed: status %d' % rc)
+		Error(prog).abort('updating failed: status %d' % rc)
 	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
@@ -185,17 +185,17 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	print('cloning test repository')
 	flush()
 	cmnd = 'git clone %s %s' % (url_git, repository)
-	rc = proc.exec(cmnd, shell=True).wait()
+	rc = proc.execute(cmnd, shell=True).wait()
 	if rc != 0:
-		Error(prog).print('cloning failed: status %d' % rc)
+		Error(prog).abort('cloning failed: status %d' % rc)
 
 	os.chdir(repository)
 	pwd()
 	print('updating submodules')
 	cmnd = 'git submodule update --init'
-	rc = proc.exec(cmnd, shell=True).wait()
+	rc = proc.execute(cmnd, shell=True).wait()
 	if rc != 0:
-		Error(prog).print('cloning failed: status %d' % rc)
+		Error(prog).abort('cloning failed: status %d' % rc)
 	os.chdir(prep_dir)
 
 # ----------------------------------------------------------------------
@@ -214,7 +214,7 @@ pwd()
 Print('Test start:')
 cmnd = 'python TestMainGit.py'
 args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
-rc = proc.exec([cmnd, args], shell=True).wait()
+rc = proc.execute([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 
 # ----------------------------------------------------------------------

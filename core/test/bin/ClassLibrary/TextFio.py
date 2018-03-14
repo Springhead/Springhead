@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:	TextFio(path, mode='r', encoding='utf8', size=8192, 

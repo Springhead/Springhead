@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -52,6 +52,7 @@
 #	Ver 3.5  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 3.51 2018/02/09 F.Kanehori	Bug fixed.
 #	Ver 3.52 2018/03/07 F.Kanehori	Add trace code.
+#	Ver 3.52 2018/03/14 F.Kanehori	Deal with new Proc class.
 # ==============================================================================
 version = 3.52
 debug = False
@@ -208,11 +209,11 @@ for line in lines:
 	else:
 		cmd = '%s -f %s' % (make, makefile)
 		print('    %s: %s' % (prog, cmd))
-		proc.exec(cmd, addpath=addpath, shell=True)
+		proc.execute(cmd, addpath=addpath, shell=True)
 		proc.wait()
 		cmd = '%s -r' % util.pathconv(makemanager)
 		print('    %s: %s' % (prog, Util.upath(cmd)))
-		proc.exec(cmd, addpath=addpath, shell=True)
+		proc.execute(cmd, addpath=addpath, shell=True)
 		proc.wait()
 
 	#  Return to original directory.
