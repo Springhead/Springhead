@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  FILE:
@@ -29,7 +29,7 @@
 #	Ver 1.41 2018/03/12 F.Kanehori	Now OK for doxygen.
 # ======================================================================
 ##  Program version.
-version = 1.4
+version = 1.41
 
 import sys
 import os

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 import sys
@@ -15,7 +15,7 @@ from Proc import *
 outdir = './html'
 logfile = 'doxygen.log'
 os.makedirs(outdir, exist_ok=True)
-Proc().exec('doxygen SprCSharp.doxy', stdout=logfile).wait()
+Proc().execute('doxygen SprCSharp.doxy', stdout=logfile).wait()
 
 sys.exit(0)
 
