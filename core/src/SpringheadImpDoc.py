@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -13,8 +13,9 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/03/01 F.Kanehori	First version.
+#	Ver 1.01 2018/03/12 F.Kanehori	Dealt with new Proc class.
 # =============================================================================
-version = 1.0
+version = 1.01
 
 import sys
 import os
@@ -119,8 +120,8 @@ log_file = 'doxgen.log'
 #
 proc1 = Proc(verbose=verbose, dry_run=dry_run)
 proc2 = Proc(verbose=verbose, dry_run=dry_run)
-proc1.exec(cmnd1, addpath=addpath, stdout=Proc.PIPE)
-proc2.exec(cmnd2, addpath=addpath,
+proc1.execute(cmnd1, addpath=addpath, stdout=Proc.PIPE)
+proc2.execute(cmnd2, addpath=addpath,
 		  stdin=proc1.proc.stdout, stderr=log_file)
 stat1 = proc1.wait()
 stat2 = proc2.wait()
