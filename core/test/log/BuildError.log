@@ -1,62 +1,28 @@
-日付 : 17.12.27 
---- ビルドエラーのログ --- 
- 
-*** Base: Quaternion *** 
- 
- 
-*** Collision: CDContGJK *** 
- 
- 
-*** Collision: CDShape *** 
- 
- 
-*** Collision: QuickHull2D *** 
- 
- 
-*** FileIO: FICollada *** 
- 
- 
-*** FileIO: FIImport *** 
- 
- 
-*** FileIO: FILoader *** 
- 
- 
-*** FileIO: FILoadGRScene *** 
- 
- 
-*** FileIO: FILoadMesh *** 
- 
- 
-*** Foundation: Cast *** 
- 
- 
-*** Foundation: Timer *** 
- 
- 
-*** Framework: FWAppBoxStack *** 
- 
- 
-*** Framework: FWAppDXTest *** 
+日付 : 2018-03-15
+--- ビルドエラーのログ ---
+
+*** Base: Quaternion ***
+*** Collision: CDContGJK ***
+*** Collision: CDShape ***
+*** Collision: QuickHull2D ***
+*** FileIO: FICollada ***
+*** FileIO: FIImport ***
+*** FileIO: FILoader ***
+*** FileIO: FILoadGRScene ***
+*** FileIO: FILoadMesh ***
+*** Foundation: Cast ***
+*** Foundation: Timer ***
+*** Framework: FWAppBoxStack ***
+*** Framework: FWAppDXTest ***
 1>LINK : fatal error LNK1104: cannot open file 'd3dxof.lib'
- 
- 
-*** Framework: FWAppGLtest *** 
+*** Framework: FWAppGLtest ***
 8>FWAppGLtest.cpp(74): error C2065: '_crtBreakAlloc': undeclared identifier
- 
- 
-*** Framework: FWAppMultiWinTest *** 
+*** Framework: FWAppMultiWinTest ***
 1>i:\dailybuild\springheadtest\core\src\tests\framework\fwappmultiwintest\MYApp.h(11): fatal error C1083: Cannot open include file: 'Framework/SprFWAppGLUT.h': No such file or directory (compiling source file MYApp.cpp)
 1>main.cpp(24): fatal error C1083: Cannot open include file: 'Framework/SprFWAppGLUT.h': No such file or directory
- 
- 
-*** Graphics: GRColorSpheres *** 
- 
- 
-*** Graphics: GRSimple *** 
- 
- 
-*** Graphics: GRVertrexBlending *** 
+*** Graphics: GRColorSpheres ***
+*** Graphics: GRSimple ***
+*** Graphics: GRVertrexBlending ***
 5>main.cpp(47): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 5>main.cpp(47): error C2146: syntax error: missing ';' before identifier 'shaderP3fB4f'
 5>main.cpp(243): error C2039: 'InitShader': is not a member of 'Spr::GRRenderIf'
@@ -80,9 +46,7 @@
 5>main.cpp(299): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
 5>main.cpp(308): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
 5>main.cpp(309): error C2664: 'void Spr::GRRenderBaseIf::DrawIndexed(Spr::GRRenderBaseIf::TPrimitiveType,GLuint *,void *,std::size_t,std::size_t)': cannot convert argument 2 from 'unsigned __int64 *' to 'GLuint *'
- 
- 
-*** GraphicsD3D: GRD3DLoadMesh *** 
+*** GraphicsD3D: GRD3DLoadMesh ***
 1>i:\dailybuild\springheadtest\core\include\GraphicsD3D/SprGRAnimationMesh.h(91): error C2061: syntax error: identifier 'LPD3DXEFFECT'
 1>main.cpp(65): error C2143: syntax error: missing ';' before '*'
 1>main.cpp(65): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
@@ -97,26 +61,10 @@
 1>main.cpp(315): error C2227: left of '->SetDevice' must point to class/struct/union/generic type
 1>main.cpp(320): error C2227: left of '->Reshape' must point to class/struct/union/generic type
 1>main.cpp(346): error C2227: left of '->SetViewMatrix' must point to class/struct/union/generic type
- 
- 
-*** HumanInterface: KeyMouse *** 
- 
- 
-*** Physics: PHConstraintTest *** 
- 
- 
-*** Physics: PHPenaltyTest *** 
- 
- 
-*** Physics: PHShape *** 
- 
- 
-*** Physics: PHShapeGL *** 
- 
- 
-*** Physics: PHSimple *** 
- 
- 
-*** Physics: PHSimpleGL *** 
- 
- 
+*** HumanInterface: KeyMouse ***
+*** Physics: PHConstraintTest ***
+*** Physics: PHPenaltyTest ***
+*** Physics: PHShape ***
+*** Physics: PHShapeGL ***
+*** Physics: PHSimple ***
+*** Physics: PHSimpleGL ***

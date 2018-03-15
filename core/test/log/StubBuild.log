@@ -1,11 +1,9 @@
-日付 : 17.12.27 
---- スタブビルドのログ --- 
- 
-[ SwigAll.bat ]
-% devenv ..\src\Springhead14.0.sln /build "Release|x64"
+日付 : 2018-03-15
+--- スタブビルドのログ ---
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+*** core: src ***
+% devenv Springhead14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -60,7 +58,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** Collision: creating "makefile.swig.tmp"
-1>   RunSwig.py Collision Foundation -P python
+1>   RunSwig.py -P python Collision Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Collision Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -77,7 +75,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** Creature: creating "makefile.swig.tmp"
-1>   RunSwig.py Creature Foundation -P python
+1>   RunSwig.py -P python Creature Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Creature Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -94,7 +92,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** FileIO: creating "makefile.swig.tmp"
-1>   RunSwig.py FileIO Foundation -P python
+1>   RunSwig.py -P python FileIO Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python FileIO Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -111,7 +109,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** Foundation: creating "makefile.swig.tmp"
-1>   RunSwig.py Foundation -P python
+1>   RunSwig.py -P python Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -128,7 +126,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** Framework: creating "makefile.swig.tmp"
-1>   RunSwig.py Framework Physics Foundation -P python
+1>   RunSwig.py -P python Framework Physics Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Framework Physics Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -145,7 +143,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** Graphics: creating "makefile.swig.tmp"
-1>   RunSwig.py Graphics Foundation -P python
+1>   RunSwig.py -P python Graphics Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Graphics Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -162,7 +160,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** HumanInterface: creating "makefile.swig.tmp"
-1>   RunSwig.py HumanInterface Foundation -P python
+1>   RunSwig.py -P python HumanInterface Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python HumanInterface Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -179,7 +177,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>   make_manager.py -P python -t
 1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
 1>      *** Physics: creating "makefile.swig.tmp"
-1>   RunSwig.py Physics Collision Foundation -P python
+1>   RunSwig.py -P python Physics Collision Foundation
 1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Physics Collision Foundation
 1>
 1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -192,35 +190,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Affine.cpp
 2>  BaseDebug.cpp
@@ -268,14 +266,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FIFileX.cpp
 5>  FIImport.cpp
 5>  FILoadContext.cpp
-6>  GRBlendMesh.cpp
-6>  GRDeviceGL.cpp
-6>  GRFrame.cpp
-6>  GRLoadBmp.cpp
-6>  GRMesh.cpp
-6>  GRRegisterTypeDesc.cpp
-6>  GRRender.cpp
-6>  GRScene.cpp
 7>  DRADAPIO.cpp
 7>  DRContecIsaCounter.cpp
 7>  DRContecIsaDa.cpp
@@ -284,19 +274,27 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  DRKeyMouseGLUT.cpp
 7>  DRKeyMouseWin32.cpp
 7>  DRNittaForce.cpp
+6>  GRBlendMesh.cpp
+6>  GRDeviceGL.cpp
+6>  GRFrame.cpp
+6>  GRLoadBmp.cpp
+6>  GRMesh.cpp
+6>  GRRegisterTypeDesc.cpp
+6>  GRRender.cpp
+6>  GRScene.cpp
 7>  DRPortIO.cpp
 7>  DRTokin3D.cpp
 7>  DRUPP.CPP
 6>  GRSdk.cpp
-4>  CDRegisterTypeDesc.cpp
 7>  DRUsb20Sh4.cpp
+4>  CDRegisterTypeDesc.cpp
 7>  DRUsb20Simple.cpp
 4>  CDRoundCone.cpp
 7>  DRUsbH8Simple.cpp
-4>  CDShape.cpp
 7>  DRWinDriver.cpp
-4>  CDSpatialHashTable.cpp
 7>  HIBase.cpp
+4>  CDShape.cpp
+4>  CDSpatialHashTable.cpp
 4>  CDSphere.cpp
 4>  CollisionStub.cpp
 7>  HIDevice.cpp
@@ -304,12 +302,12 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  HINovintFalcon.cpp
 6>  GRSphere.cpp
 5>  FIOpStateHandler.cpp
-5>  FIRegisterTypeDesc.cpp
 7>  HIRegisterTypeDesc.cpp
+5>  FIRegisterTypeDesc.cpp
+7>  HISdk.cpp
 5>  FISaveContext.cpp
 6>  GRVertex.cpp
 6>  GraphicsStub.cpp
-7>  HISdk.cpp
 5>  FISdk.cpp
 7>  HISpaceNavigator.cpp
 7>  HISpidar.cpp
@@ -412,27 +410,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 9>  FWStaticTorqueOptimizer.cpp
 9>  FWTrajectoryPlanner.cpp
 9>  FWWin.cpp
-9>FWTrajectoryPlanner.cpp(1562): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(1948): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(1949): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2067): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2068): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2243): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2244): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2262): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2263): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2297): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2298): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2443): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2444): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2591): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2643): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2728): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2729): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2870): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2871): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2950): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-9>FWTrajectoryPlanner.cpp(2951): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 9>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
 9>    Framework14.0x64.lib done
 10>------ Build started: Project: Creature, Configuration: Release x64 ------
@@ -464,3 +441,5 @@ Copyright (C) Microsoft Corp. All rights reserved.
 11>Creature14.0x64.lib(CRGrabController.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
 11>  Springhead: I:\DailyBuild\SpringheadTest\generated\lib\win64/Springhead14.0x64.lib created.
 ========== Build: 11 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+

@@ -1,11 +1,9 @@
-日付 : 17.12.27 
---- ビルドのログ --- 
- 
-*** Base: Quaternion *** 
-% devenv Quaternion14.0.sln /build "Release|x64" 
+日付 : 2018-03-15
+--- ビルドのログ ---
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+*** Base: Quaternion ***
+% devenv Quaternion14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -71,35 +69,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -108,13 +106,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 3>  Quaternion14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Base\Quaternion\14.0\x64\Release\Quaternion.exe
 3>  Quaternion14.0.vcxproj -> 14.0\x64\Release\Quaternion.pdb (Full PDB)
 ========== Build: 3 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Collision: CDContGJK *** 
-% devenv CDContGJK14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Collision: CDContGJK ***
+% devenv CDContGJK14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -180,35 +176,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -217,10 +213,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 3>    Foundation14.0x64.lib done
 4>------ Build started: Project: Collision, Configuration: Release x64 ------
 5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-4>    Collision14.0x64.lib done
 5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 5>    HumanInterface14.0x64.lib done
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+4>    Collision14.0x64.lib done
 6>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 6>    Physics14.0x64.lib done
@@ -229,13 +225,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  CDContGJK14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Collision\CDContGJK\14.0\x64\Release\CDContGJK.exe
 7>  CDContGJK14.0.vcxproj -> 14.0\x64\Release\CDContGJK.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Collision: CDShape *** 
-% devenv CDShape14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Collision: CDShape ***
+% devenv CDShape14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -301,35 +295,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -350,13 +344,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  CDShape14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Collision\CDShape\14.0\x64\Release\CDShape.exe
 7>  CDShape14.0.vcxproj -> 14.0\x64\Release\CDShape.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Collision: QuickHull2D *** 
-% devenv QuickHull2D14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Collision: QuickHull2D ***
+% devenv QuickHull2D14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -422,35 +414,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -468,13 +460,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 6>  QuickHull2D14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Collision\QuickHull2D\14.0\x64\Release\QuickHull2D.exe
 6>  QuickHull2D14.0.vcxproj -> 14.0\x64\Release\QuickHull2D.pdb (Full PDB)
 ========== Build: 6 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** FileIO: FICollada *** 
-% devenv FICollada14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** FileIO: FICollada ***
+% devenv FICollada14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -540,35 +530,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -595,13 +585,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 9>  FICollada14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\FileIO\FICollada\14.0\x64\Release\FICollada.exe
 9>  FICollada14.0.vcxproj -> 14.0\x64\Release\FICollada.pdb (Full PDB)
 ========== Build: 9 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** FileIO: FIImport *** 
-% devenv FIImport14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** FileIO: FIImport ***
+% devenv FIImport14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -667,35 +655,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -706,15 +694,15 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>------ Build started: Project: FileIO, Configuration: Release x64 ------
 6>------ Build started: Project: Graphics, Configuration: Release x64 ------
 7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-4>    Collision14.0x64.lib done
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+4>    Collision14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: FIImport, Configuration: Release x64 ------
@@ -722,13 +710,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 9>  FIImport14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\FileIO\FIImport\14.0\x64\Release\FIImport.exe
 9>  FIImport14.0.vcxproj -> 14.0\x64\Release\FIImport.pdb (Full PDB)
 ========== Build: 9 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** FileIO: FILoader *** 
-% devenv FILoader14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** FileIO: FILoader ***
+% devenv FILoader14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -794,35 +780,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -838,10 +824,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-6>    Graphics14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -852,13 +838,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 10>  FILoader14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\FileIO\FILoader\14.0\x64\Release\FILoader.exe
 10>  FILoader14.0.vcxproj -> 14.0\x64\Release\FILoader.pdb (Full PDB)
 ========== Build: 10 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** FileIO: FILoadGRScene *** 
-% devenv FILoadGRScene14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** FileIO: FILoadGRScene ***
+% devenv FILoadGRScene14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -924,35 +908,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -963,13 +947,13 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>------ Build started: Project: FileIO, Configuration: Release x64 ------
 6>------ Build started: Project: Graphics, Configuration: Release x64 ------
 7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
-5>    FileIO14.0x64.lib done
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
+5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+5>    FileIO14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
@@ -979,13 +963,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 9>  FILoadGRScene14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\FileIO\FILoadGRScene\14.0\x64\Release\FILoadGRScene.exe
 9>  FILoadGRScene14.0.vcxproj -> 14.0\x64\Release\FILoadGRScene.pdb (Full PDB)
 ========== Build: 9 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** FileIO: FILoadMesh *** 
-% devenv FILoadMesh14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** FileIO: FILoadMesh ***
+% devenv FILoadMesh14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -1051,35 +1033,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -1095,10 +1077,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>    Graphics14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -1109,13 +1091,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 10>  FILoadMesh14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\FileIO\FILoadMesh\14.0\x64\Release\FILoadMesh.exe
 10>  FILoadMesh14.0.vcxproj -> 14.0\x64\Release\FILoadMesh.pdb (Full PDB)
 ========== Build: 10 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Foundation: Cast *** 
-% devenv Cast14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Foundation: Cast ***
+% devenv Cast14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -1181,35 +1161,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -1227,13 +1207,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 6>  Cast14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Foundation\Cast\14.0\x64\Release\Cast.exe
 6>  Cast14.0.vcxproj -> 14.0\x64\Release\Cast.pdb (Full PDB)
 ========== Build: 6 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Foundation: Timer *** 
-% devenv Timer14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Foundation: Timer ***
+% devenv Timer14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 2>  Python 3.4.0
@@ -1259,28 +1237,28 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python do_swigall.py
 2>
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
 3>------ Build started: Project: Foundation, Configuration: Release x64 ------
-2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 3>    Foundation14.0x64.lib done
+2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 2>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -1301,41 +1279,41 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+4>------ Build started: Project: Collision, Configuration: Release x64 ------
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 2>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-4>------ Build started: Project: Collision, Configuration: Release x64 ------
-4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>    Collision14.0x64.lib done
 5>------ Build started: Project: Physics, Configuration: Release x64 ------
 5>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
@@ -1348,13 +1326,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 6>  Timer14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Foundation\Timer\14.0\x64\Release\Timer.exe
 6>  Timer14.0.vcxproj -> 14.0\x64\Release\Timer.pdb (Full PDB)
 ========== Build: 6 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Framework: FWAppBoxStack *** 
-% devenv FWAppBoxStack14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Framework: FWAppBoxStack ***
+% devenv FWAppBoxStack14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -1420,35 +1396,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -1459,13 +1435,13 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>------ Build started: Project: FileIO, Configuration: Release x64 ------
 6>------ Build started: Project: Graphics, Configuration: Release x64 ------
 7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
-5>    FileIO14.0x64.lib done
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
+5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+5>    FileIO14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 6>    Graphics14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
@@ -1479,31 +1455,28 @@ Copyright (C) Microsoft Corp. All rights reserved.
 10>  FWAppBoxStack14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Framework\FWAppBoxStack\14.0\x64\Release\FWAppBoxStack.exe
 10>  FWAppBoxStack14.0.vcxproj -> 14.0\x64\Release\FWAppBoxStack.pdb (Full PDB)
 ========== Build: 10 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Framework: FWAppDXTest *** 
-% devenv FWAppDXTest14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Framework: FWAppDXTest ***
+% devenv FWAppDXTest14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: FWAppDXTest, Configuration: Release x64 ------
 1>  main.cpp
 1>  MyApp.cpp
 1>LINK : fatal error LNK1104: cannot open file 'd3dxof.lib'
 ========== Build: 0 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Framework: FWAppGLtest *** 
-% devenv FWAppGLtest14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Framework: FWAppGLtest ***
+% devenv FWAppGLtest14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
 2>
+1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>      *** Collision: creating "makefile.swig"
 2>      *** Creature: creating "makefile.swig"
 2>      *** FileIO: creating "makefile.swig"
@@ -1512,7 +1485,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>      *** Graphics: creating "makefile.swig"
 2>      *** HumanInterface: creating "makefile.swig"
 2>      *** Physics: creating "makefile.swig"
-1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -1528,23 +1500,23 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
 3>------ Build started: Project: Foundation, Configuration: Release x64 ------
-2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 3>    Foundation14.0x64.lib done
+2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 2>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -1569,35 +1541,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>------ Build started: Project: Graphics, Configuration: Release x64 ------
 5>------ Build started: Project: Collision, Configuration: Release x64 ------
 6>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
@@ -1605,35 +1577,31 @@ Copyright (C) Microsoft Corp. All rights reserved.
 4>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
 5>    Collision14.0x64.lib done
 4>    Graphics14.0x64.lib done
-7>------ Build started: Project: Framework, Configuration: Release x64 ------
 6>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 6>    HumanInterface14.0x64.lib done
+7>------ Build started: Project: Framework, Configuration: Release x64 ------
 7>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
 7>    Framework14.0x64.lib done
 8>------ Build started: Project: FWAppGLtest, Configuration: Release x64 ------
 8>  FWAppGLtest.cpp
 8>FWAppGLtest.cpp(74): error C2065: '_crtBreakAlloc': undeclared identifier
 ========== Build: 7 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Framework: FWAppMultiWinTest *** 
-% devenv FWAppMultiWinTest14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Framework: FWAppMultiWinTest ***
+% devenv FWAppMultiWinTest14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: FWAppMultiWinTest, Configuration: Release x64 ------
 1>  main.cpp
 1>  MYApp.cpp
 1>i:\dailybuild\springheadtest\core\src\tests\framework\fwappmultiwintest\MYApp.h(11): fatal error C1083: Cannot open include file: 'Framework/SprFWAppGLUT.h': No such file or directory (compiling source file MYApp.cpp)
 1>main.cpp(24): fatal error C1083: Cannot open include file: 'Framework/SprFWAppGLUT.h': No such file or directory
 ========== Build: 0 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Graphics: GRColorSpheres *** 
-% devenv GRColorSpheres14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Graphics: GRColorSpheres ***
+% devenv GRColorSpheres14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -1699,35 +1667,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -1743,10 +1711,10 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 5>    FileIO14.0x64.lib done
 8>------ Build started: Project: Physics, Configuration: Release x64 ------
-7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
-7>    HumanInterface14.0x64.lib done
 6>    Graphics14.0x64.lib done
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 8>    Physics14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -1757,13 +1725,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 10>  GRColorSpheres14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Graphics\GRColorSpheres\14.0\x64\Release\GRColorSpheres.exe
 10>  GRColorSpheres14.0.vcxproj -> 14.0\x64\Release\GRColorSpheres.pdb (Full PDB)
 ========== Build: 10 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Graphics: GRSimple *** 
-% devenv GRSimple14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Graphics: GRSimple ***
+% devenv GRSimple14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
@@ -1793,20 +1759,20 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>------ Build started: Project: Foundation, Configuration: Release x64 ------
+3>    Foundation14.0x64.lib done
 2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
-3>    Foundation14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -1831,52 +1797,52 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-2>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  *** Collision ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** Creature ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** FileIO ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** Foundation ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** Framework ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** Graphics ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** HumanInterface ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-2>
-2>  *** Physics ***
-2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
 4>------ Build started: Project: Collision, Configuration: Release x64 ------
 5>------ Build started: Project: FileIO, Configuration: Release x64 ------
 6>------ Build started: Project: Graphics, Configuration: Release x64 ------
 7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+2>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  *** Collision ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** Creature ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** FileIO ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** Foundation ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** Framework ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** Graphics ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** HumanInterface ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
+2>
+2>  *** Physics ***
+2>      do_swigall: nmake -f makefile.swig
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
-5>    FileIO14.0x64.lib done
-4>    Collision14.0x64.lib done
-8>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+4>    Collision14.0x64.lib done
 6>    Graphics14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
 8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
+5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
 8>    Physics14.0x64.lib done
+5>    FileIO14.0x64.lib done
 7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 7>    HumanInterface14.0x64.lib done
 9>------ Build started: Project: Framework, Configuration: Release x64 ------
@@ -1887,13 +1853,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 10>  GRSimple14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Graphics\GRSimple\14.0\x64\Release\GRSimple.exe
 10>  GRSimple14.0.vcxproj -> 14.0\x64\Release\GRSimple.pdb (Full PDB)
 ========== Build: 10 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Graphics: GRVertrexBlending *** 
-% devenv GRVertrexBlending14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Graphics: GRVertrexBlending ***
+% devenv GRVertrexBlending14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -1959,35 +1923,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -2035,13 +1999,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>main.cpp(309): error C2664: 'void Spr::GRRenderBaseIf::DrawIndexed(Spr::GRRenderBaseIf::TPrimitiveType,GLuint *,void *,std::size_t,std::size_t)': cannot convert argument 2 from 'unsigned __int64 *' to 'GLuint *'
 5>  main.cpp(309): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
 ========== Build: 4 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** GraphicsD3D: GRD3DLoadMesh *** 
-% devenv GRD3DLoadMesh14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** GraphicsD3D: GRD3DLoadMesh ***
+% devenv GRD3DLoadMesh14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: GRD3DLoadMesh, Configuration: Release x64 ------
 1>  main.cpp
 1>i:\dailybuild\springheadtest\core\include\GraphicsD3D/SprGRAnimationMesh.h(91): error C2061: syntax error: identifier 'LPD3DXEFFECT'
@@ -2070,19 +2032,19 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>main.cpp(346): error C2227: left of '->SetViewMatrix' must point to class/struct/union/generic type
 1>  main.cpp(346): note: type is 'int *'
 ========== Build: 0 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** HumanInterface: KeyMouse *** 
-% devenv KeyMouse14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** HumanInterface: KeyMouse ***
+% devenv KeyMouse14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
 2>
+1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+1>    Base14.0x64.lib done
 2>      *** Collision: creating "makefile.swig"
 2>      *** Creature: creating "makefile.swig"
 2>      *** FileIO: creating "makefile.swig"
@@ -2096,34 +2058,32 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>  	..\RunSwig\python_adapter.bat do_swigall.py
-1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python do_swigall.py
 2>
-1>    Base14.0x64.lib done
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 3>------ Build started: Project: Foundation, Configuration: Release x64 ------
-2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 3>    Foundation14.0x64.lib done
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
+2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 2>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -2148,35 +2108,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 4>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
 4>    HumanInterface14.0x64.lib done
@@ -2187,13 +2147,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 5>  KeyMouse14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\HumanInterface\KeyMouse\14.0\x64\Release\KeyMouse.exe
 5>  KeyMouse14.0.vcxproj -> 14.0\x64\Release\KeyMouse.pdb (Full PDB)
 ========== Build: 5 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Physics: PHConstraintTest *** 
-% devenv PHConstraintTest14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Physics: PHConstraintTest ***
+% devenv PHConstraintTest14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -2259,35 +2217,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -2308,13 +2266,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  PHConstraintTest14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Physics\PHConstraintTest\14.0\x64\Release\PHConstraintTest.exe
 7>  PHConstraintTest14.0.vcxproj -> 14.0\x64\Release\PHConstraintTest.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Physics: PHPenaltyTest *** 
-% devenv PHPenaltyTest14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Physics: PHPenaltyTest ***
+% devenv PHPenaltyTest14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Python 3.4.0
 1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
@@ -2380,35 +2336,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 1>
 1>  *** Collision ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Creature ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** FileIO ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Foundation ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Framework ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Graphics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** HumanInterface ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 1>
 1>  *** Physics ***
 1>      do_swigall: nmake -f makefile.swig
-1>      do_swigall: make_manager.py -P python -r
+1>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>------ Build started: Project: Base, Configuration: Release x64 ------
 2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
 2>    Base14.0x64.lib done
@@ -2429,13 +2385,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  PHPenaltyTest14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Physics\PHPenaltyTest\14.0\x64\Release\PHPenaltyTest.exe
 7>  PHPenaltyTest14.0.vcxproj -> 14.0\x64\Release\PHPenaltyTest.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Physics: PHShape *** 
-% devenv PHShape14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Physics: PHShape ***
+% devenv PHShape14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
@@ -2465,20 +2419,20 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>------ Build started: Project: Foundation, Configuration: Release x64 ------
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+3>    Foundation14.0x64.lib done
 2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
-3>    Foundation14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -2503,45 +2457,45 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+4>------ Build started: Project: Collision, Configuration: Release x64 ------
+5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 2>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-4>------ Build started: Project: Collision, Configuration: Release x64 ------
-5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-5>    HumanInterface14.0x64.lib done
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
+5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+5>    HumanInterface14.0x64.lib done
 6>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 6>    Physics14.0x64.lib done
@@ -2550,13 +2504,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  PHShape14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Physics\PHShape\14.0\x64\Release\PHShape.exe
 7>  PHShape14.0.vcxproj -> 14.0\x64\Release\PHShape.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Physics: PHShapeGL *** 
-% devenv PHShapeGL14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Physics: PHShapeGL ***
+% devenv PHShapeGL14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
@@ -2586,20 +2538,20 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>------ Build started: Project: Foundation, Configuration: Release x64 ------
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+3>    Foundation14.0x64.lib done
 2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
-3>    Foundation14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -2625,44 +2577,44 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
+4>------ Build started: Project: Collision, Configuration: Release x64 ------
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
-4>------ Build started: Project: Collision, Configuration: Release x64 ------
-5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
-5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
-5>    HumanInterface14.0x64.lib done
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
 4>    Collision14.0x64.lib done
+5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+5>    HumanInterface14.0x64.lib done
 6>------ Build started: Project: Physics, Configuration: Release x64 ------
 6>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
 6>    Physics14.0x64.lib done
@@ -2671,21 +2623,19 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  PHShapeGL14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Physics\PHShapeGL\14.0\x64\Release\PHShapeGL.exe
 7>  PHShapeGL14.0.vcxproj -> 14.0\x64\Release\PHShapeGL.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Physics: PHSimple *** 
-% devenv PHSimple14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Physics: PHSimple ***
+% devenv PHSimple14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
-1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
-1>    Base14.0x64.lib done
 2>  Python 3.4.0
 2>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
 2>  python make_manager.py -A -c
 2>
+1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+1>    Base14.0x64.lib done
 2>      *** Collision: creating "makefile.swig"
 2>      *** Creature: creating "makefile.swig"
 2>      *** FileIO: creating "makefile.swig"
@@ -2707,24 +2657,24 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
-3>------ Build started: Project: Foundation, Configuration: Release x64 ------
+3>    Foundation14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
 2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
-3>    Foundation14.0x64.lib done
 2>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -2749,35 +2699,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>------ Build started: Project: Collision, Configuration: Release x64 ------
 5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
@@ -2792,13 +2742,11 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  PHSimple14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Physics\PHSimple\14.0\x64\Release\PHsimple.exe
 7>  PHSimple14.0.vcxproj -> 14.0\x64\Release\PHsimple.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
-*** Physics: PHSimpleGL *** 
-% devenv PHSimpleGL14.0.sln /build "Release|x64" 
 
-Microsoft Visual Studio 2015 Version 14.0.25420.1.
-Copyright (C) Microsoft Corp. All rights reserved.
+
+*** Physics: PHSimpleGL ***
+% devenv PHSimpleGL14.0.sln /build "Release|x64"
+
 1>------ Build started: Project: Base, Configuration: Release x64 ------
 2>------ Build started: Project: RunSwig, Configuration: Release x64 ------
 2>  Python 3.4.0
@@ -2806,6 +2754,7 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  python make_manager.py -A -c
 2>
 1>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+1>    Base14.0x64.lib done
 2>      *** Collision: creating "makefile.swig"
 2>      *** Creature: creating "makefile.swig"
 2>      *** FileIO: creating "makefile.swig"
@@ -2814,7 +2763,6 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>      *** Graphics: creating "makefile.swig"
 2>      *** HumanInterface: creating "makefile.swig"
 2>      *** Physics: creating "makefile.swig"
-1>    Base14.0x64.lib done
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -2829,23 +2777,23 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 2>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
-2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
-2>
-2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
-2>  Copyright (C) Microsoft Corporation.  All rights reserved.
-2>
 3>------ Build started: Project: Foundation, Configuration: Release x64 ------
-2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
 2>  Copyright (C) Microsoft Corporation.  All rights reserved.
 2>
 3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+2>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 3>    Foundation14.0x64.lib done
+2>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+2>
+2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+2>  Copyright (C) Microsoft Corporation.  All rights reserved.
+2>
 2>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
 2>
 2>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
@@ -2870,35 +2818,35 @@ Copyright (C) Microsoft Corp. All rights reserved.
 2>
 2>  *** Collision ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Creature ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** FileIO ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Foundation ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Framework ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Graphics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** HumanInterface ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 2>
 2>  *** Physics ***
 2>      do_swigall: nmake -f makefile.swig
-2>      do_swigall: make_manager.py -P python -r
+2>      do_swigall: python I:/DailyBuild/SpringheadTest/core/src/RunSwig/make_manager.py -P python -r
 4>------ Build started: Project: Collision, Configuration: Release x64 ------
 5>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
 5>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
@@ -2913,5 +2861,5 @@ Copyright (C) Microsoft Corp. All rights reserved.
 7>  PHSimpleGL14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\tests\Physics\PHSimpleGL\14.0\x64\Release\PHsimpleGL.exe
 7>  PHSimpleGL14.0.vcxproj -> 14.0\x64\Release\PHsimpleGL.pdb (Full PDB)
 ========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
- 
- 
+
+

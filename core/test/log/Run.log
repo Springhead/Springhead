@@ -1,16 +1,15 @@
-日付 : 17.12.27 
---- 実行のログ --- 
- 
-*** Base: Quaternion *** 
+日付 : 2018-03-15
+--- 実行のログ ---
+
+*** Base: Quaternion ***
 (0.965926      0 0.258819      0)(     0 0.523599      0)
 (-0.965926     -0 -0.258819     -0)(     0 0.523599      0)
- 
- 
-*** Collision: CDContGJK *** 
+
+*** Collision: CDContGJK ***
 ***  soFloor   ***
 radius: 1
 mass: 1e+20
-inertia: 
+inertia:
 (( 2e+20      0      0)
  (     0  2e+20      0)
  (     0      0  2e+20))
@@ -18,14 +17,13 @@ inertia:
 ***  soBlock   ***
 radius: 1
 mass: 2
-inertia: 
+inertia:
 ((     2      0      0)
  (     0      2      0)
  (     0      0      2))
 
- 
- 
-*** Collision: CDShape *** 
+
+*** Collision: CDShape ***
 CoG:(0.166667 0.166667 -0.0833333)(     0      0      0)
 Inertia:
 ((0.631945 0.0277778 -0.0138889)
@@ -35,9 +33,8 @@ Inertia:
  (     0 0.666667      0)
  (     0      0 0.666667))
 
- 
- 
-*** Collision: QuickHull2D *** 
+
+*** Collision: QuickHull2D ***
 3 lines.
 Plane: 0  1  d:0.707107 n:(0.707107 0.707107) del
 Plane: 1  0  d:-0.707107 n:(-0.707107 -0.707107)
@@ -60,13 +57,11 @@ Plane: 2  11  5  d:0.211365 n:(0.239418 -0.966278 0.0947975)
 Plane: 11  7  5  d:0.564198 n:(0.642848 0.719913 0.261671)
 Plane: 7  8  5  d:0.504101 n:(-0.213028 0.642817 0.735803)
 Plane: 8  2  5  d:0.207722 n:(-0.0897347 -0.949588 0.300384)
- 
- 
-*** FileIO: FICollada *** 
+
+*** FileIO: FICollada ***
 1000 count passed.
- 
- 
-*** FileIO: FIImport *** 
+
+*** FileIO: FIImport ***
 building scene
 <PHSdk >
 scene0 : PHScene
@@ -105,9 +100,8 @@ shape0 : CDSphere
   </PHScene>
 </PHSdk>
 saving scene
- 
- 
-*** FileIO: FILoader *** 
+
+*** FileIO: FILoader ***
 <FWSdk fwSdk>
 fiSdk : FISdk
 grSdk : GRSdk
@@ -123,9 +117,8 @@ sphere : CDSphere
 </PHSdk>
 Loaded : NScene=0, NShape=1
 1200 count passed.
- 
- 
-*** FileIO: FILoadGRScene *** 
+
+*** FileIO: FILoadGRScene ***
 <GRSdk >
 scene : GRScene
   <GRScene scene>
@@ -205,28 +198,24 @@ world : GRFrame
   <GRCamera cam/>
 </GRScene>
 600 count passed.
- 
- 
-*** FileIO: FILoadMesh *** 
+
+*** FileIO: FILoadMesh ***
 650 count passed.
- 
- 
-*** Foundation: Cast *** 
+
+*** Foundation: Cast ***
 <NameManager >
 firstObject : NamedObject
 </NameManager>
- 
- 
-*** Foundation: Timer *** 
- 
- 
-*** Graphics: GRColorSpheres *** 
- 
- 
-*** Graphics: GRSimple *** 
- 
- 
-*** Physics: PHConstraintTest *** 
+
+*** Foundation: Timer ***
+phpphpp
+*** Framework: FWAppBoxStack ***
+
+*** Graphics: GRColorSpheres ***
+
+*** Graphics: GRSimple ***
+
+*** Physics: PHConstraintTest ***
 0               false    (     0 0.0245      0)
 0               false    (     0  0.049      0)
 0               false    (     0 0.0735      0)
@@ -356,9 +345,8 @@ true
 true
 true
 true
- 
- 
-*** Physics: PHPenaltyTest *** 
+
+*** Physics: PHPenaltyTest ***
 0               false    (     0 0.0245      0)
 0               false    (     0  0.049      0)
 0               false    (     0 0.0735      0)
@@ -488,17 +476,14 @@ true
 true
 true
 true
- 
- 
-*** Physics: PHShape *** 
+
+*** Physics: PHShape ***
 (     0     -1      0)(     0 1.99975      0)
 (     0     -1      0)(     0 1.99926      0)
- 
- 
-*** Physics: PHShapeGL *** 
- 
- 
-*** Physics: PHSimple *** 
+
+*** Physics: PHShapeGL ***
+
+*** Physics: PHSimple ***
 (0.000125 -0.000245      0)(0.000125031  5e-06      0)
 (0.000375 -0.000735      0)(0.000375281 1.49999e-05      0)
 (0.00075 -0.00147      0)(0.000751125 2.99994e-05      0)
@@ -509,10 +494,8 @@ true
 (0.0045 -0.00882      0)(0.0045405 0.000179879      0)
 (0.005625 -0.011025      0)(0.00568828 0.000224763      0)
 (0.006875 -0.013475      0)(0.00696953 0.000274567      0)
- 
- 
-*** Physics: PHSimpleGL *** 
+
+*** Physics: PHSimpleGL ***
 
 PHSimpleGL failure (redTeapot:success, blueTeapot:failure)
- 
- 
+
