@@ -67,12 +67,16 @@ public:
 	std::vector<PHSolidIf*> soBox;
 
 	bool showColtime;
+	int aveCounter;
+	int avePool;
 	double					floorShakeAmplitude;
 
 public:
 	MyApp(){
 		appName = "BoxStack";
 		floorShakeAmplitude = 0.0;
+		aveCounter = 0;
+		avePool = 0;
 
 		AddAction(MENU_MAIN, ID_BOX, "drop box");
 		AddHotKey(MENU_MAIN, ID_BOX, 'b');
@@ -102,7 +106,9 @@ public:
 
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
-		GetPHScene()->SetGravity(Vec3d(0, -2, 0));
+		GetPHScene()->SetGravity(Vec3d(0, -30, 0));
+		FWWinIf* win = GetCurrentWin();
+		win->GetTrackball()->SetPosition(Vec3f(30, 50, 100)); //注視点設定
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
@@ -110,7 +116,6 @@ public:
 		// GetSdk()->SaveScene("test.spr", NULL, FIFileSprIf::GetIfInfoStatic());
 
 		SampleApp::OnStep();
-
 		// 床を揺らす
 		if (soFloor){
 			double time = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
@@ -121,8 +126,20 @@ public:
 
 		if (showColtime)
 		{
-			int time = GetPHScene()->GetConstraintEngine()->GetCollisionTime();
-			message = "Collision Time : " + to_string(time);
+			
+			if (aveCounter < 100)
+			{
+				avePool += GetPHScene()->GetConstraintEngine()->GetCollisionTime();
+				aveCounter++;
+			}
+			else {
+				int time = avePool/100;
+				message = "Collision Time : " + to_string(time);
+				aveCounter = 0;
+				avePool = 0;
+				message = "Collision Time : " + to_string(time);
+			}
+			
 		}
 	}
 
@@ -192,7 +209,7 @@ public:
 
 			if (id == ID_METHOD)
 			{
-				s_methodSW = (s_methodSW + 1) % 4;
+				s_methodSW = (s_methodSW + 1) % 3;
 				switch (s_methodSW)
 				{
 				case 0:
@@ -210,6 +227,8 @@ public:
 				default:
 					break;
 				}
+				aveCounter = 0;
+				avePool = 0;
 				
 			}
 
@@ -225,6 +244,8 @@ public:
 			{
 				showColtime = !showColtime;
 				GetPHScene()->GetConstraintEngine()->EnableReport(showColtime);
+				aveCounter = 0;
+				avePool = 0;
 			}
 		}
 		SampleApp::OnAction(menu, id);
