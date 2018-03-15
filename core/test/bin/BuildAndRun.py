@@ -59,6 +59,7 @@
 #  VERSION:
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
 import sys
 import os
@@ -85,7 +86,7 @@ class BuildAndRun:
 	#
 	def __init__(self, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.01
+		self.version = 1.1
 		#
 		self.ccver = ccver
 		self.dry_run = dry_run
@@ -183,8 +184,8 @@ class BuildAndRun:
 
 		# execute program.
 		if pipeprocess:
-			proc1 = Proc(self.verbose, self.dry_run)
-			proc2 = Proc(self.verbose, self.dry_run)
+			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
+			proc2 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
 				      addpath=addpath, stdin=Proc.PIPE,
 				      stdout=tmplog, stderr=Proc.STDOUT)
@@ -193,7 +194,7 @@ class BuildAndRun:
 			proc2.wait()
 			stat = proc1.wait(timeout)
 		else:
-			proc1 = Proc(self.verbose, self.dry_run)
+			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
 				   addpath=addpath,
 				   stdout=tmplog, stderr=Proc.STDOUT)
@@ -269,12 +270,19 @@ class BuildAndRun:
 	def __build_u(self, args):
 		# arguments:
 		#   args:	Parameters to compiler (list).
+		opt_flags = {
+			'Debug':	'OPTS=-g',
+			'Release':	'OPTS=-O2',
+			'Trace':	'OPTS=-O2',
+			None:		''
+		}
 		[slnfile, platform, opts, outfile, force] = args
-
+		if opts not in opt_flags:
+			opts = None
 		cmnd = 'make -f %s' % slnfile
-		args = '%s -o %s' % (opts, outfile)
-		proc = Proc(self.verbose, self.dry_run)
-		proc.execute('%s %s' % (cmnd, args),
+		args = opt_flags[opts]
+		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
+		proc.execute('%s %s' % (cmnd, args), shell=True,
 				stdout=Proc.PIPE, stderr=Proc.STDOUT)
 		stat = proc.wait()
 		out, err = proc.output()

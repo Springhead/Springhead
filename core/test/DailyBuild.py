@@ -14,7 +14,8 @@
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
 #	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
-#	Ver 1.21 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.21 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
+#	Ver 1.22 2018/03/15 F.Kanehori	Add: -A (as is flag).
 # ======================================================================
 version = 1.21
 
@@ -63,9 +64,15 @@ if Util.is_windows():
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose mode')
+parser.add_option('-D', '--dry-run', dest='dry_run',
+			action='store_true', default=False,
+			help='set dry-run mode')
 parser.add_option('-V', '--version',
 			dest='version', action='store_true', default=False,
 			help='show version')
+parser.add_option('-A', '--as-is',
+			dest='as_is', action='count', default=0,
+			help='do not update nor clear test repository')
 
 # ----------------------------------------------------------------------
 #  Process for command line
@@ -85,6 +92,8 @@ conf = options.conf
 plat = options.plat
 tool = options.tool if Util().is_windows() else None
 verbose = options.verbose
+dry_run = options.dry_run
+as_is = options.as_is
 
 if repository == 'Springhead':
 	msg = 'Are you sure to test on "Springhead" directory? [y/n] '
@@ -99,7 +108,7 @@ if repository == 'Springhead':
 spr_topdir = spr_path.abspath()
 start_dir = spr_path.abspath('test')
 prep_dir = os.path.abspath('%s/..' % spr_topdir)
-proc = Proc(verbose=verbose)
+proc = Proc(verbose=verbose, dry_run=dry_run)
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -109,6 +118,8 @@ def check_exec(name):
 	# and its value is 'skip'.  Return True otherwise.
 	val = os.getenv(name)
 	judge = True if val is None or val != 'skip' else False
+	if as_is:
+		judge = False
 	if not judge:
 		print('skip ..%s..' % name)
 	return judge
@@ -212,8 +223,9 @@ Print()
 os.chdir('core/test')
 pwd()
 Print('Test start:')
+vflag = ' -v' if verbose else ''
 cmnd = 'python TestMainGit.py'
-args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
+args = '-p %s -c %s -t %s%s %s' % (plat, conf, tool, vflag, repository)
 rc = proc.execute([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 
