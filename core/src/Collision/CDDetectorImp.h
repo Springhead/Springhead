@@ -251,11 +251,11 @@ struct EPATri {
 	Vec3f aidx[3];
 	Vec3f bidx[3];
 	bool swapidx = false;
-	EPATri::EPATri() {
+	EPATri() {
 		distance = 100000;
 	}
 
-	EPATri::EPATri(Vec3d p1, Vec3d p2, Vec3d p3, double dist) {
+	EPATri(Vec3d p1, Vec3d p2, Vec3d p3, double dist) {
 		vert[0] = p1;
 		vert[1] = p2;
 		vert[2] = p3;
@@ -271,7 +271,7 @@ struct EPATri {
 		normal.unitize();
 
 	}
-	EPATri::EPATri(Vec3d p1, Vec3d p2, Vec3d p3, Vec3d origin) {
+	EPATri(Vec3d p1, Vec3d p2, Vec3d p3, Vec3d origin) {
 		vert[0] = p1;
 		vert[1] = p2;
 		vert[2] = p3;
@@ -296,7 +296,7 @@ struct EPATri {
 		return distance < right.distance;
 	}
 
-	void EPATri::SetIdx(Vec3f i_a1, Vec3f i_a2, Vec3f i_a3, Vec3f i_b1, Vec3f i_b2, Vec3f i_b3) {
+	void SetIdx(Vec3f i_a1, Vec3f i_a2, Vec3f i_a3, Vec3f i_b1, Vec3f i_b2, Vec3f i_b3) {
 		if (swapidx) {
 			aidx[0] = i_a3;
 			aidx[1] = i_a2;
@@ -322,9 +322,9 @@ struct EPAEdge {
 	Vec3d aidx[2];
 	Vec3d bidx[2];
 	Vec3d vector;
-	EPAEdge::EPAEdge() {
+	EPAEdge() {
 	}
-	EPAEdge::EPAEdge(Vec3d p1, Vec3d p2, Vec3d a1, Vec3d a2, Vec3d b1, Vec3d b2) {
+	EPAEdge(Vec3d p1, Vec3d p2, Vec3d a1, Vec3d a2, Vec3d b1, Vec3d b2) {
 		vert[0] = p1;
 		vert[1] = p2;
 		aidx[0] = a1;
