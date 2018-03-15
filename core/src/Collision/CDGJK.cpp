@@ -658,6 +658,8 @@ float FASTCALL RaycastOreOre(Vec3d o, Vec3d ray, Vec3d tri1, Vec3d tri2, Vec3d t
 	return -1;
 }
 
+
+//加速適用版
 int FASTCALL ContFindCommonPointAccel(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist) {
@@ -701,11 +703,8 @@ if (p_timer == nullptr) p_timer = new UTPreciseTimer(); //テストなどでタ�
 		 return -2;
 	 }
  }
- //v0を原点方向へのベクトルに改める
- //v[0] = b2z.Pos() - a2z.Pos();
- //CalcSupport(0);
- //	w1を求める
- 
+
+ //	w1を求める 
  v[1] = Vec3d(w[0].X(), w[0].Y(), 0);
  if (v[1].XY().square() < epsilon2) {		//	w0=衝突点の場合
 	 normal = u.unit();
@@ -725,8 +724,9 @@ if (p_timer == nullptr) p_timer = new UTPreciseTimer(); //テストなどでタ�
 	 return 0;	//	w[1]の外側にOがあるので触ってない
  }
  
-uint32_t frameTime1 = p_timer->CountUS();
+uint32_t frameTime1 = p_timer->CountUS(); //初期処理終了
 coltimePhase1 += frameTime1;
+
 //	w[0]-w[1]-w[0] を三角形と考えてスタートして，oが三角形の内部に入るまで繰り返し
 ids[0] = 1;	//	新しい頂点
 ids[1] = 0;	//	もとの線分
@@ -793,8 +793,9 @@ while (1)
 		
 }
 ids[3] = 3;
-uint32_t frameTime2 = p_timer->CountUS();
+uint32_t frameTime2 = p_timer->CountUS(); //平面絞り込み終了
 coltimePhase2 += frameTime2;
+
 //	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
 
 	//GJK部分
@@ -828,11 +829,9 @@ coltimePhase2 += frameTime2;
 	//	三角形を小さくしていく
 	int notuse = -1;
 	int count = 0;
-	int yabaiCount = 0;
 	Vec3d lastTriV;
 	double lastZ = DBL_MAX;
-	int finalCount = 0;
-	double cbiasParam = 0;
+	double cbiasParam = 0; //現在のバイアス値
 	while (1) {
 		count++;
 		if (count > 1000) {
@@ -856,25 +855,24 @@ coltimePhase2 += frameTime2;
 			lastTriV = s.unit();
 			
 			if (cbiasParam >= 0) {
-				cbiasParam = lastTriV.z * 0.9;
+				cbiasParam = lastTriV.z * 0.9; //三角面の法線と総体ベクトル（-z)との内積を加速バイアス値にする
 			}
 			
 			if (cbiasParam > 0) {
-#define NORM_BIAS 1 //バイアスflag
+#define NORM_BIAS 1 //加速flag 0にすると加速無効化
 #if NORM_BIAS == 1
 				
 				//二次元上での原点と三角形頂点の距離でバイアスを掛ける 3点のサポートベクトル比版
 				Vec3d tridec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
 				Vec3d newSup = v[ids[0]] * tridec[0] + v[ids[1]] * tridec[1] + v[ids[2]] * tridec[2];
 				newSup = newSup*cbiasParam + lastTriV;
-				//newSup.unitize();
-				//newSup.z = lastTriV.z;
 				v[ids[3]] = newSup;
 #else
 				lastTriV = v[ids[3]] = s.unit();
 #endif
 			}
 			else {
+				//バイアス値が0以下なら法線で探す
 				v[ids[3]] = lastTriV;
 			}
 			//	新しい w w[3] を求める
@@ -1045,15 +1043,18 @@ coltimePhase2 += frameTime2;
 			}
 
 			if (newZ + epsilon >= lastZ) {
-#if NORM_BIAS >= 1		//一回ただのノーマルで試さないとアレなのでは
+#if NORM_BIAS >= 1		
 				std::swap(ids[(i + 2) % 3], ids[3]);
+				//前回と同じサポートポイントだった場合ループ抜ける　これがないと無限ループするときがあったが消せる気がする
 				if ((lastTriV.z - v[ids[3]].z) < epsilon) {
 					goto final2;
 				}
+				//加速が適用されない場合最終処理へ
 				if (cbiasParam <= 0) {
 
 					goto final2;
 				}
+				//加速適用（cbiasParam > 0）はバイアス値をマイナスにして加速を切ってまたループ
 				cbiasParam = -1;
 				continue;
 #else			
@@ -1061,14 +1062,7 @@ coltimePhase2 += frameTime2;
 #endif
 			}
 			lastZ = newZ;
-			std::swap(ids[(i + 2) % 3], ids[3]);
-			
-			if (cbiasParam >= 0)
-			{
-				cbiasParam += biasParam*0.4;
-				//cbiasParam = biasParam;
-				if (cbiasParam > biasParam) cbiasParam = biasParam;
-			}
+			std::swap(ids[(i + 2) % 3], ids[3]);		
 			
 		}
 	}
@@ -1103,6 +1097,7 @@ coltimePhase2 += frameTime2;
 	}
 #if NORM_BIAS >= 1
 	if (lastTriV.square() != 0) {
+		//lasttriVは三角面の法線が確実に入るので
 		normal = w2z.Conjugated() * lastTriV;
 	}
 	else {
