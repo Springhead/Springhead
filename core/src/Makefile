@@ -7,14 +7,13 @@
 ################################################################
 #	A rule to make sub directories.
 ################################################################
-eq = $(and $(findstring $(1)X,$(2)X), $findstring $(2)X,$(1)X)
-opt = $(if $(call eq,$(1),),$(if $(call eq,$(2),),$(3),$(2)),$(1))
-
-Python = $(call opt,$(PYTHON),$(SPR_PYTHON),python)
-InsDir = $(call opt,$(LIB_INS_DIR),$(SPR_LIB_INS_DIR),../lib)
-	
 TOP_DIR		= ..
 include 	$(TOP_DIR)/make.header
+include		$(TOP_DIR)/make.func
+
+Python = $(call def,$(PYTHON),$(SPR_PYTHON),python)
+InsDir = $(call def,$(LIB_INS_DIR),$(SPR_LIB_INS_DIR),../lib)
+
 RUNSWIG_DIR	= RunSwig
 LIBS_DIR	= Base \
 		  Collision \

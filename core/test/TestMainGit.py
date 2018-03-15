@@ -1,15 +1,16 @@
 ﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# =============================================================================
+# ======================================================================
 #  SYNOPSIS:
 #	TestMainGit [options]
 #	options:
-#	    -c CONF:	    Configuration to test (Debug, Release or Trace).
-#	    -p PLAT:	    Platform to test (x86, x64)
+#	    -c CONF:	    Test configuration (Debug, Release or Trace).
+#	    -p PLAT:	    Test platform (x86 or x64)
 #	    -t TOOLSET:	    C-compiler version.
 #				Windows: Visual Studio version (str).
 #				unix:    gcc version (dummy).
 #	    -v:		    Set verbose level (0: silent).
+#	    -D:		    Show command but do not execute it.
 #	    -V:		    Show version.
 #
 #  DESCRIPTION:
@@ -22,11 +23,10 @@
 #	    unix_copyto_webbase:    Copy generated files to the server.
 #	These control parameters are hard coded on this file.
 #
-# -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
-#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
-# =============================================================================
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
+# ======================================================================
 version = 1.01
 
 import sys
@@ -217,6 +217,8 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 	csusage = 'unuse'	#  We do not use closed sources.
 	cmnd = 'python SpringheadTest.py'
 	opts = '-p %s -c %s -C %s' % (plat, conf, csusage)
+	if verbose:
+		opts += '-v'
 	args = 'result/dailybuild.result dailybuild.control '
 	if Util.is_unix():
 		args += 'unix'
@@ -249,7 +251,8 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	rslt_path = '../log/%s' % result_log
 	hist_path = '../log/%s' % history_log
 	cmnd = 'python VersionControlSystem.py -g -f %s all' % rslt_path
-	Proc().execute(cmnd, stdout=hist_path).wait()
+	proc = Proc(verbose=verbose, dry_run=dry_run)
+	proc.execute(cmnd, stdout=hist_path).wait()
 	flush()
 	os.chdir(repository)
 

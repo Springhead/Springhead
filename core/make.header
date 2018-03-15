@@ -8,11 +8,10 @@
 
 #####################################################################
 #	User Defined
+#	    ->	Use OPTS=xxx in the command line.
 #####################################################################
 # -DDEBUG / -DNDEBUG
 #DEBUG_FLAG	= -DDEBUG
-DEBUG_FLAG	= -g
-
 
 #####################################################################
 #	Macros
@@ -71,7 +70,8 @@ WARNING_FLAGS	= -Wall \
 		  -Wno-unused-function   \
 		  -Wno-reorder \
 		  -Wno-sign-compare
-CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG) -fPIC
+#CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG) -fPIC
+CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(OPTS) -fPIC
 LDFLAGS 	= $(LDFLAGS.EXTRA) \
 		  $(LDFLAGS.GL) \
 		  -L$(TOP_DIR)/src/Base/ \
