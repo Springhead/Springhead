@@ -30,7 +30,7 @@
     <ProjectGuid>{BB8769BD-2D41-4E11-8012-E3301DA3C900}</ProjectGuid>
     <RootNamespace>BoxStack140</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>BoxStack</ProjectName>
+    <ProjectName>CDMethodSample</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
