@@ -9,6 +9,7 @@
 ################################################################
 TOP_DIR		= ../..
 include		$(TOP_DIR)/make.header
+include		$(TOP_DIR)/make.func
 TARGET_DIR	:= $(shell env pwd)
 TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
@@ -17,6 +18,7 @@ SRCS		= $(wildcard *.cpp)
 OBJS		= ${SRCS:.cpp=.o}
 
 CXXFLAGS	:= $(CXXFLAGS) \
+		$(call add_inc,${SPR_BOOST_INC}) \
 		-std=gnu++11
 
 ################################################################
