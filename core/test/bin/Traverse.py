@@ -38,6 +38,7 @@
 #  VERSION:
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
 import sys
 import os
@@ -70,7 +71,7 @@ class Traverse:
 			timeout, report=True, audit=False,
 			dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.01
+		self.version = 1.1
 		#
 		self.testid = testid
 		self.result = result
@@ -94,6 +95,7 @@ class Traverse:
 		else:
 			self.is_dailybuild = False
 		#
+		self.encoding = 'utf-8' if Util.is_unix() else 'cp932'
 		self.once = True
 		self.trace = True
 		self.fop = FileOp()
@@ -210,6 +212,7 @@ class Traverse:
 				outpath = self.__make_outpath(ctl, slnfile)
 				stat = bar.build(None,
 						slnfile,
+						ctl.get(CFK.MAKE_TARGET),
 						platform,
 						config,
 						outpath,
@@ -335,7 +338,7 @@ class Traverse:
 			(testids[self.testid], steps[step], err)
 
 		# write header
-		f = TextFio(path, 'w', encoding='cp932')
+		f = TextFio(path, 'w', encoding=self.encoding)
 		if f.open() < 0:
 			msg = '__init_log: open error "%s"', path
 			Error(self.clsname).error(msg)

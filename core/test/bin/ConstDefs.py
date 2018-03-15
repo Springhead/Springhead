@@ -8,6 +8,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/07 F.Kanehori	First version.
+#	Ver 1.1  2018/03/15 F.Kanehori	Add: MAKE_TARGET
 # ======================================================================
 from enum import Enum
 
@@ -19,6 +20,7 @@ class CFK():		#  Control File Keywords.
 	SOLUTION_ALIAS	= 'SolutionAlias'
 	BUILD		= 'Build'
 	USE_CLOSED_SRC	= 'UseClosedSrc'
+	MAKE_TARGET	= 'MakeTarget'
 	CPP_MACRO	= 'CppMacro'
 	BUILD_LOG	= 'BuildLog'
 	BUILD_ERR_LOG	= 'BuildErrLog'
