@@ -92,12 +92,13 @@ class BuildAndRun:
 		self.dry_run = dry_run
 		self.verbose = verbose
 		#
+		self.encoding = 'utf-8' if Util.is_unix() else 'cp932'
 		self.errmsg = None
 
 	#  Compile the solution.
 	#
-	def build(self, dirpath, slnfile, platform, opts, outfile,
-			logfile, errlogfile, force=False):
+	def build(self, dirpath, slnfile, make_target, platform, opts,
+			outfile, logfile, errlogfile, force=False):
 		self.dirpath = dirpath
 		self.slnfile = slnfile
 		self.platform = platform	# used by run()
@@ -106,12 +107,15 @@ class BuildAndRun:
 			print('build solution')
 			print('  dirpath: %s' % dirpath)
 			print('  slnfile: %s' % slnfile)
+			print('  target:  %s' % make_target)
 			print('  opts:    %s' % opts)
 			print('  outfile: %s' % outfile)
 			print('  force:   %s' % force)
 			print('  logfile: %s' % logfile)
 			print('  errlog:  %s' % errlogfile)
 		self.verbose = 0
+		if Util.is_unix():
+			print()
 
 		# go to target directory.
 		if dirpath:
@@ -125,7 +129,7 @@ class BuildAndRun:
 		errlogf = self.__open_log(errlogfile, 'a', RST.BLD)
 
 		# call compiler
-		args = [slnfile, platform, opts, outfile, force]
+		args = [slnfile, platform, make_target, opts, outfile, force]
 		if Util.is_unix():
 			stat, loginfo = self.__build_u(args)
 		else:
@@ -257,7 +261,7 @@ class BuildAndRun:
 		logdir = self.__dirpart(fname)
 		if logdir != '':
 			os.makedirs(logdir, exist_ok=True)
-		logf = TextFio(fname, mode=fmode)
+		logf = TextFio(fname, mode=fmode, encoding=self.encoding)
 		if logf.open() < 0:
 			msg = 'build' if step == RST.BLD else 'run'
 			msg += ': open error: "%s"' % fname
@@ -276,19 +280,21 @@ class BuildAndRun:
 			'Trace':	'OPTS=-O2',
 			None:		''
 		}
-		[slnfile, platform, opts, outfile, force] = args
+		[slnfile, platform, make_target, opts, outfile, force] = args
 		if opts not in opt_flags:
 			opts = None
-		cmnd = 'make -f %s' % slnfile
+		tmplog = 'log/%s_%s_%s_build.log' % \
+			(self.clsname, self.platform, self.config)
+
+		cmnd = 'make -f %s %s' % (slnfile, make_target)
 		args = opt_flags[opts]
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
 		proc.execute('%s %s' % (cmnd, args), shell=True,
-				stdout=Proc.PIPE, stderr=Proc.STDOUT)
+				stdout=tmplog, stderr=Proc.STDOUT)
 		stat = proc.wait()
-		out, err = proc.output()
 
 		cmnd = '%s %s' % (cmnd, args)
-		loginfo = [1, cmnd, out]
+		loginfo = [1, cmnd, tmplog]
 		return stat, loginfo
 
 	#  Call compiler (for Windows).
@@ -296,11 +302,11 @@ class BuildAndRun:
 	def __build_w(self, args):
 		# arguments:
 		#   args:	Parameters to compiler (list).
-		[slnfile, platform, opts, outfile, force] = args
+		[slnfile, platform, make_target, opts, outfile, force] = args
 
 		outdir = self.__dirpart(outfile).replace('x86', 'Win32')
 		tmplog = 'log/%s_%s_%s_%s_build.log' % \
-				(self.clsname, self.ccver, self.platform, self.config)
+			(self.clsname, self.ccver, self.platform, self.config)
 		FileOp().rm(tmplog)
 		if self.verbose > 1:
 			print('build solution (Windows)')
