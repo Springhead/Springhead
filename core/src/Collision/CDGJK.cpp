@@ -21,7 +21,7 @@
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDDetectorImp.h>
 #include <Physics/SprPHSdk.h>
-#include <Physics\SprPHEngine.h>
+#include <Physics/SprPHEngine.h>
 #include <fstream>
 #include <Foundation/UTPreciseTimer.h>
 
