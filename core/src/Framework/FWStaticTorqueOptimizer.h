@@ -1,4 +1,4 @@
-ï»¿#ifndef FWSTATICTORQUEOPTIMIZER_H
+#ifndef FWSTATICTORQUEOPTIMIZER_H
 #define FWSTATICTORQUEOPTIMIZER_H
 
 #include <Framework/SprFWOptimizer.h>
@@ -16,24 +16,24 @@ namespace Spr {
 			static void simplesort(std::vector<Vec3f>& ver, Vec3d normal);
 		};
 	public:
-		//å‡¸é›†åˆå½¢æˆã®ç‚¹é›†åˆ
+		//“ÊW‡Œ`¬‚Ì“_W‡
 		std::vector<Vec3f> hull;
-		//å¤šè§’å½¢ã®ä»®ä¸­å¿ƒ
+		//‘½ŠpŒ`‚Ì‰¼’†S
 		Vec3f center;
-		//å¤šè§’å½¢æ³•ç·š
+		//‘½ŠpŒ`–@ü
 		Vec3d normal;
-		//é¢ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢
+		//–Ê‚ÌŒ´“_‚©‚ç‚Ì‹——£
 		double dist;
 	public:
 		GrahamConvexHull();
 		~GrahamConvexHull();
-		//ä¸ãˆã‚‰ã‚ŒãŸç‚¹é›†åˆã‹ã‚‰ã‚°ãƒ©ãƒãƒ å‡¸å¤šè§’å½¢ã‚’å†è¨ˆç®—
+		//—^‚¦‚ç‚ê‚½“_W‡‚©‚çƒOƒ‰ƒnƒ€“Ê‘½ŠpŒ`‚ğÄŒvZ
 		void Recalc(std::vector<Vec3f> vertices);
-		//ã‚°ãƒ©ãƒãƒ å‡¸å¤šè§’å½¢å†…ã«ä¸ãˆãŸç‚¹ãŒå…¥ã‚‹ã‹
+		//ƒOƒ‰ƒnƒ€“Ê‘½ŠpŒ`“à‚É—^‚¦‚½“_‚ª“ü‚é‚©
 		bool InsideGrahamConvexHull(Vec3f v);
-		//å¤šè§’å½¢ä¸­å¿ƒã‹ã‚‰ã®è·é›¢ã«å¿œã˜ãŸè©•ä¾¡å€¤ï¼ˆé ->å¤§ï¼‰
+		//‘½ŠpŒ`’†S‚©‚ç‚Ì‹——£‚É‰‚¶‚½•]‰¿’li‰“->‘åj
 		double Eval(Vec3f v);
-		//å¤šè§’å½¢ã‚’ãªã™ç‚¹é›†åˆã‚’è¿”ã™
+		//‘½ŠpŒ`‚ğ‚È‚·“_W‡‚ğ•Ô‚·
 		Vec3f* GetVertices();
 	};
 
@@ -55,18 +55,18 @@ namespace Spr {
 		std::vector<JointPos> initialPos;
 		Vec3d initialRootPos;
 
-		double errorWeight, stabilityWeight, torqueWeight, resistWeight, constWeight, gravcenterWeight, differentialWeight;    //å„è©•ä¾¡å€¤Weight
+		double errorWeight, stabilityWeight, torqueWeight, resistWeight, constWeight, gravcenterWeight, differentialWeight;    //Še•]‰¿’lWeight
 
-		std::vector<FWGroundConstraint*> groundConst;               //æ¥åœ°æ‹˜æŸé›†åˆã€ã¨ã‚Šã‚ãˆãšæ›¸ãã‚„ã™ã‹ã£ãŸã®ã§vector
-		std::vector<FWUngroundedConstraint*> ungroundedConst;       //éæ¥åœ°æ‹˜æŸ
+		std::vector<FWGroundConstraint*> groundConst;               //Ú’nS‘©W‡A‚Æ‚è‚ ‚¦‚¸‘‚«‚â‚·‚©‚Á‚½‚Ì‚Åvector
+		std::vector<FWUngroundedConstraint*> ungroundedConst;       //”ñÚ’nS‘©
 
-		std::vector<int> bodyIndex;            //èº«ä½“æ§‹æˆå‰›ä½“ã®index
+		std::vector<int> bodyIndex;            //g‘Ì\¬„‘Ì‚Ìindex
 
-											   //ãƒ‡ãƒ¼ã‚¿é€ä¿¡ç”¨
-		FWObjectiveValues val;                 //è©•ä¾¡å€¤å†…è¨³ä¿å­˜æ§‹é€ ä½“
-		Vec3d cog;                             //é‡å¿ƒåº§æ¨™
+											   //ƒf[ƒ^‘—M—p
+		FWObjectiveValues val;                 //•]‰¿’l“à–ó•Û‘¶\‘¢‘Ì
+		Vec3d cog;                             //dSÀ•W
 		double mass;
-		std::vector<Vec3f> supportPolygon;     //æ”¯æŒå¤šè§’å½¢å½¢æˆé ‚ç‚¹é›†åˆ
+		std::vector<Vec3f> supportPolygon;     //x‘½ŠpŒ`Œ`¬’¸“_W‡
 
 	public:
 		SPR_OBJECTDEF(FWStaticTorqueOptimizer);
@@ -127,7 +127,7 @@ namespace Spr {
 		void SetDifferentialWeight(double v);
 		double GetDifferentialWeight();
 
-		//æ§‹é€ ä½“ã®é…åˆ—ã‚’å¤–éƒ¨ã‹ã‚‰å–ã‚Œãªã„ã®ã§ï¼‘è¦ç´ ãšã¤push
+		//\‘¢‘Ì‚Ì”z—ñ‚ğŠO•”‚©‚çæ‚ê‚È‚¢‚Ì‚Å‚P—v‘f‚¸‚Âpush
 		void AddPositionConst(FWGroundConstraint* f);
 		FWGroundConstraint GetGroundConst(int n);
 		void ClearGroundConst();

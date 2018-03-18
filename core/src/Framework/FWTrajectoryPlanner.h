@@ -1,9 +1,10 @@
-ï»¿#ifndef FWTRAJECTORYPLANNER_H
+#ifndef FWTRAJECTORYPLANNER_H
 #define FWTRAJECTORYPLANNER_H
 
 #include <Framework/SprFWOptimizer.h>
 #include <Foundation/Object.h>
 #include <Framework/FrameworkDecl.hpp>
+#include <Framework/FWOptimizer.h>
 
 namespace Spr {
 	; 
@@ -18,21 +19,22 @@ namespace Spr {
 		PTM::TMatrixRow<6, 3, double> coeffToV;
 		PTM::TMatrixRow<6, 3, double> coeffToF;
 	public:
-		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿(å¤šé …å¼ã®ä¿‚æ•°ã‚’æ±ºã‚ã‚‹)
+		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^(‘½€®‚ÌŒW”‚ğŒˆ‚ß‚é)
 		//default
 		MinJerkTrajectory();
-		//é–‹å§‹ä½ç½®ã¨çµ‚ç«¯ä½ç½®ã®ã¿
+		//ŠJnˆÊ’u‚ÆI’[ˆÊ’u‚Ì‚İ
 		MinJerkTrajectory(Posed spose, Posed fpose, int time);
-		//çµŒç”±ç‚¹è¾¼ã¿(çµŒç”±ç‚¹ã§ã®é€Ÿåº¦ã¨åŠ é€Ÿåº¦ã¯å†…éƒ¨ã§è¨ˆç®—)
+		//Œo—R“_‚İ(Œo—R“_‚Å‚Ì‘¬“x‚Æ‰Á‘¬“x‚Í“à•”‚ÅŒvZ)
 		MinJerkTrajectory(Posed spose, Posed fpose, Posed vpose, int time, int vtime);
-		//é–‹å§‹ã¨çµ‚ç«¯ã®ä½ç½®ã€é€Ÿåº¦ã€åŠ é€Ÿåº¦æŒ‡å®š
+		//ŠJn‚ÆI’[‚ÌˆÊ’uA‘¬“xA‰Á‘¬“xw’è
 		MinJerkTrajectory(Posed spose, Posed fpose, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, int time, double per);
 		MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, double per);
-		//é–‹å§‹ã¨çµ‚ç‚¹ã®ä½ç½®ã€é€Ÿåº¦ã¨é€šéç‚¹ã®ä½ç½®ã€é€šéæ™‚é–“æŒ‡å®š
+		//ŠJn‚ÆI“_‚ÌˆÊ’uA‘¬“x‚Æ’Ê‰ß“_‚ÌˆÊ’uA’Ê‰ßŠÔw’è
 		MinJerkTrajectory(Posed spose, Posed fpose, Vec3d sVel, Vec3d fVel, Posed vPose, int vtime, int time, double per);
 		MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, ControlPoint vpoint, double per);
 		Posed GetCurrentPose(int t);
 		Posed GetDeltaPose(int t);
+		Vec6d GetCurrentVelocity(int t);
 		double GetCurrentActiveness(int t);
 	};
 
@@ -47,10 +49,10 @@ namespace Spr {
 		PTM::TVector<6, double> coeffToV;
 		PTM::TVector<6, double> coeffToF;
 	public:
-		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿(å¤šé …å¼ã®ä¿‚æ•°ã‚’æ±ºã‚ã‚‹)
+		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^(‘½€®‚ÌŒW”‚ğŒˆ‚ß‚é)
 		//default
 		AngleMinJerkTrajectory();
-		//é–‹å§‹ä½ç½®ã¨çµ‚ç«¯ä½ç½®ã®ã¿
+		//ŠJnˆÊ’u‚ÆI’[ˆÊ’u‚Ì‚İ
 		AngleMinJerkTrajectory(double sangle, double fangle, int time);
 		AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double sAcc, double fAcc, int time, double per);
         AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double vangle, double vVel, int time, int vtime, double per);
@@ -58,6 +60,7 @@ namespace Spr {
 		double GetCurrentAngle(int t);
 		double GetDeltaAngle(int t);
 		double GetCurrentVelocity(int t);
+		double GetCurrentAcceleration(int t);
 	};
 
 	class QuaMinJerkTrajectory {
@@ -75,179 +78,242 @@ namespace Spr {
 		PTM::TMatrixRow<6, 1, double> coeffToV;
 		PTM::TMatrixRow<6, 1, double> coeffToF;
 	public:
-		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿(å¤šé …å¼ã®ä¿‚æ•°ã‚’æ±ºã‚ã‚‹)
+		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^(‘½€®‚ÌŒW”‚ğŒˆ‚ß‚é)
 		//default
 		QuaMinJerkTrajectory();
-		//é–‹å§‹ä½ç½®ã¨çµ‚ç«¯ä½ç½®ã®ã¿
+		//ŠJnˆÊ’u‚ÆI’[ˆÊ’u‚Ì‚İ
 		QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, int time, double per);
 		QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, int time, double per);
 		QuaMinJerkTrajectory(Quaterniond vqua, int time, int vtime, double per);
 		Quaterniond GetCurrentQuaternion(int t);
 		Quaterniond GetDeltaQuaternion(int t);
+		Vec3d GetCurrentVelocity(int t);
 	};
 
 	class FWTrajectoryPlanner : public Object{
-
-		//Jointç³»ã®ç®¡ç†ã‚¯ãƒ©ã‚¹
+	public:
+		//JointŒn‚ÌŠÇ—ƒNƒ‰ƒX
 		class Joint {
 		public:
-			virtual void Initialize(int iterate, int movetime) {};
+			virtual void Initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true) = 0;
+			virtual void MakeJointMinjerk(int cnt) = 0;
+			virtual void CloseFile() = 0;
 			virtual void SaveTorque(int n) = 0;
 			virtual void SaveTarget() = 0;
 			virtual void SetTarget(int k, int n) = 0;
+			virtual void SetTargetVelocity(int k, int n) = 0;
+			virtual void SetTargetInitial() = 0;
 			virtual void SetOffsetFromLPF(int n) = 0;
 			virtual void ResetOffset() = 0;
 			virtual void SavePosition(int k, int n) = 0;
+			virtual void SaveVelocity(int k, int n) = 0;
 			virtual void SaveViaPoint(int v, int t) = 0;
 			virtual void SavePositionFromLPF(int k, int n) = 0;
+			virtual void SaveVelocityFromLPF(int k, int n) = 0;
+			virtual void SaveVelocityForwardEnd() = 0;
 			virtual void TrajectoryCorrection(int k, bool s) = 0;
-			virtual void TrajectoryCorrectionWithVia(int k, bool s) = 0;
 			virtual void ApplyLPF(int lpf, int count) = 0;
 			virtual void Soften() = 0;
 			virtual void Harden() = 0;
 			virtual void ResetPD() = 0;
 			virtual double CalcTotalTorqueChange() = 0;
+			virtual double CalcTotalTorqueChangeLPF() = 0;
 			virtual double CalcTorqueChangeInSection(int n) = 0;
+			virtual double GetBestTorqueChangeInSection(int n) = 0;
 			virtual void SetBestTorqueChange() = 0;
 			virtual void ShowInfo() = 0;
 			virtual void SetTargetCurrent() = 0;
 			virtual void SetTargetFromLPF(int k, int n) = 0;
+			virtual void OutputTorque() = 0;
+			virtual void SetPD(double s, double d, bool mul) = 0;
+			virtual void UpdateIKParam(double b, double p) = 0;
+			virtual double GetMaxForce() = 0;
+			virtual void SetWeight(double w = 1.0) = 0;
 		};
 		class HingeJoint : public Joint {
 		public:
-			PHIKHingeActuatorIf* hinge;
-			PTM::VVector<double> torque;
-			PTM::VVector<double> torqueLPF;
-			PTM::VMatrixRow<double> angle;
-			PTM::VMatrixRow<double> angleLPF;
-			double targetAngle;
-			double targetVel;
-			PTM::VVector<double> viaAngles;
-			PTM::VVector<double> viaVels;
-			PTM::VVector<int> viatimes;
-			double deltaViaAngle;
-			double initialTorque;
-			double initialAngle;
-			double initialVel;
-			int iterate;
-			int movetime;
-			double weight = 1.0;
-			double rateLPF = 1.0;
-			double originalSpring;
-			double originalDamper;
-			double hardenSpring = 1e10;
+			PHIKHingeActuatorIf* hinge;          //ƒAƒNƒ`ƒ…ƒG[ƒ^
+
+			PTM::VVector<double> torque;         //Inverse‚É‹L˜^‚µ‚½ƒgƒ‹ƒN
+			PTM::VVector<double> torqueLPF;      //LPFŒãƒgƒ‹ƒN
+			PTM::VMatrixRow<double> angle;       //Inverse‚Å“®‚©‚·—pŠp“x(C³‚İ)
+			PTM::VMatrixRow<double> angleLPF;    //Forward‚É‹L˜^‚·‚éŠp“x
+			PTM::VMatrixRow<double> angleVels;
+			PTM::VMatrixRow<double> angleVelsLPF;
+
+			double targetAngle;                  //ƒ^[ƒQƒbƒg‚Æ‚È‚éŠÖßŠp
+			double targetVel;                    //ƒ^[ƒQƒbƒg‚Æ‚È‚éŠp‘¬“x(’Êí‚Í0)
+			PTM::VVector<double> viaAngles;      //Œo—R“_‚É‚¨‚¯‚éŠp“x
+			PTM::VVector<double> viaVels;        //Œo—R“_‚É‚¨‚¯‚éŠp‘¬“x
+			PTM::VVector<int> viatimes;          //Œo—R“_‚Ì’Ê‰ßŠÔ
+
+			double initialTorque;                //ŠJn‚Ì”­Šöƒgƒ‹ƒN
+			double initialAngle;                 //ŠJn‚ÌŠÖßŠp“x
+			double initialVel;                   //ŠJn‚ÌŠp‘¬“x
+
+			int iterate;                         //ŒJ‚è•Ô‚µ‰ñ”
+			int movetime;                        //Š—vƒXƒeƒbƒv
+			double weight = 1.0;                 //•]‰¿ƒEƒFƒCƒg
+			double rateLPF = 1.0;                //LPF‚ÌƒŒ[ƒg
+			double originalSpring;               //Œ³‚Ì‚Î‚Ë’è”
+			double originalDamper;               //Œ³‚Ìƒ_ƒ“ƒp’è”
+			double hardenSpring = 1e30;
 			double hardenDamper = 1e8;
 			bool mul = true;
-			double vel = 0;
 			PTM::VVector<double> tChanges;
 			bool viaCorrect;
 			PTM::VMatrixRow<double> CorrTraj;
+			double velBeforeEnd;
+			
+		private:
+			std::ofstream* torGraph;
+			std::ofstream* torChangeGraph;
+			bool outputEnable = false;
+			
 		public:
-			HingeJoint(PHIKHingeActuatorIf* hinge);
-			//~HingeJoint();
+			HingeJoint(PHIKHingeActuatorIf* hinge, std::string path, bool oe);
+			~HingeJoint();
 			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0, bool vCorr = true);
+			void MakeJointMinjerk(int cnt);
+			void CloseFile();
 			void SaveTorque(int n);
 			void SaveTarget();
 			void SetTarget(int k, int n);
+			void SetTargetVelocity(int k, int n);
+			void SetTargetInitial();
 			void SetOffsetFromLPF(int n);
 			void ResetOffset();
 			void SavePosition(int k, int n);
+			void SaveVelocity(int k, int n);
 			void SavePositionFromLPF(int k, int n);
+			void SaveVelocityFromLPF(int k, int n);
+			void SaveVelocityForwardEnd();
 			void SaveViaPoint(int v, int t);
 			void TrajectoryCorrection(int k, bool s);
-			void TrajectoryCorrectionWithVia(int k, bool s);
 			void ApplyLPF(int lpf, int count);
 			void Soften();
 			void Harden();
 			void ResetPD();
 			double CalcTotalTorqueChange();
+			double CalcTotalTorqueChangeLPF();
 			double CalcTorqueChangeInSection(int n);
+			double GetBestTorqueChangeInSection(int n);
 			void SetBestTorqueChange();
 			void ShowInfo();
 			void SetTargetCurrent();
 			void SetPD(double s, double d, bool mul);
 			void SetTargetFromLPF(int k, int n);
 			void UpdateIKParam(double b, double p);
+			void OutputTorque();
+			double GetMaxForce() { return hinge->GetJoint()->GetMaxForce(); }
+			void SetWeight(double w) { weight = w; }
 		};
 		class BallJoint : public Joint {
 		public:
-			PHIKBallActuatorIf* ball;
-			PTM::VVector<Vec3d> torque;
-			PTM::VVector<Vec3d> torqueLPF;
-			PTM::VMatrixRow<Quaterniond> ori;
-			PTM::VMatrixRow<Quaterniond> oriLPF;
-			Quaterniond targetOri;
-			Vec3d targetVel;
-			Quaterniond deltaEndOri;
-			PTM::VVector<Quaterniond> viaOris;
-			PTM::VVector<Vec3d> viaVels;
-			PTM::VVector<int> viatimes;
-			Quaterniond deltaViaOri;
-			int viatime;
-			Vec3d initialTorque;
-			Quaterniond initialOri;
-			Vec3d initialVel;
-			int iterate;
-			int movetime;
-			double weight = 1.0;
-			double rateLPF = 1.0;
-			double originalSpring;
-			double originalDamper;
-			double hardenSpring = 1e10;
+			PHIKBallActuatorIf* ball;            //ƒAƒNƒ`ƒ…ƒG[ƒ^
+
+			PTM::VVector<Vec3d> torque;          //Inverse‚É‹L˜^‚µ‚½ƒgƒ‹ƒN
+			PTM::VVector<Vec3d> torqueLPF;       //LPFŒãƒgƒ‹ƒN
+			PTM::VMatrixRow<Quaterniond> ori;    //Inverse‚Å“®‚©‚·—pŠp“x(C³‚İ)
+			PTM::VMatrixRow<Quaterniond> oriLPF; //Forward‚É‹L˜^‚·‚éŠp“x
+			PTM::VMatrixRow<Vec3d> oriVels;
+			PTM::VMatrixRow<Vec3d> oriVelsLPF;
+
+			Quaterniond targetOri;               //ƒ^[ƒQƒbƒg‚Æ‚È‚éŠÖßŠp
+			Vec3d targetVel;                     //ƒ^[ƒQƒbƒg‚Æ‚È‚éŠp‘¬“x(’Êí‚Í0)
+			PTM::VVector<Quaterniond> viaOris;   //Œo—R“_‚É‚¨‚¯‚éŠp“x
+			PTM::VVector<Vec3d> viaVels;         //Œo—R“_‚É‚¨‚¯‚éŠp‘¬“x
+			PTM::VVector<int> viatimes;          //Œo—R“_‚Ì’Ê‰ßŠÔ
+
+			Vec3d initialTorque;                 //ŠJn‚Ì”­Šöƒgƒ‹ƒN
+			Quaterniond initialOri;              //ŠJn‚ÌŠÖßŠp“x
+			Vec3d initialVel;                    //ŠJn‚ÌŠp‘¬“x
+
+			int iterate;                         //ŒJ‚è•Ô‚µ‰ñ”
+			int movetime;                        //Š—vƒXƒeƒbƒv
+			double weight = 1.0;                 //•]‰¿ƒEƒFƒCƒg
+			double rateLPF = 1.0;                //LPF‚ÌƒŒ[ƒg
+			double originalSpring;               //Œ³‚Ì‚Î‚Ë’è”
+			double originalDamper;               //Œ³‚Ìƒ_ƒ“ƒp’è”
+			double hardenSpring = 1e30;
 			double hardenDamper = 1e8;
 			bool mul = true;
-			Vec3d vel = Vec3d();
 			PTM::VVector<double> tChanges;
 			bool viaCorrect;
+			PTM::VMatrixRow<Quaterniond> CorrTraj;
+			Vec3d velBeforeEnd;
+
+		private:
+			std::ofstream* torGraph;
+			std::ofstream* torChangeGraph;
+			bool outputEnable = false;
+
 		public:
-			BallJoint(PHIKBallActuatorIf* ball);
+			BallJoint(PHIKBallActuatorIf* ball, std::string path, bool oe);
 			~BallJoint();
 			void Initialize(int iterate, int mtime, int nVia, double rate = 1.0, bool vCorr = true);
+			void MakeJointMinjerk(int cnt);
+			void CloseFile();
 			void SaveTorque(int n);
 			void SaveTarget();
 			void SetTarget(int k, int n);
+			void SetTargetVelocity(int k, int n);
+			void SetTargetInitial();
 			void SetOffsetFromLPF(int n);
 			void ResetOffset();
 			void SavePosition(int k, int n);
+			void SaveVelocity(int k, int n);
 			void SaveViaPoint(int v, int t);
 			void SavePositionFromLPF(int k, int n);
+			void SaveVelocityFromLPF(int k, int n);
+			void SaveVelocityForwardEnd();
 			void TrajectoryCorrection(int k, bool s);
-			void TrajectoryCorrectionWithVia(int k, bool s);
 			void SetBestTorqueChange();
 			void ApplyLPF(int lpf, int count);
 			void Soften();
 			void Harden();
 			void ResetPD();
 			double CalcTotalTorqueChange();
+			double CalcTotalTorqueChangeLPF();
 			double CalcTorqueChangeInSection(int n);
+			double GetBestTorqueChangeInSection(int n);
 			void ShowInfo();
 			void SetTargetCurrent();
 			void SetPD(double s, double d, bool mul);
 			void SetTargetFromLPF(int k, int n);
 			void UpdateIKParam(double b, double p);
+			void OutputTorque();
+			double GetMaxForce() { return ball->GetJoint()->GetMaxForce(); }
+			void SetWeight(double w) { weight = w; }
 		};
 		class Joints {
 			friend class Joint;
 		public:
 			std::vector<Joint*> joints;
-			std::vector<BallJoint> balls;
-			std::vector<HingeJoint> hinges;
+			//std::vector<BallJoint> balls;
+			//std::vector<HingeJoint> hinges;
 		public:
 			Joints();
 			~Joints();
 			void RemoveAll();
-			void Add(PHIKActuatorIf* j);
-			void initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true);
+			void Add(PHIKActuatorIf* j, std::string path, bool oe = true);
+			void Initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true);
+			void MakeJointMinjerk(int cnt);
+			void CloseFile();
 			void SetTarget(int k, int n);
+			void SetTargetVelocity(int k, int n);
+			void SetTargetInitial();
 			void SaveTorque(int n);
 			void SaveTarget();
 			void SetOffsetFromLPF(int n);
 			void ResetOffset();
 			void SavePosition(int k, int n);
+			void SaveVelocity(int k, int n);
 			void SaveViaPoint(int v, int t);
 			void SavePositionFromLPF(int k, int n);
+			void SaveVelocityFromLPF(int k, int n);
+			void SaveVelocityForwardEnd();
 			void TrajectoryCorrection(int k, bool s);
-			void TrajectoryCorrectionWithVia(int k, bool s);
 			void SetBestTorqueChange();
 			double GetBestTorqueChangeInSection(int n);
 			void ApplyLPF(int lpf, int count);
@@ -255,6 +321,8 @@ namespace Spr {
 			void Harden();
 			void ResetPD();
 			double CalcTotalTorqueChange();
+			double CalcTotalTorqueChange(std::ofstream& o);
+			double CalcTotalTorqueChangeLPF();
 			double CalcTorqueChangeInSection(int n);
 			void ShowInfo();
 			void SetTargetCurrent();
@@ -262,11 +330,10 @@ namespace Spr {
 			void SetPD(double s, double d, bool mul);
 			void SetTargetFromLPF(int k, int n);
 			void UpdateIKParam(double b, double p);
+			void OutputTorque();
 		};
 
 		struct LPF {
-			//BiQuad LPF
-			static PTM::VMatrixRow<double> BiQuad(PTM::VMatrixRow<double> input, double samplerate, double freq, double q);
 			//N-Simple Moving Average LPF
 			template<class T>
 			static PTM::VMatrixRow<T> NSMA(PTM::VMatrixRow<T> input, int n, double mag, PTM::VVector<T> s);
@@ -282,93 +349,107 @@ namespace Spr {
 		};
 
 	private:
-		//----- è¨ˆç®—ã«ã‹ã‹ã‚ã‚‹ã‚‚ã® -----
-		//æ“ä½œå¯¾è±¡ã¨ãªã‚‹ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿
+		//----- ŒvZ‚É‚©‚©‚í‚é‚à‚Ì -----
+		//‘€ì‘ÎÛ‚Æ‚È‚éƒGƒ“ƒhƒGƒtƒFƒNƒ^
 		PHIKEndEffectorIf* eef;
-		//é–‹å§‹å§¿å‹¢
+		//ŠJnp¨
 		ControlPoint startPoint = ControlPoint();
-		//ç›®æ¨™å§¿å‹¢
+		//–Ú•Wp¨
 		ControlPoint targetPoint = ControlPoint();
-		//é€”ä¸­é€šéç‚¹
-		ControlPoint viaPoint = ControlPoint();
+		PHSolidIf* targetSolid;
+		PHSpringIf* targetSpring;
+		//“r’†’Ê‰ß“_
 		std::vector<ControlPoint> viaPoints;
-		//ç§»å‹•æ™‚é–“ã‚’ç§’ã§è¡¨ã—ãŸã‚‚ã®
+		std::vector<PHSolidIf*> viaSolids;
+		std::vector<PHSpringIf*> viaSprings;
+		//ˆÚ“®ŠÔ‚ğ•b‚Å•\‚µ‚½‚à‚Ì
 		double mtime;
-		//ç§»å‹•æ™‚é–“ã‚’Stepæ•°ã«ã—ãŸã‚‚ã®(mtimeè¦ã‚‰ãªã„ï¼Ÿ)
+		//ˆÚ“®ŠÔ‚ğStep”‚É‚µ‚½‚à‚Ì(mtime—v‚ç‚È‚¢H)
 		int movtime;
-		//è€ƒæ…®ã™ã‚‹é–¢ç¯€ã®æ·±ã•
+		//l—¶‚·‚éŠÖß‚Ì[‚³
 		int depth;
-		//è€ƒæ…®ã™ã‚‹Actuator
+		//l—¶‚·‚éActuator
 		Joints joints;
-		//ç¹°ã‚Šè¿”ã—å›æ•°
+		//ŒJ‚è•Ô‚µ‰ñ”
 		int iterate;
-		//çµŒç”±æ™‚é–“è£œæ­£æœ€å¤§å›æ•°
+		//Œo—RŠÔ•â³Å‘å‰ñ”
 		int iterateViaAdjust;
-		//çµŒç”±æ™‚é–“è£œæ­£ç‡
+		//Œo—RŠÔ•â³—¦
 		double viaAdjustRate;
+		//
+		PTM::VVector<double> weights;
+		//
+		bool stop;
 
-		//----- Sceneã¨ä¿å­˜ç”¨ã®States -----
+		//----- Scene‚Æ•Û‘¶—p‚ÌStates -----
 		PHSceneIf* scene;
 		UTRef<ObjectStatesIf> states;
 		UTRef<ObjectStatesIf> cstates;
 		UTRef<ObjectStatesIf> initialstates;
 		UTRefArray<ObjectStatesIf> tmpstates;
+		UTRefArray<ObjectStatesIf> corstates;
+		UTRefArray<ObjectStatesIf> beforecorstates;
 
-		//----- ãƒˆãƒ«ã‚¯ã‹ã‚‰ç”Ÿæˆã—ãŸè»Œé“ãƒ‡ãƒ¼ã‚¿ç¾¤ -----
+		//----- ƒgƒ‹ƒN‚©‚ç¶¬‚µ‚½‹O“¹ƒf[ƒ^ŒQ -----
 		PTM::VMatrixRow<Posed> trajData;
 		PTM::VMatrixRow<Posed> trajDataNotCorrected;
 		PTM::VMatrixRow<Vec4d> trajVel;
 		PTM::VMatrixRow<Vec4d> trajVelNotCorrected;
 		PTM::VMatrixRow<Posed> ContinuousTrajData;
 
-		//å†ç”Ÿæ™‚ã«ã¾ã ç§»å‹•ä¸­ã‹ã©ã†ã‹
+		//----- o—ÍæƒpƒX -----
+		std::string path;
+
+		//Ä¶‚É‚Ü‚¾ˆÚ“®’†‚©‚Ç‚¤‚©
 		bool moving;
-		//(replayæ™‚ã®)å†ç”Ÿè»Œé“indexã€é€šå¸¸ã¯æœ€å¾Œã®ã‚‚ã®
+		//(replay‚Ì)Ä¶‹O“¹indexA’Êí‚ÍÅŒã‚Ì‚à‚Ì
 		int ite;
-		//è¨ˆç®—æ¸ˆã¿ã‹ã®ãƒ•ãƒ©ã‚°
+		//ŒvZÏ‚İ‚©‚Ìƒtƒ‰ƒO
 		bool calced;
-		//ãƒªãƒ—ãƒ¬ã‚¤æ™‚ã®é©ç”¨ã‚¹ãƒ†ãƒƒãƒ—
+		//ƒŠƒvƒŒƒC‚Ì“K—pƒXƒeƒbƒv
 		int repCount;
-		//æ¥µå°å€¤ã‚’ã¨ã£ãŸè»Œé“ã®ç•ªå·
+		//‹É¬’l‚ğ‚Æ‚Á‚½‹O“¹‚Ì”Ô†
 		int best;
 
-		//----- ãƒ­ãƒ¼ãƒ‘ã‚¹é–¢ä¿‚ -----
-		//BiQuadLPSç”¨ã®é®æ–­å‘¨æ³¢æ•°ã¨Qå€¤
+		//----- ƒ[ƒpƒXŠÖŒW -----
+		//BiQuadLPS—p‚ÌÕ’fü”g”‚ÆQ’l
 		double freq;
 		double qvalue;
-		//Nç‚¹å¹³å‡
+		//N“_•½‹Ï
 		int nsma;
 		double mag;
-		//ã‚¦ã‚§ã‚¤ãƒˆ
+		//ƒEƒFƒCƒg
 		PTM::VVector<double> weight;
-		//ãƒ­ãƒ¼ãƒ‘ã‚¹ã®æ›ã‘å…·åˆ
+		//ƒ[ƒpƒX‚ÌŠ|‚¯‹ï‡
 		double rate = 1.0;
 
-		//----- è¨ˆç®—ä¸­ã®PDå€¤ã«é–¢ã™ã‚‹å¤‰æ•° -----
-		//ãƒˆãƒ«ã‚¯->è»Œé“ç”Ÿæˆæ™‚ã®spring&damper
+		//----- ŒvZ’†‚ÌPD’l‚ÉŠÖ‚·‚é•Ï” -----
+		//ƒgƒ‹ƒN->‹O“¹¶¬‚Ìspring&damper
 		double spring = 1e10;
 		double damper = 1e10;
 		bool mul = true;
 
-		//----- Unityã‹ã‚‰ã©ã“ã¾ã§é©ç”¨ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚° -----
-		//correctionã‚’é©ç”¨ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+		//----- Unity‚©‚ç‚Ç‚±‚Ü‚Å“K—p‚·‚é‚©‚Ìƒtƒ‰ƒO -----
+		//correction‚ğ“K—p‚·‚é‚©‚Ìƒtƒ‰ƒO
 		int correction;
-		//ä¿®æ­£å‰ã®è»Œé“ã‚’Saveã™ã‚‹ã‹
+		//C³‘O‚Ì‹O“¹‚ğSave‚·‚é‚©
 		bool saveNotCorrected;
-		//åˆ°é”ã¾ã§å¾…ã¤
+		//“’B‚Ü‚Å‘Ò‚Â
 		bool waitFlag;
-		//ä¿®æ­£å‰è»Œé“ã‚’å†ç”Ÿã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+		//C³‘O‹O“¹‚ğÄ¶‚·‚é‚©‚Ìƒtƒ‰ƒO
 		bool noncorrectedReplay;
-		//åˆ°é”ç›®æ¨™ã®å§¿å‹¢ã‚’å›ºå®šã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+		//“’B–Ú•W‚Ìp¨‚ğŒÅ’è‚·‚é‚©‚Ìƒtƒ‰ƒO
 		bool staticTarget;
-		//é–¢ç¯€æ¬¡å…ƒèºåº¦æœ€å°è»Œé“ã‚’åˆæœŸè»Œé“ã¨ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+		//ŠÖßŸŒ³–ô“xÅ¬‹O“¹‚ğ‰Šú‹O“¹‚Æ‚·‚é‚©‚Ìƒtƒ‰ƒO
 		bool jointMJT;
-		//ãƒ­ãƒ¼ãƒ‘ã‚¹ã‚¦ã‚§ã‚¤ãƒˆã‚’å‹•çš„ã«å¤‰åŒ–ã•ã›ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+		//ƒ[ƒpƒXƒEƒFƒCƒg‚ğ“®“I‚É•Ï‰»‚³‚¹‚é‚©‚Ìƒtƒ‰ƒO
 		bool dynamicalWeight;
 		//
 		bool viaCorrect;
+		//
+		bool springCor;
 
-		//ãƒˆãƒ«ã‚¯å¤‰åŒ–
+		//ƒgƒ‹ƒN•Ï‰»
 		PTM::VVector<double> torquechange;
 		double totalchange;
 		double besttorque;
@@ -376,59 +457,52 @@ namespace Spr {
 	public:
 		SPR_OBJECTDEF(FWTrajectoryPlanner);
 		SPR_DECLMEMBEROF_FWTrajectoryPlannerDesc;
-		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 		FWTrajectoryPlanner(const FWTrajectoryPlannerDesc& desc = FWTrajectoryPlannerDesc()) {
 			SetDesc(&desc);
 		}
-		FWTrajectoryPlanner(int d, int i, int iv, double f, double q, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65);
+		FWTrajectoryPlanner(int d, int i, int iv, double f, double q, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool sc = false);
 
-		//----- è¨ˆç®—ç”¨é–¢æ•° -----
-		//jointã®æ·±ã•ã®ãƒã‚§ãƒƒã‚¯ã¨æŠ•ã’è¾¼ã¿
+		//----- ŒvZ—pŠÖ” -----
+		//joint‚Ì[‚³‚Ìƒ`ƒFƒbƒN‚Æ“Š‚°‚İ
 		void CheckAndSetJoints();
-		//èºåº¦æœ€å°è»Œé“ç”Ÿæˆ
-		void MakeMinJerkAndSave();
-		void MakeMinJerkAndSaveWithViaPoint();
-		//Forward 
-		void JointForward(int k, bool via = false);
-		//Inverse
-		void JointInverse(int k, bool via = false);
-		//è£œæ­£
-		void JointTrajCorrection(int k);
-		void JointTrajCorrectionWithViaPoint(int k);
-		//ãƒ‡ãƒãƒƒã‚°ç”¨æƒ…å ±è¡¨ç¤º
+		//ƒfƒoƒbƒO—pî•ñ•\¦
 		void Debug();
-		//ãƒ‡ãƒãƒƒã‚°ç”¨ã‚¢ã‚¦ãƒˆãƒ—ãƒƒãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®å¤§æœ¬ç”Ÿæˆ
+		//ƒfƒoƒbƒO—pƒAƒEƒgƒvƒbƒgƒtƒ@ƒCƒ‹‚Ì‘å–{¶¬
 		void PrepareOutputFilename(std::string& filename);
-		//è»Œé“ãƒ‡ãƒ¼ã‚¿ã®å‡ºåŠ›
+		//‹O“¹ƒf[ƒ^‚Ìo—Í
 		void OutputTrajectory(std::string filename);
 		void OutputNotCorrectedTrajectory(std::string filename);
 		void OutputVelocity(std::string filename);
-		//ãƒ­ãƒ¼ãƒ‰
+		//ƒ[ƒh
 		void LoadScene();
 
-		//å®Ÿè£…ä¸­
 		//Forward Inver Relaxation Model
 		void FIRM(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
 		//viatime adjustment
 		bool ViatimeAdjustment();
 		//viatime initialize
 		void ViatimeInitialize();
-		//MakeMinJerkè¤‡æ•°ç‚¹ç‰ˆ
+		//MakeMinJerk•¡”“_”Å
 		void MakeMinJerkAll();
-		//
+		//Forward model(torque -> pos)
 		void Forward(int k);
+		//Inverse model(pos -> torque)
 		void Inverse(int k);
+		//
 		void Correction(int k);
-		void CalcTrajectory(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
+		//Prepare solids and springs for correction
+		void PrepareSprings();
+		//
 		int TimeToStep(double t) {
 			t *= scene->GetTimeStepInv();
 			return ((t - (int)t) < 0.5) ? (int)t : (int)(t + 1);
 		}
 
-		//-----ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…-----
+		//-----ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•-----
 
-		//åˆæœŸåŒ–ç³»
-		void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true) {
+		//‰Šú‰»Œn
+		void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false) {
 			this->depth = d;
 			this->iterate = i;
 			this->iterateViaAdjust = iv;
@@ -440,47 +514,55 @@ namespace Spr {
 			this->waitFlag = wf;
 			this->saveNotCorrected = snc;
 			this->viaCorrect = vCorr;
+			this->springCor = sc;
 		}
 
 		void Init();
 
-		void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool vCorr = true);
+		void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
 		
-		//ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿è¨­å®š
+		//ƒGƒ“ƒhƒGƒtƒFƒNƒ^İ’è
 		void SetControlTarget(PHIKEndEffectorIf* e);
 
-		//ã‚·ãƒ¼ãƒ³è¨­å®š
+		//ƒV[ƒ“İ’è
 		void SetScene(PHSceneIf* s);
-
-		//æŒ‡å®šç‚¹é€šéè»Œé“è¨ˆç®—
-		void CalcTrajectoryWithViaPoint(ControlPoint tpoint, ControlPoint vpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
-
-		//é€£ç¶šè»Œé“è¨ˆç®—
-		void CalcContinuousTrajectory(int LPFmode, int smoothCount, std::string filename, bool bChange, bool pChange, bool staticTarget, bool jmjt);
 		void AddControlPoint(ControlPoint c);
 
-		//é–¢ç¯€è§’åº¦æ¬¡å…ƒè»Œé“è¨ˆç®—
-		void JointCalcTrajectory(Posed tPose, double mt, int LPFmode, int smoothCount, std::string output, bool bChange = false, bool pChange = false, bool staticTarget = false, bool jmjt = false);
-		void JointRecalcFromIterateN(Posed tPose, double mt, int LPFmode, int smoothCount, std::string output, bool bChange = false, bool pChange = false, bool staticTarget = false, bool jmjt = false);
+		//ŒvZÀs
+		void CalcTrajectory(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
 
-		//Nå›ç›®ã®ç¹°ã‚Šè¿”ã—ã‹ã‚‰å†è¨ˆç®—
+		//ŠÖßŠp“xŸŒ³‹O“¹ŒvZ
+		//‚È‚ñ‚¾‚Á‚¯H
+		void JointRecalcFromIterateN(Posed tPose, double mt, int LPFmode, int smoothCount, std::string output, bool bChange = false, bool pChange = false, bool staticTarget = false, bool jmjt = false) {};
+
+		//N‰ñ–Ú‚ÌŒJ‚è•Ô‚µ‚©‚çÄŒvZ
 		void RecalcFromIterationN(int n);
 
-		//ç”Ÿæˆã•ã‚ŒãŸè»Œé“ã‚’å®Ÿéš›é©ç”¨
+		//¶¬‚³‚ê‚½‹O“¹‚ğÀÛ“K—p
 		void JointTrajStep(bool step);
 
 		//moving?
 		bool Moving() { return moving; }
 		//spring, damper set
 		void SetPD(double s = 1e10, double d = 1e10, bool mul = true);
+		//
+		void SetWeights(std::vector<double> w) {
+			//int l = sizeof(w) / sizeof(w[0]);
+			int l = (int)w.size();
+			weights.resize(depth, 1);
+			l = (l > depth) ? depth : l;
+			for (int i = 0; i < l; i++) {
+				weights[i] = w[i];
+			}
+		}
 		//replay
 		void Replay(int ite, bool noncorrected = false);
 		//return totalChange
 		double GetTotalChange();
 		//return best
 		int GetBest();
+		void ReloadCorrected(int k, bool nc = false);
 	};
-
 }
 
 #endif
