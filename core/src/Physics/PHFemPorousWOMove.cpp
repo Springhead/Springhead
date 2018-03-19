@@ -2614,7 +2614,7 @@ double PHFemPorousWOMove::CalcOilInnerTets(unsigned id,PTM::TVector<4,double> N)
 };
 
 float PHFemPorousWOMove::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
-	float gvtx;
+	float gvtx = 0;
 	//テクスチャの設定
 	//焦げテクスチャの枚数
 	unsigned kogetex	= 5;
