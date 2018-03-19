@@ -12,7 +12,7 @@
 #		       shell=False, env=None, addpath=None, append=False)
 #	status = wait(self, timeout=None)
 #	kill(self, pid=None, image=None, verbose=0)
-#	out, err = output(self)
+#	status, out, err = output(self, timeout=None)
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -26,6 +26,7 @@
 #					when dry_run flag specified.
 #	Ver 1.15 2018/03/12 F.Kanehori	Now OK for doxygen.
 #	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
+#	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
 # ======================================================================
 import sys
 import os
@@ -247,11 +248,13 @@ class Proc:
 					print('  %s' % e)
 
 	##  Get both stdout and stderr output from the process.
+	#   @param timeout	Time out value in seconds (int).
 	#   @returns		out, err
+	#   @n status:		Process termination code (int).
 	#   @n out:		Output string got from stdout stream (str).
 	#   @n err:		Output string got from stderr stream (str).
 	#
-	def output(self):
+	def output(self, timeout=None):
 		if self.dry_run:
 			return None, None
 		if self.proc is None:
@@ -260,16 +263,22 @@ class Proc:
 			return None, None
 		if self.pipe[1] != Proc.PIPE and self.pipe[2] != Proc.PIPE:
 			if self.verbose:
-				print('  output is no redirected')
+				print('  output is not redirected')
 			return None, None
 		#
-		out, err = self.proc.communicate()
+		try:
+			out, err = self.proc.communicate(timeout=timeout)
+			status = 0
+		except subprocess.TimeoutExpired:
+			self.proc.kill()
+			out, err = self.proc.communicate()
+			status = Proc.ETIME
 		encoding = os.device_encoding(1)
 		if encoding is None:
 			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None
-		return out, err
+		return status, out, err
 
 	# --------------------------------------------------------------
 	#  For class private use
@@ -293,8 +302,7 @@ class Proc:
 		cmnd = 'ps a' if Util.is_unix() else 'tasklist'
 		proc = Proc()
 		proc.execute(cmnd, stdout=Proc.PIPE, shell=True)
-		out, err = proc.output()
-		proc.wait()
+		stat, out, err = proc.output()
 		outlist = out.replace('\r', '').split('\n')
 		tasks = []
 		for line in outlist:
