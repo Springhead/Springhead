@@ -1,4 +1,4 @@
-#include <Framework/SprFWConsoleDebugMonitor.h>
+ï»¿#include <Framework/SprFWConsoleDebugMonitor.h>
 
 #ifdef _MSC_VER
 #include <conio.h>
@@ -32,7 +32,7 @@ namespace Spr {
 	}
 	bool FWConsoleDebugMonitor::ProcessKey(int key) {
 		bool rv = false;
-		if (key == '\r') {	//	ƒRƒ}ƒ“ƒh‚ÌÀs
+		if (key == '\r') {	//	ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œ
 			std::cout << std::endl;
 			std::string cmd;
 			std::istringstream(line) >> cmd;
@@ -43,7 +43,7 @@ namespace Spr {
 			char* context = NULL;
 			char* word = strtok_s(buf, " \t", &context);
 			if (word) args.push_back(std::string(word));
-			while (word = strtok_s(NULL, " \t", &context)) {
+			while ((word = strtok_s(NULL, " \t", &context))) {
 				args.push_back(std::string(word));
 			}
 			delete buf;
@@ -108,7 +108,7 @@ namespace Spr {
 			}
 			rv = true;
 		}
-		else if (key == 224) {	//	•ûŒüƒL[
+		else if (key == 224) {	//	æ–¹å‘ã‚­ãƒ¼
 			key = getch();
 			switch (key) {
 			case 'H':	//	UP

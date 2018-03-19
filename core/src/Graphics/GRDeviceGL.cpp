@@ -987,7 +987,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 #ifdef _MSC_VER
 			if (_access(fnStr.str().c_str(), 0) != 0) break;
 #else
-#warning not supported for linux
+//#warning not supported for linux
 #endif
 		}
 		//	画像サイズを調べる

@@ -238,16 +238,16 @@ void PHFemThermo::Init(){
 		edgeVars[i].c = 0.0;	
 		edgeVars[i].k = 0.0;
 	}
-	if(GetPHFemMesh()->GetName() == "fwNsteak"){
+	if(strcmp(GetPHFemMesh()->GetName(), "fwNsteak") == 0){
 		DSTR << "this is fwNsteak" << std::endl;
 	}
-	if(GetPHFemMesh()->GetName() == "fwPan"){
+	if(strcmp(GetPHFemMesh()->GetName(), "fwPan") == 0){
 		DSTR << "this is fwPan" << std::endl;
 	}
-	if(GetPHFemMesh()->GetName() == "fwNegi"){
+	if(strcmp(GetPHFemMesh()->GetName(), "fwNegi") == 0){
 		DSTR << "this is fwNegi" << std::endl;
 	}
-	if(GetPHFemMesh()->GetName() == "metal5x1x2_fem"){
+	if(strcmp(GetPHFemMesh()->GetName(), "metal5x1x2_fem") == 0){
 		DSTR << "this is metal5x1x2_fem" << std::endl;
 	}
 	DSTR<< "My name is ... " << GetPHFemMesh()->GetName() <<std::endl;
@@ -1856,8 +1856,8 @@ void PHFemThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned nu
 						break;
 					}
 					//.頂点対がバンドを挟むとき
-					if(mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x <= xS && xE <= mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x 
-						|| mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x <= xS && xE <= mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x ){
+					if((mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x <= xS && xE <= mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x)
+						|| (mesh->vertices[mesh->faces[i].vertexIDs[(j+1)%3]].pos.x <= xS && xE <= mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x) ){
 							faceVars[i].fluxarea[0] = faceVars[i].area;
 						break;
 					}
