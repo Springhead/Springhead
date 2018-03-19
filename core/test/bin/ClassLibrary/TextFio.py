@@ -409,7 +409,7 @@ class TextFio(Fio):
 	#   @n			[1] emptyline:	Eliminate empty lines or not (bool).
 	#   @returns		Filter applied line data ([str]).
 	#
-	def __elim_comments(self, opts=[ '#', True ]):
+	def __elim_comments(self, opts=['#', True]):
 		designator = opts[0] if opts and len(opts) > 0 else '#'
 		emptyline  = opts[1] if opts and len(opts) > 1 else True
 		designator = designator.replace('*', '\*')

@@ -5,6 +5,9 @@
 #
 #  METHODS:
 #	put(msg, prompt='Error', exitcode=-1, alive=False)
+#	info(msg)
+#	warn(msg)
+#	error(msg, prompt='Error'):
 #	abort(msg, prompt='Error', exitcode=-1)
 #
 # ----------------------------------------------------------------------
@@ -18,6 +21,7 @@
 #	Ver 2.21 2018/03/09 F.Kanehori	Now OK for doxygen.
 #	Ver 3.0  2018/03/14 F.Kanehori	Change method name (print->put).
 #					Add error(), warn(), info().
+#	Ver 3.01 2018/03/19 F.Kanehori	Documentation.
 # ======================================================================
 import sys
 
@@ -85,7 +89,7 @@ class Error:
 	#	self.put(msg, prompt='Warning', alive=True)
 	#   @param msg		Warning message (str).
 	#
-	def warn(self, msg, alive=True):
+	def warn(self, msg):
 		self.put(msg, prompt='Warning', alive=True)
 
 	##  Print error message.
@@ -94,7 +98,6 @@ class Error:
 	#   @n	Control always return to the caller.
 	#   @param msg		Error message (str).
 	#   @param prompt	See self.put().
-	#   @param exitcode	See self.put().
 	#
 	def error(self, msg, prompt='Error'):
 		self.put(msg, prompt=prompt, alive=True)

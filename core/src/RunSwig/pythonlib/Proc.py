@@ -76,6 +76,10 @@ class Proc:
 		self.creationflags = 0
 
 	##  Execute program.
+	#   @n		Should be followed by self.wait() or self.output().
+	#   @n		e.g.
+	#   @n		rc = Proc(cmnd, ...).wait(...) or
+	#   @n		rc, out, err = Proc(cmnd, ...).output(...)
 	#   @param args		Command and its arguments (str or str[]).
 	#   @param stdin	File object, file name or pipe (obj or str).
 	#   @param stdout	File object, file name or pipe (obj or str).
@@ -249,8 +253,8 @@ class Proc:
 
 	##  Get both stdout and stderr output from the process.
 	#   @param timeout	Time out value in seconds (int).
-	#   @returns		out, err
-	#   @n status:		Process termination code (int).
+	#   @returns		rc, out, err
+	#   @n rc:		Process termination code (int).
 	#   @n out:		Output string got from stdout stream (str).
 	#   @n err:		Output string got from stderr stream (str).
 	#
@@ -268,17 +272,17 @@ class Proc:
 		#
 		try:
 			out, err = self.proc.communicate(timeout=timeout)
-			status = 0
+			rc = 0
 		except subprocess.TimeoutExpired:
 			self.proc.kill()
 			out, err = self.proc.communicate()
-			status = Proc.ETIME
+			rc = Proc.ETIME
 		encoding = os.device_encoding(1)
 		if encodig is None:
 			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None
-		return status, out, err
+		return rc, out, err
 
 	# --------------------------------------------------------------
 	#  For class private use
