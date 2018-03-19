@@ -56,6 +56,7 @@
 #	Ver 1.4  2018/01/18 F.Kanehori	Add get_file_content().
 #	Ver 1.41 2018/02/19 F.Kanehori	Bug fixed.
 #	Ver 1.42 2018/03/14 F.Kanehori	Deal with new Proc class.
+#	Ver 1.43 2018/03/19 F.Kanehori	Bug fixed: need Proc revise!
 # ======================================================================
 import sys
 import os
@@ -226,12 +227,8 @@ class VersionControlSystem:
 			proc1.execute(cmnd1, stdout=Proc.PIPE, stderr=Proc.STDOUT)
 			proc2.execute(cmnd2, stdin=proc1.proc.stdout,
 					     stdout=Proc.PIPE, stderr=Proc.STDOUT)
-			status1 = 0
-			status2 = 0
-			#status2 = proc2.wait()		# Why?
-			status1 = proc1.wait()
-			status = status1 + status2
 			out, err = proc2.output()
+			status = 0
 			return status, out, err
 
 # ----------------------------------------------------------------------
