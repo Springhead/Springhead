@@ -14,8 +14,7 @@
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
 #	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
-#	Ver 1.21 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
-#	Ver 1.22 2018/03/15 F.Kanehori	Add: -A (as is flag).
+#	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
 # ======================================================================
 version = 1.21
 
@@ -158,8 +157,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 	os.chdir(spr_topdir)
 	cmnd = 'git pull --all'
 	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
-	rc = proc.wait()
-	outstr, errstr = proc.output()
+	rc, outstr, errstr = proc.output()
 	Print(outstr.split('\n'))
 	if errstr:
 		Print('-- error --')
@@ -196,7 +194,12 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	print('cloning test repository')
 	flush()
 	cmnd = 'git clone %s %s' % (url_git, repository)
-	rc = proc.execute(cmnd, shell=True).wait()
+	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
+	rc, outstr, errstr = proc.output()
+	Print(outstr.split('\n'))
+	if errstr:
+		Print('-- error --')
+		Print(errstr.split('\n'))
 	if rc != 0:
 		Error(prog).abort('cloning failed: status %d' % rc)
 

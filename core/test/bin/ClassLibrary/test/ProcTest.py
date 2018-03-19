@@ -5,7 +5,7 @@
 #	ProcTest.py
 #
 #  DESCRIPTION:
-#	Test program for class Proc (Ver 1.2).
+#	Test program for class Proc (Ver 1.3 and after).
 # ======================================================================
 import sys
 import os
@@ -162,11 +162,11 @@ infile = Util.pathconv('tool/head.py')
 proc1.execute(cmnd1, stdin=infile, stdout=Proc.PIPE, shell=True)
 proc2.execute(cmnd2, stdin=proc1.proc.stdout, stdout=Proc.PIPE, shell=True)
 proc3.execute(cmnd3, stdin=proc2.proc.stdout, stdout=Proc.PIPE, shell=True)
-stat1 = proc1.wait()
-stat2 = proc2.wait()
-stat3 = proc3.wait()
-out, err = proc3.output()
-PrintResult(stat3, out, err)
+#stat1 = proc1.wait()
+#stat2 = proc2.wait()
+#stat3 = proc3.wait()
+stat, out, err = proc3.output()
+PrintResult(stat, out, err)
 print()
 
 # kill

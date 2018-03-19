@@ -55,8 +55,8 @@
 #	Ver 1.3  2017/12/20 F.Kanehori	GitHub 版実装.
 #	Ver 1.4  2018/01/18 F.Kanehori	Add get_file_content().
 #	Ver 1.41 2018/02/19 F.Kanehori	Bug fixed.
-#	Ver 1.42 2018/03/14 F.Kanehori	Deal with new Proc class.
-#	Ver 1.43 2018/03/19 F.Kanehori	Bug fixed: need Proc revise!
+#	Ver 1.42 2018/03/14 F.Kanehori	Dealt with new Proc class.
+#	Ver 1.43 2018/03/19 F.Kanehori	Dealt with Proc.output() change.
 # ======================================================================
 import sys
 import os
@@ -145,8 +145,7 @@ class VersionControlSystem:
 			cmnd = 'svn info'
 			proc = Proc(verbose=self.verbose)
 			proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT)
-			status = proc.wait()
-			out, err = proc.output()
+			status, out, err = proc.output()
 			#
 			revision = "can't get current revision"
 			if status == 0:
@@ -227,8 +226,7 @@ class VersionControlSystem:
 			proc1.execute(cmnd1, stdout=Proc.PIPE, stderr=Proc.STDOUT)
 			proc2.execute(cmnd2, stdin=proc1.proc.stdout,
 					     stdout=Proc.PIPE, stderr=Proc.STDOUT)
-			out, err = proc2.output()
-			status = 0
+			status, out, err = proc2.output()
 			return status, out, err
 
 # ----------------------------------------------------------------------
