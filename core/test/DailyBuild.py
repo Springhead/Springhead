@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+Ôªø#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  SYNOPSIS:
@@ -11,12 +11,12 @@
 #  DESCRIPTION:
 #
 #  VERSION:
-#	Ver 1.0  2017/12/03 F.Kanehori	ÉAÉ_ÉvÉ^Ç∆ÇµÇƒêVãKçÏê¨.
-#	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat ÇÕñ≥èåèÇ…é¿çs.
-#	Ver 1.2  2018/02/25 F.Kanehori	TestMainGit.py test.
+#	Ver 1.0  2017/12/03 F.Kanehori	„Ç¢„ÉÄ„Éó„Çø„Å®„Åó„Å¶Êñ∞Ë¶è‰ΩúÊàê.
+#	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat „ÅØÁÑ°Êù°‰ª∂„Å´ÂÆüË°å.
+#	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py „Å´ÁßªË°å.
+#	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
 # ======================================================================
-version = '1.2'
-python_test = True
+version = 1.21
 
 import sys
 import os
@@ -40,6 +40,7 @@ from FindSprPath import *
 spr_path = FindSprPath(prog)
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
+from FileOp import *
 from Proc import *
 from Util import *
 from Error import *
@@ -62,9 +63,15 @@ if Util.is_windows():
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose mode')
+parser.add_option('-D', '--dry-run', dest='dry_run',
+			action='store_true', default=False,
+			help='set dry-run mode')
 parser.add_option('-V', '--version',
 			dest='version', action='store_true', default=False,
 			help='show version')
+parser.add_option('-A', '--as-is',
+			dest='as_is', action='count', default=0,
+			help='do not update nor clear test repository')
 
 # ----------------------------------------------------------------------
 #  Process for command line
@@ -74,17 +81,18 @@ if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 if len(args) != 1:
-	Error(prog).print('incorrect number of arguments\n', alive=True)
-	Proc().exec('python %s.py -h' % prog).wait()
+	Error(prog).error('incorrect number of arguments\n')
+	Proc().execute('python %s.py -h' % prog).wait()
 	sys.exit(-1)
 
 # get test repository name
 repository = Util.upath(args[0])
 conf = options.conf
 plat = options.plat
-if Util.is_windows():
-	tool = options.tool
+tool = options.tool if Util().is_windows() else None
 verbose = options.verbose
+dry_run = options.dry_run
+as_is = options.as_is
 
 if repository == 'Springhead':
 	msg = 'Are you sure to test on "Springhead" directory? [y/n] '
@@ -99,7 +107,7 @@ if repository == 'Springhead':
 spr_topdir = spr_path.abspath()
 start_dir = spr_path.abspath('test')
 prep_dir = os.path.abspath('%s/..' % spr_topdir)
-proc = Proc(verbose=verbose)
+proc = Proc(verbose=verbose, dry_run=dry_run)
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -109,6 +117,8 @@ def check_exec(name):
 	# and its value is 'skip'.  Return True otherwise.
 	val = os.getenv(name)
 	judge = True if val is None or val != 'skip' else False
+	if as_is:
+		judge = False
 	if not judge:
 		print('skip ..%s..' % name)
 	return judge
@@ -117,7 +127,9 @@ def pwd():
 	# Print current workind directory.
 	print('[%s]' % Util.upath(os.getcwd()))
 
-def Print(data, indent=2):
+def Print(data=None, indent=2):
+	if data is None:
+		return
 	# Print with indent.
 	if isinstance(data, list):
 		for d in data:
@@ -125,6 +137,10 @@ def Print(data, indent=2):
 	else:
 		indent_str = ' ' * indent
 		print('%s%s' % (indent_str, data))
+
+def flush():
+	sys.stdout.flush()
+	sys.stderr.flush()
 
 # ----------------------------------------------------------------------
 #  Process start.
@@ -137,17 +153,17 @@ print('%s: start: %s' % (prog, Util.now(format='%Y/%m/%d')))
 if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 	pwd()
 	print('updating "Springhead"')
+	flush()
 	os.chdir(spr_topdir)
 	cmnd = 'git pull --all'
-	proc.exec(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT)
-	rc = proc.wait()
-	outstr, errstr = proc.output()
+	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
+	rc, outstr, errstr = proc.output()
 	Print(outstr.split('\n'))
 	if errstr:
 		Print('-- error --')
 		Print(errstr.split('\n'))
 	if rc != 0:
-		Error(prog).print('updating failed: status %d' % rc)
+		Error(prog).abort('updating failed: status %d' % rc)
 	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
@@ -158,20 +174,16 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	pwd()
 	if os.path.exists(repository):
 		print('clearing "%s"' % repository)
-		for root, dirs, files in os.walk(repository, topdown=False):
-			for f in files:
-				path = '%s/%s' % (root, f)
-				os.chmod(path, stat.S_IWRITE)
-				os.unlink(path)
-			for d in dirs:
-				path = '%s/%s' % (root, d)
-				os.rmdir(path)
-		if Util.is_windows(): sleep(1)
-		os.rmdir(repository)
+		flush()
+		# There are some files that shutil.rmtree() can not
+		# remove.  And also some idle time needs to remove
+		# top directory after all its contents are removed
+		# -- mistery.. (Windows only?).
+		FileOp().rm(repository, use_shutil=False, idle_time=1)
 	else:
 		print('test repository "%s" not exist' % repository)
-	os.chdir(start_dir)
 	print()
+	os.chdir(start_dir)
 
 # ----------------------------------------------------------------------
 #  3rd step: Clone repository.
@@ -180,45 +192,44 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	os.chdir(prep_dir)
 	pwd()
 	print('cloning test repository')
+	flush()
 	cmnd = 'git clone %s %s' % (url_git, repository)
-	rc = proc.exec(cmnd).wait()
+	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
+	rc, outstr, errstr = proc.output()
+	Print(outstr.split('\n'))
+	if errstr:
+		Print('-- error --')
+		Print(errstr.split('\n'))
 	if rc != 0:
-		Error(prog).print('cloning failed: status %d' % rc)
+		Error(prog).abort('cloning failed: status %d' % rc)
 
 	os.chdir(repository)
 	pwd()
 	print('updating submodules')
 	cmnd = 'git submodule update --init'
-	rc = proc.exec(cmnd).wait()
+	rc = proc.execute(cmnd, shell=True).wait()
 	if rc != 0:
-		Error(prog).print('cloning failed: status %d' % rc)
-
-	"""
-	print('checking out "closed"')
-	cmnd = 'svn co %s %s' % (url_svn, 'closed')
-	rc = proc.exec(cmnd).wait()
-	if rc != 0:
-		Error(prog).print('cloning failed: status %d' % rc)
-	"""
+		Error(prog).abort('cloning failed: status %d' % rc)
 	os.chdir(prep_dir)
 
 # ----------------------------------------------------------------------
 #  The process hereafter will be executed under test-repository.
 #
 os.chdir('%s/%s' % (prep_dir, repository))
+pwd()
+Print('moved to test repository')
+Print()
 
 # ----------------------------------------------------------------------
 #  4th step: Execute DailyBuild test.
 #
 os.chdir('core/test')
-print('Test start:')
-if python_test:
-	cmnd = 'python TestMainGit.py'
-	args = '-p %s -c %s -t %s %s' % (plat, conf, tool, repository)
-else:
-	cmnd = 'TestMainGit.bat'
-	args = '/r %s /t %s /c %s /p %s' % (repository, tool, conf, plat)
-rc = proc.exec([cmnd, args], shell=True).wait()
+pwd()
+Print('Test start:')
+vflag = ' -v' if verbose else ''
+cmnd = 'python TestMainGit.py'
+args = '-p %s -c %s -t %s%s %s' % (plat, conf, tool, vflag, repository)
+rc = proc.execute([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 
 # ----------------------------------------------------------------------
