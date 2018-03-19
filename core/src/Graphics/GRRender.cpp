@@ -262,23 +262,14 @@ void GRRender::SetCamera(const GRCameraDesc& c){
 	// メモリ比較でフィルタすると外部からSetProjectionMatrixした際にカメラが反映されないので無効化 tazz
 	//if (memcmp(&camera,&c, sizeof(c)) != 0){
 	camera = c;
-	bool bYZero = false, bXZero = false;	//	どちらかをWindowサイズに合わせて設定したい場合に、0に保ちたい。
-	if (camera.size.y == 0) {
-		camera.size.y = camera.size.x*(vpsize.y / vpsize.x);
-		bYZero = true;
-	}
-	if (camera.size.x == 0) {
-		camera.size.x = camera.size.y*(vpsize.x / vpsize.y);
-		bXZero = true;
-	}
+	if (camera.size.y==0) camera.size.y = camera.size.x*(vpsize.y/vpsize.x);
+	if (camera.size.x==0) camera.size.x = camera.size.y*(vpsize.x/vpsize.y);
 	Affinef afProj;
 	Vec3f screen(camera.center.x, camera.center.y, camera.front);
 	if(c.type == GRCameraDesc::PERSPECTIVE)
 		 afProj = Affinef::ProjectionGL(screen, camera.size, camera.front, camera.back);
 	else afProj = Affinef::OrthoGL     (screen, camera.size, camera.front, camera.back);
 	SetProjectionMatrix(afProj);
-	if (bXZero) camera.size.x = 0;
-	if (bYZero) camera.size.y = 0;
 	//}
 }
 Vec2f GRRender::GetPixelSize(){
