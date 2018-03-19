@@ -19,6 +19,7 @@ OBJS 		= ${SRCS:.cpp=.o}
 
 CXXFLAGS	:= $(CXXFLAGS) \
 		$(call add_inc,${SPR_BOOST_INC}) \
+		$(call add_inc,${SPR_GL_INC}) \
 		-std=gnu++11 \
 		-DWINGDIAPI= -DAPIENTRY= -DCALLBACK= \
 		-DGLUTCALLBACK= -D__cdecl=\
