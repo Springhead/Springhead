@@ -6,19 +6,10 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-\page pageBoxStack キー入力で箱を生成して積み上げるサンプル
-Springhead2/src/Samples/BoxStack
-
-\section secQuitBoxStack 終了基準
-- Escか'q'で強制終了。
-- ' ', 'm', 'd', 'c', 'v', 'z', 'x'で箱が落ちてくる
-	
-\section secFlowBoxStack 処理の流れ
-- シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
-  剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。
-- 接触エンジンを拘束エンジンに設定する。
-- 与えられた条件により⊿t(=0.1)秒後の位置の変化を積分し、OpenGLでシミュレーションする。  
-- ユーザのキー入力に対しSolidを発生させる。
+Boxstackベースで連続衝突判定の手法を切り替えて試せるサンプル
+「z」で連続判定の手法切り替え
+「x」で連続衝突と静的竈突の切り替え
+「n」で左上に100フレームの平均衝突処理時間がでる（broadを含む)
 */
 
 #include "../../SampleApp.h"
@@ -29,7 +20,7 @@ using namespace std;
 
 
 namespace Spr {
-	extern int s_methodSW;
+	extern int s_methodSW; //手法切り替えの変数
 }
 
 class MyApp : public SampleApp{
@@ -112,7 +103,7 @@ public:
 
 		if (showColtime)
 		{
-			
+			//時間表示
 			if (aveCounter < 100)
 			{
 				avePool += GetPHScene()->GetConstraintEngine()->GetCollisionTime();

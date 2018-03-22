@@ -619,7 +619,6 @@ final:
 	//	HASE_REPORT
 	uint32_t frameTime3 = p_timer->CountUS();
 	coltimePhase3 += frameTime3;
-	//colcounter += count;
 	static bool bSave = false;
 	if (bSave){
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -1109,7 +1108,6 @@ coltimePhase2 += frameTime2;
 	normal.unitize();
 	uint32_t frameTime3 = p_timer->CountUS();
 	coltimePhase3 += frameTime3;
-	//colcounter += count;
 	static bool bSave = false;
 	if (bSave) {
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -1499,7 +1497,8 @@ inline Vec3d TriNaibun(Vec3d p1, Vec3d p2, Vec3d p3,Vec3d sep) {
 
 }
 
-const int EPAsize = 10;
+//EPAで接触面をもとめる
+const int EPAsize = 10; //EPAの三角面プール数
 void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed &a2w, const Posed &b2w, Vec3d& pa, Vec3d& pb) {
 	v.clear();
 	int counter = 0;
@@ -1584,28 +1583,12 @@ void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed 
 		q_id[lastId] = b->Support(newq, b2w.Ori().Conjugated() * -tris[0].normal);
 		colcounter++;
 		Vec3d w = (a2w * (Vec3d)newp) - (b2w * (Vec3d)newq);
-		//同じサポートが出たら抜ける →ノーマルの向きで判断
-		//if (CalcTaiseki(w, tris[0].vert[0], tris[0].vert[1],tris[0].vert[2]) < epsilon) break;
+		//同じサポートが出たら抜ける →少三角形の面積で判断
 		if (CalcMensekiSq(w, tris[0].vert[0], tris[0].vert[1]) < epsilon) break;
 		else if (CalcMensekiSq(w, tris[0].vert[0], tris[0].vert[2]) < epsilon) break;
 		else if (CalcMensekiSq(w, tris[0].vert[1], tris[0].vert[2]) < epsilon) break;
-		//if ((w - tris[0].vert[0]).square() < epsilon) break;
-		//if ((w - tris[0].vert[1]).square() < epsilon) break;
-		//if ((w - tris[0].vert[2]).square() < epsilon) break;
-		//if ((tris[0].normal\-beforeNorm).square() < epsilon) break;
 		beforeNorm = tris[0].normal;
-		//配列に分割面を追加＋対象面削除
-		//EPATri tmptri0 = tris[0];
-		/*面の消しが足りない
-		tris[useLength] = EPATri(w, tris[0].vert[0], tris[0].vert[1],origin);
-		tris[useLength].SetIdx(newp, tris[0].aidx[0], tris[0].aidx[1], newq, tris[0].bidx[0], tris[0].bidx[1]);
-		tris[useLength+1] = EPATri(w, tris[0].vert[0], tris[0].vert[2],origin);
-		tris[useLength+1].SetIdx(newp, tris[0].aidx[0], tris[0].aidx[2], newq, tris[0].bidx[0], tris[0].bidx[2]);		
-		tris[0] = EPATri(w, tmptri0.vert[1], tmptri0.vert[2],origin);
-		tris[0].SetIdx(newp, tmptri0.aidx[1], tmptri0.aidx[2], newq, tmptri0.bidx[1], tmptri0.bidx[2]);
-		useLength += 2;
-		*/
-		//wが見える面を消さないといけないらしい
+		//wが見える面を消さないといけない
 		deleteLength = 0;
 		edges.clear();
 		for (int i = 0; i < useLength; i++) {
@@ -1658,6 +1641,7 @@ void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed 
  	pb = dec[0] * (Vec3d)tris[0].bidx[0] + dec[1] * (Vec3d)tris[0].bidx[1] + dec[2] * (Vec3d)tris[0].bidx[2];
 }
 
+//Ginoの手法（GJKRaycast）
 int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist)
@@ -1677,7 +1661,6 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	int ret = 1;
 	while (1) {
 		count++;
-		//colcounter++;
 		if (count > 100) break;
 		//GJKの計算
 		
@@ -1690,17 +1673,11 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 				else {
 					dist += tmpV.norm();
 				}
-			//}
 			ret = 1;
 			break;
 		}
-		
-		
 
 		CalcNormal(normal,a2l.Pos()-b2l.Pos());
-		//ramuda
-		//p_id[0] = a->Support(p[0], a2l.Ori().Conjugated() * (-normal));
-		//q_id[0] = b->Support(q[0], b2l.Ori().Conjugated() * normal);
 		Vec3d w = tmpV;//wは最近点の位置
   		double vw = (normal * w);		
 		double vr = (normal * r);
@@ -1713,13 +1690,11 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 		dist += cdist;
 		if (dist > end + (end - start) + epsilon) { ret = -1; break; }
 		if (dist < start) { ret = -2; break; }
-		//if (cdist < 0.00001) cdist += 0.0001;
 
 		//原点をすすめる
 		a2l.Pos() +=   -dir * cdist*0.5f;
 		b2l.Pos() +=   dir * cdist*0.5f;
 	}
-	//CalcContactPoint(pa, pb);
 	dist -= (end - start);
 	uint32_t frameTime1 = p_timer->CountUS();
 	coltimePhase1 += frameTime1;

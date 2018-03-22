@@ -1,8 +1,7 @@
 #pragma once
-//#include <Springhead.h>
+
 #include <GL/glut.h>
-//#include <stdio.h>
-#//include <stdarg.h>
+
 
 using namespace Spr;
 using namespace std;
@@ -86,6 +85,7 @@ Vec3d ObjtoScreenPos(const Vec3d objPos) {
 	return Vec3d(winX/width, winY/height, winZ);
 }
 
+//OpenGLでの表示用のメッシュ作成
 void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 	Affined affine;
 	glPushMatrix();
@@ -341,6 +341,7 @@ public:
 
 	}
 
+	//形状を取得
 	CDShapeIf* GetShape(ShapeID id) {
 		switch (id)
 		{
