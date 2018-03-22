@@ -27,6 +27,7 @@
 #	Ver 1.15 2018/03/12 F.Kanehori	Now OK for doxygen.
 #	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
 #	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
+#	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -254,35 +255,44 @@ class Proc:
 	##  Get both stdout and stderr output from the process.
 	#   @param timeout	Time out value in seconds (int).
 	#   @returns		rc, out, err
-	#   @n rc:		Process termination code (int).
+	#   @n status:		Process termination code (int).
 	#   @n out:		Output string got from stdout stream (str).
 	#   @n err:		Output string got from stderr stream (str).
 	#
 	def output(self, timeout=None):
 		if self.dry_run:
-			return None, None
+			return 0, None, None
 		if self.proc is None:
 			if self.verbose:
 				print('  invalid process')
-			return None, None
+			return 1, None, None
 		if self.pipe[1] != Proc.PIPE and self.pipe[2] != Proc.PIPE:
 			if self.verbose:
 				print('  output is not redirected')
-			return None, None
+			return 0, None, None
 		#
 		try:
 			out, err = self.proc.communicate(timeout=timeout)
-			rc = 0
+			status = self.proc.returncode
 		except subprocess.TimeoutExpired:
 			self.proc.kill()
 			out, err = self.proc.communicate()
-			rc = Proc.ETIME
+			status = Proc.ETIME
 		encoding = os.device_encoding(1)
 		if encodig is None:
 			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None
-		return rc, out, err
+
+		# cleanup
+		self.__close(self.fd[0], self.pipe[0])
+		self.__close(self.fd[1], self.pipe[1])
+		self.__close(self.fd[2], self.pipe[2])
+		self.__revive_envirnment(self.org_env)
+
+		# only lower 16 bits are meaningful
+		self.status = self.__s16(status)
+		return self.status, out, err
 
 	# --------------------------------------------------------------
 	#  For class private use
@@ -369,7 +379,7 @@ class Proc:
 	#   @param file		The same argument passed to self.__open().
 	#
 	def __close(self, object, file):
-		if isinstance(file, str):
+		if isinstance(file, str) and object:
 			object.close()
 
 	##  Device name for verbose message.

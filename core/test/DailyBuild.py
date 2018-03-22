@@ -175,11 +175,11 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD') and not skip_update:
 	if rc != 0:
 		Error(prog).abort('updating failed: status %d' % rc)
 	os.chdir(start_dir)
-	#
-	if update_only:
-		print('%s: update-only specified.' % prog)
-		print('%s: end: %s' % (prog, Util.now(format=date_format)))
-		sys.exit(0)
+#
+if update_only:
+	print('%s: update-only specified.' % prog)
+	print('%s: end: %s' % (prog, Util.now(format=date_format)))
+	sys.exit(0)
 
 # ----------------------------------------------------------------------
 #  2nd step: Clearing test directory.

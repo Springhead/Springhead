@@ -39,6 +39,7 @@
 #	Ver 1.0  2016/11/17 F.Kanehori	First version.
 #	Ver 2.0  2018/02/22 F.Kanehori	全体の見直し.
 #	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 2.02 2018/03/22 F.Kanehori	Change date/time info format.
 # =============================================================================
 version = 2.01
 
@@ -60,6 +61,7 @@ from KeyInterruption import *
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+date_format = '%Y/%m/%d %H:%M:%S'
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
@@ -202,7 +204,7 @@ if verbose:
 #  Test start.
 #
 print()
-print('test start at: %s' % Util.now(format='%Y/%m/%d'))
+print('test start at: %s' % Util.now(format=date_format))
 
 # test id
 #	'Test_id' affects only log file header.
@@ -256,7 +258,7 @@ proc = Proc(dry_run=options.dry_run, verbose=options.verbose)
 proc.execute([cmnd, outf, args]).wait()
 
 # done
-print('test ended at: %s' % Util.now(format='%Y/%m/%d'))
+print('test ended at: %s' % Util.now(format=date_format))
 sys.exit(0)
 
 # end: SpringheadTest.py
