@@ -2584,7 +2584,7 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 		Vec3d relvvel = -2.5 * ((tvs - tfv) / (tvs * tfv)) * c.pose.Pos();
 		Vec3d relvacc = (10 * (tvs * tvs - 4 * tvs * tfv + tfv * tfv) / (3 * tvs * tvs * tfv * tfv)) * c.pose.Pos();
 		c.vel = Vec6d(relvvel.x, relvvel.y, relvvel.z, 0, 0, 0) - minjerkVels[c.step - 1] * scene->GetTimeStepInv();
-		c.acc = Vec6d(relvacc.x, relvacc.y, relvacc.z, 0, 0, 0) - (minjerkVels[c.step - 1] - (c.step > 1 ? minjerkVels[c.step - 2] : Vec3d())) * scene->GetTimeStepInv();
+		c.acc = Vec6d(relvacc.x, relvacc.y, relvacc.z, 0, 0, 0) - (minjerkVels[c.step - 1] - (c.step > 1 ? minjerkVels[c.step - 2] : Vec6d())) * scene->GetTimeStepInv();
 		MinJerkTrajectory mjt = MinJerkTrajectory(s, f, c, scene->GetTimeStep());
 		for (int j = s.step; j < f.step; j++) {
 			Posed delta = mjt.GetCurrentPose(j + 1);
