@@ -15,6 +15,7 @@
 #	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
 #	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
 #	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
+#	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
 # ======================================================================
 version = 1.21
 
@@ -31,6 +32,7 @@ from datetime import *
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 url_git = 'https://github.com/sprphys/Springhead'
 url_svn = 'http://springhead.info/spr2/Springhead/trunk/closed'
+date_format = '%Y/%m/%d %H:%M:%S'
 
 # ----------------------------------------------------------------------
 #  Local python library
@@ -60,6 +62,12 @@ if Util.is_windows():
 	parser.add_option('-t', '--toolset-id', dest='tool',
 			action='store', default='14.0',
 			help='toolset ID [default: %default]')
+parser.add_option('-u', '--update-only',
+			dest='update_only', action='store_true', default=False,
+			help='execute \'git pull\' only')
+parser.add_option('-U', '--skip-update',
+			dest='skip_update', action='store_true', default=False,
+			help='skip \'git pull\'')
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose mode')
@@ -90,6 +98,8 @@ repository = Util.upath(args[0])
 conf = options.conf
 plat = options.plat
 tool = options.tool if Util().is_windows() else None
+update_only = options.update_only
+skip_update = options.skip_update
 verbose = options.verbose
 dry_run = options.dry_run
 as_is = options.as_is
@@ -145,12 +155,12 @@ def flush():
 # ----------------------------------------------------------------------
 #  Process start.
 #
-print('%s: start: %s' % (prog, Util.now(format='%Y/%m/%d')))
+print('%s: start: %s' % (prog, Util.now(format=date_format)))
 
 # ----------------------------------------------------------------------
 #  1st step: Make Springhead up-to-date.
 #
-if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
+if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD') and not skip_update:
 	pwd()
 	print('updating "Springhead"')
 	flush()
@@ -165,6 +175,11 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD'):
 	if rc != 0:
 		Error(prog).abort('updating failed: status %d' % rc)
 	os.chdir(start_dir)
+#
+if update_only:
+	print('%s: update-only specified.' % prog)
+	print('%s: end: %s' % (prog, Util.now(format=date_format)))
+	sys.exit(0)
 
 # ----------------------------------------------------------------------
 #  2nd step: Clearing test directory.
@@ -193,7 +208,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 	pwd()
 	print('cloning test repository')
 	flush()
-	cmnd = 'git clone %s %s' % (url_git, repository)
+	cmnd = 'git clone --recurse-submodules %s %s' % (url_git, repository)
 	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
 	rc, outstr, errstr = proc.output()
 	Print(outstr.split('\n'))
@@ -236,7 +251,7 @@ Print('rc: %s' % rc)
 #  Process end.
 #
 os.chdir(start_dir)
-print('%s: end: %s' % (prog, Util.now(format='%Y/%m/%d')))
+print('%s: end: %s' % (prog, Util.now(format=date_format)))
 sys.exit(0)
 
 # end: DailyBuild.py

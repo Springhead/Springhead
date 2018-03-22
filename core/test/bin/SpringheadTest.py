@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+Ôªø#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # =============================================================================
 #  SYNOPSIS:
@@ -37,9 +37,11 @@
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2016/11/17 F.Kanehori	First version.
-#	Ver 2.0  2018/02/15 F.Kanehori	ëSëÃÇÃå©íºÇµ.
+#	Ver 2.0  2018/02/22 F.Kanehori	ÂÖ®‰Ωì„ÅÆË¶ãÁõ¥„Åó.
+#	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 2.02 2018/03/22 F.Kanehori	Change date/time info format.
 # =============================================================================
-version = 2.0
+version = 2.01
 
 import sys
 import os
@@ -59,6 +61,7 @@ from KeyInterruption import *
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+date_format = '%Y/%m/%d %H:%M:%S'
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
@@ -150,7 +153,6 @@ if options.version:
 if len(args) != 4:
 	parser.error("incorrect number of arguments")
 
-
 # get arguments
 test_dir = args[0]
 res_file = '%s/%s' % (spr_path.abspath('test'), args[1])
@@ -161,7 +163,7 @@ top = Util.pathconv(test_dir)
 if not os.path.exists(top):
 	top = '%s/%s' % (spr_path.abspath('src'), top)
 	if not os.path.exists(top):
-		Error(prog).print('bad test directory: "%s"' % test_dir)
+		Error(prog).abort('bad test directory: "%s"' % test_dir)
 top = Util.upath(top)
 
 # get options
@@ -171,7 +173,7 @@ configs = make_list(options.configs, CONFS)
 csusage = options.closed_src_usage
 csusage_list = {'auto': CSU.AUTO, 'use': CSU.USE, 'unuse': CSU.UNUSE}
 if csusage not in csusage_list.keys():
-	Error(prog).print('invalid option: %s' % csusage)
+	Error(prog).abort('invalid option: %s' % csusage)
 csusage = csusage_list[csusage]
 rebuild= options.rebuild
 timeout= options.timeout
@@ -202,7 +204,7 @@ if verbose:
 #  Test start.
 #
 print()
-print('test start at: %s' % Util.now(format='%Y/%m/%d'))
+print('test start at: %s' % Util.now(format=date_format))
 
 # test id
 #	'Test_id' affects only log file header.
@@ -249,13 +251,14 @@ csc.revive()
 # back to start directory and make "result.log".
 os.chdir(cwd)
 cmnd = 'python GenResultLog.py'
+outf = '-o ../log/result.log'
 args = 'r %s %s %s' % (res_file, platforms[0], configs[0])
-print('CWD: %s' % os.getcwd())
-print(' '.join([cmnd, args]))
-Proc(dry_run=False).exec([cmnd, args]).wait()
+print(' '.join([cmnd, outf, args]))
+proc = Proc(dry_run=options.dry_run, verbose=options.verbose)
+proc.execute([cmnd, outf, args]).wait()
 
 # done
-print('test ended at: %s' % Util.now(format='%Y/%m/%d'))
+print('test ended at: %s' % Util.now(format=date_format))
 sys.exit(0)
 
 # end: SpringheadTest.py
