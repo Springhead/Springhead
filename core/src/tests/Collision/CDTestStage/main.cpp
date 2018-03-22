@@ -58,7 +58,7 @@ const float moverate = 0.05f;
 const float rotaterate = M_PI/180; //1°刻み
 
 bool automode = false;
-bool superAuto = false;
+bool superAuto = false; //csv分全部通しでやるときにはtrue
 
 UTRef<PHSdkIf> sdk;
 TestStage stage;
@@ -182,26 +182,20 @@ void __cdecl display(){
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_floor);
 	glPushMatrix();
 	Posed pose = solid[0]->GetPose();
-	//pose.ToAffine(ad);
-	//glMultMatrixd(ad);	
 
 	Vec3f normal;
 	for(int i=0; i<solid[0]->NShape(); ++i){
 		SetGLMesh(solid[0]->GetShape(i), obj[1].m_shapeID, pose);
 	}
-	//glPopMatrix();
 
 	
 	// 上の青い剛体(objA)
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_block);
-	//glPushMatrix();
 	pose = solid[1]->GetPose();
-	//ad = Affined(pose);
-	//glMultMatrixd(ad);
-		for(int i=0; i<solid[1]->NShape(); ++i){
-			SetGLMesh(solid[1]->GetShape(i), obj[0].m_shapeID, pose);
+	for(int i=0; i<solid[1]->NShape(); ++i){
+		SetGLMesh(solid[1]->GetShape(i), obj[0].m_shapeID, pose);
 	}
-	//glPopMatrix();
+
 	
 		//衝突情報描画
 		glDisable(GL_ALPHA);
@@ -249,8 +243,7 @@ void __cdecl display(){
 				coltimePhase2 = 0;
 				coltimePhase3 = 0;
 				if (automode) {
-					//ofstream ofs(filename, ios::app);
-					//ofs <<colMethod << "," << recordCount*10 << "," << coltimeDisp[0] << "," << coltimeDisp[1] << "," << coltimeDisp[2] << "," << colcounter << std::endl;
+					
 					if (res == 1) {
 						hitTimePool += coltimeDisp[0] + coltimeDisp[1] + coltimeDisp[2];
 						hitCount++;
@@ -310,11 +303,9 @@ void __cdecl display(){
 			{
 				aveCount++;
 			}
-
+			//VSのログに出すとき
 			//DSTR << "res:" << res << " normal:" << normal << " dist:" << dist;
 			//DSTR << " p:" << pose[0] * pos[0] << " q:" << pose[1] * pos[1] << std::endl;
-			//		pose[1].Ori() = Quaterniond::Rot('z', Rad(5)) * pose[1].Ori();
-			//		solid[1]->SetPose(pose[1]);
 			Vec3d hitPos = ObjtoScreenPos(pose[0] * pos[0]);
 			Vec3d hitPos2 = ObjtoScreenPos(pose[1] * pos[1]);
 			Vec3d vecPos = hitPos2;
@@ -500,7 +491,8 @@ void __cdecl motion(int x, int y) {
 void __cdecl idle(){
 	static int total;
 	total ++;
-#if 0
+#if 1 //自動テスト通す用
+	colMethod = (colMethod + 1) % 3;
 	if (total > TOTAL_IDLE_COUNTER){
 		//exit(EXIT_FAILURE);
 		exit(EXIT_SUCCESS);
