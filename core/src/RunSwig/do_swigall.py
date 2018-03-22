@@ -52,7 +52,8 @@
 #	Ver 3.5  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 3.51 2018/02/09 F.Kanehori	Bug fixed.
 #	Ver 3.52 2018/03/07 F.Kanehori	Add trace code.
-#	Ver 3.52 2018/03/14 F.Kanehori	Deal with new Proc class.
+#	Ver 3.52 2018/03/14 F.Kanehori	Dealt with new Proc class.
+#	Ver 3.53 2018/03/19 F.Kanehori	Bug fixed.
 # ==============================================================================
 version = 3.52
 debug = False
@@ -203,9 +204,9 @@ for line in lines:
 	#  Do make.
 	if clean:
 		print('    %s: clean' % prog)
-		f_op.rm('%s.i' % proj, force=True)
-		f_op.rm('%sStub.cpp' % proj, force=True)
-		f_op.rm('%sStub.mak.txt' % proj, force=True)
+		f_op.rm('%s.i' % proj)
+		f_op.rm('%sStub.cpp' % proj)
+		f_op.rm('%sStub.mak.txt' % proj)
 	else:
 		cmd = '%s -f %s' % (make, makefile)
 		print('    %s: %s' % (prog, cmd))
