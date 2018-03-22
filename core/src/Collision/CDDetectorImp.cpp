@@ -21,7 +21,7 @@ extern int		coltimePhase1;
 bool bUseContactVolume=true;
 
 int s_methodSW = 0; //0=通常,1=加速,2=Gino,3=GJK
-int s_accelThreshold = 24;
+int s_accelThreshold = 24; //加速適用の頂点数閾値
 //衝突判定メソッドのインターフェース
 int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
@@ -31,9 +31,6 @@ int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
 	Vec3d v;
 	switch (s_methodSW)
 	{
-	case 0:
-		res = ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
-		break;
 	case 1:
 		if (a->GetVtxCount() < s_accelThreshold || b->GetVtxCount() < s_accelThreshold) {
 			res = ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -261,12 +258,12 @@ void CDShapePair::CalcNormal(){
 	//	前回の法線の向きに動かして，最近傍点を求める
 	Vec3d n = normal;
 
-	// contだぞ
+	// 前の方式　連続で判定している→動くがstaticでなくなる
 	/*
 	int res = FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 		-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], depth);
 		*/
-	//以前の方式
+	//昔の方式　衝突を上手くとれない時があった
 	/*
 	if (state == NEW) {
 		//	新たな接触の場合は，法線を積分して初期値を求める
@@ -294,8 +291,7 @@ void CDShapePair::CalcNormal(){
 	//center += 0.5f*depth*normal;
 	*/
 
-	//EPA使う
-	
+	//EPAで衝突法線を求める
 	int res = FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], n, closestPoint[0], closestPoint[1]);
 	if (res >= 1) {
 		p_timer->CountUS();

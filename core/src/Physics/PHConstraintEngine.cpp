@@ -34,10 +34,11 @@ namespace Spr{;
 const char*    reportFilename = "PHConstraintEngineReport.csv";
 
 //coltime
+//連続判定のプロセスごとに分けて時間を保存
 int		coltimePhase1;
 int		coltimePhase2;
 int		coltimePhase3;
-int		colcounter;
+int		colcounter; //サポート探索回数カウントに使っている
 UTPreciseTimer *p_timer;
 
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
@@ -874,13 +875,14 @@ void PHConstraintEngine::StepPart1(){
 		//交差を検知
 		points.clear();
 
-		if(bReport)
+		if (bReport) {
 			ptimer.CountUS();
 			coltimePhase1 = 0;
 			coltimePhase2 = 0;
 			coltimePhase3 = 0;
 			colcounter = 0;
 			p_timer = &ptimer2;
+		}
 		PHSceneIf* scene = GetScene();
 		if(scene->IsContactDetectionEnabled()){
 			Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
