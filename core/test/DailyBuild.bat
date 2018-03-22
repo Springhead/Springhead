@@ -1,3 +1,5 @@
 @echo off
-python DailyBuild.py %*
+python DailyBuild.py -u %*
+echo.
+python DailyBuild.py -U %*
 exit /b
