@@ -53,7 +53,7 @@ using namespace Spr;
 #define COLTIME_AVE_FRAME 90	//衝突判定時間の平均を何フレームごとに出すか
 
 const double epsilon = 1e-16;	//1e-8
-const float testHeight = 5;
+const float testHeight = 10;
 const float moverate = 0.05f;
 const float rotaterate = M_PI/180; //1°刻み
 
@@ -143,7 +143,8 @@ void StartAutomode(bool sameFile) {
 	hitCount = 0;
 	outCount = 0;
 	if(!sameFile) SetFileName();
-	obj[0].SetRot(Quaternionf());
+	Quaternionf quat = Quaternionf();
+	obj[0].SetRot(quat);
 	obj[0].SetPos(Vec3f(-3, testHeight, -3));
 	if (!superAuto) {
 		ofstream ofs(filename, ios::app);
@@ -242,8 +243,9 @@ void __cdecl display(){
 				coltimePhase1 = 0;
 				coltimePhase2 = 0;
 				coltimePhase3 = 0;
+				//自動テスト時の処理
 				if (automode) {
-					
+					//衝突してるかどうかで分ける
 					if (res == 1) {
 						hitTimePool += coltimeDisp[0] + coltimeDisp[1] + coltimeDisp[2];
 						hitCount++;
@@ -253,13 +255,13 @@ void __cdecl display(){
 						outCount++;
 					}
 					recordCount++;
-					obj[0].Rotate(Quaternionf::Rot(rotaterate*15, Vec3f(0, 0, 1)));
-					if (recordCount >= 24) {
+					obj[0].Rotate(Quaternionf::Rot(rotaterate*15, Vec3f(1, 0, 0)));
+					if (recordCount >= 24) { //回転が終わったら
 						recordCount = 0;
 						transCount++;
 						obj[0].SetRot(Quaternionf());
-						obj[0].SetPos(Vec3f(transCount % 6 - 3, testHeight, transCount / 6 - 3));
-						if (!superAuto) {
+						obj[0].SetPos(Vec3f(transCount % 6 - 3, testHeight, transCount / 6 - 3)); //6*6のグリッドを移動
+						if (!superAuto) { //一回だけならここで記録
 							ofstream ofs(filename, ios::app);
 							if (hitCount > 0)
 								hitTimePool = hitTimePool / hitCount;
@@ -272,7 +274,7 @@ void __cdecl display(){
 							hitTimePool = 0;
 							outTimePool = 0;
 						}						
-						if (transCount >= 36) {
+						if (transCount >= 36) { //全グリッド測ったら
 							ofstream ofs(filename, ios::app);
 							float hitTimeAve = 0;
 							float outTimeAve = 0;
@@ -280,18 +282,18 @@ void __cdecl display(){
 								hitTimeAve = hitTimePool / (float)hitCount;
 							if (outCount > 0)
 								outTimeAve = outTimePool / (float)outCount;
-							ofs << colMethod << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << "," << hitTimeAve << "," << outTimeAve << std::endl;
+							ofs << colMethod << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << "," << hitTimeAve << "," << outTimeAve << std::endl; //書き込み
 							automode = false;
-							if (superAuto && caseCount < testShapes.size()) {
-								if (colMethod == 2) {
+							if (superAuto && caseCount < testShapes.size()) { //形状切り替え，終了判定
+								if (colMethod == 2) {//次の形状へ
 									caseCount += 2;
 									obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
 									obj[1].SetShape(stage.GetShape((ShapeID)testShapes[caseCount+1]), (ShapeID)testShapes[caseCount+1]);
 								}
-								colMethod = (colMethod+1)%3;
+								colMethod = (colMethod+1)%3; //メソッド切り替え
 								StartAutomode(true);
 							}
-							else {
+							else { //終了
 								automode = false;
 								superAuto = false;
 							}
@@ -428,6 +430,8 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 	if (key == 'v') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_ROUNDCONE), ShapeID::SHAPE_ROUNDCONE);
 	if (key == 'b') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_POLYSPHERE), ShapeID::SHAPE_POLYSPHERE);
 	if (key == 'n') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_DODECA), ShapeID::SHAPE_DODECA);
+	if (key == 'm') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGCAPSULE), ShapeID::SHAPE_LONGCAPSULE);
+	if (key == ',') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGPOLYSPHERE), ShapeID::SHAPE_LONGPOLYSPHERE);
 	if (key == 'p') {
 		colMethod = 0;
 		caseCount = 0;
@@ -491,7 +495,7 @@ void __cdecl motion(int x, int y) {
 void __cdecl idle(){
 	static int total;
 	total ++;
-#if 1 //自動テスト通す用
+#if 1 //自動テスト通す用 手動でテストするときは0に
 	colMethod = (colMethod + 1) % 3;
 	if (total > TOTAL_IDLE_COUNTER){
 		//exit(EXIT_FAILURE);
@@ -573,19 +577,14 @@ int __cdecl main(int argc, char* argv[]){
 	scene = sdk->CreateScene();				// シーンの作成
 	stage = TestStage();
 	stage.Init(sdk);
-	//p_timer = new UTPreciseTimer();
-	//p_timer->Init();
+
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
-	//objA = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 
-	//desc.mass = 1e20f;
-	//desc.inertia *= 1e20f;
 	obj[0].Init(scene->CreateSolid(desc), stage.GetShape(idBlock), idBlock);
 	obj[1].Init(scene->CreateSolid(desc), stage.GetShape(idFloor), idFloor);
-	//objB = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	//objB->SetGravity(false);
+
 	
 	//	形状の作成
 #if 0
