@@ -854,7 +854,8 @@ coltimePhase2 += frameTime2;
 			lastTriV = s.unit();
 			
 			if (cbiasParam >= 0) {
-				cbiasParam = lastTriV.z * 0.9; //三角面の法線と総体ベクトル（-z)との内積を加速バイアス値にする
+				cbiasParam = lastTriV.z * 0.9; //三角面の法線と相対ベクトル（-z)との内積を加速バイアス値にする
+				//相対ベクトルと三角面が平行に近い場合加速したサポートベクトルが既存サポートベクトルに近づきすぎるため
 			}
 			
 			if (cbiasParam > 0) {

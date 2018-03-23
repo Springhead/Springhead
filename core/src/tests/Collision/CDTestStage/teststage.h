@@ -19,7 +19,9 @@ enum ShapeID {
 	SHAPE_SPHERE,
 	SHAPE_ROCK,
 	SHAPE_POLYSPHERE,
-	SHAPE_DODECA
+	SHAPE_DODECA,
+	SHAPE_LONGCAPSULE,
+	SHAPE_LONGPOLYSPHERE
 };
 
 /**
@@ -102,7 +104,8 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 		}
 		break;
 	}
-	case SHAPE_CAPSULE: {
+	case SHAPE_CAPSULE:
+	case SHAPE_LONGCAPSULE:{
 		CDCapsuleIf* cap = DCAST(CDCapsuleIf, shape);
 		if (cap) {
 			float radius = cap->GetRadius();
@@ -143,7 +146,8 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 	}
 	case SHAPE_ROCK :
 	case SHAPE_POLYSPHERE:
-	case SHAPE_DODECA:{
+	case SHAPE_DODECA:
+	case SHAPE_LONGPOLYSPHERE:{
 		Vec3f normal;
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		if (mesh) {
@@ -252,6 +256,8 @@ public:
 	CDConvexIf*				shapeRock;
 	CDConvexIf*				shapePolySphere;
 	CDConvexIf*				shapeDodecahedron;
+	CDCapsuleIf*			shapeLongCapsule;
+	CDConvexIf*				shapeLongPolySphere;
 
 
 	void Init(PHSdkIf *sdk) {
@@ -268,11 +274,17 @@ public:
 		cd.radius = 1;
 		cd.length = 2;
 		shapeCapsule = sdk->CreateShape(cd)->Cast();
+		//long
+		cd.radius = 0.1;
+		cd.length = 10;
+		shapeLongCapsule = sdk->CreateShape(cd)->Cast();
 
 		CDRoundConeDesc rcd;
 		rcd.length = 3;
 		//rcd.radius = Vec2f(1.f, 2.f);
 		shapeRoundCone = sdk->CreateShape(rcd)->Cast();
+
+
 
 		CDConvexMeshDesc md;
 		int nv = 250;
@@ -301,14 +313,30 @@ public:
 				Quaterniond rot = Quaterniond();
 				rot.Euler(yangle,xangle, 0);
 				v = rot*v;
-				//rot = Quaterniond::Rot(xangle, Vec3d(0, 1, 0) ^ v);
-				//v = rot*v;
 				v.y *= 0.5;
 				pd.vertices.push_back(v);
 			}
 			
 		}
 		shapePolySphere = sdk->CreateShape(pd)->Cast();
+		//long spheroid
+		pd.vertices.clear();
+		pd.vertices.push_back(Vec3d(0, scale*0.05, 0));
+		pd.vertices.push_back(Vec3d(0, -scale*0.05, 0));
+		for (int i = 0; i < ynum; ++i) {
+			double yangle = (2 * M_PI / ynum)*i;
+			for (int j = 1; j<xnum; ++j) {
+				double xangle = (M_PI / xnum)*j - (M_PI / 2);
+				Vec3d v = Vec3d(scale, 0, 0);
+				Quaterniond rot = Quaterniond();
+				rot.Euler(yangle, xangle, 0);
+				v = rot*v;
+				v.y *= 0.05;
+				pd.vertices.push_back(v);
+			}
+
+		}
+		shapeLongPolySphere = sdk->CreateShape(pd)->Cast();
 		
 		pd.vertices.clear();
 		pd.vertices.push_back(Vec3d(1, 1, 1));
@@ -365,6 +393,12 @@ public:
 			break;
 		case SHAPE_DODECA:
 			return shapeDodecahedron;
+			break;
+		case SHAPE_LONGCAPSULE:
+			return shapeLongCapsule;
+			break;
+		case SHAPE_LONGPOLYSPHERE:
+			return shapeLongPolySphere;
 			break;
 		default:
 			return shapeSphere;
