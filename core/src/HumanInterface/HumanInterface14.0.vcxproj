@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{05138F41-5673-4E19-A5C7-2A684488B23A}</ProjectGuid>
+    <ProjectGuid>{0A28B08E-61A4-430B-8FFC-1DD02F479A5D}</ProjectGuid>
     <RootNamespace>HumanInterface</RootNamespace>
     <ProjectName>HumanInterface</ProjectName>
   </PropertyGroup>

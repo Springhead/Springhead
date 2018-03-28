@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}</ProjectGuid>
+    <ProjectGuid>{1563E2FD-2C00-444B-A069-ED1EE15C51EE}</ProjectGuid>
     <RootNamespace>Base</RootNamespace>
     <ProjectName>Base</ProjectName>
   </PropertyGroup>

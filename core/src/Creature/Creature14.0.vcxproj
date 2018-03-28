@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F674A4D7-A183-4C53-815D-12E17B71C6A0}</ProjectGuid>
+    <ProjectGuid>{A1B0BC81-160A-4638-80DC-D00D23DF88DB}</ProjectGuid>
     <RootNamespace>Creature</RootNamespace>
     <ProjectName>Creature</ProjectName>
   </PropertyGroup>
@@ -436,9 +436,6 @@
     </ProjectReference>
     <ProjectReference Include="..\Physics\Physics14.0.vcxproj">
       <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\RunSwig\RunSwig14.0.vcxproj">
-      <Project>{4ac6c708-19c9-4cc1-a25b-d9682470411e}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

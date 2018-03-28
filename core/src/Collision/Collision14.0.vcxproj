@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8C62959E-9E67-4439-836E-25BE57501463}</ProjectGuid>
+    <ProjectGuid>{CF3D6805-D975-4D96-8636-42DA78D4E104}</ProjectGuid>
     <RootNamespace>Collision</RootNamespace>
     <ProjectName>Collision</ProjectName>
   </PropertyGroup>

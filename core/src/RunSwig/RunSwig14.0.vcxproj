@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4AC6C708-19C9-4CC1-A25B-D9682470411E}</ProjectGuid>
+    <ProjectGuid>{5689CA67-150C-4C44-8386-353386F5AC86}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <ProjectName>RunSwig</ProjectName>
   </PropertyGroup>
