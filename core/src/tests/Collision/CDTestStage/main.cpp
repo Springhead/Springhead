@@ -37,7 +37,7 @@ o　今の衝突情報を記録
 #include<Foundation/UTPreciseTimer.h>
 #include <iostream>
 #include <fstream>
-#include <tests/Collision\CDTestStage\teststage.h>
+#include <tests/Collision/CDTestStage/teststage.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

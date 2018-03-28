@@ -39,6 +39,7 @@
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.11 2018/03/28 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
 import sys
 import os
@@ -132,6 +133,7 @@ class Traverse:
 		descend = ctl.get(CFK.DESCEND) and is_cand and not exclude
 		do_this = is_cand and not exclude and has_sln
 		#
+		interrupted = False
 		stat = 0
 		if do_this:
 			if self.audit:
@@ -139,6 +141,8 @@ class Traverse:
 			if self.verbose:
 				ctl.info()
 			stat = self.process(cwd, ctl)
+			if stat == Proc.ECANCELED:
+				interrupted = True
 		elif self.audit:
 			if not is_cand: msg = 'not a candidate dir'
 			if exclude:	msg = 'exclude condition'
@@ -146,8 +150,8 @@ class Traverse:
 			print('skip: -%s (%s)' % (cwd, msg))
 
 		# process for all subdirectories
-		if descend and stat != Proc.ECANCELED:
-			for item in os.listdir(cwd):
+		if descend and not interrupted:
+			for item in sorted(os.listdir(cwd)):
 				if not os.path.isdir(item):
 					continue
 				if not self.__is_candidate_dir(item):
@@ -192,6 +196,7 @@ class Traverse:
 			return -1
 		#
 		self.result.set_info(name, RST.EXP, ctl.get(CFK.EXPECTED))
+		stat = 0
 		for platform in self.platforms:
 			# need build?
 			if not ctl.get(CFK.BUILD):
@@ -212,7 +217,6 @@ class Traverse:
 				outpath = self.__make_outpath(ctl, slnfile)
 				stat = bar.build(None,
 						slnfile,
-						ctl.get(CFK.MAKE_TARGET),
 						platform,
 						config,
 						outpath,
@@ -249,6 +253,8 @@ class Traverse:
 				self.__report(None, 'run', False)
 				#
 				addpath = self.__runtime_addpath(ctl, platform)
+				if Util.is_unix():
+					outpath = slnfile
 				stat = bar.run(None,
 						outpath,
 						'',	# no args

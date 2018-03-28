@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for CDTestStage
+# 	Makefile for Quaternion
 #
 ################################################################
 
@@ -20,9 +20,8 @@ SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 REALCLEANS	= $(wildcard log/*)
 
-CXXFLAGS	:= $(CXXFLAGS) \
-		-D__cdecl= \
-		-std=gnu++11
+UNDEFS		= -D__cdecl=
+
 
 ################################################################
 #	compile, link and go
@@ -31,7 +30,7 @@ CXXFLAGS	:= $(CXXFLAGS) \
 all:		compile test
 
 .cpp.o:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(UNDEFS) $(INCLUDES) -c $< -o $@
 
 compile:	$(OBJS)
 	$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)

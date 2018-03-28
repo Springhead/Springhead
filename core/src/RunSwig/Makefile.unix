@@ -28,13 +28,14 @@
 #	Ver 1.2  2017/10/05 F.Kanehori  オプション PYTHON を子 make に渡す.
 #	Ver 1.21 2017/10/11 F.Kanehori  Trace info 追加.
 #	Ver 1.22 2017/10/25 F.Kanehori  使用する python の取得方法を変更.
+#	Ver 1.23 2018/03/28 F.Kanehori  マクロ定義ファイルを参照.
 #################################################################################
-eq = $(and $(findstring $(1)X,$(2)X), $findstring $(2)X,$(1)X)
-opt = $(if $(call eq,$(1),),$(if $(call eq,$(2),),$(3),$(2)),$(1))
+TOP_DIR		= ../..
+include		$(TOP_DIR)/make.func
 
 #  使用する Python (make のマクロで指定可能)
 #
-Python = $(call opt,$(PYTHON),$(SPR_PYTHON),python)
+Python = $(call def,$(PYTHON),$(SPR_PYTHON),python)
 
 #  ディレクトリの定義
 #

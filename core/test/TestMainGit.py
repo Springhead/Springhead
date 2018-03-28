@@ -26,6 +26,7 @@
 #  VERSION:
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
+#	Ver 1.02 2018/03/26 F.Kanehori	Bug fixed.
 # ======================================================================
 version = 1.01
 
@@ -88,7 +89,7 @@ def check_exec(name, os_type=True):
 	# and its value is 'skip'.  Return True otherwise.
 	if not os_type:
 		os_name = 'unix' if Util.is_unix() else 'Windows'
-		print('do not exec ..%s.. by %s' % os_name)
+		print('do not exec ..%s.. by %s' % (name, os_name))
 		return False
 	#
 	val = os.getenv(name)
