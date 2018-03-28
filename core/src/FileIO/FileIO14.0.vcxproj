@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3CA4689D-77DA-4B2E-A718-CBB6A8FF04D7}</ProjectGuid>
+    <ProjectGuid>{27277A70-7BC9-465B-9480-52B418E62A5A}</ProjectGuid>
     <RootNamespace>FileIO</RootNamespace>
     <ProjectName>FileIO</ProjectName>
   </PropertyGroup>

@@ -21,7 +21,6 @@ FWScene fwScene{
 		numIteration = 10
 		PHSolid soFloor{
 			dynamical = false			//
-			integrate = false			//
 			*grFloor
 		}
 		PHSolid soNegi{
@@ -31,7 +30,6 @@ FWScene fwScene{
 		PHSolid soPan{
 			*tpan_tex3d
 			dynamical = false
-			integrate = false
 			pose = 1 0 0 0  0.1 0.1 0	
 		}
 		//	PHFemMeshはPHSceneの中でインポート
@@ -52,7 +50,7 @@ FWScene fwScene{
 }
 Import{ path = "grFloor.x" }
 
-//Import{ path = "./xFiles/negi/negi8r2s.x"}
+Import{ path = "./xFiles/negi/negi8r2s.x"}
 
 //Import{ path = "./xFiles/negi/2cube.x"}
 
