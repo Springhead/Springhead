@@ -1,35 +1,35 @@
-@echo off
+ï»¿@echo off
 setlocal enabledelayedexpansion
 :: ==============================================================================
 ::  SYNOPSIS
 ::	MakeReport [-k] [-h] [-v] [-s] [-D level]
 ::
 ::  DESCRIPTION:
-::	daily_build ‚ÌƒŒƒ|[ƒgƒtƒ@ƒCƒ‹‚ðì¬‚·‚é. ŽŸ‚ÌƒRƒ}ƒ“ƒh‚ªƒ[ƒJƒ‹‚Å“®ì
-::	‚·‚é•K—v‚ª‚ ‚é (‚±‚ê‚ç‚Í bin ƒfƒBƒŒƒNƒgƒŠ‚É’u‚­‚±‚Æ).
-::	    gawk.exe	( awk ‚Ì‘ã‘Ö•¨‚È‚ç‚È‚ñ‚Å‚à‚æ‚¢ )
+::	daily_build ã®ãƒ¬ãƒãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹. æ¬¡ã®ã‚³ãƒžãƒ³ãƒ‰ãŒãƒ­ãƒ¼ã‚«ãƒ«ã§å‹•ä½œ
+::	ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ (ã“ã‚Œã‚‰ã¯ bin ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ç½®ãã“ã¨).
+::	    gawk.exe	( awk ã®ä»£æ›¿ç‰©ãªã‚‰ãªã‚“ã§ã‚‚ã‚ˆã„ )
 ::	    nkf.exe
 ::
 ::  VERSION:
-::	Ver 1.0	 2012/11/03 F.Kanehori	‰”Å (Unix ŒÄo‚µ”Å)
-::	Ver 2.0  2013/02/07 F.Kanehori	Windows ˆÚA‰”Å
-::	Ver 3.0  2017/10/18 F.Kanehori	VƒŒƒ|ƒWƒgƒŠ\‘¢‘Î‰ž
-::	Ver 3.1  2017/11/22 F.Kanehori	ŠJŽn/I—¹Žž‚ð•\Ž¦
+::	Ver 1.0	 2012/11/03 F.Kanehori	åˆç‰ˆ (Unix å‘¼å‡ºã—ç‰ˆ)
+::	Ver 2.0  2013/02/07 F.Kanehori	Windows ç§»æ¤åˆç‰ˆ
+::	Ver 3.0  2017/10/18 F.Kanehori	æ–°ãƒ¬ãƒã‚¸ãƒˆãƒªæ§‹é€ å¯¾å¿œ
+::	Ver 3.1  2017/11/22 F.Kanehori	é–‹å§‹/çµ‚äº†æ™‚åˆ»ã‚’è¡¨ç¤º
 ::	Ver 3.2  2017/12/21 F.Kanehori	Log directory on the web changed.
 :: ==============================================================================
 set PROG=%~n0
 echo %PROG%: started at %date% %time%
 
 ::----------------------------------------------
-::  ‰ºˆÊ‚Ìˆ—ƒvƒƒOƒ‰ƒ€‚É“n‚·ƒIƒvƒVƒ‡ƒ“
-::    -k  ì‹Æƒtƒ@ƒCƒ‹‚ðŽc‚·
-::    -V  ƒo[ƒoƒXî•ño—ÍiƒfƒtƒHƒ‹ƒgj
-::    -D  ƒfƒoƒbƒOî•ño—Í
-::  ‚±‚Ìƒoƒbƒ`ƒXƒNƒŠƒvƒg‚ÅŽg—p‚·‚éƒIƒvƒVƒ‡ƒ“
-::    -c  ƒŒƒ|[ƒgƒtƒ@ƒCƒ‹‚ðƒEƒFƒu‚ÉƒRƒs[‚·‚é
-::    -h  Žg—p•û–@‚Ì•\Ž¦
-::    -v  ƒo[ƒoƒXî•ño—ÍiƒfƒtƒHƒ‹ƒgj
-::    -s  ƒo[ƒoƒXî•ño—Í—}§i‘SƒXƒNƒŠƒvƒgj
+::  ä¸‹ä½ã®å‡¦ç†ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã«æ¸¡ã™ã‚ªãƒ—ã‚·ãƒ§ãƒ³
+::    -k  ä½œæ¥­ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ®‹ã™
+::    -V  ãƒãƒ¼ãƒã‚¹æƒ…å ±å‡ºåŠ›ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆï¼‰
+::    -D  ãƒ‡ãƒãƒƒã‚°æƒ…å ±å‡ºåŠ›
+::  ã“ã®ãƒãƒƒãƒã‚¹ã‚¯ãƒªãƒ—ãƒˆã§ä½¿ç”¨ã™ã‚‹ã‚ªãƒ—ã‚·ãƒ§ãƒ³
+::    -c  ãƒ¬ãƒãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¦ã‚§ãƒ–ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹
+::    -h  ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
+::    -v  ãƒãƒ¼ãƒã‚¹æƒ…å ±å‡ºåŠ›ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆï¼‰
+::    -s  ãƒãƒ¼ãƒã‚¹æƒ…å ±å‡ºåŠ›æŠ‘åˆ¶ï¼ˆå…¨ã‚¹ã‚¯ãƒªãƒ—ãƒˆï¼‰
 ::----------------------------------------------
 set OPT_C=0
 set OPT_K=0
@@ -71,7 +71,7 @@ if "%ARGS:~0,1%" == " " (
 if %ARGC% == 1 (set ARGS=%ARGS% %1)
 
 ::----------------------------------------------
-::  “ú•tî•ñ‚ÌŽæ“¾
+::  æ—¥ä»˜æƒ…å ±ã®å–å¾—
 ::
 set YYYY=%DATE:~0,4%
 set MM=%DATE:~5,2%
@@ -79,14 +79,14 @@ set DD=%DATE:~8,2%
 set TODAY=%YYYY%-%MM%%DD%
 
 ::----------------------------------------------
-::  Žg—p‚·‚éƒvƒƒOƒ‰ƒ€
+::  ä½¿ç”¨ã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 ::
 set BASEDIR=.\Monitoring
 set BINDIR=.\bin
 set CMND=build_monitor_Git
 
 ::----------------------------------------------
-::  ƒ[ƒJƒ‹ƒzƒXƒgã‚ÅƒRƒ}ƒ“ƒh‚ðŽÀs
+::  ãƒ­ãƒ¼ã‚«ãƒ«ãƒ›ã‚¹ãƒˆä¸Šã§ã‚³ãƒžãƒ³ãƒ‰ã‚’å®Ÿè¡Œ
 ::
 set CWD=%cd%
 cd %BASEDIR%
@@ -94,7 +94,7 @@ cmd /c %BINDIR%\%CMND% %ARGS%
 cd %CWD%
 
 ::----------------------------------------------
-::  ƒRƒs[Œ³/æ‚ÌƒfƒBƒŒƒNƒgƒŠ‚Ì’è‹`
+::  ã‚³ãƒ”ãƒ¼å…ƒ/å…ˆã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å®šç¾©
 ::
 set SELFPATH=%~dp0
 set REPBASE=%SELFPATH%report
@@ -102,7 +102,7 @@ set WEBBASE=\\haselab\HomeDirs\WWW\docroots\springhead\dailybuild\log
 set WEBREPT=%WEBBASE%
 
 ::----------------------------------------------
-::  ƒEƒFƒu‚ÉƒRƒs[‚·‚éƒtƒ@ƒCƒ‹‚Ì’è‹`
+::  ã‚¦ã‚§ãƒ–ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®å®šç¾©
 ::
 set REPFILE=%TODAY%.report
 set BLDDIFF=%TODAY%.bldlog.diff
@@ -110,7 +110,7 @@ set STBDIFF=%TODAY%.stblog.diff
 set RUNDIFF=%TODAY%.runlog.diff
 set SPLDIFF=%TODAY%.spllog.diff
 
-:: ƒEƒFƒuã‚Å‚Ì–¼Ì
+:: ã‚¦ã‚§ãƒ–ä¸Šã§ã®åç§°
 ::
 set WEB_REPFILE=Test.report
 set WEB_BLDDIFF=Build.log.diff
@@ -119,7 +119,7 @@ set WEB_RUNDIFF=Run.log.diff
 set WEB_SPLDIFF=SamplesBuild.log.diff
 
 ::----------------------------------------------
-::  ƒEƒFƒu‚ÉƒRƒs[
+::  ã‚¦ã‚§ãƒ–ã«ã‚³ãƒ”ãƒ¼
 ::
 if %OPT_C% == 1 (
     if %OPT_V% == 1 ( echo copying files to the web ... )
@@ -132,7 +132,7 @@ if %OPT_C% == 1 (
 )
 
 ::----------------------------------------------
-::  ƒ[ƒJƒ‹‚Ìƒtƒ@ƒCƒ‹‚ðíœ
+::  ãƒ­ãƒ¼ã‚«ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤
 ::
 if not %OPT_K% == 1 (
     if %OPT_V% == 1 ( set /p=clearing directory %REPBASE% ... < NUL )
@@ -149,7 +149,7 @@ endlocal
 exit /b
 
 ::----------------------------------------------
-::  Žg—p•û–@‚Ì•\Ž¦
+::  ä½¿ç”¨æ–¹æ³•ã®è¡¨ç¤º
 ::----------------------------------------------
 :usage
     echo Usage: %PROG% [options] [xxxx:yyyy]

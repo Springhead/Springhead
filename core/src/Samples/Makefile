@@ -7,18 +7,28 @@
 ################################################################
 #	A rule to make sub directories.
 ################################################################
+TOP_DIR 	= ../..
 
-TOP_DIR 		= ../..
+TARGET_DIRS	= \
+	Creature EmbPython Foundation Framework \
+	HumanInterface Physics Scilab
 
-SAMPLES_DIR		= Physics Graphics
+SILENT		= --no-print-directory
 
 all:
-	@for dir in $(SAMPLES_DIR); \
-	do echo "---------------------------------------------"; \
-	   echo "             make $$dir    			      "; \
-	   echo "---------------------------------------------"; \
-	$(MAKE) -C $$dir all || exit; \
+	@for dir in $(TARGET_DIRS); do \
+		echo "--------------------------------------------"; \
+		echo "	make $$dir."; \
+		echo "--------------------------------------------"; \
+		$(MAKE) $(SILENT) -C $$dir all || exit; \
 	done
+
+
+################################################################
+#	Dummy rules for dailybuild.
+################################################################
+compile:
+test:
 
 
 ################################################################
@@ -27,20 +37,20 @@ all:
 
 clean:
 	@echo ""
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo "               making clean in Samples ...                        "
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(SAMPLES_DIR); \
-	do $(MAKE) -C $$dir  clean || exit; \
+	@echo "--------------------------------------------"
+	@echo "	making clean in Samples ..."
+	@echo "--------------------------------------------"
+	@for dir in $(TARGET_DIRS); do \
+		$(MAKE) $(SILENT) -s -C $$dir clean || exit; \
 	done
 	
 realclean:
 	@echo ""
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo "               making realclean in Samples ...                    "
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(SAMPLES_DIR); \
-	do $(MAKE) -C $$dir  realclean || exit; \
+	@echo "--------------------------------------------"
+	@echo "	making realclean in Samples ..."
+	@echo "--------------------------------------------"
+	@for dir in $(TARGET_DIRS); do \
+		$(MAKE) $(SILENT) -s -C $$dir realclean || exit; \
 	done
 
 

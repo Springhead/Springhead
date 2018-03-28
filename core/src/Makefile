@@ -41,23 +41,27 @@ SILENT		= --no-print-directory
 all:	install test
 
 ##
+compile:	install
+
+##
 library:	runswig
 	@for dir in $(LIBS_DIR); do \
-	    echo "============================================="; \
-	    echo "       Make $$dir Library.		       "; \
-	    echo "============================================="; \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir all || exit; \
+		echo "============================================"; \
+		echo "	Make $$dir Library."; \
+		echo "============================================"; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir all || exit; \
 	done	
 	$(AR) $(ARFLAGS) $(SPRINGHEAD_LIB) $(ALL_OBJS) 
 	$(RANLIB) $(SPRINGHEAD_LIB)
 
 runswig:	
-	@echo "============================================="
-	@echo "       Make RunSwig.			    "
-	@echo "============================================="
+	@echo "============================================"
+	@echo "	Make RunSwig."
+	@echo "============================================"
 	$(MAKE) PYTHON=$(Python) $(SILENT) -C $(RUNSWIG_DIR) compile || exit
 
 install:	library
+	mkdir -p $(InsDir)
 	install $(SPRINGHEAD_LIB) $(InsDir)
 
 ##
@@ -65,18 +69,18 @@ test:		install tests-all samples-all
 	
 tests-all:		
 	@for dir in $(TESTS_DIR); do \
-	    echo "============================================="; \
-	    echo "       Entring $$dir			       "; \
-	    echo "============================================="; \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir all || exit; \
+		echo "============================================"; \
+		echo "	Entering $$dir."; \
+		echo "============================================"; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir $(TARGET) || exit; \
 	done
 	
 samples-all:		
 	@for dir in $(SAMPLES_DIR); do \
-	    echo "============================================="; \
-	    echo "       Entring $$dir			       "; \
-	    echo "============================================="; \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir all || exit; \
+		echo "============================================"; \
+		echo "	Entering $$dir."; \
+		echo "============================================"; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir $(TARGET) || exit; \
 	done	
 		
 ##
@@ -84,18 +88,18 @@ clean:		clean-library clean-tests clean-samples
 
 clean-library:
 	@for dir in $(LIBS_DIR); do \
-	    $(MAKE) PYTHON=$(Python) -s -C $$dir  clean || exit; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $$dir clean || exit; \
 	done
-	$(MAKE) PYTHON=$(Python) $(SILENT) -C $(RUNSWIG_DIR) clean || exit
+	$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $(RUNSWIG_DIR) clean || exit
 	
 clean-tests:
 	@for dir in $(TESTS_DIR); do \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir  clean || exit; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $$dir clean || exit; \
 	done
 
 clean-samples:
 	@for dir in $(SAMPLES_DIR); do \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir  clean || exit; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $$dir clean || exit; \
 	done
 
 ##
@@ -103,19 +107,19 @@ realclean:	realclean-library realclean-tests realclean-samples
 
 realclean-library:
 	@for dir in $(LIBS_DIR); do \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir  realclean || exit; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $$dir realclean || exit; \
 	done 
-	$(MAKE) PYTHON=$(Python) $(SILENT) -C $(RUNSWIG_DIR) realclean || exit
+	$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $(RUNSWIG_DIR) realclean || exit
 	-/bin/rm -f $(InsDir)/$(SPRINGHEAD_LIB)
 
 realclean-tests:
 	@for dir in $(TESTS_DIR); do \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir  realclean || exit; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $$dir realclean || exit; \
 	done
 
 realclean-samples:
 	@for dir in $(SAMPLES_DIR); do \
-	    $(MAKE) PYTHON=$(Python) $(SILENT) -C $$dir  realclean || exit; \
+		$(MAKE) PYTHON=$(Python) $(SILENT) -s -C $$dir realclean || exit; \
 	done
 
 ##

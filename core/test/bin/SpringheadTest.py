@@ -205,6 +205,7 @@ if verbose:
 #
 print()
 print('test start at: %s' % Util.now(format=date_format))
+print('with args: %s' % args)
 
 # test id
 #	'Test_id' affects only log file header.
@@ -255,7 +256,7 @@ outf = '-o ../log/result.log'
 args = 'r %s %s %s' % (res_file, platforms[0], configs[0])
 print(' '.join([cmnd, outf, args]))
 proc = Proc(dry_run=options.dry_run, verbose=options.verbose)
-proc.execute([cmnd, outf, args]).wait()
+proc.execute([cmnd, outf, args], shell=True).wait()
 
 # done
 print('test ended at: %s' % Util.now(format=date_format))

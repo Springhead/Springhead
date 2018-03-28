@@ -7,14 +7,20 @@
 ################################################################
 #	A rule to make sub directories.
 ################################################################
-
 TOP_DIR 	= ../..
 
-TESTS_DIR	= FileIO Graphics Physics Collision
+TARGET_DIRS	= \
+	Base Collision FileIO Foundation Framework \
+	Graphics HumanInterface Physics
+
+SILENT		= --no-print-directory
 
 all:
-	@for dir in $(TESTS_DIR); \
-	do $(MAKE) -C $$dir all || exit; \
+	@for dir in $(TARGET_DIRS); do \
+		echo "--------------------------------------------"; \
+		echo "	make $$dir."; \
+		echo "--------------------------------------------"; \
+		$(MAKE) $(SILENT) -C $$dir all || exit; \
 	done
 
 
@@ -24,20 +30,20 @@ all:
 
 clean:
 	@echo ""
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo "               making clean in tests ...                          "
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(TESTS_DIR); \
-	do $(MAKE) -C $$dir  clean || exit; \
+	@echo "--------------------------------------------"
+	@echo "	making clean in tests ..."
+	@echo "--------------------------------------------"
+	@for dir in $(TARGET_DIRS); do \
+		$(MAKE) $(SILENT) -s -C $$dir clean || exit; \
 	done
 	
 realclean:
 	@echo ""
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo "               making realclean in tests ...                      "
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(TESTS_DIR); \
-	do $(MAKE) -C $$dir  realclean || exit; \
+	@echo "--------------------------------------------"
+	@echo "	making real clean in tests ..."
+	@echo "--------------------------------------------"
+	@for dir in $(TARGET_DIRS); do \
+		$(MAKE) $(SILENT) -s -C $$dir realclean || exit; \
 	done
 
 	

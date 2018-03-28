@@ -60,6 +60,7 @@
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.11 2018/03/26 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
 import sys
 import os
@@ -97,7 +98,7 @@ class BuildAndRun:
 
 	#  Compile the solution.
 	#
-	def build(self, dirpath, slnfile, make_target, platform, opts,
+	def build(self, dirpath, slnfile, platform, opts,
 			outfile, logfile, errlogfile, force=False):
 		self.dirpath = dirpath
 		self.slnfile = slnfile
@@ -107,15 +108,12 @@ class BuildAndRun:
 			print('build solution')
 			print('  dirpath: %s' % dirpath)
 			print('  slnfile: %s' % slnfile)
-			print('  target:  %s' % make_target)
 			print('  opts:    %s' % opts)
 			print('  outfile: %s' % outfile)
 			print('  force:   %s' % force)
 			print('  logfile: %s' % logfile)
 			print('  errlog:  %s' % errlogfile)
 		self.verbose = 0
-		if Util.is_unix():
-			print()
 
 		# go to target directory.
 		if dirpath:
@@ -129,16 +127,16 @@ class BuildAndRun:
 		errlogf = self.__open_log(errlogfile, 'a', RST.BLD)
 
 		# call compiler
-		args = [slnfile, platform, make_target, opts, outfile, force]
+		args = [slnfile, platform, opts, outfile, force]
 		if Util.is_unix():
 			stat, loginfo = self.__build_u(args)
 		else:
 			stat, loginfo = self.__build_w(args)
 
 		# merge log data
-		dtype, cmnd, data = loginfo
+		cmnd, data = loginfo
 		errors = self.__select_errors(data, RST.BLD)
-		self.__merge_log(dtype, data, logf, cmnd, RST.BLD)
+		self.__merge_log(2, data, logf, cmnd, RST.BLD)
 		self.__merge_log(1, errors, errlogf, cmnd, RST.ERR)
 
 		# return to previous directory
@@ -147,6 +145,9 @@ class BuildAndRun:
 		return stat
 				
 	#  Execute the program.
+	#	Windows:  Invoke 'exefile' directly.
+	#	unix:	  Invoke through 'make -f exefile test'.
+	#		  In this case, 'exefile' should be a makefile.
 	#
 	def run(self, dirpath, exefile, args, logfile, errlogfile,
 			addpath=None, timeout=None, pipeprocess=None):
@@ -178,13 +179,23 @@ class BuildAndRun:
 		
 		# use following temporary log file.
 		if Util.is_unix():
-			config = config.replace('-', '')
-		tmplog = 'log/%s_%s_%s_%s_run.log' % \
-				(self.clsname, self.ccver, self.platform, self.config)
+			config = self.config.replace('-', '')
+			ccver = ''
+		else:
+			config = self.config
+			ccver = '_%s' % self.ccver
+		tmplogdir = 'log'
+		tmplog = '%s/%s%s_%s_%s_run.log' % \
+			(tmplogdir, self.clsname, ccver, self.platform, config)
+		os.makedirs(tmplogdir, exist_ok=True)
 
 		# prepare log file (append mode).
 		logf = self.__open_log(logfile, 'a', RST.RUN)
 		errlogf = self.__open_log(errlogfile, 'a', RST.RUN)
+
+		# add target to Makefile.
+		if Util.is_unix():
+			exefile = 'make -f %s test' % exefile
 
 		# execute program.
 		if pipeprocess:
@@ -193,14 +204,14 @@ class BuildAndRun:
 			proc1.execute('%s %s' % (exefile, args),
 				      addpath=addpath, stdin=Proc.PIPE,
 				      stdout=tmplog, stderr=Proc.STDOUT)
-			proc2.execute(pipeprocess, addpath=addpath,
+			proc2.execute(pipeprocess, shell=True, addpath=addpath,
 				      stdout=Proc.PIPE)
 			proc2.wait()
 			stat = proc1.wait(timeout)
 		else:
 			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
-				   addpath=addpath,
+				   addpath=addpath, shell=True,
 				   stdout=tmplog, stderr=Proc.STDOUT)
 			stat = proc1.wait(timeout)
 
@@ -280,13 +291,15 @@ class BuildAndRun:
 			'Trace':	'OPTS=-O2',
 			None:		''
 		}
-		[slnfile, platform, make_target, opts, outfile, force] = args
+		[slnfile, platform, opts, outfile, force] = args
 		if opts not in opt_flags:
 			opts = None
-		tmplog = 'log/%s_%s_%s_build.log' % \
-			(self.clsname, self.platform, self.config)
+		tmplogdir = 'log'
+		tmplog = '%s/%s_%s_%s_build.log' % \
+			(tmplogdir, self.clsname, self.platform, self.config)
+		os.makedirs(tmplogdir, exist_ok=True)
 
-		cmnd = 'make -f %s %s' % (slnfile, make_target)
+		cmnd = 'make -f %s compile' % slnfile
 		args = opt_flags[opts]
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
 		proc.execute('%s %s' % (cmnd, args), shell=True,
@@ -294,7 +307,7 @@ class BuildAndRun:
 		stat = proc.wait()
 
 		cmnd = '%s %s' % (cmnd, args)
-		loginfo = [1, cmnd, tmplog]
+		loginfo = [cmnd, tmplog]
 		return stat, loginfo
 
 	#  Call compiler (for Windows).
@@ -302,7 +315,7 @@ class BuildAndRun:
 	def __build_w(self, args):
 		# arguments:
 		#   args:	Parameters to compiler (list).
-		[slnfile, platform, make_target, opts, outfile, force] = args
+		[slnfile, platform, opts, outfile, force] = args
 
 		outdir = self.__dirpart(outfile).replace('x86', 'Win32')
 		tmplog = 'log/%s_%s_%s_%s_build.log' % \
@@ -326,7 +339,7 @@ class BuildAndRun:
 		stat = vs.build(platform, opts)
 
 		cmnd = vs.get(VisualStudio.COMMAND)
-		loginfo = [2, cmnd, tmplog]
+		loginfo = [cmnd, tmplog]
 		return stat, loginfo
 
 	def __select_errors(self, fname, step):
@@ -338,7 +351,7 @@ class BuildAndRun:
 		fobj = TextFio(fname)
 		if fobj.open() < 0:
 			msg = 'build' if step == RST.BLD else 'run'
-			msg += '%s: open error: "%s"' % (step, fname)
+			msg += '_s: open error: "%s"' % fname
 			Error(self.clsname).error(msg)
 		lines = fobj.read()
 		fobj.close()
