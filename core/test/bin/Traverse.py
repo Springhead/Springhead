@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -37,6 +37,9 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.11 2018/03/28 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
 import sys
 import os
@@ -69,7 +72,7 @@ class Traverse:
 			timeout, report=True, audit=False,
 			dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.0
+		self.version = 1.1
 		#
 		self.testid = testid
 		self.result = result
@@ -93,16 +96,17 @@ class Traverse:
 		else:
 			self.is_dailybuild = False
 		#
+		self.encoding = 'utf-8' if Util.is_unix() else 'cp932'
 		self.once = True
 		self.trace = True
-		self.err = Error(self.clsname)
 		self.fop = FileOp()
 
 	#  Compile the solution.
 	#
 	def traverse(self, top):
 		if not os.path.isdir(top):
-			self.err.print('not a directory: %s' % top, alive=True)
+			msg = 'not a directory: %s' % top
+			Error(self.clsname).error(msg)
 			return 0
 	
 		# go to test directory
@@ -112,7 +116,7 @@ class Traverse:
 		# read control file
 		ctl = ControlParams(self.control, self.section, verbose=self.verbose)
 		if ctl.error():
-			self.err.print(ctl.error(), alive=True)
+			Error(self.clsname).error(ctl.error())
 			return -1
 		if self.once:
 			self.__init_log(ctl.get(CFK.BUILD_LOG), RST.BLD)
@@ -129,6 +133,7 @@ class Traverse:
 		descend = ctl.get(CFK.DESCEND) and is_cand and not exclude
 		do_this = is_cand and not exclude and has_sln
 		#
+		interrupted = False
 		stat = 0
 		if do_this:
 			if self.audit:
@@ -136,6 +141,8 @@ class Traverse:
 			if self.verbose:
 				ctl.info()
 			stat = self.process(cwd, ctl)
+			if stat == Proc.ECANCELED:
+				interrupted = True
 		elif self.audit:
 			if not is_cand: msg = 'not a candidate dir'
 			if exclude:	msg = 'exclude condition'
@@ -143,8 +150,8 @@ class Traverse:
 			print('skip: -%s (%s)' % (cwd, msg))
 
 		# process for all subdirectories
-		if descend and stat != Proc.ECANCELED:
-			for item in os.listdir(cwd):
+		if descend and not interrupted:
+			for item in sorted(os.listdir(cwd)):
 				if not os.path.isdir(item):
 					continue
 				if not self.__is_candidate_dir(item):
@@ -165,7 +172,8 @@ class Traverse:
 	#
 	def process(self, cwd, ctl):
 		if not os.path.isdir(cwd):
-			self.err.print('not a directory: %s' % cwd, alive=True)
+			msg = 'not a directory: %s' % cwd
+			Error(self.clsname).error(msg)
 		#
 		slnfile = self.__solution_file_name(ctl, cwd, self.toolset)
 		if self.verbose > 1:
@@ -188,6 +196,7 @@ class Traverse:
 			return -1
 		#
 		self.result.set_info(name, RST.EXP, ctl.get(CFK.EXPECTED))
+		stat = 0
 		for platform in self.platforms:
 			# need build?
 			if not ctl.get(CFK.BUILD):
@@ -244,6 +253,8 @@ class Traverse:
 				self.__report(None, 'run', False)
 				#
 				addpath = self.__runtime_addpath(ctl, platform)
+				if Util.is_unix():
+					outpath = slnfile
 				stat = bar.run(None,
 						outpath,
 						'',	# no args
@@ -333,10 +344,10 @@ class Traverse:
 			(testids[self.testid], steps[step], err)
 
 		# write header
-		f = TextFio(path, 'w', encoding='cp932')
+		f = TextFio(path, 'w', encoding=self.encoding)
 		if f.open() < 0:
 			msg = '__init_log: open error "%s"', path
-			self.err.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 			return
 		f.writeline(datestr)
 		f.writeline(header)
@@ -359,7 +370,7 @@ class Traverse:
 			os.chdir(abspath)
 		except:
 			msg = 'chdir failed (%s)' % path
-			self.err.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 		return Util.upath(cwd)
 
 	#  Is this directory a test candidate?

@@ -26,13 +26,11 @@
 #	Ver 1.0  2017/04/20 F.Kanehori  Windows 版を unix 用に修正
 #	Ver 1.1  2017/08/23 F.Kanehori  Springhead tree 再構成に対応.
 #	Ver 1.2  2017/10/05 F.Kanehori  オプション PYTHON を子 make に渡す.
-#	Ver 1.3  2019/01/08 F.Kanehori  CheckClosedSrc の導入
+#	Ver 1.21 2017/10/11 F.Kanehori  Trace info 追加.
+#	Ver 1.22 2017/10/25 F.Kanehori  使用する python の取得方法を変更.
+#	Ver 1.23 2018/03/28 F.Kanehori  マクロ定義ファイルを参照.
 #################################################################################
-ifeq ($(_SPRTOP_),)
-	TOP_DIR	= ../..
-else
-	TOP_DIR	= $(_SPRTOP_)
-endif
+TOP_DIR		= ../..
 include		$(TOP_DIR)/make.func
 
 #  使用する Python (make のマクロで指定可能)
@@ -51,7 +49,6 @@ FRAMEWORK	= ../Framework
 SCILABSWIG	= $(Python) ScilabSwig.py
 RUNSWIGFW	= $(Python) RunSwigFramework.py
 SCRIPT		= do_swigall.py
-CHECKCLOSEDSRC	= CheckClosedSrc.py
 
 #  前処理で作成するファイル
 #
@@ -60,22 +57,18 @@ FWOLDSPRSTUB	= $(FRAMEWORK)/FWOldSpringheadStub.cpp
 
 all:	PreWork RunSwig
 
-PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
-
-ClosedSrcCtl:
-		echo Makefile.unix: ClosedSrcCtl
-		$(Python) $(CHECKCLOSEDSRC)
+PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 $(SCILABSTUBHDR):	
-		echo Makefile.unix: SCILABSTUBHDR [SciLab/ScilabStub.hpp]
+		echo target: SCILABSTUBHDR
 		cd $(FOUNDATION) && $(SCILABSWIG)
 
 $(FWOLDSPRSTUB):	
-		echo Makefile.unix: FWOLDSPRSTUB [Framework/FWOldSpringStub.cpp]
+		echo target: FWOLDSPRSTUB
 		cd $(FRAMEWORK) && $(RUNSWIGFW) -P $(Python)
 
 RunSwig:	
-		echo Makefile.unix: RunSwig [$(SCRIPT) -- gmake -f makefile.swig]
+		echo target: RunSwig
 		$(Python) $(BINDIR)/$(SCRIPT) -P $(Python)
 
 clean:		

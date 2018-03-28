@@ -12,7 +12,7 @@ include 	$(TOP_DIR)/make.header
 include		$(TOP_DIR)/make.func
 
 Python = $(call def,$(PYTHON),$(SPR_PYTHON),python)
-InsDir = $(call def,$(LIB_INS_DIR),$(SPR_LIB_INS_DIR),../../generated/lib)
+InsDir = $(call def,$(LIB_INS_DIR),$(SPR_LIB_INS_DIR),../lib)
 
 RUNSWIG_DIR	= RunSwig
 LIBS_DIR	= Base \

@@ -28,8 +28,10 @@ Expected	-1
 
 #[Windows]
 
-#[unix]
+[unix]
 #SolutionAlias	Makefile
+Build		False
 #OutputDir	.
 #BinaryOutName	a.out
+Run		False
 

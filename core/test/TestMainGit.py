@@ -1,15 +1,16 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# =============================================================================
+# ======================================================================
 #  SYNOPSIS:
 #	TestMainGit [options]
 #	options:
-#	    -c CONF:	    Configuration to test (Debug, Release or Trace).
-#	    -p PLAT:	    Platform to test (x86, x64)
+#	    -c CONF:	    Test configuration (Debug, Release or Trace).
+#	    -p PLAT:	    Test platform (x86 or x64)
 #	    -t TOOLSET:	    C-compiler version.
 #				Windows: Visual Studio version (str).
 #				unix:    gcc version (dummy).
 #	    -v:		    Set verbose level (0: silent).
+#	    -D:		    Show command but do not execute it.
 #	    -V:		    Show version.
 #
 #  DESCRIPTION:
@@ -22,12 +23,12 @@
 #	    unix_copyto_webbase:    Copy generated files to the server.
 #	These control parameters are hard coded on this file.
 #
-# -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/26 F.Kanehori	First version.
-# =============================================================================
-version = 1.0
-python_test = True
+#	Ver 1.0  2018/03/05 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
+#	Ver 1.02 2018/03/26 F.Kanehori	Bug fixed.
+# ======================================================================
+version = 1.01
 
 import sys
 import os
@@ -88,7 +89,7 @@ def check_exec(name, os_type=True):
 	# and its value is 'skip'.  Return True otherwise.
 	if not os_type:
 		os_name = 'unix' if Util.is_unix() else 'Windows'
-		print('do not exec ..%s.. by %s' % os_name)
+		print('do not exec ..%s.. by %s' % (name, os_name))
 		return False
 	#
 	val = os.getenv(name)
@@ -97,31 +98,32 @@ def check_exec(name, os_type=True):
 		print('skip ..%s..' % name)
 	return judge
 
-def make_dir(newdir):
-	if dry_run:
-		print('  mkdir: %s' % Util.upath(newdir))
-		return
-	os.makedirs(newdir, exist_ok=True)
-
-def copy_dir(fop, dir, copyto):
-	for root, dirs, files in os.walk(dir, topdown=False):
-		for f in files:
-			copy_file(fop, f, copyto, debug=True)
-		for d in dirs:
-			todir = '%s/%s' % (copyto, d)
-			make_dir(os.path.abspath(todir))
-			copy_dir(fop, d, todir)
-
-def copy_file(fop, f, copyto, debug=False):
-	leaf = f.split('/')[-1]
-	path = '%s/%s' % (copyto, leaf)
-	if debug:
-		print('    copying "%s" -> "%s"' % (leaf, path))
-	fop.cp(f, path, force=True)
+def copy_all(src, dst, rm_topdir=True, dry_run=False, verbose=0):
+	Print('  clearing "%s"' % dst)
+	fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
+	fop.rm('%s/*' % dst, recurse=True)
+	if os.path.exists(dst) and rm_topdir:
+		if Util.is_windows(): sleep(1)	# Kludge
+		fop.rmdir(dst)
+		if Util.is_windows(): sleep(1)	# Kludge
+	#
+	os.chdir(src)
+	Print('  copying "%s" to "%s"' % (src, dst))
+	names = os.listdir()
+	for name in names:
+		if os.path.isfile(name):
+			fop.cp(name, dst)
+		elif os.path.isdir(name):
+			dst_dir = '%s/%s' % (dst, name)
+			fop.cp(name, dst_dir)
 
 def flush():
 	sys.stdout.flush()
 	sys.stderr.flush()
+
+def Print(msg):
+	print(msg)
+	flush()
 
 # ----------------------------------------------------------------------
 #  Options
@@ -163,7 +165,7 @@ repository = '%s/../%s' % (topdir, args[0])
 repository = Util.upath(os.path.abspath(repository))
 if not os.path.isdir(repository):
 	msg = '"%s" is not a directory' % repository
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 
 # get options
 toolset = options.toolset
@@ -171,10 +173,10 @@ plat = options.plat
 conf = options.conf
 if plat not in ['x86', 'x64']:
 	msg = 'invalid platform name "%s"' % plat
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 if conf not in ['Debug', 'Release', 'Trace']:
 	msg = 'invalid configuration name "%s"' % conf
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 verbose = options.verbose
 dry_run = options.dry_run
 
@@ -197,7 +199,7 @@ os.chdir(repository)
 
 if not os.path.exists('core/test/bin'):
 	msg = 'test repository "%s/core" may be empty' % repository
-	Error(prog).print(msg)
+	Error(prog).abort(msg)
 
 # ----------------------------------------------------------------------
 #  Test Go!
@@ -216,6 +218,8 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 	csusage = 'unuse'	#  We do not use closed sources.
 	cmnd = 'python SpringheadTest.py'
 	opts = '-p %s -c %s -C %s' % (plat, conf, csusage)
+	if verbose:
+		opts += '-v'
 	args = 'result/dailybuild.result dailybuild.control '
 	if Util.is_unix():
 		args += 'unix'
@@ -229,11 +233,11 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		if len(tmp) == 2:
 			t_opts = '%s %s' % (opts, tmp[1])
 		t_args = '%s %s' % (tmp[0], args)
-		proc.exec('%s %s %s' % (cmnd, t_opts, t_args))
+		proc.execute('%s %s %s' % (cmnd, t_opts, t_args), shell=True)
 		stat = proc.wait()
 		if (stat != 0):
 			msg = 'test failed (%d)' % stat
-			Error(proc).print(msg, exitcode=stat)
+			Error(proc).abort(msg, exitcode=stat)
 		flush()
 	#
 	os.chdir(repository)
@@ -242,13 +246,14 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 #  Make history log file.
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
-	print('making history log')
+	Print('making history log')
 	os.chdir('%s/bin' % testdir)
 	#
 	rslt_path = '../log/%s' % result_log
 	hist_path = '../log/%s' % history_log
 	cmnd = 'python VersionControlSystem.py -g -f %s all' % rslt_path
-	Proc().exec(cmnd, stdout=hist_path).wait()
+	proc = Proc(verbose=verbose, dry_run=dry_run)
+	proc.execute(cmnd, stdout=hist_path).wait()
 	flush()
 	os.chdir(repository)
 
@@ -256,7 +261,7 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 #  Make test date/time information file.
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
-	print('making test date information')
+	Print('making test date information')
 	os.chdir('%s/log' % testdir)
 	#
 	date_and_time = Util.now('%Y-%m%d %H:%M:%S')
@@ -270,31 +275,21 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 		fio.writelines(lines)
 		fio.close()
 	else:
-		Error(prog).print('cannot make "Test.date".', alive=True)
-	flush()
+		Error(prog).error('cannot make "Test.date".')
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Copy log files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
-	os.chdir('%s/log' % testdir)
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/log' % docroot
-	print('web base: %s' % webbase)
+	logdir = '%s/log' % testdir
 	#
-	print('  clearing...')
-	fop = FileOp(dry_run=dry_run, verbose=verbose)
-	fop.rm('%s/*' % webbase)
-	#
-	print('  copying to %s' % webbase)
-	flist = glob.glob('*.log')
-	for f in flist:
-		print('    %s' % Util.upath(f))
-		f_abs = Util.upath(os.path.abspath(f))
-		copy_file(fop, f_abs, webbase)
-	flush()
+	Print('copying log files to web')
+	copy_all(logdir, webbase, False, dry_run)
+
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
@@ -304,28 +299,22 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	print('making documents')
 	#
 	os.chdir('core/include')
-	if python_test:
-		cmnd = 'python SpringheadDoc.py'
-	else:
-		cmnd = 'cmd /c SpringheadDoc.bat'
+	Print('  SpringheadDoc')
+	cmnd = 'python SpringheadDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec(cmnd).wait()
+	proc.execute(cmnd).wait()
 	#
-	os.chdir('../include')
-	if python_test:
-		cmnd = 'python SpringheadImpDoc.py'
-	else:
-		cmnd = 'cmd /c SpringheadImpDoc.bat'
+	os.chdir('../src')
+	Print('  SpringheadImpDoc')
+	cmnd = 'python SpringheadImpDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec(cmnd).wait()
+	proc.execute(cmnd).wait()
 	#
 	os.chdir('../doc/SprManual')
-	if python_test:
-		cmnd = 'python MakeDoc.py'
-	else:
-		cmnd = 'cmd /c make.bat'
+	Print('  SprManual')
+	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.exec(cmnd).wait()
+	proc.execute(cmnd).wait()
 	#
 	flush()
 	os.chdir(repository)
@@ -334,34 +323,12 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 #  Copy generated files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
-	print('copying generated files to web')
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/generated' % docroot
 	#
-	os.chdir('generated')
-	glist = glob.glob('*')
-	dlist = []
-	flist = []
-	for g in glist:
-		if os.path.isdir(g):
-			dlist.append(g)
-		elif os.isfile(g):
-			flist.append(g)
-	print('  web base:  [%s]' % webbase)
-	print('  dir list:  [%s]' % ' '.join(dlist))
-	print('  file list: [%s]' % ' '.join(flist))
-	fop = FileOp(dry_run=dry_run, verbose=verbose)
-	for d in dlist:
-		d_abs = Util.upath(os.path.abspath(d))
-		print('  clearing %s...' % d_abs)
-		fop.rm('%s' % d_abs, recurse=True)
-		make_dir(d_abs)
-		print('  copying directory %s -> %s' % (d_abs, webbase))
-		copy_dir(fop, d_abs, webbase)
-	for f in flist:
-		f_abs = Util.upath(os.path.abspath(f))
-		copy_file(fop, f_abs, webbase)
+	Print('copying generated files to web')
+	copy_all('generated', webbase, True, dry_run)
 	#
 	os.chdir(repository)
 
