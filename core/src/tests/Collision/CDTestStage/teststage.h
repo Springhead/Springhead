@@ -14,8 +14,6 @@ using namespace std;
 static float width = 400;
 static float height = 300;
 
-const int drawDiv = 64;
-
 /// 形状ID
 enum ShapeID {
 	SHAPE_BOX,
@@ -26,8 +24,7 @@ enum ShapeID {
 	SHAPE_POLYSPHERE,
 	SHAPE_DODECA,
 	SHAPE_LONGCAPSULE,
-	SHAPE_LONGPOLYSPHERE,
-	SHAPE_ELLIPSOID,
+	SHAPE_LONGPOLYSPHERE
 };
 
 /**
@@ -118,10 +115,10 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 			float height = cap->GetLength();
 			//glMultMatrixd(Affined::Rot(M_PI*0.5,Vec3f(1.f,0,0)));
 			glMultMatrixd(Affined::Trn(0.0f, 0.0f, -height / 2.0f));
-			glutSolidCylinder(radius, height, drawDiv, 1);
-			glutSolidSphere(radius, drawDiv, drawDiv);
+			glutSolidCylinder(radius, height, 8, 1);
+			glutSolidSphere(radius, 8, 8);
 			glMultMatrixd(Affined::Trn(0.0f, 0.0f, height));
-			glutSolidSphere(radius, drawDiv, drawDiv);
+			glutSolidSphere(radius, 8, 8);
 		}
 		break;
 	}
@@ -135,10 +132,10 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 			GLUquadricObj* cylinder;
 			cylinder = gluNewQuadric();
 			gluQuadricDrawStyle(cylinder, GLU_FILL);
-			gluCylinder(cylinder, radius.X(), radius.Y(), height, drawDiv, 1);
-			glutSolidSphere(radius.X(), drawDiv, drawDiv);
+			gluCylinder(cylinder, radius.X(), radius.Y(), height, 8, 1);
+			glutSolidSphere(radius.X(), 8, 8);
 			glMultMatrixd(Affined::Trn(0.0f, 0.0f, height));
-			glutSolidSphere(radius.Y(), drawDiv, drawDiv);
+			glutSolidSphere(radius.Y(), 8, 8);
 
 		}
 		break;
@@ -146,22 +143,7 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 	case SHAPE_SPHERE: {
 		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
 		if (sphere) {
-			glutSolidSphere(sphere->GetRadius(), drawDiv, drawDiv);
-		}
-		break;
-	}
-	case SHAPE_ELLIPSOID: {
-		CDEllipsoidIf* ell = shape->Cast();
-		if (ell) {
-			glMatrixMode(GL_MODELVIEW);
-			glPushMatrix();
-			Affinef af;
-			af.Ex() *= ell->GetRadius().x;
-			af.Ey() *= ell->GetRadius().y;
-			af.Ez() *= ell->GetRadius().z;
-			glMultMatrixf(af);
-			glutSolidSphere(1, drawDiv, drawDiv);
-			glPopMatrix();
+			glutSolidSphere(sphere->GetRadius(), 8, 8);
 		}
 		break;
 	}
@@ -279,26 +261,22 @@ public:
 	CDConvexIf*				shapeDodecahedron;
 	CDCapsuleIf*			shapeLongCapsule;
 	CDConvexIf*				shapeLongPolySphere;
-	CDEllipsoidIf*			shapeEllipsoid;
 
 
 	void Init(PHSdkIf *sdk) {
 		// 形状の作成
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f(2, 2, 2);
+		bd.boxsize = Vec3f(3, 3, 3);
 		shapeBox = sdk->CreateShape(bd)->Cast();
-		shapeBox->SetName("box");
 
 		CDSphereDesc sd;
 		sd.radius = 2;
 		shapeSphere = sdk->CreateShape(sd)->Cast();
-		shapeSphere->SetName("sphere");
 
 		CDCapsuleDesc cd;
 		cd.radius = 1;
 		cd.length = 2;
 		shapeCapsule = sdk->CreateShape(cd)->Cast();
-		shapeCapsule->SetName("capsule");
 		//long
 		cd.radius = 0.1f;
 		cd.length = 10;
@@ -321,8 +299,7 @@ public:
 			md.vertices.push_back(v);
 		}
 		shapeRock = sdk->CreateShape(md)->Cast();
-		shapeRock->SetName("mesh");
-		DSTR << "Rock  nvtx:" << ((CDConvexMeshIf*)shapeRock)->NVertex() <<  "  nFace: " << ((CDConvexMeshIf*)shapeRock)->NFace() << std::endl;
+
 		
 		CDConvexMeshDesc pd;
 		int xnum = 15;
@@ -345,7 +322,6 @@ public:
 			
 		}
 		shapePolySphere = sdk->CreateShape(pd)->Cast();
-
 		//long spheroid
 		pd.vertices.clear();
 		pd.vertices.push_back(Vec3d(0, scale*0.05, 0));
@@ -364,10 +340,6 @@ public:
 
 		}
 		shapeLongPolySphere = sdk->CreateShape(pd)->Cast();
-
-		CDEllipsoidDesc ed;
-		shapeEllipsoid = sdk->CreateShape(ed)->Cast();
-		shapeEllipsoid->SetName("ellipsoid");
 		
 		pd.vertices.clear();
 		pd.vertices.push_back(Vec3d(1, 1, 1));
@@ -395,7 +367,6 @@ public:
 		pd.vertices.push_back(Vec3d(-gsiInv, -gsi, 0));
 
 		shapeDodecahedron = sdk->CreateShape(pd)->Cast();
-		shapeDodecahedron->SetName("dodecahedron");
 
 
 
@@ -431,9 +402,6 @@ public:
 			break;
 		case SHAPE_LONGPOLYSPHERE:
 			return shapeLongPolySphere;
-			break;
-		case SHAPE_ELLIPSOID:
-			return shapeEllipsoid;
 			break;
 		default:
 			return shapeSphere;

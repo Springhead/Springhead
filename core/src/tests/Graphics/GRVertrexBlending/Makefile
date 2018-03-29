@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for KeyMouse
+# 	Makefile for GRVertexBlending
 #
 ################################################################
 
@@ -23,6 +23,9 @@ REALCLEANS	= $(wildcard log/*)
 CXXFLAGS	:= $(CXXFLAGS) \
 		-D__cdecl= \
 		-std=gnu++11
+
+LDFLAGS		:= $(LDFLAGS) \
+		-L/usr/lib/X11
 
 
 ################################################################

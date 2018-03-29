@@ -17,7 +17,7 @@
 Run		False
 #OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
 #BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
-Timeout		1
+Timeout		1	# time out value in sec
 #Expected	0
 #AddPath
 #PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
@@ -28,8 +28,10 @@ Timeout		1
 
 #[Windows]
 
-#[unix]
+[unix]
 #SolutionAlias	Makefile
+Build		True
 #OutputDir	.
 #BinaryOutName	a.out
+Run		True
 

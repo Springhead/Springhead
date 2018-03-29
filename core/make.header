@@ -14,21 +14,12 @@
 #DEBUG_FLAG	= -DDEBUG
 
 #####################################################################
-#	Default timeout setting
-#####################################################################
-FORCE_TIMEOUT	= timeout --preserve-status --signal=ALRM 15s
-
-#####################################################################
 #	Macros
 #####################################################################
 CXX		= g++
 AR		= ar
 RANLIB		= ranlib
 RM		= rm -rf
-
-# for substitution of space character
-NIL:=
-SP:=$(NIL) $(NIL)
 
 # ----------------------------------------------------------
 #	Cygwin
@@ -50,7 +41,7 @@ endif
 ifeq ($(findstring Linux, $(shell env uname)), Linux)
 LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/linux/ \
 		  -L/usr/lib -L/usr/X11R6/lib  -L/usr/lib/X11
-LDFLAGS.GL	= -lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL \
+LDFLAGS.GL	= -lX11 -lXi -lXmu -glui -lglut -lGLEW -lGLU -lGL \
 		  -lm -ldl -lboost_regex
 INCLUDES 	= -I/usr/X11R6/include/ -I/usr/X11/include
 ARFLAGS		= r
@@ -79,20 +70,20 @@ WARNING_FLAGS	= -Wall \
 		  -Wno-unused-local-typedefs \
 		  -Wno-unused-function   \
 		  -Wno-reorder \
-		  -Wno-sign-compare \
-		  -Wno-unknown-pragmas
+		  -Wno-sign-compare
 #CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG) -fPIC
 CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(OPTS) -fPIC
-LDFLAGS 	= \
+LDFLAGS 	= $(LDFLAGS.EXTRA) \
+		  $(LDFLAGS.GL) \
 		  -L$(TOP_DIR)/src/Base/ \
 		  -L$(TOP_DIR)/src/Collision/ \
-		  -L$(TOP_DIR)/src/Creature/ \
-		  -L$(TOP_DIR)/src/FileIO/ \
 		  -L$(TOP_DIR)/src/Foundation/ \
-		  -L$(TOP_DIR)/src/Framework/ \
-		  -L$(TOP_DIR)/src/Graphics/ \
-		  -L$(TOP_DIR)/src/HumanInterface/ \
 		  -L$(TOP_DIR)/src/Physics/ \
+		  -L$(TOP_DIR)/src/Graphics/ \
+		  -L$(TOP_DIR)/src/FileIO/ \
+		  -L$(TOP_DIR)/src/Framework/ \
+		  -L$(TOP_DIR)/src/Creature/ \
+		  -L$(TOP_DIR)/src/HumanInterface/ \
 		  -lFramework \
 		  -lHumanInterface \
 		  -lCreature \
@@ -111,8 +102,6 @@ LDFLAGS 	= \
 		  -lCollision \
 		  -lFoundation \
 		  -lBase \
-		  $(LDFLAGS.EXTRA) \
-		  $(LDFLAGS.GL) \
 					
 INCLUDES	+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 

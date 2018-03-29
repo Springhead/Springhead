@@ -25,13 +25,11 @@ def = $(if $(call eq,$(1),),$(if $(call eq,$(2),),$(3),$(2)),$(1))
 
 # ------------------------------------------------------------------
 #  add option using environment variable
-#	$(call add_inc,ENV)	returns "-IENV" if ENV is not empty
-#				else empty
-#	$(call add_lib,ENV)	returns "-LENV" if ENV is not empty
-#				else empty
+#	$(call add,ENV)		returns ENV if ENV is not empty
+#				else    empty
 # ------------------------------------------------------------------
-add_inc = $(if $1,-I"$1",)
-add_lib = $(if $1,-L"$1",)
+add_inc = $(if $1,-I$1,)
+add_lib = $(if $1,-L$1,)
 
 
 #####################################################################
