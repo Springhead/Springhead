@@ -1,23 +1,25 @@
 ################################################################
 #
-# 	Makefile for FileIO test
+# 	Makefile for FileIO
 #
 ################################################################
 
-################################################################
-#	A rule to make sub directories.
-################################################################
+TOP_DIR 	= ../..
+MAKE_DIR	:= $(shell env pwd)
+MAKE_DIRNAME	:= $(shell env basename $(MAKE_DIR))
 
-TOP_DIR 		= ../../..
+TARGET_DIRS	= \
+	FICollada FIImport FILoader FILoadGRScene FILoadMesh
 
-FILEIO_TEST_DIR	= FILoader FILoadGRScene FILoadMesh
+SILENT		= --no-print-directory
 
+##
 all:
-	@for dir in $(FILEIO_TEST_DIR); \
-	do echo "---------------------------------------------"; \
-	   echo "             make $$dir    			      "; \
-	   echo "---------------------------------------------"; \
-	$(MAKE) -C $$dir all || exit; \
+	@for dir in $(TARGET_DIRS); do \
+		echo "--------------------------------------------"; \
+		echo "	make $$dir."; \
+		echo "--------------------------------------------"; \
+		$(MAKE) -C $$dir all || exit; \
 	done
 
 
@@ -26,16 +28,25 @@ all:
 ################################################################
 
 clean:
-	@for dir in $(FILEIO_TEST_DIR); \
-	do $(MAKE) -C $$dir  clean || exit; \
+	@echo ""
+	@echo "--------------------------------------------"
+	@echo "	making clean in $(MAKE_DIRNAME) ..."
+	@echo "--------------------------------------------"
+	@for dir in $(TARGET_DIRS); do \
+		$(MAKE) $(SILENT) -s -C $$dir clean || exit; \
 	done
 	
 realclean:
-	@for dir in $(FILEIO_TEST_DIR); \
-	do $(MAKE) -C $$dir  realclean || exit; \
-	done 
+	@echo ""
+	@echo "--------------------------------------------"
+	@echo "	making realclean in $(MAKE_DIRNAME) ..."
+	@echo "--------------------------------------------"
+	@for dir in $(TARGET_DIRS); do \
+		$(MAKE) $(SILENT) -s -C $$dir realclean || exit; \
+	done
 
-
+	
 ################################################################
 # 	THE END
 ################################################################
+

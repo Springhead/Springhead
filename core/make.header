@@ -40,9 +40,10 @@ endif
 # ----------------------------------------------------------
 ifeq ($(findstring Linux, $(shell env uname)), Linux)
 LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/linux/ \
-		  -L/usr/lib -L/usr/X11R6/lib 
-LDFLAGS.GL	= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm -ldl -lGLEW -lboost_regex
-INCLUDES 	= -I/usr/X11R6/include/
+		  -L/usr/lib -L/usr/X11R6/lib  -L/usr/lib/X11
+LDFLAGS.GL	= -lX11 -lXi -lXmu -glui -lglut -lGLEW -lGLU -lGL \
+		  -lm -ldl -lboost_regex
+INCLUDES 	= -I/usr/X11R6/include/ -I/usr/X11/include
 ARFLAGS		= r
 endif				
 
@@ -51,7 +52,7 @@ endif
 # ----------------------------------------------------------
 ifeq ($(findstring Darwin, $(shell env uname)), Darwin)
 LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/darwin/ \
-		  -L/usr/lib -/usr/local/lib
+		  -L/usr/lib -L/usr/local/lib
 LDFLAGS.GL	= -framework GLUT -framework OpenGL \
 		  -framework Foundation -lGLEW
 INCLUDES 	= -I/usr/local/include/
@@ -101,8 +102,6 @@ LDFLAGS 	= $(LDFLAGS.EXTRA) \
 		  -lCollision \
 		  -lFoundation \
 		  -lBase \
-		  $(LDFLAGS.EXTRA) \
-		  $(LDFLAGS.GL) \
 					
 INCLUDES	+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 

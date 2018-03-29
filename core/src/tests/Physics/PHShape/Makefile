@@ -8,33 +8,52 @@
 #	common rules
 ################################################################
 
-TOP_DIR 		= ../../../..
-include 		$(TOP_DIR)/make.header
-TARGET_DIR  	:= $(shell env pwd)
-TARGET_NAME		:= $(shell env basename $(TARGET_DIR))
-EXECUTABLE		= $(TARGET_NAME).exe
+TOP_DIR 	= ../../../..
+include 	$(TOP_DIR)/make.header
+include 	$(TOP_DIR)/make.func
 
-SRCS			= $(wildcard *.cpp)
-OBJS 			= ${SRCS:.cpp=.o}
+MAKE_DIR  	= $(shell env pwd)
+MAKE_DIRNAME	= $(shell env basename $(MAKE_DIR))
+BIN_NAME  	= $(MAKE_DIRNAME)
+
+SRCS		= $(wildcard *.cpp)
+OBJS 		= ${SRCS:.cpp=.o}
+REALCLEANS	= $(wildcard log/*)
+
+CXXFLAGS	:= $(CXXFLAGS) \
+		-D__cdecl= \
+		-std=gnu++11
+
+LDFLAGS		:= $(LDFLAGS) \
+		-L/usr/lib/X11
 
 
 ################################################################
-#	build management
+#	compile, link and go
 ################################################################
 		
-all: $(EXECUTABLE)
+all:		compile test
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(EXECUTABLE):$(OBJS)
-	$(CXX) $(OBJS) -o $(EXECUTABLE) $(LDFLAGS)
-			
+compile:	$(OBJS)
+	$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
+
+test:	
+	./$(BIN_NAME)
+
+
+################################################################
+#	clean up
+################################################################
+
 clean:
-	-$(RM) $(OBJS) $(EXECUTABLE)
+	@echo "entering $(MAKE_DIRNAME)"
+	-$(RM) $(OBJS) $(BIN_NAME)
 	
-realclean: clean
-	-$(RM) $(REALCLEAN_TARGET)
+realclean:	clean
+	-$(RM) $(REALCLEANS)
 			
 			
 ################################################################

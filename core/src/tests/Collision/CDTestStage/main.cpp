@@ -55,7 +55,7 @@ using namespace Spr;
 const double epsilon = 1e-16;	//1e-8
 const float testHeight = 10;
 const float moverate = 0.05f;
-const float rotaterate = M_PI/180; //1°刻み
+const float rotaterate = (float) M_PI/180; //1°刻み
 
 bool automode = false;
 bool superAuto = false; //csv分全部通しでやるときにはtrue
@@ -129,7 +129,11 @@ void SetFileName() {
 	time_t timer;
 	time(&timer);
 	tm lTimer;
-	localtime_s(&lTimer, &timer);
+#ifdef _MSC_VER
+	localtime_s(&lTimer, &timer);	// この引数並びは正しい？
+#else
+	localtime_r(&timer, &lTimer);
+#endif
 	filename = "CDTest_" + to_string(lTimer.tm_mon + 1) + to_string(lTimer.tm_mday) + to_string(lTimer.tm_hour) + to_string(lTimer.tm_min) + ".csv";
 	hitFilename = "CDHit_" + to_string(lTimer.tm_mon + 1) + to_string(lTimer.tm_mday) + to_string(lTimer.tm_hour) + to_string(lTimer.tm_min) + ".csv";
 }
@@ -313,9 +317,9 @@ void __cdecl display(){
 			Vec3d vecPos = hitPos2;
 			Vec3d vecPos2 = ObjtoScreenPos(pose[1] * pos[1] +dir*dirLength);
 			BeginRend2D();
-			RendText(0,0.95f,"res:%d normal:%.3f,%.3f,%.3f deist:%.4f", res, normal.x, normal.y, normal.z, dist);
-			RendText(0, 0.9f, "coltime phase1:%d phase2:%d phase3:%d phase3 loop:%d", coltimeDisp[0], coltimeDisp[1], coltimeDisp[2],colcounter);
-			RendText(0, 0.85f, "bias param:%.2f", biasParam);
+			RendText(0,0.95f,(char*)"res:%d normal:%.3f,%.3f,%.3f deist:%.4f", res, normal.x, normal.y, normal.z, dist);
+			RendText(0, 0.9f, (char*)"coltime phase1:%d phase2:%d phase3:%d phase3 loop:%d", coltimeDisp[0], coltimeDisp[1], coltimeDisp[2],colcounter);
+			RendText(0, 0.85f, (char*)"bias param:%.2f", biasParam);
 			if (recordHit)
 			{
 				ofstream ofs(hitFilename, ios::app);
@@ -327,14 +331,14 @@ void __cdecl display(){
 			}
 			glPointSize(5.0);					// 点の太さ
 			glBegin(GL_POINTS);					// 点の座標を記述開始
-			glColor4f(0.3, 1.0, 0.3, 0);	// 点の色(RGBA)
+			glColor4f(0.3f, 1.0f, 0.3f, 0);	// 点の色(RGBA)
 			glVertex2d(hitPos.X(), hitPos.Y());			// 点2つ分の座標
 			glVertex2d(hitPos2.X(), hitPos2.Y());
 			glEnd();							// 座標の記述終了
 			glLineWidth(3.0);
 			
 			glBegin(GL_LINES);		//線
-			glColor4f(0.3, 0.3, 1.0, 0);	// 線の色(RGBA)
+			glColor4f(0.3f, 0.3f, 1.0f, 0);	// 線の色(RGBA)
 			glVertex2d(vecPos.X(), vecPos.Y());			// 線の座標
 			glVertex2d(vecPos2.X(), vecPos2.Y());
 			glEnd();
@@ -389,8 +393,8 @@ void __cdecl reshape(int w, int h){
 	glLoadIdentity();
 	gluPerspective(60.0, (GLfloat)w/(GLfloat)h, 1.0, 500.0);
 	glMatrixMode(GL_MODELVIEW);
-	width = w;
-	height = h;
+	width = (float) w;
+	height = (float) h;
 }
 
 void __cdecl RecordHit()
@@ -634,7 +638,7 @@ int __cdecl main(int argc, char* argv[]){
 	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(width, height);
+	glutInitWindowSize((int)width, (int)height);
 	glutCreateWindow("PHShapeGL");
 	initialize();
 	glutDisplayFunc(display);
