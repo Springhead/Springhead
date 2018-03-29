@@ -16,7 +16,7 @@
 
 using namespace Spr;
 
-void __cdecl main(){
+int __cdecl main(){
 	UTRef<NameManager> nameMan = DBG_NEW NameManager;
 	UTRef<NamedObject> obj = DBG_NEW NamedObject;
 	NamedObjectIf* objIf = obj->Cast();
@@ -39,5 +39,7 @@ void __cdecl main(){
 
 	
 	delete poseObj;
-*/
+	*/
+
+	return 0;
 }
