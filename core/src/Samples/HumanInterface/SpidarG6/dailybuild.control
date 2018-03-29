@@ -6,7 +6,7 @@
 
 #Exclude	False
 #Descend	True
-#SolutionAlias	# Ailas name for solution file
+SolutionAlias	SpidarG6
 
 #Build		True
 #UseClosedSrc	True
@@ -28,7 +28,8 @@
 
 #[Windows]
 
-[unix]
-Exclude		True
-#Build		True
+#[unix]
+#SolutionAlias	Makefile
+#OutputDir	.
+#BinaryOutName	a.out
 

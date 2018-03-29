@@ -28,9 +28,8 @@ SolutionAlias	IK
 
 #[Windows]
 
-[unix]
-SolutionAlias	Makefile
-Build		True
+#[unix]
+#SolutionAlias	Makefile
 #OutputDir	.
 #BinaryOutName	a.out
 
