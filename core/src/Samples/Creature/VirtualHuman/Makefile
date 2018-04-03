@@ -12,22 +12,17 @@ TOP_DIR 	= ../../../..
 include 	$(TOP_DIR)/make.header
 include 	$(TOP_DIR)/make.func
 
-$(eval MAKE_DIR := $(subst $(SP),\$(SP),$(shell env pwd)))
+MAKE_DIR  	= $(shell env pwd)
 MAKE_DIRNAME	= $(shell env basename $(MAKE_DIR))
 BIN_NAME  	= $(MAKE_DIRNAME)
 
-#SRCS		= $(wildcard *.cpp)
-SRCS		= main.cpp
+SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 REALCLEANS	= $(wildcard log/*)
 
 CXXFLAGS	:= $(CXXFLAGS) \
-		$(call add_inc,${SPR_BOOST_INC}) \
 		-D__cdecl= \
 		-std=gnu++11
-
-LDFLAGS		:= $(LDFLAGS) \
-		-llapack
 
 
 ################################################################

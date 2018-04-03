@@ -28,7 +28,9 @@
 
 #[Windows]
 
-[unix]
-Exclude		True
-#Build		True
+#[unix]
+#SolutionAlias	Makefile
+Build		True
+#OutputDir	.
+#BinaryOutName	a.out
 

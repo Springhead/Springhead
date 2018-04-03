@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for ShoulderJointLimit
+# 	Makefile for OrientedParticleDemo2-Collision&Haptic
 #
 ################################################################
 
