@@ -73,8 +73,7 @@ WARNING_FLAGS	= -Wall \
 		  -Wno-sign-compare
 #CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG) -fPIC
 CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(OPTS) -fPIC
-LDFLAGS 	= $(LDFLAGS.EXTRA) \
-		  $(LDFLAGS.GL) \
+LDFLAGS 	= \
 		  -L$(TOP_DIR)/src/Base/ \
 		  -L$(TOP_DIR)/src/Collision/ \
 		  -L$(TOP_DIR)/src/Foundation/ \
@@ -102,6 +101,8 @@ LDFLAGS 	= $(LDFLAGS.EXTRA) \
 		  -lCollision \
 		  -lFoundation \
 		  -lBase \
+		  $(LDFLAGS.EXTRA) \
+		  $(LDFLAGS.GL) \
 					
 INCLUDES	+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 

@@ -1,14 +1,36 @@
 # dailybuild.control
+#	Set "** DO NOT INHERIT **" to prevent upper inheritance
 
-#Exclude
-#SolutionAlias
-#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-#UseClosedSrc
+#SprTop		# Set automatically.
+#SprTest	# Set automatically [$(SptTop)/core/test].
+
+#Exclude	False
+#Descend	True
+#SolutionAlias	# Ailas name for solution file
+
+#Build		True
+#UseClosedSrc	True
 #CppMacro	DAILYBUILD
-#DontBuild
-#DontRun
-#Timeout
-#ExpectedStatus	0
-PipeProcess	GenKbEvent .....Q
-#NeedIntervention
-KillProcess	NovintFalcon.exe
+#BuildLog	# Build log file path
+#BuildErrLog	# Build error log file path
+
+#Run		True
+#OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
+#BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
+#Timeout	# time out value in sec
+#Expected	0
+#AddPath
+#PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#KillProcess	# Use to kill process invoked as pipe process (if needed).
+#RunLog		# Run log file path
+#RunErrLog	# Run error log file path
+#Intervention	False
+
+#[Windows]
+
+[unix]
+#SolutionAlias	Makefile
+Build		True
+#OutputDir	.
+#BinaryOutName	a.out
+
