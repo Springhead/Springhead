@@ -27,6 +27,7 @@
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
 #	Ver 1.02 2018/03/26 F.Kanehori	Bug fixed.
+#	Ver 1.02 2018/04/05 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
 version = 1.01
 
@@ -180,6 +181,8 @@ if conf not in ['Debug', 'Release', 'Trace']:
 verbose = options.verbose
 dry_run = options.dry_run
 
+shell = True if Util.is_unix() else False
+
 print('Test parameters:')
 if Util.is_windows():
 	print('   toolset id:      [%s]' % toolset)
@@ -233,7 +236,7 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		if len(tmp) == 2:
 			t_opts = '%s %s' % (opts, tmp[1])
 		t_args = '%s %s' % (tmp[0], args)
-		proc.execute('%s %s %s' % (cmnd, t_opts, t_args), shell=True)
+		proc.execute('%s %s %s' % (cmnd, t_opts, t_args), shell=shell)
 		stat = proc.wait()
 		if (stat != 0):
 			msg = 'test failed (%d)' % stat
@@ -253,7 +256,7 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	hist_path = '../log/%s' % history_log
 	cmnd = 'python VersionControlSystem.py -g -f %s all' % rslt_path
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.execute(cmnd, stdout=hist_path).wait()
+	proc.execute(cmnd, shell=shell, stdout=hist_path).wait()
 	flush()
 	os.chdir(repository)
 
@@ -302,19 +305,19 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	Print('  SpringheadDoc')
 	cmnd = 'python SpringheadDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.execute(cmnd).wait()
+	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../src')
 	Print('  SpringheadImpDoc')
 	cmnd = 'python SpringheadImpDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.execute(cmnd).wait()
+	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../doc/SprManual')
 	Print('  SprManual')
 	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	proc.execute(cmnd).wait()
+	proc.execute(cmnd, shell=shell).wait()
 	#
 	flush()
 	os.chdir(repository)
