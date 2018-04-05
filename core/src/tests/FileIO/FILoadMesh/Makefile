@@ -24,9 +24,6 @@ CXXFLAGS	:= $(CXXFLAGS) \
 		-D__cdecl= \
 		-std=gnu++11
 
-LDFLAGS		:= $(LDFLAGS) \
-		-L/usr/lib/X11
-
 
 ################################################################
 #	compile, link and go

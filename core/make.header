@@ -76,13 +76,13 @@ CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(OPTS) -fPIC
 LDFLAGS 	= \
 		  -L$(TOP_DIR)/src/Base/ \
 		  -L$(TOP_DIR)/src/Collision/ \
-		  -L$(TOP_DIR)/src/Foundation/ \
-		  -L$(TOP_DIR)/src/Physics/ \
-		  -L$(TOP_DIR)/src/Graphics/ \
-		  -L$(TOP_DIR)/src/FileIO/ \
-		  -L$(TOP_DIR)/src/Framework/ \
 		  -L$(TOP_DIR)/src/Creature/ \
+		  -L$(TOP_DIR)/src/FileIO/ \
+		  -L$(TOP_DIR)/src/Foundation/ \
+		  -L$(TOP_DIR)/src/Framework/ \
+		  -L$(TOP_DIR)/src/Graphics/ \
 		  -L$(TOP_DIR)/src/HumanInterface/ \
+		  -L$(TOP_DIR)/src/Physics/ \
 		  -lFramework \
 		  -lHumanInterface \
 		  -lCreature \

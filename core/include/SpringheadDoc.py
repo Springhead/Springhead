@@ -14,6 +14,7 @@
 #  VERSION:
 #	Ver 1.0  2018/03/01 F.Kanehori	First version.
 #	Ver 1.01 2018/03/12 F.Kanehori	Dealt with new Proc class.
+#	Ver 1.02 2018/04/05 F.Kanehori	Bug fixed (for unix).
 # =============================================================================
 version = 1.01
 
@@ -169,20 +170,24 @@ if os.path.exists(target_dir):
 overrides = list(map(lambda x: 'echo %s' % x, [
 	'OUTPUT_DIRECTORY=%s' % out_dir
 ]))
-cmnd1 = 'cmd /c type %s &%s' % (doxy_file, '&'.join(overrides))
+if Util.is_unix():
+	cmnd1 = 'cat %s && %s' % (doxy_file, '&'.join(overrides))
+else:
+	cmnd1 = 'cmd /c type %s &%s' % (doxy_file, '&'.join(overrides))
 cmnd2 = 'doxygen -'
 log_file = 'doxgen.log'
 #
+shell = True if Util.is_unix() else False
 proc1 = Proc(verbose=verbose, dry_run=dry_run)
 proc2 = Proc(verbose=verbose, dry_run=dry_run)
-proc1.execute(cmnd1, addpath=addpath, stdout=Proc.PIPE)
-proc2.execute(cmnd2, addpath=addpath,
+proc1.execute(cmnd1, shell=shell, addpath=addpath, stdout=Proc.PIPE)
+proc2.execute(cmnd2, shell=shell, addpath=addpath,
 		  stdin=proc1.proc.stdout, stderr=log_file)
 stat1 = proc1.wait()
 stat2 = proc2.wait()
 if stat2 != 0:
 	msg = 'making html files failed.'
-	Error(prog).print(msg, alive=True)
+	Error(prog).error(msg)
 #
 src = '%s/%s' % (out_dir, wrkdir)
 dst = '%s/%s' % (out_dir, target_name)

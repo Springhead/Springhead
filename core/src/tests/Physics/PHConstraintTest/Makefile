@@ -25,8 +25,7 @@ CXXFLAGS	:= $(CXXFLAGS) \
 		-std=gnu++11
 
 LDFLAGS		:= $(LDFLAGS) \
-		$(call add_lib,${SPR_LINUX_GNU_LIB}) \
-		-L/usr/lib/X11
+		$(call add_lib,${SPR_LINUX_GNU_LIB})
 
 
 ################################################################
