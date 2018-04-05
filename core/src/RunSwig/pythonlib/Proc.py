@@ -28,6 +28,7 @@
 #	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
 #	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
 #	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
+#	Ver 1.32 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
 # ======================================================================
 import sys
 import os
@@ -137,6 +138,7 @@ class Proc:
 				stderr = 2
 			self.proc = dummy()	# dummy!
 			return self
+
 		if self.verbose > 1:
 			print('args to Popen')
 			print('  args: %s' % args)
@@ -150,6 +152,7 @@ class Proc:
 				stdout=self.fd[1],
 				stderr=self.fd[2],
 				creationflags=self.creationflags,
+				start_new_session=True,
 				env=new_env,
 				shell=shell)
 		self.pid = self.proc.pid
@@ -195,8 +198,10 @@ class Proc:
 			if self.verbose:
 				pid = self.proc.pid
 				print('  kill process (pid %d)' % pid)
-			#os.kill(proc.pid, signal.CTRL_BREAK_EVENT)
-			self.proc.terminate()
+			if Util.is_unix():
+				os.killpg(self.proc.pid, signal.SIGTERM)
+			else:
+				os.kill(self.proc.pid, signal.SIGTERM)
 
 		# cleanup
 		self.__close(self.fd[0], self.pipe[0])

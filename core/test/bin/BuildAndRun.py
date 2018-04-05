@@ -61,6 +61,7 @@
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.11 2018/03/26 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.12 2018/04/05 F.Kanehori	Bug fixed (shell param at run).
 # ======================================================================
 import sys
 import os
@@ -198,20 +199,26 @@ class BuildAndRun:
 			exefile = 'make -f %s test' % exefile
 
 		# execute program.
+		shell= True if Util.is_unix() else False
 		if pipeprocess:
+			# proc1: target program.
+			# proc2: generate input stream to feed proc1.
 			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc2 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
-				      addpath=addpath, stdin=Proc.PIPE,
-				      stdout=tmplog, stderr=Proc.STDOUT)
-			proc2.execute(pipeprocess, shell=True, addpath=addpath,
+				      shell=shell, addpath=addpath,
+				      stdin=Proc.PIPE, stdout=tmplog,
+				      stderr=Proc.STDOUT)
+			proc2.execute(pipeprocess,
+				      shell=shell, addpath=addpath,
 				      stdout=Proc.PIPE)
-			proc2.wait()
 			stat = proc1.wait(timeout)
+			proc2.wait()
 		else:
+			# proc1: target program.
 			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
-				   addpath=addpath, shell=True,
+				   addpath=addpath, shell=shell,
 				   stdout=tmplog, stderr=Proc.STDOUT)
 			stat = proc1.wait(timeout)
 
