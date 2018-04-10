@@ -16,11 +16,13 @@ MAKE_DIR  	= $(shell env pwd)
 MAKE_DIRNAME	= $(shell env basename $(MAKE_DIR))
 BIN_NAME  	= $(MAKE_DIRNAME)
 
-SRCS		= $(wildcard *.cpp)
+#SRCS		= $(wildcard *.cpp)
+SRCS		= main.cpp
 OBJS 		= ${SRCS:.cpp=.o}
 REALCLEANS	= $(wildcard log/*)
 
 CXXFLAGS	:= $(CXXFLAGS) \
+		$(call add_inc,${SPR_BOOST_INC}) \
 		-D__cdecl= \
 		-std=gnu++11
 

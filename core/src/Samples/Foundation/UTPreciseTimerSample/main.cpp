@@ -19,9 +19,24 @@
 #include <iostream>
 #include <ostream>
 #include <vector>
-#include <conio.h>
 #include <GL/glut.h>
-#include <mmsystem.h>
+#ifdef	_MSC_VER
+  #include <conio.h>
+  #include <mmsystem.h>
+#else
+  #include <sys/time.h>
+  inline double gettimeofday_sec() {
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec + tv.tv_usec * 1e-6;
+  }
+  #define DWORD unsigned int
+  #define timeGetTime()	gettimeofday_sec()
+  #include <unistd.h>
+  #define Sleep(x) sleep(x/1000)
+  #include <stdio.h>
+  #define _kbhit() getchar()
+#endif
 #include <Foundation/UTPreciseTimer.h>
 #include <Foundation/UTQPTimer.h>
 
@@ -78,7 +93,7 @@ void CPSCounter(double intervalms, double periodms){
 	}
 }
 
-int _cdecl main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 	pTimer.Init();								// 計測用タイマの初期化
 
 	UTTimerIf* timer1;							// コールバックタイマ

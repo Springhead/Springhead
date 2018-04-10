@@ -818,7 +818,12 @@ extern pid_t forkpty(int *, char *, struct termios *, struct winsize *);
  * rather than waiting for integer multiplication to trigger bogus
  * overflows.
  */
-#error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
+  #ifdef	__unix__
+    #undef  LONG_BIT
+    #define LONG_BIT (8 * SIZEOF_LONG)
+  #else
+    #error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
+  #endif
 #endif
 
 #ifdef __cplusplus

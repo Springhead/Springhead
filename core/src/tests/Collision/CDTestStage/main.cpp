@@ -219,7 +219,7 @@ void __cdecl display(){
 			double dist = 0;
 			Vec3d dir(0, -1, 0);
 			double dirLength = testHeight*2;
-			int res;
+			int res = 0;
 			colcounter = 0;
 			float maxSurf = mesh[0]->GetMaxSurf();
 			switch (colMethod)

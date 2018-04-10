@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,14 +6,16 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-OpenMp‚ğg‚Á‚½³•ûs—ñ‚ÌæZ‚ÌŒvZŠÔ‚ÌŒv‘ªƒvƒƒOƒ‰ƒ€B
-s—ñ‚ÌƒTƒCƒY‚Æƒ‹[ƒv‰ñ”‚ğw’è‚·‚éB
-OpenMp‚Ífor•¶‚ğ•ªŠ„‚µ‚ÄA•À—ñŒvZ‚ğs‚¤B
-ƒVƒ“ƒOƒ‹ƒXƒŒƒbƒh‚Æƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚Å‚Ç‚¿‚ç‚ª‘¬‚¢‚©Œ‹‰Ê‚ğ•Ô‚·B
+OpenMpã‚’ä½¿ã£ãŸæ­£æ–¹è¡Œåˆ—ã®ä¹—ç®—ã®è¨ˆç®—æ™‚é–“ã®è¨ˆæ¸¬ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã€‚
+è¡Œåˆ—ã®ã‚µã‚¤ã‚ºã¨ãƒ«ãƒ¼ãƒ—å›æ•°ã‚’æŒ‡å®šã™ã‚‹ã€‚
+OpenMpã¯foræ–‡ã‚’åˆ†å‰²ã—ã¦ã€ä¸¦åˆ—è¨ˆç®—ã‚’è¡Œã†ã€‚
+ã‚·ãƒ³ã‚°ãƒ«ã‚¹ãƒ¬ãƒƒãƒ‰ã¨ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§ã©ã¡ã‚‰ãŒé€Ÿã„ã‹çµæœã‚’è¿”ã™ã€‚
  */
 
 #include <iostream>
-#include <conio.h>
+#ifdef	_MSC_VER
+  #include <conio.h>
+#endif
 #include <Springhead.h>
 
 using namespace std;
@@ -22,6 +24,11 @@ using namespace PTM;
 
 #ifdef _OPENMP
 	#include <omp.h>
+#endif
+
+#ifdef	__unix__
+  #include <stdio.h>
+  #define _getch() getchar()
 #endif
 
 class OmpTimer{
@@ -91,7 +98,7 @@ void Test(size_t size, int nIter){
 	CSVOUT << nIter << "," << single << "," << multi << std::endl;
 }
 
-int _cdecl main()
+int __cdecl main()
 {
 	int matSize;
 	std::cout << "Put the size of square matrix in int." << std::endl;
