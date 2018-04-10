@@ -20,7 +20,9 @@
 
 #include <Creature/CRBodyGenerator/CRBallHumanBodyGen.h>
 
-#pragma  hdrstop
+#ifdef	_MSC_VER
+  #pragma  hdrstop
+#endif
 
 using namespace Spr;
 using namespace std;

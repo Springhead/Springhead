@@ -65,6 +65,10 @@ WIN32 is still required for the locale module.
 #define HAVE_STRERROR
 #endif
 
+#ifdef	__unix__
+  #undef HAVE_IO_H	// Kludge
+#endif
+
 #ifdef HAVE_IO_H
 #include <io.h>
 #endif

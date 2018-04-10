@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,18 +8,18 @@
 
 #include <iostream>
 #include <fstream>
-#include <conio.h>
+//#include <conio.h>
 #include <Springhead.h>
 #include <Foundation/UTClapack.h>
 
 using namespace Spr;
 using namespace PTM;
 
-//	lapack‚ÅƒKƒEƒX‚ÌÁ‹–@‚ğ‚µ‚Ä‚İ‚½‚­‚Ä‚¢‚Á‚Ï‚¢’Ç‹L‚µ‚Ä‚µ‚Ü‚¢‚Ü‚µ‚½B
-//	‚¢‚ë‚¢‚ë‰˜‚µ‚Ä‚µ‚Ü‚Á‚Ä‚²‚ß‚ñ‚È‚³‚¢i’·’Jìj
+//	lapackã§ã‚¬ã‚¦ã‚¹ã®æ¶ˆå»æ³•ã‚’è©¦ã—ã¦ã¿ãŸãã¦ã„ã£ã±ã„è¿½è¨˜ã—ã¦ã—ã¾ã„ã¾ã—ãŸã€‚
+//	ã„ã‚ã„ã‚æ±šã—ã¦ã—ã¾ã£ã¦ã”ã‚ã‚“ãªã•ã„ï¼ˆé•·è°·å·ï¼‰
 #if 1
 #include <Foundation/UTPreciseTimer.h>
-int _cdecl main()
+int __cdecl main()
 {
 	PTM::VMatrixRow<double> matk;
 	PTM::VVector<double> x;
