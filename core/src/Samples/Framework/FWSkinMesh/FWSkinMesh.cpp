@@ -2,7 +2,9 @@
 //
 
 #include "FWSkinMesh.h"
+#ifdef	_MSC_VER
 #include "Windows.h"
+#endif
 
 void MyApp::Init(int argc, char* argv[]){
 	CreateSdk();

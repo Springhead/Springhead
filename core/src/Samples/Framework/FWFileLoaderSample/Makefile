@@ -24,6 +24,9 @@ CXXFLAGS	:= $(CXXFLAGS) \
 		-D__cdecl= \
 		-std=gnu++11
 
+LDFLAGS		:= $(LDFLAGS) \
+		-l lapack
+
 
 ################################################################
 #	compile, link and go

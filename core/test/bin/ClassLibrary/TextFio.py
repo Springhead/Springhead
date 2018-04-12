@@ -35,6 +35,7 @@
 #	Ver 2.21 2018/02/22 F.Kanehori	writeline(): allow line=None.
 #	Ver 2.22 2018/03/12 F.Kanehori	Now OK for doxygen.
 #	Ver 2.23 2018/04/05 F.Kanehori	Bug fixed.
+#	Ver 2.24 2018/04/12 F.Kanehori	Bug fixed (encoding: utf-16).
 # ======================================================================
 import sys
 import io
@@ -359,8 +360,8 @@ class TextFio(Fio):
 	#   @returns		Determined character encoding (str).
 	#
 	def __check_encoding(self):
-		lookup = ['iso-2022-jp', 'ascii', 'euc-jp',
-			  'utf-8', 'utf-16', 'cp932']
+		lookup = ['iso-2022-jp', 'ascii', 'euc-jp', 'unicode',
+			  'utf-8', 'utf-16-le', 'utf-16-be', 'cp932']
 		try:
 			f = open(self.path, 'rb')
 			data = f.read(self.size)
@@ -375,11 +376,13 @@ class TextFio(Fio):
 				break
 			except:
 				pass
-
+		#
 		if encoding == 'utf-8':
-			# check if with BOM.
-			line = open(self.path, encoding='utf-8').readline()
-			if line[0] == '\ufeff':
+			# check if with BOM
+			f = open(self.path, encoding=encoding)
+			line = f.readline()
+			f.close()
+			if line[0] == 'ufeff':
 				encoding = 'utf-8-sig'
 		return encoding
 

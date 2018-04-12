@@ -7,7 +7,9 @@
  */
 #include "../../SampleApp.h"
 
+#ifdef	_MSC_VER
 #pragma hdrstop
+#endif
 using namespace Spr;
 using namespace std;
 
@@ -59,7 +61,7 @@ public:
 
 } app;
 
-int _cdecl main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 	SEH_HANDLER_DEF
 	SEH_HANDLER_TRY
 

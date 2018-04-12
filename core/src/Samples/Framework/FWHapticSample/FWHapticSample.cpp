@@ -94,7 +94,12 @@ void FWHapticSample::InitInterface(){
 
 	//	インタフェースの取得
 	device = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+#ifdef	_MSC_VER
 	if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
+#else
+	HISpidarGDesc tmpdesc = HISpidarGDesc((char*) "SpidarG6X3F");
+	if (device->Init(&tmpdesc)) {
+#endif
 		device->Calibration();
 	}else{	//	XBOX
 		device = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
@@ -142,7 +147,7 @@ void FWHapticSample::Init(int argc, char* argv[]){
 #else
 	UTTimerIf* timer = CreateTimer(UTTimerIf::THREAD);	// 力覚スレッド用のマルチメディアタイマを作成
 	timer->SetResolution(1);			// 分解能(ms)
-	timer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
+	timer->SetInterval((unsigned int)(hdt * 1000));		// 刻み(ms)h
 	hapticTimerID = timer->GetID();		// 力覚スレッドのタイマIDの取得
 	timer->Start();						// タイマスタート
 #endif

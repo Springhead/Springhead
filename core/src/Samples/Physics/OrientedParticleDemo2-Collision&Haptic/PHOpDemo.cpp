@@ -7,11 +7,11 @@
  */
 
 #include "PHOpDemo.h"
-#include "Physics\PHOpSpHashColliAgent.h"
-//#include "Framework\FWOpHapticHandler.h"
-#include "Physics\PHOpEngine.h"
+#include "Physics/PHOpSpHashColliAgent.h"
+//#include "Framework/FWOpHapticHandler.h"
+#include "Physics/PHOpEngine.h"
 #include <Foundation/UTClapack.h>
-#include "Graphics\GRMesh.h"
+#include "Graphics/GRMesh.h"
 
 #define USE_SPRFILE
 #define ESC 27
@@ -24,11 +24,15 @@
 
 #ifdef HAPTIC_DEMO
 //#define _3DOF
-
-#ifndef _3DOF
-#define _6DOF
+  #ifndef _3DOF
+    #define _6DOF
+  #endif
 #endif
 
+#ifdef	__unix__
+  #define fopen_s(fptr,name,mode)	*(fptr) = fopen(name,mode)
+  #define loadFromFile(o,s,t,v)		loadFromFile(o,(char*)s,t,v)
+  #define saveToFile(o,s,v)		saveToFile(o,(char*)s,v)
 #endif
 
 using namespace std;
@@ -38,7 +42,8 @@ int hapticObjId;
 PHOpDemo::PHOpDemo(){
 #ifdef COLLISION_DEMO
 	fileName = "./files/sceneSampleColli.spr";	// sprファイル
-#else if  HAPTIC_DEMO
+//#else if  HAPTIC_DEMO
+#elseif  HAPTIC_DEMO
 	fileName = "./files/sceneSampleHaptic.spr";
 #endif
 //	fileName = "./files/sceneSample.spr";
@@ -256,7 +261,7 @@ void PHOpDemo::TimerFunc(int id)
 
 	//save tst pos
 	if (recordingPos)
-		SaveTstPPos("TstP.dfmobj", 55, dpAdd->pCurrCtr);
+		SaveTstPPos((char*) "TstP.dfmobj", 55, dpAdd->pCurrCtr);
 
 	/*if (useAnime)
 		opAnimator->AnimationStep(opEngine->GetDescAddress());*/
@@ -284,7 +289,12 @@ void PHOpDemo::InitInterface(){
 		hiSdk->Print(std::cout);
 
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+#ifdef	_MSC_VER
 		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+#else
+		HISpidarGDesc tmpdesc = HISpidarGDesc((char *) "SpidarG6X3R");
+		spg->Init(&tmpdesc);
+#endif
 		spg->Calibration();
 	}
 	else if (humanInterface == XBOX){

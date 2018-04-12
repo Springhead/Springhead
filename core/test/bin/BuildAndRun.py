@@ -62,10 +62,12 @@
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.11 2018/03/26 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.12 2018/04/05 F.Kanehori	Bug fixed (shell param at run).
+#	Ver 1.13 2018/04/12 F.Kanehori	Bug fixed (encodinig check).
 # ======================================================================
 import sys
 import os
 import re
+from stat import *
 from VisualStudio import *
 
 # local python library
@@ -355,7 +357,8 @@ class BuildAndRun:
 		#   step:	Execute step (RST.BLD or RST.RUN).
 		# returns:	List of error messages (str[]).
 
-		fobj = TextFio(fname)
+		fsize = os.stat(fname).st_size
+		fobj = TextFio(fname, size=fsize)
 		if fobj.open() < 0:
 			msg = 'build' if step == RST.BLD else 'run'
 			msg += '_s: open error: "%s"' % fname
@@ -400,7 +403,8 @@ class BuildAndRun:
 			logf.writelines(data)
 		elif kind == 2:
 			# data is the file name to be read
-			tmpf = TextFio(data)
+			fsize = os.stat(data).st_size
+			tmpf = TextFio(data, size=fsize)
 			if tmpf.open() < 0:
 				msg = 'build' if step == RST.BLD else 'run'
 				msg += '_w: open error: "%s"' % (name, data)

@@ -70,7 +70,8 @@ WARNING_FLAGS	= -Wall \
 		  -Wno-unused-local-typedefs \
 		  -Wno-unused-function   \
 		  -Wno-reorder \
-		  -Wno-sign-compare
+		  -Wno-sign-compare \
+		  -Wno-unknown-pragmas
 #CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG) -fPIC
 CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(OPTS) -fPIC
 LDFLAGS 	= \
