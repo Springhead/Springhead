@@ -71,7 +71,7 @@ public:
 
 
 int SPR_CDECL main(int argc, char* argv[]){
-	_crtBreakAlloc = 171212;
+	//_crtBreakAlloc = 171212;
 	{
 		//	Window を自動でつくらないために、app.Init()を呼ばずに他だけを初期化。
 		app.CreateSdk();

@@ -22,7 +22,9 @@ Springhead2/src/Samples/FEMThermo
 #include <Graphics/GRMesh.h>
 #include <list>
 
+#ifdef	_MSC_VER
 #pragma hdrstop
+#endif
 
 using namespace PTM;
 

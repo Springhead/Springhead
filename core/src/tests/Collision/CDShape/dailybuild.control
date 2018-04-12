@@ -30,8 +30,8 @@ Expected	-1
 
 [unix]
 #SolutionAlias	Makefile
-Build		False
+Build		True
 #OutputDir	.
 #BinaryOutName	a.out
-Run		False
+Run		True
 

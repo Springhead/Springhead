@@ -23,7 +23,9 @@
 
 #include "../../SampleApp.h"
 
+#ifdef	_MSC_VER
 #pragma  hdrstop
+#endif
 
 using namespace Spr;
 using namespace std;

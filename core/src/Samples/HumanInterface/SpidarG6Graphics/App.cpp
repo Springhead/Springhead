@@ -36,7 +36,12 @@ void App::InitInterface(){
 	hiSdk->Print(std::cout);
 
 	spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+#ifdef	_MSC_VER
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+#else
+	HISpidarGDesc tmpdesc = HISpidarGDesc((char *) "SpidarG6X3R");
+	spg->Init(&tmpdesc);
+#endif
 	spg->Calibration();
 }
 
@@ -49,7 +54,7 @@ void App::Init(int argc, char* argv[]){
 
 	UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
 	timer->SetResolution(1);								// 分解能(ms)
-	timer->SetInterval(unsigned int(hdt * 1000));			// 刻み(ms)h
+	timer->SetInterval((unsigned int)(hdt * 1000));			// 刻み(ms)h
 	hapticTimerID = timer->GetID();							// 力覚スレッドのタイマIDの取得
 	timer->Start();											// タイマスタート
 }
