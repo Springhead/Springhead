@@ -40,6 +40,7 @@
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.11 2018/03/28 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.12 2018/04/19 F.Kanehori	Special trap introduced.
 # ======================================================================
 import sys
 import os
@@ -95,6 +96,7 @@ class Traverse:
 			self.is_dailybuild = True
 		else:
 			self.is_dailybuild = False
+		self.trap_enabled = False	#### special trap ####
 		#
 		self.encoding = 'utf-8' if Util.is_unix() else 'cp932'
 		self.once = True
@@ -104,6 +106,12 @@ class Traverse:
 	#  Compile the solution.
 	#
 	def traverse(self, top):
+		#### special trap for manual test ####
+		skips = os.getenv('SPR_SKIP')
+		if self.trap_enabled and top.split('/')[-1] in skips:
+			print('skip: %s' % top)
+			return 0
+		#### end trap ####
 		if not os.path.isdir(top):
 			msg = 'not a directory: %s' % top
 			Error(self.clsname).error(msg)
@@ -282,7 +290,7 @@ class Traverse:
 					print(self.__status_str(RST.RUN, stat))
 				if stat == Proc.ETIME:
 					self.__report('', '(timedout)', False, False)
-				self.__report(',', '.', False, False)
+				self.__report(',', ' (rc %s).' % stat, False, False)
 
 			# end config
 			if stat == Proc.ECANCELED:

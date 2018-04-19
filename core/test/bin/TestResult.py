@@ -70,6 +70,7 @@
 #  VERSION:
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.02 2018/04/19 F.Kanehori	Refine status check.
 # ======================================================================
 import sys
 import os
@@ -214,7 +215,7 @@ class TestResult:
 			if stat != 0:
 				continue
 			stat = r[v][RST.RUN][p][c]
-			if str(stat) == r[v][RST.RUN][RST.EXP]:
+			if str(stat) == str(r[v][RST.RUN][RST.EXP]):
 				succs[RST.RUN].append(module)
 			elif stat == Proc.ETIME:	# assume success
 				succs[RST.RUN].append(module)
