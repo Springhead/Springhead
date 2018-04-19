@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:	FileOp(info=0, dry_run=False, verbose=0)
@@ -11,7 +11,9 @@
 #	rmdir(path, dir_fd=None)
 #	makedirs(path, mode=0o777, exist_ok=False)
 #	touch(path, mode=0o666, no_create=False)
-#	string = ls(path, sort='name', show='mtime')
+#	[string] = ls(path, sort='name', show='mtime', backtrack=True)
+#	[infos] in tree_walk(path, recurse=True, backtrack=False)
+#	    infos = [[isdir, root, name, stat], ...]
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -22,6 +24,7 @@
 #	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
 #	Ver 1.5  2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
 #	Ver 1.6  2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.7  2018/04/19 F.Kanehori	New edition of ls().
 # ======================================================================
 import sys
 import os
@@ -29,12 +32,16 @@ import datetime
 import stat
 import glob
 import shutil
+import math
 from pathlib import Path
 from time import sleep
 
 sys.path.append('/usr/local/lib')
 from Util import *
 from Error import *
+if Util.is_unix():
+	import pwd
+	import grp
 
 ##  File operation support class.
 #
@@ -95,21 +102,21 @@ class FileOp:
 	#   @retval 1		failure
 	#
 	def mv(self, src, dst):
-		msg = 'mv: %s -> %s' % (Util.upath(src), Util.upath(dst))
+		u_src = Util.upath(src)
+		u_dst = Util.upath(dst)
 		if self.dry_run or self.info:
-			print(msg)
+			print('mv: %s -> %s' % (u_src, u_dst))
 			if self.dry_run:
 				return 0
 		#
+		rc = 0
 		try:
-			shutil.move(src, dst)
-			rc = 0
+			shutil.move(u_src, u_dst)
 		except OSError as why:
 			prog = '%s: mv' % self.clsname
 			msg = str(why)
 			Error(prog).error(msg)
 			rc = 1
-			#
 		return rc
 
 	##  Unix like remove (rm) command.
@@ -131,9 +138,9 @@ class FileOp:
 	#   @retval 1		failure
 	#
 	def rm(self, path, recurse=False, use_shutil=True, idle_time=0):
-		msg = 'rm: %s' % Util.upath(path)
+		u_path = Util.upath(path)
 		if self.dry_run or self.info:
-			print(msg)
+			print('rm: %s' % u_path)
 			if self.dry_run:
 				return 0
 		#
@@ -141,7 +148,6 @@ class FileOp:
 		for name in glob.glob(path):
 			u_name = Util.upath(name)
 			rc = self.__rm(u_name, use_shutil, idle_time)
-		#
 		return rc
 
 	##  Make new directory (Wrapper of os.mkdir())
@@ -213,42 +219,90 @@ class FileOp:
 		return 0
 
 	##  List contents of directory.
-	#   @param path		Path to show list (str).
+	#   @param path		Path to show list (str or [str]).
 	#   @param sort		Sort key (str).
-	#   @n			If soret is 'name', list is sorted by file name.
-	#			Otherwise, sorted by date and time.
+	#   @n			If key is 'name', sorted by file name.
+	#   @n			Otherwise, sorted by date and time.
 	#   @param show		Specify time kind showed in the list.
 	#   @n			'mtime': show last modification time.
 	#   @n			'ctime': show last status change time.
 	#   @n			'atime': show last access time.
+	#   @param backtrack	Use backtrack (depth first) search (bool).
+	#   @n			This implies recurse be True.
 	#   @returns		List of file informations ([str]).
 	#
-	def ls(self, path, sort='name', show='mtime'):
-		if os.path.isdir(path):
-			path += '/*'
-		filelist = glob.glob(path)
-		if len(filelist) == 0:
-			return 'total 0'
-		if len(filelist) == 1:
-			return self.__ls_one(filelist[0], show)
+	def ls(self, path, sort='name', show='mtime', backtrack=True):
+		if path is None or path is '':
+			path = '.'
+		dcount = self.__ls_ftype_count(path, os.path.isdir)
+		fcount = self.__ls_ftype_count(path, os.path.isfile)
+		filefirst = dcount > 0 and fcount > 0
+		blocksize = 1024
+		#
 		lslist = []
-		if path[-2:] == '/*':
-			lslist.append(self.__ls_one(path[:-2], show))
-		for f in filelist:
-			if os.path.isdir(f):
-				lslist.append(self.__ls_one(f, show))
-				sublist = self.ls(f)
-				if not sublist:
-					continue
-				if sublist[0:5] == 'total':
-					continue
-				if isinstance(sublist, str):
-					lslist.append(sublist)
-				else:
-					lslist.extend(sublist)
+		for items in self.tree_walk(path, backtrack=True):
+			if sort != 'name':
+				self.__ls_sort(items, sort)
+			total = self.__ls_total_size(items, blocksize)
+			lslist.append('total %dK' % total)
+			for item in items:
+				lslist.append(self.__ls_edit(item, show))
+		#
+		return lslist
+
+	##  Yields file information of given directory.
+	#   @param path		Path to yield iterator (str).
+	#   @param recurse	Walk directories recursively (bool).
+	#   @param backtrack	Use backtrack (depth first) search (bool).
+	#   @n			This implies recurse be True.
+	#   @returns		Iterator of file infromation dictionary.
+	#   @n			Keys are:
+	#   @n			'isdir': Is directory or not (bool).
+	#   @n			'root':	 Root directory path (str).
+	#   @n			'name':	 File name (str).
+	#   @n			'stat':	 File stat information (obj).
+	#
+	def tree_walk(self, path, recurse=False, backtrack=False):
+		if backtrack:
+			recurse = True
+		if isinstance(path, str):
+			path = [path]
+		#
+		pathlist = []
+		for name in path:
+			exp1 = os.path.expandvars(name)
+			exp2 = os.path.expanduser(exp1)
+			abspath = os.path.abspath(exp2)
+			if os.path.isdir(abspath):
+				tmplist = glob.glob('%s/*' % abspath)
+				pathlist.extend(sorted(Util.upath(tmplist)))
 			else:
-				lslist.append(self.__ls_one(f, show))
-		return self.__ls_sort(lslist, sort)
+				tmplist = glob.glob(abspath)
+				pathlist.extend(sorted(Util.upath(tmplist)))
+		#
+		result = []
+		dnames = []
+		for name in pathlist:
+			name = Util.upath(name).replace('//', '/')
+			if os.path.isdir(name):
+				info = self.__ls_info(True, name, None)
+				result.append(info)
+				if backtrack:
+					itr = self.tree_walk(name, True, True)
+					for r in itr:
+						result.extend(r)
+				else:
+					dnames.append(name)
+			else:
+				dname = os.path.dirname(name)
+				bname = os.path.basename(name)
+				info = self.__ls_info(False, dname, bname)
+				result.append(info)
+		yield result
+		#
+		for name in dnames:
+			tree_walk(name, True, False)
+
 
 	# --------------------------------------------------------------
 	#  For class private use
@@ -268,11 +322,12 @@ class FileOp:
 		if self.verbose:
 			print('__cp: %s -> %s' % (src, dst))
 		#
+		rc = 0
 		try:
 			if self.verbose:
 				print('    cwd: %s' % Util.upath(os.getcwd()))
-				print('    src: %s' % src)
-				print('    dst: %s' % dst)
+				print('    src: %s' % Util.upath(src))
+				print('    dst: %s' % Util.upath(dst))
 			if os.path.isdir(src):
 				if os.path.exists(dst):
 					prog = '%s: cp' % self.clsname
@@ -286,12 +341,10 @@ class FileOp:
 				if self.verbose:
 					print('  shutil.copy2()')
 				shutil.copy2(src, dst)
-			rc = 0
 		except OSError as why:
 			prog = '%s: cp' % self.clsname
 			Error(prog).error(str(why))
 			rc = 1
-		#
 		return rc
 
 	##  Remove files and directories (Helper method of self.rm()).
@@ -304,6 +357,8 @@ class FileOp:
 	#   @retval 1		failure
 	#
 	def __rm(self, path, use_shutil, idle_time):
+		if self.verbose:
+			print('__rm: %s' % path)
 		try:
 			if os.path.isdir(path):
 				if use_shutil:
@@ -343,6 +398,7 @@ class FileOp:
 			os.chdir(wrkdir)
 		#
 		#print('remove_all: path: %s' % path)
+		rc = 0
 		try:
 			for root, dirs, files in os.walk(path, topdown=False):
 				for name in files:
@@ -352,7 +408,6 @@ class FileOp:
 				for name in dirs:
 					dpath = '%s/%s' % (root, name)
 					os.rmdir(dpath)
-			rc = 0
 		except OSError as why:
 			prog = '%s: rm' % self.clsname
 			msg = str(why)
@@ -361,14 +416,13 @@ class FileOp:
 		#
 		if another_drive:
 			os.chdir(cwd)
-
 		return rc
 
 	##  Get current time (for touch method).
-	#   @retval		Last access time (in msec).
-	#   @retval		Last modification time (in msec).
-	#
-	#		This method returns the same time as atime and mtime.
+	#   @retval atime	Last access time (in msec).
+	#   @retval mtime	Last modification time (in msec).
+	#   @n
+	#   NOTE: This method returns the same time as atime and mtime.
 	#
 	def __time_to_set(self):
 		d = datetime.datetime.today()
@@ -382,47 +436,87 @@ class FileOp:
 		ts = int(dt.timestamp() * 1000000 + 0.0000005) * 1000
 		return ts, ts
 
-	##  List information for one file (Helper method of ls()).
-	#   @param path		File path to show (str).
-	#   @param show		Specify time kind showed in the list.
-	#   @n			'mtime': show last modification time.
-	#   @n			'ctime': show last status change time.
-	#   @n			'atime': show last access time.
-	#   @returns		File information (str).
+	##  Count satisfying given condition in the list.
+	#   @param path		File path(s) (str or [str]).
+	#   @param func		Function object to test condition.
+	#   @returns		Number of files to satisfy given condition.
 	#
-	def __ls_one(self, path, show='mtime'):
-		# argument:
-		#   path	File path.
-		# returns:	Ls string.
+	def __ls_ftype_count(self, path, func):
+		if isinstance(path, str):
+			path = [path]
+		pathlist = []
+		for p in path:
+			pathlist.extend(glob.glob(p))
+		return len(list(filter(lambda x: func(x), pathlist)))
 
-		try:
-			fstat = os.stat(path)
-		except:
-			return ''
+	##  Sort by time.
+	#   @param items	File info items ([dict]).
+	#   @retunrs		Sorted items ([dict]).
+	#
+	def __ls_sort(self, items, sort):
+		if sort == 'mtime':
+			items.sort(key = lambda item: item['stat'].st_mtime)
+		elif sort == 'ctime':
+			items.sort(key = lambda item: item['stat'].st_ctime)
+		elif sort == 'atime':
+			items.sort(key = lambda item: item['stat'].st_atime)
+
+	##  Caluculate total block size.
+	#   @param items	File info items ([dict]).
+	#   @param blocksize	Inode block size in bytes (int).
+	#   @returns		Number of blocks (int).
+	#
+	def __ls_total_size(self, items, blocksize):
+		size = 0
+		for item in items:
+			s = item['stat'].st_size
+			size += math.floor((s + blocksize - 1) / blocksize)
+		return size
+
+	##  Edit file info.
+	#   @param item		File info item (dict).
+	#   @param show		Which time mode to show (str).
+	#   @n			'mtime': Show last modification time.
+	#   @n			'ctime': Show file creation time.
+	#   @n			'atime': Show last access time.
+	#   @returns		File info line (str).
+	#
+	def __ls_edit(self, info, show):
+		root = info['root']
+		name = info['name']
+		fname = root if info['isdir'] else '%s/%s' % (root, name)
+		fstat = info['stat']
+		if fstat is None:
+			return fname	# no stat info available
 		fmode = stat.filemode(fstat.st_mode)
-		fname = self.__add_modifier(path, fmode)
+		fdrive = os.path.splitdrive(fname)[0].lower()
+		cdrive = os.path.splitdrive(os.getcwd())[0].lower()
+		if fdrive == cdrive:
+			fname = os.path.relpath(fname)
+		fname = self.__add_modifier(fname, fmode)
 		nlink = fstat.st_nlink
+		if Util.is_unix():
+			uid = pwd.getpwuid(fstat.st_uid).pw_name
+			gid = grp.getgrgid(fstat.st_gid).gr_name
+		else:
+			uid = os.getlogin()
+			gid = fstat.st_gid
 		fsize = fstat.st_size
 		if show == 'mtime': timemode = fstat.st_mtime
 		if show == 'ctime': timemode = fstat.st_ctime
 		if show == 'atime': timemode = fstat.st_atime
 		dt = datetime.datetime.fromtimestamp(int(timemode))
 		ftime = dt.strftime('%Y-%m-%d %H:%M')
-		fmt = '{0} {1} {2:>8} {3} {4}'
-		ls = fmt.format(fmode, nlink, fsize, ftime, fname)
+		fmt = '{0} {1} {2} {3} {4:>10} {5} {6}'
+		ls = fmt.format(fmode, nlink, uid, gid, fsize, ftime, fname)
 		return Util.upath(ls)
 
 	##  Add file modifier to given path string.
-	#   @param path		Path string.
-	#   @param mode		File permission string.
-	#   @returns		Modifier added path string.
+	#   @param path		File path (str).
+	#   @param mode		File permission (str).
+	#   @returns		Modifier added path (str).
 	#
 	def __add_modifier(self, path, mode):
-		# argument:
-		#   path	File path.
-		#   mode	File mode.
-		# returns:	Modifier added file path.
-
 		if mode[0] == 'd': return path + '/'
 		if mode[3] == 'x': return path + '*'
 		if mode[6] == 'x': return path + '*'
@@ -440,18 +534,20 @@ class FileOp:
 			return '%s -> %s' % (path, info)
 		return path
 
-	##  Sort ls list by specified field.
-	#   @param lslist	File list ([str]).
-	#   @n			List format is;
-	#   @n			<perm> <link> <size> <date> <time> <name>
-	#   @param sort		Sort key.
-	#   @n			If key is 'name', list is sorted by file name.
-	#			Otherwise, sorted by date and time.
-	#   @returns		Sorted file list ([str]).
+	##  Set file information.
+	#   @param isdir	Is directory or not (bool).
+	#   @param root		Directory (part of the file) path (str).
+	#   @param name		File leaf name (str) or None (directory).
+	#   @returns		File info object (dict).
 	#
-	def __ls_sort(self, lslist, sort):
-		if sort == 'name':
-			return sorted(lslist, key=lambda f: f.split()[5])
-		return sorted(lslist, key=lambda f: f.split()[3]+f.split()[4])
+	def __ls_info(self, isdir, root, name):
+		info = {'isdir': isdir, 'root': root, 'name': name}
+		fname = root if isdir else '%s/%s' % (root, name)
+		try:
+			fstat = os.stat(fname)
+			info['stat'] = fstat
+		except:
+			info['stat'] = None
+		return info
 
 # end: FileOp.py

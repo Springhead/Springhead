@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  FILE:
@@ -16,6 +16,7 @@ import shutil
 
 sys.path.append('..')
 from FileOp import *
+from Util import *
 
 # ----------------------------------------------------------------------
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
@@ -90,7 +91,8 @@ def Print(msg, indent=2):
 # ----------------------------------------------------------------------
 test_suit = ['ls', 'touch', 'cp', 'mv', 'rm']
 #test_suit = ['rm']
-another_fs = 'C:/tmp/FileOpTest'
+if Util.is_windows():
+	another_fs = 'C:/tmp/FileOpTest'
 
 verbose = 0
 dry_run = True
@@ -154,9 +156,10 @@ if 'touch' in test_suit:
 #
 if 'cp' in test_suit:
 	make_tree(top)
-	remove_tree(another_fs)
-	if os.path.exists(another_fs):
-		os.rmdir(another_fs)
+	if Util.is_windows():
+		remove_tree(another_fs)
+		if os.path.exists(another_fs):
+			os.rmdir(another_fs)
 	#Ls(F, top)
 	#print()
 	for dry_run in [True, False]:
@@ -177,10 +180,11 @@ if 'cp' in test_suit:
 		Ls(F, top)
 		print()
 
-		F.cp(testpath(top, 'test1'), another_fs)
-		Ls(F, another_fs)
-		remove_tree(another_fs)
-		print()
+		if Util.is_windows():
+			F.cp(testpath(top, 'test1'), another_fs)
+			Ls(F, another_fs)
+			remove_tree(another_fs)
+			print()
 
 		src = testpath(top, 'test1')
 		F.cp(src, testpath(top, 'test5'))
@@ -220,7 +224,6 @@ if 'mv' in test_suit:
 		dst = testpath(top, 'test3')
 		F.mv(src, dst)
 		Ls(F, top)
-		Ls(F, testpath(top, 'test3/test2'))
 		print()
 
 # rm
@@ -246,12 +249,12 @@ if 'rm' in test_suit:
 		make_tree(top)
 		F.rm(testpath(top, 'test1/*'))
 		Ls(F, top)
-		Ls(F, testpath(top, 'test1'))
 		print()
 
 		make_tree(top)
 		F.rm(testpath(top, 'test1/test1'))
 		Ls(F, top)
+		print()
 		F.rm(testpath(top, 'test1'))
 		Ls(F, top)
 		print()
