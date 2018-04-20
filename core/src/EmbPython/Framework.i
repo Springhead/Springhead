@@ -13,9 +13,9 @@
 #define SPR_DLL					
 //---
 %ignore Spr::FWGraphicsAdaptee::Init;
-%ignore Spr::FWInteractSceneIf::GetIAAdaptee; //API‚Ì•s®‡‚ª‚ ‚èƒRƒ“ƒpƒCƒ‹•s‰Â‚È‚Ì‚Å
-%ignore Spr::FWSceneIf::GetObjects; // **‚ªo‚Ä‚­‚é‚Ì‚Å–¢‘Î‰
-%ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6D‚ªAPIƒwƒbƒ_‚Å’è‹`‚³‚ê‚Ä‚¢‚È‚¢
+%ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIï¿½Ì•sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½ï¿½sï¿½Â‚È‚Ì‚ï¿½
+%ignore Spr::FWSceneIf::GetObjects; // **ï¿½ï¿½ï¿½oï¿½Ä‚ï¿½ï¿½ï¿½ï¿½Ì‚Å–ï¿½ï¿½Î‰ï¿½
+%ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6Dï¿½ï¿½APIï¿½wï¿½bï¿½_ï¿½Å’ï¿½ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½
 %ignore Spr::FWSceneIf::CreateOpHapticHandler;
 %ignore Spr::FWSceneIf::GetOpHapticHandler;
 %ignore Spr::FWApp::CreateTimer;
@@ -25,8 +25,11 @@
 	}
 }
 %ignore Spr::FWApp::timers;
-%ignore Spr::FWApp::GRInit;
-%ignore Spr::FWApp::Init;
+%ignore Spr::FWApp::GRInit(int argc, char* argv[], int type);
+%ignore Spr::FWApp::GRInit(int argc, char* argv[]);
+%ignore Spr::FWApp::GRInit(int argc);
+%ignore Spr::FWApp::Init(int argc, char* argv[]);
+%ignore Spr::FWApp::Init(int argc);
 %ignore Spr::FWTextBoxIf::GetIntRange;
 %ignore Spr::FWTextBoxIf::GetFloatRange;
 %ignore Spr::FWWinIf::CalcViewport;

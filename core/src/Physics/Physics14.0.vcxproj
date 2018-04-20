@@ -463,6 +463,7 @@
     <ClCompile Include="PhysicsStub.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\Physics\SprPHJointMotor.h" />
     <ClInclude Include="..\..\include\Physics\SprPHOpObj.h" />
     <ClInclude Include="..\..\include\Physics\SprPHOpSpHashAgent.h" />
     <ClInclude Include="..\..\include\Physics\SprPHSkeleton.h" />

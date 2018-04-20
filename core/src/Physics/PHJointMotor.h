@@ -74,7 +74,14 @@ public:
 	virtual void SetupAxisIndex();
 	virtual void Setup         ();
 	virtual bool Iterate       ();
-	virtual void CompResponse  (double df, int i);
+	virtual void CompResponse      (double df, int i);
+	virtual void CompResponseDirect(double df, int i);
+
+	/// 拘束軸を決定する
+	//virtual void SetupAxisIndex();
+
+	/// dA, dbを計算する
+	//virtual void CompBias();
 
 	// ----- このクラスの機能
 
@@ -119,30 +126,27 @@ public:
 };
 
 //非線形の親クラス作ろうか？
-class PH1DJointNonLinearMotor : public PH1DJointMotor {
+class PH1DJointNonLinearMotor : public PH1DJointMotor, public PH1DJointNonLinearMotorDesc {
 public:
 	SPR_OBJECTDEF(PH1DJointNonLinearMotor);
-	SPR_DECLMEMBEROF_PH1DJointNonLinearMotorDesc;
+	//SPR_DECLMEMBEROF_PH1DJointNonLinearMotorDesc;
+	ACCESS_DESC(PH1DJointNonLinearMotor);
 
 	PH1DJointNonLinearMotor(const PH1DJointNonLinearMotorDesc& desc = PH1DJointNonLinearMotorDesc()) { 
 		SetDesc(&desc); 
-		springFunc = 0;
-		damperFunc = 0;
-		offset = 0;
 	}
 
-	Vec2d (*fpFunc)(PH1DJointIf* , void* );
-	int springFunc;
-	int damperFunc;
-
-	void SetFuncFromDatabase(int i, void* param);
-	void SetFuncFromDatabase(int i, int j, void* sparam, void* dparam);
-
-	double targetPos;
+	FunctionMode springMode;
+	FunctionMode damperMode;
 	void* springParam;
 	void* damperParam;
 
+	double targetPos;
 	double offset;
+
+	void SetSpring(FunctionMode m, void* param);
+	void SetDamper(FunctionMode m, void* param);
+	void SetSpringDamper(FunctionMode smode, FunctionMode dmode, void* sparam, void* dparam);
 
 	// ----- PHNDJointMotorの派生クラスで実装する機能(この二つはオーバーライドしないとダメそう)
 	/// propVを計算する(位置差分)
@@ -159,8 +163,8 @@ public:
 
 	PHHuman1DJointResistance(const PHHuman1DJointResistanceDesc& desc = PHHuman1DJointResistanceDesc()) {
 		SetDesc(&desc);
-		springFunc = 1;
-		damperFunc = 1;
+		springMode = HUMANJOINTRESITANCE;
+		damperMode = HUMANJOINTRESITANCE;
 		springParam = new Vec4d(desc.coefficient);
 		damperParam = new Vec4d(desc.coefficient);
 		offset = 0;

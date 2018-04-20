@@ -128,4 +128,5 @@ void PHBallJoint::CompError(){
 	B.v() = Xjrel.r;
 }
 
+int        PHBallJoint::NMotors() { return (int)motors.size(); }
 }

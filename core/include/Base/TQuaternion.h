@@ -288,11 +288,11 @@ public:
 		Z() = c1*s2*c3 - s1*c2*s3;
 	}
 
-	template <class VET> TVec3<VET> ToEuler() {
+	TVec3<ET> ToEuler() const{
 		ET poleCheck = X()*Y() + Z()*W();
-		VET heading;
-		VET attitude;
-		VET bank;
+		ET heading;
+		ET attitude;
+		ET bank;
 		if (poleCheck > 0.499) {				//	north pole
 			heading = 2 * atan2(X(), W());
 			attitude = 0;
@@ -308,7 +308,7 @@ public:
 			attitude = asin(2 * X()*Y() + 2 * Z()*W());
 			bank = atan2(2 * X()*W() - 2 * Y()*Z(), 1 - 2 * X()*X() - 2 * Z()*Z());
 		}
-		return TVec3<VET>(heading, attitude, bank);
+		return TVec3<ET>(heading, attitude, bank);
 	}
 
 	/** @brief 角速度からquaternionの時間微分を計算

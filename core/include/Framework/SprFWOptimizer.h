@@ -20,6 +20,9 @@ namespace Spr{;
 
 */
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// FWStaticTorqueOptimizerに使う拘束クラス
+
 class FWGroundConstraint{
 public:
 	Vec3d cNormal;
@@ -56,6 +59,7 @@ struct JointPos {
 	JointPos(double a);
 };
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 //Unityで評価値の内訳を表示するための転送用構造体
 struct FWObjectiveValues{
 	double errorvalue = 0;
@@ -67,6 +71,9 @@ struct FWObjectiveValues{
 	double initialorivalue = 0;
 };
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// Frameworkの最適化計算の基底クラス
+// インタフェース
 struct FWOptimizerIf : public ObjectIf {
 	SPR_IFDEF(FWOptimizer);
 
@@ -115,6 +122,7 @@ struct FWOptimizerIf : public ObjectIf {
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 };
 
+// デスクリプタ
 struct FWOptimizerDesc{
 	SPR_DESCDEF(FWOptimizer);
 
@@ -133,6 +141,9 @@ struct FWOptimizerDesc{
 	}
 };
 
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// 姿勢最適化計算のインタフェース
 struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	SPR_IFDEF(FWStaticTorqueOptimizer);
 	
@@ -194,6 +205,7 @@ struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	Vec3f GetSupportPolygonVerticesN(int n);
 };
 
+// 姿勢最適化計算のデスクリプタ
 struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
 	SPR_DESCDEF(FWStaticTorqueOptimizer);
 
@@ -202,7 +214,11 @@ struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
 	}
 };
 
-//複数点指定用に必要そうなデータ
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// トルク変化最小化計算
+
+// 空間内の経由点指定用データ
 struct ControlPoint{
 	Posed pose;
 	Vec6d vel;
@@ -218,6 +234,8 @@ struct ControlPoint{
 	//ControlPoint(ControlPoint& c);
 };
 
+
+// トルク変化最小化計算のインタフェース
 struct FWTrajectoryPlannerIf : public ObjectIf{
 	SPR_IFDEF(FWTrajectoryPlanner);
 
@@ -254,6 +272,7 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	void ReloadCorrected(int k, bool nc = false);
 };
 
+// トルク変化最小化計算のデスクリプタ
 struct FWTrajectoryPlannerDesc {
 	SPR_DESCDEF(FWTrajectoryPlanner);
 
