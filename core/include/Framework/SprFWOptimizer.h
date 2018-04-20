@@ -20,6 +20,9 @@ namespace Spr{;
 
 */
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// FWStaticTorqueOptimizerに使う拘束クラス
+
 class FWGroundConstraint{
 public:
 	Vec3d cNormal;
@@ -56,6 +59,7 @@ struct JointPos {
 	JointPos(double a);
 };
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 //Unityで評価値の内訳を表示するための転送用構造体
 struct FWObjectiveValues{
 	double errorvalue = 0;
@@ -67,6 +71,9 @@ struct FWObjectiveValues{
 	double initialorivalue = 0;
 };
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// Frameworkの最適化計算の基底クラス
+// インタフェース
 struct FWOptimizerIf : public ObjectIf {
 	SPR_IFDEF(FWOptimizer);
 
@@ -115,14 +122,28 @@ struct FWOptimizerIf : public ObjectIf {
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 };
 
+// デスクリプタ
 struct FWOptimizerDesc{
 	SPR_DESCDEF(FWOptimizer);
 
-	FWOptimizerDesc() {
+	double ixstart;
+	double istddev;
+	double iTolFun;
+	double ilambda;
+	double iMaxIter;
 
+	FWOptimizerDesc() {
+		ixstart = 0.3;
+		istddev = 0.3;
+		iTolFun = 10;
+		ilambda = 30;
+		iMaxIter = 500;
 	}
 };
 
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// 姿勢最適化計算のインタフェース
 struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	SPR_IFDEF(FWStaticTorqueOptimizer);
 	
@@ -143,17 +164,6 @@ struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	bool TestForTermination();
 
 	void TakeFinalValue();
-	
-	double CalcErrorCriterion();
-	double CalcGroundedCriterion();
-	double CalcPositionCriterion();
-	double CalcCOGCriterion();
-	double CalcDifferenceCriterion();
-	double CalcTorqueCriterion();
-	double CalcStabilityCriterion();
-
-	double CenterOfGravity(PHIKActuatorIf* root, Vec3d& point);
-	double CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& forceInChildren);
 	
 	void SetErrorWeight(double v);
 	double GetErrorWeight();
@@ -195,7 +205,8 @@ struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	Vec3f GetSupportPolygonVerticesN(int n);
 };
 
-struct FWStaticTorqueOptimizerDesc {
+// 姿勢最適化計算のデスクリプタ
+struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
 	SPR_DESCDEF(FWStaticTorqueOptimizer);
 
 	FWStaticTorqueOptimizerDesc() {
@@ -203,7 +214,11 @@ struct FWStaticTorqueOptimizerDesc {
 	}
 };
 
-//複数点指定用に必要そうなデータ
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// トルク変化最小化計算
+
+// 空間内の経由点指定用データ
 struct ControlPoint{
 	Posed pose;
 	Vec6d vel;
@@ -215,49 +230,49 @@ struct ControlPoint{
 	bool timeControl;
 	ControlPoint();
 	ControlPoint(Posed p, int s, double t);
-	ControlPoint(Posed p, Vec6d v, int s, double t);
+	ControlPoint(Posed p, Vec6d v, Vec6d a, int s, double t);
 	//ControlPoint(ControlPoint& c);
 };
 
+
+// トルク変化最小化計算のインタフェース
 struct FWTrajectoryPlannerIf : public ObjectIf{
 	SPR_IFDEF(FWTrajectoryPlanner);
 
 	//初期化系
-	void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true);
+	void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
 	void Init();
-	void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65);
+	void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool sc = false);
 	//jointの深さのチェックと投げ込み
 	//void CheckAndSetJoints();
 	//エンドエフェクタ設定
 	void SetControlTarget(PHIKEndEffectorIf* e);
 	//シーン設定
 	void SetScene(PHSceneIf* s);
-	//指定点通過軌道計算
-	void CalcTrajectoryWithViaPoint(ControlPoint tpoint, ControlPoint vpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
-	//連続軌道計算
-	void CalcContinuousTrajectory(int LPFmode, int smoothCount, std::string filename, bool bChange, bool pChange, bool staticTarget, bool jmjt);
-	void AddControlPoint(ControlPoint c); //実装移動
-										  //関節角度次元軌道計算
-	void JointCalcTrajectory(Posed tPose, double mt, int LPFmode, int smoothCount, std::string output, bool bChange = false, bool pChange = false, bool staticTarget = false, bool jmjt = false);
+	void AddControlPoint(ControlPoint c); 
+	//関節角度次元軌道計算
 	void CalcTrajectory(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
 	//N回目の繰り返しから再計算
 	void RecalcFromIterationN(int n);
 	//生成された軌道を実際適用
 	void JointTrajStep(bool step);
-	//補正
-	//void JointTrajCorrection(int k);
 	//
 	bool Moving();
 	//spring, damper set
 	void SetPD(double s = 1e10, double d = 1e10, bool mul = true);
+	//
+	void SetWeights(std::vector<double> w);
 	//replay
 	void Replay(int ite, bool noncorrected = false);
 	//return totalChange
 	double GetTotalChange();
 	//return best
 	int GetBest();
+	//
+	void ReloadCorrected(int k, bool nc = false);
 };
 
+// トルク変化最小化計算のデスクリプタ
 struct FWTrajectoryPlannerDesc {
 	SPR_DESCDEF(FWTrajectoryPlanner);
 

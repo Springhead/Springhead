@@ -137,7 +137,7 @@ public:
 	bool HasLimit() { return limit != NULL; }
 	PHBallJointLimitIf* GetLimit() { return limit->Cast(); }
 
-	Vec3d		GetAngle() { UpdateState();  return Vec3d(position[0], position[1], position[2]); }
+	Vec3d		GetAngle(){ UpdateState();  return Vec3d(position[0], position[1], position[2]); }
 	Quaterniond GetPosition(){ UpdateState(); return Xjrel.q; }
 	Vec3d		GetVelocity(){ UpdateState(); return Vec3d(velocity[0], velocity[1], velocity[2]); }
 	void        SetSpring(const double& spring) { this->spring = spring; }
