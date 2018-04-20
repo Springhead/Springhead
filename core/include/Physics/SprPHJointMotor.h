@@ -32,20 +32,24 @@ struct PH1DJointMotorDesc{
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
+///	1自由度関節非線形モータのデスクリプタ
+struct PH1DJointNonLinearMotorDesc : public PH1DJointMotorDesc{
+	//SPR_DESCDEF(PH1DJointNonLinearMotor);
+	enum FunctionMode {
+		LINEAR,
+		HUMANJOINTRESITANCE,
+	};
+	PH1DJointNonLinearMotorDesc() {}
+};
+
 /// 1自由度関節非線形モータのインタフェース
 struct PH1DJointNonLinearMotorIf : public PH1DJointMotorIf{
 	SPR_IFDEF(PH1DJointNonLinearMotor);
 
-	//void SetFunc(std::function<double(double)> func);
-	void SetFuncFromDatabase(int i, void* param);
-	void SetFuncFromDatabase(int i, int j, void* sparam, void* dparam);
+	void SetSpring(PH1DJointNonLinearMotorDesc::FunctionMode m, void* param);
+	void SetDamper(PH1DJointNonLinearMotorDesc::FunctionMode m, void* param);
+	void SetSpringDamper(PH1DJointNonLinearMotorDesc::FunctionMode smode, PH1DJointNonLinearMotorDesc::FunctionMode dmode, void* sparam, void* dparam);
 };
-///	1自由度関節非線形モータのデスクリプタ
-struct PH1DJointNonLinearMotorDesc : public PH1DJointMotorDesc{
-	SPR_DESCDEF(PH1DJointNonLinearMotor);
-	PH1DJointNonLinearMotorDesc() {}
-};
-
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 /// 1自由度人体関節抵抗のインタフェース

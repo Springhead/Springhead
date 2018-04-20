@@ -60,7 +60,6 @@ namespace Spr {
 		double GetCurrentAngle(int t);
 		double GetDeltaAngle(int t);
 		double GetCurrentVelocity(int t);
-		double GetCurrentAcceleration(int t);
 	};
 
 	class QuaMinJerkTrajectory {
@@ -85,6 +84,7 @@ namespace Spr {
 		QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, int time, double per);
 		QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, int time, double per);
 		QuaMinJerkTrajectory(Quaterniond vqua, int time, int vtime, double per);
+		~QuaMinJerkTrajectory();
 		Quaterniond GetCurrentQuaternion(int t);
 		Quaterniond GetDeltaQuaternion(int t);
 		Vec3d GetCurrentVelocity(int t);
@@ -378,7 +378,7 @@ namespace Spr {
 		double viaAdjustRate;
 		//
 		PTM::VVector<double> weights;
-		//
+		//発散したときに止める
 		bool stop;
 
 		//----- Sceneと保存用のStates -----
@@ -444,10 +444,12 @@ namespace Spr {
 		bool jointMJT;
 		//ローパスウェイトを動的に変化させるかのフラグ
 		bool dynamicalWeight;
-		//
+		//経由点の修正を行うか
 		bool viaCorrect;
-		//
+		//強制到達においてバネを使用するか
 		bool springCor;
+		//速度制御を有効にするか
+		bool velCorrect;
 
 		//トルク変化
 		PTM::VVector<double> torquechange;
@@ -496,12 +498,12 @@ namespace Spr {
 		//
 		int TimeToStep(double t) {
 			t *= scene->GetTimeStepInv();
-			return ((t - (int)t) < 0.5) ? (int)t : (int)(t + 1);
+			return std::round(t);
 		}
 
 		//-----インタフェースの実装-----
 
-		//初期化系
+		// パラメータのリセット
 		void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false) {
 			this->depth = d;
 			this->iterate = i;
@@ -517,8 +519,8 @@ namespace Spr {
 			this->springCor = sc;
 		}
 
+		// 初期化処理
 		void Init();
-
 		void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
 		
 		//エンドエフェクタ設定
@@ -558,9 +560,9 @@ namespace Spr {
 		//replay
 		void Replay(int ite, bool noncorrected = false);
 		//return totalChange
-		double GetTotalChange();
+		double GetTotalChange() { return totalchange; }
 		//return best
-		int GetBest();
+		int GetBest() { return best; }
 		void ReloadCorrected(int k, bool nc = false);
 	};
 }

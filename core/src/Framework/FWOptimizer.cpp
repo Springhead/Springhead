@@ -225,6 +225,7 @@ namespace Spr {
 	}
 
 	void FWOptimizer::SetESParameters(double xs, double st, double tf, double la, double mi) {
+		/*
 		ixstart = xs;
 		istddev = st;
 #ifdef USE_CLOSED_SRC
@@ -232,5 +233,6 @@ namespace Spr {
 		ilambda = la;
 		iMaxIter = mi;
 #endif
+*/
 	}
 }

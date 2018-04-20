@@ -174,7 +174,7 @@ public:
 	double      GetHardnessRate() { return hardnessRate; }
 	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
 	Vec3d       GetSecondMoment() { return secondMoment; }
-	int         NMotors(){ return (int) motors.size(); }
+	int         NMotors();
 	PHBallJointMotorIf** GetMotors(){
 		return motors.empty() ? NULL : (PHBallJointMotorIf**)&*motors.begin();
 	}

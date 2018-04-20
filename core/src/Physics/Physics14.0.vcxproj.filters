@@ -384,6 +384,9 @@
     <ClInclude Include="PHHapticStepBase.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHJointMotor.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
