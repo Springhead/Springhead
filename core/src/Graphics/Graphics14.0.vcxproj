@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5819AD04-44BD-4CEF-AFDE-2CC736FE9C23}</ProjectGuid>
+    <ProjectGuid>{A339C0CA-D5FB-4DFA-9BCF-826739790653}</ProjectGuid>
     <RootNamespace>Graphics</RootNamespace>
     <ProjectName>Graphics</ProjectName>
   </PropertyGroup>
