@@ -73,7 +73,7 @@
     <ClCompile Include="Utility\EPUTTimer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9CFE2A3B-F831-4321-9A72-8C0B9A1E05FF}</ProjectGuid>
+    <ProjectGuid>{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}</ProjectGuid>
     <RootNamespace>EmbPython140</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ProjectName>EmbPython</ProjectName>

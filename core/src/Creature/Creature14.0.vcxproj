@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A1B0BC81-160A-4638-80DC-D00D23DF88DB}</ProjectGuid>
+    <ProjectGuid>{F674A4D7-A183-4C53-815D-12E17B71C6A0}</ProjectGuid>
     <RootNamespace>Creature</RootNamespace>
     <ProjectName>Creature</ProjectName>
   </PropertyGroup>

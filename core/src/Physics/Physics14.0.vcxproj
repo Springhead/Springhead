@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FA052413-2417-49EE-9387-5BB7B17CF9F4}</ProjectGuid>
+    <ProjectGuid>{A2B91F83-DF0A-473D-9C3B-059673CD2046}</ProjectGuid>
     <RootNamespace>Physics</RootNamespace>
     <ProjectName>Physics</ProjectName>
   </PropertyGroup>

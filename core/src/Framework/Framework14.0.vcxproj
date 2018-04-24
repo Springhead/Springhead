@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E7E0348E-6104-4B0D-8A5B-0362278903B7}</ProjectGuid>
+    <ProjectGuid>{755660BE-3B1E-416B-B795-4F653C83A43A}</ProjectGuid>
     <RootNamespace>Framework120</RootNamespace>
     <ProjectName>Framework</ProjectName>
   </PropertyGroup>
