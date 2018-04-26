@@ -292,6 +292,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	copy_all(logdir, webbase, False, dry_run)
 	os.chdir(repository)
 
+"""
 # ----------------------------------------------------------------------
 #  Create commit.id which holds newest commit id on GitHub.
 #
@@ -339,6 +340,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 		Print('  ** nothing to commit **')
 	#
 	os.chdir(repository)
+"""
 
 # ----------------------------------------------------------------------
 #  Make document (doxygen).
