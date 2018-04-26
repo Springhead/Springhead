@@ -1,4 +1,4 @@
-日付 : 2018-03-15
+日付 : 2018-04-26
 --- サンプルビルドエラーのログ ---
 
 *** Creature: ShoulderJointLimit ***
@@ -34,20 +34,31 @@
 11>main.cpp(325): error C2228: left of '.NResults' must have class/struct/union
 *** Framework: FWSkinMesh ***
 *** Framework: FWVRMLFileLoader ***
+*** HumanInterface: LeapmotionBoxStack ***
 *** HumanInterface: NovintFalcon ***
 *** HumanInterface: Spidar4 ***
 *** HumanInterface: Spidar4D ***
 *** HumanInterface: SpidarG6 ***
+*** HumanInterface: SpidarG6FlexiForce ***
 *** HumanInterface: SpidarG6Gestures ***
 *** HumanInterface: SpidarG6Graphics ***
 *** HumanInterface: SpidarG6MMTimer ***
 *** HumanInterface: Xbox360Controller ***
+*** Physics: BallJoints ***
 *** Physics: BoxStack ***
 *** Physics: CDMethodSample ***
 *** Physics: FEMThermo ***
 *** Physics: IK ***
 *** Physics: Joints ***
+*** Physics: OrientedParticleDemo ***
+*** Physics: OrientedParticleDemo2-Collision&Haptic ***
+10>PHOpDemo.cpp(370): error C2039: 'setprecision': is not a member of 'std'
+10>PHOpDemo.cpp(370): error C3861: 'setprecision': identifier not found
+10>PHOpDemo.cpp(419): error C2039: 'setprecision': is not a member of 'std'
+10>PHOpDemo.cpp(419): error C3861: 'setprecision': identifier not found
+10>PHOpDemo.cpp(1207): error C2039: 'OnDisplay': is not a member of 'Spr::FWApp'
+10>PHOpDemo.cpp(1207): error C3861: 'OnDisplay': identifier not found
 *** Physics: PHSceneState ***
 *** Physics: Reach ***
-*** Physics: Vehicles ***
 *** Physics: VTraj ***
+*** Physics: Vehicles ***
