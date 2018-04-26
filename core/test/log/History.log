@@ -1,3 +1,815 @@
+--[8697fba,8697fba51813c7b1396d6ab5b087c0da91bf2228,2018-0424,15:57:28]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[2dbb76e,2dbb76eb2b915b8af9039cb236fa1746351303ef,2018-0424,12:01:29]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[403b796,403b7961ba958338cefccc1b2f6f46a5c65a0ae4,2018-0419,13:47:19]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[5a4b15f,5a4b15fef3c72196739298db3f4a0eb8c69fb255,2018-0419,13:35:43]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[74dca52,74dca528b810008583450e894f012255df761ce8,2018-0419,11:46:02]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[4bee9d5,4bee9d57f6d298675fa11f266cfd2f532d64a54d,2018-0416,10:28:03]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[cb4eccb,cb4eccbbfbc886144c456d1b77c4d4728eb1f139,2018-0412,16:31:02]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[c6d783c,c6d783c925fd5641bfe72297def3f41e445eac68,2018-0410,16:26:22]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[a2b0baa,a2b0baa383abab55b18575345dc8c077b887f795,2018-0405,15:49:35]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[08f99ed,08f99ed68a5e092b925fb71780e64e527f20ddab,2018-0405,13:43:20]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[6ae7e98,6ae7e988f7925d8d5df0054800ec8ba21d7ad99d,2018-0403,16:10:05]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[dab3d5e,dab3d5e21fc60a4c91934cfd29dcc978add098ec,2018-0329,17:01:51]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[7214149,7214149a0b3a71ad0895a817c290e8d5f726a86e,2018-0329,16:32:00]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[01c1a1b,01c1a1bae35a421fffd9e89bbe89767a95fdf497,2018-0329,16:28:33]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[9d0866c,9d0866c8225d625332e7dde74830c8a16abc3d06,2018-0329,16:25:51]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[e59e49f,e59e49f78d45028b58df334ac1d596ca590ab49b,2018-0329,15:44:28]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[96033f0,96033f02aa6866442d01428123d2ebcf4493da17,2018-0328,16:54:59]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[0584f9f,0584f9fc5a69bc8a37d3d8d2420c10accad244d1,2018-0328,16:54:34]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[7da042a,7da042a15f73caf9ed1b6db3512560f253480761,2018-0328,14:58:47]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[124299f,124299fbb4619a24c24d99fcb1895c02887c7c9b,2018-0327,13:08:14]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[e64f88f,e64f88fd1058b7702aa9a9791f97274b3a4ffe2f,2018-0326,16:47:26]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[0d6077c,0d6077c952a4efdb89ddc3303d3ef5b5fb2d4b61,2018-0323,15:51:03]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[f7291a3,f7291a3982bd410860081dfe4a48f33ac49669e7,2018-0323,15:50:38]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[6c85883,6c85883f1bf84f2b12341374839e96747d8b49f6,2018-0322,15:26:21]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[6c5291c,6c5291cf34e1ae70408740b5872503b52a26c9e8,2018-0322,14:41:16]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[f91eaa6,f91eaa61e9270d27f43767da06f213a98400a07d,2018-0322,13:44:18]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[38f8fbf,38f8fbf9027cb63a7f7036e15658df2789e4cf8c,2018-0322,13:23:20]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[6f933c8,6f933c88ac3c0259c8693382305eef0907d77154,2018-0322,12:32:28]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[e3aa65e,e3aa65e4a87327e51463680453dc4250f8c389e2,2018-0322,11:24:47]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[a0cbd9e,a0cbd9e703828912c68e5481cbed1317e2a47914,2018-0322,10:55:44]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[37a0774,37a07749e3321a64171d08e51c193f4f5f8ba037,2018-0322,10:55:24]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[0383095,038309558fb147b590c437bf361de89d2a851698,2018-0322,10:48:40]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[730e96a,730e96a1e562da77975b3b810bf8f523418493c2,2018-0322,10:16:40]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[68194de,68194de6badea420b32ccf073eb61a7724a43c59,2018-0319,16:24:38]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[82d52bb,82d52bb41067f558209d3df86bcfc68bb8d813d6,2018-0319,16:09:20]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[ebfab08,ebfab0817565e4a67a23e8c5c293405f70b35e97,2018-0319,14:04:34]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[f3e7d94,f3e7d948bca0d9616ffb1b77fdc9df00dbf743a8,2018-0319,13:59:20]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[249b8e6,249b8e6a7ea78a17a0d4286a6ce5a6dbdee40c6b,2018-0319,12:27:57]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[74f57cb,74f57cb532a755afd8fc8f3e404949ab554adf2a,2018-0319,10:59:03]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[1eca499,1eca4998e89e3b1a74f52c849a5c43d7535b4ed2,2018-0318,16:33:19]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[4cf4943,4cf49430f13d6601da6124c69e9a5d44422ced88,2018-0318,16:26:00]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[e7615ee,e7615ee6904910e8519d60b925ba591b588e5401,2018-0315,17:10:03]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[d551736,d55173662977caa77091909eb1e38f939c0bfab8,2018-0315,17:02:50]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[673f297,673f29799f003f0134195305a9b722e443356640,2018-0315,17:01:47]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[d080163,d0801634cae500c5c1927a6da678eba7ec675d17,2018-0315,16:59:48]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[4a4f785,4a4f785ee267f5eb14ed78678a66eb01f77e8cd9,2018-0315,16:55:49]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[5f86015,5f86015f3145233e419f15a4c57198df0a7a0fc3,2018-0315,16:42:31]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[5b728f5,5b728f55ecdd44a98673c0a5476e4c25d3f513d7,2018-0315,16:26:23]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[8bc4aa1,8bc4aa1f8c2b73dbc8147b5942bf12b71b8df066,2018-0315,16:25:01]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[a922d43,a922d4385031543037a241bc9ddf78149d3241fb,2018-0315,16:19:00]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[eb903ea,eb903ea654c0d51df9abc62188fb762da2c4cf5b,2018-0315,15:57:06]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[0c9f576,0c9f576560a7c2cae2877f50a509484b7a7f66e4,2018-0315,15:42:44]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[8e369c0,8e369c0ff5122f82ef693ed156c332f373cf980c,2018-0315,14:31:46]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[a8ad41a,a8ad41a66fb1571655e37ae789b4452eeee76d31,2018-0315,13:21:44]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[635008b,635008bc3447433938dd5553a9b7e6a6a6ba9a07,2018-0315,13:21:05]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[7aafa02,7aafa0268a3f58e309a2bc56e0554cdf99e938ff,2018-0315,12:19:56]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[d1cfc66,d1cfc66c354284bb5c2f18483810904e17937329,2018-0315,10:30:53]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[f9213ee,f9213ee382e8170b67c80abb3c53993385ae030d,2018-0315,10:25:09]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 (Foundation:Timer)
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BoxStack,Physics:CDMethodSample,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
 --[d4b3762,d4b376223f4fb7eb180e15b77c51aa1d34f769a2,2018-0314,16:29:21]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
@@ -194,6 +1006,34 @@ Samples
 実行失敗 ()
  
 
+--[4a460da,4a460dabf8367eaeb2d8a2476b490e6234a31291,2018-0308,14:39:12]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[259106e,259106eca40f6d9c6c03813fc8696f79260435c2,2018-0308,14:37:26]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
 --[ae4068f,ae4068f116bd55e7a0458cd6018e8da327f16600,2018-0308,13:27:13]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
@@ -279,6 +1119,20 @@ Samples
  
 
 --[5a17f6a,5a17f6a641a8e96aa463f8ca6fab8e1a9bcfa3a0,2018-0305,12:18:37]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[535162d,535162d5a2afb1e6464dccfe2725a4e8eb1e923f,2018-0303,17:16:54]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
 ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
@@ -433,6 +1287,20 @@ Samples
  
 
 --[342715c,342715cf8043abce8cfca334f2a5ca8e78212343,2018-0226,14:36:05]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[f574fcd,f574fcdb072bb681158545d35136ce7f758fa07a,2018-0222,17:01:39]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
 ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
@@ -656,6 +1524,20 @@ Samples
 実行失敗 ()
  
 
+--[7fd5c7b,7fd5c7bf92097cdfc8f6d62b0e7d05e2c060fd55,2018-0201,11:01:31]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
 --[63e9d56,63e9d569bc00bf3dfbd3ac52641087eb1fdc0386,2018-0122,10:59:43]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
@@ -824,6 +1706,20 @@ Samples
 実行失敗 ()
  
 
+--[3908773,3908773cccdad44943deb9388b9af331b56a5b27,2018-0110,18:49:09]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
 --[52c7877,52c78776d3a6d38b257f15653dfa4fb3c4c74b95,2018-0109,13:37:52]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
@@ -852,6 +1748,62 @@ Samples
 実行失敗 ()
  
 
+--[4e71413,4e71413996da595e5a469133ee74c215b4dbc906,2018-0109,12:46:13]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[ee7061f,ee7061f5adff16022b0682106bad3fbf9d8c6a31,2018-0109,10:33:11]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[6a99dc6,6a99dc6d4626ba8c4bde870b87fe4a3c48f44716,2018-0107,16:49:48]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[92b81e9,92b81e91a8cfc458d30bfdc07b749e50e42f07eb,2018-0107,16:20:59]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
 --[4864b74,4864b74ffa75ab2ceb7e8b266210e153d140ee25,2018-0105,17:52:40]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
@@ -867,6 +1819,20 @@ Samples
  
 
 --[0822e9c,0822e9c185dbde50f01a0250cca9f8a9dd877d19,2018-0102,09:58:43]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[58331e2,58331e2a7ae3ae86b4117c4c18515487a7070ba1,2017-1229,00:38:42]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
 ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
@@ -979,6 +1945,34 @@ Samples
  
 
 --[aab92be,aab92be581c2905797bba60a6f39e690f9afe373,2017-1225,15:18:45]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[dc13e05,dc13e05ed93ca3ad1b2a697daedc950ea039087e,2017-1223,23:50:09]--
+tests
+ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
+実行成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Graphics:GRColorSpheres,Graphics:GRSimple,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
+実行失敗 ()
+ 
+Samples
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman,EmbPython:BoxStack,EmbPython:MyEPApp,EmbPython:PythonSpr,Foundation:UTCLAPACKSample,Foundation:UTOpenMPSample,Foundation:UTPreciseTimerSample,Foundation:UTTimerSample,Framework:FWAppSample,Framework:FWFileLoaderSample,Framework:FWGLUISample,Framework:FWHapticSample,Framework:FWMultiWinSample,Framework:FWSkinMesh,Framework:FWVRMLFileLoader,HumanInterface:LeapmotionBoxStack,HumanInterface:NovintFalcon,HumanInterface:Spidar4,HumanInterface:Spidar4D,HumanInterface:SpidarG6,HumanInterface:SpidarG6FlexiForce,HumanInterface:SpidarG6Gestures,HumanInterface:SpidarG6Graphics,HumanInterface:SpidarG6MMTimer,HumanInterface:Xbox360Controller,Physics:BallJoints,Physics:BoxStack,Physics:FEMThermo,Physics:IK,Physics:Joints,Physics:OrientedParticleDemo,Physics:PHSceneState,Physics:Reach,Physics:Vehicles,Physics:VTraj,SciLab:SciLab)
+ビルド失敗 (Framework:FWOptimizer)
+実行成功 ()
+実行失敗 ()
+ 
+
+--[57cf3b3,57cf3b3ef2af0bc2992ee2711bca948ee4ab04fb,2017-1223,21:04:30]--
 tests
 ビルド成功 (Base:Quaternion,Collision:CDContGJK,Collision:CDShape,Collision:QuickHull2D,FileIO:FICollada,FileIO:FIImport,FileIO:FILoader,FileIO:FILoadGRScene,FileIO:FILoadMesh,Foundation:Cast,Foundation:Timer,Framework:FWAppBoxStack,Graphics:GRColorSpheres,Graphics:GRSimple,HumanInterface:KeyMouse,Physics:PHConstraintTest,Physics:PHPenaltyTest,Physics:PHShape,Physics:PHShapeGL,Physics:PHSimple,Physics:PHSimpleGL)
 ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppGLtest,Framework:FWAppMultiWinTest,Graphics:GRVertrexBlending,GraphicsD3D:GRD3DLoadMesh)
@@ -1469,3 +2463,5 @@ Samples
  
 
 --[75a3149,75a314904e8b3a9056ddeeb15fb7b58b768fc01b,2017-1213,12:11:26]--
+fatal: Path 'core/test/log/result.log' exists on disk, but not in '75a3149'.
+
