@@ -25,11 +25,9 @@
 #
 #  VERSION:
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
-#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error/Proc class.
-#	Ver 1.02 2018/03/26 F.Kanehori	Bug fixed.
-#	Ver 1.02 2018/04/05 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 # ======================================================================
-version = 1.01
+version = 1.1
 
 import sys
 import os
@@ -282,24 +280,65 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
-#  Copy log files to the server.
+#  Copy log files to the web server.
 #
 if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
+	Print('copying log files to web')
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/log' % docroot
 	logdir = '%s/log' % testdir
 	#
-	Print('copying log files to web')
 	copy_all(logdir, webbase, False, dry_run)
+	os.chdir(repository)
 
+# ----------------------------------------------------------------------
+#  Create commit.id which holds newest commit id on GitHub.
+#
+if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
+	Print('extracting HEAD commit id from GitHub')
+	logdir = '%s/log' % testdir
+	os.chdir(logdir)
+	#
+	proc = Proc(verbose=verbose, dry_run=dry_run)
+	cmnd = 'git log --abbrev-commit --oneline --max-count=1'
+	proc.execute(cmnd, shell=shell,
+			stdout=Proc.PIPE, stderr=Proc.STDOUT)
+	rc, out, err = proc.output()
+	if rc == 0:
+		commit_id = out.split()[0]
+		fio = TextFio('commit.id', 'w')
+		if fio.open() == 0:
+			fio.writeline(commit_id)
+			fio.close()
+	#
+	os.chdir(repository)
+
+# ----------------------------------------------------------------------
+#  Commit result.log and commit.id to logal git server.
+#
+if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
+	Print('committing result.log to local git server')
+	logdir = '%s/log' % testdir
+	os.chdir(logdir)
+	#
+	url = 'http://git/haselab.net/DailyBuild/log'
+	files = 'result.log commit.id'
+	#
+	proc = Proc(verbose=verbose, dry_run=dry_run)
+	cmnd = 'git commit --message="today\'s result %s' % files
+	rc = proc.execute(cmnd, shell=shell).wait()
+	if rc == 0:
+		cmnd = 'git push'
+		rc = proc.execute(cmnd, shell=shell).wait()
+	#
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Make document (doxygen).
 #
 if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
-	print('making documents')
+	Print('making documents')
 	#
 	os.chdir('core/include')
 	Print('  SpringheadDoc')
@@ -326,13 +365,12 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 #  Copy generated files to the server.
 #
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
+	Print('copying generated files to web')
 	#
 	docroot = '//haselab/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/generated' % docroot
 	#
-	Print('copying generated files to web')
 	copy_all('generated', webbase, True, dry_run)
-	#
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------
