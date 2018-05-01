@@ -16,6 +16,7 @@
 #	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
 #	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
 #	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
+#	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
 # ======================================================================
 version = 1.21
 
@@ -50,7 +51,7 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: python %prog [options] test-repository'
+usage = 'Usage: python %prog [options] test-repository result-repository'
 parser = OptionParser(usage = usage)
 parser.add_option('-c', '--conf', dest='conf',
 			action='store', default='Release',
@@ -88,13 +89,14 @@ parser.add_option('-A', '--as-is',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
-if len(args) != 1:
+if len(args) != 2:
 	Error(prog).error('incorrect number of arguments\n')
 	Proc().execute('python %s.py -h' % prog).wait()
 	sys.exit(-1)
 
 # get test repository name
 repository = Util.upath(args[0])
+result_repository = Util.upath(args[1])
 conf = options.conf
 plat = options.plat
 tool = options.tool if Util().is_windows() else None
@@ -174,6 +176,20 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD') and not skip_update:
 		Print(errstr.split('\n'))
 	if rc != 0:
 		Error(prog).abort('updating failed: status %d' % rc)
+	#
+	print('updating "DailyBuild/Result"')
+	flush()
+	os.chdir('../%s' % result_repository)
+	cmnd = 'git pull --all'
+	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
+	rc, outstr, errstr = proc.output()
+	Print(outstr.split('\n'))
+	if errstr:
+		Print('-- error --')
+		Print(errstr.split('\n'))
+	if rc != 0:
+		Error(prog).abort('updating failed: status %d' % rc)
+	#
 	os.chdir(start_dir)
 #
 if update_only:
@@ -243,7 +259,8 @@ pwd()
 Print('Test start:')
 vflag = ' -v' if verbose else ''
 cmnd = 'python TestMainGit.py'
-args = '-p %s -c %s -t %s%s %s' % (plat, conf, tool, vflag, repository)
+args = '-p %s -c %s -t %s%s %s %s' % (plat, conf, tool, vflag, \
+				      repository, result_repository)
 rc = proc.execute([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 

@@ -8,13 +8,12 @@
 //  VERSION:
 //	Ver 1.0  2016/10/05 F.Kanehori	First version
 //	Ver 1.1  2016/10/26 F.Kanehori	Avoid duplicated definition.
+//	Ver 1.2  2017/09/11 F.Kanehori	Bug fixed.
 // --------------------------------------------------------------------------
 #ifndef SEH_HANDLER_H
 #define SEH_HANDLER_H
 
 #include <stdexcept>
-
-#include <Base/Env.h>
 
 // --------------------------------------------------------------------------
 //  Kludge
@@ -68,7 +67,7 @@ const int SEH_Exception::exitcode() const {
 	switch (exception_code) {
 	    case (DWORD) 0xC0000002L:	code = -9002; break;
 	    case (DWORD) 0xC0000005L:	code = -9005; break;
-	    case (DWORD) 0xC0000008L:	code = -9005; break;
+	    case (DWORD) 0xC0000008L:	code = -9008; break;
 	    case (DWORD) 0xC000008CL:	code = -9140; break;
 	    case (DWORD) 0xC0000094L:	code = -9148; break;
 	    case (DWORD) 0xC0000095L:	code = -9149; break;
@@ -77,7 +76,7 @@ const int SEH_Exception::exitcode() const {
 	}
 	return (const int) code;
 }
-void SPR_CDECL se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
+void __cdecl se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	SEH_Exception se(code, ep);
 	throw se;
 }
