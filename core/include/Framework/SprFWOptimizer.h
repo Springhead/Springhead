@@ -239,19 +239,53 @@ struct ControlPoint{
 struct FWTrajectoryPlannerIf : public ObjectIf{
 	SPR_IFDEF(FWTrajectoryPlanner);
 
+	void SetDepth(int d);
+	int GetDepth();
+	void SetMaxIterate(int i);
+	int GetMaxIterate();
+	void SetMaxLPF(int l);
+	int GetMaxLPF();
+	void SetLPFRate(double r);
+	double GetLPFRate();
+	void EnableCorrection(bool e);
+	bool IsEnabledCorrection();
+	void EnableStaticTarget(bool e);
+	bool IsEnabledStaticTarget();
+	void EnableSpringCorrection(bool e);
+	bool IsEbabledSpringCorrection();
+	void EnableJointMJTInitial(bool e);
+	bool IsEbabledJointMJTInitial();
+
+	void EnableViaCorrection(bool e);
+	bool IsEnabledViaCorrection();
+	void SetMaxIterateViaAdjust(int m);
+	int GetMaxIterateViaAdjust();
+	void SetViaAdjustRate(double r);
+	double GetViaAdjustRate();
+
+	void SetSpringRate(double s);
+	double GetSpringRate();
+	void SetDamperRate(double d);
+	double GetDamperRate();
+	void EnableMultiplePD(bool e);
+	bool IsEnabledMultiplePD();
+
+	void EnableChangeBias(bool e);
+	bool IsEnabledChangeBias();
+	void EnableChangePullback(bool e);
+	bool IsEnabledChangePullback();
+
 	//初期化系
-	void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
+	void ResetParameters(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
 	void Init();
-	void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool sc = false);
-	//jointの深さのチェックと投げ込み
-	//void CheckAndSetJoints();
+	void Init(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool sc = false);
 	//エンドエフェクタ設定
 	void SetControlTarget(PHIKEndEffectorIf* e);
 	//シーン設定
 	void SetScene(PHSceneIf* s);
 	void AddControlPoint(ControlPoint c); 
 	//関節角度次元軌道計算
-	void CalcTrajectory(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
+	void CalcTrajectory(ControlPoint tpoint, std::string output);
 	//N回目の繰り返しから再計算
 	void RecalcFromIterationN(int n);
 	//生成された軌道を実際適用
@@ -259,9 +293,7 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	//
 	bool Moving();
 	//spring, damper set
-	void SetPD(double s = 1e10, double d = 1e10, bool mul = true);
-	//
-	void SetWeights(std::vector<double> w);
+	void SetPD(double s = 1e5, double d = 1e5, bool mul = true);
 	//replay
 	void Replay(int ite, bool noncorrected = false);
 	//return totalChange
@@ -275,9 +307,48 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 // トルク変化最小化計算のデスクリプタ
 struct FWTrajectoryPlannerDesc {
 	SPR_DESCDEF(FWTrajectoryPlanner);
+	// Descにいろいろ移したい
+
+	double depth;
+	int maxIterate;
+	int maxLPF;
+	double LPFRate;
+	bool bCorrection;
+	bool bStaticTarget;
+	bool bUseSpringCorrection;
+	bool bUseJointMJTInitial;
+
+	bool bViaCorrection;
+	int maxIterateViaAdjust;
+	double viaAdjustRate;
+
+	double springRate;
+	double damperRate;
+	bool bMultiplePD;
+
+	bool bChangeBias;
+	bool bChangePullback;
 
 	FWTrajectoryPlannerDesc() {
+		depth = 3;
+		maxIterate = 100;
+		maxLPF = 10;
+		LPFRate = 1.0;
+		bCorrection = true;
+		bStaticTarget = false;
+		bUseSpringCorrection = false;
+		bUseJointMJTInitial = false;
 
+		bViaCorrection = false;
+		maxIterateViaAdjust = 0;
+		viaAdjustRate = 0.0;
+
+		springRate = 1e5;
+		damperRate = 1e5;
+		bMultiplePD = true;
+
+		bChangeBias = true;
+		bChangePullback = false;
 	}
 };
 
