@@ -8,14 +8,26 @@
 
 namespace Spr {
 	; 
+
+	/**  FWTrajectoryPlanner
+	     トルク変化最小軌道を用いて関節系をコントロールするための計算クラス
+		 参考論文
+		  Title : Trajectory Formation of Arm Movement by a Neural Network with Forward and Inverse Dynamics Models
+		  Authors : Yasuhiro WADA and Mitsuo KAWATO
+		  Outline : They got approximate solution of Minimum Torque Change Model by using iterative method named FIRM(Forward Inverse Relaxation Model).
+
+	*/
+
 	class MinJerkTrajectory {
 	private:
 		ControlPoint sPoint;
 		ControlPoint fPoint;
 		int stime;
 		int ftime;
+		// 経由点情報
 		ControlPoint vPoint;
 		int vtime;
+		// 係数行列
 		PTM::TMatrixRow<6, 3, double> coeffToV;
 		PTM::TMatrixRow<6, 3, double> coeffToF;
 	public:
@@ -92,7 +104,7 @@ namespace Spr {
 
 	class FWTrajectoryPlanner : public Object{
 	public:
-		//Joint系の管理クラス
+		//Joint系の管理クラス(PHJointとは別)
 		class Joint {
 		public:
 			virtual void Initialize(int iterate, int movetime, int nVia, double rate = 1.0, bool vCorr = true) = 0;
@@ -112,7 +124,7 @@ namespace Spr {
 			virtual void SaveVelocityFromLPF(int k, int n) = 0;
 			virtual void SaveVelocityForwardEnd() = 0;
 			virtual void TrajectoryCorrection(int k, bool s) = 0;
-			virtual void ApplyLPF(int lpf, int count) = 0;
+			virtual void ApplyLPF(int count) = 0;
 			virtual void Soften() = 0;
 			virtual void Harden() = 0;
 			virtual void ResetPD() = 0;
@@ -190,7 +202,7 @@ namespace Spr {
 			void SaveVelocityForwardEnd();
 			void SaveViaPoint(int v, int t);
 			void TrajectoryCorrection(int k, bool s);
-			void ApplyLPF(int lpf, int count);
+			void ApplyLPF(int count);
 			void Soften();
 			void Harden();
 			void ResetPD();
@@ -210,37 +222,38 @@ namespace Spr {
 		};
 		class BallJoint : public Joint {
 		public:
-			PHIKBallActuatorIf* ball;            //アクチュエータ
+			PHIKBallActuatorIf* ball;            // アクチュエータ
 
-			PTM::VVector<Vec3d> torque;          //Inverse時に記録したトルク
-			PTM::VVector<Vec3d> torqueLPF;       //LPF後トルク
-			PTM::VMatrixRow<Quaterniond> ori;    //Inverseで動かす用角度(修正込み)
-			PTM::VMatrixRow<Quaterniond> oriLPF; //Forward時に記録する角度
+			/// 
+			PTM::VVector<Vec3d> torque;          // Inverse時に記録したトルク
+			PTM::VVector<Vec3d> torqueLPF;       // LPF後トルク
+			PTM::VMatrixRow<Quaterniond> ori;    // Inverseで動かす用角度(修正込み)
+			PTM::VMatrixRow<Quaterniond> oriLPF; // Forward時に記録する角度
 			PTM::VMatrixRow<Vec3d> oriVels;
 			PTM::VMatrixRow<Vec3d> oriVelsLPF;
 
-			Quaterniond targetOri;               //ターゲットとなる関節角
-			Vec3d targetVel;                     //ターゲットとなる角速度(通常は0)
-			PTM::VVector<Quaterniond> viaOris;   //経由点における角度
-			PTM::VVector<Vec3d> viaVels;         //経由点における角速度
-			PTM::VVector<int> viatimes;          //経由点の通過時間
+			Quaterniond targetOri;               // ターゲットとなる関節角
+			Vec3d targetVel;                     // ターゲットとなる角速度(通常は0)
+			PTM::VVector<Quaterniond> viaOris;   // 経由点における角度
+			PTM::VVector<Vec3d> viaVels;         // 経由点における角速度
+			PTM::VVector<int> viatimes;          // 経由点の通過時間
 
-			Vec3d initialTorque;                 //開始時の発揮トルク
-			Quaterniond initialOri;              //開始時の関節角度
-			Vec3d initialVel;                    //開始時の角速度
+			Vec3d initialTorque;                 // 開始時の発揮トルク
+			Quaterniond initialOri;              // 開始時の関節角度
+			Vec3d initialVel;                    // 開始時の角速度
 
-			int iterate;                         //繰り返し回数
-			int movetime;                        //所要ステップ
-			double weight = 1.0;                 //評価ウェイト
-			double rateLPF = 1.0;                //LPFのレート
-			double originalSpring;               //元のばね定数
-			double originalDamper;               //元のダンパ定数
+			int iterate;                         // 繰り返し回数
+			int movetime;                        // 所要ステップ
+			double weight = 1.0;                 // 評価ウェイト
+			double rateLPF = 1.0;                // LPFのレート
+			double originalSpring;               // 元のばね定数
+			double originalDamper;               // 元のダンパ定数
 			double hardenSpring = 1e30;
 			double hardenDamper = 1e8;
 			bool mul = true;
 			PTM::VVector<double> tChanges;
 			bool viaCorrect;
-			PTM::VMatrixRow<Quaterniond> CorrTraj;
+			PTM::VMatrixRow<Quaterniond> CorrTraj; // 経由点修正に使う何か(今はコメントアウトされている)
 			Vec3d velBeforeEnd;
 
 		private:
@@ -269,7 +282,7 @@ namespace Spr {
 			void SaveVelocityForwardEnd();
 			void TrajectoryCorrection(int k, bool s);
 			void SetBestTorqueChange();
-			void ApplyLPF(int lpf, int count);
+			void ApplyLPF(int count);
 			void Soften();
 			void Harden();
 			void ResetPD();
@@ -316,7 +329,7 @@ namespace Spr {
 			void TrajectoryCorrection(int k, bool s);
 			void SetBestTorqueChange();
 			double GetBestTorqueChangeInSection(int n);
-			void ApplyLPF(int lpf, int count);
+			void ApplyLPF(int count);
 			void Soften();
 			void Harden();
 			void ResetPD();
@@ -350,41 +363,38 @@ namespace Spr {
 
 	private:
 		//----- 計算にかかわるもの -----
-		//操作対象となるエンドエフェクタ
+		// 操作対象となるエンドエフェクタ
 		PHIKEndEffectorIf* eef;
-		//開始姿勢
+		// 開始姿勢
 		ControlPoint startPoint = ControlPoint();
-		//目標姿勢
+		// 目標姿勢
 		ControlPoint targetPoint = ControlPoint();
 		PHSolidIf* targetSolid;
 		PHSpringIf* targetSpring;
-		//途中通過点
+		// 途中通過点
 		std::vector<ControlPoint> viaPoints;
 		std::vector<PHSolidIf*> viaSolids;
 		std::vector<PHSpringIf*> viaSprings;
-		//移動時間を秒で表したもの
+		// 移動時間を秒で表したもの
 		double mtime;
-		//移動時間をStep数にしたもの(mtime要らない？)
+		// 移動時間をStep数にしたもの(mtime要らない？)
 		int movtime;
-		//考慮する関節の深さ
-		int depth;
-		//考慮するActuator
+		// 考慮する関節の深さ
+		//int depth;
+		// 考慮するActuator
 		Joints joints;
-		//繰り返し回数
-		int iterate;
-		//経由時間補正最大回数
-		int iterateViaAdjust;
-		//経由時間補正率
-		double viaAdjustRate;
-		//
-		PTM::VVector<double> weights;
-		//発散したときに止める
+		// 繰り返し回数
+		//int iterate;
+		// 経由時間補正最大回数
+		//int iterateViaAdjust;
+		// 経由時間補正率
+		//double viaAdjustRate;
+		// 発散したときに止める
 		bool stop;
 
 		//----- Sceneと保存用のStates -----
 		PHSceneIf* scene;
 		UTRef<ObjectStatesIf> states;
-		UTRef<ObjectStatesIf> cstates;
 		UTRef<ObjectStatesIf> initialstates;
 		UTRefArray<ObjectStatesIf> tmpstates;
 		UTRefArray<ObjectStatesIf> corstates;
@@ -395,66 +405,70 @@ namespace Spr {
 		PTM::VMatrixRow<Posed> trajDataNotCorrected;
 		PTM::VMatrixRow<Vec4d> trajVel;
 		PTM::VMatrixRow<Vec4d> trajVelNotCorrected;
-		PTM::VMatrixRow<Posed> ContinuousTrajData;
 
 		//----- 出力先パス -----
 		std::string path;
 
-		//再生時にまだ移動中かどうか
+		// 再生時にまだ移動中かどうか
 		bool moving;
-		//(replay時の)再生軌道index、通常は最後のもの
+		// (replay時の)再生軌道index、通常は最後のもの
 		int ite;
-		//計算済みかのフラグ
+		// 計算済みかのフラグ
 		bool calced;
-		//リプレイ時の適用ステップ
+		// リプレイ時の適用ステップ
 		int repCount;
-		//極小値をとった軌道の番号
+		// 極小値をとった軌道の番号
 		int best;
 
 		//----- ローパス関係 -----
-		//BiQuadLPS用の遮断周波数とQ値
-		double freq;
-		double qvalue;
-		//N点平均
-		int nsma;
-		double mag;
-		//ウェイト
-		PTM::VVector<double> weight;
-		//ローパスの掛け具合
-		double rate = 1.0;
+		// ローパスの掛け具合
+		//double rate = 1.0;
 
 		//----- 計算中のPD値に関する変数 -----
-		//トルク->軌道生成時のspring&damper
-		double spring = 1e10;
-		double damper = 1e10;
-		bool mul = true;
+		// トルク->軌道生成時のspring&damper
+		//double spring = 1e10;
+		//double damper = 1e10;
+		//bool mul = true;
 
 		//----- Unityからどこまで適用するかのフラグ -----
-		//correctionを適用するかのフラグ
-		int correction;
-		//修正前の軌道をSaveするか
-		bool saveNotCorrected;
-		//到達まで待つ
-		bool waitFlag;
-		//修正前軌道を再生するかのフラグ
+		// correctionを適用するかのフラグ
+		//bool correction;
+		// 到達目標の姿勢を固定するかのフラグ
+		//bool staticTarget;
+		// 関節次元躍度最小軌道を初期軌道とするかのフラグ
+		//bool jointMJT;
+		// 修正前軌道を再生するかのフラグ
 		bool noncorrectedReplay;
-		//到達目標の姿勢を固定するかのフラグ
-		bool staticTarget;
-		//関節次元躍度最小軌道を初期軌道とするかのフラグ
-		bool jointMJT;
-		//ローパスウェイトを動的に変化させるかのフラグ
-		bool dynamicalWeight;
-		//経由点の修正を行うか
-		bool viaCorrect;
-		//強制到達においてバネを使用するか
-		bool springCor;
-		//速度制御を有効にするか
-		bool velCorrect;
+		// 経由点の修正を行うか
+		//bool viaCorrection;
+		// 強制到達においてバネを使用するか
+		//bool springCorrection;
 
-		//トルク変化
+		// トルク変化
 		PTM::VVector<double> torquechange;
 		double totalchange;
 		double besttorque;
+
+		// 計算フェイズ
+		enum Phase {
+			MINJERK,
+			FORWARD,
+			INVERSE,
+		};
+		Phase phase;
+
+		// フェイズシフト
+		void PhaseShift() {
+			switch (phase) {
+			case Phase::FORWARD:
+			case Phase::MINJERK:
+				phase = Phase::INVERSE;
+				break;
+			case Phase::INVERSE:
+				phase = Phase::FORWARD;
+				break;
+			}
+		}
 
 	public:
 		SPR_OBJECTDEF(FWTrajectoryPlanner);
@@ -463,28 +477,20 @@ namespace Spr {
 		FWTrajectoryPlanner(const FWTrajectoryPlannerDesc& desc = FWTrajectoryPlannerDesc()) {
 			SetDesc(&desc);
 		}
-		FWTrajectoryPlanner(int d, int i, int iv, double f, double q, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool sc = false);
+		FWTrajectoryPlanner(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool sc = false);
 
 		//----- 計算用関数 -----
 		//jointの深さのチェックと投げ込み
 		void CheckAndSetJoints();
 		//デバッグ用情報表示
 		void Debug();
-		//デバッグ用アウトプットファイルの大本生成
-		void PrepareOutputFilename(std::string& filename);
 		//軌道データの出力
 		void OutputTrajectory(std::string filename);
 		void OutputNotCorrectedTrajectory(std::string filename);
 		void OutputVelocity(std::string filename);
-		//ロード
-		void LoadScene();
 
-		//Forward Inver Relaxation Model
-		void FIRM(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
-		//viatime adjustment
-		bool ViatimeAdjustment();
-		//viatime initialize
-		void ViatimeInitialize();
+		//Forward Inverse Relaxation Model
+		void FIRM(ControlPoint tpoint, std::string output);
 		//MakeMinJerk複数点版
 		void MakeMinJerkAll();
 		//Forward model(torque -> pos)
@@ -493,6 +499,10 @@ namespace Spr {
 		void Inverse(int k);
 		//
 		void Correction(int k);
+		//viatime adjustment
+		bool ViatimeAdjustment();
+		//viatime initialize
+		void ViatimeInitialize();
 		//Prepare solids and springs for correction
 		void PrepareSprings();
 		//
@@ -503,39 +513,69 @@ namespace Spr {
 
 		//-----インタフェースの実装-----
 
+		void SetDepth(int d) { depth = d; }
+		int GetDepth() { return depth; }
+		void SetMaxIterate(int i) { maxIterate = i; }
+		int GetMaxIterate() { return maxIterate; }
+		void SetMaxLPF(int l) { maxLPF = l; }
+		int GetMaxLPF() { return maxLPF; }
+		void SetLPFRate(double r) { LPFRate = r; }
+		double GetLPFRate() { return LPFRate; }
+		void EnableCorrection(bool e) { bCorrection = e; }
+		bool IsEnabledCorrection() { return bCorrection; }
+		void EnableStaticTarget(bool e) { bStaticTarget = e; }
+		bool IsEnabledStaticTarget() { return bStaticTarget; }
+		void EnableSpringCorrection(bool e) { bUseSpringCorrection = e; }
+		bool IsEbabledSpringCorrection() { return bUseSpringCorrection; }
+		void EnableJointMJTInitial(bool e) { bUseJointMJTInitial = e; }
+		bool IsEbabledJointMJTInitial() { return bUseJointMJTInitial; }
+
+		void EnableViaCorrection(bool e) { bViaCorrection = e; }
+		bool IsEnabledViaCorrection() { return bViaCorrection; }
+		void SetMaxIterateViaAdjust(int m) { maxIterateViaAdjust = m; }
+		int GetMaxIterateViaAdjust() { return maxIterateViaAdjust; }
+		void SetViaAdjustRate(double r) { viaAdjustRate = r; }
+		double GetViaAdjustRate() { return viaAdjustRate; }
+
+		void SetSpringRate(double s) { springRate = s; }
+		double GetSpringRate() { return springRate; }
+		void SetDamperRate(double d) { damperRate = d; }
+		double GetDamperRate() { return damperRate; }
+		void EnableMultiplePD(bool e) { bMultiplePD = e; }
+		bool IsEnabledMultiplePD() { return bMultiplePD; }
+
+		void EnableChangeBias(bool e) { bChangeBias = e; }
+		bool IsEnabledChangeBias() { return bChangeBias; }
+		void EnableChangePullback(bool e) { bChangePullback = e; }
+		bool IsEnabledChangePullback() { return bChangePullback; }
+
 		// パラメータのリセット
-		void Reset(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc = false, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false) {
+		void ResetParameters(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false) {
 			this->depth = d;
-			this->iterate = i;
-			this->iterateViaAdjust = iv;
-			this->nsma = n;
-			this->mag = mg;
-			this->correction = c;
-			this->rate = r;
+			this->maxIterate = i;
+			this->maxIterateViaAdjust = iv;
+			this->bCorrection = c;
+			this->LPFRate = r;
 			this->viaAdjustRate = vRate;
-			this->waitFlag = wf;
-			this->saveNotCorrected = snc;
-			this->viaCorrect = vCorr;
-			this->springCor = sc;
+			this->bViaCorrection = vCorr;
+			this->bUseSpringCorrection = sc;
 		}
 
 		// 初期化処理
 		void Init();
-		void Init(int d, int i, int iv, int n, double mg, int c, bool wf, bool snc, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
+		void Init(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
 		
 		//エンドエフェクタ設定
-		void SetControlTarget(PHIKEndEffectorIf* e);
+		void SetControlTarget(PHIKEndEffectorIf* e) { this->eef = e; }
 
 		//シーン設定
-		void SetScene(PHSceneIf* s);
-		void AddControlPoint(ControlPoint c);
+		void SetScene(PHSceneIf* s) { this->scene = s; }
+		void AddControlPoint(ControlPoint c) { viaPoints.push_back(c); }
 
 		//計算実行
-		void CalcTrajectory(ControlPoint tpoint, int LPFmode, int smoothCount, std::string output, bool bChange, bool pChange, bool staticTarget, bool jmjt);
+		void CalcTrajectory(ControlPoint tpoint, std::string output);
 
-		//関節角度次元軌道計算
-		//なんだっけ？
-		void JointRecalcFromIterateN(Posed tPose, double mt, int LPFmode, int smoothCount, std::string output, bool bChange = false, bool pChange = false, bool staticTarget = false, bool jmjt = false) {};
+		void PhaseExecution() {};
 
 		//N回目の繰り返しから再計算
 		void RecalcFromIterationN(int n);
@@ -546,16 +586,10 @@ namespace Spr {
 		//moving?
 		bool Moving() { return moving; }
 		//spring, damper set
-		void SetPD(double s = 1e10, double d = 1e10, bool mul = true);
-		//
-		void SetWeights(std::vector<double> w) {
-			//int l = sizeof(w) / sizeof(w[0]);
-			int l = (int)w.size();
-			weights.resize(depth, 1);
-			l = (l > depth) ? depth : l;
-			for (int i = 0; i < l; i++) {
-				weights[i] = w[i];
-			}
+		void SetPD(double s = 1e10, double d = 1e10, bool mul = true) {
+			this->springRate = s;
+			this->damperRate = d;
+			this->bMultiplePD = mul;
 		}
 		//replay
 		void Replay(int ite, bool noncorrected = false);
