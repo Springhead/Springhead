@@ -251,6 +251,9 @@ if __name__ == '__main__':
 	parser.add_option('-g', '--github',
 				dest='github', action='store_true', default=False,
 				help='use GitHub')
+	parser.add_option('-h', '--git-haselab',
+				dest='githaselab', action='store_true', default=False,
+				help='use git.haselab.net')
 	parser.add_option('-f', '--fname',
 				dest='fname', default=None,
 				help='get file content')
@@ -265,18 +268,25 @@ if __name__ == '__main__':
 		parser.error("incorrect number of arguments")
 	repo_sub = options.subversion
 	repo_git = options.github
+	repo_hlb = options.githaselab
 	verbose = options.verbose
 	revision = args[0]
 
-	if repo_sub and repo_git:
-		print('invalid combination of arguments (-s and -g)')
+	repo_count = 0
+	if repo_sub: repo_count += 1
+	if repo_git: repo_count += 1
+	if repo_hlb: repo_count += 1
+	if repo_count > 1:
+		print('invalid combination of arguments (-s, -g and -h)')
 		print(usage)
 		sys.exit(-1)
-	if not repo_sub and not repo_git:
-		print('either -s or -g required')
+	if repo_count == 0:
+		print('one of -s, -g or -h required')
 		sys.exit(-1)
 
-	system = 'Subversion' if repo_sub else 'GitHub'
+	if repo_sub: system = 'Subversion'
+	if repo_git: system = 'GitHub'
+	if repo_hlb: system = 'git.haselab.net'
 
 	# --------------------------------------------------------------
 	def test(system, args, topdir, verbose):
@@ -324,6 +334,17 @@ if __name__ == '__main__':
 
 	if system == 'GitHub':
 		args = {'url': 'http://github.com/sprphys/Springhead/'}
+		if options.fname:
+			revs = info(system, args, topdir_git, revision, out=False)
+			if not isinstance(revs[0], list):
+				revs = [revs]
+			for rev in revs:
+				contents(topdir_git, options.fname, rev)
+		else:
+			revisions = info(system, args, topdir_git, revision)
+
+	if system == 'git.haselab.net':
+		args = {'url': 'http://git.haselab.net/DailyBuild/Result/'}
 		if options.fname:
 			revs = info(system, args, topdir_git, revision, out=False)
 			if not isinstance(revs[0], list):
