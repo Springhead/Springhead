@@ -1,0 +1,16 @@
+; KvFileTest.ini4
+;
+
+Python		C:/Python34/python.exe
+Springhead2	F:/Project/Springhead#2
+DllPath		$(Springhead2)/lib/win32
+;
+TestRoot	$(Springhead2)/src/UnityTest
+OutFile		$(TestRoot)/bin/player.exe
+
+; key only
+KeyOnly		# True
+KeyTrue		True
+KeyFalse	False
+
+; end: KvFileTest.ini
