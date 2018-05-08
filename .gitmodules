@@ -1,6 +1,3 @@
-[submodule "dependency"]
-	path = dependency
-	url = https://github.com/sprphys/dependency
 [submodule "buildtool"]
 	path = buildtool
 	url = https://github.com/sprphys/buildtool.git
