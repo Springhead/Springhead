@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:	KvFile(path, sep=None, overwrite=True, desig='#', verbose=0)
@@ -21,6 +21,7 @@
 #	Ver 3.0  2017/12/06 F.Kanehori	Section construction introduced.
 #	Ver 3.1  2018/02/05 F.Kanehori	Bug fixed.
 #	Ver 3.11 2018/03/12 F.Kanehori	Now OK for doxygen.
+#	Ver 3.12 2018/05/07 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -77,7 +78,7 @@ class KvFile:
 			self.errmsg = f.error()
 			return -1
 		f.add_filter(f.WRAP)
-		f.add_filter(f.ELIM)
+		f.add_filter(f.ELIM, opts=[self.desig, True])
 		f.read()
 		lines = f.lineinfo()
 		f.close()
@@ -306,15 +307,15 @@ class KvFile:
 	##  Expand macros.
 	# NOTE
 	# @n	Only already registered keys are valid for macro expansion.
-	#   @param str		Original line data (str).
+	#   @param string	Original line data (str).
 	#   @param dict		Dictionary to lookup prior to self.dict.
 	#   @returns		Expanded line data (str).
 	#   @n			Same that input data if no macros met.
 	#   @returns		Expanded line data (str).
 	#
-	def __expand(self, str, dict):
+	def __expand(self, string, dict):
 		section = self.curr_section
-		m = re.match('([^\$]*)\$\(([^\)]+)\)(.*$)', str)
+		m = re.match('([^\$]*)\$\(([^\)]+)\)(.*$)', string)
 		if m:
 			if self.verbose > 1:
 				group = [m.group(1), m.group(2), m.group(3)]
@@ -328,9 +329,9 @@ class KvFile:
 			else:
 				val = self.get(m.group(2), section)
 			if val is not None:
-				str = m.group(1) + val + m.group(3)
-				str = self.__expand(str, dict)
-		return str
+				string = m.group(1) + str(val) + m.group(3)
+				string = self.__expand(string, dict)
+		return string
 
 	##  Register to the dictionary.
 	#   @param section	Section name (str).

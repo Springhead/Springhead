@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  FILE:
@@ -137,6 +137,18 @@ for s in sections:
 	kvf.show(2, s)
 	print()
 
+##
+fname = 'test/KvFileTest.ini4'
+print('-- %s --' % fname)
+kvf = KvFile(fname, desig=";", verbose=verbose)
+count = kvf.read()
+if count < 0:
+	Print(kvf.error())
+	sys.exit(-1)
+Print('file: "%s"' % fname)
+Print(defined_sections(count, kvf))
+Print('----')
+kvf.show(2)
 sys.exit(0)
 
 # end: KvFileTest.py
