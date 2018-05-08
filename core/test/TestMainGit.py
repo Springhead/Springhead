@@ -27,6 +27,7 @@
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
 #	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
+#	Ver 1.21 2018/05/08 F.Kanehori	Change VersionControlSystem args.
 # ======================================================================
 version = 1.1
 
@@ -274,7 +275,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
-	cmnd = 'python ../bin/VersionControlSystem.py -g HEAD'
+	cmnd = 'python ../bin/VersionControlSystem.py -G HEAD'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	rc = proc.execute(cmnd, shell=shell,
 			  stdout=commit_id, stderr=Proc.STDOUT).wait()
@@ -288,8 +289,6 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
-	#logfiles = glob.glob('*')
-	#logfiles.remove('History.log')	# will be generated later
 	logfiles = ['result.log']
 	fop = FileOp()
 	for f in logfiles:
@@ -315,13 +314,13 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	Print('making history log')
-	os.chdir(result_repository)
-	#
 	logdir = '%s/log' % testdir
+	os.chdir(logdir)
+	#
 	hist_path = '%s/%s' % (logdir, history_log)
 	extract = 'result.log'
-	cmnd = 'python VersionControlSystem_for_DailyBuildResult.py'
-	args = '-g -f %s all' % extract
+	cmnd = 'python ../bin/VersionControlSystem.py'
+	args = '-H -f %s all' % extract
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute([cmnd, args], shell=shell, stdout=hist_path).wait()
 	flush()
