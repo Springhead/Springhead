@@ -774,7 +774,7 @@ void FWTrajectoryPlanner::HingeJoint::Initialize(int iterate, int mtime, int nVi
 	for (int i = 0; i < nShape; i++) {
 		so->GetShape(i)->SetDensity(density);
 	}
-	so->CompInertiaFromDensity();
+	so->CompInertia();
 }
 void FWTrajectoryPlanner::HingeJoint::MakeJointMinjerk(int cnt) {
 	double per = hinge->GetJoint()->GetScene()->GetTimeStep();
@@ -1126,7 +1126,7 @@ void FWTrajectoryPlanner::BallJoint::Initialize(int iterate, int mtime, int nVia
 	for (int i = 0; i < nShape; i++) {
 		so->GetShape(i)->SetDensity(density);
 	}
-	so->CompInertiaFromDensity();
+	so->CompInertia();
 	DSTR << "inertia" << std::endl << so->GetInertia() << std::endl;
 	return;
 }
