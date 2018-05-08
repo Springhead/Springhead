@@ -10,13 +10,14 @@
 #		  'GitHub'	    GitHub system
 #
 #  INITIALIZER:
-#	obj = VersionControlSystem(system, args=None, verbose=0)
+#	obj = VersionControlSystem(system, url, wrkdir='.', verbose=0)
 #	arguments:
 #	    system:	Version control system name.
 #			'Subversion'	Apache Subversion system
 #			'GitHub'	GitHub system
-#	    args:	Atguments to get system information (dic).
-#			  'url':	Url of the repository.
+#			'haselab'	git.haselab.net system
+#	    url:	Url of git server.
+#	    wrkdir:	Directory to perform action (Git directory).
 #	    verbose:	Verbose level (int) (0: silent).
 #	    
 #  METHODS:
@@ -27,10 +28,11 @@
 #		rev:	    Revision (str).
 #		err:	    Error message got from stderr (str).
 #
-#	info = revision_info(commit_id='HEAD')
+#	info = revision_info(revision='HEAD')
 #	    Get commit information.
 #	    arguments:
-#		commit_id:  Commit short name to retrieve (str).
+#		revision:   Subversion: revision number to retrieve (str).
+#			    Git: Commit short name to retrieve (str).
 #			    If 'all', get all commit info.
 #	    returns:
 #		'all':	    List of triplets.
@@ -40,11 +42,12 @@
 #				date:	    Commit date ('YYYY-MM-DD').
 #			    [] if can not get information.
 #
-#	content = get_file_content(path, commit_id)
+#	content = get_file_content(path, revision)
 #	    Get file contents of specified revision.
 #	    arguments:
 #		path:	    File path relative to repository top dir (str).
-#		commit_id:  Commit id (short form will do) (str).
+#		revision:   Subversion: revision number (str).
+#			    Git: Commit id (short form will do) (str).
 #	    returns:	    File contents (str).
 #
 # ----------------------------------------------------------------------
@@ -81,9 +84,9 @@ class VersionControlSystem:
 
 	#  Class initializer.
 	#
-	def __init__(self, system, url, wrkdir=None, verbose=0):
+	def __init__(self, system, url, wrkdir='.', verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.42
+		self.version = 1.5
 		#
 		self.system = system
 		self.url = Util.upath(url)
@@ -97,12 +100,12 @@ class VersionControlSystem:
 		#
 		if verbose:
 			print('VersionControlSystem: %s' % system)
-			print('  url: %s' % self.url)
-			print('  dir: %s' % self.wrkdir)
+			print('  connecting to "%s"' % self.url)
+			print('  working dir:  "%s"' % self.wrkdir)
 
 	#  Get revision number.
 	#
-	def revision(self, dir=None):
+	def revision(self):
 		self.__pushd()
 		revision = self.obj.revision()
 		self.__popd()
@@ -166,11 +169,11 @@ class VersionControlSystem:
 			return status, revision, err
 
 		def revision_info(self, revision='HEAD'):
-			## NOT IMPLEMENTED
-			return None
+			# sorry - not implemented yet
+			return []
 
 		def get_file_content(self, path, revision):
-			## NOT IMPLEMENTED
+			# sorry - not implemented yet
 			return None
 
 	# ==============================================================
@@ -193,6 +196,7 @@ class VersionControlSystem:
 				m = re.match(pattern, out)
 				if m:
 					rev = m.group(1)
+					err = None
 			return status, rev, err
 
 		def revision_info(self, commit_id='HEAD'):
@@ -221,7 +225,7 @@ class VersionControlSystem:
 					dt = datetime.datetime.strptime(mstr, ifmt)
 					date = dt.strftime(ofmt)
 					info = [short_id, long_id, date]
-					if short_id == commit_id or commit_id == 'HEAD':
+					if commit_id in [short_id, 'HEAD']:
 						return info
 					infos.append(info)
 			return infos
@@ -257,9 +261,7 @@ class VersionControlSystem:
 from optparse import OptionParser
 from Error import *
 if __name__ == '__main__':
-
-	topdir_svn = '../../..'
-	topdir_git = '../../../../Springhead'
+	prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 
 	repository_def = {
 	    'Subversion': {
@@ -276,30 +278,44 @@ if __name__ == '__main__':
 	    }
 	}
 
+	def print_usage():
+		print()
+		cmnd = 'python %s.py --help' % prog
+		shell = False if Util.is_unix() else True
+		Proc().execute(cmnd, shell=shell).wait()
+		sys.exit(1)
+	
 	# --------------------------------------------------------------
 	usage = 'Usage: %prog [options] {HEAD | all | commit-id}'
 	parser = OptionParser(usage = usage)
-	parser.add_option('-S', '--subversion',
-				dest='subversion', action='store_true', default=False,
+	#
+	parser.add_option('-S', '--subversion', dest='subversion',
+				action='store_true', default=False,
 				help='use Subversion')
-	parser.add_option('-G', '--github',
-				dest='github', action='store_true', default=False,
+	parser.add_option('-G', '--github', dest='github',
+				action='store_true', default=False,
 				help='use GitHub')
-	parser.add_option('-H', '--haselab',
-				dest='haselab', action='store_true', default=False,
+	parser.add_option('-H', '--haselab', dest='haselab',
+				action='store_true', default=False,
 				help='use git.haselab.net')
-	parser.add_option('-f', '--fname',
-				dest='fname', default=None,
+	parser.add_option('-f', '--fname', dest='fname',
+				action='store', default=None,
 				help='get file content')
-	parser.add_option('-v', '--verbose',
-				dest='verbose', action='count', default=0,
+	parser.add_option('-v', '--verbose', dest='verbose',
+				action='count', default=0,
 				help='set verbose mode')
-	parser.add_option('-V', '--version',
-				dest='version', action='store_true', default=False,
+	parser.add_option('-V', '--version', dest='version',
+				action='store_true', default=False,
 				help='show version')
+	#
 	(options, args) = parser.parse_args()
+	if options.version:
+		version = VersionControlSystem('', '').version
+		print('%s: Version %s' % (prog, version))
+		sys.exit(0)
 	if len(args) != 1:
-		parser.error("incorrect number of arguments")
+		Error(prog).error("incorrect number of arguments")
+		print_usage()
 	repo_sub = options.subversion
 	repo_git = options.github
 	repo_hlb = options.haselab
