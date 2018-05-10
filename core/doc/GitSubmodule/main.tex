@@ -1,0 +1,71 @@
+% main.tex
+%	Last update: 2018/05/10 F.Kanehori
+%
+\documentclass[a4j,12pt]{jsarticle}
+\usepackage{dirtree}
+\usepackage{ulem}
+\usepackage{setspace}
+\usepackage{longtable}
+
+\setlength{\textheight}{\paperheight}   % 紙面縦幅を本文領域にする（BOTTOM=-TOP）
+\setlength{\topmargin}{4.6truemm}       % 上の余白を30mm（=1inch+4.6mm）に
+\addtolength{\topmargin}{-\headheight}  % 
+\addtolength{\topmargin}{-\headsep}     % ヘッダの分だけ本文領域を移動させる
+\addtolength{\textheight}{-60truemm}    % 下の余白も30mm（BOTTOM=-TOPだから+TOP+30mm）
+
+\setlength{\textwidth}{\paperwidth}     % 紙面横幅を本文領域にする（RIGHT=-LEFT）
+\setlength{\oddsidemargin}{-0.4truemm}  % 左の余白を25mm(=1inch-0.4mm)に
+\setlength{\evensidemargin}{-0.4truemm} % 
+\addtolength{\textwidth}{-50truemm}     % 右の余白も25mm（RIGHT=-LEFT）
+
+\def\commands#1{%
+    \vspace{-5pt}
+    \begin{narrow}[s][15pt]\framebox[\linewidth][l]{\tt{%
+	\begin{tabular}{@{\hspace{5pt}}l}#1\end{tabular}}}
+    \end{narrow}
+    \vspace{5pt}
+}
+\def\ra{\tt{\orgRA \,}}
+\def\example#1{%
+    \begin{narrow}[s][25pt]\tt{\footnotesize{%
+	\begin{tabular}{@{\hspace{5pt}}l}\hspace*{-10pt}\rm{(出力例)}\\#1\end{tabular}}}
+    \end{narrow}
+    \bigskip
+}
+
+\begin{document}
+\input{macro}
+
+\begin{center}
+  \Large{Springheadのsubmoduleに関して} \\
+  {\normalsize\input{LastUpdate}} \\
+\end{center}
+
+\vspace{25pt}
+<Springhead/buildtool>および<Springhead/dependency>は、
+\TT{"sprphys/buildtool"}
+および\TT{"sprphys/dependency"}をsubmoduleとして取り込んだものである。
+
+\bigskip
+\commands{%
+    \ra git submodule add https://github.com/sprphys/buildtool.git buildtool\\
+    \ra git submodule add https://github.com/sprphys/dependency.git dependency
+}
+
+
+\bigskip
+\TT{"sprpyhs/buildtool"}または\TT{"sprphys/dependency"}で新たなcommit/pushを
+行なっても\TT{"sprphys/Springhead"}のsubmoduleのリンクは自動的には追随せず、
+次の作業を行なって正しいcommitをリンクし直さなければならない。
+
+\medskip
+なお、buildtoolまたはdependencyへの変更は必ず
+\TT{"sprpyhs/buildtool"}または\TT{"sprphys/dependency"}で実施すること。
+\TT{"sprphys/Springhead/buildtool"}および\TT{"sprphys/Springhead/dependency"}
+で\TT{commit/push}した場合にどうなるかは未確認である。
+
+\input{LinkUpdate}
+
+\end{document}
+
+% end: main.tex
