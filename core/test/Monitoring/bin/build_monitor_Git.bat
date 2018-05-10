@@ -19,9 +19,7 @@ setlocal enabledelayedexpansion
 ::	Ver 2.0  2017/12/20 F.Kanehori	GitHub 版に改造
 ::	Ver 2.1  2017/12/27 F.Kanehori	レポートファイル名を変更
 ::	Ver 2.2  2018/01/02 F.Kanehori	NEWREV ログはテスト結果から直接得る
-::	Ver 2.21 2018/01/10 F.Kanehori	レポート表記を一部変更
-::	Ver 2.22 2018/02/22 F.Kanehori	レポート表記を一部変更
-::	Ver 2.23 2018/03/05 F.Kanehori	Bug fixed.
+::	Ver 2.3  2018/05/10 F.Kanehori	変更：VersionControlSystem 呼出し
 :: ============================================================================
 set PROG=%~n0
 
@@ -194,7 +192,7 @@ if %NEWREV% == 0 (
 	    call :backquote NEWREV "echo !NEWREV! ^| %GETFIELD% -v field=1"
 	    if "!NEWREV!" == "HEAD" (
 		if %OPT_V% == 1 ( set /p=extracting HEAD info from GitHub ... < NUL )
-		call :backquote NEWREV "%VCS% -g HEAD"
+		call :backquote NEWREV "%VCS% -G HEAD"
 		call :backquote NEWREV "echo !NEWREV! ^| %GETFIELD% -v sep1=,"
 		if %OPT_V% == 1 ( echo done )
 	    )
@@ -213,14 +211,14 @@ if %VAL_D% geq 1 (
 ::----------------------------------------------
 ::  svn から OLDREV の日付と時刻を取得する
 ::
-call :backquote TMPDATA "%VCS% -g %OLDREV%"
+call :backquote TMPDATA "%VCS% -G %OLDREV%"
 call :backquote OLDDATE "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=3"
 call :backquote OLDTIME "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=4"
  
 ::----------------------------------------------
 ::  svn から NEWREV の日付と時刻を取得する
 ::
-call :backquote TMPDATA "%VCS% -g %NEWREV%"
+call :backquote TMPDATA "%VCS% -G %NEWREV%"
 call :backquote NEWDATE "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=3"
 call :backquote NEWTIME "echo !TMPDATA! ^| %GETFIELD% -v sep1=, -v field=4"
 if %OPT_V% == 1 (
