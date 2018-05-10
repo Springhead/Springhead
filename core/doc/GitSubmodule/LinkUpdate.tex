@@ -1,0 +1,147 @@
+% LinkUpdate.tex
+%	Last update: 2018/05/10 F.Kanehori
+%
+\label{LinkUpdate}
+
+%\vspace{35pt}
+\vfill
+\noindent
+{\Large Submodule linkの更新の手順}
+
+\medskip
+\noindent
+\bf{Direcoty構成}
+
+\medskip
+\def\dontcommithere{%
+	\hspace{5mm}{\textmd ({\footnotesize ここでcommit/pushしないこと)}}}
+\begin{narrow}[\WID]
+    \begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {<top>}.
+		.3 {buildtool}.
+		.3 {dependency}.
+		.3 {Springhead}.
+		.4 {.git}.
+		.4 {buildtool \dontcommithere}.
+		.4 {core}.
+		.4 {dependency \dontcommithere}.
+		.4 {docs}.
+	}
+    \end{minipage}\end{narrow}
+\end{narrow}
+\vspace{20pt}
+
+\newpage
+\noindent
+\bf{更新の手順}
+(\small{\it{buildtool\,}について記述するが、\it{dependency\,}についても同様である。)
+
+\medskip
+\begin{enumerate}
+    \item 最新のcommitを調べる\\
+	\commands{%
+		\ra cd <top>/buildtool>\\
+		\ra git log --oneline --max-count=1
+	}
+	\example{\uwave{444f9dc} (HEAD -> master, origin/master, origin/HEAD) ...}
+
+    \item リンク先のcommitを最新のもの(上の例では \tt{444f9dc})に変更する\\
+	\commands{%
+		\ra cd <top>/Springhead/buildtool\\
+		\ra git pull origin HEAD\\
+		\ra git checkout \uwave{444f9dc}
+	}
+	\example{%
+    		Previous HEAD position was 1db2f95... <comment>\\
+    		HEAD is now 444f9dc... <comment>\\
+		\\
+    		Warining: Your console font ...
+	}
+
+    \item 確認(念のため)\\
+	\commands{\ra git status}
+	\example{%
+    		HEAD detached at 444f9dc\\
+    		nothing to commit, working tree clean
+	}
+
+    \item Springheadの状態を確認\\
+	\commands{%
+		\ra cd ..\\
+		\ra git status
+	}
+	\example{
+    		On branch master\\
+    		Your branch is up-to-date with 'origin/master'.\\
+		\\
+    		Changes not staged for commit:\\
+      		\hspace{10pt}(use "git add <file>..." to update what will be committed)\\
+      		\hspace{10pt}(use "git checkout -- <file>..." to discard changes in working directory)\\
+		\\
+            	\hspace{40pt}	modified:   buildtool (new commits)\\
+		\\
+    		no changes added to commit (use "git add" and/or "git commit -a")
+	}
+
+    \item 現状との差異\\
+	\commands{\ra git diff}
+	\example{%
+    		diff --git a/buildtool b/buildtool\\
+    		index 1db2f95..444f9dc 160000\\
+    		--- a/buildtool\\
+    		+++ b/buildtool\\
+    		@@ -1 +1 @@\\
+    		-Subproject commit 1db2f95....\\
+    		+Subproject commit 444f9dc....
+	}
+
+    \item 変更をコミット\\
+	\commands{%
+		\ra git add buildtool\\
+		\ra git commit -m "describe comment here"
+	}
+	\example{%
+		\relax [master c76fa6a] comment described above\\
+		1 file changed, 1 insertion(+), 1 deletion(-)\ 
+	}
+
+    \item コミットを確認\\
+	\commands{\ra git status}
+	\example{%
+    		On branch master\\
+    		Your branch is ahead of 'origin/master' by 1 commit.\\
+      		\hspace{10pt}(use "git push" to publish your local commits)\\
+		\\
+    		nothing to commit, working tree clean
+	}
+
+    \item 変更を登録\\
+	\commands{\ra git push}
+	\begin{narrow}[f]
+    		送信エラーが発生してUsername/Passwordを聞かれたら、\\
+        	\hspace{20pt}\mbox{\tt{Username:\,sprphys, Password:\,Haselab0}}\\
+    		を入力する。
+	\end{narrow}
+	\medskip
+	\example{%
+    		warning: redirecting to https://github.com/sprphys/Springhead.git/\\
+    		Counting objects 2, done.\\
+    		Delta compression using up to 8 threads.\\
+    		Compressing objects: 100\% (2/2), done.\\
+    		Writing objects: 100\% (2/2), 270 bytes | 270.00 KiB/s, done.\\
+    		total 2 (delta 1), reused 0 (delta 0)\\
+    		remote: Resolving deltas: 100\% (1/1), completed with 1 local object.\\
+    		To http://github.com/sprphys/Springhead.git\\
+       		\hspace{10pt}dd7abfa..c76fa6a  master -\ra\  master
+	}
+\end{enumerate}
+
+\bigskip
+補足
+\begin{narrow}
+commit時のコメントに日本語が入っていると、dos窓では表示が出来ずに見難い。
+そのような場合にはGit Bashを使うとよい。
+\end{narrow}
+
+% end: LinkUpdate.tex
