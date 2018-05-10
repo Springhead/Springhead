@@ -28,8 +28,9 @@
 #	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.21 2018/05/08 F.Kanehori	Change VersionControlSystem args.
+#	Ver 1.22 2018/05/10 F.Kanehori	Add git config.
 # ======================================================================
-version = 1.1
+version = 1.22
 
 import sys
 import os
@@ -296,12 +297,21 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	fop.cp(commit_id, '%s/%s' % (result_repository, commit_id))
 	#
 	os.chdir(result_repository)
-	cmnd = 'git commit --message="today\'s test result"'
-	args = '%s %s' % (' '.join(logfiles), commit_id)
+	cmnds = [
+		'git config --global user.name "DailyBuild"',
+		'git config --global user.email kanehori@haselab.net',
+		'git commit --message="today\'s test result" %s %s' % \
+			(' '.join(logfiles), commit_id)
+	]
 	proc = Proc(verbose=verbose, dry_run=dry_run)
-	rc = proc.execute('%s %s' % (cmnd, args), shell=shell).wait()
+	for cmnd in cmnds:
+		print('## %s' % cmnd)
+		rc = proc.execute(cmnd, shell=shell).wait()
+		if rc != 0:
+			break
 	if rc == 0:
 		cmnd = 'git push'
+		print('## %s' % cmnd)
 		rc = proc.execute(cmnd, shell=shell).wait()
 		if rc == 0:
 			Print('  commit and push OK.')
