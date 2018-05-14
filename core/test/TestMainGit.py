@@ -29,8 +29,9 @@
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.21 2018/05/08 F.Kanehori	Change VersionControlSystem args.
 #	Ver 1.22 2018/05/10 F.Kanehori	Add git config.
+#	Ver 1.23 2018/05/14 F.Kanehori	Add snap message for debug.
 # ======================================================================
-version = 1.22
+version = 1.23
 
 import sys
 import os
@@ -286,7 +287,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 #  Commit and push log files commit-id file to test result repository.
 #
 if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
-	Print('committing log files to test result repository.')
+	Print('copying test result and commit-id to test result repository')
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
@@ -295,7 +296,9 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	for f in logfiles:
 		fop.cp(f, '%s/%s' % (result_repository, f))
 	fop.cp(commit_id, '%s/%s' % (result_repository, commit_id))
+	flush()
 	#
+	Print('committing files to test result repository.')
 	os.chdir(result_repository)
 	cmnds = [
 		'git config --global user.name "DailyBuild"',
@@ -306,6 +309,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	for cmnd in cmnds:
 		print('## %s' % cmnd)
+		flush()
 		rc = proc.execute(cmnd, shell=shell).wait()
 		if rc != 0:
 			break
@@ -316,7 +320,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 		if rc == 0:
 			Print('  commit and push OK.')
 	else:
-		Print('  -> nothing to comit!')
+		Print('  -> nothing to commit!')
 	os.chdir(repository)
 
 # ----------------------------------------------------------------------

@@ -61,6 +61,7 @@
 #	Ver 1.42 2018/03/14 F.Kanehori	Dealt with new Proc class.
 #	Ver 1.43 2018/03/19 F.Kanehori	Dealt with Proc.output() change.
 #	Ver 1.5  2018/05/08 F.Kanehori	Code reviewd.
+#	Ver 1.6  2018/05/14 F.Kanehori	Use sprphys's commit id.
 # ======================================================================
 import sys
 import os
@@ -86,7 +87,7 @@ class VersionControlSystem:
 	#
 	def __init__(self, system, url, wrkdir='.', verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.5
+		self.version = 1.6
 		#
 		self.system = system
 		self.url = Util.upath(url)
@@ -372,10 +373,24 @@ if __name__ == '__main__':
 	def contents(wrkdir, fname, rev):
 		vcs = VersionControlSystem(system, url, wrkdir, verbose)
 		contents = vcs.get_file_content(fname, rev[0])
-		print('--[%s,%s,%s]--' % (rev[0], rev[1], rev[2]))
+		spr_id_fname = 'Springhead.commit.id'
+		spr_id_info = vcs.get_file_content(spr_id_fname, rev[0])
+		if spr_id_info[0:9] == 'Traceback' or \
+		   spr_id_info[0:6] == 'python' or \
+		   spr_id_info[0:5] == 'fatal':
+			# Kludge -- caused by bug!
+			return
 		if contents is None:
 			return
 		if isinstance(contents, str):
+			# commit-id is from sprphys/Springhead.
+			#	The current commit id of Springhead.
+			spr_id = spr_id_info.replace('\r\n', '').split(',')
+			spr_id = ','.join(spr_id[0:2])
+			# date and time is from DailyBuild/Result.
+			#	Date and time of dailybuild test.
+			dt = (','.join(rev[1:]))
+			print('--[%s,%s]--' % (spr_id, rev[2]))
 			print(contents.replace('\r', ''))
 
 	# --------------------------------------------------------------
