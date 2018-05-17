@@ -30,8 +30,9 @@
 #	Ver 1.21 2018/05/08 F.Kanehori	Change VersionControlSystem args.
 #	Ver 1.22 2018/05/10 F.Kanehori	Add git config.
 #	Ver 1.23 2018/05/14 F.Kanehori	Add snap message for debug.
+#	Ver 1.24 2018/05/17 F.Kanehori	Rewrite code about "git push" .
 # ======================================================================
-version = 1.23
+version = 1.24
 
 import sys
 import os
@@ -139,6 +140,15 @@ def flush():
 def Print(msg):
 	print(msg)
 	flush()
+
+def get_username(fname):
+	fio = TextFio(fname)
+	if fio.open() < 0:
+		Error(prog).error(fio.error())
+		return ''
+	lines = fio.read()
+	fio.close()
+	return lines[0]
 
 # ----------------------------------------------------------------------
 #  Options
@@ -302,7 +312,6 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	os.chdir(result_repository)
 	cmnds = [
 		'git config --global user.name "DailyBuild"',
-		'git config --global user.email kanehori@haselab.net',
 		'git commit --message="today\'s test result" %s %s' % \
 			(' '.join(logfiles), commit_id)
 	]
@@ -314,7 +323,8 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 		if rc != 0:
 			break
 	if rc == 0:
-		cmnd = 'git push'
+		user = get_username('../../hasegit.user')
+		cmnd = 'git push http://%s@git.haselab.net/DailyBuild/Result' % user
 		print('## %s' % cmnd)
 		rc = proc.execute(cmnd, shell=shell).wait()
 		if rc == 0:
@@ -373,56 +383,6 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	#
 	copy_all(logdir, webbase, False, dry_run)
 	os.chdir(repository)
-
-"""
-# ----------------------------------------------------------------------
-#  Create commit.id which holds newest commit id on GitHub.
-#
-if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
-	Print('creating "commit.id"')
-	logdir = '%s/log' % testdir
-	os.chdir(logdir)
-	#
-	proc = Proc(verbose=verbose, dry_run=dry_run)
-	cmnd = 'git log --abbrev-commit --oneline --max-count=1'
-	proc.execute(cmnd, shell=shell,
-			stdout=Proc.PIPE, stderr=Proc.STDOUT)
-	rc, out, err = proc.output()
-	if rc == 0:
-		commit_id = out.split()[0]
-		fio = TextFio('commit.id', 'w')
-		if fio.open() == 0:
-			fio.writeline(commit_id)
-			fio.close()
-	else:
-		Print('  ** extracting HEAD log from GitHub failed **')
-	#
-	os.chdir(repository)
-
-# ----------------------------------------------------------------------
-#  Commit result.log and commit.id to logal git server.
-#
-if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
-	Print('committing result.log to local git server')
-	logdir = '%s/log' % testdir
-	os.chdir(logdir)
-	#
-	url = 'http://git/haselab.net/DailyBuild/log'
-	files = 'result.log commit.id'
-	#
-	proc = Proc(verbose=verbose, dry_run=dry_run)
-	cmnd = 'git commit --message="today\'s result %s' % files
-	rc = proc.execute(cmnd, shell=shell).wait()
-	if rc == 0:
-		cmnd = 'git push'
-		rc = proc.execute(cmnd, shell=shell).wait()
-		if rc != 0:
-			Print('  ** git push failed **')
-	else:
-		Print('  ** nothing to commit **')
-	#
-	os.chdir(repository)
-"""
 
 # ----------------------------------------------------------------------
 #  Make document (doxygen).
