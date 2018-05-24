@@ -6,11 +6,13 @@
 #	    Traverse and test specified tree recursively.
 #
 #  INITIALIZER:
-#	obj = Traverse(result, csc, control, section,
+#	obj = Traverse(testid, result, csc, control, section,
 #			toolset, platforms, configs, csusage, rebuild,
 #			timeout, report=True, audit=False,
 #			dry_run=False, verbose=0)
 #	arguments:
+#	    testid:	Used as a title line in test log file.
+#			One of TESTID.STUB, TESTID.TESTS, TESTID.SAMPLES.
 #	    result:	TestResult class object (obj).
 #	    csc:	ClosedSrcControl class object (obj).
 #	    control:	Test control file name (str).
@@ -41,6 +43,7 @@
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.11 2018/03/28 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.12 2018/04/19 F.Kanehori	Special trap introduced.
+#	Ver 1.13 2018/05/24 F.Kanehori	Add some comments.
 # ======================================================================
 import sys
 import os
