@@ -98,7 +98,7 @@ def make_list(obj, default=None):
 #  Options
 #
 usage = 'Usage: %prog [options] '\
-	+ 'test-dir res-file ctl-file [section]\n'\
+	+ 'test-dir res-file ctl-file section\n'\
 	+ '    test-dir:\ttest directory (relative to ".../core/src")\n'\
 	+ '    res-file:\ttest result file path (relative to ".../core/test")\n'\
 	+ '    ctl-file:\ttest control file name (leaf name)\n'\
