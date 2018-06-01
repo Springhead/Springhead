@@ -18,8 +18,11 @@ Boxstackベースで連続衝突判定の手法を切り替えて試せるサン
 using namespace Spr;
 using namespace std;
 
-
-namespace Spr {
+namespace Spr{
+	extern int		coltimePhase1;
+	extern int		coltimePhase2;
+	extern int		coltimePhase3;
+	extern int		colcounter;
 	extern int s_methodSW; //手法切り替えの変数
 }
 
@@ -37,26 +40,33 @@ public:
 		ID_SPHERE,
 		ID_ROCK,
 		ID_BLOCK,
+		ID_TOWER,
 		ID_SHAKE,
 		ID_METHOD,
 		ID_CCD,
-		ID_SHOWTIME,
 	};
+	UTString state;
 
 	PHSolidIf*				soFloor;
 	std::vector<PHSolidIf*> soBox;
 
-	bool showColtime;
-	int aveCounter;
-	int avePool;
+	int aveCounter = 0;
+	double avePool = 0;
+	double avePhaseTime[3] = {0,0,0};
 	double					floorShakeAmplitude;
 
 public:
+	void ClearTime() {
+		aveCounter = 0;
+		avePool = 0;
+		memset(avePhaseTime, 0, sizeof(avePhaseTime));
+		coltimePhase1 = coltimePhase2 = coltimePhase3 = 0;
+		colcounter = 0;
+	}
 	MyApp(){
 		appName = "BoxStack";
 		floorShakeAmplitude = 0.0;
-		aveCounter = 0;
-		avePool = 0;
+		ClearTime();
 
 		AddAction(MENU_MAIN, ID_BOX, "drop box");
 		AddHotKey(MENU_MAIN, ID_BOX, 'b');
@@ -70,23 +80,28 @@ public:
 		AddHotKey(MENU_MAIN, ID_ROCK, 'd');
 		AddAction(MENU_MAIN, ID_BLOCK, "drop block");
 		AddHotKey(MENU_MAIN, ID_BLOCK, 'e');
+		AddAction(MENU_MAIN, ID_TOWER, "drop tower");
+		AddHotKey(MENU_MAIN, ID_TOWER, 't');
 		AddAction(MENU_MAIN, ID_SHAKE, "shake floor");
 		AddHotKey(MENU_MAIN, ID_SHAKE, 'f');
 		AddAction(MENU_MAIN, ID_METHOD, "switch method");
 		AddHotKey(MENU_MAIN, ID_METHOD, 'z');
 		AddAction(MENU_MAIN, ID_CCD, "switch CCD");
 		AddHotKey(MENU_MAIN, ID_CCD, 'x');
-		AddAction(MENU_MAIN, ID_SHOWTIME, "Show Time");
-		AddHotKey(MENU_MAIN, ID_SHOWTIME, 'n');
 
 	}
 	~MyApp(){}
 
-	virtual void BuildScene(){
+	virtual void BuildScene() {
 		soFloor = CreateFloor();
 		GetPHScene()->SetGravity(Vec3d(0, -30, 0));
 		FWWinIf* win = GetCurrentWin();
 		win->GetTrackball()->SetPosition(Vec3f(30, 50, 100)); //注視点設定
+		PHConstraintEngineDesc ed;
+		GetPHScene()->GetConstraintEngine()->GetDesc(&ed);
+		ed.bReport = true;
+		ed.freezeThreshold = 0;
+		GetPHScene()->GetConstraintEngine()->SetDesc(&ed);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
@@ -101,22 +116,17 @@ public:
 			soFloor->SetVelocity(Vec3d(floorShakeAmplitude*omega*cos(time*omega),0,0));
 		}
 
-		if (showColtime)
-		{
-			//時間表示
-			if (aveCounter < 100)
-			{
-				avePool += GetPHScene()->GetConstraintEngine()->GetCollisionTime();
-				aveCounter++;
-			}
-			else {
-				int time = avePool/100;
-				message = "Collision Time : " + to_string(time);
-				aveCounter = 0;
-				avePool = 0;
-				message = "Collision Time : " + to_string(time);
-			}
-			
+		//時間表示
+		avePool += GetPHScene()->GetConstraintEngine()->GetCollisionTime();
+		avePhaseTime[0] += coltimePhase1; coltimePhase1 = 0;
+		avePhaseTime[1] += coltimePhase2; coltimePhase2 = 0;
+		avePhaseTime[2] += coltimePhase3; coltimePhase3 = 0;
+		aveCounter++;
+		if (aveCounter > 0) {
+			message = state + "Collision Time : ave:" + to_string(aveCounter) + " total:" + to_string(avePool / aveCounter)
+				+ " P1:" + to_string(avePhaseTime[0] / aveCounter * 0.001)
+				+ " P2:" + to_string(avePhaseTime[1] / aveCounter * 0.001)
+				+ " P3:" + to_string(avePhaseTime[2] / aveCounter * 0.001);
 		}
 	}
 
@@ -136,37 +146,51 @@ public:
 
 			if(id == ID_BOX){
 				Drop(SHAPE_BOX, GRRenderIf::RED, v, w, p, q);
-				message = "box dropped.";
+				state = "box dropped.";
 			}
 			if(id == ID_CAPSULE){
 				Drop(SHAPE_CAPSULE, GRRenderIf::GREEN, v, w, p, q);
-				message = "capsule dropped.";
+				state = "capsule dropped.";
 			}
 			if(id == ID_ROUNDCONE){
 				Drop(SHAPE_ROUNDCONE, GRRenderIf::BLUE, v, w, p, q);
-				message = "round cone dropped.";
+				state = "round cone dropped.";
 			}
 			if(id == ID_SPHERE){
 				Drop(SHAPE_SPHERE, GRRenderIf::YELLOW, v, w, p, q);
-				message = "sphere dropped.";
+				state = "sphere dropped.";
 			}
 			if(id == ID_ROCK){
 				Drop(SHAPE_ROCK, GRRenderIf::ORANGE, v, w, p, q);
-				message = "random polyhedron dropped.";
+				state = "random polyhedron dropped.";
 			}
 			if(id == ID_BLOCK){
 				Drop(SHAPE_BLOCK, GRRenderIf::CYAN, v, w, p, q);
-				message = "composite block dropped.";
+				state = "composite block dropped.";
+			}
+			if(id == ID_TOWER){
+				double tower_radius = 4;
+				const int tower_height = 5;
+				const int numbox = 10;
+				double theta;
+				for (int i = 0; i < tower_height; i++) {
+					for (int j = 0; j < numbox; j++) {
+						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)numbox;
+						Drop(SHAPE_BOX, GRRenderIf::BLUE, Vec3d(), Vec3d(), Quaterniond::Rot(-theta, 'y') * Vec3d(tower_radius, tower_height*2-2*i, 0), Quaterniond::Rot(-theta, 'y'));
+					}
+					tower_radius *= 1.03;
+				}
+				state = "tower built.";
 			}
 			if(id == ID_SHAKE){
 				std::cout << "F: shake floor." << std::endl;
 				if(floorShakeAmplitude == 0.0){
 					floorShakeAmplitude = 2.5;
-					message = "floor shaken.";
+					state = "floor shaken.";
 				}
 				else{
 					floorShakeAmplitude = 0;
-					message = "floor stopped.";
+					state = "floor stopped.";
 				}
 			}
 
@@ -176,39 +200,30 @@ public:
 				switch (s_methodSW)
 				{
 				case 0:
-					message = "method : normal";
+					state = "method : normal";
 					break;
 				case 1:
-					message = "method : accel";
+					state = "method : accel";
 					break;
 				case 2:
-					message = "method : Gino";
+					state = "method : Gino";
 					break;
 				case 3:
-					message = "method : GJK";
+					state = "method : GJK";
 					break;
 				default:
 					break;
 				}
-				aveCounter = 0;
-				avePool = 0;
-				
+				ClearTime();
 			}
 
 			if (id == ID_CCD)
 			{
 				bool CCDstate = !(GetPHScene()->IsCCDEnabled());
-				if (CCDstate) message = "CCD : Enable";
-				else message = "CCD : Disable";
+				if (CCDstate) state = "CCD : Enable";
+				else state = "CCD : Disable";
 				GetPHScene()->EnableCCD(CCDstate);
-			}
-
-			if (id == ID_SHOWTIME) 
-			{
-				showColtime = !showColtime;
-				GetPHScene()->GetConstraintEngine()->EnableReport(showColtime);
-				aveCounter = 0;
-				avePool = 0;
+				ClearTime();
 			}
 		}
 		SampleApp::OnAction(menu, id);
