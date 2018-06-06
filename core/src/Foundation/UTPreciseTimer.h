@@ -35,6 +35,7 @@ public:
 	void Init(int period = 100);	///< カウンタの初期化
 	void WaitUS(int time);			///< us単位で待つ
 	int CountUS();					///< 前回からの経過時間をus単位で計測
+	int CountNS();					///< 前回からの経過時間をns単位で計測
 	void CountAndWaitUS(int time);	///< 前回からの経過時間をus単位で計測し，全体としてus単位で待つ（一定ループ生成用）
 	
 	/// ストップウォッチ機能.

@@ -115,7 +115,8 @@ struct PHSceneDesc: public PHSceneState{
 		頻繁に用いるのでPHSceneIfからもアクセスできるようにしてある．（要検討）
 	 */
 	Vec3d	gravity;			///< 重力加速度ベクトル
-	double	airResistanceRate;	///< 毎ステップ剛体の速度に掛けられる倍率
+	double	airResistanceRateForVelocity;			///< 毎ステップ剛体の速度に掛けられる倍率
+	double	airResistanceRateForAngularVelocity;	///< 毎ステップ剛体の速度に掛けられる倍率
 	double	contactTolerance;	///< 接触の許容交差量
 	double	impactThreshold;	///< 衝突速度．これよりも大きな速度で接触したら衝突として扱う
 	double	frictionThreshold;	///< 動摩擦速度．接触面に変更な速度成分がこれよりも大きい場合に動摩擦として扱う
@@ -421,16 +422,25 @@ public:
 	 */
 	Vec3d GetGravity();
 
+	/** @brief 並進に対する空気抵抗の割合を設定する
+	@param rate 並進に対する空気抵抗の割合
+	標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
+	*/
+	void    SetAirResistanceRateForVelocity(double rate);
 	/** @brief 回転に対する空気抵抗の割合を設定する
 		@param rate 回転に対する空気抵抗の割合
 		標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
 	 */
-	void    SetAirResistanceRate(double rate);
-	
-	/** @brief 回転に対する空気抵抗の割合を取得する
-		@return 回転に対する空気抵抗の割合
+	void    SetAirResistanceRateForAngularVelocity(double rate);
+
+	/** @brief 並進に対する空気抵抗の割合を取得する
+		@return 並進に対する空気抵抗の割合
 	 */
-	double  GetAirResistanceRate();
+	double  GetAirResistanceRateForVelocity();
+	/** @brief 回転に対する空気抵抗の割合を取得する
+	@return 回転に対する空気抵抗の割合
+	*/
+	double  GetAirResistanceRateForAngularVelocity();
 
 	/// @brief 接触の許容交差量を設定する
 	void    SetContactTolerance(double tol);

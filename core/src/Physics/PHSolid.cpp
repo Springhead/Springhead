@@ -462,7 +462,8 @@ void PHSolid::UpdateVelocity(double* dt){
 
 	// 空気抵抗係数をかける
 	PHSceneIf* scene = GetScene()->Cast();
-	v *= scene->GetAirResistanceRate();
+	v.v() *= scene->GetAirResistanceRateForVelocity();
+	v.w() *= scene->GetAirResistanceRateForAngularVelocity();
 
 	// 速度更新
 	SetVelocity       (GetOrientation() * v.v());

@@ -116,6 +116,9 @@ void PHContactPoint::CompBias(){
 		// 粘弾性なし
 		if(spring == 0.0 && damper == 0.0){
 			db[0] = - engine->contactCorrectionRate * diff * dtinv;
+			if (!finite(db[0])) {
+				DSTR << "db[0] is not finite" << std::endl;
+			}
 		}
 		// 粘弾性あり
 		else{
@@ -182,8 +185,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 }
 
 void PHContactPoint::CompError(){
-	PHSceneIf* scene = GetScene();
-	
+	PHSceneIf* scene = GetScene();	
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる
 	double tol  = scene->GetContactTolerance();

@@ -39,8 +39,10 @@ FWApp::~FWApp(){
 			break;
 		}
 	}
-	if(hasFullScreen)
-		FWGraphicsHandler::instance->LeaveGameMode();
+	if (hasFullScreen) {
+		if (FWGraphicsHandler::instance)
+			FWGraphicsHandler::instance->LeaveGameMode();
+	}
 
 }
 

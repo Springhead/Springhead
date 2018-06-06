@@ -290,6 +290,12 @@ void PHConstraint::CompResponse(double df, int i) {
 			(Vec6d&)Jrow = J[k].row(i);
 			solid[k]->dv.v() += (solid[k]->minv * df) * Jrow.v();
 			solid[k]->dv.w() += (solid[k]->Iinv * Jrow.w()) * df;
+#if 0
+			if (!isfinite(solid[k]->dv.norm())) {
+				DSTR << " df" << df << " jrow" << Jrow << std::endl;
+				DSTR << "dv is not finite" << std::endl;
+			}
+#endif
 		}
 	}
 }

@@ -60,10 +60,11 @@ int CDCapsule::Support(Vec3f& w, const Vec3f& v) const {
 	}else{
 		w = (radius / n) * v;
 	}
-	if (v.Z() >= 0){
+	if (v.Z() > 0) {
 		w.Z() += length*0.5f;
-	}else{
-		w.Z() -= length*0.5f;
+	}
+	if (v.Z() < 0) {
+			w.Z() -= length*0.5f;
 	}
 	return -1;
 }

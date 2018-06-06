@@ -26,7 +26,6 @@ UTPreciseTimer::UTPreciseTimer(): stopWatch(0), startFlag(false){
 	cycles2.quadPart = 0;
 	if (freq == 0){
 #ifndef __BORLANDC__
-		Init(50);
 		Init();
 #else
 		freq = 100 * 1000;
@@ -131,6 +130,27 @@ int  UTPreciseTimer::CountUS()
 	cycles2.quadPart = cycles.quadPart;
 	return retval;
 }
+int  UTPreciseTimer::CountNS()
+{
+	int retval = 1;
+	UTLargeInteger cycles;
+#ifdef _M_IX86
+	unsigned long lowPart, highPart;
+	_asm {
+		CPUID;
+		RDTSC;// クロックカウンタを読む
+		MOV     lowPart, EAX;// カウンタを保存
+		MOV     highPart, EDX;// カウンタを保存
+	}
+	cycles.lowPart = lowPart;
+	cycles.highPart = highPart;
+#else
+	QueryPerformanceCounter((LARGE_INTEGER*)&cycles);
+#endif
+	retval = (int)(((cycles.quadPart - cycles2.quadPart) * (1000000*1000 / freq)) & 0xffffffff);
+	cycles2.quadPart = cycles.quadPart;
+	return retval;
+}
 
 void UTPreciseTimer::CountAndWaitUS(int time)
 {
@@ -162,7 +182,8 @@ unsigned long UTPreciseTimer::Clear(){
 UTPreciseTimer::UTPreciseTimer(){}
 void UTPreciseTimer::Init(int period){}
 void UTPreciseTimer::WaitUS(int time){}
-int  UTPreciseTimer::CountUS(){ return 0; }
+int  UTPreciseTimer::CountUS() { return 0; }
+int  UTPreciseTimer::CountNS() { return 0; }
 void UTPreciseTimer::CountAndWaitUS(int time){}
 unsigned long UTPreciseTimer::Start(){ return 0; }
 unsigned long UTPreciseTimer::Stop(){ return 0; }
