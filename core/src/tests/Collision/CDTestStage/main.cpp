@@ -33,6 +33,7 @@ o　今の衝突情報を記録
 //#include <Physics\SprPHEngine.h>
 #include <ctime>
 #include <string>
+#include <numeric>
 //#include <GL/glut.h>
 #include<Foundation/UTPreciseTimer.h>
 #include <iostream>
@@ -49,8 +50,7 @@ using namespace Spr;
 #define RIGHT				39			//→
 #define DOWN				40			//↓
 #define STAY_COUNTER		300			// 静止判定カウント
-#define TOTAL_IDLE_COUNTER	10000		// 静止しない場合に利用
-#define COLTIME_AVE_FRAME 90	//衝突判定時間の平均を何フレームごとに出すか
+#define COLTIME_AVE_FRAME 10	//衝突判定時間の平均を何フレームごとに出すか
 
 const double epsilon = 1e-16;	//1e-8
 const float testHeight = 10;
@@ -69,6 +69,7 @@ ShapeID idBlock = ShapeID::SHAPE_SPHERE;
 int selectObj = 0;
 int colMethod = 0;
 int coltimeDisp[3];
+double colCountAve = 0;
 int aveCount = 0;
 Vec3d cameraPos = Vec3d(0,3.0,9.0);
 double camTheta;
@@ -77,10 +78,12 @@ double camPhi;
 //record
 string filename;
 string hitFilename;
-int recordCount = 0;
+int rotateCount = 0;
 int transCount = 0;
-int hitTimePool = 0;
-int outTimePool = 0;
+double hitTimePool[3] = { 0,0,0 };
+double outTimePool[3] = { 0,0,0 };
+double colCountHit = 0;
+double colCountOut = 0;
 int hitCount = 0;
 int outCount = 0;
 bool recordHit=false;
@@ -140,12 +143,14 @@ void SetFileName() {
 
 void StartAutomode(bool sameFile) {
 	automode = true;
-	recordCount = 0;
+	rotateCount = 0;
 	transCount = 0;
-	hitTimePool = 0;
-	outTimePool = 0;
+	memset(hitTimePool, 0, sizeof(hitTimePool));
+	memset(outTimePool, 0, sizeof(outTimePool));
 	hitCount = 0;
 	outCount = 0;
+	colCountHit = 0;
+	colCountOut = 0;
 	if(!sameFile) SetFileName();
 	Quaternionf quat = Quaternionf();
 	obj[0].SetRot(quat);
@@ -156,12 +161,18 @@ void StartAutomode(bool sameFile) {
 	}
 }
 
+Vec3d hitPos, hitPos2;
+Vec3d vecPos, vecPos2;
+int res;
+double dist;
+
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
  param		なし
  return 	なし
  */
 void __cdecl display(){
+//	glClearColor(1, 1, 1, 1);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	camera();
 	PHSolidIf* solid[2] = { obj[1].GetSolid(), obj[0].GetSolid() };
@@ -173,9 +184,9 @@ void __cdecl display(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// 材質の設定
-	static GLfloat mat_floor[]      = { 1.0f, 0.7f, 0.7f, 0.8f };
-	static GLfloat mat_block[]      = { 0.7f, 0.7f, 1.0f, 0.8f };
-	static GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 0.8f };
+	static GLfloat mat_floor[]      = { 1.0f, 0.7f, 0.7f, 1.0f };
+	static GLfloat mat_block[]      = { 0.7f, 0.7f, 1.0f, 1.0f };
+	static GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 	static GLfloat mat_shininess[]  = { 120.0f };
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -202,150 +213,203 @@ void __cdecl display(){
 	}
 
 	
-		//衝突情報描画
-		glDisable(GL_ALPHA);
-		glDisable(GL_BLEND);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_CULL_FACE);
-		{
-			CDConvex* mesh[2];
-			Posed pose[2];
-			for (int i = 0; i<2; ++i) {
-				mesh[i] = DCAST(CDConvex, solid[i]->GetShape(0));
-				pose[i] = solid[i]->GetPose();
+	//衝突情報描画
+	glDisable(GL_ALPHA);
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glEnable(GL_CULL_FACE);
+
+
+	BeginRend2D();
+	RendText(0, 0.95f, (char*)"res:%d normal:%.3f,%.3f,%.3f deist:%.4f", res, normal.x, normal.y, normal.z, dist);
+	RendText(0, 0.9f, (char*)"coltime phase1:%d phase2:%d phase3:%d phase3 loop:%d", coltimeDisp[0], coltimeDisp[1], coltimeDisp[2], colcounter);
+	RendText(0, 0.85f, (char*)"bias param:%.2f", biasParam);
+	glPointSize(5.0);					// 点の太さ
+	glBegin(GL_POINTS);					// 点の座標を記述開始
+	glColor4f(0.3f, 1.0f, 0.3f, 0);	// 点の色(RGBA)
+	glVertex2d(hitPos.X(), hitPos.Y());			// 点2つ分の座標
+	glVertex2d(hitPos2.X(), hitPos2.Y());
+	glEnd();							// 座標の記述終了
+	glLineWidth(3.0);
+
+	glBegin(GL_LINES);		//線
+	glColor4f(0.3f, 0.3f, 1.0f, 0);	// 線の色(RGBA)
+	glVertex2d(vecPos.X(), vecPos.Y());			// 線の座標
+	glVertex2d(vecPos2.X(), vecPos2.Y());
+	glEnd();
+
+	EndRend2D();
+
+
+	glutSwapBuffers();
+}
+
+int colcountAcc = 0;
+void collisionTest() {
+	CDConvex* mesh[2];
+	Posed pose[2];
+	PHSolidIf* solid[2] = { obj[1].GetSolid(), obj[0].GetSolid() };
+	for (int i = 0; i<2; ++i) {
+		mesh[i] = DCAST(CDConvex, solid[i]->GetShape(0));
+		pose[i] = solid[i]->GetPose();
+	}
+	Vec3d normal;
+	Vec3d pos[2];
+	dist = 0;
+	Vec3d dir(0, -1, 0);
+	double dirLength = testHeight * 2;
+	res = 0;
+	colcounter = 0;
+	float maxSurf = mesh[0]->GetMaxSurf();
+	switch (colMethod)
+	{
+	case 0:
+		res = ContFindCommonPointGino(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
+		break;
+	case 1:
+		res = ContFindCommonPointAccel(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
+		break;
+	case 2:
+		res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
+		break;
+	default:
+		assert("Not selected collision method");
+		break;
+	}
+	colcountAcc += colcounter;
+
+	//coltimeの平均化
+	if (aveCount >= COLTIME_AVE_FRAME) {
+		coltimeDisp[0] = (double)coltimePhase1 / (double)COLTIME_AVE_FRAME;
+		coltimeDisp[1] = (double)coltimePhase2 / (double)COLTIME_AVE_FRAME;
+		coltimeDisp[2] = (double)coltimePhase3 / (double)COLTIME_AVE_FRAME;
+		colCountAve = (double)colcountAcc / (double)COLTIME_AVE_FRAME;
+		colcountAcc = 0;
+		aveCount = 0;
+		coltimePhase1 = 0;
+		coltimePhase2 = 0;
+		coltimePhase3 = 0;
+		//自動テスト時の処理
+		if (automode) {
+			//衝突してるかどうかで分ける
+			if (res == 1) {
+				for (int i = 0; i < 3; ++i) {
+					hitTimePool[i] += coltimeDisp[i];
+				}
+				colCountHit += colCountAve;
+				hitCount++;
 			}
-			Vec3d normal;
-			Vec3d pos[2];
-			double dist = 0;
-			Vec3d dir(0, -1, 0);
-			double dirLength = testHeight*2;
-			int res;
-			colcounter = 0;
-			float maxSurf = mesh[0]->GetMaxSurf();
-			switch (colMethod)
-			{
-			case 0:
-				res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
-				break;
-			case 1:
-				res = ContFindCommonPointAccel(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);				
-				break;
-			case 2:
-				res = ContFindCommonPointGino(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
-				break;
-			default:
-				assert("Not selected collision method");
-				break;
+			else {
+				for (int i = 0; i < 3; ++i) {
+					outTimePool[i] += coltimeDisp[i];
+				}
+				colCountOut += colCountAve;
+				outCount++;
 			}
-			
-			//coltimeの平均化
-			if (aveCount >= COLTIME_AVE_FRAME) {
-				coltimeDisp[0] = coltimePhase1 / COLTIME_AVE_FRAME;
-				coltimeDisp[1] = coltimePhase2 / COLTIME_AVE_FRAME;
-				coltimeDisp[2] = coltimePhase3 / COLTIME_AVE_FRAME;
-				aveCount = 0;
-				coltimePhase1 = 0;
-				coltimePhase2 = 0;
-				coltimePhase3 = 0;
-				//自動テスト時の処理
-				if (automode) {
-					//衝突してるかどうかで分ける
-					if (res == 1) {
-						hitTimePool += coltimeDisp[0] + coltimeDisp[1] + coltimeDisp[2];
-						hitCount++;
+			rotateCount++;
+			obj[0].Rotate(Quaternionf::Rot(rotaterate * 15, Vec3f(1, 0, 0)));
+			if (rotateCount >= 24) { //回転が終わったら
+				rotateCount = 0;
+				transCount++;
+				obj[0].SetRot(Quaternionf());
+				obj[0].SetPos(Vec3f(transCount % 6 - 3, testHeight, transCount / 6 - 3)); //6*6のグリッドを移動
+				if (!superAuto) { //一回だけならここで記録
+					ofstream ofs(filename, ios::app);
+					if (hitCount > 0) {
+						for (int i = 0; i < 3; ++i) {
+							hitTimePool[i] /= hitCount;
+						}
+						colCountHit /= hitCount;
+					}
+					if (outCount > 0) {
+						for (int i = 0; i < 3; ++i) {
+							outTimePool[i] /= outCount;
+						}
+						colCountOut /= outCount;
+					}
+					ofs << hitTimePool << "," << std::flush;
+					if (transCount % 6 == 0) ofs << std::endl;
+					hitCount = 0;
+					outCount = 0;
+					assert(0);
+					memset(hitTimePool, 0, sizeof(hitTimePool));
+					memset(outTimePool, 0, sizeof(outTimePool));
+					colCountHit = 0;
+					colCountOut = 0;
+				}
+				if (transCount >= 36) { //全グリッド測ったら
+					ofstream ofs(filename, ios::app);
+					if (hitCount > 0) {
+						for (int i = 0; i < 3; ++i) {
+							hitTimePool[i] /= hitCount;
+						}
+						colCountHit /= hitCount;
+					}
+					if (outCount > 0) {
+						for (int i = 0; i < 3; ++i) {
+							outTimePool[i] /= outCount;
+						}
+						colCountOut /= outCount;
+					}
+					if (colMethod == 0) {
+						ofs << obj[0].m_shape->GetName() << "-" << obj[1].m_shape->GetName();
+						ofs << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << ",";
+						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] / 1000 << ",";
+						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] / 1000 << ",";
+						ofs << hitCount << "," << outCount << ",";
+						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) / 1000 << ",";
+						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) / 1000 << ",";
+						ofs << colCountHit << "," << colCountOut;
 					}
 					else {
-						outTimePool += coltimeDisp[0] + coltimeDisp[1] + coltimeDisp[2];
-						outCount++;
+						ofs << ",,";
+						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] / 1000 << ",";
+						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] / 1000 << ",";
+						ofs << hitCount << "," << outCount << ",";
+						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) / 1000 << ",";
+						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) / 1000 << ",";
+						ofs << colCountHit << "," << colCountOut << std::endl;
 					}
-					recordCount++;
-					obj[0].Rotate(Quaternionf::Rot(rotaterate*15, Vec3f(1, 0, 0)));
-					if (recordCount >= 24) { //回転が終わったら
-						recordCount = 0;
-						transCount++;
-						obj[0].SetRot(Quaternionf());
-						obj[0].SetPos(Vec3f(transCount % 6 - 3, testHeight, transCount / 6 - 3)); //6*6のグリッドを移動
-						if (!superAuto) { //一回だけならここで記録
-							ofstream ofs(filename, ios::app);
-							if (hitCount > 0)
-								hitTimePool = hitTimePool / hitCount;
-							if (outCount > 0)
-								outTimePool = outTimePool / outCount;
-							ofs <<  hitTimePool << ","  << std::flush;
-							if (transCount % 6 == 0) ofs << std::endl;
-							hitCount = 0;
-							outCount = 0;
-							hitTimePool = 0;
-							outTimePool = 0;
-						}						
-						if (transCount >= 36) { //全グリッド測ったら
-							ofstream ofs(filename, ios::app);
-							float hitTimeAve = 0;
-							float outTimeAve = 0;
-							if (hitCount > 0)
-								hitTimeAve = hitTimePool / (float)hitCount;
-							if (outCount > 0)
-								outTimeAve = outTimePool / (float)outCount;
-							ofs << colMethod << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << "," << hitTimeAve << "," << outTimeAve << std::endl; //書き込み
-							automode = false;
-							if (superAuto && caseCount < testShapes.size()) { //形状切り替え，終了判定
-								if (colMethod == 2) {//次の形状へ
-									caseCount += 2;
-									obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
-									obj[1].SetShape(stage.GetShape((ShapeID)testShapes[caseCount+1]), (ShapeID)testShapes[caseCount+1]);
-								}
-								colMethod = (colMethod+1)%3; //メソッド切り替え
-								StartAutomode(true);
-							}
-							else { //終了
-								automode = false;
-								superAuto = false;
-							}
+					automode = false;
+					if (superAuto && caseCount < testShapes.size()) { //形状切り替え，終了判定
+						if (colMethod == 2) {//次の形状へ
+							caseCount += 2;
+							obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
+							obj[1].SetShape(stage.GetShape((ShapeID)testShapes[caseCount + 1]), (ShapeID)testShapes[caseCount + 1]);
 						}
+						colMethod = colMethod + 2; //メソッド切り替え
+						if (colMethod >= 3) colMethod = 0;
+						StartAutomode(true);
+					}
+					else { //終了
+						if (superAuto) exit(0);
+						automode = false;
+						superAuto = false;
 					}
 				}
 			}
-			else
-			{
-				aveCount++;
-			}
-			//VSのログに出すとき
-			//DSTR << "res:" << res << " normal:" << normal << " dist:" << dist;
-			//DSTR << " p:" << pose[0] * pos[0] << " q:" << pose[1] * pos[1] << std::endl;
-			Vec3d hitPos = ObjtoScreenPos(pose[0] * pos[0]);
-			Vec3d hitPos2 = ObjtoScreenPos(pose[1] * pos[1]);
-			Vec3d vecPos = hitPos2;
-			Vec3d vecPos2 = ObjtoScreenPos(pose[1] * pos[1] +dir*dirLength);
-			BeginRend2D();
-			RendText(0,0.95f,(char*)"res:%d normal:%.3f,%.3f,%.3f deist:%.4f", res, normal.x, normal.y, normal.z, dist);
-			RendText(0, 0.9f, (char*)"coltime phase1:%d phase2:%d phase3:%d phase3 loop:%d", coltimeDisp[0], coltimeDisp[1], coltimeDisp[2],colcounter);
-			RendText(0, 0.85f, (char*)"bias param:%.2f", biasParam);
-			if (recordHit)
-			{
-				ofstream ofs(hitFilename, ios::app);
-				ofs << colMethod << "," << res << "," << normal.x << "," << normal.y << "," << normal.z << "," << dist << ","
-					<< obj[0].m_position.x << "," << obj[0].m_position.y << "," << obj[0].m_position.z << ","
-					<< obj[1].m_position.x << "," << obj[1].m_position.y << "," << obj[1].m_position.z << ","
-					<< coltimeDisp[0] << "," << coltimeDisp[1] << "," << coltimeDisp[2] << "," << coltimeDisp[0]+ coltimeDisp[1] + coltimeDisp[2] << "," << colcounter << std::endl;
-				recordHit = false;
-			}
-			glPointSize(5.0);					// 点の太さ
-			glBegin(GL_POINTS);					// 点の座標を記述開始
-			glColor4f(0.3f, 1.0f, 0.3f, 0);	// 点の色(RGBA)
-			glVertex2d(hitPos.X(), hitPos.Y());			// 点2つ分の座標
-			glVertex2d(hitPos2.X(), hitPos2.Y());
-			glEnd();							// 座標の記述終了
-			glLineWidth(3.0);
-			
-			glBegin(GL_LINES);		//線
-			glColor4f(0.3f, 0.3f, 1.0f, 0);	// 線の色(RGBA)
-			glVertex2d(vecPos.X(), vecPos.Y());			// 線の座標
-			glVertex2d(vecPos2.X(), vecPos2.Y());
-			glEnd();
-
-			EndRend2D();
 		}
-	glutSwapBuffers();
+	}
+	else
+	{
+		aveCount++;
+	}
+	//VSのログに出すとき
+	//DSTR << "res:" << res << " normal:" << normal << " dist:" << dist;
+	//DSTR << " p:" << pose[0] * pos[0] << " q:" << pose[1] * pos[1] << std::endl;
+	hitPos = ObjtoScreenPos(pose[0] * pos[0]);
+	hitPos2 = ObjtoScreenPos(pose[1] * pos[1]);
+	vecPos = hitPos2;
+	vecPos2 = ObjtoScreenPos(pose[1] * pos[1] + dir*dirLength);
+	if (recordHit)
+	{
+		ofstream ofs(hitFilename, ios::app);
+		ofs << colMethod << "," << res << "," << normal.x << "," << normal.y << "," << normal.z << "," << dist << ","
+			<< obj[0].m_position.x << "," << obj[0].m_position.y << "," << obj[0].m_position.z << ","
+			<< obj[1].m_position.x << "," << obj[1].m_position.y << "," << obj[1].m_position.z << ","
+			<< coltimeDisp[0] << "," << coltimeDisp[1] << "," << coltimeDisp[2] << "," << coltimeDisp[0] + coltimeDisp[1] + coltimeDisp[2] << "," << colcounter << std::endl;
+		recordHit = false;
+	}
 }
 
 /**
@@ -436,11 +500,24 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 	if (key == 'n') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_DODECA), ShapeID::SHAPE_DODECA);
 	if (key == 'm') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGCAPSULE), ShapeID::SHAPE_LONGCAPSULE);
 	if (key == ',') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGPOLYSPHERE), ShapeID::SHAPE_LONGPOLYSPHERE);
+	if (key == 'r') {
+		static int count = 0;
+		if (count == 0) {
+			testShapes = LoadTestCSV(testCSVPath);
+			count = 0;
+			obj[0].SetPos(Vec3d(100, 0, 0));
+			obj[1].SetPos(Vec3d(0, 3, 0));
+			obj[1].SetRot(Quaterniond::Rot(Rad(-60), 'y'));
+		}
+		obj[1].SetShape(stage.GetShape((ShapeID)testShapes[count]), (ShapeID)testShapes[count]);
+		count++;
+		if (count >= testShapes.size()) count = 0;
+	}
 	if (key == 'p') {
-		colMethod = 0;
+			colMethod = 0;
 		caseCount = 0;
-		StartAutomode(false);
 		superAuto = true;
+		StartAutomode(false);
 		testShapes = LoadTestCSV(testCSVPath);
 		obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
 		obj[1].SetShape(stage.GetShape((ShapeID)testShapes[caseCount + 1]), (ShapeID)testShapes[caseCount + 1]);
@@ -497,42 +574,12 @@ void __cdecl motion(int x, int y) {
  return 	なし
  */
 void __cdecl idle(){
-	static int total;
-	total ++;
-#if 1 //自動テスト通す用 手動でテストするときは0に
-	colMethod = (colMethod + 1) % 3;
-	if (total > TOTAL_IDLE_COUNTER){
-		//exit(EXIT_FAILURE);
-		exit(EXIT_SUCCESS);
+	if (automode || superAuto) {
+		collisionTest();
 	}
-#endif
-#if 0
-	Vec3d prepos, curpos;	// position
-	prepos = objA->GetFramePosition();
-
-	scene->Step();
-
-	curpos = objA->GetFramePosition();
-
-	static int total=0;
-	static int stay=0;
-	total++;
-	if (total > TOTAL_IDLE_COUNTER){
-		DSTR << "\nPHShapeGL failure." << std::endl;
-		exit(EXIT_FAILURE);
-	} else {
-		if (approx(prepos, curpos)){
-			stay++;
-			if (stay > STAY_COUNTER){				// 静止判定カウント	
-			DSTR << "\nPHShapeGL success." << std::endl;
-				exit(EXIT_SUCCESS);
-			}
-		} else {
-			stay = 0;
-		}
+	else {
+		glutPostRedisplay();
 	}
-#endif
-	glutPostRedisplay();
 }
 
 /**

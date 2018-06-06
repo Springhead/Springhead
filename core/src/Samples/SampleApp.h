@@ -82,7 +82,6 @@ public:
 		SHAPE_CAPSULE,
 		SHAPE_ROUNDCONE,
 		SHAPE_SPHERE,
-		SHAPE_ELLIPSOID,
 		SHAPE_ROCK,
 		SHAPE_BLOCK,
 		SHAPE_COIN,
@@ -122,7 +121,7 @@ public:
 	UTTimerIf*				timer;			///< タイマ
 
 	///	形状のスケール
-	float					shapeScale;
+	double					shapeScale;
 	/// 床用の形状
 	CDBoxIf*				shapeFloor;
 	CDBoxIf*				shapeWallX;
@@ -130,7 +129,6 @@ public:
 	/// 作りおき形状
 	CDBoxIf*				shapeBox;
 	CDSphereIf*				shapeSphere;
-	CDEllipsoidIf*			shapeEllipsoid;
 	CDCapsuleIf*			shapeCapsule;
 	CDRoundConeIf*			shapeRoundCone;
 	CDConvexMeshIf*			shapeCoin;
@@ -158,8 +156,8 @@ public:
 
 public:
 	///	アクティブなシーン
-	FWSceneIf*				GetFWScene(){ return GetCurrentWin() ? GetCurrentWin()->GetScene() : NULL; }
-	PHSceneIf*				GetPHScene(){ return GetCurrentWin() ? GetCurrentWin()->GetScene() ? GetCurrentWin()->GetScene()->GetPHScene() : NULL: NULL; }
+	FWSceneIf*				GetFWScene(){ return GetCurrentWin()->GetScene(); }
+	PHSceneIf*				GetPHScene(){ return GetCurrentWin()->GetScene()->GetPHScene(); }
 	/// メニューの登録
 	void AddMenu(int menu, UTString brief){
 		menus[menu].brief = brief;
@@ -237,10 +235,8 @@ public:
 			solid->AddShape(shapeCapsule);
 		if(shape == SHAPE_ROUNDCONE)
 			solid->AddShape(shapeRoundCone);
-		if (shape == SHAPE_SPHERE)
+		if(shape == SHAPE_SPHERE)
 			solid->AddShape(shapeSphere);
-		if (shape == SHAPE_ELLIPSOID)
-			solid->AddShape(shapeEllipsoid);
 		if(shape == SHAPE_ROCK){
 			CDConvexMeshDesc md;
 			int nv = rand()%100 + 50;
@@ -469,8 +465,8 @@ public: /** 派生クラスが実装する関数 **/
 	virtual void OnAction(int menu, int id){
 		/// いつでも有効アクション
 		if(menu == MENU_ALWAYS){
-			if (id == ID_EXIT)
-				EndMainLoop();
+			if(id == ID_EXIT)
+				exit(0);
 			if(id == ID_RUN)
 				ToggleAction(menu, id);
 			if (id == ID_STEP)
@@ -654,18 +650,14 @@ public: /** FWAppの実装 **/
 		CDSphereDesc sd;
 		sd.radius = shapeScale * 1;
 		shapeSphere = GetSdk()->GetPHSdk()->CreateShape(sd)->Cast();
-
-		CDEllipsoidDesc ed;
-		ed.radius *= shapeScale;
-		shapeEllipsoid = GetSdk()->GetPHSdk()->CreateShape(ed)->Cast();
-
+		
 		CDCapsuleDesc cd;
 		cd.radius = shapeScale * 1;
-		cd.length = shapeScale * 4;
+		cd.length = shapeScale * 1;
 		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 		
 		CDRoundConeDesc rcd;
-		rcd.length = shapeScale * 6;
+		rcd.length = shapeScale * 3;
 		rcd.radius = shapeScale * Vec2d(1, 2);
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 

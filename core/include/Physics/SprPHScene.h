@@ -16,7 +16,6 @@
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
 #include <Foundation/SprScene.h>
-#include <Foundation/SprUTQPTimer.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>
@@ -158,16 +157,6 @@ public:
 		@return Solidの数
 	 */
 	int NSolids()const;
-
-	/** @brief Solidを取得する
-		@return Solidのインタフェースへのポインタ
-	 */
-	PHSolidIf* GetSolid(int idx);
-
-	/** @brief Solidのインデックスを取得する
-		@return Solidのインデックス
-	 */
-	int GetSolidIndex(PHSolidIf* s);
 
 	/** @brief Solidを取得する
 		@return Solidのインタフェースの配列へのポインタ
@@ -598,10 +587,6 @@ public:
 	/** @breif Physicsとの同期を取る StepHapticLoop()を呼ぶ度に呼び出す必要あり
 	*/
 	void StepHapticSync();
-
-	/** @brief 計算時間の計測結果を取得する。
-	*/
-	UTPerformanceMeasureIf* GetPerformanceMeasure();
 };
 
 //@}

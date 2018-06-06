@@ -9,16 +9,15 @@
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
-#include <Foundation/UTQPTimer.h>
+#include <Foundation/UTPreciseTimer.h>
 
 namespace Spr {;
 const double epsilon = 1e-16;
 const double epsilon2 = epsilon*epsilon;
 
-UTQPTimer qpTimerForCollision;
-UTLongLong& coltimePhase1 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P1");
-UTLongLong& coltimePhase2 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P2");
-UTLongLong& coltimePhase3 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P3");
+extern UTPreciseTimer* p_timer;
+extern int		coltimePhase1;
+extern int		coltimePhase2;
 bool bUseContactVolume = true;
 
 int s_methodSW = 0;			//	0=通常,1=加速,2=Gino
@@ -45,7 +44,7 @@ int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
 		break;
 	case 3:	
 		assert(0);
-		qpTimerForCollision.CountNS();
+		p_timer->CountNS();
 		res = FindCommonPoint(a, b, a2w, b2w, v, pa, pb);
 		if (res >= 1) {
 			v.clear();
@@ -161,7 +160,6 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		int res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpN[0], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;
-#if 1
 		int foundId = 0;
 		double minD = dist;
 		if (-dist > end){	//	侵入量が大きかったので、他の向きを試す。
@@ -193,10 +191,6 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		res=FindCommonPointInterface(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpN[foundId], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;	//	法線の向きに離してから現在位置まで近づけても接触が起きない場合なので、接触なし。
-#else
- #error
- // Test for shallowest penetration was needed for rotation collision.
-#endif
 		depth = -dist;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 		if (depth > 5 || depth < 0){
@@ -226,6 +220,8 @@ found:;
 		DSTR << " / " << sum << std::endl;
 #endif
 	}
+	lastContactCount = ct;
+
 	//	debug dump
 	if (depth > 5 || depth < 0){
 		//DSTR << "depth=" << depth << std::endl;
@@ -236,7 +232,6 @@ found:;
 		// 本来はここに来ないようにするのがベスト　tazz
 		return false;	
 	}
-	lastContactCount = ct;
 	return true;
 }
 
@@ -296,7 +291,7 @@ void CDShapePair::CalcNormal(){
 	center += 0.5f*depth*normal;
 #else
 	//EPAで衝突法線を求める
-	qpTimerForCollision.CountNS();
+	p_timer->CountNS();
 	Vec3d n = normal;
 	CalcEPA(n, shape[0], shape[1], shapePoseW[0], shapePoseW[1], closestPoint[0], closestPoint[1]);
 	depth = -1 * n.norm();
@@ -306,7 +301,7 @@ void CDShapePair::CalcNormal(){
 	else {
 		normal = (shapePoseW[1].Pos() - shapePoseW[0].Pos()).unit();
 	}
-	qpTimerForCollision.Accumulate(coltimePhase2);
+	coltimePhase2 += p_timer->CountNS();
 #if 0
 	if (res <= 0){
 		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << n << std::endl;

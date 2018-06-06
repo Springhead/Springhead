@@ -50,7 +50,6 @@ public:
 		ID_CAPSULE,
 		ID_ROUNDCONE,
 		ID_SPHERE,
-		ID_ELLIPSOID,
 		ID_ROCK,
 		ID_BLOCK,
 		//ID_TOWER,
@@ -75,8 +74,6 @@ public:
 		AddHotKey(MENU_MAIN, ID_ROUNDCONE, 'r');
 		AddAction(MENU_MAIN, ID_SPHERE, "drop sphere");
 		AddHotKey(MENU_MAIN, ID_SPHERE, 's');
-		AddAction(MENU_MAIN, ID_ELLIPSOID, "drop ellipsoid");
-		AddHotKey(MENU_MAIN, ID_ELLIPSOID, 'E');
 		AddAction(MENU_MAIN, ID_ROCK, "drop rock");
 		AddHotKey(MENU_MAIN, ID_ROCK, 'd');
 		AddAction(MENU_MAIN, ID_BLOCK, "drop block");
@@ -99,7 +96,7 @@ public:
 		SampleApp::OnStep();
 
 		// 床を揺らす
-		if (soFloor && floorShakeAmplitude){
+		if (soFloor){
 			double time = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
 			double omega = 2.0 * M_PI;
 			soFloor->SetFramePosition(Vec3d(floorShakeAmplitude*sin(time*omega),0,0));			
@@ -119,8 +116,7 @@ public:
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
-			static Quaterniond q = Quaterniond::Rot(Rad(0.0), 'y');
-			q = Quaterniond::Rot(Rad(90), 'y') * q;
+			Quaterniond q = Quaterniond::Rot(Rad(30.0), 'y');
 
 			if(id == ID_BOX){
 				Drop(SHAPE_BOX, GRRenderIf::RED, v, w, p, q);
@@ -134,12 +130,8 @@ public:
 				Drop(SHAPE_ROUNDCONE, GRRenderIf::BLUE, v, w, p, q);
 				message = "round cone dropped.";
 			}
-			if (id == ID_SPHERE) {
+			if(id == ID_SPHERE){
 				Drop(SHAPE_SPHERE, GRRenderIf::YELLOW, v, w, p, q);
-				message = "sphere dropped.";
-			}
-			if (id == ID_ELLIPSOID) {
-				Drop(SHAPE_ELLIPSOID, GRRenderIf::LIGHTGREEN, v, w, p, q);
 				message = "sphere dropped.";
 			}
 			if(id == ID_ROCK){
@@ -172,8 +164,6 @@ public:
 				}
 				else{
 					floorShakeAmplitude = 0;
-					soFloor->SetFramePosition(Vec3d(0, 0, 0));
-					soFloor->SetVelocity(Vec3d(0, 0, 0));
 					message = "floor stopped.";
 				}
 			}

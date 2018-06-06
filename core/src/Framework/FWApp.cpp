@@ -19,81 +19,18 @@
 #pragma hdrstop
 #endif
 
-#ifdef _WIN32
-# include <windows.h>
-#endif
-
-#ifdef	__linux__
-  #define DWORD unsigned long
-  #define WINAPI
-#endif
-
 namespace Spr{;
-
-FWAppBase::FWAppBase() {
-}
-
-FWAppBase::~FWAppBase() {
-	//	タイマーを止める
-	for (size_t i = 0; i<timers.size(); ++i) timers[i]->Stop();
-}
-
-void FWAppBase::Init() {
-	// 最も基本的な初期化処理
-	// SDK初期化
-	CreateSdk();
-	// シーンを作成
-	GetSdk()->CreateScene();
-	// タイマを作成
-	CreateTimer();
-}
-
-void FWAppBase::TimerFunc(int id) {
-	UserFunc();
-	FWSceneIf* s = GetSdk()->GetScene();
-	if (s) s->Step();
-}
-
-void FWAppBase::CreateSdk() {
-	if (fwSdk)
-		return;
-	fwSdk = FWSdkIf::CreateSdk();
-}
-
-/// UTTimerに登録するコールバック関数
-void SPR_CDECL FWAppBase_TimerCallback(int id, void* arg) {
-	FWAppBase* app = (FWAppBase*)arg;
-	if (!app)
-		return;
-	app->TimerFunc(id);
-}
-
-UTTimerIf*  FWAppBase::CreateTimer(UTTimerIf::Mode mode) {
-	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
-	UTTimerIf* timer = UTTimerIf::Create();
-	timer->SetMode(mode);
-	timer->SetCallback(FWAppBase_TimerCallback, this);
-	timers.push_back(timer);
-	return timer;
-}
-
-UTTimerIf* FWAppBase::GetTimer(int i) {
-	if ((int)timers.size() > 0) return timers[i];
-	return NULL;
-}
-
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 FWApp* FWApp::instance = 0;
 UTRef<FWGraphicsHandler> FWGraphicsHandler::instance = 0;
 
 FWApp::FWApp(){
-	bThread = false;
-	bPostRedisplay = false;
 	instance = this;
 }
 
 FWApp::~FWApp(){
+	//	タイマーを止める
+	for (size_t i = 0; i<timers.size(); ++i) timers[i]->Stop();	
 	//	フルスクリーンモードだったら戻す
 	bool hasFullScreen = false;
 	for(int i = 0; i < (int)wins.size(); i++){
@@ -106,6 +43,7 @@ FWApp::~FWApp(){
 		if (FWGraphicsHandler::instance)
 			FWGraphicsHandler::instance->LeaveGameMode();
 	}
+
 }
 
 void FWApp::Init(){ Init(0); }
@@ -125,97 +63,21 @@ void FWApp::Init(int argc, char* argv[]){
 	CreateTimer();
 }
 
-//---------------------------------------------------------
-//	Create new thead, init and start the framework.
-//	thread function
-class FWAppThreadCall {
-public:
-	static DWORD WINAPI MainLoop(void* arg) {
-		FWApp* app = (FWApp*)arg;
-		app->StartInThread();
-		return 0;
-	}
-	static void SPR_CDECL RedisplayCheck(int id, void* arg) {
-		FWApp* app = (FWApp*)arg;
-		app->CheckAndPostRedisplay();
-	}
-};
-void FWApp::CheckAndPostRedisplay() {
-	if (!bThread) return;
-	if (bEndThread) {
-		bEndThread = false;
-		FWGraphicsHandler::instance->EndMainLoop();
-	}
-	if (bPostRedisplay) {
-		bPostRedisplay = false;
-		FWGraphicsHandler::instance->PostRedisplay();
-	}
-}
-void FWApp::InitInNewThread() {
-	unsigned long threadId;
-#ifdef _WIN32
-	CreateThread(NULL, 0, FWAppThreadCall::MainLoop, this, 0, &threadId);
-#else
-	#warning Please implement thread creation for the platform
-#endif
-}
-void FWApp::StartInThread() {
-	bThread = true;
-	// SDK初期化
-	CreateSdk();
-	// シーンを作成
-	GetSdk()->CreateScene();
-	// ウィンドウマネジャ初期化
-	GRInit(0, NULL);
-	// ウィンドウを作成
-	FWWinDesc wd;
-	wd.title = "FWApp::StartInThread";
-	CreateWin(wd);
-
-	EnableIdleFunc(false);
-
-	UTTimerIf* grTimer = CreateTimer(UTTimerIf::FRAMEWORK);
-	grTimer->SetCallback(FWAppThreadCall::RedisplayCheck, this);
-	grTimer->SetInterval(20);
-	grTimer->Start();
-	FWGraphicsHandler::instance->StartMainLoop();
-}
-void FWApp::EndThread() {
-#ifdef _WIN32
-	bEndThread = true;
-#else
-	#warning Please implement thread creation for other platform
-#endif
-}
-
 void FWApp::Display(){
-	UTAutoLock LOCK(displayLock);
-
-	if (bEndThread) {
-		bEndThread = false;
-		FWGraphicsHandler::instance->EndMainLoop();
-	}
-	else {
-		GetCurrentWin()->Display();
-	}
+	GetCurrentWin()->Display();
 }
 
 void FWApp::TimerFunc(int id){
 	UserFunc();
-	if (GetCurrentWin() && GetCurrentWin()->GetScene()) {
-		GetCurrentWin()->GetScene()->Step();
-	}
+	GetCurrentWin()->GetScene()->Step();
 	PostRedisplay();
 }
 
 void FWApp::EnableIdleFunc(bool on){
 	FWGraphicsHandler::instance->EnableIdleFunc(on);
 }
-void FWApp::StartMainLoop() {
+void FWApp::StartMainLoop(){
 	FWGraphicsHandler::instance->StartMainLoop();
-}
-void FWApp::EndMainLoop() {
-	FWGraphicsHandler::instance->EndMainLoop();
 }
 
 
@@ -260,6 +122,12 @@ void FWApp::MouseMove(int x, int y){
 
 //　FWAppのインタフェース ///////////////////////////////////////////////////////
 
+void FWApp::CreateSdk(){
+	if(fwSdk)
+		return;
+	fwSdk = FWSdkIf::CreateSdk();
+}
+
 void FWApp::AssignScene(FWWinIf* win){
 	if (win->GetScene()) return;
 	
@@ -301,9 +169,6 @@ FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	render->GetDevice()->Init();
 	win->SetRender(render);
 
-	//	トラックボールの視線に、シーンのカメラを移動
-	if (desc.useKeyMouse && desc.useTrackball)
-		win->GetTrackball()->UpdateView();
 	return win;
 }
 
@@ -337,12 +202,7 @@ void FWApp::SetCurrentWin(FWWinIf* win){
 }
 
 void FWApp::PostRedisplay(){
-	if (bThread){
-		bPostRedisplay = true;
-	}
-	else {
-		FWGraphicsHandler::instance->PostRedisplay();
-	}
+	FWGraphicsHandler::instance->PostRedisplay();
 }
 
 int FWApp::GetModifier(){
@@ -373,53 +233,28 @@ GRDeviceIf* FWApp::GRInit(int argc, char* argv[], int type){
 	return FWGraphicsHandler::instance->GetGRDevice();
 }
 
-// ----- ----- -----
-// ロック処理
-void FWApp::GetDisplayLock() {
-	displayLock.Enter();
+//タイマ///////////////////////////////////////////////////////////////////////////
+
+/// UTTimerに登録するコールバック関数
+void SPR_CDECL FWApp_TimerCallback(int id, void* arg){
+	FWApp* app = (FWApp*)arg;
+	if(!app)
+		return;
+	app->TimerFunc(id);
 }
 
-void FWApp::ReleaseDisplayLock() {
-	displayLock.Leave();
+UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
+	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
+	UTTimerIf* timer = UTTimerIf::Create();
+	timer->SetMode(mode);
+	timer->SetCallback(FWApp_TimerCallback, this);
+	timers.push_back(timer);
+	return timer;
 }
 
-// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-// FWHapticApp 
-// 力覚提示を伴う組込みアプリ
-
-FWHapticApp::FWHapticApp() {
-}
-
-FWHapticApp::~FWHapticApp() {
-}
-
-void FWHapticApp::CreateTimers() {
-	UTTimerIf* physicsTimer = CreateTimer(UTTimerIf::THREAD);
-	physicsTimerID = physicsTimer->GetID();
-
-	UTTimerIf* hapticTimer = CreateTimer(UTTimerIf::THREAD);
-	hapticTimerID = hapticTimer->GetID();
-}
-
-void FWHapticApp::TimerFunc(int id) {
-	if (hapticTimerID == id) {
-		GetSdk()->GetScene(0)->UpdateHapticPointers();
-		GetSdk()->GetScene(0)->GetPHScene()->StepHapticLoop();
-		GetSdk()->GetScene(0)->GetPHScene()->StepHapticSync();
-	} else {
-		// GetSdk()->GetScene(0)->GetPHScene()->GetHapticEngine()->StepPhysicsSimulation();
-	}
-}
-
-void FWHapticApp::StartTimers() {
-	GetTimer(0)->Start();
-	GetTimer(1)->Start();
-}
-
-void FWHapticApp::SetPHScene(PHSceneIf* phScene) {
-	GetSdk()->GetScene(0)->SetPHScene(phScene);
+UTTimerIf* FWApp::GetTimer(int i){
+	if((int)timers.size() > 0) return timers[i];
+	return NULL;
 }
 
 }
-
-

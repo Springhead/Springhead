@@ -17,7 +17,7 @@ Boxstackベースで連続衝突判定の手法を切り替えて試せるサン
 
 std::string ftos(double d, char* fmt = "%2.3f") {
 	char buf[100];
-	snprintf(buf, sizeof(buf), fmt, d);
+	snprintf(buf, sizeof(buf), fmt, d/1000);
 	return std::string(buf);
 }
 
@@ -27,8 +27,14 @@ using namespace Spr;
 using namespace std;
 
 namespace Spr{
+	extern int		coltimePhase1;
+	extern int		coltimePhase2;
+	extern int		coltimePhase3;
 	extern int		colcounter;
 	extern int s_methodSW; //手法切り替えの変数
+	extern int narrowTime;
+	extern int broadTime;
+
 }
 
 class MyApp : public SampleApp{
@@ -46,7 +52,6 @@ public:
 		ID_CAPSULE,
 		ID_ROUNDCONE,
 		ID_SPHERE,
-		ID_ELLIPSOID,
 		ID_ROCK,
 		ID_BLOCK,
 		ID_TOWER,
@@ -61,7 +66,6 @@ public:
 		ID_COINSTACK,
 		ID_SPHERESHOOT,
 		ID_FENCEDROP,
-		ID_ROTATION,
 	};
 	UTString state;
 
@@ -75,7 +79,7 @@ public:
 
 public:
 	virtual void Init(int argc, char* argv[]) {
-		shapeScale = 0.01f;
+		shapeScale = 0.01;
 		SampleApp::Init(argc, argv);
 	}
 	void ClearTime() {
@@ -83,7 +87,6 @@ public:
 		avePool = 0;
 		aveNarrow = 0;
 		aveBroad = 0;
-		if (GetPHScene()) GetPHScene()->GetPerformanceMeasure()->ClearCounts();
 		memset(avePhaseTime, 0, sizeof(avePhaseTime));
 	}
 	MyApp(){
@@ -115,8 +118,6 @@ public:
 		AddHotKey(MENU_MAIN, ID_ROUNDCONE, 'r');
 		AddAction(MENU_MAIN, ID_SPHERE, "drop sphere");
 		AddHotKey(MENU_MAIN, ID_SPHERE, 's');
-		AddAction(MENU_MAIN, ID_ELLIPSOID, "drop Ellipsoid");
-		AddHotKey(MENU_MAIN, ID_ELLIPSOID, 'E');
 		AddAction(MENU_MAIN, ID_SPHERESHOOT, "shoot sphere");
 		AddHotKey(MENU_MAIN, ID_SPHERESHOOT, 'p');
 		AddAction(MENU_MAIN, ID_TOWER, "drop tower");
@@ -131,8 +132,6 @@ public:
 		AddHotKey(MENU_MAIN, ID_CLEARTIME, 'l');
 		AddAction(MENU_MAIN, ID_MEASURE, "measure");
 		AddHotKey(MENU_MAIN, ID_MEASURE, 'm');
-		AddAction(MENU_MAIN, ID_ROTATION, "rotation test");
-		AddHotKey(MENU_MAIN, ID_ROTATION, 'R');
 	}
 	~MyApp(){}
 
@@ -142,25 +141,25 @@ public:
 		FWWinIf* win = GetCurrentWin();
 		win->SetFullScreen();
 		win->GetTrackball()->SetTarget(Vec3d(0,0.06,0));
-		win->GetTrackball()->SetPosition(0.01f*Vec3f(0, 25, 50) * 0.9f); //注視点設定
+		win->GetTrackball()->SetPosition(0.01*Vec3f(0, 25, 50) * 0.9); //注視点設定
 		PHSceneDesc pd;
 		GetPHScene()->GetDesc(&pd);
 		pd.timeStep = 1.0 / 60;
-		pd.contactTolerance = 0.001 * 0.4;
+		pd.contactTolerance = 0.001 * 0.2;
 		pd.airResistanceRateForAngularVelocity = 0.98;
 		GetPHScene()->SetDesc(&pd);
 		PHConstraintEngineDesc ed;
 		GetPHScene()->GetConstraintEngine()->GetDesc(&ed);
 		ed.freezeThreshold = 0;
-		ed.contactCorrectionRate = 0.8;
-		//ed.contactCorrectionRate = 0.2;
+		//ed.contactCorrectionRate = 0.8;
+		ed.contactCorrectionRate = 0.2;
 		ed.numIter = 500;
 		GetPHScene()->GetConstraintEngine()->SetDesc(&ed);
 		GetFWScene()->EnableRenderAxis(false, false, false);
 		GetFWScene()->EnableRenderContact(false);
 		GetFWScene()->SetRenderMode();
 
-#if 0
+#if SMALLACCEL
 		GetPHScene()->SetGravity(Vec3d(0, -9.8, 0) * 0.1);
 #endif
 	}
@@ -227,36 +226,24 @@ public:
 			}
 		
 		}
-		for(int i=0; i<UTPerformanceMeasureIf::NInstance(); ++i){
-			UTPerformanceMeasureIf* m = UTPerformanceMeasureIf::GetInstance(i);
-			DSTR << m->GetName();
-			for (int j = 0; j < m->NCounter(); ++j) {
-				DSTR << " " << m->GetNameOfCounter(j) << ":" << m->Time(j);
-			}
-			DSTR << std::endl;
-		}
 
 		//時間表示
-		UTPerformanceMeasureIf* meScene = GetPHScene()->GetPerformanceMeasure();
-		avePool += meScene->Time("collision");
-		meScene->ClearCounts();
-		UTPerformanceMeasureIf* meCol = UTPerformanceMeasureIf::GetInstance("Collision");
-		aveNarrow += meCol->Time("narrow");
-		aveBroad += meCol->Time("broad");
-		avePhaseTime[0] += meCol->Time("P1");
-		avePhaseTime[1] += meCol->Time("P2"); 
-		avePhaseTime[2] += meCol->Time("P3"); 
-		meCol->ClearCounts();
+		avePool += GetPHScene()->GetConstraintEngine()->GetCollisionTime();
+		aveNarrow += narrowTime; narrowTime = 0;
+		aveBroad += broadTime; broadTime = 0;
+		avePhaseTime[0] += coltimePhase1;
+		avePhaseTime[1] += coltimePhase2; 
+		avePhaseTime[2] += coltimePhase3; 
 		aveCounter++;
 		if (aveCounter > 0) {
-			message = ftos(fps) + "FPS  "
+			message = ftos(fps*1000) + "FPS  "
 				+ " count" + to_string(aveCounter) 
 				+ "  Total:" + ftos(avePool / aveCounter)
 				+ "  Broad:" + ftos(aveBroad / aveCounter)
 				+ "  Narrow:" + ftos(aveNarrow / aveCounter)
-				+ "  Setup:" + ftos(avePhaseTime[0] / aveCounter)
-				+ "  2D Search:" + ftos(avePhaseTime[1] / aveCounter)
-				+ "  3D Refinement:" + ftos(avePhaseTime[2] / aveCounter);
+				+ "  Setup:" + ftos(avePhaseTime[0] / aveCounter * 0.001)
+				+ "  2D Search:" + ftos(avePhaseTime[1] / aveCounter * 0.001)
+				+ "  3D Refinement:" + ftos(avePhaseTime[2] / aveCounter * 0.001);
 		}
 	}
 
@@ -323,8 +310,8 @@ public:
 				//	机の足
 				PHSolidIf* floor = GetPHScene()->FindObject("soFloor")->Cast();
 				CDCapsuleDesc cd;
-				cd.length = 0.04f;
-				cd.radius = 0.006f;
+				cd.length = 0.04;
+				cd.radius = 0.006;
 				CDCapsuleIf* cp = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 				double tower_radius = 0.04;
 				const int numbox = 4;
@@ -359,8 +346,8 @@ public:
 				ClearTime();
 				PHSolidIf* floor = GetPHScene()->FindObject("soFloor")->Cast();
 				CDCapsuleDesc cd;
-				cd.length = 0.1f;
-				cd.radius = 0.002f;
+				cd.length = 0.1;
+				cd.radius = 0.002;
 				CDCapsuleIf* cp = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 				double tower_radius = 0.082;
 				const int numbox = 30;
@@ -382,9 +369,9 @@ public:
 				for (int i = 0; i < 2; ++i) {
 					for (int j = 0; j < num; ++j) {
 						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)num;
-						shapeScale *= 0.4f;
+						shapeScale *= 0.4;
 						Drop(SHAPE_ROCK, GRRenderIf::ORANGE, v, w, Quaterniond::Rot(-theta, 'y') * Vec3d(0.06, 0.1 + 0.04*(i + 0.5), 0), q);
-						shapeScale /= 0.4f;
+						shapeScale /= 0.4;
 					}
 				}
 				for (int i = 0; i < 2; ++i) {
@@ -395,10 +382,9 @@ public:
 				}
 			}
 			if (id == ID_TOWER) {
-				//				double tower_radius = 0.032;
-				double tower_radius = 0.021;
+				double tower_radius = 0.032;
 				const int tower_height = 2;
-				const int numbox = 10;
+				const int numbox = 16;
 				double theta;
 				static int start = 0;
 				for (int i = start; i < start + tower_height; i++) {
@@ -425,10 +411,6 @@ public:
 			if (id == ID_SPHERE) {
 				Drop(SHAPE_SPHERE, GRRenderIf::YELLOW, v, w, p, q);
 				state = "sphere dropped.";
-			}
-			if (id == ID_ELLIPSOID) {
-				Drop(SHAPE_ELLIPSOID, GRRenderIf::LIGHTGREEN, v, w, p, q);
-				state = "ellipsoid dropped.";
 			}
 			if (id == ID_SPHERESHOOT) {
 				static int ct = 0;
@@ -526,7 +508,7 @@ public:
 					eyePos = win->GetTrackball()->GetPosition();
 					Vec3d shift(0.2, 0, 0);
 					win->GetTrackball()->SetTarget(Vec3d(0, 0.06, 0) + shift);
-					win->GetTrackball()->SetPosition(0.01f*Vec3f(0, 40, 50) * 2 + shift); //注視点設定
+					win->GetTrackball()->SetPosition(0.01*Vec3f(0, 40, 50) * 2 + shift); //注視点設定
 				}
 				else {
 					floor->SetOrientation(Quaterniond());
@@ -534,20 +516,6 @@ public:
 					win->GetTrackball()->SetTarget(eyeTgt);
 					win->GetTrackball()->SetPosition(eyePos); 
 				}
-			}
-			if (id == ID_ROTATION) {
-				CDBoxDesc bd(Vec3d(0.01, 0.04, 0.01));
-				CDShapeIf* sh = GetSdk()->GetPHSdk()->CreateShape(bd);
-				PHSolidDesc sd;
-				sd.pose.Pos() = Vec3d(-0.01, 0.1, 0);
-				PHSolidIf * s = GetPHScene()->CreateSolid(sd);
-				s->AddShape(sh);
-				sd.pose.Pos() = Vec3d(0.01, 0.1, 0);
-				sd.velocity = Vec3d(0.01, 0, 0);
-				sd.angVelocity = Vec3d(0, 0, 10);
-				s = GetPHScene()->CreateSolid(sd);
-				s->AddShape(sh);
-				GetPHScene()->SetGravity(Vec3d(0, 0, 0));
 			}
 		}
 		SampleApp::OnAction(menu, id);
