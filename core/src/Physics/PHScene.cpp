@@ -27,7 +27,8 @@ namespace Spr{;
 void PHSceneDesc::Init(){
 	PHSceneState::Init();
 	gravity				     = Vec3d(0.0, -9.8, 0.0);
-	airResistanceRate	     = 1.0;
+	airResistanceRateForVelocity	 = 1.0;
+	airResistanceRateForAngularVelocity	 = 1.0;
 	contactTolerance         = 0.002;
 	impactThreshold          = 10.0;
 	frictionThreshold        = 0.01;
@@ -309,19 +310,19 @@ void PHScene::SetTimeStep(double dt){
 	timeStepInv = 1.0/dt;
 }
 
-static UTPreciseTimer ptimer;
+static UTPreciseTimer ptimerSce;
 
 void PHScene::Step(){
 	int t0, t1, t2;
-	ptimer.CountUS();
+	ptimerSce.CountUS();
 	ClearForce();
-	t0 = ptimer.CountUS();
-	ptimer.CountUS();
+	t0 = ptimerSce.CountUS();
+	ptimerSce.CountUS();
 	GenerateForce();
-	t1 = ptimer.CountUS();
-	ptimer.CountUS();
+	t1 = ptimerSce.CountUS();
+	ptimerSce.CountUS();
 	Integrate();
-	t2 = ptimer.CountUS();
+	t2 = ptimerSce.CountUS();
 	//DSTR << "clear: " << t0 << " gen: " << t1 << " int: " << t2 << std::endl;
 }
 void PHScene::ClearForce(){

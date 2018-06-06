@@ -70,8 +70,8 @@ void FWGLUT::GlutTimerFunc(int value){
 		return;
 	// タイマーが稼働中ならコールバックを呼び再登録する
 	if(timer->IsStarted()){
-		timer->Call();
 		glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->GetID());
+		timer->Call();
 	}
 
 }

@@ -175,8 +175,11 @@ public:
 	void	SetGravity(const Vec3d& accel);
 	Vec3d	GetGravity();
 	
-	double	GetAirResistanceRate(){ return airResistanceRate; }
-	void	SetAirResistanceRate(double rate){ airResistanceRate = rate; }
+	double	GetAirResistanceRateForVelocity(){ return airResistanceRateForVelocity; }
+	void	SetAirResistanceRateForVelocity(double rate){ airResistanceRateForVelocity = rate; }
+
+	double	GetAirResistanceRateForAngularVelocity() { return airResistanceRateForAngularVelocity; }
+	void	SetAirResistanceRateForAngularVelocity(double rate) { airResistanceRateForAngularVelocity = rate; }
 
 	double  GetContactTolerance(){ return contactTolerance; }
 	void    SetContactTolerance(double tol){ contactTolerance = tol; }

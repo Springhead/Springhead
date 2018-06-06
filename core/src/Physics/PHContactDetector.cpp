@@ -20,6 +20,13 @@ namespace Spr{;
 #ifdef REPORT_TIME
 Spr::UTPreciseTimer ptimerForCd;
 #endif
+Spr::UTPreciseTimer ptimerForCd;
+Spr::UTPreciseTimer ptimerForBroad;
+Spr::UTPreciseTimer ptimerForGjk;
+int narrowTime;
+int broadTime;
+extern int		coltimePhase1;
+extern int		coltimePhase2;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // PHShapePair
@@ -65,11 +72,16 @@ bool PHSolidPair::Detect(unsigned int ct, double dt){
 	for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 		sp = shapePairs.item(i, j);
 		//このshape pairの交差判定/法線と接触の位置を求める．
+		ptimerForGjk.CountNS();
 		if(sp->Detect(
 			ct,
 			solid[0]->GetPose() * solid[0]->GetShapePose(i), solid[1]->GetPose() * solid[1]->GetShapePose(j))){
 			found = true;
+			coltimePhase1 += ptimerForGjk.CountNS();
 			OnDetect(sp, ct, dt);
+		}
+		else {
+			coltimePhase1 += ptimerForGjk.CountNS();
 		}
 	}
 	return found;
@@ -115,12 +127,14 @@ bool PHSolidPair::ContDetect(unsigned int ct, double dt){
 	for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 		sp = shapePairs.item(i, j);
 		//このshape pairの交差判定/法線と接触の位置を求める．
-		if(sp->ContDetect(ct, shapePose[0][i], shapePose[1][j], 
+		if (sp->ContDetect(ct, shapePose[0][i], shapePose[1][j],
 			//	剛体ではなく、形状の移動量なので、形状の中心位置で移動量を補正する。
 			delta[0] + (wt[0]^shapeCenter[0][i]),  delta[1] + (wt[1]^shapeCenter[1][j]), dt)){
+			narrowTime += ptimerForCd.CountUS();
 			assert(0.9 < sp->normal.norm() && sp->normal.norm() < 1.1);
 			found = true;
 			OnContDetect(sp, ct, dt);
+			ptimerForCd.CountUS();
 		}
 	}
 	// フリーズの解除
@@ -537,9 +551,9 @@ bool PHContactDetector::DetectPair(
 
 bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous){
 	if(NActiveSolidPairs() == 0) return false;
-
 	bool found = false;
 	
+	ptimerForBroad.CountUS();
 	//	Sort and prune mode --------------------------------------------------------------------
 	if( mode >= PHSceneDesc::MODE_SORT_AND_SWEEP_X &&
 	    mode <= PHSceneDesc::MODE_SORT_AND_SWEEP_Z ){
@@ -594,11 +608,15 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 #ifdef REPORT_TIME
 					ptimerForCd.Stop();
 #endif
+					broadTime += ptimerForBroad.CountUS();
+					ptimerForCd.CountUS();
 					if (continuous){
 						found |= solidPairs.item(f1, f2)->ContDetect(ct, dt);
 					}else{
 						found |= solidPairs.item(f1, f2)->Detect(ct, dt);
 					}
+					narrowTime += ptimerForCd.CountUS();
+					ptimerForBroad.CountUS();
 #ifdef REPORT_TIME
 					ptimerForCd.Start();
 #endif
@@ -614,6 +632,7 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 #ifdef REPORT_TIME
 		DSTR << "  narrow:" << ptimerForCd.CountUS();
 #endif
+		broadTime += ptimerForBroad.CountUS();
 	//	Cell mode --------------------------------------------------------------------
 	}else{
 			// 各形状のAABBを計算

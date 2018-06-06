@@ -84,6 +84,7 @@ public:
 		SHAPE_SPHERE,
 		SHAPE_ROCK,
 		SHAPE_BLOCK,
+		SHAPE_COIN,
 	};
 	
 	/// アクション情報
@@ -119,15 +120,19 @@ public:
 	UTRef<ObjectStatesIf>	states;			///< 状態保存用
 	UTTimerIf*				timer;			///< タイマ
 
+	///	形状のスケール
+	double					shapeScale;
 	/// 床用の形状
 	CDBoxIf*				shapeFloor;
-	CDBoxIf*				shapeWall;
+	CDBoxIf*				shapeWallX;
+	CDBoxIf*				shapeWallZ;
 	/// 作りおき形状
 	CDBoxIf*				shapeBox;
 	CDSphereIf*				shapeSphere;
 	CDCapsuleIf*			shapeCapsule;
 	CDRoundConeIf*			shapeRoundCone;
-	
+	CDConvexMeshIf*			shapeCoin;
+
 	/// 状態
 	bool					showHelp;		///< ヘルプ表示
 	int						curScene;		///< アクティブなシーンの番号
@@ -178,21 +183,24 @@ public:
 	}
 
 	/// 床の作成
-	PHSolidIf* CreateFloor(){
+	PHSolidIf* CreateFloor(bool bWall){
 		PHSolidIf* soFloor = GetPHScene()->CreateSolid();
+		soFloor->SetName("soFloor");
 		soFloor->SetDynamical(false);
-		soFloor->SetFramePosition(Vec3f(0,-1,0));
 	
 		soFloor->AddShape(shapeFloor);
-		soFloor->AddShape(shapeWall);
-		soFloor->AddShape(shapeWall);
-		soFloor->AddShape(shapeWall);
-		soFloor->AddShape(shapeWall);
-		soFloor->SetShapePose(1, Posed::Trn(-60, 0,   0));
-		soFloor->SetShapePose(2, Posed::Trn(  0, 0, -40));
-		soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
-		soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
-
+		soFloor->SetShapePose(0, Posed::Trn(0, -shapeFloor->GetBoxSize().y/2, 0));
+		if (bWall) {
+			soFloor->AddShape(shapeWallZ);
+			soFloor->AddShape(shapeWallX);
+			soFloor->AddShape(shapeWallZ);
+			soFloor->AddShape(shapeWallX);
+			double y = shapeWallZ->GetBoxSize().y / 2 - shapeFloor->GetBoxSize().y;
+			soFloor->SetShapePose(1, Posed::Trn(-(shapeFloor->GetBoxSize().x + shapeWallZ->GetBoxSize().x) / 2, y, 0));
+			soFloor->SetShapePose(2, Posed::Trn(0, y, -(shapeFloor->GetBoxSize().z + shapeWallX->GetBoxSize().z) / 2));
+			soFloor->SetShapePose(3, Posed::Trn((shapeFloor->GetBoxSize().x + shapeWallZ->GetBoxSize().x) / 2, y, 0));
+			soFloor->SetShapePose(4, Posed::Trn(0, y, (shapeFloor->GetBoxSize().z + shapeWallX->GetBoxSize().z) / 2));
+		}
 		GetFWScene()->SetSolidMaterial(GRRenderIf::GRAY, soFloor);
 
 		return soFloor;
@@ -223,7 +231,7 @@ public:
 		// 形状の割当て
 		if(shape == SHAPE_BOX)
 			solid->AddShape(shapeBox);
-		if(shape == SHAPE_CAPSULE)
+		if (shape == SHAPE_CAPSULE)
 			solid->AddShape(shapeCapsule);
 		if(shape == SHAPE_ROUNDCONE)
 			solid->AddShape(shapeRoundCone);
@@ -235,7 +243,7 @@ public:
 			for(int i=0; i < nv; ++i){
 				Vec3d v;
 				for(int c=0; c<3; ++c){
-					v[c] = ((rand() % 100) / 100.0 - 0.5) * 5 * 1.3;
+					v[c] = ((rand() % 100) / 100.0 - 0.5) * 5 * 1.3 * shapeScale;
 				}
 				md.vertices.push_back(v);
 			}
@@ -245,18 +253,21 @@ public:
 			for(int i = 0; i < 7; i++)
 				solid->AddShape(shapeBox);
 			Posed pose;
-			pose.Pos() = Vec3d( 3,  0,  0); solid->SetShapePose(1, pose);
-			pose.Pos() = Vec3d(-3,  0,  0); solid->SetShapePose(2, pose);
-			pose.Pos() = Vec3d( 0,  3,  0); solid->SetShapePose(3, pose);
-			pose.Pos() = Vec3d( 0, -3,  0); solid->SetShapePose(4, pose);
-			pose.Pos() = Vec3d( 0,  0,  3); solid->SetShapePose(5, pose);
-			pose.Pos() = Vec3d( 0,  0, -3); solid->SetShapePose(6, pose);
+			pose.Pos() = shapeScale * Vec3d( 3,  0,  0); solid->SetShapePose(1, pose);
+			pose.Pos() = shapeScale * Vec3d(-3,  0,  0); solid->SetShapePose(2, pose);
+			pose.Pos() = shapeScale * Vec3d( 0,  3,  0); solid->SetShapePose(3, pose);
+			pose.Pos() = shapeScale * Vec3d( 0, -3,  0); solid->SetShapePose(4, pose);
+			pose.Pos() = shapeScale * Vec3d( 0,  0,  3); solid->SetShapePose(5, pose);
+			pose.Pos() = shapeScale * Vec3d( 0,  0, -3); solid->SetShapePose(6, pose);
 		}
-
+		if (shape == SHAPE_COIN) {
+			solid->AddShape(shapeCoin);
+		}
 		solid->SetVelocity(v);
 		solid->SetAngularVelocity(w);
 		solid->SetFramePosition(p);
 		solid->SetOrientation(q);
+		solid->CompInertia();
 	}
 
 	///
@@ -349,6 +360,8 @@ public:
 		yline		= 20;
 		xkeys		= 0;
 		xbrief		= 100;
+
+		shapeScale = 1.0;
 
 		/// いつでも有効系
 		AddMenu(MENU_ALWAYS, "");
@@ -458,8 +471,8 @@ public: /** 派生クラスが実装する関数 **/
 				ToggleAction(menu, id);
 			if (id == ID_STEP)
 			{
-				GetFWScene()->Step();
-				Display();
+				OnStep();
+				PostRedisplay();
 			}
 		}
 		if(menu == MENU_STATE){
@@ -619,27 +632,44 @@ public: /** FWAppの実装 **/
 
 		/// 床用の形状
 		CDBoxDesc bd;
-		bd.boxsize = Vec3d(60.0, 2.0, 40.0);
+		bd.boxsize = shapeScale * Vec3d(60, 2, 40);
 		shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
-		bd.boxsize.y *= 6.0;
-		shapeWall = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
+		bd.boxsize.y = shapeScale * 6;
+		CDBoxDesc wd = bd;
+		wd.boxsize.x = shapeScale * 2;
+		wd.boxsize.z += shapeScale * 4;
+		shapeWallZ = GetSdk()->GetPHSdk()->CreateShape(wd)->Cast();
+		wd = bd;
+		wd.boxsize.z = shapeScale * 2;
+		shapeWallX = GetSdk()->GetPHSdk()->CreateShape(wd)->Cast();
 
 		// 形状の作成
-		bd.boxsize = Vec3f(2,2,2);
+		bd.boxsize = shapeScale * Vec3f(2, 2, 2);
 		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		
 		CDSphereDesc sd;
-		sd.radius = 1;
+		sd.radius = shapeScale * 1;
 		shapeSphere = GetSdk()->GetPHSdk()->CreateShape(sd)->Cast();
 		
 		CDCapsuleDesc cd;
-		cd.radius = 1;
-		cd.length = 1;
+		cd.radius = shapeScale * 1;
+		cd.length = shapeScale * 1;
 		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 		
 		CDRoundConeDesc rcd;
-		rcd.length = 3;
+		rcd.length = shapeScale * 3;
+		rcd.radius = shapeScale * Vec2d(1, 2);
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
+
+		CDConvexMeshDesc coind;
+		const int nDiv = 12;
+		for (int i = 0; i < nDiv; ++i) {
+			const double r = shapeScale * 0.8;
+			const double h = shapeScale * 0.2;
+			coind.vertices.push_back(Quaterniond::Rot(Rad(360.0/nDiv * i), 'y')* Vec3d(r, -h / 2, 0));
+			coind.vertices.push_back(Quaterniond::Rot(Rad(360.0/nDiv * i), 'y')*Vec3d(r, +h / 2, 0));
+		}
+		shapeCoin = GetSdk()->GetPHSdk()->CreateShape(coind)->Cast();
 		
 		/// シーンの作成
 		for(int i = 0; i < numScenes; i++){
@@ -672,7 +702,6 @@ public: /** FWAppの実装 **/
 		// タイマ
 		timer = CreateTimer(UTTimerIf::FRAMEWORK);
 		timer->SetInterval(25);
-
 		EnableIdleFunc(false);
 	}
 
