@@ -70,6 +70,7 @@ public:
 	}
 	
 	HISpidar(){ bGood = false; }
+	HISpidar(const HISpidarDesc& desc) {}
 	virtual ~HISpidar(){ SetMinForce(); }
 };
 

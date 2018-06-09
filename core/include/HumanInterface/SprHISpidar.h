@@ -86,6 +86,10 @@ struct HISpidarIf : public HIHapticIf{
 	void SetLimitMinForce(float f);
 	/// 最大出力の設定
 	void SetLimitMaxForce(float f);
+	///	モータ
+	HISpidarMotorIf* GetMotor(size_t i);
+	///	モータの数
+	size_t NMotor() const;
 };
 struct HISpidarDesc{
 	SPR_DESCDEF(HISpidar);
