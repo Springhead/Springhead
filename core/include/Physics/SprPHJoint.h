@@ -698,6 +698,26 @@ struct PHSpringMotorIf;
 struct PHSpringIf : public PHJointIf{
 	SPR_IFDEF(PHSpring);
 
+	/** @brief 目標位置を設定する
+		@param targetPosition 目標位置
+	*/
+	void SetTargetPosition(const Vec3d& targetPosition);
+
+	/** @brief 目標位置を取得する
+		@return 目標位置
+	*/
+	Vec3d GetTargetPosition();
+
+	/** @brief 目標姿勢を設定する
+		@param targetOrientation 目標姿勢
+	*/
+	void SetTargetOrientation(const Quaterniond& targetOrientation);
+
+	/** @brief 目標姿勢を取得する
+		@return 目標姿勢
+	*/
+	Quaterniond GetTargetOrientation();
+
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
 	 */
@@ -796,6 +816,8 @@ struct PHSpringIf : public PHJointIf{
 /// バネダンパのデスクリプタ
 struct PHSpringDesc : public PHJointDesc {
 	SPR_DESCDEF(PHSpring);
+	Vec3d targetPosition;
+	Quaterniond targetOrientation;
 	Vec3d  spring;
 	Vec3d  damper;
 	Vec3d  secondDamper;
@@ -807,14 +829,16 @@ struct PHSpringDesc : public PHJointDesc {
 	Vec3d  secondMoment;
 
 	PHSpringDesc() {
-		spring          = Vec3d();
-		damper          = Vec3d();
-		secondDamper    = Vec3d(FLT_MAX, FLT_MAX, FLT_MAX);
-		springOri       = 0;
-		damperOri       = 0;
-		secondDamperOri = FLT_MAX;
-		yieldStress     = FLT_MAX;
-		hardnessRate    = 1.0;
+		targetPosition    = Vec3d();
+		targetOrientation = Quaterniond();
+		spring            = Vec3d();
+		damper            = Vec3d();
+		secondDamper      = Vec3d(FLT_MAX, FLT_MAX, FLT_MAX);
+		springOri         = 0;
+		damperOri         = 0;
+		secondDamperOri   = FLT_MAX;
+		yieldStress       = FLT_MAX;
+		hardnessRate      = 1.0;
 	}
 };
 

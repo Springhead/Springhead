@@ -52,6 +52,10 @@ public:
 
 	// ----- インタフェースの実装
 
+	virtual void SetTargetPosition(const Vec3d& targetPosition) { this->targetPosition = targetPosition; }
+	virtual Vec3d GetTargetPosition() { return targetPosition; }
+	virtual void SetTargetOrientation(const Quaterniond& targetOrientation) { this->targetOrientation = targetOrientation; }
+	virtual Quaterniond GetTargetOrientation() { return targetOrientation; }
 	virtual void SetSpring(const Vec3d& spring) { this->spring = spring; }
 	virtual Vec3d GetSpring() { return spring; }
 	virtual void SetDamper(const Vec3d& damper) { this->damper = damper; }
