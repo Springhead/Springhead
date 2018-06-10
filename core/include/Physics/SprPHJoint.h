@@ -811,18 +811,6 @@ struct PHSpringIf : public PHJointIf{
 	/** @brief バネの発揮している力を取得する
 	 */
 	Vec6d GetMotorForce();
-
-	/** @brief バネの発揮している力を設定する
-	 */
-	void SetOffsetForce(const Vec6d& offsetForce);
-
-	/** @brief 目標速度を設定する
-	 */
-	void SetTargetVelocity(const Vec6d& targetVelocity);
-
-	/** @brief 目標速度を取得する
-	 */
-	Vec6d GetTargetVelocity();
 };
 
 /// バネダンパのデスクリプタ
@@ -839,8 +827,6 @@ struct PHSpringDesc : public PHJointDesc {
 	double yieldStress;
 	double hardnessRate;
 	Vec3d  secondMoment;
-	Vec6d  targetVelocity;
-	Vec6d  offsetForce;
 
 	PHSpringDesc() {
 		targetPosition    = Vec3d();
@@ -853,8 +839,6 @@ struct PHSpringDesc : public PHJointDesc {
 		secondDamperOri   = FLT_MAX;
 		yieldStress       = FLT_MAX;
 		hardnessRate      = 1.0;
-		targetVelocity    = Vec6d();
-		offsetForce       = Vec6d();
 	}
 };
 

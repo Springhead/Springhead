@@ -123,13 +123,13 @@ struct PHHumanBallJointResistanceDesc : public PHBallJointNonLinearMotorDesc {
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
-/// ボールジョイントモータのインタフェース
+/// バネのモータのインタフェース
 struct PHSpringMotorIf : public SceneObjectIf {
 	SPR_IFDEF(PHSpringMotor);
 
 };
 	
-/// ボールジョイントモータのデスクリプタ
+/// バネのモータのデスクリプタ
 struct PHSpringMotorDesc{
 	SPR_DESCDEF(PHSpringMotor);
 
