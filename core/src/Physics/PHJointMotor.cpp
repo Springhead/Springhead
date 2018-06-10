@@ -196,9 +196,9 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		int j = joint->movableAxes[i];
-		if(!joint->dv_changed[j])
-			continue;
 
+		joint->dv[j] = joint->J[0].row(j) * (joint->solid[0]->dv /*+ joint->solid[0]->ddv*/)
+			         + joint->J[1].row(j) * (joint->solid[1]->dv /*+ joint->solid[1]->ddv*/);
 		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
@@ -210,7 +210,7 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 
 		if(std::abs(df[i]) > joint->engine->dfEps){
 			updated = true;
-			CompResponseDirect(df[i], i);
+			CompResponse(df[i], i);
 		}
 	}
 	return updated;
@@ -219,11 +219,6 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 template<int NDOF>
 void PHNDJointMotor<NDOF>::CompResponse(double df, int i){
 	joint->CompResponse(df, joint->movableAxes[i]);
-}
-
-template<int NDOF>
-void PHNDJointMotor<NDOF>::CompResponseDirect(double df, int i){
-	joint->CompResponseDirect(df, joint->movableAxes[i]);
 }
 
 /// 弾性変形用のCompBias
@@ -535,8 +530,8 @@ Vec3d PHHumanBallJointResistance::GetCurrentResistance() {
 /// propVを計算する
 PTM::TVector<6,double> PHSpringMotor::GetPropV() {
 	Vec6d propV;
-	Quaterniond diff = joint->Xjrel.q.Inv();
-	propV.SUBVEC(0,3) = -joint->Xjrel.r;
+	Quaterniond diff = DCAST(PHSpring,joint)->targetOrientation * joint->Xjrel.q.Inv();
+	propV.SUBVEC(0,3) = DCAST(PHSpring, joint)->targetPosition - joint->Xjrel.r;
 	propV.SUBVEC(3,3) = diff.RotationHalf();
 	return propV;
 }
