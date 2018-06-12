@@ -57,7 +57,7 @@ public:
 	}
 
 	virtual void BuildScene(){
-		soFloor = app->CreateFloor();
+		soFloor = app->CreateFloor(true);
 		soFloor->SetFramePosition(Vec3d(0,-30,0));
 		
 		PHSdkIf* phSdk = GetPHSdk();

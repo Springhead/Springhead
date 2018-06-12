@@ -88,7 +88,7 @@ public:
 	}
 
 	virtual void BuildScene(){
-		soFloor = app->CreateFloor();
+		soFloor = app->CreateFloor(true);
 
 		CDBoxDesc bd;
 		bd.boxsize = Vec3d(2.0, 2.0, 2.0);

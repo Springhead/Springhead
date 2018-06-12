@@ -95,7 +95,7 @@ public:
 		}
 	}
 	virtual void BuildScene(){
-		soFloor = app->CreateFloor();
+		soFloor = app->CreateFloor(true);
 
 		PHSolidIf* so = GetPHScene()->CreateSolid();
 		so->AddShape(app->shapeBox);

@@ -50,7 +50,7 @@ public:
 		robot.Build(pose, GetFWScene()->GetPHScene(), GetSdk()->GetPHSdk());			//	ロボット
 		pose.Pos() = Vec3d(0.0, 1.0, 1.0);
 
-		CreateFloor();								//	床
+		CreateFloor(true);								//	床
 		CDBoxDesc box;								//	三つ重なっている箱
 		box.boxsize = Vec3f(1.0, 1.0, 2.0);
 		CDBoxIf* boxBody = GetFWScene()->GetPHScene()->GetSdk()->CreateShape(box)->Cast();
