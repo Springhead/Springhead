@@ -112,7 +112,7 @@ public:
 	~MyApp(){}
 
 	virtual void BuildScene(){
-		soFloor = CreateFloor();
+		soFloor = CreateFloor(true);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
