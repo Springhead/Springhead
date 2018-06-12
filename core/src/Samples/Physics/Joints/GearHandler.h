@@ -69,7 +69,7 @@ public:
 	~GearHandler(){}
 
 	virtual void BuildScene(){
-		soFloor = app->CreateFloor();
+		soFloor = app->CreateFloor(true);
 
 		AddGear(Posed(Vec3d( 0.0, 10.0, 0.0), Quaterniond()), 1.0, 0.5);
 		AddGear(Posed(Vec3d( 2.0, 10.0, 0.0), Quaterniond()), 1.0, 0.5, &gears[0]);

@@ -51,7 +51,7 @@ public:
 		PHSdkIf*	phSdk	= GetPHSdk();
 		PHSceneIf*	phScene = GetPHScene();
 
-		soFloor = app->CreateFloor();
+		soFloor = app->CreateFloor(true);
 		
 		CDBoxDesc bd;
 		soBox.resize(3);
