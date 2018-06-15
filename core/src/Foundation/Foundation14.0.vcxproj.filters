@@ -25,9 +25,6 @@
     <ClCompile Include="UTPath.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="UTPreciseTimer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="UTQPTimer.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -90,9 +87,6 @@
     <ClInclude Include="UTPath.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="UTPreciseTimer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="UTQPTimer.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -113,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="ClapackLibsDef.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprUTQPTimer.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

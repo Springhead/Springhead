@@ -12,7 +12,7 @@
 #include <Physics/PHConstraint.h>
 #include <Physics/PHGear.h>
 #include <Physics/PHContactDetector.h>
-#include <Foundation/UTPreciseTimer.h>
+#include <Foundation/UTQPTimer.h>
 
 namespace Spr{;
 
@@ -114,16 +114,14 @@ public:
 
 	int count;
 
-	/// レポート用
-	UTPreciseTimer ptimer;
-	UTPreciseTimer ptimer2;
-	FILE*          reportFile;
-	int            timeCollision;
-	int            timeSetup;
-	int            timeIterate;
+	/// Peformance counter
+	UTQPTimer ptimer;
+	UTLongLong& timeCollision;
+	UTLongLong& timeSetup;
+	UTLongLong& timeIterate;
 
 public:
-	PHConstraintEngine();
+	PHConstraintEngine(UTPerformanceMeasure* pm = (UTPerformanceMeasure*)UTPerformanceMeasure::Get("global"));
 	~PHConstraintEngine();
 	
 	PHJoint*    CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs = NULL, PHSolid* rhs = NULL);	///< 関節の追加する
@@ -173,8 +171,6 @@ public:
 	double	GetShrinkRate            (){return shrinkRate;}
 	void	SetShrinkRateCorrection  (double data){shrinkRateCorrection = data;}
 	double	GetShrinkRateCorrection  (){return shrinkRateCorrection;}
-	void    EnableReport             (bool on);
-	int		GetCollisionTime		 (){return timeCollision;}
 
 	//	接触領域を表示するための情報を更新するかどうか
 	virtual void	EnableRenderContact	(bool enable);

@@ -83,19 +83,19 @@ FWSdk::FWSdk(){
 }
 void FWSdk::CreateSdks(){
 	phSdk = PHSdkIf::CreateSdk();
-	DCAST(PHSdk, phSdk)->SetNameManager(this);
+	DCAST(PHSdk, phSdk)->SetNameManager(Cast());
 	phSdk->SetName("phSdk");
 	
 	grSdk = GRSdkIf::CreateSdk();
-	DCAST(GRSdk, grSdk)->SetNameManager(this);
+	DCAST(GRSdk, grSdk)->SetNameManager(Cast());
 	grSdk->SetName("grSdk");
 	
 	fiSdk = FISdkIf::CreateSdk();
-	DCAST(FISdk, fiSdk)->SetNameManager(this);
+	DCAST(FISdk, fiSdk)->SetNameManager(Cast());
 	fiSdk->SetName("fiSdk");
 
 	hiSdk = HISdkIf::CreateSdk();
-	DCAST(HISdk, hiSdk)->SetNameManager(this);
+	DCAST(HISdk, hiSdk)->SetNameManager(Cast());
 	hiSdk->SetName("hiSdk");
 }
 

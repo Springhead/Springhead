@@ -17,7 +17,7 @@ Boxstackベースで連続衝突判定の手法を切り替えて試せるサン
 
 std::string ftos(double d, char* fmt = "%2.3f") {
 	char buf[100];
-	snprintf(buf, sizeof(buf), fmt, d/1000);
+	snprintf(buf, sizeof(buf), fmt, d);
 	return std::string(buf);
 }
 
@@ -27,14 +27,8 @@ using namespace Spr;
 using namespace std;
 
 namespace Spr{
-	extern int		coltimePhase1;
-	extern int		coltimePhase2;
-	extern int		coltimePhase3;
 	extern int		colcounter;
 	extern int s_methodSW; //手法切り替えの変数
-	extern int narrowTime;
-	extern int broadTime;
-
 }
 
 class MyApp : public SampleApp{
@@ -87,6 +81,7 @@ public:
 		avePool = 0;
 		aveNarrow = 0;
 		aveBroad = 0;
+		if (GetPHScene()) GetPHScene()->GetPerformanceMeasure()->ClearCounts();
 		memset(avePhaseTime, 0, sizeof(avePhaseTime));
 	}
 	MyApp(){
@@ -228,22 +223,26 @@ public:
 		}
 
 		//時間表示
-		avePool += GetPHScene()->GetConstraintEngine()->GetCollisionTime();
-		aveNarrow += narrowTime; narrowTime = 0;
-		aveBroad += broadTime; broadTime = 0;
-		avePhaseTime[0] += coltimePhase1;
-		avePhaseTime[1] += coltimePhase2; 
-		avePhaseTime[2] += coltimePhase3; 
+		UTPerformanceMeasure* me = GetPHScene()->GetPerformanceMeasure();
+		avePool += me->Time("collision");
+		me->ClearCounts();
+		UTPerformanceMeasure* meC = UTPerformanceMeasure::Get("Collision");
+		aveNarrow += meC->Time("narrow");
+		aveBroad += meC->Time("broad");
+		avePhaseTime[0] += meC->Time("P1");
+		avePhaseTime[1] += meC->Time("P2"); 
+		avePhaseTime[2] += meC->Time("P3"); 
+		meC->ClearCounts();
 		aveCounter++;
 		if (aveCounter > 0) {
-			message = ftos(fps*1000) + "FPS  "
+			message = ftos(fps) + "FPS  "
 				+ " count" + to_string(aveCounter) 
 				+ "  Total:" + ftos(avePool / aveCounter)
 				+ "  Broad:" + ftos(aveBroad / aveCounter)
 				+ "  Narrow:" + ftos(aveNarrow / aveCounter)
-				+ "  Setup:" + ftos(avePhaseTime[0] / aveCounter * 0.001)
-				+ "  2D Search:" + ftos(avePhaseTime[1] / aveCounter * 0.001)
-				+ "  3D Refinement:" + ftos(avePhaseTime[2] / aveCounter * 0.001);
+				+ "  Setup:" + ftos(avePhaseTime[0] / aveCounter)
+				+ "  2D Search:" + ftos(avePhaseTime[1] / aveCounter)
+				+ "  3D Refinement:" + ftos(avePhaseTime[2] / aveCounter);
 		}
 	}
 
@@ -382,9 +381,10 @@ public:
 				}
 			}
 			if (id == ID_TOWER) {
-				double tower_radius = 0.032;
+				//				double tower_radius = 0.032;
+				double tower_radius = 0.021;
 				const int tower_height = 2;
-				const int numbox = 16;
+				const int numbox = 10;
 				double theta;
 				static int start = 0;
 				for (int i = start; i < start + tower_height; i++) {

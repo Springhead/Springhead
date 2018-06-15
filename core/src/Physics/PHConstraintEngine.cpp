@@ -33,13 +33,7 @@ namespace Spr{;
  */
 const char*    reportFilename = "PHConstraintEngineReport.csv";
 
-//coltime
-//連続判定のプロセスごとに分けて時間を保存
-int		coltimePhase1;
-int		coltimePhase2;
-int		coltimePhase3;
-int		colcounter; //サポート探索回数カウントに使っている
-UTPreciseTimer* p_timer;
+int		colcounter; //サポート探索回数のカウント
 
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
@@ -224,29 +218,15 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 //----------------------------------------------------------------------------
 // PHConstraintEngine
 
-PHConstraintEngine::PHConstraintEngine(){
+PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasure* pm):
+	timeCollision(pm->Count("collision")), 
+	timeSetup(pm->Count("setup")),
+	timeIterate(pm->Count("iterate"))
+{
 	dfEps      = 1.0e-12;
-	reportFile = 0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
-	EnableReport(false);
-}
-
-void PHConstraintEngine::EnableReport(bool on){
-	if(!on && reportFile){
-		fclose(reportFile);
-		reportFile = nullptr;
-	}
-	if(on && !reportFile){
-		reportFile = fopen(reportFilename, "w");
-		if(reportFile)
-			fprintf(reportFile, "col, sup, ite\n");
-	}
-
-	bReport = on;
-	renderContact = true;
-
 }
 
 void PHConstraintEngine::Clear(){
@@ -689,14 +669,8 @@ void PHConstraintEngine::StepPart1(){
 
 		PHSceneIf* scene = GetScene();
 		if(scene->IsContactDetectionEnabled()){
-//			if (bReport) {
-				coltimePhase1 = 0;
-				coltimePhase2 = 0;
-				coltimePhase3 = 0;
-				colcounter = 0;
-				p_timer = &ptimer2;
-				ptimer.CountUS();
-//			}
+			colcounter = 0;
+			ptimer.CountUS();
 			Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
 			timeCollision = ptimer.CountUS();
 			if (bReport) {
@@ -796,10 +770,6 @@ void PHConstraintEngine::Step(){
 	{
 		StepPart1();	// 接触判定
 		StepPart2();	// 拘束力計算，積分
-	}
-
-	if(bReport && reportFile){
-		fprintf(reportFile, "%d, %d, %d, %d\n", timeCollision, timeSetup, timeIterate,coltimePhase1);
 	}
 }
 

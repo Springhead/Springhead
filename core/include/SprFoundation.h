@@ -16,5 +16,6 @@
 #include "Foundation/SprScene.h"
 #include "Foundation/SprUTTimer.h"
 #include "Foundation/SprUTCriticalSection.h"
+#include "Foundation/SprUTQPTimer.h"
 
 #endif
