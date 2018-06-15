@@ -87,7 +87,8 @@ void NameManager::Clear(){
 	childManagers.clear();
 	names.Clear();
 }
-void NameManager::SetNameManager(NameManager* p){
+void NameManager::SetNameManager(NameManagerIf* pi){
+	NameManager* p = pi->Cast();
 	if (nameManager==p) return;
 	if (nameManager) nameManager->DelChildManager(this);
 	if (p) p->AddChildManager(this);

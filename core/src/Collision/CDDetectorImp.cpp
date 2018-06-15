@@ -9,15 +9,16 @@
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
-#include <Foundation/UTPreciseTimer.h>
+#include <Foundation/UTQPTimer.h>
 
 namespace Spr {;
 const double epsilon = 1e-16;
 const double epsilon2 = epsilon*epsilon;
 
-extern UTPreciseTimer* p_timer;
-extern int		coltimePhase1;
-extern int		coltimePhase2;
+UTQPTimer qpTimerForCollision;
+UTLongLong& coltimePhase1 = UTPerformanceMeasure::Get("Collision")->Count("P1");
+UTLongLong& coltimePhase2 = UTPerformanceMeasure::Get("Collision")->Count("P2");
+UTLongLong& coltimePhase3 = UTPerformanceMeasure::Get("Collision")->Count("P3");
 bool bUseContactVolume = true;
 
 int s_methodSW = 0;			//	0=通常,1=加速,2=Gino
@@ -44,7 +45,7 @@ int FindCommonPointInterface(const CDConvex* a, const CDConvex* b,
 		break;
 	case 3:	
 		assert(0);
-		p_timer->CountNS();
+		qpTimerForCollision.CountNS();
 		res = FindCommonPoint(a, b, a2w, b2w, v, pa, pb);
 		if (res >= 1) {
 			v.clear();
@@ -291,7 +292,7 @@ void CDShapePair::CalcNormal(){
 	center += 0.5f*depth*normal;
 #else
 	//EPAで衝突法線を求める
-	p_timer->CountNS();
+	qpTimerForCollision.CountNS();
 	Vec3d n = normal;
 	CalcEPA(n, shape[0], shape[1], shapePoseW[0], shapePoseW[1], closestPoint[0], closestPoint[1]);
 	depth = -1 * n.norm();
@@ -301,7 +302,7 @@ void CDShapePair::CalcNormal(){
 	else {
 		normal = (shapePoseW[1].Pos() - shapePoseW[0].Pos()).unit();
 	}
-	coltimePhase2 += p_timer->CountNS();
+	qpTimerForCollision.Accumulate(coltimePhase2);
 #if 0
 	if (res <= 0){
 		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << n << std::endl;

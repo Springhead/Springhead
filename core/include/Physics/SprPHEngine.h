@@ -107,11 +107,6 @@ public:
 	*/
 	double GetShrinkRateCorrection();
 
-	/** レポートを有効化/無効化 */
-	void EnableReport(bool on = true);
-
-	int GetCollisionTime();
-
 	/** @brief 接触領域を表示するための情報を更新するかどうか。FWScene::EnableRenderContact()が呼び出す。
 	*/
 	void EnableRenderContact(bool enable);

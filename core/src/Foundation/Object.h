@@ -324,11 +324,11 @@ public:
 	NamedObject& operator=(const NamedObject& n);
 	virtual ~NamedObject();
 	///	名前の取得
-	const char* GetName() const { return name.c_str(); }
+	virtual const char* GetName() const { return name.c_str(); }
 	///	名前の設定
-	void SetName(const char* n);
+	virtual void SetName(const char* n);
 	///	NameManagerを設定
-	void SetNameManager(NameManagerIf* s);
+	virtual void SetNameManager(NameManagerIf* s);
 	///	NameManagerの取得
 	virtual NameManagerIf* GetNameManager() const ;
 protected:

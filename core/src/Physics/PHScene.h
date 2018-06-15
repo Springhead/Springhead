@@ -71,6 +71,8 @@ protected:
 	std::vector< UTRef<PHSkeleton> > skeletons;
 
 	double					timeStepInv;	///< timeStepの逆数．高速化用
+
+	UTPerformanceMeasure* performanceMeasure;
 public:
 	
 	friend class			PHSolid;
@@ -89,7 +91,7 @@ public:
 	PHEngines*				GetEngines();
 	CDShapeIf*				CreateShape(const IfInfo* ii, const CDShapeDesc& desc);	
 	double					GetTimeStepInv(){ return timeStepInv; }
-	
+
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//インタフェース(PHSceneIf)の実装
 	PHSdkIf*				GetSdk();
@@ -257,6 +259,9 @@ public:
 	virtual bool        WriteStateR    (std::ostream& fout);
 	virtual bool        ReadStateR     (std::istream& fin);
 	virtual void        DumpObjectR    (std::ostream& os, int level=0) const;
+	virtual UTPerformanceMeasure* GetPerformanceMeasure() {
+		return performanceMeasure;
+	}
 protected:
 	virtual void AfterSetDesc();
 	virtual void BeforeGetDesc() const;

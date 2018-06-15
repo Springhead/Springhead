@@ -94,7 +94,7 @@ protected:
 public:
 	NameManager();
 	virtual ~NameManager();
-	virtual void SetNameManager(NameManager* s);
+	virtual void SetNameManager(NameManagerIf* s);
 	void AddChildManager(NameManager* c);
 	void DelChildManager(NameManager* c);
 	///	型と名前からオブジェクトを取得

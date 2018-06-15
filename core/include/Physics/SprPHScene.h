@@ -16,6 +16,7 @@
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
 #include <Foundation/SprScene.h>
+#include <Foundation/UTQPTimer.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>
@@ -587,6 +588,10 @@ public:
 	/** @breif Physicsとの同期を取る StepHapticLoop()を呼ぶ度に呼び出す必要あり
 	*/
 	void StepHapticSync();
+
+	/** @brief 計算時間の計測結果を取得する。
+	*/
+	UTPerformanceMeasure* GetPerformanceMeasure();
 };
 
 //@}

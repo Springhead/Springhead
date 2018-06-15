@@ -15,6 +15,8 @@
 
 #include "UTQPTimer.h"
 #include <Base/BaseDebug.h>
+#include <Foundation/Scene.h>
+
 #ifdef	_MSC_VER
 #  include <Windows.h>
 #  include <mmsystem.h>
@@ -32,18 +34,17 @@ namespace Spr{;
  */
 typedef	unsigned long	DWORD;		// 32-bit unsigned integer
 typedef	long		LONG;		// 32-bit signed integer
-typedef	long long	LONGLONG;	// 64-bit signed integer
 typedef union _LARGE_INTEGER {
 	struct {
 		DWORD	LowPart;
 		LONG	HighPart;
 	};
-	LONGLONG	QuadPart;
+	UTLongLong	QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
 static void QueryPerformanceCounter(LARGE_INTEGER* c) {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	c->QuadPart = (LONGLONG) (tv.tv_sec * 1000000) + tv.tv_usec;
+	c->QuadPart = (UTLongLong) (tv.tv_sec * 1000000) + tv.tv_usec;
 }
 //extern unsigned int sleep(unsigned int);	// ??
 static int QueryPerformanceFrequency(LARGE_INTEGER* f) {
@@ -57,15 +58,22 @@ static int QueryPerformanceFrequency(LARGE_INTEGER* f) {
 }
 #endif
 
+UTLargeInteger UTQPTimer::freq;
+
 //周波数を読み出す
 UTQPTimer::UTQPTimer(): stopWatch(0), startFlag(false)
 {
-	LARGE_INTEGER f;
-	QueryPerformanceFrequency( &(f) );
-	freq.quadPart = f.QuadPart;
+	if (freq.quadPart == 0) {
+		Freq();
+	}
 }
 
 int UTQPTimer::Freq(){
+	if (freq.quadPart == 0) {
+		LARGE_INTEGER f;
+		QueryPerformanceFrequency(&(f));
+		freq.quadPart = f.QuadPart;
+	}
 	return (int)freq.quadPart;
 } 
 //μ秒単位で待つ
@@ -80,15 +88,40 @@ void UTQPTimer::WaitUS(int time)
 	}while(time1.QuadPart < time2.QuadPart);
 }
 
-//前回呼び出されてからの時間をμ秒単位で計測
+void UTQPTimer::Accumulate(UTLongLong& l){
+	LARGE_INTEGER now;
+	QueryPerformanceCounter(&now);
+	l +=  now.QuadPart - lasttime.quadPart;
+	lasttime.quadPart = now.QuadPart;
+}
+//前回呼び出されてからのカウント数を返す
+UTLongLong UTQPTimer::Count()
+{
+	LARGE_INTEGER now;
+	QueryPerformanceCounter(&now);
+	UTLongLong rv = now.QuadPart - lasttime.quadPart;
+	lasttime.quadPart = now.QuadPart;
+	return rv;
+}
 int  UTQPTimer::CountUS()
 {	
 	LARGE_INTEGER now;
 	int retval;
 
-	QueryPerformanceCounter( &now);
+	QueryPerformanceCounter(&now);
 	
 	retval =  (int)(((now.QuadPart-lasttime.quadPart)*1000000 / freq.quadPart) & 0xffffffff);
+	lasttime.quadPart = now.QuadPart;
+	return retval;
+}
+int  UTQPTimer::CountNS()
+{
+	LARGE_INTEGER now;
+	int retval;
+
+	QueryPerformanceCounter(&now);
+
+	retval = (int)(((now.QuadPart - lasttime.quadPart) * 1000000 / (freq.quadPart/1000)) & 0xffffffff);
 	lasttime.quadPart = now.QuadPart;
 	return retval;
 }
@@ -129,12 +162,77 @@ unsigned long UTQPTimer::Clear(){
 	return rv;
 }
 
+static std::vector< UTRef<UTPerformanceMeasureImp> >& GetMeasures() {
+	static std::vector< UTRef<UTPerformanceMeasureImp> > measures;
+	return measures;
+}
+UTPerformanceMeasure* UTPerformanceMeasure::Find(const char* n) {
+	for (auto m : GetMeasures()) {
+		if (m->name.compare(n) == 0) {
+			return m;
+		}
+	}
+	return NULL;
+}
+UTPerformanceMeasure* UTPerformanceMeasure::Get(const char* n) {
+	UTPerformanceMeasure* rv = Find(n);
+	if (rv) return rv;
+	GetMeasures().push_back(DBG_NEW UTPerformanceMeasureImp(n));	
+	return GetMeasures().back();
+}
+UTPerformanceMeasure* UTPerformanceMeasure::Create(const char* n) {
+	std::string name;
+	for (int i = 0;; ++i) {
+		name = n;
+		if (i) name = name + std::to_string(i);
+		if (Find(name.c_str()) == 0) break;
+	}
+	GetMeasures().push_back(DBG_NEW UTPerformanceMeasureImp(name.c_str()));
+	return GetMeasures().back();
+}
+
+int UTPerformanceMeasureImp::FindId(std::string name) {
+	for (auto n : names) {
+		if (n.name == name){
+			return n.id;
+		}
+	}
+	return -1;
+}
+int UTPerformanceMeasureImp::CreateId(std::string name) {
+	assert(FindId(name) == -1);
+	assert(names.size() < MAXCOUNTS);
+	names.push_back(Name());
+	names.back().id = (int)names.size() - 1;
+	names.back().name = name;
+	return names.back().id;
+}
+int UTPerformanceMeasureImp::GetId(std::string name) {
+	int rv = FindId(name);
+	if (rv == -1) rv = CreateId(name);
+	return rv;
+}
+std::string UTPerformanceMeasureImp::PrintAll() {
+	std::string s;
+	return s;
+}
+std::string UTPerformanceMeasureImp::Print(std::string name) {
+	return Print(FindId(name));
+}
+std::string UTPerformanceMeasureImp::Print(int id) {
+	std::string s;
+	std::ostringstream os(s);
+	if (id < 0) {
+		 os << "ID " << id << " not found.";
+	}
+	return s;
+}
+
 
 UTQPTimerFileOut::UTQPTimerFileOut(double u){
 	unit = u;
 	Init();
 }
-
 void UTQPTimerFileOut::Init(){
 	Clear();
 	Start();

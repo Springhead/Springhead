@@ -18,7 +18,7 @@
 #include <Physics/PHOpEngine.h>
 #include <sstream>
 
-#include <Foundation/UTPreciseTimer.h>
+#include <Foundation/UTQPTimer.h>
 
 namespace Spr{;
 
@@ -53,9 +53,11 @@ PHScene::~PHScene() {
 PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }
+
 void PHScene::Init(){
 	engines.scene = this;
 	Scene::Clear();
+	performanceMeasure = UTPerformanceMeasure::Create("PHScene");
 
 	// エンジン作成
 	solids = DBG_NEW PHSolidContainer;
@@ -70,7 +72,7 @@ void PHScene::Init(){
 	penaltyEngine = DBG_NEW PHPenaltyEngine;
 	engines.Add(penaltyEngine);
 	
-	constraintEngine = DBG_NEW PHConstraintEngine;
+	constraintEngine = DBG_NEW PHConstraintEngine(performanceMeasure);
 	engines.Add(constraintEngine);
 
 	ikEngine = DBG_NEW PHIKEngine;
@@ -310,7 +312,7 @@ void PHScene::SetTimeStep(double dt){
 	timeStepInv = 1.0/dt;
 }
 
-static UTPreciseTimer ptimerSce;
+static UTQPTimer ptimerSce;
 
 void PHScene::Step(){
 	int t0, t1, t2;
