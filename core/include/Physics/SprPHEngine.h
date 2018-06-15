@@ -107,15 +107,6 @@ public:
 	*/
 	double GetShrinkRateCorrection();
 
-	/** @brief set regularization parameter
-	    @param reg regularization parameter to be set 
-	*/
-	void SetRegularization(double reg);
-
-	/** @brief returns regularization parameter
-	*/
-	double GetRegularization();
-
 	/** @brief 接触領域を表示するための情報を更新するかどうか。FWScene::EnableRenderContact()が呼び出す。
 	*/
 	void EnableRenderContact(bool enable);
@@ -134,7 +125,6 @@ struct PHConstraintEngineDesc{
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	double	accelSOR;					///< SOR法の加速係数
 	double  dfEps;
-	double  regularization;
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
 	bool	bUseContactSurface;			///< 面接触を使う
@@ -152,7 +142,6 @@ struct PHConstraintEngineDesc{
 		freezeThreshold			 = 0.0;
 		accelSOR				 = 1.0;
 		dfEps                    = 0.0;
-		regularization           = 0.001;
 		bSaveConstraints         = false;
 		bUpdateAllState	         = true;
 		bUseContactSurface       = false;
@@ -175,15 +164,6 @@ struct PHIKEngineDesc{
 	size_t	numIter;
 	double  maxVel, maxAngVel, maxActVel;
 	double  regularizeParam;
-	double  regularizeParam2;
-	int     regularizeMode;
-	int     iterGaussSeidel = 100;
-	enum    Mode {
-		SVD,
-		QR,
-		LM,
-	};
-	Mode   solverMode = Mode::SVD;
 
 	PHIKEngineDesc();
 };
@@ -215,9 +195,6 @@ public:
 	void SetIterCutOffAngVel(double epsilon);
 	double GetIterCutOffAngVel();
 
-	void SetIntpRate();
-	int GetIntpRate();
-
 	/** @brief 一時変数の関節角度・剛体姿勢を現実のものに合わせる
 	*/
 	void ApplyExactState(bool reverse=false);
@@ -236,33 +213,18 @@ public:
 
 struct PHFemMeshIf;
 struct PHFemMeshNewIf;
-/**
-	For historical reason, there are two kinds of FEM mesh, FemMesh and FemMeshNew.
-	Now FemMeshNew is mainly used and FemMesh will be removed in the future.	*/
 struct PHFemEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHFemEngine);
-	void SetTimeStep(double dt);				///<	FEM engine has it's time step independently.
-	double GetTimeStep();						///<	FEM engine has it's time step independently.
-	void SetVibrationTransfer(bool bEnable);	///< Enable vibration tranfer between fem meshes for haptic vibration
-	void SetThermalTransfer(bool bEnable);		///< Enable thermal transfer between feme meshes for thermal simulation
-
-	int NMeshNew();
-	PHFemMeshNewIf* GetMeshNew(int i);
-
-	bool AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
-	bool RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
-	void ThermalTransfer();
-	void setheatTransferRatio(double setheatTransferRatio);
-
-	//	Old contact treatment codes for vibration simulation. Will be replaced by new functions.
-	void FEMSolidMatchRefresh();				//Refreshing the solid->FEMindex values
-	void InitContacts();						 //Used to match the FEM objects with their solids counterparts
-	void ClearContactVectors();
-
-	//	For old mesh
+	void SetTimeStep(double dt);
+	double GetTimeStep();
 	int NMesh();
 	PHFemMeshIf* GetMesh(int i);
+	int NMeshNew();
+	PHFemMeshNewIf* GetMeshNew(int i);
+	void FEMSolidMatchRefresh();  //Refreshing the solid->FEMindex values
+	void InitContacts();	 //Used to match the FEM objects with their solids counterparts
+	void ClearContactVectors();
 };
 struct PHOpEngineIf : PHEngineIf{
 	SPR_IFDEF(PHOpEngine);

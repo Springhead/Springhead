@@ -199,8 +199,8 @@
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <OpenMPSupport>false</OpenMPSupport>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -287,7 +287,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
@@ -408,7 +408,6 @@
     <ClCompile Include="UTDllLoader.cpp" />
     <ClCompile Include="UTLoadContext.cpp" />
     <ClCompile Include="UTLoadHandler.cpp" />
-    <ClCompile Include="UTOptimizer.cpp" />
     <ClCompile Include="UTPath.cpp" />
     <ClCompile Include="UTQPTimer.cpp" />
     <ClCompile Include="UTRegisterTypeDesc.cpp" />
@@ -418,7 +417,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Foundation\SprUTCriticalSection.h" />
-    <ClInclude Include="..\..\include\Foundation\SprUTOptimizer.h" />
     <ClInclude Include="..\..\include\Foundation\SprUTQPTimer.h" />
     <ClInclude Include="ClapackLibsDef.h" />
     <ClInclude Include="Object.h" />
@@ -430,7 +428,6 @@
     <ClInclude Include="UTDllLoaderImpl.h" />
     <ClInclude Include="UTLoadContext.h" />
     <ClInclude Include="UTLoadHandler.h" />
-    <ClInclude Include="UTOptimizer.h" />
     <ClInclude Include="UTPath.h" />
     <ClInclude Include="UTQPTimer.h" />
     <ClInclude Include="UTSocket.h" />

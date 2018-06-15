@@ -10,7 +10,6 @@
 #pragma once
 
 #include <Foundation/SprUTQPTimer.h>
-#include <Foundation/Object.h>
 
 #include <vector>
 #include <sstream>
@@ -39,19 +38,19 @@ union UTLargeInteger {
 class UTQPTimer{
 private:
 	static UTLargeInteger freq;
-	UTLargeInteger lasttime;		///<	前回の時刻
-	unsigned long stopWatch;		///<	ストップウォッチ機能の計測時間us単位
+	UTLargeInteger lasttime;		//前回の状態を保存する
+	unsigned long stopWatch;		///<計測時間us単位
 	bool startFlag;
 
 public:
 	UTQPTimer();
-	static int Freq();				///<	タイマーの周波数を出力
-	void WaitUS(int time);			///<	μs単位で待つ
+	void WaitUS(int time);	///<	μs単位で待つ
 	void Accumulate(UTLongLong& l);	///<	前回からの経過時間をカウント値で追加
-	UTLongLong Count();				///<	前回からの経過時間をカウント値で計測
-	int CountNS();					///<	前回からの経過時間をns単位で計測
-	int CountUS();					///<	前回からの経過時間をμs単位で計測
+	UTLongLong Count();		///<	前回からの経過時間をカウント値で計測
+	int CountNS();			///<	前回からの経過時間をns単位で計測
+	int CountUS();			///<	前回からの経過時間をμs単位で計測
 	void CountAndWaitUS(int time);	///<	前回からの経過時間をμs単位で計測し，全体としてus単位で待つ（一定ループ生成用）
+	static int Freq();				///<	タイマーの周波数を出力
 
 	/// ストップウォッチ機能.
 	unsigned long Start();		///< 計測開始，開始時間（stopWatchの値）をus単位で返す
@@ -61,9 +60,7 @@ public:
 };
 
 /// UTQPTimerを使い、アルゴリズムの所要時間を測定するためのクラス
-class SPR_DLL UTPerformanceMeasure : public Object{
-public:
-	SPR_OBJECTDEF(UTPerformanceMeasure);
+class UTPerformanceMeasureImp : public UTPerformanceMeasure, public UTRefCount{
 private:
 	std::string name;
 	double unit;	// 出力時の単位(1でsec, 1e-3でmsec)
@@ -74,20 +71,9 @@ private:
 		std::string name;		// 計測場所の名前
 	};
 	std::vector< Name > names;
-	UTPerformanceMeasure(const char* n) :name(n), unit(1e-3) {}
 
+	UTPerformanceMeasureImp(const char* n):name(n), unit(1e-3){}
 public:
-	UTPerformanceMeasure() :name(""), unit(1e-3) {
-		assert(0);
-		//	should not create independently.
-	}
-	int NCounter() {
-		return (int)names.size();
-	}
-	const char* GetNameOfCounter(int id) {
-		if (0<= id && id < (int)names.size()) return names[id].name.c_str();
-		return NULL;
-	}
 	const char* GetName() { return name.c_str(); }
 	std::string PrintAll();
 	std::string Print(std::string name);
@@ -113,11 +99,11 @@ public:
 	void SetUnit(double u) { unit = u; }
 	double GetUnit() { return unit; }
 	void ClearCounts() {
-		for (int i = 0; i < (int)names.size(); ++i) {
+		for (int i = 0; i < names.size(); ++i) {
 			counts[i] = 0;
 		}
 	}
-	friend class UTPerformanceMeasureIf;
+	friend class UTPerformanceMeasure;
 };
 
 

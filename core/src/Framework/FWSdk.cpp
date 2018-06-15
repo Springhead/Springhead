@@ -15,6 +15,7 @@
 #include <Framework/FWFemMesh.h>
 #include <Framework/FWFemMeshNew.h>
 #include <Framework/FWOpObj.h>
+#include <Framework/FWTrajectoryPlanner.h>
 #include <Framework/FWStaticTorqueOptimizer.h>
 #include <Physics/PHSdk.h>
 #include <Physics/PHScene.h>
@@ -55,6 +56,7 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(HISdk));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWOpObj));
+	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWTrajectoryPlanner));
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWOptimizer));
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWStaticTorqueOptimizer));
 }

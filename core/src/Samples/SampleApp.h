@@ -156,8 +156,8 @@ public:
 
 public:
 	///	アクティブなシーン
-	FWSceneIf*				GetFWScene(){ return GetCurrentWin()->GetScene(); }
-	PHSceneIf*				GetPHScene(){ return GetCurrentWin()->GetScene()->GetPHScene(); }
+	FWSceneIf*				GetFWScene(){ return GetCurrentWin() ? GetCurrentWin()->GetScene() : NULL; }
+	PHSceneIf*				GetPHScene(){ return GetCurrentWin() ? GetCurrentWin()->GetScene() ? GetCurrentWin()->GetScene()->GetPHScene() : NULL: NULL; }
 	/// メニューの登録
 	void AddMenu(int menu, UTString brief){
 		menus[menu].brief = brief;

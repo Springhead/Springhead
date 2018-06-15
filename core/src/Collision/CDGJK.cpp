@@ -14,6 +14,7 @@
 	しかし，似ている箇所があります．もし派生物だと認定された場合，
 	ライセンスがLGPLとなります．ご注意ください．
 */
+#include <Foundation/UTQPTimer.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 #include <Collision/CDCapsule.h>
@@ -23,14 +24,12 @@
 #include <Physics/SprPHSdk.h>
 #include <Physics/SprPHEngine.h>
 #include <fstream>
-#include <Foundation/UTPreciseTimer.h>
 
 #include <string.h>  // strcmp
 
 
 namespace Spr{
 bool bGJKDebug;
-static UTPreciseTimer ptimerLocal;
 
 
 void SaveMaterial(std::ostream& file, PHMaterial& m){
@@ -176,12 +175,11 @@ void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
 	DSTR << a2w * pa << std::endl;
 	DSTR << b2w * pb << std::endl;
 }
-
-extern int		coltimePhase1;
-extern int		coltimePhase2;
-extern int		coltimePhase3;
-extern int		colcounter;
-extern UTPreciseTimer* p_timer;
+extern UTLongLong&	coltimePhase1;
+extern UTLongLong&	coltimePhase2;
+extern UTLongLong&	coltimePhase3;
+extern int			colcounter;
+extern UTQPTimer	qpTimerForCollision;
 
 double biasParam = 0.5;
 
@@ -279,8 +277,7 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
-	if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマーが割り当てられてないとき用
-	uint32_t startTime = p_timer->CountNS();
+	qpTimerForCollision.Count();
 
 	nSupport = 0;
 	//	range が+Zになるような座標系を求める．
@@ -308,7 +305,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	CalcSupport(0);
 	if (w[0].Z() > end)
 	{
-		coltimePhase1 += p_timer->CountNS();
+		qpTimerForCollision.Accumulate(coltimePhase1);
 		return -1;	//	範囲内では接触しないが，endより先で接触するかもしれない．
 	}
 
@@ -317,7 +314,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		CalcSupport(3);
 		if (w[3].Z() < start) {
 			//	範囲内では接触しないが，後ろに延長すると接触するかもしれない．
-			coltimePhase1 += p_timer->CountNS();
+			qpTimerForCollision.Accumulate(coltimePhase1);
 			return -2;
 		}
 	}
@@ -330,7 +327,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		dist = w[0].Z();
 		nSupport = 1;
 		dec[0] = 1; dec[1] = 0; dec[2] = 0;
-		coltimePhase1 += p_timer->CountNS();
+		qpTimerForCollision.Accumulate(coltimePhase1);
 		if (dist > end) return -1;
 		if (dist < start) return -2;
 		return 1;
@@ -338,11 +335,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	CalcSupport(1);
 	if (w[1].XY() * v[1].XY() > 0)
 	{
-		coltimePhase1 += p_timer->CountNS();
+		qpTimerForCollision.Accumulate(coltimePhase1);
 		return 0;	//	w[1]の外側にOがあるので触ってない
 	}
-	uint32_t frameTime1 = p_timer->CountNS();
-	coltimePhase1 += frameTime1;
+	qpTimerForCollision.Accumulate(coltimePhase1);
 	
 	//	w[0]-w[1]-w[0] を三角形と考えてスタートして，oが三角形の内部に入るまで繰り返し
 	ids[0] = 1;	//	新しい頂点
@@ -391,22 +387,21 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		v[ids[0]] = vNew;
 		CalcSupport(ids[0]);	//	法線の向きvNewでサポートポイントを探す
 		if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2){	//	0の外側にoがあるので触ってない
-			coltimePhase2 += p_timer->CountNS();
+			qpTimerForCollision.Accumulate(coltimePhase2);
 			return 0;
 		}
 		//	新しいsupportが1回前の線分からまったく動いていない → 点Oは外側
 		double d1 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[1]].XY());
 		double d2 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[2]].XY());
 		if (d1 < epsilon2 || d2 < epsilon2) {
-			coltimePhase2 += p_timer->CountNS();
+			qpTimerForCollision.Accumulate(coltimePhase2);
 			return 0;
 		}
 	}
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
 	//GJK部分	
-	uint32_t frameTime2 = p_timer->CountNS();
-	coltimePhase2 += frameTime2;
+	qpTimerForCollision.Accumulate(coltimePhase2);
 	//	三角形を小さくしていく
 	int notuse = -1;
 	int count = 0;
@@ -621,8 +616,7 @@ final:
 
 	normal.unitize();
 	//	HASE_REPORT
-	uint32_t frameTime3 = p_timer->CountNS();
-	coltimePhase3 += frameTime3;
+	qpTimerForCollision.Accumulate(coltimePhase3);
 	static bool bSave = false;
 	if (bSave){
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -684,8 +678,7 @@ a2z.Pos() = w2z * a2w.Pos();
 Posed b2z;
 b2z.Ori() = w2z * b2w.Ori();
 b2z.Pos() = w2z * b2w.Pos();
-if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマーが割り当てられてないとき用
- uint32_t startTime = p_timer->CountNS();
+	qpTimerForCollision.Count();
 //	GJKと似た方法で，交点を求める
 //	まず、2次元で見たときに、原点が含まれるような三角形または線分を作る
 //	w0を求める
@@ -693,7 +686,7 @@ if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマー
  CalcSupport(0);
  if (w[0].Z() > end)
  {
-	 coltimePhase1 += p_timer->CountNS();
+	 qpTimerForCollision.Accumulate(coltimePhase1);
 	 return -1;	//	範囲内では接触しないが，endより先で接触するかもしれない．
  }
 
@@ -702,7 +695,7 @@ if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマー
 	 CalcSupport(3);
 	 if (w[3].Z() < start) {
 		 //	範囲内では接触しないが，後ろに延長すると接触するかもしれない．
-		 coltimePhase1 += p_timer->CountNS();
+		 qpTimerForCollision.Accumulate(coltimePhase1);
 		 return -2;
 	 }
  }
@@ -715,7 +708,7 @@ if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマー
 	 dist = w[0].Z();
 	 nSupport = 1;
 	 dec[0] = 1; dec[1] = 0; dec[2] = 0;
-	 coltimePhase1 += p_timer->CountNS();
+	 qpTimerForCollision.Accumulate(coltimePhase1);
 	 if (dist > end) return -1;
 	 if (dist < start) return -2;
 	 return 1;
@@ -723,12 +716,10 @@ if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマー
  CalcSupport(1);
  if (w[1].XY() * v[1].XY() > 0) 
  {
-	 coltimePhase1 += p_timer->CountNS();
+	 qpTimerForCollision.Accumulate(coltimePhase1);
 	 return 0;	//	w[1]の外側にOがあるので触ってない
  }
- 
-uint32_t frameTime1 = p_timer->CountNS(); //初期処理終了
-coltimePhase1 += frameTime1;
+ qpTimerForCollision.Accumulate(coltimePhase1);
 
 //	w[0]-w[1]-w[0] を三角形と考えてスタートして，oが三角形の内部に入るまで繰り返し
 ids[0] = 1;	//	新しい頂点
@@ -781,7 +772,7 @@ while (1)
 	v[ids[0]] = vNew;
 	CalcSupport(ids[0]);	//	法線の向きvNewでサポートポイントを探す
 	if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2) {	//	0の外側にoがあるので触ってない
-		coltimePhase2 += p_timer->CountNS();
+		qpTimerForCollision.Accumulate(coltimePhase2);
 		return 0;
 		
 	}
@@ -790,14 +781,13 @@ while (1)
 	double d2 = -vNew.XY() * (w[(int)ids[0]].XY() - w[(int)ids[2]].XY());
 	if (d1 < epsilon2 || d2 < epsilon2) 
 	{
-		coltimePhase2 += p_timer->CountNS();
+		qpTimerForCollision.Accumulate(coltimePhase2);
 		return 0;
 	}
 		
 }
 ids[3] = 3;
-uint32_t frameTime2 = p_timer->CountNS(); //平面絞り込み終了
-coltimePhase2 += frameTime2;
+qpTimerForCollision.Accumulate(coltimePhase2);
 
 //	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
 
@@ -1111,8 +1101,7 @@ coltimePhase2 += frameTime2;
 	normal = w2z.Conjugated() * v[ids[3]];
 #endif
 	normal.unitize();
-	uint32_t frameTime3 = p_timer->CountNS();
-	coltimePhase3 += frameTime3;
+	qpTimerForCollision.Accumulate(coltimePhase3);
 	static bool bSave = false;
 	if (bSave) {
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
@@ -1656,8 +1645,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist)
 {
-	if (p_timer == nullptr) p_timer = &ptimerLocal; //テストなどでタイマーが割り当てられてないとき用
-	uint32_t startTime = p_timer->CountNS();	
+	qpTimerForCollision.Count();
 	Posed a2l = a2w;
 	Posed b2l = b2w;
 	dist = 0;
@@ -1708,8 +1696,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 		b2l.Pos() +=   dir * cdist*0.5f;
 	}
 	dist -= (end - start);
-	uint32_t frameTime1 = p_timer->CountNS();
-	coltimePhase1 += frameTime1;
+	qpTimerForCollision.Accumulate(coltimePhase1);
 	if (normal.square() < epsilon2) return 0;
 	static bool bSave = false;
 	if (bSave) {
