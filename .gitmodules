@@ -1,3 +1,0 @@
-[submodule "buildtool"]
-	path = buildtool
-	url = https://github.com/sprphys/buildtool.git
