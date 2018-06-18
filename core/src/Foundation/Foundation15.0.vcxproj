@@ -409,7 +409,6 @@
     <ClCompile Include="UTLoadContext.cpp" />
     <ClCompile Include="UTLoadHandler.cpp" />
     <ClCompile Include="UTPath.cpp" />
-    <ClCompile Include="UTPreciseTimer.cpp" />
     <ClCompile Include="UTQPTimer.cpp" />
     <ClCompile Include="UTRegisterTypeDesc.cpp" />
     <ClCompile Include="UTSocket.cpp" />
@@ -418,6 +417,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Foundation\SprUTCriticalSection.h" />
+    <ClInclude Include="..\..\include\Foundation\SprUTQPTimer.h" />
     <ClInclude Include="ClapackLibsDef.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="QuadProg++.hh" />
@@ -429,7 +429,6 @@
     <ClInclude Include="UTLoadContext.h" />
     <ClInclude Include="UTLoadHandler.h" />
     <ClInclude Include="UTPath.h" />
-    <ClInclude Include="UTPreciseTimer.h" />
     <ClInclude Include="UTQPTimer.h" />
     <ClInclude Include="UTSocket.h" />
     <ClInclude Include="UTTimer.h" />
