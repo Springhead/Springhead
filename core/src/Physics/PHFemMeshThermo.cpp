@@ -529,7 +529,7 @@ std::vector<Vec2d> PHFemMeshThermo::CalcIntersectionPoint2(unsigned id0,unsigned
 	if(vertices[vtxId0].pos.z == vertices[vtxId1].pos.z && vertices[vtxId0].pos.x == vertices[vtxId1].pos.x){
 		DSTR << "vertices[vtxId0].pos.y: " << vertices[vtxId0].pos.y << ", vertices[vtxId1].pos.y: " << vertices[vtxId1].pos.y << std::endl;
 		if(vertices[vtxId0].pos.y == vertices[vtxId1].pos.y)
-			DSTR << "id[" << id0 <<"], id[" << id1 << "] は同じ頂点 !" << std::endl;
+			DSTR << "id[" << id0 <<"], id[" << id1 << L"] は同じ頂点 !" << std::endl;
 	}
 	
 	constB = vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x;
@@ -754,7 +754,7 @@ Vec2d PHFemMeshThermo::CalcIntersectionOfCircleAndLine(unsigned id0,unsigned id1
 		//	vertices[id0].pos.z != 0 && vertices[id1].pos.z!= 0 && vertices[id0].pos.x
 		// z == 0という直線の式である。とｘ＝＝０という直線の式の時もあろう。
 		//	この条件分岐の意味は、線分の両端の点のx,z座標が(0,0)や、直線の式が１次関数にならないと記を除くことができるときに、用いる。
-		DSTR << "直線の式の切片と傾きが共に0" << std::endl;
+		DSTR << L"直線の式の切片と傾きが共に0" << std::endl;
 		DSTR << "id0: " << id0 << ", id1: " << id1 << "radius: " << radius << std::endl;
 		DSTR << "vertices[id0].pos.x: " << vertices[id0].pos.x << ", vertices[id1].pos.x: " << vertices[id1].pos.x << std::endl;
 		DSTR << "vertices[id0].pos.z: " << vertices[id0].pos.z << ", vertices[id1].pos.z: " << vertices[id1].pos.z << std::endl;
@@ -807,7 +807,7 @@ Vec2d PHFemMeshThermo::CalcIntersectionOfCircleAndLine(unsigned id0,unsigned id1
 			}
 		}
 	}else{
-		DSTR << "CalcVtxCircleAndLine()関数のこの頂点組みと円弧は交わりません" << std::endl;
+		DSTR << L"CalcVtxCircleAndLine()関数のこの頂点組みと円弧は交わりません" << std::endl;
 		constX1 = 0.0;
 		constZ1 = 0.0;
 		DSTR << "(id0, vertices[id0].disFromOrigin): (" << id0 << ", " << vertices[id0].disFromOrigin << "), (id1, vertices[id1].disFromOrigin): (" << id1 << ", " << vertices[id1].disFromOrigin << "), radius: " << radius << std::endl;  
@@ -824,8 +824,8 @@ void PHFemMeshThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNu
 	DSTR << "ascendVtx[" << j << "]: " << faces[i].ascendVtx[j] << ", " << "[ " << (j+1)%3 << "]: " << faces[i].ascendVtx[(j+1)%3] << "; ";
 	DSTR << " (vertices[" << faces[i].ascendVtx[j] << "].pos.x, .z) = ( " <<  vertices[faces[i].ascendVtx[j]].pos.x << ", "<<  vertices[faces[i].ascendVtx[j]].pos.z  << "), " ;
 	DSTR << " (vertices[" << faces[i].ascendVtx[(j+1)%3] << "].pos.x, .z) : ( " <<  vertices[faces[i].ascendVtx[(j+1)%3]].pos.x << ", "<<  vertices[faces[i].ascendVtx[(j+1)%3]].pos.z << "), " <<std::endl;
-	DSTR <<"face[i].[(" << j << "], [" << (j+1)%3 << "]：各々の原点からの距離" << vertices[faces[i].ascendVtx[j]].disFromOrigin << ", " << vertices[faces[i].ascendVtx[(j+1)%3]].disFromOrigin << ", "; 
-	DSTR << " radius: " << radius <<" と2点で構成される線分との交点は下記"<< std::endl;
+	DSTR << "face[i].[(" << j << "], [" << (j+1)%3 << L"]：各々の原点からの距離" << vertices[faces[i].ascendVtx[j]].disFromOrigin << ", " << vertices[faces[i].ascendVtx[(j+1)%3]].disFromOrigin << ", "; 
+	DSTR << " radius: " << radius << L" と2点で構成される線分との交点は下記"<< std::endl;
 	DSTR << __FILE__  << "(" <<  __LINE__ << "):"<< "Intersection Vtx (x,z)= " << CalcIntersectionOfCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) << std::endl;
 	DSTR << std::endl;
 }
@@ -1410,7 +1410,7 @@ void PHFemMeshThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << L"面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 }		// /*CalcIHdqdt_decrease*/
 
 void PHFemMeshThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned mode){
@@ -1457,7 +1457,7 @@ void PHFemMeshThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsig
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << L"面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 }		// /*CalcIHdqdt_decrease*/
 
 
@@ -1525,7 +1525,7 @@ void PHFemMeshThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsig
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << L"面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 }		// /*CalcIHdqdt_add*/
 
 void PHFemMeshThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode){
@@ -1573,7 +1573,7 @@ void PHFemMeshThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned m
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << L"面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 }		// /*CalcIHdqdt_add*/
 
 void PHFemMeshThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mode){
@@ -1756,7 +1756,7 @@ void PHFemMeshThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,u
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << L"面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 	//　以上、値は入っているようだ
 	//DSTR << "face 加熱面数cnt: " << cnt<<std::endl;
 }		// /*CalcIHdqdt_atleast*/
@@ -1808,7 +1808,7 @@ void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsign
 		} 
 	}
 	if(debugS != faceS){ DSTR << "diff between debugS:" << debugS << ", faceS:" << faceS << std::endl; }
-	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
+	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << L"面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 	//　以上、値は入っているようだ
 	//DSTR << "face 加熱面数cnt: " << cnt<<std::endl;
 }		// /*CalcIHdqdt_atleast*/
@@ -2812,7 +2812,7 @@ void PHFemMeshThermo::Step(double dt){
 
 	if(COUNT * dt == 1 * dt){
 		if(tempe.size()){
-			DSTR << "初期温度表示：" << std::endl;
+			DSTR << L"初期温度表示：" << std::endl;
 			for(unsigned i=0;i<tempe.size();i++){
 				Vec3d hyoukaPos =Vec3d(i*0.01, 0.0015, -0.005);
 				DSTR << i << ":" << GetVtxTempInTets(hyoukaPos) << std::endl;
@@ -3702,7 +3702,7 @@ void PHFemMeshThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE)
 
 void PHFemMeshThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0){
 	// デバッグのため　&&　使われていなかったので、コメントアウト
-	DSTR << "この関数はデバッグのため、コメントアウトしています。用いる場合には、実装を良く見て復活させてください。" <<std::endl;
+	DSTR << L"この関数はデバッグのため、コメントアウトしています。用いる場合には、実装を良く見て復活させてください。" <<std::endl;
 
 	//for(unsigned i =0; i < edges.size();i++){
 	//	edges[i].c = 0.0;
@@ -4252,13 +4252,13 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 	//温度変化出力
 	checkTVecAllout.open("checkTVecAllout.csv");
-	checkTVecAllout <<"時間" << COUNT<<", ";
+	checkTVecAllout << L"時間" << COUNT<<", ";
 	for(unsigned i=0; i < vertices.size();i++){
 		if(i != vertices.size() -1){
-			checkTVecAllout << "頂点" << i << ", ";	
+			checkTVecAllout << L"頂点" << i << ", ";	
 		}
 		else{
-			checkTVecAllout << "頂点" << i << std::endl;
+			checkTVecAllout << L"頂点" << i << std::endl;
 		}
 	}
 	FEMLOG.open("femLog.csv");
@@ -6251,8 +6251,8 @@ void PHFemMeshThermo::SetHeatTransRatioToAllVertex(double heatTransR_){
 		vertices[i].heatTransRatio = heatTransR_;
 	}
 	//行列とvecfの熱伝達項を作り直す
-	std::cout << "行列の熱伝達項を作りなおせ！"<<std::endl;
-	DSTR << "行列の熱伝達項を作りなおせ！"<<std::endl;
+	std::cout << L"行列の熱伝達項を作りなおせ！"<<std::endl;
+	DSTR << L"行列の熱伝達項を作りなおせ！"<<std::endl;
 }
 
 void PHFemMeshThermo::SetHeatTransRatioToAllVertex(){
@@ -6332,7 +6332,7 @@ void PHFemMeshThermo::InitMoist(){
 			tets[id].tetsMg = tets[id].volume * rho;	//質量*密度
 			tets[id].wmass = tets[id].tetsMg * tets[id].wratio;
 		}else if(tets[id].volume < 0.0){
-			DSTR << "tets[" << id << "]の体積が計算されていません" << std::endl;
+			DSTR << "tets[" << id << L"]の体積が計算されていません" << std::endl;
 			tets[id].volume;
 		}
 	}
@@ -6442,7 +6442,7 @@ void PHFemMeshThermo::DecrMoist_vel(double dt){
 			if(tets[id].wmass > dw - exwater){
 				tets[id].wmass -= dw - exwater;
 			}else{
-				DSTR << "水分流出量が多すぎます" << std::endl;
+				DSTR << L"水分流出量が多すぎます" << std::endl;
 			}
 			//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
 			//wlatの分だけ、温度から引く
@@ -6482,7 +6482,7 @@ void PHFemMeshThermo::DecrMoist(){
 			if(tets[id].wmass > dw - exwater){
 				tets[id].wmass -= dw - exwater;
 			}else{
-				DSTR << "水分流出量が多すぎます" << std::endl;
+				DSTR << L"水分流出量が多すぎます" << std::endl;
 			}
 			//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
 			//wlatの分だけ、温度から引く
