@@ -1,6 +1,6 @@
 ﻿#include <vector>
 #include "../../SampleApp.h"
-#include <Framework/SprFWOptimizer.h>
+#include <Framework/FWOptimizer.h>
 
 #include "windows.h"
 
@@ -85,7 +85,7 @@ public:
 	virtual double Objective(double const *x, int n) {
 		PHHingeJointIf* jo[nJoints];
 		for (int i = 0; i < nJoints; ++i) {
-			jo[i] = fwScene->GetPHScene()->GetJoint(i)->Cast();
+			jo[i] = phScene->GetJoint(i)->Cast();
 		}
 
 		double obj = 0;
@@ -105,13 +105,13 @@ public:
 		double lastTorque[nJoints]; for (int i = 0; i < nJoints; ++i) { lastTorque[i] = 0; }
 		for (int step = 0; step < 100; ++step) {
 			// 2. Do Simulation Step
-			double t = fwScene->GetPHScene()->GetCount() * fwScene->GetPHScene()->GetTimeStep();
+			double t = phScene->GetCount() * phScene->GetTimeStep();
 
 			for (int i = 0; i < nJoints; ++i) {
 				jo[i]->SetTargetPosition(jt[i].At(t));
 			}
 
-			fwScene->Step();
+			phScene->Step();
 
 			// 3. Calc Criterion and Sum up
 			for (int i = 0; i < nJoints; ++i) {
@@ -125,9 +125,9 @@ public:
 
 		// 4. Calc Criterion for Final State
 		for (int step = 100; step < 150; ++step) {
-			fwScene->Step();
+			phScene->Step();
 
-			PHIKEndEffectorIf* eef = fwScene->GetPHScene()->GetIKEndEffector(0);
+			PHIKEndEffectorIf* eef = phScene->GetIKEndEffector(0);
 			double error = ((eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition()) - eef->GetTargetPosition()).norm();
 
 			obj += 1e+4 * abs(error);
@@ -157,9 +157,9 @@ public:
 	char** argv;
 
 	static const int nsub = 1;
-	//Optimizer<nsub> optimizer;
+	Optimizer<nsub> optimizer;
 	//FWOptimizer optimizer;
-	FWStaticTorqueOptimizer optimizer;
+	//FWStaticTorqueOptimizer optimizer;
 	JointTrajectory<nsub> jt[2];
 
 	ObjectStatesIf *states_;
