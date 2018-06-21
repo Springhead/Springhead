@@ -1,5 +1,5 @@
 % LinkUpdate.tex
-%	Last update: 2018/05/10 F.Kanehori
+%	Last update: 2018/06/10 F.Kanehori
 %
 \label{LinkUpdate}
 
@@ -54,7 +54,7 @@
 	}
 	\example{%
     		Previous HEAD position was 1db2f95... <comment>\\
-    		HEAD is now 444f9dc... <comment>\\
+    		\uwave{HEAD is now 444f9dc}... <comment>\\
 		\\
     		Warining: Your console font ...
 	}
@@ -62,7 +62,7 @@
     \item 確認(念のため)\\
 	\commands{\ra git status}
 	\example{%
-    		HEAD detached at 444f9dc\\
+    		\uwave{HEAD detached at 444f9dc}\\
     		nothing to commit, working tree clean
 	}
 
@@ -79,7 +79,7 @@
       		\hspace{10pt}(use "git add <file>..." to update what will be committed)\\
       		\hspace{10pt}(use "git checkout -- <file>..." to discard changes in working directory)\\
 		\\
-            	\hspace{40pt}	modified:   buildtool (new commits)\\
+            	\hspace{40pt}	\uwave{modified:   buildtool (new commits)}\\
 		\\
     		no changes added to commit (use "git add" and/or "git commit -a")
 	}
@@ -93,7 +93,7 @@
     		+++ b/buildtool\\
     		@@ -1 +1 @@\\
     		-Subproject commit 1db2f95....\\
-    		+Subproject commit 444f9dc....
+    		\uwave{+Subproject commit 444f9dc}....
 	}
 
     \item 変更をコミット\\

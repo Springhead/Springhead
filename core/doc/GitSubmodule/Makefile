@@ -6,7 +6,7 @@
 #    unix:	make
 #
 #	Utilizes the property that make recognises line continuation
-#	on comment line bat nmake does not.
+#	on comment line but nmake does not.
 ######################################################################
 
 TOPFILE	= main.tex
@@ -20,21 +20,8 @@ INSFILE	= $(INSPATH)/$(PDFNAME)
 SRCS	=\
 	main.tex			\
 	macro.tex			\
+	LinkUpdate.tex			\
 	LastUpdate.tex
-
-#	1.WhatIsDailyBuild.tex		\
-#	2.RoutineWork.tex		\
-#	3.WikiMaintenance.tex		\
-#	4.VisualStudioVersion.tex	\
-#	5.Task.tex			\
-#	6.0.Script.tex			\
-#	6.1.0.TestMain.tex		\
-#	6.1.1.TestAll.tex		\
-#	6.1.2.BuidVC.tex		\
-#	6.2.0.MakeReport.tex		\
-#	6.2.1.BuildMonitor.tex		\
-#	6.2.2.BaseLib.tex		\
-#	6.2.3.DailyBuildLib.tex		\
 
 TIMESTAMPFILE	= timestamp.tex
 CLEANS	= *.pdf *.dvi *.log *.aux *.toc *.ilg $(TIMESTAMPFILE)
