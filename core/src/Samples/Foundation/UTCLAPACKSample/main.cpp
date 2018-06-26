@@ -18,7 +18,8 @@ using namespace PTM;
 //	lapackでガウスの消去法を試してみたくていっぱい追記してしまいました。
 //	いろいろ汚してしまってごめんなさい（長谷川）
 #if 1
-#include <Foundation/UTPreciseTimer.h>
+//#include <Foundation/UTPreciseTimer.h>
+#include <Foundation/UTQPTimer.h>
 int __cdecl main()
 {
 	PTM::VMatrixRow<double> matk;
@@ -40,7 +41,8 @@ int __cdecl main()
 	for(int i=0; i<n; ++i){
 		b[i] = i*10+15;
 	}
-	UTPreciseTimer timer;
+	//UTPreciseTimer timer;
+	UTQPTimer timer;
 	timer.Clear();
 	timer.Start();
 #if 1

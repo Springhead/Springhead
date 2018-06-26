@@ -37,7 +37,7 @@
   #include <stdio.h>
   #define _kbhit() getchar()
 #endif
-#include <Foundation/UTPreciseTimer.h>
+//#include <Foundation/UTPreciseTimer.h>
 #include <Foundation/UTQPTimer.h>
 
 using namespace Spr;
@@ -45,14 +45,22 @@ using namespace Spr;
 unsigned int dt = 1;	// 繰り返し間隔ms
 int mt = 5000;			// 測定時間ms
 
-UTPreciseTimer pTimer;		// μs単位で計測可能なタイマ
+//UTPreciseTimer pTimer;		// μs単位で計測可能なタイマ
 UTQPTimer qTimer;			// マルチスレッド対応版
-std::vector< Vec2d > m_time;	// 計測時間
+//std::vector< Vec2d > m_time;	// 計測時間
+std::vector< double > m_time;	// 計測時間
 
 void CPSCounter(double intervalms, double periodms);
 void SPR_CDECL CallBack(int id, void* arg){
-	Vec2d sec;
+	//Vec2d sec;
+	double sec;
 #if 1
+	// 1ループ間の計測用
+	sec = qTimer.Stop() * 1e-6;
+	m_time.push_back(sec);
+	qTimer.Clear();
+	qTimer.Start();
+#else
 	// 1ループ間の計測用
 	sec.x = pTimer.Stop() * 1e-6;
 	sec.y = qTimer.Stop() * 1e-6;
@@ -61,7 +69,7 @@ void SPR_CDECL CallBack(int id, void* arg){
 	qTimer.Clear();
 	pTimer.Start();
 	qTimer.Start();
-#else
+----
 	// あるアルゴリズムが終了するまでにかかる時間計測用
 	pTimer.Clear();
 	qTimer.Clear();
@@ -94,7 +102,7 @@ void CPSCounter(double intervalms, double periodms){
 }
 
 int __cdecl main(int argc, char* argv[]){
-	pTimer.Init();								// 計測用タイマの初期化
+	//pTimer.Init();								// 計測用タイマの初期化
 
 	UTTimerIf* timer1;							// コールバックタイマ
 	timer1 = UTTimerIf::Create();				// コールバックタイマの作成
@@ -113,7 +121,8 @@ int __cdecl main(int argc, char* argv[]){
 	// 計測データをcsvで出力
 	CSVOUT << "count" << "," << "Precise timer [s]" << "," << "QPTimer [s]" << std::endl;
 	for(size_t i = 0; i < m_time.size(); i++){
-		CSVOUT << i << "," << m_time[i].x << "," << m_time[i].y << std::endl;
+		//CSVOUT << i << "," << m_time[i].x << "," << m_time[i].y << std::endl;
+		CSVOUT << i << "," << m_time[i] << std::endl;
 	}
 
 	// 計測完了
