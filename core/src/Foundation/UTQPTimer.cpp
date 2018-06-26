@@ -134,7 +134,6 @@ void UTQPTimer::CountAndWaitUS(int time)
 	WaitUS(time - elapsedtime);
 }
 
-
 unsigned long UTQPTimer::Start(){
 	if(!startFlag){
 		CountUS();
@@ -166,7 +165,7 @@ static std::vector< UTRef<UTPerformanceMeasureImp> >& GetMeasures() {
 	static std::vector< UTRef<UTPerformanceMeasureImp> > measures;
 	return measures;
 }
-UTPerformanceMeasure* UTPerformanceMeasure::Find(const char* n) {
+UTPerformanceMeasure* UTPerformanceMeasure::FindInstance(const char* n) {
 	for (auto m : GetMeasures()) {
 		if (m->name.compare(n) == 0) {
 			return m;
@@ -174,21 +173,27 @@ UTPerformanceMeasure* UTPerformanceMeasure::Find(const char* n) {
 	}
 	return NULL;
 }
-UTPerformanceMeasure* UTPerformanceMeasure::Get(const char* n) {
-	UTPerformanceMeasure* rv = Find(n);
+UTPerformanceMeasure* UTPerformanceMeasure::GetInstance(int i) {
+	return GetMeasures()[i];
+}
+UTPerformanceMeasure* UTPerformanceMeasure::GetInstance(const char* n) {
+	UTPerformanceMeasure* rv = FindInstance(n);
 	if (rv) return rv;
 	GetMeasures().push_back(DBG_NEW UTPerformanceMeasureImp(n));	
 	return GetMeasures().back();
 }
-UTPerformanceMeasure* UTPerformanceMeasure::Create(const char* n) {
+UTPerformanceMeasure* UTPerformanceMeasure::CreateInstance(const char* n) {
 	std::string name;
 	for (int i = 0;; ++i) {
 		name = n;
 		if (i) name = name + std::to_string(i);
-		if (Find(name.c_str()) == 0) break;
+		if (FindInstance(name.c_str()) == 0) break;
 	}
 	GetMeasures().push_back(DBG_NEW UTPerformanceMeasureImp(name.c_str()));
 	return GetMeasures().back();
+}
+int UTPerformanceMeasure::NInstance() {
+	return (int) GetMeasures().size();
 }
 
 int UTPerformanceMeasureImp::FindId(std::string name) {
