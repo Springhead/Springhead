@@ -29,6 +29,7 @@
 #	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
 #	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
 #	Ver 1.32 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
+#	Ver 1.33 2018/06/28 F.Kanehori	Fixes spaces in homedir.
 # ======================================================================
 import sys
 import os
@@ -108,6 +109,7 @@ class Proc:
 		if isinstance(args, str):
 			args = args.split()
 		args = ' '.join(args)
+		args = self.__space_in_homedir(args)
 
 		# prepare output redirection file
 		rmode = 'r'			# open mode for input
@@ -302,6 +304,26 @@ class Proc:
 	# --------------------------------------------------------------
 	#  For class private use
 	# --------------------------------------------------------------
+
+	##  Double quote path in args if home dir name has space(s).
+	#   @param args		command args (str).
+	#   @returns		Replaced args if needed (str).
+	#
+	def __space_in_homedir(self, args):
+		new_args = args
+		homedir = Util.upath(os.path.expanduser('~'))
+		if args.find(homedir) >= 0 and homedir.find(' ') >= 0:
+			tmp_home = homedir.replace(' ', '@')
+			tmp_repl = args.replace(homedir, tmp_home)
+			org_list = tmp_repl.split()
+			new_list = []
+			for item in org_list:
+				if item.find('@') >= 0:
+					item = '"%s"' % item.replace('@', ' ')
+				new_list.append(item)
+			new_args = ' '.join(new_list)
+			#print('==> args replaced to [%s]' % new_args)
+		return new_args
 
 	##  Convert zero-extended-16bit-signed-int into 32bit-signed-int.
 	#   @param value	32-bit-unsigend-int value (int).
