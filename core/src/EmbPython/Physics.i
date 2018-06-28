@@ -20,6 +20,7 @@
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t);
 %ignore Spr::PHSceneIf::GetSolidPair(PHSolidIf*, PHSolidIf*, bool&);
+%ignore Spr::PHSceneIf::GetPerformanceMeasure;
 %ignore Spr::PHHapticEngineIf::Callback;
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;

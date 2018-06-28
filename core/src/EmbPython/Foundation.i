@@ -28,6 +28,7 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 %ignore Spr::UTAccessBase;
 %ignore Spr::UTTypeDescIf::SetAccess;
 %ignore Spr::UTTypeDescIf::Create;
+%ignore Spr::UTPerformanceMeasure;
 %extend Spr::UTTimerIf{
 	PyObject* SetCallback(PyObject* arg){
 		ret_tmp = Py_None;
@@ -57,3 +58,4 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"
 %include "../../include/Foundation/SprUTTimer.h"
+%include "../../include/Foundation/SprUTQPTimer.h"
