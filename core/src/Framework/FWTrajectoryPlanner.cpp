@@ -1,4 +1,5 @@
 ﻿#include <Framework/FWTrajectoryPlanner.h>
+#define DEBUG_INFORMATION 1
 
 namespace Spr {
 	;
@@ -8,117 +9,15 @@ namespace Spr {
 
 MinJerkTrajectory::MinJerkTrajectory() {
 	sPoint = ControlPoint(); fPoint = ControlPoint();
-	stime = 0; ftime = 1;
 }
 
-MinJerkTrajectory::MinJerkTrajectory(Posed spose, Posed fpose, int time) {
-	sPoint = ControlPoint(spose, 0, 0); fPoint = ControlPoint(fpose, time, 0); 
-	stime = 0; ftime = time;
+MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint) {
+	sPoint = spoint;
+	fPoint = fpoint;
+	vPoint = ControlPoint();
 
-	for (int i = 0; i < 3; ++i) {
-		PTM::TMatrixRow<6, 6, double> A;
-		PTM::TMatrixRow<6, 1, double> b, x;
-		A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = sPoint.pose.Pos()[i];
-		A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = 0;
-		A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = 0;
-		A.row(3) = Vec6d(1, ftime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = fPoint.pose.Pos()[i];
-		A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = 0;
-		A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = 0;
-		x = A.inv() * b;
-
-		for (int n = 0; n < 6; ++n) { coeffToF[n][i] = x[n][0]; }
-	}
-}
-
-MinJerkTrajectory::MinJerkTrajectory(Posed spose, Posed fpose, Posed vpose, int time, int vtime) {
-	stime = 0; ftime = time;
-	sPoint = ControlPoint(spose, 0, 0); fPoint = ControlPoint(fpose, ftime, 0);
-	vPoint = ControlPoint(vpose, vtime, 0);
-	this->vtime = vtime;
-	Vec3d diff = fPoint.pose.Pos() - sPoint.pose.Pos();
-	//開始と終点を０としたときの経由点の相対位置
-	double internalRatio = (double)(vtime - stime) / (ftime - stime);
-	Vec3d relvpos = vpose.Pos() - ((1 - internalRatio) * spose.Pos() + internalRatio * fpose.Pos());
-	double tvs = vtime - stime;
-	double tfv = ftime - vtime;
-	Vec3d relvvel = -2.5 * ((tvs - tfv) / (tvs * tfv)) * relvpos;
-	Vec3d relvacc = (10 * (tvs * tvs - 4 * tvs * tfv + tfv * tfv) / (3 * tvs * tvs * tfv * tfv)) * relvpos;
-	if (vtime > 0 && vtime < ftime) {
-		for (int i = 0; i < 3; ++i) {
-			PTM::TMatrixRow<6, 6, double> A;
-			PTM::TMatrixRow<6, 1, double> b, x;
-			A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = sPoint.pose.Pos()[i];
-			A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = 0;
-			A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = 0;
-			A.row(3) = Vec6d(1, vtime, pow(vtime, 2), pow(vtime, 3), pow(vtime, 4), pow(vtime, 5)); b[3][0] = vPoint.pose.Pos()[i];
-			A.row(4) = Vec6d(0, 1, 2 * vtime, 3 * pow(vtime, 2), 4 * pow(vtime, 3), 5 * pow(vtime, 4)); b[4][0] = relvvel[i];
-			A.row(5) = Vec6d(0, 0, 2, 6 * vtime, 12 * pow(vtime, 2), 20 * pow(vtime, 3)); b[5][0] = relvacc[i];
-			x = A.inv() * b;
-
-			for (int n = 0; n < 6; ++n) { coeffToV[n][i] = x[n][0]; }
-		}
-		for (int i = 0; i < 3; ++i) {
-			PTM::TMatrixRow<6, 6, double> A;
-			PTM::TMatrixRow<6, 1, double> b, x;
-			A.row(0) = Vec6d(1, vtime, pow(vtime, 2), pow(vtime, 3), pow(vtime, 4), pow(vtime, 5)); b[0][0] = vPoint.pose.Pos()[i];
-			A.row(1) = Vec6d(0, 1, 2 * vtime, 3 * pow(vtime, 2), 4 * pow(vtime, 3), 5 * pow(vtime, 4)); b[1][0] = relvvel[i];
-			A.row(2) = Vec6d(0, 0, 2, 6 * vtime, 12 * pow(vtime, 2), 20 * pow(vtime, 3)); b[2][0] = relvacc[i];
-			A.row(3) = Vec6d(1, ftime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = fPoint.pose.Pos()[i];
-			A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = 0;
-			A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = 0;
-			x = A.inv() * b;
-
-			for (int n = 0; n < 6; ++n) { coeffToF[n][i] = x[n][0]; }
-		}
-	}
-	else {
-		for (int i = 0; i < 3; ++i) {
-			PTM::TMatrixRow<6, 6, double> A;
-			PTM::TMatrixRow<6, 1, double> b, x;
-			A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = sPoint.pose.Pos()[i];
-			A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = 0;
-			A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = 0;
-			A.row(3) = Vec6d(1, ftime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = fPoint.pose.Pos()[i];
-			A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = 0;
-			A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = 0;
-			x = A.inv() * b;
-
-			for (int n = 0; n < 6; ++n) { coeffToF[n][i] = x[n][0]; coeffToV[n][i] = x[n][0];}
-		}
-	}
-}
-
-MinJerkTrajectory::MinJerkTrajectory(Posed spose, Posed fpose, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, int time, double per) {
-	sVel *= per;
-	fVel *= per;
-	sAcc *= per * per;
-	fAcc *= per * per;
-	sPoint = ControlPoint(spose, Vec6d(sVel.x, sVel.y, sVel.z, 0, 0, 0), Vec6d(sAcc.x, sAcc.y, sAcc.z, 0, 0, 0), 0, 0);
-	fPoint = ControlPoint(fpose, Vec6d(fVel.x, fVel.y, fVel.z, 0, 0, 0), Vec6d(fAcc.x, fAcc.y, fAcc.z, 0, 0, 0), time, 0);
-	stime = 0; ftime = time;
-	vPoint = ControlPoint(); vtime = 0;
-	for (int i = 0; i < 3; ++i) {
-		PTM::TMatrixRow<6, 6, double> A;
-		PTM::TMatrixRow<6, 1, double> b, x;
-		A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = sPoint.pose.Pos()[i];
-		A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = sVel[i];
-		A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = sAcc[i];
-		A.row(3) = Vec6d(1, ftime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = fPoint.pose.Pos()[i];
-		A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = fVel[i];
-		A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = fAcc[i];
-		x = A.inv() * b;
-
-		for (int n = 0; n < 6; ++n) { coeffToF[n][i] = x[n][0]; }
-	}
-}
-
-
-MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, double per) {
-	sPoint = ControlPoint(spoint.pose, spoint.vel * per, spoint.acc * per * per, spoint.step, spoint.time);
-	fPoint = ControlPoint(fpoint.pose, fpoint.vel * per, fpoint.acc * per * per, fpoint.step, fpoint.time);
-	stime = sPoint.step; ftime = fpoint.step;
-	vPoint = ControlPoint();  vtime = 0;
-
+	double stime = sPoint.time;
+	double ftime = fPoint.time;
 	for (int i = 0; i < 3; ++i) {
 		PTM::TMatrixRow<6, 6, double> A;
 		PTM::TMatrixRow<6, 1, double> b, x;
@@ -134,39 +33,10 @@ MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, d
 	}
 }
 
-MinJerkTrajectory::MinJerkTrajectory(Posed spose, Posed fpose, Vec3d sVel, Vec3d fVel, Posed vPose, int vtime, int time, double per) {
-	sVel *= per;
-	fVel *= per;
-	sPoint = ControlPoint(spose, Vec6d(sVel.x, sVel.y, sVel.z, 0, 0, 0), Vec6d(), 0, 0);
-	fPoint = ControlPoint(fpose, Vec6d(fVel.x, fVel.y, fVel.z, 0, 0, 0), Vec6d(), time + vtime, 0);
-	stime = 0; ftime = time + vtime;
-	this->vPoint = ControlPoint(vPose, vtime, 0); this->vtime = vtime;
-	for (int i = 0; i < 3; ++i) {
-		PTM::TMatrixRow<6, 6, double> A;
-		PTM::TMatrixRow<6, 1, double> b, x;
-		A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = sPoint.pose.Pos()[i];
-		A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = sVel[i];
-		if (vtime > 0) {
-			A.row(2) = Vec6d(1, vtime, pow(vtime, 2), pow(vtime, 3), pow(vtime, 4), pow(vtime, 5)); b[2][0] = vPoint.pose.Pos()[i];
-		}
-		else {
-			A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = 0;
-		}
-		A.row(3) = Vec6d(1, ftime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = fPoint.pose.Pos()[i];
-		A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = fVel[i];
-		A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = 0;
-
-		x = A.inv() * b;
-
-		for (int n = 0; n < 6; ++n) { coeffToF[n][i] = x[n][0]; }
-	}
-}
-
-MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, ControlPoint vpoint, double per) {
-	sPoint = ControlPoint(spoint.pose, spoint.vel * per, spoint.acc * per * per, spoint.step, spoint.time);
-	fPoint = ControlPoint(fpoint.pose, fpoint.vel * per, fpoint.acc * per * per, fpoint.step, fpoint.time);
-	stime = sPoint.step; ftime = fpoint.step;
-	this->vPoint = ControlPoint(vpoint.pose, vpoint.vel * per, vpoint.acc * per * per, vpoint.step, vpoint.time); this->vtime = vPoint.step;
+MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, ControlPoint vpoint) {
+	sPoint = spoint;
+	fPoint = fpoint;
+	vPoint = vpoint;
 	
 	//開始と終点を０としたときの経由点の相対位置相対位置
 	/*
@@ -180,6 +50,9 @@ MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, C
 	//Vec3d relvvel = -2.5 * ((tvs - tfv) / (tvs * tfv)) * relvpos;
 	//Vec3d relvacc = (10 * (tvs * tvs - 4 * tvs * tfv + tfv * tfv) / (3 * tvs * tvs * tfv * tfv)) * relvpos;
 	
+	double stime = sPoint.time;
+	double ftime = fPoint.time;
+	double vtime = vPoint.time;
 	if (vtime > stime && vtime < ftime) {
 		for (int i = 0; i < 3; ++i) {
 			PTM::TMatrixRow<6, 6, double> A;
@@ -223,38 +96,14 @@ MinJerkTrajectory::MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, C
 			for (int n = 0; n < 6; ++n) { coeffToF[n][i] = x[n][0]; }
 		}
 	}
-	/*
-	for (int i = 0; i < 3; ++i) {
-		PTM::TMatrixRow<6, 6, double> A;
-		PTM::TMatrixRow<6, 1, double> b, x;
-		A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = sPoint.pose.Pos()[i];
-		A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = sPoint.vel[i];
-		if (vtime > 0) {
-			A.row(2) = Vec6d(1, vtime, pow(vtime, 2), pow(vtime, 3), pow(vtime, 4), pow(vtime, 5)); b[2][0] = vPoint.pose.Pos()[i];
-		}
-		else {
-			A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = 0;
-		}
-		A.row(3) = Vec6d(1, stime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = fPoint.pose.Pos()[i];
-		A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = fPoint.vel[i];
-		if (vpoint.velControl && vtime > 0) {
-			A.row(5) = Vec6d(0, 1, 2 * vtime, 3 * pow(vtime, 2), 4 * pow(vtime, 3), 5 * pow(vtime, 4)); b[5][0] = vPoint.vel[i];
-		}
-		else {
-			A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = 0;
-		}
-		x = A.inv() * b;
-
-		for (int n = 0; n < 6; ++n) { coeff[1][n][i] = x[n][0]; }
-	}
-	*/
 }
 
-Posed MinJerkTrajectory::GetCurrentPose(int t) {
-	if (t <= stime) return sPoint.pose;
-	if (ftime <= t) return fPoint.pose;
+Posed MinJerkTrajectory::GetCurrentPose(double t) {
+	if (t <= sPoint.time) return sPoint.pose;
+	if (fPoint.time <= t) return fPoint.pose;
 
-	int st = stime, ft = ftime;
+	double st = sPoint.time, ft = fPoint.time;
+	double vtime = vPoint.time;
 	/*
 	if (vtime > 0) {
 		int st = (vtime > t) ? stime : vtime;
@@ -263,7 +112,7 @@ Posed MinJerkTrajectory::GetCurrentPose(int t) {
 	*/
 	double s = (double)(t - st) / (ft - st);
 	double sr = 10 * pow(s, 3) - 15 * pow(s, 4) + 6 * pow(s, 5);
-	int r = t;// -stime;
+	double r = t;// -stime;
 	//DSTR << s << " " << r << std::endl;
 
 	Posed curPose;
@@ -275,18 +124,19 @@ Posed MinJerkTrajectory::GetCurrentPose(int t) {
 	return  curPose;
 }
 
-Posed MinJerkTrajectory::GetDeltaPose(int t) {
-	if (t <= stime) return Posed();
-	if (ftime <= t) return fPoint.pose * sPoint.pose.Inv();
+Posed MinJerkTrajectory::GetDeltaPose(double t) {
+	if (t <= sPoint.time) return Posed();
+	if (fPoint.time <= t) return fPoint.pose * sPoint.pose.Inv();
 
-	int st = stime, ft = ftime;
+	double st = sPoint.time, ft = fPoint.time;
+	double vtime = vPoint.time;
 
 	if (vtime > 0) {
-		st = (vtime > t) ? stime : vtime;
-		ft = (vtime > t) ? vtime : ftime;
+		st = (vtime > t) ? sPoint.time : vtime;
+		ft = (vtime > t) ? vtime : fPoint.time;
 	}
 	
-	double s = (double)(t - stime) / (ftime - stime);
+	double s = (double)(t - st) / (ft - st);
 	double sr = 10 * pow(s, 3) - 15 * pow(s, 4) + 6 * pow(s, 5);
 	int r = t;// -stime;
 
@@ -299,15 +149,15 @@ Posed MinJerkTrajectory::GetDeltaPose(int t) {
 	return deltaPose;
 }
 
-Vec6d MinJerkTrajectory::GetCurrentVelocity(int t) {
+Vec6d MinJerkTrajectory::GetCurrentVelocity(double t) {
 	Posed curr = GetCurrentPose(t);
-	Posed pre = GetCurrentPose(t - 1);
+	Posed pre = GetCurrentPose(t);
 	Vec3d v =  curr.Pos() - pre.Pos();
 	return Vec6d(v.x, v.y, v.z, 0, 0, 0);
 }
 
-double MinJerkTrajectory::GetCurrentActiveness(int t) {
-	double s = (double)(ftime - t) / (ftime - stime);
+double MinJerkTrajectory::GetCurrentActiveness(double t) {
+	double s = (double)(fPoint.time - t) / (fPoint.time - sPoint.time);
 	double r = 30 * pow(s, 2) - 60 * pow(s, 3) + 30 * pow(s, 4);
 	return r;
 }
@@ -316,7 +166,7 @@ QuaMinJerkTrajectory::QuaMinJerkTrajectory() {
 
 }
 
-QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, int time, double per) {
+QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, double time) {
 	sQua = squa; fQua = fqua;
 	stime = 0; ftime = time;
 	//sVel *= per;
@@ -328,8 +178,8 @@ QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, V
 	Vec3d fv = Vec3d(fVel.y, fVel.z, fVel.x);
 	amjt = new AngleMinJerkTrajectory[3];
 	for (int i = 0; i < 3; i++) {
-		//amjt[i] = AngleMinJerkTrajectory(sEuler[i], fEuler[i], sv[i], fv[i], 0, 0, ftime, per);
-		amjt[i] = AngleMinJerkTrajectory(0, 0, sv[i], fv[i], 0, 0, ftime, per);
+		//amjt[i] = AngleMinJerkTrajectory(sEuler[i], fEuler[i], sv[i], fv[i], 0, 0, ftime);
+		amjt[i] = AngleMinJerkTrajectory(0, 0, sv[i], fv[i], 0, 0, ftime);
 	}
 	velToQua.resize(ftime + 1);
 	for (int i = 1; i <= ftime; i++) {
@@ -345,7 +195,7 @@ QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, V
 	}
 }
 
-QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, int time, double per) {
+QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, double time) {
 	sQua = squa; fQua = fqua;
 	stime = 0; ftime = time;
 	//sVel *= per;
@@ -361,8 +211,8 @@ QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, V
 	Vec3d fa = Vec3d(fAcc.y, fAcc.z, fAcc.x);
 	amjt = new AngleMinJerkTrajectory[3];
 	for (int i = 0; i < 3; i++) {
-		//amjt[i] = AngleMinJerkTrajectory(sEuler[i], fEuler[i], sv[i], fv[i], sa[i], fa[i], ftime, per);
-		amjt[i] = AngleMinJerkTrajectory(0, 0, sv[i], fv[i], sa[i], fa[i], ftime, per);
+		//amjt[i] = AngleMinJerkTrajectory(sEuler[i], fEuler[i], sv[i], fv[i], sa[i], fa[i], ftime);
+		amjt[i] = AngleMinJerkTrajectory(0, 0, sv[i], fv[i], sa[i], fa[i], ftime);
 	}
 	velToQua.resize(ftime + 1);
 	for (int i = 1; i <= ftime; i++) {
@@ -381,7 +231,7 @@ QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, V
 	}
 }
 
-QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond vqua, int time, int vtime, double per) {
+QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond vqua, double time, double vtime) {
 	sQua = Quaterniond(); fQua = Quaterniond();
 	stime = 0; ftime = time;
 	vQua = vqua; this->vtime = vtime;
@@ -393,7 +243,7 @@ QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond vqua, int time, int vtime
 	vQua.ToEuler(vEuler);
 	amjt = new AngleMinJerkTrajectory[3];
 	for (int i = 0; i < 3; i++) {
-		amjt[i] = AngleMinJerkTrajectory(vEuler[i], ftime, vtime, per);
+		amjt[i] = AngleMinJerkTrajectory(vEuler[i], ftime, vtime);
 	}
 }
 
@@ -401,7 +251,7 @@ QuaMinJerkTrajectory::~QuaMinJerkTrajectory() {
 	delete amjt;
 }
 
-Quaterniond QuaMinJerkTrajectory::GetCurrentQuaternion(int t) {
+Quaterniond QuaMinJerkTrajectory::GetCurrentQuaternion(double t) {
 	if (t <= stime) {
 		return sQua;
 	}if (t >= ftime) {
@@ -425,7 +275,7 @@ Quaterniond QuaMinJerkTrajectory::GetCurrentQuaternion(int t) {
 	return interpolate(sr, sQua, fQua) * cq;
 }
 
-Quaterniond QuaMinJerkTrajectory::GetDeltaQuaternion(int t) {
+Quaterniond QuaMinJerkTrajectory::GetDeltaQuaternion(double t) {
 	if (t <= stime) {
 		return Quaterniond();
 	}if (t > ftime) {
@@ -455,74 +305,17 @@ Quaterniond QuaMinJerkTrajectory::GetDeltaQuaternion(int t) {
 	return interpolate(sr, Quaterniond(), fQua * sQua.Inv()) * cq;
 }
 
-Vec3d QuaMinJerkTrajectory::GetCurrentVelocity(int t) {
+Vec3d QuaMinJerkTrajectory::GetCurrentVelocity(double t) {
 	Quaterniond delta = GetCurrentQuaternion(t + 0.01) * GetCurrentQuaternion(t - 0.01).Inv();
 	Vec3d vel = Vec3d();
 	delta.ToEuler(vel);
 	return Vec3d(vel.z, vel.x, vel.y) * 50;
 }
-/*
-QuaMinJerkTrajectory::QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, int time) {
-Quaterniond delta = fqua * squa.Inv();
-axis = delta.Axis();
-angle = delta.Theta();
-sQua = squa; fQua = fqua;
-stime = 0; ftime = time;
 
-PTM::TMatrixRow<6, 6, double> A;
-PTM::TMatrixRow<6, 1, double> b, x;
-A.row(0) = Vec6d(1, stime, pow(stime, 2), pow(stime, 3), pow(stime, 4), pow(stime, 5)); b[0][0] = 0;
-A.row(1) = Vec6d(0, 1, 2 * stime, 3 * pow(stime, 2), 4 * pow(stime, 3), 5 * pow(stime, 4)); b[1][0] = 0;
-A.row(2) = Vec6d(0, 0, 2, 6 * stime, 12 * pow(stime, 2), 20 * pow(stime, 3)); b[2][0] = 0;
-A.row(3) = Vec6d(1, stime, pow(ftime, 2), pow(ftime, 3), pow(ftime, 4), pow(ftime, 5)); b[3][0] = angle;
-A.row(4) = Vec6d(0, 1, 2 * ftime, 3 * pow(ftime, 2), 4 * pow(ftime, 3), 5 * pow(ftime, 4)); b[4][0] = 0;
-A.row(5) = Vec6d(0, 0, 2, 6 * ftime, 12 * pow(ftime, 2), 20 * pow(ftime, 3)); b[5][0] = 0;
-x = A.inv() * b;
-
-for (int n = 0; n < 6; ++n) { coeff[n][0] = x[n][0]; }
-}
-
-Quaterniond QuaMinJerkTrajectory::GetCurrentQuaternion(int t) {
-if (t < stime) {
-return sQua;
-}if (t > ftime) {
-return fQua;
-}
-double s = (double)(t - stime) / (ftime - stime);
-double sr = 0;
-for (int i = 0; i < 6; i++) { sr += coeff[i][0] * pow(s, i); }
-return sQua * Quaterniond::Rot(sr * angle, axis);
-}
-
-Quaterniond QuaMinJerkTrajectory::GetDeltaQuaternion(int t) {
-if (t < stime) {
-return Quaterniond();
-}if (t > ftime) {
-return fQua * sQua.Inv();
-}
-double s = (double)(t - stime) / (ftime - stime);
-double sr = 0;
-for (int i = 0; i < 6; i++) { sr += coeff[i][0] * pow(s, i); }
-return Quaterniond::Rot(sr * angle, axis);
-}
-*/
-AngleMinJerkTrajectory::AngleMinJerkTrajectory() {
-
-}
-
-AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, int time) {
-	sAngle = sangle; fAngle = fangle;
-	stime = 0; ftime = time;
-}
-
-AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double sAcc, double fAcc, int time, double per) {
+AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double sAcc, double fAcc, double time) {
 	sAngle = sangle; fAngle = fangle;
 	stime = 0; ftime = time;
 	vAngle = sangle; vtime = 0;
-	sVel *= per;
-	fVel *= per;
-	sAcc *= per * per;
-	fAcc *= per * per;
 	
 	PTM::TMatrixRow<6, 6, double> A;
 	PTM::TMatrixRow<6, 1, double> b, x;
@@ -545,13 +338,10 @@ AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, dou
 	*/
 }
 
-AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double vangle, double vVel, int time, int vtime, double per) {
+AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double vangle, double vVel, double time, double vtime) {
 	sAngle = sangle; fAngle = fangle;
 	stime = 0; ftime = time;
 	vAngle = vangle; this->vtime = vtime;
-	sVel *= per;
-	fVel *= per;
-	vVel *= per;
 
 	PTM::TMatrixRow<6, 6, double> A;
 	PTM::TMatrixRow<6, 1, double> b, x;
@@ -603,7 +393,7 @@ AngleMinJerkTrajectory::AngleMinJerkTrajectory(double sangle, double fangle, dou
 	*/
 }
 
-AngleMinJerkTrajectory::AngleMinJerkTrajectory(double vangle, int time, int vtime, double per) {
+AngleMinJerkTrajectory::AngleMinJerkTrajectory(double vangle, double time, double vtime) {
 	sAngle = 0; fAngle = 0;
 	stime = 0; ftime = time;
 	vAngle = vangle; this->vtime = vtime;
@@ -655,7 +445,7 @@ AngleMinJerkTrajectory::AngleMinJerkTrajectory(double vangle, int time, int vtim
 }
 
 
-double AngleMinJerkTrajectory::GetCurrentAngle(int t) {
+double AngleMinJerkTrajectory::GetCurrentAngle(double t) {
 	if (t <= stime) {
 		return sAngle;
 	}if (t >= ftime) {
@@ -666,7 +456,7 @@ double AngleMinJerkTrajectory::GetCurrentAngle(int t) {
 	return (r < vtime ?  coeffToV : coeffToF) * Vec6d(1, r, pow(r, 2), pow(r, 3), pow(r, 4), pow(r, 5));
 }
 
-double AngleMinJerkTrajectory::GetDeltaAngle(int t) {
+double AngleMinJerkTrajectory::GetDeltaAngle(double t) {
 	if (t <= stime) {
 		return 0;
 	}if (t >= ftime) {
@@ -678,7 +468,7 @@ double AngleMinJerkTrajectory::GetDeltaAngle(int t) {
 	return GetCurrentAngle(t) - sAngle;
 }
 
-double AngleMinJerkTrajectory::GetCurrentVelocity(int t) {
+double AngleMinJerkTrajectory::GetCurrentVelocity(double t) {
 	if (t < stime) {
 		return 0;
 	}if (t > ftime) {
@@ -691,24 +481,23 @@ double AngleMinJerkTrajectory::GetCurrentVelocity(int t) {
 
 ControlPoint::ControlPoint() {
 	pose = Posed();
-	vel = Vec6d();
+	vel = SpatialVector();
+	acc = SpatialVector();
 	time = 0;
-	step = 0;
 }
 
-ControlPoint::ControlPoint(Posed p, int s, double t) {
+ControlPoint::ControlPoint(Posed p, double t) {
 	pose = p;
-	vel = Vec6d();
+	vel = SpatialVector();
+	acc = SpatialVector();
 	time = t;
-	step = s;
 	velControl = false;
 }
-ControlPoint::ControlPoint(Posed p, Vec6d v, Vec6d a, int s, double t) {
+ControlPoint::ControlPoint(Posed p, SpatialVector v, SpatialVector a, double t) {
 	pose = p;
 	vel = v;
 	acc = a;
 	time = t;
-	step = s;
 	velControl = true;
 }
 /*
@@ -730,22 +519,23 @@ FWTrajectoryPlanner::HingeJoint::~HingeJoint(){
 	delete torGraph;
 	delete torChangeGraph;
 }
-void FWTrajectoryPlanner::HingeJoint::Initialize(int iterate, int mtime, int nVia, double rate, bool vCorr) {
+void FWTrajectoryPlanner::HingeJoint::Initialize(int iterate, double mtime, int nVia, double rate, bool vCorr) {
 	// 
 	hinge->Enable(true);
 	this->iterate = iterate;
-	this->movetime = mtime;
+	this->mtime = mtime;
+	this->movetime = mtime * hinge->GetJoint()->GetScene()->GetTimeStepInv() + 1;
 	originalSpring = hinge->GetJoint()->GetSpring();
 	originalDamper = hinge->GetJoint()->GetDamper();
 	this->rateLPF = rate;
 
 	// データのリサイズ
-	torque.resize(mtime, 0);
-	torqueLPF.resize(mtime, 0);
-	angle.resize(iterate + 1, mtime);
-	angleLPF.resize(iterate + 1, mtime);
-	angleVels.resize(iterate + 1, mtime);
-	angleVelsLPF.resize(iterate + 1, mtime);
+	torque.resize(movetime, 0);
+	torqueLPF.resize(movetime, 0);
+	angle.resize(iterate + 1, movetime);
+	angleLPF.resize(iterate + 1, movetime);
+	angleVels.resize(iterate + 1, movetime);
+	angleVelsLPF.resize(iterate + 1, movetime);
 	tChanges.resize(nVia + 1, 0);
 
 	// 初期姿勢時のデータを保存
@@ -777,24 +567,25 @@ void FWTrajectoryPlanner::HingeJoint::Initialize(int iterate, int mtime, int nVi
 	so->CompInertiaFromDensity();
 }
 void FWTrajectoryPlanner::HingeJoint::MakeJointMinjerk(int cnt) {
-	double per = hinge->GetJoint()->GetScene()->GetTimeStep();
-	double perInv = hinge->GetJoint()->GetScene()->GetTimeStepInv();
-	AngleMinJerkTrajectory hmjt = AngleMinJerkTrajectory(initialAngle, targetAngle, initialVel, targetVel, 0, 0, movetime, per);
+	double dt = hinge->GetJoint()->GetScene()->GetTimeStep();
+	double dtInv = hinge->GetJoint()->GetScene()->GetTimeStepInv();
+	AngleMinJerkTrajectory hmjt = AngleMinJerkTrajectory(initialAngle, targetAngle, initialVel, targetVel, 0, 0, mtime);
 	for (int j = 0; j < movetime; j++) {
-		angle[cnt][j] = hmjt.GetCurrentAngle(j + 1);
-		angleVels[cnt][j] = hmjt.GetCurrentVelocity(j + 1) * perInv;
+		angle[cnt][j] = hmjt.GetCurrentAngle((j + 1) * dt);
+		angleVels[cnt][j] = hmjt.GetCurrentVelocity((j + 1) * dt);
 	}
+	/*
 	for (int j = 0; j < viatimes.size() - 1; j++) {
 		int st = (j == 0) ? 0 : viatimes[j - 1];
 		double v = viaAngles[j] - angle[0][viatimes[j] - 1];
 		int t = movetime - st;
 		int vt = viatimes[j] - st;
-		AngleMinJerkTrajectory dhmjt = AngleMinJerkTrajectory(v, t, vt, per);
+		AngleMinJerkTrajectory dhmjt = AngleMinJerkTrajectory(v, t, vt);
 		for (int k = 0; k < t; k++) {
-			angle[cnt][st + k] += dhmjt.GetCurrentAngle(k + 1);
-			//dhmjt.GetCurrentVelocity(k + 1) * perInv;
+			angle[cnt][st + k] += dhmjt.GetCurrentAngle((k + 1) * dt);
+			//dhmjt.GetCurrentVelocity((k + 1) * dt);
 		}
-	}
+	}*/
 	/*/
 	for (int j = 0; j < (int)viaPoints.size() + 1; j++) {
 	double s = (j == 0) ? hj->initialAngle : hj->viaAngles[j - 1];
@@ -803,12 +594,12 @@ void FWTrajectoryPlanner::HingeJoint::MakeJointMinjerk(int cnt) {
 	double vf = hj->viaVels[j];
 	//double f = (j == (int)viaPoints.size()) ? hj->targetAngle : hj->viaAngles[j];
 	//double vf = (j == (int)viaPoints.size()) ? hj->targetVel : hj->viaVels[j];
-	int st = (j == 0 ? 0 : viaPoints[j - 1].step);
-	int time = (j == (int)viaPoints.size() ? movtime : viaPoints[j].step) - st;
+	int st = (j == 0 ? 0 : viaPoints[j - 1].time);
+	int time = (j == (int)viaPoints.size() ? mtime : viaPoints[j].time) - st;
 	DSTR << s << " " << vs << " " << f << " " << vf << " " << st << " " << time << std::endl;
-	AngleMinJerkTrajectory mjt = AngleMinJerkTrajectory(s, f, vs, vf, 0, 0, time, scene->GetTimeStep());
+	AngleMinJerkTrajectory mjt = AngleMinJerkTrajectory(s, f, vs, vf, 0, 0, time);
 	for (int k = 0; k < time; k++) {
-	hj->angle[0][k + st] = mjt.GetCurrentAngle(k + 1);
+	hj->angle[0][k + st] = mjt.GetCurrentAngle((k + 1) * dt);
 	DSTR << k + st << std::endl;
 	}
 	}
@@ -896,26 +687,24 @@ void FWTrajectoryPlanner::HingeJoint::SaveVelocityForwardEnd() {
 	velBeforeEnd = hinge->GetJoint()->GetVelocity();
 }
 void FWTrajectoryPlanner::HingeJoint::TrajectoryCorrection(int k, bool s) {
-	double end;
-	int time;
-	double per = hinge->GetJoint()->GetScene()->GetTimeStep();
-	double perInv = hinge->GetJoint()->GetScene()->GetTimeStepInv();
+	double dt = hinge->GetJoint()->GetScene()->GetTimeStep();
+	double dtInv = hinge->GetJoint()->GetScene()->GetTimeStepInv();
 
 	//終端の到達および停止保証部
 	int stime = (int)(movetime * 0.0);
 	//end = angleLPF[k][stime];
-	end = angleLPF[k][angleLPF.width() - 1];
-	double acc = (angleVelsLPF[k][angleVelsLPF.width() - 1] - angleVelsLPF[k][angleVelsLPF.width() - 2]) * perInv;
-	time = movetime;
-	AngleMinJerkTrajectory delta = AngleMinJerkTrajectory(0, targetAngle - end, 0, -velBeforeEnd, 0, -acc, time - stime, per);
+	double end = angleLPF[k][angleLPF.width() - 1];
+	double acc = (angleVelsLPF[k][angleVelsLPF.width() - 1] - angleVelsLPF[k][angleVelsLPF.width() - 2]) * dtInv;
+	double time = movetime;
+	AngleMinJerkTrajectory delta = AngleMinJerkTrajectory(0, targetAngle - end, 0, -velBeforeEnd, 0, -acc, time - stime);
 	DSTR << "target:" << targetAngle << " actual:" << delta.GetCurrentAngle(movetime) << std::endl;
 	for (int i = 0; i < time - stime; i++) {
-		angle[k][i + stime] = delta.GetDeltaAngle(i + 1) + angleLPF[k][i + stime]; //k+1でいいのか？
-		angleLPF[k][i + stime] += delta.GetDeltaAngle(i + 1);
-		//angleVels[k][i + stime] = delta.GetCurrentVelocity(i + 1) * perInv + angleVelsLPF[k][i + stime];
-		angleVels[k][i + stime] = (angle[k][i + stime] - (i + stime > 0 ? angle[k][i + stime - 1] : initialAngle)) * perInv;
-		angleVelsLPF[k][i + stime] += delta.GetCurrentVelocity(i + 1) * perInv;
-		//CorrTraj[k - 1][i + stime] = delta.GetCurrentVelocity(i);
+		angle[k][i + stime] = delta.GetDeltaAngle((i + 1) * dt) + angleLPF[k][i + stime]; //k+1でいいのか？
+		angleLPF[k][i + stime] += delta.GetDeltaAngle((i + 1) * dt);
+		//angleVels[k][i + stime] = delta.GetCurrentVelocity((i + 1) * dt) * perInv + angleVelsLPF[k][i + stime];
+		angleVels[k][i + stime] = (angle[k][i + stime] - (i + stime > 0 ? angle[k][i + stime - 1] : initialAngle)) * dtInv;
+		angleVelsLPF[k][i + stime] += delta.GetCurrentVelocity((i + 1) * dt) * dtInv;
+		//CorrTraj[k - 1][i + stime] = delta.GetCurrentVelocity(i * dt);
 	}
 	
 	//各経由点の通過保証
@@ -927,10 +716,10 @@ void FWTrajectoryPlanner::HingeJoint::TrajectoryCorrection(int k, bool s) {
 			end = viaAngles[i] - angleLPF[k][viatimes[i] - 1];
 			int starttime = ((i == 0) ? 0 : viatimes[i - 1]);
 			time = viatimes[i] - starttime;
-			AngleMinJerkTrajectory d = AngleMinJerkTrajectory(start, end, 0, 0, 0, 0, time, per);
+			AngleMinJerkTrajectory d = AngleMinJerkTrajectory(start, end, 0, 0, 0, 0, time);
 			for (int j = 0; j < time; j++) {
-				angle[k][starttime + j] = d.GetCurrentAngle(j + 1) + angleLPF[k][starttime + j]; //d.GetCurrentAngle(j?)
-				CorrTraj[k - 1][starttime + j] += d.GetCurrentVelocity(j);
+				angle[k][starttime + j] = d.GetCurrentAngle((j + 1) * dt) + angleLPF[k][starttime + j];
+				CorrTraj[k - 1][starttime + j] += d.GetCurrentVelocity(j * dt);
 			}
 			start = end;
 			last = viatimes[i];
@@ -941,23 +730,12 @@ void FWTrajectoryPlanner::HingeJoint::TrajectoryCorrection(int k, bool s) {
 			double v = viaAngles[i] - angleLPF[k][viatimes[i] - 1];
 			int t = movetime - st;
 			int vt = viatimes[i] - st;
-			AngleMinJerkTrajectory dhmjt = AngleMinJerkTrajectory(v, t, vt, per);
+			AngleMinJerkTrajectory dhmjt = AngleMinJerkTrajectory(v, t, vt);
 			for (int j = 0; j < t; j++) {
-				angle[k][st + j] += dhmjt.GetCurrentAngle(j + 1);
+				angle[k][st + j] += dhmjt.GetCurrentAngle((j + 1) * dt);
 			}
 		}
-		
 	}
-	/*
-	end = targetAngle - angleLPF[k][angleLPF.width() - 1];
-	time = movetime - last;
-	AngleMinJerkTrajectory delta = AngleMinJerkTrajectory(start, end, 0, -vel, 0, 0, time, per);
-	DSTR << "target:" << targetAngle << " actual:" << delta.GetCurrentAngle(movetime) << std::endl;
-	for (int i = 0; i < time; i++) {
-		angle[k][i] = delta.GetCurrentAngle(i + 1) + angleLPF[k][last + i]; //k+1でいいのか？
-	}
-	*/
-	
 }
 void FWTrajectoryPlanner::HingeJoint::ApplyLPF(int count) {
 	//torqueLPF = LPF::weightedv(torque, initialTorque, weight, rateLPF);
@@ -1084,22 +862,23 @@ FWTrajectoryPlanner::BallJoint::~BallJoint() {
 	delete torGraph;
 	delete torChangeGraph;
 }
-void FWTrajectoryPlanner::BallJoint::Initialize(int iterate, int mtime, int nVia, double rate, bool vCorr) {
+void FWTrajectoryPlanner::BallJoint::Initialize(int iterate, double mtime, int nVia, double rate, bool vCorr) {
 	// 
 	ball->Enable(true);
 	this->iterate = iterate;
-	this->movetime = mtime;
+	this->mtime = mtime;
+	this->movetime = mtime * ball->GetJoint()->GetScene()->GetTimeStepInv();
 	this->rateLPF = rate;
 	originalSpring = ball->GetJoint()->GetSpring();
 	originalDamper = ball->GetJoint()->GetDamper();
 
 	// データのリサイズ
-	torque.resize(mtime, Vec3d());
-	torqueLPF.resize(mtime, Vec3d());
-	ori.resize(iterate + 1, mtime);
-	oriLPF.resize(iterate + 1, mtime);
-	oriVels.resize(iterate + 1, mtime);
-	oriVelsLPF.resize(iterate + 1, mtime);
+	torque.resize(movetime, Vec3d());
+	torqueLPF.resize(movetime, Vec3d());
+	ori.resize(iterate + 1, movetime);
+	oriLPF.resize(iterate + 1, movetime);
+	oriVels.resize(iterate + 1, movetime);
+	oriVelsLPF.resize(iterate + 1, movetime);
 
 	// 初期姿勢時のデータを保存
 	initialTorque = ball->GetJoint()->GetMotorForceN(0);
@@ -1131,24 +910,25 @@ void FWTrajectoryPlanner::BallJoint::Initialize(int iterate, int mtime, int nVia
 	return;
 }
 void FWTrajectoryPlanner::BallJoint::MakeJointMinjerk(int cnt) {
-	double per = ball->GetJoint()->GetScene()->GetTimeStep();
-	double perInv = ball->GetJoint()->GetScene()->GetTimeStepInv();
-	QuaMinJerkTrajectory qmjt = QuaMinJerkTrajectory(initialOri, targetOri, initialVel, targetVel, Vec3d(), Vec3d(), movetime, per);
+	double dt = ball->GetJoint()->GetScene()->GetTimeStep();
+	double dtInv = ball->GetJoint()->GetScene()->GetTimeStepInv();
+	QuaMinJerkTrajectory qmjt = QuaMinJerkTrajectory(initialOri, targetOri, initialVel, targetVel, Vec3d(), Vec3d(), mtime);
+
 	for (int j = 0; j < movetime; j++) {
-		ori[cnt][j] = qmjt.GetCurrentQuaternion(j + 1);
-		oriVels[cnt][j] = qmjt.GetCurrentVelocity(j + 1) * perInv;
-	}
+		ori[cnt][j] = qmjt.GetCurrentQuaternion((j + 1) * dt);
+		oriVels[cnt][j] = qmjt.GetCurrentVelocity((j + 1) * dt);
+	}/*
 	for (int j = 0; j < viaOris.size() - 1; j++) {
-		int st = (j == 0) ? 0 : viatimes[j - 1];
-		Quaterniond v = viaOris[j] * ori[0][viatimes[j] - 1].Inv();
-		int t = movetime - st;
-		int vt = viatimes[j] - st;
-		QuaMinJerkTrajectory dqmjt = QuaMinJerkTrajectory(v, t, vt, per);
+		int st = (j == 0) ? 0 : viatimes[j - 1] * dtInv;
+		Quaterniond v = viaOris[j] * ori[0][viatimes[j] * dtInv - 1].Inv();
+		double t = mtime - st;
+		double vt = viatimes[j] - st;
+		QuaMinJerkTrajectory dqmjt = QuaMinJerkTrajectory(v, t, vt);
 		for (int k = 0; k < t; k++) {
-			ori[cnt][st + k] = ori[0][st + k] * dqmjt.GetCurrentQuaternion(k + 1);
+			ori[cnt][st + k] = ori[0][st + k] * dqmjt.GetCurrentQuaternion((k + 1) * dt);
 			//dqmjt.GetCurrerntVelocity(k + 1) * perInv;
 		}
-	}
+	}*/
 	/*/
 	for (int j = 0; j < viaPoints.size() + 1; j++) {
 	Quaterniond s = (j == 0) ? bj->initialOri : bj->viaOris[j - 1];
@@ -1157,12 +937,12 @@ void FWTrajectoryPlanner::BallJoint::MakeJointMinjerk(int cnt) {
 	Vec3d vf = bj->viaVels[j];
 	//Quaterniond f = (j == viaPoints.size()) ? bj->targetOri : bj->viaOris[j];
 	//Quaterniond vf = (j == viaPoints.size()) ? bj->targetVel : bj->viaVels[j];
-	int st = (j == 0 ? 0 : viaPoints[j - 1].step);
-	int time = (j == viaPoints.size() ? movtime : viaPoints[j].step) - st;
+	double st = (j == 0 ? 0 : viaPoints[j - 1].time);
+	double time = (j == viaPoints.size() ? movtime : viaPoints[j].time) - st;
 	DSTR << s << " " << vs << " " << f << " " << vf << " " << st << " " << time << std::endl;
-	QuaMinJerkTrajectory qmjt = QuaMinJerkTrajectory(s, f, vs, vf, Vec3d(), Vec3d(), time, scene->GetTimeStep());
+	QuaMinJerkTrajectory qmjt = QuaMinJerkTrajectory(s, f, vs, vf, Vec3d(), Vec3d(), time);
 	for (int k = 0; k < time; k++) {
-	bj->ori[0][k + st] = qmjt.GetCurrentQuaternion(k + 1);
+	bj->ori[0][k + st] = qmjt.GetCurrentQuaternion((k + 1) * dt);
 	DSTR << k + st << std::endl;
 	}
 	}
@@ -1242,18 +1022,16 @@ void FWTrajectoryPlanner::BallJoint::SaveVelocityForwardEnd() {
 }
 void FWTrajectoryPlanner::BallJoint::TrajectoryCorrection(int k, bool s) {
 	//終端条件保証
-	Quaterniond end;
-	int time;
-	double per = ball->GetJoint()->GetScene()->GetTimeStep();
-	double perInv = ball->GetJoint()->GetScene()->GetTimeStepInv();
-	int stime = (int)(movetime * 0.0);
-	end = oriLPF[k][oriLPF.width() - 1];
-	Vec3d acc = (oriVelsLPF[k][oriVelsLPF.width() - 1] - oriVelsLPF[k][oriVelsLPF.width() - 2]) * perInv;
+	double dt = ball->GetJoint()->GetScene()->GetTimeStep();
+	double dtInv = ball->GetJoint()->GetScene()->GetTimeStepInv();
+	double stime = (int)(mtime * 0.0);
+	Quaterniond end = oriLPF[k][oriLPF.width() - 1];
+	Vec3d acc = (oriVelsLPF[k][oriVelsLPF.width() - 1] - oriVelsLPF[k][oriVelsLPF.width() - 2]) * dtInv;
 	Quaterniond half = oriLPF[k][stime];
-	time = movetime;
-	QuaMinJerkTrajectory delta = QuaMinJerkTrajectory(Quaterniond(), targetOri * end.Inv(), Vec3d(), -velBeforeEnd, Vec3d(), -acc, time - stime, per);
+	double time = mtime;
+	QuaMinJerkTrajectory delta = QuaMinJerkTrajectory(Quaterniond(), targetOri * end.Inv(), Vec3d(), -velBeforeEnd, Vec3d(), -acc, time - stime);
 	
-	DSTR << "target:" << targetOri * end.Inv() << " actual:" << delta.GetCurrentQuaternion(movetime) << std::endl;
+	DSTR << "target:" << targetOri * end.Inv() << " actual:" << delta.GetCurrentQuaternion(mtime) << std::endl;
 	PHBallJointConeLimitIf* limit = DCAST(PHBallJointIf, ball->GetJoint())->GetLimit()->Cast();
 	Vec2d range;
 	Vec3d limitDir;
@@ -1263,11 +1041,11 @@ void FWTrajectoryPlanner::BallJoint::TrajectoryCorrection(int k, bool s) {
 		limit->GetSwingRange(range);
 		limitDir = limit->GetLimitDir();
 	}
+
+	// <!!> stime が doubleです
 	for (int i = 0; i < movetime - stime; i++) {
-		ori[k][i + stime] = delta.GetCurrentQuaternion(i + 1) * oriLPF[k][i + stime];
-		//oriVels[k][i + stime] = delta.GetCurrentVelocity(i + 1) * perInv + oriVelsLPF[k][i + stime];
-		//oriVels[k][i + stime] = (ori[k][i + stime] * (i + stime > 0 ? ori[k][i + stime - 1] : initialOri).Inv()).ToEuler() * perInv;
-		oriVels[k][i + stime] = ori[k][i + stime].AngularVelocity(ori[k][i + stime] - (i + stime > 0 ? ori[k][i + stime - 1] : initialOri)) * perInv;
+		ori[k][i + stime] = delta.GetCurrentQuaternion((i + 1) * dt) * oriLPF[k][i + stime];
+		oriVels[k][i + stime] = ori[k][i + stime].AngularVelocity(ori[k][i + stime] - (i + stime > 0 ? ori[k][i + stime - 1] : initialOri)) * dtInv;
 		/*
 		//limit補正
 		if (limit) {
@@ -1288,6 +1066,7 @@ void FWTrajectoryPlanner::BallJoint::TrajectoryCorrection(int k, bool s) {
 		oriLPF[k][i + stime] = ori[k][i + stime];
 		oriVelsLPF[k][i + stime] = oriVels[k][i + stime];
 	}
+
 	//通過点保証
 	Quaterniond start = Quaterniond();
 	int last = 0;
@@ -1308,29 +1087,15 @@ void FWTrajectoryPlanner::BallJoint::TrajectoryCorrection(int k, bool s) {
 		for (int i = 0; i < viaOris.size() - 1; i++) {
 			int st = (i == 0) ? 0 : viatimes[i - 1];
 			Quaterniond v = viaOris[i] * oriLPF[k][viatimes[i] - 1].Inv();
-			int t = movetime - st;
-			int vt = viatimes[i] - st;
-			QuaMinJerkTrajectory dhmjt = QuaMinJerkTrajectory(v, t, vt, per);
+			double t = mtime - st;
+			double vt = viatimes[i] - st;
+			QuaMinJerkTrajectory dhmjt = QuaMinJerkTrajectory(v, t, vt);
 			for (int j = 0; j < t; j++) {
-				ori[k][st + j] = dhmjt.GetCurrentQuaternion(j + 1) * oriLPF[k][st + j];
+				ori[k][st + j] = dhmjt.GetCurrentQuaternion((j + 1) * dt) * oriLPF[k][st + j];
 			}
 		}
 
 	}
-	/*
-	for (int i = 0; i < viatimes.size(); i++) {
-		ori[k][viatimes[i] - 1] = viaOris[i];
-	}
-	*/
-	/*
-	end = targetOri - oriLPF[k][oriLPF.width() - 1];
-	time = movetime - last;
-	QuaMinJerkTrajectory delta = QuaMinJerkTrajectory(start, end, 0, -vel, 0, 0, time, per);
-	DSTR << "target:" << targetOri << " actual:" << delta.GetCurrentQuaternion(movetime) << std::endl;
-	for (int i = 0; i < time; i++) {
-	ori[k][i] = oriLPF[k][last + i] * delta.GetCurrentQuaternion(i + 1);
-	}
-	*/
 }
 void FWTrajectoryPlanner::BallJoint::ApplyLPF(int count) {
 	//torqueLPF = LPF::weightedv(torque, initialTorque, weight, rateLPF);
@@ -1351,11 +1116,11 @@ void FWTrajectoryPlanner::BallJoint::Soften() {
 void FWTrajectoryPlanner::BallJoint::Harden() {
 	if (mul) {
 		ball->GetJoint()->SetSpring(originalSpring * hardenSpring);
-		ball->GetJoint()->SetDamper(originalDamper * hardenDamper * 0);
+		ball->GetJoint()->SetDamper(originalDamper * hardenDamper);
 	}
 	else {
 		ball->GetJoint()->SetSpring(hardenSpring);
-		ball->GetJoint()->SetDamper(hardenDamper * 0);
+		ball->GetJoint()->SetDamper(hardenDamper);
 	}
 }
 void FWTrajectoryPlanner::BallJoint::ResetPD() {
@@ -1454,8 +1219,12 @@ void FWTrajectoryPlanner::BallJoint::OutputTorque() {
 }
 
 FWTrajectoryPlanner::Joints::Joints() { joints.clear(); joints.shrink_to_fit(); }
-FWTrajectoryPlanner::Joints::~Joints() { std::vector<Joint*>().swap(joints); }
+FWTrajectoryPlanner::Joints::~Joints() { RemoveAll();  std::vector<Joint*>().swap(joints); }
 void FWTrajectoryPlanner::Joints::RemoveAll() {
+	// 各要素でnewしているためこう？
+	for (int i = 0; i < joints.size(); i++) {
+		delete joints[i];
+	}
 	joints.clear();  joints.shrink_to_fit();
 }
 void FWTrajectoryPlanner::Joints::Add(PHIKActuatorIf* j, std::string path, bool oe) {
@@ -1468,7 +1237,7 @@ void FWTrajectoryPlanner::Joints::Add(PHIKActuatorIf* j, std::string path, bool 
 		joints.push_back(h);
 	}
 }
-void FWTrajectoryPlanner::Joints::Initialize(int iterate, int movetime, int nVia, double rate, bool vCorr) {
+void FWTrajectoryPlanner::Joints::Initialize(int iterate, double movetime, int nVia, double rate, bool vCorr) {
 	for (size_t i = 0; i < joints.size(); i++) {
 		joints[i]->Initialize(iterate, movetime, nVia, rate, vCorr);
 	}
@@ -1801,16 +1570,6 @@ PTM::VVector<T> FWTrajectoryPlanner::LPF::weightedv(PTM::VVector<T> input, T ini
 	return output;
 }
 
-FWTrajectoryPlanner::FWTrajectoryPlanner(int d, int i, int iv, bool c, double r, double vRate, bool sc) {
-	this->depth = d;
-	this->maxIterate = i;
-	this->maxIterateViaAdjust = iv;
-	this->bCorrection = c;
-	this->LPFRate = r;
-	this->viaAdjustRate = vRate;
-	this->bUseSpringCorrection = sc;
-}
-
 void FWTrajectoryPlanner::Init() {
 
 	//とりあえず全エンドエフェクタを無効化
@@ -1827,38 +1586,39 @@ void FWTrajectoryPlanner::Init() {
 	
 	CheckAndSetJoints();
 
-	eef->SetTargetPosition(eef->GetSolid()->GetPose().Pos());
-	eef->SetTargetVelocity(Vec3d());
+	ikEndEffector->SetTargetPosition(ikEndEffector->GetSolid()->GetPose().Pos());
+	ikEndEffector->SetTargetVelocity(Vec3d());
 
 	//jointsの初期化
-	joints.Initialize(maxIterate, movtime, (int)viaPoints.size(), LPFRate, bViaCorrection);
+	joints.Initialize(maxIterate, mtime, (int)viaPoints.size(), LPFRate, bViaCorrection);
 	joints.SetWeight();
 	joints.SetPD(springRate, damperRate, bMultiplePD);
 
 	//手先軌道リサイズ
 	trajData.resize(maxIterate + 1, movtime);
-	trajDataNotCorrected.resize(maxIterate, movtime);
+	trajDataNotCorrected.resize(maxIterate + 1, movtime);
 	trajVel.resize(maxIterate + 1, movtime + 1);
-	trajVelNotCorrected.resize(maxIterate, movtime + 1);
+	trajVelNotCorrected.resize(maxIterate + 1, movtime + 1);
 
 	//stateの保存
+	scene->GetIKEngine()->ApplyExactState();
 	states = ObjectStatesIf::Create();
-	tmpstates.clear();
+	tmpStates.clear();
 	for (int i = 0; i < (int)viaPoints.size(); i++) {
-		tmpstates.push_back(ObjectStatesIf::Create());
+		tmpStates.push_back(ObjectStatesIf::Create());
 	}
 	for (int i = 0; i < maxIterate; i++) {
-		corstates.push_back(ObjectStatesIf::Create());
-		beforecorstates.push_back(ObjectStatesIf::Create());
+		corStates.push_back(ObjectStatesIf::Create());
+		beforeCorStates.push_back(ObjectStatesIf::Create());
 	}
 	DSTR << scene->GetCount() << std::endl;
 	DSTR << "Saved" << std::endl;
-	Debug();
+	DisplayDebugInfo();
 	states->SaveState(scene);
 
 	//計算前フラグ
-	moving = false;
-	calced = false;
+	isMoving = false;
+	isCalculated = false;
 }
 
 void FWTrajectoryPlanner::Init(int d, int i, int iv, bool c, double r, double vRate, bool vCorr, bool sc) {
@@ -1868,8 +1628,8 @@ void FWTrajectoryPlanner::Init(int d, int i, int iv, bool c, double r, double vR
 
 void FWTrajectoryPlanner::CheckAndSetJoints() {
 	PHIKActuatorIf* ika;
-	ika = eef->GetParentActuator();
-	eef->Enable(true);
+	ika = ikEndEffector->GetParentActuator();
+	ikEndEffector->Enable(true);
 
 	//depthがオーバーしてないかチェック
 	for (int i = 0; i < depth; i++) {
@@ -1881,7 +1641,7 @@ void FWTrajectoryPlanner::CheckAndSetJoints() {
 			break;
 		}
 	}
-	ika = eef->GetParentActuator();
+	ika = ikEndEffector->GetParentActuator();
 
 	//関節をjointsに投げ込む
 	joints.RemoveAll();
@@ -1907,7 +1667,8 @@ void FWTrajectoryPlanner::RecalcFromIterationN(int n) {
 
 }
 
-void FWTrajectoryPlanner::Debug() { 
+void FWTrajectoryPlanner::DisplayDebugInfo() { 
+//#ifdef _DEBUG
 	// Debug用にいろいろ表示する
 	DSTR << "----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----" << std::endl;
 	int nsolids = scene->NSolids();
@@ -1916,11 +1677,12 @@ void FWTrajectoryPlanner::Debug() {
 		DSTR << "Solid" << i << " mass:" << so->GetMass() << ": pose" << so->GetPose() << " velocity" << so->GetVelocity() << " force" << so->GetForce() << " torque" << so->GetTorque() << std::endl;
 	}
 	joints.ShowInfo();
-	DSTR << "EndeffectorPosition:" << eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() << std::endl;
-	DSTR << "EndeffectorRotation:" << eef->GetSolid()->GetPose().Ori() << std::endl;
-	DSTR << "EndEffectorVelocity:" << eef->GetSolid()->GetVelocity() << std::endl;
-	DSTR << "EndEffectorTarget:" << eef->GetTargetPosition() << std::endl;
+	DSTR << "EndeffectorPosition:" << ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() << std::endl;
+	DSTR << "EndeffectorRotation:" << ikEndEffector->GetSolid()->GetPose().Ori() << std::endl;
+	DSTR << "EndEffectorVelocity:" << ikEndEffector->GetSolid()->GetVelocity() << std::endl;
+	DSTR << "EndEffectorTarget:" << ikEndEffector->GetTargetPosition() << std::endl;
 	DSTR << "Gravity:" << scene->GetGravity() << std::endl << std::endl;
+//#endif
 }
 
 void FWTrajectoryPlanner::OutputTrajectory(std::string filename) {
@@ -1961,14 +1723,14 @@ void FWTrajectoryPlanner::OutputVelocity(std::string filename) {
 }
 
 void FWTrajectoryPlanner::Replay(int ite, bool noncorrected) {
-	if (!calced) return;
+	if (!isCalculated) return;
 	if (ite < 0 || ite > maxIterate) return; // 多分変える
 
 	// 要求された再生番号を設定
 	this->ite = ite;
 	noncorrectedReplay = noncorrected;
-	moving = true;
-	torquechange.clear();
+	isMoving = true;
+	torqueChange.clear();
 	joints.SetTargetInitial();
 	states->LoadState(scene);
 	scene->GetIKEngine()->ApplyExactState();
@@ -1976,7 +1738,7 @@ void FWTrajectoryPlanner::Replay(int ite, bool noncorrected) {
 }
 
 void FWTrajectoryPlanner::JointTrajStep(bool step) {
-	if (moving) {
+	if (isMoving) {
 		if (repCount >= 0 && repCount < (int)trajData.width()) {
 			if (!noncorrectedReplay) {
 				joints.SetTarget(ite, repCount);
@@ -1987,7 +1749,7 @@ void FWTrajectoryPlanner::JointTrajStep(bool step) {
 			repCount++;
 		}
 		else if (repCount >= movtime) {
-			moving = false;
+			isMoving = false;
 			if (!noncorrectedReplay) {
 				joints.SetTarget(ite, movtime - 1);
 			}
@@ -1999,73 +1761,48 @@ void FWTrajectoryPlanner::JointTrajStep(bool step) {
 			joints.SetTargetInitial();
 			repCount++;
 		}
-		Debug();
+		DisplayDebugInfo();
 	}
 }
 
-void FWTrajectoryPlanner::FIRM(ControlPoint tpoint, std::string output) {
+void FWTrajectoryPlanner::ForwardInverseRelaxation(ControlPoint tpoint, std::string output) {
 	// --- デバッグ用の出力ファイル準備 ---
 	std::ofstream torqueChangeOutput(output + "TorqueChange.csv");
 
 	//途中停止用のフラグを無効化
-	stop = false;
+	isDiverged = false;
 	
 	//躍度最小軌道の生成とトルクの保存
 	MakeMinJerkAll();
-	besttorque = joints.CalcTotalTorqueChange(torqueChangeOutput);
-	torqueChangeOutput << besttorque << std::endl;
+	bestTorque = joints.CalcTotalTorqueChange(torqueChangeOutput);
+	torqueChangeOutput << bestTorque << std::endl;
 	joints.OutputTorque();
 
-	//IKのバイアスとプルバックを弱く
-	int nIK = scene->NIKActuators();
-	/*
-	if (bChange) {
-		for (int i = 0; i < nIK; i++) {
-			scene->GetIKActuator(i)->SetBias(1);
-		}
-	}
-	if (pChange) {
-		for (int i = 0; i < nIK; i++) {
-			scene->GetIKActuator(i)->SetPullbackRate(0);
-		}
-	}
-	*/
-
-	// --- 軌道計算の繰り返し計算 ---
+	// ----- 軌道計算の繰り返し計算 -----
 
 	scene->GetIKEngine()->Enable(false);
 
 	double torqueChange;
 	double torqueChangeLPF;
 
-	int max = bUseJointMJTInitial ? maxIterate + 1 : maxIterate;
-	for (int k = 1; k < max && !stop; k++) {
+	for (int k = 1; k < maxIterate && !isDiverged; k++) {
 		
 		//トルクにLPFをかける
 		double level = 1 + (double)(maxIterate - k) / maxIterate;
 		joints.ApplyLPF(maxLPF * level);
 
 		//フォワード(トルクー＞軌道)
-		Forward(k);
+		CompForwardDynamics(k);
 
 		torqueChangeLPF = joints.CalcTotalTorqueChangeLPF();
 
 		//軌道の修正
 		if (bCorrection) {
-			Correction(k);
+			TrajectoryCorrection(k);
 		}
 		
 		//インバース(軌道ー＞トルク)
-		Inverse(k);
-
-		torqueChange = joints.CalcTotalTorqueChange(torqueChangeOutput);
-		torqueChangeOutput << torqueChange << "," << torqueChangeLPF << std::endl;
-		joints.OutputTorque();
-	}
-
-	if (!bUseJointMJTInitial) {
-		//インバース(軌道ー＞トルク)
-		Inverse(maxIterate);
+		CompInverseDynamics(k);
 
 		torqueChange = joints.CalcTotalTorqueChange(torqueChangeOutput);
 		torqueChangeOutput << torqueChange << "," << torqueChangeLPF << std::endl;
@@ -2073,8 +1810,8 @@ void FWTrajectoryPlanner::FIRM(ControlPoint tpoint, std::string output) {
 	}
 
 	// --- 計算後であることのフラグ有効化 ---
-	moving = true;
-	calced = true;
+	isMoving = true;
+	isCalculated = true;
 	ite = best;
 	repCount = 0;
 
@@ -2090,59 +1827,65 @@ void FWTrajectoryPlanner::FIRM(ControlPoint tpoint, std::string output) {
 }
 
 void FWTrajectoryPlanner::MakeMinJerkAll() {
-	//開始点と目標点から空間躍度最小軌道を作成
-	MinJerkTrajectory minjerk = MinJerkTrajectory(startPoint, targetPoint, scene->GetTimeStep());
+	// シーンのステップ幅など
+	double dt = scene->GetTimeStep();
+	double dtInv = 1 / dt;
+
+	// 開始点と目標点から空間躍度最小軌道を作成
+	MinJerkTrajectory minjerk = MinJerkTrajectory(startPoint, targetPoint);
 	PTM::VVector<Posed> minjerkPoses;
 	minjerkPoses.resize(movtime);
-	PTM::VVector<Vec6d> minjerkVels;
+	PTM::VVector<SpatialVector> minjerkVels;
 	minjerkVels.resize(movtime);
 	for (int i = 0; i < movtime; i++) {
-		minjerkPoses[i] = minjerk.GetCurrentPose(i + 1);
+		DSTR << (i + 1) * dt << std::endl;
+		minjerkPoses[i] = minjerk.GetCurrentPose((i + 1) * dt);
 		//minjerkVels[i] = minjerk.GetCurrentVelocity(i + 1);
 	}
-	/*
+	
 	//各点を単純な躍度最小軌道で接続
 	for (int i = 0; i < (int)viaPoints.size() + 1; i++) {
 		ControlPoint s = (i == 0) ? startPoint : viaPoints[i - 1];
 		ControlPoint f = (i == viaPoints.size()) ? targetPoint : viaPoints[i];
-		MinJerkTrajectory mjt = MinJerkTrajectory(s, f, scene->GetTimeStep());
-		for (int j = s.step; j < f.step; j++) {
-			minjerkPoses[j] = mjt.GetCurrentPose(j + 1);
+		MinJerkTrajectory mjt = MinJerkTrajectory(s, f);
+		for (int j = s.time * dtInv; j < f.time * dtInv; j++) {
+			minjerkPoses[j] = mjt.GetCurrentPose((j + 1) * dt);
 		}
 	}
 	/*/
 	//境界条件満足の部分軌道を足し合わせて経由点を通る軌道実現
 	for (int i = 0; i < (int)viaPoints.size(); i++) {
-		ControlPoint s = ControlPoint(Posed(), Vec6d(), Vec6d(), (i == 0) ? startPoint.step : viaPoints[i - 1].step, (i == 0) ? startPoint.time : viaPoints[i - 1].time);
-		ControlPoint f = ControlPoint(Posed(), Vec6d(), Vec6d(), movtime, targetPoint.time);
+		ControlPoint s = ControlPoint(Posed(), SpatialVector(), SpatialVector(), (i == 0) ? startPoint.time : viaPoints[i - 1].time);
+		ControlPoint f = ControlPoint(Posed(), SpatialVector(), SpatialVector(), targetPoint.time);
 		ControlPoint c = viaPoints[i];
-		c.pose.Pos() -= minjerkPoses[c.step - 1].Pos();
-		c.pose.Ori() = c.pose.Ori() * minjerkPoses[c.step - 1].Ori().Inv();
+		c.pose.Pos() -= minjerkPoses[c.time * dtInv - 1].Pos();
+		c.pose.Ori() = c.pose.Ori() * minjerkPoses[c.time * dtInv - 1].Ori().Inv();
 		double internalRatio = (double)(c.time - s.time) / (f.time - s.time);
 		Vec3d relvpos = c.pose.Pos() - ((1 - internalRatio) * s.pose.Pos() + internalRatio * f.pose.Pos());
 		double tvs = c.time - s.time;
 		double tfv = f.time - c.time;
 		Vec3d relvvel = -2.5 * ((tvs - tfv) / (tvs * tfv)) * c.pose.Pos();
 		Vec3d relvacc = (10 * (tvs * tvs - 4 * tvs * tfv + tfv * tfv) / (3 * tvs * tvs * tfv * tfv)) * c.pose.Pos();
-		c.vel = Vec6d(relvvel.x, relvvel.y, relvvel.z, 0, 0, 0) - minjerkVels[c.step - 1] * scene->GetTimeStepInv();
-		c.acc = Vec6d(relvacc.x, relvacc.y, relvacc.z, 0, 0, 0) - (minjerkVels[c.step - 1] - (c.step > 1 ? minjerkVels[c.step - 2] : Vec6d())) * scene->GetTimeStepInv();
-		MinJerkTrajectory mjt = MinJerkTrajectory(s, f, c, scene->GetTimeStep());
-		for (int j = s.step; j < f.step; j++) {
-			Posed delta = mjt.GetCurrentPose(j + 1);
+		c.vel = SpatialVector(relvvel, Vec3d()) - minjerkVels[c.time * dtInv - 1];
+		c.acc = SpatialVector(relvacc, Vec3d()) - (minjerkVels[c.time * dtInv - 1] - (c.time * dtInv > 1 ? minjerkVels[c.time * dtInv - 2] : SpatialVector()));
+		MinJerkTrajectory mjt = MinJerkTrajectory(s, f, c);
+		for (int j = s.time * dtInv; j < f.time* dtInv; j++) {
+			Posed delta = mjt.GetCurrentPose((j + 1) * dt);
 			minjerkPoses[j].Pos() += delta.Pos();
 			minjerkPoses[j].Ori() = minjerkPoses[j].Ori() * delta.Ori();
-			minjerkVels[j] += mjt.GetCurrentVelocity(j + 1);
+			minjerkVels[j] += mjt.GetCurrentVelocity((j + 1) * dt);
 		}
 	}
-	
+	*/
 	joints.Harden();
-
+	
 	states->LoadState(scene);
 	scene->GetIKEngine()->ApplyExactState();
+	
 	scene->GetIKEngine()->Enable(true);
-	Debug();
+	DisplayDebugInfo();
 
-	Vec3d eefVel = eef->GetSolid()->GetVelocity();
+	Vec3d eefVel = ikEndEffector->GetSolid()->GetVelocity();
 	for (int i = 0; i < maxIterate + 1; i++) {
 		trajVel[i][0] = Vec4d(eefVel.x, eefVel.y, eefVel.z, eefVel.norm());
 	}
@@ -2156,27 +1899,30 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 	// 空間躍度最小軌道を再生して関節角を保存
 	for (; reach < movtime; reach++) {
 		 minjerkTarget = minjerkPoses[reach];
-		eef->SetTargetPosition(minjerkTarget.Pos());
-		eef->SetTargetOrientation(minjerkTarget.Ori());
-		eef->SetTargetVelocity((minjerkPoses[reach].Pos() - (reach == 0 ? startPoint.pose.Pos() : minjerkPoses[reach - 1].Pos())) * scene->GetTimeStepInv());
+		ikEndEffector->SetTargetPosition(minjerkTarget.Pos());
+		ikEndEffector->SetTargetOrientation(minjerkTarget.Ori());
+		//ikEndEffector->SetTargetVelocity((minjerkPoses[reach].Pos() - (reach == 0 ? startPoint.pose.Pos() : minjerkPoses[reach - 1].Pos())) * scene->GetTimeStepInv());
 		for (int i = 0; i < 1; i++) {
 			scene->Step();
 		}
 		if (count < (int)viaPoints.size()) {
-			if (reach == (viaPoints[count].step - 1)) {
-				joints.SaveViaPoint(count, (viaPoints[count].step));
+			if (reach == (int)(viaPoints[count].time * dtInv - 1)) {
+				joints.SaveViaPoint(count, viaPoints[count].time);
 				count++;
 			}
 		}
-		Debug();
+		DisplayDebugInfo();
+
+		joints.SaveTorque(reach);
 		for (int i = 0; i < maxIterate + 1; i++) {
 			joints.SavePosition(i, reach);
 			joints.SaveVelocity(i, reach);
 		}
+
 		trajData[0][reach] = Posed();
-		trajData[0][reach].Pos() = eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition();
-		trajData[0][reach].Ori() = eef->GetSolid()->GetPose().Ori();
-		eefVel = eef->GetSolid()->GetVelocity();
+		trajData[0][reach].Pos() = ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition();
+		trajData[0][reach].Ori() = ikEndEffector->GetSolid()->GetPose().Ori();
+		eefVel = ikEndEffector->GetSolid()->GetVelocity();
 		trajVel[0][reach + 1] = Vec4d(eefVel.x, eefVel.y, eefVel.z, eefVel.norm());
 		//trajVel[0][reach + 1] = Vec4d(minjerkTarget.Pos().x, minjerkTarget.Pos().y, minjerkTarget.Pos().z, minjerkPoses[reach].Pos().y);
 	}
@@ -2186,18 +1932,19 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 	joints.SaveTarget();
 
 	// 関節次元躍度最小軌道の生成
-	double per = scene->GetTimeStep();
 	if (bUseJointMJTInitial) {
 		joints.MakeJointMinjerk(0);
 	}else{
 		joints.MakeJointMinjerk(maxIterate);
 	}
-
+	
 	states->LoadState(scene);
 	scene->GetIKEngine()->ApplyExactState();
 
+	DisplayDebugInfo();
+	
 	scene->GetIKEngine()->Enable(false);
-
+	/*
 	count = 0;
 	for (int i = 0; i < movtime; i++) {
 		//跳ね対策(SetTarget内にてk==0の最初の方だけ線形補間)
@@ -2205,59 +1952,62 @@ void FWTrajectoryPlanner::MakeMinJerkAll() {
 		joints.SetTargetVelocity(0, i);
 		//joints.SetTargetCurrent();
 		DSTR << "in minjerk " << i << "step" << std::endl;
-		Debug();
+		DisplayDebugInfo();
 		scene->Step();
 		if (count < (int)viaPoints.size()) {
-			if (i == (viaPoints[count].step - 1)) {
-				joints.SaveViaPoint(count, (viaPoints[count].step));
+			if (i == (int)(viaPoints[count].time * dtInv - 1)) {
+				joints.SaveViaPoint(count, (viaPoints[count].time * dtInv));
 				count++;
 			}
 		}
-		Debug();
+		DisplayDebugInfo();
 		joints.SaveTorque(i);
-		//trajData[0][i].Pos() = eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition();
-		//trajData[0][i].Ori() = eef->GetSolid()->GetPose().Ori();
-		eefVel = eef->GetSolid()->GetVelocity();
+		//trajData[0][i].Pos() = ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition();
+		//trajData[0][i].Ori() = ikEndEffector->GetSolid()->GetPose().Ori();
+		eefVel = ikEndEffector->GetSolid()->GetVelocity();
 		trajVel[0][i + 1] = Vec4d(eefVel.x, eefVel.y, eefVel.z, eefVel.norm());
 	}
-
+	*/
 	best = 0;
-	besttorque = joints.CalcTotalTorqueChange();
+	bestTorque = joints.CalcTotalTorqueChange();
 	joints.SetBestTorqueChange();
 
 	states->LoadState(scene);
 	scene->GetIKEngine()->ApplyExactState();
 	DSTR << "loaded scene after minjerk" << std::endl;
-	Debug();
+	DisplayDebugInfo();
 }
 
-void FWTrajectoryPlanner::Forward(int k) {
+void FWTrajectoryPlanner::CompForwardDynamics(int k) {
 	// 関節ターゲットで動かすためにIKをオフ
 	scene->GetIKEngine()->Enable(false);
 	joints.Soften();
 	
 	// モータのオフセットを使って関節を駆動させ、角度を保存
-	Vec3d eefVel = eef->GetSolid()->GetVelocity();
+	Vec3d eefVel = ikEndEffector->GetSolid()->GetVelocity();
 	trajVelNotCorrected[k > 0 ? k - 1 : 0][0] = Vec4d(eefVel.x, eefVel.y, eefVel.z, eefVel.norm());
-	Debug();
+	DisplayDebugInfo();
+
 	for (int i = 0; i < movtime; i++) {
 		joints.SetOffsetFromLPF(i);
 		scene->Step();
-		if (eef->GetSolid()->GetVelocity().norm() > 1e3) {
-			stop = true;
+		if (ikEndEffector->GetSolid()->GetVelocity().norm() > 1e3) {
+			isDiverged = true;
 		}
 		joints.SavePositionFromLPF(k, i);
 		joints.SaveVelocityFromLPF(k, i);
 
-		trajDataNotCorrected[k > 0 ? k - 1 : 0][i].Pos() = eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition();
-		trajDataNotCorrected[k > 0 ? k - 1 : 0][i].Ori() = eef->GetSolid()->GetPose().Ori();
+		trajDataNotCorrected[k > 0 ? k - 1 : 0][i].Pos() = ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition();
+		trajDataNotCorrected[k > 0 ? k - 1 : 0][i].Ori() = ikEndEffector->GetSolid()->GetPose().Ori();
 
-		eefVel = eef->GetSolid()->GetVelocity();
+		eefVel = ikEndEffector->GetSolid()->GetVelocity();
 		trajVelNotCorrected[k > 0 ? k - 1 : 0][i + 1] = Vec4d(eefVel.x, eefVel.y, eefVel.z, eefVel.norm());
 	}
+
 	joints.ResetOffset();
+
 	DSTR << "in forward end" << std::endl;
-	Debug();
+	DisplayDebugInfo();
 
 	//Correction用にこの時の関節角速度を保存
 	joints.SaveVelocityForwardEnd();
@@ -2266,66 +2016,69 @@ void FWTrajectoryPlanner::Forward(int k) {
 	joints.Harden();
 }
 
-void FWTrajectoryPlanner::Inverse(int k) {
-	torquechange.clear();
-	totalchange = 0;
+void FWTrajectoryPlanner::CompInverseDynamics(int k) {
+	// シーンのステップ幅など
+	double dtInv = scene->GetTimeStepInv();
+
+	torqueChange.clear();
+	totalChange = 0;
+
 	scene->GetIKEngine()->Enable(false);
 	joints.Harden();
-	//軌道再生と各関節トルクの保存
+
+	// 軌道再生と各関節トルクの保存
 	int count = 0;
 	for (int i = 0; i < movtime; i++) {
 
-		//jointTargetを設定
+		// jointTargetを設定
 		joints.SetTarget(k, i);
 		joints.SetTargetVelocity(k, i);
 
-		//Stepで軌道再生
+		// Stepで軌道再生
 		scene->Step();
 
-		if (eef->GetSolid()->GetVelocity().norm() > 1e3) {
-			stop = true;
-		}
-		if (i == 0) {
-			Debug();
-			DSTR << "in inverse " << k << " " << i << std::endl;
-			DSTR << std::endl;
+		if (ikEndEffector->GetSolid()->GetVelocity().norm() > 1e3) {
+			isDiverged = true;
 		}
 
 		if (count < (int)viaPoints.size()) {
-			if (i == (viaPoints[count].step - 1)) {
-				tmpstates[count++]->SaveState(scene);
+			if (i == (int)(viaPoints[count].time * dtInv - 1)) {
+				tmpStates[count++]->SaveState(scene);
 			}
 		}
-		trajData[k][i].Pos() = eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition();
-		trajData[k][i].Ori() = eef->GetSolid()->GetPose().Ori();
-		//Debug();
+		trajData[k][i].Pos() = ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition();
+		trajData[k][i].Ori() = ikEndEffector->GetSolid()->GetPose().Ori();
+		//DisplayDebugInfo();
 
-		Vec3d eefVel = eef->GetSolid()->GetVelocity();
+		Vec3d eefVel = ikEndEffector->GetSolid()->GetVelocity();
 		trajVel[k][i + 1] = Vec4d(eefVel.x, eefVel.y, eefVel.z, eefVel.norm());
 
 		//トルクの記録
 		joints.SaveTorque(i);
 	}
 	DSTR << "in inverse end" << std::endl;
-	Debug();
+	DisplayDebugInfo();
 
 	double torqueChange = joints.CalcTotalTorqueChange();
-	if (torqueChange < besttorque) {
+	if (torqueChange < bestTorque) {
 		best = k;
-		besttorque = torqueChange;
+		bestTorque = torqueChange;
 		joints.SetBestTorqueChange();
 	}
 
 	//ロードしてIK周りの調整
 	states->LoadState(scene);
 	scene->GetIKEngine()->ApplyExactState();
-	Debug();
+	DisplayDebugInfo();
 }
 
-void FWTrajectoryPlanner::Correction(int k) {
-	//この前のFDMの終了時には目標到達時間における状態で終了しているはず(多分未到達だが)
-	//なので、ここで到達位置や速度を
-	beforecorstates[k - 1]->SaveState(scene);
+void FWTrajectoryPlanner::TrajectoryCorrection(int k) {
+	// シーンのステップ幅など
+	double dtInv = scene->GetTimeStepInv();
+
+	// この前のFDMの終了時には目標到達時間における状態で終了しているはず(多分未到達だが)
+	// なので、ここで到達位置や速度を
+	beforeCorStates[k - 1]->SaveState(scene);
 
 	double dist = 0;
 	int count;
@@ -2335,41 +2088,41 @@ void FWTrajectoryPlanner::Correction(int k) {
 		//IKを用いて目標に到達させ、jointsに状態保存
 		if (!bStaticTarget) {
 
-			eef->SetTargetPosition(targetPoint.pose.Pos());
-			eef->SetTargetOrientation(targetPoint.pose.Ori());
+			ikEndEffector->SetTargetPosition(targetPoint.pose.Pos());
+			ikEndEffector->SetTargetOrientation(targetPoint.pose.Ori());
 			count = 0;
 			if (true) {
-				double dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
+				double dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
 				while (count++ < 50 && dist > 0.01) {
 					scene->Step();
-					dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
+					dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
 					DSTR << count << " step" << std::endl;
-					Debug();
+					DisplayDebugInfo();
 				}
 			}
 
 			DSTR << "in correction IK step after " << count << " steps" << std::endl;
-			Debug();
+			DisplayDebugInfo();
 			DSTR << "dist:" << dist << std::endl;
 			joints.SaveTarget();
-			corstates[k - 1]->SaveState(scene);
+			corStates[k - 1]->SaveState(scene);
 		}
 
 		//以降では経由点の通過保証修正を行う
 		for (int n = 0; n < (int)viaPoints.size(); n++) {
-			tmpstates[n]->LoadState(scene);
+			tmpStates[n]->LoadState(scene);
 			scene->GetIKEngine()->ApplyExactState();
-			eef->SetTargetPosition(viaPoints[n].pose.Pos());
-			eef->SetTargetOrientation(viaPoints[n].pose.Ori());
+			ikEndEffector->SetTargetPosition(viaPoints[n].pose.Pos());
+			ikEndEffector->SetTargetOrientation(viaPoints[n].pose.Ori());
 			count = 0;
-			dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
+			dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
 			while (count++ < 50 && dist > 0.05) {
 				scene->Step();
-				dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
+				dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
 			}
 			DSTR << "ViaPoint " << n << " in correction IK step after " << count << " steps" << std::endl;
-			Debug();
-			joints.SaveViaPoint(n, viaPoints[n].step);
+			DisplayDebugInfo();
+			joints.SaveViaPoint(n, viaPoints[n].time * dtInv);
 		}
 	}
 	else {
@@ -2379,39 +2132,39 @@ void FWTrajectoryPlanner::Correction(int k) {
 			joints.SetTargetCurrent();
 			targetSpring->Enable(true);
 			count = 0;
-			double dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
+			double dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
 			while (count++ < 50) {
 				scene->Step();
-				dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
+				dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - targetPoint.pose.Pos()).norm();
 				DSTR << count << " step" << std::endl;
 				DSTR << "dist:" << dist << std::endl;
-				Debug();
+				DisplayDebugInfo();
 				DSTR << "SpringForce:" << targetSpring->GetMotorForce() << std::endl;
 			}
 
 			DSTR << "in correction IK step after " << count << " steps" << std::endl;
-			Debug();
+			DisplayDebugInfo();
 			DSTR << "dist:" << dist << std::endl;
 			joints.SaveTarget();
 			targetSpring->Enable(false);
-			corstates[k - 1]->SaveState(scene);
+			corStates[k - 1]->SaveState(scene);
 		}
 
 		//以降では経由点の通過保証修正を行う
 		for (int n = 0; n < (int)viaPoints.size(); n++) {
-			tmpstates[n]->LoadState(scene);
+			tmpStates[n]->LoadState(scene);
 			scene->GetIKEngine()->ApplyExactState();
 			joints.SetTargetCurrent();
 			viaSprings[n]->Enable(true);
 			count = 0;
-			dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
+			dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
 			while (count++ < 50) {
 				scene->Step();
-				dist = (eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
+				dist = (ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition() - viaPoints[n].pose.Pos()).norm();
 			}
 			DSTR << "ViaPoint " << n << " in correction IK step after " << count << " steps" << std::endl;
-			Debug();
-			joints.SaveViaPoint(n, viaPoints[n].step);
+			DisplayDebugInfo();
+			joints.SaveViaPoint(n, viaPoints[n].time * dtInv);
 			viaSprings[n]->Enable(false);
 		}
 	}
@@ -2434,11 +2187,13 @@ void FWTrajectoryPlanner::Correction(int k) {
 			DCAST(PHHingeJointIf, jo)->SetTargetVelocity(0);
 		}
 	}
-	Debug();
+	DisplayDebugInfo();
 }
 
-bool FWTrajectoryPlanner::ViatimeAdjustment() {
+bool FWTrajectoryPlanner::AdjustViatime() {
 	if (viaPoints.empty()) return false;
+	double dtinv = scene->GetTimeStepInv();
+
 	// トルクの総変化量と各セクションでの変化量を取得
 	int nVia = (int)viaPoints.size();
 	double* tChange = new double[nVia + 1];
@@ -2481,9 +2236,8 @@ bool FWTrajectoryPlanner::ViatimeAdjustment() {
 		sumtime += deltat[i];
 		double newtime = (viaPoints[i].time + sumtime) * movtime * scene->GetTimeStep() / (movtime * scene->GetTimeStep() + sumdeltat);
 		int newstep = TimeToStep(newtime);
-		cont &= (newstep == viaPoints[i].step);
+		cont &= (newstep == (int)(viaPoints[i].time * dtinv));
 		viaPoints[i].time = newtime;
-		viaPoints[i].step = newstep;
 		DSTR << "new viatime " << i << " : " << viaPoints[i].time << std::endl;
 	}
 
@@ -2494,12 +2248,11 @@ bool FWTrajectoryPlanner::ViatimeAdjustment() {
 	return !cont;
 }
 
-void FWTrajectoryPlanner::ViatimeInitialize() {
+void FWTrajectoryPlanner::InitializeViatime() {
 	// 各経由点の通過時間を等間隔に初期化
 	int nVia = (int)viaPoints.size();
 	for (int i = 0; i < nVia; i++) {
-		viaPoints[i].time = movtime * scene->GetTimeStep() * (i + 1) / (nVia + 1);
-		viaPoints[i].step = TimeToStep(viaPoints[i].time);
+		viaPoints[i].time = mtime * (i + 1) / (nVia + 1);
 	}
 }
 
@@ -2519,7 +2272,7 @@ void FWTrajectoryPlanner::PrepareSprings() {
 	tspDesc.bEnabled = false;
 	tspDesc.spring = Vec3d(1e10, 1e10, 1e10);
 	tspDesc.damper = Vec3d(1e2, 1e2, 1e2);
-	if (eef->IsOrientationControlEnabled()) {
+	if (ikEndEffector->IsOrientationControlEnabled()) {
 		tspDesc.springOri = 1e8;
 		tspDesc.damperOri = 1e2;
 	}
@@ -2527,9 +2280,9 @@ void FWTrajectoryPlanner::PrepareSprings() {
 		tspDesc.springOri = 0;
 		tspDesc.damperOri = 1e2;
 	}
-	targetSpring = (PHSpringIf*)scene->CreateJoint(targetSolid, eef->GetSolid(), tspDesc);
-	targetSpring->SetPlugPose(Posed(eef->GetTargetLocalPosition(), Quaterniond()));
-	scene->SetContactMode(targetSolid, eef->GetSolid(), PHSceneDesc::ContactMode::MODE_NONE);
+	targetSpring = (PHSpringIf*)scene->CreateJoint(targetSolid, ikEndEffector->GetSolid(), tspDesc);
+	targetSpring->SetPlugPose(Posed(ikEndEffector->GetTargetLocalPosition(), Quaterniond()));
+	scene->SetContactMode(targetSolid, ikEndEffector->GetSolid(), PHSceneDesc::ContactMode::MODE_NONE);
 	
 	// 経由点の剛体とバネの設定
 	for (size_t i = 0; i < (int)viaPoints.size(); i++) {
@@ -2544,7 +2297,7 @@ void FWTrajectoryPlanner::PrepareSprings() {
 		vspDesc.bEnabled = false;
 		vspDesc.spring = Vec3d(1e10, 1e10, 1e10);
 		vspDesc.damper = Vec3d(100, 100, 100); 
-		if (eef->IsOrientationControlEnabled()) {
+		if (ikEndEffector->IsOrientationControlEnabled()) {
 			vspDesc.springOri = 1e8;
 			vspDesc.damperOri = 1e2;
 		}
@@ -2552,19 +2305,19 @@ void FWTrajectoryPlanner::PrepareSprings() {
 			vspDesc.springOri = 0;
 			vspDesc.damperOri = 1e2;
 		}
-		viaSprings.push_back((PHSpringIf*)scene->CreateJoint(viaSolids[i], eef->GetSolid(), vspDesc));
-		viaSprings[i]->SetPlugPose(Posed(eef->GetTargetLocalPosition(), Quaterniond()));
-		scene->SetContactMode(viaSolids[i], eef->GetSolid(), PHSceneDesc::ContactMode::MODE_NONE);
+		viaSprings.push_back((PHSpringIf*)scene->CreateJoint(viaSolids[i], ikEndEffector->GetSolid(), vspDesc));
+		viaSprings[i]->SetPlugPose(Posed(ikEndEffector->GetTargetLocalPosition(), Quaterniond()));
+		scene->SetContactMode(viaSolids[i], ikEndEffector->GetSolid(), PHSceneDesc::ContactMode::MODE_NONE);
 	}
 }
 
 void FWTrajectoryPlanner::ReloadCorrected(int k, bool nc) {
 	if (k < 0 || k >= maxIterate) return;
 	if (nc) {
-		beforecorstates[k]->LoadState(scene);
+		beforeCorStates[k]->LoadState(scene);
 	}
 	else {
-		corstates[k]->LoadState(scene);
+		corStates[k]->LoadState(scene);
 	}
 	int nJoints = scene->NJoints();
 	for (int i = 0; i < nJoints; i++) {
@@ -2583,37 +2336,32 @@ void FWTrajectoryPlanner::ReloadCorrected(int k, bool nc) {
 void FWTrajectoryPlanner::CalcTrajectory(ControlPoint tpoint, std::string output) {
 
 	//総移動ステップ数設定
-	movtime = tpoint.step;
+	mtime = tpoint.time;
+	movtime = tpoint.time * scene->GetTimeStepInv();
 
 	//path set
 	path = output;
 
-	DSTR << "stapose:" << startPoint.pose << " tarvel:" << startPoint.vel << " time:" << startPoint.step << std::endl;
-	DSTR << "tarpose:" << targetPoint.pose << " tarvel:" << targetPoint.vel << " time:" << targetPoint.step << std::endl;
-
 	auto start = std::chrono::system_clock::now();
 
-	//ターゲットと経由点のバネ準備
+	// ターゲットと経由点のバネ準備
 	PrepareSprings();
 
 	Init();
 
-	//経由点の通過時間の初期化
-	ViatimeInitialize();
+	// 経由点の通過時間の初期化
+	InitializeViatime();
 
-	//開始点の設定
-	Vec3d eefVel = eef->GetSolid()->GetVelocity();
-	startPoint.pose = Posed(eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition(), eef->GetSolid()->GetPose().Ori());
-	startPoint.vel = Vec6d(eefVel.x, eefVel.y, eefVel.z, 0, 0, 0);
-	startPoint.vel = Vec6d();
-	startPoint.acc = Vec6d();
-	startPoint.step = 0;
+	// 開始点の設定
+	startPoint.pose = Posed(ikEndEffector->GetSolid()->GetPose() * ikEndEffector->GetTargetLocalPosition(), ikEndEffector->GetSolid()->GetPose().Ori());
+	startPoint.vel = SpatialVector(ikEndEffector->GetSolid()->GetVelocity(), Vec3d());
+	startPoint.acc = SpatialVector();
 	startPoint.time = 0;
 
-	//目標点の設定(引数とってくるだけ)
+	// 目標点の設定(引数とってくるだけ)
 	targetPoint = tpoint;
 
-	//経由点通過時間推移記録ファイル
+	// 経由点通過時間推移記録ファイル
 	std::ofstream outfile(output + "Viatimes.csv");
 	std::ofstream outfile2(output + "Bests.csv");
 
@@ -2622,14 +2370,14 @@ void FWTrajectoryPlanner::CalcTrajectory(ControlPoint tpoint, std::string output
 	do {
 		// 現在の経由点通過時間を記録
 		for (int j = 0; j < (int)viaPoints.size(); j++) {
-			outfile << viaPoints[j].step << ",";
+			outfile << viaPoints[j].time * scene->GetTimeStepInv() << ",";
 		}
 		outfile << std::endl;
-		// FIRMにより近似最適解の導出
-		FIRM(tpoint, output);
-		outfile2 << besttorque << std::endl;
+		// ForwardInverseRelaxationにより近似最適解の導出
+		ForwardInverseRelaxation(tpoint, output);
+		outfile2 << bestTorque << std::endl;
 		// 経由点の通過時間の調整をして継続か判断
-		cont = ViatimeAdjustment();
+		cont = AdjustViatime();
 	} while (maxIterateViaAdjust > i++ && cont);
 
 	joints.CloseFile();

@@ -41,12 +41,13 @@ public:
 class FWUngroundedConstraint{
 public:
 	Vec3i cAxis;
+	Vec3d normal;
 	PHSolidIf* cSolid;
 	Posed initialPose;
 	double cWeight;
 public:
 	FWUngroundedConstraint();
-	FWUngroundedConstraint(double w, Vec3i a);
+	FWUngroundedConstraint(double w, Vec3i a, Vec3d n = Vec3d());
 	double CalcEvalFunc();
 	void Init();
 };
@@ -126,16 +127,21 @@ struct FWOptimizerIf : public ObjectIf {
 struct FWOptimizerDesc{
 	SPR_DESCDEF(FWOptimizer);
 
+	/// Initial search space vector
 	double ixstart;
+	/// Inital standard deviation of the samples
 	double istddev;
+	/// Minimal value difference
 	double iTolFun;
+	/// Population size
 	double ilambda;
+	/// Max iteration
 	double iMaxIter;
 
 	FWOptimizerDesc() {
 		ixstart = 0.3;
 		istddev = 0.3;
-		iTolFun = 10;
+		iTolFun = 0.1;
 		ilambda = 30;
 		iMaxIter = 500;
 	}
@@ -147,61 +153,83 @@ struct FWOptimizerDesc{
 struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	SPR_IFDEF(FWStaticTorqueOptimizer);
 	
+	/// Init
 	void Init();
 
+	/// 
 	void Iterate();
 
+	/// 
 	void ApplyResult(PHSceneIf* phScene);
 
+	/// 
 	double ApplyPop(PHSceneIf* phScene, double const *x, int n);
 
+	/// 
 	double Objective(double const *x, int n);
 
+	/// 
 	void SetScene(PHSceneIf* phSceneInput);
 
+	/// 
 	void Optimize();
 
+	/// 
 	bool TestForTermination();
 
+	/// 
 	void TakeFinalValue();
 	
+	// Set/Get errorWeight
 	void SetErrorWeight(double v);
 	double GetErrorWeight();
 
+	// Set/Get stabilityWeight
 	void SetStabilityWeight(double v);
 	double GetStabilityWeight();
 
+	// Set/Get torqueWeight
 	void SetTorqueWeight(double v);
 	double GetTorqueWeight();
 
-	void SetResistWeight(double v);
-	double GetResistWeight();
-
+	// Set/Get  constWeight
 	void SetConstWeight(double v);
 	double GetConstWeight();
 
+	// Set/Get gravcenterWeight
 	void SetGravcenterWeight(double v);
 	double GetGravcenterWeight();
 
+	// Set/Get  differentialWeight
 	void SetDifferentialWeight(double v);
 	double GetDifferentialWeight();
 
-	//構造体の配列を外部から取れないので１要素ずつpush
+	// GroundConstraintの追加、取得、全消去
 	void AddPositionConst(FWGroundConstraint* f);
 	FWGroundConstraint GetGroundConst(int n);
 	void ClearGroundConst();
+
+	// UngroundedConstraintの追加、取得、全消去
 	void AddPositionConst(FWUngroundedConstraint* f);
 	FWUngroundedConstraint GetUngroundConst(int n);
 	void ClearUngroundedConst();
 
+	// トルク評価時の関節ウェイトの設定
+	void SetJointWeight(PHJointIf* jo, double w);
+
+	/// CMAESのパラメータの設定
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 
+	/// 評価値を取得
 	FWObjectiveValues GetObjectiveValues();
 	
+	/// 重心位置取得
 	Vec3f GetCenterOfGravity();
 
+	/// 支持多角形に使われている点の数
 	int NSupportPolygonVertices();
 
+	/// 支持多角形に使われている点の取得
 	Vec3f GetSupportPolygonVerticesN(int n);
 };
 
@@ -221,16 +249,15 @@ struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
 // 空間内の経由点指定用データ
 struct ControlPoint{
 	Posed pose;
-	Vec6d vel;
-	Vec6d acc;
-	int step;
+	SpatialVector vel;
+	SpatialVector acc;
 	double time;
 	bool velControl;
 	bool accControl;
 	bool timeControl;
 	ControlPoint();
-	ControlPoint(Posed p, int s, double t);
-	ControlPoint(Posed p, Vec6d v, Vec6d a, int s, double t);
+	ControlPoint(Posed p, double t);
+	ControlPoint(Posed p, SpatialVector v, SpatialVector a, double t);
 	//ControlPoint(ControlPoint& c);
 };
 
@@ -283,7 +310,7 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	void SetControlTarget(PHIKEndEffectorIf* e);
 	//シーン設定
 	void SetScene(PHSceneIf* s);
-	void AddControlPoint(ControlPoint c); 
+	void AddViaPoint(ControlPoint c); 
 	//関節角度次元軌道計算
 	void CalcTrajectory(ControlPoint tpoint, std::string output);
 	//N回目の繰り返しから再計算
@@ -293,7 +320,7 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	//
 	bool Moving();
 	//spring, damper set
-	void SetPD(double s = 1e5, double d = 1e5, bool mul = true);
+	void SetSpringDamper(double s = 1e5, double d = 1e5, bool mul = true);
 	//replay
 	void Replay(int ite, bool noncorrected = false);
 	//return totalChange

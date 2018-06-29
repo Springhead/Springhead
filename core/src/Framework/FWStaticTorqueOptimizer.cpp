@@ -1,4 +1,4 @@
-#include <Framework/FWStaticTorqueOptimizer.h>
+﻿#include <Framework/FWStaticTorqueOptimizer.h>
 
 namespace Spr { ;
 
@@ -6,31 +6,40 @@ namespace Spr { ;
 FWGroundConstraint::FWGroundConstraint() { this->cWeight = 1.0; this->cNormal = Vec3d(0, 0, 0); }
 FWGroundConstraint::FWGroundConstraint(double w, Vec3d n) { this->cWeight = w;  this->cNormal = n.unit(); this->contactForce = Vec3d(); this->contactPoint = Vec3d(); }
 double FWGroundConstraint::CalcEvalFunc() {
-	Vec3d normal = cNormal.unit();
+	Vec3d normal1 = cNormal.unit();
+	Vec3d normal2 = initialPose.Ori().Inv() * cNormal.unit();
+	// 現在姿勢との差分を取得
 	Vec3d dPosition = cSolid->GetPose().Pos() - initialPose.Pos();
 	Quaterniond dQuaternion = initialPose.Ori().Inv() * cSolid->GetPose().Ori();
-	Vec3d n1 = dQuaternion * normal;
-	double gq = 1.0 - n1 * normal;
-	double gp = abs(dPosition * normal);
+	Vec3d n1 = dQuaternion * normal2;
+	double gq = 1.0 - n1 * normal2;
+	double gp = abs(dPosition * normal1);
+#ifdef _DEBUG
 	DSTR << normal << initialPose << cSolid->GetPose() << dPosition << "rotationValue:" << gq << " positionValue:" << gp << std::endl;
+#endif
 	return cWeight * (gq + gp);
 }
 void FWGroundConstraint::Init() {
 	if (cSolid != NULL) {
 		this->initialPose = cSolid->GetPose();
+		//this->cNormal = initialPose.Ori().Inv() * cNormal;
 	}
 }
 
 //----- ----- ----- -----
 FWUngroundedConstraint::FWUngroundedConstraint() { this->cWeight = 1.0; this->cAxis = Vec3i(0, 0, 0); }
-FWUngroundedConstraint::FWUngroundedConstraint(double w, Vec3i a) { this->cWeight = w; this->cAxis = a; }
+FWUngroundedConstraint::FWUngroundedConstraint(double w, Vec3i a, Vec3d n) { this->cWeight = w; this->cAxis = a; this->normal = n.unit(); }
 double FWUngroundedConstraint::CalcEvalFunc() {
 	Vec3d dPosition = cSolid->GetPose().Pos() - initialPose.Pos();
-	return cWeight * abs(dPosition * cAxis);
+	Quaterniond dQuaternion = initialPose.Ori().Inv() * cSolid->GetPose().Ori();
+	Vec3d n1 = dQuaternion * normal;
+	double gq = 1.0 - n1 * normal;
+	return cWeight * (abs(dPosition * cAxis) + gq);
 }
 void FWUngroundedConstraint::Init() {
 	if (cSolid != NULL) {
 		this->initialPose = cSolid->GetPose();
+		this->normal = initialPose.Ori().Inv() * normal;
 	}
 }
 
@@ -134,13 +143,13 @@ void GrahamConvexHull::Recalc(std::vector<Vec3f> vertices) {
 		vertices[0] = vertices[xmax];
 		vertices[xmax] = tmp;
 		DSTR << "before sort" << std::endl;
-		for (int i = 0; i < vertices.size(); i++) {
+		for (int i = 0; i < (int)vertices.size(); i++) {
 			DSTR << vertices[i] << std::endl;
 		}
 		Sort::simplesort(vertices, normal);
 		//Sort::quicksort(vertices, 1, n - 1, normal);
 		DSTR << "after sort" << std::endl;
-		for (int i = 0; i < vertices.size(); i++) {
+		for (int i = 0; i < (int)vertices.size(); i++) {
 			DSTR << vertices[i] << std::endl;
 		}
 		vertices.push_back(vertices[0]);
@@ -182,11 +191,10 @@ double GrahamConvexHull::Eval(Vec3f v) {
 		DSTR << "vertices[" << i << "]:" << hull[i] << std::endl;
 	DSTR << "center of hull:" << center << std::endl;
 
-	InsideGrahamConvexHull(v);
 	for (int i = 0; i < nHull; i++) {
 		Vec3f edge = hull[i + 1] - hull[i];
 		if (edge.norm() != 0) {
-			c = cross(hull[i + 1] - hull[i], v - hull[i]) / edge.norm();
+			c = cross(edge, v - hull[i]) / edge.norm();
 			if (min > abs(c.y)) {
 				min = abs(c.y);
 			}
@@ -341,19 +349,12 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 	// 1. Apply x to Scene
 	obj += ApplyPop(phScene, x, n);
 
-	int nSolids = phScene->NSolids();
-	DSTR << "after applypop" << std::endl;
-	for (int i = 0; i < nSolids; i++) {
-		PHSolidIf* so = phScene->GetSolids()[i];
-		DSTR << "inipos" << so->GetName() << so->GetPose() << std::endl;
-		if (so->NShape() > 0) {
-			for (int j = 0; j < so->NShape(); j++) {
-				DSTR << "CD(" << so->GetName() << "):" << so->GetShape(j)->GetName() << std::endl;
-			}
-		}
-	}
 
 	// 2. Do Simulation Step And Calc Criterion
+
+	for (int i = 0; i < 1; ++i) {
+		phScene->Step();
+	}
 
 	// a. Calc Error Criterion
 	val.errorvalue = CalcErrorCriterion();
@@ -371,10 +372,6 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 	val.centervalue = CalcCOGCriterion();
 	obj += val.centervalue;
 
-
-	for (int i = 0; i < 1; ++i) {
-		phScene->Step();
-	}
 	// e. evaluate difference from initial joint ori
 	val.initialorivalue = CalcDifferenceCriterion();
 	obj += val.initialorivalue;
@@ -384,14 +381,9 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 	obj += val.torquevalue;
 
 	// g. Calc Stability Criterion
-
-	//Evaluate from body solids velocity and angular velocity
+	// Evaluate from body solids velocity and angular velocity
 	val.stabilityvalue = CalcStabilityCriterion();
 	obj += val.stabilityvalue;
-
-	DSTR << "error:" << val.errorvalue << " torque:" << val.torquevalue << " stability:" << val.stabilityvalue << std::endl;
-	DSTR << "grounded:" << val.groundvalue << " ungrounded:" << val.ungroundedvalue << " center:" << val.centervalue << " iniori:" << val.initialorivalue << std::endl;
-	DSTR << "obj:" << obj << std::endl;
 
 	return obj;
 }
@@ -416,54 +408,52 @@ void FWStaticTorqueOptimizer::TakeFinalValue() {
 }
 
 double FWStaticTorqueOptimizer::CalcErrorCriterion() {
-	//EndEffectorによるエラー評価
-	double e;
+	// EndEffectorによるエラー評価
+	double e = 0;
 	for (int i = 0; i < phScene->NIKEndEffectors(); ++i) {
 		PHIKEndEffectorIf* eef = phScene->GetIKEndEffector(i);
 		if (eef->IsPositionControlEnabled()) {
 			Vec3d diff = ((eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition()) - eef->GetTargetPosition());
-			e += errorWeight * pow(diff.norm(), 2);
+			e += pow(diff.norm(), 2);
 		}
 		if (eef->IsOrientationControlEnabled()) {
-			e += errorWeight * ((eef->GetSolid()->GetOrientation() * Vec3d(1, 0, 0)) - (eef->GetTargetOrientation() * Vec3d(1, 0, 0))).norm();
-			e += errorWeight * ((eef->GetSolid()->GetOrientation() * Vec3d(0, 1, 0)) - (eef->GetTargetOrientation() * Vec3d(0, 1, 0))).norm();
+			e += ((eef->GetSolid()->GetOrientation() * Vec3d(1, 0, 0)) - (eef->GetTargetOrientation() * Vec3d(1, 0, 0))).norm();
+			e += ((eef->GetSolid()->GetOrientation() * Vec3d(0, 1, 0)) - (eef->GetTargetOrientation() * Vec3d(0, 1, 0))).norm();
 		}
 	}
-	return e;
+	return errorWeight * e;
 }
 
 double FWStaticTorqueOptimizer::CalcGroundedCriterion() {
-	//接地拘束を評価
+	// 接地拘束を評価
 	double g = 0;
 	for (size_t i = 0; i < groundConst.size(); i++) {
-		double e = groundConst[i]->CalcEvalFunc();
-		g += constWeight * e;
+		g += groundConst[i]->CalcEvalFunc();
 	}
-	return g;
+	return constWeight * g;
 }
 
 double FWStaticTorqueOptimizer::CalcPositionCriterion() {
-	//非接地位置拘束を評価
+	// 非接地位置拘束を評価
 	double p = 0;
 	for (size_t i = 0; i < ungroundedConst.size(); i++) {
-		double e = ungroundedConst[i]->CalcEvalFunc();
-		p += constWeight * e;
+		p += ungroundedConst[i]->CalcEvalFunc();
 	}
-	return p;
+	return constWeight * p;
 }
 
 double FWStaticTorqueOptimizer::CalcCOGCriterion() {
-	//重心位置を評価
+	// 重心位置を評価
 	double g = 0;
 	std::vector<Vec3f> supports;
 	for (size_t i = 0; i < groundConst.size(); i++) {
-		//make supporting polygon from all vertices of body grounded collider
+		// make supporting polygon from all vertices of body grounded collider
 		Vec3f* vertices;
 		Vec3f v;
 		int ns = groundConst[i]->cSolid->NShape();
 		for (int j = 0; j < ns; j++) {
 			CDShapeIf* shape = groundConst[i]->cSolid->GetShape(0);
-			//Boxにしか対応してません
+			// Boxにしか対応していません
 			if (DCAST(CDBoxIf, shape)) {
 				vertices = DCAST(CDBoxIf, shape)->GetVertices();
 				for (int k = 0; k < 8; k++) {
@@ -479,7 +469,7 @@ double FWStaticTorqueOptimizer::CalcCOGCriterion() {
 		int bSize = (int)bodyIndex.size();
 		Vec3d totalBodyGravPos = Vec3d();
 		double totalBodyMass = 0;
-		//Calculate position of cog
+		// Calculate position of cog
 		for (int i = 0; i < bSize; i++) {
 			Vec3d bodyGravPos = phScene->GetSolids()[bodyIndex[i]]->GetCenterPosition();
 			double bodyMass = phScene->GetSolids()[bodyIndex[i]]->GetMass();
@@ -487,13 +477,13 @@ double FWStaticTorqueOptimizer::CalcCOGCriterion() {
 			totalBodyMass += bodyMass;
 		}
 		cog = totalBodyGravPos;
-		//Create convex hull and calculate cog evaluation
+		// Create convex hull and calculate cog evaluation
 		GrahamConvexHull gh = GrahamConvexHull();
 		gh.Recalc(supports);
 		supportPolygon.resize(gh.hull.size());
 		std::copy(gh.hull.begin(), gh.hull.end(), supportPolygon.begin());
 		double e = gh.Eval(totalBodyGravPos);
-		g = gravcenterWeight * totalBodyMass * e;
+		g = totalBodyMass * e;
 	}
 	else {
 		PHIKActuatorIf* root = phScene->GetIKActuator(0);
@@ -502,39 +492,39 @@ double FWStaticTorqueOptimizer::CalcCOGCriterion() {
 		double totalBodyMass = 0;
 		totalBodyMass = CenterOfGravity(root, totalBodyGravPos);
 		cog = totalBodyGravPos;
-		//Create convex hull and calculate cog evaluation
+		// Create convex hull and calculate cog evaluation
 		GrahamConvexHull gh = GrahamConvexHull();
 		gh.Recalc(supports);
 		supportPolygon.resize(gh.hull.size());
 		std::copy(gh.hull.begin(), gh.hull.end(), supportPolygon.begin());
 		double e = gh.Eval(totalBodyGravPos);
-		g = gravcenterWeight * totalBodyMass * e;
+		g = totalBodyMass * e;
 	}
-	return g;
+	return gravcenterWeight * g;
 }
 
 double FWStaticTorqueOptimizer::CalcDifferenceCriterion() {
-	//初期関節角との差分を評価
+	// 初期関節角との差分を評価
 	double d = 0;
 	int nJoints = phScene->NIKActuators();
 	for (int i = 0; i < nJoints; i++) {
 		if (DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))) {
 			Quaterniond jQuaternion = DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))->GetJoint()->GetPosition();
 			Vec3d euler;
-			///　本来はToEulerから取得したVec3dはyzxの順であることを考慮する必要があるが今回は変える必要なし
+			/// 本来はToEulerから取得したVec3dはyzxの順であることを考慮する必要があるが今回は変える必要なし
 			jQuaternion.ToEuler(euler);
 			Vec3d euler0;
 			Quaterniond jQuaternion0 = initialPos[i].ori;
 			jQuaternion0.ToEuler(euler0);
 			euler0 -= euler;
-			d += differentialWeight * (euler0.norm() * euler0.norm());
+			d += pow(euler0.norm(), 2);
 		}
 		else if (DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))) {
 			double angle = DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))->GetJoint()->GetPosition() - initialPos[i].angle;
-			d += differentialWeight * angle * angle;
+			d += pow(angle, 2);
 		}
 	}
-	return d;
+	return differentialWeight * d;
 }
 
 double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
@@ -543,7 +533,8 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 	typedef ublas::vector< element_type >                               vector_type;
 	typedef ublas::matrix< element_type, ublas::column_major >          matrix_type;
 	typedef ublas::diagonal_matrix< element_type, ublas::column_major > diag_matrix_type;
-	//トルクを評価
+
+	// トルクを評価
 	double t = 0;
 	int nContacts = (int)groundConst.size();
 	PHIKActuatorIf* root = phScene->GetIKActuator(0);
@@ -554,8 +545,8 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 
 	Vec3d gravity = phScene->GetGravity();
 
-	//接触力計算
-	//utclapackを使ってみる
+	// 接触力計算
+	// utclapackを使ってみる
 	matrix_type A_;
 	A_.resize(6, 3 * nContacts);
 	A_.clear();
@@ -572,7 +563,7 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 
 	for (int i = 0; i < nContacts; i++) {
 		Vec3d contactPos = groundConst[i]->cSolid->GetPose() * groundConst[i]->contactPoint - totalBodyGravPos; //逆？
-																														 //A.col(3 * i) = Vec6d(0, contactPos.z, -contactPos.y, 1, 0, 0);
+		//A.col(3 * i) = Vec6d(0, contactPos.z, -contactPos.y, 1, 0, 0);
 		A_.at_element(1, 3 * i) = -contactPos.z;
 		A_.at_element(2, 3 * i) = contactPos.y;
 		A_.at_element(3, 3 * i) = 1;
@@ -584,8 +575,9 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 		A_.at_element(0, 3 * i + 2) = -contactPos.y;
 		A_.at_element(1, 3 * i + 2) = contactPos.x;
 		A_.at_element(5, 3 * i + 2) = 1;
-
-		assumptionForce[i] = (massgrav.norm() / nContacts) * -contactPos.unit();
+		
+		// 各接地点から重心方向への力の予測ベクトルを用意し、事前に差し引く
+		assumptionForce[i] = Vec3d();// (massgrav.norm() / nContacts) * -contactPos.unit();
 		massgrav += assumptionForce[i];
 	}
 
@@ -612,7 +604,7 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 			Di.at_element(i, i) = D(i, i) / (D(i, i)*D(i, i));
 		}
 		else {
-			break; //特異値が小さいときはランク落ちと判定
+			break; // 特異値が小さいときはランク落ちと判定
 		}
 		DSTR << Di.at_element(i, i) << " " << D(i, i) << std::endl;
 	}
@@ -631,7 +623,7 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 		DSTR << std::endl;
 	}
 
-	//A_.pseudoinv = Vtt * D+ * Ut
+	// A_.pseudoinv = Vtt * D+ * Ut
 	// --- 特異値->擬似逆行列&力
 	vector_type      UtM = ublas::prod(ublas::trans(U), M_);
 	vector_type    DiUtM = ublas::prod(Di, UtM);
@@ -647,25 +639,26 @@ double FWStaticTorqueOptimizer::CalcTorqueCriterion() {
 		groundConst[i]->contactForce = Vec3d(F_[3 * i], F_[3 * i + 1], F_[3 * i + 2]) + assumptionForce[i];
 	}
 
-	Vec3d dummy;
-	t = CalcTorqueInChildren(root, dummy, dummy);
+	Vec3d force = Vec3d();
+	Vec3d point = Vec3d();
+	t = CalcTorqueInChildren(root, point, force);
 	for (int i = 0; i < nContacts; i++) {
 		double penalty = dot(groundConst[i]->contactForce, groundConst[i]->cNormal);
 		if (penalty < 0) {
 			t += abs(penalty) * 1e5;
 		}
 	}
-	return t;
+	return torqueWeight * t;
 }
 
 double FWStaticTorqueOptimizer::CalcStabilityCriterion() {
 	//剛体の速度、角速度からバランスを評価
 	double s = 0;
 	for (int j = 0; j < phScene->NSolids(); ++j) {
-		s += stabilityWeight * phScene->GetSolids()[j]->GetVelocity().norm();
-		s += stabilityWeight * phScene->GetSolids()[j]->GetAngularVelocity().norm();
+		s += phScene->GetSolids()[j]->GetVelocity().norm();
+		s += phScene->GetSolids()[j]->GetAngularVelocity().norm();
 	}
-	return s;
+	return stabilityWeight * s;
 }
 
 double FWStaticTorqueOptimizer::CenterOfGravity(PHIKActuatorIf* root, Vec3d& point) {
@@ -689,105 +682,134 @@ double FWStaticTorqueOptimizer::CenterOfGravity(PHIKActuatorIf* root, Vec3d& poi
 		thisCOG = (childMass / (mass + childMass)) * childCOG + (mass / (mass + childMass)) * thisCOG;
 		mass += childMass;
 	}
-	point = *new Vec3d(thisCOG);
+	point = thisCOG;
 
 	return mass;
 }
 
 double FWStaticTorqueOptimizer::CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& f) {
+	// 対象関節のプラグ剛体にかかる力と力点(ワールド座標系)
 	Vec3d force;
+	Vec3d thisCOF;
+
+	// 現在の剛体とその全子剛体におけるトルク評価値(返り値用)
 	double torque = 0;
 
-	//とりあえず対象アクチュエータの子剛体全部にかかる力を合力の力点と力ベクトルに統合
-	//+子アクチュエータのトルク値も取得
-	PHSolidIf* rootSolid;
+	// プラグとソケットの情報取得
+	PHJointIf* joint;
+	PHSolidIf* plugSolid;
+	PHSolidIf* socketSolid;
 	Posed plugPose;
+	Posed socketPose;
 	if (DCAST(PHIKBallActuatorIf, root)) {
-		rootSolid = DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetPlugSolid();
+		joint = DCAST(PHIKBallActuatorIf, root)->GetJoint();
+		plugSolid = joint->GetPlugSolid();
+		socketSolid = joint->GetSocketSolid();
 		DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetPlugPose(plugPose);
+		DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetSocketPose(socketPose);
 	}
 	else {
-		rootSolid = DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetPlugSolid();
+		joint = DCAST(PHIKHingeActuatorIf, root)->GetJoint();
+		plugSolid = joint->GetPlugSolid();
+		socketSolid = joint->GetSocketSolid();
 		DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetPlugPose(plugPose);
+		DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetSocketPose(socketPose);
 	}
-	DSTR << rootSolid->GetName() << rootSolid->GetPose() << std::endl;
-	force = rootSolid->GetMass() * phScene->GetGravity();
-	Vec3d thisCOF = rootSolid->GetPose() * rootSolid->GetCenterOfMass();
+	DSTR << plugSolid->GetName() << plugSolid->GetPose() << std::endl;
+
+	// プラグ剛体にはたらく重力と重心を取得(ワールド)
+	force = plugSolid->GetMass() * phScene->GetGravity();
+	thisCOF = plugSolid->GetPose() * plugSolid->GetCenterOfMass();
+
+	// 再帰による子剛体内のトルク値取得及び力合成
 	int Nchilds = root->NChildActuators();
 	Vec3d childCOF = Vec3d();
 	Vec3d forceInChildren;
-	//再起による子ソリッド内のトルク値取得及び力合成
 	for (int i = 0; i < Nchilds; i++) {
 		torque += CalcTorqueInChildren(root->GetChildActuator(i), childCOF, forceInChildren);
 		double t = forceInChildren.norm() / (force.norm() + forceInChildren.norm());
 		thisCOF = t * childCOF + (1 - t) * thisCOF;
 		force += forceInChildren;
 	}
-	//接地剛体の抗力の合成
-	for (int i = 0; i < groundConst.size(); i++) {
-		if (rootSolid == groundConst[i]->cSolid) {
-			DSTR << "match : " << rootSolid->GetName() << "&groundConst[" << i << "]" << std::endl;
+
+	// 接地剛体の抗力の合成
+	for (int i = 0; i < (int)groundConst.size(); i++) {
+		if (plugSolid == groundConst[i]->cSolid) {
+			DSTR << "match : " << plugSolid->GetName() << "&groundConst[" << i << "]" << std::endl;
 			double t = groundConst[i]->contactForce.norm() / (force.norm() + groundConst[i]->contactForce.norm());
-			thisCOF = t * groundConst[i]->contactForce + (1 - t) * thisCOF;
+			thisCOF = t * (groundConst[i]->cSolid->GetPose() * groundConst[i]->contactPoint) + (1 - t) * thisCOF;
 			force += groundConst[i]->contactForce;
 		}
 	}
-	//現アクチュエータのトルクを計算
-	Vec3d jointPos = rootSolid->GetPose() * plugPose.Pos();
-	Vec3d dir = thisCOF - jointPos;
-	Vec3d moment = cross(dir, jointPos);
-	torque += moment.norm();
 
+	// 現アクチュエータのトルクを計算
+	Vec3d jointPos = socketSolid->GetPose() * socketPose.Pos();
+	Vec3d dir = jointPos - thisCOF;
+	// ローカル化(上の段階ではまだワールド)
+	Vec3d forceLocal = (socketSolid->GetPose() * socketPose).Ori().Inv() * force;
+	dir = (socketSolid->GetPose() * socketPose).Ori().Inv() * dir;
+	Vec3d moment = cross(dir, -forceLocal);
+
+	// 関節特性抵抗の加算
+	Vec3d resistanceTorque = Vec3d();
+	Vec3d actualForce = Vec3d();
 	if (DCAST(PHIKBallActuatorIf, root)) {
-		PHHumanBallJointResistanceIf* resist = DCAST(PHHumanBallJointResistanceIf, DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetMotors()[1]);
-		if (resist) {
-			torque += resist->GetCurrentResistance().norm();
+		actualForce = DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetMotorForceN(0);
+		if (DCAST(PHIKBallActuatorIf, root)->GetJoint()->NMotors() > 1) {
+			PHHumanBallJointResistanceIf* resist = DCAST(PHHumanBallJointResistanceIf, DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetMotors()[1]);
+			if (resist) {
+				resistanceTorque = resist->GetCurrentResistance();
+			}
 		}
 	}
 	else {
-		PHHuman1DJointResistanceIf* resist = DCAST(PHHuman1DJointResistanceIf, DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetMotors()[1]);
-		if (resist) {
-			torque += resist->GetCurrentResistance();
+		moment = Vec3d(0, 0, moment.z);
+		actualForce = Vec3d(0, 0, DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetMotorForceN(0));
+		if (DCAST(PHIKHingeActuatorIf, root)->GetJoint()->NMotors() > 1) {
+			PHHuman1DJointResistanceIf* resist = DCAST(PHHuman1DJointResistanceIf, DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetMotors()[1]);
+			if (resist) {
+				resistanceTorque = Vec3d(0, 0, resist->GetCurrentResistance());
+			}
+		}
+	}
+	DSTR << "dir:" << dir << " force:" << force << " (local):" << forceLocal << std::endl;
+	DSTR << root->GetName() << " moment:" << moment << "(" << moment.norm() << ") actual:" << actualForce << "(" << actualForce.norm() << ") resistance:" << resistanceTorque << std::endl;
+	moment -= resistanceTorque;
+
+	// 関節ウェイトの取得
+	double weight = 1.0;
+	int NJointWeights = (int)jointWeights.size();
+	for (int i = 0; i < NJointWeights; i++) {
+		if (joint == jointWeights[i].joint) {
+			weight = jointWeights[i].weight;
+			break;
 		}
 	}
 
-	point = *new Vec3d(thisCOF);
-	f = *new Vec3d(force);
+	// 評価値の加算
+	torque += weight * (moment * moment);
+	DSTR << "weight:" << weight << " value:" << weight * (moment * moment) << std::endl;
 
+	// ワールド座標系でのCOFと力を参照渡しで返す(親のほうで使いまわすため)
+	// もう少しいい方法があるなら変更したい
+	point = thisCOF;
+	f = force;
+
+	// 現剛体以下のツリー内でのトルク評価値を返す
 	return torque;
 }
 
-void FWStaticTorqueOptimizer::SetErrorWeight(double v) { errorWeight = v; }
-double FWStaticTorqueOptimizer::GetErrorWeight() { return errorWeight; }
-
-void FWStaticTorqueOptimizer::SetStabilityWeight(double v) { stabilityWeight = v; }
-double FWStaticTorqueOptimizer::GetStabilityWeight() { return stabilityWeight; }
-
-void FWStaticTorqueOptimizer::SetTorqueWeight(double v) { torqueWeight = v; }
-double FWStaticTorqueOptimizer::GetTorqueWeight() { return torqueWeight; }
-
-void FWStaticTorqueOptimizer::SetResistWeight(double v) { resistWeight = v; }
-double FWStaticTorqueOptimizer::GetResistWeight() { return resistWeight; }
-
-void FWStaticTorqueOptimizer::SetConstWeight(double v) { constWeight = v; }
-double FWStaticTorqueOptimizer::GetConstWeight() { return constWeight; }
-
-void FWStaticTorqueOptimizer::SetGravcenterWeight(double v) { gravcenterWeight = v; }
-double FWStaticTorqueOptimizer::GetGravcenterWeight() { return gravcenterWeight; }
-
-void FWStaticTorqueOptimizer::SetDifferentialWeight(double v) { differentialWeight = v; }
-double FWStaticTorqueOptimizer::GetDifferentialWeight() { return differentialWeight; }
-
-//構造体の配列を外部から取れないので１要素ずつpush
 void FWStaticTorqueOptimizer::AddPositionConst(FWGroundConstraint* f) {
 	groundConst.push_back(f);
 }
+
 FWGroundConstraint FWStaticTorqueOptimizer::GetGroundConst(int n) {
 	if (n >= 0 && n < (int)groundConst.size()) {
 		return *groundConst[n];
 	}
 	return FWGroundConstraint();
 }
+
 void FWStaticTorqueOptimizer::ClearGroundConst() {
 	groundConst.clear();
 }
@@ -802,24 +824,6 @@ FWUngroundedConstraint FWStaticTorqueOptimizer::GetUngroundConst(int n) {
 }
 void FWStaticTorqueOptimizer::ClearUngroundedConst() {
 	ungroundedConst.clear();
-}
-
-void FWStaticTorqueOptimizer::SetESParameters(double xs, double st, double tf, double la, double mi) { FWOptimizer::SetESParameters(xs, st, tf, la, mi); }
-
-FWObjectiveValues FWStaticTorqueOptimizer::GetObjectiveValues() {
-	return this->val;
-}
-
-Vec3f FWStaticTorqueOptimizer::GetCenterOfGravity() {
-	return cog;
-}
-
-int FWStaticTorqueOptimizer::NSupportPolygonVertices() {
-	return (int)supportPolygon.size();
-}
-
-Vec3f FWStaticTorqueOptimizer::GetSupportPolygonVerticesN(int n) {
-	return supportPolygon[n];
 }
 
 }
