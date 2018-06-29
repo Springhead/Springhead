@@ -50,23 +50,37 @@ namespace Spr {
 		Vec3d normal;
 		Vec3d dist;
 	};
+
+	// 関節ごとのウェイト保存用の構造体
+	struct JointWeight {
+	public:
+		PHJointIf* joint;
+		double weight;
+		JointWeight() : joint(NULL), weight(1.0) {}
+		JointWeight(PHJointIf*jo, double w) {
+			joint = jo;
+			weight = w;
+		}
+	};
 	
 	class FWStaticTorqueOptimizer : public FWOptimizer {
 		std::vector<JointPos> initialPos;
 		Vec3d initialRootPos;
 
-		double errorWeight, stabilityWeight, torqueWeight, resistWeight, constWeight, gravcenterWeight, differentialWeight;    //各評価値Weight
+		double errorWeight, stabilityWeight, torqueWeight, constWeight, gravcenterWeight, differentialWeight;    // 各評価値Weight
 
-		std::vector<FWGroundConstraint*> groundConst;               //接地拘束集合、とりあえず書きやすかったのでvector
-		std::vector<FWUngroundedConstraint*> ungroundedConst;       //非接地拘束
+		std::vector<FWGroundConstraint*> groundConst;               // 接地拘束集合、とりあえず書きやすかったのでvector
+		std::vector<FWUngroundedConstraint*> ungroundedConst;       // 非接地拘束
 
-		std::vector<int> bodyIndex;            //身体構成剛体のindex
+		std::vector<int> bodyIndex;            // 身体構成剛体のindex
 
-											   //データ送信用
-		FWObjectiveValues val;                 //評価値内訳保存構造体
-		Vec3d cog;                             //重心座標
+		std::vector<JointWeight> jointWeights;
+
+		// データ送信用
+		FWObjectiveValues val;                 // 評価値内訳保存構造体
+		Vec3d cog;                             // 重心座標
 		double mass;
-		std::vector<Vec3f> supportPolygon;     //支持多角形形成頂点集合
+		std::vector<Vec3f> supportPolygon;     // 支持多角形形成頂点集合
 
 	public:
 		SPR_OBJECTDEF(FWStaticTorqueOptimizer);
@@ -94,6 +108,8 @@ namespace Spr {
 
 		void TakeFinalValue();
 
+		void SetESParameters(double xs, double st, double tf, double la, double mi) { FWOptimizer::SetESParameters(xs, st, tf, la, mi); }
+
 
 		double CalcErrorCriterion();
 		double CalcGroundedCriterion();
@@ -106,44 +122,52 @@ namespace Spr {
 		double CenterOfGravity(PHIKActuatorIf* root, Vec3d& point);
 		double CalcTorqueInChildren(PHIKActuatorIf* root, Vec3d& point, Vec3d& forceInChildren);
 
-		void SetErrorWeight(double v);
-		double GetErrorWeight();
+		void SetErrorWeight(double v) { errorWeight = v; }
+		double GetErrorWeight() { return errorWeight; }
 
-		void SetStabilityWeight(double v);
-		double GetStabilityWeight();
+		void SetStabilityWeight(double v) { stabilityWeight = v; }
+		double GetStabilityWeight() { return stabilityWeight; }
 
-		void SetTorqueWeight(double v);
-		double GetTorqueWeight();
+		void SetTorqueWeight(double v) { torqueWeight = v; }
+		double GetTorqueWeight() { return torqueWeight; }
 
-		void SetResistWeight(double v);
-		double GetResistWeight();
+		void SetConstWeight(double v) { constWeight = v; }
+		double GetConstWeight() { return constWeight; }
 
-		void SetConstWeight(double v);
-		double GetConstWeight();
+		void SetGravcenterWeight(double v) { gravcenterWeight = v; }
+		double GetGravcenterWeight() { return gravcenterWeight; }
 
-		void SetGravcenterWeight(double v);
-		double GetGravcenterWeight();
+		void SetDifferentialWeight(double v) { differentialWeight = v; }
+		double GetDifferentialWeight() { return differentialWeight; }
 
-		void SetDifferentialWeight(double v);
-		double GetDifferentialWeight();
-
-		//構造体の配列を外部から取れないので１要素ずつpush
+		// GroundConstraintの操作
 		void AddPositionConst(FWGroundConstraint* f);
 		FWGroundConstraint GetGroundConst(int n);
 		void ClearGroundConst();
+
+		// UngroundedConstraintの操作
 		void AddPositionConst(FWUngroundedConstraint* f);
 		FWUngroundedConstraint GetUngroundConst(int n);
 		void ClearUngroundedConst();
 
-		void SetESParameters(double xs, double st, double tf, double la, double mi);
+		void SetJointWeight(PHJointIf* jo, double w) {
+			int n = (int)jointWeights.size();
+			for (int i = 0; i < n; i++) {
+				if (jointWeights[i].joint == jo) {
+					jointWeights[i].weight = w;
+					return;
+				}
+			}
+			jointWeights.push_back(JointWeight(jo, w));
+		}
 
-		FWObjectiveValues GetObjectiveValues();
+		FWObjectiveValues GetObjectiveValues() { return this->val; }
 
-		Vec3f GetCenterOfGravity();
+		Vec3f GetCenterOfGravity() { return this->cog; }
 
-		int NSupportPolygonVertices();
+		int NSupportPolygonVertices() { return (int)(this->supportPolygon.size()); }
 
-		Vec3f GetSupportPolygonVerticesN(int n);
+		Vec3f GetSupportPolygonVerticesN(int n) { return this->supportPolygon[n]; }
 	};
 	
 }
