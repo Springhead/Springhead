@@ -16,7 +16,7 @@
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
 #include <Foundation/SprScene.h>
-#include <Foundation/UTQPTimer.h>
+#include <Foundation/SprUTQPTimer.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>

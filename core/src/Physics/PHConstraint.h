@@ -143,9 +143,6 @@ public:
 	PHConstraint();
 	virtual ~PHConstraint();
 
-	/// 拘束対象軸番号リストの構築．コンストラクタでmovableAxesを決めた後に呼ぶ
-	void InitTargetAxes();
-
 	// ----- エンジンから呼び出される関数
 	/// ツリーノードを構成しているか
 	bool IsArticulated();
