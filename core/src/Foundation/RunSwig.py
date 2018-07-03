@@ -20,9 +20,9 @@
 #	Ver 1.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.5  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.51 2018/03/14 F.Kanehori	Deal with New Proc class.
+#	Ver 1.6  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 # ==============================================================================
-version = 1.51
+version = 1.6
 
 import sys
 import os
@@ -52,16 +52,15 @@ from Proc import *
 #  Globals (part 1)
 #
 util = Util()
-error = Error(prog)
 unix = util.is_unix()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
 sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-incdir = spr_path.abspath('inc')
-srcdir = spr_path.abspath('src')
+bindir = spr_path.relpath('bin')
+incdir = spr_path.relpath('inc')
+srcdir = spr_path.relpath('src')
 swigdir = '%s/%s' % (bindir, 'swig')
 
 incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
@@ -126,13 +125,13 @@ proc = Proc(dry_run=dry_run)
 #
 interfacefile = '%s.i' % module
 makefile = '%sStub.mak.txt' % module
-stubfile = '%s/%s/%sStub.cpp' % (srcdir, module, module)
+stubfile = '%sStub.cpp' % module
 
 # ----------------------------------------------------------------------
 #  ヘッダファイル情報を収集する.
 #
 incf_names = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
-srcf_names = ['Foundation/UTTypeDesc.h']
+srcf_names = []		# ['Foundation/UTTypeDesc.h']
 auxdep_inc = list(map(lambda x: '%s/%s' % (incdir_rel, x), incf_names))
 auxdep_src = list(map(lambda x: '%s/%s' % (srcdir_rel, x), srcf_names))
 auxdep = copy.deepcopy(auxdep_inc)
@@ -180,9 +179,9 @@ def output(fname, lines):
 			print('  %s' % line)
 	fobj = TextFio(fname, 'w', encoding='utf8')
 	if fobj.open() < 0:
-		error.print(fobj.error(), exitcode=0)
+		Error(prog).put(fobj.error(), exitcode=0, alive=True)
 	if fobj.writelines(lines, '\n') < 0:
-		error.print(fobj.error(), exitcode=0)
+		Error(prog).put(fobj.error(), exitcode=0, alive=True)
 	fobj.close()
 #
 path = '%s/%s' % (os.getcwd(), interfacefile)
@@ -218,7 +217,7 @@ proc.execute(cmd, addpath=addpath, shell=True)
 status = proc.wait()
 if status != 0:
 	msg = '%s failed (%d)' % (make, status)
-	error.print(msg, exitcode=0)
+	Error(prog).put(msg, exitcode=0, alive=True)
 
 sys.exit(0)
 

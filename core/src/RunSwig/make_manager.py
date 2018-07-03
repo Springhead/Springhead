@@ -32,12 +32,9 @@
 #	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.61 2018/02/09 F.Kanehori	Bug fixed.
-#	Ver 1.62 2018/03/05 F.Kanehori	Bug fixed.
-#	Ver 1.63 2018/03/07 F.Kanehori	Add trace code.
-#	Ver 1.64 2018/03/14 F.Kanehori	Deal with new Proc class.
+#	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 # ==============================================================================
-version = 1.64
+version = 1.7
 trace = False
 
 import sys
@@ -63,6 +60,7 @@ sys.path.append(libdir)
 from TextFio import *
 from Proc import *
 from FileOp import *
+from Error import *
 
 # ----------------------------------------------------------------------
 #  Globals
@@ -74,8 +72,8 @@ f_op = FileOp()
 #  Directories
 #
 sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-srcdir = spr_path.abspath('src')
+bindir = spr_path.relpath('bin')
+srcdir = spr_path.relpath('src')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
@@ -101,7 +99,7 @@ def vprint(msg, level=0):
 #
 def create(fname, proj, dept):
 	if os.path.exists(fname):
-		#E.print('file "%s" already exists.' % fname, prompt='Warning')
+		#Error(prog).warn('file "%s" already exists.' % fname)
 		return
 
 	#  Generate makefile body.
@@ -238,9 +236,9 @@ createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
 
 #  Read project dependency definition file.
 #
-fio = TextFio('%s/%s' % (etcdir, projfile))
+fio = TextFio("%s/%s" % (etcdir, projfile))
 if fio.open() < 0:
-	E.print(fio.error())
+	Error(prog).error(fio.error())
 lines = fio.read()
 fio.close()
 
@@ -270,7 +268,7 @@ for line in lines:
 		if options.create or options.maketmp:
 			fio = TextFio(one_file, 'w')
 			if fio.open() < 0:
-				E.print(fio.error())
+				Error(prog).error(fio.error())
 			line = '%s %s' % (proj, dept)
 			vprint('creating one file: "%s" [%s]' % (one_file, line))
 			fio.writelines([line])
