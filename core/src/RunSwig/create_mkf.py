@@ -1,4 +1,4 @@
-﻿#!/usr/local/bin/python
+﻿#!/usr/local/bin/python#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -25,9 +25,9 @@
 #	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
 #	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.61 2018/03/07 F.Kanehori	Add trece code.
+#	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 # ==============================================================================
-version = 1.61
+version = 1.7
 debug = False
 trace = False
 
@@ -66,9 +66,9 @@ util = Util()
 #  Directories and paths
 #
 sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-incdir = spr_path.abspath('inc')
-srcdir = spr_path.abspath('src')
+bindir = spr_path.relpath('bin')
+incdir = spr_path.relpath('inc')
+srcdir = spr_path.relpath('src')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 swigdir = '%s/%s' % (srcdir, 'Foundation')
 
@@ -89,7 +89,7 @@ tempfile = prog + '.tmp'
 #
 projdef = '../RunSwig/do_swigall.projs'
 fd_inc = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
-fd_src = ['Foundation/UTTypeDesc.h']
+fd_src = []	# ['Foundation/UTTypeDesc.h']
 fixdept_inc = list(map(lambda x: '%s/%s' % (incdir_out, x), fd_inc))
 fixdept_src = list(map(lambda x: '%s/%s' % (srcdir_out, x), fd_src))
 fixhdrs = copy.deepcopy(fixdept_inc)
@@ -165,8 +165,8 @@ if verbose:
 #
 if options.python:
 	python = options.python
-makemanager = '%s %s/make_manager.py -P %s' % (python, util.pathconv(runswigdir), python)
-swig = '%s %s/RunSwig.py -P %s' % (python, util.pathconv(swigdir), python)
+makemanager = '%s "%s/make_manager.py" -P %s' % (python, util.pathconv(runswigdir), python)
+swig = '%s "%s/RunSwig.py" -P %s' % (python, util.pathconv(swigdir), python)
 
 # ----------------------------------------------------------------------
 #   Swig に渡す引数

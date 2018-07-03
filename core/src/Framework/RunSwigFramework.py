@@ -26,10 +26,9 @@
 #	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.5  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
 #	Ver 1.6  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
-#	Ver 1.61 2018/03/07 F.Kanehori	FileOp.rm() 引数変更に対応.
-#	Ver 1.62 2018/03/14 F.Kanehori	Deal with new Proc class.
+#	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 # ==============================================================================
-version = 1.62
+version = 1.7
 debug = False
 trace = False
 
@@ -65,7 +64,6 @@ from Proc import *
 # ----------------------------------------------------------------------
 #  Globals (part 1)
 #
-error = Error(prog)
 util = Util()
 unix = util.is_unix()
 
@@ -73,10 +71,9 @@ unix = util.is_unix()
 #  Directories
 #
 sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-incdir = spr_path.abspath('inc')
-srcdir = spr_path.abspath('src')
-swigdir = '%s/swig' % bindir
+bindir = spr_path.relpath('bin')
+incdir = spr_path.relpath('inc')
+srcdir = spr_path.relpath('src')
 foundation_dir = '%s/%s' % (srcdir, 'Foundation')
 framework_dir = '%s/%s' % (srcdir, 'Framework')
 
@@ -94,9 +91,9 @@ stubcpp = '%sStub.cpp' % module		# in src/Framework
 def output(fname, lines):
 	fobj = TextFio(fname, 'w', encoding='utf8')
 	if fobj.open() < 0:
-		error.print(fobj.error())
+		Error(prog).error(fobj.error())
 	if fobj.writelines(lines, '\n') < 0:
-		error.print(fobj.error())
+		Error(prog).error(fobj.error())
 	fobj.close()
 
 
@@ -162,12 +159,12 @@ proc.execute(cmd, shell=True)
 status = proc.wait()
 if status != 0:
 	msg = '%s failed (%d)' % (runswig_foundation, status)
-	error.print(msg, exitcode=0)
+	Error(prog).error(msg)
 
 # ----------------------------------------------------------------------
 #  swigtemp 下に SJIS world を作る.
 #
-swigtmp = '%s/core/swigtemp' % sprtop
+swigtmp = Util.upath(os.path.relpath('%s/core/swigtemp' % sprtop))
 tmp_inc = '%s/include' % swigtmp
 tmp_src = '%s/src' % swigtmp
 
@@ -199,14 +196,14 @@ for file in incf_names:
 	proc.execute(cmnd, addpath=addpath, shell=True)
 	status = proc.wait()
 	if status != 0:
-		error.print('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
+		Error(prog).error('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
 for file in srcf_names:
 	cmnd = '%s -s -O %s/%s %s/src/%s' % (nkf, srcdir, file, swigtmp, file)
 	cmnd = util.pathconv(cmnd)
 	proc.execute(cmnd, addpath=addpath, shell=True)
 	status = proc.wait()
 	if status != 0:
-		error.print('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
+		Error(prog).error('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
 
 # ----------------------------------------------------------------------
 #  ここからは swigtemp/src/Foundation に移って作業する.
@@ -221,7 +218,6 @@ if verbose:
 #
 srcimp = '%s/src/Framework/FWOldSpringheadNodeHandler.h' % swigtmp
 srcimpdep = '%s/Framework/FWOldSpringheadNodeHandler.h' % srcdir
-swigtmp_rel = util.pathconv(os.path.relpath(swigtmp), 'unix')
 
 print('src files: %s' % srcimp)
 lines = []
@@ -240,7 +236,7 @@ output(interfacefile, lines)
 #  makefile を作成する.
 #
 srcimpdep_rel = os.path.relpath(srcimpdep)
-swigdir_rel = os.path.relpath(swigdir)
+swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
 #
 swigargs = '-I%s/Lib' % swigdir_rel
 swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
@@ -279,7 +275,7 @@ if trace:
 proc.execute(cmd, shell=True)
 status = proc.wait()
 if status != 0:
-	error.print('%s failed (%d)' % (make, status))
+	Error(prog).error('%s failed (%d)' % (make, status))
 
 # ----------------------------------------------------------------------
 #  ファイルの後始末
