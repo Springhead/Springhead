@@ -21,6 +21,10 @@ AR		= ar
 RANLIB		= ranlib
 RM		= rm -rf
 
+# for substitution of space character
+NIL:=
+SP:=$(NIL) $(NIL)
+
 # ----------------------------------------------------------
 #	Cygwin
 # ----------------------------------------------------------

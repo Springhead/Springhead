@@ -9,7 +9,7 @@
 ################################################################
 TOP_DIR 	= ../..
 include 	$(TOP_DIR)/make.header
-TARGET_DIR	:= $(shell env pwd)
+$(eval TARGET_DIR := $(subst $(SP),@,$(shell env pwd)))
 TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
