@@ -9,7 +9,7 @@
 
 #include "Foundation/SprUTCriticalSection.h"//CriticalSection用
 
-#include <EmbPython\/SprEPVersion.h>
+#include <EmbPython/SprEPVersion.h>
 #include PYTHON_H_PATH
 
 #define EP_MODULE_NAME "Spr"
