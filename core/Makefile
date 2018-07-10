@@ -8,7 +8,9 @@
 #	A rule to make sub directories.
 ################################################################
 
-export TOP_DIR := $(shell env pwd)
+NIL:=
+SP:=$(NIL) $(NIL)
+$(eval TOP_DIR := $(subst $(SP),\$(SP),$(shell env pwd)))
 include $(TOP_DIR)/make.header
 
 SUB_DIRS	= src
