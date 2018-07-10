@@ -30,7 +30,7 @@ o　今の衝突情報を記録
 
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <Collision/CDDetectorImp.h>
-//#include <Physics\SprPHEngine.h>
+//#include <Physics/SprPHEngine.h>
 #include <ctime>
 #include <string>
 #include <numeric>
@@ -281,9 +281,9 @@ void collisionTest() {
 
 	//coltimeの平均化
 	if (aveCount >= COLTIME_AVE_FRAME) {
-		coltimeDisp[0] = (double)coltimePhase1 / (double)COLTIME_AVE_FRAME;
-		coltimeDisp[1] = (double)coltimePhase2 / (double)COLTIME_AVE_FRAME;
-		coltimeDisp[2] = (double)coltimePhase3 / (double)COLTIME_AVE_FRAME;
+		coltimeDisp[0] = (int)((double)coltimePhase1 / (double)COLTIME_AVE_FRAME);
+		coltimeDisp[1] = (int)((double)coltimePhase2 / (double)COLTIME_AVE_FRAME);
+		coltimeDisp[2] = (int)((double)coltimePhase3 / (double)COLTIME_AVE_FRAME);
 		colCountAve = (double)colcountAcc / (double)COLTIME_AVE_FRAME;
 		colcountAcc = 0;
 		aveCount = 0;
