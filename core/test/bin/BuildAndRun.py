@@ -43,6 +43,7 @@
 #		exefile:    Executable file path.
 #		args:	    Run time arguments.
 #		logfile:    Log file path (log will be appended).
+#		errlogfile: Error log file path (log will be appended).
 #		addpath:    Additional path to execute program.
 #		timeout:    Time out value in sec (num).
 #		pipeproc:   Process name whose output is piped to

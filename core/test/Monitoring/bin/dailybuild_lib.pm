@@ -9,6 +9,7 @@ package dailybuild_lib;
 #  Version:
 #	Ver 1.0  2013/02/01 F.Kanehori	初版
 #	Ver 1.1  2013/03/11 F.Kanehori	read_log: モジュール名パターン修正
+#	Ver 1.11 2018/07/12 F.Kanehori	コメント修正
 # ==============================================================================
 use base 'Exporter';
 @EXPORT = qw(read_log associate_modules mod_ins mod_del
@@ -230,7 +231,7 @@ sub mod_del { return '_DEL_'; }
 #  Subroutine:
 #	\@buff = gather_lines(\%modules, $module);
 #
-#	%modules	モジュール名を入力行を対応付けたハッシュテーブル
+#	%modules	モジュール名と入力行を対応付けたハッシュテーブル
 #	$module		処理対象のモジュール名
 #	@buff		%modules からキーが $module の行を集めたもの
 # ------------------------------------------------------------------------------
