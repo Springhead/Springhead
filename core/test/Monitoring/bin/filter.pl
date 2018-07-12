@@ -10,7 +10,8 @@ BEGIN { push(@INC, 'bin'); }
 #
 #  Version:
 #	Ver 1.0  2013/02/06 F.Kanehori	Windows 移植初版 (全面改訂)
-#	Ver 1.0a 2015/05/25 F.Kanehori	コメント修正
+#	Ver 1.01 2015/05/25 F.Kanehori	コメント修正
+#	Ver 1.02 2018/07/12 F.Kanehori	コメント修正
 # ==============================================================================
 use strict;
 use warnings;
@@ -127,7 +128,7 @@ for (my $i = 0; $i < @modules; $i++) {
 	next if $outflag[$i] == 0;
 	next if $mark eq '-';
 	my $found = find($search{$mark}, $line, $indx, \@buff2);
-	if ($found >= 0) {
+	if ($found >= 0) 	{
 	    $outflag[$i] = 0;
 	    $outflag[$found] = 0;
 	}
@@ -183,7 +184,7 @@ sub drop_thread_number
 #	$line		検索文字列
 #	$indx		検索文字列の @buff での要素番号
 #	@buff		drop_thread_number() が返した三つ組み情報配列
-#	$find		>=0: 行番号(見つかったとき), -1: 見つからなかったとき
+#	$found		>=0: 行番号(見つかったとき), -1: 見つからなかったとき
 #-------------------------------------------------------------------------------
 sub find
 {

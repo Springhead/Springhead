@@ -3,7 +3,7 @@
 # ======================================================================
 #  CLASS:
 #	SEH
-#	    Interruptions and exceptios handling class.
+#	    Structured exceptios handling class.
 #
 #  INITIALIZER:
 #	obj = SEH()
@@ -29,6 +29,7 @@
 #  VERSION:
 #	Ver 1.0  2016/09/29 F.Kanehori	First version.
 #	Ver 1.01 2017/09/11 F.Kanehori	Comment added.
+#	Ver 1.02 2018/06/12 F.Kanehori	Comment modified.
 # ======================================================================
 
 # ----------------------------------------------------------------------

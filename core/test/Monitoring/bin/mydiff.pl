@@ -10,6 +10,7 @@ BEGIN { push(@INC, 'bin'); }
 #
 #  Version:
 #	Ver 1.0  2013/02/06 F.Kanehori	Windows 移植初版 (全面改訂)
+#	Ver 1.1  2018/07/03 F.Kanehori	コメント修正.
 # ==============================================================================
 #use strict;
 use warnings;
@@ -172,7 +173,7 @@ exit 0;
 #	($count1, $count2)
 #	= diff($fh, \%modules1, $module1, $base1, \%modules2, $module2, $base2);
 #
-#	%modulesN	モジュール名を入力行を対応付けたハッシュテーブル
+#	%modulesN	モジュール名と入力行を対応付けたハッシュテーブル
 #	$moduleN	処理対象のモジュール名
 #	$baseN		先頭行の行番号
 #
@@ -356,12 +357,12 @@ sub triplet
 
 # ------------------------------------------------------------------------------
 #  Subroutine:
-#	flush($fh, $mark, $size1, $size2, \@line1, \@line2);
+#	flush($fh, $mark, $size1, $size2, \@buff1, \@buff2);
 #
 #	$fh		出力ファイルハンドル
 #	$mark		行編集コマンドテーブルのキー
-#	$sizeN		@lineN の要素数
-#	@lineN		出力行データの配列
+#	$sizeN		@buffN の要素数
+#	@buffN		出力行データの配列
 # ------------------------------------------------------------------------------
 sub flush
 {
@@ -397,7 +398,7 @@ sub flush
 
 # ------------------------------------------------------------------------------
 #  Subroutine:
-#	flush1($fh, $mark, \@line);
+#	flush1($fh, $mark, \@buff);
 #
 #	$fh		出力ファイルハンドル
 #	$mark		行編集コマンド

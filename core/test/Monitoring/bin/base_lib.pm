@@ -8,6 +8,7 @@ package base_lib;
 #
 #  Version:
 #	Ver 1.0  2013/02/01 F.Kanehori	初版
+#	Ver 1.01 2018/07/12 F.Kanehori	コメント修正
 # ==============================================================================
 use base 'Exporter';
 @EXPORT = qw(assert verbose verbose_set show_usage
@@ -51,7 +52,7 @@ sub verbose_set { $verbose = shift; }
 
 # ------------------------------------------------------------------------------
 #  Subroutine:
-#	show_usage($cmnd [,$@args [,$@opts]]);
+#	show_usage($cmnd [,\@args [,\@opts]]);
 #
 #	$cmnd		コマンドライン
 #	@args		コマンド引数
