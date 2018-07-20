@@ -247,7 +247,7 @@ struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
 // トルク変化最小化計算
 
 // 空間内の経由点指定用データ
-struct ControlPoint{
+struct ControlPoint{ // 改名 ViaPoint
 	Posed pose;
 	SpatialVector vel;
 	SpatialVector acc;
@@ -302,17 +302,16 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	void EnableChangePullback(bool e);
 	bool IsEnabledChangePullback();
 
-	//初期化系
-	void ResetParameters(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool vCorr = true, bool sc = false);
+	//初期化
 	void Init();
-	void Init(int d, int i, int iv, bool c, double r = 1.0, double vRate = 0.65, bool sc = false);
 	//エンドエフェクタ設定
 	void SetControlTarget(PHIKEndEffectorIf* e);
 	//シーン設定
 	void SetScene(PHSceneIf* s);
 	void AddViaPoint(ControlPoint c); 
 	//関節角度次元軌道計算
-	void CalcTrajectory(ControlPoint tpoint, std::string output);
+	void CalcTrajectory();
+	void CalcOneStep();
 	//N回目の繰り返しから再計算
 	void RecalcFromIterationN(int n);
 	//生成された軌道を実際適用
@@ -323,12 +322,15 @@ struct FWTrajectoryPlannerIf : public ObjectIf{
 	void SetSpringDamper(double s = 1e5, double d = 1e5, bool mul = true);
 	//replay
 	void Replay(int ite, bool noncorrected = false);
-	//return totalChange
-	double GetTotalChange();
 	//return best
 	int GetBest();
 	//
 	void ReloadCorrected(int k, bool nc = false);
+
+	Posed GetTrajctoryData(int k, int n);
+	Posed GetNotCorrectedTrajctoryData(int k, int n);
+	SpatialVector GetVeclocityData(int k, int n);
+	SpatialVector GetNotCorrectedVelocityData(int k, int n);
 };
 
 // トルク変化最小化計算のデスクリプタ
@@ -356,6 +358,8 @@ struct FWTrajectoryPlannerDesc {
 	bool bChangeBias;
 	bool bChangePullback;
 
+	std::string outputPath;
+
 	FWTrajectoryPlannerDesc() {
 		depth = 3;
 		maxIterate = 100;
@@ -376,6 +380,8 @@ struct FWTrajectoryPlannerDesc {
 
 		bChangeBias = true;
 		bChangePullback = false;
+
+		outputPath = "";
 	}
 };
 

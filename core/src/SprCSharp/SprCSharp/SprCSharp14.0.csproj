@@ -97,9 +97,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>C:\Project\PatchLibrary-master\bin\PatchLibraryProxy64 /target:Unity.exe /patch:$(SolutionDir)..\..\..\genarated\bin\win64\SprExport.dll
-C:\Project\PatchLibrary-master\bin\PatchLibraryProxy64 /target:Unity.exe /patch:$(SolutionDir)..\..\..\genarated\bin\win64\SprCSharp.dll
-C:\Project\PatchLibrary-master\bin\PatchLibraryProxy64 /target:Unity.exe /patch:$(SolutionDir)..\..\..\genarated\bin\win64\SprImport.dll</PostBuildEvent>
+    <PostBuildEvent>$(SolutionPath)\..\..\..\..\buildtool\PatchLibraryProxy64.exe /target:Unity.exe /patch:$(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
