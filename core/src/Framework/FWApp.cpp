@@ -21,6 +21,59 @@
 
 namespace Spr{;
 
+FWAppBase::FWAppBase() {
+}
+
+FWAppBase::~FWAppBase() {
+	//	タイマーを止める
+	for (size_t i = 0; i<timers.size(); ++i) timers[i]->Stop();
+}
+
+void FWAppBase::Init() {
+	// 最も基本的な初期化処理
+	// SDK初期化
+	CreateSdk();
+	// シーンを作成
+	GetSdk()->CreateScene();
+	// タイマを作成
+	CreateTimer();
+}
+
+void FWAppBase::TimerFunc(int id) {
+	UserFunc();
+	GetSdk()->GetScene()->Step();
+}
+
+void FWAppBase::CreateSdk() {
+	if (fwSdk)
+		return;
+	fwSdk = FWSdkIf::CreateSdk();
+}
+
+/// UTTimerに登録するコールバック関数
+void SPR_CDECL FWAppBase_TimerCallback(int id, void* arg) {
+	FWAppBase* app = (FWAppBase*)arg;
+	if (!app)
+		return;
+	app->TimerFunc(id);
+}
+
+UTTimerIf*  FWAppBase::CreateTimer(UTTimerIf::Mode mode) {
+	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
+	UTTimerIf* timer = UTTimerIf::Create();
+	timer->SetMode(mode);
+	timer->SetCallback(FWAppBase_TimerCallback, this);
+	timers.push_back(timer);
+	return timer;
+}
+
+UTTimerIf* FWAppBase::GetTimer(int i) {
+	if ((int)timers.size() > 0) return timers[i];
+	return NULL;
+}
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
 FWApp* FWApp::instance = 0;
 UTRef<FWGraphicsHandler> FWGraphicsHandler::instance = 0;
 
@@ -29,8 +82,6 @@ FWApp::FWApp(){
 }
 
 FWApp::~FWApp(){
-	//	タイマーを止める
-	for (size_t i = 0; i<timers.size(); ++i) timers[i]->Stop();	
 	//	フルスクリーンモードだったら戻す
 	bool hasFullScreen = false;
 	for(int i = 0; i < (int)wins.size(); i++){
@@ -43,7 +94,6 @@ FWApp::~FWApp(){
 		if (FWGraphicsHandler::instance)
 			FWGraphicsHandler::instance->LeaveGameMode();
 	}
-
 }
 
 void FWApp::Init(){ Init(0); }
@@ -121,12 +171,6 @@ void FWApp::MouseMove(int x, int y){
 }
 
 //　FWAppのインタフェース ///////////////////////////////////////////////////////
-
-void FWApp::CreateSdk(){
-	if(fwSdk)
-		return;
-	fwSdk = FWSdkIf::CreateSdk();
-}
 
 void FWApp::AssignScene(FWWinIf* win){
 	if (win->GetScene()) return;
@@ -233,28 +277,43 @@ GRDeviceIf* FWApp::GRInit(int argc, char* argv[], int type){
 	return FWGraphicsHandler::instance->GetGRDevice();
 }
 
-//タイマ///////////////////////////////////////////////////////////////////////////
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+// FWHapticApp 
+// 力覚提示を伴う組込みアプリ
 
-/// UTTimerに登録するコールバック関数
-void SPR_CDECL FWApp_TimerCallback(int id, void* arg){
-	FWApp* app = (FWApp*)arg;
-	if(!app)
-		return;
-	app->TimerFunc(id);
+FWHapticApp::FWHapticApp() {
 }
 
-UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
-	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
-	UTTimerIf* timer = UTTimerIf::Create();
-	timer->SetMode(mode);
-	timer->SetCallback(FWApp_TimerCallback, this);
-	timers.push_back(timer);
-	return timer;
+FWHapticApp::~FWHapticApp() {
 }
 
-UTTimerIf* FWApp::GetTimer(int i){
-	if((int)timers.size() > 0) return timers[i];
-	return NULL;
+void FWHapticApp::CreateTimers() {
+	UTTimerIf* physicsTimer = CreateTimer(UTTimerIf::THREAD);
+	physicsTimerID = physicsTimer->GetID();
+
+	UTTimerIf* hapticTimer = CreateTimer(UTTimerIf::THREAD);
+	hapticTimerID = hapticTimer->GetID();
+}
+
+void FWHapticApp::TimerFunc(int id) {
+	if (hapticTimerID == id) {
+		GetSdk()->GetScene(0)->UpdateHapticPointers();
+		GetSdk()->GetScene(0)->GetPHScene()->StepHapticLoop();
+		GetSdk()->GetScene(0)->GetPHScene()->StepHapticSync();
+	} else {
+		// GetSdk()->GetScene(0)->GetPHScene()->GetHapticEngine()->StepPhysicsSimulation();
+	}
+}
+
+void FWHapticApp::StartTimers() {
+	GetTimer(0)->Start();
+	GetTimer(1)->Start();
+}
+
+void FWHapticApp::SetPHScene(PHSceneIf* phScene) {
+	GetSdk()->GetScene(0)->SetPHScene(phScene);
 }
 
 }
+
+

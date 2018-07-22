@@ -17,35 +17,104 @@ namespace Spr{;
 //@{
 
 struct FWSdkIf;
+struct PHSceneIf;
 class FWGraphicsHandler;
 struct GRDeviceIf;
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/** @brief アプリケーションクラスのベース
+	ウィンドウを持たず、FWSceneとタイマー関連のみを持つ。
+	ウィンドウを持つ他のアプリケーションに組み込む用途を想定
+*/
+
+class FWAppBase : public UTRefCount, public DVKeyMouseCallback {
+protected:
+	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
+public:
+	FWAppBase();
+	virtual ~FWAppBase();
+
+	// 派生クラスで定義する必要がある仮想関数 -----------------------------
+
+	/** @brief 初期化
+	FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
+	*/
+	virtual void Init();
+						 
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// 派生クラスで定義することのできる仮想関数
+
+	/** @brief ユーザ関数
+	メインループ実行中にユーザが処理を加えたい場合，ここに記述する．
+	物理シミュレーションのステップの前に呼ばれる．
+	*/
+	virtual void UserFunc() {}
+
+	/** @brief タイマー処理
+	繰り返し実行を行う．
+	デフォルトではid = 0でコールバック
+	*/
+	virtual void TimerFunc(int id);
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// FWAppのインタフェース
+
+	/** @brief SDKを取得する
+	*/
+	FWSdkIf*	GetSdk() { return fwSdk; }
+
+	/** @brief SDKを作成する
+	*/
+	void		CreateSdk();
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// タイマー
+
+	typedef std::vector< UTRef<UTTimerIf> > Timers;
+	Timers timers;
+
+	/** @brief タイマーを作成する
+	@param	mode	タイマの種類
+	@return			タイマオブジェクト
+	*/
+	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
+
+	/** @breif タイマーを取得する
+	@param タイマー番号
+	@return タイマーオブジェクト
+	*/
+	UTTimerIf* GetTimer(int i);
+	int	NTimers() { return (int)timers.size(); }
+};
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
 	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
 	仮想関数をオーバライドすることによって独自機能を実装する．
  */
-class FWApp : public UTRefCount, public DVKeyMouseCallback{
+class FWApp : public FWAppBase {
 protected:
-	static FWApp*				instance;	///< 唯一のFWAppインスタンス
-	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
+	static FWApp* instance; ///< 唯一のFWAppインスタンス
 	
 	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
-	Wins		wins;
+	Wins wins;
 	
 	/** @brief ウィンドウにシーンを与える
 		@param win シーンを割り当てるウィンドウ
 		winに，既存のウィンドウが割り当てられていないシーンを割り当てる．
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
-	void	AssignScene(FWWinIf* win);
+	void AssignScene(FWWinIf* win);
 
 public:
 	FWApp();
 	virtual ~FWApp();
 
-// 派生クラスで定義する必要がある仮想関数 -----------------------------
+	// 派生クラスで定義する必要がある仮想関数 -----------------------------
 
 	/** @brief 初期化
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
@@ -74,12 +143,7 @@ public:
 	 */
 	void StartMainLoop();
 
-// 派生クラスで定義することのできる仮想関数 -----------------------------
-	/** @brief ユーザ関数
-		メインループ実行中にユーザが処理を加えたい場合，ここに記述する．
-		物理シミュレーションのステップの前に呼ばれる．
-	 */
-	virtual void UserFunc(){}
+	// 派生クラスで定義することのできる仮想関数 -----------------------------
 
 	/** @brief アイドル処理
 		イベントが何もない場合にバックグラウンド処理を行う．
@@ -158,18 +222,8 @@ public:
 	 **/
 	virtual void OnControlUpdate(FWControlIf* ctrl){}
 
-	//　FWAppのインタフェース -----------------------------------------
-
 	/** @brief FWAppインスタンスを取得する */
 	static FWApp* GetApp(){ return instance; }
-
-	/** @brief SDKを取得する
-	*/
-	FWSdkIf*	GetSdk(){ return fwSdk; }
-
-	/** @brief SDKを作成する
-	 */
-	void		CreateSdk();
 
 	/** @brief ウィンドウに対応するコンテキストを作る
 		@param desc		ディスクリプタ
@@ -239,24 +293,6 @@ public:
 	GRDeviceIf* GRInit(int argc, char* argv[] = NULL, int type = TypeGLUT);
 
 public:
-	// タイマー
-	typedef std::vector< UTRef<UTTimerIf> > Timers;
-	Timers timers;
-
-	/** @brief タイマーを作成する
-		@param	mode	タイマの種類
-		@return			タイマオブジェクト
-	 */
-	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
-
-	/** @breif タイマーを取得する
-		@param タイマー番号
-		@return タイマーオブジェクト
-	*/
-	UTTimerIf* GetTimer(int i);
-	int	NTimers(){ return (int)timers.size(); }
-
-public:
 	/**  削除候補API  **/
 	/// ウィンドウを1つだけ作成
 	void	InitWindow(){ if(!NWin()) CreateWin(); }
@@ -266,6 +302,50 @@ public:
 	void	Reset(){}
 
 };
+
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/** @brief 力覚提示を伴う組み込み用アプリケーション
+*/
+
+class FWHapticApp : public FWAppBase {
+	unsigned int physicsTimerID, hapticTimerID;
+
+	int cnt = 0;
+
+public:
+	FWHapticApp();
+	virtual ~FWHapticApp();
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// 派生クラスで定義することのできる仮想関数
+
+	/** @brief タイマー処理
+	繰り返し実行を行う．
+	デフォルトではid = 0でコールバック
+	*/
+	virtual void TimerFunc(int id);
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// その他の関数
+
+	/** @brief タイマーを作成する
+	*/
+	void CreateTimers();
+
+	/** @brief タイマーを開始する
+	*/
+	void StartTimers();
+
+	/** @brief 物理シーンをセットする
+	*/
+	void SetPHScene(PHSceneIf* phScene);
+
+	int GetCount() { return cnt; }
+
+};
+
 //@}
 }
 #endif
