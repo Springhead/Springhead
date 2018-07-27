@@ -150,8 +150,9 @@ public:
 	virtual void DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv){}
 	virtual void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){}
 	virtual void DrawBox(float sx, float sy, float sz, bool solid=true){}
-	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true){}
- 	virtual void DrawCone(float radius, float height, int slice, bool solid=true){}
+	virtual void DrawSphere(float radius, int slices, int stacks, bool solid = true) {}
+	virtual void DrawEllipsoid(Vec3f radius, int slices, int stacks, bool solid = true) {}
+	virtual void DrawCone(float radius, float height, int slice, bool solid=true){}
 	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true, bool cap=true){}
 	virtual void DrawDisk(float radius, int slice, bool solid=true){}
 	virtual void DrawCapsule(float radius, float height, int slice=20, bool solid=true){}
@@ -250,6 +251,8 @@ public:
 		{ ptr DrawBox(sx, sy, sz, solid); }																	\
 	virtual void DrawSphere(float radius, int stacks, int slice, bool solid = true)							\
 		{ ptr DrawSphere(radius, stacks, slice, solid); }													\
+	virtual void DrawEllipsoid(Vec3f radius, int stacks, int slice, bool solid = true)						\
+		{ ptr DrawEllipsoid(radius, stacks, slice, solid); }												\
 	virtual void DrawCone(float radius, float height, int slice, bool solid=true)							\
 		{ ptr DrawCone(radius, height, slice, solid); }														\
 	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true, bool cap=true)		\

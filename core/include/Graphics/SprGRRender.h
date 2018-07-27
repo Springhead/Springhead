@@ -376,7 +376,9 @@ struct GRRenderBaseIf: public ObjectIf{
 	/// 直方体を描画
 	void	DrawBox(float sx, float sy, float sz, bool solid=true);
 	/// 球体を描画
-	void	DrawSphere(float radius, int slices, int stacks, bool solid=true);
+	void	DrawSphere(float radius, int slices, int stacks, bool solid = true);
+	/// 楕円体を描画
+	void	DrawEllipsoid(Vec3f radius, int slices, int stacks, bool solid = true);
 	/// 円錐の描画
 	void	DrawCone(float radius, float height, int slice, bool solid=true);
 	/// 円筒の描画

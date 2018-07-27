@@ -257,6 +257,21 @@ struct CDSphereDesc: public CDShapeDesc{
 	float radius;					// 球体の半径
 };	
 
+/** 楕円体　*/
+struct CDEllipsoidIf: public CDConvexIf{
+	SPR_IFDEF(CDEllipsoid);
+	Vec3d	GetRadius();
+	void	SetRadius(Vec3d r);
+};	
+/** 楕円のディスクリプタ　*/
+struct CDEllipsoidDesc: public CDShapeDesc{
+	SPR_DESCDEF(CDEllipsoid);
+	CDEllipsoidDesc():CDShapeDesc(){
+		radius = Vec3d(1, 0.2, 1);
+	}
+	Vec3d radius;					// 楕円体の半径
+};	
+
 /** カプセル　*/
 struct CDCapsuleIf: public CDConvexIf{
 	SPR_IFDEF(CDCapsule);

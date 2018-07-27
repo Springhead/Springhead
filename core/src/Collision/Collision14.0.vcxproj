@@ -405,6 +405,7 @@
     <ClCompile Include="CDConvexMeshInterpolate.cpp" />
     <ClCompile Include="CDCutRing.cpp" />
     <ClCompile Include="CDDetectorImp.cpp" />
+    <ClCompile Include="CDEllipsoid.cpp" />
     <ClCompile Include="CDGJK.cpp" />
     <ClCompile Include="CDRegisterTypeDesc.cpp" />
     <ClCompile Include="CDRoundCone.cpp" />
@@ -424,6 +425,7 @@
     <ClInclude Include="CDConvexMeshInterpolate.h" />
     <ClInclude Include="CDCutRing.h" />
     <ClInclude Include="CDDetectorImp.h" />
+    <ClInclude Include="CDEllipsoid.h" />
     <ClInclude Include="CDQuickHull2D.h" />
     <ClInclude Include="CDQuickHull2DImp.h" />
     <ClInclude Include="CDQuickHull3D.h" />

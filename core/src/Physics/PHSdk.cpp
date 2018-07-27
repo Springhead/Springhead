@@ -26,6 +26,7 @@
 #include <Physics/PHFemPorousWOMove.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
+#include <Collision/CDEllipsoid.h>
 #include <Collision/CDCapsule.h>
 #include <Collision/CDRoundCone.h>
 #include <Collision/CDConvexMesh.h>
@@ -149,15 +150,23 @@ CDShapeIf* PHSdk::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 	CDShape* s = NULL;
 	if (ii == CDConvexMeshInterpolateIf::GetIfInfoStatic()){
 		s = DBG_NEW CDConvexMeshInterpolate((const CDConvexMeshInterpolateDesc&)desc);
-	}else if (ii == CDConvexMeshIf::GetIfInfoStatic()){
+	}
+	else if (ii == CDConvexMeshIf::GetIfInfoStatic()){
 		s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
-	}else if (ii == CDSphereIf::GetIfInfoStatic()){
+	}
+	else if (ii == CDSphereIf::GetIfInfoStatic()) {
 		s = DBG_NEW CDSphere((const CDSphereDesc&)desc);
-	}else if (ii == CDCapsuleIf::GetIfInfoStatic()){
+	}
+	else if (ii == CDEllipsoidIf::GetIfInfoStatic()) {
+		s = DBG_NEW CDEllipsoid((const CDEllipsoidDesc&)desc);
+	}
+	else if (ii == CDCapsuleIf::GetIfInfoStatic()){
 		s = DBG_NEW CDCapsule((const CDCapsuleDesc&)desc);
-	}else if (ii == CDRoundConeIf::GetIfInfoStatic()){
+	}
+	else if (ii == CDRoundConeIf::GetIfInfoStatic()){
 		s = DBG_NEW CDRoundCone((const CDRoundConeDesc&)desc);
-	}else if (ii == CDBoxIf::GetIfInfoStatic()){
+	}
+	else if (ii == CDBoxIf::GetIfInfoStatic()){
 		s = DBG_NEW CDBox((const CDBoxDesc&)desc);
 	}
 	if (s){
