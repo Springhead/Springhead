@@ -191,6 +191,7 @@ public:
 	virtual void DrawArrow		(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid);
 	virtual void DrawBox		(float sx, float sy, float sz, bool solid=true);
 	virtual void DrawSphere		(float radius, int slices, int stacks, bool solid=true);
+	virtual void DrawEllipsoid	(Vec3f radius, int slices, int stacks, bool solid);
 	virtual void DrawCone		(float radius, float height, int slice, bool solid=true);
 	virtual void DrawCylinder	(float radius, float height, int slice, bool solid=true, bool cap=true);
 	virtual void DrawDisk		(float radius, int slice, bool solid=true);

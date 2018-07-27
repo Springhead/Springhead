@@ -43,6 +43,9 @@
     <ClCompile Include="CollisionStub.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="CDEllipsoid.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Collision\SprCDShape.h">
@@ -104,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\Collision\SprCDDetector.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CDEllipsoid.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

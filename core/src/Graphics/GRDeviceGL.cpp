@@ -438,10 +438,24 @@ void GRDeviceGL::DrawBox(float sx, float sy, float sz, bool solid){
 	this->PopModelMatrix();
 }
 
-void GRDeviceGL::DrawSphere(float radius, int slices, int stacks, bool solid){
-	if(solid)
-		 glutSolidSphere(radius, slices, stacks);
+void GRDeviceGL::DrawSphere(float radius, int slices, int stacks, bool solid) {
+	if (solid)
+		glutSolidSphere(radius, slices, stacks);
 	else glutWireSphere(radius, slices, stacks);
+}
+
+void GRDeviceGL::DrawEllipsoid(Vec3f radius, int slices, int stacks, bool solid) {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	Affinef af;
+	af.Ex() *= radius.x;
+	af.Ey() *= radius.y;
+	af.Ez() *= radius.z;
+	glMultMatrixf(af);
+	if (solid)
+		glutSolidSphere(1, slices, stacks);
+	else glutWireSphere(1, slices, stacks);
+	glPopMatrix();
 }
 
 void GRDeviceGL::DrawCone(float radius, float height, int slice, bool solid){

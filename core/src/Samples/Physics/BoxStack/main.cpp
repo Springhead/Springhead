@@ -50,6 +50,7 @@ public:
 		ID_CAPSULE,
 		ID_ROUNDCONE,
 		ID_SPHERE,
+		ID_ELLIPSOID,
 		ID_ROCK,
 		ID_BLOCK,
 		//ID_TOWER,
@@ -74,6 +75,8 @@ public:
 		AddHotKey(MENU_MAIN, ID_ROUNDCONE, 'r');
 		AddAction(MENU_MAIN, ID_SPHERE, "drop sphere");
 		AddHotKey(MENU_MAIN, ID_SPHERE, 's');
+		AddAction(MENU_MAIN, ID_ELLIPSOID, "drop ellipsoid");
+		AddHotKey(MENU_MAIN, ID_ELLIPSOID, 'E');
 		AddAction(MENU_MAIN, ID_ROCK, "drop rock");
 		AddHotKey(MENU_MAIN, ID_ROCK, 'd');
 		AddAction(MENU_MAIN, ID_BLOCK, "drop block");
@@ -130,8 +133,12 @@ public:
 				Drop(SHAPE_ROUNDCONE, GRRenderIf::BLUE, v, w, p, q);
 				message = "round cone dropped.";
 			}
-			if(id == ID_SPHERE){
+			if (id == ID_SPHERE) {
 				Drop(SHAPE_SPHERE, GRRenderIf::YELLOW, v, w, p, q);
+				message = "sphere dropped.";
+			}
+			if (id == ID_ELLIPSOID) {
+				Drop(SHAPE_ELLIPSOID, GRRenderIf::LIGHTGREEN, v, w, p, q);
 				message = "sphere dropped.";
 			}
 			if(id == ID_ROCK){

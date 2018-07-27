@@ -26,7 +26,8 @@ enum ShapeID {
 	SHAPE_POLYSPHERE,
 	SHAPE_DODECA,
 	SHAPE_LONGCAPSULE,
-	SHAPE_LONGPOLYSPHERE
+	SHAPE_LONGPOLYSPHERE,
+	SHAPE_ELLIPSOID,
 };
 
 /**
@@ -149,6 +150,21 @@ void SetGLMesh(CDShapeIf* shape,ShapeID id,Posed pose) {
 		}
 		break;
 	}
+	case SHAPE_ELLIPSOID: {
+		CDEllipsoidIf* ell = shape->Cast();
+		if (ell) {
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			Affinef af;
+			af.Ex() *= ell->GetRadius().x;
+			af.Ey() *= ell->GetRadius().y;
+			af.Ez() *= ell->GetRadius().z;
+			glMultMatrixf(af);
+			glutSolidSphere(1, drawDiv, drawDiv);
+			glPopMatrix();
+		}
+		break;
+	}
 	case SHAPE_ROCK :
 	case SHAPE_POLYSPHERE:
 	case SHAPE_DODECA:
@@ -263,6 +279,7 @@ public:
 	CDConvexIf*				shapeDodecahedron;
 	CDCapsuleIf*			shapeLongCapsule;
 	CDConvexIf*				shapeLongPolySphere;
+	CDEllipsoidIf*			shapeEllipsoid;
 
 
 	void Init(PHSdkIf *sdk) {
@@ -347,6 +364,10 @@ public:
 
 		}
 		shapeLongPolySphere = sdk->CreateShape(pd)->Cast();
+
+		CDEllipsoidDesc ed;
+		shapeEllipsoid = sdk->CreateShape(ed)->Cast();
+		shapeEllipsoid->SetName("ellipsoid");
 		
 		pd.vertices.clear();
 		pd.vertices.push_back(Vec3d(1, 1, 1));
@@ -410,6 +431,9 @@ public:
 			break;
 		case SHAPE_LONGPOLYSPHERE:
 			return shapeLongPolySphere;
+			break;
+		case SHAPE_ELLIPSOID:
+			return shapeEllipsoid;
 			break;
 		default:
 			return shapeSphere;

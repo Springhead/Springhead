@@ -477,7 +477,8 @@ void FWScene::DrawBBox(GRRenderIf* render, PHBBox* bbox){
 void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire){
 	CDBoxIf*		box		= DCAST(CDBoxIf, shape);
 	CDSphereIf*		sphere	= DCAST(CDSphereIf, shape);
-	CDCapsuleIf*	cap		= DCAST(CDCapsuleIf, shape);
+	CDEllipsoidIf*	ell = shape->Cast();
+	CDCapsuleIf*	cap = DCAST(CDCapsuleIf, shape);
 	CDRoundConeIf*	rc		= DCAST(CDRoundConeIf, shape);
 	CDConvexMeshIf* mesh	= DCAST(CDConvexMeshIf, shape);
 
@@ -488,6 +489,7 @@ void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire
 		render->DrawBox(sz.x, sz.y, sz.z, solid_or_wire);
 	}
 	if(sphere)	render->DrawSphere(sphere->GetRadius(), slice, slice, solid_or_wire);
+	if (ell)	render->DrawEllipsoid(ell->GetRadius(), slice, slice, solid_or_wire);
 	if(cap)		render->DrawCapsule(cap->GetRadius(), cap->GetLength(), slice, solid_or_wire);
 	if(rc){
 		Vec2f r = rc->GetRadius();
