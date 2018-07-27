@@ -56,8 +56,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	matAxis.y	= GRRenderIf::GREEN;
 	matAxis.z	= GRRenderIf::BLUE;
 	matContact	= GRRenderIf::YELLOW;
-	matBBoxLocal = GRRenderIf::LIGHTGRAY;
-	matBBoxWorld = GRRenderIf::WHITE;
+	matBBox     = GRRenderIf::WHITE;
 	matForce	= GRRenderIf::ORANGE;
 	matMoment	= GRRenderIf::CYAN;
 	matGrid.x = matGrid.y = matGrid.z = GRRenderIf::GRAY;
@@ -327,7 +326,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		PHConstraintEngine* engine = phScene->GetConstraintEngine()->Cast();
 		//DrawDetectorRegion(render, &engine->rootRegion);
 		for(int c = 0; c < (int)engine->cells.size(); c++)
-			DrawBBox(render, Posed(), &engine->cells[c].bbox);
+			DrawBBox(render, &engine->cells[c].bbox);
 	}
 
 	// 剛体
@@ -339,14 +338,8 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		// BBox
 		if(renderBBox){
 			PHSolid* so = solids[i]->Cast();
-			if (so->bboxReady) {
-				render->SetMaterial(matBBoxLocal);
-				DrawBBox(render, so->GetPose(), &so->bbLocal);
-			}
-			else if (so->aabbReady) {
-				render->SetMaterial(matBBoxWorld);
-				DrawBBox(render, Posed(), &so->bbWorld);
-			}
+			render->SetMaterial(matBBox);
+			DrawBBox(render, &so->bbWorld);
 		}
 
 		// 形状を描画
@@ -472,17 +465,12 @@ void FWScene::DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire
 	render->PopModelMatrix();
 }
 
-void FWScene::DrawBBox(GRRenderIf* render, Posed pose, PHBBox* bbox){
+void FWScene::DrawBBox(GRRenderIf* render, PHBBox* bbox){
 	Vec3d bbcenter = bbox->GetBBoxCenter();
 	Vec3d bbextent = bbox->GetBBoxExtent();
 	render->PushModelMatrix();
-	Affinef af;
-	pose.ToAffine(af);
-	render->MultModelMatrix(af);
 	render->MultModelMatrix(Affinef::Trn(bbcenter.x, bbcenter.y, bbcenter.z));
-	render->SetLighting(false);
 	render->DrawBox(2.0*bbextent.x, 2.0*bbextent.y, 2.0*bbextent.z, false);
-	render->SetLighting(true);
 	render->PopModelMatrix();
 }
 
@@ -734,26 +722,21 @@ void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
 	render->SetLighting(true);
 }
 void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
-	render->SetMaterial(matContact);	
-	render->SetLighting(false);
-	render->SetDepthTest(false);	
-	PHContactPoint* c = con->Cast();
-	if (c->shapePair->section.size() > 1) {
-		std::vector<Vec3f> vtx;
-		vtx.resize(c->shapePair->section.size());
-		copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
-		render->SetVertexFormat(GRVertexElement::vfP3f);
-		render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
-	}
-	render->SetPointSize(10, true);
-	render->SetMaterial(GRRenderBaseIf::GREEN);
-	render->DrawPoint(c->shapePair->center);
-/*	render->SetMaterial(GRRenderBaseIf::GREEN);
-	render->DrawPoint(c->shapePair->shapePoseW[0] * c->shapePair->closestPoint[0]);
-	render->SetMaterial(GRRenderBaseIf::YELLOWGREEN);
-	render->DrawPoint(c->shapePair->shapePoseW[1] * c->shapePair->closestPoint[1]);
-*/
+	render->SetMaterial(matContact);
 
+	PHContactPoint* c = con->Cast();
+	if(c->shapePair->section.size() < 3)
+		return;
+	std::vector<Vec3f> vtx;
+	vtx.resize(c->shapePair->section.size());
+	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
+	
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+	
+	render->SetVertexFormat(GRVertexElement::vfP3f);
+	render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
+	
 	render->SetDepthTest(true);
 	render->SetLighting(true);
 }
@@ -762,7 +745,7 @@ void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
 	int n = (int)region->regions.size();
 	// 最下層のみBBoxを描画
 	if(n == 0)
-		DrawBBox(render, Posed(), &region->bbox);
+		DrawBBox(render, &region->bbox);
 	for(int i = 0; i < n; i++)
 		DrawDetectorRegion(render, region->regions[i]);
 }*/
@@ -799,27 +782,6 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 			Vec3d p1 = ikE->GetSolidTempPose() * ikE->GetTargetLocalPosition();
 			render->DrawLine(p0, p1);
 		}
-
-		// -----
-
-		if (i % 3 == 0) {
-			render->SetMaterial(matAxis.x);
-		}
-		else if (i % 3 == 1) {
-			render->SetMaterial(matAxis.y);
-		}
-		else {
-			render->SetMaterial(matAxis.z);
-		}
-
-		Posed pose = ikA->GetSolidTempPose();
-		render->DrawLine(pose.Pos(), pose * Vec3d(2, 0, 0));
-		render->DrawLine(pose.Pos(), pose * Vec3d(0, 2, 0));
-		render->DrawLine(pose.Pos(), pose * Vec3d(0, 0, 2));
-
-		render->SetMaterial(matAxis.x);
-
-		// -----
 	}
 
 	render->SetLineWidth(1);
@@ -889,8 +851,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 			for (int j = 0; j < nNeighbors; j++) {
 				int solidID = pointer->neighborSolidIDs[j];
 				PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)he->GetSolidPairTemp(solidID, i);
-				for (int k = 0; k < solidPair->body[0]->NShape(); k++) {
-					for (int l = 0; l < solidPair->body[1]->NShape(); l++) {
+				for (int k = 0; k < solidPair->solid[0]->NShape(); k++) {
+					for (int l = 0; l < solidPair->solid[1]->NShape(); l++) {
 						PHShapePairForHaptic* sp = (PHShapePairForHaptic*)solidPair->GetShapePair(k, l);
 						for (int m = 0; m < 2; m++) {
 							// 近傍点対		・白点
@@ -1129,7 +1091,7 @@ void FWScene::DrawOp(GRRenderIf* render, PHOpEngineIf* opEngineif)
 				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(dp.pCurrOrint.Inv() * dp.ellipRotMatrix);
 
 				DrawEllipsoid drawEll;
-				drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 18, elliRotQ);//dp.pCurrOrint.Inv());
+				drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
 
 				render->PopModelMatrix();
 
@@ -1331,11 +1293,8 @@ void FWScene::SetContactMaterial(int mat){
 void FWScene::EnableRenderBBox(bool enable){
 	renderBBox = enable;
 }
-void FWScene::SetLocalBBoxMaterial(int mat) {
-	matBBoxWorld = mat;
-}
-void FWScene::SetWorldBBoxMaterial(int mat) {
-	matBBoxLocal = mat;
+void FWScene::SetBBoxMaterial(int mat){
+	matBBox = mat;
 }
 void FWScene::EnableRenderGrid(bool x, bool y, bool z){
 	renderGridX = x;

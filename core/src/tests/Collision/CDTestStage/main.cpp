@@ -35,7 +35,7 @@ o　今の衝突情報を記録
 #include <string>
 #include <numeric>
 //#include <GL/glut.h>
-#include<Foundation/UTPreciseTimer.h>
+#include<Foundation/UTQPTimer.h>
 #include <iostream>
 #include <fstream>
 #include <tests/Collision/CDTestStage/teststage.h>
@@ -94,10 +94,11 @@ int caseCount = 0;
 
 Vec2d lastMouse;
 
+UTLongLong& coltimePhase1 = UTPerformanceMeasure::GetInstance("Collision")->Count("P1");
+UTLongLong& coltimePhase2 = UTPerformanceMeasure::GetInstance("Collision")->Count("P2");
+UTLongLong& coltimePhase3 = UTPerformanceMeasure::GetInstance("Collision")->Count("P3");
+
 namespace Spr {
-	extern int		coltimePhase1;
-	extern int		coltimePhase2;
-	extern int		coltimePhase3;
 	extern int		colcounter;
 	extern double	biasParam;
 }
@@ -354,20 +355,20 @@ void collisionTest() {
 					if (colMethod == 0) {
 						ofs << obj[0].m_shape->GetName() << "-" << obj[1].m_shape->GetName();
 						ofs << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << ",";
-						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] / 1000 << ",";
-						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] / 1000 << ",";
+						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i]  << ",";
+						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] << ",";
 						ofs << hitCount << "," << outCount << ",";
-						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) / 1000 << ",";
-						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) / 1000 << ",";
+						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) << ",";
+						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) << ",";
 						ofs << colCountHit << "," << colCountOut;
 					}
 					else {
 						ofs << ",,";
-						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] / 1000 << ",";
-						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] / 1000 << ",";
+						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] << ",";
+						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] << ",";
 						ofs << hitCount << "," << outCount << ",";
-						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) / 1000 << ",";
-						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) / 1000 << ",";
+						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) << ",";
+						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) << ",";
 						ofs << colCountHit << "," << colCountOut << std::endl;
 					}
 					automode = false;
@@ -500,6 +501,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 	if (key == 'n') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_DODECA), ShapeID::SHAPE_DODECA);
 	if (key == 'm') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGCAPSULE), ShapeID::SHAPE_LONGCAPSULE);
 	if (key == ',') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGPOLYSPHERE), ShapeID::SHAPE_LONGPOLYSPHERE);
+	if (key == '.') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_ELLIPSOID), ShapeID::SHAPE_ELLIPSOID);
 	if (key == 'r') {
 		static int count = 0;
 		if (count == 0) {
@@ -616,6 +618,9 @@ void dstrSolid(const std::string& solidName) {
 }
 
 
+namespace Spr {
+	void setGjkThreshold(double th, double e);
+}
 
 /**
  brief		メイン関数
@@ -635,6 +640,8 @@ int __cdecl main(int argc, char* argv[]){
 
 	obj[0].Init(scene->CreateSolid(desc), stage.GetShape(idBlock), idBlock);
 	obj[1].Init(scene->CreateSolid(desc), stage.GetShape(idFloor), idFloor);
+	
+	setGjkThreshold(1e-6, 1e-6);
 
 	
 	//	形状の作成

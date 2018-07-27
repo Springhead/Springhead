@@ -34,7 +34,7 @@ public:
 	virtual int GetVtxCount() const { return INT32_MAX; };
 
 	Vec3d	GetRadius() { return radius; }
-	void	SetRadius(Vec3d r) { radius = r; bboxReady = false; CalcMetrics(); }
+	void	SetRadius(Vec3d r) { radius = r; bboxReady = false; }
 };
 
 }	//	namespace Spr

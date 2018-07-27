@@ -161,7 +161,7 @@ struct GRCameraDesc : GRVisualDesc{
 		ORTHO,
 		PERSPECTIVE,
 	};
-	Vec2f size;				///<	スクリーンのサイズ。x, yどちらを0にしておくと、スクリーンサイズからアスペクト比を保つように自動計算する。
+	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
 	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
 	int   type;             ///<    投影変換
