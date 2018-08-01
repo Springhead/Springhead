@@ -161,42 +161,42 @@ unsigned long UTQPTimer::Clear(){
 	return rv;
 }
 
-static std::vector< UTRef<UTPerformanceMeasureImp> >& GetMeasures() {
-	static std::vector< UTRef<UTPerformanceMeasureImp> > measures;
+static std::vector< UTRef<UTPerformanceMeasure> >& GetMeasures() {
+	static std::vector< UTRef<UTPerformanceMeasure> > measures;
 	return measures;
 }
-UTPerformanceMeasure* UTPerformanceMeasure::FindInstance(const char* n) {
+UTPerformanceMeasureIf* UTPerformanceMeasureIf::FindInstance(const char* n) {
 	for (auto m : GetMeasures()) {
 		if (m->name.compare(n) == 0) {
-			return m;
+			return m->Cast();
 		}
 	}
 	return NULL;
 }
-UTPerformanceMeasure* UTPerformanceMeasure::GetInstance(int i) {
-	return GetMeasures()[i];
+UTPerformanceMeasureIf* UTPerformanceMeasureIf::GetInstance(int i) {
+	return GetMeasures()[i]->Cast();
 }
-UTPerformanceMeasure* UTPerformanceMeasure::GetInstance(const char* n) {
-	UTPerformanceMeasure* rv = FindInstance(n);
+UTPerformanceMeasureIf* UTPerformanceMeasureIf::GetInstance(const char* n) {
+	UTPerformanceMeasureIf* rv = FindInstance(n);
 	if (rv) return rv;
-	GetMeasures().push_back(DBG_NEW UTPerformanceMeasureImp(n));	
-	return GetMeasures().back();
+	GetMeasures().push_back(DBG_NEW UTPerformanceMeasure(n));	
+	return GetMeasures().back()->Cast();
 }
-UTPerformanceMeasure* UTPerformanceMeasure::CreateInstance(const char* n) {
+UTPerformanceMeasureIf* UTPerformanceMeasureIf::CreateInstance(const char* n) {
 	std::string name;
 	for (int i = 0;; ++i) {
 		name = n;
 		if (i) name = name + std::to_string(i);
 		if (FindInstance(name.c_str()) == 0) break;
 	}
-	GetMeasures().push_back(DBG_NEW UTPerformanceMeasureImp(name.c_str()));
-	return GetMeasures().back();
+	GetMeasures().push_back(DBG_NEW UTPerformanceMeasure(name.c_str()));
+	return GetMeasures().back()->Cast();
 }
-int UTPerformanceMeasure::NInstance() {
+int UTPerformanceMeasureIf::NInstance() {
 	return (int) GetMeasures().size();
 }
 
-int UTPerformanceMeasureImp::FindId(std::string name) {
+int UTPerformanceMeasure::FindId(std::string name) {
 	for (auto n : names) {
 		if (n.name == name){
 			return n.id;
@@ -204,7 +204,7 @@ int UTPerformanceMeasureImp::FindId(std::string name) {
 	}
 	return -1;
 }
-int UTPerformanceMeasureImp::CreateId(std::string name) {
+int UTPerformanceMeasure::CreateId(std::string name) {
 	assert(FindId(name) == -1);
 	assert(names.size() < MAXCOUNTS);
 	names.push_back(Name());
@@ -212,19 +212,19 @@ int UTPerformanceMeasureImp::CreateId(std::string name) {
 	names.back().name = name;
 	return names.back().id;
 }
-int UTPerformanceMeasureImp::GetId(std::string name) {
+int UTPerformanceMeasure::GetId(std::string name) {
 	int rv = FindId(name);
 	if (rv == -1) rv = CreateId(name);
 	return rv;
 }
-std::string UTPerformanceMeasureImp::PrintAll() {
+std::string UTPerformanceMeasure::PrintAll() {
 	std::string s;
 	return s;
 }
-std::string UTPerformanceMeasureImp::Print(std::string name) {
+std::string UTPerformanceMeasure::Print(std::string name) {
 	return Print(FindId(name));
 }
-std::string UTPerformanceMeasureImp::Print(int id) {
+std::string UTPerformanceMeasure::Print(int id) {
 	std::string s;
 	std::ostringstream os(s);
 	if (id < 0) {

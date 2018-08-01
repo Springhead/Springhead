@@ -11,7 +11,6 @@
 #include <Foundation/SprUTTimer.h>
 #include <HumanInterface/SprHIKeyMouse.h>
 #include <Framework/SprFWWin.h>
-#include <Foundation/SprUTCriticalSection.h>
 
 namespace Spr{;
 /** \addtogroup gpFramework */
@@ -71,13 +70,12 @@ public:
 	*/
 	void		CreateSdk();
 
-#if (!defined(SWIG_PY_SPR) && !defined(SWIG_CS_SPR))
+
 	/** @brief タイマーを作成する
 	@param	mode	タイマの種類
 	@return			タイマオブジェクト
 	*/
 	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
-#endif
 
 	/** @breif タイマーを取得する
 	@param タイマー番号
@@ -96,12 +94,8 @@ public:
  */
 class FWApp : public FWAppBase {
 protected:
-	static FWApp* instance;			///<	唯一のFWAppインスタンス
-	bool bThread;					///<	GLUTを別スレッドで動かす場合 true
-	volatile bool bPostRedisplay;	///<	別スレッドに再描画の要求をするためのフラグ true で再描画
-	volatile bool bEndThread;		///<	別スレッドの場合にスレッドを終了させる。
-	UTCriticalSection displayLock;
-
+	static FWApp* instance; ///< 唯一のFWAppインスタンス
+	
 	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
 	Wins wins;
@@ -112,10 +106,6 @@ protected:
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
 	void AssignScene(FWWinIf* win);
-	///	Initialize in new thead
-	void StartInThread();
-	friend class FWAppThreadCall;
-	void CheckAndPostRedisplay();
 
 public:
 	FWApp();
@@ -128,9 +118,6 @@ public:
 	 */
 	virtual void Init(); // C# API用. （引数を持つInitのみを%ignoreしたいので）
 	virtual void Init(int argc, char* argv[] = NULL);
-	///	Create new thead and start.
-	void InitInNewThread();
-	void EndThread();
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
@@ -149,13 +136,9 @@ public:
 	void EnableIdleFunc(bool on = true);
 	
 	/** @brief メインループの実行
-		glutの場合，glutMainLoopの実行
+		glutの場合，glutmainLoopの実行
 	 */
 	void StartMainLoop();
-	/** @brief メインループの終了
-		freeglutの場合，glutLeaveMainLoopを実行、それ以外の場合は exit(0)
-	 */
-	void EndMainLoop();
 
 	// 派生クラスで定義することのできる仮想関数 -----------------------------
 
@@ -305,14 +288,6 @@ public:
 	 */
 	GRDeviceIf* GRInit(); // C# API用. （引数を持つGRInitのみを%ignoreしたいので）
 	GRDeviceIf* GRInit(int argc, char* argv[] = NULL, int type = TypeGLUT);
-
-	/** @brief Display関数呼び出しの排他ロックを取得する
-	 */
-	void GetDisplayLock();
-
-	/** @brief Display関数呼び出しの排他ロックを解放する
-	 */
-	void ReleaseDisplayLock();
 
 public:
 	/**  削除候補API  **/
