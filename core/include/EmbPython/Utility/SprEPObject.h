@@ -4,6 +4,11 @@
 #include <EmbPython/SprEPVersion.h>
 #include PYTHON_H_PATH
 
+#if PY_VERSION_HEX >= 0x03060000
+#define __PYDECL
+#endif
+
+
 #include <Springhead.h>
 
 using namespace Spr;
