@@ -274,6 +274,8 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 	w[n] = b2z * ((Vec3d)q[n]) - a2z * ((Vec3d)p[n]);						\
 	colcounter++;
 
+
+int contFindCommonPoint3DRefinementCount;
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
@@ -621,6 +623,7 @@ final:
 	if (bSave){
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 	}
+	contFindCommonPoint3DRefinementCount = count;
 	if (dist > end) return -1;
 	if (dist < start) return -2;
 	return 1;

@@ -10,6 +10,7 @@
 #pragma once
 
 #include <Foundation/SprUTQPTimer.h>
+#include <Foundation/Object.h>
 
 #include <vector>
 #include <sstream>
@@ -60,7 +61,9 @@ public:
 };
 
 /// UTQPTimerを使い、アルゴリズムの所要時間を測定するためのクラス
-class UTPerformanceMeasureImp : public UTPerformanceMeasure, public UTRefCount{
+class SPR_DLL UTPerformanceMeasure : public Object{
+public:
+	SPR_OBJECTDEF(UTPerformanceMeasure);
 private:
 	std::string name;
 	double unit;	// 出力時の単位(1でsec, 1e-3でmsec)
@@ -71,9 +74,13 @@ private:
 		std::string name;		// 計測場所の名前
 	};
 	std::vector< Name > names;
+	UTPerformanceMeasure(const char* n) :name(n), unit(1e-3) {}
 
-	UTPerformanceMeasureImp(const char* n):name(n), unit(1e-3){}
 public:
+	UTPerformanceMeasure() :name(""), unit(1e-3) {
+		assert(0);
+		//	should not create independently.
+	}
 	int NCounter() {
 		return (int)names.size();
 	}
@@ -110,7 +117,7 @@ public:
 			counts[i] = 0;
 		}
 	}
-	friend class UTPerformanceMeasure;
+	friend class UTPerformanceMeasureIf;
 };
 
 

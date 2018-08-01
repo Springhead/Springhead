@@ -72,7 +72,7 @@ protected:
 
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 
-	UTPerformanceMeasure* performanceMeasure;
+	UTPerformanceMeasureIf* performanceMeasure;
 public:
 	
 	friend class			PHSolid;
@@ -259,7 +259,7 @@ public:
 	virtual bool        WriteStateR    (std::ostream& fout);
 	virtual bool        ReadStateR     (std::istream& fin);
 	virtual void        DumpObjectR    (std::ostream& os, int level=0) const;
-	virtual UTPerformanceMeasure* GetPerformanceMeasure() {
+	virtual UTPerformanceMeasureIf* GetPerformanceMeasure() {
 		return performanceMeasure;
 	}
 protected:
