@@ -28,7 +28,8 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 %ignore Spr::UTAccessBase;
 %ignore Spr::UTTypeDescIf::SetAccess;
 %ignore Spr::UTTypeDescIf::Create;
-%ignore Spr::UTPerformanceMeasure;
+%ignore Spr::UTPerformanceMeasureIf;
+
 %extend Spr::UTTimerIf{
 	PyObject* SetCallback(PyObject* arg){
 		ret_tmp = Py_None;

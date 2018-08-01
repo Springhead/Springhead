@@ -13,6 +13,7 @@
 %ignore Spr::ObjectIf::ReadStateR;
 %ignore Spr::ObjectIf::DumpObjectR;
 %ignore Spr::SdkIf::CreateSdk;
+%ignore Spr::UTPerformanceMeasureIf;
 
 %ignore Spr::UTTypeDescDbIf::PrintPool;
 
