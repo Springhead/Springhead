@@ -18,29 +18,30 @@
 namespace Spr{;
 
 typedef	long long	UTLongLong;	// 64-bit signed integer
-class UTPerformanceMeasure{
+class UTPerformanceMeasureIf:public ObjectIf{
 public:
-	static UTPerformanceMeasure* GetInstance(const char* name);		///<	Find or Create UTPerformanceMeasure with specified name.
-	static UTPerformanceMeasure* CreateInstance(const char* name);	///<	Create UTPerformanceMeasure with specified name.
-	static UTPerformanceMeasure* FindInstance(const char* name);	///<	Find UTPerformanceMeasure by name.
-	static UTPerformanceMeasure* GetInstance(int i);				///<	Get i-th instance.
-	static int NInstance();											///<	return the number of intstance.
-	virtual const char* GetName() = 0;
-	virtual int NCounter() = 0;
-	virtual const char* GetNameOfCounter(int id) = 0;
-	virtual std::string PrintAll() = 0;
-	virtual std::string Print(std::string name) = 0;
-	virtual std::string Print(int id) = 0;
-	virtual void SetUnit(double u) = 0;
-	virtual double GetUnit() = 0;
-	virtual double Time(int id) = 0;
-	virtual double Time(const char* name) = 0;
-	virtual UTLongLong& Count(const char* name) = 0;
-	virtual UTLongLong& Count(int id) = 0;
-	virtual int GetId(std::string name) = 0;
-	virtual int FindId(std::string name) = 0;
-	virtual int CreateId(std::string name) = 0;
-	virtual void ClearCounts() = 0;
+	SPR_IFDEF(UTPerformanceMeasure);
+	static UTPerformanceMeasureIf* GetInstance(const char* name);		///<	Find or Create UTPerformanceMeasure with specified name.
+	static UTPerformanceMeasureIf* CreateInstance(const char* name);	///<	Create UTPerformanceMeasure with specified name.
+	static UTPerformanceMeasureIf* FindInstance(const char* name);		///<	Find UTPerformanceMeasure by name.
+	static UTPerformanceMeasureIf* GetInstance(int i);					///<	Get i-th instance.
+	static int NInstance();												///<	return the number of intstance.
+	const char* GetName();
+	int NCounter();
+	const char* GetNameOfCounter(int id);
+	std::string PrintAll();
+	std::string Print(std::string name);
+	std::string Print(int id);
+	void SetUnit(double u);
+	double GetUnit();
+	double Time(int id);
+	double Time(const char* name);
+	UTLongLong& Count(const char* name);
+	UTLongLong& Count(int id);
+	int GetId(std::string name);
+	int FindId(std::string name);
+	int CreateId(std::string name);
+	void ClearCounts();
 };
 
 }	//	namespace Spr

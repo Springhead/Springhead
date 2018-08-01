@@ -218,7 +218,7 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 //----------------------------------------------------------------------------
 // PHConstraintEngine
 
-PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasure* pm):
+PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasureIf* pm):
 	timeCollision(pm->Count("collision")), 
 	timeSetup(pm->Count("setup")),
 	timeIterate(pm->Count("iterate"))

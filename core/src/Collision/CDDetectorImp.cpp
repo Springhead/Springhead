@@ -16,9 +16,9 @@ const double epsilon = 1e-16;
 const double epsilon2 = epsilon*epsilon;
 
 UTQPTimer qpTimerForCollision;
-UTLongLong& coltimePhase1 = UTPerformanceMeasure::GetInstance("Collision")->Count("P1");
-UTLongLong& coltimePhase2 = UTPerformanceMeasure::GetInstance("Collision")->Count("P2");
-UTLongLong& coltimePhase3 = UTPerformanceMeasure::GetInstance("Collision")->Count("P3");
+UTLongLong& coltimePhase1 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P1");
+UTLongLong& coltimePhase2 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P2");
+UTLongLong& coltimePhase3 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P3");
 bool bUseContactVolume = true;
 
 int s_methodSW = 0;			//	0=通常,1=加速,2=Gino

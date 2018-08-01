@@ -31,6 +31,8 @@ struct GRDeviceIf;
 class FWAppBase : public UTRefCount, public DVKeyMouseCallback {
 protected:
 	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
+	typedef std::vector< UTRef<UTTimerIf> > Timers;
+	Timers timers;							///< Timers to call periodic processing
 public:
 	FWAppBase();
 	virtual ~FWAppBase();
@@ -68,11 +70,6 @@ public:
 	*/
 	void		CreateSdk();
 
-	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// タイマー
-
-	typedef std::vector< UTRef<UTTimerIf> > Timers;
-	Timers timers;
 
 	/** @brief タイマーを作成する
 	@param	mode	タイマの種類

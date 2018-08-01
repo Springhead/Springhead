@@ -591,7 +591,7 @@ public:
 
 	/** @brief 計算時間の計測結果を取得する。
 	*/
-	UTPerformanceMeasure* GetPerformanceMeasure();
+	UTPerformanceMeasureIf* GetPerformanceMeasure();
 };
 
 //@}

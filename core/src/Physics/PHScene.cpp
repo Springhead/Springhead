@@ -57,7 +57,7 @@ PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 void PHScene::Init(){
 	engines.scene = this;
 	Scene::Clear();
-	performanceMeasure = UTPerformanceMeasure::Create("PHScene");
+	performanceMeasure = UTPerformanceMeasureIf::CreateInstance("PHScene");
 
 	// エンジン作成
 	solids = DBG_NEW PHSolidContainer;

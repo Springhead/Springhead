@@ -146,7 +146,7 @@ public:
 		PHSceneDesc pd;
 		GetPHScene()->GetDesc(&pd);
 		pd.timeStep = 1.0 / 60;
-		pd.contactTolerance = 0.001 * 0.2;
+		pd.contactTolerance = 0.001 * 0.4;
 		pd.airResistanceRateForAngularVelocity = 0.98;
 		GetPHScene()->SetDesc(&pd);
 		PHConstraintEngineDesc ed;
@@ -160,7 +160,7 @@ public:
 		GetFWScene()->EnableRenderContact(false);
 		GetFWScene()->SetRenderMode();
 
-#if SMALLACCEL
+#if 0
 		GetPHScene()->SetGravity(Vec3d(0, -9.8, 0) * 0.1);
 #endif
 	}
@@ -227,18 +227,26 @@ public:
 			}
 		
 		}
+		for(int i=0; i<UTPerformanceMeasureIf::NInstance(); ++i){
+			UTPerformanceMeasureIf* m = UTPerformanceMeasureIf::GetInstance(i);
+			DSTR << m->GetName();
+			for (int j = 0; j < m->NCounter(); ++j) {
+				DSTR << " " << m->GetNameOfCounter(j) << ":" << m->Time(j);
+			}
+			DSTR << std::endl;
+		}
 
 		//時間表示
-		UTPerformanceMeasure* me = GetPHScene()->GetPerformanceMeasure();
-		avePool += me->Time("collision");
-		me->ClearCounts();
-		UTPerformanceMeasure* meC = UTPerformanceMeasure::Get("Collision");
-		aveNarrow += meC->Time("narrow");
-		aveBroad += meC->Time("broad");
-		avePhaseTime[0] += meC->Time("P1");
-		avePhaseTime[1] += meC->Time("P2"); 
-		avePhaseTime[2] += meC->Time("P3"); 
-		meC->ClearCounts();
+		UTPerformanceMeasureIf* meScene = GetPHScene()->GetPerformanceMeasure();
+		avePool += meScene->Time("collision");
+		meScene->ClearCounts();
+		UTPerformanceMeasureIf* meCol = UTPerformanceMeasureIf::GetInstance("Collision");
+		aveNarrow += meCol->Time("narrow");
+		aveBroad += meCol->Time("broad");
+		avePhaseTime[0] += meCol->Time("P1");
+		avePhaseTime[1] += meCol->Time("P2"); 
+		avePhaseTime[2] += meCol->Time("P3"); 
+		meCol->ClearCounts();
 		aveCounter++;
 		if (aveCounter > 0) {
 			message = ftos(fps) + "FPS  "
