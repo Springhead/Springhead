@@ -70,12 +70,13 @@ public:
 	*/
 	void		CreateSdk();
 
-
+#if (!defined(SWIG_PY_SPR) && !defined(SWIG_CS_SPR))
 	/** @brief タイマーを作成する
 	@param	mode	タイマの種類
 	@return			タイマオブジェクト
 	*/
 	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
+#endif
 
 	/** @breif タイマーを取得する
 	@param タイマー番号
