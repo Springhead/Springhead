@@ -23,7 +23,7 @@ rem for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUD
 
 :swig
 echo Swig Part
-call swig.exe -cpperraswarn -sprpy -c++ %MODULE%.i & if errorlevel 1 echo !!!!SWIG FAILED!!!!! & @pause
+call swig.exe -cpperraswarn -sprpy -DSWIG_PY_SPR -c++ %MODULE%.i & if errorlevel 1 echo !!!!SWIG FAILED!!!!! & @pause
 
 :astyle
 echo AStyle Part
