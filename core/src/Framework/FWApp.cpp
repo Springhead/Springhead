@@ -78,6 +78,8 @@ FWApp* FWApp::instance = 0;
 UTRef<FWGraphicsHandler> FWGraphicsHandler::instance = 0;
 
 FWApp::FWApp(){
+	bThread = false;
+	bPostRedisplay = false;
 	instance = this;
 }
 
@@ -113,6 +115,57 @@ void FWApp::Init(int argc, char* argv[]){
 	CreateTimer();
 }
 
+//---------------------------------------------------------
+//	Create new thead, init and start the framework.
+//	thread function
+class FWAppThreadCall {
+public:
+	static DWORD WINAPI MainLoop(void* arg) {
+		FWApp* app = (FWApp*)arg;
+		app->StartInThread();
+		return 0;
+	}
+	static void SPR_CDECL RedisplayCheck(int id, void* arg) {
+		FWApp* app = (FWApp*)arg;
+		app->CheckAndPostRedisplay();
+	}
+};
+void FWApp::InitInNewThread() {
+	unsigned long thread;
+#ifdef _WIN32
+	CreateThread(NULL, 0, FWAppThreadCall::MainLoop, this, 0, &thread);
+#else
+#warning Please implement thread creation for other platform 
+#endif
+}
+
+void FWApp::CheckAndPostRedisplay() {
+	if (bThread && bPostRedisplay) {
+		bPostRedisplay = false;
+		FWGraphicsHandler::instance->PostRedisplay();
+	}
+}
+void FWApp::StartInThread() {
+	bThread = true;
+	// SDK初期化
+	CreateSdk();
+	// シーンを作成
+	GetSdk()->CreateScene();
+	// ウィンドウマネジャ初期化
+	GRInit(0, NULL);
+	EnableIdleFunc(false);
+	// ウィンドウを作成
+	FWWinDesc wd;
+	wd.title = "FWApp::StartInThread";
+	CreateWin();
+
+	UTTimerIf* grTimer = CreateTimer(UTTimerIf::FRAMEWORK);
+	grTimer->SetCallback(FWAppThreadCall::RedisplayCheck, this);
+	grTimer->SetInterval(20);
+	grTimer->Start();
+	FWGraphicsHandler::instance->StartMainLoop();
+}
+
 void FWApp::Display(){
 	GetCurrentWin()->Display();
 }
@@ -126,7 +179,7 @@ void FWApp::TimerFunc(int id){
 void FWApp::EnableIdleFunc(bool on){
 	FWGraphicsHandler::instance->EnableIdleFunc(on);
 }
-void FWApp::StartMainLoop(){
+void FWApp::StartMainLoop() {
 	FWGraphicsHandler::instance->StartMainLoop();
 }
 
@@ -246,7 +299,12 @@ void FWApp::SetCurrentWin(FWWinIf* win){
 }
 
 void FWApp::PostRedisplay(){
-	FWGraphicsHandler::instance->PostRedisplay();
+	if (bThread){
+		bPostRedisplay = true;
+	}
+	else {
+		FWGraphicsHandler::instance->PostRedisplay();
+	}
 }
 
 int FWApp::GetModifier(){
