@@ -29,6 +29,19 @@ class CRBone : public SceneObject, public CRBoneDesc {
 	PHIKActuatorIf*		actuator;
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// Boneの親子関係
+
+	CRBoneIf* parent;
+	std::vector<CRBoneIf*> children;
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// 内部変数
+
+	// バネダンパの初期値
+	double initialSpring = 0.0f;
+	double initialDamper = 0.0f;
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 	void InitVars() {
 		solid		= NULL;
@@ -85,18 +98,39 @@ public:
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+	/** @brief 親ボーンを設定する
+	*/
+	void SetParentBone(CRBoneIf* parent) { this->parent = parent; }
+
 	/** @brief 親ボーンを返す
 	 */
-	CRBoneIf* GetParentBone();
+	CRBoneIf* GetParentBone() { return parent; }
 
-	/** @brief 子ボーンのリスト
+	/** @brief 子ボーン数を返す
 	 */
-	int       NChildBones();
-	CRBoneIf* GetChildBone(int number);
+	int       NChildBones() { 
+		return children.size();
+	}
+
+	/** @brief 子ボーンを返す
+	*/
+	CRBoneIf* GetChildBone(int number) {
+		if (number >= 0 && number < children.size()) {
+			return children[number];
+		} else {
+			return NULL;
+		}
+	}
+
+	/** @brief 子ボーンを追加する
+	*/
+	void AddChildBone(CRBoneIf* child) {
+		children.push_back(child);
+	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-	/** @brief 子要素の扱い
+	/** @brief Springheadのシーンツリーにおける子要素の扱い
 	*/
 	virtual size_t NChildObject() const {
 		return( ((solid==NULL)?0:1) + ((joint==NULL)?0:1) + ((endeffector==NULL)?0:1) + ((actuator==NULL)?0:1) );
@@ -127,6 +161,25 @@ public:
 		if (o==actuator)	{ actuator		= NULL; return true; }
 		return false;
 	}
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+	/** @brief バネダンパの初期値を関節から取得して保存する
+	*/
+	void ReadInitialSpringDamperFromJoint() {
+		PHHingeJointIf* hj = joint->Cast();
+		if (hj) {
+			initialSpring = hj->GetSpring();
+			initialDamper = hj->GetDamper();
+		}
+
+		PHBallJointIf* bj = joint->Cast();
+		if (bj) {
+			initialSpring = bj->GetSpring();
+			initialDamper = bj->GetDamper();
+		}
+	}
+
 };
 
 }

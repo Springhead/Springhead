@@ -63,14 +63,26 @@ struct CRBoneIf : SceneObjectIf {
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
+	/** @brief 親ボーンを設定する
+	*/
+	void SetParentBone(CRBoneIf* parent);
+
 	/** @brief 親ボーンを返す
-	 */
+	*/
 	CRBoneIf* GetParentBone();
 
 	/** @brief 子ボーンのリスト
-	 */
+	*/
 	int       NChildBones();
 	CRBoneIf* GetChildBone(int number);
+	void      AddChildBone(CRBoneIf* child);
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+	/** @brief バネダンパの初期値を関節から取得して保存する
+	*/
+	void ReadInitialSpringDamperFromJoint();
+
 };
 
 struct CRBoneDesc {

@@ -25,6 +25,7 @@ public:
 };
 
 class SPR_DLL CRSdk : public Sdk {
+
 protected:
 	///	クリーチャ
 	typedef std::vector< UTRef<CRCreatureIf> > CRCreatures;
@@ -34,6 +35,9 @@ public:
 	SPR_OBJECTDEF(CRSdk);
 	CRSdk();
 	~CRSdk();
+
+	// CRSdkのインスタンス。CRSdkIf::GetSdk用
+	static CRSdkIf* crSdkInstance;
 
 	/** @brief クリーチャを一体作成する
 	 */
