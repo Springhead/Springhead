@@ -70,12 +70,13 @@ public:
 	*/
 	void		CreateSdk();
 
-
+#if (!defined(SWIG_PY_SPR) && !defined(SWIG_CS_SPR))
 	/** @brief タイマーを作成する
 	@param	mode	タイマの種類
 	@return			タイマオブジェクト
 	*/
 	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
+#endif
 
 	/** @breif タイマーを取得する
 	@param タイマー番号
@@ -94,8 +95,6 @@ public:
  */
 class FWApp : public FWAppBase {
 protected:
-	bool bThread;					///<	GLUTを別スレッドで動かす場合 true
-	volatile bool bPostRedisplay;	///<	別スレッドに再描画の要求をするためのフラグ true で再描画
 	static FWApp* instance; ///< 唯一のFWAppインスタンス
 	
 	// ウィンドウ
@@ -108,10 +107,6 @@ protected:
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
 	void AssignScene(FWWinIf* win);
-	///	Initialize in new thead
-	void StartInThread();
-	friend class FWAppThreadCall;
-	void CheckAndPostRedisplay();
 
 public:
 	FWApp();
@@ -124,8 +119,6 @@ public:
 	 */
 	virtual void Init(); // C# API用. （引数を持つInitのみを%ignoreしたいので）
 	virtual void Init(int argc, char* argv[] = NULL);
-	///	Create new thead and start.
-	void InitInNewThread();
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．

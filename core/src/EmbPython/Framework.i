@@ -18,12 +18,13 @@
 %ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6D��API�w�b�_�Œ��`�����Ă��Ȃ�
 %ignore Spr::FWSceneIf::CreateOpHapticHandler;
 %ignore Spr::FWSceneIf::GetOpHapticHandler;
-%ignore Spr::FWAppBase::CreateTimer;
+
 %extend Spr::FWAppBase{
 	Spr::UTTimerIf* CreateTimer(int mode){
 		ret_tmp = c_self->CreateTimer((Spr::UTTimerIf::Mode)c_param1);
 	}
 }
+
 %ignore Spr::FWApp::GRInit(int argc, char* argv[], int type);
 %ignore Spr::FWApp::GRInit(int argc, char* argv[]);
 %ignore Spr::FWApp::GRInit(int argc);
