@@ -71,6 +71,7 @@
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
 #	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.02 2018/04/19 F.Kanehori	Refine status check.
+#	Ver 1.03 2018/07/23 F.Kanehori	Change comment.
 # ======================================================================
 import sys
 import os
@@ -321,7 +322,7 @@ class TestResult:
 	#
 	def __edit_log_data(self, lines, name, succs, fails):
 		# arguments:
-		#   lines:	Edit result log data lines ([str]).
+		#   lines:	List to be appended edit lines ([str]).
 		#   name:	Test module name (str).
 		#   succs:	List of success module names ([str]).
 		#   fails:	List of failure module names ([str]).
