@@ -40,15 +40,10 @@
     <ClCompile Include="CRTouchSensor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="CRTrajectoryController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="CRVisualSensor.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="CRMinimumJerkTrajectory.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="CRMotionController.cpp" />
-    <ClCompile Include="CRMotionPlanner.cpp" />
-    <ClCompile Include="CRTrajectoryPlanner.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,19 +111,13 @@
     <ClInclude Include="CRTouchSensor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="CRTrajectoryController.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="CRVisualSensor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="CRMinimumJerkTrajectory.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Creature\SprCRTimeSeries.h" />
-    <ClInclude Include="CRMotionController.h" />
-    <ClInclude Include="CRMotionPlanner.h" />
-    <ClInclude Include="CRTrajectoryPlanner.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Creature\SprCRTrajectoryPlanner.h">
+    <ClInclude Include="..\..\include\Creature\SprCRTimeSeries.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

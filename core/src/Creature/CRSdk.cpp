@@ -17,8 +17,6 @@
 #include <Creature/CRReachController.h>
 #include <Creature/CRGrabController.h>
 
-#include <Creature/CRTrajectoryPlanner.h>
-
 using namespace std;
 
 namespace Spr{;
@@ -39,7 +37,6 @@ void SPR_CDECL CRSdkIf::RegisterSdk(){
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRVisualSensor));
 
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRReachController));
-	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRTrajectoryPlanner));
 
 	// 使っているのだろうか？ <!!>
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRGazeController));

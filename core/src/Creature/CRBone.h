@@ -109,13 +109,13 @@ public:
 	/** @brief 子ボーン数を返す
 	 */
 	int       NChildBones() { 
-		return (int) children.size();
+		return children.size();
 	}
 
 	/** @brief 子ボーンを返す
 	*/
 	CRBoneIf* GetChildBone(int number) {
-		if (number >= 0 && number < (int) children.size()) {
+		if (number >= 0 && number < children.size()) {
 			return children[number];
 		} else {
 			return NULL;

@@ -392,14 +392,11 @@
     <ClCompile Include="CREngine.cpp" />
     <ClCompile Include="CRGazeController.cpp" />
     <ClCompile Include="CRGrabController.cpp" />
-    <ClCompile Include="CRMinimumJerkTrajectory.cpp" />
-    <ClCompile Include="CRMotionController.cpp" />
-    <ClCompile Include="CRMotionPlanner.cpp" />
     <ClCompile Include="CRReachController.cpp" />
     <ClCompile Include="CRRegisterTypeDesc.cpp" />
     <ClCompile Include="CRSdk.cpp" />
     <ClCompile Include="CRTouchSensor.cpp" />
-    <ClCompile Include="CRTrajectoryPlanner.cpp" />
+    <ClCompile Include="CRTrajectoryController.cpp" />
     <ClCompile Include="CRVisualSensor.cpp" />
     <ClCompile Include="CRBodyGenerator\CRBallHumanBodyGen.cpp" />
     <ClCompile Include="CRBodyGenerator\CRBodyGen.cpp" />
@@ -408,20 +405,16 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\Creature\SprCRReachController.h" />
     <ClInclude Include="..\..\include\Creature\SprCRTimeSeries.h" />
-    <ClInclude Include="..\..\include\Creature\SprCRTrajectoryPlanner.h" />
     <ClInclude Include="CRBody.h" />
     <ClInclude Include="CRBone.h" />
     <ClInclude Include="CRCreature.h" />
     <ClInclude Include="CREngine.h" />
     <ClInclude Include="CRGazeController.h" />
     <ClInclude Include="CRGrabController.h" />
-    <ClInclude Include="CRMinimumJerkTrajectory.h" />
-    <ClInclude Include="CRMotionController.h" />
-    <ClInclude Include="CRMotionPlanner.h" />
     <ClInclude Include="CRReachController.h" />
     <ClInclude Include="CRSdk.h" />
     <ClInclude Include="CRTouchSensor.h" />
-    <ClInclude Include="CRTrajectoryPlanner.h" />
+    <ClInclude Include="CRTrajectoryController.h" />
     <ClInclude Include="CRVisualSensor.h" />
     <ClInclude Include="CRBodyGenerator\CRBallHumanBodyGen.h" />
     <ClInclude Include="CRBodyGenerator\CRBodyGen.h" />
