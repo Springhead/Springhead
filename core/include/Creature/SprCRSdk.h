@@ -22,8 +22,12 @@ struct CRSdkIf : SdkIf {
 	SPR_IFDEF(CRSdk);
 
 	/** @brief SDKオブジェクトを作成する
-	 */
+	*/
 	static CRSdkIf* SPR_CDECL CreateSdk();
+
+	/** @brief SDKオブジェクトを取得する（未作成なら作成し、作成済みならそれを返す）
+	 */
+	static CRSdkIf* SPR_CDECL GetSdk();
 
 	/** @brief クリーチャを一体作成する
 	 */

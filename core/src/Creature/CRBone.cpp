@@ -16,6 +16,7 @@ namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+/*
 CRBoneIf* CRBone::GetParentBone() {
 	if (actuator) {
 		PHIKActuatorIf* paAct = actuator->GetParent();
@@ -66,6 +67,7 @@ CRBoneIf* CRBone::GetChildBone(int number) {
 	}
 	return NULL;
 }
+*/
 
 #if 0
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

@@ -49,6 +49,14 @@ CRSdkIf* SPR_CDECL CRSdkIf::CreateSdk() {
 	return rv->Cast();
 }
 
+CRSdkIf* CRSdk::crSdkInstance = NULL;
+CRSdkIf* SPR_CDECL CRSdkIf::GetSdk() {
+	if (CRSdk::crSdkInstance == NULL) {
+		CRSdk::crSdkInstance = CreateSdk();
+	}
+	return CRSdk::crSdkInstance;
+}
+
 //----------------------------------------------------------------------------
 //	CRSdk
 
