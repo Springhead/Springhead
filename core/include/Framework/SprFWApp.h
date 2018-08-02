@@ -93,6 +93,8 @@ public:
 	仮想関数をオーバライドすることによって独自機能を実装する．
  */
 class FWApp : public FWAppBase {
+	bool bThread;
+	bool bPostRedisplay;
 protected:
 	static FWApp* instance; ///< 唯一のFWAppインスタンス
 	
@@ -106,6 +108,10 @@ protected:
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
 	void AssignScene(FWWinIf* win);
+	///	Initialize in new thead
+	void StartInThread();
+	friend class FWAppThreadCall;
+	void CheckAndPostRedisplay();
 
 public:
 	FWApp();
@@ -118,6 +124,8 @@ public:
 	 */
 	virtual void Init(); // C# API用. （引数を持つInitのみを%ignoreしたいので）
 	virtual void Init(int argc, char* argv[] = NULL);
+	///	Create new thead and start.
+	void InitInNewThread();
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
