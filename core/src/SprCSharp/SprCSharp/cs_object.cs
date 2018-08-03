@@ -27,7 +27,7 @@ namespace SprCs {
             return this == (CsObject)obj;
         }
         public override int GetHashCode() {
-            return this.GetHashCode();
+            return _this.GetHashCode();
         }
     }
 
