@@ -46,6 +46,12 @@
     <ClCompile Include="CRVisualSensor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="CRMinimumJerkTrajectory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRMinimumTorqueChangePlanner.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Creature\SprCRBody.h">
@@ -117,7 +123,16 @@
     <ClInclude Include="CRVisualSensor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Creature\SprCRTimeSeries.h">
+    <ClInclude Include="CRMinimumJerkTrajectory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRMinimumTorqueChangePlanner.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="SprCRMinimumTorqueChangePlanner.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="SprCRMinimumJerkTrajectory.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
