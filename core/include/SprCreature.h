@@ -28,6 +28,7 @@
 // コントローラ
 #include "Creature/SprCRController.h"
 #include "Creature/SprCRReachController.h"
+#include "Creature/SprCRMinimumTorqueChangePlanner.h"
 
 // センサ　（１ファイルに統合予定） <!!>
 #include "Creature/SprCRTouchSensor.h"

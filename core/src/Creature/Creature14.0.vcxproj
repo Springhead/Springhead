@@ -392,6 +392,8 @@
     <ClCompile Include="CREngine.cpp" />
     <ClCompile Include="CRGazeController.cpp" />
     <ClCompile Include="CRGrabController.cpp" />
+    <ClCompile Include="CRMinimumJerkTrajectory.cpp" />
+    <ClCompile Include="CRMinimumTorqueChangePlanner.cpp" />
     <ClCompile Include="CRReachController.cpp" />
     <ClCompile Include="CRRegisterTypeDesc.cpp" />
     <ClCompile Include="CRSdk.cpp" />
@@ -411,6 +413,8 @@
     <ClInclude Include="CREngine.h" />
     <ClInclude Include="CRGazeController.h" />
     <ClInclude Include="CRGrabController.h" />
+    <ClInclude Include="CRMinimumJerkTrajectory.h" />
+    <ClInclude Include="CRMinimumTorqueChangePlanner.h" />
     <ClInclude Include="CRReachController.h" />
     <ClInclude Include="CRSdk.h" />
     <ClInclude Include="CRTouchSensor.h" />
@@ -427,6 +431,8 @@
     <ClInclude Include="..\..\include\Creature\SprCREngine.h" />
     <ClInclude Include="..\..\include\Creature\SprCRTouchSensor.h" />
     <ClInclude Include="..\..\include\Creature\SprCRVisualSensor.h" />
+    <ClInclude Include="SprCRMinimumJerkTrajectory.h" />
+    <ClInclude Include="SprCRMinimumTorqueChangePlanner.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Foundation\Foundation14.0.vcxproj">
