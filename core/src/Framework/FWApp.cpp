@@ -19,6 +19,10 @@
 #pragma hdrstop
 #endif
 
+#ifdef _WIN32
+# include <windows.h>
+#endif
+
 #ifdef	__linux__
   #define DWORD unsigned long
   #define WINAPI
