@@ -449,7 +449,7 @@ class Traverse:
 		else:
 			outdir = '.'
 		default_name = slnfile
-		if Uteil.is_unix():
+		if Util.is_unix():
 			default_name = os.getcwd().split(os.sep)[-1]
 		binary = ctl.get(CFK.BINARY_OUT, default=default_name)
 		binary = binary.replace('.sln', '')
