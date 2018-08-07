@@ -44,6 +44,7 @@
 #	Ver 1.11 2018/03/28 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.12 2018/04/19 F.Kanehori	Special trap introduced.
 #	Ver 1.13 2018/05/24 F.Kanehori	Add some comments.
+#	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
 # ======================================================================
 import sys
 import os
@@ -76,7 +77,7 @@ class Traverse:
 			timeout, report=True, audit=False,
 			dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.1
+		self.version = 1.2
 		#
 		self.testid = testid
 		self.result = result
@@ -264,8 +265,6 @@ class Traverse:
 				self.__report(None, 'run', False)
 				#
 				addpath = self.__runtime_addpath(ctl, platform)
-				if Util.is_unix():
-					outpath = slnfile
 				stat = bar.run(None,
 						outpath,
 						'',	# no args
