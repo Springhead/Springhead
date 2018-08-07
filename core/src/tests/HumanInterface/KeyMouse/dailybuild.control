@@ -29,9 +29,6 @@ Timeout		1	# time out value in sec
 #[Windows]
 
 [unix]
-#SolutionAlias	Makefile
 Build		True
-#OutputDir	.
-#BinaryOutName	a.out
 Run		True
 

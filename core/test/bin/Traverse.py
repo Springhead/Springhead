@@ -449,7 +449,10 @@ class Traverse:
 			outdir = outdir.replace('x86', 'Win32')
 		else:
 			outdir = '.'
-		binary = ctl.get(CFK.BINARY_OUT, default=slnfile)
+		default_name = slnfile
+		if Uteil.is_unix():
+			default_name = os.getcwd().split(os.sep)[-1]
+		binary = ctl.get(CFK.BINARY_OUT, default=default_name)
 		binary = binary.replace('.sln', '')
 		binary = binary.replace(self.toolset, '')
 		outpath = '%s/%s' % (os.path.abspath(outdir), binary)

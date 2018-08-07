@@ -37,7 +37,6 @@ Build		False
 BuildLog	$(SprTest)/log/tests.build.log
 BuildErrLog	$(SprTest)/log/tests.build.error.log
 OutputDir	.
-BinaryOutName	a.out
 Run		False
 RunLog		$(SprTest)/log/tests.run.log
 RunErrLog	$(SprTest)/log/tests.run.error.log

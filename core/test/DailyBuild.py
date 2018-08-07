@@ -19,7 +19,7 @@
 #	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
 #	Ver 1.51 2018/08/02 F.Kanehori	Bug fixed.
 # ======================================================================
-version = 1.22
+version = 1.51
 
 import sys
 import os

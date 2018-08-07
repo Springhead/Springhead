@@ -64,6 +64,7 @@
 #	Ver 1.11 2018/03/26 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.12 2018/04/05 F.Kanehori	Bug fixed (shell param at run).
 #	Ver 1.13 2018/04/12 F.Kanehori	Bug fixed (encodinig check).
+#	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
 # ======================================================================
 import sys
 import os
@@ -91,7 +92,7 @@ class BuildAndRun:
 	#
 	def __init__(self, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.1
+		self.version = 1.2
 		#
 		self.ccver = ccver
 		self.dry_run = dry_run
@@ -196,10 +197,6 @@ class BuildAndRun:
 		# prepare log file (append mode).
 		logf = self.__open_log(logfile, 'a', RST.RUN)
 		errlogf = self.__open_log(errlogfile, 'a', RST.RUN)
-
-		# add target to Makefile.
-		if Util.is_unix():
-			exefile = 'make -f %s test' % exefile
 
 		# execute program.
 		shell= True if Util.is_unix() else False
