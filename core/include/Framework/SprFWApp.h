@@ -95,8 +95,10 @@ public:
  */
 class FWApp : public FWAppBase {
 protected:
-	static FWApp* instance; ///< 唯一のFWAppインスタンス
-	
+	static FWApp* instance;			///<	唯一のFWAppインスタンス
+	bool bThread;					///<	GLUTを別スレッドで動かす場合 true
+	volatile bool bPostRedisplay;	///<	別スレッドに再描画の要求をするためのフラグ true で再描画
+
 	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
 	Wins wins;
@@ -107,6 +109,10 @@ protected:
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
 	void AssignScene(FWWinIf* win);
+	///	Initialize in new thead
+	void StartInThread();
+	friend class FWAppThreadCall;
+	void CheckAndPostRedisplay();
 
 public:
 	FWApp();
@@ -119,6 +125,8 @@ public:
 	 */
 	virtual void Init(); // C# API用. （引数を持つInitのみを%ignoreしたいので）
 	virtual void Init(int argc, char* argv[] = NULL);
+	///	Create new thead and start.
+	void InitInNewThread();
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
