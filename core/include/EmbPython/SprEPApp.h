@@ -210,6 +210,14 @@ public:
 		}
 	}
 
+	virtual void Display(){
+		if (bThread) {
+			UTAutoLock LOCK(EPCriticalSection);
+			GetCurrentWin()->Display();
+		}else{
+			GetCurrentWin()->Display();
+		}
+	}
 	void TimerFunc(int id) {
 		if (! bPhysicsEnabled) { return; }
 
