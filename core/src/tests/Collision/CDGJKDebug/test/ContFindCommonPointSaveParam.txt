@@ -1,0 +1,16 @@
+box
+0.4 0.3 0.5
+(  1000      1   1000)
+cap
+0.4 0.3 0.5
+0.046
+0.3
+ 0 0 0 0 0 0 f0 3f 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 a d7 a3 70 3d a ef bf 0 0 0 0 0 0 0 0
+ 2d b2 7 8e 38 22 e5 3f 5 5 3c 2 79 2b d0 bf f ca 1f 93 24 22 e5 3f 52 18 5b 60 2 2c d0 3f 4 e1 8d 2b 99 42 d7 bf 7 ae 94 22 62 ba d4 bf cc c6 b4 f8 fa 2e c2 be
+ d7 7e 16 16 5c b9 eb bf b2 db cb 61 3e 8b d3 bf 8f 21 8e 66 5 4a d9 3f
+ 0 0 0 0 0 0 0 0
+ 1b 2d d1 da 3f 2 d7 3e
+ 0 0 0 0 80 9e 52 bd 0 0 0 0 0 0 f0 3f 0 0 0 0 b0 d7 a4 bd
+ 0 10 5b 19 9b 68 de bf 0 0 0 0 0 0 e0 3f 0 0 0 e8 5e ec d5 be
+ d0 2 bb c6 22 b1 be be e6 29 b1 58 a3 89 a1 bf da c4 1c 89 4c 21 c7 bf
+ 88 22 75 53 0 0 0 0
