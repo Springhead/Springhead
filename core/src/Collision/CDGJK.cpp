@@ -24,13 +24,13 @@
 #include <Physics/SprPHSdk.h>
 #include <Physics/SprPHEngine.h>
 #include <fstream>
+#include <iomanip>
 
 #include <string.h>  // strcmp
 
 
 namespace Spr{
 bool bGJKDebug;
-
 
 void SaveMaterial(std::ostream& file, PHMaterial& m){
 	file << m.e << " ";
@@ -131,21 +131,52 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
 	return rv;
 }
 
+template <class T>
+void LoadP(std::istream& is, T& t) {
+	unsigned char* p = (unsigned char*)&t;
+	unsigned int d;
+	for (int i = 0; i < sizeof(t); ++i) {
+		is >> std::setbase(16) >> d;
+		p[i]=d;
+	}
+}
+template <class T>
+void SaveP(std::ostream& os, const T& t) {
+	const unsigned char* p = (const unsigned char*)&t;
+	for (int i = 0; i < sizeof(t); ++i) {
+		os << " " << std::setbase(16) << (unsigned int)p[i];
+	}
+	os << std::endl;
+}
+
+/**	ConfFindPointのデバッグのため、引数をファイルに保存する関数。ループを抜けないなどの場合にパラメータを保存する。
+	doubleを10進に変換すると再現しないので、バイナリを１６進数で保存するように変更。
+	ShapeDescは小数点のままなので、ShapeDescに10進数で桁数が多くなる数を書くと再現しない。	2018.08.16
+*/
 void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
-	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
-	std::ofstream file("ContFindCommonPointSaveParam.txt");
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist, const char* exName){
+	std::string base = std::string("ContFindCommonPointSaveParam") + exName;
+	std::ofstream file;
+	for (int i = 0;; ++i) {
+		std::string fname = base + std::to_string(i) + ".txt";
+		std::ifstream ifs(fname);
+		if (!ifs.is_open()) {
+			file.open(fname);
+			break;
+		}
+	}
 	SaveShape(file, (CDConvex*)a);
 	SaveShape(file, (CDConvex*)b);
-	file << a2w << std::endl;
-	file << b2w << std::endl;
-	file << dir << std::endl;
-	file << start << std::endl;
-	file << end << std::endl;
-	file << normal << std::endl;
-	file << pa << std::endl;
-	file << pb << std::endl;
-	file << dist << std::endl;
+	SaveP(file, a2w);
+	SaveP(file, b2w);
+	SaveP(file, dir);
+	SaveP(file, start);
+	SaveP(file, end);
+	SaveP(file, normal);
+	SaveP(file, pa);
+	SaveP(file, pb);
+	SaveP(file, dist);
 }
 void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
 	bGJKDebug = true;
@@ -156,15 +187,15 @@ void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
 	double dist, start, end;
 	a = LoadShape(file, sdk);
 	b = LoadShape(file, sdk);
-	file >> a2w;
-	file >> b2w;
-	file >> dir;
-	file >> start;
-	file >> end;
-	file >> normal;
-	file >> pa;
-	file >> pb;
-	file >> dist;
+	LoadP(file, a2w);
+	LoadP(file, b2w);
+	LoadP(file, dir);
+	LoadP(file, start);
+	LoadP(file, end);
+	LoadP(file, normal);
+	LoadP(file, pa);
+	LoadP(file, pb);
+	LoadP(file, dist);
 
 	Vec3f capdir = b2w.Ori() * Vec3f(0,0,1);
 	DSTR << "dir of capsule = " << capdir << std::endl;
@@ -276,20 +307,22 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 
 
 int contFindCommonPoint3DRefinementCount;
+
+/**	並進のみの連続時間衝突判定のアルゴリズム
+*/
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	qpTimerForCollision.Count();
 
 	nSupport = 0;
-	//	range が+Zになるような座標系を求める．
-	Quaterniond w2z;
+	Quaterniond w2z;	//	range が+Zになるような座標系
 	Vec3d u = -dir;	//	u: 物体ではなく原点の速度の向きなので - がつく．
 	if (u.Z() < -1+epsilon){
 		w2z = Quaterniond::Rot(Rad(180), 'x');
-	}else if (u.Z() < 1-epsilon){
+	}else if (u.Z() < 1-epsilon){	//	TODO:直接Quaternionを求めるべき
 		Matrix3d matW2z = Matrix3d::Rot(u, Vec3f(0,0,1), 'z');
-		w2z.FromMatrix(matW2z);
+		w2z.FromMatrix(matW2z);		
 		w2z = w2z.Inv();
 	}
 	Posed a2z;
@@ -298,9 +331,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	Posed b2z;
 	b2z.Ori() = w2z * b2w.Ori();
 	b2z.Pos() = w2z * b2w.Pos();
-
 	
-	//	GJKと似た方法で，交点を求める
+	//	GJKと似た方法で，原点とCSO(Configuration Space Obstacle)の交点を求める
 	//	まず、2次元で見たときに、原点が含まれるような三角形または線分を作る
 	//	w0を求める
 	v[0] = Vec3d(0,0,1);
@@ -346,23 +378,47 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	ids[0] = 1;	//	新しい頂点
 	ids[1] = 0;	//	もとの線分
 	ids[2] = 0;	//	もとの線分
+	int count = 0;
 	while(1){
-		double s;
+		count++;
+		if (count > 1000) {
+			DSTR << "Too many loop in 2D tri search of CCDGJK." << std::endl;
+			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "2DS");
+			bGJKDebug = true;
+		}
+#ifdef _DEBUG
+		if (bGJKDebug) {
+			DSTR << "ids:";
+			for (int i = 0; i < 3; ++i) {
+				DSTR << ids[i];
+			}
+			DSTR << " w:" << std::endl;
+			for (int i = 0; i < 4; ++i) {
+				for (int j = 0; j < 2; ++j) {
+					DSTR << "\t" << w[i % 3][j];
+				}
+				DSTR << std::endl;
+			}
+		}
+#endif
 		Vec3d vNew;
-		if ((s = w[(int)ids[0]].XY() ^ w[(int)ids[1]].XY()) > epsilon){
-			//	点Oが、線分1-0から、三角形の外にはみ出している場合  
-			//		... epsilon=1e-8だと無限ループ，1e-7でも稀に無限ループ
+		double s1, s2, s;
+		s1 = w[(int)ids[0]].XY() ^ w[(int)ids[1]].XY();
+		s2 = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY();
+		if (s1 >= s2 && s1 > epsilon) {	//	両方から見て外にある場合、より大きい方を取る。小さい方を使うと、スレスレの場合に無限ループに陥る場合がある。epsilon = 1e-12. 2018.08.16 hase 
+			s = s1;
 			//	1-0の法線の向きvNewでsupport pointを探し、新しい三角形にする。
 			Vec2d l = w[(int)ids[1]].XY() - w[(int)ids[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
-			double ll_inv = 1/l.square();
+			double ll_inv = 1 / l.square();
 			vNew.XY() = (w[(int)ids[1]].XY()*l*ll_inv) * w[(int)ids[0]].XY()
-				   - (w[(int)ids[0]].XY()*l*ll_inv) * w[(int)ids[1]].XY();
+				- (w[(int)ids[0]].XY()*l*ll_inv) * w[(int)ids[1]].XY();
 			vNew.Z() = 0;
 			ids[2] = ids[0];
 			ids[0] = FindVacantId(ids[1], ids[2]);
-		}else if ((s = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY()) > epsilon){
-			//	点Oが、線分2-0から、三角形の外にはみ出している場合
+			//		}else if ((s = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY()) > epsilon){
+		} else if (s2 > epsilon) {
+			s = s2;
 			//	2-0の法線の向きvでsupport pointを探し、新しい三角形にする。
 			Vec2d l = w[(int)ids[2]].XY() - w[(int)ids[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
@@ -372,7 +428,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			vNew.Z() = 0;
 			ids[1] = ids[0];
 			ids[0] = FindVacantId(ids[1], ids[2]);
-		}else{
+		} else {
 			//	点Oは三角形の内側にある。
 			if (ids[1] == ids[2]){
 				//	1と2が同じ点=最初からonlineだったため、3角形ができなかった。
@@ -387,6 +443,11 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			break;
 		}
 		v[ids[0]] = vNew;
+#ifdef _DEBUG
+		if (bGJKDebug) {
+			DSTR << "v:" << vNew << std::endl;
+		}
+#endif
 		CalcSupport(ids[0]);	//	法線の向きvNewでサポートポイントを探す
 		if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2){	//	0の外側にoがあるので触ってない
 			qpTimerForCollision.Accumulate(coltimePhase2);
@@ -399,6 +460,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			qpTimerForCollision.Accumulate(coltimePhase2);
 			return 0;
 		}
+		if (count > 1000) return 0;
 	}
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
@@ -406,19 +468,16 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	qpTimerForCollision.Accumulate(coltimePhase2);
 	//	三角形を小さくしていく
 	int notuse = -1;
-	int count = 0;
+	count = 0;
 	Vec3d lastV;
 	double lastZ = DBL_MAX;
 	int lastVid = -1;
 	while(1){
 		count ++;
 		if (count > 1000) {
-#if 1
-			DSTR << "Too many loop in CCDGJK." << std::endl;
-			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
-			//DebugBreak();
+			DSTR << "Too many loop in 3D refinement of CCDGJK." << std::endl;
+			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "3DR");
 			bGJKDebug = true;
-#endif
 		}
 		Vec3d s;		//	三角形の有向面積
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
@@ -427,13 +486,17 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				std::swap(ids[1], ids[2]);
 				s *= -1;
 			}
+#ifdef _DEBUG
 			if (bGJKDebug) DSTR << "TRI ";
+#endif
 			//	三角形になる場合
 			notuse = -1;
 			//lastTriV = 
 			v[ids[3]] = s.unit();	//	3角形の法線を使う
 		}else{
+#ifdef _DEBUG
 			if (bGJKDebug) DSTR << "LINE";
+#endif
 			int id0, id1;
 			if (notuse >= 0){	
 				//	前回も線分だった場合。新しい点と古い線分のどちらかの頂点で新たな線分を作る。
@@ -508,6 +571,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 #endif
 		//	新しい w w[3] を求める
 		CalcSupport(ids[3]);
+#ifdef _DEBUG
 		if (bGJKDebug){
 			DSTR << "v:" << v[ids[3]];
 			for(int i=0; i<4; ++i){
@@ -528,6 +592,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			DSTR << "notuse:" << notuse;
 			for(int i=0; i<4; ++i) DSTR << " " << ids[i];
 		}
+#endif
 		lastVid = ids[3];
 		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
 			int nid[3];
@@ -536,9 +601,11 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			nid[2] = ids[3];
 			Vec3d dec = TriDecompose(w[nid[0]].XY(), w[nid[1]].XY(), w[nid[2]].XY());
 			double newZ = w[nid[0]].z * dec[0] + w[nid[1]].z * dec[1] + w[nid[2]].z * dec[2];
+#ifdef _DEBUG
 			if (bGJKDebug){
 				DSTR << " newZ:" << newZ << "  dec:"<< dec << std::endl;
 			}
+#endif
 #if 1
 			//			if (newZ > lastZ + epsilon) {
 			if (newZ >= lastZ) {
@@ -573,9 +640,11 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			int nid2 = ids[3];
 			Vec3d dec = decs[i];
 			double newZ = w[nid0].z * dec[0] + w[nid1].z * dec[1] + w[nid2].z * dec[2];
+#ifdef _DEBUG
 			if (bGJKDebug){
 				DSTR << " newZ:" << newZ << std::endl;
 			}
+#endif
 			if (newZ >= lastZ - epsilon) {
 				//goto final;	//	Zだけでは打ち切らない
 				double progress = -DBL_MAX;
@@ -621,7 +690,7 @@ final:
 	qpTimerForCollision.Accumulate(coltimePhase3);
 	static bool bSave = false;
 	if (bSave){
-		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "bSave");
 	}
 	contFindCommonPoint3DRefinementCount = count;
 	if (dist > end) return -1;
@@ -831,9 +900,9 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 	while (1) {
 		count++;
 		if (count > 1000) {
-#if 1	//	USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
+#if 1
 			DSTR << "Too many loop in CCDGJK." << std::endl;
-			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "3DRA");
 			//DebugBreak();
 			bGJKDebug = true;
 #endif
@@ -845,7 +914,9 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 				std::swap(ids[1], ids[2]);
 				s *= -1;
 			}
+#ifdef _DEBUG
 			if (bGJKDebug) DSTR << "TRI ";
+#endif
 			//	三角形になる場合
 			notuse = -1;
 			lastTriV = s.unit();
@@ -876,7 +947,9 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 			CalcSupport(ids[3]);
 		}
 		else {
+#ifdef _DEBUG
 			if (bGJKDebug) DSTR << "LINE";
+#endif
 			int id0, id1;
 			if (notuse >= 0) {
 				//	前回も線分だった場合。新しい点と古い線分のどちらかの頂点で新たな線分を作る。
@@ -971,6 +1044,7 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 			}
 			CalcSupport(ids[3]);
 		}
+#ifdef _DEBUG
 		if (bGJKDebug) {
 			DSTR << "v:" << v[ids[3]];
 			for (int i = 0; i < 4; ++i) {
@@ -991,6 +1065,7 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 			DSTR << "notuse:" << notuse;
 			for (int i = 0; i < 4; ++i) DSTR << " " << ids[i];
 		}
+#endif
 		if (notuse >= 0) {	//	線分の場合、使った2点と新しい点で三角形を作る
 			int nid[3];
 			nid[0] = ids[(notuse + 1) % 3];
@@ -998,9 +1073,11 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 			nid[2] = ids[3];
 			Vec3d dec = TriDecompose(w[nid[0]].XY(), w[nid[1]].XY(), w[nid[2]].XY());
 			double newZ = w[nid[0]].z * dec[0] + w[nid[1]].z * dec[1] + w[nid[2]].z * dec[2];
+#ifdef _DEBUG
 			if (bGJKDebug) {
 				DSTR << " newZ:" << newZ << "  dec:" << dec << std::endl;
 			}
+#endif
 			if (newZ + epsilon >= lastZ) {
 				notuse = -1;
 				goto final2;
@@ -1035,9 +1112,11 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 			int amariID = ids[(i + 2) % 3];
 			Vec3d dec = decs[i];
 			double newZ = w[nid0].z * dec[0] + w[nid1].z * dec[1] + w[nid2].z * dec[2];
+#ifdef _DEBUG
 			if (bGJKDebug) {
 				DSTR << " newZ:" << newZ << std::endl;
 			}
+#endif
 
 			if (newZ + epsilon >= lastZ) {
 #if NORM_BIAS >= 1		
@@ -1107,7 +1186,7 @@ qpTimerForCollision.Accumulate(coltimePhase2);
 	qpTimerForCollision.Accumulate(coltimePhase3);
 	static bool bSave = false;
 	if (bSave) {
-		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "bSaveA");
 	}
 	if (dist > end) return -1;
 	if (dist < start) return -2;
@@ -1703,7 +1782,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	if (normal.square() < epsilon2) return 0;
 	static bool bSave = false;
 	if (bSave) {
-		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
+		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "bSaveA");
 	}
 		return ret;
 }
