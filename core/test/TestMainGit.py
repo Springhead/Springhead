@@ -27,12 +27,9 @@
 #	Ver 1.0  2018/03/05 F.Kanehori	First version.
 #	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
-#	Ver 1.21 2018/05/08 F.Kanehori	Change VersionControlSystem args.
-#	Ver 1.22 2018/05/10 F.Kanehori	Add git config.
-#	Ver 1.23 2018/05/14 F.Kanehori	Add snap message for debug.
-#	Ver 1.24 2018/05/17 F.Kanehori	Rewrite code about "git push" .
+#	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
 # ======================================================================
-version = 1.24
+version = 1.3
 
 import sys
 import os
@@ -58,8 +55,8 @@ from TextFio import *
 #  Control parameter for test on unix.
 #
 unix_gen_history	= Util.is_windows()
-unix_copyto_buildlog	= Util.is_windows()
-unix_execute_makedoc	= True
+unix_copyto_buildlog	= Util.is_windows()	# True
+unix_execute_makedoc	= Util.is_windows()
 unix_copyto_webbase	= Util.is_windows()
 
 # ----------------------------------------------------------------------
@@ -94,7 +91,7 @@ def check_exec(name, os_type=True):
 	# and its value is 'skip'.  Return True otherwise.
 	if not os_type:
 		os_name = 'unix' if Util.is_unix() else 'Windows'
-		print('do not exec ..%s.. by %s' % (name, os_name))
+		print('do not exec ..%s.. on %s' % (name, os_name))
 		return False
 	#
 	val = os.getenv(name)
@@ -298,14 +295,15 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 #
 if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	Print('copying test result and commit-id to test result repository')
+	target_dir = result_repository + '/unix' if Util.is_unix() else ''
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
 	logfiles = ['result.log']
 	fop = FileOp()
 	for f in logfiles:
-		fop.cp(f, '%s/%s' % (result_repository, f))
-	fop.cp(commit_id, '%s/%s' % (result_repository, commit_id))
+		fop.cp(f, '%s/%s' % (target_dir, f))
+	fop.cp(commit_id, '%s/%s' % (target_dir, commit_id))
 	flush()
 	#
 	Print('committing files to test result repository.')
@@ -377,8 +375,9 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	Print('copying log files to web')
 	#
+	dirname = 'log.unix' if Util.is_unix() else 'log'
 	docroot = '//haselab/HomeDirs/WWW/docroots'
-	webbase = '%s/springhead/dailybuild/log' % docroot
+	webbase = '%s/springhead/dailybuild/%s' % (docroot, dirname)
 	logdir = '%s/log' % testdir
 	#
 	copy_all(logdir, webbase, False, dry_run)
