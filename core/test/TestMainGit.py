@@ -28,8 +28,9 @@
 #	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
+#	Ver 1.31 2018/08/21 F.Kanehori	Bug fixed.
 # ======================================================================
-version = 1.3
+version = 1.31
 
 import sys
 import os
@@ -295,7 +296,9 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 #
 if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	Print('copying test result and commit-id to test result repository')
-	target_dir = result_repository + '/unix' if Util.is_unix() else ''
+	target_dir = result_repository
+	if Util.is_unix():
+		target_dir = '%s/unix' % result_repository
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
