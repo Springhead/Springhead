@@ -59,7 +59,7 @@ from TextFio import *
 #  Control parameter for test on unix.
 #
 unix_gen_history	= Util.is_windows()
-unix_copyto_buildlog	= Util.is_windows()	# True
+unix_copyto_buildlog	= True
 unix_execute_makedoc	= Util.is_windows()
 unix_copyto_webbase	= Util.is_windows()
 
