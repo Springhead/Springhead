@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  SYNOPSIS:
-#	TestMainGit [options]
+#	TestMainGit [options] test-repository result-repository
 #	options:
 #	    -c CONF:	    Test configuration (Debug, Release or Trace).
 #	    -p PLAT:	    Test platform (x86 or x64)
@@ -12,6 +12,9 @@
 #	    -v:		    Set verbose level (0: silent).
 #	    -D:		    Show command but do not execute it.
 #	    -V:		    Show version.
+#
+#	test-repository, result-repository:
+#	    Relative to the directory where Springhead directory exists.
 #
 #  DESCRIPTION:
 #	Execute dailybuild test.
@@ -28,7 +31,7 @@
 #	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
-#	Ver 1.31 2018/08/21 F.Kanehori	Bug fixed.
+#	Ver 1.31 2018/08/21 F.Kanehori	Fixed for unix.
 # ======================================================================
 version = 1.31
 
@@ -296,9 +299,14 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 #
 if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	Print('copying test result and commit-id to test result repository')
-	target_dir = result_repository
 	if Util.is_unix():
 		target_dir = '%s/unix' % result_repository
+		cert_dir = '../../..'
+		aux_msg = '(unix)'
+	else:
+		target_dir = result_repository
+		cert_dir = '../..'
+		aux_msg = '(Windows)'
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
@@ -310,11 +318,11 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 	flush()
 	#
 	Print('committing files to test result repository.')
-	os.chdir(result_repository)
+	os.chdir(target_dir)
 	cmnds = [
 		'git config --global user.name "DailyBuild"',
-		'git commit --message="today\'s test result" %s %s' % \
-			(' '.join(logfiles), commit_id)
+		'git commit --message="today\'s test result %s" %s %s' % \
+			(aux_msg, ' '.join(logfiles), commit_id)
 	]
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	for cmnd in cmnds:
@@ -324,7 +332,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_copyto_buildlog):
 		if rc != 0:
 			break
 	if rc == 0:
-		user = get_username('../../hasegit.user')
+		user = get_username('%s/hasegit.user' % cert_dir)
 		cmnd = 'git push http://%s@git.haselab.net/DailyBuild/Result' % user
 		print('## %s' % cmnd)
 		rc = proc.execute(cmnd, shell=shell).wait()
