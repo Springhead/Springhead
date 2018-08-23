@@ -1,0 +1,101 @@
+% 4.0.Task.tex
+%	Last update: 2018/07/26 F.Kanehori
+\newpage
+\section{タスク}
+\label{sec:Task}
+
+\noindent
+DailyBuildは毎日Windows上でタスクとして実行される。
+\begin{narrow}
+    \Vskip{-.7\baselineskip}
+    \begin{Table}[r][6em]{ll}
+	\Item{実行マシン}{\tt{DESKTOP-KD3C7HS}}
+	\Item{タスク名}{%
+		\begin{LocalScope}\tabcolsep=0pt\def\arraystretch{1.0}
+		\begin{tabular}[t]{l@{\Hskip{1em}}l}
+		    Task1: \tt{DailyBuild}    & 毎日 02:02 に起動\\
+		    Task2: \tt{MakeReportGit} & 毎日 04:02 に起動
+		\end{tabular}
+		\end{LocalScope}}
+    \end{Table}
+\end{narrow}
+\Vskip{-\baselineskip}
+
+% -----------------------------------------------------------------------
+\subsection{タスク DailyBuild}
+\label{subsec:TaskDailyBuild}
+% -----------------------------------------------------------------------
+\noindent
+ビルド＆テストを実行するタスク
+\begin{narrow}
+    \Vskip{-.7\baselineskip}
+    \begin{Table}[r][6em]{ll}
+	\Item{Script}{\Path{I:/DailyBuild/Springhead/core/test/DailyBuild.bat}}
+	\Item{起動引数}{%
+		\tt{[-t 14.0 -c Release -p x64]} \Cont\\
+		\Hskip{40pt}\tt{SpringheadTest DailyBuildResult/Result}\\
+		(\tt{[\,]}内はデフォルトなので指定しなくてもよい。)}
+	\Item{概要}{%
+		作業領域(\Path{I:/DailyBuild/SprintheadTest})に最新バージョンを
+		pullし、そこでライブラリ作成およびビルド＆テストを実行する。}
+	\Item{詳細}{\RefRef{sec}{DailyBuildScript}}
+	\Item{結果}{\Path{I:/DailyBuild/SpringheadTest/core/test/log}以下に
+		作成される。}
+    \end{Table}
+\end{narrow}
+
+\Vskip{-.5\baselineskip}
+\noindent
+unixの場合：
+\begin{narrow}
+	Scriptは \Path{.../springhad/core/test/DailyBuild.sh}。
+	起動引数およびlogの出力先はWindowsと同様である。
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{タスク MakeReport}
+\label{subsec:TaskMakeReport}
+% -----------------------------------------------------------------------
+\noindent
+過去のレビジョンでの実行結果との差分情報を作成するタスク
+\begin{narrow}
+    \Vskip{-.7\baselineskip}
+    \begin{Table}[r][6em]{ll}
+	\Item{Script}{\Path{I:/DailyBuild/Springhead/core/test/MakeReport.bat}}
+	\Item{概要}{%
+		指定された特定コミットの実行結果と最新コミットの実行結果とを
+		比較して差分情報を作成し、レポートファイルにまとめる。
+		特定コミットは次のファイルで指定する。
+		\begin{narrow}
+			\tt{"I:/DailyBuild/Springhead/} \Cont\\
+			\Hskip{40pt}\tt{core/test/Monitoring/etc/revision.old"}
+		\end{narrow}}
+	\Item{詳細}{\RefRef{sec}{MakeReportScript}}
+    \end{Table}
+\end{narrow}
+
+\noindent
+unixには未対応である。
+\begin{narrow}
+	MakeReportの主たるスクリプトはperlで書かれているが、
+	WindowsバッチファイルのPythonへの移植は行なっていない。
+	perlスクリプトのunix上での動作確認も行なっていない。
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{タスク実行結果の参照}
+\label{subsec:ResultReference}
+% -----------------------------------------------------------------------
+\noindent
+Wiki (\tt{http://Springhead.info/wiki})の「開発者向け情報」から参照できる。
+\begin{narrow}[\WID]
+    \begin{tabular}{l@{\RArrowSp{8pt}}l}
+	DailyBuild & ``今朝のビルドの状況'',\\
+		   & ``Samples のビルドの状況'',\\
+		   & ``今朝のビルドのログ''\\
+	MakeReport & ``今朝のビルドについてまとめた報告'',\\
+		   & ``レビジョン nnnn (yyyy/mm/dd) との比較''\\
+    \end{tabular}
+\end{narrow}
+
+% end: 4.0.Task.tex

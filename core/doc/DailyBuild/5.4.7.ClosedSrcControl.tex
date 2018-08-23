@@ -1,0 +1,65 @@
+% 5.4.7.ClosedSrcControl.tex
+%	Last update: 2018/07/26 F.Kanehori
+%\newpage
+\subsubsection{クラス ClosedSrcControl}
+\label{subsubsec:ClosedSrcControl}
+
+\bigskip
+\begin{Brief}[b]
+	Springheadを非公開ソースを使用してビルドするか否かは、
+	マクロ\tt{USE_CLOSED_SRC}が定義されるか否かで制御される
+	(ファイル\Path{core/include/UseClosedSrcOrNot.h}参照)。
+	このクラスでは、上記のマクロを切り替える
+	(\,\tt{\#define} $\Leftrightarrow$ \tt{\#undef}\,)ための
+	メソッドを提供する。
+\end{Brief}
+
+\begin{Initializer}{%
+	obj = ClosedSrcControl(path, use_path, unuse_path,\Cont\\
+	\Hskip{140pt}dry_run, verbose)}
+	\Vskip{-.5\baselineskip}
+	\begin{Args}
+	    \Item[t]{path}{%
+		当該マクロを定義しているファイル名\\
+		\Path{core/include/UseclosedSrcOrNot.h}を指定する}
+	    \Item[t]{use_path}{%
+   		closed sourceを使用する場合のテンプレートファイル名\\
+		\Path{core/test/bin/UseClosedSrc.h.template}を指定する}
+	    \Item[t]{unuse_path}{%
+   		closed sourceを使用しない場合のテンプレートファイル名\\
+		\Path{core/test/bin/UnuseClosedSrc.h.template}を指定する}
+	    \Item[t]{dry_run}{コマンドを表示するだけで実行はしない}
+	\end{Args}
+\end{Initializer}
+
+\begin{Methods}{公開メソッド}
+\begin{Method}{set_usage(usage)}
+    \begin{Args}
+    	\Item[t]{usage}{%
+	    closed sourceを使用してビルドするか否か。
+	    \SQuote{\tt{CSU_USE}}又は\SQuote{\tt{CSU_UNUSE}}を指定する
+	    (\Ref{subsubsec}{ConstDefs})。}
+    \end{Args}
+    \begin{Brief}
+	指定されたusageが現在のマクロ定義と異なる場合は、
+	適切なテンプレートを定義ファイルにコピーすることで要求に応じる。
+    \end{Brief}
+\end{Method}
+\begin{Method}{revive()}
+    \begin{Brief}
+	マクロ定義ファイルの内容を元の状態に戻す。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+\begin{Methods}{内部メソッド}
+\begin{Method}{__read_uage(path)}
+    \begin{Brief}
+	引数で指定されたマクロファイルを読み、
+	記述されているマクロ定義に従って
+	\SQuote{\tt{CSU_USE}}又は\SQuote{\tt{CSU_UNUSE}}を返す。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 5.4.7.ClosedSrcControl.tex

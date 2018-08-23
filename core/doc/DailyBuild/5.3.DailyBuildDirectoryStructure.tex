@@ -1,0 +1,20 @@
+% 5.3.DailyBuildDirectoryStructure.tex
+%	Last update: 2018/07/26 F.Kanehori
+
+\subsection{Directory構成}
+\label{subsec:DailuBuildDirectoryStructure}
+
+\noindent
+DailyBuild は、
+\Path{I:/DailyBuild/Springhead/core/test}を現在ディレクトリとして起動するが、
+スクリプト内部では相対ディレクトリを使用しているので、
+以下では絶対パス形式表示をしているのに関わらず、
+\Path{I:/DailyBuild/Springhead}というドライブ・ディレクトリ名
+には意味はない。
+
+ただし、引数\,<\it{test-repository}>\,及び\,<\it{result-repository}>\,に
+指定するディレクトリは、
+スクリプト起動ディレクトリから3階層上のディレクトリ
+(前記の\Path{I:/DailyBuild})からの相対指定となっている必要がある。
+
+% end: 5.3.DailyBuildDirectoryStructure.tex

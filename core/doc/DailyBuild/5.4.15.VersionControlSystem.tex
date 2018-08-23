@@ -1,0 +1,128 @@
+% 5.4.15.TestResult.tex
+%	Last update: 2018/07/31 F.Kanehori
+%\newpage
+\subsubsection{クラス VersionControlSystem}
+\label{subsubsec:VersionControlSystem}
+
+\bigskip
+\begin{Brief}[b]
+	バージョン管理システムから種々の情報を取り出すためのラッパクラス。
+	取り扱えるのはSubversionとGitHubである。
+	\begin{Table}[r][2.5em]{ll}
+    	\Item{\rm{(注)}}{%
+		ただしGitHub版の実装以後、Subversionについては
+		メンテナンスを行なっていないので、正しく動作しない可能性がある。}
+	\end{Table}
+\end{Brief}
+
+\Vskip{-\baselineskip}
+\begin{Initializer}{obj = VersionControlSystem(system, url, wrkdir, verbose)}
+    \Vskip{-\baselineskip}
+    \begin{Args}
+	\Item[t]{system}{%
+		バージョン管理システムの識別(\DQuote{Subversion},
+		\DQuote{GitHub} or \DQuote{haselab})。}
+	\Item[t]{url}{バージョン管理システムのURL}
+	\Item[t]{wrkdir}{%
+		指定したバージョン管理システムの管理下にあるディレクトリ。
+		\DQuote{GitHub}の場合に必要となる。}
+    \end{Args}
+    \begin{narrow}
+    \begin{Table}[r][2.5em]{ll}
+	\Item{\rm{(注)}}{%
+		引数\tt{system}のうち\DQuote{haselab}は、
+		このクラスのテストプログラムを外部プログラム(\tt{VersionInfo})として
+		流用しているために必要となる名称である。
+		内部処理は\DQuote{GitHub}と同一であり、将来\tt{VersionInfo}を
+		独立プログラムとして作成したならば削除すべきである。}
+    \end{Table}
+    \end{narrow}
+\end{Initializer}
+
+\begin{Methods}{公開メソッド}
+\begin{Method}{(code, rev, err) = revison()}
+    \begin{Return}
+	\MC{2}{l}{\tt{(code, rev, err)}}\\
+	\Item{}{レビジョン番号/commit--IDが取得できたならば、
+		\tt{code}に0、\tt{rev}にレビジョン番号
+		(\DQuote{GitHub}のときはcommit--IDのshort形式)を返す。
+		さもなければ\tt{err}にエラー情報を返す。}
+    \end{Return}
+    \begin{Brief}
+	現在のレビジョン番号(\DQuote{GitHub}のときはcommit--ID)を取得する。
+	内部クラス\tt{Subversion, GitHub}に対するラッパメソッド。
+    \end{Brief}
+\end{Method}
+\begin{Method}{info = revison_info(revision)}
+    \begin{Args}
+	\Item[t]{revision}{%
+		取得するレビジョンの番号(\DQuote{GitHub}のときはcommit--ID)。
+		\DQuote{HEAD}又は\DQuote{all}も可。}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{info}{%
+		(\tt{short_id, long_id, date})の3つ組。
+		引数が\DQuote{all}のときはそれらのリスト。}
+    \end{Return}
+    \begin{Brief}
+	引数で指定されたレビジョンの情報を取得する。
+	内部クラス\tt{Subversion, GitHub}に対するラッパメソッド。
+	ただし\tt{Subversion}については実装されていない。
+    \end{Brief}
+\end{Method}
+\begin{Method}{content = get_file_content(path, revision)}
+    \begin{Args}
+	\Item[t]{path}{%
+		取得するファイルのパス。当該レポジトリのトップディレクトリ
+		からの相対パスで指定する。}
+	\Item[t]{revision}{%
+		取得するcommit--ID (short形式でもlong形式でも可)。}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{content}{ファイルの内容(\it{string})。}
+    \end{Return}
+    \begin{Brief}
+	引数で指定されたレビジョンのファイルのコピーを取得する。
+	内部クラス\tt{Subversion, GitHub}に対するラッパメソッド。
+	ただし\tt{Subversion}については実装されていない。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+\begin{Methods}{内部クラス \tt{Subversion}}
+\begin{Method}{(code, rev, err) = revision()}
+    \begin{Brief}
+	指定されたURLに次のコマンドを送って情報を得る。\\
+	\Cmnd{> svn info}\\
+	このうち、\DQuote{Lase Changed Rev: \it{nnnnnnn}}を含む行が
+	現在のレビジョンに関する行である。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+\begin{Methods}{内部クラス \tt{GitHub}}
+\begin{Method}{(code, rev, err) = revision()}
+    \begin{Brief}
+	指定されたURLに次のコマンドを送って情報を得る。\\
+	\Cmnd{> git log --abbrev-commit --oneline --max-count=1}\\
+	このうち、最初のフィールドがcommit--ID (short形式)である。
+    \end{Brief}
+\end{Method}
+\begin{Method}{info = revision_info(commit_id)}
+    \begin{Brief}[r]
+	指定されたURLに次のコマンドを送って情報を得る。\\
+	\Cmnd{> git log --abbrev-commit --oneline --max-count=1}\\
+	このうち、\DQuote{commit \it{nnnn} \CDots\ \it{nnnn}}を含む行が
+	commit--ID (long形式)を含む行、\DQuote{Date: }を含む行が日付を含む行である。
+    \end{Brief}
+\end{Method}
+\begin{Method}{content = get_file_content(path, commit_id)}
+    \begin{Brief}
+	指定されたURLに次のコマンドを送って情報を得る。\\
+	\Cmnd{> git show \it{commit_id, path}}\\
+	このコマンドの出力がファイルの内容である。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 5.4.15.TestResult.tex

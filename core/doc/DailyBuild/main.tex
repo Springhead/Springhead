@@ -1,0 +1,65 @@
+% main.tex
+%	Last update: 2018/07/09 F.Kanehori
+%
+\documentclass[a4j,12pt]{jsarticle}
+\usepackage{dirtree}
+\usepackage{setspace}
+\usepackage{longtable}
+\usepackage{comment}
+
+\setlength{\textheight}{\paperheight}   % 紙面縦幅を本文領域にする（BOTTOM=-TOP）
+\setlength{\topmargin}{4.6truemm}       % 上の余白を30mm（=1inch+4.6mm）に
+\addtolength{\topmargin}{-\headheight}  % 
+\addtolength{\topmargin}{-\headsep}     % ヘッダの分だけ本文領域を移動させる
+\addtolength{\textheight}{-60truemm}    % 下の余白も30mm（BOTTOM=-TOPだから+TOP+30mm）
+
+\setlength{\textwidth}{\paperwidth}     % 紙面横幅を本文領域にする（RIGHT=-LEFT）
+\setlength{\oddsidemargin}{-0.4truemm}  % 左の余白を25mm(=1inch-0.4mm)に
+\setlength{\evensidemargin}{-0.4truemm} % 
+\addtolength{\textwidth}{-50truemm}     % 右の余白も25mm（RIGHT=-LEFT）
+
+\begin{document}
+\input{macro}
+
+\begin{center}
+  \Large{DailyBuildメンテナンスマニュアル} \\
+  {\normalsize\input{LastUpdate}} \\
+\end{center}
+
+\bigskip
+本ドキュメントでは、Springheadの日々のメンテナンス作業(dailybuildの結果の確認、
+Wikiページのメンテナンス等)およびそれらに関わるスクリプトについて説明する。
+
+\vfill
+\begin{center}\small{%
+  改 訂 履 歴\\
+  \medskip
+  \begin{tabular}{ll}
+    第2.0版 & スクリプトのpython化に伴う変更 \\
+    第1.0版 & 初版 \\
+  \end{tabular}
+}\end{center}
+\vspace{1.5cm}
+
+\newpage
+\setcounter{tocdepth}{3}
+\tableofcontents
+%-------------------------------
+\input{1.0.WhatIsDailyBuild}
+\input{2.0.RoutineWork}
+\input{3.0.WikiMaintenance}
+\input{4.0.Task}
+\input{5.0.DailyBuildScript}
+\input{5.1.DailyBuildScriptTree}
+\input{5.2.DailyBuildEnvironmentVariable}
+\input{5.3.DailyBuildDirectoryStructure}
+\input{5.4.0.DailyBuildScriptSpec}
+\input{6.0.MakeReportScript}
+\input{6.1.MakeReportScriptTree}
+\input{6.2.MakeReportDirectoryStructure}
+\input{6.3.0.MakeReportScriptSpec}
+% ---------------------------
+
+\end{document}
+
+% end: main.tex

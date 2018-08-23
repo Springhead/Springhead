@@ -1,0 +1,132 @@
+% 5.2.DailyBuildEnvironmentVariable.tex
+%	Last update: 2018/07/26 F.Kanehori
+
+\subsection{処理を制御する環境変数}
+\label{subsec:DailyBuildEnvironmentVariable}
+
+\noindent
+以下に示すDailyBuildの各ステップは、実行時の環境変数で制御することができる。
+各ステップの``制御変数名''に記述された環境変数が\DQuote{skip}と設定されて
+いる場合に限りそのステップは実行されない。
+毎日のDailyBuildタスクの実行時にはこれらの環境変数はすべて未定義としておく。
+\begin{narrow}[s][15pt]
+	\bf{※} これらの環境変数はデバッグ及びローカルでのテストのときに使用する。
+\end{narrow}
+
+\bigskip
+\noindent
+\bf{ステップの説明}
+
+\noindent
+\begin{enumerate}
+  \item	\tt{Springhead}の更新を反映する
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_UPDATE_SPRINGHEAD}}
+	    \Item{処理}{%
+		以下のローカルレポジトリの内容を最新バージョンにする。\\
+	    	\hspace{1em}\Path{I:/DailyBuild/Springhead/}\\
+		\hspace{1em}\Path{I:/DailyBuild/DailyBuildResult/Result/}
+	    }
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	テストディレクトリをクリアする
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_CLEANUP_WORKSPACE}}
+	    \Item{処理}{%
+	    	テストディレクトリ(SpringheadTest -- 引数で指定)をクリアする。
+		指定されたディレクトリが存在しなければ何もしない。}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	SpringheadTestにソースツリーを取得する
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_CLEANUP_WORKSPACE}}
+	    \Item{処理}{%
+	    	テストディレクトリに最新バージョンをCloneする。}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	Springheadライブラリを作成する
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_EXECUTE_STUBBUILD}}
+	    \Item{処理}{%
+	    	呼出し時の引数及びオプションは次のとおり\\
+		\tt{-p x64 -c Release -t 14.0 -C unuse -S}\Cont\\
+		\Hskip{20pt}\Path{result/dailybuild.result}\Cont\\
+		\Hskip{20pt}\Path{dailybuild.control}\\
+		テスト結果ファイルを初期化してからビルドする。}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	\tt{"src/tests"}以下のテストを実行する
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_EXECUTE_BUILDRUN}}
+	    \Item{処理}{%
+	    	呼出し時の引数及びオプションは前項と同じ。
+		ただしテスト結果ファイルの初期化は行なわない
+		(オプション`\tt{-S}'なし)}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	\tt{src/Samples}以下のビルドを実行する
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_EXECUTE_SAMPLEBUILD}}
+	    \Item{処理}{%
+	    	呼出し時の引数及びオプションは前項と同じ。
+		ただしテスト結果ファイルの初期化は行なわない
+		(オプション`\tt{-S}'なし)}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	テスト結果ファイルをコミットする
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_COMMIT_RESULTOG}}
+	    \Item{処理}{%
+	    	Springheadの最新コミットIDを取り出して記録ファイルを作成し、
+		テスト結果ファイルとともにレポジトリに登録する。}
+	    \Item{ファイル}{\Path{Springhead.commit.id}及び\Path{result.log}}
+	    \Item{登録先}{\Path{git.haselab.net/DailyBuild/Result}}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	履歴ファイルを作成する
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_GEN_HISTORY}}
+	    \Item{処理}{%
+	    	テスト履歴ファイル\Path{History.log}及び
+		タイムスタンプファイル\Path{Test.date}を作成する。}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	ログファイルをWebにコピーする
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_COPYTO_BUILDLOG}}
+	    \Item{処理}{テストログファイルをWebウェブサーバにコピーする。}
+	    \Item{コピー先}{%
+	    	\tt{\BS\BS haselab\BS HomeDirs\BS WWW\BS docroots\BS} \Cont\\
+		\hspace{40pt}\tt{springhead\BS daily_build\BS log\BS}以下}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	ドキュメントを作る
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_EXECUTE_MAKEDOC}}
+	    \Item{処理}{doxygenによりドキュメントを作成する(\Path{MakeDoc.py})}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+  \item	成果物をWebにコピー
+	\begin{Table}[r][6em]{ll}
+	    \Item{制御変数名}{\tt{DAILYBUILD_COPYTO_WEBBASE}}
+	    \Item{処理}{DailyBuildの成果物Webサーバにコピーする}
+	    \Item{ファイル}{ライブラリファイル及びドキュメントファイル}
+	    \Item{コピー先}{%
+	    	\tt{\BS\BS haselab\BS HomeDirs\BS WWW\BS docroots\BS }\Cont\\
+		\Hskip{40pt}\tt{springhead\BS daily_build\BS generated\BS}以下}
+	\end{Table}
+	\Vskip{-.1\baselineskip}
+
+\end{enumerate}
+
+% end: 5.2.DailyBuildEnvironmentVariable.tex

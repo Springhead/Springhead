@@ -1,0 +1,161 @@
+% 5.4.4.SpringheadTest.tex
+%	Last update: 2018/06/18 F.Kanehori
+%\newpage
+\subsubsection{SpringheadTest}
+\label{subsubsec:SpringheadTest}
+
+\medskip
+\noindent
+引数で指定されたディレクトリ以下すべてのサブディレクトリを対象として
+テストを実施するためのプログラム。
+どのサブディレクトリに対してどのようなテストを実施するかは、
+各ディレクトリに配置されたテスト制御ファイル\Path{dailybuild.control}で制御する。
+制御方法の詳細については \Ref{subsubsec}{ControlParams}及び 
+\Ref{subsubsec}{ConstDefs}を参照のこと。
+
+\medskip
+\Invoke[b]{%
+     > python SpringheadTest.py [options]\Cont\\
+     \Hskip{100pt}test-dir res-file ctl-file section
+}
+\begin{Opts}[b]
+    \Item[t]{-c CONF}{ビルド構成 (\tt{Debug, Release, Trace})}
+    \Item[t]{-p PLAT}{プラットフォーム (\tt{x86, x64})}
+    \Item[t]{-r}{強制的にビルドする}
+    \Item[t]{-s}{プログレスレポートをしない}
+    \Item[t]{-t TOOL}{ツールセット (\tt{14.0\Note})}
+    \Item[t]{-C usage}{%
+    		Closed sourceの扱い方\\
+		\begin{LocalScope}
+		\def\arraystretch{1.0}
+		\begin{tabular}{@{\Hskip{15pt}}ll}
+		    \tt{auto}	& テスト制御ファイルに従う\\
+		    \tt{use}	& すべてで使用する\\
+		    \tt{unuse}	& すべてで使用しない
+		\end{tabular}
+		\end{LocalScope}}
+    \Item[t]{-D}{コマンドを表示するだけで実行はしない(dry run)}
+    \Item[t]{-S}{テスト結果累積ファイルを初期化する}
+    \Item[t]{-T value}{実行タイムアウト指定 (単位は秒)}
+\end{Opts}
+\begin{Args}[b]
+    \Item[t]{test-dir}{%
+    	テスト対象ディレクトリ\\
+	Path{core/src}からの相対パスで指定する。}
+    \Item[t]{res-file}{%
+    	テスト結果累積ファイル名\\
+	テストを起動するディレクトリからの相対パスで指定。}
+    \Item[t]{ctl-file}{テスト制御ファイル名}
+    \Item[t]{section}{%
+    	テスト制御ファイルの対象セクション名\\
+	\SQuote{Windows}または\SQuote{unix}を指定}
+\end{Args}
+
+\begin{Proc}[b]
+	\begin{enumerate}
+	  \item	テストディレクトリ\Path{core/test}に移動する。
+
+	  \item	\tt{TestResult}クラスのインスタンスを生成して
+  		テスト結果累積データを準備する
+		(\RefRef{subsubsec}{TestResult})。\\
+		\Cmnd{%
+		     > res = TestResult(res_file, scratch, verbose)
+		}
+		Springheadライブラリ作成時には起動引数\SQuote{-S}が指定され
+		(\tt{scratch=True})、
+		テスト結果累積データは空に初期化される。
+		\tt{src/tests, src/Samples}のテスト時には
+		起動引数\SQuote{-S}は指定されず(\tt{scratch=False})、
+		テスト結果累積データは\tt{res_file}の内容で初期化される。
+		いずれの場合も、今回のテスト結果はそれに追加される。
+
+	  \item	\tt{ClosedSrcControl}クラスのインスタンスを生成して、
+  		Closed sourceの使用/不使用の準備をする。\\
+		\Cmnd{%
+		    > csc = ClosedSrcControl(csc_head,\Cont\\
+		    \Hskip{100pt}use_tmpl, unuse_tmpl, dry_run, verbose)
+		}
+		最初の3つの引数は、ビルド時にincludeされるマクロ定義ファイル名、
+		closed source使用時のためのテンプレートファイル名、
+		closed source不使用時のためのテンプレートファイル名である。
+		実際のファイル名は、
+		\begin{narrow}
+			\Path{core/include/UseClosedSrcOrNot.h} \\
+			\Path{core/test/bin/UseClosedSrc.h.template} \\
+			\Path{core/test/bin/UnuseClosedSrc.h.template}
+		\end{narrow}
+		である。
+		ここでは関連するファイルを指定しておくだけで、
+		ヘッダファイル\it{<csc_head\,>}を変更する訳ではない。
+
+	  \item	\tt{Traverse}クラスのインスタンスを生成して
+	  	必要なパラメータを設定し、テスト実行の準備をする。\\
+		\Cmnd{%
+		    > trv = Traverse(testid, res, csc,\Cont\\
+		    \Hskip{50pt}ctl_file, section,\Cont\\
+		    \Hskip{50pt}toolset, platforms, configs, csusage,\Cont\\
+		    \Hskip{50pt}rebuild, timeout, report, audit,
+					dry_run, verbose)
+		}
+		\tt{testid}には引数\tt{test-dir}に従い
+		次の\tt{TESTID}クラス定数を設定する。
+		\Vskip{-.2\baselineskip}
+		\begin{narrow}\begin{tabular}{l@{\RArrowSp{5pt}}l}
+			Springheadライブラリ作成のとき & \tt{TESTID.STUB}\\
+			{src/tests}のテストのとき      & \tt{TESTID.TESTS}\\
+			{src/Samples}のテストのとき    & \tt{TESTID.SAMPLES}
+		\end{tabular}\end{narrow}
+		\Vskip{.2\baselineskip}
+		\tt{res, csc}は前のステップで生成したクラスオブジェクトである。
+		他のパラメータは、起動時引数及びオプションを参照して設定する。
+		ただし\tt{csusage}にはオプション\tt{-C}の値に従い
+		次の\tt{TESTID}クラス定数を設定する
+		(\RefRef{subsubsec}{ConstDefs})。
+		\Vskip{-.2\baselineskip}
+		\begin{narrow}\begin{tabular}{l@{\RArrowSp{5pt}}l}
+		    	\tt{-C auto}	& \tt{TESTID.AUTO}\\
+		    	\tt{-C use}	& \tt{TESTID.USE}\\
+		    	\tt{-C unuse}	& \tt{TESTID.UNUSE}
+		\end{tabular}\end{narrow}
+		\Vskip{.2\baselineskip}
+		%\medskip
+
+	  \item	指定されたディレクトリに対して ビルド＆テストを実行する。\\
+		\Cmnd{%
+		     > stat = trv.traverse(top)
+		}
+		\tt{top}はテスト対象ディレクトリで、次のものを指定する。
+		\Vskip{-.2\baselineskip}
+		\begin{narrow}\begin{tabular}{l@{\RArrowSp{5pt}}l}
+			Springheadライブラリ作成のとき & \Path{src}\\
+			\tt{src/tests}のテストのとき   & \Path{src/tests}\\
+		    	\tt{src/Samples}のテストのとき & \Path{src/Samples}
+		\end{tabular}\end{narrow}
+		\Vskip{.2\baselineskip}
+		%\medskip
+
+	  \item	テスト結果をテスト結果累積ファイル\tt{res_file}に書き出す。\\
+		\Cmnd{%
+		     > res.finish()
+		}
+
+	  \item	\tt{"UseClosedSrcOrNot.h"}の内容が変更されていたら元の状態に戻す。\\
+		\Cmnd{%
+		     > csc.revive()
+		}
+
+	  \item	テスト結果ファイル\Path{result.log}を作成する。\\
+		\Cmnd{%
+		     > python GenResultLog.py -o ../log/result.log\Cont\\
+		     \Hskip{100pt}\tt{res_file} \it{<plat\,> <conf\,>}
+		}
+		\it{<plat\,>, <conf\,>}は
+		それぞれオプション\tt{-p, -c}で指定された値である。
+		オプションの仕様上は複数指定が可能であるが、
+		タスクDailyBuildでは必ず単一指定にする
+		(\Path{result.log}はそのように仮定されている)。
+		ファイルは、テストを起動するディレクトリからの相対パスで指定する。
+	\end{enumerate}
+\end{Proc}
+
+% end: 5.4.4.SpringheadTest.tex
