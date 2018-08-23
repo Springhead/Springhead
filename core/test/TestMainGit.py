@@ -33,8 +33,9 @@
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
 #	Ver 1.31 2018/08/21 F.Kanehori	Fixed for unix.
+#	Ver 1.32 2018/08/23 F.Kanehori	Fixed for unix (scp).
 # ======================================================================
-version = 1.31
+version = 1.32
 
 import sys
 import os
@@ -391,18 +392,18 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	Print('copying log files to web')
 	#
 	if Util.is_unix():
-		host = log_server
-		user = 'demo'
-		rdir = '/home/WWW/docroots/springhead/dailybuild/log.unix'
-		logdir = '%s/log' % testdir
-		os.chdir(logdir)
+		tohost = 'demo@%s' % log_server
+		touser = 'demo'
+		todir = '/home/WWW/docroots/springhead/dailybuild/log.unix'
+		fmdir = os.path.relpath('%s/log' % testdir)
 		proc = Proc(verbose=verbose, dry_run=dry_run)
-		cmnd = 'rcp -r %s %s@%s:%s' % (logdir, user, host, rdir)
+		opts = '-i ~/.ssh/id_rsa -o "StrictHostKeyChecking=no"'
+		cmnd = 'scp %s %s %s:%s' % (opts, fmdir, tohost, todir)
 		rc = proc.execute(cmnd, shell=True).wait()
 		if rc == 0:
-			print('cp %s -> %s@%s:%s' % (logdir, user, host, rdir))
+			print('cp %s -> %s:%s' % (fmdir, tohost, todir))
 		else:
-			print('cp %s faild' % logdir)
+			print('cp %s faild' % fmdir)
 	else:
 		dirname = 'log'
 		docroot = '//haselab/HomeDirs/WWW/docroots'
@@ -410,7 +411,6 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 		logdir = '%s/log' % testdir
 		#
 		copy_all(logdir, webbase, False, dry_run)
-	os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Make document (doxygen).

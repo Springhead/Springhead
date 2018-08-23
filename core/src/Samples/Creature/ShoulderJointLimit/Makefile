@@ -16,13 +16,17 @@ $(eval MAKE_DIR := $(subst $(SP),\$(SP),$(shell env pwd)))
 MAKE_DIRNAME	= $(shell env basename $(MAKE_DIR))
 BIN_NAME  	= $(MAKE_DIRNAME)
 
-SRCS		= $(wildcard *.cpp)
+#SRCS		= $(wildcard *.cpp)
+SRCS		= main.cpp
 OBJS 		= ${SRCS:.cpp=.o}
 REALCLEANS	= $(wildcard log/*)
 
 CXXFLAGS	:= $(CXXFLAGS) \
 		-D__cdecl= \
 		-std=gnu++11
+
+LDFLAGS		:= $(LDFLAGS) \
+		-llapack
 
 
 ################################################################
