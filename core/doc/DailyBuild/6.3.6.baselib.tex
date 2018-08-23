@@ -1,0 +1,97 @@
+% 6.3.6.baselib.tex
+%	Last update: 2018/07/12 F.Kanehori
+%\newpage
+\subsubsection{base\_lib.pm}
+\label{subsubsec:baselib}
+
+\medskip
+\noindent
+perlスクリプトで共通に使用するユーティリティサブルーチンのライブラリである
+(\DDagger を付したものは外部非公開)。
+
+\medskip
+\begin{Methods}{サブルーチンの説明}
+\begin{Method}{assert(\plVar{expr})}
+	アサーションルーチン。
+	条件が満たされなければスタックをトレースして終了する。
+\end{Method}
+\begin{Method}{%
+	verbose(\plVar{text} [,\plVar{stream}])\\
+	verbose_set(\plVar{value})}
+    \begin{Args}
+	\Item[t]{\plVar{text}}{表示文字列}
+	\Item[t]{\plVar{stream}}{出力ストリーム}
+	\Item[t]{\plVar{value}}{$1$でon, $0$でoff}
+    \end{Args}
+    \begin{Brief}
+	バーバス表示ルーチン。
+	\tt{verbose_set()}でon/offを切り替えできる。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	show_usage(\plVar{cmnd} [,\plAryR{args} [,\plAryR{opts}]])\\
+	add_padding(\plVar{text}, \plVar{width}) \DDagger}
+    \begin{Args}
+	\Item[t]{\plVar{cmnd}}{コマンドライン}
+	\Item[t]{\plAry{args}}{コマンド引数}
+	\Item[t]{\plAry{opts}}{オプション引数}
+    \end{Args}
+    \begin{Brief}
+	使用方法の表示ルーチン。
+	\tt{add_padding()}は表示位置を合わせるための簡易ルーチン。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	warning(\plVar{prog}, \plAry{text})\\
+	error(\plVar{prog}, \plAry{text})\\
+	fatal(\plVar{prog}, \plAry{text})\\
+	panic(\plVar{prog}, \plAry{text})}
+    \begin{Args}[r]
+	\Item[t]{\plVar{prog}}{プログラム名}
+	\Item[t]{\plAry{text}}{表示文字列(配列)}
+    \end{Args}
+    \begin{Brief}
+	エラーメッセージ表示ルーチン。
+	\tt{fatal()}と\tt{panic()}はプログラムを終了させる。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\plVar{name} = dirname(\plVar{path})}
+    \begin{Brief}
+	引数のパス名\plVar{path}からディレクトリ部分を取り出して返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\plVar{name} = leafname(\plVar{path})}
+    \begin{Brief}
+	引数のパス名\plVar{path}からリーフ名部分を取り出して返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	debug(\plVar{level}, \plAry{text})\\
+	debug_push(\plVar{value})\\
+	debug_pop()}
+    \begin{Args}
+	\Item[t]{\plVar{level}}{表示レベル}
+	\Item[t]{\plAry{tex}t}{出力フォーマットとテキスト}
+	\Item[t]{\plVar{value}}{デバッグレベル}
+    \end{Args}
+    \begin{Brief}[r]
+	デバッグ表示を行なう
+	(現在のデバッグレベルより大きいレベルが指定された時のみ)。
+	デバッグレベルを変更するには\tt{debug_push()}を使用する。
+	\tt{debug_pop()}で一つ前のデバッグレベルに戻せる。
+    \end{Brief}
+\end{Method}
+\begin{Method}{object_dump(\plVar{level}, \plVar{object} [,\plVar{text}])}
+    \begin{Args}
+	\Item[t]{\plVar{level}}{表示レベル}
+	\Item[t]{\plVar{object}}{ダンプするオブジェクト}
+	\Item[t]{\plAry{text}}{出力フォーマットとテキスト}
+    \end{Args}
+    \begin{Brief}
+	引数で指定したオブジェクトをダンプする。
+	表示には\tt{debug()}を使用するので、デバッグレベルの指定が可能(というか必須)。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 6.3.6.baselib.tex

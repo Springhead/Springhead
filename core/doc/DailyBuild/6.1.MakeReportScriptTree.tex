@@ -1,0 +1,128 @@
+% 6.1.MakeReportScriptTree.tex
+%	Last update: 2018/08/20 F.Kanehori
+
+\subsection{Script構成}
+\label{subsec:MakeReportScriptTree}
+
+\def\Anno#1{\mc{\footnotesize{ \CDots\  #1}}}
+\def\AnnoRef#1#2{\Anno{#1} \footnotesize{(\ref{#2} 参照)}}
+
+\noindent
+プログラム構造
+\vspace{.2\baselineskip}
+\begin{narrow}
+    \begin{narrow}\begin{minipage}{\textwidth}
+	\dirtree{%
+		.1 \Hskip{-10mm}I:/DailyBuild/Springhead/core/.
+		.2 test/.
+		.3 \it{MakeReportGit.bat}
+			\Anno{MakeReport制御スクリプト}.
+		.3 Monitoring/.
+		.4 bin/.
+		.5 \it{build_monitor_Git.bat}
+			\AnnoRef{レポート作成メイン}{subsubsec:buildmonitorGit}.
+		.5 \it{build_monitor_SVN.bat}
+			\Anno{同上Subversion版 --- obsoleted}.
+	}
+	\medskip
+    \end{minipage}\end{narrow}
+\end{narrow}
+
+\bigskip
+\noindent
+関連スクリプト構成
+
+\vspace{-12pt}
+\noindent
+\begin{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \Hskip{-10mm}I:/DailyBuild/Springhead/core/.
+		.2 test/.
+		.3 Monitoring/.
+		.4 bin/.
+		.5 \it{filter.pl}
+			\AnnoRef{diff -c形式情報作成}{subsubsec:filter}.
+		.5 \it{mydiff.pl}
+			\AnnoRef{diff情報作成}{subsubsec:mydiff}.
+		.5 \it{order.pl}
+			\AnnoRef{Visual Studioログ行並べ替え}{subsubsec:order}.
+		.5 \it{base_lib.pm}
+			\AnnoRef{共通ライブラリ}{subsubsec:baselib}.
+		.5 \it{dailybuild_lib.pm}
+			\AnnoRef{dailybuild用ライブラリ}{subsubsec:dailybuildlib}.
+		.5 \it{exclude.awk}
+			\AnnoRef{不要な行の削除}{subsubsec:awkscripts}.
+		.5 \it{field.awk}
+			\AnnoRef{特定フィールドの抽出}{subsubsec:awkscripts}.
+		.5 \it{grep.awk}
+			\AnnoRef{grepもどき}{subsubsec:awkscripts}.
+		.5 \it{head.awk}
+			\AnnoRef{headもどき}{subsubsec:awkscripts}.
+	}
+  \end{minipage}\end{narrow}
+  \medskip
+\end{narrow}
+
+\bigskip
+\noindent
+外部プログラム構成
+
+\vspace{-12pt}
+\noindent
+\begin{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}I:/DailyBuild/Springhead/core/.
+		.2 test/.
+		.3 Monitoring/.
+		.4 bin/.
+		.5 \it{gawk.exe}.
+		.5 \it{nkf.exe}.
+	}
+  \end{minipage}\end{narrow}
+  \medskip
+\end{narrow}
+
+\bigskip
+\noindent
+関連ファイル構成
+
+\vspace{-12pt}
+\noindent
+\begin{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}I:/DailyBuild/Springhead/core/.
+		.2 test/.
+		.3 Monitoring/.
+		.4 etc/.
+		.5 \it{revision.new}
+			\Anno{比較レビジョン定義ファイル}.
+		.5 \it{revision.old}
+			\Anno{基準レビジョン定義ファイル}.
+	}
+  \end{minipage}\end{narrow}
+  \bigskip
+  \noindent
+  基準レビジョン定義ファイル
+  \begin{narrow}
+  	レポート作成の基準とするレビジョン(コミットID)を指定するファイル。
+	次の形式のテキストファイルである。
+	\begin{itemize}
+	  \item	行頭から短形式のコミットIDを記述する。
+	  	コミットIDの代わりに\SQuote{\tt{HEAD}}と記述したときは、
+		最新のコミットIDを指定したものと解釈する。
+	  \item	1つ以上の空白を置けば後ろに何を書いても無視する。
+	  \item	ハッシュ文字(\SQuote{\tt{\#}})以降及び空行は無視する。
+	\end{itemize}
+  \end{narrow}
+  \noindent
+  比較レビジョン定義ファイル
+  \begin{narrow}
+  	レポート作成の対象となるレビジョン(コミットID)を指定するファイル。
+	形式は基準レビジョン定義ファイルと同じである(上記参照)。
+  \end{narrow}
+\end{narrow}
+
+% end: 6.1.MakeReportScriptTree.tex

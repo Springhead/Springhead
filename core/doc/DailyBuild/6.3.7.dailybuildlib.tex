@@ -1,0 +1,119 @@
+% 6.3.7.dailybuildlib.tex
+%	Last update: 2018/08/02 F.Kanehori
+%\newpage
+\subsubsection{dailybuild\_lib.pm}
+\label{subsubsec:dailybuildlib}
+
+\medskip
+\noindent
+Daily Buildの結果解析で共通に使用する関数のライブラリ
+
+\medskip
+\begin{Methods}{サブルーチン}
+\begin{Method}{%
+	read_log(\plHshR{modules}, \plAryR{modules}, \plAryR{lines})\\
+	\Hskip{60pt}= read_log(\plVar{logfile}, \plVar{script} [, \plVar{patt_id}])}
+    \begin{Args}
+	\Item[t]{\plVar{logfile}}{ログファイル名}
+	\Item[t]{\plVar{script}}{呼び出し元スクリプト名(エラー表示用)}
+	\Item[t]{\plVar{patt_id}}{モジュール開始パターンID(下表参照)}
+    \end{Args}
+    \begin{narrow}[10pt]
+	\begin{longtable}[r]{cll}\hline
+	     id & \MC{1}{c}{pattern} & \MC{1}{c}{用 途}\\\hline
+	     0  & \DQuote{\tt{*** \it{proj}: \it{solution} ***}}
+		& \Path{Build.log}及び\Path{Run.log}用\\
+	     1  & \DQuote{\tt{\it{num}> *** \it{proj}: \it{solution} ***}}
+		& \Path{StubBuild.log}用\\
+	     2  & \DQuote{\tt{[ \it{alnum} ]}}
+	    	& \Hskip{5pt}\tt{filter.pl}用\\\hline
+	\end{longtable}
+    \end{narrow}
+    \begin{Return}
+	\Item[t]{\plHsh{modules}}{モジュール名とスレッド情報を関連付けた連想配列。
+		キーはモジュール名、値は\plHsh{threads}の参照。
+		ここで\plHsh{threads}はスレッド情報を格納する連想配列で、
+		キーはスレッド番号、値はそのスレッドに属するログ行。}
+	\Item[t]{\plAry{modules}}{モジュール名を出現順に格納した配列}
+	\Item[t]{\plAry{lines}}{ログの各行を出現順に格納した配列}
+    \end{Return}
+    \begin{Brief}
+	指定されたログファイルを読み込み、モジュール毎にスレッド順に整理する。\\
+	モジュールの開始パターンは3種類あり、どれを使うかは引数で指定する
+	(引数の説明参照)。\\
+	スレッド関連より前に出力されたログ行は、
+	スレッド番号$-1$のスレッドに属するものとして扱う。
+	また、スレッド関連より後に出力されたログ行は、
+	スレッド番号$999$のスレッドに属するものとして扱う。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	\plVar{number} = outside_threads_before()\\
+	\plVar{number} = outsize_threads_after()}
+    \begin{Brief}[r]
+	それぞれ、スレッド情報より前の部分に対する仮想スレッド番号($-1$)
+	及びスレッド情報より後の部分に対する仮想スレッド番号($999$)を返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	(\plAryR{modules1}, \plAryR{modules2})\\
+		\Hskip{60pt}= associate_modules(\plAryR{modules1},
+		\plAryR{modules2}, \plVar{script)}}
+    \begin{Args}[r]
+	\Item[t]{\plAry{modules1}}{比較される側(\KQuote{左側})の配列}
+	\Item[t]{\plAry{modules2}}{比較する側(\KQuote{右側})の入力行の配列}
+    \end{Args}
+    \begin{Brief}
+	引数で指定された2つのモジュール配列(\plAry{modules1},
+	\plAry{modules2}とする)の対応する要素が同じモジュールとなるように
+	各配列の要素を調整する。そのために、
+	\plAry{modules1}にしかないモジュールに対しては
+	\plAry{modules2}に削除モジュールマーク(\SQuote{\tt{_DEL_}})を挿入することで、
+	\plAry{modules2}にしかないモジュールに対しては
+	\plAry{modules1}に挿入モジュールマーク(\SQuote{\tt{_INS_}})を挿入することで
+	対応をとる。
+	挿入モジュールマーク及び削除モジュールマークは
+	\tt{mod_ins()}及び\tt{mod_del()}で取得する。下図参照。
+	\begin{narrow}[\WID]
+	\def\CLINE{\cline{1-1}\cline{3-3}\cline{5-5}\cline{7-7}}
+	\begin{tabular}{|c|c|c|c|c|c|c|}
+		\MC{3}{c}{input} & \MC{1}{c}{} & \MC{3}{c}{output}\\\CLINE
+		1 && 1 & \RArrowSp{10pt} & 1 && 1\\\CLINE
+		2 && X & \RArrowSp{10pt} & \tt{_INS_} && X\\\CLINE
+		3 && 2 & \RArrowSp{10pt} & 2 && 2\\\CLINE
+		4 && 3 & \RArrowSp{10pt} & 3 && 3\\\CLINE
+		5 && 5 & \RArrowSp{10pt} & 4 && \tt{_DEL_}\\\CLINE
+		\MC{1}{c}{modules1} & \MC{1}{c}{} & \MC{1}{c}{modules2} & \MC{1}{c|}{}
+			& 5 && 5\\\cline{5-5}\cline{7-7}
+		\MC{4}{c}{} & \MC{1}{c}{\tt{modules1}} &
+		\MC{1}{c}{} & \MC{1}{c}{\tt{modules2}}
+	\end{tabular}
+	\end{narrow}
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	mod_ins()\\
+	mod_del()}
+    \begin{Brief}
+	それぞれ、挿入モジュールマーク(\SQuote{\tt{_INS_}})、
+	削除モジュールマーク(\SQuote{\tt{_DEL_}})を返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\plAryR{buff} = gather_lines(\plHshR{modules}, \plVar{module})}
+    \begin{Args}
+	\Item[t]{\plHsh{modules}}{モジュール名と入力行を対応付けた連想配列}
+	\Item[t]{\plVar{module}}{抽出するモジュールの名前}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{\plAry{buff}}{\plHsh{modules}から
+		該当するモジュールの入力行を抽出した配列}
+    \end{Return}
+    \begin{Brief}
+	モジュール名とスレッド情報を関連付けた連想配列から、
+	指定されたスレッドのログのみを抽出する。
+	\tt{rad_log()}で返された\plHsh{modules}を処理の対象とする。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 6.3.7.dailybuildlib.tex

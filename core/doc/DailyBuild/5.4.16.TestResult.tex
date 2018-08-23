@@ -1,0 +1,180 @@
+% 5.4.16.TestResult.tex
+%	Last update: 2018/07/31 F.Kanehori
+%\newpage
+\subsubsection{クラス TestResult}
+\label{subsubsec:TestResult}
+
+\bigskip
+\def\HS{\Hskip{1.5em}}
+\begin{Brief}[b]
+	テスト結果を管理するクラス。
+	2つの配列\tt{results}及び\tt{visited}を用いて管理する。
+	\def\Row#1#2{\tt{#1} & \FCol{165pt}{#2}\\}
+	\def\RowSp#1#2{\tt{#1} & \FCol[.85]{165pt}{#2}\\}
+	\Vskip{-.8\baselineskip}
+	{\small\begin{longtable}[r]{|p{18em}|l|}\hline
+    	    \Row{results}{テスト結果情報を累積する配列}
+	    \RowSp{%
+		{\def\arraystretch{.85}%
+		\begin{tabular}{@{\Hskip{15pt}}l}
+    	    		results[\it{name}][RST.ERR]\\
+    	    		results[\it{name}][RST.SKP]\\
+    	    		results[\it{name}][RST.BLD]\\
+    	    		results[\it{name}][RST.RUN]\\
+    	    		results[\it{name}][RST.RUN]
+		\end{tabular}}}{%
+		\begin{tabular}{@{\Hskip{10pt}}l}
+			コンパイル・実行以外でのエラーコード\\
+			このテストがスキップされたことを示す\\
+			コンパイルの結果コード\\
+			テスト実行の結果コード\\
+			テスト実行の結果コードの予測値
+		\end{tabular}}\hline
+    	    \Row{visited}{上記の\tt{\it{name}}の一覧}\hline
+	\end{longtable}}
+	ここで\it{name}はテストが終了したディレクトリの名称(テスト名称)、
+	\it{p}と\it{c}\,はそれぞれplatformとconfigurationの名前。
+	\tt{RST.xxx}については\Ref{subsubsec}{ConstDefs}を参照。
+\end{Brief}
+
+\begin{Initializer}{obj = TestResult(fname, scratch, verbose)}
+    \Vskip{-\baselineskip}
+    \begin{Args}
+	\Item[t]{fname}{%
+		テスト結果累積ファイルのベースとなる名前\\
+		\HS\tt{results}\RArrowSp{5pt}\Path{\it{fname}.r}\\
+		\HS\tt{visited}\RArrowSp{5pt}\Path{\it{fname}.v}}
+	\Item[t]{scratch}{%
+		テスト結果の登録をスクラッチ状態から始めるか否か。
+		Trueが指定されたら、
+		指定された名前のテスト結果累積ファイルを消去して
+		スクラッチ状態から始める。
+		Falseが指定されたら、
+		指定された名前のテスト結果累積ファイルから
+		以前のデータを読み出してテスト結果データの初期データとする。}
+    \end{Args}
+\end{Initializer}
+
+\def\HS{\Hskip{\WID}}
+\begin{Methods}{公開メソッド}
+\begin{Method}{set_info(name, category, info)}
+    \begin{Args}
+	\Item[t]{name}{テスト名(ディレクトリ名)}
+	\Item[t]{category}{情報のカテゴリー(enum \tt{RST})}
+	\Item[t]{info}{設定する情報(\it{string} or \it{int})}
+    \end{Args}
+    \begin{Brief}
+	引数\tt{name}で指定されたテストに対して、
+	テスト結果以外の情報(\tt{RST.ERR, RST.SKP, RST.EXP})を登録する。\\
+	\HS\tt{results[\it{name}][RST.ERR] = \it{info}}\\
+	\HS\tt{results[\it{name}][RST.SKP] = \it{info}}\\
+	\HS\tt{results[\it{name}][RST.RUN][RST.EXP] = \it{info}}\\
+	\tt{name}が初出の場合には、テスト結果の登録(\tt{set_result()})に先立ち、
+	このメソッドを呼んで\tt{results[\it{name}]}を初期化する必要がある。
+    \end{Brief}
+\end{Method}
+\begin{Method}{set_result(name, category, platform, config, result)}
+    \begin{Args}
+	\Item[t]{name}{テスト名(ディレクトリ名)}
+	\Item[t]{category}{情報のカテゴリー(enum \tt{RST})}
+	\Item[t]{platform}{プラットフォーム(enum \tt{PLATS})}
+	\Item[t]{conf}{テスト構成(enum \tt{CONFS})}
+	\Item[t]{result}{テスト結果(\it{int})}
+    \end{Args}
+    \begin{Brief}
+	引数\tt{name}で指定されたテストに対して、
+	\tt{category, platform, config}の組合せの結果を登録する。
+	ここで\tt{category}は\tt{RST.BLD, RST.RUN}の何れかである。\\
+	\HS\tt{results[\it{name}][RST.RUN][\it{platform}][\it{config}] = \it{result}}
+    \end{Brief}
+\end{Method}
+\begin{Method}{(results, visited) = get()}
+    \begin{Brief}
+	テスト結果全体(\tt{results}と\tt{visited})を取得する。
+    \end{Brief}
+\end{Method}
+\begin{Method}{status = finish()}
+    \begin{Return}
+	\Item[t]{status}{処理結果($0$: 成功、$-1$: 失敗)}
+    \end{Return}
+    \begin{Brief}
+	テスト結果データをテスト結果累積ファイルにシリアライズする。
+	テスト結果はメモリ上にしかないので、
+	テスト終了時に必ずこのメソッドを呼ぶこと。
+    \end{Brief}
+\end{Method}
+\begin{Method}{erase()}
+    \begin{Brief}
+	テスト結果累積ファイルを消去する。
+	インスタンス生成時に\tt{scratch}が指定されたならば、
+	イニシャライザから呼び出される。
+    \end{Brief}
+\end{Method}
+\begin{Method}{lines = edit_result_log()}
+    \def\COLWID{\linewidth}
+    \addtolength{\COLWID}{-13pt}
+    \begin{Brief}
+	テスト結果全体を、テスト結果ファイル(\Path{result.log})形式に編集する。\\
+	\tt{visited}にリストされているすべてのテストデータを取り出して、
+	成功モジュール名を\tt{succs[RST.BLD]}と\tt{succs[RST.RUN]}に、
+	失敗モジュール名を\tt{fails[RST.BLD]}と\tt{fails[RST.RUN]}に格納する。
+	これらを\tt{__edit_log_data()}で編集データ\tt{lines}にまとめる。\\
+	(例)\\
+	\vspace{-1.2\baselineskip}
+	\begin{longtable}[r]{|l|}\hline
+	    \begin{minipage}[r]{\COLWID}\footnotesize{\tt{%
+		\vrule width 0pt height 1ex\\
+tests\\
+ビルド成功 (Base:Quaternion,Collision:CDContGJK, \CDots )\\
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppMultiWinTest, \CDots )\\
+実行成功 (Base:Quaternion,Collision:CDContGJK, \CDots )\\
+実行失敗 (Foundation:Timer)\\
+\\ 
+Samples\\
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman, \CDots )\\
+ビルド失敗 (Framework:FWOptimizer, \CDots )\\
+実行成功 ()\\
+実行失敗 ()\\
+	    }}\end{minipage}\\\hline
+	\end{longtable}
+	\vspace{-.7\baselineskip}
+    \end{Brief}
+\end{Method}
+\begin{Method}{dump()}
+    \begin{Brief}
+	テスト結果をダンプする(デバッグ用)。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+\begin{Methods}{内部メソッド}
+\begin{Method}{\it{object} __init_result()}
+    \begin{Brief}
+	個々のテストについて、必要な要素をすべてNoneで初期化した配列を返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\it{int} __serialize(obj, fname)}
+    \begin{Brief}
+	引数\tt{obj}で与えられたオブジェクトをシリアライズして
+	ファイル\tt{fname}に書き込む。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\it{object} __deserialize(fname)}
+    \begin{Brief}
+	\tt{__serialize()}で書いたデシリアライズデータを読み込んで返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{[\it{string}] __edit_log_data(lines, name, succs, fails)}
+    \begin{Args}
+	\Item[t]{lines}{編集結果を格納するリスト}
+	\Item[t]{name}{テスト名}
+	\Item[t]{succs}{成功モジュール名リスト}
+	\Item[t]{fails}{失敗モジュール名リスト}
+    \end{Args}
+    \begin{Brief}
+	引数で与えられたデータを編集して\tt{lines}に追記する。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 5.4.16.TestResult.texx

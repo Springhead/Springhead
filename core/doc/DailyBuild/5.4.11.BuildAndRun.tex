@@ -1,0 +1,200 @@
+% 5.4.11.BuildAndRun.tex
+%	Last update: 2018/07/31 F.Kanehori
+%\newpage
+\subsubsection{クラス BuildAndRun}
+\label{subsubsec:BuildAndRun}
+
+\bigskip
+\begin{Brief}[b]
+	Solution/makeファイルで指定された1つのソリューションについて、
+	コンパイル及びテスト実行を実施するクラス。
+	この時点で、コンパイル及びテスト実行に係るパラメータは
+	すべて確定していること。\\
+	コンパイルには、Visual Studio (Windowsの場合)又は
+	\tt{/bin/make} (unixの場合)を使用する。
+	テスト実行は、生成されたバイナリを直接起動することで実施する。
+	それぞれ、リターンコードを返すことで結果を通知する。
+\end{Brief}
+
+\bigskip
+\begin{Initializer}{obj = BuildAndRun(ccver, verbose, dry_run)}
+    \begin{Args}
+	\Item[t]{ccver}{%
+		コンパイラのバージョン (unixの場合はダミー)\\
+		Visual Studioのtool set versionを指定する。\\
+		(\RefRef{subsubsec}{VisualStudio})}
+	\Item[t]{dry_run}{%
+		コマンドを表示するだけで実行はしない。}
+    \end{Args}
+\end{Initializer}
+
+\begin{Methods}{公開メソッド}
+\begin{Method}{stat = build(build(dirpath, slnfile, platform, opts, \Cont\\
+		\hspace{100pt}outfile, logfile, errlogfile, force)}
+    \begin{Args}
+	\Item[t]{dirpath}{ソリューションファイルがあるディレクトリのパス名}
+	\Item[t]{slnfile}{Solution/makeファイル名}
+	\Item[t]{platform}{プラットフォーム(\DQuote{x86} or \DQuote{x64})}
+	\Item[t]{opts}{コンパイラオプション\\
+			unixの場合には、
+			\begin{LocalScope}\def\arraystretch{.9}
+			\begin{narrow}[10pt]
+			\begin{tabular}{l@{\RArrowSp{5pt}}l}
+				\DQuote{Debug}   & \DQuote{--g}\\
+				\DQuote{Release} & \DQuote{--O2}\\
+				\DQuote{Trace}   & \DQuote{--O2}
+			\end{tabular}\end{narrow}\end{LocalScope}
+			\Vskip{5pt}
+			に置き換えて使用する。}
+	\Item[t]{outfile}{出力バイナリのパス
+			(Windowsの場合leaf名はダミー --- solution fileで決まる)\\
+			絶対パス又は\tt{dirpath}からの相対パスで指定する。}
+	\Item[t]{logfile}{ログファイルのパス(ログはappendされる）\\
+			絶対パス又は\tt{dirpath}からの相対パスで指定する。}
+	\Item[t]{errlogfile}{エラーログファイルのパス(ログはappendされる）\\
+			絶対パス又は\tt{dirpath}からの相対パスで指定する。}
+	\Item[t]{force}{強制的に再コンパイルする(True or False\Note)}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{stat}{リターンステータス}
+    \end{Return}
+    \begin{Brief}
+	一時的に指定されたディレクトリ(\tt{dirpath})に移動して
+	ソリューションをコンパイルする。
+    \end{Brief}
+    \begin{Proc}
+	\begin{enumerate}
+	  \item	引数\tt{dirpath}で指定されたディレクトリに移動する。
+	  \item	ログファイル、エラーログファイルをappend openする。
+		コンパイルログをこれらのファイルに直接書き出せる訳ではない
+		(後でマージする)。
+	  \item	Windowsの場合は\tt{__build_w()}を、
+		unixの場合は\tt{__build_u()}を呼び出してコンパイルする。
+		引数は煩雑になるのでリストにまとめて渡す。
+	  \item	コンパイルログからエラー行を抜き出す。
+	  \item	コンパイルログをログファイルに、
+		前項で抜き出したエラー行をエラーログファイルにマージする。
+	  \item	元のディレクトリに戻って、コンパイル結果(status code)を返す。
+	\end{enumerate}
+    \end{Proc}
+\end{Method}
+\begin{Method}{stat = run(build(dirpath, exefile, args,\Cont\\
+		\hspace{100pt}logfile, errlogfile,\Cont\\
+		\hspace{100pt}addpath, timeout, pipeprocess)}
+    \begin{Args}[r][7em]
+	\Item[t]{dirpath}{生成したバイナリファイルがあるディレクトリのパス名。}
+	\Item[t]{exefile}{Windows \RArrow\ 実行バイナリのパス\\
+			unix \RArrow\ makefileのパス}
+	\Item[t]{args}{実行時に与える引数}
+	\Item[t]{logfile}{ログファイルのパス(ログはappendされる)。\\
+			絶対パス又は\tt{dirpath}からの相対パスで指定する。}
+	\Item[t]{errlogfile}{エラーログファイルのパス(ログはappendされる)\\
+			絶対パス又は\tt{dirpath}からの相対パスで指定する。}
+	\Item[t]{addpath}{実行時サーチパスに加えるパス(前置される)。}
+	\Item[t]{timeout}{実行時のタイムアウト値(秒)。}
+	\Item[t]{pipeprocess}{実行バイナリの標準入力に何か与える必要がある場合、
+			それを与えるプログラム。}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{stat}{リターンステータス}
+    \end{Return}
+    \begin{Brief}
+	一時的に指定されたディレクトリ(\tt{dirpath})に移動して
+	プログラムを実行する。
+	パイププロセスを指定することも可能で(ただし入力側のみ)。
+	これは、メニュー駆動のプログラムを想定したものである
+	(出力側のパイププロセスには未対応である)。
+	\begin{Table}[r][1.5em]{ll}
+	    \Item{※}{%
+ 		Webのレポートでは単純にdiffをとっているものがあるが、
+		出力をフィルタリング(行数制限、編集等)してから
+		diffをとった方が見易くなると思われるので
+		拡張を考慮する価値はある -- (TODO)。}
+	\end{Table}
+    \end{Brief}
+    \begin{Proc}
+	\begin{enumerate}
+	  \item	引数\tt{dirpath}で指定されたディレクトリに移動する。
+	  \item	実行ログを書き出すための一時ファイル名を決める。
+	  \item	ログファイル、エラーログファイルをappend openする。
+		実行ログをこれらのファイルに直接書き出せる訳ではない
+		(後でマージする)。
+	  \item	unixの場合、makeのターゲットを\tt{test}とする。
+	  \item	\tt{Proc}クラスを用いてプログラムを実行する
+		(パイププロセスの処理も行なう)。
+	プロセスの出力は実行ログ一時ファイルに割り当てる
+		(標準出力、標準エラーとも)。
+		\tt{timeout}は\tt{wait()}の引数として指定する。
+	  \item	実行一時ログからエラー行を抜き出す。
+	  \item	実行一時ログをログファイルに、
+		前項で抜き出したエラー行をエラーログファイルにマージする。
+	  \item	元のディレクトリに戻って、実行結果(status code)を返す。
+	\end{enumerate}
+    \end{Proc}
+\end{Method}
+\end{Methods}
+
+\bigskip
+\begin{Methods}{内部メソッド \rm{(抜粋)}}
+\begin{Method}{\it{obj} __open_log(self, fname, fmode, step)}
+    \begin{Brief}
+	指定されたファイルを指定されたモードでオープンする。
+    \end{Brief}
+\end{Method}
+\begin{Method}{(stat, loginfo) = __build_u(args)}
+    \begin{Brief}
+	Unix用のコンパイルメソッド。
+	コンパイルの方法はmakefileで指定する。
+	\begin{enumerate}
+	  \item	引数\tt{args}(リスト)を、
+		\tt{slnfile, platform, opts, outfile, force}に分解する。
+	  \item	コンパイルログを書き出すための一時ファイル名を決める。
+	  \item	\tt{Proc}クラスを用いてコンパイルを実行する
+		(パイププロセスの処理も行なう)。
+		プロセスの出力はログ一時ファイルに割り当てる
+		(stdout, stderrとも)。\\
+		\Cmnd{> make -f <\it{makefile}> compile}
+	  \item	コンパイラが返したステータスコード(\tt{stat})と
+		ログ情報(\tt{loginfo} \CDots コマンド名とログ一時ファイル名の
+		リスト)とを返す。
+	\end{enumerate}
+    \end{Brief}
+\end{Method}
+\begin{Method}{(stat, loginfo) = __build_w(args)}
+    \begin{Brief}
+	Windows用のコンパイルメソッド。
+	コンパイルにはVisual Studioを用いる(\RefRef{subsubsec}{VisualStudio})。
+	\begin{enumerate}
+	  \item	引数\tt{args}(リスト)を、
+		\tt{slnfile, platform, opts, outfile, force}に分解する。
+	  \item	実行ログを書き出すための一時ファイル名を決める。
+	  \item	クラス\tt{VisualStudio}のインスタンスを生成し(\tt{vs})、
+		必要なパラメータを設定する(\tt{vs.set()})。
+	  \item	\tt{Proc}クラスを用いてコンパイルを実行する。\\
+		\Cmnd{vs.build()}
+	  \item	コンパイラが返したステータスコード(\tt{stat})と
+		ログ情報(\tt{loginfo} \CDots コマンド名とログ一時ファイル名の
+		リスト)とを返す。
+	\end{enumerate}
+    \end{Brief}
+\end{Method}
+\begin{Method}{\it{string--list} __select_errors(fname, step)}
+    \begin{Brief}
+	指定されたファイルを読み、\UpDQ\verb*| error |\UpDQ\,を含む行を集めて
+	リストとして返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{__merge_log(self, kind, data, logf, cmnd, step)}
+    \begin{Brief}[r]
+	引数\tt{kind}の意味は次の通り。\\
+	\begin{tabular}{@{\hspace{10pt}}lcl}
+		1 & \RArrow & 次の引数\tt{DATA}はログテキストのリストである。\\
+		2 & \RArrow & ログテキストを記録したファイル名である。
+	\end{tabular}\\
+	これに従ってログテキストを取得し、引数\tt{logf}で与えられた
+	ファイルオブジェクトに追記する(オープン済みのオブジェクト)。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 5.4.11.BuildAndRun.tex

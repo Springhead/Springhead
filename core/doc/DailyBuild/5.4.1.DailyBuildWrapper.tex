@@ -1,0 +1,57 @@
+% 5.4.1.DailyBuildWrapper.tex
+%	Last update: 2018/06/17 F.Kanehori
+%\newpage
+\subsubsection{DailyBuildWrapper}
+\label{subsubsec:DailyBuildWrapper}
+
+\medskip
+\noindent
+タスクDailyBuildを実行するためのラッパスクリプト。
+関連するスクリプトの変更を確実に反映させるために、
+次の2段階でDailyBuildを起動する。
+
+\bigskip
+\begin{narrow}
+    \framebox[.75\linewidth][l]{\tt{%
+	\tt{\begin{tabular}{l}
+		> python DailyBuild.py -u \%*\\
+		> python DailyBuild.py -U \%*\\
+	\end{tabular}}
+    }}\hspace{10pt}\small{(Windows)}
+\end{narrow}
+\smallskip 又は\smallskip
+\begin{narrow}
+    \framebox[.75\linewidth][l]{\tt{%
+	\tt{\begin{tabular}{l}
+		> python DailyBuild.py -u \$*\\
+		> python DailyBuild.py -U \$*\\
+	\end{tabular}}
+    }}\hspace{10pt}\small{(unix)}
+\end{narrow}
+
+\bigskip
+1回目のスクリプト起動ではレポジトリSpringheadの更新のみを行なう。
+2回目は更新されたスクリプトの起動であり、
+テストレポジトリを新たに作成してテストを実行する。
+
+\medskip
+このバッチファイルをタスクスケジューラに登録することでタスクDailyBuildを実行する
+(以下Windowsの場合)。
+登録情報は次のとおり。
+
+\begin{narrow}
+    \begin{LocalScope}
+    \TableItemIndent=0pt
+    \begin{Table}[r][7.5em]{ll}
+	\Item{トリガー}{毎日2:02に起動}
+	\Item{操作}{プログラムの開始}
+	\Item{スクリプト(P)}{%
+		\Path{I:/DailyBuild/Springhead/core/test/DailuBuild.bat}}
+	\Item{引数}{%
+		\tt{-t 14.0 -c Release -p x64}\Cont\\
+		\hspace{40pt}\tt{SpringheadTest DailyBuildResult/Result}}
+    \end{Table}
+    \end{LocalScope}
+\end{narrow}
+
+% end: 5.4.1.DailyBuildWrapper.tex

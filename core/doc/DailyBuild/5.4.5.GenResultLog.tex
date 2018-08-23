@@ -1,0 +1,53 @@
+% 5.4.5.GenResultLog.tex
+%	Last update: 2018/07/26 F.Kanehori
+%\newpage
+\subsubsection{GenResultLog}
+\label{subsubsec:GenResultLog}
+
+\medskip
+\noindent
+テスト結果をファイルに書き出すプログラム。
+入力となるテスト結果は引数\tt{res-file}で指定し、
+\tt{TestResult}クラスのメソッド\tt{edit_result_log()}または
+\tt{dump()}を用いて編集する(\RefRef{subsubsec}{TestResult})。
+
+\medskip
+\Invoke[b]{%
+     > python GenResultLog.py [options] type res-file [plat conf]
+}
+\begin{Opts}[b]
+    \Item[t]{-o FILE}{%
+	出力ファイル名\\
+	テストを起動するディレクトリからの相対パスで指定する。}
+\end{Opts}
+\begin{Args}[b]
+    \Item[t]{type}{%
+	ログ編集タイプ(次のいずれか)\\
+	\begin{tabular}{@{\Hskip{10pt}}l@{\Hskip{10pt}}l}
+		\tt{d} & ダンプ形式 (ファイル内容の確認用)\\
+		\tt{r} & \tt{result.log}形式
+	\end{tabular}}
+    \Item[t]{res-file}{テスト結果累積ファイル名}
+    \ItemMC{2}{l}{--- 以下\tt{type}が\tt{r}のときのみ指定 ---}\\[10pt]
+    \Item[t]{plat}{プラットフォーム (\tt{x86, x64})}
+    \Item[t]{conf}{ビルド構成 (\tt{Debug, Release, Trace})}
+\end{Args}
+
+\begin{Proc}[b]
+	\begin{enumerate}
+	  \item	\tt{TestResult}クラスのインスタンスを生成して
+  		テスト結果累積データを読み込む(\RefRef{subsubsec}{TestResult})。
+
+	  \item	\tt{type}が\tt{r}ならば、
+		\begin{enumerate}
+		  \item	\tt{edit_result_log()}でテスト結果を編集する。
+		  \item	編集結果を標準出力に出力する。
+		  \item	出力ファイル指定があれば、そこにも出力する。
+		\end{enumerate}
+
+	  \item	\tt{type}が\tt{d}ならば、
+		\tt{dump()}を呼び出してテスト結果をダンプする。
+	\end{enumerate}
+\end{Proc}
+
+% end: 5.4.5.GenResultLog.tex

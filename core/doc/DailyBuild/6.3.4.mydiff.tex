@@ -1,0 +1,225 @@
+% 6.3.4.mydiff.tex
+%	Last update: 2018/07/31 F.Kanehori
+%\newpage
+\subsubsection{mydiff.pl}
+\label{subsubsec:mydiff}
+
+\medskip
+\noindent
+Visual Studio (devenv) が出力したログを比較して、共通する行を取り除く。
+処理はモジュール単位に行なう。
+
+\medskip
+\Invoke[b]{
+	> perl order.pl [options] file1 file2
+}
+\begin{Opts}[b]
+    \Item[t]{-c}{context diff出力 (未実装)}
+    \Item[t]{-o outfile}{出力ファイル名 (stdout\Note)}
+    \Item[t]{-p patt_id}{モジュール識別パターン番号}
+    \Item[t]{-D n}{デバッグレベル設定}
+\end{Opts}
+\begin{Args}[b]
+    \Item[t]{file1}{入力ファイル名1}
+    \Item[t]{file2}{入力ファイル名2}
+\end{Args}
+
+\begin{Proc}[b]
+\begin{enumerate}
+  \item	指定された2つのファイルそれぞれについて、
+	\tt{dailybuild\_lib.pm}のライブラリ関数\tt{read\_log()}を用いて
+	入力ファイルの読み込み処理を行なう。
+	返されるのは(\plHshR{modules}, \plAryR{modules}, \plAryR{lines})の3つ組である。
+	\begin{narrow}[10pt]\begin{tabular}{ll}
+	    \plHsh{modules}
+		& モジュール名をキーとした連想配列(要素は\tt{\%threads})\\
+	    \plHsh{threads}
+		& スレッド番号をキーとした連想配列(要素は入力データ行の配列)\\
+	    \plAry{modules}
+		& モジュール名の配列(出現順)
+	\end{tabular}\end{narrow}
+
+  \item	\tt{dailybuild\_lib.pm}のライブラリ関数\tt{associate\_modules()}を用いて
+	2つのファイルのモジュール名の対応をとる。
+	すなわち、両方のファイルでモジュールの出現順序が同じとなるように
+	データ行を並べ替える。
+	このとき、片方のファイルにしかないモジュールについては、
+	特別なモジュールマークを挿入することで対応をとる
+	(\RefRef{subsubsec}{dailybuildlib})。\\
+	返されるのはデータ行配列の組(\plAryR{modules1}, \plAryR{modules2})である。
+
+  \item	すべてのモジュールについて、
+	\begin{enumerate}
+	  \item	どちらか一方のファイルにしかないモジュールの場合は、
+		行頭に\DQuote{<}か\DQuote{>}を付けて出力ファイルに書き出す
+		(\tt{gatherlines(), output()})。
+	  \item	両方にファイルにあるモジュールの場合は、
+		差分情報を出力ファイルに書き出す(\RefRef{mydiff}{diff})
+	\end{enumerate}
+\end{enumerate}
+\end{Proc}
+
+\begin{Methods}{サブルーチン}
+\begin{Method}{%
+	    (\plVar{count1}, \plVar{count2})
+		= diff(\plVar{fh},
+			\plHshR{modules1}, \plVar{module1}, \plVar{base1},\\
+ 	    \Hskip{160pt}
+			\plHshR{modules2}, \plVar{module2}, \plVar{base2})}
+    \label{mydiff:diff}
+    \begin{Args}
+	\Item[t]{\plVar{fh}}{出力ファイル}
+	\Item[t]{\plHsh{modules}\Note}{モジュール名と入力行を対応付けた連想配列}
+	\Item[t]{\plVar{module}\Note}{処理対象モジュール名}
+	\Item[t]{\plVar{base}\Note}{当該モジュール先頭行の行番号}
+	\ItemMC{2}{l}{\Hskip{5pt}\Note
+		\small{ 添字1は比較される側を、添字2は比較する側を示す。}}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{\plVar{count1}}{\tt{modules1}について処理が済んだ行数}
+	\Item[t]{\plVar{count2}}{\tt{modules2}について処理が済んだ行数}
+    \end{Return}
+    \begin{Brief}
+	モジュール1とモジュール2とを比較して差分情報を作成する。
+	比較される側がモジュール1、比較する側がモジュール2である。\\
+	比較の対象となるデータ行は、
+	\tt{gather_lines()}を用いて\plAry{buff1}と\plAry{buff2}に取り出す
+	\tt{(\plHsh{modules}\it{N}[\plVar{module}\it{N}]}の全体を
+	スレッド順にソートしたもの)。\\
+	\plAry{buff1}と\plAry{buff2}の各行を先頭から順に比較しながら次の処理を行なう
+	(処理の済んだ行数をカウントするのに
+	\plVar{count}\it{N}と\plAry{buff}\it{N}を使用する。)
+	\begin{itemize}
+	  \item	\plAry{buff2}だけに行が残っているならば、
+		それらは末尾に挿入された行である。
+		\plAry{buff2}に残った行を出力する(\ref{mydiff:eatup} eat_up参照)。
+	  \item	\plAry{buff1}だけに行が残っているならば、
+		それらは末尾から削除された行である。
+		\plAry{buff1}に残った行を破棄する(\ref{mydiff:eatup} eat_up参照)。
+	  \item	\plAry{buff1}の先頭行を\tt{line1}、
+		\plAry{buff2}の先頭行を\tt{line2}とする。
+	  	\tt{line1}と\tt{line2}とが同じならば、
+		未出力行をフラッシュする(\RefRef{mydiff}{flush})。
+		なければカウントを進めるだけ。
+	  \item	\tt{line1}と\tt{line2}とが異なっている場合で、
+	  	\tt{line1}が\plAry{buff2}になく、
+		かつ\tt{line2}が\plAry{buff1}にあるならば、
+		それは削除された行である。
+	  	\plAry{buff1}のうち\tt{line2}の前までの部分を
+		削除バッファ(\tt{@del_buff})に追加する。
+	  \item	同じく\tt{line1}と\tt{line2}とが異なっている場合で、
+	  	逆に\tt{line1}が\plAry{buff2}にあり、
+		かつ\tt{line2}が\plAry{buff1}にないならば、
+		それは挿入された行である。
+	  	\plAry{buff2}のうち\tt{line1}の前までの部分を
+		挿入バッファ(\tt{@ins_buff})に追加する。
+	  \item	それ以外で\tt{line1}と\tt{line2}とが異なっている場合は、
+		\tt{line1}を削除バッファ(\tt{@del_buff})に、
+		\tt{line2}を挿入バッファ(\tt{@ins_buff})に追加する。
+	\end{itemize}
+	最後に未出力行をフラッシュする。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	\plAryR{outbuff}
+	= eat_up(\plAryR{inbuff}, \plVar{mark}, \plVar{base1}, \plVar{base2})}
+    \label{mydiff:eatup}
+    \begin{Args}
+	\Item[t]{\plAry{inbuff}}{入力データの配列}
+	\Item[t]{\plVar{mark}}{削除マーク(\plVar{mark_del})か
+			       挿入マーク(\plVar{mark_ins})のいずれか}
+	\Item[t]{\plVar{base1}}{ファイル1側の先頭行番号}
+	\Item[t]{\plVar{base2}}{ファイル2側の先頭行番号}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{\plAry{outbuff}}{%
+		処理した3つ組(ファイル1側行番号, ファイル2側行番号, 行データ)の配列。}
+    \end{Return}
+    \begin{Brief}
+	\plVar{mark}が削除マーク(\plVar{mark_del})ならばファイル1側の行番号を進めながら、
+	\plVar{mark}が挿入マーク(\plVar{mark_ins})ならばファイル2側の行番号を進めながら、
+	入力データがなくなるまで
+	(ファイル1側行番号, ファイル2側行番号, 行データ)の3つ組を
+	配列に格納して返す(\RefRef{mydiff}{triplet})。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	\plAryR{array3}
+	= triplet(\plVar{lineno1}, \plVar{lineno2}, \plVar{line})}
+    \label{mydiff:triplet}
+    \begin{Brief}
+	与えられた3つの引数を1つの配列にまとめて返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	flush(\plVar{fh}, \plVar{mark}, \plVar{size1}, \plVar{size2},
+	\plAryR{buff1}, \plAryR{buff2})}
+    \label{mydiff:flush}
+    \begin{Args}
+	\Item[t]{\plVar{fh}}{出力ファイルハンドル}
+	\Item[t]{\plVar{mark}}{%
+		\plVar{mark_ins}, \plVar{mark_del}, \plVar{mark_chg} のいずれか。\\
+		行編集コマンド連想配列\plHsh{cmnd_tab}のキーに使用}
+	\Item[t]{\plVar{size}\it{N}}{\plAry{line}\it{N}の要素数}
+	\Item[t]{plAry{buff}\it{N}}{出力行データ3つ組の配列}
+    \end{Args}
+    \begin{Brief}
+	\plVar{size1}と\plVar{size2}が共に0ならば、何もしない。\\
+	\plVar{size1}が0でなければ、削除マークを指定して\plAry{buff1}の内容を出力する。\\
+	\plVar{size2}が0でなければ、挿入マークを指定して\plAry{buff2}の内容を出力する。\\
+	さもなければ、
+	\begin{enumerate}
+	  \item	\plAry{buff1}から行番号の最小値、最大値を求める(\tt{min_max()})。
+	  \item	\plAry{buff2}から行番号の最小値、最大値を求める(\tt{min_max()})。
+	  \item	これらを基に編集コマンドを出力する。
+	  \item	\plAry{buff1}の内容を行データを削除マーク付きで出力する。
+	  \item	セパレータ(\tt{--})を出力する。
+	  \item	\plAry{buff2}の内容を行データを挿入マーク付きで出力する。
+	\end{enumerate}
+    \end{Brief}
+\end{Method}
+\begin{Method}{flush1(\plVar{fh}, \plVar{mark}, \plAryR{buff})}
+    \label{mydiff:flush1}
+    \begin{Brief}
+	\begin{enumerate}
+	  \item	\plAry{buff}から、最大行番号、最小行番号、行データを
+	  	取得する(\ref{mydiff:minmax}\tt{min_max()}参照)。
+	  \item	これらを元に編集コマンドを編集して
+	  	(\ref{mydiff:editcommand}\tt{edit_command()}参照)出力する。
+	  \item	\plAry{buff}の内容を出力する(\RefRef{mydiff}{output})。
+	\end{enumerate}
+    \end{Brief}
+\end{Method}
+\begin{Method}{%
+	(\plVar{min1}, \plVar{max1}, \plVar{min2}, \plVar{max2},
+	\plAryR{lines}) = minx_max(\plAryR{buff})}
+    \label{mydiff:minmax}
+    \begin{Brief}
+	引数で渡されるのは、(行番号1, 行番号2, 行データ)の3つ組の配列である。
+	これから、行番号1の最大値・最小値、行番号2の最大値・最小値、
+	行データの配列を取り出して返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\plVar{str}
+		= edit_command(\plVar{min1}, \plVar{max1},
+		\plVar{min2}, \plVar{max2}, \plVar{cmnd})}
+    \label{mydiff:editcommand}
+    \begin{Brief}
+	与えられた情報から、\tt{ed}ライクな編集コマンドを作成して返す。
+    \end{Brief}
+\end{Method}
+\begin{Method}{output_module_name(\plVar{fh}, \plVar{module})}
+    \label{mydiff:outputmodulename}
+    \begin{Brief}
+	モジュール名が\DQuote{\tt{_top_level_}}でなければそれをファイルに出力する。
+    \end{Brief}
+\end{Method}
+\begin{Method}{output(\plVar{fh}, \plAry{buff}, \plVar{mark})}
+    \label{mydiff:output}
+    \begin{Brief}
+	\plAry{buff}の内容を、挿入・削除・置換表示文字とともにファイルに出力する。
+    \end{Brief}
+\end{Method}
+\end{Methods}
+
+% end: 6.3.4.mydiff.tex
