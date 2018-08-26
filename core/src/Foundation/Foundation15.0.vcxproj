@@ -442,7 +442,7 @@
     <None Include="Scilab.i" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Base\Base14.0.vcxproj">
+    <ProjectReference Include="..\Base\Base15.0.vcxproj">
       <Project>{90010cd8-7c45-481e-8697-aab9b3fb9e4f}</Project>
     </ProjectReference>
   </ItemGroup>
