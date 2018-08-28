@@ -34,8 +34,9 @@
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
 #	Ver 1.31 2018/08/21 F.Kanehori	Fixed for unix.
 #	Ver 1.32 2018/08/23 F.Kanehori	Fixed for unix (scp).
+#	Ver 1.33 2018/08/28 F.Kanehori	Tentative version (remote user).
 # ======================================================================
-version = 1.32
+version = 1.33
 
 import sys
 import os
@@ -74,7 +75,8 @@ result_log = 'result.log'
 history_log = 'History.log'
 date_record = 'Test.date'
 commit_id = 'Springhead.commit.id'
-log_server = '192.168.91.3'
+log_user = 'kanehori'
+log_server = 'haselab.net'
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -392,13 +394,12 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	Print('copying log files to web')
 	#
 	if Util.is_unix():
-		tohost = 'demo@%s' % log_server
-		touser = 'demo'
+		tohost = '%s@%s' % (log_user, log_server)
 		todir = '/home/WWW/docroots/springhead/dailybuild/log.unix'
 		fmdir = os.path.relpath('%s/log' % testdir)
 		proc = Proc(verbose=verbose, dry_run=dry_run)
 		opts = '-i ~/.ssh/id_rsa -o "StrictHostKeyChecking=no"'
-		cmnd = 'scp %s %s %s:%s' % (opts, fmdir, tohost, todir)
+		cmnd = 'scp %s %s/* %s:%s' % (opts, fmdir, tohost, todir)
 		rc = proc.execute(cmnd, shell=True).wait()
 		if rc == 0:
 			print('cp %s -> %s:%s' % (fmdir, tohost, todir))
