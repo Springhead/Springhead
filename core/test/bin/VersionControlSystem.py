@@ -60,6 +60,7 @@
 #	Ver 1.5  2018/05/08 F.Kanehori	Code reviewd.
 #	Ver 1.6  2018/05/14 F.Kanehori	Use sprphys's commit id.
 #	Ver 1.61 2018/08/21 F.Kanehori	Bug fixed.
+#	Ver 1.62 2018/08/30 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -85,7 +86,7 @@ class VersionControlSystem:
 	#
 	def __init__(self, system, url, wrkdir='.', verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.61
+		self.version = 1.62
 		#
 		self.system = system
 		self.url = Util.upath(url)
@@ -226,7 +227,8 @@ class VersionControlSystem:
 					info = [short_id, long_id, date]
 					if commit_id in [short_id, 'HEAD']:
 						return info
-					infos.append(info)
+					if commit_id == 'all':
+						infos.append(info)
 			return infos
 
 		def get_file_content(self, path, commit_id):
