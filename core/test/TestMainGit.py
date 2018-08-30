@@ -35,8 +35,9 @@
 #	Ver 1.31 2018/08/21 F.Kanehori	Fixed for unix.
 #	Ver 1.32 2018/08/23 F.Kanehori	Fixed for unix (scp).
 #	Ver 1.33 2018/08/28 F.Kanehori	Tentative version (remote user).
+#	Ver 1.34 2018/08/30 F.Kanehori	Generate "Test.date" on unix.
 # ======================================================================
-version = 1.33
+version = 1.34
 
 import sys
 import os
@@ -62,7 +63,7 @@ from TextFio import *
 #  Control parameter for test on unix.
 #
 unix_commit_resultlog	= True
-unix_gen_history	= Util.is_windows()
+unix_gen_history	= True
 unix_copyto_buildlog	= True
 unix_execute_makedoc	= Util.is_windows()
 unix_copyto_webbase	= Util.is_windows()
