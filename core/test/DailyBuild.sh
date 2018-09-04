@@ -1,5 +1,13 @@
 #! /bin/sh
 
+# Set test environment.
+
+ENVDEF="SprPath.sh"
+
+if [ -f ${ENVDEF} ]; then
+	source ${ENVDEF}
+fi
+
 # Use -A option to skip following steps.
 #	Update Springhead to HEAD status - git pull.
 #	Cleanup SpringheadTest - rm and git clone.

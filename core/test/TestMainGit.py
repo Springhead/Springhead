@@ -36,6 +36,7 @@
 #	Ver 1.32 2018/08/23 F.Kanehori	Fixed for unix (scp).
 #	Ver 1.33 2018/08/28 F.Kanehori	Tentative version (remote user).
 #	Ver 1.34 2018/08/30 F.Kanehori	Generate "Test.date" on unix.
+#	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
 # ======================================================================
 version = 1.34
 
@@ -76,7 +77,7 @@ result_log = 'result.log'
 history_log = 'History.log'
 date_record = 'Test.date'
 commit_id = 'Springhead.commit.id'
-log_user = 'kanehori'
+log_user = 'demo'
 log_server = 'haselab.net'
 
 # ----------------------------------------------------------------------
@@ -245,6 +246,15 @@ os.chdir(repository)
 if not os.path.exists('core/test/bin'):
 	msg = 'test repository "%s/core" may be empty' % repository
 	Error(prog).abort(msg)
+
+# ----------------------------------------------------------------------
+#  Remove log files.
+#
+Print('clearing log files')
+os.chdir('%s/log' % testdir)
+fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
+fop.rm('*')
+os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Test Go!
