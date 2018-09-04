@@ -32,10 +32,6 @@
 #	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
-#	Ver 1.31 2018/08/21 F.Kanehori	Fixed for unix.
-#	Ver 1.32 2018/08/23 F.Kanehori	Fixed for unix (scp).
-#	Ver 1.33 2018/08/28 F.Kanehori	Tentative version (remote user).
-#	Ver 1.34 2018/08/30 F.Kanehori	Generate "Test.date" on unix.
 #	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
 # ======================================================================
 version = 1.34
@@ -415,7 +411,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 		if rc == 0:
 			print('cp %s -> %s:%s' % (fmdir, tohost, todir))
 		else:
-			print('cp %s faild' % fmdir)
+			print('cp %s failed' % fmdir)
 	else:
 		dirname = 'log'
 		docroot = '//haselab/HomeDirs/WWW/docroots'
