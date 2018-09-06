@@ -61,6 +61,7 @@
 #	Ver 1.6  2018/05/14 F.Kanehori	Use sprphys's commit id.
 #	Ver 1.61 2018/08/21 F.Kanehori	Bug fixed.
 #	Ver 1.62 2018/08/30 F.Kanehori	Bug fixed.
+#	Ver 1.63 2018/08/30 F.Kanehori	Buf fixed: history log on unix.
 # ======================================================================
 import sys
 import os
@@ -305,6 +306,9 @@ if __name__ == '__main__':
 	parser.add_option('-f', '--fname', dest='fname',
 				action='store', default=None,
 				help='get file content')
+	parser.add_option('-u', '--unix', dest='unix',
+				action='store_true', default=False,
+				help='run on unix')
 	parser.add_option('-v', '--verbose', dest='verbose',
 				action='count', default=0,
 				help='set verbose mode')
@@ -323,6 +327,7 @@ if __name__ == '__main__':
 	repo_sub = options.subversion
 	repo_git = options.github
 	repo_hlb = options.haselab
+	fname = options.fname
 	verbose = options.verbose
 	revision = args[0]
 
@@ -400,6 +405,9 @@ if __name__ == '__main__':
 	repository = repository_def[system]
 	url = repository['url']
 	wrkdir = repository['dir']
+	if options.unix:
+		wrkdir += '/unix'
+		fname = 'unix/' + fname
 
 	if system == 'Subversion':
 		test(system, url, srkdir, verbose)
@@ -410,7 +418,7 @@ if __name__ == '__main__':
 			if not isinstance(revs[0], list):
 				revs = [revs]
 			for rev in revs:
-				contents(wrkdir, options.fname, rev)
+				contents(wrkdir, fname, rev)
 		else:
 			revisions = info(system, url, wrkdir, revision)
 

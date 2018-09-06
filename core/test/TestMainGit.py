@@ -407,7 +407,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 		todir = '/home/WWW/docroots/springhead/dailybuild/log.unix'
 		fmdir = os.path.relpath('%s/log' % testdir)
 		proc = Proc(verbose=verbose, dry_run=dry_run)
-		opts = '-i ~/.ssh/id_rsa -o "StrictHostKeyChecking=no"'
+		opts = '-i $HOME/.ssh/id_rsa -o "StrictHostKeyChecking=no"'
 		cmnd = 'scp %s %s/* %s:%s' % (opts, fmdir, tohost, todir)
 		rc = proc.execute(cmnd, shell=True).wait()
 		if rc == 0:
