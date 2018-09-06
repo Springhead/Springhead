@@ -33,8 +33,9 @@
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
 #	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
+#	Ver 1.41 2018/09/06 F.Kanehori	Bug fixed.
 # ======================================================================
-version = 1.34
+version = 1.41
 
 import sys
 import os
@@ -335,6 +336,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_commit_resultlog):
 	cmnds = [
 		'git config --global push.default simple',
 		'git config --global user.name "DailyBuild"',
+		'git pull',
 		'git commit --message="today\'s test result %s" %s %s' % \
 			(aux_msg, ' '.join(logfiles), commit_id)
 	]
