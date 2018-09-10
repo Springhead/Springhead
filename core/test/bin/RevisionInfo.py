@@ -13,6 +13,7 @@
 #	    -G:		Use Github (GitHub.com) repository.
 #	    -H:		Use Gitlab (git.haselab.net) repository.
 #	    -f fname:	File name to extract from repository.
+#	    -u:		Run on unix (directory difers from Windows).
 #
 #  DESCRIPTION:
 #	Extract some information from git server.
@@ -29,7 +30,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/08/20 F.Kanehori	Separated from class test file
+#	Ver 1.0  2018/09/06 F.Kanehori	Separated from class test file
 #					"VersionControlSystem.py".
 # ======================================================================
 version = 1.0
@@ -80,8 +81,8 @@ def contents(url, wrkdir, fname, rev):
 	spr_id_fname = 'Springhead.commit.id'
 	spr_id_info = vcs.get_file_content(spr_id_fname, rev[0])
 	if spr_id_info[0:9] == 'Traceback' or \
-	   spr_id_info[0:6] == 'python' or \
-	   spr_id_info[0:5] == 'fatal':
+	    spr_id_info[0:6] == 'python' or \
+	    contents[0:5] == 'fatal':
 		# Kludge -- caused by bug!
 		return
 	if contents is None:
@@ -93,7 +94,10 @@ def contents(url, wrkdir, fname, rev):
 		spr_id = ','.join(spr_id[0:2])
 		# date and time:
 		#	Date and time of dailybuild test.
-		dt = (','.join(rev[1:]))
+		dt = ''.join(rev[2].split(',')[0].split('-'))
+		if dt < '20180905':
+			# Before epoch of test on unix.
+			return
 		print('--[%s,%s]--' % (spr_id, rev[2]))
 		print(contents.replace('\r', ''))
 
@@ -111,15 +115,18 @@ def print_usage():
 usage = 'Usage: %prog [options] {HEAD | all | commit-id}'
 parser = OptionParser(usage = usage)
 #
-parser.add_option('-G', '--github', dest='github',
+parser.add_option('-S', '--springhead', dest='springhead',
 			action='store_true', default=False,
-			help='use GitHub')
-parser.add_option('-H', '--haselab', dest='haselab',
+			help='use repository "sprphys/Springhead"')
+parser.add_option('-R', '--result', dest='result',
 			action='store_true', default=False,
-			help='use git.haselab.net')
+			help='use repository "DailyBuild/Result"')
 parser.add_option('-f', '--fname', dest='fname',
 			action='store', default=None,
 			help='get file content')
+parser.add_option('-u', '--unix', dest='unix',
+			action='store_true', default=None,
+			help='run on unix (with option -H)')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
 			help='set verbose mode')
@@ -131,14 +138,14 @@ parser.add_option('-V', '--version', dest='version',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
-if options.github and options.haselab:
+if options.springhead and options.result:
 	Error(prog).error('both -G and -H specified')
 	print_usage()
-if not options.github and not options.haselab:
+if not options.springhead and not options.result:
 	Error(prog).error('remote repository is not specified')
 	print_usage()
 #
-if options.github:
+if options.springhead:
 	system = 'GitHub'
 	url = 'http://github.com/sprphys/Springhead/'
 	wrkdir = '../../../../Springhead'
@@ -146,19 +153,23 @@ else:
 	system = 'haselab'
 	url = 'http://git.haselab.net/DailyBuild/Result/'
 	wrkdir = '../../../../DailyBuildResult/Result'
+fname = options.fname
 verbose = options.verbose
 revision = args[0]
 
 # ----------------------------------------------------------------------
 #  Main process.
 #
-if options.fname:
+if options.unix:
+	wrkdir = '%s/unix' % wrkdir
+	fname = 'unix/%s' % fname
+if fname:
 	revs = info(system, url, wrkdir, revision, out=False)
 	if revs != []:
 		if not isinstance(revs[0], list):
 			revs = [revs]
 		for rev in revs:
-			contents(url, wrkdir, options.fname, rev)
+			contents(url, wrkdir, fname, rev)
 else:
 	revisions = info(system, url, wrkdir, revision)
 
