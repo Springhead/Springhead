@@ -28,12 +28,13 @@
 #		rev:	    Revision (str).
 #		err:	    Error message got from stderr (str).
 #
-#	info = revision_info(revision='HEAD')
+#	info = revision_info(revision='HEAD', pattern='Windows')
 #	    Get commit information.
 #	    arguments:
 #		revision:   Subversion: revision number to retrieve (str).
 #			    Git: Commit short name to retrieve (str).
 #			    If 'all', get all commit info.
+#		pattern:    Extract pattern in commit message.
 #	    returns:
 #		'all':	    List of triplets.
 #		other:	    Triplet [short-id, long-id, date]
@@ -62,6 +63,7 @@
 #	Ver 1.61 2018/08/21 F.Kanehori	Bug fixed.
 #	Ver 1.62 2018/08/30 F.Kanehori	Bug fixed.
 #	Ver 1.63 2018/08/30 F.Kanehori	Buf fixed: history log on unix.
+#	Ver 1.64 2018/09/13 F.Kanehori	Buf fixed: history log on unix.
 # ======================================================================
 import sys
 import os
@@ -114,9 +116,9 @@ class VersionControlSystem:
 
 	#  Get revision information.
 	#
-	def revision_info(self, revision='HEAD'):
+	def revision_info(self, revision='HEAD', pattern='Windows'):
 		self.__pushd()
-		revisions = self.obj.revision_info(revision)
+		revisions = self.obj.revision_info(revision, pattern)
 		self.__popd()
 		return revisions
 
@@ -169,7 +171,7 @@ class VersionControlSystem:
 						revision = m.group(1)
 			return status, revision, err
 
-		def revision_info(self, revision='HEAD'):
+		def revision_info(self, revision, pattern):
 			# sorry - not implemented yet
 			return []
 
@@ -200,9 +202,11 @@ class VersionControlSystem:
 					err = None
 			return status, rev, err
 
-		def revision_info(self, commit_id='HEAD'):
+		def revision_info(self, commit_id, platform):
 			url = self.url
-			cmnd = 'git log'
+			cmnd = 'git log --grep=unix'
+			if platform != 'unix':
+				cmnd += ' --invert-grep'
 			status, out, err = self.__exec(url, cmnd)
 			if status != 0:
 				return []
