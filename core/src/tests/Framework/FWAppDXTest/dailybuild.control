@@ -29,6 +29,7 @@
 #[Windows]
 
 [unix]
-Build		True
-Run		True
+Exclude		True
+#Build		True
+#Run		True
 

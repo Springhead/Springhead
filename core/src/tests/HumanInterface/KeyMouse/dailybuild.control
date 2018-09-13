@@ -29,6 +29,7 @@ Timeout		1	# time out value in sec
 #[Windows]
 
 [unix]
-Build		True
-Run		True
+Exclude		True
+#Build		True
+#Run		True
 
