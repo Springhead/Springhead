@@ -32,9 +32,9 @@
 #  VERSION:
 #	Ver 1.0  2018/09/06 F.Kanehori	Separated from class test file
 #					"VersionControlSystem.py".
-#	Ver 1.01 2018/09/13 F.Kanehori	Bug fixed.
+#	Ver 1.1  2018/09/13 F.Kanehori	VersionControlsystem revised.
 # ======================================================================
-version = 1.01
+version = 1.1
 
 import sys
 from optparse import OptionParser
@@ -63,8 +63,8 @@ from Error import *
 #
 
 #  Extract revision information (commit-id and date/time).
-def info(system, url, wrkdir, commit_id, platform, out=True):
-	vcs = VersionControlSystem(system, url, wrkdir, verbose)
+def info(url, wrkdir, commit_id, platform, out=True):
+	vcs = VersionControlSystem(url, wrkdir, verbose)
 	revs = vcs.revision_info(commit_id, platform)
 	if revs == []:
 		return []
@@ -76,9 +76,9 @@ def info(system, url, wrkdir, commit_id, platform, out=True):
 	return revs
 
 #  Extract file contents of specified revision.
-def contents(url, wrkdir, fname, rev, prev_id):
-	vcs = VersionControlSystem(system, url, wrkdir, verbose)
-	contents = vcs.get_file_content(fname, rev[0])
+def contents(url, wrkdir, fname, platform, rev, prev_id):
+	vcs = VersionControlSystem(url, wrkdir, verbose)
+	content = vcs.get_file_content(fname, rev[0], platform)
 	spr_id_fname = 'Springhead.commit.id'
 	spr_id_info = vcs.get_file_content(spr_id_fname, rev[0])
 	if spr_id_info[0:9] == 'Traceback' or \
@@ -86,9 +86,9 @@ def contents(url, wrkdir, fname, rev, prev_id):
 	   spr_id_info[0:5] == 'fatal':
 		# Kludge -- caused by bug!
 		return
-	if contents is None:
+	if content is None:
 		return
-	if isinstance(contents, str):
+	if isinstance(content, str):
 		# commit-id:
 		#	The current commit id of sprphys/Springhead.
 		spr_id = spr_id_info.replace('\r\n', '').split(',')
@@ -103,7 +103,7 @@ def contents(url, wrkdir, fname, rev, prev_id):
 				# Before epoch of test on unix.
 				return
 		print('--[%s,%s]--' % (spr_id, rev[2]))
-		print(contents.replace('\r', ''))
+		print(content.replace('\r', ''))
 		return spr_id.split(',')[0]
 
 #  Show usage.
@@ -167,20 +167,21 @@ revision = args[0]
 #
 if options.unix:
 	wrkdir = '%s/unix' % wrkdir
-	fname = 'unix/%s' % fname
+	if fname:
+		fname = 'unix/%s' % fname
 	platform = 'unix'
 else:
 	platform = 'Windows'
 if fname:
-	revs = info(system, url, wrkdir, revision, platform, out=False)
+	revs = info(url, wrkdir, revision, platform, out=False)
 	spr_id = None
 	if revs != []:
 		if not isinstance(revs[0], list):
 			revs = [revs]
 		for rev in revs:
-			spr_id = contents(url, wrkdir, fname, rev, spr_id)
+			spr_id = contents(url, wrkdir, fname, platform, rev, spr_id)
 else:
-	revisions = info(system, url, wrkdir, revision, platform)
+	revisions = info(url, wrkdir, revision, platform)
 
 sys.exit(0)
 
