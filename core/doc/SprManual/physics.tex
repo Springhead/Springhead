@@ -494,10 +494,15 @@ Swing-Twist座標系で表現された関節変位を返します．
 剛体間を連結するダンパ付きバネです．ソケット座標系とプラグ座標系が一致するときが自然状態で，位置の変位・姿勢の変位に比例して自然状態に戻すような力・モーメントを発生します．並進運動に作用するバネ・ダンパ係数と，回転運動に作用するバネ・ダンパ係数はディスクリプタによってそれぞれ設定できます．
 
 \begin{lightreference}{PHSpringDesc}
-\member{Vec3d spring}{並進運動に対するバネ係数}
-\member{Vec3d damper}{並進運動に対するダンパ係数}
-\member{double springOri}{回転運動に対するバネ係数}
-\member{double damperOri}{回転運動に対するダンパ係数}
+% \memberマクロがうまく機能しない
+%\member{Vec3d spring}{並進運動に対するバネ係数}
+%\member{Vec3d damper}{並進運動に対するダンパ係数}
+%\member{double springOri}{回転運動に対するバネ係数}
+%\member{double damperOri}{回転運動に対するダンパ係数}
+\multicolumn{2}{l}{\texttt{Vec3d spring}} & 並進運動に対するバネ係数 \\
+\multicolumn{2}{l}{\texttt{Vec3d damper}} & 並進運動に対するダンパ係数 \\
+\multicolumn{2}{l}{\texttt{double springOri}} & 回転運動に対するバネ係数 \\
+\multicolumn{2}{l}{\texttt{double damperOri}} & 回転運動に対するダンパ係数 \\
 \end{lightreference}
 
 
@@ -589,12 +594,19 @@ $f_0$	&	\texttt{offsetForce}
 ボールジョイントの変位はクォータニオンで表されるため，目標変位\texttt{targetPosition}はクォータニオンで，目標速度\texttt{targetVelocity}は回転ベクトルで与えます．
 
 \begin{lightreference}{PHBallJointDesc}
-\member{double spring}{バネ係数}
-\member{double damper}{ダンパ係数}
-\member{Quaterniond targetPosition}{目標変位}
-\member{Vec3d targetVelocity}{目標速度}
-\member{Vec3d offsetForce}{モータートルク}
-\member{double fMax}{関節トルクの限度}
+% \memberマクロがうまく機能しない
+%\member{double spring}{バネ係数}
+%\member{double damper}{ダンパ係数}
+%\member{Quaterniond targetPosition}{目標変位}
+%\member{Vec3d targetVelocity}{目標速度}
+%\member{Vec3d offsetForce}{モータートルク}
+%\member{double fMax}{関節トルクの限度}
+\multicolumn{2}{l}{\texttt{double spring}} & バネ係数 \\
+\multicolumn{2}{l}{\texttt{double damper}} & ダンパ係数 \\
+\multicolumn{2}{l}{\texttt{Quaterniond targetPosition}} & 目標変位 \\
+\multicolumn{2}{l}{\texttt{Vec3d targetVelocity}} & 目標速度 \\
+\multicolumn{2}{l}{\texttt{Vec3d offsetForce}} & モータートルク \\
+\multicolumn{2}{l}{\texttt{double fMax}} & 関節トルクの限度 \\
 \end{lightreference}
 
 

@@ -1,14 +1,33 @@
 \makeatletter
 
+% lwarpを使うための準備
+%
+\newif\ifLwarp
+\Lwarpfalse
+
+% lwarpでは'zw'が使えないのでマクロ'\zw'にしておく
+%	%iflwarp(...)は"buildhtml.py"で変換する
+%iflwarp(\newdimen\zw)
+%iflwarp(\zw=10pt)
+%	本当はこうしたいのだけれど…
+%%iflwarp(\setbox0=\hbox{\phantom{あ}})
+%%iflwarp(\zw=\the\wd0)
+
+% lwarpmkに対するおまじない
+\def\KLUDGE{\vrule width 0pt height 1pt }
+
 % --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 %
 % 参照
 % 
 \newcommand{\Fig}[1]{Fig\,\ref{fig_#1}}
 \newcommand{\Table}[1]{Table\,\ref{table_#1}}
-\newcommand{\式}[1]{式(\ref{eqn:#1})}
-\newcommand{\節}[1]{第\ref{sec_#1}節}
-\newcommand{\章}[1]{第\ref{chap_#1}章}
+%%\newcommand{\式}[1]{式(\ref{eqn:#1})}
+%%\newcommand{\節}[1]{第\ref{sec_#1}節}
+%%\newcommand{\章}[1]{第\ref{chap_#1}章}
+\newcommand{\EQUATION}[1]{式(\ref{eqn:#1})}
+\newcommand{\SECTION}[1]{第\ref{sec_#1}節}
+\newcommand{\CHAPTER}[1]{第\ref{chap_#1}章}
 
 % --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 %
@@ -47,16 +66,19 @@
 %
 % 解説付き関数リファレンス
 % 
-
 \newenvironment{reference}[1]{%
+\ifLwarp\else
 \def\FrameCommand{\textcolor{lightgray}{\vrule width 0.5zw} \hspace{5pt}}% 
 \MakeFramed {\advance\hsize-\width \FrameRestore}
+\fi
 {\parindent=0truept{\ttfamily\bfseries #1}\sffamily クラス}
 \hrule height0.75pt
 \begin{description}
 }{%
 \end{description}
+\ifLwarp\else
 \endMakeFramed
+\fi
 }
 
 \newcommand{\classmember}[1]{%
@@ -82,13 +104,17 @@
 % 
 
 \newenvironment{lightreference}[1]{%
+\ifLwarp\else
 \def\FrameCommand{\textcolor{lightgray}{\vrule width 0.5zw} \hspace{0pt}}% 
 \MakeFramed {\advance\hsize-\width \FrameRestore}
+\fi
 \begin{tabular}{lll}
 \multicolumn{3}{l}{\texttt{#1}} \\ \midrule
 }{
 \end{tabular}
+\ifLwarp\else
 \endMakeFramed
+\fi
 }
 
 \newcommand{\member}[2]{\multicolumn{2}{l}{\texttt{#1}} & #2 \\}
@@ -98,37 +124,60 @@
 %
 % ソースコード
 % 
-
-\newenvironment{sourcecode}{%
-\VerbatimEnvironment
-\def\FrameCommand{\hspace{2zw} \fcolorbox{lightgray}{lightgray}}%
-\MakeFramed {\advance\hsize-\width \FrameRestore}
-\small
-\baselineskip = 0.9\baselineskip
-\begin{Verbatim}
-}{
-\end{Verbatim}
-\small
-\baselineskip = 0.9\baselineskip
-\endMakeFramed
-}
-
+\ifLwarp
+  \newenvironment{sourcecode}{%
+    %\noindent
+    %\begin{flushright}
+    %\begin{minipage}[r]{.8\hsize}
+    \definecolor{shadecolor}{gray}{0.80}
+    \VerbatimEnvironment
+    \begin{spacing}{0.9}
+    \begin{shaded}
+    \small\vspace{-\baselineskip}
+    \begin{Verbatim}
+  }{%
+    \end{Verbatim}
+    \vspace{-\baselineskip}
+    \end{shaded}
+    \end{spacing}
+    %\end{minipage}
+    %\end{flushright}
+  }
+\else
+  \newenvironment{sourcecode}{%
+    \VerbatimEnvironment
+    \def\FrameCommand{\hspace{2zw} \fcolorbox{lightgray}{lightgray}}%
+    \MakeFramed{\advance\hsize-\width \FrameRestore}
+    \small
+    \baselineskip = 0.9\baselineskip
+    \begin{Verbatim}
+  }{
+    \end{Verbatim}
+    \small
+    \baselineskip = 0.9\baselineskip
+    \endMakeFramed
+  }
+\fi
 
 % --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 %
 % tips
 % 
 
-\newenvironment{tips}{
-\begin{center}
-\begin{Sbox}
-\begin{minipage}{0.8\hsize} {\bfseries tips} \vskip 0.3\baselineskip \gtfamily \footnotesize %
-}{%
-\end{minipage}
-\end{Sbox}
-\fcolorbox{lightgray}{lightgray}
-\TheSbox
-\end{center}
-}
+\ifLwarp
+  \def\tips{}{}
+\else
+  \newenvironment{tips}{
+  \begin{center}
+  \begin{Sbox}
+  \begin{minipage}{0.8\hsize} {\bfseries tips} \vskip 0.3\baselineskip \gtfamily \footnotesize %
+  }{%
+  \end{minipage}
+  \end{Sbox}
+  \fcolorbox{lightgray}{lightgray}
+  \TheSbox
+  \end{center}
+  }
+\fi
 
 \makeatother
