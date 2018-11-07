@@ -57,6 +57,8 @@ def exchange_quote(s):
 def fileconv(ifname, patterns, ofname):
 	if verbose:
 		print('converting %s to %s' % (ifname, ofname))
+	if dry_run:
+		return
 	#
 	inp_cmnd = '%s %s' % (cmndname('cat'), ifname.replace('/', os.sep))
 	med_cmnd = []
@@ -127,6 +129,8 @@ def pipe_open(file, mode, dry_run):
 #  Wait for process termination.
 #
 def wait(proc):
+	if dry_run:
+		return 0
 	rc = proc.wait()
 	if not is_unix():
 		rc = -(rc & 0b1000000000000000) | (rc & 0b0111111111111111)
@@ -134,7 +138,7 @@ def wait(proc):
 
 #  Remove tree.
 #
-def remove_tree(top, dry_run=False, verbose=0):
+def remove_tree(top, verbose=0):
 	if is_unix():
 		cmnd = '/bin/rm -rf %s' % top
 	else:
@@ -148,7 +152,7 @@ def remove_tree(top, dry_run=False, verbose=0):
 
 #  Copy file(s).
 #
-def cp(src, dst, dry_run=False, verbose=0):
+def cp(src, dst, verbose=0):
 	src_cnv = pathconv(src)
 	dst_cnv = pathconv(dst)
 	if os.path.isdir(src) and os.path.isfile(dst):
@@ -179,7 +183,7 @@ def cp(src, dst, dry_run=False, verbose=0):
 
 #  Copy all files and directories.
 #
-def copy_all(src, dst, dry_run=False, verbose=0):
+def copy_all(src, dst, verbose=0):
 	if verbose:
 		print('  clearing "%s"' % dst)
 	cmnd = '%s %s/*' % (cmndname('rm'), dst)
@@ -258,6 +262,9 @@ parser.add_option('-C', '--convert-only', dest='convert_only',
 parser.add_option('-K', '--insert-kludge', dest='insert_kludge',
 			action='store_true', default=False,
 			help='insert kludge code')
+parser.add_option('-S', '--skip-to-lwarpmk', dest='skip_to_lwarpmk',
+			action='store_true', default=False,
+			help='skip to lwarpmk')
 parser.add_option('-D', '--dry-run', dest='dry_run',
 			action='store_true', default=False,
 			help='set dry-run mode')
@@ -286,6 +293,10 @@ if texmain[-4:] != '.tex':
 # ----------------------------------------------------------------------
 #  Main process.
 #
+if options.skip_to_lwarpmk:
+	dry_run_save = dry_run
+	dry_run = True
+
 # ----------------------------------------------------------------------
 #  Prepare work space.
 #
@@ -293,13 +304,13 @@ if os.path.exists(wrkspace) and not os.path.isdir(wrkspace):
 	msg = '%s exists but not a directory' % wrkspace
 	abort(msg)
 if os.path.exists(wrkspace):
-	rc = remove_tree(wrkspace, dry_run, verbose)
+	rc = remove_tree(wrkspace, verbose)
 	if rc != 0:
 		msg = 'clearing workspace failed'
 		abort(msg)
 if verbose:
 	print('making %s' % wrkspace)
-os.mkdir(wrkspace)
+os.makedirs(wrkspace, exist_ok=True)
 
 #  Copy files to work space.
 #
@@ -325,7 +336,7 @@ if test:
 	others.append('test.bat')
 for f in others:
 	dst = '%s/%s' % (wrkspace, f)
-	rc = cp(f, dst, dry_run=dry_run, verbose=verbose)
+	rc = cp(f, dst, verbose=verbose)
 	if rc != 0:
 		msg = 'file copy failed: "%s"' % f
 		abort(msg)
@@ -334,13 +345,13 @@ for f in others:
 #
 cwd = os.getcwd()
 if verbose:
-	print('converting image format')
+	print('converting image file format')
 os.chdir('%s/fig' % wrkspace)
 for f in glob.glob('*.eps'):
 	f_pdf = f.replace('.eps', '.pdf')
 	f_svg = f.replace('.eps', '.svg')
 	if verbose:
-		print('  %s to svg' % f)
+		print('  %s -> %s' % (f, f_svg))
 	cmnd = 'lwarpmk epstopdf %s' % f
 	rc = wait(execute(cmnd, stdout=NULL))
 	if rc != 0:
@@ -371,6 +382,9 @@ rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
 if rc != 0:
 	msg = '%s: failed' % cmnd
 	abort(msg)
+#
+if options.skip_to_lwarpmk:
+	dry_run = dry_run_save
 
 # (2) Change macro to use lwarpmk.
 #
@@ -383,6 +397,7 @@ fileconv(ifname.replace('/', os.sep), patterns, ofname)
 #	lwarpmk html を実行するとANKから漢字に変化する箇所でエラーを起こす。
 #	    pdfTeX error: pdflatex,exe (file cyberb30): Font cyberb30 at 420 not found
 #	おまじないとして、ダミーのvruleを挿入しておく。
+#	    \def\KLUDGE{\vrule width 0pt height 1pt }	(in "sprmacros.sty")
 #
 if options.insert_kludge:
 	cmnd = 'python insert_kludge.py'
@@ -431,7 +446,7 @@ if options.copy:
 			print('cp %s failed' % fmdir)
 	else:
 		remote = '//%s/HomeDirs/%s' % (web_host, todir)
-		copy_all(fmdir, remote, dry_run=True)
+		copy_all(fmdir, remote)
 #
 sys.exit(0)
 
