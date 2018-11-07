@@ -2,35 +2,16 @@
 setlocal enabledelayedexpansion
 
 set CWD=%CD%
-if "%CWD:~-9%" equ "SprManual" (set DO_PDF=yes&set DO_LWARP=yes)
-if "%CWD:~-3%" equ "tmp" (set DO_LWARP=yes)
-set NEED_CONV=
+if "%CWD:~-9%" equ "SprManual" (set OPT=)
+if "%CWD:~-3%" equ "tmp" (set OPT=-S)
 
-if "%DO_PDF%" equ "yes" (
-	python buildhtml.py -v -K -t %* main_html.tex
-)
-if "%DO_LWARP%" equ "yes" (
-	call :exec lwarpmk html
-	call :exec lwarpmk again
-	call :exec lwarpmk html
-	call :exec lwarpmk print
-	call :exec lwarpmk htmlindex
-	call :exec lwarpmk html
-	call :exec lwarpmk html1
-	call :exec lwarpmk limages
-	if "%NEED_CONV%" equ "yes" (
-		cd fig
-		for %%f in (*.eps) do (echo [ %%f ] & lwarpmk epstopdf %%f)
-		for %%f in (*.pdf) do (echo [ %%f ] & lwarpmk pdftosvg %%f)
-		cd ..
-	)
-	call :exec lwarpmk html
-)
+if "%OPT%" equ "-S" (cd ..)
+
+echo test start at "%CD%"
+python buildhtml.py -v -K -t %OPT% %* main_html.tex
+
+if "%OPT%" equ "-S" (cd tmp)
+echo test end at "%CD%"
 
 endlocal
 exit /b
-
-:exec
-	echo ====[ %* ]====
-	%*
-	exit /b
