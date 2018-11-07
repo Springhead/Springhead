@@ -27,6 +27,7 @@ from optparse import OptionParser
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 web_host = 'haselab.net'
 web_user = 'demo'
+PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
 
 # ----------------------------------------------------------------------
@@ -68,13 +69,13 @@ def fileconv(ifname, patterns, ofname):
 	#
 	if verbose > 1:
 		print('EXEC: %s' % inp_cmnd)
-	inp_proc = execute(inp_cmnd, stdout=subprocess.PIPE, shell=True)
+	inp_proc = execute(inp_cmnd, stdout=PIPE, shell=True)
 	out_pipe = inp_proc.stdout
 	med_proc = []
 	for cmnd in med_cmnd:
 		if verbose > 1:
 			print('EXEC: %s' % cmnd)
-		proc = execute(cmnd, stdin=out_pipe, stdout=subprocess.PIPE)
+		proc = execute(cmnd, stdin=out_pipe, stdout=PIPE)
 		out_pipe = proc.stdout
 		med_proc.append(proc)
 	if verbose > 1:
@@ -328,6 +329,27 @@ for f in others:
 	if rc != 0:
 		msg = 'file copy failed: "%s"' % f
 		abort(msg)
+
+# Convert figure file format (eps to svg).
+#
+cwd = os.getcwd()
+if verbose:
+	print('converting image format')
+os.chdir('%s/fig' % wrkspace)
+for f in glob.glob('*.eps'):
+	f_pdf = f.replace('.eps', '.pdf')
+	f_svg = f.replace('.eps', '.svg')
+	if verbose:
+		print('  %s to svg' % f)
+	cmnd = 'lwarpmk epstopdf %s' % f
+	rc = wait(execute(cmnd, stdout=NULL))
+	if rc != 0:
+		print('%s -> %s: faild' % (f, f_pdf))
+	cmnd = 'lwarpmk pdftosvg %s' % f_pdf
+	rc = wait(execute(cmnd, stdout=NULL))
+	if rc != 0:
+		print('%s -> %s: faild' % (f_pdf, f_svg))
+os.chdir(cwd)
 #
 if options.convert_only:
 	sys.exit(0)
@@ -335,7 +357,7 @@ if options.convert_only:
 # ----------------------------------------------------------------------
 #  Generating htmls.
 #
-cwd = os.getcwd()
+#cwd = os.getcwd()
 os.chdir(wrkspace)
 if verbose:
 	print('enter: %s' % os.getcwd().replace(os.sep, '/'))
