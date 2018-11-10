@@ -122,7 +122,7 @@ public:
 	UTTimerIf*				timer;			///< タイマ
 
 	///	形状のスケール
-	double					shapeScale;
+	float					shapeScale;
 	/// 床用の形状
 	CDBoxIf*				shapeFloor;
 	CDBoxIf*				shapeWallX;

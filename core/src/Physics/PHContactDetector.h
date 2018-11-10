@@ -34,6 +34,7 @@ public:
 	PHFrameIf* GetFrame(int i) { return (PHFrameIf*)frame[i]; }
 };
 
+
 /// 剛体の組の状態
 struct PHSolidPairSt{
 	bool bEnabled;
@@ -50,14 +51,23 @@ public:
 	PHContactDetector* detector;
 	PHSolid*           solid[2];
 	PHShapePairs       shapePairs;
+	typedef std::vector<PHCollisionListener*> Listeners;
+	Listeners listeners;
 
 	virtual ~PHSolidPair(){}
 	
 	/// 派生クラスが実装する関数
 	virtual PHShapePair* CreateShapePair() = 0;
-	virtual void         OnDetect    (PHShapePair* sp, unsigned ct, double dt){}	///< 交差が検知されたときの処理
-	virtual void         OnContDetect(PHShapePair* sp, unsigned ct, double dt){}	///< 交差が検知されたときの処理
-	
+	virtual void OnDetect(PHShapePair* sp, unsigned ct, double dt) {	///< 交差が検知されたときの処理
+		for (Listeners::iterator it = listeners.begin(); it != listeners.end(); ++it) {
+			(*it)->OnDetect((PHSolidPairIf*)this, (CDShapePairIf*)sp, ct, dt);
+		}
+	}
+	virtual void OnContDetect(PHShapePair* sp, unsigned ct, double dt) {	///< 交差が検知されたときの処理
+		for (Listeners::iterator it = listeners.begin(); it != listeners.end(); ++it) {
+			(*it)->OnContDetect((PHSolidPairIf*)this, (CDShapePairIf*)sp, ct, dt);
+		}
+	}
 	void Init  (PHContactDetector* d, PHSolid* s0, PHSolid* s1);
 	bool Detect(unsigned int ct, double dt);
 	bool ContDetect(unsigned int ct, double dt);
@@ -71,6 +81,15 @@ public:
 	/// 剛体同士の接触が有効かどうかを取得・設定する
 	bool IsContactEnabled()         { return bEnabled;   }
 	void EnableContact(bool enable) { bEnabled = enable; }
+
+	///	Listener
+	int NListener() { return (int) listeners.size();  }
+	PHCollisionListener* GetListener(int i) { return listeners[i];  }
+	void RemoveListener(int i) { listeners.erase(listeners.begin() + i); }
+	void AddListener(PHCollisionListener*l, int pos=-1){
+		if (pos == -1) listeners.push_back(l);
+		else listeners.insert(listeners.begin() + pos, l);
+	}
 };
 
 ///	PHContactDetectorの状態

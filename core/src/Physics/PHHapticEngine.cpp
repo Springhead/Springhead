@@ -202,6 +202,7 @@ PHSolidPairForHaptic::PHSolidPairForHaptic(const PHSolidPairForHaptic& s){
 }
 void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	if(_sp == NULL) assert(0);
+	PHSolidPair::OnDetect(_sp, ct, dt);
 	
 	PHShapePairForHaptic* sp = (PHShapePairForHaptic*)_sp;
 	sp->intersectionVertices.clear();

@@ -31,18 +31,34 @@ namespace Spr{
 // FEMエンジン
 // 
 
+class PHFemMeshPair {
+public:
+	PHFemMeshNew* mesh[2];
+	double heatTransferRatio;
+	PHFemMeshPair();
+};
+
 class PHFemEngine : public PHEngine{
+	bool bVibrationTransfer;
+	bool bThermalTransfer;
 public:
 	SPR_OBJECTDEF(PHFemEngine);
 	double fdt;
 	std::vector<PHFemMesh*> meshes;
 	std::vector<PHFemMeshNew*> meshes_n;
+	std::vector<PHFemMeshPair*> meshPairs;
 
 	PHFemEngine();
-
-	void SetPHFemMode(int mode);  //Thermo: mode=0 ;  Vibration : mode=1;
-	int  GetPriority() const {return SGBP_NONE; }//SGBP_DYNAMICALSYSTEM;}
+	void SetVibrationTransfer(bool bEnable);	///<	For haptic vibration simulation
+	void SetThermalTransfer(bool bEnable);		///<	For thermal simulation
+	int  GetPriority() const {return SGBP_NONE; }	//	Must call this engine explicitly
 	void Step();
+
+	bool AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
+	bool RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
+	void ThermalTransfer();
+	void HeatTrans(PHFemMeshPair* mp);
+
 	void Clear();
 	virtual bool AddChildObject(ObjectIf* o);
 	void SetTimeStep(double dt);
@@ -55,7 +71,7 @@ public:
 	//For the multiple object implemenation FUNCTIONS
 	PHFemMeshNew* GetMeshByName(std::string name);
 	void	FEMSolidMatchRefresh();   
-	void	ContactInterface();
+	void	VibrationTransfer();
 	void	clearContacts();  
 	void	InitContacts();
 	void	ClearContactVectors();

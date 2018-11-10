@@ -116,7 +116,6 @@ public:
 	int						NSolidPairs() const;
 	PHSolidPairForLCPIf*	GetSolidPair(int i, int j);
 	PHSolidPairForLCPIf*	GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap);
-//	UTCombination<UTRef<PHSolidPairForLCPIf>>	GetSolidPair();
 	PHRootNodeIf*			CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 	int						NRootNodes() const;
 	PHRootNodeIf*			GetRootNode(int i);

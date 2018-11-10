@@ -9,41 +9,74 @@
 
 using namespace std;
 
-int phfemmode=1;	//Thermo: mode=0 ;  Vibration : mode=1; //Default:1
-
-
 namespace Spr{
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// FEMEngine
+// PHFemMeshPair
+PHFemMeshPair::PHFemMeshPair() {
+	mesh[0] = NULL;
+	mesh[1] = NULL;
+	// A5052の熱伝達率	12.0 *1e2
+	heatTransferRatio = 12.0 *1e2;//0.2 *1e3;//12.0 *1e2;	//ems:3.6E-02	ems_const:-0.2	->1.2e3	, ems:3.80E-02	ems_const:-1.1507  ->5.1e2
+}
+
+
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// PHFemEngine
 PHFemEngine::PHFemEngine(){
+	bVibrationTransfer = false;
+	bThermalTransfer = false;
 	fdt = 0.02;
 }
 
-void PHFemEngine::SetPHFemMode(int mode){
-	//Thermo: mode=0 ;  Vibration : mode=1;
-	phfemmode=mode;
-	if(phfemmode==THERMO_MODE){
-		std::cout<<"PHFemMode: Thermo"<<std::endl;
-		std::cout<<"ContactInterface Disabled "<<std::endl;
+void PHFemEngine::SetVibrationTransfer(bool bEnable) {
+	bVibrationTransfer = bEnable;
+}
+void PHFemEngine::SetThermalTransfer(bool bEnable) {
+	bThermalTransfer = bEnable;
+}
+bool PHFemEngine::AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1) {
+	for (int i = 0; i < meshPairs.size(); ++i) {
+		if (meshPairs[i]->mesh[0] == (PHFemMeshNew*)m0 && meshPairs[i]->mesh[1] == (PHFemMeshNew*)m1) {
+			return false;
+		}
+		if (meshPairs[i]->mesh[0] == (PHFemMeshNew*)m1 && meshPairs[i]->mesh[1] == (PHFemMeshNew*)m0) {
+			return false;
+		}
 	}
-	else if(phfemmode==VIBRATION_MODE){
-		std::cout<<"PHFemMode: Vibration"<<std::endl;
-		std::cout<<"ContactInterface Enabled "<<std::endl;
+	PHFemMeshPair* mp = DBG_NEW PHFemMeshPair;
+	mp->mesh[0] = m0->Cast();
+	mp->mesh[1] = m1->Cast();
+	meshPairs.push_back(mp);
+	return true;
+}
+bool PHFemEngine::RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1) {
+	for (int i = 0; i < meshPairs.size(); ++i) {
+		if (meshPairs[i]->mesh[0] == (PHFemMeshNew*)m0 && meshPairs[i]->mesh[1] == (PHFemMeshNew*)m1) {
+			meshPairs.erase(meshPairs.begin() + i);
+			return true;
+		}
+		if (meshPairs[i]->mesh[0] == (PHFemMeshNew*)m1 && meshPairs[i]->mesh[1] == (PHFemMeshNew*)m0) {
+			meshPairs.erase(meshPairs.begin() + i);
+			return true;
+		}
 	}
+	return false;
 }
 
 void PHFemEngine::Step(){
-	/// FEM Interface for vibration transmission
-	if(phfemmode==VIBRATION_MODE){
-		if (meshes_n.size() > 1) {
-			this->ContactInterface();
-		}
+	/// Vibration transmission for haptic vibration simulation
+	if(bVibrationTransfer){
+		VibrationTransfer();
+	}	
+	///	Heat trasmission for thermal simulation
+	if (bThermalTransfer) {
+		ThermalTransfer();
 	}
 	/// 旧メッシュの更新
 	for(size_t i = 0; i < meshes.size(); ++i){
 		meshes[i]->Step(GetTimeStep());
 	}
-
 	/// 新メッシュの更新
 	for(size_t i = 0; i < meshes_n.size(); ++i){
 		meshes_n[i]->Step(GetTimeStep());
@@ -73,6 +106,7 @@ bool PHFemEngine::AddChildObject(ObjectIf* o){
 		for (int i = 0; i < (int)meshes_n.size(); ++i) {
 			meshes_n[i]->contactVector.resize(meshes_n.size());
 		}
+		//	for thermal trans
 		return true;
 	}
 	return false;
@@ -104,7 +138,7 @@ void PHFemEngine::FEMSolidMatchRefresh() {
 }
 
 /// This function encapulates the FEM vibration transmission interface
-void PHFemEngine::ContactInterface() {
+void PHFemEngine::VibrationTransfer() {
 	PHSceneIf* phscene = GetScene();
 	int nc = phscene->NContacts();
 
