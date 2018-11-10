@@ -13,6 +13,7 @@
 #define SPR_PHSolidIf_H
 
 #include <Foundation/SprObject.h>
+#include <Collision/SprCDDetector.h>
 #include <Base/Spatial.h>
 
 /**	\addtogroup gpPhysics	*/
@@ -309,7 +310,7 @@ struct PHSolidIf : public SceneObjectIf{
 	//bool		IsDrawn();
 };
 
-struct PHShapePairForLCPIf : public ObjectIf{
+struct PHShapePairForLCPIf : public CDShapePairIf{
 	SPR_IFDEF(PHShapePairForLCP);
 
 	/** @brief sectionの数を取得する
@@ -336,9 +337,21 @@ struct PHShapePairForLCPIf : public ObjectIf{
 	/// 形状を取得する
 	CDShapeIf* GetShape(int i);
 };
+
+struct PHSolidPairIf;
+class PHCollisionListener {
+public:
+	virtual void OnDetect(PHSolidPairIf* sop, CDShapePairIf* shp, unsigned ct, double dt) {}		///< 交差が検知されたときの処理
+	virtual void OnContDetect(PHSolidPairIf* sop, CDShapePairIf* shp, unsigned ct, double dt) {}	///< 交差が検知されたときの処理
+};
+
 struct PHSolidPairIf : public ObjectIf {
 	SPR_IFDEF(PHSolidPair);
 	PHSolidIf* GetSolid(int i);
+	int NListener();
+	PHCollisionListener* GetListener(int i);
+	void RemoveListener(int i);
+	void AddListener(PHCollisionListener*l, int pos = -1);
 };
 
 struct PHSolidPairForLCPIf : public PHSolidPairIf{

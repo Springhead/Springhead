@@ -411,6 +411,7 @@
     <ClCompile Include="PHContactPoint.cpp" />
     <ClCompile Include="PHContactSurface.cpp" />
     <ClCompile Include="PHFemEngine.cpp" />
+    <ClCompile Include="PHFemEngineHeatTransfer.cpp" />
     <ClCompile Include="PHForceField.cpp" />
     <ClCompile Include="PHGear.cpp" />
     <ClCompile Include="PHGenericJoint.cpp" />

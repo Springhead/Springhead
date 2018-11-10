@@ -36,6 +36,7 @@ const char*    reportFilename = "PHConstraintEngineReport.csv";
 int		colcounter; //サポート探索回数のカウント
 
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
+	PHSolidPair::OnDetect(_sp, ct, dt);
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
 	//	法線を求める
 	sp->CalcNormal();
@@ -44,6 +45,7 @@ void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 }			
 
 void PHSolidPairForLCP::OnContDetect(PHShapePair* _sp, unsigned ct, double dt){
+	PHSolidPair::OnContDetect(_sp, ct, dt);
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
 
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める

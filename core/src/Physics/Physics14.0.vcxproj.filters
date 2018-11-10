@@ -172,6 +172,9 @@
     <ClCompile Include="PHHapticEngineRender.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="PHFemEngineHeatTransfer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PHAxisIndex.h">

@@ -65,7 +65,7 @@ public:
 
 	virtual void Init(int argc, char* argv[]){
 		CreateSdk();
-		GetSdk()->CreateScene();
+//		GetSdk()->CreateScene();
 		SetGRHandler(TypeGLUT);
 		GRInit(argc, argv);
 		//CreateSdk();
@@ -202,7 +202,6 @@ public:
 			}else if(id==ID_TEMPDN){
 
 			}
-
 		}
 		SampleApp::OnAction(menu, id);
 	}
@@ -210,29 +209,13 @@ public:
 	virtual void OnStep() {
 		SampleApp::OnStep();
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-		//if(phscene)		cout << phscene << endl;
-//		SceneObjectIf* phSceneObject;			//>	未使用
-//		PHFemMeshIf* phFemMesh;					//>	未使用
-		size_t Nobject = GetSdk()->GetPHSdk()->GetObjectIf()->NChildObject();
-		//なんかしらアドレスが取れているのは分かった
-		//for(int i=0; i< Nobject ;i++){
-		//	ObjectIf* object = GetSdk()->GetPHSdk()->GetChildObject(i);
-		//	cout << "Object" << i << " : " << object << endl;
-		//}
-		//NamedObjectIf* nobject = GetSdk()->FindObject("negi");
-		//phFemMeshを作って、phFemMeshの処理をを実行させてみたい。
-		//
-		//熱シミュレーションステップ
-		HeatConductionStep();
-		
+		HeatConductionStep();		
 	}
 	inline static double dist2D2(const Vec3d& a, const Vec3d& b){
 		return Square(a.x-b.x) + Square(a.y-b.y);
 	}
 	struct CondVtx;
 	struct CondVtxs:public std::vector<CondVtx>{
-		//PHFemMesh* pmesh;
-		//
 		PHFemMeshThermo* pmesh;
 		std::vector<int> vtx2Cond;
 	};
