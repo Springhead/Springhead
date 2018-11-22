@@ -10,9 +10,10 @@
 #	changes from 'ascii' to another multi-byte one.
 #
 #  VERSION:
+#	Ver 1.1  2018/11/20 F.Kanehori	Add exclusion code for \url{...}.
 #	Ver 1.0  2018/10/30 F.Kanehori	First release version.
 # ======================================================================
-version = '1.0'
+version = '1.1'
 
 import sys
 import os
@@ -31,17 +32,29 @@ target_defs = {
 kludge_code = b'\\KLUDGE '
 verbatim_in = r'\\begin\{sourcecode\}'
 verbatim_out = r'\\end\{sourcecode\}'
+code_bs = 92	# '\\'
+code_ob = 123	# '{'
+code_cb = 125	# '}'
+code_u = 117	# 'u'
+code_r = 114	# 'r'
+code_l = 108	# 'l'
 
 # ----------------------------------------------------------------------
 #  Options
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
-parser.add_option('-v', '--verbose',
-			dest='verbose', action='count', default=0,
+parser.add_option('-s', '--save-orginal', dest='save_original',
+			action='store_true', default=False,
+			help='save original file')
+parser.add_option('-U', '--exclude-url', dest='exclude_url',
+			action='store_true', default=False,
+			help='exclude inserting in \\url{...}')
+parser.add_option('-v', '--verbose', dest='verbose',
+			action='count', default=0,
 			help='set verbose mode')
-parser.add_option('-V', '--version',
-			dest='version', action='store_true', default=False,
+parser.add_option('-V', '--version', dest='version',
+			action='store_true', default=False,
 			help='show version')
 
 # ----------------------------------------------------------------------
@@ -55,6 +68,8 @@ if len(args) != 0:
 	parser.error("incorrect number of arguments")
 
 # get options and input file name
+save_original = options.save_original
+exclude_url = options.exclude_url
 verbose = options.verbose
 
 # ----------------------------------------------------------------------
@@ -66,8 +81,9 @@ def read_targets():
 	if verbose:
 		print('file: %s' % target_defs['file'])
 		print('patt: %s' % target_defs['patt'])
-	fnames = []
-	for line in open(target_defs['file'], 'r', encoding='utf-8'):
+	fname = target_defs['file']
+	fnames = [fname]
+	for line in open(fname, 'r', encoding='utf-8'):
 		m = re.match(target_defs['patt'], line)
 		if m:
 			fname = m.group(1)
@@ -116,6 +132,26 @@ def process_oneline(string, verbatim):
 			ix += 1
 	if verbose:
 		print('mark: %s' % mark)
+	if verbose > 1:
+		print('  %s' % string.replace('\n', ''))
+		print('mark before: %s' % mark)
+
+	if exclude_url and string.find('\\url') >= 0:
+		# \url{...} が見つかった
+		#	オプション -U が指定されたらこの中にはKLUDGEを入れない
+		ix = 0
+		while ix < size:
+			ps, pe = locate_url(byte, size, ix)
+			if ps > 0:
+				if verbose:
+					print('  \\url found at (%d, %d)' % (ps, pe))
+				while ps <= pe:
+					mark[ps] = 1
+					ps += 1
+			ix += 1
+	if verbose > 1:
+		print('mark after:  %s' % mark)
+		print()
 
 	# マルチバイトに変わる場所にKLUDGEを入れる
 	bout = bytearray()
@@ -132,6 +168,22 @@ def process_oneline(string, verbatim):
 		ix += 1
 
 	return bout.decode('utf-8')
+
+#  指定されたコードの中にTeXマクロ \ur{...} があるか調べてその範囲を返す
+#
+def locate_url(code, size, ix):
+	pos = (-1, -1)
+	if code[ix+0] == code_bs and code[ix+1] == code_u  and \
+	   code[ix+2] == code_r  and code[ix+3] == code_l  and \
+	   code[ix+4] != code_as:
+		ix += 5
+		ix_s = ix
+		while ix < size:
+			if code[ix] == code_cb:
+				break
+			ix += 1
+		pos = (ix_s, ix)
+	return pos
 
 #  先頭コードを見てこの文字が何バイトで構成されているかを判断する(utf8)
 #
@@ -156,6 +208,8 @@ for fn in fnames:
 	if verbose:
 		print('  %s' % fn)
 	process_onefile(ifn, ofn)
+	if save_original:
+		os.remove(ifn)		# remove
 
 # ----------------------------------------------------------------------
 #  End of process.
