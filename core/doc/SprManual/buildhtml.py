@@ -11,7 +11,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/10/30 F.Kanehori	First version.
+#	Ver 1.0  2018/11/22 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
@@ -29,6 +29,9 @@ web_host = 'haselab.net'
 web_user = 'demo'
 PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
+
+# for test
+svg_dir = '../../../../../../SprManual-fig/svg'.replace('/', os.sep)
 
 # ----------------------------------------------------------------------
 #  External tools.
@@ -259,9 +262,15 @@ parser.add_option('-v', '--verbose', dest='verbose',
 parser.add_option('-C', '--convert-only', dest='convert_only',
 			action='store_true', default=False,
 			help='convert files only')
+parser.add_option('-E', '--replace-tex_es', dest='replace_tex_es',
+			action='store_true', default=False,
+			help='replace and revive tex escape sequence')
 parser.add_option('-K', '--insert-kludge', dest='insert_kludge',
 			action='store_true', default=False,
 			help='insert kludge code')
+parser.add_option('-R', '--replace-csarg', dest='replace_csarg',
+			action='store_true', default=False,
+			help='replace and revive cs-arg')
 parser.add_option('-S', '--skip-to-lwarpmk', dest='skip_to_lwarpmk',
 			action='store_true', default=False,
 			help='skip to lwarpmk')
@@ -318,8 +327,9 @@ patterns = [ [ '{sourcecode}', '{sourcecode}' ],
 	     [ '\([^\\]\)zw', '\\1\\\\zw' ],
 	     [ '^%iflwarp(\\(.*\\))', '\\1' ] ]
 #
-texsrcs = glob.glob('*.tex')
 texstys = glob.glob('*.sty')
+texsrcs = glob.glob('*.tex')
+texcsss = glob.glob('*.css')
 for inpf in texstys:
 	outf = '%s/%s' % (wrkspace, inpf)
 	fileconv(inpf, patterns, outf)
@@ -327,6 +337,10 @@ for inpf in texstys:
 for inpf in texsrcs:
 	outf = '%s/%s' % (wrkspace, inpf)
 	fileconv(inpf, patterns, outf)
+#
+for inpf in texcsss:
+	outf = '%s/%s' % (wrkspace, inpf)
+	cp(inpf, outf)
 #
 others = glob.glob('*.cls')
 others.append('fig')
@@ -341,39 +355,49 @@ for f in others:
 		msg = 'file copy failed: "%s"' % f
 		abort(msg)
 
-# Convert figure file format (eps to svg).
+#  "fig/*.eps"をsvgに変換する
 #
 cwd = os.getcwd()
 if verbose:
 	print('converting image file format')
 os.chdir('%s/fig' % wrkspace)
-for f in glob.glob('*.eps'):
-	f_pdf = f.replace('.eps', '.pdf')
-	f_svg = f.replace('.eps', '.svg')
-	if verbose:
-		print('  %s -> %s' % (f, f_svg))
-	cmnd = 'lwarpmk epstopdf %s' % f
-	rc = wait(execute(cmnd, stdout=NULL))
-	if rc != 0:
-		print('%s -> %s: faild' % (f, f_pdf))
-	cmnd = 'lwarpmk pdftosvg %s' % f_pdf
-	rc = wait(execute(cmnd, stdout=NULL))
-	if rc != 0:
-		print('%s -> %s: faild' % (f_pdf, f_svg))
+if test and os.path.isdir(svg_dir) and os.listdir(svg_dir):
+	#  テスト時にsvf_dir/にsvgファイルがあればそれをコピーする
+	#  これは単に時間の節約のため
+	for f in glob.glob('*.eps'):
+		f_svg = f.replace('.eps', '.svg')
+		fname = '%s%s%s' % (svg_dir, os.sep, f_svg)
+		print('  copying from %s' % fname.replace(os.sep, '/'))
+		cp(fname, f_svg)
+else:
+	#  時間がかかるし無駄のようだがlwarpmkではこうするしかない
+	for f in glob.glob('*.eps'):
+		f_pdf = f.replace('.eps', '.pdf')
+		f_svg = f.replace('.eps', '.svg')
+		if verbose:
+			print('  %s -> %s' % (f, f_svg))
+		cmnd = 'lwarpmk epstopdf %s' % f
+		rc = wait(execute(cmnd, stdout=NULL))
+		if rc != 0:
+			print('%s -> %s: faild' % (f, f_pdf))
+		cmnd = 'lwarpmk pdftosvg %s' % f_pdf
+		rc = wait(execute(cmnd, stdout=NULL))
+		if rc != 0:
+			print('%s -> %s: faild' % (f_pdf, f_svg))
 os.chdir(cwd)
 #
 if options.convert_only:
+	# for debug
 	sys.exit(0)
 
 # ----------------------------------------------------------------------
 #  Generating htmls.
 #
-#cwd = os.getcwd()
 os.chdir(wrkspace)
 if verbose:
 	print('enter: %s' % os.getcwd().replace(os.sep, '/'))
 
-# (1) Make pdf by pdflatex.
+# (1) pdflatexを用いてpdfを作成する
 #
 cmnd = '%s %s' % (pdflatex, texmain)
 if verbose:
@@ -382,33 +406,76 @@ rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
 if rc != 0:
 	msg = '%s: failed' % cmnd
 	abort(msg)
+
+"""
+#  ここでできたpdfを退避しておく（この後で書き換えられてしまうから）
+#	栞の文字が化けてしまうことへの対処 － まだうまく機能していない！
+#
+pdf_fname = texmain.replace('.tex', '.pdf')
+pdf_fsave = '%s_save.pdf' % pdf_fname
+rc = cp(pdf_fname, pdf_fsave)
+if rc != 0:
+	msg = 'save %s failed' % pdf_fname
+	abort(msg)
 #
 if options.skip_to_lwarpmk:
 	dry_run = dry_run_save
+"""
 
-# (2) Change macro to use lwarpmk.
+# (2) Lwarpmkで使うマクロを有効にするために"sprmacros.sty"を書き換える
 #
 patterns.append(['Lwarpfalse', 'Lwarptrue'])
 ofname = 'sprmacros.sty'
 ifname = '%s/%s' % ('..', ofname)
 fileconv(ifname.replace('/', os.sep), patterns, ofname)
 
-# (2.5) Kludge
-#	lwarpmk html を実行するとANKから漢字に変化する箇所でエラーを起こす。
-#	    pdfTeX error: pdflatex,exe (file cyberb30): Font cyberb30 at 420 not found
-#	おまじないとして、ダミーのvruleを挿入しておく。
-#	    \def\KLUDGE{\vrule width 0pt height 1pt }	(in "sprmacros.sty")
+# (2.1)	Replace TeX escape sequence.
+#	出力するhtmlをセクション毎分割しようとすると、TeXのエスケープ
+#	シーケンスが悪さをする（ファイル名がおかしくなる）のでいったん
+#	別の文字列に置き換えておく（htmlができてから表示を調整する）
+#	※ 対応表は "escch.replace" で定義する
 #
-if options.insert_kludge:
-	cmnd = 'python insert_kludge.py'
+if options.replace_tex_es:
+	cmnd = 'python ../escch_replace.py -v -d ../escch.replace enc *.tex'
 	if verbose:
 		print('#### %s' % cmnd)
 	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
+	sys.stdout.flush()
 
-# (3) Make htmls.
+# (2.2) Replace control sequence argument.
+#	\chapter{}, \section{} 等の引数に漢字があるとエラーとなるので、
+#	いったん別の文字列に置き換えておく（htmlができてから元へ戻す）
+#
+if options.replace_csarg:
+	cmnd = 'python ../csarg_replace.py -v enc *.tex'
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
+# (2.3) Insert kludge.
+#	lwarpmk htmlを実行するとANKから漢字に変化する箇所でエラーを起こす
+#	    pdfTeX error: pdflatex,exe (file cyberb30): Font cyberb30 at 420 not found
+#	おまじないとして、ダミーのvruleを挿入しておく
+#	    \def\KLUDGE{\vrule width 0pt height 1pt }	(in "sprmacros.sty")
+#
+if options.insert_kludge:
+	cmnd = 'python insert_kludge.py'	# -U
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
+# (3) htmlファイルを作成する
 #
 cmnds = [ '%s html' % lwarpmk,
 	  '%s again' % lwarpmk,
@@ -426,27 +493,74 @@ for cmnd in cmnds:
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
+
+# (3.1)	(2.2)で変更した引数情報を元に戻す（html本体）
+#
+if options.replace_csarg:
+	cmnd = 'python ../csarg_replace.py -v dec *.html'
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
+# (3.2)	(2.2)で変更した引数情報を元に戻す（ファイル名）
+#
+	cmnd = 'python ../csarg_replace.py -v ren *.html'
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
+# (3.3)	(2.1)で変更したエスケープ文字情報を元に戻す（html本体）
+#
+if options.replace_tex_es:
+	cmnd = 'python ../escch_replace.py -v -d ../escch.replace dec *.html'
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
+# (3.4)	(2.1)で変更したエスケープ文字情報を元に戻す（ファイル名）
+#
+	cmnd = 'python ../escch_replace.py -v -d ../escch.replace ren *.html'
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
 os.chdir(cwd)
 #
 if options.copy:
-	#  Copy generated files to web server.
+	#  生成されたファイルを"generated/doc/SprManual"にコピーする
 	#
-	fmdir = '.'
-	todir = 'WWW/docroots/springhead/doc/SprManual'
-	if Util.is_unix():
-		remote = '%s@%s:/home/%s' % (web_user, web_host, todir)
-		pkey = '%s/.ssh/id_rsa' % os.environ['HOME']
-		opts = '-i %s -o "StrictHostKeyChecking=no"' % pkey
-		cmnd = 'scp %s %s/* %s' % (opts, fmdir, remote)
-		print('## %s' % cmnd)
-		rc = wait(execute(cmnd))
-		if rc == 0:
-			print('cp %s -> %s:%s' % (fmdir, tohost, todir))
+	fmdir = wrkspace
+	todir = '../../../generate/doc/SprManual'
+	targets = ['fig/*.svg', 'lateximages', '*.html', '*.css']
+
+	for target in targets:
+		component = target.split('/')
+		if len(component) > 1:
+			d = '/'.join(component[:-1])
+			os.makedirs(d, exist_ok=True)
+
+		if os.path.isdir(target):
+			copy_all(target, todir)
 		else:
-			print('cp %s failed' % fmdir)
-	else:
-		remote = '//%s/HomeDirs/%s' % (web_host, todir)
-		copy_all(fmdir, remote)
+			for f in glob.glob(target):
+				cp(f, todir)
+
 #
 sys.exit(0)
 

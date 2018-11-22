@@ -2,15 +2,15 @@
 
 % --- LOAD FONT SELECTION AND ENCODING BEFORE LOADING LWARP ---
 
-%%\usepackage{lwarp}
-%\ifPDFTeX
-\usepackage[whole,autotilde]{bxcjkjatype}
-\usepackage{lmodern}            % pdflatex
-\usepackage[T1]{fontenc}
-%\usepackage[utf8]{inputenc}
-%\else
-%\usepackage{fontspec}           % XeLaTeX or LuaLaTeX
-%\fi
+\ifPDFTeX
+  %\usepackage[whole,autotilde]{bxcjkjatype}
+  \usepackage[whole]{bxcjkjatype}
+  \usepackage{lmodern}            % pdflatex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else
+  \usepackage{fontspec}           % XeLaTeX or LuaLaTeX
+\fi
 
 % --- LWARP IS LOADED NEXT ---
 \usepackage[
@@ -25,4 +25,4 @@
 
 % --- OTHER PACKAGES ARE LOADED AFTER LWARP ---
 \usepackage{makeidx} \makeindex
-\usepackage{xcolor}             % (Demonstration purposes only.)
+%\usepackage{xcolor}             % (Demonstration purposes only.)
