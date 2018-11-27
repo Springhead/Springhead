@@ -5,7 +5,6 @@
 #	escseq_replace [options] func files
 #	    func:	'enc': encode csname argument to random string.
 #			'dec': decode replaced_argument to original one.
-#			'ren': rename replaced file name to suitable one.
 #	    files:	Input file names.
 #
 #	options:
@@ -33,7 +32,7 @@
 #	    漢字の＃でも見た目はほとんど変わらないからこれで良い？
 #	    
 #  VERSION:
-#	Ver 1.0  2018/11/22 F.Kanehori	First release version.
+#	Ver 1.0  2018/11/27 F.Kanehori	First release version.
 # ======================================================================
 version = '1.0'
 
@@ -144,35 +143,6 @@ def process(func, ix_fm, ix_to):
 			outf.close()
 	sys.stdout.flush()
 
-#  ファイル名の置換処理
-#
-def rename_html():
-
-	#  定義ファイルを読む
-	defs = read_defs(def_file)
-
-	#  各ファイルを走査して定義された文字列を置き換える
-	#
-	replaces = []
-	for f in fnames:
-		if verbose:
-			print('  processing %s' % f)
-		new_f = f
-		for d in defs:
-			fm = d[1]
-			to = d[2]
-			new_f = re.sub(fm, to, new_f)
-		#
-		if new_f != f:
-			if verbose:
-				print('  rename: %s -> %s' % (f, new_f))
-			rc = rename(f, new_f)
-			if rc != 0:
-				msg = 'rename failed: %s -> %s' % (f, new_f)
-				print(msg)
-				sys.exit(1)
-	sys.stdout.flush()
-
 #  変換定義ファイルを読む
 #
 def read_defs(fname):
@@ -219,9 +189,6 @@ if func == 'enc':
 elif func == 'dec':
 	# field #2 to #3 (for file body)
 	process(func, 1, 2)
-elif func == 'ren':
-	# field #2 to #3 (for file name)
-	rename_html()
 
 # ----------------------------------------------------------------------
 #  End of process.

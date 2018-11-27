@@ -11,7 +11,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/11/22 F.Kanehori	First version.
+#	Ver 1.0  2018/11/27 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
@@ -165,12 +165,12 @@ def cp(src, dst, verbose=0):
 		msg = 'copying plain file to directory (%s to %s)' % (src, dst)
 		abort(msg)
 	if dry_run:
-		print('cp: %s %s' % (src, dst))
+		Print('cp: %s %s' % (src, dst))
 		if dry_run:
 			return 0
 	if os.path.isdir(src):
 		if verbose:
-			print('cp: %s -> %s (dir)' % (src, dst))
+			Print('cp: %s -> %s (dir)' % (src, dst))
 		if is_unix():
 			## NEED IMPLEMENT
 			pass
@@ -179,7 +179,7 @@ def cp(src, dst, verbose=0):
 			rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
 	else:
 		if verbose:
-			print('cp: %s -> %s' % (src, dst))
+			Print('cp: %s -> %s' % (src, dst))
 		cmnd = '%s %s %s' % (cmndname('cp'), src_cnv, dst_cnv)
 		rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
 	return rc
@@ -187,24 +187,23 @@ def cp(src, dst, verbose=0):
 #  Copy all files and directories.
 #
 def copy_all(src, dst, verbose=0):
-	if verbose:
-		print('  clearing "%s"' % dst)
-	cmnd = '%s %s/*' % (cmndname('rm'), dst)
-	wait(execute(cmnd))
-	#
 	os.chdir(src)
-	print('  copying "%s" to "%s"' % (src, dst))
+	Print('  copying "%s" to "%s"' % (src, dst))
 	names = os.listdir()
 	for name in names:
 		if os.path.isfile(name):
+			if verbose:
+				Print('    ISFILE %s ...' % name)
 			cmnd = '%s %s %s' % (cmndname('cp'), src, dst)
-			rc = wait(execute(cmnd))
+			rc = wait(execute(cmnd), shell=True)
 			if rc != 0:
 				break
 		elif os.path.isdir(name):
 			dst_dir = '%s/%s' % (dst, name)
+			if verbose:
+				Print('    %s -> %s' % (src, dst_dir))
 			cmnd = '%s %s %s' % (cmndname('cp'), src, dst_dir)
-			rc = wait(execute(cmnd))
+			rc = wait(execute(cmnd), shell=True)
 			if rc != 0:
 				break
 	return rc
@@ -214,12 +213,19 @@ def copy_all(src, dst, verbose=0):
 def pathconv(path):
 	return path.replace('/', os.sep)
 
+#  Print and flush
+#
+def Print(msg):
+	print(msg)
+	sys.stdout.flush()
+
 #  Command names.
 #
 def cmndname(cmnd):
 	nametab = { 'cat':	['cat', 'type'],
 		    'cp':	['cp', 'copy'],
 		    'rm':	['rm', 'del'],
+		    'rmdir':	['rmdir', 'rmdir /s /q'],
 		}
 	indx = 0 if is_unix() else 1
 	return nametab[cmnd][indx]
@@ -306,6 +312,7 @@ if options.skip_to_lwarpmk:
 	dry_run_save = dry_run
 	dry_run = True
 
+'''
 # ----------------------------------------------------------------------
 #  Prepare work space.
 #
@@ -409,7 +416,8 @@ if rc != 0:
 
 """
 #  ここでできたpdfを退避しておく（この後で書き換えられてしまうから）
-#	栞の文字が化けてしまうことへの対処 － まだうまく機能していない！
+#	栞の文字が化けてしまうことへの対処 － うまく機能しない！
+#	他の方法を考えたほうが良い
 #
 pdf_fname = texmain.replace('.tex', '.pdf')
 pdf_fsave = '%s_save.pdf' % pdf_fname
@@ -506,18 +514,7 @@ if options.replace_csarg:
 		abort(msg)
 	sys.stdout.flush()
 
-# (3.2)	(2.2)で変更した引数情報を元に戻す（ファイル名）
-#
-	cmnd = 'python ../csarg_replace.py -v ren *.html'
-	if verbose:
-		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
-	if rc != 0:
-		msg = '%s: failed' % cmnd
-		abort(msg)
-	sys.stdout.flush()
-
-# (3.3)	(2.1)で変更したエスケープ文字情報を元に戻す（html本体）
+# (3.2)	(2.1)で変更したエスケープ文字情報を元に戻す（html本体）
 #
 if options.replace_tex_es:
 	cmnd = 'python ../escch_replace.py -v -d ../escch.replace dec *.html'
@@ -528,40 +525,49 @@ if options.replace_tex_es:
 		msg = '%s: failed' % cmnd
 		abort(msg)
 	sys.stdout.flush()
-
-# (3.4)	(2.1)で変更したエスケープ文字情報を元に戻す（ファイル名）
 #
-	cmnd = 'python ../escch_replace.py -v -d ../escch.replace ren *.html'
-	if verbose:
-		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
-	if rc != 0:
-		msg = '%s: failed' % cmnd
-		abort(msg)
-	sys.stdout.flush()
-
-os.chdir(cwd)
-#
+'''
+os.chdir('tmp')
 if options.copy:
 	#  生成されたファイルを"generated/doc/SprManual"にコピーする
 	#
 	fmdir = wrkspace
-	todir = '../../../generate/doc/SprManual'
-	targets = ['fig/*.svg', 'lateximages', '*.html', '*.css']
+	todir = '../../../../generated/doc/SprManual'
+
+	Print('=== %s' % os.getcwd())
+	if os.path.exists(todir):
+		if verbose:
+			Print('  clearing "%s"' % todir)
+		cmnd = '%s %s' % (cmndname('rmdir'), pathconv(todir))
+		Print('#### %s' % cmnd)
+		wait(execute(cmnd, shell=True))
+	os.makedirs(todir)
+
+	#
+	targets = ['lateximages', 'fig/*.svg', '*.html', '*.css']
+	if verbose:
+		absdir = pathconv(os.path.abspath(todir))
+		Print('copying htmls to "%s"' % absdir)
+		sys.stdout.flush()
 
 	for target in targets:
+		Print('...[ %s ]...' % target)
 		component = target.split('/')
 		if len(component) > 1:
 			d = '/'.join(component[:-1])
-			os.makedirs(d, exist_ok=True)
+			os.makedirs('%s/%s' % (todir, d), exist_ok=True)
 
 		if os.path.isdir(target):
-			copy_all(target, todir)
+			Print('COPY_ALL: %s, %s' % (target, todir))
+			copy_all(target, todir, verbose=verbose)
 		else:
 			for f in glob.glob(target):
-				cp(f, todir)
+				tofile = '%s/%s' % (todir, f.replace(os.sep, '/'))
+				Print('COPY: %s, %s' % (f, tofile))
+				cp(f, tofile)
 
 #
+os.chdir(cwd)
 sys.exit(0)
 
 # end: buildhtml.py
