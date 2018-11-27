@@ -5,7 +5,6 @@
 #	csname_replace [options] func files
 #	    func:	'enc': encode csname argument to random string.
 #			'dec': decode replaced_argument to original one.
-#			'ren': rename replaced file name to suitable one.
 #	    files:	Input file names.
 #
 #	options:
@@ -25,7 +24,7 @@
 #	を記録する中間ファイルを作成する。
 #
 #  VERSION:
-#	Ver 1.0  2018/11/20 F.Kanehori	First release version.
+#	Ver 1.0  2018/11/27 F.Kanehori	First release version.
 # ======================================================================
 version = '1.0'
 
@@ -86,10 +85,10 @@ for fn in fn_args:
 	fnames.extend(glob.glob(fn))
 
 if verbose:
-	print('func:   %s' % func)
-	print('corres: %s' % correspondence_file)
-	print('suffix: %s' % suffix)
-	print('files:  %s' % fnames)
+	print('func:     %s' % func)
+	print('corres:   %s' % correspondence_file)
+	print('suffix:   %s' % suffix)
+	print('files:    %s' % fnames)
 
 # ----------------------------------------------------------------------
 #  メソッドの定義
@@ -103,7 +102,7 @@ def encode():
 	#  対象とするコマンドシーケンス
 	#
 	csnames = ['chapter', 'section', 'subsection', 'subsubsection']
-	patt = '|'.join(list(map(lambda x: '\\\\'+x+'\\{(.*)\\}', csnames)))
+	patt = '|'.join(list(map(lambda x: '\\\\'+x+'\\{([^\\}]*)\\}', csnames)))
 
 	#  置き換える文字列は次の文字から生成する
 	#
@@ -121,14 +120,14 @@ def encode():
 			#  対象となるcontrol sequenceが見つかった
 			m = re.search(patt, line)
 			if m:
-				if m.group(1): csname = m.group(1)
-				if m.group(2): csname = m.group(2)
-				if m.group(3): csname = m.group(3)
+				if m.group(1): csarg = m.group(1)
+				if m.group(2): csarg = m.group(2)
+				if m.group(3): csarg = m.group(3)
 				randomname = random_str(seed, 16)
 				if verbose:
-					print('    %s -> %s' % (csname, randomname))
-				line = line.replace(csname, randomname)
-				replaces.append([csname, randomname])
+					print('    %s -> %s' % (csarg, randomname))
+				line = line.replace(csarg, randomname)
+				replaces.append([csarg, randomname])
 			lines.append(line)
 
 		if replaces != []:
@@ -172,9 +171,38 @@ def decode():
 			print('  decoding %s' % f)
 		lines = []
 		for line in open(f, 'r', encoding='utf-8'):
+			p1 = line.find('<a href=')
+			if p1 < 0:
+				#  ファイル参照のない行
+				for key,val in replaces:
+					if line.find(key) >= 0:
+						line = line.replace(key, val)
+						break
+				lines.append(line)
+				continue
+
+			p2 = line[p1:].find('>')
+			if p2 < 0:
+				#  anchorタグが閉じていない行
+				#  ファイル参照は変換しない
+				if verbose:
+					print('    uncloded <a>: %s' % line[:-1])
+				lines.append(line)
+				continue
+
+			#   <a href="...">text</a>
+			#   textの部分だけ変換対象とする
+			p2 = p1 + p2 + 1
+			line1 = line[:p1]
+			line2 = line[p1:p2]
+			line3 = line[p2:]
 			for key,val in replaces:
-				if line.find(key):
-					line = line.replace(key, val)
+				if line3.find(key) >= 0:
+					line3 = line3.replace(key, val)
+					if verbose:
+						print('    %s -> %s' % (key, val))
+					line = line1 + line2 + line3
+					break
 			lines.append(line)
 
 		if options.save_original:
@@ -186,49 +214,6 @@ def decode():
 		for line in lines:
 			outf.write(line)
 		outf.close()
-
-#  引数をランダム文字列にしたためにセクション毎のhtmlファイルも同様に
-#  ランダムな名前で生成されてしまう。これを元の正しいファイル名に変換
-#  する（インデックスのリンクを正しく保つため）
-#    ※1 同一のchapter/section/..が存在するとセクション毎のhtmlも
-#	 同一の名称となってしまい不都合である。このような場合には
-#	 適宜番号を付与して回避するものとする。
-#
-def rename_html():
-
-	#  対応表を中間ファイルから読む
-	#
-	correspondence = {}
-	keys = []
-	dupecheck = []
-	for line in open(correspondence_file, 'r', encoding='utf-8'):
-		if line[-1] == '\n':
-			line = line[:-1]
-		replaced, original = line.split(',')
-		while original in dupecheck:		# 同名を回避する
-			original += '_'
-		dupecheck.append(original)
-		keys.append(replaced + '.html')
-		correspondence[replaced] = original
-	if verbose:
-		for r in correspondence.keys():
-			print('  %s -> %s' % (r, correspondence[r]))
-
-	#  ランダムファイル名を本来のファイル名に変更する
-	#
-	for f in fnames:
-		if not os.path.exists(f):
-			continue
-		if not f in keys:
-			continue
-		to_name = '"%s.html"' % correspondence[f.replace('.html', '')]
-		if verbose:
-			print('  rename: %s -> %s' % (f, to_name))
-		rc = rename(f, to_name)
-		if rc != 0:
-			msg = 'rename failed: %s -> %s' % (f, to_name)
-			print(msg)
-			sys.exit(1)
 
 #  指定された長さのランダム文字列を作成する（文字はseedの中から取り出す）
 #
@@ -278,9 +263,6 @@ if func == 'enc':
 elif func == 'dec':
 	# random string -> csname
 	decode()
-elif func == 'ren':
-	# rename randomly named html file to original name
-	rename_html()
 
 # ----------------------------------------------------------------------
 #  End of process.
