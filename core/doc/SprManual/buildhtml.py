@@ -11,7 +11,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/11/27 F.Kanehori	First version.
+#	Ver 1.0  2018/11/29 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
@@ -46,16 +46,17 @@ lwarpmk = 'lwarpmk'
 #  Helper methods
 # ----------------------------------------------------------------------
 #
-#  Platform now running?
+#  OSの判定
 def is_unix():
 	return True if os.name == 'posix' else False
 
-#  Executes "cat <file> | sed <patterns>/<patterns> | nkf -w"
+#  引用符(')と(")とを相互に入れ替える
 #
 def exchange_quote(s):
 	return s.replace("'", '|').replace('"', "'").replace('|', '"')
 
-#  File encoding and text pattern conversion (awk and sed).
+#  入力ファイルをutf8に変換したのち、patternsで指定されたパターンすべて
+#  についてsedで書き換え処理をする。
 #
 def fileconv(ifname, patterns, ofname):
 	if verbose:
@@ -96,7 +97,7 @@ def fileconv(ifname, patterns, ofname):
 		msg = 'file conversion failed: "%s"' % ifname
 		abort(msg)
 
-#  Execute command (subprocess).
+#  指定されたコマンドを実行する
 #
 def execute(cmnd, stdin=None, stdout=sys.stdout, stderr=sys.stderr, shell=None):
 	if stderr is NULL:
@@ -116,7 +117,7 @@ def execute(cmnd, stdin=None, stdout=sys.stdout, stderr=sys.stderr, shell=None):
 				shell=shell)
 	return proc
 
-#  Open pipe object.
+#  Pipeオブジェクトをオープンする
 #
 def pipe_open(file, mode, dry_run):
 	if dry_run:
@@ -129,7 +130,7 @@ def pipe_open(file, mode, dry_run):
 		f = None
 	return f
 
-#  Wait for process termination.
+#  プロセスの終了を待つ
 #
 def wait(proc):
 	if dry_run:
@@ -139,7 +140,7 @@ def wait(proc):
 		rc = -(rc & 0b1000000000000000) | (rc & 0b0111111111111111)
 	return rc
 
-#  Remove tree.
+#  指定されたディレクトリ以下をすべて削除する
 #
 def remove_tree(top, verbose=0):
 	if is_unix():
@@ -153,79 +154,98 @@ def remove_tree(top, verbose=0):
 	rc = wait(execute(cmnd, shell=True))
 	return rc
 
-#  Copy file(s).
+#  ファイルをコピーする
+#  ※ dstがディレクトリ名のときはcp()を、ファイル名のときはcp0()を使用する
 #
-def cp(src, dst, verbose=0):
-	src_cnv = pathconv(src)
-	dst_cnv = pathconv(dst)
+def cp(src, dst):
+	#  srcとdstの組み合わせ
+	#     file to file	N/A
+	#     fiel to dir	src -> dst/leaf(src)
+	#     dir to file	Error!
+	#     dir to dir	src/* -> dst/*
+	#  file to file は cp0(src, dst) で扱う
+
 	if os.path.isdir(src) and os.path.isfile(dst):
 		msg = 'copying directory to plain file (%s to %s)' % (src, dst)
-		abort(msg)
-	if os.path.isfile(src) and os.path.isdir(dst):
-		msg = 'copying plain file to directory (%s to %s)' % (src, dst)
-		abort(msg)
+		abort('Error: %s' % msg)
 	if dry_run:
 		Print('cp: %s %s' % (src, dst))
-		if dry_run:
-			return 0
+		return 0
+
 	if os.path.isdir(src):
-		if verbose:
-			Print('cp: %s -> %s (dir)' % (src, dst))
+		rc = __cp(src, dst)
+	else:	
+		for s in glob.glob(src):
+			rc = __cp(pathconv(s, True), dst)
+			if rc != 0: return 1	# copying failed
+	return rc
+
+def __cp(src, dst):
+	if os.path.isfile(src):
+		org_src_cnv = pathconv(src)
+		plist = src.split('/')
+		if len(plist) > 1:
+			src = plist[-1]
+			dst = '%s/%s' % (dst, '/'.join(plist[:-1]))
+		if not os.path.exists(dst):
+			Print('  creating directory %s' % dst)
+			os.makedirs(dst)
+		if verbose > 1:
+			Print('  cp: %s -> %s' % (src, dst))
+		src_cnv = pathconv(src)
+		dst_cnv = pathconv(dst)
+		cmnd = '%s %s %s' % (cmndname('cp'), org_src_cnv, dst_cnv)
+		rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
+
+	else:	# both src and dst are directory
+		dst = '%s/%s' % (dst, src)
+		if not os.path.exists(dst):
+			abspath = os.path.abspath(dst)
+			Print('  creating directory %s' % pathconv(abspath, True))
+			os.makedirs(dst)
+		if verbose > 1:
+			Print('  cp: %s -> %s' % (src, dst))
+		src_cnv = pathconv(src)
+		dst_cnv = pathconv(dst)
 		if is_unix():
-			## NEED IMPLEMENT
-			pass
+			cmnd = 'cp -r %s %s' % (src_cnv, dst_cnv)
 		else:
 			cmnd = 'xcopy /I /E /S /Y /Q %s %s' % (src_cnv, dst_cnv)
-			rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
-	else:
-		if verbose:
-			Print('cp: %s -> %s' % (src, dst))
-		cmnd = '%s %s %s' % (cmndname('cp'), src_cnv, dst_cnv)
 		rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
+
 	return rc
 
-#  Copy all files and directories.
-#
-def copy_all(src, dst, verbose=0):
-	os.chdir(src)
-	Print('  copying "%s" to "%s"' % (src, dst))
-	names = os.listdir()
-	for name in names:
-		if os.path.isfile(name):
-			if verbose:
-				Print('    ISFILE %s ...' % name)
-			cmnd = '%s %s %s' % (cmndname('cp'), src, dst)
-			rc = wait(execute(cmnd), shell=True)
-			if rc != 0:
-				break
-		elif os.path.isdir(name):
-			dst_dir = '%s/%s' % (dst, name)
-			if verbose:
-				Print('    %s -> %s' % (src, dst_dir))
-			cmnd = '%s %s %s' % (cmndname('cp'), src, dst_dir)
-			rc = wait(execute(cmnd), shell=True)
-			if rc != 0:
-				break
+def cp0(src, dst):
+	#  srcとdstの組み合わせ
+	#     file to file	src -> dst
+
+	if verbose > 1:
+		Print('  cp: %s -> %s' % (src, dst))
+	src_cnv = pathconv(src)
+	dst_cnv = pathconv(dst)
+	cmnd = '%s %s %s' % (cmndname('cp'), src_cnv, dst_cnv)
+	rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
 	return rc
 
-#  Convert path separators to fit current OS.
+#  パス表記を変換する (第2引数がFalseなら現在のOSでの表記に変換する)
 #
-def pathconv(path):
+def pathconv(path, unix=False):
+	if unix:
+		return path.replace(os.sep, '/')
 	return path.replace('/', os.sep)
 
-#  Print and flush
+#  Flush付きのprint
 #
 def Print(msg):
 	print(msg)
 	sys.stdout.flush()
 
-#  Command names.
+#  現在のOSの元でのコマンド名を返す
 #
 def cmndname(cmnd):
 	nametab = { 'cat':	['cat', 'type'],
 		    'cp':	['cp', 'copy'],
 		    'rm':	['rm', 'del'],
-		    'rmdir':	['rmdir', 'rmdir /s /q'],
 		}
 	indx = 0 if is_unix() else 1
 	return nametab[cmnd][indx]
@@ -306,15 +326,14 @@ if texmain[-4:] != '.tex':
 	texmain += '.tex'
 
 # ----------------------------------------------------------------------
-#  Main process.
+#  メイン処理開始
 #
 if options.skip_to_lwarpmk:
 	dry_run_save = dry_run
 	dry_run = True
 
-'''
 # ----------------------------------------------------------------------
-#  Prepare work space.
+#  作業場所を作成してそこに移動する
 #
 if os.path.exists(wrkspace) and not os.path.isdir(wrkspace):
 	msg = '%s exists but not a directory' % wrkspace
@@ -328,7 +347,7 @@ if verbose:
 	print('making %s' % wrkspace)
 os.makedirs(wrkspace, exist_ok=True)
 
-#  Copy files to work space.
+#  必要なファイルを作業場所にコピーする
 #
 patterns = [ [ '{sourcecode}', '{sourcecode}' ],
 	     [ '\([^\\]\)zw', '\\1\\\\zw' ],
@@ -346,8 +365,7 @@ for inpf in texsrcs:
 	fileconv(inpf, patterns, outf)
 #
 for inpf in texcsss:
-	outf = '%s/%s' % (wrkspace, inpf)
-	cp(inpf, outf)
+	cp(inpf, wrkspace)
 #
 others = glob.glob('*.cls')
 others.append('fig')
@@ -356,8 +374,7 @@ if options.insert_kludge:
 if test:
 	others.append('test.bat')
 for f in others:
-	dst = '%s/%s' % (wrkspace, f)
-	rc = cp(f, dst, verbose=verbose)
+	rc = cp(f, wrkspace)
 	if rc != 0:
 		msg = 'file copy failed: "%s"' % f
 		abort(msg)
@@ -369,13 +386,13 @@ if verbose:
 	print('converting image file format')
 os.chdir('%s/fig' % wrkspace)
 if test and os.path.isdir(svg_dir) and os.listdir(svg_dir):
-	#  テスト時にsvf_dir/にsvgファイルがあればそれをコピーする
+	#  テスト時にsvg_dir/にsvgファイルがあればそれをコピーする
 	#  これは単に時間の節約のため
 	for f in glob.glob('*.eps'):
 		f_svg = f.replace('.eps', '.svg')
 		fname = '%s%s%s' % (svg_dir, os.sep, f_svg)
 		print('  copying from %s' % fname.replace(os.sep, '/'))
-		cp(fname, f_svg)
+		cp0(fname, f_svg)
 else:
 	#  時間がかかるし無駄のようだがlwarpmkではこうするしかない
 	for f in glob.glob('*.eps'):
@@ -398,7 +415,7 @@ if options.convert_only:
 	sys.exit(0)
 
 # ----------------------------------------------------------------------
-#  Generating htmls.
+#  Htmlを作成する
 #
 os.chdir(wrkspace)
 if verbose:
@@ -416,12 +433,13 @@ if rc != 0:
 
 """
 #  ここでできたpdfを退避しておく（この後で書き換えられてしまうから）
-#	栞の文字が化けてしまうことへの対処 － うまく機能しない！
-#	他の方法を考えたほうが良い
+#	栞の文字が化けてしまうことへの対処
+#  －これはうまく機能しない！
+#	他の方法を考えないといけない
 #
 pdf_fname = texmain.replace('.tex', '.pdf')
 pdf_fsave = '%s_save.pdf' % pdf_fname
-rc = cp(pdf_fname, pdf_fsave)
+rc = cp0(pdf_fname, pdf_fsave)
 if rc != 0:
 	msg = 'save %s failed' % pdf_fname
 	abort(msg)
@@ -431,6 +449,7 @@ if options.skip_to_lwarpmk:
 """
 
 # (2) Lwarpmkで使うマクロを有効にするために"sprmacros.sty"を書き換える
+#     これ以降 \ifLwarp が真となる
 #
 patterns.append(['Lwarpfalse', 'Lwarptrue'])
 ofname = 'sprmacros.sty'
@@ -438,9 +457,8 @@ ifname = '%s/%s' % ('..', ofname)
 fileconv(ifname.replace('/', os.sep), patterns, ofname)
 
 # (2.1)	Replace TeX escape sequence.
-#	出力するhtmlをセクション毎分割しようとすると、TeXのエスケープ
-#	シーケンスが悪さをする（ファイル名がおかしくなる）のでいったん
-#	別の文字列に置き換えておく（htmlができてから表示を調整する）
+#	TeXのエスケープシーケンス(\#)はpdf/htmlではそのまま"\#"と表示される
+#	いったん別の文字列に置き換えておく（htmlができてから表示を調整する）
 #	※ 対応表は "escch.replace" で定義する
 #
 if options.replace_tex_es:
@@ -456,6 +474,8 @@ if options.replace_tex_es:
 # (2.2) Replace control sequence argument.
 #	\chapter{}, \section{} 等の引数に漢字があるとエラーとなるので、
 #	いったん別の文字列に置き換えておく（htmlができてから元へ戻す）
+#	セクション毎のファイルの名称も変化してしまうが、それはそのまま
+#	にしておく (漢字のファイル名は翻訳ページで問題を起こすかも…)
 #
 if options.replace_csarg:
 	cmnd = 'python ../csarg_replace.py -v enc *.tex'
@@ -472,6 +492,8 @@ if options.replace_csarg:
 #	    pdfTeX error: pdflatex,exe (file cyberb30): Font cyberb30 at 420 not found
 #	おまじないとして、ダミーのvruleを挿入しておく
 #	    \def\KLUDGE{\vrule width 0pt height 1pt }	(in "sprmacros.sty")
+#	これは単純にフォントだけの問題なので、そちらが解決できたらここの
+#	部分の処理は不要となる (-K オプションをやめること)
 #
 if options.insert_kludge:
 	cmnd = 'python insert_kludge.py'	# -U
@@ -526,46 +548,19 @@ if options.replace_tex_es:
 		abort(msg)
 	sys.stdout.flush()
 #
-'''
-os.chdir('tmp')
 if options.copy:
 	#  生成されたファイルを"generated/doc/SprManual"にコピーする
 	#
 	fmdir = wrkspace
 	todir = '../../../../generated/doc/SprManual'
-
-	Print('=== %s' % os.getcwd())
-	if os.path.exists(todir):
-		if verbose:
-			Print('  clearing "%s"' % todir)
-		cmnd = '%s %s' % (cmndname('rmdir'), pathconv(todir))
-		Print('#### %s' % cmnd)
-		wait(execute(cmnd, shell=True))
-	os.makedirs(todir)
-
 	#
 	targets = ['lateximages', 'fig/*.svg', '*.html', '*.css']
 	if verbose:
 		absdir = pathconv(os.path.abspath(todir))
-		Print('copying htmls to "%s"' % absdir)
-		sys.stdout.flush()
+		Print('copying htmls to "%s"' % absdir.replace(os.sep, '/'))
 
 	for target in targets:
-		Print('...[ %s ]...' % target)
-		component = target.split('/')
-		if len(component) > 1:
-			d = '/'.join(component[:-1])
-			os.makedirs('%s/%s' % (todir, d), exist_ok=True)
-
-		if os.path.isdir(target):
-			Print('COPY_ALL: %s, %s' % (target, todir))
-			copy_all(target, todir, verbose=verbose)
-		else:
-			for f in glob.glob(target):
-				tofile = '%s/%s' % (todir, f.replace(os.sep, '/'))
-				Print('COPY: %s, %s' % (f, tofile))
-				cp(f, tofile)
-
+		cp(target, todir)
 #
 os.chdir(cwd)
 sys.exit(0)
