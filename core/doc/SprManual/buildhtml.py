@@ -81,13 +81,13 @@ def fileconv(ifname, patterns, ofname):
 	for cmnd in med_cmnd:
 		if verbose > 1:
 			print('EXEC: %s' % cmnd)
-		proc = execute(cmnd, stdin=out_pipe, stdout=PIPE)
+		proc = execute(cmnd, stdin=out_pipe, stdout=PIPE, shell=True)
 		out_pipe = proc.stdout
 		med_proc.append(proc)
 	if verbose > 1:
 		print('EXEC: %s' % out_cmnd)
 	outf = ofname.replace('/', os.sep)
-	out_proc = execute(out_cmnd, stdin=out_pipe, stdout=outf)
+	out_proc = execute(out_cmnd, stdin=out_pipe, stdout=outf, shell=True)
 	#
 	inp_proc.wait()
 	for proc in med_proc:
@@ -401,11 +401,11 @@ else:
 		if verbose:
 			print('  %s -> %s' % (f, f_svg))
 		cmnd = 'lwarpmk epstopdf %s' % f
-		rc = wait(execute(cmnd, stdout=NULL))
+		rc = wait(execute(cmnd, stdout=NULL, shell=True))
 		if rc != 0:
 			print('%s -> %s: faild' % (f, f_pdf))
 		cmnd = 'lwarpmk pdftosvg %s' % f_pdf
-		rc = wait(execute(cmnd, stdout=NULL))
+		rc = wait(execute(cmnd, stdout=NULL, shell=True))
 		if rc != 0:
 			print('%s -> %s: faild' % (f_pdf, f_svg))
 os.chdir(cwd)
@@ -426,7 +426,7 @@ if verbose:
 cmnd = '%s %s' % (pdflatex, texmain)
 if verbose:
 	print('#### %s' % cmnd)
-rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 if rc != 0:
 	msg = '%s: failed' % cmnd
 	abort(msg)
@@ -465,7 +465,7 @@ if options.replace_tex_es:
 	cmnd = 'python ../escch_replace.py -v -d ../escch.replace enc *.tex'
 	if verbose:
 		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
@@ -481,7 +481,7 @@ if options.replace_csarg:
 	cmnd = 'python ../csarg_replace.py -v enc *.tex'
 	if verbose:
 		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
@@ -499,7 +499,7 @@ if options.insert_kludge:
 	cmnd = 'python insert_kludge.py'	# -U
 	if verbose:
 		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
@@ -519,7 +519,7 @@ cmnds = [ '%s html' % lwarpmk,
 for cmnd in cmnds:
 	if verbose:
 		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
@@ -530,7 +530,7 @@ if options.replace_csarg:
 	cmnd = 'python ../csarg_replace.py -v dec *.html'
 	if verbose:
 		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
@@ -542,7 +542,7 @@ if options.replace_tex_es:
 	cmnd = 'python ../escch_replace.py -v -d ../escch.replace dec *.html'
 	if verbose:
 		print('#### %s' % cmnd)
-	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr))
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
 		abort(msg)
