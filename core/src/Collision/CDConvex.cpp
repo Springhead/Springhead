@@ -16,7 +16,6 @@ namespace Spr{;
 
 CDConvex::CDConvex(){
 	bboxReady = false;
-	maxSurfArea = FLT_EPSILON;
 }
 
 std::vector<int>& CDConvex::FindNeighbors(int vtx){
@@ -38,7 +37,7 @@ void CDConvex::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){
 }
 
 //----------------------------------------------------------------------------
-
+#ifdef USE_METRICS_BY_BOXEL
 void CDConvex::CalcMetricByBoxel(float& volume, Vec3f& center, Matrix3f& inertia){
 	volume = 0.0f;
 	center.clear();
@@ -126,5 +125,6 @@ void CDConvex::AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float ep
 		}
 	}
 }
+#endif
 
 }

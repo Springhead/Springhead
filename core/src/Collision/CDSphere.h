@@ -20,13 +20,11 @@ public:
 	SPR_DECLMEMBEROF_CDSphereDesc;
 
 	CDSphere();
-	//CDSphere(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
-	//CDSphere(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
 	CDSphere(const CDSphereDesc& desc);
 	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();
 	virtual Matrix3f CalcMomentOfInertia();
-	
+
 	///	サポートポイントを求める．
 	virtual int Support(Vec3f&w, const Vec3f& v) const;
 	///	切り口を求める．接触解析に使う．
@@ -39,7 +37,7 @@ public:
 	virtual int GetVtxCount() const { return INT32_MAX; };
 
 	float	GetRadius(){ return radius; }
-	void	SetRadius(float r){ radius = r; bboxReady = false; }
+	void	SetRadius(float r) { radius = r; 	bboxReady = false; CalcMetrics(); }
 };
 
 	

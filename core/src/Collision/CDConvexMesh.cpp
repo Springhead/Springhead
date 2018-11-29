@@ -48,8 +48,7 @@ void CDConvexMesh::SetDesc(const void *ptr){
 	base = desc->vertices;
 
 	CalcFace();
-	CalcMetric();
-
+	CalcMetrics();
 	bboxReady = false;
 }
 
@@ -133,7 +132,6 @@ public:
 Vec3f* CDQhullVtx::base;
 
 void CDConvexMesh::CalcFace(){
-	maxSurfArea = 0;
 	curPos = 0;
 	faces.clear();
 	neighbor.clear();
@@ -181,7 +179,11 @@ void CDConvexMesh::CalcFace(){
 	}
 
 	// 平均座標の計算
-	CalcAverage();
+	Vec3d average;
+	for (unsigned i = 0; i<base.size(); ++i) {
+		average += base[i];
+	}
+	average /= base.size();
 
 	//	面の頂点IDを振りなおす / 法線を計算
 	for(CDFaces::iterator it = faces.begin(); it != faces.end(); ++it){
@@ -192,8 +194,6 @@ void CDConvexMesh::CalcFace(){
 		it->normal.unitize();
 		if(it->normal * (base[it->vtxs[0]] - average) < 0.0f)
 			it->normal *= -1.0f;
-		float area = ((base[it->vtxs[2]] - base[it->vtxs[0]]) % (base[it->vtxs[1]] - base[it->vtxs[0]])).norm()/2.f;
-		if (maxSurfArea < area) maxSurfArea = area;
 	}
 	//	隣の頂点リストを作る．(GJKのSupportに使用)
 	neighbor.resize(vtxIds.size());
@@ -238,27 +238,21 @@ void CDConvexMesh::MergeFace(){
 	//	DSTR << "Poly faces:" << nf << "->" << faces.size() << std::endl;
 }
 
-void CDConvexMesh::CalcAverage(){
-	average.clear();
-	for(unsigned i=0; i<base.size(); ++i){
-		average += base[i];
-	}
-	average /= base.size();
-}
-
 float CDConvexMesh::CalcVolume(){
+	CalcMetrics();
 	return volume;
 }
-
 Vec3f CDConvexMesh::CalcCenterOfMass(){
+	CalcMetrics();
 	return center;
 }
 
 Matrix3f CDConvexMesh::CalcMomentOfInertia(){
+	CalcMetrics();
 	return inertia;
 }
 
-void CDConvexMesh::CalcMetric(){
+void CDConvexMesh::CalcMetrics(){
 	volume  = 0.0f;
 	center  = Vec3f();
 	inertia = Matrix3f::Zero();

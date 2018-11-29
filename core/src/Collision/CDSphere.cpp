@@ -18,7 +18,7 @@ CDSphere::CDSphere() {
 CDSphere::CDSphere(const CDSphereDesc& d){
 	radius = d.radius;
 	material = d.material;
-	
+	CalcMetrics();
 }
 
 // サポートポイントを求める
@@ -46,7 +46,6 @@ float CDSphere::CalcVolume(){
 Matrix3f CDSphere::CalcMomentOfInertia(){
 	return (CalcVolume() * (0.4f * radius * radius)) * Matrix3f::Unit();
 }
-
 int CDSphere::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
 	const float eps = 1.0e-10f;
 	Vec3f p;

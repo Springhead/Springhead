@@ -99,7 +99,7 @@ bool PHSolidPair::ContDetect(unsigned int ct, double dt){
 			CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
 			if(convex){
 				Posed lp = solid[i]->GetShapePose(j);
-				shapeCenter[i][j] = lp * convex->CalcCenterOfMass();
+				shapeCenter[i][j] = lp * convex->GetCenterOfMass();
 				shapePose[i][j] = solid[i]->GetPose() * lp;
 			}else{
 				solid[i]->DelChildObject(solid[i]->GetFrame(j));
@@ -109,11 +109,8 @@ bool PHSolidPair::ContDetect(unsigned int ct, double dt){
 			}
 		}
 	}
-	//	１ステップ前の並進移動量×α倍だけ戻す。
-	//	２倍くらい戻した方が、離れる確率が高いし、そのくらいなら戻ってもおかしなことにはならないので。
-	double alpha = 2;
-	Vec3d vt[2] = {solid[0]->GetVelocity() * dt * alpha, solid[1]->GetVelocity() * dt * alpha};
-	Vec3d wt[2] = {solid[0]->GetAngularVelocity() * dt * alpha, solid[1]->GetAngularVelocity() * dt * alpha};
+	Vec3d vt[2] = {solid[0]->GetVelocity() * dt, solid[1]->GetVelocity() * dt};
+	Vec3d wt[2] = {solid[0]->GetAngularVelocity() * dt, solid[1]->GetAngularVelocity() * dt};
 	Vec3d delta[2] = {vt[0] - (wt[0]^solid[0]->GetCenterOfMass()), vt[1] - (wt[1] ^  solid[1]->GetCenterOfMass())};
 
 	// 全てのshape pairについて交差を調べる
