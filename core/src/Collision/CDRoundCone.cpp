@@ -18,7 +18,6 @@ CDRoundCone::CDRoundCone(const CDRoundConeDesc& desc){
 	radius = desc.radius;
 	length = desc.length;
 	material = desc.material;
-	maxSurfArea = length*((radius[0]+radius[1])*M_PI);
 }
 
 bool CDRoundCone::IsInside(const Vec3f& p){
@@ -340,18 +339,20 @@ float CDRoundCone::GetLength() {
 void CDRoundCone::SetRadius(Vec2f r) {
 	radius    = r;
 	bboxReady = false;
+	CalcMetrics();
 }
 void CDRoundCone::SetLength(float l) {
 	length    = l;
 	bboxReady = false;
+	CalcMetrics();
 }
 void CDRoundCone::SetWidth(Vec2f r) {
 	Vec2f radiusMargin=r-radius;
 	
 	length-=(radiusMargin.x+radiusMargin.y);
 	radius=r;
-
 	bboxReady = false;
+	CalcMetrics();
 }
 
 int CDRoundCone::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){

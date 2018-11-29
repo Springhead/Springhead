@@ -19,6 +19,8 @@ class CDConvex : public CDShape{
 public:
 	SPR_OBJECTDEF_ABST(CDConvex);
 
+	bool	bboxReady;	///<	PHFrameのBounding Boxの再計算の要否を表すフラグ
+#ifdef USE_METRICS_BY_BOXEL
 	/** ボクセル近似による体積，重心，慣性行列の計算
 		使用していないが比較のために残してある
 	 */
@@ -31,10 +33,30 @@ public:
 	};
 	std::vector<Boxel> boxels;
 	float   maxSurfArea;
-	bool	bboxReady;
-	
 	void	AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float eps);
 	void	CalcMetricByBoxel(float& volume, Vec3f& center, Matrix3f& inertia);
+#endif
+
+protected:
+	/// 体積
+	float volume;
+	/// 重心
+	Vec3f center;
+	/// 慣性行列
+	Matrix3f inertia;
+public:
+	virtual float CalcVolume()=0;							///<	体積の計算
+	virtual Vec3f CalcCenterOfMass() { return Vec3f(); }	///<	重心の計算
+	virtual Matrix3f CalcMomentOfInertia()=0;				///<	密度1での慣性テンソルの計算
+	/// 体積, 重心, 慣性行列を計算して内部にキャッシュしておく
+	virtual void CalcMetrics() {
+		volume = CalcVolume();
+		center = CalcCenterOfMass();
+		inertia = CalcMomentOfInertia();
+	}
+	float GetVolume() { return volume; };					///<	体積を返す(キャッシュ済みの)
+	Vec3f GetCenterOfMass() { return center; };				///<	重心位置を返す(キャッシュ済みの)
+	Matrix3f GetMomentOfInertia() { return inertia; };		///<	密度での慣性テンソルを返す(キャッシュ済みの)
 
 	/**	サポートポイント(方向ベクトルvとの内積が最大の点)をwに格納する。
 		戻り値には、頂点番号があれば返す。無ければ-1。頂点番号はメッシュの頂点の場合
@@ -49,13 +71,16 @@ public:
 
 	// 頂点数を返す
 	virtual int GetVtxCount() const = 0;
-	virtual float GetMaxSurf() { return maxSurfArea; };
+
 	///	バウンディングボックスを求める．
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
+
+
 	/// 表面上の点pにおける曲率半径を求める
 	virtual double CurvatureRadius(Vec3d p){ return 1e+10; } /// 平面とした場合の値。現時点ではRoundConeについてのみ実装されている(09/02/08, mitake)
-	///< 表面上の点pにおける法線
-	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } /// 現時点ではRoundConeについてのみ実装されている(09/02/14, mitake)
+
+	/// 表面上の点pにおける法線
+	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } ///< 現時点ではRoundConeについてのみ実装されている(09/02/14, mitake)
 
 	CDConvex();
 };

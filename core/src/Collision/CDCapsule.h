@@ -24,7 +24,7 @@ public:
 	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();
 	virtual Matrix3f CalcMomentOfInertia();
-	
+
 	///	サポートポイントを求める．
 	virtual int Support(Vec3f& w, const Vec3f& v) const;
 	///	切り口を求める．接触解析に使う．
@@ -35,9 +35,9 @@ public:
 	virtual int GetVtxCount() const { return INT32_MAX; };
 	
 	float	GetRadius()       { return radius; }
-	void	SetRadius(float r){ radius = r; bboxReady = false; }
+	void	SetRadius(float r){ radius = r; bboxReady = false; CalcMetrics(); }
 	float	GetLength()       { return length; }
-	void	SetLength(float l){ length = l; bboxReady = false; }
+	void	SetLength(float l){ length = l; bboxReady = false; CalcMetrics(); }
 
 	int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 };
