@@ -13,7 +13,7 @@
 #undef SPR_DLL						
 #define SPR_DLL					
 //---
-%ignore Spr::PHSolidIf::AddShapes;
+%ignore Spr::PHBodyIf::AddShapes;
 %ignore Spr::PHIKActuatorIf::GetRawSolution;
 %ignore Spr::PHSceneIf::GetSolids;
 %ignore Spr::PHJoint1DIf::GetRange;

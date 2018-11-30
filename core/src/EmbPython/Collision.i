@@ -28,3 +28,4 @@ EXTEND_NEW(PHMaterial)
 %}
 //--  
 %include "../../include/Collision/SprCDShape.h"
+%include "../../include/Collision/SprCDDetector.h"
