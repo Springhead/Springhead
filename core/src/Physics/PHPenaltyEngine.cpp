@@ -36,7 +36,9 @@ void PHShapePairForPenalty::Clear(){
 // PHSolidPairForPenalty
 
 void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
-	if(!bEnabled)return;
+	if(!bEnabled) return;
+	PHSolid* solid[2] = { body[0]->Cast(), body[1]->Cast() };
+	if (!solid[0] || !solid[1]) return;
 	//	動力学計算の準備
 	reflexForce = reflexTorque = frictionForce = frictionTorque = Vec3f();
 	area = 0;
@@ -107,6 +109,8 @@ void PHSolidPairForPenalty::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 
 void PHSolidPairForPenalty::GenerateForce(){
 	if(!bEnabled)return;
+	PHSolid* solid[2] = { body[0]->Cast(), body[1]->Cast() };
+	if (!solid[0] || !solid[1]) return;
 	//	接触判定終了後の処理
 	//	抗力とその作用点を求め，摩擦を計算し，抗力と摩擦力を物体に加える．
 	int i, j;
@@ -157,6 +161,8 @@ void PHSolidPairForPenalty::GenerateForce(){
 //	凸形状対に発生する反力の計算と最大摩擦力の計算
 //	すべて commonPoint を原点とした座標系で計算する．
 void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
+	PHSolid* solid[2] = { body[0]->Cast(), body[1]->Cast() };
+	if (!solid[0] || !solid[1]) return;
 	//DSTR << "---------------------------------------------------------" << std::endl;
 	cp->Clear();
 	Vec3f cog[2] = {solid[0]->GetCenterPosition() - cp->commonPoint, solid[1]->GetCenterPosition() - cp->commonPoint};
@@ -355,6 +361,8 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 //	凸形状対に発生する摩擦力の計算
 //	力の作用点を原点とした座標系で計算する．
 void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
+	PHSolid* solid[2] = { body[0]->Cast(), body[1]->Cast() };
+	if (!solid[0] || !solid[1]) return;
 	//	初めての接触の時
 	Vec3f reflexForcePoint = cp->reflexForcePoint + cp->commonPoint;	//	力の作用点(絶対系)
 	if (cp->state == PHShapePairForPenalty::NEW){
@@ -468,7 +476,7 @@ void PHPenaltyEngine::Step(){
 	
 	unsigned int ct = scene->GetCount();
 	double       dt = scene->GetTimeStep();
-	int n = (int)solids.size();
+	int n = (int)bodies.size();
 	int i, j;
 	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
 		GetSolidPair(i,j)->Setup(ct, dt);

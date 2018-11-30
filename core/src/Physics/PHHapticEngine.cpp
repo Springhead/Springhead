@@ -210,7 +210,7 @@ void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	PHHapticPointerIf* pointer = GetSolid(1)->Cast();
 	
 	if(sp->state == CDShapePair::NEW || sp->state == CDShapePair::CONTINUE){
-		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
+		sp->OnDetect(ct, body[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
 		if(pointer->IsMultiPoints()){
 			sp->AnalyzeContactRegion();		// 侵入領域の頂点を取得
 		}else{
@@ -339,11 +339,11 @@ void PHHapticEngine::StartDetection(){
 void PHHapticEngine::UpdateEdgeList(){
 	edges.clear();
 	Vec3f dir[3] = { Vec3f(1, 0, 0), Vec3f(0, 1, 0), Vec3f(0, 0, 1) };
-	for(int i = 0; i < (int)solids.size(); i++){
+	for(int i = 0; i < (int)bodies.size(); i++){
 		Edge e;
 		for(int j = 0; j < 3; j++){
 			float min, max = 0.0f;
-			solids[i]->GetBBoxSupport(dir[j], min, max);
+			bodies[i]->GetBBoxSupport(dir[j], min, max);
 			e.min[j] = min; e.max[j] = max;
 		}
 		edges.push_back(e);
@@ -393,12 +393,12 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 		// 2.近傍物体と判定
 		const int pointerID = pointer->GetPointerID();
 		PHSolidPairForHaptic* solidPair = GetSolidPair(i, pointerID)->Cast();
-		if(DCAST(PHHapticPointer, solidPair->solid[0])) continue;	// 剛体がポインタの場合
+		if(DCAST(PHHapticPointer, solidPair->body[0])) continue;	// 剛体がポインタの場合
 		if (!solidPair->bEnabled) continue;
 		if(nAxes == 3){
 			// 形状毎の近傍点探索、接触解析
-			int ns0 = solidPair->solid[0]->NShape();
-			int ns1 = solidPair->solid[1]->NShape();
+			int ns0 = solidPair->body[0]->NShape();
+			int ns1 = solidPair->body[1]->NShape();
 			for(int is0 = 0; is0 < ns0; is0++)for(int is1 = 0; is1 < ns1; is1++){
 				solidPair->Detect(solidPair->GetShapePair(is0, is1)->Cast(), ct, dt, false);
 			}
@@ -426,15 +426,15 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 
 bool PHHapticEngine::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
-	if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
-		// solidsにsolidを保存(pointerも含まれる)
-		solids.push_back(s);				
+	if(s && std::find(bodies.begin(), bodies.end(), s) == bodies.end()){
+		// bodiesにsolidを保存(pointerも含まれる)
+		bodies.push_back(s);				
 		PHSolidForHaptic* h = DBG_NEW PHSolidForHaptic();
 		h->sceneSolid = s;
 		*h->GetLocalSolid() = *s;
 		hapticSolids.push_back(h);
 
-		int NSolids = (int)solids.size();
+		int NSolids = (int)bodies.size();
 		int NPointers = (int)hapticPointers.size();
 
 		// PHSolidPairFoHapticを追加 行 solid, 列 pointer
@@ -452,7 +452,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			solidPairsTemp.resize(NSolids, NPointers);
 			for(int i = 0; i < NSolids; i++){
 				PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)CreateSolidPair();
-				solidPair->Init(this, solids[i], s);
+				solidPair->Init(this, bodies[i], s);
 				solidPair->solidID[0] = i;
 				solidPair->solidID[1] = NSolids - 1;
 				solidPairs.item(i, pointerID) = solidPair;
@@ -470,7 +470,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 		solidPairsTemp.resize(NSolids, NPointers);
 		for(int i = 0; i < NPointers; i++){
 			PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)CreateSolidPair();
-			solidPair->Init(this, solids[NSolids - 1], hapticPointers[i]);	
+			solidPair->Init(this, bodies[NSolids - 1], hapticPointers[i]);	
 			solidPair->solidID[0] = NSolids - 1;	
 			solidPair->solidID[1] = hapticPointers[i]->GetSolidID();
 			solidPairs.item(NSolids - 1, i) = solidPair;
@@ -489,10 +489,10 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 bool PHHapticEngine::DelChildObject(ObjectIf* o){
 	//PHSolid* s = DCAST(PHSolid, o);
 	//if(s){
-	//	PHSolids::iterator is = find(solids.begin(), solids.end(), s);
-	//	if(is != solids.end() && solids.size() > 0){
-	//		int idx = (int)(is - solids.begin());
-	//		solids.erase(is);
+	//	PHSolids::iterator is = find(bodies.begin(), bodies.end(), s);
+	//	if(is != bodies.end() && bodies.size() > 0){
+	//		int idx = (int)(is - bodies.begin());
+	//		bodies.erase(is);
 	//		solidPairs.erase_col(idx);
 	//		PHSolidsForHaptic::iterator it;
 	//		for(it = hapticSolids.begin(); it < hapticSolids.end(); it++){
@@ -511,19 +511,19 @@ bool PHHapticEngine::DelChildObject(ObjectIf* o){
 	return false;
 }
 
-void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
-	PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
-	if(it == solids.end())
+void PHHapticEngine::UpdateShapePairs(PHBody* solid){
+	PHBodies::iterator it = std::find(bodies.begin(), bodies.end(), solid);
+	if(it == bodies.end())
 		return;
-	int isolid = (int)(it - solids.begin());
+	int isolid = (int)(it - bodies.begin());
 	int i, j;
 	PHSolidPairForHaptic* sp;
-	PHSolid* s[2];
+	PHBody* s[2];
 	// solidの場合(行の更新）
 	for(i = 0; i < NPointers(); i++){
 		sp = GetSolidPair(isolid, i)->Cast();
 		s[0] = solid;
-		s[1] = sp->solid[1];
+		s[1] = sp->body[1];
 		sp->shapePairs.resize(s[0]->NShape(), s[1]->NShape());
 		for(j = 0; j < s[1]->NShape(); j++){
 			PHShapePairForHaptic* n = sp->CreateShapePair();
@@ -537,10 +537,10 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	// PHHapticPointerの場合（列の更新）
 	int pointerID = pointer->GetPointerID();
 	int pointerSolidID = pointer->GetSolidID();
-	for(i = 0; i < (int)solids.size(); i++){
+	for(i = 0; i < (int)bodies.size(); i++){
 		if(i == pointerSolidID) continue;
 		sp = GetSolidPair(i, pointerID)->Cast();
-		s[0] = sp->solid[0];
+		s[0] = sp->body[0];
 		s[1] = solid;
 		sp->shapePairs.resize(s[0]->NShape(), s[1]->NShape());
 		for(j = 0; j < s[0]->NShape(); j++){
@@ -570,7 +570,7 @@ void PHHapticEngine::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable)
 	PHSolidIf *soLatter = NULL;
 	for (int i = 0; i < solidPairs.height(); ++i) {
 		for (int j = 0; j < solidPairs.width(); ++j) {
-			PHSolidIf *s0 = solidPairs.item(i, j)->solid[0]->Cast(), *s1 = solidPairs.item(i, j)->solid[1]->Cast();
+			PHSolidIf *s0 = solidPairs.item(i, j)->body[0]->Cast(), *s1 = solidPairs.item(i, j)->body[1]->Cast();
 			if ( ((s0 == lhs) && (s1 == rhs)) || ((s0 == rhs) && (s1 == lhs)) ) {
 				solidPairs.item(i, j)->bEnabled = bEnable;
 			}
@@ -584,9 +584,9 @@ void PHHapticEngine::EnableContact(PHSolidIf** group, size_t length, bool bEnabl
 	std::vector<int> idx;
 	PHSolids::iterator it;
 	for (int i = 0; i < (int)length; i++){
-		it = find(solids.begin(), solids.end(), (PHSolid*)(group[i]->Cast()));
-		if (it != solids.end())
-			idx.push_back((int)(it - solids.begin()));
+		it = find(bodies.begin(), bodies.end(), (PHSolid*)(group[i]->Cast()));
+		if (it != bodies.end())
+			idx.push_back((int)(it - bodies.begin()));
 	}
 	sort(idx.begin(), idx.end());
 	for (int i = 0; i < (int)idx.size(); i++){
@@ -600,7 +600,7 @@ void PHHapticEngine::EnableContact(PHSolidIf** group, size_t length, bool bEnabl
 void PHHapticEngine::EnableContact(PHSolidIf* solid, bool bEnable){
 	for (int i = 0; i < solidPairs.height(); ++i) {
 		for (int j = 0; j < solidPairs.width(); ++j) {
-			PHSolidIf *s0 = solidPairs.item(i, j)->solid[0]->Cast(), *s1 = solidPairs.item(i, j)->solid[1]->Cast();
+			PHSolidIf *s0 = solidPairs.item(i, j)->body[0]->Cast(), *s1 = solidPairs.item(i, j)->body[1]->Cast();
 			if (s0==solid || s1==solid) {
 				solidPairs.item(i, j)->bEnabled = bEnable;
 			}

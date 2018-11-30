@@ -33,6 +33,115 @@ struct PHFrameIf: public SceneObjectIf{
 	CDShapeIf* GetShape();
 };
 
+struct PHBodyIf : SceneObjectIf {
+	SPR_IFDEF(PHBody);
+	/** @brief 剛体の位置と向きを取得する
+	@return シーンに対する剛体の位置と向き
+	*/
+	Posed		GetPose() const;
+
+	/** @brief 剛体の速度を取得する
+	@return シーンに対する剛体の質量中心の速度
+	*/
+	Vec3d		GetVelocity() const;
+
+	/** @brief 剛体の角速度を取得する
+	@return シーンに対する剛体の角速度
+	*/
+	Vec3d		GetAngularVelocity() const;
+
+	/** @brief 質量中心を取得する
+	@return 質量中心の位置(剛体座標系)
+	*/
+	Vec3d		GetCenterOfMass();
+
+	/** @brief 剛体の位置を取得する
+	@return シーンに対する剛体フレーム原点の位置
+	*/
+	Vec3d		GetFramePosition();
+
+	/** @brief 剛体の質量中心の位置を取得する
+	@return シーンに対する剛体の質量中心の位置(World)
+	*/
+	Vec3d		GetCenterPosition();
+
+	/// 動く物体かどうか
+	bool IsDynamical();
+
+	/// 速度が0になり、計算省略のために凍らせているかどうか
+	bool IsFrozen();
+
+	/** @brief 剛体に形状を登録する
+	@param shape 形状へのポインタ
+
+	剛体が保持する形状リストの末尾に新しく形状を追加する
+	*/
+	void AddShape(CDShapeIf* shape);
+	void AddShapes(CDShapeIf** shBegin, CDShapeIf** shEnd);
+
+	/** @brief 剛体から形状を取り外す
+	@param index	形状インデックス
+
+	形状リストからindex番目の形状を削除する．
+	その結果，index+1番目以降の形状のインデックスは1つ先頭に向かってシフトするので注意が必要．
+	*/
+	void RemoveShape(int index);
+	void RemoveShapes(int idxBegin, int idxEnd);
+
+	/** @brief 剛体から形状を取り外す
+	@param shape	形状へのポインタ
+
+	形状リストの中からshapeを参照している要素をすべて削除する．
+	その結果，削除された要素よりも後ろにある要素は先頭に向かってシフトするので注意が必要．
+	*/
+	void		RemoveShape(CDShapeIf* shape);
+
+	/** @brief 登録されている形状の個数を取得する
+	@return 形状の個数
+
+	形状リストの要素数を返す．
+	*/
+	int			NShape();
+
+	/**	@brief 登録されている形状を取得する
+	@param index 形状インデックス
+	@return 形状へのポインタ
+
+	形状リストのindex番目の形状を返す．
+	*/
+	CDShapeIf*	GetShape(int index);
+
+	/** @brief 形状の位置と向きを取得する
+	@param index 対象とする形状のインデックス
+	@return 剛体に対する形状の位置と向き
+
+	形状リストのindex番目の形状の位置と向きを取得する．
+	*/
+	Posed		GetShapePose(int index);
+
+	/** @brief 形状の位置と向きを設定する
+	@param index 対象とする形状のインデックス
+	@param pose 剛体に対する形状の位置と向き
+
+	形状リストのindex番目の位置と向きを設定する．
+	*/
+	void		SetShapePose(int index, const Posed& pose);
+
+	/** @brief 形状をClearする
+
+	形状リストを空にする．
+	*/
+	void		ClearShape();
+
+	/** @brief Bounding boxを取得．必要なら再計算
+	@param bbmin  bboxの下限
+	@param bbmax  bboxの上限
+	@param world  trueならワールド座標，falseならローカル座標に平行なbbox
+	*/
+	void		GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world);
+
+};
+
 ///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	質量中心の速度		(World系)
@@ -61,7 +170,7 @@ struct CDShapeIf;
 struct PHTreeNodeIf;
 
 ///	剛体のインタフェース
-struct PHSolidIf : public SceneObjectIf{
+struct PHSolidIf : public PHBodyIf{
 	SPR_IFDEF(PHSolid);
 
 	/** @brief 力を質量中心に加える
@@ -95,11 +204,6 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	void		SetMass(double m);
 	
-	/** @brief 質量中心を取得する
-		@return 質量中心の位置(剛体座標系)
-	 */
-	Vec3d		GetCenterOfMass();
-	
 	/** @brief 質量中心を設定する
 		@param center 質量中心の位置(剛体座標系)
 	 */
@@ -124,20 +228,10 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	void		CompInertia();
 	
-	/** @brief 剛体の位置を取得する
-		@return シーンに対する剛体フレーム原点の位置
-	 */
-	Vec3d		GetFramePosition() const;
-	
 	/** @brief 剛体の位置を設定する
 		@param p シーンに対する剛体フレーム原点の位置
 	 */
 	void		SetFramePosition(const Vec3d& p);
-	
-	/** @brief 剛体の質量中心の位置を取得する
-		@return シーンに対する剛体の質量中心の位置(World)
-	 */
-	Vec3d		GetCenterPosition() const ;
 	
 	/** @brief 剛体の位置を設定する
 		@param p シーンに対する剛体の質量中心の位置(World)
@@ -161,31 +255,16 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	void		SetOrientation(const Quaterniond& q);
 
-	/** @brief 剛体の位置と向きを取得する
-		@return シーンに対する剛体の位置と向き
-	 */
-	Posed		GetPose() const;
-	
 	/** @brief 剛体の位置と向きを設定する
 		@param p シーンに対する剛体の位置と向き
 	 */
 	void		SetPose(const Posed& p);
-
-	/** @brief 剛体の速度を取得する
-		@return シーンに対する剛体の質量中心の速度
-	 */
-	Vec3d		GetVelocity() const ;
 
 	/** @brief 剛体の速度を設定する
 		@param v シーンに対する剛体の質量中心の速度
 	 */
 	void		SetVelocity(const Vec3d& v);
 
-	/** @brief 剛体の角速度を取得する
-		@return シーンに対する剛体の角速度
-	 */
-	Vec3d		GetAngularVelocity() const;
-	
     /** @brief 剛体の角速度を設定する
 		@param av シーンに対する剛体の角速度
 	 */
@@ -202,76 +281,6 @@ struct PHSolidIf : public SceneObjectIf{
 		@return 剛体に加えられたトルク(World系、剛体の重心周り)
 	*/
 	Vec3d GetTorque() const;
-
-	/** @brief 剛体に形状を登録する
-		@param shape 形状へのポインタ
-
-		剛体が保持する形状リストの末尾に新しく形状を追加する
-	 */
-	void AddShape (CDShapeIf* shape);
-	void AddShapes(CDShapeIf** shBegin, CDShapeIf** shEnd);
-	
-	/** @brief 剛体から形状を取り外す
-		@param index	形状インデックス
-
-		形状リストからindex番目の形状を削除する．
-		その結果，index+1番目以降の形状のインデックスは1つ先頭に向かってシフトするので注意が必要．
-	 */
-	void RemoveShape (int index);
-	void RemoveShapes(int idxBegin, int idxEnd);
-
-	/** @brief 剛体から形状を取り外す
-		@param shape	形状へのポインタ
-
-		形状リストの中からshapeを参照している要素をすべて削除する．
-		その結果，削除された要素よりも後ろにある要素は先頭に向かってシフトするので注意が必要．
-	 */
-	void		RemoveShape(CDShapeIf* shape);
-
-	/** @brief 登録されている形状の個数を取得する
-		@return 形状の個数
-
-		形状リストの要素数を返す．
-	 */
-	int			NShape();
-
-	/**	@brief 登録されている形状を取得する
-		@param index 形状インデックス
-		@return 形状へのポインタ
-
-		形状リストのindex番目の形状を返す．
-	 */
-	CDShapeIf*	GetShape(int index);
-
-	/** @brief 形状の位置と向きを取得する
-		@param index 対象とする形状のインデックス
-		@return 剛体に対する形状の位置と向き
-		
-		形状リストのindex番目の形状の位置と向きを取得する．
-	 */
-	Posed		GetShapePose(int index);
-
-	/** @brief 形状の位置と向きを設定する
-		@param index 対象とする形状のインデックス
-		@param pose 剛体に対する形状の位置と向き
-		
-		形状リストのindex番目の位置と向きを設定する．
-	 */
-	void		SetShapePose(int index, const Posed& pose);
-
-	/** @brief 形状をClearする
-
-		形状リストを空にする．
-	 */
-	void		ClearShape();
-	
-	/** @brief Bounding boxを取得．必要なら再計算
-		@param bbmin  bboxの下限
-		@param bbmax  bboxの上限
-		@param world  trueならワールド座標，falseならローカル座標に平行なbbox
-	 */
-	void		GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world);
-	
 	/** @brief 重力を有効/無効化する
 		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
 	 */

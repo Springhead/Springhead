@@ -8,113 +8,14 @@
 #ifndef PHSOLID_H
 #define PHSOLID_H
 
-#include <Physics/SprPHSolid.h>
-#include <Collision/SprCDShape.h>
-#include "../Physics/PHEngine.h"
-#include "../Foundation/Object.h"
+#include "PHBody.h"
+#include "PHEngine.h"
 
 namespace Spr{;
 
+class PHSolid;
 class CDShape;
 
-///	バウンディングボックスの実装
-class PHBBox{
-	Vec3f bboxCenter;	///<	BBoxの中心(ローカル系)
-	Vec3f bboxExtent;	///<	BBoxの大きさ(ローカル系)
-public:
-	///	バウンディングボックスの設定
-	void SetBBoxCenterExtent(Vec3f c, Vec3f e){
-		bboxCenter = c;
-		bboxExtent = e;
-	}
-	///	バウンディングボックスの設定
-	void SetBBoxMinMax(Vec3f bmin, Vec3f bmax){
-		bboxCenter = (bmin+bmax)*0.5f;
-		bboxExtent = (bmax-bmin)*0.5f;
-	}
-	///	バウンディングボックスの追加
-	void AddBBox(Vec3f bmin, Vec3f bmax){
-		Vec3f bboxMin = GetBBoxMin();
-		Vec3f bboxMax = GetBBoxMax();
-		bboxMin.element_min(bmin);
-		bboxMax.element_max(bmax);
-		SetBBoxMinMax(bboxMin, bboxMax);
-	}
-	///	中心
-	Vec3f GetBBoxCenter() const { return bboxCenter; }
-	///	大きさ
-	Vec3f GetBBoxExtent() const { return bboxExtent; }
-	///	小さい端点
-	Vec3f GetBBoxMin() const { return bboxCenter-bboxExtent; }
-	///	大きい端点
-	Vec3f GetBBoxMax() const { return bboxCenter+bboxExtent; }
-
-	///	与えられたベクトルとの内積が最大と最小の点
-	void GetSupport(const Vec3f& dir, float& minS, float& maxS);
-	
-	///	SolidのPoseを代入することで，world座標系の最小値,最大値を取得
-	/// (注意）バウンディングボックスよりも大きなボックスで判定されてしまう．
-	//
-	void GetBBoxWorldMinMax(Posed& pose, Vec3d& _min, Vec3d& _max);
-
-	/// 交差判定
-	static bool Intersect(PHBBox& lhs, PHBBox& rhs);
-};
-
-
-enum PHIntegrationMode{
-	PHINT_NONE,				///	積分しない
-	PHINT_ARISTOTELIAN,		///	f = mv
-	PHINT_EULER,			///	オイラー法
-	PHINT_SIMPLETIC,		/// シンプレクティック法
-	PHINT_ANALYTIC,			
-	PHINT_RUNGEKUTTA2,		///	２次ルンゲクッタ法
-	PHINT_RUNGEKUTTA4		///	４次ルンゲクッタ法
-};
-
-class PHSolid;
-
-/// 剛体に取り付けられた形状の座標系
-class PHFrame: public SceneObject, public PHFrameDesc{
-public:
-	PHSolid*		solid;
-	CDShape*		shape;
-
-	double			mass;
-	Vec3d			center;
-	Matrix3d		inertia;
-
-	Posed			pose_abs;	///< ワールドに対する形状フレームの位置と向き
-	Vec3d			delta;		///< 形状フレームの移動量
-
-	bool            bboxReady;
-	PHBBox			bbShape;		///< 形状座標のBBox
-	PHBBox			bbSolid;		///< 剛体座標のBBox
-	PHBBox			bbWorld[2];		///< ワールド座標のBBox(0:非CCD 1:CCD)
-
-public:
-	SPR_OBJECTDEF(PHFrame);
-	ACCESS_DESC(PHFrame);
-
-	PHFrame();
-	PHFrame(PHSolid* so, CDShape* sh);
-	PHFrame(const PHFrameDesc& desc);
-
-	bool      CalcBBox   ();
-	void      CalcAABB   ();
-	void      CompInertia();
-
-	// インタフェースの実装
-	Posed     GetPose();
-	void      SetPose(Posed p);
-	CDShapeIf* GetShape() { return (CDShapeIf*)shape; }
-
-	// Objectの仮想関数
-	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual bool      AddChildObject(ObjectIf* o);
-	virtual bool      DelChildObject(ObjectIf* o);
-	virtual size_t    NChildObject  () const;
-};
 
 class PHTreeNode;
 class PHScene;
@@ -133,7 +34,7 @@ struct PHSolidStatePrivate{
 };
 
 ///	剛体
-class PHSolid : public SceneObject, public PHSolidDesc, public PHSolidStatePrivate{
+class PHSolid : public PHBody, public PHSolidDesc, public PHSolidStatePrivate{
 protected:
 	//Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
@@ -153,7 +54,6 @@ public:
 	//@{
 	PHConstraintEngine* engine;
 	PHTreeNode*	        treeNode;	  ///< 関節系を構成している場合の対応するノード
-	std::vector< UTRef<PHFrame> > frames;
 	
 	double		        minv;		  ///< 質量の逆数
 	Matrix3d	        Iinv;		  ///< 慣性行列の逆行列
@@ -165,11 +65,6 @@ public:
 	SpatialVector       dV;			  ///< Correctionによる移動量，回転量
 	double				velocityNorm;
 	double				angVelocityNorm;
-	int                 id;
-	bool				bboxReady;    ///< bboxの再計算用フラグ
-	bool                aabbReady;    ///< aabbの再計算用フラグ
-	PHBBox              bbLocal;      ///< ローカル座標のBBox
-	PHBBox              bbWorld;      ///< ワールド座標のBBox
 	
 	///	LCP関連補助変数の初期化。毎ステップLCPの前に呼ばれる。
 	void UpdateCacheLCP(double dt);
@@ -198,11 +93,11 @@ public:
 		return frames[pos]->Cast();
 	}
 
-	bool		CalcBBox      ();						///< 剛体と各形状のローカルBBoxを計算
-	void		CalcAABB      ();						///< 剛体と各形状のワールドBBoxを計算
-	void		GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS);
-	void        GetBBox       (Vec3d& bbmin, Vec3d& bbmax, bool world);
-	
+	virtual bool CalcBBox();						///< 剛体と各形状のローカルBBoxを計算
+	virtual void CalcAABB();						///< 剛体と各形状のワールドBBoxを計算
+	virtual void GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS);
+	virtual void GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world);
+
 	void		SetUpdated(bool set){bUpdated = set;}	///< 
 	bool		IsUpdated(){return bUpdated;}			///< 
 	void		Step();									///< 時刻を進める．
@@ -215,11 +110,11 @@ public:
 	/// 拘束力以外の剛体に加わった外力によるトルク。拘束トルクはPHConstraintから取得しなければならない。
 	Vec3d		GetTorque() const {return torque;}
 
-	double		GetMass   (){return mass;}						///< 質量
+	double		GetMass() {return mass;}						///< 質量
 	double		GetMassInv(){return 1.0 / mass;}				///< 質量の逆数
 	void		SetMass   (double m)   {mass = m;}				///< 質量の設定
 	void		SetMassInv(double minv){mass = 1.0 / minv;}		///< 質量の逆数の設定
-	Vec3d		GetCenterOfMass(){return center;}				///< ローカルフレームから見た，剛体の質量中心位置の設定
+	Vec3d		GetCenterOfMass() {return center;}				///< ローカルフレームから見た，剛体の質量中心位置の設定
 	void		SetCenterOfMass(const Vec3d& c){center = c;}	///< ローカルフレームから見た，剛体の質量中心位置の取得
 	Matrix3d	GetInertia   (){return inertia;}				///< 慣性テンソル
 	Matrix3d	GetInertiaInv(){return Iinv;}					///< 慣性テンソルの逆数
@@ -232,15 +127,14 @@ public:
 	///	積分方式の設定
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
-	Posed		GetPose             () const { return pose; }
-	Vec3d		GetFramePosition    () const { return pose.Pos(); }
-	Posed 		GetPrevPose() const;
-	Vec3d		GetDeltaPosition    () const ;
-	Vec3d		GetDeltaPosition    (const Vec3d& p) const;
-	Vec3d		GetPrevFramePosition() const { return pose.Pos() - GetDeltaPosition(); }
-	Vec3d		GetCenterPosition   () const { return pose*center; }								///< 重心位置の取得(World)
-	Matrix3d	GetRotation         () const { Matrix3d rv; pose.Ori().ToMatrix(rv); return rv; }	///	向きの取得
-	Quaterniond GetOrientation      () const { return pose.Ori(); }									///	向きの取得
+	Posed		GetPose             () { return pose; }
+	Vec3d		GetFramePosition    () { return pose.Pos(); }
+	Posed 		GetPrevPose();
+	Vec3d		GetDeltaPosition    ();
+	Vec3d		GetDeltaPosition    (const Vec3d& p);
+	Vec3d		GetPrevFramePosition() { return pose.Pos() - GetDeltaPosition(); }
+	Matrix3d	GetRotation         () { Matrix3d rv; pose.Ori().ToMatrix(rv); return rv; }		///	向きの取得
+	Quaterniond GetOrientation      () { return pose.Ori(); }									///	向きの取得
 	void		SetPose             (const Posed& p)      { pose       = p;                     aabbReady = false; }
 	void		SetFramePosition    (const Vec3d& p)      { pose.Pos() = p;                     aabbReady = false; }
 	void		SetCenterPosition   (const Vec3d& p)      { pose.Pos() = p - pose.Ori()*center; aabbReady = false; }	///< 重心位置の設定(World)
@@ -248,19 +142,14 @@ public:
 	void		SetOrientation      (const Quaterniond& q){ pose.Ori() = q;                     aabbReady = false; }	///	向きの設定
 
 	///	質量中心の速度の取得
-	Vec3d		GetVelocity() const {return velocity;}
+	Vec3d		GetVelocity() {return velocity;}
 	///	質量中心の速度の設定
 	void		SetVelocity(const Vec3d& v);
 
 	///	角速度の取得
-	Vec3d		GetAngularVelocity() const {return angVelocity;}
+	Vec3d		GetAngularVelocity() {return angVelocity;}
 	///	角速度の設定
 	void		SetAngularVelocity(const Vec3d& av);
-
-	///	任意の位置での速度の取得
-	Vec3d		GetPointVelocity(Vec3d posW) const {
-		return velocity + (angVelocity^(posW - pose*center));
-	}
 
 	///	質量中心の速度と角速度をまとめて取得
 	//SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity, angVelocity); }
@@ -268,34 +157,6 @@ public:
 	///	（最後のStep()での）剛体の質量中心の加速度
 	//SpatialVector GetAcceleration() const;
 
-	///	shapeの数。
-	int			NFrame();
-	///	shapeを、位置指定込みで追加する．
-	void		AddFrame(PHFrameIf* frame);	
-	///	
-	//void		DelFrame(int i);
-	///	frameで取得
-	PHFrameIf*	GetFrame(int i);
-
-	///	この剛体が持つ Spr::CDShape の数
-	int			NShape();
-	///	この剛体が持つ i番目の SPR::CDShape の取得
-	CDShapeIf*	GetShape(int i);
-	///	shape を この剛体が持つSpr::CDShapeのリスト の最後に追加する．
-	void		AddShape (CDShapeIf* shape);
-	void		AddShapes(CDShapeIf** shBegin, CDShapeIf** shEnd);
-	/// i番目のshapeを削除
-	void		RemoveShape (int i);
-	/// iBegin番目からiEnd-1番目までを削除
-	void        RemoveShapes(int iBegin, int iEnd);
-	///	この剛体が持つshapeを全て削除
-	void		RemoveShape(CDShapeIf* shape);
-	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を取得
-	Posed		GetShapePose(int i);
-	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を設定
-	void		ClearShape();
-	/// この剛体が持つSPR::CDShape を削除
-	void		SetShapePose(int i, const Posed& pose);
 	/// 重力を加えるかどうか設定
 	void		SetGravity(bool bOn);
 	/// 物理法則に従うかどうか設定
@@ -317,8 +178,8 @@ protected:
 	virtual void AfterSetDesc();
 };
 
+typedef std::vector< PHSolid* >	PHSolids;
 typedef std::vector< UTRef<PHSolid> >	PHSolidRefs;
-typedef std::vector< PHSolid* >			PHSolids;
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHEngine{

@@ -851,8 +851,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 			for (int j = 0; j < nNeighbors; j++) {
 				int solidID = pointer->neighborSolidIDs[j];
 				PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)he->GetSolidPairTemp(solidID, i);
-				for (int k = 0; k < solidPair->solid[0]->NShape(); k++) {
-					for (int l = 0; l < solidPair->solid[1]->NShape(); l++) {
+				for (int k = 0; k < solidPair->body[0]->NShape(); k++) {
+					for (int l = 0; l < solidPair->body[1]->NShape(); l++) {
 						PHShapePairForHaptic* sp = (PHShapePairForHaptic*)solidPair->GetShapePair(k, l);
 						for (int m = 0; m < 2; m++) {
 							// 近傍点対		・白点

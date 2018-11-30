@@ -37,10 +37,10 @@ void PHShapePair::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1){
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // PHSolidPair
 
-void PHSolidPair::Init(PHContactDetector* d, PHSolid* s0, PHSolid* s1){
+void PHSolidPair::Init(PHContactDetector* d, PHBody* s0, PHBody* s1){
 	detector = d;
-	solid[0] = s0;
-	solid[1] = s1;
+	body[0] = s0;
+	body[1] = s1;
 	int ns0 = s0->NShape();
 	int ns1 = s1->NShape();
 	shapePairs.resize(ns0, ns1);
@@ -50,7 +50,7 @@ void PHSolidPair::Init(PHContactDetector* d, PHSolid* s0, PHSolid* s1){
 			sp = CreateShapePair();
 			shapePairs.item(i, j) = sp;
 		}
-		sp->Init(this, solid[0]->frames[i], solid[1]->frames[j]);
+		sp->Init(this, body[0]->frames[i], body[1]->frames[j]);
 	}
 	bEnabled = true;
 }
@@ -59,18 +59,18 @@ bool PHSolidPair::Detect(unsigned int ct, double dt){
 	if(!bEnabled)return false;
 
 	// いずれかのSolidに形状が割り当てられていない場合は接触なし
-	if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+	if(body[0]->NShape() == 0 || body[1]->NShape() == 0) return false;
 
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
 	PHShapePair* sp;
-	for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
+	for(int i = 0; i < body[0]->NShape(); i++)for(int j = 0; j < body[1]->NShape(); j++){
 		sp = shapePairs.item(i, j);
 		//このshape pairの交差判定/法線と接触の位置を求める．
 		ptimerForGjk.Count();
 		if(sp->Detect(
 			ct,
-			solid[0]->GetPose() * solid[0]->GetShapePose(i), solid[1]->GetPose() * solid[1]->GetShapePose(j))){
+			body[0]->GetPose() * body[0]->GetShapePose(i), body[1]->GetPose() * body[1]->GetShapePose(j))){
 			found = true;
 			ptimerForGjk.Accumulate(coltimePhase1);
 			OnDetect(sp, ct, dt);
@@ -85,38 +85,38 @@ bool PHSolidPair::ContDetect(unsigned int ct, double dt){
 	if(!bEnabled)return false;
 
 	// いずれかのSolidに形状が割り当てられていない場合は接触なし
-	if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+	if(body[0]->NShape() == 0 || body[1]->NShape() == 0) return false;
 	// 両方ともフリーズ状態の場合は接触なし
-	if(solid[0]->IsFrozen() && solid[1]->IsFrozen())
+	if(body[0]->IsFrozen() && body[1]->IsFrozen())
 		return false;
 
 	static std::vector<Posed> shapePose[2];
 	static std::vector<Vec3d> shapeCenter[2];
 	for(int i=0; i < 2; i++){
-		shapePose[i].resize(solid[i]->NShape());
-		shapeCenter[i].resize(solid[i]->NShape());
-		for(int j=0; j < solid[i]->NShape(); j++){
-			CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
+		shapePose[i].resize(body[i]->NShape());
+		shapeCenter[i].resize(body[i]->NShape());
+		for(int j=0; j < body[i]->NShape(); j++){
+			CDConvex* convex = DCAST(CDConvex, body[i]->GetShape(j));
 			if(convex){
-				Posed lp = solid[i]->GetShapePose(j);
+				Posed lp = body[i]->GetShapePose(j);
 				shapeCenter[i][j] = lp * convex->GetCenterOfMass();
-				shapePose[i][j] = solid[i]->GetPose() * lp;
+				shapePose[i][j] = body[i]->GetPose() * lp;
 			}else{
-				solid[i]->DelChildObject(solid[i]->GetFrame(j));
-				shapePose[i].resize(solid[i]->NShape());
-				shapeCenter[i].resize(solid[i]->NShape());
+				body[i]->DelChildObject(body[i]->GetFrame(j));
+				shapePose[i].resize(body[i]->NShape());
+				shapeCenter[i].resize(body[i]->NShape());
 				j--;
 			}
 		}
 	}
-	Vec3d vt[2] = {solid[0]->GetVelocity() * dt, solid[1]->GetVelocity() * dt};
-	Vec3d wt[2] = {solid[0]->GetAngularVelocity() * dt, solid[1]->GetAngularVelocity() * dt};
-	Vec3d delta[2] = {vt[0] - (wt[0]^solid[0]->GetCenterOfMass()), vt[1] - (wt[1] ^  solid[1]->GetCenterOfMass())};
+	Vec3d vt[2] = {body[0]->GetVelocity() * dt, body[1]->GetVelocity() * dt};
+	Vec3d wt[2] = {body[0]->GetAngularVelocity() * dt, body[1]->GetAngularVelocity() * dt};
+	Vec3d delta[2] = {vt[0] - (wt[0]^body[0]->GetCenterOfMass()), vt[1] - (wt[1] ^  body[1]->GetCenterOfMass())};
 
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
 	PHShapePair* sp;
-	for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
+	for(int i = 0; i < body[0]->NShape(); i++)for(int j = 0; j < body[1]->NShape(); j++){
 		sp = shapePairs.item(i, j);
 		//このshape pairの交差判定/法線と接触の位置を求める．
 		if (sp->ContDetect(ct, shapePose[0][i], shapePose[1][j],
@@ -131,11 +131,11 @@ bool PHSolidPair::ContDetect(unsigned int ct, double dt){
 	}
 	// フリーズの解除
 	if(found){
-		if(solid[0]->IsDynamical() && !solid[1]->IsFrozen()){
-			solid[0]->SetFrozen(false);
+		if(body[0]->IsDynamical() && !body[1]->IsFrozen()){
+			body[0]->SetFrozen(false);
 		}
-		else if(solid[1]->IsDynamical() && !solid[0]->IsFrozen()){
-			solid[1]->SetFrozen(false);
+		else if(body[1]->IsDynamical() && !body[0]->IsFrozen()){
+			body[1]->SetFrozen(false);
 		}
 	}
 	return found;
@@ -147,11 +147,11 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 #if 0	// check PHFrame
 	for(int i=0; i<2; ++i){
 			int j;
-			for(j=0; j< solid[i]->frames.size(); ++j){
-				if (solid[i]->GetFrame(j) ==  shapePair->frame[i]->Cast()) break;
+			for(j=0; j< body[i]->frames.size(); ++j){
+				if (body[i]->GetFrame(j) ==  shapePair->frame[i]->Cast()) break;
 			}
-			if (j >= solid[i]->frames.size()){
-				DSTR << solid[i]->GetName() << " has wrong frame " <<  shapePair->frame[i]->GetName() << std::endl;
+			if (j >= body[i]->frames.size()){
+				DSTR << body[i]->GetName() << " has wrong frame " <<  shapePair->frame[i]->GetName() << std::endl;
 			}
 	}
 #endif
@@ -159,7 +159,7 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 	bool found = false;
 	if(continuous){	
 		const double alpha = 2.0;
-		if (shapePair->ContDetect(ct, solid[0]->pose * fr0->pose, solid[1]->pose * fr1->pose, alpha * fr0->delta, alpha * fr1->delta, dt)){
+		if (shapePair->ContDetect(ct, body[0]->GetPose() * fr0->GetPose(), body[1]->GetPose() * fr1->GetPose(), alpha * fr0->delta, alpha * fr1->delta, dt)){
 			double n = shapePair->normal.norm();
 			assert(0.9 < n && n < 1.1);
 			found = true;
@@ -167,7 +167,7 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 		}		
 	}
 	else{
-		if (shapePair->Detect(ct, solid[0]->pose * fr0->pose, solid[1]->pose * fr1->pose)){
+		if (shapePair->Detect(ct, body[0]->GetPose() * fr0->GetPose(), body[1]->GetPose() * fr1->GetPose())){
 			found = true;
 			OnDetect(shapePair, ct, dt);
 		}
@@ -175,11 +175,11 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 
 	// フリーズの解除
 	if(found){
-		if(fr0->solid->IsDynamical() && !fr1->solid->IsFrozen()){
-			fr0->solid->SetFrozen(false);
+		if(fr0->body->IsDynamical() && !fr1->body->IsFrozen()){
+			fr0->body->SetFrozen(false);
 		}
-		else if(fr1->solid->IsDynamical() && !fr0->solid->IsFrozen()){
-			fr1->solid->SetFrozen(false);
+		else if(fr1->body->IsDynamical() && !fr0->body->IsFrozen()){
+			fr1->body->SetFrozen(false);
 		}
 	}
 	return found;
@@ -193,33 +193,33 @@ PHContactDetector::PHContactDetector(){
 }
 
 void PHContactDetector::Clear(){
-	solids        .clear();
-	inactiveSolids.clear();
-	solidPairs    .clear();
+	bodies.clear();
+	inactiveBodies.clear();
+	solidPairs.clear();
 }
 
-void PHContactDetector::AddInactiveSolid(PHSolidIf* solid){
-	inactiveSolids.push_back(solid->Cast());
+void PHContactDetector::AddInactiveSolid(PHBodyIf* body){
+	inactiveBodies.push_back(body->Cast());
 }
 
-bool PHContactDetector::IsInactiveSolid(PHSolidIf* solid){
-	for(PHSolids::iterator it = inactiveSolids.begin(); it != inactiveSolids.end(); it++){
-		if((*it) == solid->Cast())
+bool PHContactDetector::IsInactiveSolid(PHBodyIf* body){
+	for(PHBodies::iterator it = inactiveBodies.begin(); it != inactiveBodies.end(); it++){
+		if((*it) == body->Cast())
 			return true;
 	}
 	return false;
 }
 
 bool PHContactDetector::AddChildObject(ObjectIf* o){
-	PHSolid* s = DCAST(PHSolid, o);
-	if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
-		solids.push_back(s);
-		int N = (int)solids.size();
+	PHBody* s = DCAST(PHBody, o);
+	if(s && std::find(bodies.begin(), bodies.end(), s) == bodies.end()){
+		bodies.push_back(s);
+		int N = (int)bodies.size();
 		assert(solidPairs.height() == N-1 && solidPairs.width() == N-1);
 		solidPairs.resize(N, N);
 		for(int i = 0; i < N-1; i++){
 			solidPairs.item(i, N-1) = CreateSolidPair();
-			solidPairs.item(i, N-1)->Init(this, solids[i], solids[N-1]);
+			solidPairs.item(i, N-1)->Init(this, bodies[i], bodies[N-1]);
 		}
 		if(s->NShape())
 			UpdateShapePairs(s);
@@ -229,43 +229,43 @@ bool PHContactDetector::AddChildObject(ObjectIf* o){
 }
 
 bool PHContactDetector::DelChildObject(ObjectIf* o){
-	PHSolid* s = DCAST(PHSolid, o);
+	PHBody* s = DCAST(PHBody, o);
 	if(!s)return false;
 	
-	PHSolids::iterator is;
-	is = find(solids.begin(), solids.end(), s);
-	if(is != solids.end()){
-		int idx = (int)(is - solids.begin());
-		solids.erase(is);
+	PHBodies::iterator is;
+	is = find(bodies.begin(), bodies.end(), s);
+	if(is != bodies.end()){
+		int idx = (int)(is - bodies.begin());
+		bodies.erase(is);
 		solidPairs.erase_row(idx);
 		solidPairs.erase_col(idx);
 		return true;
 	}
-	is = find(inactiveSolids.begin(), inactiveSolids.end(), s);
-	if(is != inactiveSolids.end())
-		inactiveSolids.erase(is);
+	is = find(inactiveBodies.begin(), inactiveBodies.end(), s);
+	if(is != inactiveBodies.end())
+		inactiveBodies.erase(is);
 
 	return false;
 }
 
 int PHContactDetector::NSolidPairs() const{
-	int n = (int)solids.size();
+	int n = (int)bodies.size();
 	return n * (n - 1) / 2;
 }
 int PHContactDetector::NShapePairs() const{
-	int n = (int)solids.size(), N = 0;
+	int n = (int)bodies.size(), N = 0;
 	for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 		N += (int)(solidPairs.item(i,j)->shapePairs.size());
 	return N;
 }
 int PHContactDetector::NActiveSolidPairs() const{
-	int n = (int)solids.size(), N = 0;
+	int n = (int)bodies.size(), N = 0;
 	for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 		N += (int)solidPairs.item(i,j)->bEnabled;
 	return N;
 }
 int PHContactDetector::NActiveShapePairs() const{
-	int n = (int)solids.size(), N = 0;
+	int n = (int)bodies.size(), N = 0;
 	for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 		if(solidPairs.item(i,j)->bEnabled)
 			N += (int)solidPairs.item(i,j)->shapePairs.size();
@@ -342,18 +342,18 @@ void PHContactDetector::SetState(const void* s){
 
 }
 
-void PHContactDetector::UpdateShapePairs(PHSolid* solid){
-	PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
-	if(it == solids.end())
+void PHContactDetector::UpdateShapePairs(PHBody* body){
+	PHBodies::iterator it = std::find(bodies.begin(), bodies.end(), body);
+	if(it == bodies.end())
 		return;
-	int isolid = (int)(it - solids.begin());
+	int isolid = (int)(it - bodies.begin());
 	int i, j;
 	PHSolidPair* solidPair;
-	PHSolid *slhs, *srhs;
+	PHBody *slhs, *srhs;
 	for(i = 0; i < isolid; i++){
 		solidPair = solidPairs.item(i, isolid);
-		slhs = solidPair->solid[0];
-		srhs = solid;
+		slhs = solidPair->body[0];
+		srhs = body;
 		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
 		for(j = 0; j < slhs->NShape(); j++){
 			PHShapePair* shapePair = solidPair->CreateShapePair();
@@ -361,11 +361,11 @@ void PHContactDetector::UpdateShapePairs(PHSolid* solid){
 			solidPair->shapePairs.item(j, srhs->NShape()-1) = shapePair;
 		}
 	}
-	for(i = isolid+1; i < (int)solids.size(); i++){
+	for(i = isolid+1; i < (int)bodies.size(); i++){
 		solidPair = solidPairs.item(isolid, i);
-		slhs = solid;
-		srhs = solidPair->solid[1];
-		solidPair->shapePairs.resize(solid->NShape(), srhs->NShape());
+		slhs = body;
+		srhs = solidPair->body[1];
+		solidPair->shapePairs.resize(body->NShape(), srhs->NShape());
 		for(j = 0; j < srhs->NShape(); j++){
 			PHShapePair* shapePair = solidPair->CreateShapePair();
 			shapePair->Init(solidPair, slhs->frames[slhs->NShape()-1], srhs->frames[j]);
@@ -374,18 +374,18 @@ void PHContactDetector::UpdateShapePairs(PHSolid* solid){
 	}
 }
 
-void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
-	PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
-	if(it == solids.end())
+void PHContactDetector::DelShapePairs(PHBody* body, int iBegin, int iEnd){
+	PHBodies::iterator it = std::find(bodies.begin(), bodies.end(), body);
+	if(it == bodies.end())
 		return;
-	int isolid = (int)(it - solids.begin());
+	int isolid = (int)(it - bodies.begin());
 	int i, j;
-	PHSolid *slhs, *srhs;
+	PHBody *slhs, *srhs;
 	PHSolidPair* solidPair;
 	for(i = 0; i < isolid; i++){
 		solidPair = solidPairs.item(i, isolid);
-		slhs = solidPair->solid[0];
-		srhs = solid;
+		slhs = solidPair->body[0];
+		srhs = body;
 		//	消えたShapeに対応する行を詰める
 		for(j = 0; j < slhs->NShape(); j++){
 			for(int k=iEnd; k < srhs->NShape() + (iEnd-iBegin); ++k)
@@ -394,10 +394,10 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 		//	サイズの更新
 		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
 	}
-	for(i = isolid+1; i < (int)solids.size(); i++){
+	for(i = isolid+1; i < (int)bodies.size(); i++){
 		solidPair = solidPairs.item(isolid, i);
-		slhs = solid;
-		srhs = solidPair->solid[1];
+		slhs = body;
+		srhs = solidPair->body[1];
 		//	消えたShapeに対応する行を詰める
 		for(j = 0; j < srhs->NShape(); j++) {
 			for(int k=iEnd; k < slhs->NShape() + (iEnd-iBegin); ++k){
@@ -409,14 +409,14 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 #if 0		//確認
 		for(j = 0; j < slhs->NShape(); j++) {
 			for(int k=0; k<srhs->NShape(); ++k) {
-				if (solidPair->shapePairs.item(j,k)->frame[0] != solidPair->solid[0]->frames[j]){
-					DSTR << solidPair->solid[0]->GetName() << "-" << solidPair->solid[1]->GetName() << std::endl;
-					DSTR << "sp" << j << " - " << k << " " << solidPair->shapePairs.item(j,k)->frame[0]->GetName() << "-" << solidPair->solid[0]->frames[j]->GetName();
+				if (solidPair->shapePairs.item(j,k)->frame[0] != solidPair->body[0]->frames[j]){
+					DSTR << solidPair->body[0]->GetName() << "-" << solidPair->body[1]->GetName() << std::endl;
+					DSTR << "sp" << j << " - " << k << " " << solidPair->shapePairs.item(j,k)->frame[0]->GetName() << "-" << solidPair->body[0]->frames[j]->GetName();
 					DSTR << std::endl;
 					DSTR << "collision";
 				}
-				if (solidPair->shapePairs.item(j,k)->frame[1] != solidPair->solid[1]->frames[k]){
-					DSTR << solidPair->solid[0]->GetName() << "-" << solidPair->solid[1]->GetName() << std::endl;
+				if (solidPair->shapePairs.item(j,k)->frame[1] != solidPair->body[1]->frames[k]){
+					DSTR << solidPair->body[0]->GetName() << "-" << solidPair->body[1]->GetName() << std::endl;
 				}
 			}
 		}
@@ -425,12 +425,12 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 }
 
 void PHContactDetector::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
-	PHSolids::iterator ilhs, irhs;
-	ilhs = find(solids.begin(), solids.end(), (PHSolid*)(lhs->Cast()));
-	irhs = find(solids.begin(), solids.end(), (PHSolid*)(rhs->Cast()));
-	if(ilhs == solids.end() || irhs == solids.end())
+	PHBodies::iterator ilhs, irhs;
+	ilhs = find(bodies.begin(), bodies.end(), (PHBody*)(lhs->Cast()));
+	irhs = find(bodies.begin(), bodies.end(), (PHBody*)(rhs->Cast()));
+	if(ilhs == bodies.end() || irhs == bodies.end())
 		return;
-	int i = (int)(ilhs - solids.begin()), j = (int)(irhs - solids.begin());
+	int i = (int)(ilhs - bodies.begin()), j = (int)(irhs - bodies.begin());
 	if(i > j)std::swap(i, j);
 	assert(i < solidPairs.height() && j < solidPairs.width());
 	solidPairs.item(i, j)->bEnabled = bEnable;
@@ -438,11 +438,11 @@ void PHContactDetector::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnab
 
 void PHContactDetector::EnableContact(PHSolidIf** group, size_t length, bool bEnable){
 	std::vector<int> idx;
-	PHSolids::iterator it;
+	PHBodies::iterator it;
 	for(int i = 0; i < (int)length; i++){
-		it = find(solids.begin(), solids.end(), (PHSolid*)(group[i]->Cast()));
-		if(it != solids.end())
-			idx.push_back((int)(it - solids.begin()));
+		it = find(bodies.begin(), bodies.end(), (PHBody*)(group[i]->Cast()));
+		if(it != bodies.end())
+			idx.push_back((int)(it - bodies.begin()));
 	}
 	sort(idx.begin(), idx.end());
 	for(int i = 0; i < (int)idx.size(); i++){
@@ -452,19 +452,19 @@ void PHContactDetector::EnableContact(PHSolidIf** group, size_t length, bool bEn
 	}
 }
 
-void PHContactDetector::EnableContact(PHSolidIf* solid, bool bEnable){
-	PHSolids::iterator it = find(solids.begin(), solids.end(), (PHSolid*)(solid->Cast()));
-	if(it == solids.end())
+void PHContactDetector::EnableContact(PHSolidIf* body, bool bEnable){
+	PHBodies::iterator it = find(bodies.begin(), bodies.end(), (PHBody*)(body->Cast()));
+	if(it == bodies.end())
 		return;
-	int idx = (int)(it - solids.begin());
+	int idx = (int)(it - bodies.begin());
 	for(int i = 0; i < idx; i++)
 		solidPairs.item(i, idx)->bEnabled = bEnable;
-	for(int i = idx+1; i < (int)solids.size(); i++)
+	for(int i = idx+1; i < (int)bodies.size(); i++)
 		solidPairs.item(idx, i)->bEnabled = bEnable;
 }
 
 void PHContactDetector::EnableContact(bool bEnable){
-	int n = (int)solids.size();
+	int n = (int)bodies.size();
 	for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 		solidPairs.item(i, j)->bEnabled = bEnable;
 }
@@ -501,28 +501,28 @@ bool PHContactDetector::DetectPair(
 	PHContactDetector::ShapeIndex sh1, unsigned ct, double dt, bool continuous){
 
 	// 同じ剛体同士はスキップ
-	if(sh0.idxSolid == sh1.idxSolid)
+	if(sh0.idxBody == sh1.idxBody)
 		return false;
 
 	// 両方の形状とも中心がセルの外ならスキップ
 	if(!sh0.center && !sh1.center)
 		return false;
 
-	if(sh0.idxSolid > sh1.idxSolid)
+	if(sh0.idxBody > sh1.idxBody)
 		swap(sh0, sh1);
 
-	PHSolidPair* solidPair = solidPairs.item(sh0.idxSolid, sh1.idxSolid);
+	PHSolidPair* solidPair = solidPairs.item(sh0.idxBody, sh1.idxBody);
 	
 	// 無効な剛体対はスキップ
 	if(!solidPair->bEnabled)
 		return false;
 	
 	// 両方frozenならスキップ
-	if(solidPair->solid[0]->IsFrozen() && solidPair->solid[1]->IsFrozen())
+	if(solidPair->body[0]->IsFrozen() && solidPair->body[1]->IsFrozen())
 		return false;
 	
 	// 両方non-dynamicalならスキップ
-	if(!solidPair->solid[0]->IsDynamical() && !solidPair->solid[1]->IsDynamical())
+	if(!solidPair->body[0]->IsDynamical() && !solidPair->body[1]->IsDynamical())
 		return false;
 
 	nBroad++;
@@ -552,18 +552,18 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 		int idx = mode - PHSceneDesc::MODE_SORT_AND_SWEEP_X;
 		Vec3d dir(0,0,0);
 		dir[idx] = 1;
-		edges.resize(2 * solids.size());
+		edges.resize(2 * bodies.size());
 		std::vector<Edge>::iterator eit = edges.begin();
-		for(int i = 0; i < (int)solids.size(); i++){
-			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+		for(int i = 0; i < (int)bodies.size(); i++){
+			bodies[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 			if (continuous){
-				PHScene* s = DCAST(PHScene, solids[i]->GetNameManager());
+				PHScene* s = DCAST(PHScene, bodies[i]->GetNameManager());
 				double dt = s->GetTimeStep();
-				Quaterniond rot = Quaterniond::Rot(solids[i]->GetAngularVelocity() * dt);
+				Quaterniond rot = Quaterniond::Rot(bodies[i]->GetAngularVelocity() * dt);
 				Vec3d prevDir = rot * dir;
 				float pe0, pe1;
-				solids[i]->GetBBoxSupport(prevDir, pe0, pe1);
-				Vec3d delta = dt * solids[i]->GetVelocity();
+				bodies[i]->GetBBoxSupport(prevDir, pe0, pe1);
+				Vec3d delta = dt * bodies[i]->GetVelocity();
 				float ofs = delta * prevDir;
 				if (ofs < 0) pe0 += ofs;
 				else pe1 += ofs;
@@ -609,10 +609,10 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 	//	Cell mode --------------------------------------------------------------------
 	}else{
 		// 各形状のAABBを計算
-		int nsolids = (int)solids.size();
+		int nsolids = (int)bodies.size();
 		for(int i = 0; i < nsolids; ++i){
-			PHSolid* solid = solids[i];
-			solid->CalcAABB();
+			PHBody* body = bodies[i];
+			body->CalcAABB();
 		}
 		// 各形状を領域に分類
 		cellOutside.shapes.clear();
@@ -625,9 +625,9 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 		Vec3d cellmin, cellmax;
 		Vec3d bbmin, bbmax, bbcenter, bbextent;
 		for(int i = 0; i < nsolids; i++){
-			int nshapes = solids[i]->NShape();
+			int nshapes = bodies[i]->NShape();
 			for(int j = 0; j < nshapes; j++){
-				PHBBox& bb = solids[i]->frames[j]->bbWorld[continuous];
+				PHBBox& bb = bodies[i]->frames[j]->bbWorld[continuous];
 				bbmin    = bb.GetBBoxMin   ();
 				bbmax    = bb.GetBBoxMax   ();
 				bbcenter = bb.GetBBoxCenter();

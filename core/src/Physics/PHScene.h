@@ -51,7 +51,6 @@ typedef std::vector< UTRef<PHRay> > PHRays;
 
 class SPR_DLL PHScene : public Scene, public PHSceneDesc{
 	SPR_OBJECTDEF(PHScene);
-	friend class PHConstraint;
 public:
 	PHEngines				engines;
 protected:
@@ -73,11 +72,11 @@ protected:
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 
 	UTPerformanceMeasureIf* performanceMeasure;
-public:
-	
-	friend class			PHSolid;
-	friend class			PHFrame;
-	friend class			Object;
+public:	
+	friend class PHBody;
+	friend class PHFrame;
+	friend class Object;
+	friend class PHConstraint;
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	///	コンストラクタ

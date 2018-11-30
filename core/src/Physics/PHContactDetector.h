@@ -49,7 +49,7 @@ public:
 	typedef UTCombination< UTRef<PHShapePair> > PHShapePairs;
 
 	PHContactDetector* detector;
-	PHSolid*           solid[2];
+	PHBody*            body[2];
 	PHShapePairs       shapePairs;
 	typedef std::vector<PHCollisionListener*> Listeners;
 	Listeners listeners;
@@ -68,7 +68,7 @@ public:
 			(*it)->OnContDetect((PHSolidPairIf*)this, (CDShapePairIf*)sp, ct, dt);
 		}
 	}
-	void Init  (PHContactDetector* d, PHSolid* s0, PHSolid* s1);
+	void Init  (PHContactDetector* d, PHBody* b0, PHBody* b1);
 	bool Detect(unsigned int ct, double dt);
 	bool ContDetect(unsigned int ct, double dt);
 	bool Detect(PHShapePair* shapePair, unsigned ct, double dt, bool continuous);
@@ -76,7 +76,8 @@ public:
 	void SetSt(const PHSolidPairSt& s){ *((PHSolidPairSt*)this) = s; }
 	void GetSt(      PHSolidPairSt& s){ s = *this; }
 
-	PHSolidIf* GetSolid(int i){ return solid[i]->Cast(); }			///< 指定したsolidを返す
+	PHSolidIf* GetSolid(int i) { return body[i]->Cast(); }			///< 指定したsolidを返す
+	PHBodyIf* GetBody(int i) { return body[i]->Cast(); }			///< 指定したbodyを返す
 
 	/// 剛体同士の接触が有効かどうかを取得・設定する
 	bool IsContactEnabled()         { return bEnabled;   }
@@ -117,12 +118,12 @@ public:
 	typedef UTCombination< UTRef<PHSolidPair> > PHSolidPairs;
 
 	struct ShapeIndex{
-		int		idxSolid;
+		int		idxBody;
 		int		idxShape;
 		bool	center;		///< 中心を含むか
 
 		ShapeIndex(){}
-		ShapeIndex(int i, int j, bool c):idxSolid(i), idxShape(j), center(c){}
+		ShapeIndex(int i, int j, bool c):idxBody(i), idxShape(j), center(c){}
 	};
 	
 	struct Edge{
@@ -153,8 +154,8 @@ public:
 	std::vector<Cell>	cells;
 	std::vector<Edge>   edges;
 	
-	PHSolids			solids;				///< 剛体の配列
-	PHSolids			inactiveSolids;		///< 接触判定しない剛体の集合
+	PHBodies			bodies;				///< 物体の配列
+	PHBodies			inactiveBodies;		///< 接触判定しない物体の集合
 	PHSolidPairs		solidPairs;			///< 剛体の組の配列	
 	int					nBroad;
 	int					nNarrow;
@@ -182,16 +183,16 @@ public:
 	/// 派生クラスが実装する関数
 	virtual PHSolidPair* CreateSolidPair(){ return NULL; }
 
-	void AddInactiveSolid(PHSolidIf* solid);	///< 解析法を適用しない剛体の追加
-	bool IsInactiveSolid (PHSolidIf* solid);	///< 解析法を適用しない剛体の検索
+	void AddInactiveSolid(PHBodyIf* body);	///< 解析法を適用しない剛体の追加
+	bool IsInactiveSolid (PHBodyIf* body);	///< 解析法を適用しない剛体の検索
 
 	int NSolidPairs      () const;
 	int NShapePairs      () const;
 	int NActiveSolidPairs() const;
 	int NActiveShapePairs() const;
 	
-	void UpdateShapePairs(PHSolid* solid);							///< 形状追加時の処理
-	void DelShapePairs   (PHSolid* solid, int iBegin, int iEnd);	///< 形状削除時の処理
+	void UpdateShapePairs(PHBody* body);							///< 形状追加時の処理
+	void DelShapePairs   (PHBody* body, int iBegin, int iEnd);	///< 形状削除時の処理
 	
 	void SetDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz);		///< 衝突判定の対象範囲
 
@@ -210,7 +211,7 @@ public:
 };
 
 inline bool operator<(const PHContactDetector::ShapeIndex& lhs, const PHContactDetector::ShapeIndex& rhs){
-	return lhs.idxSolid < rhs.idxSolid || (lhs.idxSolid == rhs.idxSolid && lhs.idxShape < rhs.idxShape);
+	return lhs.idxBody < rhs.idxBody || (lhs.idxBody == rhs.idxBody && lhs.idxShape < rhs.idxShape);
 }
 
 }
