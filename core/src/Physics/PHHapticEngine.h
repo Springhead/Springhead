@@ -206,7 +206,7 @@ public:
 	///< 剛体の削除
 	bool DelChildObject(ObjectIf* o);
 	///< ShapePairの更新
-	void UpdateShapePairs(PHSolid* solid);
+	void UpdateShapePairs(PHBody* body);
 	///<	Time stepping for haptic rendering and physics
 	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
 

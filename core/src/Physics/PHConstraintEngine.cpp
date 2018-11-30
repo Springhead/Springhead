@@ -41,7 +41,11 @@ void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	//	法線を求める
 	sp->CalcNormal();
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-	sp->EnumVertex(ct, solid[0], solid[1]);
+	PHSolid* solid0 = body[0]->Cast();
+	PHSolid* solid1 = body[1]->Cast();
+	if (solid0 && solid1) {
+		sp->EnumVertex(ct, solid0, solid1);
+	}
 }			
 
 void PHSolidPairForLCP::OnContDetect(PHShapePair* _sp, unsigned ct, double dt){
@@ -49,8 +53,11 @@ void PHSolidPairForLCP::OnContDetect(PHShapePair* _sp, unsigned ct, double dt){
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
 
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-	sp->EnumVertex(ct, solid[0], solid[1]);
-
+	PHSolid* solid0 = body[0]->Cast();
+	PHSolid* solid1 = body[1]->Cast();
+	if (solid0 && solid1) {
+		sp->EnumVertex(ct, solid0, solid1);
+	}
 	//	HASE_REPORT
 /*	DSTR << "st:" << sp->state << " depth:" << sp->depth;
 	DSTR << " n:" << sp->normal;
@@ -242,9 +249,9 @@ void PHConstraintEngine::Clear(){
 }
 
 PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs, PHSolid* rhs){
-	if(std::find(solids.begin(), solids.end(), lhs) == solids.end())
+	if(std::find(bodies.begin(), bodies.end(), lhs) == bodies.end())
 		return 0;
-	if(std::find(solids.begin(), solids.end(), rhs) == solids.end())
+	if(std::find(bodies.begin(), bodies.end(), rhs) == bodies.end())
 		return 0;
 
 	PHJoint* joint = NULL;
@@ -282,7 +289,7 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 
 PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid){
 	// コンテナに含まれない剛体はNG
-	if(find(solids.begin(), solids.end(), solid) == solids.end())
+	if(find(bodies.begin(), bodies.end(), solid) == bodies.end())
 		return NULL;
 
 	// 既存のツリーに含まれる剛体
@@ -638,10 +645,10 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 
 	// 速度の更新 (dtを渡すので並列化しない）
 	dt = GetScene()->GetTimeStep();
-	for(int i = 0; i < (int)solids.size(); i++){
-		if(solids[i]->IsArticulated())
-			continue;
-		solids[i]->UpdateVelocity(&dt);
+	for(int i = 0; i < (int)bodies.size(); i++){
+		PHSolid* s = bodies[i]->Cast();
+		if (!s || s->IsArticulated()) continue;
+		s->UpdateVelocity(&dt);
 	}
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		(*it)->UpdateVelocity(&dt);
@@ -651,10 +658,11 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 
 	// 位置の更新
 	//# pragma omp for
-	for(int i = 0; i < (int)solids.size(); i++){
-		if(solids[i]->IsArticulated())
+	for(int i = 0; i < (int)bodies.size(); i++){
+		PHSolid* s = bodies[i]->Cast();
+		if(!s || s->IsArticulated())
 			continue;
-		solids[i]->UpdatePosition(dt);
+		s->UpdatePosition(dt);
 	}
 	//# pragma omp for
 	for(int i = 0; i < (int)trees.size(); i++)
@@ -700,8 +708,10 @@ void PHConstraintEngine::StepPart2(){
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp for
     #endif
-	for(int i = 0; i < (int)solids.size(); i++)
-		solids[i]->UpdateCacheLCP(dt);
+	for (int i = 0; i < (int)bodies.size(); i++) {
+		PHSolid* s = bodies[i]->Cast();
+		if (s) s->UpdateCacheLCP(dt);
+	}
     
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp for

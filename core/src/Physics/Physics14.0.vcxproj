@@ -405,6 +405,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="PHBallJoint.cpp" />
+    <ClCompile Include="PHBody.cpp" />
     <ClCompile Include="PHConstraint.cpp" />
     <ClCompile Include="PHConstraintEngine.cpp" />
     <ClCompile Include="PHContactDetector.cpp" />
@@ -470,6 +471,7 @@
     <ClInclude Include="..\..\include\Physics\SprPHSkeleton.h" />
     <ClInclude Include="PHAxisIndex.h" />
     <ClInclude Include="PHBallJoint.h" />
+    <ClInclude Include="PHBody.h" />
     <ClInclude Include="PHConstraint.h" />
     <ClInclude Include="PHConstraintEngine.h" />
     <ClInclude Include="PHContactDetector.h" />

@@ -34,8 +34,8 @@ float PHHapticPointer::GetContactForce(int i){
 		int j = neighborSolidIDs[i];
 		PHHapticEngine* he = DCAST(PHSceneIf,GetScene())->GetHapticEngine()->Cast();
 		PHSolidPairForHaptic* sop = he->GetSolidPairTemp(j,0)->Cast();
-		for (int m=0; m<sop->solid[0]->NShape(); ++m) {
-			for (int n=0; n<sop->solid[0]->NShape(); ++n) {
+		for (int m=0; m<sop->body[0]->NShape(); ++m) {
+			for (int n=0; n<sop->body[0]->NShape(); ++n) {
 				PHShapePairForHaptic* shp = sop->GetShapePair(m,n)->Cast();
 				Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
 				Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
