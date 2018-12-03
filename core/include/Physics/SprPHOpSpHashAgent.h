@@ -4,10 +4,6 @@
 #include <Collision/SprCDSpHash.h>
 #include <Physics/SprPHOpObj.h>
 
-//class PHOpSpHashColliAgentDesc
-//{
-//
-//}
 
 namespace Spr{;
 
@@ -16,10 +12,13 @@ namespace Spr{;
 
 struct PHOpSpHashColliAgentDesc{
 	bool useDirColli;
+	float collisionCstrStiffness;
 };
 
 struct PHOpSpHashColliAgentIf: public ObjectIf{
 	SPR_IFDEF(PHOpSpHashColliAgent);
+	void SetCollisionCstrStiffness(float alpha);
+	float GetCollisionCstrStiffness();
 	void EnableCollisionDetection(bool able = true);
 	void Initial(float cellSize, CDBounds bounds);
 	void OpCollisionProcedure(int myTimeStamp);
