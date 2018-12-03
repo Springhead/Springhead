@@ -1091,7 +1091,7 @@ void FWScene::DrawOp(GRRenderIf* render, PHOpEngineIf* opEngineif)
 				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(dp.pCurrOrint.Inv() * dp.ellipRotMatrix);
 
 				DrawEllipsoid drawEll;
-				drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
+				drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 18, elliRotQ);//dp.pCurrOrint.Inv());
 
 				render->PopModelMatrix();
 
