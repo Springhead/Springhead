@@ -16,16 +16,16 @@ FWScene fwScene{
 		*soFloor		// PHSolid
 		*grFrameFloor	// GRFrame
 	}
-	FWOpObj FwExpBoardmesh{
-		fwPSize = 0.5
-		*expBoardnewMesh//*grFloor//
-		*phExpBoardmesh
+	FWOpObj fwSLBunny{
+		fwPSize = 0.3
+		*slimeBunnyMesh//*grFloor//
+		*phSLBunny
 	}
-//	FWOpObj fwSLBunny2{
-//		fwPSize = 0.5
-//		*slimeBunnyMesh2//*grFloor//
-//		*phSLBunny2
-//	}
+	FWOpObj fwSLBunny2{
+		fwPSize = 0.3
+		*slimeBunnyMesh2//*grFloor//
+		*phSLBunny2
+	}
 
 	/* PHScene“à‚ÌObject */
 	PHScene phScene{
@@ -40,20 +40,20 @@ FWScene fwScene{
 			dynamical = false
 			*grFloor		// link to xfile(physics model)
 		}
-		PHOpObj phExpBoardmesh{
+		PHOpObj phSLBunny{
 			
 		}
-//		PHOpObj phSLBunny2{
-//		
-//		}
+		PHOpObj phSLBunny2{
+		
+		}
 	}
 	
 	/* GRScene“à‚ÌObject */
 	GRScene grScene{
 		//GRFrame grFrameKuma { *grKuma }
 		GRFrame grFrameFloor{ *grFloor }
-		GRFrame grExpBoardmesh{ *expBoardnewMesh}
-//		GRFrame grFrameBunny2{ *slimeBunnyMesh2}
+		GRFrame grFrameBunny{ *slimeBunnyMesh}
+		GRFrame grFrameBunny2{ *slimeBunnyMesh2}
 		
 		GRLight light1 {						#SprGRRender.h GRMaterialDesc
 			ambient = 0.9 0.9 0.9 0.0			#Vec4f ambient
