@@ -344,6 +344,12 @@
   <ItemGroup>
     <ClInclude Include="PHOpDemo.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="files\MySlimeBunny.x" />
+    <None Include="files\MySlimeBunny2.x" />
+    <None Include="files\sceneSampleColli.spr" />
+    <None Include="files\sceneSampleHaptic.spr" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
