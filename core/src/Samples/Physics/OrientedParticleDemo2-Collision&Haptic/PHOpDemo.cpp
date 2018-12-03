@@ -16,7 +16,7 @@
 
 #define USE_SPRFILE
 #define ESC 27
-#define USE_AVG_RADIUS
+//#define USE_AVG_RADIUS
 #define COLLISION_DEMO
 
 #ifndef COLLISION_DEMO
@@ -79,7 +79,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	tmp->CreateOpObjWithRadius(0.5f);
 //#endif
 	
-	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 #ifdef HAPTIC_DEMO
 	//initial for haptic
 	
@@ -158,14 +158,36 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	spIf->EnableCollisionDetection(false);
 #endif
 	
-	PHOpEngine* opEnginedesc = DCAST(PHOpEngine, opEngine);
-	
+	PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
 
-	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
-	cout << "obji = 0" << "pNum" << dp1->assPsNum << "gNum" << dp1->assGrpNum << endl;
+
+	PHOpObjDesc* obj1 = opEngine->opObjs[0];
+	cout << "obji = 0" << "pNum" << obj1->assPsNum << "gNum" << obj1->assGrpNum << endl;
+	obj1->objAverRadius *= 0.5f;
 #ifdef COLLISION_DEMO
-	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
-	cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
+	PHOpObjDesc* obj2 = opEngine->opObjs[1];
+	cout << "obji = 1" << "pNum" << obj2->assPsNum << "gNum" << obj2->assGrpNum << endl;
+	obj2->objAverRadius *= 0.5f;
+#endif
+
+#ifdef COLLISION_DEMO
+	//define general ellipsoid radius to make stable collision result(not the radius calculated from PCA)
+	for (int pi = 0; pi < obj1->assPsNum; pi++)
+	{
+		PHOpParticle* dp1 = &opEngine->opObjs[0]->objPArr[pi];
+
+		dp1->pMainRadius = 0.4f;
+		dp1->pSecRadius = 0.4f;
+		dp1->pThrRadius = 0.2f;
+	}
+	for (int pi = 0; pi < obj2->assPsNum; pi++)
+	{
+		PHOpParticle* dp1 = &opEngine->opObjs[1]->objPArr[pi];
+
+		dp1->pMainRadius = 0.4f;
+		dp1->pSecRadius = 0.4f;
+		dp1->pThrRadius = 0.2f;
+	}
 #endif
 
 	DrawHelpInfo = true;
@@ -688,6 +710,20 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		drawVertex = !drawVertex;
 		DSTR << "drawVertex = " << drawVertex << std::endl;
 		break;
+	case '%':
+		if (spIf->GetCollisionCstrStiffness() <= 1.0f)
+		{
+			spIf->SetCollisionCstrStiffness(spIf->GetCollisionCstrStiffness() + 0.05f);
+			DSTR << "CollisionConstraintStiffness Added to" << spIf->GetCollisionCstrStiffness() << std::endl;
+		}
+		break;
+	case '&':
+		if (spIf->GetCollisionCstrStiffness() >= 0.0f)
+		{
+			spIf->SetCollisionCstrStiffness(spIf->GetCollisionCstrStiffness() - 0.05f);
+			DSTR << "CollisionConstraintStiffness Reduced to" << spIf->GetCollisionCstrStiffness() << std::endl;
+		}
+		break;
 	case 'z':
 		//step debugger
 		runByStep = !runByStep;
@@ -846,6 +882,9 @@ void PHOpDemo::Display()
 		sstr << "Enable Collision: 'c'";
 		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
 		sstr.str("");
+		sstr << "Edit Collision Constraint Stiffness: '%' to ++, '&' to --";
+		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
+		sstr.str("");
 		sstr << "Enable Haptic: 't'";
 		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
 		sstr.str("");
@@ -995,7 +1034,7 @@ void PHOpDemo::Display()
 				PHOpParticle &dp = drawObj.objPArr[i];
 				Vec3f pos1 = dp.pCurrCtr;
 				dp.hitedByMouse = false;
-				float detectSphereRadiu;
+				float detectSphereRadiu = dp.pMainRadius;
 #ifdef USE_AVG_RADIUS
 				detectSphereRadiu = drawObj.objAverRadius * opEngine->radiusCoe;
 #endif
