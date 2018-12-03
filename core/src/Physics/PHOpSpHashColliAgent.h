@@ -51,12 +51,15 @@ public :
 		useDebugInfo = true;
 		useHapticDevice = false;
 		enableCollision = false;
+		collisionCstrStiffness = 1.0f;
 		SetScene(s);
 	}
 
 	Vec3f GetFirContactPosition(int firId);
 	Vec3f GetSecContactPosition(int secId);
 
+	void SetCollisionCstrStiffness(float alpha);
+	float GetCollisionCstrStiffness();
 	void EnableCollisionDetection(bool able = true);
 	void Initial(float cellSize, CDBounds  bounds);
 	void SetDebugMode(bool flag);
