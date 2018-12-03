@@ -119,6 +119,14 @@ namespace Spr{
 	{
 		return useDirColli;
 	}
+	void PHOpSpHashColliAgent::SetCollisionCstrStiffness(float alpha)
+	{
+		collisionCstrStiffness = alpha;
+	}
+	float PHOpSpHashColliAgent::GetCollisionCstrStiffness()
+	{
+		return collisionCstrStiffness;
+	}
 
 	void PHOpSpHashColliAgent::OpDirCollision()
 	{//directly test all particle pairs
@@ -724,52 +732,39 @@ namespace Spr{
 
 		}
 		//move pos in N dir
-		Vec3f lastpos1 = dpCtr1;
-		Vec3f lastpos2 = dpCtr2;
-		Vec3f moveVec = (-vectorN) * moveDhalf;
-		if (!dp1->isFixed&&!dp2->isFixed){
-			dpCtr1 += (dfmObj[objIndex1]->params.alpha) * moveVec;
-			dpCtr2 += (dfmObj[objIndex2]->params.alpha) * (-1) * moveVec;
-		}
-		else{
-			if (dp1->isFixed&&!dp2->isFixed)
-			{
-				moveVec = (-vectorN) *x2tox1.norm();
-				dpCtr2 += (dfmObj[objIndex2]->params.alpha) * (-1) * moveVec;
-			}
-			else if (dp2->isFixed&&!dp1->isFixed){
-				moveVec = (-vectorN) *x2tox1.norm();
-				dpCtr1 += (dfmObj[objIndex1]->params.alpha) * moveVec;
-			}
-			
-		}
+		float totalMass = dp1->pTempSingleVMass + dp2->pTempSingleVMass;
+		float length = fabs(x2tox1.norm()) * collisionCstrStiffness;
+
+
+		dpCtr1 += -length * (dp2->pTempSingleVMass / totalMass) * vectorN;
+		dpCtr2 += length * (dp1->pTempSingleVMass / totalMass) * vectorN;
 		
 
 		//dpCtr1 += (dp1->pParaAlpha)* moveVec;
 		//dpCtr2 += (dp2->pParaAlpha) * (-1) * moveVec;
 
-		//if (useVelCal)
-		{
-			//eliminate vel in N dir// may be strange when interaction 
-			//float dirTmp1 = dpVel1.dot(vectorN);
-			//dpVel1 += (-vectorN) * dirTmp1;
-			//float dirTmp2 = dpVel2.dot(-vectorN);
-			//dpVel2 += (vectorN)* dirTmp2;
+		////if (useVelCal)
+		//{
+		//	//eliminate vel in N dir// may be strange when interaction 
+		//	//float dirTmp1 = dpVel1.dot(vectorN);
+		//	//dpVel1 += (-vectorN) * dirTmp1;
+		//	//float dirTmp2 = dpVel2.dot(-vectorN);
+		//	//dpVel2 += (vectorN)* dirTmp2;
 
-			////vel result
-			//float dt1 = 1.0f / (dObj1->params.timeStep);
-			//float dt2 = 1.0f / (dObj2->params.timeStep);
+		//	////vel result
+		//	//float dt1 = 1.0f / (dObj1->params.timeStep);
+		//	//float dt2 = 1.0f / (dObj2->params.timeStep);
 
-			//dpVel1 += (dpCtr1 - lastpos1) * dt1* (dfmObj[dObj1->objId].params.alpha);
-			//dpVel2 += (dpCtr2 - lastpos2) * dt2* (dfmObj[dObj2->objId].params.alpha);
-			//dpVel1 += (dpCtr1 - lastpos1) * dt1* (dp1->pParaAlpha);
-			//dpVel2 += (dpCtr2 - lastpos2) * dt2* (dp2->pParaAlpha);
-		}
-		//else
-		{
-			dpVel1 = dpVel1.Zero();
-			dpVel2 = dpVel1.Zero();
-		}
+		//	//dpVel1 += (dpCtr1 - lastpos1) * dt1* (dfmObj[dObj1->objId].params.alpha);
+		//	//dpVel2 += (dpCtr2 - lastpos2) * dt2* (dfmObj[dObj2->objId].params.alpha);
+		//	//dpVel1 += (dpCtr1 - lastpos1) * dt1* (dp1->pParaAlpha);
+		//	//dpVel2 += (dpCtr2 - lastpos2) * dt2* (dp2->pParaAlpha);
+		//}
+		////else
+		//{
+		//	dpVel1 = dpVel1.Zero();
+		//	dpVel2 = dpVel1.Zero();
+		//}
 	
 	}
 	
