@@ -82,17 +82,28 @@ namespace Spr{
 		{
 			int i = 0, j = 0, w = 2 * slices, h = slices;
 			Vec3f *mx;
+			Vec3f fn;
 			mx = getPointMatrix2(rx, ry, rz, slices, tq);
 			if (!mx)return 0;
+			glBegin(GL_QUADS);
 			for (; i<h - 1; i++)
 			{
 				for (j = 0; j<w - 1; j++)
 				{
+					fn.x = (mx[i*w + j].x + mx[i*w + j + 1].x + mx[(i + 1)*w + j + 1].x + mx[(i + 1)*w + j].x) / (2 * rx * rx);
+					fn.y = (mx[i*w + j].y + mx[i*w + j + 1].y + mx[(i + 1)*w + j + 1].y + mx[(i + 1)*w + j].y) / (2 * ry * ry);
+					fn.z = (mx[i*w + j].z + mx[i*w + j + 1].z + mx[(i + 1)*w + j + 1].z + mx[(i + 1)*w + j].z) / (2 * rz * rz);
+					glNormal3f(fn.x, fn.y, fn.z);
 					drawSlice(mx[i*w + j], mx[i*w + j + 1], mx[(i + 1)*w + j + 1], mx[(i + 1)*w + j]);
 				}
+				fn.x = (mx[i*w + j].x + mx[i*w].x + mx[(i + 1)*w].x + mx[(i + 1)*w + j].x) / (2 * rx * rx);
+				fn.y = (mx[i*w + j].y + mx[i*w].y + mx[(i + 1)*w].y + mx[(i + 1)*w + j].y) / (2 * ry * ry);
+				fn.z = (mx[i*w + j].z + mx[i*w].z + mx[(i + 1)*w].z + mx[(i + 1)*w + j].z) / (2 * rz * rz);
+				glNormal3f(fn.x, fn.y, fn.z);
 				drawSlice(mx[i*w + j], mx[i*w], mx[(i + 1)*w], mx[(i + 1)*w + j]);
 			}
 			free(mx);
+			glEnd();
 			return 1;
 		}
 
@@ -100,17 +111,33 @@ namespace Spr{
 		{
 			int i = 0, j = 0, w = 2 * slices, h = slices;
 			Vec3f *mx;
+			Vec3f fn;
 			mx = getPointMatrix2(rx, ry, rz, slices, dotcEM);
 			if (!mx)return 0;
+			glBegin(GL_QUADS);
 			for (; i<h - 1; i++)
 			{
 				for (j = 0; j<w - 1; j++)
 				{
+					//calculate face normal
+					glBegin(GL_QUADS);
+					fn.x = (mx[i*w + j].x + mx[i*w + j + 1].x + mx[(i + 1)*w + j + 1].x + mx[(i + 1)*w + j].x) / (2 * rx * rx);
+					fn.y = (mx[i*w + j].y + mx[i*w + j + 1].y + mx[(i + 1)*w + j + 1].y + mx[(i + 1)*w + j].y) / (2 * ry * ry);
+					fn.z = (mx[i*w + j].z + mx[i*w + j + 1].z + mx[(i + 1)*w + j + 1].z + mx[(i + 1)*w + j].z) / (2 * rz * rz);
+					glNormal3f(fn.x, fn.y, fn.z);
 					drawSlice(mx[i*w + j], mx[i*w + j + 1], mx[(i + 1)*w + j + 1], mx[(i + 1)*w + j]);
+					glEnd();
 				}
+				glBegin(GL_QUADS);
+				fn.x = (mx[i*w + j].x + mx[i*w].x + mx[(i + 1)*w].x + mx[(i + 1)*w + j].x) / (2 * rx * rx);
+				fn.y = (mx[i*w + j].y + mx[i*w].y + mx[(i + 1)*w].y + mx[(i + 1)*w + j].y) / (2 * ry * ry);
+				fn.z = (mx[i*w + j].z + mx[i*w].z + mx[(i + 1)*w].z + mx[(i + 1)*w + j].z) / (2 * rz * rz);
+				glNormal3f(fn.x, fn.y, fn.z);
 				drawSlice(mx[i*w + j], mx[i*w], mx[(i + 1)*w], mx[(i + 1)*w + j]);
+				glEnd();
 			}
 			free(mx);
+
 			return 1;
 		}
 
