@@ -103,7 +103,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//opObjIf->InitialObjUsingLocalBuffer(0.5f);
 #ifdef _6DOF
 	
-	opEngine->InitialHapticRenderer(0);//6DOF haptic renderer
+	opEngineif->InitialHapticRenderer(0);//6DOF haptic renderer
 #endif
 #ifdef _3DOF
 	opEngine->InitialNoMeshHapticRenderer();
@@ -112,9 +112,9 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	InitInterface();
 	opHapticHandler->SetHumanInterface(spg);
 	
-	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
+	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngineif->GetOpHapticController();
 	opHc->setC_ObstacleRadius(0.2f);
-	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngineif->GetOpHapticRenderer();
 	
 	//for clip
 	//opEngine->InitialHapticRenderer(1, hisdk);
@@ -129,7 +129,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//{
 	//	opAnimator->AddAnimationP(1, pi, Vec3f(0, -300, 0), 100);
 	//}
-	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(0);
+	PHOpObjIf *opObjIf = opEngineif->GetOpObjIf(0);
 	opObjIf->SetBound(3);
 
 	opHrDesc = DCAST(PHOpHapticRenderer, opHr);
