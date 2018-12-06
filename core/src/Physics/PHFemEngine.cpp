@@ -17,10 +17,8 @@ PHFemMeshPair::PHFemMeshPair() {
 	mesh[0] = NULL;
 	mesh[1] = NULL;
 	// A5052の熱伝達率	12.0 *1e2
-	//heatTransferRatio = 0.1 *1e2;//0.2 *1e3;//12.0 *1e2;	//ems:3.6E-02	ems_const:-0.2	->1.2e3	, ems:3.80E-02	ems_const:-1.1507  ->5.1e2
+	heatTransferRatio = 12.0 *1e2;//0.2 *1e3;//12.0 *1e2;	//ems:3.6E-02	ems_const:-0.2	->1.2e3	, ems:3.80E-02	ems_const:-1.1507  ->5.1e2
 }
-
-
 
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -30,10 +28,7 @@ PHFemEngine::PHFemEngine(){
 	bThermalTransfer = false;
 	fdt = 0.02;
 }
-void PHFemEngine::setheatTransferRatio(double setheatTransferRatio) {
 
-	heatTransferRatio = setheatTransferRatio;//0.2 *1e3;//12.0 *1e2;	//ems:3.6E-02	ems_const:-0.2	->1.2e3	, ems:3.80E-02	ems_const:-1.1507  ->5.1e2
-}
 void PHFemEngine::SetVibrationTransfer(bool bEnable) {
 	bVibrationTransfer = bEnable;
 }
