@@ -36,7 +36,7 @@ void PHFemEngine::SetThermalTransfer(bool bEnable) {
 	bThermalTransfer = bEnable;
 }
 bool PHFemEngine::AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1) {
-	for (int i = 0; i < meshPairs.size(); ++i) {
+	for (int i = 0; i < (int) meshPairs.size(); ++i) {
 		if (meshPairs[i]->mesh[0] == (PHFemMeshNew*)m0 && meshPairs[i]->mesh[1] == (PHFemMeshNew*)m1) {
 			return false;
 		}
@@ -51,7 +51,7 @@ bool PHFemEngine::AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1) {
 	return true;
 }
 bool PHFemEngine::RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1) {
-	for (int i = 0; i < meshPairs.size(); ++i) {
+	for (int i = 0; i < (int) meshPairs.size(); ++i) {
 		if (meshPairs[i]->mesh[0] == (PHFemMeshNew*)m0 && meshPairs[i]->mesh[1] == (PHFemMeshNew*)m1) {
 			meshPairs.erase(meshPairs.begin() + i);
 			return true;

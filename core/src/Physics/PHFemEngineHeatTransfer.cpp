@@ -216,7 +216,7 @@ void MakeVtxPair(CondVtxs(&condVtxs)[2], std::vector<int>(&neighbor)[2], int bas
 
 
 void PHFemEngine::ThermalTransfer() {
-	for (int i = 0; i < meshPairs.size(); ++i) {
+	for (int i = 0; i < (int) meshPairs.size(); ++i) {
 		HeatTrans(meshPairs[i]);
 	}
 }
