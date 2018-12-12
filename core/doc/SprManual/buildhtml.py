@@ -263,7 +263,6 @@ def abort(msg, exitcode=1):
 def print_usage():
 	print()
 	cmnd = 'python %s.py --help' % prog
-	print(cmnd)
 	wait(execute(cmnd))
 	sys.exit(1)
 
