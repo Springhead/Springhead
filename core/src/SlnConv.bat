@@ -1,10 +1,16 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set PYTHON=..\..\buildtool\win32\python.exe
+call :get_script_dir DIR %0
+
+set PYTHON=%DIR%..\..\buildtool\win32\python.exe
 set SCRIPT=SlnConv.py
 
-%PYTHON% %SCRIPT% -s 14.0 -d 15.0 -f -v %1
+%PYTHON% %DIR%%SCRIPT% -s 14.0 -d 15.0 -f -v %1
 
 endlocal
+exit /b
+
+:get_script_dir
+	set %1=%~p2
 exit /b
