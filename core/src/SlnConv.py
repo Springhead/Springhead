@@ -16,7 +16,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/12/12 F.Kanehori	First version.
+#	Ver 1.0  2018/12/13 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
@@ -96,10 +96,10 @@ def write_file(name, lines, encoding):
 			abort(msg)
 	ofobj.close()
 
-#  Visual Studio のバージョンを調べる
+#  Visual Studio のベースを調べる
+#	ベースとは、"Common7", "DIA SDK" があるディレクトリのこと
 #
-def get_vs_version():
-	# 最新の devenv.exe のパスを見つける
+def get_vs_base_directory():
 	cwd = os.getcwd()
 	base = 'C:/Program Files (x86)/Microsoft Visual Studio/'
 	os.chdir(base)
@@ -116,7 +116,7 @@ def get_vs_version():
 	if len(vs_editions) == 1:
 		vs_edition = vs_editions[0]
 	else:
-		print('found folowings')
+		print('found followings')
 		while True:
 			n = 0
 			for e in vs_editions:
@@ -127,15 +127,21 @@ def get_vs_version():
 				vs_edition = vs_editions[rc]
 				break
 			print('error: index out of range')
-	devenv_dir = '%s/%d/%s/Common7/IDE' % (base, year, vs_edition)
-	print('OK')
-	print('using %s/devenv.exe' % devenv_dir)
 	os.chdir(cwd)
+	return '%s/%d/%s' % (base, year, vs_edition)
+
+#  Visual Studio のバージョンを調べる
+#
+def get_vs_version():
+	# 'devenv /?' で調べる
+	#
+	devenv_dir = '%s/Common7/IDE' % get_vs_base_directory()
 	#
 	cmnd = '"%s/%s" /?' % (devenv_dir.replace('/', '\\'), devenv)
 	status, out, err = command(cmnd)
 	if status != 0:
-		return -1
+		print('NG')
+		abort('"%s" failed')
 	outlist = out.replace('\r', '').split('\n')
 	patt = r'([0-9]+.[0-9]+.[0-9]+.[0-9]+)'
 	version = None
@@ -144,6 +150,26 @@ def get_vs_version():
 			m = re.search(patt, s)
 			if m:
 				version = m.group(1)
+			break
+	print('OK')
+	print('using %s/devenv.exe' % devenv_dir)
+	return version
+
+#  toolset のバージョンを調べる
+#
+def get_toolset_version():
+	# "DIA2Dump.vcxproj" を読んで PlatformToolsetVersion を調べる
+	#
+	DIA2Dump_dir = '%s/DIA SDK/Samples/DIA2Dump' % get_vs_base_directory()
+	fname = '%s/DIA2Dump.vcxproj' % DIA2Dump_dir
+	#
+	patt = r'<PlatformToolset>(v[0-9]+)</PlatformToolset>'
+	lines = read_file(fname, 'utf_8')	
+	version = None
+	for line in lines:
+		m = re.search(patt, line)
+		if m:
+			version = m.group(1)
 			break
 	return version
 
@@ -235,16 +261,14 @@ sys.stdout.write('getting Visual Studio Version (take long, be patience) ... ')
 sys.stdout.flush()
 vs_version = get_vs_version()
 vs_version = '.'.join(vs_version.split('.')[:-1]) + '.0'
-print('Visual Studio Version: %s' % vs_version)
+pts_version = get_toolset_version()
 
-if verbose:
-	print('converting')
-	print('  from: %s' % src_slnfile)
-	print('  to:   %s' % dst_slnfile)
-	print('encoding: %s' % encoding)
-	print('version info')
-	print('    VS:   %s' % vs_version)
-	print()
+print()
+print('Version info:')
+print("  Visual Studio: '%s'" % vs_version)
+print("  Platform Toolset: '%s'" % pts_version)
+print('Target File: %s -> %s (%s)' % (src_slnfile, dst_slnfile, encoding))
+print()
 
 # ----------------------------------------------------------------------
 #  メイン処理開始
@@ -259,7 +283,8 @@ check_files(src_slnfile, dst_slnfile, force)
 #   (2) 関連するプロジェクトファイルをリストアップする
 #
 patt_vsv = r'VisualStudioVersion = ([0-9.]+)'
-patt_prj = r'Project\(.*\) = ".*", "(.*)", ".*"'
+patt_prj = r'Project\(.*\) = ".*", "(.+)(%s).vcxproj", ".*"' % src_version
+patt_nam = r'Project\(.*\) = "(.+)(%s)", ".*", ".*"' % src_version
 #
 projects = []		# 関連プロジェクトのリスト
 out_lines = []		# 書き出すファイルの内容
@@ -272,25 +297,39 @@ for line in lines:
 			print(line.strip())
 	m = re.match(patt_prj, line)
 	if m:
-		prjname = get_slnname(m.group(1), src_version, '.vcxproj')
-		new_prjname = '%s%s.vcxproj' % (prjname, dst_version)
-		line = line.replace(m.group(1), new_prjname)
-		projects.append(new_prjname)
+		new_prjfile = '%s%s.vcxproj' % (m.group(1), dst_version)
+		line = line.replace(m.group(2), dst_version)
+		projects.append(new_prjfile)
 		if verbose:
-			print(line.strip())
+			print('  => %s' % line.strip())
+	m = re.match(patt_nam, line)
+	if m:
+		line = line.replace(m.group(1), dst_version)
+		if verbose:
+			print('  => %s' % line.strip())
 	out_lines.append(line)
 #
 write_file(dst_slnfile, out_lines, encoding)
 print('created: %s' % dst_slnfile)
 
 #  関連するプロジェクトのうち、Springhead ライブラリに関するものは除く
-#  ただし、SpringheadXX.sln が指定された場合には除外はしない
+#	ただし 'core/src', 'core/src/EmbPython' から呼び出されたときは例外
 #
 excludes = [
 	'Base', 'Collision', 'Creature', 'EmbPython', 'FileIO', 'Foundation',
-	'Framework', 'Graphics', 'HumanINterface', 'PHysics', 'RunSwig']
+	'Framework', 'Graphics', 'HumanInterface', 'Physics', 'RunSwig']
+invoked_by_librarian = False
+
+#  ただし次の場合は特別に扱う
+if slnname == 'Springhead' or slnname == 'EmbPython':
+	excludes = []
+elif slnname == 'SprPythonDLL':
+	excludes.remove('EmbPython')
+if verbose:
+	print()
+	print('exclude projects: %s' % excludes)
 #
-if slnname != 'Springhead':
+if not invoked_by_librarian:
 	spr_projs = []
 	for proj in projects:
 		p = proj.split('\\')[-1]
@@ -306,22 +345,56 @@ if verbose:
 
 #  関連するプロジェクトファイルを作成する（ToolsVersion のみ書き換える）
 #
-patt_tv = r'ToolsVersion="([0-9.]+)"'
+patt_tv = r'ToolsVersion="(%s)"' % src_version
+patt_ref = r'ProjectReference.+=\".+(%s).+\"' % src_version
+patt_DST = [patt_tv, patt_ref]
+#
+patt_pts = r'<PlatformToolset>(v[0-9]+)</PlatformToolset>'
+patt_ns1 = r'<RootNamespace>%s([0-9]+)</RootNamespace>' % slnname
+patt_ns2 = r'<RootNamespace>[a-zA-Z0-9_]+?([0-9]+)</RootNamespace>'
+patt_NSP = [patt_ns1, patt_ns2]
+#
+patt_cfg = r'<ConfigurationType>(.+)</ConfigurationType>'
+#
 out_lines = []
 for proj in projects:
 	prjname = get_slnname(proj, dst_version, '.vcxproj')
 	src = '%s%s.vcxproj' % (prjname, src_version)
 	dst = '%s%s.vcxproj' % (prjname, dst_version)
 	check_files(src, dst, force)
+	apply_pts = False
 	#
 	lines = read_file(src, encoding)	
 	out_lines = []
 	for line in lines:
-		m = re.search(patt_tv, line)
+		# trap
+		m = re.search(patt_cfg, line)
 		if m:
-			line = line.replace(m.group(1), dst_version)
-			if verbose:
-				print(line.strip())
+			if m.group(1) == 'Makefile':
+				apply_pts = True
+		
+		# project reference (.vcxproj)
+		for patt in patt_DST:
+			m = re.search(patt, line)
+			if m:
+				line = line.replace(m.group(1), dst_version)
+				if verbose:
+					print('  => %s' % line.strip())
+		# platform toolset version
+		if apply_pts:
+			m = re.search(patt_pts, line)
+			if m:
+				line = line.replace(m.group(1), pts_version)
+				if verbose:
+					print('  => %s' % line.strip())
+		# root namespace
+		for patt in patt_NSP:
+			m = re.search(patt, line)
+			if m:
+				line = line.replace(m.group(1), pts_version[1:])
+				if verbose:
+					print('  => %s' % line.strip())
+				break
 		out_lines.append(line)
 	write_file(dst, out_lines, encoding)
 	print('created: %s' % dst)
