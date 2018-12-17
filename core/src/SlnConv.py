@@ -344,10 +344,14 @@ if verbose:
 	print()
 
 #  関連するプロジェクトファイルを作成する（ToolsVersion のみ書き換える）
+#　(1) ToolsVersion を書き換える
+#　(2) <ProjectReference Include="...RunSwig...vcxproj">
+#	を見つけたら直後に <Provate>false</Private> という行を挿入する
 #
 patt_tv = r'ToolsVersion="(%s)"' % src_version
-patt_ref = r'ProjectReference.+=\".+(%s).+\"' % src_version
+patt_ref = r'ProjectReference\s+Include="(.+)(%s).vcxproj"' % src_version
 patt_DST = [patt_tv, patt_ref]
+copylocal_false = '      <Private>false</Private>\n'
 #
 patt_pts = r'<PlatformToolset>(v[0-9]+)</PlatformToolset>'
 patt_ns1 = r'<RootNamespace>%s([0-9]+)</RootNamespace>' % slnname
@@ -372,22 +376,35 @@ for proj in projects:
 		if m:
 			if m.group(1) == 'Makefile':
 				apply_pts = True
+		line_add_after = []
 		
-		# project reference (.vcxproj)
-		for patt in patt_DST:
-			m = re.search(patt, line)
-			if m:
-				line = line.replace(m.group(1), dst_version)
+		# ToolsVersion
+		m = re.search(patt_tv, line)
+		if m:
+			line = line.replace(m.group(1), dst_version)
+			if verbose:
+				print('  => %s' % line.strip())
+
+		# ProjectReference
+		m = re.search(patt_ref, line)
+		if m:
+			line = line.replace(m.group(2), dst_version)
+			if verbose:
+				print('  => %s' % line.strip())
+			if m.group(1).split('\\')[-1] == 'RunSwig':
+				line_add_after.append(copylocal_false)
 				if verbose:
-					print('  => %s' % line.strip())
-		# platform toolset version
+					print('  => %s' % copylocal_false.strip())
+
+
+		# PlatformToolset
 		if apply_pts:
 			m = re.search(patt_pts, line)
 			if m:
 				line = line.replace(m.group(1), pts_version)
 				if verbose:
 					print('  => %s' % line.strip())
-		# root namespace
+		# RootNamespace
 		for patt in patt_NSP:
 			m = re.search(patt, line)
 			if m:
@@ -395,7 +412,12 @@ for proj in projects:
 				if verbose:
 					print('  => %s' % line.strip())
 				break
+		#
 		out_lines.append(line)
+		if line_add_after != []:
+			for d in line_add_after:
+				out_lines.append(d)
+
 	write_file(dst, out_lines, encoding)
 	print('created: %s' % dst)
 
