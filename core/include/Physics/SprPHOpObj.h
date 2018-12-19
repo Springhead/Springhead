@@ -5,11 +5,16 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+/**
+ *	@file SprPHSolid.h
+ *	@brief 剛体
+*/
 #ifndef SPR_PHOPOBJ_H
 #define SPR_PHOPOBJ_H
 
 #include <Foundation/SprObject.h>
-
+/**	\addtogroup gpPhysics	*/
+//@{
 namespace Spr{;
 
 ///	剛体のステート
@@ -89,6 +94,9 @@ struct PHOpObjDesc : public PHOpObjState{
 	bool updateNormals;
 
 
+
+	//ObjectParams params;
+
 	PHOpObjDesc(){ Init(); }
 	void Init(){
 		mass = 1.0f;
@@ -112,6 +120,7 @@ struct PHOpObjIf : public SceneObjectIf {
 	void AddVertextoLocalBuffer(Vec3f v);
 	bool InitialObjUsingLocalBuffer(float pSize);
 
+	//隠したほうがいい関数たち
 	void positionPredict();
 	void groupStep();
 	void integrationStep();
@@ -128,6 +137,9 @@ struct PHOpObjIf : public SceneObjectIf {
 	int GetobjVtoPmap(int vi);
 	float GetVtxBlendWeight(int Vtxi, int Grpi);
 	
+	//void SetGRMesh(ObjectIf *mesh);
+	//PHOpObjIf* GetMyIf();
+
 	void SetVelocityDamping(float vd);
 	float GetVelocityDamping();
 	float GetBoundLength();
@@ -144,6 +156,9 @@ struct PHOpObjIf : public SceneObjectIf {
 	int GetObjItrTime();
 	void StoreOrigPose();
 
+	//void GetFirVertexData(float vData[]);
+	//float* GetFirVData();
+	//bool GetVDataArr(void *source);
 
 };
 struct PHOpParticleDesc {
@@ -161,7 +176,7 @@ struct PHOpParticleDesc {
 	//マウスに触られたかフラグ
 	bool hitedByMouse;
 	//頂点持つ質量（仮）
-	float pSingleVMass;
+	float pTempSingleVMass;
 	//粒子の総合質量（開発中）
 	float pTotalMass;
 	
@@ -280,8 +295,9 @@ struct PHOpHapticControllerDesc
 	Vec3f hcCurrUPos;
 	Vec3f hcLastUPos;
 	Vec3f hcFixsubGoal;
-	float c_obstRadius;
+	float c_obstRadius;// = hapticDetectRange/6;
 
+	//PHOpParticle* hcColliedP;
 	int hpObjIndex;
 	enum HapticDOFType
 	{
@@ -290,6 +306,7 @@ struct PHOpHapticControllerDesc
 	};
 
 	HapticDOFType hcType;
+	//Vec3f hcPointPos;
 	bool logForce;
 	bool hcReady;
 	bool IsSetForceReady;
@@ -302,6 +319,7 @@ struct PHOpHapticControllerDesc
 	int constrainCountHc;//used in Haptic rate
 	Vec3f couterPlaneN;
 	float hcElmDtcRadius;
+	//int bindElementid;
 	int collectCount;
 	int collectItrtor;
 	bool hcProxyOn;
@@ -331,16 +349,23 @@ struct PHOpHapticControllerIf : public SceneObjectIf{
 	void SetHCForceReady(bool flag);
 	bool GetHCForceReady();
 	bool CheckProxyState();
+	//void SetHCColliedFlag(bool flag);
+	////void BindCtcPlane(ConstrainPlaneInfo cif);
 	void AddColliedPtcl(int pIndex, int objindex, Vec3f ctcPos);
+	//PHOpParticleIf* GetMyHpProxyParticle();
 	bool BeginLogForce();
 	void EndLogForce();
+	//void ClearColliedPs();
 	void setC_ObstacleRadius(float r);
 	Vec3f GetUserPos();
 	Vec3f GetHCPosition();
+	void SetHCReady(bool flag);
+	bool GetHCReady();
 	void SetHCPosition(Vec3f pos);
 	void SetHCPose(Posef pose);
 	Posef GetHCPose();
 	float GetC_ObstacleRadius();
+	//int GetHpObjIndex();
 	Vec3f GetCurrentOutputForce();
 };
 struct PHOpHapticRendererIf : public SceneObjectIf{
@@ -384,15 +409,23 @@ struct PHOpAnimationDesc  {
 };
 struct PHOpAnimationIf :public  SceneObjectIf, public PHOpAnimationDesc{
 	SPR_IFDEF(PHOpAnimation);
+	//struct OpAnimationStruct;
 
 	void AddAnimationP(int objIndex, int pIndex, Vec3f start, Vec3f end, float totalTime);
 	void AddAnimationP(int objIndex, int pIndex, Vec3f force, float totalTime);
+	//OpAnimationStruct* GetAnimeInfo(int animeindex);
 	void AnimationStep(void* opEngine);
 	void AnimationIntergration(void* opEngine);
 	
 };
 
 
+//struct PHOpHapticHandler : ObjectIf{
+//public:
+//	
+//	SPR_IFDEF(PHOpHapticHandler);
+//};
+//@}
 
 }	//	namespace Spr
 #endif
