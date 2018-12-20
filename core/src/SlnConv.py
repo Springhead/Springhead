@@ -16,7 +16,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/12/17 F.Kanehori	First version.
+#	Ver 1.0  2018/12/20 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
@@ -261,7 +261,7 @@ slnname = get_slnname(slnfile, src_version, '.sln')
 src_slnfile = '%s%s.sln' % (slnname, src_version)
 dst_slnfile = '%s%s.sln' % (slnname, dst_version)
 
-sys.stdout.write('getting Visual Studio Version (take long, be patience) ... ')
+sys.stdout.write('getting Visual Studio Version (take long, be patient) ... ')
 sys.stdout.flush()
 vs_version = get_vs_version()
 vs_version = '.'.join(vs_version.split('.')[:-1]) + '.0'
