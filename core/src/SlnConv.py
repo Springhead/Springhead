@@ -16,7 +16,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/12/13 F.Kanehori	First version.
+#	Ver 1.0  2018/12/17 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
@@ -230,6 +230,9 @@ parser.add_option('-f', '--force', dest='force',
 parser.add_option('-s', '--src-version', dest='src_version',
 			action='store', default='14.0', metavar='VER',
 			help='source VS version [default: %default]')
+parser.add_option('-u', '--user-data', dest='user_data',
+			action='store_true', default=False,
+			help='convert user data file (.vcxproj.user)')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
 			help='set verbose mode')
@@ -246,6 +249,7 @@ src_version = options.src_version
 dst_version = options.dst_version
 encoding = options.encoding
 force = options.force
+user_data = options.user_data
 verbose = options.verbose
 #
 if len(args) != 1:
@@ -343,7 +347,7 @@ if verbose:
 	print('related project files: %s' % ', '.join(projects))
 	print()
 
-#  関連するプロジェクトファイルを作成する（ToolsVersion のみ書き換える）
+#  関連するプロジェクトファイル(.vcxproj)を作成する
 #　(1) ToolsVersion を書き換える
 #　(2) <ProjectReference Include="...RunSwig...vcxproj">
 #	を見つけたら直後に <Provate>false</Private> という行を挿入する
@@ -396,7 +400,6 @@ for proj in projects:
 				if verbose:
 					print('  => %s' % copylocal_false.strip())
 
-
 		# PlatformToolset
 		if apply_pts:
 			m = re.search(patt_pts, line)
@@ -404,6 +407,7 @@ for proj in projects:
 				line = line.replace(m.group(1), pts_version)
 				if verbose:
 					print('  => %s' % line.strip())
+
 		# RootNamespace
 		for patt in patt_NSP:
 			m = re.search(patt, line)
@@ -420,6 +424,34 @@ for proj in projects:
 
 	write_file(dst, out_lines, encoding)
 	print('created: %s' % dst)
+
+#  関連するユーザーファイル(.vcxproj.user)を作成する
+#　(1) ToolsVersion を書き換える
+#
+if user_data:
+	out_lines = []
+	for proj in projects:
+		prjname = get_slnname(proj, dst_version, '.vcxproj')
+		src = '%s%s.vcxproj.user' % (prjname, src_version)
+		dst = '%s%s.vcxproj.user' % (prjname, dst_version)
+		if not os.path.exists(src):
+			continue
+		check_files(src, dst, force)
+		#
+		lines = read_file(src, encoding)	
+		out_lines = []
+		for line in lines:
+			# ToolsVersion
+			m = re.search(patt_tv, line)
+			if m:
+				line = line.replace(m.group(1), dst_version)
+				if verbose:
+					print('  => %s' % line.strip())
+			#
+			out_lines.append(line)
+	
+		write_file(dst, out_lines, encoding)
+		print('created: %s' % dst)
 
 #  終了
 #
