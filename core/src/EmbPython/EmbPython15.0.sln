@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 15.0.28307.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EmbPython", "EmbPython15.0.vcxproj", "{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33} = {59C4D972-C917-4F20-B8E7-9E5D22169F33}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EmbPython_RunSwig", "EmbPython_RunSwig15.0.vcxproj", "{59C4D972-C917-4F20-B8E7-9E5D22169F33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Trace|Win32 = Trace|Win32
+		Trace|x64 = Trace|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Debug|Win32.Build.0 = Debug|Win32
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Debug|x64.ActiveCfg = Debug|x64
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Debug|x64.Build.0 = Debug|x64
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Release|Win32.ActiveCfg = Release|Win32
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Release|Win32.Build.0 = Release|Win32
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Release|x64.ActiveCfg = Release|x64
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Release|x64.Build.0 = Release|x64
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Trace|Win32.ActiveCfg = Trace|Win32
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Trace|Win32.Build.0 = Trace|Win32
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Trace|x64.ActiveCfg = Trace|x64
+		{4CB5DA50-4BF0-4E42-81E2-6785BDED5B09}.Trace|x64.Build.0 = Trace|x64
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Debug|Win32.ActiveCfg = Debug|Win32
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Debug|Win32.Build.0 = Debug|Win32
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Debug|x64.ActiveCfg = Debug|x64
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Debug|x64.Build.0 = Debug|x64
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Release|Win32.ActiveCfg = Release|Win32
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Release|Win32.Build.0 = Release|Win32
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Release|x64.ActiveCfg = Release|x64
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Release|x64.Build.0 = Release|x64
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Trace|Win32.ActiveCfg = Trace|Win32
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Trace|Win32.Build.0 = Trace|Win32
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Trace|x64.ActiveCfg = Trace|x64
+		{59C4D972-C917-4F20-B8E7-9E5D22169F33}.Trace|x64.Build.0 = Trace|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
