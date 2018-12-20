@@ -4,22 +4,49 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "Base\Base15.0.vcxproj", "{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "Collision\Collision15.0.vcxproj", "{8C62959E-9E67-4439-836E-25BE57501463}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Creature", "Creature\Creature15.0.vcxproj", "{F674A4D7-A183-4C53-815D-12E17B71C6A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileIO", "FileIO\FileIO15.0.vcxproj", "{3CA4689D-77DA-4B2E-A718-CBB6A8FF04D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation", "Foundation\Foundation15.0.vcxproj", "{916BF063-5A94-4652-B355-62220EF17768}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "Framework\Framework15.0.vcxproj", "{755660BE-3B1E-416B-B795-4F653C83A43A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Graphics\Graphics15.0.vcxproj", "{A339C0CA-D5FB-4DFA-9BCF-826739790653}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HumanInterface", "HumanInterface\HumanInterface15.0.vcxproj", "{05138F41-5673-4E19-A5C7-2A684488B23A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Physics\Physics15.0.vcxproj", "{A2B91F83-DF0A-473D-9C3B-059673CD2046}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunSwig", "RunSwig\RunSwig15.0.vcxproj", "{4AC6C708-19C9-4CC1-A25B-D9682470411E}"
 EndProject
