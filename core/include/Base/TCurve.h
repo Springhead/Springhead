@@ -321,23 +321,23 @@ public:
 	typedef T	real_t;
 
 	pos_t	CalcPos(real_t t){
-		std::pair<int,int> seg = GetSegment(t);
-		struct Point& p0 = TCurve<V,V,T>::points[seg.first ];
-		struct Point& p1 = TCurve<V,V,T>::points[seg.second];
+		std::pair<int,int> seg = this->GetSegment(t);
+		struct TCurve<V,V,T>::Point& p0 = this->points[seg.first ];
+		struct TCurve<V,V,T>::Point& p1 = this->points[seg.second];
 		return InterpolatePos(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
 	vel_t	CalcVel(real_t t){
-		std::pair<int,int> seg = GetSegment(t);
-		struct Point& p0 = TCurve<V,V,T>::points[seg.first ];
-		struct Point& p1 = TCurve<V,V,T>::points[seg.second];
+		std::pair<int,int> seg = this->GetSegment(t);
+		struct TCurve<V,V,T>::Point& p0 = this->points[seg.first ];
+		struct TCurve<V,V,T>::Point& p1 = this->points[seg.second];
 		return InterpolateVel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
 	vel_t	CalcAcc(real_t t){
-		std::pair<int,int> seg = GetSegment(t);
-		struct Point& p0 = TCurve<V,V,T>::points[seg.first ];
-		struct Point& p1 = TCurve<V,V,T>::points[seg.second];
+		std::pair<int,int> seg = this->GetSegment(t);
+		struct TCurve<V,V,T>::Point& p0 = this->points[seg.first ];
+		struct TCurve<V,V,T>::Point& p1 = this->points[seg.second];
 		return InterpolateAcc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
