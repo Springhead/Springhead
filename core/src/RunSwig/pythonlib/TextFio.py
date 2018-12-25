@@ -335,6 +335,10 @@ class TextFio(Fio):
 			msg = 'file write error: "%s"' % self.path
 			self.errmsg = msg
 			return -1
+		except UnicodeEncodeError:
+			msg = 'unicode encode error: "%s"' % self.path
+			self.errmsg = msg
+			return -1
 		return 0
 
 	##  Flush the file.

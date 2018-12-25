@@ -66,7 +66,7 @@
 #	Ver 1.4  2017/11/16 F.Kanehori	Python library path 変更.
 #	Ver 1.5  2017/11/30 F.Kanehori	Python library path 変更.
 #	Ver 2.0  2018/02/07 F.Kanehori	全体の見直し.
-#	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 2.1  2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
 # ======================================================================
 import sys
 import os
@@ -98,7 +98,7 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.01
+		self.version = 2.1
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)
@@ -175,7 +175,10 @@ class VisualStudio:
 		if self.vs_path is None:
 			msg = self.vs_name + ' (' + self.pf_toolset + ')'
 			self.errmsg = 'devenv not found: ' + msg
+			print()
+			Error(self.clsname).abort(self.errmsg)
 			return status
+
 		# prepare log directory
 		#
 		if self.logfile is not None:
@@ -242,6 +245,8 @@ class VisualStudio:
 		pts, vsv, vsn = (None, None, None)
 		if toolset in ['14.0', '14', 'v140', '2015']:
 			pts, vsv, vsn = ('v140', '14.0', 'Visual Studio 2015')
+		elif toolset in ['15.0', '15', 'v141', '2017']:
+			pts, vsv, vsn = ('v141', '15.0', 'Visual Studio 2017')
 		#
 		if pts is None:
 			self.errmsg = 'invalid platform toolset: %s' % (toolset)
@@ -261,9 +266,13 @@ class VisualStudio:
 		if version is None:
 			# bad VS version
 			return None
-		devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio '
-		devenvpath += version
-		devenvpath += '/Common7/IDE'
+		if self.vs_version <= '14.0':
+			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio '
+			devenvpath += version
+			devenvpath += '/Common7/IDE'
+		else:
+			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio/'
+			devenvpath += '2017/Community/common7/IDE'
 		if self.verbose:
 			print('  devenv path: %s' % devenvpath)
 		if not os.path.exists(Util.pathconv('%s/devenv.exe' % devenvpath)):
