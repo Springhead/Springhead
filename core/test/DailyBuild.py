@@ -9,6 +9,15 @@
 #	  -t tool:	Visual Studio toolset ID. (Windows only)
 #
 #  DESCRIPTION:
+#	テストの環境を整えてから TestMainGit.py を呼び出す.
+#
+#  NOTE:
+#	****************************************************************
+#	新しい Visual Studio に対応するには、"bin/visualStudio.py" の
+#	  (1) __get_vsibnfo() に新しいバージョンの情報を追加する.
+#	  (2) __get_vs_path() に devenv のパスを設定する.
+#	必要がある.
+#	****************************************************************
 #
 #  VERSION:
 #	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.

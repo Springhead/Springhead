@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -63,9 +63,10 @@
 #	Ver 1.1  2016/11/09 F.Kanehori	Add method: get_toolset.
 #	Ver 1.2  2017/09/07 F.Kanehori	Python library revised.
 #	Ver 1.3  2017/09/14 F.Kanehori	Change return value: error().
-#	Ver 1.4  2017/11/16 F.Kanehori	Python library path �ύX.
-#	Ver 1.5  2017/11/30 F.Kanehori	Python library path �ύX.
-#	Ver 2.0  2018/02/07 F.Kanehori	�S�̂̌�����.
+#	Ver 1.4  2017/11/16 F.Kanehori	Python library path 変更.
+#	Ver 1.5  2017/11/30 F.Kanehori	Python library path 変更.
+#	Ver 2.0  2018/02/07 F.Kanehori	全体の見直し.
+#	Ver 2.1  2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
 # ======================================================================
 import sys
 import os
@@ -97,7 +98,7 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.0
+		self.version = 2.1
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)
@@ -153,17 +154,17 @@ class VisualStudio:
 			self.dry_run = arg1
 		else:
 			msg = 'set: invalid function specified: %s' % str(func)
-			Error(self.clsname).print(msg)
+			Error(self.clsname).abort(msg)
 
 	def __need_arg(self, num, arg):
 		if arg is None:
 			msg = 'set: argument required: arg%d' % num
-			Error(self.clsname).print(msg)
+			Error(self.clsname).abort(msg)
 
 	def __type_check(self, num, arg, type):
 		if not isinstance(arg, type):
 			msg = 'set: invalid argument: arg%d' % num
-			Error(self.clsname).print(msg)
+			Error(self.clsname).abort(msg)
 
 	#  Build solution.
 	#
@@ -174,7 +175,10 @@ class VisualStudio:
 		if self.vs_path is None:
 			msg = self.vs_name + ' (' + self.pf_toolset + ')'
 			self.errmsg = 'devenv not found: ' + msg
+			print()
+			Error(self.clsname).abort(self.errmsg)
 			return status
+
 		# prepare log directory
 		#
 		if self.logfile is not None:
@@ -202,7 +206,7 @@ class VisualStudio:
 		elif kind == self.COMMAND:
 			return self.cmnd
 		msg = 'set: invalid argument'
-		Error(self.clsname).print(msg)
+		Error(self.clsname).abort(msg)
 
 	#  Print setup information.
 	#
@@ -241,6 +245,8 @@ class VisualStudio:
 		pts, vsv, vsn = (None, None, None)
 		if toolset in ['14.0', '14', 'v140', '2015']:
 			pts, vsv, vsn = ('v140', '14.0', 'Visual Studio 2015')
+		elif toolset in ['15.0', '15', 'v141', '2017']:
+			pts, vsv, vsn = ('v141', '15.0', 'Visual Studio 2017')
 		#
 		if pts is None:
 			self.errmsg = 'invalid platform toolset: %s' % (toolset)
@@ -260,9 +266,13 @@ class VisualStudio:
 		if version is None:
 			# bad VS version
 			return None
-		devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio '
-		devenvpath += version
-		devenvpath += '/Common7/IDE'
+		if self.vs_version <= '14.0':
+			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio '
+			devenvpath += version
+			devenvpath += '/Common7/IDE'
+		else:
+			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio/'
+			devenvpath += '2017/Community/common7/IDE'
 		if self.verbose:
 			print('  devenv path: %s' % devenvpath)
 		if not os.path.exists(Util.pathconv('%s/devenv.exe' % devenvpath)):
@@ -285,8 +295,8 @@ class VisualStudio:
 		# delete all files in outdir before build (rebuild)
 		if self.clean:
 			fop = FileOp(verbose=self.verbose, dry_run=self.dry_run)
-			status = fop.rm(self.outdir, force=True)
-			status = fop.rm(self.logfile, force=True)
+			status = fop.rm(self.outdir)
+			status = fop.rm(self.logfile)
 			if status != 0 and not self.dry_run:
 				self.errmsg = 'file deletion failed (%d)' % status
 				return status
@@ -296,7 +306,7 @@ class VisualStudio:
 		self.cmnd = cmnd	# for log output
 		cmnd += ' /Out %s' % Util.pathconv(self.logfile)
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
-		proc.exec(cmnd, addpath=Util.pathconv(self.vs_path))
+		proc.execute(cmnd, addpath=Util.pathconv(self.vs_path))
 		status = proc.wait()
 		if status != 0 and self.verbose > 1:
 			self.__show_error(self.logfile)

@@ -33,10 +33,10 @@
 #	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
 #	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
-#	Ver 1.41 2018/09/06 F.Kanehori	Bug fixed.
-#	Ver 1.42 2018/09/10 F.Kanehori	Bug fixed.
+#	Ver 1.5  2018/09/10 F.Kanehori	RevisionInfo.py implemented.
+#	Ver 1.51 2018/12/25 F.Kanehori	Bug fixed.
 # ======================================================================
-version = 1.42
+version = 1.51
 
 import sys
 import os
@@ -225,7 +225,7 @@ shell = True if Util.is_unix() else False
 
 print('Test parameters:')
 if Util.is_windows():
-	print('   toolset id:      [%s]' % toolset)
+	print('   toolset id:        [%s]' % toolset)
 print('   platform:          [%s]' % plat)
 print('   configuration:     [%s]' % conf)
 print('   test repository:   [%s]' % repository)
@@ -290,7 +290,7 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		stat = proc.wait()
 		if (stat != 0):
 			msg = 'test failed (%d)' % stat
-			Error(proc).abort(msg, exitcode=stat)
+			Error(prog).abort(msg, exitcode=stat)
 		flush()
 	#
 	os.chdir(repository)
@@ -303,7 +303,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_commit_resultlog):
 	logdir = '%s/log' % testdir
 	os.chdir(logdir)
 	#
-	cmnd = 'python ../bin/VersionControlSystem.py -G HEAD'
+	cmnd = 'python ../bin/RevisionInfo.py -S HEAD'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	rc = proc.execute(cmnd, shell=shell,
 			  stdout=commit_id, stderr=Proc.STDOUT).wait()
@@ -369,8 +369,11 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	#
 	hist_path = '%s/%s' % (logdir, history_log)
 	extract = 'result.log'
-	cmnd = 'python ../bin/VersionControlSystem.py'
-	args = '-H -f %s all' % extract
+	cmnd = 'python ../bin/RevisionInfo.py'
+	if Util.is_unix():
+		args = '-R -u -f %s all' % extract
+	else:
+		args = '-R -f %s all' % extract
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute([cmnd, args], shell=shell, stdout=hist_path).wait()
 	flush()
@@ -411,6 +414,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 		pkey = '%s/.ssh/id_rsa' % os.environ['HOME']
 		opts = '-i %s -o "StrictHostKeyChecking=no"' % pkey
 		cmnd = 'scp %s %s/* %s:%s' % (opts, fmdir, tohost, todir)
+		print('## %s' % cmnd)
 		rc = proc.execute(cmnd, shell=True).wait()
 		if rc == 0:
 			print('cp %s -> %s:%s' % (fmdir, tohost, todir))
