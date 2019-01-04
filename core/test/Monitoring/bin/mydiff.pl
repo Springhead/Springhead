@@ -11,6 +11,7 @@ BEGIN { push(@INC, 'bin'); }
 #  Version:
 #	Ver 1.0  2013/02/06 F.Kanehori	Windows 移植初版 (全面改訂)
 #	Ver 1.1  2018/07/03 F.Kanehori	コメント修正.
+#	Ver 1.11 2019/01/04 F.Kanehori	Bug fixed.
 # ==============================================================================
 #use strict;
 use warnings;
@@ -217,7 +218,7 @@ sub diff
 	    debug(1, "*1_I2* (%3d) [%d lines inserted]\n", $base2+$count2, $#{$ins_buff}+1);
 	    flush($fh, $mark_ins, $size1, $size2, $dummy_buff, $ins_buff);
 	    $need_flush = 0;
-	    $line2 = shift @buff2;
+	    last;
 	}
 	elsif (!defined($line2)) {
 	    # @buff1 だけに行がある‐削除された行
@@ -228,7 +229,7 @@ sub diff
 	    debug(1, "*1D_2* (%3d) [%d lines deleted]\n", $base1+$count1, $#{$del_buff}+1);
 	    flush($fh, $mark_del, $size1, $size2, $del_buff, $dummy_buff);
 	    $need_flush = 0;
-	    $line1 = shift @buff1;
+	    last;
 	}
 	elsif ($line1 eq $line2) {
 	    # 同じ行
@@ -248,8 +249,8 @@ sub diff
 	    @ins_buff = ();
 	}
 	else {
-	    my $line1_in_buff2 = $line1 ~~ @buff2;
-	    my $line2_in_buff1 = $line2 ~~ @buff1;
+	    my $line1_in_buff2 = is_in_buff(\@buff2, $line1);
+	    my $line2_in_buff1 = is_in_buff(\@buff1, $line2);
 	    debug(1, "line1 in buff2: [%s] [%s]\n", $line1_in_buff2 ? "Y" : "N", $line1);
 	    debug(1, "line2 in buff1: [%s] [%s]\n", $line2_in_buff1 ? "Y" : "N", $line2);
 
@@ -274,10 +275,11 @@ sub diff
 		$need_flush = 1;
 	    }
 	    else {
+		# $line1 は削除された行で、$line2 は挿入された行
 		push @del_buff, triplet($base1+$count1, $base2+$count2, $line1);
 		push @ins_buff, triplet($base1+$count1, $base2+$count2, $line2);
-		debug(1, "*1cc2* (%3d) %s [%s]\n", $base1+$count1, $mark_del, $line1);
-		debug(1, "*1cc2* (%3d) %s [%s]\n", $base2+$count2, $mark_ins, $line2);
+		debug(1, "*1d__* (%3d) %s [%s]\n", $base1+$count1, $mark_del, $line1);
+		debug(1, "*__i2* (%3d) %s [%s]\n", $base2+$count2, $mark_ins, $line2);
 		$count1++;
 		$count2++;
 		$line1 = shift @buff1;

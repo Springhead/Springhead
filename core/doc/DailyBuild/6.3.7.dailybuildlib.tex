@@ -1,5 +1,5 @@
 % 6.3.7.dailybuildlib.tex
-%	Last update: 2018/08/02 F.Kanehori
+%	Last update: 2019/01/04 F.Kanehori
 %\newpage
 \subsubsection{dailybuild\_lib.pm}
 \label{subsubsec:dailybuildlib}
@@ -112,6 +112,19 @@ Daily Buildの結果解析で共通に使用する関数のライブラリ
 	モジュール名とスレッド情報を関連付けた連想配列から、
 	指定されたスレッドのログのみを抽出する。
 	\tt{rad_log()}で返された\plHsh{modules}を処理の対象とする。
+    \end{Brief}
+\end{Method}
+\begin{Method}{\plVar{result} = is_in_buff(\plAryR{buff}, \plVar{data})}
+    \begin{Args}
+	\Item[t]{\plAryR{buff}}{データの存在を確認する文字列の配列}
+	\Item[t]{\plVar{data}}{データ文字列}
+    \end{Args}
+    \begin{Return}
+	\Item[t]{\plVar{result}}{一致する要素があったら``真''、なかったら``偽''}
+    \end{Return}
+    \begin{Brief}
+	与えられたデータ文字列が、指定された文字列配列のいずれかの要素に
+	一致するかどうかを判定する(smartmatchの代用メソッド)
     \end{Brief}
 \end{Method}
 \end{Methods}
