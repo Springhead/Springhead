@@ -10,10 +10,11 @@ package dailybuild_lib;
 #	Ver 1.0  2013/02/01 F.Kanehori	初版
 #	Ver 1.1  2013/03/11 F.Kanehori	read_log: モジュール名パターン修正
 #	Ver 1.11 2018/07/12 F.Kanehori	コメント修正
+#	Ver 1.2  2019/01/04 F.Kanehori	add: is_in_buff()
 # ==============================================================================
 use base 'Exporter';
 @EXPORT = qw(read_log associate_modules mod_ins mod_del
-	     gather_lines);
+	     gather_lines is_in_buff);
 @EXPORT_OK = qw(outside_threads_before outside_threads_after);
 use base_lib;
 
@@ -182,13 +183,13 @@ sub associate_modules
 	    $module2 = shift @old_mod2;
 	}
 	else {
-	    if ($module1 ~~ @old_mod2) {
+	    if (is_in_buff(\@old_mod2, $module1)) {
 		push @new_mod1, mod_ins();
 		push @new_mod2, $module2;
 		debug(2, "4--[%s]--[%s]--\n", mod_ins(), $module2);
 		$module2 = shift @old_mod2;
 	    }
-	    elsif ($module2 ~~ @old_mod1) {
+	    elsif (is_in_buff(\@old_mod1, $module2)) {
 		push @new_mod1, $module1;
 		push @new_mod2, mod_del();
 		debug(2, "5--[%s]--[%s]--\n", $module2, mod_del());
@@ -249,6 +250,32 @@ sub gather_lines
     object_dump(3, \@buff, "GATHER_LINES: \@buff");
 
     return \@buff;
+}
+
+# ------------------------------------------------------------------------------
+#  Subroutine:
+#	$result = is_in_buff(\@buff, $data);
+#
+#	@buff		データの存在を確認する文字列の配列
+#	$data		データ文字列
+#	$result		データが存在したら真、存在しなければ偽
+# ------------------------------------------------------------------------------
+sub is_in_buff
+{
+    my $buff = shift || assert(0, "argument missing [\$buff]");
+    my $data = shift;
+    my @buff = @{$buff};
+
+    $judge = 0;
+    $line = shift @buff;
+    while (defined($line)) {
+	if ($line eq $data) {
+	    $judge = 1;
+	    last;
+	}
+	$line = shift @buff;
+    }
+    return $judge == 1;
 }
 
 1;
