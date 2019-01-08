@@ -39,6 +39,7 @@
 #	Ver 2.0  2013/01/10 F.Kanehori  前処理を追加
 #	Ver 3.0  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
 #	Ver 4.0  2017/07/31 F.Kanehori  Python adapter の導入
+#	Ver 4.1  2019/01/08 F.Kanehori  CheckClosedSrc の導入
 #################################################################################
 
 #  Python アダプタの定義
@@ -57,6 +58,7 @@ SCILAB		= $(INCDIR)\Scilab
 SCILABSWIG	= ScilabSwig.py
 RUNSWIGFW	= RunSwigFramework.py
 SCRIPT		= do_swigall.py
+CHECKCLOSEDSRC	= CheckClosedSrc.py
 
 #  前処理で作成するファイル
 #
@@ -65,7 +67,10 @@ FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
 all:	PreWork RunSwig
 
-PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+
+ClosedSrcCtl:
+		$(PYTHON) $(CHECKCLOSEDSRC)
 
 $(SCILABSTUBHDR):	
 		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
