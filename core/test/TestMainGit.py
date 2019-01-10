@@ -34,7 +34,7 @@
 #	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
 #	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
 #	Ver 1.5  2018/09/10 F.Kanehori	RevisionInfo.py implemented.
-#	Ver 1.51 2018/12/25 F.Kanehori	Bug fixed.
+#	Ver 1.6  2019/01/10 F.Kanehori	Add closed-source control.
 # ======================================================================
 version = 1.51
 
@@ -50,6 +50,7 @@ from optparse import OptionParser
 sys.path.append('../src/RunSwig')
 from FindSprPath import *
 spr_path = FindSprPath('SpringheadTest')
+srcdir = spr_path.abspath('src')
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from Error import *
@@ -244,6 +245,16 @@ os.chdir(repository)
 if not os.path.exists('core/test/bin'):
 	msg = 'test repository "%s/core" may be empty' % repository
 	Error(prog).abort(msg)
+
+# ----------------------------------------------------------------------
+#  Create closed-source-contril file (UseClosedSrcOrNot.h).
+#	Following script must be done at RunSwig directory!
+#
+runswigdir = '%s/RunSwig' % srcdir
+os.chdir(runswigdir)
+cmnd = 'python CheckClosedSrc.py'
+rc = Proc().execute(cmnd).wait()
+os.chdir(repository)
 
 # ----------------------------------------------------------------------
 #  Remove log files.
