@@ -22,7 +22,7 @@
 #			    'inc'	<core>/include directory.
 #			    'src'	<core>/src directory.
 #			    'test'	<core>/test directory.
-#			    'pythonlib'	<src>/RunSwig directory.
+#			    'pythonlib'	<src>/RunSwig/pythonlib directory.
 #			    'buildtool'	buildtool directory.
 #	    returns:	Absolute path of selected directory.
 #	
@@ -41,6 +41,7 @@
 #	Ver 1.4  2017/11/29 F.Kanehori	Add 'pythonlib' to selector.
 #	Ver 1.41 2018/03/09 F.Kanehori	Bug fixed.
 #	Ver 1.42 2018/03/14 F.Kanehori	Change code for error message.
+#	Ver 1.43 2019/01/10 F.Kanehori	Correct comment line.
 # ----------------------------------------------------------------------
 import sys
 import os
