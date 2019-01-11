@@ -93,11 +93,12 @@ const string testCSVPath = "testsetting.csv";
 int caseCount = 0;
 
 Vec2d lastMouse;
+UTLongLong& coltimePhase1 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P1");
+UTLongLong& coltimePhase2 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P2");
+UTLongLong& coltimePhase3 = UTPerformanceMeasureIf::GetInstance("Collision")->Count("P3");
+
 
 namespace Spr {
-	extern /*int*/ UTLongLong&		coltimePhase1;
-	extern /*int*/ UTLongLong&		coltimePhase2;
-	extern /*int*/ UTLongLong&		coltimePhase3;
 	extern int		colcounter;
 	extern double	biasParam;
 }
@@ -260,11 +261,10 @@ void collisionTest() {
 	double dirLength = testHeight * 2;
 	res = 0;
 	colcounter = 0;
-	float maxSurf = mesh[0]->GetMaxSurf();
 	switch (colMethod)
 	{
 	case 0:
-		res = ContFindCommonPointGino(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
+		res = ContFindCommonPointGinoNew(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
 		break;
 	case 1:
 		res = ContFindCommonPointAccel(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
@@ -354,24 +354,24 @@ void collisionTest() {
 					if (colMethod == 0) {
 						ofs << obj[0].m_shape->GetName() << "-" << obj[1].m_shape->GetName();
 						ofs << "," << obj[0].m_shapeID << "," << obj[1].m_shapeID << ",";
-						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] / 1000 << ",";
-						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] / 1000 << ",";
+						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i]  << ",";
+						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] << ",";
 						ofs << hitCount << "," << outCount << ",";
-						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) / 1000 << ",";
-						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) / 1000 << ",";
+						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) << ",";
+						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) << ",";
 						ofs << colCountHit << "," << colCountOut;
 					}
 					else {
 						ofs << ",,";
-						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] / 1000 << ",";
-						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] / 1000 << ",";
+						for (int i = 0; i < 3; ++i) ofs << hitTimePool[i] << ",";
+						for (int i = 0; i < 3; ++i) ofs << outTimePool[i] << ",";
 						ofs << hitCount << "," << outCount << ",";
-						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) / 1000 << ",";
-						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) / 1000 << ",";
+						ofs << std::accumulate(hitTimePool, hitTimePool + 3, 0.0) << ",";
+						ofs << std::accumulate(outTimePool, outTimePool + 3, 0.0) << ",";
 						ofs << colCountHit << "," << colCountOut << std::endl;
 					}
 					automode = false;
-					if (superAuto && caseCount < testShapes.size()) { //形状切り替え，終了判定
+					if (superAuto && caseCount+2 < testShapes.size()) { //形状切り替え，終了判定
 						if (colMethod == 2) {//次の形状へ
 							caseCount += 2;
 							obj[0].SetShape(stage.GetShape((ShapeID)testShapes[caseCount]), (ShapeID)testShapes[caseCount]);
@@ -500,6 +500,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 	if (key == 'n') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_DODECA), ShapeID::SHAPE_DODECA);
 	if (key == 'm') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGCAPSULE), ShapeID::SHAPE_LONGCAPSULE);
 	if (key == ',') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_LONGPOLYSPHERE), ShapeID::SHAPE_LONGPOLYSPHERE);
+	if (key == '.') obj[selectObj].SetShape(stage.GetShape(ShapeID::SHAPE_ELLIPSOID), ShapeID::SHAPE_ELLIPSOID);
 	if (key == 'r') {
 		static int count = 0;
 		if (count == 0) {
@@ -616,6 +617,9 @@ void dstrSolid(const std::string& solidName) {
 }
 
 
+namespace Spr {
+	void setGjkThreshold(double th, double e);
+}
 
 /**
  brief		メイン関数
@@ -635,6 +639,8 @@ int __cdecl main(int argc, char* argv[]){
 
 	obj[0].Init(scene->CreateSolid(desc), stage.GetShape(idBlock), idBlock);
 	obj[1].Init(scene->CreateSolid(desc), stage.GetShape(idFloor), idFloor);
+	
+	setGjkThreshold(1e-6, 1e-6);
 
 	
 	//	形状の作成
