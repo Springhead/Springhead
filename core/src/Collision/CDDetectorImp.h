@@ -90,7 +90,7 @@ void FASTCALL CalcEPA(Vec3d &v,const CDConvex* a,const CDConvex* b, const Posed 
 	@param dir   ２物体の相対速度の方向ベクトル。World系。単位ベクトルでなければならない。
 	@param start 区間の始点：a2w.pos + dir*start に aがあり、 b2wの点にbがある状態から、
 	@param end   区間の終点：a2w.pos + dir*end に aがあり、b2wの点にbがある状態までを判定。
-	@param normal 接触の法線（出力）
+	@param normal 接触の法線(物体Aの法線)（出力）
 	@param pa	物体 a 上の接触点。物体a系。（出力）
 	@param pb	物体 b 上の接触点。物体b系。（出力）
 	@param dist 衝突位置：a2w.pos + dir*dist に aがあり、 b2w.pos にbがあるときに衝突が起こった。
@@ -109,6 +109,14 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
+//Ginoのアルゴリズム(GJK-Raycast 新版) //2019/1追加　長谷川
+int FASTCALL ContFindCommonPointGinoNew(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+//Ginoのアルゴリズム(GJK-Raycast 新版 detを使わない高精度版) //2019/1追加　長谷川
+int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
 ///	デバッグ用のツール。ファイルに引数を保存する。
 void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
