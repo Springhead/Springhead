@@ -52,11 +52,11 @@ int SPR_CDECL main(int argc, char* argv[]) {
 	//	形状の作成
 	CDSphereDesc sda, sdb;
 	CDBoxDesc bda;
-	sda.radius = 0.1f;
+	sda.radius = 0.1;
 	bda.boxsize = Vec3d(1, 1, 1) * sda.radius * 2;
-	sdb.radius = 0.001f;
+	sdb.radius = 0.001;
 
-//#define BOX
+#define BOX
 
 
 #ifdef BOX
@@ -72,7 +72,7 @@ int SPR_CDECL main(int argc, char* argv[]) {
 #endif
 	std::ostringstream ostrPR;
 	std::ostringstream ostrGJK;
-	for (double thres = 4; thres <= 10; thres+= 1) {
+	for (double thres = 4; thres <= 15; thres+= 1) {
 		setGjkThreshold(pow(10, -thres), pow(10, -12));
 		double distESq1 = 0, normalESq1 = 0;
 		double distESq2 = 0, normalESq2 = 0;
@@ -82,7 +82,7 @@ int SPR_CDECL main(int argc, char* argv[]) {
 		int count = 0;
 		Posed poseA2 = poseA;
 		poseA2.Pos() += Vec3d(-0.01, 0, 0);
-		for (double theta = M_PI*(-70.0 / 180.0); theta < M_PI*(+89.5 / 180.0); theta += M_PI / 180) {
+		for (double theta = M_PI*(-89.0 / 180.0); theta < M_PI*(+89.5 / 180.0); theta += M_PI / 180) {
 			//if (abs(theta - M_PI*(-82.0 / 180.0)) > 0.001) continue;
 			Vec3d dir = Vec3d(cos(theta), sin(theta), 0);	//	Aが動く向き
 			//poseA.Pos() -= dir;
