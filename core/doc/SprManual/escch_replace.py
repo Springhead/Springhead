@@ -20,21 +20,12 @@
 #	    'enc'では <元の文字列> → <lwarpmkに処理させる文字列>
 #	    'dec'では <lwarpmkに処理させる文字列> → <最終表示文字列>
 #	の処理を行なう。
-#	'ren'ではファイル名に対して'dec'と同様の処理を行なう。
 #
-#  TODO:
-#	エスケープ文字が'\#'の場合：
-#	    一見うまく変換できているように見えるがリンクがたどれない。
-#	    これは、'#'が<a>タグhrefのアンカーを示す文字だから。
-#	    現在は置換え文字(escch.replaceの第3項)を漢字の＃にして回避
-#	    ちゃんとやるなら<a>タグのhref="..."の中は変換しなければよい
-#	    のだが、それには真面目にパーズしないと駄目みたい。
-#	    漢字の＃でも見た目はほとんど変わらないからこれで良い？
-#	    
 #  VERSION:
-#	Ver 1.0  2018/11/27 F.Kanehori	First release version.
+#	Ver 1.0  2018/11/27 F.Kanehori	初版
+#	Ver 1.1  2019/01/17 F.Kanehori	#include <...> の html sanitize
 # ======================================================================
-version = '1.0'
+version = '1.1'
 
 import sys
 import os
@@ -108,6 +99,10 @@ def process(func, ix_fm, ix_to):
 	#  定義ファイルを読む
 	defs = read_defs(def_file)
 
+	#  html sanitize 判定パターン
+	#	#include <...>
+	patt_inc = r'#include\s+<(.+)>(.*)'
+
 	#  各ファイルを走査して定義された文字列を置き換える
 	#
 	replaces = []
@@ -127,6 +122,15 @@ def process(func, ix_fm, ix_to):
 						print('    %s -> %s' % (fm, to))
 					line = re.sub(fm, to, line)
 					replaced = True
+			#
+			m = re.search(patt_inc, line)
+			if m:
+				line = '#include &lt;%s&gt;' % m.group(1)
+				if m.group(2):
+					line += m.group(2)
+				line += '\n'
+				replaced = True
+			#
 			lines.append(re.sub(fm, to, line))
 
 		if replaced:
