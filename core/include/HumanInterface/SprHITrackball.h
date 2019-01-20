@@ -153,6 +153,8 @@ struct HITrackballIf : HIPoseIf{
 	void			SetKeyMouse(DVKeyMouseIf* dv);
 	/// コールバックを登録する
 	void			SetCallback(HITrackballCallback* callback);
+	///	Trackballをシーンのカメラに反映させる。
+	void	UpdateView();
 };
 
 }	//	namespace Spr

@@ -1842,6 +1842,7 @@ int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
 }
 
 //Ginoの手法2（GJKRaycast改良版＝非繰り返し版）
+#if 0
 int FASTCALL ContFindCommonPointGinoNew(const CDConvex* a, const CDConvex* b,
 	const Posed& a2wOrg, const Posed& b2wOrg, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist)
@@ -1877,7 +1878,8 @@ int FASTCALL ContFindCommonPointGinoNew(const CDConvex* a, const CDConvex* b,
 		normal = v / dist;
 		double supportDist = w * normal;
 		if (supportDist > 0) {	// 原点を進める
-			double dirDist = supportDist / (dir*normal) - threshold / 2;
+			double dirNormal = dir*normal;
+			double dirDist = supportDist / dirNormal - threshold / 2;
 			//DSTR << "sd:" << supportDist << " dd:" << dirDist << " dir*v:" << dir * v << " dist:" << dist << std::endl;
 			shift += dirDist;
 			if (shift > (end - start)) {
@@ -1924,20 +1926,7 @@ int FASTCALL ContFindCommonPointGinoNew(const CDConvex* a, const CDConvex* b,
 //		" pd:" << (b2l.Pos()-b2wOrg.Pos()).norm() << std::endl;
 	return ret;
 }
-
-//	３点を補間して、原点の垂線の足を表す
-/*
-int TriDivRatio(int id0, int id1, int id2, Vec3d& ratio) {
-	Vec3d n = (p_q[id2] - p_q[id0]) ^ (p_q[id1] - p_q[id0]);
-	Vec3d p[3] = {
-		p_q[id0] - (p_q[id0] * n) * n,
-		p_q[id1] - (p_q[id1] * n) * n,
-		p_q[id2] - (p_q[id2] * n) * n,
-	}
-	//	p[0]*x + p[1]*y + p[2]*z = 0, x+y+z=1
-}
-*/
-
+#endif
 
 const int vertexIds1[16] = {
 	-1, 0, 1, -1,  2, -1, -1, -1,   3, -1, -1, -1,  -1, -1, -1, -1
@@ -1973,7 +1962,8 @@ int CalcTriAreas(int bits, double* areas) {
 			n = -n;
 			sign = -1;
 		}
-		if (n*p_q[vids[0]] > 1e-4) {	//	内部
+		double forthDist = n*p_q[vids[0]];
+		if (forthDist > -1e-8) {	//	内部
 			return 0;
 		}
 	}
@@ -2016,6 +2006,11 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 	Vec3d v = dir;
 	dist = v.norm();
 	int stopCount = 0;
+	int weightBit;
+	double lineWeight[2];
+	double* triArea;
+	double areas[4][4];
+	triArea = areas[0];
 	while (1) {
 		usedBits = allUsedBits;
 		lastId = VacantIdFromBits(usedBits);
@@ -2030,7 +2025,11 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 		normal = v / dist;
 		double supportDist = p_q[lastId] * normal;
 		if (supportDist > 0) {	// 原点を進める
-			double dirDist = supportDist / (dir*normal);
+			double dirNormal = dir*normal;
+			if (dirNormal < 0) {
+				return 0;
+			}
+			double dirDist = supportDist / dirNormal * (1.0 - 1e-4);
 			shift += dirDist;
 			if (shift > (end - start)) {
 				return -1;
@@ -2055,8 +2054,6 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 		int theLine;	//	原点が上にのる辺
 		int thePoint;	//	原点が上にのる頂点
 		int triNPlus;
-		double* triArea;
-		double areas[4][4];
 		if (nVtx == 4) {
 			//	４点の場合、最後の１点と他のどの２点で作った三角形が一番近くなるか調べる。
 			//	外向きの法線があれば、
@@ -2076,6 +2073,10 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 			if (nPlus[2] > nPlusMax) { nPlusMax = nPlus[2]; }
 			nPlus[3] = CalcTriAreas(usedBits, areas[3]);
 			if (nPlus[3] > nPlusMax) { nPlusMax = nPlus[3]; }
+			if (nPlus[0] == 0 || nPlus[1] == 0 || nPlus[2] == 0 || nPlus[3] == 0) {
+				//	すでに原点がSimplexの内側→近づきすぎ→すぐ抜ける
+				goto HitExit;
+			}
 			if (nPlusMax == 3) {	//	三角形の上に原点がある
 				int i;
 				for (i = 0; i < 4; ++i) {
@@ -2136,6 +2137,7 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 			TriCase:;
 				const int* vids = vertexIds3[theTriangle];
 				v = triArea[0] * p_q[vids[0]] + triArea[1] * p_q[vids[1]] + triArea[2] * p_q[vids[2]];
+				weightBit = theTriangle;
 			}else if (triNPlus == 2){	//辺上
 				const int* vids = vertexIds3[theTriangle];
 				int ids[2];
@@ -2180,7 +2182,11 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 				goto PointCase;
 			}
 			else if (h1 > 0) {
-				v = (p_q[ids[0]] * h1 + p_q[ids[1]] * (-h0)) / (h1 - h0);
+				lineWeight[0] = h1 / (h1 - h0);
+				lineWeight[1] = -h0 / (h1 - h0);
+				v = p_q[ids[0]] * lineWeight[0] + p_q[ids[1]] * lineWeight[1];
+				//v = (p_q[ids[0]] * h1 + p_q[ids[1]] * (-h0)) / (h1 - h0);
+				weightBit = theLine;
 			}
 			else {
 				thePoint = 1 << ids[1];
@@ -2192,6 +2198,7 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 			PointCase:
 			int id = vertexIds1[thePoint];
 			v = p_q[id];
+			weightBit = thePoint;
 		}
 		dist = v.norm();
 		if (dist < threshold) break;
@@ -2201,14 +2208,36 @@ int FASTCALL ContFindCommonPointGinoPrec(const CDConvex* a, const CDConvex* b,
 			break;
 		}
 	}
-	if (dist > 1e-10) {
+	if (dist > 1e-8) {
 		normal = v / dist;
 	}
+	HitExit:
 	CalcPoints(usedBits, pa, pb);
-	qpTimerForCollision.Accumulate(coltimePhase1);
+	
 	double d = dist;
 	dist = start + shift;
 	normal = -normal;
+
+	Vec3d pl, ql;
+	int nVtx = numVertices[weightBit];
+	if (nVtx == 3) {
+		const int* ids = vertexIds3[weightBit];
+		pl = p[ids[0]] * triArea[0] + p[ids[1]] * triArea[1] + p[ids[2]] * triArea[2];
+		ql = q[ids[0]] * triArea[0] + q[ids[1]] * triArea[1] + q[ids[2]] * triArea[2];
+	}
+	else if (nVtx == 2) {
+		const int* ids = vertexIds2[weightBit];
+		pl = p[ids[0]] * lineWeight[0] + p[ids[1]] * lineWeight[1];
+		ql = q[ids[0]] * lineWeight[0] + q[ids[1]] * lineWeight[1];
+	}
+	else {
+		int id = vertexIds1[weightBit];
+		pl = p[id];
+		ql = q[id];
+	}
+	pa = a2l * pl;
+	pb = b2l * ql;
+	qpTimerForCollision.Accumulate(coltimePhase1);
 	//	DSTR << "GRDist:" << dist << " start:"<<start << " shift:"<< shift << " d:" << d << 
 	//		" pd:" << (b2l.Pos()-b2wOrg.Pos()).norm() << std::endl;
 	return ret;
