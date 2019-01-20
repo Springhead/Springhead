@@ -275,6 +275,9 @@ FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	render->GetDevice()->Init();
 	win->SetRender(render);
 
+	//	トラックボールの視線に、シーンのカメラを移動
+	if (desc.useKeyMouse && desc.useTrackball)
+		win->GetTrackball()->UpdateView();
 	return win;
 }
 
