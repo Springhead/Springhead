@@ -16,6 +16,7 @@
 /**	\addtogroup gpPhysics	*/
 //@{
 namespace Spr{;
+class PHOpHapticController;
 
 ///	剛体のステート
 struct PHOpObjState{
@@ -122,6 +123,7 @@ struct PHOpObjIf : public SceneObjectIf {
 
 	//隠したほうがいい関数たち
 	void positionPredict();
+	void positionPredictFriction(PHOpHapticController* myHc);
 	void groupStep();
 	void integrationStep();
 	void ReducedPositionProject();

@@ -2347,7 +2347,7 @@ Mesh slimeBunnyMesh2{
    0.130000;0.130000;0.130000;;
    0.306824;0.306824;0.306824;;
    TextureFilename {
-    "Tex\\slime.jpg";
+    "Tex\slime.jpg";
    }
   }
  }
