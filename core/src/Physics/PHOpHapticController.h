@@ -14,6 +14,8 @@
 
 namespace Spr {
 	;
+	class PHOpObj;
+
 	class PHOpHapticController: public SceneObject, public PHOpHapticControllerDesc
 	{
 	public:

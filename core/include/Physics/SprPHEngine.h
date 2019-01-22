@@ -213,18 +213,32 @@ public:
 
 struct PHFemMeshIf;
 struct PHFemMeshNewIf;
+/**
+	For historical reason, there are two kinds of FEM mesh, FemMesh and FemMeshNew.
+	Now FemMeshNew is mainly used and FemMesh will be removed in the future.	*/
 struct PHFemEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHFemEngine);
-	void SetTimeStep(double dt);
-	double GetTimeStep();
-	int NMesh();
-	PHFemMeshIf* GetMesh(int i);
+	void SetTimeStep(double dt);				///<	FEM engine has it's time step independently.
+	double GetTimeStep();						///<	FEM engine has it's time step independently.
+	void SetVibrationTransfer(bool bEnable);	///< Enable vibration tranfer between fem meshes for haptic vibration
+	void SetThermalTransfer(bool bEnable);		///< Enable thermal transfer between feme meshes for thermal simulation
+
 	int NMeshNew();
 	PHFemMeshNewIf* GetMeshNew(int i);
-	void FEMSolidMatchRefresh();  //Refreshing the solid->FEMindex values
-	void InitContacts();	 //Used to match the FEM objects with their solids counterparts
+
+	bool AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
+	bool RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
+	void ThermalTransfer();
+
+	//	Old contact treatment codes for vibration simulation. Will be replaced by new functions.
+	void FEMSolidMatchRefresh();				//Refreshing the solid->FEMindex values
+	void InitContacts();						 //Used to match the FEM objects with their solids counterparts
 	void ClearContactVectors();
+
+	//	For old mesh
+	int NMesh();
+	PHFemMeshIf* GetMesh(int i);
 };
 struct PHOpEngineIf : PHEngineIf{
 	SPR_IFDEF(PHOpEngine);
@@ -245,6 +259,8 @@ public:
 	bool IsUpdateNormal(int obji);
 	void SetUseHaptic(bool hapticUsage);
 	bool GetUseHaptic();
+	void SetUseFriction(bool frictionUsage);
+	bool GetUseFriction();
 
 	PHOpObjIf* GetOpObjIf(int obji);
 	int GetOpObjNum();
