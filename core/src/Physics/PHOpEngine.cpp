@@ -23,6 +23,7 @@ namespace Spr{
 
 		logForce = false;
 		useHaptic = false;
+		useFriction = false;
 		useAnime = false;
 	}
 	void PHOpEngine::InitialNoMeshHapticRenderer()
@@ -48,6 +49,14 @@ namespace Spr{
 	bool PHOpEngine::GetUseHaptic()
 	{
 		return useHaptic;
+	}
+	void PHOpEngine::SetUseFriction(bool frictionUsage)
+	{
+		useFriction = frictionUsage;
+	}
+	bool PHOpEngine::GetUseFriction()
+	{
+		return useFriction;
 	}
 
 	PHOpObjDesc* PHOpEngine::GetOpObj(int i)
@@ -167,7 +176,8 @@ namespace Spr{
 				continue;
 
 			//predict step
-			opObjs[obji]->positionPredict();
+			if (useFriction) opObjs[obji]->positionPredictFriction(myHc);
+			else opObjs[obji]->positionPredict();
 		}
 
 		//haptic sych
