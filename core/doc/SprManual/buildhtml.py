@@ -12,8 +12,9 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/11/29 F.Kanehori	First version.
+#	Ver 1.1  2019/01/24 F.Kanehori	Add: call html_escape()
 # ======================================================================
-version = 1.0
+version = 1.1
 
 import sys
 import os
@@ -24,7 +25,7 @@ from optparse import OptionParser
 # ----------------------------------------------------------------------
 #  Constants
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+prog = sys.argv[0].replace(os.sep, '/').split('/')[-1].split('.')[0]
 web_host = 'haselab.net'
 web_user = 'demo'
 PIPE = subprocess.PIPE
@@ -172,6 +173,7 @@ def cp(src, dst):
 		Print('cp: %s %s' % (src, dst))
 		return 0
 
+	rc = 0
 	if os.path.isdir(src):
 		rc = __cp(src, dst)
 	else:	
@@ -287,9 +289,12 @@ parser.add_option('-v', '--verbose', dest='verbose',
 parser.add_option('-C', '--convert-only', dest='convert_only',
 			action='store_true', default=False,
 			help='convert files only')
-parser.add_option('-E', '--replace-tex_es', dest='replace_tex_es',
+parser.add_option('-E', '--replace-tex_esc', dest='replace_tex_esc',
 			action='store_true', default=False,
 			help='replace and revive tex escape sequence')
+parser.add_option('-H', '--replace-html_esc', dest='replace_html_esc',
+			action='store_true', default=False,
+			help='replace html escape sequence')
 parser.add_option('-K', '--insert-kludge', dest='insert_kludge',
 			action='store_true', default=False,
 			help='insert kludge code')
@@ -460,7 +465,7 @@ fileconv(ifname.replace('/', os.sep), patterns, ofname)
 #	いったん別の文字列に置き換えておく（htmlができてから表示を調整する）
 #	※ 対応表は "escch.replace" で定義する
 #
-if options.replace_tex_es:
+if options.replace_tex_esc:
 	cmnd = 'python ../escch_replace.py -v -d ../escch.replace enc *.tex'
 	if verbose:
 		print('#### %s' % cmnd)
@@ -486,7 +491,24 @@ if options.replace_csarg:
 		abort(msg)
 	sys.stdout.flush()
 
-# (2.3) Insert kludge.
+# (2.3) html_escape.
+#	html特殊文字('&','<','>')はhtmlソース上ではエスケープしないといけないが、
+#	Lwarpはこの点に関して不十分である。ここでエスケープ処理を施しておく。
+#	将来Lwarpがhtmlエスケープを正しく処理するようになったなら、この部分の
+#	処理は不要となる（-H オプションをやめること）
+#
+if options.replace_html_esc:
+	opts = ' -v' * verbose
+	cmnd = 'python ../html_escape.py %s *.tex' % opts
+	if verbose:
+		print('#### %s' % cmnd)
+	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
+	if rc != 0:
+		msg = '%s: failed' % cmnd
+		abort(msg)
+	sys.stdout.flush()
+
+# (2.4) Insert kludge.
 #	lwarpmk htmlを実行するとANKから漢字に変化する箇所でエラーを起こす
 #	    pdfTeX error: pdflatex,exe (file cyberb30): Font cyberb30 at 420 not found
 #	おまじないとして、ダミーのvruleを挿入しておく
@@ -518,6 +540,7 @@ cmnds = [ '%s html' % lwarpmk,
 for cmnd in cmnds:
 	if verbose:
 		print('#### %s' % cmnd)
+		sys.stdout.flush()
 	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
 		msg = '%s: failed' % cmnd
@@ -537,7 +560,7 @@ if options.replace_csarg:
 
 # (3.2)	(2.1)で変更したエスケープ文字情報を元に戻す（html本体）
 #
-if options.replace_tex_es:
+if options.replace_tex_esc:
 	cmnd = 'python ../escch_replace.py -v -d ../escch.replace dec *.html'
 	if verbose:
 		print('#### %s' % cmnd)
