@@ -2,18 +2,20 @@
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  SYNOPSIS:
-#	insert_kludge file
-#	    file:	Input file name.
+#	insert_kludge
 #
 #  DESCRIPTION:
 #	Insert 'kludge' before every location where character code
 #	changes from 'ascii' to another multi-byte one.
+#	File names to be processed is read from '\input{...}' lines
+#	in the 'chapters.tex' file.
 #
 #  VERSION:
-#	Ver 1.1  2018/11/20 F.Kanehori	Add exclusion code for \url{...}.
 #	Ver 1.0  2018/10/30 F.Kanehori	First release version.
+#	Ver 1.1  2018/11/20 F.Kanehori	Add exclusion code for \url{...}.
+#	Ver 1.11 2019/01/22 F.Kanehori	Correct comment line.
 # ======================================================================
-version = '1.1'
+version = '1.11'
 
 import sys
 import os
