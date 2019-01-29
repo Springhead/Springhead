@@ -35,8 +35,9 @@
 #	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
 #	Ver 1.5  2018/09/10 F.Kanehori	RevisionInfo.py implemented.
 #	Ver 1.6  2019/01/10 F.Kanehori	Add closed-source control.
+#	Ver 1.61 2019/01/29 F.Kanehori	Bug fixed (for unix).
 # ======================================================================
-version = 1.51
+version = 1.61
 
 import sys
 import os
@@ -247,13 +248,13 @@ if not os.path.exists('core/test/bin'):
 	Error(prog).abort(msg)
 
 # ----------------------------------------------------------------------
-#  Create closed-source-contril file (UseClosedSrcOrNot.h).
+#  Create closed-source-control file (UseClosedSrcOrNot.h).
 #	Following script must be done at RunSwig directory!
 #
 runswigdir = '%s/RunSwig' % srcdir
 os.chdir(runswigdir)
 cmnd = 'python CheckClosedSrc.py'
-rc = Proc().execute(cmnd).wait()
+rc = Proc().execute(cmnd, shell=shell).wait()
 os.chdir(repository)
 
 # ----------------------------------------------------------------------
