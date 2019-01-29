@@ -27,7 +27,7 @@
 #		特殊文字は変換されずにそのまま出力される。
 #
 #  VERSION:
-#	Ver 1.0  2019/01/24 F.Kanehori	First release version.
+#	Ver 1.0  2019/01/29 F.Kanehori	First release version.
 # ======================================================================
 version = '1.0'
 
@@ -133,79 +133,80 @@ def split(line, ch):
 def process_oneline(mode, line):
 	global end_environ
 	indent.inc(2)
-	__verbose('IN:  [%s]' % line.strip())
+	__verbose('in:  [%s]' % line.strip(), 2)
 	__verbose('%s: [%s]' % (mode_str(mode), line.strip()), 2)
-	__verbose('--- end env [%s]' % end_environ, 2)
+	if options.verbose:
+		line_org = line
 	#
 	if mode is MD_MATH or mode is MD_DMATH:
 		__verbose('process: MATH', 2)
 		separator = BGN_MATH if mode is MD_MATH else BGN_DMATH
 		segments = split(line, separator)
 		if len(segments) == 1:
-			__verbose('process: MATH: still in math/dmath mode', 2)
-			__verbose('nothing to do', 2)
+			__verbose('process: MATH: still in math/dmath mode', 3)
+			__verbose('nothing to do', 3)
 			pass
 		else:
-			__verbose('process: MATH: end_math FOUND', 2)
-			__verbose('split: [%s, TEXT]' % mode_str(mode), 2)
+			__verbose('process: MATH: end_math FOUND', 3)
+			__verbose('split: [%s, TEXT]' % mode_str(mode), 3)
 			mode, text = process_oneline(MD_TEXT, segments[1])
 			line = separator.join([segments[0], text])
 
 	elif mode is MD_TABLE:
 		__verbose('process: TABLE', 2)
 		if line.find(END_TABLE) >= 0:
-			__verbose('process: TABLE: end_table FOUND', 2)
-			__verbose('split: [TABLE, TEXT]', 2)
+			__verbose('process: TABLE: end_table FOUND', 3)
+			__verbose('split: [TABLE, TEXT]', 3)
 			segments = split(line, END_TABLE)
 			mode1, text1 = process_oneline(MD_TABLE, segments[0])
 			mode2, text2 = process_oneline(MD_TEXT, segments[1])
 			line = END_TABLE.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 		else:
-			__verbose('process: TABLE: still in table mode', 2)
+			__verbose('process: TABLE: still in table mode', 3)
 			# convert '<'( and '>'.  ** do not convert '&'!
 			if has_one_of('<>', line):
-				__verbose('convert to tex macro', 2)
+				__verbose('convert to tex macro', 3)
 			line = line.replace('<', r'\textless ')
 			line = line.replace('>', r'\textgreater ')
 		# end if
 
 	elif mode is MD_VERBATIM:
-		__verbose('process: VERBATIM')
+		__verbose('process: VERBATIM', 2)
 		if end_environ is None:
 			print('%s: Panic: no environment was detected so far' % prog)
 			sys.exit(1)
 		if line.find(end_environ) >= 0:
 			# segments = [ MD_VARBATIM, MD_TEXT ]
-			__verbose('process: VERBATIM: end_environ FOUND', 2)
+			__verbose('process: VERBATIM: end_environ FOUND', 3)
 			__verbose('split: [VERBATIM, TEXT]', 2)
 			segments = split(line, end_environ)
 			mode1, text1 = process_oneline(MD_VERBATIM, segments[0])
 			mode2, text2 = process_oneline(MD_TEXT, segments[1])
 			line = end_environ.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 			end_environ = None
 		else:
-			__verbose('process: VERBATIM: still in verbatim mode', 2)
+			__verbose('process: VERBATIM: still in verbatim mode', 3)
 			if re.search(r'#include\s*<.+.', line):
 				# do not convert '#include <...>'.
 				segments = split(line, '>')
 				if len(segments) == 1:
-					__verbose('has #incliude <...>', 2)
+					__verbose('has #incliude <...>', 3)
 					# do not have any comment.
 					pass
 				else:
-					__verbose('has #incliude <...> // comment', 2)
+					__verbose('has #incliude <...> // comment', 3)
 					mode, text = process_oneline(MD_TEXT, segments[1])
 					line = '>'.join([segments[0], text])
 			else:
 				# convert '&', '<'( and '>' ('&' first).
 				if has_one_of('&<>', line):
-					__verbose('convert to html escape', 2)
+					__verbose('convert to html escape', 3)
 				line = line.replace('&lt;', '==ESCAPEsLT==')
 				line = line.replace('&gt;', '==ESCAPEsGT==')
 				line = line.replace('&', '&amp;')
@@ -218,62 +219,62 @@ def process_oneline(mode, line):
 		# mode is MD_TEXT
 		__verbose('process: TEXT', 2)
 		if line.find(BGN_MATH) >= 0:
-			__verbose('process: TEXT: bgn_math FOUND', 2)
-			__verbose('split: [TEXT, MATH]', 2)
+			__verbose('process: TEXT: bgn_math FOUND', 3)
+			__verbose('split: [TEXT, MATH]', 3)
 			segments = split(line, BGN_MATH)
 			mode1, text1 = process_oneline(MD_TEXT, segments[0])
 			mode2, text2 = process_oneline(MD_MATH, segments[1])
 			line = BGN_MATH.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 		elif line.find(BGN_DMATH) >= 0:
-			__verbose('process: TEXT: bgn_dmath FOUND', 2)
-			__verbose('split: [TEXT, DMATH]', 2)
+			__verbose('process: TEXT: bgn_dmath FOUND', 3)
+			__verbose('split: [TEXT, DMATH]', 3)
 			segments = split(line, BGN_DMATH)
 			mode1, text1 = process_oneline(MD_TEXT, segments[0])
 			mode2, text2 = process_oneline(MD_DMATH, segments[1])
 			line = BGN_DMATH.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 		elif line.find(BGN_TABLE) >= 0:
-			__verbose('process: TEXT: bgn_table FOUND', 2)
-			__verbose('split: [TEXT, TABLE]', 2)
+			__verbose('process: TEXT: bgn_table FOUND', 3)
+			__verbose('split: [TEXT, TABLE]', 3)
 			segments = split(line, BGN_TABLE)
 			mode1, text1 = process_oneline(MD_TEXT, segments[0])
 			mode2, text2 = process_oneline(MD_TABLE, segments[1])
 			line = BGN_TABLE.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 		elif line.find(BGN_VERBATIM) >= 0:
-			__verbose('process: TEXT: bgn_verbatim FOUND', 2)
-			__verbose('split: [TEXT, VERBATIM]', 2)
+			__verbose('process: TEXT: bgn_verbatim FOUND', 3)
+			__verbose('split: [TEXT, VERBATIM]', 3)
 			segments = split(line, BGN_VERBATIM)
 			end_environ = END_VERBATIM
 			mode1, text1 = process_oneline(MD_TEXT, segments[0])
 			mode2, text2 = process_oneline(MD_VERBATIM, segments[1])
 			line = BGN_VERBATIM.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 		elif line.find(BGN_SRCCODE) >= 0:
-			__verbose('process: TEXT: bgn_srccode FOUND', 2)
-			__verbose('split: [TEXT, SRCCODE]', 2)
+			__verbose('process: TEXT: bgn_srccode FOUND', 3)
+			__verbose('split: [TEXT, SRCCODE]', 3)
 			segments = split(line, BGN_SRCCODE)
 			end_environ = END_SRCCODE
 			mode1, text1 = process_oneline(MD_TEXT, segments[0])
 			mode2, text2 = process_oneline(MD_VERBATIM, segments[1])
 			line = BGN_SRCCODE.join([text1, text2])
 			__verbose('returned: mode1 %s, mode2 %s' \
-					% (mode_str(mode1), mode_str(mode2)), 2)
+					% (mode_str(mode1), mode_str(mode2)), 3)
 			mode = mode2
 		else:
-			__verbose('process: TEXT: still in text mode', 2)
+			__verbose('process: TEXT: still in text mode', 3)
 			# convert '&', '<'( and '>' ('&' first).
 			if has_one_of('&<>', line):
-				__verbose('convert to tex macro', 2)
+				__verbose('convert to tex macro', 3)
 			line = line.replace(r'\&', '=ESCAPEx26=')
 			line = line.replace('&', r'\&')
 			line = line.replace('=ESCAPEx26=', r'\&')
@@ -282,7 +283,10 @@ def process_oneline(mode, line):
 		# end if
 	# end if
 
-	__verbose('OUT: [%s]' % line.strip())
+	__verbose('out: [%s]' % line.strip(), 2)
+	if options.verbose and line.strip() != line_org.strip():
+		__verbose(' IN: [%s]' % line_org.strip())
+		__verbose('OUT: [%s]' % line.strip())
 	indent.dec(2)
 	return mode, line
 

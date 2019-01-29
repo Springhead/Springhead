@@ -26,7 +26,8 @@ if "%1" equ "pdf" (
     if "!OPT!" equ "-S" (cd ..)
 
     echo test start at "%CD%"
-    python buildhtml.py -v -E -H -K -R -c -t !OPT! %ARGS% main_html.tex
+    rem python buildhtml.py -v -E -H -K -R -c -t !OPT! %ARGS% main_html.tex
+    python buildhtml.py -E -H -K -R -c -t !OPT! %ARGS% main_html.tex
 
     if "!OPT!" equ "-S" (cd tmp)
     echo test end at "%CD%"

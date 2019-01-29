@@ -12,7 +12,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/11/29 F.Kanehori	First version.
-#	Ver 1.1  2019/01/24 F.Kanehori	Add: call html_escape()
+#	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
 # ======================================================================
 version = 1.1
 
@@ -519,6 +519,7 @@ if options.replace_html_esc:
 if options.insert_kludge:
 	cmnd = 'python insert_kludge.py'	# -U
 	if verbose:
+		cmnd += ' -v'
 		print('#### %s' % cmnd)
 	rc = wait(execute(cmnd, stdout=sys.stdout, stderr=sys.stderr, shell=True))
 	if rc != 0:
