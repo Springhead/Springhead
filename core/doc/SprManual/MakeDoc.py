@@ -20,8 +20,9 @@
 #  VERSION:
 #	Ver 1.0  2018/02/21 F.Kanehori	First version.
 #	Ver 1.1  2018/12/06 F.Kanehori	Now both pdf and html version available.
+#	Ver 1.2  2019/01/31 F.Kanehori	Texlive 2014 is obsoleted.
 # =============================================================================
-version = 1.1
+version = 1.2
 
 import sys
 import os
@@ -52,9 +53,11 @@ make_html = 'buildhtml.py'
 
 # ----------------------------------------------------------------------
 #  Paths
+#	Now we do not need to use texlive 2014 (2019/01/31).
 #
-texlive2014_path = 'C:/texlive/2014/bin/win32'
+#texlive2014_path = 'C:/texlive/2014/bin/win32'
 texlive2018_path = 'C:/texlive/2018/bin/win32'
+addpath = None
 
 # ----------------------------------------------------------------------
 #  Options
@@ -93,7 +96,7 @@ curr_date = Util.date(format='%Y-%m%d')
 curr_time = Util.time(format='%H%M')
 opts = 'DATE=%s TIME=%s' % (curr_date, curr_time)
 cmnd = '%s %s' % (make_pdf, opts)
-addpath = texlive2014_path
+#addpath = texlive2014_path
 
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
@@ -101,9 +104,10 @@ if stat == 0:
 	print('%s: SprManual.pdf generated.' % prog)
 
 # (2) create html version.
-opts = '-v -E -K -R -c'
+#opts = '-v -E -K -R -c'
+opts = '-E -H -K -R -c'
 cmnd = '%s %s %s main_html.tex' % (python, make_html, opts)
-addpath = texlive2018_path
+#addpath = texlive2018_path
 
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
