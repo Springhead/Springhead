@@ -8,11 +8,11 @@ if "%1" equ "" (
 )
 set ARGS=%2 %3 %4 %5 %6 %7 %8 %9
 
-set ADDPATH=.
-if "%1" equ "pdf"  (set ADDPATH=F:\C-Drive-Save\texlive\2014\bin\win32)
+rem set ADDPATH=.
+rem if "%1" equ "pdf"  (set ADDPATH=F:\C-Drive-Save\texlive\2014\bin\win32)
 rem if "%1" equ "pdf"  (set ADDPATH=C:\texlive\2014\bin\win32)
-if "%1" equ "html" (set ADDPATH=C:\texlive\2018\bin\win32)
-set path=%ADDPATH%;%path%
+rem if "%1" equ "html" (set ADDPATH=C:\texlive\2018\bin\win32)
+rem set path=%ADDPATH%;%path%
 
 if "%1" equ "pdf" (
     cmd /c make clean
