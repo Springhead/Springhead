@@ -79,25 +79,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -122,7 +122,7 @@
     <Link>
       <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../$(DependencyLib)/win32</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -149,7 +149,7 @@
     <Link>
       <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../$(DependencyLib)/win64</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -175,7 +175,7 @@
     <Link>
       <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../$(DependencyLib)/win32</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -201,7 +201,7 @@
     <Link>
       <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../$(DependencyLib)/win64</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>

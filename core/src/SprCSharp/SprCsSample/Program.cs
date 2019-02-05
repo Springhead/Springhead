@@ -14,7 +14,11 @@ namespace SprCsSample {
 
         static void Main(string[] args) {
 
-            var dllDirectory = @"..\..\..\..\..\..\..\libs\bin\win64";
+            //var dllDirectory = @"..\..\..\..\..\..\..\libs\bin\win64";
+            var dllDirectory = @"..\..\..\..\..\..\..\generated\bin\win64"
+                + @";..\..\..\..\..\..\..\generated\bin\win32"
+                + @";..\..\..\..\..\..\..\dependency\bin\win64"
+                + @";..\..\..\..\..\..\..\dependency\bin\win32";
             var dllPath = Environment.GetEnvironmentVariable("PATH") + ";" + dllDirectory;
             Environment.SetEnvironmentVariable("PATH", dllPath);
 
