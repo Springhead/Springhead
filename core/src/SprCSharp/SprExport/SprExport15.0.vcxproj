@@ -79,25 +79,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(VisualStudioVersion)ALL\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

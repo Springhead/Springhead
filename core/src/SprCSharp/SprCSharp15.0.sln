@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprCSharp15.0", "SprCSharp\
 	ProjectSection(ProjectDependencies) = postProject
 		{14187602-DB2F-41EC-9291-5A4B9376DCC9} = {14187602-DB2F-41EC-9291-5A4B9376DCC9}
 		{6F5A2986-1F4C-4ED8-871C-9B218603EFB1} = {6F5A2986-1F4C-4ED8-871C-9B218603EFB1}
+		{99E1038B-57E7-45D1-B3DB-B9FBB60E4960} = {99E1038B-57E7-45D1-B3DB-B9FBB60E4960}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprImport15.0", "SprImport\SprImport15.0.csproj", "{14187602-DB2F-41EC-9291-5A4B9376DCC9}"
@@ -342,5 +343,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE812BF9-348D-4886-A65F-A37A6BD63144}
 	EndGlobalSection
 EndGlobal
