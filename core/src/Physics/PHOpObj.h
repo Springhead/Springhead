@@ -1,4 +1,11 @@
-﻿#ifndef PHOPOBJ_H
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#ifndef PHOPOBJ_H
 #define PHOPOBJ_H
 
 #include <Physics/SprPHOpObj.h>
@@ -376,16 +383,7 @@ namespace Spr{
 
 		void vertexBlending()
 		{
-			//int count = 0;
-			/*if(unNormalobj)
-			{
-			targetVts[0]= objPArr[0].pCurrCtr;
-			return;
-			}*/
-
-			//if (useTetgen)
-			//count = objTargetVtsNum;
-			//	else count = targetMesh->NVertex();
+			
 			for (int j = 0; j < assPsNum; j++)
 			{
 
@@ -396,18 +394,7 @@ namespace Spr{
 					int vertind = objPArr[j].pVertArr[k];
 					Vec3f &vert = objOrigPos[vertind];
 					Vec3f u; u = u.Zero();
-					//vert = Vec3f(1.2,0,0);
-
-					//TAffine<float> taB,taM;
-					//Spr::TQuaternion<float> tq;tq.fr
-					//PHOpParticle &ctrP = objPArr[pg.getParticleGlbIndex(0)];
-
-					//Spr::TPose<float> ctrpose = TPose<float>(ctrP.pOrigCtr,ctrP.pOrigOrint);//ctrP.pOrigCtr,ctrP.pOrigOrint
-					//ctrpose.unitize();
-					//ctrpose.w=1.0;+9
-					//ctrpose.ToAffine(taM);
-					//ctrpose= ctrpose.Inv();
-
+					
 					int startFromLinkP = 0;
 					for (int jm = startFromLinkP; jm < pg.gNptcl; jm++)
 					{
@@ -419,33 +406,13 @@ namespace Spr{
 						//boost!1
 						Spr::TPose<float> &ctrpose = objOrinPsPoseList[pg.getParticleGlbIndex(jm)];
 
-						//Spr::TQuaternion<float> tq;tq.FromMatrix(dp.pSmR);
-						//Spr::TPose<float> pose = TPose<float>(dp.pCurrCtr,dp.pCurrOrint);
+					
 						Spr::TPose<float> pose = TPose<float>(dp.pCurrCtr, dp.pCurrOrint);
-						//Spr::TPose<float> pose1 = pose;
-						//pose1 = pose1.Inv();
-						//pose = pose.Inv();
+						
 						pose.x = -pose.x;
 						pose.y = -pose.y;
 						pose.z = -pose.z;
-						//Spr::TQuaternion<float> tq;tq.FromMatrix(dp.pSmR);
-						//tq.unitize();
-						//tq = tq*dp.pOrigOrint;
-						//Spr::TPose<float> &pose = TPose<float>(dp.pCurrCtr,tq);
-
-						//Spr::TPose<float> pose = TPose<float>(pg.gCurrCenter,dp.pCurrOrint);
-						//ctrpose = ctrpose * pose;
-
-						//pose.unitize();
-						//pose.w = 1.0;
-						//pose = pose.Inv();
-						//pose.ToAffine(taB);
-						//taB = taB.inv();
-						//tmp = vert;
-						//tmp = ctrpose * tmp;
-						//tmp = pose * tmp;
-						//u += tmp * blWeightArr[vertind][jm];
-
+					
 						//ver.1 boost1
 						//u += blWeightArr[vertind][jm] * (pose * (ctrpose * vert));// (taM *
 						//ver.2 boost2
@@ -461,7 +428,6 @@ namespace Spr{
 					objTargetVtsArr[vertind * 3 + 1] = u.y;
 					objTargetVtsArr[vertind * 3 + 2] = u.z;
 
-					//else targetMesh->vertices[vertind] = u;
 				}
 			}
 #ifdef USEGRMESH
@@ -810,7 +776,7 @@ namespace Spr{
 					pMIMatrix.zz += p.x * p.x + p.y * p.y;
 
 				}
-				pMIMatrix = pMIMatrix * dp.pTempSingleVMass;
+				pMIMatrix = pMIMatrix * dp.pTotalMass;
 				dp.pInverseOfMomentInertia = pMIMatrix.inv();
 			}
 

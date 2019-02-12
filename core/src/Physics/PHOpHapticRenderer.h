@@ -1,4 +1,11 @@
-﻿#ifndef PHOPHAPTICRENDERER_H
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#ifndef PHOPHAPTICRENDERER_H
 #define PHOPHAPTICRENDERER_H
 
 #include <Foundation/Object.h>
@@ -28,17 +35,11 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		{
 			std::vector<PHOpHapticController::ConstrainPlaneInfo*> constrainIs;
 		public:
-			//static solution
-			/*  void proxuSolveItror()
-			{
-			constrainIs.push_back(HapticController::ConstrainPlaneInfo());
-			constrainIs.push_back(HapticController::ConstrainPlaneInfo());
-			constrainIs.push_back(HapticController::ConstrainPlaneInfo());
-			}*/
+		
 		}slvItr;
 
 		PHOpHapticRenderer(const PHOpHapticRendererDesc& desc = PHOpHapticRendererDesc()) : PHOpHapticRendererDesc(desc)
-		//PHOpHapticRenderer(const PHOpHapticRendererDesc& desc = PHOpHapticRendererDesc(), SceneIf* s = NULL)
+		
 		{
 			hitWall = false;
 			rigid = false;
@@ -92,7 +93,6 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		void ProxyMove();
 		void ProxyTrace();
 		bool ProxyCorrection();
-		void ForceCalculation();
 		void HpNoCtcProxyCorrection();
 		void HpConstrainSolve(Vec3f &currSubStart);
 		void BuildVToFaceRelation();
@@ -120,9 +120,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		{
 			return constraintSpring;
 		}
-		//void HpProxyPosFix();
-		//void HpConstraint();
-
+		
 	};
 }
 

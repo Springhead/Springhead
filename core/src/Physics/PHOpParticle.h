@@ -1,4 +1,11 @@
-﻿#ifndef PHOpParticle_H
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#ifndef PHOpParticle_H
 #define PHOpParticle_H
 
 #include "Base/TQuaternion.h"
@@ -32,8 +39,7 @@ public :
 	{
 		//
 		pType = 0;//0 は表面particleで、1は内部particle
-		pTempSingleVMass = 1.0f;// 0.001f * 8.0f / 43.0f;
-		//pTempSingleVMass = 0.001f * 8.0f / 43.0f;
+		pSingleVMass = 1.0f;
 		pParaAlpha = 1.0f;
 		pNvertex = 0;
 		pWvel = pVelocity = Vec3f(0.0,0.0,0.0);
@@ -50,7 +56,6 @@ public :
 		hitedByMouse = false;
 		isFixed = false;
 		pMomentInertia = pMomentInertia.Zero();
-		//pColliedForceMove = pColliedForceMove.Zero();
 		
 		initialWArr = false;
 		initialPvarr = false;
@@ -116,15 +121,6 @@ public :
 	//粒子の到達位置（未使用）
 	std::vector<Vec3f> pGoalCtr;
 	
-
-	//Delayed Force Base.()
-	
-
-	//The list which include the groups that contain this particle
-	
-	
-
-
 	int getVertexGlbIndex(int vindex)
 	{
 		return pVertArr[vindex];
@@ -143,15 +139,9 @@ public :
 
 	void preCalcu(Vec3f *mPos);
 	
-	void addVertMomtInertias(Vec3f &position);
 	void ptclBuildStep(Vec3f *mPos);
 	
-	void angleVelocityBuild(float dt);
-	void angleVelocityIntegration(float dt);
-
 	bool addNewVertex(int index);
-	
-	void addLinkParticle(int parIndex);
 	
 	void buildParticleCenter(Vec3f *mPos);
 	

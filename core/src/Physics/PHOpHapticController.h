@@ -1,14 +1,16 @@
-﻿#ifndef PHOPHAPTICCONTROLLER_H
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#ifndef PHOPHAPTICCONTROLLER_H
 #define PHOPHAPTICCONTROLLER_H
 
 #include <Foundation/Object.h>
-//#include <HumanInterface/SprHISpidar.h>
 #include <Physics/PHOpObj.h>
 #include <sstream>
-//#include "HumanInterface/SprHIDRUsb.h"
-//#include "HumanInterface/SprHIKeyMouse.h"
-//#include "HumanInterface/SprHISdk.h"
-//#include "Physics/PHOpEngine.h"
 
 namespace Spr {
 	;
@@ -33,7 +35,6 @@ namespace Spr {
 
 		
 		std::vector<PvsHcCtcPInfo> hcColliedPs;
-		//std::vector<PvsHcCtcPInfo> segTestPs;//Ptcl of segment test in pre-ctc detection
 		std::vector<int> suspFaceIndex;
 		SpatialVector outForce;
 		
@@ -76,26 +77,23 @@ namespace Spr {
 			Vec3f goalP;
 			float fv, fu, fw, segmentt, routet;
 		};
-		//CtcConstrain intsctInfo;
+		
 		ConstrainPlaneInfo hcBindCpi;
-		//std::vector<ConstrainPlaneInfo> bindElements;
+		
 		std::vector<ConstrainPlaneInfo> cpiVec;
 		std::vector<ConstrainPlaneInfo> cpiHpVec;
 		std::vector<ConstrainPlaneInfo> cpiLastHpVec;
 		std::vector<int> sameIdArr;
 		std::vector<int> sameLIdArr;
-		//HapticController(int id) :PHOpObj(id)
+		
 
 		//for new HC
 		
-		void SetPhHCReady(bool flag);
-		bool GetPhHCReady();
 		SpatialVector GetHCOutput();
 
 
 	
-		//bool doCalibration();
-		//bool  initDevice(HISdkIf* hiSdk);
+		
 		bool InitialHapticController(PHOpObj* opObjectif);
 		bool InitialHapticController();
 		
@@ -103,7 +101,7 @@ namespace Spr {
 		void UpdateProxyPosition(Vec3f &pos, TQuaternion<float> winPose);
 		bool CheckProxyState();
 		void SetHCColliedFlag(bool flag);
-		//void BindCtcPlane(ConstrainPlaneInfo cif);
+		
 		void AddColliedPtcl(int pIndex, int objindex, Vec3f ctcPos);
 		PHOpParticle* GetMyHpProxyParticle();
 		bool BeginLogForce();
@@ -111,7 +109,6 @@ namespace Spr {
 		void ClearColliedPs();
 		void setC_ObstacleRadius(float r);
 		int GetHpObjIndex();
-		void BuildVToFaceRelation();
 		ObjectIf* GetHpOpObj();
 		bool SetForce(Vec3f f);
 		
@@ -125,24 +122,6 @@ namespace Spr {
 		Posef GetHCPose();
 
 		
-		/*void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ)
-		{
-			crossPlatformTransform.xx = 1;
-			crossPlatformTransform.yy = 1;
-			crossPlatformTransform.zz = 1;
-			if (InverX)
-			{
-				crossPlatformTransform.xx = -1;
-			}
-			if (InverY)
-			{
-				crossPlatformTransform.yy = -1;
-			}
-			if (InverZ)
-			{
-				crossPlatformTransform.zz = -1;
-			}
-		}*/
 		Vec3f GetUserPos()
 		{
 			return userPos;
@@ -152,14 +131,7 @@ namespace Spr {
 			return c_obstRadius;
 		}
 		Vec3f GetCurrentOutputForce();
-		/*void AddtoOpEngine()
-		{
-			PHSceneIf* scene = (PHSceneIf*)GetScene();
-			PHOpEngineIf* opengIf = scene->GetOpEngine()->Cast();
-			PHOpEngine* opEngine = DCAST(PHOpEngine, opengIf);
-			opEngine->opObjs.push_back(this);
-
-		}*/
+		
 		
 	};
 

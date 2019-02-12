@@ -1,24 +1,19 @@
-﻿#include "Physics/PHOpHapticRenderer.h"
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#include "Physics/PHOpHapticRenderer.h"
 
-//#define DRAW_INTSINFO
 #define USE_a_little_over_InSolve
 #define USE_a_little_over_InUctcFix
-//#define DrawRouteInfo
 #define ProxyFixInCORadius
 #define USE_GLOBLE_COLLI
-//#define PrintItrctingProxySolve
-//#define PrintNewCtr
-//#define PrintInfoHapTime
-//#define PrintCalInfoColliSolve
-//#define PrintNoctcProxyInfo
-//#define PROXYFIX_INFO
-//#define Save_GoalPos
 #define Old_Functions
 #define new_ProxyFunctions
 #define CHECK_INF_ERR
-//#define PrintInfoColliSolve
-//#define PrintInfoCostMtx
-//#define PrintProxyFixCstrCal
 
 namespace Spr
 {
@@ -37,7 +32,6 @@ namespace Spr
 		bool insideObjs = false;
 
 #ifdef USE_a_little_over_InUctcFix
-		//float overDist = 1.001f;
 		float overDist = 2.001f;
 #else 
 		float overDist = 1.0000f;

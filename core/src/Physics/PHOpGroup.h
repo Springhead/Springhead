@@ -1,3 +1,10 @@
+/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
 #ifndef PHOpGroup_H
 #define PHOpGroup_H
 
@@ -38,15 +45,7 @@ public:
 	}
 	bool addPInds(int gPIndex);
 	void delPInds(int gPIndex);
-	void preCalculation();
-
-	void groupTimeStep();
 	
-	void projectPos(PHOpParticle *objPArr);
-	void gravityStep();
-	void SwapPtclInGroup();
-	
-
 	int getParticleGlbIndex(int pindex)
 	{
 		return this->gPInd[pindex];

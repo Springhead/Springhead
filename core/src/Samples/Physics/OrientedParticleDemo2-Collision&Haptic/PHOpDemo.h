@@ -34,16 +34,11 @@
 
 #include "FileIO/SprFIOpStateHandler.h"
 #include "Physics/SprPHOpSpHashAgent.h"
-//#include "Physics/SprPHOpObj.h"
 #include "Physics/SprPHOpObj.h"
-//#include "Physics/PHOpParticle.h"
 #include "Framework/SprFWOpObj.h"
 #include "Physics/PHOpEngine.h"
 
 #include "Framework/SprFWOpHapticHandler.h"
-//#include "Physics/PHOpSpHashColliAgent.h"
-
-//#include "Physics/Spr"
 
 using namespace Spr;								// Springheadの名前空間
 
@@ -72,8 +67,6 @@ public:
 	bool OnMouseMove(int button, int x, int y, int zdelta);
 	void MouseButton(int button, int state, int x, int y);
 	bool OnMouse(int button, int state, int x, int y);
-	void SaveTstPPos(char *filename, int pi, Vec3f Pos);
-	void showOPStructureMatrix();
 
 	GRRenderIf* render;
 
@@ -125,9 +118,7 @@ public:
 	bool drawCtcP;
 	bool runByStep;
 
-	//OpFileStateStore
 	FIOpStateHandlerIf* fileOp;
-	//stateFileVersion
 	float fileVersion;
 
 	float radiusCoe;

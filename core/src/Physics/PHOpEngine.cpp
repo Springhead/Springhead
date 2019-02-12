@@ -1,4 +1,10 @@
-﻿
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
 #include <Physics/PHOpEngine.h>
 #include "PHOpDecompositionMethods.h"
 
@@ -14,7 +20,6 @@ namespace Spr{
 		subStepProFix = true;
 		noCtcItrNum = 0;
 		opAnimator = DBG_NEW PHOpAnimation();
-		//opAnimator->intial(this);
 
 		logForce = false;
 		useHaptic = false;
@@ -26,7 +31,6 @@ namespace Spr{
 		myHc = new PHOpHapticController();
 		myHc->InitialHapticController();
 		myHc->hpObjIndex = -1;
-		//opObjs.push_back(myHc->hcObj);
 
 		myHc->hcType = PHOpHapticControllerDesc::_3DOF;
 #ifdef USEGRMESH
@@ -153,9 +157,7 @@ namespace Spr{
 		return useAnime;
 	}
 	void PHOpEngine::Step(){
-		/*for (int obji = 0; obji < (int) opObjs.size(); obji++)
-				opObjs[obji]->SimpleSimulationStep();*/
-
+		
 		PHSceneIf* phs = (PHSceneIf*)GetScene();
 		PHOpSpHashColliAgentIf* agent = phs->GetOpColliAgent();
 
@@ -171,14 +173,6 @@ namespace Spr{
 		//haptic sych
 		if (useHaptic)
 		{
-
-			//myHc->currSpg->Update(0.001f);
-		/*	Vec3f &spgpos = myHc->currSpg->GetPosition();
-			myHc->userPose = myHc->currSpg->GetPose();
-			myHc->userPose.Ori() = myHc->userPose.Ori() * myHc->rotScale;
-			myHc->userPose.Pos() = winPose * myHc->userPose.Pos()* myHc->posScale;
-
-			myHc->userPos = winPose *  spgpos * myHc->posScale;*/
 
 			myHc->userPose.Pos() = winPose * myHc->userPose.Pos();
 			myHc->userPos = winPose *  myHc->userPos;
@@ -218,15 +212,12 @@ namespace Spr{
 
 
 		//collision
-		//for (int obji = 0; obji < (int)opObjs.size(); obji++)
+		if (agent->IsCollisionEnabled())
 		{
-			
-				if (agent->IsCollisionEnabled())
-				{
-				agent->OpCollisionProcedure();
+		agent->OpCollisionProcedure();
 
-				}
 		}
+		
 
 		for (int itri = 0; itri < opIterationTime; itri++)//iteration default is 1
 		{
@@ -304,10 +295,6 @@ namespace Spr{
 		winPose = orit;
 	}
 
-	//void PHOpEngine::SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ)
-	//{
-	//	myHc->SetCrossPlatformCoord(InverX, InverY, InverZ);
-	//}
 
 	void PHOpEngine::HapticProcedure_6DOF()
 	{
@@ -319,29 +306,18 @@ namespace Spr{
 			PHOpParticle &dp = opObjs[myHc->GetHpObjIndex()]->objPArr[pi];
 			Vec3f diff = (myHc->userPose *dp.pOrigCtr);//userPos
 
-			//dp.pNewCtr += (diff - dp.pNewCtr)* constraintSpring;
-			//if (dp.isColliedSphashSolved)
 			diffAcc += -(diff - dp.pNewCtr);
 
-			
-			//dp.pColliedForce += (diff - dp.pNewCtr)* constraintSpring;
 		}
-		//myHc->positionPredict();
+		
 		diffAcc /= opObjs[myHc->GetHpObjIndex()]->assPsNum;
 
 
 		Vec3f f = winPose *diffAcc * opHpRender->outForceSpring;
-		//float magni = f.norm();
-		//if (magni > 10.0f)
-		//{
-		//	DSTR << "Big Force Output!" << std::endl;
-		//	;// f.clear();
-		//}
+	
 		if (myHc->SetForce(f))
 		{
-			;//log force?
-			/*if (logForce)
-				myHc->LogForce(f);*/
+			DSTR << "Set Force failed" << std::endl;
 		}
 	}
 	void PHOpEngine::HapticProcedure_3DOF()
@@ -353,27 +329,23 @@ namespace Spr{
 		{
 			dp->pNewCtr = myHc->userPos;
 
-			//dp->pNewOrint = myHc->currSpg->GetPose().Ori().Inv();
+			
 			if (subStepProFix){
 				//触っていない時のproxyfix
 				noCtcItrNum = 0;
 				opHpRender->HpNoCtcProxyCorrection();
-				// cout << "noCtcItrNum = " << noCtcItrNum << endl;
+				
 			}
 
 		}
 		else {
-			//dp->pNewCtr = dp->pCurrCtr;
-
-			//dp->pVelocity = (myHc->userPos - dp->pCurrCtr) / myHc->params.timeStep;
+			
 			if (subStepProFix){
 				//触っているときまずtraceする
 				opHpRender->ProxyTrace();
-				// HpProxyPosFix();
+				
 				//Proxy位置の修正(関数名は修正まち)
 
-				// if (!ProxyCorrection())
-				;// return;
 				opHpRender->ProxyMove();
 			}
 
@@ -387,7 +359,6 @@ namespace Spr{
 
 			//haptic解決
 			opHpRender->HpConstrainSolve(dp->pCurrCtr);
-			//HpConstrainSolve();
 
 		}
 #ifdef CHECK_INF_ERR
@@ -408,7 +379,6 @@ namespace Spr{
 		opHpRender->ForceCalculation();
 
 		dp->pCurrCtr = dp->pNewCtr;
-		//TQuaternion<float> winPose = GetCurrentWin()->GetTrackball()->GetPose().Ori();
 		myHc->hcCollied = false;
 
 
@@ -416,10 +386,7 @@ namespace Spr{
 		if (myHc->hcProxyOn || true == opHpRender->hitWall)
 		{
 			winPose = winPose.Inv();
-			//if (!useConstrainForce)
 			f = winPose * (dp->pCurrCtr - myHc->userPos) *opHpRender->outForceSpring;
-			//else 
-			//	f = winPose * (dp->pCurrCtr - myHc->userPos) / myHc->posScale *constraintSpring;
 			float magni = f.norm();
 			if (magni > 10.0f)
 			{
