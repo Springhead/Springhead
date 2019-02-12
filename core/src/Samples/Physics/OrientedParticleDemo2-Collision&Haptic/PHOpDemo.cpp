@@ -8,7 +8,6 @@
 
 #include "PHOpDemo.h"
 #include "Physics/PHOpSpHashColliAgent.h"
-//#include "Framework/FWOpHapticHandler.h"
 #include "Physics/PHOpEngine.h"
 #include <Foundation/UTClapack.h>
 #include "Graphics/GRMesh.h"
@@ -63,15 +62,11 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	GRInit(argc, argv);		// ウィンドウマネジャ初期化
 	CreateWin();			// ウィンドウを作成
 	CreateTimer();			// タイマを作成
-
 	InitCameraView();		// カメラビューの初期化
 	GetSdk()->SetDebugMode(false);						// デバックモードの無効化
 	GetSdk()->GetScene()->EnableRenderAxis(true);		// 座標軸の表示
 	GetSdk()->GetScene()->EnableRenderContact(true);	// 接触領域の表示
-
 	HISdkIf* hisdk = GetSdk()->GetHISdk();
-	
-	
 	
 	//initial op objects
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
@@ -967,46 +962,6 @@ void PHOpDemo::Display()
 		}
 	}
 	
-	//if (drawPs)
-	//{
-	//	for (int obji = 0; obji < (int)opEngineif->GetOpObjNum(); obji++)
-	//	{
-	//		PHOpObj& drawObj = *opEngine->opObjs[obji];
-	//		{
-	//			for (int j = 0; j < drawObj.assPsNum; j++)
-	//			{
-	//				PHOpParticle &dp = drawObj.objPArr[j];
-	//				Vec3f &spCtr = dp.pCurrCtr;
-	//				Affinef affpos; affpos.Pos() = spCtr;
-	//				float radius = drawObj.objAverRadius;
-	//				if (dp.hitedByMouse)
-	//					render->SetMaterial(GRRenderIf::YELLOW);
-	//				else if (dp.isColliedSphashSolved)
-	//					render->SetMaterial(GRRenderIf::RED);
-	//				else if (dp.isColliedSphashSolvedReady)
-	//					render->SetMaterial(GRRenderIf::DEEPPINK);
-	//				else if (dp.isColliedbySphash)
-	//					render->SetMaterial(GRRenderIf::GREEN);
-	//				else if (dp.isColliedbyColliCube)
-	//					;
-	//				else render->SetMaterial(GRRenderIf::CADETBLUE);
-
-	//				render->PushModelMatrix();//相対座標で使う
-	//				render->MultModelMatrix(affpos);
-	//				//render->DrawSphere(radius, 10, 10, false);
-
-	//				float ra = drawObj.objAverRadius, rb = ra, rc = ra / 2;
-	//				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(dp.pCurrOrint.Inv() * dp.ellipRotMatrix);
-	//				//Spr::TQuaternion<float> elliRotQ = dp.pCurrOrint.Inv();//with no ellip orint
-	//				//TPose<float> ta; ta= TPose<float>(pos1,elliRotQ); 
-	//				DrawEllipsoid drawEll;
-	//				drawEll.drawOval(ra * radiusCoe, rb * radiusCoe, rc* radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
-
-	//				render->PopModelMatrix();
-	//			}
-	//		}
-	//	}
-	//}
 	for (int obji = 0; obji < (int) opEngineif->GetOpObjNum(); obji++)
 	{
 		PHOpObj& drawObj = *opEngine->opObjs[obji];

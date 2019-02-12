@@ -1,4 +1,11 @@
-﻿#ifndef PHOPSPHASHCOLLIAGENT_H
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#ifndef PHOPSPHASHCOLLIAGENT_H
 #define PHOPSPHASHCOLLIAGENT_H
 
 
@@ -55,9 +62,7 @@ public :
 		SetScene(s);
 	}
 
-	Vec3f GetFirContactPosition(int firId);
-	Vec3f GetSecContactPosition(int secId);
-
+	
 	void SetCollisionCstrStiffness(float alpha);
 	float GetCollisionCstrStiffness();
 	void EnableCollisionDetection(bool able = true);
@@ -79,8 +84,7 @@ public :
 	void EllipColliInit();
 	void pctlColliSolve(int objIndex1, int ptclindex1, int objIndex2, int ptclindex2, Vec3f &ctc1, Vec3f &ctc2);
 	Vec3f getCtcP_PvP(Vec3f &vectorN, Matrix3f &ellipA1tmp, Matrix3f &ellipA2tmp, float &d, float& lamdaP);
-	//Vec3f getConterCtcP_PvP(Vec3f &vectorN, Matrix3f &ellipA1tmp, Matrix3f &ellipA2tmp);
-
+	
 };
 
 }

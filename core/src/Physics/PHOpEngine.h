@@ -1,10 +1,15 @@
-﻿#ifndef PHOPENGINE_H
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#ifndef PHOPENGINE_H
 #define PHOPENGINE_H
 
 
 #include <SprDefs.h>
-//#include <GL/glew.h>
-//#include <GL/glut.h>
   #undef CreateDialog
   #undef CreateFile
   #undef GetObject
@@ -64,20 +69,16 @@ namespace Spr{
 
 		int  GetPriority() const {
 			return SGBP_NONE;
-			//return SGBP_FORCEGENERATOR;
-		}//SGBP_DYNAMICALSYSTEM;}
+		}
 		void SetIterationCount(int count);
 		int GetIterationCount();
 		void Step();
 
 		void SetGravity(bool gflag);
-		//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 		virtual bool AddChildObject(ObjectIf* o);
 		virtual bool DelChildObject(ObjectIf* o);
 		void SetTimeStep(double dt);
 		double GetTimeStep();
-		//void initialHapticController(ObjectIf*);
-		//ObjectIf* GetHapticController();
 		int GetOpObjNum(){ return(int)opObjs.size(); }
 		PHOpObjDesc* GetOpObj(int i);
 		void StepWithBlend();

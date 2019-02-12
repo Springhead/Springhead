@@ -1,4 +1,10 @@
-
+/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
 #include "Framework.h"
 #include "FWOpObj.h"
 namespace Spr{;
@@ -25,13 +31,8 @@ void FWOpObj::CreateOpObj()
 	grMesh->EnableAlwaysCreateBuffer();
 
 	//Decide Particle size
-	//Vec3f beginP, diameterP;
 	Vec3f tbeginP, tdiameterP;
 	int vtsNum = grMesh->NVertex();
-	//Vec3f beginP = grMesh->vertices[72],diameterP =grMesh->vertices[73];//only for monkey
-	//Vec3f beginP = grMesh->vertices[392],diameterP =grMesh->vertices[493];//only for monkey
-	//Vec3f beginP = grMesh->vertices[107],diameterP =grMesh->vertices[112];//only for monkey
-	//Vec3f beginP = grMesh->vertices[405],diameterP =grMesh->vertices[495];//only for monkey
 	
 
 	//ƒ‚ƒfƒ‹‚©‚çparticle—±Žq’Tõ”¼Œa‚â‚¢‚ë‚¢‚ë‚ðŒˆ‚ß‚é
@@ -43,33 +44,28 @@ void FWOpObj::CreateOpObj()
 	{
 		if (grMesh->GetName()[9] == '4')
 		{
-			//tbeginP = grMesh->vertices[165];	tdiameterP =grMesh->vertices[404];
-			//best stiffness for no tegen//tbeginP = grMesh->vertices[61];	tdiameterP =grMesh->vertices[63];
+			
 			tbeginP = grMesh->vertices[0];	tdiameterP = grMesh->vertices[1];
-			//params.SetBound(30.0f);
-		
+			
 		}
 	}
 	else if (grMesh->GetName()[0] == 'a')//for artery
 	{
-		//tbeginP = grMesh->vertices[165];	tdiameterP =grMesh->vertices[404];
-		//best stiffness for no tegen//tbeginP = grMesh->vertices[61];	tdiameterP =grMesh->vertices[63];
+		
 		tbeginP = grMesh->vertices[61];	tdiameterP = grMesh->vertices[90];
 		opObj->params.SetBound(30.0f);
 	
 	}
 	else if (grMesh->GetName()[0] == 'c')//for clipMesh
 	{
-		//tbeginP = grMesh->vertices[165];	tdiameterP =grMesh->vertices[404];
-		//best stiffness for no tegen//tbeginP = grMesh->vertices[61];	tdiameterP =grMesh->vertices[63];
+		
 		tbeginP = grMesh->vertices[61];	tdiameterP = grMesh->vertices[90];
 		opObj->params.SetBound(30.0f);
 	
 	}
 	else if (grMesh->GetName()[0] == 'f')//for fabicrabbit
 	{
-		//tbeginP = grMesh->vertices[165];	tdiameterP =grMesh->vertices[404];
-		//best stiffness for no tegen//tbeginP = grMesh->vertices[61];	tdiameterP =grMesh->vertices[63];
+	
 		if (grMesh->GetName()[2] == 'c')
 		{//for faceCube
 			tbeginP = grMesh->vertices[208];	tdiameterP = grMesh->vertices[310];
@@ -83,24 +79,21 @@ void FWOpObj::CreateOpObj()
 	}
 	else if (grMesh->GetName()[0] == 's')//for fabicrabbit
 	{
-		//tbeginP = grMesh->vertices[165];	tdiameterP =grMesh->vertices[404];
-		//best stiffness for no tegen//tbeginP = grMesh->vertices[61];	tdiameterP =grMesh->vertices[63];
+	
 		tbeginP = grMesh->vertices[61];	tdiameterP = grMesh->vertices[65];
 	
 	}
 	else if (grMesh->GetName()[0] == 'r')//for rabbit
 	{
-		//tbeginP = grMesh->vertices[165];	tdiameterP =grMesh->vertices[404];
-		//best stiffness for no tegen//tbeginP = grMesh->vertices[61];	tdiameterP =grMesh->vertices[63];
+		
 		tbeginP = grMesh->vertices[61];	tdiameterP = grMesh->vertices[65];
 	
 	}
 	else if (grMesh->GetName()[0] == 'm')//only for monkey
 	{
-		//tbeginP = grMesh->vertices[102];	tdiameterP =grMesh->vertices[130];//ideal......
+		
 		tbeginP = grMesh->vertices[14];	tdiameterP = grMesh->vertices[20];
-		//tbeginP = grMesh->vertices[193];
-		//tdiameterP =grMesh->vertices[198];
+	
 	
 	}
 	else if (grMesh->GetName()[0] == 'b')//only for bar
@@ -149,10 +142,8 @@ void FWOpObj::CreateOpObj()
 	
 	tdiameterP = tbeginP - tdiameterP;
 	float objPtclDiameter = fabs(tdiameterP.norm());
-	//objPtclRadiusSpecialForUnstabledeform = objPtclDiameter / 2;//no kill
 
 	opObj->initialPHOpObj(&grMesh->vertices[0], grMesh->NVertex(), objPtclDiameter);
-	//opObj->SetGRMesh(grMesh);
 #ifdef USEGRMESH
 	opObj->targetMesh = grMesh;
 #endif
@@ -162,7 +153,6 @@ void FWOpObj::CreateOpObjWithRadius(float r)
 {
 	grMesh->EnableAlwaysCreateBuffer();
 	opObj->initialPHOpObj(&grMesh->vertices[0], grMesh->NVertex(), r);
-	//opObj->SetGRMesh(grMesh);
 #ifdef USEGRMESH
 	opObj->targetMesh = grMesh;
 #endif

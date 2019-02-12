@@ -1,3 +1,10 @@
+/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
 #include "FWOpHapticHandler.h"
 #include "Physics/PHOpHapticController.h"
 
@@ -47,69 +54,11 @@ namespace Spr {
 			vel.w() = hiPose->GetAngularVelocity();
 			Posed pose = hiPose->GetPose();
 
-			//// デバックのための擬似入力
-			//Vec3d debug_vel = Vec3d(-0.001, 0.0, 0.0);
-			//static Posed debug_pose = Posed();
-			//debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;
-			//pose = debug_pose;
-			//vel.v() = debug_vel;
-
 			opHC->SetHCPosition(pose.Pos());
 			opHC->SetHCPose(pose);
 		}
 	}
 
-	/*void FWOpHapticHandler::SetCurrFeedbackForce()
-	{
-		currSpg->SetForce(opHcIf->GetCurrentOutputForce(),Vec3f());
-	}
-	
-
-	void FWOpHapticHandler::UpdateHapticStats()
-	{
-		currSpg->Update(0.001f);
-		opHcIf->SetHCPosition(currSpg->GetPosition());
-		opHcIf->SetHCPose(currSpg->GetPose());
-	}
-*/
-	//bool FWOpHapticHandler::initDevice(HISdkIf* hiSdk)
-	//{
-	//	// 力覚インタフェースとの接続設定
-	//	//hiSdk = HISdkIf::CreateSdk();
-
-	//	// win32
-	//	/*DRUsb20SimpleDesc usbSimpleDesc;
-	//	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
-	//	DRUsb20Sh4Desc usb20Sh4Desc;
-	//	for (int i = 0; i<10; ++i){
-	//	usb20Sh4Desc.channel = i;
-	//	hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-	//	}*/
-	//	// win64
-	//	DRCyUsb20Sh4Desc cyDesc;
-	//	for (int i = 0; i < 10; ++i){
-	//		cyDesc.channel = i;
-	//		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-	//	}
-	//	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-	//	hiSdk->Print(DSTR);
-	//	//hiSdk->Print(std::DSTR);
-
-	//	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	//	hcReady = spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-
-	//	if (hcReady)
-	//	{
-	//		spg->Calibration();
-	//		spg->Update(0.001f);
-	//	}
-	//	else return false;
-
-	//	currSpg = spg;
-	//	opHcIf->SetPhHCReady(hcReady);
-
-	//	return true;
-	//}
 	bool FWOpHapticHandler::doCalibration(float dt)
 	{
 		HIHapticIf* hiHaptic = DCAST(HIHapticIf, humanInterface);

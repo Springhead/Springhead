@@ -1,4 +1,11 @@
-﻿#include "Physics/PHOpHapticController.h"
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#include "Physics/PHOpHapticController.h"
 
 #ifdef	__linux__
 #  define fopen_s(fptr,name,mode)	*(fptr) = fopen(name,mode)
@@ -137,10 +144,7 @@ namespace Spr {
 		pose.Ori() = pose.Ori() * rotScale;
 		userPose = pose;
 	}
-	/*void PHOpHapticController::BindCtcPlane(ConstrainPlaneInfo cif)
-	{
-		hcBindCpi = cif;
-	}*/
+	
 	void PHOpHapticController::SetHCColliedFlag(bool flag)
 	{
 		hcCollied = flag;
@@ -155,18 +159,17 @@ namespace Spr {
 		hcCollied = false;
 
 
-		//PHOpParticleIf *dpif = GetMyHpProxyParticle();
+		
 		PHOpParticle* dp = GetMyHpProxyParticle();
-		//dp->pVelocity = (dp->pCurrCtr - pos)/params.timeStep ;
+		
 		dp->pCurrCtr = pos;
 		dp->pCurrOrint = dp->pNewOrint;
-		//targetVts[0]= pos;
-
+		
 		Vec3f f;
 		if (hcProxyOn)
 		{
 			winPose = winPose.Inv();
-			f = winPose * (dp->pCurrCtr - userPos) * 3;// *params.alpha;
+			f = winPose * (dp->pCurrCtr - userPos) * 3;
 			float magni = f.norm();
 			if (magni > 10.0f)
 			{
@@ -180,7 +183,7 @@ namespace Spr {
 
 
 		SetForce(f);
-		//std::DSTR<<"Force = "<<f<<std::endl;
+		
 	}
 	void PHOpHapticController::LogForce(TQuaternion<float> winPose)
 	{
@@ -188,16 +191,10 @@ namespace Spr {
 		{
 			
 			PHOpParticle* dp = GetMyHpProxyParticle();
-			//Vec3f f = winPose * (dp->pCurrCtr - userPos) * 3;// *params.alpha;
-			Vec3f f = winPose * (hcCurrPPos - hcCurrUPos) * 3;//debug hapticrate
-			//const int len = 100;
-			//char *s = new char[len +1];
-			//fprintf(logForceFile, "%f %f %f\n",f.x,f.y,f.z);
+			
+			Vec3f f = winPose * (hcCurrPPos - hcCurrUPos) * 3;
 			fprintf(logForceFile, "%f\n", f.y);
-			//fprintf(logPosFile, "%f %f %f\n",dp->pCurrCtr.x,dp->pCurrCtr.y,dp->pCurrCtr.z);
 			fprintf(logPPosFile, "%f\n", hcCurrPPos.y);
-			//fprintf(logUPosFile, "%f\n", userPos.y);
-			//debug hapticrate
 			fprintf(logUPosFile, "%f\n", hcCurrUPos.y);
 		}
 	}
@@ -248,20 +245,6 @@ namespace Spr {
 	}
 	bool PHOpHapticController::InitialHapticController(PHOpObj* opObject)
 	{
-		////if (hpMesh.enabled)
-		//{
-		//	PHOpObj::intialPHOpObj(&hpMesh);
-		//	return true;
-		//}
-		//objOrigPos = new Vec3f[vtsNum];
-		//initialOrgP = true;
-		//objTargetVts = vts;//Tetgenため使う
-		//objTargetVtsNum = vtsNum;
-
-		//initialDeformVertex(vts, vtsNum);
-		//if (!BuildParticles(vts, vtsNum, tmpPtclList, pSize))
-		//	return false;
-
 		
 		hcObj = opObject;
 		hpObjIndex = hcObj->objId;
@@ -269,8 +252,6 @@ namespace Spr {
 		rotScale = 1.0f;
 		forceScale = 0.01f;
 		hcCollied = false;
-		//hcColliedPid = -1;
-		//hcObj->objNoMeshObj = true;//->only use for no mesh objec(like one ball)
 		hcObj->objType = 1;
 		suspObjid = -1;
 		proxyRadius = 0.03f;
@@ -293,12 +274,11 @@ namespace Spr {
 		cpiHpVec.push_back(tmpcpinfo);
 		cpiHpVec.push_back(tmpcpinfo);
 		cpiHpVec.push_back(tmpcpinfo);
-		//cpiHpVec.resize();
 		cpiLastHpVec.push_back(tmpcpinfo);
 
 		
 		
-		return true; //initDevice(hisdk);
+		return true;
 	}
 	
 	ObjectIf*PHOpHapticController:: GetHpOpObj()
@@ -309,7 +289,7 @@ namespace Spr {
 	{
 		if (fabs(f.norm()) < max_output_force)
 		{
-			//currSpg->SetForce(f, Vec3f());
+			
 			SetHCForceReady(true);
 			outForce.v() = f;
 			return true;

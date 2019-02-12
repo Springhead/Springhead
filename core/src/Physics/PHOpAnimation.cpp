@@ -1,3 +1,10 @@
+/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
 #include "PHOpAnimation.h"
 #include <Physics/SprPHOpObj.h>
 #include "PHOpEngine.h"
@@ -17,7 +24,7 @@ namespace Spr{
 			PHOpParticle* dp = &pobj->objPArr[animatedPs[ai].animatedPindex];
 			if (animatedPs[ai].animatedType == 1)
 			{
-				dp->pNewCtr += animatedPs[ai].animatedForces * timestep * timestep / dp->pTempSingleVMass;
+				dp->pNewCtr += animatedPs[ai].animatedForces * timestep * timestep / dp->pTotalMass;
 				
 			}
 			dp->pOrigCtr += (dp->pNewCtr - dp->pCurrCtr);
@@ -80,10 +87,6 @@ namespace Spr{
 		tmp.animatedType = 1;
 		animatedPs.push_back(tmp);
 	}
-	/*OpAnimationStruct* PHOpAnimation::GetAnimeInfo(int animeindex)
-	{
-		return &animatedPs[animeindex];
-	}*/
 	Vec3f PHOpAnimation::GetAnimatedPStart(int animeindex)
 	{
 		return animatedPs[animeindex].animatedPStarts;

@@ -1,16 +1,17 @@
-﻿#include <Physics/PHOpObj.h>
+﻿/*
+*  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
+*  All rights reserved.
+*  This software is free software. You can freely use, distribute and modify this
+*  software. Please deal with this software under one of the following licenses:
+*  This license itself, Boost Software License, The MIT License, The BSD License.
+*/
+#include <Physics/PHOpObj.h>
 #include "PHOpDecompositionMethods.h"
 #define CHECK_INF_ERR
 
 using namespace PTM;
 namespace Spr{;
 
-//PHOpObjIf* PHOpObj::GetMyIf()
-//{
-//	NameManagerIf* nm = GetNameManager();
-//	PHOpObjIf* sdk = DCAST(PHOpObjIf, nm);
-//	return sdk;
-//}
 
 void PHOpObj::SimpleSimulationStep()
 {
@@ -111,7 +112,7 @@ void PHOpObj::positionPredict()
 			dp.pVelocity += params.gravity * params.timeStep ;
 		}
 		//external force
-		dp.pVelocity += dp.pExternalForce *params.timeStep / dp.pTempSingleVMass;
+		dp.pVelocity += dp.pExternalForce *params.timeStep / dp.pTotalMass;
 
 #ifdef CHECK_INF_ERR
 		if (!FloatErrorTest::CheckBadFloatValue(dp.pVelocity.z))
@@ -437,12 +438,7 @@ void PHOpObj::positionProject()
 	{
 
 		PHOpGroup &pg = objGArr[i];
-		//pd.NewPolarDecomposition(pg.gAgroup,R);
 		pd.polarDecom(R,S,pg.gAgroup);
-		//R = SolveShpMchByJacobi(pg);
-		
-		//R = R.Unit(); //debug R
-
 		//beta
 		R = R *(1-params.beta) + pg.gAgroup * (params.beta);//or S?
 
