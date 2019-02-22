@@ -1471,6 +1471,7 @@ public:
 					Printf(CS, "            return (%s) result;\n", cs_qualified_name(unqualified_name(ni.type)));
 				}
 				else if (ENDWITH(ni.cs_type, "If")) {
+					Printf(CS, "            if (ptr == IntPtr.Zero) { return null; } \n", ni.cs_type, ni.cs_type);
 					Printf(CS, "            %s obj = new %s(ptr);\n", ni.cs_type, ni.cs_type);
 					Printf(CS, "            return Activator.CreateInstance(IfInfoToCsType.FindType(obj.GetIfInfo()), ptr) as %s;\n", ni.cs_type);
 				}

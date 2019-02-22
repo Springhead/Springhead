@@ -160,6 +160,16 @@ public:
 	int NSolids()const;
 
 	/** @brief Solidを取得する
+		@return Solidのインタフェースへのポインタ
+	 */
+	PHSolidIf* GetSolid(int idx);
+
+	/** @brief Solidのインデックスを取得する
+		@return Solidのインデックス
+	 */
+	int GetSolidIndex(PHSolidIf* s);
+
+	/** @brief Solidを取得する
 		@return Solidのインタフェースの配列へのポインタ
 	 */
 	PHSolidIf** GetSolids();
