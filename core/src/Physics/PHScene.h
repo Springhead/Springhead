@@ -96,7 +96,9 @@ public:
 	PHSdkIf*				GetSdk();
 	PHSolidIf*				CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	int						NSolids() const;
+	PHSolidIf*				GetSolid(int idx);
 	PHSolidIf**				GetSolids();
+	int						GetSolidIndex(PHSolidIf* s);
 	void					SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void					SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	void					SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
