@@ -33,8 +33,9 @@
 #	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#	Ver 1.8  2019/02/21 F.Kanehori	Cmake環境に対応.
 # ==============================================================================
-version = 1.7
+version = 1.8
 trace = False
 
 import sys
@@ -70,10 +71,16 @@ f_op = FileOp()
 
 # ----------------------------------------------------------------------
 #  Directories
+#	Relative path cause problem when using CMake build environment.
+#	Because finding path is done under CMake build environment; e.g.
+#	src/build/RunSwig; but script is actually executed at original
+#	file tree; src/RunSwig etc.
 #
 sprtop = spr_path.abspath()
-bindir = spr_path.relpath('bin')
-srcdir = spr_path.relpath('src')
+##bindir = spr_path.relpath('bin')
+##srcdir = spr_path.relpath('src')
+bindir = spr_path.abspath('bin')
+srcdir = spr_path.abspath('src')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
