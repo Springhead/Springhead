@@ -51,6 +51,7 @@
 #	Ver 3.4  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 3.5  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 3.6  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#	Ver 3.7  2019/02/26 F.Kanehori	Cmake環境に対応.
 # ==============================================================================
 version = 3.6
 debug = False
@@ -91,8 +92,10 @@ unix = util.is_unix()
 #  Directories
 #
 sprtop = spr_path.abspath()
-bindir = spr_path.relpath('bin')
-srcdir = spr_path.relpath('src')
+##bindir = spr_path.relpath('bin')
+##srcdir = spr_path.relpath('src')
+bindir = spr_path.abspath('bin')
+srcdir = spr_path.abspath('src')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
