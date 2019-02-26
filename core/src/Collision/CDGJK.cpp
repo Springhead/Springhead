@@ -449,14 +449,14 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		}
 #endif
 		CalcSupport(ids[0]);	//	法線の向きvNewでサポートポイントを探す
-		if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2){	//	0の外側にoがあるので触ってない
+		if (w[ids[0]].XY() * v[ids[0]].XY() > epsilon){	//	0の外側にoがあるので触ってない
 			qpTimerForCollision.Accumulate(coltimePhase2);
 			return 0;
 		}
 		//	新しいsupportが1回前の線分からまったく動いていない → 点Oは外側
 		double d1 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[1]].XY());
 		double d2 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[2]].XY());
-		if (d1 < epsilon2 || d2 < epsilon2) {
+		if (d1 < -epsilon || d2 < -epsilon) {
 			qpTimerForCollision.Accumulate(coltimePhase2);
 			return 0;
 		}
