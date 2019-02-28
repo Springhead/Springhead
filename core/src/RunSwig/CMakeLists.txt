@@ -39,7 +39,7 @@ set(PattF ../Foundation=../../Foundation)
 # main target
 #
 if(${Windows})
-    add_custom_target(RunSwig
+    add_custom_target(${Target}
 	COMMAND copy ${RSOrgDir}\\PrepforCMake.py ${RSBldDir} >NUL 2>&1
 	COMMAND ${Python} PrepForCMake.py ${OrgDir} ${BldDir}
 	COMMAND ${Python} make_manager.py -A -c
@@ -47,7 +47,7 @@ if(${Windows})
 	COMMENT [[  generating files...]]
     )
 elseif(${Linux})
-    add_custom_target(RunSwig
+    add_custom_target(${Target}
 	COMMAND cp -f ${RSOrgDir}/PrepforCMake.py ${RSBldDir} >/dev/null 2>&1
 	COMMAND ${Python} PrepForCMake.py ${OrgDir} ${BldDir}
 	COMMAND ${Python} make_manager.py -A -c
