@@ -63,18 +63,18 @@ set(LIBNAME_DEBUG Springhead${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_RELEASE Springhead${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_TRACE Springhead${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
 
-if(${Windows})
-    add_custom_target(MakeLib
-	#OUTPUT_NAME_DEBUG ${OUTDIR_BASE}\\${LIBNAME_DEBUG}
-	#OUTPUT_NAME_RELEASE ${OUTDIR_BASE}\\${LIBNAME_RELEASE}
-	#OUTPUT_NAME_TRACE ${OUTDIR_BASE}\\${LIBNAME_TRACE}
-	COMMAND dir SpringheadLib.bat
-	COMMAND echo MakeLib executed
-	#COMMAND cmd /c SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}
-	#WORKING_DIRECTOEY
-	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
-	COMMENT [[  generating Springhead library... ]]
-    )
-endif()
+#if(${Windows})
+#    add_custom_target(MakeLib
+#	#OUTPUT_NAME_DEBUG ${OUTDIR_BASE}\\${LIBNAME_DEBUG}
+#	#OUTPUT_NAME_RELEASE ${OUTDIR_BASE}\\${LIBNAME_RELEASE}
+#	#OUTPUT_NAME_TRACE ${OUTDIR_BASE}\\${LIBNAME_TRACE}
+#	COMMAND dir SpringheadLib.bat
+#	COMMAND echo MakeLib executed
+#	#COMMAND cmd /c SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}
+#	#WORKING_DIRECTOEY
+#	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
+#	COMMENT [[  generating Springhead library... ]]
+#    )
+#endif()
 
 # end: Springhead

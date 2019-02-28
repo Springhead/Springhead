@@ -5,14 +5,12 @@ set(Target "RunSwig")
 message("** ${Target} **")
 
 # original directory
-set(RSOrgDir ${PROJECT_SOURCE_DIR}/RunSwig)
-set(FOOrgDir ${PROJECT_SOURCE_DIR}/Foundation)
-set(FWOrgDir ${PROJECT_SOURCE_DIR}/Framework)
+set(OrgDir ${PROJECT_SOURCE_DIR})
+set(RSOrgDir ${OrgDir}/RunSwig)
 
 # build directory
-set(RSBldDir ${PROJECT_SOURCE_DIR}/build/RunSwig)
-set(FOBldDir ${PROJECT_SOURCE_DIR}/build/Foundation)
-set(FWBldDir ${PROJECT_SOURCE_DIR}/build/Framework)
+set(BldDir ${PROJECT_BINARY_DIR})
+set(RSBldDir ${BldDir}/RunSwig)
 
 if(${Windows})
     set(Python python)
@@ -28,12 +26,10 @@ endif()
 # needed for invoking child scripts (these paths are on original file tree).
 # So we copy scripts from src/build/RunSwig and related ones first.
 #
+file(TO_NATIVE_PATH "${OrgDir}" OrgDir)
 file(TO_NATIVE_PATH "${RSOrgDir}" RSOrgDir)
-file(TO_NATIVE_PATH "${FOOrgDir}" FOOrgDir)
-file(TO_NATIVE_PATH "${FWOrgDir}" FWOrgDir)
+file(TO_NATIVE_PATH "${BldDir}" BldDir)
 file(TO_NATIVE_PATH "${RSBldDir}" RSBldDir)
-file(TO_NATIVE_PATH "${FOBldDir}" FOBldDir)
-file(TO_NATIVE_PATH "${FWBldDir}" FWBldDir)
 
 # Also rewrite .i file because it has relative path hardcoded!
 #
@@ -44,18 +40,16 @@ set(PattF ../Foundation=../../Foundation)
 #
 if(${Windows})
     add_custom_target(RunSwig
-	COMMAND copy ${RSOrgDir}\\FindSprPath.py ${RSBldDir} >NUL 2>&1
 	COMMAND copy ${RSOrgDir}\\PrepforCMake.py ${RSBldDir} >NUL 2>&1
-	COMMAND ${Python} PrepForCMake.py
+	COMMAND ${Python} PrepForCMake.py ${OrgDir} ${BldDir}
 	COMMAND ${Python} make_manager.py -A -c
 	COMMAND ${Make} -f ${Makefile}
 	COMMENT [[  generating files...]]
     )
 elseif(${Linux})
     add_custom_target(RunSwig
-	COMMAND cp -f ${RSOrgDir}/FindSprPath.py ${RSBldDir} >/dev/null 2>&1
 	COMMAND cp -f ${RSOrgDir}/PrepforCMake.py ${RSBldDir} >/dev/null 2>&1
-	COMMAND ${Python} PrepForCMake.py
+	COMMAND ${Python} PrepForCMake.py ${OrgDir} ${BldDir}
 	COMMAND ${Python} make_manager.py -A -c
 	COMMAND ${Make} -f ${Makefile}
 	COMMENT [[  generating files...]]
