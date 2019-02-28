@@ -41,7 +41,6 @@ add_subdirectory(Graphics)
 add_subdirectory(HumanInterface)
 add_subdirectory(Physics)
 add_subdirectory(RunSwig)
-#add_subdirectory(MakeLibrary)
 
 add_dependencies(Base RunSwig)
 add_dependencies(Collision Foundation RunSwig)
@@ -53,9 +52,10 @@ add_dependencies(Graphics Foundation RunSwig)
 add_dependencies(HumanInterface Foundation RunSwig)
 add_dependencies(Physics Collision Foundation RunSwig)
 
-# make Springhead library
+# main target
 #
-set(OUTDIR_BASE ../../../generated/lib)
+set(Target "Springhead")
+set(OUTDIR_BASE ${CMAKE_SOURCE_DIR}/../../generated/lib)
 if(${Windows})
 	string(REPLACE "/" "\\" OUTDIR_BASE ${OUTDIR_BASE})
 endif()
@@ -63,18 +63,19 @@ set(LIBNAME_DEBUG Springhead${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_RELEASE Springhead${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_TRACE Springhead${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
 
-#if(${Windows})
-#    add_custom_target(MakeLib
-#	#OUTPUT_NAME_DEBUG ${OUTDIR_BASE}\\${LIBNAME_DEBUG}
-#	#OUTPUT_NAME_RELEASE ${OUTDIR_BASE}\\${LIBNAME_RELEASE}
-#	#OUTPUT_NAME_TRACE ${OUTDIR_BASE}\\${LIBNAME_TRACE}
-#	COMMAND dir SpringheadLib.bat
-#	COMMAND echo MakeLib executed
-#	#COMMAND cmd /c SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}
-#	#WORKING_DIRECTOEY
-#	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
-#	COMMENT [[  generating Springhead library... ]]
-#    )
-#endif()
+if(${Windows})
+    add_custom_target(${Target} ALL
+	COMMAND cd ${CMAKE_SOURCE_DIR}
+	COMMAND SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}
+	#COMMAND SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${OUTPUT_NAME}
+	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
+	COMMENT [[  generating Springhead Library... ]]
+    )
+    set_target_properties(${Target} PROPERTIES
+	OUTPUT_NAME_DEBUG   ${OUTDIR_BASE}\\${LIBNAME_DEBUG}
+	OUTPUT_NAME_RELEASE ${OUTDIR_BASE}\\${LIBNAME_RELEASE}
+	OUTPUT_NAME_TRACE   ${OUTDIR_BASE}\\${LIBNAME_TRACE}
+    )
+endif()
 
 # end: Springhead
