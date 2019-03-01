@@ -262,10 +262,6 @@ public:
 	/** @brief solidTempPoseにアクセスする
 	*/
 	virtual Posed GetSolidTempPose() { return solidTempPose; }
-
-	/** @brief solidPullbackPoseにアクセスする
-	*/
-	virtual Posed GetSolidPullbackPose() { return solidPullbackPose; }
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -483,120 +479,6 @@ public:
 
 	// <!!>
 	double GTA() { return jointTempAngle; }
-};
-
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-class PHIKSpringActuator : public PHIKActuator {
-public:
-	SPR_OBJECTDEF(PHIKSpringActuator);
-	SPR_DECLMEMBEROF_PHIKSpringActuatorDesc;
-
-	/// IKの回転軸
-	Vec3d e[3];
-
-	/// 関節で実現すべき速度
-	Vec6d jointVelocity;
-
-	// --- --- --- --- --- --- --- --- --- ---
-
-	/** @brief 初期化
-	*/
-	virtual void Init() {
-		ndof = 6;
-		PHIKActuator::Init();
-		jointVelocity = Vec6d();
-		solidVelocity = Vec3d();
-		solidAngularVelocity = Vec3d();
-	}
-
-	/** @brief デフォルトコンストラクタ
-	*/
-	PHIKSpringActuator() {
-		Init();
-	}
-
-	/** @brief コンストラクタ
-	*/
-	PHIKSpringActuator(const PHIKSpringActuatorDesc& desc) {
-		Init();
-		SetDesc(&desc);
-	}
-
-	// --- --- --- --- ---
-
-	/** @brief 計算結果に従って制御対象を動かす
-	*/
-	virtual void Move();
-
-	// --- --- --- --- ---
-
-	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
-	*/
-	virtual void SetJoint(PHSpringIf* joint) { this->joint = joint; }
-
-	/** @brief 動作対象として設定された関節を取得する
-	*/
-	virtual PHSpringIf* GetJoint() { return this->joint->Cast(); }
-
-	/** @brief 関節一時姿勢をセットする
-	*/
-	void SetJointTempPose(Posed pose) { jointTempPose = pose; }
-
-	/** @brief 関節引き戻し目標をセットする
-	*/
-	void SetPullbackTarget(Posed pose) { pullbackTarget = pose; }
-
-	/** @brief 一時変数の関節角度を取得する
-	*/
-	Posed GetJointTempPose() { return jointTempPose; }
-
-	/** @brief 関節引き戻し目標を取得する
-	*/
-	Posed GetPullbackTarget() { return pullbackTarget; }
-
-	// --- --- --- --- ---
-
-	virtual bool		AddChildObject(ObjectIf* o);
-	virtual ObjectIf*	GetChildObject(size_t pos);
-	virtual	size_t		NChildObject()const;
-
-	// --- --- --- --- --- --- --- --- --- ---
-	// Non API Methods
-
-	/** @brief 回転軸を計算する
-	*/
-	virtual void CalcAxis();
-
-	/** @brief ヤコビアン計算前の処理
-	*/
-	virtual void BeforeCalcAllJacobian();
-
-	/** @brief 計算用変数を準備する前の処理
-	*/
-	virtual void BeforeSetupMatrix();
-
-	/** @brief 指定した制御点との間のヤコビアンを計算する
-	*/
-	virtual void CalcJacobian(PHIKEndEffector* endeffector);
-
-	/** @brief 引き戻し速度を計算する
-	*/
-	virtual void CalcPullbackVelocity();
-
-	// --- --- --- --- --- --- --- --- --- ---
-
-	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
-	*/
-	virtual void ApplyExactState(bool reverse = false);
-
-	/** @brief 一時変数の関節角度を可動域内にクリップする
-	*/
-	virtual bool LimitTempJoint();
-
-	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
-	*/
-	virtual void MoveTempJoint();
 };
 
 }
