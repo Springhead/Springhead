@@ -394,6 +394,8 @@
     <ClCompile Include="CRGrabController.cpp" />
     <ClCompile Include="CRMinimumJerkTrajectory.cpp" />
     <ClCompile Include="CRMinimumTorqueChangePlanner.cpp" />
+    <ClCompile Include="CRMotionController.cpp" />
+    <ClCompile Include="CRMotionPlanner.cpp" />
     <ClCompile Include="CRReachController.cpp" />
     <ClCompile Include="CRRegisterTypeDesc.cpp" />
     <ClCompile Include="CRSdk.cpp" />
@@ -415,6 +417,8 @@
     <ClInclude Include="CRGrabController.h" />
     <ClInclude Include="CRMinimumJerkTrajectory.h" />
     <ClInclude Include="CRMinimumTorqueChangePlanner.h" />
+    <ClInclude Include="CRMotionController.h" />
+    <ClInclude Include="CRMotionPlanner.h" />
     <ClInclude Include="CRReachController.h" />
     <ClInclude Include="CRSdk.h" />
     <ClInclude Include="CRTouchSensor.h" />
