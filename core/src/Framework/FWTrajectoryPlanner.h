@@ -5,6 +5,7 @@
 #include <Foundation/Object.h>
 #include <Framework/FrameworkDecl.hpp>
 #include <Framework/FWOptimizer.h>
+#include <Creature/CRMinimumJerkTrajectory.h>
 
 namespace Spr {
 	; 
@@ -16,102 +17,49 @@ namespace Spr {
 		  Authors : Yasuhiro WADA and Mitsuo KAWATO
 		  Outline : They got approximate solution of Minimum Torque Change Model by using iterative method named FIRM(Forward Inverse Relaxation Model).
 
+		  バグについて
+		  解決済のバグ
+		  ・動かし初めにジャンプが発生する
+		   -> 初期解の手先軌道生成時の開始手先位置に現在の手先ターゲットを指定することで解消
+		  残っているバグ
+		　・ローパスをかける回数を0にして、修正も切っているのに軌道が変わっていく
+		   -> IKを切り忘れていたり、PDゲインが適切じゃなかったり、といった原因と推測
+		      特にPDゲインについては何かとシビア
+		  
+		  問題
+		  ・フォワードは忠実だと思うが、インバースの修正がうまくいかない
+		  ・
+
 	*/
-
-	/// 作業空間での躍度最小軌道
-	class MinJerkTrajectory {
-	private:
-		// 
-		ControlPoint sPoint;
-		// 
-		ControlPoint fPoint;
-		//
-		ControlPoint vPoint;
-		// 係数行列
-		PTM::TMatrixRow<6, 3, double> coeffToV;
-		PTM::TMatrixRow<6, 3, double> coeffToF;
-	public:
-		// コンストラクタ(多項式の係数を決める)
-		//default
-		MinJerkTrajectory();
-		MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint);
-		MinJerkTrajectory(ControlPoint spoint, ControlPoint fpoint, ControlPoint vpoint);
-		Posed GetCurrentPose(double t);
-		Posed GetDeltaPose(double t);
-		Vec6d GetCurrentVelocity(double t);
-		double GetCurrentActiveness(double t);
-	};
-
-	class AngleMinJerkTrajectory {
-	private:
-		double sAngle;
-		double fAngle;
-		double stime;
-		double ftime;
-
-		double vAngle;
-		double vtime;
-
-		PTM::TVector<6, double> coeffToV;
-		PTM::TVector<6, double> coeffToF;
-	public:
-		//コンストラクタ(多項式の係数を決める)
-		//default
-		AngleMinJerkTrajectory() {};
-		//開始位置と終端位置のみ
-		AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double sAcc, double fAcc, double time);
-		AngleMinJerkTrajectory(double sangle, double fangle, double sVel, double fVel, double vangle, double vVel, double time, double vtime);
-		AngleMinJerkTrajectory(double vangle, double time, double vtime);
-		double GetCurrentAngle(double t);
-		double GetDeltaAngle(double t);
-		double GetCurrentVelocity(double t);
-	};
-
-	class QuaMinJerkTrajectory {
-	private:
-		Quaterniond sQua;
-		Quaterniond fQua;
-		double stime;
-		double ftime;
-		Quaterniond vQua;
-		double vtime;
-		Vec3d axis;
-		double angle;
-		AngleMinJerkTrajectory* amjt;
-		PTM::VVector<Quaterniond> velToQua;
-		PTM::TMatrixRow<6, 1, double> coeffToV;
-		PTM::TMatrixRow<6, 1, double> coeffToF;
-	public:
-		//コンストラクタ(多項式の係数を決める)
-		//default
-		QuaMinJerkTrajectory();
-		//開始位置と終端位置のみ
-		QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, double time);
-		QuaMinJerkTrajectory(Quaterniond squa, Quaterniond fqua, Vec3d sVel, Vec3d fVel, Vec3d sAcc, Vec3d fAcc, double time);
-		QuaMinJerkTrajectory(Quaterniond vqua, double time, double vtime);
-		~QuaMinJerkTrajectory();
-		Quaterniond GetCurrentQuaternion(double t);
-		Quaterniond GetDeltaQuaternion(double t);
-		Vec3d GetCurrentVelocity(double t);
-	};
-
+	
 	class FWTrajectoryPlanner : public Object{
 	public:
 		//Joint系の管理クラス(PHJointとは別)
 		class Joint {
 		public:
+			//
 			virtual void Initialize(int iterate, double movetime, int nVia, double rate = 1.0, bool vCorr = true) = 0;
+			//
 			virtual void MakeJointMinjerk(int cnt) = 0;
+			//
 			virtual void CloseFile() = 0;
+			//
 			virtual void SaveTorque(int n) = 0;
+			//
 			virtual void SaveTarget() = 0;
 			virtual void SetTarget(int k, int n) = 0;
+			//
 			virtual void SetTargetVelocity(int k, int n) = 0;
+			//
 			virtual void SetTargetInitial() = 0;
+			//
 			virtual void SetOffsetFromLPF(int n) = 0;
+			//
 			virtual void ResetOffset(double o) = 0;
+			//
 			virtual void SavePosition(int k, int n) = 0;
 			virtual void SaveVelocity(int k, int n) = 0;
+			//
 			virtual void SaveViaPoint(int v, int t) = 0;
 			virtual void SavePositionFromLPF(int k, int n) = 0;
 			virtual void SaveVelocityFromLPF(int k, int n) = 0;
@@ -133,6 +81,8 @@ namespace Spr {
 			virtual void UpdateIKParam(double b, double p) = 0;
 			virtual double GetMaxForce() = 0;
 			virtual void SetWeight(double w = 1.0) = 0;
+			virtual void SetPullbackTarget(int k, int n) = 0;
+			virtual void SetPullbackTargetFromInitial() = 0;
 		};
 		class HingeJoint : public Joint {
 		public:
@@ -155,7 +105,7 @@ namespace Spr {
 			double initialTorque;                //開始時の発揮トルク  torque[0]
 			double initialAngle;                 //開始時の関節角度  angle[i][0]
 			double initialVel;                   //開始時の角速度   angleVel[i][0]
-
+			double initialPullbackTarget;   // 開始時のIKプルバックターゲット
 			
 			double weight = 1.0;                 //評価ウェイト
 			double rateLPF = 1.0;                //LPFのレート
@@ -216,6 +166,8 @@ namespace Spr {
 			void OutputTorque();
 			double GetMaxForce() { return hinge->GetJoint()->GetMaxForce(); }
 			void SetWeight(double w) { weight = w; }
+			void SetPullbackTarget(int k, int n);
+			void SetPullbackTargetFromInitial();
 		};
 		class BallJoint : public Joint {
 		public:
@@ -239,6 +191,7 @@ namespace Spr {
 			Vec3d initialTorque;                 // 開始時の発揮トルク
 			Quaterniond initialOri;              // 開始時の関節角度
 			Vec3d initialVel;                    // 開始時の角速度
+			Quaterniond initialPullbackTarget;   // 開始時のIKプルバックターゲット
 
 			int iterate;                         // 繰り返し回数
 			double mtime;                        // 所要時間(s)
@@ -298,6 +251,8 @@ namespace Spr {
 			void OutputTorque();
 			double GetMaxForce() { return ball->GetJoint()->GetMaxForce(); }
 			void SetWeight(double w) { weight = w; }
+			void SetPullbackTarget(int k, int n);
+			void SetPullbackTargetFromInitial();
 		};
 		class Joints {
 			friend class Joint;
@@ -342,6 +297,8 @@ namespace Spr {
 			void SetTargetFromLPF(int k, int n);
 			void UpdateIKParam(double b, double p);
 			void OutputTorque();
+			void SetPullbackTarget(int k, int n);
+			void SetPullbackTargetFromInitial();
 		};
 
 		struct LPF {
@@ -365,6 +322,9 @@ namespace Spr {
 		PHIKEndEffectorIf* ikEndEffector;
 		// 開始姿勢
 		//ControlPoint startPoint = ControlPoint();
+		Posed initialTargetPose;
+		SpatialVector initialTargetVel;
+		SpatialVector initialTargetAcc;
 		// 目標姿勢
 		PHSolidIf* targetSolid;
 		PHSpringIf* targetSpring;
@@ -415,6 +375,7 @@ namespace Spr {
 
 		// トルク変化
 		double bestTorque;
+		std::vector<double> torqueChangeRecord;
 
 		// 計算フェイズ
 		enum Phase {
@@ -575,7 +536,7 @@ namespace Spr {
 		void ReloadCorrected(int k, bool nc = false);
 
 		// getters for trajectory
-		Posed GetTrajctoryData(int k, int n) { return Posed(Vec3d(1,2,20), Quaterniond()); }
+		Posed GetTrajctoryData(int k, int n) { return Posed(); }
 		Posed GetNotCorrectedTrajctoryData(int k, int n) { return Posed(); }
 		SpatialVector GetVeclocityData(int k, int n) { return SpatialVector(); }
 		SpatialVector GetNotCorrectedVelocityData(int k, int n) { return SpatialVector(); }

@@ -257,6 +257,7 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 		PHBallJoint* j = DCAST(PHBallJoint,joint);
 		Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();
 
+		// <!!> IKActuatorがついてないjointが間に入るとd.poseSocketがずれる
 		PHBallJointDesc d; j->GetDesc(&d);
 		Vec3d Pj = soParentPose * d.poseSocket * Vec3d(0,0,0);
 

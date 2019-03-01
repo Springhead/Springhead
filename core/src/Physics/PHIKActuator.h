@@ -330,6 +330,10 @@ public:
 	*/
 	Quaterniond GetJointTempOri() { return jointTempOri; }
 
+	/** @brief 関節引き戻し目標を取得する
+	*/
+	Quaterniond GetPullbackTarget() { return pullbackTarget; }
+
 	// --- --- --- --- ---
 
 	virtual bool		AddChildObject(ObjectIf* o);
@@ -436,6 +440,10 @@ public:
 	/** @brief 一時変数の関節角度を取得する
 	*/
 	double GetJointTempAngle() { return jointTempAngle; }
+
+	/** @brief 関節引き戻し目標を取得する
+	*/
+	double GetPullbackTarget() { return pullbackTarget; }
 
 	// --- --- --- --- ---
 

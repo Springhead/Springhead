@@ -66,13 +66,6 @@ struct CRTrajectoryPlannerIf : public ObjectIf {
 	void EnableChangePullback(bool e);
 	bool IsEnabledChangePullback();
 
-	//初期化
-	void Init();
-	//エンドエフェクタ設定
-	void SetControlTarget(PHIKEndEffectorIf* e);
-	//シーン設定
-	void SetScene(PHSceneIf* s);
-	void AddViaPoint(ViaPoint c);
 	//関節角度次元軌道計算
 	void CalcTrajectory();
 	void CalcOneStep();
@@ -80,14 +73,11 @@ struct CRTrajectoryPlannerIf : public ObjectIf {
 	void RecalcFromIterationN(int n);
 	//生成された軌道を実際適用
 	void JointTrajStep(bool step);
-	//
-	bool Moving();
+
 	//spring, damper set
 	void SetSpringDamper(double s = 1e5, double d = 1e5, bool mul = true);
 	//replay
 	void Replay(int ite, bool noncorrected = false);
-	//return best
-	int GetBest();
 	//
 	void ReloadCorrected(int k, bool nc = false);
 
