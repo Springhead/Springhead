@@ -56,26 +56,23 @@ add_dependencies(Physics Collision Foundation RunSwig)
 #
 set(Target "Springhead")
 set(OUTDIR_BASE ${CMAKE_SOURCE_DIR}/../../generated/lib)
-if(${Windows})
-	string(REPLACE "/" "\\" OUTDIR_BASE ${OUTDIR_BASE})
-endif()
-set(LIBNAME_DEBUG Springhead${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
-set(LIBNAME_RELEASE Springhead${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
-set(LIBNAME_TRACE Springhead${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
+set(LIBNAME_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
+set(LIBNAME_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
+set(LIBNAME_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
+set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_DEBUG})
+set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_RELEASE})
+set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRACE})
 
 if(${Windows})
     add_custom_target(${Target} ALL
 	COMMAND cd ${CMAKE_SOURCE_DIR}
-	COMMAND SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}
-	#COMMAND SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${OUTPUT_NAME}
+	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${LIBCMND_DEBUG}
+	COMMAND if "'$(Configuration)'" equ "'Release'" ${LIBCMND_RELEASE}
+	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${LIBCMND_TRACE}
 	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
 	COMMENT [[  generating Springhead Library... ]]
     )
-    set_target_properties(${Target} PROPERTIES
-	OUTPUT_NAME_DEBUG   ${OUTDIR_BASE}\\${LIBNAME_DEBUG}
-	OUTPUT_NAME_RELEASE ${OUTDIR_BASE}\\${LIBNAME_RELEASE}
-	OUTPUT_NAME_TRACE   ${OUTDIR_BASE}\\${LIBNAME_TRACE}
-    )
+elseif(${Linux})
 endif()
 
 # end: Springhead
