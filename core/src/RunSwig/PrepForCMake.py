@@ -21,7 +21,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2019/02/28 F.Kanehori	First release version.
+#	Ver 1.0	 2019/03/05 F.Kanehori	First release version.
 # ==============================================================================
 version = 1.0
 
@@ -89,6 +89,31 @@ def expand_filenames(names):
 		fnames.extend(glob.glob(name))
 	return fnames
 
+def is_newer(file_to_check, compared_with, use_mtime=True):
+	if not os.path.exists(file_to_check):
+		print('%s: "%s" does not exist' % (prog, file_to_check))
+		return None
+	if not os.path.exists(compared_with):
+		return True
+	#
+	st1 = os.stat(file_to_check)
+	st2 = os.stat(compared_with)
+	time1 = st1.st_mtime_ns if use_mtime else st1.st_ctime_ns
+	time2 = st2.st_mtime_ns if use_mtime else st2.st_ctime_ns
+	if time1 <= time2:
+		if verbose:
+			print('  %s is older ... not copy' % file_to_check)
+		return False
+	return True
+
+def copy_if_newer(fname, dstdir, add_info=None):
+	if not is_newer(fname, '%s/%s' % (dstdir, fname)):
+		return
+	if verbose:
+		src = '%s/%s' % (add_info, fname) if add_info else fname
+		print('  copy %s -> %s' % (src, dstdir))
+	shutil.copy(fname, dstdir)
+
 # ----------------------------------------------------------------------
 #  Main process
 #
@@ -99,9 +124,7 @@ cwd = os.getcwd()
 os.chdir(RS_srcdir)
 fnames = expand_filenames(['*.py', '*.bat', '*.projs', 'Makefile*'])
 for fname in fnames:
-	if verbose:
-		print('  copy %s -> %s' % (fname, RS_dstdir))
-	shutil.copy(fname, RS_dstdir)
+	copy_if_newer(fname, RS_dstdir)
 #
 pythonlib = 'pythonlib'
 dstdir = '%s/%s' % (RS_dstdir, pythonlib)
@@ -111,33 +134,28 @@ if not os.path.exists(dstdir):
 os.chdir(pythonlib)
 fnames = expand_filenames(['*.py'])
 for fname in fnames:
-	if verbose:
-		print('  copy %s/%s -> %s' % (pythonlib, fname, dstdir))
-	shutil.copy(fname, dstdir)
+	copy_if_newer(fname, dstdir, pythonlib)
 
 # (2) Foundation にあるスクリプトファイルを作業場所にコピーする
 #     Foundation にある.iファイルを変更して作業場所に書き出す
 #
 os.chdir(FO_srcdir)
 for fname in ['RunSwig.py', 'ScilabSwig.py']:
-	if verbose:
-		print('  copy %s -> %s' % (fname, FO_dstdir))
-	shutil.copy(fname, FO_dstdir)
+	copy_if_newer(fname, FO_dstdir)
 
-cmnd = 'python %s/replace.py' % RS_srcdir
-args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_dstdir
-stat = subprocess.Popen('%s %s' % (cmnd, args)).wait()
-if stat != 0:
-	print('%s: Error: rewrite "Scilab.i" failed' % prog)
-	sys.exit(1)
+if is_newer("Scilab.i", '%s/Scilab.i' % FO_dstdir):
+	cmnd = 'python %s/replace.py' % RS_srcdir
+	args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_dstdir
+	stat = subprocess.Popen('%s %s' % (cmnd, args)).wait()
+	if stat != 0:
+		print('%s: Error: rewrite "Scilab.i" failed' % prog)
+		sys.exit(1)
 
 # (3) Framework にあるスクリプトファイルを作業場所にコピーする
 #
 os.chdir(FW_srcdir)
 for fname in ['RunSwigFramework.py']:
-	if verbose:
-		print('  copy %s -> %s' % (fname, FW_dstdir))
-	shutil.copy(fname, FW_dstdir)
+	copy_if_newer(fname, FW_dstdir)
 
 #  以上
 #
