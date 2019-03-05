@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  SYNOPSIS:
-#	python PrepForCMake.py src-dir bld-dir
+#	python PrepForCMake.py src-dir dst-dir
 #	arguments:
 #	    src-dir:	'src' directory path on the original source tree.
-#	    bld-dir:	'src' directory path on the build tree.
+#	    dst-dir:	'src' directory path on the build tree.
 #
 #  DESCRIPTION:
 #	CMake を使用するにあたって必要な前処理を行なう。
@@ -21,11 +21,9 @@
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.00	 2019/03/05 F.Kanehori	First release version.
-#     Ver 1.01	 2019/03/07 F.Kanehori	Change .i file rewrite method.
-#     Ver 1.011	 2019/04/11 F.Kanehori	Discard Ver.1.02 and after.
+#	Ver 1.0	 2019/03/05 F.Kanehori	First release version.
 # ==============================================================================
-version = 1.011
+version = 1.0
 
 import sys
 import os
@@ -42,9 +40,9 @@ prog = os.path.basename(sys.argv[0]).split('.')[0]
 # ---------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: %prog [options] src-dir bld-dir\n'\
+usage = 'Usage: %prog [options] src-dir dst-dir\n'\
 	+ '\tsrc-dir: src directory on the original source tree\n'\
-	+ '\tbld-dir: src directory on the build tree'
+	+ '\tdst-dir: src directory on the build tree'
 parser = OptionParser(usage = usage)
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
@@ -66,11 +64,11 @@ if len(args) != 2:
 	sys.exit(1)
 
 srcdir = args[0].replace('\\', '/')
-blddir = args[1].replace('\\', '/')
+dstdir = args[1].replace('\\', '/')
 verbose = options.verbose
 if verbose:
 	print('src-dir: %s' % srcdir)
-	print('bld-dir: %s' % blddir)
+	print('dst-dir: %s' % dstdir)
 
 # ----------------------------------------------------------------------
 #  Directories
@@ -78,9 +76,9 @@ if verbose:
 RS_srcdir = '%s/RunSwig' % srcdir
 FO_srcdir = '%s/Foundation' % srcdir
 FW_srcdir = '%s/Framework' % srcdir
-RS_blddir = '%s/RunSwig' % blddir
-FO_blddir = '%s/Foundation' % blddir
-FW_blddir = '%s/Framework' % blddir
+RS_dstdir = '%s/RunSwig' % dstdir
+FO_dstdir = '%s/Foundation' % dstdir
+FW_dstdir = '%s/Framework' % dstdir
 
 # ----------------------------------------------------------------------
 #  Methods
@@ -108,27 +106,13 @@ def is_newer(file_to_check, compared_with, use_mtime=True):
 		return False
 	return True
 
-def copy_if_newer(fname, blddir, add_info=None):
-	if not is_newer(fname, '%s/%s' % (blddir, fname)):
+def copy_if_newer(fname, dstdir, add_info=None):
+	if not is_newer(fname, '%s/%s' % (dstdir, fname)):
 		return
 	if verbose:
 		src = '%s/%s' % (add_info, fname) if add_info else fname
-		print('  copy %s -> %s' % (src, blddir))
-	shutil.copy(fname, blddir)
-
-def find_include_dir(blddir):
-	cwd = blddir.replace(os.sep, '/').split('/')
-	incdir = ''
-	if 'core' in cwd:
-		while cwd != []:
-			if cwd[-1] == 'core':
-				incdir += 'include'
-				break
-			incdir += '../'
-			cwd = cwd[:-1]
-	else:
-		print('PrepForCMake: Error: can not find include directory')
-	return incdir
+		print('  copy %s -> %s' % (src, dstdir))
+	shutil.copy(fname, dstdir)
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -140,32 +124,28 @@ cwd = os.getcwd()
 os.chdir(RS_srcdir)
 fnames = expand_filenames(['*.py', '*.bat', '*.projs', 'Makefile*'])
 for fname in fnames:
-	copy_if_newer(fname, RS_blddir)
+	copy_if_newer(fname, RS_dstdir)
 #
 pythonlib = 'pythonlib'
-blddir = '%s/%s' % (RS_blddir, pythonlib)
-#os.makedirs(blddir, exist_ok=True)	## ??
-if not os.path.exists(blddir):
-	os.mkdir(blddir)
+dstdir = '%s/%s' % (RS_dstdir, pythonlib)
+#os.makedirs(dstdir, exist_ok=True)	## ??
+if not os.path.exists(dstdir):
+	os.mkdir(dstdir)
 os.chdir(pythonlib)
 fnames = expand_filenames(['*.py'])
 for fname in fnames:
-	copy_if_newer(fname, blddir, pythonlib)
+	copy_if_newer(fname, dstdir, pythonlib)
 
 # (2) Foundation にあるスクリプトファイルを作業場所にコピーする
 #     Foundation にある.iファイルを変更して作業場所に書き出す
 #
-if not os.path.exists(FO_blddir):
-	os.makedirs(FO_blddir)
 os.chdir(FO_srcdir)
 for fname in ['RunSwig.py', 'ScilabSwig.py']:
-	copy_if_newer(fname, FO_blddir)
+	copy_if_newer(fname, FO_dstdir)
 
-if is_newer("Scilab.i", '%s/Scilab.i' % FO_blddir):
-	incdir = find_include_dir(FO_blddir)
+if is_newer("Scilab.i", '%s/Scilab.i' % FO_dstdir):
 	cmnd = 'python %s/replace.py' % RS_srcdir
-	#args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_blddir
-	args = '-o %s/Scilab.i Scilab.i ../../include=%s' % (FO_blddir, incdir)
+	args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_dstdir
 	stat = subprocess.Popen('%s %s' % (cmnd, args)).wait()
 	if stat != 0:
 		print('%s: Error: rewrite "Scilab.i" failed' % prog)
@@ -173,11 +153,9 @@ if is_newer("Scilab.i", '%s/Scilab.i' % FO_blddir):
 
 # (3) Framework にあるスクリプトファイルを作業場所にコピーする
 #
-if not os.path.exists(FW_blddir):
-	os.makedirs(FW_blddir)
 os.chdir(FW_srcdir)
 for fname in ['RunSwigFramework.py']:
-	copy_if_newer(fname, FW_blddir)
+	copy_if_newer(fname, FW_dstdir)
 
 #  以上
 #
