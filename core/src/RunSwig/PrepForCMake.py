@@ -116,16 +116,13 @@ def copy_if_newer(fname, blddir, add_info=None):
 	shutil.copy(fname, blddir)
 
 def find_relative_dir(blddir):
-	print('FRD: cwd: %s' % os.getcwd())
 	cwd = blddir.replace(os.sep, '/').split('/')
 	reldir = ''
 	while cwd != []:
 		if cwd[-1] == 'core':
 			reldir += 'include'
-			print('FRD: found: %s' % reldir)
 			break
 		reldir += '../'
-		print('FRD: .....  %s' % reldir)
 		cwd = cwd[:-1]
 	return reldir
 
