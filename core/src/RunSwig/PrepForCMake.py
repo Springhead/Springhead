@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  SYNOPSIS:
-#	python PrepForCMake.py src-dir dst-dir
+#	python PrepForCMake.py src-dir bld-dir
 #	arguments:
 #	    src-dir:	'src' directory path on the original source tree.
-#	    dst-dir:	'src' directory path on the build tree.
+#	    bld-dir:	'src' directory path on the build tree.
 #
 #  DESCRIPTION:
 #	CMake を使用するにあたって必要な前処理を行なう。
@@ -22,8 +22,9 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2019/03/05 F.Kanehori	First release version.
+#	Ver 1.1	 2019/03/07 F.Kanehori	Change .i file rewrite method.
 # ==============================================================================
-version = 1.0
+version = 1.1
 
 import sys
 import os
@@ -40,9 +41,9 @@ prog = os.path.basename(sys.argv[0]).split('.')[0]
 # ---------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: %prog [options] src-dir dst-dir\n'\
+usage = 'Usage: %prog [options] src-dir bld-dir\n'\
 	+ '\tsrc-dir: src directory on the original source tree\n'\
-	+ '\tdst-dir: src directory on the build tree'
+	+ '\tbld-dir: src directory on the build tree'
 parser = OptionParser(usage = usage)
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
@@ -64,11 +65,11 @@ if len(args) != 2:
 	sys.exit(1)
 
 srcdir = args[0].replace('\\', '/')
-dstdir = args[1].replace('\\', '/')
+blddir = args[1].replace('\\', '/')
 verbose = options.verbose
 if verbose:
 	print('src-dir: %s' % srcdir)
-	print('dst-dir: %s' % dstdir)
+	print('bld-dir: %s' % blddir)
 
 # ----------------------------------------------------------------------
 #  Directories
@@ -76,9 +77,9 @@ if verbose:
 RS_srcdir = '%s/RunSwig' % srcdir
 FO_srcdir = '%s/Foundation' % srcdir
 FW_srcdir = '%s/Framework' % srcdir
-RS_dstdir = '%s/RunSwig' % dstdir
-FO_dstdir = '%s/Foundation' % dstdir
-FW_dstdir = '%s/Framework' % dstdir
+RS_blddir = '%s/RunSwig' % blddir
+FO_blddir = '%s/Foundation' % blddir
+FW_blddir = '%s/Framework' % blddir
 
 # ----------------------------------------------------------------------
 #  Methods
@@ -106,13 +107,27 @@ def is_newer(file_to_check, compared_with, use_mtime=True):
 		return False
 	return True
 
-def copy_if_newer(fname, dstdir, add_info=None):
-	if not is_newer(fname, '%s/%s' % (dstdir, fname)):
+def copy_if_newer(fname, blddir, add_info=None):
+	if not is_newer(fname, '%s/%s' % (blddir, fname)):
 		return
 	if verbose:
 		src = '%s/%s' % (add_info, fname) if add_info else fname
-		print('  copy %s -> %s' % (src, dstdir))
-	shutil.copy(fname, dstdir)
+		print('  copy %s -> %s' % (src, blddir))
+	shutil.copy(fname, blddir)
+
+def find_relative_dir(blddir):
+	print('FRD: cwd: %s' % os.getcwd())
+	cwd = blddir.replace(os.sep, '/').split('/')
+	reldir = ''
+	while cwd != []:
+		if cwd[-1] == 'core':
+			reldir += 'include'
+			print('FRD: found: %s' % reldir)
+			break
+		reldir += '../'
+		print('FRD: .....  %s' % reldir)
+		cwd = cwd[:-1]
+	return reldir
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -124,28 +139,30 @@ cwd = os.getcwd()
 os.chdir(RS_srcdir)
 fnames = expand_filenames(['*.py', '*.bat', '*.projs', 'Makefile*'])
 for fname in fnames:
-	copy_if_newer(fname, RS_dstdir)
+	copy_if_newer(fname, RS_blddir)
 #
 pythonlib = 'pythonlib'
-dstdir = '%s/%s' % (RS_dstdir, pythonlib)
-#os.makedirs(dstdir, exist_ok=True)	## ??
-if not os.path.exists(dstdir):
-	os.mkdir(dstdir)
+blddir = '%s/%s' % (RS_blddir, pythonlib)
+#os.makedirs(blddir, exist_ok=True)	## ??
+if not os.path.exists(blddir):
+	os.mkdir(blddir)
 os.chdir(pythonlib)
 fnames = expand_filenames(['*.py'])
 for fname in fnames:
-	copy_if_newer(fname, dstdir, pythonlib)
+	copy_if_newer(fname, blddir, pythonlib)
 
 # (2) Foundation にあるスクリプトファイルを作業場所にコピーする
 #     Foundation にある.iファイルを変更して作業場所に書き出す
 #
 os.chdir(FO_srcdir)
 for fname in ['RunSwig.py', 'ScilabSwig.py']:
-	copy_if_newer(fname, FO_dstdir)
+	copy_if_newer(fname, FO_blddir)
 
-if is_newer("Scilab.i", '%s/Scilab.i' % FO_dstdir):
+if is_newer("Scilab.i", '%s/Scilab.i' % FO_blddir):
+	reldir = find_relative_dir(FO_blddir)
 	cmnd = 'python %s/replace.py' % RS_srcdir
-	args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_dstdir
+	#args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_blddir
+	args = '-o %s/Scilab.i Scilab.i ../../include=%s' % (FO_blddir, reldir)
 	stat = subprocess.Popen('%s %s' % (cmnd, args)).wait()
 	if stat != 0:
 		print('%s: Error: rewrite "Scilab.i" failed' % prog)
@@ -155,7 +172,7 @@ if is_newer("Scilab.i", '%s/Scilab.i' % FO_dstdir):
 #
 os.chdir(FW_srcdir)
 for fname in ['RunSwigFramework.py']:
-	copy_if_newer(fname, FW_dstdir)
+	copy_if_newer(fname, FW_blddir)
 
 #  以上
 #
