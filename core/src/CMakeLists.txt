@@ -9,23 +9,26 @@ set(CMAKE_USE_RELATIVE_PATHS TRUE)
 
 # current platform
 set(Windows ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
-set(Linux ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+set(Linux   ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
 
 # compile options
 if(${Windows})
     message(STATUS "Host System: Windows")
     set (CMAKE_CXX_FLAGS "/Zi /W3 /sdl /MP /D _LIB /GF- /EHsc /Gy- /Qpar /arch:AVX /openmp /wd4996 /wd4244 /FC")
-    set (CMAKE_CXX_FLAGS_DEBUG "/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
+    set (CMAKE_CXX_FLAGS_DEBUG   "/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
     set (CMAKE_CXX_FLAGS_RELEASE "/Ob2 /Ot /Oy /Gr")
-    set (CMAKE_CXX_FLAGS_TRACE "/Ob2 /Ot /D TRACE /Oy- /Gr")
+    set (CMAKE_CXX_FLAGS_TRACE   "/Ob2 /Ot /D TRACE /Oy- /Gr")
 elseif(${Linux})
 endif()
 
-# constants
+# some defs
 set(ProjectName "Springhead")
 if(${Windows})
+    set(RunSwigDir ${CMAKE_SOURCE_DIR}/RunSwig)
+    set(Python ${RunSwigDir}/python_adapter.bat)
     set(VS_VERSION "15.0")
 elseif(${Linux})
+    set(Python python)
 endif()
 
 # projects
@@ -63,6 +66,18 @@ set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_DEBU
 set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_RELEASE})
 set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRACE})
 
+# clean (only for RunSwig)
+#
+if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
+    set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win64)
+else ()
+    set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win32)
+endif()
+set(LIBPATH_DEBUG   ${LIBDIR}/Springhead${LIBNAME_DEBUG}.lib)
+set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
+set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
+set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
+
 if(${Windows})
     add_custom_target(${Target} ALL
 	COMMAND cd ${CMAKE_SOURCE_DIR}
@@ -71,6 +86,12 @@ if(${Windows})
 	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${LIBCMND_TRACE}
 	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
 	COMMENT [[  generating Springhead Library... ]]
+    )
+    add_custom_target(RunSwig_Clean
+	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
+	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
+	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${CLEAN} ${LIBPATH_TRACE}
+	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
     )
 elseif(${Linux})
 endif()
