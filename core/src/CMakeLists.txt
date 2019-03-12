@@ -2,14 +2,30 @@
 
 cmake_minimum_required(VERSION 3.1)
 #
+# projects
+set(ProjectName "Springhead")
+message(STATUS "Project: ${ProjectName}")
+project(${ProjectName} CXX)
+#
+EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+if("x${ARCHTECTURE}" STREQUAL "x")
+    set(ARCHITECTURE ${CMAKE_HOST_SYSTEM_PROCESSOR})
+endif()
+if("${ARCHITECTURE}" STREQUAL "x86_64" OR "${ARCHITECTURE}" STREQUAL "AMD64")
+    set(ARCHITECTURE "x64")
+endif()
+if("x${ARCHTECTURE}" STREQUAL "x")
+    set(ARCHITECTURE "x64")
+endif()
+message(STATUS "Architecture: ${ARCHITECTURE}")
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
-set(CMAKE_GENERATOR_PLATFORM x64)
-set(CMAKE_INSTALL_PREFIX F:/Project/Springhead_CMAKE/core/src/build)
+set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 set(CMAKE_USE_RELATIVE_PATHS TRUE)
 
 # current platform
-set(Windows ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
-set(Linux   ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
 
 # compile options
 if(${Windows})
@@ -19,21 +35,21 @@ if(${Windows})
     set (CMAKE_CXX_FLAGS_RELEASE "/Ob2 /Ot /Oy /Gr")
     set (CMAKE_CXX_FLAGS_TRACE   "/Ob2 /Ot /D TRACE /Oy- /Gr")
 elseif(${Linux})
+    message(STATUS "Host System: Linux")
 endif()
 
 # some defs
-set(ProjectName "Springhead")
 if(${Windows})
     set(RunSwigDir ${CMAKE_SOURCE_DIR}/RunSwig)
     set(Python ${RunSwigDir}/python_adapter.bat)
     set(VS_VERSION "15.0")
+    message(STATUS "Visual Studio Version: ${VS_VERSION}")
 elseif(${Linux})
     set(Python python)
 endif()
 
-# projects
+# depending projects
 #
-project(${ProjectName} CXX)
 add_subdirectory(Base)
 add_subdirectory(Collision)
 add_subdirectory(Creature)
