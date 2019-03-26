@@ -44,7 +44,7 @@ compile:	$(OBJS)
 	$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
 
 test:	
-	./$(BIN_NAME)
+	-$(FORCE_TOMEOUT) ./$(BIN_NAME)
 
 
 ################################################################
