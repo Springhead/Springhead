@@ -6,32 +6,71 @@ cmake_minimum_required(VERSION 3.1)
 set(ProjectName "Springhead")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
-#
-set(ARCH ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID})
-if("${ARCH}" STREQUAL "x64" OR "${ARCH}" STREQUAL "X64")
-    set(ARCHITECTURE "x64")
-elseif("${ARCH}" STREQUAL "x86" OR "${ARCH}" STREQUAL "X86")
-    set(ARCHITECTURE "x86")
-endif()
+
+# sytem environment
+set(CMAKE_MAKE_SYSTEM_PATH ${CMAKE_SOURCE_DIR}/../make.system.cmake)
+include(${CMAKE_MAKE_SYSTEM_PATH})
 message(STATUS "Architecture: ${ARCHITECTURE}")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 set(CMAKE_USE_RELATIVE_PATHS TRUE)
 
-# current platform
-set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+# function definitions
+set(CMAKE_MAKE_FUNC_PATH ${CMAKE_SOURCE_DIR}/../make.func.cmake)
+include(${CMAKE_MAKE_FUNC_PATH})
 
 # compile options
 if(${Windows})
     message(STATUS "Host System: Windows")
-    set (CMAKE_CXX_FLAGS "/Zi /W3 /sdl /MP /D _LIB /GF- /EHsc /Gy- /Qpar /arch:AVX /openmp /wd4996 /wd4244 /FC")
-    set (CMAKE_CXX_FLAGS_DEBUG   "/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
-    set (CMAKE_CXX_FLAGS_RELEASE "/Ob2 /Ot /Oy /Gr")
-    set (CMAKE_CXX_FLAGS_TRACE   "/Ob2 /Ot /D TRACE /Oy- /Gr")
-elseif(${Linux})
-    message(STATUS "Host System: Linux")
+    set(CMAKE_CXX_FLAGS "/Zi /W3 /sdl /MP /D _LIB /GF- /EHsc /Gy- /Qpar \
+			 /arch:AVX /openmp /wd4996 /wd4244 /FC")
+    set(CMAKE_CXX_FLAGS_DEBUG   "/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
+    set(CMAKE_CXX_FLAGS_RELEASE "/Ob2 /Ot /Oy /Gr")
+    set(CMAKE_CXX_FLAGS_TRACE   "/Ob2 /Ot /D TRACE /Oy- /Gr")
+else()
+    set(TOP_DIR	${CMAKE_SOURCE_DIR})
+    if(${Linux})
+	message(STATUS "Host System: Linux")
+	set(TOP_DIR ${CMAKE_SOURCE_DIR})
+	set(LDFLAGS.EXTRA "-L${TOP_DIR}/lib/linux/ -L/usr/lib \
+		-L/usr/X11R6/lib -L/usr/lib/X11")
+	set(LDFLAGS.GL "-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
+		-ldl -lboost_regex")
+	set(INCLUDES "-I/usr/X11R6/include/ -I/usr/X11/include")
+	set(ARFLAGS  "r")
+    elseif(${Cygwin})
+	message(STATUS "Host System: Cygwin")
+    elseif(${MacOS})
+	message(STATUS "Host System: MacOS")
+    endif()
+    set(WARNING_FLAGS "-Wall \
+	-Wno-unused-variable \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-result \
+	-Wno-unused-value \
+	-Wno-unused-local-typedefs \
+	-Wno-unused-function \
+	-Wno-reorder \
+	-Wno-sign-compare \
+	-Wno-unknown-pragmas")
+    set(CMAKE_CXX_FLAGS	"${WARNING_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS_DEBUG	"-g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+    set(LDFLAGS "-L${TOP_DIR}/src/Base/ \
+	-L${TOP_DIR}/src/Collision/ \
+	-L${TOP_DIR}/src/Creature/ \
+	-L${TOP_DIR}/src/FileIO/ \
+	-L${TOP_DIR}/src/Foundation/ \
+	-L${TOP_DIR}/src/Framework/ \
+	-L${TOP_DIR}/src/Graphics/ \
+	-L${TOP_DIR}/src/HumanInterface/ \
+	-L${TOP_DIR}/src/Physics/ \
+	-lBase -lCollision -lCreature -lFileIO -lFoundation -lFramework \
+	-lGraphics -lHumanInterface -lPhysics
+	${LDFLAGS.EXTRA} \
+	${LDFLAGS.GL}")
+    set(INCLUDES "${INCLUDES} -I${TOP_DIR}/include -I${TOP_DIR}/src -I.")
 endif()
 
 # some defs
@@ -42,6 +81,8 @@ if(${Windows})
     message(STATUS "Visual Studio Version: ${VS_VERSION}")
 elseif(${Linux})
     set(Python python)
+elseif(${Cygwin})
+elseif(${MacOS})
 endif()
 
 # depending projects
