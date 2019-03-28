@@ -32,7 +32,6 @@ else()
     set(TOP_DIR	${CMAKE_SOURCE_DIR})
     if(${Linux})
 	message(STATUS "Host System: Linux")
-	set(TOP_DIR ${CMAKE_SOURCE_DIR})
 	set(LDFLAGS.EXTRA "-L${TOP_DIR}/lib/linux/ -L/usr/lib \
 		-L/usr/X11R6/lib -L/usr/lib/X11")
 	set(LDFLAGS.GL "-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
