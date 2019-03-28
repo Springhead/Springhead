@@ -4,6 +4,24 @@
 set(Target "Framework")
 message("** ${Target} **")
 
+# sytem environment
+if("$ENV{SPR_TOP_DIR}" STREQUAL "")
+    # assume current directory is ".../Springhead/core/src"
+    set(SPR_TOP_DIR ${CMAKE_SOURCE_DIR}/../..)
+else()
+    set(SPR_TOP_DIR $ENV{SPR_TOP_DIR})
+endif()
+get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
+set(SPR_SRC_DIR ${SPR_TOP_DIR}/core/src)
+set(SPR_INC_DIR ${SPR_TOP_DIR}/core/include)
+#
+file(TO_NATIVE_PATH "${SPR_TOP_DIR}" SPR_TOP_DIR)
+file(TO_NATIVE_PATH "${SPR_SRC_DIR}" SPR_SRC_DIR)
+file(TO_NATIVE_PATH "${SPR_INC_DIR}" SPR_INC_DIR)
+#message(STATUS  ${Target}:SPR_TOP_DIR: [${SPR_TOP_DIR}])
+#message(STATUS  ${Target}:SPR_SRC_DIR: [${SPR_SRC_DIR}])
+#message(STATUS  ${Target}:SPR_INC_DIR: [${SPR_INC_DIR}])
+
 # sources
 FILE(GLOB SRCS "*.cpp")
 add_library(${Target} STATIC ${SRCS})
@@ -25,9 +43,9 @@ endif()
 #
 set(CMAKE_USE_RELATIVE_PATHS TRUE)
 target_include_directories(${Target}
-    PRIVATE ${PROJECT_SOURCE_DIR}/../include
-    PRIVATE ${PROJECT_SOURCE_DIR}
-    PRIVATE ${PROJECT_SOURCE_DIR}/../../dependency/src
+    PRIVATE ${SPR_INC_DIR}
+    PRIVATE ${SPR_SRC_DIR}
+    PRIVATE ${SPR_TOP_DIR}/dependency/src
 )
 
 # end: CMakeLists.txt
