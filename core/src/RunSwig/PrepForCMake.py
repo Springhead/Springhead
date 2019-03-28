@@ -151,6 +151,8 @@ for fname in fnames:
 # (2) Foundation にあるスクリプトファイルを作業場所にコピーする
 #     Foundation にある.iファイルを変更して作業場所に書き出す
 #
+if not os.path.exists(FO_blddir):
+	os.makedirs(FO_blddir)
 os.chdir(FO_srcdir)
 for fname in ['RunSwig.py', 'ScilabSwig.py']:
 	copy_if_newer(fname, FO_blddir)
@@ -167,6 +169,8 @@ if is_newer("Scilab.i", '%s/Scilab.i' % FO_blddir):
 
 # (3) Framework にあるスクリプトファイルを作業場所にコピーする
 #
+if not os.path.exists(FW_blddir):
+	os.makedirs(FW_blddir)
 os.chdir(FW_srcdir)
 for fname in ['RunSwigFramework.py']:
 	copy_if_newer(fname, FW_blddir)
