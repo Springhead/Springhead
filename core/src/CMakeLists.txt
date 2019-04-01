@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.1)
 set(ProjectName "Springhead")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
+set(CMAKE_SUPPRESS_REGENERATION true)
 
 # sytem environment
 set(CMAKE_MAKE_SYSTEM_PATH ${CMAKE_SOURCE_DIR}/../make.system.cmake)
@@ -23,6 +24,7 @@ include(${CMAKE_MAKE_FUNC_PATH})
 # compile options
 if(${Windows})
     message(STATUS "Host System: Windows")
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
     set(CMAKE_CXX_FLAGS "/Zi /W3 /sdl /MP /D _LIB /GF- /EHsc /Gy- /Qpar \
 			 /arch:AVX /openmp /wd4996 /wd4244 /FC")
     set(CMAKE_CXX_FLAGS_DEBUG   "/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
