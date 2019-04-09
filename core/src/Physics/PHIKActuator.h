@@ -262,6 +262,10 @@ public:
 	/** @brief solidTempPoseにアクセスする
 	*/
 	virtual Posed GetSolidTempPose() { return solidTempPose; }
+
+	/** @brief solidPullbackPoseにアクセスする
+	*/
+	virtual Posed GetSolidPullbackPose() { return solidPullbackPose; }
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
