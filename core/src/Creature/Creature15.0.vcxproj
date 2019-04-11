@@ -393,6 +393,7 @@
     <ClCompile Include="CREngine.cpp" />
     <ClCompile Include="CRGazeController.cpp" />
     <ClCompile Include="CRGrabController.cpp" />
+    <ClCompile Include="CRMinimumJerkTrajectory.cpp" />
     <ClCompile Include="CRReachController.cpp" />
     <ClCompile Include="CRRegisterTypeDesc.cpp" />
     <ClCompile Include="CRSdk.cpp" />
@@ -411,6 +412,7 @@
     <ClInclude Include="CREngine.h" />
     <ClInclude Include="CRGazeController.h" />
     <ClInclude Include="CRGrabController.h" />
+    <ClInclude Include="CRMinimumJerkTrajectory.h" />
     <ClInclude Include="CRReachController.h" />
     <ClInclude Include="CRSdk.h" />
     <ClInclude Include="CRTouchSensor.h" />
