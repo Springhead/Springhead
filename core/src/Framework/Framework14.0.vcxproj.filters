@@ -64,9 +64,6 @@
     <ClCompile Include="FWConsoleDebugMonitor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="FWTrajectoryPlanner.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="FWStaticTorqueOptimizer.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -178,9 +175,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="FWStaticTorqueOptimizer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="FWTrajectoryPlanner.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

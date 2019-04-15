@@ -1,38 +1,45 @@
-#ifndef FWTRAJECTORYPLANNER_H
-#define FWTRAJECTORYPLANNER_H
+#ifndef CRTRAJECTORYPLANNER_H
+#define CRTRAJECTORYPLANNER_H
 
-#include <Framework/SprFWOptimizer.h>
-#include <Foundation/Object.h>
-#include <Framework/FrameworkDecl.hpp>
-#include <Framework/FWOptimizer.h>
+
 #include <Creature/CRMinimumJerkTrajectory.h>
+#include <Creature/SprCRTrajectoryPlanner.h>
+#include <Foundation/Object.h>
+#include <Physics/SprPHSolid.h>
+#include <Physics/SprPHIK.h>
+#include <Physics/SprPHScene.h>
+
+#include <vector>
+
+#include <Creature/CreatureDecl.hpp>
+
 
 namespace Spr {
-	; 
+	;
 
 	/**  FWTrajectoryPlanner
-	     トルク変化最小軌道を用いて関節系をコントロールするための計算クラス
-		 参考論文
-		  Title : Trajectory Formation of Arm Movement by a Neural Network with Forward and Inverse Dynamics Models
-		  Authors : Yasuhiro WADA and Mitsuo KAWATO
-		  Outline : They got approximate solution of Minimum Torque Change Model by using iterative method named FIRM(Forward Inverse Relaxation Model).
+	トルク変化最小軌道を用いて関節系をコントロールするための計算クラス
+	参考論文
+	Title : Trajectory Formation of Arm Movement by a Neural Network with Forward and Inverse Dynamics Models
+	Authors : Yasuhiro WADA and Mitsuo KAWATO
+	Outline : They got approximate solution of Minimum Torque Change Model by using iterative method named FIRM(Forward Inverse Relaxation Model).
 
-		  バグについて
-		  解決済のバグ
-		  ・動かし初めにジャンプが発生する
-		   -> 初期解の手先軌道生成時の開始手先位置に現在の手先ターゲットを指定することで解消
-		  残っているバグ
-		　・ローパスをかける回数を0にして、修正も切っているのに軌道が変わっていく
-		   -> IKを切り忘れていたり、PDゲインが適切じゃなかったり、といった原因と推測
-		      特にPDゲインについては何かとシビア
-		  
-		  問題
-		  ・フォワードは忠実だと思うが、インバースの修正がうまくいかない
-		  ・
+	バグについて
+	解決済のバグ
+	・動かし初めにジャンプが発生する
+	-> 初期解の手先軌道生成時の開始手先位置に現在の手先ターゲットを指定することで解消
+	残っているバグ
+	　・ローパスをかける回数を0にして、修正も切っているのに軌道が変わっていく
+	 -> IKを切り忘れていたり、PDゲインが適切じゃなかったり、といった原因と推測
+	 特にPDゲインについては何かとシビア
 
-	*/
-	
-	class FWTrajectoryPlanner : public Object{
+	 問題
+	 ・フォワードは忠実だと思うが、インバースの修正がうまくいかない
+	 ・
+
+	 */
+
+	class CRTrajectoryPlanner : public Object {
 	public:
 		//Joint系の管理クラス(PHJointとは別)
 		class Joint {
@@ -86,7 +93,7 @@ namespace Spr {
 		};
 		class HingeJoint : public Joint {
 		public:
-			PHIKHingeActuatorIf* hinge;          //アクチュエータ
+			PHIKHingeActuatorIf * hinge;          //アクチュエータ
 			PHSceneIf* scene;
 
 			PTM::VVector<double> torque;         //Inverse時に記録したトルク
@@ -106,7 +113,7 @@ namespace Spr {
 			double initialAngle;                 //開始時の関節角度  angle[i][0]
 			double initialVel;                   //開始時の角速度   angleVel[i][0]
 			double initialPullbackTarget;   // 開始時のIKプルバックターゲット
-			
+
 			double weight = 1.0;                 //評価ウェイト
 			double rateLPF = 1.0;                //LPFのレート
 			double originalSpring;               //元のばね定数
@@ -124,12 +131,12 @@ namespace Spr {
 			PTM::VVector<double> torqueChange;
 			PTM::VVector<double> torqueChangeLPF;
 			PTM::VVector<double> tChanges;
-			
+
 		private:
 			std::ofstream* torGraph;
 			std::ofstream* torChangeGraph;
 			bool outputEnable = false;
-			
+
 		public:
 			HingeJoint(PHIKHingeActuatorIf* hinge, std::string path, bool oe);
 			~HingeJoint();
@@ -171,7 +178,7 @@ namespace Spr {
 		};
 		class BallJoint : public Joint {
 		public:
-			PHIKBallActuatorIf* ball;            // アクチュエータ
+			PHIKBallActuatorIf * ball;            // アクチュエータ
 			PHSceneIf* scene;
 
 			/// 
@@ -258,7 +265,7 @@ namespace Spr {
 			friend class Joint;
 		public:
 			std::vector<Joint*> joints;
-			FWTrajectoryPlannerIf* fwPlanner;
+			CRTrajectoryPlannerIf* fwPlanner;
 		public:
 			Joints();
 			~Joints();
@@ -319,7 +326,7 @@ namespace Spr {
 	private:
 		// ----- 計算にかかわるもの -----
 		// 操作対象となるエンドエフェクタ
-		PHIKEndEffectorIf* ikEndEffector;
+		PHIKEndEffectorIf * ikEndEffector;
 		// 開始姿勢
 		//ControlPoint startPoint = ControlPoint();
 		Posed initialTargetPose;
@@ -402,10 +409,10 @@ namespace Spr {
 		}
 
 	public:
-		SPR_OBJECTDEF(FWTrajectoryPlanner);
-		SPR_DECLMEMBEROF_FWTrajectoryPlannerDesc;
+		SPR_OBJECTDEF(CRTrajectoryPlanner);
+		SPR_DECLMEMBEROF_CRTrajectoryPlannerDesc;
 		//コンストラクタ
-		FWTrajectoryPlanner(const FWTrajectoryPlannerDesc& desc = FWTrajectoryPlannerDesc()) {
+		CRTrajectoryPlanner(const CRTrajectoryPlannerDesc& desc = CRTrajectoryPlannerDesc()) {
 			SetDesc(&desc);
 		}
 
@@ -424,7 +431,7 @@ namespace Spr {
 		void ForwardInverseRelaxation();
 		// スタックした経由点からMJTを作成
 		void MakeMinJerk();
-		
+
 		// Forward model(torque -> pos)
 		void CompForwardDynamics(int k);
 		// Inverse model(pos -> torque)
@@ -498,7 +505,7 @@ namespace Spr {
 		bool IsEnabledChangePullback() { return bChangePullback; }
 
 		// ----- それ以外のSetter -----
-		
+
 		// エンドエフェクタ設定
 		void SetControlTarget(PHIKEndEffectorIf* e) { this->ikEndEffector = e; }
 		// シーン設定
