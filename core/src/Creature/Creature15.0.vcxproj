@@ -398,7 +398,7 @@
     <ClCompile Include="CRRegisterTypeDesc.cpp" />
     <ClCompile Include="CRSdk.cpp" />
     <ClCompile Include="CRTouchSensor.cpp" />
-    <ClCompile Include="CRTrajectoryController.cpp" />
+    <ClCompile Include="CRTrajectoryPlanner.cpp" />
     <ClCompile Include="CRVisualSensor.cpp" />
     <ClCompile Include="CRBodyGenerator\CRBallHumanBodyGen.cpp" />
     <ClCompile Include="CRBodyGenerator\CRBodyGen.cpp" />
@@ -406,6 +406,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Creature\SprCRReachController.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRTrajectoryPlanner.h" />
     <ClInclude Include="CRBody.h" />
     <ClInclude Include="CRBone.h" />
     <ClInclude Include="CRCreature.h" />
@@ -416,7 +417,7 @@
     <ClInclude Include="CRReachController.h" />
     <ClInclude Include="CRSdk.h" />
     <ClInclude Include="CRTouchSensor.h" />
-    <ClInclude Include="CRTrajectoryController.h" />
+    <ClInclude Include="CRTrajectoryPlanner.h" />
     <ClInclude Include="CRVisualSensor.h" />
     <ClInclude Include="CRBodyGenerator\CRBallHumanBodyGen.h" />
     <ClInclude Include="CRBodyGenerator\CRBodyGen.h" />
@@ -433,9 +434,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Foundation\Foundation15.0.vcxproj">
       <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Framework\Framework15.0.vcxproj">
-      <Project>{755660be-3b1e-416b-b795-4f653c83a43a}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Physics\Physics15.0.vcxproj">
       <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>

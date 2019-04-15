@@ -10,6 +10,9 @@
 
 #include <Foundation/SprObject.h>
 #include <Creature/SprCRController.h>
+#include <Physics/SprPHSolid.h>
+#include <Physics/SprPHJoint.h>
+#include <Physics/SprPHIK.h>
 
 namespace Spr{;
 

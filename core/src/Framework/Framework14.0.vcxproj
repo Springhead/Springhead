@@ -410,7 +410,6 @@
     <ClCompile Include="FWSkeletonSensor.cpp" />
     <ClCompile Include="FWSprTetgen.cpp" />
     <ClCompile Include="FWStaticTorqueOptimizer.cpp" />
-    <ClCompile Include="FWTrajectoryPlanner.cpp" />
     <ClCompile Include="FWWin.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -434,7 +433,6 @@
     <ClInclude Include="FWSkeletonSensor.h" />
     <ClInclude Include="FWSprTetgen.h" />
     <ClInclude Include="FWStaticTorqueOptimizer.h" />
-    <ClInclude Include="FWTrajectoryPlanner.h" />
     <ClInclude Include="FWWin.h" />
     <ClInclude Include="SprFrameworkDecl.hpp" />
     <ClInclude Include="..\..\include\SprFramework.h" />
