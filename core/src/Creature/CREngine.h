@@ -11,7 +11,7 @@
 #include <Foundation/Object.h>
 #include <Creature/SprCREngine.h>
 #include <Creature/SprCRController.h>
-//#include <Framework/SprFWObject.h>
+#include <Framework/SprFWObject.h>
 
 #include <vector>
 

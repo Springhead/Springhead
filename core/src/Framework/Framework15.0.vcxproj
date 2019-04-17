@@ -452,9 +452,6 @@
     <ClInclude Include="FWSdk.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Creature\Creature15.0.vcxproj">
-      <Project>{f674a4d7-a183-4c53-815d-12e17b71c6a0}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\FileIO\FileIO15.0.vcxproj">
       <Project>{3ca4689d-77da-4b2e-a718-cbb6a8ff04d7}</Project>
     </ProjectReference>

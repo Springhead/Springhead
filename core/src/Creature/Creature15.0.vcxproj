@@ -435,6 +435,9 @@
     <ProjectReference Include="..\Foundation\Foundation15.0.vcxproj">
       <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework15.0.vcxproj">
+      <Project>{755660be-3b1e-416b-b795-4f653c83a43a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Physics\Physics15.0.vcxproj">
       <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
     </ProjectReference>
