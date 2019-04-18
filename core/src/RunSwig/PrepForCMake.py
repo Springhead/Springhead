@@ -21,10 +21,11 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2019/03/05 F.Kanehori	First release version.
-#	Ver 1.1	 2019/03/07 F.Kanehori	Change .i file rewrite method.
+#     Ver 1.00	 2019/03/05 F.Kanehori	First release version.
+#     Ver 1.01	 2019/03/07 F.Kanehori	Change .i file rewrite method.
+#     Ver 1.011	 2019/04/11 F.Kanehori	Discard Ver.1.02 and after.
 # ==============================================================================
-version = 1.1
+version = 1.011
 
 import sys
 import os
@@ -115,16 +116,19 @@ def copy_if_newer(fname, blddir, add_info=None):
 		print('  copy %s -> %s' % (src, blddir))
 	shutil.copy(fname, blddir)
 
-def find_relative_dir(blddir):
+def find_include_dir(blddir):
 	cwd = blddir.replace(os.sep, '/').split('/')
-	reldir = ''
-	while cwd != []:
-		if cwd[-1] == 'core':
-			reldir += 'include'
-			break
-		reldir += '../'
-		cwd = cwd[:-1]
-	return reldir
+	incdir = ''
+	if 'core' in cwd:
+		while cwd != []:
+			if cwd[-1] == 'core':
+				incdir += 'include'
+				break
+			incdir += '../'
+			cwd = cwd[:-1]
+	else:
+		print('PrepForCMake: Error: can not find include directory')
+	return incdir
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -158,10 +162,10 @@ for fname in ['RunSwig.py', 'ScilabSwig.py']:
 	copy_if_newer(fname, FO_blddir)
 
 if is_newer("Scilab.i", '%s/Scilab.i' % FO_blddir):
-	reldir = find_relative_dir(FO_blddir)
+	incdir = find_include_dir(FO_blddir)
 	cmnd = 'python %s/replace.py' % RS_srcdir
 	#args = '-o %s/Scilab.i Scilab.i ../../include=../../../include' % FO_blddir
-	args = '-o %s/Scilab.i Scilab.i ../../include=%s' % (FO_blddir, reldir)
+	args = '-o %s/Scilab.i Scilab.i ../../include=%s' % (FO_blddir, incdir)
 	stat = subprocess.Popen('%s %s' % (cmnd, args)).wait()
 	if stat != 0:
 		print('%s: Error: rewrite "Scilab.i" failed' % prog)

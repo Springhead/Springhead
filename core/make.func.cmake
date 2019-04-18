@@ -1,3 +1,6 @@
+#  make.func.cmake
+
+# ------------------------------------------------------------------------------
 #  eval()
 #	code		実行する(CMakeの)コード
 #
@@ -8,6 +11,7 @@ function(eval code)
     file(REMOVE ${path})
 endfunction()
 
+# ------------------------------------------------------------------------------
 #  環境変数が設定されていたらその値を、さもなければデフォルト値を返す。
 #  function env()
 #	return_var	戻り値を設定する変数名
@@ -23,6 +27,7 @@ function(envval return_var environ_name default_value)
     endif()
 endfunction()
 
+# ------------------------------------------------------------------------------
 #  環境変数の値に従って"-I"オプションを設定する。
 #  function add_inc()
 #	return_var	戻り値を設定する変数名
@@ -37,6 +42,7 @@ function(add_inc return_var environ_name)
     endif()
 endfunction()
 
+# ------------------------------------------------------------------------------
 #  環境変数の値に従って"-L"オプションを設定する。
 #  function add_inc()
 #	return_var	戻り値を設定する変数名
@@ -51,3 +57,4 @@ function(add_lib return_var environ_name)
     endif()
 endfunction()
 
+# end: make.func.cmake

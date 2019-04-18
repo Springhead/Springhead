@@ -28,8 +28,9 @@
 #	Ver 1.6  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
 #	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 #	Ver 1.8  2019/02/26 F.Kanehori	Cmake環境に対応.
+#	Ver 1.9  2019/04/01 F.Kanehori	Python library path 検索方法変更.
 # ==============================================================================
-version = 1.7
+version = 1.9
 debug = False
 trace = False
 
@@ -54,6 +55,9 @@ dry_run = 1 if debug else 0
 sys.path.append('../RunSwig')
 from FindSprPath import *
 spr_path = FindSprPath(prog)
+if spr_path.top is None:
+	if os.environ.get('SPR_TOP_DIR', None) is not None:
+		spr_path.top = os.environ.get('SPR_TOP_DIR')
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from TextFio import *
@@ -72,9 +76,6 @@ unix = util.is_unix()
 #  Directories
 #
 sprtop = spr_path.abspath()
-##bindir = spr_path.relpath('bin')
-##incdir = spr_path.relpath('inc')
-##srcdir = spr_path.relpath('src')
 bindir = spr_path.abspath('bin')
 incdir = spr_path.abspath('inc')
 srcdir = spr_path.abspath('src')

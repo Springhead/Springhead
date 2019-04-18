@@ -5,11 +5,22 @@ set(Target "Base")
 message("** ${Target} **")
 
 # sytem environment
-if("$ENV{SPR_TOP_DIR}" STREQUAL "")
+set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+
+# find Springhead top directory
+set(SPR_TOP_DIR "")
+if(${Windows})
+	set(SPR_TOP_DIR_TEXT "C:/Windows/TEMP/CMakeTopDir.txt")
+else()
+	set(SPR_TOP_DIR_TEXT "/tmp/CMakeTopDir.txt")
+endif()
+if(EXISTS ${SPR_TOP_DIR_TEXT})
+    file(READ ${SPR_TOP_DIR_TEXT} SPR_TOP_DIR)
+endif()
+if("${SPR_TOP_DIR}" STREQUAL "")
     # assume current directory is ".../Springhead/core/src"
     set(SPR_TOP_DIR ${CMAKE_SOURCE_DIR}/../..)
-else()
-    set(SPR_TOP_DIR $ENV{SPR_TOP_DIR})
 endif()
 get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
 set(SPR_SRC_DIR ${SPR_TOP_DIR}/core/src)

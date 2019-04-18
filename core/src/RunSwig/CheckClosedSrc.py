@@ -25,9 +25,11 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2019/01/08 F.Kanehori	初版
+#     Ver 1.00	 2019/01/08 F.Kanehori	初版
+#     Ver 1.01	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.011	 2019/04/11 F.Kanehori	Discard Ver.1.02 and after.
 # ==============================================================================
-version = 1.0
+version = 1.011
 
 import sys
 import os
@@ -42,7 +44,7 @@ prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 patt = r'#define[ \t]+USE_CLOSED_SRC'
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import Springhead python library.
 #
 from FindSprPath import *
 spr_path = FindSprPath(prog)
