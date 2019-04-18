@@ -1,0 +1,76 @@
+#  CMakeLists_customize.txt.sample
+#
+#    このファイルには cmake に対するデフォルトのパラメータが定義されています。
+#    これらのパラメータを変更する場合には、次の手順に従ってください。
+#
+#    (1) ファイル "CMakeLists_customize.txt" があれば削除する。
+#    (2) ファイル "CMakeLists_customize.txt.sample" を、
+#		     "CMakeLists_customize.txt" という名前でコピーする。
+#    (3) ファイル "CMakeLists_customize.txt" を編集する。
+#
+#    (*** このファイルを直接編集しないでください ***)
+
+# ------------------------------------------------------------------------------
+#  Compile options for Windows (Visual Studio).
+#
+set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D \"_LIB\" /GF- /EHsc /Gy- /Qpar \
+			 /arch:AVX /openmp /wd\"4996\" /wd\"4244\" /FC")
+set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
+set(WIN_COPT_RELEASE	"/Ob2 /Ot /Oy /Gr")
+set(WIN_COPT_TRACE	"/Ob2 /Ot /D TRACE /Oy- /Gr")
+
+# ------------------------------------------------------------------------------
+#  Compile options for Linux (g++).
+#
+set(LINUX_WFLAGS "-Wall \
+	-Wno-unused-variable \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-result \
+	-Wno-unused-value \
+	-Wno-unused-local-typedefs \
+	-Wno-unused-function \
+	-Wno-reorder \
+	-Wno-sign-compare \
+	-Wno-unknown-pragmas")
+set(LINUX_COPT_COMMON	"${WARNING_FLAGS} -fPIC")
+set(LINUX_COPT_DEBUG	"-g")
+set(LINUX_COPT_RELEASE	"-O2")
+
+# ------------------------------------------------------------------------------
+#  External packages (boost, glew and freeglut).
+#
+#    これらのパッケージを独自にインストールしておりそれらを使用するときは、
+#    次の変数の値を適切なパス(絶対パス)で定義し直してください。
+#
+#set(BOOST_ROOT "C:/Package/boost_1_70_0/include/boost-1_70")
+#set(GLEW_ROOT "C:/Package/glew-2.1.0")
+#set(GLUT_ROOT "C:/Package/freeglut")
+#
+#    GLEW について
+#	上記の GLEW_ROOT を設定しただけでは library が見つからないエラーが
+#	発生します (glew-2.1.0 Windows binary istribution の場合)。
+#	上記に加え、次の変数が library directory を指すように設定してください。
+#
+#set(GLEW_LIB32_DIR "${GLEW_ROOT}/lib/Release/Win32")
+#set(GLEW_LIB64_DIR "${GLEW_ROOT}/lib/Release/x64")
+
+# ------------------------------------------------------------------------------
+#  Install directories (library and headers).
+#
+#    作成したライブラリ及びコンパイルに必要なヘッダファイルをユーザが指定する
+#    ディレクトリにインストールには、次の変数の値を適切なパス(絶対パス)で定義
+#    し直してください (ターゲット "INSTALL" が生成されます)。
+#    コンパイルが済んだあとで "INSTALL" を実行すればインストールが行われます。
+#
+#    SPRINGHEAD_INCLUDE_PREFIX:
+#	ヘッダファイルディレクトリのインストール先 (directory)。
+#	ヘッダファイルは "${SPRINGHEAD_INCLUDE_PREFIX}/include" にコピーされる。
+#    SPRINGHEAD_LIBRARY_DEBUG:
+#    SPRINGHEAD_LIBRARY_RELEASE:
+#	ライブラリファイルのインストール先 (directory)。
+#
+#set(SPRINGHEAD_INCLUDE_PREFIX "/usr/local")
+#set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "/usr/local/lib")
+#set(SPRINGHEAD_LIBRARY_DIR_RELEASE "/usr/local/lib")
+
+# end: CMakeLists_customize.txt.sample

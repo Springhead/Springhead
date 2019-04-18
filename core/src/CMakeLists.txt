@@ -1,80 +1,100 @@
 # CMakeLists.txt for Springhead
 
 cmake_minimum_required(VERSION 3.1)
+
+# ------------------------------------------------------------------------------
+#  Definition of project.
 #
-# projects
 set(ProjectName "Springhead")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
+set(CMAKE_USE_RELATIVE_PATHS true)
 
-# sytem environment
-set(CMAKE_MAKE_SYSTEM_PATH ${CMAKE_SOURCE_DIR}/../make.system.cmake)
-include(${CMAKE_MAKE_SYSTEM_PATH})
+# ------------------------------------------------------------------------------
+#  Read default/customized parameter file.
+#
+set(CUSTOM_FILE "${CMAKE_SOURCE_DIR}/CMakeLists_customize.txt")
+set(SAMPLE_FILE "${CMAKE_SOURCE_DIR}/CMakeLists_customize.txt.sample")
+if(NOT EXISTS ${CUSTOM_FILE})
+    message(STATUS "copy\ ${SAMPLE_FILE}\ to\ ${CUSTOM_FILE}")
+    file(READ ${SAMPLE_FILE} FILE_CONTENTS)
+    file(WRITE ${CUSTOM_FILE} ${FILE_CONTENTS})
+endif()
+include(${CUSTOM_FILE})
+message(STATUS "read\ ${CUSTOM_FILE}")
+
+# ------------------------------------------------------------------------------
+#  Top directory of Springhead tree.
+#	Top directory can be set by iinvoking "cmake -D TOPDIR=<dir>".
+#	Otherwise cmake is invoked at "<TOPDIR>/core/src".
+#
+if("${TOPDIR}" STREQUAL "")
+    set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
+endif()
+get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
+set(SPR_TOP_DIR ${TOPDIR})
+set(SPR_CORE_DIR "${TOPDIR}/core")
+set(SPR_INC_DIR "${TOPDIR}/core/include")
+
+# ------------------------------------------------------------------------------
+#  Sytem environment.
+#
+include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
-set(CMAKE_USE_RELATIVE_PATHS TRUE)
+set(CMAKE_BUILD_TYPE Release)
 
-# function definitions
-set(CMAKE_MAKE_FUNC_PATH ${CMAKE_SOURCE_DIR}/../make.func.cmake)
-include(${CMAKE_MAKE_FUNC_PATH})
+# ------------------------------------------------------------------------------
+#  Read function definitions.
+#
+include("${SPR_CORE_DIR}/make.func.cmake")
 
-# compile options
+# ------------------------------------------------------------------------------
+#  Set compile options.
+#
 if(${Windows})
     message(STATUS "Host System: Windows")
     set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
-    set(CMAKE_CXX_FLAGS "/Zi /W3 /sdl /MP /D _LIB /GF- /EHsc /Gy- /Qpar \
-			 /arch:AVX /openmp /wd4996 /wd4244 /FC")
-    set(CMAKE_CXX_FLAGS_DEBUG   "/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
-    set(CMAKE_CXX_FLAGS_RELEASE "/Ob2 /Ot /Oy /Gr")
-    set(CMAKE_CXX_FLAGS_TRACE   "/Ob2 /Ot /D TRACE /Oy- /Gr")
-else()
-    set(TOP_DIR	${CMAKE_SOURCE_DIR})
-    if(${Linux})
-	message(STATUS "Host System: Linux")
-	set(LDFLAGS.EXTRA "-L${TOP_DIR}/lib/linux/ -L/usr/lib \
-		-L/usr/X11R6/lib -L/usr/lib/X11")
-	set(LDFLAGS.GL "-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
-		-ldl -lboost_regex")
-	set(INCLUDES "-I/usr/X11R6/include/ -I/usr/X11/include")
-	set(ARFLAGS  "r")
-    elseif(${Cygwin})
-	message(STATUS "Host System: Cygwin")
-    elseif(${MacOS})
-	message(STATUS "Host System: MacOS")
-    endif()
-    set(WARNING_FLAGS "-Wall \
-	-Wno-unused-variable \
-	-Wno-unused-but-set-variable \
-	-Wno-unused-result \
-	-Wno-unused-value \
-	-Wno-unused-local-typedefs \
-	-Wno-unused-function \
-	-Wno-reorder \
-	-Wno-sign-compare \
-	-Wno-unknown-pragmas")
-    set(CMAKE_CXX_FLAGS	"${WARNING_FLAGS} -fPIC")
-    set(CMAKE_CXX_FLAGS_DEBUG	"-g")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
-    set(LDFLAGS "-L${TOP_DIR}/src/Base/ \
-	-L${TOP_DIR}/src/Collision/ \
-	-L${TOP_DIR}/src/Creature/ \
-	-L${TOP_DIR}/src/FileIO/ \
-	-L${TOP_DIR}/src/Foundation/ \
-	-L${TOP_DIR}/src/Framework/ \
-	-L${TOP_DIR}/src/Graphics/ \
-	-L${TOP_DIR}/src/HumanInterface/ \
-	-L${TOP_DIR}/src/Physics/ \
-	-lBase -lCollision -lCreature -lFileIO -lFoundation -lFramework \
-	-lGraphics -lHumanInterface -lPhysics
-	${LDFLAGS.EXTRA} \
-	${LDFLAGS.GL}")
-    set(INCLUDES "${INCLUDES} -I${TOP_DIR}/include -I${TOP_DIR}/src -I.")
+    set(CMAKE_CXX_FLAGS		${WIN_COPT_COMMON})
+    set(CMAKE_CXX_FLAGS_DEBUG	${WIN_COPT_DEBUG})
+    set(CMAKE_CXX_FLAGS_RELEASE	${WIN_COPT_RELEASE})
+    set(CMAKE_CXX_FLAGS_TRACE	${WIN_COPT_TRACE})
+elseif(${Linux})
+    message(STATUS "Host System: Linux")
+    set(SRC_DIR	"${Ssrc/PR_CORE_DIR}/src")
+    set(INC_DIR	"${SPR_CORE_DIR}/include")
+    set(LIB_DIR	"${SPR_CORE_DIR}/lib")
+    set(CMAKE_CXX_FLAGS		${LINUX_COPT_COMMON})
+    set(CMAKE_CXX_FLAGS_DEBUG	${LINUX_COPT_DEBUG})
+    set(CMAKE_CXX_FLAGS_RELEASE	${LINUX_COPT_RELEASE})
+    set(LDFLAGS.EXTRA	"-L${LIB_DIR}/linux/ -L/usr/lib \
+			 -L/usr/X11R6/lib -L/usr/lib/X11")
+    set(LDFLAGS.GL	"-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
+			 -ldl -lboost_regex")
+    set(INCLUDES	"-I/usr/X11R6/include/ -I/usr/X11/include")
+    set(ARFLAGS		"r")
+    set(LDFLAGS "-L${SRC_DIR}/Base/ \
+		 -L${SRC_DIR}/Collision/ \
+		 -L${SRC_DIR}/Creature/ \
+		 -L${SRC_DIR}/FileIO/ \
+		 -L${SRC_DIR}/Foundation/ \
+		 -L${SRC_DIR}/Framework/ \
+		 -L${SRC_DIR}/Graphics/ \
+		 -L${SRC_DIR}/HumanInterface/ \
+		 -L${SRC_DIR}/Physics/ \
+		 -lBase -lCollision -lCreature -lFileIO -lFoundation -lFramework \
+		 -lGraphics -lHumanInterface -lPhysics
+		 ${LDFLAGS.EXTRA} \
+		 ${LDFLAGS.GL}")
+    set(INCLUDES "${INCLUDES} -I${INC_DIR} -I${SRC_DIR} -I.")
 endif()
 
-# some defs
+# ------------------------------------------------------------------------------
+#  Some other definitions.
+#
 if(${Windows})
     set(RunSwigDir ${CMAKE_SOURCE_DIR}/RunSwig)
     set(Python ${RunSwigDir}/python_adapter.bat)
@@ -82,11 +102,50 @@ if(${Windows})
     message(STATUS "Visual Studio Version: ${VS_VERSION}")
 elseif(${Linux})
     set(Python python)
-elseif(${Cygwin})
-elseif(${MacOS})
 endif()
 
-# depending projects
+# ------------------------------------------------------------------------------
+#  Definition of external packages.
+#
+if(DEFINED BOOST_ROOT)
+    message([\ finding\ package:\ Boost\ ])
+    cmake_policy(SET CMP0074 NEW)
+    find_package(Boost REQUIRED)
+    if(Boost_FOUND)
+	message(STATUS Boost_INCLUDE_DIRS:\ ${Boost_INCLUDE_DIRS})
+    else()
+	message(STATUS Boost\ NOT\ FOUND)
+    endif()
+endif()
+if(DEFINED GLEW_ROOT)
+    message([\ finding\ package:\ GLEW\ ])
+    cmake_policy(SET CMP0074 NEW)
+    if(DEFINED GLEW_LIB32_DIR AND "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x86")
+	list(APPEND CMAKE_PREFIX_PATH ${GLEW_LIB32_DIR})
+    endif()
+    if(DEFINED GLEW_LIB64_DIR AND "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
+	list(APPEND CMAKE_PREFIX_PATH ${GLEW_LIB64_DIR})
+    endif()
+    find_package(GLEW)
+    if(GLEW_FOUND)
+	message(STATUS GLEW_INCLUDE_DIRS:\ ${GLEW_INCLUDE_DIRS})
+    else()
+	message(STATUS GLEW\ NOT\ FOUND)
+    endif()
+endif()
+if(DEFINED GLUT_ROOT)
+    message([\ finding\ package:\ GLUT\ ])
+    cmake_policy(SET CMP0074 NEW)
+    find_package(GLUT REQUIRED)
+    if(GLUT_FOUND)
+	message(STATUS GLUT_INCLUDE_DIR:\ ${GLUT_INCLUDE_DIR})
+    else()
+	message(STATUS GLUT\ NOT\ FOUND)
+    endif()
+endif()
+
+# ------------------------------------------------------------------------------
+#  Define depending projects.
 #
 add_subdirectory(Base)
 add_subdirectory(Collision)
@@ -109,10 +168,12 @@ add_dependencies(Graphics Foundation RunSwig)
 add_dependencies(HumanInterface Foundation RunSwig)
 add_dependencies(Physics Collision Foundation RunSwig)
 
-# main target
+# ------------------------------------------------------------------------------
+#  Main target.
 #
-set(Target "Springhead")
-set(OUTDIR_BASE ${CMAKE_SOURCE_DIR}/../../generated/lib)
+set(Target ${ProjectName})
+set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
+#set(OUTDIR_BASE ${CMAKE_SOURCE_DIR}/../../generated/lib)
 set(LIBNAME_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
@@ -120,12 +181,15 @@ set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_DEBU
 set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_RELEASE})
 set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRACE})
 
-# clean (only for RunSwig)
+# ------------------------------------------------------------------------------
+#  Clean (only for RunSwig).
 #
 if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
-    set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win64)
+    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
+    #set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win64)
 else ()
-    set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win32)
+    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
+    #set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win32)
 endif()
 set(LIBPATH_DEBUG   ${LIBDIR}/Springhead${LIBNAME_DEBUG}.lib)
 set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
@@ -133,7 +197,7 @@ set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
 set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
 
 if(${Windows})
-    add_custom_target(${Target} ALL
+    add_custom_target(${ProjectName} ALL
 	COMMAND cd ${CMAKE_SOURCE_DIR}
 	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${LIBCMND_DEBUG}
 	COMMAND if "'$(Configuration)'" equ "'Release'" ${LIBCMND_RELEASE}
@@ -148,6 +212,30 @@ if(${Windows})
 	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
     )
 elseif(${Linux})
+endif()
+
+# ------------------------------------------------------------------------------
+#  Install.
+#
+if(DEFINED SPRINGHEAD_INCLUDE_PREFIX	  AND
+   DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG	  AND
+   DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
+    message(**\ INSTALL:\ Debug:\ \ \ ${SPRINGHEAD_LIBRARY_DIR_DEBUG}\ **)
+    message(**\ INSTALL:\ Release:\   ${SPRINGHEAD_LIBRARY_DIR_RELEASE}\ **)
+    install(FILES ${LIBPATH_DEBUG}
+	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
+	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	CONFIGURATIONS Debug
+    )
+    install(FILES ${LIBPATH_RELEASE}
+	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_RELEASE}
+	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	CONFIGURATIONS Release
+    )
+    message(**\ INSTALL:\ Headers:\ ${SPRINGHEAD_INCLUDE_PREFIX}\ **)
+    install(DIRECTORY ${SPR_INC_DIR}
+	DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
+    )
 endif()
 
 # end: Springhead

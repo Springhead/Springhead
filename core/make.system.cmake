@@ -1,3 +1,6 @@
+#  make.system.cmake
+
+# ------------------------------------------------------------------------------
 #  システムアーキテクチャを判定する
 #
 set(ARCH ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID})
@@ -13,6 +16,7 @@ elseif("${PROC}" STREQUAL "x86_64" OR "${PROC}" STREQUAL "AMD64")
     set(ARCHITECTURE "x64")
 endif()
 
+# ------------------------------------------------------------------------------
 #  実行OSを判定する
 #	Cygwin, MacOS について判定条件を追加すること
 #
@@ -21,3 +25,4 @@ set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
 set(Cygwin  False)
 set(MacOS   False)
 
+# end: make.system.cmake

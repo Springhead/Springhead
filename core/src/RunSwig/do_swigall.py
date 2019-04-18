@@ -41,19 +41,20 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2012/10/25 F.Kanehori	First release version.
-#	Ver 2.0	 2013/01/07 F.Kanehori	全面改訂
-#	Ver 3.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
-#	Ver 3.01 2017/06/29 F.Kanehori	Revise some messages.
-#	Ver 3.1  2017/07/24 F.Kanehori	Python executable directory moved.
-#	Ver 3.2  2017/09/06 F.Kanehori	New python library に対応.
-#	Ver 3.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#	Ver 3.4  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 3.5  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 3.6  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#	Ver 3.7  2019/02/26 F.Kanehori	Cmake環境に対応.
+#     Ver 1.00	 2012/10/25 F.Kanehori	First release version.
+#     Ver 2.00	 2013/01/07 F.Kanehori	全面改訂
+#     Ver 3.00	 2017/05/10 F.Kanehori	Windows batch file から移植.
+#     Ver 3.01	 2017/07/24 F.Kanehori	Python executable directory moved.
+#     Ver 3.02	 2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 3.03	 2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 3.04	 2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 3.05	 2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 3.06	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 3.07	 2019/02/26 F.Kanehori	Cmake環境に対応.
+#     Ver 3.08	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 3.081	 2019/04/11 F.Kanehori	Discard Ver.1.09 and after.
 # ==============================================================================
-version = 3.6
+version = 3.081
 debug = False
 trace = False
 
@@ -92,8 +93,6 @@ unix = util.is_unix()
 #  Directories
 #
 sprtop = spr_path.abspath()
-##bindir = spr_path.relpath('bin')
-##srcdir = spr_path.relpath('src')
 bindir = spr_path.abspath('bin')
 srcdir = spr_path.abspath('src')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
@@ -159,7 +158,7 @@ verbose = options.verbose
 #
 if options.python:
 	python = options.python
-make = 'make' if unix else 'nmake'
+make = 'make' if unix else 'nmake /NOLOGO'
 opts = '-P %s' % python
 makemanager = '%s "%s/make_manager.py" %s' % (python, runswigdir, opts)
 
@@ -199,6 +198,12 @@ for line in lines:
 	if debug:
 		print('chdir: %s' % target_dir)
 	os.chdir(target_dir)
+
+	#  Remove empty stub file if exists.
+	stubfile = '%sStub.cpp' % proj
+	if os.path.exists(stubfile) and os.path.getsize(stubfile) == 0:
+		print('    rm %s' % stubfile)
+		os.remove(stubfile)
 
 	#  Do make.
 	if clean:

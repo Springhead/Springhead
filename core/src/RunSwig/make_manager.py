@@ -1,17 +1,14 @@
 ﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
-#  FILE:
-#	make_manager.py
-#
 #  SYNOPSIS:
-#	python make_manager [-A] [-d] [-c] [-t] [-r]
+#	python make_manager [options]
 #
-#	対象とするプロジェクトに関する引数：
+#	対象とするプロジェクトに関するオプション：
 #	    -A	  対象となるすべてのプロジェクトについて, 以降の引数で示された
 #		  処理を実行する.
 #
-#	個別のプロジェクトの処理に関する引数：
+#	個別のプロジェクトの処理に関するオプション：
 #	    -d	  "Makefile.swig" を削除する.
 #	    -c	  "Makefile.swig" を生成する. 既にあったら何もしない.
 #	    -t	  "Makefile.swig.tmp" を作成する (テンポラリファイル作成モード).
@@ -25,17 +22,19 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
-#	Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
-#	Ver 1.2  2017/07/24 F.Kanehori	Python executable directory moved.
-#	Ver 1.3  2017/09/04 F.Kanehori	New python library に対応.
-#	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#	Ver 1.8  2019/02/21 F.Kanehori	Cmake環境に対応.
+#     Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#     Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
+#     Ver 1.2	 2017/07/24 F.Kanehori	Python executable directory moved.
+#     Ver 1.3	 2017/09/04 F.Kanehori	New python library に対応.
+#     Ver 1.4	 2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.5	 2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.6	 2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.7	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.8	 2019/02/21 F.Kanehori	Cmake環境に対応.
+#     Ver 1.9	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.91	 2019/04/11 F.Kanehori	Discard Ver.1.10 and after.
 # ==============================================================================
-version = 1.8
+version = 1.91
 trace = False
 
 import sys
@@ -68,21 +67,6 @@ from Error import *
 #
 proc = Proc()
 f_op = FileOp()
-
-# ----------------------------------------------------------------------
-#  Directories
-#	Relative path cause problem when using CMake build environment.
-#	Because finding path is done under CMake build environment; e.g.
-#	src/build/RunSwig; but script is actually executed at original
-#	file tree; src/RunSwig etc.
-#
-sprtop = spr_path.abspath()
-##bindir = spr_path.relpath('bin')
-##srcdir = spr_path.relpath('src')
-bindir = spr_path.abspath('bin')
-srcdir = spr_path.abspath('src')
-etcdir = '%s/%s' % (srcdir, 'RunSwig')
-runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
 # ----------------------------------------------------------------------
 #  Files
@@ -229,6 +213,24 @@ if verbose:
 	if options.debug:
 		print('  projs (for debug) -> %s' % debug_projs)
 	print()
+
+# ----------------------------------------------------------------------
+#  Directories
+#	Relative path cause problem when using CMake build environment.
+#	Because finding path is done under CMake build environment; e.g.
+#	src/build/RunSwig; but script is actually executed at original
+#	file tree; src/RunSwig etc.
+#
+
+from FindSprPath import *
+spr_path = FindSprPath(prog)
+sprtop = spr_path.abspath()
+##bindir = spr_path.relpath('bin')
+##srcdir = spr_path.relpath('src')
+bindir = spr_path.abspath('bin')
+srcdir = spr_path.abspath('src')
+etcdir = '%s/%s' % (srcdir, 'RunSwig')
+runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
 # ----------------------------------------------------------------------
 #  Scripts

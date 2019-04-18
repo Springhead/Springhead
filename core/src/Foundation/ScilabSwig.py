@@ -23,10 +23,9 @@
 #	Ver 1.2	 2017/09/06 F.Kanehori	New python library に対応.
 #	Ver 1.3  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.4  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.41 2018/03/07 F.Kanehori	Add trace code.
-#	Ver 1.42 2018/03/14 F.Kanehori	Deal with new Proc class.
+#	Ver 1.5  2019/04/01 F.Kanehori	Python library path 検索方法変更.
 # ==============================================================================
-version = 1.41
+version = 1.5
 debug = False
 trace = False
 
@@ -50,6 +49,9 @@ if trace:
 sys.path.append('../RunSwig')
 from FindSprPath import *
 spr_path = FindSprPath(prog)
+if spr_path.top is None:
+	if os.environ.get('SPR_TOP_DIR', None) is not None:
+		spr_path.top = os.environ.get('SPR_TOP_DIR')
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from TextFio import *
