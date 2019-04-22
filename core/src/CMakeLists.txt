@@ -12,22 +12,41 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
 
 # ------------------------------------------------------------------------------
-#  Read default/customized parameter file.
+#  Read default/customized parameter file (try to find in following order).
+#	(1) "${CMAKE_SOURCE_DIR}/CMakeCustomize.txt".
+#	(2) File specified by option "CUSTOM".
+#	(3) Default file at "${TOPDIR}/CMakeCustomize.txt.sample".
+#	(4) Default file at "${CMAKE_SOURCE_DIR}/CMakeCustomize.txt.sample".
 #
-set(CUSTOM_FILE "${CMAKE_SOURCE_DIR}/CMakeLists_customize.txt")
-set(SAMPLE_FILE "${CMAKE_SOURCE_DIR}/CMakeLists_customize.txt.sample")
-if(NOT EXISTS ${CUSTOM_FILE})
-    message(STATUS "copy\ ${SAMPLE_FILE}\ to\ ${CUSTOM_FILE}")
-    file(READ ${SAMPLE_FILE} FILE_CONTENTS)
-    file(WRITE ${CUSTOM_FILE} ${FILE_CONTENTS})
+set(CUSTOM_FNAME "CMakeCustomize.txt")
+set(CUSTOM_FILE "")
+if(EXISTS "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}")
+    # case (1)
+    set(CUSTOM_FILE "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}")
+elseif(DEFINED CUSTOM)
+    # case (2)
+    set(CUSTOM_FILE "${CUSTOM}")
+elseif(DEFINED TOPDIR AND EXISTS "${TOPDIR}/${CUSTOM_FNAME}.sample")
+    # case (3)
+    set(CUSTOM_FILE "${TOPDIR}/${CUSTOM_FNAME}.sample")
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}.sample")
+    # case (4)
+    set(CUSTOM_FILE "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}.sample")
 endif()
+if("${CUSTOM_FILE}" STREQUAL "")
+    message("** \"CMakeCustom.txt\" NOT FOUND **")
+    return()
+endif()
+message("** Using customize file: \"${CUSTOM_FILE}\"")
 include(${CUSTOM_FILE})
-message(STATUS "read\ ${CUSTOM_FILE}")
 
 # ------------------------------------------------------------------------------
 #  Top directory of Springhead tree.
-#	Top directory can be set by iinvoking "cmake -D TOPDIR=<dir>".
-#	Otherwise cmake is invoked at "<TOPDIR>/core/src".
+#	Top directory can set by two ways.
+#	  (1) Define directory in the file "CMakeLists_customize.txt" 
+#	      by set statement like "set(TOPDIR "<dir>")".
+#	  (2) Invoke cmake command with option "-D TOPDIR=<dir>".
+#	Otherwise, we assume that cmake is invoked at "<dir>/core/src".
 #
 if("${TOPDIR}" STREQUAL "")
     set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
@@ -108,17 +127,17 @@ endif()
 #  Definition of external packages.
 #
 if(DEFINED BOOST_ROOT)
-    message([\ finding\ package:\ Boost\ ])
+    message("++ finding package: Boost")
     cmake_policy(SET CMP0074 NEW)
     find_package(Boost REQUIRED)
     if(Boost_FOUND)
-	message(STATUS Boost_INCLUDE_DIRS:\ ${Boost_INCLUDE_DIRS})
+	message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
     else()
-	message(STATUS Boost\ NOT\ FOUND)
+	message("** Boost NOT FOUND")
     endif()
 endif()
 if(DEFINED GLEW_ROOT)
-    message([\ finding\ package:\ GLEW\ ])
+    message("++ finding package: GLEW")
     cmake_policy(SET CMP0074 NEW)
     if(DEFINED GLEW_LIB32_DIR AND "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x86")
 	list(APPEND CMAKE_PREFIX_PATH ${GLEW_LIB32_DIR})
@@ -128,19 +147,19 @@ if(DEFINED GLEW_ROOT)
     endif()
     find_package(GLEW)
     if(GLEW_FOUND)
-	message(STATUS GLEW_INCLUDE_DIRS:\ ${GLEW_INCLUDE_DIRS})
+	message(STATUS "GLEW_INCLUDE_DIRS: ${GLEW_INCLUDE_DIRS}")
     else()
-	message(STATUS GLEW\ NOT\ FOUND)
+	message("** GLEW NOT FOUND")
     endif()
 endif()
 if(DEFINED GLUT_ROOT)
-    message([\ finding\ package:\ GLUT\ ])
+    message("++ finding package: GLUT")
     cmake_policy(SET CMP0074 NEW)
     find_package(GLUT REQUIRED)
     if(GLUT_FOUND)
-	message(STATUS GLUT_INCLUDE_DIR:\ ${GLUT_INCLUDE_DIR})
+	message(STATUS "GLUT_INCLUDE_DIR: ${GLUT_INCLUDE_DIR}")
     else()
-	message(STATUS GLUT\ NOT\ FOUND)
+	message("** GLUT NOT FOUND")
     endif()
 endif()
 
@@ -173,7 +192,6 @@ add_dependencies(Physics Collision Foundation RunSwig)
 #
 set(Target ${ProjectName})
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
-#set(OUTDIR_BASE ${CMAKE_SOURCE_DIR}/../../generated/lib)
 set(LIBNAME_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
@@ -186,10 +204,8 @@ set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRAC
 #
 if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
     set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
-    #set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win64)
 else ()
     set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
-    #set(LIBDIR ${CMAKE_SOURCE_DIR}/../../generated/lib/win32)
 endif()
 set(LIBPATH_DEBUG   ${LIBDIR}/Springhead${LIBNAME_DEBUG}.lib)
 set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
@@ -220,8 +236,8 @@ endif()
 if(DEFINED SPRINGHEAD_INCLUDE_PREFIX	  AND
    DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG	  AND
    DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
-    message(**\ INSTALL:\ Debug:\ \ \ ${SPRINGHEAD_LIBRARY_DIR_DEBUG}\ **)
-    message(**\ INSTALL:\ Release:\   ${SPRINGHEAD_LIBRARY_DIR_RELEASE}\ **)
+    message("** INSTALL: Debug:   ${SPRINGHEAD_LIBRARY_DIR_DEBUG} **")
+    message("** INSTALL: Release: ${SPRINGHEAD_LIBRARY_DIR_RELEASE} **")
     install(FILES ${LIBPATH_DEBUG}
 	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
 	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
@@ -232,10 +248,10 @@ if(DEFINED SPRINGHEAD_INCLUDE_PREFIX	  AND
 	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
 	CONFIGURATIONS Release
     )
-    message(**\ INSTALL:\ Headers:\ ${SPRINGHEAD_INCLUDE_PREFIX}\ **)
+    message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
     install(DIRECTORY ${SPR_INC_DIR}
 	DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
     )
 endif()
 
-# end: Springhead
+# end: CMakeLists.txt
