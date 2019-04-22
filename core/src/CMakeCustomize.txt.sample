@@ -1,0 +1,124 @@
+# ==============================================================================
+#  CMakeLists_customize.txt.sample
+#
+#    このファイルには cmake に対するデフォルトのパラメータが定義されています。
+#    これらのパラメータを変更するには、次の手順に従ってください。
+#
+#    (1) 適用しようとする CMakeList.txt があるディレクトリに移動する。
+#    (2) CMakeCustomize.txt があれば削除する。
+#    (3) このファイルを CMakeCustomize.txt という名前でコピーする。
+#    (4) CMakeCustomize.txt を編集する。
+#
+#    なお、CMakeCustomize.txt が存在せず、かつ cmake 起動時に "-D CUSTOM=<file>"
+#    オプションが指定されたときは、オプションで指定したファイルを読み込みます。
+#    複数のアプリケーションで共通の定義を適用したいときには、こちらが便利です。
+#
+#    このファイルを直接編集してコミットすることはしないでください。
+#
+#    This file defines the default parameters for cmake command.
+#    Follow the steps below to change any of the parameter.
+#
+#    (1) Move to the directory where CMakeLists.txt exists.
+#    (2) Remove CMakeCustomize.txt if exists.
+#    (3) Copy this file to the one named CMakeCustomize.txt.
+#    (4) Edit CMakeCustomize.txt.
+#
+#    If CMakeCustomize.txt does not exist and you invoke cmake with option
+#    "-D CUSTOM=<file>", the file specified by the option will be read. When
+#    you apply common definitions to more than one applications, you may want
+#    to use this command option.
+#
+#    Please do not edit nor commit this file.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+#  Top directory of Springhead tree.
+#
+#    Springhead を clone したディレクトリの絶対パス。
+#    Springhead tree の外から Springhead のプロジェクトを直接取り込んでビルド
+#    をする場合には、必ず指定してください。
+#
+#    The directory absolute path where Springhead is cloned.
+#    Uncomment and redefine following parameter (use absolute path).
+#    If you use Springehad projects directly to build your application and
+#    your application source is placed at outside of Springhead tree, this
+#    parameter is manadatory.
+#
+#set(TOPDIR "C:/Springhead)
+
+# ------------------------------------------------------------------------------
+#  Compile options for Windows (Visual Studio).
+#
+set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D \"_LIB\" /GF- /EHsc /Gy- /Qpar \
+			 /arch:AVX /openmp /wd\"4996\" /wd\"4244\" /FC")
+set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
+set(WIN_COPT_RELEASE	"/Ob2 /Ot /Oy /Gr")
+set(WIN_COPT_TRACE	"/Ob2 /Ot /D TRACE /Oy- /Gr")
+
+# ------------------------------------------------------------------------------
+#  Compile options for Linux (g++).
+#
+set(LINUX_WFLAGS "-Wall \
+	-Wno-unused-variable \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-result \
+	-Wno-unused-value \
+	-Wno-unused-local-typedefs \
+	-Wno-unused-function \
+	-Wno-reorder \
+	-Wno-sign-compare \
+	-Wno-unknown-pragmas")
+set(LINUX_COPT_COMMON	"${WARNING_FLAGS} -fPIC")
+set(LINUX_COPT_DEBUG	"-g")
+set(LINUX_COPT_RELEASE	"-O2")
+
+# ------------------------------------------------------------------------------
+#  External packages (boost, glew and freeglut).
+#
+#    これらのパッケージを独自にインストールしておりそれらを使用するときは、
+#    次の変数の値を適切なパス(絶対パス)で定義し直してください。
+#
+#    If you installed these packages and use them, uncomment and redefine
+#    following parameters appropreately (use absolute path).
+#
+#set(BOOST_ROOT "C:/Package/boost_1_70_0/include/boost-1_70")
+#set(GLEW_ROOT  "C:/Package/glew-2.1.0")
+#set(GLUT_ROOT  "C:/Package/freeglut")
+#
+#    GLEW について
+#	上記の GLEW_ROOT を設定しただけでは library が見つからないエラーが
+#	発生します (例えば glew-2.1.0 Windows binary distribution の場合)。
+#	上記に加え、次の変数が library directory を指すように設定してください。
+#
+#    Note about GLEW
+#	Library not found error may occur whe using glew-2.1.0 Windows binary
+#	distribution for example. In such a case, use following parameters to
+#	indeicate where the libray is.
+#
+#set(GLEW_LIB32_DIR "${GLEW_ROOT}/lib/Release/Win32")
+#set(GLEW_LIB64_DIR "${GLEW_ROOT}/lib/Release/x64")
+
+# ------------------------------------------------------------------------------
+#  Install directories (library and headers).
+#
+#    作成したライブラリ及びコンパイルに必要なヘッダファイルをユーザが指定する
+#    ディレクトリにインストールには、次の変数の値を適切なパス(絶対パス)で定義
+#    し直してください (ターゲット "INSTALL" が生成されます)。
+#    コンパイルが済んだあとで "INSTALL" を実行すればインストールが行われます。
+#
+#    To install library file and header files where you want, uncomment and
+#    redefine following parameters appropreately (use absolute path).
+#
+#    SPRINGHEAD_INCLUDE_PREFIX:
+#	Destination directory path (absolute path). Be care that header
+#	files will be installed at "${SPRINGHEAD_INCLUDE_PREFIX}/include".
+#                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#    SPRINGHEAD_LIBRARY_DEBUG:
+#    SPRINGHEAD_LIBRARY_RELEASE:
+#	Destination directory path (absolute path).
+#
+#set(SPRINGHEAD_INCLUDE_PREFIX      "C:/usr/local")
+#set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/usr/local/lib")
+#set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/usr/local/lib")
+
+# end: CMakeCustomize.txt.sample
