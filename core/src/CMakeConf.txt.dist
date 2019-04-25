@@ -1,0 +1,75 @@
+# ==============================================================================
+#  CMakeConf.txt
+#    ** このファイルを直接編集してコミットしないようにお願いします **
+#    ** DO NOT edit and commit this file. **
+#
+#    このファイルでは、次の事項を設定します。
+#	外部パッケージの利用
+#		下記の変数を定義すれば、dependency の代わりにそれらを参照する
+#		ようになります。
+#	インストールディレクトリの設定
+#		下記の変数を定義すれば、生成したファイル及びコンパイル時に必要
+#		となるヘッダファイルをインストールするターゲットを生成できます。
+#    下記を参照のこと。
+#
+#    This file defines following matters.
+#	External package usage
+#		To use external package instead of 'dependency', define
+#		following varaibles.
+#	Install directory
+#		Create target 'INSTALL' to install generated files and header
+#		files needed for compilation.
+#    See below for details.
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+#  External packages (boost, glew and freeglut).
+#
+#    独自にインストールした下記のパッケージを使用するときは、次の変数に適切な
+#    パス(絶対パス)を設定してください。
+#
+#    If you installed following packages and intended to use them, uncomment
+#    and redefine variables with appropreate path (USE ABSOLUTE PATH).
+#
+#set(BOOST_ROOT "C:/Package/boost_1_70_0/include/boost-1_70")
+#set(GLEW_ROOT  "C:/Package/glew-2.1.0")
+#set(GLUT_ROOT  "C:/Package/freeglut")
+#
+#    GLEW について
+#	上記の GLEW_ROOT を設定しただけでは library が見つからないエラーが
+#	発生します (例えば glew-2.1.0 Windows binary distribution の場合)。
+#	上記に加え、次の変数が library directory を指すように設定してください。
+#
+#    Note about GLEW
+#	Library not found error may occur when using glew-2.1.0 Windows binary
+#	distribution for example. In such a case, use following variables to
+#	indeicate where the libray is.
+#
+#set(GLEW_LIB32_DIR "${GLEW_ROOT}/lib/Release/Win32")
+#set(GLEW_LIB64_DIR "${GLEW_ROOT}/lib/Release/x64")
+
+# ------------------------------------------------------------------------------
+#  Install directories (library and headers).
+#
+#    作成したライブラリ及びコンパイルに必要なヘッダファイルをユーザが指定する
+#    ディレクトリにインストールには、次の変数の値を適切なパス(絶対パス)で定義
+#    し直してください (ターゲット "INSTALL" が生成されます)。
+#    コンパイルが済んだあとで "INSTALL" を実行すればインストールが行われます。
+#
+#    To install library file and header files where you want, uncomment and
+#    redefine following parameters appropreately (use absolute path).
+#
+#    SPRINGHEAD_INCLUDE_PREFIX:
+#	Destination directory path (absolute path). Be care that header
+#	files will be installed at "${SPRINGHEAD_INCLUDE_PREFIX}/include".
+#                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#    SPRINGHEAD_LIBRARY_DEBUG:
+#    SPRINGHEAD_LIBRARY_RELEASE:
+#	Destination directory path (absolute path).
+#
+#set(SPRINGHEAD_INCLUDE_PREFIX      "C:/usr/local")
+#set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/usr/local/lib")
+#set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/usr/local/lib")
+
+# end: CMakeConf.txt

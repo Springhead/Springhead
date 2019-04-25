@@ -1,0 +1,77 @@
+cmake の利用法
+
+0. はじめに
+	配布されるファイル(cmake関連)は、
+	    CMakeListsLib.dist, CMakeOpts.dist, CMakeConf.dist,
+	    CMakeListsApp.dist
+	です。
+	配布されたこれらのファイルは、編集/コミットしないようにお願いします。
+	各ファイルはテキストファイルで、文字('#')で始まる行はコメント行です。
+	パラメータはset文で定義します。
+	    set(変数名 値)
+	値がファイルパスのときは"絶対パス"で指定してください。
+	またパスセパレータには文字('/')を使用してください(escape問題の回避)。
+
+1. Springhead Libray のビルド
+    Springehad を clone したディレクトリを <SprTop> とする。
+    ビルドの中間生成物を格納するディレクトリを "build" とする。
+
+1.1 Springhead/dependency を利用する場合
+    <SprTop>/core/src にある CMakeLists.txt.Lib.dist と CMakeOpts.txt.dist を
+    それぞれ CMakeLists.txt, CMakeOpts.txt という名前でコピーする。
+    次のコマンドを実行する。
+
+	> cd <SprTop>/core/src
+	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+	> copy CMakeOpts.txt.dist CMakeOpts.txt
+	> mkdir build
+	> cd build
+	> cmake .. [<generator>]
+	build/Springhead.sln を実行
+
+    <generator> の例：	-G "Visual Studio 15 2017" -A x64
+			-G "Visual Studio 15 2017 Win64"
+			-G "Unix Makefiles"
+    <generator> の詳細は cmake --help 参照。
+
+1.2 Springhead/dependency を利用しない場合
+    <SprTop>/core/src にある CMakeLists.txt.Lib.dist, CMakeOpts.txt.dist 及び
+    CMakeConf.txt.dist をそれぞれ CMakeLists.txt, CMakeOpts.txt, CMakeConf.txt
+    という名前でコピーする。
+    External packages に関する設定を行ない、次のコマンドを実行する。
+
+    <SprTop>/core/src/CMakeConf.dist を CMakeConf.txt という名前でコピーして
+
+	> cd <SprTop>/core/src
+	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+	> copy CMakeOpts.txt.dist CMakeOpts.txt
+	> copy CMakeConf.txt.dist CMakeConf.txt
+	> mkdir build
+	> cd build
+	> cmake .. [<generator>]
+	build/Springhead.sln を実行
+
+    CMakeOpts.txt と CMakeConf.txt はそれぞれ任意の場所においても構いません。
+    その場合には cmake の起動時に次のオプションを追加します。
+	> cmake [-D OPTS=<opts-file>] [-D CONF=<conf-file>] .. [<generator>]
+    複数のアプリケーションで共通の設定を用いる場合はこのようにします。
+
+1.3. コンパイラオプションを変更する場合
+    1.1 及び 1.2 において、CMakeOpts.txt の内容を適宜修正します。
+
+1.4 Install ディレクトリを設定する場合
+    CMakeOpts.txt の編集箇所が異なるだけで、1.2 と同じです。
+
+
+2. Springhead のプロジェクトを取り込んだアプリケーションのビルド
+    アプリケーションのトップディレクトリを <AppTop> とする。
+    <SprTop> と "build" については 1. と同様とします。
+    ※ dependency を利用しない場合については 1.2 を参照のこと。
+
+    <SprTop>/core/src にある CMakeLists.txt.App.dist と CMakeOpts.txt.dist を
+    それぞれ CMakeLists.txt, CMakeOpts.txt という名前で <AppTop> にコピーする。
+
+	＊未完＊
+
+
+
