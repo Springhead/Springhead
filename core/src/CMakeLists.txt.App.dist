@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Springhead")
+set(ProjectName "Quaternion")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -51,10 +51,19 @@ include(${CUSTOM_FILE})
 if("${TOPDIR}" STREQUAL "")
     set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
 endif()
-get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
-set(SPR_TOP_DIR ${TOPDIR})
+set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_CORE_DIR "${TOPDIR}/core")
-set(SPR_INC_DIR "${TOPDIR}/core/include")
+set(SPR_SRC_DIR  "${TOPDIR}/core/src")
+set(SPR_INC_DIR  "${TOPDIR}/core/include")
+get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
+get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
+get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
+get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
+get_filename_component(SPR_BLD_DIR ${PROJECT_BINARY_DIR} ABSOLUTE)
+message(STATUS "SPR_TOP_DIR: [${SPR_TOP_DIR}]")
+message(STATUS "SPR_SRC_DIR: [${SPR_SRC_DIR}]")
+message(STATUS "SPR_INC_DIR: [${SPR_INC_DIR}]")
+message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 
 # ------------------------------------------------------------------------------
 #  Sytem environment.
@@ -83,8 +92,6 @@ if(${Windows})
     set(CMAKE_CXX_FLAGS_TRACE	${WIN_COPT_TRACE})
 elseif(${Linux})
     message(STATUS "Host System: Linux")
-    set(SRC_DIR	"${Ssrc/PR_CORE_DIR}/src")
-    set(INC_DIR	"${SPR_CORE_DIR}/include")
     set(LIB_DIR	"${SPR_CORE_DIR}/lib")
     set(CMAKE_CXX_FLAGS		${LINUX_COPT_COMMON})
     set(CMAKE_CXX_FLAGS_DEBUG	${LINUX_COPT_DEBUG})
@@ -164,40 +171,51 @@ if(DEFINED GLUT_ROOT)
 endif()
 
 # ------------------------------------------------------------------------------
-#  Define depending projects.
-#
-add_subdirectory(Base)
-add_subdirectory(Collision)
-add_subdirectory(Creature)
-add_subdirectory(FileIO)
-add_subdirectory(Foundation)
-add_subdirectory(Framework)
-add_subdirectory(Graphics)
-add_subdirectory(HumanInterface)
-add_subdirectory(Physics)
-add_subdirectory(RunSwig)
-
-add_dependencies(Base RunSwig)
-add_dependencies(Collision Foundation RunSwig)
-add_dependencies(Creature Foundation Framework Physics RunSwig)
-add_dependencies(FileIO Foundation RunSwig)
-add_dependencies(Foundation Base RunSwig)
-add_dependencies(Framework FileIO Foundation Graphics Physics RunSwig)
-add_dependencies(Graphics Foundation RunSwig)
-add_dependencies(HumanInterface Foundation RunSwig)
-add_dependencies(Physics Collision Foundation RunSwig)
-
-# ------------------------------------------------------------------------------
 #  Main target.
 #
 set(Target ${ProjectName})
+file(GLOB SRCS "*.cpp")
+if(${Windows})
+    if("${ARCHITECTURE}" STREQUAL "x86")
+	add_executable(${Target} ${SRCS} WIN32)
+    else()
+	add_executable(${Target} ${SRCS})
+    endif()
+endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
-set(LIBNAME_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
-set(LIBNAME_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
-set(LIBNAME_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
-set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_DEBUG})
-set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_RELEASE})
-set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRACE})
+
+# ------------------------------------------------------------------------------
+#  Define depending projects.
+#
+add_subdirectory(${SPR_SRC_DIR}/Base ${SPR_BLD_DIR}/Base)
+#add_subdirectory(${SPR_SRC_DIR}/Collision ${SPR_BLD_DIR}/Collision)
+#add_subdirectory(${SPR_SRC_DIR}/Creature ${SPR_BLD_DIR}/Creature)
+#add_subdirectory(${SPR_SRC_DIR}/FileIO ${SPR_BLD_DIR}/FileIO)
+#add_subdirectory(${SPR_SRC_DIR}/Foundation ${SPR_BLD_DIR}/Foundation)
+#add_subdirectory(${SPR_SRC_DIR}/Framework ${SPR_BLD_DIR}/Framework)
+#add_subdirectory(${SPR_SRC_DIR}/Graphics ${SPR_BLD_DIR}/Graphics)
+#add_subdirectory(${SPR_SRC_DIR}/HumanInterface ${SPR_BLD_DIR}/HumanInterface)
+#add_subdirectory(${SPR_SRC_DIR}/Physics ${SPR_BLD_DIR}/Physics)
+add_subdirectory(${SPR_SRC_DIR}/RunSwig ${SPR_BLD_DIR}/RunSwig)
+
+add_dependencies(Base RunSwig)
+#add_dependencies(Collision Foundation RunSwig)
+#add_dependencies(Creature Foundation Framework Physics RunSwig)
+#add_dependencies(FileIO Foundation RunSwig)
+#add_dependencies(Foundation Base RunSwig)
+#add_dependencies(Framework FileIO Foundation Graphics Physics RunSwig)
+#add_dependencies(Graphics Foundation RunSwig)
+#add_dependencies(HumanInterface Foundation RunSwig)
+#add_dependencies(Physics Collision Foundation RunSwig)
+
+# ------------------------------------------------------------------------------
+#  Include directories.
+#
+include_directories(${Target}
+    PRIVATE ${SPR_INC_DIR}
+    PRIVATE ${SPR_SRC_DIR}
+    PRIVATE ${SPR_TOP_DIR}/dependency/src
+)
 
 # ------------------------------------------------------------------------------
 #  Clean (only for RunSwig).
@@ -213,14 +231,6 @@ set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
 set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
 
 if(${Windows})
-    add_custom_target(${ProjectName} ALL
-	COMMAND cd ${CMAKE_SOURCE_DIR}
-	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${LIBCMND_DEBUG}
-	COMMAND if "'$(Configuration)'" equ "'Release'" ${LIBCMND_RELEASE}
-	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${LIBCMND_TRACE}
-	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
-	COMMENT [[  generating Springhead Library... ]]
-    )
     add_custom_target(RunSwig_Clean
 	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
 	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
