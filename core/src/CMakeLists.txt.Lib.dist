@@ -14,22 +14,23 @@ set(CMAKE_USE_RELATIVE_PATHS true)
 # ------------------------------------------------------------------------------
 #  Determine top directory of Springhead tree.
 #	If cmake option "-D TOPDIR=<abs-dir-path>" is specified, <abs-dir-path>
-#	is the one. Otherwise, it is described in the file "CMakeTopdir.txt"
-#	which MUST be exist at ${CMAKE_SOURCE_DIR}.
+#	is the one. Otherwise, top directory SHOULD be described in the file
+#	"${CMAKE_SOURCE_DIR}/CMakeTopdir.txt".
 #
 set(TOPDIR_FILE "CMakeTopdir.txt")
-if(NOT DEFINED TOPDIR)
+if(DEFINED TOPDIR)
+    if(NOT EXISTS "${TOPDIR}")
+	message("Error: File \"${TOPDIR}\" not found")
+	return()
+    endif()
+else()
     if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
 	message("Error: File \"${TOPDIR_FILE}\" not found")
 	return()
     endif()
     include(${TOPDIR_FILE})
-else()
-    if(NOT EXISTS "${TOPDIR}")
-	message("Error: File \"${TOPDIR}\" not found")
-	return()
-    endif()
 endif()
+
 set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_CORE_DIR "${TOPDIR}/core")
 set(SPR_SRC_DIR  "${TOPDIR}/core/src")
@@ -61,23 +62,13 @@ set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 include("${SPR_CORE_DIR}/make.func.cmake")
 
 # ------------------------------------------------------------------------------
-#  Set compiler/linker options.
+#  Read compile/link option file (try to find in following order).
+#	(1) File specified by option "-D OPTS=<file>".
+#	(2) "${SPR_SRC_DIR}/CMakeOpts.txt".
+#	(3) Default file at "${SPR_SRCDIR}/CMakeOpts.txt.dist".
 #
 set(OPTS_FILE "CMakeOpts.txt")
-if(NOT DEFINED OPTS)
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${OPTS_FILE}")
-	if(NOT EXISTS "${SPR_SRC_DIR}/${OPTS_FILE}")
-	    message("Error: File \"${OPTS_FILE}\" not found")
-	    return()
-	else()
-	    message(STATUS "reading [${SPR_SRC_DIR}/${OPTS_FILE}]")
-	    include(${SPR_SRC_DIR}/${OPTS_FILE})
-	endif()
-    else()
-	message(STATUS "reading [${CMAKE_SOURCE_DIR}/${OPTS_FILE}]")
-	include(${CMAKE_SOURCE_DIR}/${OPTS_FILE})
-    endif()
-else()
+if(DEFINED OPTS)
     get_filename_component(OPTS ${OPTS} ABSOLUTE)
     if(NOT EXISTS "${OPTS}")
 	message("Error: File \"${OPTS}\" not found")
@@ -85,8 +76,22 @@ else()
     endif()
     message(STATUS "reading [${OPTS}]")
     include(${OPTS})
+else()
+    if(EXISTS "${SPR_SRC_DIR}/${OPTS_FILE}")
+	message(STATUS "reading [${SPR_SRC_DIR}/${OPTS_FILE}]")
+	include(${SPR_SRC_DIR}/${OPTS_FILE})
+    elseif(EXISTS "${SPR_SRC_DIR}/${OPTS_FILE}.dist")
+	message(STATUS "reading [${SPR_SRC_DIR}/${OPTS_FILE}.dist]")
+	include(${SPR_SRC_DIR}/${OPTS_FILE}.dist)
+    else()
+	message("Error: File \"${OPTS_FILE}\" not found")
+	return()
+    endif()
 endif()
 
+# ------------------------------------------------------------------------------
+#  Set compiler/linker options.
+#
 if(${Windows})
     message(STATUS "Host System: Windows")
     set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
@@ -123,20 +128,13 @@ elseif(${Linux})
 endif()
 
 # ------------------------------------------------------------------------------
-#  Definition of external packages.
+#  Read external package definition file (try to find in following order).
+#	(1) File specified by option "-D CONF=<file>".
+#	(2) "${SPR_SRC_DIR}/CMakeConf.txt".
+#	(3) Default file at "${SPR_SRCDIR}/CMakeConf.txt.dist".
 #
 set(CONF_FILE "CMakeConf.txt")
-if(NOT DEFINED CONF)
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${CONF_FILE}")
-	if(EXISTS "${SPR_SRC_DIR}/${CONF_FILE}")
-	    message(STATUS "reading [${SPR_SRC_DIR}/${CONF_FILE}]")
-	    include(${SPR_SRC_DIR}/${CONF_FILE})
-	endif()
-    else()
-	message( STATUS "reading [${CMAKE_SOURCE_DIR}/${CONF_FILE}]")
-	include(${CMAKE_SOURCE_DIR}/${CONF_FILE})
-    endif()
-else()
+if(DEFINED CONF)
     get_filename_component(CONF ${CONF} ABSOLUTE)
     if(NOT EXISTS "${CONF}")
 	message("Error: File \"${CONF}\" not found")
@@ -144,8 +142,22 @@ else()
     endif()
     message(STATUS "reading [${CONF}]")
     include(${CONF})
+else()
+    if(EXISTS "${SPR_SRC_DIR}/${CONF_FILE}")
+	message(STATUS "reading [${SPR_SRC_DIR}/${CONF_FILE}]")
+	include(${SPR_SRC_DIR}/${CONF_FILE})
+    elseif(EXISTS "${SPR_SRC_DIR}/${CONF_FILE}.dist")
+	message(STATUS "reading [${SPR_SRC_DIR}/${CONF_FILE}.dist]")
+	include(${SPR_SRC_DIR}/${CONF_FILE}.dist)
+    else()
+	message("Error: File \"${CONF_FILE}\" not found")
+	return()
+    endif()
 endif()
 
+# ------------------------------------------------------------------------------
+#  Definition of external packages.
+#
 if(DEFINED BOOST_ROOT)
     message("++ finding package: Boost")
     cmake_policy(SET CMP0074 NEW)
@@ -203,26 +215,27 @@ endif()
 # ------------------------------------------------------------------------------
 #  Define depending projects.
 #
-add_subdirectory(${SPR_SRC_DIR}/Base ${SPR_BLD_DIR}/Base)
-add_subdirectory(${SPR_SRC_DIR}/Collision ${SPR_BLD_DIR}/Collision)
-add_subdirectory(${SPR_SRC_DIR}/Creature ${SPR_BLD_DIR}/Creature)
-add_subdirectory(${SPR_SRC_DIR}/FileIO ${SPR_BLD_DIR}/FileIO)
-add_subdirectory(${SPR_SRC_DIR}/Foundation ${SPR_BLD_DIR}/Foundation)
-add_subdirectory(${SPR_SRC_DIR}/Framework ${SPR_BLD_DIR}/Framework)
-add_subdirectory(${SPR_SRC_DIR}/Graphics ${SPR_BLD_DIR}/Graphics)
-add_subdirectory(${SPR_SRC_DIR}/HumanInterface ${SPR_BLD_DIR}/HumanInterface)
-add_subdirectory(${SPR_SRC_DIR}/Physics ${SPR_BLD_DIR}/Physics)
-add_subdirectory(${SPR_SRC_DIR}/RunSwig ${SPR_BLD_DIR}/RunSwig)
-
-add_dependencies(Base RunSwig)
-add_dependencies(Collision Foundation RunSwig)
-add_dependencies(Creature Foundation Framework Physics RunSwig)
-add_dependencies(FileIO Foundation RunSwig)
-add_dependencies(Foundation Base RunSwig)
-add_dependencies(Framework FileIO Foundation Graphics Physics RunSwig)
-add_dependencies(Graphics Foundation RunSwig)
-add_dependencies(HumanInterface Foundation RunSwig)
-add_dependencies(Physics Collision Foundation RunSwig)
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+	      HumanInterface Physics)
+#
+set(DEP_Base)
+set(DEP_Collision Foundation)
+set(DEP_Creature Foundation Framework Physics)
+set(DEP_FileIO Foundation)
+set(DEP_Foundation Base)
+set(DEP_Framework FileIO Foundation Graphics Physics)
+set(DEP_Graphics Foundation)
+set(DEP_HumanInterface Foundation)
+set(DEP_Physics Collision Foundation)
+foreach(proj IN ITEMS ${SPR_PROJS} RunSwig)
+    add_subdirectory(${SPR_SRC_DIR}/${proj} ${SPR_BLD_DIR}/${proj})
+    set(DEP_LIST RunSwig)
+    foreach(dep IN ITEMS ${DEP_${proj}})
+	list(APPEND DEP_LIST ${dep})
+    endforeach()
+    add_dependencies(${proj} ${DEP_LIST})
+    #message("   dependencies: ${proj} => ${DEP_LIST}")
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Main target.

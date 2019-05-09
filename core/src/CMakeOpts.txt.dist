@@ -29,7 +29,7 @@
 # ------------------------------------------------------------------------------
 #  Visual Studio Version.
 #	Try following command from command prompt.
-#	    > devenv /? | grep "Microsoft Visual Studio
+#	    > devenv /? | grep "Microsoft Visual Studio"
 #
 set(VS_VERSION "15.0")
 
