@@ -57,4 +57,45 @@ function(add_lib return_var environ_name)
     endif()
 endfunction()
 
+# ------------------------------------------------------------------------------
+#  ファイルをincludeする。
+#  ${option}が定義されているならば、それが指すファイルをincludeする。
+#  さもなければ、${file_path}, ${default_file}の順にファイルを探し、
+#  最初に見つかったファイルをincludeする。
+#  
+#  macro include_file()
+#	option_var	オプション変数名
+#			  -D <option_var>=<file-absolute-path>
+#	file_path	ディレクトリ名 (絶対パス)
+#	default_file	デフォルトディレクトリ名 (絶対パス)
+#	file_name	includeするファイル名	
+#
+macro(include_file option_var file_path default_file)
+    if(DEFINED ${option_var})
+	if(EXISTS ${${option_var}})
+	    message(STATUS "option: ${option_var}=\"${${option_var}}\"")
+	    if(IS_DIRECTORY ${${option_var}})
+		message("Error: \"${${option_var}}\" is directory")
+		return()
+	    endif()
+	    message(STATUS "including \"${${option_var}}\"")
+	    include(${${option_var}})
+	else()
+	    message("Error: File \"${${option_var}}\" not exists!")
+	    return()
+	endif()
+    else()
+	if(EXISTS ${file_path})
+	    message(STATUS "including \"${file_path}\"")
+	    include(${file_path})
+	elseif(EXISTS ${default_file})
+	    message(STATUS "including \"${default_file}\"")
+	    include(${default_file})
+	else()
+	    message("Error: File \"${file_name}\" not found")
+	    return()
+	endif()
+    endif()
+endmacro()
+
 # end: make.func.cmake

@@ -94,7 +94,6 @@ endif()
 #
 if(${Windows})
     message(STATUS "Host System: Windows")
-    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
     set(CMAKE_CXX_FLAGS		${WIN_COPT_COMMON})
     set(CMAKE_CXX_FLAGS_DEBUG	${WIN_COPT_DEBUG})
     set(CMAKE_CXX_FLAGS_RELEASE	${WIN_COPT_RELEASE})
@@ -241,6 +240,9 @@ endforeach()
 #  Main target.
 #
 set(Target ${ProjectName})
+if(${Windows})
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
+endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
 set(LIBNAME_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
 set(LIBNAME_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
