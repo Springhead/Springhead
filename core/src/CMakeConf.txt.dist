@@ -48,6 +48,18 @@
 #
 #set(GLEW_LIB32_DIR "${GLEW_ROOT}/lib/Release/Win32")
 #set(GLEW_LIB64_DIR "${GLEW_ROOT}/lib/Release/x64")
+#
+#    GLUI について
+#	GLUI は cmake の find_package で扱うことはできないようです。
+#	独自にビルドしてライブラリを用意してください。
+#
+#    Note about GLUI
+#	Cmake's find_package seems to unable to handle GLUI sets.
+#	Build library by yourself.
+#
+#set(GLUI_ROOT		"C:/Package/glui-2.37")
+#set(GLUI_INCLUDE_DIR	"${GLUI_ROOT}/include")
+#set(GLUI_LIB_DIR	"${GLUI_ROOT}/msvc/lib")
 
 # ------------------------------------------------------------------------------
 #  Install directories (library and headers).

@@ -1,56 +1,41 @@
 # CMakeLists.txt for Springhead
+#
+#   Change parametes in "Customization section" (lines 178--215) to customize
+#   compile and/or link condition.
 
 cmake_minimum_required(VERSION 3.1)
 
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Quaternion")
+set(ProjectName "Project")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
 
 # ------------------------------------------------------------------------------
-#  Read default/customized parameter file (try to find in following order).
-#	(1) "${CMAKE_SOURCE_DIR}/CMakeCustomize.txt".
-#	(2) File specified by option "CUSTOM".
-#	(3) Default file at "${TOPDIR}/CMakeCustomize.txt.sample".
-#	(4) Default file at "${CMAKE_SOURCE_DIR}/CMakeCustomize.txt.sample".
+#  Determine top directory of Springhead tree.
+#	If cmake option "-D TOPDIR=<absolute-dir-path>" is specified,
+#	<absolute-dir-path> is the one.
+#	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt" SHOULD contain the
+#	definition of top directory like;
+#	    set(TOPDIR "<absolute-dir-path>")
 #
-set(CUSTOM_FNAME "CMakeCustomize.txt")
-set(CUSTOM_FILE "")
-if(EXISTS "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}")
-    # case (1)
-    set(CUSTOM_FILE "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}")
-elseif(DEFINED CUSTOM)
-    # case (2)
-    set(CUSTOM_FILE "${CUSTOM}")
-elseif(DEFINED TOPDIR AND EXISTS "${TOPDIR}/${CUSTOM_FNAME}.sample")
-    # case (3)
-    set(CUSTOM_FILE "${TOPDIR}/${CUSTOM_FNAME}.sample")
-elseif(EXISTS "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}.sample")
-    # case (4)
-    set(CUSTOM_FILE "${CMAKE_SOURCE_DIR}/${CUSTOM_FNAME}.sample")
+set(TOPDIR_FILE "CMakeTopdir.txt")
+if(DEFINED TOPDIR)
+    if(NOT EXISTS "${TOPDIR}")
+	message("Error: File \"${TOPDIR}\" not found")
+	return()
+    endif()
+else()
+    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
+	message("Error: File \"${TOPDIR_FILE}\" not found")
+	return()
+    endif()
+    include(${TOPDIR_FILE})
 endif()
-if("${CUSTOM_FILE}" STREQUAL "")
-    message("** \"CMakeCustom.txt\" NOT FOUND **")
-    return()
-endif()
-message("** Using customize file: \"${CUSTOM_FILE}\"")
-include(${CUSTOM_FILE})
 
-# ------------------------------------------------------------------------------
-#  Top directory of Springhead tree.
-#	Top directory can set by two ways.
-#	  (1) Define directory in the file "CMakeLists_customize.txt" 
-#	      by set statement like "set(TOPDIR "<dir>")".
-#	  (2) Invoke cmake command with option "-D TOPDIR=<dir>".
-#	Otherwise, we assume that cmake is invoked at "<dir>/core/src".
-#
-if("${TOPDIR}" STREQUAL "")
-    set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
-endif()
 set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_CORE_DIR "${TOPDIR}/core")
 set(SPR_SRC_DIR  "${TOPDIR}/core/src")
@@ -61,8 +46,8 @@ get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
 get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 get_filename_component(SPR_BLD_DIR ${PROJECT_BINARY_DIR} ABSOLUTE)
 message(STATUS "SPR_TOP_DIR: [${SPR_TOP_DIR}]")
-message(STATUS "SPR_SRC_DIR: [${SPR_SRC_DIR}]")
-message(STATUS "SPR_INC_DIR: [${SPR_INC_DIR}]")
+#message(STATUS "SPR_SRC_DIR: [${SPR_SRC_DIR}]")
+#message(STATUS "SPR_INC_DIR: [${SPR_INC_DIR}]")
 message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 
 # ------------------------------------------------------------------------------
@@ -70,10 +55,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 #
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
-
-set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
-set(CMAKE_BUILD_TYPE Release)
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -81,7 +63,18 @@ set(CMAKE_BUILD_TYPE Release)
 include("${SPR_CORE_DIR}/make.func.cmake")
 
 # ------------------------------------------------------------------------------
-#  Set compile options.
+#  Read compiler/linker option file (try to find in following order).
+#	(1) File specified by option "-D OPTS=<file>".
+#	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
+#
+set(OPTS_FILE_NAME "CMakeOpts.txt")
+set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
+set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
+include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
+
+# ------------------------------------------------------------------------------
+#  Set compiler/linker options.
 #
 if(${Windows})
     message(STATUS "Host System: Windows")
@@ -119,19 +112,18 @@ elseif(${Linux})
 endif()
 
 # ------------------------------------------------------------------------------
-#  Some other definitions.
+#  Read definition of external packages. (try to find in following order).
+#	(1) File specified by option "-D CONF=<file>".
+#	(2) "${CMAKE_SOURCE_DIR}/CMakeConf.txt".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeConf.txt.dist".
 #
-if(${Windows})
-    set(RunSwigDir ${CMAKE_SOURCE_DIR}/RunSwig)
-    set(Python ${RunSwigDir}/python_adapter.bat)
-    set(VS_VERSION "15.0")
-    message(STATUS "Visual Studio Version: ${VS_VERSION}")
-elseif(${Linux})
-    set(Python python)
-endif()
+set(CONF_FILE_NAME "CMakeConf.txt")
+set(CONF_FILE "${CMAKE_SOURCE_DIR}/${CONF_FILE_NAME}")
+set(CONF_DEFAULT_FILE "${SPR_SRC_DIR}/${CONF_FILE_NAME}.dist")
+include_file(CONF ${CONF_FILE} ${CONF_DEFAULT_FILE})
 
 # ------------------------------------------------------------------------------
-#  Definition of external packages.
+#  Find external packages if specifed.
 #
 if(DEFINED BOOST_ROOT)
     message("++ finding package: Boost")
@@ -171,51 +163,134 @@ if(DEFINED GLUT_ROOT)
 endif()
 
 # ------------------------------------------------------------------------------
+#  Some other definitions.
+#
+if(${Windows})
+    set(RunSwigDir ${SPR_SRC_DIR}/RunSwig)
+    set(Python ${RunSwigDir}/python_adapter.bat)
+    file(TO_NATIVE_PATH "${RunSwigDir}" RunSwigDir)
+    file(TO_NATIVE_PATH "${Python}" Python)
+    message(STATUS "Visual Studio Version: ${VS_VERSION}")
+elseif(${Linux})
+    set(Python python)
+endif()
+
+# ******************************************************************************
+#  Customization section.
+# ******************************************************************************
+set(EMPTY)
+
+#  Configuration type(s).
+#	Remove unneccessary configuration type(s).
+set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+
+#  Source file name(s) to EXCLUDE from compilation (wild card is NOT available).
+#	Replace '${EMPTY}' with file name(s).
+set(EXCLUDE_SRCS ${EMPTY})
+
+#  Springhead projects to incorporate in the application program.
+#	Remove unneccessary project name(s).
+#	Do not include 'RunSwig' in the list.
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics)
+
+#  Additional include path(s).
+#	Replace '${EMPTY}' with absolute path(s).
+#	Current directory can be refered as '${CMAKE_SOURCE_DIR}'.
+set(ADDITIONAL_INCDIR ${EMPTY})
+
+#  Additional library path(s).
+#	Replace '${EMPTY}' with absolute path(s).
+set(ADDITIONAL_LIBDIR ${EMPTY})
+
+#  Additional library name(s) required.
+#	Replace '${EMPTY}' with file name(s).
+set(ADDITIONAL_LIBS ${EMPTY})
+
+#  Default library name(s) to EXCLUDE from linking.
+#	Replace '${EMPTY}' with file name(s).
+set(EXCLUDE_LIBS ${EMPTY})
+
+# ******************************************************************************
+#  End of customization section.
+# ******************************************************************************
+
+# ------------------------------------------------------------------------------
 #  Main target.
 #
 set(Target ${ProjectName})
 file(GLOB SRCS "*.cpp")
+foreach(exclude IN ITEMS ${EXCLUDE_SRCS})
+    list(REMOVE_ITEM SRCS "${CMAKE_SOURCE_DIR}/${exclude}")
+endforeach()
 if(${Windows})
-    if("${ARCHITECTURE}" STREQUAL "x86")
-	add_executable(${Target} ${SRCS} WIN32)
-    else()
+    if("${ARCHITECTURE}" STREQUAL "x64")
 	add_executable(${Target} ${SRCS})
+    else()
+	add_executable(${Target} WIN32 ${SRCS})
     endif()
 endif()
-set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
+set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/bin)
 
 # ------------------------------------------------------------------------------
 #  Define depending projects.
 #
-add_subdirectory(${SPR_SRC_DIR}/Base ${SPR_BLD_DIR}/Base)
-#add_subdirectory(${SPR_SRC_DIR}/Collision ${SPR_BLD_DIR}/Collision)
-#add_subdirectory(${SPR_SRC_DIR}/Creature ${SPR_BLD_DIR}/Creature)
-#add_subdirectory(${SPR_SRC_DIR}/FileIO ${SPR_BLD_DIR}/FileIO)
-#add_subdirectory(${SPR_SRC_DIR}/Foundation ${SPR_BLD_DIR}/Foundation)
-#add_subdirectory(${SPR_SRC_DIR}/Framework ${SPR_BLD_DIR}/Framework)
-#add_subdirectory(${SPR_SRC_DIR}/Graphics ${SPR_BLD_DIR}/Graphics)
-#add_subdirectory(${SPR_SRC_DIR}/HumanInterface ${SPR_BLD_DIR}/HumanInterface)
-#add_subdirectory(${SPR_SRC_DIR}/Physics ${SPR_BLD_DIR}/Physics)
-add_subdirectory(${SPR_SRC_DIR}/RunSwig ${SPR_BLD_DIR}/RunSwig)
-
-add_dependencies(Base RunSwig)
-#add_dependencies(Collision Foundation RunSwig)
-#add_dependencies(Creature Foundation Framework Physics RunSwig)
-#add_dependencies(FileIO Foundation RunSwig)
-#add_dependencies(Foundation Base RunSwig)
-#add_dependencies(Framework FileIO Foundation Graphics Physics RunSwig)
-#add_dependencies(Graphics Foundation RunSwig)
-#add_dependencies(HumanInterface Foundation RunSwig)
-#add_dependencies(Physics Collision Foundation RunSwig)
+set(DEP_Base)
+set(DEP_Collision Foundation)
+set(DEP_Creature Foundation Framework Physics)
+set(DEP_FileIO Foundation)
+set(DEP_Foundation Base)
+set(DEP_Framework FileIO Foundation Graphics Physics)
+set(DEP_Graphics Foundation)
+set(DEP_HumanInterface Foundation)
+set(DEP_Physics Collision Foundation)
+foreach(proj IN ITEMS ${SPR_PROJS} RunSwig)
+    add_subdirectory(${SPR_SRC_DIR}/${proj} ${SPR_BLD_DIR}/${proj})
+    set(DEP_LIST RunSwig)
+    foreach(dep IN ITEMS ${DEP_${proj}})
+	list(APPEND DEP_LIST ${dep})
+    endforeach()
+    add_dependencies(${proj} ${DEP_LIST})
+    #message("   dependencies: ${proj} => ${DEP_LIST}")
+endforeach()
+add_dependencies(${Target} ${SPR_PROJS})
 
 # ------------------------------------------------------------------------------
 #  Include directories.
 #
 include_directories(${Target}
+    PRIVATE ${CMAKE_SOURCE_DIR}
     PRIVATE ${SPR_INC_DIR}
     PRIVATE ${SPR_SRC_DIR}
+    PRIVATE ${ADDITIONAL_INCDIR}
     PRIVATE ${SPR_TOP_DIR}/dependency/src
 )
+
+# ------------------------------------------------------------------------------
+#  Library directories.
+#
+if("${ARCHITECTURE}" STREQUAL "x64")
+    set(DEPENDENCY_LIBDIR ${SPR_TOP_DIR}/dependency/lib/win64)
+else()
+    set(DEPENDENCY_LIBDIR ${SPR_TOP_DIR}/dependency/lib/win32)
+endif()
+target_link_directories(${Target}
+    PRIVATE ${ADDITIONAL_LIBDIR}
+    PRIVATE ${DEPENDENCY_LIBDIR}
+)
+
+# ------------------------------------------------------------------------------
+#  Additional libraries.
+#
+target_link_libraries(${Target}
+    ${SPR_PROJS}
+    ${ADDITIONAL_LIBS}
+)
+# ------------------------------------------------------------------------------
+#  Exclude default libraries.
+#
+if(DEFINED EXCLUDE_LIBS)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
+endif()
 
 # ------------------------------------------------------------------------------
 #  Clean (only for RunSwig).
