@@ -1,9 +1,12 @@
-cmake の利用法
+cmake の利用法 (Windowsの場合)
 
-0. はじめに
+1. はじめに
 	配布されるファイル(cmake関連)は、
-	    CMakeListsLib.dist, CMakeOpts.dist, CMakeConf.dist,
-	    CMakeListsApp.dist
+	    CMakeLists.txt.Lib.dist	… Springhead library 構築用
+	    CMakeLists.txt.App.dist	… application program 構築用
+	    CMakeTopdir.txt.dist	… Springhead トップディレクトリ指定
+	    CMakeOpts.txt.dist		… Compile/Link オプション指定
+	    CMakeConf.txt.dist		… 外部 package 指定 / Install 場所指定
 	です。
 	配布されたこれらのファイルは、編集/コミットしないようにお願いします。
 	各ファイルはテキストファイルで、文字('#')で始まる行はコメント行です。
@@ -12,66 +15,96 @@ cmake の利用法
 	値がファイルパスのときは"絶対パス"で指定してください。
 	またパスセパレータには文字('/')を使用してください(escape問題の回避)。
 
-1. Springhead Libray のビルド
-    Springehad を clone したディレクトリを <SprTop> とする。
-    ビルドの中間生成物を格納するディレクトリを "build" とする。
+2. 表記法
+	以下では次の表記法を使用します。
+	<SprTop>	Springhead を clone したディレクトリ
+	<SprSrc>	<SprTop>/core/src
+	<BldDir>	対象となる"CMakeLists.txt"があるディレクトリ
+	<WrkDir>	中間生成物を格納するディレクトリ（例えば"build"）
 
-1.1 Springhead/dependency を利用する場合
-    <SprTop>/core/src にある CMakeLists.txt.Lib.dist と CMakeOpts.txt.dist を
-    それぞれ CMakeLists.txt, CMakeOpts.txt という名前でコピーする。
-    次のコマンドを実行する。
+3. Springhead library のビルド
 
-	> cd <SprTop>/core/src
+3.1 準備
+	配布された次のファイルをコピーします。
+	> cd <SprSrc>
 	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
 	> copy CMakeOpts.txt.dist CMakeOpts.txt
-	> mkdir build
-	> cd build
-	> cmake .. [<generator>]
-	build/Springhead.sln を実行
 
-    <generator> の例：	-G "Visual Studio 15 2017" -A x64
-			-G "Visual Studio 15 2017 Win64"
-			-G "Unix Makefiles"
-    <generator> の詳細は cmake --help 参照。
-
-1.2 Springhead/dependency を利用しない場合
-    <SprTop>/core/src にある CMakeLists.txt.Lib.dist, CMakeOpts.txt.dist 及び
-    CMakeConf.txt.dist をそれぞれ CMakeLists.txt, CMakeOpts.txt, CMakeConf.txt
-    という名前でコピーする。
-    External packages に関する設定を行ない、次のコマンドを実行する。
-
-    <SprTop>/core/src/CMakeConf.dist を CMakeConf.txt という名前でコピーして
-
-	> cd <SprTop>/core/src
-	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
-	> copy CMakeOpts.txt.dist CMakeOpts.txt
+	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
 	> copy CMakeConf.txt.dist CMakeConf.txt
-	> mkdir build
-	> cd build
-	> cmake .. [<generator>]
-	build/Springhead.sln を実行
 
+3.2 設定の変更
+	Compile/link オプションを変更する場合には "CMakeOpts.txt" を、
+	外部パッケージを使用する場合、Install 先を設定する場合には "CMakeConf.txt" を
+	適宜編集します (編集方法は各ファイルを参照してください）。
+
+3.3 ソリューションファイルの生成
+	作業領域を確保して、そこにソリューションファイルを生成します。
+	> mkdir <WrkDir>
+	> cd <WrkDir>
+	> cmake .. [<generator>]
+	<generator> の例：  -G "Visual Studio 15 2017" -A x64
+			    -G "Visual Studio 15 2017 Win64"
+			    -G "Unix Makefiles"
+	<generator> の詳細は cmake --help 参照。
+
+3.4 ライブラリのビルド
+	生成されたソリューションファイル <WrkDir>/Springhead.sln" を実行します。
+	ライブラリは <SprTop>/generated/lib/win[32|64] に作成されます。
+
+3.5 ソリューションファイルの再作成
+	新規ソースファイルを追加した場合、既存のソースファイルを廃止した場合、
+	CMake*.txt を編集した場合などは、cmake を再実行してソリューションファイルを
+	再作成する必要があります。
+	> cd <WrkDir>
+	> cmake .. [<generator>]
+
+	※ cmake 変数 (CMake*.txt の中で set(var ...) で設定されたもの) はキャッシュ
+	   されているようです。したがって、単に set(var ...) をコメントアウトした
+	   場合、cmake 起動時に指定していたオプション (-D OPTS=..., -D CONF=...) (後述)
+	   を止める場合などは、キャッシュを無効にするために <WrkDir> を一度削除する
+	   必要があります。
+
+	   > cd <BldDir>
+	   > rd /s /q <WrkDir>
+	   > mkdir <WrkDir>
+	   > cd <WrkDir>
+	   > cmake .. [<generator>]
+
+4. Application program のビルド
+
+4.1 準備
+	配布された次のファイルをコピーします。
+	> cd <SprSrc>
+	> copy CMakeTopdir.txt.dist CMakeTopdir.txt
+	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+	> copy CMakeOpts.txt.dist CMakeOpts.txt
+
+	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
+	> copy CMakeConf.txt.dist CMakeConf.txt
+
+4.2 <SprTop> の設定
+	CMakeTopdir.txt を編集して <SprTop> を設定してください。
+
+4.3 設定の変更
+	CMakeLists.txt を編集して必要なパラメータを設定してください (編集すべき
+	パラメータは "Customization section" に記述されています）。
+	CMakeOpts.txt, CMakeConf.txt の編集については 3.2 と同様です。
+
+4.4 ソリューションファイルの生成
+	3.3 と同様です。
+
+4.5 アプリケーションのビルド
+	生成されたソリューションファイル <WrkDir>/Springhead.sln" を実行します。
+	バイナリは <WrkDir>/<Config> に作成されます (<Config> ::= Debug | Release ..)。
+
+4.6 ソリューションファイルの再作成
+	3.5 と同様です。
+
+5. 補足
     CMakeOpts.txt と CMakeConf.txt はそれぞれ任意の場所においても構いません。
     その場合には cmake の起動時に次のオプションを追加します。
 	> cmake [-D OPTS=<opts-file>] [-D CONF=<conf-file>] .. [<generator>]
     複数のアプリケーションで共通の設定を用いる場合はこのようにします。
 
-1.3. コンパイラオプションを変更する場合
-    1.1 及び 1.2 において、CMakeOpts.txt の内容を適宜修正します。
-
-1.4 Install ディレクトリを設定する場合
-    CMakeOpts.txt の編集箇所が異なるだけで、1.2 と同じです。
-
-
-2. Springhead のプロジェクトを取り込んだアプリケーションのビルド
-    アプリケーションのトップディレクトリを <AppTop> とする。
-    <SprTop> と "build" については 1. と同様とします。
-    ※ dependency を利用しない場合については 1.2 を参照のこと。
-
-    <SprTop>/core/src にある CMakeLists.txt.App.dist と CMakeOpts.txt.dist を
-    それぞれ CMakeLists.txt, CMakeOpts.txt という名前で <AppTop> にコピーする。
-
-	＊未完＊
-
-
-
+以上
