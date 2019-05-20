@@ -13,9 +13,11 @@ set(CMAKE_USE_RELATIVE_PATHS true)
 
 # ------------------------------------------------------------------------------
 #  Determine top directory of Springhead tree.
-#	If cmake option "-D TOPDIR=<abs-dir-path>" is specified, <abs-dir-path>
-#	is the one. Otherwise, top directory SHOULD be described in the file
-#	"${CMAKE_SOURCE_DIR}/CMakeTopdir.txt".
+#	If cmake option "-D TOPDIR=<absolute-dir-path>" is specified,
+#	<abs-dir-path> is the one.
+#	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopDir.txt" SHOULD contain the
+#	definition of top directory like;
+#	    set(TOPDIR "<absolute-dir-path>")
 #
 set(TOPDIR_FILE "CMakeTopdir.txt")
 if(DEFINED TOPDIR)
@@ -62,32 +64,15 @@ set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 include("${SPR_CORE_DIR}/make.func.cmake")
 
 # ------------------------------------------------------------------------------
-#  Read compile/link option file (try to find in following order).
+#  Read compiler/linker option file (try to find in following order).
 #	(1) File specified by option "-D OPTS=<file>".
-#	(2) "${SPR_SRC_DIR}/CMakeOpts.txt".
-#	(3) Default file at "${SPR_SRCDIR}/CMakeOpts.txt.dist".
+#	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
 #
-set(OPTS_FILE "CMakeOpts.txt")
-if(DEFINED OPTS)
-    get_filename_component(OPTS ${OPTS} ABSOLUTE)
-    if(NOT EXISTS "${OPTS}")
-	message("Error: File \"${OPTS}\" not found")
-	return()
-    endif()
-    message(STATUS "reading [${OPTS}]")
-    include(${OPTS})
-else()
-    if(EXISTS "${SPR_SRC_DIR}/${OPTS_FILE}")
-	message(STATUS "reading [${SPR_SRC_DIR}/${OPTS_FILE}]")
-	include(${SPR_SRC_DIR}/${OPTS_FILE})
-    elseif(EXISTS "${SPR_SRC_DIR}/${OPTS_FILE}.dist")
-	message(STATUS "reading [${SPR_SRC_DIR}/${OPTS_FILE}.dist]")
-	include(${SPR_SRC_DIR}/${OPTS_FILE}.dist)
-    else()
-	message("Error: File \"${OPTS_FILE}\" not found")
-	return()
-    endif()
-endif()
+set(OPTS_FILE_NAME "CMakeOpts.txt")
+set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
+set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
+include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
 # ------------------------------------------------------------------------------
 #  Set compiler/linker options.
@@ -98,12 +83,18 @@ if(${Windows})
     set(CMAKE_CXX_FLAGS_DEBUG	${WIN_COPT_DEBUG})
     set(CMAKE_CXX_FLAGS_RELEASE	${WIN_COPT_RELEASE})
     set(CMAKE_CXX_FLAGS_TRACE	${WIN_COPT_TRACE})
+    foreach(macros IN ITEMS ${WIN_COPT_MACROS})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
+    endforeach()
 elseif(${Linux})
     message(STATUS "Host System: Linux")
     set(LIB_DIR	"${SPR_CORE_DIR}/lib")
     set(CMAKE_CXX_FLAGS		${LINUX_COPT_COMMON})
     set(CMAKE_CXX_FLAGS_DEBUG	${LINUX_COPT_DEBUG})
     set(CMAKE_CXX_FLAGS_RELEASE	${LINUX_COPT_RELEASE})
+    foreach(macros IN ITEMS ${WIN_COPT_MACROS})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D ${macros}")
+    endforeach()
     set(LDFLAGS.EXTRA	"-L${LIB_DIR}/linux/ -L/usr/lib \
 			 -L/usr/X11R6/lib -L/usr/lib/X11")
     set(LDFLAGS.GL	"-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
@@ -127,35 +118,18 @@ elseif(${Linux})
 endif()
 
 # ------------------------------------------------------------------------------
-#  Read external package definition file (try to find in following order).
+#  Read definition of external packages. (try to find in following order).
 #	(1) File specified by option "-D CONF=<file>".
-#	(2) "${SPR_SRC_DIR}/CMakeConf.txt".
-#	(3) Default file at "${SPR_SRCDIR}/CMakeConf.txt.dist".
+#	(2) "${CMAKE_SOURCE_DIR}/CMakeConf.txt".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeConf.txt.dist".
 #
-set(CONF_FILE "CMakeConf.txt")
-if(DEFINED CONF)
-    get_filename_component(CONF ${CONF} ABSOLUTE)
-    if(NOT EXISTS "${CONF}")
-	message("Error: File \"${CONF}\" not found")
-	return()
-    endif()
-    message(STATUS "reading [${CONF}]")
-    include(${CONF})
-else()
-    if(EXISTS "${SPR_SRC_DIR}/${CONF_FILE}")
-	message(STATUS "reading [${SPR_SRC_DIR}/${CONF_FILE}]")
-	include(${SPR_SRC_DIR}/${CONF_FILE})
-    elseif(EXISTS "${SPR_SRC_DIR}/${CONF_FILE}.dist")
-	message(STATUS "reading [${SPR_SRC_DIR}/${CONF_FILE}.dist]")
-	include(${SPR_SRC_DIR}/${CONF_FILE}.dist)
-    else()
-	message("Error: File \"${CONF_FILE}\" not found")
-	return()
-    endif()
-endif()
+set(CONF_FILE_NAME "CMakeConf.txt")
+set(CONF_FILE "${CMAKE_SOURCE_DIR}/${CONF_FILE_NAME}")
+set(CONF_DEFAULT_FILE "${SPR_SRC_DIR}/${CONF_FILE_NAME}.dist")
+include_file(CONF ${CONF_FILE} ${CONF_DEFAULT_FILE})
 
 # ------------------------------------------------------------------------------
-#  Definition of external packages.
+#  Find external packages if specified.
 #
 if(DEFINED BOOST_ROOT)
     message("++ finding package: Boost")

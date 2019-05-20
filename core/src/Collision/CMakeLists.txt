@@ -73,4 +73,34 @@ if(DEFINED GLUI_INCLUDE_DIR)
     )
 endif()
 
+# for Windows (Visual Studio)
+#   make $(IntDir) be linked to
+#	${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
+#
+if(${Windows})
+    set(INTDIR "${Target}.dir")
+    set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${INTDIR})
+    file(TO_NATIVE_PATH "${ACTDIR}" ACTDIR)
+    #message("++ ${ACTDIR} ++")
+    #message("++ ${INTDIR} ++")
+    execute_process(
+	COMMAND cmd /c if not exist "${ACTDIR}\\" mkdir "${ACTDIR}"
+	COMMAND cmd /c if exist "${INTDIR}" rd /s /q "${INTDIR}"
+	RESULT_VARIABLE CMD_STATUS
+	OUTPUT_VARIABLE CMD_OUTPUT
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    execute_process(
+	COMMAND	cmd /c mklink /J "${INTDIR}" "${ACTDIR}"
+	RESULT_VARIABLE CMD_STATUS
+	OUTPUT_VARIABLE CMD_OUTPUT
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    #message(STATUS "CMD_STATUS: ${CMD_STATUS}")
+    #message(STATUS "CMD_OUTPUT: ${CMD_OUTPUT}")
+    #message(STATUS "${INTDIR} <<===>> ${ACTDIR}")
+    unset(INTDIR)
+    unset(ACTDIR)
+endif()
+
 # end: CMakeLists.txt

@@ -12,6 +12,7 @@
 #	WIN_COPT_DEBUG			Additional options (for Debug).
 #	WIN_COPT_RELEASE		Additional options (for Release).
 #	WIN_COPT_TRACE			Additional options (for Trace).
+#	WIN_COPT_MACROS			Define macros.
 #	CMAKE_EXE_LINKER_FLAGS		Commonly used linker options.
 #	CMAKE_EXE_LINKER_FLAGS_DEBUG	Additional options (for Debug).
 #	CMAKE_EXE_LINKER_FLAGS_RELEASE	Additional options (for Release).
@@ -41,6 +42,9 @@ set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D \"_LIB\" /GF- /EHsc /Gy- /Qpar \
 set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
 set(WIN_COPT_RELEASE	"/Ob2 /Ot /Oy /Gr")
 set(WIN_COPT_TRACE	"/Ob2 /Ot /D TRACE /Oy- /Gr")
+#
+#  Need not to specify "-D" or "/D".
+#set(WIN_COPT_MACROS "NAME" "NAME=VALUE")
 #
 set(CMAKE_EXE_LINKER_FLAGS  "/ERRORREPORT:PROMPT /IGNORE:4099 /NXCOMPAT \
 			/MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")

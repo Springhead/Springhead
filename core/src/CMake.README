@@ -25,9 +25,12 @@ cmake の利用法 (Windowsの場合)
 3. Springhead library のビルド
 
 3.1 準備
-	配布された次のファイルをコピーします。
+	配布された次のファイルをコピーします (名称を変更することに注意)。
 	> cd <SprSrc>
+	> copy CMakeTopdir.txt.dist CMakeTopdir.txt
 	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+
+	Compile/link オプションを変更する場合には次のファイルもコピーします。
 	> copy CMakeOpts.txt.dist CMakeOpts.txt
 
 	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
@@ -78,6 +81,8 @@ cmake の利用法 (Windowsの場合)
 	> cd <SprSrc>
 	> copy CMakeTopdir.txt.dist CMakeTopdir.txt
 	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+
+	Compile/link オプションを変更する場合には次のファイルもコピーします。
 	> copy CMakeOpts.txt.dist CMakeOpts.txt
 
 	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
