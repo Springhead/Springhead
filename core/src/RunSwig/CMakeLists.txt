@@ -24,17 +24,17 @@ file(TO_NATIVE_PATH "${TOPDIR}" TOPDIR)
 file(TO_NATIVE_PATH "${SPR_TOP_DIR}" SPR_TOP_DIR)
 file(TO_NATIVE_PATH "${SPR_SRC_DIR}" SPR_SRC_DIR)
 file(TO_NATIVE_PATH "${PRJ_BLD_DIR}" PRJ_BLD_DIR)
-message(STATUS "${Target}: SPR_TOP_DIR: [${SPR_TOP_DIR}]")
-message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
-message(STATUS "${Target}: PRJ_BLD_DIR: [${PRJ_BLD_DIR}]")
+#message(STATUS "${Target}: SPR_TOP_DIR: [${SPR_TOP_DIR}]")
+#message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
+#message(STATUS "${Target}: PRJ_BLD_DIR: [${PRJ_BLD_DIR}]")
 
 # RunSwig directory
 set(RSSrcDir ${SPR_SRC_DIR}/RunSwig)
 set(RSBldDir ${PRJ_BLD_DIR}/RunSwig)
 file(TO_NATIVE_PATH "${RSSrcDir}" RSSrcDir)
 file(TO_NATIVE_PATH "${RSBldDir}" RSBldDir)
-message(STATUS "${Target}: RSSrcDir: [${RSSrcDir}]")
-message(STATUS "${Target}: RSBldDir: [${RSBldDir}]")
+#message(STATUS "${Target}: RSSrcDir: [${RSSrcDir}]")
+#message(STATUS "${Target}: RSBldDir: [${RSBldDir}]")
 
 if(${Windows})
     set(Python python_adapter.bat)
@@ -48,24 +48,45 @@ endif()
 
 # main target
 #
+add_custom_target(${Target}
+    COMMAND cd ${RSSrcDir}
+    COMMAND ${Python} make_manager.py -A -c
+    COMMAND ${Make} -f ${Makefile} SPRSRCDIR=${SPR_SRC_DIR}
+    COMMENT [[  generating files...]]
+)
+
+# for Windows (Visual Studio)
+#   make $(IntDir) be linked to
+#	${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
+#
 if(${Windows})
-    add_custom_target(${Target}
-	#COMMAND copy ${RSSrcDir}\\python_adapter.bat ${RSBldDir} >NUL 2>&1
-	#COMMAND copy ${RSSrcDir}\\PrepforCMake.py ${RSBldDir} >NUL 2>&1
-	#COMMAND ${Python} PrepForCMake.py ${SPR_SRC_DIR} ${PRJ_BLD_DIR}
-	COMMAND cd ${RSSrcDir}
-	COMMAND ${Python} make_manager.py -A -c
-	COMMAND ${Make} -f ${Makefile} SPRSRCDIR=${SPR_SRC_DIR}
-	COMMENT [[  generating files...]]
+    set(INTDIR ${Target}.dir)
+    set(CMFDIR CMakeFiles)
+    set(LOGDIR ${ARCHITECTURE})		# created by add_custom_target
+    set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION})
+    set(LINKLIST
+	"${INTDIR}=${ACTDIR}/${INTDIR}" ;
+	"${CMFDIR}=${ACTDIR}/${CMFDIR}" ;
+	"${LOGDIR}=${ACTDIR}/${INTDIR}" ;
     )
-elseif(${Linux})
-    add_custom_target(${Target}
-	COMMAND cp -f ${RSOrgDir}/PrepforCMake.py ${RSBldDir} >/dev/null 2>&1
-	COMMAND ${Python} PrepForCMake.py ${SPR_SRC_DIR} ${PRJ_BLD_DIR}
-	COMMAND ${Python} make_manager.py -A -c
-	COMMAND ${Make} -f ${Makefile} SPRSRCDIR=${SPR_SRC_DIR}
-	COMMENT [[  generating files...]]
+    set(cmnd "python ${SPR_SRC_DIR}/cmake_ln.py -v ${LINKLIST}")
+    execute_process(
+	COMMAND cmd /c ${cmnd}
+	RESULT_VARIABLE CMD_RESULT
+	OUTPUT_VARIABLE CMD_OUTPUT
+	ERROR_VARIABLE CMD_ERROR
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
+    if(${CMD_RESULT})
+        message("Error: ${CMD_ERROR}")
+    endif()
+    string(REPLACE "\n" "\n   " CMD_OUTPUT ${CMD_OUTPUT})
+    #message("   ${CMD_OUTPUT}")
+    unset(INTDIR)
+    unset(CMFDIR)
+    unset(LOGDIR)
+    unset(ACTDIR)
+    unset(cmnd)
 endif()
 
 # end: CMakeLists.txt

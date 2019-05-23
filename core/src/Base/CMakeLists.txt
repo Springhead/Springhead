@@ -54,29 +54,30 @@ target_include_directories(${Target}
 #	${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
 #
 if(${Windows})
-    set(INTDIR "${Target}.dir")
-    set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${INTDIR})
-    file(TO_NATIVE_PATH "${ACTDIR}" ACTDIR)
-    #message("++ ${ACTDIR} ++")
-    #message("++ ${INTDIR} ++")
+    set(INTDIR ${Target}.dir)
+    set(CMFDIR CMakeFiles)
+    set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION})
+    set(LINKLIST
+	"${INTDIR}=${ACTDIR}/${INTDIR}" ;
+	"${CMFDIR}=${ACTDIR}/${CMFDIR}" ;
+    )
+    set(cmnd "python ${SPR_SRC_DIR}/cmake_ln.py -v ${LINKLIST}")
     execute_process(
-	COMMAND cmd /c if not exist "${ACTDIR}\\" mkdir "${ACTDIR}"
-	COMMAND cmd /c if exist "${INTDIR}" rd /s /q "${INTDIR}"
-	RESULT_VARIABLE CMD_STATUS
+	COMMAND cmd /c ${cmnd}
+	RESULT_VARIABLE CMD_RESULT
 	OUTPUT_VARIABLE CMD_OUTPUT
+	ERROR_VARIABLE CMD_ERROR
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
-    execute_process(
-	COMMAND	cmd /c mklink /J "${INTDIR}" "${ACTDIR}"
-	RESULT_VARIABLE CMD_STATUS
-	OUTPUT_VARIABLE CMD_OUTPUT
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    )
-    #message(STATUS "CMD_STATUS: ${CMD_STATUS}")
-    #message(STATUS "CMD_OUTPUT: ${CMD_OUTPUT}")
-    #message(STATUS "${INTDIR} <<===>> ${ACTDIR}")
+    if(${CMD_RESULT})
+        message("Error: ${CMD_ERROR}")
+    endif()
+    string(REPLACE "\n" "\n   " CMD_OUTPUT ${CMD_OUTPUT})
+    #message("   ${CMD_OUTPUT}")
     unset(INTDIR)
+    unset(CMFDIR)
     unset(ACTDIR)
+    unset(cmnd)
 endif()
 
 # end: CMakeLists.txt
