@@ -5,8 +5,8 @@
 #
 #    このファイルでは、次の事項を設定します。
 #	外部パッケージの利用
-#		下記の変数を定義すれば、dependency の代わりにそれらを参照する
-#		ようになります。
+#		変数 CMAKE_PREFIX_PATH を定義すれば、dependency の代わりに
+#		それらのパッケージを参照するようになります。
 #	インストールディレクトリの設定
 #		下記の変数を定義すれば、生成したファイル及びコンパイル時に必要
 #		となるヘッダファイルをインストールするターゲットを生成できます。
@@ -15,7 +15,7 @@
 #    This file defines following matters.
 #	External package usage
 #		To use external package instead of 'dependency', define
-#		following varaibles.
+#		installed path(s) to CMAKE_PREFIX_PATH.
 #	Install directory
 #		Create target 'INSTALL' to install generated files and header
 #		files needed for compilation.
@@ -26,40 +26,19 @@
 # ------------------------------------------------------------------------------
 #  External packages (boost, glew and freeglut).
 #
-#    独自にインストールした下記のパッケージを使用するときは、次の変数に適切な
-#    パス(絶対パス)を設定してください。
+#    別途インストールしたパッケージを使用するときは、パッケージをインストール
+#    したディレクトリのパス(絶対パス)を CMAKE_PREFIX_PATH に設定してください。
+#    複数のパスを設定するときは、各パスを空白で区切って並べます。
 #
-#    If you installed following packages and intended to use them, uncomment
-#    and redefine variables with appropreate path (USE ABSOLUTE PATH).
+#    If you installed above packages and intended to use them, uncomment and
+#    define installed directory list to CMAKE_PREFIX_PATH (USE ABSOLUTE PATH).
 #
-#set(BOOST_ROOT "C:/Package/boost_1_70_0/include/boost-1_70")
-#set(GLEW_ROOT  "C:/Package/glew-2.1.0")
-#set(GLUT_ROOT  "C:/Package/freeglut")
-#
-#    GLEW について
-#	上記の GLEW_ROOT を設定しただけでは library が見つからないエラーが
-#	発生します (例えば glew-2.1.0 Windows binary distribution の場合)。
-#	上記に加え、次の変数が library directory を指すように設定してください。
-#
-#    Note about GLEW
-#	Library not found error may occur when using glew-2.1.0 Windows binary
-#	distribution for example. In such a case, use following variables to
-#	indeicate where the libray is.
-#
-#set(GLEW_LIB32_DIR "${GLEW_ROOT}/lib/Release/Win32")
-#set(GLEW_LIB64_DIR "${GLEW_ROOT}/lib/Release/x64")
-#
-#    GLUI について
-#	GLUI は cmake の find_package で扱うことはできないようです。
-#	独自にビルドしてライブラリを用意してください。
-#
-#    Note about GLUI
-#	Cmake's find_package seems to unable to handle GLUI sets.
-#	Build library by yourself.
-#
-#set(GLUI_ROOT		"C:/Package/glui-2.37")
-#set(GLUI_INCLUDE_DIR	"${GLUI_ROOT}/include")
-#set(GLUI_LIB_DIR	"${GLUI_ROOT}/msvc/lib")
+#set(CMAKE_PREFIX_PATH
+#	"C:/Package/boost_1_70_0"
+#	"C:/Package/glew-2.1.0"
+#	"C:/Package/glew-2.1.0/lib/Release/x64"
+#	"C:/Package/freeglut"
+#)
 
 # ------------------------------------------------------------------------------
 #  Install directories (library and headers).
