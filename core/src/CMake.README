@@ -92,8 +92,14 @@ cmake の利用法 (Windowsの場合)
 	CMakeTopdir.txt を編集して <SprTop> を設定してください。
 
 4.3 設定の変更
-	CMakeLists.txt を編集して必要なパラメータを設定してください (編集すべき
-	パラメータは "Customization section" に記述されています）。
+	CMakeLists.txt を編集して必要なパラメータを設定してください。
+	パラメータは "Customization section" に記述されています (290行目近辺）。
+	ここでは、
+	　・使用する Springhead project の選択
+	　・include directory path の追加
+	　・include library path / library file の追加
+	などが指定できます。詳細は CMakeLists.txt の該当部分を参照してください。
+
 	CMakeOpts.txt, CMakeConf.txt の編集については 3.2 と同様です。
 
 4.4 ソリューションファイルの生成
