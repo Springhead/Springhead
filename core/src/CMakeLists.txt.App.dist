@@ -209,10 +209,14 @@ set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics Human
 #	Replace '${EMPTY}' with absolute path(s).
 #	Current directory can be refered as '${CMAKE_SOURCE_DIR}'.
 set(ADDITIONAL_INCDIR ${EMPTY})
+#set(ADDITIONAL_INCDIR "F:/Project/ExternalPackage/glui-2.37/include")
 
 #  Additional library path(s).
 #	Replace '${EMPTY}' with absolute path(s).
 set(ADDITIONAL_LIBDIR ${EMPTY})
+#set(ADDITIONAL_LIBDIR
+#	"F:/Project/ExternalPackage/freeglut/lib/x64"
+#	"F:/Project/Springhead/dependency/lib/win64")
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
