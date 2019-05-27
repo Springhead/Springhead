@@ -68,9 +68,9 @@ if(DEFINED GLUT_INCLUDE_DIR)
 	PRIVATE ${GLUT_INCLUDE_DIR}
     )
 endif()
-if(DEFINED GLUI_INCLUDE_DIR)
+if(DEFINED ADDITIONAL_INCDIR)
     target_include_directories(${Target}
-	PRIVATE ${GLUI_INCLUDE_DIR}
+	PRIVATE ${ADDITIONAL_INCDIR}
     )
 endif()
 

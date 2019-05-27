@@ -131,18 +131,23 @@ include_file(CONF ${CONF_FILE} ${CONF_DEFAULT_FILE})
 # ------------------------------------------------------------------------------
 #  Find external packages if specifed.
 #
-if(DEFINED BOOST_ROOT)
-    message("++ finding package: Boost")
+if(DEFINED CMAKE_PREFIX_PATH)
+    message(STATUS "CMAKE_PREFIX_PATH:")
+    foreach(path IN LISTS CMAKE_PREFIX_PATH)
+	message("       ${path}")
+    endforeach()
+    #
+    message("finding package: Boost")
     cmake_policy(SET CMP0074 NEW)
     find_package(Boost REQUIRED)
     if(Boost_FOUND)
 	message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
     else()
 	message("** Boost NOT FOUND")
+	return()
     endif()
-endif()
-if(DEFINED GLEW_ROOT)
-    message("++ finding package: GLEW")
+    #
+    message("finding package: GLEW")
     cmake_policy(SET CMP0074 NEW)
     if(DEFINED GLEW_LIB32_DIR AND "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x86")
 	list(APPEND CMAKE_PREFIX_PATH ${GLEW_LIB32_DIR})
@@ -155,16 +160,17 @@ if(DEFINED GLEW_ROOT)
 	message(STATUS "GLEW_INCLUDE_DIRS: ${GLEW_INCLUDE_DIRS}")
     else()
 	message("** GLEW NOT FOUND")
+	return()
     endif()
-endif()
-if(DEFINED GLUT_ROOT)
-    message("++ finding package: GLUT")
+    #
+    message("finding package: GLUT")
     cmake_policy(SET CMP0074 NEW)
     find_package(GLUT REQUIRED)
     if(GLUT_FOUND)
 	message(STATUS "GLUT_INCLUDE_DIR: ${GLUT_INCLUDE_DIR}")
     else()
 	message("** GLUT NOT FOUND")
+	return()
     endif()
 endif()
 
@@ -267,6 +273,9 @@ include_directories(${Target}
     PRIVATE ${CMAKE_SOURCE_DIR}
     PRIVATE ${SPR_INC_DIR}
     PRIVATE ${SPR_SRC_DIR}
+    PRIVATE ${Boost_INCLUDE_DIRS}
+    PRIVATE ${GLEW_INCLUDE_DIRS}
+    PRIVATE ${GLUT_INCLUDE_DIR}
     PRIVATE ${ADDITIONAL_INCDIR}
     PRIVATE ${SPR_TOP_DIR}/dependency/src
 )
