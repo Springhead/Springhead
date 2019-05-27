@@ -34,11 +34,11 @@
 #    define installed directory list to CMAKE_PREFIX_PATH (USE ABSOLUTE PATH).
 #
 #set(CMAKE_PREFIX_PATH
-#	"C:/Package/boost_1_70_0"
-#	"C:/Package/glew-2.1.0"
-#	"C:/Package/glew-2.1.0/lib/Release/x64"
-#	"C:/Package/freeglut"
-#	"C:/Package/glui-2.37/include"
+#	"F:/Project/ExternalPackage/boost_1_70_0/include/boost-1_70"
+#	"F:/Project/ExternalPackage/glew-2.1.0"
+#	"F:/Project/ExternalPackage/glew-2.1.0/lib/Release/x64"
+#	"F:/Project/ExternalPackage/freeglut"
+#	"F:/Project/ExternalPackage/glui-2.37/include"
 #)
 
 # ------------------------------------------------------------------------------
