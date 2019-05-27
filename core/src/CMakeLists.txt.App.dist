@@ -1,6 +1,6 @@
 # CMakeLists.txt for Springhead
 #
-#   Change parametes in "Customization section" (lines 178--215) to customize
+#   Change parametes in "Customization section" (lines 190--231) to customize
 #   compile and/or link condition.
 
 cmake_minimum_required(VERSION 3.1)
