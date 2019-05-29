@@ -1,6 +1,24 @@
 #  make.func.cmake
 
 # ------------------------------------------------------------------------------
+#  split()
+#	<str> を <sep> で分割してできた配列を <output> に設定する。
+#
+function(split str sep output)
+	string(REPLACE "${sep}" ";" _tmp_list "${str}")
+	set (${output} "${_tmp_list}" PARENT_SCOPE)
+endfunction()
+
+# ------------------------------------------------------------------------------
+#  join()
+#	<array> の各要素を <glue> で結合してできた文字列を <output> に設定する。
+#
+function(join array glue output)
+	string (REPLACE ";" "${glue}" _tmp_str "${array}")
+	set (${output} "${_tmp_str}" PARENT_SCOPE)
+endfunction()
+
+# ------------------------------------------------------------------------------
 #  eval()
 #	code		実行する(CMakeの)コード
 #
@@ -58,7 +76,7 @@ function(add_lib return_var environ_name)
 endfunction()
 
 # ------------------------------------------------------------------------------
-#  ファイルをincludeする。
+#  【マクロ】ファイルをincludeする。
 #  ${option}が定義されているならば、それが指すファイルをincludeする。
 #  さもなければ、${file_path}, ${default_file}の順にファイルを探し、
 #  最初に見つかったファイルをincludeする。
@@ -97,5 +115,37 @@ macro(include_file option_var file_path default_file)
 	endif()
     endif()
 endmacro()
+
+# ------------------------------------------------------------------------------
+#  ${start_dir}で指定されたディレクトリに${file_name}のファイルがあるか調べる。
+#  ファイルがない場合は一つ上位のディレクトリを調べるということをファイルが
+#  見つかるまで繰り返す。
+#  ファイルが見つかったときはそのファイルの絶対パスを、見つからなかったときは
+#  "NotFound"を返す。
+#
+#  function finefile()
+#	start_dir	検査を開始するディレクトリの絶対パス。
+#	file_name	見つけるファイルの名称
+#	output		戻り値を設定する変数名
+#
+function(findfile start_dir file_name output)
+	#message("     findfile: ${file_name}")
+	split(${start_dir} "/" DirList)
+	while(true)
+		join("${DirList}" "/" PathStr)
+		#message("       ${PathStr}")
+		if(EXISTS "${PathStr}/${file_name}")
+			set(${output} "${PathStr}/${file_name}" PARENT_SCOPE)
+			return()
+		endif()
+		list(LENGTH DirList ListLen)
+		math(EXPR result "${ListLen} - 1")
+		if(NOT ${result})
+			break()
+		endif()
+		list(REMOVE_AT DirList ${result})
+	endwhile()
+	set(${output} "NotFound" PARENT_SCOPE)
+endfunction()
 
 # end: make.func.cmake
