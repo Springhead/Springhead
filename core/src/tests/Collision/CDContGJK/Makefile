@@ -22,7 +22,8 @@ REALCLEANS	= $(wildcard log/*)
 
 CXXFLAGS	:= $(CXXFLAGS) \
 		-D__cdecl= \
-		-std=gnu++11
+		-std=gnu++11 \
+		-DDAILY_BUILD
 
 LDFLAGS		:= \
 		$(call add_lib,${SPR_LINUX_GNU_LIB}) \

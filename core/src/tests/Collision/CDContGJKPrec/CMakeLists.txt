@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "CDContGJK")
+set(ProjectName "CDContGJKPrec")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -131,23 +131,18 @@ include_file(CONF ${CONF_FILE} ${CONF_DEFAULT_FILE})
 # ------------------------------------------------------------------------------
 #  Find external packages if specifed.
 #
-if(DEFINED CMAKE_PREFIX_PATH)
-    message(STATUS "CMAKE_PREFIX_PATH:")
-    foreach(path IN LISTS CMAKE_PREFIX_PATH)
-	message("       ${path}")
-    endforeach()
-    #
-    message("finding package: Boost")
+if(DEFINED BOOST_ROOT)
+    message("++ finding package: Boost")
     cmake_policy(SET CMP0074 NEW)
     find_package(Boost REQUIRED)
     if(Boost_FOUND)
 	message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
     else()
 	message("** Boost NOT FOUND")
-	return()
     endif()
-    #
-    message("finding package: GLEW")
+endif()
+if(DEFINED GLEW_ROOT)
+    message("++ finding package: GLEW")
     cmake_policy(SET CMP0074 NEW)
     if(DEFINED GLEW_LIB32_DIR AND "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x86")
 	list(APPEND CMAKE_PREFIX_PATH ${GLEW_LIB32_DIR})
@@ -160,17 +155,16 @@ if(DEFINED CMAKE_PREFIX_PATH)
 	message(STATUS "GLEW_INCLUDE_DIRS: ${GLEW_INCLUDE_DIRS}")
     else()
 	message("** GLEW NOT FOUND")
-	return()
     endif()
-    #
-    message("finding package: GLUT")
+endif()
+if(DEFINED GLUT_ROOT)
+    message("++ finding package: GLUT")
     cmake_policy(SET CMP0074 NEW)
     find_package(GLUT REQUIRED)
     if(GLUT_FOUND)
 	message(STATUS "GLUT_INCLUDE_DIR: ${GLUT_INCLUDE_DIR}")
     else()
 	message("** GLUT NOT FOUND")
-	return()
     endif()
 endif()
 
@@ -208,15 +202,11 @@ set(SPR_PROJS Base Collision Foundation HumanInterface Physics)
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
 #	Current directory can be refered as '${CMAKE_SOURCE_DIR}'.
-#set(ADDITIONAL_INCDIR ${EMPTY})
-set(ADDITIONAL_INCDIR "F:/Project/ExternalPackage/glui-2.37/include")
+set(ADDITIONAL_INCDIR ${EMPTY})
 
 #  Additional library path(s).
 #	Replace '${EMPTY}' with absolute path(s).
-#set(ADDITIONAL_LIBDIR ${EMPTY})
-set(ADDITIONAL_LIBDIR
-	"F:/Project/ExternalPackage/freeglut/lib/x64"
-	"F:/Project/Springhead/dependency/lib/win64")
+set(ADDITIONAL_LIBDIR ${EMPTY})
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
@@ -277,9 +267,6 @@ include_directories(${Target}
     PRIVATE ${CMAKE_SOURCE_DIR}
     PRIVATE ${SPR_INC_DIR}
     PRIVATE ${SPR_SRC_DIR}
-    PRIVATE ${Boost_INCLUDE_DIRS}
-    PRIVATE ${GLEW_INCLUDE_DIRS}
-    PRIVATE ${GLUT_INCLUDE_DIR}
     PRIVATE ${ADDITIONAL_INCDIR}
     PRIVATE ${SPR_TOP_DIR}/dependency/src
 )
