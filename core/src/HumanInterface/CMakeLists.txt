@@ -74,35 +74,36 @@ if(DEFINED ADDITIONAL_INCDIR)
     )
 endif()
 
-# for Windows (Visual Studio)
-#   make $(IntDir) be linked to
-#	${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
+# integrate intermediate directory
+#	${CMAKE_BINARY_DIR}/${Target}/${Target}.dir
+#	linked to (for Windows)
+#	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
+#	or (for unix)
+#	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${Target}.dir
 #
+set(INTDIR ${Target}.dir)
+set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE})
 if(${Windows})
-    set(INTDIR ${Target}.dir)
-    set(CMFDIR CMakeFiles)
-    set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION})
-    set(LINKLIST
-	"${INTDIR}=${ACTDIR}/${INTDIR}" ;
-	"${CMFDIR}=${ACTDIR}/${CMFDIR}" ;
-    )
-    set(cmnd "python ${SPR_SRC_DIR}/cmake_ln.py -v ${LINKLIST}")
-    execute_process(
-	COMMAND cmd /c ${cmnd}
-	RESULT_VARIABLE CMD_RESULT
-	OUTPUT_VARIABLE CMD_OUTPUT
-	ERROR_VARIABLE CMD_ERROR
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    )
-    if(${CMD_RESULT})
-        message("Error: ${CMD_ERROR}")
-    endif()
-    string(REPLACE "\n" "\n   " CMD_OUTPUT ${CMD_OUTPUT})
-    #message("   ${CMD_OUTPUT}")
-    unset(INTDIR)
-    unset(CMFDIR)
-    unset(ACTDIR)
-    unset(cmnd)
+    set(ACTDIR ${ACTDIR}/${VS_VERSION})
 endif()
+set(LINKLIST
+    "${INTDIR}=${ACTDIR}/${INTDIR}" ;
+)
+set(_tmp_cmnd "python ${SPR_SRC_DIR}/cmake_preconfig.py -v ${LINKLIST}")
+execute_process(
+    COMMAND cmd /c ${_tmp_cmnd}
+    RESULT_VARIABLE CMD_RESULT
+    OUTPUT_VARIABLE CMD_OUTPUT
+    ERROR_VARIABLE CMD_ERROR
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+if(${CMD_RESULT})
+    message("Error: ${CMD_ERROR}")
+endif()
+if(NOT "${CMD_OUTPUT}" STREQUAL "")
+    string(REPLACE "\n" "\n     " CMD_OUTPUT ${CMD_OUTPUT})
+endif()
+string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
+message("     ${CMD_OUTPUT}")
 
 # end: CMakeLists.txt

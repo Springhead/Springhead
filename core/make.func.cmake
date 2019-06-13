@@ -148,4 +148,17 @@ function(findfile start_dir file_name output)
 	set(${output} "NotFound" PARENT_SCOPE)
 endfunction()
 
+# ------------------------------------------------------------------------------
+#  ${cmake_build_dir}で示されたディレクトリからビルド(作業)ディレクトリ名を得る。
+#  ビルドディレクトリの1段下(例えば"build/Foundation")から呼ぶこと － この場合は
+#  build"を返す。
+#
+function(get_build_dir cmake_build_dir output)
+	split("${cmake_build_dir}" "/" _tmp_dir_list)
+	list(LENGTH _tmp_dir_list _tmp_list_len)
+	math(EXPR result "${_tmp_list_len} - 1")
+	list(GET _tmp_dir_list ${result} _tmp_build_dir)
+	set(${output} ${_tmp_build_dir} PARENT_SCOPE)
+endfunction()
+
 # end: make.func.cmake
