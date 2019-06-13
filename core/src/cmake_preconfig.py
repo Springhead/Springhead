@@ -147,7 +147,7 @@ for arg in args:
 		cmnd = 'mklink /j %s %s' % (dos_link, dos_target)
 	if verbose > 1:
 		print('%s %s' % ('%%' if is_unix() else '>', cmnd))
-	proc = subprocess.Popen(cmnd, shell=True)
+	proc = subprocess.Popen(cmnd, shell=True, stdout=subprocess.DEVNULL)
 	stat = proc.wait()
 	if stat != 0:
 		fatal('%s failed (%d)' % 'ln' if is_unix() else 'mklink')

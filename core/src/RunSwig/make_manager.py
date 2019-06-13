@@ -201,18 +201,6 @@ if options.delete:  flags.append('-d')
 if options.create:  flags.append('-c')
 if options.maketmp: flags.append('-t')
 if options.rename:  flags.append('-r')
-if verbose:
-	print('  sprtop:    %s' % sprtop)
-	print('  srcdir:    %s' % srcdir)
-	print('  bindir:    %s' % bindir)
-	print('  makefile:  %s' % makefile)
-	print('  tempfile:  %s' % tempfile)
-	print('  projfile:  %s' % projfile)
-	print('  one_file:  %s' % one_file)
-	print('  flags:     %s' % ' '.join(flags))
-	if options.debug:
-		print('  projs (for debug) -> %s' % debug_projs)
-	print()
 
 # ----------------------------------------------------------------------
 #  Directories
@@ -231,6 +219,19 @@ bindir = spr_path.abspath('bin')
 srcdir = spr_path.abspath('src')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
+
+if verbose:
+	print('  sprtop:    %s' % sprtop)
+	print('  srcdir:    %s' % srcdir)
+	print('  bindir:    %s' % bindir)
+	print('  makefile:  %s' % makefile)
+	print('  tempfile:  %s' % tempfile)
+	print('  projfile:  %s' % projfile)
+	print('  one_file:  %s' % one_file)
+	print('  flags:     %s' % ' '.join(flags))
+	if options.debug:
+		print('  projs (for debug) -> %s' % debug_projs)
+	print()
 
 # ----------------------------------------------------------------------
 #  Scripts

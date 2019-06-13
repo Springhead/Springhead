@@ -15,6 +15,16 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
 
 # ------------------------------------------------------------------------------
+#  In order to optimize build process between Springhead projects and your
+#  application program, you should adopt take "out-of-source" build method.
+#
+#  Set binary(working) directory name used when you execute Springhead libraries'
+#  cmake to the followin variable.
+#    (2) Make binary(working) directory name of Springhead library be "build".
+#
+set(OOS_BLD_DIR "build")
+
+# ------------------------------------------------------------------------------
 #  Determine top directory of Springhead tree.
 #	If cmake option "-D TOPDIR=<absolute-dir-path>" is specified,
 #	<absolute-dir-path> is the one.
