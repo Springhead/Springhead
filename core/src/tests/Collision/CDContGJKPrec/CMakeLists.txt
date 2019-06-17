@@ -1,7 +1,7 @@
 # CMakeLists.txt for Springhead
 #
-#   Change parametes in "Customization section" (lines 178--215) to customize
-#   compile and/or link condition.
+#   Change parametes in "Customization section" below to customize compile
+#   and/or link condition.
 
 cmake_minimum_required(VERSION 3.1)
 
@@ -14,14 +14,55 @@ project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
 
-# ------------------------------------------------------------------------------
-#  In order to optimize build process between Springhead projects and your
-#  application program, you should adopt take "out-of-source" build method.
-#
-#  Following variable should contain the binary(working) directory name used
-#  when you execute Springhead libraries' cmake.
+# ******************************************************************************
+#  Customization section.
+# ******************************************************************************
+set(EMPTY)
+
+#  Binary(working) directory name used when you cmake Springhead library.
+#	In order to optimize build process between Springhead projects and
+#	your application program, you should adopt take "out-of-source"
+#	build method.
 #
 set(OOS_BLD_DIR "build")
+
+#  Configuration type(s).
+#	Remove unneccessary configuration type(s).
+set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+
+#  Source file name(s) to EXCLUDE from compilation (wildcard is NOT available).
+#	Replace '${EMPTY}' with file name(s).
+set(EXCLUDE_SRCS ${EMPTY})
+
+#  Springhead projects to incorporate in the application program.
+#	Remove unneccessary project name(s).
+#	Do not include 'RunSwig' in the list.
+set(SPR_PROJS Base Collision Foundation HumanInterface Physics)
+
+#  Additional include path(s).
+#	Replace '${EMPTY}' with absolute path(s).
+#	Current directory can be refered as '${CMAKE_SOURCE_DIR}'.
+set(ADDITIONAL_INCDIR ${EMPTY})
+#set(ADDITIONAL_INCDIR "F:/Project/ExternalPackage/glui-2.37/include")
+
+#  Additional library path(s).
+#	Replace '${EMPTY}' with absolute path(s).
+set(ADDITIONAL_LIBDIR ${EMPTY})
+#set(ADDITIONAL_LIBDIR
+#	"F:/Project/ExternalPackage/freeglut/lib/x64"
+#	"F:/Project/Springhead/dependency/lib/win64")
+
+#  Additional library name(s) required.
+#	Replace '${EMPTY}' with file name(s).
+set(ADDITIONAL_LIBS ${EMPTY})
+
+#  Default library name(s) to EXCLUDE from linking.
+#	Replace '${EMPTY}' with file name(s).
+set(EXCLUDE_LIBS ${EMPTY})
+
+# ******************************************************************************
+#  End of customization section.
+# ******************************************************************************
 
 # ------------------------------------------------------------------------------
 #  Determine top directory of Springhead tree.
@@ -140,18 +181,23 @@ include_file(CONF ${CONF_FILE} ${CONF_DEFAULT_FILE})
 # ------------------------------------------------------------------------------
 #  Find external packages if specifed.
 #
-if(DEFINED BOOST_ROOT)
-    message("++ finding package: Boost")
+if(DEFINED CMAKE_PREFIX_PATH)
+    message(STATUS "CMAKE_PREFIX_PATH:")
+    foreach(path IN LISTS CMAKE_PREFIX_PATH)
+	message("       ${path}")
+    endforeach()
+    #
+    message("finding package: Boost")
     cmake_policy(SET CMP0074 NEW)
     find_package(Boost REQUIRED)
     if(Boost_FOUND)
 	message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
     else()
 	message("** Boost NOT FOUND")
+	return()
     endif()
-endif()
-if(DEFINED GLEW_ROOT)
-    message("++ finding package: GLEW")
+    #
+    message("finding package: GLEW")
     cmake_policy(SET CMP0074 NEW)
     if(DEFINED GLEW_LIB32_DIR AND "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x86")
 	list(APPEND CMAKE_PREFIX_PATH ${GLEW_LIB32_DIR})
@@ -164,16 +210,17 @@ if(DEFINED GLEW_ROOT)
 	message(STATUS "GLEW_INCLUDE_DIRS: ${GLEW_INCLUDE_DIRS}")
     else()
 	message("** GLEW NOT FOUND")
+	return()
     endif()
-endif()
-if(DEFINED GLUT_ROOT)
-    message("++ finding package: GLUT")
+    #
+    message("finding package: GLUT")
     cmake_policy(SET CMP0074 NEW)
     find_package(GLUT REQUIRED)
     if(GLUT_FOUND)
 	message(STATUS "GLUT_INCLUDE_DIR: ${GLUT_INCLUDE_DIR}")
     else()
 	message("** GLUT NOT FOUND")
+	return()
     endif()
 endif()
 
@@ -189,45 +236,6 @@ if(${Windows})
 elseif(${Linux})
     set(Python python)
 endif()
-
-# ******************************************************************************
-#  Customization section.
-# ******************************************************************************
-set(EMPTY)
-
-#  Configuration type(s).
-#	Remove unneccessary configuration type(s).
-set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
-
-#  Source file name(s) to EXCLUDE from compilation (wild card is NOT available).
-#	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_SRCS ${EMPTY})
-
-#  Springhead projects to incorporate in the application program.
-#	Remove unneccessary project name(s).
-#	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base Collision Foundation HumanInterface Physics)
-
-#  Additional include path(s).
-#	Replace '${EMPTY}' with absolute path(s).
-#	Current directory can be refered as '${CMAKE_SOURCE_DIR}'.
-set(ADDITIONAL_INCDIR ${EMPTY})
-
-#  Additional library path(s).
-#	Replace '${EMPTY}' with absolute path(s).
-set(ADDITIONAL_LIBDIR ${EMPTY})
-
-#  Additional library name(s) required.
-#	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
-
-#  Default library name(s) to EXCLUDE from linking.
-#	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
-
-# ******************************************************************************
-#  End of customization section.
-# ******************************************************************************
 
 # ------------------------------------------------------------------------------
 #  Main target.
@@ -247,6 +255,19 @@ endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/bin)
 
 # ------------------------------------------------------------------------------
+#  Add target to synchronize configuration with ${SRR_SRC_DIR}.
+#
+set(SYNC "sync")
+set(_tmp_args "${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
+	"${Target}" "${SPR_PROJS}")
+file(TO_NATIVE_PATH "${_tmp_args}" _tmp_args)
+add_custom_target(${SYNC}
+    COMMAND python ${SPR_SRC_DIR}/cmake_sync.py ${_tmp_args}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "sync configuration with ${SPR_SRC_DIR}"
+)
+
+# ------------------------------------------------------------------------------
 #  Define depending projects.
 #
 set(DEP_Base)
@@ -258,7 +279,8 @@ set(DEP_Framework FileIO Foundation Graphics Physics)
 set(DEP_Graphics Foundation)
 set(DEP_HumanInterface Foundation)
 set(DEP_Physics Collision Foundation)
-foreach(proj IN ITEMS ${SPR_PROJS} RunSwig)
+add_subdirectory(${SPR_SRC_DIR}/RunSwig ${SPR_BLD_DIR}/RunSwig)
+foreach(proj IN ITEMS ${SPR_PROJS})
     add_subdirectory(${SPR_SRC_DIR}/${proj} ${SPR_BLD_DIR}/${proj})
     set(DEP_LIST RunSwig)
     foreach(dep IN ITEMS ${DEP_${proj}})
@@ -267,6 +289,7 @@ foreach(proj IN ITEMS ${SPR_PROJS} RunSwig)
     add_dependencies(${proj} ${DEP_LIST})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
+add_dependencies(RunSwig ${SYNC})
 add_dependencies(${Target} ${SPR_PROJS})
 
 # ------------------------------------------------------------------------------
@@ -276,6 +299,9 @@ include_directories(${Target}
     PRIVATE ${CMAKE_SOURCE_DIR}
     PRIVATE ${SPR_INC_DIR}
     PRIVATE ${SPR_SRC_DIR}
+    PRIVATE ${Boost_INCLUDE_DIRS}
+    PRIVATE ${GLEW_INCLUDE_DIRS}
+    PRIVATE ${GLUT_INCLUDE_DIR}
     PRIVATE ${ADDITIONAL_INCDIR}
     PRIVATE ${SPR_TOP_DIR}/dependency/src
 )
