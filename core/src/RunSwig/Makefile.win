@@ -79,14 +79,18 @@ all:	PreWork RunSwig
 PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 ClosedSrcCtl:
+		@echo Makefile.win: ClosedSrcCtl
 		$(PYTHON) $(CHECKCLOSEDSRC)
 
-$(SCILABSTUBHDR):	
+$(SCILABSTUBHDR):
+		@echo Makefile.win: SCILABSTUBHDR (SciLab/ScilabStub.hpp)
 		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
 
-$(FWOLDSPRSTUB):	
+$(FWOLDSPRSTUB):
+		@echo Makefile.win: FWOLDSPRSTUB (Framework/FWOldSpringStub.cpp)
 		cd $(FRAMEWORK) && $(PYTHON) $(RUNSWIGFW)
 
-RunSwig:	
+RunSwig:
+		@echo Makefile.win: RunSwig (do_swigall)
 		$(PYTHON) $(SCRIPT)
 

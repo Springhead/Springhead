@@ -49,8 +49,9 @@ endif()
 # main target
 #
 add_custom_target(${Target}
+    #COMMAND ${Make} -f ${Makefile} SPRSRCDIR=${SPR_SRC_DIR}
     COMMAND cmd /c ${Python} make_manager.py -A -c
-    COMMAND ${Make} -f ${Makefile} SPRSRCDIR=${SPR_SRC_DIR}
+    COMMAND ${Make} -f ${Makefile}
     WORKING_DIRECTORY ${RSSrcDir}
     COMMENT [[  generating files...]]
 )
@@ -85,8 +86,8 @@ if(${CMD_RESULT})
 endif()
 if(NOT "${CMD_OUTPUT}" STREQUAL "")
     string(REPLACE "\n" "\n     " CMD_OUTPUT ${CMD_OUTPUT})
+    string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
+    message("     ${CMD_OUTPUT}")
 endif()
-string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
-message("     ${CMD_OUTPUT}")
 
 # end: CMakeLists.txt

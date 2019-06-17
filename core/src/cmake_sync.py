@@ -304,13 +304,26 @@ for proj in projs:
 	if verbose > 2:
 		print('cwd: %s' % os.getcwd().replace(os.sep, '/'))
 
+	#  もし spr_stampfile が存在しなければ…
+	#	Spr 側が configure されていない
+	#
+	if not os.path.exists(spr_stampfile):
+		#  Spr 側に App 側の状態をコピーする
+		#
+		print('  synchronize SPR to APP (library not configured)')
+		os.makedirs('%s/CMakeFiles' % spr_projdir, exist_ok=True)
+		copy_file(projfile, spr_projfile)
+		copy_file(app_stampfile, spr_stampfile)
+		copy_file(app_dependfile, spr_dependfile)
+		copy_file(app_stampfile, spr_stamp_prev)
+
 	#  もし spr_stamp_prev が存在しなければ...
-	#	初めてのcmakeである
+	#	App 側で初めての configure である
 	#  Spr 側のスタンプの方が spr_stamp_prev より新しければ...
 	#	Spr 側で cmake が行なわれた
 	#	or 他のアプリが Spr 側のスタンプを更新した
 	#
-	if not os.path.exists(spr_stamp_prev) \
+	elif not os.path.exists(spr_stamp_prev) \
 	    or is_newer_file(spr_stampfile, spr_stamp_prev):
 		#  App 側を Spr 側に同期させる
 		#
@@ -336,13 +349,13 @@ for proj in projs:
 
 	#  さもなければ同期の必要はない
 	#
-	else:
+	#else:
 		#  App 側のスタンプを Spr 側に合わせておく
 		#
-		print('  synchronize APP to SPR (project GUID changed)')
-		copy_file(spr_stampfile, spr_stamp_prev)
-		copy_file(spr_stampfile, app_stampfile)
-		copy_file(spr_dependfile, app_dependfile)
+		#print('  synchronize APP to SPR (project GUID changed)')
+		#copy_file(spr_stampfile, spr_stamp_prev)
+		#copy_file(spr_stampfile, app_stampfile)
+		#copy_file(spr_dependfile, app_dependfile)
 
 	#  このアプリの最新のスタンプファイルをセーブしておく
 	#  makefile/projectfile の実体を Spr 側へのリンクに変更する
@@ -385,6 +398,7 @@ if is_windows():
 			print('******************************************************')
 			print('** Push (R)-button to make solution file up-to-date **')
 			print('******************************************************')
+			print()
 # endif is_windows()
 
 sys.exit(0)

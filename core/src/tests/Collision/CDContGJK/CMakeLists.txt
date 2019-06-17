@@ -289,7 +289,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     add_dependencies(${proj} ${DEP_LIST})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
-#add_dependencies(RunSwig ${SYNC})
+add_dependencies(RunSwig ${SYNC})
 add_dependencies(${Target} ${SPR_PROJS})
 
 # ------------------------------------------------------------------------------

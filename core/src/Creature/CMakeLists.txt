@@ -26,8 +26,10 @@ get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 # sources
 #   "${Target}Stub.cpp" should always be included to source lists.
 #   Trick GLOB by dummy file if it not exists.
-if("${StubSrc}" STREQUAL "")
-    file(WRITE ${Target}Stub.cpp "")
+set(_tmp_stubfile "${SPR_SRC_DIR}/${Target}/${Target}Stub.cpp")
+if(NOT EXISTS ${_tmp_stubfile})
+    file(WRITE ${_tmp_stubfile} "")
+    message("     dummy \"${Target}Stub.cpp\" created")
 endif()
 file(GLOB SRCS "*.cpp" ${Target}Stub.cpp)
 add_library(${Target} STATIC ${SRCS})

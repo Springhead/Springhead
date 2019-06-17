@@ -25,6 +25,7 @@
 #	Ver 1.8  2019/04/01 F.Kanehori	Python library path 検索方法変更.
 # ==============================================================================
 version = 1.8
+trace = False
 
 import sys
 import os
@@ -36,6 +37,9 @@ from optparse import OptionParser
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+if trace:
+	print('ENTER: %s' % prog)
+	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
 #  Import Springhead2 python library.
@@ -227,6 +231,9 @@ if status != 0:
 	msg = '%s failed (%d)' % (make, status)
 	Error(prog).put(msg, exitcode=0, alive=True)
 
+if trace:
+	print('EXIT: %s' % prog)
+	sys.stdout.flush()
 sys.exit(0)
 
 # end: RunSwig.py

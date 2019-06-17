@@ -21,7 +21,7 @@ setlocal enabledelayedexpansion
 ::	Ver 2.01 2017/09/11 F.Kanehori	同上（コードの整理）.
 ::	Ver 3.0  2017/11/06 F.Kanehori	directory名変更 (buildtools -> buildtool)
 :: ============================================================================
-set verbose=2
+set verbose=0
 
 ::----------------------------------------------
 ::  buildtool の相対パス
@@ -63,7 +63,7 @@ if exist "%TOOLPATH%\python.exe" (
 		exit /b
 	)
 )
-if %verbose% geq 1 (
+if %verbose% geq 0 (
 	rem where python
 	python -V
 )
