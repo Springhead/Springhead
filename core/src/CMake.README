@@ -1,16 +1,164 @@
 改定履歴
+	Rev2.0	2019/06/19	βバージョン版用に全面改訂
 	Rev1.1	2019/06/13	配布ファイルの名称及び表記法を変更しました
 
 
-cmake の利用法 (Windowsの場合)
+Springheadを利用するアプリの開発でcmakeを利用するにあたって（Windowsの場合）
 
-1. はじめに
-	配布されるファイル(cmake関連)は、
+1. cmakeを利用する利点
+	今までは、新しいバージョンのVisual Studioを利用するためには、
+	他のソリューションからコピーして修正するなどして
+	.sln/.vcxprojファイルを独自に用意する必要がありました。
+
+	これに対して、cmakeは、CMakeLists.txtに書かれた内容に従って
+	.sln/.vcxproj/Makefileを自動的に生成します（cmake-configure）。
+	これにより、
+	(1) CMakeLists.txtを管理するだけでWindowsとunixの両方に対応できる。
+	(2) Visual Studioが新しいバージョンになっても（cmakeが対応してくれれば）
+	    そのまま移行できる。
+	という利点が得られます。
+
+2. cmake-configure（ソリューションファイルの生成）
+	cmakeがどのようにして.sln/.vcxproj/Makefileを生成（cmake-configure）するか
+	について、
+	次のようなソースツリーを仮定して説明します（必要なファイルも併せて示します）。
+	    # Springhead library
+	    C:/Project/Springhead				… <SprTop>
+	    C:/Project/Springhead/core/src			… <SprSrc>
+	    C:/Project/Springhead/core/src/CMakeLists.txt	(1)
+	    C:/Project/Springhead/core/src/Base/CMakeLists.txt  (2)
+					   :
+	    # Application
+	    C:/Develop/App					… <AppSrc>
+	    C:/Develop/App/CMakeLists.txt			(3)
+	    C:/Develop/App/CMakeTopdir.txt			(4)
+	    C:/Develop/App/subdir
+	    C:/Develop/App/subdir/CMakeLists.txt		(5)
+	開発するアプリのソースは<AppSrc>以下にあるものとします。
+
+	(1)と(2)はGitHubで配布されますから、アプリ開発者が用意するのは(3)～(5)です。
+	(3)と(4)の作り方については後程説明します。
+	(5)については(2)を参考にして作成することになります。
+
+	また、<SprTop>/dependency/以下を使用しない場合またはビルドに条件を
+	変えたい場合には更に別のファイルを用意する必要がありますが、それに
+	ついても後程説明します（いずれも雛形ファイルを配布しています）。
+
+	最初にSpringhead libraryをcmake-configureします。
+	まず、作業領域を用意します（ここではbuild (=<BldDir>)とします。
+	    > chdir <SprSrc>
+	    > makedir <BldDir>
+	    > chdir <BldDir>
+	cmake-configureの実行は、
+	    > cmake .. [<generator>]
+		<generator>の例：
+			-G "Visual Studio 15 2017" -A x64
+			-G "Visual Studio 15 2017 Win64"
+			-G "Unix Makefiles"
+		<generator> の詳細は cmake --help 参照。
+	またはcmake-guiを利用してConfigure-Generateとします。
+
+	プロジェクトファイルは、CMakeLists.txtの変数SRCSに定義されたソースファイル
+	を元に必要なヘッダファイル情報を走査して作成されます。
+	この走査はcmake-configure実行時に実施されますから、この時点での
+	ソースファイル構成がプロジェクトファイルの中に``固定化''されることになります。
+
+	cmake-configureで生成されるファイルとビルドで生成されるファイルはすべて
+	作業領域に格納されます（ビルドの最終生成物は別の場所に格納されます）。
+
+	次にアプリをcmake-configureします。
+	上と同様に、作業領域を用意します（ここではbuild (=<BldDir>)とします。
+	    > chdir <AppSrc>
+	    > makedir <BldDir>
+	    > chdir <BldDir>
+	cmake-configureの実行は、
+	    > cmake .. [<generator>]
+	またはcmake-guiを利用してConfigure-Generateとします。
+
+3. ビルド
+	ソリューションのビルドは、cmake-configureで生成された
+	    <SprSrc>/<BldDir>/Springhead.sln
+	    <AppSrc>/<BldDir>/<app-name>.sln
+	をVisual Studioで開き、通常どおりに行ないます。
+
+4. Springheadのソースファイル構成を変更したら
+	従来は、Visual Studio上でリソースの追加・削除を行なってファイルをセーブ
+	すれば（そしてcommit/pushすれば）、
+	その変更がすべてのソリューションに伝わりました。
+	これはすべてのソリューションが同じプロジェクトファイルを参照していたからです。
+	しかしcmakeを利用する場合には事情が異なります。
+	5.3 syncの説明をよく読んでください。
+
+5. ソリューションファイルに追加された特殊なプロジェクト
+
+5.1 ALL_BUILD
+	これはcmakeが自動的に生成するプロジェクトですが、使用することはありません。
+	無視して結構です（生成されないようにできればそのように修正します）。
+
+5.2 RunSwig_Clean
+	SpringheadのRunSwigプロジェクトはメイクファイルプロジェクトという特殊な
+	プロジェクトで、リビルド（クリーン）時にRunSwigが生成するファイルを削除
+	することが可能でした。このためソリューション全体をリビルドすれば
+	すべてのファイルについて再コンパイルすることができました。
+	残念ながらcmakeでは、メイクファイルプロジェクトのようにビルド時、リビルド時
+	で異なるコマンドを実行するように指示したプロジェクトを作成することが
+	できません。
+	したがって、RunSwigのクリーン時に実行されるべきコマンドを実行するための
+	プロジェクトRunSwig_Cleanを作り、このプロジェクトを``ビルド''させる
+	必要があるのです。
+	すなわち、ソリューション全体をリビルドするには、
+	(1) プロジェクトRunSwig_Cleanをビルドする
+	(2) ソリューションをリビルドする
+	という手順を踏むことになります。
+	
+5.3 sync（重要）
+	2. cmake-configureで説明しましたが、cmakeを利用した場合にはすべての中間生成物
+	は作業領域下に生成されます。このことが次のような不都合を生じることとなります。
+
+	2つの異なるアプリApp1とApp2とを開発（Springheadの開発を含む）する場合を
+	考えます。
+	例えばApp1の開発でSpringheadにソースファイルを1つ追加したとします。
+	この変更はVisual Studio上で直接ファイルの追加をしてもよいし、
+	App1を再度cmake-configureしても構いません。しかしいずれの場合でも
+	App1の作業領域の中で何らかの変更が行われるだけであり、この変更が
+	自動的に別のアプリであるApp2に伝わることはありません。App2でこの変更を
+	取り込むためにはApp2で再cmake-configureを行なう必要があるのです。
+
+	この不都合を解消するために、CMmakeLists.txtの雛形（CMakeLists.txt.Dev.dist
+	として配布）およびSpringhead/core/src下のCMakeLists.txtに次のような
+	仕掛けを施してあります。
+	Springheadの各プロジェクトに対しては、
+	(1) オブジェクトファイル.objは、どのアプリでビルドしても同じディレクトリ
+	    （<SprSrc>/<proj>/の下）に生成される（ビルドの最適化）。
+	(2) coonfigureを実行するとtime stampファイルが更新されてしまい必ず
+	    全ファイルがビルドされてしまうので、すべてのアプリのtime stampを
+	    Springheadのtime stampに同期させる（ビルドの最適化）。
+	(3) アプリのcmake-configureで生成されたプロジェクトファイルがSpringheadのものと
+	    異なっていたら、その相違をSpringheadに反映させる（ソース構成の同期）。
+	(4) アプリのプロジェクトファイルは常にSpringheadのものと同期させる
+	    （ソース構成の同期）。
+	これらの作業（(1)以外。(1)はcmake-configure時に実施）を実行するのが
+	syncというプロジェクトです。
+
+	すなわち、アプリ側でSpringheadのソース構成を変更したならば、
+	(1) cmakeを実行して構成の変更をプロジェクトファイルに反映させる。
+	(2) 生成されたソリューションファイルをVisual Stueioで開き
+	    syncを実行（ビルド）する。
+	    syncを実行するとソリューションファイルが更新されるために
+	    「ソリューション'xxx'は環境外で変更されています。」というダイアログが
+	    表示されます。「再読み込み(R)」を指定して変更を反映させてください。
+	を必ず実行してください。
+	これにより、構成の変更が他のアプリおよびSpringheadに伝達されます。
+
+	他のアプリが施した構成変更を取り込むのもsyncの実行でできますが、
+	syncはアプリのビルドの最初に必ず実行されるように依存関係を指定して
+	ありますから、特に何もしなくても構いません。
+
+6. 配布ファイル
+	cmake関連で配布されるファイルは、
 	    CMakeLists.txt.Lib.dist	… Springhead library 開発/構築用
 	    CMakeLists.txt.Dev.dist
 		… Application program を使用した Springhead library 開発用
-	    CMakeLists.txt.App.dist
-		… Sprringhead library を使用した Application program 開発用
 	    CMakeTopdir.txt.dist	… Springhead トップディレクトリ指定用
 	    CMakeOpts.txt.dist		… Compile/Link オプション指定用
 	    CMakeConf.txt.dist		… 外部 package 指定 / Install 場所指定用
@@ -23,152 +171,61 @@ cmake の利用法 (Windowsの場合)
 	値がファイルパスのときは"絶対パス"で指定してください。
 	またパスセパレータには文字('/')を使用してください(escape問題の回避)。
 
-2. 表記法
-	以下では次の表記法を使用します。
-	<SprTop>	Springhead を clone したディレクトリ
-	<SprSrc>	<SprTop>/core/src
-	<SrcDir>	cmakeの対象とする"CMakeLists.txt"があるディレクトリ
-	<BldDir>	中間生成物を格納するディレクトリ（例えば"build"）
+6.1 Springhead libraryを構築する場合
 
-3. Springhead library を開発/構築する場合
+6.1.1 準備
+	配布された次のファイルを<SrpSrc>ディレクトリ内でコピーします
+	（名称を変更することに注意）。
+	-------------------------------------------------------------------
+	  条件		  <SprSrc>			  <SprSrc>
+	-------------------------------------------------------------------
+	  必ず		CMakeLists.txt.Lib.dist		CMakeLists.txt
+	  (*1)		CMakeOpts.txt.dist		CMakeOpts.txt
+	  (*2)		CMakeConf.txt.dist		CMakeConf.txt
+	-------------------------------------------------------------------
+	  (*1) ビルドオプションを変更する場合
+	  (*2) <SprTop>/dependencyを使わない場合
 
-3.1 準備
-	配布された次のファイルをコピーします (名称を変更することに注意)。
-	> cd <SprSrc>
-	> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+6.1.2 設定の変更
+	ビルドオプションを変更する場合には"CMakeOpts.txt"を、外部パッケージを
+	使用する場合及びInstall先を設定する場合には"CMakeConf.txt"を適宜編集します
+	 (編集方法は各ファイルを参照してください）。
 
-	Compile/link オプションを変更する場合には次のファイルもコピーします。
-	> copy CMakeOpts.txt.dist CMakeOpts.txt
+6.1.3 cmake-configure（ソリューションファイルの生成）
+	cmake-configureは<SprSrc>で実行します（ここにCMakeLists.txtがある）。
+	2. cmake-configureを参照のこと（ただし<AppSrc>を<SprSrc>と読み替えること）。
 
-	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
-	> copy CMakeConf.txt.dist CMakeConf.txt
+	なお、cmake変数（CMake*.txtの中でset(var ...)で設定されたもの）は
+	キャッシュされているようです。したがって、単にset(var ...)を
+	コメントアウトした場合、cmake 起動時に指定していたオプション
+	（-D OPTS=..., -D CONF=...）（後述）を止める場合などは、
+	キャッシュを無効にするために<BldDir>を一度削除する必要があります。
 
-3.2 設定の変更
-	Compile/link オプションを変更する場合には "CMakeOpts.txt" を、
-	外部パッケージを使用する場合 及び Install 先を設定する場合には
-	"CMakeConf.txt" を適宜編集します (編集方法は各ファイルを参照してください）。
+6.2 Springheadを利用するアプリを開発する場合
 
-3.3 ソリューションファイルの生成
-	作業領域を確保して、そこにソリューションファイルを生成します。
-	> mkdir <BldDir>
-	> cd <BldDir>
-	> cmake .. [<generator>]
-	<generator> の例：  -G "Visual Studio 15 2017" -A x64
-			    -G "Visual Studio 15 2017 Win64"
-			    -G "Unix Makefiles"
-	<generator> の詳細は cmake --help 参照。
+6.2.1 準備
+	配布された次のファイルを<SrpSrc>から<AppSrc>にコピーします
+	（名称を変更することに注意）。
+	-------------------------------------------------------------------
+	  条件		  <SprSrc>			  <AppSrc>
+	-------------------------------------------------------------------
+	  必ず		CMakeLists.txt.Dev.dist		CMakeLists.txt
+	  (*1)		CMakeOpts.txt.dist		CMakeOpts.txt
+	  (*2)		CMakeConf.txt.dist		CMakeConf.txt
+	-------------------------------------------------------------------
+	  (*1) ビルドオプションを変更する場合
+	  (*2) <SprTop>/dependencyを使わない場合
 
-3.4 ライブラリのビルド
-	生成されたソリューションファイル <BldDir>/Springhead.sln" を実行します。
-	ライブラリは <SprTop>/generated/lib/win[32|64] に作成されます。
+6.2.2 設定の変更
+	6.1.2を参照のこと。
 
-3.5 ソリューションファイルの再作成
-	新規ソースを追加した場合などソースファイル構成に変更があった場合、及び
-	CMake*.txt を修正した場合には、cmake を再実行してソリューションファイルを
-	再作成する必要があります。
-	> cd <BldDir>
-	> cmake .. [<generator>]
+6.2.3 cmake-configure（ソリューションファイルの生成）
+	2. cmake-configureを参照のこと。
 
-	※ cmake 変数 (CMake*.txt の中で set(var ...) で設定されたもの) はキャッシュ
-	   されているようです。したがって、単に set(var ...) をコメントアウトした
-	   場合、cmake 起動時に指定していたオプション (-D OPTS=..., -D CONF=...) (後述)
-	   を止める場合などは、キャッシュを無効にするために <BldDir> を一度削除する
-	   必要があります。
-
-	   > cd <SrcDir>
-	   > rd /s /q <BldDir>
-	   > mkdir <BldDir>
-	   > cd <BldDir>
-	   > cmake .. [<generator>]
-
-4. Application program を使用して Springhead library を開発する場合
-
-4.1 準備
-	配布された次のファイルをコピーします。
-	> cd <SprSrc>
-	> copy CMakeTopdir.txt.dist CMakeTopdir.txt
-	> copy CMakeLists.txt.Dev.dist CMakeLists.txt
-
-	Compile/link オプションを変更する場合には次のファイルもコピーします。
-	> copy CMakeOpts.txt.dist CMakeOpts.txt
-
-	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
-	> copy CMakeConf.txt.dist CMakeConf.txt
-
-4.2 <SprTop> の設定
-	CMakeTopdir.txt を編集して <SprTop> を設定してください。
-
-4.3 設定の変更
-	CMakeLists.txt を編集して必要なパラメータを設定してください。
-	パラメータは "Customization section" に記述されています。
-	ここでは、
-	　・使用する Springhead project の選択
-	　・include directory path の追加
-	　・include library path / library file の追加
-	などが指定できます。詳細は CMakeLists.txt の該当部分を参照してください。
-
-	CMakeOpts.txt, CMakeConf.txt の編集については 3.2 と同様です。
-
-4.4 ソリューションファイルの生成
-	3.3 と同様です。
-	ただし Visual Studio の場合とは異なり、第三者が Springhead library の
-	ソース構成に加えた修正が自動的に取り込まれることはありません。
-	(注) ソースファイルの追加や削除などを指しています。ソースファイルに
-	　　 施された修正は正しく反映されます。
-	ソリューションにある 'sync' というターゲットをビルドすることで最新の
-	構成を反映させることができます (cmake を再実行するのと同等です)。
-	'sync' を実行するとソリューションファイルが更新されるために
-	「ソリューション'xxx'は環境外で変更されています。」というダイアログが
-	表示されます。「再読み込み(R)」を指定して変更を反映させてください。
-
-4.5 アプリケーションのビルド
-	生成されたソリューションファイル <BldDir>/<application>.sln" を実行します。
-	バイナリは <BldDir>/Debug, <BldDir>/Release などに作成されます。
-
-4.6 ソリューションファイルの再作成
-	3.5 と同様です。
-
-5. Sprringhead library を使用して Application program を開発する場合
-
-5.1 準備
-	配布された次のファイルをコピーします。
-	> cd <SprSrc>
-	> copy CMakeTopdir.txt.dist CMakeTopdir.txt
-	> copy CMakeLists.txt.App.dist CMakeLists.txt
-
-	Compile/link オプションを変更する場合には次のファイルもコピーします。
-	> copy CMakeOpts.txt.dist CMakeOpts.txt
-
-	<SprTop>/dependency を使わない場合には次のファイルもコピーします。
-	> copy CMakeConf.txt.dist CMakeConf.txt
-
-5.2 <SprTop> の設定
-	CMakeTopdir.txt を編集して <SprTop> を設定してください。
-
-5.3 設定の変更
-	CMakeLists.txt を編集して必要なパラメータを設定してください。
-	パラメータは "Customization section" に記述されています。
-	ここでは、
-	　・include directory path の追加
-	　・include library path / library file の追加
-	などが指定できます。詳細は CMakeLists.txt の該当部分を参照してください。
-
-	CMakeOpts.txt, CMakeConf.txt の編集については 3.2 と同様です。
-
-5.4 ソリューションファイルの生成
-	3.3 と同様です。
-
-5.5 アプリケーションのビルド
-	生成されたソリューションファイル <BldDir>/<application>.sln" を実行します。
-	バイナリは <BldDir>/Debug, <BldDir>/Release などに作成されます。
-
-4.6 ソリューションファイルの再作成
-	3.5 と同様です。
-
-6. 補足
-    CMakeOpts.txt と CMakeConf.txt はそれぞれ任意の場所においても構いません。
-    その場合には cmake の起動時に次のオプションを追加します。
-	> cmake [-D OPTS=<opts-file>] [-D CONF=<conf-file>] .. [<generator>]
-    複数のアプリケーションで共通の設定を用いる場合はこのようにします。
+	なお、cmake変数（CMake*.txtの中でset(var ...)で設定されたもの）は
+	キャッシュされているようです。したがって、単にset(var ...)を
+	コメントアウトした場合、cmake 起動時に指定していたオプション
+	（-D OPTS=..., -D CONF=...）（後述）を止める場合などは、
+	キャッシュを無効にするために<BldDir>を一度削除する必要があります。
 
 以上
