@@ -10,17 +10,19 @@
 #	    projs	"${SPR_PROJS}"	(dependent projects cmake-list)
 #
 #  DESCRIPTION:
-#	w’è‚³‚ê‚½ƒvƒƒWƒFƒNƒg‚É‚Â‚¢‚ÄASpringhead ‘¤‚Æ application ‘¤
-#	‚Æ‚ÌŠÔ‚Å“¯Šú‚ğ‚Æ‚éB
+#	æŒ‡å®šã•ã‚ŒãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«ã¤ã„ã¦ã€Springhead å´ã¨ application å´
+#	ã¨ã®é–“ã§åŒæœŸã‚’ã¨ã‚‹ã€‚
 #
 # ----------------------------------------------------------------------
 #  VERSION:
+#	Ver 1.1  2019/06/24 F.Kanehori	New function implemented.
 #	Ver 1.0  2019/06/10 F.Kanehori	First version.
 # ======================================================================
 version = 1.0
 
 import sys
 import os
+import stat
 import subprocess
 import shutil
 import re
@@ -38,9 +40,9 @@ app_prev_suffix = 'prev.app'
 #  Helper methods
 #
 
-#  ƒtƒ@ƒCƒ‹‚Ìƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚ğ”äŠr‚·‚é
-#	file1 ‚Ì•û‚ªV‚µ‚¯‚ê‚Î True ‚ğA‚³‚à‚È‚¯‚ê‚Î False ‚ğ•Ô‚·
-#	ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚Í stat.st_mtime ‚ğg—p‚·‚é
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã‚’æ¯”è¼ƒã™ã‚‹
+#	file1 ã®æ–¹ãŒæ–°ã—ã‘ã‚Œã° True ã‚’ã€ã•ã‚‚ãªã‘ã‚Œã° False ã‚’è¿”ã™
+#	ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã¯ stat.st_mtime ã‚’ä½¿ç”¨ã™ã‚‹
 #
 def is_newer_file(file1, file2):
 	stat1 = os.stat(file1)
@@ -51,10 +53,10 @@ def is_newer_file(file1, file2):
 		print('  %s is %s than %s' % (file1, msg, file2))
 	return result
 
-#  makefile/projectfile ‚ğ”äŠr‚·‚é
-#	Ÿ‚Ì‰½‚ê‚©‚É•ÏX‚ª‚ ‚ê‚Î True ‚ğA‚³‚à‚È‚¯‚ê‚Î False ‚ğ•Ô‚·
-#	Eplatform –”‚Í configuration ‚Ì‰½‚ê‚©
-#	EˆË‘¶‚·‚éƒ\[ƒXƒtƒ@ƒCƒ‹
+#  makefile/projectfile ã‚’æ¯”è¼ƒã™ã‚‹
+#	æ¬¡ã®ä½•ã‚Œã‹ã«å¤‰æ›´ãŒã‚ã‚Œã° True ã‚’ã€ã•ã‚‚ãªã‘ã‚Œã° False ã‚’è¿”ã™
+#	ãƒ»platform åˆã¯ configuration ã®ä½•ã‚Œã‹
+#	ãƒ»ä¾å­˜ã™ã‚‹ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«
 #
 def is_config_changed(file1, file2):
 	if is_unix():
@@ -63,7 +65,7 @@ def is_config_changed(file1, file2):
 		return is_config_changed_win(file1, file2)
 
 def is_config_changed_unix(file1, file2):
-	#  –¢À‘•
+	#  æœªå®Ÿè£…
 	#
 	return False
 
@@ -76,7 +78,7 @@ def is_config_changed_win(file1, file2):
 	if verbose == 0:
 		return grep1 != grep2
 
-	#  ˆÈ‰º‚ÍƒeƒXƒg—p
+	#  ä»¥ä¸‹ã¯ãƒ†ã‚¹ãƒˆç”¨
 	#
 	result = False
 	try:
@@ -95,24 +97,53 @@ def is_config_changed_win(file1, file2):
 		pass
 	return result
 
-#  ƒvƒƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚Ì GUID ‚ğ’²‚×‚é
+#  ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã«è¨˜è¼‰ã•ã‚ŒãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã® GUID ã‚’èª¿ã¹ã‚‹
 #
-def collect_guid(blddir, projs):
+def collect_sln_guid(blddir, projs, fname):
+	cwd = os.getcwd()
+	os.chdir(blddir)
+	#
+	guids = {}
+	for proj in projs:
+		pattern = ['Project\("{.+}"\) = "%s",.*, "{(.+)}"' % proj]
+		guid = grep(pattern, fname, extract='match')
+		guids[proj] = guid.popleft()
+	if verbose > 1:
+		print('collect_sln_guid: %s' % guids)
+	#
+	os.chdir(cwd)
+	return guids
+
+#  ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã® GUID ã‚’èª¿ã¹ã‚‹
+#
+def collect_vcx_guid(blddir, projs, in_subdir=False):
+	cwd = os.getcwd()
+	os.chdir(blddir)
 	#
 	pattern = ['<ProjectGuid>{(.+)}</ProjectGuid>']
 	guids = {}
 	for proj in projs:
-		fname = '%s/%s.vcxproj' % (proj, proj)
+		if in_subdir:
+			fname = '%s.vcxproj' % proj
+		else:
+			fname = '%s/%s.vcxproj' % (proj, proj)
 		guid = grep(pattern, fname, extract='match')
 		guids[proj] = guid.popleft()
 	if verbose > 1:
-		print('collect_guid: %s' % guids)
+		print('collect_vcx_guid: %s' % guids)
 	#
+	os.chdir(cwd)
 	return guids
 
-#  ŠÈˆÕ grep
-#	—^‚¦‚ç‚ê‚½•¶š—ñ”z—ñ‚Ì’†‚©‚çw’è‚³‚ê‚½ƒpƒ^[ƒ“‚ğŠÜ‚Şs‚ğ”²‚«o‚µ‚Ä•Ô‚·
-#	•Ô‚·‚Ì‚Í list ‚Å‚Í‚È‚­‚Ä collections.deque (Œø—¦‚ª—Ç‚¢)
+def print_guids(title, guids):
+	print(title)
+	projs = guids.keys()
+	for proj in projs:
+		print('%16s: %s' % (proj, guids[proj]))
+
+#  ç°¡æ˜“ grep
+#	ä¸ãˆã‚‰ã‚ŒãŸæ–‡å­—åˆ—é…åˆ—ã®ä¸­ã‹ã‚‰æŒ‡å®šã•ã‚ŒãŸãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å«ã‚€è¡Œã‚’æŠœãå‡ºã—ã¦è¿”ã™
+#	è¿”ã™ã®ã¯ list ã§ã¯ãªãã¦ collections.deque (åŠ¹ç‡ãŒè‰¯ã„)
 #
 def grep(patterns, fname, extract='line'):
 	lines = read_file(fname)
@@ -134,7 +165,7 @@ def grep(patterns, fname, extract='line'):
 				greps.appendleft(m.group(1))
 	return greps
 
-#  ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 #
 def read_file(fname, encoding='utf-8'):
 	try:
@@ -150,7 +181,7 @@ def read_file(fname, encoding='utf-8'):
 	f.close()
 	return lines
 
-#  ƒtƒ@ƒCƒ‹‚É‘‚«‚Ş
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€
 #
 def write_file(fname, lines):
 	try:
@@ -166,7 +197,7 @@ def write_file(fname, lines):
 	f.close()
 	return 0
 
-#  ƒtƒ@ƒCƒ‹‚ğ‘®«‚İ‚ÅƒRƒs[‚·‚é
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å±æ€§è¾¼ã¿ã§ã‚³ãƒ”ãƒ¼ã™ã‚‹
 #
 def copy_file(src, dst):
 	if verbose > 1:
@@ -179,7 +210,7 @@ def copy_file(src, dst):
 	except Exception as e:
 		print(e)
 
-#  ƒtƒ@ƒCƒ‹‚ğíœ‚·‚é
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã™ã‚‹
 #
 def remove(fname):
 	if verbose > 1:
@@ -189,9 +220,9 @@ def remove(fname):
 	except:
 		pass
 
-#  ƒtƒ@ƒCƒ‹‚ÌƒŠƒ“ƒN‚ğ’£‚é
-#	unix ‚Ìê‡‚Í symbolic link
-#	Windows ‚Ìê‡‚Í hard link (symbolic link ‚ÍŒ ŒÀ•s‘«‚Å—˜—p‚Å‚«‚È‚¢)
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªãƒ³ã‚¯ã‚’å¼µã‚‹
+#	unix ã®å ´åˆã¯ symbolic link
+#	Windows ã®å ´åˆã¯ hard link (symbolic link ã¯æ¨©é™ä¸è¶³ã§åˆ©ç”¨ã§ããªã„)
 #
 def make_link(linkname, target):
 	if verbose > 1:
@@ -209,21 +240,22 @@ def make_link(linkname, target):
 	if stat != 0:
 		fatal('link: failed (%d)' % stat)
 
-#  —˜—pŠÂ‹«(OS)‚Ì”»’è
+
+#  åˆ©ç”¨ç’°å¢ƒ(OS)ã®åˆ¤å®š
 #
 def is_unix():
 	return os.name == 'posix'
 def is_windows():
 	return os.name == 'nt'
 
-#  ƒpƒX•\‹L‚Ì•ÏŠ·
+#  ãƒ‘ã‚¹è¡¨è¨˜ã®å¤‰æ›
 #
 def upath(path):
 	return path.replace('\\', '/')
 def dpath(path):
 	return path.replace('/', '\\')
 
-#  ƒGƒ‰[‚Ìˆµ‚¢
+#  ã‚¨ãƒ©ãƒ¼æ™‚ã®æ‰±ã„
 #
 def fatal(msg, exitcode=1):
 	sys.stderr.write('Error: %s\n' % msg)
@@ -235,6 +267,12 @@ def fatal(msg, exitcode=1):
 usage = 'Usage: %prog [options] spr_blddir app_blddir projs'
 parser = OptionParser(usage = usage)
 #
+parser.add_option('-a', '--plat', dest='plat',
+			action='store', default=None,
+			help='platform')
+parser.add_option('-c', '--conf', dest='conf',
+			action='store', default=None,
+			help='configuration')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
 			help='set verbose mode')
@@ -246,6 +284,8 @@ parser.add_option('-V', '--version', dest='version',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
+plat = options.plat
+conf = options.conf
 verbose = options.verbose
 #
 spr_blddir = args[0]
@@ -254,6 +294,8 @@ app_name = args[2]
 projs = args[3:]
 if verbose:
 	print('arguments:')
+	print('  build plat: %s' % plat)
+	print('        conf: %s' % conf)
 	print('  spr_blddir: %s' % spr_blddir)
 	print('  app_blddir: %s' % app_blddir)
 	print('  projs: %s' % projs)
@@ -261,14 +303,20 @@ if verbose:
 projs.append('RunSwig')
 
 # ----------------------------------------------------------------------
-#  ƒƒCƒ“ˆ—ŠJn
+#  ãƒ¡ã‚¤ãƒ³å‡¦ç†é–‹å§‹
 #
 cwd = os.getcwd()
+need_spr_sln_modify = False
 
 if is_windows():
-	#  App ‘¤‚Å config ‚µ‚½ GUID ‚ğ‹L˜^‚µ‚Ä‚¨‚­
+	#  ã“ã®æ™‚ç‚¹ã«ãŠã‘ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã® GUID ã‚’è¨˜éŒ²ã—ã¦ãŠã
 	#
-	org_guids = collect_guid(app_blddir, projs)
+	spr_org_guids = collect_vcx_guid(spr_blddir, projs)
+	app_org_guids = collect_vcx_guid(app_blddir, projs)
+	verbose = 1
+	if verbose > 1:
+		print_guids('Spr.ORG', spr_org_guids)
+		print_guids('App.ORG', app_org_guids)
 
 for proj in projs:
 	os.chdir(proj)
@@ -289,7 +337,7 @@ for proj in projs:
 	app_dependfile = '%s.depend' % app_stampfile
 	spr_projfile = '%s/%s' % (spr_projdir, projfile)
 	app_projfile = '%s/%s' % (app_projdir, projfile)
-	#  ˆÈ‰º‚Ìƒtƒ@ƒCƒ‹‚Í app_prohdir ‚É’u‚­
+	#  ä»¥ä¸‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ app_prohdir ã«ç½®ã
 	spr_stamp_prev = '%s.%s' % (app_stampfile, spr_prev_suffix)
 	app_stamp_prev = '%s.%s' % (app_stampfile, app_prev_suffix)
 	spr_proj_prev = '%s.%s' % (projfile, spr_prev_suffix)
@@ -304,91 +352,147 @@ for proj in projs:
 	if verbose > 2:
 		print('cwd: %s' % os.getcwd().replace(os.sep, '/'))
 
-	#  ‚à‚µ spr_stampfile ‚ª‘¶İ‚µ‚È‚¯‚ê‚Îc
-	#	Spr ‘¤‚ª configure ‚³‚ê‚Ä‚¢‚È‚¢
+	#  ã‚‚ã— spr_stampfile ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°â€¦
+	#	Spr å´ãŒ configure ã•ã‚Œã¦ã„ãªã„
 	#
 	if not os.path.exists(spr_stampfile):
-		#  Spr ‘¤‚É App ‘¤‚Ìó‘Ô‚ğƒRƒs[‚·‚é
+		#  Spr å´ã« App å´ã®çŠ¶æ…‹ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
 		#
 		print('  synchronize SPR to APP (library not configured)')
 		os.makedirs('%s/CMakeFiles' % spr_projdir, exist_ok=True)
-		copy_file(projfile, spr_projfile)
+		copy_file(app_projfile, spr_projfile)
+		copy_file(spr_projfile, spr_proj_prev)		####
 		copy_file(app_stampfile, spr_stampfile)
 		copy_file(app_dependfile, spr_dependfile)
 		copy_file(app_stampfile, spr_stamp_prev)
 
-	#  ‚à‚µ spr_stamp_prev ‚ª‘¶İ‚µ‚È‚¯‚ê‚Î...
-	#	App ‘¤‚Å‰‚ß‚Ä‚Ì configure ‚Å‚ ‚é
-	#  Spr ‘¤‚ÌƒXƒ^ƒ“ƒv‚Ì•û‚ª spr_stamp_prev ‚æ‚èV‚µ‚¯‚ê‚Î...
-	#	Spr ‘¤‚Å cmake ‚ªs‚È‚í‚ê‚½
-	#	or ‘¼‚ÌƒAƒvƒŠ‚ª Spr ‘¤‚ÌƒXƒ^ƒ“ƒv‚ğXV‚µ‚½
+	#  ã‚‚ã— spr_stamp_prev ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°...
+	#	App å´ã§åˆã‚ã¦ã® configure ã§ã‚ã‚‹
+	#  Spr å´ã®ã‚¹ã‚¿ãƒ³ãƒ—ã®æ–¹ãŒ spr_stamp_prev ã‚ˆã‚Šæ–°ã—ã‘ã‚Œã°...
+	#	Spr å´ã§ cmake ãŒè¡Œãªã‚ã‚ŒãŸ
+	#	or ä»–ã®ã‚¢ãƒ—ãƒªãŒ Spr å´ã®ã‚¹ã‚¿ãƒ³ãƒ—ã‚’æ›´æ–°ã—ãŸ
 	#
 	elif not os.path.exists(spr_stamp_prev) \
 	    or is_newer_file(spr_stampfile, spr_stamp_prev):
-		#  App ‘¤‚ğ Spr ‘¤‚É“¯Šú‚³‚¹‚é
+		#  App å´ã‚’ Spr å´ã«åŒæœŸã•ã›ã‚‹
 		#
 		if not os.path.exists(spr_stamp_prev):
 			print('  synchronize APP to SPR (no stamp file saved)')
 		else:
 			print('  synchronize APP to SPR (lib\'s stamp file newer)')
+		copy_file(spr_projfile, app_projfile)		####
+		copy_file(spr_projfile, spr_proj_prev)		####
 		copy_file(spr_stampfile, spr_stamp_prev)
 		copy_file(spr_stampfile, app_stampfile)
 		copy_file(spr_dependfile, app_dependfile)
 
-	#  ‚à‚µ¡ì‚Á‚½ƒvƒƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚ª Spr ‘¤‚Ì‚à‚Ì‚ÆˆÙ‚È‚é“à—e‚È‚ç‚Î...
-	#	‚±‚ÌƒAƒvƒŠ‚Å•ÏX‚ğ{‚µ‚½
+	#  ã‚‚ã—ä»Šä½œã£ãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ãŒ Spr å´ã®ã‚‚ã®ã¨ç•°ãªã‚‹å†…å®¹ãªã‚‰ã°...
+	#	ã“ã®ã‚¢ãƒ—ãƒªã§å¤‰æ›´ã‚’æ–½ã—ãŸ
 	#
 	elif is_config_changed(app_projfile, spr_projfile):
-		#  Spr ‘¤‚ğ App ‘¤‚É“¯Šú‚³‚¹‚é
+		#  Spr å´ã‚’ App å´ã«åŒæœŸã•ã›ã‚‹
 		#
 		print('  synchronize SPR to APP (makefile/projfile changed)')
-		copy_file(projfile, spr_projfile)
+		copy_file(app_projfile, spr_projfile)
+		copy_file(spr_projfile, spr_proj_prev)		####
 		copy_file(app_stampfile, spr_stampfile)
 		copy_file(app_dependfile, spr_dependfile)
 		copy_file(app_stampfile, spr_stamp_prev)
 
-	#  ‚³‚à‚È‚¯‚ê‚Î“¯Šú‚Ì•K—v‚Í‚È‚¢
+		#  Spr å´ã® .sln ã®æ•´åˆæ€§ã‚’å›³ã‚‹å¿…è¦ãŒã‚ã‚‹ (GUID ãŒå¤‰åŒ–ã—ã¦ã„ã‚‹)
+		#	ã“ã“ã§ã¯ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹ã ã‘ (ã‚ã¨ã§ã¾ã¨ã‚ã¦å®Ÿè¡Œã™ã‚‹)
+		#
+		need_spr_sln_modify = True
+
+	#  ã•ã‚‚ãªã‘ã‚Œã°åŒæœŸã®å¿…è¦ã¯ãªã„
 	#
 	#else:
-		#  App ‘¤‚ÌƒXƒ^ƒ“ƒv‚ğ Spr ‘¤‚É‡‚í‚¹‚Ä‚¨‚­
+		#  App å´ã®ã‚¹ã‚¿ãƒ³ãƒ—ã‚’ Spr å´ã«åˆã‚ã›ã¦ãŠã
 		#
 		#print('  synchronize APP to SPR (project GUID changed)')
 		#copy_file(spr_stampfile, spr_stamp_prev)
 		#copy_file(spr_stampfile, app_stampfile)
 		#copy_file(spr_dependfile, app_dependfile)
 
-	#  ‚±‚ÌƒAƒvƒŠ‚ÌÅV‚ÌƒXƒ^ƒ“ƒvƒtƒ@ƒCƒ‹‚ğƒZ[ƒu‚µ‚Ä‚¨‚­
-	#  makefile/projectfile ‚ÌÀ‘Ì‚ğ Spr ‘¤‚Ö‚ÌƒŠƒ“ƒN‚É•ÏX‚·‚é
-	#	–ˆ‰ñs‚È‚¤‚Ì‚Í–³‘Ê‚¾‚ªAcmake ‚ªƒtƒ@ƒCƒ‹‚ğì‚è•Ï‚¦‚Ä‚µ‚Ü‚¤‚Ì‚Å
-	#	d•û‚ª‚È‚¢
+	#  ã“ã®ã‚¢ãƒ—ãƒªã®æœ€æ–°ã®ã‚¹ã‚¿ãƒ³ãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚»ãƒ¼ãƒ–ã—ã¦ãŠã
+	#  makefile/projectfile ã®å®Ÿä½“ã‚’ Spr å´ã¸ã®ãƒªãƒ³ã‚¯ã«å¤‰æ›´ã™ã‚‹
+	#	æ¯å›è¡Œãªã†ã®ã¯ç„¡é§„ã ãŒã€cmake ãŒãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚Šå¤‰ãˆã¦ã—ã¾ã†ã®ã§
+	#	ä»•æ–¹ãŒãªã„
 	#
+	'''
 	remove(app_projfile)
 	make_link(projfile, spr_projfile)
 	copy_file(app_stampfile, app_stamp_prev)
+	'''
+	if is_config_changed_win(spr_projfile, spr_proj_prev):
+		copy_file(spr_projfile, projfile)
+	else:
+		shutil.copystat(spr_projfile, projfile)
+	
 	os.chdir(cwd)
 # endfor
 
-#  Windows (Visual Studio) ‚Ìê‡‚É‚ÍŸ‚Ìˆ—‚à•K—v‚Æ‚È‚é
-#	Solution file ‚É‹L‚³‚ê‚Ä‚¢‚éQÆƒvƒƒWƒFƒNƒg‚Ì GUID ‚ğAƒŠƒ“ƒN‚ğ’£‚Á‚½
-#	æ‚Ì project file (Spr ‘¤) ‚Ì GUID ‚É‘‚«Š·‚¦‚éB
+#  Windows (Visual Studio) ã®å ´åˆã¯ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã¨ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã¨ã®
+#  æ•´åˆæ€§ã‚’ä¿è¨¼ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ (ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã® GUID ãŒå¤‰æ›´ã•ã‚Œã¦ã„ã‚‹ã“ã¨ãŒã‚ã‚‹ã‹ã‚‰)
 #
 if is_windows():
-	#  Spr ‘¤‚ÉƒŠƒ“ƒN‚µ‚½Œã‚Ì GUID ‚ğ’²‚×‚é
+	#  ã“ã®æ™‚ç‚¹ã«ãŠã‘ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã® GUID ã‚’è¨˜éŒ²ã—ã¦ãŠã
 	#
-	lnk_guids = collect_guid(app_blddir, projs)
+	spr_new_guids = collect_vcx_guid(spr_blddir, projs)
+	app_new_guids = collect_vcx_guid(app_blddir, projs)
+	if verbose > 1:
+		print_guids('Spr.NEW', spr_new_guids)
+		print_guids('App.NEW', app_new_guids)
 
-	#  ƒ\ƒŠƒ…[ƒVƒ‡ƒ“ƒtƒ@ƒCƒ‹‚ÉŒ»‚ê‚é GUID ‚ğƒŠƒ“ƒNæ‚Ì‚à‚Ì‚É’u‚«Š·‚¦‚é
+	# (1) Spr å´ã®ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã®æ•´åˆæ€§ã‚’å›³ã‚‹
+	#	App å´ã§æ§‹æˆã®å¤‰æ›´ã‚’è¡Œãªã£ãŸå ´åˆ
+	#	(ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã® GUID ãŒå¤‰æ›´ã•ã‚Œã¦ã„ã‚‹ãŸã‚)
+	#
+	if need_spr_sln_modify:
+		sln_fname = '%s/Springhead.sln' % spr_blddir
+		spr_old_guids = collect_sln_guid(spr_blddir, projs, sln_fname)
+		new_lines = []
+		modified = False
+		modified_info = {}
+		for line in read_file(sln_fname):
+			for proj in projs:
+				str1 = spr_old_guids[proj]
+				str2 = spr_new_guids[proj]
+				changed = line.find(str1) and (str1 != str2)
+				if changed:
+					line = line.replace(str1, str2)
+					modified = True
+				if verbose and changed \
+					   and not proj in modified_info.keys():
+					fmt = '%s: %s -> %s (GUID changed)'
+					modified_info[proj] = fmt % (proj, str1, str2)
+			new_lines.append(line)
+		#
+		if modified:
+			rc = write_file(sln_fname, new_lines)
+			if rc == 0:
+				print('solution file is modified (%s)' % upath(sln_fname))
+				if verbose:
+					for proj in modified_info.keys():
+						print('  %s' % modified_info[proj])
+
+	# (2) App å´ã®ã‚½ãƒªãƒ¥ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã®æ•´åˆæ€§ã‚’å›³ã‚‹
+	#	ã™ã¹ã¦ Spr å´ã«åˆã‚ã›ã‚‹
 	#	
 	sln_fname = '%s/%s.sln' % (app_blddir, app_name)
 	new_lines = []
 	modified = False
 	for line in read_file(sln_fname):
 		for proj in projs:
-			str1 = org_guids[proj]
-			str2 = lnk_guids[proj]
-			if line.find(str1):
-				line = line.replace(str1, str2)
-				modified = True
+			str1 = app_org_guids[proj]
+			str2 = app_new_guids[proj]
+			if line.find(str1) >= 0:
+				tmp_line = line.replace(str1, str2)
+				if tmp_line != line:
+					if verbose > 1:
+						print('  ** %s' % tmp_line.strip())
+					line = tmp_line
+					modified = True
 		new_lines.append(line)
 	#
 	if modified:
@@ -399,6 +503,7 @@ if is_windows():
 			print('** Push (R)-button to make solution file up-to-date **')
 			print('******************************************************')
 			print()
+
 # endif is_windows()
 
 sys.exit(0)

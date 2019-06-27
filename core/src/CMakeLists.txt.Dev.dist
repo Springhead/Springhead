@@ -258,7 +258,10 @@ set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/bin)
 #  Add target to synchronize configuration with ${SRR_SRC_DIR}.
 #
 set(SYNC "sync")
-set(_tmp_args "${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
+set(_tmp_args "-v"
+	"-a" "\"$(Platform)\""
+	"-c" "\"$(Configuration)\""
+	"${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
 	"${Target}" "${SPR_PROJS}")
 file(TO_NATIVE_PATH "${_tmp_args}" _tmp_args)
 add_custom_target(${SYNC}
@@ -290,7 +293,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
-add_dependencies(${Target} ${SPR_PROJS})
+add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
 #  Include directories.
