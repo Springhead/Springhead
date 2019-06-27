@@ -1,245 +1,245 @@
-���藚��
-	Rev2.0	2019/06/19	���o�[�W�����ŗp�ɑS�ʉ���
-	Rev1.1	2019/06/13	�z�z�t�@�C���̖��̋y�ѕ\�L�@��ύX���܂���
+改定履歴
+	Rev2.0	2019/06/19	βバージョン版用に全面改訂
+	Rev1.1	2019/06/13	配布ファイルの名称及び表記法を変更しました
 
 
-Springhead�𗘗p����A�v���̊J����cmake�𗘗p����ɂ������āiWindows�̏ꍇ�j
+Springheadを利用するアプリの開発でcmakeを利用するにあたって（Windowsの場合）
 
-1. cmake�𗘗p���闘�_
-	���܂ł́A�V�����o�[�W������Visual Studio�𗘗p���邽�߂ɂ́A
-	���̃\�����[�V��������R�s�[���ďC������Ȃǂ���
-	.sln/.vcxproj�t�@�C����Ǝ��ɗp�ӂ���K�v������܂����B
+1. cmakeを利用する利点
+	今までは、新しいバージョンのVisual Studioを利用するためには、
+	他のソリューションからコピーして修正するなどして
+	.sln/.vcxprojファイルを独自に用意する必要がありました。
 
-	����ɑ΂��āAcmake�́ACMakeLists.txt�ɏ����ꂽ���e�ɏ]����
-	.sln/.vcxproj/Makefile�������I�ɐ������܂��icmake-configure�j�B
-	����ɂ��A
-	(1) CMakeLists.txt���Ǘ����邾����Windows��unix�̗����ɑΉ��ł���B
-	(2) Visual Studio���V�����o�[�W�����ɂȂ��Ă��icmake���Ή����Ă����΁j
-	    ���̂܂܈ڍs�ł���B
-	�Ƃ������_�������܂��B
+	これに対して、cmakeは、CMakeLists.txtに書かれた内容に従って
+	.sln/.vcxproj/Makefileを自動的に生成します（cmake-configure）。
+	これにより、
+	(1) CMakeLists.txtを管理するだけでWindowsとunixの両方に対応できる。
+	(2) Visual Studioが新しいバージョンになっても（cmakeが対応してくれれば）
+	    そのまま移行できる。
+	という利点が得られます。
 
-2. cmake-configure�i�\�����[�V�����t�@�C���̐����j
-	cmake���ǂ̂悤�ɂ���.sln/.vcxproj/Makefile�𐶐��icmake-configure�j���邩
-	�ɂ��āA
-	���̂悤�ȃ\�[�X�c���[�����肵�Đ������܂��i�K�v�ȃt�@�C���������Ď����܂��j�B
+2. cmake-configure（ソリューションファイルの生成）
+	cmakeがどのようにして.sln/.vcxproj/Makefileを生成（cmake-configure）するか
+	について、
+	次のようなソースツリーを仮定して説明します（必要なファイルも併せて示します）。
 	    # Springhead library
-	    C:/Project/Springhead				�c <SprTop>
-	    C:/Project/Springhead/core/src			�c <SprSrc>
+	    C:/Project/Springhead				… <SprTop>
+	    C:/Project/Springhead/core/src			… <SprSrc>
 	    C:/Project/Springhead/core/src/CMakeLists.txt	(1)
 	    C:/Project/Springhead/core/src/Base/CMakeLists.txt  (2)
 					   :
 	    # Application
-	    C:/Develop/App					�c <AppSrc>
+	    C:/Develop/App					… <AppSrc>
 	    C:/Develop/App/CMakeLists.txt			(3)
 	    C:/Develop/App/CMakeTopdir.txt			(4)
 	    C:/Develop/App/subdir
 	    C:/Develop/App/subdir/CMakeLists.txt		(5)
-	�J������A�v���̃\�[�X��<AppSrc>�ȉ��ɂ�����̂Ƃ��܂��B
+	開発するアプリのソースは<AppSrc>以下にあるものとします。
 
-	(1)��(2)��GitHub�Ŕz�z����܂�����A�A�v���J���҂��p�ӂ���̂�(3)�`(5)�ł��B
-	(3)��(4)�̍����ɂ��Ă͌���������܂��B
-	(5)�ɂ��Ă�(2)���Q�l�ɂ��č쐬���邱�ƂɂȂ�܂��B
+	(1)と(2)はGitHubで配布されますから、アプリ開発者が用意するのは(3)～(5)です。
+	(3)と(4)の作り方については後程説明します。
+	(5)については(2)を参考にして作成することになります。
 
-	�܂��A<SprTop>/dependency/�ȉ����g�p���Ȃ��ꍇ�܂��̓r���h�ɏ�����
-	�ς������ꍇ�ɂ͍X�ɕʂ̃t�@�C����p�ӂ���K�v������܂����A�����
-	���Ă�����������܂��i����������`�t�@�C����z�z���Ă��܂��j�B
+	また、<SprTop>/dependency/以下を使用しない場合またはビルドに条件を
+	変えたい場合には更に別のファイルを用意する必要がありますが、それに
+	ついても後程説明します（いずれも雛形ファイルを配布しています）。
 
-	�ŏ���Springhead library��cmake-configure���܂��B
-	�܂��A��Ɨ̈��p�ӂ��܂��i�����ł�build (=<BldDir>)�Ƃ��܂��B
+	最初にSpringhead libraryをcmake-configureします。
+	まず、作業領域を用意します（ここではbuild (=<BldDir>)とします。
 	    > chdir <SprSrc>
 	    > makedir <BldDir>
 	    > chdir <BldDir>
-	cmake-configure�̎��s�́A
+	cmake-configureの実行は、
 	    > cmake .. [<generator>]
-		<generator>�̗�F
+		<generator>の例：
 			-G "Visual Studio 15 2017" -A x64
 			-G "Visual Studio 15 2017 Win64"
 			-G "Unix Makefiles"
-		<generator> �̏ڍׂ� cmake --help �Q�ƁB
-	�܂���cmake-gui�𗘗p����Configure-Generate�Ƃ��܂��B
+		<generator> の詳細は cmake --help 参照。
+	またはcmake-guiを利用してConfigure-Generateとします。
 
-	�v���W�F�N�g�t�@�C���́ACMakeLists.txt�̕ϐ�SRCS�ɒ�`���ꂽ�\�[�X�t�@�C��
-	�����ɕK�v�ȃw�b�_�t�@�C�����𑖍����č쐬����܂��B
-	���̑�����cmake-configure���s���Ɏ��{����܂�����A���̎��_�ł�
-	�\�[�X�t�@�C���\�����v���W�F�N�g�t�@�C���̒���``�Œ艻''����邱�ƂɂȂ�܂��B
+	プロジェクトファイルは、CMakeLists.txtの変数SRCSに定義されたソースファイル
+	を元に必要なヘッダファイル情報を走査して作成されます。
+	この走査はcmake-configure実行時に実施されますから、この時点での
+	ソースファイル構成がプロジェクトファイルの中に``固定化''されることになります。
 
-	cmake-configure�Ő��������t�@�C���ƃr���h�Ő��������t�@�C���͂��ׂ�
-	��Ɨ̈�Ɋi�[����܂��i�r���h�̍ŏI�������͕ʂ̏ꏊ�Ɋi�[����܂��j�B
+	cmake-configureで生成されるファイルとビルドで生成されるファイルはすべて
+	作業領域に格納されます（ビルドの最終生成物は別の場所に格納されます）。
 
-	���ɃA�v����cmake-configure���܂��B
-	��Ɠ��l�ɁA��Ɨ̈��p�ӂ��܂��i�����ł�build (=<BldDir>)�Ƃ��܂��B
+	次にアプリをcmake-configureします。
+	上と同様に、作業領域を用意します（ここではbuild (=<BldDir>)とします。
 	    > chdir <AppSrc>
 	    > makedir <BldDir>
 	    > chdir <BldDir>
-	cmake-configure�̎��s�́A
+	cmake-configureの実行は、
 	    > cmake .. [<generator>]
-	�܂���cmake-gui�𗘗p����Configure-Generate�Ƃ��܂��B
+	またはcmake-guiを利用してConfigure-Generateとします。
 
-3. �r���h
-	�\�����[�V�����̃r���h�́Acmake-configure�Ő������ꂽ
+3. ビルド
+	ソリューションのビルドは、cmake-configureで生成された
 	    <SprSrc>/<BldDir>/Springhead.sln
 	    <AppSrc>/<BldDir>/<app-name>.sln
-	��Visual Studio�ŊJ���A�ʏ�ǂ���ɍs�Ȃ��܂��B
+	をVisual Studioで開き、通常どおりに行ないます。
 
-	(��) ���̃A�v���J���ɂ����Ď��{���ꂽ�\���ύX�������I�Ɏ擾���邽�߂ɁA
-	     Visual Studio �Ɏ��̐ݒ�����Ă��������i5.3 sync���Q�Ɓj�B
-		[�c�[��] - [�I�v�V����] - [��] - [�h�L�������g] �ɂ���
-		  �E���O�ł̃t�@�C���̕ύX�����o����(D)
-		  �E�ۑ�����Ă��Ȃ��ύX���Ȃ�����A�ύX���ꂽ�t�@�C�����ēǂݍ��݂���(R)
-		�̗����Ƀ`�F�b�N�����Ă��������B
+	(注) 他のアプリ開発において実施された構成変更を自動的に取得するために、
+	     Visual Studio に次の設定をしてください（5.3 syncを参照）。
+		[ツール] - [オプション] - [環境] - [ドキュメント] にある
+		  ・環境外でのファイルの変更を検出する(D)
+		  ・保存されていない変更がない限り、変更されたファイルを再読み込みする(R)
+		の両方にチェックを入れてください。
 
-4. Springhead�̃\�[�X�t�@�C���\����ύX������
-	�]���́AVisual Studio��Ń��\�[�X�̒ǉ��E�폜���s�Ȃ��ăt�@�C�����Z�[�u
-	����΁i������commit/push����΁j�A
-	���̕ύX�����ׂẴ\�����[�V�����ɓ`���܂����B
-	����͂��ׂẴ\�����[�V�����������v���W�F�N�g�t�@�C�����Q�Ƃ��Ă�������ł��B
-	������cmake�𗘗p����ꍇ�ɂ͎���قȂ�܂��B
-	5.3 sync�̐������悭�ǂ�ł��������B
+4. Springheadのソースファイル構成を変更したら
+	従来は、Visual Studio上でリソースの追加・削除を行なってファイルをセーブ
+	すれば（そしてcommit/pushすれば）、
+	その変更がすべてのソリューションに伝わりました。
+	これはすべてのソリューションが同じプロジェクトファイルを参照していたからです。
+	しかしcmakeを利用する場合には事情が異なります。
+	5.3 syncの説明をよく読んでください。
 
-5. �\�����[�V�����t�@�C���ɒǉ����ꂽ����ȃv���W�F�N�g
+5. ソリューションファイルに追加された特殊なプロジェクト
 
 5.1 ALL_BUILD
-	�����cmake�������I�ɐ�������v���W�F�N�g�ł����A�g�p���邱�Ƃ͂���܂���B
-	�������Č��\�ł��i��������Ȃ��悤�ɂł���΂��̂悤�ɏC�����܂��j�B
+	これはcmakeが自動的に生成するプロジェクトですが、使用することはありません。
+	無視して結構です（生成されないようにできればそのように修正します）。
 
 5.2 RunSwig_Clean
-	Springhead��RunSwig�v���W�F�N�g�̓��C�N�t�@�C���v���W�F�N�g�Ƃ��������
-	�v���W�F�N�g�ŁA���r���h�i�N���[���j����RunSwig����������t�@�C�����폜
-	���邱�Ƃ��\�ł����B���̂��߃\�����[�V�����S�̂����r���h�����
-	���ׂẴt�@�C���ɂ��čăR���p�C�����邱�Ƃ��ł��܂����B
-	�c�O�Ȃ���cmake�ł́A���C�N�t�@�C���v���W�F�N�g�̂悤�Ƀr���h���A���r���h��
-	�ňقȂ�R�}���h�����s����悤�Ɏw�������v���W�F�N�g���쐬���邱�Ƃ�
-	�ł��܂���B
-	���������āARunSwig�̃N���[�����Ɏ��s�����ׂ��R�}���h�����s���邽�߂�
-	�v���W�F�N�gRunSwig_Clean�����A���̃v���W�F�N�g��``�r���h''������
-	�K�v������̂ł��B
-	���Ȃ킿�A�\�����[�V�����S�̂����r���h����ɂ́A
-	(1) �v���W�F�N�gRunSwig_Clean���r���h����
-	(2) �\�����[�V���������r���h����
-	�Ƃ����菇�𓥂ނ��ƂɂȂ�܂��B
+	SpringheadのRunSwigプロジェクトはメイクファイルプロジェクトという特殊な
+	プロジェクトで、リビルド（クリーン）時にRunSwigが生成するファイルを削除
+	することが可能でした。このためソリューション全体をリビルドすれば
+	すべてのファイルについて再コンパイルすることができました。
+	残念ながらcmakeでは、メイクファイルプロジェクトのようにビルド時、リビルド時
+	で異なるコマンドを実行するように指示したプロジェクトを作成することが
+	できません。
+	したがって、RunSwigのクリーン時に実行されるべきコマンドを実行するための
+	プロジェクトRunSwig_Cleanを作り、このプロジェクトを``ビルド''させる
+	必要があるのです。
+	すなわち、ソリューション全体をリビルドするには、
+	(1) プロジェクトRunSwig_Cleanをビルドする
+	(2) ソリューションをリビルドする
+	という手順を踏むことになります。
 	
-5.3 sync�i�d�v�j
-	2. cmake-configure�Ő������܂������Acmake�𗘗p�����ꍇ�ɂ͂��ׂĂ̒��Ԑ�����
-	�͍�Ɨ̈扺�ɐ�������܂��B���̂��Ƃ����̂悤�ȕs�s���𐶂��邱�ƂƂȂ�܂��B
+5.3 sync（重要）
+	2. cmake-configureで説明しましたが、cmakeを利用した場合にはすべての中間生成物
+	は作業領域下に生成されます。このことが次のような不都合を生じることとなります。
 
-	2�̈قȂ�A�v��App1��App2�Ƃ��J���iSpringhead�̊J�����܂ށj����ꍇ��
-	�l���܂��B
-	�Ⴆ��App1�̊J����Springhead�Ƀ\�[�X�t�@�C����1�ǉ������Ƃ��܂��B
-	���̕ύX��Visual Studio��Œ��ڃt�@�C���̒ǉ����Z�[�u�����Ă��悢���A
-	App1���ēxcmake-configure���Ă��\���܂���B������������̏ꍇ�ł�
-	App1�̍�Ɨ̈�̒��ŉ��炩�̕ύX���s���邾���ł���A���̕ύX��
-	�����I�ɕʂ̃A�v���ł���App2�ɓ`��邱�Ƃ͂���܂���BApp2�ł��̕ύX��
-	��荞�ނ��߂ɂ�App2�ō�cmake-configure���s�Ȃ��K�v������̂ł��B
+	2つの異なるアプリApp1とApp2とを開発（Springheadの開発を含む）する場合を
+	考えます。
+	例えばApp1の開発でSpringheadにソースファイルを1つ追加したとします。
+	この変更はVisual Studio上で直接ファイルの追加＆セーブをしてもよいし、
+	App1を再度cmake-configureしても構いません。しかしいずれの場合でも
+	App1の作業領域の中で何らかの変更が行われるだけであり、この変更が
+	自動的に別のアプリであるApp2に伝わることはありません。App2でこの変更を
+	取り込むためにはApp2で再cmake-configureを行なう必要があるのです。
 
-	���̕s�s�����������邽�߂ɁACMmakeLists.txt�̐��`�iCMakeLists.txt.Dev.dist
-	�Ƃ��Ĕz�z�j�����Springhead/core/src����CMakeLists.txt�Ɏ��̂悤��
-	�d�|�����{���Ă���܂��B
-	Springhead�̊e�v���W�F�N�g�ɑ΂��ẮA
-	(1) �I�u�W�F�N�g�t�@�C��.obj�́A�ǂ̃A�v���Ńr���h���Ă������f�B���N�g��
-	    �i<SprSrc>/<proj>/�̉��j�ɐ��������i�r���h�̍œK���j�B
-	(2) coonfigure�����s�����time stamp�t�@�C�����X�V����Ă��܂��K��
-	    �S�t�@�C�����r���h����Ă��܂��̂ŁA���ׂẴA�v����time stamp��
-	    Springhead��time stamp�ɓ���������i�r���h�̍œK���j�B
-	(3) �A�v����cmake-configure�Ő������ꂽ�v���W�F�N�g�t�@�C����Springhead�̂��̂�
-	    �قȂ��Ă�����A���̑����Springhead�ɔ��f������i�\�[�X�\���̓����j�B
-	(4) �A�v���̃v���W�F�N�g�t�@�C���͏��Springhead�̂��̂Ɠ���������
-	    �i�\�[�X�\���̓����j�B
-	�����̍�Ɓi(1)�ȊO�B(1)��cmake-configure���Ɏ��{�j�����s����̂�
-	sync�Ƃ����v���W�F�N�g�ł��B
+	この不都合を解消するために、CMmakeLists.txtの雛形（CMakeLists.txt.Dev.dist
+	として配布）およびSpringhead/core/src下のCMakeLists.txtに次のような
+	仕掛けを施してあります。
+	Springheadの各プロジェクトに対しては、
+	(1) オブジェクトファイル.objは、どのアプリでビルドしても同じディレクトリ
+	    （<SprSrc>/<proj>/の下）に生成される（ビルドの最適化）。
+	(2) coonfigureを実行するとtime stampファイルが更新されてしまい必ず
+	    全ファイルがビルドされてしまうので、すべてのアプリのtime stampを
+	    Springheadのtime stampに同期させる（ビルドの最適化）。
+	(3) アプリのcmake-configureで生成されたプロジェクトファイルがSpringheadのものと
+	    異なっていたら、その相違をSpringheadに反映させる（ソース構成の同期）。
+	(4) アプリのプロジェクトファイルは常にSpringheadのものと同期させる
+	    （ソース構成の同期）。
+	これらの作業（(1)以外。(1)はcmake-configure時に実施）を実行するのが
+	syncというプロジェクトです。
 
-	���Ȃ킿�A�A�v������Springhead�̃\�[�X�\����ύX�����Ȃ�΁A
-	(1) cmake�����s���č\���̕ύX���v���W�F�N�g�t�@�C���ɔ��f������B
-	(2) �������ꂽ�\�����[�V�����t�@�C����Visual Stueio�ŊJ���A�v���W�F�N�g
-	    sync���r���h����i�\�����[�V�����S�̂��r���h���Ă��\���܂���j�B
-	    sync���r���h����ƃ\�����[�V�����t�@�C�����X�V����邽�߂�
-	    �u�\�����[�V����'xxx'�͊��O�ŕύX����Ă��܂��B�v�Ƃ����_�C�A���O��
-	    �\������܂��B�u�ēǂݍ���(R)�v���w�肵�ĕύX�𔽉f�����Ă��������B
-	�̎菇�𓥂�ł��������B
-	����ɂ��A�\���̕ύX�����̃A�v�������Springhead�ɓ`�B����܂��B
+	すなわち、アプリ側でSpringheadのソース構成を変更したならば、
+	(1) cmakeを実行して構成の変更をプロジェクトファイルに反映させる。
+	(2) 生成されたソリューションファイルをVisual Stueioで開き、プロジェクト
+	    syncをビルドする（ソリューション全体をビルドしても構いません）。
+	    syncをビルドするとソリューションファイルが更新されるために
+	    「ソリューション'xxx'は環境外で変更されています。」というダイアログが
+	    表示されます。「再読み込み(R)」を指定して変更を反映させてください。
+	の手順を踏んでください。
+	これにより、構成の変更が他のアプリおよびSpringheadに伝達されます。
 
-	�� ����ł́A(2)�Ŏ������_�C�A���O���p�ɂɕ\�����ꂤ���Ƃ������̂ł���
-	   ����u�ēǂݍ���(R)�v�������Ă��������B���݂����������邽�߂̒���
-	   ���s�Ȃ��Ă��܂��B
+	※ 現状では、(2)で示したダイアログが頻繁に表示されうっとおしいのですが
+	   毎回「再読み込み(R)」をさせてください。現在これを回避するための調査
+	   を行なっています。
 
-	���̃A�v�����{�����\���ύX����荞�ނ̂�sync�̃r���h�łł��܂����A
-	sync�̓A�v���̃r���h�̍ŏ��ɕK�����s�����悤�Ɉˑ��֌W���w�肵��
-	����܂�����A���ɉ������Ȃ��Ă��\���܂���B
+	他のアプリが施した構成変更を取り込むのもsyncのビルドでできますが、
+	syncはアプリのビルドの最初に必ず実行されるように依存関係を指定して
+	ありますから、特に何もしなくても構いません。
 
-6. �z�z�t�@�C��
-	cmake�֘A�Ŕz�z�����t�@�C���́A
-	    CMakeLists.txt.Lib.dist	�c Springhead library �J��/�\�z�p
+6. 配布ファイル
+	cmake関連で配布されるファイルは、
+	    CMakeLists.txt.Lib.dist	… Springhead library 開発/構築用
 	    CMakeLists.txt.Dev.dist
-		�c Application program ���g�p���� Springhead library �J���p
-	    CMakeTopdir.txt.dist	�c Springhead �g�b�v�f�B���N�g���w��p
-	    CMakeOpts.txt.dist		�c Compile/Link �I�v�V�����w��p
-	    CMakeConf.txt.dist		�c �O�� package �w�� / Install �ꏊ�w��p
-	�ł��B
-	�z�z�����t�@�C���͂��ׂĐ��`�t�@�C���Ȃ̂ŁA������ҏW���ăR�~�b�g
-	���Ȃ��悤�ɂ��肢���܂��B
-	�e�t�@�C���̓e�L�X�g�t�@�C���ŁA����('#')�Ŏn�܂�s�̓R�����g�s�ł��B
-	�p�����[�^��set���Œ�`���܂��B
-	    set(�ϐ��� �l)
-	�l���t�@�C���p�X�̂Ƃ���"��΃p�X"�Ŏw�肵�Ă��������B
-	�܂��p�X�Z�p���[�^�ɂ͕���('/')���g�p���Ă�������(escape���̉��)�B
+		… Application program を使用した Springhead library 開発用
+	    CMakeTopdir.txt.dist	… Springhead トップディレクトリ指定用
+	    CMakeOpts.txt.dist		… Compile/Link オプション指定用
+	    CMakeConf.txt.dist		… 外部 package 指定 / Install 場所指定用
+	です。
+	配布されるファイルはすべて雛形ファイルなので、これらを編集してコミット
+	しないようにお願いします。
+	各ファイルはテキストファイルで、文字('#')で始まる行はコメント行です。
+	パラメータはset文で定義します。
+	    set(変数名 値)
+	値がファイルパスのときは"絶対パス"で指定してください。
+	またパスセパレータには文字('/')を使用してください(escape問題の回避)。
 
-6.1 Springhead library���\�z����ꍇ
+6.1 Springhead libraryを構築する場合
 
-6.1.1 ����
-	�z�z���ꂽ���̃t�@�C����<SrpSrc>�f�B���N�g�����ŃR�s�[���܂�
-	�i���̂�ύX���邱�Ƃɒ��Ӂj�B
+6.1.1 準備
+	配布された次のファイルを<SrpSrc>ディレクトリ内でコピーします
+	（名称を変更することに注意）。
 	-------------------------------------------------------------------
-	  ����		  <SprSrc>			  <SprSrc>
+	  条件		  <SprSrc>			  <SprSrc>
 	-------------------------------------------------------------------
-	  �K��		CMakeLists.txt.Lib.dist		CMakeLists.txt
+	  必ず		CMakeLists.txt.Lib.dist		CMakeLists.txt
 	  (*1)		CMakeOpts.txt.dist		CMakeOpts.txt
 	  (*2)		CMakeConf.txt.dist		CMakeConf.txt
 	-------------------------------------------------------------------
-	  (*1) �r���h�I�v�V������ύX����ꍇ
-	  (*2) <SprTop>/dependency���g��Ȃ��ꍇ
+	  (*1) ビルドオプションを変更する場合
+	  (*2) <SprTop>/dependencyを使わない場合
 
-6.1.2 �ݒ�̕ύX
-	�r���h�I�v�V������ύX����ꍇ�ɂ�"CMakeOpts.txt"���A�O���p�b�P�[�W��
-	�g�p����ꍇ�y��Install���ݒ肷��ꍇ�ɂ�"CMakeConf.txt"��K�X�ҏW���܂�
-	 (�ҏW���@�͊e�t�@�C�����Q�Ƃ��Ă��������j�B
+6.1.2 設定の変更
+	ビルドオプションを変更する場合には"CMakeOpts.txt"を、外部パッケージを
+	使用する場合及びInstall先を設定する場合には"CMakeConf.txt"を適宜編集します
+	 (編集方法は各ファイルを参照してください）。
 
-6.1.3 cmake-configure�i�\�����[�V�����t�@�C���̐����j
-	cmake-configure��<SprSrc>�Ŏ��s���܂��i������CMakeLists.txt������j�B
-	2. cmake-configure���Q�Ƃ̂��Ɓi������<AppSrc>��<SprSrc>�Ɠǂݑւ��邱�Ɓj�B
+6.1.3 cmake-configure（ソリューションファイルの生成）
+	cmake-configureは<SprSrc>で実行します（ここにCMakeLists.txtがある）。
+	2. cmake-configureを参照のこと（ただし<AppSrc>を<SprSrc>と読み替えること）。
 
-	�Ȃ��Acmake�ϐ��iCMake*.txt�̒���set(var ...)�Őݒ肳�ꂽ���́j��
-	�L���b�V������Ă���悤�ł��B���������āA�P��set(var ...)��
-	�R�����g�A�E�g�����ꍇ�Acmake �N�����Ɏw�肵�Ă����I�v�V����
-	�i-D OPTS=..., -D CONF=...�j�i��q�j���~�߂�ꍇ�Ȃǂ́A
-	�L���b�V���𖳌��ɂ��邽�߂�<BldDir>����x�폜����K�v������܂��B
+	なお、cmake変数（CMake*.txtの中でset(var ...)で設定されたもの）は
+	キャッシュされているようです。したがって、単にset(var ...)を
+	コメントアウトした場合、cmake 起動時に指定していたオプション
+	（-D OPTS=..., -D CONF=...）（後述）を止める場合などは、
+	キャッシュを無効にするために<BldDir>を一度削除する必要があります。
 
-6.2 Springhead�𗘗p����A�v�����J������ꍇ
+6.2 Springheadを利用するアプリを開発する場合
 
-6.2.1 ����
-	�z�z���ꂽ���̃t�@�C����<SrpSrc>����<AppSrc>�ɃR�s�[���܂�
-	�i���̂�ύX���邱�Ƃɒ��Ӂj�B
+6.2.1 準備
+	配布された次のファイルを<SrpSrc>から<AppSrc>にコピーします
+	（名称を変更することに注意）。
 	-------------------------------------------------------------------
-	  ����		  <SprSrc>			  <AppSrc>
+	  条件		  <SprSrc>			  <AppSrc>
 	-------------------------------------------------------------------
-	  �K��		CMakeLists.txt.Dev.dist		CMakeLists.txt
-	  �K��		CMakeTopdir.txt.dist		CMakeTopdir.txt
+	  必ず		CMakeLists.txt.Dev.dist		CMakeLists.txt
+	  必ず		CMakeTopdir.txt.dist		CMakeTopdir.txt
 	  (*1)		CMakeOpts.txt.dist		CMakeOpts.txt
 	  (*2)		CMakeConf.txt.dist		CMakeConf.txt
 	-------------------------------------------------------------------
-	  (*1) �r���h�I�v�V������ύX����ꍇ
-	  (*2) <SprTop>/dependency���g��Ȃ��ꍇ
+	  (*1) ビルドオプションを変更する場合
+	  (*2) <SprTop>/dependencyを使わない場合
 
-6.2.2 �ݒ�̕ύX
-	�A�v���P�[�V������Springhead library�̃\�[�X�c���[������ꏊ��������
-	���߂ɁACMakeTopdir.txt��ҏW���܂��i�ϐ�TOPDIR��K�؂Ɏw�肵�Ă��������j�B
-	���̑��̃t�@�C���ɂ��Ă�6.1.2���Q�Ƃ̂��ƁB
+6.2.2 設定の変更
+	アプリケーションにSpringhead libraryのソースツリーがある場所を教える
+	ために、CMakeTopdir.txtを編集します（変数TOPDIRを適切に指定してください）。
+	その他のファイルについては6.1.2を参照のこと。
 
-6.2.3 cmake-configure�i�\�����[�V�����t�@�C���̐����j
-	2. cmake-configure���Q�Ƃ̂��ƁB
+6.2.3 cmake-configure（ソリューションファイルの生成）
+	2. cmake-configureを参照のこと。
 
-	�Ȃ��Acmake�ϐ��iCMake*.txt�̒���set(var ...)�Őݒ肳�ꂽ���́j��
-	�L���b�V������Ă���悤�ł��B���������āA�P��set(var ...)��
-	�R�����g�A�E�g�����ꍇ�Acmake �N�����Ɏw�肵�Ă����I�v�V����
-	�i-D OPTS=..., -D CONF=...�j�i��q�j���~�߂�ꍇ�Ȃǂ́A
-	�L���b�V���𖳌��ɂ��邽�߂�<BldDir>����x�폜����K�v������܂��B
+	なお、cmake変数（CMake*.txtの中でset(var ...)で設定されたもの）は
+	キャッシュされているようです。したがって、単にset(var ...)を
+	コメントアウトした場合、cmake 起動時に指定していたオプション
+	（-D OPTS=..., -D CONF=...）（後述）を止める場合などは、
+	キャッシュを無効にするために<BldDir>を一度削除する必要があります。
 
-�ȏ�
+以上
