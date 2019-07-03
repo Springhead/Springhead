@@ -15,10 +15,11 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
+#	Ver 1.2  2019/07/03 F.Kanehori	Add check if file is linked.
 #	Ver 1.1  2019/06/24 F.Kanehori	New function implemented.
 #	Ver 1.0  2019/06/10 F.Kanehori	First version.
 # ======================================================================
-version = 1.0
+version = 1.2
 
 import sys
 import os
@@ -240,6 +241,16 @@ def make_link(linkname, target):
 	if stat != 0:
 		fatal('link: failed (%d)' % stat)
 
+#  ファイルがリンクかどうか調べる
+#
+def is_link(fname):
+	slink = os.path.islink(fname)
+	if slink:
+		return 's'	# symbolic link
+	nlink = os.stat(fname).st_nlink
+	if nlink > 1:
+		return 'h'	# hard link (or junction)
+	return 'n'		# normal file
 
 #  利用環境(OS)の判定
 #
@@ -407,28 +418,23 @@ for proj in projs:
 	#  さもなければ同期の必要はない
 	#
 	#else:
-		#  App 側のスタンプを Spr 側に合わせておく
-		#
-		#print('  synchronize APP to SPR (project GUID changed)')
-		#copy_file(spr_stampfile, spr_stamp_prev)
-		#copy_file(spr_stampfile, app_stampfile)
-		#copy_file(spr_dependfile, app_dependfile)
+	#	pass
 
 	#  このアプリの最新のスタンプファイルをセーブしておく
 	#  makefile/projectfile の実体を Spr 側へのリンクに変更する
 	#	毎回行なうのは無駄だが、cmake がファイルを作り変えてしまうので
 	#	仕方がない
 	#
-	'''
-	remove(app_projfile)
-	make_link(projfile, spr_projfile)
-	copy_file(app_stampfile, app_stamp_prev)
-	'''
-	if is_config_changed_win(spr_projfile, spr_proj_prev):
-		copy_file(spr_projfile, projfile)
+	islink = is_link(app_projfile)
+	if islink == 'h' or islink == 's':
+		#  既にリンクを張ってある
+		pass
 	else:
-		shutil.copystat(spr_projfile, projfile)
-	
+		#  App 側のプロジェクトファイルは Spr 側へのリンクにする
+		remove(app_projfile)
+		make_link(projfile, spr_projfile)
+		copy_file(app_stampfile, app_stamp_prev)
+	#
 	os.chdir(cwd)
 # endfor
 
