@@ -1,0 +1,48 @@
+% 1.1.WhatCMakeWillDo_ConventionMethod.tex
+%	Last update: 2019/07/05 F.Kanehori
+
+\subsection{従来の方法}
+\label{subsec:WhatCMakeWillDoConventionalMethod}
+
+GitHubからSpringheadをダウンロードすると、
+Springhead Libarayをビルドするためのソリューションファイル
+およびプロジェクトファイルがその中に含まれていました。
+
+\medskip
+\begin{narrow}
+    \begin{narrow}\begin{minipage}{\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}.../Springhead/core/src/Springhead\it{15.0}.sln
+			\Anno{\SolutionFile}.
+		.2 Base/.
+		.3 Base\it{15.0}.vcxproj
+			\Anno{\ProjectFile}.
+		.2 Collision/.
+		.3 ：.
+	}
+	\medskip
+  \end{minipage}\end{narrow}
+\end{narrow}
+
+上記の\SolutionFile を実行すればSpringhead Libraryを生成することが、
+アプリケーションプログラム用のソリューションファイルに
+上記の\ProjectFile を``既存のプロジェクト''として追加すれば、
+アプリケーションの開発と同時にSpringhead Libarayの開発が行なえました。
+
+後者では、\ProjectFile が直接共有されることにご注意ください。
+このため、複数のアプリケーションのソリューションファイルを同時に実行して
+\ProjectFile に変更が及ぶような修正を実施しても、
+その変更が他のアプリケーションにも反映されました
+(プロジェクトが環境外で変更された旨のダイアログが出ました）。
+
+\medskip
+この方法はうまく機能していますが、次の点が難点として挙げられます。
+\begin{itemize}
+  \item	Visual Studioのバージョンが上がる度に、
+	ソリューションファイルとプロジェクトファイルを作り直して
+	提供しなければならない。
+  \item	Windows以外のプラットフォームに対しては、
+	Makefileなどを別途作成して提供しなければならない。
+\end{itemize}
+
+% end 1.1.WhatCMakeWillDo_ConventionMethod.tex
