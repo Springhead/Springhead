@@ -13,6 +13,8 @@ message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
+#
+set(Target ${ProjectName})
 
 # ******************************************************************************
 #  Customization section.
@@ -30,8 +32,15 @@ set(OOS_BLD_DIR "build")
 #	Remove unneccessary configuration type(s).
 set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 
-#  Source file name(s) to EXCLUDE from compilation (wild card is NOT available).
+#  Source/include file names to incorporate to the application program.
+#
+file(GLOB SRCS *.cpp *.h)
+
+#  Source/include file name(s) to EXCLUDE from compilation.
 #	Replace '${EMPTY}' with file name(s).
+#	Wild card is NOT available here.
+#	We recomend to use absolute path if file exists outside of
+#	current source directory (${CMAKE_SOURCE_DIR}).
 set(EXCLUDE_SRCS ${EMPTY})
 
 #  Springhead projects to incorporate in the application program.
@@ -240,11 +249,10 @@ endif()
 # ------------------------------------------------------------------------------
 #  Main target.
 #
-set(Target ${ProjectName})
-file(GLOB SRCS "*.cpp")
-foreach(exclude IN ITEMS ${EXCLUDE_SRCS})
-    list(REMOVE_ITEM SRCS "${CMAKE_SOURCE_DIR}/${exclude}")
-endforeach()
+list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
+if(${LEN_EXCLUDE_SRCS} GREATER 0)
+	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
+endif()
 if(${Windows})
     if("${ARCHITECTURE}" STREQUAL "x64")
 	add_executable(${Target} ${SRCS})
@@ -258,7 +266,10 @@ set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/bin)
 #  Add target to synchronize configuration with ${SRR_SRC_DIR}.
 #
 set(SYNC "sync")
-set(_tmp_args "${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
+set(_tmp_args "-v"
+	"-a" "\"$(Platform)\""
+	"-c" "\"$(Configuration)\""
+	"${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
 	"${Target}" "${SPR_PROJS}")
 file(TO_NATIVE_PATH "${_tmp_args}" _tmp_args)
 add_custom_target(${SYNC}
