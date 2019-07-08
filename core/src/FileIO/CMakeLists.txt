@@ -23,15 +23,25 @@ get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 #message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
 #message(STATUS "${Target}: SPR_INC_DIR: [${SPR_INC_DIR}]")
 
-# sources
-#   "${Target}Stub.cpp" should always be included to source lists.
-#   Trick GLOB by dummy file if it not exists.
-set(_tmp_stubfile "${SPR_SRC_DIR}/${Target}/${Target}Stub.cpp")
-if(NOT EXISTS ${_tmp_stubfile})
-    file(WRITE ${_tmp_stubfile} "")
-    message("     dummy \"${Target}Stub.cpp\" created")
+#===============================================================
+#  Define sources and headers to include this project.
+#	If you specify headers under core/include directory,
+#	you must add directory path explicitly. The variable
+#	reference ${SPR_INC_DIR} indicates ".../core/include".
+#
+#	If GLOB collects unnessessary files, replace "" of the
+#	last element of EXCLUDES_SRCS by those file names.
+#---------------------------------------------------------------
+file(GLOB SRCS *.cpp *.h)
+file(GLOB COMMON_HDRS ${SPR_INC_DIR}/${Target}/*.h)
+file(GLOB EXCLUDE_SRCS FileIO.h)
+#  end of definition
+#===============================================================
+list(APPEND SRCS ${COMMON_HDRS})
+list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
+if(${LEN_EXCLUDE_SRCS} GREATER 0)
+	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
-file(GLOB SRCS "*.cpp" ${Target}Stub.cpp)
 add_library(${Target} STATIC ${SRCS})
 
 # output library
