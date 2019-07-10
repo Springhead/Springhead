@@ -1,8 +1,8 @@
-% 1.1.WhatCMakeWillDo_ConventionMethod.tex
-%	Last update: 2019/07/05 F.Kanehori
+% 1.1.ConventionMethod.tex
+%	Last update: 2019/07/10 F.Kanehori
 
 \subsection{従来の方法}
-\label{subsec:WhatCMakeWillDoConventionalMethod}
+\label{subsec:ConventionalMethod}
 
 \noindent
 GitHubからSpringheadをダウンロードすると、
@@ -30,20 +30,19 @@ Springhead Libarayをビルドするためのソリューションファイル
 上記の\ProjectFile を``既存のプロジェクト''として追加すれば、
 アプリケーションの開発と同時にSpringhead Libarayの開発が行なえました。
 
-後者では、\ProjectFile が直接共有されることにご注意ください。
-このため、複数のアプリケーションのソリューションファイルを同時に実行して
+後者の場合は、\ProjectFile は直接共有されることになります。
+このため、複数のアプリケーションのソリューションファイルを同時に開き
 \ProjectFile に変更が及ぶような修正を実施しても、
 その変更が他のアプリケーションにも反映されました
-(プロジェクトが環境外で変更された旨のダイアログが出ました）。
+(プロジェクトが環境外で変更された旨のダイアログが出ます）。
 
 \medskip
-この方法はうまく機能していますが、次の点が難点として挙げられます。
+この方法はうまく機能していますが、強いて言えば次の点が難点として挙げられます。
 \begin{itemize}
   \item	Visual Studioのバージョンが上がる度に、
-	ソリューションファイルとプロジェクトファイルを作り直して
-	提供しなければならない。
+	ソリューションファイルとプロジェクトファイルを作り直す必要がる。
   \item	Windows以外のプラットフォームに対しては、
-	Makefileなどを別途作成して提供しなければならない。
+	Makefileなどを別途作成する必要がある。
 \end{itemize}
 
-% end 1.1.WhatCMakeWillDo_ConventionMethod.tex
+% end 1.1.ConventionMethod.tex
