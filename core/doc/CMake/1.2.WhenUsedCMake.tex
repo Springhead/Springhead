@@ -1,23 +1,25 @@
-% 1.2.WhatCMakeWillDoWhenUsedCMake.tex
-%	Last update: 2019/07/05 F.Kanehori
+% 1.2.WhenUsedCMake.tex
+%	Last update: 2019/07/10 F.Kanehori
 \newpage
 \subsection{CMakeを使用した場合}
-\label{subsec:WhatCMakeWillDoWhenUsedCMake}
+\label{subsec:WhenUsedCMake}
 
-\cmake はビルドの自動化を図るためのツールであり、
-ソースコードをコンパイルしたりデバッグの制御をしたりすることを目的とした
-ツールではありません。
-Visual Studioやmakeではなくconfigureに近いツールと考えていただいてよいでしょう。
+\noindent
+\cmake は、Visual Studioやmakeのようにソースコードのビルドやデバッグの制御を
+することを目的としたツールではなく、
+ビルドの自動化を図るために\CMakeLists というパラメータファイルから
+solution/project file (Visual Studio)やMakefile (make)を
+自動的に生成するツールです
+(configureに近いものと考えていただいてよいでしょう)。
 
-\cmake の特徴の一つにout of source (out of place)でのビルドに対応している
-ということがあります。
+\cmake はout of source (out of place)でのビルドに対応しています。
 これはソースツリーの外側にビルドツリーを生成する機能で、
 \begin{itemize}
-  \item	複数のビルドツリーを作成することが可能である。
+  \item	複数のビルドツリー(互いに干渉しない)を作成することが可能である。
   \item	ビルドツリーが削除されてもソースツリーに影響が及ばない。
 \end{itemize}
-という特徴があります (Wikipediaより)。
-ここでは\cmake をout of sourceで使用するものとして説明します。
+という特徴があります。
+我々は\cmake をout of sourceで使用します。
 
 \medskip
 ソースツリーおよびビルドツリーは次のようになるでしょう。
@@ -46,9 +48,9 @@ Visual Studioやmakeではなくconfigureに近いツールと考えていただ
 		.3 ：.
 	}
 	\medskip
-  \end{minipage}\end{narrow}
+    \end{minipage}\end{narrow}
 \end{narrow}
-\begin{center}図1 Springhead Library構成 \end{center}
+\begin{center}図\ref{subsec:WhenUsedCMake}.1 Springhead Library構成\end{center}
 
 \newpage
 \begin{narrow}
@@ -70,18 +72,18 @@ Visual Studioやmakeではなくconfigureに近いツールと考えていただ
 		.4 Base.vcxproj.
 		.4 Base.dir/ \Anno{オブジェクトファイル(\tt{.obj})が置かれる}.
 		.4 CMakeFiles/.
-		.5 generate.stamp.
+		.5 generate.stamp \Anno{スタンプファイル}.
 		.3 Collision/.
 		.3 ：.
 	}
 	\medskip
-  \end{minipage}\end{narrow}
+    \end{minipage}\end{narrow}
 \end{narrow}
-\begin{center}図2 Application構成 \end{center}
+\begin{center}図\ref{subsec:WhenUsedCMake}.2 Application構成\end{center}
 
 \medskip
 \noindent
-ここで\Path{CMakeLists.txt}は\cmake を制御するためのパラメータファイルで、
+先程述べたように\CMakeLists は\cmake を制御するためのパラメータファイルで、
 メインディレクトリおよびサブディレクトリのそれぞれに作成します。
 
-% end: 1.2.WhatCMakeWillDoWhenUsedCMake.tex
+% end: 1.2.WhenUsedCMake.tex
