@@ -1,16 +1,25 @@
 % 1.0.WhatCMakeWillDo.tex
 %	Last update: 2019/07/05 F.Kanehori
 \newpage
-\section{CMakeとは何をするものか}
+\section{CMakeiとは何をするものか}
 \label{sec:WhatCMakeWillDo}
 
 \def\Anno#1{\mc{\footnotesize{ \CDots\  #1}}}
-\def\SolutionFile{\hbox{ソリューションファイル\raise.3ex\hbox{\small{$^\dagger$}}}}
-\def\ProjectFile{\hbox{プロジェクトファイル\raise.4ex\hbox{\small{$^\ddagger$}}}}
+\def\SolutionFile{\hbox{ソリューションファイル
+	{\raise 1.2ex\hbox{\scriptsize (}}%
+	\raise.3ex\hbox{\small{$^\dagger$}}%
+	{\raise 1.2ex\hbox{\scriptsize )}}%
+}}
+\def\ProjectFile{\hbox{プロジェクトファイル
+	{\raise 1.2ex\hbox{\scriptsize (}}%
+	\raise.4ex\hbox{\small{$^\ddagger$}}%
+	{\raise 1.2ex\hbox{\scriptsize )}}%
+}}
 \def\cmake{{\tt{cmake}}}
 \def\build{{\it{build\/}}}
 
 \noindent
-まず最初に、\cmake とは何をするものかについて簡単に説明をします。
+まず最初に \cmake とは何をするものかについて簡単に説明をします。
+\cmake についてご承知であれば、この章はとばして次の章からお読みください。
 
 % end: 1.0.WhatCMakeWillDo.tex
