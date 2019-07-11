@@ -20,7 +20,14 @@ INSFILE	= $(INSPATH)/$(PDFNAME)
 SRCS	=\
 	main.tex			\
 	macro.tex			\
-	1.WhatCMakeWillDo		\
+	1.0.WhatCMakeWillDo		\
+	1.1.ConventionalMethod		\
+	1.2.WhenUsedCMake		\
+	1.3.Problems			\
+	1.4.Solution			\
+	2.0.ForNonDevelopper		\
+	2.1.HowToBuildLibrary		\
+	3.0.ForDevelopper		\
 	LastUpdate.tex
 
 TIMESTAMPFILE	= timestamp.tex

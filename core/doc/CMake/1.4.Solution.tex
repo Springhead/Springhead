@@ -1,6 +1,6 @@
 % 1.4.Solution.tex
 %	Last update: 2019/07/10 F.Kanehori
-\newpage
+%\newpage
 \subsection{対処法}
 \label{subsec:Solution}
 
@@ -28,6 +28,7 @@
 	そこを指すようにlinkを張ることとします。
 
 	\medskip
+	\begin{figure}
     	\begin{narrow}\begin{minipage}{\textwidth}
 		\dirtree{%
 			.1 \hspace{-10mm}.../Springhead/core/src/ \Anno{ソースツリー}.
@@ -56,7 +57,10 @@
 		}
 		\medskip
   	\end{minipage}\end{narrow}
-	\begin{center}図\ref{subsec:Solution}.1 ビルドの最適性への対処法\end{center}
+	\caption{ビルドの最適性への対処法}
+	\label{fig:SolutionToBuildOptimization}
+	\end{figure}
+	\medskip
 	このlinkを張る作業は、アプリケーションの\cmake 時に行なうものとします。
 \end{narrow}
 
@@ -71,6 +75,7 @@
 	すべてのアプリケーションのプロジェクトファイルは、そこへのlinkします。
 
 	\medskip
+	\begin{figure}
     	\begin{narrow}\begin{minipage}{\textwidth}
 		\dirtree{%
 			.1 \hspace{-10mm}.../Springhead/core/src/ \Anno{ソースツリー}.
@@ -95,8 +100,9 @@
 		}
 		\medskip
   	\end{minipage}\end{narrow}
-	\begin{center}図\ref{subsec:Solution}.2プロジェクトファイルの最適性への対処法
-	\end{center}
+	\caption{プロジェクトファイルの最適性への対処法}
+	\label{fig:SolutionToProjectFile}
+	\end{figure}
 
 	\medskip
 	ただしこれでは不完全で、\App{1}で実施したプロジェクトファイルへの変更が
