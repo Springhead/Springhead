@@ -1,0 +1,45 @@
+% 2.2.PrepareLibrary.tex
+%	Last update: 2019/07/11 F.Kanehori
+%newpage
+\subsection{準備}
+\label{subsec:PrepareLibrary}
+
+\noindent
+ダウンロードが済んだら\SprTop{/core/src}に移動してください。
+
+まず、配布されたファイル\CMakeLists{.Lib.dist}を
+\CMakeLists{}という名前でコピーしてください
+(誤コミットを防止するためにもリネームは避けてください)。
+
+\medskip
+\begin{narrow}[15pt]
+	\CmndBox{%
+		> chdir C:/Springhead/core/src\\
+		> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+	}
+\end{narrow}
+
+\medskip
+自前でインストールしているパッケージ
+(\tt{boost}, \tt{glew}, \tt{freeglut}, \tt{glui}を使用する場合、
+およびライブラリファイルとヘッダファイルのインストール先を指定する場合は、
+さらに次の準備が必要となります。
+
+配布されたファイル\CMakeConf{.dist}を\CMakeConf{}という名前でコピーして
+必要な編集をしてください。
+編集の方法については\CMakeConf{}に記述されています
+(\tt{\#set(variable \it{value})}の\tt{\#}を削除し、\it{value}を適切に設定し直す)。
+
+\medskip
+\begin{narrow}[15pt]
+	\CmndBox{%
+		> copy CMakeConf.txt.dist CMakeConf.txt\\
+		> \it{edit} CMakeConf.txt
+	}
+\end{narrow}
+
+\medskip
+\noindent
+以上で準備作業は終了です。
+
+% end: 2.2.PrepareLibrary.tex
