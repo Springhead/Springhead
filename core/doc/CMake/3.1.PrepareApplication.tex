@@ -1,0 +1,128 @@
+% 3.1.PrepareApplication.tex
+%	Last update: 2019/07/17 F.Kanehori
+%\newpage
+\subsection{準備}
+\label{subsec:PrepareApplication}
+
+\noindent
+アプリケーションと並行してSpringheadライブラリを開発する場合には、
+\UpKQs \ref{subsec:Problems} CMakeを使用した場合の問題点\UpKQe
+で示した問題に対処する必要があるため、
+ここで述べる方法に従って作業を進めてください
+(\KQuote{\ref{subsec:Solution} 対処法}で示した方策が組み込まれます)。
+
+\medskip
+以下、Springheadライブラリをダウンロードしたディレクトリを\SprTop{} 、
+アプリケーションプログラムを作成するディレクトリを\AppTop{}として説明します。
+
+\bigskip
+\noindent
+\AppTop{}に移動してください。
+
+\bigskip
+\noindent
+配布されたファイル\CMakeTopdir{.dist}を\CMakeTopdir{}という名前で、
+\CMakeLists{.Dev.dist}を\CMakeLists{}という名前でコピーします
+(誤コミットを防止するためにもリネームではなくコピーしてください）。
+
+\medskip
+\begin{narrow}[s][15pt]
+	\CmndBox{%
+		> chdir C:/Develop/Application\\
+		> copy C:/Springhead/core/src/CMakeTopdir.txt.dist CMakeTopdir.txt\\
+		> copy C:/Springhead/core/src/CMakeLists.txt.Dev.dist CMakeLists.txt
+	}
+\end{narrow}
+
+\bigskip
+\begin{description}
+    \item[\tt{CMakeTopdir.txt}の編集]　\\
+	\CMakeTopdir{}にSpringheadライブラリをダウンロードしたディレクトリを設定します。
+	これは、CMakeにSpringheadのソースツリーの場所を教えるために必要な設定です。
+
+	\begin{narrow}[s][15pt]
+		\CmndBox{%
+			\#set(TOPDIR "C:/Springhead")\\
+			\hspace{10pt}$\downarrow$\\
+			set(TOPDIR \SprTop{})
+		}
+	\end{narrow}
+	\Vskip{.5\baselineskip}
+
+    \item[\tt{CMakeLists}の編集]　\\
+	\begin{enumerate}
+	    \item
+		プロジェクト名を設定します(11行目)。
+
+		\begin{narrow}[s][5pt]
+			\CmndBox{%
+				set(ProjectName "Project")\\
+				\hspace{10pt}$\downarrow$\\
+				set(ProjectName "<\it{MyApplication}>")
+			}
+		\end{narrow}
+		\Vskip{.5\baselineskip}
+
+	    \item
+		Customization section (19行目以降)の変更。\\
+		各変数の意味は次のとおりです。
+
+		\begin{narrow}[2pt]
+		\begin{tabular}{|l|l|}\hline
+		    \tt{OOS_BLD_DIR} &
+			CMakeの作業領域(ディレクトリ)の名前\\
+			& (本ドキュメントで\build としているもの)。\\\hline
+		    \multicolumn{2}{|l|}{
+			\tt{CMAKE_CONFIGURATION_TYPES}} \\
+			& ビルド構成。\\\hline
+		    \tt{EXCLUDE_SRCS} &
+			ビルドの対象から外すファイル。\\
+			& 直前で指定しているとおり、
+			ビルド対象のデフォルト\\
+			& は\tt{*.cpp *.h}です。\\\hline
+		    \tt{SPR_PROJS} &
+			アプリケーションに組み込むSpringheadライブラリ\\
+			& のプロジェクト名。\\
+			& 不要なプロジェクト名を削除します。
+			この中にRun-\\
+			& Swigを含めてはいけません。\\\hline
+		    \tt{ADDITIONAL_INCDIR} &
+			追加のインクルードパス指定。\\
+			& 現在のディレクトリは\tt{\$\{CMAKE_SOURCE_DIR\}}で参照\\
+			& できます。
+			\\\hline
+		    \tt{ADDITIONAL_LIBDIR} &
+			追加のライブラリパス指定。\\\hline
+		    \tt{ADDITIONAL_LIBS} &
+			追加のライブラリファイル名。\\\hline
+		    \tt{EXCLUDE_LIBS} &
+			linkの対象から外すライブラリファイル名。\\
+			& デフォルトで組み込まれてしまうライブラリファイル\\
+			& を排除するために指定します。\\\hline
+		\end{tabular}
+		\end{narrow}
+	\end{enumerate}
+\end{description}
+
+
+\bigskip
+\noindent
+自前でインストールしているパッケージ
+(\tt{boost}, \tt{glew}, \tt{freeglut}, \tt{glui}を使用する場合には
+さらに次の準備が必要となります。
+
+配布されたファイル\CMakeConf{.dist}を\CMakeConf{}という名前でコピーして
+必要な編集をします。
+\KQuote{\ref{subsec:PrepareLibrary} 準備}を参照してください。
+
+\medskip
+\noindent
+ビルドの条件(compileやlinkのパラメータ)を変更したいときは、
+配布されたファイル\CMakeOpts{.dist}を\CMakeOpts{}という名前でコピーして
+適宜変更してください。
+
+\medskip
+\noindent
+以上で準備作業は終了です。
+
+% end: 3.1.PrepareApplication.tex
