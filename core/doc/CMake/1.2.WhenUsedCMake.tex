@@ -1,33 +1,33 @@
 % 1.2.WhenUsedCMake.tex
-%	Last update: 2019/07/10 F.Kanehori
+%	Last update: 2019/07/18 F.Kanehori
 %\newpage
 \subsection{CMakeを使用した場合}
 \label{subsec:WhenUsedCMake}
 
 \noindent
-\cmake は、Visual Studioやmakeのようにソースコードのビルドやデバッグの制御を
-することを目的としたツールではなく、
+Cmakeは、\VS やmakeのように
+ソースコードのビルドやデバッグの制御をすることを目的としたツールではなく、
 ビルドの自動化を図るために\CMakeLists というパラメータファイルから
-solution/project file (Visual Studio)やMakefile (make)を
-自動的に生成するツールです
+solution/project file (\VS)やMakefile (make)を
+自動的に生成するためのツールです
 (configureに近いものと考えていただいてよいでしょう)。
 
-\cmake はout of source (out of place)でのビルドに対応しています。
+Cmakeはout of source (out of place)でのビルドに対応しています。
 これはソースツリーの外側にビルドツリーを生成する機能で、
 \begin{itemize}
-  \item	複数のビルドツリー(互いに干渉しない)を作成することが可能である。
+  \item	互いに干渉しない複数のビルドツリーを作成することができる。
   \item	ビルドツリーが削除されてもソースツリーに影響が及ばない。
 \end{itemize}
 という特徴があります。
-我々は\cmake をout of sourceで使用します。
+我々はCmakeをout of sourceで使用します。
 
 \medskip
-ソースツリーおよびビルドツリーは次のようになるでしょう。
+ソースツリーおよびビルドツリーは次のようになるでしょう
+(図\ref{fig:SpringheadLibraryTree}および図\ref{fig:ApplicationTree})。
 
-\medskip
-\begin{narrow}\begin{figure}
-    \begin{narrow}\begin{minipage}{\textwidth}
-	\dirtree{%
+\begin{narrow}\begin{figure}[h]
+    \begin{narrow}[40pt]\begin{minipage}{\textwidth}
+	{\footnotesize{\dirtree{%
 		.1 \hspace{-10mm}.../Springhead/core/src/ \Anno{ソースツリー}.
 		.2 CMakeLists.txt.
 		.2 Base/ \Anno{(*1)}.
@@ -35,7 +35,6 @@ solution/project file (Visual Studio)やMakefile (make)を
 		.3 Affine.cpp.
 		.3 ：.
 		.2 Collision/ \Anno{(*2)}.
-		.3 ：.
 		.2 ：.
 		.2 \build \Anno{ビルドツリー (他の場所でも構わない)}.
 		.3 Springhead.sln.
@@ -46,17 +45,16 @@ solution/project file (Visual Studio)やMakefile (make)を
 		.5 generate.stamp \Anno{スタンプファイル}.
 		.3 Collision/.
 		.3 ：.
-	}
+	}}}
 	\medskip
     \end{minipage}\end{narrow}
     \caption{Springhead Library構成}
     \label{fig:SpringheadLibraryTree}
 \end{figure}\end{narrow}
 
-\newpage
-\begin{narrow}\begin{figure}
-    \begin{narrow}\begin{minipage}{\textwidth}
-	\dirtree{%
+\begin{narrow}\begin{figure}[h]
+    \begin{narrow}[40pt]\begin{minipage}{\textwidth}
+	{\footnotesize{\dirtree{%
 		.1 \hspace{-10mm}.../Application/ \Anno{ソースツリー}.
 		.2 CMakeLists.txt.
 		.2 main.cpp.
@@ -76,7 +74,7 @@ solution/project file (Visual Studio)やMakefile (make)を
 		.5 generate.stamp \Anno{スタンプファイル}.
 		.3 Collision/.
 		.3 ：.
-	}
+	}}}
 	\medskip
     \end{minipage}\end{narrow}
     \caption{Application構成}
@@ -85,7 +83,7 @@ solution/project file (Visual Studio)やMakefile (make)を
 
 \medskip
 \noindent
-先程述べたように\CMakeLists は\cmake を制御するためのパラメータファイルで、
+先程述べたように\CMakeLists はCmakeを制御するためのパラメータファイルで、
 メインディレクトリおよびサブディレクトリのそれぞれに作成します。
 
 % end: 1.2.WhenUsedCMake.tex

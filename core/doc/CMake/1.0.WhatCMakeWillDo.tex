@@ -17,6 +17,9 @@
 }}
 \def\cmake{\tt{cmake}}
 \def\make{\tt{make}}
+\def\SprLib{Springheadライブラリ}
+\def\SprProj{Springheadプロジェクト}
+\def\VS{Visual Studio}
 
 \def\SprTop#1{\Path{C:/Springhead{#1}}}
 \def\AppTop#1{\Path{C:/Develop/Application{#1}}}
@@ -27,12 +30,17 @@
 \def\CMakeConf#1{\Path{CMakeConf.txt#1}}
 \def\CMakeTopdir#1{\Path{CMakeTopdir.txt#1}}
 
+\def\thinrule#1{\makebox[#1][l]{\vrule width #1 height 0.1pt}}
+
 
 \noindent
-最初に\cmake とは何をするものかについて簡単に説明をします。
+最初にCmakeとは何をするものかについて簡単に説明をします。
 Springheadの開発に携わらない方はこの章の内容は不要です。
-\ref{sec:ForNonDevelopper}をお読みください。
-また、\cmake について理解をされている方もこの章の内容は不要です。
-\ref{sec:ForDevelopper}からお読みください。
+\KQuote{\ref{sec:ForNonDevelopper} Springheadをライブラリとして利用する方へ}
+をお読みください。
+また、Cmakeについて理解をされている方は
+\KQuote{\ref{subsec:Problems} CMakeを使用した場合の問題点}、
+\KQuote{\ref{subsec:Solution} 対処法}および
+\KQuote{\ref{sec:ForDevelopper} Springheadを開発する方へ}をお読みください。
 
 % end: 1.0.WhatCMakeWillDo.tex

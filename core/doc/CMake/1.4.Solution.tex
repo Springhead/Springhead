@@ -1,17 +1,17 @@
 % 1.4.Solution.tex
-%	Last update: 2019/07/10 F.Kanehori
+%	Last update: 2019/07/18 F.Kanehori
 %\newpage
 \subsection{対処法}
 \label{subsec:Solution}
 
 \noindent
-前節(\ref{subsec:Problems})で示した問題点への対処法について述べます。
+前節で示した問題点への対処法について述べます。
 
 \bigskip
 \noindent
 \bf{ソースファイルの整合性}
 \begin{narrow}[20pt]
-	Springhead Libraryのソースツリーにあるプロジェクトディレクトリ
+	\SprLib のソースツリーにあるプロジェクトディレクトリ
 	(\tt{Base}, \tt{Collision}, $\ldots$)を
 	直接\tt{add\_subdirectory}すれば問題ありません。
 \end{narrow}
@@ -20,17 +20,17 @@
 \noindent
 \bf{ビルドの最適性(無駄なコンパイル)}
 \begin{narrow}[20pt]
-	Springhead Library, \it{App1, App2\,}などで
+	\SprLib, \it{App1, App2\,}などで
 	オブジェクトが生成される場所を共通化してしまうことで
 	この問題を回避することとします。
-	具体的には、Springhead Libraryソースツリーの中にオブジェクトの共通格納場所を作り、
-	Springhead Libraryおよびすべてのアプリケーションでオブジェクト格納領域が
+	具体的には、\SprLib ソースツリーの中にオブジェクトの共通格納場所を作り、
+	\SprLib およびすべてのアプリケーションでオブジェクト格納領域が
 	そこを指すようにlinkを張ることとします。
 
 	\medskip
-	\begin{figure}
-    	\begin{narrow}\begin{minipage}{\textwidth}
-		\dirtree{%
+	\begin{figure}[h]
+    	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
+		{\footnotesize{\dirtree{%
 			.1 \hspace{-10mm}.../Springhead/core/src/ \Anno{ソースツリー}.
 			.2 Base/ \Anno{(*s1)}.
 			.3 <\it{platform\,}>/.
@@ -42,11 +42,11 @@
 			.3 Base/.
 			.4 Base.dir/ \Anno{(*o1)にlinkを張る}.
 			.2 ：.
-		}
+		}}}
 		\medskip
     	\end{minipage}\end{narrow}
-    	\begin{narrow}\begin{minipage}{\textwidth}
-		\dirtree{%
+    	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
+		{\footnotesize{\dirtree{%
 			.1 \hspace{-10mm}.../Application/ \Anno{ソースツリー}.
 			.2 Base/ \Anno{(*s1)を指すようにする}.
 			.2 ：.
@@ -54,13 +54,13 @@
 			.3 Base/.
 			.4 Base.dir/ \Anno{(*o1)にlinkを張る}.
 			.3 ：.
-		}
+		}}}
 		\medskip
   	\end{minipage}\end{narrow}
 	\caption{ビルドの最適性への対処法}
 	\label{fig:SolutionToBuildOptimization}
 	\end{figure}
-	\medskip
+	\indent
 	このlinkを張る作業は、アプリケーションの\cmake 時に行なうものとします。
 \end{narrow}
 
@@ -71,13 +71,12 @@
 	ビルドの最適性の場合と同様、
 	プロジェクトファイルも共通化することでこの問題に対処します。
 	具体的には、各プロジェクトファイルは
-	Springehad Libraryビルドツリーにあるものを基準とし、
+	\SprLib ビルドツリーにあるものを基準とし、
 	すべてのアプリケーションのプロジェクトファイルは、そこへのlinkします。
 
-	\medskip
-	\begin{figure}
-    	\begin{narrow}\begin{minipage}{\textwidth}
-		\dirtree{%
+	\begin{figure}[h]
+    	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
+		{\footnotesize{\dirtree{%
 			.1 \hspace{-10mm}.../Springhead/core/src/ \Anno{ソースツリー}.
 			.2 Base/ \Anno{(*s1)}.
 			.2 ：.
@@ -85,11 +84,11 @@
 			.3 Base/.
 			.4 Base.vcxproj \Anno{(*p1)}.
 			.2 ：.
-		}
+		}}}
 		\medskip
     	\end{minipage}\end{narrow}
-    	\begin{narrow}\begin{minipage}{\textwidth}
-		\dirtree{%
+    	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
+		{\footnotesize{\dirtree{%
 			.1 \hspace{-10mm}.../Application/ \Anno{ソースツリー}.
 			.2 Base/ \Anno{(*s1)を指すようにする}.
 			.2 ：.
@@ -97,7 +96,7 @@
 			.3 Base/.
 			.4 Base.vcxprj/ \Anno{(*p1)へのlinkとする}.
 			.3 ：.
-		}
+		}}}
 		\medskip
   	\end{minipage}\end{narrow}
 	\caption{プロジェクトファイルの最適性への対処法}
@@ -108,14 +107,13 @@
 	ただしこれでは不完全で、\App{1}で実施したプロジェクトファイルへの変更が
 	\App{2}に伝わりません。
 	このため\App{1}でプロジェクトファイルを変更した場合には、
-	その変更をSpringhead Libraryビルドツリーにあるプロジェクトファイルに
-	反映させるものとします。
-	つまり、Springhad Libraryのビルドツリーにあるプロジェクトファイルを
+	その変更を\SprLib ビルドツリーにあるプロジェクトファイルに反映させるものとします。
+	つまり、\SprLib のビルドツリーにあるプロジェクトファイルを
 	常に最新の状態に保つということです。
 
-	この作業はアプリケーションのビルド時に行なうものとし、
-	そのために特別なターゲット\tt{sync}を作成して、
-	このターゲットが毎回ビルドに先立って実行されるようにします。
+	　この作業はアプリケーションのビルド時に行なうものとし　、
+	そのために特別なターゲット\tt{sync}を作成し、
+	このターゲットが毎回のビルドに先立って実行されるようにします。
 \end{narrow}
 
 % end: 1.4.Solution.tex
