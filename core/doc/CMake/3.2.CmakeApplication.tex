@@ -1,0 +1,38 @@
+% 3.2.CmakeApplication.tex
+%	Last update: 2019/07/17 F.Kanehori
+%newpage
+\subsection{cmakeの実行}
+\label{subsec:CmakeApplication}
+
+\noindent
+\cmake の実行手順については、
+\KQuote{\ref{subsec:CmakeLibrary} cmakeの実行}と同じですから、
+そちらを参照してください。
+ここでは、\cmake を実行することで
+\KQuote{\ref{subsec:Solution} 対処法}で示した対策がどのように実施されるかについて述べます。
+
+\bigskip
+\noindent
+\bf{ビルドの最適性}
+\begin{narrow}[20pt]
+	組み込まれているSpringheadライブラリの各プロジェクト
+	(ここでは\tt{Base}を例にします)に対して\\
+	\hspace{20pt}\SprTop{/core/src/Base}下に
+	\Path{x64/15.0/Base.dir}$^{\small (*1)}$\\
+	というディレクトリを作成し、
+	\AppTop{/\build /Base/Base.dir}から上記$^{\small (*1)}$へ
+	linkを張る作業を\cmake\ configure時に(自動的に)行ないます。
+
+	\bf{これに関して皆さんが行なうべきことはありません。}
+\end{narrow}	
+
+\bigskip
+\noindent
+\bf{プロジェクトファイルの整合性}
+\begin{narrow}[20pt]
+
+
+
+\end{narrow}	
+
+% end: 3.2.CmakeApplication.tex
