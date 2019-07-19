@@ -81,6 +81,10 @@ public:
 		Vec3d _t = motor->f.w() * GetScene()->GetTimeStepInv();
 		return Vec6d(_f.x, _f.y, _f.z, _t.x, _t.y, _t.z);
 	}
+
+	virtual void SetOffsetForce(const Vec6d& offsetForce) { this->offsetForce = offsetForce; }
+	virtual void SetTargetVelocity(const Vec6d& targetVelocity) { this->targetVelocity = targetVelocity; }
+	virtual Vec6d GetTargetVelocity() { return this->targetVelocity; }
 };
 
 }

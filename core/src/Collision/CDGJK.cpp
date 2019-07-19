@@ -214,8 +214,8 @@ extern UTQPTimer	qpTimerForCollision;
 
 double biasParam = 0.5;
 
-double epsilon = 1e-12; 
-double threshold = 1e-12;
+double epsilon = 1e-6; 
+double threshold = 1e-6;
 
 double epsilon2 = epsilon*epsilon;
 double threshold2 = threshold*threshold;

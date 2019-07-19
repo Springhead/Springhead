@@ -197,8 +197,8 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 		int i = axes[n];
 		int j = joint->movableAxes[i];
 
-		joint->dv[j] = joint->J[0].row(j) * (joint->solid[0]->dv /*+ joint->solid[0]->ddv*/)
-			         + joint->J[1].row(j) * (joint->solid[1]->dv /*+ joint->solid[1]->ddv*/);
+		joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
+			         + joint->J[1].row(j) * joint->solid[1]->dv;
 		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
@@ -532,8 +532,8 @@ Vec3d PHHumanBallJointResistance::GetCurrentResistance() {
 /// propVを計算する
 PTM::TVector<6,double> PHSpringMotor::GetPropV() {
 	Vec6d propV;
-	Quaterniond diff = joint->Xjrel.q.Inv();
-	propV.SUBVEC(0,3) = -joint->Xjrel.r;
+	Quaterniond diff = DCAST(PHSpring,joint)->targetOrientation * joint->Xjrel.q.Inv();
+	propV.SUBVEC(0,3) = DCAST(PHSpring, joint)->targetPosition - joint->Xjrel.r;
 	propV.SUBVEC(3,3) = diff.RotationHalf();
 	return propV;
 }
@@ -551,8 +551,8 @@ void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	for(int i=0;i<3;++i){ p.damper[i+3]       = j->damperOri; }
 	for(int i=0;i<3;++i){ p.secondDamper[i]   = j->secondDamper[i]; }
 	for(int i=0;i<3;++i){ p.secondDamper[i+3] = j->secondDamperOri; }
-	for(int i=0;i<6;++i){ p.targetVelocity[i] = 0.0; } // PHSpringには無い
-	for(int i=0;i<6;++i){ p.offsetForce[i]    = 0.0; } // PHSpringには無い
+	for(int i=0;i<6;++i){ p.targetVelocity[i] = j->targetVelocity[i]; } 
+	for(int i=0;i<6;++i){ p.offsetForce[i]    = j->offsetForce[i]; } 
 	p.yieldStress    = j->yieldStress;
 	p.hardnessRate   = j->hardnessRate;
 }
