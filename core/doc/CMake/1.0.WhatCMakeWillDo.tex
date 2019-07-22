@@ -1,5 +1,5 @@
 % 1.0.WhatCMakeWillDo.tex
-%	Last update: 2019/07/10 F.Kanehori
+%	Last update: 2019/07/22 F.Kanehori
 \newpage
 \section{CMakeとは何をするものか}
 \label{sec:WhatCMakeWillDo}
@@ -25,10 +25,10 @@
 \def\AppTop#1{\Path{C:/Develop/Application{#1}}}
 \def\build{{\it{build\/}}}
 
-\def\CMakeLists#1{\Path{CMakeLists.txt#1}}
-\def\CMakeOpts#1{\Path{CMakeOpts.txt#1}}
-\def\CMakeConf#1{\Path{CMakeConf.txt#1}}
-\def\CMakeTopdir#1{\Path{CMakeTopdir.txt#1}}
+\def\CMakeLists#1{\Path{CMakeLists.txt{#1}}}
+\def\CMakeOpts#1{\Path{CMakeOpts.txt{#1}}}
+\def\CMakeConf#1{\Path{CMakeConf.txt{#1}}}
+\def\CMakeTopdir#1{\Path{CMakeTopdir.txt{#1}}}
 
 \def\thinrule#1{\makebox[#1][l]{\vrule width #1 height 0.1pt}}
 
@@ -39,8 +39,8 @@ Springheadの開発に携わらない方はこの章の内容は不要です。
 \KQuote{\ref{sec:ForNonDevelopper} Springheadをライブラリとして利用する方へ}
 をお読みください。
 また、Cmakeについて理解をされている方は
-\KQuote{\ref{subsec:Problems} CMakeを使用した場合の問題点}、
-\KQuote{\ref{subsec:Solution} 対処法}および
-\KQuote{\ref{sec:ForDevelopper} Springheadを開発する方へ}をお読みください。
+\UpKQs \ref{subsec:Problems} CMakeを使用した場合の問題点\UpKQe、
+\UpKQs \ref{subsec:Solution} 対処法\UpKQe および
+\UpKQs \ref{sec:ForDevelopper} Springheadを開発する方へ\UpKQe をお読みください。
 
 % end: 1.0.WhatCMakeWillDo.tex

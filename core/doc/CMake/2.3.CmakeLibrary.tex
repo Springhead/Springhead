@@ -1,5 +1,5 @@
 % 2.3.CmakeLibrary.tex
-%	Last update: 2019/07/11 F.Kanehori
+%	Last update: 2019/07/22 F.Kanehori
 %newpage
 \subsection{cmakeの実行}
 \label{subsec:CmakeLibrary}
@@ -9,20 +9,25 @@
 作業場所(ディレクトリ)を\build として話を進めます(作業場所は任意で構いません)。
 
 \medskip
+\noindent
 \cmake にはConfigureとGenerateの2段階があります。
 
 \medskip
+\noindent
+コマンドプロンプトの場合は、1回のコマンドで両方を実行できます。
+\Vskip{-.5\baselineskip}
 \begin{narrow}[15pt]
 	\CmndBox{%
 		> chdir C:/Springhead\\
 		> mkdir build\\
 		> cmake -B build \it{generator}
 	}
-	コマンドプロンプトからならば、1回のコマンドで両方を実行できます。
-
-	\bigskip
-	GUIの場合は、まずConfigureボタン(図\ref{fig:CmakeConfigure} 左図の下)を押します。
-
+\end{narrow}
+\medskip
+\noindent
+GUIの場合は、
+\begin{narrow}[15pt]
+	まずConfigureボタン(図\ref{fig:CmakeConfigure} 左図の下)を押します。
 	\begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=0.35\textwidth]{fig/CmakeConfigure1.eps}
@@ -33,13 +38,12 @@
 	\label{fig:CmakeConfigure}
 	\end{figure}
 
-	\build がなければ作成するかどうか聞かれます(同中図)。
-	次にgenerator指定画面となります(同右図)。
+	\Vskip{-.5\baselineskip}
+	\build ディレクトリがなければ作成するかどうか聞かれます(同中図)。
 
-	\medskip
+	次にgenerator指定画面となります(同右図)。
 	cmake version 3.15.0では、
 	generatorとして図\ref{fig:CmakeGenerator}のものが指定できます。
-
 	\begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=0.3\textwidth]{fig/CmakeConfigure4.eps}
@@ -47,6 +51,8 @@
 	\caption{\cmake\ generator}
 	\label{fig:CmakeGenerator}
 	\end{figure}
+
+	\medskip
 	generatorの詳細は、コマンドプロンプトで\tt{cmake --help}とすると確認できます。
 
 	次に図\ref{fig:CmakeConfigure} 左図下のGenerateボタンを押します。

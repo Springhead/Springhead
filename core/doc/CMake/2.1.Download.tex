@@ -1,5 +1,5 @@
 % 2.1.Download.tex
-%	Last update: 2019/07/11 F.Kanehori
+%	Last update: 2019/07/22 F.Kanehori
 %newpage
 \subsection{Springheadライブラリのダウンロード}
 \label{subsec:Download}
@@ -15,16 +15,20 @@
 		> git clone --recurse-submodules\Cont\\
 		\Hskip{100pt}https://github.com/sprphys/Springhead
 	}
-	サブモジュールを選択する場合は
+\end{narrow}
+\medskip
+サブモジュールを選択する場合は
+\begin{narrow}[15pt]
 	\CmndBox{%
 		> chdir C:/Springhead\\
 		> git clone https://github.com/sprphys/Springhead\\
 		> git submodule update --init --checkout buildtool\\
 		> git submodule update --init --checkout dependency
 	}
-
-	\bigskip
-	GUIの場合は
+\end{narrow}
+\medskip
+GUIの場合は
+\begin{narrow}[15pt]
 	\begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=0.5\textwidth]{fig/SpringheadClone1.eps}
