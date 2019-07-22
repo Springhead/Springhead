@@ -1,5 +1,5 @@
 % 3.2.CmakeApplication.tex
-%	Last update: 2019/07/18 F.Kanehori
+%	Last update: 2019/07/22 F.Kanehori
 %newpage
 \subsection{cmakeの実行}
 \label{subsec:CmakeApplication}
@@ -18,12 +18,11 @@
 	組み込まれているSpringheadライブラリの各プロジェクト
 	(ここでは\tt{Base}を例にします)に対して\\
 	\hspace{20pt}\SprTop{/core/src/Base}下に
-	\Path{x64/15.0/Base.dir}$^{\small (*1)}$\\
+	\Path{\rm{<x64>}/\rm{<15.0>}/Base.dir}$^{\small (*1)}$\\
 	というディレクトリを作成し、
 	\AppTop{/\build /Base/Base.dir}から上記ディレクトリ$^{\small (*1)}$へ
 	linkを張る作業を\cmake\ configure時に(自動的に)行ないます。
 \end{narrow}	
-\medskip
 \begin{narrow}[20pt]
 	\thinrule{\linewidth}
 	{\bf{これに関して皆さんが行なうべきことはありませんが、
@@ -31,11 +30,10 @@
 
 	\medskip
 	\begin{enumerate}
-	  \item	\cmake をした後Springheadソースツリー上ので上記ディレクトリ
+	  \item	\cmake をした後でSpringheadソースツリー上ので上記ディレクトリ
 		$^{\small (*1)}$を削除すると、以降のビルドで\\
-		\tt{\small{%
-		``エラー MSB3191 ディレクトリ\Path{Base.dir/Debug/}を
-		作成できません。''}}\\
+		\KQuote{\tt{\small{%
+		エラー MSB3191 ディレクトリ\Path{Base.dir/Debug/}を作成できません。}}}
 		というエラーが発生します。
 
 	  \item	アプリケーション側で\AppTop{/\build /Base/Base.dir}を削除すると、
@@ -49,6 +47,7 @@
 		そのためこのような事態の発見が困難になる可能性があります。
 		\end{narrow}
 	\end{enumerate}
+	\medskip
 	{\bf{これらの状態を解消するためには、アプリケーション側
 	(もしくはSpringheadライブラリ側)で再度\cmake を実行する必要があります。}}
 
@@ -61,7 +60,7 @@
 \begin{narrow}[20pt]
 	\KQuote{\ref{subsec:Solution} 対処法}でも述べたように、
 	プロジェクトファイル(ソリューションファイルの含む。以下同様)は
-	Springheadライブラリのビルドツリーにあるものを最新の状態に保つこととし、
+	Springheadライブラリのビルドツリーにあるものを最新の状態に保つことを前提として、
 	アプリケーション側のプロジェクトファイルは
 	これらSpringhead側にあるものへのlinkとなるようにします。
 	このためにアプリケーションプログラムのソリューションに
@@ -84,7 +83,6 @@
 	ターゲット\tt{sync}はアプリケーションのビルドにおいて
 	必ず最初に実行されるように依存関係が設定されます。
 \end{narrow}	
-\medskip
 \begin{narrow}[20pt]
 	\thinrule{\linewidth}
 	{\bf{次のことに注意してください。}}
@@ -110,6 +108,11 @@
 		{\bf{この場合にはSpringhead側で再度\cmake を実行する必要があります
 		(アプリケーション側では駄目)。}}
 		\end{narrow}
+
+	  \item	\tt{sync}ターゲットが実行されるとプロジェクトファイルが更新される
+		ことがあるため、\UpKQs プロジェクトが環境外で変更された\UpKQe 旨の
+		メッセージが出ることがあります。
+		「すべて再読み込み」としてください。
 	\end{enumerate}
 
 	\thinrule{\linewidth}

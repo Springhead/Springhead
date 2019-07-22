@@ -1,5 +1,5 @@
 % 1.4.Solution.tex
-%	Last update: 2019/07/18 F.Kanehori
+%	Last update: 2019/07/22 F.Kanehori
 %\newpage
 \subsection{対処法}
 \label{subsec:Solution}
@@ -20,14 +20,13 @@
 \noindent
 \bf{ビルドの最適性(無駄なコンパイル)}
 \begin{narrow}[20pt]
-	\SprLib, \it{App1, App2\,}などで
-	オブジェクトが生成される場所を共通化してしまうことで
+	\SprLib, \it{App1, App2\,}などのすべてで、
+	ライブラリのオブジェクトが生成される場所を共通化してしまうことで
 	この問題を回避することとします。
 	具体的には、\SprLib ソースツリーの中にオブジェクトの共通格納場所を作り、
 	\SprLib およびすべてのアプリケーションでオブジェクト格納領域が
 	そこを指すようにlinkを張ることとします。
 
-	\medskip
 	\begin{figure}[h]
     	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
 		{\footnotesize{\dirtree{%
@@ -61,7 +60,8 @@
 	\label{fig:SolutionToBuildOptimization}
 	\end{figure}
 	\indent
-	このlinkを張る作業は、アプリケーションの\cmake 時に行なうものとします。
+	このlinkを張る作業は、
+	アプリケーションの\cmake\ (configure)時に行なうものとします。
 \end{narrow}
 
 \medskip
@@ -72,7 +72,19 @@
 	プロジェクトファイルも共通化することでこの問題に対処します。
 	具体的には、各プロジェクトファイルは
 	\SprLib ビルドツリーにあるものを基準とし、
-	すべてのアプリケーションのプロジェクトファイルは、そこへのlinkします。
+	すべてのアプリケーションのプロジェクトファイルは、そこへのlinkとします。
+
+	　ただしこれでは不完全で、\App{1}で実施したプロジェクトファイルへの変更が
+	\App{2}に伝わりません。
+	このため\App{1}でプロジェクトファイルを変更した場合には、
+	その変更を\SprLib ビルドツリーにあるプロジェクトファイルに反映させるものとします。
+	つまり、\SprLib のビルドツリーにあるプロジェクトファイルを
+	常に最新の状態に保つということです。
+
+	　この作業はアプリケーションのビルド時に行なうものとします。
+	そのために、各アプリケーションのソリューションファイルに
+	特別なターゲット\tt{sync}を作成し、
+	このターゲットが毎回のビルドに先立って実行されるようにします。
 
 	\begin{figure}[h]
     	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
@@ -102,18 +114,6 @@
 	\caption{プロジェクトファイルの最適性への対処法}
 	\label{fig:SolutionToProjectFile}
 	\end{figure}
-
-	\medskip
-	ただしこれでは不完全で、\App{1}で実施したプロジェクトファイルへの変更が
-	\App{2}に伝わりません。
-	このため\App{1}でプロジェクトファイルを変更した場合には、
-	その変更を\SprLib ビルドツリーにあるプロジェクトファイルに反映させるものとします。
-	つまり、\SprLib のビルドツリーにあるプロジェクトファイルを
-	常に最新の状態に保つということです。
-
-	　この作業はアプリケーションのビルド時に行なうものとし　、
-	そのために特別なターゲット\tt{sync}を作成し、
-	このターゲットが毎回のビルドに先立って実行されるようにします。
 \end{narrow}
 
 % end: 1.4.Solution.tex
