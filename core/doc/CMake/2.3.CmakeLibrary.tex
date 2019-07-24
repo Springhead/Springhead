@@ -1,5 +1,5 @@
 % 2.3.CmakeLibrary.tex
-%	Last update: 2019/07/22 F.Kanehori
+%	Last update: 2019/07/24 F.Kanehori
 %newpage
 \subsection{cmakeの実行}
 \label{subsec:CmakeLibrary}
@@ -22,7 +22,10 @@
 		> mkdir build\\
 		> cmake -B build \it{generator}
 	}
+	\it{generatorの}詳細(\KQuote{\tt{-G "Visual Studio 15 2017" -A x64}}など)は、
+	コマンドプロンプトで\tt{cmake --help}とすると確認できます。
 \end{narrow}
+
 \medskip
 \noindent
 GUIの場合は、
@@ -39,11 +42,11 @@ GUIの場合は、
 	\end{figure}
 
 	\Vskip{-.5\baselineskip}
-	\build ディレクトリがなければ作成するかどうか聞かれます(同中図)。
-
+	\build ディレクトリがなければ作成するかどうか聞かれ(同中図)、
 	次にgenerator指定画面となります(同右図)。
 	cmake version 3.15.0では、
 	generatorとして図\ref{fig:CmakeGenerator}のものが指定できます。
+
 	\begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=0.3\textwidth]{fig/CmakeConfigure4.eps}
@@ -52,14 +55,13 @@ GUIの場合は、
 	\label{fig:CmakeGenerator}
 	\end{figure}
 
-	\medskip
-	generatorの詳細は、コマンドプロンプトで\tt{cmake --help}とすると確認できます。
-
-	次に図\ref{fig:CmakeConfigure} 左図下のGenerateボタンを押します。
+	最後に図\ref{fig:CmakeConfigure} 左図下のGenerateボタンを押します。
 \end{narrow}
 
 \medskip
 \noindent
 以上で、\build 以下にsolution/project fileなどが生成されたはずです。
+
+\bigskip
 
 % end: 2.3.CmakeLibrary.tex
