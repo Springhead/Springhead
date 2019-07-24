@@ -1,5 +1,5 @@
 % 3.2.CmakeApplication.tex
-%	Last update: 2019/07/22 F.Kanehori
+%	Last update: 2019/07/24 F.Kanehori
 %newpage
 \subsection{cmakeの実行}
 \label{subsec:CmakeApplication}
@@ -32,8 +32,9 @@
 	\begin{enumerate}
 	  \item	\cmake をした後でSpringheadソースツリー上ので上記ディレクトリ
 		$^{\small (*1)}$を削除すると、以降のビルドで\\
-		\KQuote{\tt{\small{%
+		\hspace{15pt}\KQuote{\tt{\small{%
 		エラー MSB3191 ディレクトリ\Path{Base.dir/Debug/}を作成できません。}}}
+
 		というエラーが発生します。
 
 	  \item	アプリケーション側で\AppTop{/\build /Base/Base.dir}を削除すると、
@@ -73,7 +74,7 @@
 		\begin{narrow}[s][15pt]
 		これは、アプリケーション側でソースファイル構成を変更
 		(ファイルの追加・削除)を行ない、
-		Visual Studio上でプロジェクトファイルを保存したとき
+		Visual Studio上でプロジェクトファイルを保存したとき、
 		またはアプリケーション側で再度\cmake を実行したときです。
 		\end{narrow}
 
