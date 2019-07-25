@@ -1,10 +1,6 @@
 @echo off
 :: ***********************************************************************************
-::  FILE:
-::      RunSwig_CSharp.bat
-::
-::  SYNOPSIS:
-::	RunSwig_CSharp target
+::  SYNOPSIS:	RunSwig_CSharp target
 ::
 ::  ARGUMENTS:
 ::	target		リンクするプロジェクトの指定
@@ -25,8 +21,8 @@
 ::	Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
 ::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
 ::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
-::	Ver 3.2a 2017/01/18 F.Kanehori	Bug fixed.
 ::	Ver 3.3  2017/08/07 F.Kanehori	Bug fixed.
+::	Ver 3.3a 2019/07/25 F.Kanehori	使用 nmake の表示 (デバッグ用)
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -82,6 +78,7 @@ if not exist %MAKEPATH% (
     echo %PROG%: Error: can not find '%MAKE%' path.
     exit /b
 )
+echo using %MAKEPATH%\nmake.exe
 
 :: ------------------------------
 ::  処理するモジュール一覧を作成
