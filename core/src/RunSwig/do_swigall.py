@@ -52,14 +52,15 @@
 #     Ver 3.06	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 #     Ver 3.07	 2019/02/26 F.Kanehori	Cmake環境に対応.
 #     Ver 3.08	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#     Ver 3.081	 2019/04/11 F.Kanehori	Discard Ver.1.09 and after.
+#     Ver 3.09   2019/07/29 F.Kanehori	nmake path 検索方式変更.
 # ==============================================================================
-version = 3.081
+version = 3.09
 debug = False
 trace = False
 
 import sys
 import os
+import subprocess
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -110,14 +111,23 @@ makefile = 'makefile.swig'
 if unix:
 	makepath = '/usr/bin'
 else:
-	x32 = 'C:/Program Files'
-	x64 = 'C:/Program Files (x86)'
-	arch = None
-	if os.path.exists(x32) and os.path.isdir(x32): arch = x32
-	if os.path.exists(x64) and os.path.isdir(x64): arch = x64
-	if arch is None:
+	def s16(value):
+		return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
+	cmnd = 'python find_path.py nmake.exe'
+	proc = subprocess.Popen(cmnd, stdout=subprocess.PIPE,
+				      stderr=subprocess.DEVNULL)
+	out, err = proc.communicate()
+	status = s16(proc.returncode)
+	if status != 0:
 		Error(prog).error('can not find "%s" path.' % make)
-	makepath = '%s/Microsoft Visual Studio 12.0/VC/bin' % arch
+	#
+	encoding = os.device_encoding(1)
+	if encoding is None:
+		encoding = 'UTF-8' if unix else 'cp932'
+	makepath = out.decode(encoding) if out else None
+	if makepath is None:
+		Error(prog).error('can not decode "%s" path.' % make)
+	print('nmake path found: %s' % makepath.replace(os.sep, '/'))
 
 swigpath = '%s/%s' % (srcdir, 'Foundation')
 addpath = os.pathsep.join([bindir, swigpath, makepath])
