@@ -63,6 +63,11 @@ public:
 	int     lastM, lastN;
 	double  iterCutOffAngVel;
 
+	// --- --- --- --- ---
+
+	int constraintChangedIntpMax = 50;
+	int constraintChangedIntpRate;
+
 	// --- --- --- --- --- --- --- --- --- ---
 
 	PHIKEngine(const PHIKEngineDesc& desc = PHIKEngineDesc());
@@ -84,6 +89,9 @@ public:
 	double GetRegularizeParam()               { return regularizeParam; }
 	void SetIterCutOffAngVel(double epsilon)  { this->iterCutOffAngVel = epsilon; }
 	double GetIterCutOffAngVel()              { return iterCutOffAngVel; }
+
+	void SetIntpRate() { constraintChangedIntpRate = constraintChangedIntpMax; }
+	int GetIntpRate() { return constraintChangedIntpRate; }
 
 	// --- --- --- --- ---
 

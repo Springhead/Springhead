@@ -107,15 +107,6 @@ public:
 	*/
 	double GetShrinkRateCorrection();
 
-	/** @brief set regularization parameter
-	    @param reg regularization parameter to be set 
-	*/
-	void SetRegularization(double reg);
-
-	/** @brief returns regularization parameter
-	*/
-	double GetRegularization();
-
 	/** @brief 接触領域を表示するための情報を更新するかどうか。FWScene::EnableRenderContact()が呼び出す。
 	*/
 	void EnableRenderContact(bool enable);
@@ -134,7 +125,6 @@ struct PHConstraintEngineDesc{
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	double	accelSOR;					///< SOR法の加速係数
 	double  dfEps;
-	double  regularization;
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
 	bool	bUseContactSurface;			///< 面接触を使う
@@ -152,7 +142,6 @@ struct PHConstraintEngineDesc{
 		freezeThreshold			 = 0.0;
 		accelSOR				 = 1.0;
 		dfEps                    = 0.0;
-		regularization           = 0.001;
 		bSaveConstraints         = false;
 		bUpdateAllState	         = true;
 		bUseContactSurface       = false;
@@ -175,6 +164,8 @@ struct PHIKEngineDesc{
 	size_t	numIter;
 	double  maxVel, maxAngVel, maxActVel;
 	double  regularizeParam;
+	double  regularizeParam2;
+	int     regularizeMode;
 
 	PHIKEngineDesc();
 };
@@ -205,6 +196,9 @@ public:
 	*/
 	void SetIterCutOffAngVel(double epsilon);
 	double GetIterCutOffAngVel();
+
+	void SetIntpRate();
+	int GetIntpRate();
 
 	/** @brief 一時変数の関節角度・剛体姿勢を現実のものに合わせる
 	*/

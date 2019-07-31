@@ -29,6 +29,9 @@ double JointFunctions::resistCalc(double d, double k_1, double k_2, double k_3, 
 
 // PH1DJointNonLinearMotorのFuncDatabase
 
+// <!!> マクローリン展開での近似にして係数を渡す？より広範囲だとテイラー
+// <!!>データ点と傾きを与えて、スプライン近似？ 
+
 Vec2d JointFunctions::ResistanceTorque(PH1DJointIf* jo, void* param){
 	double k_1 = ((double*)param)[0];
 	double k_2 = ((double*)param)[1];
@@ -551,8 +554,8 @@ void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	for(int i=0;i<3;++i){ p.damper[i+3]       = j->damperOri; }
 	for(int i=0;i<3;++i){ p.secondDamper[i]   = j->secondDamper[i]; }
 	for(int i=0;i<3;++i){ p.secondDamper[i+3] = j->secondDamperOri; }
-	for(int i=0;i<6;++i){ p.targetVelocity[i] = j->targetVelocity[i]; } 
-	for(int i=0;i<6;++i){ p.offsetForce[i]    = j->offsetForce[i]; } 
+	for(int i=0;i<6;++i){ p.targetVelocity[i] = 0.0; } // PHSpringには無い
+	for(int i=0;i<6;++i){ p.offsetForce[i]    = 0.0; } // PHSpringには無い
 	p.yieldStress    = j->yieldStress;
 	p.hardnessRate   = j->hardnessRate;
 }

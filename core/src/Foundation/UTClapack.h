@@ -172,6 +172,30 @@ inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas:
 #endif
 }
 
+// c.f.) http://yano.hatenadiary.jp/entry/20080916/1221572201
+template<class M>
+double determinant(const M& m) {
+#ifdef USE_LAPACK
+	BOOST_UBLAS_CHECK(m.size1() == m.size2(), ublas::external_logic());
+
+	ublas::matrix<double>       lu(m);
+	ublas::permutation_matrix<> pm(m.size1());
+
+	ublas::lu_factorize(lu, pm);
+
+	double det(1);
+
+	typedef ublas::permutation_matrix<>::size_type size_type;
+
+	for (size_type i = 0; i < pm.size(); ++i) {
+		det *= (i == pm(i)) ? +lu(i, i) : -lu(i, i);
+	}
+
+	return det;
+#else
+	return 1;
+#endif
+}
 }
 
 #endif
