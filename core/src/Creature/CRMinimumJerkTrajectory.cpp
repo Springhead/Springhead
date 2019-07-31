@@ -12,7 +12,7 @@ namespace Spr { ;
 
 template<class T>
 void CRNDMinimumJerkTrajectory<T>::CompCoefficient() {
-	double duration = goalTime - startTime;
+	double duration = this->goalTime - this->startTime;
 
 	coefficient[0] = startPosition;
 	coefficient[1] = startVelocity;
