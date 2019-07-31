@@ -102,12 +102,14 @@ class VersionControlSystem:
 		#
 		url = self.url
 		cmnd = 'git log --abbrev-commit --oneline --max-count=1'
+		'''
 		if self.ResultURL in self.url:
 			# どちらの"result.log"か？
 			cmnd += ' --grep=unix'
 			if platform != 'unix':
 				cmnd += ' --invert-grep'
-		status, out, err = self.__exec(url, cmnd)
+		'''
+		status, out, err = self.__exec(cmnd)
 		#
 		rev = None
 		err = "can't get current revision"
@@ -128,12 +130,14 @@ class VersionControlSystem:
 		#
 		url = self.url
 		cmnd = 'git log'
+		'''
 		if self.ResultURL in self.url:
 			# どちらの"result.log"か？
 			cmnd += ' --grep=unix'
 			if platform != 'unix':
 				cmnd += ' --invert-grep'
-		status, out, err = self.__exec(url, cmnd)
+		'''
+		status, out, err = self.__exec(cmnd)
 		if status != 0:
 			self.__popd()
 			return []
@@ -173,7 +177,7 @@ class VersionControlSystem:
 		#
 		url = self.url
 		cmnd = 'git show %s:%s' % (commit_id, path)
-		status, out, err = self.__exec(url, cmnd)
+		status, out, err = self.__exec(cmnd)
 		#
 		self.__popd()
 		if status != 0:
@@ -200,7 +204,7 @@ class VersionControlSystem:
 			os.chdir(self.dirsave)
 			self.dirsave = None
 
-	def __exec(self, url, cmnd):
+	def __exec(self, cmnd):
 		cmnd1 = cmnd
 		cmnd2 = 'nkf -w' if Util.is_unix() else 'nkf -s'
 		shell = True if Util.is_unix() else False
