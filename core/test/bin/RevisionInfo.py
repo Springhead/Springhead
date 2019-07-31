@@ -10,8 +10,8 @@
 #			commit-id:
 #				Extract from specified commit.
 #	options:
-#	    -G:		Use Github (GitHub.com) repository.
-#	    -H:		Use Gitlab (git.haselab.net) repository.
+#	    -S:		Use Github (GitHub.com) repository.
+#	    -R:		Use Gitlab (git.haselab.net) repository.
 #	    -f fname:	File name to extract from repository.
 #	    -u:		Run on unix (directory difers from Windows).
 #
@@ -33,6 +33,7 @@
 #	Ver 1.0  2018/09/06 F.Kanehori	Separated from class test file
 #					"VersionControlSystem.py".
 #	Ver 1.1  2018/09/13 F.Kanehori	VersionControlsystem revised.
+#	Ver 1.11 2019/07/31 F.Kanehori	Comment fixed.
 # ======================================================================
 version = 1.1
 
