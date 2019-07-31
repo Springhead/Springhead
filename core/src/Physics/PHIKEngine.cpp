@@ -45,7 +45,7 @@ void PHIKEngine::ApplyExactState(bool reverse) {
 
 void PHIKEngine::Prepare(bool second) {
 	// <!!>
-	if (second) {
+	if (!second) {
 		// エンドエフェクタの有効・無効に基づいてアクチュエータの有効・無効を切替え
 		for(size_t i=0; i<actuators.size(); ++i){
 			actuators[i]->Enable(false);
@@ -195,9 +195,35 @@ void PHIKEngine::IK(bool nopullback) {
 	svd(J, U, D, Vt);
 
 	Di.resize(D.size2(), D.size1());
+	
+	float regularizeValue = 0;
+	switch (regularizeMode) {
+		case 0:   // Static
+			regularizeValue = regularizeParam * regularizeParam;
+			break;
+		case 1:   // Effector error
+		{
+			double error = std::min(ublas::norm_2(V), 1.0);
+			regularizeValue = regularizeParam * regularizeParam * error;
+			break;
+		}
+		case 2:  // Manipulability measure
+		{
+			double manipulability = std::sqrt(std::abs(determinant(ublas::prod(J, ublas::trans(J)))));
+			if (regularizeParam2 > 0 && manipulability < regularizeParam2) {
+				regularizeValue = regularizeParam * regularizeParam * std::pow((1 - manipulability / regularizeParam2), 2.0);
+			}
+			else {
+				regularizeValue = 0;
+			}
+			break;
+		}
+		default:  // None
+			break;
+	}
 	for (size_t i = 0; i<(std::min(J.size1(), J.size2())); ++i) {
 		// Tikhonov Regularization
-		Di.at_element(i, i)  = D(i, i) / (D(i, i)*D(i, i) + regularizeParam*regularizeParam);
+		Di.at_element(i, i)  = D(i, i) / (D(i, i)*D(i, i) + regularizeValue);
 	}
 
 	// --- 位置
@@ -260,6 +286,7 @@ void PHIKEngine::Limit() {
 	}
 
 	// リミットにかかった関節があればIK-Disableして再度IK計算をやりなおす
+	// <!!> Prepare->FKではなく？ Prepareするとenableが変化してしまうから先にFK? だとしても、enable=falseでもFKやられたはず
 	if (anyLimit) {
 		FK();
 		Prepare(true);
@@ -287,6 +314,9 @@ void PHIKEngine::Move() {
 			actuators[i]->Move();
 		}
 	}
+	if (constraintChangedIntpRate > 0) {
+		constraintChangedIntpRate--;
+	}
 }
 
 void PHIKEngine::SaveFKResult() {
@@ -298,7 +328,7 @@ void PHIKEngine::SaveFKResult() {
 void PHIKEngine::Step() {
 	if (!bEnabled) return;
 	if (actuators.empty() || endeffectors.empty()) return;
-
+	
 	// <!!>
 	// ApplyExactState();
 
@@ -335,7 +365,68 @@ void PHIKEngine::Step() {
 			break;
 		}
 	}
+	/*/
+	CalcJacobian();
+	matrix_type A;
+	A.resize(J.size2(), J.size2());
+	A.clear();
+	A = ublas::prod(ublas::trans(J), J) + 0.001 * ublas::identity_matrix<double>(J.size2());
+	vector_type x;
+	x.resize(J.size2());
+	x.clear();
+	// <!!>Vの作成
+	for (size_t j = 0; j<endeffectors.size(); ++j) {
+		if (endeffectors[j]->IsEnabled() && (endeffectors[j]->bPosition || endeffectors[j]->bOrientation)) {
+			// V
+			PHIKEndEffector* eff = endeffectors[j];
+			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
+			eff->GetTempTarget(Vpart);
+			for (size_t y = 0; y<(size_t)eff->ndof; ++y) {
+				size_t Y = strideEff[j] + y;
+				V[Y] = Vpart[y];
+			}
+		}
+	}
+	vector_type b;
+	b.resize(J.size2());
+	b = ublas::prod(ublas::trans(J), V);
+	std::cout << x.size() << " " << V.size() << endl;
+	for (iter = 0; iter < numIter; ++iter) {
+		for (int i = 0; i < x.size(); i++) {
+			x[i] = x[i] + ((b[i] - ublas::inner_prod(ublas::row(A, i), x)) / A.at_element(i,i));
+		}
+	}
+	for (int i = 0; i < x.size(); i++) {
+		W[i] = x[i];
+	}
+	// <!!>非常に大きくなりすぎた解を切り捨てる
+	double limitW = 1e+10;
+	for (size_t i = 0; i<W.size(); ++i) {
+		if (W[i]  >  limitW) { W[i] = limitW; }
+		if (W[i]  < -limitW) { W[i] = -limitW; }
+	}
 
+	// <!!>各Actuatorのωに擬似逆解を代入
+	for (size_t i = 0; i<actuators.size(); ++i) {
+		if (actuators[i]->IsEnabled()) {
+			PHIKActuator* act = actuators[i];
+			for (size_t x = 0; x<(size_t)act->ndof; ++x) {
+				size_t X = strideAct[i] + x;
+				act->omega[x] = W[X];
+			}
+		}
+	}
+
+	// 結果にしたがってActuatorの一時変数を動かす
+	for (size_t i = 0; i<actuators.size(); ++i) {
+		if (actuators[i]->IsEnabled()) {
+			actuators[i]->MoveTempJoint();
+		}
+	}
+	FK();
+	SaveFKResult();
+	*/
+	
 	Move();
 }
 
@@ -361,10 +452,6 @@ PHIKActuator* PHIKEngine::CreateIKActuator(const IfInfo* ii, const PHIKActuatorD
 	} else if (ii == PHIKHingeActuatorIf::GetIfInfoStatic()) {
 		ikactuator = DBG_NEW PHIKHingeActuator();
 		DCAST(PHIKHingeActuatorIf,ikactuator)->SetDesc(&desc);
-
-	} else if (ii == PHIKSpringActuatorIf::GetIfInfoStatic()) {
-		ikactuator = DBG_NEW PHIKSpringActuator();
-		DCAST(PHIKSpringActuatorIf, ikactuator)->SetDesc(&desc);
 
 	}
 	return ikactuator;
@@ -457,16 +544,6 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 		if (std::find(actuators.begin(), actuators.end(), hj)==actuators.end()) {
 			actuators.push_back(hj);
 			hj->number = int(actuators.size()-1);
-			return true;
-		}
-		return false;
-	}
-
-	PHIKSpringActuator* sj = o->Cast();
-	if (sj) {
-		if (std::find(actuators.begin(), actuators.end(), sj) == actuators.end()) {
-			actuators.push_back(sj);
-			sj->number = int(actuators.size() - 1);
 			return true;
 		}
 		return false;

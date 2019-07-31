@@ -8,7 +8,6 @@
 #include <Physics/PHIKActuator.h>
 #include <Physics/PHHingeJoint.h>
 #include <Physics/PHBallJoint.h>
-#include <Physics/PHSpring.h>
 
 using namespace std;
 namespace Spr{;
@@ -176,9 +175,6 @@ void PHIKActuator::FK()  {
 	Posed socketPose; joint->GetSocketPose(socketPose);
 	Posed plugPose;   joint->GetPlugPose(plugPose);
 	Posed jto = Posed(); jto.Ori() = jointTempOri;
-
-	if (DCAST(PHIKSpringActuatorIf, this)) { jto = jointTempPose; }
-
 	solidTempPose = soParentPose * socketPose * jto * plugPose.Inv();
 
 	Vec3d soParentVel  = (parent) ? parent->solidVelocity        : joint->GetSocketSolid()->GetVelocity();
@@ -331,21 +327,26 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 
 void PHIKBallActuator::Move(){
 	if (!bEnabled) { return; }
+	
 	/*
 	Vec3d dir = (jointTempOri.RotationHalf() - jointTempOriIntp);
 	double limit = DCAST(PHSceneIf,GetScene())->GetIKEngine()->GetMaxActuatorVelocity();
 	if (dir.norm() > limit) { dir = dir.unit() * limit; }
 	jointTempOriIntp += dir;
 	if (jointVelocity.norm() > limit) { jointVelocity = jointVelocity.unit() * limit; }
+	DCAST(PHBallJoint,joint)->SetTargetPosition(Quaterniond::Rot(jointTempOriIntp));
+	DCAST(PHBallJoint, joint)->SetTargetVelocity(jointVelocity);
+	
+	int intpRate = DCAST(PHSceneIf, GetScene())->GetIKEngine()->GetIntpRate();
+	if (intpRate > 0) {
+		if (intpRate == 50) jointTempOriIntp = DCAST(PHBallJoint, joint)->GetTargetPosition().RotationHalf();
+		float s = intpRate / 50;
+		jointTempOri = Quaterniond::Rot(s * jointTempOriIntp + (1 - s) * jointTempOri.RotationHalf());
+	}
 	*/
-	//DCAST(PHBallJoint,joint)->SetTargetPosition(Quaterniond::Rot(jointTempOriIntp));
+
 	DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
-
-	/*
-	DCAST(PHBallJoint,joint)->SetTargetPosition(jointTempOri);
-	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
-	*/
 
 	return;
 }
@@ -518,7 +519,7 @@ void PHIKHingeActuator::CalcPullbackVelocity() {
 void PHIKHingeActuator::Move(){
 	if (!bEnabled) { return; }
 	PHHingeJointIf* hj = joint->Cast();
-	/*
+	
 	double limit = DCAST(PHSceneIf,GetScene())->GetIKEngine()->GetMaxActuatorVelocity();
 	double diff = jointTempAngle - jointTempAngleIntp;
 	if (abs(diff) > limit) { diff = diff / abs(diff) * limit; }
@@ -526,15 +527,19 @@ void PHIKHingeActuator::Move(){
 	jointVelocity = std::max(-limit, std::min(jointVelocity, limit));
 	
 	hj->SetTargetPosition(jointTempAngleIntp);
-	*/
-	hj->SetTargetPosition(jointTempAngle);
 	hj->SetTargetVelocity(jointVelocity);
+	/*/
 
-	/*
+	int intpRate = DCAST(PHSceneIf, GetScene())->GetIKEngine()->GetIntpRate();
+	if (intpRate > 0) {
+		if (intpRate == 50) jointTempAngleIntp = hj->GetTargetPosition();
+		float s = intpRate / 50;
+		jointTempAngle = (1 - s) * jointTempAngle + s * jointTempAngleIntp;
+	}
+
 	hj->SetTargetPosition(jointTempAngle);
 	hj->SetTargetVelocity(jointVelocity);
 	*/
-	
 	return;
 }
 
@@ -587,195 +592,6 @@ void PHIKHingeActuator::MoveTempJoint() {
 
 	jointTempOri  = Quaterniond::Rot(jointTempAngle, 'z');
 	jointVelocity = dTheta  / DCAST(PHSceneIf,GetScene())->GetTimeStep();
-}
-
-// --- --- --- --- ---
-bool PHIKSpringActuator::AddChildObject(ObjectIf* o) {
-	PHSpringIf* jo = o->Cast();
-	if (jo) {
-		this->joint = jo;
-		return true;
-	}
-	return PHIKActuator::AddChildObject(o);
-}
-
-ObjectIf* PHIKSpringActuator::GetChildObject(size_t pos) {
-	if (pos == 0 && this->joint != NULL) { return this->joint; }
-	if (this->joint != NULL) {
-		return PHIKActuator::GetChildObject(pos - 1);
-	}
-	else {
-		return PHIKActuator::GetChildObject(pos);
-	}
-	return NULL;
-}
-
-size_t PHIKSpringActuator::NChildObject() const {
-	if (this->joint != NULL) { return 1 + PHIKActuator::NChildObject(); }
-	return PHIKActuator::NChildObject();
-}
-
-void PHIKSpringActuator::BeforeSetupMatrix() {
-	if (ndof != 6) {
-		ndof = 6;
-		bNDOFChanged = true;
-	}
-}
-
-void PHIKSpringActuator::BeforeCalcAllJacobian() {
-	CalcAxis();
-}
-
-void PHIKSpringActuator::CalcAxis() {
-	e[0] = Vec3d(1, 0, 0);
-	e[1] = Vec3d(0, 1, 0);
-	e[2] = Vec3d(0, 0, 1);
-}
-
-void PHIKSpringActuator::CalcJacobian(PHIKEndEffector* endeffector) {
-	int n = endeffector->number;
-
-	// アクチュエータ位置 <=> エンドエフェクタ位置
-	if (endeffector->bPosition) {
-		// 単位行列
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 3; ++j) {
-				Mj[n][i][j] = ((i == j) ? 1 : 0);
-			}
-		}
-	}
-
-	// アクチュエータ位置 <=> エンドエフェクタ回転
-	if (endeffector->bOrientation) {
-		int stride = (endeffector->bPosition ? 3 : 0);
-
-		// ゼロ行列
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 3; ++j) {
-				Mj[n][i + stride][j] = 0;
-			}
-		}
-	}
-
-	// ----- ----- -----
-
-	// アクチュエータ回転 <=> エンドエフェクタ位置
-	if (endeffector->bPosition) {
-		// 関節の回転中心
-		PHSpring* j = DCAST(PHSpring, joint);
-		Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();
-
-		// <!!> IKActuatorがついてないjointが間に入るとd.poseSocketがずれる
-		PHSpringDesc d; j->GetDesc(&d);
-		Vec3d Pj = soParentPose * d.poseSocket * Vec3d(0, 0, 0);
-
-		// エンドエフェクタ位置
-		Vec3d Pe = endeffector->solidTempPose * endeffector->targetLocalPosition;
-
-		// 外積ベクトルからヤコビアンを求める
-		for (int i = 0; i < 3; ++i) {
-			Vec3d v = PTM::cross(e[i], (Pe - Pj));
-			Mj[n][0][i + 3] = v[0];  Mj[n][1][i + 3] = v[1];  Mj[n][2][i + 3] = v[2];
-		}
-	}
-
-	// アクチュエータ回転 <=> エンドエフェクタ回転
-	if (endeffector->bOrientation) {
-		int stride = (endeffector->bPosition ? 3 : 0);
-
-		// 単位行列
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 3; ++j) {
-				Mj[n][i + stride][j + 3] = ((i == j) ? 1 : 0);
-			}
-		}
-	}
-
-	// 重み付け
-	size_t ndof_eef = 0;
-	ndof_eef += (endeffector->bPosition ? 3 : 0);
-	ndof_eef += (endeffector->bOrientation ? 3 : 0);
-	for (size_t i = 0; i < ndof_eef; ++i) {
-		for (size_t j = 0; j < (size_t)ndof; ++j) {
-			Mj[n][i][j] *= sqsaib;
-		}
-	}
-}
-
-void PHIKSpringActuator::CalcPullbackVelocity() {
-	Matrix3d m(e[0], e[1], e[2]);
-
-	Vec6d pullback = Vec6d();
-
-	// 標準姿勢へののPullback
-	pullback.r = (pullbackTarget.Pos() - jointTempPose.Pos()) * pullbackRate;
-	pullback.v = (pullbackTarget.Ori() * jointTempPose.Ori().Inv()).RotationHalf() * pullbackRate;
-
-	// <!!> Pullback量が一定以下になるよう制限する．
-	if (pullback.r.norm() > 1) {
-		pullback.r = pullback.r.unit() * 1;
-	}
-	if (pullback.v.norm() > Rad(10)) {
-		pullback.v = pullback.v.unit() * Rad(10);
-	}
-
-	Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();
-	Posed socketPose; joint->GetSocketPose(socketPose);
-
-	pullback.v = m.inv() * (soParentPose.Ori() * (socketPose.Ori() * pullback.v));
-
-	for (size_t i = 0; i < (size_t)ndof; ++i) { domega_pull[i] = pullback[i]; }
-}
-
-void PHIKSpringActuator::Move() {
-	if (!bEnabled) { return; }
-	DSTR << jointTempPose.Pos() << std::endl;
-	DCAST(PHSpring, joint)->SetTargetPosition(jointTempPose.Pos());
-	DCAST(PHSpring, joint)->SetTargetOrientation(jointTempPose.Ori());
-	DCAST(PHSpring, joint)->SetTargetVelocity(jointVelocity);
-
-	return;
-}
-
-void PHIKSpringActuator::ApplyExactState(bool reverse) {
-	if (!reverse) {
-		solidTempPose = joint->GetPlugSolid()->GetPose();
-		jointTempPose = DCAST(PHSpringIf, joint)->GetAbsolutePoseQ(); // <!!> ... だと思うんだけど
-	}
-	else {
-		joint->GetPlugSolid()->SetPose(solidTempPose);
-		joint->GetPlugSolid()->SetVelocity(solidVelocity);
-		joint->GetPlugSolid()->SetAngularVelocity(solidAngularVelocity);
-	}
-}
-
-bool PHIKSpringActuator::LimitTempJoint() {
-	return false;
-}
-
-void PHIKSpringActuator::MoveTempJoint() {
-	// ----- 位置 -----
-	Vec3d v = Vec3d();
-	for (int i = 0; i < 3; ++i) { v[i] = (omega[i] * sqsaib); }
-	jointTempPose.Pos() += v;
-
-	// ----- 速度 -----
-	jointVelocity.r = v * (1 / DCAST(PHSceneIf, GetScene())->GetTimeStep());
-
-	// ----- 角度 -----
-	// 回転軸ベクトルにする
-	Vec3d  w = Vec3d();
-	for (int i = 0; i < 3; ++i) { w += (omega[i+3] * sqsaib) * e[i]; }
-
-	// 関節座標系にする
-	Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();
-	Posed socketPose; joint->GetSocketPose(socketPose);
-	w = (soParentPose * socketPose).Inv().Ori() * w;
-
-	jointTempPose.Ori() = Quaterniond::Rot(w) * jointTempPose.Ori();
-
-	// ----- 角速度 -----
-	jointVelocity.v = w * (1 / DCAST(PHSceneIf, GetScene())->GetTimeStep());
 }
 
 }
