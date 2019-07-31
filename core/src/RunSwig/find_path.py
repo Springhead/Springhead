@@ -16,6 +16,7 @@
 #
 #  VERSION:
 #       Ver 1.0  2019/07/29 F.Kanehori	初版
+#       Ver 1.01 2019/07/31 F.Kanehori	Bug fixed (uname NOT FOUND).
 # ==============================================================================
 version = '1.0'
 
@@ -172,12 +173,17 @@ if machine is None:
 	cmnd = 'uname -m'
 	proc_info = execute(cmnd, stdout=PIPE, stderr=STDOUT)
 	status, out, err = output(proc_info)
-	if status != 0:
-		fatal('machine architecture unknown')
-	if out[0] == 'x86_64':
-		machine = 'x64'
+	if status == 0:
+		machine = 'x64' if out[0] == 'x86_64' else 'x86'
 	else:
-		machine = 'x86'
+		cmnd = 'wmic OS get OSArchitecture'
+		proc_info = execute(cmnd, stdout=PIPE, stderr=STDOUT)
+		status, out, err = output(proc_info)
+		if status == 0:
+			tmp = re.split('[ -]', out[1])
+			machine = 'x64' if tmp == '64' else 'x86'
+		else:
+			fatal('machine architecture unknown')
 if verbose:
 	print('  machine architecture: %s' % machine)
 
