@@ -10,6 +10,18 @@ GitHubからSpringheadをダウンロードすると、
 およびプロジェクトファイルがその中に含まれています。
 
 \medskip
+\ifLwarp
+\Vskip{-.8\baselineskip}
+\begin{narrow}[15pt]
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=.9\textwidth]{fig/DownloadTree.eps}
+	    \end{center}
+	    \label{fig:DownloadTree}
+	\end{figure}
+\end{narrow}
+\Vskip{-.8\baselineskip}
+\else
 \begin{narrow}
     \begin{narrow}[20pt]\begin{minipage}{\textwidth}
 	{\footnotesize{\dirtree{%
@@ -24,6 +36,7 @@ GitHubからSpringheadをダウンロードすると、
 	\medskip
   \end{minipage}\end{narrow}
 \end{narrow}
+\fi
 
 \noindent
 上記の\SolutionFile を実行すれば\SprLib を生成することができ、

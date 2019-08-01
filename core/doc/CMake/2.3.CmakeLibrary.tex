@@ -16,6 +16,14 @@
 \noindent
 コマンドプロンプトの場合は、1回のコマンドで両方を実行できます。
 \Vskip{-.5\baselineskip}
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=\textwidth]{fig/command-2-3.eps}
+	    \end{center}
+	    \label{fig:DownloadTree}
+	\end{figure}
+\else
 \begin{narrow}[15pt]
 	\CmndBox{%
 		> chdir C:/Springhead\\
@@ -25,6 +33,7 @@
 	\it{generatorの}詳細(\KQuote{\tt{-G "Visual Studio 15 2017" -A x64}}など)は、
 	コマンドプロンプトで\tt{cmake --help}とすると確認できます。
 \end{narrow}
+\fi
 
 \medskip
 \noindent

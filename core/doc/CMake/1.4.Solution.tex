@@ -28,6 +28,15 @@
 	\SprLib およびすべてのアプリケーションでオブジェクト格納領域が
 	そこを指すようにlinkを張ることとします。
 
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=.9\textwidth]{fig/ApproachToBuildOptimization.eps}
+	    \end{center}
+	    \caption{ビルドの最適性への対処法}
+	    \label{fig:ApproachToBuildOptimization}
+	\end{figure}
+\else
 	\begin{figure}[h]
     	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
 		{\footnotesize{\dirtree{%
@@ -58,8 +67,9 @@
 		\medskip
   	\end{minipage}\end{narrow}
 	\caption{ビルドの最適性への対処法}
-	\label{fig:SolutionToBuildOptimization}
+	\label{fig:ApproachToBuildOptimization}
 	\end{figure}
+\fi
 	\indent
 	このlinkを張る作業は、
 	アプリケーションの\cmake\ (configure)時に行なうものとします。
@@ -87,6 +97,15 @@
 	特別なターゲット\tt{sync}を作成し、
 	このターゲットが毎回のビルドに先立って実行されるようにします。
 
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=.9\textwidth]{fig/ApproachToProjfileOptimization.eps}
+	    \end{center}
+	    \caption{プロジェクトファイルの最適性への対処法}
+	    \label{fig:ApproachToProjfileOptimization}
+	\end{figure}
+\else
 	\begin{figure}[h]
     	\begin{narrow}[40pt]\begin{minipage}{\textwidth}
 		{\footnotesize{\dirtree{%
@@ -113,8 +132,11 @@
 		\medskip
   	\end{minipage}\end{narrow}
 	\caption{プロジェクトファイルの最適性への対処法}
-	\label{fig:SolutionToProjectFile}
+	\label{fig:ApproachToProjfileOptimization}
 	\end{figure}
+\fi
+	\indent
+	
 \end{narrow}
 
 % end: 1.4.Solution.tex

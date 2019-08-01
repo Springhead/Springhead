@@ -30,6 +30,18 @@ Cmakeはout of source (out of place)でのビルドに対応しています。
 ソースツリーおよびビルドツリーは次のようになるでしょう
 (図\ref{fig:SpringheadLibraryTree}および図\ref{fig:ApplicationTree})。
 
+\ifLwarp
+\Vskip{-.5\baselineskip}
+\begin{narrow}
+    \begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=.9\textwidth]{fig/LibraryTree.eps}
+	\end{center}
+	\caption{Springhead Library構成}
+	\label{fig:SpringheadLibraryTree}
+    \end{figure}
+\end{narrow}
+\else
 \begin{narrow}\begin{figure}[h]
     \begin{narrow}[40pt]\begin{minipage}{\textwidth}
 	{\footnotesize{\dirtree{%
@@ -53,10 +65,22 @@ Cmakeはout of source (out of place)でのビルドに対応しています。
 	}}}
 	\medskip
     \end{minipage}\end{narrow}
-    \caption{Springhead Library構成}
-    \label{fig:SpringheadLibraryTree}
 \end{figure}\end{narrow}
+\fi
 
+\ifLwarp
+\Vskip{-.5\baselineskip}
+\begin{narrow}
+    \begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=.9\textwidth]{fig/ApplicationTree.eps}
+	\end{center}
+	\caption{Application構成}
+	\label{fig:ApplicationTree}
+    \end{figure}
+\end{narrow}
+\Vskip{-1.0\baselineskip}
+\else
 \begin{narrow}\begin{figure}[h]
     \begin{narrow}[40pt]\begin{minipage}{\textwidth}
 	{\footnotesize{\dirtree{%
@@ -82,9 +106,8 @@ Cmakeはout of source (out of place)でのビルドに対応しています。
 	}}}
 	\medskip
     \end{minipage}\end{narrow}
-    \caption{Application構成}
-    \label{fig:ApplicationTree}
 \end{figure}\end{narrow}
+\fi
 
 \medskip
 \noindent

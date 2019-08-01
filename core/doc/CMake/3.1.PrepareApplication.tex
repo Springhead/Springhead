@@ -26,6 +26,14 @@
 (誤コミットを防止するためにもリネームではなくコピーしてください）。
 
 \medskip
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=\textwidth]{fig/command-3-1-a.eps}
+	    \end{center}
+	    \label{fig:DownloadTree}
+	\end{figure}
+\else
 \begin{narrow}[15pt]
 	\CmndBox{%
 	{\small{> chdir C:/Develop/Application}}\\
@@ -33,6 +41,7 @@
 	{\small{> copy C:/Springhead/core/src/CMakeLists.txt.Dev.dist CMakeLists.txt}}
 	}
 \end{narrow}
+\fi
 
 \bigskip
 \noindent
@@ -41,6 +50,14 @@
 	\CMakeTopdir{}には\SprLib をダウンロードしたディレクトリを設定します。
 	これは、CMakeにSpringheadのソースツリーの場所を教えるために必要な設定です。
 
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=\textwidth]{fig/command-3-1-b.eps}
+	    \end{center}
+	    \label{fig:DownloadTree}
+	\end{figure}
+\else
 	\begin{narrow}[15pt]
 		\CmndBox{%
 			{\small{\#set(TOPDIR "C:/Springhead")}}\\
@@ -48,6 +65,7 @@
 			{\small{set(TOPDIR \SprTop{})}}
 		}
 	\end{narrow}
+\fi
 \end{narrow}
 \medskip
 \bf{\CMakeLists{}}の編集
@@ -56,6 +74,14 @@
 	    \item
 		プロジェクト名を設定します(11行目)。
 
+\ifLwarp
+		\begin{figure}[h]
+			\begin{center}
+			\includegraphics[width=\textwidth]{fig/command-3-1-b.eps}
+				\end{center}
+			\label{fig:DownloadTree}
+		\end{figure}
+\else
 		\begin{narrow}[s][5pt]
 			\CmndBox{%
 				{\small{set(ProjectName "Project")}}\\
@@ -64,6 +90,7 @@
 			}
 		\end{narrow}
 		\Vskip{.5\baselineskip}
+\fi
 
 	    \item
 		Customization section (19行目以降)を必要に応じて変更します。\\
