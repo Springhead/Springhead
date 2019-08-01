@@ -1,0 +1,31 @@
+%\PassOptionsToPackage {warpHTML,BaseJobname=SprManual}{lwarp}
+%\documentclass[pdflatex,a4paper,ja=standard,jafont=ipaex]{book}
+\documentclass{book}
+
+\input{lwarp_preamble_first}
+\usepackage{graphicx, booktabs, amsmath, amssymb, url, makeidx, color}
+\usepackage{lwarp_macros, fancybox, framed, longtable, bm, comment}
+\usepackage{ifthen, setspace}
+
+\usepackage{dirtree}
+%\usepackage{setspace}
+%\usepackage{longtable}
+
+\input{lwarp_preamble_last}
+
+\title{Springhead - How to use CMake}
+\date{}
+
+\renewcommand{\figurename}{Fig.\,}
+\renewcommand{\tablename}{Table\,}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\listoffigures
+
+\input{chapters}
+
+\input{lwarp_afterword}
+
+\end{document}

@@ -9,6 +9,14 @@
 以下、ダウンロードするディレクトリを\SprTop{}として説明を進めます。
 
 \medskip
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=\textwidth]{fig/command-2-1-a.eps}
+	    \end{center}
+	    \label{fig:DownloadTree}
+	\end{figure}
+\else
 \begin{narrow}[15pt]
 	\CmndBox{%
 		> chdir C:/Springhead\\
@@ -16,8 +24,17 @@
 		\Hskip{100pt}https://github.com/sprphys/Springhead
 	}
 \end{narrow}
+\fi
 \medskip
 サブモジュールを選択する場合は
+\ifLwarp
+	\begin{figure}[h]
+	    \begin{center}
+	    \includegraphics[width=\textwidth]{fig/command-2-1-b.eps}
+	    \end{center}
+	    \label{fig:DownloadTree}
+	\end{figure}
+\else
 \begin{narrow}[15pt]
 	\CmndBox{%
 		> chdir C:/Springhead\\
@@ -26,6 +43,7 @@
 		> git submodule update --init --checkout dependency
 	}
 \end{narrow}
+\fi
 \medskip
 GUIの場合は
 \begin{narrow}[15pt]

@@ -4,9 +4,14 @@
 \section{CMakeとは何をするものか}
 \label{sec:WhatCMakeWillDo}
 
-\def\Anno#1{\mc{\footnotesize{ \CDots\  #1}}}
+\def\Anno#1{\rm{\footnotesize{ \CDots\  #1}}}
+\ifLwarp
+\def\SolutionFile{ソリューションファイル$(\dagger 1)$}
+\def\ProjectFile{プロジェクトファイル$(\dagger 2)$}
+\else
 \def\SolutionFile{\hbox{ソリューションファイル{\small{$^{(\dagger 1)}$}}}}
 \def\ProjectFile{\hbox{プロジェクトファイル{\small{$^{(\dagger 2)}$}}}}
+\fi
 \def\cmake{\tt{cmake}}
 \def\make{\tt{make}}
 \def\SprLib{Springheadライブラリ}
@@ -24,11 +29,16 @@
 
 \def\thinrule#1{\makebox[#1][l]{\vrule width #1 height 0.1pt}}
 
+\ifLwarp
+\def\UpKQs{``}
+\def\UpKQe{''}
+\def\KQuote#1{``#1''}
+\fi
 
 \noindent
 最初にCmakeとは何をするものかについて簡単に説明をします。
 Springheadの開発に携わらない方はこの章の内容は不要です。
-\KQuote{\ref{sec:ForNonDevelopper} Springheadをライブラリとして利用する方へ}
+\UpKQs \ref{sec:ForNonDevelopper} Springheadをライブラリとして利用する方へ\UpKQe
 をお読みください。
 また、Cmakeについて理解をされている方は
 \UpKQs \ref{subsec:Problems} CMakeを使用した場合の問題点\UpKQe、

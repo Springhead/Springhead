@@ -10,7 +10,7 @@
 ######################################################################
 
 TOPFILE	= main.tex
-PDFNAME	= CMake.pdf
+PDFNAME	= HowToUseCMake.pdf
 INSPATH	= ../../../generated/doc
 
 TEXFILE = $(PDFNAME:.pdf=.tex)
