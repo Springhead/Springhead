@@ -465,7 +465,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../doc/CMake')
+	os.chdir('../CMake')
 	Print('  CMake')
 	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
