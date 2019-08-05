@@ -35,9 +35,9 @@
 #	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
 #	Ver 1.5  2018/09/10 F.Kanehori	RevisionInfo.py implemented.
 #	Ver 1.6  2019/01/10 F.Kanehori	Add closed-source control.
-#	Ver 1.61 2019/01/29 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.7  2019/08/05 F.Kanehori	Add HowToUseCMake document.
 # ======================================================================
-version = 1.61
+version = 1.7
 
 import sys
 import os
@@ -461,6 +461,12 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	#
 	os.chdir('../doc/SprManual')
 	Print('  SprManual')
+	cmnd = 'python MakeDoc.py'
+	proc = Proc(verbose=verbose, dry_run=dry_run)
+	proc.execute(cmnd, shell=shell).wait()
+	#
+	os.chdir('../doc/CMake')
+	Print('  CMake')
 	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()

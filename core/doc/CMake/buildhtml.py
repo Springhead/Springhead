@@ -7,14 +7,15 @@
 #	    -d dname	Work directory name.
 #
 #  DESCRIPTION:
-#	Generate Springhead manual html version using plastex.
+#	Generate HpwToUseCMake manual html version using plastex.
 #
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/11/29 F.Kanehori	First version.
 #	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
+#	Ver 1.2  2019/08/05 F.Kanehori	HowToUseCMake version.
 # ======================================================================
-version = 1.1
+version = 1.2
 
 import sys
 import os
@@ -513,7 +514,7 @@ if options.replace_html_esc:
 #	lwarpmk htmlを実行するとANKから漢字に変化する箇所でエラーを起こす
 #	    pdfTeX error: pdflatex,exe (file cyberb30): Font cyberb30 at 420 not found
 #	おまじないとして、ダミーのvruleを挿入しておく
-#	    \def\KLUDGE{\vrule width 0pt height 1pt }	(in "sprmacros.sty")
+#	    \def\KLUDGE{\vrule width 0pt height 1pt }	(in "lwarp_macros.sty")
 #	これは単純にフォントだけの問題なので、そちらが解決できたらここの
 #	部分の処理は不要となる (-K オプションをやめること)
 #
@@ -573,10 +574,10 @@ if options.replace_tex_esc:
 	sys.stdout.flush()
 #
 if options.copy:
-	#  生成されたファイルを"generated/doc/SprManual"にコピーする
+	#  生成されたファイルを"generated/doc/HowToUseCMake"にコピーする
 	#
 	fmdir = wrkspace
-	todir = '../../../../generated/doc/SprManual'
+	todir = '../../../../generated/doc/HowToUseCMake'
 	#
 	targets = ['lateximages', 'fig/*.svg', '*.html', '*.css']
 	if verbose:
