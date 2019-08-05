@@ -1,21 +1,21 @@
 % macro.tex
-%	Last update: 2018/08/22 F.Kanehori
+%	Last update: 2019/08/05 F.Kanehori
 
 \makeatletter
 
-%% need original symbol
-\def\orgLAB{<}
-\def\orgRAB{>}
+%%% need original symbol
+%\def\orgLAB{<}
+%\def\orgRAB{>}
 
 %% some character usage
-\catcode`\_=\active
-\catcode`\^=\active
-\def_{\ifmmode\sb\else\_\fi}
-\def^{\ifmmode\sp\else\^\fi}
-\def\LSB{\ifmmode$[$\else\tt{[}\fi}
-\def\RSB{\ifmmode$[$\else\tt{]}\fi}
-\def\Ctrl#1{\tt{\,\textasciicircum#1}}
-\def\BS{\tt{\symbol{'134}}}
+%\catcode`\_=\active
+%\catcode`\^=\active
+%\def_{\ifmmode\sb\else\_\fi}
+%\def^{\ifmmode\sp\else\^\fi}
+%\def\LSB{\ifmmode$[$\else\tt{[}\fi}
+%\def\RSB{\ifmmode$[$\else\tt{]}\fi}
+%\def\Ctrl#1{\tt{\,\textasciicircum#1}}
+%\def\BS{\tt{\symbol{'134}}}
 
 %% alias for fonts
 \let\it@\it
@@ -81,16 +81,26 @@
 %
 \def\SQuote#1{\hspace{0pt}\Quote@{`}{#1}{'}}
 \def\DQuote#1{\hspace{0pt}\Quote@{"}{#1}{"}}
-\def\KQuote#1{\hspace{0pt}\Quote@knj{\,#1}}
+%\def\KQuote#1{\hspace{0pt}\Quote@knj{\,#1}}
 \def\Quote@#1#2#3{\hbox{\,\raise.4ex\hbox{{\tt #1}}#2\raise.4ex\hbox{{\tt #3}}\,}}
 \def\Quote@knj#1{\hbox{\,\raise.4ex\hbox{``}#1\,\raise.4ex\hbox{''}}}
-\def\UpSQs{\hbox{\raise.4ex\hbox{{\tt `}}}}
-\def\UpSQe{\hbox{\raise.4ex\hbox{{\tt '}}}}
-\def\UpDQs{\hbox{\raise.4ex\hbox{{\tt "}}}}
-\def\UpDQe{\hbox{\raise.4ex\hbox{{\tt "}}}}
-\def\UpKQs{\hbox{\hbox{\,\raise.4ex\hbox{``}}}}
-\def\UpKQe{\hbox{\hbox{\,\raise.4ex\hbox{''}}}}
-\let\UpDQ\UpDQs
+%\def\UpSQs{\hbox{\raise.4ex\hbox{{\tt `}}}}
+%\def\UpSQe{\hbox{\raise.4ex\hbox{{\tt '}}}}
+%\def\UpDQs{\hbox{\raise.4ex\hbox{{\tt "}}}}
+%\def\UpDQe{\hbox{\raise.4ex\hbox{{\tt "}}}}
+%\def\UpKQs{\hbox{\hbox{\,\raise.4ex\hbox{``}}}}
+%\def\UpKQe{\hbox{\hbox{\,\raise.4ex\hbox{''}}}}
+%\let\UpDQ\UpDQs
+
+\ifLwarp
+\def\UpKQs{``}
+\def\UpKQe{''}
+\def\KQuote#1{``#1''}
+\else
+\def\UpKQs{\hbox{\hbox{\ \raise.4ex\hbox{``}}}}
+\def\UpKQe{\hbox{\hbox{\raise.4ex\hbox{''}}}}
+\def\KQuote#1{\hspace{0pt}\Quote@knj{\,#1}}
+\fi
 
 %% abbreviations
 %
@@ -345,5 +355,37 @@
 \def\FCol@[#1]#2#3{\begin{minipage}[t]{#2}\Spacing{#1}{#3}\end{minipage}}
 \def\Spacing#1#2{\begin{spacing}{#1}#2\\\Vskip{-2.2\baselineskip}\end{spacing}}
 
+%%% CMake specific macros
+\def\Anno#1{\rm{\footnotesize{ \CDots\  #1}}}
+\ifLwarp
+\def\SolutionFile{ソリューションファイル$(\dagger 1)$}
+\def\ProjectFile{プロジェクトファイル$(\dagger 2)$}
+\else
+\def\SolutionFile{\hbox{ソリューションファイル{\small{$^{(\dagger 1)}$}}}}
+\def\ProjectFile{\hbox{プロジェクトファイル{\small{$^{(\dagger 2)}$}}}}
+\fi
+\def\cmake{\tt{cmake}}
+\def\make{\tt{make}}
+\def\SprLib{Springheadライブラリ}
+\def\SprProj{Springheadプロジェクト}
+\def\VS{Visual Studio}
+
+\def\SprTop#1{\Path{C:/Springhead{#1}}}
+\def\AppTop#1{\Path{C:/Develop/Application{#1}}}
+\def\build{{\it{build\/}}}
+
+\def\CMakeLists#1{\Path{CMakeLists.txt{#1}}}
+\def\CMakeOpts#1{\Path{CMakeOpts.txt{#1}}}
+\def\CMakeConf#1{\Path{CMakeConf.txt{#1}}}
+\def\CMakeTopdir#1{\Path{CMakeTopdir.txt{#1}}}
+
+\ifLwarp
+\def\thinrule#1{\rule{#1}{0.1pt}}
+\else
+\def\thinrule#1{\rule{#1}{0.1pt}}
+%\def\thinrule#1{\makebox[#1][l]{\vrule width #1 height 0.1pt}}
+\fi
+
 \makeatother
+
 % end: marco.tex
