@@ -8,11 +8,11 @@
 #	    -V:		    Show version.
 #
 #  DESCRIPTION:
-#	Generate "CMakeForSpringhead" manual.
+#	Generate "HowToUseCMake" manual.
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2019/07/24 F.Kanehori	First version.
+#	Ver 1.0  2019/08/05 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 
