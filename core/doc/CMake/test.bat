@@ -1,6 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set EPStoSVG=0
+set VERBOSE=1
+
 if "%1" equ "" (
     echo %0: argument required
     echo Usage: %0 { pdf ^| html }
@@ -25,10 +28,12 @@ if "%1" equ "pdf" (
 
     if "!OPT!" equ "-S" (cd ..)
 
+    set ARGS=-E -H -K -R !OPT! %ARGS%
+    if %EPStoSVG% neq 1	set ARGS=!ARGS! -t
+    if %VERBOSE% equ 1	set ARGS=!ARGS! -v
+
     echo test start at "%CD%"
-    python buildhtml.py -v -E -H -K -R -t !OPT! %ARGS% main_html.tex
-    rem python buildhtml.py -v -E -H -K -R !OPT! %ARGS% main_html.tex
-    rem python buildhtml.py -E -H -K -R -c -t !OPT! %ARGS% main_html.tex
+    python buildhtml.py !ARGS! main_html.tex
 
     if "!OPT!" equ "-S" (cd tmp)
     echo test end at "%CD%"
