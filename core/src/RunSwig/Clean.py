@@ -28,6 +28,7 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2019/03/07 F.Kanehori	First release version.
+#	Ver 1.1  2019/08/28 F.Kanehori	Add -L option (for EmbPython).
 # ==============================================================================
 version = 1.0
 
@@ -45,8 +46,11 @@ prog = os.path.basename(sys.argv[0]).split('.')[0]
 # ---------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: %prog [options]'
+usage = 'Usage: %prog [options] srcdir libpath'
 parser = OptionParser(usage = usage)
+parser.add_option('-L', '--leave-library', dest='leave_library',
+			action='store_true', default=False,
+                        help='leave library file')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
                         help='set verbose count')
@@ -61,13 +65,16 @@ parser.add_option('-V', '--version', dest='version',
 if options.version:
         print('%s: Version %s' % (prog, version))
         sys.exit(0)
-if len(args) != 2:
+if not (len(args) == 2 or (len(args) == 1 and options.leave_library)):
 	print('%s: incorrect number of arguments\n' % prog)
 	subprocess.Popen('python %s.py -h' % prog, shell=True).wait()
 	sys.exit(1)
 
 srcdir = args[0].replace('\\', '/')
-libpath = args[1].replace('\\', '/')
+if len(args) == 2:
+	libpath = args[1].replace('\\', '/')
+
+leave_library = options.leave_library
 verbose = options.verbose
 
 if verbose:
@@ -109,7 +116,7 @@ for project in projects:
 
 #  ライブラリファイルを削除する
 #
-if os.path.exists(libpath):
+if not leave_library and os.path.exists(libpath):
 	if verbose:
 		print('  delete %s' % libpath)
 	os.remove(libpath)
