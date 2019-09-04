@@ -15,9 +15,10 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.2  2019/07/03 F.Kanehori	Add check if file is linked.
-#	Ver 1.1  2019/06/24 F.Kanehori	New function implemented.
 #	Ver 1.0  2019/06/10 F.Kanehori	First version.
+#	Ver 1.1  2019/06/24 F.Kanehori	New function implemented.
+#	Ver 1.2  2019/07/03 F.Kanehori	Add check if file is linked.
+#	Ver 1.21 2019/09/04 F.Kanehori	Correspond to 'EmbPython'.
 # ======================================================================
 version = 1.2
 
@@ -36,6 +37,7 @@ from optparse import OptionParser
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 spr_prev_suffix = 'prev.spr'
 app_prev_suffix = 'prev.app'
+exclude_projs = ['EmbPython']
 
 # ----------------------------------------------------------------------
 #  Helper methods
@@ -105,7 +107,7 @@ def collect_sln_guid(blddir, projs, fname):
 	os.chdir(blddir)
 	#
 	guids = {}
-	for proj in projs:
+	for proj in diff(projs, exclude_projs):
 		pattern = ['Project\("{.+}"\) = "%s",.*, "{(.+)}"' % proj]
 		guid = grep(pattern, fname, extract='match')
 		guids[proj] = guid.popleft()
@@ -123,7 +125,7 @@ def collect_vcx_guid(blddir, projs, in_subdir=False):
 	#
 	pattern = ['<ProjectGuid>{(.+)}</ProjectGuid>']
 	guids = {}
-	for proj in projs:
+	for proj in diff(projs, exclude_projs):
 		if in_subdir:
 			fname = '%s.vcxproj' % proj
 		else:
@@ -139,7 +141,7 @@ def collect_vcx_guid(blddir, projs, in_subdir=False):
 def print_guids(title, guids):
 	print(title)
 	projs = guids.keys()
-	for proj in projs:
+	for proj in diff(projs, exclude_projs):
 		print('%16s: %s' % (proj, guids[proj]))
 
 #  簡易 grep
@@ -266,6 +268,11 @@ def upath(path):
 def dpath(path):
 	return path.replace('/', '\\')
 
+#  リストの差分
+#
+def diff(list1, list2):
+	return set(list1) - set(list2)
+
 #  エラー時の扱い
 #
 def fatal(msg, exitcode=1):
@@ -329,7 +336,7 @@ if is_windows():
 		print_guids('Spr.ORG', spr_org_guids)
 		print_guids('App.ORG', app_org_guids)
 
-for proj in projs:
+for proj in diff(projs, exclude_projs):
 	os.chdir(proj)
 	print('sync: %s' % proj)
 	if verbose > 1:
@@ -461,7 +468,7 @@ if is_windows():
 		modified = False
 		modified_info = {}
 		for line in read_file(sln_fname):
-			for proj in projs:
+			for proj in diff(projs, exclude_projs):
 				str1 = spr_old_guids[proj]
 				str2 = spr_new_guids[proj]
 				changed = line.find(str1) and (str1 != str2)
@@ -489,7 +496,7 @@ if is_windows():
 	new_lines = []
 	modified = False
 	for line in read_file(sln_fname):
-		for proj in projs:
+		for proj in diff(projs, exclude_projs):
 			str1 = app_org_guids[proj]
 			str2 = app_new_guids[proj]
 			if line.find(str1) >= 0:

@@ -46,7 +46,9 @@ set(EXCLUDE_SRCS ${EMPTY})
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics)
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+	      HumanInterface Physics)
+#set(SPR_PROJS ${SPR_PROJS} EmbPython)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -128,7 +130,7 @@ include("${SPR_CORE_DIR}/make.func.cmake")
 #	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
 #
 set(OPTS_FILE_NAME "CMakeOpts.txt")
-set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
+set(OPTS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${OPTS_FILE_NAME}")
 set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
 include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
@@ -284,6 +286,7 @@ add_custom_target(${SYNC}
 set(DEP_Base)
 set(DEP_Collision Foundation)
 set(DEP_Creature Foundation Framework Physics)
+#set(DEP_EmbPython EmbPython_RunSwig)
 set(DEP_FileIO Foundation)
 set(DEP_Foundation Base)
 set(DEP_Framework FileIO Foundation Graphics Physics)
@@ -301,6 +304,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
+#add_dependencies(EmbPython_RunSwig RunSwig)
 add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
