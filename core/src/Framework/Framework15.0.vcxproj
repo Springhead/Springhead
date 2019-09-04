@@ -458,12 +458,6 @@
     <ProjectReference Include="..\Foundation\Foundation15.0.vcxproj">
       <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\Graphics\Graphics15.0.vcxproj">
-      <Project>{a339c0ca-d5fb-4dfa-9bcf-826739790653}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics15.0.vcxproj">
-      <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
