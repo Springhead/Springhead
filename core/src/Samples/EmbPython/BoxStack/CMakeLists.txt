@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Quaternion")
+set(ProjectName "BoxStack")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -46,7 +46,9 @@ set(EXCLUDE_SRCS ${EMPTY})
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base)
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+	      HumanInterface Physics)
+set(SPR_PROJS ${SPR_PROJS} EmbPython)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -63,11 +65,12 @@ set(ADDITIONAL_LIBDIR ${EMPTY})
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
+#set(ADDITIONAL_LIBS python35_d.lib XINPUT9_1_0.LIB)
+set(ADDITIONAL_LIBS python35.lib XINPUT9_1_0.LIB)
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
+set(EXCLUDE_LIBS xinput.lib)
 
 # ******************************************************************************
 #  End of customization section.
@@ -80,29 +83,19 @@ set(EXCLUDE_LIBS ${EMPTY})
 #	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt" SHOULD contain the
 #	definition of top directory like;
 #	    set(TOPDIR "<absolute-dir-path>")
-#	For DailyBuild:
-#	    Cmake option "-D TOPDIR_FILE=<absolute-file-path>" specifies
-#	    the definition file instead of default one.
 #
+set(TOPDIR_FILE "CMakeTopdir.txt")
 if(DEFINED TOPDIR)
-    # ok
-elseif(DEFINED TOPDIR_FILE)
-    if(NOT EXISTS ${TOPDIR_FILE})
-	message("Error: File \"${TOPDIR_FILE}\" not found")
+    if(NOT EXISTS "${TOPDIR}")
+	message("Error: File \"${TOPDIR}\" not found")
 	return()
     endif()
-    include(${TOPDIR_FILE})
 else()
-    set(TOPDIR_FILE "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt")
-    if(NOT EXISTS ${TOPDIR_FILE})
+    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
 	message("Error: File \"${TOPDIR_FILE}\" not found")
 	return()
     endif()
     include(${TOPDIR_FILE})
-endif()
-if(NOT EXISTS "${TOPDIR}")
-    message("Error: Directory \"${TOPDIR}\" not found")
-    return()
 endif()
 
 set(SPR_TOP_DIR  "${TOPDIR}")
@@ -138,7 +131,7 @@ include("${SPR_CORE_DIR}/make.func.cmake")
 #	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
 #
 set(OPTS_FILE_NAME "CMakeOpts.txt")
-set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
+set(OPTS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${OPTS_FILE_NAME}")
 set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
 include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
@@ -294,6 +287,7 @@ add_custom_target(${SYNC}
 set(DEP_Base)
 set(DEP_Collision Foundation)
 set(DEP_Creature Foundation Framework Physics)
+set(DEP_EmbPython EmbPython_RunSwig)
 set(DEP_FileIO Foundation)
 set(DEP_Foundation Base)
 set(DEP_Framework FileIO Foundation Graphics Physics)
@@ -311,6 +305,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
+add_dependencies(EmbPython_RunSwig RunSwig)
 add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
@@ -353,13 +348,6 @@ target_link_libraries(${Target}
 if(DEFINED EXCLUDE_LIBS)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
 endif()
-
-# ------------------------------------------------------------------------------
-#  Set working directory to VS debugger.
-#
-set_target_properties(${Target}
-    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
 
 # ------------------------------------------------------------------------------
 #  Clean (only for RunSwig).

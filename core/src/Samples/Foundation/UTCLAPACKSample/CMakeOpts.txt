@@ -1,0 +1,80 @@
+# ==============================================================================
+#  CMakeOpts.txt
+#    ** このファイルを直接編集してコミットしないようにお願いします **
+#    ** DO NOT edit and commit this file. **
+#
+#    次の変数を定義する
+#    This file defines following variable.
+#
+#    Windows (Visual Studio):
+#	VS_VERSION			Visual Studio Version.
+#	WIN_COPT_COMMON			Commonly used compler options.
+#	WIN_COPT_DEBUG			Additional options (for Debug).
+#	WIN_COPT_RELEASE		Additional options (for Release).
+#	WIN_COPT_TRACE			Additional options (for Trace).
+#	WIN_COPT_MACROS			Define macros.
+#	CMAKE_EXE_LINKER_FLAGS		Commonly used linker options.
+#	CMAKE_EXE_LINKER_FLAGS_DEBUG	Additional options (for Debug).
+#	CMAKE_EXE_LINKER_FLAGS_RELEASE	Additional options (for Release).
+#	CMAKE_EXE_LINKER_FLAGS_TRACE	Additional options (for Trace).
+#
+#    Linux (g++):
+#	LINUX_COPT_COMMON		Commonly used compiler options.
+#	LINUX_COPT_DEBUG		Additional options (for Debug).
+#	LINUX_COPT_RELEASE		Additional options (for Release).
+#
+#    ${ARCHITECTURE} is passed as  "x86" or "x64" accoding to paltform using.
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+#  Visual Studio Version.
+#	Try following command from command prompt.
+#	    > devenv /? | grep "Microsoft Visual Studio"
+#
+set(VS_VERSION "15.0")
+
+# ------------------------------------------------------------------------------
+#  Compile options for Windows (Visual Studio).
+#
+set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D \"_LIB\" /GF- /EHsc /Gy- /Qpar \
+			 /arch:AVX /openmp /wd\"4996\" /wd\"4244\" /wd\"4251\" /FC
+			 /D \"DAILY_BUILD\"")
+#set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
+set(WIN_COPT_DEBUG	"/Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
+set(WIN_COPT_RELEASE	"/Ob2 /Ot /Oy /Gr")
+set(WIN_COPT_TRACE	"/Ob2 /Ot /D TRACE /Oy- /Gr")
+#
+#  Need not to specify "-D" or "/D".
+#set(WIN_COPT_MACROS "NAME" "NAME=VALUE")
+#
+set(CMAKE_EXE_LINKER_FLAGS  "/ERRORREPORT:PROMPT /IGNORE:4099 /NXCOMPAT \
+			/MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG   "/DEBUG")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "")
+set(CMAKE_EXE_LINKER_FLAGS_TRACE   "")
+#
+if("${ARCHITECTURE}" STREQUAL "x86")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:X86")
+else()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:X64")
+endif()
+
+# ------------------------------------------------------------------------------
+#  Compile options for Linux (g++).
+#
+set(LINUX_WFLAGS "-Wall \
+	-Wno-unused-variable \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-result \
+	-Wno-unused-value \
+	-Wno-unused-local-typedefs \
+	-Wno-unused-function \
+	-Wno-reorder \
+	-Wno-sign-compare \
+	-Wno-unknown-pragmas")
+set(LINUX_COPT_COMMON	"${WARNING_FLAGS} -fPIC")
+set(LINUX_COPT_DEBUG	"-g")
+set(LINUX_COPT_RELEASE	"-O2")
+
+# end: CMakeOpts.txt

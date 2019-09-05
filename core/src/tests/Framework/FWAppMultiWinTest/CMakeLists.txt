@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Quaternion")
+set(ProjectName "FWAppMultiWinTest")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -46,7 +46,7 @@ set(EXCLUDE_SRCS ${EMPTY})
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base)
+set(SPR_PROJS ${EMPTY})
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -300,7 +300,7 @@ set(DEP_Framework FileIO Foundation Graphics Physics)
 set(DEP_Graphics Foundation)
 set(DEP_HumanInterface Foundation)
 set(DEP_Physics Collision Foundation)
-add_subdirectory(${SPR_SRC_DIR}/RunSwig ${SPR_BLD_DIR}/RunSwig)
+#add_subdirectory(${SPR_SRC_DIR}/RunSwig ${SPR_BLD_DIR}/RunSwig)
 foreach(proj IN ITEMS ${SPR_PROJS})
     add_subdirectory(${SPR_SRC_DIR}/${proj} ${SPR_BLD_DIR}/${proj})
     set(DEP_LIST RunSwig)
@@ -310,7 +310,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     add_dependencies(${proj} ${DEP_LIST})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
-add_dependencies(RunSwig ${SYNC})
+#add_dependencies(RunSwig ${SYNC})
 add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
@@ -374,15 +374,15 @@ set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
 set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
 set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
 
-if(${Windows})
-    add_custom_target(RunSwig_Clean
-	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
-	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
-	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${CLEAN} ${LIBPATH_TRACE}
-	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
-    )
-elseif(${Linux})
-endif()
+#if(${Windows})
+#    add_custom_target(RunSwig_Clean
+#	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
+#	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
+#	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${CLEAN} ${LIBPATH_TRACE}
+#	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
+#    )
+#elseif(${Linux})
+#endif()
 
 # ------------------------------------------------------------------------------
 #  Install.

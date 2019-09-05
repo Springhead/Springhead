@@ -26,6 +26,12 @@
 #RunErrLog	# Run error log file path
 #Intervention	False
 
+#UseCMake	False
+#CMakeBuildDir	# CMake work directoru name
+#CMakeTopDir	$(SprTop)
+#CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
+#CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
+
 #[Windows]
 
 #[unix]

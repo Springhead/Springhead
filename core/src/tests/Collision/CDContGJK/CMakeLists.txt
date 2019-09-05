@@ -63,11 +63,13 @@ set(ADDITIONAL_LIBDIR
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
+#set(ADDITIONAL_LIBS ${EMPTY})
+set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
+#set(EXCLUDE_LIBS ${EMPTY})
+set(EXCLUDE_LIBS XINPUT.LIB)
 
 # ******************************************************************************
 #  End of customization section.
@@ -80,19 +82,29 @@ set(EXCLUDE_LIBS ${EMPTY})
 #	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt" SHOULD contain the
 #	definition of top directory like;
 #	    set(TOPDIR "<absolute-dir-path>")
+#	For DailyBuild:
+#	    Cmake option "-D TOPDIR_FILE=<absolute-file-path>" specifies
+#	    the definition file instead of default one.
 #
-set(TOPDIR_FILE "CMakeTopdir.txt")
 if(DEFINED TOPDIR)
-    if(NOT EXISTS "${TOPDIR}")
-	message("Error: File \"${TOPDIR}\" not found")
-	return()
-    endif()
-else()
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
+    # ok
+elseif(DEFINED TOPDIR_FILE)
+    if(NOT EXISTS ${TOPDIR_FILE})
 	message("Error: File \"${TOPDIR_FILE}\" not found")
 	return()
     endif()
     include(${TOPDIR_FILE})
+else()
+    set(TOPDIR_FILE "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt")
+    if(NOT EXISTS ${TOPDIR_FILE})
+	message("Error: File \"${TOPDIR_FILE}\" not found")
+	return()
+    endif()
+    include(${TOPDIR_FILE})
+endif()
+if(NOT EXISTS "${TOPDIR}")
+    message("Error: Directory \"${TOPDIR}\" not found")
+    return()
 endif()
 
 set(SPR_TOP_DIR  "${TOPDIR}")
@@ -301,7 +313,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
-add_dependencies(${Target} ${SPR_PROJS})
+add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
 #  Include directories.
@@ -343,6 +355,13 @@ target_link_libraries(${Target}
 if(DEFINED EXCLUDE_LIBS)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
 endif()
+
+# ------------------------------------------------------------------------------
+#  Set working directory to VS debugger.
+#
+set_target_properties(${Target}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 
 # ------------------------------------------------------------------------------
 #  Clean (only for RunSwig).

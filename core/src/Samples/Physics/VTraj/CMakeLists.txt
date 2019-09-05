@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Quaternion")
+set(ProjectName "VTraj")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -41,12 +41,12 @@ file(GLOB SRCS *.cpp *.h)
 #	Wild card is NOT available here.
 #	We recomend to use absolute path if file exists outside of
 #	current source directory (${CMAKE_SOURCE_DIR}).
-set(EXCLUDE_SRCS ${EMPTY})
+set(EXCLUDE_SRCS VTraj.cpp)
 
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base)
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -63,11 +63,11 @@ set(ADDITIONAL_LIBDIR ${EMPTY})
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
+set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
+set(EXCLUDE_LIBS XINPUT.LIB)
 
 # ******************************************************************************
 #  End of customization section.
@@ -261,7 +261,11 @@ endif()
 #
 list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
 if(${LEN_EXCLUDE_SRCS} GREATER 0)
-	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
+	foreach(_tmp ${EXCLUDE_SRCS})
+		get_filename_component(_abspath ${_tmp} ABSOLUTE)
+		message("++ exclude: ${_abspath}")
+		list(REMOVE_ITEM SRCS ${_abspath})
+	endforeach()
 endif()
 if(${Windows})
     if("${ARCHITECTURE}" STREQUAL "x64")

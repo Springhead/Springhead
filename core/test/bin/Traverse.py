@@ -39,12 +39,9 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
-#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
-#	Ver 1.11 2018/03/28 F.Kanehori	Bug fixed (for unix).
-#	Ver 1.12 2018/04/19 F.Kanehori	Special trap introduced.
-#	Ver 1.13 2018/05/24 F.Kanehori	Add some comments.
 #	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
+#	Ver 1.3  2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
 # ======================================================================
 import sys
 import os
@@ -201,7 +198,7 @@ class Traverse:
 
 		# process this directory
 		name = self.__report_1('\t', True, False)
-		bar = BuildAndRun(self.toolset, self.verbose, self.dry_run)
+		bar = BuildAndRun(ctl, self.toolset, self.verbose, self.dry_run)
 		if bar.error():
 			self.__report_1(bar.error(), False, True)
 			self.result.set_info(name, TST.ERR, bar.error())
