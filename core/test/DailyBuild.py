@@ -27,8 +27,9 @@
 #	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
 #	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
 #	Ver 1.51 2018/08/02 F.Kanehori	Bug fixed.
+#	Ver 1.52 2019/09/05 F.Kanehori	Set default VS version to 15.0.
 # ======================================================================
-version = 1.51
+version = 1.52
 
 import sys
 import os
@@ -71,7 +72,7 @@ parser.add_option('-p', '--plat', dest='plat',
 			help='test platform [default: %default]')
 if Util.is_windows():
 	parser.add_option('-t', '--toolset-id', dest='tool',
-			action='store', default='14.0',
+			action='store', default='15.0',
 			help='toolset ID [default: %default]')
 parser.add_option('-u', '--update-only',
 			dest='update_only', action='store_true', default=False,
