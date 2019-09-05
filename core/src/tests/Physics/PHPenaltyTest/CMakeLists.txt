@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Quaternion")
+set(ProjectName "PHPenaltyTest")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -46,7 +46,7 @@ set(EXCLUDE_SRCS ${EMPTY})
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base)
+set(SPR_PROJS Base Collision Foundation HumanInterface Physics)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -63,11 +63,11 @@ set(ADDITIONAL_LIBDIR ${EMPTY})
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
+set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
+set(EXCLUDE_LIBS XINPUT.LIB)
 
 # ******************************************************************************
 #  End of customization section.

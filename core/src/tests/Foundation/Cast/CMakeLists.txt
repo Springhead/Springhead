@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Quaternion")
+set(ProjectName "Cast")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -46,7 +46,7 @@ set(EXCLUDE_SRCS ${EMPTY})
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base)
+set(SPR_PROJS Base Collision Foundation Physics)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).

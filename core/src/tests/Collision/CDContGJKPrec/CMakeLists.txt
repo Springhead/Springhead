@@ -13,6 +13,8 @@ message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
+#
+set(Target ${ProjectName})
 
 # ******************************************************************************
 #  Customization section.
@@ -30,8 +32,15 @@ set(OOS_BLD_DIR "build")
 #	Remove unneccessary configuration type(s).
 set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 
-#  Source file name(s) to EXCLUDE from compilation (wildcard is NOT available).
+#  Source/include file names to incorporate to the application program.
+#
+file(GLOB SRCS *.cpp *.h)
+
+#  Source/include file name(s) to EXCLUDE from compilation.
 #	Replace '${EMPTY}' with file name(s).
+#	Wild card is NOT available here.
+#	We recomend to use absolute path if file exists outside of
+#	current source directory (${CMAKE_SOURCE_DIR}).
 set(EXCLUDE_SRCS ${EMPTY})
 
 #  Springhead projects to incorporate in the application program.
@@ -71,19 +80,29 @@ set(EXCLUDE_LIBS ${EMPTY})
 #	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt" SHOULD contain the
 #	definition of top directory like;
 #	    set(TOPDIR "<absolute-dir-path>")
+#	For DailyBuild:
+#	    Cmake option "-D TOPDIR_FILE=<absolute-file-path>" specifies
+#	    the definition file instead of default one.
 #
-set(TOPDIR_FILE "CMakeTopdir.txt")
 if(DEFINED TOPDIR)
-    if(NOT EXISTS "${TOPDIR}")
-	message("Error: File \"${TOPDIR}\" not found")
-	return()
-    endif()
-else()
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
+    # ok
+elseif(DEFINED TOPDIR_FILE)
+    if(NOT EXISTS ${TOPDIR_FILE})
 	message("Error: File \"${TOPDIR_FILE}\" not found")
 	return()
     endif()
     include(${TOPDIR_FILE})
+else()
+    set(TOPDIR_FILE "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt")
+    if(NOT EXISTS ${TOPDIR_FILE})
+	message("Error: File \"${TOPDIR_FILE}\" not found")
+	return()
+    endif()
+    include(${TOPDIR_FILE})
+endif()
+if(NOT EXISTS "${TOPDIR}")
+    message("Error: Directory \"${TOPDIR}\" not found")
+    return()
 endif()
 
 set(SPR_TOP_DIR  "${TOPDIR}")
@@ -240,11 +259,10 @@ endif()
 # ------------------------------------------------------------------------------
 #  Main target.
 #
-set(Target ${ProjectName})
-file(GLOB SRCS "*.cpp")
-foreach(exclude IN ITEMS ${EXCLUDE_SRCS})
-    list(REMOVE_ITEM SRCS "${CMAKE_SOURCE_DIR}/${exclude}")
-endforeach()
+list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
+if(${LEN_EXCLUDE_SRCS} GREATER 0)
+	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
+endif()
 if(${Windows})
     if("${ARCHITECTURE}" STREQUAL "x64")
 	add_executable(${Target} ${SRCS})
@@ -258,7 +276,10 @@ set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/bin)
 #  Add target to synchronize configuration with ${SRR_SRC_DIR}.
 #
 set(SYNC "sync")
-set(_tmp_args "${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
+set(_tmp_args "-v"
+	"-a" "\"$(Platform)\""
+	"-c" "\"$(Configuration)\""
+	"${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
 	"${Target}" "${SPR_PROJS}")
 file(TO_NATIVE_PATH "${_tmp_args}" _tmp_args)
 add_custom_target(${SYNC}
@@ -290,7 +311,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
-add_dependencies(${Target} ${SPR_PROJS})
+add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
 #  Include directories.
@@ -332,6 +353,13 @@ target_link_libraries(${Target}
 if(DEFINED EXCLUDE_LIBS)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
 endif()
+
+# ------------------------------------------------------------------------------
+#  Set working directory to VS debugger.
+#
+set_target_properties(${Target}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 
 # ------------------------------------------------------------------------------
 #  Clean (only for RunSwig).

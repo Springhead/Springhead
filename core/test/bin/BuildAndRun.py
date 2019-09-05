@@ -6,8 +6,9 @@
 #	    Build the solution and/or run the program.
 #
 #  INITIALIZER:
-#	obj = BuildAndRun(ccver, verbose=0, dry_run=False)
+#	obj = BuildAndRun(ctl, ccver, verbose=0, dry_run=False)
 #	arguments:
+#	    ctl:	Instance of ControlParams class.
 #	    ccver:	C-compiler version (str).
 #			    Windows: Visual Studio version (str).
 #			    unix:    gcc version (dummy).
@@ -61,12 +62,14 @@
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
 #	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
-#	Ver 1.21 2018/08/23 F.Kanehori	Bug fixed
+#	Ver 1.3  2019/08/07 F.Kanehori	Add parameter to initializer.
 # ======================================================================
 import sys
 import os
 import re
 from stat import *
+from ControlParams import *
+from CMake import *
 from VisualStudio import *
 
 # local python library
@@ -87,14 +90,16 @@ class BuildAndRun:
 
 	#  Class initializer.
 	#
-	def __init__(self, ccver, verbose=0, dry_run=False):
+	def __init__(self, ctl, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.21
+		self.version = 1.3
 		#
+		self.ctl = ctl
 		self.ccver = ccver
 		self.dry_run = dry_run
 		self.verbose = verbose
 		#
+		self.use_cmake = ctl.get(CFK.USE_CMAKE)
 		self.encoding = 'utf-8' if Util.is_unix() else 'cp932'
 		self.errmsg = None
 
@@ -325,6 +330,17 @@ class BuildAndRun:
 		tmplog = 'log/%s_%s_%s_%s_build.log' % \
 			(self.clsname, self.ccver, self.platform, self.config)
 		FileOp().rm(tmplog)
+
+		if self.use_cmake:
+			cmake = CMake(self.ctl, self.ccver,
+				      platform, opts, tmplog, self.verbose)
+			status = cmake.preparation()
+			if status != 0:
+				return -1, ['CMake prep', tmplog]
+			slnfile = cmake.config_and_generate()
+			if slnfile is None:
+				return -1, ['CMake config/gen', tmplog]
+
 		if self.verbose > 1:
 			print('build solution (Windows)')
 			print('  slnfile: %s' % slnfile)

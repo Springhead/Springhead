@@ -8,7 +8,8 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/07 F.Kanehori	First version.
-#	Ver 1.1  2018/03/15 F.Kanehori	Add: MAKE_TARGET
+#	Ver 1.1  2018/03/15 F.Kanehori	Add: MAKE_TARGET.
+#	Ver 1.2  2019/08/05 F.Kanehori	Add: CMAKE related ones.
 # ======================================================================
 from enum import Enum
 
@@ -35,6 +36,11 @@ class CFK():		#  Control File Keywords.
 	RUN_LOG		= 'RunLog'
 	RUN_ERR_LOG	= 'RunErrLog'
 	INTERVENTION	= 'Intervention'
+	USE_CMAKE	= 'UseCMake'		# for CMake
+	CMAKE_BLDDIR	= 'CMakeBuildDir'
+	CMAKE_TOPDIR	= 'CMakeTopDir'
+	CMAKE_CONF_FILE	= 'CMakeConfFile'
+	CMAKE_OPTS_FILE	= 'CMakeOptsFile'
 
 class RST(Enum):		#  ReSulT category.
 	ERR		= 0	#    error iinformation

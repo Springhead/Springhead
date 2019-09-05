@@ -284,7 +284,7 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 	cmnd = 'python SpringheadTest.py'
 	opts = '-p %s -c %s -C %s' % (plat, conf, csusage)
 	if verbose:
-		opts += '-v'
+		opts += ' -v'
 	args = 'result/dailybuild.result dailybuild.control '
 	if Util.is_unix():
 		args += 'unix'
