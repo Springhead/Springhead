@@ -38,7 +38,7 @@ set(VS_VERSION "15.0")
 #  Compile options for Windows (Visual Studio).
 #
 set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D _LIB /GF- /Gm- /EHsc /GS /Gy- /Qpar \
-			 /arch:AVX /fp:precize /openmp \
+			 /arch:AVX /fp:precise /openmp \
 			 /wd\"4996\" /wd\"4244\" /wd\"4251\" /FC")
 set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except /Gd")
 set(WIN_COPT_RELEASE	"/O2 /Ob2 /Ot /Oy /MD /Gr")
