@@ -114,10 +114,22 @@ endif()
 set(EmbPython_RunSwig "EmbPython_RunSwig")
 if(${Windows})
     add_custom_target(${EmbPython_RunSwig} ALL
-	COMMAND python EmbPython_clean.py
 	COMMAND RunSwig_EmbPython.bat
 	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
 	COMMENT [[ generating EmbPython sources ]]
+)
+elseif(${Linux})
+endif()
+
+# ------------------------------------------------------------------------------
+#  Add target to clean up EmbPython generated files.
+#
+set(EmbPython_RunSwig_Clean "EmbPython_RunSwig_Clean")
+if(${Windows})
+    add_custom_target(${EmbPython_RunSwig_Clean}
+	COMMAND python EmbPython_clean.py
+	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
+	COMMENT [[ clearing EmbPython fenerate files ]]
 )
 elseif(${Linux})
 endif()
