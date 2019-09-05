@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Project")
+set(ProjectName "PythonSpr")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
@@ -48,7 +48,7 @@ set(EXCLUDE_SRCS ${EMPTY})
 #	Do not include 'RunSwig' in the list.
 set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 	      HumanInterface Physics)
-#set(SPR_PROJS ${SPR_PROJS} EmbPython)
+set(SPR_PROJS ${SPR_PROJS} EmbPython)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -65,13 +65,11 @@ set(ADDITIONAL_LIBDIR ${EMPTY})
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
-#set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
+set(ADDITIONAL_LIBS python35.lib XINPUT9_1_0.LIB)
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
-#set(EXCLUDE_LIBS XINPUT.LIB)
+set(EXCLUDE_LIBS XINPUT.LIB)
 
 #  Visual Studio Debugger settings.
 #	DEBUGGER_WORKING_DIRECTORY:
@@ -80,7 +78,7 @@ set(EXCLUDE_LIBS ${EMPTY})
 #	DEBUGGER_COMMAND_ARGUMENTS:
 #		Debugger command line arguments.
 set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
+set(DEBUGGER_COMMAND_ARGUMENTS FileLoad.py)
 
 # ******************************************************************************
 #  End of customization section.
@@ -308,7 +306,7 @@ add_custom_target(${SYNC}
 set(DEP_Base)
 set(DEP_Collision Foundation)
 set(DEP_Creature Foundation Framework Physics)
-#set(DEP_EmbPython EmbPython_RunSwig)
+set(DEP_EmbPython EmbPython_RunSwig)
 set(DEP_FileIO Foundation)
 set(DEP_Foundation Base)
 set(DEP_Framework FileIO Foundation Graphics Physics)
@@ -326,7 +324,7 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
-#add_dependencies(EmbPython_RunSwig RunSwig)
+add_dependencies(EmbPython_RunSwig RunSwig)
 add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
@@ -367,8 +365,7 @@ target_link_libraries(${Target}
 #  Exclude default libraries.
 #
 if(DEFINED EXCLUDE_LIBS)
-    set(CMAKE_EXE_LINKER_FLAGS
-	"${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
 endif()
 
 # ------------------------------------------------------------------------------

@@ -1,0 +1,36 @@
+# ==============================================================================
+#  CMakeTopdir.txt
+#    ** このファイルを直接編集してコミットしないようにお願いします **
+#    ** DO NOT edit and commit this file. **
+#
+#    次の変数を定義する
+#       TOPDIR ← Springhead を clone したディレクトリの絶対パス
+#                                                       ^^^^^^^^
+#    ${TOPDIR} は "core" の直接上位のディレクトリです。
+#    パスセパレータにはスラッシュ('/')を使用するのが賢明です (文字エスケープ
+#    の混乱が回避できます)。
+#
+#    This file defines following variable.
+#       TOPDIR ← ABSOLUTE PATH of the directory where Springhead was cloned.
+#
+#    We assume that subdirectory "core" exists as direct child of ${TOPDIR}.
+#    Use slash character ('/') as path separator to avoid escape character
+#    problem.
+#
+# ==============================================================================
+
+set(TOPDIR "F:/Project/Springhead_CMakeVersion")
+
+
+# ==============================================================================
+#  これ以下は DailyBuild で使用するコードです。変更しないでください。
+#
+#  DO NOT change any line hereafter. They are used by 'DailyBuild'.
+# ==============================================================================
+
+if("${TOPDIR}" STREQUAL "")
+    set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
+    get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
+endif()
+
+# end: CMakeTopdir.txt

@@ -83,19 +83,29 @@ set(EXCLUDE_LIBS xinput.lib)
 #	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt" SHOULD contain the
 #	definition of top directory like;
 #	    set(TOPDIR "<absolute-dir-path>")
+#	For DailyBuild:
+#	    Cmake option "-D TOPDIR_FILE=<absolute-file-path>" specifies
+#	    the definition file instead of default one.
 #
-set(TOPDIR_FILE "CMakeTopdir.txt")
 if(DEFINED TOPDIR)
-    if(NOT EXISTS "${TOPDIR}")
-	message("Error: File \"${TOPDIR}\" not found")
-	return()
-    endif()
-else()
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
+    # ok
+elseif(DEFINED TOPDIR_FILE)
+    if(NOT EXISTS ${TOPDIR_FILE})
 	message("Error: File \"${TOPDIR_FILE}\" not found")
 	return()
     endif()
     include(${TOPDIR_FILE})
+else()
+    set(TOPDIR_FILE "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt")
+    if(NOT EXISTS ${TOPDIR_FILE})
+	message("Error: File \"${TOPDIR_FILE}\" not found")
+	return()
+    endif()
+    include(${TOPDIR_FILE})
+endif()
+if(NOT EXISTS "${TOPDIR}")
+    message("Error: Directory \"${TOPDIR}\" not found")
+    return()
 endif()
 
 set(SPR_TOP_DIR  "${TOPDIR}")
