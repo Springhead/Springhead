@@ -13,14 +13,20 @@ setlocal enabledelayedexpansion
 ::	Ver 1.0  2017/01/16 F.Kanehori	‰”Å
 ::	Ver 1.1  2019/08/25 F.Kanehori	ŒŸõƒpƒX’Ç‰Á (15.0) yb’èz
 ::	Ver 2.0  2019/08/29 F.Kanehori	ŒŸõ•û®•ÏX
+::	Ver 2.1  2019/09/18 F.Kanehori	Bug fixed (default python ‚ª‚È‚¢‚Æ‚«)
 :: ============================================================================
 set PROG=%~n0
 
-set SCRIPT=..\..\RunSwig\find_path.py
+set CWD=%CD%
+set RUNSWIG_DIR=..\..\RunSwig
+set PYTHON=python_adapter.bat
+set SCRIPT=find_path.py
 
 echo %PROG%: wait a moment ..
-for /f "usebackq" %%o in (`python %SCRIPT% -s nmake.exe`) do set OUT="%%o"
-if "%out%" equ "" (
+cd %RUNSWIG_DIR%
+for /f "usebackq" %%o in (`%PYTHON% %SCRIPT% -s nmake.exe`) do set OUT="%%o"
+cd %CWD%
+if "%OUT%" equ "" (
 	set MAKEPATH=
 ) else (
 	set MAKEPATH=!OUT:/= !
