@@ -203,6 +203,9 @@ void FWApp::EnableIdleFunc(bool on){
 void FWApp::StartMainLoop() {
 	FWGraphicsHandler::instance->StartMainLoop();
 }
+void FWApp::EndMainLoop() {
+	FWGraphicsHandler::instance->EndMainLoop();
+}
 
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////

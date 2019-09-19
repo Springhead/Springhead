@@ -147,9 +147,13 @@ public:
 	void EnableIdleFunc(bool on = true);
 	
 	/** @brief メインループの実行
-		glutの場合，glutmainLoopの実行
+		glutの場合，glutMainLoopの実行
 	 */
 	void StartMainLoop();
+	/** @brief メインループの終了
+		freeglutの場合，glutLeaveMainLoopを実行、それ以外の場合は exit(0)
+	 */
+	void EndMainLoop();
 
 	// 派生クラスで定義することのできる仮想関数 -----------------------------
 

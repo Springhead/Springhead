@@ -469,8 +469,8 @@ public: /** 派生クラスが実装する関数 **/
 	virtual void OnAction(int menu, int id){
 		/// いつでも有効アクション
 		if(menu == MENU_ALWAYS){
-			if(id == ID_EXIT)
-				exit(0);
+			if (id == ID_EXIT)
+				EndMainLoop();
 			if(id == ID_RUN)
 				ToggleAction(menu, id);
 			if (id == ID_STEP)
