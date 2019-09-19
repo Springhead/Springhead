@@ -7,6 +7,7 @@
  */
 
 #include <Foundation/Object.h>
+#include <Framework/SprFWWin.h>
 
 namespace Spr{;
 
@@ -34,7 +35,9 @@ public:
 	///	初期化を行う。最初にこれを呼ぶ必要がある。
 	virtual void Init(int argc = 0, char** argv = NULL){}	
 	/// メインループを開始
-	virtual void StartMainLoop()=0;
+	virtual void StartMainLoop() = 0;
+	/// メインループを終了（FreeGLUTは可能）
+	virtual void EndMainLoop() = 0;
 	/// Idle callbackの有効化/無効化
 	virtual void EnableIdleFunc(bool on = true)=0;
 	/// フルスクリーンモードへの切り替え．API名は暫定的にGLUTに準拠

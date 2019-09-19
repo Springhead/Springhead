@@ -57,6 +57,7 @@ public:
 	virtual bool StopTimer(UTTimer* timer);
 	
 	virtual void StartMainLoop();
+	virtual void EndMainLoop();
 	virtual void EnableIdleFunc(bool on = true);
 	virtual void EnterGameMode();
 	virtual void LeaveGameMode();
