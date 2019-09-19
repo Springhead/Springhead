@@ -165,12 +165,14 @@ void FWGLUT::StartMainLoop(){
 }
 void FWGLUT::EndMainLoop() {
 #ifdef GLUT_ACTION_ON_WINDOW_CLOSE
-#if 0
+# if 0
 	glutExit();
 	::ExitThread(0);
-#else
+# else
 	glutLeaveMainLoop();
-#endif
+# endif
+#else
+	exit(0);
 #endif
 }
 
