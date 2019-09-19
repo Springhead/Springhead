@@ -42,7 +42,6 @@ protected:
 	static void SPR_CDECL GlutPassiveMotionFunc(int x, int y);
 	static void SPR_CDECL GlutKeyFunc(unsigned char ch, int x, int y);
 	static void SPR_CDECL GlutSpecialKeyFunc(int ch, int x, int y);
-	static void SPR_CDECL GlutCloseFunc();
 #ifdef USE_FREEGLUT
 	static void SPR_CDECL GlutMouseWheelFunc(int, int, int, int);
 #endif

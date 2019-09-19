@@ -13,9 +13,6 @@
 #include <SprDefs.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
-#ifdef USE_FREEGLUT
-#include <GL/freeglut_ext.h>
-#endif
 
 #include <Framework/SprFWApp.h>
 #include <Framework/FWGLUT.h>
@@ -104,7 +101,7 @@ void FWGLUT::GlutKeyFunc(unsigned char ch, int x, int y){
 	FWGLUT::GetInstance()->keyMouse->OnKey(ch, x, y);
 }
 
-void FWGLUT::GlutSpecialKeyFunc(int ch, int x, int y) {
+void FWGLUT::GlutSpecialKeyFunc(int ch, int x, int y){
 	FWGLUT::GetInstance()->keyMouse->OnSpecialKey(ch, x, y);
 }
 
@@ -113,10 +110,6 @@ void FWGLUT::GlutMouseWheelFunc(int wheel, int direction, int x, int y){
 	FWGLUT::GetInstance()->keyMouse->OnMouseWheel(wheel, direction, x, y);
 }
 #endif
-
-void FWGLUT::GlutCloseFunc() {
-	FWGLUT::GetInstance()->EndMainLoop();
-}
 
 void FWGLUT::AtExit(){
 	FWApp::GetApp()->AtExit();
@@ -172,14 +165,12 @@ void FWGLUT::StartMainLoop(){
 }
 void FWGLUT::EndMainLoop() {
 #ifdef GLUT_ACTION_ON_WINDOW_CLOSE
-# if 0
+#if 0
 	glutExit();
 	::ExitThread(0);
-# else
-	glutLeaveMainLoop();
-# endif
 #else
-	exit(0);
+	glutLeaveMainLoop();
+#endif
 #endif
 }
 
@@ -259,7 +250,6 @@ void FWGLUT::RegisterCallbacks(){
 #ifdef USE_FREEGLUT
 	glutMouseWheelFunc   (FWGLUT::GlutMouseWheelFunc);
 #endif
-	glutCloseFunc(FWGLUT::GlutCloseFunc);
 }
 
 ///	ウィンドウを破棄する
