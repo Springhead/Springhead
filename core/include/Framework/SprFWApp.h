@@ -98,6 +98,7 @@ protected:
 	static FWApp* instance;			///<	唯一のFWAppインスタンス
 	bool bThread;					///<	GLUTを別スレッドで動かす場合 true
 	volatile bool bPostRedisplay;	///<	別スレッドに再描画の要求をするためのフラグ true で再描画
+	volatile bool bEndThread;		///<	別スレッドの場合にスレッドを終了させる。
 
 	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
@@ -127,6 +128,7 @@ public:
 	virtual void Init(int argc, char* argv[] = NULL);
 	///	Create new thead and start.
 	void InitInNewThread();
+	void EndThread();
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．

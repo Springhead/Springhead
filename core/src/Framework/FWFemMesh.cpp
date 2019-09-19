@@ -9,7 +9,7 @@
 #include "FWSprTetgen.h"
 
 #include <SprDefs.h>
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <GL/glut.h>
 #include <Collision/CDQuickHull2DImp.h>
 
