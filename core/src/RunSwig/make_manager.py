@@ -32,9 +32,9 @@
 #     Ver 1.7	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 #     Ver 1.8	 2019/02/21 F.Kanehori	Cmake環境に対応.
 #     Ver 1.9	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#     Ver 1.91	 2019/04/11 F.Kanehori	Discard Ver.1.10 and after.
+#     Ver 1.10	 2019/09/18 F.Kanehori	Cmakeが生成したファイルの後始末を追加.
 # ==============================================================================
-version = 1.91
+version = 1.10
 trace = False
 
 import sys
@@ -251,6 +251,29 @@ if fio.open() < 0:
 	Error(prog).error(fio.error())
 lines = fio.read()
 fio.close()
+
+#  Remove cmake generated dummy files.
+#
+projs = []
+for line in lines:
+	proj = line.split()
+	if (len(proj) > 0):
+		projs.append(proj[0])
+cwd = os.getcwd()
+for proj in projs:
+	os.chdir('../%s' % proj)
+	fio = TextFio('RunSwig_gen_files.txt')
+	if fio.open() < 0:
+		Error(prog).error(fio.error())
+	tmp_lines = fio.read()
+	fio.close()
+	for line in tmp_lines:
+		for fname in line.split():
+			if os.path.exists(fname) and os.path.getsize(fname) == 0:
+				msg = '.. removing %s (cmake generated dummy file)'
+				print(msg % fname)
+				os.remove(fname)
+	os.chdir(cwd)
 
 #  Do the job.
 #

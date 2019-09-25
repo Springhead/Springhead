@@ -39,7 +39,7 @@ file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 		../../include/EmbPython/*.h
 		../../include/EmbPython/Utility/*.h
 		../Foundation/UTCriticalSection.cpp)
-list(REMOVE_ITEM SRCS ../SprPythonDLL.cpp)		# Exclude
+list(REMOVE_ITEM SRCS SprPythonDLL.cpp)		# Exclude
 #  end of definition
 
 #===============================================================================

@@ -29,7 +29,7 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2019/08/07 F.Kanehori	First version.
+#	Ver 1.0  2019/09/19 F.Kanehori	First version.
 # ======================================================================
 import sys
 import os
@@ -74,14 +74,22 @@ class CMake:
 	#  Prepare CMake environment.
 	#
 	def preparation(self):
-		# ==========================================
-		#  DONT KNOW WHICH, LIBRARY or APPLICATION?
-		# ==========================================
-		print('    cmake: preparation')
+		# ======================================================
+		#  If "CMakeLists,txt.Lib.dist" exists here, we must be
+		#  in a Springhead Library creating step.
+		# ======================================================
+		if self.verbose:
+			print('cmake: preparation')
 		cwd = os.getcwd()
 		srcfile = '%s/CMakeLists.txt.Lib.dist' % cwd
 		dstfile = '%s/CMakeLists.txt' % cwd
-		status = FileOp(verbose=1).cp(srcfile, dstfile)
+		status = 0
+		if os.path.exists(srcfile):
+			#  Need to copy dist file to CMakeLists.txt.
+			status = FileOp(verbose=0).cp(srcfile, dstfile)
+		elif not os.path.exists(dstfile):
+			status = -1
+			srcfile = dstfile
 		if status != 0:
 			Error().error('"%s" not found' % srcfile)
 		return status
@@ -89,13 +97,15 @@ class CMake:
 	#  Configure and generate solution file.
 	#  
 	def config_and_generate(self):
-		print('    cmake: generation start')
+		if self.verbose:
+			print('cmake: generation start')
 		#  Create work directory if not exists.
 		#
 		blddir = self.ctl.get(CFK.CMAKE_BLDDIR)
 		if self.verbose and not os.path.exists(blddir):
 			cwd = Util.pathconv(os.getcwd(), to='unix')
-			print('create directory %s/%s' % (cwd, blddir))
+			if self.verbose:
+				print('  create directory %s/%s' % (cwd, blddir))
 		os.makedirs(blddir, exist_ok=True)
 
 		#  Execuete cmake.
@@ -112,11 +122,13 @@ class CMake:
 		cmnd += ' -B %s' % blddir
 		cmnd += ' -G %s' % self.generator
 		#
-		#logobj = open(logfile, 'w')
-		proc = Proc(verbose=1)	#self.verbose)
-		status = proc.execute(cmnd, shell=True).wait()
+		logobj = self.__open(self.logfile)
+		proc = Proc(verbose=0)	#self.verbose)
+		status = proc.execute(cmnd, shell=True,
+				stdout=logobj, stderr=proc.STDOUT).wait()
+		logobj.close()
 		if self.verbose:
-			print('cmake: configure/generate done with code %d' % status)
+			print('  configure/generate done with code %d' % status)
 		if status != 0:
 			return None
 		#
@@ -124,8 +136,8 @@ class CMake:
 		if slnfile is None:
 			Error().error('found more than two solution files')
 		if self.verbose:
-			print('cmake: solution file is %s'% slnfile)
-		print('    cmake: generation end')
+			print('  solution file is %s'% slnfile)
+			print('cmake: generation end')
 		return slnfile
 
 	# --------------------------------------------------------------
@@ -138,7 +150,7 @@ class CMake:
 		generator = 2015	# default
 		if ccver in ['14.0', '14', 'v140', '2015']:
 			ccver = 2015
-		elif toolset in ['15.0', '15', 'v141', '2017']:
+		elif ccver in ['15.0', '15', 'v141', '2017']:
 			ccver = 2017
 		return self.GENERATOR[ccver]
 
@@ -150,5 +162,13 @@ class CMake:
 		if len(name) != 1:
 			return None
 		return names[0]
-			
+
+	##  Open logfile (directory is created if necessary).
+	#
+	def __open(self, logpath):
+		path = logpath.split('/')
+		if len(path) > 1:
+			os.makedirs(path[:-1][0], exist_ok=True)
+		return open(logpath, 'a')
+
 # end: CMake.py

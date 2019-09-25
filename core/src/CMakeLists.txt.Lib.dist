@@ -79,19 +79,23 @@ include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 #
 if(${Windows})
     message(STATUS "Host System: Windows")
-    set(CMAKE_CXX_FLAGS		${WIN_COPT_COMMON})
-    set(CMAKE_CXX_FLAGS_DEBUG	${WIN_COPT_DEBUG})
-    set(CMAKE_CXX_FLAGS_RELEASE	${WIN_COPT_RELEASE})
-    set(CMAKE_CXX_FLAGS_TRACE	${WIN_COPT_TRACE})
+    set(CMAKE_CXX_FLAGS		"${WIN_COPT_COMMON}")
+    set(CMAKE_CXX_FLAGS_DEBUG	"${WIN_COPT_DEBUG}")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${WIN_COPT_RELEASE}")
+    set(CMAKE_CXX_FLAGS_TRACE	"${WIN_COPT_TRACE}")
     foreach(macros IN ITEMS ${WIN_COPT_MACROS})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
     endforeach()
+    set(CMAKE_EXE_LINKER_FLAGS		  "${WIN_LINK_COMMON}")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG	  "${WIN_LINK_DEBUG}")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE	  "${WIN_LINK_RELEASE}")
+    set(CMAKE_EXE_LINKER_FLAGS_TRACE	  "${WIN_LINK_TRACE}")
 elseif(${Linux})
     message(STATUS "Host System: Linux")
     set(LIB_DIR	"${SPR_CORE_DIR}/lib")
-    set(CMAKE_CXX_FLAGS		${LINUX_COPT_COMMON})
-    set(CMAKE_CXX_FLAGS_DEBUG	${LINUX_COPT_DEBUG})
-    set(CMAKE_CXX_FLAGS_RELEASE	${LINUX_COPT_RELEASE})
+    set(CMAKE_CXX_FLAGS		"${LINUX_COPT_COMMON}")
+    set(CMAKE_CXX_FLAGS_DEBUG	"${LINUX_COPT_DEBUG}")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${LINUX_COPT_RELEASE}")
     foreach(macros IN ITEMS ${WIN_COPT_MACROS})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D ${macros}")
     endforeach()
@@ -185,9 +189,10 @@ endif()
 #  Some other definitions.
 #
 if(${Windows})
-    #set(RunSwigDir ${CMAKE_SOURCE_DIR}/RunSwig)
-    set(RunSwigDir ${TOPDIR}/core/src/RunSwig)
+    set(RunSwigDir ${SPR_SRC_DIR}/RunSwig)
     set(Python ${RunSwigDir}/python_adapter.bat)
+    file(TO_NATIVE_PATH "${RunSwigDir}" RunSwigDir)
+    file(TO_NATIVE_PATH "${Python}" Python)
 #    if(NOT DEFINED VS_VERSION)
 #	execute_process(
 #	    COMMAND ${Python} get_vs_version.py
@@ -255,10 +260,10 @@ set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
 
 if(${Windows})
     add_custom_target(${ProjectName} ALL
-	COMMAND cd ${CMAKE_SOURCE_DIR}
 	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${LIBCMND_DEBUG}
 	COMMAND if "'$(Configuration)'" equ "'Release'" ${LIBCMND_RELEASE}
 	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${LIBCMND_TRACE}
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
 	COMMENT [[  generating Springhead Library... ]]
     )
