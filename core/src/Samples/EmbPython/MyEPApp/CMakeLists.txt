@@ -65,7 +65,10 @@ set(ADDITIONAL_LIBDIR ${EMPTY})
 
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS python35.lib XINPUT9_1_0.LIB)
+set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
+set(ADDITIONAL_LIBS_DEBUG   python35_d.lib)
+set(ADDITIONAL_LIBS_RELEASE python35.lib)
+set(ADDITIONAL_LIBS_TRACE   python35.lib)
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
@@ -159,19 +162,23 @@ include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 if(${Windows})
     message(STATUS "Host System: Windows")
     set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
-    set(CMAKE_CXX_FLAGS		${WIN_COPT_COMMON})
-    set(CMAKE_CXX_FLAGS_DEBUG	${WIN_COPT_DEBUG})
-    set(CMAKE_CXX_FLAGS_RELEASE	${WIN_COPT_RELEASE})
-    set(CMAKE_CXX_FLAGS_TRACE	${WIN_COPT_TRACE})
+    set(CMAKE_CXX_FLAGS		"${WIN_COPT_COMMON}")
+    set(CMAKE_CXX_FLAGS_DEBUG	"${WIN_COPT_DEBUG}")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${WIN_COPT_RELEASE}")
+    set(CMAKE_CXX_FLAGS_TRACE	"${WIN_COPT_TRACE}")
     foreach(macros IN ITEMS ${WIN_COPT_MACROS})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
     endforeach()
+    set(CMAKE_EXE_LINKER_FLAGS		"${WIN_LINK_COMMON}")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG	"${WIN_LINK_DEBUG}")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE	"${WIN_LINK_RELEASE}")
+    set(CMAKE_EXE_LINKER_FLAGS_TRACE	"${WIN_LINK_TRACE}")
 elseif(${Linux})
     message(STATUS "Host System: Linux")
     set(LIB_DIR	"${SPR_CORE_DIR}/lib")
-    set(CMAKE_CXX_FLAGS		${LINUX_COPT_COMMON})
-    set(CMAKE_CXX_FLAGS_DEBUG	${LINUX_COPT_DEBUG})
-    set(CMAKE_CXX_FLAGS_RELEASE	${LINUX_COPT_RELEASE})
+    set(CMAKE_CXX_FLAGS		"${LINUX_COPT_COMMON}")
+    set(CMAKE_CXX_FLAGS_DEBUG	"${LINUX_COPT_DEBUG}")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${LINUX_COPT_RELEASE}")
     foreach(macros IN ITEMS ${WIN_COPT_MACROS})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D ${macros}")
     endforeach()
@@ -361,6 +368,12 @@ target_link_libraries(${Target}
     ${SPR_PROJS}
     ${ADDITIONAL_LIBS}
 )
+foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${_tmp} _conf)
+    set(_lib ${ADDITIONAL_LIBS_${_conf}})
+    target_link_libraries(${Target} $<$<CONFIG:${_conf}>:${_lib}>)
+endforeach()
+
 # ------------------------------------------------------------------------------
 #  Exclude default libraries.
 #

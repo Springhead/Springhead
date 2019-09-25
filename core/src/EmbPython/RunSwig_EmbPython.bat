@@ -15,6 +15,8 @@
 ::	Ver 2.0  2017/10/04 F.Kanehori  Visual Studio 2015 対応
 ::	Ver 3.0  2018/12/15 F.Kanehori  Visual Studio 2017 対応
 ::					nmake がパスに入っていることを要請
+::	Ver 3.1  2019/09/12 F.Kanehori  依存リストに次のものを追加
+::					"include/EmbPython/SprEP*.h"
 :: ****************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -127,7 +129,10 @@ exit /b
         if "!$result!" equ "no" set INCHDRS=!INCHDRS! %%~nxf
     )
     call :add_prefix "!INCHDRS:~1!" %INCDIROUT%\%PROJECT%
-    set INCHDRS=%$string:\=/%
+    rem set INCHDRS=%$string:\=/%
+    set INCHDRS=%$string%
+    set INCHDRS=!INCHDRS! %INCDIR%\EmbPython\SprEP%PROJECT%.h
+    set INCHDRS=%INCHDRS:\=/%
     if %DEBUG% == 1 echo INCHDRS [%INCHDRS%]
 
     ::  source files

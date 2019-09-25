@@ -37,9 +37,9 @@ set(VS_VERSION "15.0")
 # ------------------------------------------------------------------------------
 #  Compile options for Windows (Visual Studio).
 #
-set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D \"_LIB\" /GF- /EHsc /Gy- /Qpar \
+set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D _LIB /GF- /EHsc /Gy- /Qpar \
 			 /arch:AVX /openmp /wd\"4996\" /wd\"4244\" /wd\"4251\" /FC
-			 /D \"DAILY_BUILD\"")
+			 /D DAILY_BUILD")
 #set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
 set(WIN_COPT_DEBUG	"/Od /Ob0 /Oy- /RTC1 /MDd /fp:except ")
 set(WIN_COPT_RELEASE	"/Ob2 /Ot /Oy /Gr")
@@ -47,18 +47,17 @@ set(WIN_COPT_TRACE	"/Ob2 /Ot /D TRACE /Oy- /Gr")
 #
 #  Need not to specify "-D" or "/D".
 #set(WIN_COPT_MACROS "NAME" "NAME=VALUE")
-#
-set(CMAKE_EXE_LINKER_FLAGS  "/ERRORREPORT:PROMPT /IGNORE:4099 /NXCOMPAT \
-			/MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG   "/DEBUG")
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE "")
-set(CMAKE_EXE_LINKER_FLAGS_TRACE   "")
-#
+
+set(WIN_LINK_COMMON  "/ERRORREPORT:PROMPT /IGNORE:4099 /NXCOMPAT \
+		      /MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")
 if("${ARCHITECTURE}" STREQUAL "x86")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:X86")
+    set(WIN_LINK_COMMON "${WIN_LINK_COMMON} /MACHINE:X86")
 else()
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:X64")
+    set(WIN_LINK_COMMON "${WIN_LINK_COMMON} /MACHINE:X64")
 endif()
+set(WIN_LINK_DEBUG   "/DEBUG")
+set(WIN_LINK_RELEASE "")
+set(WIN_LINK_TRACE   "")
 
 # ------------------------------------------------------------------------------
 #  Compile options for Linux (g++).

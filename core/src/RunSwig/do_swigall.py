@@ -159,6 +159,8 @@ parser.add_option('-V', '--version',
 if options.version:
         print('%s: Version %s' % (prog, version))
         sys.exit(0)
+if debug:
+	print('%s options=%s args=%s' % (prog, options, args))
 
 clean   = options.clean
 verbose = options.verbose

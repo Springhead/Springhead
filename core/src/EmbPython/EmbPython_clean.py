@@ -12,6 +12,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2019/08/28 F.Kanehori	First version.
+#	Ver 1.01 2019/09/11 F.Kanehori	Add include directory to target.
 # ======================================================================
 version = 1.0
 
@@ -65,5 +66,6 @@ for proj in projs:
 	remove('EP%s.h' % proj)
 	remove('Makefile_EmbPython.swig.%s' % proj)
 	remove('swig_%s.log' % proj)
+	remove('../../include/EmbPython/SprEP%s.h' % proj)
 
 sys.exit(0)

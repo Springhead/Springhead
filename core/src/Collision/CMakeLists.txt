@@ -33,15 +33,24 @@ get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 #	If GLOB collects unnessessary files, replace "" of the
 #	last element of EXCLUDES_SRCS by those file names.
 #---------------------------------------------------------------
-FILE(GLOB SRCS *.cpp *.h ${Target}Stub.cpp)
-FILE(GLOB COMMON_HDRS ${SPR_INC_DIR}/${Target}/*.h)
-FILE(GLOB EXCLUDE_SRCS "")
+file(STRINGS "RunSwig_gen_files.txt" _tmp_buff)
+string(REPLACE " " ";" _tmp_buff ${_tmp_buff})
+foreach(_file ${_tmp_buff})
+    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${_file})
+	message("     create dummy file: ${_file}")
+	file(TOUCH ${_file})
+    endif()
+endforeach()
+#
+file(GLOB SRCS *.cpp *.h)
+file(GLOB COMMON_HDRS ${SPR_INC_DIR}/${Target}/*.h)
+file(GLOB EXCLUDE_SRCS "")
 #  end of definition
 #===============================================================
 list(APPEND SRCS ${COMMON_HDRS})
 list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
 if(${LEN_EXCLUDE_SRCS} GREATER 0)
-	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
+    list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
 add_library(${Target} STATIC ${SRCS})
 
