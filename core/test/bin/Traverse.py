@@ -134,8 +134,15 @@ class Traverse:
 			self.__init_log(ctl.get(CFK.RUN_ERR_LOG), RST.RUN, RST.ERR)
 			self.once = False
 			use_cmake = True if ctl.get(CFK.USE_CMAKE) else False
-			print('use cmake: %s' % use_cmake)
-			print()
+			if ctl.get(CFK.USE_CMAKE):
+				cmnd = 'cmake --version'
+				proc = Proc().execute(cmnd, stdout=Proc.PIPE, shell=True)
+				status, out, err = proc.output()
+				if status != 0:
+					exit(-1)
+				print('using %s' % out.split('\n')[0])
+			else:
+				print('do not use cmake')
 
 		# check test condition
 		is_cand = self.__is_candidate_dir(cwd, ctl)
