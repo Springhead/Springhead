@@ -188,7 +188,15 @@ void FWApp::EndThread() {
 }
 
 void FWApp::Display(){
-	GetCurrentWin()->Display();
+	UTAutoLock LOCK(displayLock);
+
+	if (bEndThread) {
+		bEndThread = false;
+		FWGraphicsHandler::instance->EndMainLoop();
+	}
+	else {
+		GetCurrentWin()->Display();
+	}
 }
 
 void FWApp::TimerFunc(int id){
@@ -360,6 +368,16 @@ GRDeviceIf* FWApp::GRInit(int argc, char* argv[], int type){
 		SetGRHandler(type);
 	FWGraphicsHandler::instance->Init(argc, argv);
 	return FWGraphicsHandler::instance->GetGRDevice();
+}
+
+// ----- ----- -----
+// ロック処理
+void FWApp::GetDisplayLock() {
+	displayLock.Enter();
+}
+
+void FWApp::ReleaseDisplayLock() {
+	displayLock.Leave();
 }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
