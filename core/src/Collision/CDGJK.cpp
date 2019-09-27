@@ -214,7 +214,7 @@ extern UTQPTimer	qpTimerForCollision;
 
 double biasParam = 0.5;
 
-double epsilon = 1e-6; 
+double epsilon = 7e-11;
 double threshold = 1e-6;
 
 double epsilon2 = epsilon*epsilon;
@@ -381,9 +381,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	int count = 0;
 	while(1){
 		count++;
-		if (count > 1000) {
+		if (count > 100) {
 			DSTR << "Too many loop in 2D tri search of CCDGJK." << std::endl;
-			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "2DS");
+			//ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "2DS");
 			bGJKDebug = true;
 		}
 #ifdef _DEBUG
@@ -405,7 +405,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		double s1, s2, s;
 		s1 = w[(int)ids[0]].XY() ^ w[(int)ids[1]].XY();
 		s2 = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY();
-		if (s1 >= s2 && s1 > epsilon) {	//	両方から見て外にある場合、より大きい方を取る。小さい方を使うと、スレスレの場合に無限ループに陥る場合がある。epsilon = 1e-12. 2018.08.16 hase 
+		if (s1 >= s2 && s1 > epsilon * 100) {	//	両方から見て外にある場合、より大きい方を取る。小さい方を使うと、スレスレの場合に無限ループに陥る場合がある。epsilon = 1e-12. 2018.08.16 hase 
 			s = s1;
 			//	1-0の法線の向きvNewでsupport pointを探し、新しい三角形にする。
 			Vec2d l = w[(int)ids[1]].XY() - w[(int)ids[0]].XY();
@@ -417,7 +417,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			ids[2] = ids[0];
 			ids[0] = FindVacantId(ids[1], ids[2]);
 			//		}else if ((s = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY()) > epsilon){
-		} else if (s2 > epsilon) {
+		}
+		else if (s2 > epsilon * 100) {
 			s = s2;
 			//	2-0の法線の向きvでsupport pointを探し、新しい三角形にする。
 			Vec2d l = w[(int)ids[2]].XY() - w[(int)ids[0]].XY();
@@ -460,7 +461,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			qpTimerForCollision.Accumulate(coltimePhase2);
 			return 0;
 		}
-		if (count > 1000) return 0;
+		if (count > 100) return 0;
 	}
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
@@ -474,8 +475,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	int lastVid = -1;
 	while(1){
 		count ++;
-		if (count > 1000) {
+		if (count > 100) {
 			DSTR << "Too many loop in 3D refinement of CCDGJK." << std::endl;
+			goto final;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist, "3DR");
 			bGJKDebug = true;
 		}

@@ -11,6 +11,7 @@
 #include <Foundation/SprUTTimer.h>
 #include <HumanInterface/SprHIKeyMouse.h>
 #include <Framework/SprFWWin.h>
+#include <Foundation/SprUTCriticalSection.h>
 
 namespace Spr{;
 /** \addtogroup gpFramework */
@@ -99,6 +100,7 @@ protected:
 	bool bThread;					///<	GLUTを別スレッドで動かす場合 true
 	volatile bool bPostRedisplay;	///<	別スレッドに再描画の要求をするためのフラグ true で再描画
 	volatile bool bEndThread;		///<	別スレッドの場合にスレッドを終了させる。
+	UTCriticalSection displayLock;
 
 	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
@@ -147,9 +149,13 @@ public:
 	void EnableIdleFunc(bool on = true);
 	
 	/** @brief メインループの実行
-		glutの場合，glutmainLoopの実行
+		glutの場合，glutMainLoopの実行
 	 */
 	void StartMainLoop();
+	/** @brief メインループの終了
+		freeglutの場合，glutLeaveMainLoopを実行、それ以外の場合は exit(0)
+	 */
+	void EndMainLoop();
 
 	// 派生クラスで定義することのできる仮想関数 -----------------------------
 
@@ -299,6 +305,14 @@ public:
 	 */
 	GRDeviceIf* GRInit(); // C# API用. （引数を持つGRInitのみを%ignoreしたいので）
 	GRDeviceIf* GRInit(int argc, char* argv[] = NULL, int type = TypeGLUT);
+
+	/** @brief Display関数呼び出しの排他ロックを取得する
+	 */
+	void GetDisplayLock();
+
+	/** @brief Display関数呼び出しの排他ロックを解放する
+	 */
+	void ReleaseDisplayLock();
 
 public:
 	/**  削除候補API  **/
