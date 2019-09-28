@@ -13,6 +13,9 @@
 #include <SprDefs.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#ifdef USE_FREEGLUT
+#include <GL/freeglut_ext.h>
+#endif
 
 #include <Framework/SprFWApp.h>
 #include <Framework/FWGLUT.h>
