@@ -46,10 +46,40 @@ elseif(${Linux})
     set(Makefile Makefile.unix)
 endif()
 
+# RunSwig generate files
+#	These files are removed when 'clean' target executed
+#
+set(_for_all @.i @Decl.hpp @Stub.cpp @Stub.mak.txt do_swigone.projs 
+	     makefile.swig Spr@Decl.hpp swig_spr.log)
+set(_for_FW  FWOldSpringheadDecl.hpp FWOldSpringheadStub.cpp)
+
+set(generated_files)
+foreach(_dir ${SPR_PROJS})
+    foreach(_file ${_for_all})
+	set(_tmp ${SPR_SRC_DIR}/${_dir}/${_file})
+	string(REPLACE @ ${_dir} _tmp ${_tmp})
+	list(APPEND generated_files ${_tmp})
+    endforeach()
+endforeach()
+set(_dir Framework)
+foreach(_file ${_for_FW})
+    set(_tmp ${SPR_SRC_DIR}/${_dir}/${_file})
+    list(APPEND generated_files ${_tmp})
+endforeach()
+
+foreach(_file ${generated_files})
+    file(TO_NATIVE_PATH "${_file}" _file)
+    #message("     generate: ${_file}")
+endforeach()
+
 # main target
 #
 add_custom_target(${Target}
-    #COMMAND ${Make} -f ${Makefile} SPRSRCDIR=${SPR_SRC_DIR}
+    BYPRODUCTS ${genereated_files}
+    DEPENDS ${generated_files}
+)
+add_custom_command(
+    OUTPUT ${generated_files}
     COMMAND cmd /c ${Python} make_manager.py -A -c
     COMMAND ${Make} -f ${Makefile}
     WORKING_DIRECTORY ${RSSrcDir}

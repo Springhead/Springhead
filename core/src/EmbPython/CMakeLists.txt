@@ -10,7 +10,7 @@ set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
 
 # find Springhead top directory
 if("${TOPDIR}" STREQUAL "")
-    set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
+    set(TOPDIR "${CMAKE_CURRENT_SOURCE_DIR}/../../..")
 endif()
 set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_SRC_DIR  "${TOPDIR}/core/src")
@@ -24,22 +24,54 @@ get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 #message(STATUS "${Target}: SPR_INC_DIR: [${SPR_INC_DIR}]")
 
 #===============================================================================
-#  Define sources.
-#	To ensure that GLOB to work, make nessesary (empty) files temporarily
-#	which EmbPython_RunSwig will create later at build time.
+# EmbPython_RunSwig generate files
+#	These files are removed when 'clean' target executed
 #
-set(SPR_PROJS Base Collision Creature FileIO Foundation
-	      Framework Graphics HumanInterface Physics)
-foreach(_tmp ${SPR_PROJS})
-	file(TOUCH "EP${_tmp}.h" "EP${_tmp}.cpp")
+if(NOT DEFINED SPR_PROJS)
+    set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+		  HumanInterface Physics)
+endif()
+set(_for_src EP@.h EP@.cpp Makefile_EmbPython.swig.@ swig_@.log)
+set(_for_inc SprEP@.h)
+
+set(generated_files)
+set(EMBPYTHON_PROJS ${SPR_PROJS})
+list(REMOVE_ITEM EMBPYTHON_PROJS EmbPython)
+foreach(_dir ${EMBPYTHON_PROJS})
+    foreach(_file ${_for_src})
+	set(_tmp ${SPR_SRC_DIR}/EmbPython/${_file})
+	string(REPLACE @ ${_dir} _tmp ${_tmp})
+	list(APPEND generated_files ${_tmp})
+    endforeach()
 endforeach()
+foreach(_dir ${EMBPYTHON_PROJS})
+    foreach(_file ${_for_inc})
+	set(_tmp ${SPR_INC_DIR}/EmbPython/${_file})
+	string(REPLACE @ ${_dir} _tmp ${_tmp})
+	list(APPEND generated_files ${_tmp})
+    endforeach()
+endforeach()
+
+foreach(_file ${generated_files})
+    file(TO_NATIVE_PATH "${_file}" _file)
+    #message("     generate: ${_file}")
+endforeach()
+
+#===============================================================================
+#  Define sources.
+#
 file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-		*.i *.h *.cpp
-	 	Utility/*.i Utility/*.cpp
-		../../include/EmbPython/*.h
-		../../include/EmbPython/Utility/*.h
-		../Foundation/UTCriticalSection.cpp)
-list(REMOVE_ITEM SRCS SprPythonDLL.cpp)		# Exclude
+	       *.i EPUtility.h
+	       EPInterpreter.cpp EPUtility.cpp
+ 	       Utility/*.i Utility/*.cpp
+	       ../../include/EmbPython/EmpPython.h
+	       ../../include/EmbPython/SprEPApp.h
+	       ../../include/EmbPython/SprEPInterpreter.h
+	       ../../include/EmbPython/SprEPUtility.h
+	       ../../include/EmbPython/SprEPVersion.h
+	       ../../include/EmbPython/Utility/*.h
+)
+list(APPEND SRCS ${generated_files})
 #  end of definition
 
 #===============================================================================
@@ -62,7 +94,6 @@ endif()
 #  Main target.
 #
 add_library(${Target} STATIC ${SRCS})
-	
 
 # output library
 #
@@ -111,32 +142,14 @@ endif()
 # ------------------------------------------------------------------------------
 #  Add target to generate EmbPython sources.
 #
-set(EmbPython_RunSwig "EmbPython_RunSwig")
 if(${Windows})
-    add_custom_target(${EmbPython_RunSwig} ALL
-	COMMAND RunSwig_EmbPython.bat
+    add_custom_command(
+	OUTPUT ${generated_files}
+	COMMAND cmd /c RunSwig_EmbPython.bat
 	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
-	COMMENT [[ generating EmbPython sources ]]
-)
+	COMMENT [[  generating EmbPython sources ]]
+    )
 elseif(${Linux})
 endif()
-
-# ------------------------------------------------------------------------------
-#  Add target to clean up EmbPython generated files.
-#
-set(EmbPython_RunSwig_Clean "EmbPython_RunSwig_Clean")
-if(${Windows})
-    add_custom_target(${EmbPython_RunSwig_Clean}
-	COMMAND python EmbPython_clean.py
-	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
-	COMMENT [[ clearing EmbPython fenerate files ]]
-)
-elseif(${Linux})
-endif()
-
-# ------------------------------------------------------------------------------
-#  Define dependencies between targets.
-#
-add_dependencies(${Target} ${EmbPython_RunSwig})
 
 # end: CMakeLists.txt
