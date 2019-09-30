@@ -5,6 +5,7 @@ cd ..\..
 call :get_sprtop %CD%
 cd %CWD%
 
+echo DailyBuild.bat -U %SPRTOP% DailyBuildResult/Result
 DailyBuild.bat -U %SPRTOP% DailyBuildResult/Result
 
 exit /b

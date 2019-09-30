@@ -253,10 +253,6 @@ if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
 else ()
     set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
 endif()
-set(LIBPATH_DEBUG   ${LIBDIR}/Springhead${LIBNAME_DEBUG}.lib)
-set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
-set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
-set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
 
 if(${Windows})
     add_custom_target(${ProjectName} ALL
@@ -264,14 +260,8 @@ if(${Windows})
 	COMMAND if "'$(Configuration)'" equ "'Release'" ${LIBCMND_RELEASE}
 	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${LIBCMND_TRACE}
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	DEPENDS Base Collision Creature FileIO Foundation Framework Graphics HumanInterface Physics
+	DEPENDS ${SPR_PROJS}
 	COMMENT [[  generating Springhead Library... ]]
-    )
-    add_custom_target(RunSwig_Clean
-	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
-	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
-	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${CLEAN} ${LIBPATH_TRACE}
-	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
     )
 elseif(${Linux})
 endif()
