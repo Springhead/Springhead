@@ -43,6 +43,7 @@
 #	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
 #	Ver 1.3  2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
 #	Ver 1.4  2019/09/25 F.Kanehori	OK for dailybuild cmake version.
+#	Ver 1.41 2019/10/02 F.Kanehori	Add '.cmake' to console report.
 # ======================================================================
 import sys
 import os
@@ -227,6 +228,23 @@ class Traverse:
 
 			stat = 0
 			for config in self.configs:
+				#
+				# If use CMake, configure/generate solution file here
+				#
+				if ctl.get(CFK.USE_CMAKE):
+					logfile = ctl.get(CFK.BUILD_LOG)
+					cmake = CMake(ctl, self.toolset,
+				      		platform, None, logfile, self.verbose)
+					status = cmake.preparation()
+					if status != 0:
+						print('CMake prep error (%d)' % stat)
+						break
+					slnfile = cmake.config_and_generate()
+					if slnfile is None:
+						print('CMake config/gen error')
+						break
+					self.__report('%s' % config, '.cmake', False)
+
 				#
 				# Build (compile and link)
 				#
@@ -556,5 +574,39 @@ class Traverse:
 			name = 'build' if step == RST.BLD else 'run'
 			s = '%d' % status
 		return '  %s result is: %s' % (name, s)
+
+	#  Open log file.
+	#
+	def __open_log(self, fname, fmode, step):
+		# arguments:
+		#   fname:	Log file path.
+		#   fmode:	File open mode ('r', 'w' or 'a').
+		#   prefix:	Error message prefix (str).
+		# returns:	File object.
+
+		if self.dry_run:
+			print('  open log file "%s"' % fname)
+			return None
+		if fname is None:
+			return None
+
+		logdir = self.__dirpart(fname)
+		if logdir != '':
+			os.makedirs(logdir, exist_ok=True)
+		logf = TextFio(fname, mode=fmode, encoding=self.encoding)
+		if logf.open() < 0:
+			msg = 'build' if step == RST.BLD else 'run'
+			msg += ': open error: "%s"' % fname
+			Error(self.clsname).error(msg)
+			logf = None
+		return logf
+
+	#  Take directory part of the path.
+	#
+	def __dirpart(self, path):
+		dpart = '/'.join(Util.upath(path).split('/')[:-1])
+		if dpart == '':
+			dpart = '.'
+		return dpart
 
 # end: Traverse.py

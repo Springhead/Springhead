@@ -273,10 +273,9 @@ endif()
 # ------------------------------------------------------------------------------
 #  Main target.
 #
-list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
-if(${LEN_EXCLUDE_SRCS} GREATER 0)
-	message("++ exclude: ${EXCLUDE_SRCS}")
-	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
+if(EXCLUDE_SRCS)
+    message("++ exclude: ${EXCLUDE_SRCS}")
+    list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
 if(${Windows})
     if("${ARCHITECTURE}" STREQUAL "x64")
@@ -309,7 +308,7 @@ add_custom_target(${SYNC}
 set(DEP_Base)
 set(DEP_Collision Foundation)
 set(DEP_Creature Foundation Framework Physics)
-#set(DEP_EmbPython EmbPython_RunSwig)
+set(DEP_EmbPython)
 set(DEP_FileIO Foundation)
 set(DEP_Foundation Base)
 set(DEP_Framework FileIO Foundation Graphics Physics)
@@ -327,7 +326,6 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
 add_dependencies(RunSwig ${SYNC})
-#add_dependencies(EmbPython_RunSwig RunSwig)
 add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 
 # ------------------------------------------------------------------------------
@@ -375,33 +373,11 @@ endif()
 # ------------------------------------------------------------------------------
 #  Set working directory to VS debugger.
 #
-set_target_properties(${Target} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY ${DEBUGGER_WORKING_DIRECTORY}
-    #VS_DEBUGGER_COMMAND_ARGUMENTS ${DEBUGGER_COMMAND_ARGUMENTS}
-)
-
-# ------------------------------------------------------------------------------
-#  Clean (only for RunSwig).
-#
-if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
-    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
-else ()
-    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
-endif()
-set(LIBPATH_DEBUG   ${LIBDIR}/Springhead${LIBNAME_DEBUG}.lib)
-set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
-set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
-set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
-
-if(${Windows})
-    add_custom_target(RunSwig_Clean
-	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
-	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
-	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${CLEAN} ${LIBPATH_TRACE}
-	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
-    )
-elseif(${Linux})
-endif()
+foreach(_prop DEBUGGER_WORKING_DIRECTORY DEBUGGER_COMMAND_ARGUMENTS)
+    if(DEFINED ${_prop})
+	set_target_properties(${Target} PROPERTIES VS_${_prop} ${${_prop}})
+    endif()
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Install.

@@ -34,7 +34,7 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 
 #  Source/include file names to incorporate to the application program.
 #
-file(GLOB SRCS *.cpp *.h)
+file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
 
 #  Source/include file name(s) to EXCLUDE from compilation.
 #	Replace '${EMPTY}' with file name(s).
@@ -46,7 +46,9 @@ set(EXCLUDE_SRCS FWMyApptest.cpp)
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
 #	Do not include 'RunSwig' in the list.
-set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics HumanInterface Physics)
+set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics
+	      HumanInterface Physics)
+#set(SPR_PROJS ${SPR_PROJS} EmbPython)
 
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
@@ -68,6 +70,15 @@ set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
 set(EXCLUDE_LIBS XINPUT.LIB)
+
+#  Visual Studio Debugger settings.
+#	DEBUGGER_WORKING_DIRECTORY:
+#		Debugger working directory. Default is ${CMAKE_SOURCE_DIR},
+#		i.e. the directory where this file (CMakeLists.txt) is.
+#	DEBUGGER_COMMAND_ARGUMENTS:
+#		Debugger command line arguments.
+set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
 
 # ******************************************************************************
 #  End of customization section.
@@ -138,7 +149,7 @@ include("${SPR_CORE_DIR}/make.func.cmake")
 #	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
 #
 set(OPTS_FILE_NAME "CMakeOpts.txt")
-set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
+set(OPTS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${OPTS_FILE_NAME}")
 set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
 include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
@@ -263,13 +274,9 @@ endif()
 # ------------------------------------------------------------------------------
 #  Main target.
 #
-list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
-if(${LEN_EXCLUDE_SRCS} GREATER 0)
-	foreach(_tmp ${EXCLUDE_SRCS})
-		get_filename_component(_abspath ${_tmp} ABSOLUTE)
-		message("++ exclude: ${_abspath}")
-		list(REMOVE_ITEM SRCS ${_abspath})
-	endforeach()
+if(EXCLUDE_SRCS)
+    message("++ exclude: ${EXCLUDE_SRCS}")
+    list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
 if(${Windows})
     if("${ARCHITECTURE}" STREQUAL "x64")
@@ -302,6 +309,7 @@ add_custom_target(${SYNC}
 set(DEP_Base)
 set(DEP_Collision Foundation)
 set(DEP_Creature Foundation Framework Physics)
+set(DEP_EmbPython)
 set(DEP_FileIO Foundation)
 set(DEP_Foundation Base)
 set(DEP_Framework FileIO Foundation Graphics Physics)
@@ -359,38 +367,18 @@ target_link_libraries(${Target}
 #  Exclude default libraries.
 #
 if(DEFINED EXCLUDE_LIBS)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
+    set(CMAKE_EXE_LINKER_FLAGS
+	"${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBS}\"")
 endif()
 
 # ------------------------------------------------------------------------------
 #  Set working directory to VS debugger.
 #
-set_target_properties(${Target}
-    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
-# ------------------------------------------------------------------------------
-#  Clean (only for RunSwig).
-#
-if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
-    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
-else ()
-    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
-endif()
-set(LIBPATH_DEBUG   ${LIBDIR}/Springhead${LIBNAME_DEBUG}.lib)
-set(LIBPATH_RELEASE ${LIBDIR}/Springhead${LIBNAME_RELEASE}.lib)
-set(LIBPATH_TRACE   ${LIBDIR}/Springhead${LIBNAME_TRACE}.lib)
-set(CLEAN ${Python} ${CMAKE_SOURCE_DIR}/RunSwig/Clean.py ${CMAKE_SOURCE_DIR})
-
-if(${Windows})
-    add_custom_target(RunSwig_Clean
-	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${CLEAN} ${LIBPATH_DEBUG}
-	COMMAND if "'$(Configuration)'" equ "'Release'" ${CLEAN} ${LIBPATH_RELEASE}
-	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${CLEAN} ${LIBPATH_TRACE}
-	COMMENT [[  clearing RunSwig generated files and Springhead Library... ]]
-    )
-elseif(${Linux})
-endif()
+foreach(_prop DEBUGGER_WORKING_DIRECTORY DEBUGGER_COMMAND_ARGUMENTS)
+    if(DEFINED ${_prop})
+	set_target_properties(${Target} PROPERTIES VS_${_prop} ${${_prop}})
+    endif()
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Install.
