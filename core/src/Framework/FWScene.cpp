@@ -56,7 +56,8 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	matAxis.y	= GRRenderIf::GREEN;
 	matAxis.z	= GRRenderIf::BLUE;
 	matContact	= GRRenderIf::YELLOW;
-	matBBox     = GRRenderIf::WHITE;
+	matBBoxLocal = GRRenderIf::LIGHTGRAY;
+	matBBoxWorld = GRRenderIf::WHITE;
 	matForce	= GRRenderIf::ORANGE;
 	matMoment	= GRRenderIf::CYAN;
 	matGrid.x = matGrid.y = matGrid.z = GRRenderIf::GRAY;
@@ -326,7 +327,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		PHConstraintEngine* engine = phScene->GetConstraintEngine()->Cast();
 		//DrawDetectorRegion(render, &engine->rootRegion);
 		for(int c = 0; c < (int)engine->cells.size(); c++)
-			DrawBBox(render, &engine->cells[c].bbox);
+			DrawBBox(render, Posed(), &engine->cells[c].bbox);
 	}
 
 	// 剛体
@@ -338,8 +339,14 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		// BBox
 		if(renderBBox){
 			PHSolid* so = solids[i]->Cast();
-			render->SetMaterial(matBBox);
-			DrawBBox(render, &so->bbWorld);
+			if (so->bboxReady) {
+				render->SetMaterial(matBBoxLocal);
+				DrawBBox(render, so->GetPose(), &so->bbLocal);
+			}
+			else if (so->aabbReady) {
+				render->SetMaterial(matBBoxWorld);
+				DrawBBox(render, Posed(), &so->bbWorld);
+			}
 		}
 
 		// 形状を描画
@@ -465,12 +472,17 @@ void FWScene::DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire
 	render->PopModelMatrix();
 }
 
-void FWScene::DrawBBox(GRRenderIf* render, PHBBox* bbox){
+void FWScene::DrawBBox(GRRenderIf* render, Posed pose, PHBBox* bbox){
 	Vec3d bbcenter = bbox->GetBBoxCenter();
 	Vec3d bbextent = bbox->GetBBoxExtent();
 	render->PushModelMatrix();
+	Affinef af;
+	pose.ToAffine(af);
+	render->MultModelMatrix(af);
 	render->MultModelMatrix(Affinef::Trn(bbcenter.x, bbcenter.y, bbcenter.z));
+	render->SetLighting(false);
 	render->DrawBox(2.0*bbextent.x, 2.0*bbextent.y, 2.0*bbextent.z, false);
+	render->SetLighting(true);
 	render->PopModelMatrix();
 }
 
@@ -745,7 +757,7 @@ void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
 	int n = (int)region->regions.size();
 	// 最下層のみBBoxを描画
 	if(n == 0)
-		DrawBBox(render, &region->bbox);
+		DrawBBox(render, Posed(), &region->bbox);
 	for(int i = 0; i < n; i++)
 		DrawDetectorRegion(render, region->regions[i]);
 }*/
@@ -851,8 +863,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 			for (int j = 0; j < nNeighbors; j++) {
 				int solidID = pointer->neighborSolidIDs[j];
 				PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)he->GetSolidPairTemp(solidID, i);
-				for (int k = 0; k < solidPair->solid[0]->NShape(); k++) {
-					for (int l = 0; l < solidPair->solid[1]->NShape(); l++) {
+				for (int k = 0; k < solidPair->body[0]->NShape(); k++) {
+					for (int l = 0; l < solidPair->body[1]->NShape(); l++) {
 						PHShapePairForHaptic* sp = (PHShapePairForHaptic*)solidPair->GetShapePair(k, l);
 						for (int m = 0; m < 2; m++) {
 							// 近傍点対		・白点
@@ -1293,8 +1305,11 @@ void FWScene::SetContactMaterial(int mat){
 void FWScene::EnableRenderBBox(bool enable){
 	renderBBox = enable;
 }
-void FWScene::SetBBoxMaterial(int mat){
-	matBBox = mat;
+void FWScene::SetLocalBBoxMaterial(int mat) {
+	matBBoxWorld = mat;
+}
+void FWScene::SetWorldBBoxMaterial(int mat) {
+	matBBoxLocal = mat;
 }
 void FWScene::EnableRenderGrid(bool x, bool y, bool z){
 	renderGridX = x;

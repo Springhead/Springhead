@@ -185,15 +185,16 @@ int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 
 	if (-1 < normal_Z && normal_Z < 1) {
 		if (normal_Z < dir.Z()) {
-			// vの方がZ軸前方 → radius[1]を使用
+			// vの向きがZ軸前方 → radius[1]を使用
 			w = dir*radius[1] + Vec3f(0,0, length/2.0);
 			return 1;
 		} else {
-			// vの方がZ軸後方 → radius[0]を使用
+			// vの向きがZ軸後方 → radius[0]を使用
 			w = dir*radius[0] + Vec3f(0,0,-length/2.0);
 			return 0;
 		}
 	} else {
+		assert(0);
 		// どちらかの球に包含されている
 		if (radius[0] < radius[1]) {
 			w = dir*radius[1] + Vec3f(0,0, length/2.0);

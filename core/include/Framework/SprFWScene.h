@@ -257,12 +257,6 @@ public:
 	*/
 	void UpdateSkeletonSensors();
 
-	///	力覚ポインタの数を返す。
-	int NHapticPointers();
-	///	力覚ポインタを返す。
-	FWHapticPointerIf* GetHapticPointer(int i);
-
-
 	/** @brief OP力覚ハンドラーを作る
 	*/
 	FWOpHapticHandlerIf* CreateOpHapticHandler();

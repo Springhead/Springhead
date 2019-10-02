@@ -92,7 +92,7 @@ public:
 	/// 剛体が解析法に従う場合true	
 	bool bInactive[2];
 
-	int solidState[2];
+	int solidState[2];	//	0:non-dynamical, 1:Articulated, 2:Free body
 
 	// ----- 計算用変数
 
@@ -142,9 +142,6 @@ public:
 	/// コンストラクタ
 	PHConstraint();
 	virtual ~PHConstraint();
-
-	/// 拘束対象軸番号リストの構築．コンストラクタでmovableAxesを決めた後に呼ぶ
-	void InitTargetAxes();
 
 	// ----- エンジンから呼び出される関数
 	/// ツリーノードを構成しているか
