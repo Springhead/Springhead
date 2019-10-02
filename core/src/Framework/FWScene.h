@@ -86,7 +86,8 @@ public:
 	Vec3i		matAxis;
 	int			matForce, matMoment;
 	int			matContact;
-	int			matBBox;
+	int			matBBoxLocal;
+	int			matBBoxWorld;
 	Vec3i		matGrid;
 	int			matIK;
 	
@@ -134,7 +135,7 @@ public:
 	void	Draw			(GRRenderIf* render, bool ph_or_gr);
 	void	DrawPHScene		(GRRenderIf* render);
 	void	DrawSolid		(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire);
-	void    DrawBBox        (GRRenderIf* render, PHBBox* bbox);
+	void    DrawBBox        (GRRenderIf* render, Posed pose, PHBBox* bbox);
 	void	DrawShape		(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire);
 	void	DrawConstraint	(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawContact		(GRRenderIf* render, PHContactPointIf* con);
@@ -168,7 +169,8 @@ public:
 	void	SetContactMaterial	(int mat);
 
 	void    EnableRenderBBox    (bool enable);
-	void    SetBBoxMaterial     (int mat);
+	void    SetLocalBBoxMaterial(int mat);
+	void    SetWorldBBoxMaterial(int mat);
 
 	void	EnableRenderGrid	(bool x, bool y, bool z);
 	void	SetGridOption		(char axis, float offset, float size, int slice);

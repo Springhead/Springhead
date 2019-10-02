@@ -205,7 +205,8 @@ public:
 
 	/** @brief bboxの描画 */
 	void EnableRenderBBox(bool enable = true);
-	void SetBBoxMaterial(int mat);
+	void SetLocalBBoxMaterial(int mat);
+	void SetWorldBBoxMaterial(int mat);
 
 	/**  @brief グリッドの描画 */
 	void EnableRenderGrid(bool x = true, bool y = true, bool z = true);

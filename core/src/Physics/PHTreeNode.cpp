@@ -451,6 +451,12 @@ void PHRootNode::Setup(){
 	}
 }
 
+void PHRootNode::SetupCorrection() {
+	for (int i = 0; i < (int)nodes.size(); i++) {
+		nodes[i]->ClearCorrection();
+	}
+}
+
 void PHRootNode::CompArticulatedInertia(){
 	//子ノードにIaを計算させる．
 	//子ノード達は親ノード（つまりこのノード）に自分のIaを積み上げる
