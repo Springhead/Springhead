@@ -306,7 +306,7 @@ void PHConstraint::CompResponseCorrection(double dF, int i){
 		if (!solid[k]->IsDynamical() || !IsInactive(k)) { continue; }
 		(Vec6d&)dFs = J[k].row(i) * dF;
 		if (solid[k]->IsArticulated()){
-			solid[k]->treeNode->CompResponse(dFs);
+			solid[k]->treeNode->CompResponseCorrection(dFs);
 		}
 		else{
 			solid[k]->dV.v() += solid[k]->minv * dFs.v();

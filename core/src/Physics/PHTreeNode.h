@@ -83,7 +83,8 @@ public:
 	virtual void   AccumulateInertia       (){}			///< Iを親ノードのIに積み上げる
 	virtual void   AccumulateBiasForce     (){}			///< Zを親ノードのZに積み上げる
 	        void   CompResponse            (const SpatialVector& df);
-	        void   CompResponseCorrection  (const SpatialVector& dF);
+	virtual void   ClearCorrection()	   {}			///< 位置のCorrectionのためのvelを誰もクリアしていないので追加
+			void   CompResponseCorrection  (const SpatialVector& dF);
 	        double GetResponse             (PHTreeNode* src, const SpatialVector& J, const SpatialVector& df);
 	virtual void   CompResponse            (PHTreeNode* src, const SpatialVector& df);
 	virtual void   CompResponseCorrection  (PHTreeNode* src, const SpatialVector& dF);
@@ -114,7 +115,8 @@ public:
 
 public:
 	void Setup();
-	
+	void SetupCorrection();
+
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);
 	virtual size_t    NChildObject  () const;
@@ -187,6 +189,7 @@ public:
 	virtual void CompResponseMap       ();
 	virtual void UpdateJointVelocity   ();
 	virtual void UpdateJointPosition   (double dt);
+	virtual void ClearCorrection() { vel.clear(); }
 
 	PHTreeNodeND();
 };
