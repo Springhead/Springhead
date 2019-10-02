@@ -25,9 +25,9 @@ Expected	0
 #RunErrLog	# Run error log file path
 #Intervention	False
 
-UseCMake	True
-CMakeBuildDir	build
-CMakeTopDir	$(SprTop)
+#UseCMake	True
+#CMakeBuildDir	build
+#CMakeTopDir	$(SprTop)
 #CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
 #CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
 CMakeOutputDir	$(CMakeBuildDir)/$CONFIGURATION

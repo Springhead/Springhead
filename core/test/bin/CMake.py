@@ -14,6 +14,7 @@
 #			    unix:    gcc version (dummy).
 #	    platform:	Test platform ('x64' or 'x86').
 #	    config:	Test configure ('Debug', 'Release' or 'Treace').
+#			*** We do not use this argument! ***
 #	    logfile:	Log file name (str).
 #	    verbose:	Verbose level (0: silent) (int).
 #

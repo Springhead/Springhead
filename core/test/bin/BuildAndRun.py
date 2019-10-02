@@ -331,16 +331,6 @@ class BuildAndRun:
 			(self.clsname, self.ccver, self.platform, self.config)
 		FileOp().rm(tmplog)
 
-		if self.use_cmake:
-			cmake = CMake(self.ctl, self.ccver,
-				      platform, opts, tmplog, self.verbose)
-			status = cmake.preparation()
-			if status != 0:
-				return -1, ['CMake prep', tmplog]
-			slnfile = cmake.config_and_generate()
-			if slnfile is None:
-				return -1, ['CMake config/gen', tmplog]
-
 		if self.verbose > 1:
 			print('build solution (Windows)')
 			print('  slnfile: %s' % slnfile)

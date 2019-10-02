@@ -75,7 +75,7 @@ public:
 
 public:
 	virtual void Init(int argc, char* argv[]) {
-		shapeScale = 0.01;
+		shapeScale = 0.01f;
 		SampleApp::Init(argc, argv);
 	}
 	void ClearTime() {
@@ -142,7 +142,7 @@ public:
 		FWWinIf* win = GetCurrentWin();
 		win->SetFullScreen();
 		win->GetTrackball()->SetTarget(Vec3d(0,0.06,0));
-		win->GetTrackball()->SetPosition(0.01*Vec3f(0, 25, 50) * 0.9); //注視点設定
+		win->GetTrackball()->SetPosition(0.01f*Vec3f(0, 25, 50) * 0.9f); //注視点設定
 		PHSceneDesc pd;
 		GetPHScene()->GetDesc(&pd);
 		pd.timeStep = 1.0 / 60;
@@ -323,8 +323,8 @@ public:
 				//	机の足
 				PHSolidIf* floor = GetPHScene()->FindObject("soFloor")->Cast();
 				CDCapsuleDesc cd;
-				cd.length = 0.04;
-				cd.radius = 0.006;
+				cd.length = 0.04f;
+				cd.radius = 0.006f;
 				CDCapsuleIf* cp = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 				double tower_radius = 0.04;
 				const int numbox = 4;
@@ -359,8 +359,8 @@ public:
 				ClearTime();
 				PHSolidIf* floor = GetPHScene()->FindObject("soFloor")->Cast();
 				CDCapsuleDesc cd;
-				cd.length = 0.1;
-				cd.radius = 0.002;
+				cd.length = 0.1f;
+				cd.radius = 0.002f;
 				CDCapsuleIf* cp = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 				double tower_radius = 0.082;
 				const int numbox = 30;
@@ -382,9 +382,9 @@ public:
 				for (int i = 0; i < 2; ++i) {
 					for (int j = 0; j < num; ++j) {
 						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)num;
-						shapeScale *= 0.4;
+						shapeScale *= 0.4f;
 						Drop(SHAPE_ROCK, GRRenderIf::ORANGE, v, w, Quaterniond::Rot(-theta, 'y') * Vec3d(0.06, 0.1 + 0.04*(i + 0.5), 0), q);
-						shapeScale /= 0.4;
+						shapeScale /= 0.4f;
 					}
 				}
 				for (int i = 0; i < 2; ++i) {
@@ -526,7 +526,7 @@ public:
 					eyePos = win->GetTrackball()->GetPosition();
 					Vec3d shift(0.2, 0, 0);
 					win->GetTrackball()->SetTarget(Vec3d(0, 0.06, 0) + shift);
-					win->GetTrackball()->SetPosition(0.01*Vec3f(0, 40, 50) * 2 + shift); //注視点設定
+					win->GetTrackball()->SetPosition(0.01f*Vec3f(0, 40, 50) * 2 + shift); //注視点設定
 				}
 				else {
 					floor->SetOrientation(Quaterniond());

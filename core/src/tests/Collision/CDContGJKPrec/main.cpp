@@ -52,9 +52,9 @@ int SPR_CDECL main(int argc, char* argv[]) {
 	//	形状の作成
 	CDSphereDesc sda, sdb;
 	CDBoxDesc bda;
-	sda.radius = 0.1;
+	sda.radius = 0.1f;
 	bda.boxsize = Vec3d(1, 1, 1) * sda.radius * 2;
-	sdb.radius = 0.001;
+	sdb.radius = 0.001f;
 
 //#define BOX
 
