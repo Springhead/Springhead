@@ -1,5 +1,5 @@
 % macro.tex
-%	Last update: 2019/08/05 F.Kanehori
+%	Last update: 2019/10/03 F.Kanehori
 
 \makeatletter
 
@@ -79,8 +79,8 @@
 \def\VDots{$\vdots$}
 \def\Yen{Y\llap=}		% yen sign
 
-\def\Note{{\small $^\dagger$}}
-\def\DNote{{\small $^\ddagger$}}
+%\def\Note#1{\hbox to 1.5em{\raise1ex\vbox{\scriptsize{#1}}}}
+\def\Note#1{\raisebox{1ex}{{\scriptsize #1}}}
 
 %% some specific ones
 %
