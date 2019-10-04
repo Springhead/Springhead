@@ -36,8 +36,12 @@
 
 namespace Spr{;
 
+UTRef<PHSdkIf> PHSdk::phSdkInstance = NULL;
 PHSdkIf* SPR_CDECL PHSdkIf::CreateSdk(){
-	return (DBG_NEW PHSdk)->Cast();
+	if (PHSdk::phSdkInstance == NULL) {
+		PHSdk::phSdkInstance = (DBG_NEW PHSdk)->Cast();
+	}
+	return PHSdk::phSdkInstance;
 }
 
 
@@ -117,6 +121,7 @@ PHSdk::~PHSdk(){
 	Clear();
 }
 void PHSdk::Clear(){
+	phSdkInstance = NULL;
 	scenes.clear();
 	objects.clear();
 	shapes.clear();
