@@ -40,7 +40,8 @@ public:
 	SPR_OBJECTDEF(PHSdk);
 	PHSdk(const PHSdkDesc& = PHSdkDesc());
 	~PHSdk();
-
+	/// PHSdkのインスタンス。PHSdkIf::CreateSdk用
+	static  UTRef<PHSdkIf>  phSdkInstance;
 	virtual void			Clear();
 	virtual PHSceneIf*		CreateScene(const PHSceneDesc& desc);
 	virtual int				NScene();
