@@ -19,7 +19,7 @@ public:
 		return PHSdkIf::GetIfInfoStatic();
 	}
 	ObjectIf* Create(const void* desc, ObjectIf* parent){
-		return PHSdkIf::CreateSdk(*(PHSdkDesc*)desc);
+		return PHSdkIf::CreateSdk();
 	}
 };
 
