@@ -1,0 +1,15 @@
+# test.control
+
+#Exclude
+#SolutionAlias
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#UseClosedSrc
+#CppMacro	DAILYBUILD
+#DontBuild
+#DontRun
+#Timeout
+#ExpectedStatus	0
+#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+PipeProcess	GenKbEvent ..\s....A\e
+#NeedIntervention
+#KillProcess
