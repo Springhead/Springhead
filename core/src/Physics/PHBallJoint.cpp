@@ -43,7 +43,7 @@ void PHBallJointNode::CompRelativePosition(){
 void PHBallJointNode::CompRelativeVelocity(){
 	PHBallJoint* j = GetJoint();
 	j->vjrel.v() = Vec3d();
-	j->vjrel.w() = j->GetVelocity();
+	j->vjrel.w() = Vec3d(j->velocity[0], j->velocity[1], j->velocity[2]);
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -128,5 +128,8 @@ void PHBallJoint::CompError(){
 	B.v() = Xjrel.r;
 }
 
-int        PHBallJoint::NMotors() { return (int)motors.size(); }
+int PHBallJoint::NMotors() {
+	return (int)motors.size();
+}
+
 }

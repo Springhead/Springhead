@@ -670,7 +670,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 }
 
 void PHConstraintEngine::StepPart1(){
-    #ifdef USE_OPENMP_PHYSICS
+	#ifdef USE_OPENMP_PHYSICS
 	# pragma omp single
     #endif
 	{
