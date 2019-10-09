@@ -135,8 +135,8 @@ namespace Spr
 			fprintf(f, "pInverseOfMomentInertia\n");
 			fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].pInverseOfMomentInertia.xx, dfobj.objPArr[i].pInverseOfMomentInertia.xy, dfobj.objPArr[i].pInverseOfMomentInertia.xz, dfobj.objPArr[i].pInverseOfMomentInertia.yx, dfobj.objPArr[i].pInverseOfMomentInertia.yy, dfobj.objPArr[i].pInverseOfMomentInertia.yz, dfobj.objPArr[i].pInverseOfMomentInertia.zx, dfobj.objPArr[i].pInverseOfMomentInertia.zy, dfobj.objPArr[i].pInverseOfMomentInertia.zz);
 
-			fprintf(f, "pTempSingleVMass\n");
-			//fprintf(f, "%g\n", dfobj.objPArr[i].pTempSingleVMass);
+			fprintf(f, "pSingleVMass\n");
+			fprintf(f, "%g\n", dfobj.objPArr[i].pSingleVMass);
 			fprintf(f, "pMomentR\n");
 			fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].pMomentR.xx, dfobj.objPArr[i].pMomentR.xy, dfobj.objPArr[i].pMomentR.xz, dfobj.objPArr[i].pMomentR.yx, dfobj.objPArr[i].pMomentR.yy, dfobj.objPArr[i].pMomentR.yz, dfobj.objPArr[i].pMomentR.zx, dfobj.objPArr[i].pMomentR.zy, dfobj.objPArr[i].pMomentR.zz);
 			fprintf(f, "pSmR\n");
@@ -402,7 +402,7 @@ namespace Spr
 		fgets(s, len, f); sscanf_s(s, "%f %f %f  %f %f %f  %f %f %f", &dfobj.objPArr[i].pInverseOfMomentInertia.xx, &dfobj.objPArr[i].pInverseOfMomentInertia.xy, &dfobj.objPArr[i].pInverseOfMomentInertia.xz, &dfobj.objPArr[i].pInverseOfMomentInertia.yx, &dfobj.objPArr[i].pInverseOfMomentInertia.yy, &dfobj.objPArr[i].pInverseOfMomentInertia.yz, &dfobj.objPArr[i].pInverseOfMomentInertia.zx, &dfobj.objPArr[i].pInverseOfMomentInertia.zy, &dfobj.objPArr[i].pInverseOfMomentInertia.zz);
 
 		fgets(s, len, f);
-		//fgets(s, len, f); sscanf_s(s, "%g", &dfobj.objPArr[i].pTempSingleVMass);
+		fgets(s, len, f); sscanf_s(s, "%g", &dfobj.objPArr[i].pSingleVMass);
 		fgets(s, len, f);
 		fgets(s, len, f); sscanf_s(s, "%f %f %f  %f %f %f  %f %f %f", &dfobj.objPArr[i].pMomentR.xx, &dfobj.objPArr[i].pMomentR.xy, &dfobj.objPArr[i].pMomentR.xz, &dfobj.objPArr[i].pMomentR.yx, &dfobj.objPArr[i].pMomentR.yy, &dfobj.objPArr[i].pMomentR.yz, &dfobj.objPArr[i].pMomentR.zx, &dfobj.objPArr[i].pMomentR.zy, &dfobj.objPArr[i].pMomentR.zz);
 		fgets(s, len, f);

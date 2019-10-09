@@ -148,9 +148,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	bounds.max.y = boundcube;
 	bounds.max.z = boundcube;
 
-	spIf->Initial(0.5f, bounds);
-
-	spIf->EnableCollisionDetection(false);
+	
 #endif
 	
 	PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
@@ -183,6 +181,9 @@ void PHOpDemo::Init(int argc, char* argv[]){
 		dp1->pSecRadius = 0.4f;
 		dp1->pThrRadius = 0.2f;
 	}
+	spIf->Initial(0.5f, bounds);
+
+	spIf->EnableCollisionDetection(false);
 #endif
 
 	DrawHelpInfo = true;
@@ -210,7 +211,6 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//STEPタイマ作成
 	UTTimerIf* SimuTimer = CreateTimer(UTTimerIf::FRAMEWORK);
 	int intervaltime = 10;
-	//FEMdt = intervaltime / 1000.0; 
 	SimuTimer->SetInterval(intervaltime);
 	SimuTimer->SetResolution(1);
 	opSimuTimerId = SimuTimer->GetID();
@@ -263,12 +263,8 @@ void PHOpDemo::TimerFunc(int id)
 		opEngine->StepWithBlend();
 		PostRedisplay();
 
-		//opHapticHandler->SetCurrFeedbackForce();
 	}
 	
-	//save tst pos
-	if (recordingPos)
-		SaveTstPPos((char*) "TstP.dfmobj", 55, dpAdd->pCurrCtr);
 
 	/*if (useAnime)
 		opAnimator->AnimationStep(opEngine->GetDescAddress());*/
@@ -312,24 +308,6 @@ void PHOpDemo::InitInterface(){
 		spg->Init(NULL);
 	}
 }
-
-
-void PHOpDemo::SaveTstPPos(char *filename, int pi, Vec3f Pos)
-{
-	FILE *f;
-	fopen_s(&f, filename, "a");
-	if (!f)
-	{
-		std::cout << " file dir can not open" << endl;
-		return;
-	}
-	fprintf(f, "Pos:");
-	fprintf(f, "%d  ", pi);
-	fprintf(f, "%f %f %f\n", Pos.x, Pos.y, Pos.z);
-
-	fclose(f);
-}
-
 
 void PHOpDemo::Keyboard(int key, int x, int y){
 
