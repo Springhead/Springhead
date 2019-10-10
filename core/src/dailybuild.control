@@ -43,4 +43,5 @@ BuildLog	$(SprTest)/log/springhead.lib.log
 BuildErrLog	$(SprTest)/log/springhead.lib.error.log
 #OutputDir	.
 #BinaryOutName	a.out
+UseCMake	False
 
