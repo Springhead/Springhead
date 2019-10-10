@@ -2,7 +2,8 @@
 setlocal enabledelayedexpansion
 :: ============================================================================
 ::  SYNOPSIS
-::	python_adapter.bat script [-SprTop dir] [args..]	（Windows 専用）
+::	set _SPRTOP_=<Springheadのトップディレクトリ>
+::	do_python.bat script.py [args..]	（Windows 専用）
 ::
 ::  DESCRIPTION
 ::	Python script を実行するための Windows 用アダプタ。
@@ -11,36 +12,29 @@ setlocal enabledelayedexpansion
 ::	デフォルトで python が利用できない場合、または python のバージョンが
 ::	3 より古い場合は、メッセージを表示して処理を中止する。
 ::	
-::	このファイルは Windows 専用である。unix の場合はデフォルトで Python が
-::	使用できるようにしておかなければならない。
+::	このファイルは Windows 専用である。またSpringehadのトップディレクトリ
+::	を取得するために環境変数 "_SPRTOP_" を使用する。本スクリプトを呼ぶ前に
+::	この環境変数を設定しておくこと。
+::	unix の場合はデフォルトで Python が使用できるようにしておかなければ
+::	ならない。
 ::
 ::  VERSION
-::	Ver 1.0  2017/07/24 F.Kanehori	初版
-::	Ver 1.1  2017/08/02 F.Kanehori	引数 -SprTop 追加.
-::	Ver 2.0  2017/09/07 F.Kanehori	パスの検索方法を変更.
-::	Ver 2.01 2017/09/11 F.Kanehori	同上（コードの整理）.
-::	Ver 3.0  2017/11/06 F.Kanehori	directory名変更 (buildtools -> buildtool)
+::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
 :: ============================================================================
 set verbose=0
 
 ::----------------------------------------------
 ::  buildtool の相対パス
 ::
-set TOOLPATH=..\..\..\buildtool\win32
-if "%1" equ "-SprTop" (
-	set TOOLPATH=%2\buildtool\win32
-	shift && shift
+if "%_SPRTOP_%" equ "" (
+	echo Need environment variable "_SPRTOP_" be set".
+	endlocal
+	exit /b
 )
-:: 引数の調整
-set ARGS=
-:next_arg
-if "%1" == "" goto :end_arg
-	rem echo (((%1)))
-	set ARGS=!ARGS! %1
-	shift
-	goto :next_arg
-:end_arg
-if "%ARGS%" neq "" set ARGS=!ARGS:~1!
+set TOOLPATH=%_SPRTOP_%\buildtool\win32
+
+:: 引数はそのまま渡す
+set ARGS=%*
 
 ::----------------------------------------------
 ::  Python を実行できるようにする
@@ -51,6 +45,7 @@ if exist "%TOOLPATH%\python.exe" (
 	where python >NUL 2>& 1
 	if !ERRORLEVEL! neq 0 (
 		echo Python not found.
+		endlocal
 		exit /b
 	)
 	for /f "tokens=*" %%a in ('python -V') do set OUT=%%a
@@ -64,17 +59,10 @@ if exist "%TOOLPATH%\python.exe" (
 		exit /b
 	)
 )
-if %verbose% geq 0 (
+if %verbose% geq 1 (
 	rem where python
-	rem python -V
+	python -V
 )
-
-::----------------------------------------------
-::  CMake のための特別処理
-::	バッチファイルの引数に "a=b" と書いても1つの引数とは見做されない。
-::	そのため "a@b" という引数があったらそれを "a=b" と書き直すこととする。
-::
-set ARGS=%ARGS:@=^=%
 
 ::----------------------------------------------
 ::  Python を実行する
@@ -83,14 +71,11 @@ if %verbose% geq 2 (
 	echo cwd: %CD%
 	echo python %ARGS%
 )
-if %verbose% geq 1 (
-	echo.
-)
-rem where python
-rem python -V
-echo python %ARGS%
+rem if %verbose% geq 1 (
+rem 	echo.
+rem )
+rem echo python %ARGS%
 python %ARGS%
-echo %ERRORLEVEL%
 
 endlocal
 exit /b

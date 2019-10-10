@@ -1,17 +1,17 @@
 # ==============================================================================
 #  CMakeTopdir.txt
-#    ** ‚±‚Ìƒtƒ@ƒCƒ‹‚ğ’¼Ú•ÒW‚µ‚ÄƒRƒ~ƒbƒg‚µ‚È‚¢‚æ‚¤‚É‚¨Šè‚¢‚µ‚Ü‚· **
+#    ** ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç›´æ¥ç·¨é›†ã—ã¦ã‚³ãƒŸãƒƒãƒˆã—ãªã„ã‚ˆã†ã«ãŠé¡˜ã„ã—ã¾ã™ **
 #    ** DO NOT edit and commit this file. **
 #
-#    Ÿ‚Ì•Ï”‚ğ’è‹`‚·‚é
-#       TOPDIR © Springhead ‚ğ clone ‚µ‚½ƒfƒBƒŒƒNƒgƒŠ‚Ìâ‘ÎƒpƒX
+#    æ¬¡ã®å¤‰æ•°ã‚’å®šç¾©ã™ã‚‹
+#       TOPDIR â† Springhead ã‚’ clone ã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®çµ¶å¯¾ãƒ‘ã‚¹
 #                                                       ^^^^^^^^
-#    ${TOPDIR} ‚Í "core" ‚Ì’¼ÚãˆÊ‚ÌƒfƒBƒŒƒNƒgƒŠ‚Å‚·B
-#    ƒpƒXƒZƒpƒŒ[ƒ^‚É‚ÍƒXƒ‰ƒbƒVƒ…('/')‚ğg—p‚·‚é‚Ì‚ªŒ«–¾‚Å‚· (•¶šƒGƒXƒP[ƒv
-#    ‚Ì¬—‚ª‰ñ”ğ‚Å‚«‚Ü‚·)B
+#    ${TOPDIR} ã¯ "core" ã®ç›´æ¥ä¸Šä½ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ã™ã€‚
+#    ãƒ‘ã‚¹ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ã«ã¯ã‚¹ãƒ©ãƒƒã‚·ãƒ¥('/')ã‚’ä½¿ç”¨ã™ã‚‹ã®ãŒè³¢æ˜ã§ã™ (æ–‡å­—ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—
+#    ã®æ··ä¹±ãŒå›é¿ã§ãã¾ã™)ã€‚
 #
 #    This file defines following variable.
-#       TOPDIR © ABSOLUTE PATH of the directory where Springhead was cloned.
+#       TOPDIR â† ABSOLUTE PATH of the directory where Springhead was cloned.
 #
 #    We assume that subdirectory "core" exists as direct child of ${TOPDIR}.
 #    Use slash character ('/') as path separator to avoid escape character
@@ -23,7 +23,7 @@
 
 
 # ==============================================================================
-#  ‚±‚êˆÈ‰º‚Í DailyBuild ‚Åg—p‚·‚éƒR[ƒh‚Å‚·B•ÏX‚µ‚È‚¢‚Å‚­‚¾‚³‚¢B
+#  ã“ã‚Œä»¥ä¸‹ã¯ DailyBuild ã§ä½¿ç”¨ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã§ã™ã€‚å¤‰æ›´ã—ãªã„ã§ãã ã•ã„ã€‚
 #
 #  DO NOT change any line hereafter. They are used by 'DailyBuild'.
 # ==============================================================================

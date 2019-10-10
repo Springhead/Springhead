@@ -1,9 +1,9 @@
 # ==============================================================================
 #  CMakeOpts.txt
-#    ** ‚±‚Μƒtƒ@ƒCƒ‹‚π’ΌΪ•ÒW‚µ‚ΔƒRƒ~ƒbƒg‚µ‚Θ‚Ά‚ζ‚¤‚Ι‚¨θ‚Ά‚µ‚ά‚· **
+#    ** γ“γ®γƒ•γ‚΅γ‚¤γƒ«γ‚’η›΄ζ¥η·¨ι›†γ—γ¦γ‚³γƒγƒƒγƒγ—γªγ„γ‚γ†γ«γι΅γ„γ—γΎγ™ **
 #    ** DO NOT edit and commit this file. **
 #
-#    ‚Μ•Ο”‚π’θ‹`‚·‚ι
+#    ζ¬΅γ®ε¤‰ζ•°γ‚’ε®ηΎ©γ™γ‚‹
 #    This file defines following variable.
 #
 #    Windows (Visual Studio):
@@ -49,7 +49,7 @@ set(WIN_COPT_TRACE	"/O2 /Ob2 /Ot /Oy- /D TRACE /Gr")
 #  Need not to specify "-D" or "/D".
 #set(WIN_COPT_MACROS "NAME" "NAME=VALUE")
 
-set(WIN_LINK_COMMON  "/ERRORREPORT:PROMPT /IGNORE:4099 /NXCOMPAT \
+set(WIN_LINK_COMMON  "/ERRORREPORT:PROMPT /IGNORE:4099 /IGNORE:4221 /NXCOMPAT \
 		      /MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")
 if("${ARCHITECTURE}" STREQUAL "x86")
     set(WIN_LINK_COMMON "${WIN_LINK_COMMON} /MACHINE:X86")

@@ -24,7 +24,6 @@ get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 #message(STATUS "${Target}: SPR_INC_DIR: [${SPR_INC_DIR}]")
 
 #===============================================================
-# sources
 #  Define sources and headers to include this project.
 #	If you specify headers under core/include directory,
 #	you must add directory path explicitly. The variable
@@ -111,9 +110,17 @@ endif()
 set(LINKLIST
     "${INTDIR}=${ACTDIR}/${INTDIR}" ;
 )
-set(_tmp_cmnd "python ${SPR_SRC_DIR}/cmake_preconfig.py -v ${LINKLIST}")
+set(_script_dir ${SPR_SRC_DIR})
+if(${Windows})
+    set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
+    set(_tmp_args ${_script_dir}\\cmake_preconfig.py -v ${LINKLIST})
+else()
+    set(_tmp_cmnd python)
+    set(_tmp_args ${_script_dir}/cmake_preconfig.py -v ${LINKLIST})
+endif()
+set(ENV{_SPRTOP_} ${SPR_TOP_DIR})
 execute_process(
-    COMMAND cmd /c ${_tmp_cmnd}
+    COMMAND ${_tmp_cmnd} ${_tmp_args}
     RESULT_VARIABLE CMD_RESULT
     OUTPUT_VARIABLE CMD_OUTPUT
     ERROR_VARIABLE CMD_ERROR
