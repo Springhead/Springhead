@@ -73,6 +73,8 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 
 	void	AddHapticForce(const SpatialVector& f);
 	void	ClearHapticForce();
+	void	UpdateHumanInterface(const Posed& pose, const SpatialVector& vel);
+													///<	HumanInterfaceの位置の変化をHapticPointerに伝える。普通はFWSceeneが呼び出すので、呼び出し不要。
 };
 
 struct PHShapePairForHapticIf : public CDShapePairIf {
