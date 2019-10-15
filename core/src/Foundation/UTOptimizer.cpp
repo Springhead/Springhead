@@ -15,6 +15,13 @@
 #endif
 
 namespace Spr {;
+	UTCMAESOptimizerIf* UTCMAESOptimizerIf::Create() {
+		return UTCMAESOptimizerIf::Create(UTCMAESOptimizerDesc());
+	}
+	UTCMAESOptimizerIf* UTCMAESOptimizerIf::Create(const UTCMAESOptimizerDesc& desc) {
+		return (DBG_NEW UTCMAESOptimizer(desc))->Cast();
+	}
+
 
 	UTCMAESOptimizerDesc::UTCMAESOptimizerDesc() :
 		stopMaxFunEvals(-1),

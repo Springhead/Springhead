@@ -89,17 +89,31 @@ public:
 	~MyApp(){}
 
 	virtual void BuildScene(){
+#if 0
 		soFloor = CreateFloor(true);
+#else
+		PHSolidDesc d;
+		d.dynamical = false;
+		soFloor = GetFWScene()->GetPHScene()->CreateSolid(d);
+		soFloor->SetPose(Posed::Trn(2,1,0) * Posed::Rot(Rad(170), 'y'));
+		CDRoundConeDesc rd;
+		rd.length = 10;
+		rd.radius[0] = 4;
+		rd.radius[1] = 6;
+		CDConvexIf* c = (CDConvexIf*)GetSdk()->GetPHSdk()->CreateShape(rd);
+		soFloor->AddShape(c);
+		soFloor->SetShapePose(0, Posed::Trn(-1, 0, 0));
+#endif
+		GetFWScene()->EnableRenderBBox(true);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void OnStep() {
 		// GetSdk()->SaveScene("test.spr", NULL, FIFileSprIf::GetIfInfoStatic());
-
 		SampleApp::OnStep();
 
 		// 床を揺らす
-		if (soFloor){
+		if (soFloor && floorShakeAmplitude){
 			double time = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
 			double omega = 2.0 * M_PI;
 			soFloor->SetFramePosition(Vec3d(floorShakeAmplitude*sin(time*omega),0,0));			
@@ -119,7 +133,8 @@ public:
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
-			Quaterniond q = Quaterniond::Rot(Rad(30.0), 'y');
+			static Quaterniond q = Quaterniond::Rot(Rad(0.0), 'y');
+			q = Quaterniond::Rot(Rad(90), 'y') * q;
 
 			if(id == ID_BOX){
 				Drop(SHAPE_BOX, GRRenderIf::RED, v, w, p, q);
