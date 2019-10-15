@@ -46,6 +46,9 @@
     <ClCompile Include="UTCriticalSection.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="UTOptimizer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SprFoundation.h">
@@ -110,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\Foundation\SprUTQPTimer.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprUTOptimizer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="UTOptimizer.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
