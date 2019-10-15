@@ -43,7 +43,7 @@ public:
 	double* GetPopulation() { return NULL; }
 
 	/// Set Objective Function Value Computation Result
-	void SetObjectiveFunctionValue() {}
+	void SetObjectiveFunctionValue(double value) {}
 
 	/// Proceed Optimize Process Step
 	void Next() {}
