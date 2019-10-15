@@ -18,7 +18,7 @@ public:
 	SPR_OBJECTDEF(UTOptimizer);
 
 	/// Constructor
-	UTOptimizer(const UTOptimizerDesc& desc = UTOptimizerDesc()) { }
+	UTOptimizer() { }
 
 	/// Destructor
 	~UTOptimizer() { }

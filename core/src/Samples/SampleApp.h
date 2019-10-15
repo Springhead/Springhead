@@ -272,6 +272,7 @@ public:
 		solid->SetFramePosition(p);
 		solid->SetOrientation(q);
 		solid->CompInertia();
+		solid->SetInertia(solid->GetInertia() * 100000);
 	}
 
 	///
@@ -661,11 +662,11 @@ public: /** FWAppの実装 **/
 
 		CDCapsuleDesc cd;
 		cd.radius = shapeScale * 1;
-		cd.length = shapeScale * 1;
+		cd.length = shapeScale * 4;
 		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 		
 		CDRoundConeDesc rcd;
-		rcd.length = shapeScale * 3;
+		rcd.length = shapeScale * 6;
 		rcd.radius = shapeScale * Vec2d(1, 2);
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 
