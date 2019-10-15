@@ -397,6 +397,7 @@ void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer
 	double hdt = he->GetHapticTimeStep();
 	NANCHECKLP
 	pointer->lastProxyPose = pointer->proxyPose;
+	//pointer->AddForce(Vec3d(0.0f, 0.02f, 0.0f));
 	NANCHECKLP
 		// 中間表現を求める。摩擦状態を更新
 	PHIrs irsNormal, irsFric, irsAll;

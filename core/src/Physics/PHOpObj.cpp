@@ -220,7 +220,7 @@ void PHOpObj::positionPredictFriction(PHOpHapticController *myHc)
 			dp.pVelocity += params.gravity * params.timeStep;
 		}
 		//external force
-		dp.pVelocity += dp.pExternalForce *params.timeStep / dp.pTempSingleVMass;
+	//	dp.pVelocity += dp.pExternalForce *params.timeStep / dp.pTempSingleVMass;
 
 #ifdef CHECK_INF_ERR
 		if (!FloatErrorTest::CheckBadFloatValue(dp.pVelocity.z))

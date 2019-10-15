@@ -83,7 +83,7 @@ struct HIHapticIf : HIPoseIf{
 struct HIHapticDummyDesc{
 	Posed pose;
 };
-struct HIHapticDummyIf : public HIHapticIf {
+struct HIHapticDummyIf : public HIHapticIf{
 	SPR_IFDEF(HIHapticDummy);
 	void SetPose(Posed p);
 	void SetVelocity(Vec3d v);
