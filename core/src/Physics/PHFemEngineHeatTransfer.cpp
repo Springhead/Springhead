@@ -1,7 +1,7 @@
-#include "PHFemEngine.h"
+ï»¿#include "PHFemEngine.h"
 namespace Spr {;
 
-struct CondVtx;					//	Conduction@Vertex‚ÌˆÓ–¡H“`“±Œó•â’¸“_H	Companioned VertexH‚Ì—ªH ‚Ì‚Ç‚¿‚ç‚©B
+struct CondVtx;					//	Conductionã€€Vertexã®æ„å‘³ï¼Ÿä¼å°å€™è£œé ‚ç‚¹ï¼Ÿ	Companioned Vertexï¼Ÿã®ç•¥ï¼Ÿ ã®ã©ã¡ã‚‰ã‹ã€‚
 struct CondVtxs :public std::vector<CondVtx> {
 	//PHFemMesh* pmesh;
 	//
@@ -10,7 +10,7 @@ struct CondVtxs :public std::vector<CondVtx> {
 };
 struct CondVtx {
 	int vid;
-	Vec3d pos;	//	x,y‚ÍÚG–Êã‚Å‚ÌˆÊ’uAz‚ÍÚG–Ê‚©‚ç‚Ì‹——£
+	Vec3d pos;	//	x,yã¯æ¥è§¦é¢ä¸Šã§ã®ä½ç½®ã€zã¯æ¥è§¦é¢ã‹ã‚‰ã®è·é›¢
 	double area;
 	double assign;
 	CondVtx() :vid(-1), area(0), assign(0) {}
@@ -33,7 +33,7 @@ inline static double dist2D2(const Vec3d& a, const Vec3d& b) {
 inline static double dist2Dxz(const Vec3d& a, const Vec3d& b) {
 	return sqrt(Square(a.x - b.x) + Square(a.z - b.z));
 }
-//	condVtxs‚Ì‚È‚©‚©‚çAfroms‚Ì—×‚ÌŠ„‚è“–‚Ä‚É‹ó‚«‚ª‚ ‚é’¸“_‚ğ—ñ‹“‚µApos‚É‹ß‚¢‡‚Éƒ\[ƒg‚µ‚Ä•Ô‚·B
+//	condVtxsã®ãªã‹ã‹ã‚‰ã€fromsã®éš£ã®å‰²ã‚Šå½“ã¦ã«ç©ºããŒã‚ã‚‹é ‚ç‚¹ã‚’åˆ—æŒ™ã—ã€posã«è¿‘ã„é †ã«ã‚½ãƒ¼ãƒˆã—ã¦è¿”ã™ã€‚
 struct Dist2Less {
 	Vec3d pos;
 	CondVtxs& condVtxs;
@@ -52,7 +52,7 @@ double FindNearest(const Vec3d& pos, CondVtxs& condVtxs, int& found) {
 	int cid;
 	do {
 		cid = minId;
-		minDist2 = dist2D2(condVtxs[cid].pos, pos);		//‹——£‚Ì2æ 
+		minDist2 = dist2D2(condVtxs[cid].pos, pos);		//è·é›¢ã®2ä¹— 
 		int vid = condVtxs[cid].vid;
 		for (unsigned e = 0; e < condVtxs.pmesh->vertices[vid].edgeIDs.size(); ++e) {
 			FemEdge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edgeIDs[e]];
@@ -72,8 +72,8 @@ double FindNearest(const Vec3d& pos, CondVtxs& condVtxs, int& found) {
 }
 void DeleteNeighbor(int id, std::vector<int> &neighbor) {
 
-	//id‚Æˆê’v‚·‚é—v‘f‚ğíœ
-	int delNUM = -1;	//íœ‚·‚é—v‘f‚Í‰½”Ô–Ú‚©
+	//idã¨ä¸€è‡´ã™ã‚‹è¦ç´ ã‚’å‰Šé™¤
+	int delNUM = -1;	//å‰Šé™¤ã™ã‚‹è¦ç´ ã¯ä½•ç•ªç›®ã‹
 	for (unsigned n = 0; n<neighbor.size(); ++n) {
 		if (neighbor[n] == id) {
 			delNUM = n;
@@ -90,7 +90,7 @@ void AddCompanion(CondVtxs& v1, int id1, CondVtxs& v2, int id2, double a) {
 	assert(v2[id2].area - v2[id2].assign > -1e8);
 	unsigned i;
 	for (i = 0; i<v1[id1].companions.size(); ++i) {
-		if (v1[id1].companions[i].id == id2) {		// ‚·‚Å‚Écompanion‚É“o˜^‚³‚ê‚Ä‚¢‚é’¸“_‚ğÄAdd‚ÌA?
+		if (v1[id1].companions[i].id == id2) {		// ã™ã§ã«companionã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹é ‚ç‚¹ã‚’å†Addã®æ™‚ã€?
 			v1[id1].companions[i].area += a;
 			break;
 		}
@@ -110,30 +110,30 @@ void AddCompanion(CondVtxs& v1, int id1, CondVtxs& v2, int id2, double a) {
 }
 
 void RenewNeighbor(CondVtxs& condvtx, int id, std::vector<int> &neighbor) {
-	//id‚Æˆê’v‚·‚é—v‘f‚ğíœ
+	//idã¨ä¸€è‡´ã™ã‚‹è¦ç´ ã‚’å‰Šé™¤
 	DeleteNeighbor(id, neighbor);
 
-	//id‚Æ—×Ú‚·‚é—v‘fi“_j‚ğneighbor‚É’Ç‰Á
+	//idã¨éš£æ¥ã™ã‚‹è¦ç´ ï¼ˆç‚¹ï¼‰ã‚’neighborã«è¿½åŠ 
 	for (unsigned e = 0; e<condvtx.pmesh->vertices[condvtx[id].vid].edgeIDs.size(); ++e) {
-		//•\–ÊƒGƒbƒW‚Å‚È‚¯‚ê‚ÎˆÈ‰ºˆ—ƒXƒLƒbƒv
+		//è¡¨é¢ã‚¨ãƒƒã‚¸ã§ãªã‘ã‚Œã°ä»¥ä¸‹å‡¦ç†ã‚¹ã‚­ãƒƒãƒ—
 		if (condvtx.pmesh->edges[condvtx.pmesh->vertices[condvtx[id].vid].edgeIDs[e]] < (int)condvtx.pmesh->nSurfaceEdge)
 			continue;
-		FemEdge& edge = condvtx.pmesh->edges[condvtx.pmesh->vertices[condvtx[id].vid].edgeIDs[e]];	//id‚ªˆê“_‚Ìedge‚ğ‹‚ß
-		int next = edge.vertexIDs[0] == condvtx[id].vid ? edge.vertexIDs[1] : edge.vertexIDs[0];				//‚à‚¤ˆê•û‚Ì“_‚ğ‹‚ß‚é
-		if (condvtx.pmesh->GetPHFemThermo()->GetVertexToofar(next) == false) { //‰“‚­‚Ä—×Ú“_‚É‚Í‰Á‚¦‚È‚¢“_‚Å‚Í‚È‚¯‚ê‚Î
-			int cnext = condvtx.vtx2Cond[next];		//condvtx‚É•ÏŠ·
+		FemEdge& edge = condvtx.pmesh->edges[condvtx.pmesh->vertices[condvtx[id].vid].edgeIDs[e]];	//idãŒä¸€ç‚¹ã®edgeã‚’æ±‚ã‚
+		int next = edge.vertexIDs[0] == condvtx[id].vid ? edge.vertexIDs[1] : edge.vertexIDs[0];				//ã‚‚ã†ä¸€æ–¹ã®ç‚¹ã‚’æ±‚ã‚ã‚‹
+		if (condvtx.pmesh->GetPHFemThermo()->GetVertexToofar(next) == false) { //é ãã¦éš£æ¥ç‚¹ã«ã¯åŠ ãˆãªã„ç‚¹ã§ã¯ãªã‘ã‚Œã°
+			int cnext = condvtx.vtx2Cond[next];		//condvtxã«å¤‰æ›
 			if (cnext >= 0 && cnext<(int)condvtx.size())
-			{	//‚»‚Ì“_‚ªÚGŒó•â‚Å‚ ‚é‚Æ‚«()(condvtx‚ÌƒTƒCƒY“à‚Å‚ ‚é‚Æ‚«FƒTƒCƒY‚æ‚è‘å‚«‚¢ê‡‚Ícondvtxs)
-				if (condvtx[cnext].assign == 0) {		//‚Ü‚¾Š„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¯‚ê‚Î
+			{	//ãã®ç‚¹ãŒæ¥è§¦å€™è£œã§ã‚ã‚‹ã¨ã()(condvtxã®ã‚µã‚¤ã‚ºå†…ã§ã‚ã‚‹ã¨ãï¼šã‚µã‚¤ã‚ºã‚ˆã‚Šå¤§ãã„å ´åˆã¯condvtxs)
+				if (condvtx[cnext].assign == 0) {		//ã¾ã å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã‘ã‚Œã°
 					int exist = 0;
 					for (unsigned n = 0; n<neighbor.size(); ++n) {
 						if (neighbor[n] == cnext) {
-							exist = 1;	//‚·‚Å‚Éneighbor‚É’l‚ª‚ ‚é‚Æ‚«‚Í‘ã“ü‚µ‚È‚¢
+							exist = 1;	//ã™ã§ã«neighborã«å€¤ãŒã‚ã‚‹ã¨ãã¯ä»£å…¥ã—ãªã„
 							break;
 						}
 					}
 					if (exist == 0)
-						neighbor.push_back(cnext);	//neighbor‚É’Ç‰Á
+						neighbor.push_back(cnext);	//neighborã«è¿½åŠ 
 				}
 			}
 		}
@@ -141,18 +141,18 @@ void RenewNeighbor(CondVtxs& condvtx, int id, std::vector<int> &neighbor) {
 }
 
 void MakeVtxPair(CondVtxs(&condVtxs)[2], std::vector<int>(&neighbor)[2], int baseMesh, int current_id) {
-	int companion_id;//‰Šú‰»
+	int companion_id;//åˆæœŸåŒ–
 	double dist = DBL_MAX;
 
-	while (1) { //neighbor“¯m‚Ì‹——£i‘Î‰‚ğæ‚Á‚½“_“¯m)‚Ì‹——£‚ªˆê’è‚æ‚è‘å‚«‚­‚È‚Á‚½‚çI—¹
+	while (1) { //neighboråŒå£«ã®è·é›¢ï¼ˆå¯¾å¿œã‚’å–ã£ãŸç‚¹åŒå£«)ã®è·é›¢ãŒä¸€å®šã‚ˆã‚Šå¤§ãããªã£ãŸã‚‰çµ‚äº†
 
-		double overlapArea; //d‚È‚Á‚Ä‚¢‚é•”•ª‚Ì–ÊÏ
-		companion_id = -1;//‰Šú‰»
+		double overlapArea; //é‡ãªã£ã¦ã„ã‚‹éƒ¨åˆ†ã®é¢ç©
+		companion_id = -1;//åˆæœŸåŒ–
 
-						  //neighbor‚Ì’†‚©‚çŠî€“_‚Éˆê”Ô‹ß‚¢“_‚ğ’T‚µAcompanion_id‚É‚·‚é
-		double mini_length = DBL_MAX;	//edge‚Ì’·‚³
+						  //neighborã®ä¸­ã‹ã‚‰åŸºæº–ç‚¹ã«ä¸€ç•ªè¿‘ã„ç‚¹ã‚’æ¢ã—ã€companion_idã«ã™ã‚‹
+		double mini_length = DBL_MAX;	//edgeã®é•·ã•
 		for (unsigned n = 0; n<neighbor[1 - baseMesh].size(); ++n) {
-			//neighbor[‘Šè‘¤‚ÌƒƒbƒVƒ…][n]‚ÆcondVtxs[Šî€ƒƒbƒVƒ…][current_id]‚Ì‹——£‚ğ‹‚ß‚é
+			//neighbor[ç›¸æ‰‹å´ã®ãƒ¡ãƒƒã‚·ãƒ¥][n]ã¨condVtxs[åŸºæº–ãƒ¡ãƒƒã‚·ãƒ¥][current_id]ã®è·é›¢ã‚’æ±‚ã‚ã‚‹
 			double length = dist2D2(condVtxs[1 - baseMesh][neighbor[1 - baseMesh][n]].pos, condVtxs[baseMesh][current_id].pos);
 			if (length < mini_length) {
 				mini_length = length;
@@ -160,27 +160,27 @@ void MakeVtxPair(CondVtxs(&condVtxs)[2], std::vector<int>(&neighbor)[2], int bas
 			}
 		}
 
-		if (companion_id == -1) {//neighbor‚ª‹ó‚Ì‚Æ‚«‚Íƒ‹[ƒvI—¹Bneighbor‚É—v‘f‚ª“ü‚Á‚Ä‚¢‚é‚Æ‚«Acompanion_id‚Í-1‚É‚È‚ç‚È‚¢B
+		if (companion_id == -1) {//neighborãŒç©ºã®ã¨ãã¯ãƒ«ãƒ¼ãƒ—çµ‚äº†ã€‚neighborã«è¦ç´ ãŒå…¥ã£ã¦ã„ã‚‹ã¨ãã€companion_idã¯-1ã«ãªã‚‰ãªã„ã€‚
 			return;
 		}
 
-		//‹——£”»’èi‚à‚µ2“_‚Ì‹——£‚ªˆê’è‚æ‚è‘å‚«‚©‚Á‚½‚çƒ‹[ƒvI—¹j
-		dist = dist2Dxz(condVtxs[baseMesh][current_id].pos, condVtxs[1 - baseMesh][companion_id].pos); //Œ»İA’²‚×‚Ä‚¢‚é2’¸“_‚Ì‹——£
+		//è·é›¢åˆ¤å®šï¼ˆã‚‚ã—2ç‚¹ã®è·é›¢ãŒä¸€å®šã‚ˆã‚Šå¤§ãã‹ã£ãŸã‚‰ãƒ«ãƒ¼ãƒ—çµ‚äº†ï¼‰
+		dist = dist2Dxz(condVtxs[baseMesh][current_id].pos, condVtxs[1 - baseMesh][companion_id].pos); //ç¾åœ¨ã€èª¿ã¹ã¦ã„ã‚‹2é ‚ç‚¹ã®è·é›¢
 		if (dist > 0.1/*1.14499*/) {
-			condVtxs[baseMesh].pmesh->GetPHFemThermo()->SetVertexToofar(condVtxs[baseMesh][current_id].vid, true);//‹——£‚ª‰“‚¢“_‚ğƒ}[ƒN
-			DeleteNeighbor(current_id, neighbor[baseMesh]);//neighbor‚©‚ç—v‘fíœ
-														   //condVtxs[1-baseMesh].pmesh->vertices[condVtxs[1-baseMesh][companion_id].vid].toofar = true;//‹——£‚ª‰“‚¢“_‚ğƒ}[ƒN
-														   //DeleteNeighbor(companion_id,neighbor[1-baseMesh]);//neighbor‚©‚ç—v‘fíœ
+			condVtxs[baseMesh].pmesh->GetPHFemThermo()->SetVertexToofar(condVtxs[baseMesh][current_id].vid, true);//è·é›¢ãŒé ã„ç‚¹ã‚’ãƒãƒ¼ã‚¯
+			DeleteNeighbor(current_id, neighbor[baseMesh]);//neighborã‹ã‚‰è¦ç´ å‰Šé™¤
+														   //condVtxs[1-baseMesh].pmesh->vertices[condVtxs[1-baseMesh][companion_id].vid].toofar = true;//è·é›¢ãŒé ã„ç‚¹ã‚’ãƒãƒ¼ã‚¯
+														   //DeleteNeighbor(companion_id,neighbor[1-baseMesh]);//neighborã‹ã‚‰è¦ç´ å‰Šé™¤
 
-														   //‚Ü‚¾neighbor‚É—v‘f‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚Å‚ ‚ê‚ÎAÄ‹N“I‚ÉŒÄ‚Ño‚·B
+														   //ã¾ã neighborã«è¦ç´ ãŒå…¥ã£ã¦ã„ã‚‹ã®ã§ã‚ã‚Œã°ã€å†èµ·çš„ã«å‘¼ã³å‡ºã™ã€‚
 			if (neighbor[0].size() != 0 && neighbor[1].size() != 0) {
-				//	DSTR << "0ƒTƒCƒYF" << neighbor[0].size() << endl;
+				//	DSTR << "0ã‚µã‚¤ã‚ºï¼š" << neighbor[0].size() << endl;
 				//	for(unsigned n=0; n<neighbor[0].size(); n++){
-				//		DSTR << "0c‚èF" << condVtxs[0][neighbor[0][n]].vid << endl;
+				//		DSTR << "0æ®‹ã‚Šï¼š" << condVtxs[0][neighbor[0][n]].vid << endl;
 				//	}
-				//	DSTR << "1ƒTƒCƒYF" << neighbor[1].size() << endl;
+				//	DSTR << "1ã‚µã‚¤ã‚ºï¼š" << neighbor[1].size() << endl;
 				//	for(unsigned n=0; n<neighbor[1].size(); n++){
-				//		DSTR << "1c‚èF" << condVtxs[1][neighbor[1][n]].vid << endl;
+				//		DSTR << "1æ®‹ã‚Šï¼š" << condVtxs[1][neighbor[1][n]].vid << endl;
 				//	}
 				MakeVtxPair(condVtxs, neighbor, 1 - baseMesh, neighbor[1 - baseMesh][0]);
 			}
@@ -188,28 +188,28 @@ void MakeVtxPair(CondVtxs(&condVtxs)[2], std::vector<int>(&neighbor)[2], int bas
 		}
 
 		if (condVtxs[baseMesh][current_id].area - condVtxs[baseMesh][current_id].assign > condVtxs[1 - baseMesh][companion_id].area - condVtxs[1 - baseMesh][companion_id].assign) {
-			//Šî€“_‚Ì–ÊÏ„‘Šè‚Ì–ÊÏ
-			overlapArea = condVtxs[1 - baseMesh][companion_id].area - condVtxs[1 - baseMesh][companion_id].assign; //‘Šè‘¤i¬‚³‚¢•ûj‚Ì–ÊÏ‚ªoverlapArea
+			//åŸºæº–ç‚¹ã®é¢ç©ï¼ç›¸æ‰‹ã®é¢ç©
+			overlapArea = condVtxs[1 - baseMesh][companion_id].area - condVtxs[1 - baseMesh][companion_id].assign; //ç›¸æ‰‹å´ï¼ˆå°ã•ã„æ–¹ï¼‰ã®é¢ç©ãŒoverlapArea
 			AddCompanion(condVtxs[baseMesh], current_id, condVtxs[1 - baseMesh], companion_id, overlapArea);
-			condVtxs[1 - baseMesh].pmesh->GetPHFemThermo()->SetVertexBeCondVtxs(condVtxs[1 - baseMesh][companion_id].vid, true);	//‘Î‰•t‚¯I‚í‚Á‚½“_‚Ítrue
+			condVtxs[1 - baseMesh].pmesh->GetPHFemThermo()->SetVertexBeCondVtxs(condVtxs[1 - baseMesh][companion_id].vid, true);	//å¯¾å¿œä»˜ã‘çµ‚ã‚ã£ãŸç‚¹ã¯true
 
-																																	//‘Šè‘¤‚Ì–ÊÏ‚ğ‘S‚ÄŠ„‚è“–‚Ä‚½‚Ì‚ÅA‘Î‰“_‚ğíœ‚µA‚»‚Ì—×Ú“_‚ğneighbor‚É’Ç‰Á
+																																	//ç›¸æ‰‹å´ã®é¢ç©ã‚’å…¨ã¦å‰²ã‚Šå½“ã¦ãŸã®ã§ã€å¯¾å¿œç‚¹ã‚’å‰Šé™¤ã—ã€ãã®éš£æ¥ç‚¹ã‚’neighborã«è¿½åŠ 
 			RenewNeighbor(condVtxs[1 - baseMesh], companion_id, neighbor[1 - baseMesh]);
 
-			//Šî€“_‚Ì•û‚ªŠ„‚è“–‚Ä‚ç‚ê‚é–ÊÏ‚ª‘½‚¢‚Ì‚ÅAŠî€“_‚Ìc‚è‚Ì–ÊÏ‚ğŠ„‚è“–‚Ä‚é‚½‚ßA‘Šè‚Ìneighbor‚©‚ç‚³‚ª‚µ‚És‚­B
+			//åŸºæº–ç‚¹ã®æ–¹ãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã‚‹é¢ç©ãŒå¤šã„ã®ã§ã€åŸºæº–ç‚¹ã®æ®‹ã‚Šã®é¢ç©ã‚’å‰²ã‚Šå½“ã¦ã‚‹ãŸã‚ã€ç›¸æ‰‹ã®neighborã‹ã‚‰ã•ãŒã—ã«è¡Œãã€‚
 		}
-		else {	//Šî€“_‚Ì–ÊÏƒ=‘Šè‚Ì–ÊÏ
-				//Šî€“_i¬‚³‚¢•ûj‚Ì–ÊÏ‚ªoverlapArea
+		else {	//åŸºæº–ç‚¹ã®é¢ç©ï¼œ=ç›¸æ‰‹ã®é¢ç©
+				//åŸºæº–ç‚¹ï¼ˆå°ã•ã„æ–¹ï¼‰ã®é¢ç©ãŒoverlapArea
 			overlapArea = condVtxs[baseMesh][current_id].area - condVtxs[baseMesh][current_id].assign;
 			AddCompanion(condVtxs[baseMesh], current_id, condVtxs[1 - baseMesh], companion_id, overlapArea);
-			condVtxs[baseMesh].pmesh->GetPHFemThermo()->SetVertexBeCondVtxs(condVtxs[baseMesh][current_id].vid, true);	//‘Î‰•t‚¯I‚í‚Á‚½“_‚Ítrue
+			condVtxs[baseMesh].pmesh->GetPHFemThermo()->SetVertexBeCondVtxs(condVtxs[baseMesh][current_id].vid, true);	//å¯¾å¿œä»˜ã‘çµ‚ã‚ã£ãŸç‚¹ã¯true
 
-																														//Šî€“_‚Ì–ÊÏ‚ğ‘S‚ÄŠ„‚è“–‚Ä‚½‚Ì‚ÅA‘Î‰“_‚ğíœ‚µA‚»‚Ì—×Ú“_‚ğneighbor‚É’Ç‰Á
+																														//åŸºæº–ç‚¹ã®é¢ç©ã‚’å…¨ã¦å‰²ã‚Šå½“ã¦ãŸã®ã§ã€å¯¾å¿œç‚¹ã‚’å‰Šé™¤ã—ã€ãã®éš£æ¥ç‚¹ã‚’neighborã«è¿½åŠ 
 			RenewNeighbor(condVtxs[baseMesh], current_id, neighbor[baseMesh]);
 
-			//Šî€“_‚ğ‘Šè‘¤‚ÉˆÚ‚·
+			//åŸºæº–ç‚¹ã‚’ç›¸æ‰‹å´ã«ç§»ã™
 			baseMesh = 1 - baseMesh;
-			current_id = companion_id;	//Šî€“_‚ğ‘Šè‘¤‚ÉˆÚ‚·
+			current_id = companion_id;	//åŸºæº–ç‚¹ã‚’ç›¸æ‰‹å´ã«ç§»ã™
 		}
 	}
 }
@@ -226,7 +226,7 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 	PHFemMeshNew* fmesh0 = mp->mesh[0];
 	PHFemMeshNew* fmesh1 = mp->mesh[1];
 
-	/*heattransŠÖ”ˆø—p------------------------------------------------------------------------‚±‚±‚©‚ç*/
+	/*heattransé–¢æ•°å¼•ç”¨------------------------------------------------------------------------ã“ã“ã‹ã‚‰*/
 	PHSolid* solids[2];
 	solids[0] = phs0;
 	solids[1] = phs1;
@@ -235,65 +235,65 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 	fmesh[0] = fmesh0;
 	fmesh[1] = fmesh1;
 	PHScene* scene = solids[0]->GetScene()->Cast();
-	//	ÚGƒyƒA‚ğŒ©‚Â‚¯‚ÄA–¢”»’è‚È‚ç”»’è‚·‚éB
+	//	æ¥è§¦ãƒšã‚¢ã‚’è¦‹ã¤ã‘ã¦ã€æœªåˆ¤å®šãªã‚‰åˆ¤å®šã™ã‚‹ã€‚
 	bool bSwap;
 	PHSolidPairForLCP* pair = scene->GetSolidPair(solids[0]->Cast(), solids[1]->Cast(), bSwap)->Cast();
 	PHShapePairForLCP* sp = pair->GetShapePair(0, 0)->Cast();			/// 1st shape of wvery object is used as shape pair (= heatrans pair) 
 
-	if (sp->lastContactCount != (scene->GetCount() - 1)) {		//¡ÚG‚µ‚Ä‚¢‚È‚¯‚ê‚ÎBÚG	‚Í‘¼Š‚ÅŒvZBCDDetectorImp::ContactDetect()‚ÌState‚Ìd—lFÅŒãÚG‚ÌƒJƒEƒ“ƒg‚ğ•Û‚Ì‚½‚ß 
-																//	–¢ÚG‚È‚Ì‚ÅAGJK‚ğŒÄ‚Ô
+	if (sp->lastContactCount != (scene->GetCount() - 1)) {		//ä»Šæ¥è§¦ã—ã¦ã„ãªã‘ã‚Œã°ã€‚æ¥è§¦	ã¯ä»–æ‰€ã§è¨ˆç®—ã€‚CDDetectorImp::ContactDetect()ã®Stateã®ä»•æ§˜ï¼šæœ€å¾Œæ¥è§¦æ™‚ã®ã‚«ã‚¦ãƒ³ãƒˆã‚’ä¿æŒã®ãŸã‚ 
+																//	æœªæ¥è§¦ãªã®ã§ã€GJKã‚’å‘¼ã¶
 		sp->shapePoseW[0] = solids[0]->GetPose() * solids[0]->GetShapePose(0);
 		sp->shapePoseW[1] = solids[1]->GetPose() * solids[1]->GetShapePose(0);
 		if (bSwap) std::swap(sp->shapePoseW[0], sp->shapePoseW[1]);
 		Vec3d sep;
 		double dist = FindClosestPoints(sp->shape[0], sp->shape[1], sp->shapePoseW[0], sp->shapePoseW[1], sep, sp->closestPoint[0], sp->closestPoint[1]);
 		if (dist < 1e-10) {
-			//	‚©‚È‚è‹ß‚¢‚Ì‚ÅA–@ü‚ª‰ö‚µ‚¢‚Ì‚ÅAŒx‚ğ‚¾‚µ‚Ä‚¨‚­B
-			DSTR << "‚Q•¨‘Ì‚ª”ñí‚É‹ß‚¢‚ªAÚG‚µ‚Í‚µ‚Ä‚¢‚È‚¢”÷–­‚Èó‘Ô";
+			//	ã‹ãªã‚Šè¿‘ã„ã®ã§ã€æ³•ç·šãŒæ€ªã—ã„ã®ã§ã€è­¦å‘Šã‚’ã ã—ã¦ãŠãã€‚
+			DSTR << "ï¼’ç‰©ä½“ãŒéå¸¸ã«è¿‘ã„ãŒã€æ¥è§¦ã—ã¯ã—ã¦ã„ãªã„å¾®å¦™ãªçŠ¶æ…‹";
 			DSTR << " dist : " << dist << std::endl;
 			if (dist < 1e-14) {
-				DSTR << "’ˆÓ" << std::endl;
+				DSTR << "æ³¨æ„" << std::endl;
 			}
 		}
 		sp->depth = -dist;
-		sp->normal = (sp->shapePoseW[1] * sp->closestPoint[1] - sp->shapePoseW[0] * sp->closestPoint[0]);	//Œã‚Ì“`”M‚ÌŒvZ•K—vB–Ê¨–Ê‚ÌŒü‚«F–@ü‚©‚ç“`”MŒvZ
+		sp->normal = (sp->shapePoseW[1] * sp->closestPoint[1] - sp->shapePoseW[0] * sp->closestPoint[0]);	//å¾Œã®ä¼ç†±ã®è¨ˆç®—å¿…è¦ã€‚é¢â†’é¢ã®å‘ãï¼šæ³•ç·šã‹ã‚‰ä¼ç†±è¨ˆç®—
 		sp->normal.unitize();
 	}
 
-	//	‹——£:dist
-	//	‹——£‚ª‹ß‚¯‚ê‚Î“`”M‚Ìˆ—
-	/*	”M“`’B—¦ ƒ¿ [W/(m^2 K)] ‚ğ—p‚¢‚é‚ÆA‹«ŠEã‚Å q = ƒ¿(T-Tc) (T:Ú“_‰·“x Tc:üˆÍ‚Ì—¬‘Ì“™‚Ì‰·“x)
-	‚Q•¨‘Ì‚ÌÚG‚¾‚ÆAT1-ƒ¿1->Tc-ƒ¿2->T2 ‚Æ‚È‚é‚Æl‚¦‚ç‚ê‚éB
-	q = ƒ¿1(T1-Tc) = ƒ¿2(Tc-T2) ‚æ‚è (ƒ¿1+ƒ¿2)Tc = ƒ¿1T1 + ƒ¿2T2
-\	Tc = (ƒ¿1T1 + ƒ¿2T2)/(ƒ¿1+ƒ¿2)
-	q = ƒ¿1(T1-(ƒ¿1T1 + ƒ¿2T2)/(ƒ¿1+ƒ¿2)) = ƒ¿1T1 - ƒ¿1(ƒ¿1T1 + ƒ¿2T2)/(ƒ¿1+ƒ¿2)
-	= (ƒ¿1ƒ¿2T1 - ƒ¿1ƒ¿2T2)/(ƒ¿1+ƒ¿2) = ƒ¿'(T1-T2)  ƒ¿' = ƒ¿1ƒ¿2/(ƒ¿1+ƒ¿2)	*/
-	/*	q‚ÆQ‚É‚Â‚¢‚Ä‚Ìl@
-	q‚Í’PˆÊ–ÊÏ‚ ‚½‚è‚È‚Ì‚ÅA’¸“_ŠÔ‚Ì”M‚ÌˆÚ“®—ÊQ‚É’¼‚·‚É‚ÍA’¸“_‚ª‘ã•\‚·‚é–ÊÏ‚ğŠ|‚¯‚é•K—v‚ª‚ ‚éB
-	–{—ˆ‚ÍAOŠpŒ`‚Ìd‚È‚è‚ÆŒ`óŠÖ”‚©‚ç‹‚ß‚é‚×‚«‚à‚ÌB[
+	//	è·é›¢:dist
+	//	è·é›¢ãŒè¿‘ã‘ã‚Œã°ä¼ç†±ã®å‡¦ç†
+	/*	ç†±ä¼é”ç‡ Î± [W/(m^2 K)] ã‚’ç”¨ã„ã‚‹ã¨ã€å¢ƒç•Œä¸Šã§ q = Î±(T-Tc) (T:æ¥ç‚¹æ¸©åº¦ Tc:å‘¨å›²ã®æµä½“ç­‰ã®æ¸©åº¦)
+	ï¼’ç‰©ä½“ã®æ¥è§¦ã ã¨ã€T1-Î±1->Tc-Î±2->T2 ã¨ãªã‚‹ã¨è€ƒãˆã‚‰ã‚Œã‚‹ã€‚
+	q = Î±1(T1-Tc) = Î±2(Tc-T2) ã‚ˆã‚Š (Î±1+Î±2)Tc = Î±1T1 + Î±2T2
+\	Tc = (Î±1T1 + Î±2T2)/(Î±1+Î±2)
+	q = Î±1(T1-(Î±1T1 + Î±2T2)/(Î±1+Î±2)) = Î±1T1 - Î±1(Î±1T1 + Î±2T2)/(Î±1+Î±2)
+	= (Î±1Î±2T1 - Î±1Î±2T2)/(Î±1+Î±2) = Î±'(T1-T2)  Î±' = Î±1Î±2/(Î±1+Î±2)	*/
+	/*	qã¨Qã«ã¤ã„ã¦ã®è€ƒå¯Ÿ
+	qã¯å˜ä½é¢ç©ã‚ãŸã‚Šãªã®ã§ã€é ‚ç‚¹é–“ã®ç†±ã®ç§»å‹•é‡Qã«ç›´ã™ã«ã¯ã€é ‚ç‚¹ãŒä»£è¡¨ã™ã‚‹é¢ç©ã‚’æ›ã‘ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
+	æœ¬æ¥ã¯ã€ä¸‰è§’å½¢ã®é‡ãªã‚Šã¨å½¢çŠ¶é–¢æ•°ã‹ã‚‰æ±‚ã‚ã‚‹ã¹ãã‚‚ã®ã€‚[
 
-	‚µ‚©‚µAd‚È‚è‹ï‡‚Í–ˆƒXƒeƒbƒv•Ï‚í‚é‚Ì‚ÅA‚±‚ÌŒvZ‚Í‘å•ÏBŠÈ—ª‰»‚ğl‚¦‚éB
-	’¸“_‚Í’¸“_‚ğŠÜ‚ŞOŠpŒ`‚É¨—Í‚ğ‚ÂBOŠpŒ`‚Ìd‚È‚è‚æ‚èA’¸“_‚Ì‹——£‚ÌˆÓ–¡‚ª‘å‚«‚¢B
-	‹——£‚ª‹ß‚¢‚à‚Ì‚ğŠ„‚è“–‚Ä‚Ä‚¢‚­‚ªAŒã‚Å”ò‚Ñ’n‚ªo‚Ä‚Í‚¢‚¯‚È‚¢B
-	‚»‚±‚ÅA‚P“_‚©‚ç‰‚ß‚Ä™X‚ÉŠ„‚è“–‚Ä—Ìˆæ‚ğ‘å‚«‚­‚µ‚Äs‚­B‚±‚ê‚Å‚¸‚ê‚Í‹N‚«‚Ä‚à”ò‚Ñ’n‚Í‚Å‚È‚¢B
+	ã—ã‹ã—ã€é‡ãªã‚Šå…·åˆã¯æ¯ã‚¹ãƒ†ãƒƒãƒ—å¤‰ã‚ã‚‹ã®ã§ã€ã“ã®è¨ˆç®—ã¯å¤§å¤‰ã€‚ç°¡ç•¥åŒ–ã‚’è€ƒãˆã‚‹ã€‚
+	é ‚ç‚¹ã¯é ‚ç‚¹ã‚’å«ã‚€ä¸‰è§’å½¢ã«å‹¢åŠ›ã‚’æŒã¤ã€‚ä¸‰è§’å½¢ã®é‡ãªã‚Šã‚ˆã‚Šã€é ‚ç‚¹ã®è·é›¢ã®æ„å‘³ãŒå¤§ãã„ã€‚
+	è·é›¢ãŒè¿‘ã„ã‚‚ã®ã‚’å‰²ã‚Šå½“ã¦ã¦ã„ããŒã€å¾Œã§é£›ã³åœ°ãŒå‡ºã¦ã¯ã„ã‘ãªã„ã€‚
+	ãã“ã§ã€ï¼‘ç‚¹ã‹ã‚‰åˆã‚ã¦å¾ã€…ã«å‰²ã‚Šå½“ã¦é ˜åŸŸã‚’å¤§ããã—ã¦è¡Œãã€‚ã“ã‚Œã§ãšã‚Œã¯èµ·ãã¦ã‚‚é£›ã³åœ°ã¯ã§ãªã„ã€‚
 
-	’¸“_‚Ì–ÊÏ‚ÍA’¸“_‚ğŠÜ‚ŞOŠpŒ`’B‚Ì–ÊÏ‚Ì˜a‚Ì1/3B
+	é ‚ç‚¹ã®é¢ç©ã¯ã€é ‚ç‚¹ã‚’å«ã‚€ä¸‰è§’å½¢é”ã®é¢ç©ã®å’Œã®1/3ã€‚
 	*/
-	const double isoLen = 0.005;	//	0.1‚É‚·‚é‚ÆA”½“]Œã‚àA“¯‚¶–Ê‚ª‰Á”M‚³‚ê‚éB0.01‚É‚·‚é‚ÆA”½‘Î–Ê‚Í‰Á”M‚³‚ê‚È‚¢‚ªA”½‘Î–Ê‚É‹ß‚¢ƒGƒbƒW‚ª‰Á”M‚³‚ê‚é
-	const double isoLen2 = 0.07;	//	condVtxsƒyƒA‚ª‚±‚êˆÈã—£‚ê‚½‚çA‘Î‰‚µ‚Ä‚¢‚È‚¢‚±‚Æ‚É‚·‚éŒW”
-	if (sp->depth > -isoLen) {		//	Õ“Ë‚Ì[‚³‚ª
+	const double isoLen = 0.005;	//	0.1ã«ã™ã‚‹ã¨ã€åè»¢å¾Œã‚‚ã€åŒã˜é¢ãŒåŠ ç†±ã•ã‚Œã‚‹ã€‚0.01ã«ã™ã‚‹ã¨ã€åå¯¾é¢ã¯åŠ ç†±ã•ã‚Œãªã„ãŒã€åå¯¾é¢ã«è¿‘ã„ã‚¨ãƒƒã‚¸ãŒåŠ ç†±ã•ã‚Œã‚‹
+	const double isoLen2 = 0.07;	//	condVtxsãƒšã‚¢ãŒã“ã‚Œä»¥ä¸Šé›¢ã‚ŒãŸã‚‰ã€å¯¾å¿œã—ã¦ã„ãªã„ã“ã¨ã«ã™ã‚‹ä¿‚æ•°
+	if (sp->depth > -isoLen) {		//	è¡çªã®æ·±ã•ãŒ
 		CondVtxs condVtxs[2];
 		condVtxs[0].pmesh = fmesh[bSwap ? 1 : 0]->Cast();
 		condVtxs[1].pmesh = fmesh[bSwap ? 0 : 1]->Cast();
-		//	‹——£‚ª‹ß‚¢’¸“_‚ğ—ñ‹“B‚Â‚¢‚Å‚É–@ü‚É‚’¼‚È•½–Êã‚Å‚ÌÀ•W‚ğ‹‚ß‚Ä‚¨‚­B
+		//	è·é›¢ãŒè¿‘ã„é ‚ç‚¹ã‚’åˆ—æŒ™ã€‚ã¤ã„ã§ã«æ³•ç·šã«å‚ç›´ãªå¹³é¢ä¸Šã§ã®åº§æ¨™ã‚’æ±‚ã‚ã¦ãŠãã€‚
 		Matrix3d coords;
-		if (std::abs(sp->normal.x) < std::abs(sp->normal.y)) coords = Matrix3d::Rot(sp->normal, Vec3d(1, 0, 0), 'z');		//	•¨‘ÌŠÔ‚Ì‹¤—L–Êã‚Å‚Ìx-y•½–Ê‚É•¨‘Ì‚Ìã‰º•¨‘Ì‚Ì’¸“_‚ğ’u‚«Š·‚¦‚é‚½‚ß‚ÌÀ•W•ÏŠ·‚ğ‚·‚é‚½‚ß‚ÉAz²‚ğ‚’¼•û–Ê‚É   //Ë‰e€”õHH
+		if (std::abs(sp->normal.x) < std::abs(sp->normal.y)) coords = Matrix3d::Rot(sp->normal, Vec3d(1, 0, 0), 'z');		//	ç‰©ä½“é–“ã®å…±æœ‰é¢ä¸Šã§ã®x-yå¹³é¢ã«ç‰©ä½“ã®ä¸Šä¸‹ç‰©ä½“ã®é ‚ç‚¹ã‚’ç½®ãæ›ãˆã‚‹ãŸã‚ã®åº§æ¨™å¤‰æ›ã‚’ã™ã‚‹ãŸã‚ã«ã€zè»¸ã‚’å‚ç›´æ–¹é¢ã«   //å°„å½±æº–å‚™ï¼Ÿï¼Ÿ
 		else coords = Matrix3d::Rot(sp->normal, Vec3d(0, 1, 0), 'z');
 		Matrix3d coords_inv = coords.inv();
 		Vec3d normalL[2];
 
 		for (int i = 0; i<2; ++i) {
-			normalL[i] = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i == 0 ? 1 : -1);		//”»’è‚ÌˆÓ–¡:? 1,-1‚Ì‡‚ª•K—v‚È‚Ì‚©H			//worldÀ•W‚ğŠî€‚Ì–@ü‚©‚çAƒ[ƒJƒ‹‚Ì–@ü‚ÌŒü‚«‚ğŒvZ: WÀ•W•ÏŠ· *  normalL(ocal) =  normalW(orld)
+			normalL[i] = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i == 0 ? 1 : -1);		//åˆ¤å®šã®æ„å‘³:? 1,-1ã®é †ãŒå¿…è¦ãªã®ã‹ï¼Ÿ			//worldåº§æ¨™ã‚’åŸºæº–ã®æ³•ç·šã‹ã‚‰ã€ãƒ­ãƒ¼ã‚«ãƒ«ã®æ³•ç·šã®å‘ãã‚’è¨ˆç®—: Wåº§æ¨™å¤‰æ› *  normalL(ocal) =  normalW(orld)
 																								//DSTR << std::endl << "NL:" << normalL[i]<< std::endl;
 			for (unsigned v = 0; v < condVtxs[i].pmesh->surfaceVertices.size(); ++v) {
 				double vd = (sp->closestPoint[i] - condVtxs[i].pmesh->vertices[condVtxs[i].pmesh->surfaceVertices[v]].pos) * normalL[i];
@@ -302,16 +302,16 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 					CondVtx c;
 					c.vid = condVtxs[i].pmesh->surfaceVertices[v];
 					c.pos = coords_inv * (sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[c.vid].pos);
-					c.pos.z = vd + (sp->depth / 2);	//	’†–Ê‚©‚ç‚Ì‹——£‚É‚µ‚Ä‚¨‚­B
-													// sp->normal‚Í‚Ç‚¿‚ç‚©‚Ì•¨‘Ì‚©‚ç‚Ì–@ü‚È‚Ì‚ÅA‚±‚ê‚ÌŒü‚«‚ªcondvtxs‚Ìbswap‚É‚æ‚Á‚ÄH³•‰‚ ‚è‚¤‚éB
-													// if(bSwap == true)	condVtxs[0] == fmesh[1]		// sp->normal–@ü‚Æ”½‘ÎŒü‚«‚Ì‚İ
-													// else(bSwap == false)	condVtxs[0] == fmesh[0]		// sp->normal–@ü‚Æ“¯‚¶Œü‚«
+					c.pos.z = vd + (sp->depth / 2);	//	ä¸­é¢ã‹ã‚‰ã®è·é›¢ã«ã—ã¦ãŠãã€‚
+													// sp->normalã¯ã©ã¡ã‚‰ã‹ã®ç‰©ä½“ã‹ã‚‰ã®æ³•ç·šãªã®ã§ã€ã“ã‚Œã®å‘ããŒcondvtxsã®bswapã«ã‚ˆã£ã¦ï¼Ÿæ­£è² ã‚ã‚Šã†ã‚‹ã€‚
+													// if(bSwap == true)	condVtxs[0] == fmesh[1]		// sp->normalæ³•ç·šã¨åå¯¾å‘ãã®ã¿
+													// else(bSwap == false)	condVtxs[0] == fmesh[0]		// sp->normalæ³•ç·šã¨åŒã˜å‘ã
 
 					double judgeN = normalL[i] *
 						condVtxs[i].pmesh->GetPHFemThermo()->GetVertexNormal(condVtxs[i].pmesh->surfaceVertices[v]);
 
-					if (judgeN > 0.0) {		// <= ˆÈ‘O‚Ì•„†•ûŒü
-						condVtxs[i].push_back(c);		//.@l.828‚Å‚¢‚ê‚Ä‚¢‚écondVtxs‚Í“¯‚¶HBcondVtxs‚Ìƒƒ“ƒo•Ï”‚ğİ’è‚µ‚½condVtx‚ğì‚éB
+					if (judgeN > 0.0) {		// <= ä»¥å‰ã®ç¬¦å·æ–¹å‘
+						condVtxs[i].push_back(c);		//.ã€€l.828ã§ã„ã‚Œã¦ã„ã‚‹condVtxsã¯åŒã˜ï¼Ÿã€‚condVtxsã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’è¨­å®šã—ãŸcondVtxã‚’ä½œã‚‹ã€‚
 					}
 				}
 			}
@@ -321,22 +321,22 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 				DSTR << "00 Can not find companion vertex on object " << i << std::endl;
 			}
 		}
-		/*heattransŠÖ”ˆø—p--------------------------------------------------------------‚±‚±‚Ü‚Å*/
+		/*heattransé–¢æ•°å¼•ç”¨--------------------------------------------------------------ã“ã“ã¾ã§*/
 
-		const double isoLen3 = 0.003;		//:BoundingBox‚ÌüˆÍ‰½[m]‚Ü‚ÅƒyƒA’Tõ”ÍˆÍ‚Æ‚·‚é‚©
-											//	Less‚ğŠî‚É(ÚG–Êã‚Ìx,z²‚Å)ƒ\[ƒg
+		const double isoLen3 = 0.003;		//:BoundingBoxã®å‘¨å›²ä½•[m]ã¾ã§ãƒšã‚¢æ¢ç´¢ç¯„å›²ã¨ã™ã‚‹ã‹
+											//	Lessã‚’åŸºã«(æ¥è§¦é¢ä¸Šã®x,zè»¸ã§)ã‚½ãƒ¼ãƒˆ
 		Vec2d bboxMin, bboxMax;
 		for (int axis = 0; axis<2; ++axis) {
 			for (int i = 0; i<2; ++i) {
-				std::sort(condVtxs[i].begin(), condVtxs[i].end(), CondVtx::Less(axis)); //x(y)²‚É‚Â‚¢‚Ä—¼•¨‘Ì‚Ì’¸“_‚ğƒ\[ƒg
+				std::sort(condVtxs[i].begin(), condVtxs[i].end(), CondVtx::Less(axis)); //x(y)è»¸ã«ã¤ã„ã¦ä¸¡ç‰©ä½“ã®é ‚ç‚¹ã‚’ã‚½ãƒ¼ãƒˆ
 			}
-			//	²‚²‚Æ‚ÉA2ŸŒ³AABB‚Ì‚½‚ß‚ÌÅ¬’l/Å‘å’l‚ğ‹‚ß‚é
-			//	boundingboxƒ`ƒFƒbƒN d‚È‚ç‚È‚¢•”•ª‚ÍÌ‚Ä‚é
-			//	²‚²‚Æ‚ÉA‹¤’Ê”ÍˆÍ‚ÌÀ•W‚ğ“ü‚ê‚éBÅ¬‚©‚çB
-			bboxMin[axis] = condVtxs[0].size() ? condVtxs[0].front().pos[axis] : DBL_MIN;                           //condVtxs[0]‚ÌƒTƒCƒY‚ª‚ ‚ê‚ÎAfront().pos‚ğ‘ã“ü
-			bboxMin[axis] = std::max(bboxMin[axis], (condVtxs[1].size() ? condVtxs[1].front().pos[axis] : DBL_MIN));  //condVtxs[1]‚ÌƒTƒCƒY‚ª‚ ‚ê‚ÎAfront().pos‚ğ‘ã“ü ª‚Æ”äŠr‚µ‚Ä‘å‚«‚¢‚Ù‚¤‚ğ‘ã“üid‚È‚Á‚Ä‚¢‚é•”•ª‚ÌÅ¬’lj
+			//	è»¸ã”ã¨ã«ã€2æ¬¡å…ƒAABBã®ãŸã‚ã®æœ€å°å€¤/æœ€å¤§å€¤ã‚’æ±‚ã‚ã‚‹
+			//	boundingboxãƒã‚§ãƒƒã‚¯ é‡ãªã‚‰ãªã„éƒ¨åˆ†ã¯æ¨ã¦ã‚‹
+			//	è»¸ã”ã¨ã«ã€å…±é€šç¯„å›²ã®åº§æ¨™ã‚’å…¥ã‚Œã‚‹ã€‚æœ€å°ã‹ã‚‰ã€‚
+			bboxMin[axis] = condVtxs[0].size() ? condVtxs[0].front().pos[axis] : DBL_MIN;                           //condVtxs[0]ã®ã‚µã‚¤ã‚ºãŒã‚ã‚Œã°ã€front().posã‚’ä»£å…¥
+			bboxMin[axis] = std::max(bboxMin[axis], (condVtxs[1].size() ? condVtxs[1].front().pos[axis] : DBL_MIN));  //condVtxs[1]ã®ã‚µã‚¤ã‚ºãŒã‚ã‚Œã°ã€front().posã‚’ä»£å…¥ â†‘ã¨æ¯”è¼ƒã—ã¦å¤§ãã„ã»ã†ã‚’ä»£å…¥ï¼ˆé‡ãªã£ã¦ã„ã‚‹éƒ¨åˆ†ã®æœ€å°å€¤ï¼‰
 			bboxMin[axis] -= isoLen3; //<-isoLen,	
-			for (int i = 0; i<2; ++i) {		//	condVtxs‚Ì‚Ç‚¿‚ç‚àAisoLen3‚æ‚èŠO‘¤‚Ì“_‚ÍŒó•â‚©‚çœŠO‚·‚é
+			for (int i = 0; i<2; ++i) {		//	condVtxsã®ã©ã¡ã‚‰ã‚‚ã€isoLen3ã‚ˆã‚Šå¤–å´ã®ç‚¹ã¯å€™è£œã‹ã‚‰é™¤å¤–ã™ã‚‹
 				CondVtx tmp;
 				tmp.pos[axis] = bboxMin[axis];
 				CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(axis));
@@ -348,26 +348,26 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 			for (int i = 0; i<2; ++i) {
 				CondVtx tmp;
 				tmp.pos[axis] = bboxMax[axis];
-				CondVtxs::iterator it = std::upper_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(axis));		//	Less‚Å—Ç‚¢‚Ì‚©
+				CondVtxs::iterator it = std::upper_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(axis));		//	Lessã§è‰¯ã„ã®ã‹
 				condVtxs[i].erase(it, condVtxs[i].end());
 			}
 		}
 
-		//‘Î‰‚·‚é’¸“_‚Ì‚È‚¢’¸“_‚Ìíœ
+		//å¯¾å¿œã™ã‚‹é ‚ç‚¹ã®ãªã„é ‚ç‚¹ã®å‰Šé™¤
 		for (int i = 0; i<2; ++i) {
 			condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
 			for (unsigned j = 0; j<condVtxs[i].size(); ++j) {
 				condVtxs[i].vtx2Cond[condVtxs[i][j].vid] = j;
 			}
 		}
-		//	‘Î‰‚·‚é’¸“_‚ªŒ©‚Â‚©‚ç‚È‚¢’¸“_‚ğAíœ‚Ì‚½‚ß‚Éƒ}[ƒNB
+		//	å¯¾å¿œã™ã‚‹é ‚ç‚¹ãŒè¦‹ã¤ã‹ã‚‰ãªã„é ‚ç‚¹ã‚’ã€å‰Šé™¤ã®ãŸã‚ã«ãƒãƒ¼ã‚¯ã€‚
 		std::vector<int> eraseVtxs[2];
 		for (int i = 0; i<2; ++i) {
 			int from = 0;
 			for (unsigned j = 0; j<condVtxs[i].size(); ++j) {
 				int found = from;
-				double dist = FindNearest(condVtxs[i][j].pos, condVtxs[1 - i], found);	// condVtxs[i][j].pos‚ÆcondVtxs[1-i](sp‚ÌƒyƒA)‚Ì“àAˆê”Ô’Z‚¢‚â‚Â‚ªisoLen‚æ‚è’·‚©‚Á‚½‚çA”M“`“±‚µ‚È‚¢B‚¯‚ÇAÅ‰‚ÉAisoLen‚Å”»’è‚µ‚Ä‚©‚çƒyƒAì‚Á‚Ä‚¢‚é‚ñ‚¾‚©‚çA‚»‚Ì‚ ‚Æ‚ÉAdist‚ğŒvZ‚·‚é•K—v‚Í‚ ‚é‚Ì‚¾‚ë‚¤‚©HcondVtxs‚ª–ˆƒXƒeƒbƒvXV‚³‚ê‚È‚¢‚Ì‚È‚çA•K—v‚©‚à
-				if (dist > isoLen2) {	//	•½–Ê‹——£‚ªisoLenˆÈã‚Ì’¸“_‚Ííœ‚Ì‚½‚ßƒŠƒXƒgout
+				double dist = FindNearest(condVtxs[i][j].pos, condVtxs[1 - i], found);	// condVtxs[i][j].posã¨condVtxs[1-i](spã®ãƒšã‚¢)ã®å†…ã€ä¸€ç•ªçŸ­ã„ã‚„ã¤ãŒisoLenã‚ˆã‚Šé•·ã‹ã£ãŸã‚‰ã€ç†±ä¼å°ã—ãªã„ã€‚ã‘ã©ã€æœ€åˆã«ã€isoLenã§åˆ¤å®šã—ã¦ã‹ã‚‰ãƒšã‚¢ä½œã£ã¦ã„ã‚‹ã‚“ã ã‹ã‚‰ã€ãã®ã‚ã¨ã«ã€distã‚’è¨ˆç®—ã™ã‚‹å¿…è¦ã¯ã‚ã‚‹ã®ã ã‚ã†ã‹ï¼ŸcondVtxsãŒæ¯ã‚¹ãƒ†ãƒƒãƒ—æ›´æ–°ã•ã‚Œãªã„ã®ãªã‚‰ã€å¿…è¦ã‹ã‚‚
+				if (dist > isoLen2) {	//	å¹³é¢è·é›¢ãŒisoLenä»¥ä¸Šã®é ‚ç‚¹ã¯å‰Šé™¤ã®ãŸã‚ãƒªã‚¹ãƒˆout
 					eraseVtxs[i].push_back(j);
 				}
 				else {
@@ -375,7 +375,7 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 				}
 			}
 		}
-		//	ƒ}[ƒN‚µ‚½’¸“_‚ğíœ
+		//	ãƒãƒ¼ã‚¯ã—ãŸé ‚ç‚¹ã‚’å‰Šé™¤
 		for (int i = 0; i<2; ++i) {
 			std::sort(eraseVtxs[i].begin(), eraseVtxs[i].end());
 			for (int j = (int)eraseVtxs[i].size() - 1; j>0; --j) {
@@ -386,21 +386,21 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 			}
 		}
 
-		//’¸“_‚Ì’S“–‚·‚é–ÊÏ‚ÌŒvZ(ÀÛ‚É‚ÍŒvZ‚µ‚Ä‚¢‚é‚Ì‚Å‚Í‚È‚­ŒÄ‚Ño‚µ‚Ä‘ã“ü‚µ‚Ä‚é‚¾‚¯)ã‚Æ“¯‘€ì
+		//é ‚ç‚¹ã®æ‹…å½“ã™ã‚‹é¢ç©ã®è¨ˆç®—(å®Ÿéš›ã«ã¯è¨ˆç®—ã—ã¦ã„ã‚‹ã®ã§ã¯ãªãå‘¼ã³å‡ºã—ã¦ä»£å…¥ã—ã¦ã‚‹ã ã‘)ä¸Šã¨åŒæ“ä½œ
 		for (int i = 0; i<2; ++i) {
 			for (unsigned j = 0; j<condVtxs[i].size(); ++j) {
 				condVtxs[i][j].area = condVtxs[i].pmesh->GetPHFemThermo()->GetVertexArea(condVtxs[i][j].vid);
 			}
 		}
-		//2•¨‘Ì‚ªd‚È‚Á‚Ä‚¢‚é•”•ª‚Ì’†S‚ğ’T‚·
-		double xCenter = 0.5*(bboxMin.x + bboxMax.x); //d‚È‚Á‚Ä‚¢‚é•”•ª‚Ì’†S
-		int centerVtx[2] = { -1, -1 };	//‰Šú‰»(-1,-1)‚ğ“ü‚ê‚Æ‚­ //condVtxs‚Å‘O‚©‚ç‰½”Ô–Ú‚©
+		//2ç‰©ä½“ãŒé‡ãªã£ã¦ã„ã‚‹éƒ¨åˆ†ã®ä¸­å¿ƒã‚’æ¢ã™
+		double xCenter = 0.5*(bboxMin.x + bboxMax.x); //é‡ãªã£ã¦ã„ã‚‹éƒ¨åˆ†ã®ä¸­å¿ƒ
+		int centerVtx[2] = { -1, -1 };	//åˆæœŸåŒ–(-1,-1)ã‚’å…¥ã‚Œã¨ã //condVtxsã§å‰ã‹ã‚‰ä½•ç•ªç›®ã‹
 		for (int i = 0; i<2; ++i) {
 			CondVtx tmp;
 			tmp.pos[1] = 0.5*(bboxMin.y + bboxMax.y);
-			CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(1)); //condVtxs[i]ibegin~end‚Åjw’è‚µ‚½’litmp)ˆÈã‚Ì’l‚ªÅ‰‚ÉŒ»‚ê‚éˆÊ’u‚ğ•Ô‚·B
-			int cit = (int)(it - condVtxs[i].begin()); //tmp‚æ‚è‘å‚«‚¢’l(—v‘f‚ğ‚Á‚½)‚ªo‚½êŠ-Å‰‚Ì—v‘f‚ÌêŠ
-			double minDistX = DBL_MAX;	//‰Šú‰»idouble‚ÌãŒÀ’lj
+			CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(1)); //condVtxs[i]ï¼ˆbegin~endã§ï¼‰æŒ‡å®šã—ãŸå€¤ï¼ˆtmp)ä»¥ä¸Šã®å€¤ãŒæœ€åˆã«ç¾ã‚Œã‚‹ä½ç½®ã‚’è¿”ã™ã€‚
+			int cit = (int)(it - condVtxs[i].begin()); //tmpã‚ˆã‚Šå¤§ãã„å€¤(è¦ç´ ã‚’æŒã£ãŸ)ãŒå‡ºãŸå ´æ‰€-æœ€åˆã®è¦ç´ ã®å ´æ‰€
+			double minDistX = DBL_MAX;	//åˆæœŸåŒ–ï¼ˆdoubleã®ä¸Šé™å€¤ï¼‰
 			for (int y = 0; y<5; ++y) {
 				if (cit - y >= 0 && cit - y < (int)condVtxs[i].size()) {
 					double dist = std::abs(condVtxs[i][cit - y].pos.x - xCenter);
@@ -417,68 +417,68 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 					}
 				}
 			}
-			assert(centerVtx[i] >= 0); //˜_—ƒ`ƒFƒbƒN centerVtx‚Í0‚æ‚è‘å‚«‚¢i0‚æ‚è¬‚³‚¢‚Æf’fƒƒbƒZ[ƒWj
+			assert(centerVtx[i] >= 0); //è«–ç†ãƒã‚§ãƒƒã‚¯ centerVtxã¯0ã‚ˆã‚Šå¤§ãã„ï¼ˆ0ã‚ˆã‚Šå°ã•ã„ã¨è¨ºæ–­ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼‰
 		}
 
-		//	centerVtx[i]‚Æˆê”Ô‹ß‚¢’¸“_‚ğ’T‚·
-		int baseMesh = 0; //0or1AƒƒbƒVƒ…‚Ì‘Î‰‚ğ’T‚·AƒƒbƒVƒ…‚O‚Æ‚P‚Ì‚Ç‚¿‚ç‚ğŠî€‚É’T‚µ‚Ä‚¢‚é‚©
-		int current_id = centerVtx[0]; //Šî€‚Ì“_IDB‚±‚¢‚Â‚Ì‘Î‰“_‚ğ’T‚µ‚Ä‚¢‚éB
+		//	centerVtx[i]ã¨ä¸€ç•ªè¿‘ã„é ‚ç‚¹ã‚’æ¢ã™
+		int baseMesh = 0; //0or1ã€ãƒ¡ãƒƒã‚·ãƒ¥ã®å¯¾å¿œã‚’æ¢ã™æ™‚ã€ãƒ¡ãƒƒã‚·ãƒ¥ï¼ã¨ï¼‘ã®ã©ã¡ã‚‰ã‚’åŸºæº–ã«æ¢ã—ã¦ã„ã‚‹ã‹
+		int current_id = centerVtx[0]; //åŸºæº–ã®ç‚¹IDã€‚ã“ã„ã¤ã®å¯¾å¿œç‚¹ã‚’æ¢ã—ã¦ã„ã‚‹ã€‚
 		int companion_id = centerVtx[1];
 
-		// baseMesh(=centerVtx[0])‚ğŠî€‚ÉcenterVtx[1]‚Ìfaces[0]‚©‚ç“à•””»’èB‘Î‰‚³‚¹‚écompanion_id‚ğ•Ô‚·B
+		// baseMesh(=centerVtx[0])ã‚’åŸºæº–ã«centerVtx[1]ã®faces[0]ã‹ã‚‰å†…éƒ¨åˆ¤å®šã€‚å¯¾å¿œã•ã›ã‚‹companion_idã‚’è¿”ã™ã€‚
 
-		/*//9.14 while•¶‚Å‘Î‰‚Ã‚¯‚é‚æ‚¤‚É‘S“_‘Î‰‚Ã‚¯‚é‚æ‚¤‚Éƒ‹[ƒv‚³‚¹‚é
-		Š„‚è“–‚Ä‚½’¸“_‚Ì” = condVtxs‚Ì”‚É‚È‚Á‚½‚çA‘S“_‘Î‰‚µ‚½‚Æ‚¢‚¤‚±‚Æ‚Åloop‚©‚ço‚éB
+		/*//9.14 whileæ–‡ã§å¯¾å¿œã¥ã‘ã‚‹ã‚ˆã†ã«å…¨ç‚¹å¯¾å¿œã¥ã‘ã‚‹ã‚ˆã†ã«ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹
+		å‰²ã‚Šå½“ã¦ãŸé ‚ç‚¹ã®æ•° = condVtxsã®æ•°ã«ãªã£ãŸã‚‰ã€å…¨ç‚¹å¯¾å¿œã—ãŸã¨ã„ã†ã“ã¨ã§loopã‹ã‚‰å‡ºã‚‹ã€‚
 		2013.9.20
-		—×Ú“_‚ğ’T‚µ‚És‚­ˆ—Ë—×Ú“_‚Ì–ÊÏ‚ª‘S‚Ä‚¢‚Á‚Ï‚¢‚¾‚Á‚½‚Æ‚«‚Ìˆ—‚ª‚©‚¯‚Ä‚¢‚È‚¢B
+		éš£æ¥ç‚¹ã‚’æ¢ã—ã«è¡Œãå‡¦ç†â‡’éš£æ¥ç‚¹ã®é¢ç©ãŒå…¨ã¦ã„ã£ã±ã„ã ã£ãŸã¨ãã®å‡¦ç†ãŒã‹ã‘ã¦ã„ãªã„ã€‚
 		*/
 		/*2013.9.20
-		TriInOutJudge‚Ì‘æOˆø”‚Åface‚ğ“n‚·‚Ì‚¾‚ªA•\–Êface‚©‚ğŠm”F‚¹‚¸‚É“n‚µ‚Ä‚¢‚½‚Ì‚ÅƒoƒO‚ªo‚½B
-		TriInoutJudge‚Å•Ô‚µ‚Ä‚¢‚½•Ï”‚Í’¸“_ID‚¾‚Á‚½‚ªA•Ô‚·‚×‚«‚Í‚»‚ê‚ğVtx2cond‚Å•ÏŠ·‚·‚é‚â‚Â‚¾‚Á‚½B
-		Œ»İ‚ÍC³Ï‚İ
+		TriInOutJudgeã®ç¬¬ä¸‰å¼•æ•°ã§faceã‚’æ¸¡ã™ã®ã ãŒã€è¡¨é¢faceã‹ã‚’ç¢ºèªã›ãšã«æ¸¡ã—ã¦ã„ãŸã®ã§ãƒã‚°ãŒå‡ºãŸã€‚
+		TriInoutJudgeã§è¿”ã—ã¦ã„ãŸå¤‰æ•°ã¯é ‚ç‚¹IDã ã£ãŸãŒã€è¿”ã™ã¹ãã¯ãã‚Œã‚’Vtx2condã§å¤‰æ›ã™ã‚‹ã‚„ã¤ã ã£ãŸã€‚
+		ç¾åœ¨ã¯ä¿®æ­£æ¸ˆã¿
 		*/
 		/*
 		2013.10.8
-		I—¹iƒ‹[ƒvjğŒ‚ÍcoundVtxs(ÚG‚µ‚Ä‚¢‚é“_)‚Ì”‚Æ‘Î‰•t‚¯‚ªI‚í‚Á‚½i–ÊÏ‚ª‚O‚É‚È‚Á‚½j“_‚Ì”‚ğ”äŠr‚µA‚»‚ê‚ª“¯‚¶”‚¾‚Á‚½ê‡‚É‘S“_‘Î‰‚É‚·‚éB
-		‘Î‰•t‚¯‚ªI‚í‚Á‚½‚Æ‚«‚ÉAcountMesh[0or1]‚ğƒJƒEƒ“ƒgƒAƒbƒv‚·‚éB
+		çµ‚äº†ï¼ˆãƒ«ãƒ¼ãƒ—ï¼‰æ¡ä»¶ã¯coundVtxs(æ¥è§¦ã—ã¦ã„ã‚‹ç‚¹)ã®æ•°ã¨å¯¾å¿œä»˜ã‘ãŒçµ‚ã‚ã£ãŸï¼ˆé¢ç©ãŒï¼ã«ãªã£ãŸï¼‰ç‚¹ã®æ•°ã‚’æ¯”è¼ƒã—ã€ãã‚ŒãŒåŒã˜æ•°ã ã£ãŸå ´åˆã«å…¨ç‚¹å¯¾å¿œã«ã™ã‚‹ã€‚
+		å¯¾å¿œä»˜ã‘ãŒçµ‚ã‚ã£ãŸã¨ãã«ã€countMesh[0or1]ã‚’ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã™ã‚‹ã€‚
 
 		2013.10.22
-		I—¹ğŒ‚Ì•ÏXBËÚG–ÊÏ‚Ì‚¾‚¢‚½‚¢‚ğ‘Î‰•t‚¯‚½‚çÚGI—¹B
-		‚»‚Ì‚½‚ßcounMesh‚ÌƒJƒEƒ“ƒgƒAƒbƒv‚ÍíœB
-		neighbor•Ï”‚ğ’Ç‰Á‚µA‚±‚±‚©‚çŸ‚Ì‘Î‰‚ğ‘I‚Ô‚æ‚¤‚É‚·‚éBAddneighborŠÖ”’Ç‰ÁB
+		çµ‚äº†æ¡ä»¶ã®å¤‰æ›´ã€‚â‡’æ¥è§¦é¢ç©ã®ã ã„ãŸã„ã‚’å¯¾å¿œä»˜ã‘ãŸã‚‰æ¥è§¦çµ‚äº†ã€‚
+		ãã®ãŸã‚counMeshã®ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã¯å‰Šé™¤ã€‚
+		neighborå¤‰æ•°ã‚’è¿½åŠ ã—ã€ã“ã“ã‹ã‚‰æ¬¡ã®å¯¾å¿œã‚’é¸ã¶ã‚ˆã†ã«ã™ã‚‹ã€‚Addneighboré–¢æ•°è¿½åŠ ã€‚
 
 		2014
-		I—¹ğŒ‚Í’¸“_ƒyƒA‚Ìü•ª‹——£‚É‚µ‚½		*/
+		çµ‚äº†æ¡ä»¶ã¯é ‚ç‚¹ãƒšã‚¢ã®ç·šåˆ†è·é›¢ã«ã—ãŸ		*/
 
-		//	‚±‚±‚©‚ç‘Î‰‚ğL‚°‚Ä‚¢‚­
-		std::vector<int> neighbor[2];		//’¸“_‚Ì’TõŒó•â
+		//	ã“ã“ã‹ã‚‰å¯¾å¿œã‚’åºƒã’ã¦ã„ã
+		std::vector<int> neighbor[2];		//é ‚ç‚¹ã®æ¢ç´¢å€™è£œ
 		neighbor[0].push_back(current_id);
 		neighbor[1].push_back(companion_id);
 
-		//‘Î‰“_‚ğæ‚é
+		//å¯¾å¿œç‚¹ã‚’å–ã‚‹
 		MakeVtxPair(condVtxs, neighbor, baseMesh, current_id);
 		double areaSUM[2] = { 0.0, 0.0 };
 
 
-		/// 2•¨‘Ì‚ÌŠÔ‚Å”M“`’B‹«ŠEğŒ—˜—p‚É‚æ‚é”M“`’BŒvZ‚ğs‚¤
+		/// 2ç‰©ä½“ã®é–“ã§ç†±ä¼é”å¢ƒç•Œæ¡ä»¶åˆ©ç”¨ã«ã‚ˆã‚‹ç†±ä¼é”è¨ˆç®—ã‚’è¡Œã†
 		for (unsigned i = 0; i < condVtxs[0].size(); i++) {
-			//	‘Î‰‚·‚éß“_(companions[j])‚Ì‰·“x‚ğg‚Á‚Ä”M“`’B‚ÌŒvZ‚ğs‚¤
+			//	å¯¾å¿œã™ã‚‹ç¯€ç‚¹(companions[j])ã®æ¸©åº¦ã‚’ä½¿ã£ã¦ç†±ä¼é”ã®è¨ˆç®—ã‚’è¡Œã†
 			double areasum = 0.0;
 			for (unsigned j = 0; j < condVtxs[0][i].companions.size(); j++) {
-				// ”M“`’B‚ÌƒyƒA‚É‚È‚Á‚Ä‚¢‚éÒ“¯m‚ğA“¯‚¶F‚Å•`‰æA‚Ç‚ÌF‚Å•`‰æ‚·‚é‚©Aƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ’èH
-				//i=0‚©‚çA‚P‚Â‚¸‚Âƒ`ƒFƒbƒN‚µ‚Ä‚¢‚­Bd•¡‚µ‚Ä‚¢‚éê‡‚É‚ÍAF‚ªã‘‚«‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ÅB
-				condVtxs[0].pmesh->GetPHFemThermo()->SetVertexHeatTransRatio(condVtxs[0][i].vid, mp->heatTransferRatio);	// ƒtƒ‰ƒCƒpƒ“-‹ó‹CŠÔ‚Å“`”M‚µ‚È‚¢F•¨‘ÌŠÔ“`’B‚Ì‚İ“K—p‰»‚·‚×‚«‚¾‚ªA‚Æ‚è‚ ‚¦‚¸B
-																													//>		isoLen3==0‚ÌAjudgeN’¼Œã‚Æ“ü‚Á‚Ä‚¢‚é“_‚Ì”‚Í“¯‚¶‚È‚Ì‚ÉA”M“`’B‚³‚ê‚Ä‚¢‚È‚¢“_‚ª‚ ‚é‚æ‚¤‚ÉŒ©‚¦‚éB
-				double dqdt = mp->heatTransferRatio * (condVtxs[0].pmesh->GetPHFemThermo()->GetVertexTemp(condVtxs[0][i].vid)			//	0,1‚Ç‚¿‚ç‚ª‚Ç‚¿‚ç‚©•Ï‚í‚é‰Â”\«‚ ‚è‚¾‚ªA‚±‚ê‚Å‚¢‚¢‚Ì‚©B
+				// ç†±ä¼é”ã®ãƒšã‚¢ã«ãªã£ã¦ã„ã‚‹è€…åŒå£«ã‚’ã€åŒã˜è‰²ã§æç”»ã€ã©ã®è‰²ã§æç”»ã™ã‚‹ã‹ã€ãƒ©ãƒ³ãƒ€ãƒ ã§æ±ºå®šï¼Ÿ
+				//i=0ã‹ã‚‰ã€ï¼‘ã¤ãšã¤ãƒã‚§ãƒƒã‚¯ã—ã¦ã„ãã€‚é‡è¤‡ã—ã¦ã„ã‚‹å ´åˆã«ã¯ã€è‰²ãŒä¸Šæ›¸ãã•ã‚Œã¦ã—ã¾ã†ã®ã§ã€‚
+				condVtxs[0].pmesh->GetPHFemThermo()->SetVertexHeatTransRatio(condVtxs[0][i].vid, mp->heatTransferRatio);	// ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³-ç©ºæ°—é–“ã§ä¼ç†±ã—ãªã„ï¼šç‰©ä½“é–“ä¼é”æ™‚ã®ã¿é©ç”¨åŒ–ã™ã¹ãã ãŒã€ã¨ã‚Šã‚ãˆãšã€‚
+																													//>		isoLen3==0ã®æ™‚ã€judgeNç›´å¾Œã¨å…¥ã£ã¦ã„ã‚‹ç‚¹ã®æ•°ã¯åŒã˜ãªã®ã«ã€ç†±ä¼é”ã•ã‚Œã¦ã„ãªã„ç‚¹ãŒã‚ã‚‹ã‚ˆã†ã«è¦‹ãˆã‚‹ã€‚
+				double dqdt = mp->heatTransferRatio * (condVtxs[0].pmesh->GetPHFemThermo()->GetVertexTemp(condVtxs[0][i].vid)			//	0,1ã©ã¡ã‚‰ãŒã©ã¡ã‚‰ã‹å¤‰ã‚ã‚‹å¯èƒ½æ€§ã‚ã‚Šã ãŒã€ã“ã‚Œã§ã„ã„ã®ã‹ã€‚
 					- condVtxs[1].pmesh->GetPHFemThermo()->GetVertexTemp(condVtxs[1][condVtxs[0][i].companions[j].id].vid)) * condVtxs[0][i].companions[j].area;
-				//	”M“`’B‘ÎÛ’¸“_‚Å‚ÍA”M•úË‚ğŒvZ‚µ‚È‚¢
+				//	ç†±ä¼é”å¯¾è±¡é ‚ç‚¹ã§ã¯ã€ç†±æ”¾å°„ã‚’è¨ˆç®—ã—ãªã„
 				//DSTR << condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].beRadiantHeat << "," <<
 				//	condVtxs[1].pmesh->vertices[condVtxs[1][condVtxs[0][i].companions[j].id].vid].beRadiantHeat <<std::endl;
 				condVtxs[0].pmesh->GetPHFemThermo()->SetVertexBeRadiantHeat(condVtxs[0][i].vid, false);
 				condVtxs[1].pmesh->GetPHFemThermo()->SetVertexBeRadiantHeat(condVtxs[1][condVtxs[0][i].companions[j].id].vid, false);
 
-				// condvtx[0]‚ÌVecf ‚Édqdt ‚ğ‘«‚·
-				// condVtx[1]‚Ìcompanion.id”Ô–Ú‚ÌVecf‚©‚çˆø‚­
+				// condvtx[0]ã®Vecf ã«dqdt ã‚’è¶³ã™
+				// condVtx[1]ã®companion.idç•ªç›®ã®Vecfã‹ã‚‰å¼•ã
 				condVtxs[0].pmesh->GetPHFemThermo()->AddvecFAll(condVtxs[0][i].vid, -dqdt);//-
 				condVtxs[1].pmesh->GetPHFemThermo()->AddvecFAll(condVtxs[1][condVtxs[0][i].companions[j].id].vid, dqdt);//+
 			}
