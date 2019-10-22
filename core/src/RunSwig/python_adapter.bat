@@ -88,9 +88,9 @@ if %verbose% geq 1 (
 )
 rem where python
 rem python -V
-echo python %ARGS%
+rem echo python %ARGS%
 python %ARGS%
-echo %ERRORLEVEL%
+rem echo %ERRORLEVEL%
 
 endlocal
 exit /b
