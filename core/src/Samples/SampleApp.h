@@ -272,7 +272,6 @@ public:
 		solid->SetFramePosition(p);
 		solid->SetOrientation(q);
 		solid->CompInertia();
-		solid->SetInertia(solid->GetInertia() * 100000);
 	}
 
 	///
