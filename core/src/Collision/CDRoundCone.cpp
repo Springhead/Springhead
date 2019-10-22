@@ -83,10 +83,20 @@ Vec3f CDRoundCone::CalcCenterOfMass(){
 		c[3] = -halfl - CDShape::CalcConeCoM(lcone);
 	}
 	com = (V[0]*c[0] + V[1]*c[1] + V[2]*c[2] - V[3]*c[3]) / (V[0] + V[1] + V[2] + V[3]);
-	return Vec3f(0.0f, 0.0f, com);
+	//	return Vec3f(0.0f, 0.0f, com);
+	//	多分バグがあるのではと思います。
+	return Vec3f(0.0f, 0.0f, -com);
 }
 
 Matrix3f CDRoundCone::CalcMomentOfInertia(){
+	//	試しに球２つにしてみる
+#if 1
+	//	球: 2/5 * mr^2
+	Matrix3f I;
+	I.xx = I.yy = I.zz= (2.0/5.0) * Square(radius[0]) + Square(radius[1]);
+	I.zz += Square(length / 2);
+	return I;
+#else	//以前のコード多分バグあり
 	// 上下の半球と間の円錐台の慣性行列を足し合せる
 	// 円錐台は半径が等しい場合は円柱，異なる場合は大小円錐の引き算
 	float r0 = radius[0], r02 = r0*r0, r03 = r02*r0;
@@ -150,6 +160,7 @@ Matrix3f CDRoundCone::CalcMomentOfInertia(){
 	Matrix3f cross = Matrix3f::Cross(com);
 	Isum += Vsum * (cross*cross);
 	return Isum;
+#endif
 }
 
 /*Matrix3f CDRoundCone::CalcMomentOfInertia(){
