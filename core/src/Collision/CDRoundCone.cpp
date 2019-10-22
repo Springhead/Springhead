@@ -18,6 +18,7 @@ CDRoundCone::CDRoundCone(const CDRoundConeDesc& desc){
 	radius = desc.radius;
 	length = desc.length;
 	material = desc.material;
+	CalcMetrics();
 }
 
 bool CDRoundCone::IsInside(const Vec3f& p){

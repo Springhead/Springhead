@@ -89,27 +89,13 @@ public:
 	~MyApp(){}
 
 	virtual void BuildScene(){
-#if 0
 		soFloor = CreateFloor(true);
-#else
-		PHSolidDesc d;
-		d.dynamical = false;
-		soFloor = GetFWScene()->GetPHScene()->CreateSolid(d);
-		soFloor->SetPose(Posed::Trn(2,1,0) * Posed::Rot(Rad(170), 'y'));
-		CDRoundConeDesc rd;
-		rd.length = 10;
-		rd.radius[0] = 4;
-		rd.radius[1] = 6;
-		CDConvexIf* c = (CDConvexIf*)GetSdk()->GetPHSdk()->CreateShape(rd);
-		soFloor->AddShape(c);
-		soFloor->SetShapePose(0, Posed::Trn(-1, 0, 0));
-#endif
-		GetFWScene()->EnableRenderBBox(true);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void OnStep() {
 		// GetSdk()->SaveScene("test.spr", NULL, FIFileSprIf::GetIfInfoStatic());
+
 		SampleApp::OnStep();
 
 		// 床を揺らす

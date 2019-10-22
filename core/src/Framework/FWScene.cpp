@@ -734,21 +734,26 @@ void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
 	render->SetLighting(true);
 }
 void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
-	render->SetMaterial(matContact);
-
-	PHContactPoint* c = con->Cast();
-	if(c->shapePair->section.size() < 3)
-		return;
-	std::vector<Vec3f> vtx;
-	vtx.resize(c->shapePair->section.size());
-	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
-	
+	render->SetMaterial(matContact);	
 	render->SetLighting(false);
-	render->SetDepthTest(false);
-	
-	render->SetVertexFormat(GRVertexElement::vfP3f);
-	render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
-	
+	render->SetDepthTest(false);	
+	PHContactPoint* c = con->Cast();
+	if (c->shapePair->section.size() > 1) {
+		std::vector<Vec3f> vtx;
+		vtx.resize(c->shapePair->section.size());
+		copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
+		render->SetVertexFormat(GRVertexElement::vfP3f);
+		render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
+	}
+	render->SetPointSize(10, true);
+	render->SetMaterial(GRRenderBaseIf::GREEN);
+	render->DrawPoint(c->shapePair->center);
+/*	render->SetMaterial(GRRenderBaseIf::GREEN);
+	render->DrawPoint(c->shapePair->shapePoseW[0] * c->shapePair->closestPoint[0]);
+	render->SetMaterial(GRRenderBaseIf::YELLOWGREEN);
+	render->DrawPoint(c->shapePair->shapePoseW[1] * c->shapePair->closestPoint[1]);
+*/
+
 	render->SetDepthTest(true);
 	render->SetLighting(true);
 }
