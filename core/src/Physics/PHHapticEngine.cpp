@@ -33,6 +33,7 @@ PHShapePairForHaptic::PHShapePairForHaptic(){
 	timeVaryFrictionB = 0;
 	timeVaryFrictionC = 0;
 	frictionViscosity = 0;
+	stribeckVelocity = 0;
 	muCur = 0;
 	nIrsNormal = 0;
 }
@@ -49,6 +50,7 @@ void PHShapePairForHaptic::UpdateCache() {
 	timeVaryFrictionB = (shape[0]->GetMaterial().timeVaryFrictionB + shape[1]->GetMaterial().timeVaryFrictionB) * 0.5;
 	timeVaryFrictionC = (shape[0]->GetMaterial().timeVaryFrictionC + shape[1]->GetMaterial().timeVaryFrictionC) * 0.5;
 	frictionViscosity = (shape[0]->GetMaterial().frictionViscosity + shape[1]->GetMaterial().frictionViscosity) * 0.5;
+	stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocity + shape[1]->GetMaterial().stribeckVelocity) * 0.5;
 }
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	// 0:剛体, 1:力覚ポインタ

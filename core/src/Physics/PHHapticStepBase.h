@@ -100,6 +100,7 @@ public:
 	float timeVaryFrictionB;	///< 時変摩擦定数B
 	float timeVaryFrictionC;	///< 時変摩擦定数C
 	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
+	float stribeckVelocity;
 	float muCur;				///< 計算された時変摩擦係数
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
@@ -134,6 +135,7 @@ struct PHSolidPairForHapticSt{
 
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
+	unsigned slipCount;      ///stribeck効果用
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;

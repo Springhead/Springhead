@@ -10,7 +10,7 @@ class UTOptimizer : public Object {
 protected:
 	int dimension;
 
-	double *initialValue;
+	double* initialValue;
 
 	double currentFitness;
 
@@ -32,8 +32,8 @@ public:
 	int GetDimension() { return dimension; }
 
 	/// Set Initial Value
-	void SetInitialValue(double const *initialValue) {
-		for (int i = 0; i < dimension; i++) { this->initialValue[i] = initialValue[i]; }
+	void SetInitialValue(double *initialValue) {
+		for (int i = 0; i < dimension; i++) {this->initialValue[i] = initialValue[i]; }
 	}
 
 	/// Initialize Optimizer
@@ -56,6 +56,7 @@ public:
 
 	/// Return Fitness
 	double GetFitness() { return currentFitness; }
+
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -125,8 +126,9 @@ public:
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 	/// Set Initial Standard Deviation
-	void SetInitialStdDev(double const *initialStdDev) {
-		for (int i = 0; i < dimension; i++) { this->initialStdDev[i] = initialStdDev[i]; }
+	void SetInitialStdDev(double *initialStdDev) {
+		for (int i = 0; i < dimension; i++) {
+			this->initialStdDev[i] = initialStdDev[i]; }
 	}
 
 	/// Get Current Generation Number
@@ -134,6 +136,9 @@ public:
 
 	/// Get Current Population Number
 	int GetCurrentPopulation() { return currPopulationNum; }
+
+	double GetCs(){ return cs; }
+
 };
 
 }

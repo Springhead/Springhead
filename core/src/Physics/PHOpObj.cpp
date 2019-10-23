@@ -307,7 +307,7 @@ void PHOpObj::positionPredictFriction(PHOpHapticController *myHc)
 			bool bStatic = false;
 
 			float mu0 = 0.35f;
-			float mu = 0.3f;
+			float mu = 0.30f;
 			float muCur;
 			float timeVaryFrictionA = 0.1f;
 			float timeVaryFrictionB = 1800;

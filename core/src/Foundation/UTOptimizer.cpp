@@ -112,6 +112,7 @@ namespace Spr {;
 		// -----
 
 		parameters->init(dimension, initialValue, initialStdDev);
+		cs = parameters->cs;
 		objectiveFunctionValues = cmaes->init(*parameters);
 
 		// -----
