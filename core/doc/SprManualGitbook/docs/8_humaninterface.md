@@ -1,111 +1,84 @@
 
-## �T�v
-HumanInterface���W���[���́C�n�[�h�E�F�A����̓f�o�C�X�𗘗p���邽�߂̏����n�Ɉˑ����Ȃ��C���^�t�F�[�X��񋟂��܂��D�قƂ�ǂ̏ꍇ�CHumanInterface�̋@�\��Framework���W���[������ăA�N�Z�X���邱�ƂɂȂ�܂��D���̏ꍇ�́C��q����q���[�}���C���^�t�F�[�X�I�u�W�F�N�g��f�o�C�X�̍쐬�����[�U���g�ōs���K�v�͂���܂���D
+## 概要
+HumanInterfaceモジュールは，ハードウェアや入力デバイスを利用するための処理系に依存しないインタフェースを提供します．ほとんどの場合，HumanInterfaceの機能はFrameworkモジュールを介してアクセスすることになります．この場合は，後述するヒューマンインタフェースオブジェクトやデバイスの作成をユーザ自身で行う必要はありません．
 ## HumanInterface SDK
-HumanInterface���W���[���̂��ׂẴI�u�W�F�N�g��SDK�N���X*HISdk*�ɂ���ĊǗ�����܂��D*HISdk*�N���X�́C�v���O�����̎��s��ʂ��Ă����P�̃I�u�W�F�N�g�����݂���V���O���g���N���X�ł��D*HISdk*�I�u�W�F�N�g���쐬����ɂ͈ȉ��̂悤�ɂ��܂��D
-```
+HumanInterfaceモジュールのすべてのオブジェクトはSDKクラス*HISdk*によって管理されます．*HISdk*クラスは，プログラムの実行を通してただ１つのオブジェクトが存在するシングルトンクラスです．*HISdk*オブジェクトを作成するには以下のようにします．
+```c++
 HISdkIf* hiSdk = HISdkIf::CreateSdk();
 ```
-�ʏ킱�̑���̓v���O�����̏��������Ɉ�x�������s���܂��D�܂��CFramework���W���[�����g�p����ꍇ�̓��[�U������*HISdk*���쐬����K�v�͂���܂���D
-## �N���X�K�w�ƃf�[�^�\��
+通常この操作はプログラムの初期化時に一度だけ実行します．また，Frameworkモジュールを使用する場合はユーザが直接*HISdk*を作成する必要はありません．
+## クラス階層とデータ構造
 
 
 
+HumanInterfaceモジュールのクラス階層を次図に示します．デバイスには実デバイスと仮想デバイスがあります．実デバイスは現実のハードウェアに対応し，例えばWin32マウスやあるメーカのA/D変換ボードを表す実デバイスがあります．一方，仮想デバイスは実デバイスが提供する機能単位を表し，処理系に依存しません．例えば，1つのA/D変換ポートや抽象化されたマウスインタフェースがこれにあたります．基本的に，初期化時を除いてはユーザは実デバイスに触れることはなく，仮想デバイスを通じてそれらの機能を利用することになります．ヒューマンインタフェースはデバイスよりも高度で抽象化された操作インタフェースを提供します．
 
 
-\includegraphics[width=.5\hsize]{fig/hiclass.eps}
+次にHumanInterfaceモジュールのデータ構造を次図に示します．*HISdk*オブジェクトはヒューマンインタフェースプールとデバイスプールを持っています．デバイスプールとは実デバイスの集まりで，それぞれの実デバイスはその機能をいくつかの仮想デバイスとして外部に提供します．デバイスの機能を使うには，
 
-\caption{HumanInterface class hierarchy}
+1.  実デバイスを作成する
+1.  実デバイスが提供する仮想デバイスにアクセスする
 
+という2段階の手順を踏みます．以下にそれに関係する*HISdk*の関数を紹介します．
 
-HumanInterface���W���[���̃N���X�K�w��Fig.\,\ref{fig_hiclass}�Ɏ����܂��D�f�o�C�X�ɂ͎��f�o�C�X�Ɖ��z�f�o�C�X������܂��D���f�o�C�X�͌����̃n�[�h�E�F�A�ɑΉ����C�Ⴆ��Win32�}�E�X�₠�郁�[�J��A/D�ϊ��{�[�h��\�����f�o�C�X������܂��D����C���z�f�o�C�X�͎��f�o�C�X���񋟂���@�\�P�ʂ�\���C�����n�Ɉˑ����܂���D�Ⴆ�΁C1��A/D�ϊ��|�[�g�⒊�ۉ����ꂽ�}�E�X�C���^�t�F�[�X������ɂ�����܂��D��{�I�ɁC���������������Ă̓��[�U�͎��f�o�C�X�ɐG��邱�Ƃ͂Ȃ��C���z�f�o�C�X��ʂ��Ă����̋@�\�𗘗p���邱�ƂɂȂ�܂��D�q���[�}���C���^�t�F�[�X�̓f�o�C�X�������x�Œ��ۉ����ꂽ����C���^�t�F�[�X��񋟂��܂��D
-
-
-
-
-\includegraphics[width=.5\hsize]{fig/humaninterface.eps}
-
-\caption{HumanInterface module data structure}
-
-
-����HumanInterface���W���[���̃f�[�^�\����Fig.\,\ref{fig_humaninterface}�Ɏ����܂��D*HISdk*�I�u�W�F�N�g�̓q���[�}���C���^�t�F�[�X�v�[���ƃf�o�C�X�v�[���������Ă��܂��D�f�o�C�X�v�[���Ƃ͎��f�o�C�X�̏W�܂�ŁC���ꂼ��̎��f�o�C�X�͂��̋@�\���������̉��z�f�o�C�X�Ƃ��ĊO���ɒ񋟂��܂��D�f�o�C�X�̋@�\���g���ɂ́C
-
-1.  ���f�o�C�X���쐬����
-1.  ���f�o�C�X���񋟂��鉼�z�f�o�C�X�ɃA�N�Z�X����
-
-�Ƃ���2�i�K�̎菇�𓥂݂܂��D�ȉ��ɂ���Ɋ֌W����*HISdk*�̊֐����Љ�܂��D
-
-\begin{tabular}{p{.25\hsize}p{.65\hsize}}
-*HISdkIf*																		\\ \midrule
-*HIRealDeviceIf**	& *AddRealDevice(const IfInfo* ii, const void* desc = NULL)* \\
-*HIRealDeviceIf**	& *FindRealDevice(const char* name)* \\
-*HIRealDeviceIf**	& *FindRealDevice(const IfInfo* ii)*
-\end{tabular}
-
-*AddRealDevice*�͌^���*ii*�ƃf�B�X�N���v�^*desc*���w�肵�Ď��f�o�C�X���쐬���܂��D*FindRealDevice*�͖��O���^�����w�肵�āC�����̎��f�o�C�X���������܂��D���Ƃ��΁C������GLUT��p����L�[�{�[�h�E�}�E�X���f�o�C�X���擾����ɂ�
-```
+|*HISdkIf*																		 |
+|---|---|
+|_HIRealDeviceIf*_| *AddRealDevice(const IfInfo* ii, const void* desc = NULL)* |
+|_HIRealDeviceIf*_| *FindRealDevice(const char* name)* |
+|_HIRealDeviceIf*_| *FindRealDevice(const IfInfo* ii)*|
+*AddRealDevice*は型情報*ii*とディスクリプタ*desc*を指定して実デバイスを作成します．*FindRealDevice*は名前か型情報を指定して，既存の実デバイスを検索します．たとえば，内部でGLUTを用いるキーボード・マウス実デバイスを取得するには
+```c++
 hiSdk->FindRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
 ```
-�Ƃ��܂��D���z�f�o�C�X���擾����ѕԋp������@�ɂ�*HISdk*�������@��*HIRealDevice*�𒼐ڌĂяo�����@��2�ʂ肪����܂��D
+とします．仮想デバイスを取得および返却する方法には*HISdk*を介する方法と*HIRealDevice*を直接呼び出す方法の2通りがあります．
 
-\begin{tabular}{p{.25\hsize}p{.65\hsize}}
-*HISdkIf*																							\\ \midrule
-*HIVirtualDeviceIf** & *RentVirtualDevice(const IfInfo* ii, const char* name, int portNo)*	\\
-*bool*				& *ReturnVirtualDevice(HIVirtualDeviceIf* dev)*	\\
-\end{tabular}
+|*HISdkIf*																							 |
+|---|---|
+|_HIVirtualDeviceIf*_| *RentVirtualDevice(const IfInfo* ii, const char* name, int portNo)*	|
+|*bool*			| *ReturnVirtualDevice(HIVirtualDeviceIf* dev)*	|
+*RentVirtualDevice*はデバイスプールをスキャンして型情報に合致した最初の仮想デバイスを返します．実デバイスを限定したい場合は*name*で実デバイス名を指定します．また，複数の仮想デバイスを提供する実デバイスもあります．この場合はポート番号*portNo*で取得したい仮想デバイスを指定できます．デバイスの競合を防ぐために，一度取得された仮想デバイスは利用中状態になります．利用中のデバイスは新たに取得することはできません．使い終わったデバイスは*ReturnVirtualDevice*で返却することによって再び取得可能になります．
 
-*RentVirtualDevice*�̓f�o�C�X�v�[�����X�L�������Č^���ɍ��v�����ŏ��̉��z�f�o�C�X��Ԃ��܂��D���f�o�C�X�����肵�����ꍇ��*name*�Ŏ��f�o�C�X�����w�肵�܂��D�܂��C�����̉��z�f�o�C�X��񋟂�����f�o�C�X������܂��D���̏ꍇ�̓|�[�g�ԍ�*portNo*�Ŏ擾���������z�f�o�C�X���w��ł��܂��D�f�o�C�X�̋�����h�����߂ɁC��x�擾���ꂽ���z�f�o�C�X�͗��p����ԂɂȂ�܂��D���p���̃f�o�C�X�͐V���Ɏ擾���邱�Ƃ͂ł��܂���D�g���I������f�o�C�X��*ReturnVirtualDevice*�ŕԋp���邱�Ƃɂ���čĂю擾�\�ɂȂ�܂��D
+|*HIRealDeviceIf*																				 |
+|---|---|
+|_HIVirtualDeviceIf*_| *Rent(const IfInfo* ii, const char* name, int portNo)*	|
+|*bool*			| *Return(HIVirtualDeviceIf* dev)*|
+こちらは実デバイスから直接取得，返却するための関数です．機能は同様です．
+## 実デバイス
+Springheadではいくつかのメーカ製のハードウェアが実デバイスとしてサポートされていますが，処理系に強く依存する部分であるため本ドキュメントの対象外とします．興味のある方はソースコードを見てください．
+## キーボード・マウス
+キーボードおよびマウスの機能は包括して1つのクラスとして提供されています．キーボード・マウスの仮想デバイスは*DVKeyMouse*です．実デバイスとしてはWin32 APIを用いる*DRKeyMouseWin32*とGLUTを用いる*DRKeyMouseGLUT*があります．提供される機能に多少の差異があるので注意して下さい．
+### 仮想キーコード
+Ascii外の特殊キーには処理系依存のキーコードが割り当てられています．この差を吸収するために以下のシンボルが*DVKeyCode*列挙型で定義されています．
 
-\begin{tabular}{p{.25\hsize}p{.65\hsize}}
-*HIRealDeviceIf*																				\\ \midrule
-*HIVirtualDeviceIf**	& *Rent(const IfInfo* ii, const char* name, int portNo)*	\\
-*bool*				& *Return(HIVirtualDeviceIf* dev)*
-\end{tabular}
+|*DVKeyCode*									 |
+|---|---|
+|*ESC*			| エスケープ			|
+|*F1* - *F12*| ファンクションキー	|
+|*LEFT*			| ←					|
+|*UP*				| ↑					|
+|*RIGHT*			| →					|
+|*DOWN*			| ↓					|
+|*PAGE_UP*		| Page Up				|
+|*PAGE_DOWN*		| Page Down				|
+|*HOME*			| Home					|
+|*END*			| End					|
+|*INSERT*			| Insert				|
+必要に応じてシンボルが追加される可能性がありますので，完全なリストはヘッダファイルで確認してください．
+### コールバック
+*DVKeyMouse*からのイベントを処理するには*DVKeyMouseCallback*クラスを継承し，イベントハンドラをオーバライドします．*DVKeyMouseCallback*はいくつかのヒューマンインタフェースクラスが継承しているほか，後述するアプリケーションクラス*FWApp*も継承しています．
 
-������͎��f�o�C�X���璼�ڎ擾�C�ԋp���邽�߂̊֐��ł��D�@�\�͓��l�ł��D
-## ���f�o�C�X
-Springhead�ł͂������̃��[�J���̃n�[�h�E�F�A�����f�o�C�X�Ƃ��ăT�|�[�g����Ă��܂����C�����n�ɋ����ˑ����镔���ł��邽�ߖ{�h�L�������g�̑ΏۊO�Ƃ��܂��D�����̂�����̓\�[�X�R�[�h�����Ă��������D
-## �L�[�{�[�h�E�}�E�X
-�L�[�{�[�h����у}�E�X�̋@�\�͕����1�̃N���X�Ƃ��Ē񋟂���Ă��܂��D�L�[�{�[�h�E�}�E�X�̉��z�f�o�C�X��*DVKeyMouse*�ł��D���f�o�C�X�Ƃ��Ă�Win32 API��p����*DRKeyMouseWin32*��GLUT��p����*DRKeyMouseGLUT*������܂��D�񋟂����@�\�ɑ����̍��ق�����̂Œ��ӂ��ĉ������D
-### ���z�L�[�R�[�h
-Ascii�O�̓���L�[�ɂ͏����n�ˑ��̃L�[�R�[�h�����蓖�Ă��Ă��܂��D���̍����z�����邽�߂Ɉȉ��̃V���{����*DVKeyCode*�񋓌^�Œ�`����Ă��܂��D
-
-\begin{tabular}{p{.3\hsize}p{.6\hsize}}
-*DVKeyCode*									\\ \midrule
-*ESC*				& �G�X�P�[�v			\\
-*F1* - *F12*	& �t�@���N�V�����L�[	\\
-*LEFT*				& ��					\\
-*UP*					& ��					\\
-*RIGHT*				& ��					\\
-*DOWN*				& ��					\\
-*PAGE\_UP*			& Page Up				\\
-*PAGE\_DOWN*			& Page Down				\\
-*HOME*				& Home					\\
-*END*				& End					\\
-*INSERT*				& Insert				\\
-\end{tabular}
-
-�K�v�ɉ����ăV���{�����ǉ������\��������܂��̂ŁC���S�ȃ��X�g�̓w�b�_�t�@�C���Ŋm�F���Ă��������D
-### �R�[���o�b�N
-*DVKeyMouse*����̃C�x���g����������ɂ�*DVKeyMouseCallback*�N���X���p�����C�C�x���g�n���h�����I�[�o���C�h���܂��D*DVKeyMouseCallback*�͂������̃q���[�}���C���^�t�F�[�X�N���X���p�����Ă���ق��C��q����A�v���P�[�V�����N���X*FWApp*���p�����Ă��܂��D
-
-\begin{tabular}{p{.2\hsize}p{.7\hsize}}
-*DVKeyMouseCallback*								\\ \midrule
-*virtual bool* & *OnMouse(int button, int state, int x, int y)*		\\
-\multicolumn{2}{l}{�}�E�X�{�^���v�b�V��/�����[�X}	\\
-\\
-*virtual bool* & *OnDoubleClick(int button, int x, int y)*			\\
-\multicolumn{2}{l}{�_�u���N���b�N}	\\
-\\
-*virtual bool* & *OnMouseMove(int button, int x, int y, int zdelta)*	\\
-\multicolumn{2}{l}{�}�E�X�J�[�\���ړ�/�}�E�X�z�C�[����]}	\\
-\\
-*virtual bool* & *OnKey(int state, int key, int x, int y)*			\\
-\multicolumn{2}{l}{�L�[�v�b�V��/�����[�X}	\\
-\end{tabular}
-
-*OnMouse*�̓}�E�X�{�^���̃v�b�V�����邢�̓����[�X���������Ƃ��ɌĂяo����܂��D*button*�̓C�x���g�Ɋ֌W����}�E�X�{�^������т������̓���L�[�̎��ʎq��ێ����C���̒l��*DVButtonMask*�񋓎q�̒l��OR�����ŕ\������܂��D*state*�̓}�E�X�{�^����ԕω��������C*DVButtonSt*�񋓎q�̂����ꂩ�̒l�������܂��D*x*�C*y*�̓C�x���g�������̃J�[�\�����W��\���܂��D��Ƃ��āC���{�^���̃v�b�V���C�x���g����������ɂ͎��̂悤�ɂ��܂��D
-```
+|*DVKeyMouseCallback*								 |
+|---|---|
+|*virtual bool*| *OnMouse(int button, int state, int x, int y)*		|
+|マウスボタンプッシュ/リリース| 	|
+|*virtual bool*| *OnDoubleClick(int button, int x, int y)*			|
+|ダブルクリック| 	|
+|*virtual bool*| *OnMouseMove(int button, int x, int y, int zdelta)*	|
+|マウスカーソル移動/マウスホイール回転| 	|
+|*virtual bool*| *OnKey(int state, int key, int x, int y)*			|
+|キープッシュ/リリース| 	|
+*OnMouse*はマウスボタンのプッシュあるいはリリースが生じたときに呼び出されます．*button*はイベントに関係するマウスボタンおよびいくつかの特殊キーの識別子を保持し，その値は*DVButtonMask*列挙子の値のOR結合で表現されます．*state*はマウスボタン状態変化を示し，*DVButtonSt*列挙子のいずれかの値を持ちます．*x*，*y*はイベント生成時のカーソル座標を表します．例として，左ボタンのプッシュイベントを処理するには次のようにします．
+```c++
 // inside your class definition ...
 virtual bool OnMouse(int button, int state, int x, int y){
     if(button & DVButtonMask::LBUTTON && state == DVButtonSt::DOWN){
@@ -113,198 +86,159 @@ virtual bool OnMouse(int button, int state, int x, int y){
     }
 }
 ```
-*OnDoubleClick*�̓}�E�X�{�^���̃_�u���N���b�N���������Ƃ��ɌĂ΂�܂��D�����̒�`��*OnMouse*�Ɠ��l�ł��D*OnMouseMove*�̓}�E�X�J�[�\�����ړ����邩�C�}�E�X�z�C�[������]�����ۂɌĂ΂�܂��D*button*�͒��O�̃}�E�X�v�b�V���C�x���g�ɂ�����*OnMouse*�ɓn���ꂽ�̂Ɠ����l�������܂��D*x*, *y*�͈ړ���̃J�[�\�����W�C*zdelta*�̓}�E�X�J�[�\���̉�]�ʂł��D*OnKey*�̓L�[�{�[�h�̃L�[���v�b�V������邩�����[�X���ꂽ�ۂɌĂ΂�܂��D*state*��*DVKeySt*�񋓎q�̒l�������܂��D*key*�̓v�b�V�����邢�̓����[�X���ꂽ�L�[�̉��z�L�[�R�[�h��ێ����܂��D�ȉ��Ɋ֘A����񋓎q�̒�`�������܂��D
+*OnDoubleClick*はマウスボタンのダブルクリックが生じたときに呼ばれます．引数の定義は*OnMouse*と同様です．*OnMouseMove*はマウスカーソルが移動するか，マウスホイールが回転した際に呼ばれます．*button*は直前のマウスプッシュイベントにおいて*OnMouse*に渡されたのと同じ値を持ちます．*x*, *y*は移動後のカーソル座標，*zdelta*はマウスカーソルの回転量です．*OnKey*はキーボードのキーがプッシュされるかリリースされた際に呼ばれます．*state*は*DVKeySt*列挙子の値を持ちます．*key*はプッシュあるいはリリースされたキーの仮想キーコードを保持します．以下に関連する列挙子の定義を示します．
 
-\begin{tabular}{p{.3\hsize}p{.6\hsize}}
-*DVButtonMask*									\\ \midrule
-*LBUTTON*				& ���{�^��				\\
-*RBUTTON*				& �E�{�^��				\\
-*MBUTTON*				& ���{�^��				\\
-*SHIFT*					& Shift�L�[��������		\\
-*CONTROL*				& Ctrl�L�[��������		\\
-*ALT*					& Alt�L�[��������		\\
-\end{tabular}
-
+|*DVButtonMask*									 |
+|---|---|
+|*LBUTTON*			| 左ボタン				|
+|*RBUTTON*			| 右ボタン				|
+|*MBUTTON*			| 中ボタン				|
+|*SHIFT*				| Shiftキー押し下げ		|
+|*CONTROL*			| Ctrlキー押し下げ		|
+|*ALT*				| Altキー押し下げ		|
 
 
-\begin{tabular}{p{.3\hsize}p{.6\hsize}}
-*DVButtonSt*								\\ \midrule
-*DOWN*			& �{�^���v�b�V��		\\
-*UP*				& �{�^�������[�X		\\
-\end{tabular}
+|*DVButtonSt*								 |
+|---|---|
+|*DOWN*		| ボタンプッシュ		|
+|*UP*			| ボタンリリース		|
 
 
+|*DVKeySt*								 |
+|---|---|
+|*PRESSED*	| 押されている			|
+|*TOGGLE_ON*	| トグルされている		|
 
-\begin{tabular}{p{.3\hsize}p{.6\hsize}}
-*DVKeySt*								\\ \midrule
-*PRESSED*		& ������Ă���			\\
-*TOGGLE\_ON*		& �g�O������Ă���		\\
-\end{tabular}
+### APIとして提供される機能
+以下に*DVKeyMouse*の関数を示します．
 
-
-### API�Ƃ��Ē񋟂����@�\
-�ȉ���*DVKeyMouse*�̊֐��������܂��D
-
-\begin{tabular}{p{.1\hsize}p{.8\hsize}}
-*DVKeyMouseIf*																		\\ \midrule
-*void*	& *AddCallback(DVKeyMouseCallback*)* 	\\
-*void*	& *RemoveCallback(DVKeyMouseCallback*)* 	\\
-*int*	& *GetKeyState(int key)*					\\
-*void*	& *GetMousePosition(int\& x, int\& y, int\& time, int count=0)*
-\end{tabular}
-
-*AddCallback*�̓R�[���o�b�N�N���X��o�^���܂��D��̉��z�f�o�C�X�ɑ΂��ĕ����̃R�[���o�b�N��o�^�ł��܂��D*RemoveCallback*�͓o�^�ς̃R�[���o�b�N�N���X���������܂��D*GetKeyState*��*DVKeyCode*�Ŏw�肵���L�[�̏�Ԃ�*DVKeySt*�̒l�ŕԂ��܂��D*GetMousePosition*��*count*�X�e�b�v�O�̃}�E�X�J�[�\���̈ʒu���擾����̂ɗp���܂��D������*count*��$0$�ȏ�$63$�ȉ��łȂ���΂Ȃ�܂���D*x*, *y*�ɃJ�[�\�����W���C*time*�Ƀ^�C���X�^���v���i�[����܂��D
-### �T�|�[�g�󋵂Ɋւ��钍��
-�g�p������f�o�C�X�ɂ���Ă͈ꕔ�̋@�\���񋟂���Ȃ��̂Œ��ӂ��ĉ������D*OnMouseMove*�ɂ����ă}�E�X�z�C�[���̉�]�ʂ��擾����ɂ́C���f�o�C�X�Ƃ���*DRKeyMouseWin32*���g�p���邩�Cfreeglut�ƃ����N���ăr���h����Springhead���*DRKeyMouseGLUT*���g�p����K�v������܂��D*OnKey*�ɂ����ăL�[�̃g�O����Ԃ��擾����ɂ͎��f�o�C�X�Ƃ���*DRKeyMouseWin32*���g�p����K�v������܂��D*GetKeyState*��*DRKeyMouseWin32*�ł̂݃T�|�[�g����܂��D*GetMousePosition*�ɂ����āC�^�C���X�^���v���擾����ɂ�*DRKeyMouseWin32*��p����K�v������܂��D
-## �W���C�X�e�B�b�N
-�W���C�X�e�B�b�N�̉��z�f�o�C�X��*DVJoyStick*�ł��D���f�o�C�X�Ƃ��Ă�GLUT��p����*DRJoyStickGLUT*�݂̂�����܂��DT.B.D.
-## �g���b�N�{�[��
+|*DVKeyMouseIf*																		 |
+|---|---|
+|*void*| *AddCallback(DVKeyMouseCallback*)* 	|
+|*void*| *RemoveCallback(DVKeyMouseCallback*)* 	|
+|*int*| *GetKeyState(int key)*					|
+|*void*| *GetMousePosition(int& x, int& y, int& time, int count=0)*|
+*AddCallback*はコールバッククラスを登録します．一つの仮想デバイスに対して複数個のコールバックを登録できます．*RemoveCallback*は登録済のコールバッククラスを解除します．*GetKeyState*は*DVKeyCode*で指定したキーの状態を*DVKeySt*の値で返します．*GetMousePosition*は*count*ステップ前のマウスカーソルの位置を取得するのに用います．ただし*count*は*0*以上*63*以下でなければなりません．*x*, *y*にカーソル座標が，*time*にタイムスタンプが格納されます．
+### サポート状況に関する注意
+使用する実デバイスによっては一部の機能が提供されないので注意して下さい．*OnMouseMove*においてマウスホイールの回転量を取得するには，実デバイスとして*DRKeyMouseWin32*を使用するか，freeglutとリンクしてビルドしたSpringhead上で*DRKeyMouseGLUT*を使用する必要があります．*OnKey*においてキーのトグル状態を取得するには実デバイスとして*DRKeyMouseWin32*を使用する必要があります．*GetKeyState*は*DRKeyMouseWin32*でのみサポートされます．*GetMousePosition*において，タイムスタンプを取得するには*DRKeyMouseWin32*を用いる必要があります．
+## ジョイスティック
+ジョイスティックの仮想デバイスは*DVJoyStick*です．実デバイスとしてはGLUTを用いる*DRJoyStickGLUT*のみがあります．T.B.D.
+## トラックボール
 
 
 
+トラックボールはキーボード・マウスにより並進・回転の6自由度を入力するヒューマンインタフェースです．トラックボールを使うことにより，カメラを注視点まわりに視点変更することができるようになります．トラックボールを操作する方法には，APIを直接呼び出す方法と，仮想マウスにコールバック登録する方法の二通りがあります．同様に，トラックボールの状態を取得する方法にもAPI呼び出しとコールバック登録の二通りがあります．仮想マウスとトラックボールおよびユーザプログラムの関係を\figurename\ref{fig_trackball}に示します．
+### 回転中心と回転角度
+カメラの位置と向きは，注視点，経度角，緯度角および注視点からの距離によって決まります．
+
+|*HITrackballDesc*| | 				 |
+|---|---|---|
+|*Vec3f*|	*target*		| 回転中心		|
+|*float*|	*longitude*	| 経度[rad]		|
+|*float*|	*latitude*	| 緯度[rad]		|
+|*float*|	*distance*	| 距離			|
 
 
-\includegraphics[width=.5\hsize]{fig/hitrackball.eps}
+|*HITrackballIf*| 									 |
+|---|---|
+|*Vec3f*| *GetTarget()*							|
+|*void* | *SetTarget(Vec3f)*						|
+|*void* | *GetAngle(float& lon, float& lat)*	|
+|*void* | *SetAngle(float lon, float lat)*		|
+|*float* | *GetDistance()*						|
+|*void* | *SetDistance(float dist)*				|
 
-\caption{Trackball}
+### 範囲指定
+以下の機能で角度および距離に範囲制限を加えられます．
 
-
-�g���b�N�{�[���̓L�[�{�[�h�E�}�E�X�ɂ����i�E��]��6���R�x����͂���q���[�}���C���^�t�F�[�X�ł��D�g���b�N�{�[�����g�����Ƃɂ��C�J�����𒍎��_�܂��Ɏ��_�ύX���邱�Ƃ��ł���悤�ɂȂ�܂��D�g���b�N�{�[���𑀍삷����@�ɂ́CAPI�𒼐ڌĂяo�����@�ƁC���z�}�E�X�ɃR�[���o�b�N�o�^������@�̓�ʂ肪����܂��D���l�ɁC�g���b�N�{�[���̏�Ԃ��擾������@�ɂ�API�Ăяo���ƃR�[���o�b�N�o�^�̓�ʂ肪����܂��D���z�}�E�X�ƃg���b�N�{�[������у��[�U�v���O�����̊֌W��\figurename\ref{fig_trackball}�Ɏ����܂��D
-### ��]���S�Ɖ�]�p�x
-�J�����̈ʒu�ƌ����́C�����_�C�o�x�p�C�ܓx�p����ђ����_����̋����ɂ���Č��܂�܂��D
-
-\begin{tabular}{p{.15\hsize}p{.5\hsize}p{.25\hsize}}
-\multicolumn{3}{l}{*HITrackballDesc*}				\\ \midrule
-*Vec3f*	&	*target*			& ��]���S		\\
-*float*	&	*longitude*		& �o�x[rad]		\\
-*float*	&	*latitude*		& �ܓx[rad]		\\
-*float*	&	*distance*		& ����			\\
-\end{tabular}
-
-
-
-\begin{tabular}{p{.15\hsize}p{.75\hsize}}
-\multicolumn{2}{l}{*HITrackballIf*}									\\ \midrule
-*Vec3f*	& *GetTarget()*							\\
-*void* 	& *SetTarget(Vec3f)*						\\
-*void* 	& *GetAngle(float\& lon, float\& lat)*	\\
-*void* 	& *SetAngle(float lon, float lat)*		\\
-*float* 	& *GetDistance()*						\\
-*void* 	& *SetDistance(float dist)*				\\
-\end{tabular}
+|*HITrackballDesc*| | 					 |
+|---|---|---|
+|*Vec2f*|	*lonRange*	| 経度範囲			|
+|*Vec2f*|	*latRange*	| 緯度範囲			|
+|*Vec2f*|	*distRange*	| 距離範囲			|
 
 
-### �͈͎w��
-�ȉ��̋@�\�Ŋp�x����ы����ɔ͈͐������������܂��D
+|*HITrackballIf*| 									 |
+|---|---|---|---|
+|*void* | *GetLongitudeRange(float& rmin, float& rmax)*	|
+|*void* | *SetLongitudeRange(float rmin, float rmax)*		|
+|*void* | *GetLatitudeRange(float& rmin, float& rmax)*		|
+|*void* | *SetLatitudeRange(float rmin, float rmax)*			|
+|*void* | *GetDistanceRange(float& rmin, float& rmax)*		|
+|*void* | *SetDistanceRange(float rmin, float rmax)*			|
 
-\begin{tabular}{p{.15\hsize}p{.5\hsize}p{.25\hsize}}
-\multicolumn{3}{l}{*HITrackballDesc*}					\\ \midrule
-*Vec2f*	&	*lonRange*		& �o�x�͈�			\\
-*Vec2f*	&	*latRange*		& �ܓx�͈�			\\
-*Vec2f*	&	*distRange*		& �����͈�			\\
-\end{tabular}
-
-
-
-\begin{tabular}{p{.15\hsize}p{.75\hsize}}
-\multicolumn{2}{l}{*HITrackballIf*}									\\ \midrule
-*void* 	& *GetLongitudeRange(float\& rmin, float\& rmax)*	\\
-*void* 	& *SetLongitudeRange(float rmin, float rmax)*		\\
-*void* 	& *GetLatitudeRange(float\& rmin, float\& rmax)*		\\
-*void* 	& *SetLatitudeRange(float rmin, float rmax)*			\\
-*void* 	& *GetDistanceRange(float\& rmin, float\& rmax)*		\\
-*void* 	& *SetDistanceRange(float rmin, float rmax)*			\\
-\end{tabular}
+### コールバック登録
 
 
-### �R�[���o�b�N�o�^
+|*HITrackballIf*| 								 |
+|---|---|
+|_DVKeyMouseIf*_ | *GetKeyMouse()*						|
+|*void* 		| *SetKeyMouse(DVKeyMouseIf*)*			|
+|*void* 		| *SetCallback(HITrackballCallback*)*	|
+トラックボールをマウス操作するには*DVKeyMouse*クラスにコールバック登録する必要があります．コールバック登録するには*SetKeyMouse*，登録先の仮想マウスを取得するには*GetKeyMouse*を呼びます．また，ユーザプログラムがトラックボールにコールバック登録して状態変化に反応できるようにするには，*HITrackballCallback*クラスを継承し，*SetCallback*関数に渡します．*HITrackballCallback*は以下の単一の仮想関数を持ちます．
+
+|*HITrackballCallback*| 					 |
+|---|---|
+|*virtual void* | *OnUpdatePose(HITrackballIf* tb)*	|
+*OnUpdatePose*はトラックボールの位置・向きに変化が生じる度に呼ばれます．引数の*tb*は呼び出し元のトラックボールを示します．
+### マウスボタン割当て
+*HITrackball*は内部で*DVKeyMouseCallback*を継承します．*SetKeyMouse*により*DVKeyMouse*にコールバック登録すると，マウスカーソルが移動するたびに*OnMouseMove*イベントハンドラが呼び出され，トラックボールの内部状態が更新されます．マウス移動時のボタン状態に応じてトラックボールのどの状態が変化するかはある程度カスタマイズが可能です．以下に関連する機能を示します．
+
+|*HITrackballDesc*| | 		 |
+|---|---|---|
+|*int*| *rotMask*	| 回転操作のボタン割当て		|
+|*int*| *zoomMask*	| ズーム操作のボタン割当て		|
+|*int*| *trnMask*	| 平行移動操作のボタン割当て	|
 
 
-\begin{tabular}{p{.2\hsize}p{.7\hsize}}
-\multicolumn{2}{l}{*HITrackballIf*}								\\ \midrule
-*DVKeyMouseIf** 	& *GetKeyMouse()*						\\
-*void* 			& *SetKeyMouse(DVKeyMouseIf*)*			\\
-*void* 			& *SetCallback(HITrackballCallback*)*	\\
-\end{tabular}
+|*HITrackballIf*| 			 |
+|---|---|
+|*void* | *SetRotMask(int mask)*		|
+|*void* | *SetZoomMask(int mask)*	|
+|*void* | *SetTrnMask(int mask)*		|
+*rotMask*, *zoomMask*, *trnMask*はそれぞれ回転操作，ズーム操作，平行移動操作に割り当てたいマウスボタンに対応する*OnMouseMove*の*button*引数の値を表します．以下に対応関係をまとめます．
 
-�g���b�N�{�[�����}�E�X���삷��ɂ�*DVKeyMouse*�N���X�ɃR�[���o�b�N�o�^����K�v������܂��D�R�[���o�b�N�o�^����ɂ�*SetKeyMouse*�C�o�^��̉��z�}�E�X���擾����ɂ�*GetKeyMouse*���Ăт܂��D�܂��C���[�U�v���O�������g���b�N�{�[���ɃR�[���o�b�N�o�^���ď�ԕω��ɔ����ł���悤�ɂ���ɂ́C*HITrackballCallback*�N���X���p�����C*SetCallback*�֐��ɓn���܂��D*HITrackballCallback*�͈ȉ��̒P��̉��z�֐��������܂��D
+|toprule|
+|マウス移動方向	| *button*値	| 変化量		 |
+|---|---|---|
+|左右			| *rotMask*	| 経度			|
+|上下			| *rotMask*	| 緯度			|
+|上下			| *zoomMask*	| 距離			|
+|左右			| *trnMask*	| 注視点x座標	|
+|上下			| *trnMask*	| 注視点y座標	|
+|bottomrule|
+デフォルトのボタン割当ては以下の通りです．
 
-\begin{tabular}{p{.2\hsize}p{.7\hsize}}
-\multicolumn{2}{l}{*HITrackballCallback*}					\\ \midrule
-*virtual void* 	& *OnUpdatePose(HITrackballIf* tb)*	\\
-\end{tabular}
+|*rotMask*| *LBUTTON*					|
+|---|---|
+|*zoomMask*| *RBUTTON*					|
+|*trnMask*| *LBUTTON* + *ALT*	|
+したがって，左ボタンドラッグで回転操作，右ボタンドラッグでズーム操作，[ALT]キー+左ドラッグで平行移動となります．なお，現状ではマウスの移動方向との対応をカスタマイズすることはできません．また，マウスホイールの回転とトラックボールを連動させる機能も未実装です．
+### マウス操作に対する極性と感度
+マウス移動量と角度変化量，距離変化量との比例係数を下記の機能で設定できます．
 
-*OnUpdatePose*�̓g���b�N�{�[���̈ʒu�E�����ɕω���������x�ɌĂ΂�܂��D������*tb*�͌Ăяo�����̃g���b�N�{�[���������܂��D
-### �}�E�X�{�^��������
-*HITrackball*�͓�����*DVKeyMouseCallback*���p�����܂��D*SetKeyMouse*�ɂ��*DVKeyMouse*�ɃR�[���o�b�N�o�^����ƁC�}�E�X�J�[�\�����ړ����邽�т�*OnMouseMove*�C�x���g�n���h�����Ăяo����C�g���b�N�{�[���̓�����Ԃ��X�V����܂��D�}�E�X�ړ����̃{�^����Ԃɉ����ăg���b�N�{�[���̂ǂ̏�Ԃ��ω����邩�͂�����x�J�X�^�}�C�Y���\�ł��D�ȉ��Ɋ֘A����@�\�������܂��D
-
-\begin{tabular}{p{.15\hsize}p{.35\hsize}p{.4\hsize}}
-\multicolumn{3}{l}{*HITrackballDesc*}		\\ \midrule
-*int*	& *rotMask*		& ��]����̃{�^��������		\\
-*int*	& *zoomMask*		& �Y�[������̃{�^��������		\\
-*int*	& *trnMask*		& ���s�ړ�����̃{�^��������	\\
-\end{tabular}
-
-
-
-\begin{tabular}{p{.15\hsize}p{.75\hsize}}
-\multicolumn{2}{l}{*HITrackballIf*}			\\ \midrule
-*void* 	& *SetRotMask(int mask)*		\\
-*void* 	& *SetZoomMask(int mask)*	\\
-*void* 	& *SetTrnMask(int mask)*		\\
-\end{tabular}
-
-*rotMask*, *zoomMask*, *trnMask*�͂��ꂼ���]����C�Y�[������C���s�ړ�����Ɋ��蓖�Ă����}�E�X�{�^���ɑΉ�����*OnMouseMove*��*button*�����̒l��\���܂��D�ȉ��ɑΉ��֌W���܂Ƃ߂܂��D
-
-\begin{tabular}{p{.3\hsize}p{.3\hsize}p{.3\hsize}}
-\toprule
-�}�E�X�ړ�����		& *button*�l		& �ω���		\\ \midrule
-���E				& *rotMask*		& �o�x			\\
-�㉺				& *rotMask*		& �ܓx			\\
-�㉺				& *zoomMask*		& ����			\\
-���E				& *trnMask*		& �����_x���W	\\
-�㉺				& *trnMask*		& �����_y���W	\\
-\bottomrule
-\end{tabular}
-
-�f�t�H���g�̃{�^�������Ă͈ȉ��̒ʂ�ł��D
-
-\begin{tabular}{p{.3\hsize}p{.6\hsize}}
-*rotMask*	& *LBUTTON*					\\
-*zoomMask*	& *RBUTTON*					\\
-*trnMask*	& *LBUTTON* + *ALT*	\\
-\end{tabular}
-
-���������āC���{�^���h���b�O�ŉ�]����C�E�{�^���h���b�O�ŃY�[������C[ALT]�L�[+���h���b�O�ŕ��s�ړ��ƂȂ�܂��D�Ȃ��C����ł̓}�E�X�̈ړ������Ƃ̑Ή����J�X�^�}�C�Y���邱�Ƃ͂ł��܂���D�܂��C�}�E�X�z�C�[���̉�]�ƃg���b�N�{�[����A��������@�\���������ł��D
-### �}�E�X����ɑ΂���ɐ��Ɗ��x
-�}�E�X�ړ��ʂƊp�x�ω��ʁC�����ω��ʂƂ̔��W�������L�̋@�\�Őݒ�ł��܂��D
-
-\begin{tabular}{p{.15\hsize}p{.35\hsize}p{.4\hsize}}
-\multicolumn{3}{l}{*HITrackballDesc*}							\\ \midrule
-*float*	&	*rotGain*		& ��]�Q�C��[rad/pixel]		\\
-*float*	&	*zoomGain*		& �Y�[���Q�C��[rad/pixel]	\\
-*float*	&	*trnGain*		& ���s�ړ��Q�C��			\\
-\end{tabular}
+|*HITrackballDesc*| | 							 |
+|---|---|---|
+|*float*|	*rotGain*	| 回転ゲイン[rad/pixel]		|
+|*float*|	*zoomGain*	| ズームゲイン[rad/pixel]	|
+|*float*|	*trnGain*	| 平行移動ゲイン			|
 
 
+|*HITrackballIf*| 									 |
+|---|---|
+|*float* | *GetRotGain()*			|
+|*void* | *SetRotGain(float g)*	|
+|*float* | *GetZoomGain()*		|
+|*void* | *SetZoomGain(float g)*	|
+|*float* | *GetTrnGain()*			|
+|*void* | *SetTrnGain(float g)*	|
 
-\begin{tabular}{p{.15\hsize}p{.75\hsize}}
-\multicolumn{2}{l}{*HITrackballIf*}									\\ \midrule
-*float* 	& *GetRotGain()*			\\
-*void* 	& *SetRotGain(float g)*	\\
-*float* 	& *GetZoomGain()*		\\
-*void* 	& *SetZoomGain(float g)*	\\
-*float* 	& *GetTrnGain()*			\\
-*void* 	& *SetTrnGain(float g)*	\\
-\end{tabular}
-
-
-### �g���b�N�{�[���Ŏ��_�𓮂���
-�g���b�N�{�[���̈ʒu�ƌ������J�����ɔ��f����ɂ́C�`�揈���̖`���ňȉ��̂悤�ɂ��܂��D
-```
+### トラックボールで視点を動かす
+トラックボールの位置と向きをカメラに反映するには，描画処理の冒頭で以下のようにします．
+```c++
 // given GRRenderIf* render
 render->SetViewMatrix(trackball->GetAffine().inv());
 ```
 
 ## Spidar
-Spidar�̓��C���쓮�^��3���E6���͊o�񎦃q���[�}���C���^�t�F�[�X�ł��DT.B.D.
+Spidarはワイヤ駆動型の3軸・6軸力覚提示ヒューマンインタフェースです．T.B.D.

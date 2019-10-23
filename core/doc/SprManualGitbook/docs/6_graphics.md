@@ -1,580 +1,400 @@
 
-## ŠT—v
-Graphics‚Í3DƒV[ƒ“‚Ì•`‰æ‹@”\‚ğ’ñ‹Ÿ‚·‚éƒ‚ƒWƒ…[ƒ‹‚Å‚·D
+## æ¦‚è¦
+Graphicsã¯3Dã‚·ãƒ¼ãƒ³ã®æç”»æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã§ã™ï¼
 ## Graphics SDK
-Graphicsƒ‚ƒWƒ…[ƒ‹‚Ì‚·‚×‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚ÍSDKƒNƒ‰ƒX*GRSdk*‚É‚æ‚Á‚ÄŠÇ—‚³‚ê‚Ü‚·D*GRSdk*ƒNƒ‰ƒX‚ÍCƒvƒƒOƒ‰ƒ€‚ÌÀs‚ğ’Ê‚µ‚Ä‚½‚¾‚P‚Â‚ÌƒIƒuƒWƒFƒNƒg‚ª‘¶İ‚·‚éƒVƒ“ƒOƒ‹ƒgƒ“ƒNƒ‰ƒX‚Å‚·D*GRSdk*ƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚é‚É‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D\begin{verbatim}    GRSdkIf* grSdk = GRSdkIf::CreateSdk();\end{verbatim}’Êí‚±‚Ì‘€ì‚ÍƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»‚Éˆê“x‚¾‚¯Às‚µ‚Ü‚·D‚Ü‚½CFrameworkƒ‚ƒWƒ…[ƒ‹‚ğg—p‚·‚éê‡‚Íƒ†[ƒU‚ª’¼Ú*GRSdk*‚ğì¬‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD*GRSdk*‚É‚ÍˆÈ‰º‚Ì‹@”\‚ª‚ ‚è‚Ü‚·D
+Graphicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã™ã¹ã¦ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯SDKã‚¯ãƒ©ã‚¹*GRSdk*ã«ã‚ˆã£ã¦ç®¡ç†ã•ã‚Œã¾ã™ï¼*GRSdk*ã‚¯ãƒ©ã‚¹ã¯ï¼Œãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®å®Ÿè¡Œã‚’é€šã—ã¦ãŸã ï¼‘ã¤ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå­˜åœ¨ã™ã‚‹ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¯ãƒ©ã‚¹ã§ã™ï¼*GRSdk*ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹ã«ã¯ä»¥ä¸‹ã®ã‚ˆã†ã«ã—ã¾ã™ï¼
+```c++
+    GRSdkIf* grSdk = GRSdkIf::CreateSdk();
+```
+é€šå¸¸ã“ã®æ“ä½œã¯ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®åˆæœŸåŒ–æ™‚ã«ä¸€åº¦ã ã‘å®Ÿè¡Œã—ã¾ã™ï¼ã¾ãŸï¼ŒFrameworkãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã¯ãƒ¦ãƒ¼ã‚¶ãŒç›´æ¥*GRSdk*ã‚’ä½œæˆã™ã‚‹å¿…è¦ã¯ã‚ã‚Šã¾ã›ã‚“ï¼*GRSdk*ã«ã¯ä»¥ä¸‹ã®æ©Ÿèƒ½ãŒã‚ã‚Šã¾ã™ï¼
 
--  ƒŒƒ“ƒ_ƒ‰‚Ìì¬
--  ƒfƒoƒCƒX‚Ìì¬
--  ƒV[ƒ“‚ÌŠÇ—
+-  ãƒ¬ãƒ³ãƒ€ãƒ©ã®ä½œæˆ
+-  ãƒ‡ãƒã‚¤ã‚¹ã®ä½œæˆ
+-  ã‚·ãƒ¼ãƒ³ã®ç®¡ç†
 
-ƒŒƒ“ƒ_ƒ‰‚Æ‚Íˆ—Œn‚ÉˆË‘¶‚µ‚È‚¢’ŠÛ‰»‚³‚ê‚½•`‰æ‹@”\‚ğ’ñ‹Ÿ‚·‚éƒNƒ‰ƒX‚Å‚·DƒŒƒ“ƒ_ƒ‰‚ÌƒNƒ‰ƒX‚Í*GRRender*‚Å‚·Dˆê•ûCƒfƒoƒCƒX‚Íˆ—Œn‚²‚Æ‚Ì•`‰æˆ—‚ÌÀ‘•‚ğs‚¤ƒNƒ‰ƒX‚Å‚·DŒ»İ‚ÌSpringhead‚Å‚ÍOpenGL‚É‚æ‚é•`‰æ‚Ì‚İ‚ªƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚·DOpenGL—pƒfƒoƒCƒXƒNƒ‰ƒX‚Í*GRDeviceGL*‚Å‚·DƒŒƒ“ƒ_ƒ‰‚ğƒfƒoƒCƒX‚ÉŠÖ‚·‚é*GRSdk*‚ÌŠÖ”‚ğˆÈ‰º‚É¦‚µ‚Ü‚·D
+ãƒ¬ãƒ³ãƒ€ãƒ©ã¨ã¯å‡¦ç†ç³»ã«ä¾å­˜ã—ãªã„æŠ½è±¡åŒ–ã•ã‚ŒãŸæç”»æ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ã‚¯ãƒ©ã‚¹ã§ã™ï¼ãƒ¬ãƒ³ãƒ€ãƒ©ã®ã‚¯ãƒ©ã‚¹ã¯*GRRender*ã§ã™ï¼ä¸€æ–¹ï¼Œãƒ‡ãƒã‚¤ã‚¹ã¯å‡¦ç†ç³»ã”ã¨ã®æç”»å‡¦ç†ã®å®Ÿè£…ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹ã§ã™ï¼ç¾åœ¨ã®Springheadã§ã¯OpenGLã«ã‚ˆã‚‹æç”»ã®ã¿ãŒã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã™ï¼OpenGLç”¨ãƒ‡ãƒã‚¤ã‚¹ã‚¯ãƒ©ã‚¹ã¯*GRDeviceGL*ã§ã™ï¼ãƒ¬ãƒ³ãƒ€ãƒ©ã‚’ãƒ‡ãƒã‚¤ã‚¹ã«é–¢ã™ã‚‹*GRSdk*ã®é–¢æ•°ã‚’ä»¥ä¸‹ã«ç¤ºã—ã¾ã™ï¼
 
-\begin{tabular}{p{.2\hsize}p{.40\hsize}p{.3\hsize}}
-*GRSdkIf*		&								&	\\ \midrule
-*GRRenderIf** 	& *CreateRender()*		& ƒŒƒ“ƒ_ƒ‰‚ğì¬		\\
-*GRDeviceGLIf** 	& *CreateDeviceGL()*		& OpenGLƒfƒoƒCƒX‚ğì¬	\\
-\end{tabular}
-
-
-
-\begin{tabular}{p{.2\hsize}p{.40\hsize}p{.3\hsize}}
-*GRRenderIf*		&									&	\\ \midrule
-*void*			& *SetDevice(GRDeviceIf*)*	& ƒfƒoƒCƒX‚Ìİ’è	\\
-*GRDeviceIf** 	& *GetDevice()*				& ƒfƒoƒCƒX‚Ìæ“¾	\\
-\end{tabular}
+|*GRSdkIf*	|							|	 |
+|---|---|---|
+|_GRRenderIf*_ | *CreateRender()*	| ãƒ¬ãƒ³ãƒ€ãƒ©ã‚’ä½œæˆ		|
+|_GRDeviceGLIf*_ | *CreateDeviceGL()*	| OpenGLãƒ‡ãƒã‚¤ã‚¹ã‚’ä½œæˆ	|
 
 
-### ‰Šú‰»
-Graphicsƒ‚ƒWƒ…[ƒ‹‚ğg—p‚·‚é‚É‚ÍˆÈ‰º‚Ì‰Šú‰»ˆ—‚ğ•K‚¸Às‚·‚é•K—v‚ª‚ ‚è‚Ü‚·D\begin{verbatim}   	GRRenderIf* render = grSdk->CreateRender();    GRDeviceIf* device = grSdk->CreateDeviceGL();    device->Init();    render->SetDevice(device);\end{verbatim}*GRRender*‚Ì*SetDevice*ŠÖ”‚ÅƒfƒoƒCƒX‚ğ“o˜^‚·‚é‚ÆCƒŒƒ“ƒ_ƒ‰‚ÍÀÛ‚Ì•`‰æˆ—‚ğ‚»‚ÌƒfƒoƒCƒX‚ğ—p‚¢‚Äs‚¢‚Ü‚·D«—ˆ“I‚Éˆ—Œn‚²‚Æ‚ÉƒfƒoƒCƒX‚ğg‚¢•ª‚¯‚é‚±‚Æ‚ğ‘z’è‚µCã‚Ìˆ—‚Íƒ†[ƒU‚ªs‚¤‚±‚Æ‚É‚È‚Á‚Ä‚¢‚Ü‚·DFrameworkƒ‚ƒWƒ…[ƒ‹‚ğg—p‚·‚éê‡‚Íƒ†[ƒU©g‚Åã‚Ìè‘±‚«‚ğs‚¤•K—v‚Í‚ ‚è‚Ü‚¹‚ñD
-## ƒV[ƒ“
+|*GRRenderIf*	|								|	 |
+|---|---|---|
+|*void*		| *SetDevice(GRDeviceIf*)*| ãƒ‡ãƒã‚¤ã‚¹ã®è¨­å®š	|
+|_GRDeviceIf*_ | *GetDevice()*			| ãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—	|
 
-### ƒV[ƒ“‚Ìì¬
-Graphicsƒ‚ƒWƒ…[ƒ‹‚ÌƒV[ƒ“‚ÍCƒRƒ“ƒsƒ…[ƒ^ƒOƒ‰ƒtƒBƒNƒX‚É‚¨‚¯‚é‚¢‚í‚ä‚éƒV[ƒ“ƒOƒ‰ƒt‚Æ“¯“™‚Ì‚à‚Ì‚Å‚·DƒV[ƒ“ƒNƒ‰ƒX‚Í*GRScene*‚Å‚·DƒV[ƒ“‚ğì¬‚·‚é‚É‚ÍŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·D\begin{verbatim}    GRSceneIf* grScene = grSdk->CreateScene();\end{verbatim}*GRScene*‚ÍƒfƒBƒXƒNƒŠƒvƒ^‚É‚æ‚éİ’è€–Ú‚ğ‚¿‚Ü‚¹‚ñD‚Ü‚½CFig.\,\ref{fig_grscene}‚É¦‚·‚æ‚¤‚É*GRSdk*ƒIƒuƒWƒFƒNƒg‚Í”CˆÓ‚Ì”‚ÌƒV[ƒ“‚ğ•Û‚Å‚«‚Ü‚·DƒV[ƒ“ì¬‚ÉŠÖ‚·‚é*GRSdk*‚ÌŠÖ”‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·D
+### åˆæœŸåŒ–
+Graphicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã«ã¯ä»¥ä¸‹ã®åˆæœŸåŒ–å‡¦ç†ã‚’å¿…ãšå®Ÿè¡Œã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ï¼
+```c++
+   	GRRenderIf* render = grSdk->CreateRender();
+    GRDeviceIf* device = grSdk->CreateDeviceGL();
+    device->Init();
+    render->SetDevice(device);
+```
+*GRRender*ã®*SetDevice*é–¢æ•°ã§ãƒ‡ãƒã‚¤ã‚¹ã‚’ç™»éŒ²ã™ã‚‹ã¨ï¼Œãƒ¬ãƒ³ãƒ€ãƒ©ã¯å®Ÿéš›ã®æç”»å‡¦ç†ã‚’ãã®ãƒ‡ãƒã‚¤ã‚¹ã‚’ç”¨ã„ã¦è¡Œã„ã¾ã™ï¼å°†æ¥çš„ã«å‡¦ç†ç³»ã”ã¨ã«ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½¿ã„åˆ†ã‘ã‚‹ã“ã¨ã‚’æƒ³å®šã—ï¼Œä¸Šã®å‡¦ç†ã¯ãƒ¦ãƒ¼ã‚¶ãŒè¡Œã†ã“ã¨ã«ãªã£ã¦ã„ã¾ã™ï¼Frameworkãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã¯ãƒ¦ãƒ¼ã‚¶è‡ªèº«ã§ä¸Šã®æ‰‹ç¶šãã‚’è¡Œã†å¿…è¦ã¯ã‚ã‚Šã¾ã›ã‚“ï¼
+## ã‚·ãƒ¼ãƒ³
 
-\begin{tabular}{p{.15\hsize}p{.50\hsize}p{.25\hsize}}
-*GRSdkIf*	&												&	\\ \midrule
-*GRSceneIf**	& *CreateScene()*						& ƒV[ƒ“‚ğì¬			\\
-*GRSceneIf**	& *GetScene(size\_t)*					& ƒV[ƒ“‚ğæ“¾			\\
-*size\_t*	& *NScene()*								& ƒV[ƒ“‚Ì”			\\
-*void*		& *MergeScene(GRSceneIf*, GRSceneIf*)*	& ƒV[ƒ“‚Ì“‡			\\
-\end{tabular}
+### ã‚·ãƒ¼ãƒ³ã®ä½œæˆ
+Graphicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚·ãƒ¼ãƒ³ã¯ï¼Œã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ã«ãŠã‘ã‚‹ã„ã‚ã‚†ã‚‹ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã¨åŒç­‰ã®ã‚‚ã®ã§ã™ï¼ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹ã¯*GRScene*ã§ã™ï¼ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆã™ã‚‹ã«ã¯æ¬¡ã®ã‚ˆã†ã«ã—ã¾ã™ï¼
+```c++
+    GRSceneIf* grScene = grSdk->CreateScene();
+```
+*GRScene*ã¯ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã«ã‚ˆã‚‹è¨­å®šé …ç›®ã‚’æŒã¡ã¾ã›ã‚“ï¼ã¾ãŸï¼Œæ¬¡å›³ã«ç¤ºã™ã‚ˆã†ã«*GRSdk*ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ä»»æ„ã®æ•°ã®ã‚·ãƒ¼ãƒ³ã‚’ä¿æŒã§ãã¾ã™ï¼ã‚·ãƒ¼ãƒ³ä½œæˆã«é–¢ã™ã‚‹*GRSdk*ã®é–¢æ•°ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã™ï¼
 
-
-
-
-
-
-\includegraphics[width=.4\hsize]{fig/grscene.eps}
-
-\caption{Graphics data structure}
-
-
-
-### ƒV[ƒ“‚Ì‹@”\
-ƒV[ƒ“‚ğì¬‚µ‚½‚çCŸ‚Í‚»‚ÌƒRƒ“ƒeƒ“ƒc‚Å‚ ‚éƒtƒŒ[ƒ€‚âƒƒbƒVƒ…CƒJƒƒ‰‚âƒ‰ƒCƒg‚È‚Ç‚ğì¬‚µ‚ÄƒV[ƒ“‚É‰Á‚¦‚Ä‚¢‚«‚Ü‚·D‚±‚Ì•û–@‚Æ‚µ‚Ä‚ÍŠ®‘S‚Éè“®‚ÅƒV[ƒ“‚ğ\’z‚·‚é‘¼‚É‚àFileIOƒ‚ƒWƒ…[ƒ‹‚ğg—p‚µ‚Äƒtƒ@ƒCƒ‹‚©‚çƒV[ƒ“‚ğƒ[ƒh‚·‚é•û–@‚à‚ ‚è‚Ü‚·DˆÈ‰º‚É*GRScene*‚ÌŠÖ”‚ğ¦‚µ‚Ü‚·D
-
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-*GRSceneIf*	 &															&	\\ \midrule
-*GRFrameIf**	 & *GetWorld()*										& ƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚Ìæ“¾	\\
-*GRCameraIf** & *GetCamera()*										& ƒJƒƒ‰‚Ìæ“¾	\\
-*void*		 & *SetCamera(const GRCameraDesc\&)*					& ƒJƒƒ‰‚Ìİ’è	\\
-*GRVisualIf** & *CreateVisual(const GRVisualDesc\&, GRFrameIf*)*	& •`‰æƒAƒCƒeƒ€‚Ìì¬	\\
-*void*		 & *Render(GRRenderIf*)*								& •`‰æ	\\
-\end{tabular}
-
-Fig.\,\ref{fig_grscene}‚É¦‚·‚æ‚¤‚ÉC1‚Â‚ÌƒV[ƒ“‚Í‚½‚¾1‚Â‚Ìƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚ğ‚¿C‚»‚ê‚ğŠî“_‚Æ‚µ‚Ä”CˆÓ‚Ì”‚Ì•`‰æƒAƒCƒeƒ€‚ªƒcƒŠ[ó‚É˜A‚È‚è‚Ü‚·Dƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚Í*GetWorld*‚Åæ“¾‚µ‚Ü‚·D“Áê‚È•`‰æƒAƒCƒeƒ€‚ÉƒJƒƒ‰‚ª‚ ‚è‚Ü‚·DƒJƒƒ‰‚Íƒ[ƒ‹ƒhƒtƒŒ[ƒ€ˆÈ‰º‚ÌƒcƒŠ[‚Æ‚Í•Ê‚ÉC*GRScene*‚ª•Û‚µ‚Ü‚·(Fig.\,\ref{fig_grscene})DƒJƒƒ‰‚Ìİ’è‚Í*SetCamera*‚Ås‚¢‚Ü‚·DƒJƒƒ‰‚ğæ“¾‚·‚é‚É‚Í*GetCamera*‚ğg‚¢‚Ü‚·D‚Ü‚½CƒJƒƒ‰‚ÍƒV[ƒ“ƒOƒ‰ƒt’†‚Ì1‚Â‚ÌƒtƒŒ[ƒ€‚ğQÆ‚µC‚±‚ê‚ğ‹“_‚Ìİ’è‚É—p‚¢‚Ü‚·DƒCƒ[ƒW‚Æ‚µ‚Ä‚ÍƒJƒƒ‰‚ªQÆæ‚ÌƒtƒŒ[ƒ€‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚é‚Æl‚¦‚é•û‚ª©‘R‚Å‚µ‚å‚¤DQÆæ‚ÌƒtƒŒ[ƒ€‚ÌˆÚ“®‚É‰‚¶‚ÄƒJƒƒ‰‚àƒV[ƒ“’†‚ğˆÚ“®‚·‚é‚±‚Æ‚É‚È‚è‚Ü‚·D
-### ƒV[ƒ“‚Ì•`‰æ
-•`‰æˆ—‚ÍƒvƒƒOƒ‰ƒ€‚Ì•`‰æƒnƒ“ƒhƒ‰‚Ås‚¢‚Ü‚·DGLUT‚ğg‚¤ê‡‚Í*glutDisplayFunc*‚Å“o˜^‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”‚ª‚±‚ê‚É‚ ‚½‚èC‚Ü‚½Frameworkƒ‚ƒWƒ…[ƒ‹‚Ì*FWApp*‚ğg‚¤ê‡‚Í*Display*‰¼‘zŠÖ”‚ª‚±‚ê‚É‚ ‚½‚è‚Ü‚·DˆÈ‰º‚ª“TŒ^“I‚È•`‰æˆ—‚Å‚·D\begin{verbatim}    render->ClearBuffer();        // clear back buffer    render->BeginScene();         // begin rendering    grScene->Render(render);      // render scene    render->EndScene();           // end rendering    render->SwapBuffers();        // swap buffers\end{verbatim}*ClearBuffer*‚Í•`‰æƒoƒbƒtƒ@‚ğŠ’è‚ÌF‚Å“h‚è‚Â‚Ô‚µ‚Ü‚·D“h‚è‚Â‚Ô‚µF‚Ìæ“¾/İ’è‚Í*GRRender*‚Ì*GetClearColor*CSetClearColor‚ğg‚¢‚Ü‚·D\begin{verbatim}    render->SetClearColor(Vec4f(1.0f, 0.0f, 0.0f, 1.0f));    render->ClearBuffer();        // clear back buffer in red\end{verbatim}*BeginScene*‚Æ*EndScene*‚ÍƒV[ƒ“‚Ì•`‰æ‚Ì‘OŒã‚Å•K‚¸ŒÄ‚Ño‚µ‚Ü‚·D*SwapBuffers*‚Íƒtƒƒ“ƒgƒoƒbƒtƒ@‚ÆƒoƒbƒNƒoƒbƒtƒ@‚ğØ‚èŠ·‚¦‚é‚±‚Æ‚Å•`‰æ“à—e‚ğ‰æ–Êã‚É•\¦‚µ‚Ü‚·D*GRScene*‚Ì*Render*ŠÖ”‚ÍCƒJƒƒ‰(*GRCamera*)‚Ì*Render*‚Æƒ[ƒ‹ƒhƒtƒŒ[ƒ€(*GRFrame*)‚Ì*Render*‚ğ‡ŸŒÄ‚Ño‚µ‚Ü‚·D‚Ü‚¸ƒJƒƒ‰‚Ì•`‰æ‚É‚æ‚Á‚Ä‹“_‚Æ“Š‰e•ÏŠ·‚ªİ’è‚³‚êCŸ‚Éƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚Ì•`‰æ‚É‚æ‚Á‚ÄƒV[ƒ“ƒOƒ‰ƒt‚ªÄ‹A“I‚É•`‰æ‚³‚ê‚Ü‚·D
-## •`‰æƒAƒCƒeƒ€
+|*GRSdkIf*|											|	 |
+|---|---|---|
+|_GRSceneIf*_| *CreateScene()*					| ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆ			|
+|_GRSceneIf*_| *GetScene(size_t)*				| ã‚·ãƒ¼ãƒ³ã‚’å–å¾—			|
+|*size_t*| *NScene()*							| ã‚·ãƒ¼ãƒ³ã®æ•°			|
+|*void*	| *MergeScene(GRSceneIf*, GRSceneIf*)*| ã‚·ãƒ¼ãƒ³ã®çµ±åˆ			|
 
 
 
 
+### ã‚·ãƒ¼ãƒ³ã®æ©Ÿèƒ½
+ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆã—ãŸã‚‰ï¼Œæ¬¡ã¯ãã®ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã§ã‚ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ ã‚„ãƒ¡ãƒƒã‚·ãƒ¥ï¼Œã‚«ãƒ¡ãƒ©ã‚„ãƒ©ã‚¤ãƒˆãªã©ã‚’ä½œæˆã—ã¦ã‚·ãƒ¼ãƒ³ã«åŠ ãˆã¦ã„ãã¾ã™ï¼ã“ã®æ–¹æ³•ã¨ã—ã¦ã¯å®Œå…¨ã«æ‰‹å‹•ã§ã‚·ãƒ¼ãƒ³ã‚’æ§‹ç¯‰ã™ã‚‹ä»–ã«ã‚‚FileIOãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ä½¿ç”¨ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã‚·ãƒ¼ãƒ³ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹æ–¹æ³•ã‚‚ã‚ã‚Šã¾ã™ï¼ä»¥ä¸‹ã«*GRScene*ã®é–¢æ•°ã‚’ç¤ºã—ã¾ã™ï¼
 
-\includegraphics[width=.4\hsize]{fig/grvisual.eps}
+|*GRSceneIf*	|														|	 |
+|---|---|---|
+|_GRFrameIf*_	| *GetWorld()*									| ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å–å¾—	|
+|_GRCameraIf*_| *GetCamera()*									| ã‚«ãƒ¡ãƒ©ã®å–å¾—	|
+|*void*		| *SetCamera(const GRCameraDesc&)*				| ã‚«ãƒ¡ãƒ©ã®è¨­å®š	|
+|_GRVisualIf*_| *CreateVisual(const GRVisualDesc&, GRFrameIf*)*| æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®ä½œæˆ	|
+|*void*		| *Render(GRRenderIf*)*							| æç”»	|
+æ¬¡å›³ã«ç¤ºã™ã‚ˆã†ã«ï¼Œ1ã¤ã®ã‚·ãƒ¼ãƒ³ã¯ãŸã 1ã¤ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’æŒã¡ï¼Œãã‚Œã‚’åŸºç‚¹ã¨ã—ã¦ä»»æ„ã®æ•°ã®æç”»ã‚¢ã‚¤ãƒ†ãƒ ãŒãƒ„ãƒªãƒ¼çŠ¶ã«é€£ãªã‚Šã¾ã™ï¼ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã¯*GetWorld*ã§å–å¾—ã—ã¾ã™ï¼ç‰¹æ®Šãªæç”»ã‚¢ã‚¤ãƒ†ãƒ ã«ã‚«ãƒ¡ãƒ©ãŒã‚ã‚Šã¾ã™ï¼ã‚«ãƒ¡ãƒ©ã¯ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ä»¥ä¸‹ã®ãƒ„ãƒªãƒ¼ã¨ã¯åˆ¥ã«ï¼Œ*GRScene*ãŒä¿æŒã—ã¾ã™(æ¬¡å›³)ï¼ã‚«ãƒ¡ãƒ©ã®è¨­å®šã¯*SetCamera*ã§è¡Œã„ã¾ã™ï¼ã‚«ãƒ¡ãƒ©ã‚’å–å¾—ã™ã‚‹ã«ã¯*GetCamera*ã‚’ä½¿ã„ã¾ã™ï¼ã¾ãŸï¼Œã‚«ãƒ¡ãƒ©ã¯ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ä¸­ã®1ã¤ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å‚ç…§ã—ï¼Œã“ã‚Œã‚’è¦–ç‚¹ã®è¨­å®šã«ç”¨ã„ã¾ã™ï¼ã‚¤ãƒ¡ãƒ¼ã‚¸ã¨ã—ã¦ã¯ã‚«ãƒ¡ãƒ©ãŒå‚ç…§å…ˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹ã¨è€ƒãˆã‚‹æ–¹ãŒè‡ªç„¶ã§ã—ã‚‡ã†ï¼å‚ç…§å…ˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç§»å‹•ã«å¿œã˜ã¦ã‚«ãƒ¡ãƒ©ã‚‚ã‚·ãƒ¼ãƒ³ä¸­ã‚’ç§»å‹•ã™ã‚‹ã“ã¨ã«ãªã‚Šã¾ã™ï¼
+### ã‚·ãƒ¼ãƒ³ã®æç”»
+æç”»å‡¦ç†ã¯ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®æç”»ãƒãƒ³ãƒ‰ãƒ©ã§è¡Œã„ã¾ã™ï¼GLUTã‚’ä½¿ã†å ´åˆã¯*glutDisplayFunc*ã§ç™»éŒ²ã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ãŒã“ã‚Œã«ã‚ãŸã‚Šï¼Œã¾ãŸFrameworkãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®*FWApp*ã‚’ä½¿ã†å ´åˆã¯*Display*ä»®æƒ³é–¢æ•°ãŒã“ã‚Œã«ã‚ãŸã‚Šã¾ã™ï¼ä»¥ä¸‹ãŒå…¸å‹çš„ãªæç”»å‡¦ç†ã§ã™ï¼
+```c++
+    render->ClearBuffer();        // clear back buffer
+    render->BeginScene();         // begin rendering
 
-\caption{Class hierarchy of visual items}
+    grScene->Render(render);      // render scene
 
-
-ƒV[ƒ“ƒOƒ‰ƒt‚ğ\¬‚·‚é•`‰æƒAƒCƒeƒ€‚ÌŠî–{ƒNƒ‰ƒX‚Í*GRVisual*‚Å‚·D*GRVisual*‚©‚ç”h¶‚·‚éƒNƒ‰ƒX‚ğFig.\,\ref{fig_grvisual}‚É¦‚µ‚Ü‚·D•`‰æƒAƒCƒeƒ€‚É‚ÍˆÈ‰º‚Ì‹¤’Ê‚Ì‹@”\‚ª‚ ‚è‚Ü‚·D
-
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRVisualIf*}					\\ \midrule
-*void*	& *Render(GRRenderIf*)*		& 	\\
-*void* 	& *Rendered(GRRenderIf*)*	& 	\\
-*void* 	& *Enable(bool)*				& 	\\
-*bool* 	& *IsEnabled()*				& 	\\
-\end{tabular}
-
-*Render*‚ÍƒAƒCƒeƒ€‚Ì•`‰æ‚ğs‚¢C*Rendered*‚Í•`‰æ‚ÌŒãˆ—‚ğs‚¢‚Ü‚·D•`‰æˆ—‚Í•`‰æƒAƒCƒeƒ€‚Ìí—Ş‚²‚Æ‚ÉˆÙ‚È‚è‚Ü‚·D‚±‚ê‚É‚Â‚¢‚Ä‚ÍŸßˆÈ~‚Åà–¾‚µ‚Ü‚·D*Enable*ŠÖ”‚Í•`‰æˆ—‚Ì—LŒø‰»/–³Œø‰»‚ğs‚¢‚Ü‚·D–³Œø‰»‚³‚ê‚½ƒAƒCƒeƒ€‚Í•`‰æ‚³‚ê‚Ü‚¹‚ñD*IsEnabled*ŠÖ”‚Í—LŒø/–³Œøó‘Ô‚ğ•Ô‚µ‚Ü‚·D•`‰æƒAƒCƒeƒ€‚ğì¬‚·‚é‚É‚Í*GRScene*‚Ì*CreateVisual*ŠÖ”‚Éí—Ş‚²‚Æ‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ğw’è‚µ‚ÄŒÄ‚Ño‚µ‚Ü‚·D
-## ƒtƒŒ[ƒ€
-ƒtƒŒ[ƒ€‚ÍÀ•W•ÏŠ·‚ğ’è‹`‚·‚é‚Æ“¯‚É‘¼‚Ì•`‰æƒAƒCƒeƒ€‚ÌƒRƒ“ƒeƒi‚Æ‚µ‚Ä‚Ì–ğŠ„‚ğ‚¿‚Ü‚·DƒtƒŒ[ƒ€‚ÌƒNƒ‰ƒX‚Í*GRFrame*‚Å‚·DŸ‚ÌƒR[ƒh‚ÍCƒtƒŒ[ƒ€‚ğì¬‚µ‚Äƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚Ìq‚Æ‚µ‚Ä“o˜^‚µ‚Ü‚·D\begin{verbatim}    GRFrameDesc desc;    GRFrameIf* frame =        grScene->CreateVisual(desc, grScene->GetWorldFrame())->Cast();\end{verbatim}*CreateVisual*ŠÖ”‚Íw’è‚³‚ê‚½ƒfƒBƒXƒNƒŠƒvƒ^‚É‘Î‰‚·‚é•`‰æƒAƒCƒeƒ€‚ğì¬‚µCw’è‚³‚ê‚½eƒtƒŒ[ƒ€‚Ìq‚Æ‚µ‚Ä“o˜^‚µ‚Ü‚·DeƒtƒŒ[ƒ€‚ğÈ‚­‚ÆƒfƒtƒHƒ‹ƒg‚Åƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚É“o˜^‚³‚ê‚Ü‚·D‚µ‚½‚ª‚Á‚Äã‚ÌƒR[ƒh‚Í*CreateVisual(desc)*‚Æ‚µ‚Ä‚à‚©‚Ü‚¢‚Ü‚¹‚ñD*GRFrame*‚Ì*Render*ŠÖ”‚ÍCq•`‰æƒAƒCƒeƒ€‚Ì*Render*‚ğ‡ŸŒÄ‚Ño‚µ‚Ü‚·D
-### eqŠÖŒW
-ƒtƒŒ[ƒ€ŠÔ‚ÌeqŠÖŒW‚ğŠÇ—‚·‚éŠÖ”‚É‚ÍŸ‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·D
-
-\begin{tabular}{p{.20\hsize}p{.45\hsize}p{.25\hsize}}
-\multicolumn{3}{l}{*GRFrameIf*}						\\ \midrule
-*GRFrameIf**		& *GetParent()*				& 	\\
-*void* 			& *SetParent(GRFrameIf*)*	& 	\\
-*int* 			& *NChildren()*				& 	\\
-*GRVisualIf*** 	& *GetChildren()*			& 	\\
-\end{tabular}
-
-*GetParent*‚ÍeƒtƒŒ[ƒ€‚ğæ“¾‚µ‚Ü‚·D*SetParent*‚Í‚»‚ÌƒtƒŒ[ƒ€‚ÌeƒtƒŒ[ƒ€‚ğ•ÏX‚·‚é‚½‚ß‚Ég‚¢‚Ü‚·D*NChildren*‚Í‚»‚ÌƒtƒŒ[ƒ€‚Ìq‚Å‚ ‚é•`‰æƒAƒCƒeƒ€‚Ì”‚ğ•Ô‚µ‚Ü‚·D‚±‚ê‚ç‚É‚ÍƒtƒŒ[ƒ€ˆÈŠO‚Ì•`‰æƒAƒCƒeƒ€‚àŠÜ‚Ü‚ê‚é‚±‚Æ‚É’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢D*GetChildren*‚Íq•`‰æƒAƒCƒeƒ€‚Ì”z—ñ‚ğæ“¾‚µ‚Ü‚·D
-### À•W•ÏŠ·
-ƒtƒŒ[ƒ€‚ÌÀ•W•ÏŠ·‚ğ‘€ì‚·‚éŠÖ”‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·D
-
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRFrameIf*}							\\ \midrule
-*Affinef* & *GetTransform()*					& 	\\
-*Affinef* & *GetWorldTransform()*				& 	\\
-*void*	 & *SetTransform(const Affinef\&)*	& 	\\
-\end{tabular}
-
-*GetTransform*C*SetTransform*‚Í‚»‚ê‚¼‚êƒtƒŒ[ƒ€‚Æ‚»‚ÌeƒtƒŒ[ƒ€‚Æ‚ÌŠÔ‚Ì‘Š‘Î“I‚ÈÀ•W•ÏŠ·‚ğæ“¾/İ’è‚µ‚Ü‚·D—á‚¦‚Î\begin{verbatim}    frame->SetTransform(Affinef::Trn(1.0, 0.0, 0.0));\end{verbatim}‚Æ‚·‚é‚ÆeƒtƒŒ[ƒ€‚É‘Î‚µ‚Ä‘Š‘Î“I‚Éx•ûŒü‚É$1.0$ˆÚ“®‚µ‚Ü‚·D
-## ƒJƒƒ‰
+    render->EndScene();           // end rendering
+    render->SwapBuffers();        // swap buffers
+```
+*ClearBuffer*ã¯æç”»ãƒãƒƒãƒ•ã‚¡ã‚’æ‰€å®šã®è‰²ã§å¡—ã‚Šã¤ã¶ã—ã¾ã™ï¼å¡—ã‚Šã¤ã¶ã—è‰²ã®å–å¾—/è¨­å®šã¯*GRRender*ã®*GetClearColor*ï¼ŒSetClearColorã‚’ä½¿ã„ã¾ã™ï¼
+```c++
+    render->SetClearColor(Vec4f(1.0f, 0.0f, 0.0f, 1.0f));
+    render->ClearBuffer();        // clear back buffer in red
+```
+*BeginScene*ã¨*EndScene*ã¯ã‚·ãƒ¼ãƒ³ã®æç”»ã®å‰å¾Œã§å¿…ãšå‘¼ã³å‡ºã—ã¾ã™ï¼*SwapBuffers*ã¯ãƒ•ãƒ­ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡ã¨ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã‚’åˆ‡ã‚Šæ›ãˆã‚‹ã“ã¨ã§æç”»å†…å®¹ã‚’ç”»é¢ä¸Šã«è¡¨ç¤ºã—ã¾ã™ï¼*GRScene*ã®*Render*é–¢æ•°ã¯ï¼Œã‚«ãƒ¡ãƒ©(*GRCamera*)ã®*Render*ã¨ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ (*GRFrame*)ã®*Render*ã‚’é †æ¬¡å‘¼ã³å‡ºã—ã¾ã™ï¼ã¾ãšã‚«ãƒ¡ãƒ©ã®æç”»ã«ã‚ˆã£ã¦è¦–ç‚¹ã¨æŠ•å½±å¤‰æ›ãŒè¨­å®šã•ã‚Œï¼Œæ¬¡ã«ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®æç”»ã«ã‚ˆã£ã¦ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ãŒå†å¸°çš„ã«æç”»ã•ã‚Œã¾ã™ï¼
+## æç”»ã‚¢ã‚¤ãƒ†ãƒ 
 
 
-\begin{tabular}{c}
-\includegraphics[width=.4\hsize]{fig/grcamera.eps} \\
-(a) Perspective frustum \\
-\\
-\begin{tabular}{cc}
-\includegraphics[width=.4\hsize]{fig/grcamera_front.eps} &
-\includegraphics[width=.4\hsize]{fig/grcamera_top.eps} \\
-(b) Front view of screen &
-(c) Top view of screen
-\end{tabular}
-\end{tabular}
-\caption{Camera parameters}
+
+ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã‚’æ§‹æˆã™ã‚‹æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã¯*GRVisual*ã§ã™ï¼*GRVisual*ã‹ã‚‰æ´¾ç”Ÿã™ã‚‹ã‚¯ãƒ©ã‚¹ã‚’æ¬¡å›³ã«ç¤ºã—ã¾ã™ï¼æç”»ã‚¢ã‚¤ãƒ†ãƒ ã«ã¯ä»¥ä¸‹ã®å…±é€šã®æ©Ÿèƒ½ãŒã‚ã‚Šã¾ã™ï¼
+
+|*GRVisualIf*| | 					 |
+|---|---|---|
+|*void*| *Render(GRRenderIf*)*	| 	|
+|*void* | *Rendered(GRRenderIf*)*| 	|
+|*void* | *Enable(bool)*			| 	|
+|*bool* | *IsEnabled()*			| 	|
+*Render*ã¯ã‚¢ã‚¤ãƒ†ãƒ ã®æç”»ã‚’è¡Œã„ï¼Œ*Rendered*ã¯æç”»ã®å¾Œå‡¦ç†ã‚’è¡Œã„ã¾ã™ï¼æç”»å‡¦ç†ã¯æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®ç¨®é¡ã”ã¨ã«ç•°ãªã‚Šã¾ã™ï¼ã“ã‚Œã«ã¤ã„ã¦ã¯æ¬¡ç¯€ä»¥é™ã§èª¬æ˜ã—ã¾ã™ï¼*Enable*é–¢æ•°ã¯æç”»å‡¦ç†ã®æœ‰åŠ¹åŒ–/ç„¡åŠ¹åŒ–ã‚’è¡Œã„ã¾ã™ï¼ç„¡åŠ¹åŒ–ã•ã‚ŒãŸã‚¢ã‚¤ãƒ†ãƒ ã¯æç”»ã•ã‚Œã¾ã›ã‚“ï¼*IsEnabled*é–¢æ•°ã¯æœ‰åŠ¹/ç„¡åŠ¹çŠ¶æ…‹ã‚’è¿”ã—ã¾ã™ï¼æç”»ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½œæˆã™ã‚‹ã«ã¯*GRScene*ã®*CreateVisual*é–¢æ•°ã«ç¨®é¡ã”ã¨ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’æŒ‡å®šã—ã¦å‘¼ã³å‡ºã—ã¾ã™ï¼
+## ãƒ•ãƒ¬ãƒ¼ãƒ 
+ãƒ•ãƒ¬ãƒ¼ãƒ ã¯åº§æ¨™å¤‰æ›ã‚’å®šç¾©ã™ã‚‹ã¨åŒæ™‚ã«ä»–ã®æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®ã‚³ãƒ³ãƒ†ãƒŠã¨ã—ã¦ã®å½¹å‰²ã‚’æŒã¡ã¾ã™ï¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚¯ãƒ©ã‚¹ã¯*GRFrame*ã§ã™ï¼æ¬¡ã®ã‚³ãƒ¼ãƒ‰ã¯ï¼Œãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ä½œæˆã—ã¦ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å­ã¨ã—ã¦ç™»éŒ²ã—ã¾ã™ï¼
+```c++
+    GRFrameDesc desc;
+    GRFrameIf* frame =
+        grScene->CreateVisual(desc, grScene->GetWorldFrame())->Cast();
+```
+*CreateVisual*é–¢æ•°ã¯æŒ‡å®šã•ã‚ŒãŸãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã«å¯¾å¿œã™ã‚‹æç”»ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½œæˆã—ï¼ŒæŒ‡å®šã•ã‚ŒãŸè¦ªãƒ•ãƒ¬ãƒ¼ãƒ ã®å­ã¨ã—ã¦ç™»éŒ²ã—ã¾ã™ï¼è¦ªãƒ•ãƒ¬ãƒ¼ãƒ ã‚’çœãã¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã«ç™»éŒ²ã•ã‚Œã¾ã™ï¼ã—ãŸãŒã£ã¦ä¸Šã®ã‚³ãƒ¼ãƒ‰ã¯*CreateVisual(desc)*ã¨ã—ã¦ã‚‚ã‹ã¾ã„ã¾ã›ã‚“ï¼*GRFrame*ã®*Render*é–¢æ•°ã¯ï¼Œå­æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®*Render*ã‚’é †æ¬¡å‘¼ã³å‡ºã—ã¾ã™ï¼
+### è¦ªå­é–¢ä¿‚
+ãƒ•ãƒ¬ãƒ¼ãƒ é–“ã®è¦ªå­é–¢ä¿‚ã‚’ç®¡ç†ã™ã‚‹é–¢æ•°ã«ã¯æ¬¡ã®ã‚‚ã®ãŒã‚ã‚Šã¾ã™ï¼
+
+|*GRFrameIf*| | 						 |
+|---|---|---|
+|_GRFrameIf*_	| *GetParent()*			| 	|
+|*void* 		| *SetParent(GRFrameIf*)*| 	|
+|*int* 		| *NChildren()*			| 	|
+|_GRVisualIf*_* | *GetChildren()*		| 	|
+*GetParent*ã¯è¦ªãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—ã—ã¾ã™ï¼*SetParent*ã¯ãã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®è¦ªãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å¤‰æ›´ã™ã‚‹ãŸã‚ã«ä½¿ã„ã¾ã™ï¼*NChildren*ã¯ãã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®å­ã§ã‚ã‚‹æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®æ•°ã‚’è¿”ã—ã¾ã™ï¼ã“ã‚Œã‚‰ã«ã¯ãƒ•ãƒ¬ãƒ¼ãƒ ä»¥å¤–ã®æç”»ã‚¢ã‚¤ãƒ†ãƒ ã‚‚å«ã¾ã‚Œã‚‹ã“ã¨ã«æ³¨æ„ã—ã¦ãã ã•ã„ï¼*GetChildren*ã¯å­æç”»ã‚¢ã‚¤ãƒ†ãƒ ã®é…åˆ—ã‚’å–å¾—ã—ã¾ã™ï¼
+### åº§æ¨™å¤‰æ›
+ãƒ•ãƒ¬ãƒ¼ãƒ ã®åº§æ¨™å¤‰æ›ã‚’æ“ä½œã™ã‚‹é–¢æ•°ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã™ï¼
+
+|*GRFrameIf*| | 							 |
+|---|---|---|
+|*Affinef*| *GetTransform()*				| 	|
+|*Affinef*| *GetWorldTransform()*			| 	|
+|*void*	| *SetTransform(const Affinef&)*| 	|
+*GetTransform*ï¼Œ*SetTransform*ã¯ãã‚Œãã‚Œãƒ•ãƒ¬ãƒ¼ãƒ ã¨ãã®è¦ªãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã®é–“ã®ç›¸å¯¾çš„ãªåº§æ¨™å¤‰æ›ã‚’å–å¾—/è¨­å®šã—ã¾ã™ï¼ä¾‹ãˆã°
+```c++
+    frame->SetTransform(Affinef::Trn(1.0, 0.0, 0.0));
+```
+ã¨ã™ã‚‹ã¨è¦ªãƒ•ãƒ¬ãƒ¼ãƒ ã«å¯¾ã—ã¦ç›¸å¯¾çš„ã«xæ–¹å‘ã«$1.0$ç§»å‹•ã—ã¾ã™ï¼
+## ã‚«ãƒ¡ãƒ©
 
 
-ƒJƒƒ‰‚Í•`‰æ‚É‚¨‚¯‚é‹“_‚Ìİ’è‚Æ“Š‰e•ÏŠ·‚ğŠÇ—‚µ‚Ü‚·D‚Í‚¶‚ß‚ÉƒJƒƒ‰‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ğŒ©‚Ä‚¢‚«‚Ü‚·D
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRCameraDesc*}					\\ \midrule
-*Vec2f*	&	*size*	& ƒXƒNƒŠ[ƒ“ƒTƒCƒY 		\\
-*Vec2f*	&	*center*	& ƒXƒNƒŠ[ƒ“’†SÀ•W 	\\
-*float*	&	*front*	& ‘O•ûƒNƒŠƒbƒv–Ê		\\
-*float*	&	*back*	& Œã•ûƒNƒŠƒbƒv–Ê		\\
-\end{tabular}
 
-Še•Ï”‚Ì’è‹`‚ÍFig.\,\ref{fig_grcamera}(b),(c)‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢Dİ’è‚ğ•ÏX‚·‚é‚É‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D\begin{verbatim}    GRCameraDesc desc;    grScene->GetCamera()->GetDesc(&desc);    desc.front = 3.0f;    grScene->SetCamera(desc);\end{verbatim}ã‚Å‚Í*GetDesc*ŠÖ”‚ÅŠù‘¶‚Ìİ’è‚ğƒfƒBƒXƒNƒŠƒvƒ^‚ÉƒRƒs[‚µC*front*‚ğ•ÏX‚µ‚Ä‚©‚ç*SetCamera*ŠÖ”‚ÅÄİ’è‚µ‚Ä‚¢‚Ü‚·Dˆê•ûC*GRCamera*‚ÌŠÖ”‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·D
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRCameraIf*}					\\ \midrule
-*GRFrameIf**	& *GetFrame()*				&	\\
-*void*		& *SetFrame(GRFrameIf*)*		&	\\
-\end{tabular}
 
-*GetFrame*C*SetFrame*ŠÖ”‚ÍƒJƒƒ‰ƒtƒŒ[ƒ€‚ğæ“¾/İ’è‚µ‚Ü‚·DFig.\,\ref{fig_grcamera}(a)‚Ì‚æ‚¤‚ÉCƒJƒƒ‰ƒtƒŒ[ƒ€‚ÍƒJƒƒ‰‚Ì‹“_‚ğ’è‹`‚µ‚Ü‚·D
-## ƒ‰ƒCƒg
-ƒ‰ƒCƒg‚ÍƒV[ƒ“‚ÌÆ–¾‚ğİ’è‚·‚é‚½‚ß‚Ì•`‰æƒAƒCƒeƒ€‚Å‚·Dƒ‰ƒCƒg‚ÌƒNƒ‰ƒX*GRLight*‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚Ì‘ã•\“I‚È•Ï”‚ğˆÈ‰º‚É¦‚µ‚Ü‚·D
+ã‚«ãƒ¡ãƒ©ã¯æç”»ã«ãŠã‘ã‚‹è¦–ç‚¹ã®è¨­å®šã¨æŠ•å½±å¤‰æ›ã‚’ç®¡ç†ã—ã¾ã™ï¼ã¯ã˜ã‚ã«ã‚«ãƒ¡ãƒ©ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’è¦‹ã¦ã„ãã¾ã™ï¼
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRLightDesc*}				\\ \midrule
-*Vec4f*	&	*ambient*	& ŠÂ‹«Œõ 		\\
-*Vec4f*	&	*diffuse*	& ŠgUŒõ 		\\
-*Vec4f*	&	*specular*	& ‹¾–ÊŒõ		\\
-*Vec4f*	&	*position*	& ƒ‰ƒCƒgˆÊ’u	\\
-\end{tabular}
+|*GRCameraDesc*| | 					 |
+|---|---|---|
+|*Vec2f*|	*size*| ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚º 		|
+|*Vec2f*|	*center*| ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸­å¿ƒåº§æ¨™ 	|
+|*float*|	*front*| å‰æ–¹ã‚¯ãƒªãƒƒãƒ—é¢		|
+|*float*|	*back*| å¾Œæ–¹ã‚¯ãƒªãƒƒãƒ—é¢		|
+å„å¤‰æ•°ã®å®šç¾©ã¯æ¬¡å›³(b),(c)ã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼è¨­å®šã‚’å¤‰æ›´ã™ã‚‹ã«ã¯ä»¥ä¸‹ã®ã‚ˆã†ã«ã—ã¾ã™ï¼
+```c++
+    GRCameraDesc desc;
+    grScene->GetCamera()->GetDesc(&desc);
+    desc.front = 3.0f;
+    grScene->SetCamera(desc);
+```
+ä¸Šã§ã¯*GetDesc*é–¢æ•°ã§æ—¢å­˜ã®è¨­å®šã‚’ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã«ã‚³ãƒ”ãƒ¼ã—ï¼Œ*front*ã‚’å¤‰æ›´ã—ã¦ã‹ã‚‰*SetCamera*é–¢æ•°ã§å†è¨­å®šã—ã¦ã„ã¾ã™ï¼ä¸€æ–¹ï¼Œ*GRCamera*ã®é–¢æ•°ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã™ï¼
 
-Œ¸ŠŒW”‚âƒXƒ|ƒbƒgƒ‰ƒCƒg‚È‚Ç‚Ì‚æ‚èÚ×‚Èİ’è€–Ú‚É‚Â‚¢‚Ä‚Íƒ\[ƒXƒtƒ@ƒCƒ‹‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢DOpenGL‚Ìd—l‚Æ“¯—lC*position*‚Ì‘æ4¬•ª*position.w*‚ª$0$‚Ìê‡‚Í•½sŒõŒ¹‚Æ‚È‚èC*(x,y,z)*•ûŒü‚Ì–³ŒÀ‰“‚Éƒ‰ƒCƒg‚ª‚ ‚é‚±‚Æ‚É‚È‚èC*position.w*‚ª$1$‚Ìê‡‚Í*(x,y,z)*‚ÌˆÊ’u‚É“_ŒõŒ¹‚ª‚¨‚©‚ê‚Ü‚·D
-## ƒ}ƒeƒŠƒAƒ‹
-ƒ}ƒeƒŠƒAƒ‹‚ÍŞ¿‚ğw’è‚·‚é‚½‚ß‚ÌƒAƒCƒeƒ€‚Å‚·Dƒ}ƒeƒŠƒAƒ‹‚ÌƒNƒ‰ƒX‚Í*GRMaterial*‚Å‚·D’ÊíCƒ}ƒeƒŠƒAƒ‹‚ÍŸß‚Åà–¾‚·‚éƒƒbƒVƒ…‚Ìq•`‰æƒAƒCƒeƒ€‚Æ‚È‚è‚Ü‚·Dƒtƒ@ƒCƒ‹‚©‚çƒƒbƒVƒ…‚ğƒ[ƒh‚·‚éê‡‚ÍCƒƒbƒVƒ…‚Ìì¬‚Æ“¯‚Éƒ}ƒeƒŠƒAƒ‹‚à©“®“I‚Éì¬‚³‚êCƒƒbƒVƒ…‚Ìq‚Æ‚µ‚Ä’Ç‰Á‚³‚ê‚Ü‚·D*GRMaterial*‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·D
+|*GRCameraIf*| | 					 |
+|---|---|---|
+|_GRFrameIf*_| *GetFrame()*			|	|
+|*void*	| *SetFrame(GRFrameIf*)*	|	|
+*GetFrame*ï¼Œ*SetFrame*é–¢æ•°ã¯ã‚«ãƒ¡ãƒ©ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—/è¨­å®šã—ã¾ã™ï¼æ¬¡å›³(a)ã®ã‚ˆã†ã«ï¼Œã‚«ãƒ¡ãƒ©ãƒ•ãƒ¬ãƒ¼ãƒ ã¯ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã‚’å®šç¾©ã—ã¾ã™ï¼
+## ãƒ©ã‚¤ãƒˆ
+ãƒ©ã‚¤ãƒˆã¯ã‚·ãƒ¼ãƒ³ã®ç…§æ˜ã‚’è¨­å®šã™ã‚‹ãŸã‚ã®æç”»ã‚¢ã‚¤ãƒ†ãƒ ã§ã™ï¼ãƒ©ã‚¤ãƒˆã®ã‚¯ãƒ©ã‚¹*GRLight*ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®ä»£è¡¨çš„ãªå¤‰æ•°ã‚’ä»¥ä¸‹ã«ç¤ºã—ã¾ã™ï¼
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRMaterialDesc*}				\\ \midrule
-*Vec4f*		&	*ambient*	& ŠÂ‹«F 	\\
-*Vec4f*		&	*diffuse*	& ŠgUF 	\\
-*Vec4f*		&	*specular*	& ‹¾–ÊF	\\
-*Vec4f*		&	*emissive*	& ©ŒÈ”­Œõ	\\
-*float*		&	*power*		& ‹¾–ÊŒW”	\\
-*UTString*	&	*texname*	& ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
-\end{tabular}
+|*GRLightDesc*| | 				 |
+|---|---|---|
+|*Vec4f*|	*ambient*| ç’°å¢ƒå…‰ 		|
+|*Vec4f*|	*diffuse*| æ‹¡æ•£å…‰ 		|
+|*Vec4f*|	*specular*| é¡é¢å…‰		|
+|*Vec4f*|	*position*| ãƒ©ã‚¤ãƒˆä½ç½®	|
+æ¸›è¡°ä¿‚æ•°ã‚„ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆãªã©ã®ã‚ˆã‚Šè©³ç´°ãªè¨­å®šé …ç›®ã«ã¤ã„ã¦ã¯ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼OpenGLã®ä»•æ§˜ã¨åŒæ§˜ï¼Œ*position*ã®ç¬¬4æˆåˆ†*position.w*ãŒ*0*ã®å ´åˆã¯å¹³è¡Œå…‰æºã¨ãªã‚Šï¼Œ*(x,y,z)*æ–¹å‘ã®ç„¡é™é ã«ãƒ©ã‚¤ãƒˆãŒã‚ã‚‹ã“ã¨ã«ãªã‚Šï¼Œ*position.w*ãŒ*1*ã®å ´åˆã¯*(x,y,z)*ã®ä½ç½®ã«ç‚¹å…‰æºãŒãŠã‹ã‚Œã¾ã™ï¼
+## ãƒãƒ†ãƒªã‚¢ãƒ«
+ãƒãƒ†ãƒªã‚¢ãƒ«ã¯æè³ªã‚’æŒ‡å®šã™ã‚‹ãŸã‚ã®ã‚¢ã‚¤ãƒ†ãƒ ã§ã™ï¼ãƒãƒ†ãƒªã‚¢ãƒ«ã®ã‚¯ãƒ©ã‚¹ã¯*GRMaterial*ã§ã™ï¼é€šå¸¸ï¼Œãƒãƒ†ãƒªã‚¢ãƒ«ã¯æ¬¡ç¯€ã§èª¬æ˜ã™ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ã®å­æç”»ã‚¢ã‚¤ãƒ†ãƒ ã¨ãªã‚Šã¾ã™ï¼ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹å ´åˆã¯ï¼Œãƒ¡ãƒƒã‚·ãƒ¥ã®ä½œæˆã¨åŒæ™‚ã«ãƒãƒ†ãƒªã‚¢ãƒ«ã‚‚è‡ªå‹•çš„ã«ä½œæˆã•ã‚Œï¼Œãƒ¡ãƒƒã‚·ãƒ¥ã®å­ã¨ã—ã¦è¿½åŠ ã•ã‚Œã¾ã™ï¼*GRMaterial*ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã™ï¼
 
-ƒŒƒ“ƒ_ƒ‰‚Éƒ}ƒeƒŠƒAƒ‹‚ğİ’è‚·‚é‚ÆCŸ‚É•Ê‚Ìƒ}ƒeƒŠƒAƒ‹‚ğİ’è‚·‚é‚Ü‚Å‚ÌŠÔ‚ÌŒ`ó•`‰æ‚É‚»‚Ìƒ}ƒeƒŠƒAƒ‹‚Ì•`‰æ‘®«‚ª“K—p‚³‚ê‚Ü‚·Dƒ}ƒeƒŠƒAƒ‹‚ğİ’è‚·‚é‚É‚Í‚¢‚­‚Â‚©‚Ì•û–@‚ª‚ ‚è‚Ü‚·Dˆê‚Â–Ú‚Í*GRMaterialIf*‚Ì*Render*ŠÖ”‚ğŒÄ‚Ô•û–@‚Å‚·:‚±‚ê‚É‰Á‚¦CˆÈ‰º‚É¦‚·*GRRender*‚ÌŠÖ”‚Ì‚¢‚¸‚ê‚©‚ğ—p‚¢‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
+|*GRMaterialDesc*| | 				 |
+|---|---|---|
+|*Vec4f*	|	*ambient*| ç’°å¢ƒè‰² 	|
+|*Vec4f*	|	*diffuse*| æ‹¡æ•£è‰² 	|
+|*Vec4f*	|	*specular*| é¡é¢è‰²	|
+|*Vec4f*	|	*emissive*| è‡ªå·±ç™ºå…‰	|
+|*float*	|	*power*	| é¡é¢ä¿‚æ•°	|
+|*UTString*|	*texname*| ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«å|
+ãƒ¬ãƒ³ãƒ€ãƒ©ã«ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®šã™ã‚‹ã¨ï¼Œæ¬¡ã«åˆ¥ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®šã™ã‚‹ã¾ã§ã®é–“ã®å½¢çŠ¶æç”»ã«ãã®ãƒãƒ†ãƒªã‚¢ãƒ«ã®æç”»å±æ€§ãŒé©ç”¨ã•ã‚Œã¾ã™ï¼ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®šã™ã‚‹ã«ã¯ã„ãã¤ã‹ã®æ–¹æ³•ãŒã‚ã‚Šã¾ã™ï¼ä¸€ã¤ç›®ã¯*GRMaterialIf*ã®*Render*é–¢æ•°ã‚’å‘¼ã¶æ–¹æ³•ã§ã™:ã“ã‚Œã«åŠ ãˆï¼Œä»¥ä¸‹ã«ç¤ºã™*GRRender*ã®é–¢æ•°ã®ã„ãšã‚Œã‹ã‚’ç”¨ã„ã‚‹ã“ã¨ã‚‚ã§ãã¾ã™ï¼
 
-\begin{tabular}{p{.1\hsize}p{.5\hsize}p{.3\hsize}}
-*GRRenderIf*																\\ \midrule
-*void* & *SetMaterial(const GRMaterialDesc\&)*		& •`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’è	\\
-*void* & *SetMaterial(const GRMaterialIf*)*			& •`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’è	\\
-*void* & *SetMaterial(int)*							& •`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’è	\\
-\end{tabular}
+|*GRRenderIf*																 |
+|---|---|---|---|
+|*void*| *SetMaterial(const GRMaterialDesc&)*	| æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š	|
+|*void*| *SetMaterial(const GRMaterialIf*)*		| æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š	|
+|*void*| *SetMaterial(int)*						| æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š	|
+ä»¥ä¸‹ã®ä¾‹ã¯ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®šã™ã‚‹3é€šã‚Šã®æ–¹æ³•ã‚’ç¤ºã—ã¦ã„ã¾ã™ï¼ã©ã®æ–¹æ³•ã‚’ç”¨ã„ã¦ã‚‚çµæœã¯å¤‰ã‚ã‚Šã¾ã›ã‚“ï¼
+```c++
+    // given GRRenderIf* render, GRSceneIf* scene
+    GRMaterialDesc md;
+    md.diffuse = Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+    // 1.
+    render->SetMaterial(md);
+    // 2.
+    GRMaterialIf* mat = scene->CreateVisual(md)->Cast();
+    mat->Render(render);
+    // 3.
+    render->SetMaterial(mat);
+```
+æ¯å›ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ä½œæˆã™ã‚‹ã®ã¯ç…©ã‚ã—ã„ã“ã¨ãŒã‚ã‚Šã¾ã™ï¼ãã®ã‚ˆã†ãªå ´åˆã¯ãƒ¬ãƒ³ãƒ€ãƒ©ã®äºˆç´„è‰²ã‚’æŒ‡å®šã™ã‚‹ã“ã¨ã‚‚å¯èƒ½ã§ã™ï¼
+```c++
+    // 4.
+    render->SetMaterial(GRRenderBaseIf::RED);
+```
+ä½¿ç”¨å¯èƒ½ãªäºˆç´„è‰²ã¯X11 web colorã«ã‚‚ã¨ã¥ã„ã¦ã„ã¾ã™ï¼è©³ã—ãã¯*SprGRRender.h*ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’
 
-ˆÈ‰º‚Ì—á‚Íƒ}ƒeƒŠƒAƒ‹‚ğİ’è‚·‚é3’Ê‚è‚Ì•û–@‚ğ¦‚µ‚Ä‚¢‚Ü‚·D‚Ç‚Ì•û–@‚ğ—p‚¢‚Ä‚àŒ‹‰Ê‚Í•Ï‚í‚è‚Ü‚¹‚ñD\begin{verbatim}    // given GRRenderIf* render, GRSceneIf* scene    GRMaterialDesc md;    md.diffuse = Vec4f(1.0f, 0.0f, 0.0f, 1.0f);    // 1.    render->SetMaterial(md);    // 2.    GRMaterialIf* mat = scene->CreateVisual(md)->Cast();    mat->Render(render);    // 3.    render->SetMaterial(mat);\end{verbatim}–ˆ‰ñƒ}ƒeƒŠƒAƒ‹‚ğì¬‚·‚é‚Ì‚Í”Ï‚í‚µ‚¢‚±‚Æ‚ª‚ ‚è‚Ü‚·D‚»‚Ì‚æ‚¤‚Èê‡‚ÍƒŒƒ“ƒ_ƒ‰‚Ì—\–ñF‚ğw’è‚·‚é‚±‚Æ‚à‰Â”\‚Å‚·D\begin{verbatim}    // 4.    render->SetMaterial(GRRenderBaseIf::RED);\end{verbatim}g—p‰Â”\‚È—\–ñF‚ÍX11 web color‚É‚à‚Æ‚Ã‚¢‚Ä‚¢‚Ü‚·DÚ‚µ‚­‚Í*SprGRRender.h*ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğ\begin{comment}\begin{table}[t]\caption{Reserved colors}{\small
 
-\begin{tabular}{ll|ll}
-RED				& {\color[RGB]{255,0,0}$\blacksquare$} 			(1.00, 0.00, 0.00)	&
-GREEN			& {\color[rgb]{0,1,0}$\blacksquare$} 			(0.00, 1.00, 0.00)	\\
-BLUE			& {\color[rgb]{0,0,1}$\blacksquare$} 			(0.00, 0.00, 1.00)	&
-YELLOW			& {\color[rgb]{1,1,0}$\blacksquare$} 			(1.00, 1.00, 0.00)	\\
-CYAN			& {\color[rgb]{0,1,1}$\blacksquare$} 			(0.00, 1.00, 1.00)	&
-MAGENTA			& {\color[rgb]{1,0,1}$\blacksquare$} 			(1.00, 0.00, 1.00)	\\
-WHITE			& {$\square$} 						 			(1.00, 1.00, 1.00)	&
-GRAY			& {\color[rgb]{.5,.5,.5}$\blacksquare$} 		(0.50, 0.50, 0.50)	\\
-ORANGE			& {\color[rgb]{1,.27,0}$\blacksquare$} 			(1.00, 0.27, 0.00)	&
-BROWN			& {\color[rgb]{.198,0,0}$\blacksquare$} 		(0.19, 0.00, 0.00)	\\
-LIGHT\_BLUE		& {\color[rgb]{.676,.844,.898}$\blacksquare$} 	(0.67, 0.84, 0.89)	&
-MEDIUM\_PURPLE	& {\color[rgb]{.574,.438,.855}$\blacksquare$} 	(0.57, 0.43, 0.85)	\\
-DARK\_GREEN		& {\color[rgb]{0,.391,0}$\blacksquare$} 		(0.00, 0.39, 0.00)	&
-DARK\_VIOLET	& {\color[rgb]{.578,0,.824}$\blacksquare$} 		(0.57, 0.00, 0.82)	\\
-DARK\_CYAN		& {\color[rgb]{0,.543,.543}$\blacksquare$} 		(0.00, 0.54, 0.54)	&
-GREEN\_YELLOW	& {\color[rgb]{.676,1,.184}$\blacksquare$} 		(0.67, 1.00, 0.18)	\\
-LIME\_GREEN		& {\color[rgb]{.195,.801,.195}$\blacksquare$} 	(0.19, 0.80, 0.19)	&
-INDIAN\_RED		& {\color[rgb]{.801,.359,.359}$\blacksquare$} 	(0.80, 0.35, 0.35)	\\
-INDIGO			& {\color[rgb]{.293,0,.508}$\blacksquare$} 		(0.29, 0.00, 0.50)	&
-GREEN\_INDIGO	& {\color[rgb]{0,.198,.198}$\blacksquare$} 		(0.00, 0.19, 0.19)	\\
-OLIVE\_GREEN	& {\color[rgb]{.198,.398,0}$\blacksquare$} 		(0.19, 0.39, 0.00)	&
-NAVY\_BLUE		& {\color[rgb]{.198,.398,.797}$\blacksquare$} 	(0.19, 0.39, 0.79)	\\
-TURQUOISE\_BLUE	& {\color[rgb]{.398,1,.797}$\blacksquare$} 		(0.39, 1.00, 0.79)	&
-EMERALD\_GREEN	& {\color[rgb]{.598,1,.398}$\blacksquare$} 		(0.59, 1.00, 0.39)
-\end{tabular}
 
-}\end{table}\end{comment}\begin{table}[t]\caption{Reserved colors}{\tiny
 
-\ifLwarp\else
-\begin{tabular}{l|l}
-\fi
-\begin{tabular}{lll}
-INDIANRED		& {\color[RGB]{205,92,92}$\blacksquare$}	& (205 92 92) \\
-LIGHTCORAL		& {\color[RGB]{240,128,128}$\blacksquare$}	& (240 128 128) \\
-SALMON			& {\color[RGB]{250,128,114}$\blacksquare$}	& (250 128 114) \\
-DARKSALMON		& {\color[RGB]{233,150,122}$\blacksquare$}	& (233 150 122) \\
-LIGHTSALMON		& {\color[RGB]{255,160,122}$\blacksquare$}	& (255 160 122) \\
-RED				& {\color[RGB]{255,0,0}$\blacksquare$}		& (255 0 0) \\
-CRIMSON			& {\color[RGB]{220,20,60}$\blacksquare$}	& (220 20 60) \\
-FIREBRICK		& {\color[RGB]{178,34,34}$\blacksquare$}	& (178 34 34) \\
-DARKRED			& {\color[RGB]{139,0,0}$\blacksquare$}		& (139 0 0) \\
-\\
-PINK			& {\color[RGB]{255,192,203}$\blacksquare$}	& (255 192 203)	\\
-LIGHTPINK		& {\color[RGB]{255,182,193}$\blacksquare$}	& (255 182 193)	\\
-HOTPINK			& {\color[RGB]{255,105,180}$\blacksquare$}	& (255 105 180)	\\
-DEEPPINK		& {\color[RGB]{255, 20,147}$\blacksquare$}	& (255  20 147)	\\
-MEDIUMVIOLETRED	& {\color[RGB]{199, 21,133}$\blacksquare$}	& (255  21 133)	\\
-PALEVIOLETRED	& {\color[RGB]{219,112,147}$\blacksquare$}	& (255 112 147)	\\
-\\
-CORAL			& {\color[RGB]{255,127, 80}$\blacksquare$}	& (255 127 80)	\\
-TOMATO			& {\color[RGB]{255, 99, 71}$\blacksquare$}	& (255  99 71)	\\
-ORANGERED		& {\color[RGB]{255, 69,  0}$\blacksquare$}	& (255  69 0)	\\
-DARKORANGE		& {\color[RGB]{255,140,  0}$\blacksquare$}	& (255 140 0)	\\
-ORANGE			& {\color[RGB]{255,165,  0}$\blacksquare$}	& (255 165 0)	\\
-\\
-GOLD					& {\color[RGB]{255,215,0}$\blacksquare$}	& (255 215 0)	\\
-YELLOW					& {\color[RGB]{255,255,0}$\blacksquare$}	& (255 255 0)	\\
-LIGHTYELLOW				& {\color[RGB]{255,255,224}$\blacksquare$}	& (255 255 224)	\\
-LEMONCHIFFON			& {\color[RGB]{255,250,205}$\blacksquare$}	& (255 250 205)	\\
-LIGHTGOLDENRODYELLOW	& {\color[RGB]{250,250,210}$\blacksquare$}	& (250 250 210)	\\
-PAPAYAWHIP				& {\color[RGB]{255,239,213}$\blacksquare$}	& (255 239 213)	\\
-MOCCASIN				& {\color[RGB]{255,228,181}$\blacksquare$}	& (255 228 181)	\\
-PEACHPUFF				& {\color[RGB]{255,218,185}$\blacksquare$}	& (255 218 185)	\\
-PALEGOLDENROD			& {\color[RGB]{238,232,170}$\blacksquare$}	& (238 232 170)	\\
-KHAKI					& {\color[RGB]{240,230,140}$\blacksquare$}	& (240 230 140)	\\
-DARKKHAKI				& {\color[RGB]{189,183,107}$\blacksquare$}	& (189 183 107)	\\
-\\						
-LAVENDAR				& {\color[RGB]{230,230,250}$\blacksquare$}	& (230 230 250)	\\
-THISTLE					& {\color[RGB]{216,191,216}$\blacksquare$}	& (216 191 216)	\\
-PLUM					& {\color[RGB]{221,160,221}$\blacksquare$}	& (221 160 221)	\\
-VIOLET					& {\color[RGB]{238,130,238}$\blacksquare$}	& (238 130 238)	\\
-ORCHILD					& {\color[RGB]{218,112,214}$\blacksquare$}	& (218 112 214)	\\
-FUCHSIA					& {\color[RGB]{255,0,255}$\blacksquare$}	& (255 0 255)	\\
-MAGENTA					& {\color[RGB]{255,0,255}$\blacksquare$}	& (255 0 255)	\\
-MEDIUMORCHILD			& {\color[RGB]{186,85,211}$\blacksquare$}	& (186 85 211)	\\
-MEDIUMPURPLE			& {\color[RGB]{147,112,219}$\blacksquare$}	& (147 112 219)	\\
-BLUEVIOLET				& {\color[RGB]{138,43,226}$\blacksquare$}	& (138 43 226)	\\
-DARKVIOLET				& {\color[RGB]{148,0,211}$\blacksquare$}	& (148 0 211)	\\
-DARKORCHILD				& {\color[RGB]{153,50,204}$\blacksquare$}	& (153 50 204)	\\
-DARKMAGENTA				& {\color[RGB]{139,0,139}$\blacksquare$}	& (139 0 139)	\\
-PURPLE					& {\color[RGB]{128,0,128}$\blacksquare$}	& (128 0 128)	\\
-INDIGO					& {\color[RGB]{75,0,130}$\blacksquare$}	& (75 0 130)	\\
-DARKSLATEBLUE			& {\color[RGB]{72,61,139}$\blacksquare$}	& (72 61 139)	\\
-SLATEBLUE				& {\color[RGB]{106,90,205}$\blacksquare$}	& (106 90 205)	\\
-MEDIUMSLATEBLUE			& {\color[RGB]{123,104,238}$\blacksquare$}	& (123 104 238)	\\
-\\
-GREENYELLOW				& {\color[RGB]{173,255,47}$\blacksquare$}	& (173 255 47)	\\
-CHARTREUSE				& {\color[RGB]{127,255,0}$\blacksquare$}	& (127 255 0)	\\
-LAWNGREEN				& {\color[RGB]{124,252,0}$\blacksquare$}	& (124 252 0)	\\
-LIME					& {\color[RGB]{0,255,0}$\blacksquare$}	& (0 255 0)	\\
-LIMEGREEN				& {\color[RGB]{50,205,50}$\blacksquare$}	& (50 205 50)	\\
-PALEGREEN				& {\color[RGB]{152,251,152}$\blacksquare$}	& (152 251 152)	\\
-LIGHTGREEN				& {\color[RGB]{144,238,144}$\blacksquare$}	& (144 238 144)	\\
-MEDIUMSPRINGGREEN		& {\color[RGB]{0,250,154}$\blacksquare$}	& (0 250 154)	\\
-SPRINGGREEN				& {\color[RGB]{0,255,127}$\blacksquare$}	& (0 255 127)	\\
-MEDIUMSEAGREEN			& {\color[RGB]{60,179,113}$\blacksquare$}	& (60 179 113)	\\
-SEAGREEN				& {\color[RGB]{46,139,87}$\blacksquare$}	& (46 139 87)	\\
-FORESTGREEN				& {\color[RGB]{34,139,34}$\blacksquare$}	& (34 139 34)	\\
-GREEN					& {\color[RGB]{0,128,0}$\blacksquare$}	& (0 128 0)	\\
-DARKGREEN				& {\color[RGB]{0,100,0}$\blacksquare$}	& (0 100 0)	\\
-YELLOWGREEN				& {\color[RGB]{154,205,50}$\blacksquare$}	& (154 205 50)	\\
-OLIVEDRAB				& {\color[RGB]{107,142,35}$\blacksquare$}	& (107 142 35)	\\
-OLIVE					& {\color[RGB]{128,128,0}$\blacksquare$}	& (128 128 0)	\\
-DARKOLIVEGREEN			& {\color[RGB]{85,107,47}$\blacksquare$}	& (85 107 47)	\\
-MEDIUMAQUAMARINE		& {\color[RGB]{102,205,170}$\blacksquare$}	& (102 205 170)	\\
-DARKSEAGREEN			& {\color[RGB]{143,188,143}$\blacksquare$}	& (143 188 143)	\\
-LIGHTSEAGREEN			& {\color[RGB]{32,178,170}$\blacksquare$}	& (32 178 170)	\\
-DARKCYAN				& {\color[RGB]{0,139,139}$\blacksquare$}	& (0 139 139)	\\
-TEAL					& {\color[RGB]{0,128,128}$\blacksquare$}	& (0 128 128)	\\
-\\
-\end{tabular}
-\ifLwarp\vspace{2\baselineskip}\else
-&
-\fi
-\begin{tabular}{lll}
-AQUA				& {\color[RGB]{0,255,255}$\blacksquare$}	& (0 255 255)	\\
-CYAN				& {\color[RGB]{0,255,255}$\blacksquare$}	& (0 255 255)	\\
-LIGHTCYAN			& {\color[RGB]{224,255,255}$\blacksquare$}	& (224 255 255)	\\
-PALETURQUOISE		& {\color[RGB]{175,238,238}$\blacksquare$}	& (175 238 238)	\\
-AQUAMARINE			& {\color[RGB]{127,255,212}$\blacksquare$}	& (127 255 212)	\\
-TURQUOISE			& {\color[RGB]{64,224,208}$\blacksquare$}	& (64 224 208)	\\
-MEDIUMTURQUOISE		& {\color[RGB]{72,209,204}$\blacksquare$}	& (72 209 204)	\\
-DARKTURQUOISE		& {\color[RGB]{0,206,209}$\blacksquare$}	& (0 206 209)	\\
-CADETBLUE			& {\color[RGB]{95,158,160}$\blacksquare$}	& (95 158 160)	\\
-STEELBLUE			& {\color[RGB]{70,130,180}$\blacksquare$}	& (70 130 180)	\\
-LIGHTSTEELBLUE		& {\color[RGB]{176,196,222}$\blacksquare$}	& (176 196 222)	\\
-POWDERBLUE			& {\color[RGB]{176,224,230}$\blacksquare$}	& (176 224 230)	\\
-LIGHTBLUE			& {\color[RGB]{173,216,230}$\blacksquare$}	& (173 216 230)	\\
-SKYBLUE				& {\color[RGB]{135,206,235}$\blacksquare$}	& (135 206 235)	\\
-LIGHTSKYBLUE		& {\color[RGB]{135,206,250}$\blacksquare$}	& (135 206 250)	\\
-DEEPSKYBLUE			& {\color[RGB]{0,191,255}$\blacksquare$}	& (0 191 255)	\\
-DODGERBLUE			& {\color[RGB]{30,144,255}$\blacksquare$}	& (30 144 237)	\\
-CORNFLOWERBLUE		& {\color[RGB]{100,149,237}$\blacksquare$}	& (65 105 225)	\\
-ROYALBLUE			& {\color[RGB]{65,105,225}$\blacksquare$}	& (65 105 225)	\\
-BLUE				& {\color[RGB]{0,0,255}$\blacksquare$}	& (0 0 255)	\\
-MEDIUMBLUE			& {\color[RGB]{0,0,205}$\blacksquare$}	& (0 0 205)	\\
-DARKBLUE			& {\color[RGB]{0,0,139}$\blacksquare$}	& (0 0 139)	\\
-NAVY				& {\color[RGB]{0,0,128}$\blacksquare$}	& (0 0 128)	\\
-MIDNIGHTBLUE		& {\color[RGB]{25,25,112}$\blacksquare$}	& (25 25 112)	\\
-\\
-CORNSILK			& {\color[RGB]{255,248,220}$\blacksquare$}	& (255 248 220)	\\
-BLANCHEDALMOND		& {\color[RGB]{255,235,205}$\blacksquare$}	& (255 235 205)	\\
-BISQUE				& {\color[RGB]{255,228,196}$\blacksquare$}	& (255 228 196)	\\
-NAVAJOWHITE			& {\color[RGB]{255,222,173}$\blacksquare$}	& (255 222 173)	\\
-WHEAT				& {\color[RGB]{245,222,179}$\blacksquare$}	& (245 222 179)	\\
-BURLYWOOD			& {\color[RGB]{222,184,135}$\blacksquare$}	& (222 184 135)	\\
-TAN					& {\color[RGB]{210,180,140}$\blacksquare$}	& (210 180 140)	\\
-ROSYBROWN			& {\color[RGB]{188,143,143}$\blacksquare$}	& (188 143 143)	\\
-SANDYBROWN			& {\color[RGB]{244,164,96}$\blacksquare$}	& (244 164 96)	\\
-GOLDENROD			& {\color[RGB]{218,165,32}$\blacksquare$}	& (218 165 32)	\\
-DARKGOLDENROD		& {\color[RGB]{184,134,11}$\blacksquare$}	& (184 134 11)	\\
-PERU				& {\color[RGB]{205,133,63}$\blacksquare$}	& (205 133 63)	\\
-CHOCOLATE			& {\color[RGB]{210,105,30}$\blacksquare$}	& (210 105 30)	\\
-SADDLEBROWN			& {\color[RGB]{139,69,19}$\blacksquare$}	& (139 69 19)	\\
-SIENNA				& {\color[RGB]{160,82,45}$\blacksquare$}	& (160 82 45)	\\
-BROWN				& {\color[RGB]{154,42,42}$\blacksquare$}	& (154 42 42)	\\
-MAROON				& {\color[RGB]{128,0,0}$\blacksquare$}	& (128 0 0)	\\
-\\
-WHITE				& {\color[RGB]{255,255,255}$\blacksquare$}	& (255 255 255)	\\
-SNOW				& {\color[RGB]{255,250,250}$\blacksquare$}	& (255 250 250)	\\
-HONEYDEW			& {\color[RGB]{240,255,240}$\blacksquare$}	& (240 255 240)	\\
-MINTCREAM			& {\color[RGB]{245,255,250}$\blacksquare$}	& (245 255 250)	\\
-AZURE				& {\color[RGB]{240,255,255}$\blacksquare$}	& (240 255 255)	\\
-ALICEBLUE			& {\color[RGB]{240,248,255}$\blacksquare$}	& (240 248 255)	\\
-GHOSTWHITE			& {\color[RGB]{248,248,255}$\blacksquare$}	& (248 248 255)	\\
-WHITESMOKE			& {\color[RGB]{245,245,245}$\blacksquare$}	& (245 245 245)	\\
-SEASHELL			& {\color[RGB]{255,245,238}$\blacksquare$}	& (255 245 238)	\\
-BEIGE				& {\color[RGB]{245,245,220}$\blacksquare$}	& (245 245 220)	\\
-OLDLACE				& {\color[RGB]{253,245,230}$\blacksquare$}	& (253 245 230)	\\
-FLORALWHITE			& {\color[RGB]{255,250,240}$\blacksquare$}	& (255 250 240)	\\
-IVORY				& {\color[RGB]{255,255,240}$\blacksquare$}	& (255 255 240)	\\
-ANTIQUEWHITE		& {\color[RGB]{250,235,215}$\blacksquare$}	& (250 235 215)	\\
-LINEN				& {\color[RGB]{250,240,230}$\blacksquare$}	& (250 240 230)	\\
-LAVENDERBLUSH		& {\color[RGB]{255,240,245}$\blacksquare$}	& (255 240 245)	\\
-MISTYROSE			& {\color[RGB]{255,228,225}$\blacksquare$}	& (255 228 225)	\\
-\\
-GAINSBORO			& {\color[RGB]{220,220,220}$\blacksquare$}	& (220 220 220)	\\
-LIGHTGRAY			& {\color[RGB]{211,211,211}$\blacksquare$}	& (211 211 211)	\\
-SILVER				& {\color[RGB]{192,192,192}$\blacksquare$}	& (192 192 192)	\\
-DARKGRAY			& {\color[RGB]{169,169,169}$\blacksquare$}	& (169 169 169)	\\
-GRAY				& {\color[RGB]{128,128,128}$\blacksquare$}	& (128 128 128)	\\
-DIMGRAY				& {\color[RGB]{105,105,105}$\blacksquare$}	& (105 105 105)	\\
-LIGHTSLATEGRAY		& {\color[RGB]{119,136,153}$\blacksquare$}	& (119 136 153)	\\
-SLATEGRAY			& {\color[RGB]{112,128,144}$\blacksquare$}	& (112 128 144)	\\
-DARKSLATEGRAY		& {\color[RGB]{47,79,79}$\blacksquare$}	& (47 79 79)	\\
-BLACK				& {\color[RGB]{0,0,0}$\blacksquare$}	& (0 0 0)	\\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\end{tabular}
-\ifLwarp\else
-\end{tabular}
-\fi
 
-}\end{table}*GRRenderBaseIf*‚ª‚Â—\–ñFi‘S24FCTable\,\ref{table_material_sample}QÆj‚Å‚·D
-## ƒƒbƒVƒ…
-ƒƒbƒVƒ…‚Í‘½–Ê‘ÌŒ`ó‚ğ•\Œ»‚·‚é‚½‚ß‚Ì•`‰æƒAƒCƒeƒ€‚Å‚·DƒƒbƒVƒ…‚ÌƒNƒ‰ƒX‚Í*GRMesh*‚Å‚·DƒƒbƒVƒ…‚ğì¬‚·‚é•û–@‚É‚Í
 
--  ƒfƒBƒXƒNƒŠƒvƒ^‚ğ—p‚¢‚Äè“®‚Åì¬‚·‚é
--  FileIOƒ‚ƒWƒ…[ƒ‹‚ğ—˜—p‚µ‚Äƒtƒ@ƒCƒ‹‚©‚çƒƒbƒVƒ…‚ğƒ[ƒh‚·‚é
 
-‚Ì“ñ’Ê‚è‚ª‚ ‚è‚Ü‚·DŒãÒ‚Ì•û–@‚Å‚ÍCƒ‚ƒfƒŠƒ“ƒOƒ\ƒtƒg‚Åì¬‚µCDirect3D‚ÌXŒ`®‚È‚Ç‚Åo—Í‚µ‚½ƒtƒ@ƒCƒ‹‚©‚çŒ`ó‚ğƒ[ƒh‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·DÚ‚µ‚­‚Í\ref{chap_fileio}Í‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢D‚Ü‚½CƒƒbƒVƒ…‚Ì‚İ‚ğƒ[ƒh‚·‚éŠÈˆÕ‹@”\‚Æ‚µ‚Ä*FWObjectIf::LoadMesh*‚ª—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·DˆÈ‰º‚Å‚Í‘OÒ‚Ìè“®\’z‚Ì•û–@‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·DƒƒbƒVƒ…‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ÍŸ‚Ì’Ê‚è‚Å‚·D
 
-\begin{tabular}{p{.3\hsize}p{.3\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRMeshDesc*}					\\ \midrule
-*vector<Vec3f>*		&	*vertices*		& ’¸“_	 			\\
-*vector<GRMeshFace>*	&	*faces*			& –Ê	 			\\
-*vector<Vec3f>*		&	*normals*		& –@ü				\\
-*vector<GRMeshFace>*	&	*faceNormals*	& –Ê–@ü			\\
-*vector<Vec4f>*		&	*colors*			& F				\\
-*vector<Vec2f>*		&	*texCoords*		& ƒeƒNƒXƒ`ƒƒÀ•W	\\
-*vector<int>*		&	*materialList*	& ƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒg
-\end{tabular}
 
-*vector*‚Í*C++*‚Ì‰Â•Ï’·”z—ñƒRƒ“ƒeƒi‚Å‚·D*vertices*‚Í’¸“_À•W‚ğŠi”[‚µ‚½”z—ñ‚Å‚·D‚½‚¾‚µ’¸“_À•W‚ğİ’è‚µ‚½‚¾‚¯‚Å‚ÍŒ`ó‚Í’è‹`‚³‚ê‚Ü‚¹‚ñDƒƒbƒVƒ…‚Í–Ê‚ÌW‡‚Å‚·‚Ì‚ÅC*faces*‚ğİ’è‚·‚é•K—v‚ª‚ ‚è‚Ü‚·D*GRMeshFace*‚Ì’è‹`‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·D
 
-\begin{tabular}{p{.3\hsize}p{.3\hsize}p{.3\hsize}}
-\multicolumn{3}{l}{*GRMeshFace*}					\\ \midrule
-*int*	&	*nVertices*		& ’¸“_” 	\\
-*int*	&	*indices[4]*		& ’¸“_ƒCƒ“ƒfƒbƒNƒX
-\end{tabular}
 
-*nVertices*‚Í1‚Â‚Ì–Ê‚ğ\¬‚·‚é’¸“_”‚ÅC3‚©4‚ğİ’è‚µ‚Ü‚·D*indices*‚É‚Í*nVertices*ŒÂ‚Ì’¸“_ƒCƒ“ƒfƒbƒNƒX‚ğİ’è‚µ‚Ü‚·D‚±‚Ì‚Æ‚«
+*GRRenderBaseIf*ãŒæŒã¤äºˆç´„è‰²ï¼ˆå…¨24è‰²ï¼Œæ¬¡è¡¨å‚ç…§ï¼‰ã§ã™ï¼
+## ãƒ¡ãƒƒã‚·ãƒ¥
+ãƒ¡ãƒƒã‚·ãƒ¥ã¯å¤šé¢ä½“å½¢çŠ¶ã‚’è¡¨ç¾ã™ã‚‹ãŸã‚ã®æç”»ã‚¢ã‚¤ãƒ†ãƒ ã§ã™ï¼ãƒ¡ãƒƒã‚·ãƒ¥ã®ã‚¯ãƒ©ã‚¹ã¯*GRMesh*ã§ã™ï¼ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ä½œæˆã™ã‚‹æ–¹æ³•ã«ã¯
+
+-  ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ç”¨ã„ã¦æ‰‹å‹•ã§ä½œæˆã™ã‚‹
+-  FileIOãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’åˆ©ç”¨ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+
+ã®äºŒé€šã‚ŠãŒã‚ã‚Šã¾ã™ï¼å¾Œè€…ã®æ–¹æ³•ã§ã¯ï¼Œãƒ¢ãƒ‡ãƒªãƒ³ã‚°ã‚½ãƒ•ãƒˆã§ä½œæˆã—ï¼ŒDirect3Dã®Xå½¢å¼ãªã©ã§å‡ºåŠ›ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰å½¢çŠ¶ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ï¼è©³ã—ãã¯\ref{chap_fileio}ç« ã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼ã¾ãŸï¼Œãƒ¡ãƒƒã‚·ãƒ¥ã®ã¿ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ç°¡æ˜“æ©Ÿèƒ½ã¨ã—ã¦*FWObjectIf::LoadMesh*ãŒç”¨æ„ã•ã‚Œã¦ã„ã¾ã™ï¼ä»¥ä¸‹ã§ã¯å‰è€…ã®æ‰‹å‹•æ§‹ç¯‰ã®æ–¹æ³•ã«ã¤ã„ã¦èª¬æ˜ã—ã¾ã™ï¼ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã¯æ¬¡ã®é€šã‚Šã§ã™ï¼
+
+|*GRMeshDesc*| | 					 |
+|---|---|---|
+|*vector\<Vec3f>*	|	*vertices*	| é ‚ç‚¹	 			|
+|*vector\<GRMeshFace>*|	*faces*		| é¢	 			|
+|*vector\<Vec3f>*	|	*normals*	| æ³•ç·š				|
+|*vector\<GRMeshFace>*|	*faceNormals*| é¢æ³•ç·š			|
+|*vector\<Vec4f>*	|	*colors*		| è‰²				|
+|*vector\<Vec2f>*	|	*texCoords*	| ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™	|
+|*vector\<int>*	|	*materialList*| ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆ|
+*vector*ã¯*C++*ã®å¯å¤‰é•·é…åˆ—ã‚³ãƒ³ãƒ†ãƒŠã§ã™ï¼*vertices*ã¯é ‚ç‚¹åº§æ¨™ã‚’æ ¼ç´ã—ãŸé…åˆ—ã§ã™ï¼ãŸã ã—é ‚ç‚¹åº§æ¨™ã‚’è¨­å®šã—ãŸã ã‘ã§ã¯å½¢çŠ¶ã¯å®šç¾©ã•ã‚Œã¾ã›ã‚“ï¼ãƒ¡ãƒƒã‚·ãƒ¥ã¯é¢ã®é›†åˆã§ã™ã®ã§ï¼Œ*faces*ã‚’è¨­å®šã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ï¼*GRMeshFace*ã®å®šç¾©ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã™ï¼
+
+|*GRMeshFace*| | 					 |
+|---|---|---|
+|*int*|	*nVertices*	| é ‚ç‚¹æ•° 	|
+|*int*|	*indices[4]*	| é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹|
+*nVertices*ã¯1ã¤ã®é¢ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹æ•°ã§ï¼Œ3ã‹4ã‚’è¨­å®šã—ã¾ã™ï¼*indices*ã«ã¯*nVertices*å€‹ã®é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¨­å®šã—ã¾ã™ï¼ã“ã®ã¨ã
 
 *vertices[faces[i].indices[j]]*
 
-‚ª$i$”Ô–Ú‚Ì–Ê‚Ì$j$”Ô–Ú‚Ì’¸“_À•W‚Æ‚È‚è‚Ü‚·D*GRMeshDesc*‚Ìƒƒ“ƒo•Ï”‚Ì’†‚Å*vertices*‚Æ*faces*‚Í•K{‚Å‚·‚ªC‚»‚Ì‘¼‚Ìƒƒ“ƒo‚Í•K‚¸‚µ‚àİ’è‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD*normals*‚ÍŠe’¸“_‚Ì–@ü‚ÌŒü‚«‚ğ‚ğŠi”[‚·‚é”z—ñ‚Å‚·D*normals[i]*‚ª*vertices[i]*‚Ì–@ü‚ğ—^‚¦‚Ü‚·D*normals*‚ğÈ—ª‚µ‚½ê‡C–@ü‚Í©“®¶¬‚³‚ê‚Ü‚·D‚±‚Ì‚Æ‚«CŠe’¸“_‚Ì–@ü‚Í‚»‚Ì’¸“_‚ğ‹¤—L‚·‚é–Ê‚Ì–@ü‚Ì•½‹Ï‚Å—^‚¦‚ç‚ê‚Ü‚·D*normals*‚É‰Á‚¦‚Ä*faceNormals*‚ğİ’è‚µ‚½ê‡CˆÙ‚È‚é•û–@‚Å–@ü‚ª—^‚¦‚ç‚ê‚Ü‚·D‚±‚Ì‚Æ‚«
+ãŒ*i*ç•ªç›®ã®é¢ã®*j*ç•ªç›®ã®é ‚ç‚¹åº§æ¨™ã¨ãªã‚Šã¾ã™ï¼*GRMeshDesc*ã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã®ä¸­ã§*vertices*ã¨*faces*ã¯å¿…é ˆã§ã™ãŒï¼Œãã®ä»–ã®ãƒ¡ãƒ³ãƒã¯å¿…ãšã—ã‚‚è¨­å®šã™ã‚‹å¿…è¦ã¯ã‚ã‚Šã¾ã›ã‚“ï¼*normals*ã¯å„é ‚ç‚¹ã®æ³•ç·šã®å‘ãã‚’ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã§ã™ï¼*normals[i]*ãŒ*vertices[i]*ã®æ³•ç·šã‚’ä¸ãˆã¾ã™ï¼*normals*ã‚’çœç•¥ã—ãŸå ´åˆï¼Œæ³•ç·šã¯è‡ªå‹•ç”Ÿæˆã•ã‚Œã¾ã™ï¼ã“ã®ã¨ãï¼Œå„é ‚ç‚¹ã®æ³•ç·šã¯ãã®é ‚ç‚¹ã‚’å…±æœ‰ã™ã‚‹é¢ã®æ³•ç·šã®å¹³å‡ã§ä¸ãˆã‚‰ã‚Œã¾ã™ï¼*normals*ã«åŠ ãˆã¦*faceNormals*ã‚’è¨­å®šã—ãŸå ´åˆï¼Œç•°ãªã‚‹æ–¹æ³•ã§æ³•ç·šãŒä¸ãˆã‚‰ã‚Œã¾ã™ï¼ã“ã®ã¨ã
 
 *normals[faceNormals[i].indices[j]]*
 
-‚ª$i$”Ô–Ú‚Ì–Ê‚Ì$j$”Ô–Ú‚Ì’¸“_‚É‘Î‰‚·‚é–@ü‚Æ‚È‚è‚Ü‚·D*colors*‚Í’¸“_F‚Å‚·D*colors[i]*‚ª$i$”Ô–Ú‚Ì’¸“_‚ÌF‚ğ—^‚¦‚Ü‚·D*texCoords*‚Í’¸“_‚²‚Æ‚ÌƒeƒNƒXƒ`ƒƒUVÀ•W‚ğ—^‚¦‚Ü‚·DƒeƒNƒXƒ`ƒƒ‚ğ•`‰æ‚·‚é‚É‚ÍCƒƒbƒVƒ…‚ÉŠ„‚è“–‚Ä‚éƒ}ƒeƒŠƒAƒ‹‚ÉƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼‚ªİ’è‚³‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·D*materialList*‚Í–Ê‚²‚Æ‚ÉˆÙ‚È‚éƒ}ƒeƒŠƒAƒ‹‚ğŠ„‚è“–‚Ä‚é‚½‚ß‚É—p‚¢‚Ü‚·D*materialList[i]*‚ª$i$”Ô–Ú‚Ì–Ê‚Ìƒ}ƒeƒŠƒAƒ‹”Ô†‚ğ—^‚¦‚Ü‚·D‚½‚¾‚µC”Ô†‚É‘Î‰‚·‚éƒ}ƒeƒŠƒAƒ‹‚Í•Ê“rƒƒbƒVƒ…‚ÉŠ„‚è“–‚Ä‚Ä‚¨‚­•K—v‚ª‚ ‚è‚Ü‚·D
-### ƒƒbƒVƒ…‚Ö‚Ìƒ}ƒeƒŠƒAƒ‹‚ÌŠ„“–‚Ä
-ƒtƒ@ƒCƒ‹‚©‚çƒƒbƒVƒ…‚ğƒ[ƒh‚·‚éê‡C‚à‚µƒtƒ@ƒCƒ‹’†‚Éƒ}ƒeƒŠƒAƒ‹î•ñ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚ê‚Î‚»‚ê‚ğ‚à‚Æ‚É©“®“I‚Éƒ}ƒeƒŠƒAƒ‹‚ªƒƒbƒVƒ…‚ÖŠ„‚è“–‚Ä‚ç‚ê‚Ü‚·Dè“®‚ÅƒƒbƒVƒ…‚ÉŠ„‚è“–‚Ä‚é‚É‚ÍC*AddChildObject*‚ğg‚¢‚Ü‚·DˆÈ‰º‚É—á‚ğ¦‚µ‚Ü‚·D\begin{verbatim}    // given GRSceneIf* scene, GRFrameIf* frame    GRMeshDesc meshDesc;    // ... setup discriptor here ...    // create mesh and attach it to frame    GRMeshIf* mesh = scene->CreateVisual(meshDesc, frame)->Cast();    GRMaterialDesc matDesc0, matDesc1;    // ... setup materials here ...    GRMaterialIf* mat0 = scene->CreateVisual(matDesc0, frame)->Cast();    GRMaterialIf* mat1 = scene->CreateVisual(matDesc1, frame)->Cast();    // attach materials to mesh    mesh->AddChildObject(mat0);    //< material no.0    mesh->AddChildObject(mat1);    //< material no.1\end{verbatim}Å‰‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½ƒ}ƒeƒŠƒAƒ‹‚ğ0”Ô‚Æ‚µ‚Ä¸‡‚Åƒ}ƒeƒŠƒAƒ‹”Ô†‚ªŒˆ‚Ü‚è‚Ü‚·D‘Oq‚Ìƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒg‚ğ—p‚¢‚éê‡‚Í‚±‚Ìƒ}ƒeƒŠƒAƒ‹”Ô†‚ğ–Ê–ˆ‚Éw’è‚µ‚Ä‚­‚¾‚³‚¢D
-## ƒŒƒ“ƒ_ƒ‰
-ƒŒƒ“ƒ_ƒ‰‚Ì‹@”\‚ğ€–Ú•Ê‚Éà–¾‚µ‚Ü‚·DƒŒƒ“ƒ_ƒ‰‚Í’ñ‹Ÿ‚·‚éƒvƒŠƒ~ƒeƒBƒu‚È•`‰æ‹@”\‚Í”ñí‚É‘½Šò‚É“n‚è‚Ü‚·‚ªC‚±‚ê‚ç‚Ì‚Ù‚Æ‚ñ‚Ç‚ÌŠÖ”‚Í“Á•Ê‚È•`‰æˆ—‚ğ•K—v‚Æ‚µ‚È‚¢ŒÀ‚èƒ†[ƒU‚ª’¼ÚŒÄ‚Ño‚·‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñDŒÂX‚ÌŠÖ”‚ğÚ‚µ‚­à–¾‚µ‚Ä‚¢‚­‚Æ–c‘å‚È—Ê‚É‚È‚è‚Ü‚·‚Ì‚ÅC‚±‚±‚Å‚Íˆê——’ö“x‚É‚Æ‚Ç‚ß‚Ü‚·DÚ×‚Èd—l‚Íƒ\[ƒXƒR[ƒh‚ÌƒRƒƒ“ƒg‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢D
-### Šî–{‹@”\
-•`‰æ‚Ì‚¨Œˆ‚Ü‚è‚Ìˆ—‚Å‚·D\ref{sec_grscene}ß‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢D
+ãŒ*i*ç•ªç›®ã®é¢ã®*j*ç•ªç›®ã®é ‚ç‚¹ã«å¯¾å¿œã™ã‚‹æ³•ç·šã¨ãªã‚Šã¾ã™ï¼*colors*ã¯é ‚ç‚¹è‰²ã§ã™ï¼*colors[i]*ãŒ*i*ç•ªç›®ã®é ‚ç‚¹ã®è‰²ã‚’ä¸ãˆã¾ã™ï¼*texCoords*ã¯é ‚ç‚¹ã”ã¨ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£UVåº§æ¨™ã‚’ä¸ãˆã¾ã™ï¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’æç”»ã™ã‚‹ã«ã¯ï¼Œãƒ¡ãƒƒã‚·ãƒ¥ã«å‰²ã‚Šå½“ã¦ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ã«ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ï¼*materialList*ã¯é¢ã”ã¨ã«ç•°ãªã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ãŸã‚ã«ç”¨ã„ã¾ã™ï¼*materialList[i]*ãŒ*i*ç•ªç›®ã®é¢ã®ãƒãƒ†ãƒªã‚¢ãƒ«ç•ªå·ã‚’ä¸ãˆã¾ã™ï¼ãŸã ã—ï¼Œç•ªå·ã«å¯¾å¿œã™ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ã¯åˆ¥é€”ãƒ¡ãƒƒã‚·ãƒ¥ã«å‰²ã‚Šå½“ã¦ã¦ãŠãå¿…è¦ãŒã‚ã‚Šã¾ã™ï¼
+### ãƒ¡ãƒƒã‚·ãƒ¥ã¸ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã®å‰²å½“ã¦
+ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹å ´åˆï¼Œã‚‚ã—ãƒ•ã‚¡ã‚¤ãƒ«ä¸­ã«ãƒãƒ†ãƒªã‚¢ãƒ«æƒ…å ±ãŒå«ã¾ã‚Œã¦ã„ã‚Œã°ãã‚Œã‚’ã‚‚ã¨ã«è‡ªå‹•çš„ã«ãƒãƒ†ãƒªã‚¢ãƒ«ãŒãƒ¡ãƒƒã‚·ãƒ¥ã¸å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¾ã™ï¼æ‰‹å‹•ã§ãƒ¡ãƒƒã‚·ãƒ¥ã«å‰²ã‚Šå½“ã¦ã‚‹ã«ã¯ï¼Œ*AddChildObject*ã‚’ä½¿ã„ã¾ã™ï¼ä»¥ä¸‹ã«ä¾‹ã‚’ç¤ºã—ã¾ã™ï¼
+```c++
+    // given GRSceneIf* scene, GRFrameIf* frame
+    GRMeshDesc meshDesc;
+    // ... setup discriptor here ...
 
-\begin{tabular}{p{.1\hsize}p{.45\hsize}p{.35\hsize}}
-\multicolumn{2}{l}{*GRRenderIf*}									\\ \midrule
-*void* & *GetClearColor(Vec4f\&)*			& ”wŒiF‚Ìæ“¾				\\
-*void* & *SetClearColor(const Vec4f\&)*	& ”wŒiF‚Ìİ’è				\\
-*void* & *ClearBuffer()*					& •`‰æƒoƒbƒtƒ@‚ğƒNƒŠƒA		\\
-*void* & *BeginScene()*					& •`‰æ‚ÌŠJn				\\
-*void* & *EndScene()*						& •`‰æ‚ÌŠ®—¹				\\
-*void* & *SwapBuffers()*					& •`‰æƒoƒbƒtƒ@‚ÌƒXƒƒbƒv	\\
-\end{tabular}
+    // create mesh and attach it to frame
+    GRMeshIf* mesh = scene->CreateVisual(meshDesc, frame)->Cast();
 
+    GRMaterialDesc matDesc0, matDesc1;
+    // ... setup materials here ...
+    GRMaterialIf* mat0 = scene->CreateVisual(matDesc0, frame)->Cast();
+    GRMaterialIf* mat1 = scene->CreateVisual(matDesc1, frame)->Cast();
 
-### ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg
-ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ÉŠÖŒW‚·‚é‹@”\‚Å‚·D*GRMesh*‚ª“à•”‚Åg—p‚µ‚Ü‚·D
+    // attach materials to mesh
+    mesh->AddChildObject(mat0);    //< material no.0
+    mesh->AddChildObject(mat1);    //< material no.1
+```
+æœ€åˆã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸãƒãƒ†ãƒªã‚¢ãƒ«ã‚’0ç•ªã¨ã—ã¦æ˜‡é †ã§ãƒãƒ†ãƒªã‚¢ãƒ«ç•ªå·ãŒæ±ºã¾ã‚Šã¾ã™ï¼å‰è¿°ã®ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆã‚’ç”¨ã„ã‚‹å ´åˆã¯ã“ã®ãƒãƒ†ãƒªã‚¢ãƒ«ç•ªå·ã‚’é¢æ¯ã«æŒ‡å®šã—ã¦ãã ã•ã„ï¼
+## ãƒ¬ãƒ³ãƒ€ãƒ©
+ãƒ¬ãƒ³ãƒ€ãƒ©ã®æ©Ÿèƒ½ã‚’é …ç›®åˆ¥ã«èª¬æ˜ã—ã¾ã™ï¼ãƒ¬ãƒ³ãƒ€ãƒ©ã¯æä¾›ã™ã‚‹ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãªæç”»æ©Ÿèƒ½ã¯éå¸¸ã«å¤šå²ã«æ¸¡ã‚Šã¾ã™ãŒï¼Œã“ã‚Œã‚‰ã®ã»ã¨ã‚“ã©ã®é–¢æ•°ã¯ç‰¹åˆ¥ãªæç”»å‡¦ç†ã‚’å¿…è¦ã¨ã—ãªã„é™ã‚Šãƒ¦ãƒ¼ã‚¶ãŒç›´æ¥å‘¼ã³å‡ºã™ã“ã¨ã¯ã‚ã‚Šã¾ã›ã‚“ï¼å€‹ã€…ã®é–¢æ•°ã‚’è©³ã—ãèª¬æ˜ã—ã¦ã„ãã¨è†¨å¤§ãªé‡ã«ãªã‚Šã¾ã™ã®ã§ï¼Œã“ã“ã§ã¯ä¸€è¦§ç¨‹åº¦ã«ã¨ã©ã‚ã¾ã™ï¼è©³ç´°ãªä»•æ§˜ã¯ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ¡ãƒ³ãƒˆã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼
+### åŸºæœ¬æ©Ÿèƒ½
+æç”»æ™‚ã®ãŠæ±ºã¾ã‚Šã®å‡¦ç†ã§ã™ï¼\ref{sec_grscene}ç¯€ã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼
 
-\begin{tabular}{p{.1\hsize}p{.45\hsize}p{.35\hsize}}
-\multicolumn{2}{l}{*GRRenderIf*}					\\ \midrule
-*int*  & *StartList()*			& ƒfƒBƒXƒvƒŒƒCƒŠƒXƒgì¬ŠJn	\\
-*void* & *EndList()*				& ƒfƒBƒXƒvƒŒƒCƒŠƒXƒgì¬Š®—¹	\\
-*void* & *DrawList(int)*			& ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì•`‰æ		\\
-*void* & *ReleaseList(int)*		& ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì‰ğ•ú		\\
-\end{tabular}
+|*GRRenderIf*| 									 |
+|---|---|---|---|
+|*void*| *GetClearColor(Vec4f&)*		| èƒŒæ™¯è‰²ã®å–å¾—				|
+|*void*| *SetClearColor(const Vec4f&)*| èƒŒæ™¯è‰²ã®è¨­å®š				|
+|*void*| *ClearBuffer()*				| æç”»ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¯ãƒªã‚¢		|
+|*void*| *BeginScene()*				| æç”»ã®é–‹å§‹				|
+|*void*| *EndScene()*					| æç”»ã®å®Œäº†				|
+|*void*| *SwapBuffers()*				| æç”»ãƒãƒƒãƒ•ã‚¡ã®ã‚¹ãƒ¯ãƒƒãƒ—	|
 
+### ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ
+ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«é–¢ä¿‚ã™ã‚‹æ©Ÿèƒ½ã§ã™ï¼*GRMesh*ãŒå†…éƒ¨ã§ä½¿ç”¨ã—ã¾ã™ï¼
 
-### ƒfƒvƒXƒeƒXƒgCƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒOCƒ‰ƒCƒeƒBƒ“ƒO
-•`‰æ‹@”\‚ğØ‚è‘Ö‚¦‚é‚½‚ß‚ÌŠÖ”‚Å‚·D
+|*GRRenderIf*| 					 |
+|---|---|---|
+|*int* | *StartList()*		| ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆä½œæˆé–‹å§‹	|
+|*void*| *EndList()*			| ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆä½œæˆå®Œäº†	|
+|*void*| *DrawList(int)*		| ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æç”»		|
+|*void*| *ReleaseList(int)*	| ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®è§£æ”¾		|
 
-\begin{tabular}{p{.1\hsize}p{.4\hsize}p{.4\hsize}}
-*GRRenderIf*									&										\\ \midrule
-*void* & *SetDepthWrite(bool)*					& ƒfƒvƒXƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İOn/Off		\\
-*void* & *SetDepthTest(bool)*						& ƒfƒvƒXƒeƒXƒg‚ÌOn/Off					\\
-*void* & *SetDepthFunc(TDepthFunc)*				& ƒfƒvƒXƒoƒbƒtƒ@‚Ì”»’èğŒ				\\
-*void* & *SetAlphaTest(bool)*						& ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚ÌOn/Off		\\
-*void* & *SetAlphaMode(TBlendFunc, TBlendFunc)*	& ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚Ìƒ‚[ƒh		\\
-*void* & *SetLighting(bool)*						& ƒ‰ƒCƒeƒBƒ“ƒO‚ÌOn/Off					\\
-\end{tabular}
+### ãƒ‡ãƒ—ã‚¹ãƒ†ã‚¹ãƒˆï¼Œã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ï¼Œãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°
+æç”»æ©Ÿèƒ½ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ãŸã‚ã®é–¢æ•°ã§ã™ï¼
 
+|*GRRenderIf*								|										 |
+|---|---|---|
+|*void*| *SetDepthWrite(bool)*				| ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿On/Off		|
+|*void*| *SetDepthTest(bool)*					| ãƒ‡ãƒ—ã‚¹ãƒ†ã‚¹ãƒˆã®On/Off					|
+|*void*| *SetDepthFunc(TDepthFunc)*			| ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ã®åˆ¤å®šæ¡ä»¶				|
+|*void*| *SetAlphaTest(bool)*					| ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®On/Off		|
+|*void*| *SetAlphaMode(TBlendFunc, TBlendFunc)*| ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®ãƒ¢ãƒ¼ãƒ‰		|
+|*void*| *SetLighting(bool)*					| ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã®On/Off					|
 
-### ƒeƒNƒXƒ`ƒƒ
-
-
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.3\hsize}}
-*GRRenderIf*														&						\\ \midrule
-*int* 	& *LoadTexture(UTString)*										& ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh	\\
-*void* 	& *SetTextureImage(UTString, int, int, int, int, char*)*		& ƒeƒNƒXƒ`ƒƒ‚Ìİ’è		\\
-\end{tabular}
-
-
-### ƒVƒF[ƒ_
-
-
-\begin{tabular}{p{.15\hsize}p{.4\hsize}p{.35\hsize}}
-*GRRenderIf*												&								\\ \midrule
-*void* 		& *InitShader()*										& ƒVƒF[ƒ_‚Ì‰Šú‰»				\\
-*void* 		& *SetShaderFormat(ShaderType)*						& ƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚Ìİ’è	\\
-*bool* 		& *CreateShader(UTString, UTString, GRHandler\&)*	& ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬	\\
-*GRHandler* 	& *CreateShader()*									& ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬	\\
-*bool* 		& *ReadShaderSource(GRHandler, UTString)*			& ƒVƒF[ƒ_ƒvƒƒOƒ‰ƒ€‚ğƒ[ƒh	\\
-*void* 		& *GetShaderLocation(GRHandler, void*)*				& ƒƒP[ƒVƒ‡ƒ“î•ñ‚Ìæ“¾		\\
-\end{tabular}
+### ãƒ†ã‚¯ã‚¹ãƒãƒ£
 
 
-### ’¼Ú•`‰æ
+|*GRRenderIf*													|						 |
+|---|---|---|
+|*int* | *LoadTexture(UTString)*									| ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰	|
+|*void* | *SetTextureImage(UTString, int, int, int, int, char*)*	| ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š		|
+
+### ã‚·ã‚§ãƒ¼ãƒ€
 
 
-\begin{tabular}{p{.1\hsize}p{.45\hsize}p{.35\hsize}}
-*GRRenderIf*																\\ \midrule
-*void* & *SetVertexFormat(const GRVertexElement*)*							& ’¸“_ƒtƒH[ƒ}ƒbƒg‚Ìw’è	\\
-*void* & *SetVertexShader(void*)*											& ’¸“_ƒVƒF[ƒ_[‚Ìw’è		\\
-*void* & *DrawDirect(TPrimitiveType, void*, size\_t, size\_t)*				& ’¸“_‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ	\\
-*void* & *DrawIndexed(TPrimitiveType, size\_t*, void*, size\_t, size\_t)*	& ’¸“_‚ÆƒCƒ“ƒfƒbƒNƒX‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ	\\
-*void* & *DrawArrays(TPrimitiveType, GRVertexArray*, size\_t)*				& ’¸“_‚Ì¬•ª‚²‚Æ‚Ì”z—ñ‚ğw’è‚µ‚ÄCƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ	\\
-*void* & *DrawArrays(TPrimitiveType, size\_t*, GRVertexArray*, size\_t)*		& ƒCƒ“ƒfƒbƒNƒX‚Æ’¸“_‚Ì¬•ª‚²‚Æ‚Ì”z—ñ‚ğw’è‚µ‚ÄCƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ	\\
-\end{tabular}
+|*GRRenderIf*											|								 |
+|---|---|---|
+|*void* 	| *InitShader()*									| ã‚·ã‚§ãƒ¼ãƒ€ã®åˆæœŸåŒ–				|
+|*void* 	| *SetShaderFormat(ShaderType)*					| ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®è¨­å®š	|
+|*bool* 	| *CreateShader(UTString, UTString, GRHandler&)*| ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ	|
+|*GRHandler* | *CreateShader()*								| ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ	|
+|*bool* 	| *ReadShaderSource(GRHandler, UTString)*		| ã‚·ã‚§ãƒ¼ãƒ€ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ãƒ­ãƒ¼ãƒ‰	|
+|*void* 	| *GetShaderLocation(GRHandler, void*)*			| ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—		|
+
+### ç›´æ¥æç”»
 
 
-### Šî–{Œ`ó•`‰æ
+|*GRRenderIf*																 |
+|---|---|---|
+|*void*| *SetVertexFormat(const GRVertexElement*)*						| é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æŒ‡å®š	|
+|*void*| *SetVertexShader(void*)*										| é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®æŒ‡å®š		|
+|*void*| *DrawDirect(TPrimitiveType, void*, size_t, size_t)*			| é ‚ç‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»	|
+|*void*| *DrawIndexed(TPrimitiveType, size_t*, void*, size_t, size_t)*| é ‚ç‚¹ã¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»	|
+|*void*| *DrawArrays(TPrimitiveType, GRVertexArray*, size_t)*			| é ‚ç‚¹ã®æˆåˆ†ã”ã¨ã®é…åˆ—ã‚’æŒ‡å®šã—ã¦ï¼Œãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»	|
+|*void*| *DrawArrays(TPrimitiveType, size_t*, GRVertexArray*, size_t)*	| ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¨é ‚ç‚¹ã®æˆåˆ†ã”ã¨ã®é…åˆ—ã‚’æŒ‡å®šã—ã¦ï¼Œãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»	|
+
+### åŸºæœ¬å½¢çŠ¶æç”»
 
 
-\begin{tabular}{p{.1\hsize}p{.5\hsize}p{.3\hsize}}
-*GRRenderIf*																					\\ \midrule
-*void* & *DrawLine(Vec3f, Vec3f)*											& ü•ª‚ğ•`‰æ	\\
-*void* & *DrawArrow(Vec3f, Vec3f, float, float, float, int, bool)*			& –îˆó‚ğ•`‰æ	\\
-*void* & *DrawBox(float, float, float, bool)*								& ’¼•û‘Ì‚ğ•`‰æ	\\
-*void* & *DrawSphere(float, int, int, bool)*									& ‹…‘Ì‚ğ•`‰æ	\\
-*void* & *DrawCone(float, float, int, bool)*									& ‰~‚Ì•`‰æ	\\
-*void* & *DrawCylinder(float, float, int, bool)*								& ‰~“›‚Ì•`‰æ	\\
-*void* & *DrawCapsule(float, float, int, bool)*								& ƒJƒvƒZƒ‹‚Ì•`‰æ	\\
-*void* & *DrawRoundCone(float, float, float, int, bool)*						& ‹…‰~‚Ì•`‰æ	\\
-*void* & *DrawGrid(float, int, float)*										& ƒOƒŠƒbƒh‚ğ•`‰æ	\\
-*void* & *SetFont(const GRFont\&)*											& ƒtƒHƒ“ƒg‚Ìİ’è	\\
-*void* & *DrawFont(Vec2f, UTString)*											& 2ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ	\\
-*void* & *DrawFont(Vec3f, UTString)*											& 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ	\\
-*void* & *SetLineWidth(float)*												& ü‚Ì‘¾‚³‚Ìİ’è	\\
-\end{tabular}
+|*GRRenderIf*																					 |
+|---|---|---|
+|*void*| *DrawLine(Vec3f, Vec3f)*										| ç·šåˆ†ã‚’æç”»	|
+|*void*| *DrawArrow(Vec3f, Vec3f, float, float, float, int, bool)*		| çŸ¢å°ã‚’æç”»	|
+|*void*| *DrawBox(float, float, float, bool)*							| ç›´æ–¹ä½“ã‚’æç”»	|
+|*void*| *DrawSphere(float, int, int, bool)*								| çƒä½“ã‚’æç”»	|
+|*void*| *DrawCone(float, float, int, bool)*								| å††éŒã®æç”»	|
+|*void*| *DrawCylinder(float, float, int, bool)*							| å††ç­’ã®æç”»	|
+|*void*| *DrawCapsule(float, float, int, bool)*							| ã‚«ãƒ—ã‚»ãƒ«ã®æç”»	|
+|*void*| *DrawRoundCone(float, float, float, int, bool)*					| çƒå††éŒã®æç”»	|
+|*void*| *DrawGrid(float, int, float)*									| ã‚°ãƒªãƒƒãƒ‰ã‚’æç”»	|
+|*void*| *SetFont(const GRFont&)*										| ãƒ•ã‚©ãƒ³ãƒˆã®è¨­å®š	|
+|*void*| *DrawFont(Vec2f, UTString)*										| 2æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»	|
+|*void*| *DrawFont(Vec3f, UTString)*										| 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»	|
+|*void*| *SetLineWidth(float)*											| ç·šã®å¤ªã•ã®è¨­å®š	|
+
+### ã‚«ãƒ¡ãƒ©
 
 
-### ƒJƒƒ‰
+|*GRRenderIf*												 |
+|---|---|---|---|
+|*void* 				| *SetCamera(const GRCameraDesc&)*| ã‚«ãƒ¡ãƒ©ã®è¨­å®š	|
+|*const GRCameraDesc&* | *GetCamera()*					| ã‚«ãƒ¡ãƒ©ã®å–å¾—	|
+
+### ãƒ©ã‚¤ãƒˆ
 
 
-\begin{tabular}{p{.27\hsize}p{.45\hsize}p{.18\hsize}}
-*GRRenderIf*												\\ \midrule
-*void* 					& *SetCamera(const GRCameraDesc\&)*	& ƒJƒƒ‰‚Ìİ’è	\\
-*const GRCameraDesc\&* 	& *GetCamera()*						& ƒJƒƒ‰‚Ìæ“¾	\\
-\end{tabular}
+|*GRRenderIf*													 |
+|---|---|---|---|
+|*void*| *PushLight(const GRLightDesc&)*| ãƒ©ã‚¤ãƒˆã‚’ãƒ—ãƒƒã‚·ãƒ¥	|
+|*void*| *PushLight(const GRLightIf*)*| ãƒ©ã‚¤ãƒˆã‚’ãƒ—ãƒƒã‚·ãƒ¥	|
+|*void*| *PopLight()*					| ãƒ©ã‚¤ãƒˆã‚’ãƒãƒƒãƒ—	|
+|*int* | *NLights()*					| ãƒ©ã‚¤ãƒˆã®æ•°		|
+
+### åº§æ¨™å¤‰æ›
 
 
-### ƒ‰ƒCƒg
+|*GRRenderIf*												 |
+|---|---|---|
+|*void* | *Reshape(Vec2f, Vec2f)*				| ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã®å¤‰æ›´				|
+|*void* | *SetViewport(Vec2f, Vec2f)*			| ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®è¨­å®š					|
+|*Vec2f* | *GetViewportPos()*						| ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆåŸç‚¹ã®å–å¾—				|
+|*Vec2f* | *GetViewportSize()*					| ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã‚µã‚¤ã‚ºã®å–å¾—				|
+|*Vec2f* | *GetPixelSize()*						| 1ãƒ”ã‚¯ã‚»ãƒ«ã®ç‰©ç†ã‚µã‚¤ã‚ºã‚’å–å¾—			|
+|*Vec3f*| *ScreenToCamera(int, int, float, bool)*| ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‹ã‚‰ã‚«ãƒ¡ãƒ©åº§æ¨™ã¸ã®å¤‰æ›	|
+|*void* | *EnterScreenCoordinate()*				| ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã¸åˆ‡ã‚Šæ›¿ãˆã‚‹			|
+|*void* | *LeaveScreenCoordinate()*				| ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã‹ã‚‰æˆ»ã‚‹				|
 
 
-\begin{tabular}{p{.1\hsize}p{.45\hsize}p{.35\hsize}}
-*GRRenderIf*													\\ \midrule
-*void* & *PushLight(const GRLightDesc\&)*	& ƒ‰ƒCƒg‚ğƒvƒbƒVƒ…	\\
-*void* & *PushLight(const GRLightIf*)*	& ƒ‰ƒCƒg‚ğƒvƒbƒVƒ…	\\
-*void* & *PopLight()*						& ƒ‰ƒCƒg‚ğƒ|ƒbƒv	\\
-*int*  & *NLights()*						& ƒ‰ƒCƒg‚Ì”		\\
-\end{tabular}
-
-
-### À•W•ÏŠ·
-
-
-\begin{tabular}{p{.1\hsize}p{.45\hsize}p{.35\hsize}}
-*GRRenderIf*												\\ \midrule
-*void* 	& *Reshape(Vec2f, Vec2f)*					& ƒEƒBƒ“ƒhƒEƒTƒCƒY‚Ì•ÏX				\\
-*void* 	& *SetViewport(Vec2f, Vec2f)*				& ƒrƒ…[ƒ|[ƒg‚Ìİ’è					\\
-*Vec2f* 	& *GetViewportPos()*							& ƒrƒ…[ƒ|[ƒgŒ´“_‚Ìæ“¾				\\
-*Vec2f* 	& *GetViewportSize()*						& ƒrƒ…[ƒ|[ƒgƒTƒCƒY‚Ìæ“¾				\\
-*Vec2f* 	& *GetPixelSize()*							& 1ƒsƒNƒZƒ‹‚Ì•¨—ƒTƒCƒY‚ğæ“¾			\\
-*Vec3f*	& *ScreenToCamera(int, int, float, bool)*	& ƒXƒNƒŠ[ƒ“À•W‚©‚çƒJƒƒ‰À•W‚Ö‚Ì•ÏŠ·	\\
-*void* 	& *EnterScreenCoordinate()*					& ƒXƒNƒŠ[ƒ“À•WŒn‚ÖØ‚è‘Ö‚¦‚é			\\
-*void* 	& *LeaveScreenCoordinate()*					& ƒXƒNƒŠ[ƒ“À•WŒn‚©‚ç–ß‚é				\\
-\end{tabular}
-
-
-
-\begin{tabular}{p{.1\hsize}p{.5\hsize}p{.3\hsize}}
-*GRRenderIf*	& & 										\\ \midrule
-*void* & *SetViewMatrix(const Affinef\&)*			& ‹“_s—ñ‚Ìİ’è	\\
-*void* & *GetViewMatrix(Affinef\&)*				& ‹“_s—ñ‚Ìæ“¾	\\
-*void* & *SetProjectionMatrix(const Affinef\&)*	& “Š‰es—ñ‚Ìİ’è	\\
-*void* & *GetProjectionMatrix(Affinef\&)*			& “Š‰es—ñ‚Ìæ“¾	\\
-*void* & *SetModelMatrix(const Affinef\&)*		& ƒ‚ƒfƒ‹s—ñ‚Ìİ’è	\\
-*void* & *GetModelMatrix(Affinef\&)*				& ƒ‚ƒfƒ‹s—ñ‚Ìæ“¾	\\
-*void* & *MultModelMatrix(const Affinef\&)*		& ƒ‚ƒfƒ‹s—ñ‚É•ÏŠ·‚ğ‚©‚¯‚é	\\
-*void* & *PushModelMatrix()*						& ƒ‚ƒfƒ‹s—ñ‚ğƒvƒbƒVƒ…	\\
-*void* & *PopModelMatrix()*						& ƒ‚ƒfƒ‹s—ñ‚ğƒ|ƒbƒv	\\
-*void* & *ClearBlendMatrix()*						& ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ÌƒNƒŠƒA	\\
-*bool* & *SetBlendMatrix(const Affinef\&, int)*	& ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ìİ’è	\\
-\end{tabular}
-
+|*GRRenderIf*|| 										 |
+|---|---|---|---|
+|*void*| *SetViewMatrix(const Affinef&)*		| è¦–ç‚¹è¡Œåˆ—ã®è¨­å®š	|
+|*void*| *GetViewMatrix(Affinef&)*			| è¦–ç‚¹è¡Œåˆ—ã®å–å¾—	|
+|*void*| *SetProjectionMatrix(const Affinef&)*| æŠ•å½±è¡Œåˆ—ã®è¨­å®š	|
+|*void*| *GetProjectionMatrix(Affinef&)*		| æŠ•å½±è¡Œåˆ—ã®å–å¾—	|
+|*void*| *SetModelMatrix(const Affinef&)*	| ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã®è¨­å®š	|
+|*void*| *GetModelMatrix(Affinef&)*			| ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã®å–å¾—	|
+|*void*| *MultModelMatrix(const Affinef&)*	| ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¤‰æ›ã‚’ã‹ã‘ã‚‹	|
+|*void*| *PushModelMatrix()*					| ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’ãƒ—ãƒƒã‚·ãƒ¥	|
+|*void*| *PopModelMatrix()*					| ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’ãƒãƒƒãƒ—	|
+|*void*| *ClearBlendMatrix()*					| ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®ã‚¯ãƒªã‚¢	|
+|*bool*| *SetBlendMatrix(const Affinef&, int)*| ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®è¨­å®š	|

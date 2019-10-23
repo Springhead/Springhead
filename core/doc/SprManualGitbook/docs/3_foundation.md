@@ -1,67 +1,110 @@
-Foundation���W���[���͂��ׂĂ�Springhead�N���X�̊�{�N���X���`���܂��D���ʂɎg���Ă������C���[�U��Foundation�̋@�\�𒼐ڗ��p���邱�Ƃ͏��Ȃ��ł��傤�D
-## ���s���^���
-�i�قƂ�ǁj���ׂĂ�Springhead�I�u�W�F�N�g�͎��s���^���iRTTI�j�������Ă��܂��DC++�ɂ�*dynamic\_cast*�Ȃǂ�RTTI�@�\������܂����C��������啝�Ƀ��b�`�Ȍ^��񂪒񋟂���܂��D���s���^���̃N���X��*IfInfo*�ł��D*IfInfo*�͎��߂ŏЉ��*Object*�N���X����擾�ł��܂��D
-## �I�u�W�F�N�g
+FoundationモジュールはすべてのSpringheadクラスの基本クラスを定義します．普通に使っている限り，ユーザがFoundationの機能を直接利用することは少ないでしょう．
+## 実行時型情報
+（ほとんど）すべてのSpringheadオブジェクトは実行時型情報（RTTI）を持っています．C++にも*dynamic\_cast*などのRTTI機能がありますが，これよりも大幅にリッチな型情報が提供されます．実行時型情報のクラスは*IfInfo*です．*IfInfo*は次節で紹介する*Object*クラスから取得できます．
+## オブジェクト
 
 
 
+ほとんどすべてのSpringheadオブジェクトは*Object*クラスから派生します．オブジェクトは複数の子オブジェクトを持つことができます．Springheadのデータ構造はオブジェクトが成すツリー構造によって出来上がっています．Foundationモジュールにおける*Object*からのクラス階層を次図に示します．まず*Object*クラスの子オブジェクトの作成・管理に関係する関数を紹介します．
 
 
-\includegraphics[width=.5\hsize]{fig/utclass.eps}
+|*ObjectIf*										 |
+|---|
+|*size_t NChildObject()*							|
+|子オブジェクトの数を取得する．							|
+|														|
+|*ObjectIf* GetChildObject(size_t pos)*			|
+|*pos*番目の子オブジェクトを取得する．			|
+|														|
+|*bool AddChildObject(ObjectIf* o)*				|
+|オブジェクト*o*を子オブジェクトとして追加する．|
+|正しく追加されたら*true*，それ以外は*false*を返す．|
+|														|
+|*bool DelChildObject(ObjectIf* o)*				|
+|オブジェクト*o*を子オブジェクトから削除する．|
+|正しく削除されたら*true*，それ以外は*false*を返す．|
+|														|
+|*void Clear();*									|
+|クリアする．												|
+これらの関数は派生クラスによって実装されますので，追加できる子オブジェクトの種類や数などはクラスごとに異なります．また，Springheadを普通に使用する範囲内ではユーザがこれらの関数を直接呼び出す場面はないでしょう．ストリーム出力のために以下の機能があります．
 
-\caption{Object class hierarchy}
+
+|*ObjectIf*										 |
+|---|
+|*void Print(std::ostream& os) const*			|
+|オブジェクトの内容をストリーム*os*に出力する．	|
+*Print*は，基本的にはそのオブジェクトの名前を出力し，子オブジェクトの*Print*を再帰的に呼び出します．ただし派生クラスによって*Print*で出力される内容がカスタマイズされている場合はその限りではありません．*NamedObject*は名前付きオブジェクトです．*NamedObject*の派生クラスには名前を文字列で与えることができ，名前からオブジェクトを検索することができます．名前付きオブジェクトには，直接の親オブジェクト以外に，名前を管理するためのネームマネジャが対応します．
 
 
-�قƂ�ǂ��ׂĂ�Springhead�I�u�W�F�N�g��*Object*�N���X����h�����܂��D�I�u�W�F�N�g�͕����̎q�I�u�W�F�N�g�������Ƃ��ł��܂��DSpringhead�̃f�[�^�\���̓I�u�W�F�N�g�������c���[�\���ɂ���ďo���オ���Ă��܂��DFoundation���W���[���ɂ�����*Object*����̃N���X�K�w��Fig.\,\ref{fig_utclass}�Ɏ����܂��D�܂�*Object*�N���X�̎q�I�u�W�F�N�g�̍쐬�E�Ǘ��Ɋ֌W����֐����Љ�܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*ObjectIf*										\\ \midrule*size\_t NChildObject()*							\\�q�I�u�W�F�N�g�̐����擾����D							\\														\\*ObjectIf* GetChildObject(size\_t pos)*			\\*pos*�Ԗڂ̎q�I�u�W�F�N�g���擾����D			\\														\\*bool AddChildObject(ObjectIf* o)*				\\�I�u�W�F�N�g*o*���q�I�u�W�F�N�g�Ƃ��Ēǉ�����D�������ǉ����ꂽ��*true*�C����ȊO��*false*��Ԃ��D\\														\\*bool DelChildObject(ObjectIf* o)*				\\�I�u�W�F�N�g*o*���q�I�u�W�F�N�g����폜����D�������폜���ꂽ��*true*�C����ȊO��*false*��Ԃ��D\\														\\*void Clear();*									\\�N���A����D												\\\\\end{tabular}�����̊֐��͔h���N���X�ɂ���Ď�������܂��̂ŁC�ǉ��ł���q�I�u�W�F�N�g�̎�ނ␔�Ȃǂ̓N���X���ƂɈقȂ�܂��D�܂��CSpringhead�𕁒ʂɎg�p����͈͓��ł̓��[�U�������̊֐��𒼐ڌĂяo����ʂ͂Ȃ��ł��傤�D�X�g���[���o�͂̂��߂Ɉȉ��̋@�\������܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*ObjectIf*										\\ \midrule*void Print(std::ostream\& os) const*			\\�I�u�W�F�N�g�̓��e���X�g���[��*os*�ɏo�͂���D	\\\\\end{tabular}*Print*�́C��{�I�ɂ͂��̃I�u�W�F�N�g�̖��O���o�͂��C�q�I�u�W�F�N�g��*Print*���ċA�I�ɌĂяo���܂��D�������h���N���X�ɂ����*Print*�ŏo�͂������e���J�X�^�}�C�Y����Ă���ꍇ�͂��̌���ł͂���܂���D*NamedObject*�͖��O�t���I�u�W�F�N�g�ł��D*NamedObject*�̔h���N���X�ɂ͖��O�𕶎���ŗ^���邱�Ƃ��ł��C���O����I�u�W�F�N�g���������邱�Ƃ��ł��܂��D���O�t���I�u�W�F�N�g�ɂ́C���ڂ̐e�I�u�W�F�N�g�ȊO�ɁC���O���Ǘ����邽�߂̃l�[���}�l�W�����Ή����܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*NamedObjectIf*									\\ \midrule*const char* GetName()*			\\���O���擾����D						\\\\*void SetName(const char* n)*	\\���O��ݒ肷��D						\\\\*NameManagerIf* GetNameManager()*	\\�l�[���}�l�W�����擾����D					\\\\\end{tabular}���O�t���I�u�W�F�N�g����͂���ɃV�[���I�u�W�F�N�g���h�����܂��D�V�[���I�u�W�F�N�g����͎��Ӄ��W���[���̃I�u�W�F�N�g(*PHSolid*, *GRVisual*�Ȃ�)���h�����܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*SceneObjectIf*					\\ \midrule*SceneIf* GetScene()*			\\���g����������V�[�����擾����D		\\\\\end{tabular}
-## �l�[���}�l�W���ƃV�[��
-�l�[���}�l�W���͖��O�t���I�u�W�F�N�g�̃R���e�i�Ƃ��ē����C�����̖��O���Ǘ����܂��D�܂��C�l�[���}�l�W���͂��ꎩ�g���O�t���I�u�W�F�N�g�ł��D\noindent\begin{tabular}{p{1.0\hsize}}\\*NameManagerIf*									\\ \midrule*NamedObjectIf* FindObject(UTString name)*		\\���O��*name*�̃I�u�W�F�N�g���������C������΂��̃I�u�W�F�N�g��Ԃ��D������Ȃ����*NULL*��Ԃ��D					\\\\\end{tabular}�V�[���̓V�[���I�u�W�F�N�g�̃R���e�i�ł��D�V�[���̊�{�N���X��*Scene*�ŁC��������e���W���[���̃V�[��(*PHScene*, *GRScene*, *FWScene*�Ȃ�)���h�����܂��D*Scene*�N���X�͓��ɋ@�\��񋟂��܂���D
-## �^�C�}
-�^�C�}�@�\��Foundation�Œ񋟂���܂��D�^�C�}�N���X��*UTTimer*�ł��D�^�C�}���쐬����ɂ�
-```
+|*NamedObjectIf*									 |
+|---|
+|*const char* GetName()*			|
+|名前を取得する．						|
+|*void SetName(const char* n)*	|
+|名前を設定する．						|
+|*NameManagerIf* GetNameManager()*	|
+|ネームマネジャを取得する．					|
+名前付きオブジェクトからはさらにシーンオブジェクトが派生します．シーンオブジェクトからは周辺モジュールのオブジェクト(*PHSolid*, *GRVisual*など)が派生します．
+
+
+|*SceneObjectIf*					 |
+|---|
+|*SceneIf* GetScene()*			|
+|自身が所属するシーンを取得する．		|
+
+## ネームマネジャとシーン
+ネームマネジャは名前付きオブジェクトのコンテナとして働き，それらの名前を管理します．また，ネームマネジャはそれ自身名前付きオブジェクトです．
+
+
+|*NameManagerIf*									 |
+|---|
+|*NamedObjectIf* FindObject(UTString name)*		|
+|名前が*name*のオブジェクトを検索し，見つかればそのオブジェクトを返す．|
+|見つからなければ*NULL*を返す．					|
+シーンはシーンオブジェクトのコンテナです．シーンの基本クラスは*Scene*で，ここから各モジュールのシーン(*PHScene*, *GRScene*, *FWScene*など)が派生します．*Scene*クラスは特に機能を提供しません．
+## タイマ
+タイマ機能もFoundationで提供されます．タイマクラスは*UTTimer*です．タイマを作成するには
+```c++
 UTTimerIf* timer = UTTimerIf::Create();
 ```
-�Ƃ��܂��D*UTTimer*�ɂ͈ȉ���API������܂��D
+とします．*UTTimer*には以下のAPIがあります．
 
-\begin{tabular}{ll}
-*[Get|Set]Resolution*		& ����\�̎擾�Ɛݒ�	\\
-*[Get|Set]Interval*			& �����̎擾�Ɛݒ�		\\
-*[Get|Set]Mode*				& ���[�h�̎擾�Ɛݒ�	\\
-*[Get|Set]Callback*			& �R�[���o�b�N�֐��̎擾�Ɛݒ� \\
-*IsStarted*					& �����Ă��邩�ǂ���	\\
-*IsRunning*					& �R�[���o�b�N�Ăяo���� \\
-*Start*						& �n��	\\
-*Stop*						& ��~	\\
-*Call*						& �R�[���o�b�N�Ăяo��
-\end{tabular}
+|*[Get\|Set]Resolution*	| 分解能の取得と設定	|
+|---|---|
+|*[Get\|Set]Interval*		| 周期の取得と設定		|
+|*[Get\|Set]Mode*			| モードの取得と設定	|
+|*[Get\|Set]Callback*		| コールバック関数の取得と設定 |
+|*IsStarted*				| 動いているかどうか	|
+|*IsRunning*				| コールバック呼び出し中 |
+|*Start*					| 始動	|
+|*Stop*					| 停止	|
+|*Call*					| コールバック呼び出し|
+*SetMode*で指定できるモードには以下があります．
 
-*SetMode*�Ŏw��ł��郂�[�h�ɂ͈ȉ�������܂��D
-
-\begin{tabular}{ll}
-*MULTIEDIA*		& �}���`���f�B�A�^�C�}			\\
-*THREAD*		& �Ɨ��X���b�h					\\
-*FRAMEWORK*		& Framework���񋟂���^�C�}		\\
-*IDLE*			& Framework���񋟂���A�C�h���R�[���o�b�N
-\end{tabular}
-
-�}���`���f�B�A�^�C�}��Windows���񋟂��鍂�@�\�^�C�}�ł��D�Ɨ��X���b�h���[�h�ł́C�^�C�}�p�̃X���b�h�����s����*Sleep*�֐��ɂ����������䂳��܂��D*FRAMEWORK*��*IDLE*���[�h�𗘗p����ɂ�*FWApp*��*CreateTimer*�֐���p����K�v������܂��D��{�I��*FRAMEWORK*���[�h�ł�GLUT�̃^�C�}�R�[���o�b�N���g���C*IDLE*���[�h�ł�GLUT�̃A�C�h���R�[���o�b�N���g���܂��DFramework���W���[����*FWApp*�𗘗p����ꍇ�́C*FWApp*��*CreateTimer*�֐��𗘗p��������֗��ł��傤�D
-## ��Ԃ̕ۑ��E�Č�
-�V�~�����[�V�������s���ƁA�V�[�����\������I�u�W�F�N�g�̏�Ԃ��ω�����B���鎞���ł̏�Ԃ�ۑ����Ă����A�Č����邱�Ƃ��ł���ƁA���X�e�b�v�O�ɖ߂�����A����X�e�b�v�̃V�~�����[�V�������A�͂��������ꍇ�Ɖ����Ȃ��ꍇ�Ŕ�ׂ���Ƃ�������Ƃ��ł���BSpringhead�ł́A*ObjectStatesIf*��p���邱�ƂŁA�ȉ��̂悤�ɃV�[���S�̂̏�Ԃ��܂Ƃ߂ă�������ɕۑ��A�Č����邱�Ƃ��ł���B
-```
+|*MULTIEDIA*	| マルチメディアタイマ			|
+|---|---|
+|*THREAD*	| 独立スレッド					|
+|*FRAMEWORK*	| Frameworkが提供するタイマ		|
+|*IDLE*		| Frameworkが提供するアイドルコールバック|
+マルチメディアタイマはWindowsが提供する高機能タイマです．独立スレッドモードでは，タイマ用のスレッドが実行され*Sleep*関数により周期が制御されます．*FRAMEWORK*と*IDLE*モードを利用するには*FWApp*の*CreateTimer*関数を用いる必要があります．基本的に*FRAMEWORK*モードではGLUTのタイマコールバックが使われ，*IDLE*モードではGLUTのアイドルコールバックが使われます．Frameworkモジュールの*FWApp*を利用する場合は，*FWApp*の*CreateTimer*関数を利用する方が便利でしょう．
+## 状態の保存・再現
+シミュレーションを行うと、シーンを構成するオブジェクトの状態が変化する。ある時刻での状態を保存しておき、再現することができると、数ステップ前に戻ったり、あるステップのシミュレーションを、力を加えた場合と加えない場合で比べたりといった作業ができる。Springheadでは、*ObjectStatesIf*を用いることで、以下のようにシーン全体の状態をまとめてメモリ上に保存、再現することができる。
+```c++
 	PHSceneIf* phScene;
-	�ȗ��FphScene�i�����V�~�����[�V�����̃V�[���j�̍\�z
+	省略：phScene（物理シミュレーションのシーン）の構築
 	UTRef<ObjectStatesIf> states;
-	states = ObjectStatesIf::Create();	// ObjectStates�I�u�W�F�N�g�̍쐬
-	states->AllocateState(phScene);		// �ۑ��p�̃������m��
-	states->SaveState(phScene);			// ��Ԃ̕ۑ�
-	phScene->Step();					// ���̃V�~�����[�V������i�߂�
-	�ȗ��F�����x�̎擾�Ȃ�
-	states->LoadState(phScene);			// ��Ԃ̍Č�
-	states->ReleaseState();				// �������̊J��
-	�ȗ��F�͂�������Ȃǂ̏���
-	phScene->Step();					// �{�Ԃ̃V�~�����[�V������i�߂�
+	states = ObjectStatesIf::Create();	// ObjectStatesオブジェクトの作成
+	states->AllocateState(phScene);		// 保存用のメモリ確保
+	states->SaveState(phScene);			// 状態の保存
+	phScene->Step();					// 仮のシミュレーションを進める
+	省略：加速度の取得など
+	states->LoadState(phScene);			// 状態の再現
+	states->ReleaseState();				// メモリの開放
+	省略：力を加えるなどの処理
+	phScene->Step();					// 本番のシミュレーションを進める
 ```
 
-### �ۑ��E�Č��̃^�C�~���O
-Springhead�̃V�[��(PHScene��CRScene)�́A�����̃G���W��(PHEngine��CREngine�̔h���N���X)���Ăяo�����ƂŁA�V�~�����[�V������i�߂�B�V�[���́A�G���W���̌Ăяo�����ȊO�̃^�C�~���O�ł���΂��ł���Ԃ�ۑ��E�Č����邱�Ƃ��ł���B
-### �V�[���\���ύX�̐���
-��ԕۑ��p�̃������́A�V�[���̍\���Ɉˑ����Ă���B*AllocateState(), SaveState(), LoadState()*�����łȂ��A*ObjectStatesIf::ReleaseState()*���ˑ�����̂ŁA*ObjectIf::AddChildObject()*�Ȃǂ�API�ɂ���ăV�[���̍\����ω������Ă��܂��ƁA�ۑ��E�Č������łȂ��������̊J�����ł��Ȃ��Ȃ�B�ύX�O�ɊJ�����邩�A�V�[���\����߂��Ă���J������K�v������B
+### 保存・再現のタイミング
+Springheadのシーン(PHSceneやCRScene)は、複数のエンジン(PHEngineやCREngineの派生クラス)を呼び出すことで、シミュレーションを進める。シーンは、エンジンの呼び出し中以外のタイミングであればいつでも状態を保存・再現することができる。
+### シーン構成変更の制約
+状態保存用のメモリは、シーンの構成に依存している。*AllocateState(), SaveState(), LoadState()*だけでなく、*ObjectStatesIf::ReleaseState()*も依存するので、*ObjectIf::AddChildObject()*などのAPIによってシーンの構成を変化させてしまうと、保存・再現だけでなくメモリの開放もできなくなる。変更前に開放するか、シーン構成を戻してから開放する必要がある。

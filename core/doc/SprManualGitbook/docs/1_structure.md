@@ -1,39 +1,35 @@
 
-## �f�B���N�g���\��
+## ディレクトリ構成
+
+Springheadのディレクトリ構成は次図の通りです．
 
 
 
 
 
-\includegraphics[width=.6\hsize]{fig/filetree.eps}
+## ライブラリ構成
+Springheadは複数のモジュールから構成されています．次表にモジュール一覧を示します．
 
-\caption{Directory tree of Springhead}
 
 
-Springhead�̃f�B���N�g���\����Fig.\,\ref{fig_filetree}�Ɏ����܂��D
-## ���C�u�����\��
-\begin{table}[t]\caption{Springhead modules}\begin{tabular}{lll}\toprule���W���[����			& �v���t�B�b�N�X	& �@�\	\\ \midrule{\bf Base}				& -					& �s��E�x�N�g�����Z�C�X�}�[�g�|�C���^�C\\						&					& ���̑���{�@�\	\\{\bf Foundation}		& UT				& Springhead�̊�{�N���X�C���s���^���	\\{\bf Collision}			& CD				& �Փ˔���	\\{\bf Physics}			& PH				& �����v�Z	\\{\bf Graphics}			& GR				& �V�[���O���t�C�`��	\\{\bf FileIO}			& FI				& �t�@�C�����o��	\\{\bf HumanInterface}	& HI				& �q���[�}���C���^�t�F�[�X�f�o�C�X�� \\						&					& �C���^���N�V���� \\{\bf Creature}			& CR				& �o�[�`�����N���[�`�� \\{\bf Framework}			& FW				& ���W���[���Ԃ̘A�g�� \\						&					& �A�v���P�[�V�����쐬�x�� \\ \bottomrule\end{tabular}\end{table}\begin{table}[t]\caption{Module dependencies}
+次表にモジュール間の依存関係を示します．
 
-\begin{tabular}{llllllllll}
-\toprule
-���W���[����			& 			&			&			&			&			&			&			&			&			\\ \midrule
-{\bf Base}				& -			& -			& -			& -			& -			& -			& -			& -			& -			\\
-{\bf Foundation}		& $\circ$	& -			& -			& -			& -			& -			& -			& -			& -			\\
-{\bf Collision}			& $\circ$	& $\circ$	& -			& -			& -			& -			& -			& -			& -			\\
-{\bf Physics}			& $\circ$	& $\circ$	& $\circ$	& -			& -			& -			& -			& -			& -			\\
-{\bf Graphics}			& $\circ$	& $\circ$	& -			& -			& -			& -			& -			& -			& -			\\
-{\bf FileIO}			& $\circ$	& $\circ$	& -			& -			& -			& -			& -			& -			& -			\\
-{\bf HumanInterface}	& $\circ$	& $\circ$	& -			& -			& -			& -			& -			& -			& -			\\
-{\bf Creature}			& $\circ$	& $\circ$	& -			& $\circ$	& -			& -			& -			& -			& -			\\
-{\bf Framework}			& $\circ$	& $\circ$	& -			& $\circ$	& $\circ$	& $\circ$	& $\circ$	& -			& -			\\ \bottomrule
-\end{tabular}
 
-\end{table}Springhead�͕����̃��W���[������\������Ă��܂��DTable\,\ref{table_modules}�Ƀ��W���[���ꗗ�������܂��DTable\,\ref{table_dependency}�Ƀ��W���[���Ԃ̈ˑ��֌W�������܂��D�ʏ�C���[�U��Springhead���g�p����ɂ������Ă����̈ˑ��֌W��z�Ɉӎ�����K�v�͂���܂���D�܂��C���炩�̎����Springhead�̓���̋@�\�i���Ƃ��Ε����V�~�����[�V�����j�݂̂�p�������Ƃ����ꍇ�ɑΉ��ł���悤�ɁC���W���[���Ԃ̈ˑ��֌W�͂Ȃ�ׂ��a�ɂȂ�悤�ɐ݌v����Ă��܂��D���������Ă��̂悤�ȏꍇ�ɂ͗p�r�ɉ����ĕK�v�ȃ��W���[���݂̂��g����悤�ɂȂ��Ă��܂��D
-## �N���X�EAPI�̖����K��
-�e���W���[���Ɋ܂܂��N���X�̖��O�ɂ́CTable\,\ref{table_modules}�Ɏ������悤�ȃ��W���[���ŗL�̃v���t�B�b�N�X�����܂�(��: Physics���W���[����*PHSolid*�CCollision���W���[����*CDShape*)�D�ꕔ�ɂ͂��̃��[���ɂ�������Ȃ��N���X�����݂��܂�(��: Foundation���W���[����Object)�DAPI(�N���X�̃����o�֐�)�ɂ��ɂ������K��������܂��DAPI���͊�{�I��(���� + �ړI��)�Ƃ����`���ŏ������e��[�I�ɕ\�����܂��D�܂��C�P��̐擪�����̂ݑ啶���C���̑��͏������ŕ\�L���܂��D��Ƃ��Ă�*PHSolid::SetMass*�C*GRSdk::CreateScene*�Ȃǂł��D
-## �C���^�t�F�[�X�ƃf�B�X�N���v�^
-Springhead�ł͎d�l�Ǝ����𖾊m�ɕ������邽�߂ɁC�C���^�t�F�[�X�N���X�Ǝ����N���X���������Ă��܂��D���[�U�̓C���^�t�F�[�X�N���X�݂̂��g�p����Springhead�̋@�\�𗘗p���܂��D�������C`Base`��`Foundation`���W���[���ɂ��邲����{�I�ȃN���X�C�����`Framework`�̃A�v���P�[�V�����N���X�͗�O�ƂȂ��Ă��܂��D�܂��CSpringhead�̃N���X�ɂ͂��ꂼ��Ƀf�B�X�N���v�^���p�ӂ���Ă��܂��D�f�B�X�N���v�^�Ƃ́C���̃N���X�̓ǂݏ����\�ȑ����݂̂��W�߂��\���̂ł��D�f�B�X�N���v�^�𗘗p���邱�ƂŁC�����ݒ�̃C���X�^���X�𑽐��ݒ肷�邱�Ƃ��p�ӂɂȂ�܂��D�܂��C�f�B�X�N���v�^�̓t�@�C���ւ̃f�[�^�̕ۑ���ǂݍ��݂ɂ����Ă��𗧂��܂��D�ȉ���`Physics`���W���[���̍��̂�\��`PHSolid`�N���X���ɂƂ��Đ������܂��D
-```
+
+通常，ユーザはSpringheadを使用するにあたってこれらの依存関係を陽に意識する必要はありません．また，何らかの事情でSpringheadの特定の機能（たとえば物理シミュレーション）のみを用いたいという場合に対応できるように，モジュール間の依存関係はなるべく疎になるように設計されています．したがってこのような場合には用途に応じて必要なモジュールのみを使えるようになっています．
+
+
+
+## クラス・APIの命名規則
+各モジュールに含まれるクラスの名前には，先の表に示したようなモジュール固有のプリフィックスがつきます(例: Physicsモジュールの*PHSolid*，Collisionモジュールの*CDShape*)．一部にはこのルールにしたがわないクラスも存在します(例: Foundationモジュールの*Object*)．
+
+API(クラスのメンバ関数)にも緩い命名規則があります．API名は基本的に(動詞 + 目的語)という形式で処理内容を端的に表現します．また，単語の先頭文字のみ大文字，その他は小文字で表記します．例としては*PHSolid::SetMass*，*GRSdk::CreateScene*などです．
+
+
+
+## インタフェースとディスクリプタ
+Springheadでは仕様と実装を明確に分離するために，インタフェースクラスと実装クラスが分けられています．ユーザはインタフェースクラスのみを使用してSpringheadの機能を利用します．ただし，`Base`と`Foundation`モジュールにあるごく基本的なクラス，および`Framework`のアプリケーションクラスは例外となっています．また，Springheadのクラスにはそれぞれにディスクリプタが用意されています．ディスクリプタとは，そのクラスの読み書き可能な属性のみを集めた構造体です．ディスクリプタを利用することで，同じ設定のインスタンスを多数設定することが用意になります．また，ディスクリプタはファイルへのデータの保存や読み込みにおいても役立ちます．以下に`Physics`モジュールの剛体を表す`PHSolid`クラスを例にとって説明します．
+```c++
 // given PHSolidIf* phScene, 
 
 PHSolidDesc desc;
@@ -41,10 +37,14 @@ desc.mass = 1.0;
 
 PHSolidIf* solid = phScene->CreateSolid(desc);
 ```
-��̃R�[�h��`PHSolidDesc`��`PHSolid`�N���X�̃f�B�X�N���v�^�ł��D�܂����̃����o�ϐ�`mass`�ɒl���Z�b�g���邱�Ƃō��̂̎��ʂ�ݒ肵�Ă��܂��D���ɁC���̂��쐬���邽�߂�`CreateSolid`�֐����Ă΂�܂��D������`CreateSolid`�͕����V�[����\��`PHScene`�N���X�̃����o�֐��ł��D���ۂɂ�`PHScene`�N���X�̃C���^�t�F�[�X`PHSceneIf`���擾����K�v������܂����C�����ł͊��ɓ����Ă���Ƃ��Ă��܂��D���̂��쐬�����ƁC`CreateSolid`����C���^�t�F�[�X`PHSolidIf`�̃|�C���^���Ԃ���܂��D����ȍ~�̍��̂̑���͂��̃C���^�t�F�[�X����čs���܂��D
-```
+上のコードで`PHSolidDesc`は`PHSolid`クラスのディスクリプタです．まずそのメンバ変数`mass`に値をセットすることで剛体の質量を設定しています．次に，剛体を作成するために`CreateSolid`関数が呼ばれます．ここで`CreateSolid`は物理シーンを表す`PHScene`クラスのメンバ関数です．実際には`PHScene`クラスのインタフェース`PHSceneIf`を取得する必要がありますが，ここでは既に得られているとしています．剛体が作成されると，`CreateSolid`からインタフェース`PHSolidIf`のポインタが返されます．これ以降の剛体の操作はこのインタフェースを介して行います．
+```c++
 solid->SetMass(5.0);
 ```
-��{�I�ɁC�f�B�X���v�^����Đݒ�\�ȑ����̓C���^�t�F�[�X��`Get/Set`�n�֐����g���Ď擾�C�ݒ肪�ł���悤�ɂȂ��Ă��܂��D�ꍇ�ɉ����ĕ֗��ȕ����g���Ă��������DSpringhead�I�u�W�F�N�g�͂��ׂē����Ń������Ǘ�����Ă��܂��̂ŁC���[�U�������I��`delete`����K�v�͂���܂���i�܂��C���Ă͂����܂���j�D`Create`���ꂽ�I�u�W�F�N�g�̓v���O�����̏I�����Ɏ����I�ɔj������܂��D
-## ���ڂ����m�肽���l��
-�ȍ~�̏͂ł͊e���W���[���ɂ��Ă��ڂ����������܂��DSpringhead�𗘗p�����ŁC���ׂẴ��W���[�����ڂ�����������K�v�͂���܂���D�K�v�ɉ����ĎQ�Ƃ��Ă��������D
+基本的に，ディスリプタを介して設定可能な属性はインタフェースの`Get/Set`系関数を使って取得，設定ができるようになっています．場合に応じて便利な方を使ってください．Springheadオブジェクトはすべて内部でメモリ管理されていますので，ユーザが明示的に`delete`する必要はありません（また，してはいけません）．`Create`されたオブジェクトはプログラムの終了時に自動的に破棄されます．
+
+
+
+## より詳しく知りたい人は
+以降の章では各モジュールについてより詳しく説明します．Springheadを利用する上で，すべてのモジュールを詳しく理解する必要はありません．必要に応じて参照してください．
+

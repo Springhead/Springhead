@@ -1,64 +1,55 @@
 
-## �T�v
-FileIO�̓t�@�C�����o�͋@�\��񋟂��郂�W���[���ł��DFramework���痘�p����̂��ȒP�ł����A�P�̂ŗp����Ƃ��ׂ��ȍ�Ƃ��ł��܂��B
+## 概要
+FileIOはファイル入出力機能を提供するモジュールです．Frameworkから利用するのが簡単ですが、単体で用いるとより細かな作業ができます。
 ## FileIO SDK
-FileIO���W���[���̂��ׂẴI�u�W�F�N�g��SDK�N���X*FISdk*�ɂ���ĊǗ�����܂��D*FISdk*�N���X�́C�v���O�����̎��s��ʂ��Ă����P�̃I�u�W�F�N�g�����݂���V���O���g���N���X�ł��D*FISdk*�I�u�W�F�N�g���쐬����ɂ͈ȉ��̂悤�ɂ��܂��D
-```
+FileIOモジュールのすべてのオブジェクトはSDKクラス*FISdk*によって管理されます．*FISdk*クラスは，プログラムの実行を通してただ１つのオブジェクトが存在するシングルトンクラスです．*FISdk*オブジェクトを作成するには以下のようにします．
+```c++
 FISdkIf* fiSdk = FISdkIf::CreateSdk();
 ```
-�ʏ킱�̑���̓v���O�����̏��������Ɉ�x�������s���܂��D�܂��CFramework���W���[�����g�p����ꍇ�̓��[�U������*FISdk*���쐬����K�v�͂���܂���D*FISdk*�ɂ͈ȉ���2�̋@�\������܂��D
+通常この操作はプログラムの初期化時に一度だけ実行します．また，Frameworkモジュールを使用する場合はユーザが直接*FISdk*を作成する必要はありません．*FISdk*には以下の2つの機能があります．
 
--  �t�@�C���I�u�W�F�N�g�̍쐬
--  �C���|�[�g�I�u�W�F�N�g�̍쐬
-
-
+-  ファイルオブジェクトの作成
+-  インポートオブジェクトの作成
 
 
 
 
-\includegraphics[width=.6\hsize]{fig/fifile.eps}
+ファイルオブジェクトは，ファイルからのシーンのロードおよびセーブを担います．ファイルの基底クラスは*FIFile*で，ファイルフォーマットの種類ごとに専用のファイルクラスが派生します(\Fig{fifile})．ファイル作成に関する*FISdk*の関数を以下に示します．
 
-\caption{Class hierarchy of file objects}
-
-
-�t�@�C���I�u�W�F�N�g�́C�t�@�C������̃V�[���̃��[�h����уZ�[�u��S���܂��D�t�@�C���̊��N���X��*FIFile*�ŁC�t�@�C���t�H�[�}�b�g�̎�ނ��Ƃɐ�p�̃t�@�C���N���X���h�����܂�(\Fig{fifile})�D�t�@�C���쐬�Ɋւ���*FISdk*�̊֐����ȉ��Ɏ����܂��D
-
-\begin{tabular}{p{.3\hsize}p{.6\hsize}}
-*FISdkIf*															\\ \midrule
-*FIFileSprIf**		& *CreateFileSpr()*						\\
-*FIFileBinaryIf** 	& *CreateFileBinary()*					\\
-*FIFileXIf**			& *CreateFileX()*						\\
-*FIFileVRMLIf**		& *CreateFileVRML()*						\\
-*FIFileCOLLADAIf**	& *CreateFileCOLLADA()*					\\
-*FIFileIf**			& *CreateFileFromExt(UTString filename)*	\\
-\end{tabular}
-
-*CreateFileFromExt*��*filename*�̊g���q����t�@�C���t�H�[�}�b�g�𔻕ʂ��đΉ�����t�@�C���I�u�W�F�N�g���쐬���܂��D
-## �t�@�C���t�H�[�}�b�g
-���̐߂ł�Springhead�Ń��[�h�E�Z�[�u�ł���t�@�C���̃t�@�C���t�H�[�}�b�g���Љ�܂��B
-### spr�t�@�C��
-�g���q .spr �̃t�@�C���́ASpringhead�Ǝ��̃t�@�C���`���ł��B�l���ǂݏ������₷���ASpringhead�̎d�l���ω����Ă��]��e�����󂯂Ȃ��悤�Ȍ`���ɂȂ��Ă��܂��B�t�@�C�����菑������ꍇ�͂��̌`�����g���Ă��������Bspr�t�@�C���̓m�[�h��`�̌J��Ԃ��ł��Bspr�t�@�C���̗�������܂��B
-```
-PHSdk{                  #PHSdk�m�[�h
-    CDSphere sphere{    #���̎q�m�[�h��CDSphere�m�[�h��ǉ�
-        material = {    # CDSphere �� material(PHMaterial�^)��
-            mu = 0.2    # ���C�W�� mu ��0.2����
+|*FISdkIf*															 |
+|---|---|
+|_FIFileSprIf*_	| *CreateFileSpr()*						|
+|_FIFileBinaryIf*_ | *CreateFileBinary()*					|
+|_FIFileXIf*_		| *CreateFileX()*						|
+|_FIFileVRMLIf*_	| *CreateFileVRML()*						|
+|_FIFileCOLLADAIf*_| *CreateFileCOLLADA()*					|
+|_FIFileIf*_		| *CreateFileFromExt(UTString filename)*	|
+*CreateFileFromExt*は*filename*の拡張子からファイルフォーマットを判別して対応するファイルオブジェクトを作成します．
+## ファイルフォーマット
+この節ではSpringheadでロード・セーブできるファイルのファイルフォーマットを紹介します。
+### sprファイル
+拡張子 .spr のファイルは、Springhead独自のファイル形式です。人が読み書きしやすく、Springheadの仕様が変化しても余り影響を受けないような形式になっています。ファイルを手書きする場合はこの形式を使ってください。sprファイルはノード定義の繰り返しです。sprファイルの例を示します。
+```c++
+PHSdk{                  #PHSdkノード
+    CDSphere sphere{    #↑の子ノードにCDSphereノードを追加
+        material = {    # CDSphere の material(PHMaterial型)の
+            mu = 0.2    # 摩擦係数 mu に0.2を代入
         }
-        radius = 0.5    # radius��0.5����
+        radius = 0.5    # radiusに0.5を代入
     }
     CDBox bigBox{
         boxsize = 2.0 1.1 0.9
     }
 }
 ```
-Spr�t�@�C���̃m�[�h�̓f�B�X�N���v�^�i\SECTION{if_desc})���Q�Ɓj�ɂP�΂P�őΉ����܂��B�f�B�X�N���v�^�����p�ӂ���Ύ����I�Ɏg����m�[�h�̌^�������܂��B�t�@�C���Œl�������Ȃ��ƁA�f�B�X�N���v�^�̏����l�ɂȂ�܂��B��̗�ł́A*PHSdk*�ɒǉ������*sphere*(*CDSphere*�^)�́A
-```
+Sprファイルのノードはディスクリプタ（\SECTION{if_desc})を参照）に１対１で対応します。ディスクリプタさえ用意すれば自動的に使えるノードの型が増えます。ファイルで値を代入しないと、ディスクリプタの初期値になります。上の例では、*PHSdk*に追加される*sphere*(*CDSphere*型)は、
+```c++
 CDSphereDesc desc;
 desc.material.mu = 0.2;
 desc.radius = 0.5;
 ```
-�Ƃ����f�B�X�N���v�^ *desc* �ō��̂Ɠ������ƂɂȂ�܂��BSpr�t�@�C���̕��@��BNF�{���K�\���ŏ�����
-```
+としたディスクリプタ *desc* で作るのと同じことになります。Sprファイルの文法をBNF＋正規表現で書くと
+```c++
 spr   = node*
 node  = node type, (node id)?, block
 block = '{' (node|refer|data)*  '}'
@@ -67,134 +58,127 @@ data  = field id, '=', (block | right)
 right = '[' value*, ']' | value
 value = bool | int | real | str | right
 ```
-�ƂȂ�܂��B*right*�ȍ~�̉��߂�*field*�̌^�Ɉˑ����܂��B
-### X�t�@�C��
-�u X �t�@�C�� �v�́ADirect3D�̃t�@�C���t�H�[�}�b�g�ŁA�g���q�� .x �ł��B���f�����O�\�t�gXSI�Ŏg���Ă���A�����̃��f�����O�c�[���ŏo�͂ł��܂��B3D�̌`��f�[�^�A�}�e���A���A�e�N�X�`���A�{�[���Ȃǂ��܂߂邱�Ƃ��ł��܂��BSpringhead2�ł́A�W���I��X�t�@�C���̃��[�h�ƁASpringhead2�Ǝ��̃m�[�h�̃��[�h�ƃZ�[�u���ł��܂��B�������Ǝ��m�[�h���菑������ꍇ�� Spr�t�@�C���̕��������₷���֗��ł��̂ł�����̎g�p���������߂��܂��BX�t�@�C���̗�������܂��B
-```
-xof 0302txt 0064        #�ŏ��̍s�͂��ꂩ��n�܂�
+となります。*right*以降の解釈は*field*の型に依存します。
+### Xファイル
+「 X ファイル 」は、Direct3Dのファイルフォーマットで、拡張子は .x です。モデリングソフトXSIで使われており、多くのモデリングツールで出力できます。3Dの形状データ、マテリアル、テクスチャ、ボーンなどを含めることができます。Springhead2では、標準的なXファイルのロードと、Springhead2独自のノードのロードとセーブができます。ただし独自ノードを手書きする場合は Sprファイルの方が書きやすく便利ですのでそちらの使用をおすすめします。Xファイルの例を示します。
+```c++
+xof 0302txt 0064        #最初の行はこれから始まる
 
-#    �m�[�h�́C
-#        �^���C�m�[�h�� { �t�B�[���h�̌J��Ԃ�   �q�m�[�h }
-#    ����Ȃ�D
+#    ノードは，
+#        型名，ノード名 { フィールドの繰り返し   子ノード }
+#    からなる．
 PHScene scene1{
-    0.01;0;;            #�t�B�[���h �� �l; �̌J��Ԃ�
-    1;0;-9.8;0;;        #�l�� ���l�C������܂��̓t�B�[���h
-    PHSolid soFloor{    #�q�m�[�h�́C�m�[�h�Ɠ���
-        (�ȗ�)
+    0.01;0;;            #フィールド は 値; の繰り返し
+    1;0;-9.8;0;;        #値は 数値，文字列またはフィールド
+    PHSolid soFloor{    #子ノードは，ノードと同じ
+        (省略)
     }
 }
-# �R�����g�� #�ȊO�� // ���g����
+# コメントは #以外に // も使える
 ```
 
-#### �Ǝ��m�[�h�̒�`
-Springhead2 �̒ʏ�̃m�[�h�́C�I�u�W�F�N�g�̃f�B�X�N���v�^�i\SECTION{if_desc}�߁j�ɂP�΂P�őΉ����܂��D���[�h���ɂ́C�f�B�X�N���v�^�ɑΉ�����I�u�W�F�N�g����������C�V�[���O���t�ɒǉ�����܂��D�Z�[�u���ɂ́C�I�u�W�F�N�g����f�B�X�N���v�^��ǂݏo���C�m�[�h�̌`���Ńt�@�C���ɕۑ�����܂��D�I�u�W�F�N�g�̃f�B�X�N���v�^�ɂ́C�K���Ή�����m�[�h������܂��D�Ⴆ�΁C*SprPHScene.h* �ɂ́C
-```
+#### 独自ノードの定義
+Springhead2 の通常のノードは，オブジェクトのディスクリプタ（\SECTION{if_desc}節）に１対１で対応します．ロード時には，ディスクリプタに対応するオブジェクトが生成され，シーングラフに追加されます．セーブ時には，オブジェクトからディスクリプタを読み出し，ノードの形式でファイルに保存されます．オブジェクトのディスクリプタには，必ず対応するノードがあります．例えば，*SprPHScene.h* には，
+```c++
 struct PHSceneState{
-    double timeStep;      ///< �ϕ��X�e�b�v
-    unsigned count;       ///< �ϕ�������
+    double timeStep;      ///< 積分ステップ
+    unsigned count;       ///< 積分した回数
 };
 struct PHSceneDesc:PHSceneState{
-    /// �ڐG�E�S�������G���W���̎��
+    /// 接触・拘束解決エンジンの種類
     enum ContactMode{ MODE_NONE, MODE_PENALTY, MODE_LCP};
-    Vec3f gravity;      ///< �d�͉����x�x�N�g���D�f�t�H���g�l��(0.0f, -9.8f,0.0f)�D
+    Vec3f gravity;      ///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f,0.0f)．
 };
 ```
-�̂悤�ɁC�X�e�[�g�ƃf�B�X�N���v�^���錾����Ă��܂��D���� *PHSceneDesc* �ɑΉ����� X �t�@�C���̃m�[�h�́C
-```
+のように，ステートとディスクリプタが宣言されています．この *PHSceneDesc* に対応する X ファイルのノードは，
+```c++
 PHScene scene1{                                                                     0.01;     #PHSceneState::timeStep
-    0;;       #PHSceneState::count     �Ō��;��PHSceneState���̏I���������D
+    0;;       #PHSceneState::count     最後の;はPHSceneState部の終わりを示す．
     1;        #PHSceneDesc::ContactMode
-    0;-9.8;0;;#PHSceneDesc::gravity    �Ō��;��PHSceneDesc���̏I���������D
+    0;-9.8;0;;#PHSceneDesc::gravity    最後の;はPHSceneDesc部の終わりを示す．
 }
 ```
-�̂悤�ɂȂ�܂��D�N���X�̃����o�ϐ������̂܂܃t�B�[���h�ɂȂ�܂��D�܂��C��{�N���X�́C�擪�Ƀt�B�[���h���ǉ����ꂽ�`�ɂȂ�܂��D�ʏ�m�[�h�̈ꗗ�� \URL{TBU: �f�X�N���v�^�ꗗ�̃y�[�W} ���Q�Ɖ������D
-#### X�t�@�C���̃m�[�h
-Springhead2�̓Ǝ��m�[�h�����łȂ��A���ʂ�X�t�@�C���̃m�[�h�����[�h�ł��܂��BX�t�@�C���ɂ́A
-```
+のようになります．クラスのメンバ変数がそのままフィールドになります．また，基本クラスは，先頭にフィールドが追加された形になります．通常ノードの一覧は \URL{TBU: デスクリプタ一覧のページ} を参照下さい．
+#### Xファイルのノード
+Springhead2の独自ノードだけでなく、普通のXファイルのノードもロードできます。Xファイルには、
+```c++
 Frame{
     FrameTransfromMatrix{ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1; }
 }
 ```
-�̂悤�ȃt���[���̃m�[�h�^������܂����ASprinhead2 �ɂ͑Ή�����f�B�X�N���v�^��I�u�W�F�N�g������܂���D�����ŁC�����́A*GRFrame*��*PHFrame*�ɕϊ�����ă��[�h����܂��D\URL{TBW �m�[�h�ꗗ�̃y�[�W(pageNodeDefList)} ���Q�Ɖ������D
-## �t�@�C���̃��[�h�E�Z�[�u
+のようなフレームのノード型がありますが、Sprinhead2 には対応するディスクリプタやオブジェクトがありません．そこで，これらは、*GRFrame*や*PHFrame*に変換されてロードされます．\URL{TBW ノード一覧のページ(pageNodeDefList)} を参照下さい．
+## ファイルのロード・セーブ
 
 
 
+\Fig{fileOperation}は、ファイルのロード・セーブの手順を示しています。ロード時にはまずファイルをパースしてディスクリプタのツリーを作ります。次にディスクリプタのツリーをたどりながら、オブジェクトのツリーを作ります。一方、セーブ時には、ディスクリプタツリーは作りません。オブジェクトツリーをたどりながらオブジェクトからディスクリプタを作り、その場でファイルに書きだしていきます。ファイルのノードとディスクリプタツリーのノードは１対１に対応しますが、オブジェクトのツリーではそうとは限りません。
+### ファイルロードの仕組み
 
-
-\includegraphics*[width=.95\hsize]{fig/fileOperation.eps}
-
-\caption{Overview of file operation}
-
-
-\Fig{fileOperation}�́A�t�@�C���̃��[�h�E�Z�[�u�̎菇�������Ă��܂��B���[�h���ɂ͂܂��t�@�C�����p�[�X���ăf�B�X�N���v�^�̃c���[�����܂��B���Ƀf�B�X�N���v�^�̃c���[�����ǂ�Ȃ���A�I�u�W�F�N�g�̃c���[�����܂��B����A�Z�[�u���ɂ́A�f�B�X�N���v�^�c���[�͍��܂���B�I�u�W�F�N�g�c���[�����ǂ�Ȃ���I�u�W�F�N�g����f�B�X�N���v�^�����A���̏�Ńt�@�C���ɏ��������Ă����܂��B�t�@�C���̃m�[�h�ƃf�B�X�N���v�^�c���[�̃m�[�h�͂P�΂P�ɑΉ����܂����A�I�u�W�F�N�g�̃c���[�ł͂����Ƃ͌���܂���B
-### �t�@�C�����[�h�̎d�g��
-
-#### �t�@�C���̃p�[�X
-�t�@�C���̃��[�h�́A*FIFileSpr*��*FIFileX*�̂悤��*FIFile*�̔h���N���X��*LoadImp()*���\�b�h���s���܂��B�t�@�C���p�[�X�̎����́Aboost::spirit��p���Ď�������Ă��܂��B*Init()*���\�b�h�Ńp�[�T�̕��@���`���Ă��܂��B
-#### �f�B�X�N���v�^�̐���
-�p�[�T��*FILoadContext*���R���e�L�X�g�Ƃ��ėp���Ȃ���p�[�X��i�߂܂��B*fieldIts*�Ƀ��[�h���̃f�[�^�̌^�����Z�b�g���Ă����܂��B�m�[�h���⃁���o������f�B�X�N���v�^�⃁���o�̌^��m��K�v������܂����A�r���h����SWIG�Ő������Ă���f�B�X�N���v�^�̌^����*??Sdk::RegisterSdk()*���o�^�������̂�p���Ă��܂��B�V�����m�[�h���o�Ă���x��*FILoadContext::datas*�Ƀf�B�X�N���v�^��p�ӂ��A�f�[�^�����[�h����Ƃ����ɒl���Z�b�g���Ă����܂��B���̃m�[�h�ւ̎Q�Ƃ́A���̎��_�ł̓m�[�h���̕�����ŋL�^���Ă����܂��B
-#### �Q�Ƃ̃����N
-�t�@�C�������ׂă��[�h���I���ƁA*LoadImp()*���甲���āA*FIFile::Load(FILoadContext*)*�ɖ߂��Ă��܂��B���̃m�[�h(���̃f�B�X�N���v�^)�ւ̎Q�Ƃ��m�[�h���̕�����𗊂�Ƀ|�C���^�łȂ��ł����܂��B
-#### �I�u�W�F�N�g�̐���
-�I�u�W�F�N�g�����́A*FILoadContext::CreateScene()*���A�f�B�X�N���v�^�c���[�����{���炽�ǂ�Ȃ��珇�ɍs���܂��B�f�B�X�N���v�^����I�u�W�F�N�g�𐶐�����̂́A���̃I�u�W�F�N�g�̐�c�I�u�W�F�N�g�ł��B��c�I�u�W�F�N�g�������ł��Ȃ��ꍇ��SDK�̐��������݂܂��BSDK�ȊO����ԍ��{�ɂ���t�@�C�������[�h���邽�߂ɂ́A�\�ߐ�c�I�u�W�F�N�g��p�ӂ��Ă����K�v������܂��B*FIFile::Load(ObjectIfs\& objs, const char* fn)*��*objs*�����͂��̖��������܂��B�������ꂽ�I�u�W�F�N�g�́A�e��*AddChildObject()*�ł����Ɏq�Ƃ��Ēǉ�����܂��B
-#### �Q�Ƃ̃����N
-�f�B�X�N���v�^�Ԃ̎Q�Ƃ̓|�C���^�ɂȂ��Ă��܂����A�V�[���O���t�͌q�����Ă��܂���B�f�B�X�N���v�^�̎Q�Ƃɏ]���āA�f�B�X�N���v�^���琶�����ꂽ�I�u�W�F�N�g�ԂɎQ�Ƃ�ǉ����܂��B�����N�́A*AddChildObject()*�֐����Ăяo�����Ƃōs���܂��B�e�q�ƎQ�Ƃ̋�ʂ͂��Ȃ��Ȃ�܂��B����m�[�h�̉��Ɏq�m�[�h�������Ă��A�ʂ̂Ƃ���ɏ������m�[�h�ւ̎Q�Ƃ������Ă������V�[�O���t�ɂȂ�킯�ł��B
-### �t�@�C�����[�h�̎���
-Framework���g���̂ƊȒP�ł��B
-```
+#### ファイルのパース
+ファイルのロードは、*FIFileSpr*や*FIFileX*のような*FIFile*の派生クラスの*LoadImp()*メソッドが行います。ファイルパースの実装は、boost::spiritを用いて実装されています。*Init()*メソッドでパーサの文法を定義しています。
+#### ディスクリプタの生成
+パーサは*FILoadContext*をコンテキストとして用いながらパースを進めます。*fieldIts*にロード中のデータの型情報をセットしていきます。ノード名やメンバ名からディスクリプタやメンバの型を知る必要がありますが、ビルド時にSWIGで生成しているディスクリプタの型情報を*??Sdk::RegisterSdk()*が登録したものを用いています。新しいノードが出てくる度に*FILoadContext::datas*にディスクリプタを用意し、データをロードするとそこに値をセットしていきます。他のノードへの参照は、この時点ではノード名の文字列で記録しておきます。
+#### 参照のリンク
+ファイルをすべてロードし終わると、*LoadImp()*から抜けて、*FIFile::Load(FILoadContext*)*に戻ってきます。他のノード(他のディスクリプタ)への参照をノード名の文字列を頼りにポインタでつないでいきます。
+#### オブジェクトの生成
+オブジェクト生成は、*FILoadContext::CreateScene()*が、ディスクリプタツリーを根本からたどりながら順に行います。ディスクリプタからオブジェクトを生成するのは、そのオブジェクトの先祖オブジェクトです。先祖オブジェクトが生成できない場合はSDKの生成を試みます。SDK以外が一番根本にあるファイルをロードするためには、予め先祖オブジェクトを用意しておく必要があります。*FIFile::Load(ObjectIfs\& objs, const char* fn)*の*objs*引数はその役割をします。生成されたオブジェクトは、親の*AddChildObject()*ですぐに子として追加されます。
+#### 参照のリンク
+ディスクリプタ間の参照はポインタになっていますが、シーングラフは繋がっていません。ディスクリプタの参照に従って、ディスクリプタから生成されたオブジェクト間に参照を追加します。リンクは、*AddChildObject()*関数を呼び出すことで行われます。親子と参照の区別はつかなくなります。あるノードの下に子ノードを書いても、別のところに書いたノードへの参照を書いても同じシーグラフになるわけです。
+### ファイルロードの実際
+Frameworkを使うのと簡単です。
+```c++
 virtual void FWMyApp::Init(int argc, char* argv[]){
     UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-    GetSdk()->LoadScene(fileName, import);  // �t�@�C���̃��[�h
-    GetSdk()->SaveScene("save.spr", import);// �t�@�C���̃Z�[�u�e�X�g
+    GetSdk()->LoadScene(fileName, import);  // ファイルのロード
+    GetSdk()->SaveScene("save.spr", import);// ファイルのセーブテスト
 ```
-FISdk�P�̂Ŏg���ꍇ�͎��̂悤�ɂȂ�܂��B
-```
+FISdk単体で使う場合は次のようになります。
+```c++
 int main(){
-    //  �t�@�C�����[�_�Ő����ł���悤�ɁA�eSDK�̌^����o�^
+    //  ファイルローダで生成できるように、各SDKの型情報を登録
     PHSdkIf::RegisterSdk();
     GRSdkIf::RegisterSdk();
     FWSdkIf::RegisterSdk();
-    //  �t�@�C���̃��[�h
+    //  ファイルのロード
     UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
     FIFileIf* file = fiSdk->CreateFileFromExt(".spr");
-    ObjectIfs objs; //  ���[�h�p�I�u�W�F�N�g�X�^�b�N
-    fwSdk = FWSdkIf::CreateSdk();   //  FWSDK��p��
-    //  �q�I�u�W�F�N�g�쐬�p��fwSdk���X�^�b�N�ɐς�
+    ObjectIfs objs; //  ロード用オブジェクトスタック
+    fwSdk = FWSdkIf::CreateSdk();   //  FWSDKを用意
+    //  子オブジェクト作成用にfwSdkをスタックに積む
     objs.push_back(fwSdk);
-    //  FWSDK�ȉ��S�̂��t�@�C�����烍�[�h
+    //  FWSDK以下全体をファイルからロード
     if (! file->Load(objs, "test.spr") ) {  
         DSTR << "Error: Cannot open load file. " << std::endl;
         exit(-1);
     }
-    //  �t�@�C�����̃��[�g�m�[�h�i�����̉\������j��objs�ɐς܂��B
+    //  ファイル中のルートノード（複数の可能性あり）がobjsに積まれる。
     for(unsigned  i=0; i<objs.size(); ++i){ 
         objs[i]->Print(DSTR);
     }
     ...
 ```
 
-### �t�@�C���Z�[�u�̎d�g��
-�t�@�C���Z�[�u�́A*FIFile*���V�[���O���t�����ǂ�Ȃ���A�I�u�W�F�N�g���Z�[�u���Ă����܂��B�e�I�u�W�F�N�g��*GetDescAddress()*���A��������Ă��Ȃ����*GetDesc()*���Ăяo���ăf�B�X�N���v�^��ǂݏo���܂��B�V�[���O���t�ɂ́A����m�[�h�������̃m�[�h�̎q�m�[�h�ɂȂ��Ă���ꍇ�����邽�߁A2�d�ɃZ�[�u���Ȃ��悤��2�x�ڈȍ~�͎Q�ƂƂ��ăZ�[�u���܂��B�f�B�X�N���v�^�����o������A�f�B�X�N���v�^�̌^���𗘗p���āA�f�B�X�N���v�^�̃����o�����ԂɃZ�[�u���Ă����܂��B���ۂɃf�[�^���t�@�C���ɕۑ�����R�[�h�́A*FiFileSpr*�Ȃ�*FiFile*�̔h���N���X�ɂ���܂��B
-### �t�@�C���Z�[�u�̎���
-Framework���g���̂ƊȒP�ł��B
-```
+### ファイルセーブの仕組み
+ファイルセーブは、*FIFile*がシーングラフをたどりながら、オブジェクトをセーブしていきます。各オブジェクトの*GetDescAddress()*か、実装されていなければ*GetDesc()*を呼び出してディスクリプタを読み出します。シーングラフには、あるノードが複数のノードの子ノードになっている場合があるため、2重にセーブしないように2度目以降は参照としてセーブします。ディスクリプタを取り出したら、ディスクリプタの型情報を利用して、ディスクリプタのメンバを順番にセーブしていきます。実際にデータをファイルに保存するコードは、*FiFileSpr*など*FiFile*の派生クラスにあります。
+### ファイルセーブの実際
+Frameworkを使うのと簡単です。
+```c++
 virtual void FWMyApp::Save(const char* filename){
     UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-    GetSdk()->SaveScene(filename, import);	// filename�ɃV�[�����Z�[�u
+    GetSdk()->SaveScene(filename, import);	// filenameにシーンをセーブ
 ```
-FISdk�P�̂Ŏg���ꍇ�͎��̂悤�ɂȂ�܂��B
-```
+FISdk単体で使う場合は次のようになります。
+```c++
 void save(const char* filename, ImportIf* ex, ObjectIf* rootNode){
-    //  �t�@�C���̃Z�[�u
+    //  ファイルのセーブ
     UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
     FIFileIf* file = fiSdk->CreateFileFromExt(".spr");
-    ObjectIfs objs; //  ���[�h�p�I�u�W�F�N�g�X�^�b�N
+    ObjectIfs objs; //  ロード用オブジェクトスタック
     objs.push_back(rootNode);
     file->SetImport(ex);
     file->Save(*objs, filename);
 }
 ```
 
-## �C���|�[�g���̊Ǘ�
-T.B.W.�iImport���g���ƕʂ̃t�@�C���ɏ������m�[�h���Ăяo�����Ƃ��ł���BImport���g���ă��[�h�����V�[�����Z�[�u�ꍇ�A�t�@�C���ۑ����ɂǂ��܂ł��t�@�C���ɕۑ�����̂������ɂȂ�B������Ǘ�����̂�Import�̖������Ǝv���Bby ���J��)
+## インポート情報の管理
+T.B.W.（Importを使うと別のファイルに書いたノードを呼び出すことができる。Importを使ってロードしたシーンをセーブ場合、ファイル保存時にどこまでをファイルに保存するのかが問題になる。これを管理するのがImportの役割だと思う。by 長谷川)

@@ -1,202 +1,173 @@
 
-## �T�v
-Physics���W���[���͕����V�~�����[�V�����@�\��񋟂��܂��D��ɃT�|�[�g����Ă���̂́C�}���`�{�f�B�_�C�i�~�N�X�ƌĂ΂�鍄�̂Ɗ֐߂Ȃǂ̍S������Ȃ铮�͊w�V�~�����[�V�����ł��D���̂Ƃ���\�t�g�{�f�B�◬�́C�p�[�e�B�N���Ȃǂ̋@�\�̓T�|�[�g����Ă��܂���D
+## 概要
+Physicsモジュールは物理シミュレーション機能を提供します．主にサポートされているのは，マルチボディダイナミクスと呼ばれる剛体と関節などの拘束からなる動力学シミュレーションです．今のところソフトボディや流体，パーティクルなどの機能はサポートされていません．
 ## Physics SDK
-Physics���W���[���̂��ׂẴI�u�W�F�N�g��SDK�N���X*PHSdk*�ɂ���ĊǗ�����܂��D*PHSdk*�N���X�́C�v���O�����̎��s��ʂ��Ă����P�̃I�u�W�F�N�g�����݂���V���O���g���N���X�ł��D*PHSdk*�I�u�W�F�N�g���쐬����ɂ͈ȉ��̂悤�ɂ��܂��D
-```
+PhysicsモジュールのすべてのオブジェクトはSDKクラス*PHSdk*によって管理されます．*PHSdk*クラスは，プログラムの実行を通してただ１つのオブジェクトが存在するシングルトンクラスです．*PHSdk*オブジェクトを作成するには以下のようにします．
+```c++
 PHSdkIf* phSdk = PHSdkIf::CreateSdk();
 ```
-�ʏ킱�̑���̓v���O�����̏��������Ɉ�x�������s���܂��D�܂��CFramework���W���[�����g�p����ꍇ�̓��[�U������*PHSdk*���쐬����K�v�͂���܂���D*PHSdk*�̋@�\�̓V�[���ƌ`��̊Ǘ��ł��D�V�[���Ɋւ���@�\�͎��߂Ő������܂��D�܂��C�`��Ɋւ���@�\�͈ȉ��̒ʂ�ł��D
+通常この操作はプログラムの初期化時に一度だけ実行します．また，Frameworkモジュールを使用する場合はユーザが直接*PHSdk*を作成する必要はありません．*PHSdk*の機能はシーンと形状の管理です．シーンに関する機能は次節で説明します．また，形状に関する機能は以下の通りです．
 
-\begin{tabular}{p{.15\hsize}p{.55\hsize}p{.2\hsize}}
-*PHSdkIf* & &															\\ \midrule
-*CDShapeIf** & *CreateShape(const CDShapeDesc\&)*	& �`����쐬	\\
-*CDShapeIf**	& *GetShape(int)*					& �`����擾	\\
-*int*		& *NShape()*							& �`��̐�		\\
-\end{tabular}
+|*PHSdkIf*||															 |
+|---|---|---|---|
+|_CDShapeIf*_| *CreateShape(const CDShapeDesc&)*| 形状を作成	|
+|_CDShapeIf*_| *GetShape(int)*				| 形状を取得	|
+|*int*	| *NShape()*						| 形状の数		|
+異なるシーン間で形状を共有できるように，形状管理はシーンではなく*PHSdk*の機能になっています．詳しくは\ref{chap_collision}章を参照してください．
+## シーン
+シーンは物理シミュレーションを行う環境を表します．複数のシーンを作成できますが，シーン同士は互いに独立しており，ユーザが直接橋渡し処理をしない限りは影響を及ぼしあうことはありません．シーンクラスは*PHScene*で，*PHScene*オブジェクトは*PHSdk*により管理されます．
 
-�قȂ�V�[���ԂŌ`������L�ł���悤�ɁC�`��Ǘ��̓V�[���ł͂Ȃ�*PHSdk*�̋@�\�ɂȂ��Ă��܂��D�ڂ�����\ref{chap_collision}�͂��Q�Ƃ��Ă��������D
-## �V�[��
-�V�[���͕����V�~�����[�V�������s������\���܂��D�����̃V�[�����쐬�ł��܂����C�V�[�����m�݂͌��ɓƗ����Ă���C���[�U�����ڋ��n�����������Ȃ�����͉e�����y�ڂ��������Ƃ͂���܂���D�V�[���N���X��*PHScene*�ŁC*PHScene*�I�u�W�F�N�g��*PHSdk*�ɂ��Ǘ�����܂��D
-
-\begin{tabular}{p{.15\hsize}p{.55\hsize}p{.2\hsize}}
-\multicolumn{3}{l}{*PHSdkIf*}															\\ \midrule
-*PHSceneIf**	& *CreateScene(const PHSceneDesc\& desc)*			& �V�[�����쐬		\\
-*int*		& *NScene()*											& �V�[���̐�		\\
-*PHSceneIf**	& *GetScene(int i)*									& �V�[�����擾		\\
-*void*		& *MergeScene(PHSceneIf* scene0, PHSceneIf* scene1)*	& �V�[���𓝍�		\\
-\end{tabular}
-
-�V�[�����쐬����ɂ͈ȉ��̂悤�ɂ��܂��D
-```
+|*PHSdkIf*| | 															 |
+|---|---|---|---|
+|_PHSceneIf*_| *CreateScene(const PHSceneDesc& desc)*		| シーンを作成		|
+|*int*	| *NScene()*										| シーンの数		|
+|_PHSceneIf*_| *GetScene(int i)*								| シーンを取得		|
+|*void*	| *MergeScene(PHSceneIf* scene0, PHSceneIf* scene1)*| シーンを統合		|
+シーンを作成するには以下のようにします．
+```c++
 PHSceneIf* phScene = phSdk->CreateScene();
 ```
-�����Ƀf�B�X�N���v�^���w�肷�邱�Ƃ��ł��܂��D*MergeScene*�́C*scene1*���ۗL����I�u�W�F�N�g�����ׂ�*scene0*�Ɉړ��������*scene1*���폜���܂��D�V�[���͍��̂�֐߂Ȃǂ̗l�X�ȍ\���v�f�̊Ǘ����s���ق��C�����V�~�����[�V�����Ɋւ���ݒ���s���@�\��񋟂��܂��D�e�\���v�f�̍쐬�ɂ��Ă͂��ꂼ��̐߂Ő������܂��̂ŁC�ȉ��ł̓V�~�����[�V�����ݒ�@�\�ɂ��ďq�ׂ܂��D
+引数にディスクリプタを指定することもできます．*MergeScene*は，*scene1*が保有するオブジェクトをすべて*scene0*に移動した後に*scene1*を削除します．シーンは剛体や関節などの様々な構成要素の管理を行うほか，物理シミュレーションに関する設定を行う機能を提供します．各構成要素の作成についてはそれぞれの節で説明しますので，以下ではシミュレーション設定機能について述べます．
 
-\begin{tabular}{p{.15\hsize}p{.35\hsize}p{.4\hsize}}
-\multicolumn{3}{l}{*PHSceneDesc*}										\\ \midrule
-*double*		&	*timeStep*	& ���ԃX�e�b�v��					\\
-*unsigned*	&	*count*		& �V�~�����[�V���������X�e�b�v��	\\
-*Vec3d*		&	*gravity*	& �d�͉����x						\\
-*double*		&	*airResistanceRate*	& ��C��R�W��				\\
-*int*		&	*numIteration*		& LCP�̔�����				\\
-\end{tabular}
-
+|*PHSceneDesc*| | 										 |
+|---|---|---|
+|*double*	|	*timeStep*| 時間ステップ幅					|
+|*unsigned*|	*count*	| シミュレーションしたステップ数	|
+|*Vec3d*	|	*gravity*| 重力加速度						|
+|*double*	|	*airResistanceRate*| 空気抵抗係数				|
+|*int*	|	*numIteration*	| LCPの反復回数				|
 
 
-\begin{tabular}{p{.15\hsize}p{.55\hsize}p{.2\hsize}}
-\multicolumn{3}{l}{*PHSceneIf*}							  \\ \midrule
-*double*		& *GetTimeStep()*					& \\
-*void*		& *SetTimeStep(double)*				& \\
-*unsigned*	& *GetCount()*						& \\
-*void*		& *SetCount(unsigned)*				& \\
-*void*		& *SetGravity(const Vec3d\&)*		& \\
-*Vec3d*		& *GetGravity()*						& \\
-*void*		& *SetAirResistanceRate(double)*		& \\
-*double*		& *GetAirResistanceRate()*			& \\
-*int*		& *GetNumIteration()*				& \\
-*void*		& *SetNumIteration()*				& \\
-\end{tabular}
+|*PHSceneIf*| | 							   |
+|---|---|---|
+|*double*	| *GetTimeStep()*				| |
+|*void*	| *SetTimeStep(double)*			| |
+|*unsigned*| *GetCount()*					| |
+|*void*	| *SetCount(unsigned)*			| |
+|*void*	| *SetGravity(const Vec3d&)*	| |
+|*Vec3d*	| *GetGravity()*					| |
+|*void*	| *SetAirResistanceRate(double)*	| |
+|*double*	| *GetAirResistanceRate()*		| |
+|*int*	| *GetNumIteration()*			| |
+|*void*	| *SetNumIteration()*			| |
+*timeStep*は一度のシミュレーションステップで進める時間幅です．小さいほどシミュレーションの精度は上がりますが，同じ時間シミュレーションを進めるのにかかる計算コストは増大します．*count*はシーン作成後にシミュレーションした累積ステップ数です．*count*と*timeStep*の積が経過時間を表します．*gravity*は重力加速度ベクトルです．*airResistanceRate*は，シミュレーションの安定性を向上するために毎ステップに各剛体の速度に掛けられる係数です．例えば*airRegistanceRate*が$0.95$であればステップごとに速度が*95*\%になります．このように強制的に減速をかけることで，精度を犠牲に安定性を得ることができます．*numIteration*は，拘束力を計算するために内部で実行されるアルゴリズムの反復回数です．一般に，反復回数に関して指数関数的に拘束力の精度が向上し，計算コストは比例的に増大します．
+### シミュレーションの実行
+シミュレーションを*1*ステップ進めるには*Step*関数を呼びます．
 
-*timeStep*�͈�x�̃V�~�����[�V�����X�e�b�v�Ői�߂鎞�ԕ��ł��D�������قǃV�~�����[�V�����̐��x�͏オ��܂����C�������ԃV�~�����[�V������i�߂�̂ɂ�����v�Z�R�X�g�͑��債�܂��D*count*�̓V�[���쐬��ɃV�~�����[�V���������ݐσX�e�b�v���ł��D*count*��*timeStep*�̐ς��o�ߎ��Ԃ�\���܂��D*gravity*�͏d�͉����x�x�N�g���ł��D*airResistanceRate*�́C�V�~�����[�V�����̈��萫�����シ�邽�߂ɖ��X�e�b�v�Ɋe���̂̑��x�Ɋ|������W���ł��D�Ⴆ��*airRegistanceRate*��$0.95$�ł���΃X�e�b�v���Ƃɑ��x��$95$\%�ɂȂ�܂��D���̂悤�ɋ����I�Ɍ����������邱�ƂŁC���x���]���Ɉ��萫�𓾂邱�Ƃ��ł��܂��D*numIteration*�́C�S���͂��v�Z���邽�߂ɓ����Ŏ��s�����A���S���Y���̔����񐔂ł��D��ʂɁC�����񐔂Ɋւ��Ďw���֐��I�ɍS���͂̐��x�����サ�C�v�Z�R�X�g�͔��I�ɑ��債�܂��D
-### �V�~�����[�V�����̎��s
-�V�~�����[�V������$1$�X�e�b�v�i�߂�ɂ�*Step*�֐����Ăт܂��D
+|*PHSceneIf*| | 		 |
+|---|---|---|
+|*void*| *Step()*| シミュレーションを*1*ステップ進める |
+*Step*を実行すると，おおまかに述べて内部で次の処理が行われます．
 
-\begin{tabular}{p{.15\hsize}p{.3\hsize}p{.45\hsize}}
-\multicolumn{3}{l}{*PHSceneIf*}		\\ \midrule
-*void*	& *Step()*	& �V�~�����[�V������$1$�X�e�b�v�i�߂� \\
-\end{tabular}
-
-*Step*�����s����ƁC�����܂��ɏq�ׂē����Ŏ��̏������s���܂��D
-
--  �Փ˔���ƐڐG�S���̐���
--  �S���͂̌v�Z
--  ���̂̑��x����шʒu�̍X�V
+-  衝突判定と接触拘束の生成
+-  拘束力の計算
+-  剛体の速度および位置の更新
 
 
-## ����
-���͕̂����V�~�����[�V�����̊�{�v�f�ł��D���̂̃N���X��*PHSolid*�ł��D�܂����̂��쐬�E�Ǘ����邽�߂�*PHScene*�̊֐��������܂��D
+## 剛体
+剛体は物理シミュレーションの基本要素です．剛体のクラスは*PHSolid*です．まず剛体を作成・管理するための*PHScene*の関数を示します．
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHSceneIf*}									\\ \midrule
-*PHSolidIf**		& *CreateSolid(const PHSolidDesc\&)*	& ���̂��쐬���� \\
-*int*			& *NSolids()*						& ���̂̐� \\
-*PHSolidIf*** 	& *GetSolids()*						& ���̔z��̐擪�A�h���X \\
-\end{tabular}
-
-���̂��쐬����ɂ�
-```
+|*PHSceneIf*| | 									 |
+|---|---|---|---|
+|_PHSolidIf*_	| *CreateSolid(const PHSolidDesc&)*| 剛体を作成する |
+|*int*		| *NSolids()*					| 剛体の数 |
+|_PHSolidIf*_* | *GetSolids()*					| 剛体配列の先頭アドレス |
+剛体を作成するには
+```c++
 PHSolidIf* solid = phScene->CreateSolid();
 ```
-�Ƃ��܂��D�f�B�X�N���v�^���w�肵�č쐬���邱�Ƃ��ł��܂��D�܂��C*GetSolids*�͍쐬�������̂��i�[���������z��̐擪�A�h���X��Ԃ��܂��D���������āC�Ⴆ��$0$�Ԗڂ̍��̂��擾����ɂ�
-```
+とします．ディスクリプタを指定して作成することもできます．また，*GetSolids*は作成した剛体を格納した内部配列の先頭アドレスを返します．したがって，例えば*0*番目の剛体を取得するには
+```c++
 PHSolidIf* solid = phScene->GetSolids()[0];      // get 0-th solid
 ```
-�Ƃ��܂��D���ɍ��̎��g�̋@�\��������܂��D
-### ����
+とします．つぎに剛体自身の機能を説明します．
+### 物性
 
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHSolidDesc*}							\\ \midrule
-*double*		&	*mass*		& ����					\\
-*Matrix3d*	&	*inertia*	& �����s��				\\
-*Vec3d*		&	*center*		& ���ʒ��S				\\
-*bool*		&	*dynamical*	& �����@���ɂ���������	\\
-\end{tabular}
+|*PHSolidDesc*| | 							 |
+|---|---|---|
+|*double*	|	*mass*	| 質量					|
+|*Matrix3d*|	*inertia*| 慣性行列				|
+|*Vec3d*	|	*center*	| 質量中心				|
+|*bool*	|	*dynamical*| 物理法則にしたがうか	|
 
 
-
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHSolidIf*}								\\ \midrule
-*double*		& *GetMass()*						& \\
-*double* 	& *GetMassInv()*						& \\
-*void* 		& *SetMass(double)*					& \\
-*Vec3d* 		& *GetCenterOfMass()*				& \\
-*void* 		& *SetCenterOfMass(const Vec3d\&)*	& \\
-*Matrix3d* 	& *GetInertia()*						& \\
-*Matrix3d* 	& *GetInertiaInv()*					& \\
-*void* 		& *SetInertia(const Matrix3d\&)*		& \\
-*void* 		& *CompInertia()*					& \\
-*void* 		& *SetDynamical(bool)*				& \\
-*bool* 		& *IsDynamical()*					& \\
-\end{tabular}
-
-*GetMassInv*��*GetInertiaInv*�͂��ꂼ�ꎿ�ʂ̋t���Ɗ����s��̋t�s���Ԃ��܂��D*CompInertia*�́C���̍��̂����`��Ƃ����̖��x�����Ƃɍ��̂̎��ʁC���ʒ��S�Ɗ����s����v�Z���C�ݒ肵�܂��D*dynamical*�́C���̍��̂������@���ɏ]�����ǂ������w�肷��t���O�ł��D����*dynamical*��*true*�̏ꍇ�C���̍��̂ɉ����͂��v�Z����C�j���[�g���̉^���@���ɂ��������č��̂̑��x���ω����܂��D����C*dynamical*��*false*�̏ꍇ�͊O�͂ɂ��e�����󂯂��C�ݒ肳�ꂽ���x�œ����^�����܂��D����͂��傤�ǁ��̎��ʂ����ꍇ�Ɠ����ł��D
-### ���
+|*PHSolidIf*| | 								 |
+|---|---|---|
+|*double*	| *GetMass()*					| |
+|*double* | *GetMassInv()*					| |
+|*void* 	| *SetMass(double)*				| |
+|*Vec3d* 	| *GetCenterOfMass()*			| |
+|*void* 	| *SetCenterOfMass(const Vec3d&)*| |
+|*Matrix3d* | *GetInertia()*					| |
+|*Matrix3d* | *GetInertiaInv()*				| |
+|*void* 	| *SetInertia(const Matrix3d&)*	| |
+|*void* 	| *CompInertia()*				| |
+|*void* 	| *SetDynamical(bool)*			| |
+|*bool* 	| *IsDynamical()*				| |
+*GetMassInv*と*GetInertiaInv*はそれぞれ質量の逆数と慣性行列の逆行列を返します．*CompInertia*は，その剛体が持つ形状とそれらの密度をもとに剛体の質量，質量中心と慣性行列を計算し，設定します．*dynamical*は，その剛体が物理法則に従うかどうかを指定するフラグです．もし*dynamical*が*true*の場合，その剛体に加わる力が計算され，ニュートンの運動法則にしたがって剛体の速度が変化します．一方，*dynamical*が*false*の場合は外力による影響を受けず，設定された速度で等速運動します．これはちょうど∞の質量をもつ場合と同じです．
+### 状態
 
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHSolidDesc*}							\\ \midrule
-*Vec3d*	&	*velocity*		& ���x					\\
-*Vec3d*	&	*angVelocity*	& �p���x				\\
-*Posed*	&	*pose*			& �ʒu�ƌ���			\\
-\end{tabular}
+|*PHSolidDesc*| | 							 |
+|---|---|---|
+|*Vec3d*|	*velocity*	| 速度					|
+|*Vec3d*|	*angVelocity*| 角速度				|
+|*Posed*|	*pose*		| 位置と向き			|
 
 
+|*PHSolidIf*| | 									 |
+|---|---|---|
+|*Vec3d*		| *GetVelocity()*					| |
+|*void* 		| *SetVelocity(const Vec3d&)*		| |
+|*Vec3d* 		| *GetAngularVelocity()*				| |
+|*void* 		| *SetAngularVelocity(const Vec3d&)*| |
+|*Posed* 		| *GetPose()*						| |
+|*void* 		| *SetPose(const Posed&)*			| |
+|*Vec3d* 		| *GetFramePosition()*				| |
+|*void* 		| *SetFramePosition(const Vec3d&)*	| |
+|*Vec3d* 		| *GetCenterPosition()*				| |
+|*void* 		| *SetCenterPosition(const Vec3d&)*	| |
+|*Quaterniond* | *GetOrientation()*					| |
+|*void* 		| *SetOrientation(const Quaterniond&)*| |
+*velocity*, *angVelocity*, *pose*はそれぞれグローバル座標系に関する剛体の速度，角速度，位置および向きを表します．*[Get|Set]FramePosition*はグローバル座標系に関する剛体の位置を取得/設定します．これに対して*[Get|Set]CenterPosition*は剛体の質量中心の位置を取得/設定します．偏心している剛体はローカル座標原点と質量中心が一致しないことに注意してください．*[Get|Set]Orientation*はグローバル座標系に関する剛体の向きを取得/設定します．
+### 力の印加と取得
+剛体に加わる力には
 
-\begin{tabular}{p{.2\hsize}p{.5\hsize}p{.20\hsize}}
-\multicolumn{3}{l}{*PHSolidIf*}									\\ \midrule
-*Vec3d*			& *GetVelocity()*						& \\
-*void* 			& *SetVelocity(const Vec3d\&)*			& \\
-*Vec3d* 			& *GetAngularVelocity()*					& \\
-*void* 			& *SetAngularVelocity(const Vec3d\&)*	& \\
-*Posed* 			& *GetPose()*							& \\
-*void* 			& *SetPose(const Posed\&)*				& \\
-*Vec3d* 			& *GetFramePosition()*					& \\
-*void* 			& *SetFramePosition(const Vec3d\&)*		& \\
-*Vec3d* 			& *GetCenterPosition()*					& \\
-*void* 			& *SetCenterPosition(const Vec3d\&)*		& \\
-*Quaterniond* 	& *GetOrientation()*						& \\
-*void* 			& *SetOrientation(const Quaterniond\&)*	& \\
-\end{tabular}
+-  ユーザが設定する外力
+-  重力
+-  関節や接触から加わる拘束力
 
-*velocity*, *angVelocity*, *pose*�͂��ꂼ��O���[�o�����W�n�Ɋւ��鍄�̂̑��x�C�p���x�C�ʒu����ь�����\���܂��D*[Get|Set]FramePosition*�̓O���[�o�����W�n�Ɋւ��鍄�̂̈ʒu���擾/�ݒ肵�܂��D����ɑ΂���*[Get|Set]CenterPosition*�͍��̂̎��ʒ��S�̈ʒu���擾/�ݒ肵�܂��D�ΐS���Ă��鍄�̂̓��[�J�����W���_�Ǝ��ʒ��S����v���Ȃ����Ƃɒ��ӂ��Ă��������D*[Get|Set]Orientation*�̓O���[�o�����W�n�Ɋւ��鍄�̂̌������擾/�ݒ肵�܂��D
-### �͂̈���Ǝ擾
-���̂ɉ����͂ɂ�
+の*3*種類があり，それぞれについて並進力とトルクがあります．ここで，重力は重力加速度と剛体の質量より決まり，拘束力は拘束条件を満たすように内部で自動的に計算されます．以下ではユーザが剛体に加える外力を設定・取得する方法を示します．
 
--  ���[�U���ݒ肷��O��
--  �d��
--  �֐߂�ڐG��������S����
-
-��$3$��ނ�����C���ꂼ��ɂ��ĕ��i�͂ƃg���N������܂��D�����ŁC�d�͂͏d�͉����x�ƍ��̂̎��ʂ�茈�܂�C�S���͍͂S�������𖞂����悤�ɓ����Ŏ����I�Ɍv�Z����܂��D�ȉ��ł̓��[�U�����̂ɉ�����O�͂�ݒ�E�擾������@�������܂��D
-
-\begin{tabular}{p{.2\hsize}p{.5\hsize}p{.20\hsize}}
-\multicolumn{3}{l}{*PHSolidIf*}								\\ \midrule
-*void* 	& *AddForce(Vec3d)*					& \\
-*void* 	& *AddTorque(Vec3d)*					& \\
-*void* 	& *AddForce(Vec3d, Vec3d)*			& \\
-*Vec3d* 	& *GetForce()*						& \\
-*Vec3d* 	& *GetTorque()*						& \\
-\end{tabular}
-
-���i�͂�������ɂ�*AddForce*���g���܂��D
-```
+|*PHSolidIf*| | 								 |
+|---|---|---|
+|*void* | *AddForce(Vec3d)*				| |
+|*void* | *AddTorque(Vec3d)*				| |
+|*void* | *AddForce(Vec3d, Vec3d)*		| |
+|*Vec3d* | *GetForce()*					| |
+|*Vec3d* | *GetTorque()*					| |
+並進力を加えるには*AddForce*を使います．
+```c++
 solid->AddForce(Vec3d(0.0, -1.0, 0.0));
 ```
-�Ƃ���ƍ��̂̎��ʒ��S�ɕ��i��$(0, -1, 0)$�������܂��D�������͂̓O���[�o�����W�n�ŕ\������܂��D���
-```
+とすると剛体の質量中心に並進力$(0, -1, 0)$が加わります．ただし力はグローバル座標系で表現されます．一方
+```c++
 solid->AddTorque(Vec3d(1.0, 0.0, 0.0));
 ```
-�Ƃ���ƍ��̂̎��ʒ��S�Ɋւ��ă��[�����g$(1, 0, 0)$�������܂��D��p�_��C�ӂɎw�肷��ɂ�
-```
+とすると剛体の質量中心に関してモーメント$(1, 0, 0)$が加わります．作用点を任意に指定するには
+```c++
 solid->AddForce(Vec3d(0.0, -1.0, 0.0), Vec3d(0.0, 0.0, 1.0));
 ```
-�Ƃ��܂��D���̏ꍇ�͕��i��$(0, -1, 0)$����p�_$(0, 0, 1)$�ɉ����܂��D�����ō�p�_�̈ʒu�͍��̂̃��[�J�����W�ł͂Ȃ��O���[�o�����W�ŕ\������邱�Ƃɒ��ӂ��Ă��������D*AddForce*��*AddTorque*�͕�����ĂԂƁC���ꂼ��Ŏw�肵���O�͂̍��͂��ŏI�I�ɍ��̂ɉ����O�͂ƂȂ�܂��D�O�͂��擾����ɂ�*GetForce*�C*GetTorque*���g���܂��D�������C�����̊֐��Ŏ擾�ł���̂͒��O�̃V�~�����[�V�����X�e�b�v�ō��̂ɍ�p�����O�͂ł��D���������Ē��O�̃V�~�����[�V�����X�e�b�v���*AddForce*�����͎͂擾�ł��܂���D
-## �֐�
+とします．この場合は並進力$(0, -1, 0)$が作用点$(0, 0, 1)$に加わります．ここで作用点の位置は剛体のローカル座標ではなくグローバル座標で表現されることに注意してください．*AddForce*や*AddTorque*は複数回呼ぶと，それぞれで指定した外力の合力が最終的に剛体に加わる外力となります．外力を取得するには*GetForce*，*GetTorque*を使います．ただし，これらの関数で取得できるのは直前のシミュレーションステップで剛体に作用した外力です．したがって直前のシミュレーションステップ後に*AddForce*した力は取得できません．
+## 関節
 
 
 
-
-
-\includegraphics[width=.5\hsize]{fig/phconstraint.eps}
-
-\caption{Constraint class hierarchy}
-
-
-�S���Ƃ͍��̂ƍ��̂̊Ԃɍ�p���Ă��̑��ΓI�^���ɐ����������v�f�ł��D�S���̃N���X�K�w��Fig.\,\ref{fig_phconstraint}�Ɏ����܂��D�܂��S���͊֐߂ƐڐG�ɕ�����܂��D�֐߂̓��[�U���쐬���܂����C�ڐG�͏Փ˔��茋�ʂɂ��ƂÂ��Ď����I�ɐ����E�폜����܂��D�֐߂͂���ɂ������̎�ނɕ������܂��D�ׂ��Ȑ����͌�񂵂ɂ��āC�܂��͊֐߂̍쐬���@���猩�Ă����܂��D
-### �֐߂̍쐬
-�ȉ��ł͂����Ƃ��g�p�p�x�̍����q���W�̍쐬���ɂƂ��Ċ֐߂̍쐬���@��������܂��D�q���W���쐬����ɂ͎��̂悤�ɂ��܂��D
-```
+拘束とは剛体と剛体の間に作用してその相対的運動に制約を加える要素です．拘束のクラス階層を次図に示します．まず拘束は関節と接触に分かれます．関節はユーザが作成しますが，接触は衝突判定結果にもとづいて自動的に生成・削除されます．関節はさらにいくつかの種類に分けられます．細かな説明は後回しにして，まずは関節の作成方法から見ていきます．
+### 関節の作成
+以下ではもっとも使用頻度の高いヒンジの作成を例にとって関節の作成方法を説明します．ヒンジを作成するには次のようにします．
+```c++
 PHSolidIf* solid0 = phScene->GetSolids()[0];
 PHSolidIf* solid1 = phScene->GetSolids()[1];
 
@@ -206,170 +177,139 @@ desc.posePlug.Pos()   = Vec3d(-1.0, 0.0, 0.0);
 PHHingeJointIf* joint
     = phScene->CreateJoint(solid0, solid1, desc)->Cast();
 ```
-�쐬�������֐߂̎�ނɉ������f�B�X�N���v�^���쐬���C�����*PHScene*��*CreateJoint*�֐��ɓn���Ċ֐߂��쐬���܂��D���̂Ƃ��C�f�B�X�N���v�^�ƂƂ��ɘA�����������̂̃C���^�t�F�[�X���n���܂��D*CreateJoint*��*PHJointIf**��Ԃ��܂��̂ŁC�쐬�����֐߂̃C���^�t�F�[�X�𓾂�ɂ�*Cast*�œ��I�L���X�g���܂��D�֐߂Ɋւ���*PHScene*�̊֐����ȉ��Ɏ����܂��D
+作成したい関節の種類に応じたディスクリプタを作成し，これを*PHScene*の*CreateJoint*関数に渡して関節を作成します．このとき，ディスクリプタとともに連結したい剛体のインタフェースも渡します．*CreateJoint*は_PHJointIf*_を返しますので，作成した関節のインタフェースを得るには*Cast*で動的キャストします．関節に関する*PHScene*の関数を以下に示します．
 
-\begin{tabular}{p{.15\hsize}p{.75\hsize}p{.0\hsize}}
-\multicolumn{3}{l}{*PHSceneIf*}													\\ \midrule
-*PHJointIf**	& *CreateJoint(PHSolidIf*, PHSolidIf*, const PHJointDesc\&)*	& \\
-*int*		& *NJoint()*													& \\
-*PHJointIf**	& *GetJoint(int i)*											& \\
-\end{tabular}
-
-*NJoint*�̓V�[�����̊֐߂̌���Ԃ��܂��D*GetJoint*��*i*�Ԗڂ̊֐߂��擾���܂��D
-### �\�P�b�g�ƃv���O
+|*PHSceneIf*| | 													 |
+|---|---|---|---|
+|_PHJointIf*_| *CreateJoint(PHSolidIf*, PHSolidIf*, const PHJointDesc&)*| |
+|*int*	| *NJoint()*												| |
+|_PHJointIf*_| *GetJoint(int i)*										| |
+*NJoint*はシーン中の関節の個数を返します．*GetJoint*は*i*番目の関節を取得します．
+### ソケットとプラグ
 
 
 
 
+さて，上の例でディスクリプタに値を設定している箇所に注目してください．この部分で関節の取り付け位置を指定しています．Springheadでは，ソケットとプラグと呼ばれるローカル座標系を用いて関節の取り付け位置を表現します．ソケットとプラグとは，その名前から連想するように，連結する剛体に取り付ける金具のようなものです．*CreateJoint*の第*1*引数の剛体にソケットがつき，第*2*引数の剛体にプラグがつきます．ソケットとプラグがそれぞれの剛体のどの位置に取り付けられるかを指定するのがディスクリプタの*poseSocket*と*posePlug*です．上の例ではソケットの位置が$(1,0,0)$，プラグの位置が$(-1,0,0)$でした(次図(a))．この場合は次図(b)のように剛体が連結されます．後述するように，ヒンジはソケットとプラグのz軸を一致させる拘束です．したがって連結された剛体同士はソケットとプラグのz軸を回転軸として相対的に回転することができます．ソケットとプラグに関するディスクリプタとインタフェースを紹介します．
 
-\begin{tabular}{c}
-\includegraphics[clip, width=.5\hsize]{fig/socket_plug1.eps} \\
-(a) before connection \\
-\\
-\includegraphics[clip, width=.5\hsize]{fig/socket_plug2.eps} \\
-(b) after connection \\
-\end{tabular}
-
-\caption{Socket and plug}
+|*PHConstraintDesc*| | 					 |
+|---|---|---|
+|*Posed*|	*poseSocket*| ソケットの位置と向き	|
+|*Posed*|	*posePlug*| プラグの位置と向き	|
 
 
-���āC��̗�Ńf�B�X�N���v�^�ɒl��ݒ肵�Ă���ӏ��ɒ��ڂ��Ă��������D���̕����Ŋ֐߂̎��t���ʒu���w�肵�Ă��܂��DSpringhead�ł́C�\�P�b�g�ƃv���O�ƌĂ΂�郍�[�J�����W�n��p���Ċ֐߂̎��t���ʒu��\�����܂��D�\�P�b�g�ƃv���O�Ƃ́C���̖��O����A�z����悤�ɁC�A�����鍄�̂Ɏ��t�������̂悤�Ȃ��̂ł��D*CreateJoint*�̑�$1$�����̍��̂Ƀ\�P�b�g�����C��$2$�����̍��̂Ƀv���O�����܂��D�\�P�b�g�ƃv���O�����ꂼ��̍��̂̂ǂ̈ʒu�Ɏ��t�����邩���w�肷��̂��f�B�X�N���v�^��*poseSocket*��*posePlug*�ł��D��̗�ł̓\�P�b�g�̈ʒu��$(1,0,0)$�C�v���O�̈ʒu��$(-1,0,0)$�ł���(Fig.\,\ref{fig_socket_plug}(a))�D���̏ꍇ��Fig.\,\ref{fig_socket_plug}(b)�̂悤�ɍ��̂��A������܂��D��q����悤�ɁC�q���W�̓\�P�b�g�ƃv���O��z������v������S���ł��D���������ĘA�����ꂽ���̓��m�̓\�P�b�g�ƃv���O��z������]���Ƃ��đ��ΓI�ɉ�]���邱�Ƃ��ł��܂��D�\�P�b�g�ƃv���O�Ɋւ���f�B�X�N���v�^�ƃC���^�t�F�[�X���Љ�܂��D
+|*PHConstraintIf*| | 								 |
+|---|---|---|
+|_PHSolidIf*_| *GetSocketSolid()*						| ソケット側の剛体 |
+|_PHSolidIf*_| *GetPlugSolid()*						| プラグ側の剛体 |
+|*void* 	| *GetSocketPose(Posed&)*				| |
+|*void* 	| *SetSocketPose(const Posed&)*			| |
+|*void* 	| *GetPlugPose(Posed&)*					| |
+|*void* 	| *SetPlugPose(const Posed&)*			| |
+|*void* 	| *GetRelativePose(Posed&)*				| 相対的な位置と向き |
+|*void* 	| *GetRelativeVelocity(Vec3d&, Vec3d&)*| 相対速度 |
+|*void* 	| *GetConstraintForce(Vec3d&, Vec3d&)*	| 拘束力 |
+*GetRelativePose*はソケット座標系から見たプラグ座標系の相対的な位置と向きを取得します．同様に，*GetRelativeVelocity*はソケットからみたプラグの相対速度をソケット座標系で取得します．ここで第*1*引数が並進速度，第*2*引数が角速度です．*GetConstraintForce*はこの拘束が剛体に加えた拘束力を取得します(第*1*引数が並進力，第*2*引数がモーメント)．具体的には，ソケット側剛体に作用した拘束力をソケット座標系で表現したものが得られます．プラグ側剛体には作用反作用の法則によって逆向きの力が作用しますが，これを直接取得する関数は用意されていません．
+### 関節の種類
+Springheadで使用可能な関節の種類は
 
-\begin{tabular}{p{.15\hsize}p{.35\hsize}p{.40\hsize}}
-\multicolumn{3}{l}{*PHConstraintDesc*}					\\ \midrule
-*Posed*	&	*poseSocket*	& �\�P�b�g�̈ʒu�ƌ���	\\
-*Posed*	&	*posePlug*	& �v���O�̈ʒu�ƌ���	\\
-\end{tabular}
+-  ヒンジ (*PHHingeIf*)
+-  スライダ (*PHSliderIf*)
+-  パスジョイント (*PHPathJointIf*)
+-  ボールジョイント (*PHBallJointIf*)
+-  バネ (*PHSpringIf*)
 
+の5種類です．種類ごとに，自由度・拘束の仕方・変位の求め方が異なります．
+#### ヒンジ
+ヒンジは*1*軸回転関節です．ヒンジは，上の図に示すようにソケットとプラグのz軸が一致するように拘束します．このときソケットのy軸とプラグのy軸の成す角(x軸同士でも同じことですが)が関節変位となります．関節変位を取得するAPIは*1*自由度関節(*PH1DJointIf*)で共通です．そのためヒンジに限らずスライダ・パスジョイントでも使用できます．
 
+#### スライダ
+スライダは*1*自由度の直動関節です．スライダは，上の図に示すようにソケットとプラグのz軸が同一直線上に乗り，かつ両者のx軸，y軸が同じ向きを向くように拘束します．このときソケットの原点からプラグの原点までが関節変位となります．
+#### パスジョイント
+パスジョイントはソケットとプラグの相対位置関係を*1*パラメータの自由曲線で表現する関節です．詳しくは後述します．T.B.D.
+#### ボールジョイント
+ボールジョイントは*3*自由度の回転関節です．ボールジョイントは上の図に示すようにソケットとプラグの原点が一致するように拘束します．ソケット座標系をプラグ座標系に変換するようなクォータニオンが変位となります．
 
-\begin{tabular}{p{.15\hsize}p{.50\hsize}p{.25\hsize}}
-\multicolumn{3}{l}{*PHConstraintIf*}								\\ \midrule
-*PHSolidIf**	& *GetSocketSolid()*							& �\�P�b�g���̍��� \\
-*PHSolidIf** & *GetPlugSolid()*							& �v���O���̍��� \\
-*void* 		& *GetSocketPose(Posed\&)*					& \\
-*void* 		& *SetSocketPose(const Posed\&)*				& \\
-*void* 		& *GetPlugPose(Posed\&)*						& \\
-*void* 		& *SetPlugPose(const Posed\&)*				& \\
-*void* 		& *GetRelativePose(Posed\&)*					& ���ΓI�Ȉʒu�ƌ��� \\
-*void* 		& *GetRelativeVelocity(Vec3d\&, Vec3d\&)*	& ���Α��x \\
-*void* 		& *GetConstraintForce(Vec3d\&, Vec3d\&)*		& �S���� \\
-\end{tabular}
+一方で，ボールジョイントの変位はオイラー角の一種であるSwing-Twist座標系で取得することもできます（下の図）．ソケットとプラグのz軸同士がなす角をスイング角(Swing)，プラグのz軸をソケットのx-y平面への射影がソケットのx軸となす角をスイング方位角(Swing-Dir)，プラグのz軸周りの回転角度をツイスト角(Twist)と呼びます．Swing-Twist座標系は，後述するボールジョイントの関節可動範囲の指定に用います．この2種類の変位は，それぞれに対応した関数で取得することができます．
 
-*GetRelativePose*�̓\�P�b�g���W�n���猩���v���O���W�n�̑��ΓI�Ȉʒu�ƌ������擾���܂��D���l�ɁC*GetRelativeVelocity*�̓\�P�b�g����݂��v���O�̑��Α��x���\�P�b�g���W�n�Ŏ擾���܂��D�����ő�$1$���������i���x�C��$2$�������p���x�ł��D*GetConstraintForce*�͂��̍S�������̂ɉ������S���͂��擾���܂�(��$1$���������i�́C��$2$���������[�����g)�D��̓I�ɂ́C�\�P�b�g�����̂ɍ�p�����S���͂��\�P�b�g���W�n�ŕ\���������̂������܂��D�v���O�����̂ɂ͍�p����p�̖@���ɂ���ċt�����̗͂���p���܂����C����𒼐ڎ擾����֐��͗p�ӂ���Ă��܂���D
-### �֐߂̎��
-Springhead�Ŏg�p�\�Ȋ֐߂̎�ނ�
-
--  �q���W (*PHHingeIf*)
--  �X���C�_ (*PHSliderIf*)
--  �p�X�W���C���g (*PHPathJointIf*)
--  �{�[���W���C���g (*PHBallJointIf*)
--  �o�l (*PHSpringIf*)
-
-��5��ނł��D��ނ��ƂɁC���R�x�E�S���̎d���E�ψʂ̋��ߕ����قȂ�܂��D
-#### �q���W
-\begin{fig}\epscapopt{phhingejoint}{Hinge joint}{width=0.5\hsize}\end{fig}�q���W��$1$����]�֐߂ł��D�q���W�́C\Fig{phhingejoint}�Ɏ����悤�Ƀ\�P�b�g�ƃv���O��z������v����悤�ɍS�����܂��D���̂Ƃ��\�P�b�g��y���ƃv���O��y���̐����p(x�����m�ł��������Ƃł���)���֐ߕψʂƂȂ�܂��D�֐ߕψʂ��擾����API��$1$���R�x�֐�(*PH1DJointIf*)�ŋ��ʂł��D���̂��߃q���W�Ɍ��炸�X���C�_�E�p�X�W���C���g�ł��g�p�ł��܂��D\begin{reference}{PH1DJointIf}\classmember{double GetPosition()}�֐߂̕ψʂ��擾���܂��D�ψʂ̂͂�����͊֐߂̎�ނɈˑ����܂��D\end{reference}
-#### �X���C�_
-\begin{fig}\epscapopt{phsliderjoint}{Slider joint}{width=0.5\hsize}\end{fig}�X���C�_��$1$���R�x�̒����֐߂ł��D�X���C�_�́C\Fig{phsliderjoint}�Ɏ����悤�Ƀ\�P�b�g�ƃv���O��z�������꒼����ɏ��C�����҂�x���Cy�������������������悤�ɍS�����܂��D���̂Ƃ��\�P�b�g�̌��_����v���O�̌��_�܂ł��֐ߕψʂƂȂ�܂��D
-#### �p�X�W���C���g
-�p�X�W���C���g�̓\�P�b�g�ƃv���O�̑��Έʒu�֌W��$1$�p�����[�^�̎��R�Ȑ��ŕ\������֐߂ł��D�ڂ����͌�q���܂��DT.B.D.
-#### �{�[���W���C���g
-\begin{fig}  \begin{tabular}{cc}    \epsopt{phballjoint}{width=0.45\hsize} & \epsopt{swingtwist}{width=0.35\hsize} \\    (a) & (b)  \end{tabular}  \labelcap{phballjoint}{Ball Joint}\end{fig}�{�[���W���C���g��$3$���R�x�̉�]�֐߂ł��D�{�[���W���C���g��\Fig{phballjoint}(a)�Ɏ����悤�Ƀ\�P�b�g�ƃv���O�̌��_����v����悤�ɍS�����܂��D�\�P�b�g���W�n���v���O���W�n�ɕϊ�����悤�ȃN�H�[�^�j�I�����ψʂƂȂ�܂��D����ŁC�{�[���W���C���g�̕ψʂ̓I�C���[�p�̈��ł���Swing-Twist���W�n(\Fig{phballjoint}(b))�Ŏ擾���邱�Ƃ��ł��܂��D�\�P�b�g�ƃv���O��z�����m���Ȃ��p���X�C���O�p(Swing)�C�v���O��z�����\�P�b�g��x-y���ʂւ̎ˉe���\�P�b�g��x���ƂȂ��p���X�C���O���ʊp(Swing-Dir)�C�v���O��z������̉�]�p�x���c�C�X�g�p(Twist)�ƌĂт܂��DSwing-Twist���W�n�́C��q����{�[���W���C���g�̊֐߉��͈͂̎w��ɗp���܂��D����2��ނ̕ψʂ́C���ꂼ��ɑΉ������֐��Ŏ擾���邱�Ƃ��ł��܂��D\begin{reference}{PHBallJoint}\classmember{Quaterniond GetPosition()}�\�P�b�g���W�n���v���O���W�n�ɕϊ�����悤�ȃN�H�[�^�j�I����Ԃ��܂��D\classmember{Vec3d GetAngle()}Swing-Twist���W�n�ŕ\�����ꂽ�֐ߕψʂ�Ԃ��܂��D\end{reference}
-#### �o�l
-\begin{fig}\epscapopt{phspring}{Spring}{width=0.5\hsize}\end{fig}���̊Ԃ�A������_���p�t���o�l�ł��D�\�P�b�g���W�n�ƃv���O���W�n����v����Ƃ������R��ԂŁC�ʒu�̕ψʁE�p���̕ψʂɔ�Ⴕ�Ď��R��Ԃɖ߂��悤�ȗ́E���[�����g�𔭐����܂��D���i�^���ɍ�p����o�l�E�_���p�W���ƁC��]�^���ɍ�p����o�l�E�_���p�W���̓f�B�X�N���v�^�ɂ���Ă��ꂼ��ݒ�ł��܂��D\begin{lightreference}{PHSpringDesc}\multicolumn{2}{l}{*Vec3d spring*} & ���i�^���ɑ΂���o�l�W�� \\\multicolumn{2}{l}{*Vec3d damper*} & ���i�^���ɑ΂���_���p�W�� \\\multicolumn{2}{l}{*double springOri*} & ��]�^���ɑ΂���o�l�W�� \\\multicolumn{2}{l}{*double damperOri*} & ��]�^���ɑ΂���_���p�W�� \\\end{lightreference}
-### �L�����Ɩ�����
-
-
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHConstraintDesc*}					\\ \midrule
-*bool*	&	*bEnabled*	& �L��/�����t���O		\\
-\end{tabular}
+#### バネ
+剛体間を連結するダンパ付きバネです．ソケット座標系とプラグ座標系が一致するときが自然状態で，位置の変位・姿勢の変位に比例して自然状態に戻すような力・モーメントを発生します．並進運動に作用するバネ・ダンパ係数と，回転運動に作用するバネ・ダンパ係数はディスクリプタによってそれぞれ設定できます．
 
 
 
-\begin{tabular}{p{.15\hsize}p{.50\hsize}p{.25\hsize}}
-\multicolumn{3}{l}{*PHConstraintIf*}						\\ \midrule
-*void*	& *Enable(bool)*					& \\
-*bool* 	& *IsEnabled()*					& \\
-\end{tabular}
-
-�L���ȍS���͍S���͂𐶂��܂��D���������ꂽ�S���͑��݂��Ȃ��̂Ɠ�����ԂɂȂ�܂����C�폜����̂ƈقȂ肢�ł��ēx�L�������邱�Ƃ��ł��܂��D�쐬����̍S���͗L��������Ă��܂��D
-### �֐ߐ���
-
-#### $1$���R�x�֐߂̏ꍇ
+### 有効化と無効化
 
 
-\begin{tabular}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHJoint1DDesc*}								\\ \midrule
-*double*	&	*spring*			& ���͈͉���				\\
-*double*	&	*damper*			& ���͈͏��				\\
-*double*	&	*targetPosition*	& ���͈͐����p�o�l�W��	\\
-*double*	&	*targetVelocity*	& ���͈͐����p�_���p�W��	\\
-*double*	&	*offsetForce*	& \\
-*double*	&	*fMax*			& \\
-\end{tabular}
+|*PHConstraintDesc*| | 					 |
+|---|---|---|
+|*bool*|	*bEnabled*| 有効/無効フラグ		|
 
 
+|*PHConstraintIf*| | 						 |
+|---|---|---|
+|*void*| *Enable(bool)*				| |
+|*bool* | *IsEnabled()*				| |
+有効な拘束は拘束力を生じます．無効化された拘束は存在しないのと同じ状態になりますが，削除するのと異なりいつでも再度有効化することができます．作成直後の拘束は有効化されています．
+### 関節制御
 
-\begin{longtable}{p{.15\hsize}p{.45\hsize}p{.30\hsize}}
-\multicolumn{3}{l}{*PHJoint1DIf*}						\\ \midrule
-*double*	& *GetPosition()*				& �֐ߕψʂ��擾 \\
-*double* & *GetVelocity()*				& �֐ߑ��x���擾 \\
-*void* 	& *SetSpring(double)*			& \\
-*double* & *GetSpring()*					& \\
-*void* 	& *SetDamper(double)*			& \\
-*double* & *GetDamper()*					& \\
-*void* 	& *SetTargetPosition(double)*	& \\
-*double* & *GetTargetPosition()*			& \\
-*void* 	& *SetTargetVelocity(double)*	& \\
-*double* & *GetTargetVelocity()*			& \\
-*void* 	& *SetOffsetForce(double)*		& \\
-*double* & *GetOffsetForce()*				& \\
-*void* 	& *SetTorqueMax(double)*			& �ő�֐߃g���N��ݒ� \\
-*double* & *GetTorqueMax()*				& �ő�֐߃g���N���擾 \\
-\end{longtable}
+#### *1*自由度関節の場合
 
-�֐߂��쓮�����$f$�͎����ŗ^�����܂��D
+
+|*PHJoint1DDesc*| | 								 |
+|---|---|---|
+|*double*|	*spring*		| 可動範囲下限				|
+|*double*|	*damper*		| 可動範囲上限				|
+|*double*|	*targetPosition*| 可動範囲制限用バネ係数	|
+|*double*|	*targetVelocity*| 可動範囲制限用ダンパ係数	|
+|*double*|	*offsetForce*| |
+|*double*|	*fMax*		| |
+
+
+関節を駆動する力*f*は次式で与えられます．
 
 f = K(p_0 - p) + D(v_0 - v) + f_0
 
-������$p$�C$v$�͂��ꂼ��֐ߕψʂƊ֐ߑ��x��*GetPosition*�C*GetVelocity*�Ŏ擾�ł��܂��D���̑��̋L���ƃf�B�X�N���v�^�ϐ��Ƃ̑Ή��͈ȉ��̒ʂ�ł��D
+ここで*p*，*v*はそれぞれ関節変位と関節速度で*GetPosition*，*GetVelocity*で取得できます．その他の記号とディスクリプタ変数との対応は以下の通りです．
 
-\begin{tabular}{ll}
-$K$		&	*spring*				\\
-$D$		&	*damper*				\\
-$p_0$	&	*targetPosition*		\\
-$v_0$	&	*targetVelocity*		\\
-$f_0$	&	*offsetForce*
-\end{tabular}
+|*K*	|	*spring*				|
+|---|---|
+|*D*	|	*damper*				|
+|*p_0*|	*targetPosition*		|
+|*v_0*|	*targetVelocity*		|
+|*f_0*|	*offsetForce*|
+上の式はバネ・ダンパモデルとPD制御則の二通りの解釈ができます．前者としてとらえるなら*K*はバネ係数，*D*はダンパ係数，*p_0*はバネの自然長，*v_0*は基準速度となります．後者としてとらえる場合は*K*はPゲイン，*D*はDゲイン，*p_0*は目標変位，*v_0*は目標速度となります．また，*f_0*は関節トルクのオフセット項です．上の式で得られた関節トルクは最後に*±fMax*の範囲に収まるようにクランプされます．
+#### ボールジョイントの場合
+ヒンジと同様に，バネダンパモデル・PD制御を実現します．ボールジョイントの変位はクォータニオンで表されるため，目標変位*targetPosition*はクォータニオンで，目標速度*targetVelocity*は回転ベクトルで与えます．
 
-��̎��̓o�l�E�_���p���f����PD���䑥�̓�ʂ�̉��߂��ł��܂��D�O�҂Ƃ��ĂƂ炦��Ȃ�$K$�̓o�l�W���C$D$�̓_���p�W���C$p_0$�̓o�l�̎��R���C$v_0$�͊���x�ƂȂ�܂��D��҂Ƃ��ĂƂ炦��ꍇ��$K$��P�Q�C���C$D$��D�Q�C���C$p_0$�͖ڕW�ψʁC$v_0$�͖ڕW���x�ƂȂ�܂��D�܂��C$f_0$�͊֐߃g���N�̃I�t�Z�b�g���ł��D��̎��œ���ꂽ�֐߃g���N�͍Ō��$\pm$*fMax*�͈̔͂Ɏ��܂�悤�ɃN�����v����܂��D
-#### �{�[���W���C���g�̏ꍇ
-�q���W�Ɠ��l�ɁC�o�l�_���p���f���EPD������������܂��D�{�[���W���C���g�̕ψʂ̓N�H�[�^�j�I���ŕ\����邽�߁C�ڕW�ψ�*targetPosition*�̓N�H�[�^�j�I���ŁC�ڕW���x*targetVelocity*�͉�]�x�N�g���ŗ^���܂��D\begin{lightreference}{PHBallJointDesc}\multicolumn{2}{l}{*double spring*} & �o�l�W�� \\\multicolumn{2}{l}{*double damper*} & �_���p�W�� \\\multicolumn{2}{l}{*Quaterniond targetPosition*} & �ڕW�ψ� \\\multicolumn{2}{l}{*Vec3d targetVelocity*} & �ڕW���x \\\multicolumn{2}{l}{*Vec3d offsetForce*} & ���[�^�[�g���N \\\multicolumn{2}{l}{*double fMax*} & �֐߃g���N�̌��x \\\end{lightreference}	%\multicolumn{2}{l}{*void SetMotorTorque(double)*}		& \\	%\multicolumn{2}{l}{*double GetMotorTorque()*}	& \\	%double	secondDamper;	///< ��ڂ̃_���p�W��	%double  yieldStress;	///< �~������	%double  hardnessRate;	///< �~�����͈ȉ��̏ꍇ�ɓ�ڂ̃_���p�W���Ɋ|����䗦	%void SetTrajectoryVelocity(double v);	%double GetTrajectoryVelocity();	%double  GetSecondDamper();	%void	SetSecondDamper(double input);	%double GetYieldStress();    %void SetYieldStress(const double yS);	%double GetHardnessRate();	%void SetHardnessRate(const double hR);	%PHJointDesc::PHDeformationType 	GetDeformationMode();
-### ���搧��
-*CreateLimit*�͉��͈͐���I�u�W�F�N�g�̃f�B�X�N���v�^�������ɂƂ�܂��D$1$���R�x�֐߂̉��͈͐���̏ꍇ�C*Vec2d range*�������\���܂��D*range[0]*������̉����C*range[1]*������ł��D*range[0] < range[1]*����������Ă���Ƃ��Ɍ�����͈͐��񂪗L���ƂȂ�܂��D�f�t�H���g�ł�*range[0] > range[1]*�ƂȂ�l���ݒ肳��Ă��āC���͈͐���͖����ƂȂ��Ă��܂��D�֐߂̕ψʂ����͈͌��E�ɓ��B�����Ƃ��C�͈͂𒴉߂��Ȃ��悤�ɉ��͈͐���̍S���͂���p���܂��D���̂Ƃ��C�֐ߕψʂ�͈͓��ɉ����߂��͂̓o�l�E�_���p���f���Ōv�Z����܂��D���̃o�l�W���ƃ_���p�W���͂��ꂼ��f�B�X�N���v�^��*spring*�C*damper*�Ŏw�肵�܂��D\begin{tips}���͈͗p��*spring*�C*damper*�͏����l�ł��\���傫�Ȓl���ݒ肳��Ă��܂����C�֐ߐ���ɂ����Ĕ��ɑ傫�ȃo�l�E�_���p�W����p����Ɖ��͈͐���̃o�l�E�_���p�������Ă��܂����Ƃ�����܂��D���̏ꍇ�ɂ͊֐ߐ�����傫�ȌW����K�؂ɍĐݒ肷��ƁC���͈͓��Ŋ֐߂𐧌䂷�鎖���ł���悤�ɂȂ�܂��D\end{tips}
-#### $1$���R�x�֐߂̏ꍇ
-\begin{reference}{PH1DJointLimitDesc}\classmember{Vec2d range}���͈͂�\���܂��D*range[0]*�������C*range[1]*������ł��D\classmember{double spring} \Plus\classmember{double damper}���͈͂𐧌����邽�߂̃o�l�E�_���p���f���̌W���ł��D\end{reference}\begin{reference}{PH1DJointLimitIf}\classmember{IsOnLimit()}���݂̊֐ߎp�������͈͊O�ɂ��鎞��*true*��Ԃ��܂��D���̊֐���*true*��Ԃ��悤�Ȏ��C�֐߂ɂ͉��搧����������邽�߂̍S���͂��������Ă��܂��D\end{reference}
-#### �{�[���W���C���g�̏ꍇ
-�{�[���W���C���g�̉��͈͂�\Fig{phballjoint}(b)�Ɏ���Swing-Twist���W�n�ɂ���Ďw�肵�܂��D�{�[���W���C���g�ɑ΂��Ă�2��ނ̉��͈͐�����g�p���邱�Ƃ��ł��܂��D
 
--  *ConeLimit*�͉~���`�̉��͈͐���ŁC��Ɋ֐߂̃X�C���O�p�����͈͓��ɐ��񂵂܂��D
--  *SplineLimit*�͎��R�Ȑ��`�̉��͈͐���ŁC�v���O���W�nz���̉��͈͂�Ȑ��Ŏw�肷�邱�Ƃ��ł��܂��D
 
-�����ł�*ConeLimit*�ɂ��Đ������܂�(*SplineLimit*�ɂ��Ă͌�q���܂�)�D\begin{reference}{PHBallJointConeLimitDesc}\classmember{Vec2d limitSwing}�X�C���O�p�̉��͈͂ł��D�T�O�I�ɂ́C�֐߂����ȏ�ɐ܂�Ȃ���Ȃ��悤�ɂ��鐧��ł�(�X�C���O�p�̉�����ݒ肷�鎖���ł���̂ŁC���ۂɂ͈��ȏ�ɂ܂������ɂȂ�Ȃ��悤�ɂ���@�\���L���Ă��܂�)�D*limitSwing[0]*�������C*limitSwing[1]*������ł��D*limitSwing*���擾�E�ݒ肷�邽�߂�API��\begin{quote}*PHBallJointConeLimitIf::[Set|Get]SwingRange(range)*\end{quote}�ł��D*limitSwing[0] > limitSwing[1]*�ƂȂ鎞�͖���������܂��D�f�t�H���g�ł�*limitSwing[0] > limitSwing[1]*�ƂȂ�l���Z�b�g����Ă��܂��D\classmember{Vec2d limitTwist}�c�C�X�g�p�̉��͈͂ł��D�T�O�I�ɂ́C�֐߂����ȏ�ɂ˂���Ȃ��悤�ɂ��邽�߂̐���ł��D*limitTwist[0]*�������C*limitTwist[1]*������ł��D*limitTwist*���擾�E�ݒ肷�邽�߂�API��\begin{quote}*PHBallJointConeLimitIf::[Set|Get]TwistRange(range)*\end{quote}�ł��D*limitTwist[0] > limitTwist[1]*�ƂȂ鎞�͖���������܂��D�f�t�H���g�ł�*limitTwist[0] > limitTwist[1]*�ƂȂ�l���Z�b�g����Ă��܂��D\classmember{double spring} \Plus\classmember{double damper}���͈͂𐧌����邽�߂̃o�l�E�_���p���f���̌W���ł��D$1$���R�x�֐߂̏ꍇ�Ɠ����ł��D\end{reference}\begin{reference}{PHBallJointConeLimitIf}\classmember{IsOnLimit()}���݂̊֐ߎp�������͈͊O�ɂ��鎞��*true*��Ԃ��܂��D$1$���R�x�֐߂̏ꍇ�Ɠ����ł��D\end{reference}
-### �{�[���W���C���g�̎��R�Ȑ����� 
+### 可動域制限
+*CreateLimit*は可動範囲制約オブジェクトのディスクリプタを引数にとります．*1*自由度関節の可動範囲制約の場合，*Vec2d range*が可動域を表します．*range[0]*が可動域の下限，*range[1]*が上限です．*range[0] < range[1]*が満たされているときに限り可動範囲制約が有効となります．デフォルトでは*range[0] > range[1]*となる値が設定されていて，可動範囲制約は無効となっています．関節の変位が可動範囲限界に到達したとき，範囲を超過しないように可動範囲制約の拘束力が作用します．このとき，関節変位を範囲内に押し戻す力はバネ・ダンパモデルで計算されます．このバネ係数とダンパ係数はそれぞれディスクリプタの*spring*，*damper*で指定します．
 
-### �p�X�W���C���g 
+> 可動範囲用の*spring*，*damper*は初期値でも十分大きな値が設定されていますが，関節制御において非常に大きなバネ・ダンパ係数を用いると可動範囲制約のバネ・ダンパが負けてしまうことがあります．その場合には関節制御より大きな係数を適切に再設定すると，可動範囲内で関節を制御する事ができるようになります．
 
-### �e�Y���ό`�o�l�_���p
+#### *1*自由度関節の場合
+#### ボールジョイントの場合
+ボールジョイントの可動範囲は先の図に示すSwing-Twist座標系によって指定します．ボールジョイントに対しては2種類の可動範囲制約を使用することができます．
 
-## �֐ߌn�̋t�^���w
-�t�^���w(IK)�́C���̊֐ߌn�ɂ����č��̂��ڕW�ʒu�ɓ��B����悤�֐߂𐧌䂷��@�\�ł��DSpringhead�ł́C�֐ߌn�̃��R�r�A����p����IK�@�\���g�p�\�ł��D�����V�~�����[�V������1�X�e�b�v���ƂɊ֐ߌn�̃��R�r�A�����v�Z���C����Ɋ�Â��č��̂�ڕW�ʒu�E�p���ɋ߂Â���悤�Ȋe�֐߂̊p���x���v�Z���܂��D�V�~�����[�V�����𑱂��邱�ƂŁC�ŏI�I�ɍ��̂��ڕW�ʒu�E�p���ƂȂ�����Ԃ������܂��DSpringhead��̍��̊֐ߌn�ɑ΂���IK���g�p����ɂ́C���X���������K�v�ł��D���̂悤��3�̍��̂�������ɂȂ������֐ߌn���ɂƂ��ĉ�����܂��D
+-  *ConeLimit*は円錐形の可動範囲制約で，主に関節のスイング角を一定範囲内に制約します．
+-  *SplineLimit*は自由曲線形の可動範囲制約で，プラグ座標系z軸の可動範囲を閉曲線で指定することができます．
 
-\epsopt{ikexample3link}{width=0.5\hsize}
+ここでは*ConeLimit*について説明します(*SplineLimit*については後述します)．
 
-IK���g�p����ɂ́C�܂�IK�ɗp���邽�߂̊֐߂��u�A�N�`���G�[�^�v�Ƃ��ēo�^����K�v������܂��D
-```
+
+
+### ボールジョイントの自由曲線可動域 
+
+### パスジョイント 
+
+### 弾塑性変形バネダンパ
+
+
+
+## 関節系の逆運動学
+逆運動学(IK)は，剛体関節系において剛体が目標位置に到達するよう関節を制御する機能です．Springheadでは，関節系のヤコビアンを用いたIK機能が使用可能です．物理シミュレーションの1ステップごとに関節系のヤコビアンを計算し，それに基づいて剛体を目標位置・姿勢に近づけるような各関節の角速度を計算します．シミュレーションを続けることで，最終的に剛体が目標位置・姿勢となった状態が得られます．Springhead上の剛体関節系に対してIKを使用するには，少々下準備が必要です．次のように3つの剛体が直線状につながった関節系を例にとって解説します．\epsopt{ikexample3link}{width=0.5\hsize}IKを使用するには，まずIKに用いるための関節を「アクチュエータ」として登録する必要があります．
+```c++
 // given PHSceneIf* phScene
 // given PHSolidIf* solid1, solid2, solid3
 // given PHHingeJointIf* joint1 (solid1 <-> solid2)
@@ -385,28 +325,24 @@ PHIKHingeActuatorIf* ikActuator2
   = phScene->CreateIKActuator(descIKActuator);
 ikActuator1.AddChildObject(joint2);
 ```
-*PHIKHingeActuatorIf*��*PHHingeJointIf*�ɑΉ�����A�N�`���G�[�^�N���X�ł��D���ɁC�֐ߌn�̐e�q�֌W��o�^���܂��D�e�A�N�`���G�[�^�ɁC�q�A�N�`���G�[�^��o�^���܂��D
-```
+*PHIKHingeActuatorIf*は*PHHingeJointIf*に対応するアクチュエータクラスです．次に，関節系の親子関係を登録します．親アクチュエータに，子アクチュエータを登録します．
+```c++
 ikActuator1.AddChildObject(ikActuator2);
 ```
-�܂��CIK��p���ē��B�������[�̍��̂��u�G���h�G�t�F�N�^�v�Ƃ��ēo�^����K�v������܂��D
-```
+また，IKを用いて到達させる先端の剛体を「エンドエフェクタ」として登録する必要があります．
+```c++
 PHIKEndEffectorDesc descEndEffector;
 
 PHIKEndEffectorIf* ikEndEffector1
   = phScene->CreateIKEndEffector(descEndEffector);
 ikEndEffector1.AddChildObject(solid3);
 ```
-�Ō�ɁC���̊֐ߌn�̐e�q�֌W�ɂ����āC�G���h�G�t�F�N�^�̒��ڂ̐e�ɂ�����A�N�`���G�[�^�ɑ΂��C�G���h�G�t�F�N�^��o�^���܂��D
-```
+最後に，剛体関節系の親子関係において，エンドエフェクタの直接の親にあたるアクチュエータに対し，エンドエフェクタを登録します．
+```c++
 ikActuator2.AddChildObject(ikEndEffector1);
 ```
-���̗�ł� *solid1 -(joint1)-> solid2 -(joint2)-> solid3* �̂悤�Ɋ֐߂��ڑ�����Ă��܂�����C�֐ߌn�̖��[�ł��� *solid3* ���G���h�G�t�F�N�^�ɂ����ꍇ�C���ڂ̐e�ɂ�����A�N�`���G�[�^�� *joint2* �ɑΉ�����A�N�`���G�[�^�C���Ȃ킿 *ikActuator2* �Ƃ������ƂɂȂ�܂��D�����܂ł̍�ƂŁC�������ꂽ�I�u�W�F�N�g�̊֌W�͈ȉ��̂悤�ɂȂ��Ă���͂��ł��D
-
-\epsopt{ikexample3linkobjects}{width=0.9\hsize}
-
-����ŉ������͏I���ł��D�ڕW�ʒu���Z�b�g���CIK�G���W����L���ɂ����IK�������n�߂܂��D
-```
+この例では *solid1 -(joint1)-> solid2 -(joint2)-> solid3* のように関節が接続されていますから，関節系の末端である *solid3* をエンドエフェクタにした場合，直接の親にあたるアクチュエータは *joint2* に対応するアクチュエータ，すなわち *ikActuator2* ということになります．ここまでの作業で，生成されたオブジェクトの関係は以下のようになっているはずです．\epsopt{ikexample3linkobjects}{width=0.9\hsize}これで下準備は終わりです．目標位置をセットし，IKエンジンを有効にするとIKが動き始めます．
+```c++
 // solid3 goes to (2, 5, 0)
 ikEndEffector1->SetTargetPosition(Vec3d(2, 5, 0)); 
 
@@ -417,66 +353,71 @@ phScene->Step(); // IK is calculated in physics step
 ...
 ```
 
-### IK�G���W��
-IK�̌v�Z�́C*PHScene*������IK�G���W��(*PHIKEngine*)�ɂ���Ď�������Ă��܂��DIK�G���W���̓f�t�H���g�ł͖����ƂȂ��Ă��܂��D
-```
+### IKエンジン
+IKの計算は，*PHScene*が持つIKエンジン(*PHIKEngine*)によって実現されています．IKエンジンはデフォルトでは無効となっています．
+```c++
 phScene->GetIKEngine()->Enable(true);
 ```
-�����s���邱�ƂŗL���ƂȂ�܂��D*GetIKEngine()*�́C*PHScene*������IK�G���W�����擾����API�ł��DSpringhead�ɂ�����IK�̌v�Z�����́C�֐ߌn�̃��R�r�s��i���R�r�A���j�Ɋ�Â��܂��D�S�A�N�`���G�[�^�̊֐ߊp�x�ɔ����ω��� $\varDelta\bm{\theta}$ ��^�������́C�S�G���h�G�t�F�N�^�̈ʒu�̔����ω��� $\varDelta\bm{r}$ �́C�֐ߌn�̃��R�r�A�� $J$ ��p����\[\varDelta\bm{r} = J \varDelta\bm{\theta}\]�ƕ\����܂��D���X�e�b�v���ƂɊ֐ߌn���R�r�A��$J$����іڕW�ʒu�Ɍ����������ψ�$\varDelta\bm{r}$���v�Z���C��L�̐��`�A�����������������ƂŊe�֐߂ɗ^����p���x�����߂܂��D���`�A���������̋����ɂ̓K�E�X=�U�C�f���@�ɂ��J��Ԃ���@��p���Ă��܂��D���̂���1�X�e�b�v������̌J��Ԃ��v�Z�̉񐔂ɂ���Čv�Z���x�ƌv�Z���x�̃g���[�h�I�t������܂��D�J��Ԃ��̉񐔂́C
-```
+を実行することで有効となります．*GetIKEngine()*は，*PHScene*が持つIKエンジンを取得するAPIです．SpringheadにおけるIKの計算原理は，関節系のヤコビ行列（ヤコビアン）に基づきます．全アクチュエータの関節角度に微小変化量 $\varDelta\bm{\theta}$ を与えた時の，全エンドエフェクタの位置の微小変化量 $\varDelta\bm{r}$ は，関節系のヤコビアン *J* を用いて\[\varDelta\bm{r} = J \varDelta\bm{\theta}\]と表されます．毎ステップごとに関節系ヤコビアン*J*および目標位置に向かう微小変位$\varDelta\bm{r}$を計算し，上記の線形連立方程式を解くことで各関節に与える角速度を求めます．線形連立方程式の求解にはガウス=ザイデル法による繰り返し解法を用いています．そのため1ステップあたりの繰り返し計算の回数によって計算速度と計算精度のトレードオフがあります．繰り返しの回数は，
+```c++
 // 20 iteration per 1 physics step
 phScene->GetIKEngine()->SetNumIter(20);
 ```
-�̂悤�ɂ��Đݒ肷�邱�Ƃ��ł��܂��D\referencetitle\begin{reference}{PHSceneIf}\classmember{PHIKEngineIf* GetIKEngine()}IK�G���W�����擾���܂��D\end{reference}\begin{reference}{PHIKEngineIf}\classmember{Enable(bool b)}IK�G���W���̗L���E������؂�ւ��܂��D������*true*�Ȃ�ΗL�������C*false*�Ȃ�Ζ��������܂��D\classmember{SetNumIter(int n)}IK�̌J��Ԃ��v�Z�񐔂�1�X�e�b�v������*n*��ɃZ�b�g���܂��D\end{reference}
-### �A�N�`���G�[�^
-Springhead�ł́CIK�Ɏg�p����e�֐߂��A�N�`���G�[�^�ƌĂт܂��DIK�́C�A�N�`���G�[�^���쓮�����č��̂�ڕW�ʒu�ɓ��B�����܂��D���I�u�W�F�N�g�֌W�}��IK�G���W���̓A�N�`���G�[�^�𕡐��ێ����C�e�A�N�`���G�[�^���e�֐߂�ێ����܂��D�A�N�`���G�[�^�I�u�W�F�N�g��ɂ��C�֐߂���Ή����܂��D�A�N�`���G�[�^�I�u�W�F�N�g�̋�̓I�Ȗ����́C�֐߂̏�Ԃ�IK�G���W���ɓ`���CIK�̌v�Z�̂����֐߃��R�r�A���̌v�Z�ȂǊ֐߂��Ƃɍs�����������s���CIK�̌v�Z���ʂɏ]���Ċ֐߂𓮂������ł��D
-#### �A�N�`���G�[�^�N���X�̎�ނƍ쐬
-�{�e���M���_�ł́CIK�p�A�N�`���G�[�^�Ƃ��Ďg�p�ł���̂̓q���W�ƃ{�[���W���C���g�݂̂ł��D���ꂼ��ɑΉ������A�N�`���G�[�^�N���X������܂��D
-
--  *PHIKHingeActuator*��*PHHingeJoint*�ɑ΂���A�N�`���G�[�^�ł��D�q���W�W���C���g��1���R�x���쓮�ɗp���܂��D
-
--  *PHIKBallActuator*��*PHBallJoint*�ɑ΂���A�N�`���G�[�^�ł��D�{�[���W���C���g��3���R�x�̊֐߂ł����C��q����G���h�G�t�F�N�^�̎p��������s��Ȃ�(�G���h�G�t�F�N�^�̈ʒu�݂̂𐧌䂷��)�ꍇ�́C�G���h�G�t�F�N�^�̈ʒu��ω������邱�Ƃ̂ł���2���R�x�݂̂��쓮�ɗp���܂�(�g�p����2���R�x�̎���1�X�e�b�v���ƂɍX�V����܂�)�D
+のようにして設定することができます．
 
 
-```
+
+### アクチュエータ
+
+Springheadでは，IKに使用する各関節をアクチュエータと呼びます．IKは，アクチュエータを駆動させて剛体を目標位置に到達させます．＜オブジェクト関係図＞IKエンジンはアクチュエータを複数保持し，各アクチュエータが各関節を保持します．アクチュエータオブジェクト一つにつき，関節が一つ対応します．アクチュエータオブジェクトの具体的な役割は，関節の状態をIKエンジンに伝え，IKの計算のうち関節ヤコビアンの計算など関節ごとに行う部分を実行し，IKの計算結果に従って関節を動かす事です．
+#### アクチュエータクラスの種類と作成
+本稿執筆時点では，IK用アクチュエータとして使用できるのはヒンジとボールジョイントのみです．それぞれに対応したアクチュエータクラスがあります．
+
+-  *PHIKHingeActuator*は*PHHingeJoint*に対するアクチュエータです．ヒンジジョイントの1自由度を駆動に用います．
+
+-  *PHIKBallActuator*は*PHBallJoint*に対するアクチュエータです．ボールジョイントは3自由度の関節ですが，後述するエンドエフェクタの姿勢制御を行わない(エンドエフェクタの位置のみを制御する)場合は，エンドエフェクタの位置を変化させることのできる2自由度のみを駆動に用います(使用する2自由度の軸は1ステップごとに更新されます)．
+
+
+```c++
 // given PHSceneIf* phScene
 
 PHIKHingeActuatorDesc descIKActuator;
 PHIKHingeActuatorIf* ikActuator
     = phScene->CreateIKActuator(descActuator);
 ```
-�A�N�`���G�[�^���쐬����ɂ́C*PHSceneIf*��*CreateIKActuator*�֐���p���܂��D�����̓A�N�`���G�[�^�̃f�B�X�N���v�^�ł��D*PHIKHingeActuatorDesc*�^�̃f�B�X�N���v�^��n���ƃq���W�p�̃A�N�`���G�[�^���쐬����C*PHIKBallActuatorDesc*�^�̃f�B�X�N���v�^��n���ƃ{�[���W���C���g�p�̃A�N�`���G�[�^���쐬����܂��D�쐬���ꂽ���_�ł́C�A�N�`���G�[�^�͊֐߂ƑΉ��t��������Ă��܂���D�A�N�`���G�[�^�̎q�v�f�Ɋ֐߂�o�^���邱�ƂőΉ��t�����s���܂��D
-```
+アクチュエータを作成するには，*PHSceneIf*の*CreateIKActuator*関数を用います．引数はアクチュエータのディスクリプタです．*PHIKHingeActuatorDesc*型のディスクリプタを渡すとヒンジ用のアクチュエータが作成され，*PHIKBallActuatorDesc*型のディスクリプタを渡すとボールジョイント用のアクチュエータが作成されます．作成された時点では，アクチュエータは関節と対応付けがされていません．アクチュエータの子要素に関節を登録することで対応付けが行われます．
+```c++
 // given PHHingeJointIf* joint
 ikActuator->AddChildObject(joint);
 ```
 
-#### �A�N�`���G�[�^�̐e�q�֌W�̓o�^
-���̂悤�ɓ�҂ɕ��򂵂������N���ɂƂ�܂��F
+#### アクチュエータの親子関係の登録
+次図のように二股に分岐したリンクを例にとります：
 
-\epsopt{ikexample5link}{width=0.8\hsize}
 
-�v�Z��CIK�ŋ쓮����֐ߌn�͖؍\���łȂ���΂Ȃ�܂���DSpringhead�ł́C�A�N�`���G�[�^�̐e�q�֌W����邱�ƂŊ֐߂̖؍\����ݒ肵�܂��D
-```
+
+計算上，IKで駆動する関節系は木構造でなければなりません．Springheadでは，アクチュエータの親子関係を作ることで関節の木構造を設定します．
+
+```c++
 // given PHIKActuator ikActuator1, ikActuator2
 ikActuator1->AddChildObject(ikActuator2);
 ```
-*AddChildObject*���Ăяo���ƁC�A�N�`���G�[�^�ɑ΂��u�q�v�f�v�ƂȂ�A�N�`���G�[�^��o�^���邱�Ƃ��ł��܂��D�����S�ẴA�N�`���G�[�^�ɑ΂��čs�����ƂŃA�N�`���G�[�^�̖؍\�����ݒ肳��܂��D���̂Ƃ��A�N�`���G�[�^�̐e�q�֌W�́C�O�o�̐}�̉E���̂悤�ɂȂ�܂��D
-#### �֐߂̃_���p�W����IK
-�֐߂̉^���́CIK�@�\�ɂ���Čv�Z���ꂽ�ڕW�֐ߊp���x���֐߂�*SetTargetVelocity*���邱�ƂŎ������܂��D�ڕW���x�Ɋւ���֐߂̐U�镑���́C�֐߂�*damper*�p�����[�^�ɂ���ĕω����܂��D��ʂ�*damper*���傫���قǊ֐߂͌ł��Ȃ�C�O���̉e�����󂯂Â炭�Ȃ�܂��D���̐����͂��̂܂�IK�̐U�镑���ɂ��󂯌p����܂��D
-#### �d�ݕt��IK
-�ʏ�CIK�͑S�Ă̊֐߂��\�Ȍ���ϓ��Ɏg�p���ĖڕW��B������悤�v�Z����܂��D����C�L�����N�^�̓���ɗp����ꍇ�ȂǂŁC����D��I�ɓ��������̂͂��܂蓮�����Ȃ��C�Ƃ������d�ݕt�����v��������ʂ�����܂��DSpringhead��IK�ɂ́C���̂悤�ȏd�ݕt����ݒ肷�邱�Ƃ��ł��܂��D
-```
+*AddChildObject*を呼び出すと，アクチュエータに対し「子要素」となるアクチュエータを登録することができます．これを全てのアクチュエータに対して行うことでアクチュエータの木構造が設定されます．このときアクチュエータの親子関係は，前出の図の右側のようになります．
+#### 関節のダンパ係数とIK
+関節の運動は，IK機能によって計算された目標関節角速度を関節に*SetTargetVelocity*することで実現します．目標速度に関する関節の振る舞いは，関節の*damper*パラメータによって変化します．一般に*damper*が大きいほど関節は固くなり，外乱の影響を受けづらくなります．この性質はそのままIKの振る舞いにも受け継がれます．
+#### 重み付きIK
+通常，IKは全ての関節を可能な限り均等に使用して目標を達成するよう計算されます．一方，キャラクタの動作に用いる場合などで，手先を優先的に動かし胴体はあまり動かさない，といった重み付けが要求される場面があります．SpringheadのIKには，このような重み付けを設定することができます．
+```c++
 // given PHIKActuator ikActuator1, ikActuator2
 ikActuator1->SetBias(2.0);
 ikActuator2->SetBias(1.0);
 ```
-*SetBias*�́C�w�肵���֐߂����܂蓮�����Ȃ��悤�ɐݒ肷��֐��ł��DBias�ɂ�$1.0$�ȏ�̒l��ݒ肵�܂��D�傫�Ȓl��ݒ肵���֐߂قǁCIK�ɂ�铮��͏������Ȃ�܂��D�f�t�H���g�ł͂ǂ̃A�N�`���G�[�^��$1.0$�ƂȂ��Ă���C�S�֐߂��ϓ��Ɏg�p����܂��D
-### �G���h�G�t�F�N�^
-���́E�֐ߌn���\�����鍄�̂̈ꕔ���C�u�G���h�G�t�F�N�^�v�Ɏw�肷�邱�Ƃ��ł��܂��D�G���h�G�t�F�N�^�ɂ͖ڕW�ʒu�E�p�����w�����邱�Ƃ��ł��܂��DIK�G���W���́C�G���h�G�t�F�N�^���̂��w�肳�ꂽ�ڕW�ʒu�E�p����B������悤�A�N�`���G�[�^�𐧌䂵�܂��D
-#### �G���h�G�t�F�N�^�̍쐬
-�G���h�G�t�F�N�^��*PHSceneIf*��*CreateIKEndEffector*��p���č쐬���܂��D�����ɂ�*PHIKEndEffectorDesc*��n���܂��D
-```
+*SetBias*は，指定した関節をあまり動かさないように設定する関数です．Biasには$1.0$以上の値を設定します．大きな値を設定した関節ほど，IKによる動作は小さくなります．デフォルトではどのアクチュエータも$1.0$となっており，全関節が均等に使用されます．
+### エンドエフェクタ
+剛体・関節系を構成する剛体の一部を，「エンドエフェクタ」に指定することができます．エンドエフェクタには目標位置・姿勢を指示することができます．IKエンジンは，エンドエフェクタ剛体が指定された目標位置・姿勢を達成するようアクチュエータを制御します．
+#### エンドエフェクタの作成
+エンドエフェクタは*PHSceneIf*の*CreateIKEndEffector*を用いて作成します．引数には*PHIKEndEffectorDesc*を渡します．
+```c++
 // given PHSceneIf* phScene
 
 PHIKEndEffectorDesc descEndEffector;
@@ -484,121 +425,74 @@ PHIKEndEffectorDesc descEndEffector;
 PHIKEndEffectorIf* ikEndEffector
   = phScene->CreateIKEndEffector(descEndEffector);
 ```
-�A�N�`���G�[�^���l�C�G���h�G�t�F�N�^���쐬���_�ł͍��̂Ƃ̑Ή��������܂���D*AddChildObject*�ɂ�荄�̂��q�v�f�Ƃ��ēo�^����K�v������܂��D
-```
+アクチュエータ同様，エンドエフェクタも作成時点では剛体との対応を持ちません．*AddChildObject*により剛体を子要素として登録する必要があります．
+```c++
 // given PHSolidIf* solid
 
 ikEndEffector.AddChildObject(solid);
 ```
-���ɁC�G���h�G�t�F�N�^���̂�e���̂ɘA�����Ă���A�N�`���G�[�^�ɑ΂��C�G���h�G�t�F�N�^���q�v�f�Ƃ��ēo�^���܂��D
-```
+次に，エンドエフェクタ剛体を親剛体に連結しているアクチュエータに対し，エンドエフェクタを子要素として登録します．
+```c++
 // given PHIKActuatorIf* ikActuatorParent
 
 ikActuatorParent.AddChildObject(ikEndEffector);
 ```
-�������邱�ƂŃG���h�G�t�F�N�^�̓A�N�`���G�[�^�؍\���̗t�m�[�h�ƂȂ�CIK�̌v�Z�Ɏg�p�ł���悤�ɂȂ�܂��D�Ȃ��C�G���h�G�t�F�N�^�͈�̊֐ߌn�ɑ΂��ĕ����쐬���邱�Ƃ��ł��܂��D���̏ꍇ�CIK�͕����̃G���h�G�t�F�N�^���\�Ȍ��蓯���ɖڕW�ʒu�E�p����B���ł���悤�A�N�`���G�[�^�𐧌䂵�܂��D�܂��C�G���h�G�t�F�N�^�͊֐ߌn�̐�[���̂Ɍ���܂���D
-#### �ڕW�ʒu�̐ݒ�
-�G���h�G�t�F�N�^�̖ڕW�ʒu��*SetTargetPosition*�ɂ���Ďw�肵�܂��D
-```
+こうすることでエンドエフェクタはアクチュエータ木構造の葉ノードとなり，IKの計算に使用できるようになります．なお，エンドエフェクタは一つの関節系に対して複数作成することができます．この場合，IKは複数のエンドエフェクタが可能な限り同時に目標位置・姿勢を達成できるようアクチュエータを制御します．また，エンドエフェクタは関節系の先端剛体に限りません．
+#### 目標位置の設定
+エンドエフェクタの目標位置は*SetTargetPosition*によって指定します．
+```c++
 // solid3 goes to (2, 5, 0)
 ikEndEffector->SetTargetPosition(Vec3d(2, 5, 0)); 
 ```
-�G���h�G�t�F�N�^�ɖڕW�p�����w�����C�G���h�G�t�F�N�^������̎p�����Ƃ�悤�Ɋ֐ߌn�𓮍삳���邱�Ƃ��ł��܂��D
-```
+エンドエフェクタに目標姿勢を指示し，エンドエフェクタが特定の姿勢をとるように関節系を動作させることもできます．
+```c++
 ikEndEffector->SetTargetOrientation( Quaterniond::Rot('x', rad(30)) ); 
 ikEndEffector->EnableOrientationControl(true);
 ```
-�ڕW�p����*Quaterniond*�Őݒ肵�܂��D�p������̓f�t�H���g�ł͖����ɂȂ��Ă���C�g�p����ɂ�*EnableOrientationControl*���Ă�ŗL��������K�v������܂��D*EnablePositionControl*�����*EnableOrientationControl*��p����ƁC�ʒu����E�p������̗������ʂɗL���E���������邱�Ƃ��ł��܂��D
-```
-// �ʒu���䂠��C�p������Ȃ��i�f�t�H���g�j
+目標姿勢は*Quaterniond*で設定します．姿勢制御はデフォルトでは無効になっており，使用するには*EnableOrientationControl*を呼んで有効化する必要があります．*EnablePositionControl*および*EnableOrientationControl*を用いると，位置制御・姿勢制御の両方を個別に有効・無効化することができます．
+```c++
+// 位置制御あり，姿勢制御なし（デフォルト）
 ikEndEffector->EnablePositionControl(true);
 ikEndEffector->EnableOrientationControl(false);
 ```
 
-```
-// �ʒu����Ȃ��C�p�����䂠��
+```c++
+// 位置制御なし，姿勢制御あり
 ikEndEffector->EnablePositionControl(false);
 ikEndEffector->EnableOrientationControl(true);
 ```
 
-```
-// �ʒu���䂠��C�p�����䂠��
+```c++
+// 位置制御あり，姿勢制御あり
 ikEndEffector->EnablePositionControl(true);
 ikEndEffector->EnableOrientationControl(true);
 ```
 
-## �ڐG
+## 接触
 
-### �ڐG���f��
-
-
+### 接触モデル
 
 
 
-\begin{tabular}{c}
-\includegraphics[clip, width=.7\hsize]{fig/phcontact.eps} \\
-\end{tabular}
 
-\caption{Contact configuration}
-
-
-Springhead�ō̗p���Ă���ڐG���f���ɂ��Đ������܂��D��\ref{sec_physics_scene}�߂ŏq�ׂ��悤�ɁC*PHSceneIf::Step*�ɂ���ăV�~�����[�V������1�X�e�b�v�i�߂�ƁC���߂Ɍ`��̌�������ƐڐG�S���̐������s���܂��D���������̌`��̌����f�ʂƁC�ڐG�S���̊֌W�ɂ���Fig.\,\ref{fig_physics_contact}�Ɏ����܂��D�}�ł͊ȒP�̂��߂ɓ񎟌��ŕ`���Ă��܂����C���ۂɂ͐ڐG�f�ʂ�\�����p�`�̊e���_�ɐڐG�S��������܂��D�ڐG�S�������̍S���Ɠ��l�Ƀ\�P�b�g�ƃv���O�ō\������܂��D����ŁC���̍S���Ƃ͈Ⴂ�ڐG�S���͌�������A���S���Y���ɂ���ē��I�ɐ����E�j������܂��D���̂��߁C�ڐG���������̂̂ǂ���Ƀ\�P�b�g���邢�̓v���O�����t�����邩�͏󋵈ˑ��ł���C�O������I�����邱�Ƃ͂ł��܂���D�v���O����у\�P�b�g�̌����͎��̂悤�ɂ��Č��܂�܂��D�܂��Cx���͐ڐG�@���ƕ��s�Ɍ����܂��D�������ǂ��炪���̌������͏󋵈ˑ��ł��D���ɁCy���͐ڐG�_�ɂ������̍��̂̑��Α��x�x�N�g����ڐG�f�ʂ֓��e���������Ɍ����܂��D�Ō��z����x�Cy���ɒ�������悤�Ɍ��܂�܂��D�ȉ��ł͊e�ڐG�S�����ۂ������ɂ��ċ�̓I�ɏq�ׂ܂��D�܂��C�@�������̐i�����x�̑召�ɉ����ďՓ˃��f���ƐÓI�ڐG���f���̂����ꂩ���I������܂��D
-
-v^\mathrm{x} < -V^\mathrm{th}   \;\; &\Rightarrow \;\; �Փ˃��f�� \\
-v^\mathrm{x} \ge -V^\mathrm{th} \;\; &\Rightarrow \;\; �ÓI�ڐG���f��
-
-������$v^\mathrm{x}$�̓\�P�b�g���猩���v���O�̑��Α��x��x���i�ڐG�@���j�����ŁC�߂Â����������𕉂Ƃ��܂��D�܂��C$V^\mathrm{th}$�͏Փ˃��f���֐؂�ւ��ՊE���x�ł��D�Փ˃��f���ł́C1�X�e�b�v��̑��Α��x${v^\mathrm{x}}'$�����˕Ԃ�W��$e$�ɂ��ƂÂ��Č��܂�C����𖞂����悤�ȐڐG�͂��v�Z����܂��D
-
-{v^\mathrm{x}}' = - e \, v^\mathrm{x}
-
-�����ŁC���˕Ԃ�W���͏Փ˂���`��̕����l�ɒ�`���ꂽ���˕Ԃ�W���̕��ϒl�ł��D�ÓI�ڐG���f���ł́C�`�󓯎m�̐i���[�x$d$��1�X�e�b�v�ŏ���̊����Ō�������悤�ȐڐG�͂����߂܂��D�܂�C1�X�e�b�v��̐i���[�x��$d'$�Ƃ����
-
-d' = d - \gamma \mathrm{max}(d - d^\mathrm{tol}, 0)
-
-�ƂȂ�܂��D������$\gamma$�͐ڐG�S���̌덷�C�����ł��D�܂��C$d^\mathrm{tol}$�͋��e�i���[�x�ł��D�Ō�ɁC�ڐG�͂��������ׂ������ɂ��ďq�ׂ܂��D�܂��C�@�������ɂ͔����͂̂ݍ�p���邱�Ƃ���C�ڐG�͂�x������$f^\mathrm{x}$�ɂ�
-
-f^\mathrm{x} \ge 0
-
-���ۂ����܂��D����ŐڐG�͂�y������$f^\mathrm{y}$�Cz������$f^\mathrm{z}$�͖��C�͂�\���܂��D���C�͂Ɋւ��ẮC���̌����̑��Α��x�ɂ��ƂÂ��Î~���C�������C�������肳��C����ɉ����čő喀�C�͂̐��񂪉ۂ���܂��D
-
--\mu_0 f^\mathrm{x} \le &f^\mathrm{y} \le \mu_0 f^\mathrm{x} & & if \; -V^\mathrm{f} \le v^\mathrm{y} \le V^\mathrm{f},\\
- \mu   f^\mathrm{x} \le &f^\mathrm{y} \le \mu   f^\mathrm{x} & & otherwise
-
-�����ŁC�Î~���C�W��$\mu_0$����ѓ����C�W��$\mu$�͒��˕Ԃ�W���Ɠ��l�Ɋe�`��̕����l�̕��ϒl���p�����܂��D�܂��C$V^\mathrm{f}$�͐Î~���C�Ɠ����C���؂�ւ��ՊE���x�ł��Dz�������ɂ��Ă����l�̐��񂪉ۂ���܂��D�ڐG���f���̊֌W����C���^�t�F�[�X�ɂ͈ȉ�������܂��D
-
-\begin{longtable}{p{.1\hsize}p{.5\hsize}p{.4\hsize}}
-\multicolumn{3}{l}{*CDShapeIf*}						\\ \midrule
-*void*	& *SetElasticity(float e)*       & ���˕Ԃ�W����ݒ� \\
-*float*  & *GetElasticity()*              & ���˕Ԃ�W�����擾 \\
-*void*   & *SetStaticFriction(float mu0)* & �Ö��C�W����ݒ� \\
-*float*  & *GetStaticFriction()*          & �Ö��C�W�����擾 \\
-*void*   & *SetDynamicFriction(float mu)* & �����C�W����ݒ� \\
-*float*  & *GetDynamicFriction()*         & �����C�W�����擾
-\end{longtable}
+Springheadで採用している接触モデルについて説明します．第\ref{sec_physics_scene}節で述べたように，*PHSceneIf::Step*によってシミュレーションを1ステップ進めると，初めに形状の交差判定と接触拘束の生成が行われます．交差する二つの形状の交差断面と，接触拘束の関係について次図に示します．図では簡単のために二次元で描いていますが，実際には接触断面を表す多角形の各頂点に接触拘束が作られます．接触拘束も他の拘束と同様にソケットとプラグで構成されます．一方で，他の拘束とは違い接触拘束は交差判定アルゴリズムによって動的に生成・破棄されます．このため，接触し合う剛体のどちらにソケットあるいはプラグが取り付けられるかは状況依存であり，外部から選択することはできません．プラグおよびソケットの向きは次のようにして決まります．まず，x軸は接触法線と平行に向きます．ただしどちらが正の向きかは状況依存です．次に，y軸は接触点における二つの剛体の相対速度ベクトルを接触断面へ投影した向きに向きます．最後にz軸はx，y軸に直交するように決まります．以下では各接触拘束が課す条件について具体的に述べます．まず，法線方向の進入速度の大小に応じて衝突モデルと静的接触モデルのいずれかが選択されます．
 
 
 
-\begin{longtable}{p{.1\hsize}p{.5\hsize}p{.4\hsize}}
-\multicolumn{3}{l}{*PHSceneIf*}						\\ \midrule
-*void*	& *SetContactTolerance(double tol)* & ���e�����[�x��ݒ� \\
-*double* & *GetContactTolerance()*           & ���e�����[�x���擾 \\
-*void*   & *SetImpactThreshold(double vth)*  & �ŏ��Փˑ��x��ݒ� \\
-*double* & *GetImpactThreshold()*            & �ŏ��Փˑ��x���擾 \\
-*void*   & *SetFrictionThreshold(double vf)* & �ŏ������C���x��ݒ� \\
-*double* & *GetFrictionThreshold()*          & �ŏ������C���x���擾
-\end{longtable}
-
-\noindent**���l**
-
--  �ڐG�f�ʂ̌����ɂ��ẮC�`�󓯎m�̐i�����x�����ƂɌ��肵�܂����C�����ł͏ڂ����q�ׂ܂���D
--  ���C�͂Ɋւ��Ă�y���Cz�����ʂɈ����܂����C���ۂ̖��C�͂�y������z�����̍��͂Ƃ��ė^�����܂��̂ŁC
-���͂��ő喀�C�͂𒴉߂���\��������܂��D���̂悤��Springhead�̖��C���f���͂����܂ŋߎ��I�Ȃ��̂ł��̂�
-���ӂ��ĉ������D
+（＊＊＊あとで移植する＊＊＊）
 
 
-### �ڐG�͂̎擾
-����̍��̂ɍ�p����ڐG�͂𒼐ڎ擾���邽�߂̃C���^�t�F�[�X�͗p�ӂ���Ă��܂���D���̂��߁C���[�U�T�C�h�ł�����x�̌v�Z���s���K�v������܂��D�ȉ��ɁC���鍄�̂ɍ�p����ڐG�͂̍��͂����߂��������܂��D
-```
+**備考**
+
+-  接触断面の向きについては，形状同士の進入速度をもとに決定しますが，ここでは詳しく述べません．
+-  摩擦力に関してはy軸，z軸が個別に扱われますが，実際の摩擦力はy成分とz成分の合力として与えられますので，
+合力が最大摩擦力を超過する可能性があります．このようにSpringheadの摩擦モデルはあくまで近似的なものですので
+注意して下さい．
+
+
+### 接触力の取得
+特定の剛体に作用する接触力を直接取得するためのインタフェースは用意されていません．このため，ユーザサイドである程度の計算を行う必要があります．以下に，ある剛体に作用する接触力の合力を求める例を示します．
+```c++
 // given PHSceneIf* scene
 // given PHSolidIf* solid
 
@@ -625,50 +519,38 @@ for(int i = 0; i < N; i++){
     }
 }
 ```
-�܂��C�V�[�����̐ڐG�S���̐���*PHSceneIf::NConstacts*�Ŏ擾���C*for*���[�v����$i$�Ԗڂ̐ڐG�S����*PHSceneIf::GetContact*�Ŏ擾���܂��D����*PHConstraintIf::GetConstraintForce*�ŐڐG�͂̕��i��*f*�ƃ��[�����g*t*���擾���܂����C�ڐG�S���̏ꍇ���[�����g��$0$�ł��̂ŗp���܂���D�܂��C������S���͂̓\�P�b�g/�v���O���W�n�ŕ\�������̂ŁC��p�_�̓\�P�b�g/�v���O���W�n�̌��_�ł��D������l�����č��̂ɍ�p����͂ƃ��[�����g�֕ϊ����C���͂ɑ������킹�Ă����܂��D���̂��\�P�b�g���ł���ꍇ�͍�p�E����p���l�����ĕ����𔽓]���邱�Ƃɒ��ӂ��ĉ������D
-### �ڐG�͌v�Z�̗L��/�����̐؂�ւ�
-�����̃A�v���P�[�V�����ł́C���ׂĂ̍��̂̑g�ݍ��킹�Ɋւ��ĐڐG����舵���K�v�͂���܂���D���̂悤�ȏꍇ�͕K�v�ȍ��̂̑΂Ɋւ��Ă̂ݐڐG��L�������邱�ƂŌv�Z�R�X�g���팸�ł��܂��DSpringhead�ł́C���̂̑g�ݍ��킹���Ɍ������肨��ѐڐG�͌v�Z���s������؂�ւ��邱�Ƃ��ł��܂��D����ɂ�*PHSceneIf::SetContactMode*��p���܂��D
+まず，シーン中の接触拘束の数を*PHSceneIf::NConstacts*で取得し，*for*ループ中で*i*番目の接触拘束を*PHSceneIf::GetContact*で取得します．次に*PHConstraintIf::GetConstraintForce*で接触力の並進力*f*とモーメント*t*を取得しますが，接触拘束の場合モーメントは*0*ですので用いません．また，得られる拘束力はソケット/プラグ座標系で表したもので，作用点はソケット/プラグ座標系の原点です．これを考慮して剛体に作用する力とモーメントへ変換し，合力に足し合わせていきます．剛体がソケット側である場合は作用・反作用を考慮して符号を反転することに注意して下さい．
+### 接触力計算の有効/無効の切り替え
+多くのアプリケーションでは，すべての剛体の組み合わせに関して接触を取り扱う必要はありません．このような場合は必要な剛体の対に関してのみ接触を有効化することで計算コストを削減できます．Springheadでは，剛体の組み合わせ毎に交差判定および接触力計算を行うかを切り替えることができます．これには*PHSceneIf::SetContactMode*を用います．
 
-\begin{longtable}{p{.1\hsize}p{.9\hsize}}
-\multicolumn{2}{l}{*PHSceneIf*}						\\ \midrule
-*void*	& *SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, int mode)* \\
-*void*   & *SetContactMode(PHSolidIf** group, size\_t length, int mode)* \\
-*void*   & *SetContactMode(PHSolidIf* solid, int mode)* \\
-*void*   & *SetContactMode(int mode)*
-\end{longtable}
 
-��Ԗڂ͍���*lhs*��*rhs*�̑΂Ɋւ��ă��[�h��ݒ肵�܂��D��Ԗڂ͔z��*[group, group + length)*�Ɋi�[���ꂽ���̂̑S�g�ݍ��킹�Ɋւ��Đݒ肵�܂��D�O�Ԗڂ͍���*solid*�Ƒ��̑S���̂Ƃ̑g�ݍ��킹�Ɋւ��Đݒ肵�܂��D�l�Ԗڂ̓V�[�����̂��ׂĂ̍��̂̑g�ݍ��킹�Ɋւ��Đݒ肵�܂��D�ݒ�\�ȃ��[�h�͈ȉ��̓��̈�ł��D
 
-\begin{longtable}{p{.3\hsize}p{.7\hsize}}
-\multicolumn{2}{l}{*PHSceneDesc::ContactMode*} \\ \midrule
-*MODE\_NONE*	   & �������肨��ѐڐG�͌v�Z���s��Ȃ� \\
-*MODE\_LCP*     & ����������s���C�S���͌v�Z�@��p���� \\
-*MODE\_PENALTY* & ����������s���C�y�i���e�B���͖@��p���� \\
-\end{longtable}
+一番目は剛体*lhs*と*rhs*の対に関してモードを設定します．二番目は配列*[group, group + length)*に格納された剛体の全組み合わせに関して設定します．三番目は剛体*solid*と他の全剛体との組み合わせに関して設定します．四番目はシーン中のすべての剛体の組み合わせに関して設定します．設定可能なモードは以下の内の一つです．
 
-�f�t�H���g�ł͂��ׂĂ̍��̑΂Ɋւ���*MODE\_LCP*���I������Ă��܂��D��Ƃ��āC���ʂƂ̐ڐG�ȊO�����ׂăI�t�ɂ���ɂ�
-```
+
+
+デフォルトではすべての剛体対に関して*MODE\_LCP*が選択されています．例として，床面との接触以外をすべてオフにするには
+
+```c++
 // given PHSolidIf* floor
 
 scene->SetContactMode(PHSceneDesc::MODE_NONE);
 scene->SetContactMode(floor, PHSceneDesc::MODE_LCP);
 ```
-�Ƃ��܂��D
-## �֐ߍ��W�n�V�~�����[�V����
+とします．
+## 関節座標系シミュレーション
 T.B.D.
-## �M�A
+## ギア
 T.B.D.
-## �����A���S���Y���̐ݒ�
-�ȉ��ł͕����V�~�����[�V�����̓����ŗp�����Ă���A���S���Y���̏ڍׂȐݒ荀�ڂɂ��Đ������܂��D
-### �S���͌v�Z�G���W��
-�S���͌v�Z�G���W���́C�֐߂�ڐG�Ȃǂ̍S���𖞑����邽�߂̍S���͂̌v�Z���s���܂��D�S���͌v�Z�G���W���̃N���X��*PHConstraintEngineIf*�ŁC������擾����ɂ͈ȉ��̊֐���p���܂��D*PHConstraintEngineIf*�̃C���^�t�F�[�X���ȉ��Ɏ����܂��D
+## 内部アルゴリズムの設定
+以下では物理シミュレーションの内部で用いられているアルゴリズムの詳細な設定項目について説明します．
+### 拘束力計算エンジン
+拘束力計算エンジンは，関節や接触などの拘束を満足するための拘束力の計算を行います．拘束力計算エンジンのクラスは*PHConstraintEngineIf*で，これを取得するには以下の関数を用います．*PHConstraintEngineIf*のインタフェースを以下に示します．
 
-\begin{longtable}{p{.12\hsize}p{.45\hsize}p{.33\hsize}}
-\multicolumn{3}{l}{*PHConstraintEngineIf*}			\\ \midrule
-*void*	& *SetVelCorrectionRate(double)*		& �֐ߍS���̌덷�C������ݒ� \\
-*double* & *GetVelCorrectionRate()*			& �֐ߍS���̌덷�C�������擾 \\
-*void*	& *SetContactCorrectionRate(double)*	& �ڐG�S���̌덷�C������ݒ� \\
-*double* & *GetContactCorrectionRate()*		& �ڐG�S���̌덷�C�������擾 \\
-\end{longtable}
 
-�덷�C�����Ƃ́C1�X�e�b�v�ōS���덷�ǂ̒��x�C�����邩�������䗦�ŁC�ʏ�$[0, 1]$�̒l��ݒ肵�܂��D�덷�C������$1$�ɂ���ƁC1�X�e�b�v�ōS���덷��$0$�ɂ���悤�ȍS���͂��v�Z����܂����C���U���ۂȂǂ̃V�~�����[�V�����̕s���艻�������X��������܂��D�t�ɏC�����������ڂɐݒ肷��΃V�~�����[�V�����͈��艻���܂����C���덷�����債�܂��D�S���͌v�Z�G���W���́C�����Ŕ����^�̃A���S���Y���ōS���͂��v�Z���܂��D�A���S���Y���̔����񐔂�*PHSceneIf::SetNumIteration*�Őݒ肵�܂��i��\ref{sec_physics_scene}�ߎQ�Ɓj�D*PHSceneIf::SetContactTolerance*�Őݒ�\�ł��D*PHConstraintEngineIf::SetContactCorrectionRate*�Őݒ�\�ł��i��\ref{sec_physics_engine}�ߎQ�Ɓj�D
+
+誤差修正率とは，1ステップで拘束誤差どの程度修正するかを示す比率で，通常$[0, 1]$の値を設定します．誤差修正率を*1*にすると，1ステップで拘束誤差を*0*にするような拘束力が計算されますが，発振現象などのシミュレーションの不安定化を招く傾向があります．逆に修正率を小さ目に設定すればシミュレーションは安定化しますが，定常誤差が増大します．拘束力計算エンジンは，内部で反復型のアルゴリズムで拘束力を計算します．アルゴリズムの反復回数は*PHSceneIf::SetNumIteration*で設定します．
+
+*PHSceneIf::SetContactTolerance*で設定可能です．
+
+*PHConstraintEngineIf::SetContactCorrectionRate*で設定可能です．

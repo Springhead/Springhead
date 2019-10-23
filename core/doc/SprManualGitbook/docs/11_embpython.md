@@ -1,27 +1,27 @@
-EmbPython���W���[���́C�X�N���v�g����Python�Ƃ̘A�g�@�\��񋟂��܂��DPython�C���^�v���^����Springhead�̋@�\���Ăяo������CSpringhead�A�v���P�[�V������Python�C���^�v���^��g�ݍ���ŃX�N���v�e�B���O�G���W���Ƃ��Ďg�p����Ƃ����������ł��܂��DEmbPython���W���[���̎g�p�ɂ��CPython�C���^�v���^���Springhead API�N���X�ւ̃C���^�t�F�[�X�N���X���񋟂���܂��D���[�U��Python�C���^�t�F�[�X�N���X���g�p����Springhead�̊e�@�\�ɃA�N�Z�X���܂��DPython�C���^�t�F�[�X�N���X�͓����I��Springhead�̋@�\���Ăяo���C���ʂ�Python�C���^�t�F�[�X�N���X�ɕϊ����ĕԂ��܂��D
-## ���p�@
-�傫�������ē�ʂ�̗��p�@��z�肵�Ă��܂��D��́CC++�Ŏ������ꂽSpringhead�A�v���P�[�V�����ɑ΂��CPython�C���^�v���^��g�ݍ��ނ��Ƃł��DSpringhead�A�v���P�[�V�����̋@�\�̈ꕔ��Python�X�N���v�g�L�q���C�g���������߂܂��D������́CPython�C���^�v���^�ɑ΂���O���g�����W���[��(Python DLL, pyd)�Ƃ��Ē񋟂��ꂽSpringhead�𗘗p���邱�ƂŁCPython�A�v���P�[�V������Springhead�̋@�\��g�ݍ��ޗ��p�@�ł��D�ǂ���̏ꍇ�ɂ����Ă��CEmbPython���W���[����Python������Springhead�̊֐����Ăяo�����߂̃C���^�t�F�[�X��񋟂��܂��D�֌W��\Fig{epoverview}�Ɏ����܂��D\begin{fig}\epscapopt{epoverview}{Python�A�g��EmbPython���W���[���̈ʒu�Â�}{width=0.8\hsize}\end{fig}
-### ���ϐ�PATH�̐ݒ�
-Springhead�̓���́A`Springhead2\core\bin\win64`�t�H���_�A�����`Springhead2\dependency\bin\win64`�t�H���_����dll�Q�Ɉˑ����Ă��܂��B�����̃t�H���_�̐�΃p�X�����ϐ�PATH�ɒǉ����Ă��������B
-### Springhead�ւ�Python�g����
-Springhead�A�v���P�[�V������Python�C���^�v���^��g�ݍ���ŗ��p������@��������܂��D�{�߂ł͂܂�Springhead�ɓ������ꂽPython�C���^�v���^�g�ݍ��݃T���v�����Љ�C�ȒP�Ȏg������������܂��D���̌�C�T���v���ɂ�����Python�C���^�v���^�g�ݍ��݂̂��߂̃\�[�X�R�[�h�ɂ��ĉ�����܂��D
-#### PythonSpr�T���v���̃r���h�Ǝ��s
-Python�C���^�v���^�g�ݍ��݃T���v���� `src\Samples\EmbPython\PythonSpr` �ɂ���܂��D�r���h����� `PythonSpr.exe` ���ł��܂��D*PythonSpr*�T���v���͕W���I��Springhead�T���v���A�v���P�[�V�����t���[�����[�N��Python�C���^�v���^��g�ݍ��񂾂��̂ŁC�����V�[�����\�z�E�V�~�����[�V�����E�`�悷�鎖���ł��܂��DPython�C���^�v���^�����*phSdk*��*fwSdk*�ɃA�N�Z�X���邱�Ƃ��ł��C�\���@�\��؂�ւ�����V�[���ɃI�u�W�F�N�g���쐬������Ƃ��������Ƃ�Python����s���܂��D���s�̑O�ɁC���ϐ���ݒ肵�܂��D����́CSpringhead�A�v���P�[�V�����ɑg�ݍ��܂ꂽPython�C���^�v���^��Python�̕W�����C�u�����Q�ɃA�N�Z�X���邽�߂ɕK�v�ł��D\begin{description}- [*SPRPYTHONPATH*���ϐ�]~Springhead�����[�X��W�J�����t�H���_����`bin\src\Python32\Lib`�ւ̃t���p�X���w�肵�܂��DPython3.2��`c:\Python32`�ɃC���X�g�[�����Ă���ꍇ�C`C:\Python32\Lib`�ł����܂��܂���D\end{description}`PythonSpr.exe`�����s����Ǝ��̂悤�ȉ�ʂ�����܂��D���X�N���[���V���b�g���E��Springhead�̎��s��ʁC���̃R���\�[����Python�v�����v�g�ł��D�N�����ɂ́CSpringhead���s��ʂɂ͉��̃V�[�����\�z����Ă��Ȃ����߁C���[���h���W�n���������݂̂��`�悳��Ă��܂��D����@�͈ȉ��̒ʂ�ł��D\begin{description}- [�}�E�X ���h���b�O] ���_�ύX�i��]�j- [�}�E�X �E�h���b�O] ���_�ύX�i�g��k���j- [�X�y�[�X�L�[] �V�~�����[�V�����J�n�E�ꎞ��~�i�N������͒�~���Ă��܂��j\end{description}
-#### PythonSpr�T���v���̗V�ѕ�
-���̐߂ł́CPython�R�[�h�𒆐S�Ƃ���Springhead�̋@�\�𗘗p�����̓I�ȕ��@���Љ�܂��DPython�����Springhead API���p�Ɋւ���ڂ����d�l��\SECTION{pythonsprAPI}���Q�Ƃ��Ă��������DPython�v�����v�g���Springhead�̃R�[�h����͂��Ď��s���邱�Ƃ��ł��܂��D�ȉ��̂悤�ɓ��͂��ăV�~�����[�V�������J�n�i�X�y�[�X�L�[�j����ƁC���̂��쐬����ė����Ă����܂��D
-```
-# ���̂������邾���̃T���v��
+EmbPythonモジュールは，スクリプト言語Pythonとの連携機能を提供します．PythonインタプリタからSpringheadの機能を呼び出したり，SpringheadアプリケーションにPythonインタプリタを組み込んでスクリプティングエンジンとして使用するといった事ができます．EmbPythonモジュールの使用により，Pythonインタプリタ上にSpringhead APIクラスへのインタフェースクラスが提供されます．ユーザはPythonインタフェースクラスを使用してSpringheadの各機能にアクセスします．Pythonインタフェースクラスは内部的にSpringheadの機能を呼び出し，結果をPythonインタフェースクラスに変換して返します．
+## 利用法
+大きく分けて二通りの利用法を想定しています．一つは，C++で実装されたSpringheadアプリケーションに対し，Pythonインタプリタを組み込むことです．Springheadアプリケーションの機能の一部をPythonスクリプト記述し，拡張性を高めます．もう一つは，Pythonインタプリタに対する外部拡張モジュール(Python DLL, pyd)として提供されたSpringheadを利用することで，PythonアプリケーションにSpringheadの機能を組み込む利用法です．どちらの場合においても，EmbPythonモジュールはPython側からSpringheadの関数を呼び出すためのインタフェースを提供します．関係を\Fig{epoverview}に示します．\begin{fig}\epscapopt{epoverview}{Python連携とEmbPythonモジュールの位置づけ}{width=0.8\hsize}\end{fig}
+### 環境変数PATHの設定
+Springheadの動作は、`Springhead2\core\bin\win64`フォルダ、および`Springhead2\dependency\bin\win64`フォルダ内のdll群に依存しています。これらのフォルダの絶対パスを環境変数PATHに追加してください。
+### SpringheadへのPython組込み
+SpringheadアプリケーションにPythonインタプリタを組み込んで利用する方法を解説します．本節ではまずSpringheadに同梱されたPythonインタプリタ組み込みサンプルを紹介し，簡単な使い方を説明します．その後，サンプルにおけるPythonインタプリタ組み込みのためのソースコードについて解説します．
+#### PythonSprサンプルのビルドと実行
+Pythonインタプリタ組み込みサンプルは `src\Samples\EmbPython\PythonSpr` にあります．ビルドすると `PythonSpr.exe` ができます．*PythonSpr*サンプルは標準的なSpringheadサンプルアプリケーションフレームワークにPythonインタプリタを組み込んだもので，物理シーンを構築・シミュレーション・描画する事ができます．Pythonインタプリタからは*phSdk*や*fwSdk*にアクセスすることができ，表示機能を切り替えたりシーンにオブジェクトを作成したりといったことがPythonから行えます．実行の前に，環境変数を設定します．これは，Springheadアプリケーションに組み込まれたPythonインタプリタがPythonの標準ライブラリ群にアクセスするために必要です．\begin{description}- [*SPRPYTHONPATH*環境変数]~Springheadリリースを展開したフォルダ内の`bin\src\Python32\Lib`へのフルパスを指定します．Python3.2を`c:\Python32`にインストールしてある場合，`C:\Python32\Lib`でもかまいません．\end{description}`PythonSpr.exe`を実行すると次のような画面が現れます．＜スクリーンショット＞右がSpringheadの実行画面，左のコンソールがPythonプロンプトです．起動時には，Springhead実行画面には何のシーンも構築されていないため，ワールド座標系を示す矢印のみが描画されています．操作法は以下の通りです．\begin{description}- [マウス 左ドラッグ] 視点変更（回転）- [マウス 右ドラッグ] 視点変更（拡大縮小）- [スペースキー] シミュレーション開始・一時停止（起動直後は停止しています）\end{description}
+#### PythonSprサンプルの遊び方
+この節では，Pythonコードを中心としてSpringheadの機能を利用する具体的な方法を紹介します．PythonからのSpringhead API利用に関する詳しい仕様は\SECTION{pythonsprAPI}を参照してください．Pythonプロンプト上にSpringheadのコードを入力して実行することができます．以下のように入力してシミュレーションを開始（スペースキー）すると，剛体が作成されて落ちていきます．
+```python
+# 剛体が落ちるだけのサンプル
 
->>> fwScene   �� ������ԂŒ�`����Ă���ϐ��ŁC�A�v���P�[�V�������ێ�����fwScene�ɃA�N�Z�X�ł��܂�
+>>> fwScene   ← 初期状態で定義されている変数で，アプリケーションが保持するfwSceneにアクセスできます
 <Framework.FWScene object at 0x05250A40>
 >>> phScene = fwScene.GetPHScene()
 >>> desc = Spr.PHSolidDesc()
 >>> desc.mass = 2.0
 >>> solid0 = phScene.CreateSolid(desc)
 ```
-�`���^���邱�Ƃ��ł��܂��D�Ȃ��C�Ō�̍s��*solid0.AddShape(box0)*�����s����܂ō��̂Ɍ`��͊��蓖�Ă��Ȃ��̂ŁC���̍s����͂��I���܂ł̓X�y�[�X�L�[���������ɃV�~�����[�V�������ꎞ��~��Ԃɂ��Ă����Ƃ悢�ł��傤�D
-```
-# �`��̂��鍄�̂������邾���̃T���v��
+形状を与えることもできます．なお，最後の行の*solid0.AddShape(box0)*を実行するまで剛体に形状は割り当てられないので，この行を入力し終わるまではスペースキーを押さずにシミュレーションを一時停止状態にしておくとよいでしょう．
+```python
+# 形状のある剛体が落ちるだけのサンプル
 
 >>> phScene = fwScene.GetPHScene()
 >>> phSdk   = phScene.GetSdk()
@@ -32,12 +32,12 @@ Python�C���^�v���^�g�ݍ��݃T���v���� `src\Samples\EmbPython\PythonSpr` �ɂ���܂
 >>> box0 = phSdk.CreateShape(Spr.CDBox.GetIfInfoStatic(), descBox)
 >>> solid0.AddShape(box0)
 ```
-���i�ʒu���Œ肳�ꂽ���́j���쐬����ƁC����ɂ���炵���Ȃ�܂��D
-```
+床（位置が固定された剛体）を作成すると，さらにそれらしくなります．
+```python
 >>> phScene = fwScene.GetPHScene()
 >>> phSdk   = phScene.GetSdk()
 
-# ��������
+# 床をつくる
 >>> descSolid = Spr.PHSolidDesc()
 >>> solid0 = phScene.CreateSolid(descSolid)
 >>> descBox = Spr.CDBoxDesc()
@@ -47,25 +47,25 @@ Python�C���^�v���^�g�ݍ��݃T���v���� `src\Samples\EmbPython\PythonSpr` �ɂ���܂
 >>> solid0.SetFramePosition(Spr.Vec3d(0,-1,0))
 >>> solid0.SetDynamical(False)
 
-# ���̏�ɔ��������čڂ���
+# 床の上に箱をつくって載せる
 >>> solid1 = phScene.CreateSolid(descSolid)
 >>> descBox.boxsize = Spr.Vec3f(1,1,1)
 >>> boxifinfo = Spr.CDBox.GetIfInfoStatic()
 >>> solid1.AddShape(phSdk.CreateShape(boxifinfo, descBox))
 ```
-�͂������邱�Ƃ��ł��܂��D
-```
+力を加えることもできます．
+```python
 >>> solid1.AddForce(Spr.Vec3d(0,200,0))
 ```
-Python��For��While���g���Čp�����ė͂������邱�Ƃ��ł��܂��D
-```
+PythonのForやWhileを使って継続して力を加えることもできます．
+```python
 >>> import time
 >>> for i in range(0,100):
 >>>     solid1.AddForce(Spr.Vec3d(0,20,0))
 >>>     time.sleep(0.01)
 ```
-���p�Ƃ��āC�ȒP�Ȑ��䃋�[�v�𑖂点�邱�Ƃ��ł��܂��D
-```
+応用として，簡単な制御ループを走らせることもできます．
+```python
 >>> import time
 >>> for i in range(0,500):
 >>>   y  = solid1.GetPose().getPos().y
@@ -75,8 +75,8 @@ Python��For��While���g���Čp�����ė͂������邱�Ƃ��ł��܂��D
 >>>   solid1.AddForce(Spr.Vec3d(0, (2.0 - y)*kp - dy*kd, 0))
 >>>   time.sleep(0.01)
 ```
-�����܂ł͍��݂̂̂ł������C�֐߂��쐬�ł��܂��D
-```
+ここまでは剛体のみでしたが，関節も作成できます．
+```python
 >>> phScene = fwScene.GetPHScene()
 >>> phSdk   = phScene.GetSdk()
 
@@ -97,19 +97,19 @@ Python��For��While���g���Čp�����ė͂������邱�Ƃ��ł��܂��D
 >>> hingeifinfo = Spr.PHHingeJoint.GetIfInfoStatic()
 >>> joint = phScene.CreateJoint(solid0, solid1, hingeifinfo, descJoint)
 ```
-PythonSpr.exe�Ɉ�����^����ƁCpython�t�@�C����ǂݍ���Ŏ��s���邱�Ƃ��ł��܂��D�����܂łɏ��������e�� *test.py* �Ƃ����t�@�C���ɏ����ĕۑ����C�R�}���h�v�����v�g����ȉ��̂悤�Ɏ��s����ƁCtest.py�ɏ��������e�����s����܂��i�X�y�[�X�L�[�������܂ŃV�~�����[�V�����͊J�n����Ȃ����Ƃɒ��ӂ��Ă��������j�D
-```
+PythonSpr.exeに引数を与えると，pythonファイルを読み込んで実行することもできます．ここまでに書いた内容を *test.py* というファイルに書いて保存し，コマンドプロンプトから以下のように実行すると，test.pyに書いた内容が実行されます（スペースキーを押すまでシミュレーションは開始されないことに注意してください）．
+```python
 C:\src\Samples\EmbPython\PythonSpr> Release\PythonSpr.exe test.py
 >>>
 ```
 
-#### Python�C���^�v���^�g�ݍ��݂̂��߂̃R�[�h��
-PythonSpr�T���v���ɂ����āCPython�C���^�v���^��g�ݍ��ނ��߂̃R�[�h�ɂ��ďЉ�܂��D\begin{tips}Python�C���^�v���^�g�ݍ��݂̏ڍׂ𗝉����邽�߂ɂ�Springhead�����łȂ�Python��C����API�ɂ��Ēm��K�v������܂��D�ڂ����m�肽������Python/C API���t�@�����X�}�j���A��$^{*1}$�����Q�Ƃ��Ă��������D{\footnotesize *1 ... `http://docs.python.org/py3k/c-api/index.html`}\end{tips}PythonSpr�T���v���ɂ����āCPython�g�ݍ��݂̂��߂̃R�[�h�� *main.cpp* �ɋL�q����Ă��܂��D�֘A�ӏ��𔲐����ďЉ�܂��DPython�g�ݍ��݊֘A�̋@�\���g�p����ɂ́C*EmbPython.h* �w�b�_���C���N���[�h���܂��D
-```
+#### Pythonインタプリタ組み込みのためのコード例
+PythonSprサンプルにおいて，Pythonインタプリタを組み込むためのコードについて紹介します．\begin{tips}Pythonインタプリタ組み込みの詳細を理解するためにはSpringheadだけでなくPythonのC言語APIについて知る必要があります．詳しく知りたい方はPython/C APIリファレンスマニュアル$^{*1}$等も参照してください．{\footnotesize *1 ... `http://docs.python.org/py3k/c-api/index.html`}\end{tips}PythonSprサンプルにおいて，Python組み込みのためのコードは *main.cpp* に記述されています．関連箇所を抜粋して紹介します．Python組み込み関連の機能を使用するには，*EmbPython.h* ヘッダをインクルードします．
+```python
 #include <EmbPython/EmbPython.h>
 ```
-Python�C���^�v���^�́CSpringhead�A�v���P�[�V�����{�̂Ƃ͈قȂ�X���b�h�œ��삵�܂��D�����V�~�����[�V�����X�e�b�v�̎��s����`��̍Œ���Python���f�[�^�����������Ă��܂����Ƃ��Ȃ��悤�C�r�����b�N�������ĕی삵�܂��D
-```
+Pythonインタプリタは，Springheadアプリケーション本体とは異なるスレッドで動作します．物理シミュレーションステップの実行中や描画の最中にPythonがデータを書き換えてしまうことがないよう，排他ロックをかけて保護します．
+```python
 virtual void OnStep(){
   UTAutoLock critical(EPCriticalSection);
   ...
@@ -123,24 +123,24 @@ virtual void OnAction(int menu, int id){
   ...
 }
 ```
-*EPCriticalSection*�̓A�v���P�[�V�����Ɉ�������݂��Ȃ��C���X�^���X�ŁC*EPCriticalSection*�ɂ��r�����b�N���擾�ł���̂͑S�A�v���P�[�V�������ň�̃X�R�[�v�݂̂ł��DPython����Springhead�̋@�\���Ăяo�����ۂɂ͕K��*EPCriticalSection*�̎擾��҂悤�ɂȂ��Ă���̂ŁC�r�����b�N���擾����*OnStep*�̎��s����Python��Springhead�̋@�\�����s���邱�Ƃ͂���܂���\footnote{�i�C�[�u�Ȏ����̂��ߏ��X�ߏ�ȃ��b�N�ƂȂ��Ă��܂��D���ۂ̋������\�[�X�ɍ��������r�����䂪�ł���悤�C�����̃o�[�W�����ŕύX���Ȃ����\��������܂��D}�D���ɁCPython�C���^�v���^�������p�̊֐����`���܂��D
-```
+*EPCriticalSection*はアプリケーションに一つしか存在しないインスタンスで，*EPCriticalSection*による排他ロックを取得できるのは全アプリケーション中で一つのスコープのみです．PythonからSpringheadの機能が呼び出される際には必ず*EPCriticalSection*の取得を待つようになっているので，排他ロックを取得した*OnStep*の実行中にPythonがSpringheadの機能を実行することはありません\footnote{ナイーブな実装のため少々過剰なロックとなっています．実際の競合リソースに根ざした排他制御ができるよう，将来のバージョンで変更がなされる可能性もあります．}．次に，Pythonインタプリタ初期化用の関数を定義します．
+```python
 void EPLoopInit(void* arg) {
   PythonSprApp* app = (PythonSprApp*)arg;
 
-  // Python�Ń��W���[���̎g�p�錾
+  // Pythonでモジュールの使用宣言
   PyRun_SimpleString("import Spr");
         
-  // Python����C�̕ϐ��ɃA�N�Z�X�\�ɂ��鏀��
+  // PythonからCの変数にアクセス可能にする準備
   PyObject *m = PyImport_AddModule("__main__");
   PyObject *dict = PyModule_GetDict(m);
 
-  // Python����fwScene�ɃA�N�Z�X�\�ɂ���
+  // PythonからfwSceneにアクセス可能にする
   PyObject* pyObj = (PyObject*)newEPFWSceneIf(app->fwScene);
   Py_INCREF(pyObj);
   PyDict_SetItemString(dict, "fwScene", pyObj);
 
-  // Python�t�@�C�������[�h���Ď��s����
+  // Pythonファイルをロードして実行する
   if (app->argc == 2) {
     ostringstream loadfile;
     loadfile << "__mainfilename__ ='";
@@ -158,8 +158,8 @@ void EPLoopInit(void* arg) {
   }
 }
 ```
-���̊֐��͊֐��|�C���^�̌`�ŃC���^�v���^�I�u�W�F�N�g�ɓn����C���s�J�n���ɃR�[���o�b�N����܂��D���g��Python���Springhead���g�p�\�ɂ��邽�߂̎葱���ƁCC��̕ϐ����u���b�W���邽�߂̃R�[�h�C�����ċN�����Ɏw�肳�ꂽ.py�t�@�C�������[�h����R�[�h�Ȃǂł��D��̗�ł�*app->fwScene*�݂̂�Python�ɓn���Ă��܂����C���ɂ��󂯓n�������ϐ��������o�Ă����ꍇ�́C�ȉ��̂悤�ȃ}�N�����֗��ł��傤�D
-```
+この関数は関数ポインタの形でインタプリタオブジェクトに渡され，実行開始時にコールバックされます．中身はPython上でSpringheadを使用可能にするための手続きと，C上の変数をブリッジするためのコード，そして起動時に指定された.pyファイルをロードするコードなどです．上の例では*app->fwScene*のみをPythonに渡していますが，他にも受け渡したい変数が複数出てきた場合は，以下のようなマクロが便利でしょう．
+```python
 #define ACCESS_SPR_FROM_PY(cls, name, obj)           \
 {                                                    \
     PyObject* pyObj = (PyObject*)newEP##cls((obj));  \
@@ -167,18 +167,18 @@ void EPLoopInit(void* arg) {
     PyDict_SetItemString(dict, #name, pyObj);        \
 }                                                    \
 
-// �g����:
-// ACCESS_SPR_FROM_PY(�^��, Python���ł̕ϐ���, �A�N�Z�X����ϐ�)
+// 使い方:
+// ACCESS_SPR_FROM_PY(型名, Python側での変数名, アクセスする変数)
 ACCESS_SPR_FROM_PY(FWSceneIf, fwScene, app->fwScene);
 ```
-���ۂ�PythonSpr�T���v���ł́C���̃}�N����p���Ă������̕ϐ���Python����Ăяo����悤�ɂ��Ă��܂��D���[�v�֐�����`���܂��D����ɂ��Ă͕ύX���邱�Ƃ͋H�ł��傤�D
-```
+実際のPythonSprサンプルでは，このマクロを用いていくつかの変数をPythonから呼び出せるようにしています．ループ関数も定義します．これについては変更することは稀でしょう．
+```python
 void EPLoop(void* arg) {
 	PyRun_InteractiveLoop(stdin,"SpringheadPython Console");
 }
 ```
-�Ō�ɁC*main*�֐�����Python�C���^�v���^�N���X�ł���*EPInterpreter*���쐬���ăR�[���o�b�N��ݒ肵�C�������E���s���s���܂��D
-```
+最後に，*main*関数内でPythonインタプリタクラスである*EPInterpreter*を作成してコールバックを設定し，初期化・実行を行います．
+```python
 int main(int argc, char *argv[]) {
   app.Init(argc, argv);
 
@@ -193,17 +193,17 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-### Python�ւ�Springhead�g����
-Python��DLL�C���|�[�g�@�\�𗘗p����Springhead��Python�Ƀ��[�h���ėp���邱�Ƃ��ł��܂��DSpringhead�̋@�\��*Spr.pyd*�Ƃ���DLL�t�@�C���ɂ܂Ƃ߂��Ă��܂��D*Spr.pyd*�́C`bin\win32\Spr.pyd`�܂���`bin\win64\Spr.pyd`�Ƃ���Springhead�����[�X�Ɋ܂܂�Ă��܂����C`src\EmbPython\SprPythonDLL.sln`���r���h���Đ������邱�Ƃ��ł��܂��D
-#### *Spr.pyd*�̎g����
-*Spr.pyd* �́CPython�̃C���X�g�[���t�H���_���ɂ���*DLLs*�t�H���_�ɃR�s�[���ėp���܂��Dimport�Ń��[�h���܂��D
-```
+### PythonへのSpringhead組込み
+PythonのDLLインポート機能を利用してSpringheadをPythonにロードして用いることができます．Springheadの機能は*Spr.pyd*というDLLファイルにまとめられています．*Spr.pyd*は，`bin\win32\Spr.pyd`または`bin\win64\Spr.pyd`としてSpringheadリリースに含まれていますが，`src\EmbPython\SprPythonDLL.sln`をビルドして生成することもできます．
+#### *Spr.pyd*の使い方
+*Spr.pyd* は，Pythonのインストールフォルダ内にある*DLLs*フォルダにコピーして用います．importでロードします．
+```python
 Python 3.2.2 [MSC v.1500 64 bit (AMD64)] on win32
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import Spr
 ```
-Springhead�A�v���P�[�V�����ɑg�ݍ��ޏꍇ�ƈႢ�C���[�h���_�ł͉��̃I�u�W�F�N�g����������Ă��܂���D�܂�*PHSdk*�𐶐����C����*PHScene*�𐶐����邱�ƂŁC*PHSolid*�������ł���悤�ɂȂ�܂��D
-```
+Springheadアプリケーションに組み込む場合と違い，ロード時点では何のオブジェクトも生成されていません．まず*PHSdk*を生成し，次に*PHScene*を生成することで，*PHSolid*が生成できるようになります．
+```python
 >>> phSdk = Spr.PHSdk.CreateSdk()
 >>> phScene = phSdk.CreateScene(Spr.PHSceneDesc())
 >>> solid0 = phScene.CreateSolid(Spr.PHSolidDesc())
@@ -214,55 +214,51 @@ Springhead�A�v���P�[�V�����ɑg�ݍ��ޏꍇ�ƈႢ�C���[�h���_�ł͉��̃I�u�W�F�N�g��
 Vec3d(0.000,0.000,0.000)
 Vec3d(0.000,-0.000,0.000)
 Vec3d(0.000,-0.001,0.000)
-...(����)...
+...(中略)...
 Vec3d(0.000,-0.011,0.000)
 >>>
 ```
-API�̌Ăяo������Springhead�A�v���P�[�V�����g�ݍ��݂̏ꍇ�ƕς��܂���D�������C���̏�Ԃł̓O���t�B�N�X�\�����g���Ȃ����ߏo�͂̓e�L�X�g��t�@�C���Ɍ����܂��D�O���t�B�N�X�\�����g�����߂ɂ́Cpyopengl���̕`�惉�C�u�����Ƒg�ݍ��킹��R�[�h�������K�v������܂��D
-#### ���p��
-*Spr.pyd*�̉��p��̈��SprBlender������܂��D
-
-\epsopt{epsprblender}{width=0.5\hsize}
-
-SprBlender�́C3DCG�\�t�gBlender�Ƀ��[�h���邱�Ƃ�Springhead���g�p�\�ɂ���g���@�\�ŁCSpringhead�J���`�[���ɂ���Č����ɊJ������Ă��܂��DBlender��UI�@�\�̑唼��Python�ŋL�q����Ă���C���J���ꂽPython API��ʂ��Ċe��̋@�\�𗘗p���邱�Ƃ��ł��܂��D�����ŁCBlender���Python��*Spr.pyd*�����[�h���CBlender���CG�I�u�W�F�N�g��Springhead�ŃV�~�����[�V�����ł���悤�ɏ����ꂽPython�X�N���v�g��SprBlender�ł��D�ڂ�����Web�T�C�g\footnote{`http://springhead.info/wiki/SprBlender`}���Q�Ƃ��Ă��������D
-## Python�����Springhead API�g�p�@
-Python����Springhead API���Ăяo���ۂ̏ڍׂȕ��@�Ƃ������̒��ӓ_�ɂ��ĉ�����܂��D
-#### Spr���W���[���ɂ���
-Springhead�̑S�N���X��*Spr*���W���[���Ƀp�b�P�[�W����Ă��܂��D
-```
+APIの呼び出し方はSpringheadアプリケーション組み込みの場合と変わりません．ただし，この状態ではグラフィクス表示が使えないため出力はテキストやファイルに限られます．グラフィクス表示を使うためには，pyopengl等の描画ライブラリと組み合わせるコードを書く必要があります．
+#### 応用例
+*Spr.pyd*の応用例の一つにSprBlenderがあります．\epsopt{epsprblender}{width=0.5\hsize}SprBlenderは，3DCGソフトBlenderにロードすることでSpringheadを使用可能にする拡張機能で，Springhead開発チームによって公式に開発されています．BlenderはUI機能の大半がPythonで記述されており，公開されたPython APIを通じて各種の機能を利用することができます．そこで，Blender上のPythonで*Spr.pyd*をロードし，Blender上のCGオブジェクトをSpringheadでシミュレーションできるように書かれたPythonスクリプトがSprBlenderです．詳しくはWebサイト\footnote{`http://springhead.info/wiki/SprBlender`}を参照してください．
+## PythonからのSpringhead API使用法
+PythonからSpringhead APIを呼び出す際の詳細な方法といくつかの注意点について解説します．
+#### Sprモジュールについて
+Springheadの全クラスは*Spr*モジュールにパッケージされています．
+```python
 import Spr
 ```
-���s�����ƂŎg�p�\�ƂȂ�܂��iSpringhead�A�v���P�[�V�����ɑg�ݍ��ޏꍇ��*EPLoopInit*�̒��ŃC���|�[�g�����s���܂��j�DSpringhead�Ɋ֘A����N���X�͑S��Spr���W���[���̒����ɒ�`����܂��DSpringhead�̃C���^�t�F�[�X�N���X�̓N���X������If�����������(******If*��*******)�C�x�N�g����N�H�[�^�j�I�����͂��̂܂܂̃N���X���Œ�`����Ă��܂��D�����_�ł́C���ׂĂ�Springhead�N���X��Python����̗��p�ɑΉ����Ă���킯�ł͂���܂���DPython���痘�p�ł���Springhead�N���X�́C*dir*�֐��Ŋm�F�ł��܂��D
-```
+を行うことで使用可能となります（Springheadアプリケーションに組み込む場合は*EPLoopInit*の中でインポートを実行します）．Springheadに関連するクラスは全てSprモジュールの直下に定義されます．Springheadのインタフェースクラスはクラス名からIfを取ったもの(******If*→*******)，ベクトルやクォータニオン等はそのままのクラス名で定義されています．現時点では，すべてのSpringheadクラスがPythonからの利用に対応しているわけではありません．Pythonから利用できるSpringheadクラスは，*dir*関数で確認できます．
+```python
 >>> import Spr
 >>> dir(Spr)
 ```
 
-#### �I�u�W�F�N�g�̐���
-C++��Springhead�𗘗p����ꍇ�Ɠ��l�C�܂���Sdk���쐬����K�v������܂��DSdk���쐬����ɂ́CPHSdk�N���X�̃C���X�^���X����*CreateSdk*���Ăяo���K�v������܂��D
-```
+#### オブジェクトの生成
+C++でSpringheadを利用する場合と同様，まずはSdkを作成する必要があります．Sdkを作成するには，PHSdkクラスのインスタンスから*CreateSdk*を呼び出す必要があります．
+```python
 phSdk = Spr.PHSdk().CreateSdk()
 grSdk = Spr.GRSdk().CreateSdk()
 # ... etc.
 ```
-�V�[����Create��Springhead���lsdk�̃C���X�^���X����s���܂��D
-```
+シーンのCreateはSpringhead同様sdkのインスタンスから行います．
+```python
 phScene = phSdk.CreateScene(Spr.PHSceneDesc())
 grScene = grSdk.CreateScene(Spr.GRSceneDesc())
 # ... etc.
 ```
 
-#### IfInfo�C�����_�E���L���X�g
-�I�u�W�F�N�g��Create����API�̒��ɂ́C�����n���f�B�X�N���v�^�̌^�ɂ���Đ�������I�u�W�F�N�g�̎�ނ𔻕ʂ�����̂�����܂��D�Ⴆ��*PHScene::CreateJoint*�́C*PHHingeJointDesc*��n���ƃq���W�W���C���g�𐶐����C*PHBallJointDesc*��n���ƃ{�[���W���C���g�𐶐����܂��D������Create�֐���Python���痘�p����ꍇ�C�f�B�X�N���v�^�̌^�𔻕ʂ���@�\�͌����_�ł͗p�ӂ���Ă��Ȃ����߁C�����������I�u�W�F�N�g�̌^�ɑΉ�����IfInfo�I�u�W�F�N�g�𓯎��Ɉ����ɓn���܂��D
-```
+#### IfInfo，自動ダウンキャスト
+オブジェクトをCreateするAPIの中には，引き渡すディスクリプタの型によって生成するオブジェクトの種類を判別するものがあります．例えば*PHScene::CreateJoint*は，*PHHingeJointDesc*を渡すとヒンジジョイントを生成し，*PHBallJointDesc*を渡すとボールジョイントを生成します．これらのCreate関数をPythonから利用する場合，ディスクリプタの型を判別する機能は現時点では用意されていないため，生成したいオブジェクトの型に対応するIfInfoオブジェクトを同時に引数に渡します．
+```python
 # Hinge
 phScene.CreateJoint(so1,so2, Spr.PHHingeJoint.GetIfInfoStatic(), desc)
 
 # Ball
 phScene.CreateJoint(so1,so2, Spr.PHBallJoint.GetIfInfoStatic(),  desc)
 ``` 
-IfInfo�I�u�W�F�N�g��*�N���X��.GetIfInfoStatic()*�Ŏ擾���邱�Ƃ��ł��܂��D��萳�m�ɂ́C�f�B�X�N���v�^�^�ɂ���ĕԂ��I�u�W�F�N�g��ς���悤��Create�֐��́C�ȉ��̂悤��API�w�b�_�t�@�C���ɂ����ăe���v���[�g��p���ċL�q����Ă��܂��DPython API�ł́C��e���v���[�g�ł�Create�֐��݂̂��|�[�g����Ă��邽�߁C*IfInfo* ii* �ɑ�������������K�v�ɂȂ�܂��D
-```
+IfInfoオブジェクトは*クラス名.GetIfInfoStatic()*で取得することができます．より正確には，ディスクリプタ型によって返すオブジェクトを変えるようなCreate関数は，以下のようにAPIヘッダファイルにおいてテンプレートを用いて記述されています．Python APIでは，非テンプレート版のCreate関数のみがポートされているため，*IfInfo* ii* に相当する引数が必要になります．
+```python
 // in SprPHScene.h
 PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs,
   const IfInfo* ii, const PHJointDesc& desc);
@@ -272,17 +268,17 @@ template <class T> PHJointIf* CreateJoint
   return CreateJoint(lhs, rhs, T::GetIfInfo(), desc);
 }
 ```
-�Ȃ��C������ނ̃N���X�̃I�u�W�F�N�g��Ԃ�����API�֐��̏ꍇ�CC++�ł͋��ʂ���X�[�p�[�N���X(�֐߂Ȃ�*PHJointIf*�Ȃ�)���Ԃ邽�ߎ�����*DCAST*����p���ă_�E���L���X�g����K�v������܂����CPython�ɂ����Ă͂͂��߂���X�̃N���X(*PHHingeJoint*, *PHBallJoint*�Ȃ�)�̌^�������悤�Ɏ����I�Ƀ_�E���L���X�g���ꂽ���̂��Ԃ���܂��D����āC���[�U���ӎ����ă_�E���L���X�g����K�v�͂���܂���D
-#### enum�̈���
-*PHSceneIf::SetContactMode*�̂悤�ɁCenum�^�������ɂƂ�֐�������܂��D�c�O�Ȃ���C�����_�ł�enum�̒�`��Python�փ|�[�g����Ă��܂���D�����̊֐����Ăяo���ꍇ�́C�Ή����鐮���l��n���Ă��������D
-```
-# C++�ł� phScene->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE) �Ɠ���
+なお，複数種類のクラスのオブジェクトを返しうるAPI関数の場合，C++では共通するスーパークラス(関節なら*PHJointIf*など)が返るため自分で*DCAST*等を用いてダウンキャストする必要がありますが，Pythonにおいてははじめから個々のクラス(*PHHingeJoint*, *PHBallJoint*など)の型情報を持つように自動的にダウンキャストされたものが返されます．よって，ユーザが意識してダウンキャストする必要はありません．
+#### enumの扱い
+*PHSceneIf::SetContactMode*のように，enum型を引数にとる関数があります．残念ながら，現時点ではenumの定義はPythonへポートされていません．これらの関数を呼び出す場合は，対応する整数値を渡してください．
+```python
+# C++での phScene->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE) と同じ
 phScene.SetContactMode(so1, so2, 0)
 ```
 
-#### �x�N�g���C�|�[�Y
-*Vec3d*�C*Quaterniond*�C*Posed*����Springhead�Ɠ����N���X���Ŏg�p�ł��܂��D�e�v�f�� *.x* *.y* ���̃v���p�e�B�ɂ��A�N�Z�X�ł��C�l�̕ύX���\�ł��D
-```
+#### ベクトル，ポーズ
+*Vec3d*，*Quaterniond*，*Posed*等はSpringheadと同じクラス名で使用できます．各要素は *.x* *.y* 等のプロパティによりアクセスでき，値の変更も可能です．
+```python
 >>> v = Spr.Vec3d(1,2,3)
 >>> v
 (1.000,2.000,3.000)
@@ -292,11 +288,11 @@ phScene.SetContactMode(so1, so2, 0)
 >>> v
 (4.000,2.000,3.000)
 ```
-*Posed*, *Posef*�ɂ��ẮC*w, x, y, z*�v���p�e�B���N�H�[�^�j�I�������C*px, py, pz*�v���p�e�B���x�N�g�������ւ̃A�N�Z�X�ƂȂ�܂��D�܂��C*Posed::Pos()*, *Posed::Ori()*�ɑΉ�����֐��Ƃ���
+*Posed*, *Posef*については，*w, x, y, z*プロパティがクォータニオン成分，*px, py, pz*プロパティがベクトル成分へのアクセスとなります．また，*Posed::Pos()*, *Posed::Ori()*に対応する関数として
 
 -  *.getOri()*
 -  *.setOri()*
 -  *.getPos()*
 -  *.setPos()*
 
-���p�ӂ���Ă��܂��D
+が用意されています．
