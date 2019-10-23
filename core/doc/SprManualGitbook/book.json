@@ -1,0 +1,14 @@
+{
+    "plugins": [
+        "-sharing",
+        "styles-sass-fix",
+	"expandable-chapters",
+	"theme-api"
+    ],
+    "pluginsConfig": {
+    },
+    "styles": {
+        "website": "./styles/site.scss",
+        "pdf": "./styles/pdf.scss"
+    }
+}
