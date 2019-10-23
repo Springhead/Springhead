@@ -21,7 +21,7 @@ struct UTOptimizerIf : public ObjectIf {
 	int GetDimension();
 
 	/// Set Initial Value
-	void SetInitialValue(double const *initialValue);
+	void SetInitialValue(double *initialValue);
 
 	/// Initialize Optimizer
 	void Initialize();
@@ -52,9 +52,10 @@ struct UTCMAESOptimizerDesc;
 /// CMA-ESによる最適化計算
 struct UTCMAESOptimizerIf : public UTOptimizerIf {
 	SPR_IFDEF(UTCMAESOptimizer);
+	void SetInitialValue(double *initialValue);
 
 	/// Set Initial Standard Deviation
-	void SetInitialStdDev(double const *initialStdDev);
+	void SetInitialStdDev(double *initialStdDev);
 
 	/// Get Current Generation Number
 	int GetCurrentGeneration();
@@ -65,6 +66,8 @@ struct UTCMAESOptimizerIf : public UTOptimizerIf {
 	///	Create an instance
 	static UTCMAESOptimizerIf* Create(const UTCMAESOptimizerDesc& desc);
 	static UTCMAESOptimizerIf* Create();
+
+	double GetCs();
 };
 
 /// CMAES最適化のデスクリプタ

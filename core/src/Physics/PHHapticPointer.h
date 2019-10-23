@@ -28,6 +28,7 @@ struct PHHapticPointerPhysicsSt {
 	double posScale;
 	float localRange;
 	float frictionSpring;
+	float frictionDamper;
 	float reflexSpring;
 	float reflexDamper;
 	float rotationReflexSpring;
@@ -70,6 +71,8 @@ public:
 	bool	IsVibration() { return bVibration; }
 	void	SetFrictionSpring(float s) { frictionSpring = s; }
 	float	GetFrictionSpring() { return frictionSpring; }
+	void	SetFrictionDamper(float d) { frictionDamper = d; }
+	float	GetFrictionDamper() { return frictionDamper; }
 	void	SetReflexSpring(float s) { reflexSpring = s; }
 	float	GetReflexSpring() { return reflexSpring; }
 	void	SetReflexDamper(float d) { reflexDamper = d; }
@@ -101,7 +104,7 @@ public:
 	}
 	float   GetContactForce(int i);
 	SpatialVector GetProxyVelocity() { return lastProxyVelocity; }
-
+	void	SetProxyVelocity(SpatialVector lpv) { lastProxyVelocity = lpv; }
 	// Implementation
 	void	SetPointerID(int id){ pointerID = id; }
 	int		GetPointerID(){ return pointerID; }

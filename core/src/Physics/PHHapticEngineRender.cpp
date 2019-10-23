@@ -146,6 +146,7 @@ void PHHapticEngine::SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, P
 	GaussSeidel(c, f, -d);
 
 	for (size_t i = 0; i < irs.size(); i++) {
+		assert(c[i][i] > 0);
 		assert(f[i] >= 0);
 		// 並進量
 		Vec3d tmpdr = f[i] * irs[i]->normal * massInv;
@@ -204,6 +205,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 			ir->depth = ortho.norm();
 			ir->interpolation_pose = curShapePoseW[0];
 			sh->irs.push_back(ir);
+			//assert(isfinite(ir->depth));
 		}
 	}
 	else {
@@ -215,6 +217,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 		ir->depth = ortho.norm();
 		ir->interpolation_pose = curShapePoseW[0];
 		sh->irs.push_back(ir);
+		assert(isfinite(ir->depth));
 	}
 	for (size_t i = 0; i < sh->irs.size(); i++) {
 		PHIr* ir = sh->irs[i];
@@ -231,11 +234,17 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 	bool bStatic = false;
 	double hdt = he->GetHapticTimeStep();
 	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
-	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
+	//double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
+	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->frictionSpring;
+
 	//	摩擦係数の計算
 	if (pointer->bTimeVaryFriction) {
 		if (sp->frictionState == PHSolidPairForHapticIf::STATIC) {
 			sh->muCur = sh->mu + sh->mu*(sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->fricCount + 1) * hdt));
+			sp->slipCount = sp->fricCount;
+			//std::cout << sp->fricCount << std::endl;
+			//std::cout << sp->slipCount << std::endl;
+			//std::cout << sh->muCur << std::endl;
 		}
 	}
 	else {
@@ -246,11 +255,22 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sh->irs[i];
 		if (pointer->bTimeVaryFriction && sp->frictionState == PHSolidPairForHapticIf::DYNAMIC) {
+			//double v = (ir->pointerPointVel - ir->contactPointVel).norm();
+			double v = pointer->GetProxyVelocity().vx;
+			v = std::max(v, sh->timeVaryFrictionC / hdt);
+			//stribeck効果を含める
+			//sh->muCur = sh->mu * (1 + (sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->slipCount + 1) * hdt)*exp(-v/sh->stribeckVelocity)));
+			
+			//sh->muCur = sh->mu * (1 + (sh->timeVaryFrictionA * log(sh->timeVaryFrictionB * (sp->slipCount + 1) * hdt)*exp(-v / sh->stribeckVelocity)));
+			sh->muCur = sh->mu * exp(-v / sh->stribeckVelocity);
+			//std::cout <<  v << std::endl;
+			/*
 			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
 			v = std::max(v, sh->timeVaryFrictionC / hdt);
 			//	速度と粘性摩擦を含める
 			sh->muCur = sh->mu + sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * sh->timeVaryFrictionC / v)
 				+ sh->frictionViscosity * v;
+				*/
 		}
 		double l = sh->muCur * ir->depth;					//	摩擦円錐半径
 		Vec3d vps = ir->pointerPointW;						//	接触判定した際の、ポインタ侵入点の位置
@@ -273,7 +293,7 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 
 		double epsilon = 1e-5;
 		double tangentNorm = tangent.norm();
-		if (tangentNorm > 1e-5) {
+		if (tangentNorm > 1e-12) {
 			PHIr* fricIr = DBG_NEW PHIr();
 			*fricIr = *ir;
 			fricIr->normal = tangent / tangentNorm;
@@ -281,20 +301,27 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 			double proxyPos, frictionLimit;
 			if (pointer->renderMode == PHHapticPointer::DYNAMIC_PROXY) {
 				proxyPos = tangentNorm;
-				double predict = proxyPos + (proxyPointVel * fricIr->normal) * hdt;	//	pr = r(t) + v dt;
+				double vdt = (proxyPointVel * fricIr->normal) * hdt;
+				double predict = proxyPos + vdt - (pointer->GetFrictionDamper() * (vdt - (pointer->velocity * fricIr->normal)*hdt));	//	pr = r(t) + v dt;
+				//std::cout << proxyPos << std::endl;
 				frictionLimit = predict - alpha * (predict - l);
+
+
 			}
 			else {
 				proxyPos = tangentNorm;
 				frictionLimit = l;
 			}
 			//	結果をfricIrに反映
+			//std::cout << proxyPos << " : " << frictionLimit << std::endl;
 			if (proxyPos <= frictionLimit) {
 				fricIr->depth = proxyPos;
+				assert(isfinite(fricIr->depth));
 				bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 			}
 			else {
 				fricIr->depth = frictionLimit;
+				assert(isfinite(fricIr->depth));
 			}
 			sh->irs.push_back(fricIr);
 		}
@@ -510,9 +537,14 @@ void PHHapticEngine::VibrationRendering(PHHapticStepBase* he, PHHapticPointer* p
 			Vec3d vibV = sp->lastStaticFrictionForce * hdt * pointer->GetMassInv() * 0.3;	//	0.3は謎係数。ないと接触の振動に対して強すぎてしまう。
 			double vibT = sp->fricCount * hdt;
 			vibForce.v() += vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
+
+
 		}
+		pointer->AddForce(vibForce.v()); //シミュレーション用
+
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
+
 	}
 }
 

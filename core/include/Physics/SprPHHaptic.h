@@ -47,6 +47,8 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 
 	void	SetFrictionSpring(float s);				///<	摩擦で動的Proxyを使う場合のバネ係数
 	float	GetFrictionSpring();					///<	摩擦で動的Proxyを使う場合のバネ係数
+	void	SetFrictionDamper(float s);				///<	摩擦で動的Proxyを使う場合のダンパ係数
+	float	GetFrictionDamper();					///<	摩擦で動的Proxyを使う場合のダンパ係数
 	void	SetReflexSpring(float s);				///<	提示力計算に使うバネ係数
 	float	GetReflexSpring();						///<	提示力計算に使うバネ係数
 	void	SetReflexDamper(float d);				///<	提示力計算に使うダンパ係数
@@ -70,6 +72,7 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	float   GetContactForce(int i);					///<	近傍物体iからの接触力
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
 	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
+	void SetProxyVelocity(SpatialVector spv);
 
 	void	AddHapticForce(const SpatialVector& f);
 	void	ClearHapticForce();

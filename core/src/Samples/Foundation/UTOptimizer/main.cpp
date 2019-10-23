@@ -50,7 +50,7 @@ public:
 
 			// 次へ
 			optimizer->Next();
-
+			DSTR << optimizer->GetCurrentPopulation() << std::endl;
 			if (optimizer->GetCurrentPopulation() == 0) {
 				// １世代ごとに途中経過表示
 				DSTR << "Generation: " << optimizer->GetCurrentGeneration() << std::endl;
