@@ -1,25 +1,18 @@
 
-## ŠT—v
-Collisionƒ‚ƒWƒ…[ƒ‹‚Í•¨—ŒvZ‚ÌŠî‘b‚Æ‚È‚éÕ“Ë”»’è‹@”\‚ğ’ñ‹Ÿ‚µ‚Ü‚·D–ÀãCollisionƒ‚ƒWƒ…[ƒ‹‚ÍPhysicsƒ‚ƒWƒ…[ƒ‹‚ÌƒTƒuƒ‚ƒWƒ…[ƒ‹‚Æ‚È‚Á‚Ä‚¨‚èC—¼Ò‚Í–§Ú‚ÉˆË‘¶‚µ‚Ä‚¢‚Ü‚·Dƒ†[ƒU‚Íå‚Æ‚µ‚Ä„‘Ì‚ÉÕ“Ë”»’è—pŒ`ó‚ğŠ„‚è“–‚Ä‚éÛ‚ÉCollisionƒ‚ƒWƒ…[ƒ‹‚Ì‹@”\‚ğ—˜—p‚·‚é‚±‚Æ‚É‚È‚è‚Ü‚·D
+## æ¦‚è¦
+Collisionãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¯ç‰©ç†è¨ˆç®—ã®åŸºç¤ã¨ãªã‚‹è¡çªåˆ¤å®šæ©Ÿèƒ½ã‚’æä¾›ã—ã¾ã™ï¼äº‹å®Ÿä¸ŠCollisionãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¯Physicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚µãƒ–ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¨ãªã£ã¦ãŠã‚Šï¼Œä¸¡è€…ã¯å¯†æ¥ã«ä¾å­˜ã—ã¦ã„ã¾ã™ï¼ãƒ¦ãƒ¼ã‚¶ã¯ä¸»ã¨ã—ã¦å‰›ä½“ã«è¡çªåˆ¤å®šç”¨å½¢çŠ¶ã‚’å‰²ã‚Šå½“ã¦ã‚‹éš›ã«Collisionãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®æ©Ÿèƒ½ã‚’åˆ©ç”¨ã™ã‚‹ã“ã¨ã«ãªã‚Šã¾ã™ï¼
 
 
+Collisionãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚¯ãƒ©ã‚¹éšå±¤ã‚’æ¬¡å›³ã«ç¤ºã—ã¾ã™ï¼è¡çªåˆ¤å®šå½¢çŠ¶ã¯ã™ã¹ã¦`CDShape`ã‹ã‚‰æ´¾ç”Ÿã—ã¾ã™ï¼ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã®æ€§è³ªä¸Šï¼Œå½¢çŠ¶ã¯ã™ã¹ã¦å‡¸å½¢çŠ¶ã§ãªã‘ã‚Œã°ãªã‚Šã¾ã›ã‚“ï¼
+## å½¢çŠ¶ã®ä½œæˆ
+è¡çªåˆ¤å®šå½¢çŠ¶ã¯æ¬¡ã®æ‰‹é †ã§ä½œæˆãƒ»ç™»éŒ²ã—ã¾ã™ï¼
 
+1.  å½¢çŠ¶ã‚’ä½œæˆã™ã‚‹
+1.  å‰›ä½“ã¸å½¢çŠ¶ã‚’è¿½åŠ ã™ã‚‹
+1.  å½¢çŠ¶ã®ä½ç½®ã‚’è¨­å®šã™ã‚‹
 
-\includegraphics[width=.4\hsize]{fig/cdclass.eps}
-
-\caption{Class hierarchy of Collision module}
-
-
-Collisionƒ‚ƒWƒ…[ƒ‹‚ÌƒNƒ‰ƒXŠK‘w‚ğFig.\,\ref{fig_cdclass}‚É¦‚µ‚Ü‚·DÕ“Ë”»’èŒ`ó‚Í‚·‚×‚Ä`CDShape`‚©‚ç”h¶‚µ‚Ü‚·DƒAƒ‹ƒSƒŠƒYƒ€‚Ì«¿ãCŒ`ó‚Í‚·‚×‚Ä“ÊŒ`ó‚Å‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñD
-## Œ`ó‚Ìì¬
-Õ“Ë”»’èŒ`ó‚ÍŸ‚Ìè‡‚Åì¬E“o˜^‚µ‚Ü‚·D
-
-1.  Œ`ó‚ğì¬‚·‚é
-1.  „‘Ì‚ÖŒ`ó‚ğ’Ç‰Á‚·‚é
-1.  Œ`ó‚ÌˆÊ’u‚ğİ’è‚·‚é
-
-ˆÈ‰º‚É‡‚ğ’Ç‚Á‚Äà–¾‚µ‚Ü‚·D‚Ü‚¸Œ`ó‚ğì¬‚·‚é‚É‚ÍŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
-```
+ä»¥ä¸‹ã«é †ã‚’è¿½ã£ã¦èª¬æ˜ã—ã¾ã™ï¼ã¾ãšå½¢çŠ¶ã‚’ä½œæˆã™ã‚‹ã«ã¯æ¬¡ã®ã‚ˆã†ã«ã—ã¾ã™ï¼
+```c++
 // given PHSdkIf* phSdk
 
 CDBoxDesc desc;
@@ -27,14 +20,14 @@ desc.boxsize = Vec3d(1.0, 1.0, 1.0);
 
 CDBoxIf* box = phSdk->CreateShape(desc)->Cast();
 ```
-Õ“Ë”»’èŒ`ó‚ÌƒIƒuƒWƒFƒNƒg‚ÍPhysicsƒ‚ƒWƒ…[ƒ‹‚ªŠÇ—‚µ‚Ü‚·D‚±‚Ì‚½‚ßCŒ`ó‚ğì¬‚·‚é‚É‚Í`PHSdk`ƒNƒ‰ƒX‚Ì`CreateShape`ŠÖ”‚ğg‚¢‚Ü‚·D`PHSdk`‚É‚Â‚¢‚Ä‚Í\ref{chap_physics}Í‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢DŒ`ó‚ğì¬‚·‚é‚É‚ÍC‚Ü‚¸í—Ş‚É‰‚¶‚½ƒfƒBƒXƒNƒŠƒvƒ^‚ğì¬‚µC¡–@‚È‚Ç‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è‚µ‚Ü‚·D‚±‚Ì—á‚Å‚Í’¼•û‘ÌƒNƒ‰ƒX`CDBox`‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ğì¬‚µ‚Äˆê•Ó‚ª$1.0$‚Ì—§•û‘Ì‚ğì¬‚µ‚Ü‚·DƒfƒBƒXƒNƒŠƒvƒ^‚ğw’è‚µ‚Ä`CreateShape`‚ğŒÄ‚Ño‚·‚ÆC‘Î‰‚·‚éí—Ş‚ÌŒ`ó‚ªì¬‚³‚êC‚»‚ÌƒCƒ“ƒ^ƒtƒF[ƒX‚ª•Ô‚³‚ê‚Ü‚·D‚½‚¾‚µ–ß‚è’l‚ÍŒ`ó‚ÌŠî’êƒNƒ‰ƒX‚Å‚ ‚é`CDShape`‚ÌƒCƒ“ƒ^ƒtƒF[ƒX‚Å‚·‚Ì‚ÅC”h¶ƒNƒ‰ƒXi‚±‚±‚Å‚Í`CDBox`j‚ÌƒCƒ“ƒ^ƒtƒF[ƒX‚ğ“¾‚é‚É‚Íã‚Ì‚æ‚¤‚É`Cast`ŠÖ”‚Å“®“IƒLƒƒƒXƒg‚·‚é•K—v‚ª‚ ‚è‚Ü‚·DŒ`ó‚ğì¬‚µ‚½‚çCŸ‚É‚»‚ÌŒ`ó‚ğ—^‚¦‚½‚¢„‘Ì‚É“o˜^‚µ‚Ü‚·D
-```
+è¡çªåˆ¤å®šå½¢çŠ¶ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯Physicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãŒç®¡ç†ã—ã¾ã™ï¼ã“ã®ãŸã‚ï¼Œå½¢çŠ¶ã‚’ä½œæˆã™ã‚‹ã«ã¯`PHSdk`ã‚¯ãƒ©ã‚¹ã®`CreateShape`é–¢æ•°ã‚’ä½¿ã„ã¾ã™ï¼`PHSdk`ã«ã¤ã„ã¦ã¯\ref{chap_physics}ç« ã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼å½¢çŠ¶ã‚’ä½œæˆã™ã‚‹ã«ã¯ï¼Œã¾ãšç¨®é¡ã«å¿œã˜ãŸãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ä½œæˆã—ï¼Œå¯¸æ³•ãªã©ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ï¼ã“ã®ä¾‹ã§ã¯ç›´æ–¹ä½“ã‚¯ãƒ©ã‚¹`CDBox`ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ä½œæˆã—ã¦ä¸€è¾ºãŒ$1.0$ã®ç«‹æ–¹ä½“ã‚’ä½œæˆã—ã¾ã™ï¼ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’æŒ‡å®šã—ã¦`CreateShape`ã‚’å‘¼ã³å‡ºã™ã¨ï¼Œå¯¾å¿œã™ã‚‹ç¨®é¡ã®å½¢çŠ¶ãŒä½œæˆã•ã‚Œï¼Œãã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ãŒè¿”ã•ã‚Œã¾ã™ï¼ãŸã ã—æˆ»ã‚Šå€¤ã¯å½¢çŠ¶ã®åŸºåº•ã‚¯ãƒ©ã‚¹ã§ã‚ã‚‹`CDShape`ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã§ã™ã®ã§ï¼Œæ´¾ç”Ÿã‚¯ãƒ©ã‚¹ï¼ˆã“ã“ã§ã¯`CDBox`ï¼‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å¾—ã‚‹ã«ã¯ä¸Šã®ã‚ˆã†ã«`Cast`é–¢æ•°ã§å‹•çš„ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ï¼å½¢çŠ¶ã‚’ä½œæˆã—ãŸã‚‰ï¼Œæ¬¡ã«ãã®å½¢çŠ¶ã‚’ä¸ãˆãŸã„å‰›ä½“ã«ç™»éŒ²ã—ã¾ã™ï¼
+```c++
 // given PHSolidIf* solid
 
 solid->AddShape(box);         // first box
 ```
-„‘ÌƒNƒ‰ƒX`PHSolid`‚É‚Â‚¢‚Ä‚Í\ref{chap_physics}Í‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢D‚±‚±‚Åd—v‚È‚±‚Æ‚ÍCˆê“xì¬‚µ‚½Œ`ó‚Í1‚Â‚Ì„‘Ì‚É‚¢‚­‚Â‚Å‚à“o˜^‚Å‚«C‚Ü‚½ˆÙ‚È‚é•¡”‚Ì„‘Ì‚É‚à“o˜^‚Å‚«‚é‚Æ‚¢‚¤‚±‚Æ‚Å‚·D‚Â‚Ü‚èC“¯‚¶Œ`ó‚ğ•¡”‚Ì„‘ÌŠÔ‚Å‹¤—L‚·‚é‚±‚Æ‚ÅCŒ`ó‚Ìì¬ƒRƒXƒg‚âƒƒ‚ƒŠÁ”ï‚ğ—}‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D`AddShape`ŠÖ”‚Å“o˜^‚µ‚½’¼Œã‚ÌŒ`ó‚ÍC„‘Ì‚Ìƒ[ƒJƒ‹À•WŒn‚ÌŒ´“_‚ÉˆÊ’u‚µ‚Ä‚¢‚Ü‚·D‚±‚ê‚ğ•ÏX‚µ‚½‚¢ê‡‚Í`SetShapePose`ŠÖ”‚ğg‚¢‚Ü‚·D
-```
+å‰›ä½“ã‚¯ãƒ©ã‚¹`PHSolid`ã«ã¤ã„ã¦ã¯\ref{chap_physics}ç« ã‚’å‚ç…§ã—ã¦ãã ã•ã„ï¼ã“ã“ã§é‡è¦ãªã“ã¨ã¯ï¼Œä¸€åº¦ä½œæˆã—ãŸå½¢çŠ¶ã¯1ã¤ã®å‰›ä½“ã«ã„ãã¤ã§ã‚‚ç™»éŒ²ã§ãï¼Œã¾ãŸç•°ãªã‚‹è¤‡æ•°ã®å‰›ä½“ã«ã‚‚ç™»éŒ²ã§ãã‚‹ã¨ã„ã†ã“ã¨ã§ã™ï¼ã¤ã¾ã‚Šï¼ŒåŒã˜å½¢çŠ¶ã‚’è¤‡æ•°ã®å‰›ä½“é–“ã§å…±æœ‰ã™ã‚‹ã“ã¨ã§ï¼Œå½¢çŠ¶ã®ä½œæˆã‚³ã‚¹ãƒˆã‚„ãƒ¡ãƒ¢ãƒªæ¶ˆè²»ã‚’æŠ‘ãˆã‚‹ã“ã¨ãŒã§ãã¾ã™ï¼`AddShape`é–¢æ•°ã§ç™»éŒ²ã—ãŸç›´å¾Œã®å½¢çŠ¶ã¯ï¼Œå‰›ä½“ã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã®åŸç‚¹ã«ä½ç½®ã—ã¦ã„ã¾ã™ï¼ã“ã‚Œã‚’å¤‰æ›´ã—ãŸã„å ´åˆã¯`SetShapePose`é–¢æ•°ã‚’ä½¿ã„ã¾ã™ï¼
+```c++
 solid->AddShape(box);         // second box
 solid->AddShape(box);         // third box 
 
@@ -45,192 +38,134 @@ solid->SetShapePose(0, Posed(Vec3d(1.0, 0.0, 0.0), Quaterniond());
 solid->SetShapePose(1, Posed(Vec3d(),
                     Quaterniond::Rot(Rad(30.0), 'y')));
 ```
-`SetShapePose`‚Ì‘æ1ˆø”‚Í‘€ì‚·‚éŒ`ó‚Ì”Ô†‚Å‚·DÅ‰‚É`AddShape`‚µ‚½Œ`ó‚Ì”Ô†‚ª$0$‚ÅC`AddShape`‚·‚é‚½‚Ñ‚É$1$‘‰Á‚µ‚Ü‚·DŒ`ó‚ÌˆÊ’u‚âŒü‚«‚Í„‘Ì‚Ìƒ[ƒJƒ‹À•WŒn‚Åw’è‚µ‚Ü‚·D‚Ü‚½CŒ`ó‚ÌˆÊ’uEŒü‚«‚ğæ“¾‚·‚é‚É‚Í`GetShapePose`ŠÖ”‚ğg‚¢‚Ü‚·DˆÈ‰º‚Å‚ÍSpringhead‚ÅƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚éŒ`ó‚ğí—Ş•Ê‚É‰ğà‚µ‚Ü‚·D
-### ’¼•û‘Ì
+`SetShapePose`ã®ç¬¬1å¼•æ•°ã¯æ“ä½œã™ã‚‹å½¢çŠ¶ã®ç•ªå·ã§ã™ï¼æœ€åˆã«`AddShape`ã—ãŸå½¢çŠ¶ã®ç•ªå·ãŒ*0*ã§ï¼Œ`AddShape`ã™ã‚‹ãŸã³ã«*1*å¢—åŠ ã—ã¾ã™ï¼å½¢çŠ¶ã®ä½ç½®ã‚„å‘ãã¯å‰›ä½“ã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§æŒ‡å®šã—ã¾ã™ï¼ã¾ãŸï¼Œå½¢çŠ¶ã®ä½ç½®ãƒ»å‘ãã‚’å–å¾—ã™ã‚‹ã«ã¯`GetShapePose`é–¢æ•°ã‚’ä½¿ã„ã¾ã™ï¼ä»¥ä¸‹ã§ã¯Springheadã§ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹å½¢çŠ¶ã‚’ç¨®é¡åˆ¥ã«è§£èª¬ã—ã¾ã™ï¼
+### ç›´æ–¹ä½“
 
 
 
+ç›´æ–¹ä½“(æ¬¡å›³)ã®ã‚¯ãƒ©ã‚¹ã¯*CDBox*ã§ã™ï¼
 
+|*CDBoxDesc*| | 					 |
+|---|---|---|
+|*Vec3f*|	*boxsize*| å„è¾ºã®é•·ã• 	|
+|*CDBoxIf*| | 					 |
+|*Vec3f GetBoxSize()*| 			|
+|*void SetBoxSize(Vec3f)*| 		|
 
-\includegraphics[width=.4\hsize]{fig/cdbox.eps}
-
-\caption{Box geometry}
-
-
-’¼•û‘Ì(Fig.\,\ref{fig_cdbox})‚ÌƒNƒ‰ƒX‚Í*CDBox*‚Å‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDBoxDesc*}					\\ \midrule
-*Vec3f*	&	*boxsize*	& Še•Ó‚Ì’·‚³ 	\\
-\\
-\multicolumn{3}{l}{*CDBoxIf*}					\\ \midrule
-\multicolumn{2}{l}{*Vec3f GetBoxSize()*}			\\
-\multicolumn{2}{l}{*void SetBoxSize(Vec3f)*}		\\
-\end{tabular}
-
-
-### ‹…
+### çƒ
 
 
 
+çƒ(æ¬¡å›³)ã®ã‚¯ãƒ©ã‚¹ã¯`CDSphere`ã§ã™ï¼
 
+|*CDSphereDesc*| | 				 |
+|---|---|---|
+|*float*|	*radius*| åŠå¾„ 				|
+|*CDSphereIf*| | 					 |
+|*float GetRadius()*| 			|
+|*void SetRadius(float)*| 		|
 
-\includegraphics[width=.4\hsize]{fig/cdsphere.eps}
-
-\caption{Sphere geometry}
-
-
-‹…(Fig.\,\ref{fig_cdsphere})‚ÌƒNƒ‰ƒX‚Í`CDSphere`‚Å‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDSphereDesc*}				\\ \midrule
-*float*	&	*radius*	& ”¼Œa 				\\
-\\
-\multicolumn{3}{l}{*CDSphereIf*}					\\ \midrule
-\multicolumn{2}{l}{*float GetRadius()*}			\\
-\multicolumn{2}{l}{*void SetRadius(float)*}		\\
-\end{tabular}
-
-
-### ƒJƒvƒZƒ‹
+### ã‚«ãƒ—ã‚»ãƒ«
 
 
 
+ã‚«ãƒ—ã‚»ãƒ«(æ¬¡å›³)ã®ã‚¯ãƒ©ã‚¹ã¯`CDCapsule`ã§ã™ï¼ã‚«ãƒ—ã‚»ãƒ«ã¯å††æŸ±ã®ä¸¡ç«¯ã«åŠçƒãŒã¤ã„ãŸå½¢ã‚’ã—ã¦ã„ã¾ã™ï¼
 
+|*CDCapsuleDesc*| | 				 |
+|---|---|---|
+|*float*|	*radius*| åŠçƒã®åŠå¾„ 		|
+|*float*|	*length*| å††æŸ±ã®é•·ã•		|
+|*CDCapsuleIf*| | 				 |
+|*float GetRadius()*| 			|
+|*void SetRadius(float)*| 		|
+|*float GetLength()*| 			|
+|*void SetLength(float)*| 		|
 
-\includegraphics[width=.4\hsize]{fig/cdcapsule.eps}
-
-\caption{Capsule geometry}
-
-
-ƒJƒvƒZƒ‹(Fig.\,\ref{fig_cdcapsule})‚ÌƒNƒ‰ƒX‚Í`CDCapsule`‚Å‚·DƒJƒvƒZƒ‹‚Í‰~’Œ‚Ì—¼’[‚É”¼‹…‚ª‚Â‚¢‚½Œ`‚ğ‚µ‚Ä‚¢‚Ü‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDCapsuleDesc*}				\\ \midrule
-*float*	&	*radius*	& ”¼‹…‚Ì”¼Œa 		\\
-*float*	&	*length* & ‰~’Œ‚Ì’·‚³		\\
-\\
-\multicolumn{3}{l}{*CDCapsuleIf*}				\\ \midrule
-\multicolumn{2}{l}{*float GetRadius()*}			\\
-\multicolumn{2}{l}{*void SetRadius(float)*}		\\
-\multicolumn{2}{l}{*float GetLength()*}			\\
-\multicolumn{2}{l}{*void SetLength(float)*}		\\
-\end{tabular}
-
-
-### ŠÛƒR[ƒ“
+### ä¸¸ã‚³ãƒ¼ãƒ³
 
 
 
+ä¸¸ã‚³ãƒ¼ãƒ³(æ¬¡å›³)ã®ã‚¯ãƒ©ã‚¹ã¯`CDRoundCone`ã§ã™ï¼ä¸¸ã‚³ãƒ¼ãƒ³ã¯ã‚«ãƒ—ã‚»ãƒ«ã®ä¸¡ç«¯ã®åŠå¾„ãŒéå¯¾ç§°ã«ãªã£ãŸã‚‚ã®ã§ã™ï¼
 
-
-\includegraphics[width=.4\hsize]{fig/cdroundcone.eps}
-
-\caption{Round cone geometry}
-
-
-ŠÛƒR[ƒ“(Fig.\,\ref{fig_cdroundcone})‚ÌƒNƒ‰ƒX‚Í`CDRoundCone`‚Å‚·DŠÛƒR[ƒ“‚ÍƒJƒvƒZƒ‹‚Ì—¼’[‚Ì”¼Œa‚ª”ñ‘ÎÌ‚É‚È‚Á‚½‚à‚Ì‚Å‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDRoundConeDesc*}			\\ \midrule
-*Vec2f*	&	*radius*	& Še”¼‹…‚Ì”¼Œa		\\
-*float*	&	*length* & ”¼‹…ŠÔ‚Ì‹——£		\\
-\\
-\multicolumn{3}{l}{*CDRoundConeIf*}				\\ \midrule
-\multicolumn{2}{l}{*Vec2f GetRadius()*}			\\
-\multicolumn{2}{l}{*void SetRadius(Vec2f)*}		\\
-\multicolumn{2}{l}{*float GetLength()*}			\\
-\multicolumn{2}{l}{*void SetLength(float)*}		\\
-\multicolumn{2}{l}{*void SetWidth(Vec2f)*}		\\
-\end{tabular}
-
-*SetWidth*ŠÖ”‚ÍCŠÛƒR[ƒ“‚Ì‘S’·‚ğ•Û‘¶‚µ‚½‚Ü‚Ü”¼Œa‚ğ•ÏX‚µ‚Ü‚·D
-### “ÊƒƒbƒVƒ…
+|*CDRoundConeDesc*| | 			 |
+|---|---|---|
+|*Vec2f*|	*radius*| å„åŠçƒã®åŠå¾„		|
+|*float*|	*length*| åŠçƒé–“ã®è·é›¢		|
+|*CDRoundConeIf*| | 				 |
+|*Vec2f GetRadius()*| 			|
+|*void SetRadius(Vec2f)*| 		|
+|*float GetLength()*| 			|
+|*void SetLength(float)*| 		|
+|*void SetWidth(Vec2f)*| 		|
+*SetWidth*é–¢æ•°ã¯ï¼Œä¸¸ã‚³ãƒ¼ãƒ³ã®å…¨é•·ã‚’ä¿å­˜ã—ãŸã¾ã¾åŠå¾„ã‚’å¤‰æ›´ã—ã¾ã™ï¼
+### å‡¸ãƒ¡ãƒƒã‚·ãƒ¥
 
 
 
+å‡¸ãƒ¡ãƒƒã‚·ãƒ¥(æ¬¡å›³)ã®ã‚¯ãƒ©ã‚¹ã¯`CDConvexMesh`ã§ã™ï¼å‡¸ãƒ¡ãƒƒã‚·ãƒ¥ã¨ã¯å‡¹ã¿ã‚„ç©´ã‚’æŒãŸãªã„å¤šé¢ä½“ã§ã™ï¼é ‚ç‚¹åº§æ¨™ã‚’æŒ‡å®šã™ã‚‹ã“ã¨ã§è‡ªç”±ãªå½¢ã‚’ä½œæˆã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ï¼
 
+|*CDConvexMeshDesc*| | 						 |
+|---|---|---|
+|*vector\<Vec3f>*|	*vertices*| é ‚ç‚¹åº§æ¨™ã®é…åˆ—	|
+|*CDConvexMeshIf*| | 					 |
+|*Vec3f* GetVertices()*| 		| é ‚ç‚¹é…åˆ—ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹	|
+|*int NVertex()*| 				| é ‚ç‚¹æ•°					|
+|*CDFaceIf* GetFace(int i)*| 	| *i*ç•ªç›®ã®é¢				|
+|*int NFace()*| 				| é¢æ•°						|
+å‡¸ãƒ¡ãƒƒã‚·ãƒ¥ãŒä½œæˆã•ã‚Œã‚‹éš›ï¼Œ*CDConvexMeshDesc::vertices*ã«æ ¼ç´ã•ã‚ŒãŸé ‚ç‚¹ã‚’å†…åŒ…ã™ã‚‹æœ€å°ã®å‡¸å¤šé¢ä½“ï¼ˆå‡¸åŒ…ï¼‰ãŒä½œæˆã•ã‚Œã¾ã™ï¼å¤šé¢ä½“ã®é¢ã‚’è¡¨ã™*CDFace*ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’ä»¥ä¸‹ã«ç¤ºã—ã¾ã™ï¼
 
-\includegraphics[width=.4\hsize]{fig/cdconvexmesh.eps}
-
-\caption{Convex mesh geometry}
-
-
-“ÊƒƒbƒVƒ…(Fig.\,\ref{fig_cdconvexmesh})‚ÌƒNƒ‰ƒX‚Í`CDConvexMesh`‚Å‚·D“ÊƒƒbƒVƒ…‚Æ‚Í‰š‚İ‚âŒŠ‚ğ‚½‚È‚¢‘½–Ê‘Ì‚Å‚·D’¸“_À•W‚ğw’è‚·‚é‚±‚Æ‚Å©—R‚ÈŒ`‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDConvexMeshDesc*}						\\ \midrule
-*vector<Vec3f>*	&	*vertices*	& ’¸“_À•W‚Ì”z—ñ	\\
-\\
-\multicolumn{3}{l}{*CDConvexMeshIf*}					\\ \midrule
-\multicolumn{2}{l}{*Vec3f* GetVertices()*}			& ’¸“_”z—ñ‚Ìæ“ªƒAƒhƒŒƒX	\\
-\multicolumn{2}{l}{*int NVertex()*}					& ’¸“_”					\\
-\multicolumn{2}{l}{*CDFaceIf* GetFace(int i)*}		& $i$”Ô–Ú‚Ì–Ê				\\
-\multicolumn{2}{l}{*int NFace()*}					& –Ê”						\\
-\end{tabular}
-
-“ÊƒƒbƒVƒ…‚ªì¬‚³‚ê‚éÛC*CDConvexMeshDesc::vertices*‚ÉŠi”[‚³‚ê‚½’¸“_‚ğ“à•ï‚·‚éÅ¬‚Ì“Ê‘½–Ê‘Ìi“Ê•ïj‚ªì¬‚³‚ê‚Ü‚·D‘½–Ê‘Ì‚Ì–Ê‚ğ•\‚·*CDFace*‚ÌƒCƒ“ƒ^ƒtƒF[ƒX‚ğˆÈ‰º‚É¦‚µ‚Ü‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDFaceIf*}						\\ \midrule
-\multicolumn{2}{l}{*int* GetIndices()*}				& ’¸“_ƒCƒ“ƒfƒbƒNƒX”z—ñ‚Ìæ“ªƒAƒhƒŒƒX	\\
-\multicolumn{2}{l}{*int NIndex()*}					& –Ê‚Ì’¸“_”							\\
-\end{tabular}
-
-*NIndex*‚Í–Ê‚ğ\¬‚·‚é’¸“_‚Ì”‚ğ•Ô‚µ‚Ü‚·i’Êí$3$‚©$4$‚Å‚·jD–Ê‚Í’¸“_”z—ñ‚ğ’¼Ú•Û—L‚¹‚¸CƒCƒ“ƒfƒbƒNƒX”z—ñ‚Æ‚µ‚ÄŠÔÚ“I‚É’¸“_‚ğQÆ‚µ‚Ü‚·D‚µ‚½‚ª‚Á‚ÄC–Ê‚Ì’¸“_À•W‚ğ“¾‚é‚É‚Í
-```
+|*CDFaceIf*| | 						 |
+|---|---|---|
+|*int* GetIndices()*| 			| é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹	|
+|*int NIndex()*| 				| é¢ã®é ‚ç‚¹æ•°							|
+*NIndex*ã¯é¢ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã®æ•°ã‚’è¿”ã—ã¾ã™ï¼ˆé€šå¸¸*3*ã‹*4*ã§ã™ï¼‰ï¼é¢ã¯é ‚ç‚¹é…åˆ—ã‚’ç›´æ¥ä¿æœ‰ã›ãšï¼Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—ã¨ã—ã¦é–“æ¥çš„ã«é ‚ç‚¹ã‚’å‚ç…§ã—ã¾ã™ï¼ã—ãŸãŒã£ã¦ï¼Œé¢ã®é ‚ç‚¹åº§æ¨™ã‚’å¾—ã‚‹ã«ã¯
+```c++
 // given CDConvexMeshIf* mesh
 CDFaceIf* face = mesh->GetFace(0);        // get 0-th face
 int* idx = face->GetIndices();
 Vec3f v = mesh->GetVertices()[idx[0]];    // get 0-th vertex
 ```
-‚Æ‚µ‚Ü‚·D
-## •¨«‚Ìw’è
-Œ`ó‚É‚Í–€CŒW”‚â’µ‚Ë•Ô‚èŒW”‚È‚Ç‚Ì•¨«‚ğw’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·DŒ`ó‚ÌŠî–{ƒNƒ‰ƒX‚Å‚ ‚é*CDShape*‚ÌƒfƒBƒXƒNƒŠƒvƒ^*CDShapeDesc*‚Í*PHMaterial*Œ^‚Ì•Ï”*material*‚ğ‚Á‚Ä‚¢‚Ü‚·D
+ã¨ã—ã¾ã™ï¼
+## ç‰©æ€§ã®æŒ‡å®š
+å½¢çŠ¶ã«ã¯æ‘©æ“¦ä¿‚æ•°ã‚„è·³ã­è¿”ã‚Šä¿‚æ•°ãªã©ã®ç‰©æ€§ã‚’æŒ‡å®šã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ï¼å½¢çŠ¶ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã§ã‚ã‚‹*CDShape*ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿*CDShapeDesc*ã¯*PHMaterial*å‹ã®å¤‰æ•°*material*ã‚’æŒã£ã¦ã„ã¾ã™ï¼
 
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*PHMaterial*}							\\ \midrule
-*float*	&	*density*		& –§“x				\\
-*float*	&	*mu0*			& Ã~–€CŒW”		\\
-*float*	&	*mu*				& “®–€CŒW”		\\
-*float*	&	*e*				& ’µ‚Ë•Ô‚èŒW”		\\
-*float*	&	*reflexSpring*	& ’µ‚Ë•Ô‚èƒoƒlŒW”iƒyƒiƒ‹ƒeƒB–@j	\\
-*float*	&	*reflexDamper*	& ’µ‚Ë•Ô‚èƒ_ƒ“ƒpŒW”iƒyƒiƒ‹ƒeƒB–@j\\
-*float*	&	*frictionSpring*	& –€CƒoƒlŒW”iƒyƒiƒ‹ƒeƒB–@j	\\
-*float*	&	*frictionDamper*	& –€Cƒ_ƒ“ƒpŒW”iƒyƒiƒ‹ƒeƒB–@j\\
-\end{tabular}
+|*PHMaterial*| | 							 |
+|---|---|---|
+|*float*|	*density*	| å¯†åº¦				|
+|*float*|	*mu0*		| é™æ­¢æ‘©æ“¦ä¿‚æ•°		|
+|*float*|	*mu*			| å‹•æ‘©æ“¦ä¿‚æ•°		|
+|*float*|	*e*			| è·³ã­è¿”ã‚Šä¿‚æ•°		|
+|*float*|	*reflexSpring*| è·³ã­è¿”ã‚Šãƒãƒä¿‚æ•°ï¼ˆãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ï¼‰	|
+|*float*|	*reflexDamper*| è·³ã­è¿”ã‚Šãƒ€ãƒ³ãƒ‘ä¿‚æ•°ï¼ˆãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ï¼‰|
+|*float*|	*frictionSpring*| æ‘©æ“¦ãƒãƒä¿‚æ•°ï¼ˆãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ï¼‰	|
+|*float*|	*frictionDamper*| æ‘©æ“¦ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ï¼ˆãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ï¼‰|
+å½¢çŠ¶ä½œæˆå¾Œã«ç‰©æ€§ã‚’æŒ‡å®šã™ã‚‹ã«ã¯*CDShapeIf*ã®é–¢æ•°ã‚’ä½¿ã„ã¾ã™ï¼
 
-Œ`óì¬Œã‚É•¨«‚ğw’è‚·‚é‚É‚Í*CDShapeIf*‚ÌŠÖ”‚ğg‚¢‚Ü‚·D
+|*CDShapeIf*| | 						 |
+|---|---|---|
+|*void SetDensity(float)*| 			| |
+|*float GetDensity()*| 				| |
+|*void SetStaticFriction(float)*| 	| |
+|*float GetStaticFriction()*| 		| |
+|*void SetDynamicFriction(float)*| 	| |
+|*float GetDynamicFriction()*| 		| |
+|*void SetElasticity(float)*| 		| |
+|*float GetElasticity()*| 			| |
+|*void SetReflexSpring(float)*| 	| |
+|*float GetReflexSpring()*| 		| |
+|*void SetReflexDamper(float)*| 	| |
+|*float GetReflexDamper()*| 		| |
+|*void SetFrictionSpring(float)*| 	| |
+|*float GetFrictionSpring()*| 		| |
+|*void SetFrictionDamper(float)*| 	| |
+|*float GetFrictionDamper()*| 		| |
+ç‰©æ€§ã«åŸºã¥ã„ãŸæ¥è§¦åŠ›ã®å…·ä½“çš„ãªè¨ˆç®—æ³•ã«ã¤ã„ã¦ã¯ç¬¬\ref{sec_physics_contact}ç¯€ã‚’å‚ç…§ã—ã¦ä¸‹ã•ã„ï¼
+## å¹¾ä½•æƒ…å ±ã®è¨ˆç®—
+å½¢çŠ¶ã«é–¢ã™ã‚‹å¹¾ä½•æƒ…å ±ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°ã‚’ç´¹ä»‹ã—ã¾ã™ï¼
 
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDShapeIf*}						\\ \midrule
-\multicolumn{2}{l}{*void SetDensity(float)*}				& \\
-\multicolumn{2}{l}{*float GetDensity()*}					& \\
-\multicolumn{2}{l}{*void SetStaticFriction(float)*}		& \\
-\multicolumn{2}{l}{*float GetStaticFriction()*}			& \\
-\multicolumn{2}{l}{*void SetDynamicFriction(float)*}		& \\
-\multicolumn{2}{l}{*float GetDynamicFriction()*}			& \\
-\multicolumn{2}{l}{*void SetElasticity(float)*}			& \\
-\multicolumn{2}{l}{*float GetElasticity()*}				& \\
-\multicolumn{2}{l}{*void SetReflexSpring(float)*}		& \\
-\multicolumn{2}{l}{*float GetReflexSpring()*}			& \\
-\multicolumn{2}{l}{*void SetReflexDamper(float)*}		& \\
-\multicolumn{2}{l}{*float GetReflexDamper()*}			& \\
-\multicolumn{2}{l}{*void SetFrictionSpring(float)*}		& \\
-\multicolumn{2}{l}{*float GetFrictionSpring()*}			& \\
-\multicolumn{2}{l}{*void SetFrictionDamper(float)*}		& \\
-\multicolumn{2}{l}{*float GetFrictionDamper()*}			& \\
-\end{tabular}
-
-•¨«‚ÉŠî‚Ã‚¢‚½ÚG—Í‚Ì‹ï‘Ì“I‚ÈŒvZ–@‚É‚Â‚¢‚Ä‚Í‘æ\ref{sec_physics_contact}ß‚ğQÆ‚µ‚Ä‰º‚³‚¢D
-## Šô‰½î•ñ‚ÌŒvZ
-Œ`ó‚ÉŠÖ‚·‚éŠô‰½î•ñ‚ğŒvZ‚·‚éŠÖ”‚ğĞ‰î‚µ‚Ü‚·D
-
-\begin{tabular}{lll}
-\multicolumn{3}{l}{*CDShapeIf*}							\\ \midrule
-\multicolumn{2}{l}{*float CalcVolume()*}					& ‘ÌÏ‚ğŒvZ		\\
-\multicolumn{2}{l}{*Vec3f CalcCenterOfMass()*}			& ¿—Ê’†S‚ğŒvZ	\\
-\multicolumn{2}{l}{*Matrix3f CalcMomentOfInertia()*}		& Šµ«s—ñ‚ğŒvZ	\\
-\end{tabular}
-
-*CalcVolume*‚ÍŒ`ó‚Ì‘ÌÏ‚ğŒvZ‚µ‚Ü‚·D‘ÌÏ‚É–§“xi*GetDensity*‚Åæ“¾j‚ğŠ|‚¯‚ê‚Î¿—Ê‚ª“¾‚ç‚ê‚Ü‚·D*CalcCenterOfMass*ŠÖ”‚ÍCŒ`ó‚Ìƒ[ƒJƒ‹À•WŒn‚Å•\‚³‚ê‚½¿—Ê’†S‚ÌÀ•W‚ğŒvZ‚µ‚Ü‚·D*CalcMomentOfInertia*ŠÖ”‚ÍCŒ`ó‚Ìƒ[ƒJƒ‹À•WŒn‚Å•\‚³‚ê‚½¿—Ê’†S‚ÉŠÖ‚·‚éŠµ«s—ñ‚ğŒvZ‚µ‚Ü‚·D‚½‚¾‚µC–§“x‚ğ$1$‚Æ‚µ‚½ê‡‚Ì’l‚ª•Ô‚³‚ê‚Ü‚·‚Ì‚ÅCÀÛ‚ÌŠµ«s—ñ‚ğ“¾‚é‚É‚Í–§“x‚ğŠ|‚¯‚é•K—v‚ª‚ ‚è‚Ü‚·D
+|*CDShapeIf*| | 							 |
+|---|---|---|
+|*float CalcVolume()*| 				| ä½“ç©ã‚’è¨ˆç®—		|
+|*Vec3f CalcCenterOfMass()*| 		| è³ªé‡ä¸­å¿ƒã‚’è¨ˆç®—	|
+|*Matrix3f CalcMomentOfInertia()*| 	| æ…£æ€§è¡Œåˆ—ã‚’è¨ˆç®—	|
+*CalcVolume*ã¯å½¢çŠ¶ã®ä½“ç©ã‚’è¨ˆç®—ã—ã¾ã™ï¼ä½“ç©ã«å¯†åº¦ï¼ˆ*GetDensity*ã§å–å¾—ï¼‰ã‚’æ›ã‘ã‚Œã°è³ªé‡ãŒå¾—ã‚‰ã‚Œã¾ã™ï¼*CalcCenterOfMass*é–¢æ•°ã¯ï¼Œå½¢çŠ¶ã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§è¡¨ã•ã‚ŒãŸè³ªé‡ä¸­å¿ƒã®åº§æ¨™ã‚’è¨ˆç®—ã—ã¾ã™ï¼*CalcMomentOfInertia*é–¢æ•°ã¯ï¼Œå½¢çŠ¶ã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§è¡¨ã•ã‚ŒãŸè³ªé‡ä¸­å¿ƒã«é–¢ã™ã‚‹æ…£æ€§è¡Œåˆ—ã‚’è¨ˆç®—ã—ã¾ã™ï¼ãŸã ã—ï¼Œå¯†åº¦ã‚’*1*ã¨ã—ãŸå ´åˆã®å€¤ãŒè¿”ã•ã‚Œã¾ã™ã®ã§ï¼Œå®Ÿéš›ã®æ…£æ€§è¡Œåˆ—ã‚’å¾—ã‚‹ã«ã¯å¯†åº¦ã‚’æ›ã‘ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ï¼

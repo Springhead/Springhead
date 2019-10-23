@@ -1,74 +1,119 @@
 
-## �T�v
+## 概要
 
 
 
-
-
-\includegraphics[width=.7\hsize]{fig/framework.eps}
-
-\caption{Framework data structure}
-
-
-Framework�̓��W���[���Ԃ̘A�g�𑣐i���ăA�v���P�[�V�����̍쐬���x�����邽�߂̃��W���[���ł��DFramework���W���[���̃f�[�^�\����Fig.\,\ref{fig_framework}�Ɏ����܂��D�ŏ�ʂɂ̓A�v���P�[�V�����N���X*FWApp*������܂��D���[�U��*FWApp*���p�����邱�ƂœƎ��̃A�v���P�[�V�������쐬���܂��D*FWApp*���̒��Ƀg�b�v���x���E�B���h�E(*FWWin*)�̔z��CFramework SDK (*FWSdk*)�C����уE�B���h�E�}�l�W��(*FWGraphicsAdaptee*)�������܂��D*FWWin*�̓g�b�v���x���E�B���h�E�ŁC���̃E�B���h�E�ɑΉ�������̓f�o�C�X��r���[�|�[�g����ێ����郌���_���C���̃E�B���h�E�Ɗ֘A�t����ꂽ�V�[���ւ̎Q�ƂȂǂ������܂��D�܂��C�}���ł͏ȗ�����Ă��܂����T�u�E�B���h�E��GUI�R���g���[���������Ƃ��ł��܂��D*FWSdk*�̖����͎��Ӄ��W���[���̋@�\�����ł��D���̒��Ɏ��Ӄ��W���[����SDK�N���X��Framework�V�[��(*FWScene*)�̔z��������܂��D�E�B���h�E�}�l�W���͏����n�Ɉˑ�����f�o�C�X�̏�������C�x���g�n���h�����O���s���܂��D�E�B���h�E�}�l�W���̓C���^�t�F�[�X�����J���Ă��܂���̂Ń��[�U�͂��̑��݂�z�Ɉӎ�����K�v�͂���܂���D�}�ł̓f�[�^�\���̐����̂��߂ɂ����ċL�ڂ��Ă��܂��D�ȉ��ł͌X�̍\���v�f�ɂ��Đ������Ă����܂��D
+Frameworkはモジュール間の連携を促進してアプリケーションの作成を支援するためのモジュールです．Frameworkモジュールのデータ構造を次図に示します．最上位にはアプリケーションクラス*FWApp*があります．ユーザは*FWApp*を継承することで独自のアプリケーションを作成します．*FWApp*その中にトップレベルウィンドウ(*FWWin*)の配列，Framework SDK (*FWSdk*)，およびウィンドウマネジャ(*FWGraphicsAdaptee*)を持ちます．*FWWin*はトップレベルウィンドウで，そのウィンドウに対応する入力デバイスやビューポート情報を保持するレンダラ，そのウィンドウと関連付けられたシーンへの参照などを持ちます．また，図中では省略されていますがサブウィンドウやGUIコントロールを持つこともできます．*FWSdk*の役割は周辺モジュールの機能統合です．その中に周辺モジュールのSDKクラスやFrameworkシーン(*FWScene*)の配列を持ちます．ウィンドウマネジャは処理系に依存するデバイスの初期化やイベントハンドリングを行います．ウィンドウマネジャはインタフェースを公開していませんのでユーザはその存在を陽に意識する必要はありません．図ではデータ構造の説明のためにあえて記載しています．以下では個々の構成要素について説明していきます．
 ## Framework SDK
-Framework���W���[���̂��ׂẴI�u�W�F�N�g��SDK�N���X*FWSdk*�ɂ���ĊǗ�����܂��D*FWSdk*�N���X�́C�v���O�����̎��s��ʂ��Ă����P�̃I�u�W�F�N�g�����݂���V���O���g���N���X�ł��D*FWSdk*�I�u�W�F�N�g���쐬����ɂ͈ȉ��̂悤�ɂ��܂��D
-```
+FrameworkモジュールのすべてのオブジェクトはSDKクラス*FWSdk*によって管理されます．*FWSdk*クラスは，プログラムの実行を通してただ１つのオブジェクトが存在するシングルトンクラスです．*FWSdk*オブジェクトを作成するには以下のようにします．
+```c++
 FWSdkIf* fwSdk = FWSdkIf::CreateSdk();
 ```
-�ʏ킱�̑���̓v���O�����̏��������Ɉ�x�������s���܂��D*FWSdk*���쐬����ƁC������*PHSdk*�C*GRSdk*�C*FISdk*�C*HISdk*���쐬����܂��D���������Ă��������[�U���蓮�ō쐬����K�v�͂���܂���D�e���W���[���̋@�\�ɃA�N�Z�X����ɂ͈ȉ��̊֐��ɂ��SDK���擾���܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*FWSdkIf*				\\ \midrule*PHSdkIf* GetPHSdk()*	\\Physics SDK���擾����D			\\\\*GRSdkIf* GetGRSdk()*	\\Graphics SDK���擾����D		\\\\*FISdkIf* GetFISdk()*	\\FileIO SDK���擾����D			\\\\*HISdkIf* GetHISdk()*	\\HumanInterface SDK���擾����D	\\\\\end{tabular}
-## Framework �V�[��
+通常この操作はプログラムの初期化時に一度だけ実行します．*FWSdk*を作成すると，同時に*PHSdk*，*GRSdk*，*FISdk*，*HISdk*も作成されます．したがってこれらをユーザが手動で作成する必要はありません．各モジュールの機能にアクセスするには以下の関数によりSDKを取得します．
+
+
+|*FWSdkIf*				 |
+|---|
+|*PHSdkIf* GetPHSdk()*	|
+|Physics SDKを取得する．			|
+|*GRSdkIf* GetGRSdk()*	|
+|Graphics SDKを取得する．		|
+|*FISdkIf* GetFISdk()*	|
+|FileIO SDKを取得する．			|
+|*HISdkIf* GetHISdk()*	|
+|HumanInterface SDKを取得する．	|
+
+## Framework シーン
 
 
 
+Frameworkモジュールの主な機能の1つにPhysicsシーンとGraphicsシーンの同期があります．次図に3つのモジュールのSDKとシーンの関係を示します．*FWSdk*は任意の数のシーン（*FWScene*クラス）を保持します．また，シーンは任意の数のオブジェクト（*FWObject*クラス）を保持します．次図に示すように，オブジェクトはPhysicsモジュールの剛体とGraphicsモジュールのトップフレームを一対一に対応づけます．ここでトップフレームとはワールドフレームの直下にあるフレームのことです．物理シミュレーションにより計算される剛体の運動をフレームの座標変換に反映させることで，シミュレーションの様子をGraphicsモジュールの機能を利用して可視化することができるようになります．シーン作成に関する*FWSdk*の関数を以下に示します．
 
 
-\includegraphics[width=.9\hsize]{fig/fwscene.eps}
-
-\caption{Data structure of Framework, Physics and Graphics modules}
-
-
-Framework���W���[���̎�ȋ@�\��1��Physics�V�[����Graphics�V�[���̓���������܂��DFig.\,\ref{fig_fwscene}��3�̃��W���[����SDK�ƃV�[���̊֌W�������܂��D*FWSdk*�͔C�ӂ̐��̃V�[���i*FWScene*�N���X�j��ێ����܂��D�܂��C�V�[���͔C�ӂ̐��̃I�u�W�F�N�g�i*FWObject*�N���X�j��ێ����܂��DFig.\,\ref{fig_fwscene}�Ɏ����悤�ɁC�I�u�W�F�N�g��Physics���W���[���̍��̂�Graphics���W���[���̃g�b�v�t���[������Έ�ɑΉ��Â��܂��D�����Ńg�b�v�t���[���Ƃ̓��[���h�t���[���̒����ɂ���t���[���̂��Ƃł��D�����V�~�����[�V�����ɂ��v�Z����鍄�̂̉^�����t���[���̍��W�ϊ��ɔ��f�����邱�ƂŁC�V�~�����[�V�����̗l�q��Graphics���W���[���̋@�\�𗘗p���ĉ������邱�Ƃ��ł���悤�ɂȂ�܂��D�V�[���쐬�Ɋւ���*FWSdk*�̊֐����ȉ��Ɏ����܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*HITrackballIf*														\\ \midrule*FWSceneIf* CreateScene(const PHSceneDesc\&, const GRSceneDesc\&)*	\\�V�[�����쐬����D															\\\\*int NScene()*	\\�V�[���̐����擾����	\\\\*FWSceneIf* GetScene(int i)*	\\*i*�Ԗڂ̃V�[�����擾����D	\\\\*void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1)*	\\*scene1*�̎q�I�u�W�F�N�g��*scene0*�Ɉڂ��D		\\\\\end{tabular}�V�[�����쐬����ɂ͈ȉ��̂悤�ɂ��܂��D
-```
+|*HITrackballIf*														 |
+|---|
+|*FWSceneIf* CreateScene(const PHSceneDesc&, const GRSceneDesc&)*	|
+|シーンを作成する．															|
+|*int NScene()*	|
+|シーンの数を取得する	|
+|*FWSceneIf* GetScene(int i)*	|
+|*i*番目のシーンを取得する．	|
+|*void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1)*	|
+|*scene1*の子オブジェクトを*scene0*に移す．		|
+シーンを作成するには以下のようにします．
+```c++
 FWSceneIf* fwScene = fwSdk->CreateScene();
 ```
-*FWScene*���쐬����ƁC������*PHScene*��*GRScene*���쐬����C*FWScene*�ƃ����N����܂��D*CreateScene*�Ƀf�B�X�N���v�^���w�肷�邱�Ƃ��ł��܂��D*NScene*�͍쐬�����V�[���̐���Ԃ��܂��D�V�[�����擾����ɂ�*GetScene*���g���܂��D*GetScene*�Ɏw�肷�鐮���͍쐬���ꂽ���ԂɃV�[���ɗ^������ʂ��ԍ��ł��D
-```
+*FWScene*を作成すると，同時に*PHScene*と*GRScene*も作成され，*FWScene*とリンクされます．*CreateScene*にディスクリプタを指定することもできます．*NScene*は作成したシーンの数を返します．シーンを取得するには*GetScene*を使います．*GetScene*に指定する整数は作成された順番にシーンに与えられる通し番号です．
+```c++
 fwSdk->CreateScene();               // create two scenes
 fwSdk->CreateScene();
 FWSceneIf *fwScene0, *fwScene1;
 fwScene0 = fwSdk->GetScene(0);      // get 1st scene
 fwScene1 = fwSdk->GetScene(1);      // get 2nd scene
 ```
-*MergeScene*���g����2�̃V�[���𓝍�����1�̃V�[���ɂł��܂��D
-```
+*MergeScene*を使うと2つのシーンを統合して1つのシーンにできます．
+```c++
 fwSdk->MergeScene(fwScene0, fwScene1);
 ```
-��̃R�[�h�ł�*scene1*������*FWObject*��*scene0*�Ɉڂ���C�����ɃV�[�����Q�Ƃ���*PHScene*��*GRScene*�Ɋւ��Ă����ꂼ���*MergeScene*�֐��ɂ�蓝�����s���܂��D���ɁC*FWScene*�̊�{�@�\���ȉ��Ɏ����܂��D\noindent\begin{tabular}{p{.6\hsize}p{.3\hsize}}\\*FWSceneIf*													\\ \midrule*void SetPHScene(PHSceneIf*)*	& Physics�V�[���̐ݒ�		\\*PHSceneIf* GetPHScene()*		& Physics�V�[���̎擾		\\*void SetGRScene(GRSceneIf*)*	& Graphics�V�[���̐ݒ�		\\*GRSceneIf* GetGRScene()*		& Graphics�V�[���̎擾		\\*FWObjectIf* CreateFWObject()*	& �I�u�W�F�N�g�̍쐬		\\*int NObject()const*				& �I�u�W�F�N�g�̐�			\\*FWObjectIf** GetObjects()*		& �I�u�W�F�N�g�z��̎擾	\\*void Sync(bool)*				& ����						\\\\\end{tabular}*[Set|Get][PH|GR]Scene*�֐��̓V�[���Ɋ��蓖�Ă�ꂽ*PHScene*��*GRScene*���擾������C�ʂ̃V�[�������蓖�Ă��肷��̂Ɏg�p���܂��D*CreateFWObject*�֐���*FWObject*�I�u�W�F�N�g���쐬���܂��D���̂Ƃ��C�V���ɍ쐬���ꂽ*FWObject*�ɂ�*PHSolid*�����*GRFrame*�͊��蓖�Ă��Ă��Ȃ���ԂɂȂ��Ă���̂Œ��ӂ��Ă��������D�����������ɍ쐬����ɂ́C�ȉ��̃R�[�h��1�Z�b�g�Ŏ��s���܂��D
-```
+上のコードでは*scene1*が持つ*FWObject*が*scene0*に移され，同時にシーンが参照する*PHScene*と*GRScene*に関してもそれぞれの*MergeScene*関数により統合が行われます．次に，*FWScene*の基本機能を以下に示します．
+
+
+|*FWSceneIf*													 |
+|---|
+|*void SetPHScene(PHSceneIf*)*| Physicsシーンの設定		|
+|*PHSceneIf* GetPHScene()*	| Physicsシーンの取得		|
+|*void SetGRScene(GRSceneIf*)*| Graphicsシーンの設定		|
+|*GRSceneIf* GetGRScene()*	| Graphicsシーンの取得		|
+|*FWObjectIf* CreateFWObject()*| オブジェクトの作成		|
+|*int NObject()const*			| オブジェクトの数			|
+|_FWObjectIf*_ GetObjects()*	| オブジェクト配列の取得	|
+|*void Sync(bool)*			| 同期						|
+*[Set|Get][PH|GR]Scene*関数はシーンに割り当てられた*PHScene*や*GRScene*を取得したり，別のシーンを割り当てたりするのに使用します．*CreateFWObject*関数は*FWObject*オブジェクトを作成します．このとき，新たに作成された*FWObject*には*PHSolid*および*GRFrame*は割り当てられていない状態になっているので注意してください．これらも同時に作成するには，以下のコードを1セットで実行します．
+```c++
 FWObjectIf* fwObj = fwScene->CreateFWObject();
 fwObj->SetPHSolid(fwScene->GetPHScene()->CreateSolid());
 fwObj->SetGRFrame(
     fwScene->GetGRScene()->CreateVisual(GRFrameDesc())->Cast);
 ```
-*Sync*�֐���*PHScene*��*GRScene*�̓����ɗp���܂��D
-```
+*Sync*関数は*PHScene*と*GRScene*の同期に用います．
+```c++
 fwScene->Sync(true);
 ```
-�Ƃ���ƁC���̃V�[�����Q�Ƃ���*PHScene*���̍��̂̈ʒu�ƌ������C���������̃V�[�����Q�Ƃ���*GRScene*���̃g�b�v�t���[���̈ʒu�ƌ����ɔ��f����܂��D���̂Ƃ��̍��̂ƃg�b�v�t���[���Ƃ̑Ή��֌W��*FWObject*�ɂ���`����܂��D�t��
-```
+とすると，このシーンが参照する*PHScene*中の剛体の位置と向きが，同じくこのシーンが参照する*GRScene*中のトップフレームの位置と向きに反映されます．このときの剛体とトップフレームとの対応関係は*FWObject*により定義されます．逆に
+```c++
 fwScene->Sync(false);
 ```
-�Ƃ���ƁC���l�̃��J�j�Y���Ŋe�g�b�v�t���[���̈ʒu�ƌ������Ή����鍄�̂ɔ��f����܂��D
-## �V�[���̃��[�h�ƃZ�[�u
-FileIO���W���[���𗘗p���ăV�[�������[�h�C�Z�[�u���邽�߂̊֐����p�ӂ���Ă��܂��D�܂����[�h�ɂ͈ȉ��̊֐���p���܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*FWSdkIf*														\\ \midrule*bool LoadScene(UTString path, ImportIf* imp, const IfInfo* ii, ObjectIfs* objs)*	\\�V�[�������[�h����D		\\\\\end{tabular}*path*�̓��[�h����t�@�C���ւ̃p�X���i�[����������ł��D*imp*�ɂ̓C���|�[�g�����i�[���邽�߂�*Import*�I�u�W�F�N�g��^���܂��D�C���|�[�g�����L������K�v�̂Ȃ��ꍇ��*NULL*�ō\���܂���D*ii*�̓��[�h����t�@�C���̎�ނ𖾎����邽�߂̌^���ł��D*NULL*���w�肷��ƃp�X�̊g���q���玩�����ʂ���܂��D*objs*�̓��[�h�ɂ���č쐬�����I�u�W�F�N�g�c���[�̐e�I�u�W�F�N�g���i�[�����z��ł��D���[�h�ɐ��������*true*�C���s�����*false*���Ԃ���܂��D���[�h���ꂽ�V�[����*FWSdk*�̃V�[���z��̖����ɉ������܂��D���ɁC�V�[�����Z�[�u����ɂ͈ȉ��̊֐����g���܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*FWSdkIf*														\\ \midrule*bool SaveScene(UTString path, ImportIf* imp, const IfInfo* ii, ObjectIfs* objs)*	\\�V�[�����Z�[�u����D		\\\\\end{tabular}�����̈Ӗ���*LoadScene*�Ɠ��l�ł��D*imp*�ɂ̓��[�h���ɋL�������C���|�[�g����^���܂��D�ȗ�����ƃV�[���S�̂��P��̃t�@�C���ɃZ�[�u����܂��D�Z�[�u�ɐ��������*true*�C���s�����*false*���Ԃ���܂��D
-## Framework �I�u�W�F�N�g
-*FWObject*��*PHSolid*��*GRFrame*�̋��n������Ȗ����ł��̂ŁC���ꎩ�̂͂���قǑ����̋@�\�������Ă��܂���D
-## �A�v���P�[�V�����N���X
-Springhead�𗘗p����A�v���P�[�V�����̍쐬��e�Ղɂ��邽�߂ɁC�A�v���P�[�V�����N���X*FWApp*���p�ӂ���Ă��܂��D\ref{sec_create_application}��*FWApp*���g���ĊȒP�ȃA�v���P�[�V�������쐬������@�ɂ��Đ������܂����̂ł���������킹�ĎQ�l�ɂ��Ă��������D�`���Ő��������ʂ�CSpringhead�̂قƂ�ǂ̃I�u�W�F�N�g�́C�e�I�u�W�F�N�g��*Create*�n�֐����g���č쐬���܂����C*FWApp*�͗�O�I�ɁCC++�̃N���X�p����p���ă��[�U�̃A�v���P�[�V�����N���X���`������@���Ƃ�܂��D���̕������z�֐��ɂ���ē���̃J�X�^�}�C�Y���t���L�V�u���ɍs���邩��ł��D�ȉ��ł�*FWApp*�̋@�\�⃆�[�U���������ׂ����z�֐��ɂ��ď��Ɍ��Ă����܂��D
-### ������
-*FWApp*�̏����������͉��z�֐�*Init*�ōs���܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWApp*											\\ \midrule*virtual void Init(int argc, char* argv[])*	&	\\\\\end{tabular}�ȉ���*Init*�֐��̃f�t�H���g�̎����������܂��D
-```
+とすると，同様のメカニズムで各トップフレームの位置と向きが対応する剛体に反映されます．
+## シーンのロードとセーブ
+FileIOモジュールを利用してシーンをロード，セーブするための関数が用意されています．まずロードには以下の関数を用います．
+
+
+|*FWSdkIf*														 |
+|---|
+|*bool LoadScene(UTString path, ImportIf* imp, const IfInfo* ii, ObjectIfs* objs)*	|
+|シーンをロードする．		|
+*path*はロードするファイルへのパスを格納した文字列です．*imp*にはインポート情報を格納するための*Import*オブジェクトを与えます．インポート情報を記憶する必要のない場合は*NULL*で構いません．*ii*はロードするファイルの種類を明示するための型情報です．*NULL*を指定するとパスの拡張子から自動判別されます．*objs*はロードによって作成されるオブジェクトツリーの親オブジェクトを格納した配列です．ロードに成功すると*true*，失敗すると*false*が返されます．ロードされたシーンは*FWSdk*のシーン配列の末尾に加えられます．次に，シーンをセーブするには以下の関数を使います．
+
+
+|*FWSdkIf*														 |
+|---|
+|*bool SaveScene(UTString path, ImportIf* imp, const IfInfo* ii, ObjectIfs* objs)*	|
+|シーンをセーブする．		|
+引数の意味は*LoadScene*と同様です．*imp*にはロード時に記憶したインポート情報を与えます．省略するとシーン全体が単一のファイルにセーブされます．セーブに成功すると*true*，失敗すると*false*が返されます．
+## Framework オブジェクト
+*FWObject*は*PHSolid*と*GRFrame*の橋渡しが主な役割ですので，それ自体はそれほど多くの機能を持っていません．
+## アプリケーションクラス
+Springheadを利用するアプリケーションの作成を容易にするために，アプリケーションクラス*FWApp*が用意されています．\ref{sec_create_application}に*FWApp*を使って簡単なアプリケーションを作成する方法について説明しましたのでそちらも合わせて参考にしてください．冒頭で説明した通り，Springheadのほとんどのオブジェクトは，親オブジェクトの*Create*系関数を使って作成しますが，*FWApp*は例外的に，C++のクラス継承を用いてユーザのアプリケーションクラスを定義する方法をとります．この方が仮想関数によって動作のカスタマイズがフレキシブルに行えるからです．以下では*FWApp*の機能やユーザが実装すべき仮想関数について順に見ていきます．
+### 初期化
+*FWApp*の初期化処理は仮想関数*Init*で行います．
+
+
+|*FWApp*											 |
+|---|
+|*virtual void Init(int argc, char* argv[])*|	|
+以下に*Init*関数のデフォルトの実装を示します．
+```c++
 void FWApp::Init(int argc, char* argv[]){
     // create SDK
     CreateSdk();
@@ -82,28 +127,28 @@ void FWApp::Init(int argc, char* argv[]){
     CreateTimer();
 }
 ```
-�͂��߂�
-```
+はじめに
+```c++
     CreateSdk();
 ```
-��SDK���쐬���܂��D����
-```
+でSDKを作成します．つぎに
+```c++
     GRInit(argc, argv);
 ```
-�ŃE�B���h�E�}�l�W�����쐬����܂��D�f�t�H���g�ł�GLUT��p����E�B���h�E�}�l�W�����쐬����܂��D�����
-```
+でウィンドウマネジャが作成されます．デフォルトではGLUTを用いるウィンドウマネジャが作成されます．さらに
+```c++
     GetSdk()->CreateScene();
 ```
-��*FWScene*��1�쐬���܂��D�Â���
-```
+で*FWScene*を1つ作成します．つづいて
+```c++
     CreateWin();
 ```
-�Ń��C���E�B���h�E���쐬���܂��D�Ō��
-```
+でメインウィンドウを作成します．最後に
+```c++
     CreateTimer();
 ```
-�Ń^�C�}���쐬���܂��D���̊�{�����ɒǉ����ĂȂ�炩�̏������s���ꍇ��
-```
+でタイマを作成します．この基本処理に追加してなんらかの処理を行う場合は
+```c++
 virtual void Init(int argc = 0, char* argv[] = 0){
     // select GLUI window manager
     SetGRAdaptee(TypeGLUI);
@@ -116,14 +161,14 @@ virtual void Init(int argc = 0, char* argv[] = 0){
 
 }
 ```
-�̂悤�ɁC*FWApp:Init*�����s���Ă���ǉ��̏������s���̂��ǂ��ł��傤�D����C�ȉ��ɋ�����悤�ȃJ�X�^�}�C�Y���K�v�ȏꍇ��*Init*�֐��̏����S�̂�h���N���X�ɋL�q����K�v������܂��D
+のように，*FWApp:Init*を実行してから追加の処理を行うのが良いでしょう．一方，以下に挙げるようなカスタマイズが必要な場合は*Init*関数の処理全体を派生クラスに記述する必要があります．
 
--  �V�[���������J�X�^�}�C�Y������
--  �E�B���h�E�̏����T�C�Y��^�C�g����ύX������
--  �قȂ��ނ̃^�C�}���g������
+-  シーン生成をカスタマイズしたい
+-  ウィンドウの初期サイズやタイトルを変更したい
+-  異なる種類のタイマが使いたい
 
-���̏ꍇ�́C��ɍڂ���*Init*�̃f�t�H���g���������ƂɕK�v�ȕ����ɏC����������̂��ǂ��ł��傤�D�v���O�����̑S�̂̍\���͒ʏ�ȉ��̂悤�ɂȂ�܂��D
-```
+この場合は，上に載せた*Init*のデフォルト処理をもとに必要な部分に修正を加えるのが良いでしょう．プログラムの全体の構造は通常以下のようになります．
+```c++
 MyApp app;
 
 int main(int argc, char* argv[]){
@@ -132,18 +177,30 @@ int main(int argc, char* argv[]){
     return 0;
 }
 ```
-������*MyApp*�̓��[�U����`����*FWApp*�̔h���N���X�ł��i������񑼂̖��O�ł��\���܂���j�D*MyApp*�̃C���X�^���X���O���[�o���ϐ��Ƃ��Ē�`���C*main*�֐���*Init*�C*StartMainLoop*���������s���܂��D*StartMainLoop*�֐��̓A�v���P�[�V�����̃��C�����[�v���J�n���܂��D
-### �^�C�}
-�^�C�}�̍쐬�ɂ�*CreateTimer*�֐����g���܂��D�ʏ�C*CreateTimer*��*Init*�̒��ŌĂт܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWApp*												\\ \midrule*UTTimerIf* CreateTimer(UTTimerIf::Mode mode)*	&	\\\\\end{tabular}����*mode*�Ɏw��ł���l��*UTTimer*��*SetMode*�Ɠ����ł��D\ref{sec_uttimer}�߂��Q�Ƃ��Ă��������D�߂�l�Ƃ���*UTTimer*�̃C���^�t�F�[�X���Ԃ���܂��D�����Ȃǂ̐ݒ�͂��̃C���^�t�F�[�X����čs���܂��D�V�~�����[�V�����p�ƕ`��p��2�̃^�C�}���쐬�������ȉ��Ɏ����܂��D
-```
+ここで*MyApp*はユーザが定義した*FWApp*の派生クラスです（もちろん他の名前でも構いません）．*MyApp*のインスタンスをグローバル変数として定義し，*main*関数で*Init*，*StartMainLoop*を順次実行します．*StartMainLoop*関数はアプリケーションのメインループを開始します．
+### タイマ
+タイマの作成には*CreateTimer*関数を使います．通常，*CreateTimer*は*Init*の中で呼びます．
+
+
+|*FWApp*												 |
+|---|
+|*UTTimerIf* CreateTimer(UTTimerIf::Mode mode)*|	|
+引数*mode*に指定できる値は*UTTimer*の*SetMode*と同じです．\ref{sec_uttimer}節を参照してください．戻り値として*UTTimer*のインタフェースが返されます．周期などの設定はこのインタフェースを介して行います．シミュレーション用と描画用に2つのタイマを作成する例を以下に示します．
+```c++
 UTTimerIf *timerSim, *timerDraw;
 timerSim = CreateTimer(MULTIMEDIA);
 timerSim->SetInterval(10);
 timerDraw = CreateTimer(FRAMEWORK);
 timerDraw->SetInterval(50);
 ```
-���̗�ł̓V�~�����[�V�����p�ɂ͎�����$10$[ms]�̃}���`���f�B�A�^�C�}���g���C�`��p�ɂ͎���$50$[ms]�̃t���[�����[�N�^�C�}�iGLUT�^�C�}�j���g���Ă��܂��D�^�C�}���n������ƁC�������ƂɈȉ��̉��z�֐����Ă΂�܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWApp*								\\ \midrule*virtual void TimerFunc(int id)*	&	\\\\\end{tabular}�^�C�}�̔��ʂ͈���$id$�ōs���܂��D*TimerFunc*�̃f�t�H���g�̐U�镑���ł́C�J�����g�E�B���h�E�̃V�[����*Step*���ĂсC����*PostRedisplay*�ōĕ`��v���𔭍s���܂��i���̌��ʁC�����*Display*�֐����Ăяo����܂��j�D���̐U�镑�����J�X�^�}�C�Y�������ꍇ��*TimerFunc*�֐����I�[�o���C�h���܂��D
-```
+この例ではシミュレーション用には周期を*10*[ms]のマルチメディアタイマを使い，描画用には周期*50*[ms]のフレームワークタイマ（GLUTタイマ）を使っています．タイマを始動すると，周期ごとに以下の仮想関数が呼ばれます．
+
+
+|*FWApp*								 |
+|---|
+|*virtual void TimerFunc(int id)*|	|
+タイマの判別は引数*id*で行います．*TimerFunc*のデフォルトの振る舞いでは，カレントウィンドウのシーンの*Step*を呼び，つぎに*PostRedisplay*で再描画要求を発行します（その結果，直後に*Display*関数が呼び出されます）．この振る舞いをカスタマイズしたい場合は*TimerFunc*関数をオーバライドします．
+```c++
 void TimerFunc(int id){
     // proceed simulation of scene attached to current window
     if(id == timerSim->GetID()){
@@ -155,55 +212,150 @@ void TimerFunc(int id){
     }
 }
 ```
-���̗�ł̓V�~�����[�V�����ƕ`��ɈقȂ�2�̃^�C�}���g�p���Ă��܂��D
-### �`��
-�`�揈���͎��̉��z�֐��ōs���܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWApp*						\\ \midrule*virtual void Display()*	&	\\\\\end{tabular}*Display*�͕`��v�������s���ꂽ�Ƃ��ɌĂяo����܂��D�`��v����*PostRedisplay*�֐��ōs���܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWApp*							\\ \midrule*virtual void PostRedisplay()*	&	\\\\\end{tabular}*Display*�֐��̃f�t�H���g�̐U�镑���ł̓J�����g�E�B���h�E��*Display*�֐����Ă΂�܂��D
-### �L�[�{�[�h�E�}�E�X�C�x���g
-*FWApp*�͊e�E�B���h�E�Ɋ֘A�t����ꂽ���z�L�[�{�[�h�E�}�E�X�f�o�C�X*DVKeyMouse*�ɃR�[���o�b�N�o�^����Ă��܂��D���������Ĉȉ��̉��z�֐����I�[�o���C�h���邱�ƂŃL�[�{�[�h�E�}�E�X�C�x���g�������ł��܂��D\noindent\begin{tabular}{p{1.0\hsize}}\\*FWApp*							\\ \midrule*virtual bool OnMouse(int button, int state, int x, int y)*	\\*virtual bool OnDoubleClick(int button, int x, int y)*	\\*virtual bool OnMouseMove(int state, int x, int y, int zdelta)*	\\*virtual bool OnKey(int state, int key, int x, int y)*	\\\\\end{tabular}�e�C�x���g�n���h���̏ڍׂɂ��Ă�\ref{sec_hi_keymouse}�߂��Q�Ƃ��ĉ������D
-## �E�B���h�E
-�E�B���h�E�₻�̑���GUI�R���g���[���̍쐬��Framework�ɂ���ăT�|�[�g����Ă��܂��D���łɏq�ׂĂ����Ƃ���C*FWApp*�̓g�b�v���x���E�B���h�E�̔z��������܂��D
-## Framework��p�����V�~�����[�V�����ƕ`��
-Framework���W���[������ĕ����V�~�����[�V�������s���ɂ͈ȉ��̊֐����g���܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWSdkIf*			\\ \midrule*void Step()*	& 	\\\end{tabular}\noindent*FWSdk*��*Step*�̓A�N�e�B�u�V�[����*Step*���Ăт܂��D����������*GetScene()->Step()*�Ɠ����ł��D���*FWScene*��*Step*�́C�ێ����Ă���*PHScene*��*Step*���Ăт܂��D����������*GetPHScene()->Step()*�Ɠ����ł��D�����Ƃ��������b�p�[�֐��ł����C���[�U�̃^�C�v�񐔐ߖ�̂��߂ɗp�ӂ���Ă��܂��DFramework��p�����`��ɂ�2�ʂ�̕��@������܂��D1��Graphics�̃V�[���O���t��p������@�C����1��Physics�V�[���𒼐ڕ`�悷����@�ł��D��҂̓f�o�b�O�`��Ƃ��Ă΂�Ă��܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWSdkIf*						\\ \midrule*void Draw()*				&	\\*void SetDebugMode(bool)*	& 	\\*bool GetDebugMode()*		&	\\\\\end{tabular}*Draw*�֐��͕`�惂�[�h�ɉ������`�揈�����s���܂��D*Draw*�͒ʏ�A�v���P�[�V�����̕`��n���h������Ăяo���܂��D*[Set|Get]DebugMode*�͒ʏ�`�惂�[�h(*false*)�ƃf�o�b�O�`�惂�[�h(*true*)��؂�ւ��܂��D�ʏ�`�惂�[�h�ɂ�����*Draw*�֐����ĂԂƁC�͂��߂ɃA�N�e�B�u�V�[���ɂ���*Sync(true)*���Ă΂�C���̂̏�Ԃ��V�[���O���t�ɔ��f����܂��D���ɃA�N�e�B�u�V�[�����Q�Ƃ���*GRScene*��*Render*�֐����Ă΂�C�V�[���O���t���`�悳��܂��D���̕��@�ł̓V�[���O���t�������C�g��e�N�X�`���Ȃǂ̏����ő�����p���ăt�H�g���A���X�e�B�b�N�ȕ`�悪�\�ł��D���̔��ʁC�����V�~�����[�V��������ړI�ł���ꍇ�ɂ̓V�[���O���t�̍\�z�Ƃ����t���I�ȃR�X�g���x����Ȃ���΂Ȃ�Ȃ��Ƃ����f�����b�g������܂��D�f�o�b�O�`��ɂ��Ă͎��߂Ő������܂��D
-## �f�o�b�O�`��
-�f�o�b�O�`�惂�[�h�ł�*PHScene*�̏�񂾂���p���ĕ`�悪�s����̂ŁC�V�[���O���t�\�z�̎�Ԃ��Ȃ��܂��D�܂��C���̂ɉ����͂Ȃǂ̕����V�~�����[�V�����Ɋւ�������������邱�Ƃ��ł��܂��D����ŁC�\��F�����g���Ȃ��ȂǁC�`��̎��R�x�ɂ͈��̐��񂪐����܂��D�f�o�b�O�`�惂�[�h�ł�*FWScene*��*DrawPHScene*�֐��ɂ��`�揈�����s���܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWSceneIf*									\\ \midrule*void DrawPHScene(GRRenderIf* render)*	&	\\\\\end{tabular}*DrawPHScene*�́C�e���̂Ɋ��蓖�Ă��Ă���Փ˔���`��C���W���C��p���Ă���́C�ڐG�f�ʂȂǂ�`�悵�܂��D���ڕʂɕ`����s������C�`��F��ݒ肷��ɂ͌�q����`�搧��֐���p���܂��D
-### �f�o�b�O�`�掞�̃J�����ƃ��C�g
-�f�o�b�O�`��ɂ����Ă��J�����̏���*GRScene*���Q�Ƃ���܂��D����*GRScene*���J������ۗL���Ă���ꍇ�͂��̃J������*Render*���Ă΂�C���_�Ɠ��e�ϊ����ݒ肳��܂��D*GRScene*���J�����������Ȃ��ꍇ�͎蓮�Őݒ肷��K�v������܂��D���C�g�ɂ��ẮC�����O���Ń����_���ɑ΂��ă��C�g�ݒ肪����Ă���ꍇ�͂��̐ݒ肪�D�悳��C�����_����1�����C�g�������Ȃ��ꍇ�͓����Ńf�t�H���g���C�g���ݒ肳��܂��D
-### �ʂ̕`��
-�ȉ��̊֐���*DrawPHScene*����Ăяo����܂����C���[�U���ʂɌĂяo�����Ƃ��ł��܂��D\noindent\begin{tabular}{p{.7\hsize}p{.2\hsize}}\\*FWSceneIf*												\\ \midrule*void DrawSolid(GRRenderIf*, PHSolidIf*, bool)*		&	���̂�`��\\*void DrawShape(GRRenderIf*, CDShapeIf*, bool)*		&	�`���`��\\*void DrawConstraint(GRRenderIf*, PHConstraintIf*)*	&	�S����`��\\*void DrawContact(GRRenderIf*, PHContactPointIf*)*	&	�ڐG��`��\\*void DrawIK(GRRenderIf*, PHIKEngineIf*)*			&	IK����`��\\\\\end{tabular}
-### �`�搧��
-�ȉ��̊֐��͕`���On/Off��؂�ւ��܂��D\noindent\begin{tabular}{p{.8\hsize}p{.1\hsize}}\\*FWSceneIf*													\\ \midrule*void SetRenderMode(bool solid, bool wire)*					&	\\*void EnableRender(ObjectIf* obj, bool enable)*				&	\\*void EnableRenderAxis(bool world, bool solid, bool con)*	&	\\*void EnableRenderForce(bool solid, bool con)*				&	\\*void EnableRenderContact(bool enable)*						&	\\*void EnableRenderGrid(bool x, bool y, bool z)*				&	\\*void EnableRenderIK(bool enable)*							&	\\\\\end{tabular}*SetRenderMode*�̓\���b�h�`��i�ʂ�h��Ԃ��j�ƃ��C���t���[���`��i�ʂ̗֊s�j��On/Off��؂�ւ��܂��D*EnableRender*�͎w�肵���I�u�W�F�N�g�̕`���On/Off��؂�ւ��܂��D���ڂł͂Ȃ��I�u�W�F�N�g���x���ŕ`�搧�䂵�����ꍇ�ɕ֗��ł��D*obj*�Ɏw��ł���͍̂���(*PHSolidIf**)���S��(*PHConstraintIf**)�ł��D*EnableRenderAxis*�͍��ڕʂɍ��W���̕`���ݒ肵�܂��D*world*�̓��[���h���W���C*solid*�͍��́C*con*�͍S���̍��W���ł��D*EnableRenderForce*�͗͂ƃ��[�����g�̕`���ݒ肵�܂��D*solid*�͍��̂ɉ����́i�������O�݂͂̂ōS���͂͏����j�C*con*�͍S���͂ł��D*EnableRenderGrid*�͊e���Ɋւ��ăO���b�h�̕`���ݒ肵�܂��D*EnableRenderIK*��IK���̕`���ݒ肵�܂��D�ȉ��̊֐��͕`�摮�����w�肷��̂Ɏg���܂��D\noindent\begin{tabular}{p{.8\hsize}p{.1\hsize}}\\*FWSceneIf*																\\ \midrule*void SetSolidMaterial(int mat, PHSolidIf* solid)*						&	\\*void SetWireMaterial (int mat, PHSolidIf* solid)*						&	\\*void SetAxisMaterial(int matX, int matY, int matZ)*						&	\\*void SetAxisScale(float world, float solid, float con)*					&	\\*void SetAxisStyle(int style)*											&	\\*void SetForceMaterial(int matForce, int matMoment)*						&	\\*void SetForceScale(float scaleForce, float scaleMoment)*				&	\\*void SetContactMaterial(int mat)*										&	\\*void SetGridOption(char axis, float offset, float size, int slice)*		&	\\*void SetGridMaterial(int matX, int matY, int matZ)*						&	\\*void SetIKMaterial(int mat)*											&	\\*void SetIKScale(float scale)*											&	\\\\\end{tabular}*SetSolidMaterial*�͎w�肵�����̂̃\���b�h�`��F���w�肵�܂��D*mat*�Ɏw��ł���l��\ref{sec_grmaterial}�߂ŏq�ׂ��\��F�ł��D*solid*��*NULL*���w�肷��Ƃ��ׂĂ̍��̂̐F���w�肳�ꂽ�l�ɂȂ�܂��D*SetWireMaterial*�͓��l�ɍ��̂̃��C���t���[���`��F���w�肵�܂��D*SetAxisMaterial*�͍��W���̐F��x, y, z�ʂɎw�肵�܂��D*SetAxisScale*�͍��W���̏k�ڂ��w�肵�܂��D*SetAxisStyle*�͍��W���̃X�^�C�����w�肵�܂��D*SetForceMaterial*�C*SetForceScale*�͂��ꂼ��́i���i�͂ƃ��[�����g�j�̕`��F�Ək�ڂ��w�肵�܂��D*SetContactMaterial*�͐ڐG�f�ʂ̕`��F���w�肵�܂��D*SetGridOption*�̓O���b�h�̃I�v�V�������w�肵�܂��D*SetGridMaterial*�̓O���b�h�̕`��F���w�肵�܂��D*SetIKMaterial*�C*SetIKScale*��IK���̕`��F�Ək�ڂ��w�肵�܂��D
-## �͊o�C���^���N�V�����̂��߂̃A�v���P�[�V����
-Springhead2�ɂ̓V�[���Ƃ̗͊o�C���^���N�V�����̂��߂̃G���W��*PHHapticEngine*���܂܂�Ă��܂��D�����ł͗͊o�C���^���N�V�����̂��߂̃A�v���P�[�V�����̍쐬���@�ɂ��Đ������܂��D�܂��́C�ʏ��*Framework*�A�v���P�[�V�����̍쐬�Ɠ��l�ɁC�ЂȌ`�N���X�ł���*FWApp*���p�����ăA�v���P�[�V�������쐬���܂��D�����āC*Init*�֐����ŗ͊o�C���^���N�V������L�����ƁC�͊o�C���^���N�V�����V�X�e���̃��[�h��ݒ肵�܂��D
-```
+この例ではシミュレーションと描画に異なる2つのタイマを使用しています．
+### 描画
+描画処理は次の仮想関数で行います．
+
+
+|*FWApp*						 |
+|---|
+|*virtual void Display()*|	|
+*Display*は描画要求が発行されたときに呼び出されます．描画要求は*PostRedisplay*関数で行います．
+
+
+|*FWApp*							 |
+|---|
+|*virtual void PostRedisplay()*|	|
+*Display*関数のデフォルトの振る舞いではカレントウィンドウの*Display*関数が呼ばれます．
+### キーボード・マウスイベント
+*FWApp*は各ウィンドウに関連付けられた仮想キーボード・マウスデバイス*DVKeyMouse*にコールバック登録されています．したがって以下の仮想関数をオーバライドすることでキーボード・マウスイベントを処理できます．
+
+
+|*FWApp*							 |
+|---|
+|*virtual bool OnMouse(int button, int state, int x, int y)*	|
+|*virtual bool OnDoubleClick(int button, int x, int y)*	|
+|*virtual bool OnMouseMove(int state, int x, int y, int zdelta)*	|
+|*virtual bool OnKey(int state, int key, int x, int y)*	|
+各イベントハンドラの詳細については\ref{sec_hi_keymouse}節を参照して下さい．
+## ウィンドウ
+ウィンドウやその他のGUIコントロールの作成もFrameworkによってサポートされています．すでに述べてきたとおり，*FWApp*はトップレベルウィンドウの配列を持ちます．
+## Frameworkを用いたシミュレーションと描画
+Frameworkモジュールを介して物理シミュレーションを行うには以下の関数を使います．
+
+
+|*FWSdkIf*			 |
+|---|
+|*void Step()*| 	|
+
+*FWSdk*の*Step*はアクティブシーンの*Step*を呼びます．したがって*GetScene()->Step()*と等価です．一方*FWScene*の*Step*は，保持している*PHScene*の*Step*を呼びます．したがって*GetPHScene()->Step()*と等価です．両方とも薄いラッパー関数ですが，ユーザのタイプ回数節約のために用意されています．Frameworkを用いた描画には2通りの方法があります．1つはGraphicsのシーングラフを用いる方法，もう1つはPhysicsシーンを直接描画する方法です．後者はデバッグ描画とも呼ばれています．
+
+
+|*FWSdkIf*						 |
+|---|
+|*void Draw()*			|	|
+|*void SetDebugMode(bool)*| 	|
+|*bool GetDebugMode()*	|	|
+*Draw*関数は描画モードに応じた描画処理を行います．*Draw*は通常アプリケーションの描画ハンドラから呼び出します．*[Set|Get]DebugMode*は通常描画モード(*false*)とデバッグ描画モード(*true*)を切り替えます．通常描画モードにおいて*Draw*関数を呼ぶと，はじめにアクティブシーンについて*Sync(true)*が呼ばれ，剛体の状態がシーングラフに反映されます．次にアクティブシーンが参照する*GRScene*の*Render*関数が呼ばれ，シーングラフが描画されます．この方法ではシーングラフが持つライトやテクスチャなどの情報を最大限利用してフォトリアリスティックな描画が可能です．その反面，物理シミュレーションが主目的である場合にはシーングラフの構築という付加的なコストを支払わなければならないというデメリットもあります．デバッグ描画については次節で説明します．
+## デバッグ描画
+デバッグ描画モードでは*PHScene*の情報だけを用いて描画が行われるので，シーングラフ構築の手間が省けます．また，剛体に加わる力などの物理シミュレーションに関する情報を可視化することができます．一方で，予約色しか使えないなど，描画の自由度には一定の制約が生じます．デバッグ描画モードでは*FWScene*の*DrawPHScene*関数により描画処理が行われます．
+
+
+|*FWSceneIf*									 |
+|---|
+|*void DrawPHScene(GRRenderIf* render)*|	|
+*DrawPHScene*は，各剛体に割り当てられている衝突判定形状，座標軸，作用している力，接触断面などを描画します．項目別に描画を行ったり，描画色を設定するには後述する描画制御関数を用います．
+### デバッグ描画時のカメラとライト
+デバッグ描画においてもカメラの情報は*GRScene*が参照されます．もし*GRScene*がカメラを保有している場合はそのカメラの*Render*が呼ばれ，視点と投影変換が設定されます．*GRScene*がカメラを持たない場合は手動で設定する必要があります．ライトについては，もし外部でレンダラに対してライト設定がされている場合はその設定が優先され，レンダラが1つもライトを持たない場合は内部でデフォルトライトが設定されます．
+### 個別の描画
+以下の関数は*DrawPHScene*から呼び出されますが，ユーザが個別に呼び出すこともできます．
+
+
+|*FWSceneIf*												 |
+|---|
+|*void DrawSolid(GRRenderIf*, PHSolidIf*, bool)*	|	剛体を描画|
+|*void DrawShape(GRRenderIf*, CDShapeIf*, bool)*	|	形状を描画|
+|*void DrawConstraint(GRRenderIf*, PHConstraintIf*)*|	拘束を描画|
+|*void DrawContact(GRRenderIf*, PHContactPointIf*)*|	接触を描画|
+|*void DrawIK(GRRenderIf*, PHIKEngineIf*)*		|	IK情報を描画|
+
+### 描画制御
+以下の関数は描画のOn/Offを切り替えます．
+
+
+|*FWSceneIf*													 |
+|---|
+|*void SetRenderMode(bool solid, bool wire)*				|	|
+|*void EnableRender(ObjectIf* obj, bool enable)*			|	|
+|*void EnableRenderAxis(bool world, bool solid, bool con)*|	|
+|*void EnableRenderForce(bool solid, bool con)*			|	|
+|*void EnableRenderContact(bool enable)*					|	|
+|*void EnableRenderGrid(bool x, bool y, bool z)*			|	|
+|*void EnableRenderIK(bool enable)*						|	|
+*SetRenderMode*はソリッド描画（面を塗りつぶす）とワイヤフレーム描画（面の輪郭）のOn/Offを切り替えます．*EnableRender*は指定したオブジェクトの描画のOn/Offを切り替えます．項目ではなくオブジェクトレベルで描画制御したい場合に便利です．*obj*に指定できるのは剛体(_PHSolidIf*_)か拘束(_PHConstraintIf*_)です．*EnableRenderAxis*は項目別に座標軸の描画を設定します．*world*はワールド座標軸，*solid*は剛体，*con*は拘束の座標軸です．*EnableRenderForce*は力とモーメントの描画を設定します．*solid*は剛体に加わる力（ただし外力のみで拘束力は除く），*con*は拘束力です．*EnableRenderGrid*は各軸に関してグリッドの描画を設定します．*EnableRenderIK*はIK情報の描画を設定します．以下の関数は描画属性を指定するのに使います．
+
+
+|*FWSceneIf*																 |
+|---|
+|*void SetSolidMaterial(int mat, PHSolidIf* solid)*					|	|
+|*void SetWireMaterial (int mat, PHSolidIf* solid)*					|	|
+|*void SetAxisMaterial(int matX, int matY, int matZ)*					|	|
+|*void SetAxisScale(float world, float solid, float con)*				|	|
+|*void SetAxisStyle(int style)*										|	|
+|*void SetForceMaterial(int matForce, int matMoment)*					|	|
+|*void SetForceScale(float scaleForce, float scaleMoment)*			|	|
+|*void SetContactMaterial(int mat)*									|	|
+|*void SetGridOption(char axis, float offset, float size, int slice)*	|	|
+|*void SetGridMaterial(int matX, int matY, int matZ)*					|	|
+|*void SetIKMaterial(int mat)*										|	|
+|*void SetIKScale(float scale)*										|	|
+*SetSolidMaterial*は指定した剛体のソリッド描画色を指定します．*mat*に指定できる値は\ref{sec_grmaterial}節で述べた予約色です．*solid*に*NULL*を指定するとすべての剛体の色が指定された値になります．*SetWireMaterial*は同様に剛体のワイヤフレーム描画色を指定します．*SetAxisMaterial*は座標軸の色をx, y, z個別に指定します．*SetAxisScale*は座標軸の縮尺を指定します．*SetAxisStyle*は座標軸のスタイルを指定します．*SetForceMaterial*，*SetForceScale*はそれぞれ力（並進力とモーメント）の描画色と縮尺を指定します．*SetContactMaterial*は接触断面の描画色を指定します．*SetGridOption*はグリッドのオプションを指定します．*SetGridMaterial*はグリッドの描画色を指定します．*SetIKMaterial*，*SetIKScale*はIK情報の描画色と縮尺を指定します．
+## 力覚インタラクションのためのアプリケーション
+Springhead2にはシーンとの力覚インタラクションのためのエンジン*PHHapticEngine*が含まれています．ここでは力覚インタラクションのためのアプリケーションの作成方法について説明します．まずは，通常の*Framework*アプリケーションの作成と同様に，ひな形クラスである*FWApp*を継承してアプリケーションを作成します．そして，*Init*関数内で力覚インタラクションを有効化と，力覚インタラクションシステムのモードを設定します．
+```c++
 	// given PHSceneIf* phScene,
     phScene->GetHapticEngine()->EnableHapticEngine(true);
     phScene->GetHapticEngine()->
     SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
 ```
-�͊o�C���^���N�V�����V�X�e���̃��[�h�̓V���O���X���b�h�A�v���P�[�V�����̂��߂�*SINGLE\_THREAD*�C�}���`���f�B�A�A�v���P�[�V�����̂��߂�*MULTI\_THREAD*�C�Ǐ��V�~�����[�V�����𗘗p����*LOCAL\_DYNAMICS*��3��ނ�����܂��D�W���ł�*MULTI\_THREAD*���ݒ肳��Ă��܂��D*MULTI\_THREAD*�C*LOCAL\_DYNAMICS*�̃��[�h�̓}���`�X���b�h�𗘗p�����A�v���P�[�V�����ƂȂ�C�����V�~�����[�V���������s���镨���X���b�h�C�͊o�����_�����O�����s����͊o�X���b�h������ɓ����܂��D���̂��߁C���ꂼ��̃X���b�h���R�[���o�b�N���邽�߂Ƀ^�C�}��ݒ肵�����K�v������܂��D\clearpage
-```
+力覚インタラクションシステムのモードはシングルスレッドアプリケーションのための*SINGLE\_THREAD*，マルチメディアアプリケーションのための*MULTI\_THREAD*，局所シミュレーションを利用した*LOCAL\_DYNAMICS*の3種類があります．標準では*MULTI\_THREAD*が設定されています．*MULTI\_THREAD*，*LOCAL\_DYNAMICS*のモードはマルチスレッドを利用したアプリケーションとなり，物理シミュレーションを実行する物理スレッド，力覚レンダリングを実行する力覚スレッドが並列に動きます．そのため，それぞれのスレッドをコールバックするためにタイマを設定し直す必要があります．\clearpage
+```c++
 	// given PHSceneIf* phScene,
-	int physicsTimerID, hapticTimerID // �e�^�C�}��ID
-	// FWApp::TimerFunc���I�[�o���C�h�����R�[���o�b�N�֐�
+	int physicsTimerID, hapticTimerID // 各タイマのID
+	// FWApp::TimerFuncをオーバライドしたコールバック関数
 	void MyApp::TimerFunc(int id){
         if(hapticTimerID == id){
-            // �͊o�X���b�h�̃R�[���o�b�N
+            // 力覚スレッドのコールバック
             phScene->StepHapticLoop();	
         }else{
-            // �����X���b�h�̃R�[���o�b�N
+            // 物理スレッドのコールバック
             phScene->GetHapticEngine()->StepPhysicsSimulation();	
-            PostRedisplay();	// �`��
+            PostRedisplay();	// 描画
         }	
 	}	
 ```
-���Ƀ��[�U���I�u�W�F�N�g�ƃC���^���N�V�������邽�߂̃|�C���^�C�͊o�|�C���^*PHHapticPointer*�����܂��D�����āC�ǂ̃C���^�t�F�[�X�ƌ�������̂���ݒ肵�܂��D*PHHapticPointer*��*PHScene*�����邱�Ƃ��ł��܂��D*PHHapticPointer*��*PHSolid*���p�������N���X��*PHSolid*�̊֐��𗘗p���āC���ʁC�����e���\���C�`��Ȃǂ����킹�Đݒ肵�܂��D�Ⴆ��Spidar-G6�Ɛڑ�����ꍇ�ɂ́C
-```
+次にユーザがオブジェクトとインタラクションするためのポインタ，力覚ポインタ*PHHapticPointer*を作ります．そして，どのインタフェースと結合するのかを設定します．*PHHapticPointer*は*PHScene*から作ることができます．*PHHapticPointer*は*PHSolid*を継承したクラスで*PHSolid*の関数を利用して，質量，慣性テンソル，形状などを合わせて設定します．例えばSpidar-G6と接続する場合には，
+```c++
 	// given PHSceneIf* phScene,
 	// given HISpidarIf* spg,
     PHHapticPointerIf* pointer = phScene->CreateHapticPointer();
     /*
-        ���ʁC�����e���\���C�`��Ȃǂ�ݒ肷��
+        質量，慣性テンソル，形状などを設定する
     */
     pointer->SetHumanInterface(spg);
 ```
-�Ƃ��܂��D�����PHHapticPointer�ɂ��Ĉȉ��̊֐���p���āC�͊o�񎦂̂��߂̃p�����[�^��ݒ肵�܂��D\noindent\begin{tabular}{p{.8\hsize}p{.1\hsize}}\\*PHHapticPointerIf*													\\ \midrule*void SetHumanInterface(HIBaseIf* interface)*						&	\\*void SetDefaultPose(Posed pose)*									&	\\*void SetPosScale(double scale)*										&	\\*void SetReflexSpring(float s)*										&	\\*void SetReflexDamper(float s)*										&	\\*void EnableFriction(bool b)*										&	\\*void EnableVibration(bool b)*										&	\\*void SetLocalRange(float s)*										&	\\*void SetHapticRenderMode(PHHapticPointerDesc::HapticRenderMode m )*	&	\\\\\end{tabular}*SetHumanInterface*�͗͊o�|�C���^�Ƀq���[�}���C���^�t�F�[�X�����蓖�Ă܂��D*SetDefaultPose*�̓V�[�����ł̗͊o�|�C���^�̏����ʒu���w�肵�܂��D*SetPosScale*�̓V�[�����ł̗͊o�|�C���^�̉��X�P�[�����w�肵�܂��D*SetReflexSpring*�͗͊o�����_�����O�i���͌v�Z�j�̂��߂̃o�l�W���l��ݒ肵�܂��D*SetReflexDamper*�͗͊o�����_�����O�̂��߂̃_���p�W���l��ݒ肵�܂��D*EnableFriction*�͗͊o�|�C���^�̖��C�͒񎦂�L�������܂��D*EnableVibration*�͗͊o�|�C���^�̐U���񎦂�L�������܂��D*SetLocalRange*�͋Ǐ��V�~�����[�V�����V�X�e�����g�p���̋Ǐ��V�~�����[�V�����͈͂��w�肵�܂��D*SetHapticRenderMode*�͗͊o�����_�����O�̃��[�h���w�肵�܂��D�Ō��*SetHapticRenderMode*�ɂ�*PENALTY*�C*CONSTRAINT*�̃��[�h������܂��D*PENALTY*�͗͊o�|�C���^�����̂ɐڐG�������̊e�ڐG�_�̐N���ʂƃo�l�_���p�W�����悶�����̂𑫂����킹�����̂����͂Ƃ��Čv�Z����C�C���^�t�F�[�X����o�͂���܂��D*CONSTRAINT*�͗͊o�|�C���^�����̂ɐN�����Ă��Ȃ���ԁi�v���L�V�j�����߁C�͊o�|�C���^�ƃv���L�V�̋����̍����Ƀo�l�_���p�W�����悶�����̂𔽗͂Ƃ��Čv�Z���܂��D
+とします．さらにPHHapticPointerについて以下の関数を用いて，力覚提示のためのパラメータを設定します．
+
+
+|*PHHapticPointerIf*													 |
+|---|
+|*void SetHumanInterface(HIBaseIf* interface)*					|	|
+|*void SetDefaultPose(Posed pose)*								|	|
+|*void SetPosScale(double scale)*									|	|
+|*void SetReflexSpring(float s)*									|	|
+|*void SetReflexDamper(float s)*									|	|
+|*void EnableFriction(bool b)*									|	|
+|*void EnableVibration(bool b)*									|	|
+|*void SetLocalRange(float s)*									|	|
+|*void SetHapticRenderMode(PHHapticPointerDesc::HapticRenderMode m )*|	|
+*SetHumanInterface*は力覚ポインタにヒューマンインタフェースを割り当てます．*SetDefaultPose*はシーン内での力覚ポインタの初期位置を指定します．*SetPosScale*はシーン内での力覚ポインタの可動スケールを指定します．*SetReflexSpring*は力覚レンダリング（反力計算）のためのバネ係数値を設定します．*SetReflexDamper*は力覚レンダリングのためのダンパ係数値を設定します．*EnableFriction*は力覚ポインタの摩擦力提示を有効化します．*EnableVibration*は力覚ポインタの振動提示を有効化します．*SetLocalRange*は局所シミュレーションシステムを使用時の局所シミュレーション範囲を指定します．*SetHapticRenderMode*は力覚レンダリングのモードを指定します．最後の*SetHapticRenderMode*には*PENALTY*，*CONSTRAINT*のモードがあります．*PENALTY*は力覚ポインタが剛体に接触した時の各接触点の侵入量とバネダンパ係数を乗じたものを足しあわせたものが反力として計算され，インタフェースから出力されます．*CONSTRAINT*は力覚ポインタが剛体に侵入していない状態（プロキシ）を求め，力覚ポインタとプロキシの距離の差分にバネダンパ係数を乗じたものを反力として計算します．

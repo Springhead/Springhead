@@ -1,99 +1,99 @@
-Creature���W���[���́C�����V�~�����[�^��p���ăo�[�`�����N���[�`���i�������삷��L�����N�^�j���쐬����@�\��񋟂��܂��DSpringhead�̕����V�~�����[�V�����@�\�́C�l�ԁE�����E�L�����N�^�E���{�b�g���̐g�̓�����V�~�����[�V�������邱�Ƃɂ����Ă����p���l������܂��D���́E�֐ߌn�Őg�̃��f�����쐬���C�֐߂ɑg�ݍ��܂ꂽ����@�\��֐ߌn��IK�@�\��p���Đg�̓���𐶐����邱�Ƃ��ł��܂��D�����V�~�����[�^���̏��i���̂̉^���E�`��E�ڐG�͓��j�𗘗p���ăo�[�`�����Ȋ��o�i�Z���T�j���̐������ł��܂��D���o�E����̃��[�v���񂷂��ƂŎ������삷��L�����N�^�⃍�{�b�g�������ł��܂��D���������o�[�`�����ȃL�����N�^�E���{�b�g���𑍏̂��āC�o�[�`�����N���[�`���iCreature : �������j�ƌĂт܂��D
-## Creature���W���[���̍\��
-���}��Creature���W���[���̃V�[���c���[�\���������܂��B
-```
+Creatureモジュールは，物理シミュレータを用いてバーチャルクリーチャ（自律動作するキャラクタ）を作成する機能を提供します．Springheadの物理シミュレーション機能は，人間・動物・キャラクタ・ロボット等の身体動作をシミュレーションすることにおいても利用価値があります．剛体・関節系で身体モデルを作成し，関節に組み込まれた制御機能や関節系のIK機能を用いて身体動作を生成することができます．物理シミュレータ内の情報（物体の運動・形状・接触力等）を利用してバーチャルな感覚（センサ）情報の生成もできます．感覚・制御のループを回すことで自律動作するキャラクタやロボットが実現できます．こうしたバーチャルなキャラクタ・ロボット等を総称して，バーチャルクリーチャ（Creature : 生き物）と呼びます．
+## Creatureモジュールの構成
+下図にCreatureモジュールのシーンツリー構造を示します。
+```c++
 CRSdk
 +-- CRCreature
 |   +-- CRBody
 |   |   +-- CRBone
 |   +-- CREngine (CRSensor, CRController)
 ```
-*CRSdk*��Creature�̋@�\���g�p���鍪�{�ƂȂ�I�u�W�F�N�g�ł��B
-```
+*CRSdk*はCreatureの機能を使用する根本となるオブジェクトです。
+```c++
 CRSdkIf* crSdk = CRSdkIf::CreateSdk();
 ```
-*CRCreature*�́C�o�[�`�����N���[�`��$1$�̕��̋@�\�𓝊�����I�u�W�F�N�g�ł��D�g�́A���o��A������L���Ă��܂��DCRCreatureDesc�ɂ͓��ɐݒ肷�ׂ����ڂ͂���܂���B
-```
+*CRCreature*は，バーチャルクリーチャ*1*体分の機能を統括するオブジェクトです．身体、感覚器、制御器を有しています．CRCreatureDescには特に設定すべき項目はありません。
+```c++
 CRCreatureIf* crCreature = crSdk->CreateCreature(
   CDCreatureIf::GetIfInfoStatic(), CRCreatureDesc());
 ```
-CRCreature���쐬������A�����V�~�����[�V�����̃V�[���Ɗ֘A�Â��邽�߂ɁAPHScene���q�I�u�W�F�N�g�Ƃ��ăZ�b�g���Ă��������B
-```
+CRCreatureを作成したら、物理シミュレーションのシーンと関連づけるために、PHSceneを子オブジェクトとしてセットしてください。
+```c++
 // PHSceneIf* phScene;   // should be taken from somewhere
 crCreature->AddChildObject(phScene);
 ```
-�V�~�����[�V�������s���́A1�X�e�b�v��1��ACRCreature��Step���Ă�ł��������B������ĂԂ�Creature�����eEngine��Step�����s����܂��B
-```
+シミュレーション実行時は、1ステップに1回、CRCreatureのStepを呼んでください。これを呼ぶとCreatureが持つ各EngineのStepが実行されます。
+```c++
 // Every time after simulation step
 crCreature.Step();
 ```
 
-### �g��
-*CRBody*�́C�o�[�`�����N���[�`���̐g�̃��f���𓝊����܂��D�g�̃��f���͐g�̍\�����i�̏W���̂ł��D
-```
+### 身体
+*CRBody*は，バーチャルクリーチャの身体モデルを統括します．身体モデルは身体構成部品の集合体です．
+```c++
 CDBodyIf* crBody = crCreature->CreateBody(
   CRBodyIf::GetIfInfoStatic(), CRBodyDesc());
 ```
-*CRBone*�́C�g�̍\�����i�ЂƂЂƂɑΉ�����I�u�W�F�N�g�ł��D���̂Ɗ֐߁AIK�̂��߂̃A�N�`���G�[�^�i�ꍇ�ɂ���Ă̓G���h�G�t�F�N�^�j���Z�b�g�ɂ������̂ł��B
-```
+*CRBone*は，身体構成部品ひとつひとつに対応するオブジェクトです．剛体と関節、IKのためのアクチュエータ（場合によってはエンドエフェクタ）をセットにしたものです。
+```c++
 CRBoneIf* crBone = crBody->CreateObject(
   CDBoneIf::GetIfInfoStatic(), CRBoneDesc());
 ```
-CRBone�Ɋ֘A�Â���ׂ��I�u�W�F�N�g�͂��ׂĎq�I�u�W�F�N�g�Ƃ��Ă��������B
-```
-// ����Bone�ɑΉ����鍄��
+CRBoneに関連づけるべきオブジェクトはすべて子オブジェクトとしてください。
+```c++
+// このBoneに対応する剛体
 // PHSolidIf* phSolid; 
 crBone->AddChildObject(phSolid);
 
-// ����Bone��eBone�ɐڑ�����֐߁BRoot Bone�̏ꍇ�͑��݂��Ȃ��̂Œǉ��s�v�B
+// このBoneを親Boneに接続する関節。Root Boneの場合は存在しないので追加不要。
 // PHJointIf* phJoint;
 crBone->AddChildObject(phJoint);
 
-// IK�̃G���h�G�t�F�N�^�i���Ȃǁj�ł���ꍇ�͑Ή�����PHIKEndEffector
+// IKのエンドエフェクタ（手先など）である場合は対応するPHIKEndEffector
 // PHIKEndEffectorIf* phIKEEff;
 crBone->AddChildObject(phIKEEff);
 
-// phJoint�ɑΉ�����IK�A�N�`���G�[�^
+// phJointに対応するIKアクチュエータ
 // PHIKActuatorIf* phIKAct;
 crBone->AddChildObject(phIKAct);
 ```
 
-### ���o��
-���o��(CRSensor)��CREngine�̈��ł��B*CREngine*�́C�o�[�`�����N���[�`���̃X�e�b�v�����̎��s��̂ł��D*CRCreature*��*Step*�֐���1��Ă΂�邽�тɁC*CRCreature*���ێ�����S�Ă�*CREngine*��*Step*�֐������Ɏ��s����܂��DCRSensor�ɂ͎��o�iCRVisualSensor�j�A�G�o�iCRTouchSensor�j������܂��B\paragraph{���o}������ɂ��鍄�̂�1Step���ƂɃ��X�g�A�b�v����@�\�ł��B
-```
-// �ݒ�
+### 感覚器
+感覚器(CRSensor)はCREngineの一種です。*CREngine*は，バーチャルクリーチャのステップ処理の実行主体です．*CRCreature*の*Step*関数が1回呼ばれるたびに，*CRCreature*が保持する全ての*CREngine*の*Step*関数が順に実行されます．CRSensorには視覚（CRVisualSensor）、触覚（CRTouchSensor）があります。\paragraph{視覚}視野内にある剛体を1Stepごとにリストアップする機能です。
+```c++
+// 設定
 CRVisualSensorDesc descVisualSensor;
-/// ����̑傫���F �����p�x�C�����p�x
+/// 視野の大きさ： 水平角度，垂直角度
 descVisualSensor.range = Vec2d(Rad(90), Rad(60));
-// ���S����̑傫���F �����p�x�C�����p�x
+// 中心視野の大きさ： 水平角度，垂直角度
 descVisualSensor.centerRange = Vec2d(Rad(10), Rad(10));
-// ���o�Z���T��Ώۍ��̂ɓ\��t����ʒu�E�p��
+// 視覚センサを対象剛体に貼り付ける位置・姿勢
 descVisualSensor.pose = Posed();
-// ���̋������z�������͎̂���O        
+// この距離を越えたものは視野外        
 descVisualSensor.limitDistance = 60;	
 
-// �쐬
+// 作成
 CRVisualSensorIf* crVisualSensor = crCreature->CreateEngine(
   CRVisualSensorIf::GetIfInfoStatic(), descVisualSensor);
 ```
-���o����ǂݏo���ɂ� NVisibles() �� GetVisible(int n) ��p���܂��B���o���𗘗p����O�ɂ͕K��Update�����s���Ă��������BUpdate�����s����Ǝ��o��񂪍ŐV��Step�Ɋ�Â����ɍX�V����܂��B
-```
+視覚情報を読み出すには NVisibles() と GetVisible(int n) を用います。視覚情報を利用する前には必ずUpdateを実行してください。Updateを実行すると視覚情報が最新のStepに基づく情報に更新されます。
+```c++
 crVisualSensor->Update();
 for (int i=0; i<crVisualSensor->NVisibles(); ++i) {
 	CRVisualInfo info = crVisualSensor->GetVisible(i);
-	// �����̈���̎��o���
-	info.posWorld;    // �����̂̃��[���h���W
-	info.posLocal;    // ������Ƃ��������̂̃��[�J�����W
-	info.velWorld;    // ���x
-	info.velLocal;    // ���[�J�����W�ł̑��x
-	info.angle;       // ���쒆�S���獄�̂܂ł̎��p�i���Ԃ�j
-	info.solid;       // ������
-	info.solidSensor; // ���o�Z���T���́i���Ƃ��ڂƂ��j
-	info.sensorPose;  // ���o�Z���T���̂̈ʒu�E�p���i���Ԃ�j
-	info.bMyBody;     // �����̐g�̂��\�����鍄�̂ł����true
-	info.bCenter;     // ���S����ɓ����Ă����true
+	// 可視剛体一個分の視覚情報
+	info.posWorld;    // 可視剛体のワールド座標
+	info.posLocal;    // 頭を基準とした可視剛体のローカル座標
+	info.velWorld;    // 速度
+	info.velLocal;    // ローカル座標での速度
+	info.angle;       // 視野中心から剛体までの視角（たぶん）
+	info.solid;       // 可視剛体
+	info.solidSensor; // 視覚センサ剛体（頭とか目とか）
+	info.sensorPose;  // 視覚センサ剛体の位置・姿勢（たぶん）
+	info.bMyBody;     // 自分の身体を構成する剛体であればtrue
+	info.bCenter;     // 中心視野に入っていればtrue
 }
 ```
 
-### �����
-*CRController*��*CREngine*�̈��ŁC�o�[�`�����N���[�`���̐g�̐����S�����܂��D���ۂ̐���@�\��*CRController*���p�������e�N���X���S�����܂��D���B�^������A�ዅ�^������Ȃǂ�����܂��B
+### 制御器
+*CRController*は*CREngine*の一種で，バーチャルクリーチャの身体制御を担当します．実際の制御機能は*CRController*を継承した各クラスが担当します．到達運動制御、眼球運動制御などがあります。
