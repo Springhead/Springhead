@@ -195,6 +195,7 @@ struct PHMaterial{
 	float frictionViscosity;
 
 	float stribeckVelocity;
+	float stribeckmu;
 
 	struct VelocityField{
 		enum{

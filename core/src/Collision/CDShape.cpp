@@ -35,6 +35,7 @@ PHMaterial::PHMaterial(){
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	frictionViscosity = 0.0f;
 	stribeckVelocity = 0.1f;
+	stribeckmu = 0.1f;
 
 	velocityFieldMode      = VelocityField::NONE;
 	velocityFieldAxis      = Vec3d();
