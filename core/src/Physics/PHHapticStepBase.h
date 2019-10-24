@@ -101,6 +101,7 @@ public:
 	float timeVaryFrictionC;	///< 時変摩擦定数C
 	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	float stribeckVelocity;
+	float stribeckmu;
 	float muCur;				///< 計算された時変摩擦係数
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)

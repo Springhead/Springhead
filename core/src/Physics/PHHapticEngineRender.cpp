@@ -262,7 +262,7 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 			//sh->muCur = sh->mu * (1 + (sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->slipCount + 1) * hdt)*exp(-v/sh->stribeckVelocity)));
 			
 			//sh->muCur = sh->mu * (1 + (sh->timeVaryFrictionA * log(sh->timeVaryFrictionB * (sp->slipCount + 1) * hdt)*exp(-v / sh->stribeckVelocity)));
-			sh->muCur = sh->mu * exp(-v / sh->stribeckVelocity);
+			sh->muCur = sh->mu + (sh->mu - sh->stribeckmu)*(exp(-v / sh->stribeckVelocity)-1.0);
 			//std::cout <<  v << std::endl;
 			/*
 			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
