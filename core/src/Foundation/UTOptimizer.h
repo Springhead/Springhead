@@ -18,44 +18,44 @@ public:
 	SPR_OBJECTDEF(UTOptimizer);
 
 	/// Constructor
-	UTOptimizer() { }
+	UTOptimizer(): dimension(0), initialValue(NULL), currentFitness(DBL_MAX) { }
 
 	/// Destructor
-	~UTOptimizer() { }
+	virtual ~UTOptimizer() { }
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 	/// Set Number of Parameters
-	void SetDimension(int dimension) { this->dimension = dimension; }
+	virtual void SetDimension(int dimension) { this->dimension = dimension; }
 
 	/// Get Number of Parameters
-	int GetDimension() { return dimension; }
+	virtual int GetDimension() { return dimension; }
 
 	/// Set Initial Value
-	void SetInitialValue(double *initialValue) {
+	virtual void SetInitialValue(double *initialValue) {
 		for (int i = 0; i < dimension; i++) {this->initialValue[i] = initialValue[i]; }
 	}
 
 	/// Initialize Optimizer
-	void Initialize() {}
+	virtual void Initialize() {}
 
 	/// Get Parameter Value to Compute Objective Function
-	double* GetPopulation() { return NULL; }
+	virtual double* GetPopulation() { return NULL; }
 
 	/// Set Objective Function Value Computation Result
-	void SetObjectiveFunctionValue(double value) {}
+	virtual void SetObjectiveFunctionValue(double value) {}
 
 	/// Proceed Optimize Process Step
-	void Next() {}
+	virtual void Next() {}
 
 	/// Check Optimization is Finished or Not
-	bool IsFinished() { return true; }
+	virtual bool IsFinished() { return true; }
 
 	/// Return Results
-	double* GetResult() { return NULL; }
+	virtual double* GetResult() { return NULL; }
 
 	/// Return Fitness
-	double GetFitness() { return currentFitness; }
+	virtual double GetFitness() { return currentFitness; }
 
 };
 
