@@ -69,20 +69,21 @@ bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& 
 	Vec3d sep;
 	double dist = FindClosestPoints(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
 									sep, closestPoint[0], closestPoint[1]);
-	if(dist > -1e-12){
-		// 接触していない
-		state = NONE;
-	}else{							
-		// 接触
-		Vec3d w0 = shapePoseW[0] * closestPoint[0];
-		Vec3d w1 = shapePoseW[1] * closestPoint[1];
-		normal = (w1 - w0).unit();		// 剛体->力覚ポインタへの法線ベクトル
-		commonPoint = (w0 + w1) * 0.5;	// 共有点
-
-		if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
-		else state = NEW;
-		lastContactCount = ct;
+	// 接触
+	Vec3d w0 = shapePoseW[0] * closestPoint[0];
+	Vec3d w1 = shapePoseW[1] * closestPoint[1];
+	normal = (w1 - w0);
+	if (normal.norm() > 1e-20) {
+		normal = normal.unit();		// 剛体->力覚ポインタへの法線ベクトル
 	}
+	else {
+		return false;
+	}
+	commonPoint = (w0 + w1) * 0.5;	// 共有点
+
+	if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
+	else state = NEW;
+	lastContactCount = ct;
 	return true;
 }
 
