@@ -53,10 +53,8 @@ namespace Spr {;
 
 	UTCMAESOptimizer::UTCMAESOptimizer(const UTCMAESOptimizerDesc& desc) {
 		SetDesc(&desc);
-
 		initialValue = NULL;
 		initialStdDev = NULL;
-
 #ifdef USE_CLOSED_SRC
 		parameters = NULL;
 		cmaes = NULL;
