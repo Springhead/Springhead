@@ -1,7 +1,11 @@
-
-
+# C#との連携およびUnity上での利用
 
 ゲームエンジンUnity上でSpringheadを利用する方法について述べます。この機能は開発中のため、予告なく大きな仕様変更をする場合があります。専用のDLLをロードすることにより、Springheadの機能をC\#から利用することが可能です。また、SpringheadにはUnityのGameObjectとSpringheadのオブジェクトを接続・同期するための一連のC\#スクリプトが含まれます。以降では、Unity上でSpringheadを利用するためのDLLと一連のC\#スクリプト群をまとめて SprUnity と呼びます。
+
+
+
+
+
 ## Springhead C\# DLLのビルド
 Springheadの機能をC\#で使うためには以下の3つのDLLファイルが必要になります。
 

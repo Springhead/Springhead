@@ -1,4 +1,11 @@
+# EmbPython : Pythonとの連携機能
+
 EmbPythonモジュールは，スクリプト言語Pythonとの連携機能を提供します．PythonインタプリタからSpringheadの機能を呼び出したり，SpringheadアプリケーションにPythonインタプリタを組み込んでスクリプティングエンジンとして使用するといった事ができます．EmbPythonモジュールの使用により，Pythonインタプリタ上にSpringhead APIクラスへのインタフェースクラスが提供されます．ユーザはPythonインタフェースクラスを使用してSpringheadの各機能にアクセスします．Pythonインタフェースクラスは内部的にSpringheadの機能を呼び出し，結果をPythonインタフェースクラスに変換して返します．
+
+
+
+
+
 ## 利用法
 大きく分けて二通りの利用法を想定しています．一つは，C++で実装されたSpringheadアプリケーションに対し，Pythonインタプリタを組み込むことです．Springheadアプリケーションの機能の一部をPythonスクリプト記述し，拡張性を高めます．もう一つは，Pythonインタプリタに対する外部拡張モジュール(Python DLL, pyd)として提供されたSpringheadを利用することで，PythonアプリケーションにSpringheadの機能を組み込む利用法です．どちらの場合においても，EmbPythonモジュールはPython側からSpringheadの関数を呼び出すためのインタフェースを提供します．関係を\Fig{epoverview}に示します．\begin{fig}\epscapopt{epoverview}{Python連携とEmbPythonモジュールの位置づけ}{width=0.8\hsize}\end{fig}
 ### 環境変数PATHの設定
@@ -256,7 +263,7 @@ phScene.CreateJoint(so1,so2, Spr.PHHingeJoint.GetIfInfoStatic(), desc)
 
 # Ball
 phScene.CreateJoint(so1,so2, Spr.PHBallJoint.GetIfInfoStatic(),  desc)
-``` 
+```
 IfInfoオブジェクトは*クラス名.GetIfInfoStatic()*で取得することができます．より正確には，ディスクリプタ型によって返すオブジェクトを変えるようなCreate関数は，以下のようにAPIヘッダファイルにおいてテンプレートを用いて記述されています．Python APIでは，非テンプレート版のCreate関数のみがポートされているため，*IfInfo* ii* に相当する引数が必要になります．
 ```python
 // in SprPHScene.h
