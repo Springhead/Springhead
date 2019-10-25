@@ -54,7 +54,7 @@ struct PHSdkIf : public SdkIf{
 
 	//	SDK生成、登録関数
 	///	PHSdkのインスタンスを作成
-	static PHSdkIf* SPR_CDECL CreateSdk();
+	static PHSdkIf* SPR_CDECL CreateSdk(const PHSdkDesc& desc = PHSdkDesc());
 	///	PHSdkをファイルローダーなどに登録
 	static void SPR_CDECL RegisterSdk();
 };
