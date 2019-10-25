@@ -32,7 +32,7 @@ public:
 	virtual int GetDimension() { return dimension; }
 
 	/// Set Initial Value
-	virtual void SetInitialValue(double *initialValue) {
+	virtual void SetInitialValue(const double *initialValue) {
 		for (int i = 0; i < dimension; i++) {this->initialValue[i] = initialValue[i]; }
 	}
 
@@ -127,7 +127,7 @@ public:
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 	/// Set Initial Standard Deviation
-	void SetInitialStdDev(double *initialStdDev) {
+	void SetInitialStdDev(const double *initialStdDev) {
 		for (int i = 0; i < dimension; i++) {
 			this->initialStdDev[i] = initialStdDev[i]; }
 	}
@@ -139,9 +139,10 @@ public:
 	int GetCurrentPopulation() { return currPopulationNum; }
 
 	double GetCs(){ return cs; }
+	double GetLambda() { return lambda; }
 
 };
 
 }
-
 #endif
+
