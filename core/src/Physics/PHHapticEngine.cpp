@@ -83,9 +83,15 @@ bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& 
 	}
 	commonPoint = (w0 + w1) * 0.5;	// 共有点
 
-	if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
-	else state = NEW;
-	lastContactCount = ct;
+	if(dist > 1e-3){
+		// 接触していない
+		state = NONE;
+	}else{							
+		// 接触
+		if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
+		else state = NEW;
+		lastContactCount = ct;
+	}
 	return true;
 }
 
