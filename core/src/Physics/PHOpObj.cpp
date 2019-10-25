@@ -7,9 +7,6 @@
 */
 #include <Physics/PHOpObj.h>
 #include "PHOpDecompositionMethods.h"
-
-//friction 
-
 #define CHECK_INF_ERR
 
 using namespace PTM;
@@ -129,7 +126,6 @@ void PHOpObj::positionPredict()
 	//速度Damp
 	dampVelocities();
 
-
 	for (i = 0; i < assPsNum; i++) {
 		//改良！実際は重力加速度と質量の乗では？
 		PHOpParticle &dp = objPArr[i];
@@ -164,7 +160,7 @@ void PHOpObj::positionPredict()
 		Vec3f &p = dp.pCurrCtr;
 		Vec3f &np = dp.pNewCtr;
 		Vec3f &v = dp.pVelocity;
-
+		
 		if (np.x < params.bounds.min.x || np.x > params.bounds.max.x) {
 			np.x = p.x - v.x * params.timeStep * restitution;
 			np.y = p.y;
@@ -177,6 +173,7 @@ void PHOpObj::positionPredict()
 				np.x = p.x;
 			np.z = p.z;
 			yChanged = true;
+			
 		}
 		if (np.z < params.bounds.min.z || np.z > params.bounds.max.z) {
 			np.z = p.z - v.z * params.timeStep * restitution;
@@ -186,193 +183,11 @@ void PHOpObj::positionPredict()
 				np.y = p.y;
 			zChanged = true;
 		}
-		
         params.bounds.clamp(dp.pNewCtr);
-
-
+		
 	}
+
 }
-
-
-/*
-@brief 位置の予測(摩擦あり)
-*/
-void PHOpObj::positionPredictFriction(PHOpHapticController *myHc)
-{
-	int i = 0;
-	float restitution = 0.9f;
-	//
-	//Gravity Force
-	bool xChanged = false, yChanged = false, zChanged = false;
-
-
-	for (i = 0; i < assPsNum; i++) {
-		PHOpParticle &dp = objPArr[i];
-		if (dp.isFixed)
-		{
-			dp.pExternalForce.clear();
-			continue;
-		}
-		//position predict
-		//gravity
-		if (gravityOn)
-		{
-			dp.pVelocity += params.gravity * params.timeStep;
-		}
-		//external force
-		dp.pVelocity += dp.pExternalForce *params.timeStep / dp.pTempSingleVMass;
-
-#ifdef CHECK_INF_ERR
-		if (!FloatErrorTest::CheckBadFloatValue(dp.pVelocity.z))
-			int u = 0;
-#endif
-
-		//clear
-		dp.pExternalForce.clear();
-	}
-
-	//速度Damp
-	dampVelocities();
-
-
-	for (i = 0; i < assPsNum; i++) {
-		//改良！実際は重力加速度と質量の乗では？
-		PHOpParticle &dp = objPArr[i];
-		dp.pNewCtr = dp.pCurrCtr + dp.pVelocity * params.timeStep;
-
-		//orientation predict
-		Spr::TQuaternion<float> q;
-		float norm = dp.pWvel.norm();
-
-		//norm = fabs(norm);//debug norm abs
-		if (norm <0.001f)
-		{
-			dp.pNewOrint = dp.pCurrOrint;
-		}
-		else
-		{
-			//build quat from axis and radian 
-			Vec3f direction = dp.pWvel / norm;
-			float arcPerSc = norm * params.timeStep;
-
-			float halfAngle = arcPerSc * 0.5f;
-			float scale = sin(halfAngle);
-
-			q.x = scale * direction.x;
-			q.y = scale * direction.y;
-			q.z = scale * direction.z;
-			q.w = cos(halfAngle);
-			dp.pNewOrint = q * dp.pCurrOrint;
-		}
-		//dp.pNewOrint = dp.pCurrOrint;//debug stop predict
-
-		//Boundary of Scene
-		Vec3f &p = dp.pCurrCtr;
-		Vec3f &np = dp.pNewCtr;
-		Vec3f &v = dp.pVelocity;
-
-		if (np.x < params.bounds.min.x || np.x > params.bounds.max.x) {
-			np.x = p.x - v.x * params.timeStep * restitution;
-			np.y = p.y;
-			np.z = p.z;
-			xChanged = true;
-		}
-		if (np.y < params.bounds.min.y || np.y > params.bounds.max.y) {
-			np.y = p.y - v.y * params.timeStep * restitution;
-			if (!xChanged)
-				np.x = p.x;
-			np.z = p.z;
-			yChanged = true;
-
-			dp.isColliedBound = true;
-			dp.pfrictionState = STATIC;
-		}
-		else {
-			dp.isColliedBound = false;
-			dp.pfrictionState = FREE;
-		}
-		if (np.z < params.bounds.min.z || np.z > params.bounds.max.z) {
-			np.z = p.z - v.z * params.timeStep * restitution;
-			if (!xChanged)
-				np.x = p.x;
-			if (!yChanged)
-				np.y = p.y;
-			zChanged = true;
-		}
-
-		params.bounds.clamp(dp.pNewCtr);
-
-		if (dp.isColliedBound && !dp.pType) {
-			//friction constraint
-			bool bStatic = false;
-
-			float mu0 = 0.35f;
-			float mu = 0.3f;
-			float muCur;
-			float timeVaryFrictionA = 0.1f;
-			float timeVaryFrictionB = 1800;
-			float reflexSpring = 2000.0f;
-			float hdt = 0.001f;
-			double alpha = hdt * hdt * reflexSpring / (dp.pTotalMass * 0.001);
-			//	DSTR << "alpha" << alpha << std::endl;
-			if (dp.pfrictionState == STATIC) {
-				muCur = mu; //+ mu*(timeVaryFrictionA * log(1 + timeVaryFrictionB * (dp.fricCount + 1) * hdt));
-			}
-
-			if (dp.pfrictionState == DYNAMIC) {
-				muCur = mu;
-			}
-
-			Vec3d diff = (myHc->userPose * dp.pOrigCtr);
-			Vec3d ortho = Vec3d(0, (diff.y - dp.pNewCtr.y), 0);
-			double depth = ortho.norm();
-			
-			double l = muCur * depth;
-			Vec3d tangent = Vec3d(diff.x - dp.pNewCtr.x, 0, 0);
-			double tangentNorm = tangent.norm();
-			//if (i == 0) DSTR << "alpha" << alpha << std::endl;
-			//if (i == 10) DSTR << "diff" << diff << std::endl;
-			//if (i == 0) DSTR << "dp.pCurrCtr.x" << dp.pCurrCtr.x << std::endl;
-			//if (i == 0) DSTR << "originalpos" << dp.pOrigCtr << std::endl;
-			//if (i == 0) DSTR << "tangent" << tangentNorm << std::endl;
-			double proxyPos, frictionLimit;
-
-			if (tangentNorm > 1e-5) {
-				proxyPos = tangentNorm;
-				double predict = proxyPos; + (v * (tangent / tangentNorm)) * hdt;
-
-				frictionLimit = predict - alpha * (predict - l);
-				
-				if (proxyPos <= frictionLimit) {
-					bStatic = true;
-				}
-				else {
-					bStatic = false;
-					dp.pNewCtr.x = frictionLimit;
-				}
-			}
-			dp.fricCount++;
-			if (!bStatic) {
-				if (dp.pfrictionState != DYNAMIC) {
-					dp.fricCount = 0;
-					dp.pfrictionState = DYNAMIC;
-				}
-			}
-			else {
-				if (dp.pfrictionState != STATIC) {
-					dp.fricCount = 0;
-					dp.pfrictionState = STATIC;
-				}
-			}
-			//if (i == 0 && dp.pfrictionState != STATIC) DSTR << "tangentNorm:" << tangentNorm << std::endl;
-			//if (i == 0 && dp.pfrictionState != STATIC)DSTR << "frictionLimit:" << frictionLimit << std::endl;
-			//if (i == 0 && dp.pfrictionState != STATIC) DSTR << "frictionState" << dp.pfrictionState << std::endl;
-
-		}
-	}
-}
-
-
 /*
 @brief グループMatrixの計算
 */
