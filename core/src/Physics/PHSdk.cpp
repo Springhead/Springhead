@@ -126,7 +126,6 @@ void PHSdk::Clear(){
 	objects.clear();
 	shapes.clear();
 	Sdk::Clear();
-	phSdkInstance = NULL;
 }
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	PHSceneIf* rv = DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
