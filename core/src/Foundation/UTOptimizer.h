@@ -91,12 +91,13 @@ public:
 
 	/// Destruct Values
 	void Clear() {
-		if (initialValue) { delete initialValue; }
-		if (initialStdDev) { delete initialStdDev; }
+		if (initialValue) { delete initialValue; initialValue = NULL; }
+		if (initialStdDev) { delete initialStdDev; initialStdDev = NULL;  }
+		if (finalValue) { delete finalValue;  finalValue = NULL; }
 
 #ifdef USE_CLOSED_SRC
-		if (parameters) { delete parameters; }
-		if (cmaes) { delete cmaes; }
+		if (parameters) { delete parameters; parameters = NULL;  }
+		if (cmaes) { delete cmaes; cmaes = NULL; }
 #endif
 	}
 
