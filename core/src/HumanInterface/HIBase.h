@@ -11,7 +11,6 @@
 #include <Foundation/Object.h>
 #include <SprHumanInterface.h>
 #include <set>
-#include <Physics/PHSolid.h>
 
 namespace Spr{;
 class HIRealDevice;
@@ -114,7 +113,7 @@ public:
 	//@}
 };
 
-class SPR_DLL HIHapticDummy : HIHapticDummyDesc, public HIHaptic{
+class SPR_DLL HIHapticDummy : HIHapticDummyDesc, public HIHaptic {
 public:
 	SPR_OBJECTDEF(HIHapticDummy);
 	HIHapticDummy() {}
