@@ -12,50 +12,82 @@ HumanInterfaceモジュールのすべてのオブジェクトはSDKクラス*HI
 HISdkIf* hiSdk = HISdkIf::CreateSdk();
 ```
 通常この操作はプログラムの初期化時に一度だけ実行します．また，Frameworkモジュールを使用する場合はユーザが直接*HISdk*を作成する必要はありません．
+
+
+
 ## クラス階層とデータ構造
 
+HumanInterfaceモジュールのクラス階層を次図に示します．
+
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/hiclass.svg) 
 
 
-HumanInterfaceモジュールのクラス階層を次図に示します．デバイスには実デバイスと仮想デバイスがあります．実デバイスは現実のハードウェアに対応し，例えばWin32マウスやあるメーカのA/D変換ボードを表す実デバイスがあります．一方，仮想デバイスは実デバイスが提供する機能単位を表し，処理系に依存しません．例えば，1つのA/D変換ポートや抽象化されたマウスインタフェースがこれにあたります．基本的に，初期化時を除いてはユーザは実デバイスに触れることはなく，仮想デバイスを通じてそれらの機能を利用することになります．ヒューマンインタフェースはデバイスよりも高度で抽象化された操作インタフェースを提供します．
+
+デバイスには実デバイスと仮想デバイスがあります．実デバイスは現実のハードウェアに対応し，例えばWin32マウスやあるメーカのA/D変換ボードを表す実デバイスがあります．一方，仮想デバイスは実デバイスが提供する機能単位を表し，処理系に依存しません．例えば，1つのA/D変換ポートや抽象化されたマウスインタフェースがこれにあたります．基本的に，初期化時を除いてはユーザは実デバイスに触れることはなく，仮想デバイスを通じてそれらの機能を利用することになります．ヒューマンインタフェースはデバイスよりも高度で抽象化された操作インタフェースを提供します．
 
 
-次にHumanInterfaceモジュールのデータ構造を次図に示します．*HISdk*オブジェクトはヒューマンインタフェースプールとデバイスプールを持っています．デバイスプールとは実デバイスの集まりで，それぞれの実デバイスはその機能をいくつかの仮想デバイスとして外部に提供します．デバイスの機能を使うには，
+
+次にHumanInterfaceモジュールのデータ構造を下図に示します．
+
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/humaninterface.svg) 
+
+*HISdk*オブジェクトはヒューマンインタフェースプールとデバイスプールを持っています．デバイスプールとは実デバイスの集まりで，それぞれの実デバイスはその機能をいくつかの仮想デバイスとして外部に提供します．
+
+
+
+デバイスの機能を使うには，
 
 1.  実デバイスを作成する
 1.  実デバイスが提供する仮想デバイスにアクセスする
 
 という2段階の手順を踏みます．以下にそれに関係する*HISdk*の関数を紹介します．
 
-|*HISdkIf*																		 |
+|*HISdkIf*																		 ||
 |---|---|
 |_HIRealDeviceIf*_| *AddRealDevice(const IfInfo* ii, const void* desc = NULL)* |
 |_HIRealDeviceIf*_| *FindRealDevice(const char* name)* |
 |_HIRealDeviceIf*_| *FindRealDevice(const IfInfo* ii)*|
 *AddRealDevice*は型情報*ii*とディスクリプタ*desc*を指定して実デバイスを作成します．*FindRealDevice*は名前か型情報を指定して，既存の実デバイスを検索します．たとえば，内部でGLUTを用いるキーボード・マウス実デバイスを取得するには
+
 ```c++
 hiSdk->FindRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
 ```
-とします．仮想デバイスを取得および返却する方法には*HISdk*を介する方法と*HIRealDevice*を直接呼び出す方法の2通りがあります．
+とします．
 
-|*HISdkIf*																							 |
+
+
+仮想デバイスを取得および返却する方法には*HISdk*を介する方法と*HIRealDevice*を直接呼び出す方法の2通りがあります．
+
+|*HISdkIf*																							 ||
 |---|---|
 |_HIVirtualDeviceIf*_| *RentVirtualDevice(const IfInfo* ii, const char* name, int portNo)*	|
 |*bool*			| *ReturnVirtualDevice(HIVirtualDeviceIf* dev)*	|
 *RentVirtualDevice*はデバイスプールをスキャンして型情報に合致した最初の仮想デバイスを返します．実デバイスを限定したい場合は*name*で実デバイス名を指定します．また，複数の仮想デバイスを提供する実デバイスもあります．この場合はポート番号*portNo*で取得したい仮想デバイスを指定できます．デバイスの競合を防ぐために，一度取得された仮想デバイスは利用中状態になります．利用中のデバイスは新たに取得することはできません．使い終わったデバイスは*ReturnVirtualDevice*で返却することによって再び取得可能になります．
 
-|*HIRealDeviceIf*																				 |
+|*HIRealDeviceIf*																				 ||
 |---|---|
 |_HIVirtualDeviceIf*_| *Rent(const IfInfo* ii, const char* name, int portNo)*	|
 |*bool*			| *Return(HIVirtualDeviceIf* dev)*|
 こちらは実デバイスから直接取得，返却するための関数です．機能は同様です．
+
+
+
+
+
 ## 実デバイス
 Springheadではいくつかのメーカ製のハードウェアが実デバイスとしてサポートされていますが，処理系に強く依存する部分であるため本ドキュメントの対象外とします．興味のある方はソースコードを見てください．
+
+
+
+
+
 ## キーボード・マウス
+
 キーボードおよびマウスの機能は包括して1つのクラスとして提供されています．キーボード・マウスの仮想デバイスは*DVKeyMouse*です．実デバイスとしてはWin32 APIを用いる*DRKeyMouseWin32*とGLUTを用いる*DRKeyMouseGLUT*があります．提供される機能に多少の差異があるので注意して下さい．
 ### 仮想キーコード
 Ascii外の特殊キーには処理系依存のキーコードが割り当てられています．この差を吸収するために以下のシンボルが*DVKeyCode*列挙型で定義されています．
 
-|*DVKeyCode*									 |
+|*DVKeyCode*									 ||
 |---|---|
 |*ESC*			| エスケープ			|
 |*F1* - *F12*| ファンクションキー	|
@@ -72,16 +104,12 @@ Ascii外の特殊キーには処理系依存のキーコードが割り当てら
 ### コールバック
 *DVKeyMouse*からのイベントを処理するには*DVKeyMouseCallback*クラスを継承し，イベントハンドラをオーバライドします．*DVKeyMouseCallback*はいくつかのヒューマンインタフェースクラスが継承しているほか，後述するアプリケーションクラス*FWApp*も継承しています．
 
-|*DVKeyMouseCallback*								 |
-|---|---|
-|*virtual bool*| *OnMouse(int button, int state, int x, int y)*		|
-|マウスボタンプッシュ/リリース| 	|
-|*virtual bool*| *OnDoubleClick(int button, int x, int y)*			|
-|ダブルクリック| 	|
-|*virtual bool*| *OnMouseMove(int button, int x, int y, int zdelta)*	|
-|マウスカーソル移動/マウスホイール回転| 	|
-|*virtual bool*| *OnKey(int state, int key, int x, int y)*			|
-|キープッシュ/リリース| 	|
+|*DVKeyMouseCallback*								 |||
+|---|---|---|
+|*virtual bool*| *OnMouse(int button, int state, int x, int y)*		|マウスボタンプッシュ/リリース|
+|*virtual bool*| *OnDoubleClick(int button, int x, int y)*			|ダブルクリック|
+|*virtual bool*| *OnMouseMove(int button, int x, int y, int zdelta)*	|マウスカーソル移動/マウスホイール回転|
+|*virtual bool*| *OnKey(int state, int key, int x, int y)*			|キープッシュ/リリース|
 *OnMouse*はマウスボタンのプッシュあるいはリリースが生じたときに呼び出されます．*button*はイベントに関係するマウスボタンおよびいくつかの特殊キーの識別子を保持し，その値は*DVButtonMask*列挙子の値のOR結合で表現されます．*state*はマウスボタン状態変化を示し，*DVButtonSt*列挙子のいずれかの値を持ちます．*x*，*y*はイベント生成時のカーソル座標を表します．例として，左ボタンのプッシュイベントを処理するには次のようにします．
 ```c++
 // inside your class definition ...
@@ -93,7 +121,7 @@ virtual bool OnMouse(int button, int state, int x, int y){
 ```
 *OnDoubleClick*はマウスボタンのダブルクリックが生じたときに呼ばれます．引数の定義は*OnMouse*と同様です．*OnMouseMove*はマウスカーソルが移動するか，マウスホイールが回転した際に呼ばれます．*button*は直前のマウスプッシュイベントにおいて*OnMouse*に渡されたのと同じ値を持ちます．*x*, *y*は移動後のカーソル座標，*zdelta*はマウスカーソルの回転量です．*OnKey*はキーボードのキーがプッシュされるかリリースされた際に呼ばれます．*state*は*DVKeySt*列挙子の値を持ちます．*key*はプッシュあるいはリリースされたキーの仮想キーコードを保持します．以下に関連する列挙子の定義を示します．
 
-|*DVButtonMask*									 |
+|*DVButtonMask*									 ||
 |---|---|
 |*LBUTTON*			| 左ボタン				|
 |*RBUTTON*			| 右ボタン				|
@@ -103,13 +131,13 @@ virtual bool OnMouse(int button, int state, int x, int y){
 |*ALT*				| Altキー押し下げ		|
 
 
-|*DVButtonSt*								 |
+|*DVButtonSt*								 ||
 |---|---|
 |*DOWN*		| ボタンプッシュ		|
 |*UP*			| ボタンリリース		|
 
 
-|*DVKeySt*								 |
+|*DVKeySt*								 ||
 |---|---|
 |*PRESSED*	| 押されている			|
 |*TOGGLE_ON*	| トグルされている		|
@@ -117,22 +145,35 @@ virtual bool OnMouse(int button, int state, int x, int y){
 ### APIとして提供される機能
 以下に*DVKeyMouse*の関数を示します．
 
-|*DVKeyMouseIf*																		 |
+|*DVKeyMouseIf*																		 ||
 |---|---|
 |*void*| *AddCallback(DVKeyMouseCallback*)* 	|
 |*void*| *RemoveCallback(DVKeyMouseCallback*)* 	|
 |*int*| *GetKeyState(int key)*					|
 |*void*| *GetMousePosition(int& x, int& y, int& time, int count=0)*|
 *AddCallback*はコールバッククラスを登録します．一つの仮想デバイスに対して複数個のコールバックを登録できます．*RemoveCallback*は登録済のコールバッククラスを解除します．*GetKeyState*は*DVKeyCode*で指定したキーの状態を*DVKeySt*の値で返します．*GetMousePosition*は*count*ステップ前のマウスカーソルの位置を取得するのに用います．ただし*count*は*0*以上*63*以下でなければなりません．*x*, *y*にカーソル座標が，*time*にタイムスタンプが格納されます．
+
 ### サポート状況に関する注意
 使用する実デバイスによっては一部の機能が提供されないので注意して下さい．*OnMouseMove*においてマウスホイールの回転量を取得するには，実デバイスとして*DRKeyMouseWin32*を使用するか，freeglutとリンクしてビルドしたSpringhead上で*DRKeyMouseGLUT*を使用する必要があります．*OnKey*においてキーのトグル状態を取得するには実デバイスとして*DRKeyMouseWin32*を使用する必要があります．*GetKeyState*は*DRKeyMouseWin32*でのみサポートされます．*GetMousePosition*において，タイムスタンプを取得するには*DRKeyMouseWin32*を用いる必要があります．
+
+
+
+
+
 ## ジョイスティック
+
 ジョイスティックの仮想デバイスは*DVJoyStick*です．実デバイスとしてはGLUTを用いる*DRJoyStickGLUT*のみがあります．T.B.D.
+
+
+
+
+
 ## トラックボール
 
+トラックボールはキーボード・マウスにより並進・回転の6自由度を入力するヒューマンインタフェースです．トラックボールを使うことにより，カメラを注視点まわりに視点変更することができるようになります．トラックボールを操作する方法には，APIを直接呼び出す方法と，仮想マウスにコールバック登録する方法の二通りがあります．同様に，トラックボールの状態を取得する方法にもAPI呼び出しとコールバック登録の二通りがあります．仮想マウスとトラックボールおよびユーザプログラムの関係を次図に示します．
 
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/hitrackball.svg) 
 
-トラックボールはキーボード・マウスにより並進・回転の6自由度を入力するヒューマンインタフェースです．トラックボールを使うことにより，カメラを注視点まわりに視点変更することができるようになります．トラックボールを操作する方法には，APIを直接呼び出す方法と，仮想マウスにコールバック登録する方法の二通りがあります．同様に，トラックボールの状態を取得する方法にもAPI呼び出しとコールバック登録の二通りがあります．仮想マウスとトラックボールおよびユーザプログラムの関係を\figurename\ref{fig_trackball}に示します．
 ### 回転中心と回転角度
 カメラの位置と向きは，注視点，経度角，緯度角および注視点からの距離によって決まります．
 
@@ -203,7 +244,6 @@ virtual bool OnMouse(int button, int state, int x, int y){
 |*void* | *SetTrnMask(int mask)*		|
 *rotMask*, *zoomMask*, *trnMask*はそれぞれ回転操作，ズーム操作，平行移動操作に割り当てたいマウスボタンに対応する*OnMouseMove*の*button*引数の値を表します．以下に対応関係をまとめます．
 
-|toprule|
 |マウス移動方向	| *button*値	| 変化量		 |
 |---|---|---|
 |左右			| *rotMask*	| 経度			|
@@ -245,5 +285,12 @@ virtual bool OnMouse(int button, int state, int x, int y){
 render->SetViewMatrix(trackball->GetAffine().inv());
 ```
 
+
+
+
+
+
+
 ## Spidar
+
 Spidarはワイヤ駆動型の3軸・6軸力覚提示ヒューマンインタフェースです．T.B.D.

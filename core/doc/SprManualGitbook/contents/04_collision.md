@@ -4,7 +4,7 @@ Collisionモジュールは物理計算の基礎となる衝突判定機能を�
 
 Collisionモジュールのクラス階層を次図に示します．衝突判定形状はすべて`CDShape`から派生します．アルゴリズムの性質上，形状はすべて凸形状でなければなりません．
 
-
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdclass.svg) 
 
 
 
@@ -30,7 +30,7 @@ CDBoxIf* box = phSdk->CreateShape(desc)->Cast();
 
 solid->AddShape(box);         // first box
 ```
-剛体クラス`PHSolid`については\ref{chap_physics}章を参照してください．ここで重要なことは，一度作成した形状は1つの剛体にいくつでも登録でき，また異なる複数の剛体にも登録できるということです．つまり，同じ形状を複数の剛体間で共有することで，形状の作成コストやメモリ消費を抑えることができます．`AddShape`関数で登録した直後の形状は，剛体のローカル座標系の原点に位置しています．これを変更したい場合は`SetShapePose`関数を使います．
+剛体クラス`PHSolid`については[Physics](05_physics.html)の項目を参照してください．ここで重要なことは，一度作成した形状は1つの剛体にいくつでも登録でき，また異なる複数の剛体にも登録できるということです．つまり，同じ形状を複数の剛体間で共有することで，形状の作成コストやメモリ消費を抑えることができます．`AddShape`関数で登録した直後の形状は，剛体のローカル座標系の原点に位置しています．これを変更したい場合は`SetShapePose`関数を使います．
 ```c++
 solid->AddShape(box);         // second box
 solid->AddShape(box);         // third box 
@@ -42,71 +42,95 @@ solid->SetShapePose(0, Posed(Vec3d(1.0, 0.0, 0.0), Quaterniond());
 solid->SetShapePose(1, Posed(Vec3d(),
                     Quaterniond::Rot(Rad(30.0), 'y')));
 ```
-`SetShapePose`の第1引数は操作する形状の番号です．最初に`AddShape`した形状の番号が*0*で，`AddShape`するたびに*1*増加します．形状の位置や向きは剛体のローカル座標系で指定します．また，形状の位置・向きを取得するには`GetShapePose`関数を使います．以下ではSpringheadでサポートされている形状を種類別に解説します．
+`SetShapePose`の第1引数は操作する形状の番号です．最初に`AddShape`した形状の番号が*0*で，`AddShape`するたびに*1*増加します．形状の位置や向きは剛体のローカル座標系で指定します．また，形状の位置・向きを取得するには`GetShapePose`関数を使います．
+
+
+
+以下ではSpringheadでサポートされている形状を種類別に解説します．
+
+
+
 ### 直方体
 
+直方体のクラスは*CDBox*です．
 
-
-直方体(次図)のクラスは*CDBox*です．
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdbox.svg) 
 
 |*CDBoxDesc*| | 					 |
 |---|---|---|
 |*Vec3f*|	*boxsize*| 各辺の長さ 	|
-|*CDBoxIf*| | 					 |
+
+|*CDBoxIf*| |
+|---|---|
 |*Vec3f GetBoxSize()*| 			|
 |*void SetBoxSize(Vec3f)*| 		|
 
+
+
 ### 球
 
+球のクラスは`CDSphere`です．
 
-
-球(次図)のクラスは`CDSphere`です．
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdsphere.svg) 
 
 |*CDSphereDesc*| | 				 |
 |---|---|---|
 |*float*|	*radius*| 半径 				|
-|*CDSphereIf*| | 					 |
+
+|*CDSphereIf*| |
+|---|---|
 |*float GetRadius()*| 			|
 |*void SetRadius(float)*| 		|
 
+
+
 ### カプセル
 
+カプセルのクラスは`CDCapsule`です．カプセルは円柱の両端に半球がついた形をしています．
 
-
-カプセル(次図)のクラスは`CDCapsule`です．カプセルは円柱の両端に半球がついた形をしています．
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdcapsule.svg) 
 
 |*CDCapsuleDesc*| | 				 |
 |---|---|---|
 |*float*|	*radius*| 半球の半径 		|
 |*float*|	*length*| 円柱の長さ		|
-|*CDCapsuleIf*| | 				 |
+
+|*CDCapsuleIf*| |
+|---|---|
 |*float GetRadius()*| 			|
 |*void SetRadius(float)*| 		|
 |*float GetLength()*| 			|
 |*void SetLength(float)*| 		|
 
+
+
 ### 丸コーン
 
+丸コーンのクラスは`CDRoundCone`です．丸コーンはカプセルの両端の半径が非対称になったものです．
 
-
-丸コーン(次図)のクラスは`CDRoundCone`です．丸コーンはカプセルの両端の半径が非対称になったものです．
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdroundcone.svg) 
 
 |*CDRoundConeDesc*| | 			 |
 |---|---|---|
 |*Vec2f*|	*radius*| 各半球の半径		|
 |*float*|	*length*| 半球間の距離		|
-|*CDRoundConeIf*| | 				 |
+
+|*CDRoundConeIf*| |
+|---|---|
 |*Vec2f GetRadius()*| 			|
 |*void SetRadius(Vec2f)*| 		|
 |*float GetLength()*| 			|
 |*void SetLength(float)*| 		|
-|*void SetWidth(Vec2f)*| 		|
-*SetWidth*関数は，丸コーンの全長を保存したまま半径を変更します．
+|*void SetWidth(Vec2f)*|丸コーンの全長を保存したまま半径を変更します．|
+
+
+
+
 ### 凸メッシュ
 
-
-
 凸メッシュ(次図)のクラスは`CDConvexMesh`です．凸メッシュとは凹みや穴を持たない多面体です．頂点座標を指定することで自由な形を作成することができます．
+
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdconvexmesh.svg) 
 
 |*CDConvexMeshDesc*| | 						 |
 |---|---|---|
@@ -130,6 +154,9 @@ int* idx = face->GetIndices();
 Vec3f v = mesh->GetVertices()[idx[0]];    // get 0-th vertex
 ```
 とします．
+
+
+
 ## 物性の指定
 形状には摩擦係数や跳ね返り係数などの物性を指定することができます．形状の基本クラスである*CDShape*のディスクリプタ*CDShapeDesc*は*PHMaterial*型の変数*material*を持っています．
 
@@ -163,8 +190,12 @@ Vec3f v = mesh->GetVertices()[idx[0]];    // get 0-th vertex
 |*float GetFrictionSpring()*| 		| |
 |*void SetFrictionDamper(float)*| 	| |
 |*float GetFrictionDamper()*| 		| |
-物性に基づいた接触力の具体的な計算法については第\ref{sec_physics_contact}節を参照して下さい．
+物性に基づいた接触力の具体的な計算法については[Physics](05_physics.html)の項目を参照して下さい．
+
+
+
 ## 幾何情報の計算
+
 形状に関する幾何情報を計算する関数を紹介します．
 
 |*CDShapeIf*| | 							 |
@@ -173,3 +204,4 @@ Vec3f v = mesh->GetVertices()[idx[0]];    // get 0-th vertex
 |*Vec3f CalcCenterOfMass()*| 		| 質量中心を計算	|
 |*Matrix3f CalcMomentOfInertia()*| 	| 慣性行列を計算	|
 *CalcVolume*は形状の体積を計算します．体積に密度（*GetDensity*で取得）を掛ければ質量が得られます．*CalcCenterOfMass*関数は，形状のローカル座標系で表された質量中心の座標を計算します．*CalcMomentOfInertia*関数は，形状のローカル座標系で表された質量中心に関する慣性行列を計算します．ただし，密度を*1*とした場合の値が返されますので，実際の慣性行列を得るには密度を掛ける必要があります．
+

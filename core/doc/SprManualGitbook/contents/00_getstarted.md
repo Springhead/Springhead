@@ -26,9 +26,20 @@ Springheadは処理系非依存の思想のもとで開発されています．�
 
 ソリューションを開いたら次図に示すように`Springhead`プロジェクトをビルドしてください．
 
+![img-0003](images/00_getstarted/img-0003.png)
 
+ビルドに成功したら`C:\Springhead\generated\lib\win32\`または`C:\Springhead\generated\lib\win64\`ディレクトリにライブラリファイルが作成されるはずです．
 
-ビルドに成功したら`C:\Springhead\generated\lib\win32\`または`C:\Springhead\generated\lib\win64\`ディレクトリにライブラリファイルが作成されるはずです．次表に示すように，ビルドの設定ごとに異なるいくつかの構成が用意されています．ユーザアプリケーションの都合に合わせて使い分けてください．
+次表に示すように，ビルドの設定ごとに異なるいくつかの構成が用意されています．ユーザアプリケーションの都合に合わせて使い分けてください．
+
+| 構成名  | ビルド設定              | 作成されるライブラリファイル名 |
+| ------- | ----------------------- | ------------------------------ |
+| Release | multithread, DLL        | Springhead##.lib               |
+| Debug   | multithread, Debug, DLL | Springhead##D.lib              |
+| Trace   | multithread, Debug, DLL | Springhead##T.lib              |
+
+- `##` はVisual Studioバージョンと、プラットフォームを表す`Win32`または`x64`の組み合わせです（`15.0x64`など）。
+- Trace構成とは、フレームポインタ情報付きRelease構成のことです。
 
 
 
@@ -40,14 +51,22 @@ Springheadは処理系非依存の思想のもとで開発されています．�
 
 に移動して`BoxStack15.0.sln`を開きます．`BoxStack`をスタートアッププロジェクトに設定し，ビルド，実行してください．実行時にDLLが見つからないためにエラーが起こるかもしれません。その場合には，32ビット環境ならば
 
-`Springhead\core\bin\win32`, `Springhead\dependency\bin\win32`
+- `Springhead\core\bin\win32`
+- `Springhead\dependency\bin\win32`
 
 64ビット環境ならば
 
-`Springhead\core\bin\win64`，`Springhead\dependency\bin\win64`\\
-`Springhead\core\bin\win32`，`Springhead\dependency\bin\win32`
+- `Springhead\core\bin\win64`
+
+- `Springhead\dependency\bin\win64`
+
+- `Springhead\core\bin\win32`
+- `Springhead\dependency\bin\win32`
 
 のすべてにPathを通してください。
+
+
+
 ## アプリケーションの作成
 
 
@@ -55,7 +74,19 @@ Springheadを使って簡単なアプリケーションプログラムを作成�
 ### プロジェクトの作成
 「Visual C++ Windows >  デスクトップ ウィザード」を作成します．作成するディレクトリを `C:\Experiments` と仮定します．他のディレクトリに作成する場合には，プロジェクトに指定するインクルードファイル及びライブラリファイルのパスが，保存したSpringheadを正しく参照するように注意してください．プロジェクト名は好きな名前を付けてください．アプリケーションの設定で「コンソールアプリケーション」を選び，空のプロジェクトをチェックします．
 
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject1.svg) 
+
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject2.svg) 
+
+
+
+
+
 プロジェクトを作成したら「プロジェクト >  新しい項目の追加 >  C++ファイル(.cpp)」としてソースファイルを作成します．ここでは仮に`main.cpp`とします．
+
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject3.svg) 
+
+
 
 ### ソースコードの編集
 
@@ -107,14 +138,17 @@ int main(int argc, char* argv[]){
 64ビットプラットフォームを使用する場合には，プロパティーページの「構成マネージャー」で「`x64`」プラットフォームを新規作成して選択しておきます．また，[ライブラリのビルド](#ライブラリのビルド)は済んでいるものとします．
 
 1. まずプロジェクトのプロパティページを開き，構成を「すべての構成」としてください．
+2. 次に「C/C++ >  全般 >  追加のインクルードディレクトリ」に，次図のようにSpringheadのインクルードファイルへのパスを指定してください． ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject4.svg) 
+3. さらに，「リンカー >  全般 >  追加のライブラリディレクトリ」に次図のようにSpringheadのライブラリファイルへのパスを指定します(64ビット構成の場合は`win32`の代わりに`win64`を指定します)． ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject5.svg) 
+4. 今度は構成を「Debug」にします．「C/C++ >  コード生成 >  ランタイムライブラリ」を「マルチスレッド デバッグ DLL(`/MDd`)」にします．次に「リンカー >  入力 >  追加の依存ファイル」に`Springhead15.0DWin32.lib` (または`Springhead15.0Dx64.lib`)を追加してください． ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject6_truncate.svg) 
+5. 最後に構成を「Release」に切り替えて同様の設定をします．ランタイムライブラリを「マルチスレッド DLL(`/MD`)」として，追加の依存ファイルに`Springhead15.0Win32.lib` (または`Springhead15.0Dx64.lib`)を追加します． ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject7_truncate.svg) 
 
-2. 次に「C/C++ >  全般 >  追加のインクルードディレクトリ」に，次図のようにSpringheadのインクルードファイルへのパスを指定してください．
-3. さらに，「リンカー >  全般 >  追加のライブラリディレクトリ」に次図のようにSpringheadのライブラリファイルへのパスを指定します(64ビット構成の場合は`win32`の代わりに`win64`を指定します)．
-4. 今度は構成を「Debug」にします．「C/C++ >  コード生成 >  ランタイムライブラリ」を「マルチスレッド デバッグ DLL(`/MDd`)」にします．次に「リンカー >  入力 >  追加の依存ファイル」に`Springhead15.0DWin32.lib` (または`Springhead15.0Dx64.lib`)を追加してください．
-5. 最後に構成を「Release」に切り替えて同様の設定をします．ランタイムライブラリを「マルチスレッド DLL(`/MD`)」として，追加の依存ファイルに`Springhead15.0Win32.lib` (または`Springhead15.0Dx64.lib`)を追加します．
+
 
 
 
 ## ビルド・実行
+
 以上で準備完了です．ビルド(F7)して，実行(F5)してみてください．次のような画面が出てくれば成功です．
 
+ ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/newproject8.svg) 
