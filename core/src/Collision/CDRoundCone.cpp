@@ -45,50 +45,117 @@ bool CDRoundCone::IsInside(const Vec3f& p){
 }
 
 float CDRoundCone::CalcVolume(){
-	return  CDShape::CalcHemisphereVolume(radius[0]) +
-			CDShape::CalcHemisphereVolume(radius[1]) +
-			(1.0f/3.0f) * (float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length;
+	float sinTheta = (radius[1] - radius[0]) / length;
+	float cosTheta = sqrt(1 - pow((radius[1] - radius[0]) / length, 2.0f));
+	float zMinus = -(length / 2.0f) - radius[0];
+	float zZero = -(length / 2.0f) - radius[0] * sinTheta;
+	float zOne = length / 2.0f - radius[1] * sinTheta;
+	float zPlus = length / 2.0f + radius[1];
+
+	float volumeR0 = M_PI * radius[0]*radius[0] * (zZero - zMinus) -
+		(M_PI / 3.0f)*(pow((zZero + length / 2.0f), 3.0f) - pow(zMinus + length/2.0f, 3.0f));
+	float volumeR1 = M_PI * radius[1] * radius[1] * (zPlus - zOne) +
+		(M_PI / 3.0f)*(pow(length / 2.0f - zPlus, 3.0f) - pow(length / 2.0f - zOne, 3.0f));
+	float volumeCone = M_PI * pow((radius[0] + radius[1]) * cosTheta,2.0f)/4.0f*(length - radius[0]*sinTheta + radius[1] * sinTheta);
+	//DSTR << " length " << length << " r0 " << radius[0] << " r1 " <<radius[1] << 
+	//	"sinTheta " << sinTheta << " cosTheta " << cosTheta <<
+	//	" zMinus " << zMinus << " zZero " << zZero << " zOne " << zOne <<
+	//	" zPlus " << zPlus << std::endl << " volumeR0 " << volumeR0 << " volumeR1 " << volumeR1 << " volumeCone " << volumeCone <<std::endl;
+	
+	return volumeR0 + volumeR1 + volumeCone;
+	//return  CDShape::CalcHemisphereVolume(radius[0]) +
+	//		CDShape::CalcHemisphereVolume(radius[1]) +
+	//		(1.0f/3.0f) * (float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length;
 }
 
 Vec3f CDRoundCone::CalcCenterOfMass(){
-	// 半球の半径が等しければ重心は原点に一致
-	const float eps = 1.0e-10f;
-	if(std::abs(radius[0] - radius[1]) < eps)
-		return Vec3f();
-	
-	// 下の半球，上の半球，大円錐，小円錐（切り取られる方）の体積と重心
-	float V[4];
-	float c[4];
-	float halfl = 0.5f * length;
-	float lcone;
-	float com;
+	float sinTheta = (radius[1] - radius[0]) / length;
+	float cosTheta = sqrt(1 - pow((radius[1] - radius[0]) / length, 2.0f));
+	float tanTheta = sinTheta / cosTheta;
+	float zMinus = -(length / 2.0f) - radius[0];
+	float zZero = -(length / 2.0f) - radius[0] * sinTheta;
+	float zOne = length / 2.0f - radius[1] * sinTheta;
+	float zPlus = length / 2.0f + radius[1];
+	float density = GetDensity();
 
-	V[0] = CDShape::CalcHemisphereVolume(radius[0]);
-	V[1] = CDShape::CalcHemisphereVolume(radius[1]);
-	c[0] = -halfl - CDShape::CalcHemisphereCoM(radius[0]);
-	c[1] =  halfl + CDShape::CalcHemisphereCoM(radius[1]);
+	// 球の中にすべて含まれる場合
+	if((radius[0] >= radius[1]) && radius[0] >= length + radius[1]){
+		return Vec3f(0, 0, -length / 2);
+	}else if ((radius[1] >= radius[0]) && radius[1] >= length + radius[0]) {
+		return Vec3f(0, 0, length / 2);
+	}else {
+		float r0 = density * M_PI *(pow(radius[0], 2.0f) * (pow(zZero, 2.0f) - pow(zMinus, 2.0f)) / 2.0f -
+			(zZero*pow(length / 2.0f + zZero, 3.0f) -
+				zMinus * pow(length / 2.0f + zMinus, 3.0f)) / 3.0f +
+				(pow(length / 2 + zZero, 4.0f) - pow(length / 2 + zMinus, 4.0f)) / 12.0f);
+		float r1 = density * M_PI *(pow(radius[1], 2.0f) * (pow(zPlus, 2.0f) - pow(zOne, 2.0f)) / 2.0f +
+			(zPlus*pow(length / 2.0f - zPlus, 3.0f) -
+				zOne * pow(length / 2.0f - zOne, 3.0f)) / 3.0f +
+				(pow(length / 2 - zPlus, 4.0f) - pow(length / 2 - zOne, 4.0f)) / 12.0f);
 
-	if(radius[0] > radius[1]){
-		lcone = (radius[1]/(radius[0]-radius[1]))*length;
-		V[2] = CDShape::CalcConeVolume(radius[0], lcone + length);
-		V[3] = CDShape::CalcConeVolume(radius[1], lcone);
-		c[2] = -halfl + CDShape::CalcConeCoM(lcone + length);
-		c[3] =  halfl + CDShape::CalcConeCoM(lcone);
+		float tempVar = radius[0] * cosTheta + length * tanTheta / 2.0f + radius[0] * sinTheta*tanTheta;
+		float cone = 0;
+		// tanThetaが0の時0割になってしまうのでその場合は0にする
+		if (abs(tanTheta) >= 1.0e-05) {
+			cone = density * M_PI *((zOne*pow(zOne*tanTheta + tempVar, 3.0f) -
+				zZero * pow(zZero*tanTheta + tempVar, 3.0f)) / (3.0f * tanTheta) -
+				((pow(zOne*tanTheta + tempVar, 4.0f) -
+					pow(zZero*tanTheta + tempVar, 4.0f)) / (12.0f * pow(tanTheta, 2.0f))));
+		}
+		//float cone = density * M_PI * ((pow(zOne, 2.0f) - pow(zZero, 2.0f))*
+		//	(radius[0] * cosTheta + length * tanTheta / 2.0f + radius[0] * sinTheta*tanTheta) / 2.0f +
+		//	(pow(zOne, 3.0f) - pow(zZero, 3.0f))*tanTheta / 3.0f);
+
+		//DSTR << " length " << length << " r0 " << radius[0] << " r1 " << radius[1] <<
+		//	"sinTheta " << sinTheta << " cosTheta " << cosTheta << " tanTheta " << tanTheta <<
+		//	" zMinus " << zMinus << " zZero " << zZero << " zOne " << zOne <<
+		//	" zPlus " << zPlus << std::endl << " r0 " << r0 << " r1 " << r1 <<
+		//	" cone " << cone << " mu " << density << " volume " << CalcVolume() <<
+		//	" M " << CalcVolume()*density << " tasu " << r0 + r1 + cone <<
+		//	" ans " << (r0 + r1 + cone) / (CalcVolume()*density) << std::endl;
+		//DSTR << pow(radius[0], 2.0f) * (pow(zZero, 2.0f) - pow(zMinus, 2.0f)) / 2.0f << " " <<
+		//	pow(radius[1], 2.0f) * (pow(zPlus, 2.0f) - pow(zOne, 2.0f)) / 2.0f << std::endl;
+		//DSTR << (zZero*pow(length / 2.0f + zZero, 3.0f) -
+		//	zMinus * pow(length / 2.0f + zMinus, 3.0f)) / 3.0f << " " <<
+		//	(zPlus*pow(length / 2.0f - zPlus, 3.0f) -
+		//		zOne * pow(length / 2.0f - zOne, 3.0f)) / 3.0f << std::endl;
+		return Vec3f(0, 0, (r0 + r1 + cone) / (CalcVolume()*density));
 	}
-	else{
-		lcone = (radius[0]/(radius[1]-radius[0]))*length;
-		V[2] = CDShape::CalcConeVolume(radius[1], lcone + length);
-		V[3] = CDShape::CalcConeVolume(radius[0], lcone);
-		c[2] =  halfl - CDShape::CalcConeCoM(lcone + length);
-		c[3] = -halfl - CDShape::CalcConeCoM(lcone);
-	}
-	com = (V[0]*c[0] + V[1]*c[1] + V[2]*c[2] - V[3]*c[3]) / (V[0] + V[1] + V[2] + V[3]);
-	//	return Vec3f(0.0f, 0.0f, com);
-	//	多分バグがあるのではと思います。
-	return Vec3f(0.0f, 0.0f, -com);
 }
 
 Matrix3f CDRoundCone::CalcMomentOfInertia(){
+/*
+ * z成分は求めれたがxとy成分が上手くいかない
+	float sinTheta = (radius[1] - radius[0]) / length;
+	float cosTheta = sqrt(1 - pow((radius[1] - radius[0]) / length, 2.0f));
+	float tanTheta = sinTheta / cosTheta;
+	float zMinus = -(length / 2.0f) - radius[0];
+	float zZero = -(length / 2.0f) - radius[0] * sinTheta;
+	float zOne = length / 2.0f - radius[1] * sinTheta;
+	float zPlus = length / 2.0f + radius[1];
+	float density = GetDensity();
+	float r0 = (density*M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zZero - zMinus) -
+		(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(zZero + length / 2, 3.0f) - (pow(zMinus + length / 2, 3.0f))) +
+		(1.0f / 5.0f)*(pow(zZero + length / 2.0f, 5.0f) - pow(zMinus + length / 2.0f, 5.0f)));
+	float r1 = (density*M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zPlus - zOne) +
+		(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(length / 2 - zPlus, 3.0f) - (pow(length / 2 -zOne, 3.0f))) -
+		(1.0f / 5.0f)*(pow(length / 2.0f - zPlus, 5.0f) - pow(length / 2.0f - zOne, 5.0f)));
+	float tempVar = radius[0] * cosTheta + length * tanTheta / 2.0f + radius[0] * sinTheta*tanTheta;
+	float cone = (density*M_PI / (10.0f*tanTheta))*(pow(zOne*tanTheta + tempVar, 5.0f) - 
+		pow(zZero*tanTheta + tempVar, 5.0f));
+
+	DSTR << "cone "<<cone << " r0 "<<r0 << " r1 " << r1  <<" Iz Inertia "<<r0 + r1 + cone << std::endl;
+	float Iz = r0 + r1 + cone;
+	float Ix = (1 / 2)*Iz  - GetVolume()*pow(GetCenterOfMass().z,2.0f);
+	
+	Matrix3f I;
+	I.zz = Iz;
+	I.xx = Ix;
+	I.yy = Ix;
+	DSTR << I << std::endl;
+	
+	return I;
+*/
 	//	試しに球２つにしてみる
 #if 1
 	//	球: 2/5 * mr^2
