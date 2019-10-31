@@ -125,7 +125,6 @@ Vec3f CDRoundCone::CalcCenterOfMass(){
 }
 
 Matrix3f CDRoundCone::CalcMomentOfInertia(){
- // z成分は求めれたがxとy成分が上手くいかない
 	float sinTheta = (radius[1] - radius[0]) / length;
 	float cosTheta = sqrt(1 - pow((radius[1] - radius[0]) / length, 2.0f));
 	float tanTheta = sinTheta / cosTheta;
@@ -133,138 +132,66 @@ Matrix3f CDRoundCone::CalcMomentOfInertia(){
 	float zZero = -(length / 2.0f) - radius[0] * sinTheta;
 	float zOne = length / 2.0f - radius[1] * sinTheta;
 	float zPlus = length / 2.0f + radius[1];
-	float r0 = (M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zZero - zMinus) -
-		(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(zZero + length / 2, 3.0f) - (pow(zMinus + length / 2, 3.0f))) +
-		(1.0f / 5.0f)*(pow(zZero + length / 2.0f, 5.0f) - pow(zMinus + length / 2.0f, 5.0f)));
-	float r1 = (M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zPlus - zOne) +
-		(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(length / 2 - zPlus, 3.0f) - (pow(length / 2 -zOne, 3.0f))) -
-		(1.0f / 5.0f)*(pow(length / 2.0f - zPlus, 5.0f) - pow(length / 2.0f - zOne, 5.0f)));
-	float tempVar = radius[0] * cosTheta + length * tanTheta / 2.0f + radius[0] * sinTheta*tanTheta;
-	float cone = (M_PI / (10.0f*tanTheta))*(pow(zOne*tanTheta + tempVar, 5.0f) - 
-		pow(zZero*tanTheta + tempVar, 5.0f));
 
-	//DSTR << "RoundCone "<<cone << " r0 "<<r0 << " r1 " << r1  <<" Iz Inertia "<<r0 + r1 + cone << std::endl;
-	float Iz = r0 + r1 + cone;
-	float g = CalcCenterOfMass().z;
-	float r0Ix = M_PI *(1.0f/60.0f)* (12*pow(zMinus,5) + 15 *pow(zMinus,4)* (length - 2* g) + 5 *pow(zMinus,3)* 
-		(4 *Square(g) - 8* g* length + Square(length) - 4 *Square(radius[0])) + 15 *Square(zMinus)* g *(2* g* length - Square(length) + 
-			4 *pow(radius[0],2)) + 15 *zMinus *pow(g,2) *(pow(length,2) - 4 *pow(radius[0],2)) -
-		zZero *(12* pow(zZero,4) + 15 *pow(zZero,3) *(length - 2 *g) + 5 *pow(zZero,2) *(4 *pow(g,2) -
-			8 *g* length + pow(length,2) - 4* pow(radius[0],2)) + 15* zZero* g *(2 *g *length - pow(length,2) + 
-				4* pow(radius[0],2)) + 15 *pow(g,2)* (pow(length,2) - 4 *pow(radius[0],2))));
 	
-	float r1Ix = M_PI*(1.0f/60.0f)* (12* pow(zOne,5) - 15* pow(zOne,4) *(2* g + length) + 5* pow(zOne,3) *
-		(4 *pow(g,2) + 8 *g* length + pow(length,2) - 4 *pow(radius[1],2)) - 15* pow(zOne,2) *g* (2* g *length + pow(length,2) - 
-			4 *pow(radius[1],2)) + 15 *zOne *pow(g,2) *(pow(length,2) - 4 *pow(radius[1],2)) + 
-		zPlus *((-12) *pow(zPlus,4) + 15 *pow(zPlus,3) *(2* g + length) - 5 *pow(zPlus,2) *(4 *pow(g,2) + 
-			8* g* length + pow(length,2) - 4* pow(radius[1],2)) + 15* zPlus* g* (2* g* length + pow(length,2) - 
-				4* pow(radius[1],2)) - 15* pow(g,2) *(pow(length,2) - 4* pow(radius[1],2))));
-	float coneIx = M_PI * (1.0f/30.0f)* (-6.0f* pow(zZero,5)* Square(tanTheta) + 15 *pow(zZero,4)* tanTheta* (g* tanTheta - tempVar) - 10.0f *pow(zZero,3.0f)* (Square(tempVar) - 4.0f* tempVar* g* tanTheta + Square(g)*Square(tanTheta)) + 30.0f* Square(zZero)* tempVar *g *(tempVar - g *tanTheta) - 
-		30 *zZero* Square(tempVar)* Square(g) + zOne *(6.0f * pow(zOne,4)*Square(tanTheta) + 15 *pow(zOne,3) *tanTheta* (tempVar - g *tanTheta) + 10 *Square(zOne)* (Square(tempVar) - 4 *tempVar* g *tanTheta + Square(g)*Square(tanTheta)) - 30 *zOne* tempVar* g* (tempVar - g* tanTheta) + 30 * Square(tempVar) *Square(g)));
-	
-	//DSTR << "RoundCone Ix r0"<<r0Ix<<" r1 " <<r1Ix << " cone " << coneIx << std::endl;
-	float Ix = (1.0f / 2.0f)*Iz + r0Ix + r1Ix + coneIx;
-	Matrix3d I;
-	I.zz = Iz;
-	I.xx = Ix;
-	I.yy = Ix;
-	return I;
-/*
-	//	試しに球２つにしてみる
-#if 1
-	//	球: 2/5 * mr^2
-	Matrix3f I = Matrix3f(0,0,0,0,0,0,0,0,0);
-	I.xx = I.yy = I.zz= (2.0/5.0) * Square(radius[0]) + Square(radius[1]);
-	I.zz += Square(length / 2);
-	return I;
-#else	//以前のコード多分バグあり
-	// 上下の半球と間の円錐台の慣性行列を足し合せる
-	// 円錐台は半径が等しい場合は円柱，異なる場合は大小円錐の引き算
-	float r0 = radius[0], r02 = r0*r0, r03 = r02*r0;
-	float r1 = radius[1], r12 = r1*r1, r13 = r12*r1;
-	float fpi = (float)M_PI;
-	float halfl = 0.5f * length;
-	float lcone;
-	
-	float    V[4], Vsum;
-	float    c[4];
-	Matrix3f I[4], Isum;
-	float    offset[4];
-	
-	// 半球の体積と慣性行列
-	V[0] = CDShape::CalcHemisphereVolume(radius[0]);
-	V[1] = CDShape::CalcHemisphereVolume(radius[1]);
-	c[0] = CDShape::CalcHemisphereCoM(radius[0]);
-	c[1] = CDShape::CalcHemisphereCoM(radius[1]);
-	offset[0] = V[0]*halfl*(halfl + 2.0f*c[0]);
-	offset[1] = V[1]*halfl*(halfl + 2.0f*c[1]);
-	I[0] = CDShape::CalcHemisphereInertia(radius[0]) + Matrix3f::Diag(offset[0], offset[0], 0.0f);
-	I[1] = CDShape::CalcHemisphereInertia(radius[1]) + Matrix3f::Diag(offset[1], offset[1], 0.0f);
+	// 球の中にすべて含まれる場合
+	if((radius[0] >= radius[1]) && radius[0] >= length + radius[1]){
+		return (2.0f/5.0f)*(4.0f/3.0f)*M_PI*pow(radius[0],3.0f)*pow(radius[0],2.0f)* Matrix3f::Unit();
+	}else if ((radius[1] >= radius[0]) && radius[1] >= length + radius[0]) {
+		return (2.0f/5.0f)*(4.0f/3.0f)*M_PI*pow(radius[1],3.0f)*pow(radius[1],2.0f)* Matrix3f::Unit();
+	}
+	else {
+		float r0 = (M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zZero - zMinus) -
+			(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(zZero + length / 2, 3.0f) - (pow(zMinus + length / 2, 3.0f))) +
+			(1.0f / 5.0f)*(pow(zZero + length / 2.0f, 5.0f) - pow(zMinus + length / 2.0f, 5.0f)));
+		float r1 = (M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zPlus - zOne) +
+			(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(length / 2 - zPlus, 3.0f) - (pow(length / 2 - zOne, 3.0f))) -
+			(1.0f / 5.0f)*(pow(length / 2.0f - zPlus, 5.0f) - pow(length / 2.0f - zOne, 5.0f)));
+		float tempVar = radius[0] * cosTheta + length * tanTheta / 2.0f + radius[0] * sinTheta*tanTheta;
+		float cone = 0;
+		if (abs(tanTheta) >= 1.0e-05) {
+			cone = (M_PI / (10.0f*tanTheta))*(pow(zOne*tanTheta + tempVar, 5.0f) -
+				pow(zZero*tanTheta + tempVar, 5.0f));
+		}
+		else
+		{
+			cone = CDShape::CalcCylinderInertia(radius[0], length).zz;
+		}
 
-	const float eps = 1.0e-10f;
-	if(std::abs(r0 - r1) < eps){
-		// 円柱の体積と慣性行列
-		I[2] = CDShape::CalcCylinderInertia((radius[0] + radius[1])/2.0f, length);
-		V[2] = CDShape::CalcCylinderVolume ((radius[0] + radius[1])/2.0f, length);
-		Isum = I[0] + I[1] + I[2];
-		Vsum = V[0] + V[1] + V[2];
-	}
-	else{
-		if(r0 > r1){
-			lcone = (r1/(r0-r1))*length;
-			V[2] = CDShape::CalcConeVolume(radius[0], lcone + length);
-			V[3] = CDShape::CalcConeVolume(radius[1], lcone);
-			c[2] = CDShape::CalcConeCoM(lcone + length);
-			c[3] = CDShape::CalcConeCoM(lcone);
-			offset[2] = V[2]*halfl*(halfl - 2.0f*c[2]);
-			offset[3] = V[3]*halfl*(halfl + 2.0f*c[3]);
-			I[2] = CDShape::CalcConeInertia(radius[0], lcone + length) + Matrix3f::Diag(offset[2], offset[2], 0.0f);
-			I[3] = CDShape::CalcConeInertia(radius[1], lcone)          + Matrix3f::Diag(offset[3], offset[3], 0.0f);
+		//DSTR << "RoundCone "<<cone << " r0 "<<r0 << " r1 " << r1  <<" Iz Inertia "<<r0 + r1 + cone << std::endl;
+		float Iz = r0 + r1 + cone;
+		float g = CalcCenterOfMass().z;
+		float r0Ix = M_PI * (1.0f / 60.0f)* (12 * pow(zMinus, 5) + 15 * pow(zMinus, 4)* (length - 2 * g) + 5 * pow(zMinus, 3)*
+			(4 * Square(g) - 8 * g* length + Square(length) - 4 * Square(radius[0])) + 15 * Square(zMinus)* g *(2 * g* length - Square(length) +
+				4 * pow(radius[0], 2)) + 15 * zMinus *pow(g, 2) *(pow(length, 2) - 4 * pow(radius[0], 2)) -
+			zZero * (12 * pow(zZero, 4) + 15 * pow(zZero, 3) *(length - 2 * g) + 5 * pow(zZero, 2) *(4 * pow(g, 2) -
+				8 * g* length + pow(length, 2) - 4 * pow(radius[0], 2)) + 15 * zZero* g *(2 * g *length - pow(length, 2) +
+					4 * pow(radius[0], 2)) + 15 * pow(g, 2)* (pow(length, 2) - 4 * pow(radius[0], 2))));
+
+		float r1Ix = M_PI * (1.0f / 60.0f)* (12 * pow(zOne, 5) - 15 * pow(zOne, 4) *(2 * g + length) + 5 * pow(zOne, 3) *
+			(4 * pow(g, 2) + 8 * g* length + pow(length, 2) - 4 * pow(radius[1], 2)) - 15 * pow(zOne, 2) *g* (2 * g *length + pow(length, 2) -
+				4 * pow(radius[1], 2)) + 15 * zOne *pow(g, 2) *(pow(length, 2) - 4 * pow(radius[1], 2)) +
+			zPlus * ((-12) *pow(zPlus, 4) + 15 * pow(zPlus, 3) *(2 * g + length) - 5 * pow(zPlus, 2) *(4 * pow(g, 2) +
+				8 * g* length + pow(length, 2) - 4 * pow(radius[1], 2)) + 15 * zPlus* g* (2 * g* length + pow(length, 2) -
+					4 * pow(radius[1], 2)) - 15 * pow(g, 2) *(pow(length, 2) - 4 * pow(radius[1], 2))));
+		float coneIx = 0;
+		if (abs(tanTheta) >= 1.0e-05) {
+			coneIx = M_PI * (1.0f / 30.0f)* (-6.0f* pow(zZero, 5)* Square(tanTheta) + 15 * pow(zZero, 4)* tanTheta* (g* tanTheta - tempVar) - 10.0f *pow(zZero, 3.0f)* (Square(tempVar) - 4.0f* tempVar* g* tanTheta + Square(g)*Square(tanTheta)) + 30.0f* Square(zZero)* tempVar *g *(tempVar - g * tanTheta) -
+				30 * zZero* Square(tempVar)* Square(g) + zOne * (6.0f * pow(zOne, 4)*Square(tanTheta) + 15 * pow(zOne, 3) *tanTheta* (tempVar - g * tanTheta) + 10 * Square(zOne)* (Square(tempVar) - 4 * tempVar* g *tanTheta + Square(g)*Square(tanTheta)) - 30 * zOne* tempVar* g* (tempVar - g * tanTheta) + 30 * Square(tempVar) *Square(g)));
 		}
-		else{
-			lcone = (r0/(r1-r0))*length;
-			V[2] = CDShape::CalcConeVolume(radius[1], lcone + length);
-			V[3] = CDShape::CalcConeVolume(radius[0], lcone);
-			c[2] = CDShape::CalcConeCoM(lcone + length);
-			c[3] = CDShape::CalcConeCoM(lcone);
-			offset[2] = V[2]*halfl*(halfl - 2.0f*c[2]);
-			offset[3] = V[3]*halfl*(halfl + 2.0f*c[3]);
-			I[2] = CDShape::CalcConeInertia(radius[0], lcone + length) + Matrix3f::Diag(offset[2], offset[2], 0.0f);
-			I[3] = CDShape::CalcConeInertia(radius[1], lcone)          + Matrix3f::Diag(offset[3], offset[3], 0.0f);
+		else
+		{
+			coneIx = CDShape::CalcCylinderInertia(radius[0], length).xx;
 		}
-		Isum = I[0] + I[1] + I[2] - I[3];
-		Vsum = V[0] + V[1] + V[2] - V[3];
+		//DSTR << "RoundCone Ix r0"<<r0Ix<<" r1 " <<r1Ix << " cone " << coneIx << std::endl;
+		float Ix = (1.0f / 2.0f)*Iz + r0Ix + r1Ix + coneIx;
+		Matrix3d I;
+		I.zz = Iz;
+		I.xx = Ix;
+		I.yy = Ix;
+		return I;
 	}
-	
-	// 重心基準の慣性行列に変換
-	Vec3f com = CalcCenterOfMass();
-	Matrix3f cross = Matrix3f::Cross(com);
-	Isum += Vsum * (cross*cross);
-	return Isum;
-#endif
-	*/
 }
-
-/*Matrix3f CDRoundCone::CalcMomentOfInertia(){
-	Matrix3f ans;
-	//円錐台の部分は円柱近似
-	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
-	// http://www.dynamictouch.matrix.jp/tensormodel.php
-
-	float r = (radius[0] + radius[1]) * 0.5f;	 //円柱の半径
-	
-	ans[0][0] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f; 
-	ans[0][1] = 0.0f;
-	ans[0][2] = 0.0f;
-	ans[1][0] = 0.0f;
-	ans[1][1] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f;
-	ans[1][2] = 0.0f;
-	ans[2][0] = 0.0f;
-	ans[2][1] = 0.0f;
-	ans[2][2] = (9.0f/5.0f * r * r);
-
-	return ans;
-}*/
 	
 // サポートポイントを求める
 int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
