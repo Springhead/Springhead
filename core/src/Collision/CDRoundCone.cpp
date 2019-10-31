@@ -56,7 +56,8 @@ float CDRoundCone::CalcVolume(){
 		(M_PI / 3.0f)*(pow((zZero + length / 2.0f), 3.0f) - pow(zMinus + length/2.0f, 3.0f));
 	float volumeR1 = M_PI * radius[1] * radius[1] * (zPlus - zOne) +
 		(M_PI / 3.0f)*(pow(length / 2.0f - zPlus, 3.0f) - pow(length / 2.0f - zOne, 3.0f));
-	float volumeCone = M_PI * pow((radius[0] + radius[1]) * cosTheta,2.0f)/4.0f*(length - radius[0]*sinTheta + radius[1] * sinTheta);
+	//float volumeCone = M_PI * pow((radius[0] + radius[1]) * cosTheta,2.0f)/4.0f*(length - radius[0]*sinTheta + radius[1] * sinTheta);
+	float volumeCone = (1.0f / 3.0f)*length * M_PI *(pow(radius[0],2.0f) + radius[0]*radius[1] + pow(radius[1],2.0f));
 	//DSTR << " length " << length << " r0 " << radius[0] << " r1 " <<radius[1] << 
 	//	"sinTheta " << sinTheta << " cosTheta " << cosTheta <<
 	//	" zMinus " << zMinus << " zZero " << zZero << " zOne " << zOne <<
@@ -124,8 +125,7 @@ Vec3f CDRoundCone::CalcCenterOfMass(){
 }
 
 Matrix3f CDRoundCone::CalcMomentOfInertia(){
-/*
- * z成分は求めれたがxとy成分が上手くいかない
+ // z成分は求めれたがxとy成分が上手くいかない
 	float sinTheta = (radius[1] - radius[0]) / length;
 	float cosTheta = sqrt(1 - pow((radius[1] - radius[0]) / length, 2.0f));
 	float tanTheta = sinTheta / cosTheta;
@@ -133,33 +133,47 @@ Matrix3f CDRoundCone::CalcMomentOfInertia(){
 	float zZero = -(length / 2.0f) - radius[0] * sinTheta;
 	float zOne = length / 2.0f - radius[1] * sinTheta;
 	float zPlus = length / 2.0f + radius[1];
-	float density = GetDensity();
-	float r0 = (density*M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zZero - zMinus) -
+	float r0 = (M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zZero - zMinus) -
 		(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(zZero + length / 2, 3.0f) - (pow(zMinus + length / 2, 3.0f))) +
 		(1.0f / 5.0f)*(pow(zZero + length / 2.0f, 5.0f) - pow(zMinus + length / 2.0f, 5.0f)));
-	float r1 = (density*M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zPlus - zOne) +
+	float r1 = (M_PI / 2.0f)*(pow(radius[0], 4.0f)*(zPlus - zOne) +
 		(2.0f / 3.0f)*pow(radius[0], 2.0f)*(pow(length / 2 - zPlus, 3.0f) - (pow(length / 2 -zOne, 3.0f))) -
 		(1.0f / 5.0f)*(pow(length / 2.0f - zPlus, 5.0f) - pow(length / 2.0f - zOne, 5.0f)));
 	float tempVar = radius[0] * cosTheta + length * tanTheta / 2.0f + radius[0] * sinTheta*tanTheta;
-	float cone = (density*M_PI / (10.0f*tanTheta))*(pow(zOne*tanTheta + tempVar, 5.0f) - 
+	float cone = (M_PI / (10.0f*tanTheta))*(pow(zOne*tanTheta + tempVar, 5.0f) - 
 		pow(zZero*tanTheta + tempVar, 5.0f));
 
-	DSTR << "cone "<<cone << " r0 "<<r0 << " r1 " << r1  <<" Iz Inertia "<<r0 + r1 + cone << std::endl;
+	//DSTR << "RoundCone "<<cone << " r0 "<<r0 << " r1 " << r1  <<" Iz Inertia "<<r0 + r1 + cone << std::endl;
 	float Iz = r0 + r1 + cone;
-	float Ix = (1 / 2)*Iz  - GetVolume()*pow(GetCenterOfMass().z,2.0f);
+	float g = CalcCenterOfMass().z;
+	float r0Ix = M_PI *(1.0f/60.0f)* (12*pow(zMinus,5) + 15 *pow(zMinus,4)* (length - 2* g) + 5 *pow(zMinus,3)* 
+		(4 *Square(g) - 8* g* length + Square(length) - 4 *Square(radius[0])) + 15 *Square(zMinus)* g *(2* g* length - Square(length) + 
+			4 *pow(radius[0],2)) + 15 *zMinus *pow(g,2) *(pow(length,2) - 4 *pow(radius[0],2)) -
+		zZero *(12* pow(zZero,4) + 15 *pow(zZero,3) *(length - 2 *g) + 5 *pow(zZero,2) *(4 *pow(g,2) -
+			8 *g* length + pow(length,2) - 4* pow(radius[0],2)) + 15* zZero* g *(2 *g *length - pow(length,2) + 
+				4* pow(radius[0],2)) + 15 *pow(g,2)* (pow(length,2) - 4 *pow(radius[0],2))));
 	
-	Matrix3f I;
+	float r1Ix = M_PI*(1.0f/60.0f)* (12* pow(zOne,5) - 15* pow(zOne,4) *(2* g + length) + 5* pow(zOne,3) *
+		(4 *pow(g,2) + 8 *g* length + pow(length,2) - 4 *pow(radius[1],2)) - 15* pow(zOne,2) *g* (2* g *length + pow(length,2) - 
+			4 *pow(radius[1],2)) + 15 *zOne *pow(g,2) *(pow(length,2) - 4 *pow(radius[1],2)) + 
+		zPlus *((-12) *pow(zPlus,4) + 15 *pow(zPlus,3) *(2* g + length) - 5 *pow(zPlus,2) *(4 *pow(g,2) + 
+			8* g* length + pow(length,2) - 4* pow(radius[1],2)) + 15* zPlus* g* (2* g* length + pow(length,2) - 
+				4* pow(radius[1],2)) - 15* pow(g,2) *(pow(length,2) - 4* pow(radius[1],2))));
+	float coneIx = M_PI * (1.0f/30.0f)* (-6.0f* pow(zZero,5)* Square(tanTheta) + 15 *pow(zZero,4)* tanTheta* (g* tanTheta - tempVar) - 10.0f *pow(zZero,3.0f)* (Square(tempVar) - 4.0f* tempVar* g* tanTheta + Square(g)*Square(tanTheta)) + 30.0f* Square(zZero)* tempVar *g *(tempVar - g *tanTheta) - 
+		30 *zZero* Square(tempVar)* Square(g) + zOne *(6.0f * pow(zOne,4)*Square(tanTheta) + 15 *pow(zOne,3) *tanTheta* (tempVar - g *tanTheta) + 10 *Square(zOne)* (Square(tempVar) - 4 *tempVar* g *tanTheta + Square(g)*Square(tanTheta)) - 30 *zOne* tempVar* g* (tempVar - g* tanTheta) + 30 * Square(tempVar) *Square(g)));
+	
+	//DSTR << "RoundCone Ix r0"<<r0Ix<<" r1 " <<r1Ix << " cone " << coneIx << std::endl;
+	float Ix = (1.0f / 2.0f)*Iz + r0Ix + r1Ix + coneIx;
+	Matrix3d I;
 	I.zz = Iz;
 	I.xx = Ix;
 	I.yy = Ix;
-	DSTR << I << std::endl;
-	
 	return I;
-*/
+/*
 	//	試しに球２つにしてみる
 #if 1
 	//	球: 2/5 * mr^2
-	Matrix3f I;
+	Matrix3f I = Matrix3f(0,0,0,0,0,0,0,0,0);
 	I.xx = I.yy = I.zz= (2.0/5.0) * Square(radius[0]) + Square(radius[1]);
 	I.zz += Square(length / 2);
 	return I;
@@ -228,6 +242,7 @@ Matrix3f CDRoundCone::CalcMomentOfInertia(){
 	Isum += Vsum * (cross*cross);
 	return Isum;
 #endif
+	*/
 }
 
 /*Matrix3f CDRoundCone::CalcMomentOfInertia(){
