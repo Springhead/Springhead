@@ -50,7 +50,8 @@ void FWAppBase::Init() {
 
 void FWAppBase::TimerFunc(int id) {
 	UserFunc();
-	GetSdk()->GetScene()->Step();
+	FWSceneIf* s = GetSdk()->GetScene();
+	if (s) s->Step();
 }
 
 void FWAppBase::CreateSdk() {
@@ -201,7 +202,9 @@ void FWApp::Display(){
 
 void FWApp::TimerFunc(int id){
 	UserFunc();
-	GetCurrentWin()->GetScene()->Step();
+	if (GetCurrentWin() && GetCurrentWin()->GetScene()) {
+		GetCurrentWin()->GetScene()->Step();
+	}
 	PostRedisplay();
 }
 
