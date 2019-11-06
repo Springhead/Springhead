@@ -110,22 +110,22 @@ def do_process(proj, dept):
 	#  Option '-d': Delete makefile.
 	if options.delete:
 		if os.path.exists(makefile):
-			vprint('    *** %s: removing "%s"' % (proj, makefile))
+			print('    *** %s: removing "%s"' % (proj, makefile))
 			f_op.rm(makefile)
 		if os.path.exists(one_file):
-			vprint('    *** %s: removing "%s"' % (proj, one_file))
+			print('    *** %s: removing "%s"' % (proj, one_file))
 			f_op.rm(one_file)
 		int_file = '%s.i' % proj
 		if os.path.exists(int_file):
-			vprint('    *** %s: removing "%s"' % (proj, int_file))
+			print('    *** %s: removing "%s"' % (proj, int_file))
 			f_op.rm(int_file)
 		stb_file = '%sStub.cpp' % proj
 		if os.path.exists(stb_file):
-			vprint('    *** %s: removing "%s"' % (proj, stb_file))
+			print('    *** %s: removing "%s"' % (proj, stb_file))
 			f_op.rm(stb_file)
 		hpp_file = '%sDecl.hpp' % proj
 		if os.path.exists(hpp_file):
-			vprint('    *** %s: removing "%s"' % (proj, hpp_file))
+			print('    *** %s: removing "%s"' % (proj, hpp_file))
 			f_op.rm(hpp_file)
 
 	#  Option '-c': Create makefile.

@@ -72,11 +72,11 @@ endforeach()
 
 # main target
 #
-add_custom_target(${Target}
-    BYPRODUCTS ${genereated_files}
-    DEPENDS ${generated_files}
-)
 if(${Windows})
+    add_custom_target(${Target}
+	BYPRODUCTS ${genereated_files}
+	DEPENDS ${generated_files}
+    )
     set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
     set(_tmp_args ${RSSrcDir}\\make_manager.py -A -c)
     add_custom_command(
@@ -86,13 +86,13 @@ if(${Windows})
 	WORKING_DIRECTORY ${RSSrcDir}
 	COMMENT [[  generating files...]]
     )
-else()
+elseif(${Linux})
     set(_tmp_cmnd python)
     set(_tmp_args ${RSSrcDir}/make_manager.py -A -c)
-    add_custom_command(
-	OUTPUT ${generated_files}
+    add_custom_target(${Target}
 	COMMAND _SPRTOP_=${SPR_TOP_DIR} ${_tmp_cmnd} ${_tmp_args}
 	COMMAND ${Make} -f ${RSSrcDir}/${Makefile}
+	BYPRODUCTS ${generated_files}
 	WORKING_DIRECTORY ${RSSrcDir}
 	COMMENT [[  generating files...]]
     )
@@ -110,9 +110,13 @@ set(LOGDIR ${ARCHITECTURE})		# created by add_custom_target
 set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE})
 if(${Windows})
     set(ACTDIR ${ACTDIR}/${VS_VERSION})
+    set(LINKDIR ${INTDIR})
+elseif(${Linux})
+    set(LINKDIR .${CMAKE_FILES_DIRECTORY}/${INTDIR})
+    set(LOGDIR  .${CMAKE_FILES_DIRECTORY}/${INTDIR})
 endif()
 set(LINKLIST
-    "${INTDIR}=${ACTDIR}/${INTDIR}" ;
+    "${LINKDIR}=${ACTDIR}/${INTDIR}"
     "${LOGDIR}=${ACTDIR}/${INTDIR}" ;
 )
 set(_script_dir ${SPR_SRC_DIR})

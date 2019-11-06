@@ -30,7 +30,11 @@ set(OOS_BLD_DIR "build")
 
 #  Configuration type(s).
 #	Remove unneccessary configuration type(s).
-set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+if(MSVC)
+    set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+elseif(UNIX)
+    set(CMAKE_CONFIGURATION_TYPES Release)
+endif()
 
 #  Source/include file names to incorporate to the application program.
 #
@@ -66,15 +70,19 @@ set(ADDITIONAL_LIBDIR ${EMPTY})
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
 set(ADDITIONAL_LIBS ${EMPTY})
-#set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
-#set(ADDITIONAL_LIBS_DEBUG   python35_d.lib)
-#set(ADDITIONAL_LIBS_RELEASE python35.lib)
-#set(ADDITIONAL_LIBS_TRACE   python35.lib)
+if(MSVC)
+    #set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
+    #set(ADDITIONAL_LIBS_DEBUG   python35_d.lib)
+    #set(ADDITIONAL_LIBS_RELEASE python35.lib)
+    #set(ADDITIONAL_LIBS_TRACE   python35.lib)
+endif()
 
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
 set(EXCLUDE_LIBS ${EMPTY})
-#set(EXCLUDE_LIBS XINPUT.LIB)
+if(MSVC)
+    #set(EXCLUDE_LIBS XINPUT.LIB)
+endif()
 
 #  Visual Studio Debugger settings.
 #	DEBUGGER_WORKING_DIRECTORY:
@@ -177,33 +185,14 @@ if(${Windows})
     set(CMAKE_EXE_LINKER_FLAGS_TRACE	"${WIN_LINK_TRACE}")
 elseif(${Linux})
     message(STATUS "Host System: Linux")
-    set(LIB_DIR	"${SPR_CORE_DIR}/lib")
+    set(CMAKE_CXX_COMPILER	"/usr/bin/g++")
     set(CMAKE_CXX_FLAGS		"${LINUX_COPT_COMMON}")
-    set(CMAKE_CXX_FLAGS_DEBUG	"${LINUX_COPT_DEBUG}")
-    set(CMAKE_CXX_FLAGS_RELEASE	"${LINUX_COPT_RELEASE}")
     foreach(macros IN ITEMS ${WIN_COPT_MACROS})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D ${macros}")
     endforeach()
-    set(LDFLAGS.EXTRA	"-L${LIB_DIR}/linux/ -L/usr/lib \
-			 -L/usr/X11R6/lib -L/usr/lib/X11")
-    set(LDFLAGS.GL	"-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
-			 -ldl -lboost_regex")
-    set(INCLUDES	"-I/usr/X11R6/include/ -I/usr/X11/include")
-    set(ARFLAGS		"r")
-    set(LDFLAGS "-L${SRC_DIR}/Base/ \
-		 -L${SRC_DIR}/Collision/ \
-		 -L${SRC_DIR}/Creature/ \
-		 -L${SRC_DIR}/FileIO/ \
-		 -L${SRC_DIR}/Foundation/ \
-		 -L${SRC_DIR}/Framework/ \
-		 -L${SRC_DIR}/Graphics/ \
-		 -L${SRC_DIR}/HumanInterface/ \
-		 -L${SRC_DIR}/Physics/ \
-		 -lBase -lCollision -lCreature -lFileIO -lFoundation -lFramework \
-		 -lGraphics -lHumanInterface -lPhysics
-		 ${LDFLAGS.EXTRA} \
-		 ${LDFLAGS.GL}")
-    set(INCLUDES "${INCLUDES} -I${INC_DIR} -I${SRC_DIR} -I.")
+    set(INCLUDES "${INCLUDES} -I${SPR_INC_FIR} -I${SPR_SRC_DIR} -I,")
+    #set(CMAKE_STATIC_LINKER_FLAGS "${LDFLAGS}")
+    #set(ARFLAGS	"r")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -264,6 +253,16 @@ if(DEFINED CMAKE_PREFIX_PATH)
 endif()
 
 # ------------------------------------------------------------------------------
+#  Additional include directories.
+#
+#if(DEFINED CMAKE_PREFIX_PATH)
+#    set(ADDITIONAL_INCDIR "C:/Package/glui-2.37/include")
+#endif()
+if(${Linux})
+    set(ADDITIONAL_INCDIR ${INCLUDES})
+endif()
+
+# ------------------------------------------------------------------------------
 #  Some other definitions.
 #
 if(${Windows})
@@ -271,6 +270,12 @@ if(${Windows})
     set(Python ${RunSwigDir}/python_adapter.bat)
     file(TO_NATIVE_PATH "${RunSwigDir}" RunSwigDir)
     file(TO_NATIVE_PATH "${Python}" Python)
+#    if(NOT DEFINED VS_VERSION)
+#       execute_process(
+#           COMMAND ${Python} get_vs_version.py
+#           OUTPUT_VARIABLE VS_VERSION
+#       )
+#    endif()
     message(STATUS "Visual Studio Version: ${VS_VERSION}")
 elseif(${Linux})
     set(Python python)
@@ -289,6 +294,8 @@ if(${Windows})
     else()
 	add_executable(${Target} WIN32 ${SRCS})
     endif()
+elseif(${Linux})
+    add_executable(${Target} ${SRCS})
 endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/bin)
 
@@ -344,13 +351,23 @@ include_directories(${Target}
     PRIVATE ${Boost_INCLUDE_DIRS}
     PRIVATE ${GLEW_INCLUDE_DIRS}
     PRIVATE ${GLUT_INCLUDE_DIR}
-    PRIVATE ${ADDITIONAL_INCDIR}
+    #PRIVATE ${ADDITIONAL_INCDIR}
     PRIVATE ${SPR_TOP_DIR}/dependency/src
 )
+foreach(_incdir ${ADDITIONAL_INCDIR})
+    include_directories(${Target} PRIVATE ${_incdir})
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Library directories.
 #
+if(${Linux})
+    foreach(proj IN ITEMS ${SPR_PROJS})
+        target_link_directories(${Target}
+            PRIVATE ${CMAKE_SOURCE_DIR}/${proj}
+        )
+    endforeach()
+endif()
 if("${ARCHITECTURE}" STREQUAL "x64")
     set(DEPENDENCY_LIBDIR ${SPR_TOP_DIR}/dependency/lib/win64)
 else()

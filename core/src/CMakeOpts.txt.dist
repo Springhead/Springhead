@@ -52,29 +52,59 @@ set(WIN_COPT_TRACE	"/O2 /Ob2 /Ot /Oy- /D TRACE /Gr")
 set(WIN_LINK_COMMON  "/ERRORREPORT:PROMPT /IGNORE:4099 /IGNORE:4221 /NXCOMPAT \
 		      /MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")
 if("${ARCHITECTURE}" STREQUAL "x86")
-    set(WIN_LINK_COMMON "${WIN_LINK_COMMON} /MACHINE:X86")
+    set(WIN_LINK_COMMON	"${WIN_LINK_COMMON} /MACHINE:X86")
 else()
     set(WIN_LINK_COMMON "${WIN_LINK_COMMON} /MACHINE:X64")
 endif()
-set(WIN_LINK_DEBUG   "/DEBUG")
-set(WIN_LINK_RELEASE "")
-set(WIN_LINK_TRACE   "")
+set(WIN_LINK_DEBUG	"/DEBUG")
+set(WIN_LINK_RELEASE	"")
+set(WIN_LINK_TRACE	"")
 
 # ------------------------------------------------------------------------------
 #  Compile options for Linux (g++).
 #
-set(LINUX_WFLAGS "-Wall \
-	-Wno-unused-variable \
-	-Wno-unused-but-set-variable \
-	-Wno-unused-result \
-	-Wno-unused-value \
-	-Wno-unused-local-typedefs \
-	-Wno-unused-function \
-	-Wno-reorder \
-	-Wno-sign-compare \
-	-Wno-unknown-pragmas")
-set(LINUX_COPT_COMMON	"${WARNING_FLAGS} -fPIC")
-set(LINUX_COPT_DEBUG	"-g")
-set(LINUX_COPT_RELEASE	"-O2")
+set(WARNING_FLAGS -Wall
+		  -Wno-unused-variable
+		  -Wno-unused-but-set-variable
+		  -Wno-unused-result
+		  -Wno-unused-value
+		  -Wno-unused-local-typedefs
+		  -Wno-unused-function
+		  -Wno-reorder
+		  -Wno-sign-compare
+		  -Wno-unknown-pragmas)
+set(LINUX_COPT_COMMON	-fPIC -std=gnu++11 -D__cdecl=)
+set(LINUX_COPT_MACROS	-D__cdecl=)
+set(LINUX_COPT_CONFIG	-O2)
+list(APPEND LINUX_COPT	${WARNING_FLAGS})
+list(APPEND LINUX_COPT	${LINUX_COPT_COMMON})
+list(APPEND LINUX_COPT	${LINUX_COPT_CONFIG})
+set(LDFLAGS.COMMON -L${SPR_SRC_DIR}/Base/
+		   -L${SPR_SRC_DIR}/Collision/
+		   -L${SPR_SRC_DIR}/Creature/
+		   -L${SPR_SRC_DIR}/FileIO/
+		   -L${SPR_SRC_DIR}/Foundation/
+		   -L${SPR_SRC_DIR}/Framework/
+		   -L${SPR_SRC_DIR}/Graphics/
+		   -L${SPR_SRC_DIR}/HumanInterface/
+		   -L${SPR_SRC_DIR}/Physics/
+		   -lBase
+		   -lCollision
+		   -lCreature
+		   -lFileIO
+		   -lFoundation
+		   -lFramework
+		   -lGraphics
+		   -lHumanInterface
+		   -lPhysics)
+set(LDFLAGS.EXTRA  -L/usr/lib
+		   -L/usr/X11R6/lib
+		   -L/usr/lib/X11)
+set(LDFLAGS.GL	   -lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm
+		   -ldl -lboost_regex)
+set(LDFLAGS	   ${LDFLAGS.COMMON} ${LDFLAGS.EXTRA} ${LDFLAGS.GL})
+set(ADDITIONAL_INCDIR	/usr/X11R6/include/
+			/usr/X11/include/)
+set(ARFLAGS	  r)
 
 # end: CMakeOpts.txt

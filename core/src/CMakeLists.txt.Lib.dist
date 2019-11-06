@@ -23,14 +23,15 @@ set(CMAKE_USE_RELATIVE_PATHS true)
 #
 set(TOPDIR_FILE "CMakeTopdir.txt")
 if(DEFINED TOPDIR)
-    if(NOT EXISTS "${TOPDIR}")
-	message("Error: File \"${TOPDIR}\" not found")
-	return()
-    endif()
+    # ok
 elseif(EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
     include(${TOPDIR_FILE})
 else()
     set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
+endif()
+if(NOT EXISTS "${TOPDIR}")
+    message("Error: Directory \"${TOPDIR}\" not found")
+    return()
 endif()
 
 set(SPR_TOP_DIR  "${TOPDIR}")
@@ -92,33 +93,7 @@ if(${Windows})
     set(CMAKE_EXE_LINKER_FLAGS_TRACE	  "${WIN_LINK_TRACE}")
 elseif(${Linux})
     message(STATUS "Host System: Linux")
-    set(LIB_DIR	"${SPR_CORE_DIR}/lib")
-    set(CMAKE_CXX_FLAGS		"${LINUX_COPT_COMMON}")
-    set(CMAKE_CXX_FLAGS_DEBUG	"${LINUX_COPT_DEBUG}")
-    set(CMAKE_CXX_FLAGS_RELEASE	"${LINUX_COPT_RELEASE}")
-    foreach(macros IN ITEMS ${WIN_COPT_MACROS})
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D ${macros}")
-    endforeach()
-    set(LDFLAGS.EXTRA	"-L${LIB_DIR}/linux/ -L/usr/lib \
-			 -L/usr/X11R6/lib -L/usr/lib/X11")
-    set(LDFLAGS.GL	"-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm \
-			 -ldl -lboost_regex")
-    set(INCLUDES	"-I/usr/X11R6/include/ -I/usr/X11/include")
-    set(ARFLAGS		"r")
-    set(LDFLAGS "-L${SRC_DIR}/Base/ \
-		 -L${SRC_DIR}/Collision/ \
-		 -L${SRC_DIR}/Creature/ \
-		 -L${SRC_DIR}/FileIO/ \
-		 -L${SRC_DIR}/Foundation/ \
-		 -L${SRC_DIR}/Framework/ \
-		 -L${SRC_DIR}/Graphics/ \
-		 -L${SRC_DIR}/HumanInterface/ \
-		 -L${SRC_DIR}/Physics/ \
-		 -lBase -lCollision -lCreature -lFileIO -lFoundation -lFramework \
-		 -lGraphics -lHumanInterface -lPhysics
-		 ${LDFLAGS.EXTRA} \
-		 ${LDFLAGS.GL}")
-    set(INCLUDES "${INCLUDES} -I${INC_DIR} -I${SRC_DIR} -I.")
+    set(CMAKE_CXX_COMPILER	/usr/bin/g++)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -246,7 +221,24 @@ set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_RELE
 set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRACE})
 
 # ------------------------------------------------------------------------------
-#  Clean (only for RunSwig).
+#  Include directories.
+#
+include_directories(${Target}
+    PRIVATE ${CMAKE_SOSURCE_DIR}
+    PRIVATE ${SPR_INC_DIR}
+    PRIVATE ${SPR_SRC_DIR}
+    PRIVATE ${Boost_INCLUDE_DIRS}
+    PRIVATE ${GLUE_INCLUDE_DIRS}
+    PRIVATE ${GLUT_INCLUDE_DIR}
+    #PRIVATE ${ADDITIONAL_INCDIR}
+    PRIVATE ${SPR_TOP_DIR}/dependency/src
+)
+foreach(_incdir ${ADDITIONAL_INCDIR})
+    include_directories(${Target} PRIVATE ${_incdir})
+endforeach()
+
+# ------------------------------------------------------------------------------
+#  Generate Springhead Library.
 #
 if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
     set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
@@ -264,6 +256,17 @@ if(${Windows})
 	COMMENT [[  generating Springhead Library... ]]
     )
 elseif(${Linux})
+    set(_outdir ${SPR_TOP_DIR}/generated/lib)
+    set(_archive_name ${_outdir}/${ProjectName}.a)
+    list(JOIN SPR_PROJS " " _members)
+    set(_cmnd ./SpringheadLib.sh)
+    add_custom_target(${ProjectName} ALL
+	COMMAND mkdir -p ${_outdir}
+	COMMAND ${_cmnd} ${_archive_name} ${_members}
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	DEPENDS ${SPR_PROJS}
+	COMMENT [[  generating Springhead Library... ]]
+    ) 
 endif()
 
 # ------------------------------------------------------------------------------
