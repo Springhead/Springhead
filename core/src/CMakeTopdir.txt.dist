@@ -9,6 +9,9 @@
 #    ${TOPDIR} は "core" の直接上位のディレクトリです。
 #    パスセパレータにはスラッシュ('/')を使用するのが賢明です (文字エスケープ
 #    の混乱が回避できます)。
+#    パスの中にシェル変数や'~'を含めることはできません (cmakeはこれらを解釈
+#    することはありません)。
+#    
 #
 #    This file defines following variable.
 #       TOPDIR ← ABSOLUTE PATH of the directory where Springhead was cloned.
@@ -16,6 +19,8 @@
 #    We assume that subdirectory "core" exists as direct child of ${TOPDIR}.
 #    Use slash character ('/') as path separator to avoid escape character
 #    problem.
+#    DO NOT use shell variable nor '~' as home directory in path string.
+#    Cmake never recognize them.
 #
 # ==============================================================================
 

@@ -4,13 +4,13 @@
 #  SYNOPSIS:
 #	python cmake_ln.py [options] link=target ...
 #	arguments:
-#	    link	ì¬‚·‚éƒŠƒ“ƒN‚ÌƒpƒX
-#	    target	ƒŠƒ“ƒN‚ÌÀ‘Ì‚ğ’u‚­ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
+#	    link	ä½œæˆã™ã‚‹ãƒªãƒ³ã‚¯ã®ãƒ‘ã‚¹
+#	    target	ãƒªãƒ³ã‚¯ã®å®Ÿä½“ã‚’ç½®ããƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
 #
 #  DESCRIPTION:
-#	w’è‚³‚ê‚½–¼Ì(link)‚ÌƒŠƒ“ƒN‚ğƒ^[ƒQƒbƒgƒfƒBƒŒƒNƒgƒŠ(target)
-#	ã‚Éì¬‚·‚éB
-#	unix ‚Å‚Í symbolic link ‚ğAWindows ‚Å‚Í junction ‚ğg—p‚·‚éB
+#	æŒ‡å®šã•ã‚ŒãŸåç§°(link)ã®ãƒªãƒ³ã‚¯ã‚’ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª(target)
+#	ä¸Šã«ä½œæˆã™ã‚‹ã€‚
+#	unix ã§ã¯ symbolic link ã‚’ã€Windows ã§ã¯ junction ã‚’ä½¿ç”¨ã™ã‚‹ã€‚
 #
 # ----------------------------------------------------------------------
 #  VERSION:
@@ -35,7 +35,7 @@ target_mark = '_target_body_'
 #  Helper methods
 #
 
-#  ƒtƒ@ƒCƒ‹‚ğƒ€[ƒu‚·‚é
+#  ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ ãƒ¼ãƒ–ã™ã‚‹
 #
 def move_files(src, dst):
 	src = upath(src)
@@ -46,6 +46,8 @@ def move_files(src, dst):
 		if os.path.isfile(f):
 			if verbose > 1:
 				print('  copying %s -> %s' % (f, dst))
+			if os.path.exists('%s/%s' % (dst, f)):
+				os.remove('%s/%s' % (dst, f))
 			shutil.move(f, dst)
 		elif os.path.isdir(f):
 			os.makedirs('%s/%s' % (dst, f), exist_ok=True)
@@ -55,17 +57,17 @@ def move_files(src, dst):
 		print('  removing directory %s' % src)
 	os.rmdir(src)
 			
-#  “®ìŠÂ‹«‚Ì”»’è
+#  å‹•ä½œç’°å¢ƒã®åˆ¤å®š
 #
 def is_unix():
 	return os.name == 'posix'
 
-#  ƒpƒXƒZƒpƒŒ[ƒ^‚Ì•ÏŠ·i•\¦—pj
+#  ãƒ‘ã‚¹ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ã®å¤‰æ›ï¼ˆè¡¨ç¤ºç”¨ï¼‰
 #
 def upath(path):
 	return path.replace('\\', '/')
 
-#  ƒGƒ‰[ƒƒbƒZ[ƒW‚ğ•\¦‚µ‚Äˆ—‚ğ’†~‚·‚é
+#  ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¦å‡¦ç†ã‚’ä¸­æ­¢ã™ã‚‹
 #
 def fatal(msg, exitcode=1):
 	sys.stderr.write('Error: %s\n' % msg)
@@ -92,7 +94,7 @@ if options.version:
 verbose = options.verbose
 
 # ----------------------------------------------------------------------
-#  ƒƒCƒ“ˆ—ŠJn
+#  ãƒ¡ã‚¤ãƒ³å‡¦ç†é–‹å§‹
 #
 
 for arg in args:
@@ -100,14 +102,14 @@ for arg in args:
 	if verbose:
 		print('making link: %s -> %s' % (link, target))
 
-	# target directory ‹y‚Ñ target mark file ‚Ì‘¶İ‚ğ•ÛØ‚·‚é
-	#	Windows ‚Å‚Í“ÁŒ ‚ª‚È‚¢‚Æ symbolic link ‚ªì¬‚Å‚«‚È‚¢B
-	#	d•û‚ª‚È‚¢‚Ì‚Å junciton ‚ğì¬‚·‚é‚Ì‚¾‚ªAjunction ‚Í
-	#	symbolic link ‚Æ‚ÍˆÙ‚È‚èA’Êí‚Ì directory ‚Æ‚Ì‹æ•Ê‚ª
-	#	ŠÈ’P‚É‚Í‚Å‚«‚È‚¢B
-	#	‘ã‘ÖˆÄ‚Æ‚µ‚ÄAÀ‘Ì directory ‚É target mark ‚ğ’u‚­
-	#	‚±‚Æ‚ÅŠù‚É junction ‚ª’£‚ç‚ê‚Ä‚¢‚é‚©”Û‚©‚ğ”»’è‚·‚éB
-	#	unix ‚Å‚Í•K—v‚È‚¢‚ªƒR[ƒh‚ª”ÏG‚É‚È‚é‚Ì‚Å“¥P‚·‚éB
+	# target directory åŠã³ target mark file ã®å­˜åœ¨ã‚’ä¿è¨¼ã™ã‚‹
+	#	Windows ã§ã¯ç‰¹æ¨©ãŒãªã„ã¨ symbolic link ãŒä½œæˆã§ããªã„ã€‚
+	#	ä»•æ–¹ãŒãªã„ã®ã§ junciton ã‚’ä½œæˆã™ã‚‹ã®ã ãŒã€junction ã¯
+	#	symbolic link ã¨ã¯ç•°ãªã‚Šã€é€šå¸¸ã® directory ã¨ã®åŒºåˆ¥ãŒ
+	#	ç°¡å˜ã«ã¯ã§ããªã„ã€‚
+	#	ä»£æ›¿æ¡ˆã¨ã—ã¦ã€å®Ÿä½“ directory ã« target mark ã‚’ç½®ã
+	#	ã“ã¨ã§æ—¢ã« junction ãŒå¼µã‚‰ã‚Œã¦ã„ã‚‹ã‹å¦ã‹ã‚’åˆ¤å®šã™ã‚‹ã€‚
+	#	unix ã§ã¯å¿…è¦ãªã„ãŒã‚³ãƒ¼ãƒ‰ãŒç…©é›‘ã«ãªã‚‹ã®ã§è¸è¥²ã™ã‚‹ã€‚
 	#
 	if os.path.exists(target) and not os.path.isdir(target):
 		fatal('"%s" is not a directory' % target)
@@ -116,28 +118,28 @@ for arg in args:
 		f = open('%s/%s' % (target, target_mark), 'w')
 		f.close()
 
-	# link ‚ª‘¶İ‚·‚éê‡
+	# link ãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 	#
 	if os.path.exists(link):
 
-		# ‚»‚ê‚ÍƒfƒBƒŒƒNƒgƒŠ‚Å‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢B
+		# ãã‚Œã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ãªã‘ã‚Œã°ã„ã‘ãªã„ã€‚
 		#
 		if not os.path.isdir(link):
 			fatal('"%s" is not a directory' % link)
 
-		# ‚»‚ê‚ª target (À‘Ì) ‚ğw‚µ‚Ä‚¢‚ê‚Î‰½‚à‚µ‚È‚­‚Ä‚æ‚¢B
+		# ãã‚ŒãŒ target (å®Ÿä½“) ã‚’æŒ‡ã—ã¦ã„ã‚Œã°ä½•ã‚‚ã—ãªãã¦ã‚ˆã„ã€‚
 		#
 		if os.path.exists('%s/%s' % (link, target_mark)):
 			if verbose > 1:
 				print('"%s" already exists' % link)
 			continue
 
-		# ‚³‚à‚È‚¯‚ê‚ÎA“à—e‚ğ target ‚ÉƒRƒs[‚µ‚½Œã‚Åíœ‚·‚éB
+		# ã•ã‚‚ãªã‘ã‚Œã°ã€å†…å®¹ã‚’ target ã«ã‚³ãƒ”ãƒ¼ã—ãŸå¾Œã§å‰Šé™¤ã™ã‚‹ã€‚
 		#
 		move_files(os.path.abspath(link), os.path.abspath(target))
 
-	# link ‚Ì–¼Ì‚Å target ‚ÉƒŠƒ“ƒN‚ğ’£‚éB
-	#	Window ‚Å‚Í junction, unix ‚Å‚Í symbolic link ‚ğg‚¤B
+	# link ã®åç§°ã§ target ã«ãƒªãƒ³ã‚¯ã‚’å¼µã‚‹ã€‚
+	#	Window ã§ã¯ junction, unix ã§ã¯ symbolic link ã‚’ä½¿ã†ã€‚
 	#
 	if is_unix():
 		cmnd = 'ln -s %s %s' % (target, link)

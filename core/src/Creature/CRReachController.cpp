@@ -384,9 +384,9 @@ void CRReachController::Draw() {
 		double s = ((double)i)/20.0;
 
 		if (s < currS) {
-			glColor4f(1.0, 0.2, 0.2, 1.0);
+			glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
 		} else {
-			glColor4f(0.2, 0.2, 1.0, 1.0);
+			glColor4f(0.2f, 0.2f, 1.0f, 1.0f);
 		}
 
 		Vec6f point = GetTrajectory(s);
@@ -396,9 +396,9 @@ void CRReachController::Draw() {
 
 	Vec3d p1=initPos, p2=initPos+(initVel*0.1), p3=targPos, p4=targPos+(targVel*0.1);
 	glBegin(GL_LINES);
-	glColor4f(1.0, 1.0, 0.2, 1.0);
+	glColor4f(1.0f, 1.0f, 0.2f, 1.0f);
 	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p2.x, p2.y, p2.z);
-	glColor4f(0.2, 1.0, 1.0, 1.0);
+	glColor4f(0.2f, 1.0f, 1.0f, 1.0f);
 	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p4.x, p4.y, p4.z);
 	glEnd();
 

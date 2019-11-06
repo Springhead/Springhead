@@ -42,7 +42,9 @@ foreach(_file ${_tmp_buff})
 endforeach()
 #
 file(GLOB SRCS *.cpp *.h)
-file(GLOB COMMON_HDRS ${SPR_INC_DIR}/${Target}/*.h)
+file(GLOB COMMON_HDRS
+	${SPR_INC_DIR}/${Target}/*.h
+)
 file(GLOB EXCLUDE_SRCS "")
 #  end of definition
 #===============================================================
@@ -52,6 +54,15 @@ if(${LEN_EXCLUDE_SRCS} GREATER 0)
     list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
 add_library(${Target} STATIC ${SRCS})
+
+# override compile/link options if neccessary
+set(_override_file "${SPR_TOP_DIR}/core/makeopts.override.cmake")
+include(${_override_file})
+if (${Windows})
+else()
+    list(JOIN LINUX_COPT " " CMAKE_CXX_FLAGS)
+    add_definitions(${LINUX_COPT_MACROS_APPEND})
+endif()
 
 # output library
 if(${Windows})
@@ -64,16 +75,35 @@ if(${Windows})
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
 elseif(${Linux})
+    set_target_properties("${Target}" PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target}
+    )
 endif()
 
 # include directories
 #
 set(CMAKE_USE_RELATIVE_PATHS TRUE)
-target_include_directories(${Target}
-    PRIVATE ${SPR_INC_DIR}
-    PRIVATE ${SPR_SRC_DIR}
-    PRIVATE ${SPR_TOP_DIR}/dependency/src
-)
+if(DEFINED ADDITIONAL_INCDIR)
+    foreach(_dir ${ADDITIONAL_INCDIR})
+	target_include_directories(${Target}
+	    PRIVATE ${_dir}
+	)
+    endforeach()
+endif()
+if(${Windows})
+    target_include_directories(${Target}
+	PRIVATE ${SPR_INC_DIR}
+	PRIVATE ${SPR_SRC_DIR}
+	PRIVATE ${SPR_TOP_DIR}/dependency/src
+	PRIVATE .
+    )
+elseif(${Linux})
+    target_include_directories(${Target}
+	PRIVATE ${SPR_INC_DIR}
+	PRIVATE ${SPR_SRC_DIR}
+	PRIVATE .
+    )
+endif()
 if(DEFINED Boost_INCLUDE_DIRS)
     target_include_directories(${Target}
 	PRIVATE ${Boost_INCLUDE_DIRS}
@@ -106,9 +136,12 @@ set(INTDIR ${Target}.dir)
 set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE})
 if(${Windows})
     set(ACTDIR ${ACTDIR}/${VS_VERSION})
+    set(LINKDIR ${INTDIR})
+elseif(${Linux})
+    set(LINKDIR .${CMAKE_FILES_DIRECTORY}/${INTDIR})
 endif()
 set(LINKLIST
-    "${INTDIR}=${ACTDIR}/${INTDIR}" ;
+    "${LINKDIR}=${ACTDIR}/${INTDIR}"
 )
 set(_script_dir ${SPR_SRC_DIR})
 if(${Windows})
