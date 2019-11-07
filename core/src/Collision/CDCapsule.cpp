@@ -24,7 +24,8 @@ bool CDCapsule::IsInside(const Vec3f& p){
 		   (p.x*p.x + p.y*p.y < radius * radius && -0.5f*length < p.z && p.z < 0.5f*length);
 }
 float CDCapsule::CalcVolume(){
-	return  2.0f * CDShape::CalcHemisphereVolume(radius) + CDShape::CalcCylinderVolume(radius, length);
+	//return  2.0f * CDShape::CalcHemisphereVolume(radius) + CDShape::CalcCylinderVolume(radius, length);
+	return CDShape::CalcRoundConeVolume(Vec2f(radius,radius), length);
 }
 
 Matrix3f CDCapsule::CalcMomentOfInertia(){
@@ -42,6 +43,7 @@ Matrix3f CDCapsule::CalcMomentOfInertia(){
 	ans[2][1] = 0.0f;
 	ans[2][2] = (9.0f/5.0f * radius * radius);
 	return ans;*/
+	/*
 	Matrix3f I0 = CDShape::CalcCylinderInertia  (radius, length);
 	float    V1 = CDShape::CalcHemisphereVolume (radius);
 	Matrix3f I1 = CDShape::CalcHemisphereInertia(radius);
@@ -50,6 +52,8 @@ Matrix3f CDCapsule::CalcMomentOfInertia(){
 	float    offset = halfl*(halfl + 2.0f*c1);
 
 	return I0 + 2.0f * (I1 + V1 * Matrix3f::Diag(offset, offset, 0.0f));
+	*/
+	return CDShape::CalcRoundConeMomentOfInertia(Vec2f(radius,radius),length);
 }
 	
 // サポートポイントを求める
