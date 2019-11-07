@@ -87,7 +87,9 @@ public:
 	static float    CalcTetrahedronVolume (const Vec3f& a, const Vec3f& b, const Vec3f& c);
 	static Vec3f    CalcTetrahedronCoM    (const Vec3f& a, const Vec3f& b, const Vec3f& c);
 	static Matrix3f CalcTetrahedronInertia(const Vec3f& a, const Vec3f& b, const Vec3f& c);
-	
+	static float    CalcRoundConeVolume   (Vec2f radius, float length);
+	static Vec3f    CalcRoundConeCenterOfMass(Vec2f radius, float length);
+	static Matrix3f CalcRoundConeMomentOfInertia(Vec2f radius, float length);
 };
 
 }	//	namespace Spr
