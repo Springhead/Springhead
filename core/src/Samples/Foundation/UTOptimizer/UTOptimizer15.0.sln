@@ -1,5 +1,6 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
 VisualStudioVersion = 15.0.28307.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UTOptimizer", "UTOptimizer15.0.vcxproj", "{D0FA44F1-83FC-4239-9181-61CA892A2E7D}"
@@ -13,6 +14,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileIO", "..\..\..\FileIO\FileIO15.0.vcxproj", "{3CA4689D-77DA-4B2E-A718-CBB6A8FF04D7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation", "..\..\..\Foundation\Foundation15.0.vcxproj", "{916BF063-5A94-4652-B355-62220EF17768}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "..\..\..\Framework\Framework15.0.vcxproj", "{755660BE-3B1E-416B-B795-4F653C83A43A}"
 EndProject
@@ -169,5 +173,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {959BE583-FAE2-4052-A26F-743BCC5E6C3D}
 	EndGlobalSection
 EndGlobal
