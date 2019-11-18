@@ -68,6 +68,7 @@ public:
 			DSTR << i << " : " << result[i] << std::endl;
 		}
 		DSTR << " --- " << std::endl;
+		delete optimizer;
 	}
 
 	// 目的関数（例）
