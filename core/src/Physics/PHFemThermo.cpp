@@ -100,16 +100,20 @@ PHFemThermoDesc::PHFemThermoDesc(){
 }
 void PHFemThermoDesc::Init(){
 #if 1
-	thConduct = 83.5;		//THCOND;
-	thConduct_x = 83.5;
-	thConduct_y = 83.5;
-	thConduct_z = 83.5;
+	//thConduct = 83.5;		//THCOND;
+	//thConduct_x = 83.5;
+	//thConduct_y = 83.5;
+	//thConduct_z = 83.5;
+	thConduct = 26;		//THCOND;
+	thConduct_x = 26;
+	thConduct_y = 26;
+	thConduct_z = 26;
 #endif
-	rho = 7874;	//RHO;
-	heatTrans = 25;//0;//25;
-	specificHeat = 459.94;//SPECIFICHEAT;//0.196;		//1960
-	radiantHeat =0;
-	initial_temp=0.0;
+	//rho = 7874;	//RHO;
+	//heatTrans = 25;//0;//25;
+	//specificHeat = 459.94;//SPECIFICHEAT;//0.196;		//1960
+	//radiantHeat =0;
+	//initial_temp=0.0;
 
 }
 
@@ -124,10 +128,10 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 	epsilonG = 1.0;
 	//%%%	初期条件
 	jout = 22.9;	//A5052熱伝達実験時:22.9, SUS430放熱実験時:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
-	ems = 0.0;//3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
-	ems_const = 0.0;//-1.14;//-1.1507//-1.063;
+	ems =3.58e-2;//0.0;//3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
+	ems_const = -1.14;//-1.1507//-1.063;
 	temp_c = 30.0;
-	temp_out = 20.0;//23.8;	//A5052試料時室温:23.8, SUS430放熱実験時:29.9
+	temp_out = 26.8;//20.0;//23.8;	//A5052試料時室温:23.8, SUS430放熱実験時:29.9
 
 	//%%%%%4
 	weekPow_FULL = 120.0;
@@ -325,13 +329,13 @@ void PHFemThermo::Init(){
 	}
 	//%%%		放熱のパラメータ
 	//	200℃から放熱
-	//tempe.push_back(211.3);
-	//tempe.push_back(211.2);
-	//tempe.push_back(210.2);
-	//tempe.push_back(207.6);
-	//tempe.push_back(203.9);
+	/*tempe.push_back(211.3);
+	tempe.push_back(211.2);
+	tempe.push_back(210.2);
+	tempe.push_back(207.6);
+	tempe.push_back(203.9);
 
-	//tempe.push_back(198.0);
+	tempe.push_back(198.0);*/
 	//tempe.push_back(189.3);
 	//tempe.push_back(178.7);
 	//tempe.push_back(169.8);
@@ -4462,7 +4466,8 @@ void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 #else
 	#ifdef DISABLE_COIL
 		//CalcIHdqdt_atleast_map(Vec2d(0.0, -0.005),weekPow_FULL,WEEK);
-		CalcIHdqdt_atleast_map(Vec2d(0.0425, -0.0425),weekPow_FULL,WEEK);
+		//CalcIHdqdt_atleast_map(Vec2d(0.0, 0.0),weekPow_FULL,WEEK);
+		CalcIHdqdt_atleast_map(Vec2d(0.125, -0.125),weekPow_FULL,WEEK);
 	#else
 		CalcIHdqdt_atleast(inr_,outR_,weekPow_, WEEK);		//	API化済み
 		CalcIHdqdt_add(inr_add,outR_add,weekPow_add, WEEK);
