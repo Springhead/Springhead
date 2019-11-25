@@ -1,7 +1,7 @@
 #  make.func.cmake
 
 # ------------------------------------------------------------------------------
-#  split()
+#  function split()
 #	<str> を <sep> で分割してできた配列を <output> に設定する。
 #
 function(split str sep output)
@@ -10,7 +10,7 @@ function(split str sep output)
 endfunction()
 
 # ------------------------------------------------------------------------------
-#  join()
+#  function join()
 #	<array> の各要素を <glue> で結合してできた文字列を <output> に設定する。
 #
 function(join array glue output)
@@ -19,7 +19,7 @@ function(join array glue output)
 endfunction()
 
 # ------------------------------------------------------------------------------
-#  eval()
+#  function eval()
 #	code		実行する(CMakeの)コード
 #
 function(eval code)
@@ -28,6 +28,32 @@ function(eval code)
     include(${path})
     file(REMOVE ${path})
 endfunction()
+
+# ------------------------------------------------------------------------------
+#  リストに他のリストを結合する
+#  macro append()
+#  marco prepend()
+#	list1		元のリスト
+#	list2		結合するリスト
+#
+macro(append list1 list2)
+    if(DEFINED ${list2})
+        list(APPEND ${list1} ${${list2}})
+    endif()
+endmacro()
+
+macro(prepend list1 list2)
+    if(DEFINED ${list2})
+        if(DEFINED ${list1})
+            set(__tmp ${${list1}})
+            set(${list1})
+            list(APPEND ${list1} ${${list2}})
+            list(APPEND ${list1} ${__tmp})
+        else()
+            set(${list1} ${${list2}})
+        endif()
+    endif()
+endmacro()
 
 # ------------------------------------------------------------------------------
 #  環境変数が設定されていたらその値を、さもなければデフォルト値を返す。

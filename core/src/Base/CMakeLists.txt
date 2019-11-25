@@ -42,10 +42,31 @@ list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
 if(${LEN_EXCLUDE_SRCS} GREATER 0)
 	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
-add_library(${Target} STATIC ${SRCS})
 
-# output library
+# modify compile/link options if neccessary
+#
+set(_override_file "${SPR_TOP_DIR}/core/make.modify_opts.cmake")
+include(${_override_file})
+if (${Windows})
+else()
+    set(LINUX_COPT      ${LINUX_COPT_CONFIG}
+			${LINUX_COPT_FLAGS}
+			${LINUX_COPT_MACROS}
+			${LINUX_COPT_WARNING_FLAGS})
+    set(LINUX_INCDIRS   ${LINUX_COPT_INCDIR})
+    set(LINUX_LDFLAGS   #${LINUX_LDFLAGS_PREPEND}
+			${LINUX_SPRLIB}
+			${LINUX_STDLIB}
+			${LINUX_LDFLAGS})
+			#${LINUX_LDFLAGS_APPEND})
+    list(JOIN LINUX_COPT " " CMAKE_CXX_FLAGS)
+    add_definitions(${LINUX_COPT_MACROS_APPEND})
+endif()
+
+# create library
+#
 if(${Windows})
+    add_library(${Target} ${LIBTYPE} ${SRCS})
     set_target_properties("${Target}" PROPERTIES
 	OUTPUT_NAME_DEBUG   "${Target}${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM}"
 	OUTPUT_NAME_RELEASE "${Target}${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}"
@@ -54,35 +75,41 @@ if(${Windows})
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
-elseif(${Linux})
-    set_target_properties("${Target}" PROPERTIES
-	ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target}
-    )
+else()
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
+    add_library(${Target} ${LIBTYPE} ${SRCS})
 endif()
 
 # include directories
 #
-set(CMAKE_USE_RELATIVE_PATHS TRUE)
-if(DEFINED ADDITIONAL_INCDIR)
-    foreach(_dir ${ADDITIONAL_INCDIR})
-	target_include_directories(${Target}
-	    PRIVATE ${_dir}
-	)
-    endforeach()
-endif()
+foreach(_dir ${LINUX_INCDIRS})
+    string(REPLACE "-I" "" _tmp ${_dir})
+    target_include_directories(${Target}
+	PRIVATE ${_tmp}
+    )
+endforeach()
+
+##if(DEFINED ADDITIONAL_INCDIR)
+##    foreach(_dir ${ADDITIONAL_INCDIR})
+##	target_include_directories(${Target}
+##	    PRIVATE ${_dir}
+##	)
+##    endforeach()
+##endif()
 if(${Windows})
     target_include_directories(${Target}
+	PRIVATE .
 	PRIVATE ${SPR_INC_DIR}
 	PRIVATE ${SPR_SRC_DIR}
 	PRIVATE ${SPR_TOP_DIR}/dependency/src
-	PRIVATE .
     )
-elseif(${Linux})
-    target_include_directories(${Target}
-	PRIVATE ${SPR_INC_DIR}
-	PRIVATE ${SPR_SRC_DIR}
-	PRIVATE .
-    )
+##elseif(${Linux})
+##    target_include_directories(${Target}
+##	PRIVATE .
+##	PRIVATE ${SPR_INC_DIR}
+##	PRIVATE ${SPR_SRC_DIR}
+##    )
 endif()
 
 # integrate intermediate directory
