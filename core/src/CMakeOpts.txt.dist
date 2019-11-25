@@ -21,7 +21,7 @@
 #	WIN_LINK_TRACE			Additional options (for Trace).
 #
 #    Linux (g++):
-#	LINUX_COPT_COMMON		Commonly used compiler options.
+#	LINUX_COPT_FLAGS		Compiler options.
 #	LINUX_COPT_DEBUG		Additional options (for Debug).
 #	LINUX_COPT_RELEASE		Additional options (for Release).
 #
@@ -63,48 +63,46 @@ set(WIN_LINK_TRACE	"")
 # ------------------------------------------------------------------------------
 #  Compile options for Linux (g++).
 #
-set(WARNING_FLAGS -Wall
-		  -Wno-unused-variable
-		  -Wno-unused-but-set-variable
-		  -Wno-unused-result
-		  -Wno-unused-value
-		  -Wno-unused-local-typedefs
-		  -Wno-unused-function
-		  -Wno-reorder
-		  -Wno-sign-compare
-		  -Wno-unknown-pragmas)
-set(LINUX_COPT_COMMON	-fPIC -std=gnu++11 -D__cdecl=)
+set(LINUX_COPT_WARNING_FLAGS
+			-Wall
+			-Wno-unused-variable
+			-Wno-unused-but-set-variable
+			-Wno-unused-result
+			-Wno-unused-value
+			-Wno-unused-local-typedefs
+			-Wno-unused-function
+			-Wno-reorder
+			-Wno-sign-compare
+			-Wno-unknown-pragmas)
+set(LINUX_COPT_INCDIR	-I.
+			-I${SPR_INC_DIR}
+			-I${SPR_SRC_DIR}
+			-I/usr/X11R6/include
+			-I/usr/X11/include)
+if(${CMAKE_CONFIGURATION_TYPES} STREQUAL Debug)
+    set(LINUX_COPT_CONFIG	-g)
+else()
+    set(LINUX_COPT_CONFIG	-O2)
+endif()
+set(LINUX_COPT_FLAGS	-fPIC -std=gnu++11)
 set(LINUX_COPT_MACROS	-D__cdecl=)
-set(LINUX_COPT_CONFIG	-O2)
-list(APPEND LINUX_COPT	${WARNING_FLAGS})
-list(APPEND LINUX_COPT	${LINUX_COPT_COMMON})
-list(APPEND LINUX_COPT	${LINUX_COPT_CONFIG})
-set(LDFLAGS.COMMON -L${SPR_SRC_DIR}/Base/
-		   -L${SPR_SRC_DIR}/Collision/
-		   -L${SPR_SRC_DIR}/Creature/
-		   -L${SPR_SRC_DIR}/FileIO/
-		   -L${SPR_SRC_DIR}/Foundation/
-		   -L${SPR_SRC_DIR}/Framework/
-		   -L${SPR_SRC_DIR}/Graphics/
-		   -L${SPR_SRC_DIR}/HumanInterface/
-		   -L${SPR_SRC_DIR}/Physics/
-		   -lBase
-		   -lCollision
-		   -lCreature
-		   -lFileIO
-		   -lFoundation
-		   -lFramework
-		   -lGraphics
-		   -lHumanInterface
-		   -lPhysics)
-set(LDFLAGS.EXTRA  -L/usr/lib
-		   -L/usr/X11R6/lib
-		   -L/usr/lib/X11)
-set(LDFLAGS.GL	   -lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm
-		   -ldl -lboost_regex)
-set(LDFLAGS	   ${LDFLAGS.COMMON} ${LDFLAGS.EXTRA} ${LDFLAGS.GL})
-set(ADDITIONAL_INCDIR	/usr/X11R6/include/
-			/usr/X11/include/)
-set(ARFLAGS	  r)
+#
+##list(APPEND LINUX_COPT	${WARNING_FLAGS})
+##list(APPEND LINUX_COPT	${LINUX_COPT_INCDIR})
+##list(APPEND LINUX_COPT	${LINUX_COPT_CONFIG})
+##list(APPEND LINUX_COPT	${LINUX_COPT_FLAGS})
+##list(APPEND LINUX_COPT	${LINUX_COPT_MACROS})
+
+if("${LIBTYPE}" STREQUAL "STATIC")
+    set(LINUX_SPRLIB	-L${SPR_SRC_DIR} -lSpringhead)
+endif()
+set(LINUX_STDLIB	-L/usr/lib
+			-L/usr/X11R6/lib
+			-L/usr/lib/X11
+			-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm
+			-ldl -lboost_regex)
+##set(LINUX_LDFLAGS	${LINUX_SPRLIB} ${LINUX_STDLIB})
+
+set(ARFLAGS	  	r)
 
 # end: CMakeOpts.txt

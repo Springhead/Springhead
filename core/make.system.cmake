@@ -20,8 +20,11 @@ endif()
 #  実行OSを判定する
 #	Cygwin, MacOS について判定条件を追加すること
 #
-set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+    set(Windows True)
+elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+    set(Linux True)
+endif()
 set(Cygwin  False)
 set(MacOS   False)
 

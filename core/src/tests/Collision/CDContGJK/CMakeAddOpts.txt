@@ -1,0 +1,8 @@
+# ----------------------------------------------------------------------
+#  Compile options for Linux (g++).
+#
+set(LINUX_COPT_MACRO_APPEND	-DDAILY_BUILD)
+set(LINUX_LDFLAGS_APPEND	-L$ENV{SPR_LINUX_GNU_LIB}
+				-llapack)
+
+# end: CMakeAddOpts.txt

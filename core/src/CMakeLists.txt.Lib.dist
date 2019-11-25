@@ -54,9 +54,11 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 
-#set(CMAKE_BUILD_TYPE Release)
-#set(CMAKE_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE} CACHE STRING "" FORCE)
-set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+if(${Windwos})
+    set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+else()
+    set(CMAKE_CONFIGURATION_TYPES Release)
+endif()
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 
 # ------------------------------------------------------------------------------
@@ -78,6 +80,18 @@ include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 # ------------------------------------------------------------------------------
 #  Set compiler/linker options.
 #
+if(DEFINED LIBTYPE)
+    if(${LIBTYPE} STREQUAL SHARED)
+    else()
+	message("Error: invalid value [LIBTYPE=${LIBTYPE}]")
+    endif()
+else()
+    if(${Windows})
+	set(LIBTYPE STATIC)
+    else()
+	set(LIBTYPE STATIC)
+    endif()
+endif()
 if(${Windows})
     message(STATUS "Host System: Windows")
     set(CMAKE_CXX_FLAGS		"${WIN_COPT_COMMON}")
@@ -93,6 +107,7 @@ if(${Windows})
     set(CMAKE_EXE_LINKER_FLAGS_TRACE	  "${WIN_LINK_TRACE}")
 elseif(${Linux})
     message(STATUS "Host System: Linux")
+    message(STATUS "Library type: ${LIBTYPE}")
     set(CMAKE_CXX_COMPILER	/usr/bin/g++)
 endif()
 
@@ -256,17 +271,32 @@ if(${Windows})
 	COMMENT [[  generating Springhead Library... ]]
     )
 elseif(${Linux})
-    set(_outdir ${SPR_TOP_DIR}/generated/lib)
-    set(_archive_name ${_outdir}/${ProjectName}.a)
     list(JOIN SPR_PROJS " " _members)
     set(_cmnd ./SpringheadLib.sh)
-    add_custom_target(${ProjectName} ALL
-	COMMAND mkdir -p ${_outdir}
-	COMMAND ${_cmnd} ${_archive_name} ${_members}
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	DEPENDS ${SPR_PROJS}
-	COMMENT [[  generating Springhead Library... ]]
-    ) 
+    if("${LIBTYPE}" STREQUAL "STATIC")
+	set(_outdir ${SPR_SRC_DIR})
+	set(_libname libSpringhead.a)
+	set(_gendir ${SPR_TOP_DIR}/generated/lib)
+	add_custom_target(${ProjectName} ALL
+	    COMMAND mkdir -p ${_outdir}
+	    COMMAND ${_cmnd} STATIC ${_outdir}/${_libname} ${_members}
+	    COMMAND ranlib ${_outdir}/${_libname}
+	    COMMAND mkdir -p ${_gendir}
+	    COMMAND cp ${_outdir}/${_libname} ${_gendir}
+	    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	    DEPENDS ${SPR_PROJS}
+	    COMMENT [[  generating Springhead Library... ]]
+	)
+    else()
+	set(_outdir ${SPR_TOP_DIR}/generated/lib)
+	add_custom_target(${ProjectName} ALL
+	    COMMAND mkdir -p ${_outdir}
+	    COMMAND ${_cmnd} SHARED ${_outdir} ${_members}
+	    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	    DEPENDS ${SPR_PROJS}
+	    COMMENT [[  generating Springhead Library... ]]
+	)
+    endif()
 endif()
 
 # ------------------------------------------------------------------------------
