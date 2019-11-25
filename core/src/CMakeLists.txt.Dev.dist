@@ -1,4 +1,4 @@
-# CMakeLists.txt for Springhead
+# CMakeLists.txt for Springhead Application
 #
 #   Change parametes in "Customization section" below to customize compile
 #   and/or link condition.

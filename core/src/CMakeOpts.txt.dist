@@ -29,6 +29,7 @@
 #
 # ==============================================================================
 
+if(${Windows})
 # ------------------------------------------------------------------------------
 #  Visual Studio Version.
 #	Try following command from command prompt.
@@ -59,7 +60,9 @@ endif()
 set(WIN_LINK_DEBUG	"/DEBUG")
 set(WIN_LINK_RELEASE	"")
 set(WIN_LINK_TRACE	"")
+endif()	# ${Windows}
 
+if(${Linux})
 # ------------------------------------------------------------------------------
 #  Compile options for Linux (g++).
 #
@@ -104,5 +107,6 @@ set(LINUX_STDLIB	-L/usr/lib
 ##set(LINUX_LDFLAGS	${LINUX_SPRLIB} ${LINUX_STDLIB})
 
 set(ARFLAGS	  	r)
+endif()	# ${Linux}
 
 # end: CMakeOpts.txt
