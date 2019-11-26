@@ -172,6 +172,8 @@ public:
 				}
 				else{
 					floorShakeAmplitude = 0;
+					soFloor->SetFramePosition(Vec3d(0, 0, 0));
+					soFloor->SetVelocity(Vec3d(0, 0, 0));
 					message = "floor stopped.";
 				}
 			}
