@@ -143,10 +143,10 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 ///FemThermo‚ÌƒfƒXƒNƒŠƒvƒ^
 struct PHFemThermoDesc: public PHFemBaseDesc{
 	double rho;						//	–§“x
-	//double thConduct;				//”M“`“±—¦
-	//double thConduct_x;				//	x•ûŒü	”M“`“±—¦
-	//double thConduct_y;				//	y•ûŒü	”M“`“±—¦
-	//double thConduct_z;				//	z•ûŒü	”M“`“±—¦
+	double thConduct;				//”M“`“±—¦
+	double thConduct_x;				//	x•ûŒü	”M“`“±—¦
+	double thConduct_y;				//	y•ûŒü	”M“`“±—¦
+	double thConduct_z;				//	z•ûŒü	”M“`“±—¦
 	double heatTrans;				//”M“`’B—¦			//class ß“_‚É‚ÍAheatTransRatio‚ª‘¶İ‚·‚é
 	double specificHeat;			//”ä”M
 	double radiantHeat;				//”MçtË—¦i‹ó‹C‚Ö‚Ì”M“`’B—¦j
@@ -212,12 +212,10 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	//void ReProduceMat_Vec_ThermalRadiation();
 	void SetStopTimespan(double timespan);
 	void UpdateMatk_RadiantHeatToAir();
-	void ReCreateMatrix(double thConduct0);
 	void ActivateVtxbeRadiantHeat();			//
 	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
 	void OutputMatKall();
 	void IfRadiantHeatTrans();
-	void IfRadiantHeatTransSteak();
 	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
 	void SetTimeStep(double dt);
 	Vec3d GetVertexNormal(unsigned vtxid);
@@ -236,8 +234,6 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void SetWeekPowFULL(double weekPow_full);
 	void SetweekPow_FULL(double setweekPow_FULL);
 	void Setems(double setems);
-	void Setems_steak(double setems_steak);
-	void SetthConduct(double thConduct);
 	double GetWeekPowFULL();
 	Vec3d GetVertexPose(unsigned vtxid);
 	void OutTetVolumeAll();
