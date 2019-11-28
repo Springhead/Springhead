@@ -128,13 +128,15 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 	epsilonG = 1.0;
 	//%%%	初期条件
 	jout = 22.9;	//A5052熱伝達実験時:22.9, SUS430放熱実験時:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
-	ems =3.58e-2;//0.0;//3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
+	//Setems(3.58e-2);
+	//ems =3.58e-2;//0.0;//3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
 	ems_const = -1.14;//-1.1507//-1.063;
 	temp_c = 30.0;
 	temp_out = 26.8;//20.0;//23.8;	//A5052試料時室温:23.8, SUS430放熱実験時:29.9
 
 	//%%%%%4
-	weekPow_FULL = 120.0;
+	//weekPow_full = 120.0;
+	//weekPow_FULL = 120.0;
 	weekPow_ = 77.0;
 	inr_ = 0.0355;
 	outR_ = 0.0825;
@@ -158,7 +160,8 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 
 void PHFemThermo::Init(){
 
-	weekPow_FULL = weekPow_full;
+	//weekPow_FULL = 300;
+	//SetweekPow_FULL(300);
 	matkupSwitch = true;
 	
 	PHFemMeshNew* mesh = phFemMesh;
@@ -714,6 +717,15 @@ void PHFemThermo::Init(){
 	}
 
 }
+
+void PHFemThermo::SetweekPow_FULL(double setweekPow_FULL) {
+	weekPow_FULL = setweekPow_FULL;
+}
+void PHFemThermo::Setems(double setems) {
+	ems = setems;
+}
+
+
 
 void PHFemThermo::SetStopTimespan(double timespan){
 	stopTime = timespan;

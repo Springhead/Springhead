@@ -232,6 +232,8 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void InitVertexNormalAll();
 	void RevVertexNormalAll();
 	void SetWeekPowFULL(double weekPow_full);
+	void SetweekPow_FULL(double setweekPow_FULL);
+	void Setems(double setems);
 	double GetWeekPowFULL();
 	Vec3d GetVertexPose(unsigned vtxid);
 	void OutTetVolumeAll();

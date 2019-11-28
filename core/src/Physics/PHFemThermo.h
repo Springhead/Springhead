@@ -562,6 +562,8 @@ public:
 	double outR_add;
 	double inr_decr;
 	double outR_decr;
+	void SetweekPow_FULL(double setweekPow_FULL);
+	void Setems(double setems);
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
