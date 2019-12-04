@@ -1,5 +1,5 @@
 % 3.3.BuildApplication.tex
-%	Last update: 2019/10/03 F.Kanehori
+%	Last update: 2019/10/07 F.Kanehori
 %newpage
 \subsection{アプリケーションプログラムのビルド}
 \label{subsec:BuildApplication}
@@ -61,23 +61,24 @@
 \noindent
 \bf{補足}　
 \begin{narrow}
-	\bf{commit 1d8e5ce (2019/9/30)以前の\CMakeLists{} 配布ファイルを
-	使用している場合}
+	\bf{2019/9/30 (commit 1d8e5ce)以前に配布した\CMakeLists{.*.dist}を元に
+	\CMakeLists{}を作成して使用している場合}
 
 	\medskip
 	RunSwigでclean/rebuildの対応ができていなかったため、
-	cleanと同等の機能を実現するためのターゲットRunSwig\_Cleanを作成していました。
+	cleanと同等の機能を実現するためのターゲットRunSwig\_Cleanが作成されて
+	いるはずです。
 
 	上記日付以降の\SprLib をダウンロードし\cmake を実行していただければ、
 	RunSwigはclean/rebuild対応となります。
-
-	RunSwig\_Cleanをビルドすると
+	ただし、RunSwig\_Cleanをビルドすると
 	\begin{narrow}
 	\tt{python: can't open file '.../Clean.py': ... No such file ...}
 	\end{narrow}
-	というエラーが起きますが実害はありません。
+	というエラーが起きます。実害はありませんがRunSwigのcleanは行なわれません。
 
-	RunSwig\_Cleanターゲットを生成されないようにするには、
+	\medskip
+	　RunSwig\_Cleanターゲットを生成されないようにするには、
 	新しい配布ファイルから\CMakeLists{}を再作成するか、
 	または既存の\CMakeLists{}から以下の部分を削除して再\cmake してください。
 
