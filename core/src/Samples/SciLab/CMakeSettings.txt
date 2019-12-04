@@ -1,0 +1,165 @@
+# ******************************************************************************
+#  CMake settings for Springhead Application
+#
+# ******************************************************************************
+set(EMPTY)
+
+# ------------------------------------------------------------------------------
+#  Project name.
+#	Define porject name here.
+#
+set(ProjectName Scilab)
+
+# ------------------------------------------------------------------------------
+#  Binary(working) directory name used when you cmake Springhead library.
+#	In order to optimize build process between Springhead projects and
+#	your application program, you should adopt take "out-of-source"
+#	build method.
+#
+set(OOS_BLD_DIR "build")
+
+# ------------------------------------------------------------------------------
+#  Configuration type(s).
+#	Remove unneccessary configuration type(s).
+#	Windows (Visual Studio) allows multiple configuration.
+#	Unix (make) allows only single configuration (Debug or Release).
+#
+if(${Windows})
+    set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+else()
+    set(CMAKE_CONFIGURATION_TYPES Release)
+endif()
+
+# ------------------------------------------------------------------------------
+#  Library type.
+#	Select one of STATIC or SHARED.
+#
+set(LIBTYPE STATIC)
+#set(LIBTYPE SHARED)
+
+# ------------------------------------------------------------------------------
+#  Source/include file names to incorporate to the application program.
+#	${CMAKE_SOURCE_DIR} is the top level of the current CMake source
+#	tree. In usual case, where the top level "CMakeLists.txt" is.
+#	If you want to refer current (sublevel) source directory, use
+#	${CMAKE_CURRENT_SOURCE_DIR} instead.
+#
+file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
+
+# ------------------------------------------------------------------------------
+#  Source/include file name(s) to EXCLUDE from compilation.
+#	Replace '${EMPTY}' with file name(s).
+#	Wild card is NOT available here.
+#	We recomend to use absolute path if file exists outside of
+#	current source directory (${CMAKE_SOURCE_DIR}).
+#
+set(EXCLUDE_SRCS ${EMPTY})
+
+# ------------------------------------------------------------------------------
+#  Springhead projects to incorporate in the application program.
+#	Remove unneccessary project name(s).
+#	Do not include 'RunSwig' in the list.
+#  If you need Springehad library only, leave this parameter unchaged.
+#
+#set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+#		HumanInterface Physics)
+#set(SPR_PROJS ${SPR_PROJS} EmbPython)
+if(${Windows})
+    set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics Physics)
+else()
+    set(SPR_PROJS ${EMPTY})
+endif()
+
+# ------------------------------------------------------------------------------
+#  Additional include path(s).
+#	Replace '${EMPTY}' with absolute path(s).
+#
+set(ADDITIONAL_INCDIR ${EMPTY})
+if(${Windows})
+#    set(ADDITIONAL_INCDIR "C:/Project/ExternalPackage/glui-2.37/include")
+endif()
+
+# ------------------------------------------------------------------------------
+#  Additional library path(s).
+#	Replace '${EMPTY}' with absolute path(s).
+#
+set(ADDITIONAL_LIBDIR ${EMPTY})
+if(${Windows})
+#    set(ADDITIONAL_LIBDIR
+#	"C:/Project/ExternalPackage/freeglut/lib/x64"
+#	"C:/Project/Springhead/dependency/lib/win64")
+else()
+endif()
+
+# ------------------------------------------------------------------------------
+#  Additional library name(s) required.
+#	Replace '${EMPTY}' with file name(s).
+#
+set(ADDITIONAL_LIBS ${EMPTY})
+if(${Windows})
+    set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
+#    set(ADDITIONAL_LIBS_DEBUG   python35_d.lib)
+#    set(ADDITIONAL_LIBS_RELEASE python35.lib)
+#    set(ADDITIONAL_LIBS_TRACE   python35.lib)
+else()
+endif()
+
+# ------------------------------------------------------------------------------
+#  Default library name(s) to EXCLUDE from linking.
+#	Replace '${EMPTY}' with file name(s).
+#
+set(EXCLUDE_LIBS ${EMPTY})
+if(${Windows})
+    set(EXCLUDE_LIBS XINPUT.LIB)
+else()
+endif()
+
+# ------------------------------------------------------------------------------
+#  Visual Studio Debugger settings.
+#	DEBUGGER_WORKING_DIRECTORY:
+#		Debugger working directory. Default is ${CMAKE_SOURCE_DIR},
+#		i.e. the directory where this file (CMakeLists.txt) is.
+#	DEBUGGER_COMMAND_ARGUMENTS:
+#		Debugger command line arguments.
+if(${Windows})
+    set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
+endif()
+
+
+# ******************************************************************************
+#  Additional compile/link options.
+#    ** compiler options **
+#	WIN_COPT_COMMON_APPEND	  appended to CMAKE_CXX_FLAGS.
+#	WIN_COPT_xxxxxx_APPEND	  appended to CMAKE_CXX_FLAGS_xxxxx.
+#       LINUX_INCDIRS_PREPEND	  prepended to ${LINUX_COPT_INCDIR}.
+#       LINUX_INCDIRS_APPEND	  appended to ${LINUX_COPT_INCDIR}.
+#       LINUX_COPT_MACROS_APPEND  appended to ${LINUX_COPT_MACROS}.
+#    ** linker options **
+#       LINUX_LDFLAGS_PREPEND	  prepended to ${LINUX_LDFLAGS}.
+#       LINUX_LDFLAGS_APPEND	  appended to ${LINUX_LDFLAGS}.
+#
+#       See "CMakeOpts.txt.dist" for referred variables.
+# ******************************************************************************
+
+#  for Windows
+set(WIN_COPT_COMMON_APPEND	)
+set(WIN_COPT_DEBUG_APPEND	)
+set(WIN_COPT_RELEASE_APPEND	)
+set(WIN_COPT_TRACE_APPEND	)
+
+set(WIN_LINK_COMMON_APPEND	)
+set(WIN_LINK_DEBUG_APPEND	)
+set(WIN_LINK_RELEASE_APPEND	)
+set(WIN_LINK_TRACE_APPEND	)
+
+#  for unix
+set(LINUX_INCDIRS_PREPEND      )
+set(LINUX_INCDIRS_APPEND       )
+set(LINUX_COPT_FLAGS_APPEND    )
+set(LINUX_COPT_MACROS_APPEND   )
+
+set(LINUX_LDFLAGS_PREPEND      )
+set(LINUX_LDFLAGS_APPEND       )
+
+# end: CMakeCustomize.txt

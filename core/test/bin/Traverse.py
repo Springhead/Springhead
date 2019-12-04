@@ -44,6 +44,7 @@
 #	Ver 1.3  2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
 #	Ver 1.4  2019/09/25 F.Kanehori	OK for dailybuild cmake version.
 #	Ver 1.41 2019/10/02 F.Kanehori	Add '.cmake' to console report.
+#	Ver 1.42 2019/12/04 F.Kanehori	Change '.cmake' report timing.
 # ======================================================================
 import sys
 import os
@@ -232,6 +233,7 @@ class Traverse:
 				# If use CMake, configure/generate solution file here
 				#
 				if ctl.get(CFK.USE_CMAKE):
+					self.__report('%s' % config, '.cmake', False)
 					logfile = ctl.get(CFK.BUILD_LOG)
 					cmake = CMake(ctl, self.toolset,
 				      		platform, None, logfile, self.verbose)
@@ -243,8 +245,6 @@ class Traverse:
 					if slnfile is None:
 						print('CMake config/gen error')
 						break
-					self.__report('%s' % config, '.cmake', False)
-
 				#
 				# Build (compile and link)
 				#
