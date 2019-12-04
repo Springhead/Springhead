@@ -1,5 +1,5 @@
 % 3.2.CmakeApplication.tex
-%	Last update: 2019/10/03 F.Kanehori
+%	Last update: 2019/10/07 F.Kanehori
 %newpage
 \subsection{cmakeの実行}
 \label{subsec:CmakeApplication}
@@ -17,10 +17,8 @@
 \begin{narrow}[20pt]
 	組み込まれているSpringheadライブラリの各プロジェクト
 	(ここでは\tt{Base}を例にします)に対して\\
-	\hspace{20pt}\SprTop{/core/src/Base}下に
-	%\Path{\rm{<x64>}/\rm{<15.0>}/Base.dir}\Note{(*1)}\\
-	\Path{\it{\textless x64\textgreater}/%
-	      \it{\textless 15.0\textgreater}/Base.dir}\Note{(*1)}\\
+	\hspace{20pt}\SprTop{/core/src/Base/\it{\textless x64\textgreater}/%
+		\it{\textless 15.0\textgreater}/Base.dir}\Note{(*1)}\\
 	というディレクトリを作成し、
 	\AppTop{/\build /Base/Base.dir}から上記ディレクトリ\Note{(*1)}へ
 	linkを張る作業を\cmake\ configure時に(自動的に)行ないます。
@@ -85,7 +83,7 @@
 		\end{narrow}
 
 	  \item	アプリケーション側のプロジェクトファイルをSpringhead側の
-		プロジェクトファイルへのlinkとします。
+		プロジェクトファイルへのlinkとする。
 	\end{enumerate}
 	ターゲット\tt{sync}はアプリケーションのビルドにおいて
 	必ず最初に実行されるように依存関係が設定されます。
