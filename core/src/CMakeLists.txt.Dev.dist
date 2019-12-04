@@ -6,103 +6,10 @@
 cmake_minimum_required(VERSION 3.1)
 
 # ------------------------------------------------------------------------------
-#  Definition of project.
+#  Default name (replaced later).
 #
-set(ProjectName "Project")
-message(STATUS "Project: ${ProjectName}")
+set(ProjectName Project)
 project(${ProjectName} CXX)
-set(CMAKE_SUPPRESS_REGENERATION true)
-set(CMAKE_USE_RELATIVE_PATHS true)
-#
-set(Target ${ProjectName})
-
-# ******************************************************************************
-#  Customization section.
-# ******************************************************************************
-set(EMPTY)
-
-#  Binary(working) directory name used when you cmake Springhead library.
-#	In order to optimize build process between Springhead projects and
-#	your application program, you should adopt take "out-of-source"
-#	build method.
-#
-set(OOS_BLD_DIR "build")
-
-#  Configuration type(s).
-#	Remove unneccessary configuration type(s).
-if(${Windows})
-    set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
-else()
-    set(CMAKE_CONFIGURATION_TYPES Release)
-endif()
-
-#  library type.
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
-
-#  Source/include file names to incorporate to the application program.
-#
-file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
-
-#  Source/include file name(s) to EXCLUDE from compilation.
-#	Replace '${EMPTY}' with file name(s).
-#	Wild card is NOT available here.
-#	We recomend to use absolute path if file exists outside of
-#	current source directory (${CMAKE_SOURCE_DIR}).
-set(EXCLUDE_SRCS ${EMPTY})
-
-#  Springhead projects to incorporate in the application program.
-#	Remove unneccessary project name(s).
-#	Do not include 'RunSwig' in the list.
-set(SPR_PROJS ${EMPTY})
-#set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
-#	      HumanInterface Physics)
-#set(SPR_PROJS ${SPR_PROJS} EmbPython)
-
-#  Additional include path(s).
-#	Replace '${EMPTY}' with absolute path(s).
-#	Current directory can be refered as '${CMAKE_SOURCE_DIR}'.
-set(ADDITIONAL_INCDIR ${EMPTY})
-if(${Windows})
-    #set(ADDITIONAL_INCDIR "F:/Project/ExternalPackage/glui-2.37/include")
-endif()
-
-#  Additional library path(s).
-#	Replace '${EMPTY}' with absolute path(s).
-set(ADDITIONAL_LIBDIR ${EMPTY})
-#set(ADDITIONAL_LIBDIR
-#	"F:/Project/ExternalPackage/freeglut/lib/x64"
-#	"F:/Project/Springhead/dependency/lib/win64")
-
-#  Additional library name(s) required.
-#	Replace '${EMPTY}' with file name(s).
-set(ADDITIONAL_LIBS ${EMPTY})
-if(${Windows})
-#    set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
-#    set(ADDITIONAL_LIBS_DEBUG   python35_d.lib)
-#    set(ADDITIONAL_LIBS_RELEASE python35.lib)
-#    set(ADDITIONAL_LIBS_TRACE   python35.lib)
-endif()
-
-#  Default library name(s) to EXCLUDE from linking.
-#	Replace '${EMPTY}' with file name(s).
-set(EXCLUDE_LIBS ${EMPTY})
-if(${Windows})
-    #set(EXCLUDE_LIBS XINPUT.LIB)
-endif()
-
-#  Visual Studio Debugger settings.
-#	DEBUGGER_WORKING_DIRECTORY:
-#		Debugger working directory. Default is ${CMAKE_SOURCE_DIR},
-#		i.e. the directory where this file (CMakeLists.txt) is.
-#	DEBUGGER_COMMAND_ARGUMENTS:
-#		Debugger command line arguments.
-set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
-
-# ******************************************************************************
-#  End of customization section.
-# ******************************************************************************
 
 # ------------------------------------------------------------------------------
 #  Determine top directory of Springhead tree.
@@ -163,6 +70,25 @@ set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 include("${SPR_CORE_DIR}/make.func.cmake")
 
 # ------------------------------------------------------------------------------
+#  Read CMake settiing parameters.
+#
+set(_setting_file "${CMAKE_CURRENT_SOURCE_DIR}/CMakeSettings.txt")
+include(${_setting_file})
+
+# ------------------------------------------------------------------------------
+#  Definition of project.
+#
+if(NOT DEFINED ProjectName)
+    set(ProjectName Project)
+endif()
+message(STATUS "Project: ${ProjectName}")
+project(${ProjectName} CXX)
+set(CMAKE_SUPPRESS_REGENERATION true)
+set(CMAKE_USE_RELATIVE_PATHS true)
+#
+set(Target ${ProjectName})
+
+# ------------------------------------------------------------------------------
 #  Read compiler/linker option file (try to find in following order).
 #	(1) File specified by option "-D OPTS=<file>".
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
@@ -202,7 +128,8 @@ else()
 ##    endif()
 endif()
 
-# modify compile/link options if neccessary
+# ------------------------------------------------------------------------------
+#  Modify compile/link options if specified.
 #
 set(_modify_file "${SPR_TOP_DIR}/core/make.modify_opts.cmake")
 include(${_modify_file})
