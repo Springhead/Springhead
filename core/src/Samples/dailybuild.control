@@ -41,9 +41,11 @@ SolutionAlias	Makefile
 Build		False
 BuildLog	$(SprTest)/log/samples.build.log
 BuildErrLog	$(SprTest)/log/samples.build.error.log
-OutputDir	.
-#BinaryOut
+#OutputDir	.
+CMakeOutputDir	$(CMakeBuildDir)
+#BinaryOutName	a.out
 Run		False
 RunLog		$(SprTest)/log/samples.run.log
 RunErrLog	$(SprTest)/log/samples.run.error.log
+#UseCMake	True
 

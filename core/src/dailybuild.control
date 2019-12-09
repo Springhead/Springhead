@@ -42,6 +42,7 @@ MakeTarget	install
 BuildLog	$(SprTest)/log/springhead.lib.log
 BuildErrLog	$(SprTest)/log/springhead.lib.error.log
 #OutputDir	.
+CMakeOutputDir	$(CMakeBuildDir)
 #BinaryOutName	a.out
-UseCMake	False
+#UseCMake	False
 

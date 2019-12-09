@@ -307,13 +307,21 @@ class BuildAndRun:
 		tmplog = '%s/%s_%s_%s_build.log' % \
 			(tmplogdir, self.clsname, self.platform, self.config)
 		os.makedirs(tmplogdir, exist_ok=True)
+		FileOp().touch(tmplog)
 
-		cmnd = 'make -f %s compile' % slnfile
+		if (self.use_cmake):
+			os.chdir('build')
+			target = 'all'
+		else:
+			target = 'compile'
+		cmnd = 'make -f %s %s' % (slnfile, target)
 		args = opt_flags[opts]
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
 		proc.execute('%s %s' % (cmnd, args), shell=True,
 				stdout=tmplog, stderr=Proc.STDOUT)
 		stat = proc.wait()
+		if (self.use_cmake):
+			os.chdir('..')
 
 		cmnd = '%s %s' % (cmnd, args)
 		loginfo = [cmnd, tmplog]
