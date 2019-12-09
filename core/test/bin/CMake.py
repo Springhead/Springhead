@@ -31,6 +31,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2019/09/19 F.Kanehori	First version.
+#	Ver 1.01 2019/12/05 F.Kanehori	Fixed for unix.
 # ======================================================================
 import sys
 import os
@@ -53,8 +54,10 @@ class CMake:
 	#  Class constant.section
 	#
 	GENERATOR = {
-		2015: '"Visual Studio 14 2015" -A x64',
-		2017: '"Visual Studio 15 2017" -A x64'
+		'unix':	'"Unix Makefiles"',
+		2015:	'"Visual Studio 14 2015" -A x64',
+		2017:	'"Visual Studio 15 2017" -A x64',
+		2019:	'"Visual Studio 16 2019" -A x64'
 	}
 
 	#  Class initializer
@@ -71,6 +74,7 @@ class CMake:
 		self.verbose = verbose
 		#
 		self.generator = self.__find_generator(ccver)
+		self.error = Error(self.clsname)
 
 	#  Prepare CMake environment.
 	#
@@ -92,7 +96,7 @@ class CMake:
 			status = -1
 			srcfile = dstfile
 		if status != 0:
-			Error().error('"%s" not found' % srcfile)
+			self.error.error('"%s" not found' % srcfile)
 		return status
 
 	#  Configure and generate solution file.
@@ -133,9 +137,11 @@ class CMake:
 		if status != 0:
 			return None
 		#
+		if (Util.is_unix()):
+			return "Makefile"
 		slnfile = self.__find_slnfile()
 		if slnfile is None:
-			Error().error('found more than two solution files')
+			self.error.error('found more than two solution files')
 		if self.verbose:
 			print('  solution file is %s'% slnfile)
 			print('cmake: generation end')
@@ -148,11 +154,15 @@ class CMake:
 	##  Find generator string.
 	#
 	def __find_generator(self, ccver):
+		if (Util.is_unix()):
+			return self.GENERATOR['unix']
 		generator = 2015	# default
 		if ccver in ['14.0', '14', 'v140', '2015']:
 			ccver = 2015
 		elif ccver in ['15.0', '15', 'v141', '2017']:
 			ccver = 2017
+		elif ccver in ['16.0', '16', 'v142', '2019']:
+			ccver = 2019
 		return self.GENERATOR[ccver]
 
 	##  Find solution file name.
@@ -160,14 +170,13 @@ class CMake:
 	def __find_slnfile(self):
 		names = glob.glob('%s/*.sln' % self.ctl.get(CFK.CMAKE_BLDDIR))
 		return names[0] if len(names) == 1 else None
-		if len(name) != 1:
-			return None
-		return names[0]
 
 	##  Open logfile (directory is created if necessary).
 	#
 	def __open(self, logpath):
 		path = logpath.split('/')
+		if (Util.is_unix()):
+			path = path[1:]
 		if len(path) > 1:
 			os.makedirs(path[:-1][0], exist_ok=True)
 		return open(logpath, 'a')
