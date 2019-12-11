@@ -33,6 +33,7 @@ import stat
 import glob
 import shutil
 import math
+import re
 from pathlib import Path
 from time import sleep
 
@@ -360,7 +361,7 @@ class FileOp:
 		if self.verbose:
 			print('__rm: %s' % path)
 		try:
-			if os.path.isdir(path):
+			if os.path.isdir(path) and not os.path.islink(path):
 				if use_shutil:
 					shutil.rmtree(path, ignore_errors=True)
 				else:
@@ -399,20 +400,24 @@ class FileOp:
 		#
 		#print('remove_all: path: %s' % path)
 		rc = 0
-		try:
-			for root, dirs, files in os.walk(path, topdown=False):
+		for root, dirs, files in os.walk(path, topdown=False):
+			try:
 				for name in files:
 					fpath = '%s/%s' % (root, name)
-					os.chmod(fpath, stat.S_IWRITE)
-					os.unlink(fpath)
+					if os.path.islink(fpath):
+						os.remove(fpath)
+					else:
+						os.chmod(fpath, stat.S_IWRITE)
+						os.unlink(fpath)
 				for name in dirs:
 					dpath = '%s/%s' % (root, name)
 					os.rmdir(dpath)
-		except OSError as why:
-			prog = '%s: rm' % self.clsname
-			msg = str(why)
-			Error(prog).error(msg)
-			rc = 1
+			except OSError as why:
+				m = re.match('\[Errno (\d+)\].*', str(why))
+				prog = '%s: rm' % self.clsname
+				msg = str(why)
+				Error(prog).error(msg)
+				rc = 1
 		#
 		if another_drive:
 			os.chdir(cwd)
