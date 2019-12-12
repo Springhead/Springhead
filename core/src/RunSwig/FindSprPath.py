@@ -42,6 +42,7 @@
 #	Ver 1.41 2018/03/09 F.Kanehori	Bug fixed.
 #	Ver 1.42 2018/03/14 F.Kanehori	Change code for error message.
 #	Ver 1.43 2019/01/10 F.Kanehori	Correct comment line.
+#	Ver 1.44 2019/12/12 F.Kanehori	Bug? fixed (for the time being).
 # ----------------------------------------------------------------------
 import sys
 import os
@@ -104,7 +105,8 @@ class FindSprPath:
 	#
 	def __err(self, msg):
 		cname = self.__class__.__name__
-		print('%s: %s' % (cname, msg), file=sys.stderr)
+		#print('%s: %s' % (cname, msg), file=sys.stderr)
+		print('%s: %s' % (cname, msg))
 
 
 # ======================================================================
