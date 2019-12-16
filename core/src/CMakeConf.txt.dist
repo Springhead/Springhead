@@ -61,8 +61,13 @@
 #    SPRINGHEAD_LIBRARY_RELEASE:
 #	Destination directory path (absolute path).
 #
-#set(SPRINGHEAD_INCLUDE_PREFIX      "C:/usr/local")
-#set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/usr/local/lib")
-#set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/usr/local/lib")
+if(${Windows})
+#    set(SPRINGHEAD_INCLUDE_PREFIX      "C:/usr/local")
+#    set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/usr/local/lib")
+#    set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/usr/local/lib")
+elseif(${unix})
+#    set(SPRINGHEAD_INCLUDE_PREFIX      "/home/user/install")
+#    set(SPRINGHEAD_LIBRARY_DIR		"/home/user/install/lib")
+endif()
 
 # end: CMakeConf.txt

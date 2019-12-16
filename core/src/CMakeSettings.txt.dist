@@ -33,6 +33,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Library type.
 #	Select one of STATIC or SHARED.
+#	(Type SHARED is not supported for Windows)
 #
 set(LIBTYPE STATIC)
 #set(LIBTYPE SHARED)
