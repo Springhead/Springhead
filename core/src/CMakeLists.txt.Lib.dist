@@ -54,7 +54,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 
-if(${Windwos})
+if(${Windows})
     set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 elseif(${unix})
     set(CMAKE_CONFIGURATION_TYPES Release)
@@ -232,12 +232,25 @@ if(${Windows})
     set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
 endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
-set(LIBNAME_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
-set(LIBNAME_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
-set(LIBNAME_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
-set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_DEBUG})
-set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_RELEASE})
-set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBNAME_TRACE})
+if(${Windows})
+    set(LIBBASE_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
+    set(LIBBASE_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
+    set(LIBBASE_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
+    set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBBASE_DEBUG})
+    set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBBASE_RELEASE})
+    set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBBASE_TRACE})
+    set(LIB_SUFFIX lib)
+    set(LIBNAME_DEBUG   ${Target}${LIBBASE_DEBUG}.${LIB_SUFFIX})
+    set(LIBNAME_RELEASE ${Target}${LIBBASE_RELEASE}.${LIB_SUFFIX})
+    set(LIBNAME_TRACE   ${Target}${LIBBASE_TRACE}.${LIB_SUFFIX})
+elseif(${unix})
+    if("${LIBTYPE}" STREQUAL "STATIC")
+	set(LIB_SUFFIX a)
+    else()
+	set(LIB_SUFFIX so)
+    endif()
+    set(LIBNAME lib${Target}.${LIB_SUFFIX})
+endif()
 
 # ------------------------------------------------------------------------------
 #  Include directories.
@@ -259,10 +272,14 @@ endforeach()
 # ------------------------------------------------------------------------------
 #  Generate Springhead Library.
 #
-if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
-    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
-else ()
-    set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
+if(${Windows})
+    if ("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
+	set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win64)
+    else ()
+	set(LIBDIR ${SPR_TOP_DIR}/generated/lib/win32)
+    endif()
+elseif(${unix})
+    set(LIBDIR ${SPR_TOP_DIR}/generated/lib)
 endif()
 
 if(${Windows})
@@ -279,14 +296,13 @@ elseif(${unix})
     set(_cmnd ./SpringheadLib.sh)
     if("${LIBTYPE}" STREQUAL "STATIC")
 	set(_outdir ${SPR_SRC_DIR})
-	set(_libname libSpringhead.a)
 	set(_gendir ${SPR_TOP_DIR}/generated/lib)
 	add_custom_target(${ProjectName} ALL
 	    COMMAND mkdir -p ${_outdir}
-	    COMMAND ${_cmnd} STATIC ${_outdir}/${_libname} ${_members}
-	    COMMAND ranlib ${_outdir}/${_libname}
+	    COMMAND ${_cmnd} STATIC ${_outdir}/${LIBNAME} ${_members}
+	    COMMAND ranlib ${_outdir}/${LIBNAME}
 	    COMMAND mkdir -p ${_gendir}
-	    COMMAND cp ${_outdir}/${_libname} ${_gendir}
+	    COMMAND cp ${_outdir}/${LIBNAME} ${_gendir}
 	    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	    DEPENDS ${SPR_PROJS}
 	    COMMENT [[  generating Springhead Library... ]]
@@ -306,25 +322,41 @@ endif()
 # ------------------------------------------------------------------------------
 #  Install.
 #
-if(DEFINED SPRINGHEAD_INCLUDE_PREFIX	  AND
-   DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG	  AND
-   DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
-    message("** INSTALL: Debug:   ${SPRINGHEAD_LIBRARY_DIR_DEBUG} **")
-    message("** INSTALL: Release: ${SPRINGHEAD_LIBRARY_DIR_RELEASE} **")
-    install(FILES ${LIBPATH_DEBUG}
-	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
-	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	CONFIGURATIONS Debug
-    )
-    install(FILES ${LIBPATH_RELEASE}
-	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_RELEASE}
-	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	CONFIGURATIONS Release
-    )
+if(DEFINED SPRINGHEAD_INCLUDE_PREFIX)
     message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
     install(DIRECTORY ${SPR_INC_DIR}
 	DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
     )
+endif()
+if(${Windows})
+    if(DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG)
+	set(_libpath ${LIBDIR}/${LIBNAME_DEBUG})
+	message("** INSTALL: ${LIBNAME_DEBUG}: ${SPRINGHEAD_LIBRARY_DIR_DEBUG} **")
+	install(FILES ${_libpath}
+	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
+    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	    CONFIGURATIONS Debug
+	)
+    endif()
+    if(DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
+	set(_libpath ${LIBDIR}/${LIBNAME_RELEASE})
+	message("** INSTALL: ${LIBNAME_RELEASE}: ${SPRINGHEAD_LIBRARY_DIR_RELEASE} **")
+	install(FILES ${_libpath}
+	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR_RELEASE}
+	    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	    CONFIGURATIONS Release
+	)
+    endif()
+elseif(${unix})
+    if(DEFINED SPRINGHEAD_LIBRARY_DIR)
+	set(_libpath ${LIBDIR}/${LIBNAME})
+	message("** INSTALL: ${LIBNAME}: ${SPRINGHEAD_LIBRARY_DIR} **")
+	install(FILES ${_libpath}
+	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR}
+	    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	    CONFIGURATIONS Release
+	)
+    endif()
 endif()
 
 # end: CMakeLists.txt
