@@ -28,8 +28,9 @@
 #	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
 #	Ver 1.51 2018/08/02 F.Kanehori	Bug fixed.
 #	Ver 1.52 2019/09/05 F.Kanehori	Set default VS version to 15.0.
+#	Ver 1.53 2019/12/16 F.Kanehori	New cleanup code for unix.
 # ======================================================================
-version = 1.52
+version = 1.53
 
 import sys
 import os
@@ -222,7 +223,12 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 		# remove.  And also some idle time needs to remove
 		# top directory after all its contents are removed
 		# -- mistery.. (Windows only?).
-		FileOp().rm(repository, use_shutil=False, idle_time=1)
+		if Util.is_unix:
+			cmnd = '/bin/rm -rf %s' % repository
+			Proc().execute(cmnd, shell=True).wait()
+			
+		else:
+			FileOp().rm(repository, use_shutil=False, idle_time=1)
 	else:
 		print('test repository "%s" not exist' % repository)
 	print()
