@@ -131,14 +131,16 @@ endif()
 # ******************************************************************************
 #  Additional compile/link options.
 #    ** compiler options **
-#	WIN_COPT_COMMON_APPEND	  appended to CMAKE_CXX_FLAGS.
-#	WIN_COPT_xxxxxx_APPEND	  appended to CMAKE_CXX_FLAGS_xxxxx.
-#       LINUX_INCDIRS_PREPEND	  prepended to ${LINUX_COPT_INCDIR}.
-#       LINUX_INCDIRS_APPEND	  appended to ${LINUX_COPT_INCDIR}.
-#       LINUX_COPT_MACROS_APPEND  appended to ${LINUX_COPT_MACROS}.
+#	WIN_COPT_COMMON_APPEND	  append to CMAKE_CXX_FLAGS.
+#	WIN_COPT_xxxxxx_APPEND	  append to CMAKE_CXX_FLAGS_xxxxx.
+#	WIN_LINK_COMMON_APPEND	  append to CMAKE_EXE_LINKER_FLAGS.
+#	WIN_LINK_xxxxxx_APPEND	  append to CMAKE_EXE_LINKER_FLAGS_xxxxx.
+#       LINUX_INCDIRS_PREPEND	  prepend to ${LINUX_COPT_INCDIR}.
+#       LINUX_INCDIRS_APPEND	  append to ${LINUX_COPT_INCDIR}.
+#       LINUX_COPT_MACROS_APPEND  append to ${LINUX_COPT_MACROS}.
 #    ** linker options **
-#       LINUX_LDFLAGS_PREPEND	  prepended to ${LINUX_LDFLAGS}.
-#       LINUX_LDFLAGS_APPEND	  appended to ${LINUX_LDFLAGS}.
+#       LINUX_LDFLAGS_PREPEND	  prepend to ${LINUX_LDFLAGS}.
+#       LINUX_LDFLAGS_APPEND	  append to ${LINUX_LDFLAGS}.
 #
 #       See "CMakeOpts.txt.dist" for referred variables.
 # ******************************************************************************

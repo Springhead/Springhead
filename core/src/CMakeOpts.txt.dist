@@ -62,7 +62,7 @@ set(WIN_LINK_RELEASE	"")
 set(WIN_LINK_TRACE	"")
 endif()	# ${Windows}
 
-if(${Linux})
+if(${unix})
 # ------------------------------------------------------------------------------
 #  Compile options for Linux (g++).
 #
@@ -96,8 +96,17 @@ set(LINUX_COPT_MACROS	-D__cdecl=)
 ##list(APPEND LINUX_COPT	${LINUX_COPT_FLAGS})
 ##list(APPEND LINUX_COPT	${LINUX_COPT_MACROS})
 
-if("${LIBTYPE}" STREQUAL "STATIC")
-    set(LINUX_SPRLIB	-L${SPR_SRC_DIR} -lSpringhead)
+if("${SPR_PROJS}" STREQUAL "${EMPTY}")
+    if(${Windows})
+    else()
+	if("${LIBTYPE}" STREQUAL "STATIC")
+	    set(LINUX_SPRLIB	-L${SPR_SRC_DIR} -lSpringhead)
+	else()
+	    #  環境変数 LD_LIBRARY_PATH の設定も必要です
+	    #  Environment variable LD_LIBRARY_PATH should be set appropreately.
+	    set(LINUX_SPRLIB	-lSpringhead)
+	endif()
+    endif()
 endif()
 set(LINUX_STDLIB	-L/usr/lib
 			-L/usr/X11R6/lib
@@ -107,6 +116,6 @@ set(LINUX_STDLIB	-L/usr/lib
 ##set(LINUX_LDFLAGS	${LINUX_SPRLIB} ${LINUX_STDLIB})
 
 set(ARFLAGS	  	r)
-endif()	# ${Linux}
+endif()	# ${unix}
 
 # end: CMakeOpts.txt
