@@ -109,9 +109,9 @@ if(${Windows})
     set(CMAKE_CXX_FLAGS_DEBUG	"${WIN_COPT_DEBUG}")
     set(CMAKE_CXX_FLAGS_RELEASE	"${WIN_COPT_RELEASE}")
     set(CMAKE_CXX_FLAGS_TRACE	"${WIN_COPT_TRACE}")
-    foreach(macros IN ITEMS ${WIN_COPT_MACROS})
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
-    endforeach()
+#    foreach(macros IN ITEMS ${WIN_COPT_MACROS})
+#	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
+#    endforeach()
     set(CMAKE_EXE_LINKER_FLAGS		"${WIN_LINK_COMMON}")
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG	"${WIN_LINK_DEBUG}")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE	"${WIN_LINK_RELEASE}")
@@ -378,29 +378,5 @@ foreach(_prop DEBUGGER_WORKING_DIRECTORY DEBUGGER_COMMAND_ARGUMENTS)
 	set_target_properties(${Target} PROPERTIES VS_${_prop} ${${_prop}})
     endif()
 endforeach()
-
-# ------------------------------------------------------------------------------
-#  Install.
-#
-if(DEFINED SPRINGHEAD_INCLUDE_PREFIX	  AND
-   DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG	  AND
-   DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
-    message("** INSTALL: Debug:   ${SPRINGHEAD_LIBRARY_DIR_DEBUG} **")
-    message("** INSTALL: Release: ${SPRINGHEAD_LIBRARY_DIR_RELEASE} **")
-    install(FILES ${LIBPATH_DEBUG}
-	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
-	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	CONFIGURATIONS Debug
-    )
-    install(FILES ${LIBPATH_RELEASE}
-	DESTINATION ${SPRINGHEAD_LIBRARY_DIR_RELEASE}
-	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	CONFIGURATIONS Release
-    )
-    message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
-    install(DIRECTORY ${SPR_INC_DIR}
-	DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
-    )
-endif()
 
 # end: CMakeLists.txt
