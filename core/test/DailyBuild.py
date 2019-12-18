@@ -29,8 +29,9 @@
 #	Ver 1.51 2018/08/02 F.Kanehori	Bug fixed.
 #	Ver 1.52 2019/09/05 F.Kanehori	Set default VS version to 15.0.
 #	Ver 1.53 2019/12/16 F.Kanehori	New cleanup code for unix.
+#	Ver 1.54 2019/12/18 F.Kanehori	Bug fixed.
 # ======================================================================
-version = 1.53
+version = 1.54
 
 import sys
 import os
@@ -223,7 +224,7 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 		# remove.  And also some idle time needs to remove
 		# top directory after all its contents are removed
 		# -- mistery.. (Windows only?).
-		if Util.is_unix:
+		if Util.is_unix():
 			cmnd = '/bin/rm -rf %s' % repository
 			Proc().execute(cmnd, shell=True).wait()
 			
