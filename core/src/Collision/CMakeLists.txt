@@ -100,13 +100,6 @@ foreach(_dir ${LINUX_INCDIRS})
 	PRIVATE ${_tmp}
     )
 endforeach()
-##if(DEFINED ADDITIONAL_INCDIR)
-##    foreach(_dir ${ADDITIONAL_INCDIR})
-##	target_include_directories(${Target}
-##	    PRIVATE ${_dir}
-##	)
-##    endforeach()
-##endif()
 if(${Windows})
     target_include_directories(${Target}
 	PRIVATE .
@@ -114,12 +107,6 @@ if(${Windows})
 	PRIVATE ${SPR_SRC_DIR}
 	PRIVATE ${SPR_TOP_DIR}/dependency/src
     )
-##elseif(${Linux})
-##    target_include_directories(${Target}
-##	PRIVATE .
-##	PRIVATE ${SPR_INC_DIR}
-##	PRIVATE ${SPR_SRC_DIR}
-##    )
 endif()
 if(DEFINED Boost_INCLUDE_DIRS)
     target_include_directories(${Target}
@@ -136,11 +123,11 @@ if(DEFINED GLUT_INCLUDE_DIR)
 	PRIVATE ${GLUT_INCLUDE_DIR}
     )
 endif()
-##if(DEFINED ADDITIONAL_INCDIR)
-##    target_include_directories(${Target}
-##	PRIVATE ${ADDITIONAL_INCDIR}
-##    )
-##endif()
+if(DEFINED ADDITIONAL_INCDIR)
+    foreach(_dir ${ADDITIONAL_INCDIR})
+	target_include_directories(${Target} PRIVATE ${_dir})
+    endforeach()
+endif()
 
 # integrate intermediate directory
 #	${CMAKE_BINARY_DIR}/${Target}/${Target}.dir

@@ -134,9 +134,9 @@ if(DEFINED GLUT_INCLUDE_DIR)
     )
 endif()
 if(DEFINED ADDITIONAL_INCDIR)
-    target_include_directories(${Target}
-	PRIVATE ${ADDITIONAL_INCDIR}
-    )
+    foreach(_dir ${ADDITIONAL_INCDIR})
+	target_include_directories(${Target} PRIVATE ${_dir})
+    endforeach()
 endif()
 
 # ------------------------------------------------------------------------------
