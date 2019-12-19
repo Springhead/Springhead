@@ -33,14 +33,17 @@
 #    If you installed above packages and intend to use them, uncomment and
 #    define installed directory list to CMAKE_PREFIX_PATH (USE ABSOLUTE PATH).
 #
-#set(CMAKE_PREFIX_PATH
+if(${Windows})
+#    set(CMAKE_PREFIX_PATH
 #	"F:/Project/ExternalPackage/boost_1_70_0/include/boost-1_70"
 #	"F:/Project/ExternalPackage/glew-2.1.0"
 #	"F:/Project/ExternalPackage/glew-2.1.0/lib/Release/x64"
 #	"F:/Project/ExternalPackage/freeglut"
-#	"F:/Project/ExternalPackage/glui-2.37/include"
-#)
-#set(CMAKE_PREFIX_PATH "/usr")
+#    )
+#    set(ADDITIONAL_INCDIR "F:/Project/ExternalPackage/glui-2.37/include")
+elseif(${unix})
+#    set(CMAKE_PREFIX_PATH "/usr")
+endif()
 
 # ------------------------------------------------------------------------------
 #  Install directories (library and headers).

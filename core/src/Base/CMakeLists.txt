@@ -90,13 +90,6 @@ foreach(_dir ${LINUX_INCDIRS})
     )
 endforeach()
 
-##if(DEFINED ADDITIONAL_INCDIR)
-##    foreach(_dir ${ADDITIONAL_INCDIR})
-##	target_include_directories(${Target}
-##	    PRIVATE ${_dir}
-##	)
-##    endforeach()
-##endif()
 if(${Windows})
     target_include_directories(${Target}
 	PRIVATE .
@@ -104,12 +97,6 @@ if(${Windows})
 	PRIVATE ${SPR_SRC_DIR}
 	PRIVATE ${SPR_TOP_DIR}/dependency/src
     )
-##elseif(${Linux})
-##    target_include_directories(${Target}
-##	PRIVATE .
-##	PRIVATE ${SPR_INC_DIR}
-##	PRIVATE ${SPR_SRC_DIR}
-##    )
 endif()
 
 # integrate intermediate directory
