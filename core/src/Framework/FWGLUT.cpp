@@ -104,7 +104,7 @@ void FWGLUT::GlutKeyFunc(unsigned char ch, int x, int y){
 	FWGLUT::GetInstance()->keyMouse->OnKey(ch, x, y);
 }
 
-void FWGLUT::GlutSpecialKeyFunc(int ch, int x, int y){
+void FWGLUT::GlutSpecialKeyFunc(int ch, int x, int y) {
 	FWGLUT::GetInstance()->keyMouse->OnSpecialKey(ch, x, y);
 }
 
@@ -113,6 +113,10 @@ void FWGLUT::GlutMouseWheelFunc(int wheel, int direction, int x, int y){
 	FWGLUT::GetInstance()->keyMouse->OnMouseWheel(wheel, direction, x, y);
 }
 #endif
+
+void FWGLUT::GlutCloseFunc() {
+	FWGLUT::GetInstance()->EndMainLoop();
+}
 
 void FWGLUT::AtExit(){
 	FWApp::GetApp()->AtExit();
@@ -255,6 +259,7 @@ void FWGLUT::RegisterCallbacks(){
 #ifdef USE_FREEGLUT
 	glutMouseWheelFunc   (FWGLUT::GlutMouseWheelFunc);
 #endif
+	glutCloseFunc(FWGLUT::GlutCloseFunc);
 }
 
 ///	ウィンドウを破棄する
