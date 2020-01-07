@@ -197,6 +197,20 @@ struct PHMaterial{
 	float stribeckVelocity;
 	float stribeckmu;
 
+	//GMSモデルのためのパラメータ
+	int proxyN;
+	std::vector<float> mus;					///< 動摩擦係数
+	std::vector<float> mu0s;					///< 最大静止摩擦係数	
+	std::vector<float> timeVaryFrictionAs;	///< 時変摩擦定数A
+	std::vector<float> timeVaryFrictionBs;	///< 時変摩擦定数B
+	std::vector<float> timeVaryFrictionDs;	///< 時変摩擦定数D
+	std::vector<float> timeVaryFrictionCs;	///< 時変摩擦定数C
+	std::vector<float> muCurs;				///< 計算された時変摩擦係数
+	std::vector<float> stribeckVelocitys;
+	std::vector<float> stribeckmus;
+	std::vector<Vec3d> z;
+	std::vector<double> c;
+
 	struct VelocityField{
 		enum{
 			NONE,

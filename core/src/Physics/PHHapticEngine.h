@@ -235,11 +235,17 @@ public:
 	virtual void HapticRendering(PHHapticStepBase* hs);
 	///	Compute all constraints.
 	void CompIntermediateRepresentationForDynamicProxy(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
+
+	void CompIntermediateRepresentationForDynamicProxy2(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
+
 	///	Genreate constraints for surface normal
 	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
 	///	Generate constrants for static friction
 	bool CompFrictionIntermediateRepresentation(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+	
+	bool CompFrictionIntermediateRepresentation2(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+
 	///	PENALTY based haptic rendering
 	void PenaltyBasedRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
 	///	CONSTRAINT and DYNAMIC_PROXY based Haptic Rendering

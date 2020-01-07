@@ -104,6 +104,19 @@ public:
 	float stribeckmu;			///< 速度∞のときの摩擦係数
 	float muCur;				///< 計算された時変摩擦係数
 
+	std::vector<float> mus;					///< 動摩擦係数
+	std::vector<float> mu0s;					///< 最大静止摩擦係数	
+	std::vector<float> timeVaryFrictionAs;	///< 時変摩擦定数A
+	std::vector<float> timeVaryFrictionBs;	///< 時変摩擦定数B
+	std::vector<float> timeVaryFrictionDs;	///< 時変摩擦定数D
+	std::vector<float> timeVaryFrictionCs;	///< 時変摩擦定数C
+	std::vector<float> muCurs;				///< 計算された時変摩擦係数
+	std::vector<float> stribeckVelocitys;
+	std::vector<float> stribeckmus;
+	std::vector<Vec3d> z;
+	std::vector<double> c;
+
+
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
 	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
@@ -121,6 +134,9 @@ public:
 	int NIrsNormal() { return nIrsNormal;  }
 	Vec3d GetIrForce(int i) { return irs[i]->force;  }
 	double GetMu() { return muCur;  }
+
+	// GMS用
+	double GetMus(int id) { return muCurs[id]; }
 };
 
 //----------------------------------------------------------------------------
@@ -137,6 +153,11 @@ struct PHSolidPairForHapticSt{
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
 	unsigned slipCount;      ///stribeck効果用
+
+							 //GMS用
+	int proxyN;
+	unsigned* fricCounts;
+	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
@@ -162,6 +183,10 @@ public:
 	PHSolidPairForHapticIf::FrictionState GetFrictionState() { return frictionState; }
 	unsigned GetContactCount() { return contactCount;  }
 	unsigned GetFrictionCount() { return fricCount; }
+
+	//GMS用
+	void SetFrictionState(int i, PHSolidPairForHapticIf::FrictionState state) { frictionStates[i] = state; }
+
 	Vec3d GetForce(){ return force; }
 	Vec3d GetTorque(){ return torque; }
 

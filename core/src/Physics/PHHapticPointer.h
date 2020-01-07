@@ -36,6 +36,9 @@ struct PHHapticPointerPhysicsSt {
 	Posed defaultPose;
 	double rotaionalWeight;
 	PHHapticPointerPhysicsSt();
+
+	//GMS用
+	int proxyN;
 };
 
 class PHHapticPointer : public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
@@ -92,6 +95,10 @@ public:
 		defaultPose = p; 
 	}
 	Posed	GetDefaultPose(){ return defaultPose; }
+
+	//GMS用
+	void	SetProxyN(int n) { proxyN = n; }
+	int		GetProxyN() { return proxyN; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {
