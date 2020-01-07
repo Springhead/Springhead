@@ -108,7 +108,9 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	FrictionState GetFrictionState();
 	unsigned GetContactCount();
 	unsigned GetFrictionCount();
-
+	//GMS
+	void InitFrictionState(int n);
+	void InitFrictionCount(int n);
 	Vec3d GetForce();
 	Vec3d GetTorque();
 };

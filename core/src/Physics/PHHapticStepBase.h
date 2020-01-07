@@ -155,8 +155,7 @@ struct PHSolidPairForHapticSt{
 	unsigned slipCount;      ///stribeck効果用
 
 							 //GMS用
-	int proxyN;
-	unsigned* fricCounts;
+	std::vector<unsigned> fricCounts;
 	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
 
 	Vec3d contactVibrationVel;
@@ -185,7 +184,9 @@ public:
 	unsigned GetFrictionCount() { return fricCount; }
 
 	//GMS用
-	void SetFrictionState(int i, PHSolidPairForHapticIf::FrictionState state) { frictionStates[i] = state; }
+	void InitFrictionState(int n) { for (int i = 0; i < n; i++) frictionStates.push_back(PHSolidPairForHapticIf::FREE); }
+	void InitFrictionCount(int n) { for (int i = 0; i < n; i++) fricCounts.push_back(0); }
+
 
 	Vec3d GetForce(){ return force; }
 	Vec3d GetTorque(){ return torque; }

@@ -347,18 +347,24 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 	if (Nirs == 0) return false;
 	bool bStatic = false;
 	double hdt = he->GetHapticTimeStep();
+
+// GMS用
+	if (sh->muCurs.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sh->muCurs.push_back(0);
+
+
 	for (int i = 0; i < pointer->proxyN; i++) {
 
 		//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 		double alpha = hdt * hdt * pointer->GetMassInv() * pointer->frictionSpring;
 
+	
 		//	摩擦係数の計算
 		if (pointer->bTimeVaryFriction) {
-			if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC) {
-				//	if (sp->frictionState == PHSolidPairForHapticIf::STATIC) {
-				sh->muCurs[i] = sh->mus[i] + sh->mus[i] * (sh->timeVaryFrictionAs[i] * log(1 + sh->timeVaryFrictionBs[i] * (sp->fricCounts[i] + 1) * hdt));
-				//	sh->muCur = sh->mu + sh->mu*(sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->fricCount + 1) * hdt));
-			}
+				if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC) {
+					//	if (sp->frictionState == PHSolidPairForHapticIf::STATIC) {
+					sh->muCurs[i] = sh->mus[i] + sh->mus[i] * (sh->timeVaryFrictionAs[i] * log(1 + sh->timeVaryFrictionBs[i] * (sp->fricCounts[i] + 1) * hdt));
+					//	sh->muCur = sh->mu + sh->mu*(sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->fricCount + 1) * hdt));
+				}
 		}
 		else {
 			sh->muCurs[i] = sh->mus[i];
@@ -565,6 +571,12 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 		double t = he->GetLoopCount() / syncCount;
 		if (t > 1.0) t = 1.0;
 
+		//GMS用の初期化
+		if (sp->frictionStates.empty()) {
+			sp->InitFrictionState(pointer->GetProxyN());
+			sp->InitFrictionCount(pointer->GetProxyN());
+		}
+
 		sp->force.clear();
 		sp->torque.clear();
 		sp->lastInterpolationPose = sp->interpolationPose;
@@ -579,7 +591,6 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 		}
 		// 接触したとして摩擦計算のための相対位置を計算
 		// 相対摩擦
-		DSTR << sp->proxyN << std::endl;
 		for (int i = 0; i < pointer->proxyN; i++) {
 			if (sp->frictionStates[i] == PHSolidPairForHapticIf::FREE) {
 				sp->frictionStates[i] = PHSolidPairForHapticIf::STATIC;
