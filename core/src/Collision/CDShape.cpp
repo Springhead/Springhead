@@ -25,8 +25,14 @@ PHMaterial::PHMaterial(){
 	vibT = 0;
 	vibContact = false;
 
-	mu = 0.3f;
+	mu = 0.35f;
 	mu0 = 0.5f;
+
+
+	//GMS用
+	proxyN = 3;
+
+
 	/**	時変摩擦係数のための係数	ms = mu+ A log(1+Bt),  md = mu+ A log (1+B C/v)  [Dieterich 1979]
 		Cは動摩擦時のスリップ距離を意味する C/v < dt(時間刻み) のときは、v=C/dt を使う */
 	timeVaryFrictionA = 0.1f;
@@ -34,6 +40,8 @@ PHMaterial::PHMaterial(){
 	timeVaryFrictionC = 0.0f;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	frictionViscosity = 0.0f;
+	stribeckVelocity = 0.1f;
+	stribeckmu = 0.1f;
 
 	velocityFieldMode      = VelocityField::NONE;
 	velocityFieldAxis      = Vec3d();
