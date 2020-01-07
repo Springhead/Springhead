@@ -72,6 +72,11 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	float   GetContactForce(int i);					///<	近傍物体iからの接触力
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
 	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
+
+													//GMS用
+	void	SetProxyN(int n);				///<	proxyの数
+	int		GetProxyN();						///<    proxyの数
+
 	void SetProxyVelocity(SpatialVector spv);
 
 	void	AddHapticForce(const SpatialVector& f);
@@ -88,6 +93,9 @@ struct PHShapePairForHapticIf : public CDShapePairIf {
 	double GetMu();
 	PHFrameIf* GetFrame(int i);
 	void UpdateCache();
+
+	//GMS用
+	double GetMus(int id);
 };
 struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	SPR_IFDEF(PHSolidPairForHaptic);
@@ -100,6 +108,7 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	FrictionState GetFrictionState();
 	unsigned GetContactCount();
 	unsigned GetFrictionCount();
+
 	Vec3d GetForce();
 	Vec3d GetTorque();
 };
