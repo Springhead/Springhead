@@ -4,55 +4,68 @@
 #include <Physics/PHHapticStepSingle.h>
 #include <Physics/PHHapticStepLocalDynamics.h>
 
-namespace Spr{;
+namespace Spr {
+	;
 
-//----------------------------------------------------------------------------
-// PHSolidForHaptic
+	//----------------------------------------------------------------------------
+	// PHSolidForHaptic
 
-PHSolidForHaptic::PHSolidForHaptic(){
-	bPointer = false;	
-	doSim = 0;	
-	NLocalFirst = 0;
-	NLocal = 0;
-}
-void PHSolidForHaptic::AddForce(Vec3d f){
-	force += f;
-}
-void PHSolidForHaptic::AddForce(Vec3d f, Vec3d r){
-	torque += (r - localSolid.pose * localSolid.center) ^ f;
-	force += f;
-}
-//----------------------------------------------------------------------------
-// PHShapePairForHaptic
-PHShapePairForHaptic::PHShapePairForHaptic(){
-	springK = 0;
-	damperD= 0;
-	mu = 0;
-	mu0 = 0;
-	timeVaryFrictionA = 0;
-	timeVaryFrictionB = 0;
-	timeVaryFrictionC = 0;
-	frictionViscosity = 0;
-	stribeckVelocity = 0;
-	stribeckmu = 0;
-	muCur = 0;
-	nIrsNormal = 0;
-}
-void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
-	PHShapePair::Init(sp, fr0, fr1);
-	UpdateCache();
-}
-void PHShapePairForHaptic::UpdateCache() {
-	springK = (shape[0]->GetReflexSpring() + shape[1]->GetReflexSpring()) * 0.5;
-	damperD = (shape[0]->GetReflexDamper() + shape[1]->GetReflexDamper()) * 0.5;
-	mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
-	mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
-	timeVaryFrictionA = (shape[0]->GetMaterial().timeVaryFrictionA + shape[1]->GetMaterial().timeVaryFrictionA) * 0.5;
-	timeVaryFrictionB = (shape[0]->GetMaterial().timeVaryFrictionB + shape[1]->GetMaterial().timeVaryFrictionB) * 0.5;
-	timeVaryFrictionC = (shape[0]->GetMaterial().timeVaryFrictionC + shape[1]->GetMaterial().timeVaryFrictionC) * 0.5;
-	frictionViscosity = (shape[0]->GetMaterial().frictionViscosity + shape[1]->GetMaterial().frictionViscosity) * 0.5;
-	stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocity + shape[1]->GetMaterial().stribeckVelocity) * 0.5;
-	stribeckVelocity = (shape[0]->GetMaterial().stribeckmu + shape[1]->GetMaterial().stribeckmu) * 0.5;
+	PHSolidForHaptic::PHSolidForHaptic() {
+		bPointer = false;
+		doSim = 0;
+		NLocalFirst = 0;
+		NLocal = 0;
+	}
+	void PHSolidForHaptic::AddForce(Vec3d f) {
+		force += f;
+	}
+	void PHSolidForHaptic::AddForce(Vec3d f, Vec3d r) {
+		torque += (r - localSolid.pose * localSolid.center) ^ f;
+		force += f;
+	}
+	//----------------------------------------------------------------------------
+	// PHShapePairForHaptic
+	PHShapePairForHaptic::PHShapePairForHaptic() {
+		springK = 0;
+		damperD = 0;
+		mu = 0;
+		mu0 = 0;
+		timeVaryFrictionA = 0;
+		timeVaryFrictionB = 0;
+		timeVaryFrictionC = 0;
+		frictionViscosity = 0;
+		stribeckVelocity = 0;
+		stribeckmu = 0;
+		muCur = 0;
+		nIrsNormal = 0;
+	}
+	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
+		PHShapePair::Init(sp, fr0, fr1);
+		UpdateCache();
+	}
+	void PHShapePairForHaptic::UpdateCache() {
+		springK = (shape[0]->GetReflexSpring() + shape[1]->GetReflexSpring()) * 0.5;
+		damperD = (shape[0]->GetReflexDamper() + shape[1]->GetReflexDamper()) * 0.5;
+		mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
+		mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
+		timeVaryFrictionA = (shape[0]->GetMaterial().timeVaryFrictionA + shape[1]->GetMaterial().timeVaryFrictionA) * 0.5;
+		timeVaryFrictionB = (shape[0]->GetMaterial().timeVaryFrictionB + shape[1]->GetMaterial().timeVaryFrictionB) * 0.5;
+		timeVaryFrictionC = (shape[0]->GetMaterial().timeVaryFrictionC + shape[1]->GetMaterial().timeVaryFrictionC) * 0.5;
+		frictionViscosity = (shape[0]->GetMaterial().frictionViscosity + shape[1]->GetMaterial().frictionViscosity) * 0.5;
+		stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocity + shape[1]->GetMaterial().stribeckVelocity) * 0.5;
+		stribeckmu = (shape[0]->GetMaterial().stribeckmu + shape[1]->GetMaterial().stribeckmu) * 0.5;
+
+		for (int i = 0; i < shape[0]->GetMaterial().timeVaryFrictionAs.size(); i++) {
+			mu = (shape[0]->GetMaterial().mus[i] + shape[1]->GetMaterial().mus[i]) * 0.5;
+			mu0 = (shape[0]->GetMaterial().mu0s[i] + shape[1]->GetMaterial().mu0s[i]) * 0.5;
+			timeVaryFrictionA = (shape[0]->GetMaterial().timeVaryFrictionAs[i] + shape[1]->GetMaterial().timeVaryFrictionAs[i]) * 0.5;
+			timeVaryFrictionB = (shape[0]->GetMaterial().timeVaryFrictionBs[i] + shape[1]->GetMaterial().timeVaryFrictionBs[i]) * 0.5;
+			timeVaryFrictionC = (shape[0]->GetMaterial().timeVaryFrictionCs[i] + shape[1]->GetMaterial().timeVaryFrictionCs[i]) * 0.5;
+			stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocitys[i] + shape[1]->GetMaterial().stribeckVelocitys[i]) * 0.5;
+			stribeckmu = (shape[0]->GetMaterial().stribeckmus[i] + shape[1]->GetMaterial().stribeckmus[i]) * 0.5;
+		}
+
+
 }
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	// 0:剛体, 1:力覚ポインタ
