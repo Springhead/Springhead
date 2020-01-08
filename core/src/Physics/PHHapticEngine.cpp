@@ -38,6 +38,16 @@ namespace Spr {
 		stribeckmu = 0;
 		muCur = 0;
 		nIrsNormal = 0;
+
+		mus = {0,0,0,0,0};
+		timeVaryFrictionAs = { 0,0,0,0,0 };
+		timeVaryFrictionBs = { 0,0,0,0,0 };
+		timeVaryFrictionCs = { 0,0,0,0,0,0 };
+		stribeckVelocitys = { 0,0,0,0,0 };
+		stribeckmus = { 0,0,0,0,0 };
+		timeVaryFrictionDs = { 0,0,0,0,0 };
+		z = {Vec3d(),Vec3d(),Vec3d(),Vec3d(),Vec3d()};
+		c ={0,0,0,0,0};
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);

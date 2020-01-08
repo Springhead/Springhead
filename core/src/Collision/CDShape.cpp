@@ -39,6 +39,21 @@ PHMaterial::PHMaterial(){
 	stribeckVelocity = 0.1f;
 	stribeckmu = 0.1f;
 
+
+//GMS用
+	timeVaryFrictionAs = { 0.1f,0.1f,0.1f };
+	timeVaryFrictionBs = { 1800,1800,1800 };
+	timeVaryFrictionCs = { 0.0f,0.0f,0.0f };
+	timeVaryFrictionDs = { 0.0f,0.0f,0.0f };
+	mus = { 0.35f,0.35f,0.35f };
+	mu0s = { 0.5f,0.5f,0.50f };
+	stribeckmus = { 0.1f,0.1f,0.1f };
+	stribeckVelocitys = { 0.1f,0.1f,0.1f };
+	z = { Vec3d(),Vec3d(),Vec3d() };
+	c = { 0.01f,0.01f,0.01f };
+
+	
+
 	velocityFieldMode      = VelocityField::NONE;
 	velocityFieldAxis      = Vec3d();
 	velocityFieldMagnitude = 0.0;

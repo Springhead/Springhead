@@ -356,8 +356,8 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 
 		//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 		double alpha = hdt * hdt * pointer->GetMassInv() * pointer->frictionSpring;
-
-	
+		DSTR << sh->mu << std::endl;
+		DSTR << sh->mus[i] << std::endl;
 		//	摩擦係数の計算
 		if (pointer->bTimeVaryFriction) {
 				if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC) {
