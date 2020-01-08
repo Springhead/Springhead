@@ -205,7 +205,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 			ir->depth = ortho.norm();
 			ir->interpolation_pose = curShapePoseW[0];
 			sh->irs.push_back(ir);
-			//assert(std::isfinite(ir->depth));
+			//assert(isfinite(ir->depth));
 		}
 	}
 	else {
@@ -217,7 +217,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 		ir->depth = ortho.norm();
 		ir->interpolation_pose = curShapePoseW[0];
 		sh->irs.push_back(ir);
-		assert(std::isfinite(ir->depth));
+		assert(isfinite(ir->depth));
 	}
 	for (size_t i = 0; i < sh->irs.size(); i++) {
 		PHIr* ir = sh->irs[i];
@@ -305,6 +305,8 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 				double predict = proxyPos + vdt - (pointer->GetFrictionDamper() * (vdt - (pointer->velocity * fricIr->normal)*hdt));	//	pr = r(t) + v dt;
 				//std::cout << proxyPos << std::endl;
 				frictionLimit = predict - alpha * (predict - l);
+
+
 			}
 			else {
 				proxyPos = tangentNorm;
@@ -314,12 +316,12 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 			//std::cout << proxyPos << " : " << frictionLimit << std::endl;
 			if (proxyPos <= frictionLimit) {
 				fricIr->depth = proxyPos;
-				assert(std::isfinite(fricIr->depth));
+				assert(isfinite(fricIr->depth));
 				bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 			}
 			else {
 				fricIr->depth = frictionLimit;
-				assert(std::isfinite(fricIr->depth));
+				assert(isfinite(fricIr->depth));
 			}
 			sh->irs.push_back(fricIr);
 		}
@@ -640,6 +642,7 @@ void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer
 	double hdt = he->GetHapticTimeStep();
 	NANCHECKLP
 	pointer->lastProxyPose = pointer->proxyPose;
+	//pointer->AddForce(Vec3d(0.0f, 0.02f, 0.0f));
 	NANCHECKLP
 		// 中間表現を求める。摩擦状態を更新
 	PHIrs irsNormal, irsFric, irsAll;
@@ -752,9 +755,14 @@ void PHHapticEngine::VibrationRendering(PHHapticStepBase* he, PHHapticPointer* p
 			Vec3d vibV = sp->lastStaticFrictionForce * hdt * pointer->GetMassInv() * 0.3;	//	0.3は謎係数。ないと接触の振動に対して強すぎてしまう。
 			double vibT = sp->fricCount * hdt;
 			vibForce.v() += vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
+
+
 		}
+	//	pointer->AddForce(vibForce.v()); //シミュレーション用
+
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
+
 	}
 }
 
