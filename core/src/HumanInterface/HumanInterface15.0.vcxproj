@@ -405,6 +405,7 @@
     <ClCompile Include="DRNittaForce.cpp" />
     <ClCompile Include="DRPortIO.cpp" />
     <ClCompile Include="DRTokin3D.cpp" />
+    <ClCompile Include="DRUartMotorDriver.cpp" />
     <ClCompile Include="DRUPP.CPP" />
     <ClCompile Include="DRUsb20Sh4.cpp" />
     <ClCompile Include="DRUsb20Simple.cpp" />
@@ -425,6 +426,7 @@
     <ClCompile Include="HumanInterfaceStub.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDRUart.h" />
     <ClInclude Include="..\..\include\HumanInterface\SprHILeap.h" />
     <ClInclude Include="..\..\include\HumanInterface\SprHISkeletonSensor.h" />
     <ClInclude Include="Device.h" />
@@ -438,6 +440,7 @@
     <ClInclude Include="DRNittaForce.h" />
     <ClInclude Include="DRPortIO.h" />
     <ClInclude Include="DRTokin3D.h" />
+    <ClInclude Include="DRUartMotorDriver.h" />
     <ClInclude Include="DRUPP.h" />
     <ClInclude Include="DRUsb20Sh4.h" />
     <ClInclude Include="DRUsb20Simple.h" />
