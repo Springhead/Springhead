@@ -353,13 +353,24 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 // GMS用
 	if (sh->muCurs.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sh->muCurs.push_back(0);
 
+	sh->timeVaryFrictionAs = { 0.1f,0.2f,0.3f };
+	sh->timeVaryFrictionBs = { 1000,1500,2000 };
+	sh->timeVaryFrictionCs = { 0.0f,0.0f,0.0f };
+	sh->timeVaryFrictionDs = { 0.0f,0.0f,0.0f };
+	sh->mus = { 0.35f,0.25f,0.30f };
+	sh->mu0s = { 0.4f,0.35f,0.50f };
+	sh->stribeckmus = { 0.1f,0.2f,0.15f };
+	sh->stribeckVelocitys = { 0.35f,0.25f,0.50f };
+	sh->z = { Vec3d(),Vec3d(),Vec3d() };
+	sh->c = { 0.01f,0.02f,0.03f };
+
 
 	for (int i = 0; i < pointer->proxyN; i++) {
 
 		//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 		double alpha = hdt * hdt * pointer->GetMassInv() * pointer->frictionSpring;
-		DSTR << sh->mu << std::endl;
-		DSTR << sh->mus[i] << std::endl;
+	//	DSTR << sh->mu << std::endl;
+	//	DSTR << sh->mus[i] << std::endl;
 		//	摩擦係数の計算
 		if (pointer->bTimeVaryFriction) {
 				if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC) {
@@ -604,6 +615,7 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 				sp->contactCount++;
 				sp->initialRelativePose = pointer->lastProxyPose * sp->lastInterpolationPose.Inv();
 			}
+		}
 			sp->relativePose = sp->initialRelativePose * sp->interpolationPose * pointer->GetPose().Inv();
 			//DSTR << "pose" << pointer->GetPose() << std::endl;
 			//DSTR << "lastProxy" << pointer->lastProxyPose << std::endl;
@@ -628,13 +640,15 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 					}
 				}
 			}
-			if (!bContact) {
-				// 接触なし
-				sp->frictionStates[i] = PHSolidPairForHapticIf::FREE;
-				sp->initialRelativePose = Posed();
-				sp->relativePose = Posed();
+			for (int i = 0; i < pointer->proxyN; i++) {
+
+				if (!bContact) {
+					// 接触なし
+					sp->frictionStates[i] = PHSolidPairForHapticIf::FREE;
+					sp->initialRelativePose = Posed();
+					sp->relativePose = Posed();
+				}
 			}
-		}
 	}
 }
 
