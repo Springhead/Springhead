@@ -40,6 +40,8 @@ namespace Spr {
 		nIrsNormal = 0;
 
 		mus = {0,0,0,0,0};
+		mu0s = { 0,0,0,0,0};
+	
 		timeVaryFrictionAs = { 0,0,0,0,0 };
 		timeVaryFrictionBs = { 0,0,0,0,0 };
 		timeVaryFrictionCs = { 0,0,0,0,0,0 };
@@ -66,13 +68,13 @@ namespace Spr {
 		stribeckmu = (shape[0]->GetMaterial().stribeckmu + shape[1]->GetMaterial().stribeckmu) * 0.5;
 
 		for (int i = 0; i < shape[0]->GetMaterial().timeVaryFrictionAs.size(); i++) {
-			mu = (shape[0]->GetMaterial().mus[i] + shape[1]->GetMaterial().mus[i]) * 0.5;
-			mu0 = (shape[0]->GetMaterial().mu0s[i] + shape[1]->GetMaterial().mu0s[i]) * 0.5;
-			timeVaryFrictionA = (shape[0]->GetMaterial().timeVaryFrictionAs[i] + shape[1]->GetMaterial().timeVaryFrictionAs[i]) * 0.5;
-			timeVaryFrictionB = (shape[0]->GetMaterial().timeVaryFrictionBs[i] + shape[1]->GetMaterial().timeVaryFrictionBs[i]) * 0.5;
-			timeVaryFrictionC = (shape[0]->GetMaterial().timeVaryFrictionCs[i] + shape[1]->GetMaterial().timeVaryFrictionCs[i]) * 0.5;
-			stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocitys[i] + shape[1]->GetMaterial().stribeckVelocitys[i]) * 0.5;
-			stribeckmu = (shape[0]->GetMaterial().stribeckmus[i] + shape[1]->GetMaterial().stribeckmus[i]) * 0.5;
+			mus[i] = (shape[0]->GetMaterial().mus[i] + shape[1]->GetMaterial().mus[i]) * 0.5;
+			mu0s[i] = (shape[0]->GetMaterial().mu0s[i] + shape[1]->GetMaterial().mu0s[i]) * 0.5;
+			timeVaryFrictionAs[i] = (shape[0]->GetMaterial().timeVaryFrictionAs[i] + shape[1]->GetMaterial().timeVaryFrictionAs[i]) * 0.5;
+			timeVaryFrictionBs[i] = (shape[0]->GetMaterial().timeVaryFrictionBs[i] + shape[1]->GetMaterial().timeVaryFrictionBs[i]) * 0.5;
+			timeVaryFrictionCs[i] = (shape[0]->GetMaterial().timeVaryFrictionCs[i] + shape[1]->GetMaterial().timeVaryFrictionCs[i]) * 0.5;
+			stribeckVelocitys[i] = (shape[0]->GetMaterial().stribeckVelocitys[i] + shape[1]->GetMaterial().stribeckVelocitys[i]) * 0.5;
+			stribeckmus[i] = (shape[0]->GetMaterial().stribeckmus[i] + shape[1]->GetMaterial().stribeckmus[i]) * 0.5;
 		}
 
 
