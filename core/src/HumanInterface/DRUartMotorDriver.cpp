@@ -10,7 +10,15 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <Springhead.h>
+#define NMOTOR 1
+#define NFORCE 1
+#define NTARGET 1
 #include <HumanInterface/DRUartMotorDriver.h>
+#include <HumanInterface/DRUartMotorDriver/WROOM/main/softRobot/CommandWROOM.h>
+#include <HumanInterface/DRUartMotorDriver/WROOM/main/softRobot/Board.h>
+#undef NMOTOR
+#undef NTARGET
+#undef NFORCE
 
 #ifdef _WIN32
 #include <windows.h>
@@ -86,232 +94,33 @@ bool DRUARTMotorDriver::Init(){
 	for(int i = 0; i < 8; i++){
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 		AddChildObject((DBG_NEW Counter(this, i))->Cast());
-		AddChildObject((DBG_NEW Pio(this, i))->Cast());
 	}
 	return true;
 }
 void DRUARTMotorDriver::EnumBoards() {
-
+	//	TBW by hase
 }
-
-void DRUARTMotorDriver::WriteVoltage(int ch, float v){
-	assert(0 <= ch && ch < 8);
-	const float DigitPerVolt[]={	//	DA指令値/出力電圧 アンプごとに異なるので計測値をアンプに書いておき，読み出す必要がある．
-		415.0f,
-		415.0f,
-		415.0f,
-		415.0f,		
-		415.0f,
-		415.0f,
-		415.0f,
-		415.0f,
-	};
-	daOut[ch] = (int)(v * DigitPerVolt[ch]);
+void DRUARTMotorDriver::WriteVoltage(int ch, float v) {
+	//	TBW by hase
 }
-void DRUARTMotorDriver::WriteDigit(int ch, int v){
-	daOut[ch] = v;
+void DRUARTMotorDriver::WriteDigit(int ch, int v) {
+	//	TBW by hase
 }
-void DRUARTMotorDriver::WriteCount(int ch, long c){
-	countOffset[ch] = - (count[ch] - c); 
+void DRUARTMotorDriver::WriteCount(int ch, long c) {
+	//	TBW by hase
 }
-long DRUARTMotorDriver::ReadCount(int ch){
-	return count[ch] + countOffset[ch];
-}
-void DRUARTMotorDriver::WritePio(int ch, bool level){
-	pioLevel[ch] = level ? 1 : 0;
-}
-bool DRUARTMotorDriver::ReadPio(int ch) {
-	if(pioLevel[ch]) return true;
-	else return false;
-}
-int DRUARTMotorDriver::ReadRotarySwitch(){
-	int sw=0;
-	for(int i=0; i<4; ++i){
-		sw |= pioLevel[i+4] << i;
-	}
-	return sw;
-}
-
-void DRUARTMotorDriver::Update(){
-	UsbDaSet();
-	UsbCounterGet();
-}
-
-void DRUARTMotorDriver::Reset(){
-	UsbReset();
-	UsbCounterClear();
-}
-
-void DRUARTMotorDriver::UsbReset(){
-#ifdef _WIN32
-	BULK_TRANSFER_CONTROL bulkControl;
-	int nBytes = 0;
-	int i;
-	UCHAR outBuffer[32];
-	for(i = 0; i < 32; i++) outBuffer[i] = 0;
-
-	// ホストからデバイス側へ
-	// PipeNum:1 type:blk Endpoint:2 OUT MaxPktSize:0x200(512bytes)
-	bulkControl.pipeNum = 1;
-	WORD outPacketSize = 32;
-
-	// エンコーダ相順設定
-	outBuffer[0] = 0xA2;
-	outBuffer[1] = 0x1A;
-	outBuffer[2] = 0xFF;	//	各チャンネル(各ビットが対応)の正逆転の設定
-
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_WRITE,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		&outBuffer[0],
-		outPacketSize,
-		(unsigned long *)&nBytes,
-		NULL);
-#endif
-}
-
-void DRUARTMotorDriver::UsbCounterClear(){
-#ifdef _WIN32
-	// エンコーダカウンタクリア
-	UCHAR outBuffer[32];
-	outBuffer[0] = 0xA2;
-	outBuffer[1] = 0x19;
-	outBuffer[2] = 0xFF;
-	BULK_TRANSFER_CONTROL bulkControl;
-	bulkControl.pipeNum = 1;
-	WORD outPacketSize = 32;
-	int nBytes = 0;
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_WRITE,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		&outBuffer[0],
-		outPacketSize,
-		(unsigned long *)&nBytes,
-		NULL);
-#endif
-}
-
-//----------------------------------------------------------------------
-// D/A出力
-
-void DRUARTMotorDriver::UsbDaSet(){
-#ifdef _WIN32
-	WORD  outPacketSize;
-	int nBytes = 0;
-
-	BULK_TRANSFER_CONTROL bulkControl; //バルク、インタラプト転送用コントロール構造体
-
-	// ホストからデバイス側へ
-	// PipeNum:1 type:blk Endpoint:2 OUT MaxPktSize:0x200(512bytes)
-	bulkControl.pipeNum = 1;
-	outPacketSize = 32;
-
-	// DAコンバータセット
-	int cur = 0;	//	パケット先頭からの位置
-	UCHAR outBufferDA[32];
-	memset(outBufferDA, 0, sizeof(outBufferDA));
-	outBufferDA[cur++] = 0x52;	//	D/Aセット
-	for(int i=0; i < 8; i++){
-		outBufferDA[cur++] = daOut[i] & 0xFF;
-		outBufferDA[cur++] = daOut[i] >> 8;
-	}
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_WRITE,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		&outBufferDA[0],
-		outPacketSize,
-		(unsigned long *)&nBytes,
-		NULL);
-#endif
-}
-
-void DRUARTMotorDriver::UsbCounterGet(){
-#ifdef _WIN32
-	// ホストからデバイス側へ
-	// PipeNum:1 type:blk Endpoint:2 OUT MaxPktSize:0x200(512bytes)
-	BULK_TRANSFER_CONTROL bulkControl;
-	bulkControl.pipeNum = 1;
-	WORD outPacketSize = 32;
-	int nBytes = 0;
-
-	// エンコーダ値のホールドを指令
-	UCHAR outBuffer[32];
-	outBuffer[0] = 0x51;
-
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_WRITE,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		&outBuffer[0],
-		outPacketSize,
-		(unsigned long *)&nBytes,
-		NULL);
-
-	// デバイス側からホストへ
-	// PipeNum:2 type:blk Endpoint:6 IN MaxPktSize:0x200(512bytes)
-	bulkControl.pipeNum = 2;
-	WORD inPacketSize = 32;
-	UCHAR inBuffer[32];
-	int piBuffer[8];
-	
-	//	エンコーダ値の読み出し
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_READ,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		&inBuffer[0],
-		inPacketSize,
-		(unsigned long *)&nBytes,
-		NULL);
-
-	UCHAR Data;
-	bool flag;
-	for(int i = 0; i < 8; i++){
-		piBuffer[i] = 0;
-		Data = inBuffer[i * 3 + 2];
-		if(Data & 0x80)
-			flag = true;
-		else
-			flag = false;
-		piBuffer[i] += Data << 16;
-		Data = inBuffer[i * 3 + 1];
-		piBuffer[i] += Data << 8;
-		Data = inBuffer[i * 3 + 0];
-		piBuffer[i] += Data;
-		if(flag)
-			piBuffer[i] |= 0xFF000000;
-	}
-
-	for(int i=0;i<8;i++){
-		pioLevel[i] = (inBuffer[24] & (1 << i)) ? 1 : 0;
-	}
-
-	for(int i=0;i<8;i++){
-		count[i] = piBuffer[i];
-	}
-#endif
-}
-
-unsigned DRUARTMotorDriver::UsbVidPid(void* h){
-#ifdef _WIN32
-	USB_DEVICE_DESCRIPTOR desc;
-	DWORD nBytes=0;
-	if (DeviceIoControl(h,
-	       IOCTL_Ezusb_GET_DEVICE_DESCRIPTOR,
-	       NULL,
-	       0,
-	       &desc,
-	       sizeof(desc),
-	       &nBytes,
-		   NULL)){
-		return (desc.idVendor << 16) | desc.idProduct;
-	}
-#endif
+long DRUARTMotorDriver::ReadCount(int ch) {
+	//	TBW by hase
 	return 0;
 }
+void DRUARTMotorDriver::Update() {
+	//	TBW by hase
+}
+void DRUARTMotorDriver::Reset() {
+	//	TBW by hase
+}
+
+
 
 } //namespace Spr
 

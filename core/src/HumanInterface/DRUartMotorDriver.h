@@ -76,11 +76,8 @@ public:
 	virtual void Reset();
 
 	///	UARTのファイルハンドル
-	void* GetHandle(){ return hSpidar; };
+	void* GetHandle(){ return hUART; };
 protected:
-	//	デバイスを見つけ、チャンネルを返す。チャンネルが指定された場合、指定したチャンネルのデバイスしか返さない。
-	//	失敗すると-1を返す。
-	int FindDevice(int ch=-1);
 	//	名前のベース部分
 	virtual const char* BaseName() const {return "UART Motor Driver by SoftCreature";}
 };
