@@ -352,7 +352,7 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 
 // GMS用
 	if (sh->muCurs.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sh->muCurs.push_back(0);
-
+	/*
 	sh->timeVaryFrictionAs = { 0.1f,0.2f,0.3f };
 	sh->timeVaryFrictionBs = { 1000,1500,2000 };
 	sh->timeVaryFrictionCs = { 0.0f,0.0f,0.0f };
@@ -363,7 +363,7 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 	sh->stribeckVelocitys = { 0.35f,0.25f,0.50f };
 	sh->z = { Vec3d(),Vec3d(),Vec3d() };
 	sh->c = { 0.01f,0.02f,0.03f };
-
+	*/
 
 	for (int i = 0; i < pointer->proxyN; i++) {
 
@@ -571,7 +571,6 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 	for (int i = 0; i < nNeighbors; i++) {
 		int solidID = pointer->neighborSolidIDs[i];
 		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(solidID, pointer->GetPointerID());
-
 		//--------------------------------------------------
 		/* 力覚安定化のための補間
 		// Impulseの場合は相手の剛体のPoseの補間が必要。
@@ -622,7 +621,8 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 			//DSTR << "ini" << initialRelativePose << std::endl;
 			//DSTR << "relativePose" << relativePose << std::endl;
 			// 中間表現の作成
-			bool bContact = false;
+			bool bContact = false; 
+			
 			for (int i = 0; i < solid0->NShape(); i++) {
 				for (int j = 0; j < pointer->NShape(); j++) {
 					PHShapePairForHaptic* sh = sp->GetShapePair(i, j)->Cast();

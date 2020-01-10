@@ -98,6 +98,7 @@ struct CDShapeIf : public NamedObjectIf{
 	/// 物性をまとめて設定
 	void				SetMaterial(const PHMaterial& mat);
 
+
 	/// 幾何計算
 
 	/** 体積を計算
