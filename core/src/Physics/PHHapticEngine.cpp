@@ -72,9 +72,9 @@ namespace Spr {
 			mu0s[i] = (shape[0]->GetMaterial().mu0s[i] + shape[1]->GetMaterial().mu0s[i]) * 0.5;
 			timeVaryFrictionAs[i] = (shape[0]->GetMaterial().timeVaryFrictionAs[i] + shape[1]->GetMaterial().timeVaryFrictionAs[i]) * 0.5;
 			timeVaryFrictionBs[i] = (shape[0]->GetMaterial().timeVaryFrictionBs[i] + shape[1]->GetMaterial().timeVaryFrictionBs[i]) * 0.5;
-			timeVaryFrictionCs[i] = (shape[0]->GetMaterial().timeVaryFrictionCs[i] + shape[1]->GetMaterial().timeVaryFrictionCs[i]) * 0.5;
 			stribeckVelocitys[i] = (shape[0]->GetMaterial().stribeckVelocitys[i] + shape[1]->GetMaterial().stribeckVelocitys[i]) * 0.5;
 			stribeckmus[i] = (shape[0]->GetMaterial().stribeckmus[i] + shape[1]->GetMaterial().stribeckmus[i]) * 0.5;
+			c[i] = (shape[0]->GetMaterial().c[i] + shape[1]->GetMaterial().c[i]) * 0.5;
 		}
 
 
