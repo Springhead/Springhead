@@ -207,7 +207,6 @@ struct PHMaterial{
 	std::vector<float> timeVaryFrictionCs;	///< 時変摩擦定数C
 	std::vector<float> stribeckVelocitys;
 	std::vector<float> stribeckmus;
-	std::vector<Vec3d> z;
 	std::vector<double> c;
 
 	struct VelocityField{

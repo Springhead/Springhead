@@ -23,6 +23,7 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 
 	//GMS用
 	proxyN = 3;
+	totalZ = Vec3d();
 }
 
 //----------------------------------------------------------------------------
