@@ -450,7 +450,6 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 					fricIr->depth = frictionLimit;
 					//zの更新計算をする
 					sh->z[i] += fricIr->normal*(sh->c[i] * (1.0 - (sh->z[i].norm() / (sh->muCurs[i] * ir->depth)))) * hdt;
-					DSTR << ir->depth << std::endl;
 				}
 				sh->irs.push_back(fricIr);
 			}
