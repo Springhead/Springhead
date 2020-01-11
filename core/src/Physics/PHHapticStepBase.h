@@ -157,6 +157,7 @@ struct PHSolidPairForHapticSt{
 							 //GMS用
 	std::vector<unsigned> fricCounts;
 	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
+	std::vector<Vec3d> z;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;

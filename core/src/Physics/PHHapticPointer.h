@@ -39,6 +39,7 @@ struct PHHapticPointerPhysicsSt {
 
 	//GMS用
 	int proxyN;
+	Vec3d totalZ;
 };
 
 class PHHapticPointer : public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{

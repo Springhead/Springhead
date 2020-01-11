@@ -49,7 +49,6 @@ PHMaterial::PHMaterial(){
 	mu0s = { 0.5f,0.5f,0.50f };
 	stribeckmus = { 0.1f,0.1f,0.1f };
 	stribeckVelocitys = { 0.1f,0.1f,0.1f };
-	z = { Vec3d(),Vec3d(),Vec3d() };
 	c = { 0.01f,0.01f,0.01f };
 
 	
