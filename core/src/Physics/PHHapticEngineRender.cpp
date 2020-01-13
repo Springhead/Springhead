@@ -414,7 +414,7 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 				frictiontotalnormal = fricIr->normal;
 				//	現在のProxy位置と摩擦力の限界位置を計算
 				//double proxyPos, frictionLimit;
-				double proxyPos, frictionLimit;
+				double proxyPos, frictionLimit = 0;
 				if (pointer->renderMode == PHHapticPointer::DYNAMIC_PROXY) {
 					proxyPos = tangentNorm;
 					double vdt = (proxyPointVel * fricIr->normal) * hdt;
@@ -432,17 +432,19 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 				//	結果をfricIrに反映
 				if (proxyPos <= frictionLimit) {
 					fricIr->depth = proxyPos;
+					sp->z[i] = Vec3d();
 					bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 				}
 				else {
 					//動摩擦時
 					fricIr->depth = frictionLimit;
 					//zの更新計算をする
-					sp->z[i] += fricIr->normal*(sh->c[i] * (1.0 - (sp->z[i].norm() / (sh->muCurs[i] * ir->depth)))) * hdt;
+					Vec3d lastz = sp->z[i];
+					sp->z[i] = fricIr->normal*(sh->c[i] * (1.0 - (lastz.norm() / (sh->muCurs[i] * ir->depth)))) * hdt;
 				}
-				frictotaldepth += fricIr->depth;
+			//	frictotaldepth += fricIr->depth;
 
-			//	sh->irs.push_back(fricIr);
+				sh->irs.push_back(fricIr);
 				
 			}
 		}
@@ -465,14 +467,15 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 	//	DSTR << sh->c[0] << std::endl;
 		pointer->totalZ += sp->z[i];
 	}
-	PHIr* totalfricIr = DBG_NEW PHIr();
+	/*PHIr* totalfricIr = DBG_NEW PHIr();
 	*totalfricIr = *sh->irs[0];
-	
-	totalfricIr->depth = frictotaldepth / (double)pointer->proxyN;
-	totalfricIr->normal = frictiontotalnormal;
 	DSTR << frictotaldepth << std::endl;
 	DSTR << frictiontotalnormal << std::endl;
+	totalfricIr->depth = frictotaldepth / (double)pointer->proxyN;
+	totalfricIr->normal = frictiontotalnormal;
 	sh->irs.push_back(totalfricIr);
+	*/
+	pointer->totalZ /= pointer->proxyN;
 
 	return true;
 }
@@ -667,9 +670,9 @@ void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer
 		// ポインタを中間表現の外に追い出した点を、proxyPoseとする。
 		pointer->proxyPose.Ori() = Quaterniond::Rot(dtheta) * pointer->GetOrientation();
 		pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr;
-
+		
 		//GMS用
-	//	pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr + (pointer->totalZ/(double)pointer->proxyN);
+	//	pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr + ( pointer->totalZ/(double)pointer->proxyN);
 
 		if (pointer->renderMode == pointer->DYNAMIC_PROXY) {
 			//	Proxyの速度の計算

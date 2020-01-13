@@ -100,6 +100,7 @@ public:
 	//GMS用
 	void	SetProxyN(int n) { proxyN = n; }
 	int		GetProxyN() { return proxyN; }
+	Vec3d GetTotalZ() { return totalZ; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {

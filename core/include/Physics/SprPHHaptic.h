@@ -75,7 +75,8 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 
 													//GMS用
 	void	SetProxyN(int n);				///<	proxyの数
-	int		GetProxyN();						///<    proxyの数
+	int		GetProxyN();///<    proxyの数
+	Vec3d GetTotalZ();
 
 	void SetProxyVelocity(SpatialVector spv);
 
