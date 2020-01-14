@@ -352,6 +352,8 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 // GMS用
 	if (sh->muCurs.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sh->muCurs.push_back(0);
 	if (sp->z.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sp->z.push_back(Vec3d());
+	//if (sp->lastz.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sp->lastz.push_back(Vec3d());
+
 	pointer->totalZ = Vec3d();
 	double frictotaldepth = 0;
 	Vec3d frictiontotalnormal = Vec3d();
@@ -371,8 +373,8 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 			if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC) sh->muCurs[i] = sh->mu0s[i];
 		}
 
-		for (int i = 0; i < Nirs; i++) {
-			PHIr* ir = sh->irs[i];
+		for (int j = 0; j < Nirs; j++) {
+			PHIr* ir = sh->irs[j];
 			if (pointer->bTimeVaryFriction && sp->frictionStates[i] == PHSolidPairForHapticIf::DYNAMIC) {
 				double v = (ir->pointerPointVel - ir->contactPointVel).norm();
 				//std::cout << v << std::endl;
@@ -407,14 +409,14 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 
 			double epsilon = 1e-5;
 			double tangentNorm = tangent.norm();
-			if (tangentNorm > 1e-5) {
+			if (tangentNorm > 1e-32) {
 				PHIr* fricIr = DBG_NEW PHIr();
 				*fricIr = *ir;
 				fricIr->normal = tangent / tangentNorm;
 				frictiontotalnormal = fricIr->normal;
 				//	現在のProxy位置と摩擦力の限界位置を計算
 				//double proxyPos, frictionLimit;
-				double proxyPos, frictionLimit = 0;
+				double proxyPos, frictionLimit;
 				if (pointer->renderMode == PHHapticPointer::DYNAMIC_PROXY) {
 					proxyPos = tangentNorm;
 					double vdt = (proxyPointVel * fricIr->normal) * hdt;
@@ -439,8 +441,8 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 					//動摩擦時
 					fricIr->depth = frictionLimit;
 					//zの更新計算をする
-					Vec3d lastz = sp->z[i];
-					sp->z[i] = fricIr->normal*(sh->c[i] * (1.0 - (lastz.norm() / (sh->muCurs[i] * ir->depth)))) * hdt;
+					//sp->lastz[i] = sp->z[i];
+					sp->z[i] = fricIr->normal*(sh->c[i] * (1.0 - (sp->z[i].norm() / (sh->muCurs[i] * ir->depth)))) * hdt;
 				}
 			//	frictotaldepth += fricIr->depth;
 
@@ -578,6 +580,7 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 		if (sp->frictionStates.empty()) {
 			sp->InitFrictionState(pointer->GetProxyN());
 			sp->InitFrictionCount(pointer->GetProxyN());
+			sp->InitContactCount(pointer->GetProxyN());
 		}
 		
 
@@ -598,12 +601,12 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 		for (int i = 0; i < pointer->proxyN; i++) {
 			if (sp->frictionStates[i] == PHSolidPairForHapticIf::FREE) {
 				sp->frictionStates[i] = PHSolidPairForHapticIf::STATIC;
-				sp->contactCount = 0;
-				sp->fricCounts[i] = 0;
+				sp->contactCounts[i] = 3000;
+				sp->fricCounts[i] = 3000;
 				sp->initialRelativePose = pointer->GetPose() * sp->interpolationPose.Inv();
 			}
 			else {
-				sp->contactCount++;
+				sp->contactCounts[i]++;
 				sp->initialRelativePose = pointer->lastProxyPose * sp->lastInterpolationPose.Inv();
 			}
 		}
