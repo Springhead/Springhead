@@ -113,7 +113,6 @@ public:
 	std::vector<float> muCurs;				///< 計算された時変摩擦係数
 	std::vector<float> stribeckVelocitys;
 	std::vector<float> stribeckmus;
-	std::vector<Vec3d> z;
 	std::vector<double> c;
 
 
@@ -156,8 +155,10 @@ struct PHSolidPairForHapticSt{
 
 							 //GMS用
 	std::vector<unsigned> fricCounts;
+	std::vector<unsigned> contactCounts;
 	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
 	std::vector<Vec3d> z;
+	std::vector<Vec3d> lastz;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
@@ -187,6 +188,8 @@ public:
 	//GMS用
 	void InitFrictionState(int n) { for (int i = 0; i < n; i++) frictionStates.push_back(PHSolidPairForHapticIf::FREE); }
 	void InitFrictionCount(int n) { for (int i = 0; i < n; i++) fricCounts.push_back(0); }
+	void InitContactCount(int n) { for (int i = 0; i < n; i++) contactCounts.push_back(0); }
+	Vec3d GetZ(int i) { return z[i]; }
 
 
 	Vec3d GetForce(){ return force; }

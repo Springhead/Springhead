@@ -77,6 +77,7 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	SetProxyN(int n);				///<	proxyの数
 	int		GetProxyN();///<    proxyの数
 	Vec3d GetTotalZ();
+	Vec3d GetZ(int i);
 
 	void SetProxyVelocity(SpatialVector spv);
 
@@ -112,6 +113,8 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	//GMS
 	void InitFrictionState(int n);
 	void InitFrictionCount(int n);
+	void InitContactCount(int n);
+	Vec3d GetZ(int i);
 	Vec3d GetForce();
 	Vec3d GetTorque();
 };

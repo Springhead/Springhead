@@ -40,6 +40,7 @@ struct PHHapticPointerPhysicsSt {
 	//GMS用
 	int proxyN;
 	Vec3d totalZ;
+	Vec3d z[10];
 };
 
 class PHHapticPointer : public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
@@ -101,6 +102,7 @@ public:
 	void	SetProxyN(int n) { proxyN = n; }
 	int		GetProxyN() { return proxyN; }
 	Vec3d GetTotalZ() { return totalZ; }
+	Vec3d GetZ(int i) { return z[i]; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {
