@@ -41,8 +41,8 @@ START_PACKED
 union CommandHeader{
 	unsigned char header;
 	struct {
-		unsigned boardId : 3;
-		unsigned commandId : 5;
+		unsigned char boardId : 3;
+		unsigned char commandId : 5;
 	} PACKED;
 } PACKED;
 END_PACKED
@@ -81,8 +81,8 @@ union CommandPacket##BOARD {										\
 		union {														\
 			unsigned char header;									\
 			struct {												\
-				unsigned boardId : 3;								\
-				unsigned commandId : 5;								\
+				unsigned char boardId : 3;							\
+				unsigned char commandId : 5;						\
 			} PACKED;												\
 		} PACKED;													\
 		union {														\
@@ -162,6 +162,7 @@ const unsigned char cmdPacketLen##BOARD[CI_NCOMMAND] = {			\
     BOARD##_CLEN_GET_PARAM,                                         \
 };																	\
 
+
 #define DEFINE_ReturnPacket(BOARD, CURRENT, FORCE, TOUCH)		\
 START_PACKED													\
 union ReturnPacket##BOARD {										\
@@ -175,8 +176,8 @@ union ReturnPacket##BOARD {										\
 		union {													\
 			unsigned char header;								\
 			struct {											\
-				unsigned boardId : 3;							\
-				unsigned commandId : 5;							\
+				unsigned char boardId : 3;						\
+				unsigned char commandId : 5;					\
 			}PACKED;											\
 		}PACKED;												\
 		union {													\

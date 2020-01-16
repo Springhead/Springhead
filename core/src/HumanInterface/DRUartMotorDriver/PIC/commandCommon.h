@@ -9,7 +9,7 @@
 
 //extern unsigned char boardId;
 extern enum CommandId commandId;
-#include "CommandTemplate.h"
+#include "commandTemplate.h"
 
 enum B1M_PARAM{
 	B1M_MODEL_NUMBER = 1,
@@ -60,13 +60,11 @@ enum B3F_PARAM{
     B3F_NTOUCH = 0,
 };
 
-#ifndef _WIN32
-DEFINE_Packets(B1M)
-DEFINE_Packets(B1F)
-DEFINE_Packets(B2M)
-DEFINE_Packets(B2F)
-DEFINE_Packets(B3M)
-DEFINE_Packets(B3F)
-#endif
+DEFINE_Packets(B1M, CT_0, CT_0, CT_0)
+DEFINE_Packets(B1F, CT_0, CT_N, CT_0)
+DEFINE_Packets(B2M, CT_0, CT_0, CT_0)
+DEFINE_Packets(B2F, CT_0, CT_N, CT_0)
+DEFINE_Packets(B3M, CT_N, CT_0, CT_0)
+DEFINE_Packets(B3F, CT_N, CT_N, CT_0)
 
 #endif

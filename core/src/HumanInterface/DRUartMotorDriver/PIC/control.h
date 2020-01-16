@@ -4,7 +4,7 @@
 
 #include "env.h"
 #include "fixed.h"
-#ifndef _WIN32
+#ifndef SPRINGHEAD
 #include "command.h"
 #endif
 

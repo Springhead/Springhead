@@ -146,7 +146,7 @@
       <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
@@ -186,7 +186,7 @@
       <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
@@ -230,7 +230,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -276,7 +276,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -320,7 +320,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -364,7 +364,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -406,6 +406,7 @@
     <ClCompile Include="DRPortIO.cpp" />
     <ClCompile Include="DRTokin3D.cpp" />
     <ClCompile Include="DRUartMotorDriver.cpp" />
+    <ClCompile Include="DRUartMotorDriver\WROOM\main\softRobot\Board.cpp" />
     <ClCompile Include="DRUPP.CPP" />
     <ClCompile Include="DRUsb20Sh4.cpp" />
     <ClCompile Include="DRUsb20Simple.cpp" />
@@ -441,6 +442,15 @@
     <ClInclude Include="DRPortIO.h" />
     <ClInclude Include="DRTokin3D.h" />
     <ClInclude Include="DRUartMotorDriver.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\commandCommon.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\commandTemplate.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\control.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\env.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\fixed.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\Board.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\BoardBase.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\CommandWROOM.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\esp_log.h" />
     <ClInclude Include="DRUPP.h" />
     <ClInclude Include="DRUsb20Sh4.h" />
     <ClInclude Include="DRUsb20Simple.h" />
@@ -477,6 +487,9 @@
     <ProjectReference Include="..\Foundation\Foundation15.0.vcxproj">
       <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DRUartMotorDriver\PCRobokey\commandId.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

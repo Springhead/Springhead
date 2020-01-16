@@ -12,4 +12,5 @@ copy ..\..\..\..\..\\StuffedV3\PIC\fixed.h PIC
 copy ..\..\..\..\..\\StuffedV3\WROOM\main\softRobot\CommandWROOM.h WROOM\main\softRobot
 copy ..\..\..\..\..\\StuffedV3\WROOM\main\softRobot\Board.h WROOM\main\softRobot
 copy ..\..\..\..\..\\StuffedV3\WROOM\main\softRobot\BoardBase.h WROOM\main\softRobot
+copy ..\..\..\..\..\\StuffedV3\WROOM\main\softRobot\Board.cpp WROOM\main\softRobot
 
