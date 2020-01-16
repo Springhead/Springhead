@@ -186,9 +186,30 @@ public:
 	unsigned GetFrictionCount() { return fricCount; }
 
 	//GMS用
-	void InitFrictionState(int n) { for (int i = 0; i < n; i++) frictionStates.push_back(PHSolidPairForHapticIf::FREE); }
-	void InitFrictionCount(int n) { for (int i = 0; i < n; i++) fricCounts.push_back(0); }
-	void InitContactCount(int n) { for (int i = 0; i < n; i++) contactCounts.push_back(0); }
+	void InitFrictionState(int n) {
+		frictionStates.clear();
+		for (int i = 0; i < n; i++) {
+			frictionStates.push_back(PHSolidPairForHapticIf::FREE);
+		}
+	}
+	void InitFrictionCount(int n) {
+		fricCounts.clear();
+		for (int i = 0; i < n; i++) {
+			fricCounts.push_back(0);
+		}
+	}
+	void InitContactCount(int n) {
+		contactCounts.clear();
+		for (int i = 0; i < n; i++) {
+			contactCounts.push_back(0);
+		}
+	}
+	void InitZ(int n) {
+		z.clear();
+		for (int i = 0; i < n; i++) {
+			z.push_back(Vec3d(0.0f,0.0f,0.0f));
+		}
+	}
 	Vec3d GetZ(int i) { return z[i]; }
 
 
@@ -211,6 +232,7 @@ public:
 	double GetPhysicsTimeStep();
 	///	力覚レンダリングのdt
 	double GetHapticTimeStep();
+	void SetHapticTimeStep(double dt);
 	///	
 	virtual void Step1(){};
 	///	
