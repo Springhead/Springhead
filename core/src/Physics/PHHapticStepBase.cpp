@@ -11,6 +11,9 @@ double PHHapticStepBase::GetPhysicsTimeStep(){
 double PHHapticStepBase::GetHapticTimeStep(){
 	return engine->GetScene()->GetHapticTimeStep();
 }
+void PHHapticStepBase::SetHapticTimeStep(double dt) {
+	return engine->GetScene()->SetHapticTimeStep(dt);
+}
 int PHHapticStepBase::NHapticPointers(){
 	return (int)engine->hapticPointers.size();
 }

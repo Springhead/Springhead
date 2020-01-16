@@ -345,18 +345,21 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 }
 
 bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
+	pointer->totalZ = Vec3d(0.0f, 0.0f, 0.0f);
+//	int slipCount = 0;
+
+	// GMS用
+	if (sh->muCurs.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sh->muCurs.push_back(0);
+	if (sp->z.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sp->z.push_back(Vec3d(0.0f, 0.0f, 0.0f));
+
 	int Nirs = (int)sh->irs.size();
 	if (Nirs == 0) return false;
 	
-	double hdt = he->GetHapticTimeStep();
-// GMS用
-	if (sh->muCurs.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sh->muCurs.push_back(0);
-	if (sp->z.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sp->z.push_back(Vec3d());
+	//double hdt = he->GetHapticTimeStep();
+	double hdt = 0.0002;
+
 	//if (sp->lastz.empty()) for (int i = 0; i < pointer->GetProxyN(); i++) sp->lastz.push_back(Vec3d());
 
-	pointer->totalZ = Vec3d();
-	double frictotaldepth = 0;
-	Vec3d frictiontotalnormal = Vec3d();
 	for (int i = 0; i < pointer->proxyN; i++) {
 		bool bStatic = false;
 		//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
@@ -409,11 +412,10 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 
 			double epsilon = 1e-5;
 			double tangentNorm = tangent.norm();
-			if (tangentNorm > 1e-32) {
+			if (tangentNorm > 1e-36) {
 				PHIr* fricIr = DBG_NEW PHIr();
 				*fricIr = *ir;
 				fricIr->normal = tangent / tangentNorm;
-				frictiontotalnormal = fricIr->normal;
 				//	現在のProxy位置と摩擦力の限界位置を計算
 				//double proxyPos, frictionLimit;
 				double proxyPos, frictionLimit;
@@ -434,22 +436,23 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 				//	結果をfricIrに反映
 				if (proxyPos <= frictionLimit) {
 					fricIr->depth = proxyPos;
-					sp->z[i] = Vec3d();
+					sp->z[i].x = 0.0f;
 					bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 				}
 				else {
 					//動摩擦時
+					double v = (ir->pointerPointVel - ir->contactPointVel).norm();
+
 					fricIr->depth = frictionLimit;
 					//zの更新計算をする
-					//sp->lastz[i] = sp->z[i];
-					//sp->z[i] += fricIr->normal*((sh->c[i] *1e-10)* (1.0 - (sp->z[i].norm() / (sh->muCurs[i] * ir->depth)))) * hdt;
-					sp->z[i].x += ((sh->c[i] * 1e-10)* (1.0 - (sp->z[i].x / (sh->muCurs[i] * ir->depth)))) * hdt;
-
+				//	sp->z[i].x = sh->c[i] * (1 - proxyPos/frictionLimit)*hdt;
+					sp->z[i].x += ((ir->pointerPointVel - ir->contactPointVel).x/fabs((ir->pointerPointVel - ir->contactPointVel).x)) * sh->c[i] *1e-3* (1 - frictionLimit/proxyPos)*hdt;
 				}
+				//sp->lastz[i].x = sp->z[i].x;
 			//	frictotaldepth += fricIr->depth;
 
 				sh->irs.push_back(fricIr);
-				
+				pointer->totalZ += sp->z[i];
 			}
 		}
 		sp->fricCounts[i]++;
@@ -469,18 +472,10 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation2(PHHapticStepBase* h
 			}
 		}
 	//	DSTR << sh->c[0] << std::endl;
-		pointer->totalZ += sp->z[i];
 	}
-	/*PHIr* totalfricIr = DBG_NEW PHIr();
-	*totalfricIr = *sh->irs[0];
-	DSTR << frictotaldepth << std::endl;
-	DSTR << frictiontotalnormal << std::endl;
-	totalfricIr->depth = frictotaldepth / (double)pointer->proxyN;
-	totalfricIr->normal = frictiontotalnormal;
-	sh->irs.push_back(totalfricIr);
-	*/
-	pointer->totalZ /= pointer->proxyN;
-
+	
+	pointer->totalZ /= (double)pointer->proxyN;
+	//if (slipCount == pointer->proxyN) pointer->totalZ = Vec3d(0.0f,0.0f,0.0f);
 	return true;
 }
 
@@ -574,7 +569,10 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 		*/
 		PHSolid* solid0 = he->GetSolidInHaptic(solidID)->GetLocalSolid();
 
-		const double syncCount = he->GetPhysicsTimeStep() / he->GetHapticTimeStep();
+	
+
+		//const double syncCount = he->GetPhysicsTimeStep() / he->GetHapticTimeStep();
+		const double syncCount = 0.008f / 0.0002f;
 		double t = he->GetLoopCount() / syncCount;
 		if (t > 1.0) t = 1.0;
 
@@ -583,8 +581,8 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 			sp->InitFrictionState(pointer->GetProxyN());
 			sp->InitFrictionCount(pointer->GetProxyN());
 			sp->InitContactCount(pointer->GetProxyN());
+			sp->InitZ(pointer->GetProxyN());
 		}
-		
 
 		sp->force.clear();
 		sp->torque.clear();
@@ -638,7 +636,6 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 				}
 			}
 			for (int i = 0; i < pointer->proxyN; i++) {
-
 				if (!bContact) {
 					// 接触なし
 					sp->frictionStates[i] = PHSolidPairForHapticIf::FREE;
@@ -650,7 +647,8 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy2(PHHapticStep
 }
 
 void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer* pointer) {
-	double hdt = he->GetHapticTimeStep();
+	//double hdt = he->GetHapticTimeStep();
+	double hdt = 0.0002f;
 	NANCHECKLP
 	pointer->lastProxyPose = pointer->proxyPose;
 	//pointer->AddForce(Vec3d(0.0f, 0.02f, 0.0f));
