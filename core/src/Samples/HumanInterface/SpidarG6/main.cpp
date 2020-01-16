@@ -36,6 +36,9 @@ int __cdecl main(){
 		cyDesc.channel = i;
 		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
 	}
+	//	UART Motor Driver
+	DRUARTMotorDriverDesc umDesc;
+	hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &umDesc);
 	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	hiSdk->Print(DSTR);
 	hiSdk->Print(std::cout);

@@ -1,15 +1,19 @@
 #pragma once
 
 #include "CommandWROOM.h"
-#ifndef _WIN32
-#include "UTRef.h"
-#else
+#ifdef SPRINGHEAD
+#include <springhead.h>
 using namespace Spr;
+#define NMOTOR 1
+#define NFORCE 1
+#define NTARGET 1
+#else
+#include "UTRef.h"
 #endif
 #include <vector>
 extern "C"{
 #include "../../../PIC/fixed.h"
-#include "../../../PIC/Control.h"
+#include "../../../PIC/control.h"
 }
 
 class BoardCmdBase{
@@ -54,11 +58,17 @@ public:
 	virtual void SetParamTorque(short minimum, short maximum, int i)=0;
 };
 
+#ifdef SPRINGHEAD
+namespace Spr { class DRUARTMotorDriverImpl; }
+#endif
 struct RobotState;
 class UdpCmdPacket;
 class UdpRetPacket;
 class BoardBase:public UTRefCount{
 public:
+#ifdef SPRINGHEAD
+	Spr::DRUARTMotorDriverImpl* owner;
+#endif
 	static const char* Tag(){ return "Board"; };
 	const unsigned char * cmdPacketLen;
 	const unsigned char * retPacketLen;

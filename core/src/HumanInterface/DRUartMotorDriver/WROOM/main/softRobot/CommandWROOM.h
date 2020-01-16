@@ -1,10 +1,10 @@
 #pragma once
-#ifdef WROOM
+#ifndef SPRINGHEAD
 #include "env.h"
 #endif
 
 #ifndef _COMMANDID_CS
-#include "../../../PCRobokey/CommandId.cs"
+#include "../../../PCRobokey/commandId.cs"
 #define _COMMANDID_CS
 #endif
 
@@ -21,7 +21,7 @@ enum BD0_PARAM {
 };
 DEFINE_Packets(BD0, CT_0, CT_0, CT_N)
 
-#ifndef _WIN32
+#ifndef SPRINGHEAD
 CHOOSE_BoardInfo(BD0);
 #define BOARD_ID 0xFF 
 #endif
