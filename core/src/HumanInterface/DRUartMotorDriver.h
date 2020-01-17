@@ -29,6 +29,7 @@ public:
 	friend DRUARTMotorDriverImpl;
 	std::vector<int> counts, offsets;
 	std::vector<int> currents;
+	int retry, retryMax;
 
 	///	仮想デバイス(DA)
 	class Da : public DVDa {

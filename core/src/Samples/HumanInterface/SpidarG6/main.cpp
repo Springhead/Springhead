@@ -15,8 +15,13 @@
 #include <Springhead.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <HumanInterface/SprHIKeyMouse.h>
+#include <Foundation/SprUTQPTimer.h>
 #include <iomanip>
 using namespace Spr;
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 int __cdecl main(){
 	// 力覚インタフェースとの接続設定
@@ -43,13 +48,28 @@ int __cdecl main(){
 	hiSdk->Print(DSTR);
 	hiSdk->Print(std::cout);
 
-	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	//	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+//	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	spg->Init(&HISpidar4DDesc());
 	spg->Calibration();
 
 	int t = 0;
+	int lastTime;
+#ifdef _WIN32
+	lastTime = timeGetTime();
+#endif
 	while(!_kbhit()){
 		t += 1;
+		if (t >= 1000) {
+			t = 0;
+#ifdef _WIN32
+			int time = timeGetTime();
+#endif
+			int diff = time - lastTime;
+			DPF("Duration: %d,  Freq: %f\n", diff, 1000.0 / diff * 1000);
+			lastTime = time;
+		}
 		spg->Update(0.001f);
 #if 0	//	Virtual floor
 		Vec3f spgpos = spg->GetPosition();
