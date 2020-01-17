@@ -85,6 +85,7 @@ public:
 				//	Check if the board info is appropriate or not.
 				if (ret.boardInfo.modelNumber > 0 && (0 < s && s < 100)) {
 					BoardBase* b = boards.Create(ret.boardInfo.modelNumber, i);
+					b->owner = this;
 					for (int m = 0; m < b->GetNMotor(); ++m) {
 						b->motorMap.push_back((char)motorMap.size());
 						motorMap.push_back(DeviceMap(i, m));
@@ -105,11 +106,12 @@ public:
 						ret.boardInfo.nMotor, ret.boardInfo.nCurrent, ret.boardInfo.nForce);
 				}
 			}
+#if 0
 			else {
 				DWORD e = GetLastError();
 				DSTR << "ID" << i << "ReadFile() Error = " << e << " rxLen = " << rxLen << std::endl;
 			}
-
+#endif
 		}
 		//	set command length for all boards
 		for (int i = 0; i < (int)boards.size(); ++i) {
@@ -128,6 +130,8 @@ public:
 		}
 		WriteFile(hUART, zero, 5, &nDid, NULL);
 		owner->ClearComRead();
+		readPos = 0;
+		nCommandBuffered = 0;
 #if 0	// For UART command test
 		for (int i = 0; i < boards.size(); ++i) {
 			ets_delay_us(10000);
@@ -136,16 +140,65 @@ public:
 		}
 		uart_write_bytes(port, zero, 5);
 #endif
+		owner->counts.resize(motorMap.size(), 0);
+		owner->offsets.resize(motorMap.size(), 0);
+		owner->currents.resize(currentMap.size(), 0);
 		return true;
 	}
-	void Update() {
+	int readPos;
+	int nCommandBuffered;
+	CommandHeader cmdHeader;
+	bool Update() {
+		bool rv = false;
 		// write command to boards
-		for (auto board : boards) {
-			board->WriteCmd(CI_CURRENT, *this);
+		if (nCommandBuffered < (boards.size()+1)) {
+			for (auto board : boards) {
+				board->WriteCmd(CI_CURRENT, *this);
+				//DPF("S");
+				nCommandBuffered++;
+			}
+			// send commands to uart
+			SendUart();
+			if (boards.size()) {
+				nCommandBuffered++;
+			}
+			rv = true;
 		}
-		// send commands to uart
-		SendUart();
 		// receive from uart
+		while (1) {
+			DWORD comErr;
+			COMSTAT comStat;
+			ClearCommError(owner->hUART, &comErr, &comStat);
+			if (comStat.cbInQue == 0) {
+				break;
+			}else{
+				DWORD nRead;
+				if (readPos == 0){
+					ReadFile(owner->hUART, &cmdHeader, 1, &nRead, NULL);
+					readPos = 1;
+				}
+				for (auto board : boards) {
+					if (board->GetBoardId() == cmdHeader.boardId) {
+						board->RetStart()[0] = cmdHeader.header;
+						int retLen = board->RetLen();
+						if (retLen == 0) {
+							DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0" << std::endl;
+						}
+						ReadFile(owner->hUART, (char*)(board->RetStart() + readPos), retLen - readPos, &nRead, NULL);
+						readPos += nRead;
+						if (readPos == retLen) {
+							board->ReadRet(cmdHeader.commandId, *this);
+							//DPF("R");
+							readPos = 0;
+							nCommandBuffered--;
+						}
+						break;
+					}
+				}
+			}
+		}
+		return rv;
+#if 0
 		int boardPos = -1;
 		for (auto board : boards) {
 			boardPos++;
@@ -176,16 +229,28 @@ public:
 				}
 			}
 		}
+#endif
 	}
 	void SendUart() {
+		static char zeros[80];
 		int wait = 0;
 		for (auto board: boards) {
 			int retLen = board->RetLenForCommand();
 			wait = retLen - board->CmdLen() + 20;
 			if (wait < 5) wait = 5;
-			memset(board->CmdStart() + board->CmdLen(), 0, wait);
-			WriteFile(owner->hUART, board->CmdStart(), board->CmdLen() + wait, NULL, NULL);
+			WriteFile(owner->hUART, board->CmdStart(), board->CmdLen(), NULL, NULL);
+			WriteFile(owner->hUART, zeros, wait, NULL, NULL);
 		}
+		//	Send CI_BOARD_INFO to get '\0' byte which works as event character for UART.
+		//	On the event, the UART driver transfer the received data to application, which imporve respose time.
+		if (boards.size()) {
+			CommandHeader cmd;
+			cmd.header = boards.front()->CmdStart()[0];
+			cmd.commandId = CI_BOARD_INFO;
+			WriteFile(owner->hUART, &cmd, 1, NULL, NULL);
+			WriteFile(owner->hUART, zeros, 5, NULL, NULL);
+		}
+		FlushFileBuffers(owner->hUART);
 	}
 	//	override BoardCmdBase
 	virtual short GetControlMode() {
@@ -249,6 +314,7 @@ DRUARTMotorDriver::DRUARTMotorDriver(const DRUARTMotorDriverDesc& d){
 	port = d.port;
 	hUART = INVALID_HANDLE_VALUE;
 	impl = new DRUARTMotorDriverImpl(this);
+	retry = retryMax = 0;
 }
 
 DRUARTMotorDriver::~DRUARTMotorDriver(){
@@ -304,10 +370,12 @@ bool DRUARTMotorDriver::InitCom() {
 //	dcb.fAbortOnError = TRUE;//エラー時の読み書き操作終了:終了する
 	dcb.fAbortOnError = FALSE;
 	dcb.fErrorChar = FALSE;// パリティエラー発生時のキャラクタ（ErrorChar）置換:なし
-	dcb.ErrorChar = 0x00;// パリティエラー発生時の置換キャラクタ
+	dcb.ErrorChar = 0xFF;// パリティエラー発生時の置換キャラクタ
 	dcb.EofChar = 0x03;// データ終了通知キャラクタ:一般に0x03(ETX)がよく使われます。
-	dcb.EvtChar = 0x02;// イベント通知キャラクタ:一般に0x02(STX)がよく使われます
+	dcb.EvtChar = 0x00;// Event notification character is used to start transfer from driver to application.
 	if (SetCommState(hUART, &dcb) != TRUE) return false;  //設定値の書き込み
+
+	SetCommMask(hUART, EV_RXFLAG);	//	Enable event notificaiton character
 
 	COMMTIMEOUTS timeouts;
 	timeouts.ReadIntervalTimeout = 1;
@@ -384,7 +452,16 @@ void DRUARTMotorDriver::UpdateCounter(int ch, short ct) {
 }
 
 void DRUARTMotorDriver::Update() {
-	impl->Update();
+	while (!impl->Update()) {
+		//DPF(".");
+		retry++;
+	}
+	if (retryMax < retry) {
+		DSTR << "DRUARTMotorDriver::Update() retryMax = " << retryMax << "  retry = " << retry << std::endl;
+		retryMax = retry;
+	}
+	retry = 0;
+	//DPF("\n");
 }
 
 void DRUARTMotorDriver::Reset() {

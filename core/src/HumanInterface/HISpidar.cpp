@@ -70,7 +70,7 @@ void HISpidar::SetLimitMaxForce(float f){
 // HISpidar4Desc
 
 HISpidar4Desc::HISpidar4Desc(){
-
+	InitSpidarG("SpidarG6X3L");
 }
 
 void HISpidar4Desc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF, float maxF){
@@ -206,7 +206,7 @@ void HISpidar4Desc::Init(char* type){
 //----------------------------------------------------------------------------
 // HISpidar4D
 
-HISpidar4::HISpidar4(const HISpidar4Desc& desc){}
+HISpidar4::HISpidar4(const HISpidar4Desc& desc){}	//	desc is null pointer here
 HISpidar4::~HISpidar4(){}
 
 bool HISpidar4::Init(const void* pDesc){
@@ -493,7 +493,7 @@ void HISpidarGDesc::Init(char* type){
 }
 
 //----------------------------------------------------------------------------
-HISpidarG::HISpidarG(const HISpidarGDesc& desc){
+HISpidarG::HISpidarG(const HISpidarGDesc& desc){	// desc is null pointer here
 	SetWeight();
 }
 
