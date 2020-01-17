@@ -3,9 +3,11 @@ mkdir WROOM
 mkdir WROOM\main
 mkdir WROOM\main\softRobot
 mkdir PCRobokey
+copy WROOM\main\softRobot\esp_log.h WROOM\main
 del /y Robokey\*
 del /y WROOM\main\softRobot\*
 del /y PIC\*
+move WROOM\main\esp_log.h WROOM\main\softRobot
 ln ..\..\..\..\..\\StuffedV3\PCRobokey\commandId.cs PCRobokey\commandId.cs
 ln ..\..\..\..\..\\StuffedV3\PIC\commandCommon.h PIC\commandCommon.h
 ln ..\..\..\..\..\\StuffedV3\PIC\commandTemplate.h PIC\commandTemplate.h
