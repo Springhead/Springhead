@@ -119,7 +119,7 @@ union CommandPacket##BOARD {										\
 			struct { /*	 CI_FORCE_CONTROL */						\
 				union {												\
 					SDEC pos[BOARD##_NMOTOR];						\
-					NOT##FORCE(SDEC jacob[1][1];)					\
+					NOT##FORCE(SDEC jacob[1][BOARD##_NMOTOR];)		\
 				} PACKED;											\
 				FORCE(SDEC jacob[BOARD##_NFORCE][BOARD##_NMOTOR];)	\
 				short period;		/*	period to interpolate */	\
