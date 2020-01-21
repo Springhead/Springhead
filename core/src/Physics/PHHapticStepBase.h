@@ -114,6 +114,7 @@ public:
 	std::vector<float> stribeckVelocitys;
 	std::vector<float> stribeckmus;
 	std::vector<double> c;
+	std::vector<float> bristleK;			/// 剛毛モデルもばね係数
 
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
