@@ -160,6 +160,8 @@ struct PHSolidPairForHapticSt{
 	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
 	std::vector<Vec3d> z;
 	std::vector<Vec3d> lastz;
+	Vec3d lasttangent;
+	std::vector<double> laststaticflag;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
@@ -209,6 +211,12 @@ public:
 		z.clear();
 		for (int i = 0; i < n; i++) {
 			z.push_back(Vec3d(0.0f,0.0f,0.0f));
+		}
+	}
+	void InitlastStaticFlag(int n) {
+		laststaticflag.clear();
+		for (int i = 0; i < n; i++) {
+			laststaticflag.push_back(0);
 		}
 	}
 	Vec3d GetZ(int i) { return z[i]; }
