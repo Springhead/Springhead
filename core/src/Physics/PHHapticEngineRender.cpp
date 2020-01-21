@@ -562,17 +562,18 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation3(PHHapticStepBase* h
 			Vec3d lastz = sp->z[i];								// 1step前のz[i]
 			sp->laststaticflag[i] = (sp->z[i] - lastz + proxyPointVel * hdt)*sgnv;
 			//ziの計算
-			if (tangentNorm > 1e-10) {
+			if (tangentNorm > 1e-36) {
+				Vec3d dproxyPos = tangent - sp->lasttangent;
 
-				if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC && sp->z[i] * sgnv < sh->muCurs[i]) { // 静摩擦の時
-					Vec3d dproxyPos = tangent - sp->lasttangent;
+				if (sp->frictionStates[i] == PHSolidPairForHapticIf::STATIC && sp->z[i] *sgnv < sh->muCurs[i]) { // 静摩擦の時
 					sp->z[i] += proxyPointVel * hdt - dproxyPos;
 					sp->laststaticflag[i] = (sp->z[i] - lastz + proxyPointVel * hdt)*sgnv;
 					sp->lasttangent = tangent;
 					bStatic = true;
 				}
 				else { //動摩擦の時
-					sp->z[i] += sgnv * sh->c[i] * (1 - (sp->z[i] * sgnv / sh->muCurs[i]))*hdt;
+					sp->z[i] += sgnv * sh->c[i] * (1 - ((sp->z[i]+tangent) * sgnv / sh->muCurs[i]))*hdt-dproxyPos;
+					sp->lasttangent = tangent;
 
 					double staticflag = (sp->z[i] - lastz + proxyPointVel * hdt)* sgnv;
 
@@ -598,9 +599,9 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation3(PHHapticStepBase* h
 					double vdt = (proxyPointVel * fricIr->normal) * hdt;
 					double predict = proxyPos + vdt;
 
-					double springf = pointer->frictionSpring * predict - (pointer->GetFrictionDamper() * (vdt - (pointer->velocity * fricIr->normal)*hdt));
+					double springf = pointer->frictionSpring * proxyPos - (pointer->GetFrictionDamper() * (vdt - (pointer->velocity * fricIr->normal)*hdt));
 					double dx = (springf + bristlef * fricIr->normal)*alpha;
-					frictionLimit = predict + dx;
+					frictionLimit = predict - dx;
 				}
 
 				//	結果をfricIrに反映
