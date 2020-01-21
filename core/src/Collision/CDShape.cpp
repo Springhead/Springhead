@@ -50,7 +50,7 @@ PHMaterial::PHMaterial(){
 	stribeckmus = { 0.1f,0.1f,0.1f };
 	stribeckVelocitys = { 0.1f,0.1f,0.1f };
 	c = { 0.01f,0.01f,0.01f };
-	bristleK = { 30.0f,40.0f,50.0f };
+	bristleK = { 1000.0f,700.0f,800.0f };
 
 	
 
