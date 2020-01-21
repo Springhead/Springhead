@@ -246,6 +246,8 @@ public:
 	
 	bool CompFrictionIntermediateRepresentation2(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
 
+	bool CompFrictionIntermediateRepresentation3(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+
 	///	PENALTY based haptic rendering
 	void PenaltyBasedRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
 	///	CONSTRAINT and DYNAMIC_PROXY based Haptic Rendering

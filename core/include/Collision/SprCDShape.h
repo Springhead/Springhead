@@ -208,6 +208,7 @@ struct PHMaterial{
 	std::vector<float> stribeckVelocitys;
 	std::vector<float> stribeckmus;
 	std::vector<double> c;
+	std::vector<float> bristleK;
 
 	struct VelocityField{
 		enum{
