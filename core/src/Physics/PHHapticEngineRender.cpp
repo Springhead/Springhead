@@ -553,7 +553,7 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation3(PHHapticStepBase* h
 				bStatic = true;
 			}
 			else { //動摩擦の時
-				sp->z[i] += sgnv * sh->c[i] * (1 - sp->z[i] * sgnv / sh->muCurs[i]*ir->depth)*hdt;
+				sp->z[i] += sgnv * sh->c[i] * (1 - (sp->z[i] * sgnv / sh->muCurs[i]))*hdt;
 			}
 			bristlef += sh->bristleK[i] * sp->z[i]; //ziの弾性力計算
 
@@ -574,7 +574,6 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation3(PHHapticStepBase* h
 			}
 			sp->fricCounts[i]++;
 		}
-
 		Vec3d vps = ir->pointerPointW;						//	接触判定した際の、ポインタ侵入点の位置
 		Vec3d vq = sp->relativePose * ir->pointerPointW;	//	現在の(ポインタの移動分を反映した)、位置
 		Vec3d dq = (vq - vps) * ir->normal * ir->normal;	//	移動の法線成分
@@ -596,11 +595,10 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation3(PHHapticStepBase* h
 
 				double vdt = (proxyPointVel * fricIr->normal) * hdt;
 
-				double springf = pointer->frictionSpring * tangentNorm - (pointer->GetFrictionDamper() * (vdt - (pointer->velocity * fricIr->normal)));
+				double springf = pointer->frictionSpring * tangentNorm - (pointer->GetFrictionDamper() * (vdt + (pointer->velocity * fricIr->normal)*hdt));
 				double dx = (springf + bristlef * fricIr->normal)*alpha;
 				double predict = proxyPos + vdt;
 				frictionLimit = predict - dx;
-				DSTR << frictionLimit << std::endl;
 			}
 
 			//	結果をfricIrに反映
