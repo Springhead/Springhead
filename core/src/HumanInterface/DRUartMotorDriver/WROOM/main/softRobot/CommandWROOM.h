@@ -1,7 +1,5 @@
 #pragma once
-#ifndef SPRINGHEAD
 #include "env.h"
-#endif
 
 #ifndef _COMMANDID_CS
 #include "../../../PCRobokey/commandId.cs"
