@@ -370,7 +370,7 @@ bool DRUARTMotorDriver::InitCom() {
 //	dcb.fAbortOnError = TRUE;//エラー時の読み書き操作終了:終了する
 	dcb.fAbortOnError = FALSE;
 	dcb.fErrorChar = FALSE;// パリティエラー発生時のキャラクタ（ErrorChar）置換:なし
-	dcb.ErrorChar = 0xFF;// パリティエラー発生時の置換キャラクタ
+	dcb.ErrorChar = -1;// パリティエラー発生時の置換キャラクタ
 	dcb.EofChar = 0x03;// データ終了通知キャラクタ:一般に0x03(ETX)がよく使われます。
 	dcb.EvtChar = 0x00;// Event notification character is used to start transfer from driver to application.
 	if (SetCommState(hUART, &dcb) != TRUE) return false;  //設定値の書き込み
