@@ -1,0 +1,110 @@
+# ******************************************************************************
+#  CMake settings for Springhead Library
+#
+# ******************************************************************************
+
+# ------------------------------------------------------------------------------
+#  Which OS?
+#
+if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+    set(Windows True)
+elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+    set(Linux True)
+    set(unix True)
+endif()
+set(Cygwin  False)
+set(MacOS   False)
+
+# ------------------------------------------------------------------------------
+#  Project name.
+#
+set(ProjectName Springhead)
+
+# ------------------------------------------------------------------------------
+#  Binary(working) directory name used when you cmake Springhead library.
+#	In order to optimize build process between Springhead projects and
+#	your application program, you should adopt take "out-of-source"
+#	build method.
+#
+set(OOS_BLD_DIR "build")
+
+# ------------------------------------------------------------------------------
+#  Configuration type(s).
+#	Remove unneccessary configuration type(s).
+#	Windows (Visual Studio) allows multiple configuration.
+#	Unix (make) allows only single configuration (Debug or Release).
+#
+if(${Windows})
+    set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+else()
+    set(CMAKE_CONFIGURATION_TYPES Release)
+endif()
+
+# ------------------------------------------------------------------------------
+#  Library type.
+#	Select one of STATIC or SHARED.
+#	(Type SHARED is not supported for Windows)
+#
+set(LIBTYPE STATIC)
+#set(LIBTYPE SHARED)
+
+# ------------------------------------------------------------------------------
+#  Springhead projects to incorporate in the application program.
+#	Remove unneccessary project name(s).
+#	Do not include 'RunSwig' in the list.
+#  If you need Springehad library only, leave this parameter unchaged.
+#
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+		HumanInterface Physics)
+#set(SPR_PROJS ${SPR_PROJS} EmbPython)
+
+# ******************************************************************************
+#  Additional compile/link options.
+#
+#    ** for both Windows and Linux **
+#	DEFINE_MACROS_ADD	Macro definitions: "NAME=VALUE" or "NAME".
+#				Do not add "/D" or "-D".
+#	INCLUDE_PATHS_ADD	Additional include paths (prepended to defaults).
+#				Do not add "-I".
+#
+#    ** additional flags **
+#	COMP_FLAGS_ADD		Additional compile flags.
+#	LINK_FLAGS_ADD		Additional link flags.
+#
+#    ** for Windows specific **
+#	VS_VERSION		Visual Studio Version (15.0, 17.0, ...).
+#				Any string distinguishable VS versions.
+#				We use VS's $(MSBuildVersion) macro.
+#
+#  See "CMakeOpts.txt.dist" for default definitions.
+# ******************************************************************************
+
+#  for Windows specific
+set(VS_VERSION			"15.0")
+
+#  for both Windows and Linux
+set(DEFINE_MACROS_ADD		"SPRINGHEAD")
+
+#  additional flags
+if(${Windows})
+    set(INCLUDE_PATHS_ADD	)
+    set(COMP_FLAGS_ADD		)
+    set(LINK_FLAGS_ADD		)
+else()
+    set(INCLUDE_PATHS_ADD	)
+    set(COMP_FLAGS_ADD		)
+    set(LINK_FLAGS_ADD		)
+endif()
+
+# ------------------------------------------------------------------------------
+#  merge
+#	macros		=> append
+#	compiler flags	=> append
+#	linker flgas	=> prepend
+#
+set(DEFINE_MACROS		${DEFINE_MACROS} ${DEFINE_MACROS_ADD})
+set(INCLUDE_PATHS		${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
+set(COMP_FLAGS			${COMP_FLAGS} ${COMP_FLAGS_ADD})
+set(LINK_FLAGS			${LINK_FLAGS_ADD} ${LINK_FLAGS})
+
+# end: CMakeSettings.txt

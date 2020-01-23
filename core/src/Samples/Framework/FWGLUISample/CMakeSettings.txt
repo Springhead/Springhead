@@ -5,6 +5,18 @@
 set(EMPTY)
 
 # ------------------------------------------------------------------------------
+#  Which OS?
+#
+if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+    set(Windows True)
+elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+    set(Linux True)
+    set(unix True)
+endif()
+set(Cygwin  False)
+set(MacOS   False)
+
+# ------------------------------------------------------------------------------
 #  Project name.
 #	Define porject name here.
 #
@@ -33,6 +45,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Library type.
 #	Select one of STATIC or SHARED.
+#	(Type SHARED is not supported for Windows)
 #
 set(LIBTYPE STATIC)
 #set(LIBTYPE SHARED)
@@ -53,68 +66,94 @@ file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
 #	We recomend to use absolute path if file exists outside of
 #	current source directory (${CMAKE_SOURCE_DIR}).
 #
-#set(EXCLUDE_SRCS ${EMPTY})
 set(EXCLUDE_SRCS FWGLUISample.cpp SampleModel.cpp)
 
 # ------------------------------------------------------------------------------
 #  Springhead projects to incorporate in the application program.
 #	Remove unneccessary project name(s).
-#	Do not include 'RunSwig' in the list.
+#	Do not include 'RunSwig' in this list.
 #  If you need Springehad library only, leave this parameter unchaged.
 #
-#set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
-#		HumanInterface Physics)
-#set(SPR_PROJS ${SPR_PROJS} EmbPython)
 if(${Windows})
-set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics
+    set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 		HumanInterface Physics)
+    #set(SPR_PROJS ${SPR_PROJS} EmbPython)
 else()
     set(SPR_PROJS ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------
+#  Additional compile macro(s).
+#	format:  "<name>=<value>" or "<name>"
+#	Do not prepend "/D" nor "-D" to macro body.
+#	See "CMakeOpts.txt.dist" for default paths.
+#
+set(DEFINE_MACROS_ADD "SPRINGHEAD")
+
+# ------------------------------------------------------------------------------
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
+#	See "CMakeOpts.txt.dist" for default paths.
 #
-set(ADDITIONAL_INCDIR ${EMPTY})
 if(${Windows})
-#    set(ADDITIONAL_INCDIR "C:/Project/ExternalPackage/glui-2.37/include")
+    set(INCLUDE_PATHS_ADD ${EMPTY})
+else()
+    set(INCLUDE_PATHS_ADD ${EMPTY})
+endif()
+
+# ------------------------------------------------------------------------------
+#  Additional compile/link flag(s).
+#	Replace '${EMPTY}' with absolute path(s).
+#	See "CMakeOpts.txt.dist" for default paths.
+if(${Windows})
+    set(COMP_FLAGS_ADD ${EMPTY})
+    set(LINK_FLAGS_ADD ${EMPTY})
+else()
+    set(COMP_FLAGS_ADD ${EMPTY})
+    set(LINK_FLAGS_ADD ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------
 #  Additional library path(s).
 #	Replace '${EMPTY}' with absolute path(s).
+#	See "CMakeOpts.txt.dist" for default paths.
 #
-set(ADDITIONAL_LIBDIR ${EMPTY})
 if(${Windows})
-#    set(ADDITIONAL_LIBDIR
-#	"C:/Project/ExternalPackage/freeglut/lib/x64"
-#	"C:/Project/Springhead/dependency/lib/win64")
+    set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
+    set(LIBRARY_PATHS_ADD ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------
 #  Additional library name(s) required.
 #	Replace '${EMPTY}' with file name(s).
+#	See "CMakeOpts.txt.dist" for default paths.
 #
-set(ADDITIONAL_LIBS ${EMPTY})
 if(${Windows})
-    set(ADDITIONAL_LIBS XINPUT9_1_0.LIB)
-#    set(ADDITIONAL_LIBS_DEBUG   python35_d.lib)
-#    set(ADDITIONAL_LIBS_RELEASE python35.lib)
-#    set(ADDITIONAL_LIBS_TRACE   python35.lib)
+    set(LIBRARY_NAMES_ADD ${EMPTY})
+    set(LIBRARY_NAMES_ADD XINPUT9_1_0.LIB)
+#    set(LIBRARY_NAMES_DEBUG   python35_d.lib)
+#    set(LIBRARY_NAMES_RELEASE python35.lib)
+#    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
+    set(LIBRARY_NAMES_ADD ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
 #
-set(EXCLUDE_LIBS ${EMPTY})
 if(${Windows})
-    set(EXCLUDE_LIBS XINPUT.LIB)
+    set(EXCLUDE_LIBRARY_NAMES ${EMPTY})
+    set(EXCLUDE_LIBRARY_NAMES XINPUT.LIB)
 else()
+    set(EXCLUDE_LIBRARY_NAMES ${EMPTY})
 endif()
+
+# ------------------------------------------------------------------------------
+#  Visual Studio Version.
+#
+set(VS_VERSION "15.0")
 
 # ------------------------------------------------------------------------------
 #  Visual Studio Debugger settings.
@@ -128,40 +167,19 @@ if(${Windows})
     set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
 endif()
 
-
-# ******************************************************************************
-#  Additional compile/link options.
-#    ** compiler options **
-#	WIN_COPT_COMMON_APPEND	  appended to CMAKE_CXX_FLAGS.
-#	WIN_COPT_xxxxxx_APPEND	  appended to CMAKE_CXX_FLAGS_xxxxx.
-#       LINUX_INCDIRS_PREPEND	  prepended to ${LINUX_COPT_INCDIR}.
-#       LINUX_INCDIRS_APPEND	  appended to ${LINUX_COPT_INCDIR}.
-#       LINUX_COPT_MACROS_APPEND  appended to ${LINUX_COPT_MACROS}.
-#    ** linker options **
-#       LINUX_LDFLAGS_PREPEND	  prepended to ${LINUX_LDFLAGS}.
-#       LINUX_LDFLAGS_APPEND	  appended to ${LINUX_LDFLAGS}.
+# ------------------------------------------------------------------------------
+#  merge
+#	macros		=> append
+#	compiler flags	=> append
+#	linker flgas	=> prepend
+#	library paths	=> prepend
+#	library names	=> prepend
 #
-#       See "CMakeOpts.txt.dist" for referred variables.
-# ******************************************************************************
-
-#  for Windows
-set(WIN_COPT_COMMON_APPEND	)
-set(WIN_COPT_DEBUG_APPEND	)
-set(WIN_COPT_RELEASE_APPEND	)
-set(WIN_COPT_TRACE_APPEND	)
-
-set(WIN_LINK_COMMON_APPEND	)
-set(WIN_LINK_DEBUG_APPEND	)
-set(WIN_LINK_RELEASE_APPEND	)
-set(WIN_LINK_TRACE_APPEND	)
-
-#  for unix
-set(LINUX_INCDIRS_PREPEND	)
-set(LINUX_INCDIRS_APPEND	)
-set(LINUX_COPT_FLAGS_APPEND	)
-set(LINUX_COPT_MACROS_APPEND	)
-
-set(LINUX_LDFLAGS_PREPEND	)
-set(LINUX_LDFLAGS_APPEND	-llapack)
+set(DEFINE_MACROS		${DEFINE_MACROS} ${DEFINE_MACROS_ADD})
+set(INCLUDE_PATHS		${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
+set(COMP_FLAGS			${COMP_FLAGS} ${COMP_FLAGS_ADD})
+set(LINK_FLAGS			${LINK_FLAGS_ADD} ${LINK_FLAGS})
+set(LIBRARY_PATHS		${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
+set(LIBRARY_NAMES		${LIBRARY_NAMES} ${LIBRARY_NAMES_ADD})
 
 # end: CMakeSettings.txt

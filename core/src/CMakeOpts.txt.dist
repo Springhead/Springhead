@@ -6,67 +6,66 @@
 #    次の変数を定義する
 #    This file defines following variable.
 #
+#	DEFINE_MACROS		Compile macros.
+#	INCLUDE_PATHS		Include paths.
+#	COMP_FLAGS		Compile options.
+#	LINK_FLAGS		Link options.
+#
 #    Windows (Visual Studio):
-#	VS_VERSION			Visual Studio Version.
-#
-#	WIN_COPT_COMMON			Commonly used compler options.
-#	WIN_COPT_DEBUG			Additional options (for Debug).
-#	WIN_COPT_RELEASE		Additional options (for Release).
-#	WIN_COPT_TRACE			Additional options (for Trace).
-#	WIN_COPT_MACROS			Define macros.
-#
-#	WIN_LINK_COMMON			Commonly used linker options.
-#	WIN_LINK_DEBUG			Additional options (for Debug).
-#	WIN_LINK_RELEASE		Additional options (for Release).
-#	WIN_LINK_TRACE			Additional options (for Trace).
-#
-#    Linux (g++):
-#	LINUX_COPT_FLAGS		Compiler options.
-#	LINUX_COPT_DEBUG		Additional options (for Debug).
-#	LINUX_COPT_RELEASE		Additional options (for Release).
+#	COMP_FLAGS_<conf>	Configuration specific compile options.
+#	LINK_FLAGS_<conf>	Configuration specific link options.
+#		where <conf> is one of "DEBUG", "RELEASE" or "TRACE".
 #
 #    ${ARCHITECTURE} is passed as  "x86" or "x64" accoding to paltform using.
 #
 # ==============================================================================
 
-if(${Windows})
 # ------------------------------------------------------------------------------
-#  Visual Studio Version.
-#	Try following command from command prompt.
-#	    > devenv /? | grep "Microsoft Visual Studio"
+#  for both Windows and unix
 #
-set(VS_VERSION "15.0")
+set(DEFINE_MACROS	)
+set(INCLUDE_PATHS	.
+			${SPR_INC_DIR}
+			${SPR_SRC_DIR}
+			${SPR_TOP_DIR}/dependency/src)
 
 # ------------------------------------------------------------------------------
-#  Compile options for Windows (Visual Studio).
+#  for Windows (Visual Studio)
 #
-set(WIN_COPT_COMMON	"/Zi /W3 /sdl /MP /D _LIB /GF- /Gm- /EHsc /GS /Gy- /Qpar \
+if(${Windows})
+    set(COPT_DEFAULT	"/Zi /W3 /sdl /MP /D _LIB /GF- /Gm- /EHsc /GS /Gy- /Qpar \
 			 /arch:AVX /fp:precise /openmp \
 			 /wd\"4996\" /wd\"4244\" /wd\"4251\" /FC")
-set(WIN_COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except /Gd")
-set(WIN_COPT_RELEASE	"/O2 /Ob2 /Ot /Oy /MD /Gr")
-set(WIN_COPT_TRACE	"/O2 /Ob2 /Ot /Oy- /D TRACE /Gr")
-#
-#  Need not to specify "-D" or "/D".
-#set(WIN_COPT_MACROS "NAME" "NAME=VALUE")
-
-set(WIN_LINK_COMMON  "/ERRORREPORT:PROMPT /IGNORE:4099 /IGNORE:4221 /NXCOMPAT \
-		      /MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO")
-if("${ARCHITECTURE}" STREQUAL "x86")
-    set(WIN_LINK_COMMON	"${WIN_LINK_COMMON} /MACHINE:X86")
-else()
-    set(WIN_LINK_COMMON "${WIN_LINK_COMMON} /MACHINE:X64")
-endif()
-set(WIN_LINK_DEBUG	"/DEBUG")
-set(WIN_LINK_RELEASE	"")
-set(WIN_LINK_TRACE	"")
+    set(COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except /Gd")
+    set(COPT_RELEASE	"/O2 /Ob2 /Ot /Oy /MD /Gr")
+    set(COPT_TRACE	"/O2 /Ob2 /Ot /Oy- /D TRACE /Gr")
+    #
+    string(TOUPPER ${ARCHITECTURE} _arch)
+    set(LOPT_DEFAULT	"/ERRORREPORT:PROMPT /IGNORE:4099 /IGNORE:4221 /NXCOMPAT \
+			 /MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO \
+			 /MACHINE:${_arch}")
+    set(LOPT_DEBUG	/DEBUG)
+    set(LOPT_RELEASE	)
+    set(LOPT_TRACE	)
+    #
+    set(COMP_FLAGS		${COPT_DEFAULT})
+    set(COMP_FLAGS_DEBUG	${COPT_DEBUG})
+    set(COMP_FLAGS_RELEASE	${COPT_RELEASE})
+    set(COMP_FLAGS_TRACE	${COPT_TRACE})
+    set(LINK_FLAGS		${LOPT_DEFAULT})
+    set(LINK_FLAGS_DEBUG	${LOPT_DEBUG})
+    set(LINK_FLAGS_RELEASE	${LOPT_RELEASE})
+    set(LINK_FLAGS_TRACE	${LOPT_TRACE})
 endif()	# ${Windows}
 
-if(${unix})
 # ------------------------------------------------------------------------------
-#  Compile options for Linux (g++).
+#  Compile options for unix (g++).
 #
-set(LINUX_COPT_WARNING_FLAGS
+if(${unix})
+    set(INCDIR_DEFAULT	-I/usr/X11R6/include
+			-I/usr/X11/include)
+    #
+    set(COPT_WARNING_FLAGS
 			-Wall
 			-Wno-unused-variable
 			-Wno-unused-but-set-variable
@@ -77,45 +76,37 @@ set(LINUX_COPT_WARNING_FLAGS
 			-Wno-reorder
 			-Wno-sign-compare
 			-Wno-unknown-pragmas)
-set(LINUX_COPT_INCDIR	-I.
-			-I${SPR_INC_DIR}
-			-I${SPR_SRC_DIR}
-			-I/usr/X11R6/include
-			-I/usr/X11/include)
-if(${CMAKE_CONFIGURATION_TYPES} STREQUAL Debug)
-    set(LINUX_COPT_CONFIG	-g)
-else()
-    set(LINUX_COPT_CONFIG	-O2)
-endif()
-set(LINUX_COPT_FLAGS	-fPIC -std=gnu++11)
-set(LINUX_COPT_MACROS	-D__cdecl=)
-#
-##list(APPEND LINUX_COPT	${WARNING_FLAGS})
-##list(APPEND LINUX_COPT	${LINUX_COPT_INCDIR})
-##list(APPEND LINUX_COPT	${LINUX_COPT_CONFIG})
-##list(APPEND LINUX_COPT	${LINUX_COPT_FLAGS})
-##list(APPEND LINUX_COPT	${LINUX_COPT_MACROS})
-
-if("${SPR_PROJS}" STREQUAL "${EMPTY}")
-    if(${Windows})
+    if(${CMAKE_CONFIGURATION_TYPES} STREQUAL Debug)
+	set(COPT_CONFIG	-g)
     else()
+	set(COPT_CONFIG	-O2)
+    endif()
+    set(COPT_DEFAULT	${COPT_WARNING_FLAGS}
+			${COPT_CONFIG}
+			-fPIC -std=gnu++11)
+    #
+    if("${SPR_PROJS}" STREQUAL "${EMPTY}")
 	if("${LIBTYPE}" STREQUAL "STATIC")
-	    set(LINUX_SPRLIB	-L${SPR_SRC_DIR} -lSpringhead)
+	    set(UNIX_SPRLIB	-L${SPR_SRC_DIR} -lSpringhead)
 	else()
 	    #  環境変数 LD_LIBRARY_PATH の設定も必要です
 	    #  Environment variable LD_LIBRARY_PATH should be set appropreately.
-	    set(LINUX_SPRLIB	-lSpringhead)
+	    set(UNIX_SPRLIB	-lSpringhead)
 	endif()
+    else()
+	set(UNIX_SPRLIB	${EMPTY})
     endif()
-endif()
-set(LINUX_STDLIB	-L/usr/lib
+    set(UNIX_STDLIB	-L/usr/lib
 			-L/usr/X11R6/lib
 			-L/usr/lib/X11
 			-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm
 			-ldl -lboost_regex)
-##set(LINUX_LDFLAGS	${LINUX_SPRLIB} ${LINUX_STDLIB})
-
-set(ARFLAGS	  	r)
+    #
+    set(DEFINE_MACROS	${DEFINE_MACROS} __ccdecl=)
+    set(INCLUDE_PATHS	${INCLUDE_PATHS} ${INCDIR_DEFAULT})
+    set(COMP_FLAGS	${COPT_DEFAULT})
+    set(LINK_FLAGS	${UNIX_SPRLIB} ${UNIX_STDLIB})
+    #
 endif()	# ${unix}
 
 # end: CMakeOpts.txt
