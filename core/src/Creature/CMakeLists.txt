@@ -1,37 +1,21 @@
-# CMakeLists.txt for Creature
+# CMakeLists.txt for Collision
 
-# target
+# ------------------------------------------------------------------------------
+#  Set target name.
+#
 set(Target "Creature")
 message("** ${Target} **")
 
-# sytem environment
-set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-
-# find Springhead top directory
-if("${TOPDIR}" STREQUAL "")
-    set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
-endif()
-set(SPR_TOP_DIR  "${TOPDIR}")
-set(SPR_SRC_DIR  "${TOPDIR}/core/src")
-set(SPR_INC_DIR  "${TOPDIR}/core/include")
-get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
-get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
-get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
-get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
-#message(STATUS "${Target}: SPR_TOP_DIR: [${SPR_TOP_DIR}]")
-#message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
-#message(STATUS "${Target}: SPR_INC_DIR: [${SPR_INC_DIR}]")
-
-#===============================================================
-#  Define sources and headers to include this project.
-#	If you specify headers under core/include directory,
-#	you must add directory path explicitly. The variable
-#	reference ${SPR_INC_DIR} indicates ".../core/include".
+# ------------------------------------------------------------------------------
+#  Read setting parameters.
 #
-#	If GLOB collects unnessessary files, replace "" of the
-#	last element of EXCLUDES_SRCS by those file names.
-#---------------------------------------------------------------
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/CMakeSettings.txt")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/CMakeSettings.txt")
+endif()
+
+# ------------------------------------------------------------------------------
+#  Define sources and headers.
+#
 file(STRINGS "RunSwig_gen_files.txt" _tmp_buff)
 string(REPLACE " " ";" _tmp_buff ${_tmp_buff})
 foreach(_file ${_tmp_buff})
@@ -45,7 +29,8 @@ file(GLOB SRCS *.cpp *.h
 	CRBodyGenerator/CRBallHumanBodyGen.cpp
 	CRBodyGenerator/CRBallHumanBodyGen.h
 	CRBodyGenerator/CRBodyGen.cpp
-	CRBodyGenerator/CRBodyGen.h)
+	CRBodyGenerator/CRBodyGen.h
+)
 file(GLOB COMMON_HDRS
 	${SPR_INC_DIR}/SprCreature.h
 	${SPR_INC_DIR}/${Target}/*.h
@@ -57,90 +42,69 @@ file(GLOB EXCLUDE_SRCS
 	CRMotionPlanner.cpp
 	CRMotionPlanner.h
 )
-#  end of definition
-#===============================================================
 list(APPEND SRCS ${COMMON_HDRS})
-list(LENGTH EXCLUDE_SRCS LEN_EXCLUDE_SRCS)
-if(${LEN_EXCLUDE_SRCS} GREATER 0)
-	list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
+if(EXCLUDE_SRCS)
+    message("++ exclude: ${EXCLUDE_SRCS}")
+    list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
 
-# modyfy compile/link options if neccessary
-#
-set(_override_file "${SPR_TOP_DIR}/core/make.modify_opts.cmake")
-include(${_override_file})
-if (${Windows})
-else()
-    set(LINUX_COPT      ${LINUX_COPT_CONFIG}
-			${LINUX_COPT_FLAGS}
-			${LINUX_COPT_MACROS}
-			${LINUX_COPT_WARNING_FLAGS})
-    set(LINUX_INCDIRS   ${LINUX_COPT_INCDIR})
-    set(LINUX_LDFLAGS   ${LINUX_LDFLAGS_PREPEND}
-			${LINUX_SPRLIB}
-			${LINUX_STDLIB}
-			${LINUX_LDFLAGS_APPEND})
-    list(JOIN LINUX_COPT " " CMAKE_CXX_FLAGS)
-    add_definitions(${LINUX_COPT_MACROS_APPEND})
-endif()
-
-# create library
+# ------------------------------------------------------------------------------
+#  Definition of library.
 #
 if(${Windows})
     add_library(${Target} ${LIBTYPE} ${SRCS})
+    set(_platform ${CMAKE_GENERATOR_PLATFORM})
+    set(_output_name_debug   "${Target}${VS_VERSION}${LIB_SUFFIX_DEBUG}${_platform}")
+    set(_output_name_release "${Target}${VS_VERSION}${LIB_SUFFIX_RELEASE}${_platform}")
+    set(_output_name_trace   "${Target}${VS_VERSION}${LIB_SUFFIX_TRACE}${_platform}")
     set_target_properties("${Target}" PROPERTIES
-	OUTPUT_NAME_DEBUG   "${Target}${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM}"
-	OUTPUT_NAME_RELEASE "${Target}${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}"
-	OUTPUT_NAME_TRACE   "${Target}${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM}"
+	OUTPUT_NAME_DEBUG   ${_output_name_debug}
+	OUTPUT_NAME_RELEASE ${_output_name_release}
+	OUTPUT_NAME_TRACE   ${_output_name_trace}
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG   ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
+    #message("     lib name debug:   ${_output_name_debug}")
+    #message("     lib name release: ${_output_name_release}")
+    #message("     lib name trace:   ${_output_name_trace}")
 elseif(${Linux})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
     add_library(${Target} ${LIBTYPE} ${SRCS})
 endif()
 
-# include directories
+# ------------------------------------------------------------------------------
+#  Compiler/linker options.
+#
+if(${Windows})
+    set(CMAKE_CXX_FLAGS		"${COMP_FLAGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG	"${COMP_FLAGS_DEBUG}")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${COMP_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_TRACE	"${COMP_FLAGS_TRACE}")
+elseif(${unix})
+    target_compile_options(${Target} PUBLIC ${COMP_FLAGS}>)
+    set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+endif()
+target_compile_definitions(${Target} PUBLIC ${DEFINE_MACROS})
+
+# ------------------------------------------------------------------------------
+#  Include directories.
 #
 set(CMAKE_USE_RELATIVE_PATHS TRUE)
-foreach(_dir ${LINUX_INCDIRS})
-    string(REPLACE "-I" "" _tmp ${_dir})
-    target_include_directories(${Target}
-	PRIVATE ${_tmp}
-    )
-endforeach()
-if(${Windows})
-    target_include_directories(${Target}
-	PRIVATE .
-	PRIVATE ${SPR_INC_DIR}
-	PRIVATE ${SPR_SRC_DIR}
-	PRIVATE ${SPR_TOP_DIR}/dependency/src
-    )
-endif()
+target_include_directories(${Target} BEFORE PRIVATE ${INCLUDE_PATHS})
 if(DEFINED Boost_INCLUDE_DIRS)
-    target_include_directories(${Target}
-	PRIVATE ${Boost_INCLUDE_DIRS}
-    )
+    target_include_directories(${Target} BEFORE PRIVATE ${Boost_INCLUDE_DIRS})
 endif()
 if(DEFINED GLEW_INCLUDE_DIRS)
-    target_include_directories(${Target}
-	PRIVATE ${GLEW_INCLUDE_DIRS}
-    )
+    target_include_directories(${Target} BEFORE PRIVATE ${GLEW_INCLUDE_DIRS})
 endif()
 if(DEFINED GLUT_INCLUDE_DIR)
-    target_include_directories(${Target}
-	PRIVATE ${GLUT_INCLUDE_DIR}
-    )
-endif()
-if(DEFINED ADDITIONAL_INCDIR)
-    foreach(_dir ${ADDITIONAL_INCDIR})
-	target_include_directories(${Target} PRIVATE ${_dir})
-    endforeach()
+    target_include_directories(${Target} BEFORE PRIVATE ${GLUT_INCLUDE_DIR})
 endif()
 
-# integrate intermediate directory
+# ------------------------------------------------------------------------------
+#  Integrate intermediate directory.
 #	${CMAKE_BINARY_DIR}/${Target}/${Target}.dir
 #	linked to (for Windows)
 #	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir

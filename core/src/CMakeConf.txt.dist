@@ -28,10 +28,14 @@
 #
 #    別途インストールしたパッケージを使用するときは、パッケージをインストール
 #    したディレクトリのパス(絶対パス)を CMAKE_PREFIX_PATH に設定してください。
-#    複数のパスを設定するときは、各パスを空白で区切って並べます。
+#    複数のパスを設定するときは、各パスを空白、改行またはセミコロンで区切って
+#    並べます。
 #
 #    If you installed above packages and intend to use them, uncomment and
-#    define installed directory list to CMAKE_PREFIX_PATH (USE ABSOLUTE PATH).
+#    define installed directory list to CMAKE_PREFIX_PATH.
+#    NOTE:	
+#	Use ABSOLUTE PATH.
+#	Multiple pathes must be separated by 'space', "newline' or 'semicolon'.
 #
 if(${Windows})
 #    set(CMAKE_PREFIX_PATH

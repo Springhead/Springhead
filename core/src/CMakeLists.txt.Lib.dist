@@ -3,36 +3,28 @@
 cmake_minimum_required(VERSION 3.1)
 
 # ------------------------------------------------------------------------------
+#  Read project name.
+#
+if(EXISTS "${CMAKE_SOURCE_DIR}/CMakeSettings.txt")
+    set(SETTING_FILE "CMakeSettings.txt")
+else()
+    set(SETTING_FILE "CMakeSettings.txt.Lib.dist")
+endif()
+include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")
+message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME}")
+
+# ------------------------------------------------------------------------------
 #  Definition of project.
 #
-set(ProjectName "Springhead")
 message(STATUS "Project: ${ProjectName}")
 project(${ProjectName} CXX)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
 
 # ------------------------------------------------------------------------------
-#  Determine top directory of Springhead tree.
-#	If cmake option "-D TOPDIR=<absolute-dir-path>" is specified,
-#	    <abs-dir-path> is the one.
-#	Else if the file "${CMAKE_SOURCE_DIR}/CMakeTopDir.txt" exists,
-#	    this file should contain the definition of top dorectory like
-#	    set(TOPDIR "<absolute-dir-path>")
-#	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopDir.txt" SHOULD contain the
-#	    "${CMAKE_SOURCE_DIR}/../.." is the top directory/
+#  We set top directory of Springhead tree to "TOPDIR".
 #
-set(TOPDIR_FILE "CMakeTopdir.txt")
-if(DEFINED TOPDIR)
-    # ok
-elseif(EXISTS "${CMAKE_SOURCE_DIR}/${TOPDIR_FILE}")
-    include(${TOPDIR_FILE})
-else()
-    set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
-endif()
-if(NOT EXISTS "${TOPDIR}")
-    message("Error: Directory \"${TOPDIR}\" not found")
-    return()
-endif()
+set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
 
 set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_CORE_DIR "${TOPDIR}/core")
@@ -53,12 +45,6 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 #
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
-
-if(${Windows})
-    set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
-elseif(${unix})
-    set(CMAKE_CONFIGURATION_TYPES Release)
-endif()
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 
 # ------------------------------------------------------------------------------
@@ -70,7 +56,7 @@ include("${SPR_CORE_DIR}/make.func.cmake")
 #  Read compiler/linker option file (try to find in following order).
 #	(1) File specified by option "-D OPTS=<file>".
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
-#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.Lib.dist".
 #
 set(OPTS_FILE_NAME "CMakeOpts.txt")
 set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
@@ -78,42 +64,9 @@ set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
 include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
 # ------------------------------------------------------------------------------
-#  Set compiler/linker options.
+#  Read setting parameters.
 #
-if(DEFINED LIBTYPE)
-    if(${LIBTYPE} STREQUAL SHARED)
-    else()
-	message("Error: invalid value [LIBTYPE=${LIBTYPE}]")
-    endif()
-else()
-    if(${Windows})
-	set(LIBTYPE STATIC)
-    elseif(${unix})
-	set(LIBTYPE STATIC)
-    endif()
-endif()
-if(${Windows})
-    message(STATUS "Host System: Windows")
-    set(CMAKE_CXX_FLAGS		"${WIN_COPT_COMMON}")
-    set(CMAKE_CXX_FLAGS_DEBUG	"${WIN_COPT_DEBUG}")
-    set(CMAKE_CXX_FLAGS_RELEASE	"${WIN_COPT_RELEASE}")
-    set(CMAKE_CXX_FLAGS_TRACE	"${WIN_COPT_TRACE}")
-#    foreach(macros IN ITEMS ${WIN_COPT_MACROS})
-#	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
-#    endforeach()
-    set(CMAKE_EXE_LINKER_FLAGS		  "${WIN_LINK_COMMON}")
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG	  "${WIN_LINK_DEBUG}")
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE	  "${WIN_LINK_RELEASE}")
-    set(CMAKE_EXE_LINKER_FLAGS_TRACE	  "${WIN_LINK_TRACE}")
-elseif(${unix})
-    if(${Linux})
-	message(STATUS "Host System: Linux")
-    else()
-	message(STATUS "Host System: unix")
-    endif()
-    message(STATUS "Library type: ${LIBTYPE}")
-    set(CMAKE_CXX_COMPILER	/usr/bin/g++)
-endif()
+include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")
 
 # ------------------------------------------------------------------------------
 #  Read definition of external packages. (try to find in following order).
@@ -180,13 +133,10 @@ if(${Windows})
     set(Python ${RunSwigDir}/python_adapter.bat)
     file(TO_NATIVE_PATH "${RunSwigDir}" RunSwigDir)
     file(TO_NATIVE_PATH "${Python}" Python)
-#    if(NOT DEFINED VS_VERSION)
-#	execute_process(
-#	    COMMAND ${Python} get_vs_version.py
-#	    OUTPUT_VARIABLE VS_VERSION
-#	)
-#    endif()
     message(STATUS "Visual Studio Version: ${VS_VERSION}")
+    set(LIB_SUFFIX_DEBUG   D)
+    set(LIB_SUFFIX_RELEASE  )
+    set(LIB_SUFFIX_TRACE   T)
 elseif(${unix})
     set(Python python)
 endif()
@@ -226,16 +176,15 @@ if(${Windows})
 endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
 if(${Windows})
-    set(LIBBASE_DEBUG   ${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM})
-    set(LIBBASE_RELEASE ${VS_VERSION}${CMAKE_GENERATOR_PLATFORM})
-    set(LIBBASE_TRACE   ${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM})
-    set(LIBCMND_DEBUG   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBBASE_DEBUG})
-    set(LIBCMND_RELEASE SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBBASE_RELEASE})
-    set(LIBCMND_TRACE   SpringheadLib.bat ${CMAKE_GENERATOR_PLATFORM} ${LIBBASE_TRACE})
+    set(_platform ${CMAKE_GENERATOR_PLATFORM})
     set(LIB_SUFFIX lib)
-    set(LIBNAME_DEBUG   ${Target}${LIBBASE_DEBUG}.${LIB_SUFFIX})
-    set(LIBNAME_RELEASE ${Target}${LIBBASE_RELEASE}.${LIB_SUFFIX})
-    set(LIBNAME_TRACE   ${Target}${LIBBASE_TRACE}.${LIB_SUFFIX})
+    foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
+	string(TOUPPER ${_tmp} _conf)
+	set(_lib ${WIN_COPT}_${_conf}})
+	set(LIBBASE_${_conf} ${VS_VERSION}${LIB_SUFFIX_${_conf}}${_platform})
+	set(LIBCMND_${_conf} SpringheadLib.bat ${_platform} ${LIBBASE_${_conf}})
+	set(LIBNAME_${_conf} ${Target}${LIBBASE_${_conf}}.${LIB_SUFFIX})
+    endforeach() 
 elseif(${unix})
     if("${LIBTYPE}" STREQUAL "STATIC")
 	set(LIB_SUFFIX a)
@@ -244,23 +193,6 @@ elseif(${unix})
     endif()
     set(LIBNAME lib${Target}.${LIB_SUFFIX})
 endif()
-
-# ------------------------------------------------------------------------------
-#  Include directories.
-#
-include_directories(${Target}
-    PRIVATE ${CMAKE_SOSURCE_DIR}
-    PRIVATE ${SPR_INC_DIR}
-    PRIVATE ${SPR_SRC_DIR}
-    PRIVATE ${Boost_INCLUDE_DIRS}
-    PRIVATE ${GLUE_INCLUDE_DIRS}
-    PRIVATE ${GLUT_INCLUDE_DIR}
-    #PRIVATE ${ADDITIONAL_INCDIR}
-    PRIVATE ${SPR_TOP_DIR}/dependency/src
-)
-foreach(_incdir ${ADDITIONAL_INCDIR})
-    include_directories(${Target} PRIVATE ${_incdir})
-endforeach()
 
 # ------------------------------------------------------------------------------
 #  Generate Springhead Library.
@@ -322,24 +254,19 @@ if(DEFINED SPRINGHEAD_INCLUDE_PREFIX)
     )
 endif()
 if(${Windows})
-    if(DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG)
-	set(_libpath ${LIBDIR}/${LIBNAME_DEBUG})
-	message("** INSTALL: ${LIBNAME_DEBUG}: ${SPRINGHEAD_LIBRARY_DIR_DEBUG} **")
-	install(FILES ${_libpath}
-	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
-    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	    CONFIGURATIONS Debug
-	)
-    endif()
-    if(DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
-	set(_libpath ${LIBDIR}/${LIBNAME_RELEASE})
-	message("** INSTALL: ${LIBNAME_RELEASE}: ${SPRINGHEAD_LIBRARY_DIR_RELEASE} **")
-	install(FILES ${_libpath}
-	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR_RELEASE}
-	    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	    CONFIGURATIONS Release
-	)
-    endif()
+    set(_libdir ${SPRINGHEAD_LIBRARY_DIR}})
+    foreach(_tmp Debug Release)
+	string(TOUPPER ${_tmp} _conf)
+	if(DEFINED SPRINGHEAD_LIBRARY_DIR_${_conf})
+	    set(_libpath ${LIBDIR}/${LIBNAME_${_conf}})
+	    message("** INSTALL: ${LIBNAME_${_conf}}: ${_libdir}_${_conf} **")
+	    install(FILES ${_libpath}
+		DESTINATION ${SPRINGHEAD_LIBRARY_DIR_${_conf}}
+		PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+		CONFIGURATIONS ${_tmp}
+	    )
+	endif()
+    endforeach()
 elseif(${unix})
     if(DEFINED SPRINGHEAD_LIBRARY_DIR)
 	set(_libpath ${LIBDIR}/${LIBNAME})

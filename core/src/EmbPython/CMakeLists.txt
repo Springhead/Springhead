@@ -1,36 +1,22 @@
-# CMakeLists.txt for Physics
+# CMakeLists.txt for EmbPython
 
 # target
 set(Target "EmbPython")
 message("** ${Target} **")
 
-# sytem environment
-set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-
-# find Springhead top directory
-if("${TOPDIR}" STREQUAL "")
-    set(TOPDIR "${CMAKE_CURRENT_SOURCE_DIR}/../../..")
-endif()
-set(SPR_TOP_DIR  "${TOPDIR}")
-set(SPR_SRC_DIR  "${TOPDIR}/core/src")
-set(SPR_INC_DIR  "${TOPDIR}/core/include")
-get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
-get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
-get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
-get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
-#message(STATUS "${Target}: SPR_TOP_DIR: [${SPR_TOP_DIR}]")
-#message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
-#message(STATUS "${Target}: SPR_INC_DIR: [${SPR_INC_DIR}]")
-
-#===============================================================================
-# EmbPython_RunSwig generate files
-#	These files are removed when 'clean' target executed
+# ------------------------------------------------------------------------------
+#  Read setting parameters.
 #
-if(NOT DEFINED SPR_PROJS)
-    set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
-		  HumanInterface Physics)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/CMakeSettings.txt")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/CMakeSettings.txt")
 endif()
+
+# ------------------------------------------------------------------------------
+# EmbPython_RunSwig generate files.
+#	These files are removed when 'clean' target executed.
+#
+set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+		HumanInterface Physics)
 set(_for_src EP@.h EP@.cpp Makefile_EmbPython.swig.@ swig_@.log)
 set(_for_inc SprEP@.h)
 
@@ -57,8 +43,8 @@ foreach(_file ${generated_files})
     #message("     generate: ${_file}")
 endforeach()
 
-#===============================================================================
-#  Define sources.
+# ------------------------------------------------------------------------------
+#  Define sources and headers.
 #
 file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	       *.i EPUtility.h
@@ -72,71 +58,74 @@ file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	       ../../include/EmbPython/Utility/*.h
 )
 list(APPEND SRCS ${generated_files})
-#  end of definition
 
-#===============================================================================
-#  Load local compile options.
+# ------------------------------------------------------------------------------
+#  Read compiler/linker option file (try to find in following order).
+#	(1) File specified by option "-D OPTS=<file>".
+#	(2) "${SPR_SRC_DIR}/CMakeOpts.txt".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.Lib.dist".
 #
 set(OPTS_FILE_NAME "CMakeOpts.txt")
-set(OPTS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${OPTS_FILE_NAME}")
-if(EXISTS ${OPTS_FILE})
-	include(${OPTS_FILE})
-	set(CMAKE_CXX_FLAGS		${WIN_COPT_COMMON})
-	set(CMAKE_CXX_FLAGS_DEBUG	${WIN_COPT_DEBUG})
-	set(CMAKE_CXX_FLAGS_RELEASE	${WIN_COPT_RELEASE})
-	set(CMAKE_CXX_FLAGS_TRACE	${WIN_COPT_TRACE})
-	foreach(macros IN ITEMS ${WIN_COPT_MACROS})
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D ${macros}")
-	endforeach()
-endif()
+set(OPTS_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}")
+set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
+include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
-#===============================================================================
+# ------------------------------------------------------------------------------
 #  Main target.
 #
 add_library(${Target} STATIC ${SRCS})
 
-# output library
+# ------------------------------------------------------------------------------
+#  Apply local settings.
 #
 if(${Windows})
+    set(CMAKE_CXX_FLAGS		"${COMP_FLAGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG	"${COMP_FLAGS_DEBUG}")
+    set(CMAKE_CXX_FLAGS_RELEASE	"${COMP_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_TRACE	"${COMP_FLAGS_TRACE}")
+elseif(${unix})
+    target_compile_options(${Target} PUBLIC ${COMP_FLAGS}>)
+    set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+endif()
+target_compile_definitions(${Target} PUBLIC ${DEFINE_MACROS})
+
+# ------------------------------------------------------------------------------
+#  Include directories.
+#
+set(CMAKE_USE_RELATIVE_PATHS TRUE)
+target_include_directories(${Target} BEFORE PRIVATE ${INCLUDE_PATHS})
+if(DEFINED Boost_INCLUDE_DIRS)
+    target_include_directories(${Target} BEFORE PRIVATE ${Boost_INCLUDE_DIRS})
+endif()
+if(DEFINED GLEW_INCLUDE_DIRS)
+    target_include_directories(${Target} BEFORE PRIVATE ${GLEW_INCLUDE_DIRS})
+endif()
+if(DEFINED GLUT_INCLUDE_DIR)
+    target_include_directories(${Target} BEFORE PRIVATE ${GLUT_INCLUDE_DIR})
+endif()
+
+# ------------------------------------------------------------------------------
+#  Library output directories.
+#
+if(${Windows})
+    set(LIB_SUFFIX_DEBUG   D)
+    set(LIB_SUFFIX_RELEASE  )
+    set(LIB_SUFFIX_TRACE   T)
+    set(_platform ${CMAKE_GENERATOR_PLATFORM})
+    set(_output_name_debug   "${Target}${VS_VERSION}${LIB_SUFFIX_DEBUG}${_platform}")
+    set(_output_name_release "${Target}${VS_VERSION}${LIB_SUFFIX_RELEASE}${_platform}")
+    set(_output_name_trace   "${Target}${VS_VERSION}${LIB_SUFFIX_TRACE}${_platform}")
     set_target_properties("${Target}" PROPERTIES
-	OUTPUT_NAME_DEBUG   "${Target}${VS_VERSION}D${CMAKE_GENERATOR_PLATFORM}"
-	OUTPUT_NAME_RELEASE "${Target}${VS_VERSION}${CMAKE_GENERATOR_PLATFORM}"
-	OUTPUT_NAME_TRACE   "${Target}${VS_VERSION}T${CMAKE_GENERATOR_PLATFORM}"
+	OUTPUT_NAME_DEBUG   ${_output_name_debug}
+	OUTPUT_NAME_RELEASE ${_output_name_release}
+	OUTPUT_NAME_TRACE   ${_output_name_trace}
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG   ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
 elseif(${Linux})
-endif()
-
-# include directories
-#
-set(CMAKE_USE_RELATIVE_PATHS TRUE)
-target_include_directories(${Target}
-    PRIVATE ${SPR_INC_DIR}/Python
-    PRIVATE ${SPR_INC_DIR}
-    PRIVATE ${SPR_SRC_DIR}
-    PRIVATE ${SPR_TOP_DIR}/dependency/src
-)
-if(DEFINED Boost_INCLUDE_DIRS)
-    target_include_directories(${Target}
-	PRIVATE ${Boost_INCLUDE_DIRS}
-    )
-endif()
-if(DEFINED GLEW_INCLUDE_DIRS)
-    target_include_directories(${Target}
-	PRIVATE ${GLEW_INCLUDE_DIRS}
-    )
-endif()
-if(DEFINED GLUT_INCLUDE_DIR)
-    target_include_directories(${Target}
-	PRIVATE ${GLUT_INCLUDE_DIR}
-    )
-endif()
-if(DEFINED ADDITIONAL_INCDIR)
-    foreach(_dir ${ADDITIONAL_INCDIR})
-	target_include_directories(${Target} PRIVATE ${_dir})
-    endforeach()
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
 endif()
 
 # ------------------------------------------------------------------------------
