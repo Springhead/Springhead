@@ -37,7 +37,7 @@
 #	Use ABSOLUTE PATH.
 #	Multiple pathes must be separated by 'space', "newline' or 'semicolon'.
 #
-if(${Windows})
+if(Windows)
 #    set(CMAKE_PREFIX_PATH
 #	"F:/Project/ExternalPackage/boost_1_70_0/include/boost-1_70"
 #	"F:/Project/ExternalPackage/glew-2.1.0"
@@ -45,7 +45,7 @@ if(${Windows})
 #	"F:/Project/ExternalPackage/freeglut"
 #    )
 #    set(ADDITIONAL_INCDIR "F:/Project/ExternalPackage/glui-2.37/include")
-elseif(${unix})
+elseif(unix)
 #    set(CMAKE_PREFIX_PATH "/usr")
 endif()
 
@@ -68,11 +68,11 @@ endif()
 #    SPRINGHEAD_LIBRARY_RELEASE:
 #	Destination directory path (absolute path).
 #
-if(${Windows})
+if(Windows)
 #    set(SPRINGHEAD_INCLUDE_PREFIX      "C:/usr/local")
 #    set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/usr/local/lib")
 #    set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/usr/local/lib")
-elseif(${unix})
+elseif(unix)
 #    set(SPRINGHEAD_INCLUDE_PREFIX      "/home/user/install")
 #    set(SPRINGHEAD_LIBRARY_DIR		"/home/user/install/lib")
 endif()

@@ -36,7 +36,7 @@ set(OOS_BLD_DIR "build")
 #	Windows (Visual Studio) allows multiple configuration.
 #	Unix (make) allows only single configuration (Debug or Release).
 #
-if(${Windows})
+if(Windows)
     set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 else()
     set(CMAKE_CONFIGURATION_TYPES Release)
@@ -74,7 +74,7 @@ set(EXCLUDE_SRCS ${EMPTY})
 #	Do not include 'RunSwig' in this list.
 #  If you need Springehad library only, leave this parameter unchaged.
 #
-if(${Windows})
+if(Windows)
     set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 		HumanInterface Physics)
     #set(SPR_PROJS ${SPR_PROJS} EmbPython)
@@ -88,14 +88,14 @@ endif()
 #	Do not prepend "/D" nor "-D" to macro body.
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-set(DEFINE_MACROS_ADD "SPRINGHEAD")
+set(DEFINE_MACROS_ADD ${EMPTYY})
 
 # ------------------------------------------------------------------------------
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-if(${Windows})
+if(Windows)
     set(INCLUDE_PATHS_ADD ${EMPTY})
 else()
     set(INCLUDE_PATHS_ADD ${EMPTY})
@@ -105,7 +105,7 @@ endif()
 #  Additional compile/link flag(s).
 #	Replace '${EMPTY}' with absolute path(s).
 #	See "CMakeOpts.txt.dist" for default paths.
-if(${Windows})
+if(Windows)
     set(COMP_FLAGS_ADD ${EMPTY})
     set(LINK_FLAGS_ADD ${EMPTY})
 else()
@@ -118,7 +118,7 @@ endif()
 #	Replace '${EMPTY}' with absolute path(s).
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-if(${Windows})
+if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
     set(LIBRARY_PATHS_ADD ${EMPTY})
@@ -129,7 +129,7 @@ endif()
 #	Replace '${EMPTY}' with file name(s).
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-if(${Windows})
+if(Windows)
     set(LIBRARY_NAMES_ADD ${EMPTY})
 #    set(LIBRARY_NAMES_ADD XINPUT9_1_0.LIB)
 #    set(LIBRARY_NAMES_DEBUG   python35_d.lib)
@@ -143,7 +143,7 @@ endif()
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
 #
-if(${Windows})
+if(Windows)
     set(EXCLUDE_LIBRARY_NAMES ${EMPTY})
 #    set(EXCLUDE_LIBRARY_NAMES XINPUT.LIB)
 else()
@@ -162,7 +162,7 @@ set(VS_VERSION "15.0")
 #		i.e. the directory where this file (CMakeLists.txt) is.
 #	DEBUGGER_COMMAND_ARGUMENTS:
 #		Debugger command line arguments.
-if(${Windows})
+if(Windows)
     set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
     set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
 endif()

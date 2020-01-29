@@ -9,4 +9,4 @@ inline void ESP_LOGE(const char* tag, const char* fmt, ...){
 	vprintf(fmt, args);
 	va_end(args);
 }
-#endif ESP_LOG_H
+#endif //ESP_LOG_H

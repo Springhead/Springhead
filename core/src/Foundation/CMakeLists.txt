@@ -77,10 +77,14 @@ if(${Windows})
     set(CMAKE_CXX_FLAGS_RELEASE	"${COMP_FLAGS_RELEASE}")
     set(CMAKE_CXX_FLAGS_TRACE	"${COMP_FLAGS_TRACE}")
 elseif(${unix})
-    target_compile_options(${Target} PUBLIC ${COMP_FLAGS}>)
+    foreach(_flag ${COMP_FLAGS})
+        target_compile_options(${Target} PUBLIC ${_flag})
+    endforeach()
     set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 endif()
-target_compile_definitions(${Target} PUBLIC ${DEFINE_MACROS})
+foreach(_macro ${DEFINE_MACROS})
+        target_compile_definitions(${Target} PUBLIC ${_macro})
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Include directories.

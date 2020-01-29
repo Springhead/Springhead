@@ -2,7 +2,7 @@
 
 #include "CommandWROOM.h"
 #ifdef SPRINGHEAD
-#include <springhead.h>
+#include <Springhead.h>
 using namespace Spr;
 #define NMOTOR 1
 #define NFORCE 1
