@@ -23,16 +23,17 @@
 # ------------------------------------------------------------------------------
 #  for both Windows and unix
 #
-set(DEFINE_MACROS	)
-set(INCLUDE_PATHS	.
-			${SPR_INC_DIR}
-			${SPR_SRC_DIR}
-			${SPR_TOP_DIR}/dependency/src)
+set(DEFINE_MACROS_DEFAULT	SPRINGHEAD)
+set(INCLUDE_PATHS_DEFAULT	.
+				${SPR_INC_DIR}
+				${SPR_SRC_DIR})
 
 # ------------------------------------------------------------------------------
 #  for Windows (Visual Studio)
 #
-if(${Windows})
+if(Windows)
+    set(INCDIR_DEFAULT	${SPR_TOP_DIR}/dependency/src)
+    #
     set(COPT_DEFAULT	"/Zi /W3 /sdl /MP /D _LIB /GF- /Gm- /EHsc /GS /Gy- /Qpar \
 			 /arch:AVX /fp:precise /openmp \
 			 /wd\"4996\" /wd\"4244\" /wd\"4251\" /FC")
@@ -48,6 +49,8 @@ if(${Windows})
     set(LOPT_RELEASE	)
     set(LOPT_TRACE	)
     #
+    set(DEFINE_MACROS		${DEFINE_MACROS_DEFAULT})
+    set(INCLUDE_PATHS		${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})
     set(COMP_FLAGS		${COPT_DEFAULT})
     set(COMP_FLAGS_DEBUG	${COPT_DEBUG})
     set(COMP_FLAGS_RELEASE	${COPT_RELEASE})
@@ -56,14 +59,14 @@ if(${Windows})
     set(LINK_FLAGS_DEBUG	${LOPT_DEBUG})
     set(LINK_FLAGS_RELEASE	${LOPT_RELEASE})
     set(LINK_FLAGS_TRACE	${LOPT_TRACE})
-endif()	# ${Windows}
+endif()	# Windows
 
 # ------------------------------------------------------------------------------
 #  Compile options for unix (g++).
 #
-if(${unix})
-    set(INCDIR_DEFAULT	-I/usr/X11R6/include
-			-I/usr/X11/include)
+if(unix)
+    set(INCDIR_DEFAULT	/usr/X11R6/include
+			/usr/X11/include)
     #
     set(COPT_WARNING_FLAGS
 			-Wall
@@ -83,11 +86,15 @@ if(${unix})
     endif()
     set(COPT_DEFAULT	${COPT_WARNING_FLAGS}
 			${COPT_CONFIG}
-			-fPIC -std=gnu++11)
+			-fPIC
+			-std=gnu++11
+			-D__ccdecl=
+			-D__cdecl=)
     #
     if("${SPR_PROJS}" STREQUAL "${EMPTY}")
 	if("${LIBTYPE}" STREQUAL "STATIC")
-	    set(UNIX_SPRLIB	-L${SPR_SRC_DIR} -lSpringhead)
+	    set(UNIX_SPRLIB	-L${SPR_TOP_DIR}/generated/lib
+				-lSpringhead)
 	else()
 	    #  環境変数 LD_LIBRARY_PATH の設定も必要です
 	    #  Environment variable LD_LIBRARY_PATH should be set appropreately.
@@ -102,11 +109,11 @@ if(${unix})
 			-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm
 			-ldl -lboost_regex)
     #
-    set(DEFINE_MACROS	${DEFINE_MACROS} __ccdecl=)
-    set(INCLUDE_PATHS	${INCLUDE_PATHS} ${INCDIR_DEFAULT})
+    set(DEFINE_MACROS	${DEFINE_MACROS_DEFAULT})
+    set(INCLUDE_PATHS	${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})
     set(COMP_FLAGS	${COPT_DEFAULT})
     set(LINK_FLAGS	${UNIX_SPRLIB} ${UNIX_STDLIB})
     #
-endif()	# ${unix}
+endif()	# unix
 
 # end: CMakeOpts.txt

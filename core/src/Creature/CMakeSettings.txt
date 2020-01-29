@@ -21,10 +21,7 @@ set(MacOS   False)
 if(${Windows})
     set(DEFINE_MACROS_ADD	)
 else()
-    set(DEFINE_MACROS_ADD	WINGDIAPI=
-				APIENTRY=
-				CALLBACK=
-				GLUTCALLBACK=)
+    set(DEFINE_MACROS_ADD	)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -43,7 +40,10 @@ if(${Windows})
     set(COMP_FLAGS_ADD		)
     set(LINK_FLAGS_ADD		)
 else()
-    set(COMP_FLAGS_ADD		)
+    set(COMP_FLAGS_ADD		-UWINGDIAPI
+				-UAPIENTRY
+				-UCALLBACK
+				-UGLUTCALLBACK)
     set(LINK_FLAGS_ADD		)
 endif()
 

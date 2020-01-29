@@ -34,7 +34,7 @@ set(OOS_BLD_DIR "build")
 #	Windows (Visual Studio) allows multiple configuration.
 #	Unix (make) allows only single configuration (Debug or Release).
 #
-if(${Windows})
+if(Windows)
     set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 else()
     set(CMAKE_CONFIGURATION_TYPES Release)
@@ -83,10 +83,10 @@ set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 set(VS_VERSION			"15.0")
 
 #  for both Windows and Linux
-set(DEFINE_MACROS_ADD		"SPRINGHEAD")
+set(DEFINE_MACROS_ADD		)
 
 #  additional flags
-if(${Windows})
+if(Windows)
     set(INCLUDE_PATHS_ADD	)
     set(COMP_FLAGS_ADD		)
     set(LINK_FLAGS_ADD		)
