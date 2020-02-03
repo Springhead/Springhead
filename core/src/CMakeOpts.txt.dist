@@ -93,26 +93,27 @@ if(unix)
     #
     if("${SPR_PROJS}" STREQUAL "${EMPTY}")
 	if("${LIBTYPE}" STREQUAL "STATIC")
-	    set(UNIX_SPRLIB	-L${SPR_TOP_DIR}/generated/lib
-				-lSpringhead)
+	    set(SPRLIB_PATHS	${SPR_TOP_DIR}/generated/lib)
+	    set(SPRLIB_NAMES	Springhead)
 	else()
 	    #  環境変数 LD_LIBRARY_PATH の設定も必要です
 	    #  Environment variable LD_LIBRARY_PATH should be set appropreately.
-	    set(UNIX_SPRLIB	-lSpringhead)
+	    set(SPRLIB_PATHS	)
+	    set(SPRLIB_NAMES	Springhead)
 	endif()
     else()
-	set(UNIX_SPRLIB	${EMPTY})
+	set(SPRLIB_PATHS	${EMPTY})
+	set(SPRLIB_NAMES	${EMPTY})
     endif()
-    set(UNIX_STDLIB	-L/usr/lib
-			-L/usr/X11R6/lib
-			-L/usr/lib/X11
-			-lX11 -lXi -lXmu -lglui -lglut -lGLEW -lGLU -lGL -lm
-			-ldl -lboost_regex)
+    set(STDLIB_PATHS	/usr/lib /usr/X11R6/lib /usr/lib/X11)
+    set(STDLIB_NAMES	X11 Xi Xmu glui glut GLEW GLU GL m dl boost_regex)
     #
     set(DEFINE_MACROS	${DEFINE_MACROS_DEFAULT})
     set(INCLUDE_PATHS	${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})
     set(COMP_FLAGS	${COPT_DEFAULT})
-    set(LINK_FLAGS	${UNIX_SPRLIB} ${UNIX_STDLIB})
+    set(LINK_FLAGS	)
+    set(LIBRARY_PATHS	${SPRLIB_PATHS} ${STDLIB_PATHS})
+    set(LIBRARY_NAMES	${SPRLIB_NAMES} ${STDLIB_NAMES})
     #
 endif()	# unix
 

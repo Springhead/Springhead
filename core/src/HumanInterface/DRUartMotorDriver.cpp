@@ -150,6 +150,7 @@ public:
 	CommandHeader cmdHeader;
 	bool Update() {
 		bool rv = false;
+#ifdef _WIN32
 		// write command to boards
 		if (nCommandBuffered < (boards.size()+1)) {
 			for (auto board : boards) {
@@ -197,6 +198,7 @@ public:
 				}
 			}
 		}
+#endif //_WIN32
 		return rv;
 #if 0
 		int boardPos = -1;
