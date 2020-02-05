@@ -36,7 +36,7 @@ set(OOS_BLD_DIR "build")
 #	Windows (Visual Studio) allows multiple configuration.
 #	Unix (make) allows only single configuration (Debug or Release).
 #
-if(${Windows})
+if(Windows)
     set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
 else()
     set(CMAKE_CONFIGURATION_TYPES Release)
@@ -57,7 +57,7 @@ set(LIBTYPE STATIC)
 #	If you want to refer current (sublevel) source directory, use
 #	${CMAKE_CURRENT_SOURCE_DIR} instead.
 #
-file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
+file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} main.cpp robot.cpp *.h)
 
 # ------------------------------------------------------------------------------
 #  Source/include file name(s) to EXCLUDE from compilation.
@@ -66,7 +66,7 @@ file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
 #	We recomend to use absolute path if file exists outside of
 #	current source directory (${CMAKE_SOURCE_DIR}).
 #
-set(EXCLUDE_SRCS car.cpp)
+set(EXCLUDE_SRCS ${EMPTY})
 
 # ------------------------------------------------------------------------------
 #  Springhead projects to incorporate in the application program.
@@ -74,8 +74,8 @@ set(EXCLUDE_SRCS car.cpp)
 #	Do not include 'RunSwig' in this list.
 #  If you need Springehad library only, leave this parameter unchaged.
 #
-if(${Windows})
-    set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics
+if(Windows)
+    set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 		HumanInterface Physics)
     #set(SPR_PROJS ${SPR_PROJS} EmbPython)
 else()
@@ -88,14 +88,14 @@ endif()
 #	Do not prepend "/D" nor "-D" to macro body.
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-set(DEFINE_MACROS_ADD "SPRINGHEAD")
+set(DEFINE_MACROS_ADD ${EMPTYY})
 
 # ------------------------------------------------------------------------------
 #  Additional include path(s).
 #	Replace '${EMPTY}' with absolute path(s).
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-if(${Windows})
+if(Windows)
     set(INCLUDE_PATHS_ADD ${EMPTY})
 else()
     set(INCLUDE_PATHS_ADD ${EMPTY})
@@ -105,7 +105,7 @@ endif()
 #  Additional compile/link flag(s).
 #	Replace '${EMPTY}' with absolute path(s).
 #	See "CMakeOpts.txt.dist" for default paths.
-if(${Windows})
+if(Windows)
     set(COMP_FLAGS_ADD ${EMPTY})
     set(LINK_FLAGS_ADD ${EMPTY})
 else()
@@ -118,7 +118,7 @@ endif()
 #	Replace '${EMPTY}' with absolute path(s).
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-if(${Windows})
+if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
     set(LIBRARY_PATHS_ADD ${EMPTY})
@@ -129,23 +129,23 @@ endif()
 #	Replace '${EMPTY}' with file name(s).
 #	See "CMakeOpts.txt.dist" for default paths.
 #
-if(${Windows})
+if(Windows)
     set(LIBRARY_NAMES_ADD ${EMPTY})
-    set(LIBRARY_NAMES_ADD XINPUT9_1_0.LIB)
+#    set(LIBRARY_NAMES_ADD XINPUT9_1_0.LIB)
 #    set(LIBRARY_NAMES_DEBUG   python35_d.lib)
 #    set(LIBRARY_NAMES_RELEASE python35.lib)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
-    set(LIBRARY_NAMES_ADD ${EMPTY})
+    set(LIBRARY_NAMES_ADD lapack)
 endif()
 
 # ------------------------------------------------------------------------------
 #  Default library name(s) to EXCLUDE from linking.
 #	Replace '${EMPTY}' with file name(s).
 #
-if(${Windows})
+if(Windows)
     set(EXCLUDE_LIBRARY_NAMES ${EMPTY})
-    set(EXCLUDE_LIBRARY_NAMES XINPUT.LIB)
+#    set(EXCLUDE_LIBRARY_NAMES XINPUT.LIB)
 else()
     set(EXCLUDE_LIBRARY_NAMES ${EMPTY})
 endif()
@@ -162,24 +162,9 @@ set(VS_VERSION "15.0")
 #		i.e. the directory where this file (CMakeLists.txt) is.
 #	DEBUGGER_COMMAND_ARGUMENTS:
 #		Debugger command line arguments.
-if(${Windows})
+if(Windows)
     set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
     set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
 endif()
-
-# ------------------------------------------------------------------------------
-#  merge
-#	macros		=> append
-#	compiler flags	=> append
-#	linker flgas	=> prepend
-#	library paths	=> prepend
-#	library names	=> prepend
-#
-set(DEFINE_MACROS		${DEFINE_MACROS} ${DEFINE_MACROS_ADD})
-set(INCLUDE_PATHS		${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
-set(COMP_FLAGS			${COMP_FLAGS} ${COMP_FLAGS_ADD})
-set(LINK_FLAGS			${LINK_FLAGS_ADD} ${LINK_FLAGS})
-set(LIBRARY_PATHS		${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
-set(LIBRARY_NAMES		${LIBRARY_NAMES} ${LIBRARY_NAMES_ADD})
 
 # end: CMakeSettings.txt
