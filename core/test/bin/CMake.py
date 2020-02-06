@@ -80,13 +80,13 @@ class CMake:
 	#
 	def preparation(self):
 		# ======================================================
-		#  If "CMakeLists,txt.Lib.dist" exists here, we must be
+		#  If "CMakeLists.txt.dist" exists here, we must be
 		#  in a Springhead Library creating step.
 		# ======================================================
 		if self.verbose:
 			print('cmake: preparation')
 		cwd = os.getcwd()
-		srcfile = '%s/CMakeLists.txt.Lib.dist' % cwd
+		srcfile = '%s/CMakeLists.txt.dist' % cwd
 		dstfile = '%s/CMakeLists.txt' % cwd
 		status = 0
 		if os.path.exists(srcfile):
