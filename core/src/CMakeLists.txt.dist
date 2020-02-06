@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 if(EXISTS "${CMAKE_SOURCE_DIR}/CMakeSettings.txt")
     set(SETTING_FILE "CMakeSettings.txt")
 else()
-    set(SETTING_FILE "CMakeSettings.txt.Lib.dist")
+    set(SETTING_FILE "CMakeSettings.txt.dist")
 endif()
 include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")
 message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME}")
@@ -56,7 +56,7 @@ include("${SPR_CORE_DIR}/make.func.cmake")
 #  Read compiler/linker option file (try to find in following order).
 #	(1) File specified by option "-D OPTS=<file>".
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
-#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.Lib.dist".
+#	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.dist".
 #
 set(OPTS_FILE_NAME "CMakeOpts.txt")
 set(OPTS_FILE "${CMAKE_SOURCE_DIR}/${OPTS_FILE_NAME}")
