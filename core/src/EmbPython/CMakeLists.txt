@@ -1,6 +1,51 @@
 # CMakeLists.txt for EmbPython
 
-# target
+# ------------------------------------------------------------------------------
+#  Commandline option "-DSTANDALONE=1" indicates 'standalone' version of
+#  creating library "libEmbPyson.a" on unix system.
+#
+if(STANDALONE)
+    cmake_minimum_required(VERSION 3.1)
+    set(ProjectName EmbPython)
+    message(STATUS "Project: ${ProjectName}")
+    project(${ProjectName} CXX)
+    set(Target ${ProjectName})
+    set(CMAKE_SUPPRESS_REGENERATION true)
+    set(CMAKE_USE_RELATIVE_PATHS true)
+    #
+    set(TOPDIR ../../..)
+    set(SPR_TOP_DIR  "${TOPDIR}")
+    set(SPR_CORE_DIR "${TOPDIR}/core")
+    set(SPR_SRC_DIR  "${TOPDIR}/core/src")
+    set(SPR_INC_DIR  "${TOPDIR}/core/include")
+    get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
+    get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
+    get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
+    get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
+    get_filename_component(SPR_BLD_DIR ${PROJECT_BINARY_DIR} ABSOLUTE)
+    message(STATUS "SPR_TOP_DIR: [${SPR_TOP_DIR}]")
+    #message(STATUS "SPR_SRC_DIR: [${SPR_SRC_DIR}]")
+    #message(STATUS "SPR_INC_DIR: [${SPR_INC_DIR}]")
+    message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
+    #
+    include("${SPR_CORE_DIR}/make.system.cmake")
+    message(STATUS "Architecture: ${ARCHITECTURE}")
+    set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
+    include("${SPR_CORE_DIR}/make.func.cmake")
+    #
+    if(Windows)
+	set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+	set(LIBTYPE STATIC)
+	set(VS_VERSION "15.0")
+    else()
+	set(CMAKE_CONFIGURATION_TYPES Release)
+	set(LIBTYPE STATIC)
+    endif()
+endif() 
+
+# ------------------------------------------------------------------------------
+#  Definition of target.
+#
 set(Target "EmbPython")
 message("** ${Target} **")
 
