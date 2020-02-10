@@ -2,17 +2,29 @@
 
 ダウンロードが済んだら "C:/Springhead/core/src" に移動してください。
 
-配布されたファイル "CMakeLists.txt.Lib.dist" を "CMakeLists.txt" という名前で
+ライブラリのビルドに関連する配布ファイルは次のものです。
+
+| ファイル名 | 説明 |
+|:--|:--|
+| CMakeLists.txt.dist | ライブラリ生成用設定ファイル |
+| CMakeSettings.txt.dist | ビルドパラメータ変更用ファイル |
+| CMakeOpts.txt.dist | デフォルトビルドパラメータファイル |
+| CMakeConf.txt.dist | 外部パッケージ・インストール先設定用ファイル |
+
+<br>
+配布されたファイル "CMakeLists.txt.dist" を "CMakeLists.txt" という名前で
 コピーします。
 
 ```
 > chdir C:/Springhead/core/src
-> copy CMakeLists.txt.Lib.dist CMakeLists.txt
+> copy CMakeLists.txt.dist CMakeLists.txt
 ```
 
-配布されたビルド条件で構わないのであれば、これで準備は終了です。
+配布されたビルド条件で問題なければ、これで準備は終了です。
 [ビルド](/install/Build.md) へ進んでください。
 
+<br>
+<a id="install"></a>
 独自にインストールしたパッケージ boost, glew, glut, glui を使用する場合
 およびライブラリファイルとヘッダファイルのインストール先を指定する場合には、
 配布されたファイル "CMakeConf.txt.dist" を "CMakeConf.txt" という名前でコピーして
@@ -38,6 +50,7 @@ set(SPRINGHEAD_LIBRARY_DIR_RELEASE  "C:/somewhere/appropreate")
 $ENV{variable} とすると環境変数の値を参照できます。
 文字 '#' 以降はコメントです。
 
+<br>
 コンパイル及びリンクのオプションはファイル "CMakeOpts.txt.dist" に設定されています。
 これらのオプションを変更するときは、配布されたファイル "CMakeOpts.txt.dist" を
 "CMakeOpts.txt" という名前でコピーして必要な編集をします。

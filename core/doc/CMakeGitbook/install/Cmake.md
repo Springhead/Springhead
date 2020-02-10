@@ -10,7 +10,7 @@ CMake には Configure と Generate の2段階があります。
 ```
 > chdir C:/Springhead
 > mkdir build
-> cmake -B build <generator>
+> cmake -B build [generator]
 ```
 
 *generator* の詳細は、コマンドプロンプトで `cmake --help` とすると確認できます。
@@ -19,6 +19,11 @@ CMake には Configure と Generate の2段階があります。
 Windows: `-G "Visual Studio 15 2017" -A x64`<br>
 unix:    `-G "Unix Makefiles"`
 
+*generataor*を省略した場合のデフォルトは、
+Windows の場合にはインストールされている Visual Studio の最新バージョンが、
+unix の場合には Unix Makefiles が選択されるようです。 
+
+<br>
 `cmake-gui`を利用する場合は、まず、次の画面で Configure ボタンを押します。
 <img src="/fig/CMakeConfigure1.jpg" width="600px">
 

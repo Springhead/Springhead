@@ -2,7 +2,7 @@
 
 Springhead Library は GitHub で管理されており、
 次の URL からダウンロードすることができます。
-以下、ダウンロードするディレクトリを "C:/Springhead" として説明を進めます。
+**以下、ダウンロードするディレクトリを "C:/Springhead" として説明を進めます。**
 
 ```
 > chdir C:/Springhead
