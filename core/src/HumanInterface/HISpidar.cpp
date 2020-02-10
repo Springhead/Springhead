@@ -147,6 +147,14 @@ void HISpidar4Desc::InitSpidarG(char* type){
 			motors[2].lengthPerPulse *= -1;
 		}
 	}
+	else if (stricmp(type, "SpidarG6U") == 0) {	//	UART version
+		for (int i = 0; i < motors.size(); ++i) {
+			motors[i].currentPerVolt = 20.0f;	//	1A / 0.05 OHM
+			motors[i].voltPerNewton = (1.0f / motors[i].currentPerVolt) * (1.0f / 10.0f);	//	V/N = V/C * C/N
+			motors[i].lengthPerPulse = 0.004f * M_PI / 1024.0f;	 //	D=4mm * PI / (count/revolution)
+		}
+		nButton = 0;
+	}
 }
 
 void HISpidar4Desc::InitSpidarBig(char* type){
