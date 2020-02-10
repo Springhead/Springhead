@@ -24,13 +24,13 @@ cmake (configure) 実行時に作成されるオブジェクト格納ディレ�
 各プロジェクトの "CMakeLists.txt" から execute_process で呼び出される
  "make_prconfig.py" を参照のこと。
 
-> (\*) で作成する link は、unix では symbolic link、Windows では junction です。
+> (\*) ここで作成する link は、unix では symbolic link、Windows では junction です。
 これは、Windows では通常の実行権限では symblic link が作成できないためです。
 
 > Windows では、"Base.dir" が junction なのか通常のディレクトリなのかが、
  explorer でも command prompt でも区別がつきません。
-このことが、[Q&A](/application/QandA.md) の *ビルドの最適性が崩れる* の原因究明を
-困難にする可能性を孕んでいます。
+このことが、[Q&A](/application/QandA.md#CrumbleBuildOptimization) の
+ *ビルドの最適性が崩れる* の原因究明を困難にする可能性を孕んでいます。
 ここでは、オブジェクト共通格納場所には "\_target\_body\_" という名前の空ファイルを
 置くことで判定の補助としています。
 

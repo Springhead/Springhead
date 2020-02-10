@@ -23,6 +23,8 @@
 これはプロジェクトファイルの整合性を保つために作られたターゲットで、
 他のターゲットをビルドすることにより自動的にこのターゲットが最初に実行されます。
 ** このターゲットに対して何らかのアクションを起こす必要はありません。 **
+[プロジェクトファイルの整合性](/application/Solutions.md#ProjectFileIntegration)
+ 参照。
 
 ----
 ** ソリューションまたはプロジェクトが環境外で変更された旨のメッセージが出る **
@@ -43,13 +45,13 @@
 ** ディレクトリが作成できないエラーが発生する **
 
 Springehad Library をビルドすると、ソースツリー上に
- "C:/Springhead/core/src/Base/&lt;x64&gt;/&lt;15.0&gt;/Base.dir"
+ "C:/Springhead/core/src/Base/*x64*/*15.0*/Base.dir"
  というディレクトリが作成されます
- (&lt;*x64*&gt;, &lt;*15.0*&gt; の部分は環境により異なります)。
+ (*x64*, *15.0* の部分は環境により異なります)。
 
 アプリケーションの cmake をした後で上記のディレクトリを削除すると、
 以降のビルドで<br>
-　　*“エラー MSB3191 ディレクトリ "Base.dir/Debug/" を作成できません”*<br>
+　　“エラー MSB3191 ディレクトリ "Base.dir/Debug/" を作成できません”<br>
 などというエラーが発生します。
 
 **この問題を解消するためには、アプリケーション側または Springhead Library 側で
@@ -60,6 +62,7 @@ Springehad Library をビルドすると、ソースツリー上に
 **この場合には、Springhead Library 側で cmake を実行してください。**
 
 ----
+<a id="CrumbleBuildOptimization"></a>
 ** ビルドの最適性が崩れる **
 
 アプリケーション側で "C:/Develop/Application/*build*/Base.Base.dir" などを削除すると、
@@ -67,7 +70,8 @@ Springehad Library をビルドすると、ソースツリー上に
 ビルドの最適性が崩れてしまいます。
 
 > 無駄なビルドが発生するだけで、ビルド自体は正常に行なえます。
-“ビルドの最適性”については [問題点](/application/Problems.md) を参照してください。
+“ビルドの最適性”については [問題点](/application/Problems.md#BuildOptimality)
+ を参照してください。
 
 **この問題を解消するためには、アプリケーション側または Springhead Library 側で
 再度 cmake を実行する必要があります。**
