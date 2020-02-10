@@ -734,21 +734,26 @@ void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
 	render->SetLighting(true);
 }
 void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
-	render->SetMaterial(matContact);
-
-	PHContactPoint* c = con->Cast();
-	if(c->shapePair->section.size() < 3)
-		return;
-	std::vector<Vec3f> vtx;
-	vtx.resize(c->shapePair->section.size());
-	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
-	
+	render->SetMaterial(matContact);	
 	render->SetLighting(false);
-	render->SetDepthTest(false);
-	
-	render->SetVertexFormat(GRVertexElement::vfP3f);
-	render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
-	
+	render->SetDepthTest(false);	
+	PHContactPoint* c = con->Cast();
+	if (c->shapePair->section.size() > 1) {
+		std::vector<Vec3f> vtx;
+		vtx.resize(c->shapePair->section.size());
+		copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
+		render->SetVertexFormat(GRVertexElement::vfP3f);
+		render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
+	}
+	render->SetPointSize(10, true);
+	render->SetMaterial(GRRenderBaseIf::GREEN);
+	render->DrawPoint(c->shapePair->center);
+/*	render->SetMaterial(GRRenderBaseIf::GREEN);
+	render->DrawPoint(c->shapePair->shapePoseW[0] * c->shapePair->closestPoint[0]);
+	render->SetMaterial(GRRenderBaseIf::YELLOWGREEN);
+	render->DrawPoint(c->shapePair->shapePoseW[1] * c->shapePair->closestPoint[1]);
+*/
+
 	render->SetDepthTest(true);
 	render->SetLighting(true);
 }
@@ -794,6 +799,27 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 			Vec3d p1 = ikE->GetSolidTempPose() * ikE->GetTargetLocalPosition();
 			render->DrawLine(p0, p1);
 		}
+
+		// -----
+
+		if (i % 3 == 0) {
+			render->SetMaterial(matAxis.x);
+		}
+		else if (i % 3 == 1) {
+			render->SetMaterial(matAxis.y);
+		}
+		else {
+			render->SetMaterial(matAxis.z);
+		}
+
+		Posed pose = ikA->GetSolidTempPose();
+		render->DrawLine(pose.Pos(), pose * Vec3d(2, 0, 0));
+		render->DrawLine(pose.Pos(), pose * Vec3d(0, 2, 0));
+		render->DrawLine(pose.Pos(), pose * Vec3d(0, 0, 2));
+
+		render->SetMaterial(matAxis.x);
+
+		// -----
 	}
 
 	render->SetLineWidth(1);
