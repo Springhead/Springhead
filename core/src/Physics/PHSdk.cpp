@@ -91,6 +91,7 @@ void PHSdkIf::RegisterSdk(){
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKBallActuator));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKHingeActuator));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKSpringActuator));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKEndEffector));
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMesh));

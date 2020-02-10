@@ -799,6 +799,27 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 			Vec3d p1 = ikE->GetSolidTempPose() * ikE->GetTargetLocalPosition();
 			render->DrawLine(p0, p1);
 		}
+
+		// -----
+
+		if (i % 3 == 0) {
+			render->SetMaterial(matAxis.x);
+		}
+		else if (i % 3 == 1) {
+			render->SetMaterial(matAxis.y);
+		}
+		else {
+			render->SetMaterial(matAxis.z);
+		}
+
+		Posed pose = ikA->GetSolidTempPose();
+		render->DrawLine(pose.Pos(), pose * Vec3d(2, 0, 0));
+		render->DrawLine(pose.Pos(), pose * Vec3d(0, 2, 0));
+		render->DrawLine(pose.Pos(), pose * Vec3d(0, 0, 2));
+
+		render->SetMaterial(matAxis.x);
+
+		// -----
 	}
 
 	render->SetLineWidth(1);
