@@ -24,6 +24,7 @@ struct PHSolidIf;
 struct PHHingeJointIf;
 struct PHBallJointIf;
 struct PHIKActuatorIf;
+struct PHSpringIf;
 
 /** \defgroup gpIK 逆運動学(IK)計算*/
 //@{
@@ -341,6 +342,9 @@ struct PHIKActuatorState{
 	///
 	Posed solidPullbackPose;
 
+	// <!!> Springでしか使わないが，Stateの多重継承を防ぐためここに入れてある．(20/02/10 mitake)
+	Posed       jointTempPose; ///< IK-FK計算用の一時変数：関節角度（Spring用）
+
 	PHIKActuatorState() {
 		solidTempPose    = Posed();
 		jointTempOri = Quaterniond();
@@ -348,6 +352,7 @@ struct PHIKActuatorState{
 		jointTempAngle = 0.0;
 		jointTempAngleIntp = 0;
 		solidPullbackPose = Posed();
+		jointTempPose = Posed();
 	}
 };
 
@@ -443,6 +448,46 @@ struct PHIKHingeActuatorDesc : PHIKActuatorDesc{
 
 	PHIKHingeActuatorDesc() {
 		pullbackTarget = 0.0;
+	}
+};
+
+/// 6軸アクチュエータ（PHSpringを駆動する）
+struct PHIKSpringActuatorIf : PHIKActuatorIf {
+	SPR_IFDEF(PHIKSpringActuator);
+
+	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
+	*/
+	void SetJoint(PHSpringIf* joint);
+
+	/** @brief 動作対象として設定された関節を取得する
+	*/
+	PHSpringIf* GetJoint();
+
+	/** @brief 関節一時姿勢をセットする
+	*/
+	void SetJointTempPose(Posed pose);
+
+	/** @brief 関節引き戻し目標をセットする
+	*/
+	void SetPullbackTarget(Posed pose);
+
+	/** @brief 一時変数の関節角度を取得する
+	*/
+	Posed GetJointTempPose();
+
+	/** @brief 関節引き戻し目標を取得する
+	*/
+	Posed GetPullbackTarget();
+};
+
+/// 6軸アクチュエータのディスクリプタ
+struct PHIKSpringActuatorDesc : PHIKActuatorDesc {
+	SPR_DESCDEF(PHIKSpringActuator);
+
+	Posed pullbackTarget;
+
+	PHIKSpringActuatorDesc() {
+		pullbackTarget = Posed();
 	}
 };
 

@@ -122,8 +122,8 @@ public:
 
 	// シーン構築
 	virtual void BuildScene() {
-		BuildSceneBallBranch();
-		// BuildSceneHinge(false);
+		// BuildSceneBallBranch();
+		BuildSceneHinge(false);
 	}
 
 	virtual void BuildSceneHinge(bool branch = false) {
@@ -144,8 +144,13 @@ public:
 		Posed shapePose; shapePose.Ori() = Quaterniond::Rot(Rad(90), 'x');
 
 		// Base Link
+		PHSolidIf* soBase = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+		soBase->SetDynamical(false);
+		soBase->AddShape(phSdk->CreateShape(descSphere));
+
+		// Base Link
 		PHSolidIf* so0 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		so0->SetDynamical(false);
+		// so0->SetDynamical(false);
 		so0->AddShape(phSdk->CreateShape(descCapsule));
 		so0->SetShapePose(0, shapePose);
 
@@ -228,10 +233,22 @@ public:
 		descBall.damper     =   1000.0;
 		// descBall.fMax    =   1000.0;
 
-		PHIKHingeActuatorDesc descIKHinge;
-		PHIKBallActuatorDesc  descIKBall;
+		PHSpringDesc descSpring;
+		descSpring.spring    = Vec3d(1000000.0, 1000000.0, 1000000.0);
+		descSpring.damper    = Vec3d( 100000.0,  100000.0,  100000.0);
+		descSpring.springOri = 1000000.0;
+		descSpring.damperOri =  100000.0;
 
-		PHIKEndEffectorDesc   descIKE;
+		PHIKHingeActuatorDesc  descIKHinge;
+		PHIKBallActuatorDesc   descIKBall;
+		PHIKSpringActuatorDesc descIKSpring;
+
+		PHIKEndEffectorDesc    descIKE;
+
+		// Fix Base
+		PHSpringIf* joBase = GetFWScene()->GetPHScene()->CreateJoint(soBase, so0, descSpring)->Cast();
+		PHIKSpringActuatorIf* ikaBase = GetFWScene()->GetPHScene()->CreateIKActuator(descIKSpring)->Cast();
+		ikaBase->AddChildObject(joBase);
 
 		// Base <-> Link 1
 		PHHingeJointIf* jo1 = GetFWScene()->GetPHScene()->CreateJoint(so0, so1, descHinge)->Cast();
@@ -272,6 +289,7 @@ public:
 			ika6->AddChildObject(jo6);
 		}
 
+		ikaBase->AddChildObject(ika1);
 		ika1->AddChildObject(ika2);
 		ika2->AddChildObject(ika3);
 		ika3->AddChildObject(ika4);
@@ -307,7 +325,8 @@ public:
 
 		// ----- ----- ----- ----- -----
 
-		double pbr = 1.0;
+		double pbr = 0.01;
+		ikaBase->SetPullbackRate(pbr);
 		ika1->SetPullbackRate(pbr);
 		ika2->SetPullbackRate(pbr);
 		ika3->SetPullbackRate(pbr);
@@ -317,7 +336,7 @@ public:
 			ika6->SetPullbackRate(pbr);
 		}
 
-		/*
+		ikaBase->SetBias(16.0);
 		ika1->SetBias( 8.0);
 		ika2->SetBias( 4.0);
 		ika3->SetBias( 2.0);
@@ -326,7 +345,6 @@ public:
 			ika5->SetBias( 2.0);
 			ika6->SetBias( 1.0);  
 		}
-		*/
 
 		ika1->Enable(true);
 		ika2->Enable(true);
