@@ -106,7 +106,7 @@ solid->SetShapePose(1, Posed(Vec3d(),
 
 ### 丸コーン
 
-丸コーンのクラスは`CDRoundCone`です．丸コーンはカプセルの両端の半径が非対称になったものです．
+丸コーン[^1]のクラスは`CDRoundCone`です．丸コーンはカプセルの両端の半径が非対称になったものです．
 
  ![img](http://springhead.info/dailybuild/generated/doc/SprManual/fig/cdroundcone.svg) 
 
@@ -123,6 +123,8 @@ solid->SetShapePose(1, Posed(Vec3d(),
 |*void SetLength(float)*| 		|
 |*void SetWidth(Vec2f)*|丸コーンの全長を保存したまま半径を変更します．|
 
+
+[^1]: 丸コーンという名前はRoundConeの直訳で、POV-RayのRound_Cone2マクロに由来します（[参考資料１]( https://www.povray.org/documentation/3.7.0/r3_4.html )、[参考資料２]( http://www.f-lohmueller.de/pov_tut/all_shapes/shapes320e.htm )）。丸コーンは人体やキャラクタの表現のために導入されたプリミティブですが、その考え方の元となったのは[EC2008]( http://ec2008.entcomp.org/program.html )で展示発表されていた「*POSEUM : 絵画技能熟達支援のためのWEBベース3Dモデル作成・共有システム*」（ [紹介動画]( https://www.nicovideo.jp/watch/sm3858385 ) ）です。
 
 
 
