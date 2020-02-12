@@ -108,6 +108,7 @@ void PHContactPoint::CompBias(){
 	double dtinv = scene->GetTimeStepInv();
 	double tol   = scene->GetContactTolerance();
 	double vth   = scene->GetImpactThreshold();
+	double fth	 = scene->GetFrictionThreshold();
 
 	//	速度が小さい場合は、跳ね返りなし。
 	if(vjrel[0] > - vth){
@@ -136,7 +137,8 @@ void PHContactPoint::CompBias(){
 
 	// determine static/dynamic friction based on tangential relative velocity
 	double vt = vjrel[1] + velField[1];
-	isStatic = (-vth < vt && vt < vth);
+	//isStatic = (-vth < vt && vt < vth);
+	isStatic = (-fth < vt && vt < fth);
 }
 
 bool PHContactPoint::Projection(double& f_, int i) {
