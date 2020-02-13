@@ -1,5 +1,5 @@
 % 1.3.Cmake.tex
-%	Last update: 2020/02/27 F.Kanehori
+%	Last update: 2020/02/10 F.Kanehori
 %\newpage
 \subsection{cmake}
 \label{subsec:CmakeLibrary}
@@ -28,8 +28,6 @@ CMakeにはConfigureとGenerateの2段階があります。
 \it{generator}を省略した場合のデフォルトは、
 Windowsの場合にはインストールされているVisual Studioの最新バージョンが、
 unixの場合には\tt{Unix Makefiles}が選択されるようです。
-ただし、マシンアーキテクチャは自動的には判定されません。
-Windowsで64ビットマシンの場合には \tt{-A x64}を指定してください。
 
 \begin{narrow}[s]
 	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
