@@ -1,0 +1,119 @@
+% 1.6.DoNotUseCmake.tex
+%	Last update: 2020/02/13 F.Kanehori
+%\newpage
+\subsection{CMakeを利用しない場合(非推奨)}
+\label{subsec:DoNotUseCmake}
+\parindent=0pt
+
+\Important{%
+	この章の冒頭でも述べたとおり、
+	ここで説明する方法でビルドすることは推奨しません。 
+	特にWindowsの場合、
+	Visual Studioの新しいバージョンに対応したファイルが配布されることは
+	期待しないでください。
+	また、これらのファイルはいずれ配布の対象から外される可能性がありますので、
+	できればCMakeを利用するビルド環境をご利用ください。}
+
+\bigskip
+CMakeを利用しないで直接ビルドをすることもできます。
+現在配布しているファイルは次のもので、\Path{C:/Springhead/core/src}に置かれています。
+
+\medskip
+\begin{narrow}[20pt]
+\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}l}\hline
+	\tt{Springhead14.0.sln} & Windows Visual Studio 2015用 \\
+	\tt{Springhead15.0.sln} & Windows Visual Studio 2017用 \\
+	\tt{Makefile} & unix用 \\\hline
+\end{tabular}
+\end{narrow}
+
+\bigskip
+\bf{Windowsの場合}
+\begin{narrow}
+	Visual Studio を起動し、
+	"スタートアッププロジェクト"にSpringheadを指定してビルドしてください。
+	ライブラリファイルは、\\
+	\hspace{20pt}\Path{C:/Springhead/generated/lib/\it{arch}} \\
+	に生成されます
+	(\it{arch}は\Path{win64}または\Path{win32}のいずれかです)。
+\end{narrow}
+
+\bf{unixの場合}
+\begin{narrow}
+	\tt{make install}を実行してください。
+	ライブラリファイルは、\\
+	\hspace{20pt}\Path{C:/Springhead/generated/lib} \\
+	に生成されます。
+\end{narrow}
+
+\medskip
+\thinrule{\linewidth}
+
+%---------------------------------------------------------------
+EmbPython 関係の配布ファイルは次のものです(unix用の\tt{Makefile}はありません)。
+
+\medskip
+\bf{Springhead アプリケーションに Python インタプリタを組み込む場合}
+
+\begin{narrow}
+	Solution fileが\Path{C:/Springhead/core/src/EmbPython}に置かれています。
+
+	\medskip
+	\begin{narrow}[10pt]
+	\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}l}\hline
+		\tt{EmbPython14.0.sln} & Windows Visual Studio 2015用 \\
+		\tt{EmbPython15.0.sln} & Windows Visual Studio 2017用 \\\hline
+	\end{tabular}
+	\end{narrow}
+
+	\medskip
+	Visual Studioで上記のsolution fileを実行し、
+	ターゲットEmbPythonをビルドしてください。
+	ライブラリファイルは、\Path{C:/Springhead/core/src/EmbPython}に
+	次の名前で生成されます
+	(プラットフォームが32ビットの場合はx64がx86となります)。
+
+	\medskip
+	\begin{narrow}[10pt]
+	\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}ll} \hline
+		& Visual Studio 2015 & Visual Studio 2017 \\\hline
+		Debug構成 & \tt{EmbPython14.0x64D.lib} & \tt{EmbPython15.0x64D.lib} \\
+		Relase構成 & \tt{EmbPython14.0x64.lib} & \tt{EmbPython15.0x64.lib} \\
+		Trace構成 & \tt{EmbPython14.0x64T.lib} & \tt{EmbPython15.0x64T.lib} \\\hline
+	\end{tabular}
+	\end{narrow}
+	\medskip
+\end{narrow}
+
+\bigskip
+\bf{Pythonインタプリタに対する外部拡張モジュール(Python DLL, pyd)を作成する場合}
+
+\begin{narrow}
+	Solution fileが\Path{C:/Springhead/core/embed}に置かれています。
+
+	\medskip
+	\begin{narrow}[10pt]
+	\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}l}\hline
+		\tt{SprPythonDLL14.0.sln} & Windows Visual Studio 2015用 \\
+		\tt{SprPythonDLL15.0.sln} & Windows Visual Studio 2017用 \\\hline
+	\end{tabular}
+	\end{narrow}
+
+	\medskip
+	Visual Studioで上記のsolution fileを実行し、
+	ターゲットSprPythonDLLを ビルドしてください。
+	DLLファイルは、\Path{C:/Springhead/generated/bin/arch}に
+	次の名前で生成されます(archはwin32またはwin64のいずれかです)。
+
+	\medskip
+	\begin{narrow}[10pt]
+	\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}l} \hline
+		Debug構成 & \tt{SprD.pyd} \\
+		Relase構成 & \tt{Spr.pyd} \\
+		Trace構成 & \tt{SprT.pyd} \\\hline
+	\end{tabular}
+	\end{narrow}
+	\medskip
+\end{narrow}
+
+% end: 1.6.DoNotUseCmake.tex

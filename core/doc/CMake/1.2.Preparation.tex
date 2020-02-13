@@ -1,0 +1,81 @@
+% 1.2.Preparation.tex
+%	Last update: 2020/02/13 F.Kanehori
+%\newpage
+\subsection{ビルドの準備}
+\label{subsec:Preparation}
+\parindent=0pt
+
+ダウンロードが済んだら、ディレクトリ\SprTop{/core/src}に移動してください。
+
+ライブラリのビルドに関連する配布ファイルは次のものです。
+
+\begin{center}
+\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}l}\hline
+	\tt{CMakeLists.txt.dist} & ライブラリ生成用設定ファイル \\
+	\tt{CMakeSettings.txt.dist} & ビルドパラメータ変更用ファイル \\
+	\tt{CMakeOpts.txt.dist} & デフォルトビルドパラメータファイル \\
+	\tt{CMakeConf.txt.dist} & 外部パッケージ・インストール先設定用ファイル \\\hline
+\end{tabular}
+\end{center}
+
+\bigskip
+配布されたファイル\QCMakeLists{.dist}を\QCMakeLists{}という名前でコピーします。
+
+\CmndLine{%
+	> chdir C:/Springhead/core/src\\
+	> \it{copy} \CMakeLists{.dist} \CMakeLists{}
+}{command-1-2-a.eps}{\CMakeLists{}}
+
+\medskip
+配布されたビルド条件で問題なければ、これで準備は終了です。
+\KQuote{\ref{subsec:Build} ビルド}へ進んでください。
+
+\bigskip
+独自にインストールしたパッケージ boost, glew, freeglut, gluiを使用する場合
+およびライブラリファイルとヘッダファイルのインストール先を指定する場合には、
+配布されたファイル\QCMakeConf{.dist}を\QCMakeConf{}という名前でコピーして
+必要な編集をします。
+編集の方法は\QCMakeConf{}に記述されています。
+
+\def\cite#1{\hspace{10pt}\footnotesize{#1}}
+\def\somewhere{"C:/\it{somewhere}/\it{appropreate}"}
+\CmndLine{%
+	> \it{copy} \CMakeConf{.txt} \CMakeConf{}\\
+	> \it{edit} \CMakeConf{}\\
+	\hspace{20pt}:\\
+	\cite{set(CMAKE\_PREFIX\_PATH "C:/somewhre/appropreate")} \\
+	\cite{\hspace{20pt}\#\hspace{40pt}{(\rm{use absolute path)}}}\\
+	\cite{\hspace{20pt}\#\hspace{40pt}%
+		{(\rm{multiple paths must be separated by `newline' or `semicolon')}}}\\
+	\cite{)}\\
+	\hspace{20pt}:\\
+	\cite{set(SPRINGHEAD\_INCLUDE\_PREFIX       "C:/somewhere/appropreate)}\\
+	\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_DEBUG   "C:/somewhere/appropreate)}\\
+	\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_RELEASE "C:/somewhere/appropreate)}
+}{command-1-2-b.eps}{\CMakeConf{}}
+
+\medskip
+\begin{narrow}[s][20pt]
+	変数\it{variable}に値\it{value}を設定するには
+	\tt{set(\it{variable} "\it{value}"}) とします。
+	途中に空白やセミコロンを含まない文字列ならば引用符は省略できます。
+	また、\tt{\$\{\it{variable}\}}とすると他の変数の値を、
+	\tt{\$ENV\{\it{variable}\}}とすると環境変数の値を参照できます。
+	文字`\tt{\#}'以降はコメントです。
+\end{narrow}
+
+\bigskip
+コンパイル及びリンクのオプションはファイル\QCMakeOpts{.dist}に設定されています。
+これらのオプションを変更するときは、配布されたファイル\QCMakeOpts{.dist}を
+\QCMakeOpts{}という名前でコピーして必要な編集をします。
+
+\CmndLine{%
+	> \it{copy} \CMakeOpts{.dist} \CMakeOpts{}\\
+	> \it{edit} \CMakeOpts{}\\
+	\hspace{20pt}:\\
+}{command-1-2-c.eps}{\CMakeOpts{}}
+
+\bigskip
+以上で準備作業は終了です。
+
+% end: 1.2.Preparation.tex

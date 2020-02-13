@@ -1,0 +1,31 @@
+% 1.4.Build.tex
+%	Last update: 2020/02/10 F.Kanehori
+%\newpage
+\subsection{ビルド}
+\label{subsec:Build}
+\parindent=0pt
+
+\noindent
+ライブラリのビルドについては特に説明することはありません。
+
+\medskip
+\bf{Windowsの場合}
+\begin{narrow}
+	ディレクトリ\BldDir へ移動して\Path{Springhead.sln}をVisual Studioで実行し、
+	プロジェクトSpringheadをビルドしてください。
+	\KQuote{\ref{subsec:Preparation} ビルドの準備}で
+	ライブラリファイルのインストール先を指定していなければ、
+	ライブラリファイルは\SprTop{/generated/lib/<\it{arch}>}に生成されます。
+	\tt{<\it{arch}>} はマシンのアーキテクチャに従い、
+	\Path{win64}または\Path{win32}のいずれかです。
+\end{narrow}
+
+\bf{unixの場合}
+\begin{narrow}
+	ディレクトリ\BldDir へ移動してmakeコマンドを実行してください。
+	\KQuote{\ref{subsec:Preparation} ビルドの準備}で
+	ライブラリファイルのインストール先を指定していなければ、
+	ライブラリファイルは\SprTop{/generated/lib}に生成されます。
+\end{narrow}
+
+% end: 1.4.Build.tex
