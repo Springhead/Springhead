@@ -180,7 +180,7 @@ void PHConstraint::Setup() {
 	for(int n = 0; n < axes.size(); ++n) {
 		int j = axes[n];
 
-		dA[j] += 0.001;
+		dA[j] += engine->regularization;
 		Ainv[j] = engine->accelSOR / (A[j] + dA[j]);
 
 		// 拘束力の初期値を更新

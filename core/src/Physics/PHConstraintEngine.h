@@ -171,6 +171,8 @@ public:
 	double	GetShrinkRate            (){return shrinkRate;}
 	void	SetShrinkRateCorrection  (double data){shrinkRateCorrection = data;}
 	double	GetShrinkRateCorrection  (){return shrinkRateCorrection;}
+	void    SetRegularization        (double reg){regularization = reg;}
+	double  GetRegularization        (){return regularization;}
 
 	//	接触領域を表示するための情報を更新するかどうか
 	virtual void	EnableRenderContact	(bool enable);

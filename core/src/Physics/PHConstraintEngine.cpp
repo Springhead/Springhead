@@ -232,7 +232,8 @@ PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasureIf* pm):
 	timeSetup(pm->Count("setup")),
 	timeIterate(pm->Count("iterate"))
 {
-	dfEps      = 1.0e-12;
+	dfEps         = 1.0e-12;
+	renderContact = true;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
