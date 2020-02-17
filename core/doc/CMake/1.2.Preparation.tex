@@ -10,11 +10,11 @@
 ライブラリのビルドに関連する配布ファイルは次のものです。
 
 \begin{center}
-\begin{tabular}{l@{\hspace{5pt}$\cdots$\hspace{5pt}}l}\hline
-	\tt{CMakeLists.txt.dist} & ライブラリ生成用設定ファイル \\
-	\tt{CMakeSettings.txt.dist} & ビルドパラメータ変更用ファイル \\
-	\tt{CMakeOpts.txt.dist} & デフォルトビルドパラメータファイル \\
-	\tt{CMakeConf.txt.dist} & 外部パッケージ・インストール先設定用ファイル \\\hline
+\begin{tabular}{l@{\ \ ---\ \ }l}\hline
+	\tt{\CMakeLists{.dist}} & ライブラリ生成用設定ファイル \\
+	\tt{\CMakeSettings{.dist}} & ビルドパラメータ変更用ファイル \\
+	\tt{\CMakeOpts{.dist}} & デフォルトビルドパラメータファイル \\
+	\tt{\CMakeConf{.dist}} & 外部パッケージ・インストール先設定用ファイル \\\hline
 \end{tabular}
 \end{center}
 
@@ -24,7 +24,7 @@
 \CmndLine{%
 	> chdir C:/Springhead/core/src\\
 	> \it{copy} \CMakeLists{.dist} \CMakeLists{}
-}{command-1-2-a.eps}{\CMakeLists{}}
+}{command-1-2-a.eps}{CMakeLists.txt}
 
 \medskip
 配布されたビルド条件で問題なければ、これで準備は終了です。
@@ -52,7 +52,7 @@
 	\cite{set(SPRINGHEAD\_INCLUDE\_PREFIX       "C:/somewhere/appropreate)}\\
 	\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_DEBUG   "C:/somewhere/appropreate)}\\
 	\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_RELEASE "C:/somewhere/appropreate)}
-}{command-1-2-b.eps}{\CMakeConf{}}
+}{command-1-2-b.eps}{CMakeConf.txt}
 
 \medskip
 \begin{narrow}[s][20pt]
@@ -73,7 +73,7 @@
 	> \it{copy} \CMakeOpts{.dist} \CMakeOpts{}\\
 	> \it{edit} \CMakeOpts{}\\
 	\hspace{20pt}:\\
-}{command-1-2-c.eps}{\CMakeOpts{}}
+}{command-1-2-c.eps}{CMakeOpts.txt}
 
 \bigskip
 以上で準備作業は終了です。
