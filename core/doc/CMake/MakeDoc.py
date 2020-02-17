@@ -97,10 +97,10 @@ if stat == 0:
 opts = '-E -H -K -R -c -v -v'
 cmnd = '%s %s %s main_html.tex' % (python, make_html, opts)
 
-#proc = Proc(dry_run=dry_run, verbose=verbose)
-#stat = proc.execute(cmnd, addpath=addpath).wait()
-#if stat == 0:
-#	print('%s: HowToUseCMake.html generated.' % prog)
+proc = Proc(dry_run=dry_run, verbose=verbose)
+stat = proc.execute(cmnd, addpath=addpath).wait()
+if stat == 0:
+	print('%s: HowToUseCMake.html generated.' % prog)
 
 # ----------------------------------------------------------------------
 #  Clean up.
