@@ -18,7 +18,7 @@
 	> \it{copy} \CMakeTopdir{.dist} \CMakeTopdir{}\\
 	> \it{copy} \CMakeLists{.Dev.dist} \CMakeLists{}\\
 	> \it{copy} \CMakeSettings{.Dev.dist} \CMakeSettings{}\\
-}{command-2-1-a.eps}{\CMakeLists{}.App}
+}{command-2-1-a.eps}{CMakeLists.txt.App}
 
 \medskip
 \Important{%
@@ -38,7 +38,7 @@
 	\cite{\#set(TOPDIR "\SprTop{}")}\\
 	\hspace{20pt}$\downarrow$\\
 	\cite{set(TOPDIR "\SprTop{}")}\\
-}{command-2-2-a.eps}{\CMakeTopdir{}.App}
+}{command-2-1-b.eps}{CMakeTopdir.txt.App}
 
 \bigskip
 \bf{\QCMakeSettings{}}の編集
@@ -51,11 +51,7 @@
 
 \def\HLine{\cline{2-3}}
 \def\Width{255pt}
-\def\LBox#1{%
-	\vbox{\hbox{\tt{#1}}\vfill}}
-\def\RBox#1{%
-	\parbox[t]{\Width}{%
-	\Vskip{-.4\baselineskip}#1\Vskip{-.3\baselineskip}}}
+% see macro.tex for LBox and RBox
 	
 \begin{longtable}{p{4.75pt}|p{84.5pt}|p{\Width}|}\HLine
     %&\multicolumn{1}{c|}{変数名} & \multicolumn{1}{c|}{説明} \\\HLine
