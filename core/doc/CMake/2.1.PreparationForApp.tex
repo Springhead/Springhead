@@ -53,16 +53,21 @@
 \def\Width{255pt}
 % see macro.tex for LBox and RBox
 	
+\ifLwarp
+\begin{tabular}{p{4.75pt}|p{84.5pt}|p{\Width}|}\HLine
+\else
 \begin{longtable}{p{4.75pt}|p{84.5pt}|p{\Width}|}\HLine
+\fi
     %&\multicolumn{1}{c|}{変数名} & \multicolumn{1}{c|}{説明} \\\HLine
     %\endfirsthead
     %&\multicolumn{1}{c}{変数名} & \multicolumn{1}{c}{説明} \\\HLine
     %\endhead
-    &\tt{ProjectName} & \RBox{プロジェクト名}\\\HLine
+    &\tt{ProjectName}
+	& \RBox{プロジェクト名} \\\HLine
     &\tt{OOS\_BLD\_DIR}
 	& \RBox{CMakeの作業領域(ディレクトリ)の名前\\
 		本ドキュメントで\BldDir としているもの。} \\\HLine
-    &\multicolumn{2}{|l|}{\tt{CMAKE\_CONFIGURATION\_TYPES}} \\
+    &\multicolumn{2}{l|}{\tt{CMAKE\_CONFIGURATION\_TYPES}} \\
 	&& \RBox{ビルド構成\\
 		unixの場合はここに複数の構成を指定することができません。
 		作業ディレクトリを分けることで対処してください
@@ -104,16 +109,20 @@
 	& \RBox{追加のライブラリパス指定 (\tt{-L}は不要です)} \\\HLine
     &\tt{LIBRARY\_NAMES\_ADD}
 	& \RBox{追加のライブラリファイル名 (\tt{-l}は不要です)} \\\HLine
-    &\multicolumn{2}{|l|}{\tt{EXCLUDE\_LIBRARY\_NAMES}} \\
+    &\multicolumn{2}{l|}{\tt{EXCLUDE\_LIBRARY\_NAMES}} \\
 	&& \RBox{リンクの対象から外すライブラリファイル名\\
 		デフォルトで組み込まれてしまうライブラリファイルを
 		排除するために指定します。} \\\HLine
-    &\multicolumn{2}{|l|}{\tt{DEBUGGER\_WORKING\_DIRECTORY}} \\
+    &\multicolumn{2}{l|}{\tt{DEBUGGER\_WORKING\_DIRECTORY}} \\
 	&& \RBox{Visual Studio Debuggerの作業ディレクトリ名\\
 		デバッガはこのディレクトリで起動されたように振る舞います。} \\\HLine
-    &\multicolumn{2}{|l|}{\tt{DEBUGGER\_COMMAND\_ARGUMENTS}} \\
+    &\multicolumn{2}{l|}{\tt{DEBUGGER\_COMMAND\_ARGUMENTS}} \\
 	&& \RBox{Visual Studio Debuggerに渡すコマンド引数} \\\HLine
+\ifLwarp
+\end{tabular}
+\else
 \end{longtable}
+\fi
 
 別途インストールしているパッケージ(boost, glew, freeglut, glui)を使用する場合には、
 配布されたファイル\QCMakeConf{.dist}を\QCMakeConf{}という名前でコピーして
