@@ -25,7 +25,7 @@ unix の場合には Unix Makefiles が選択されるようです。
 
 <br>
 `cmake-gui`を利用する場合は、まず、次の画面で Configure ボタンを押します。
-<img src="/fig/CMakeConfigure1.jpg" width="600px">
+<img src="/fig/CMakeConfigure1.jpg" width="600px" alt="Configure 1">
 
 "build" ディレクトリがなければ作成するかどうかを尋ねられ、
 ![Configure 2](/fig/CmakeConfigure2.jpg)
