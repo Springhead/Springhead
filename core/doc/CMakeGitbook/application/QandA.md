@@ -9,7 +9,7 @@
 思われますので、ここでは Windows 上で Visual Studio を使う場合について説明します。
 
 ----
-** ソリューションファイルに新しいターゲットがある **
+** Q. ソリューションファイルに新しいターゲットがある **
 
 ** ALL_BUILD **
 
@@ -27,7 +27,7 @@
  参照。
 
 ----
-** ソリューションまたはプロジェクトが環境外で変更された旨のメッセージが出る **
+** Q. ソリューションまたはプロジェクトが環境外で変更された旨のメッセージが出る **
 
 これはアプリケーション側と Springhead Library 側との整合性を保つために
 上記の sync ターゲットが実行されることで、
@@ -42,7 +42,7 @@
 その後にソリューションを開き直せば同じ結果が得られます。
 
 ----
-** ディレクトリが作成できないエラーが発生する **
+** Q. ディレクトリが作成できないエラーが発生する **
 
 Springehad Library をビルドすると、ソースツリー上に
  "C:/Springhead/core/src/Base/*x64*/*15.0*/Base.dir"
@@ -63,7 +63,7 @@ Springehad Library をビルドすると、ソースツリー上に
 
 ----
 <a id="CrumbleBuildOptimization"></a>
-** ビルドの最適性が崩れる **
+** Q. ビルドの最適性が崩れる **
 
 アプリケーション側で "C:/Develop/Application/*build*/Base.Base.dir" などを削除すると、
 ビルド時に Visual Studio が *build* 下に "Base.dir" を自動的に作成してしまうために
@@ -77,7 +77,7 @@ Springehad Library をビルドすると、ソースツリー上に
 再度 cmake を実行する必要があります。**
 
 ----
-** sync configuration でファイルオープンエラーが発生する **
+** Q. sync configuration でファイルオープンエラーが発生する **
 
 Springhead Library 側で "*build*/Base" 下にあるプロジェクトファイル "Base.vcxproj" を
 削除すると、sync ターゲット実行で link 先のファイルが見つからずに

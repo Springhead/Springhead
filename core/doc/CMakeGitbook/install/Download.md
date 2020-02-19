@@ -25,7 +25,7 @@ Windows explorer ならば右クリックで GUI が利用できます。
 Git clone の画面で recursive にチェックを入れると
 サブモジュールも一緒にダウンロードできます。
 
-<img src="/fig/SpringheadClone1.jpg" width="600px">
+<img src="/fig/SpringheadClone1.jpg" width="600px" alt="Springhead Download 1">
 ![Springhead Download 2](/fig/SpringheadClone2.jpg)
 
 > サブモジュールを導入するのに必要なディスク容量は、
