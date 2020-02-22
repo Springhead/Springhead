@@ -13,6 +13,7 @@
 #include <map>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 #include <stdarg.h>
 using namespace std;
 typedef std::vector<string> Strings;
@@ -336,6 +337,8 @@ class SpringheadCs:public Language {
 	int indent_level;
 	File *cpp, *csp, *cs, *log, *fps[4];
 	bool errorFlag;
+	std::map<string, std::vector<string> > childClassMap;
+
 public:
 	SpringheadCs():indent_level(0), cpp(NULL), cs(NULL), csp(NULL), log(NULL), errorFlag(false){
 	}
@@ -1473,7 +1476,11 @@ public:
 				else if (ENDWITH(ni.cs_type, "If")) {
 					Printf(CS, "            if (ptr == IntPtr.Zero) { return null; } \n", ni.cs_type, ni.cs_type);
 					Printf(CS, "            %s obj = new %s(ptr);\n", ni.cs_type, ni.cs_type);
-					Printf(CS, "            return Activator.CreateInstance(IfInfoToCsType.FindType(obj.GetIfInfo()), ptr) as %s;\n", ni.cs_type);
+					// Printf(CS, "            return Activator.CreateInstance(IfInfoToCsType.FindType(obj.GetIfInfo()), ptr) as %s;\n", ni.cs_type);
+					for (int j = 0; j < childClassMap[ni.cs_type].size(); j++) {
+						Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) { return new %s(ptr); }\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
+					}
+					Printf(CS, "            return obj;\n");
 				}
 				else if (ni.is_pointer) {
 					SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct pointer");
@@ -2068,6 +2075,14 @@ public:
 						if (intf_map.find(name) == intf_map.end()) {
 							intfs.push_back(n);
 							intf_map[name] = 1;
+
+							Strings bases;
+							GetBaseList(bases, Getattr(n, "baselist"), "If");
+							for (unsigned j = 0; j < bases.size(); j++) {
+								string basetypename = bases[j] + "If";
+								childClassMap[basetypename].push_back(string(name + 5));
+								// std::cout << basetypename << " <-- " << string(name + 5) << std::endl;
+							}
 						}
 						break;
 					} else if (Strstr(Getattr(cn, "name"), "SPR_VIFDEF")) {
@@ -2193,6 +2208,48 @@ public:
 #endif
 
 		// ----- ----- ----- ----- -----
+		// 子クラスマップを孫以下に拡大
+		bool updated = true;
+
+		while (updated) {
+			updated = false;
+			for (std::map<string, std::vector<string> >::iterator it = childClassMap.begin(); it != childClassMap.end(); it++) {
+
+				for (int i = 0; i < it->second.size(); i++) {
+					string child = it->second[i];
+					for (int j = 0; j < childClassMap[child].size(); j++) {
+						string grandChild = childClassMap[child][j];
+
+						bool found = false;
+						for (int k = 0; k < it->second.size(); k++) {
+							if (it->second[k] == grandChild) {
+								found = true;
+								break;
+							}
+						}
+
+						if (!found) {
+							it->second.push_back(grandChild);
+							updated = true;
+						}
+					}
+				}
+			}
+		}
+
+		/* （デバッグ用表示）
+		std::cout << "  -----  " << std::endl;
+		for (std::map<string, std::vector<string> >::iterator it = childClassMap.begin(); it != childClassMap.end(); it++) {
+			std::cout << it->first << " <-- ";
+			for (int i = 0; i < it->second.size(); i++) {
+				std::cout << it->second[i] << ", ";
+			}
+			std::cout << std::endl;
+		}
+		std::cout << "  -----  " << std::endl;
+		*/
+
+		// ----- ----- ----- ----- -----
 		for(unsigned i=0; i<intfs.size(); ++i){
 			IfImp(fps, top, intfs[i], false);
 		}
@@ -2211,6 +2268,7 @@ public:
 		}
 		Printf(cs, "\t\t};\n");
 		Printf(cs, "\t}\n");
+
 
 #ifdef	ORIGINAL_CODE
 		// ----- ----- ----- ----- -----
