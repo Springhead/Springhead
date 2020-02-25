@@ -46,6 +46,10 @@ public:
 	/// IK Iterationの1回前でのsolidTempPose
 	Posed lastSolidTempPose;
 
+	// <!!>
+	Vec3d lagMulP;
+	Vec3d lagMulR;
+
 	/** @brief 初期化する
 	*/
 	void Init() {
@@ -56,6 +60,8 @@ public:
 		solidTempPose = Posed();
 		lastSolidTempPose = Posed();
 		number = -1;
+		lagMulP = Vec3d();
+		lagMulR = Vec3d();
 	}
 
 	/** @brief デフォルトコンストラクタ
@@ -285,6 +291,8 @@ public:
 	/** @brief 暫定目標地点を取得する
 	*/
 	void GetTempTarget(PTM::VVector<double> &v);
+	void GetTempTarget(PTM::VVector<double> &v, PTM::VVector<double> &w);
+	void UpdateLagrangeMultiplier(PTM::VVector<double> &l);
 
 	/** @brief 暫定目標速度を取得する
 	*/

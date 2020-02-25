@@ -126,6 +126,38 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 	}
 }
 
+void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v, PTM::VVector<double> &w) {
+	GetTempTarget(v);
+	if (bPosition) {
+		for (int i = 0; i < 3; i++) { w[i] = positionPriority; v[i] += lagMulP[i]; lagMulP[i] = v[i]; }
+	}/*
+	int stride = (bPosition ? 3 : 0);
+	if (bOrientation) {
+		// <!!> クオータニオン経由でラグランジェ乗数を各軸ベクトルに変換しているが、多分経由しちゃダメ
+		Vec3d l = Vec3d(v[0 + stride], v[1 + stride], v[2 + stride]);
+		Quaterniond q = Quaterniond::Rot(l);
+		Vec3d le = q.ToEuler();
+		lagMulR += le;
+		q.FromEuler(lagMulR);
+		Vec3d r = q.RotationHalf();
+		for (int i = 0; i < 3; i++) { w[i + stride] = orientationPriority; v[i + stride] = r[i]; }
+	}*/
+}
+
+void PHIKEndEffector::UpdateLagrangeMultiplier(PTM::VVector<double> &l) {
+	if (bPosition) {
+		for (int i = 0; i < 3; i++) { lagMulP[i] += l[i]; }
+	}
+	int stride = (bPosition ? 3 : 0);
+	if (bOrientation) {
+		// <!!> クオータニオン経由でラグランジェ乗数を各軸ベクトルに変換しているが、多分経由しちゃダメ
+		Vec3d v = Vec3d(l[0 + stride], l[1 + stride], l[2 + stride]);
+		Quaterniond q = Quaterniond::Rot(v);
+		Vec3d r = q.ToEuler();
+		for (int i = 0; i < 3; i++) { lagMulR[i] += r[i]; }
+	}
+}
+
 void PHIKEndEffector::GetTempVelocity(PTM::VVector<double> &v){
 	v.resize(ndof);
 

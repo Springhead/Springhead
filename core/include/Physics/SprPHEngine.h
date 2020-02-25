@@ -166,6 +166,13 @@ struct PHIKEngineDesc{
 	double  regularizeParam;
 	double  regularizeParam2;
 	int     regularizeMode;
+	int     iterGaussSeidel = 100;
+	enum    Mode {
+		SVD,
+		QR,
+		LM,
+	};
+	Mode   solverMode = Mode::SVD;
 
 	PHIKEngineDesc();
 };
