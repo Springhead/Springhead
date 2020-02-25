@@ -216,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CSUtility.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CSBase.cpp" />
@@ -262,6 +263,9 @@
     <ProjectReference Include="..\..\Physics\Physics15.0.vcxproj">
       <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SprExport15.0.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

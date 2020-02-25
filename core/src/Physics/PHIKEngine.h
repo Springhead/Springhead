@@ -48,6 +48,7 @@ public:
 
 	// 全体ヤコビアン
 	matrix_type J;
+	//ublas::mapped_matrix<double> J;
 
 	// 全エンドエフェクタ目標変位
 	vector_type V;
@@ -57,6 +58,15 @@ public:
 
 	// 全関節角変位（IK計算結果）
 	vector_type W;
+
+	// エンドエフェクタのウェイトベクトル
+	diag_matrix_type We;
+
+	// ラグランジェ乗数
+	vector_type l;
+	vector_type Vl;
+	//matrix_type Jl;
+	ublas::mapped_matrix<double> Jl;
 
 	// --- --- --- --- ---
 
@@ -100,6 +110,8 @@ public:
 	void Prepare(bool second = false);
 	void CalcJacobian();
 	void IK(bool nopullback = false);
+	void LQIK(bool nopullback = false);
+	void LagrangeMultiplierIK(bool nopullback = false);
 	void Limit();
 	void FK();
 	void SaveFKResult();
