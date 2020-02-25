@@ -25,6 +25,9 @@
 #include <boost/numeric/bindings/ublas/vector.hpp>
 #include <boost/numeric/bindings/ublas/vector_proxy.hpp>
 
+#include <boost/numeric/bindings/lapack/computational/geqrf.hpp>
+#include <boost/numeric/bindings/lapack/computational/orgqr.hpp>
+
 #if defined(_MSC_VER)
 #  pragma warning(pop)
 #endif
