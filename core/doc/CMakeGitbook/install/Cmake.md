@@ -22,6 +22,8 @@ unix:    `-G "Unix Makefiles"`
 *generataor*を省略した場合のデフォルトは、
 Windows の場合にはインストールされている Visual Studio の最新バージョンが、
 unix の場合には Unix Makefiles が選択されるようです。 
+ただし、マシンアーキテクチャは自動的には判定されません。
+Windows で 64 ビットマシンの場合には `-A x64` を指定してください。
 
 <br>
 `cmake-gui`を利用する場合は、まず、次の画面で Configure ボタンを押します。

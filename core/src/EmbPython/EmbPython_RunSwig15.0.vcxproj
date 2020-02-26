@@ -91,9 +91,9 @@
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py &amp;&amp; ..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py</NMakeCleanCommandLine>
     <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
     <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
   </PropertyGroup>
@@ -102,9 +102,9 @@
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py &amp;&amp; ..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py</NMakeCleanCommandLine>
     <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
     <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
   </PropertyGroup>
@@ -113,30 +113,30 @@
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py &amp;&amp; ..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py</NMakeCleanCommandLine>
     <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
     <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
-    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py &amp;&amp; ..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py</NMakeCleanCommandLine>
     <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
     <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py &amp;&amp; ..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py</NMakeCleanCommandLine>
     <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
     <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py &amp;&amp; ..\RunSwig\python_adapter RunSwig_EmbPython.py</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\RunSwig\python_adapter.bat EmbPython_clean.py</NMakeCleanCommandLine>
     <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
     <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
   </PropertyGroup>

@@ -6,8 +6,10 @@ cmake_minimum_required(VERSION 3.1)
 #  Read project name.
 #
 if(EXISTS "${CMAKE_SOURCE_DIR}/CMakeSettings.txt")
+    message("reading \"CMakeSettings.txt\"")
     set(SETTING_FILE "CMakeSettings.txt")
 else()
+    message("reading \"CMakeSettings.txt.dist\"")
     set(SETTING_FILE "CMakeSettings.txt.dist")
 endif()
 include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")

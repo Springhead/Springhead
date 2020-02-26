@@ -18,7 +18,7 @@ set(MacOS   False)
 # ------------------------------------------------------------------------------
 #  additional compile macros
 #
-if(${Windows})
+if(Windows)
     set(DEFINE_MACROS_ADD	)
 else()
     set(DEFINE_MACROS_ADD	)
@@ -27,7 +27,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  additional include paths.
 #
-if(${Windows})
+if(Windows)
     set(INCLUDE_PATHS_ADD	)
 else()
     set(INCLUDE_PATHS_ADD	)
@@ -36,7 +36,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  additional flags.
 #
-if(${Windows})
+if(Windows)
     set(COMP_FLAGS_ADD		)
     set(LINK_FLAGS_ADD		)
 else()
