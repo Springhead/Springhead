@@ -210,7 +210,7 @@ if verbose:
 #  処理開始
 #
 for proj in projs:
-	print('Project: %s' % proj)
+	print('Project: %s' % proj, flush=True)
 
 	#  ヘッダ情報を収集する
 	interfs, inchdrs, srchdrs = collect_headers(proj)
@@ -225,10 +225,11 @@ for proj in projs:
 
 	#  swigを実行する
 	cmnd = '%s -f %s' % (make, makefname)
-	rc = Proc(dry_run=dry_run).execute(cmnd,
-		 stderr=Proc.NULL, shell=True).wait()
+	rc = Proc(dry_run=dry_run).execute(cmnd, shell=True).wait()
 	if rc != 0:
 		Error(prog).abort('%s failed' % make)
+	print()
+	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
 #  終了

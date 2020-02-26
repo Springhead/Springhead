@@ -46,10 +46,10 @@ from Error import *
 #
 
 #  ディレクトリの定義
-topdir	= '../../..'
-srcdir	= '%s/core/src' % topdir
-incdir	= '%s/core/include' % topdir
-swigdir	= '%s/core/bin/swig' % topdir
+coredir	= '../..'
+topdir	= '%s/..' % coredir
+incdir	= '%s/include' % coredir
+swigdir	= '%s/bin/swig' % coredir
 
 #  使用するプログラム名
 #
@@ -111,11 +111,13 @@ sprh = 'SprEP%s.h' % module
 # ----------------------------------------------------------------------
 #  swigの実行
 #
-print('  Swig Part')
+print('** Swig Part **', flush=True)
 cmnd = Util.wpath(swig) if Util.is_windows() else swig
 args = '-cpperraswarn -sprpy -DSWIG_PY_SPR -c++ %s.i' % module
-rc = Proc(dry_run=dry_run).execute('%s %s' % (cmnd, args),
-		stdout=Proc.NULL, stderr=Proc.NULL, shell=True).wait()
+rc = Proc(dry_run=dry_run)\
+	.execute('%s %s' % (cmnd, args), shell=True)\
+	.wait()
+sys.stdout.flush()
 if rc != 0:
 	msg = 'swig failed'
 	Error(prog).error(msg)
@@ -124,11 +126,13 @@ if rc != 0:
 #  astyleの実行
 #
 if astyle is not None:
-	print('  AStyle Part')
+	print('** AStyle Part **', flush=True)
 	cmnd = Util.wpath(astyle) if Util.is_windows() else astyle
 	args = '--style=allman --indent=tab "%s" "%s" "%s"' % (cpp, hpp, sprh)
-	rc = Proc(dry_run=dry_run).execute('%s %s' % (cmnd, args),
-			stdout=Proc.NULL, stderr=Proc.NULL, shell=True).wait()
+	rc = Proc(dry_run=dry_run)\
+		.execute('%s %s' % (cmnd, args), shell=True)\
+		.wait()
+	sys.stdout.flush()
 	if rc != 0:
 		msg = 'astyle failed'
 		Error(prog).error(msg)
@@ -140,7 +144,7 @@ if astyle is not None:
 # ----------------------------------------------------------------------
 #  ファイルを生成する
 #
-print('  Arange Part')
+print('** Arange Part **', flush=True)
 fop = FileOp()
 
 api_header = '%s/EmbPython/SprEP%s.h' % (incdir, module)

@@ -124,12 +124,12 @@ add_library(${Target} STATIC ${SRCS})
 # ------------------------------------------------------------------------------
 #  Apply local settings.
 #
-if(${Windows})
+if(Windows)
     set(CMAKE_CXX_FLAGS		"${COMP_FLAGS}")
     set(CMAKE_CXX_FLAGS_DEBUG	"${COMP_FLAGS_DEBUG}")
     set(CMAKE_CXX_FLAGS_RELEASE	"${COMP_FLAGS_RELEASE}")
     set(CMAKE_CXX_FLAGS_TRACE	"${COMP_FLAGS_TRACE}")
-elseif(${unix})
+elseif(unix)
     foreach(_flag ${COMP_FLAGS})
         target_compile_options(${Target} PUBLIC ${_flag})
     endforeach()
@@ -157,7 +157,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Library output directories.
 #
-if(${Windows})
+if(Windows)
     set(LIB_SUFFIX_DEBUG   D)
     set(LIB_SUFFIX_RELEASE  )
     set(LIB_SUFFIX_TRACE   T)
@@ -173,7 +173,7 @@ if(${Windows})
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
-elseif(${Linux})
+elseif(unix)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
 endif()
@@ -181,14 +181,84 @@ endif()
 # ------------------------------------------------------------------------------
 #  Add target to generate EmbPython sources.
 #
-if(${Windows})
-    add_custom_command(
-	OUTPUT ${generated_files}
-	COMMAND cmd /c RunSwig_EmbPython.bat
-	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
-	COMMENT [[  generating EmbPython sources ]]
-    )
-elseif(${Linux})
+##if(Windows)
+##    add_custom_command(
+##	OUTPUT ${generated_files}
+##	COMMAND cmd /c RunSwig_EmbPython.bat
+##	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
+##	COMMENT [[  generating EmbPython sources ]]
+##    )
+##elseif(unix)
+##endif()
+
+set(CleanTarget EmbPython_RunSwig)
+add_dependencies(${Target} ${CleanTarget})
+if(STANDALONE)
+    set(_external_dependencies)
+else()
+    set(_external_dependencies RunSwig)
+endif()
+
+set(_wrkdir ${CMAKE_CURRENT_SOURCE_DIR})
+if(Windows)
+    set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
+elseif(unix)
+    set(_tmp_cmnd python)
+endif()
+set(_tmp_args ${SPR_SRC_DIR}/EmbPython/RunSwig_EmbPython.py)
+file(TO_NATIVE_PATH ${_tmp_args} _tmp_args)
+
+add_custom_target(${CleanTarget}
+    BYPRODUCTS ${genereated_files}
+    DEPENDS ${generated_files} ${_external_dependencies}
+)
+add_custom_command(
+    OUTPUT ${generated_files}
+    COMMAND set _SPRTOP_=${SPR_TOP_DIR} & ${_tmp_cmnd} ${_tmp_args}
+    WORKING_DIRECTORY ${_wrkdir}
+    COMMENT [[  generating EmbPython sources ]]
+)
+
+# ------------------------------------------------------------------------------
+#  Copy generated library file to "${SPR_TOP_DIR}/generated/lib"
+#
+if(STANDALONE)
+    set(_install_dir ${SPR_TOP_DIR}/generated/lib)
+    if(Windows)
+	if("${ARCHITECTURE}" STREQUAL "x64")
+	    set(_install_dir ${_install_dir}/win64)
+	else()
+	    set(_install_dir ${_install_dir}/win32)
+	endif()
+    endif()
+    file(TO_NATIVE_PATH ${_install_dir} _install_dir)
+    if(Windows)
+	set(_cp copy)
+    elseif(unix)
+	set(_cp cp)
+    endif()
+    set(_libdir ${SPR_SRC_DIR}/${Target})
+    set(_cmnd_DEBUG   "${_cp} ${_libdir}/${_output_name_debug}   ${_install_dir}")
+    set(_cmnd_RELEASE "${_cp} ${_libdir}/${_output_name_release} ${_install_dir}")
+    set(_cmnd_TRACE   "${_cp} ${_libdir}/${_output_name_trace}   ${_install_dir}")
+#message("## [${_cmnd_DEBUG}]")
+#message("## [${_cmnd_RELEASE}]")
+#message("## [${_cmnd_TRACE}]")
+    set(_libfile_DEBUG   ${_cp} ${_libdir}/${_output_name_debug})
+    set(_libfile_RELEASE ${_cp} ${_libdir}/${_output_name_release})
+    set(_libfile_TRACE   ${_cp} ${_libdir}/${_output_name_trace})
+
+    foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
+	string(TOUPPER ${_tmp} _conf)
+	string(TOLOWER ${_tmp} _conf_low)
+	set(_cmnd _cmnd_${_conf})
+	add_custom_command(TARGET ${Target}
+	    POST_BUILD
+	    COMMAND $<$<CONFIG:${_conf}>:${${_cmnd}}>
+	    WORKING_DIRECTORY ${_wrkdir}
+	    COMMENT [[  copying liibrary file ]]
+	)
+    endforeach()
 endif()
 
 # end: CMakeLists.txt
