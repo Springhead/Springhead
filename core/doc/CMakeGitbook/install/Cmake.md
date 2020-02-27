@@ -29,10 +29,10 @@ Windows で 64 ビットマシンの場合には `-A x64` を指定してくだ�
 `cmake-gui`を利用する場合は、まず、次の画面で Configure ボタンを押します。
 <img src="/fig/CmakeConfigure1.jpg" width="600px" alt="Configure 1">
 
-"build" ディレクトリがなければ作成するかどうかを尋ねられ、
+"build" ディレクトリがなければ作成するかどうかを尋ねられ、<br>
 ![Configure 2](/fig/CmakeConfigure2.jpg)
 
-次に generator 指定画面となります。
+次に generator 指定画面となります。<br>
 ![Configure 3](/fig/CmakeConfigure3.jpg)
 
 最後に、最初の画面の Generate ボタンを押します。
