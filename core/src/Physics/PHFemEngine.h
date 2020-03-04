@@ -34,8 +34,9 @@ namespace Spr{
 class PHFemMeshPair {
 public:
 	PHFemMeshNew* mesh[2];
-	double heatTransferRatio;
+	
 	PHFemMeshPair();
+	
 };
 
 class PHFemEngine : public PHEngine{
@@ -47,13 +48,14 @@ public:
 	std::vector<PHFemMesh*> meshes;
 	std::vector<PHFemMeshNew*> meshes_n;
 	std::vector<PHFemMeshPair*> meshPairs;
-
+	double heatTransferRatio;
 	PHFemEngine();
+	void setheatTransferRatio(double setheatTransferRatio);
 	void SetVibrationTransfer(bool bEnable);	///<	For haptic vibration simulation
 	void SetThermalTransfer(bool bEnable);		///<	For thermal simulation
 	int  GetPriority() const {return SGBP_NONE; }	//	Must call this engine explicitly
 	void Step();
-
+	
 	bool AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
 	bool RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
 	void ThermalTransfer();

@@ -247,14 +247,14 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 		if (bSwap) std::swap(sp->shapePoseW[0], sp->shapePoseW[1]);
 		Vec3d sep;
 		double dist = FindClosestPoints(sp->shape[0], sp->shape[1], sp->shapePoseW[0], sp->shapePoseW[1], sep, sp->closestPoint[0], sp->closestPoint[1]);
-		if (dist < 1e-10) {
-			//	かなり近いので、法線が怪しいので、警告をだしておく。
-			DSTR << "２物体が非常に近いが、接触しはしていない微妙な状態";
-			DSTR << " dist : " << dist << std::endl;
-			if (dist < 1e-14) {
-				DSTR << "注意" << std::endl;
-			}
-		}
+		//if (dist < 1e-10) {
+		//	//	かなり近いので、法線が怪しいので、警告をだしておく。
+		//	DSTR << "２物体が非常に近いが、接触しはしていない微妙な状態";
+		//	DSTR << " dist : " << dist << std::endl;
+		//	if (dist < 1e-14) {
+		//		DSTR << "注意" << std::endl;
+		//	}
+		//}
 		sp->depth = -dist;
 		sp->normal = (sp->shapePoseW[1] * sp->closestPoint[1] - sp->shapePoseW[0] * sp->closestPoint[0]);	//後の伝熱の計算必要。面→面の向き：法線から伝熱計算
 		sp->normal.unitize();
@@ -316,11 +316,11 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 				}
 			}
 		}
-		for (unsigned i = 0; i<2; i++) {
+		/*for (unsigned i = 0; i<2; i++) {
 			if (condVtxs[i].size() == 0) {
-				DSTR << "00 Can not find companion vertex on object " << i << std::endl;
+				DSTR << "00 can not find companion vertex on object " << i << std::endl;
 			}
-		}
+		}*/
 		/*heattrans関数引用--------------------------------------------------------------ここまで*/
 
 		const double isoLen3 = 0.003;		//:BoundingBoxの周囲何[m]までペア探索範囲とするか
@@ -467,9 +467,9 @@ void PHFemEngine::HeatTrans(PHFemMeshPair* mp) {
 			for (unsigned j = 0; j < condVtxs[0][i].companions.size(); j++) {
 				// 熱伝達のペアになっている者同士を、同じ色で描画、どの色で描画するか、ランダムで決定？
 				//i=0から、１つずつチェックしていく。重複している場合には、色が上書きされてしまうので。
-				condVtxs[0].pmesh->GetPHFemThermo()->SetVertexHeatTransRatio(condVtxs[0][i].vid, mp->heatTransferRatio);	// フライパン-空気間で伝熱しない：物体間伝達時のみ適用化すべきだが、とりあえず。
+				condVtxs[0].pmesh->GetPHFemThermo()->SetVertexHeatTransRatio(condVtxs[0][i].vid, heatTransferRatio);	// フライパン-空気間で伝熱しない：物体間伝達時のみ適用化すべきだが、とりあえず。
 																													//>		isoLen3==0の時、judgeN直後と入っている点の数は同じなのに、熱伝達されていない点があるように見える。
-				double dqdt = mp->heatTransferRatio * (condVtxs[0].pmesh->GetPHFemThermo()->GetVertexTemp(condVtxs[0][i].vid)			//	0,1どちらがどちらか変わる可能性ありだが、これでいいのか。
+				double dqdt = heatTransferRatio * (condVtxs[0].pmesh->GetPHFemThermo()->GetVertexTemp(condVtxs[0][i].vid)			//	0,1どちらがどちらか変わる可能性ありだが、これでいいのか。
 					- condVtxs[1].pmesh->GetPHFemThermo()->GetVertexTemp(condVtxs[1][condVtxs[0][i].companions[j].id].vid)) * condVtxs[0][i].companions[j].area;
 				//	熱伝達対象頂点では、熱放射を計算しない
 				//DSTR << condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].beRadiantHeat << "," <<

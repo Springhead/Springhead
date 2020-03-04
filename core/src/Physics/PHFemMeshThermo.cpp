@@ -3588,6 +3588,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
 	}
 	else if(heatingMODE == WEEK){	
+		
 #ifdef TempDependHeat
 		CalcIHdqdt_atleast_high(inr_,outR_,weekPow_, WEEK);
 		CalcIHdqdt_add_high(inr_add,outR_add,weekPow_add, WEEK);
