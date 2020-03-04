@@ -543,6 +543,7 @@ public:
 	//実験用
 	double jout;
 	double ems;
+	double ems_steak;
 	double ems_const;
 	void SetOuterTemp(double temp);
 	void SetThermalRadiation(double ems,double ems_const);
@@ -564,11 +565,14 @@ public:
 	double outR_decr;
 	void SetweekPow_FULL(double setweekPow_FULL);
 	void Setems(double setems);
+	void Setems_steak(double setems_steak);
+	void SetthConduct(double thConduct);
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
 	//void UpdateMatK();		//実装途中。main.cppで値を設定後に、もう一度行列を作り直したくなった時に用いる。
 	void IfRadiantHeatTrans();//unsigned verticesID);
+	void IfRadiantHeatTransSteak();
 	double stopTime;
 	void SetStopTimespan(double timespan);
 	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
