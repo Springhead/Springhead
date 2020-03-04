@@ -216,6 +216,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
 	void OutputMatKall();
 	void IfRadiantHeatTrans();
+	void IfRadiantHeatTransSteak();
 	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
 	void SetTimeStep(double dt);
 	Vec3d GetVertexNormal(unsigned vtxid);
@@ -234,6 +235,8 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void SetWeekPowFULL(double weekPow_full);
 	void SetweekPow_FULL(double setweekPow_FULL);
 	void Setems(double setems);
+	void Setems_steak(double setems_steak);
+	void SetthConduct(double thConduct);
 	double GetWeekPowFULL();
 	Vec3d GetVertexPose(unsigned vtxid);
 	void OutTetVolumeAll();

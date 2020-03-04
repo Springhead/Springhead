@@ -230,6 +230,7 @@ public:
 	bool AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
 	bool RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
 	void ThermalTransfer();
+	void setheatTransferRatio(double setheatTransferRatio);
 
 	//	Old contact treatment codes for vibration simulation. Will be replaced by new functions.
 	void FEMSolidMatchRefresh();				//Refreshing the solid->FEMindex values

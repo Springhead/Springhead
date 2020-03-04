@@ -127,12 +127,12 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 	NofCyc = 100;
 	epsilonG = 1.0;
 	//%%%	初期条件
-	jout = 22.9;	//A5052熱伝達実験時:22.9, SUS430放熱実験時:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
+	jout = 22.0;//22.0;	//A5052熱伝達実験時:22.9, SUS430放熱実験時:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
 	//Setems(3.58e-2);
 	//ems =3.58e-2;//0.0;//3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
 	ems_const = -1.14;//-1.1507//-1.063;
-	temp_c = 30.0;
-	temp_out = 26.8;//20.0;//23.8;	//A5052試料時室温:23.8, SUS430放熱実験時:29.9
+	temp_c = 22.0;//30.0;
+	temp_out = 21.2;//26.8;//20.0;//23.8;	//A5052試料時室温:23.8, SUS430放熱実験時:29.9
 
 	//%%%%%4
 	//weekPow_full = 120.0;
@@ -724,6 +724,15 @@ void PHFemThermo::SetweekPow_FULL(double setweekPow_FULL) {
 void PHFemThermo::Setems(double setems) {
 	ems = setems;
 }
+void PHFemThermo::Setems_steak(double setems_steak) {
+	ems_steak = setems_steak;
+}
+void PHFemThermo::SetthConduct(double thConduct) {
+	thConduct_x = thConduct;
+	thConduct_y = thConduct;
+	thConduct_z = thConduct;
+}
+
 
 
 
@@ -2240,14 +2249,15 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 		//	(x,z)平面におけるmayIHheatedのface全節点の原点からの距離を計算する
 		for(unsigned j=0; j<3; j++){
 			double dx = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.x - origin[0];
-			double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - origin[1];	//	表記はyだが、実質z座標が入っている
+			double dz = mesh->vertices[mesh->faces[i].vertexIDs[j]].pos.z - origin[1];//	表記はyだが、実質z座標が入っている
 			vertexVars[mesh->faces[i].vertexIDs[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
 		}
-	}
+	} 
 	//求めた距離に応じて、設定された初期条件を満たすような温度分布を作る
 	float r[11];		//	10こめの外側が必要なため
 	for(unsigned i=0;i<11;++i){
 		r[i] = 0.01 * i;
+		
 	}
 
 	//	中心から一定範囲内の面積和を求める	face原点で判断
@@ -4398,6 +4408,20 @@ void PHFemThermo::IfRadiantHeatTrans(){
 	}
 }
 
+void PHFemThermo::IfRadiantHeatTransSteak() {
+	for (int id = 0; id < NSurfaceVertices(); id++) {
+		if (vertexVars[id].beRadiantHeat) {
+			vertexVars[id].thermalEmissivity = ems_steak;
+			vertexVars[id].thermalEmissivity_const = ems_const;
+		}
+		else {
+			vertexVars[id].thermalEmissivity = 0.0;
+			vertexVars[id].thermalEmissivity_const = 0.0;
+		}
+	}
+}
+
+
 void PHFemThermo::UpdateMatk_RadiantHeatToAir(){
 		for(unsigned i =0; i < phFemMesh->edges.size();i++){
 			edgeVars[i].k = 0.0;
@@ -4471,27 +4495,34 @@ void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
 	}
 	else if(heatingMODE == WEEK){	
-#ifdef TempDependHeat
-		CalcIHdqdt_atleast_high(inr_,outR_,weekPow_, WEEK);
-		CalcIHdqdt_add_high(inr_add,outR_add,weekPow_add, WEEK);
-		CalcIHdqdt_decrease_high(inr_decr,outR_decr,weekPow_decr, WEEK);
-#else
-	#ifdef DISABLE_COIL
-		//CalcIHdqdt_atleast_map(Vec2d(0.0, -0.005),weekPow_FULL,WEEK);
-		//CalcIHdqdt_atleast_map(Vec2d(0.0, 0.0),weekPow_FULL,WEEK);
-		CalcIHdqdt_atleast_map(Vec2d(0.125, -0.125),weekPow_FULL,WEEK);
-	#else
-		CalcIHdqdt_atleast(inr_,outR_,weekPow_, WEEK);		//	API化済み
-		CalcIHdqdt_add(inr_add,outR_add,weekPow_add, WEEK);
-		CalcIHdqdt_decrease(inr_decr,outR_decr,weekPow_decr, WEEK);
-	#endif
+		//CalcIHdqdt_atleast(0, 0, weekPow_FULL, WEEK);
+		//CalcIHdqdt_atleast(0.11, 0.14, weekPow_FULL, WEEK);
+		CalcIHdqdt_atleast_map(Vec2d(0, 0), weekPow_FULL, WEEK);
 
-	//>個別に呼ぶ仕様に変更	//UpdateMatk_RadiantHeatToAir();				//	熱伝達境界条件で空気への熱伝達項だけ更新する
-#endif
+//#ifdef TempDependHeat
+//		CalcIHdqdt_atleast_high(inr_,outR_,weekPow_, WEEK);
+//		CalcIHdqdt_add_high(inr_add,outR_add,weekPow_add, WEEK);
+//		CalcIHdqdt_decrease_high(inr_decr,outR_decr,weekPow_decr, WEEK);
+//		
+//#else
+//	#ifdef DISABLE_COIL
+//		//CalcIHdqdt_atleast_map(Vec2d(0.0, -0.005),weekPow_FULL,WEEK);
+//		//CalcIHdqdt_atleast_map(Vec2d(0.0, 0.0),weekPow_FULL,WEEK);
+//		CalcIHdqdt_atleast_map(Vec2d(0, 0),weekPow_FULL,WEEK);
+//		
+//
+//	#else
+//		CalcIHdqdt_atleast(inr_,outR_,weekPow_, WEEK);		//	API化済み
+//		CalcIHdqdt_add(inr_add,outR_add,weekPow_add, WEEK);
+//		CalcIHdqdt_decrease(inr_decr,outR_decr,weekPow_decr, WEEK);
+//	#endif
+//
+//	//>個別に呼ぶ仕様に変更	//UpdateMatk_RadiantHeatToAir();				//	熱伝達境界条件で空気への熱伝達項だけ更新する
+//#endif
 	}	
 	else if(heatingMODE == MIDDLE){
 		//CalcIHdqdt_atleast(inr_,outR_,231.9 * 0.005 * 1e4, MIDDLE);		//
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4, MIDDLE);		//
+		CalcIHdqdt_atleast(0.11,0.14, 231.9 * 0.005 * 1e4, MIDDLE);		//
 	}
 	else if(heatingMODE == HIGH){
 		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5, HIGH);		//
