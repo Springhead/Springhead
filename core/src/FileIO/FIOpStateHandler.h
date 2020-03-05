@@ -3,6 +3,7 @@
 
 #ifdef	_WIN32
 #  include <shlobj.h> 
+#  undef CreateFile
 #endif
 #include <string.h>
 #include <Foundation/Object.h>
