@@ -1,4 +1,4 @@
-#include "MethodInfo.h"
+ï»¿#include "MethodInfo.h"
 #include "SprpyInfoObjectUtility.h"
 #include <sstream>
 
@@ -77,30 +77,36 @@ MethodInfo MethodInfo::CreateMethodInfo(Node* _node, const char* className)
 	if ( mi.methodNameStr.compare(className) == 0 ) mi.isConstructor = true;
 	else mi.isConstructor = false;
 		
-	//DecodeType‚ğg‚Á‚ÄŠÖ”‚Ì–ß‚è’l‚ÌŒ^‚ğæ“¾
+	//DecodeTypeã‚’ä½¿ã£ã¦é–¢æ•°ã®æˆ»ã‚Šå€¤ã®å‹ã‚’å–å¾—
 	string res;
+#ifdef _WIN32
 	res = DecodeType(mi.node);
+#else
+	std::string _tmp = std::string();
+	std::string& __tmp = _tmp;
+	res = DecodeType(mi.node, __tmp);
+#endif
 	mi.returnTypeStr.assign(res); 
 	mi.returnType = mi.returnTypeStr.c_str();
 
 	mi.pyreturnTypeStr = "PyObject*";
 	mi.pyreturnType = mi.pyreturnTypeStr.c_str();
 		
-	//params‚Ì“o˜^
+	//paramsã®ç™»éŒ²
 	vector<string> tmp = Util.ParmtoStrings( Getattr(mi.node,"parms") );
 	mi.params.assign(tmp.begin(),tmp.end());
 
-	//param‚Échar*‚ğó‚¯æ‚é‚à‚Ì‚ª‚ ‚éŠÖ”‚Í–¢‘Î‰i‚¢‚Ü‚Íconst char*‚Ì‚İj
+	//paramã«char*ã‚’å—ã‘å–ã‚‹ã‚‚ã®ãŒã‚ã‚‹é–¢æ•°ã¯æœªå¯¾å¿œï¼ˆã„ã¾ã¯const char*ã®ã¿ï¼‰
 	for( vector<string>::iterator it = tmp.begin(); it != tmp.end(); it++)
 	{
 		string s(*it);
 		Util.DelSpace(s);
 		if (s.compare("char*") == 0) {
-			ALERT(_node,"const‚Å‚È‚¢char*‚ğó‚¯æ‚éŠÖ”‚Í–¢‘Î‰");
+			ALERT(_node,"constã§ãªã„char*ã‚’å—ã‘å–ã‚‹é–¢æ•°ã¯æœªå¯¾å¿œ");
 			return MethodInfo();
 		}
 		//if (s.find("&") != -1){
-		//	ALERT(_node,"QÆ‚ğó‚¯æ‚éŠÖ”‚Í–¢‘Î‰");
+		//	ALERT(_node,"å‚ç…§ã‚’å—ã‘å–ã‚‹é–¢æ•°ã¯æœªå¯¾å¿œ");
 		//	return MethodInfo();
 		//}
 	}

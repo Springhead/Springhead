@@ -18,6 +18,7 @@ trace = False
 import sys
 import os
 import glob
+import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -49,7 +50,7 @@ from Error import *
 coredir	= '../..'
 topdir	= '%s/..' % coredir
 incdir	= '%s/include' % coredir
-swigdir	= '%s/bin/swig' % coredir
+swigdir = os.path.abspath('%s/bin/swig' % coredir)
 
 #  使用するプログラム名
 #
@@ -60,7 +61,7 @@ def installed(path, test='--help'):
 		stdout=Proc.NULL, stderr=Proc.NULL, shell=True).wait()
 	return rc == 0
 
-swig   = '%s/swig' % swigdir
+swig   = 'swig'
 astyle = 'astyle'
 if not installed(astyle):
 	bindir = '%s/buildtool' % topdir
@@ -112,9 +113,10 @@ sprh = 'SprEP%s.h' % module
 #  swigの実行
 #
 print('** Swig Part **', flush=True)
-cmnd = Util.wpath(swig) if Util.is_windows() else swig
-args = '-cpperraswarn -sprpy -DSWIG_PY_SPR -c++ %s.i' % module
-rc = Proc(dry_run=dry_run)\
+cmnd = '%s/%s' % (Util.pathconv(swigdir), swig)
+args = '-I%s/Lib -cpperraswarn -sprpy -DSWIG_PY_SPR -c++ -DPYTHON_H_PATH="Python/Python.h" %s.i'\
+	% (swigdir, module)
+rc = Proc(dry_run=dry_run, verbose=verbose)\
 	.execute('%s %s' % (cmnd, args), shell=True)\
 	.wait()
 sys.stdout.flush()
@@ -129,7 +131,7 @@ if astyle is not None:
 	print('** AStyle Part **', flush=True)
 	cmnd = Util.wpath(astyle) if Util.is_windows() else astyle
 	args = '--style=allman --indent=tab "%s" "%s" "%s"' % (cpp, hpp, sprh)
-	rc = Proc(dry_run=dry_run)\
+	rc = Proc(dry_run=dry_run, verbose=verbose)\
 		.execute('%s %s' % (cmnd, args), shell=True)\
 		.wait()
 	sys.stdout.flush()

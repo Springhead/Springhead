@@ -1,14 +1,21 @@
 ﻿
-#include "..\..\include\EmbPython\SprEPInterpreter.h"
+#include "../../include/EmbPython/SprEPInterpreter.h"
 
 using namespace Spr;
 
 //マルチスレッド用
+#ifdef _WIN32
 #include <process.h>
+#endif
 
 #ifdef _WIN32
 #define NOMINMAX //std::maxなどを使うのに必要(windows.hと競合するから)
 #include <windows.h>
+#else
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#define	Sleep sleep
 #endif
 
 EPInterpreter* EPInterpreter::instance = NULL;
@@ -54,6 +61,7 @@ void EPInterpreter::Initialize()
 	//PYTHONPATHを変更する
 	//SPRPYTHONPATHにSpringheadPythonで使うLIBのPATHを追加しておく
 	std::string newPath;
+#ifdef _WIN32
 	char buff[1024];
 	if (!GetEnvironmentVariable("SPRPYTHONPATH",buff,1024) || !strlen(buff)){
 		DSTR << "Warning: " << "Can not find environment variable of 'SPRPYTHONPATH'. " 
@@ -74,6 +82,29 @@ void EPInterpreter::Initialize()
 	
 	SetEnvironmentVariable("PYTHONPATH", newPath.c_str());
 	// SetEnvironmentVariable("PYTHONHOME", newPath.c_str());
+#else
+	const char* envp;
+	envp = getenv("SPRPYTHONPATH");
+	if (envp == NULL) {
+		printf("Warning: "
+			"Can not find environment variable of 'SPRPYTHONPATH' ."
+			"Embeded python may cause serious error.\n");
+	} else {
+		newPath.append(envp);
+		newPath.append(";");
+	}
+	envp = getenv("PYTHONPATH");
+	newPath.append(envp);
+	if (envp == NULL) {
+		printf("Warning: "
+			"Can not find environment variable of 'PYTHONPATH'"
+			" and 'SPRPYTHONPATH'. " 
+			"Embeded python will causes buffer over run error.\n");
+		printf("Error: Python Lib not found\n");
+		assert(0);
+	}
+	setenv((const char*)"PYTHONPATH", (const char*) newPath.c_str(), 1);
+#endif
 
 
 	//パイソン初期化
@@ -97,7 +128,17 @@ void EPInterpreter::Run(void* arg)
 {
 	if( this->state == UNSTARTED || this->state == STOPED)
 	{
+#ifdef _WIN32
 		_beginthread(EPLoopLauncher, 0 , arg);
+#else
+		pthread_t thread;
+		pthread_attr_t attr;
+		void* param = NULL;
+
+		pthread_attr_init(&attr);
+		void* (*entry)(void*) = (void* (*)(void*)) arg;
+		pthread_create(&thread, &attr, entry, param);
+#endif
 		this->state = RUN;
 	}
 }

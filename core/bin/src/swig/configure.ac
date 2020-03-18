@@ -3,9 +3,9 @@
 
 AC_PREREQ([2.69])
 AC_INIT([eswig], [2.0.4], [test@domain])
-AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([Source/Modules/php.cxx])
+AC_CONFIG_SRCDIR([Source])
 AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE
 
 # Checks for programs.
 AC_PROG_CXX

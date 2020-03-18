@@ -72,6 +72,12 @@ eswig_SOURCES =	CParse/cscanner.c		\
 		Modules/utils.cxx		\
 		Modules/xml.cxx			\
 		Modules/spr.cpp			\
+		Modules/sprpy/ClassInfo.cpp	\
+		Modules/sprpy/MethodInfo.cpp	\
+		Modules/sprpy/MethodInfoEx.cpp	\
+		Modules/sprpy/SprpyInfoObjectUtility.cpp	\
+		Modules/sprpy/sprpy.cpp		\
+		Modules/sprcs.cpp		\
 		Preprocessor/cpp.c		\
 		Preprocessor/expr.c		\
 		Swig/cwrap.c			\

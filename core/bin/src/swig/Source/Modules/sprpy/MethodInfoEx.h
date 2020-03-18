@@ -1,7 +1,7 @@
 #ifndef METHODINFOEX_H
 #define METHODINFOEX_H
 
-#include "..\swigmod.h"
+#include "../swigmod.h"
 #include "sprpy.h"
 #include <string>
 #include <vector>

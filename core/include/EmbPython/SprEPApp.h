@@ -113,7 +113,12 @@ public:
 			hiSdk->Print(std::cout);
 
 			spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+#ifdef _WIN32
 			spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+#else
+			struct HISpidarGDesc _tmp = HISpidarGDesc((char*) "SpidarG6X3R");
+			spg->Init(&_tmp);
+#endif
 			spg->Calibration();
 		}else if(humanInterface == XBOX){
 			spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
@@ -196,7 +201,7 @@ public:
 		{
 			UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 物理スレッド用のマルチメディアタイマを作成
 			timer->SetResolution(1);								// 分解能(ms)
-			timer->SetInterval(unsigned int(pdt * 1000));			// 刻み(ms)h
+			timer->SetInterval((unsigned int)(pdt * 1000));			// 刻み(ms)h
 			physicsTimerID = timer->GetID();						// 物理スレッドのタイマIDの取得
 			timer->Start();											// タイマスタート
 		}
@@ -204,7 +209,7 @@ public:
 		{
 			UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
 			timer->SetResolution(1);								// 分解能(ms)
-			timer->SetInterval(unsigned int(hdt * 1000));			// 刻み(ms)h
+			timer->SetInterval((unsigned int)(hdt * 1000));			// 刻み(ms)h
 			hapticTimerID = timer->GetID();							// 力覚スレッドのタイマIDの取得
 			timer->Start();											// タイマスタート
 		}

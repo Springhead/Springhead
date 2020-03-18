@@ -1,7 +1,13 @@
-﻿#include "../../include\EmbPython\SprEPUtility.h" 
+﻿#include "../../include/EmbPython/SprEPUtility.h" 
 #include "EPUtility.h" 
-#include "../../include\EmbPython\Utility\SprEPObject.h"
+#include "../../include/EmbPython/Utility/SprEPObject.h"
+#ifdef _WIN32
 #include <Windows.h>
+#else
+#include "kludge.h"
+#define __debugbreak()
+#define _set_se_translator(x)
+#endif
 
 #pragma warning(disable:4244) 
 //*********** Decl Global variables ***********

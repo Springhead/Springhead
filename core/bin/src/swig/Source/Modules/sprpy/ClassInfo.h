@@ -1,7 +1,7 @@
-#ifndef CLASSINFO_H
+ï»¿#ifndef CLASSINFO_H
 #define CLASSINFO_H
 
-#include "..\swigmod.h"
+#include "../swigmod.h"
 #include "sprpy.h"
 #include <string>
 #include <vector>
@@ -18,10 +18,10 @@ struct _MethodInfoEx;
 
 enum SprClassType{
 	SPR_CLASSTYPE_NONE = 0,
-	SPR_CLASSTYPE_IF,		//PHSolidIf‚È‚Ç
-	SPR_CLASSTYPE_DESC,		//PHSolidDesc‚È‚Ç
-	SPR_CLASSTYPE_STATE,	//PHSolidState‚È‚Ç
-	SPR_CLASSTYPE_NOTSPR	//int,char,PyObject‚È‚Ç
+	SPR_CLASSTYPE_IF,		//PHSolidIfãªã©
+	SPR_CLASSTYPE_DESC,		//PHSolidDescãªã©
+	SPR_CLASSTYPE_STATE,	//PHSolidStateãªã©
+	SPR_CLASSTYPE_NOTSPR	//int,char,PyObjectãªã©
 };
 
 struct _ClassInfo
@@ -56,7 +56,7 @@ struct _ClassInfo
 	vector<string> pyBaseTypes;
 	bool isInherited;
 	bool isStruct;
-	bool isUTRef;//UTRef‚ğŒp³‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	bool isUTRef;//UTRefã‚’ç¶™æ‰¿ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool useDefaultConstructor;
 	SprClassType classType;
 

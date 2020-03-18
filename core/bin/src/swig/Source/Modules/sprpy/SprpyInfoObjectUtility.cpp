@@ -1,6 +1,7 @@
-#include "SprpyInfoObjectUtility.h"
+ï»¿#include "SprpyInfoObjectUtility.h"
 #include "SprpyInfoObject.h"
 #include <sstream>
+#include <string>
 
 namespace SwigSprpy
 {
@@ -18,7 +19,7 @@ namespace SwigSprpy
 		int index;
 		if (s.length() != 0 ){
 
-			//////Ø‚è•ª‚¯
+			//////åˆ‡ã‚Šåˆ†ã‘
 			// s = 'Vec3d,Vec2d,Vec3f'
 			index = -1;
 			while( -1 != (index = s.find(",")) && index+1 < (int)s.length() -1 )
@@ -32,7 +33,7 @@ namespace SwigSprpy
 		return ret;
 	}
 
-	// CElem‚Ìtype‚É‚ ‚½‚é•¶š—ñ‚ğó‚¯æ‚èAenum‚¾‚Á‚½ê‡‚ÍEnum*‚ğ•Ô‚·
+	// CElemã®typeã«ã‚ãŸã‚‹æ–‡å­—åˆ—ã‚’å—ã‘å–ã‚Šã€enumã ã£ãŸå ´åˆã¯Enum*ã‚’è¿”ã™
 	const Enum* SprpyInfoObjectUtility::GetEnum( string cls )
 	{
 		for(std::set<Enum>::iterator it = Vars.enuminfos.begin(); it != Vars.enuminfos.end(); it++)
@@ -83,7 +84,12 @@ namespace SwigSprpy
 		pyType = "PyObject*";
 		////pyCode = this->Util->WrapValue( cType, cCode );
 		
+#ifdef _WIN32
 		CElem cls = Util->CreateCElem( cType );
+#else
+		CElem cls;
+		cls = Util->CreateCElem( cType );
+#endif
 
 		if ( cls.classkeyword == "enum")
 			cls = Util->CreateCElem("int");
@@ -91,26 +97,26 @@ namespace SwigSprpy
 		int nPointer = Util->CountPointer(cls.pr);
 		
 		
-		//ƒŠƒXƒg‚ğì‚é‚Ì‚Å‚Í‚È‚­AAPI‚ğ•Ï‚¦‚é•ûŒü‚Å
-		//////ƒ|ƒCƒ“ƒ^‚Ì[‚³‚É‚æ‚éˆ—
+		//ãƒªã‚¹ãƒˆã‚’ä½œã‚‹ã®ã§ã¯ãªãã€APIã‚’å¤‰ãˆã‚‹æ–¹å‘ã§
+		//////ãƒã‚¤ãƒ³ã‚¿ã®æ·±ã•ã«ã‚ˆã‚‹å‡¦ç†
 		if (nPointer == 2 ) 
 			pyCode = string("___assert___") + cls.type;
 
-		//void‚Ì‚Î‚ ‚¢‹­§I—¹@ void*‚ÍOK
+		//voidã®å ´åˆå¼·çµ‚äº†  void*ã¯OK
 		if( cls.type == "void" && nPointer == 0 ) assert(0);
 
-		//int double‚È‚Ç‚Ìƒ|ƒCƒ“ƒ^‚Í–¢À‘•‚¾‚©‚ç@‹­§I—¹
+		//int doubleãªã©ã®ãƒã‚¤ãƒ³ã‚¿ã¯æœªå®Ÿè£…ã ã‹ã‚‰ã€€å¼·åˆ¶çµ‚äº†
 //		if( nPointer != 0 && Util->GetPySymbolName(cls.type).find(Util->Vars.classnamePrefix) == -1 )
-			//assert(0);	//‚Æ‚è‚ ‚¦‚¸“®‚©‚·
+			//assert(0);	//ã¨ã‚Šã‚ãˆãšå‹•ã‹ã™
 
-		//“Á’è‚ÌŒ^‚Ìê‡ int, double , ‚È‚Ç‚È‚Ç
+		//ç‰¹å®šã®å‹ã®å ´åˆ int, double, ãªã©ãªã©
 		if( cls.type == "PyObject" )
 		{
 			pyCode = cName;
 		}
-		else if( cls.type == "int" || //unsigned‚à^
+		else if( cls.type == "int" || //unsighedã‚‚çœŸ
 				cls.type == "short" ||  
-				cls.type == "long"  || //unsigned‚à^
+				cls.type == "long"  || //unsignedã‚‚çœŸ
 				(cls.type == "char" && !cls.usigned.empty())
 				)
 		{
@@ -159,22 +165,22 @@ namespace SwigSprpy
 			pyCode+= "}\n";
 		}
 
-		//“Á’è‚ÌŒ^‚¶‚á‚È‚¢ê‡ 
+		//ç‰¹å®šã®å‹ã˜ã‚ƒãªã„å ´åˆ
 		else{	
 			pyCode =  "new" + Util->GetPySymbolName(cls.type) + "(" + cName +")";
 		}
 
 
 
-		//•¡”s‚Ìê‡
+		//è¤‡æ•°è¡Œã®å ´åˆ
 		if( cls.type == "vector")
 		{
 			pyCode = cType + " " + cName + " = " + cCode + ";" + pyCode ;
 		}
-		//‚Ps‚Ìê‡
+		//ï¼‘è¡Œã®å ´åˆ
 		else
 		{
-			//•Ï”‚É‘ã“ü‚·‚é
+			//å¤‰æ•°ã«ä»£å…¥ã™ã‚‹
 			pyCode = pyType + " " +pyName + " = " + pyCode + ";";
 			pyCode = cType + " " + cName + " = " + cCode + ";" + pyCode ;
 		}
@@ -185,22 +191,27 @@ namespace SwigSprpy
 	{
 		///////////cCode = this->Util->UnwrapValue( cType, pyCode);
 
+#ifdef _WIN32
 		CElem cls = Util->CreateCElem( cType );
+#else
+		CElem cls;
+		cls = Util->CreateCElem( cType );
+#endif
 	
 		int nPointer = Util->CountPointer(cls.pr);
 				
 		if ( cls.classkeyword == "enum" ){
-			//int‚Æ‚µ‚Äˆµ‚¢A–Ú“I‚ÌenumŒ^‚ÖƒLƒƒƒXƒg‚·‚é
+			//intã¨ã—ã¦æ‰±ã„ã€ç›®çš„ã®enumå‹ã¸ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹
 			cCode = "((" + cls.fulltype + ")PyLong_AsLong(" + pyName + "))";
 		}
-		//“Á’è‚ÌŒ^‚Ìê‡ int, double‚È‚Ç‚Ì‘g‚İ‚İŒ^‚âPyObject ‚È‚Ç‚È‚Ç
+		//ç‰¹å®šã®å‹ã®å ´åˆ int, doubleãªã©ã®çµ„ã¿è¾¼ã¿å‹ã‚„PyObject ãªã©ãªã©
 		else if( cls.type == "PyObject" )	{
 			cCode = pyName  ;
 		}
-		else if( cls.type == "int" || //unsigned‚à^
+		else if( cls.type == "int" || //unsigendã‚‚çœŸ
 				 cls.type == "short" || 
-				 cls.type == "long" || //unsigned‚à^
-				( cls.type == "char" && !cls.usigned.empty() ) //unsigned char‚¾‚¯^
+				 cls.type == "long" || //unsignedã‚‚çœŸ
+				( cls.type == "char" && !cls.usigned.empty() ) //unsigned charã ã‘çœŸ
 				)
 		{
 			cCode = "PyObject_asLong(" + pyName + ")"  ;
@@ -250,10 +261,12 @@ namespace SwigSprpy
 			cCode += "}";
 
 		}
-		//“Á’è‚ÌŒ^‚¶‚á‚È‚¢ê‡
+		//ç‰¹å®šã®å‹ã˜ã‚ƒãªã„å ´åˆ
 		else
 		{
-			//ˆÃ–Ù‚ÌƒLƒƒƒXƒg‚ª•K—v‚ÈSpringhead‚ÌƒNƒ‰ƒX‚È‚Ç(Vec,Pose....
+			bool _hack = false;	// Kludge
+#ifdef WIN32
+			//æš—é»™ã®ã‚­ãƒ£ã‚¹ãƒˆãŒå¿…è¦ãªSpringheadã®ã‚¯ãƒ©ã‚¹ãªã©(Vec,Pose....
 			if(  cls.type == "Vec3d")	{
 				cCode = "(&PyObject_asVec3d(" + pyName + "))"  ;
 			}
@@ -263,31 +276,119 @@ namespace SwigSprpy
 			else{
 				cCode = "EPObject_Cast(" + pyName + "," + cls.fulltype + ")" ;
 			}
+#else
+			//  g++ complains "taking address of temporary"...
+			static int _tmpNo = 0;
+			char buff[16];
+			string _cType(this->cType);
+			string _cName(this->cName);
+			int pos;
+	//string __cName(this->cName);
+	//string __cType(this->cType);
+	//string __cCode(this->cCode);
+			if(  cls.type == "Vec3d" || cls.type == "Vec3f")	{
+				cCode = "(&PyObject_as" + cls.type + "(" + pyName + "))"  ;
+				string __cCode = cCode;
+				if (_cType.find("*") == std::string::npos) {
+					pos = cCode.find("(&");
+					if (pos != std::string::npos) {
+						cCode.replace(pos, 2, "");
+						pos = cCode.find("))");
+						if (pos != std::string::npos) cCode.replace(pos, 2, ")");
+					} 
+					cCode += " /*0316-21*/";
+					_hack = true;
+				}
+				else {
+					string _oType(this->cType);
+					string _oCode(this->cCode);
+					if ((pos = _oType.find("*"))  != std::string::npos) _oType.replace(pos, 1, "");
+					if ((pos = _oCode.find("(&")) != std::string::npos) _oCode.replace(pos, 2, "");
+					if ((pos = _oCode.find("))")) != std::string::npos) _oCode.replace(pos, 2, ")");
+					
+					sprintf(buff, "_tmp%d", _tmpNo++);
+					string _tmpVar(buff);
+					cCode = "NULL;\t//0316-31\n";
+					cCode += _oType + " " + _tmpVar + " = " + _oCode + ";\t//0316-32\n";
+					cCode += _cName + " = &" + _tmpVar + ";\t//0316-33";
+					_hack = true;
+				}
+	//0316-2a: cCode = cCode + ";\n//0316-2: cName [" + __cName + "], cType [" + __cType + "], cCode [" + __cCode + "], ";
+	//0316-2b: cCode = cCode + "\n//0316-2: original [" + __cCode + "]\n";
+			}
+			else{
+				cCode = "EPObject_Cast(" + pyName + "," + cls.fulltype + ")" ;
+			}
+#endif
 
-			//ƒ|ƒCƒ“ƒ^‚Ì[‚³‚É‚æ‚éˆ—
-			if( nPointer ==0 )	{
-				cCode.insert(0,"(*");//i•ÏŠ·æ‚ªjÀ‘Ì,QÆ‚Ìê‡‚Íƒ|ƒCƒ“ƒ^‚ğÀ‘Ì‰»
-				cCode.append(")");
+			//ãƒã‚¤ãƒ³ã‚¿ã®æ·±ã•ã«ã‚ˆã‚‹å‡¦ç†
+			if( nPointer == 0) {
+				if (!_hack)	{
+					cCode.insert(0,"(*");//ï¼ˆå¤‰æ›å…ˆãŒï¼‰å®Ÿä½“,å‚ç…§ã®å ´åˆã¯ãƒã‚¤ãƒ³ã‚¿ã‚’å®Ÿä½“åŒ–
+					cCode.append(")");
+				}
 			}
 			else if ( nPointer == 1)
-				;		//ƒ|ƒCƒ“ƒ^‚ª1‚Â‚Ìê‡‚Í‚»‚Ì‚Ü‚Ü
+				;		//ãƒã‚¤ãƒ³ã‚¿ãŒ1ã¤ã®å ´åˆã¯ãã®ã¾ã¾
 			else
 				cCode = "___assert___"+ cls.type ;
 				//asset(0);
 		}
 
-		//•¡”s‚Ìê‡
+		//è¤‡æ•°è¡Œã®å ´åˆ
 		if(  cls.type == "vector" ||
 			(cls.type == "char" && cls.usigned.empty() )
 			)
 		{
 			cCode = pyType + " " + pyName + " = " + pyCode + ";\n" + cCode;
 		}
-		//‚Ps‚Ìê‡
+		//ï¼‘è¡Œã®å ´åˆ
 		else
 		{
+#ifdef _WIN32
 			cCode = cType + " " +cName + " = " + cCode + ";\n";
 			cCode = pyType + " " + pyName + " = " + pyCode + ";\n" + cCode;
+#else
+		static int _tmpNo = 0;
+		char buff[16];
+	//string __cName(this->cName);
+	//string __cType(this->cType);
+	//string __cCode(this->cCode);
+			bool is_iostream = cType.find("istream") != std::string::npos || cType.find("ostream") != std::string::npos;
+			if (cType.find("&") != std::string::npos && !is_iostream) {
+				//  g++ complains "taking address of temporary"...
+				string _cType(cType), _cCode(cCode);
+				int pos;
+	//string _oType(this->cType);
+	//string _oCode(this->cCode);
+
+				pos = _cType.find_last_of("&");
+				if (pos != std::string::npos) _cType.replace(pos, 1, "");
+				pos = _cCode.find("(*(&");
+				if (pos != std::string::npos) {
+					_cCode.replace(pos, 4, "");
+					pos = _cCode.find(")))");
+					if (pos != std::string::npos) _cCode.replace(pos, 2, "");
+				} 
+
+	//string __cCode;
+	//__cCode = ";\n//0316-1a: cName [" + __cName + "], cType [" + __cType + "], cCode [" + __cCode + "]\n";
+	//__cCode += "//0316-1b: _oType [" + _oType + "], _oCode [" + _oCode + "]\n";
+	//__cCode += "//0316-1c: original code [" + pyType + " " + pyName + " = " + pyCode + ";]\n";
+	//__cCode += "//0316-1d: original code [" + cType + " " + cName + " = " + cCode + ";]\n";
+				
+				sprintf(buff, "_tmp%d", _tmpNo++);
+				string _tmpVar(buff);
+				cCode = pyType + " " + pyName + " = " + pyCode + ";\n";
+				cCode += _cType + " " + _tmpVar + " = " + _cCode + ";\t//0316-11\n";
+				cCode += cType + " " + cName + " = " + _tmpVar + ";\t//0316-12\n";
+
+	//cCode += __cCode + "\n";
+			} else {
+				cCode = cType + " " +cName + " = " + cCode + ";\n";
+				cCode = pyType + " " + pyName + " = " + pyCode + ";\n" + cCode;
+			}
+#endif
 		}
 	}
 
@@ -296,7 +397,12 @@ namespace SwigSprpy
 	
 	string SprpyInfoObjectUtility::GetPySymbolName(string clsStr)
 	{		
+#ifdef _WIN32
 		CElem cls = CreateCElem( clsStr );
+#else
+		CElem cls;
+		cls = CreateCElem( clsStr );
+#endif
 		if( cls.classkeyword == "enum")
 			cls = CreateCElem("int");
 	
@@ -306,7 +412,7 @@ namespace SwigSprpy
 		
 		if ( !cls.type.empty() )
 		{
-			//‹K’è‚ÌƒL[ƒ[ƒh‚Ìê‡‚Í‹K’è‚Ì’PŒê‚ğ•Ô‚· double -> PyDoubleObject ‚È‚Ç
+			//è¦å®šã®ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰ã®å ´åˆã¯è¦å®šã®å˜èªã‚’è¿”ã™ double -> PyDoubleObject ãªã©
 			if (  cls.type == "PyObject" ||  cls.type == "bool" )
 			{
 				symbol = "PyObject";
@@ -316,11 +422,11 @@ namespace SwigSprpy
 				symbol = "PyFloat";
 			}
 			else if ( 
-				cls.type == "int" || //unsigned‚à^
+				cls.type == "int" || //unsignedã‚‚çœŸ
 				cls.type == "size_t" || 
 				cls.type == "short" ||
-				cls.type == "long" ||//unsigned‚à^
-				(cls.type == "dchar" && !cls.usigned.empty()) //unsigned char‚Ì‚İ
+				cls.type == "long" ||//unsignedã‚‚çœŸ
+				(cls.type == "dchar" && !cls.usigned.empty()) //unsigned charã®ã¿
 				)
 			{
 				symbol = "PyLong";
@@ -341,7 +447,7 @@ namespace SwigSprpy
 				{
 					symbol.insert(0,Vars.classnamePrefix);
 				}
-				//ƒŠƒXƒg‚ğì‚é‚Ì‚Å‚Í‚È‚­AAPI‚ğ•Ï‚¦‚é•ûŒü‚Å
+				//ãƒªã‚¹ãƒˆã‚’ä½œã‚‹ã®ã§ã¯ãªãã€APIã‚’å¤‰ãˆã‚‹æ–¹å‘ã§
 				//else if( nPointer == 2 )
 				//	{ name.insert(0,classnamePrefix); name.append("List");}
 			}
@@ -397,7 +503,7 @@ namespace SwigSprpy
 
 	void SprpyInfoObjectUtility::DelRef(string& cls)
 	{
-		//////QÆ‚Ìê‡@@–³‹
+		//////å‚ç…§ã®å ´åˆã€€ã€€ç„¡è¦–
 		while ( cls.find("&") != -1) cls.erase( cls.find("&") ,1 );
 	}
 
@@ -408,7 +514,7 @@ namespace SwigSprpy
 
 	void SprpyInfoObjectUtility::DelSpace(string& cls)
 	{
-		/////ƒXƒy[ƒXíœ
+		/////ã‚¹ãƒšãƒ¼ã‚¹å‰Šé™¤
 		while ( cls.find(" ") != -1 ) cls.erase(cls.find(" ") , 1);
 	}
 
@@ -421,13 +527,13 @@ namespace SwigSprpy
 
 	void SprpyInfoObjectUtility::DelNamespace(string& cls)
 	{
-		//namespaceÁ‚· Spr::PHSolid‚È‚Ç
+		//namespaceæ¶ˆã™ Spr::PHSolidãªã©
 		while ( cls.find("::") != -1 )
 			cls.assign( cls.erase(0, cls.find("::") + 2 ));
 	}
 
-	// const‚Ì‘•ü‚ª‚ ‚Á‚½ê‡‚ÍA"q(const)"‚ğÁ‚µ‚Ätrue‚ğ•Ô‚·
-	// consto‚È‚¢ê‡‚Ífalse
+	// constã®è£…é£¾ãŒã‚ã£ãŸå ´åˆã¯ã€"q(const)"ã‚’æ¶ˆã—ã¦trueã‚’è¿”ã™
+	// constå‡ºãªã„å ´åˆã¯false
 	bool SprpyInfoObjectUtility::DelqConst(string& cls)
 	{
 		bool ret = false;
@@ -472,12 +578,20 @@ namespace SwigSprpy
 	CElem::~CElem()
 	{
 		//printf("delete %p\n",this);
+#if _WIN32
 		if(this->child) delete this->child;
+#endif
 	}
 	
 	void SprpyInfoObjectUtility::CreateCElem(string cls,CElem** alloc)
 	{
+#ifdef _WIN32
 		*alloc = new CElem(CreateCElem(cls));
+#else
+		CElem _cls;
+		_cls = CreateCElem(cls);
+		*alloc = new CElem(_cls);
+#endif
 	}
 
 	CElem SprpyInfoObjectUtility::CreateCElem(string cls)
@@ -487,10 +601,16 @@ namespace SwigSprpy
 		//DelNamespace(cls);
 		//DelSpace(cls);
 
+#ifdef _WIN32
 		CElem elem = CElem();
+#else
+		CElem elem;
+		elem = CElem();
+#endif
 
-		if(cls.find("UTRef") != -1)
-			printf("");
+		// Kludge: make no sense
+		//if(cls.find("UTRef") != -1)
+		//	printf("");
 
 
 		Strings list;
@@ -517,7 +637,7 @@ namespace SwigSprpy
 			}
 		}
 
-		//child‚ğæ‚èo‚·
+		//childã‚’å–ã‚Šå‡ºã™
 		{
 			int s = cls.find("<");
 			int e = cls.rfind(">");
@@ -530,9 +650,9 @@ namespace SwigSprpy
 			}
 		}
 
-		// *,&,const*,const&‚ğæ‚èo‚·
+		// *,&,const*,const&ã‚’å–ã‚Šå‡ºã™
 		list.clear();
-		list.push_back("const &");	//’·‚¢‡”Ô‚ÅŒŸõ‚µ‚È‚¢‚Æƒ_ƒ
+		list.push_back("const &");	//é•·ã„é †ç•ªã§æ¤œç´¢ã—ãªã„ã¨ãƒ€ãƒ¡
 		list.push_back("const *");
 		list.push_back("const&");
 		list.push_back("const*");
@@ -560,9 +680,9 @@ namespace SwigSprpy
 			int index = -1;
 			while (-1 != (index = cls.find(*it,index+1)) )
 			{
-				if( true )	//êŠ‚ÍŠÖŒW‚È‚µ
+				if( true )	//å ´æ‰€ã¯é–¢ä¿‚ãªã—
 				{
-					elem.pr += *it;			//**‚Æ‚©‚ ‚é‚©‚ç’Ç‹L
+					elem.pr += *it;			//**ã¨ã‹ã‚ã‚‹ã‹ã‚‰è¿½è¨˜
 					string tmp = cls.substr(0,index);
 					tmp += cls.substr(index+it->length());
 					cls = tmp;
@@ -571,7 +691,7 @@ namespace SwigSprpy
 			}
 		}
 
-		// cv‘•üq(const,volatile)‚ğæ‚èo‚·
+		// cvè£…é£¾å­(const,volatile)ã‚’å–ã‚Šå‡ºã™
 		list.clear();
 		list.push_back("const");
 		list.push_back("volatile");
@@ -591,7 +711,7 @@ namespace SwigSprpy
 
 			}
 		}
-		//ƒNƒ‰ƒXƒL[ƒ[ƒh‚ğæ‚èo‚·
+		//ã‚¯ãƒ©ã‚¹ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰ã‚’å–ã‚Šå‡ºã™
 		list.clear();
 		list.push_back("struct");
 		list.push_back("enum");
@@ -628,7 +748,7 @@ namespace SwigSprpy
 				{
 					elem.nspace = *it;
 					string tmp = cls.substr(0,index);
-					tmp += cls.substr(index+it->length()+2);//::‚àÁ‚·
+					tmp += cls.substr(index+it->length()+2);//::ã‚‚æ¶ˆã™
 					cls = tmp;
 				}
 
@@ -654,21 +774,29 @@ namespace SwigSprpy
 			}
 		}
 
-		//c‚è‚Ífulltype
+		//æ®‹ã‚Šã¯fulltype
 		DelSpace(cls);
 		elem.fulltype = elem.usigned + cls;
 
 		// classA::classB::type 
-		//               ª‚¢‚ç‚È‚¢‚Æ‚±‚ë‚Ü‚Åíœ
+		//               â†‘ã„ã‚‰ãªã„ã¨ã“ã‚ã¾ã§å‰Šé™¤
 		
-		//namespaceÁ‚· Spr::PHSolid‚È‚Ç
+		//namespaceæ¶ˆã™ Spr::PHSolidãªã©
 		while ( cls.find("::") != -1 )
 			cls = cls.erase(0, cls.find("::") + 2 );
 		elem.type = cls;
 
 		string res = ResolveTypedef(elem);
 		if( !res.empty() )
+		{
+#ifdef _WIN32
 			return CreateCElem( res );
+#else
+			CElem _res;
+			_res = CreateCElem( res );
+			return _res;
+#endif
+		}
 
 		const Enum* en = GetEnum(elem.type);
 		if( en )
@@ -679,9 +807,9 @@ namespace SwigSprpy
 		return elem;
 	}
 
-	// –ß‚è’l: array‚Å‚Í‚È‚¢ê‡ -1
-	//		 : array‚Å—v‘f”‚ª‚í‚©‚é‚Æ‚«@—v‘f”
-	//		 : array‚Å—v‘f”‚ª‚í‚©‚ç‚È‚¢‚Æ‚« 0
+	// æˆ»ã‚Šå€¤: arrayã§ã¯ãªã„å ´åˆ -1
+	//		 : arrayã§è¦ç´ æ•°ãŒã‚ã‹ã‚‹ã¨ãã€€è¦ç´ æ•°
+	//		 : arrayã§è¦ç´ æ•°ãŒã‚ã‹ã‚‰ãªã„ã¨ã 0
 	int SprpyInfoObjectUtility::DelArray(string &cls)
 	{
 		int beg = cls.find("[");
@@ -710,15 +838,15 @@ namespace SwigSprpy
 
 
 
-	/////Œ^•¶š—ñ‚©‚çAPython‚ÌŒ^ƒ`ƒFƒbƒNŠÖ”–¼‚ğ•Ô‚·
+	/////å‹æ–‡å­—åˆ—ã‹ã‚‰ã€Pythonã®å‹ãƒã‚§ãƒƒã‚¯é–¢æ•°åã‚’è¿”ã™
 	string SprpyInfoObjectUtility::GetCheckfuncName(string cls, string name)
 	{
 		cls.assign( GetPySymbolName(cls) );
 
-		//“Á’è‚ÌŒ^‚Ìê‡ int, double , ‚È‚Ç‚È‚Ç
+		//ç‰¹å®šã®å‹ã®å ´åˆ int, double , ãªã©ãªã©
 		if (cls == "PyObject")
 		{
-			//PyObject‚Íƒ`ƒFƒbƒN‚·‚éŠÖ”‚ª‚È‚¢‚Ì‚Å true
+			//PyObjectã¯ãƒã‚§ãƒƒã‚¯ã™ã‚‹é–¢æ•°ãŒãªã„ã®ã§ true
 			return string("true");
 		}
 		else if( cls == "PyFloat" || cls == "PyLong") 
@@ -764,21 +892,26 @@ namespace SwigSprpy
 			
 			////////CreateCElem(clsStr);
 			////////DelPointer(cls);
+#ifdef _WIN32
 			CElem cls = CreateCElem( clsStr );
+#else
+			CElem cls;
+			cls = CreateCElem( clsStr );
+#endif
 	
 			int nPointer = CountPointer(cls.pr);
 			string name = cls.type;
 
-			//SpringheadˆÈŠO‚ÌŒ^‚ğ•ª‚¯‚é
-			if (name == "int"      || //unsigned‚à^
+			//Springheadä»¥å¤–ã®å‹ã‚’åˆ†ã‘ã‚‹
+			if (name == "int"      || //unsignedã‚‚çœŸ
 				name == "PyObject" || 
 				name == "short"    ||
-				name == "long"     || //unsigned‚à^
+				name == "long"     || //unsignedã‚‚çœŸ
 				name == "float"    ||
 				name == "double"   ||
 				name == "bool"     || 
 				name == "size_t"   ||
-				name == "char"     || //unsigned‚à^
+				name == "char"     || //unsignedã‚‚çœŸ
 				name == "string" 
 				)
 				return SPR_CLASSTYPE_NOTSPR;

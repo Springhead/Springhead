@@ -42,6 +42,11 @@ if(STANDALONE)
 	set(CMAKE_CONFIGURATION_TYPES Release)
 	set(LIBTYPE STATIC)
     endif()
+    #
+    set(OPTS_FILE_NAME "CMakeOpts.txt")
+    set(OPTS_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}")
+    set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
+    include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 endif() 
 
 # ------------------------------------------------------------------------------
@@ -111,10 +116,12 @@ list(APPEND SRCS ${generated_files})
 #	(2) "${SPR_SRC_DIR}/CMakeOpts.txt".
 #	(3) Default file: "${SPR_SRC_DIR}/CMakeOpts.txt.Lib.dist".
 #
-set(OPTS_FILE_NAME "CMakeOpts.txt")
-set(OPTS_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}")
-set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
-include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
+if(NOT STANDALONE)
+    set(OPTS_FILE_NAME "CMakeOpts.txt")
+    set(OPTS_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}")
+    set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
+    include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
+endif()
 
 # ------------------------------------------------------------------------------
 #  Main target.
@@ -174,6 +181,8 @@ if(Windows)
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
 elseif(unix)
+    set(_output_name_debug   "lib${Target}.a")
+    set(_output_name_release "lib${Target}.a")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
 endif()
@@ -241,9 +250,6 @@ if(STANDALONE)
     set(_cmnd_DEBUG   "${_cp} ${_libdir}/${_output_name_debug}   ${_install_dir}")
     set(_cmnd_RELEASE "${_cp} ${_libdir}/${_output_name_release} ${_install_dir}")
     set(_cmnd_TRACE   "${_cp} ${_libdir}/${_output_name_trace}   ${_install_dir}")
-#message("## [${_cmnd_DEBUG}]")
-#message("## [${_cmnd_RELEASE}]")
-#message("## [${_cmnd_TRACE}]")
     set(_libfile_DEBUG   ${_cp} ${_libdir}/${_output_name_debug})
     set(_libfile_RELEASE ${_cp} ${_libdir}/${_output_name_release})
     set(_libfile_TRACE   ${_cp} ${_libdir}/${_output_name_trace})
