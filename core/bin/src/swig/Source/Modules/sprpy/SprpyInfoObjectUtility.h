@@ -1,4 +1,4 @@
-#include "SprpyInfoObject.h"
+ï»¿#include "SprpyInfoObject.h"
 
 namespace SwigSprpy
 {;
@@ -28,10 +28,10 @@ struct Variable
 	string pyCode;
 		
 	Variable(SprpyInfoObjectUtility*);
-	// C -> Python •Ï”‚Ì•ÏŠ·@@int => PyIntObject*   Vec3d => SPRPYVec3d*  Vec3d* => SPRPYVec3d*
+	// C -> Python å¤‰æ•°ã®å¤‰æ›    int => PyIntObject*   Vec3d => SPRPYVec3d*  Vec3d* => SPRPYVec3d*
 	void WrapValue();
 
-	// Python -> C •Ï”‚Ì•ÏŠ·@@PyIntObject* => int SPRPYVec3d* => Vec3d,
+	// Python -> C å¤‰æ•°ã®å¤‰æ›    PyIntObject* => int SPRPYVec3d* => Vec3d,
 	void UnWrapValue();
 };
 
@@ -40,27 +40,27 @@ struct Variable
 
 struct CElem
 {
-	//ƒNƒ‰ƒXƒL[ƒ[ƒh
+	//ã‚¯ãƒ©ã‚¹ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰
 	//class,struct,union   ,enum
 
-	//‘•ü
-	//* ‚Æ &
-	//cv Cüqiconst ‚Æ volatilej
-	//–¼‘Ow’èqistd:: ‚È‚Çj
-	//() “à‚ÌŠÖ”ƒpƒ‰ƒ[ƒ^
-	//[] “à‚Ì”z—ñ‚Ì’·‚³
-	//—áŠOˆ—‚Ìw’è
-	//ƒCƒjƒVƒƒƒ‰ƒCƒU
+	//è£…é£¾
+	//* ã¨ &
+	//cv ä¿®é£¾å­ (const ã¨ volatile)
+	//åå‰ä¿®é£¾å­ (std:: ãªã©)
+	//() å†…ã®é–¢æ•°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	//[] å†…ã®é…åˆ—ã®é•·ã•
+	//ä¾‹å¤–å‡¦ç†ã®æŒ‡å®š
+	//ã‚¤ãƒ‹ã‚·ãƒ£ãƒ©ã‚¤ã‚¶
 
 	// access storage cv classkeyword usigned nspace::classA::classB::type pr name
-	//							                      ^^^^^^^^^^^^^^^^^^^^¨fulltype
+	//							                      ^^^^^^^^^^^^^^^^^^^^â†’fulltype
 	// type<child> name
 	string nspace;
 	//string access;
 	string storage;
 	string cv;
 	string classkeyword;
-	string pr;	//* ‚Æ & ,const*,const&‚à
+	string pr;	//* ã¨ & ,const*,const&ã‚‚
 	string type;
 	string fulltype;
 	string usigned; //unsigned
@@ -117,7 +117,7 @@ public:
 
 	void StrReplaceall(string& str, string from , string to);
 
-	/////Œ^•¶š—ñ‚©‚çAPython‚ÌŒ^ƒ`ƒFƒbƒNŠÖ”–¼‚ğ•Ô‚·
+	/////å‹æ–‡å­—åˆ—ã‹ã‚‰ã€Pythonã®å‹ãƒã‚§ãƒƒã‚¯é–¢æ•°åã‚’è¿”ã™
 	string GetCheckfuncName(string cls, string name);
 	
 	string GetPyTypeObjectName(string cls);

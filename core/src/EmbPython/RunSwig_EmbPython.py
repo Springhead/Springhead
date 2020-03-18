@@ -31,6 +31,14 @@ if trace:
 	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
+#  Kludge for unix
+#	何故か、cmake で add_custom_command の WORKINGDIRECTORY 指定が
+#	うまく機能しないようなので…
+path = os.getcwd().split(os.sep)
+if path[-1] == 'build' or path[-2] != 'src':
+	os.chdir('..')
+
+# ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
 sys.path.append('../RunSwig')

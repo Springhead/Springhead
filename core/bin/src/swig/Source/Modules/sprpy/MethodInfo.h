@@ -1,7 +1,7 @@
-#ifndef METHODINFO_H
+ï»¿#ifndef METHODINFO_H
 #define METHODINFO_H
 
-#include "..\swigmod.h"
+#include "../swigmod.h"
 #include "sprpy.h"
 #include <string>
 #include <vector>
@@ -29,15 +29,15 @@ struct _MethodInfo
 
 	vector<string> params;
 	vector<string> paramNames;
-	string extendCode;  //extend‚È‚Ç‚Å—^‚¦‚ç‚ê‚éÀ‘•ƒR[ƒh
+	string extendCode;  //extendãªã©ã§ä¸ãˆã‚‰ã‚Œã‚‹å®Ÿè£…ã‚³ãƒ¼ãƒ‰
 		
-	//ˆø”ƒ`ƒFƒbƒNŠÖ”‚Ì“o˜^
+	//å¼•æ•°ãƒã‚§ãƒƒã‚¯é–¢æ•°ã®ç™»éŒ²
 	string checkfuncCode;
-	//BODY‚Ì“o˜^
+	//BODYã®ç™»éŒ²
 	string bodyCode;
-	//return•¶‚Ì“o˜^
+	//returnæ–‡ã®ç™»éŒ²
 	string returnCode;
-	//PARAM(Œ^+•Ï”–¼)‚Ì“o˜^
+	//PARAM(å‹+å¤‰æ•°å)ã®ç™»éŒ²
 	string paramCode;
 
 	struct _MethodInfoEx *methodinfoex;

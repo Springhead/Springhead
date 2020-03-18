@@ -82,8 +82,11 @@ WIN32 is still required for the locale module.
 #define LONG_BIT	32
 #define WORD_BIT 32
 
+#ifdef _WIN32
 #define MS_WIN32 /* only support win32 and greater. */
 #define MS_WINDOWS
+#endif
+
 #ifndef PYTHONPATH
 #	define PYTHONPATH L".\\DLLs;.\\lib"
 #endif

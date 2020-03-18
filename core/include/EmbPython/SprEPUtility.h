@@ -7,6 +7,10 @@
 #define __EPDECL __fastcall
 #endif
 
+#ifndef	_WIN32
+#include "kludge.h"
+#endif
+
 #include "Foundation/SprUTCriticalSection.h"//CriticalSection用
 
 #include <EmbPython/SprEPVersion.h>

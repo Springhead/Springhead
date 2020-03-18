@@ -1,4 +1,4 @@
-#include "ClassInfo.h"
+ï»¿#include "ClassInfo.h"
 #include "SprpyInfoObjectUtility.h"
 #include <sstream>
 
@@ -27,13 +27,13 @@ ClassInfo::_ClassInfo(const _ClassInfo& obj )
 	pytypeobjectNameStr.assign(obj.pytypeobjectNameStr) ; pytypeobjectName = pytypeobjectNameStr.c_str();
 			
 	//methods.assign(obj.methods.begin(),obj.methods.end());
-	//ƒ}ƒbƒv‚ÌƒRƒs[
+	//ãƒãƒƒãƒ—ã®ã‚³ãƒ”ãƒ¼
 	for(map<string,MethodInfoEx>::const_iterator it = obj.methods.begin(); it != obj.methods.end(); it++) {
 		pair<map<string,MethodInfoEx>::iterator, bool> p = methods.insert(*it);
 		if(!p.second)
 			p.first->second = it->second;
 	}
-	//ƒ}ƒbƒv‚ÌƒRƒs[
+	//ãƒãƒƒãƒ—ã®ã‚³ãƒ”ãƒ¼
 	for(map<string,MethodInfoEx>::const_iterator it = obj.mathMethods.begin(); it != obj.mathMethods.end(); it++) {
 		pair<map<string,MethodInfoEx>::iterator, bool> p = mathMethods.insert(*it);
 		if(!p.second)
@@ -70,20 +70,20 @@ ClassInfo::~ClassInfo()
 }
 
 
-/////// Node*‚©‚çMethodInfoEx‚ğì¬AClassInfo‚É’Ç‰Á‚·‚éB
-/////// function , constructorƒm[ƒh‚É‚¨‚¢‚Äì¬‚³‚ê‚é
+/////// Node*ã‹ã‚‰MethodInfoExã‚’ä½œæˆã€ClassInfoã«è¿½åŠ ã™ã‚‹ã€‚
+/////// function , constructorãƒãƒ¼ãƒ‰ã«ãŠã„ã¦ä½œæˆã•ã‚Œã‚‹
 void ClassInfo::BuildMethodInfoEx(Node* node)
 {
 	MethodInfoEx *target = NULL;
 	MethodInfoEx mex = MethodInfoEx::CreateMethodInfoEx(node,this->className);
 
 	
-	//SPR_IFDEF‚àƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Æ‚µ‚Äˆµ‚í‚ê‚é‚Ì‚ÅA‰ñ”ğ
+	//SPR_IFDEFã‚‚ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ã—ã¦æ‰±ã‚ã‚Œã‚‹ã®ã§ã€å›é¿
 	if(mex.methodNameStr == "" || mex.methodNameStr == "SPR_IFDEF" || mex.methodNameStr == "SPR_DESCDEF" ||
 		mex.methodNameStr == "SPR_VIFDEF")
 		return ;
 	
-	//ƒIƒyƒŒ[ƒ^ƒI[ƒo[ƒ[ƒh‚Í‚Æ‚è‚ ‚¦‚¸–³‹
+	//ã‚ªãƒšãƒ¬ãƒ¼ã‚¿ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã¯ã¨ã‚Šã‚ãˆãšç„¡è¦–
 	if(mex.methodNameStr.find("operator ") != -1) 
 		return;
 
@@ -101,11 +101,11 @@ void ClassInfo::BuildMethodInfoEx(Node* node)
 
 
 	
-	//ClassInfo‚ÉMethodInfoEx‚ª–³‚©‚Á‚½‚ç‘ã“ü
+	//ClassInfoã«MethodInfoExãŒç„¡ã‹ã£ãŸã‚‰ä»£å…¥
 	if(target->methods.size() == 0 ) target->assign(mex);
 					
 
-	//ƒm[ƒh‚©‚çMethodInfo‚ğì‚Á‚ÄMethodInfoEx‚É“ü‚ê‚é
+	//ãƒãƒ¼ãƒ‰ã‹ã‚‰MethodInfoã‚’ä½œã£ã¦MethodInfoExã«å…¥ã‚Œã‚‹
 	MethodInfo meth = MethodInfo::CreateMethodInfo(node,this->className);
 	if(meth.node!=NULL)
 		target->methods.push_back( meth );
@@ -114,10 +114,10 @@ void ClassInfo::BuildMethodInfoEx(Node* node)
 
 	
 
-	//À‘••t‚«‚Ìê‡ (%extend‚È‚Ç
+	//å®Ÿè£…ä»˜ãã®å ´åˆ (%extendãªã©
 	if (GetFlagAttr(node,"code"))
 	{
-		//À‘••t‚«‚ÅA‚©‚ÂA.iƒtƒ@ƒCƒ‹‚É’è‹`‚³‚ê‚Ä‚¢‚é‚à‚ÌiÀ‘•‚ª‚Ç‚±‚É‚à–³‚¢ê‡j
+		//å®Ÿè£…ä»˜ãã§ã€ã‹ã¤ã€.iãƒ•ã‚¡ã‚¤ãƒ«ã«å®šç¾©ã•ã‚Œã¦ã„ã‚‹ã‚‚ã®ï¼ˆå®Ÿè£…ãŒã©ã“ã«ã‚‚ç„¡ã„å ´åˆï¼‰
 		if ( Checkattr( parentNode(node) , "nodeType","extend") )
 		{
 			MethodInfo &mi = target->methods.back();
@@ -131,11 +131,11 @@ void ClassInfo::BuildMethodInfoEx(Node* node)
 void ClassInfo::UpdateMethodInfos()
 	{
 		//constructor 				
-		//ƒI[ƒo[ƒ[ƒh‚Ìƒtƒ‰ƒO‚ğŒ³‚ÉACreateMethodInfo‚Å
-		//–„‚ß‚ç‚ê‚È‚©‚Á‚½€–Ú‚ğ‚¤‚ß‚é
+		//ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã®ãƒ•ãƒ©ã‚°ã‚’å…ƒã«ã€CreateMethodInfoã§
+		//åŸ‹ã‚ã‚‰ã‚Œãªã‹ã£ãŸé …ç›®ã‚’ã†ã‚ã‚‹
 		if( !this->constructors->methods.empty())
 			this->UpdateMethodInfo(*this->constructors);
-		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ª’è‹`‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í–³—‚â‚èì‚é
+		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒå®šç¾©ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ç„¡ç†ã‚„ã‚Šä½œã‚‹
 		else
 		{
 			this->constructors->pyfuncNameCode = this->pyobjectNameStr + this->classNameStr;
@@ -156,15 +156,15 @@ void ClassInfo::UpdateMethodInfos()
 		for( map<string,MethodInfoEx>::iterator itex = this->methods.begin();
 			itex != this->methods.end() ; itex++)
 		{				
-				//ƒI[ƒo[ƒ[ƒh‚Ìƒtƒ‰ƒO‚ğŒ³‚ÉACreateMethodInfo‚Å
-				//–„‚ß‚ç‚ê‚È‚©‚Á‚½€–Ú‚ğ‚¤‚ß‚é
+				//ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã®ãƒ•ãƒ©ã‚°ã‚’å…ƒã«ã€CreateMethodInfoã§
+				//åŸ‹ã‚ã‚‰ã‚Œãªã‹ã£ãŸé …ç›®ã‚’ã†ã‚ã‚‹
 				this->UpdateMethodInfo((*itex).second);					
 		}
 
 	}
 
-	//MethodInfoEx‚ÍMethodInfo‚ªpush‚³‚ê‚é‚Ü‚Åˆø”‚È‚Ç‚ªŒˆ’è‚Å‚«‚È‚¢
-	//‚»‚Ì‚½‚ßˆê“xƒ‹[ƒv‚Å‚·‚×‚Äpush‚µ‚Ä‚©‚çA‚±‚ÌŠÖ”‚É‚æ‚èAˆø”‚È‚Ç‚ÌŒˆ’è‚ğ‚·‚é
+	//MethodInfoExã¯MethodInfoãŒpushã•ã‚Œã‚‹ã¾ã§å¼•æ•°ãªã©ãŒæ±ºå®šã§ããªã„
+	//ãã®ãŸã‚ä¸€åº¦ãƒ«ãƒ¼ãƒ—ã§ã™ã¹ã¦pushã—ã¦ã‹ã‚‰ã€ã“ã®é–¢æ•°ã«ã‚ˆã‚Šã€å¼•æ•°ãªã©ã®æ±ºå®šã‚’ã™ã‚‹
 void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 	{
 		if (mex.methods.empty()) return;
@@ -200,12 +200,12 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 		{
 			MethodInfo &mi = (*it);
 
-			//paramNames‚Ì“o˜^
+			//paramNamesã®ç™»éŒ²
 			ss.str("");
 			for ( unsigned var_count = 0 ; var_count < mi.params.size() ; var_count++ )
 			{
-				//ƒI[ƒo[ƒ[ƒh‚³‚ê‚Ä‚¢‚éorˆø”‚ª‚Q‚±ˆÈãorƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìê‡‚Íƒ^ƒvƒ‹‚Åˆø”‚ª“n‚³‚ê‚é‚©‚ç•ª‰ğ‚µ‚Ä‚©‚çˆµ‚¤
-				//‚½‚¾‚µMathMethod‚Ìê‡‚Í•K‚¸PyObject*‚ª“n‚³‚ê‚é‚Ì‚ÅœŠO
+				//ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ã‚‹orå¼•æ•°ãŒï¼’ã“ä»¥ä¸Šorã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å ´åˆã¯ã‚¿ãƒ—ãƒ«ã§å¼•æ•°ãŒæ¸¡ã•ã‚Œã‚‹ã‹ã‚‰åˆ†è§£ã—ã¦ã‹ã‚‰æ‰±ã†
+				//ãŸã ã—MathMethodã®å ´åˆã¯å¿…ãšPyObject*ãŒæ¸¡ã•ã‚Œã‚‹ã®ã§é™¤å¤–
 				if( !mex.isMathMethod && (mex.isOverloaded || mi.params.size() > 1 || mi.isConstructor))
 					ss << "(PyTuple_GetItem(" << Util.Vars.VARNAME_ARG << "," << var_count << "))" ;
 				else
@@ -217,8 +217,8 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 
 
 			// PY_PARAM
-			//pyparams,paramNames‚Ì“o˜^ (EPŠÖ”‚Ìˆø”
-			//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìê‡‚R‚Âˆø”‚ª‚¢‚é
+			//pyparams,paramNamesã®ç™»éŒ² (EPé–¢æ•°ã®å¼•æ•°
+			//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å ´åˆï¼“ã¤å¼•æ•°ãŒã„ã‚‹
 			if (mex.isConstructor)
 			{
 				mex.pyparams.clear(); mex.pyparamNames.clear();
@@ -226,12 +226,12 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 				mex.pyparams.push_back("PyObject*");
 				mex.pyparamNames.push_back(Util.Vars.VARNAME_SELF);
 				
-				mex.pyparams.push_back("PyObject*");			//init‚Í•K‚¸ˆø”‚ğ‚R‚Âæ‚é
+				mex.pyparams.push_back("PyObject*");			//initã¯å¿…ãšå¼•æ•°ã‚’ï¼“ã¤å–ã‚‹
 				mex.pyparamNames.push_back(Util.Vars.VARNAME_ARG);
 				mex.pyparams.push_back("PyObject*");
 				mex.pyparamNames.push_back("kwds");
 			}
-			//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚¶‚á‚È‚¢ê‡
+			//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã˜ã‚ƒãªã„å ´åˆ
 			else
 			{
 				mex.pyparams.clear(); mex.pyparamNames.clear();
@@ -239,7 +239,7 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 				mex.pyparams.push_back("PyObject*");
 				mex.pyparamNames.push_back(Util.Vars.VARNAME_SELF);
 
-				//ƒI[ƒo[ƒ[ƒhA‚à‚µ‚­‚Íˆø”‚ª‚ ‚éê‡
+				//ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã€ã‚‚ã—ãã¯å¼•æ•°ãŒã‚ã‚‹å ´åˆ
 				if( mex.isOverloaded || ( !mex.methods.empty() && !mex.methods[0].params.empty() ) )
 				{
 					mex.pyparams.push_back("PyObject*");
@@ -257,10 +257,10 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 
 
 
-			// CHECK (ƒ`ƒFƒbƒNŠÖ”“o˜^		
+			// CHECK (ãƒã‚§ãƒƒã‚¯é–¢æ•°ç™»éŒ²		
 			ss.str("");
-			//ƒI[ƒo[ƒ[ƒh‚³‚ê‚Ä‚¢‚éorˆø”‚ª‚Q‚±ˆÈãorƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìê‡‚Íƒ^ƒvƒ‹‚Åˆø”‚ª“n‚³‚ê‚é‚©‚ç•ª‰ğ‚µ‚Ä‚©‚çˆµ‚¤
-			//‚½‚¾‚µMathMethod‚Ìê‡‚Í•K‚¸PyObject*‚ª“n‚³‚ê‚é‚Ì‚ÅœŠO
+			//ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ã‚‹orå¼•æ•°ãŒï¼’ã“ä»¥ä¸Šorã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å ´åˆã¯ã‚¿ãƒ—ãƒ«ã§å¼•æ•°ãŒæ¸¡ã•ã‚Œã‚‹ã‹ã‚‰åˆ†è§£ã—ã¦ã‹ã‚‰æ‰±ã†
+			//ãŸã ã—MathMethodã®å ´åˆã¯å¿…ãšPyObject*ãŒæ¸¡ã•ã‚Œã‚‹ã®ã§é™¤å¤–
 			if ( !mex.isMathMethod && ( mex.isOverloaded || mi.params.size() > 1 )) 
 				ss << Util.Vars.VARNAME_ARG << " && PyTuple_Size(" << Util.Vars.VARNAME_ARG << ") == " << mi.params.size() << "&&" ;
 			for ( unsigned i = 0 ; i < mi.params.size() ; i++)
@@ -286,8 +286,8 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 				param.pyType = "PyObject *";
 				param.cName = string("c_param")+ (char)('1'+i);
 				param.cType = mi.params[i];
-				param.UnWrapValue();
 
+				param.UnWrapValue();
 				PARAM_DECL += param.cCode + "\n";
 			}
 
@@ -302,25 +302,25 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 
 
 			// CALL_FUNC_AND_ASSIGN
-			//–ß‚è’l‚ª‚ ‚éê‡‚ÌAC‚Å‚Ì’l‚ğ•Ï”ret_tmp‚É“ü‚ê‚éƒR[ƒhBret_tmp‚ÍBODY‚ÅWrapValue‚ªŒÄ‚Î‚êA•Ï”ret‚É‘ã“ü‚³‚êAPython‘¤‚É“n‚³‚ê‚é
-			//ŠÖ”‚ÌƒuƒŠƒbƒW‚Ìê‡‚ÍŠÖ”ŒÄ‚Ño‚µ•¶‚ªAŠÖ”‚ÌÀ‘•(extend)‚Ìê‡‚ÍƒR[ƒh‚ª“ü‚é
+			//æˆ»ã‚Šå€¤ãŒã‚ã‚‹å ´åˆã®ã€Cã§ã®å€¤ã‚’å¤‰æ•°ret_tmpã«å…¥ã‚Œã‚‹ã‚³ãƒ¼ãƒ‰ã€‚ret_tmpã¯BODYã§WrapValueãŒå‘¼ã°ã‚Œã€å¤‰æ•°retã«ä»£å…¥ã•ã‚Œã€Pythonå´ã«æ¸¡ã•ã‚Œã‚‹
+			//é–¢æ•°ã®ãƒ–ãƒªãƒƒã‚¸ã®å ´åˆã¯é–¢æ•°å‘¼ã³å‡ºã—æ–‡ãŒã€é–¢æ•°ã®å®Ÿè£…(extend)ã®å ´åˆã¯ã‚³ãƒ¼ãƒ‰ãŒå…¥ã‚‹
 			ss.str("");
 			string CALL_FUNC_AND_ASSIGN;
 
-			//ŠÖ”‚Ì–ß‚è’l(C++)‚ğŠi”[‚·‚é•Ï”‚ÌéŒ¾
-			//–ß‚è’l‚È‚¢ê‡‚Íret_tmp‚ğ’è‹`‚µ‚È‚¢
+			//é–¢æ•°ã®æˆ»ã‚Šå€¤(C++)ã‚’æ ¼ç´ã™ã‚‹å¤‰æ•°ã®å®£è¨€
+			//æˆ»ã‚Šå€¤ãªã„å ´åˆã¯ret_tmpã‚’å®šç¾©ã—ãªã„
 			if (mi.returnTypeStr != "void" && !mi.isConstructor)
 			{
 				string returnTypeStr = mi.returnTypeStr;
 
-				//–ß‚è’l‚ÅQÆ‚ª•Ô‚³‚ê‚éê‡‚Íƒ|ƒCƒ“ƒ^‚Åó‚¯æ‚é
+				//æˆ»ã‚Šå€¤ã§å‚ç…§ãŒè¿”ã•ã‚Œã‚‹å ´åˆã¯ãƒã‚¤ãƒ³ã‚¿ã§å—ã‘å–ã‚‹
 				if (Util.IsRef(returnTypeStr))
 					Util.StrReplaceall(returnTypeStr,"&","*");
 
 				ss << returnTypeStr << " ret_tmp;\n";
 			}
 
-			//ˆø”‚ª‚ ‚éê‡‚Íˆø”Ši”[•Ï”‚Ì’è‹`
+			//å¼•æ•°ãŒã‚ã‚‹å ´åˆã¯å¼•æ•°æ ¼ç´å¤‰æ•°ã®å®šç¾©
 			if ( !PARAM_DECL.empty() )
 				ss << PARAM_DECL;
 
@@ -330,7 +330,7 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 				//vec __add__(vec var1){
 				// return *$self + var1;
 				//}
-				//«
+				//â†“
 				//vec EPvec__add__(PyObject* self,PyObject arg)
 				//{
 				//	vec ret_tmp;
@@ -342,24 +342,24 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 				
 				Variable self(&Util);
 				self.cName = "c_self";
-				self.cType = mex.classNameStr+"*";		//$self‚Í©•ª‚ÌŒ^‚Ìƒ|ƒCƒ“ƒ^B‚¾‚©‚ç*‚ğ’Ç‰Á‚µ‚Ä“n‚·
+				self.cType = mex.classNameStr+"*";		//$selfã¯è‡ªåˆ†ã®å‹ã®ãƒã‚¤ãƒ³ã‚¿ã€‚ã ã‹ã‚‰*ã‚’è¿½åŠ ã—ã¦æ¸¡ã™
 				self.pyName = string("py_") + Util.Vars.VARNAME_SELF;
 				self.pyCode = Util.Vars.VARNAME_SELF;
 				self.pyType = "PyObject *";
 				self.UnWrapValue();
 
-				//•Ï”éŒ¾&‘ã“ü
+				//å¤‰æ•°å®£è¨€&ä»£å…¥
 				src.insert(1, self.cCode);
 
-				//$self‚Ì’uŠ·
+				//$selfã®ç½®æ›
 				Util.StrReplaceall(src,"$self",self.cName);
 
-				//var ‚Ì’uŠ·
-				if(mi.params.size() > 9) assert(0);	//ˆø”10ŒÂˆÈã‚É‚Í–¢‘Î‰
+				//var ã®ç½®æ›
+				if(mi.params.size() > 9) assert(0);	//å¼•æ•°10å€‹ä»¥ä¸Šã«ã¯æœªå¯¾å¿œ
 				for(int i = 0 ; i < (int)mi.params.size() ; i++)
 				{
 					string param(mi.params[i]);
-					Util.DelRef(param);//QÆ‚ª“n‚³‚ê‚½ê‡‚ÍA’l“n‚µ‚³‚ê‚½‚Æ‚«‚Æ“¯—l‚É
+					Util.DelRef(param);//å‚ç…§ãŒæ¸¡ã•ã‚ŒãŸå ´åˆã¯ã€å€¤æ¸¡ã—ã•ã‚ŒãŸã¨ãã¨åŒæ§˜ã«
 					
 					Variable var(&Util);
 					var.cName = string("c_var") + (char)('1'+i);
@@ -369,14 +369,14 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 					var.pyType = "PyObject *";
 					var.UnWrapValue();
 
-					//•Ï”éŒ¾&‘ã“ü
+					//å¤‰æ•°å®£è¨€&ä»£å…¥
 					src.insert(1, var.cCode);
 					
 					Util.StrReplaceall(src,string("$var") + (char)('1'+i),var.cName);
 				}
 
 				//return
-				//–ß‚è’l‚È‚¢ê‡‚Íret_tmp‚ğ’è‹`‚µ‚È‚¢
+				//æˆ»ã‚Šå€¤ãªã„å ´åˆã¯ret_tmpã‚’å®šç¾©ã—ãªã„
 				if (mi.returnTypeStr != "void")
 					Util.StrReplaceall(src,"return","ret_tmp =");
 
@@ -388,20 +388,20 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 			}
 			else
 			{
-				//–ß‚è’l‚È‚¢ê‡‚Íret_tmp‚ğ’è‹`‚µ‚È‚¢
+				//æˆ»ã‚Šå€¤ãªã„å ´åˆã¯ret_tmpã‚’å®šç¾©ã—ãªã„
 				if (mi.returnTypeStr != "void" && !mi.isConstructor) 
 					ss << "ret_tmp = ";
 
-				//QÆ‚ğ•Ô‚·ŠÖ”‚Íƒ|ƒCƒ“ƒ^‚Æ‚µ‚Äó‚¯æ‚é
-				//‚»‚Ì‚½‚ßƒAƒhƒŒƒX‚ğ•Ô‚·‚æ‚¤‚É‚·‚é
+				//å‚ç…§ã‚’è¿”ã™é–¢æ•°ã¯ãƒã‚¤ãƒ³ã‚¿ã¨ã—ã¦å—ã‘å–ã‚‹
+				//ãã®ãŸã‚ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™ã‚ˆã†ã«ã™ã‚‹
 				if ( Util.IsRef(mi.returnTypeStr) )
 					ss << "&(";
 				{
-					//staticŠÖ”‚Ìê‡‚Íself->func()‚Å‚Í‚È‚­class::func()‚ğŒÄ‚Ô
+					//staticé–¢æ•°ã®å ´åˆã¯self->func()ã§ã¯ãªãclass::func()ã‚’å‘¼ã¶
 					if ( mex.isStatic ){
 						ss << mex.className << "::" << mi.methodName << "(" << mi.paramCode << ")" ;
 					}
-					//•’Ê‚ÌŠÖ”‚Ìê‡‚Íself->func()‚ğŒÄ‚Ô
+					//æ™®é€šã®é–¢æ•°ã®å ´åˆã¯self->func()ã‚’å‘¼ã¶
 					else{
 						ss << "EPObject_Cast(" << mex.pyparamNames[0] << "," << mex.className << ")->" << mi.methodName << "(" << mi.paramCode << ")";
 					}
@@ -413,17 +413,17 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 			CALL_FUNC_AND_ASSIGN = ss.str();
 
 
-			// BODY (BODY‚Ì“o˜^
+			// BODY (BODYã®ç™»éŒ²
 			ss.str("");
 			Variable ret(&Util);
 			if ( mi.returnTypeStr == "void" || mi.isConstructor )
 				ss << CALL_FUNC_AND_ASSIGN;
 			else
 			{
-				ss << CALL_FUNC_AND_ASSIGN;	// ret_tmp‚ÉŒ‹‰Ê‚ğ‘ã“ü‚·‚éƒR[ƒh
+				ss << CALL_FUNC_AND_ASSIGN;	// ret_tmpã«çµæœã‚’ä»£å…¥ã™ã‚‹ã‚³ãƒ¼ãƒ‰
 					
 				//BUILDVALUE
-				//ret_tmp‚ğŒ³‚ÉPyObject* ret‚ğì‚é  
+				//ret_tmpã‚’å…ƒã«PyObject* retã‚’ä½œã‚‹  
 				ret.cName = "c_ret";
 				ret.cType = mi.returnTypeStr;
 				ret.cCode = ( (Util.CreateCElem(ret.cType).pr == "&") ? string("*") : string(" ")) + "ret_tmp";
@@ -436,7 +436,7 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 			mi.bodyCode = ss.str();
 
 
-			// RETURN (return•¶‚Ì“o˜^
+			// RETURN (returnæ–‡ã®ç™»éŒ²
 			if(mex.isConstructor)
 			{
 				mi.returnCode = string("if(EPObject_Ptr(") + Util.Vars.VARNAME_SELF + ") != NULL) return 0;";
@@ -451,7 +451,7 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 					mi.returnCode = string("if ( !") + ret.pyName + " ){ PyErr_BadInternalCall();\nreturn NULL;\n}";
 					mi.returnCode += string("if ( ") + ret.pyName + " == Py_None ) Py_RETURN_NONE;";
 
-					//char,int,PyObject‚Ìê‡‚»‚Ì‚Ü‚Üreturn
+					//char,int,PyObjectã®å ´åˆãã®ã¾ã¾return
 					if (Util.GetSprClassType(mi.returnType) == SPR_CLASSTYPE_NOTSPR )
 						mi.returnCode += string("return ") + ret.pyName + ";\n";
 
@@ -476,9 +476,15 @@ void ClassInfo::UpdateMethodInfo(MethodInfoEx &mex)
 void ClassInfo::BuildMemberInfo(Node* node)
 {
 	string varname( GetString(Getattr(node,"name")) );
+#ifdef _WIN32
 	string type( DecodeType(node) );
+#else
+	std::string _tmp = std::string();
+	std::string& __tmp = _tmp;
+	string type( DecodeType(node, __tmp) );
+#endif
 
-	//const‚È‚ÇA•ÏX‚Å‚«‚È‚¢ê‡‚Íget‚Ì‚İ
+	//constãªã©ã€å¤‰æ›´ã§ããªã„å ´åˆã¯getã®ã¿
 	bool isImmutable = GetFlagAttr(node,"feature:immutable") != NULL;
 	
 	string getterCode;
@@ -487,25 +493,25 @@ void ClassInfo::BuildMemberInfo(Node* node)
 	string setterName = isImmutable ? "NULL" : this->pysymbolNameStr + "_set_"+ varname;
 	string doc = "member ("+type+")"+varname+" of "+this->className;
 
-	// table‚Ì—v‘f
+	// tableã®è¦ç´ 
 	string tableElem = "{\""+varname+"\",(getter)"+getterName+",(setter)"+setterName+",\""+doc+"\",NULL},\n";
 		
 
 	Variable mem(&Util);
 	mem.cName = "c_" + varname;
 	mem.cType = type;	
-	// Python‚ÌƒNƒ‰ƒX‚ğC‚ÌƒNƒ‰ƒX‚É–ß‚µA‚»‚Ìƒƒ“ƒo•Ï”‚ğ‚ ‚ç‚í‚·	
+	// Pythonã®ã‚¯ãƒ©ã‚¹ã‚’Cã®ã‚¯ãƒ©ã‚¹ã«æˆ»ã—ã€ãã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’ã‚ã‚‰ã‚ã™	
 	mem.cCode = string("EPObject_Cast(") + Util.Vars.VARNAME_SELF + "," + this->className + ")->" + varname;
 	mem.pyName = "py_" + varname;
 	mem.pyType = "PyObject*";
-	mem.WrapValue();// mem.pyCode‚ªg‚¦‚é‚æ‚¤‚É‚È‚é
+	mem.WrapValue();// mem.pyCodeãŒä½¿ãˆã‚‹ã‚ˆã†ã«ãªã‚‹
 
-	// set‚Ì‚Æ‚«‚É—^‚¦‚ç‚ê‚éPython‚©‚ç—^‚¦‚ç‚ê‚é•Ï”
+	// setã®ã¨ãã«ä¸ãˆã‚‰ã‚Œã‚‹Pythonã‹ã‚‰ä¸ãˆã‚‰ã‚Œã‚‹å¤‰æ•°
 	Variable arg(&Util);
 	arg.cName = string("c_")  + Util.Vars.VARNAME_ARG;
 	arg.cType = type;
 	arg.pyName = string("py_") +Util.Vars.VARNAME_ARG;
-	// Python‚ÌƒNƒ‰ƒX‚ğC‚ÌƒNƒ‰ƒX‚É–ß‚µA‚»‚Ìƒƒ“ƒo•Ï”‚ğ‚ ‚ç‚í‚·
+	// Pythonã®ã‚¯ãƒ©ã‚¹ã‚’Cã®ã‚¯ãƒ©ã‚¹ã«æˆ»ã—ã€ãã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’ã‚ã‚‰ã‚ã™
 	arg.pyCode = Util.Vars.VARNAME_ARG;
 	arg.pyType = "PyObject *";
 	arg.UnWrapValue();
@@ -516,15 +522,27 @@ void ClassInfo::BuildMemberInfo(Node* node)
 		"}";
 
 
+#ifdef _WIN32
 	setterCode = "static int __PYDECL " + setterName + "(PyObject* "+Util.Vars.VARNAME_SELF+", PyObject* "+Util.Vars.VARNAME_ARG+"){"+
-		mem.cType + " &" + mem.cName + " = " + (mem.cType == "int" ? "(int)" : "") + mem.cCode +";\n" +	//enum‚ğint‚Æ‚µ‚Ä”F¯‚³‚¹‚é‚½‚ß‚ÉƒLƒƒƒXƒg
+		mem.cType + " &" + mem.cName + " = " + (mem.cType == "int" ? "(int)" : "") + mem.cCode +";\n" +	//enumã‚’intã¨ã—ã¦èªè­˜ã•ã›ã‚‹ãŸã‚ã«ã‚­ãƒ£ã‚¹ãƒˆ
 		arg.cCode + "\n" + 
 		//mem.cCode+
 		mem.cName + " = " + arg.cName +";\n"+
 		"return 0;" +
 		"}";
+#else
+	// g++ complains... "taking address of temporary"
+	setterCode = "static int __PYDECL " + setterName + "(PyObject* "+Util.Vars.VARNAME_SELF+", PyObject* "+Util.Vars.VARNAME_ARG+"){"+
+		mem.cType + " _tmp = " + (mem.cType == "int" ? "(int)" : "") + mem.cCode +";\n" + //enumã‚’intã¨ã—ã¦èªè­˜ã•ã›ã‚‹ãŸã‚ã«ã‚­ãƒ£ã‚¹ãƒˆ
+		mem.cType + " &" + mem.cName + " = _tmp;\n" +
+		arg.cCode + "\n" + 
+		//mem.cCode+
+		mem.cName + " = " + arg.cName +";\n"+
+		"return 0;" +
+		"}";
+#endif
 
-	//getter,setter‚Ì’è‹`iƒ\[ƒXƒR[ƒhjì¬
+	//getter,setterã®å®šç¾©ï¼ˆã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ï¼‰ä½œæˆ
 	this->getsetMethodCode += getterCode;
 	if(!isImmutable)
 		this->getsetMethodCode += setterCode;
@@ -538,7 +556,7 @@ void ClassInfo::UpdateClassInfo()
 		stringstream ss;
 
 		
-		/////////// __add__ ‚È‚Ç‚ÌƒIƒyƒŒ[ƒ^ƒI[ƒo[ƒ‰ƒCƒh‚Ì‚½‚ß‚Ì\‘¢‘Ì
+		/////////// __add__ ãªã©ã®ã‚ªãƒšãƒ¬ãƒ¼ã‚¿ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã®ãŸã‚ã®æ§‹é€ ä½“
 		ss.str("");
 		ss << "static PyNumberMethods " << this->mathMethodTableName << "={\n";
 		{
@@ -647,7 +665,7 @@ void ClassInfo::UpdateClassInfo()
 		this->mathMethodTable.assign(ss.str());
 
 
-		//methodTable‚ğì¬
+		//methodTableã‚’ä½œæˆ
 		ss.str("");
 		ss << "static PyMethodDef " << this->methodTableName << "[] = {\n";
 		for(map<string,MethodInfoEx>::iterator itmex = this->methods.begin() ; itmex != this->methods.end() ; itmex++)
@@ -679,7 +697,7 @@ void ClassInfo::UpdateClassInfo()
 		ss << "};\n";
 		this->methodTable.assign(ss.str());
 
-		//getsetTable‚ğì¬
+		//getsetTableã‚’ä½œæˆ
 		ss.str("");
 		ss << "static PyGetSetDef "<< this->getsetTableName << "[] = {\n";
 		{	
@@ -692,7 +710,7 @@ void ClassInfo::UpdateClassInfo()
 		this->getsetTable.assign(ss.str());
 
 
-		//TypeObject‚ğì¬
+		//TypeObjectã‚’ä½œæˆ
 		ss.str("");
 		ss << "PyTypeObject " << this->pytypeobjectName << " = {\n";
 		{
@@ -744,7 +762,7 @@ void ClassInfo::UpdateClassInfo()
 			ss << this->getsetTableName <<",/*tp_getset*/\n";
 			if ( this->bases.size() > 0 )
 			{
-				//Šî’êƒNƒ‰ƒX‚Í‚P‚Â‚¾‚¯@‚Æ‚è‚ ‚¦‚¸
+				//åŸºåº•ã‚¯ãƒ©ã‚¹ã¯ï¼‘ã¤ã ã‘ã€€ã¨ã‚Šã‚ãˆãš
 				//string tpbase;
 				//for(int i=0; i<cls.bases.size( ++i){
 				//tpbase.append(cls.bases[i]
@@ -753,7 +771,7 @@ void ClassInfo::UpdateClassInfo()
 				ss << "&"<<this->pyBaseTypes[0]<<",/*tp_base*/\n";
 			}
 			else{
-				//‚·‚×‚Ä‚ÌEPƒNƒ‰ƒX‚ÍEPObject‚ğŒp³‚·‚é
+				//ã™ã¹ã¦ã®EPã‚¯ãƒ©ã‚¹ã¯EPObjectã‚’ç¶™æ‰¿ã™ã‚‹
 				ss << "&EPObjectType,\n";
 
 				//ss << "0,/*tp_base*/\n";
@@ -770,7 +788,7 @@ void ClassInfo::UpdateClassInfo()
 		this->typeobjectCode.assign(ss.str());
 	}
 
-//–{—ˆ‚Í.iƒtƒ@ƒCƒ‹‚Éextend‚Å’è‹`‚·‚×‚«‚¾‚ªA‘å—Ê‚·‚¬‚Ä–Ê“|‚Èê‡‚Í‚±‚±‚É‘‚­
+//æœ¬æ¥ã¯.iãƒ•ã‚¡ã‚¤ãƒ«ã«extendã§å®šç¾©ã™ã¹ãã ãŒã€å¤§é‡ã™ãã¦é¢å€’ãªå ´åˆã¯ã“ã“ã«æ›¸ã
 void ClassInfo::SetAdditionalMethods()
 {
 	//GetIfInfo

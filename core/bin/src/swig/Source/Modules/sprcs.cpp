@@ -1,4 +1,4 @@
-/* -----------------------------------------------------------------------------
+ï»¿/* -----------------------------------------------------------------------------
  * See the LICENSE file for information on copyright, usage and redistribution
  * of SWIG, and the README file for authors - http://www.swig.org/release.html.
  *
@@ -19,13 +19,25 @@ using namespace std;
 typedef std::vector<string> Strings;
 typedef std::vector<Node*> Nodes;
 
+#ifndef _WIN32
+#define vsnprintf_s vsnprintf
+int sprintf_s(char* s, size_t n, const char* f, ...) {
+  va_list list;
+  va_start(list, f);
+  int r = sprintf(s, f, list);
+  va_end(list);
+  return r;
+}
+#include <algorithm>
+#endif
+
 #define ALERT(node_or_str,message) printf("(Alert) %s : " #message "\n", DohCheck(node_or_str) ? Char(Getattr((DOH*)node_or_str,"name")): (char*) node_or_str )
 
 // Compile conditions
-//	FREE_UNMANAGED_MEMORY		C++‘¤‚Åstring‚©‚çBSTR‚Ö‚Ì•ÏŠ·‚Ég—p‚µ‚½ƒƒ‚ƒŠ‚ğC#‘¤‚©‚ç‰ğ•ú‚·‚éƒR[ƒh‚ğ¶¬‚·‚é
-//	GENERATE_TRY_CATCH		C++‘¤‚Å‚ÌŠÖ”ŒÄo‚µ‚É”­¶‚µ‚½—áŠO‚ğ•ß‘¨‚·‚éƒR[ƒh‚ğ¶¬‚·‚é
-//	ADOPT_TEMPLATE_CLASS		template‚Æ‚µ‚Ä’è‹`‚³‚ê‚½ƒNƒ‰ƒX‚ğ¶¬‚·‚é ** –¢Š®¬ **
-//	GENERATE_OPT_CONSTRUCTOR	‚·‚×‚Ä‚Ìˆø”‚ğw’è‚µ‚½ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğ©“®“I‚É¶¬‚·‚é
+//	FREE_UNMANAGED_MEMORY		C++å´ã§stringã‹ã‚‰BSTRã¸ã®å¤‰æ›ã«ä½¿ç”¨ã—ãŸãƒ¡ãƒ¢ãƒªã‚’C#å´ã‹ã‚‰è§£æ”¾ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã‚’ç”Ÿæˆã™ã‚‹
+//	GENERATE_TRY_CATCH		C++å´ã§ã®é–¢æ•°å‘¼å‡ºã—æ™‚ã«ç™ºç”Ÿã—ãŸä¾‹å¤–ã‚’æ•æ‰ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã‚’ç”Ÿæˆã™ã‚‹
+//	ADOPT_TEMPLATE_CLASS		templateã¨ã—ã¦å®šç¾©ã•ã‚ŒãŸã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ ** æœªå®Œæˆ **
+//	GENERATE_OPT_CONSTRUCTOR	ã™ã¹ã¦ã®å¼•æ•°ã‚’æŒ‡å®šã—ãŸã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’è‡ªå‹•çš„ã«ç”Ÿæˆã™ã‚‹
 //
 #define	FREE_UNMANAGED_MEMORY		1
 #define	GENERATE_TRY_CATCH		1
@@ -51,7 +63,11 @@ Springhead C++/C# Options (available with -sprcs)\n";
 std::string TrimSuffix(DOHString* s, char* suffix);
 std::string Trim(char* pre, DOHString* s, char* suf);
 std::string GetString(DOHString* s);
+#ifdef _WIN32
 std::string DecodeType(DOHString* n, std::string& post = string());
+#else
+std::string DecodeType(DOHString* n, std::string& post);
+#endif
 void GetBaseList(Strings& rv, DOH* baseList, char* suffix);
 
 struct Field{
@@ -182,7 +198,7 @@ struct template_class_info_t {
 };
 typedef struct template_class_info_t TemplateClassInfo;
 
-// ƒtƒ@ƒCƒ‹o—Í‚Ì§Œäiƒ\[ƒX‚ğŒ©ˆÕ‚­‚·‚é‚½‚ßj
+// ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›ã®åˆ¶å¾¡ï¼ˆã‚½ãƒ¼ã‚¹ã‚’è¦‹æ˜“ãã™ã‚‹ãŸã‚ï¼‰
 //
 const int FD_CPP	= 0x00000001;	// SprExport .cpp file
 const int FD_CS		= 0x00000010;	// SprCSharp .cs file
@@ -210,7 +226,7 @@ const int FD_ALL	= FD_CPP | FD_CS | FD_CSP;
   #define ALIGNMENT	4
 #endif
 
-// try-catch code ‚ğo—Í‚·‚é‚©”Û‚©
+// try-catch code ã‚’å‡ºåŠ›ã™ã‚‹ã‹å¦ã‹
 //
 #define TC_PTR		true
 #define TC_VAL		false
@@ -396,7 +412,7 @@ public:
 
 		bool feature = false;
 		for (int i = 0; i < (int) members.size(); i++) {
-			if (GetFlagAttr(members[i], "feature:ignore")) { // %ignore‚É‚ ‚Á‚½‚çƒpƒX
+			if (GetFlagAttr(members[i], "feature:ignore")) { // %ignoreã«ã‚ã£ãŸã‚‰ãƒ‘ã‚¹
 				ALERT(members[i],"ignored:'%%ignore'");
 				continue;
 			}
@@ -407,22 +423,22 @@ public:
 			DUMP_NODE_INFO(fps, FD_ALL, "DescImp cdecl", ni);
 #endif
 
-			if (ni.is_variable == 0)	continue;	// •Ï”‚Å‚È‚¯‚ê‚ÎƒpƒX
-			if (ni.is_function == 1)	continue;	// •Ï”‚Å‚È‚¯‚ê‚ÎƒpƒX
-			if (EQ(ni.kind, "typedef"))	continue;	// typedef ‚ÍƒpƒX
+			if (ni.is_variable == 0)	continue;	// å¤‰æ•°ã§ãªã‘ã‚Œã°ãƒ‘ã‚¹
+			if (ni.is_function == 1)	continue;	// å¤‰æ•°ã§ãªã‘ã‚Œã°ãƒ‘ã‚¹
+			if (EQ(ni.kind, "typedef"))	continue;	// typedef ã¯ãƒ‘ã‚¹
 			if (EQc(ni.storage, "static")) {
 				if (ni.is_variable && EQ(ni.type, "q(const).int")) {
 					// static const
 					DUMP_NODE_INFO(fps, FD_CS, "DescImp cdecl: static", ni);
 					Printf(CS, "    const int %s = %s;\n", ni.uq_name, Getattr(members[i], "value"));
 				}
-				continue;				// static •Ï”‚ÍƒpƒX
+				continue;				// static å¤‰æ•°ã¯ãƒ‘ã‚¹
 			}
-			if (EQc(ni.access, "protected"))	continue;	// protected •Ï”‚ÍƒpƒX
-			if (EQc(ni.access, "private"))		continue;	// private •Ï”‚ÍƒpƒX
+			if (EQc(ni.access, "protected"))	continue;	// protected å¤‰æ•°ã¯ãƒ‘ã‚¹
+			if (EQc(ni.access, "private"))		continue;	// private å¤‰æ•°ã¯ãƒ‘ã‚¹
 
 			if (ni.is_function == 2 && ni.is_pointer) {
-				// typedef ‚³‚ê‚½ŠÖ”ƒ|ƒCƒ“ƒ^
+				// typedef ã•ã‚ŒãŸé–¢æ•°ãƒã‚¤ãƒ³ã‚¿
 				if ((EQ(ci.name, "UTTimerIf") && EQ(ni.name, "TimerFunc")) ||
 				    (EQ(ci.name, "PHHapticEngineIf") && EQ(ni.name, "Callback"))) {
 					Printf(CPP, "// SKIP: %s::%s (typedef'd function pointer)\n", ci.name, ni.name);
@@ -433,7 +449,7 @@ public:
 
 #if (ADOPT_TEMPLATE_CLASS == 1)
 			if (template_class) {
-				// template class ‚Ì‚Æ‚«‚Í template parameter ‚Ì’u‚«Š·‚¦‚ğ‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢
+				// template class ã®ã¨ãã¯ template parameter ã®ç½®ãæ›ãˆã‚’ã—ãªã„ã¨ã„ã‘ãªã„
 				TemplateClassInfo* tci = template_class_info_map[tc_name];
 				//replace_template_parameter(ni, *tci);
 			}
@@ -459,14 +475,14 @@ public:
 				}
 			}
 
-			// C#‚É‘Î‰‚·‚éŒ^‚ª‚ ‚é
+			// C#ã«å¯¾å¿œã™ã‚‹å‹ãŒã‚ã‚‹
 			else if (ni.is_intrinsic) {
-				// ƒ|ƒCƒ“ƒ^
+				// ãƒã‚¤ãƒ³ã‚¿
 				if (ni.is_pointer) {
 					SNAP_ANA_PATH1(fps, FD_ALL, "variable: pointer");
 					generate_accessor_for_type_intrinsic_pointer(fps, ni, ci);
 				}
-				// booliC++ bool <=> byte ‚Åó‚¯“n‚µ <=> C# boolj
+				// boolï¼ˆC++ bool <=> byte ã§å—ã‘æ¸¡ã— <=> C# boolï¼‰
 				else if (ni.is_bool) {
 					SNAP_ANA_PATH1(fps, FD_ALL, "variable: intrinsic: bool");
 					generate_accessor_for_type_intrinsic_bool(fps, ni, ci);
@@ -535,7 +551,7 @@ public:
 			}
 		}
 
-		// class ’¼‰º‚Ì enum ’è‹`
+		// class ç›´ä¸‹ã® enum å®šç¾©
 		//
 		Nodes enums;
 		FindNodeR(enums, n, "enum");
@@ -548,7 +564,7 @@ public:
 			FP_generate_enum_def(fps, FD_CS, __LINE__, "\t", enums[i], NULL, "DescImp");
 		}
 
-		// ŠÖ”¶¬‚ªw¦‚³‚ê‚Ä‚¢‚½‚È‚ç‚Î
+		// é–¢æ•°ç”ŸæˆãŒæŒ‡ç¤ºã•ã‚Œã¦ã„ãŸãªã‚‰ã°
 		if (both_desc_and_if) {
 #if (ADOPT_TEMPLATE_CLASS == 1)
 			IfImp(fps, topnode, n, true, tc_name);
@@ -557,21 +573,21 @@ public:
 #endif
 		}
 
-		// class ‚ÌI—¹
+		// class ã®çµ‚äº†
 		if (ci.name) {
 			// [cs]
 			//
 			Printf(CS,  "    }\n");
 		}
 
-		// Struct ƒNƒ‰ƒX‚Ì¶¬
+		// Struct ã‚¯ãƒ©ã‚¹ã®ç”Ÿæˆ
 		if (ci.name) {
 			generate_new_class_struct(fps, topnode, n, ci.name, ci.uq_name, feature);
 		}
 	}
 
 #ifdef	ORIGINAL_CODE
-	//	\‘¢‘Ì‚²‚Æ‚Ìˆ—(TypeDesc‚Ìì¬‚È‚Ç)
+	//	æ§‹é€ ä½“ã”ã¨ã®å‡¦ç†(TypeDescã®ä½œæˆãªã©)
 	void TypeDesc(DOHFile* cpp, DOHFile* csp, Node* n){		
 		DOHString* fullname = Getattr(n, "name");
 		DOHString* name = Getattr(n, "sym:name");
@@ -635,9 +651,9 @@ public:
 		Fields normalVars;
 		for(unsigned i = 0; i < memberVars.size(); ++i){
 			Node* m = memberVars[i];
-			if (Cmp(Getattr(m, "kind"), "variable") != 0) continue;			//•Ï”‚Å‚È‚¯‚ê‚ÎƒpƒX
-			if (Cmp(Getattr(m, "storage"), "static") == 0) continue;		//static •Ï”‚ÍƒpƒX
-			if (Cmp(Getattr(m, "feature:immutable"), "1") == 0) continue;	//const •Ï”‚ÍƒpƒX
+			if (Cmp(Getattr(m, "kind"), "variable") != 0) continue;			//å¤‰æ•°ã§ãªã‘ã‚Œã°ãƒ‘ã‚¹
+			if (Cmp(Getattr(m, "storage"), "static") == 0) continue;		//static å¤‰æ•°ã¯ãƒ‘ã‚¹
+			if (Cmp(Getattr(m, "feature:immutable"), "1") == 0) continue;	//const å¤‰æ•°ã¯ãƒ‘ã‚¹
 			normalVars.push_back(Field());
 			Node* memName = Getattr(m, "sym:name");
 			normalVars.back().name = GetString(memName);
@@ -671,7 +687,7 @@ public:
 					}
 				}
 			}
-			if (typeBase.compare(0, 5, "enum ")==0){	//	enumŒ^
+			if (typeBase.compare(0, 5, "enum ")==0){	//	enumå‹
 				string enumFullname = typeBase.substr(5);
 				size_t f = enumFullname.rfind("::");
 				string enumName = enumFullname;
@@ -705,7 +721,7 @@ public:
 		Printf(cpp, "	db->RegisterDesc(desc);\n");
 
 		if (clsType == DESC || clsType == STATE){
-			//	Desc State‚ğƒNƒ‰ƒXƒƒ“ƒo‚Æ‚µ‚ÄéŒ¾‚µCGetDesc() SetDesc()‚ğéŒ¾‚·‚éƒ}ƒNƒ‚ÌéŒ¾
+			//	Desc Stateã‚’ã‚¯ãƒ©ã‚¹ãƒ¡ãƒ³ãƒã¨ã—ã¦å®£è¨€ã—ï¼ŒGetDesc() SetDesc()ã‚’å®£è¨€ã™ã‚‹ãƒã‚¯ãƒ­ã®å®£è¨€
 			Printf(hpp, "#define SPR_DECLMEMBEROF_%s \\\n", name);
 			Printf(hpp, "protected:\\\n");
 			for (unsigned i=0; i<normalVars.size(); ++i){
@@ -719,15 +735,15 @@ public:
 			}
 			Printf(hpp, "public:\\\n");
 
-			//	Desc‚Ìê‡CGetDescAddress‚ğ–³Œø‚É‚·‚éD
+			//	Descã®å ´åˆï¼ŒGetDescAddressã‚’ç„¡åŠ¹ã«ã™ã‚‹ï¼
 			if (clsType == DESC) {
 				Printf(hpp, "	virtual const void* GetDescAddress() const { return NULL; }\\\n");
 			}
 			
-			//	SetDescŠÖ”
+			//	SetDescé–¢æ•°
 			char* suffix = (clsType==STATE) ? "State" : "Desc";
 			Printf(hpp, "	virtual void Set%s(const void* ptr){ \\\n", suffix);
-			//	Šî–{ƒNƒ‰ƒX‚ÌSetDesc/SetState‚ğŒÄ‚Ô
+			//	åŸºæœ¬ã‚¯ãƒ©ã‚¹ã®SetDesc/SetStateã‚’å‘¼ã¶
 			bases.clear();
 			GetBaseList(bases, Getattr(n, "baselist"), "Desc");
 			for (unsigned i=0; i<bases.size(); ++i)
@@ -736,7 +752,7 @@ public:
 			GetBaseList(bases, Getattr(n, "baselist"), "State");
 			for (unsigned i=0; i<bases.size(); ++i)
 				Printf(hpp, "		%s::SetState((%sState*)(%s*)ptr);	\\\n", bases[i].c_str(), bases[i].c_str(), name);
-			//	ƒƒ“ƒo•Ï”‚ğİ’è‚·‚é
+			//	ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’è¨­å®šã™ã‚‹
 			for (unsigned i=0; i<normalVars.size(); ++i){
 				Field& var = normalVars[i];
 				Printf(hpp, "		%s = ((%s*)ptr)->%s;	\\\n", var.name.c_str(), name, var.name.c_str());
@@ -746,12 +762,12 @@ public:
 			}
 			Printf(hpp, "	}\\\n");
 
-			//	GetDescŠÖ”
+			//	GetDescé–¢æ•°
 			Printf(hpp, "	virtual bool Get%s(void* ptr) const { \\\n", suffix);
 			if (clsType == DESC){
 				Printf(hpp, "		BeforeGetDesc();	\\\n");
 			}
-			//	Šî–{ƒNƒ‰ƒX‚ÌGetDesc/GetState‚ğŒÄ‚Ô
+			//	åŸºæœ¬ã‚¯ãƒ©ã‚¹ã®GetDesc/GetStateã‚’å‘¼ã¶
 			bases.clear();
 			GetBaseList(bases, Getattr(n, "baselist"), "Desc");
 			for (unsigned i=0; i<bases.size(); ++i)
@@ -760,7 +776,7 @@ public:
 			GetBaseList(bases, Getattr(n, "baselist"), "State");
 			for (unsigned i=0; i<bases.size(); ++i)
 				Printf(hpp, "		%s::GetState((%sState*)(%s*)ptr);	\\\n", bases[i].c_str(), bases[i].c_str(), name);
-			//	ƒƒ“ƒo•Ï”‚ğ“Ç‚İo‚·
+			//	ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’èª­ã¿å‡ºã™
 			for (unsigned i=0; i<normalVars.size(); ++i){
 				Field& var = normalVars[i];
 				Printf(hpp, "		((%s*)ptr)->%s = %s;	\\\n", name, var.name.c_str(), var.name.c_str());
@@ -828,7 +844,7 @@ public:
 #endif
 
 		for (int i = 0; i < (int) members.size(); i++) {
-			if (GetFlagAttr(members[i], "feature:ignore")) { // %ignore‚É‚ ‚Á‚½‚çƒpƒX
+			if (GetFlagAttr(members[i], "feature:ignore")) { // %ignoreã«ã‚ã£ãŸã‚‰ãƒ‘ã‚¹
 				ALERT(members[i],"ignored:'%%ignore'");
 				continue;
 			}
@@ -839,7 +855,7 @@ public:
 			DUMP_NODE_INFO(fps, FD_ALL, "IfImp cdecl", ni);
 #endif
 
-			if (!ni.is_function)		continue;	// ŠÖ”‚Å‚È‚¯‚ê‚ÎƒpƒX
+			if (!ni.is_function)		continue;	// é–¢æ•°ã§ãªã‘ã‚Œã°ãƒ‘ã‚¹
 #if (GATHER_INFO == 1)
 			const char* drop_reason = NULL;
 			if (EQc(ni.access, "private"))		drop_reason = "private";
@@ -849,27 +865,27 @@ public:
 			if (BEGINWITH(ni.uq_type, "UTStack"))	drop_reason = "special";
 			if (drop_reason) PRINTinfo(gip, "drop_function: %s.%s (%s)\n", ni.uq_type, ni.sym_name, drop_reason);
 #endif
-			if (EQc(ni.access, "private"))	continue;	// private ŠÖ”‚ÍƒpƒX
-			if (EQc(ni.access, "protected"))	continue;	// protected ŠÖ”‚ÍƒpƒX
-			//if (EQc(ni.storage, "static"))	continue;	// static ŠÖ”‚ÍƒpƒX
+			if (EQc(ni.access, "private"))	continue;	// private é–¢æ•°ã¯ãƒ‘ã‚¹
+			if (EQc(ni.access, "protected"))	continue;	// protected é–¢æ•°ã¯ãƒ‘ã‚¹
+			//if (EQc(ni.storage, "static"))	continue;	// static é–¢æ•°ã¯ãƒ‘ã‚¹
 			if (EQc(ni.storage, "virtual") && !class_already_defined) {
 				Printf(stderr, "Error: %s::%s() is a virtual function.\n", ni.sym_name, ni.name);
 				errorFlag = true;
-				continue;					//XXIf ‚É‚ÍCvirtual ŠÖ”‚ª‚ ‚Á‚Ä‚Í‚È‚ç‚È‚¢D
+				continue;					//XXIf ã«ã¯ï¼Œvirtual é–¢æ•°ãŒã‚ã£ã¦ã¯ãªã‚‰ãªã„ï¼
 			}
-			//if (Getattr(members[i], "defaultargs"))	continue;	//ƒfƒtƒHƒ‹ƒgˆø”‚É‚æ‚éƒoƒŠƒG[ƒVƒ‡ƒ“‚Í•s—v
+			//if (Getattr(members[i], "defaultargs"))	continue;	//ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå¼•æ•°ã«ã‚ˆã‚‹ãƒãƒªã‚¨ãƒ¼ã‚·ãƒ§ãƒ³ã¯ä¸è¦
 			if (BEGINWITH(ni.uq_name, "operator"))	continue;
 			// specical trap
 			if (BEGINWITH(ni.uq_type, "UTStack"))	continue;
 
 #if (ADOPT_TEMPLATE_CLASS == 1)
 			if (template_class) {
-				// template class ‚Ì‚Æ‚«‚Í template parameter ‚Ì’uŠ·‚¦‚ğ‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢
+				// template class ã®ã¨ãã¯ template parameter ã®ç½®æ›ãˆã‚’ã—ãªã„ã¨ã„ã‘ãªã„
 				TemplateClassInfo* tci = template_class_info_map[tc_name];
 				replace_template_parameter(ni, *tci);
 			}
 #endif
-			// ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·ŠÖ”‚ªÀÛ‚É”z—ñ‚ğ•Ô‚·ê‡i%feature("returns_array") ‚Ìˆ—j
+			// ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™é–¢æ•°ãŒå®Ÿéš›ã«é…åˆ—ã‚’è¿”ã™å ´åˆï¼ˆ%feature("returns_array") ã®å‡¦ç†ï¼‰
 			if (GetFlagAttr(members[i], "feature:returns_array")) {
 				PRINTinfo(gip, "returns_array: %s %s\n", ci.name, ni.name);
 				ni.pointer_level = 0;
@@ -890,8 +906,8 @@ public:
 				PRINTinfo(gip, "argument: %s%s\n", (ai.is_struct ? "struct: " : ""), ai.cpp_type);
 			}
 #endif
-			// ŠÖ”ˆø”‚ğ delegate ‚·‚é‚½‚ß‚Ì‘Oˆ—
-			//	typedef ‚³‚ê‚½ŠÖ”
+			// é–¢æ•°å¼•æ•°ã‚’ delegate ã™ã‚‹ãŸã‚ã®å‰å‡¦ç†
+			//	typedef ã•ã‚ŒãŸé–¢æ•°
 			function_count++;
 			int need_comma = 0;
 			string signature_args("(");
@@ -949,13 +965,13 @@ public:
 				signature_args_map[delegate_key] = signature_args;
 				PRINTinfo(gip, "delegate_func_map: %s %s%s\n", ni.cs_type, delegate_key.c_str(), delegate_args.c_str());
 			}
-			//if (ni.is_function == 2) continue;	// typedef ‚³‚ê‚½ŠÖ”©‘Ì‚ÍƒpƒX
+			//if (ni.is_function == 2) continue;	// typedef ã•ã‚ŒãŸé–¢æ•°è‡ªä½“ã¯ãƒ‘ã‚¹
 
 			// [cpp]
 			//
 			SNAP_ANA_PATH1(fps, FD_CPP, "function: cdecl");
 			Node* is_enum_node = (ni.is_struct) ? FindNodeByAttrR(topnode, "enumtype", ni.type) : NULL;
-			// ŠÖ”ŒÄo‚µˆ—
+			// é–¢æ•°å‘¼å‡ºã—å‡¦ç†
 			char* return_type;
 			if	(ni.is_void)		{ return_type = "void"; }
 			else if (ni.is_bool)		{ return_type = "char"; }
@@ -971,27 +987,27 @@ public:
 			if (ni.num_args > 0) {
 				argnames = new char*[ni.num_args];
 			}
-			// ŠÖ”’è‹`
+			// é–¢æ•°å®šç¾©
 			Printf(CPP, "    __declspec(dllexport) %s __cdecl Spr_%s_%s%s(", return_type, ci.uq_name, ni.uq_name, overname(ni));
 			int sep_needed = 0;
 			if (!ni.is_static) {
 				Printf(CPP, "HANDLE _this");
 				sep_needed = 1;
 			}
-			// ‰¼ˆø”•À‚Ñ
+			// ä»®å¼•æ•°ä¸¦ã³
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
 				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
-				char* arg_type = ((ai.is_intrinsic && !ai.is_pointer) ? ai.cpp_type : ((ai.is_string) ? "BSTR" : "HANDLE"));
+				char* arg_type = (char*) ((ai.is_intrinsic && !ai.is_pointer) ? ai.cpp_type : ((ai.is_string) ? "BSTR" : "HANDLE"));
 				if (ai.is_vector)   arg_type = "HANDLE";
-				if (ai.is_bool)	    arg_type = "char";		// booliC++ bool <=> byte ‚Åó‚¯“n‚µ <=> C# boolj
+				if (ai.is_bool)	    arg_type = "char";		// boolï¼ˆC++ bool <=> byte ã§å—ã‘æ¸¡ã— <=> C# boolï¼‰
 				if (is_enum_node_a) arg_type = "int";		// ai.cpp_type;
 				if (sep_needed) Printf(CPP, ", ");
 				Printf(CPP, "%s %s", arg_type, argname(ai.uq_name, j));
 				sep_needed = 1;
 			}
 			Printf(CPP, ") {\n");
-			// Àˆø”‚ÉŠÖ‚·‚é‘Oˆ—
+			// å®Ÿå¼•æ•°ã«é–¢ã™ã‚‹å‰å‡¦ç†
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
 				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
@@ -1010,9 +1026,9 @@ public:
 					}
 					argnames[j] = Char(NewString(argbuff));
 				}
-				// C#‚É‘Î‰‚·‚éŒ^‚ª‚ ‚é
+				// C#ã«å¯¾å¿œã™ã‚‹å‹ãŒã‚ã‚‹
 				else if (ai.is_intrinsic) {
-					// ƒ|ƒCƒ“ƒ^
+					// ãƒã‚¤ãƒ³ã‚¿
 					if (ai.is_void_ptr) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: intrinsic: pointer");
 						sprintf(argbuff, "%s", ai.name);
@@ -1021,13 +1037,13 @@ public:
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: intrinsic: pointer");
 						sprintf(argbuff, "(%s) %s", ai.cpp_type, ai.name);
 					}
-					// booliC++ bool <=> byte ‚Åó‚¯“n‚µ <=> C# boolj
+					// boolï¼ˆC++ bool <=> byte ã§å—ã‘æ¸¡ã— <=> C# boolï¼‰
 					else if (ai.is_bool) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: intrinsic: bool");
 						Printf(CPP, "\tbool %s = (%s == 0) ? false : true;\n", tmpname, ai.name);
 						sprintf(argbuff, "(%s) %s", ai.cpp_type, tmpname);
 					}
-					// ’l‚Ü‚½‚ÍQÆ
+					// å€¤ã¾ãŸã¯å‚ç…§
 					else {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: intrinsic: value or value&");
 						sprintf(argbuff, "%s", argname(ai.name, j));
@@ -1036,12 +1052,12 @@ public:
 				}
 				// string
 				else if (ai.is_string) {
-					// ƒ|ƒCƒ“ƒ^
+					// ãƒã‚¤ãƒ³ã‚¿
 					if (ai.is_pointer) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: string: pointer  ** NOT IMPLEMENTED **");
 						sprintf(argbuff, "(%s) %s", ai.cpp_type, ai.name);
 					}
-					// string or string&ió‚¯“n‚µ‚Í BSTRj
+					// string or string&ï¼ˆå—ã‘æ¸¡ã—ã¯ BSTRï¼‰
 					else {
 						PRINTF(fps, FD_CPP, "//_[%s: %d] %s\n", "function_args: string", __LINE__, ai.is_reference ? " reference" : "");
 						Printf(CPP, "\tstring %s(\"\");\n", tmpname);
@@ -1051,12 +1067,12 @@ public:
 				}
 				// struct
 				else if (ai.is_struct) {
-					// ƒ|ƒCƒ“ƒ^
+					// ãƒã‚¤ãƒ³ã‚¿
 					if (ai.is_pointer) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: struct pointer");
 						sprintf(argbuff, "(%s) %s", ai.cpp_type, ai.name);
 					}
-					// QÆ
+					// å‚ç…§
 					else if (ai.is_reference) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_args: struct reference");
 						sprintf(argbuff, "(%s) *((%s*) %s)", ai.cpp_type, ai.uq_type, ai.name);
@@ -1080,7 +1096,7 @@ public:
 				}
 				argnames[j] = Char(NewString(argbuff));
 			}
-			// ŠÖ”–{‘Ì
+			// é–¢æ•°æœ¬ä½“
 			SNAP_ANA_PATH2(fps, FD_CPP, "function_body", ni.cpp_type);
 			is_enum_node = (ni.is_struct) ? FindNodeByAttrR(topnode, "enumtype", ni.type) : NULL;
 #if (DUMP == 1)
@@ -1215,7 +1231,7 @@ public:
 			TRY_end();
 			CATCH(8);
 
-			// ŠÖ”’l‚ÉŠÖ‚·‚éˆ—
+			// é–¢æ•°å€¤ã«é–¢ã™ã‚‹å‡¦ç†
 			if (!ni.is_void) {
 				PRINTinfo(gip, "returns: %s\n", ni.cpp_type);
 				// vector or array
@@ -1223,35 +1239,35 @@ public:
 					WRAPPER_NAME_PRINT(fps, FD_CPP, __LINE__, ni, "function_return");
 					Printf(CPP, "\treturn (HANDLE) _ptr;\n");
 				}
-				// C# ‚É‘Î‰‚·‚éŒ^‚ª‚ ‚é
+				// C# ã«å¯¾å¿œã™ã‚‹å‹ãŒã‚ã‚‹
 				else if (ni.is_intrinsic) {
-					// ƒ|ƒCƒ“ƒ^Œ^‚Í HANDLE ‚É‚µ‚Ä•Ô‚·
+					// ãƒã‚¤ãƒ³ã‚¿å‹ã¯ HANDLE ã«ã—ã¦è¿”ã™
 					if (ni.is_pointer) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_return: intrinsic: pointer");
 						Printf(CPP, "\treturn (HANDLE) _ptr;\n");
 					}
-					// booliC++ bool <=> byte ‚Åó‚¯“n‚µ <=> C# boolj
+					// boolï¼ˆC++ bool <=> byte ã§å—ã‘æ¸¡ã— <=> C# boolï¼‰
 					else if (ni.is_bool) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_return: intrinsic: bool");
 						Printf(CPP, "\tchar _ret = _val ? 1 : 0;\n");
 						Printf(CPP, "\treturn _ret;\n");
 					}
-					// ’l‚Ü‚½‚ÍQÆ‚Í‚»‚Ì‚Ü‚Ü•Ô‚·
+					// å€¤ã¾ãŸã¯å‚ç…§ã¯ãã®ã¾ã¾è¿”ã™
 					else {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_return: intrinsic");
 						Printf(CPP, "\treturn _val;\n");
 					}
 				}
-				// string Œ^
+				// string å‹
 				else if (ni.is_string) {
-					// ƒ|ƒCƒ“ƒ^Œ^iBSTR ‚É‚µ‚Ä‚»‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·j
+					// ãƒã‚¤ãƒ³ã‚¿å‹ï¼ˆBSTR ã«ã—ã¦ãã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™ï¼‰
 					if (ni.is_pointer) {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_return: string: pointer  ** NOT IMPLEMENTED **");
 						Printf(CPP, "\tBSTR wstr = NULL;\n");
 						generate_string_get(CPP, "\t", "wstr", NULL, "_val");
 						Printf(CPP, "\treturn (HANDLE) &result;\n");
 					}
-					// BSTR ‚É‚µ‚Ä•Ô‚·
+					// BSTR ã«ã—ã¦è¿”ã™
 					else {
 						SNAP_ANA_PATH1(fps, FD_CPP, "function_return: string");
 						Printf(CPP, "\tBSTR wstr = NULL;\n");
@@ -1259,7 +1275,7 @@ public:
 						Printf(CPP, "\treturn (BSTR) wstr;\n");
 					}
 				}
-				// struct Œ^
+				// struct å‹
 				else if (ni.is_struct) {
 					PRINTF(fps, FD_CPP, "//_[%s: %d] %s\n", "function_return: struct", __LINE__, 
 						is_enum_node ? " enum" : ni.is_pointer ? " pointer" : ni.is_reference ? " reference" : "");
@@ -1296,7 +1312,7 @@ public:
 				memset(cleanup1, 0, sizeof(void*) * ni.num_args);
 				memset(cleanup2, 0, sizeof(void*) * ni.num_args);
 			}
-			// ŠÖ”‚ªˆø”‚É‚È‚Á‚Ä‚¢‚é‚Æ‚«‚Í‘Oˆ—‚ª•K—v
+			// é–¢æ•°ãŒå¼•æ•°ã«ãªã£ã¦ã„ã‚‹ã¨ãã¯å‰å‡¦ç†ãŒå¿…è¦
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
 				string key(ci.uq_name);
@@ -1311,7 +1327,7 @@ public:
 				}
 			}
 			
-			// ŠÖ”’è‹`
+			// é–¢æ•°å®šç¾©
 			if (ni.is_vector || ni.is_array) {
 				char* wrapper_class = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return_type");
 				Printf(CS, "\tpublic %s%s", (ni.is_static ? "static" : ""), wrapper_class);
@@ -1325,7 +1341,7 @@ public:
 				Printf(CS, "\tpublic %s%s", (ni.is_static ? "static " : ""), ni.cs_type);
 			}
 			Printf(CS,  " %s(", ni.cs_name);
-			// ˆø”•À‚Ñ
+			// å¼•æ•°ä¸¦ã³
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
 				char* uqname = argname(ai.uq_name, j);
@@ -1334,7 +1350,7 @@ public:
 				key.append(".");
 				key.append(uqname);
 				if (delegate_func_map.find(key) != delegate_func_map.end()) {
-					// ŠÖ”
+					// é–¢æ•°
 					Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
 				}
 				else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
@@ -1356,7 +1372,7 @@ public:
 				argnames[j] = csname;
 			}
 			Printf(CS, ") {\n");
-			// ˆø”‚ÉŠÖ‚·‚é‘Oˆ—
+			// å¼•æ•°ã«é–¢ã™ã‚‹å‰å‡¦ç†
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
@@ -1382,7 +1398,7 @@ public:
 				}
 				*/
 			}
-			// ŠÖ”–{‘Ì
+			// é–¢æ•°æœ¬ä½“
 			SNAP_ANA_PATH1(fps, FD_CS, "function_body");
 			is_enum_node = (ni.is_struct) ? FindNodeByAttrR(topnode, "enumtype", ni.type) : NULL;
 			if (ni.is_bool) {
@@ -1414,7 +1430,7 @@ public:
 				Printf(CS, "\t    ");
 			}
 			Printf(CS, "SprExport.Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			// ˆø”•À‚Ñ
+			// å¼•æ•°ä¸¦ã³
 			sep_needed = 0;
 			if (!ni.is_static) {
 				Printf(CS, "(IntPtr) _this");
@@ -1439,7 +1455,7 @@ public:
 				sep_needed = 1;
 			}
 			Printf(CS, ");\n");
-			// ì‹Æ•Ï”‚Ì‰ğ•ú
+			// ä½œæ¥­å¤‰æ•°ã®è§£æ”¾
 			if (argnames) delete argnames;
 			for (int j = 0; j < ni.num_args; j++) {
 				if (cleanup1[j]) Printf(CS, "            Marshal.FreeBSTR(%s);\n", cleanup1[j]);
@@ -1447,7 +1463,7 @@ public:
 			}
 			if (cleanup1) delete cleanup1;
 			if (cleanup2) delete cleanup2;
-			// ŠÖ”–ß‚è’l‚Ì‚½‚ß‚ÌŒãˆ—
+			// é–¢æ•°æˆ»ã‚Šå€¤ã®ãŸã‚ã®å¾Œå‡¦ç†
 			if (ni.is_bool) {
 				SNAP_ANA_PATH1(fps, FD_CS, "function_return: intrinsic: bool");
 				Printf(CS, "\t    return (ret == 0) ? false : true;\n");
@@ -1499,7 +1515,7 @@ public:
 
 			// [csp]
 			//
-			// ŠÖ”éŒ¾
+			// é–¢æ•°å®£è¨€
 			SNAP_ANA_PATH1(fps, FD_CSP, "function: cdecl");
 			Printf(CSP, "\t%s\n", DLLIMPORT);
 			//
@@ -1523,10 +1539,10 @@ public:
 			}
 			else {
 				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: ");
-				char* cpp_return_type = (ni.is_bool) ? "char" : ni.cs_im_type;
+				char* cpp_return_type = (ni.is_bool) ? (char*) "char" : ni.cs_im_type;
 				Printf(CSP, "\tpublic static extern %s Spr_%s_%s%s(", cpp_return_type, ci.uq_name, ni.uq_name, overname(ni));
 			}
-			// ˆø”•À‚Ñ
+			// å¼•æ•°ä¸¦ã³
 			sep_needed = 0;
 			if (!ni.is_static) {
 				Printf(CSP, "IntPtr _this");
@@ -1553,7 +1569,7 @@ public:
 #endif
 		}
 
-		// IfImp ‚É‚à enum ‚ª‚ ‚é
+		// IfImp ã«ã‚‚ enum ãŒã‚ã‚‹
 		//
 		if (!class_already_defined) {
 			Nodes enums;
@@ -1626,11 +1642,11 @@ public:
 		bool is_state = ENDWITH(name, "State");
 
 		if (direct.size() == 0) {
-			// Œp³‚È‚µ
+			// ç¶™æ‰¿ãªã—
 			return string();
 		}
 		else if (direct.size() == 1) {
-			// ’¼Ú‚ÌŒp³Œ³‚Íˆê‚Â‚Ì‚İ
+			// ç›´æ¥ã®ç¶™æ‰¿å…ƒã¯ä¸€ã¤ã®ã¿
 			(void) resolve_inheritance(fps, top, direct[0], parents);
 			const char* pname = Char(Getattr(direct[0], "name"));
 			bool is_p_desc  = ENDWITH(pname, "Desc");
@@ -1645,11 +1661,11 @@ public:
 				bool is_p_desc  = ENDWITH(pname, "Desc");
 				bool is_p_state = ENDWITH(pname, "State");
 				if (is_p_desc) {
-					// Desc Œp³ƒŠƒXƒg‚É‰Á‚¦‚é
+					// Desc ç¶™æ‰¿ãƒªã‚¹ãƒˆã«åŠ ãˆã‚‹
 					(void) resolve_inheritance(fps, top, direct[i], parents);
 					parents.push_back(direct[i]);
 				} else if (is_p_state) {
-					// C#@‚ÌŒp³Œ³‚Í State ‚ğŒp³Œ³‚Æ‚·‚é
+					// C#ã€€ã®ç¶™æ‰¿å…ƒã¯ State ã‚’ç¶™æ‰¿å…ƒã¨ã™ã‚‹
 					(void) resolve_inheritance(fps, top, direct[i], parents);
 					return pname;
 				}
@@ -1660,7 +1676,7 @@ public:
 				const char* pname = Char(Getattr(direct[i], "name"));
 				bool is_p_state = ENDWITH(pname, "State");
 				if (is_p_state) {
-					// State ‚Í State ‚Ì‚İŒp³‰Â
+					// State ã¯ State ã®ã¿ç¶™æ‰¿å¯
 					(void) resolve_inheritance(fps, top, direct[i], parents);
 					return pname;
 				} else {
@@ -1959,7 +1975,7 @@ public:
 #endif
 
 #if (ADOPT_TEMPLATE_CLASS == 1)
-		// template class î•ñ‚ğW‚ß‚é
+		// template class æƒ…å ±ã‚’é›†ã‚ã‚‹
 		AddTemplateClassR(top, template_class_map, template_function_map, template_class_info_map);
 #if (GATHER_INFO == 1)
 		for (auto itr = template_class_map.begin(); itr != template_class_map.end(); itr++) {
@@ -2119,7 +2135,7 @@ public:
 					PRINTinfo(gip, "enum: %s\n", name);
 				}
 			}
-			// Vec3f,Vec3d ‚Ì‚æ‚¤‚É float/double ‚ÌƒyƒA‚Æ‚È‚Á‚Ä‚¢‚éƒNƒ‰ƒX‚ğŒ©‚Â‚¯‚é
+			// Vec3f,Vec3d ã®ã‚ˆã†ã« float/double ã®ãƒšã‚¢ã¨ãªã£ã¦ã„ã‚‹ã‚¯ãƒ©ã‚¹ã‚’è¦‹ã¤ã‘ã‚‹
 			char* name = unqualified_name(Char(Getattr(n, "name")));
 			if (!ENDWITH(name, "If")) {
 				char last_ch = name[strlen(name)-1];
@@ -2134,7 +2150,7 @@ public:
 				}
 			}
 			// ---- ---- ---- ----
-			// .i ƒtƒ@ƒCƒ‹‚Å’è‹`‚³‚ê‚½ %feature:operator:macro î•ñ‚ğ‚±‚±‚ÅûW‚·‚é
+			// .i ãƒ•ã‚¡ã‚¤ãƒ«ã§å®šç¾©ã•ã‚ŒãŸ %feature:operator:macro æƒ…å ±ã‚’ã“ã“ã§åé›†ã™ã‚‹
 			void* attrline = GetFlagAttr(n, "feature:operator:macro");
 			if (attrline) {
 				string macroline = strip_whites(Char(attrline));
@@ -2208,7 +2224,7 @@ public:
 #endif
 
 		// ----- ----- ----- ----- -----
-		// qƒNƒ‰ƒXƒ}ƒbƒv‚ğ‘·ˆÈ‰º‚ÉŠg‘å
+		// å­ã‚¯ãƒ©ã‚¹ãƒãƒƒãƒ—ã‚’å­«ä»¥ä¸‹ã«æ‹¡å¤§
 		bool updated = true;
 
 		while (updated) {
@@ -2237,7 +2253,7 @@ public:
 			}
 		}
 
-		/* iƒfƒoƒbƒO—p•\¦j
+		/* ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨è¡¨ç¤ºï¼‰
 		std::cout << "  -----  " << std::endl;
 		for (std::map<string, std::vector<string> >::iterator it = childClassMap.begin(); it != childClassMap.end(); it++) {
 			std::cout << it->first << " <-- ";
@@ -2359,7 +2375,7 @@ public:
 		Printf(csp, "    }\n");	// partial class
 		Printf(csp, "}\n");	// namespace SprCs
 
-		//	ƒcƒŠ[‚Ìƒ_ƒ“ƒv‚ğo—Í
+		//	ãƒ„ãƒªãƒ¼ã®ãƒ€ãƒ³ãƒ—ã‚’å‡ºåŠ›
 /***
 		char filename[] = "swig_sprcs_\0                       ";
 		strcat(filename, Char(Getattr(modules.front(), "name")));
@@ -2371,7 +2387,7 @@ public:
 		filename.append(".log");
 		log = NewFile((char*)filename.c_str(), "w", NULL);
 		if (!log) {
-			FileErrorDisplay("swig_sprcs.log");
+			FileErrorDisplay((char*) "swig_sprcs.log");
 			SWIG_exit(EXIT_FAILURE);
 		}
 		DumpNode(log, top);
@@ -2386,7 +2402,7 @@ public:
 
 	void create_wrapper_accessor_file(DOHFile* fps[3], Node* top, char* cname) {
 		// ------------------------------------------------------------------------------
-		//  o—Í‚·‚éƒfƒBƒŒƒNƒgƒŠ‚ÍA".i" ƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘Î‚Åw’è‚·‚éB
+		//  å‡ºåŠ›ã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¯ã€".i" ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ã§æŒ‡å®šã™ã‚‹ã€‚
 		//
 		char* wf_outdir[3] = { "SprExport\\tmp", "SprCSharp\\tmp", "SprImport\\tmp" };
 		// ------------------------------------------------------------------------------
@@ -2440,7 +2456,7 @@ public:
 		string* psname = new string(pname);
 		char* ctype = Char(nodeType(cn));
 		char* ckind = Char(Getattr(cn, "kind"));
-		ctype = ctype ? ctype : "";
+		ctype = ctype ? ctype : (char*) "";
 		if (ENDWITH(pname, "If"))	return;
 		if (ENDWITH(pname, "Dedc"))	return;
 		if (GetFlagAttr(pn, "deature:struct"))	return;
@@ -2486,12 +2502,12 @@ public:
 
 	void DumpNode(DOHFile* file, Node *obj) {
 		PrintIndent(file, 0);
-		//	ƒm[ƒh‚Ì•\¦
+		//	ãƒãƒ¼ãƒ‰ã®è¡¨ç¤º
 		Printf(file, "+++ %s ----------------------------------------\n", nodeType(obj));
 		Iterator ki;
 		Node *cobj;
 		ki = First(obj);
-		//	ƒm[ƒh‚Ì‚à‚Â‘®«‚Ì•\¦
+		//	ãƒãƒ¼ãƒ‰ã®ã‚‚ã¤å±æ€§ã®è¡¨ç¤º
 		while (ki.key) {
 			String *k = ki.key;
 			if ((Cmp(k, "nodeType") == 0) || (Cmp(k, "firstChild") == 0) || (Cmp(k, "lastChild") == 0) ||
@@ -2548,7 +2564,7 @@ public:
 			}
 			ki = Next(ki);
 		}
-		//	qƒm[ƒh‚Ì•\¦
+		//	å­ãƒãƒ¼ãƒ‰ã®è¡¨ç¤º
 		cobj = firstChild(obj);
 		if (cobj) {
 			indent_level += 4;
@@ -2590,11 +2606,11 @@ public:
 		int is_newable = is_newable_class(node) && !is_virtual(struct_info->name);
 		if (is_newable == 0) return;
 
-		// Œp³Œ³ƒNƒ‰ƒX‚ÌƒŠƒXƒg‚ğæ“¾‚·‚é (Desc/State ‚Ì‚İ)
+		// ç¶™æ‰¿å…ƒã‚¯ãƒ©ã‚¹ã®ãƒªã‚¹ãƒˆã‚’å–å¾—ã™ã‚‹ (Desc/State ã®ã¿)
 		SNAP_ANA_PATH2(fps, FD_CS, "generate: class", uq_name);
 		Nodes parents;
 		string inherit = resolve_inheritance(fps, topnode, node, parents);
-		reverse(parents.begin(), parents.end());
+		std::reverse(parents.begin(), parents.end());
 		Strings bases;
 		if (!inherit.empty()) {
 			bases.push_back(unqualified_name((char*) inherit.c_str()));
@@ -2796,7 +2812,7 @@ public:
 		Printf(CS, "    public partial class %s", name);
 
 		if (bases.size() > 0) {
-			// UTRefCount ‚ÍŒp³Œ³‚É‚Í“ü‚ê‚È‚¢
+			// UTRefCount ã¯ç¶™æ‰¿å…ƒã«ã¯å…¥ã‚Œãªã„
 			std::vector<string> inherits;
  			for (int i = 0; i < (int) bases.size(); ++i) {
 				if (!EQ(bases[i].c_str(), "UTRefCount")) {
@@ -2864,20 +2880,20 @@ public:
 			// attribute specification
 			//	%feature("operator", def="spec[:spec]...") Spr::CLASS
 			//	sepc:		op-sym,types,[func-name][,type[,type]]
-			//	op-sym:		‰‰Zq‹L†i+,- ‚È‚Çj
-			//	types="r12":	"r12" ‚Í‚»‚ê‚¼‚ê ‰‰ZŒ‹‰Ê,ƒIƒyƒ‰ƒ“ƒh1,ƒIƒyƒ‰ƒ“ƒh2 ‚ÌŒ^w’è
-			//	func-name:	‰‰Z‚ğ¯•Ê‚·‚é–¼‘Oitypes‚Æfinc-name‚ÅˆêˆÓ‚É‚È‚é‚±‚ÆjyÈ—ª‰Âz
-			//	type:		types ‚Å S ‚Ü‚½‚Í O ‚ğw’è‚µ‚½‚Æ‚« ‚»‚Ì‹ï‘Ì“I‚ÈŒ^–¼
+			//	op-sym:		æ¼”ç®—å­è¨˜å·ï¼ˆ+,- ãªã©ï¼‰
+			//	types="r12":	"r12" ã¯ãã‚Œãã‚Œ æ¼”ç®—çµæœ,ã‚ªãƒšãƒ©ãƒ³ãƒ‰1,ã‚ªãƒšãƒ©ãƒ³ãƒ‰2 ã®å‹æŒ‡å®š
+			//	func-name:	æ¼”ç®—ã‚’è­˜åˆ¥ã™ã‚‹åå‰ï¼ˆtypesã¨finc-nameã§ä¸€æ„ã«ãªã‚‹ã“ã¨ï¼‰ã€çœç•¥å¯ã€‘
+			//	type:		types ã§ S ã¾ãŸã¯ O ã‚’æŒ‡å®šã—ãŸã¨ã ãã®å…·ä½“çš„ãªå‹å
 			//	
-			//	"r12" ‚Éw’è‚Å‚«‚é‚Ì‚à‚Ì
-			//			'C'	‚±‚Ì‰‰Zq‚ğ’è‹`‚·‚éƒNƒ‰ƒX
-			//			'E'	‚±‚ÌƒNƒ‰ƒX‚Ì—v‘f‚ÌŒ^ifloat, double ‚È‚Çj
-			//			'v'	Vec** ƒNƒ‰ƒX
-			//			'm'	Matrix** ƒNƒ‰ƒX
-			//			'q'	Quaternion* ƒNƒ‰ƒX
-			//			'p'	Pose* ƒNƒ‰ƒX
-			//			'S'	ƒXƒJƒ‰Œ^itype ‚É int, float, double, bool ‚È‚Ç‚Æw’è‚·‚éj
-			//			'O'	‘¼‚ÌƒNƒ‰ƒXitype ‚É‹ï‘Ì“I‚Éw’è‚·‚éj
+			//	"r12" ã«æŒ‡å®šã§ãã‚‹ã®ã‚‚ã®
+			//			'C'	ã“ã®æ¼”ç®—å­ã‚’å®šç¾©ã™ã‚‹ã‚¯ãƒ©ã‚¹
+			//			'E'	ã“ã®ã‚¯ãƒ©ã‚¹ã®è¦ç´ ã®å‹ï¼ˆfloat, double ãªã©ï¼‰
+			//			'v'	Vec** ã‚¯ãƒ©ã‚¹
+			//			'm'	Matrix** ã‚¯ãƒ©ã‚¹
+			//			'q'	Quaternion* ã‚¯ãƒ©ã‚¹
+			//			'p'	Pose* ã‚¯ãƒ©ã‚¹
+			//			'S'	ã‚¹ã‚«ãƒ©å‹ï¼ˆtype ã« int, float, double, bool ãªã©ã¨æŒ‡å®šã™ã‚‹ï¼‰
+			//			'O'	ä»–ã®ã‚¯ãƒ©ã‚¹ï¼ˆtype ã«å…·ä½“çš„ã«æŒ‡å®šã™ã‚‹ï¼‰
 			//			
 			string defline = strip_whites(Char(attrline));
 			vector<string> org_defs = split(defline, ':');
@@ -2984,7 +3000,7 @@ public:
 	}
 
 	void generate_constructor(DOHFile* fps[], Node* node, char* name, char* uq_name, char* cpp_name, StructInfo* struct_info, int newable = 1) {
-		// default constructor ‚Í•K‚¸ì‚é
+		// default constructor ã¯å¿…ãšä½œã‚‹
 		//
 		if (newable) {
 			// [cpp]
@@ -3025,7 +3041,7 @@ public:
 			Printf(CS, "\tpublic static implicit operator %s(CsCastObject target) {\n\t\treturn (target._info.Inherit(%s.GetIfInfoStatic()) ? new %s(target._this, target._flag) : null);\n\t}\n", name, name, name);
 		}
 
-		// If ƒNƒ‰ƒX‚Å‚Í‚±‚êˆÈã‚Ì constructor ‚Íì‚ç‚È‚¢
+		// If ã‚¯ãƒ©ã‚¹ã§ã¯ã“ã‚Œä»¥ä¸Šã® constructor ã¯ä½œã‚‰ãªã„
 		if (!ENDWITH(uq_name, "If")) {
                		int has_constructor = Cmp(Getattr(node, "allocate:has_constructor"), "1") == 0;
                		int public_constructor = Cmp(Getattr(node, "allocate:public_constructor"), "1") == 0;
@@ -3035,8 +3051,8 @@ public:
 #if (DUMP == 1)
 			Printf(CS, "//  has constructors: %s, is public: %s\n", (has_constructor ? "yes" : "no"), (public_constructor ? "yes" : "no")); 
 #endif
-			// has_constructor ‚ª "1" ‚ÅAƒcƒŠ[‚Éƒm[ƒh‚ª‚ ‚é‚à‚Ì‚¾‚¯ì‚é
-			// copy_coonstructor ‚Í–³‹‚·‚é 
+			// has_constructor ãŒ "1" ã§ã€ãƒ„ãƒªãƒ¼ã«ãƒãƒ¼ãƒ‰ãŒã‚ã‚‹ã‚‚ã®ã ã‘ä½œã‚‹
+			// copy_coonstructor ã¯ç„¡è¦–ã™ã‚‹ 
 			if (has_constructor) {
 				int count = 1;
 				NodeInfo& ni = get_node_info(fps, node);
@@ -3045,7 +3061,7 @@ public:
 					if (Cmp(Getattr(child, "nodeType"), "constructor") == 0) {
 						NodeInfo& ci = get_node_info(fps, child);
 						DUMP_NODE_INFO(fps, (FD_CPP | FD_CS), "constructor", ci);
-						char* access = public_constructor ? "public " : "";
+						char* access = (char*) (public_constructor ? "public " : "");
 #define	new_args(f,v)		string formal_args_##f((v)); string actual_args_##f((v))
 #define	append_args_F1(f,t)	formal_args_##f.append((t))
 #define	append_args_F2(f,t,n)	formal_args_##f.append((t)).append(" ").append((n))
@@ -3058,7 +3074,7 @@ public:
 							NodeInfo& ai = ci.funcargs[i];
 							DUMP_NODE_INFO(fps, FD_CS, "constructor argument", ai);
 							if (ai.is_vector || ai.is_array) {
-								char* tmp = ai.cs_name ? ai.cs_name : "";
+								char* tmp = ai.cs_name ? ai.cs_name : (char*) "";
 								//ai.pointer_level = 0;
 								char* name = make_wrapper_name(fps, FD_CS, __LINE__, ai, ci, "formal arg");
 								string str;
@@ -3079,7 +3095,7 @@ public:
 								append_args_A(csp, tmp);
 							}
 							else if (ai.is_struct) {
-								char* name = ai.cs_name ? ai.cs_name : "";
+								char* name = ai.cs_name ? ai.cs_name : (char*) "";
 								string str;
 								if (ai.is_reference) {
 									str.append("((").append(ai.cpp_type).append(") ").append(name).append(")");
@@ -3098,8 +3114,8 @@ public:
 								append_args_A(csp, name);
 							}
 							else {
-								char* type = EQ(ai.cs_im_type, "IntPtr") ? "HANDLE" : ai.cpp_type;
-								char* name = ai.cs_name ? ai.cs_name : "";
+								char* type = (char*) (EQ(ai.cs_im_type, "IntPtr") ? "HANDLE" : ai.cpp_type);
+								char* name = (char*) (ai.cs_name ? ai.cs_name : "");
 								append_args_F2(cpp, type, name);
 								if (ai.is_pointer && !EQc(ai.uq_type, "char")) {
 									append_args_F2(cs,  "IntPtr", name);
@@ -3146,7 +3162,7 @@ public:
 #if (GENERATE_OPT_CONSTRUCTOR == 1)
 			if (need_generate_constructor(uq_name)) {
 				// Kludge
-				//	‘Sƒƒ“ƒo‚ğˆø”‚Æ‚·‚é constructor ‚ğ¶¬‚·‚é
+				//	å…¨ãƒ¡ãƒ³ãƒã‚’å¼•æ•°ã¨ã™ã‚‹ constructor ã‚’ç”Ÿæˆã™ã‚‹
 				generate_constructor_with_full_members(fps, /*CPP, CS, CSP,*/ name, uq_name, struct_info);
 			}
 #endif
@@ -3279,7 +3295,7 @@ public:
 		bool is_ptr = (rtype != 'E' && rtype != 'S');
 
 		// [CPP]
-		char* rt = is_ptr ? "HANDLE" : rname;
+		char* rt = (char*) (is_ptr ? "HANDLE" : rname);
 		SNAP_ANA_PATH1(fps, FD_CPP, "generate: indexer");
 		if (is_ptr) {
 			SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: indexer: pointer");
@@ -3317,7 +3333,7 @@ public:
 
 		// [CS]
 		SNAP_ANA_PATH1(fps, FD_CS, "generate: indexer");
-		rt = is_ptr ? "IntPtr" : rname;
+		rt = (char*) (is_ptr ? "IntPtr" : rname);
 		Printf(CS,  "\tpublic %s this[int i] {\n", rname);
 		if (EQ(rt, "IntPtr")) {
 			Printf(CS,  "\t    get {\n");
@@ -3333,7 +3349,7 @@ public:
 
 		// [CSP]
 		SNAP_ANA_PATH1(fps, FD_CSP, "generate: indexer");
-		char* aname = is_ptr ? "ptr" : "value";
+		char* aname = (char*) (is_ptr ? "ptr" : "value");
 		Printf(CSP, "\t%s\n", DLLIMPORT);
 		Printf(CSP, "\tpublic static extern %s Spr_%s_get_%s(IntPtr _this, int i);\n", rt, func, cname);
 		Printf(CSP, "\t%s\n", DLLIMPORT);
@@ -3349,7 +3365,7 @@ public:
 		} else {
 			if (EQ(symb, "+"))		name = "add";
 			else if (EQ(symb, "-"))		name = "sub";
-			else if (EQ(symb, "*"))		name = (type[1] == 'E' || type[2] == 'E') ? "mul" : "sprod";
+			else if (EQ(symb, "*"))		name = (char*) ((type[1] == 'E' || type[2] == 'E') ? "mul" : "sprod");
 			else if (EQ(symb, "/"))		name = "div";
 			else if (EQ(symb, "%"))		name = "vprod1";
 			else if (EQ(symb, "^"))		name = "vprod2";
@@ -3438,8 +3454,8 @@ public:
 		// [cpp]
 		SNAP_ANA_PATH1(fps, FD_CPP, "generate_operator");
 		SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: operator");
-		char* rtif = EQ(rt, "bool") ? "char" : rt;
-		char* opname = binaryop ? "binary" : "unary";
+		char* rtif = (char*) (EQ(rt, "bool") ? "char" : rt);
+		char* opname = (char*) (binaryop ? "binary" : "unary");
 		sprintf(argsbuff, (binaryop ? "%s %s, %s %s" : "%s %s"), at, an, bt, bn);
 		Printf(CPP, "    __declspec(dllexport) %s __cdecl Spr_%s_operator_%s_%s(%s) {\n", rtif, opname, func, cname, argsbuff);
 		if (generate_operator_is_type_scalar(atype)) { strcpy(arg1, "a"); } else { sprintf(arg1, "*((%s*) %s)", aname, an); }
@@ -3511,7 +3527,7 @@ public:
 
 		// [csp]
 		SNAP_ANA_PATH1(fps, FD_CSP, "generate_operator");
-		rtif = EQ(rt, "bool") ? "char" : rt;	// 'rt' may be changed at [cs] generation
+		rtif = (char*) (EQ(rt, "bool") ? "char" : rt);	// 'rt' may be changed at [cs] generation
 		sprintf(argsbuff, (binaryop ? "%s %s, %s %s" : "%s %s"), at, an, bt, bn);
 		Printf(CSP, "\t%s\n", DLLIMPORT);
 		Printf(CSP, "\tpublic static extern %s Spr_%s_operator_%s_%s(%s);\n", rtif, opname, func, cname, argsbuff);
@@ -3712,7 +3728,7 @@ public:
 	}
 
 	char* make_wrapper_type(NodeInfo& ni) {
-		return ni.is_vector ? "vector" : "array";
+		return (char*) (ni.is_vector ? "vector" : "array");
 	}
 
 	char* make_wrapper_name(DOHFile* fps[], int flag, int line, NodeInfo& ni, NodeInfo& ci, char* label) {
@@ -3748,8 +3764,8 @@ public:
 		*d = '\0';
 		string* type_str = new string(buff);
 		if (strchr(buff, '<') && strchr(buff, '>')) {
-			// TODO: æ‚èŠ¸‚¦‚¸ƒRƒ“ƒpƒCƒ‹‚ª’Ê‚é‚æ‚¤‚É‚·‚éB
-			// TODO: Œã‚Å‚¿‚á‚ñ‚Æl‚¦‚é‚±‚ÆB
+			// TODO: å–ã‚Šæ•¢ãˆãšã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ãŒé€šã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚
+			// TODO: å¾Œã§ã¡ã‚ƒã‚“ã¨è€ƒãˆã‚‹ã“ã¨ã€‚
 			char* kind = "";
 			char* p;
 			if ((p = strstr(buff, "vector"))) kind = "vector";
@@ -3943,7 +3959,7 @@ public:
 
 	void generate_accessor_for_type_string(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: string");
-		// [cs]@ó‚¯“n‚µ‚Í BSTR
+		// [cs]ã€€å—ã‘æ¸¡ã—ã¯ BSTR
 		Printf(CS, "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
 		Printf(CS, "\t    get {\n");
 		Printf(CS, "\t        IntPtr ptr = SprExport.Spr_%s_get_%s(_this);\n", ci.uq_name, ni.uq_name);
@@ -3960,7 +3976,7 @@ public:
 		Printf(CS, "\t}\n");
 		if (is_already_generated(ni, ci)) return;
 
-		// [cpp]@ó‚¯“n‚µ‚Í BSTR
+		// [cpp]ã€€å—ã‘æ¸¡ã—ã¯ BSTR
 		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_get_%s(HANDLE _this) {\n", ci.uq_name, ni.uq_name);
 		Printf(CPP, "        BSTR result = NULL;\n");
 		Printf(CPP, "        try {\n");
@@ -3982,7 +3998,7 @@ public:
 		Printf(CPP, "    }\n");
 #endif
 
-		// [csp]@ó‚¯“n‚µ‚Í BSTR
+		// [csp]ã€€å—ã‘æ¸¡ã—ã¯ BSTR
 		Printf(CSP, "\t%s\n", DLLIMPORT);
 		//Printf(CSP, "\t[return: MarshalAs(UnmanagedType.%s)]\n", ni.cs_marshaltype);
 		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_get_%s(IntPtr _this);\n", ci.uq_name, ni.uq_name);
@@ -4389,9 +4405,9 @@ public:
 		ni->uq_type = unqualified_name(ni->type);
 ////		ni->overname = (Getattr(node, "defaultargs")) ? "defaultargs" : Char(Getattr(node, "sym:overname"));
 		ni->overname = Char(Getattr(node, "sym:overname"));
-		ni->is_function = (EQc(ni->kind, "function") && !EQc(ni->kind, "typedef")) ? 1 : 0;	// À‘Ì‚Ì‚ ‚éŠÖ” (=1)
+		ni->is_function = (EQc(ni->kind, "function") && !EQc(ni->kind, "typedef")) ? 1 : 0;	// å®Ÿä½“ã®ã‚ã‚‹é–¢æ•° (=1)
 		if (EQc(ni->kind, "typedef") && EQc(ni->storage, "typedef")) {
-			ni->is_function = 2;	// typedef ‚³‚ê‚½ŠÖ” (=2)
+			ni->is_function = 2;	// typedef ã•ã‚ŒãŸé–¢æ•° (=2)
 		}
 		ni->is_struct = EQc(ni->kind, "struct");
 		if (use_type_string) {
@@ -4420,8 +4436,8 @@ public:
 			ni->is_void_ptr = 1;			//
 		}
 #endif
-		// template ‚Å’è‹`‚³‚ê‚½ƒNƒ‰ƒX‚Ì’†‚É template ‚ğg‚Á‚½ŠÖ”‚ª‚ ‚é‚Æ‚«‚Ìˆ—
-		//	template ‚Ì‹tˆø‚«‚ğ‚·‚é
+		// template ã§å®šç¾©ã•ã‚ŒãŸã‚¯ãƒ©ã‚¹ã®ä¸­ã« template ã‚’ä½¿ã£ãŸé–¢æ•°ãŒã‚ã‚‹ã¨ãã®å‡¦ç†
+		//	template ã®é€†å¼•ãã‚’ã™ã‚‹
 		char* cstype = ni->cs_type;
 		if (cstype && strstr(cstype, "<")) {
 			string key(cstype);
@@ -4920,7 +4936,7 @@ public:
 	char* overname(NodeInfo& ni) {
 		char* p = NULL;
 		if (ni.overname) p = strrchr(ni.overname, '_');
-		return (p && !EQ(p, "_0")) ? p : "";
+		return (char*) ((p && !EQ(p, "_0")) ? p : "");
 	}
 
 	char* analyze_cpp_type_repr(NodeInfo& ni) {

@@ -21,7 +21,7 @@ set(MacOS   False)
 if(Windows)
     set(DEFINE_MACROS_ADD	)
 else()
-    set(DEFINE_MACROS_ADD	)
+    set(DEFINE_MACROS_ADD	PYTHON_H_PATH=<Python/Python.h>)
 endif()
 
 # ------------------------------------------------------------------------------

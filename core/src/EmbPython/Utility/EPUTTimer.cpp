@@ -1,6 +1,6 @@
-#include "..\..\..\include\EmbPython\SprEPFoundation.h"
-#include "..\..\..\include\EmbPython\SprEPUtility.h"
-#include "..\..\..\include\EmbPython\SprEPBase.h"
+#include "../../../include/EmbPython/SprEPFoundation.h"
+#include "../../../include/EmbPython/SprEPUtility.h"
+#include "../../../include/EmbPython/SprEPBase.h"
 
 void SPR_CDECL PyUTTimerFunc(int id, void* arg){
 	PyGILState_STATE state;
@@ -9,6 +9,10 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg){
 		PyObject_CallObject((PyObject*)arg, NULL);
 		PyGILState_Release(state);
 	}else{
+#ifdef _WIN32
 		DSTR << "Fail to call python callback " << ios::hex << (unsigned)arg << " by UTTimer id=" << id << std::endl;
+#else
+		DSTR << "Fail to call python callback " << ios::hex << arg << " by UTTimer id=" << id << std::endl;
+#endif
 	}
 }

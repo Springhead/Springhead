@@ -1,8 +1,8 @@
-﻿#include "..\..\..\include\EmbPython\Utility\SprEPObject.h"
-#include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
-#include "..\..\..\include\EmbPython\SprEPFoundation.h"
-#include "..\..\..\include\EmbPython\SprEPUtility.h"
-#include "..\..\..\include\EmbPython\SprEPBase.h"
+﻿#include "../../../include/EmbPython/Utility/SprEPObject.h"
+#include "../../../include/EmbPython/Utility/SprEPCast.h"
+#include "../../../include/EmbPython/SprEPFoundation.h"
+#include "../../../include/EmbPython/SprEPUtility.h"
+#include "../../../include/EmbPython/SprEPBase.h"
 
 static PyObject* __PYDECL EPObject_dir(PyObject* self)
 {
@@ -52,7 +52,11 @@ static int __PYDECL EPObject_init(EPObject* self,PyObject *args, PyObject *kwds)
 	return 0;
 }
 //////////////////////////////////////////new
+#ifdef _WIN32
 static PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+#else
+PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+#endif
 {
 	EPObject *self;
 	self = ( EPObject*) type->tp_alloc(type,0);

@@ -124,6 +124,11 @@ am_eswig_OBJECTS = CParse/cscanner.$(OBJEXT) CParse/parser.$(OBJEXT) \
 	Modules/tcl8.$(OBJEXT) Modules/typepass.$(OBJEXT) \
 	Modules/uffi.$(OBJEXT) Modules/utils.$(OBJEXT) \
 	Modules/xml.$(OBJEXT) Modules/spr.$(OBJEXT) \
+	Modules/sprpy/ClassInfo.$(OBJEXT) \
+	Modules/sprpy/MethodInfo.$(OBJEXT) \
+	Modules/sprpy/MethodInfoEx.$(OBJEXT) \
+	Modules/sprpy/SprpyInfoObjectUtility.$(OBJEXT) \
+	Modules/sprpy/sprpy.$(OBJEXT) Modules/sprcs.$(OBJEXT) \
 	Preprocessor/cpp.$(OBJEXT) Preprocessor/expr.$(OBJEXT) \
 	Swig/cwrap.$(OBJEXT) Swig/deprecate.$(OBJEXT) \
 	Swig/error.$(OBJEXT) Swig/fragment.$(OBJEXT) \
@@ -209,21 +214,22 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp \
-	$(top_srcdir)/ylwrap CParse/parser.c CParse/parser.h README
+	$(top_srcdir)/ylwrap AUTHORS CParse/parser.c CParse/parser.h \
+	ChangeLog NEWS README
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/kanehori/Project/Springhead2/bin/src/swig/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/kanehori/Project/SpringheadTest/core/bin/src/swig/missing aclocal-1.15
 ALLOCA = 
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/kanehori/Project/Springhead2/bin/src/swig/missing autoconf
-AUTOHEADER = ${SHELL} /home/kanehori/Project/Springhead2/bin/src/swig/missing autoheader
-AUTOMAKE = ${SHELL} /home/kanehori/Project/Springhead2/bin/src/swig/missing automake-1.15
+AUTOCONF = ${SHELL} /home/kanehori/Project/SpringheadTest/core/bin/src/swig/missing autoconf
+AUTOHEADER = ${SHELL} /home/kanehori/Project/SpringheadTest/core/bin/src/swig/missing autoheader
+AUTOMAKE = ${SHELL} /home/kanehori/Project/SpringheadTest/core/bin/src/swig/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPP = gcc -E
-CPPFLAGS = 
+CPPFLAGS = -Wwrite-strings
 CXX = g++
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
@@ -245,7 +251,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/kanehori/Project/Springhead2/bin/src/swig/missing makeinfo
+MAKEINFO = ${SHELL} /home/kanehori/Project/SpringheadTest/core/bin/src/swig/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = eswig
@@ -263,10 +269,10 @@ STRIP =
 VERSION = 2.0.4
 YACC = bison -y
 YFLAGS = 
-abs_builddir = /home/kanehori/Project/Springhead2/bin/src/swig/Source
-abs_srcdir = /home/kanehori/Project/Springhead2/bin/src/swig/Source
-abs_top_builddir = /home/kanehori/Project/Springhead2/bin/src/swig
-abs_top_srcdir = /home/kanehori/Project/Springhead2/bin/src/swig
+abs_builddir = /home/kanehori/Project/SpringheadTest/core/bin/src/swig/Source
+abs_srcdir = /home/kanehori/Project/SpringheadTest/core/bin/src/swig/Source
+abs_top_builddir = /home/kanehori/Project/SpringheadTest/core/bin/src/swig
+abs_top_srcdir = /home/kanehori/Project/SpringheadTest/core/bin/src/swig
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
@@ -286,7 +292,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/kanehori/Project/Springhead2/bin/src/swig/install-sh
+install_sh = ${SHELL} /home/kanehori/Project/SpringheadTest/core/bin/src/swig/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -376,6 +382,12 @@ eswig_SOURCES = CParse/cscanner.c		\
 		Modules/utils.cxx		\
 		Modules/xml.cxx			\
 		Modules/spr.cpp			\
+		Modules/sprpy/ClassInfo.cpp	\
+		Modules/sprpy/MethodInfo.cpp	\
+		Modules/sprpy/MethodInfoEx.cpp	\
+		Modules/sprpy/SprpyInfoObjectUtility.cpp	\
+		Modules/sprpy/sprpy.cpp		\
+		Modules/sprcs.cpp		\
 		Preprocessor/cpp.c		\
 		Preprocessor/expr.c		\
 		Swig/cwrap.c			\
@@ -599,6 +611,25 @@ Modules/xml.$(OBJEXT): Modules/$(am__dirstamp) \
 	Modules/$(DEPDIR)/$(am__dirstamp)
 Modules/spr.$(OBJEXT): Modules/$(am__dirstamp) \
 	Modules/$(DEPDIR)/$(am__dirstamp)
+Modules/sprpy/$(am__dirstamp):
+	@$(MKDIR_P) Modules/sprpy
+	@: > Modules/sprpy/$(am__dirstamp)
+Modules/sprpy/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) Modules/sprpy/$(DEPDIR)
+	@: > Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+Modules/sprpy/ClassInfo.$(OBJEXT): Modules/sprpy/$(am__dirstamp) \
+	Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+Modules/sprpy/MethodInfo.$(OBJEXT): Modules/sprpy/$(am__dirstamp) \
+	Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+Modules/sprpy/MethodInfoEx.$(OBJEXT): Modules/sprpy/$(am__dirstamp) \
+	Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+Modules/sprpy/SprpyInfoObjectUtility.$(OBJEXT):  \
+	Modules/sprpy/$(am__dirstamp) \
+	Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+Modules/sprpy/sprpy.$(OBJEXT): Modules/sprpy/$(am__dirstamp) \
+	Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+Modules/sprcs.$(OBJEXT): Modules/$(am__dirstamp) \
+	Modules/$(DEPDIR)/$(am__dirstamp)
 Preprocessor/$(am__dirstamp):
 	@$(MKDIR_P) Preprocessor
 	@: > Preprocessor/$(am__dirstamp)
@@ -659,6 +690,7 @@ mostlyclean-compile:
 	-rm -f CParse/*.$(OBJEXT)
 	-rm -f DOH/*.$(OBJEXT)
 	-rm -f Modules/*.$(OBJEXT)
+	-rm -f Modules/sprpy/*.$(OBJEXT)
 	-rm -f Preprocessor/*.$(OBJEXT)
 	-rm -f Swig/*.$(OBJEXT)
 
@@ -709,12 +741,18 @@ include Modules/$(DEPDIR)/r.Po
 include Modules/$(DEPDIR)/ruby.Po
 include Modules/$(DEPDIR)/s-exp.Po
 include Modules/$(DEPDIR)/spr.Po
+include Modules/$(DEPDIR)/sprcs.Po
 include Modules/$(DEPDIR)/swigmain.Po
 include Modules/$(DEPDIR)/tcl8.Po
 include Modules/$(DEPDIR)/typepass.Po
 include Modules/$(DEPDIR)/uffi.Po
 include Modules/$(DEPDIR)/utils.Po
 include Modules/$(DEPDIR)/xml.Po
+include Modules/sprpy/$(DEPDIR)/ClassInfo.Po
+include Modules/sprpy/$(DEPDIR)/MethodInfo.Po
+include Modules/sprpy/$(DEPDIR)/MethodInfoEx.Po
+include Modules/sprpy/$(DEPDIR)/SprpyInfoObjectUtility.Po
+include Modules/sprpy/$(DEPDIR)/sprpy.Po
 include Preprocessor/$(DEPDIR)/cpp.Po
 include Preprocessor/$(DEPDIR)/expr.Po
 include Swig/$(DEPDIR)/cwrap.Po
@@ -909,6 +947,8 @@ distclean-generic:
 	-rm -f DOH/$(am__dirstamp)
 	-rm -f Modules/$(DEPDIR)/$(am__dirstamp)
 	-rm -f Modules/$(am__dirstamp)
+	-rm -f Modules/sprpy/$(DEPDIR)/$(am__dirstamp)
+	-rm -f Modules/sprpy/$(am__dirstamp)
 	-rm -f Preprocessor/$(DEPDIR)/$(am__dirstamp)
 	-rm -f Preprocessor/$(am__dirstamp)
 	-rm -f Swig/$(DEPDIR)/$(am__dirstamp)
@@ -925,7 +965,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf CParse/$(DEPDIR) DOH/$(DEPDIR) Modules/$(DEPDIR) Preprocessor/$(DEPDIR) Swig/$(DEPDIR)
+	-rm -rf CParse/$(DEPDIR) DOH/$(DEPDIR) Modules/$(DEPDIR) Modules/sprpy/$(DEPDIR) Preprocessor/$(DEPDIR) Swig/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-local distclean-tags
@@ -971,7 +1011,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf CParse/$(DEPDIR) DOH/$(DEPDIR) Modules/$(DEPDIR) Preprocessor/$(DEPDIR) Swig/$(DEPDIR)
+	-rm -rf CParse/$(DEPDIR) DOH/$(DEPDIR) Modules/$(DEPDIR) Modules/sprpy/$(DEPDIR) Preprocessor/$(DEPDIR) Swig/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

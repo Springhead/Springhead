@@ -318,9 +318,17 @@ public:
 	//@}
 
 	///	回転拡大変換部を取り出す.
+#ifdef _WIN32
 	PTM::TSubMatrixCol<2,2, desc>& Rot() { return sub_matrix(0,0,PTM::TSubMatrixCol<2,2, desc>()); }
+#else
+	PTM::TSubMatrixCol<2,2, desc>& Rot() { return this->sub_matrix(0,0,PTM::TSubMatrixCol<2,2, desc>()); }
+#endif
 	///	回転拡大変換部を取り出す (const版).
+#ifdef _WIN32
 	const PTM::TSubMatrixCol<2,2, desc>& Rot() const { return sub_matrix(0,0,PTM::TSubMatrixCol<2,2, desc>()); }
+#else
+	const PTM::TSubMatrixCol<2,2, desc>& Rot() const { return this->sub_matrix(0,0,PTM::TSubMatrixCol<2,2, desc>()); }
+#endif
 	
 	/**@name	初期化と構築	*/
 	//@{

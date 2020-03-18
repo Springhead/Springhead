@@ -1,4 +1,4 @@
-/* -----------------------------------------------------------------------------
+ï»¿/* -----------------------------------------------------------------------------
  * See the LICENSE file for information on copyright, usage and redistribution
  * of SWIG, and the README file for authors - http://www.swig.org/release.html.
  *
@@ -8,9 +8,9 @@
  * ----------------------------------------------------------------------------- */
 
 //for OutputDebugString
-#include <windows.h>
+//#include <windows.h>
 
-#include "..\swigmod.h"
+#include "../swigmod.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -40,11 +40,11 @@ Springhead Options (available with -spr)\n";
 namespace SwigSprpy{;
 
 
-//ƒOƒ[ƒoƒ‹•Ï”
+//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //Utility
 SprpyInfoObjectUtility Util;
 
-#pragma region ƒOƒ[ƒoƒ‹ŠÖ”
+#pragma region ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°
 	void FindNodeR(Nodes& rv, Node* n, char* type){
 		if (Cmp(nodeType(n), type)==0){
 			rv.push_back(n);
@@ -206,7 +206,7 @@ public:
 	{
 		Util.Vars.classnamePrefix = CLASSNAME_PREFIX;
 		Util.Vars.filenamePrefix  = FILENAME_PREFIX;
-		//UTRef‚ğŒp³‚µ‚Ä‚¢‚éƒNƒ‰ƒX‚ÌƒŠƒXƒg(Œã•ûˆê’v)
+		//UTRefã‚’ç¶™æ‰¿ã—ã¦ã„ã‚‹ã‚¯ãƒ©ã‚¹ã®ãƒªã‚¹ãƒˆ(å¾Œæ–¹ä¸€è‡´)
 		Util.Vars.UTRefList.push_back("If");
 		
 		Util.Vars.VARNAME_SELF = "self";
@@ -285,21 +285,21 @@ public:
 		}
 
 
-		//ƒ‚ƒWƒ…[ƒ‹‚Í‚P‚Â‚¾‚¯
+		//ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¯ï¼‘ã¤ã ã‘
 		Nodes module;
 		FindNodeR(module, top, "module");
 
-		//module‚ª‚È‚¢ê‡‚ÌƒGƒ‰[
-		if ( module.size() == 0 ) {Swig_error(input_file,line_number," ƒ‚ƒWƒ…[ƒ‹‚ÌéŒ¾‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½\n"); SWIG_exit(EXIT_FAILURE);}
-		//module‚ª•¡”‚Ìê‡‚ÌƒGƒ‰[
-		if ( module.size() >1 ) {Swig_error(input_file,line_number," .i ƒ‚ƒWƒ…[ƒ‹‚ÌéŒ¾‚ª•¡”Œ©‚Â‚©‚è‚Ü‚µ‚½\n"); SWIG_exit(EXIT_FAILURE);}
+		//moduleãŒãªã„å ´åˆã®ã‚¨ãƒ©ãƒ¼
+		if ( module.size() == 0 ) {Swig_error(input_file,line_number," ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®å®£è¨€ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ\n"); SWIG_exit(EXIT_FAILURE);}
+		//moduleãŒè¤‡æ•°ã®å ´åˆã®ã‚¨ãƒ©ãƒ¼
+		if ( module.size() >1 ) {Swig_error(input_file,line_number," .i ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®å®£è¨€ãŒè¤‡æ•°è¦‹ã¤ã‹ã‚Šã¾ã—ãŸ\n"); SWIG_exit(EXIT_FAILURE);}
 
 		string moduleNameStr = GetString(Getattr(module[0],"name")); const char* moduleName = moduleNameStr.c_str();
 
 		Node* moduleTop;
 		moduleTop = parentNode(module[0]);
 
-		//.iƒtƒ@ƒCƒ‹’¼‘‚«‚Ìƒm[ƒh‚Ìeƒm[ƒhi FindNodeR‚Å‚Í‚È‚­A FindNode‚Åqƒm[ƒh‚ªŒŸõ‚³‚ê‚é
+		//.iãƒ•ã‚¡ã‚¤ãƒ«ç›´æ›¸ãã®ãƒãƒ¼ãƒ‰ã®è¦ªãƒãƒ¼ãƒ‰ï¼ˆ FindNodeRã§ã¯ãªãã€ FindNodeã§å­ãƒãƒ¼ãƒ‰ãŒæ¤œç´¢ã•ã‚Œã‚‹
 		Nodes directTop;
 		directTop.push_back(moduleTop);
 		FindNode(directTop,moduleTop,"namespace");
@@ -310,14 +310,14 @@ public:
 
 		Nodes incs;
 		FindNodeR(incs,moduleTop,"include");
-		//moduleTop‚àincludeƒm[ƒh‚È‚Ì‚ÅœŠO‚·‚é
+		//moduleTopã‚‚includeãƒãƒ¼ãƒ‰ãªã®ã§é™¤å¤–ã™ã‚‹
 		incs.erase( incs.begin() );
 
 
 
-		/////////////// ˆÈ‰ºiƒtƒ@ƒCƒ‹‚Åinclude‚³‚ê‚½ƒNƒ‰ƒX
-		/////////////// Swig‚Ìƒ\[ƒX‚É’¼‘‚«‚³‚ê‚½‚à‚Ì‚Í–¢‘Î‰
-		//ƒNƒ‰ƒX‚Ì—ñ‹“
+		/////////////// ä»¥ä¸‹iãƒ•ã‚¡ã‚¤ãƒ«ã§includeã•ã‚ŒãŸã‚¯ãƒ©ã‚¹
+		/////////////// Swigã®ã‚½ãƒ¼ã‚¹ã«ç›´æ›¸ãã•ã‚ŒãŸã‚‚ã®ã¯æœªå¯¾å¿œ
+		//ã‚¯ãƒ©ã‚¹ã®åˆ—æŒ™
 		Nodes classes;
 		for(unsigned i=0; i<directTop.size(); ++i){
 			FindNode(classes, directTop[i], "class");
@@ -325,7 +325,7 @@ public:
 		for(unsigned i=0; i<incs.size(); ++i){
 			FindNodeR(classes, incs[i], "class");
 		}
-		//enum—ñ‹“
+		//enumåˆ—æŒ™
 		Nodes enumNodes;
 		for(unsigned i=0; i<directTop.size(); ++i){
 			FindNode(enumNodes, directTop[i], "enum");
@@ -349,7 +349,7 @@ public:
 		}
 		
 
-		//typedef—ñ‹“
+		//typedefåˆ—æŒ™
 		std::map<string,string> typedefs;
 		Nodes typedefNodes;
 		for(unsigned i=0; i<directTop.size(); ++i){
@@ -370,7 +370,7 @@ public:
 			}
 		}
 
-		//ƒOƒ[ƒoƒ‹•Ï”—ñ‹“
+		//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°åˆ—æŒ™
 		Nodes gVariableNodes;
 		{
 			Nodes tempNodes;
@@ -398,31 +398,31 @@ public:
 	
 
 
-		//•K—v‚Èƒm[ƒh‚ğ”²‚«o‚·
+		//å¿…è¦ãªãƒãƒ¼ãƒ‰ã‚’æŠœãå‡ºã™
 		vector<ClassInfo> classinfos;
 
-#pragma region class‚Ìƒm[ƒh‚©‚ç•K—v‚Èî•ñ‚ğì¬
+#pragma region classã®ãƒãƒ¼ãƒ‰ã‹ã‚‰å¿…è¦ãªæƒ…å ±ã‚’ä½œæˆ
 		for(unsigned i=0; i<classes.size(); ++i){
 			Node* n = classes[i];
 			Node* cn = firstChild(n);
 			ClassInfo ci = ClassInfo::CreateClassInfo(n,moduleName);
 
-			//%ignore‚É‚ ‚Á‚½‚ç–³‹‚·‚é
+			//%ignoreã«ã‚ã£ãŸã‚‰ç„¡è¦–ã™ã‚‹
 			if( GetFlagAttr(n,"feature:ignore") ) {
 				ALERT(n,"ignored:'%%ignore'");
 				continue;
 			}
 			
-			//ƒAƒNƒZƒXw’è‚ªpublic‚Å–³‚¢ê‡‚Í–³‹‚·‚é
+			//ã‚¢ã‚¯ã‚»ã‚¹æŒ‡å®šãŒpublicã§ç„¡ã„å ´åˆã¯ç„¡è¦–ã™ã‚‹
 			if( Checkattr(n,"access","private") || Checkattr(n,"access","protected") ) {
 				ALERT(n,"ignored:'not public'");
 				continue;
 			}
 
-			/////// Node*‚©‚çMethodInfoEx‚ğì¬‚·‚éB function , constructor , extendƒm[ƒh‚É‚¨‚¢‚Äì¬‚³‚ê‚é
+			/////// Node*ã‹ã‚‰MethodInfoExã‚’ä½œæˆã™ã‚‹ã€‚ function , constructor , extendãƒãƒ¼ãƒ‰ã«ãŠã„ã¦ä½œæˆã•ã‚Œã‚‹
 			while ( cn )
 			{
-				//ƒAƒNƒZƒXw’è‚ªpublic‚Å–³‚¢ê‡‚Í–³‹‚·‚é
+				//ã‚¢ã‚¯ã‚»ã‚¹æŒ‡å®šãŒpublicã§ç„¡ã„å ´åˆã¯ç„¡è¦–ã™ã‚‹
 				if( Checkattr(cn,"access","private") || Checkattr(cn,"access","protected") ) {
 					ALERT(cn,"ignored:'not public'");
 					cn = nextSibling(cn);
@@ -430,7 +430,7 @@ public:
 				}
 
 				//%ignore
-				//%extend‚Ìƒƒ\ƒbƒhê‡‚Íignore‚ğ–³‹
+				//%extendã®ãƒ¡ã‚½ãƒƒãƒ‰å ´åˆã¯ignoreã‚’ç„¡è¦–
 				if( GetFlagAttr(cn,"feature:ignore") && !Checkattr(cn,"nodeType","extend") ){
 					ALERT(cn,"ignored");
 					cn = nextSibling(cn);
@@ -463,27 +463,27 @@ public:
 				cn = nextSibling(cn);
 			}
 
-			///////// MethodInfo ‚âMethodInfoEx‚ğ–„‚ß‚é
+			///////// MethodInfo ã‚„MethodInfoExã‚’åŸ‹ã‚ã‚‹
 
-			//Swig‚Å‚Í”F¯‚³‚ê‚È‚¢(.iƒtƒ@ƒCƒ‹‚É‚©‚©‚ê‚È‚¢)ƒƒ\ƒbƒh‚ğMethodInfo‚È‚Ç‚É’Ç‰Á
-			// i‚¨‚à‚ÉGetIfInfoj
+			//Swigã§ã¯èªè­˜ã•ã‚Œãªã„(.iãƒ•ã‚¡ã‚¤ãƒ«ã«ã‹ã‹ã‚Œãªã„)ãƒ¡ã‚½ãƒƒãƒ‰ã‚’MethodInfoãªã©ã«è¿½åŠ 
+			// ï¼ˆãŠã‚‚ã«GetIfInfoï¼‰
 			ci.SetAdditionalMethods();
 
-			//ƒI[ƒo[ƒ[ƒh‚Ìƒtƒ‰ƒO‚ğŒ³‚ÉACreateMethodInfo‚Å–„‚ß‚ç‚ê‚È‚©‚Á‚½€–Ú‚ğ‚¤‚ß‚é
+			//ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã®ãƒ•ãƒ©ã‚°ã‚’å…ƒã«ã€CreateMethodInfoã§åŸ‹ã‚ã‚‰ã‚Œãªã‹ã£ãŸé …ç›®ã‚’ã†ã‚ã‚‹
 			ci.UpdateMethodInfos();
 			
-			//MethodInfo‚È‚Ç‚Ìî•ñ‚ğŒ³‚ÉŠÖ”ƒe[ƒuƒ‹‚È‚Ç‚ğì¬
+			//MethodInfoãªã©ã®æƒ…å ±ã‚’å…ƒã«é–¢æ•°ãƒ†ãƒ¼ãƒ–ãƒ«ãªã©ã‚’ä½œæˆ
 			ci.UpdateClassInfo();
 
 			classinfos.push_back(ci);
 		}
 #pragma endregion
 
-////////////////////////////////////ƒtƒ@ƒCƒ‹o—ÍŠJn
+////////////////////////////////////ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›é–‹å§‹
 
-		//////////////////////////////////////@APIƒwƒbƒ_[ƒtƒ@ƒCƒ‹  ////////////////////////////////
+		//////////////////////////////////////ã€€APIãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«  ////////////////////////////////
 		{
-			//ƒCƒ“ƒNƒ‹[ƒhƒK[ƒh
+			//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰
 			string upper = "SPR";
 			upper.append(Util.Vars.filenamePrefix);
 			upper.append(moduleName);
@@ -492,75 +492,75 @@ public:
 			Printf(sprh,"#define %s\n",ToUpperString(upper).c_str());
 
 
-			// .iƒtƒ@ƒCƒ‹‚Ì %begin  { #include `` %} ‚ğŒ³‚É‚ÉƒCƒ“ƒNƒ‹[ƒh
+			// .iãƒ•ã‚¡ã‚¤ãƒ«ã® %begin  { #include ï½ï½ %} ã‚’å…ƒã«ã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 			for ( int i = 0 ; i < (int)inserts.size() ; i++ )
 			{
 				if(Checkattr(inserts[i],"section","begin"))
 					Printf(sprh, Char( Getattr(inserts[i],"code") ) );
 			}
 
-			//ƒOƒ[ƒoƒ‹•Ï”‚ÌéŒ¾
+			//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®£è¨€
 			for ( int i = 0 ; i < (int)gVariableNodes.size() ; i++)
 			{
 				Node *n = gVariableNodes[i];
 				Printf(sprh, "extern %s %s;\n",Char( Getattr(n,"type") ),Char( Getattr(n,"sym:name"))); 
 			}
 
-#pragma region ////////////////////// ƒNƒ‰ƒX‚²‚Æ‚É
+#pragma region ////////////////////// ã‚¯ãƒ©ã‚¹ã”ã¨ã«
 
-			//////typedef‚à—ñ‹“
+			//////typedefã‚‚åˆ—æŒ™
 			////for(vector<string>::iterator it = typedefs.begin() ; it != typedefs.end() ; it++)
 			////{
 			////	string str = *it;
-			////	//PyObject\‘¢‘Ì
+			////	//PyObjectæ§‹é€ ä½“
 			////	Printf(sprh,"%s\n" ,str );
 			////}
 
-			///////////////////////class–ˆ‚Éˆ—
+			///////////////////////classæ¯ã«å‡¦ç†
 			for(vector<ClassInfo>::iterator itc = classinfos.begin() ; itc != classinfos.end() ; itc++)
 			{
 				ClassInfo cls = *itc;
 
-				////////////ƒNƒ‰ƒXn‚Ü‚è//////////////////
+				////////////ã‚¯ãƒ©ã‚¹å§‹ã¾ã‚Š//////////////////
 				Printf(sprh,"\n//{*********%s*******\n",cls.pysymbolName);
 				//TypeObject
 				Printf(sprh,"extern PyTypeObject %s;\n",cls.pytypeobjectName);
 
-				//define (ƒ`ƒFƒbƒNŠÖ” checkfunc
+				//define (ãƒã‚§ãƒƒã‚¯é–¢æ•° checkfunc
 				Printf(sprh,"#define %s_Check(ob) PyObject_TypeCheck(ob, &%s)\n",cls.pysymbolName,cls.pytypeobjectName);
 
 					
 				//newPyObject
 				Printf(sprh,"PyObject* new%s(const %s*);\n",cls.pysymbolName,cls.classNameEx);
 		
-				///ƒNƒ‰ƒXI‚í‚è
+				///ã‚¯ãƒ©ã‚¹çµ‚ã‚ã‚Š
 				Printf(sprh,"//}%s\n",cls.pysymbolName);
 			}
 #pragma endregion
 
 			
-			// .iƒtƒ@ƒCƒ‹‚Ì %header  %{ extern int i; `` %} ‚ğ‚±‚±‚É‘}“ü iƒOƒ[ƒoƒ‹ŠÖ”éŒ¾‚È‚Ç
+			// .iãƒ•ã‚¡ã‚¤ãƒ«ã® %header  %{ extern int i; ï½ï½ %} ã‚’ã“ã“ã«æŒ¿å…¥ ï¼ˆã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°å®£è¨€ãªã©
 			for ( int i = 0 ; i < (int)inserts.size() ; i++ )
 			{
 				if(Checkattr(inserts[i],"section","header"))
 					Printf(sprh, Char( Getattr(inserts[i],"code") ) );
 			}
 
-			///////////////////////ƒ‚ƒWƒ…[ƒ‹‚Ì‰Šú‰»ŠÖ”
+			///////////////////////ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®åˆæœŸåŒ–é–¢æ•°
 			Printf(sprh,"void init%s(PyObject *rootModule = NULL) ;\n",moduleName);
 
 
-			//ƒCƒ“ƒNƒ‹[ƒhƒK[ƒhI‚í‚è
+			//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰çµ‚ã‚ã‚Š
 			Printf(sprh,"#endif\n");
 		}
 
-		//////////////////////////////////@APIƒwƒbƒ_[ƒtƒ@ƒCƒ‹ I‚í‚è  ///////////////////////////
+		//////////////////////////////////ã€€APIãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ« çµ‚ã‚ã‚Š  ///////////////////////////
 
 
-		//////////////////////////////////@ƒwƒbƒ_[ƒtƒ@ƒCƒ‹  ///////////////////////////
+		//////////////////////////////////ã€€ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«  ///////////////////////////
 		{
 			
-			//ƒCƒ“ƒNƒ‹[ƒhƒK[ƒh
+			//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰
 			string upper = "";
 			upper.append(Util.Vars.filenamePrefix);
 			upper.append(moduleName);
@@ -568,25 +568,25 @@ public:
 			Printf(hpp,"#ifndef %s\n",ToUpperString(upper).c_str());
 			Printf(hpp,"#define %s\n",ToUpperString(upper).c_str());
 
-			//// .iƒtƒ@ƒCƒ‹‚Ì %begin  { #include `` %} ‚ğŒ³‚É‚ÉƒCƒ“ƒNƒ‹[ƒh
+			//// .iãƒ•ã‚¡ã‚¤ãƒ«ã® %begin  { #include ï½ï½ %} ã‚’å…ƒã«ã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 			//for ( int i = 0 ; i < inserts.size() ; i++ )
 			//{
 			//	if(Checkattr(inserts[i],"section","begin"))
 			//		Printf(hpp, Char( Getattr(inserts[i],"code") ) );
 			//}
 			
-#pragma region ////////////////////// ƒNƒ‰ƒX‚²‚Æ‚É
+#pragma region ////////////////////// ã‚¯ãƒ©ã‚¹ã”ã¨ã«
 			for(vector<ClassInfo>::iterator itc = classinfos.begin() ; itc != classinfos.end() ; itc++)
 			{
 				ClassInfo cls = *itc;
 
-				////////////ƒNƒ‰ƒXn‚Ü‚è//////////////////
+				////////////ã‚¯ãƒ©ã‚¹å§‹ã¾ã‚Š//////////////////
 				Printf(hpp,"\n//{*********%s*******\n",cls.pysymbolName);
 
-				//runtime downcast —p
+				//runtime downcast ç”¨
 				Printf(hpp,"void to%s( EPObject* obj);\n",cls.pysymbolName);
 
-				//ƒvƒƒgƒ^ƒCƒvéŒ¾
+				//ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 				for(map<string,MethodInfoEx>::iterator itmex = cls.methods.begin() ; itmex != cls.methods.end() ; itmex++)
 				{
 					MethodInfoEx methEx = (*itmex).second;
@@ -597,30 +597,30 @@ public:
 						Printf(hpp,"//%s\n",Char(Getattr(methEx.methods[0].node,"code")));
 				}
 				
-				///ƒNƒ‰ƒXI‚í‚è
+				///ã‚¯ãƒ©ã‚¹çµ‚ã‚ã‚Š
 				Printf(hpp,"//}%s\n",cls.pysymbolName);
 			}
 #pragma endregion
 
 			//
-			//// .iƒtƒ@ƒCƒ‹‚Ì %header  %{ extern int i; `` %} ‚ğ‚±‚±‚É‘}“ü iƒOƒ[ƒoƒ‹ŠÖ”éŒ¾‚È‚Ç
+			//// .iãƒ•ã‚¡ã‚¤ãƒ«ã® %header  %{ extern int i; ï½ï½ %} ã‚’ã“ã“ã«æŒ¿å…¥ ï¼ˆã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°å®£è¨€ãªã©
 			//for ( int i = 0 ; i < inserts.size() ; i++ )
 			//{
 			//	if(Checkattr(inserts[i],"section","header"))
 			//		Printf(hpp, Char( Getattr(inserts[i],"code") ) );
 			//}
 			
-			//ƒCƒ“ƒNƒ‹[ƒhƒK[ƒhI‚í‚è
+			//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰çµ‚ã‚ã‚Š
 			Printf(hpp,"#endif\n");
 		}
-		////////////////////////////// ƒwƒbƒ_[ƒtƒ@ƒCƒ‹ I‚í‚è  ///////////////////////////
+		////////////////////////////// ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ« çµ‚ã‚ã‚Š  ///////////////////////////
 
 
-		//////////////////////////////////////@ƒ\[ƒXƒtƒ@ƒCƒ‹  ////////////////////////////////
-		//ƒCƒ“ƒNƒ‹[ƒh‚Íƒoƒbƒ`ƒtƒ@ƒCƒ‹‚Å’Ç‰Á‚·‚é
+		//////////////////////////////////////ã€€ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«  ////////////////////////////////
+		//ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã¯ãƒãƒƒãƒãƒ•ã‚¡ã‚¤ãƒ«ã§è¿½åŠ ã™ã‚‹
 
 
-		//ƒOƒ[ƒoƒ‹•Ï”‚Ì’è‹`
+		//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã®å®šç¾©
 		Printf(cpp,"//*********** Decl Global variables ***********\n");
 		for ( int i = 0 ; i < (int)gVariableNodes.size() ; i++)
 		{
@@ -630,16 +630,16 @@ public:
 		Printf(cpp,"\n\n");
 
 		
-#pragma region ///////////////////////class–ˆ‚Éˆ—
+#pragma region ///////////////////////classæ¯ã«å‡¦ç†
 		for(vector<ClassInfo>::iterator itc = classinfos.begin() ; itc != classinfos.end() ; itc++)
 		{
 			ClassInfo cls = *itc;
 
-			////////////ƒNƒ‰ƒXn‚Ü‚è//////////////////
+			////////////ã‚¯ãƒ©ã‚¹å§‹ã¾ã‚Š//////////////////
 			Printf(cpp,"\n//{*********%s*******\n",cls.pysymbolName);
 
 
-			////////‚»‚Ì‚P				
+			////////ãã®ï¼‘				
 			////
 			//FUNCTION :=  
 			//
@@ -665,7 +665,7 @@ public:
 					//PUBLIC_BODY
 					Printf(cpp,"%s\n",methEx.publicBodyCode.c_str());
 
-					//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆø”‚ªNULL‚Ì‚Æ‚«@iC++‘¤‚©‚çŒÄ‚Î‚ê‚½‚Æ‚«
+					//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å¼•æ•°ãŒNULLã®ã¨ãã€€ï¼ˆC++å´ã‹ã‚‰å‘¼ã°ã‚ŒãŸã¨ã
 					Printf(cpp,"if(!%s) return 0;\n",Util.Vars.VARNAME_ARG);
 					
 					if ( methEx.methods.size() == 1 )
@@ -689,7 +689,7 @@ public:
 			for(map<string,MethodInfoEx>::iterator itmex = cls.methods.begin() ; itmex != cls.methods.end() ; itmex++)
 			{
 				MethodInfoEx methEx = (*itmex).second;
-				//—LŒø‚ÈŠÖ”‚ª‚È‚¢ê‡‚Ío—Í‚¹‚¸‚Écontinue
+				//æœ‰åŠ¹ãªé–¢æ•°ãŒãªã„å ´åˆã¯å‡ºåŠ›ã›ãšã«continue
 				if( methEx.methods.empty() ) continue;
 
 				Printf(cpp,"PyObject* __PYDECL %s( %s ) {",methEx.pyfuncNameCode.c_str() , methEx.pyparamCode.c_str() );
@@ -698,9 +698,9 @@ public:
 					//PUBLIC_BODY
 					Printf(cpp,"%s\n",methEx.publicBodyCode.c_str());
 
-					//staticŠÖ”‚Íˆø”‚ª0 (NULL‚ÌPyObject*)‚È‚Ì‚ÅANullƒ`ƒFƒbƒN•s—v
+					//staticé–¢æ•°ã¯å¼•æ•°ãŒ0 (NULLã®PyObject*)ãªã®ã§ã€Nullãƒã‚§ãƒƒã‚¯ä¸è¦
 					if( !methEx.isStatic ){
-						//self->ptr‚ªNULL‚Ì‚Æ‚«
+						//self->ptrãŒNULLã®ã¨ã
 						Printf(cpp,"if( EPObject_Ptr(%s) == NULL ){\n",Util.Vars.VARNAME_SELF,Util.Vars.VARNAME_SELF);
 						Printf(cpp,"PyErr_SetString( PyErr_Spr_NullReference , \"Null Reference in %s.%s\");\n",methEx.className,methEx.methodName);
 						Printf(cpp,"return NULL;\n}\n");
@@ -720,39 +720,39 @@ public:
 
 
 
-			//‚»‚Ì‚Q
+			//ãã®ï¼’
 			{
-				/////////// getsetŠÖ”’è‹`
+				/////////// getseté–¢æ•°å®šç¾©
 				Printf(cpp,"%s\n",cls.getsetMethodCode.c_str());
 
 
-				///////////ŠÖ”ƒe[ƒuƒ‹\‘¢‘Ì‘‚«o‚µ
+				///////////é–¢æ•°ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€ ä½“æ›¸ãå‡ºã—
 				Printf(cpp,"%s",cls.methodTable.c_str());
 				Printf(cpp,"%s",cls.mathMethodTable.c_str());
 				Printf(cpp,"%s",cls.getsetTable.c_str());
 			
 
-				///////////“à•”‚©‚çŒÄ‚Î‚ê‚édealloc,str,init,new‚È‚Ç
+				///////////å†…éƒ¨ã‹ã‚‰å‘¼ã°ã‚Œã‚‹dealloc,str,init,newãªã©
 				Printf(cpp,"void __PYDECL %s_dealloc(PyObject* self){\n",cls.pysymbolName);
 				{
-					//ƒfƒoƒbƒOo—Í
+					//ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›
 					Printf(cpp,"#ifdef DEBUG_OUTPUT\n");
 					Printf(cpp,"printf(\"%s dealloc called (MemoryManager=\");\n",cls.className);
 					Printf(cpp,"if( ((EPObject*)self)->mm == EP_MM_SPR ) printf(\"Springhead)\\n\");\n");
 					Printf(cpp,"else if( ((EPObject*)self)->mm == EP_MM_PY ) printf(\"Python)\\n\");\n"); 
 					Printf(cpp,"#endif\n");
 
-					//’l“n‚µ‚³‚ê‚½‚Æ‚«A’l•Û‚Ì‚½‚ß‚Éƒf[ƒ^‚ğƒRƒs[‚·‚é
-					//UTRef‚ªg‚¦‚éê‡‚ÍUTRef‚Å•Û‚·‚é
+					//å€¤æ¸¡ã—ã•ã‚ŒãŸã¨ãã€å€¤ä¿æŒã®ãŸã‚ã«ãƒ‡ãƒ¼ã‚¿ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
+					//UTRefãŒä½¿ãˆã‚‹å ´åˆã¯UTRefã§ä¿æŒã™ã‚‹
 					if ( cls.isUTRef )
 						Printf(cpp,"//UTRef will delete\n"); 
 					else 
 					{
-						//Python‚Ìƒƒ‚ƒŠŠÇ—‚¾‚Á‚½ê‡Á‚·
+						//Pythonã®ãƒ¡ãƒ¢ãƒªç®¡ç†ã ã£ãŸå ´åˆæ¶ˆã™
 						Printf(cpp,"if ( ((EPObject*)self)->mm == EP_MM_PY ) ");
 						Printf(cpp,"delete EPObject_Ptr(self);\n");
 					}
-					//©g‚ğŠJ•ú
+					//è‡ªèº«ã‚’é–‹æ”¾
 					Printf(cpp,"self->ob_type->tp_free(self);\n");
 				}
 				Printf(cpp,"}\n");
@@ -760,8 +760,8 @@ public:
 
 				Printf(cpp,"PyObject* __PYDECL %s_str(){return Py_BuildValue(\"s\",\"This is %s.\");}\n",cls.pysymbolName,cls.pyobjectName);
 
-				//EPObject‚Ìƒƒ‚ƒŠŠm•Û
-				//’†‚Ìptr‚ÍNULL ( EP`_`‚Æ‚¢‚¤–¼‘O‚ÌŠÖ”iinitŠÖ”j‚Åptr‚Ì’†g‚ªì‚ç‚ê‚é
+				//EPObjectã®ãƒ¡ãƒ¢ãƒªç¢ºä¿
+				//ä¸­ã®ptrã¯NULL ( EPï½_ï½ã¨ã„ã†åå‰ã®é–¢æ•°ï¼ˆinité–¢æ•°ï¼‰ã§ptrã®ä¸­èº«ãŒä½œã‚‰ã‚Œã‚‹
 				Printf(cpp,"PyObject* __PYDECL %s_new(PyTypeObject *type,PyObject *args, PyObject *kwds)\n{\n",cls.pysymbolName);
 				{
                                         PrintfTRY
@@ -782,25 +782,25 @@ public:
 			}
 			
 
-			/////////‚»‚Ì‚R
+			/////////ãã®ï¼“
 			{
 				////////////////////TypeObject	
 				Printf(cpp,"%s", cls.typeobjectCode.c_str());
 
 
 
-				//ŠO•”‚©‚çŒÄ‚Î‚ê‚éinit,new
+				//å¤–éƒ¨ã‹ã‚‰å‘¼ã°ã‚Œã‚‹init,new
 				Printf(cpp,"void init%s(PyObject *rootModule)\n{\n",cls.pysymbolName);
 				{
-					Printf(cpp,"if ( PyType_Ready( &%s ) < 0 ) return ;//PythonƒNƒ‰ƒX‚Ìì¬\n",cls.pytypeobjectName);
+					Printf(cpp,"if ( PyType_Ready( &%s ) < 0 ) return ;//Pythonã‚¯ãƒ©ã‚¹ã®ä½œæˆ\n",cls.pytypeobjectName);
 
-					//«‘‚É’Ç‰Á‚³‚ê‚éTypeObject‚ÌƒCƒ“ƒfƒbƒNƒX
+					//è¾æ›¸ã«è¿½åŠ ã•ã‚Œã‚‹TypeObjectã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 					string indexName = cls.className;
-					if( cls.classType == SPR_CLASSTYPE_IF ) //`If‚Ìê‡‚ÍIf‚ğæ‚èœ‚­
+					if( cls.classType == SPR_CLASSTYPE_IF ) //ï½Ifã®å ´åˆã¯Ifã‚’å–ã‚Šé™¤ã
 						indexName = Util.TrimEnd(indexName,"If");
 					Printf(cpp,"string package;");
 					Printf(cpp,"if(rootModule) package = PyModule_GetName(rootModule);\n");
-					Printf(cpp,"else{// rootModule‚ª“n‚³‚ê‚½ê‡‚ÍEP_MODULE_NAME‚Í–³‹‚³‚ê‚é\n");
+					Printf(cpp,"else{// rootModuleãŒæ¸¡ã•ã‚ŒãŸå ´åˆã¯EP_MODULE_NAMEã¯ç„¡è¦–ã•ã‚Œã‚‹\n");
 					Printf(cpp,"#ifdef EP_MODULE_NAME\n");
 					Printf(cpp,"package = EP_MODULE_NAME \".\";\n");
 					Printf(cpp,"rootModule = PyImport_AddModule( EP_MODULE_NAME );\n");
@@ -824,12 +824,12 @@ public:
 					Printf(cpp,"PyModule_AddObject(subModule,\"%s\",(PyObject*)&%s);\n",indexName.c_str(),cls.pytypeobjectName);
 
 
-					////builtin‚Æ‚µ‚ÄSpringhead‚ğæ‚è‚Şê‡
+					////builtinã¨ã—ã¦Springheadã‚’å–ã‚Šè¾¼ã‚€å ´åˆ
 					//Printf(cpp,"#ifdef EP_AS_BUILTIN\n");
 					//Printf(cpp,"m = PyImport_ImportModule(\"builtins\");\n");
 					//Printf(cpp,"Py_INCREF(&%s);\n",cls.pytypeobjectName);
 					//Printf(cpp,"PyModule_AddObject(m,\"%s\",(PyObject *)&%s);\n",Util.TrimEnd(cls.className,"If").c_str(),cls.pytypeobjectName);
-					////module‚Æ‚µ‚ÄSpringhead‚ğæ‚è‚Şê‡
+					////moduleã¨ã—ã¦Springheadã‚’å–ã‚Šè¾¼ã‚€å ´åˆ
 					//Printf(cpp,"#else\n");
 					//Printf(cpp,"m = PyImport_AddModule(\"%s\");\n",moduleName);
 					//Printf(cpp,"Py_INCREF(&%s);\n",cls.pytypeobjectName);
@@ -838,8 +838,8 @@ public:
 				}
 				Printf(cpp,"}\n");
 			
-				//’l“n‚µ‚ÍŠî–{“I‚É‚È‚µ@
-				//Vector‚È‚Ç‚Í—áŠO“I‚É .iƒtƒ@ƒCƒ‹‚É‹Lq‚·‚é
+				//å€¤æ¸¡ã—ã¯åŸºæœ¬çš„ã«ãªã—ã€€
+				//Vectorãªã©ã¯ä¾‹å¤–çš„ã« .iãƒ•ã‚¡ã‚¤ãƒ«ã«è¨˜è¿°ã™ã‚‹
 
 				//new
 				Printf(cpp,"PyObject* new%s(const %s* org)\n{\n",cls.pysymbolName, cls.classNameEx);
@@ -855,12 +855,12 @@ public:
 				Printf(cpp,"}\n");
 
 
-				// runtime downcast—pŠÖ”
+				// runtime downcastç”¨é–¢æ•°
 				Printf(cpp,"void to%s( EPObject* obj){\n",cls.pysymbolName);
 				{
 					//Printf(cpp,"Py_DECREF(obj->ob_base.ob_type);\n");
 					//Printf(cpp,"Py_INCREF(&%s);\n",cls.pytypeobjectName);
-					//Œ^î•ñ‚ÍRefCount‚ÅŠÇ—‚³‚ê‚È‚¢H
+					//å‹æƒ…å ±ã¯RefCountã§ç®¡ç†ã•ã‚Œãªã„ï¼Ÿ
 
 					Printf(cpp,"obj->ob_base.ob_type = &%s;\n",cls.pytypeobjectName);
 				}
@@ -869,12 +869,12 @@ public:
 
 			}
 
-			///ƒNƒ‰ƒXI‚í‚è
+			///ã‚¯ãƒ©ã‚¹çµ‚ã‚ã‚Š
 			Printf(cpp,"//}%s\n",cls.className);
 		}
 #pragma endregion
 
-		// .iƒtƒ@ƒCƒ‹‚Ì %wrapper %{  %} ‚ğ‚±‚±‚É‘}“ü
+		// .iãƒ•ã‚¡ã‚¤ãƒ«ã® %wrapper %{  %} ã‚’ã“ã“ã«æŒ¿å…¥
 		for ( int i = 0 ; i < (int)inserts.size() ; i++ )
 		{
 			if(Checkattr(inserts[i],"section","wrapper"))
@@ -883,27 +883,27 @@ public:
 
 
 		Printf(cpp,"/**************** for Module ******************/\n");
-		//ƒ‚ƒWƒ…[ƒ‹‰Šú‰»ŠÖ”
+		//ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åˆæœŸåŒ–é–¢æ•°
 		Printf(cpp,"void init%s(PyObject *rootModule)\n{\n",moduleName);
 		
-		//Utilityƒ‚ƒWƒ…[ƒ‹‚Ìê‡‚ÍEPObject‚Ì‰Šú‰»‚ğ‚Â‚¢‚©@
+		//Utilityãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®å ´åˆã¯EPObjectã®åˆæœŸåŒ–ã‚’ã¤ã„ã‹ã€€
 		if ( moduleNameStr == "Utility" ) Printf(cpp,"initEPObject(rootModule);\n");
 		for(vector<ClassInfo>::iterator itc = classinfos.begin() ; itc != classinfos.end() ; itc++)
 		{
 			Printf(cpp,"init%s(rootModule);\n",(*itc).pysymbolName);
 			
-			//runtime downcast—p
+			//runtime downcastç”¨
 			if( itc->classType == SPR_CLASSTYPE_IF )			
 				Printf(cpp,"EPObject_RegistCastfunc(%s::GetIfInfoStatic(),to%s);\n",itc->classNameStr.c_str(),itc->pysymbolName); 
 		}
 		Printf(cpp,"}\n");
-		//////////////////////////////////@ƒ\[ƒXƒtƒ@ƒCƒ‹ I‚í‚è  //////////////////////////////
+		//////////////////////////////////ã€€ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ« çµ‚ã‚ã‚Š  //////////////////////////////
 
 
 
-		/////////////////////////////////////////////////////////////o—ÍI‚í‚è/////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////å‡ºåŠ›çµ‚ã‚ã‚Š/////////////////////////////////////////////////////////////////
 
-		//	ƒcƒŠ[‚Ìƒ_ƒ“ƒv‚ğo—Í
+		//	ãƒ„ãƒªãƒ¼ã®ãƒ€ãƒ³ãƒ—ã‚’å‡ºåŠ›
 		string logfilename( string("swig_") + moduleNameStr + string(".log"));
 		log = NewFile((DOH*)logfilename.c_str(), "w", NULL);
 		if (!log) {
@@ -945,13 +945,13 @@ public:
 
 	void DumpNode(DOHFile* file, Node *obj) {
 		PrintIndent(file, 0);
-		//	ƒm[ƒh‚Ì•\¦
+		//	ãƒãƒ¼ãƒ‰ã®è¡¨ç¤º
 		
 		Printf(file, "+++ %s (0x%x) ----------------------------------------\n", nodeType(obj),obj);
 		Iterator ki;
 		Node *cobj;
 		ki = First(obj);
-		//	ƒm[ƒh‚Ì‚à‚Â‘®«‚Ì•\¦
+		//	ãƒãƒ¼ãƒ‰ã®ã‚‚ã¤å±æ€§ã®è¡¨ç¤º
 		while (ki.key) {
 			String *k = ki.key;
 			if ((Cmp(k, "nodeType") == 0) ||
@@ -980,7 +980,7 @@ public:
 					Delete(o);
 				} 
 
-				//baselist‚¾‚¯ƒŠƒXƒg‚ğ“WŠJ
+				//baselistã ã‘ãƒªã‚¹ãƒˆã‚’å±•é–‹
 				else if (Cmp(k,"baselist") == 0 && DohIsSequence(attr)){
 						Printf(file, "%-12s - { ", k);
 						for(int i=0; i<DohLen(attr); ++i){
@@ -991,7 +991,7 @@ public:
 							}
 						}
 						Printf(file, "}\n");
-				}else if (DohIsMapping(attr) && false/*Mapping‚Ìƒ_ƒ“ƒv–³Œø*/){
+				}else if (DohIsMapping(attr) && false/*Mappingã®ãƒ€ãƒ³ãƒ—ç„¡åŠ¹*/){
 					Printf(file, "%-12s - {", k);
 					DohIterator it = DohFirst(attr);
 					do{
@@ -1014,7 +1014,7 @@ public:
 			}
 			ki = Next(ki);
 		}
-		//	qƒm[ƒh‚Ì•\¦
+		//	å­ãƒãƒ¼ãƒ‰ã®è¡¨ç¤º
 		cobj = firstChild(obj);
 		if (cobj) {
 			indent_level += 4;

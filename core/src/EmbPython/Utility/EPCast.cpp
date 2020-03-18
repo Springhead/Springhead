@@ -1,4 +1,4 @@
-﻿#include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
+﻿#include "../../../include/EmbPython/Utility/SprEPCast.h"
 using namespace std;
 #include <locale>
 #include "EmbPython/SprEPBase.h"
@@ -28,15 +28,15 @@ long PyObject_asLong(PyObject* obj)
 	return 0;
 }
 
-#define PyObject_as3(N,S,T)									\
-N##S##T PyObject_as##N##S##T##(PyObject* obj){				\
-if( obj->ob_type == &EP##N##S##dType)						\
-	return ((##N##S##T##)*EPObject_Cast(obj,N##S##d));		\
-	if( obj->ob_type == &EP##N##S##fType)					\
-	return ((##N##S##T##)*EPObject_Cast(obj,N##S##f));		\
-	DSTR << "CastError at PyObject_as3(" #N #S #T ")\n";	\
-EP_ASSERT(0);													\
-return N##S##T##();											\
+#define PyObject_as3(N,S,T)						\
+N##S##T PyObject_as##N##S##T(PyObject* obj){				\
+	if( obj->ob_type == &EP##N##S##dType)				\
+		return ((N##S##T)*EPObject_Cast(obj,N##S##d));		\
+	if( obj->ob_type == &EP##N##S##fType)				\
+		return ((N##S##T)*EPObject_Cast(obj,N##S##f));		\
+	DSTR << "CastError at PyObject_as3(" #N #S #T ")\n";		\
+	EP_ASSERT(0);							\
+	return N##S##T();						\
 }
 
 PyObject_as3(Vec,2,d)
@@ -68,15 +68,15 @@ PyObject_as3(Affine,2,f)
 //	return Matrix3d();
 //}
 
-#define PyObject_as2(N,T)									\
-N##T PyObject_as##N##T##(PyObject* obj){					\
-	if( obj->ob_type == &EP##N##dType )						\
-	return (##N##T##)*EPObject_Cast(obj,##N##d);			\
-	if( obj->ob_type == &EP##N##fType )						\
-	return (##N##T##)*EPObject_Cast(obj,##N##f);			\
+#define PyObject_as2(N,T)						\
+N##T PyObject_as##N##T(PyObject* obj){					\
+	if( obj->ob_type == &EP##N##dType )				\
+		return (N##T)*EPObject_Cast(obj,N##d);			\
+	if( obj->ob_type == &EP##N##fType )				\
+		return (N##T)*EPObject_Cast(obj,N##f);			\
 	DSTR << "CastError at PyObject_as2(" #N #T ")\n";		\
-	EP_ASSERT(0);												\
-	return N##T##();									\
+	EP_ASSERT(0);							\
+	return N##T();							\
 }
 
 PyObject_as2(Affine,d)

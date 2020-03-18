@@ -32,14 +32,18 @@ typedef std::vector<string> Strings;
 typedef std::vector<Node*> Nodes;
 
 
-#pragma region ƒOƒ[ƒoƒ‹ŠÖ”
+#pragma region ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°
 void FindNodeR(Nodes& rv, Node* n, char* type);
 void FindNode(Nodes& rv, Node* n, char* type);
 
 std::string TrimSuffix(DOHString* s, char* suffix);
 std::string Trim(char* pre, DOHString* s, char* suf);
 std::string GetString(DOHString* s);
+#ifdef _WIN32
 std::string DecodeType(DOHString* n, std::string& post = string());
+#else
+std::string DecodeType(DOHString* n, std::string& post);
+#endif
 void GetBaseList(Strings& rv, DOH* baseList, char* suffix);
 
 #pragma endregion
