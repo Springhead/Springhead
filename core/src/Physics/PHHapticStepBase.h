@@ -113,9 +113,6 @@ public:
 	std::vector<float> muCurs;				///< 計算された時変摩擦係数
 	std::vector<float> stribeckVelocitys;
 	std::vector<float> stribeckmus;
-	std::vector<double> c;
-	std::vector<float> bristleK;			/// 剛毛モデルもばね係数
-
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
@@ -152,16 +149,12 @@ struct PHSolidPairForHapticSt{
 
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
-	unsigned slipCount;      ///stribeck効果用
 
-							 //GMS用
+	//GMS用
 	std::vector<unsigned> fricCounts;
 	std::vector<unsigned> contactCounts;
 	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
-	std::vector<Vec3d> z;
-	std::vector<Vec3d> lastz;
-	Vec3d lasttangent;
-	std::vector<double> laststaticflag;
+	std::vector<int> slipState;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
@@ -207,20 +200,13 @@ public:
 			contactCounts.push_back(0);
 		}
 	}
-	void InitZ(int n) {
-		z.clear();
+	void InitSlipState(int n) {
+		slipState.clear();
 		for (int i = 0; i < n; i++) {
-			z.push_back(Vec3d(0.0f,0.0f,0.0f));
+			slipState.push_back(0);
 		}
 	}
-	void InitlastStaticFlag(int n) {
-		laststaticflag.clear();
-		for (int i = 0; i < n; i++) {
-			laststaticflag.push_back(0);
-		}
-	}
-	Vec3d GetZ(int i) { return z[i]; }
-
+	int GetSlipState(int i) { return slipState[i]; }
 
 	Vec3d GetForce(){ return force; }
 	Vec3d GetTorque(){ return torque; }

@@ -15,6 +15,7 @@ struct PHHapticPointerHapticSt{
 	Posed proxyPose;			// 反力計算用のProxyの姿勢	IRsのLCPで追い出した後の位置
 	Posed lastProxyPose;		// 1(haptic)ステップ前のproxyPoseの位置、デバイスの向き
 	SpatialVector lastProxyVelocity;// lastProxyの速度(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
+
 	SpatialVector hapticForce;	// HapticRenderingで求めた、提示すべき力
 	PHHapticPointerHapticSt();
 };
@@ -38,9 +39,11 @@ struct PHHapticPointerPhysicsSt {
 	PHHapticPointerPhysicsSt();
 
 	//GMS用
+	bool bSimulation;
+	bool bMultiproxy;
 	int proxyN;
-	Vec3d totalZ;
-	Vec3d z[10];
+	int totalSlipState;
+	std::vector<int> slipState;
 };
 
 class PHHapticPointer : public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
@@ -99,10 +102,14 @@ public:
 	Posed	GetDefaultPose(){ return defaultPose; }
 
 	//GMS用
+	void	EnableMultiProxy(bool b) { bMultiproxy = b; }
+	bool	IsMultiProxy() { return bMultiproxy; }
+	void	EnableSimulation(bool b) { bSimulation = b; }
+	bool	IsSimulation() { return bSimulation; }
 	void	SetProxyN(int n) { proxyN = n; }
 	int		GetProxyN() { return proxyN; }
-	Vec3d GetTotalZ() { return totalZ; }
-	Vec3d GetZ(int i) { return z[i]; }
+	int GetTotalSlipState() { return totalSlipState; }
+	int GetSlipState(int i) { return slipState[i]; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {

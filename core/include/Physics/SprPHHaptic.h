@@ -45,6 +45,11 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	EnableMultiPoints(bool b);
 	bool	IsMultiPoints();
 
+	void	EnableMultiProxy(bool b);
+	bool	IsMultiProxy();
+	void	EnableSimulation(bool b);
+	bool	IsSimulation();
+
 	void	SetFrictionSpring(float s);				///<	摩擦で動的Proxyを使う場合のバネ係数
 	float	GetFrictionSpring();					///<	摩擦で動的Proxyを使う場合のバネ係数
 	void	SetFrictionDamper(float s);				///<	摩擦で動的Proxyを使う場合のダンパ係数
@@ -73,11 +78,11 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
 	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
 
-													//GMS用
-	void	SetProxyN(int n);				///<	proxyの数
-	int		GetProxyN();///<    proxyの数
-	Vec3d GetTotalZ();
-	Vec3d GetZ(int i);
+	//GMS用
+	void	SetProxyN(int n);						///<	proxyの数を設定
+	int		GetProxyN();							///<    proxyの数を取得
+	int GetTotalSlipState();
+	int GetSlipState(int i);
 
 	void SetProxyVelocity(SpatialVector spv);
 
@@ -114,8 +119,8 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	void InitFrictionState(int n);
 	void InitFrictionCount(int n);
 	void InitContactCount(int n);
-	void InitZ(int n);
-	Vec3d GetZ(int i);
+	void InitSlipState(int n);
+	int GetSlipState(int i);
 	Vec3d GetForce();
 	Vec3d GetTorque();
 };

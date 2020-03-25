@@ -41,15 +41,15 @@ PHMaterial::PHMaterial(){
 
 
 //GMS用
-	timeVaryFrictionAs = { 0.0001f,0.0001f,0.001f };
-	timeVaryFrictionBs = { 1800,1800,1800 };
+	timeVaryFrictionAs = { 0.0001f,0.0003f,0.005f };
+	timeVaryFrictionBs = { 1800,1500,2500 };
 	timeVaryFrictionCs = { 0.0f,0.0f,0.0f };
 	timeVaryFrictionDs = { 0.0f,0.0f,0.0f };
-	mus = { 0.001f,0.002f,0.003f };
+	mus = { 0.02f,0.07f,0.03f };
 	mu0s = { 0.5f,0.5f,0.50f };
-	stribeckmus = { 0.0001f,0.0001f,0.0001f };
-	stribeckVelocitys = { 0.1f,0.1f,0.1f };
-	c = { 0.01f,0.01f,0.01f };
+	stribeckmus = { 0.005f,0.007f,0.009f };
+	stribeckVelocitys = { 0.4f,0.5f,0.2f };
+	c = { 0.01f,0.03f,0.05f };
 	bristleK = { 1000.0f,700.0f,800.0f };
 
 	
