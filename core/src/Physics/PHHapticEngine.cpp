@@ -48,8 +48,6 @@ namespace Spr {
 		stribeckVelocitys = { 0,0,0,0,0 };
 		stribeckmus = { 0,0,0,0,0 };
 		timeVaryFrictionDs = { 0,0,0,0,0 };
-		c ={0,0,0,0,0};
-		bristleK = { 0,0,0,0,0 };
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);
@@ -74,8 +72,6 @@ namespace Spr {
 			timeVaryFrictionBs[i] = (shape[0]->GetMaterial().timeVaryFrictionBs[i] + shape[1]->GetMaterial().timeVaryFrictionBs[i]) * 0.5;
 			stribeckVelocitys[i] = (shape[0]->GetMaterial().stribeckVelocitys[i] + shape[1]->GetMaterial().stribeckVelocitys[i]) * 0.5;
 			stribeckmus[i] = (shape[0]->GetMaterial().stribeckmus[i] + shape[1]->GetMaterial().stribeckmus[i]) * 0.5;
-			c[i] = (shape[0]->GetMaterial().c[i] + shape[1]->GetMaterial().c[i]) * 0.5;
-			bristleK[i] = (shape[0]->GetMaterial().bristleK[i] + shape[1]->GetMaterial().bristleK[i]) * 0.5;
 		}
 
 

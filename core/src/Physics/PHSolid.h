@@ -151,6 +151,7 @@ public:
 	///	角速度の設定
 	void		SetAngularVelocity(const Vec3d& av);
 
+	//GMS用
 	///	質量中心の速度と角速度をまとめて取得
 	//SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity, angVelocity); }
 
