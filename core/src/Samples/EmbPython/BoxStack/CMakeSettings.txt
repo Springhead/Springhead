@@ -110,7 +110,7 @@ if(Windows)
     set(LINK_FLAGS_ADD ${EMPTY})
 else()
     set(COMP_FLAGS_ADD ${EMPTY})
-    set(LINK_FLAGS_ADD ${EMPTY})
+    set(LINK_FLAGS_ADD -pthread)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -121,7 +121,9 @@ endif()
 if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
-    set(LIBRARY_PATHS_ADD ${EMPTY})
+    set(LIBRARY_PATHS_ADD /home/demo/ExtLibs/gnulib
+			  /usr/lib/lapack)
+			  #/usr/lib/x86_64-linux-gnu)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -136,7 +138,10 @@ if(Windows)
 #    set(LIBRARY_NAMES_RELEASE python35.lib)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
-    set(LIBRARY_NAMES_ADD ${EMPTY})
+    set(LIBRARY_NAMES_ADD EmbPython
+			  lapack
+			  python3.4m
+			  util)
 endif()
 
 # ------------------------------------------------------------------------------

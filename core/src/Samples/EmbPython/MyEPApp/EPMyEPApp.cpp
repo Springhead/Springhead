@@ -1,4 +1,4 @@
-#include "../../../../include/Springhead.h"                 
+ï»¿#include "../../../../include/Springhead.h"                 
 #include "../../../../include/Python/Python.h"    
 #include "../../../../include/EmbPython/SprEPUtility.h"    
 #include "../../../../include/EmbPython/SprEPBase.h"       
@@ -23,7 +23,7 @@ int __PYDECL EPSampleAppObjectSampleApp( PyObject* self,PyObject* arg,PyObject* 
 	catch (const std::exception& e)
 	{
 		PyErr_SetString(PyErr_Spr_OSException, const_cast<char *>(e.what()));
-		return NULL;
+		return 0;
 	}
 }
 
@@ -148,10 +148,10 @@ PyTypeObject EPSampleAppType =
 };
 void initEPSampleApp(PyObject *rootModule)
 {
-	if ( PyType_Ready( &EPSampleAppType ) < 0 ) return ;//PythonƒNƒ‰ƒX‚Ìì¬
+	if ( PyType_Ready( &EPSampleAppType ) < 0 ) return ;//Pythonã‚¯ãƒ©ã‚¹ã®ä½œæˆ
 	string package;
 	if(rootModule) package = PyModule_GetName(rootModule);
-	else // rootModule‚ª“n‚³‚ê‚½ê‡‚ÍEP_MODULE_NAME‚Í–³Ž‹‚³‚ê‚é
+	else // rootModuleãŒæ¸¡ã•ã‚ŒãŸå ´åˆã¯EP_MODULE_NAMEã¯ç„¡è¦–ã•ã‚Œã‚‹
 	{
 #ifdef EP_MODULE_NAME
 		package = EP_MODULE_NAME ".";
@@ -215,7 +215,7 @@ int __PYDECL EPHogeshi_Hogeshi( PyObject* self,PyObject* arg,PyObject* kwds )
 	catch (const std::exception& e)
 	{
 		PyErr_SetString(PyErr_Spr_OSException, const_cast<char *>(e.what()));
-		return NULL;
+		return 0;
 	}
 }
 static PyObject* __PYDECL EPHogeshi_get_fuga(PyObject* self)
@@ -256,7 +256,12 @@ static PyObject* __PYDECL EPHogeshi_get_piyo(PyObject* self)
 }
 static int __PYDECL EPHogeshi_set_piyo(PyObject* self, PyObject* arg)
 {
+#ifdef _WIN32
 	int &c_piyo = (int)EPObject_Cast(self,Hogeshi)->piyo;
+#else
+	int _tmp = (int)EPObject_Cast(self,Hogeshi)->piyo;
+	int &c_piyo = _tmp;
+#endif
 	PyObject * py_arg = arg;
 	int c_arg = PyObject_asLong(py_arg);
 
@@ -320,10 +325,10 @@ static PyNumberMethods EPHogeshi_math_method_table=
 };
 static PyGetSetDef EPHogeshi_getset_table[] =
 {
-	{"fuga",(getter)EPHogeshi_get_fuga,(setter)EPHogeshi_set_fuga,"member (float)fuga of Hogeshi",NULL},
-	{"guho",(getter)EPHogeshi_get_guho,(setter)EPHogeshi_set_guho,"member (double)guho of Hogeshi",NULL},
-	{"piyo",(getter)EPHogeshi_get_piyo,(setter)EPHogeshi_set_piyo,"member (int)piyo of Hogeshi",NULL},
-	{"bOfu",(getter)EPHogeshi_get_bOfu,(setter)EPHogeshi_set_bOfu,"member (bool)bOfu of Hogeshi",NULL},
+	{(char*)"fuga",(getter)EPHogeshi_get_fuga,(setter)EPHogeshi_set_fuga,(char*)"member (float)fuga of Hogeshi",NULL},
+	{(char*)"guho",(getter)EPHogeshi_get_guho,(setter)EPHogeshi_set_guho,(char*)"member (double)guho of Hogeshi",NULL},
+	{(char*)"piyo",(getter)EPHogeshi_get_piyo,(setter)EPHogeshi_set_piyo,(char*)"member (int)piyo of Hogeshi",NULL},
+	{(char*)"bOfu",(getter)EPHogeshi_get_bOfu,(setter)EPHogeshi_set_bOfu,(char*)"member (bool)bOfu of Hogeshi",NULL},
 	{NULL}
 };
 void __PYDECL EPHogeshi_dealloc(PyObject* self)
@@ -403,10 +408,10 @@ PyTypeObject EPHogeshiType =
 };
 void initEPHogeshi(PyObject *rootModule)
 {
-	if ( PyType_Ready( &EPHogeshiType ) < 0 ) return ;//PythonƒNƒ‰ƒX‚Ìì¬
+	if ( PyType_Ready( &EPHogeshiType ) < 0 ) return ;//Pythonã‚¯ãƒ©ã‚¹ã®ä½œæˆ
 	string package;
 	if(rootModule) package = PyModule_GetName(rootModule);
-	else // rootModule‚ª“n‚³‚ê‚½ê‡‚ÍEP_MODULE_NAME‚Í–³Ž‹‚³‚ê‚é
+	else // rootModuleãŒæ¸¡ã•ã‚ŒãŸå ´åˆã¯EP_MODULE_NAMEã¯ç„¡è¦–ã•ã‚Œã‚‹
 	{
 #ifdef EP_MODULE_NAME
 		package = EP_MODULE_NAME ".";
@@ -464,7 +469,7 @@ int __PYDECL EPMyEPAppObjectMyEPApp( PyObject* self,PyObject* arg,PyObject* kwds
 	catch (const std::exception& e)
 	{
 		PyErr_SetString(PyErr_Spr_OSException, const_cast<char *>(e.what()));
-		return NULL;
+		return 0;
 	}
 }
 PyObject* __PYDECL EPMyEPApp_Drop( PyObject* self,PyObject* arg )
@@ -487,13 +492,16 @@ PyObject* __PYDECL EPMyEPApp_Drop( PyObject* self,PyObject* arg )
 			int c_param2 = PyObject_asLong(py_param2);
 
 			PyObject * py_param3 = (PyTuple_GetItem(arg,2));
-			Vec3d c_param3 = (*(&PyObject_asVec3d(py_param3)));
+			//Vec3d c_param3 = (*(&PyObject_asVec3d(py_param3)));
+			Vec3d c_param3 = PyObject_asVec3d(py_param3);
 
 			PyObject * py_param4 = (PyTuple_GetItem(arg,3));
-			Vec3d c_param4 = (*(&PyObject_asVec3d(py_param4)));
+			//Vec3d c_param4 = (*(&PyObject_asVec3d(py_param4)));
+			Vec3d c_param4 = PyObject_asVec3d(py_param4);
 
 			PyObject * py_param5 = (PyTuple_GetItem(arg,4));
-			Vec3d c_param5 = (*(&PyObject_asVec3d(py_param5)));
+			//Vec3d c_param5 = (*(&PyObject_asVec3d(py_param5)));
+			Vec3d c_param5 = PyObject_asVec3d(py_param5);
 
 			PyObject * py_param6 = (PyTuple_GetItem(arg,5));
 			Quaterniond c_param6 = (*EPObject_Cast(py_param6,Quaterniond));
@@ -597,7 +605,7 @@ PyObject* __PYDECL EPMyEPApp_OnStep( PyObject* self )
 static PyObject* __PYDECL EPMyEPApp_get_vhoge(PyObject* self)
 {
 	std::vector< Hogeshi > c_vhoge = EPObject_Cast(self,MyEPApp)->vhoge;
-	int size = c_vhoge.size();
+	int size = (int) c_vhoge.size();
 	PyObject* py_vhoge = PyList_New(c_vhoge.size());
 	for( int i = 0 ; i < size ; i++)
 	{
@@ -671,7 +679,7 @@ static PyNumberMethods EPMyEPApp_math_method_table=
 };
 static PyGetSetDef EPMyEPApp_getset_table[] =
 {
-	{"vhoge",(getter)EPMyEPApp_get_vhoge,(setter)EPMyEPApp_set_vhoge,"member (std::vector< Hogeshi >)vhoge of MyEPApp",NULL},
+	{(char*)"vhoge",(getter)EPMyEPApp_get_vhoge,(setter)EPMyEPApp_set_vhoge,(char*)"member (std::vector< Hogeshi >)vhoge of MyEPApp",NULL},
 	{NULL}
 };
 void __PYDECL EPMyEPApp_dealloc(PyObject* self)
@@ -751,10 +759,10 @@ PyTypeObject EPMyEPAppType =
 };
 void initEPMyEPApp(PyObject *rootModule)
 {
-	if ( PyType_Ready( &EPMyEPAppType ) < 0 ) return ;//PythonƒNƒ‰ƒX‚Ìì¬
+	if ( PyType_Ready( &EPMyEPAppType ) < 0 ) return ;//Pythonã‚¯ãƒ©ã‚¹ã®ä½œæˆ
 	string package;
 	if(rootModule) package = PyModule_GetName(rootModule);
-	else // rootModule‚ª“n‚³‚ê‚½ê‡‚ÍEP_MODULE_NAME‚Í–³Ž‹‚³‚ê‚é
+	else // rootModuleãŒæ¸¡ã•ã‚ŒãŸå ´åˆã¯EP_MODULE_NAMEã¯ç„¡è¦–ã•ã‚Œã‚‹
 	{
 #ifdef EP_MODULE_NAME
 		package = EP_MODULE_NAME ".";

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,35 +7,35 @@
  */
 
 /* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-<<EmbPython—pswig‚ğ©‘O‚ÌƒNƒ‰ƒX‚É‚àg—p‚·‚éƒTƒ“ƒvƒ‹>>
+<<EmbPythonç”¨swigã‚’è‡ªå‰ã®ã‚¯ãƒ©ã‚¹ã«ã‚‚ä½¿ç”¨ã™ã‚‹ã‚µãƒ³ãƒ—ãƒ«>>
 
-Springhead‚ÌIfƒNƒ‰ƒX‚¾‚¯‚Å‚È‚­CƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚É‚¨‚¢‚Ä©‘O‚Å—pˆÓ‚µ‚½ƒNƒ‰ƒX‚àC
-swig‚ğ—p‚¢‚ÄPython‚©‚çƒAƒNƒZƒX‰Â”\‚É‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+Springheadã®Ifã‚¯ãƒ©ã‚¹ã ã‘ã§ãªãï¼Œã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«ãŠã„ã¦è‡ªå‰ã§ç”¨æ„ã—ãŸã‚¯ãƒ©ã‚¹ã‚‚ï¼Œ
+swigã‚’ç”¨ã„ã¦Pythonã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ã«ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ï¼
 
-0. ƒ‚ƒWƒ…[ƒ‹–¼‚ğ‚«‚ß‚é
-- ‚±‚ÌƒTƒ“ƒvƒ‹‚Å‚Í MyEPApp ‚Å‚·D
--- ŠÜ‚Ü‚ê‚éƒNƒ‰ƒX–¼‚Æ‚Í•K‚¸‚µ‚àˆê’v‚µ‚È‚­‚Ä\‚¢‚Ü‚¹‚ñD
+0. ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åã‚’ãã‚ã‚‹
+- ã“ã®ã‚µãƒ³ãƒ—ãƒ«ã§ã¯ MyEPApp ã§ã™ï¼
+-- å«ã¾ã‚Œã‚‹ã‚¯ãƒ©ã‚¹åã¨ã¯å¿…ãšã—ã‚‚ä¸€è‡´ã—ãªãã¦æ§‹ã„ã¾ã›ã‚“ï¼
 
-1. —pˆÓ‚·‚éƒtƒ@ƒCƒ‹
-- ƒNƒ‰ƒXƒwƒbƒ_iƒ‚ƒWƒ…[ƒ‹–¼.h)
-- .iƒtƒ@ƒCƒ‹iƒ‚ƒWƒ…[ƒ‹–¼.ij %module ‚â %ignore ‚ğ“KØ‚É—pˆÓ‚µC ÅŒã‚É %include "ƒ‚ƒWƒ…[ƒ‹–¼.h"
-- %module:ƒ‚ƒWƒ…[ƒ‹–¼
-- %ignore:python‚©‚çƒAƒNƒZƒX‚µ‚È‚­‚Ä—Ç‚¢MyEPAppƒNƒ‰ƒX‚Ìƒƒ\ƒbƒh or ƒRƒ“ƒpƒCƒ‹‚ª’Ê‚ç‚È‚¢ƒƒ\ƒbƒh‚ÌœŠO(UTRef‚Ü‚í‚è‚Å‹N‚«‚éj
+1. ç”¨æ„ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«
+- ã‚¯ãƒ©ã‚¹ãƒ˜ãƒƒãƒ€ï¼ˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.h)
+- .iãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.iï¼‰ %module ã‚„ %ignore ã‚’é©åˆ‡ã«ç”¨æ„ã—ï¼Œ æœ€å¾Œã« %include "ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.h"
+- %module:ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å
+- %ignore:pythonã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã—ãªãã¦è‰¯ã„MyEPAppã‚¯ãƒ©ã‚¹ã®ãƒ¡ã‚½ãƒƒãƒ‰ or ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ãŒé€šã‚‰ãªã„ãƒ¡ã‚½ãƒƒãƒ‰ã®é™¤å¤–(UTRefã¾ã‚ã‚Šã§èµ·ãã‚‹ï¼‰
 
-2. ‘‚«Š·‚¦‚éƒtƒ@ƒCƒ‹
-- RunSwig.bat ‚Ìæ“ªiMODULE‚âBIN‚ğ“KØ‚ÉƒZƒbƒg‚·‚éj
+2. æ›¸ãæ›ãˆã‚‹ãƒ•ã‚¡ã‚¤ãƒ«
+- RunSwig.bat ã®å…ˆé ­ï¼ˆMODULEã‚„BINã‚’é©åˆ‡ã«ã‚»ãƒƒãƒˆã™ã‚‹ï¼‰
 
-3. ƒrƒ‹ƒh‚Ì•û–@
-- RunSwig.bat‚ğ‘–‚ç‚¹‚é
-- ƒOƒ‹[ƒR[ƒhCSprEPƒ‚ƒWƒ…[ƒ‹–¼.h, EPƒ‚ƒWƒ…[ƒ‹–¼.hCEPƒ‚ƒWƒ…[ƒ‹–¼.cpp‚ª¶¬‚³‚ê‚é
-- ƒrƒ‹ƒh‚·‚é
+3. ãƒ“ãƒ«ãƒ‰ã®æ–¹æ³•
+- RunSwig.batã‚’èµ°ã‚‰ã›ã‚‹
+- ã‚°ãƒ«ãƒ¼ã‚³ãƒ¼ãƒ‰ï¼ŒSprEPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.h, EPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.hï¼ŒEPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.cppãŒç”Ÿæˆã•ã‚Œã‚‹
+- ãƒ“ãƒ«ãƒ‰ã™ã‚‹
 
-4. Às‘O‚É
--SprEPƒ‚ƒWƒ…[ƒ‹–¼.h‚ÆEPƒ‚ƒWƒ…[ƒ‹–¼.h‚ğƒCƒ“ƒNƒ‹[ƒh‚·‚é(‚¨‚»‚ç‚­main.cpp)
--mainŠÖ”“à‚Ìinterpreter->Initialize();‚Ì‚ ‚Æ‚ÅŠÖ”Initƒ‚ƒWƒ…[ƒ‹–¼();‚ğŒÄ‚Ô
--‚±‚ÌŠÖ”‚ÍSprEPƒ‚ƒWƒ…[ƒ‹–¼.h‚ÅéŒ¾‚³‚ê‚Ä‚¢‚é
--*SpringheadŠÖŒW‚Íinterpreter->Initialize();‚Å‰Šú‰»‚³‚ê‚é‚ªC
-	©‘O‚Ì‚à‚Ì‚Í‰Šú‰»‚³‚ê‚È‚¢‚Ì‚Å‚±‚±‚Å‚â‚Á‚Ä‚¨‚­
+4. å®Ÿè¡Œå‰ã«
+-SprEPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.hã¨EPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.hã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹(ãŠãã‚‰ãmain.cpp)
+-mainé–¢æ•°å†…ã®interpreter->Initialize();ã®ã‚ã¨ã§é–¢æ•°Initãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å();ã‚’å‘¼ã¶
+-ã“ã®é–¢æ•°ã¯SprEPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å.hã§å®£è¨€ã•ã‚Œã¦ã„ã‚‹
+-*Springheadé–¢ä¿‚ã¯interpreter->Initialize();ã§åˆæœŸåŒ–ã•ã‚Œã‚‹ãŒï¼Œ
+	è‡ªå‰ã®ã‚‚ã®ã¯åˆæœŸåŒ–ã•ã‚Œãªã„ã®ã§ã“ã“ã§ã‚„ã£ã¦ãŠã
 
 ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
 
@@ -50,20 +50,20 @@ using namespace Spr;
 using namespace std;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh—p
+// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ç”¨
 #ifdef _WIN32
-/// std::max‚È‚Ç‚ğg‚¤‚Ì‚É•K—v(windows.h‚Æ‹£‡‚·‚é‚©‚ç)
+/// std::maxãªã©ã‚’ä½¿ã†ã®ã«å¿…è¦(windows.hã¨ç«¶åˆã™ã‚‹ã‹ã‚‰)
 #define NOMINMAX 
 #include <windows.h>
 #endif
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// WndProc‘‚«Š·‚¦—p
+// WndProcæ›¸ãæ›ãˆç”¨
 LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 WNDPROC OldWndProc;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
 void MyEPApp::Init(int argc, char* argv[]) {
 	this->argc = argc;
 	this->argv = argv;
@@ -89,7 +89,7 @@ void MyEPApp::Init(int argc, char* argv[]) {
 	spaceNavigator1->Init(&descSN);
 	spaceNavigator1->SetPose(Posef(Vec3f(0,0,-5.0), Quaternionf()));
 
-	// ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚ğ’u‚«Š·‚¦
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’ç½®ãæ›ãˆ
 	OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 	SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(NewWndProc));
 
@@ -101,14 +101,14 @@ void MyEPApp::Init(int argc, char* argv[]) {
 MyEPApp app;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒ‹[ƒv‚Ì’†g(‰½‰ñ‚àŒÄ‚Î‚ê‚é
+// ãƒ«ãƒ¼ãƒ—ã®ä¸­èº«(ä½•å›ã‚‚å‘¼ã°ã‚Œã‚‹
 void EPLoop(void* arg) {
-	//ƒCƒ“ƒ^ƒ‰ƒNƒeƒBƒuƒ‚[ƒh‚Å‹N“®
+	//ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ãƒ¢ãƒ¼ãƒ‰ã§èµ·å‹•
 	PyRun_InteractiveLoop(stdin,"SpringheadPython Console");
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// Python <=> Springhead •Ï”Ú‘±—p
+// Python <=> Springhead å¤‰æ•°æ¥ç¶šç”¨
 #define ACCESS_SPR_FROM_PY(cls, name, obj)							\
 	{																\
 		PyObject* pyObj = (PyObject*)newEP##cls((obj));				\
@@ -117,14 +117,14 @@ void EPLoop(void* arg) {
 	}																\
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒ‹[ƒvÀs’¼‘O‚É‚P“x‚¾‚¯ŒÄ‚Î‚ê‚é
+// ãƒ«ãƒ¼ãƒ—å®Ÿè¡Œç›´å‰ã«ï¼‘åº¦ã ã‘å‘¼ã°ã‚Œã‚‹
 void EPLoopInit(void* arg) {
 	MyEPApp* app = (MyEPApp*)arg;
 
-	////Python‚Åƒ‚ƒWƒ…[ƒ‹‚Ìg—péŒ¾
+	////Pythonã§ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ä½¿ç”¨å®£è¨€
 	PyRun_SimpleString("import Spr");
 		
-	// c‚Ìpyobject‚ğpython‚Å“Ç‚ß‚é‚æ‚¤‚É‚·‚é
+	// cã®pyobjectã‚’pythonã§èª­ã‚ã‚‹ã‚ˆã†ã«ã™ã‚‹
 	PyObject *m = PyImport_AddModule("__main__");
 	PyObject *dict = PyModule_GetDict(m);
 
@@ -148,7 +148,7 @@ void EPLoopInit(void* arg) {
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ’u‚«Š·‚¦—pWndProc
+// ç½®ãæ›ãˆç”¨WndProc
 LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	MSG m;
 	m.hwnd		= hWnd;
@@ -167,10 +167,10 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 #if _MSC_VER <= 1500
 #include <GL/glut.h>

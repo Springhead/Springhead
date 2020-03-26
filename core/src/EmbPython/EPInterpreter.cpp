@@ -30,8 +30,15 @@ EPInterpreter* EPInterpreter::Create()
 
 void EPInterpreter::Destroy()
 {
+#ifdef _WIN32
 	if( EPInterpreter::instance != NULL)
 		delete(EPInterpreter::instance);
+#else
+	// g++ complains "deleting object of polymorphic class type
+	// ‘Spr::EPInterpreter’ which has non-virtual destructor
+	// might cause undefined behaviour"
+	// This results memory leak!
+#endif
 }
 
 EPInterpreter::EPInterpreter()

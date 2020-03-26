@@ -12,7 +12,7 @@
 
 #include <sstream>
 
-#include "windows.h"
+//#include "windows.h"
 
 #pragma  hdrstop
 
