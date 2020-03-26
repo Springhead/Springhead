@@ -1,12 +1,14 @@
 #ifndef	_KLUDGE_H
 #define	_KLUDGE_H
 
-// Some cludges for converting from Windws to unix.
+// Some kludges for converting from Windws to unix.
+#include <cstddef>
 
 // -----------------------------
 //  functions
 //
-#define	sprintf_s(b,s,f,...) sprintf(b,f,__VA_ARGS__)
+extern int sprintf_s(char* s, size_t n, const char* f, ...);
+extern int sprintf_s(char* s, const char* f, ...);
 
 // -----------------------------
 //  data types

@@ -1,12 +1,14 @@
-#include "../../SampleApp.h"
+ï»¿#include "../../SampleApp.h"
 
 #include <EmbPython/EmbPython.h>
 
 #include <sstream>
 
+#ifdef _WIN32
 #include "windows.h"
+#endif
 
-// \‘¢‘Ì‚ğg‚¤ƒTƒ“ƒvƒ‹
+// æ§‹é€ ä½“ã‚’ä½¿ã†ã‚µãƒ³ãƒ—ãƒ«
 struct Hogeshi {
 	float  fuga;
 	double guho;
@@ -18,14 +20,14 @@ struct Hogeshi {
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
 class MyEPApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_TOGGLE_RENDER_BACKSCENE,
 		ID_CALIB_SPIDAR,
@@ -40,7 +42,7 @@ public:
 	char** argv;
 
 
-	// \‘¢‘Ì‚Ì”z—ñ‚ÖPython‚©‚çƒAƒNƒZƒX‰Â”\‚É‚·‚éƒTƒ“ƒvƒ‹
+	// æ§‹é€ ä½“ã®é…åˆ—ã¸Pythonã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ã«ã™ã‚‹ã‚µãƒ³ãƒ—ãƒ«
 	std::vector<Hogeshi> vhoge;
 
 
@@ -51,7 +53,7 @@ public:
 	}
 	~MyEPApp(){}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init(int argc, char* argv[]);
 
 	virtual void OnStep(){
@@ -61,7 +63,7 @@ public:
 		GetFWScene()->Step();
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void OnDraw(GRRenderIf* render) {
 		UTAutoLock critical(EPCriticalSection);
 		SampleApp::OnDraw(render);

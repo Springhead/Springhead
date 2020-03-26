@@ -68,14 +68,22 @@ endif()
 #
 set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 		HumanInterface Physics)
-set(_for_src EP@.h EP@.cpp Makefile_EmbPython.swig.@ swig_@.log)
+set(_for_src EP@.h EP@.cpp)
+set(_for_etc Makefile_EmbPython.swig.@ swig_@.log)
 set(_for_inc SprEP@.h)
 
 set(generated_files)
+set(generated_srcs)
 set(EMBPYTHON_PROJS ${SPR_PROJS})
 list(REMOVE_ITEM EMBPYTHON_PROJS EmbPython)
 foreach(_dir ${EMBPYTHON_PROJS})
     foreach(_file ${_for_src})
+	set(_tmp ${SPR_SRC_DIR}/EmbPython/${_file})
+	string(REPLACE @ ${_dir} _tmp ${_tmp})
+	list(APPEND generated_files ${_tmp})
+	list(APPEND generated_srcs ${_tmp})
+    endforeach()
+    foreach(_file ${_for_etc})
 	set(_tmp ${SPR_SRC_DIR}/EmbPython/${_file})
 	string(REPLACE @ ${_dir} _tmp ${_tmp})
 	list(APPEND generated_files ${_tmp})
@@ -86,6 +94,7 @@ foreach(_dir ${EMBPYTHON_PROJS})
 	set(_tmp ${SPR_INC_DIR}/EmbPython/${_file})
 	string(REPLACE @ ${_dir} _tmp ${_tmp})
 	list(APPEND generated_files ${_tmp})
+	list(APPEND generated_srcs ${_tmp})
     endforeach()
 endforeach()
 
@@ -98,9 +107,9 @@ endforeach()
 #  Define sources and headers.
 #
 file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-	       *.i EPUtility.h
+	       EPUtility.h
 	       EPInterpreter.cpp EPUtility.cpp
- 	       Utility/*.i Utility/*.cpp
+ 	       Utility/*.cpp
 	       ../../include/EmbPython/EmpPython.h
 	       ../../include/EmbPython/SprEPApp.h
 	       ../../include/EmbPython/SprEPInterpreter.h
@@ -108,7 +117,10 @@ file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	       ../../include/EmbPython/SprEPVersion.h
 	       ../../include/EmbPython/Utility/*.h
 )
-list(APPEND SRCS ${generated_files})
+list(APPEND SRCS ${generated_srcs})
+if(STANDALONE AND unix)
+    list(APPEND SRCS kludge.cpp)
+endif()
 
 # ------------------------------------------------------------------------------
 #  Read compiler/linker option file (try to find in following order).
@@ -169,37 +181,27 @@ if(Windows)
     set(LIB_SUFFIX_RELEASE  )
     set(LIB_SUFFIX_TRACE   T)
     set(_platform ${CMAKE_GENERATOR_PLATFORM})
-    set(_output_name_debug   "${Target}${VS_VERSION}${LIB_SUFFIX_DEBUG}${_platform}")
-    set(_output_name_release "${Target}${VS_VERSION}${LIB_SUFFIX_RELEASE}${_platform}")
-    set(_output_name_trace   "${Target}${VS_VERSION}${LIB_SUFFIX_TRACE}${_platform}")
+    set(_output_name_DEBUG   "${Target}${VS_VERSION}${LIB_SUFFIX_DEBUG}${_platform}")
+    set(_output_name_RELEASE "${Target}${VS_VERSION}${LIB_SUFFIX_RELEASE}${_platform}")
+    set(_output_name_TRACE   "${Target}${VS_VERSION}${LIB_SUFFIX_TRACE}${_platform}")
     set_target_properties("${Target}" PROPERTIES
-	OUTPUT_NAME_DEBUG   ${_output_name_debug}
-	OUTPUT_NAME_RELEASE ${_output_name_release}
-	OUTPUT_NAME_TRACE   ${_output_name_trace}
+	OUTPUT_NAME_DEBUG   ${_output_name_DEBUG}
+	OUTPUT_NAME_RELEASE ${_output_name_RELEASE}
+	OUTPUT_NAME_TRACE   ${_output_name_TRACE}
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG   ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
 elseif(unix)
-    set(_output_name_debug   "lib${Target}.a")
-    set(_output_name_release "lib${Target}.a")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
+    set(_output_name "lib${Target}.a")
+    set_target_properties("${Target}" PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target}
+    )
 endif()
 
 # ------------------------------------------------------------------------------
 #  Add target to generate EmbPython sources.
 #
-##if(Windows)
-##    add_custom_command(
-##	OUTPUT ${generated_files}
-##	COMMAND cmd /c RunSwig_EmbPython.bat
-##	WORKING_DIRECTORY "${SPR_SRC_DIR}/EmbPython"
-##	COMMENT [[  generating EmbPython sources ]]
-##    )
-##elseif(unix)
-##endif()
-
 set(CleanTarget EmbPython_RunSwig)
 add_dependencies(${Target} ${CleanTarget})
 if(STANDALONE)
@@ -232,39 +234,57 @@ add_custom_command(
 #  Copy generated library file to "${SPR_TOP_DIR}/generated/lib"
 #
 if(STANDALONE)
-    set(_install_dir ${SPR_TOP_DIR}/generated/lib)
     if(Windows)
 	if("${ARCHITECTURE}" STREQUAL "x64")
-	    set(_install_dir ${_install_dir}/win64)
+	    set(_install_dir ${SPR_TOP_DIR}/generated/lib/win64)
 	else()
-	    set(_install_dir ${_install_dir}/win32)
+	    set(_install_dir ${SPR_TOP_DIR}/generated/lib/win32)
 	endif()
-    endif()
-    file(TO_NATIVE_PATH ${_install_dir} _install_dir)
-    if(Windows)
-	set(_cp copy)
-    elseif(unix)
-	set(_cp cp)
-    endif()
-    set(_libdir ${SPR_SRC_DIR}/${Target})
-    set(_cmnd_DEBUG   "${_cp} ${_libdir}/${_output_name_debug}   ${_install_dir}")
-    set(_cmnd_RELEASE "${_cp} ${_libdir}/${_output_name_release} ${_install_dir}")
-    set(_cmnd_TRACE   "${_cp} ${_libdir}/${_output_name_trace}   ${_install_dir}")
-    set(_libfile_DEBUG   ${_cp} ${_libdir}/${_output_name_debug})
-    set(_libfile_RELEASE ${_cp} ${_libdir}/${_output_name_release})
-    set(_libfile_TRACE   ${_cp} ${_libdir}/${_output_name_trace})
+	file(TO_NATIVE_PATH ${_install_dir} _install_dir)
 
-    foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
-	string(TOUPPER ${_tmp} _conf)
-	string(TOLOWER ${_tmp} _conf_low)
-	set(_cmnd _cmnd_${_conf})
+	set(_libdir ${SPR_SRC_DIR}/${Target})
+	foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
+	    string(TOUPPER ${_tmp} _conf)
+	    set(_libfile_${_conf} ${_libdir}/${_output_name_${_conf}}.lib)
+	    file(TO_NATIVE_PATH ${_libfile_${_conf}} _libfile_${_conf})
+	    set(_cmnd_${_conf} copy ${_libfile_${_conf}} ${_install_dir})
+	endforeach()
+
 	add_custom_command(TARGET ${Target}
 	    POST_BUILD
-	    COMMAND $<$<CONFIG:${_conf}>:${${_cmnd}}>
+	    COMMAND if "'$(Configuration)'" equ "'Debug'"   ${_cmnd_DEBUG}
+	    COMMAND if "'$(Configuration)'" equ "'Release'" ${_cmnd_RELEASE}
+	    COMMAND if "'$(Configuration)'" equ "'Trace'"   ${_cmnd_TRACE}
 	    WORKING_DIRECTORY ${_wrkdir}
-	    COMMENT [[  copying liibrary file ]]
+	    COMMENT [[  copying library file ]]
 	)
-    endforeach()
+
+    elseif(unix)
+	set(_install_dir ${SPR_TOP_DIR}/generated/lib)
+	file(TO_NATIVE_PATH ${_install_dir} _install_dir)
+
+	set(_libdir ${SPR_SRC_DIR}/${Target})
+	set(_libfile ${_libdir}/${_output_name})
+
+	if("${LIBTYPE}" STREQUAL "STATIC")
+	    add_custom_command(TARGET ${Target}
+		POST_BUILD
+		COMMAND ranlib ${_libfile}
+		COMMAND mkdir -p ${_libdir}
+		COMMAND cp ${_libfile} ${_install_dir}
+		WORKING_DIRECTORY ${_wrkdir}
+		COMMENT [[  copying library file (STATIC)]]
+	    )
+	else()
+	    add_custom_command(TARGET ${Target}
+		POST_BUILD
+		COMMAND mkdir -p ${_libdir}
+		COMMAND cp ${_libfile} ${_install_dir}
+		WORKING_DIRECTORY ${_wrkdir}
+		COMMENT [[  copying library file ]]
+	    )
+	endif()
+    endif()
 endif()
 
 # end: CMakeLists.txt

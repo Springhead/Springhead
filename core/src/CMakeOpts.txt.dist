@@ -105,7 +105,7 @@ if(unix)
 	set(SPRLIB_PATHS	${EMPTY})
 	set(SPRLIB_NAMES	${EMPTY})
     endif()
-    set(STDLIB_PATHS	/usr/lib /usr/X11R6/lib /usr/lib/X11)
+    set(STDLIB_PATHS	/usr/local/lib /usr/lib /usr/X11R6/lib /usr/lib/X11)
     set(STDLIB_NAMES	X11 Xi Xmu glui glut GLEW GLU GL m dl boost_regex)
     #
     set(DEFINE_MACROS	${DEFINE_MACROS_DEFAULT})
@@ -113,7 +113,7 @@ if(unix)
     set(COMP_FLAGS	${COPT_DEFAULT})
     set(LINK_FLAGS	)
     set(LIBRARY_PATHS	${SPRLIB_PATHS} ${STDLIB_PATHS})
-    set(LIBRARY_NAMES	${SPRLIB_NAMES} ${STDLIB_NAMES})
+    #set(LIBRARY_NAMES	${SPRLIB_NAMES} ${STDLIB_NAMES})
     #
 endif()	# unix
 

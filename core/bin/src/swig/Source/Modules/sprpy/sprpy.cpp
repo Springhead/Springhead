@@ -31,6 +31,12 @@ using namespace std;
                     Printf(cpp,"PyErr_SetString(PyErr_Spr_OSException, const_cast<char *>(e.what()));");\
                     Printf(cpp,"return NULL;");\
                     Printf(cpp,"}\n");
+#define PrintfCATCH_int \
+		    Printf(cpp,"}");\
+                    Printf(cpp,"catch (const std::exception& e) {");\
+                    Printf(cpp,"PyErr_SetString(PyErr_Spr_OSException, const_cast<char *>(e.what()));");\
+                    Printf(cpp,"return 0;");\
+                    Printf(cpp,"}\n");
 
 
 
@@ -680,7 +686,7 @@ public:
 						}
 						Printf(cpp,"PyErr_BadArgument(); return -1;\n");
 					}
-                                        PrintfCATCH
+                                        PrintfCATCH_int
 				}
 				Printf(cpp,"}\n");
 
@@ -748,9 +754,13 @@ public:
 						Printf(cpp,"//UTRef will delete\n"); 
 					else 
 					{
+#ifdef _WIN32
+// g++ complains "deleting ‘const void*’ is undefined"...
+// the result is unpredictable!
 						//Pythonのメモリ管理だった場合消す
 						Printf(cpp,"if ( ((EPObject*)self)->mm == EP_MM_PY ) ");
 						Printf(cpp,"delete EPObject_Ptr(self);\n");
+#endif
 					}
 					//自身を開放
 					Printf(cpp,"self->ob_type->tp_free(self);\n");

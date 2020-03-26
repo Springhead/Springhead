@@ -101,7 +101,15 @@ set(INCLUDE_PATHS               ${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
 set(COMP_FLAGS                  ${COMP_FLAGS_ADD} ${COMP_FLAGS})
 set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
 set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
-set(LIBRARY_NAMES               ${LIBRARY_NAMES} ${LIBRARY_NAMES_ADD})
+list(FIND LIBRARY_NAMES_ADD EmbPython _found)
+if(${_found} EQUAL -1)
+    set(LIBRARY_NAMES	${SPRLIB_NAMES}
+			${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+else()
+    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
+    set(LIBRARY_NAMES	EmbPython ${SPRLIB_NAMES}
+			${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+endif()
 
 # ------------------------------------------------------------------------------
 #  Read definition of external packages. (try to find in following order).
@@ -301,10 +309,7 @@ if(Windows)
 else()
     set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
     foreach(_path ${LIBRARY_PATHS})
-	target_link_directories(${Target} PRIVATE ${_path})
-    endforeach()
-    foreach(_path ${DEPENDENCY_LIBDIR})
-	target_link_directories(${Target} PRIVATE ${_path})
+	target_link_directories(${Target} BEFORE PRIVATE ${_path})
     endforeach()
 endif()
 

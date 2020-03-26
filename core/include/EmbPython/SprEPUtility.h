@@ -8,7 +8,7 @@
 #endif
 
 #ifndef	_WIN32
-#include "kludge.h"
+#include "EmbPython/kludge.h"
 #endif
 
 #include "Foundation/SprUTCriticalSection.h"//CriticalSection用
