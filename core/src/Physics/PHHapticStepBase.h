@@ -100,8 +100,8 @@ public:
 	float timeVaryFrictionB;	///< 時変摩擦定数B
 	float timeVaryFrictionC;	///< 時変摩擦定数C
 	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
-	float stribeckVelocity;
-	float stribeckmu;
+	float stribeckVelocity;		///< ストライベク効果の速度の影響の強さ	: 動摩擦 =　mu + (mu - stribeckmu) * (exp(-v / stribeckVelocity) - 1.0)
+	float stribeckmu;			///< 速度∞のときの摩擦係数
 	float muCur;				///< 計算された時変摩擦係数
 
 	std::vector<float> mus;					///< 動摩擦係数
@@ -113,9 +113,6 @@ public:
 	std::vector<float> muCurs;				///< 計算された時変摩擦係数
 	std::vector<float> stribeckVelocitys;
 	std::vector<float> stribeckmus;
-	std::vector<Vec3d> z;
-	std::vector<double> c;
-
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
@@ -152,12 +149,12 @@ struct PHSolidPairForHapticSt{
 
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
-	unsigned slipCount;      ///stribeck効果用
 
-							 //GMS用
-	int proxyN;
-	unsigned* fricCounts;
+	//GMS用
+	std::vector<unsigned> fricCounts;
+	std::vector<unsigned> contactCounts;
 	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
+	std::vector<int> slipState;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
@@ -185,7 +182,32 @@ public:
 	unsigned GetFrictionCount() { return fricCount; }
 
 	//GMS用
-	void SetFrictionState(int i, PHSolidPairForHapticIf::FrictionState state) { frictionStates[i] = state; }
+	void InitFrictionState(int n) {
+		frictionStates.clear();
+		for (int i = 0; i < n; i++) {
+			frictionStates.push_back(PHSolidPairForHapticIf::FREE);
+		}
+	}
+	void InitFrictionCount(int n) {
+		fricCounts.clear();
+		for (int i = 0; i < n; i++) {
+			fricCounts.push_back(0);
+		}
+	}
+	void InitContactCount(int n) {
+		contactCounts.clear();
+		for (int i = 0; i < n; i++) {
+			contactCounts.push_back(0);
+		}
+	}
+	void InitSlipState(int n) {
+		slipState.clear();
+		for (int i = 0; i < n; i++) {
+			slipState.push_back(0);
+		}
+	}
+	PHSolidPairForHapticIf::FrictionState GetFrictionStates(int i) { return frictionStates[i]; }
+	int GetSlipState(int i) { return slipState[i]; }
 
 	Vec3d GetForce(){ return force; }
 	Vec3d GetTorque(){ return torque; }
@@ -206,6 +228,7 @@ public:
 	double GetPhysicsTimeStep();
 	///	力覚レンダリングのdt
 	double GetHapticTimeStep();
+	void SetHapticTimeStep(double dt);
 	///	
 	virtual void Step1(){};
 	///	
