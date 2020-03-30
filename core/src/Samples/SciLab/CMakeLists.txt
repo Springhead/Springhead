@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 if(EXISTS "${CMAKE_SOURCE_DIR}/CMakeSettings.txt")
     set(SETTING_FILE "CMakeSettings.txt")
 else()
-    set(SETTING_FILE "CMakeSettings.txt.App.dist")
+    set(SETTING_FILE "CMakeSettings.txt.Dev.dist")
 endif()
 include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")
 message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME}")
@@ -81,12 +81,6 @@ set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 include("${SPR_CORE_DIR}/make.func.cmake")
 
 # ------------------------------------------------------------------------------
-#  Read CMake settiing parameters.
-#
-set(_setting_file "${CMAKE_CURRENT_SOURCE_DIR}/CMakeSettings.txt")
-include(${_setting_file})
-
-# ------------------------------------------------------------------------------
 #  Read compiler/linker option file (try to find in following order).
 #	(1) File specified by option "-D OPTS=<file>".
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
@@ -98,9 +92,24 @@ set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
 include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 
 # ------------------------------------------------------------------------------
-#  Read setting parameters.
+#  Merge setting parameters.
+#	Additional parameters are already read at the top of this file.
+#	We need merge process here.
 #
-include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")
+set(DEFINE_MACROS               ${DEFINE_MACROS} ${DEFINE_MACROS_ADD})
+set(INCLUDE_PATHS               ${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
+set(COMP_FLAGS                  ${COMP_FLAGS_ADD} ${COMP_FLAGS})
+set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
+set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
+list(FIND LIBRARY_NAMES_ADD EmbPython _found)
+if(${_found} EQUAL -1)
+    set(LIBRARY_NAMES	${SPRLIB_NAMES}
+			${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+else()
+    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
+    set(LIBRARY_NAMES	EmbPython ${SPRLIB_NAMES}
+			${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+endif()
 
 # ------------------------------------------------------------------------------
 #  Read definition of external packages. (try to find in following order).
@@ -162,7 +171,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Some other definitions.
 #
-if(${Windows})
+if(Windows)
     set(RunSwigDir ${SPR_SRC_DIR}/RunSwig)
     set(Python ${RunSwigDir}/python_adapter.bat)
     file(TO_NATIVE_PATH "${RunSwigDir}" RunSwigDir)
@@ -171,7 +180,7 @@ if(${Windows})
     set(LIB_SUFFIX_DEBUG   D)
     set(LIB_SUFFIX_RELEASE  )
     set(LIB_SUFFIX_TRACE   T)
-elseif(${unix})
+elseif(unix)
     set(Python python)
 endif()
 
@@ -182,30 +191,34 @@ if(EXCLUDE_SRCS)
     message("++ exclude: ${EXCLUDE_SRCS}")
     list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
-if(${Windows})
+if(Windows)
     if("${ARCHITECTURE}" STREQUAL "x64")
 	add_executable(${Target} ${SRCS})
     else()
 	add_executable(${Target} WIN32 ${SRCS})
     endif()
-elseif(${unix})
+elseif(unix)
     add_executable(${Target} ${SRCS})
 endif()
 
 # ------------------------------------------------------------------------------
 #  Compiler options.
 #
-if(${Windows})
+if(Windows)
     set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
     set(CMAKE_CXX_FLAGS		"${COMP_FLAGS}")
     set(CMAKE_CXX_FLAGS_DEBUG	"${COMP_FLAGS_DEBUG}")
     set(CMAKE_CXX_FLAGS_RELEASE	"${COMP_FLAGS_RELEASE}")
     set(CMAKE_CXX_FLAGS_TRACE	"${COMP_FLAGS_TRACE}")
-elseif(${unix})
-    target_compile_options(${Target} PUBLIC ${COMP_FLAGS}>)
+elseif(unix)
+    foreach(_flag ${COMP_FLAGS})
+	target_compile_options(${Target} PRIVATE ${_flag})
+    endforeach()
     set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 endif()
-target_compile_definitions(${Target} PUBLIC ${DEFINE_MACROS})
+foreach(_macro ${DEFINE_MACROS})
+	target_compile_definitions(${Target} PRIVATE ${_macro})
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Include directories.
@@ -225,19 +238,19 @@ endif()
 # ------------------------------------------------------------------------------
 #  Linker options.
 #
-if(${Windows})
+if(Windows)
     set(CMAKE_EXE_LINKER_FLAGS		"${LINK_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG	"${LINK_FLAGS_DEBUG}")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE	"${LINK_FLAGS_RELEASE}")
     set(CMAKE_EXE_LINKER_FLAGS_TRACE	"${LINK_FLAGS_TRACE}")
 else()
-    target_link_options(${Target} BEFORE PUBLIC ${LINK_FLAGS})
+    target_link_options(${Target} BEFORE PRIVATE ${LINK_FLAGS})
 endif()
 
 # ------------------------------------------------------------------------------
 #  Add target to synchronize configuration with ${SRR_SRC_DIR}.
 #
-if(SPR_PROJS AND ${Windows})
+if(SPR_PROJS AND Windows)
     set(SYNC "sync")
     set(_tmp_args "-v"
 		  "-a" "\"$(Platform)\""
@@ -255,7 +268,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Define depending projects.
 #
-if(SPR_PROJS AND ${Windows})
+if(SPR_PROJS AND Windows)
     set(DEP_Base)
     set(DEP_Collision Foundation)
     set(DEP_Creature Foundation Framework Physics)
@@ -283,22 +296,27 @@ endif()
 # ------------------------------------------------------------------------------
 #  Library directories.
 #
-if(${Windows})
+if(Windows)
     if("${ARCHITECTURE}" STREQUAL "x64")
 	set(DEPENDENCY_LIBDIR ${SPR_TOP_DIR}/dependency/lib/win64)
     else()
 	set(DEPENDENCY_LIBDIR ${SPR_TOP_DIR}/dependency/lib/win32)
     endif()
+    target_link_directories(${Target} BEFORE
+	PRIVATE ${LIBRARY_PATHS}
+	PRIVATE ${DEPENDENCY_LIBDIR}
+    )
+else()
+    set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
+    foreach(_path ${LIBRARY_PATHS})
+	target_link_directories(${Target} BEFORE PRIVATE ${_path})
+    endforeach()
 endif()
-target_link_directories(${Target} BEFORE
-    PRIVATE ${LIBRARY_PATHS}
-    PRIVATE ${DEPENDENCY_LIBDIR}
-)
 
 # ------------------------------------------------------------------------------
 #  Additional libraries.
 #
-if(${Windows})
+if(Windows)
     target_link_libraries(${Target}
 	${SPR_PROJS}
 	${LIBRARY_NAMES}
@@ -309,15 +327,15 @@ if(${Windows})
 	target_link_libraries(${Target} $<$<CONFIG:${_conf}>:${_lib}>)
     endforeach()
 else()
-    target_link_libraries(${Target}
-	${LIBRARY_NAMES}
-    )
+    foreach(_name ${LIBRARY_NAMES})
+	target_link_libraries(${Target} ${_name})
+    endforeach()
 endif()
 
 # ------------------------------------------------------------------------------
 #  Exclude default libraries (Windows only).
 #
-if(${Windows} AND DEFINED EXCLUDE_LIBRARY_NAMES)
+if(Windows AND DEFINED EXCLUDE_LIBRARY_NAMES)
     set(CMAKE_EXE_LINKER_FLAGS
 	"${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:\"${EXCLUDE_LIBRARY_NAMES}\"")
 endif()
@@ -325,7 +343,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Set working directory to VS debugger.
 #
-if(${Windows})
+if(Windows)
     foreach(_prop DEBUGGER_WORKING_DIRECTORY DEBUGGER_COMMAND_ARGUMENTS)
 	if(DEFINED ${_prop})
 	    set_target_properties(${Target} PROPERTIES VS_${_prop} ${${_prop}})
