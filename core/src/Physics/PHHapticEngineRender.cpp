@@ -206,7 +206,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 			ir->depth = ortho.norm();
 			ir->interpolation_pose = curShapePoseW[0];
 			sh->irs.push_back(ir);
-			//assert(isfinite(ir->depth));
+			//assert(std::isfinite(ir->depth));
 		}
 	}
 	else {
@@ -218,7 +218,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 		ir->depth = ortho.norm();
 		ir->interpolation_pose = curShapePoseW[0];
 		sh->irs.push_back(ir);
-		assert(isfinite(ir->depth));
+		assert(std::isfinite(ir->depth));
 	}
 	for (size_t i = 0; i < sh->irs.size(); i++) {
 		PHIr* ir = sh->irs[i];
@@ -305,12 +305,12 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 			//std::cout << proxyPos << " : " << frictionLimit << std::endl;
 			if (proxyPos <= frictionLimit) {
 				fricIr->depth = proxyPos;
-				assert(isfinite(fricIr->depth));
+				assert(std::isfinite(fricIr->depth));
 				bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 			}
 			else {
 				fricIr->depth = frictionLimit;
-				assert(isfinite(fricIr->depth));
+				assert(std::isfinite(fricIr->depth));
 			}
 			sh->irs.push_back(fricIr);
 		}
@@ -742,12 +742,12 @@ void PHHapticEngine::VibrationRendering(PHHapticStepBase* he, PHHapticPointer* p
 			Vec3d vibV = sp->lastStaticFrictionForce * hdt * pointer->GetMassInv() * 0.3;	//	0.3は謎係数。ないと接触の振動に対して強すぎてしまう。
 			double vibT = sp->fricCount * hdt;
 			vibForce.v() += vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
+
 		}
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
 	}
 }
-
 
 void PHHapticEngine::VibrationRenderingMulti(PHHapticStepBase* he, PHHapticPointer* pointer){
 	if(!pointer->bVibration) return;
@@ -766,7 +766,6 @@ void PHHapticEngine::VibrationRenderingMulti(PHHapticStepBase* he, PHHapticPoint
 		double vibB = solid->GetShape(0)->GetVibB();
 		double vibW = solid->GetShape(0)->GetVibW();
 		double vibT = sp->contactCounts[0] * hdt;
-
 		SpatialVector vibForce;
 		// 法線方向に射影する必要がある？
 		vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
@@ -782,7 +781,6 @@ void PHHapticEngine::VibrationRenderingMulti(PHHapticStepBase* he, PHHapticPoint
 
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
-
 	}
 }
 

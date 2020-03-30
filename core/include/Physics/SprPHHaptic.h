@@ -123,6 +123,7 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	int GetSlipState(int i);
 	Vec3d GetForce();
 	Vec3d GetTorque();
+	FrictionState GetFrictionStates(int i);
 };
 
 struct PHHapticEngineDesc {
