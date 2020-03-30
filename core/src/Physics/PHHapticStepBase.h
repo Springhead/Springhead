@@ -206,6 +206,7 @@ public:
 			slipState.push_back(0);
 		}
 	}
+	PHSolidPairForHapticIf::FrictionState GetFrictionStates(int i) { return frictionStates[i]; }
 	int GetSlipState(int i) { return slipState[i]; }
 
 	Vec3d GetForce(){ return force; }
