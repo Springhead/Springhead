@@ -85,6 +85,12 @@
     <ClCompile Include="HumanInterfaceStub.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="DRUartMotorDriver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRUartMotorDriver\WROOM\main\softRobot\Board.cpp">
+      <Filter>src\NewFilter1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -219,6 +225,24 @@
     <ClInclude Include="..\..\include\SprHumanInterface.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="DRUartMotorDriver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\Board.h">
+      <Filter>src\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\BoardBase.h">
+      <Filter>src\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\CommandWROOM.h">
+      <Filter>src\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\env.h">
+      <Filter>src\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\esp_log.h">
+      <Filter>src\NewFilter1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -226,6 +250,9 @@
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{7f90ef65-74a2-4e22-8eb9-7e37535d74db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\NewFilter1">
+      <UniqueIdentifier>{ad0594f6-751a-4fa1-b009-0d9cd8003e91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

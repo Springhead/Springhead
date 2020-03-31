@@ -50,7 +50,7 @@ int __cdecl main(){
 
 	//	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-//	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	spg->Init(&HISpidar4DDesc());
 	spg->Calibration();
 
