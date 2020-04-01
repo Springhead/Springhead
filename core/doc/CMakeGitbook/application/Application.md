@@ -25,7 +25,7 @@ Visual Studio 等の開発ツールでの作業に慣れている場合には
 
 | ファイル名 | 説明 |
 |:--|:--|
-| CMakeLists.txt.Devdist | アプリケーション生成用設定ファイルの雛形 |
+| CMakeLists.txt.Dev.dist | アプリケーション生成用設定ファイルの雛形 |
 | CMakeSettings.txt.Dev.dist | ビルドパラメータ変更用ファイルの雛形 |
 | CMakeTopdir.txt.dist | ダウンロードツリー位置指定用ファイル |
 

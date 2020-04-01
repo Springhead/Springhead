@@ -40,7 +40,8 @@ C:/Develop/Application/　…　ソースツリー
 
 オブジェクトの共通格納領域を設定する作業は Springhead Library の
  cmake (configure) 時に、
-link を張る作業はアプリケーションの cmake (configuure) 時に行なうものとします。
+アプリケーションのビルドツリーで link を張る作業は
+アプリケーションの cmake (configuure) 時に行なうものとします。
 
 <a id="ProjectFileIntegration"></a>
 ** プロジェクトファイルの整合性 (Visual Studio の場合) **
@@ -57,10 +58,9 @@ Springhead Library のプロジェクトに関わるソリューションファ�
 ただしこれでは不完全で、
 *App1* で実施したプロジェクトファイルへの変更が *App2* に伝わりません。
 このため *App1* でプロジェクトファイルを変更した場合には、
-その変更を Springhead Library ビルドツリーにあるプロジェクトファイルに
-コピーするものとします。
-つまり、Springhead Library のビルドツリーにあるプロジェクトファイルを
-常に最新の状態に保つということです。
+その変更内容を Springhead Library ビルドツリーにあるプロジェクトファイルに
+コピーすることで、Springhead Library のビルドツリーにあるプロジェクトファイルが
+常に最新のものであることを保証します。
 
 この作業はアプリケーションのビルド時に行なうものとします。そのために、
 各アプリケーションのソリューションファイルに特別なターゲット *sync* を作成し、

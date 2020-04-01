@@ -1,6 +1,6 @@
 ## ビルドの準備
 
-"C:/Develop/Application" に移動してください。
+ディレクトリ "C:/Develop/Application" に移動してください。
 
 ** ファイルのコピー **
 
@@ -9,7 +9,7 @@
  "CMakeLists.txt", "CMakeSettings.txt" という名前でコピーします。
 
 ```
-> chdir C:/Application
+> chdir C:/Develop/Application
 > copy C:/Springhead/core/src/CMakeTopdir.txt.dist CMakeTopdir.txt
 > copy C:/Springhead/core/src/CMakeLists.txt.Dev.dist CMakeLists.txt
 > copy C:/Springhead/core/src/CMakeSettings.txt.Dev.dist CMakeSettings.txt
@@ -32,24 +32,25 @@ set(TOPDIR "C:/Springhead")
 
 ** "CMakeSettings.txt" の編集 **
 
+<a id="BuildParameters"></a>
 アプリケーションのビルド条件を設定します。
 各変数の意味は次のとおりです。
 
 | 変数名 | 説明 |
 |:--|:--|
 | `ProjectName` | プロジェクト名 |
-| `OOS_BLD_DIR` | CMake の作業領域 (ディレクトリ) の名前 (本ドキュメントで *build* としているもの) |
+| `OOS_BLD_DIR` | CMake の作業領域 (ディレクトリ) の名前<br>本ドキュメントで *build* としているもの |
 | `CMAKE_CONFIGURATION_TYPES` | ビルド構成<br>unix の場合はここに複数の構成を指定することができません。作業ディレクトリを分けることで対処してください (`OOS_BLD_DIR` 参照)。 |
-| `LIBTYPE` | 作成するライブラリの種別<br>Windows の場合は`STATIC`を指定してください。 unix の場合は、`STATIC`なら`.a`を、`SHARED`なら`.so`を作成します。 |
+| `LIBTYPE` | 作成するライブラリの種別<br>Windows の場合は`STATIC`を指定してください。 unix の場合は、`STATIC`なら`.a`を、`SHARED`なら`.so`を作成します。 <br>(現在 `SHARED` は実装されていません) |
 | `SRCS` | ビルドの対象とするファイル<br>設定は`set(SRCS …)`または`file(GLOB SRCS …)`とします。後者ではワイルドカードが使えます。<br>`SRCS`の直後に`RELATIVE <base-dir>`を付加すると`<base-dir>`に対する相対パスとなります。デフォルトは`file(GLOB RELATIVE ${CMAKE_SORUCE_DIR} *.cpp *.h)`です。|
-| `EXECLUDE_SRCS` | ビルドの対象から外すファイル<br>`SRCS`でワイルドカードを使用した場合に有用です。<br>上の`SRCS`で`RELATIVE`としていないときは絶対パスで指定します。 |
+| `EXECLUDE_SRCS` | ビルドの対象から外すファイル<br>`SRCS`でワイルドカードを使用した場合に有用です。上の`SRCS`で`RELATIVE`としていないときは絶対パスで指定します。 |
 | `SPR_PROJS` | アプリケーションに組み込む Springhead Library のプロジェクト名 (この中に RunSwig を含めてはいけません)<br>unix で "libSpringhead.a" をリンクするときは`${EMPTY}`のままとします。 |
-| `DEFINE_MACROS_ADD` | 追加のコンパイルマクロ指定。`/D, -D` は不要。 |
-| `INCLUDE_PATHS_ADD` | 追加のインクルードパス指定。`/I, -I` は不要。<br>現在のディレクトリは`${CMAKE_SOURCE_DIR}`で参照できます。 |
-| `COMP_FLAGS_ADD` | 追加のコンパイラフラグ指定。 |
-| `LINK_FLAGS_ADD` | 追加のリンカフラグ指定。 |
-| `LIBRARY_PATHS_ADD` | 追加のライブラリパス指定。`-L` は不要。 |
-| `LIBRARY_NAMES_ADD` | 追加のライブラリファイル名。 `-l`は不要。 |
+| `DEFINE_MACROS_ADD` | 追加のコンパイルマクロ指定 (`/D, -D` は不要です) |
+| `INCLUDE_PATHS_ADD` | 追加のインクルードパス指定 (`/I, -I` は不要です)<br>現在のディレクトリは`${CMAKE_SOURCE_DIR}`で参照できます。 |
+| `COMP_FLAGS_ADD` | 追加のコンパイラフラグ指定 |
+| `LINK_FLAGS_ADD` | 追加のリンカフラグ指定 |
+| `LIBRARY_PATHS_ADD` | 追加のライブラリパス指定 (`-L` は不要です) |
+| `LIBRARY_NAMES_ADD` | 追加のライブラリファイル名 ( `-l`は不要です) |
 | `EXCLUDE_LIBRARY_NAMES` | リンクの対象から外すライブラリファイル名<br>デフォルトで組み込まれてしまうライブラリファイルを排除するために使用します。 |
 | `DEBUGGER_WORKING_DIRECTORY` | Visual Studio Debugger の作業ディレクトリ名<br>デバッガはこのディレクトリで起動されたように振る舞います。 |
 | `DEBUGGER_COMMAND_ARGUMENTS` | Visual Studio Debugger に渡すコマンド引数 |
