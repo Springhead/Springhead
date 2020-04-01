@@ -1,5 +1,5 @@
 % 1.5.EmbPython.tex
-%	Last update: 2020/02/13 F.Kanehori
+%	Last update: 2020/04/01 F.Kanehori
 \newpage
 \subsection{EmbPython}
 \label{subsec:EmbPython}
@@ -7,10 +7,88 @@
 
 Python インタプリタに対する外部拡張モジュールを生成する 方法について説明します。
 
+\medskip
+\thinrule{\linewidth}
+\noindent
+\bf{Springhead アプリケーションにPythonインタプリタを組み込む場合}
+
+\bigskip
+\bf{Windowsの場合}
+\begin{narrow}
+	アプリケーションをビルドするとき、\QCMakeSettings{}のビルド条件
+	\Path{SPR\_PROJS}に\Path{EmbPython}を加えてビルドしてください。
+	ライブラリファイルが\Path{C:/Springhead/core/src/EmbPython}に
+	次の名前で生成され、アプリケーションプログラムに組み込まれます。
+ 	(プラットフォームが 32 ビットの場合は x64 が x86 となります)。
+	
+	\medskip
+	\begin{narrow}[10pt]
+	\begin{tabular}{l@{\ \ ---\ \ }ll}\hline
+	    & Visual Studio 2015 & Visual Studio 2017 \\\hline
+	    Debug構成 & \tt{EmbPython14.0x64D.lib} & \tt{EmbPython15.0x64D.lib} \\
+	    Relase構成 & \tt{EmbPython14.0x64.lib} & \tt{EmbPython15.0x64.lib} \\
+	    Trace構成 & \tt{EmbPython14.0x64T.lib} & \tt{EmbPython15.0x64T.lib} \\\hline
+	\end{tabular}
+	\end{narrow}
+
+	\bigskip
+	ビルド条件については\KQuote{\ref{subsec:PreparationForApp} ビルドの準備}
+	を参照してください。
+
+	また、次の\KQuote{unix の場合}と同様にすれば、
+	上記のライブラリファイルだけを作成することもできます。
+\end{narrow}
+
+\medskip
+\bf{unixの場合}
+\begin{narrow}
+	ディレクトリ\Path{C:/Springhead/core/src/EmbPython}に移動してください。
+
+	次のようにcmakeコマンド(パラメータに注意)を実行してから
+	makeコマンドを実行してください。
+
+	\CmndLine{%
+		> chdir C:/Springhead/core/src/EmbPython\\
+		> cmake -B build -DSTANDALONE=1 [\it{generator}]\\
+		> chdir build\\
+		> make
+	}{command-1-5.eps}{EmbPython\_unix}
+
+	\begin{narrow}[s]
+		\it{generator}については
+		\KQuote{\ref{subsec:CmakeLibrary} cmake} を参照してください。
+	\end{narrow}
+
+	\medskip
+	ライブラリファイルは、
+	ディレクトリ\Path{C:/Springhead/generated/lib}に次の名前で作成されます。
+	(\tt{SHARED}構成は未だ実装されていません)
+
+	\medskip
+	\begin{center}
+	\begin{tabular}{l@{\ \ ---\ \ }l}\hline
+		\tt{STATIC}構成 & \tt{libEmbPython.a}\\\hline
+		\tt{SHARED}構成 & \tt{libEmbPython.so}\\\hline
+	\end{tabular}
+	\end{center}
+
+	\bigskip
+	アプリケーションをリンクするときは、
+	このライブラリをSpringheadライブラリより前に指定してください。
+\end{narrow}
+
+\bigskip
+\thinrule{\linewidth}
+\noindent
+\bf{Pythonインタプリタに対する外部拡張モジュール(Python DLL, pyd)を作成する場合}
+
+\bigskip
+cmake版は未だ実装されていません。Windowsについては下記を参照してください。
+
+\medskip
 \Important{%
-	現在作業中です。しばらくお待ちください。\\
-	Windows Visual Studio用のソリューションファイルを用いてビルドする
-	方法については
+	Windows Visual Studio用のソリューションファイルを用いてビルドする方法
+	については
 	\KQuote{\ref{subsec:DoNotUseCmake} CMakeを利用しない場合 (非推奨)}を
 	ご覧ください。
 }

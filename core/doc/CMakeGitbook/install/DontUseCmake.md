@@ -58,7 +58,7 @@ Solution file が **"C:/Springhead/core/embed"** に置かれています。
 
 | Visual Studio 2017 用| Visual Studio 2015 用|
 |:--|:--|
-| SprPythonDLL15.0sln | SprPythonDLL14.0sln |
+| SprPythonDLL15.0.sln | SprPythonDLL14.0.sln |
 
 Visual Studio で上記の solution file を実行し、
 ターゲット SprPythonDLL を ビルドしてください。
