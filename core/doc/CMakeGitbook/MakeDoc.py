@@ -44,7 +44,8 @@ python = 'python'
 # ----------------------------------------------------------------------
 #  Paths
 #
-addpath = None
+gitbookpath = '%s%s\\AppData\\Roaming\\npm' % \
+		(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
 
 # ----------------------------------------------------------------------
 #  Options
@@ -78,10 +79,12 @@ dry_run = options.dry_run
 # ----------------------------------------------------------------------
 #  Process start.
 #
-cmnd = 'gitbook build ./ docs/'
+outdir = '../../../generated/doc/CMakeGitbook/'
+cmnd = '%s\\gitbook.cmd build ./ %s' % (gitbookpath, outdir)
+#print('cmnd: %s' % cmnd)
 
 proc = Proc(dry_run=dry_run, verbose=verbose)
-stat = proc.execute(cmnd, addpath=addpath).wait()
+stat = proc.execute(cmnd).wait()
 if stat == 0:
 	print('%s: CMakeGitbook document generated.' % prog)
 
