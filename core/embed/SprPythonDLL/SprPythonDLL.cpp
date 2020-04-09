@@ -5,8 +5,8 @@
 
 // #include <iostream>
 
-#include <EmbPython\EmbPython.h>
-#include <EmbPython\SprEPUtility.h>
+#include <EmbPython/EmbPython.h>
+#include <EmbPython/SprEPUtility.h>
 
 
 static PyMethodDef Spr_methods[] = {
