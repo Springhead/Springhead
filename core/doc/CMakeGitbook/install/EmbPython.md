@@ -38,7 +38,6 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 > chdir build
 > make
 ```
-
 > *generator* については [cmake](/install/Cmake.md#generator) を参照してください。
 
 ライブラリファイルは、ディレクトリ "C:/Springhead/generated/lib" に
@@ -55,7 +54,34 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 - - -
 ** Pythonインタプリタに対する外部拡張モジュール (Python DLL, pyd) を作成する場合 **
 
-cmake 版は未だ実装されていません。Windows については下記を参照してください。
+** Windows の場合 **
+
+> 以下の作業は、[cmake](/install/Cmake.md) に従い "C:/Springhead/core/src" において
+ cmake が既に実行されていることを前提としています。さもないと、
+
+> `1>FileNotFoundError: [WinError 2] 指定されたファイルが見つかりません。: 'C:/Springhead/core/src/build'`
+
+> というエラーが発生してビルドに失敗します。
+
+ディレクトリ "C:/Springhead/core/embed/SprPythonDLL" に移動してください。
+
+次のように cmake を実行した後 build に移動し、
+"SprPythonDLL.sln" をビルドしてください。
+DLL ファイルは "C:/Springhead/generated/bin/*arch*" に作成されます
+ (*arch*は "win64" または "win32" です）。
+
+```
+> chdir C:/Springhead/core/embed/SprPythonDLL
+> mkdir build
+> cmake -B build [generator]
+```
+
+> *generator* については [cmake](/install/Cmake.md#generator) を参照してください。
+
+
+** unix の場合 **
+
+unix 版は未だ実装されていません。
 
 - - -
 Windows Visual Studio 用のソリューションファイルを用いてビルドする方法については
