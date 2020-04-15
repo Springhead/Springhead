@@ -145,6 +145,9 @@ if(Windows)
     file(TO_NATIVE_PATH "${RunSwigDir}" RunSwigDir)
     file(TO_NATIVE_PATH "${Python}" Python)
     message(STATUS "Visual Studio Version: ${VS_VERSION}")
+    set(LIB_SUFFIX_DEBUG   D)
+    set(LIB_SUFFIX_RELEASE  )
+    set(LIB_SUFFIX_TRACE   T)
 elseif(unix)
     set(Python python)
 endif()
@@ -289,6 +292,10 @@ if(Windows)
 	PRIVATE ${LIBRARY_PATHS}
 	PRIVATE ${DEPENDENCY_LIBDIR}
     )
+    foreach(_proj ${SPR_PROJS_PLUS})
+	target_link_directories(${Target} BEFORE
+		PRIVATE ${SPR_SRC_DIR}/${_proj})
+    endforeach()
 else()
     set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
     foreach(_path ${LIBRARY_PATHS})
@@ -300,14 +307,13 @@ endif()
 #  Additional libraries.
 #
 if(Windows)
-    target_link_libraries(${Target}
-	${SPR_PROJS_PLUS}
-	${LIBRARY_NAMES}
-    )
-    foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
-	string(TOUPPER ${_tmp} _conf)
-	set(_lib ${LIBRARY_NAMES_${_conf}})
-	target_link_libraries(${Target} $<$<CONFIG:${_conf}>:${_lib}>)
+    target_link_libraries(${Target} ${LIBRARY_NAMES})
+    foreach(_proj ${SPR_PROJS_PLUS})
+	set(_base ${_proj}${VS_VERSION})
+	set(_post ${ARCHITECTURE}.lib)
+	target_link_libraries(${Target} $<$<CONFIG:Debug>:${_base}D${_post}>)
+	target_link_libraries(${Target} $<$<CONFIG:Release>:${_base}${_post}>)
+	target_link_libraries(${Target} $<$<CONFIG:Trace>:${_base}T${_post}>)
     endforeach()
 else()
     foreach(_name ${LIBRARY_NAMES})
