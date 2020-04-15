@@ -53,7 +53,7 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 		> cmake -B build -DSTANDALONE=1 [\it{generator}]\\
 		> chdir build\\
 		> make
-	}{command-1-5.eps}{EmbPython-unix}
+	}{command-1-5-1.eps}{EmbPython-unix}
 
 	\begin{narrow}[s]
 		\it{generator}については
@@ -85,7 +85,47 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 \bf{Pythonインタプリタに対する外部拡張モジュール(Python DLL, pyd)を作成する場合}
 
 \bigskip
-cmake版は未だ実装されていません。Windowsについては下記を参照してください。
+\bf{Windowsの場合}
+\begin{narrow}
+	\begin{narrow}[s]
+		%\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+		\thinrule{\linewidth}\\
+		以下の作業は、\KQuote{\ref{subsec:CmakeLibrary}} cmake に従い
+		\Path{C:/Springhead/core/src}においてcmakeが
+		既に実行されていることを前提としています。
+		さもないと、\\
+		\hspace{10pt}\tt{\small{FileNotFoundError: [WinError 2]
+		指定されたファイルが見つかりません。}}\hfill\\
+		\hspace{20pt}\tt{\small{%
+		 : 'C:/Springhead/core/src/build'}}\hfill\\
+		というエラーが発生してビルドに失敗します。\\
+		\Vskip{-1\baselineskip}\thinrule{\linewidth}\\
+	\end{narrow}
+	\Vskip{-1\baselineskip}
+	ディレクトリ\Path{C:/Springhead/core/src/EmbPython}に移動してください。
+
+	次のようにcmakeを実行した後\Path{build}に移動し、\Path{SprPythonDLL.sln}を
+	ビルドしてください。
+	DLLファイルは\Path{C:/Springhead/generated/bin/\it{arch}}に作成されます
+	(\it{arch}は\Path{win64}または\Path{win32}です）。
+
+	\CmndLine{%
+		> chdir C:/Springhead/core/embed/SprPythonDLL\\
+		> mkdir build\\
+		> cmake -B build [\it{generator}]\\
+	}{command-1-5-2.eps}{SprPythonDLL}
+
+	\begin{narrow}[s]
+		\it{generator}については
+		\KQuote{\ref{subsec:CmakeLibrary} cmake} を参照してください。
+	\end{narrow}
+\end{narrow}
+
+\medskip
+\bf{unixの場合}
+\begin{narrow}
+	unix版は未だ実装されていません。
+\end{narrow}
 
 \medskip
 \Important{%
