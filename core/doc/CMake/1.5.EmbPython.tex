@@ -23,9 +23,10 @@ Python インタプリタに対する外部拡張モジュールを生成する 
  	(プラットフォームが 32 ビットの場合は x64 が x86 となります)。
 	
 	\medskip
-	\begin{narrow}[10pt]
+	\begin{narrow}[20pt]
 	\begin{tabular}{l@{\ \ ---\ \ }ll}\hline
-	    & Visual Studio 2015 & Visual Studio 2017 \\\hline
+	    & \multicolumn{1}{c}{Visual Studio 2015}
+	    & \multicolumn{1}{c}{Visual Studio 2017} \\\hline
 	    Debug構成 & \tt{EmbPython14.0x64D.lib} & \tt{EmbPython15.0x64D.lib} \\
 	    Relase構成 & \tt{EmbPython14.0x64.lib} & \tt{EmbPython15.0x64.lib} \\
 	    Trace構成 & \tt{EmbPython14.0x64T.lib} & \tt{EmbPython15.0x64T.lib} \\\hline
@@ -66,12 +67,12 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 	(\tt{SHARED}構成は未だ実装されていません)
 
 	\medskip
-	\begin{center}
+	\begin{narrow}[20pt]
 	\begin{tabular}{l@{\ \ ---\ \ }l}\hline
 		\tt{STATIC}構成 & \tt{libEmbPython.a}\\\hline
 		\tt{SHARED}構成 & \tt{libEmbPython.so}\\\hline
 	\end{tabular}
-	\end{center}
+	\end{narrow}
 
 	\bigskip
 	アプリケーションをリンクするときは、
@@ -104,10 +105,7 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 	\Vskip{-1\baselineskip}
 	ディレクトリ\Path{C:/Springhead/core/src/EmbPython}に移動してください。
 
-	次のようにcmakeを実行した後\Path{build}に移動し、\Path{SprPythonDLL.sln}を
-	ビルドしてください。
-	DLLファイルは\Path{C:/Springhead/generated/bin/\it{arch}}に作成されます
-	(\it{arch}は\Path{win64}または\Path{win32}です）。
+	次のようにcmakeを実行します。
 
 	\CmndLine{%
 		> chdir C:/Springhead/core/embed/SprPythonDLL\\
@@ -119,9 +117,24 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 		\it{generator}については
 		\KQuote{\ref{subsec:CmakeLibrary} cmake} を参照してください。
 	\end{narrow}
+
+	その後\Path{build}に移動し、\Path{SprPythonDLL.sln}を
+	ビルドしてください。
+	DLLファイルは\Path{C:/Springhead/generated/bin/\it{arch}}に
+	次の名前で作成されます
+	(\it{arch}は\Path{win64}または\Path{win32}です）。
+
+	\medskip
+	\begin{narrow}[20pt]
+	\begin{tabular}{ccc}\hline
+	    Debug構成 & Release構成 & Trace構成 \\\hline
+	    \tt{SprD.py} & \tt{Spr.py} & \tt{SprT.py} \\\hline
+	\end{tabular}
+	\end{narrow}
+
 \end{narrow}
 
-\medskip
+\bigskip
 \bf{unixの場合}
 \begin{narrow}
 	unix版は未だ実装されていません。

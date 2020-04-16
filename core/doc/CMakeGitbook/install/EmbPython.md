@@ -65,19 +65,23 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 
 ディレクトリ "C:/Springhead/core/embed/SprPythonDLL" に移動してください。
 
-次のように cmake を実行した後 build に移動し、
-"SprPythonDLL.sln" をビルドしてください。
-DLL ファイルは "C:/Springhead/generated/bin/*arch*" に作成されます
- (*arch*は "win64" または "win32" です）。
+次のように cmake を実行します。
 
 ```
 > chdir C:/Springhead/core/embed/SprPythonDLL
 > mkdir build
 > cmake -B build [generator]
 ```
-
 > *generator* については [cmake](/install/Cmake.md#generator) を参照してください。
 
+その後 "build" に移動し、
+"SprPythonDLL.sln" のプロジェクト `SprPythonDLL` をビルドしてください。
+DLL ファイルは "C:/Springhead/generated/bin/*arch*" に次の名前で作成されます
+ (*arch*は "win64" または "win32" です）。
+
+| Debug 構成 | Release 構成 | Trace 構成 |
+|:--:|:--:|:--:|
+| SprD.py | Spr.py | SprT.py |
 
 ** unix の場合 **
 
