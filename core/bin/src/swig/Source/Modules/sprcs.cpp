@@ -1315,6 +1315,10 @@ public:
 			// 関数が引数になっているときは前処理が必要
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
+				// 引数が関数でなければ前処理は不要
+				if (!ai.is_function) {
+					continue;
+				}
 				string key(ci.uq_name);
 				key.append(".");
 				key.append(argname(ai.uq_name, j));
@@ -1349,7 +1353,7 @@ public:
 				string key(ci.uq_name);
 				key.append(".");
 				key.append(uqname);
-				if (delegate_func_map.find(key) != delegate_func_map.end()) {
+				if (ai.is_function && (delegate_func_map.find(key) != delegate_func_map.end())) {
 					// 関数
 					Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
 				}
