@@ -34,8 +34,7 @@ IMPSRCDIR	= $(TOPDIR)\SprImport
 CSSRCDIR	= $(TOPDIR)\SprCSharp
 IFILEDIR	= $(TOPDIR)
 
-PYTHONADAPTER	= $(COREDIR)\src\RunSwig\python_adapter.bat
-PYTHON		= $(PYTHONADAPTER) -SprTop $(SPRTOP)
+PYTHON		= $(COREDIR)\src\do_python.bat
 NAMEMGRDIR	= $(COREDIR)\src\SprCSharp\NameManager
 NAMEMGR		= $(NAMEMGRDIR)\NameManager.bat
 

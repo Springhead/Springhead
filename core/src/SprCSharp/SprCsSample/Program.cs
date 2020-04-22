@@ -179,31 +179,36 @@ namespace SprCsSample {
             for (int i = 0; i < 4; i++) {
                 System.Console.WriteLine("array<int>: expected: " + (200 + i) + " result: " + meshFace.indices[i]);
             }
-            //Vec3i v3i = new Vec3i(1, 2, 3);
-            //System.Console.WriteLine("array<int> alloc(3): result:   " + v3i);
-            //v3i.alloc(2);
-            //for (int i = 0; i < 2; i++) {
-            //    v3i[i].x = 10 * (i + 1);
-            //    v3i[i].y = 10 * (i + 1);
-            //    v3i[i].z = 10 * (i + 1);
-            //}
-            //System.Console.WriteLine("                     expected: " + "((10, 10, 10), (20, 20, 20))");
-            //System.Console.WriteLine("                     result:   " + v3i);
 
-            CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
-            for (int x = 0; x < 10; x++) {
-                for (int y = 0; y < 10; y++) {
-                    for (int z = 0; z < 10; z++) {
-                        descMesh.vertices.push_back(new Vec3f(x, y, z));
-                    }
-                }
+            Vec3i[] v3ia = new Vec3i[3];
+            for (int i = 0; i < 3; i++) {
+                v3ia[i] = new Vec3i(10*(i+1), 10*(i+1), 10*(i+1));
             }
-            PHSdkIf phSdk = PHSdkIf.CreateSdk();
-            CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), (CDConvexMeshDesc)descMesh) as CDConvexMeshIf;
-            var vertices = mesh.GetVertices();
-            for (int i = 0; i < mesh.NVertex(); i++) {
-                put_indent(2, vertices[i]);
-            }
+            string result = string.Format("(({0}, {1}, {2}), ({3}, {4}, {5}), ({6}, {7}, {8}))",
+                v3ia[0][0], v3ia[0][1], v3ia[0][2], v3ia[1][0], v3ia[1][1], v3ia[1][2], v3ia[2][0], v3ia[2][1], v3ia[2][2]);
+            put2("array<int> Vec3i[3]: ", "((10, 10, 10), (20, 20, 20), (30, 30, 30))", result);
+
+            //CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
+            //for (int x = 0; x < 10; x++) {
+            //    for (int y = 0; y < 10; y++) {
+            //        for (int z = 0; z < 10; z++) {
+            //            descMesh.vertices.push_back(new Vec3f(x, y, z));
+            //        }
+
+            //CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
+            //for (int x = 0; x < 10; x++) {
+            //    for (int y = 0; y < 10; y++) {
+            //        for (int z = 0; z < 10; z++) {
+            //            descMesh.vertices.push_back(new Vec3f(x, y, z));
+            //        }
+            //    }
+            //}
+            //PHSdkIf phSdk = PHSdkIf.CreateSdk();
+            //CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), (CDConvexMeshDesc)descMesh) as CDConvexMeshIf;
+            //var vertices = mesh.GetVertices();
+            //for (int i = 0; i < mesh.NVertex(); i++) {
+            //    put_indent(2, vertices[i]);
+            //}
         }
 
         static void test_type_conv() {
@@ -234,8 +239,8 @@ namespace SprCsSample {
             // ↑ CreateShapeはCDBoxIfオブジェクトを返す。それをCDShapeIfで受ける。
 
             // CDShapeIf型の変数に格納されているが中身はCDBoxIfなので型変換可能。
-            CDBoxIf box = shape as CDBoxIf;
-            put("type_conv", "(1, 4, 9)", box.GetBoxSize().ToString());
+            //CDBoxIf box = shape as CDBoxIf;
+            //put("type_conv", "(1, 4, 9)", box.GetBoxSize().ToString());
 
             // CDBoxIf is not a CDSphereIf なので nullになることが期待される。
             CDSphereIf sphere = shape as CDSphereIf;
@@ -425,16 +430,16 @@ namespace SprCsSample {
             }
             //PHSdkIf phSdk = PHSdkIf.CreateSdk();
             CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
-            mesh.GetVertices();
-            arraywrapper_Vec3f vertices = mesh.GetVertices();
+            //mesh.GetVertices();
+            //arraywrapper_Vec3f vertices = mesh.GetVertices();
             Vec3f[] v3fr = new Vec3f[8];
             v3fr[0] = new Vec3f(0, 0, 0); v3fr[1] = new Vec3f(0, 0, 9);
             v3fr[2] = new Vec3f(0, 9, 0); v3fr[3] = new Vec3f(0, 9, 9);
             v3fr[4] = new Vec3f(9, 0, 0); v3fr[5] = new Vec3f(9, 0, 9);
             v3fr[6] = new Vec3f(9, 9, 0); v3fr[7] = new Vec3f(9, 9, 9);
-            for (int i = 0; i< 8; i++) {
-                put("ret_array", edit_vector(v3fr[i]), vertices[i]);
-            }
+            //for (int i = 0; i< 8; i++) {
+            //    put("ret_array", edit_vector(v3fr[i]), vertices[i]);
+            //}
         }
 
         static void test_operator() {

@@ -91,15 +91,15 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>python_adapter make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>python_adapter make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>python_adapter make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\do_python make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python make_manager.py -A -d</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>python_adapter make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>python_adapter make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>python_adapter make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\do_python make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python make_manager.py -A -d</NMakeCleanCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
@@ -113,15 +113,15 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>python_adapter make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>python_adapter make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>python_adapter make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\do_python make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python make_manager.py -A -d</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>python_adapter make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>python_adapter make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>python_adapter make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\do_python make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python make_manager.py -A -d</NMakeCleanCommandLine>
     <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
@@ -133,15 +133,15 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>python_adapter make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>python_adapter make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>python_adapter make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\do_python make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python make_manager.py -A -d</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>python_adapter make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>python_adapter make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>python_adapter make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>..\do_python make_manager.py -A -c &amp;&amp; nmake -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python make_manager.py -A -d -c &amp;&amp; nmake -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python make_manager.py -A -d</NMakeCleanCommandLine>
     <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>

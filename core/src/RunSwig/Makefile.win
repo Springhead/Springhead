@@ -41,6 +41,7 @@
 #	Ver 4.0  2017/07/31 F.Kanehori  Python adapter の導入
 #	Ver 4.1  2019/01/08 F.Kanehori  CheckClosedSrc の導入
 #	Ver 4.2  2019/04/03 F.Kanehori  オプション SPRSRCDIR の導入
+#	Ver 4.3  2020/04/20 F.Kanehori  python_adapter を do_python に変更
 #################################################################################
 
 #  srcディレクトリの設定
@@ -53,7 +54,7 @@ SPRSRCDIR	= ..
 
 #  Python アダプタの定義
 #
-PYTHON		= $(SPRSRCDIR)\RunSwig\python_adapter.bat
+PYTHON		= $(SPRSRCDIR)\do_python.bat
 
 #  ディレクトリの定義
 #
