@@ -20,16 +20,19 @@ setlocal enabledelayedexpansion
 ::
 ::  VERSION
 ::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
+::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更
 :: ============================================================================
 set verbose=0
 
 ::----------------------------------------------
 ::  buildtool の相対パス
+::	"%1"=="-src"なら、"_SPRTOP_=..\..\"とする
 ::
 if "%_SPRTOP_%" equ "" (
-	echo Need environment variable "_SPRTOP_" be set".
-	endlocal
-	exit /b
+	set _SPRTOP_=..\..
+	rem echo Need environment variable "_SPRTOP_" be set".
+	rem endlocal
+	rem exit /b
 )
 set TOOLPATH=%_SPRTOP_%\buildtool\win32
 
