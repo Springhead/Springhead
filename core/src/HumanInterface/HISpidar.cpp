@@ -147,6 +147,14 @@ void HISpidar4Desc::InitSpidarG(char* type){
 			motors[2].lengthPerPulse *= -1;
 		}
 	}
+	else if (stricmp(type, "SpidarG6U") == 0) {	//	UART version
+		for (int i = 0; i < motors.size(); ++i) {
+			motors[i].currentPerVolt = 20.0f;	//	1A / 0.05 OHM
+			motors[i].voltPerNewton = (1.0f / motors[i].currentPerVolt) * (1.0f / 10.0f);	//	V/N = V/C * C/N
+			motors[i].lengthPerPulse = 0.004f * (float) M_PI / 1024.0f;	 //	D=4mm * PI / (count/revolution)
+		}
+		nButton = 0;
+	}
 }
 
 void HISpidar4Desc::InitSpidarBig(char* type){
@@ -392,46 +400,7 @@ void HISpidarGDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 }
 
 void HISpidarGDesc::Init(char* type){
-	if (stricmp(type, "SpidarG6T1") == 0) {
-		nButton = 0;
-		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
-		float PX = 0.12f / 2;		//	x方向の辺の長さ/2
-		float PY = 0.152f / 2;//0.14f/2;		//	y方向の辺の長さ/2
-		float PZ = 0.12f / 2;		//	z方向の辺の長さ/2
-		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
-		float GX = 0.045f / 2;		//	x方向の辺の長さ/2
-		float GY = 0.045f / 2;		//	y方向の辺の長さ/2
-		float GZ = 0.0;              //Used only for Spidar Finger grip configuration
-		Vec3f mp[8] = {
-			Vec3f(-0.141,	-0.096,	0.060),
-			Vec3f(-0.107,	-0.096,	0.060),
-			Vec3f(0.07736,	-0.096,	0.060),
-			Vec3f(0.11028,	-0.096,	0.060),
-
-			Vec3f(0,		0.0763,		-0.07341),
-			Vec3f(0,		0.0842,		-0.04443),
-			Vec3f(0,		0.1078,	     0.04443),
-			Vec3f(0,		0.1156,	     0.07341),
-		};
-		Vec3f gp[4] = {
-			Vec3f(-0.010, 0.007, 0),
-			Vec3f(0.010, 0.007, 0),
-			Vec3f(0, -0.007, -0.010),
-			Vec3f(0, -0.007, 0.010)
-		};
-		Vec3f gps[8] = { gp[0], gp[1], gp[0], gp[1], 
-			gp[2], gp[3], gp[2], gp[3] };
-		Init(8, mp, gps, 0.02f, (3.14 * 4 * 0.001)/1024.0, 0.3f, 20.0f);
-		motors[2].lengthPerPulse *= -1;
-		motors[3].lengthPerPulse *= -1;
-		motors[4].lengthPerPulse *= -1;
-		motors[5].lengthPerPulse *= -1;
-		
-		motors[0].voltPerNewton *= -1;
-		motors[1].voltPerNewton *= -1;
-		motors[6].voltPerNewton *= -1;
-		motors[7].voltPerNewton *= -1;
-	} else if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0 || stricmp(type, "SpidarG6X3F")==0 ){
+	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0 || stricmp(type, "SpidarG6X3F")==0 ){
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
 		bool bFinger = stricmp(type, "SpidarG6X3F")==0;
 
@@ -457,6 +426,8 @@ void HISpidarGDesc::Init(char* type){
 
 			rotR = Matrix3f::Rot((float)Rad(0), 'y');
 			rotL = Matrix3f::Rot((float)Rad(45), 'y');
+
+
 		}
 
 		Vec3f motorPos[3][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
@@ -564,15 +535,14 @@ bool HISpidarG::Init(const void* pDesc){
 		if (!buttons[i]) break;
 		AddDeviceDependency(buttons[i]->GetRealDevice()->Cast());
 	}
-	//	ボタンの無いSPIDARも許容したい
-	if (i < buttons.size()) {
-		buttons.resize(i);
-	}
-	bGood = true;
+	if(i < buttons.size())
+		return false;
+
 	SetMinForce();
 	BeforeCalibration();
 	Calibration();
 	AfterCalibration();
+	bGood = true;
 	return true;
 }
 

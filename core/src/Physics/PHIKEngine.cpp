@@ -549,7 +549,7 @@ void PHIKEngine::LagrangeMultiplierIK(bool nopullback) {
 			}
 		}
 	}
-finGS:
+//finGS:	// 2020-0420 fk: suppress warning (unused label)
 	for (int i = 0; i < x.size(); i++) {
 		W[i] = x[i];
 	}
@@ -792,6 +792,10 @@ PHIKActuator* PHIKEngine::CreateIKActuator(const IfInfo* ii, const PHIKActuatorD
 		ikactuator = DBG_NEW PHIKHingeActuator();
 		DCAST(PHIKHingeActuatorIf,ikactuator)->SetDesc(&desc);
 
+	} else if (ii == PHIKSpringActuatorIf::GetIfInfoStatic()) {
+		ikactuator = DBG_NEW PHIKSpringActuator();
+		DCAST(PHIKSpringActuatorIf, ikactuator)->SetDesc(&desc);
+
 	}
 	return ikactuator;
 }
@@ -883,6 +887,16 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 		if (std::find(actuators.begin(), actuators.end(), hj)==actuators.end()) {
 			actuators.push_back(hj);
 			hj->number = int(actuators.size()-1);
+			return true;
+		}
+		return false;
+	}
+
+	PHIKSpringActuator* sj = o->Cast();
+	if (sj) {
+		if (std::find(actuators.begin(), actuators.end(), sj) == actuators.end()) {
+			actuators.push_back(sj);
+			sj->number = int(actuators.size() - 1);
 			return true;
 		}
 		return false;
