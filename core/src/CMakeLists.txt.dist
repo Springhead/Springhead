@@ -46,6 +46,13 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 #  Sytem environment.
 #
 include("${SPR_CORE_DIR}/make.system.cmake")
+if(Windows)
+    message(STATUS "OS: Windows")
+elseif(Linux)
+    message(STATUS "OS: Linux (unix)")
+elseif(FreeBSD)
+    message(STATUS "OS: FreeBSD (unix)")
+endif()
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
 
