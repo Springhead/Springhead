@@ -5,13 +5,6 @@
 set(Target "RunSwig")
 message("** ${Target} **")
 
-# sytem environment
-set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-set(unix    "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-set(FreeBSD "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "FreeBSD")
-set(unix    "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "FreeBSD")
-
 # Springhead top directory and build directory
 if("${TOPDIR}" STREQUAL "")
     set(TOPDIR "${CMAKE_SOURCE_DIR}/../..")
@@ -43,7 +36,7 @@ if(Windows)
     set(Make nmake)
     set(Makefile Makefile.win)
 elseif(unix)
-    set(Make make)
+    set(Make gmake)
     set(Makefile Makefile.unix)
 endif()
 

@@ -49,18 +49,19 @@ MAKEMANAGER	= make_manager.py -P $(Python)
 
 #  Make のオプション
 #
+MAKE	= gmake
 OPT	= --silent PYTHON=$(Python)
 
 all:	compile
 
 compile:	
 	$(Python) $(MAKEMANAGER) -A -c
-	make $(OPT) -f Makefile.unix
+	$(MAKE) $(OPT) -f Makefile.unix
 
 clean:	
 	$(Python) $(MAKEMANAGER) -A -d -c
 	/bin/rm -r -f $(SWIGTEMP)
-	make $(OPT) -f Makefile.unix clean
+	$(MAKE) $(OPT) -f Makefile.unix clean
 
 realclean:	clean
 	
