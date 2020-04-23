@@ -152,7 +152,7 @@ for arg in args:
 	proc = subprocess.Popen(cmnd, shell=True, stdout=subprocess.DEVNULL)
 	stat = proc.wait()
 	if stat != 0:
-		fatal('%s failed (%d)' % 'ln' if is_unix() else 'mklink')
+		fatal('%s failed (%d)' % ('ln' if is_unix() else 'mklink', stat))
 
 sys.exit(0)
 

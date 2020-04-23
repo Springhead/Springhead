@@ -8,6 +8,9 @@ message("** ${Target} **")
 # sytem environment
 set(Windows "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
 set(Linux   "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+set(unix    "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+set(FreeBSD "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "FreeBSD")
+set(unix    "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "FreeBSD")
 
 # Springhead top directory and build directory
 if("${TOPDIR}" STREQUAL "")
@@ -36,10 +39,10 @@ file(TO_NATIVE_PATH "${RSBldDir}" RSBldDir)
 #message(STATUS "${Target}: RSSrcDir: [${RSSrcDir}]")
 #message(STATUS "${Target}: RSBldDir: [${RSBldDir}]")
 
-if(${Windows})
+if(Windows)
     set(Make nmake)
     set(Makefile Makefile.win)
-elseif(${Linux})
+elseif(unix)
     set(Make make)
     set(Makefile Makefile.unix)
 endif()
@@ -72,7 +75,7 @@ endforeach()
 
 # main target
 #
-if(${Windows})
+if(Windows)
     add_custom_target(${Target}
 	BYPRODUCTS ${genereated_files}
 	DEPENDS ${generated_files}
@@ -86,7 +89,7 @@ if(${Windows})
 	WORKING_DIRECTORY ${RSSrcDir}
 	COMMENT [[  generating files...]]
     )
-elseif(${Linux})
+elseif(unix)
     set(_tmp_cmnd python)
     set(_tmp_args ${RSSrcDir}/make_manager.py -A -c)
     add_custom_target(${Target}
@@ -108,10 +111,10 @@ endif()
 set(INTDIR ${Target}.dir)
 set(LOGDIR ${ARCHITECTURE})		# created by add_custom_target
 set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE})
-if(${Windows})
+if(Windows)
     set(ACTDIR ${ACTDIR}/${VS_VERSION})
     set(LINKDIR ${INTDIR})
-elseif(${Linux})
+elseif(unix)
     set(LINKDIR .${CMAKE_FILES_DIRECTORY}/${INTDIR})
     set(LOGDIR  .${CMAKE_FILES_DIRECTORY}/${INTDIR})
 endif()
@@ -120,7 +123,7 @@ set(LINKLIST
     "${LOGDIR}=${ACTDIR}/${INTDIR}" ;
 )
 set(_script_dir ${SPR_SRC_DIR})
-if(${Windows})
+if(Windows)
     set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
     set(_tmp_args ${_script_dir}\\cmake_preconfig.py -v ${LINKLIST})
 else()
