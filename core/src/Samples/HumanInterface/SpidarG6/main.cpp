@@ -48,10 +48,11 @@ int __cdecl main(){
 	hiSdk->Print(DSTR);
 	hiSdk->Print(std::cout);
 
-	//	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-	spg->Init(&HISpidar4DDesc());
+	//UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	//spg->Init(&HISpidar4DDesc());
+
+	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	spg->Init(&HISpidarGDesc("SpidarG6T1"));
 	spg->Calibration();
 
 	int t = 0;
@@ -73,7 +74,7 @@ int __cdecl main(){
 		spg->Update(0.001f);
 #if 0	//	Virtual floor
 		Vec3f spgpos = spg->GetPosition();
-		//std::cout << std::setprecision(2) << spgpos << std::endl;
+		std::cout << std::setprecision(2) << spgpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);
 		if(spgpos.y < -0.015){
 			f.y = (float) (-(spgpos.y -  -0.015) * 1000);

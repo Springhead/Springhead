@@ -437,7 +437,7 @@ bool DRUARTMotorDriver::Init(){
 	return true;
 }
 void DRUARTMotorDriver::WriteVoltage(int ch, float v) {
-	currents[ch] = (int)v * 4096 / 24.0;	
+	currents[ch] = (int)(v * (4096.0 / 3.3));
 }
 void DRUARTMotorDriver::WriteDigit(int ch, int v) {
 	currents[ch] = v;
