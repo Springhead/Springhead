@@ -44,8 +44,8 @@ public:
 	virtual ~HISpidarMotor(){}
 	///	出力の設定
 	void SetForce(float f){
-		if(f < minForce) f = minForce;
-		if(f > maxForce) f = maxForce;
+		if (f < minForce) f = minForce;
+		if (f > maxForce) f = maxForce;
 		if(da) da->Voltage(f * voltPerNewton);
 		force = f;
 	}
