@@ -29,6 +29,7 @@
 #	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 #	Ver 1.8  2019/02/26 F.Kanehori	Cmake環境に対応.
 #	Ver 1.9  2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#	Ver 1.10 2020/04/27 F.Kanehori	unix: native swig の利用を導入
 # ==============================================================================
 version = 1.9
 debug = False
@@ -241,7 +242,12 @@ output(interfacefile, lines)
 #  makefile を作成する.
 #
 srcimpdep_rel = os.path.relpath(srcimpdep)
-swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
+proc = proc.execute('which swig', stdout=Proc.PIPE, shell=True)
+stat, out, err = proc.output()
+if stat == 0:
+	swigdir_rel = out
+else:
+	swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
 #
 swigargs = '-I%s/Lib' % swigdir_rel
 swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
