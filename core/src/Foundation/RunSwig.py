@@ -23,6 +23,7 @@
 #	Ver 1.6  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
 #	Ver 1.7  2019/02/26 F.Kanehori	Cmake環境に対応.
 #	Ver 1.8  2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#	Ver 1.9  2020/04/27 F.Kanehori	unix: native swig の利用を導入
 # ==============================================================================
 version = 1.8
 trace = False
@@ -73,7 +74,12 @@ sprtop = spr_path.abspath()
 bindir = spr_path.abspath('bin')
 incdir = spr_path.abspath('inc')
 srcdir = spr_path.abspath('src')
-swigdir = '%s/%s' % (bindir, 'swig')
+proc = Proc().execute('which swig', stdout=Proc.PIPE, shell=True)
+stat, out, err = proc.output()
+if stat == 0:
+	swigdir = out
+else:
+	swigdir = '%s/%s' % (bindir, 'swig')
 
 incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
 srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
