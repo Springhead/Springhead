@@ -143,10 +143,10 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 ///FemThermo‚ÌƒfƒXƒNƒŠƒvƒ^
 struct PHFemThermoDesc: public PHFemBaseDesc{
 	double rho;						//	–§“x
-	double thConduct;				//”M“`“±—¦
-	double thConduct_x;				//	x•ûŒü	”M“`“±—¦
-	double thConduct_y;				//	y•ûŒü	”M“`“±—¦
-	double thConduct_z;				//	z•ûŒü	”M“`“±—¦
+	//double thConduct;				//”M“`“±—¦
+	//double thConduct_x;				//	x•ûŒü	”M“`“±—¦
+	//double thConduct_y;				//	y•ûŒü	”M“`“±—¦
+	//double thConduct_z;				//	z•ûŒü	”M“`“±—¦
 	double heatTrans;				//”M“`’B—¦			//class ß“_‚É‚ÍAheatTransRatio‚ª‘¶İ‚·‚é
 	double specificHeat;			//”ä”M
 	double radiantHeat;				//”MçtË—¦i‹ó‹C‚Ö‚Ì”M“`’B—¦j
@@ -212,6 +212,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	//void ReProduceMat_Vec_ThermalRadiation();
 	void SetStopTimespan(double timespan);
 	void UpdateMatk_RadiantHeatToAir();
+	void ReCreateMatrix(double thConduct0);
 	void ActivateVtxbeRadiantHeat();			//
 	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
 	void OutputMatKall();
