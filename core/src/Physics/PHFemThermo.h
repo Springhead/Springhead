@@ -23,6 +23,11 @@ class PHFemThermo: public PHFemThermoDesc, public PHFemBase{
 public:
 	//	メンバ変数宣言
 	double tdt;
+
+	double thConduct;			
+	double thConduct_x;
+	double thConduct_y;			
+	double thConduct_z;	
 	//	頂点
 	struct StateVertex{
 		double temp;		//	温度
@@ -523,6 +528,7 @@ public:
 	void InitAllVertexTemp();
 
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);	//熱伝達率以外（熱伝達率は現行main.cppで行っているため
+	void PHFemThermo::ReCreateMatrix(double thConduct0);
 	double GetArbitraryPointTemp(Vec3d temppos);							//	四面体内任意点の温度を取得	temppose:知りたい点のローカル座標
 	Vec3d GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]);					//	点から三角形面(2辺のベクトルで定義)へのベクトルを計算
 	double GetVtxTempInTets(Vec3d temppos);									//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
@@ -566,7 +572,7 @@ public:
 	void SetweekPow_FULL(double setweekPow_FULL);
 	void Setems(double setems);
 	void Setems_steak(double setems_steak);
-	void SetthConduct(double thConduct);
+	void SetthConduct(double thC);
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
