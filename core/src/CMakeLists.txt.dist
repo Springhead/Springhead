@@ -140,6 +140,7 @@ if(Windows)
     set(LIB_SUFFIX_RELEASE  )
     set(LIB_SUFFIX_TRACE   T)
 elseif(unix)
+    set(CMAKE_CXX_COMPILER "${GPP_PAT}/g++")
     set(Python python)
 endif()
 
