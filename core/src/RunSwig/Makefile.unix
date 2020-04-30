@@ -75,7 +75,7 @@ $(FWOLDSPRSTUB):
 		cd $(FRAMEWORK) && $(RUNSWIGFW) -P $(Python)
 
 RunSwig:	
-		echo Makefile.unix: RunSwig [do_swigall]
+		echo Makefile.unix: RunSwig [$(SCRIPT) -- gmake -f makefile.swig]
 		$(Python) $(BINDIR)/$(SCRIPT) -P $(Python)
 
 clean:		

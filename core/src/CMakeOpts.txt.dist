@@ -65,6 +65,11 @@ endif()	# Windows
 #  Compile options for unix (g++).
 #
 if(unix)
+    set(GPP_PATH	/usr/bin)
+    if(FreeBSD)
+	set(GPP_PATH	/usr/local/bin)
+    endif()
+    #
     set(INCDIR_DEFAULT	/usr/X11R6/include
 			/usr/X11/include)
     #

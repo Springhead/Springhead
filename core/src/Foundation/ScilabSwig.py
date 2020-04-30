@@ -24,8 +24,9 @@
 #	Ver 1.3  2017/11/08 F.Kanehori	Python library path の変更.
 #	Ver 1.4  2017/11/29 F.Kanehori	Python library path の変更.
 #	Ver 1.5  2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#	Ver 1.6  2020/04/31 F.Kanehori	unix: gmake をデフォルトに.
 # ==============================================================================
-version = 1.5
+version = 1.6
 debug = False
 trace = False
 
@@ -81,7 +82,7 @@ srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 #  Scripts
 #
 swig = '%s/swig -I%s/Lib' % (swigdir, swigdir)
-make = 'make' if unix else 'nmake'
+make = 'gmake' if unix else 'nmake'
 
 # ----------------------------------------------------------------------
 #  Files
