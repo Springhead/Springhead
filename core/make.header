@@ -1,6 +1,8 @@
-#####################################################################
+﻿#####################################################################
 #
 # 	The make.header file is more complex than the Makefile.
+#
+#	!! Not verified on Cygwin and Mac OS X. !!
 #
 #####################################################################
 
@@ -9,70 +11,104 @@
 #####################################################################
 # -DDEBUG / -DNDEBUG
 #DEBUG_FLAG	= -DDEBUG
+DEBUG_FLAG	= -g
 
 
 #####################################################################
 #	Macros
 #####################################################################
-CXX				= g++
-AR				= ar
-RANLIB			= ranlib
-RM				= rm -rf
+CXX		= g++
+AR		= ar
+RANLIB		= ranlib
+RM		= rm -rf
 
 # ----------------------------------------------------------
 #	Cygwin
 # ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
-LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/
-LDFLAGS.GL 		= -lglut -lglut.dll -lglut32 -lglu32 -lglu -lGLU.dll -lglew32 -lGL.dll -lopengl32 -lboost_regex-gcc-mt -lm
-INCLUDES 		= -I/usr/include \
-					-I/usr/local/include
-ARFLAGS			= r
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ \
+		  -L/usr/lib -L/usr/w32api/
+LDFLAGS.GL 	= -lglut -lglut.dll -lglut32 -lglu32 -lglu \
+		  -lGLU.dll -lglew32 -lGL.dll -lopengl32 \
+		  -lboost_regex-gcc-mt -lm
+INCLUDES 	= -I/usr/include \
+		  -I/usr/local/include
+ARFLAGS		= r
 endif
 
 # ----------------------------------------------------------
 # 	Linux
 # ----------------------------------------------------------
 ifeq ($(findstring Linux, $(shell env uname)), Linux)
-LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/linux/ -L/usr/lib -L/usr/X11R6/lib 
-LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm -lGLEW
-INCLUDES 		= -I/usr/X11R6/include/
-ARFLAGS			= r
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/linux/ \
+		  -L/usr/lib -L/usr/X11R6/lib 
+LDFLAGS.GL	= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm -ldl -lGLEW -lboost_regex
+INCLUDES 	= -I/usr/X11R6/include/
+ARFLAGS		= r
 endif				
 
 # ----------------------------------------------------------
 # 	Mac OS X(PowerPC, Aqua)
 # ----------------------------------------------------------
 ifeq ($(findstring Darwin, $(shell env uname)), Darwin)
-LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/darwin/ -L/usr/lib -/usr/local/lib
-LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation -lGLEW
-INCLUDES 		= -I/usr/local/include/
-#ARFLAGS		= rcu
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/darwin/ \
+		  -L/usr/lib -/usr/local/lib
+LDFLAGS.GL	= -framework GLUT -framework OpenGL \
+		  -framework Foundation -lGLEW
+INCLUDES 	= -I/usr/local/include/
+#ARFLAGS	= rcu
 endif		
 
 # ----------------------------------------------------------
 # 	common rules
 # ----------------------------------------------------------	
-WARNING_FLAGS	= -Wall
-CXXFLAGS 		= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG)
-LDFLAGS 		= $(LDFLAGS.EXTRA) \
-					$(LDFLAGS.GL) \
-					-L$(TOP_DIR)/src/Base/ \
-					-L$(TOP_DIR)/src/Collision/ \
-					-L$(TOP_DIR)/src/Foundation/ \
-					-L$(TOP_DIR)/src/Physics/ \
-					-L$(TOP_DIR)/src/Graphics/ \
-					-L$(TOP_DIR)/src/FileIO/ \
-					-L$(TOP_DIR)/src/Framework/ \
-					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO -lFramework -lFoundation -lFramework  \
-					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO -lFramework -lFoundation -lFramework \
-					$(LDFLAGS.EXTRA) \
-					$(LDFLAGS.GL) \
+WARNING_FLAGS	= -Wall \
+		  -Wno-unused-variable \
+		  -Wno-unused-but-set-variable \
+		  -Wno-unused-result \
+		  -Wno-unused-value \
+		  -Wno-unused-local-typedefs \
+		  -Wno-unused-function   \
+		  -Wno-reorder \
+		  -Wno-sign-compare
+CXXFLAGS 	= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG) -fPIC
+LDFLAGS 	= $(LDFLAGS.EXTRA) \
+		  $(LDFLAGS.GL) \
+		  -L$(TOP_DIR)/src/Base/ \
+		  -L$(TOP_DIR)/src/Collision/ \
+		  -L$(TOP_DIR)/src/Foundation/ \
+		  -L$(TOP_DIR)/src/Physics/ \
+		  -L$(TOP_DIR)/src/Graphics/ \
+		  -L$(TOP_DIR)/src/FileIO/ \
+		  -L$(TOP_DIR)/src/Framework/ \
+		  -L$(TOP_DIR)/src/Creature/ \
+		  -L$(TOP_DIR)/src/HumanInterface/ \
+		  -lFramework \
+		  -lHumanInterface \
+		  -lCreature \
+		  -lFileIO \
+		  -lGraphics \
+		  -lPhysics \
+		  -lCollision \
+		  -lFoundation \
+		  -lBase \
+		  -lFramework \
+		  -lHumanInterface \
+		  -lCreature \
+		  -lFileIO \
+		  -lGraphics \
+		  -lPhysics \
+		  -lCollision \
+		  -lFoundation \
+		  -lBase \
+		  $(LDFLAGS.EXTRA) \
+		  $(LDFLAGS.GL) \
 					
-INCLUDES		+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
+INCLUDES	+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 
-REALCLEAN_TARGET	= $(wildcard *.lib *.ncb *.suo Debug7 Release7) \
-						$(wildcard *.tag *.log *.tmp out.x)
+REALCLEAN_TARGET \
+		= $(wildcard *.lib *.ncb *.suo Debug7 Release7) \
+		  $(wildcard *.tag *.log *.tmp out.x)
 
 
 #####################################################################
