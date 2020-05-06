@@ -125,7 +125,7 @@ struct HISpidar4Desc : HISpidarDesc{
 	void Init(char* type);
 	void InitSpidarG(char* type);
 	void InitSpidarBig(char* type);
-	void InitSpidarMedium(char* type);
+	/* void InitSpidarMedium(char* type); */	// 実装がないためにSprCSharpでリンクエラーとなってしまう
 };
 
 /**	@brief	Spidar4の基本クラス	*/

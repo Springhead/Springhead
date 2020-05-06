@@ -8,11 +8,11 @@ static Spr::UTDllLoader dllLoader2;
 #define SWIGDLL_GETPROC(x) ((dllLoader.GetProc(x)) ? dllLoader.GetProc(x) : dllLoader2.GetProc(x))
 #include "ScilabStubImpl.cxx"
 
-int (_cdecl *StartScilabOrg)(char *SCIpath, char *ScilabStartup,int *Stacksize);
+int (SPR_CDECL *StartScilabOrg)(char *SCIpath, char *ScilabStartup,int *Stacksize);
 StrCtx** ppvApiCtx;
 
 bool StartScilab(char* SCIpath, char *ScilabStartup,int *Stacksize){
-	char* dllPath = "C:\\Program Files\\scilab-5.4.0\\bin;C:\\Program Files (x86)\\scilab-5.4.0\\bin";
+	const char* dllPath = "C:\\Program Files\\scilab-5.4.0\\bin;C:\\Program Files (x86)\\scilab-5.4.0\\bin";
 	if(!dllLoader.Load("call_Scilab.dll", dllPath)) return false;
 	if(!dllLoader2.Load("api_Scilab.dll", dllPath)) return false;
 

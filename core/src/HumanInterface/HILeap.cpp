@@ -10,7 +10,9 @@
 #include <Foundation/UTSocket.h>
 #include <Foundation/UTDllLoader.h>
 
-#include <Windows.h>
+#ifdef _WIN32
+# include <Windows.h>
+#endif
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -197,7 +199,7 @@ bool HILeapUDP::calibrate(int formerLeapID) {
 	fclose(fp);
 
 	ppc->loadCalib();
-	if(formerLeapID == ppc->mapIdLeapData.size() - 1) {
+	if(formerLeapID == (int)ppc->mapIdLeapData.size() - 1) {
 		ppc->calibratingFlag = false;
 		return false;
 	}
@@ -225,10 +227,10 @@ void HILeapUDP::Update(float dt) {
 	}
 	*/
 
-	//for(int i = 0; i < ppc->mapIdLeapData.size(); i++) {
-	for each ( pair<int, LeapData*> c in ppc->mapIdLeapData ) {
-//		LeapData* ld = ppc->mapIdLeapData[i];
-		LeapData* ld = c.second;
+	for(int i = 0; i < (int) ppc->mapIdLeapData.size(); i++) {
+	//for each ( pair<int, LeapData*> c in ppc->mapIdLeapData ) {
+		LeapData* ld = ppc->mapIdLeapData[i];
+//		LeapData* ld = c.second;
 		for(int j = 0; j < ld->leapFrameBufs[ld->read].recHandsNum; j++) {
 			LeapHand* lh = &ld->leapFrameBufs[ld->read].leapHands[j];
 			currentUsingLeapHandIdList.push_back(lh->originalLeapHandID);
@@ -241,9 +243,7 @@ void HILeapUDP::Update(float dt) {
 
 	if(currentUsingLeapHandIdList.size() == 0) {
 		//ppc->mapLHIdLeapHand.clear();
-		for each( int var in ppc->usingLeapHandIdList ){
-			usedLeapHandIdList.push_back(var);
-		}
+		usedLeapHandIdList.insert(usedLeapHandIdList.end(), ppc->usingLeapHandIdList.begin(), ppc->usingLeapHandIdList.end());
 	}
 	else {
 		for(list<int>::iterator it = ppc->usingLeapHandIdList.begin(); it != ppc->usingLeapHandIdList.end(); it++) {
@@ -466,8 +466,8 @@ void HILeapUDP::Update(float dt) {
 			}
 			*/
 			//*
-			for each (int val in ppc->bufIdLHIds[h] ) {
-				
+			for(std::list<int>::iterator it = ppc->bufIdLHIds[h].begin(); it != ppc->bufIdLHIds[h].end(); it++) {
+				int val = *it;
 				LeapHand* lh = ppc->mapLHIdLeapHand[val];
 				offset = ppc->calibrateOffset[lh->leapID - 1];
 				float conf = lh->confidence;
@@ -578,7 +578,7 @@ LeapBone::LeapBone(){
 	length = 0;
 }
 LeapFinger::LeapFinger(){}
-LeapHand::LeapHand() : recFingersNum(0), bufID(-1), grabStrength(0) {}
+LeapHand::LeapHand() : recFingersNum(0), grabStrength(0), bufID(-1) {}
 LeapFrame::LeapFrame() : recHandsNum(0) {}
 
 void ProtocolPC::loadCalib() {
@@ -697,7 +697,9 @@ void ProtocolPC::recvThreadFunc(int id, void* arg) {
 				ppc->nRecv++;
 			}
 			else {
+#ifdef _WIN32
 				DSTR << GetLastError() << std::endl;
+#endif
 			}
 		}
 		

@@ -73,6 +73,9 @@ SpatialVector PHHapticPointer::GetHapticForce() {
 void PHHapticPointer::AddHapticForce(const SpatialVector& f){
 	hapticForce += f;
 }
+void	PHHapticPointer::ClearHapticForce() {
+	hapticForce.clear();
+}
 
 
 }

@@ -49,7 +49,7 @@ std::vector<PHSolidIf*> soSphere;
  param		なし
  return 	なし
  */
-void __cdecl display(){
+void SPR_CDECL display(){
 	render->ClearBuffer();
 	render->BeginScene();
 	fwScene->DrawPHScene(render);
@@ -75,7 +75,7 @@ void setLight() {
  param		<in/--> h　　高さ
  return		 なし
  */
-void __cdecl reshape(int w, int h){
+void SPR_CDECL reshape(int w, int h){
 	// Viewportと射影行列を設定
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
@@ -86,7 +86,7 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void __cdecl keyboard(unsigned char key, int x, int y){
+void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 /**
@@ -94,7 +94,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void __cdecl idle(){
+void SPR_CDECL idle(){
 	fwScene->Step();
 	glutPostRedisplay();
 	static int count;
@@ -107,7 +107,7 @@ void __cdecl idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	fwSdk = FWSdkIf::CreateSdk();
 	phSdk = fwSdk->GetPHSdk();
 

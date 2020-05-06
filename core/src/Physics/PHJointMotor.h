@@ -12,18 +12,18 @@
 #include <Physics/SprPHJointMotor.h>
 #include <Physics/PhysicsDecl.hpp>
 #include <Physics/PHConstraint.h>
+#include <memory>
 
 namespace Spr{;
 
-Vec2d ResistanceTorque(PH1DJointIf* jo, void* param);
-Vec2d PD(PH1DJointIf* jo, void* param);
-//非線形モータで使う関数のデータベース的なやつ
-Vec2d (*PH1DJointFunc[])(PH1DJointIf*, void*);
+struct JointFunctions {
+	static double resistCalc(double d, double k_1, double k_2, double k_3, double k_4);
+	static Vec2d ResistanceTorque(PH1DJointIf* jo, void* param);
+	static Vec2d PD(PH1DJointIf* jo, void* param);
 
-Vec2d ResistanceTorque(int a, PHBallJointIf* jo, void* param);
-Vec2d PD(int a, PHBallJointIf* jo, void* param);
-//非線形モータで使う関数のデータベース的なやつ
-Vec2d(*PHBallJointFunc[])(int a, PHBallJointIf*, void*);
+	static Vec2d ResistanceTorque(int a, PHBallJointIf* jo, void* param);
+	static Vec2d PD(int a, PHBallJointIf* jo, void* param);
+};
 
 template<int NDOF> class PHNDJoint;
 
@@ -133,18 +133,15 @@ public:
 
 	PH1DJointNonLinearMotor(const PH1DJointNonLinearMotorDesc& desc = PH1DJointNonLinearMotorDesc()) { 
 		SetDesc(&desc); 
-		//m_func = [](double d){return d; };
 		springFunc = 0;
 		damperFunc = 0;
 		offset = 0;
 	}
 
-	std::function<double(double)> m_func;
 	Vec2d (*fpFunc)(PH1DJointIf* , void* );
 	int springFunc;
 	int damperFunc;
 
-	void SetFunc(std::function<double(double)> func){ this->m_func = func; }  //不安しかない
 	void SetFuncFromDatabase(int i, void* param);
 	void SetFuncFromDatabase(int i, int j, void* sparam, void* dparam);
 
@@ -159,6 +156,24 @@ public:
 	virtual PTM::TVector<1, double> GetPropV();
 	/// パラメータを取得する
 	virtual void GetParams(PHNDJointMotorParam<1>& p);
+};
+
+/// 1自由度人体関節特性抵抗モータ
+class PHHuman1DJointResistance : public PH1DJointNonLinearMotor {
+public:
+	SPR_OBJECTDEF(PHHuman1DJointResistance);
+	SPR_DECLMEMBEROF_PHHuman1DJointResistanceDesc;
+
+	PHHuman1DJointResistance(const PHHuman1DJointResistanceDesc& desc = PHHuman1DJointResistanceDesc()) {
+		SetDesc(&desc);
+		springFunc = 1;
+		damperFunc = 1;
+		springParam = new Vec4d(desc.coefficient);
+		damperParam = new Vec4d(desc.coefficient);
+		offset = 0;
+	}
+
+	double GetCurrentResistance();
 };
 
 ///	球関節の関節コントローラ
@@ -196,8 +211,6 @@ public:
 	Vec3i springFunc;
 	Vec3i damperFunc;
 
-	//void SetFunc(std::function<double(double)> func){ this->m_func = func; }  //不安しかない
-	//void SetFuncFromDatabase(int i, void* param);
 	void SetFuncFromDatabase(Vec3i i, Vec3i j, void* sparam[], void* dparam[]);
 	void SetFuncFromDatabaseN(int n, int i, int j, void* sparam, void* dparam);
 
@@ -213,6 +226,28 @@ public:
 	/// パラメータを取得する
 	virtual void GetParams(PHNDJointMotorParam<3>& p);
 
+};
+
+/// 3自由度人体関節特性抵抗モータ
+class PHHumanBallJointResistance : public PHBallJointNonLinearMotor {
+public:
+	SPR_OBJECTDEF(PHHumanBallJointResistance);
+	SPR_DECLMEMBEROF_PHHumanBallJointResistanceDesc;
+
+	PHHumanBallJointResistance(const PHHumanBallJointResistanceDesc& desc = PHHumanBallJointResistanceDesc()) {
+		SetDesc(&desc);
+		springFunc = Vec3i(1, 1, 1);
+		damperFunc = Vec3i(1, 1, 1);
+		springParam[0] = new Vec4d(desc.xCoefficient);
+		springParam[1] = new Vec4d(desc.yCoefficient);
+		springParam[2] = new Vec4d(desc.zCoefficient);
+		damperParam[0] = new Vec4d(desc.xCoefficient);
+		damperParam[1] = new Vec4d(desc.yCoefficient);
+		damperParam[2] = new Vec4d(desc.zCoefficient);
+		offset = Vec3d();
+	}
+
+	Vec3d GetCurrentResistance();
 };
 
 ///	バネダンパのコントローラ

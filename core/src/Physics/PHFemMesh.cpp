@@ -44,7 +44,7 @@ bool PHFemMesh::Face::operator == (const Face& f2){
 
 PHFemMesh::Edge::Edge(int v1, int v2){
 	if (v1>v2) std::swap(v1, v2);
-	assert(v1==-1 && v2==-1 || v1 < v2);
+	assert( (v1==-1 && v2==-1) || v1 < v2);
 	vertices[0] = v1;
 	vertices[1] = v2;
 }

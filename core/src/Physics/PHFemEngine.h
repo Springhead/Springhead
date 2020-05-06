@@ -58,7 +58,12 @@ public:
 	void	ContactInterface();
 	void	clearContacts();  
 	void	InitContacts();
-	
+	void	ClearContactVectors();
+
+	int NMesh() { return (int)meshes.size();  }
+	PHFemMeshIf* GetMesh(int i) { return meshes[i]->Cast(); }
+	int NMeshNew() { return (int)meshes_n.size(); }
+	PHFemMeshNewIf* GetMeshNew(int i) { return meshes_n[i]->Cast(); }
 };
 
 }

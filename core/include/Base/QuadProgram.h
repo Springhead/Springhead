@@ -257,19 +257,19 @@ public:
 	typedef QuadProgramImp< VMatrixRow<ET>, VVector<ET>, VVector<ET>, VVector<int> > base_type;
 	///	次元を設定
 	void SetDim(int n){
-		matQ.resize(n,n);
-		vecC.resize(n);
-		vecX.resize(n);
-		matA.resize(n, n);
-		minX.resize(n);	
-		maxX.resize(n);
+		this->matQ.resize(n,n);
+		this->vecC.resize(n);
+		this->vecX.resize(n);
+		this->matA.resize(n, n);
+		this->minX.resize(n);	
+		this->maxX.resize(n);
 
-		matR.resize(n, n);
-		vecL.resize(n);
+		this->matR.resize(n, n);
+		this->vecL.resize(n);
 
-		vecXYNext.resize(2*n);
-		vecD.resize(n);
-		isActiveSet.resize(n);
+		this->vecXYNext.resize(2*n);
+		this->vecD.resize(n);
+		this->isActiveSet.resize(n);
 	}
 	///	初期化，minTの次元で，次元を設定
 	void Init(VVector<ET> minT, VVector<ET> maxT){
@@ -278,8 +278,8 @@ public:
 	}
 
 	void SetOneRange(int num, ET max,ET min){
-		minX[num] = -min;
-		maxX[num] = max;
+		this->minX[num] = -min;
+		this->maxX[num] = max;
 	}
 };
 

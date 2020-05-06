@@ -41,8 +41,8 @@ public:
 	virtual Quaternionf		GetOrientation();
 	virtual Affinef			GetAffine();
 
-	virtual Vec3f			GetVelocity()			{ return Vec3f(); velocity; }
-	virtual Vec3f			GetAngularVelocity()	{ return Vec3f(); angularVelocity; }
+	virtual Vec3f			GetVelocity()		{ return velocity; }
+	virtual Vec3f			GetAngularVelocity()	{ return angularVelocity; }
 
 	virtual void			SetMaxVelocity(float mV)         { maxVelocity = mV; }
 	virtual void			SetMaxAngularVelocity(float mAV) { maxAngularVelocity = mAV; }

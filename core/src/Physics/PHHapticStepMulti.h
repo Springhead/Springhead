@@ -2,12 +2,12 @@
 #define PH_HAPTICENGINE_MULTIBASE_H
 
 #include <Physics/PHHapticStepBase.h>
-#include <Physics/PHHapticRender.h>
+#include <Physics/PHHapticPointer.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// PHHapticScene
+/// PHHapticScene
 class PHHapticScene {
 public:
 	PHHapticPointers hapticPointers;
@@ -16,7 +16,7 @@ public:
 	PHSolidPairForHaptic* GetSolidPair(int i, int j) { return (PHSolidPairForHaptic*)&*solidPairs.item(i, j); }
 };
 //----------------------------------------------------------------------------
-// PHHapticStepMulti
+/// PHHapticStepMulti
 class PHHapticStepMulti : public PHHapticStepBase{
 	SPR_OBJECTDEF_ABST_NOIF(PHHapticStepMulti);
 protected:

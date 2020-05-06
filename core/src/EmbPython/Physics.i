@@ -33,8 +33,8 @@
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
 
 // 2016/04/06 for dailybuild
-%ignore Spr::PHSceneIf::GetOpEngine();
-%ignore Spr::PHOpSpHashColliAgentIf::Initial(float, Bounds);
+%ignore Spr::PHSceneIf::GetOpEngine;
+%ignore Spr::PHOpSpHashColliAgentIf::Initial;
 
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
@@ -42,9 +42,20 @@
 %ignore Spr::PHOpObjIf;
 %ignore Spr::PHOpEngineIf;
 
-// 2017/08/24 for dailybuild
-%ignore Spr::PHBallJointIf::GetMotors;
+// 2017/08/30 for dailybuild
+%ignore Spr::PH1DJointIf::CreateMotor;
+%ignore Spr::PH1DJointIf::AddMotor;
 %ignore Spr::PH1DJointIf::GetMotors;
+%ignore Spr::PHBallJointIf::CreateMotor;
+%ignore Spr::PHBallJointIf::AddMotor;
+%ignore Spr::PHBallJointIf::GetMotors;
+
+// 2017/10/25 for dailybuild
+%ignore Spr::PHFemVibrationIf::FindNeighborTetrahedron;
+%ignore Spr::PHHapticEngineIf::GetSolidPair;
+%ignore Spr::PHHapticEngineIf::GetSolidPairInHaptic;
+%ignore Spr::PHShapePairForHapticIf;
+%ignore Spr::PHSolidPairForHapticIf;
 
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
@@ -86,7 +97,6 @@ EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 %include "../../include/Physics/SprPHIK.h"
 %include "../../include/Physics/SprPHJoint.h"
 %include "../../include/Physics/SprPHJointLimit.h"
-%include "../../include/Physics/SprPHJointMotor.h"
 %include "../../include/Physics/SprPHNodeHandlers.h"
 %include "../../include/Physics/SprPHOpSpHashAgent.h"
 %include "../../include/Physics/SprPHScene.h"

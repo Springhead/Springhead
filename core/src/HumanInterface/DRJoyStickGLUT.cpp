@@ -8,6 +8,13 @@
 
 #include <HumanInterface/DRJoyStickGLUT.h>
 #include <HumanInterface/HISdk.h>
+
+#include <GL/glut.h>
+
+#ifndef GLUTCALLBACK
+#define GLUTCALLBACK
+#endif
+
 #ifdef USE_HDRSTOP
  #pragma hdrstop
 #endif
@@ -38,6 +45,9 @@ HIVirtualDeviceIf* DRJoyStickGLUT::Rent(const IfInfo* ii, const char* n, int por
 	return dv;
 }
 
+static void GLUTCALLBACK OnUpdateStatic(unsigned int buttonMask, int x, int y, int z) {
+	DRJoyStickGLUT::instance->OnUpdate(buttonMask, x, y, z);
+}
 void DRJoyStickGLUT::SetPollInterval(DVJoyStick* dv){
 	int wid = dv->GetPortNo();
 	int widCur = glutGetWindow();
@@ -55,8 +65,5 @@ void DRJoyStickGLUT::OnUpdate(unsigned int buttonMask, int x, int y, int z){
 	}
 }
 
-void GLUTCALLBACK DRJoyStickGLUT::OnUpdateStatic(unsigned int buttonMask, int x, int y, int z){
-	instance->OnUpdate(buttonMask, x, y, z);
-}
 
 }	//	namespace Spr

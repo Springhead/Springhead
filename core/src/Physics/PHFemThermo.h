@@ -426,8 +426,8 @@ public:
 	//BC=BoundaryCondition
 	//HTR=HeatTransferRatio
 
-	int GetSurfaceVertex(int id){return GetPHFemMesh()->surfaceVertices[id];};
-	int NSurfaceVertices(){return int(GetPHFemMesh()->surfaceVertices.size());};
+	int GetSurfaceVertex(int id){return phFemMesh->surfaceVertices[id];};
+	int NSurfaceVertices(){return int( phFemMesh->surfaceVertices.size());};
 	//	周囲流体温度を更新	熱伝達率は変えない
 	void SetVertexTc(int id,double temp){
 		// ...PHFemThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
@@ -443,12 +443,12 @@ public:
 	// 全節点の熱流束を設定する
 	void SetVtxHeatFluxAll(double heatFlux);
 
-	Vec3d GetPose(unsigned id){ return GetPHFemMesh()->vertices[id].pos; };
-	Vec3d GetSufVtxPose(unsigned id){return GetPHFemMesh()->vertices[GetPHFemMesh()->surfaceVertices[id]].pos; };
+	Vec3d GetPose(unsigned id){ return phFemMesh->vertices[id].pos; };
+	Vec3d GetSufVtxPose(unsigned id){return phFemMesh->vertices[phFemMesh->surfaceVertices[id]].pos; };
 	// メッシュ節点の温度を取得
 	double GetVertexTemp(unsigned id){ return vertexVars[id].temp; };
 	// メッシュ表面の節点温度を取得
-	double GetSufVertexTemp(unsigned id){ return vertexVars[GetPHFemMesh()->surfaceVertices[id]].temp; };
+	double GetSufVertexTemp(unsigned id){ return vertexVars[phFemMesh->surfaceVertices[id]].temp; };
 
 	//%%%	Stepカウントのための変数、関数定義		%%%//
 	unsigned long StepCount;			//	Step数カウントアップの加算係数	
@@ -595,7 +595,7 @@ public:
 	void RevVertexNormalAll();
 	void SetWeekPowFULL(double weekPow_full){weekPow_FULL = weekPow_full;}
 	double GetWeekPowFULL(){return weekPow_FULL;}
-	Vec3d GetVertexPose(unsigned vtxid){return GetPHFemMesh()->vertices[vtxid].pos;}
+	Vec3d GetVertexPose(unsigned vtxid){return phFemMesh->vertices[vtxid].pos;}
 
 	//std::vector<unsigned> matknormal;
 	std::vector<double> matkupdate;
@@ -608,13 +608,13 @@ public:
 		CalcEdgeLengthAll();
 		std::ofstream tetvolout;
 		tetvolout.open("tetVolAll.csv");
-		for(unsigned tetid=0; tetid < GetPHFemMesh()->tets.size(); tetid++){
+		for(unsigned tetid=0; tetid < phFemMesh->tets.size(); tetid++){
 			tetvolout << tetid << "," << tetVars[tetid].volume << "," << GetMaxMinEdgeRatioInTet(tetid) << std::endl;
 		}
 		tetvolout.close();
 	}
 	void OutEig();
-	int GetTetsV(unsigned tetid, unsigned vtxid){return GetPHFemMesh()->tets[tetid].vertexIDs[vtxid];}
+	int GetTetsV(unsigned tetid, unsigned vtxid){return phFemMesh->tets[tetid].vertexIDs[vtxid];}
 	void VecFNegativeCheck();
 	double GetVecFElem(unsigned vtxid){return vecFAllSum[vtxid];}
 
@@ -631,7 +631,7 @@ public:
 	std::ofstream ggConvOut;
 	PTM::TMatrixRow<4,4,double> Create44Mat50();	//共通で用いる、4×4の5と0でできた行列を返す関数
 	void matKModif();
-	int GetTetVNums(unsigned id,unsigned num){return GetPHFemMesh()->tets[id].vertexIDs[num];}
+	int GetTetVNums(unsigned id,unsigned num){return phFemMesh->tets[id].vertexIDs[num];}
 	PTM::VMatrixRow<double> fpat;	//各頂点への熱流束Fを他の頂点へ分配する比率を保存する
 	PTM::VMatrixRow<double> cratio;
 	void makeFPartition(unsigned num);

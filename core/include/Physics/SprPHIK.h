@@ -378,6 +378,10 @@ struct PHIKBallActuatorIf : PHIKActuatorIf{
 	/** @brief 関節引き戻し目標をセットする
 	*/
 	void SetPullbackTarget(Quaterniond ori);
+
+	/** @brief 一時変数の関節角度を取得する
+	*/
+	Quaterniond GetJointTempOri();
 };
 
 /// ３軸アクチュエータのディスクリプタ
@@ -410,6 +414,10 @@ struct PHIKHingeActuatorIf : PHIKActuatorIf{
 	/** @brief 関節引き戻し目標をセットする
 	*/
 	void SetPullbackTarget(double angle);
+
+	/** @brief 一時変数の関節角度を取得する
+	*/
+	double GetJointTempAngle();
 };
 
 /// １軸アクチュエータのディスクリプタ

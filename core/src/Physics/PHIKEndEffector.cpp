@@ -73,7 +73,7 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 
 	PHSceneIf*    phScene = DCAST(PHSceneIf,GetScene());
 	PHIKEngineIf* engine  = phScene->GetIKEngine();
-	double dt = DCAST(PHSceneIf,GetScene())->GetTimeStep();
+	//double dt = DCAST(PHSceneIf,GetScene())->GetTimeStep();
 
 	if (bPosition) {
 		Vec3d currPos = solidTempPose*targetLocalPosition;
@@ -115,11 +115,9 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		}
 
 		double maxmove = engine->GetMaxAngularVelocity() * phScene->GetTimeStep();
-		Vec3d v_o;
-		if (qG.Theta() < maxmove) {
-			v_o = (qG.Axis() * qG.Theta());
-		} else {
-			v_o = (qG.Axis() * maxmove);
+		Vec3d v_o = qG.RotationHalf();
+		if (v_o.norm() > maxmove) {
+			v_o = v_o.unit() * maxmove;
 		}
 		v_o *= orientationPriority;
 

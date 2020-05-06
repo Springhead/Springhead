@@ -15,7 +15,9 @@ set API_INCLUDE=../../include
 rem makefileÇÃçÏê¨Ç∆MakeÇÃé¿çs
 set PATHORG=%PATH%;
 
-set PATH=..\..\bin;..\..\bin\swig
+set BINDIR=..\..\..\buildtool
+set SWIGDIR=..\..\bin\swig
+set PATH=%BINDIR%;%SWIGDIR%;%PATH%
 rem set SRCINTF=
 rem for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%MODULE%/%%f
 
@@ -25,7 +27,7 @@ call swig.exe -cpperraswarn -sprpy -c++ %MODULE%.i & if errorlevel 1 echo !!!!SW
 
 :astyle
 echo AStyle Part
-call ..\..\bin\AStyle.exe  --style=allman --indent=tab "%CPP%" "%HPP%" "%SPRH%" & if errorlevel 1 @pause
+call AStyle.exe  --style=allman --indent=tab "%CPP%" "%HPP%" "%SPRH%" & if errorlevel 1 @pause
 del /Q .\SprEP%MODULE%.*.orig
 del /Q .\EP%MODULE%.*.orig
 

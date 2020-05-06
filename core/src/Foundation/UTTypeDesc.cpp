@@ -130,7 +130,7 @@ void UTTypeDesc::Composit::Print(std::ostream& os) const{
 void UTTypeDesc::Composit::Link(UTTypeDescDb* db) {
 	for(iterator it = begin(); it != end(); ++it){
 		if (it->type == NULL){
-			it->type = db->Find(it->typeName);
+			it->type = db->Find(it->typeName)->Cast();
 #if 0
 			if (it->type){
 				DSTR << it->typeName << " " << it->name << " = " << it->type->GetTypeName() << std::endl;
@@ -146,6 +146,17 @@ UTTypeDesc::Field* UTTypeDesc::Composit::Find(const char* id){
 	}
 	return NULL;
 }
+
+//--------------------------------------------------------------------
+//	UTTypeDesc
+UTTypeDescIf* UTTypeDescIf::Create(std::string tn, int sz) {
+	UTTypeDesc* t = DBG_NEW UTTypeDesc(tn, sz);
+	return t->Cast();
+}
+void UTTypeDesc::SetIfInfo(const IfInfo* i) {
+	ifInfo = i;
+}
+
 UTTypeDesc::BinaryType UTTypeDesc::CheckSimple(){
 	if (bSimple == UNKNOWN_BINARY){
 		if (IsPrimitive()){
@@ -167,7 +178,7 @@ UTTypeDesc::BinaryType UTTypeDesc::CheckSimple(){
 	return bSimple;
 }
 
-UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, std::string n, std::string suf){
+int UTTypeDesc::AddField(std::string pre, std::string tn, std::string n, std::string suf){
 	composit.push_back(Field());
 	if (pre.compare("vector") == 0){
 		composit.back().varType = UTTypeDescIf::VECTOR;
@@ -189,10 +200,10 @@ UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, std::st
 	composit.back().typeName = tn;
 	composit.back().name = n;
 
-	return &composit.back();
+	return (int)composit.size()-1;
 };
 
-UTTypeDesc::Field* UTTypeDesc::AddBase(std::string tn){
+int UTTypeDesc::AddBase(std::string tn){
 	Composit::iterator it;
 	if (composit.size()){
 		for(it = composit.begin(); it!=composit.end(); ++it){
@@ -205,7 +216,7 @@ UTTypeDesc::Field* UTTypeDesc::AddBase(std::string tn){
 		it = composit.begin();
 	}
 	it->typeName = tn;
-	return &*it;
+	return it-composit.begin();
 }
 void UTTypeDesc::Link(UTTypeDescDb* db) {
 	composit.Link(db);
@@ -355,14 +366,14 @@ void UTTypeDesc::WriteFromString(std::string in, int i, void* base, int pos) {
 UTTypeDescDb::~UTTypeDescDb(){
 	db.clear();
 }
-UTTypeDesc* UTTypeDescDb::Find(UTString tn){
+UTTypeDescIf* UTTypeDescDb::Find(UTString tn){
 	UTRef<UTTypeDesc> key = new UTTypeDesc;
 	if (prefix.length() && tn.compare(0, prefix.length(), prefix)==0){
 		tn = tn.substr(prefix.length());
 	}
 	key->typeName = tn;
 	Db::iterator it = db.find(key);
-	if (it != db.end()) return *it;
+	if (it != db.end()) return (*it)->Cast();
 	return NULL;
 }
 void UTTypeDescDb::SetPrefix(UTString p){
@@ -380,10 +391,16 @@ void UTTypeDescDb::SetPrefix(UTString p){
 	}
 	db.insert(descs.begin(), descs.end());
 }
-void UTTypeDescDb::Link(UTTypeDescDb* lib) {
-	if (!lib) lib = this;
+void UTTypeDescDb::Link(UTTypeDescDbIf* lib) {
+	if (!lib) lib = Cast();
 	for(Db::iterator it=db.begin(); it!=db.end(); ++it){
-		(*it)->Link(lib);
+		(*it)->Link(lib->Cast());
+	}
+}
+void UTTypeDescDb::LinkAll() {
+	UTTypeDescDbPool* pool = UTTypeDescDbPool::GetPool();
+	for(auto it = pool->begin(); it !=  pool->end(); ++it){
+		Link((*it)->Cast());
 	}
 }
 bool UTTypeDescDb::LinkCheck(){
@@ -414,10 +431,10 @@ UTTypeDescDbPool* SPR_CDECL UTTypeDescDbPool::GetPool(){
 	if (!pool) pool = new UTTypeDescDbPool();
 	return pool;
 }
-UTTypeDescDb* SPR_CDECL UTTypeDescDbPool::Get(std::string gp){
+UTTypeDescDbIf* SPR_CDECL UTTypeDescDbPool::Get(std::string gp){
 	UTRef<UTTypeDescDb> key = DBG_NEW UTTypeDescDb(gp);
 	std::pair<UTTypeDescDbPool::iterator, bool> r = GetPool()->insert(key);
-	return *r.first;
+	return (*r.first)->Cast();
 }
 void SPR_CDECL UTTypeDescDbPool::Print(std::ostream& os){
 	for(const_iterator it = GetPool()->begin(); it != GetPool()->end(); ++it){
@@ -547,11 +564,14 @@ UTTypeDescFieldIt::FieldType UTTypeDescFieldIt::GetTypeId(UTTypeDesc* type){
 	return fieldType;
 }
 UTTypeDescIf* UTTypeDescIf::FindTypeDesc(const char* typeName, const char* moduleName) {
-	UTTypeDescDb* db = UTTypeDescDbPool::Get(moduleName);
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get(moduleName);
 	return (UTTypeDescIf*)db->Find(typeName);
 }
-void UTTypeDescIf::PrintPool(std::ostream& os) {
+void UTTypeDescDbIf::PrintPool(std::ostream& os) {
 	UTTypeDescDbPool::GetPool()->Print(os);
+}
+UTTypeDescDbIf* UTTypeDescDbIf::GetDb(std::string n){
+	return UTTypeDescDbPool::Get(n);
 }
 
 

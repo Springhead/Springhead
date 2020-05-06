@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -27,7 +27,7 @@ struct FWSkeletonInfo {
 	FWSkeletonInfo() : id(-1), invisibleCnt(0), phSkeleton(NULL) {}
 };
 
-// HISkeletonSensor‚ÆPHSkeleton‚ğ‚Â‚È‚®‚Ğ‚Æ
+// HISkeletonSensorã¨PHSkeletonã‚’ã¤ãªãã²ã¨
 class FWSkeletonSensor: public FWSkeletonSensorDesc, public SceneObject {
 public:
 	SPR_OBJECTDEF(FWSkeletonSensor);
@@ -43,17 +43,17 @@ public:
 	}
 
 	// ----- ----- ----- ----- -----
-	// APIŠÖ”
+	// APIé–¢æ•°
 
 	void Update();
 
-	/// ’¼Œa‚ğƒZƒbƒg
+	/// ç›´å¾„ã‚’ã‚»ãƒƒãƒˆ
 	void SetRadius(Vec2d r) { this->radius = r; }
 
-	/// ŠÖ˜A•t‚¯‚ç‚ê‚½HISkeletonSensor‚ğ•Ô‚·
+	/// é–¢é€£ä»˜ã‘ã‚‰ã‚ŒãŸHISkeletonSensorã‚’è¿”ã™
 	HISkeletonSensorIf* GetSensor() { return sensor; }
 
-	/// ƒXƒPƒ‹ƒgƒ“î•ñ‚ğ•Ô‚·
+	/// ã‚¹ã‚±ãƒ«ãƒˆãƒ³æƒ…å ±ã‚’è¿”ã™
 	int NSkeleton() const {
 		int cnt = 0;
 		for (size_t i = 0; i < skeletons.size(); ++i) {
@@ -62,7 +62,7 @@ public:
 		return cnt;
 	}
 	PHSkeletonIf* GetSkeleton(int i) {
-		int cnt = 0;
+		size_t cnt = 0;
 		for (size_t i = 0; i < skeletons.size(); ++i) {
 			if (skeletons[i].id >= 0) { cnt++; }
 			if (cnt == i) { return skeletons[i].phSkeleton; }
@@ -71,7 +71,7 @@ public:
 	}
 
 	// ----- ----- ----- ----- -----
-	// ƒx[ƒXƒNƒ‰ƒX‚ÌAPIŠÖ”
+	// ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹ã®APIé–¢æ•°
 	
 	virtual bool        AddChildObject(ObjectIf* o) {
 		if (DCAST(HISkeletonSensorIf, o)) { sensor = o->Cast();             return true; }
@@ -94,7 +94,7 @@ public:
 	}
 
 	// ----- ----- ----- ----- -----
-	// ”ñAPIŠÖ”
+	// éAPIé–¢æ•°
 
 	void ProcessSkeleton(HISkeletonIf* hiSkel, int i);
 	void AddSkeleton();

@@ -12,6 +12,8 @@
 
 namespace Spr {;
 
+#ifdef _WIN32
+
 std::vector<void*> HISpaceNavigator::deviceHandles;
 
 bool HISpaceNavigator::Init(const void* desc) {
@@ -251,4 +253,18 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 
 	return false;
 }
+
+#else
+
+bool        HISpaceNavigator::Init(const void* desc){ return false; }
+bool        HISpaceNavigator::Calibration(){ return false; }
+void        HISpaceNavigator::Update(float dt){}
+bool        HISpaceNavigator::SetPose(Posef pose){ return false; }
+Posef       HISpaceNavigator::GetPose(){ return Posef(); }
+Vec3f       HISpaceNavigator::GetPosition(){ return Vec3f(); }
+Quaternionf HISpaceNavigator::GetOrientation(){ return Quaternionf(); }
+Affinef     HISpaceNavigator::GetAffine(){ return Affinef(); }
+bool        HISpaceNavigator::PreviewMessage(void *m){ return false; }
+#endif
+
 }

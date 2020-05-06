@@ -1,4 +1,4 @@
-#ifndef CDCOLLISIONFUNCTION_H
+ï»¿#ifndef CDCOLLISIONFUNCTION_H
 #define CDCOLLISIONFUNCTION_H
 /*
 
@@ -18,7 +18,7 @@ namespace Spr{
 		Vec3f m = a - sphereCtr;
 		float b = m.dot(unitb_aNome);
 		float c = m.dot(m) - sphereR * sphereR;
-		// Exit if r’s origin outside s (c > 0)and r pointing away from s (b > 0)
+		// Exit if rç—´ origin outside s (c > 0)and r pointing away from s (b > 0)
 		if (c > 0.0f && b > 0.0f) return 0;
 		float discr = b*b - c;
 		// A negative discriminant corresponds to ray missing sphere
@@ -35,7 +35,7 @@ namespace Spr{
 
 		static 	Vec3f  SaveTriLocalCoordinates(Vec3f p, Vec3f q, Vec3f a, Vec3f b, Vec3f c, float &u, float &v, float &w, float &t)
 	{
-		int regionFlag, insideFlag;
+		//int regionFlag, insideFlag;
 		//Check if P in vertex region outside A
 		Vec3f ab = b - a;
 		Vec3f ac = c - a;
@@ -50,16 +50,16 @@ namespace Spr{
 		float d4 = ac * bp;
 		//if(d3 >= 0.0f && d4 <= d3 ) {regionFlag = 2;return b;}
 
-		Vec3f bc = c - b;
-		float d4_ = bc * bp;
+		//Vec3f bc = c - b;
+		//float d4_ = bc * bp;
 		//if (d3 >= 0.0f && d4_ <= 0.0f)  { regionFlag = 2; return b; }
 
 		//Check if P in edge region of AB, then return the projection of P
 		float vc = d1 * d4 - d3 * d2;
 		if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f)
 		{
-			float v = d1 / (d1 - d3);
-			{regionFlag = 11; }
+			//float v = d1 / (d1 - d3);
+			//{regionFlag = 11; }
 			//return a + v * ab;
 		}
 
@@ -69,22 +69,22 @@ namespace Spr{
 		float d6 = ac * cp;
 		//if(d6 <=0.0f && d5 <= d6) {regionFlag = 3;return c;}
 
-		float d5_ = bc * cp;
+		//float d5_ = bc * cp;
 		//if (d6 >= 0.0f && d5_ >= 0.0f)  { regionFlag = 3; return c; }
 
 		// Check if P in edge region of AC, if so return projection of P onto AC
 		float vb = d5*d2 - d1*d6;
 		if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
-			float w = d2 / (d2 - d6);
-			{regionFlag = 12; }
+			//float w = d2 / (d2 - d6);
+			//{regionFlag = 12; }
 			//return a + w * ac; // barycentric coordinates (1-w,0,w)
 		}
 
 		// Check if P in edge region of BC, if so return projection of P onto BC
 		float va = d3*d6 - d5*d4;
 		if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
-			float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-			{regionFlag = 13; }
+			//float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+			//{regionFlag = 13; }
 			//return b + w * (c - b); // barycentric coordinates (0,1-w,w)
 		}
 
@@ -92,8 +92,8 @@ namespace Spr{
 		float denom = 1.0f / (va + vb + vc);
 		v = vb * denom;
 		w = vc * denom;
-		insideFlag = true;
-		{regionFlag = 0; }
+		//insideFlag = true;
+		//{regionFlag = 0; }
 		u = 1 - v - w;
 		return a + ab * v + ac * w; // = u*a + v*b + w*c, u = va * denom = 1.0f - v - w
 	}
@@ -265,8 +265,8 @@ namespace Spr{
 		float nd = n.dot(d);
 		float dd = d.dot(d);
 		// Test if segment fully outside either endcap of cylinder
-		if (md < 0.0f && md + nd < 0.0f) return 0; // Segment outside ‘p - side of cylinder
-		if (md > dd && md + nd > dd) return 0;     // Segment outside ‘q - side of cylinder
+		if (md < 0.0f && md + nd < 0.0f) return 0; // Segment outside å¢ - side of cylinder
+		if (md > dd && md + nd > dd) return 0;     // Segment outside å€‰ - side of cylinder
 		float nn = n.dot(n);
 		float mn = m.dot(n);
 		float a = dd * nn - nd * nd;
@@ -275,11 +275,11 @@ namespace Spr{
 		float EPSILON = 50 * std::numeric_limits<float>::epsilon();
 		if (fabs(a) < EPSILON) {
 			// Segment runs parallel to cylinder axis
-			if (c > 0.0f) return 0; // ‘a - and thus the segment lie outside cylinder
+			if (c > 0.0f) return 0; // ç–Ž - and thus the segment lie outside cylinder
 			// Now known that segment intersects cylinder; figure out how it intersects
-			if (md < 0.0f) t = -mn / nn; // Intersect segment against ‘p - endcap
-			else if (md > dd) t = (nd - mn) / nn; // Intersect segment against ‘q - endcap
-			else t = 0.0f; // ‘a - lies inside cylinder
+			if (md < 0.0f) t = -mn / nn; // Intersect segment against å¢ - endcap
+			else if (md > dd) t = (nd - mn) / nn; // Intersect segment against å€‰ - endcap
+			else t = 0.0f; // ç–Ž - lies inside cylinder
 			return 1;
 		}
 		float b = dd * mn - nd * md;
@@ -288,14 +288,14 @@ namespace Spr{
 		t = (-b - sqrt(discr)) / a;
 		if (t < 0.0f || t > 1.0f) return 0; // Intersection lies outside segment
 		if (md + t * nd < 0.0f) {
-			// Intersection outside cylinder on ‘p - side
+			// Intersection outside cylinder on å¢ - side
 			if (nd <= 0.0f) return 0; // Segment pointing away from endcap
 			t = -md / nd;
 			// Keep intersection ifS(t) - p, S(t) - p) <= r^2
 			return k + 2 * t * (mn + t * nn) <= 0.0f;
 		}
 		else if (md + t * nd > dd) {
-			// Intersection outside cylinder on ‘q - side
+			// Intersection outside cylinder on å€‰ - side
 			if (nd >= 0.0f) return 0; // Segment pointing away from endcap
 			t = (dd - md) / nd;
 			// Keep intersection ifS(t) - q, S(t) - q) <= r^2

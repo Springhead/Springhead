@@ -30,6 +30,10 @@ using namespace Spr;
 #define STAY_COUNTER		300			// 静止判定カウント
 #define TOTAL_IDLE_COUNTER	10000		// 静止しない場合に利用
 
+#if defined(DAILY_BUILD)
+  #undef  TOTAL_IDLE_COUNTER
+  #define TOTAL_IDLE_COUNTER	750
+#endif
 
 UTRef<PHSdkIf> sdk;
 PHSceneIf* scene;
@@ -61,7 +65,7 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
  param		なし
  return 	なし
  */
-void __cdecl display(){
+void SPR_CDECL display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glEnable(GL_CULL_FACE);
 
@@ -207,7 +211,7 @@ void initialize(){
  param		<in/--> h　　高さ
  return		 なし
  */
-void __cdecl reshape(int w, int h){
+void SPR_CDECL reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -222,7 +226,7 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void __cdecl keyboard(unsigned char key, int x, int y){
+void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 	if (key == 'q') exit(0);
 }	
@@ -232,7 +236,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void __cdecl idle(){
+void SPR_CDECL idle(){
 	static int total;
 	total ++;
 	if (total > TOTAL_IDLE_COUNTER){
@@ -307,7 +311,7 @@ void dstrSolid(const std::string& solidName) {
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	scene = sdk->CreateScene();				// シーンの作成
 	PHSolidDesc desc;

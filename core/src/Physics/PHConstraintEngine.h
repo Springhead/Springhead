@@ -116,6 +116,7 @@ public:
 
 	/// レポート用
 	UTPreciseTimer ptimer;
+	UTPreciseTimer ptimer2;
 	FILE*          reportFile;
 	int            timeCollision;
 	int            timeSetup;

@@ -122,11 +122,11 @@ public:
 		bjd.spring = 10.0;
 		bjd.poseSocket.Pos() = Vec3d(0.13, 0.1, 0.0);
 		bjd.posePlug  .Pos() = Vec3d(0.0 , 0.1, 0.0);
-		(Vec3d&)bjd.targetPosition = Vec3d(Rad(-0), Rad(-0), Rad(+0));
+		bjd.targetPosition = Quaterniond();
 		GetFWScene()->GetPHScene()->CreateJoint(chest, upArmR, bjd);
 		bjd.poseSocket.Pos() = Vec3d(-0.13, 0.1, 0.0);
 		bjd.posePlug  .Pos() = Vec3d( 0.0 , 0.1, 0.0);
-		(Vec3d&)bjd.targetPosition = Vec3d(Rad(-0), Rad(-0), Rad(-0));
+		bjd.targetPosition = Quaterniond();
 		GetFWScene()->GetPHScene()->CreateJoint(chest, upArmL, bjd);
 
 		// elbow
@@ -247,7 +247,7 @@ public:
 #if _MSC_VER <= 1500
 #include <GL/glut.h>
 #endif
-int __cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;

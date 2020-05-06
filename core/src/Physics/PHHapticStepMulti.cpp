@@ -1,4 +1,5 @@
 ﻿#include <Physics/PHHapticStepMulti.h>
+#include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------

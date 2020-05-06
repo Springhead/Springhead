@@ -20,22 +20,22 @@
 
 namespace Spr{;
 
-///	@brief 表示用のSphere(GRSphere)のデスクリプタ．
-struct GRSphereDesc{
-	float radius;			///< 半径
-	int   slices;			///< 経線方向の分割数
-	int   stacks;			///< 緯線方向の分割数	
-	GRSphereDesc(){
-		radius = 1.0;
-		slices = 16;
-		stacks = 16;
-	}
-};
-
 
 ///	@brief	グラフィックスで使う表示用のSphere
 struct GRSphereIf: public GRVisualIf{
 	SPR_IFDEF(GRSphere);
+};
+///	@brief 表示用のSphere(GRSphere)のデスクリプタ．
+struct GRSphereDesc: public GRVisualDesc {
+	SPR_DESCDEF(GRSphere);
+	float radius;			///< 半径
+	int   slices;			///< 経線方向の分割数
+	int   stacks;			///< 緯線方向の分割数	
+	GRSphereDesc() {
+		radius = 1.0;
+		slices = 16;
+		stacks = 16;
+	}
 };
 
 

@@ -12,7 +12,7 @@ namespace Spr{
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
 
-extern void RegisterTypeDescGraphics(UTTypeDescDb* db);
+extern void RegisterTypeDescGraphics(UTTypeDescDbIf* db);
 void SPR_CDECL GRRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
@@ -20,8 +20,8 @@ void SPR_CDECL GRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Graphics");
+	UTTypeDescDbIf* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("Graphics");
 	RegisterTypeDescGraphics(db);
 	db->Link();
 	db->Link(fdb);

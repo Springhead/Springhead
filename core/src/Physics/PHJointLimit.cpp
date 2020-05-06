@@ -622,8 +622,8 @@ void PHBallJointIndependentLimit::SetupAxisIndex(){
 	axes.Clear();
 	Vec3d delta;
 	joint->GetPosition().ToEuler(delta);
+	delta = Vec3d(delta.z, delta.x, delta.y);
 	ax = 0;
-	DSTR << delta << std::endl;
 	for (int i = 0; i<3; ++i) {
 		if ((limit[i][0] < FLT_MAX*0.1) && delta[i] < limit[i][0]) {
 			axes.Enable(i);

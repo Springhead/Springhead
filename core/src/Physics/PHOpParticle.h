@@ -133,7 +133,7 @@ public :
 	{
 		for(int i =0; i< pNvertex;i++)
 			{
-			if(vGindex = pVertArr[i])
+			if(vGindex == pVertArr[i])
 			{
 				return i;
 			}

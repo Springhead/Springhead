@@ -21,7 +21,7 @@ namespace Spr{;
 const double epsilon = 1e-10;
 const double inf     = 1e+10;
 
-double resistCalc(double d, double k_1, double k_2, double k_3, double k_4){
+double JointFunctions::resistCalc(double d, double k_1, double k_2, double k_3, double k_4){
 	return exp(k_1 * (d - k_2)) - exp(k_3 * (k_4 - d));
 }
 
@@ -29,12 +29,12 @@ double resistCalc(double d, double k_1, double k_2, double k_3, double k_4){
 
 // PH1DJointNonLinearMotorのFuncDatabase
 
-Vec2d ResistanceTorque(PH1DJointIf* jo, void* param){
+Vec2d JointFunctions::ResistanceTorque(PH1DJointIf* jo, void* param){
 	double k_1 = ((double*)param)[0];
 	double k_2 = ((double*)param)[1];
 	double k_3 = ((double*)param)[2];
 	double k_4 = ((double*)param)[3];
-	double delta = jo->GetPosition();
+	double delta = jo->GetPosition() + jo->GetVelocity() * jo->GetScene()->GetTimeStep();
 	if (DCAST(PH1DJointLimitIf, jo->GetLimit())){
 		Vec2d range;
 		jo->GetLimit()->GetRange(range);
@@ -46,33 +46,34 @@ Vec2d ResistanceTorque(PH1DJointIf* jo, void* param){
 		}
 	}
 	double k = k_1 * exp(k_1 * (delta - k_2)) + k_3 * exp(k_3 * (k_4 - delta));
-	DSTR << k_1 << " " << k_2 << " " << k_3 << " " << k_4 << " " << delta << std::endl;
+	//DSTR << k_1 << " " << k_2 << " " << k_3 << " " << k_4 << " " << delta << std::endl;
 	double t = (k == 0 ? 0 : delta - (exp(k_1 * (delta - k_2)) - exp(k_3 * (k_4 - delta))) / k);
-	DSTR << k << " " << t << std::endl;
+	//DSTR << k << " " << t << std::endl;
 	return Vec2d(abs(k), t);
 }
 
-Vec2d PD(PH1DJointIf* jo, void* param){
-	DSTR << Vec2d(((double*)param)[0], ((double*)param)[1]) << std::endl;
+Vec2d JointFunctions::PD(PH1DJointIf* jo, void* param){
 	return Vec2d(((double*)param)[0], ((double*)param)[1]);
 }
 
 Vec2d (*PH1DJointFunc[])(PH1DJointIf*, void*) = {
-	PD,
-	ResistanceTorque,
+	JointFunctions::PD,
+	JointFunctions::ResistanceTorque,
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----
 
 // PHBallJointNonLinearMotorのFuncDatabase
 
-Vec2d ResistanceTorque(int a, PHBallJointIf* jo, void* param){
+Vec2d JointFunctions::ResistanceTorque(int a, PHBallJointIf* jo, void* param){
 	double k_1 = ((double*)param)[0];
 	double k_2 = ((double*)param)[1];
 	double k_3 = ((double*)param)[2];
 	double k_4 = ((double*)param)[3];
 	Vec3d dq;
 	jo->GetPosition().ToEuler(dq);
+	dq = Vec3d(dq.z, dq.x, dq.y);
+	dq += jo->GetVelocity() * jo->GetScene()->GetTimeStep();
 	if (a < 0 || a >= 3) return Vec2d();
 	double delta = dq[a];
 	if (DCAST(PHBallJointIndependentLimitIf, jo->GetLimit())){
@@ -86,17 +87,15 @@ Vec2d ResistanceTorque(int a, PHBallJointIf* jo, void* param){
 		}
 	}
 	double k = k_1 * exp(k_1 * (delta - k_2)) + k_3 * exp(k_3 * (k_4 - delta));
-	DSTR << k_1 << " " << k_2 << " " << k_3 << " " << k_4 << " " << delta << std::endl;
 	double t = (k == 0 ? 0 : delta - (exp(k_1 * (delta - k_2)) - exp(k_3 * (k_4 - delta))) / k);
-	DSTR << k << " " << t << std::endl;
 	return Vec2d(abs(k), t);
 }
-Vec2d PD(int a, PHBallJointIf* jo, void* param){
+Vec2d JointFunctions::PD(int a, PHBallJointIf* jo, void* param){
 	return Vec2d(((double*)param)[0], ((double*)param)[1]);
 }
 Vec2d(*PHBallJointFunc[])(int a, PHBallJointIf*, void*) = {
-	PD,
-	ResistanceTorque,
+	JointFunctions::PD,
+	JointFunctions::ResistanceTorque,
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -141,7 +140,7 @@ void PHNDJointMotor<NDOF>::Setup(){
 	if (p.spring.norm() < epsilon && p.damper.norm() < epsilon) {
 		// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 		for(int n = 0; n < joint->movableAxes.size(); ++n){
-			f [n] = p.offsetForce[n];
+			f [n] = p.offsetForce[n] * dt;
 			dA[n] = inf;
 			db[n] = inf;
 		}
@@ -242,7 +241,7 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 		else{
 			double tmp = 1.0 / (D + K*dt);
 			dA[j] = tmp * (1.0/dt);
-			db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]);   // - D*p.targetVelocity[j] - p.offsetForce[j]　なぜ-なのだろうか？
+			db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]); 
 		}
 	}
 
@@ -398,9 +397,7 @@ void PH1DJointNonLinearMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	p.xs = j->xs;
 	p.bYielded = j->bYielded;
 	p.secondDamper[0] = j->secondDamper;
-	//p.targetVelocity[0] = j->targetVelocity;
 	p.offsetForce[0] = offset;
-	DSTR << p.offsetForce << std::endl;
 	p.yieldStress = j->yieldStress;
 	p.hardnessRate = j->hardnessRate;
 	//関数存在するならそれに合わせてspringとdamper, 各targetを変更
@@ -410,6 +407,16 @@ void PH1DJointNonLinearMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	Vec2d da = PH1DJointFunc[damperFunc](joint->Cast(), damperParam);
 	p.damper[0] = da[0];
 	p.targetVelocity[0] = da[1];
+}
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+//PHHuman1DJointResistance
+
+//現在の関節抵抗値
+double PHHuman1DJointResistance::GetCurrentResistance() {
+	double* spring = ((double*)springParam);
+	PH1DJointIf* jo = joint->Cast();
+	return JointFunctions::resistCalc(jo->GetPosition(), spring[0], spring[1], spring[2], spring[3]);
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -470,7 +477,7 @@ void PHBallJointNonLinearMotor::SetFuncFromDatabase(Vec3i i, Vec3i j, void* spar
 PTM::TVector<3, double> PHBallJointNonLinearMotor::GetPropV() {
 	PHBallJoint* j = joint->Cast();
 	Quaterniond qtar;
-	qtar.FromEuler(targetPos);
+	qtar.FromEuler(Vec3d(targetPos.y, targetPos.z, targetPos.x)); //順番あってる？
 	Quaterniond pQ = qtar * joint->Xjrel.q.Inv();
 	return((PTM::TVector<3, double>)(pQ.RotationHalf()));
 }
@@ -492,16 +499,30 @@ void PHBallJointNonLinearMotor::GetParams(PHNDJointMotorParam<3>& p) {
 		da[i] = temp_da[0];
 		tarVel[i] = temp_da[1];
 	}
-	//p.spring = PTM::TVector<3, double>(Vec3d(1, 1, 1) * j->spring);
 	p.spring = sp;
-	//p.damper = PTM::TVector<3, double>(Vec3d(1, 1, 1) * j->damper);
 	p.damper = da;
 	p.secondDamper = PTM::TVector<3, double>(j->secondDamper);
-	//p.targetVelocity = PTM::TVector<3, double>(j->targetVelocity);
 	p.targetVelocity = tarVel;
 	p.offsetForce = PTM::TVector<3, double>(offset);
 	p.yieldStress = j->yieldStress;
 	p.hardnessRate = j->hardnessRate;
+}
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----
+// PHHumanBallJointResistance
+
+Vec3d PHHumanBallJointResistance::GetCurrentResistance() {
+	Vec3d resistance;
+	double* spring;
+	PHBallJointIf* jo = joint->Cast();
+	Vec3d delta;
+	jo->GetPosition().ToEuler(delta);
+	delta = Vec3d(delta.z, delta.x, delta.y);
+	for (int i = 0; i < 3; i++) {
+		spring = (double*)(springParam[i]);
+		resistance[i] = JointFunctions::resistCalc(delta[i], spring[0], spring[1], spring[2], spring[3]);
+	}
+	return resistance;
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----

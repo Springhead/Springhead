@@ -43,12 +43,12 @@ namespace Spr{
 	{
 		enableCollision = able;
 	}
-	void PHOpSpHashColliAgent::Initial(float cellSize, Bounds  bounds)
+	void PHOpSpHashColliAgent::Initial(float cellSize, CDBounds bounds)
 	{
 		useDirColli = true;
 		CDSpatialHashTableIf* cdif = (spTable)->Cast();
 		DSTR << "cdif" << cdif << std::endl;
-		cdif->init(cellSize, bounds);
+		cdif->Init(cellSize, bounds);
 		UpdateSceneInfo();
 		EllipColliInit();
 

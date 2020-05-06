@@ -88,12 +88,10 @@ public:
 			motors.back()->joint = this;
 			return true;
 		}
-		//if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
 		return PHConstraint::AddChildObject(o);
 	}
 	virtual size_t NChildObject() const {
 		return((limit?1:0) + motors.size() + PHConstraint::NChildObject());
-		//return((limit ? 1 : 0) + PHConstraint::NChildObject());
 	}
 	virtual ObjectIf* GetChildObject(size_t i) {
 		if (limit){
@@ -110,8 +108,6 @@ public:
 			}
 		}
 		return PHConstraint::GetChildObject(i);
-		//if (i==0 && limit) { return limit->Cast(); }
-		//return PHConstraint::GetChildObject(i - (limit ? 1 : 0));
 	}
 
 	PHBallJointLimitIf* CreateLimit(const IfInfo* ii, const PHBallJointLimitDesc& desc) {
@@ -155,7 +151,7 @@ public:
 	Vec3d       GetTargetVelocity() { return targetVelocity; }
 	void        SetOffsetForce(const Vec3d& offsetForce) { this->offsetForce = offsetForce; }
 	Vec3d       GetOffsetForce() { return offsetForce; }
-	void   SetOffsetForceN(int n, const Vec3d& offsetForce){
+	void   SetOffsetForceN(int n, Vec3d offsetForce){
 		if (n < 0 || (size_t) n >= motors.size()) return;
 		if (DCAST(PHBallJointNonLinearMotor, motors[n])){
 			DCAST(PHBallJointNonLinearMotor, motors[n])->offset = offsetForce;
@@ -177,26 +173,20 @@ public:
 	double      GetHardnessRate() { return hardnessRate; }
 	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
 	Vec3d       GetSecondMoment() { return secondMoment; }
-	int         NMotors(){ return motors.size(); }
+	int         NMotors(){ return (int) motors.size(); }
 	PHBallJointMotorIf** GetMotors(){
 		return motors.empty() ? NULL : (PHBallJointMotorIf**)&*motors.begin();
 	}
 	Vec3d       GetMotorForce() {
-		//if (limit && limit->IsOnLimit())
-		//	return Vec3d();
-		//return f.w() *  GetScene()->GetTimeStepInv();
 		Vec3d force = Vec3d();
 		for (size_t i = 0; i < motors.size(); i++){
 			force += Vec3d(motors[i]->f[0], motors[i]->f[1], motors[i]->f[2]);
-			/*if (force.norm() > 1000000000 || isnan(force.norm())){
-				DSTR << "Something wrong" << std::endl;
-			}*/
 		}
 		return force * GetScene()->GetTimeStepInv();
 	}
 	Vec3d GetMotorForceN(int n){
 		if (n < 0 || (size_t) n >= motors.size()) return Vec3d();
-		return Vec3d(motors[n]->f[0], motors[n]->f[1], motors[n]->f[2]);
+		return Vec3d(motors[n]->f[0], motors[n]->f[1], motors[n]->f[2])* GetScene()->GetTimeStepInv();
 	}
 };
 

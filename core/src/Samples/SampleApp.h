@@ -722,7 +722,8 @@ public: /** FWAppの実装 **/
 		camera.front = 0.3f;
 		render->SetCamera(camera);
 		render->SetViewMatrix(win->GetTrackball()->GetAffine().inv());
-		OnDraw(render);
+		OnDraw(render);		
+		render->SetMaterial(GRRenderBaseIf::WHITE);
 		DrawHelp(render);
 
 		render->EndScene();

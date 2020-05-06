@@ -391,7 +391,7 @@ public:
 	void WriteNoLimit(const T& element)
 	{
 		volatile unsigned local_write;
-		local_write = write_index;
+		local_write = (unsigned)write_index;
 
 		++local_write;
 		if (local_write == buffer.size())

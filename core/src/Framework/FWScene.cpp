@@ -1115,7 +1115,7 @@ void FWScene::DrawOp(GRRenderIf* render, PHOpEngineIf* opEngineif)
 
 
 				render->SetMaterial(GRRenderIf::WHITE);
-				Vec3f &addVec = Vec3f(0.6, 0.6, 0.6);
+				Vec3f addVec = Vec3f(0.6, 0.6, 0.6);
 		
 				Spr::TPose<float> ptclPos;
 			

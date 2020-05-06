@@ -33,6 +33,13 @@ namespace Spr{;
  */
 const char*    reportFilename = "PHConstraintEngineReport.csv";
 
+//coltime
+int		coltimePhase1;
+int		coltimePhase2;
+int		coltimePhase3;
+int		colcounter;
+UTPreciseTimer *p_timer;
+
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
 	//	法線を求める
@@ -868,7 +875,11 @@ void PHConstraintEngine::StepPart1(){
 
 		if(bReport)
 			ptimer.CountUS();
-
+			coltimePhase1 = 0;
+			coltimePhase2 = 0;
+			coltimePhase3 = 0;
+			colcounter = 0;
+			p_timer = &ptimer2;
 		PHSceneIf* scene = GetScene();
 		if(scene->IsContactDetectionEnabled()){
 			Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());

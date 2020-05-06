@@ -3,11 +3,12 @@
 INIFILE	= NameManager.ini
 SCRIPT	= NameManager.py
 TARGET	= NameManager.bat
+PYTHON	= ..\..\RunSwig\python_adapter.bat
 
 all:	$(TARGET)
 
 $(TARGET):	$(INIFILE) $(SCRIPT)
-		GoPython $(SCRIPT)
+		$(PYTHON) -SprTop ..\..\..\.. $(SCRIPT)
 
 clean:		
 		del $(TARGET) >NUL 2>&1

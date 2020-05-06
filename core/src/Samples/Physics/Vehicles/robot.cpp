@@ -120,8 +120,8 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 }
 
 
-//const double speed = 3;
-const double speed = 100;
+const double speed = 3;
+//const double speed = 100;
 void Robot::Stop(){
 	leg[0].jntCrank->SetOffsetForce(0);
 	leg[1].jntCrank->SetOffsetForce(0);

@@ -11,6 +11,8 @@
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Collision/SprCDShape.h"
+%include "../../include/Collision/SprCDDetector.h"
+%include "../../include/Collision/SprCDSpHash.h"
 /*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"

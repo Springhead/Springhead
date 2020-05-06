@@ -49,7 +49,7 @@ bool FemFace::operator == (const FemFace& f2){
 // •Ó
 FemEdge::FemEdge(int v1, int v2){
 	if (v1>v2) std::swap(v1, v2);
-	assert(v1==-1 && v2==-1 || v1 < v2);
+	assert( (v1==-1 && v2==-1) || v1 < v2 );
 	vertexIDs[0] = v1;
 	vertexIDs[1] = v2;
 }
@@ -368,6 +368,14 @@ int PHFemMeshNew::NFaces(){
 int PHFemMeshNew::NTets(){
 	return (int)tets.size();
 }
+void PHFemMeshNew::SetVertexUpdateFlags(bool flg) {
+	for (size_t i = 0; i < vertices.size(); i++) {
+		vertices[i].bUpdated = flg;
+	}
+}
+void PHFemMeshNew::SetVertexUpateFlag(int vid, bool flg) {
+	vertices[vid].bUpdated = flg;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //* ’¸“_‚ÉŠÖ‚·‚éŠÖ” */
@@ -426,6 +434,14 @@ bool PHFemMeshNew::SetVertexPositionW(int vtxId, Vec3d posW){
 bool PHFemMeshNew::SetVertexPositionL(int vtxId, Vec3d posL){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos = posL;
+		return true;
+	}
+	return false;
+}
+
+bool PHFemMeshNew::SetVertexVelocityL(int vtxId, Vec3d velL) {
+	if (0 <= vtxId && vtxId <= (int)vertices.size() - 1) {
+		vertices[vtxId].vel = velL;
 		return true;
 	}
 	return false;
@@ -558,7 +574,6 @@ Vec3d PHFemMeshNew::CompFaceNormal(const int& faceId, const bool& bDeform){
 	}
 	return CompFaceNormal(pos);
 }
-
 
 
 }

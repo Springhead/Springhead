@@ -321,8 +321,10 @@ struct FIPTMatchPolicy{
     template <typename MatchT>
     void
     group_match(MatchT& m, boost::spirit::classic::parser_id const& id,
-        FIIteratorT const& first, FIIteratorT const& last) const {
-        if (!m) return;
+        FIIteratorT const& first, FIIteratorT const& last) const 
+	{
+        if(!m)
+			return;
 		FIPTNodeValData<typename MatchT::attr_t> newVal(first, last, true, id);
 		MatchT newmatch(m.length(), newVal);
         std::swap(newmatch.trees.begin()->children, m.trees);

@@ -7,9 +7,9 @@
  */
 #include <SprDefs.h>
 #ifdef USE_CLOSED_SRC
-#include "../../closed/HumanInterface/DRADAPIO.cpp"
+#include "../../../closed/HumanInterface/DRADAPIO.cpp"
 #else
-#include "DRAdapio.h"
+#include "DRADAPIO.h"
 namespace Spr {	
 DRAdapio::DRAdapio(int i){}
 DRAdapio::~DRAdapio(){}
@@ -20,4 +20,4 @@ float DRAdapio::ADVoltage(int ch){return - FLT_MAX;}
 int DRAdapio::ADDigit(int ch){return -1;}
 void DRAdapio::CloseDevice(){}
 }	//	namespace Spr
-#endif USE_CLOSED_SRC
+#endif // USE_CLOSED_SRC

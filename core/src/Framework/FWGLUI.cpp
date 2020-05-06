@@ -20,6 +20,12 @@ FWGLUI* FWGLUI::GetInstance(){
 FWGLUI::~FWGLUI(){
 }
 
+void FWGLUI::GLUIUpdateFunc(int id){
+	FWApp::GetApp()->OnControlUpdate(FWGLUI::GetInstance()->ctrls[id]->Cast());
+}
+
+#ifdef USE_GLUI
+
 void FWGLUI::EnableIdleFunc(bool on){
 	idleFuncFlag = on;
 	// GLUIに渡す
@@ -332,11 +338,39 @@ void FWGLUI::AddItem(FWListBox*	listBox, UTString label){
 	gluiList->add_item((int)listBox->items.size(), label.c_str());
 }
 
-//-------------------------------------------------------------------------------------------------
+#else
 
-void FWGLUI::GLUIUpdateFunc(int id){
-	FWApp::GetApp()->OnControlUpdate(FWGLUI::GetInstance()->ctrls[id]->Cast());
-}
+void FWGLUI::EnableIdleFunc(bool on){}
+void FWGLUI::CalcViewport(int& l, int& t, int& w, int& h){}
+void FWGLUI::RegisterCallbacks(){}
+
+FWDialog* FWGLUI::CreateDialog(FWWin* owner, const FWDialogDesc& desc){ return 0; }
+FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWControlDesc& desc, FWPanel* parent){ return 0; }
+void FWGLUI::CreateColumn(FWDialog* owner, bool sep, FWPanel* panel){}
+void FWGLUI::CreateSeparator(FWDialog* owner, FWPanel* panel){}
+void FWGLUI::SetSize(FWWinBase* win, int width, int height){}
+void FWGLUI::SetLabel(FWControl* ctrl, UTString label){}
+void FWGLUI::SetAlign(FWControl* ctrl, int align){}
+void FWGLUI::SetChecked(FWButton* btn, bool on){}
+bool FWGLUI::IsChecked(FWButton* btn){ return false; }
+void FWGLUI::SetIntRange(FWTextBox* text, int rmin, int rmax){}
+void FWGLUI::SetFloatRange(FWTextBox* text, float rmin, float rmax){}
+const char* FWGLUI::GetString(FWTextBox* text){ return 0; }
+void FWGLUI::SetString(FWTextBox* text, const char* str){}
+int	FWGLUI::GetInt(FWControl* ctrl){ return 0; }
+void FWGLUI::SetInt(FWControl* ctrl, int val){}
+float FWGLUI::GetFloat(FWControl* ctrl){ return 0.0f; }
+void FWGLUI::SetFloat(FWControl* ctrl, float val){}
+Matrix3f FWGLUI::GetRotation(FWRotationControl* rotCtrl){ return Matrix3f(); }
+void FWGLUI::SetRotation(FWRotationControl* rotCtrl, const Matrix3f& rot){}
+void FWGLUI::SetDamping(FWRotationControl* rotCtrl, float d){}
+void FWGLUI::Reset(FWRotationControl* rotCtrl){}
+Vec3f FWGLUI::GetTranslation(FWTranslationControl* trnCtrl){ return Vec3f(); }
+void FWGLUI::SetTranslation(FWTranslationControl* trnCtrl, Vec3f p){}
+void FWGLUI::SetSpeed(FWTranslationControl* trnCtrl, float sp){}
+void FWGLUI::AddItem(FWListBox*	listBox, UTString label){}
+
+#endif
 
 
 

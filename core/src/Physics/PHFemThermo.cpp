@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <SprDefs.h>
+#include <Base/Env.h>
 #include <Scilab/SprScilab.h>
 #include <Physics/PHFemThermo.h>
 #include <Base/Affine.h>
@@ -156,7 +157,7 @@ void PHFemThermo::Init(){
 	weekPow_FULL = weekPow_full;
 	matkupSwitch = true;
 	
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	PHFemThermoIf* phm = mesh->GetPHFemThermo();
 
 	int nSurfaceVtxs = NSurfaceVertices();
@@ -736,7 +737,7 @@ void PHFemThermo::SetGaussCalcParam(unsigned cyc,double epsilon_){
 }
 
 double PHFemThermo::CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double temp = 0.0;
 	for(unsigned i=0;i<4;i++){
@@ -747,7 +748,7 @@ double PHFemThermo::CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N){
 
 
 double PHFemThermo::GetVtxTempInTets(Vec3d temppos){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	PTM::TMatrixCol<4,4,double> Vertex;		//	四面体を成す4点の位置座標
 	PTM::TVector<4,double> coeffk;			//	形状関数的な？
@@ -820,7 +821,7 @@ Vec3d PHFemThermo::GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]){
 
 #if 1		// 以下、実装が途中?
 double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//tempposがどの四面体に属するか
 	//四面体のface面の向きで判定
@@ -884,7 +885,7 @@ double PHFemThermo::GetArbitraryPointTemp(Vec3d temppos){
 #endif
 
 void PHFemThermo::CalcVtxDisFromOrigin(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
 	//> 同心円系の計算に利用する　distance from origin
@@ -932,7 +933,7 @@ void PHFemThermo::CalcVtxDisFromOrigin(){
 }
 
 void PHFemThermo::CalcVtxDisFromVertex(Vec2d originVertexIH){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
 	//> 同心円系の計算に利用する　distance from origin
@@ -1016,7 +1017,7 @@ void PHFemThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
 }
 
 void PHFemThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransRatio){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//熱伝達境界条件
 	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
@@ -1056,7 +1057,7 @@ void PHFemThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp){
 		//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tcを含むベクトルを更新する
 		//}
 		InitCreateVecf_();
-		for(unsigned i=0; i < GetPHFemMesh()->tets.size();i++){
+		for(unsigned i=0; i < phFemMesh->tets.size();i++){
 			CreateVecFAll(i);				///	VeecFの再作成
 													///	MatK2の再作成→matK1はmatk1の変数に入れておいて、matk2だけ、作って、加算
 		}
@@ -1070,7 +1071,7 @@ void PHFemThermo::SetRhoSpheat(double r,double Spheat){
 }
 
 std::vector<Vec2d> PHFemThermo::CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	2点を通る直線は1つ	2つの定数を求める
 	double constA = 0.0;
@@ -1187,7 +1188,7 @@ std::vector<Vec2d> PHFemThermo::CalcIntersectionPoint2(unsigned id0,unsigned id1
 }
 
 Vec2d PHFemThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,double R){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double constA = 0.0;
 	double constB = 0.0;
@@ -1254,7 +1255,7 @@ Vec2d PHFemThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,doub
 }
 
 void PHFemThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	///	3点を原点に近い順に並べる		//>	クイックソートにしたいかも？
 	int vtxmin[3];		///	通しの頂点番号を入れる
@@ -1303,7 +1304,7 @@ void PHFemThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 }
 
 Vec2d PHFemThermo::CalcIntersectionOfCircleAndLine(unsigned id0,unsigned id1,double radius){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	x-z平面での半径rの円環と線分の交点の座標を求める
 	//	関数が呼ばれる条件：交わることが明白なとき、交わる円弧の半径と、円弧の内・外側の頂点を引受け計算
@@ -1410,7 +1411,7 @@ Vec2d PHFemThermo::CalcIntersectionOfCircleAndLine(unsigned id0,unsigned id1,dou
 }		//	CalcVtxCircleAndLine() :difinition
 
 void PHFemThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,double radius){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	unsigned i = faceID;
 	unsigned j = faceVtxNum;
@@ -1832,7 +1833,7 @@ void PHFemThermo::SetIHbandDrawVtx(double xS, double xE){
 }
 
 void PHFemThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	///	x座標：xS~xEの間の節点に熱流束境界条件を設定
 	// xS,ｘEの間にいずれか一点がある、
@@ -1893,7 +1894,7 @@ void PHFemThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned nu
 }
 
 void PHFemThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	///	x座標：xS~xEの間の節点に熱流束境界条件を設定
 
@@ -1945,7 +1946,7 @@ void PHFemThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num
 }
 
 void PHFemThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//dqdtAllを単位面積辺り位に直す
 	double dqdtdsAll =0.0;
@@ -2013,7 +2014,7 @@ void PHFemThermo::CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsi
 }		// /*CalcIHdqdt_decrease*/
 
 void PHFemThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//dqdtAllを単位面積辺り位に直す
 	double dqdtdsAll =0.0;
@@ -2063,7 +2064,7 @@ void PHFemThermo::CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned 
 
 
 void PHFemThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//%%%			[1]について計算
 	//dqdtAllを単位面積辺り位に直す
@@ -2132,7 +2133,7 @@ void PHFemThermo::CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned 
 }		// /*CalcIHdqdt_add*/
 
 void PHFemThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//%%%			[1]について計算
 	//dqdtAllを単位面積辺り位に直す
@@ -2182,7 +2183,7 @@ void PHFemThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode)
 }		// /*CalcIHdqdt_add*/
 
 void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double faceSq[10] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};								//　円環毎の面積保存
 	// 10sec時
@@ -2292,7 +2293,7 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 }		// /*CalcIHdqdt_atleast_hogehoge*/
 
 void PHFemThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//dqdtAllを単位面積辺り位に直す
 	double dqdtdsAll =0.0;
@@ -2371,7 +2372,7 @@ void PHFemThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsig
 }		// /*CalcIHdqdt_atleast*/
 
 void PHFemThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned mode){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 
 	//dqdtAllを単位面積辺り位に直す
@@ -2426,7 +2427,7 @@ void PHFemThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned m
 }		// /*CalcIHdqdt_atleast*/
 
 void PHFemThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 
@@ -2503,7 +2504,7 @@ void PHFemThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 
 void PHFemThermo::CalcHeatTransDirect2(double dt){
 #ifdef USE_LAPACK
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//lapack利用
 	int n = (int)mesh->vertices.size();
@@ -2572,7 +2573,7 @@ void PHFemThermo::CalcHeatTransDirect2(double dt){
 }
 
 void PHFemThermo::CalcHeatTransDirect(double dt){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	if(strcmp(mesh->GetName(), "femNsteak") == 0){
 		for(unsigned i=0; i < mesh->vertices.size(); i++){
@@ -2873,7 +2874,7 @@ void PHFemThermo::CalcHeatTransDirect(double dt){
 }
 
 void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//直接法利用
 
@@ -3095,7 +3096,7 @@ void PHFemThermo::CalcHeatTransUsingScilab(double dt, double eps){
 
 
 void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	
@@ -3284,7 +3285,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 }
 
 void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//for(unsigned i=0; i < vertices.size(); i++){
 	//	FEMLOG << vertices[i].k <<","<< vertices[i].c << std::endl;
@@ -3484,7 +3485,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 }
 
 void PHFemThermo::UpdateVertexTempAll(){
-	for(unsigned i=0;i < GetPHFemMesh()->vertices.size();i++){
+	for(unsigned i=0;i < phFemMesh->vertices.size();i++){
 		vertexVars[i].temp = TVecAll[i];
 	}
 }
@@ -3497,7 +3498,7 @@ void PHFemThermo::Step(){
 }
 
 void PHFemThermo::Step(double dt){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 
 	//// cps表示用
@@ -3890,13 +3891,13 @@ void PHFemThermo::Step(double dt){
 //}
 
 void PHFemThermo::InitTcAll(double temp){
-	for(unsigned i =0; i < GetPHFemMesh()->vertices.size();i++){
+	for(unsigned i =0; i < phFemMesh->vertices.size();i++){
 		vertexVars[i].Tc = temp;
 	}
 }
 
 void PHFemThermo::InitToutAll(double temp){
-	for(unsigned i =0; i < GetPHFemMesh()->vertices.size();i++){
+	for(unsigned i =0; i < phFemMesh->vertices.size();i++){
 		vertexVars[i].Tout = temp;
 		//DSTR << vertices[i].Tout << temp <<std::endl;
 	}
@@ -3905,10 +3906,10 @@ void PHFemThermo::InitToutAll(double temp){
 void PHFemThermo::InitCreateMatC(){
 	/// MatCについて	//	使用する行列の初期化
 	//dMatCAll：対角行列の成分の入った行列のサイズを定義:配列として利用	幅:vertices.size(),高さ:1
-	dMatCAll.resize(1,GetPHFemMesh()->vertices.size()); //(h,w)
+	dMatCAll.resize(1,phFemMesh->vertices.size()); //(h,w)
 	dMatCAll.clear();								///	値の初期化
 	//matcの初期化は、matcを作る関数でやっているので、省略
-	matCAll.resize(GetPHFemMesh()->vertices.size(),GetPHFemMesh()->vertices.size());
+	matCAll.resize(phFemMesh->vertices.size(),phFemMesh->vertices.size());
 	matCAll.clear();
 }
 
@@ -3937,7 +3938,7 @@ void PHFemThermo::InitCreateMatk_(){
 }
 
 void PHFemThermo::InitCreateMatk(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	///	MatKについて
 	//matkの初期化
@@ -3989,7 +3990,7 @@ void PHFemThermo::InitCreateVecf_(){
 }
 
 void PHFemThermo::InitVecFAlls(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	for(unsigned i =0; i < 4 ; i++){ vecf[i] = 0.0;}	/// Vecfの初期化
 	vecFAllSum.resize(mesh->vertices.size());					///	全体剛性ベクトルFのサイズを規定
@@ -4014,7 +4015,7 @@ void PHFemThermo::InitVecFAlls(){
 }
 
 void PHFemThermo::UpdateVecF_frypan(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// modeは必要か？
 
@@ -4128,7 +4129,7 @@ void PHFemThermo::UpdateVecF_frypan(){
 
 
 void PHFemThermo::UpdateVecF(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// 引数にenum modeを入れてモード指定を行う仕様に変える
 
@@ -4382,23 +4383,23 @@ void PHFemThermo::IfRadiantHeatTrans(){
 }
 
 void PHFemThermo::UpdateMatk_RadiantHeatToAir(){
-		for(unsigned i =0; i < GetPHFemMesh()->edges.size();i++){
+		for(unsigned i =0; i < phFemMesh->edges.size();i++){
 			edgeVars[i].k = 0.0;
 		}
 #ifdef UseMatAll
 		matKAll.clear();
 #endif
 		dMatKAll[0].clear(); 
-		for(unsigned i=0;i<GetPHFemMesh()->tets.size();++i){
+		for(unsigned i=0;i<phFemMesh->tets.size();++i){
 			CreateMatkLocal_update(i);
 		}
 #ifdef badMatK
-		if(strcmp(GetPHFemMesh()->GetName(), "femNsteak") == 0){
+		if(strcmp(phFemMesh->GetName(), "femNsteak") == 0){
 			//if(matkupSwitch){
 				CalcMatKup();
 				//matkupSwitch = false;
 			//}
-			for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+			for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 				dMatKAll[0][i] += matkupdate[i];
 #ifdef UseMatAll
 				matKAll[i][i] += matkupdate[i];
@@ -4408,12 +4409,12 @@ void PHFemThermo::UpdateMatk_RadiantHeatToAir(){
 #endif
 #ifdef UseMatAll
 #ifdef outMatK
-		if(strcmp(GetPHFemMesh()->GetName(), "femNsteak") == 0){
+		if(strcmp(phFemMesh->GetName(), "femNsteak") == 0){
 			OutputMatKall();
 		//}
 		matKAllout.open("matKAllout.csv");
-		for(unsigned i=0; i<GetPHFemMesh()->vertices.size(); i++){
-			for(unsigned j=0; j<GetPHFemMesh()->vertices.size(); j++){
+		for(unsigned i=0; i<phFemMesh->vertices.size(); i++){
+			for(unsigned j=0; j<phFemMesh->vertices.size(); j++){
 				matKAllout << matKAll[i][j] << ",";
 			}
 			matKAllout << std::endl;
@@ -4570,7 +4571,7 @@ void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double
 	// デバッグのため　&&　使われていなかったので、コメントアウト
 	DSTR << "この関数はデバッグのため、コメントアウトしています。用いる場合には、実装を良く見て復活させてください。" <<std::endl;
 	
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	PHFemThermoIf* phm = mesh->GetPHFemThermo();
 
 	int nSurfaceVtxs = NSurfaceVertices();
@@ -4910,8 +4911,8 @@ void PHFemThermo::OutputMatKall(){
 #ifdef badMatK
 	upmatKAllout.open("upMatKAllout.csv");
 	matKAllout.open("matKAllout.csv");
-	for(unsigned i=0; i<GetPHFemMesh()->vertices.size(); i++){
-		for(unsigned j=0; j<GetPHFemMesh()->vertices.size(); j++){
+	for(unsigned i=0; i<phFemMesh->vertices.size(); i++){
+		for(unsigned j=0; j<phFemMesh->vertices.size(); j++){
 			if(i==j){
 				matKAllout << matKAll[i][j]-matkupdate[i] << ",";
 			}else{
@@ -4936,9 +4937,9 @@ void PHFemThermo::OutputMatKall(){
 	double maxgap = 0.0;
 	//unsigned maxvtx;
 	//double maxtotal;
-	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 		double total = 0.0;
-		for(unsigned j=0; j < GetPHFemMesh()->vertices.size(); j++){
+		for(unsigned j=0; j < phFemMesh->vertices.size(); j++){
 			if(i != j){
 				total += fabs(matKAll[i][j]);
 			}
@@ -4979,7 +4980,7 @@ void PHFemThermo::CreateMatc(unsigned id){
 }
 
 void PHFemThermo::CreatedMatCAll(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//すべての要素について係数行列を作る
 		//c
@@ -5075,7 +5076,7 @@ void PHFemThermo::CreateVecFAll(unsigned id){
 	//要素の節点番号の場所に、その節点のfの値を入れる
 	//j:要素の中の何番目か
 	for(unsigned j =0;j < 4; j++){
-		int vtxid0 = GetPHFemMesh()->tets[id].vertexIDs[j];
+		int vtxid0 = phFemMesh->tets[id].vertexIDs[j];
 		vecFAllSum[vtxid0] += vecf[j];
 		//vecFAll_f2IH[num][vtxid0][0] += vecf[j];
 	}
@@ -5099,7 +5100,7 @@ void PHFemThermo::CreateVecFAll(unsigned id){
 
 
 void PHFemThermo::CreateMatkLocal_update(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	//	四面体要素について係数行列[k]を作る			命名規則	
 	//..	k1を作る	k1kでも、k1bでもどちらでも構わない	どちらが速いか調べる
 	///....		変形した時だけ生成する
@@ -5193,7 +5194,7 @@ void PHFemThermo::CreateMatkLocal_update(unsigned id){
 }
 
 void PHFemThermo::CreateMatkLocal(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	四面体要素について係数行列[k]を作る			命名規則	
 	//..	k1を作る	k1kでも、k1bでもどちらでも構わない	どちらが速いか調べる
@@ -5375,7 +5376,7 @@ void PHFemThermo::CreateMatkLocal(unsigned id){
 }
 
 void PHFemThermo::CreateMatk1b(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//yagawa1983を基にノートに式展開した計算式
 	unsigned i=0;
@@ -5538,7 +5539,7 @@ void PHFemThermo::CreateMatk1b(unsigned id){
 }
 
 void PHFemThermo::CreateMatk1k(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//この計算を呼び出すときに、各四面体ごとに計算するため、四面体の0番から順にこの計算を行う
 	//四面体を構成する4節点を節点の配列(Tetsには、節点の配列が作ってある)に入っている順番を使って、面の計算を行ったり、行列の計算を行ったりする。
@@ -5708,7 +5709,7 @@ PTM::TMatrixRow<4,4,double> PHFemThermo::GetKMatInTet(unsigned id){
 ///*小野原追加ここから--------------------------------------------*/
 /////頂点の担当する面積の計算を予めしておく。（物体が剛体なのでメッシュ情報は変化しない前提）
 void PHFemThermo::calcVerticesArea(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	for(unsigned i=0; i<mesh->surfaceVertices.size(); i++){
 		vertexVars[mesh->surfaceVertices[i]].area = 0; //これを求める
@@ -5723,7 +5724,7 @@ void PHFemThermo::calcVerticesArea(){
 ///*小野原追加ここまで--------------------------------------------*/
 
 void PHFemThermo::CreateVecf2surface(unsigned id,unsigned num){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// 初期化
 	tetVars[id].vecf[1].clear();
@@ -5778,7 +5779,7 @@ void PHFemThermo::CreateVecf2surface(unsigned id,unsigned num){
 }
 
 void PHFemThermo::CreateVecf2surface(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// 初期化
 	tetVars[id].vecf[1].clear();
@@ -5850,7 +5851,7 @@ void PHFemThermo::CreateVecf2surface(unsigned id){
 }
 
 void PHFemThermo::CreateVecf3surface(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// 初期化
 	tetVars[id].vecf[2].clear();
@@ -5894,7 +5895,7 @@ void PHFemThermo::CreateVecf3surface(unsigned id){
 }
 
 void PHFemThermo::CreateVecf4surface(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// 初期化
 	tetVars[id].vecf[3].clear();
@@ -5942,7 +5943,7 @@ void PHFemThermo::CreateVecf4surface(unsigned id){
 
 #if 0
 void PHFemThermo::CreateVecF3surfaceAll(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	初期化
 	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化)
@@ -5966,7 +5967,7 @@ void PHFemThermo::CreateVecF3surfaceAll(){
 }
 
 void PHFemThermo::CreateVecF2surfaceAll(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	初期化
 	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化) initVecFAlls()で実行
@@ -6134,7 +6135,7 @@ void PHFemThermo::CreateVecF2surfaceAll(){
 //}
 
 void PHFemThermo::CreateVecf3_(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
@@ -6250,7 +6251,7 @@ void PHFemThermo::CreateVecf3_(unsigned id){
 }
 
 void PHFemThermo::CreateVecf3(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
@@ -6363,7 +6364,7 @@ void PHFemThermo::CreateVecf3(unsigned id){
 }
 
 double PHFemThermo::CalcTetrahedraVolume2(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	PTM::TMatrixRow<4,4,double> tempMat44;
 	tempMat44.clear();
@@ -6396,7 +6397,7 @@ double PHFemThermo::CalcTetrahedraVolume2(unsigned id){
 }
 
 double PHFemThermo::CalcTetrahedraVolume(FemTet tet){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	PTM::TMatrixRow<4,4,double> tempMat44;
 	for(unsigned i =0; i < 4; i++){
@@ -6427,7 +6428,7 @@ double PHFemThermo::CalcTetrahedraVolume(FemTet tet){
 }
 
 double PHFemThermo::CalcTriangleArea(int id0, int id1, int id2){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double area=0.0;								///	要改善	faces[id].areaに値を入れる 
 
@@ -6500,7 +6501,7 @@ void PHFemThermo::ActivateVtxbeRadiantHeat(){
 
 
 void PHFemThermo::CreateMatk3t_nonRadiantHeat(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
 	for(unsigned l= 0 ; l < 4; l++){
@@ -6564,7 +6565,7 @@ void PHFemThermo::CreateMatk3t_nonRadiantHeat(unsigned id){
 }
 
 void PHFemThermo::CreateMatk3t(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
 	for(unsigned l= 0 ; l < 4; l++){
@@ -6621,7 +6622,7 @@ void PHFemThermo::CreateMatk3t(unsigned id){
 }
 
 void PHFemThermo::CreateMatk2t(unsigned id){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
 	for(unsigned l= 0 ; l < 4; l++){
@@ -6860,7 +6861,7 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 
 
 bool PHFemThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//中心からの距離を求める
 	double dx = 0.0;
@@ -6930,13 +6931,13 @@ void PHFemThermo::SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity
 	vertexVars[id].thermalEmissivity_const = thermalEmissivity_const;
 }
 void PHFemThermo::SetThermalEmissivityToVerticesAll(double thermalEmissivity,double thermalEmissivity_const){
-	for(unsigned i =0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i =0; i < phFemMesh->vertices.size(); i++){
 		vertexVars[i].thermalEmissivity = thermalEmissivity;
 		vertexVars[i].thermalEmissivity_const = thermalEmissivity_const;
 	}
 }
 void PHFemThermo::SetHeatTransRatioToAllVertex(double heatTransR_){
-	for(unsigned i =0; i < GetPHFemMesh()->vertices.size() ; i++){
+	for(unsigned i =0; i < phFemMesh->vertices.size() ; i++){
 		vertexVars[i].heatTransRatio = heatTransR_;
 	}
 	//行列とvecfの熱伝達項を作り直す
@@ -6945,7 +6946,7 @@ void PHFemThermo::SetHeatTransRatioToAllVertex(double heatTransR_){
 }
 
 void PHFemThermo::SetHeatTransRatioToAllVertex(){
-	for(unsigned i =0; i < GetPHFemMesh()->vertices.size() ; i++){
+	for(unsigned i =0; i < phFemMesh->vertices.size() ; i++){
 		vertexVars[i].heatTransRatio = heatTrans;
 	}
 }
@@ -6957,8 +6958,8 @@ void PHFemThermo::SetTempAllToTVecAll(unsigned size){
 }
 
 void PHFemThermo::CreateTempVertex(){		//Resize and Set Temp to TVecAll 
-	TVecAll.resize(GetPHFemMesh()->vertices.size());
-	SetTempAllToTVecAll((unsigned)GetPHFemMesh()->vertices.size());
+	TVecAll.resize(phFemMesh->vertices.size());
+	SetTempAllToTVecAll((unsigned)phFemMesh->vertices.size());
 }
 
 void PHFemThermo::SetTempToTVecAll(unsigned vtxid){
@@ -6990,7 +6991,7 @@ void PHFemThermo::SetVertexTemp(unsigned i,double temp){
 }
 
 void PHFemThermo::SetVerticesTempAll(double temp){
-	for(std::vector<unsigned int>::size_type i=0; i < GetPHFemMesh()->vertices.size() ; i++){
+	for(std::vector<unsigned int>::size_type i=0; i < phFemMesh->vertices.size() ; i++){
 		vertexVars[i].temp = temp;
 		SetTempToTVecAll((unsigned)i);	// 要検討：Aftersetdeskの中で呼ばれる時、TVecAllの要素の数が固まっておらず、アクセス違反の可能性がある
 	}
@@ -7007,14 +7008,14 @@ void PHFemThermo::SetvecFAll(unsigned id,double dqdt){
 
 void PHFemThermo::InitAllVertexTemp(){
 	//	このメッシュの全長点の温度を0にする
-	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 		vertexVars[i].temp = 0.0;
 		//	どのメッシュでリセットかけたか　GetMe()->
 	}
 }
 
 void PHFemThermo::InitMoist(){
-	for(unsigned id =0; id < GetPHFemMesh()->tets.size(); id++){
+	for(unsigned id =0; id < phFemMesh->tets.size(); id++){
 		tetVars[id].wratio = 0.917;
 		double rho = 970;
 		if(tetVars[id].volume){
@@ -7028,7 +7029,7 @@ void PHFemThermo::InitMoist(){
 }
 
 void PHFemThermo::DecrMoist_velo(double vel){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//制限速度ver
 	for(unsigned id =0; id < mesh->tets.size() ; id++){
@@ -7099,7 +7100,7 @@ void PHFemThermo::DecrMoist_velo(double vel){
 
 
 void PHFemThermo::DecrMoist_vel(double dt){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//制限速度ver
 	for(unsigned id =0; id < mesh->tets.size() ; id++){
@@ -7152,7 +7153,7 @@ void PHFemThermo::DecrMoist_vel(double dt){
 
 
 void PHFemThermo::DecrMoist(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	for(unsigned id =0; id < mesh->tets.size() ; id++){
 		////頂点が100度以上で残水量が０ではないとき
@@ -7193,7 +7194,7 @@ void PHFemThermo::DecrMoist(){
 }
 
 void PHFemThermo::CalcVertexVolume(unsigned vtxid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	vertexVars[vtxid].vVolume = 0;
 	for(unsigned tetid=0; tetid < mesh->vertices[vtxid].tetIDs.size(); tetid++){
 		vertexVars[vtxid].vVolume += tetVars[mesh->vertices[vtxid].tetIDs[tetid]].volume / 4;
@@ -7201,7 +7202,7 @@ void PHFemThermo::CalcVertexVolume(unsigned vtxid){
 }
 
 void PHFemThermo::VertexWaterBoiling(unsigned vtxid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	unsigned vtxID = mesh->surfaceVertices[vtxid];
 	
 	if(TVecAll[vtxID] >= 100){
@@ -7350,7 +7351,7 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 		//	水分蒸発表示モード
 		//	残水率に沿った変化
 		gvtx = wastart + 2 * dtex;
-		for(unsigned j =0; j < GetPHFemMesh()->tets.size(); j++){
+		for(unsigned j =0; j < phFemMesh->tets.size(); j++){
 			//	割合直打ちでいいや
 			if(0.5 < tetVars[j].wratio && tetVars[j].wratio < 1.0){
 				gvtx = wastart + 2 * dtex - ( (tetVars[j].wratio -0.5) * (dtex / 0.5) );
@@ -7482,13 +7483,13 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 }
 
 void PHFemThermo::CreateVecFAll(){
-	for(unsigned tetid=0; tetid < GetPHFemMesh()->tets.size(); tetid++){
+	for(unsigned tetid=0; tetid < phFemMesh->tets.size(); tetid++){
 		CreateVecFAll(tetid);
 	}
 }
 
 void PHFemThermo::CalcFaceNormalAll(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	faceの法線を計算
 	//.	表面の頂点に、法線ベクトルを追加
@@ -7568,7 +7569,7 @@ void PHFemThermo::CalcFaceNormalAll(){
 }
 
 void PHFemThermo::CalcVertexNormalAll(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//	頂点の法線を計算
 	//	頂点の属するface面より平均？正規化した頂点法線を求める
@@ -7590,12 +7591,12 @@ void PHFemThermo::CalcVertexNormalAll(){
 }
 
 void PHFemThermo::InitFaceNormalAll(){
-	for(unsigned faceid=0; faceid < GetPHFemMesh()->faces.size(); faceid++){
+	for(unsigned faceid=0; faceid < phFemMesh->faces.size(); faceid++){
 		faceVars[faceid].normal = Vec3d(0.0, 0.0, 0.0);
 	}
 }
 void PHFemThermo::InitVertexNormalAll(){
-	for(unsigned vtxid=0; vtxid < GetPHFemMesh()->vertices.size(); vtxid++){
+	for(unsigned vtxid=0; vtxid < phFemMesh->vertices.size(); vtxid++){
 		vertexVars[vtxid].normal = Vec3d(0.0, 0.0, 0.0);
 	}
 }
@@ -7606,14 +7607,14 @@ void PHFemThermo::RevVertexNormalAll(){
 	revMat[0][0] = -1.0;
 	revMat[1][1] = -1.0;
 	revMat[2][2] = -1.0;
-	for(unsigned vtxid=0; vtxid < GetPHFemMesh()->vertices.size(); vtxid++){
+	for(unsigned vtxid=0; vtxid < phFemMesh->vertices.size(); vtxid++){
 		vertexVars[vtxid].normal = revMat * vertexVars[vtxid].normal;
 	}
 }
 
 void PHFemThermo::CalcMatKup(){
 #ifdef badMatK
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	matkupdate.clear();
 	for(unsigned i=0; i < mesh->vertices.size(); i++){
 		double total = 0.0;
@@ -7632,7 +7633,7 @@ void PHFemThermo::CalcMatKup(){
 }
 
 void PHFemThermo::CalcEdgeLengthAll(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	for(unsigned edgeid=0; edgeid < mesh->edges.size(); edgeid++){
 		double length = 0.0;
 		length += pow((mesh->vertices[mesh->edges[edgeid].vertexIDs[0]].pos[0] - mesh->vertices[mesh->edges[edgeid].vertexIDs[1]].pos[0]),2.0);
@@ -7643,7 +7644,7 @@ void PHFemThermo::CalcEdgeLengthAll(){
 }
 
 double PHFemThermo::GetMaxMinEdgeRatioInTet(unsigned tetId){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	double maxL = 0.0;
 	double minL = 0.0;
 	for(unsigned edgeid=0; edgeid < 6; edgeid++){
@@ -7664,7 +7665,7 @@ double PHFemThermo::GetMaxMinEdgeRatioInTet(unsigned tetId){
 }
 
 void PHFemThermo::OutEig(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	PTM::VMatrixRow<double> eig;
 
 #ifndef UseScilab
@@ -7693,7 +7694,7 @@ void PHFemThermo::OutEig(){
 }
 
 void PHFemThermo::VecFNegativeCheck(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	bool flag = false;
 	for(unsigned i=0; i < mesh->vertices.size(); i++){
 		if(vecFAllSum[i] < 0){
@@ -7706,7 +7707,7 @@ void PHFemThermo::VecFNegativeCheck(){
 }
 
 void PHFemThermo::SetVerticesPreTempAll(double temp){
-	for(unsigned vtxid=0; vtxid < GetPHFemMesh()->vertices.size(); vtxid++){
+	for(unsigned vtxid=0; vtxid < phFemMesh->vertices.size(); vtxid++){
 		preTVecAll[vtxid] = temp;
 	}
 }
@@ -7730,7 +7731,7 @@ PTM::TMatrixRow<4,4,double> PHFemThermo::Create44Mat50(){
 }
 
 void PHFemThermo::matKModif(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	for(unsigned i=0; i < mesh->vertices.size(); i++){
 		for(unsigned j=0; j < mesh->vertices.size(); j++){
@@ -7745,7 +7746,7 @@ void PHFemThermo::matKModif(){
 }
 
 void PHFemThermo::makeFPartition(unsigned num){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	fpat.resize(mesh->vertices.size(), mesh->vertices.size());
 	fpat.clear();
@@ -7775,7 +7776,7 @@ void PHFemThermo::makeFPartition(unsigned num){
 }
 
 PTM::VVector<double> PHFemThermo::fPartition(unsigned vid, double f, unsigned num){
-	unsigned vsize = (unsigned)GetPHFemMesh()->vertices.size();
+	unsigned vsize = (unsigned)phFemMesh->vertices.size();
 	double cratioSum = 0;
 	PTM::VVector<double> fsub;
 	fsub.resize(vsize);
@@ -7805,7 +7806,7 @@ double PHFemThermo::sumVectorElement(PTM::VVector<double> vec){
 
 void PHFemThermo::createNewVecF(){
 	if(vecFAllSum.norm() != 0){
-		PHFemMeshNew* mesh = GetPHFemMesh();
+		PHFemMeshNew* mesh = phFemMesh;
 		double fmin = 0;
 		double alpha;
 		PTM::VVector<double> vecFratio;
@@ -7837,7 +7838,7 @@ void PHFemThermo::createNewVecF(){
 }
 
 void PHFemThermo::CalcHeatTransDirect3(double dt){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	for(unsigned i=0; i < mesh->vertices.size(); i++){
 	//		DSTR << vecFAllSum[i] << std::endl;
@@ -7928,7 +7929,7 @@ void PHFemThermo::CalcHeatTransDirect3(double dt){
 }
 
 void PHFemThermo::CalcHeatTransDirect4(double dt){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	//if(strcmp(mesh->GetName(), "femNsteak") == 0){
 	//	for(unsigned i=0; i < mesh->vertices.size(); i++){
 	//		DSTR << vecFAllSum[i] << std::endl;
@@ -8023,7 +8024,7 @@ void PHFemThermo::CalcHeatTransDirect4(double dt){
 }
 
 void PHFemThermo::vecFOutToDSTR(){
-	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 		DSTR << vecFAllSum[i] << std::endl;
 	}
 	DSTR << std::endl;
@@ -8032,7 +8033,7 @@ void PHFemThermo::vecFOutToDSTR(){
 void PHFemThermo::vecFOutToFile(){
 	std::ofstream vecFThermo;
 	vecFThermo.open("vecFThermo.csv",std::ios::app);
-	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 		vecFThermo << vecFAllSum[i] << ",";
 	}
 	vecFThermo << std::endl;

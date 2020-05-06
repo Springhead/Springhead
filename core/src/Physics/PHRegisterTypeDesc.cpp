@@ -9,23 +9,21 @@
 #include <Physics/PHSdk.h>
 
 namespace Spr{ 
-static UTTypeDesc* desc; 
-static UTTypeDesc::Field* field; 
-extern void RegisterTypeDescCollision(UTTypeDescDb* db);
-extern void RegisterTypeDescPhysics(UTTypeDescDb* db);
+extern void RegisterTypeDescCollision(UTTypeDescDbIf* db);
+extern void RegisterTypeDescPhysics(UTTypeDescDbIf* db);
 
 void SPR_CDECL PHRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;
 	UTRegisterTypeDescs();
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Physics");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("Physics");
 	assert(db);
 	RegisterTypeDescCollision(db);
 	RegisterTypeDescPhysics(db);
 	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");
 	db->Link();
-	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDbIf* fdb = UTTypeDescDbPool::Get("Foundation");
 	db->Link(fdb);
 	db->LinkCheck();
 }

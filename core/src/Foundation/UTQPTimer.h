@@ -8,7 +8,7 @@
 #ifndef UTQTTIMER_H
 #define UTQTTIMER_H
 #pragma once
-#include <Foundation/UTPreciseTimer.h> //UTLargeIntegerの読み込み
+#include "Foundation/UTPreciseTimer.h"
 #include <vector>
 #include <sstream>
 namespace Spr{;

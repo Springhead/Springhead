@@ -372,7 +372,7 @@ void FWFemMesh::Sync(){
 							}
 							//	150~200:orange to red
 							else if(150.0 < temp && temp <= 200.0){
-								double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+								//double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
 								gvtx[stride * gv + tex + 2] = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
 							}
 							//	200~250:red to purple
@@ -413,7 +413,7 @@ void FWFemMesh::Sync(){
 							}
 							//	150~200:orange to red
 							else if(150.0 < temp && temp <= 200.0){
-								double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+								//double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
 								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
 							}
 							//	200~250:red to purple
@@ -433,7 +433,7 @@ void FWFemMesh::Sync(){
 							DSTR << "tPan are there" << std::endl;
 						}
 
-						int phmeshdebug =0;
+						//int phmeshdebug =0;
 					//}else if(texturemode == MOISTURE){
 					}else if(texture_mode == 3){
 						//	水分蒸発表示モード
@@ -479,7 +479,7 @@ void FWFemMesh::Sync(){
 						}
 						//	150~200:orange to red
 						else if(150.0 < temp && temp <= 200.0){
-							double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+							//double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
 							gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
 						}
 						//	200~250:red to purple

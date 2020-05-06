@@ -40,7 +40,7 @@ PHSolidIf* solid1, *solid2;
  param		<in/--> argv　　コマンドライン入力
  return	0 (正常終了)
  */
-int __cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();				//	SDKの作成
 	scene = sdk->CreateScene();			//	シーンの作成
 	PHSolidDesc desc;

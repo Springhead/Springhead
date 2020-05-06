@@ -31,11 +31,13 @@
 // intrin.hとinterlocked.hppとの呼び出し規約の不整合を回避するためにwindows.hをインクルードするように指示
 #if defined _MSC_VER
 # define BOOST_USE_WINDOWS_H
+# pragma warning(push)
+# pragma warning(disable:4005)
 #endif
-#pragma warning(push)
-#pragma warning(disable:4005)
 #include <boost/regex.hpp>
-#pragma warning(pop)
+#if defined _MSC_VER
+# pragma warning(pop)
+#endif
 
 static bool enableDebugMessage = false;
 

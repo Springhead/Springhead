@@ -38,6 +38,12 @@ bool IfInfo::Inherit(const IfInfo* info) const{
 	}
 	return false;
 }
+void IfInfo::SetState(UTTypeDescIf* t) {
+	state = t->Cast();
+}
+void IfInfo::SetDesc(UTTypeDescIf* t) {
+	desc = t->Cast();
+}
 
 //-------------------------------------------------------------------------
 //	TypeInfoManager

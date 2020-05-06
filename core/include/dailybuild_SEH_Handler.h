@@ -14,6 +14,8 @@
 
 #include <stdexcept>
 
+#include <Base/Env.h>
+
 // --------------------------------------------------------------------------
 //  Kludge
 // --------------------------------------------------------------------------
@@ -75,7 +77,7 @@ const int SEH_Exception::exitcode() const {
 	}
 	return (const int) code;
 }
-void __cdecl se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
+void SPR_CDECL se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	SEH_Exception se(code, ep);
 	throw se;
 }

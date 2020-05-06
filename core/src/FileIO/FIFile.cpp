@@ -133,7 +133,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 
 	UTString tn = sc->GetNodeTypeName();
 	tn.append("Desc");
-	UTTypeDesc* type = sc->typeDbs.Top()->Find(tn);
+	UTTypeDesc* type = sc->typeDbs.Top()->Find(tn)->Cast();
 	if(type){
 		//	セーブ位置を設定
 		sc->fieldIts.Push(UTTypeDescFieldIt(type));

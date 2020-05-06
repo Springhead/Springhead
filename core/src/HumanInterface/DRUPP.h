@@ -45,7 +45,7 @@ public:
 		@param anIod	端子D
 		@param anId		識別文字列(省略可)	*/
 		UppFunc(int aCmd = NOP, int anAr = 0, int anBr = 0,
-			int anIoa = 0, int anIob = 0, int anIoc = 0, int anIod = 0, char* anId = "");
+			int anIoa = 0, int anIob = 0, int anIoc = 0, int anIod = 0, const char* anId = "");
 		bool operator ==(const UppFunc& f) const;
 		bool operator <(const UppFunc& f) const;
 		bool operator >(const UppFunc& f) const;

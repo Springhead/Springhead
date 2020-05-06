@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <SprDefs.h>
+#include <Base/Env.h>
 #include <Scilab/SprScilab.h>
 #include <Physics/PHFemMeshThermo.h>
 #include <Base/Affine.h>
@@ -1259,8 +1260,8 @@ void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigne
 						break;
 					}
 					//.頂点対がバンドを挟むとき
-					if(vertices[faces[i].vertices[j]].pos.x <= xS && xE <= vertices[faces[i].vertices[(j+1)%3]].pos.x 
-						|| vertices[faces[i].vertices[(j+1)%3]].pos.x <= xS && xE <= vertices[faces[i].vertices[j]].pos.x ){
+					if(    (vertices[faces[i].vertices[j      ]].pos.x <= xS && xE <= vertices[faces[i].vertices[(j+1)%3]].pos.x) 
+						|| (vertices[faces[i].vertices[(j+1)%3]].pos.x <= xS && xE <= vertices[faces[i].vertices[j      ]].pos.x) ){
 							faces[i].fluxarea[0] = faces[i].area;
 						break;
 					}
@@ -3925,16 +3926,16 @@ void PHFemMeshThermo::AfterSetDesc() {
 		edges[i].c = 0.0;	
 		edges[i].k = 0.0;
 	}
-	if(this->GetName() == "fwNsteak"){
+	if(strcmp(this->GetName(), "fwNsteak")){
 		DSTR << "this is fwNsteak" << std::endl;
 	}
-	if(this->GetName() == "fwPan"){
+	if(strcmp(this->GetName(), "fwPan")){
 		DSTR << "this is fwPan" << std::endl;
 	}
-	if(this->GetName() == "fwNegi"){
+	if(strcmp(this->GetName(), "fwNegi")){
 		DSTR << "this is fwNegi" << std::endl;
 	}
-	if(this->GetName() == "metal5x1x2_fem"){
+	if(strcmp(this->GetName(), "metal5x1x2_fem")){
 		DSTR << "this is metal5x1x2_fem" << std::endl;
 	}
 	DSTR<< "My name is ... " << this->GetName() <<std::endl;

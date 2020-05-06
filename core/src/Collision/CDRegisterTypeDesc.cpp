@@ -19,7 +19,7 @@ void SPR_CDECL CDRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Physics");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("Physics");
 	assert(db);
 	db->Link();
 }

@@ -38,17 +38,15 @@
 #	Ver 1.0	 2012/10/15 F.Kanehori
 #	Ver 2.0  2013/01/10 F.Kanehori  前処理を追加
 #	Ver 3.0  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
+#	Ver 4.0  2017/07/31 F.Kanehori  Python adapter の導入
 #################################################################################
 
-#  Python の定義
+#  Python アダプタの定義
 #
-PYTHON_VERSION	= 34
-PYTHON_DIR	= ..\..\bin\Python$(PYTHON_VERSION)
-PYTHON		= $(PYTHON_DIR)\python
+PYTHON		= ..\RunSwig\python_adapter.bat
 
 #  ディレクトリの定義
 #
-BINDIR		= .
 INCDIR		= ..\..\include
 FOUNDATION	= ..\Foundation
 FRAMEWORK	= ..\Framework
@@ -56,8 +54,8 @@ SCILAB		= $(INCDIR)\Scilab
 
 #  使用するスクリプト
 #
-SCILABSWIG	= $(PYTHON) ScilabSwig.py
-RUNSWIGFW	= $(PYTHON) RunSwigFramework.py
+SCILABSWIG	= ScilabSwig.py
+RUNSWIGFW	= RunSwigFramework.py
 SCRIPT		= do_swigall.py
 
 #  前処理で作成するファイル
@@ -70,11 +68,11 @@ all:	PreWork RunSwig
 PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 $(SCILABSTUBHDR):	
-		cd $(FOUNDATION) && $(SCILABSWIG)
+		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
 
 $(FWOLDSPRSTUB):	
-		cd $(FRAMEWORK) && $(RUNSWIGFW)
+		cd $(FRAMEWORK) && $(PYTHON) $(RUNSWIGFW)
 
 RunSwig:	
-		$(PYTHON) $(BINDIR)\$(SCRIPT)
+		$(PYTHON) $(SCRIPT)
 

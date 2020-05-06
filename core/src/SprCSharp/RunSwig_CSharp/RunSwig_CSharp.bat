@@ -26,6 +26,7 @@
 ::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
 ::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
 ::	Ver 3.2a 2017/01/18 F.Kanehori	Bug fixed.
+::	Ver 3.3  2017/08/07 F.Kanehori	Bug fixed.
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -134,7 +135,7 @@ echo IFiles:    [%IFILES%]
 ::  モジュールにまたがる初期化
 :: ------------------------------
 call :truncate_file %SIGNATUREFILE%
-del /f ..\%WRAPPERSBUILTFILE% > NUL 2>&1
+del /f %WRAPPERSBUILTFILE% > NUL 2>&1
 
 :: ------------------------------
 ::  作業ディレクトリの作成

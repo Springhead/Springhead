@@ -16,9 +16,9 @@ TARGET_LIB	:= lib$(TARGET_NAME).a
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 
-CXXFLAGS	= -std=gnu++11 \
-		-DWINGDIAPI= -DAPIENTRY= -DCALLBACK= \
-		-DGLUTCALLBACK=
+CXXFLAGS	:= $(CXXFLAGS) \
+		-std=gnu++11 -DWINGDIAPI= -DAPIENTRY= \
+		-DCALLBACK= -DGLUTCALLBACK=
 	
 
 ################################################################

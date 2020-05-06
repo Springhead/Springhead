@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for BoxStack
+# 	Makefile for PHSimple
 #
 ################################################################
 
@@ -8,13 +8,13 @@
 #	common rules
 ################################################################
 
-TOP_DIR 		= ../../..
+TOP_DIR 		= ../../../..
 include 		$(TOP_DIR)/make.header
 TARGET_DIR  	:= $(shell env pwd)
 TARGET_NAME		:= $(shell env basename $(TARGET_DIR))
 EXECUTABLE		= $(TARGET_NAME).exe
 
-SRCS			= $(wildcard *.cpp)
+SRCS			= main.cpp robot.cpp
 OBJS 			= ${SRCS:.cpp=.o}
 
 
@@ -35,8 +35,8 @@ clean:
 	
 realclean: clean
 	-$(RM) $(REALCLEAN_TARGET)
-
- 			
+			
+			
 ################################################################
 #	THE END
 ################################################################

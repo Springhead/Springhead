@@ -30,7 +30,7 @@
 
 #include <Springhead.h>								// SpringheadのAPIを使うためのヘッダファイル
 #include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
-#include <Physics\PHOpParticle.h>
+#include <Physics/PHOpParticle.h>
 
 
 using namespace Spr;								// Springheadの名前空間
@@ -98,7 +98,7 @@ public:
 	//OpFileStateStore
 	//FileOp fileOp;
 	//meshname
-	char* mymeshname;
+	const char* mymeshname;
 }; 
 
 #endif

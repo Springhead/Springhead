@@ -1,18 +1,32 @@
 #include <Framework/SprFWConsoleDebugMonitor.h>
+
+#ifdef _MSC_VER
 #include <conio.h>
+#endif
+
+#ifdef _MSC_VER
+# define stricmp _stricmp
+# define strnicmp _strnicmp
+# define kbhit _kbhit
+# define getch _getch
+# define ungetch _ungetch
+#else
+# define strcpy_s(DST,LEN,SRC) strcpy(DST,SRC)
+# define strtok_s(TOK,DEL,CON) strtok(TOK,DEL)
+# define stricmp strcasecmp
+# define strnicmp strncasecmp
+int kbhit(){ return 0; }
+int getch(){ return 0; }
+void ungetch(int ch){}
+#endif
 
 namespace Spr {
 
 	FWConsoleDebugMonitor::FWConsoleDebugMonitor() : lineHistoryCur(0) {
 	}
-
-	bool FWConsoleDebugMonitor::ExecCommand(std::string cmd, std::string arg, std::vector<std::string> args) {
-		return false;
-	}
-
 	void FWConsoleDebugMonitor::KeyCheck() {
-		if (_kbhit()) {
-			int key = _getch();
+		if (kbhit()) {
+			int key = getch();
 			ProcessKey(key);
 		}
 	}
@@ -35,26 +49,31 @@ namespace Spr {
 			delete buf;
 			ExecCommand(cmd, arg, args);
 			std::cout << ">";
-			for (auto it = lineHistory.begin(); it != lineHistory.end(); ++it) {
-				if (line.compare(*it) == 0) {
-					goto SkipPushback;
+			if (line.length()) {
+				for (auto it = lineHistory.begin(); it != lineHistory.end(); ++it) {
+					if (line.compare(*it) == 0) {
+						lineHistory.erase(it);
+						break;
+					}
 				}
+				lineHistory.push_back(line);
+				lineHistoryCur = (int)lineHistory.size();
 			}
-			lineHistory.push_back(line);
-			lineHistoryCur = lineHistory.size();
-		SkipPushback:
 			line.clear();
 			rv = true;
 		}
 		else if (key == '\t') {
-			std::string cmd;
-			std::istringstream(line) >> cmd;
-			std::vector<std::string> candidates = Candidates(0);
+			size_t fs = line.find_last_of(" ");
+			if (fs == std::string::npos) fs = 0;
+			else fs += 1;
+			std::string field = line.substr(fs);
+			std::vector<std::string> candidates;
+			Candidates(candidates, fs, field);
 			bool bFirst = true;
 			std::vector<std::string> matches;
 			for (size_t i = 0; i < candidates.size(); ++i) {
-				std::string nameCut = std::string(candidates[i].substr(0, cmd.length()));
-				if (_stricmp(cmd.c_str(), nameCut.c_str()) == 0) {
+				std::string nameCut = std::string(candidates[i].substr(0, field.length()));
+				if (stricmp(field.c_str(), nameCut.c_str()) == 0) {
 					if (matches.size() == 0) {
 						std::cout << std::endl;
 					}
@@ -77,7 +96,7 @@ namespace Spr {
 					}
 				}
 			next:
-				line = matches.begin()->substr(0, pos);
+				line = line.substr(0, fs) + matches.begin()->substr(0, pos);
 				std::cout << ">" << line;
 			}
 			rv = true;
@@ -90,7 +109,7 @@ namespace Spr {
 			rv = true;
 		}
 		else if (key == 224) {	//	•ûŒüƒL[
-			key = _getch();
+			key = getch();
 			switch (key) {
 			case 'H':	//	UP
 				std::cout << "\r>";
@@ -113,13 +132,14 @@ namespace Spr {
 				for (size_t i = 0; i < line.length(); ++i) std::cout << " ";
 				if (lineHistory.size()) {
 					lineHistoryCur++;
-					if (lineHistoryCur >= (int)lineHistory.size()) {
-						lineHistoryCur = (int)lineHistory.size() - 1;
+					if (lineHistoryCur > (int)lineHistory.size()) {
+						lineHistoryCur = (int)lineHistory.size();
 					}
 					else if (lineHistoryCur < 0) {
 						lineHistoryCur = 0;
 					}
-					line = lineHistory[lineHistoryCur];
+					if (lineHistoryCur < (int)lineHistory.size()) line = lineHistory[lineHistoryCur];
+					else line = "";
 				}
 				std::cout << "\r>" << line;
 				rv = true;
@@ -128,7 +148,7 @@ namespace Spr {
 			case 'M':	//	RIHGT
 			default:
 				assert(rv == false);
-				_ungetch(key);
+				ungetch(key);
 				break;
 			}
 		}
@@ -139,5 +159,84 @@ namespace Spr {
 		}
 		return rv;
 	}
-
+	static std::string FindField(UTTypeDescIf*& td, void*& data, std::string field) {
+		size_t cur = 0;
+		size_t pp;
+		while ((pp = field.find_first_of('.', cur)) != std::string::npos) {
+			std::string name = field.substr(cur, pp - cur);
+			bool bFound = false;
+			for (int i = 0; i < td->NFields(); ++i) {
+				if (strcmp(name.c_str(), td->GetFieldName(i)) == 0) {
+					if (data) data = td->GetFieldAddress(i, data, 0);
+					td = td->GetFieldType(i);
+					cur = pp + 1;
+					field.substr(cur);
+					bFound = true;
+					break;
+				}
+			}
+			if (!bFound) {
+				td = NULL;
+				break;
+			}
+		}
+		return field.substr(cur);
+	}
+	static std::string FindField(UTTypeDescIf*& td, std::string field) {
+		void* n = NULL;
+		return FindField(td, n, field);
+	}
+	void FWConsoleDebugMonitor::CandidatesForDesc(std::vector<std::string>& rv, UTTypeDescIf* td, std::string field) {
+		std::string name = FindField(td, field);
+		if (td) {
+			for (int i = 0; i < td->NFields(); ++i) {
+				if (strnicmp(name.c_str(), td->GetFieldName(i), name.length()) == 0) {
+					std::string f;
+					size_t pos = field.find_last_of('.');
+					if (pos != std::string::npos) {
+						f = field.substr(0, pos + 1);
+					}
+					f.append(td->GetFieldName(i));
+					rv.push_back(f);
+				}
+			}
+		}
+	}
+	FWConsoleDebugMonitor::ExecResults FWConsoleDebugMonitor::ExecCommandForDesc(UTTypeDescIf* td, void* data, std::string cmd, std::string arg, std::vector<std::string> args){
+		std::string name;
+		if (cmd.length()) {
+			name = FindField(td, data, cmd);
+		}
+		if (td) {
+			for (int i = 0; i < td->NFields(); ++i) {
+				if (name.length() > 0 && strcmp(name.c_str(), td->GetFieldName(i)) == 0) {
+					FWConsoleDebugMonitor::ExecResults rv = READ;
+					if (args.size() > 1 && args[0].compare("=") == 0) arg = args[1];
+					if (td->GetFieldType(i)->IsPrimitive()){
+						if (arg.length()) {
+							td->WriteFromString(arg, i, data, 0);
+							rv = WRITE;
+						}
+						std::cout << cmd << " = " << td->ReadToString(i, data, 0) << std::endl;
+					}
+					else {
+						data = td->GetFieldAddress(i, data, 0);
+						td = td->GetFieldType(i);
+						for(int i=0; i<td->NFields(); ++i){
+							std::cout << cmd << "." << td->GetFieldName(i);
+							if (td->GetFieldType(i)->IsPrimitive()) std::cout << " = " << td->ReadToString(i, data, 0);
+							std::cout << std::endl;
+						}
+					}
+					return rv;
+				}
+				else if (name.length() == 0){
+					std::cout << td->GetFieldName(i);
+					if (td->GetFieldType(i)->IsPrimitive()) std::cout << " = " << td->ReadToString(i, data, 0);
+					std::cout << std::endl;
+				}
+			}
+		}
+		return NOTHING;
+	}
 }

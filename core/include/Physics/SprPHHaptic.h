@@ -10,6 +10,7 @@
 #ifndef SPR_PHHAPTIC_H
 #define SPR_PHHAPTIC_H
 
+#include <Collision/SprCDDetector.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHEngine.h>
 
@@ -64,13 +65,17 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	Posed	GetDefaultPose();						///<	インタフェースに対するポインタの向き
 
 	int     NNeighborSolids();						///<	ポインタ近傍の剛体数
-	PHSolidIf*   GetNeighborSolid(int i);			///<	ポインタ近傍の剛体数			
+	int		GetNeighborSolidId(int i);				///<	ポインタ近傍の剛体のIDを取得
+	PHSolidIf*   GetNeighborSolid(int i);			///<	ポインタ近傍の剛体を取得	
 	float   GetContactForce(int i);					///<	近傍物体iからの接触力
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
 	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
+
+	void	AddHapticForce(const SpatialVector& f);
+	void	ClearHapticForce();
 };
 
-struct PHShapePairForHapticIf : public ObjectIf {
+struct PHShapePairForHapticIf : public CDShapePairIf {
 	SPR_IFDEF(PHShapePairForHaptic);
 	int NIrs();
 	int NIrsNormal();
@@ -90,13 +95,15 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	FrictionState GetFrictionState();
 	unsigned GetContactCount();
 	unsigned GetFrictionCount();
+	Vec3d GetForce();
+	Vec3d GetTorque();
 };
 
 struct PHHapticEngineDesc {
 	enum HapticStepMode {
 		SINGLE_THREAD = 0,
 		MULTI_THREAD,
-		LOCAL_DYNAMICS,
+		LOCAL_DYNAMICS
 	};
 	PHHapticEngineDesc();
 };

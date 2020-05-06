@@ -25,12 +25,21 @@ public:
 	///	キー入力を処理する
 	virtual bool ProcessKey(int key);
 	///	コマンド実行
-	virtual bool ExecCommand(std::string cmd, std::string arg, std::vector<std::string> args);
+	virtual void ExecCommand(std::string cmd, std::string arg, std::vector<std::string> args) {}
 	///	コマンドの候補(i=0 コマンド, i=1.. arg1...)オーバライド用
-	virtual const std::vector<std::string>& Candidates(int i) {
-		static std::vector<std::string> rv;
-		return rv;
-	}
+	virtual void Candidates(std::vector<std::string>& rv, size_t fieldStart, std::string field) {}
+
+	//-------------------------------------------------------------------------
+	//	以下はコマンドのライブラリ
+	void CandidatesForDesc(std::vector<std::string>& rv, UTTypeDescIf* td, std::string base);
+	
+	enum ExecResults {
+		NOTHING,
+		READ,
+		WRITE
+	};
+	
+	ExecResults ExecCommandForDesc(UTTypeDescIf* td, void* data, std::string cmd, std::string arg, std::vector<std::string> args);
 };
 
 //@}

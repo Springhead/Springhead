@@ -33,8 +33,8 @@ namespace Spr {
 		double avgEdge[2] = { 0.0f, 0.0f };
 
 		Vec3d instantVel[2];
-		mesh[0]->ringVel->GetLastOne(instantVel[0]);
-		mesh[1]->ringVel->GetLastOne(instantVel[1]);
+		mesh[0]->ringVel.GetLastOne(instantVel[0]);
+		mesh[1]->ringVel.GetLastOne(instantVel[1]);
 
 		Vec3d instantAccel[2];
 		PHSolid *solid[2];

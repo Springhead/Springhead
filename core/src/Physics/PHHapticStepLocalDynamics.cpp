@@ -1,11 +1,12 @@
 ﻿#include <Physics/PHHapticStepLocalDynamics.h>
+#include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
 // PHHapticStepLocalDynamics
 void PHHapticStepLocalDynamics::StepHapticLoop() {
 	UpdateHapticPointer();
-	GetHapticRender()->HapticRendering(this);
+	engine->HapticRendering(this);
 	LocalDynamics();
 }
 void PHHapticStepLocalDynamics::LocalDynamics() {
