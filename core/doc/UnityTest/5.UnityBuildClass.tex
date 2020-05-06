@@ -1,0 +1,87 @@
+% UnityBuildClass.tex
+\newpage
+\section{UnityBuildClass}
+\label{UnityBuildClass}
+
+\subsection{概要}
+コマンドラインからunityを実行させるために定義したクラスである。
+このクラスには、unityのコマンドライン引数 \tt{-executeMode} に与える
+メソッドを定義している。
+
+\begin{itemize}
+\item[\bf{注意}]
+  unity をコマンドラインから実行するに際して、
+  実行環境を独自に設定する方法はないようである。
+  即ち、UnityTest の実行に関して設定した環境が状態として記録されてしまい、
+  それが他のunityの実行(例えばUIからの実行)に影響を与えてしまうことになる。
+  現在のところ、次の環境については退避と復元を実施しているが、
+  他にも同様の処置を施さなければならない環境があるかも知れない。
+  そのような環境が確認されたときは、退避と復元のコードを追加する必要がある。
+
+  \vspace{2mm}
+  現在退避と復元を実施している環境：
+  \begin{description}
+    \item[\bf{ビルド対象プラットフォーム}]
+	シーンを実行させるプラットフォームを選択する
+	(UnityTest では StandaloneWindows を選択）
+    \item[\bf{ProjectSettingsの中のdisplayResolutionDialog}]
+	exe実行時に Screen resolution/Graphics quality などの
+	確認ダイアログを制御する(UnityTest では抑止する)
+	ただし、この環境は UI からでなければ変更できないようである。
+	従って、ビルド実行の直前/直後に設定ファイルを直接編集することで
+	退避と復元を実施する。
+	これについては \ref{UnityTest}.UnityTestを参照のこと。
+  \end{description}
+\end{itemize}
+
+\subsection{メソッド}
+\subsubsection{\tt{Build()}}
+\label{Build}
+  \begin{FuncSpec}
+    \ItemMA{概要}{unityから直接呼び出されるメソッド}
+    \ItemMB{\bf{処理の流れ}}
+    \ItemMA{}{現在環境の退避 → ビルドの実行 → 環境の復元 → 結果の表示}
+    \ItemMA{説明}{ビルドは\tt{BuildPipeline.BuildPlayer()}を呼び出すことで実現する}
+    \ItemMA{}{このメソッドに与える引数は次のとおり}
+    \ItemMA{}{\hbox to -3mm{}
+	    \begin{tabular}{ll}
+		levels	& ビルドに含むシーン(\tt{.unity})		\\
+			& プロジェクトディレクトリからの相対パス	\\
+			& unity起動時引数 \tt{-target scene}から取得する	\\
+			& \ref{GetSceneName} GetSceneName()参照		\\
+		\multicolumn{2}{l}{locationPathName}			\\
+			& 成果物の保存先のパス(.exe)			\\
+			& unity起動時引数 \tt{-output path}から取得する	\\
+			& \ref{GetOutputPath} GetOutputPath()参照	\\
+		target& ビルド時の対象プラットフォーム			\\
+			& BuildTarget.StandaloneWindowsを指定する	\\
+		options	& ビルドしたプレイヤーをどのように実行するか	\\
+			& BuildOptions.Noneを指定する(ビルドのみ)
+	    \end{tabular}}
+  \end{FuncSpec}
+
+\subsubsection{\tt{GetSceneName()}}
+\label{GetSceneName}
+  \begin{FuncSpec}
+    \ItemMA{概要}{ビルドするシーンの名前をunity起動時引数 \tt{-target scene}から取得する}
+    \ItemMA{説明}{引数の取り出しには \tt{GetArg()}を使用する}
+    \ItemMA{}{\ref{GetArg} GetArg()参照}
+  \end{FuncSpec}
+
+\subsubsection{\tt{GetOutputPath()}}
+\label{GetOutputPath}
+  \begin{FuncSpec}
+    \ItemMA{概要}{成果物の保存パスをunity起動時引数 \tt{-output path}から取得する}
+    \ItemMA{説明}{引数の取り出しには \tt{GetArg()}を使用する}
+    \ItemMA{}{\ref{GetArg} GetArg()参照}
+  \end{FuncSpec}
+
+\subsubsection{\tt{GetArg(string key)}}
+\label{GetArg}
+  \begin{FuncSpec}
+    \ItemMA{概要}{unity起動時引数全体から、指定されたキーに対応するものを取得する}
+    \ItemMA{説明}{起動時引数の全体は \tt{System.Environment.GetCommandLineArgs()}で}
+    \ItemMA{}{取得し、この中から指定された key に対応するものを抽出する}
+  \end{FuncSpec}
+
+% end: UnityBuildClass.tex

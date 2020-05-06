@@ -1,0 +1,49 @@
+Import { path = "phCookie.x" }
+Import { path = "phTable.x" }
+Import { path = "grCookie.x" }
+Import { path = "grTable.x" }
+
+FWScene fwScene{	
+	/* PHSolid‚ÆGRFrame‚Æ‚ÌŠÖ˜A•t‚¯ */
+	FWObject fwCookie{
+		*soCookie			// PHSolid
+		*grFrameCookie		// GRFrame
+	}
+	FWObject fwTable{
+		*soTable		// PHSolid
+		*grFrameTable	// GRFrame
+	}
+
+	/* PHScene“à‚ÌObject */
+	PHScene phScene{
+		PHSolid soCookie{
+			// Cookie radian = 0.025m height = 0.01m
+			mass = 0.01
+			inertia = 1.65e-6 0 0   0 3.123e-6 0  0 0 1.65e-6
+			pose = 1 0 0 0  0 0.04 0
+			dynamical = true
+			// link to xfile(physics model)
+			PHFrame{
+				*phCookie
+			}
+		}
+		PHSolid soTable{
+			mass = 20
+			dynamical = false
+			*phTable		// link to xfile(physics model)
+		}
+	}
+	
+	/* GRScene“à‚ÌObject */
+	GRScene grScene{
+		GRFrame grFrameCookie { *grCookie }
+		GRFrame grFrameFloor{ *grTable }
+		GRLight light1 {						#SprGRRender.h GRMaterialDesc
+			ambient = 0.9 0.9 0.9 1.0			#Vec4f ambient
+			diffuse = 0.5 0.5 0.5 1.9			#Vec4f diffuse
+			specular = 0.1 0.1 0.1 1.0			#Vec4f specular
+			position = 1.0 1.0 1.0 0.0			#Vec4f position
+			range = 10000.0						#float range
+		}
+	}
+}

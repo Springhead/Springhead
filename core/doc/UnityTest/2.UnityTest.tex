@@ -1,0 +1,239 @@
+% UnityTest.tex
+\newpage
+\section{UnityTest}
+\label{UnityTest}
+
+\subsection{概要}
+起動引数で指定されたシーン(\tt{.unity})を、\BuildRun する。
+扱うのは1つのシーンのみである。
+
+\subsection{ファイル}
+\begin{FileList}
+  \Item{\UnityTest}{スクリプトファイル}
+  \Item{UnityTest.ini}{初期化ファイル}
+\end{FileList}
+
+\subsection{関連スクリプト}
+\begin{FileList}
+  \Item{\KvFile}{初期化ファイルの解析スクリプト}
+  \Item{\Replace}{unity設定ファイルの変更スクリプト}
+\end{FileList}
+
+\subsection{初期化ファイル}
+初期化ファイルはKey--Value--Pair\,(keyとvalueを空白またはタブで区切って定義した)%
+ファイルであること。次の項目を指定する。
+
+\begin{enumerate}
+  \item 必須項目
+	\VSkip{b}{2mm}
+	\begin{InitItem}
+	  \Item[T]{Key}{Value}
+	  \Item{Unity}{unity実行形式(\tt{unity.exe}) (パス名)}
+	  \Item{Python}{Python実行形式(\tt{python.exe}) (パス名)}
+	  \Item{Springhead2}{Springhead2のルートディレクトリ(パス名)}
+	  \Item{DllPath}{Springhead2ライブラリのあるディレクトリ(パス名)}
+	  \ItemMA{備考：特に指定がない限り、パス名は絶対パスで指定することが望ましい。
+		   \VSkip{t}{5mm}}
+	\end{InitItem}
+	\\
+
+  \item 任意項目
+	\VSkip{b}{2mm}
+	\begin{InitItem}
+	  \Item[T]{Key}{Value}
+	  \Item[n]{UnityProject}{Unityプロジェクトのルート(パス名)}
+	  \Item{}{default: \tt{\$(Springhead2)/src/Unity}}
+	  \Item[n]{ScenesDir}{シーンファイルが置かれているディレクトリ}
+	  \Item[n]{}{\tt{\$(UnityProject)}からの相対パス名}
+	  \Item{}{default: \tt{Assets/Scenes}}
+	  \Item[n]{TestRoot}{UnityTest システムのルート(パス名)}
+	  \Item{}{default: \tt{\$(Springhead2)/src/UnityTest}}
+	  \Item[n]{OutFile}{ビルドで作成する実行形式(パス名)}
+	  \Item{}{default: \tt{\$(TestRoot)/bin/player.exe}}
+	  \Item[n]{LogFile}{unityが作成するログファイル(パス名)}
+	  \Item{}{default: \tt{\$(TestRoot)/log/build.log}}
+	  \ItemMA{備考：特に指定がない限り、パス名は絶対パスで指定することが望ましい。
+		   \VSkip{t}{5mm}}
+	\end{InitItem}
+\end{enumerate}
+
+\subsection{ヘルパーメソッド}
+\subsubsection{\tt{get_date()}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{今日の日付・時刻を\tt{\DQuote{yyyy/mm/dd hh:mm:ss}}形式で返す}
+  \end{FuncSpec}
+
+\subsubsection{\tt{dir_part(path)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{与えられたpathのディレクトリ部分を返す}
+    \Item{引数}{path}{パス名}
+  \end{FuncSpec}
+
+\subsubsection{\tt{s16(value)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{与えられた16ビットのビットパターンを符号付き整数に変換して返す}
+    \Item{引数}{value}{16ビットのビットパターン}
+  \end{FuncSpec}
+
+\subsubsection{\tt{result_str(code)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{与えられたコード値に従い、成功か失敗かを示す文字列を返す}
+    \Item{引数}{code}{リターンコード}
+    \ItemMA{説明}{$code\geq 0$なら\DQuote{$code$ (success)}を返す}
+    \ItemMA{}{$code<0$なら\DQuote{$code$ (fail)}を返す}
+  \end{FuncSpec}
+
+\subsubsection{\tt{verbose(msg, level=0)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{バーバス情報を表示する}
+    \Item{引数}{msg}{表示する文字列}
+    \Item{}{level}{表示制御変数}
+    \ItemMA{説明}{起動引数\ttt{-v}オプションの個数が、\tt{level}で指定した数より大きい}
+    \ItemMA{}{ときにmsgを表示する}
+  \end{FuncSpec}
+
+\subsubsection{\tt{info(msg, name=None, has_next=False, continued=False)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{与えられたmsgを表示する(\tt{-T}オプション対応、改行制御付き)}
+    \Item{引数}{msg}{メッセージ}
+    \Item{}{name}{指定があれば行の先頭に表示する(\DQuote{name: })}
+    \Item{}{has_next}{ここでは改行したくないとき\tt{True}とする}
+    \Item{}{continued}{ここで改行したいとき\tt{True}とする}
+    \ItemMA{説明}{has_next/continuedは\tt{-v}オプションが指定されたときは意味をもたない}
+    \ItemMA{}{\tt{-v}オプションが指定されたとき：}
+    \ItemMA{}{\hspace{.5cm}必ず改行する(\tt{-T}, name 対応)}
+    \ItemMA{}{\tt{-v}オプションが指定されていないとき：}
+    \ItemMA{}{\hspace{.5cm}has_nextが\tt{True}なら改行ぜずに\tt{\DQuote{.. }} と表示する}
+    \ItemMA{}{\hspace{.5cm}continuedが\tt{True}なら改行する(\tt{-T}, name 非対応)}
+  \end{FuncSpec}
+
+\subsubsection{\tt{fatal(msg, code=-1)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{メッセージをstderrに出力してスクリプトを終了する}
+    \Item{引数}{msg}{メッセージ}
+    \Item{}{code}{終了コード}
+  \end{FuncSpec}
+
+\subsection{プログラムの説明}
+\subsubsection{起動形式}
+\hspace{8mm}\tt{UnityTest.py [}\it{options}\tt{\,] scene}
+
+\subsubsection{起動引数の解析}
+  OptionParserパケージを用いて解析する
+
+  必須引数：\\
+    \begin{OptionList}
+      \Item{scene}{}{シーン名}
+      \Item{}{}{\tt{\DQuote{.unity}}で終っていなければ\tt{\DQuote{.unity}}を追加する}
+    \end{OptionList}
+
+  オプション引数：\\
+    \begin{OptionList}
+      \Item{-i}{file}{初期化ファイル名}
+      \Item{-t}{time}{タイムアウト値(秒)}
+      \Item{-T}{}{スナップに日付と時刻を付加}
+      \Item{-h}{}{ヘルプの出力}
+      \Item{-v}{}{バーバス情報出力指定(複数個指定可)}
+      \Item{-V}{}{バージョン情報表示}
+    \end{OptionList}
+
+\subsubsection{初期化ファイルの読み込み}
+初期化ファイル(\tt{-i}オプションで指定、default: \tt{./UnityTest.ini})を
+読んでパラメータを設定する。
+指定されなかったパラメータには次のデフォルト値を設定する。
+\vspace{2mm}
+
+\begin{DefaultList}
+  \Item{UnityProject}{\$(Springhead2)/src/Unity}
+  \Item{ScenesDir}{Assets/Scenes}
+  \Item{TestRoot}{\$(Springhead2)/src/UnityTest}
+  \Item{OutFile}{\$(TestRoot)/bin/player.exe}
+  \Item{LogFile}{\$(TestRoot)/log/build.log}
+\end{DefaultList}
+\vspace{4mm}
+
+\subsubsection{OutFile/LogFileのディレクトリの作成}
+存在しないときのみ
+
+\subsubsection{unityのProjectSettingsの変更}
+\label{UnityTestSaveSettings}
+本テストを実施することによるunity環境の変更を回避するため、
+\begin{enumerate}
+  \item 該当ファイルの退避
+  \item 該当ファイルの変更
+  \item テストの実施 (\ref{UnityTestBuildRun}参照)
+  \item 該当ファイルの復元 (\ref{UnityTestReviveSettings}参照)
+\end{enumerate}
+という手順を踏む。
+現在判明している限りでは、\\
+\tt{\DQuote{\$(UnityProject)/ProjectSettings/ProjectSettings.asset}} ファイルに\\
+  \hspace{1cm}displayResolutionDialog: 1\\
+という設定があると、\$(OutFile)を実行したときにダイアログが開いてしまい、
+スクリプトが中断(入力待ち)してしまう。
+これを回避するために、この行を\\
+  \hspace{1cm}displayResolutionDialog: 0\\
+と変更してからテストを実施する。
+
+\begin{enumerate}
+  \item ファイルの退避\\
+        上記のファイル\fname{\DQuote{ProjectSettings.asset}}を
+	\fname{\DQuote{ProjectSettings.asset.save}}
+	という名前のファイルにコピーする。
+  \item ファイルの書換え\\
+        \fname{\DQuote{ProjectSettings.asset}}の該当行を書き換える
+	(\fname{replace.py})
+\end{enumerate}
+
+\subsubsection{\BuildRun}
+\label{UnityTestBuildRun}
+\begin{enumerate}
+  \item \$(Outfile)を削除する(ビルドの成功を確認するため)
+  \item unityをコマンドラインから次の引数で起動する。\\
+	\begin{tabular}{ll}
+          --projectPath \$(ProjectPath)	    & 開くunityプロジェクトのパス	\\
+          --executeMethod BuildClass.Build  & unityで実行するメソッド名		\\
+          --batchmode			    & unityをバッチモードで実行		\\
+          --quit			    & 実行終了後unityエディターを終了	\\
+          --logfile \$(LogFile)		    & エディターが書き出すログファイル	\\
+          --output \$(OutFile)		    & 作成するstandalone実行ファイル	\\
+          --target \$(ScenesDir)/scene	    & ビルドするシーン名
+	\end{tabular}
+	\vspace{4mm}
+  \item ビルドに成功したら(\$(OutFile) が作成されたら)、
+        \tt{PATH}に\$(DllPath)を加えて\$(OutFile)を実行する。
+\end{enumerate}
+
+タイムアウト処理
+
+\begin{center}
+  \begin{minipage}{.8\textwidth}
+  WindowsではSIGALARMが使えないため、本来の意味でのタイムアウト制御は行なえない。
+  ここでは、次のような方式で制御を実施する。
+  \begin{enumerate}
+    \item サブプロセスを生成してunityを開始する。制御はすぐに戻ってくる。
+    \label{gensubprocess}
+    \item 指定された秒数だけsleepする。
+    \item sleepが終了したら、\ref{gensubprocess}で生成したサブプロセスが
+	  実行中かどうかを調べる。
+	  \begin{enumerate}
+	    \item 実行中ならば、サブプロセスをkillしてテストは成功とする。
+	    \item 既に終了していれば、サブプロセスの終了コードを取り出す。
+	  \end{enumerate}
+  \end{enumerate}
+
+  この方式だと、サブプロセスが早く終了してもsleepから戻ってくるまで
+  無条件に待たされることになる。
+  しかし、タイムアウト値に大きい値を指定しない限り、実用上問題はないと思われる。
+  \end{minipage}
+\end{center}
+
+\subsubsection{ProjectSettingsの復元}
+\label{UnityTestReviveSettings}
+\begin{enumerate}
+  \item ファイル\fname{\DQuote{ProjectSettings.asset}}を削除する。
+  \item \ref{UnityTestSaveSettings}でProjectSettingsを退避したファイル
+	\fname{\DQuote{ProjectSettings.asset.save}}を
+	改めて\fname{\DQuote{ProjectSettings.asset}}とする。
+\end{enumerate}
+
+% end: UnityTest.tex

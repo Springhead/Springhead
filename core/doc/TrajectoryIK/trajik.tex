@@ -1,0 +1,217 @@
+\documentclass[a4paper,10pt, twocolumn, fleqn]{jsarticle}
+\usepackage{sty/config}
+
+\title{\gtfamily\bfseries 手先軌道制御について}
+\author{\gtfamily\bfseries 三武裕玄}
+
+\begin{document}
+\maketitle
+
+\section{目的と概要}
+
+
+\section{記号・用語の定義}
+
+\begin{description}
+\item[$\varDelta t$] :
+シミュレーションの1ステップあたりの時間刻み．したがってステップ$n$における時刻は$n \varDelta t$である．
+
+\item[$\bm{traj}(t)$] :
+手先軌道．時刻$t$の手先通過位置を表す．
+
+\item[$\bm{r}_n$] :
+ステップ$n$における目標手先位置．
+
+\item[$\bm{\theta}_n$] :
+ステップ$n$における目標関節角度．
+
+\item[$\bm{\omega}_n$] :
+ステップ$n$における目標関節角速度．
+
+\item[$\bm{p}_n$] :
+ステップ$n$における手先位置．
+
+\item[$\bm{q}_n$] :
+ステップ$n$における関節角度．
+
+\item[$J(\theta)$] :
+関節角度$\bm{\theta}$における関節角微小変位$\varDelta\bm{\theta}$を手先位置微小変位$\varDelta\bm{r}$に変換するヤコビアン．$\varDelta\bm{\theta} = J(\bm{\theta}) \varDelta\bm{r}$．
+\end{description}
+
+
+\section{逆運動学}
+
+逆運動学を用いて，手先軌道から目標関節角を求める．シミュレーション1ステップあたりの手先移動量は微小であるため，ヤコビアンの擬似逆行列による微分逆運動学を1ステップあたり1回行うことで実現する．
+
+\subsection{目標関節角度の計算}
+
+ステップ$n$から$n+1$にかけての目標手先位置の変化は
+\begin{gather*}
+\bm{r}_{n+1} - \bm{r}_n \\
+( = \bm{traj}(n\varDelta t+\varDelta t) - \bm{traj}(n\varDelta t) )
+\end{gather*}
+である．ここで$\varDelta t$が十分小さく，比較的滑らかな手先軌道ならば$\bm{traj}(t+\varDelta t) - \bm{traj}(t)$は微小であると想定される．したがってステップ間の目標手先位置変化$\bm{r}_{n+1} - \bm{r}_n$と目標関節角度変化$\bm{\theta}_{n+1} - \bm{\theta}_n$の関係はヤコビアン$J(\bm{\theta}_n)$で近似できる（ヤコビアンの具体的な内容は\節{jacobian}で述べる）．
+\begin{equation*}
+\bm{r}_{n+1} - \bm{r}_n = J(\bm{\theta}_n) (\bm{\theta}_{n+1} - \bm{\theta}_n)
+\end{equation*}
+$J(\bm{\theta}_n)$は一般に正方行列ではないので，擬似逆行列$J^\#$を用いて$\bm{\theta}_{n+1} - \bm{\theta}_n$について解くと
+\begin{equation*}
+\bm{\theta}_{n+1} - \bm{\theta}_n = J^\#(\bm{\theta}_n) (\bm{r}_{n+1} - \bm{r}_n)
+\end{equation*}
+
+したがって，ステップ$n$における目標手先位置$\bm{r}_n$，目標関節角度$\bm{\theta}_n$が求まっていれば，ステップ$n+1$における目標関節角$\bm{\theta}_{n+1}$は
+\begin{gather*}
+\bm{\theta}_{n+1} = J^\#(\bm{\theta}_n) (\bm{r}_{n+1} - \bm{r}_n) + \bm{\theta}_n \\
+\text{(ただし$\bm{r}_{n+1} = \bm{traj}((n+1)\varDelta t)$)}
+\end{gather*}
+で得られる．
+
+
+\subsection{目標関節角速度の計算}
+
+1ステップで関節角度を$\bm{\theta}_{n+1} - \bm{\theta}_n$だけ変化させるための目標関節角速度$\bm{\omega}_{n+1}$は，
+\begin{equation*}
+\bm{\omega}_{n+1} = (\bm{\theta}_{n+1} - \bm{\theta}_n) / \varDelta t
+\end{equation*}
+である\footnote{メモ：積分手法が関係すると思われるので検証のこと．}．
+
+
+\section{解の安定化}
+
+擬似逆行列解は特異姿勢付近になると極端に大きな値が出てしまい安定しない．そこで，Tikhonov正則化を行い解を安定化する．
+
+$J$の特異値分解を$U \Sigma V^T$とする．以下に示す$J^\#’$を$J^\#$の代わりに用いて解を得る．
+\begin{gather*}
+J^\#’ = V \sigma U^T \\
+ただし \sigma_{ii} = \frac{\Sigma_{ii}}{\Sigma_{ii}^2 + \epsilon^2}
+\end{gather*}
+$\epsilon$は正則化パラメータで，大きいほど解を安定させる（その一方で正しい解が出なくなる）．
+
+
+
+\section{基準姿勢復帰}
+
+$J^\#(\bm{\theta}_n)$による解は，ステップ間の目標関節角度変化の二乗和$(\bm{\theta}_{n+1} - \bm{\theta}_n)^T(\bm{\theta}_{n+1} - \bm{\theta}_n)$を最小化する．このことは軌道によっては不自然な姿勢や絡まりの原因になる．
+
+不自然な姿勢を避ける方法として，自然な基準姿勢を設定し，リンクアームの冗長自由度を用いて基準姿勢に近い解を得る方法が考えられる（冗長自由度を制御して指定した関節速度に極力近い解を得る方法は例えば文献\cite{gemsjp2012}で紹介されている）．
+
+基準姿勢を$\bm{\theta}_{normal}$とし，目標関節角$\bm{\theta}_n$を$\bm{\theta}_{normal}$に近づける関節角速度を$\bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal})$とする（$\bm{\omega}_{pullback}$の具体的な計算は\節{pullback}で述べる）．
+
+線形方程式
+\begin{gather*}
+\varDelta\bm{r} = J \varDelta\bm{\theta}\\
+ただし \varDelta\bm{\theta} = \bm{\theta}_{n+1} - \bm{\theta}_n，\varDelta\bm{r} = \bm{r}_{n+1} - \bm{r}_n，J=J(\bm{\theta}_n)
+\end{gather*}
+の，冗長自由度を含む解は
+\begin{equation*}
+\varDelta\bm{\theta} = J^\# \varDelta\bm{r} + (I - J^\# J)\bm{k}
+\end{equation*}
+である（両辺に左から$J$を掛けると右辺第二項は擬似逆行列の性質 $J=J J^\# J$ により消えるので$J\varDelta\bm{\theta}$に影響しないことがわかる）．
+
+ここで，基準姿勢に向かう関節角速度$\bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal})$が可能な限り実現されるとすると，$\varDelta\bm{r}=\bm{0}$のとき$\varDelta\bm{\theta}=\bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal})$である．したがって，
+\begin{equation*}
+\bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal}) = (I - J^\# J)\bm{k}
+\end{equation*}
+この線形方程式を$k$について解く．右辺が冗長自由度を表す事を考えると$(I - J^\# J)$はフルランクではないため，擬似逆行列を用いて
+\begin{equation*}
+\bm{k} = (I - J^\# J)^\# \bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal})
+\end{equation*}
+である．
+
+ところで，実際には以下に示すように$(I - J^\# J)^\# = I$であり，したがって$\bm{k} = \bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal})$である．
+\begin{gather*}
+(I - J^\# J)^\# \\
+= (I - J^\# J)^T ( (I - J^\# J) (I - J^\# J)^T )^{-1} \\
+＜I - J^\# J は（たぶん）対称行列なので＞ \\
+= (I - J^\# J) ( (I - J^\# J) (I - J^\# J) )^{-1} \\
+= (I - J^\# J) ( (I - 2 J^\# J + J^\# J J^\# J) )^{-1} \\
+＜J J^\# J = J より＞\\
+= (I - J^\# J) ( (I - J^\# J) )^{-1} \text{…\footnote{でも$(I - J^\# J)$は逆行列を持たないんじゃなかったっけ？}} \\
+= I
+\end{gather*}
+
+これらより，$\varDelta\bm{\theta}$を求める式は以下の通りとなる．
+\begin{equation*}
+\varDelta\bm{\theta} = J^\# \varDelta\bm{r} + (I - J^\# J)\bm{\omega}_{pullback}(\bm{\theta}_n, \bm{\theta}_{normal})
+\end{equation*}
+
+
+
+\section{関節の重み付け}
+
+加重擬似逆行列を用いると，関節に使用優先度を与えることができる．大きな重みを与えられた関節を極力動かさないように動作する．
+
+重みを表す対角行列を$W_{ii}$とすると，加重擬似逆行列解は
+\begin{equation*}
+\varDelta\bm{\theta} = W^{-1}J^T(J W^{-1} J^T)^{-1} \varDelta\bm{r}
+\end{equation*}
+となる\footnote{何故こうなるかは左から$J$を掛けてみればわかる．}．
+
+一方，正則化等の都合から，実際には$J$の特異値分解を用いて$J^\#$を求める方法をとりたい．
+そこで，$W^{-1} = D^2$なる対角行列$D$を定義し，以下のように式変形する．
+\begin{gather*}
+\varDelta\bm{\theta} = W^{-1}J^T(J W^{-1} J^T)^{-1} \varDelta\bm{r} \\
+\iff \varDelta\bm{\theta} = D^2 J^T(J D^2 J^T)^{-1} \varDelta\bm{r} \\
+\iff \varDelta\bm{\theta} = D D^TJ^T(J D D^TJ^T)^{-1} \varDelta\bm{r} \\
+\iff \varDelta\bm{\theta} = D (JD)^T(JD (JD)^T)^{-1} \varDelta\bm{r} \\
+\iff \varDelta\bm{\theta} = D (JD)^\# \varDelta\bm{r}
+\end{gather*}
+これより，$W$を重み行列とする加重擬似逆行列解は，
+\begin{gather*}
+\varDelta\bm{\theta} = D (JD)^\# \varDelta\bm{r} \\
+（ただし D_{ii} = \frac{1}{\sqrt{W_{ii}}}）
+\end{gather*}
+で得られることがわかる．
+
+実装上は，ヤコビアン$J$の代わりに重み付きヤコビアン$JD$を用い，$JD$による擬似逆行列解が得られたら$D$を掛けた上で目標関節角度に加える．これらの処理は関節ごとに行えるので実装しやすい．
+
+
+なお，さらに以下のように変形すれば加重擬似逆行列解が $J \varDelta\bm{\theta} = \varDelta\bm{r}$ を満たす解であることも確かめられる．
+\begin{gather*}
+\varDelta\bm{\theta} = D (JD)^\# \varDelta\bm{r} \\
+\iff D^{-1} \varDelta\bm{\theta} = (JD)^\# \varDelta\bm{r} \\
+\Leftarrow JD D^{-1} \varDelta\bm{\theta} = \varDelta\bm{r} \\
+\iff J \varDelta\bm{\theta} = \varDelta\bm{r}
+\end{gather*}
+
+
+% 加重擬似逆行列解と零空間の関係についてはもう一度考えたほうがいいと思う．
+
+
+
+
+\section{軌道追従制御}
+
+\subsection{柔らかい軌道追従制御}
+
+いずれ具体的に記述する予定．
+さしあたっては文献\cite{pliantmotion}を参照されたい．
+
+
+\subsection{LCP計算の反復回数と追従誤差}
+
+大きな関節トルクを要する運動では，正確なオフセットトルクを求めるのにより多くのLCP反復計算を要する．例えば関節ダンパを最大限に設定した2リンクアーム（アームあたり質量は1[kg]）を重力に逆らって静止させるのに反復回数$niter = 50$程度以上を要した（Springheadのデフォルトは$niter=15$）．多数回の反復を要するのはオフセットトルクを計算するテストシミュレーションの間に限られるので，テストシミュレーション時は反復回数を大きくとり，本番シミュレーションでは通常の反復回数に戻して計算すればよい．
+
+関節のバネ・ダンパは手先位置を軌道上に留めるよう作用するので，バネ・ダンパ係数が比較的大きければオフセットトルク計算に誤差があっても吸収される．この場合，反復回数とアームの柔軟性がトレードオフとなる．
+
+
+\section{剛体関節モデルでの実装}
+
+\subsection{ヤコビアン} \label{sec_jacobian}
+
+
+\subsection{姿勢復帰速度} \label{sec_pullback}
+
+
+\subsection{関節運動の実現}
+
+
+\subsection{順運動学}
+
+
+
+\newpage
+\bibliographystyle{jplain}
+\bibliography{trajik}
+
+\end{document}

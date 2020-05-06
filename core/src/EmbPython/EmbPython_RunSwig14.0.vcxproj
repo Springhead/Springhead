@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Trace|Win32">
+      <Configuration>Trace</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Trace|x64">
+      <Configuration>Trace</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{59C4D972-C917-4F20-B8E7-9E5D22169F33}</ProjectGuid>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>
+    </NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
+    <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>
+    </NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
+    <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>
+    </NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
+    <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
+    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
+    <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
+    <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>RunSwig_EmbPython.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>EmbPython_clean.bat &amp;&amp; RunSwig_EmbPython.bat</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>EmbPython_clean.bat</NMakeCleanCommandLine>
+    <OutDir>$(VisualStudioVersion)\EmbPython_RunSwig\</OutDir>
+    <IntDir>$(VisualStudioVersion)\EmbPython_RunSwig\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\EmbPython\EmbPython.h" />
+    <None Include="..\..\include\EmbPython\SprEPApp.h" />
+    <None Include="..\..\include\EmbPython\SprEPBase.h" />
+    <None Include="..\..\include\EmbPython\SprEPCollision.h" />
+    <None Include="..\..\include\EmbPython\SprEPCreature.h" />
+    <None Include="..\..\include\EmbPython\SprEPFileIO.h" />
+    <None Include="..\..\include\EmbPython\SprEPFoundation.h" />
+    <None Include="..\..\include\EmbPython\SprEPFramework.h" />
+    <None Include="..\..\include\EmbPython\SprEPGraphics.h" />
+    <None Include="..\..\include\EmbPython\SprEPHumanInterface.h" />
+    <None Include="..\..\include\EmbPython\SprEPInterpreter.h" />
+    <None Include="..\..\include\EmbPython\SprEPPhysics.h" />
+    <None Include="..\..\include\EmbPython\SprEPUtility.h" />
+    <None Include="..\..\include\EmbPython\Utility\SprEPCast.h" />
+    <None Include="..\..\include\EmbPython\Utility\SprEPObject.h" />
+    <None Include="Base.i" />
+    <None Include="Collision.i" />
+    <None Include="Creature.i" />
+    <None Include="EPBase.cpp" />
+    <None Include="EPBase.h" />
+    <None Include="EPCollision.cpp" />
+    <None Include="EPCollision.h" />
+    <None Include="EPCreature.cpp" />
+    <None Include="EPCreature.h" />
+    <None Include="EPFileIO.cpp" />
+    <None Include="EPFileIO.h" />
+    <None Include="EPFoundation.cpp" />
+    <None Include="EPFoundation.h" />
+    <None Include="EPFramework.cpp" />
+    <None Include="EPFramework.h" />
+    <None Include="EPGraphics.cpp" />
+    <None Include="EPGraphics.h" />
+    <None Include="EPHumanInterface.cpp" />
+    <None Include="EPHumanInterface.h" />
+    <None Include="EPInterpreter.cpp" />
+    <None Include="EPPhysics.cpp" />
+    <None Include="EPPhysics.h" />
+    <None Include="EPUtility.cpp" />
+    <None Include="EPUtility.h" />
+    <None Include="FileIO.i" />
+    <None Include="Foundation.i" />
+    <None Include="Framework.i" />
+    <None Include="Graphics.i" />
+    <None Include="HumanInterface.i" />
+    <None Include="Physics.i" />
+    <None Include="SprPythonDLL.cpp" />
+    <None Include="Utility\EPObject.i" />
+    <None Include="Utility\PyPTM.i" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Foundation\SprUTCriticalSection.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Foundation\UTCriticalSection.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

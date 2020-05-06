@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="GRAnimationMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRDebugRenderD3D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRDeviceD3D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRSdkD3D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TypeDescDumpImpGraphicsD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRAnimationMesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRDebugRenderD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRDeviceD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRSdkD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="IfStubDumpGraphicsD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="IfStubDumpImpGraphicsD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="IfStubGraphicsD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDescDumpGraphicsD3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SprGraphicsD3D.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GraphicsD3D\SprGRAnimationMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GraphicsD3D\SprGRSdkD3D.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{bacfd707-5a72-4c57-9a6f-58c02fb52778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1e9021dc-2887-4d44-b6a9-2828bb8558a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

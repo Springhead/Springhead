@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{3ddf99a5-0ceb-4efb-b8c6-f636b9ddd5e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{b6f5b312-da26-42bc-b98b-11ad9dcd0f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Utility">
+      <UniqueIdentifier>{ac53ce0e-a7db-4c19-8735-83eee846fbad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utility">
+      <UniqueIdentifier>{c5ba842b-411a-424f-a95a-1e8b21defa92}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\EmbPython\EmbPython.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPApp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPBase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPCollision.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPCreature.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPFileIO.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPFoundation.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPFramework.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPGraphics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPHumanInterface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPInterpreter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPPhysics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\SprEPUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\Utility\SprEPCast.h">
+      <Filter>include\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\EmbPython\Utility\SprEPObject.h">
+      <Filter>include\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="EPBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPCollision.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPCreature.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPFileIO.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPFoundation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPFramework.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPGraphics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPHumanInterface.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPPhysics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="EPUtility.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprUTCriticalSection.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Utility\EPCast.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\EPObject.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\EPUTTimer.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="EPBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPCollision.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPCreature.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPFileIO.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPFoundation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPFramework.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPGraphics.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPHumanInterface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPInterpreter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPPhysics.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EPUtility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="SprPythonDLL.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Foundation\UTCriticalSection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

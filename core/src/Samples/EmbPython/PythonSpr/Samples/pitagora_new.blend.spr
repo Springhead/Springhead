@@ -1,0 +1,258 @@
+FWScene{
+  PHScene scene0{
+    timeStep = 0.0166667
+    count = 64
+    gravity = 0 0 -9.81 
+    contactTolerance = 0.002
+    frictionThreshold = 0.01
+    maxVelocity = 1.#INF
+    PHSolid so_Cube.005{
+      pose = 1 0 0 0 -0.956761 -1.10873e-007 0.825197 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.005{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.004{
+      pose = 1 0 0 0 1.47568 -1.08868e-007 0.810274 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.004{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.007{
+      pose = 1 0 0 0 0.281841 -1.08868e-007 0.810274 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.007{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube{
+      pose = 1 0 0 0 -0.49415 6.15597e-008 -0.458174 
+      inertia = 0.0276444 0 0 0 0.397669 0 0 0 0.416484 
+      dynamical = FALSE
+      PHFrame{
+        CDBox cd_Cube{
+          boxsize = 8.22896 2 0.871888 
+        }
+      }
+    }
+    PHSolid so_Cube.001{
+      pose = 1 0 0 0 3.29627 -1.06862e-007 0.795351 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.001{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.003{
+      pose = 1 0 0 0 2.13228 -1.06862e-007 0.795351 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.003{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.010{
+      pose = 1 0 0 0 -2.13567 -1.10873e-007 0.825197 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.010{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.002{
+      pose = 1 0 0 0 2.71428 -1.06862e-007 0.795351 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.002{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.011{
+      pose = 1 0 0 0 -2.71767 -1.10873e-007 0.825197 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.011{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.009{
+      pose = 1 0 0 0 -1.55368 -1.10873e-007 0.825197 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.009{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.008{
+      pose = 1 0 0 0 0.863835 -1.08868e-007 0.810274 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.008{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.006{
+      pose = 1 0 0 0 -0.300153 -1.08868e-007 0.810274 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.006{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Sphere{
+      pose = 1 0 0 0 5.04395 -3.76945e-007 2.80551 
+      inertia = 0.186144 0 0 0 0.186144 0 0 0 0.186144 
+      PHFrame{
+        CDSphere cd_Sphere{
+          radius = 0.513007
+        }
+      }
+    }
+    PHSolid so_Cube.012{
+      pose = 1 0 0 0 -3.37428 -1.12878e-007 0.84012 
+      inertia = 0.801827 0 0 0 0.296173 0 0 0 0.51762 
+      PHFrame{
+        CDBox cd_Cube.012{
+          boxsize = 0.21627 2 1.50623 
+        }
+      }
+    }
+    PHSolid so_Cube.013{
+      pose = 0.958619 0 -0.284693 -3.82511e-008 4.98256 -1.04857e-007 0.780429 
+      inertia = 0.105096 -2.75286e-021 -1.42109e-014 -2.75286e-021 0.120225 -2.75286e-021 -1.42109e-014 -2.75286e-021 0.191754 
+      dynamical = FALSE
+      PHFrame{
+        pose = 1 0 0 -2.22045e-016 -1.19209e-007 -2.30926e-014 -1.19209e-007 
+        CDBox cd_Cube.013{
+          boxsize = 2.16455 2 0.871888 
+        }
+      }
+    }
+      *so_Cube
+      *so_Cube.010
+      *so_Cube
+      *so_Cube.010
+      *so_Cube
+      *so_Cube.010
+      *so_Cube
+      *so_Cube.010
+      *so_Cube
+      *so_Cube.011
+      *so_Cube
+      *so_Cube.011
+      *so_Cube
+      *so_Cube.011
+      *so_Cube
+      *so_Cube.011
+      *so_Cube
+      *so_Cube.009
+      *so_Cube
+      *so_Cube.009
+      *so_Cube
+      *so_Cube.009
+      *so_Cube
+      *so_Cube.009
+      *so_Cube
+      *so_Cube.012
+      *so_Cube
+      *so_Cube.012
+      *so_Cube
+      *so_Cube.012
+      *so_Cube
+      *so_Cube.012
+      *so_Cube
+      *so_Cube.012
+      *so_Cube
+      *so_Cube.003
+      *so_Cube
+      *so_Cube.003
+      *so_Cube
+      *so_Cube.003
+      *so_Cube
+      *so_Cube.003
+      *so_Cube
+      *so_Cube.002
+      *so_Cube
+      *so_Cube.002
+      *so_Cube
+      *so_Cube.002
+      *so_Cube
+      *so_Cube.002
+      *so_Cube
+      *so_Cube.008
+      *so_Cube
+      *so_Cube.008
+      *so_Cube
+      *so_Cube.008
+      *so_Cube
+      *so_Cube.008
+      *so_Cube
+      *so_Cube.006
+      *so_Cube
+      *so_Cube.006
+      *so_Cube
+      *so_Cube.006
+      *so_Cube
+      *so_Cube.006
+      *so_Cube.004
+      *so_Cube
+      *so_Cube.004
+      *so_Cube
+      *so_Cube.004
+      *so_Cube
+      *so_Cube.004
+      *so_Cube
+      *so_Cube.004
+      *so_Cube
+      *so_Cube.007
+      *so_Cube
+      *so_Cube.007
+      *so_Cube
+      *so_Cube.007
+      *so_Cube
+      *so_Cube.007
+      *so_Cube
+      *so_Cube.007
+      *so_Cube
+      *so_Cube.005
+      *so_Cube
+      *so_Cube.005
+      *so_Cube
+      *so_Cube.005
+      *so_Cube
+      *so_Cube.005
+      *so_Cube
+      *so_Cube
+      *so_Cube.001
+      *so_Cube
+      *so_Cube.001
+      *so_Cube
+      *so_Cube.001
+      *so_Cube
+      *so_Cube.001
+      *so_Cube.001
+      *so_Sphere
+      *so_Sphere
+      *so_Cube.013
+  }
+  GRScene scene0{
+  }
+}
+CRSdk crSdk{
+}

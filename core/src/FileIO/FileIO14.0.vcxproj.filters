@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="FIFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIFileBinary.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIFileCOLLADA.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIFileSpr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIFileVrml.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIFileX.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIImport.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FileIOStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FILoadContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIOpStateHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FIRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FISaveContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FISdk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FISpirit.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\FileIO\SprFIFile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\FileIO\SprFIImport.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\FileIO\SprFIOpStateHandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\FileIO\SprFISdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFile.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFileBinary.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFileCOLLADA.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFileCOLLADAHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFileSpr.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFileVrml.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIFileX.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIImport.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FILoadContext.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FIOpStateHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FISaveContext.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FISdk.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FISpirit.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{4b97985f-ab75-4a72-b3a6-eb088a435279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{8e5ef535-bcfd-4a94-b2ee-f142cc44de04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,27 @@
+# 比較の基準となるレビジョンを記述するファイル
+#
+# SYNTAX
+#	^r[0-9]+	具体的にレビジョンを指定
+#	行頭より "r1234" or "HEAD" のように記述する。
+#	1つ以上の空白を置けば後ろに何を書いてもよい.
+#	それ以外の行はすべて無視する.
+#
+
+#r5849		# 28-Sep-2012
+#r5918		# 03-Nov-2012 Test system started. 
+#r6003		# 04-Dec-2012 Epoch
+#r6054		# 17-Dec-2012
+#r6196		# 17-Jan-2013
+#r6356		# 07-Mar-2013 Sample build introduced
+#r6367		# 14-Mar-2013 Module name representation changed
+#r6430		# 03-Apr-2013 File names related Samples changed
+#r6763		# 07-Oct-2013 Revised version for 'v110' compiler (Visual Studio 2012)
+#r7000		# 03-Feb-2014 Test environment reviesed
+#r7606		# 13-Nov-2014 Revised version for 'v120' compiler (Visual Studio 2013)
+#r8395		# 09-May-2016 PHConstraintEngineDesc changed
+#r9026		# 21-Jun-2017 Physics: PHConstraintTest: Floating numeric results.
+#r9182		# 04-Sep-2017 Move to new repository tree.
+#r9284		# 19-Oct-2017 New epoch
+#r9408		# 19-Oct-2017 Diff messed up!
+
+75a3149		# 29-Nov-2017 Epoch of GitHub era.

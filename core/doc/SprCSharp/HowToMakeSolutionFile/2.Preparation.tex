@@ -1,0 +1,108 @@
+% Preparation.tex
+%	Last update: 2017/02/23 F.Kanehori
+\newpage
+\section{準備作業}
+\label{Preparation}
+
+\subsection{現在すでにある構成}
+\label{CurrentSolutions}
+
+現在既に作成済みの構成は、次のとおりである。
+
+\small{%
+\begin{center}
+\begin{tabular}{p{40mm}p{40mm}c}
+    \MC{1}{l}{Solution名} & \MC{1}{l}{構成} & \MC{1}{c}{Visual Studio} \\\hline
+    SprCSharp12.0   & 全体構成		& 2013 \\
+    SprCSharp12.0PH & Physics最小構成	& 2013 \\
+    SprCSharp14.0   & 全体構成		& 2015 \\
+    SprCSharp14.0PH & Physics最小構成	& 2015 \\\hline
+\end{tabular}
+\end{center}
+}
+
+\subsection{準備しておくこと}
+\label{PreperationWork}
+
+\begin{enumerate}
+  \item	構成の対象とするプロジェクト名を基にして、<Physics>, <PH>, <EDP>, <IDP>%
+	に相当するものを決める。
+	ソリューションファイル名およびプロジェクトファイル名は<PH>を基に決めるので、
+	これらが既存のものと重複しないようにすることが重要である。
+
+	(例) Physics最小構成にGraphicsを追加した構成の場合。\\
+	\vspace{-.75ZH}
+	\begin{narrow}[s][\WID]\begin{tabular}{lll}
+	    <Physics> & \ARROW & <Graphics,Physics> \\
+	    <PH>  & \ARROW & <GRPH> \\
+	    <EDP> & \ARROW & Base, Collision, Foundation, Graphics \\
+	    <IDP> & \ARROW & HumanInterface, ... (要調査)
+	\end{tabular}\end{narrow}
+	\vspace{1ZH}
+
+  \item \tt{".i"} ファイルの編集(必要ならば)\\
+	\fname{swig_sprcs.exe}が実行されるとき、次のようなマクロが引数で渡される。
+
+	\begin{narrow}[s][\WID]\begin{tabular}{lll}
+	    <Graphics>		& \ARROW & \tt{-DGraphics_ONLY} \\
+	    <Graphics,Physics>	& \ARROW & \tt{-DGraphics_and_Physics} \\
+	    全体構成		& \ARROW & 何も定義されない
+	\end{tabular}\end{narrow}
+
+	\vspace{1ZH}
+	このマクロを用いて、必要ならば\fname{.i}ファイルを編集する
+	(この構成には不要なメソッドで、<EDO>や<IDP>を拡張するような
+	ものは{\tt \%ignore}しておく)。
+
+	\vspace{.5ZH}
+	(例) \tt{"Physics.i"}
+	\small{%
+	\begin{verbatim}
+	        #ifdef  Physics_ONLY
+	        %ignore Spr::PHOpEngineIf::InitialHapticRenderer;
+	        ...
+	        #endif
+	\end{verbatim}
+
+	(参考) Project RunSwig_CSharpをビルドすると、
+	\begin{narrow}[5mm]
+	\begin{verbatim}
+	  	nmake -f RunSwig_CSharp/Makefile.RunSwig_CSharp
+		    → RunSwig_CSharp/RunSwig_CSharp.bat TARGET=<Physics>
+		        → nmake Makefile_CSharp.swig.<Physics>
+		            → RunSwig_CSharp/CSharpSwig.bat <Physics> <Macro>
+		                → swig_sprcs.exe -D<Macro>
+	\end{verbatim}
+	\end{narrow}
+	と順次呼び出され、\fname{swig_sprcs.exe}に上記のマクロが渡される。
+	}
+	\vspace{1ZH}
+
+  \item	プロジェクト\pname{TargetManager}を追加するためのメモ
+
+	新しい構成を作るときは、
+	プロジェクト\pname{TargetManager}は既存のものを利用するのではなく、
+	新規に作成しなければならない。ポイントは次のとおり。
+
+	\begin{itemize}
+	  \item	Makefile Projectを作成する。
+	  \item	Build Command Lineには\DQuote{TargetManager.bat <Physics>}を指定する。
+	  \item	Rebuild All Command Lineには
+		\DQuote{TargetManager.bat <Physics>}を指定する。
+	\end{itemize}
+
+	\vspace{.5ZH}
+	\small{%
+	\begin{tabular}{llcl}
+	    (例) & 全体構成 & \ARROW & \tt{TargetManager.bat ALL} \\
+		 & <Physics,Graphics> & \ARROW & \tt{TargetManager.bat Physics,Graphics}
+	\end{tabular}
+	}
+
+	\vspace{1ZH}
+	実際の作成方法は次章(\ref{sec:SolutionFramework} ソリューション枠組みの作成)%
+	で述べる。
+
+\end{enumerate}
+
+% end: Preparation.tex

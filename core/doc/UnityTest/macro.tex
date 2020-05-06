@@ -1,0 +1,153 @@
+% macro.tex
+%
+\makeatletter
+\catcode`\_=\active
+\catcode`\^=\active
+\def_{\ifmmode\sb\else\_\fi}
+\def^{\ifmmode\sp\else\^\fi}
+
+% alias for script file names
+\def\fname#1{\tt{#1}}
+\def\UnityTestMain{\fname{UnityTestMain.py}}
+\def\UnityTest{\fname{UnityTest.py}}
+\def\LogExtraction{\fname{log_extraction.py}}
+\def\UnityBuildClass{\fname{UnityBuildClass.cs}}
+\def\KvFile{\fname{KvFile.py}}
+\def\Replace{\fname{replace.py}}
+
+%  Alias for awckward spelling
+\def\BuildRun{ƒrƒ‹ƒh\&ƒ‰ƒ“}
+
+%  Alias for reducing braces
+\let\it@\it
+\let\tt@\tt
+\let\bf@\bf
+\def\it#1{{\it@{#1}}}
+\def\tt#1{{\tt@{#1}}}
+\def\bf#1{{\bf@{#1}}}
+\def\ttt#1{{\,\tt@{#1}\,}}
+
+%  Quoted word
+\def\DQuote#1{\,\tt{"}#1\tt{"}\,}
+
+%  Strut
+\def\vstrut#1#2{\vrule height#1 depth#2 width0pt}
+
+%  Needs LaTeX's help
+\def\v@top@skip#1{\hbox{\vtop{\vbox to#1{}}}}
+\def\v@bot@skip#1{\vspace{#1}\\}
+\def\VSkip#1#2{\ifx#1t\v@top@skip{#2}\else\v@bot@skip{#2}\fi}
+
+%  Empty token
+\def\Empty@Token{}
+
+%  \narrow[MGN]
+%	MGN: the leftside margin
+%
+\def\narrow{\@ifnextchar [{\@narrow}{\@narrow[\leftmargin]}}
+\def\@narrow[#1]{\list{}{\topsep 0pt \partopsep 0pt
+    \parsep 0pt \itemsep 0pt \leftmargin #1 \relax}\item[]}
+\let\endnarrow\endlist
+
+%  \FileList	(2 columns, no rule)
+%	Item{#1}{#2} -> \tt{#1} & #2           \\
+%	ItemMA{#1}   -> \multicolumn{2}{l}{#1} \\
+%
+\def\Item@FileList{\Item@FileList@@}
+\def\Item@FileListMA{\Item@FileList@A}
+\def\Item@FileList@@#1#2{\fname{#1}&#2\\}
+\def\Item@FileList@A#1{\multicolumn{2}{l}{#1}\\}
+\def\FileList{%
+	\begin{Table}{@{\hspace{7.5mm}}p{35mm}l}{0.8}
+		     {\Item@FileList}{\Item@FileListMA}{}}
+\def\end@FileList{\end{Table}}
+\let\endFileList\end@FileList
+
+%  \InitItem	(2 columns, with rule)
+%	Item[T]{#1}{#2} -> \v@strut\bf{#1} & \v@strut\bf{#2} \\\hline
+%	Item{#1}{#2}    -> #1              & #2              \\\hline
+%	Item[n]{#1}{#2} -> #1              & #2              \\
+%	ItemMA{#1}      -> \multicolumn{2}{l}{#1}            \\
+%
+\def\Item@InitItem{\@ifnextchar[{\Item@InitItem@}{\Item@InitItem@@}}
+\def\Item@InitItemMA{\Item@InitItem@A}
+\def\Item@InitItem@@#1#2{#1&#2\\\hline}
+\def\Item@InitItem@A#1{\multicolumn{2}{l}{#1}\\}
+\def\Item@InitItem@[#1]{\if#1T\let\Item@@\Item@InitItem@T\else
+			\if#1n\let\Item@@\Item@InitItem@n\fi\fi \Item@@}
+\def\Item@InitItem@T#1#2{\v@strut{#1}&\v@strut{#2}\\\hline}
+\def\Item@InitItem@n#1#2{\vspace{-1.1mm}#1&#2\\}
+\def\v@strut#1{\vstrut{5.5mm}{2.5mm}\hfill{\bf{#1}}\hfill\vstrut{0pt}{0pt}}
+\def\InitItem{%
+	\begin{Table}{|l|l|}{0.95}
+		     {\Item@InitItem}{\Item@InitItemMA}{}\hline}
+\def\end@InitItem{\end{Table}}
+\let\endInitItem\end@InitItem
+
+%  \DefaultList	(2 columns, no rule)
+%	Item{#1}{#2} -> #1 & \tt{#2} \\
+%
+\def\Item@DefaultList{\Item@DefaultList@@}
+\def\Item@DefaultList@@#1#2{#1&\tt{#2}\\}
+\def\DefaultList{%
+	\begin{Table}{@{\hspace{7.5mm}}p{30mm}l}{0.9}
+		     {\Item@DefaultList}{}{}}
+\def\end@DefaultList{\end{Table}}
+\let\endDefaultList\end@DefaultList
+
+%  \OptionList	(3 columns, no rule)
+%	Item{#1}{#2}{#3} -> \tt{#1} & \it{#2} & #3 \\
+%
+\def\Item@OptionList{\Item@OptionList@@}
+\def\Item@OptionList@@#1#2#3{\tt{#1} \,\it{#2}&#3\\}
+\def\OptionList{%
+	\begin{Table}{@{\hspace{10mm}}p{15mm}ll}{0.8}
+		     {\Item@OptionList}{}{}}
+\def\end@OptionList{\end{Table}}
+\let\endOptionList\end@OptionList
+
+%  \FuncSpec	(3 columns, no rule)
+%	Item{#1}{#2}{#3} -> \bf{#1} & #2 & #3                \\
+%	ItemMA{#1}{#2}{} -> \bf{#1} & \multicolumn{2}{l}{#2} \\
+%	ItemMA{#1}{}{}   -> \multicolumn{3}{l}{#1}           \\
+%
+\def\Item@FuncSpec{\Item@FuncSpec@@}
+\def\Item@FuncSpec@@#1#2#3{\bf{#1}&#2&#3\\}
+\def\Item@FuncSpecMA{\Item@FuncSpec@A}
+\def\Item@FuncSpecMB{\Item@FuncSpec@B}
+\def\Item@FuncSpec@A#1#2{\bf{#1}&\multicolumn{2}{l}{#2}\\}
+\def\Item@FuncSpec@B#1{\multicolumn{3}{l}{#1}\\}
+\def\FuncSpec{\vspace{1.5mm}%
+	      \begin{Table}{@{\hspace{5mm}}p{7mm}p{15mm}l}{0.85}
+			   {\Item@FuncSpec}{\Item@FuncSpecMA}{\Item@FuncSpecMB}}
+\def\end@FuncSpec{\end{Table}}
+\let\endFuncSpec\end@FuncSpec
+
+%  General-use table definition
+%
+%  \Table{columns}{arraystretch}{\ItemDef}{\ItemDefMA}{\ItemDefMB}
+%	columns: definition of columns and vrules (e.g. |c|c|)
+%	hrule:	 \hline or empty
+%	\ItemDef:	item format for ordinal row
+%	\ItemDefMA:	item format for multicolumn row (type 1)
+%	\ItemDefMB:	item format for multicolumn row (type 2)
+%
+\def\Table#1#2#3#4#5{%
+    \begingroup
+    \let\org@Table@arraystretch\arraystretch
+    \let\Item#3
+    \def\@arg{#4}\ifx\@arg\Empty@Token\else\let\ItemMA#4\fi
+    \def\@arg{#5}\ifx\@arg\Empty@Token\else\let\ItemMB#5\fi
+    \def\arraystretch{#2}
+    \begin{tabular}{#1}
+}
+\def\end@Table{%
+    \end{tabular}
+    \let\arraystretch\org@Table@arraystretch
+    \endgroup
+}
+\let\endTable\end@Table
+
+%
+\makeatother
+% end: marco.tex

@@ -1,0 +1,23 @@
+# KvFileTest.ini3
+#
+macro_def		Macro_Def
+out1			1
+out2			2
+macro_def_ref_default	$(macro_def)/ref_default
+
+[section1]
+macro_sec1		Macro_Sec1
+sec1_11			11
+out1			1_redefined
+macro_sec1_sec1		$(macro_sec1)/sec1
+macro_def_ref_sec1	$(macro_def)/ref_sec1
+
+[section2]
+macro_def		Macro_Def_Redefined
+macro_sec2		Macro_Sec2
+sec2_21			21
+out2			2_redefined
+macro_sec2_sec2		$(macro_sec2)/sec2
+macro_def_ref_ref_sec2	$(macro_def)/ref_sec2
+
+# end: KvFileTest.ini

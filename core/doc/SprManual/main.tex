@@ -1,0 +1,32 @@
+\documentclass[a4paper, 12pt]{jsbook}
+\usepackage{graphicx, booktabs, amsmath, amssymb, url, makeidx, color}
+
+\usepackage{sprmacros, fancybox, framed, longtable, bm, comment}
+
+% PDF–ÚŽŸ
+\usepackage[dvipdfm,bookmarks=true,bookmarksnumbered=true,bookmarkstype=toc,colorlinks=true,urlcolor=black,linkcolor=black,citecolor=black,setpagesize=false]{hyperref}
+\ifnum 42146=\euc"A4A2
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+\else
+\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
+\fi
+
+
+\title{Springhead Users Manual}
+\date{}
+\author{Yuichi Tazaki and Springhead Development Team.}
+
+\renewcommand{\figurename}{Fig.\,}
+\renewcommand{\tablename}{Table\,}
+
+\makeindex
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\input{chapters}
+
+\printindex
+
+\end{document}

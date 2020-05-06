@@ -1,0 +1,174 @@
+% CSInterface.tex
+%	Last update: 2017/03/13 F.Kanehori
+\newpage
+\section{概要}
+\label{sec:Overview}
+
+\medskip
+\noindent
+\bf{ソースファイル}
+\begin{narrow}
+	\verb|"Springhead2\bin\src\swig\Source\Modules\sprcs.cpp"|
+\end{narrow}
+
+\bigskip
+\noindent
+\bf{ビルドについて}
+\begin{enumerate}
+  \item	使用するVisual Studioのバージョンは、2010, 2013のいずれでもよい。
+  \item	Debug構成でビルドすると\tt{SNAP}, \tt{DUMP}などが有効となり、
+	出力されるソース中に各種情報がコメントとして埋め込まれる。
+	\begin{itemize}
+	  \item	多くの場合に、生成された行に対応するソース行番号が含まれている。
+
+	  \item	\tt{"//+"}で始まる番号はノード番号であるが、
+		\tt{get_node_info()}が呼び出される度に割り当てられるので
+		ノードの識別には役に立たない(同じノードに複数の番号が割り当てられる)。
+		\begin{description}
+		  \item	[※]
+			ソース中のマクロ\tt{BREAK_NODE_NO}に上記のノード番号を設定し、
+			関数\FUNC{debug_break_at()}にブレークポイントを設定すれば、
+			その行が生成される(\FUNC{get_node_info()}が呼ばれる)タイミング
+			で停止させることができる。
+		\end{description}
+
+	  \item	\CPP 側で\FUNC{::SysAllocStringLen()}により割り当てたメモリを解放する
+		コードは\\
+		\hspace{20pt}\verb|#ifdef FREE_UNMANAGED_MEMORY| ～ \verb|#endif|\\
+		で囲まれている。現在のままで特にメモリ関連の不都合が起きないのであれば、
+		適当なタイミングでこれを外した方がよいと思われる。
+	\end{itemize}
+\end{enumerate}
+
+\medskip
+\noindent
+\bf{\tt{.exe}ファイルについて}
+\begin{enumerate}
+  \item	現状ではビルドをするとビルド構成に応じて、
+	\begin{narrow}[\WID]
+	\small{%
+	\verb+$(Solutiondir)/{Win32|x64}/{Debug|Release}{10|12.0}/swig{10|12.0}.exe+}
+	\end{narrow}
+        が生成される。
+
+  \item	\FILE{cp.bat}を実行すると、これを\FILE{Springhead2/bin/swig/}にコピーする。
+        このとき、ファイル名を\FILE{swig_sprcs.exe}とリネームする。
+	\begin{itemize}
+	  \item	\FILE{cp.bat}の引数については\tt{cp.bat -h}を実行のこと。
+	  \item	リネームする名前(\FILE{swig_sprcs.exe})は\FILE{cp.bat}に
+		ハードコードされている。
+	\end{itemize}
+
+  \item	\FILE{sprcs.cpp}は、swigの引数に\,\tt{-sprcs}を付けて実行したときにのみ
+	有効となるもの(?)なので、上記のようなリネームは必要ないかも知れない(??)。
+\end{enumerate}
+          
+\medskip
+\noindent
+\bf{特別な扱いをしているもの}
+\begin{enumerate}
+  \item	トークンの置き換え\\
+	\medskip
+	\small{\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l}
+	    \tt{"UTString"} & \tt{"std::string"}\\
+	    \tt{"GLuint"} & \tt{"unsigned int"}\\
+	    \tt{"FWApp::Timers"} & \tt{"std::vector<(UTRef<(UTTimerIf)>)>"}\\
+	    \multicolumn{2}{l}{\tt{"PHEngines::base::iterator"}}\\
+		& \tt{"std::vector<(UTRef<(PHEngine)>)>::iterator"}\\
+	    \multicolumn{2}{l}{\tt{"PHEngines::base::const_iterator"}}\\
+		& \tt{"std::vector<(UTRef<(PHEngine)>)>::const_iterator"}\\
+	\end{tabular}}
+
+  \item	templateクラス\\
+	形名が\tt{"TAffine"}で始まるメンバをもつクラスは出力しない。
+	\medskip
+
+  \item	識別子名の置き換え処理\\
+	\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l@{\hspace{20pt}}l}
+	    \tt{"checked"} & \tt{"checked_"} & \small{\CS のリザーブドワード}\\
+	\end{tabular}
+	\medskip
+
+  \item	スコープの置き換え\\
+	\medskip
+	\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l}
+	    \tt{"SprCOLLADA::physics_material"} & \tt{"physics_material"}\\
+	    \tt{"SprCOLLADA::physics_materialCommon"} & \tt{"physics_materialCommon"}\\
+	    \tt{"gimite::ip_address"} & \tt{"ip_address"}\\
+	    \tt{"gimite::socket_address"} & \tt{"socket_address"}\\
+	    \tt{"gimite::socket_streambuf"} & \tt{"socket_streambuf"}\\
+	    \tt{"gimite::socket_stream"} & \tt{"socket_stream"}\\
+	    \tt{"gimite::bound_socket"} & \tt{"bound_socket"}\\
+	    \tt{"gimite::server_stream_socket"} & \tt{"server_stream_socket"}\\
+	    \tt{"gimite::diagram_socket"} & \tt{"diagram_socket"}\\
+	\end{tabular}
+	\medskip
+
+  \item	全メンバを引数にもつコンストラクタの自動生成\\
+        次のクラスについては、全メンバを引数にもつコンストラクタを自動的に生成する。
+	\tt{\begin{narrow}
+		"Vec2f", "Vec2d", "Vec3f", "Vec3d", "Vec4f", "Vec4d"\\
+		"Quaternionf", "Quaterniond"\\
+		"Posef", "Posed"\\
+		"Matrix3f", "Matrix3d"\\
+		"Vec2i", "Vec3i", "Vec6d"\\
+		"Curve3f"
+	\end{narrow}}
+	\medskip
+
+  \item	\FUNC{ToString()}の自動生成\\
+        クラス名が次の名前で始まるクラスについては\FUNC{ToString()}を自動的に生成する。
+	\tt{\begin{narrow}
+		"Vec", "Quaternion", "Pose", "Matrix", "Affine"
+	\end{narrow}}
+        ただし\FUNC{MatrixExtension}は例外。
+
+\end{enumerate}
+
+\medskip
+\noindent
+\bf{出力ファイル}
+\begin{enumerate}
+  \item	\FILE{cs_object.cs}, \FILE{wrappers.cs}\\
+	wrapperクラス(\FILE{wrappers.cs})は
+	\tt{CsObject}クラス(\FILE{cs_object.cs})を継承する。
+
+  \item	\FILE{CSxxxx.wrapper.cs}\\
+	\tt{xxxx} (Collision, Graphics, HumanInterface, Physics)の各々について、
+	構造体をメンバとする\tt{vector}のwrapperクラスを格納。
+
+	\tt{wrapper}クラスの命名規則は、
+	\begin{narrow}
+		\tt{vectorwrapper_<\it{CLASS}>_<\it{MEMBER}>}\\
+		\tt{arraywrapper_<\it{CLASS}>_<\it{MEMBER}>}
+	\end{narrow}
+	ここで <\it{CLASS}> はこのメンバが属するクラス名、
+	<\it{MEMEBER}> はメンバ名である( ラス名を含めているのは、
+	異なるクラスで同一のメンバ名があり得るから)。
+
+	これらのwrapperクラスを一つのソースファイルに纏められないのは、
+	\begin{narrow}[10pt]\begin{enumerate}
+	  \item	swig処理が\tt{xxxx} (Collision, ..)毎に別々に実行されるために、
+		異なる\tt{xxxx}で同一の\tt{.i}ファイルを読み込むことがある。
+	  \item	よって単純に同じファイルに出力すると重複定義となってしまう
+	\end{enumerate}\end{narrow}
+	ためである。
+
+	解決策としては、
+	\begin{narrow}[10pt]\begin{enumerate}
+	  \item	重複定義を避けるための情報を異なるswigジョブ間で渡すために
+		外部ファイルなどを用いる。
+	  \item	各wrapper毎にソースを別ファイルに出力する。
+	\end{enumerate}\end{narrow}
+	などが考えられるが、未着手のままである。
+\end{enumerate}
+
+\medskip
+\noindent
+\bf{積み残し事項}
+\begin{enumerate}
+  \item	クラスメンバが配列のときのsetter\\
+	配列要素数の確認をとるコードが未実装(今は無条件にコピーしている)
+\end{enumerate}
+
+% end: CSInterface.tex

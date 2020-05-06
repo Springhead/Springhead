@@ -1,0 +1,464 @@
+日付 : 17.12.13 
+--- スタブビルドのログ --- 
+ 
+[ SwigAll.bat ]
+% devenv ..\src\Springhead14.0.sln /build "Release|x64"
+
+Microsoft Visual Studio 2015 Version 14.0.25420.1.
+Copyright (C) Microsoft Corp. All rights reserved.
+1>------ Build started: Project: RunSwig, Configuration: Release x64 ------
+1>  Python 3.4.0
+1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
+1>  python make_manager.py -A -c
+1>
+1>      *** Collision: creating "makefile.swig"
+1>      *** Creature: creating "makefile.swig"
+1>      *** FileIO: creating "makefile.swig"
+1>      *** Foundation: creating "makefile.swig"
+1>      *** Framework: creating "makefile.swig"
+1>      *** Graphics: creating "makefile.swig"
+1>      *** HumanInterface: creating "makefile.swig"
+1>      *** Physics: creating "makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	cd ..\Framework && ..\RunSwig\python_adapter.bat RunSwigFramework.py
+1>  Python 3.4.0
+1>  cwd: I:\DailyBuild\SpringheadTest\core\src\Framework
+1>  python RunSwigFramework.py
+1>
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Framework -c++ Framework.i
+1>      *** I:/DailyBuild/SpringheadTest/core/src/Foundation/RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Framework/Framework.i"
+1>      *** I:/DailyBuild/SpringheadTest/core/src/Foundation/RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Framework/FrameworkStub.mak.txt"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	..\..\..\bin\swig\swig -I..\..\..\bin\swig\Lib -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++ FWOldSpringhead.i
+1>  	copy SprFWOldSpringheadDecl.hpp ..\..\..\include\FWOldSpringhead >NUL 2>&1
+1>  	copy FWOldSpringheadStub.cpp ..\..\..\src\Framework >NUL 2>&1
+1>  	copy FWOldSpringheadDecl.hpp ..\..\..\src\Framework >NUL 2>&1
+1>  creating I:/DailyBuild/SpringheadTest/core/swigtemp/include/Base
+1>  creating I:/DailyBuild/SpringheadTest/core/swigtemp/include/Framework
+1>  creating I:/DailyBuild/SpringheadTest/core/swigtemp/src/Foundation
+1>  creating I:/DailyBuild/SpringheadTest/core/swigtemp/src/Framework
+1>  src files: I:/DailyBuild/SpringheadTest/core/swigtemp/src/Framework/FWOldSpringheadNodeHandler.h
+1>  	..\RunSwig\python_adapter.bat do_swigall.py
+1>  Python 3.4.0
+1>  cwd: I:\DailyBuild\SpringheadTest\core\src\RunSwig
+1>  python do_swigall.py
+1>
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** Collision: creating "makefile.swig.tmp"
+1>   RunSwig.py Collision Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Collision Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Collision -c++ Collision.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Collision/Collision.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Collision/CollisionStub.mak.txt"
+1>      *** Collision: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** Creature: creating "makefile.swig.tmp"
+1>   RunSwig.py Creature Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Creature Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Creature -c++ Creature.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Creature/Creature.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Creature/CreatureStub.mak.txt"
+1>      *** Creature: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** FileIO: creating "makefile.swig.tmp"
+1>   RunSwig.py FileIO Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python FileIO Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_FileIO -c++ FileIO.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/FileIO/FileIO.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/FileIO/FileIOStub.mak.txt"
+1>      *** FileIO: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** Foundation: creating "makefile.swig.tmp"
+1>   RunSwig.py Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Foundation -c++ Foundation.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Foundation/Foundation.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Foundation/FoundationStub.mak.txt"
+1>      *** Foundation: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** Framework: creating "makefile.swig.tmp"
+1>   RunSwig.py Framework Physics Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Framework Physics Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Framework -c++ Framework.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Framework/Framework.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Framework/FrameworkStub.mak.txt"
+1>      *** Framework: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** Graphics: creating "makefile.swig.tmp"
+1>   RunSwig.py Graphics Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Graphics Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Graphics -c++ Graphics.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Graphics/Graphics.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Graphics/GraphicsStub.mak.txt"
+1>      *** Graphics: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** HumanInterface: creating "makefile.swig.tmp"
+1>   RunSwig.py HumanInterface Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python HumanInterface Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_HumanInterface -c++ HumanInterface.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/HumanInterface/HumanInterface.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/HumanInterface/HumanInterfaceStub.mak.txt"
+1>      *** HumanInterface: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>   make_manager.py -P python -t
+1>  	python I:\DailyBuild\SpringheadTest\core\src\RunSwig\make_manager.py -P python -t
+1>      *** Physics: creating "makefile.swig.tmp"
+1>   RunSwig.py Physics Collision Foundation -P python
+1>  	python I:\DailyBuild\SpringheadTest\core\src\Foundation\RunSwig.py -P python Physics Collision Foundation
+1>
+1>  Microsoft (R) Program Maintenance Utility Version 14.00.24210.0
+1>  Copyright (C) Microsoft Corporation.  All rights reserved.
+1>
+1>  	I:\DailyBuild\SpringheadTest\core\bin\swig\swig -II:\DailyBuild\SpringheadTest\core\bin\swig\Lib -spr -w305,312,319,325,401,402 -DSWIG_Physics -c++ Physics.i
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Physics/Physics.i"
+1>      *** RunSwig: creating "I:/DailyBuild/SpringheadTest/core/src/Physics/PhysicsStub.mak.txt"
+1>      *** Physics: renaming "makefile.swig.tmp -> makefile.swig"
+1>
+1>  *** Collision ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** Creature ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** FileIO ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** Foundation ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** Framework ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** Graphics ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** HumanInterface ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+1>
+1>  *** Physics ***
+1>      do_swigall: nmake -f makefile.swig
+1>      do_swigall: make_manager.py -P python -r
+2>------ Build started: Project: Base, Configuration: Release x64 ------
+2>  Affine.cpp
+2>  BaseDebug.cpp
+2>  BaseTypeInfo.cpp
+2>  BaseUtility.cpp
+2>  StrBufBase.cpp
+2>  Base14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Base\Base14.0x64.lib
+2>    Base14.0x64.lib done
+3>------ Build started: Project: Foundation, Configuration: Release x64 ------
+3>  FoundationStub.cpp
+3>  Object.cpp
+3>  QuadProg++.cc
+3>  Scene.cpp
+3>  ScilabStub.cpp
+3>  UTCriticalSection.cpp
+3>  UTDllLoader.cpp
+3>  UTLoadContext.cpp
+3>  UTLoadHandler.cpp
+3>  UTPath.cpp
+3>  UTPreciseTimer.cpp
+3>  UTQPTimer.cpp
+3>  UTRegisterTypeDesc.cpp
+3>  UTSocket.cpp
+3>  UTTimer.cpp
+3>  UTTypeDesc.cpp
+3>  Foundation14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Foundation\Foundation14.0x64.lib
+3>    Foundation14.0x64.lib done
+4>------ Build started: Project: Collision, Configuration: Release x64 ------
+5>------ Build started: Project: FileIO, Configuration: Release x64 ------
+6>------ Build started: Project: Graphics, Configuration: Release x64 ------
+7>------ Build started: Project: HumanInterface, Configuration: Release x64 ------
+4>  CDBox.cpp
+4>  CDCapsule.cpp
+4>  CDConvex.cpp
+4>  CDConvexMesh.cpp
+4>  CDConvexMeshInterpolate.cpp
+4>  CDCutRing.cpp
+4>  CDDetectorImp.cpp
+4>  CDGJK.cpp
+4>  CDRegisterTypeDesc.cpp
+4>  CDRoundCone.cpp
+4>  CDShape.cpp
+4>  CDSpatialHashTable.cpp
+4>  CDSphere.cpp
+5>  FIFile.cpp
+5>  FIFileBinary.cpp
+5>  FIFileCOLLADA.cpp
+5>  FIFileSpr.cpp
+5>  FIFileVrml.cpp
+5>  FIFileX.cpp
+5>  FIImport.cpp
+5>  FILoadContext.cpp
+5>  FIOpStateHandler.cpp
+5>  FIRegisterTypeDesc.cpp
+5>  FISaveContext.cpp
+5>  FISdk.cpp
+6>  GRBlendMesh.cpp
+6>  GRDeviceGL.cpp
+6>  GRFrame.cpp
+6>  GRLoadBmp.cpp
+6>  GRMesh.cpp
+6>  GRRegisterTypeDesc.cpp
+6>  GRRender.cpp
+6>  GRScene.cpp
+6>  GRSdk.cpp
+6>  GRSphere.cpp
+6>  GRVertex.cpp
+6>  GraphicsStub.cpp
+7>  DRADAPIO.cpp
+7>  DRContecIsaCounter.cpp
+7>  DRContecIsaDa.cpp
+7>  DRCyUsb20Sh4.cpp
+7>  DRJoyStickGLUT.cpp
+7>  DRKeyMouseGLUT.cpp
+7>  DRKeyMouseWin32.cpp
+7>  DRNittaForce.cpp
+7>  DRPortIO.cpp
+7>  DRTokin3D.cpp
+7>  DRUPP.CPP
+7>  DRUsb20Sh4.cpp
+7>  DRUsb20Simple.cpp
+7>  DRUsbH8Simple.cpp
+7>  DRWinDriver.cpp
+7>  HIBase.cpp
+4>  CollisionStub.cpp
+7>  HIDevice.cpp
+7>  HILeap.cpp
+7>  HINovintFalcon.cpp
+7>  HIRegisterTypeDesc.cpp
+7>  HISdk.cpp
+7>  HISpaceNavigator.cpp
+7>  HISpidar.cpp
+5>  FISpirit.cpp
+7>  HISpidarCalc.cpp
+7>  HISpidarMotor.cpp
+7>  HITrackball.cpp
+5>  FileIOStub.cpp
+7>  HIXbox360Controller.cpp
+7>  HumanInterfaceStub.cpp
+4>  Collision14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Collision\Collision14.0x64.lib
+4>    Collision14.0x64.lib done
+8>------ Build started: Project: Physics, Configuration: Release x64 ------
+8>  PHBallJoint.cpp
+8>  PHConstraint.cpp
+8>  PHConstraintEngine.cpp
+8>  PHContactDetector.cpp
+8>  PHContactPoint.cpp
+8>  PHContactSurface.cpp
+8>  PHFemEngine.cpp
+8>  PHForceField.cpp
+8>  PHGear.cpp
+8>  PHGenericJoint.cpp
+8>  PHHapticEngine.cpp
+8>  PHHapticEngineRender.cpp
+6>  Graphics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Graphics\Graphics14.0x64.lib
+6>    Graphics14.0x64.lib done
+8>  PHHapticPointer.cpp
+7>  HumanInterface14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\HumanInterface\HumanInterface14.0x64.lib
+7>    HumanInterface14.0x64.lib done
+8>  PHHapticStepBase.cpp
+8>  PHHapticStepImpulse.cpp
+8>  PHHapticStepLocalDynamics.cpp
+8>  PHHapticStepLocalDynamicsDev.cpp
+8>  PHHapticStepMulti.cpp
+8>  PHHapticStepSingle.cpp
+8>  PHOpAnimation.cpp
+8>  PHOpEngine.cpp
+8>  PHOpHapticController.cpp
+8>  PHOpHapticRenderer.cpp
+8>  PHOpHapticRenderer2.cpp
+8>  PHOpObj.cpp
+8>  PHOpGroup.cpp
+8>  PHOPParticle.cpp
+8>  PHEngine.cpp
+8>  PHFemBase.cpp
+8>  PHFemCollision.cpp
+8>  PHFemMesh.cpp
+8>  PHFemMeshNew.cpp
+8>  PHFemMeshThermo.cpp
+8>  PHFemPorousWOMove.cpp
+8>  PHFemThermo.cpp
+8>  PHFemVibration.cpp
+8>  PHFixJoint.cpp
+8>  PHHingeJoint.cpp
+8>  PHIKActuator.cpp
+8>  PHIKEndEffector.cpp
+8>  PHIKEngine.cpp
+8>  PHJoint.cpp
+8>  PHJointLimit.cpp
+8>  PHJointMotor.cpp
+8>  PHLoadHandlers.cpp
+8>  PHOpSpHashColliAgent.cpp
+8>  PHPathJoint.cpp
+8>  PHPenaltyEngine.cpp
+8>  PHRegisterTypeDesc.cpp
+8>  PHScene.cpp
+8>  PHSdk.cpp
+8>  PHSkeleton.cpp
+8>  PHSliderJoint.cpp
+8>  PHSolid.cpp
+8>  PHSpring.cpp
+8>  PHTreeNode.cpp
+8>  PhysicsStub.cpp
+5>  FileIO14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\FileIO\FileIO14.0x64.lib
+5>    FileIO14.0x64.lib done
+8>  Physics14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Physics\Physics14.0x64.lib
+8>    Physics14.0x64.lib done
+9>------ Build started: Project: Framework, Configuration: Release x64 ------
+9>  FrameworkStub.cpp
+9>  FWApp.cpp
+9>  FWConsoleDebugMonitor.cpp
+9>  FWEditor.cpp
+9>  FWFemMesh.cpp
+9>  FWFemMeshNew.cpp
+9>  FWGLUI.cpp
+9>  FWGLUT.cpp
+9>  FWHapticPointer.cpp
+9>  FWObject.cpp
+9>  FWOldSpringheadNodeHandler.cpp
+9>  FWOldSpringheadStub.cpp
+9>  FWOPHapticHandler.cpp
+9>  FWOpObj.cpp
+9>  FWOptimizer.cpp
+9>  FWRegisterTypeDesc.cpp
+9>  FWScene.cpp
+9>  FWSdk.cpp
+9>  FWSkeletonSensor.cpp
+9>  FWSprTetgen.cpp
+9>  FWStaticTorqueOptimizer.cpp
+9>  FWTrajectoryPlanner.cpp
+9>  FWWin.cpp
+9>FWTrajectoryPlanner.cpp(1012): warning C4101: 'total': unreferenced local variable
+9>FWTrajectoryPlanner.cpp(1506): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(1890): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(1891): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2009): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2010): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2185): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2186): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2204): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2205): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2239): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2240): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2511): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2562): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2644): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2645): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2855): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWTrajectoryPlanner.cpp(2856): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>FWStaticTorqueOptimizer.cpp(78): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+9>  Framework14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Framework\Framework14.0x64.lib
+9>    Framework14.0x64.lib done
+10>------ Build started: Project: Creature, Configuration: Release x64 ------
+10>  CRBody.cpp
+10>  CRBone.cpp
+10>  CRCreature.cpp
+10>  CREngine.cpp
+10>  CRGazeController.cpp
+10>  CRGrabController.cpp
+10>  CRReachController.cpp
+10>  CRRegisterTypeDesc.cpp
+10>  CRSdk.cpp
+10>  CRTouchSensor.cpp
+10>  CRTrajectoryController.cpp
+10>  CRVisualSensor.cpp
+10>  CRBallHumanBodyGen.cpp
+10>  CRBodyGen.cpp
+10>  CreatureStub.cpp
+10>  Creature14.0.vcxproj -> I:\DailyBuild\SpringheadTest\core\src\Creature\Creature14.0x64.lib
+10>    Creature14.0x64.lib done
+11>------ Build started: Project: Springhead, Configuration: Release x64 ------
+11>  Microsoft (R) Library Manager Version 14.00.24215.1
+11>  Copyright (C) Microsoft Corporation.  All rights reserved.
+11>
+11>Physics14.0x64.lib(PHOpHapticRenderer.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+11>Physics14.0x64.lib(PHOpHapticRenderer2.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+11>Physics14.0x64.lib(PHSpring.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+11>Creature14.0x64.lib(CREngine.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+11>Creature14.0x64.lib(CRGrabController.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+11>  Springhead: I:\DailyBuild\SpringheadTest\generated\lib\win64/Springhead14.0x64.lib created.
+========== Build: 11 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========

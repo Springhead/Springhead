@@ -1,0 +1,63 @@
+% Replace.tex
+\newpage
+\section{Replace}
+\label{Replace}
+
+\subsection{概要}
+入力ファイルの各行について、指定したパターンの置換を施した結果を出力ファイルに書き出す。
+置換するパターンが見つからなかったときは、入力ファイルと出力ファイルの内容は同一となる。
+
+\subsection{ファイル}
+\vspace{-2mm}
+\begin{FileList}
+  \Item{\Replace}{スクリプトファイル}
+\end{FileList}
+
+\subsection{ヘルパーメソッド}
+\subsubsection{\tt{replace(ifname, ofname, patterns, sep)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{入力ファイルの各行について置換処理(\tt{string.replace()})を施し、}
+    \ItemMA{}{結果を出力ファイルに書き出す。置換処理を実施した行数を返す}
+    \Item{引数}{ifname}{入力ファイルのパス}
+    \Item{}{ofname}{出力ファイルのパス}
+    \Item{}{patterns}{置換パターン指定(複数指定可)}
+    \Item{}{}{各パターンは \tt{<FROM><sep><TO>} の形式とする。}
+    \Item{}{}{%
+      \begin{tabular}{ll}
+	\tt{<FROM>} & マッチさせるパターン			\\
+	\tt{<TO>}   & 置き換えるパターン			\\
+	\tt{<sep>}  & \tt{<FROM>}と\tt{<TO>}との分離文字	\\
+      \end{tabular}}
+    \Item{}{sep}{patternsの分離文字(デフォルトは\tt{'='})}
+    \ItemMA{説明}{置換処理は行単位で、patternsに指定した順序で実行する}
+    \ItemMA{}{※ \tt{a=b b=c}は\tt{a=c}と同じ結果となる}
+  \end{FuncSpec}
+
+\subsection{プログラムの説明}
+\subsubsection{起動形式}
+\hspace{8mm}\tt{replace.py [}\it{options}\tt{\,] infile outfile from=to [from=to]..}
+
+\subsubsection{起動引数の解析}
+\label{ReplaceInvoke}
+  OptionParserパケージを用いて解析する
+
+  必須引数：\\
+    \begin{OptionList}
+      \Item{infile}{}{入力ファイルのパス}
+      \Item{outfile}{}{出力ファイルのパス}
+      \Item{from=to}{}{置換パターン指定(複数指定可)}
+      \Item{}{}{ヘルパーメソッド\tt{replace()}での説明を参照}
+    \end{OptionList}
+
+  オプション引数：\\
+    \begin{OptionList}
+      \Item{-s}{sep}{patternsの分離文字(デフォルトは\tt{'='})}
+      \Item{-h}{}{ヘルプの出力}
+      \Item{-v}{}{バーバス情報出力指定(複数個指定可)}
+      \Item{-V}{}{バージョン情報表示}
+    \end{OptionList}
+
+\subsubsection{置換処理の実行}
+\ref{ReplaceInvoke}で取り出した引数情報を\tt{replace()}に与えて置換処理を実行する。
+
+% end: Replace.tex

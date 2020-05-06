@@ -1,0 +1,827 @@
+\documentclass{jarticle}
+\usepackage{amsmath, bm, leftidx, fancybox, ascmac, graphicx}
+
+\title{Featherstone's Algorithm の定式化}
+\author{tazz}
+\date{}
+
+\setlength{\oddsidemargin}{0mm}
+\setlength{\textwidth}{160mm}
+
+\begin{document}
+\maketitle
+
+\begin{itemize}
+\item 05/10/10 執筆開始
+\item 13/06/01 最終更新
+\end{itemize}
+
+\section{位置，速度，加速度の伝播}
+
+本稿では静止座標系を静止フレーム，運動座標系を単にフレームと呼ぶ．
+静止フレームに対するフレームの位置と向きを
+\begin{align*}
+\begin{bmatrix}\bm{r} \\ R \end{bmatrix}
+\end{align*}
+と表現する．ここで$\bm{r}$は3次元ベクトル，$R$は$3 \times 3$正規直交行列である．
+
+フレーム$a$とフレーム$b$があるとする．それぞれの位置・向きを
+\begin{align*}
+\begin{bmatrix}\bm{r}_a \\ R_a \end{bmatrix}, \;\begin{bmatrix}\bm{r}_b \\ R_b \end{bmatrix}
+\end{align*}
+とし，フレーム$a$に対するフレーム$b$の相対的な位置・向きを
+\begin{align*}
+\begin{bmatrix}\bm{r}_{ab} \\ R_{ab} \end{bmatrix}
+\end{align*}
+とおくと，これらの間に以下の関係式が成り立つ．
+\begin{align}
+\begin{bmatrix}\bm{r}_b \\ R_b \end{bmatrix}
+ =  \begin{bmatrix}\bm{r}_a \\ R_a \end{bmatrix} \cdot \begin{bmatrix}\bm{r}_{ab} \\ R_{ab} \end{bmatrix}
+ =: \begin{bmatrix}\bm{r}_a + R_a \bm{r}_{ab} \\ R_a R_{ab} \end{bmatrix}
+\label{position_propagation}
+\end{align}
+
+式(\ref{position_propagation})を時間微分すると
+\begin{align*}
+\dot{\bm{r}_b} = \dot{\bm{r}_a} + \dot{R_a}\bm{r}_{ab} + R_a \dot{\bm{r}_{ab}}
+ = \dot{\bm{r}_a} + \hat{\bm{\omega}}_a^\times R_a \bm{r}_{ab} + R_a \dot{\bm{r}_{ab}}
+\end{align*}
+\begin{align*}
+&\dot{R_b} = \dot{R_a}R_{ab} + R_a\dot{R_{ab}}\notag\\
+&\hat{\bm{\omega_b}}^\times R_b = \hat{\bm{\omega_a}}^\times R_a R_{ab} + R_a \hat{\bm{\omega_{ab}}}^\times R_{ab}\notag\\
+&\hat{\bm{\omega_b}}^\times = \hat{\bm{\omega_a}}^\times + R_a \hat{\bm{\omega_{ab}}}^\times R_a^\mathsf{T}
+ = \hat{\bm{\omega_a}}^\times + (R_a \hat{\bm{\omega_{ab}}})^\times
+\end{align*}
+となる．
+ここで$\hat{\bm{\omega}}^\times = \dot{R}R^\mathsf{T}$は歪対称行列であり，軸性ベクトル$\hat{\bm{\omega}}$が存在して
+$\hat{\bm{\omega}}^\times \bm{a} = \hat{\bm{\omega}} \times \bm{a}$を満たす（$\bm{a}$は任意）．
+このとき$\hat{\bm{\omega}}$は静止フレームに対するローカルフレームの角速度を表す．
+改めて$\dot{\bm{r}_a} = \hat{\bm{v}}_a$，$\dot{\bm{r}_b} = \hat{\bm{v}}_b$，$\dot{\bm{r}_{ab}} = \bm{v}_{ab}$
+とおくと，次式を得る．
+\begin{align}
+\hat{\bm{v}}_b &= \hat{\bm{v}}_a + \hat{\bm{\omega}}_a \times (R_a \bm{r}_{ab}) + R_a \bm{v}_{ab}
+\label{vel_prop_abs} \\
+\hat{\bm{\omega}}_b &= \hat{\bm{\omega}}_a + R_a \bm{\omega}_{ab}
+\label{angvel_prop_abs}
+\end{align}
+ここで$\hat{\bm{v}}_a, \hat{\bm{v}}_b$はそれぞれ静止フレームに対するフレームa, bの並進速度，
+$\hat{\bm{\omega}}_a, \hat{\bm{\omega}}_b$は同角速度である．
+また，$\bm{v}_{ab}, \bm{\omega}_{ab}$はそれぞれフレームaに対するフレームbの相対速度，相対角速度である．
+
+次に上式をローカル座標表現に変形する．まず，フレームの速度・角速度をフレーム自身の座標によって表現したものを
+以下のように定義する．
+\begin{align*}
+\bm{v}_a = R_a^\mathsf{T} \hat{\bm{v}}_a, \bm{\omega}_a = R_a^\mathsf{T} \hat{\bm{\omega}}_a,\,
+\bm{v}_b = R_b^\mathsf{T} \hat{\bm{v}}_b, \bm{\omega}_b = R_b^\mathsf{T} \hat{\bm{\omega}}_b
+\end{align*}
+すると，ローカル座標表現による速度伝播は
+\begin{align*}
+\bm{v}_b &= R_{ab}^\mathsf{T} \bm{v}_a + R_{ab}^\mathsf{T}(\bm{\omega}_a \times \bm{r}_{ab}) + R_{ab}^\mathsf{T} \bm{v}_{ab}\\
+\bm{\omega}_b &= R_{ab}^\mathsf{T} \bm{\omega}_a + R_{ab}^\mathsf{T} \bm{\omega}_{ab}
+\end{align*}
+となる．
+ここで
+\begin{align*}
+X(R, \bm{r}) = \begin{bmatrix}R^\mathsf{T} & -R^\mathsf{T} \bm{r}^\times \\ O & R^\mathsf{T}\end{bmatrix}
+\end{align*}
+と定義し，さらに
+\begin{align*}
+\bm{V}_a = \begin{bmatrix}\bm{v}_a \\ \bm{\omega}_a\end{bmatrix},\,
+\bm{V}_b = \begin{bmatrix}\bm{v}_b \\ \bm{\omega}_b\end{bmatrix},\,
+\bm{V}_{ab} = \begin{bmatrix}\bm{v}_{ab} \\ \bm{\omega}_{ab}\end{bmatrix}
+\end{align*}
+とおくと，
+\begin{align}
+\bm{V}_b = X(R_{ab}, \bm{r}_{ab}) \bm{V}_a + X(R_{ab}, \bm{0}) \bm{V}_{ab}
+\label{vel_prop}
+\end{align}
+と簡潔に書ける．
+%フレームa, b間の相対的な位置・向きが時間的に変化しないならば単に$\bm{V}_b = X_{ba} \bm{V}_a$となる．
+
+変換$X(R, \bm{r})$は以下の基本的な性質を満たす．
+\begin{align}
+\begin{aligned}
+X(R_a, \bm{r}_a) X(R_b, \bm{r}_b)
+&= \begin{bmatrix}R_a^\mathsf{T} & -R_a^\mathsf{T} \bm{r}_a^\times \\ O & R_a^\mathsf{T}\end{bmatrix}
+   \begin{bmatrix}R_b^\mathsf{T} & -R_b^\mathsf{T} \bm{r}_b^\times \\ O & R_b^\mathsf{T}\end{bmatrix} \\
+&= \begin{bmatrix}(R_b R_a)^\mathsf{T} & -(R_b R_a)^\mathsf{T} (\bm{r}_b + R_b \bm{r}_a)^\times \\ O & (R_b R_a)^\mathsf{T}\end{bmatrix} \\
+&= X(R_b R_a, \bm{r}_b + R_b \bm{r}_a)
+\end{aligned}
+\end{align}
+\begin{align}
+X(R, \bm{r})^{-1} &= X(R^\mathsf{T}, -R^\mathsf{T} \bm{r})
+\end{align}
+
+続いて加速度伝播の式を導出する．
+式(\ref{vel_prop_abs})(\ref{angvel_prop_abs})を更に時間微分すると
+\begin{align*}
+\dot{\hat{\bm{v}}}_b
+	&= \dot{\hat{\bm{v}}}_a + \dot{\hat{\bm{\omega}}}_a \times (R_a \bm{r}_{ab}) +
+	\hat{\bm{\omega}}_a \times (\hat{\bm{\omega}}_a \times (R_a \bm{r}_{ab}) + R_a \dot{\bm{r}}_{ab}) +
+	\hat{\bm{\omega}}_a \times (R_a \bm{v}_{ab}) + R_a \dot{\bm{v}}_{ab} \notag\\
+	&= \dot{\hat{\bm{v}}}_a + \dot{\hat{\bm{\omega}}}_a \times (R_a \bm{r}_{ab}) +
+	(\hat{\bm{\omega}}_a \cdot (R_a \bm{r}_{ab}))\hat{\bm{\omega}}_a - ||\hat{\bm{\omega}}_a||^2(R_a \bm{r}_{ab}) +
+	2 \, \hat{\bm{\omega}}_a \times (R_a \bm{v}_{ab}) + R_a \dot{\bm{v}}_{ab} \notag\\
+	&= \dot{\hat{\bm{v}}}_a + \dot{\hat{\bm{\omega}}}_a \times (R_a \bm{r}_{ab}) +
+	(\bm{\omega}_a \cdot \bm{r}_{ab})\hat{\bm{\omega}}_a - ||\bm{\omega}_a||^2(R_a \bm{r}_{ab}) +
+	2 \, \hat{\bm{\omega}}_a \times (R_a \bm{v}_{ab}) + R_a \dot{\bm{v}}_{ab} \\
+\dot{\hat{\bm{\omega}}}_b
+	&= \dot{\hat{\bm{\omega}}}_a + \hat{\bm{\omega}}_a \times (R_a \bm{\omega}_{ab}) + R_a \dot{\bm{\omega}}_{ab}
+\end{align*}
+となる．
+ただしベクトル三重積$\bm{a} \times (\bm{b} \times \bm{c}) = (\bm{a} \cdot \bm{c})\bm{b} - (\bm{a} \cdot \bm{b})\bm{c}$に注意．
+新たに$\hat{\bm{a}}_a := \dot{\hat{\bm{v}}}_a,\, \hat{\bm{\alpha}}_a := \dot{\hat{\bm{\omega}}}_a$, 
+$\hat{\bm{a}}_b := \dot{\hat{\bm{v}}}_b,\, \hat{\bm{\alpha}}_b := \dot{\hat{\bm{\omega}}}_b$,
+および
+$\bm{a}_{ab} := \dot{\bm{v}}_{ab},\, \bm{\alpha}_{ab} := \dot{\bm{\omega}}_{ab}$
+と定義すると，
+\begin{align}
+\hat{\bm{a}}_b &= \hat{\bm{a}}_a + \hat{\bm{\alpha}}_a \times (R_a \bm{r}_{ab}) +
+	(\bm{\omega}_a \cdot \bm{r}_{ab})\hat{\bm{\omega}}_a - ||\bm{\omega}_a||^2(R_a \bm{r}_{ab}) +
+	2 \, \hat{\bm{\omega}}_a \times (R_a \bm{v}_{ab}) + R_a \bm{a}_{ab}
+\label{accel_prop_abs}\\
+\hat{\bm{\alpha}}_b
+	&= \hat{\bm{\alpha}}_a + \hat{\bm{\omega}}_a \times (R_a \bm{\omega}_{ab}) + R_a \bm{\alpha}_{ab}
+\label{angaccel_prop_abs}
+\end{align}
+となる．
+速度と同様にローカル座標表現に変換する．
+まず以下のように定義する．
+\begin{align*}
+\bm{a}_a = R_a^\mathsf{T} \hat{\bm{a}}_a, \, \bm{\alpha}_a = R_a^\mathsf{T} \hat{\bm{\alpha}}_a, \,
+\bm{a}_b = R_b^\mathsf{T} \hat{\bm{a}}_b, \, \bm{\alpha}_b = R_b^\mathsf{T} \hat{\bm{\alpha}}_b
+\end{align*}
+\begin{align*}
+\bm{A}_a = \begin{bmatrix}\bm{a}_a \\ \bm{\alpha}_a\end{bmatrix},\,
+\bm{A}_b = \begin{bmatrix}\bm{a}_b \\ \bm{\alpha}_b\end{bmatrix},\,
+\bm{A}_{ab} = \begin{bmatrix}\bm{a}_{ab} \\ \bm{\alpha}_{ab}\end{bmatrix}
+\end{align*}
+式(\ref{accel_prop_abs})(\ref{angaccel_prop_abs})の両辺に$R_b^\mathsf{T}$をかけて整理すると，次式を得る．
+\begin{align}
+\bm{A}_b = X(R_{ab}, \bm{r}_{ab}) \bm{A}_a + X(R_{ab}, \bm{0}) (\bm{C}_{ab} + \bm{A}_{ab})
+\label{accel_prop}
+\end{align}
+ただし$\bm{C}_{ab}$は
+\begin{align*}
+\bm{C}_{ab} = \begin{bmatrix}
+	(\bm{\omega}_a \cdot \bm{r}_{ab})\bm{\omega}_a - ||\bm{\omega}_a||^2 \bm{r}_{ab} + 2\,\bm{\omega}_a \times \bm{v}_{ab}\\
+	\bm{\omega}_a \times \bm{\omega}_{ab}
+\end{bmatrix}
+\end{align*}
+と表され，コリオリの加速度と遠心加速度から成る．
+
+\section{関節剛体系のモデル}
+関節によってつながれた二つの剛体の機構学的関係式を導出する．
+
+\begin{figure}
+\label{notation}
+\end{figure}
+
+Fig.\,\ref{notation}は関節によってつながれた二つの剛体の位置関係を表わしている．
+$p, c, j, j'$の各添え字は親剛体，子剛体，ソケット（親剛体に取り付けられた関節），プラグ（子剛体に取り付けられた関節）を示す．
+
+\subsection{速度伝播}
+
+各フレーム間の速度の関係は式(\ref{vel_prop})より
+\begin{align*}
+&\bm{V}_j = X(R_{pj}, \bm{r}_{pj}) \bm{V}_p \\
+&\bm{V}_{j'} = X(R_{jj'}, \bm{r}_{jj'}) \bm{V}_j + X(R_{jj'}, \bm{0}) \bm{V}_{jj'}\\
+&\bm{V}_{j'} = X(R_{cj'}, \bm{r}_{cj'}) \bm{V}_c
+\end{align*}
+となる．上式から$\bm{V}_j$, $\bm{V}_{j'}$を消去すると，$\bm{V}_p$から$\bm{V}_c$への速度伝播式
+\begin{align}
+\bm{V}_c &= X(R_{cj'}, \bm{r}_{cj'})^{-1} X(R_{jj'}, \bm{r}_{jj'}) X(R_{pj}, \bm{r}_{pj}) \bm{V}_p
+		 + X(R_{cj'}, \bm{r}_{cj'})^{-1} X(R_{jj'}, \bm{0}) \bm{V}_{jj'}
+\label{vel_prop2}
+\end{align}
+を得る．
+関節速度$\bm{V}_{jj'}$は関節変数$\bm{q}_c$および関節速度$\dot{\bm{q}}_c$を用いて
+\begin{align}
+\bm{V}_{jj'} = J_c(\bm{q}_c) \dot{\bm{q}}_c
+\label{joint_vel}
+\end{align}
+と表わせる．$J_c$は関節の種類によって決まるヤコビ行列である．
+個々の関節の種類に対応するヤコビ行列は\ref{jacobian}節を参照．
+式(\ref{joint_vel})を式(\ref{vel_prop2})に代入することにより
+\begin{align}
+\bm{V}_c = X_{cp} \bm{V}_p + \hat{J}_c \dot{\bm{q}}_c
+\label{vel_prop3}
+\end{align}
+となる．
+ただし
+\begin{align*}
+X_{cp} &= X(R_{cj'}, \bm{r}_{cj'})^{-1} X(R_{jj'}, \bm{r}_{jj'}) X(R_{pj}, \bm{r}_{pj})\\
+X_{cj} &= X(R_{cj'}, \bm{r}_{cj'})^{-1} X(R_{jj'}, \bm{0})\\
+\hat{J}_c &= X_{cj} J_c
+\end{align*}
+である．
+
+\subsection{加速度伝播}
+
+各フレーム間の加速度の関係は式(\ref{accel_prop})より
+\begin{align*}
+&\bm{A}_j = X(R_{pj}, \bm{r}_{pj}) \bm{A}_p + X(R_{pj}, \bm{0}) C_{pj}\\
+&\bm{A}_{j'} = X(R_{jj'}, \bm{r}_{jj'}) \bm{A}_j + X(R_{jj'}, \bm{0}) (C_{jj'} + \bm{A}_{jj'})\\
+&\bm{A}_{j'} = X(R_{cj'}, \bm{r}_{cj'}) \bm{A}_c + X(R_{cj'}, \bm{0}) C_{cj'}
+\end{align*}
+となる．上式から$\bm{A}_j$, $\bm{A}_{j'}$を消去すると，$\bm{A}_p$から$\bm{A}_c$への加速度伝播式
+\begin{align}
+\bm{A}_c &= X(R_{cj'}, \bm{r}_{cj'})^{-1} X(R_{jj'}, \bm{r}_{jj'}) X(R_{pj}, \bm{r}_{pj}) \bm{A}_p \notag\\
+	&+ X(R_{cj'}, \bm{r}_{cj'})^{-1} X(R_{jj'}, \bm{0}) \bm{A}_{jj'} \notag\\
+	&+ X(R_{cj'}, \bm{r}_{cj'})^{-1}(
+		X(R_{jj'}, \bm{r}_{jj'}) X(R_{pj}, \bm{0}) C_{pj} + X(R_{jj'}, \bm{0}) C_{jj'} - X(R_{cj'}, \bm{0}) C_{cj'})
+\label{acc_prop2}
+\end{align}
+を得る．
+一方，式(\ref{joint_vel})を時間微分することにより
+\begin{align}
+\bm{A}_{jj'} = J_c(\bm{q}_c) \ddot{\bm{q}}_c + \dot{J}_c(\bm{q}_c, \dot{\bm{q}}_c) \dot{\bm{q}}_c
+\label{joint_acc}
+\end{align}
+となる．
+式(\ref{joint_acc})を式(\ref{acc_prop2})に代入すると
+\begin{align}
+\bm{A}_c = X_{cp} \bm{A}_p + \hat{C}_{pc} + \hat{J}_c \ddot{\bm{q}}_c
+\label{acc_prop3}
+\end{align}
+を得る．ただし
+\begin{align}
+\hat{C}_{pc} &= X(R_{cj'}, \bm{r}_{cj'})^{-1}\left(
+		X(R_{jj'}, \bm{r}_{jj'}) X(R_{pj}, \bm{0}) C_{pj} + X(R_{jj'}, \bm{0}) C_{jj'} - X(R_{cj'}, \bm{0}) C_{cj'}\right)
+	+ X_{cj} \dot{J}_c \dot{\bm{q}}_c
+\end{align}
+である．
+
+\subsection{Articulated Body Algorithmの導出}
+
+Articulated Body Algorithm (ABA) は，木構造を成す連結剛体系の基本的な性質にもとづいている．
+木構造に関し，剛体$i$の子剛体の集合を$\mathcal{C}_i$と表記する．
+
+\begin{itembox}[l]{\textbf{[定理1]}}
+木構造を成す連結剛体系の各剛体$i$について，次式が成り立つ．
+\begin{align}
+\bm{F}_i = \hat{I}_i \bm{A}_i + \hat{Z}_i
+\label{eq_aba}
+\end{align}
+ここで$\bm{F}_i$は剛体$i$とその親剛体をつなぐ関節から作用する力，$\bm{A}_i$は剛体$i$の加速度である．
+また，行列$\hat{I}_i$とベクトル$\hat{Z}_i$は$\{\hat{I}_c，\, \hat{Z}_c\}$ ($c \in \mathcal{C}_i$)により決定される．
+\end{itembox}
+$\hat{I}_i$は剛体$i$を根とする部分木の慣性を表す行列であり，articulated inertia matrixを呼ばれる．
+また，$\hat{Z}_i$は加速度$\bm{A}_i$が$0$のときに$\bm{F}_i$とつりあう力であることからarticulated bias forceと呼ばれる．
+
+\flushleft{証明)}\\
+\flushleft{[終端ノードのケース]}\\
+剛体$i$について
+\begin{align}
+I_i &= \begin{bmatrix}m_i \bm{1} & O \\ O & J_i \end{bmatrix}, \label{eq_I_initial} \\
+Z_i &= - (\bm{F}_i + \bm{F}^\mathrm{ext}_i)                    \label{eq_Z_initial}
+\end{align}
+とおく．
+ここで$m_i$は剛体$i$の質量，$J_i$は重心に関する慣性テンソル，$\bm{1}$は$3\times3$の単位行列である．
+また，$\bm{F}_i = \begin{bmatrix}\bm{0} \\ -\bm{\omega}_i \times J_i \bm{\omega}_i\end{bmatrix}$はコリオリ力，
+$\bm{F}^\mathrm{ext}_i$はその他の外力である．
+するとツリーの末端にある剛体$i$の運動方程式は次のように書ける．
+\begin{align*}
+I_i \bm{A}_i = \bm{F}^\mathrm{I}_i - Z_i
+\end{align*}
+ただし$\bm{F}^\mathrm{I}_i$は親ノードから関節を介して受ける力で，本来の作用点から剛体$i$のフレームを基準に等価変換したものである．
+このとき
+\begin{align*}
+\hat{I}_i &= I_i\\
+\hat{Z}_i &= Z_i
+\end{align*}
+とおくと式(\ref{eq_aba})が成り立つ．
+
+\flushleft{[中間ノードのケース]}\\
+ツリーの中間に位置する剛体$p$を考える．
+すべての子剛体$c \in \mathcal{C}_p$について$\bm{F}_c = \hat{I}_c \bm{A}_c + \hat{Z}_c$が成り立つとする．
+これに式(\ref{acc_prop3})を代入すると，
+\begin{align}
+\bm{F}_c = \hat{I}_c (X_{cp} \bm{A}_p + \hat{C}_{pc} + \hat{J}_c \ddot{\bm{q}}_c) + \hat{Z}_c
+\label{child}
+\end{align}
+を得る．
+一方，関節トルクを$\bm{\tau}_c$をおくと仮想仕事の原理より以下が成り立つ．
+\begin{align}
+\hat{J}_c^\mathsf{T} \bm{F}_c = \bm{\tau}_c
+\label{joint_torque}
+\end{align}
+式(\ref{child})(\ref{joint_torque})を連立して$\ddot{\bm{q}}$について解くと，
+\begin{align}
+\ddot{\bm{q}}_c = (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1}
+	(\bm{\tau}_c - (\hat{I}_c \hat{J}_c)^\mathsf{T} X_{cp} \bm{A}_p - \hat{J}_c^\mathsf{T} (\hat{I}_c \hat{C}_{pc} + \hat{Z}_c))
+\label{joint_acc2}
+\end{align}
+一方，親ノードにおける運動方程式は以下のように書ける．
+\begin{align}
+\bm{F}_p &= I_p \bm{A}_p + Z_p + \sum_{c = 0}^{C_p} X_{cp}^\mathsf{T} \bm{F}_c
+\label{parent1}
+\end{align}
+右辺の第3項は，親ノードが各子ノードに加える拘束力の反作用力である．
+これに式(\ref{child})(\ref{joint_acc2})を代入することにより，次式を得る．
+\begin{align}
+\bm{F}_p &= \hat{I}_p \bm{A}_p + \hat{Z}_p\\
+\hat{I}_p &= I_p + \sum_{c=0}^{C_p} X_{cp}^\mathsf{T} \left\{
+	\hat{I}_c  - (\hat{I}_c \hat{J}_c)(\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1} (\hat{I}_c \hat{J}_c)^\mathsf{T} \right\} X_{cp}
+\label{eq_I_recurs} \\
+\hat{Z}_p &= Z_p + \sum_{c=0}^{C_p} X_{cp}^\mathsf{T} \left\{
+	\hat{I}_c \hat{C}_{pc} + \hat{Z}_c
+	 + \hat{I}_c \hat{J}_c (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1} (\bm{\tau}_c - \hat{J}_c^\mathsf{T} (\hat{I}_c \hat{C}_{pc} + \hat{Z}_c))\right\}
+\label{eq_Z_recurs}
+\end{align}
+
+以上より，ツリー上の任意の剛体について式(\ref{eq_aba})が成立することが証明された．
+
+\subsection{ABAのアルゴリズム}
+
+\begin{enumerate}
+\item 木構造の末端から根に向かい，式(\ref{eq_I_recurs})(\ref{eq_Z_recurs})により$\hat{I}_i$，$\hat{Z}_i$を計算する
+\item 根剛体について式(\ref{eq_aba})から加速度$\bm{A}_0$を求める
+\item 木構造の根から末端に向かい，まず式(\ref{joint_acc2})より関節加速度$\ddot{q}_i$を求め，次に式(\ref{acc_prop3})より
+剛体の加速度$\bm{A}_i$を求める
+\item 各剛体に対して，加速度を積分して速度，位置を更新する
+\end{enumerate}
+
+\subsection{関節の記述}
+\subsubsection{1軸回転関節}
+
+ソケットのZ軸を回転軸とする．
+\begin{align*}
+	&q \in \Re^1\\
+	&R_{jj'} = R_\mathrm{z}(q) =: \begin{bmatrix}\cos(q) & -\sin(q) & 0\\ \sin(q) & \cos(q) & 0\\ 0 & 0 & 1\end{bmatrix}\\
+	&\bm{r}_{jj'} = \bm{0}\\
+	&J = \begin{bmatrix}0 & 0 & 0 & 0 & 0 & 1\end{bmatrix}^\mathsf{T}
+\end{align*}
+
+\subsubsection{1軸直動関節}
+
+ソケットのZ軸を直動軸とする場合．
+\begin{align*}
+	&q \in \Re^1\\
+	&R_{jj'} = \bm{1}\\
+	&\bm{r}_{jj'} = \begin{bmatrix}0 & 0 & q\end{bmatrix}^\mathsf{T}\\
+	&J = \begin{bmatrix}0 & 0 & 1 & 0 & 0 & 0\end{bmatrix}^\mathsf{T}
+\end{align*}
+	
+\subsubsection{ボールジョイント}
+
+関節座標を$x, y, z$各軸に関する回転角度で表現する．
+\begin{align*}
+	& \bm{q} = [q_x \; q_y \; q_z]^\mathsf{T}\\
+	& R_{jj'} = R_\mathrm{z}(q_z)\,R_\mathrm{y}(q_y)\,R_\mathrm{x}(q_x)\\
+	& \bm{r}_{jj'} = \bm{0}\\
+	& J = \begin{bmatrix}
+		0 & 0 & 0\\ 0 & 0 & 0\\ 0 & 0 & 0\\ \cos(q_y)\cos(q_z) & -\sin(q_z) & 0\\ \cos(q_y)\sin(q_z) & \cos(q_z) & 0\\ -\sin(q_y) & 0 & 1
+		\end{bmatrix}
+\end{align*}
+可動範囲制限はスイング角とツイスト角に関して加える方が使いやすい．
+ここでソケットとプラグの$z$軸が成す角をスイング角とする．
+\begin{align}
+	\theta_\mathrm{swing} := \cos^{-1}(R_{zz})
+\end{align}
+一方，両者の$z$軸に直交する軸に関して$z$軸同士が一致するように回転させた後に$x$軸同士（$y$軸同士でも同じ）が成す角をツイスト角と定義する．
+まず$z$同士を一致させる回転行列は
+\begin{align}
+	\begin{bmatrix}
+		R_{zy}^2 / (1 + R_{zz}) + R_{zz} & - R_{zy}R_{zx} / (1 + R_{zz}) & -R_{zx}\\
+		- R_{zy}R_{zx} / (1 + R_{zz}) & R_{zx}^2 / (1 + R_{zz}) + R_{zz} & -R_{zy}\\
+		R_{zx} & R_{zy} & R_{zz}
+	\end{bmatrix}
+\end{align}
+と与えられる（確かめよ）．したがってツイスト角は
+\begin{align}
+	\theta_{twist} := \cos^{-1}((R_{zy}^2R_{xx} + (1 + R_{zz}) R_{zz}R_{xx} - R_{zy}R_{zx}R_{xy} - (1 + R_{zz}R_{zx}R_{xz})/(1+R_{zz}))
+\end{align}
+すなわち，スイング角は$\bm{q}_{jj'}$の軸ベクトルとソケットのz軸が成す角，ツイスト角は$\bm{q}_{jj'}$の回転角である．	
+
+\subsection{直列連動}
+
+ギアは2つの関節の関節座標に線形な拘束を加える要素である．
+ギアをABAに適切に組み入れることにより，考慮すべき自由度を削減し計算コストを低減できる．
+ただしABAで扱えるのは，ギアが直接の親子関係にある関節同士に作用する場合（直列連動）と，
+共通の親を持つ関節同士に作用する場合（並列連動）のみである．
+より一般的な場合はLCPで扱う．
+
+直列リンクでつながった3つの剛体(それぞれ剛体0, 1, 2）があり，
+剛体0と1，剛体1と2を連結する関節がギアで連動する場合を考える．
+ギア比を$\gamma$とすると関節座標に加わる拘束は$\dot{\bm{q}}_2 = \gamma \dot{\bm{q}}_1$と書ける．
+すると，速度伝播と加速度伝播はそれぞれ次のように書き直される．
+\begin{align}
+	\bm{V}_2 &= X_{21} \bm{V}_1 + \hat{J}_2 \dot{\bm{q}}_2 \\
+		&= X_{21} (X_{10} \bm{V}_0 + \hat{J}_1 \dot{\bm{q}}_1) + \hat{J}_2 \dot{\bm{q}}_2 \\
+		&= (X_{21} X_{10}) \bm{V}_0 + (X_{21} \hat{J}_1 + \gamma \hat{J}_2) \dot{\bm{q}}_1
+\end{align}
+\begin{align}
+	\bm{A}_2 &= X_{21} \bm{A}_1 + \hat{C}_{12} + \hat{J}_2 \ddot{\bm{q}}_2 \\
+		&= X_{21} (X_{10} \bm{A}_0 + \hat{C}_{01} + \hat{J}_1 \ddot{\bm{q}}_1) + \hat{C}_{12} + \hat{J}_2 \ddot{\bm{q}}_2 \\
+		&= (X_{21} X_{10})\bm{A}_0 + (X_{21}\hat{C}_{01} + \hat{C}_{12}) + (X_{21}\hat{J}_1 + \gamma \hat{J}_2)\ddot{\bm{q}}_1
+\end{align}
+このように，ギアによる連動は剛体2が剛体0に直接連結されている場合と同様に扱えることが分かる．
+以降は次節で述べる連動関節に帰着される．
+
+\subsection{並列連動}
+前節までは1つの関節が1組の剛体を連結する場合を考えてきたが，
+1つの関節により複数の剛体が並列に連結される場合を扱えるとうれしいことがたまにある．
+特に前節で述べた直列連動（ギアなどの表現）は並列連動に帰着される．
+
+親剛体$p$に子剛体$c = 1, 2, \dots, C_p$が連結されているとする．
+並列連動により加速度伝播は次式で表現される．
+\begin{align}
+	\bm{A}_c = X_{cp} \bm{A}_p + \hat{C}_{pc} + \hat{J}_c \ddot{\bm{q}} \;\;\;\; (c = 1, 2, \dots, C_p)
+\end{align}
+ここで$\bm{q}$は共通の関節座標である．
+ABAアルゴリズムの修正点を述べる．まず全ての子剛体について$\bm{F}_c = \hat{I}_c \bm{A}_c + \hat{Z}_c$
+が成り立つとする．
+仮想仕事の原理より
+\begin{align}
+	\bm{\tau} = \sum_{c = 1}^{C_p} \hat{J}_c^\mathsf{T} \bm{F}_c
+	\label{joint_torque_parallel}
+\end{align}
+が成り立つ．したがって
+\begin{align}
+	\ddot{\bm{q}} = \left(\sum_{c = 1}^{C_p} \hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c\right)^{-1}
+		\left(\bm{\tau} - \left(\sum_{c = 1}^{C_p} X_{cp}^\mathsf{T} \hat{I}_c \hat{J}_c\right)^\mathsf{T} \bm{A}_p - \sum_{c = 1}^{C_p}\hat{J}_c^\mathsf{T} (\hat{I}_c \hat{C}_{pc} + \hat{Z}_c)\right)
+	\label{joint_acc2_parallel}
+\end{align}
+\begin{align}
+	\hat{I}_p &= I_p + \sum_{c=1}^{C_p} X_{cp}^\mathsf{T} \hat{I}_c X_{cp} 
+		 - \left(\sum_{c=1}^{C_p} X_{cp}^\mathsf{T} \hat{I}_c \hat{J}_c\right)
+		   \left(\sum_{c=1}^{C_p} \hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c\right)^{-1}
+		   \left(\sum_{c=1}^{C_p} X_{cp}^\mathsf{T} \hat{I}_c \hat{J}_c\right)^\mathsf{T} \\
+	\hat{Z}_p &= Z_p + \sum_{c=1}^{C_p} X_{cp}^\mathsf{T} (\hat{I}_c \hat{C}_{pc} + \hat{Z}_c)
+		+ \left(\sum_{c=1}^{C_p} X_{cp}^\mathsf{T} \hat{I}_c \hat{J}_c\right)
+		  \left(\sum_{c=1}^{C_p} \hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c\right)^{-1}
+		  \left(\sum_{c=1}^{C_p} (\bm{\tau}_c - \hat{J}_c^\mathsf{T} (\hat{I}_c \hat{C}_{pc} + \hat{Z}_c))\right)
+\end{align}
+ここでは全ての子剛体が共通の$\bm{q}$で連動するとしたが，より一般的な場合への拡張は容易である．
+
+\subsection{ツリーに属する剛体間の慣性}
+
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[width=40mm]{fig/case_a.eps} &
+\includegraphics[width=40mm]{fig/case_b.eps} &
+\includegraphics[width=40mm]{fig/case_c.eps} \\
+(a) &
+(b) &
+(c)
+\end{tabular}
+\end{center}
+\end{figure}
+
+ABAをLCPなどによる反復型拘束力計算法と組み合わせる場合，
+ツリーに加わる拘束力の微小変化に対してツリーに属する剛体の加速度の微小変化を繰り返し計算することになる．
+
+基本的な計算の流れは以下のようになる．
+拘束力が加わる剛体を剛体$i$とし，拘束力の変化量を$\delta f$とする．
+ツリーに対して拘束力は外力であるので，式(\ref{eq_Z_initial})より$Z_i$の変化量は
+\begin{align*}
+\delta Z_i = - \delta f
+\end{align*}
+となり，同時に式(\ref{eq_Z_recurs})より
+\begin{align*}
+\delta \hat{Z}_i = \delta Z_i
+\end{align*}
+となる．
+次に$\hat{Z}_i$の変化が親剛体に伝播する．
+これは式(\ref{eq_Z_recurs})より
+\begin{align*}
+\delta \hat{Z}_p &= X_{cp}^\mathsf{T} 
+ \left\{
+  \bm{1} - \hat{I}_c \hat{J}_c (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1} \hat{J}_c^\mathsf{T}
+ \right\} \delta \hat{Z}_c
+\end{align*}
+となる．
+この関係式により根剛体の$\delta \hat{Z}_0$まで求める．
+これに対する根剛体の加速度の変化量は式(\ref{eq_aba})より
+\begin{align*}
+\delta \bm{A}_0 = - \hat{I}_0^{-1} \delta \hat{Z}_0
+\end{align*}
+となる．
+今度は加速度伝播式にもとづき下流の加速度変化量を求めていく．
+親剛体と子剛体の加速度変化の伝播式は以下のようになる．
+まず式(\ref{joint_acc2})より
+\begin{align*}
+\delta \ddot{\bm{q}}_c = -(\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1}
+	((\hat{I}_c \hat{J}_c)^\mathsf{T} X_{cp} \delta \bm{A}_p + \hat{J}_c^\mathsf{T} \delta \hat{Z}_c)
+\end{align*}
+となり，次に式(\ref{acc_prop3})より
+\begin{align*}
+\delta \bm{A}_c = X_{cp} \delta \bm{A}_p + \hat{J}_c \delta \ddot{\bm{q}}_c
+\end{align*}
+となる．
+$\ddot{q}_c$を消去すると
+\begin{align*}
+\delta \bm{A}_c = (\bm{1} - \hat{J}_c (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1}(\hat{I}_c \hat{J}_c)^\mathsf{T}) X_{cp} \delta \bm{A}_p
+ - \hat{J}_c (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1} \hat{J}_c^\mathsf{T} \delta \hat{Z}_c
+\end{align*}
+となる．
+さて，ここで
+\begin{align*}
+T_{cp} &= (\bm{1} - \hat{J}_c (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1}(\hat{I}_c \hat{J}_c)^\mathsf{T}) X_{cp}, \\
+S_{cp} &= \hat{J}_c (\hat{J}_c^\mathsf{T} \hat{I}_c \hat{J}_c)^{-1} \hat{J}_c^\mathsf{T} \delta \hat{Z}_c
+\end{align*}
+とおけば上式は簡単に
+\begin{align*}
+\delta \hat{Z}_p &= T_{cp}^\mathsf{T} \, \delta \hat{Z}_c, \\
+\delta \bm{A}_c  &= T_{cp} \, \delta \bm{A}_p - S_{cp} \, \delta \hat{Z}_c
+\end{align*}
+と書ける．
+ここで注意を要するのは，最初に拘束力変化が生じた剛体$i$と根剛体を結ぶ経路上の剛体は零でない$\delta \hat{Z}$を持つのに対し，
+それ以外の剛体については$\delta \hat{Z} = 0$である点である．
+このため，一般に剛体$i$での拘束力変化によって生じる剛体$j$での加速度変化を求めるには，
+剛体$i$と$j$の共通の親剛体$p$を考え，
+\begin{enumerate}
+\item 剛体$i$から剛体$p$への$\delta \hat{Z}$伝播
+\item 剛体$p$から根剛体への$\delta \hat{Z}$伝播
+\item 根剛体から剛体$p$への$\delta \bm{A}$伝播
+\item 剛体$p$から剛体$j$への$\delta \bm{A}$伝播
+\end{enumerate}
+に分解して考える必要がある．
+特殊な場合として剛体$i$が剛体$j$の上流にある場合（このとき剛体$p$は剛体$i$である）と，
+逆に剛体$i$が剛体$j$の下流にある場合（このとき剛体$p$は剛体$j$である）も含まれる．
+
+ここでステップ2と3はまとめて剛体$p$の$\delta \hat{Z}_p$から自身の$\delta \bm{A}_p$への伝播と考えられる．
+これを
+\begin{align*}
+\delta \bm{A}_p = \Theta_p \delta \hat{Z}_p
+\end{align*}
+とおくと，$\Theta_p$は次のように再帰的に求められる．
+まず根剛体に関しては
+\begin{align*}
+\Theta_0 = -\hat{I}_0^{-1}
+\end{align*}
+である．
+また，剛体$p$について$\Theta_p$が既知とすると，その子剛体$c$について
+\begin{align*}
+\delta \bm{A}_c &= T_{cp} \Theta_p \, \delta \hat{Z}_p - S_{cp} \, \delta \hat{Z}_c \\
+                &= (T_{cp} \Theta_p T_{cp}^\mathsf{T} - S_{cp}) \, \delta \hat{Z}_c, \\
+\Theta_c        &= T_{cp} \Theta_p T_{cp}^\mathsf{T} - S_{cp}
+\end{align*}
+となる．
+
+ギアによる連動がある場合も基本的には同様である．
+
+
+\end{document}
+
+\subsection{撃力の伝播}
+
+\subsection{陰積分}
+\begin{tabular}{ll}
+剛体の数 													& 	$N^B$							\\
+剛体のインデックス											&	$i \in \{1, 2, \dots, N^B\}$	\\
+\\
+関節系の数													&	$N^A$							\\
+関節系のインデックス										&	$j \in \{1, 2, \dots, N^A\}$	\\
+関節系$j$の関節の数											&	$N_j$							\\
+関節のインデックス											&	$j'\in \{1, 2, \dots, N_j\}$	\\
+関節系$j$の関節$j'$の変位									&	$\bm{q}_{jj'}$					\\
+関節系に属さない剛体のインデックス集合						&	$\mathcal{B}_0$					\\
+関節系$j$に含まれる剛体のインデックス集合					&	$\mathcal{B}_j$					\\
+関節系$j$のルート剛体のインデックス							&	$\mathcal{B}_{j0}$				\\
+関節系$j$の関節$j'$で親剛体とつながる剛体のインデックス		&	$\mathcal{B}_{jj'}$				\\
+関節系$j$の一般化速度										&	$\dot{\bm{q}}_j = [\bm{V}_{\mathcal{B}_{j0}}, \dot{\bm{q}}_{j1}, \dots, \dot{\bm{q}}_{jN_j}]$	\\
+関節系$j$から剛体$i$へのヤコビアン							&	$\hat{J}_{ji} \;(i \in \mathcal{B}_j, \, \bm{V}_i = \hat{J}_{ji} \dot{\bm{q}}_j)$	\\
+\\
+拘束の数													&	$N^C$							\\
+拘束のインデックス											&	$k = \{1, 2, \dots, N^C\}$		\\
+拘束$k$が作用する剛体のインデックス集合						&	$\mathcal{B}_k$					\\
+拘束$k$の速度												&	$\bm{w}_k$						\\
+拘束$k$の拘束力												&	$\bm{\lambda}_k$				\\
+剛体$i$から拘束$k$へのヤコビアン							&	$J_{ki} \; (i \in \mathcal{B}_k) \;\;\; (\bm{w}_k = \sum_{i \in \mathcal{B}_k} J_{ki} \bm{V}_i)$	\\
+\\
+\end{tabular}
+
+関節系に属さない剛体$i \in \mathcal{B}_0$の運動方程式は
+\begin{align}
+	M_i \dot{\bm{V}}_i = \bm{F}_i + \bm{F}^\mathrm{ext}_i + \sum_{k: i \in \mathcal{B}_k} J_{ki}^\mathsf{T} \bm{\lambda}_k
+\end{align}
+と書ける．
+オイラー積分を施すと
+\begin{align}
+	\bm{V}_i[t+1]
+		&= \bm{V}_i[t] + M_i^{-1}(\bm{F}_i + \bm{F}^\mathrm{ext}_i + \sum_{k: i \in \mathcal{B}_k} J_{ki}^T \bm{\lambda}_k) \varDelta t\\
+		&= \sum_{k: i \in \mathcal{B}_k}
+			\underbrace{\left(M_i^{-1} J_{ki}^T \right)}_{\mbox{$T_{ki}$}}\bm{\lambda}_k \varDelta t
+			 + \underbrace{\left(\bm{V}_i[t] + M_i^{-1}(\bm{F}_i + \bm{F}^\mathrm{ext}_i)\varDelta t\right)}_{\mbox{$\bm{V}^\mathrm{free}_i$}}\\
+\end{align}
+となる．
+$T_{ki}$は拘束力から剛体の速度変化への写像，
+$\bm{V}^\mathrm{free}_i$は拘束力が作用しない場合の次時刻の速度と解釈できる．
+
+一方，関節系$j$の運動方程式は
+\begin{align}
+	M_j \ddot{\bm{q}}_j &= \bm{F}_j + \bm{\tau}_j + \sum_{i \in \mathcal{B}_j} \hat{J}_{ji}^T (\bm{F}^\mathrm{ext}_i + \sum_{k : i \in \mathcal{B}_k} J_{ki}^T \bm{\lambda}_k)
+\end{align}
+と書ける．
+ここで$M_j$は慣性行列，$\bm{F}_j$はコリオリ項，$\bm{\tau}_j$は関節トルクである．
+オイラー積分を施すと
+\begin{align}
+	\dot{\bm{q}}_j[t+1] &= \dot{\bm{q}}_j[t]
+	 + M_j^{-1}(\bm{F}_j + \bm{\tau}_j + \sum_{i \in \mathcal{B}_j} \hat{J}_{ji}^T (\bm{F}^\mathrm{ext}_i + \sum_{k: i \in \mathcal{B}_k} J_{ki}^T \bm{\lambda}_k))\varDelta t\\
+		&= M_j^{-1} \bm{\tau}_j \varDelta t
+		+ \sum_{i,k: i \in \mathcal{B}_j \cap \mathcal{B}_k} \left(M_j^{-1} \hat{J}_{ji}^T J_{ki}^T \right) \bm{\lambda}_k \varDelta t
+		+ \left( \dot{\bm{q}}_j[t] + M_j^{-1}(\bm{F}_j + \sum_{i \in \mathcal{B}_j} \hat{J}_{ji}^T \bm{F}^\mathrm{ext}_i)\varDelta t \right)
+\end{align}
+となる．
+ここで近似的に$\bm{V}_i[t+1] = \hat{J}_{ji} \dot{\bm{q}}_j[t+1]$とすると，
+\begin{align}
+	\bm{V}_i[t+1] 
+		&= \hat{J}_{ji} M_j^{-1} \bm{\tau}_j \varDelta t
+		 + \sum_{i',k: i' \in \mathcal{B}_j \cap \mathcal{B}_k} \left( \hat{J}_{ji} M_j^{-1} \hat{J}_{ji'}^T J_{ki'}^T \right) \bm{\lambda}_k \varDelta t 
+		 + \underbrace{\hat{J}_{ji} \left( \dot{\bm{q}}_j[t] + M_j^{-1}(\bm{F}_j + \sum_{i' \in \mathcal{B}_j} \hat{J}_{ji'}^T \bm{F}^\mathrm{ext}_{i'})\varDelta t \right)}_{\mbox{$\bm{V}^\mathrm{free}_{ji}$}}
+\end{align}
+となる．
+さらに，拘束$k$の時刻$t+1$での速度を近似的に$\bm{w}_k[t+1] = \sum_{i \in \mathcal{B}_k} J_{ki} \bm{V}_i[t+1]$とすると，
+\begin{align}
+	\bm{w}_k[t+1] &=
+	\sum_{i,j:\; i \in \mathcal{B}_j \cap \mathcal{B}_k}J_{ki} \hat{J}_{ji} M_j^{-1} \bm{\tau}_j \varDelta t
+	+ \sum_{k'} \left(
+		\sum_{i \in \mathcal{B}_0 \cap \mathcal{B}_k \cap \mathcal{B}_{k'}} J_{ki} T_{k'i}
+		 + \sum_{i,i',j:\; i \in \mathcal{B}_j \cap \mathcal{B}_k,\, i' \in \mathcal{B}_j \cap \mathcal{B}_{k'}} J_{ki} \hat{J}_{ji} M_j^{-1} \hat{J}_{ji'}^T J_{ki'}^T
+	\right) \bm{\lambda}_{k'} \varDelta t \notag\\
+	&+ \left( \sum_{i \in \mathcal{B}_0 \cap \mathcal{B}_k} J_{ki} \bm{V}^\mathrm{free}_i
+	  + \sum_{i,j:\; i \in \mathcal{B}_j \cap \mathcal{B}_k} J_{ki} \bm{V}^\mathrm{free}_{ji} \right)
+	%\\
+	%&\bm{w}_k[t+1] = \sum_{i \in \mathcal{B}_k} J_{ki}
+	%\left\{ \begin{aligned}
+	%	\sum_{k': i \in \mathcal{B}_{k'}} T_{k'i} \bm{\lambda}_{k'} \varDelta t + \bm{V}^\mathrm{free}_i	& (i \in \mathcal{B}_0)\\
+	%	\sum_{i' \in \mathcal{B}_j} \sum_{k': i' \in \mathcal{B}_{k'}} T_{k'i} \bm{\lambda}_{k'} + \bm{V}^\mathrm{free}_i	& (i \in \mathcal{B}_j)
+	%\end{aligned} \right.
+\end{align}
+
+系全体の速度変数を
+\begin{align}
+	\bm{V} = \begin{bmatrix}\bm{V}_{\mathcal{B}_0} \\ \dot{\bm{q}}_1 \\ \vdots \\ \dot{\bm{q}}_{N^A}\end{bmatrix},\;
+	\bm{\Lambda} = \begin{bmatrix}\bm{\lambda}_1 \\ \bm{\lambda}_2 \\ \vdots \\ \bm{\lambda}_{N^C}\end{bmatrix}
+\end{align}
+
+\newcommand{\Rp}{R_\mathrm{p}}
+\newcommand{\rp}{\bm{r}_\mathrm{p}}
+\newcommand{\Rc}{R_\mathrm{c}}
+\newcommand{\rc}{\bm{r}_\mathrm{c}}
+
+\newcommand{\Rpj}{R_\mathrm{pj}}
+\newcommand{\rpj}{\bm{r}_\mathrm{pj}}
+\newcommand{\Rcj}{R_\mathrm{cj'}}
+\newcommand{\rcj}{\bm{r}_\mathrm{cj'}}
+\newcommand{\Rjj}{R_\mathrm{jj'}}
+\newcommand{\rjj}{\bm{r}_\mathrm{jj'}}
+
+\newcommand{\vsp}{\hat{\bm{v}}}
+\newcommand{\asp}{\hat{\bm{a}}}
+\newcommand{\csp}{\hat{\bm{c}}}
+\newcommand{\fsp}{\hat{\bm{f}}}
+\newcommand{\Isp}{\hat{I}}
+\newcommand{\Zsp}{\hat{Z}}
+\newcommand{\Iart}{\hat{I}^A}
+\newcommand{\Zart}{\hat{Z}^A}
+
+\newcommand{\bq}{\bm{q}}
+\newcommand{\bqd}{\dot{\bm{q}}}
+\newcommand{\bqdd}{\ddot{\bm{q}}}
+\newcommand{\btau}{\bm{\tau}}
+
+\subsection{アリストテレス物理の下でのABA}
+
+S. McMillan and D. E. Orin, Efficient Computation
+of Articulated-Body Inertias Using Successive
+Axial Screws," IEEE Trans. on Robotics and
+Automation, vol. 11, pp. 606{611, 1995.
+
+Alternate formulations for the manipulator inertia matrix
+IJRR 1991 vol10, no1
+
+	\begin{tabular}{ll}
+	$\Rp$		& 静止フレームに対する親剛体の向き \\
+	$\rp$		& 静止フレームに関する親剛体の位置 \\
+	$\Rc$		& 静止フレームに対する子剛体の向き \\
+	$\rc$		& 静止フレームに関する親剛体の位置 \\
+				& \\
+	$\Rpj$		& 親剛体に対するソケットの向き \\
+	$\rpj$		& 親剛体に
+	\end{tabular}
+
+	$R_p, R_c$は$3 \times 3$の正規直交行列，$r_p, r_c$は3次元ベクトルである．
+
+	%ここで$\prj^p, \pRj, \crj^c, \cRj$は各剛体と関節の位置関係を決める定数である．
+	%一方$\jrj, \jRj$は関節の変形を表現するものであり，関節変数$\bm{q}$の関数である．
+
+	各フレーム間の位置・姿勢の関係は次の通り．
+	\begin{align}
+		\bm{r}_c &= \bm{r}_p + R_p \bm{r}_{pj} + R_p R_{pj} \bm{r}_{jj'} - R_p R_{pj} R_{jj'} R_{cj'}^T \bm{r}_{cj'} \\
+		R_c &= R_p R_{pj} R_{jj'} R_{cj'}^T
+	\end{align}
+	上式を時間で微分すると次の速度伝播の式を得る．
+	\begin{align}
+		\bm{v}_c &= \bm{v}_p
+			 + \bm{\omega}_p \times \bm{r}_{pc}
+			 + R_j \bm{v}_{jj'}
+			 - (R_j \bm{\omega}_{jj'}) \times (R_c \bm{r}_{cj'}) \label{vel_prop_abs}\\
+		\bm{\omega}_c &= \bm{\omega}_p + R_j \bm{\omega}_{jj'}	\label{angvel_prop_abs}
+	\end{align}
+	$\dot{R}R^T \bm{p} = \bm{\omega} \times \bm{p} \;\; (\bm{p}\text{:任意})$に注意．
+	ただし$R_j = R_p R_{pj}, \bm{r}_{pc} = \bm{r}_c - \bm{r}_p$．
+	$\bm{v}_p, \bm{v}_c, \bm{\omega}_p, \bm{\omega}_c$はそれぞれ静止フレームから見た親フレームおよび子フレームの速度と角速度である．
+	また，$\bm{v}_{jj'}, \bm{\omega}_{jj'}$は関節入力フレームから見た関節出力フレームの速度と角速度である．
+
+	もう一度微分すると
+	\begin{align}
+		\bm{a}_c &= \bm{a}_p
+			 + \bm{\alpha}_p \times \bm{r}_{pc}
+			 + \bm{\omega}_p \times \bm{v}_{pc}
+			 + \bm{\omega}_p \times R_j \bm{v}_{jj'}
+			 + R_j \bm{a}_{jj'} \\
+			 &- (\bm{\omega}_p \times R_j \bm{\omega}_{jj'}) \times R_c \bm{r}_{cj'}
+			 - R_j \bm{\alpha}_{jj'} \times R_c \bm{r}_{cj'}
+			 - R_j \bm{\omega}_{jj'} \times (\bm{\omega}_c \times R_c \bm{r}_{cj'})
+		\label{acc_prop_abs}\\
+		\bm{\alpha}_c &= \bm{\alpha}_p + \bm{\omega}_p \times R_j \bm{\omega}_{jj'} + R_j \bm{\alpha}_{jj'}
+		\label{angacc_prop_abs}
+	\end{align}
+	ここで$\bm{a}_p, \bm{a}_c, \bm{\alpha}_p, \bm{\alpha}_c$はそれぞれ静止フレームから見た親フレームおよび子フレームの加速度と角加速度である．
+	また，$\bm{a}_{jj'}, \bm{\alpha}_{jj'}$は関節入力フレームから見た関節出力フレームの加速度と角加速度である．
+
+	以上は静止フレームで表わした速度・加速度伝播の式．これをローカルフレーム表現に変換する．
+	式(\ref{vel_prop_abs})(\ref{angvel_prop_abs})に左から$R_c^T$をかけると
+	\begin{align}
+		\bm{v}_c^l &= R_{cp}(\bm{v}_p^l + \bm{\omega}_p^l \times \bm{r}_{pc}^l) + R_{cj} (\bm{v}_{jj'} + \bm{\omega}_{jj'} \times R_{cj}^T (-\bm{r}_{cj'}))
+		\label{vel_prop_local}\\
+		\bm{\omega}_c^l &= R_{cp}\bm{\omega}_p^l + R_{cj}\bm{\omega}_{jj'}
+		\label{angvel_prop_local}
+	\end{align}
+	となる．
+	さてここでspatial transformation matrixを以下のように定義する．
+	\begin{align}
+		X(R, \bm{r}) :=
+			\begin{bmatrix}R & O \\ O & R\end{bmatrix}
+			\begin{bmatrix}I & O \\ \hat{\bm{r}}^T & I\end{bmatrix}
+			= \begin{bmatrix}R & O \\ R\hat{\bm{r}}^T & R\end{bmatrix}
+		\label{sp_mat}
+	\end{align}
+	$\hat{(\cdot)}$は外積演算と等価な歪対称行列である．すなわち$\hat{\bm{a}}\bm{b} = \bm{a} \times \bm{b}$．
+	すると速度伝播(\ref{vel_prop_local})(\ref{angvel_prop_local})は以下のように書ける．
+	\begin{align}
+		\vsp_c = X_{cp} \vsp_p + X_{cj} \vsp_{jj'}
+		\label{vel_prop_sp}
+	\end{align}
+	ただし$X_{cp} = X(R_{cp}, \bm{r}_{pc}^l), \; X_{cj} = X(R_{cj}, R_{cj}^T(-\bm{r}_{cj'}))$．
+	ここで$\vsp_c, \vsp_p, \vsp_j$はそれぞれ子フレーム，親フレーム，関節のspatial velocityであり，次式により与えられる．
+	\begin{align}
+		\vsp_c = \begin{bmatrix}\bm{\omega}_c^l \\ \bm{v}_c^l\end{bmatrix}, \;\;
+		\vsp_p = \begin{bmatrix}\bm{\omega}_p^l \\ \bm{v}_p^l\end{bmatrix}, \;\;
+		\vsp_{jj'} = \begin{bmatrix}\bm{\omega}_{jj'} \\ \bm{v}_{jj'}\end{bmatrix}
+		\label{sp_vel}
+	\end{align}
+
+	同様に式(\ref{acc_prop_abs})(\ref{angacc_prop_abs})に左から$R_c^T$をかけて整理すると
+	\begin{align}
+		\asp_c = X_{cp} \asp_p + X_{cj} \asp_{jj'} + \csp_c
+		\label{acc_prop_sp}
+	\end{align}
+	と書ける．
+	ここで$\asp_c, \asp_p, \asp_{jj'}$はそれぞれ子フレーム，親フレーム，関節のspatial accelerationであり，次式により与えられる．
+	\begin{align}
+		\asp_c = \begin{bmatrix}\bm{\alpha}_c^l \\ \bm{a}_c^l\end{bmatrix}, \;\;
+		\asp_p = \begin{bmatrix}\bm{\alpha}_p^l \\ \bm{a}_p^l\end{bmatrix}, \;\;
+		\asp_{jj'} = \begin{bmatrix}\bm{\alpha}_{jj'} \\ \bm{a}_{jj'}\end{bmatrix}
+		\label{sp_acc}
+	\end{align}
+	また$\csp_c$はspatial coriolis accelerationと呼ばれ，次の通り．
+	\begin{align}
+		\csp_c = \begin{bmatrix}
+			R_{cp}\bm{\omega}_p^l \times R_{cj}\bm{\omega}_{jj'} \\
+			R_{cp}\bm{\omega}_p^l \times R_c^T \bm{v}_{pc} + R_{cp}\bm{\omega}_p^l \times R_{cj}\bm{v}_{jj'}
+				- (R_{cp}\bm{\omega}_p^l \times R_{cj}\bm{\omega}_{jj'}) \times \bm{r}_{cj'}
+				- R_{cj}\bm{\omega}_{jj'} \times (R_c^T \bm{\omega}_c \times \bm{r}_{cj'})
+		\end{bmatrix}
+		\label{sp_coriolis}
+	\end{align}
+
+	式(\ref{vel_prop})の逆方向の速度変換は，
+	\begin{align}
+		X_{ab} := X_{ba}^{-1} = \begin{bmatrix}R_{ab} & \bm{r}_{ab}^\times R_{ab} \\ O & R_{ab}\end{bmatrix}
+	\end{align}
+	を用いて
+	\begin{align}
+		\bm{V}_a = X_{ab} \bm{V}_b - \begin{bmatrix}\bm{v}_{ab} + \bm{r}_{ab} \times \bm{\omega}_{ab} \\ \bm{\omega}_{ab}\end{bmatrix}
+		\label{vel_prop_inverse}
+	\end{align}
+	となる．
+
+	上式にあれとこれとそれを代入して整理すると
+	\begin{align}
+		\bqdd = \left \{\btau - \left(J^T X_{cj}^T \Iart_c X_{cp}\right)\asp_p
+					+ J^T X_{cj}^T \left(\Zart_c + \Iart_c \left(X_{cj} \dot{J}\bqd + \csp_c\right)\right)
+				\right \}
+				\left(J^T X_{cj}^T \Iart_c X_{cj} J\right)^{-1}
+	\end{align}
+	であるから
+	\begin{align}
+		\fsp_p  &= \Iart_p \asp_p + \Zart_p\\
+		\Iart_p &= \Isp_p + X_{cp}^T \Iart_c X_{cp} - X_{cp}^T \Iart_c X_{cj} JJ^T X_{cj}^T \Iart_c X_{cp} (J^T X_{cj}^T \Iart_c X_{cj} J)^{-1}\\
+		\Zart_p &= \Zsp_p + X_{cp}^T(\Zart_c + \Iart_c(\csp_c + X_{cj}\dot{J}\bqd))\notag\\
+				& + X_{cp}^T \Iart_c X_{cj} J (\btau - J^T X_{cj}^T (\Zart_c + \Iart_c(\csp_c + X_{cj}\dot{J}\bqd)))(J^T X_{cj}^T \Iart_c X_{cj} J)^{-1}
+	\end{align}

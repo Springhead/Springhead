@@ -1,0 +1,66 @@
+Import { path = "grFloor.x" }
+//Import { path = "phKumaBody.x" }
+//Import { path = "grKuma.x" }
+Import { path = "MySlimeBunny.x" }
+Import { path = "MySlimeBunny2.x" }
+//Import { path = "MyMonkey.x"}
+
+FWScene fwScene{	
+	/* PHSolid‚ÆGRFrame‚Æ‚ÌŠÖ˜A•t‚¯ */
+	//FWObject fwKuma{
+	//	*soKuma			// PHSolid
+	//	*grFrameKuma	// GRFrame
+	//}
+	FWObject fwFloor{
+		*soFloor		// PHSolid
+		*grFrameFloor	// GRFrame
+	}
+	FWOpObj fwSLBunny{
+		fwPSize = 0.5
+		*slimeBunnyMesh//*grFloor//
+		*phSLBunny
+	}
+	FWOpObj fwSLBunny2{
+		fwPSize = 0.5
+		*slimeBunnyMesh2//*grFloor//
+		*phSLBunny2
+		}
+	
+	/* PHScene“à‚ÌObject */
+	PHScene phScene{
+		//PHSolid soKuma{
+		//	pose = 1 0 0 0  -0.5 10 0
+		//	inertia = 10 0 0   0 1 0  0 0 10
+		//	dynamical = true
+		//	*phKumaBody			// link to xfile(physics model)
+		//}
+		PHSolid soFloor{
+			pose = 1 0 0 0  -0.5 -15.2 0
+			dynamical = false
+			*grFloor		// link to xfile(physics model)
+		}
+		PHOpObj phSLBunny{
+			
+		}
+		PHOpObj phSLBunny2{
+			
+		}
+	}
+	
+	/* GRScene“à‚ÌObject */
+	GRScene grScene{
+		//GRFrame grFrameKuma { *grKuma }
+		GRFrame grFrameFloor{ *grFloor }
+		GRFrame grFrameBunny{ *slimeBunnyMesh}
+		GRFrame grFrameBunny2{ *slimeBunnyMesh2}
+		
+		GRLight light1 {						#SprGRRender.h GRMaterialDesc
+			ambient = 0.9 0.9 0.9 0.0			#Vec4f ambient
+			diffuse = 0.5 0.5 0.5 0.9			#Vec4f diffuse
+			specular = 0.1 0.1 0.1 1.0			#Vec4f specular
+			position = 1.0 5.0 1.0 0.0			#Vec4f position
+			range = 10000.0						#float range
+		}
+		
+	}
+}

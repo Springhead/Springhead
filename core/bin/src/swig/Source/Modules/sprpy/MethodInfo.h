@@ -1,0 +1,55 @@
+#ifndef METHODINFO_H
+#define METHODINFO_H
+
+#include "..\swigmod.h"
+#include "sprpy.h"
+#include <string>
+#include <vector>
+#include <map>
+
+#include "MethodInfoEx.h"
+
+using namespace std;
+namespace SwigSprpy
+{;
+
+struct _MethodInfo
+{
+	Node* node;
+	bool isConstructor;
+	bool isExtend;
+	const char* methodName;
+	const char* pymethodName;
+	const char* returnType;
+	const char* pyreturnType;
+	string methodNameStr;
+	string pymethodNameStr;
+	string returnTypeStr;
+	string pyreturnTypeStr;
+
+	vector<string> params;
+	vector<string> paramNames;
+	string extendCode;  //extendÇ»Ç«Ç≈ó^Ç¶ÇÁÇÍÇÈé¿ëïÉRÅ[Éh
+		
+	//à¯êîÉ`ÉFÉbÉNä÷êîÇÃìoò^
+	string checkfuncCode;
+	//BODYÇÃìoò^
+	string bodyCode;
+	//returnï∂ÇÃìoò^
+	string returnCode;
+	//PARAM(å^+ïœêîñº)ÇÃìoò^
+	string paramCode;
+
+	struct _MethodInfoEx *methodinfoex;
+
+	_MethodInfo();
+	_MethodInfo(const _MethodInfo& obj);
+	void assign(const _MethodInfo& obj);
+
+	static _MethodInfo CreateMethodInfo(Node* node, const char* className);
+};
+typedef _MethodInfo MethodInfo;
+
+}
+
+#endif

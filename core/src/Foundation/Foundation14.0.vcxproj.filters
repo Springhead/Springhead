@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="FoundationStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ScilabStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTDllLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTLoadContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTLoadHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTPath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTPreciseTimer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTQPTimer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTSocket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTTimer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadProg++.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UTCriticalSection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\SprFoundation.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprUTTimer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprScene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTBaseType.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTClapack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTDllLoader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTDllLoaderImpl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTLoadContext.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTLoadHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTPath.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTPreciseTimer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTQPTimer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTTimer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="UTTypeDesc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadProg++.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Foundation\SprUTCriticalSection.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ClapackLibsDef.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{0a65e0aa-7169-40df-9f03-b3e1cad24783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{a32273c8-cc5b-4e34-a363-37ce76309e70}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scilab.i">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
+</Project>

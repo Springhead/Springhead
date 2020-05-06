@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="GraphicsStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRBlendMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRDeviceGL.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRFrame.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRLoadBmp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRRender.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRSdk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRSphere.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GRVertex.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Graphics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRBlendMesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRDeviceGL.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRFrame.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRLoadBmp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRMesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRRender.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRSdk.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GRSphere.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SprGraphics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRBlendMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRFrame.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRRender.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRScene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRSdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRShader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRSphere.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Graphics\SprGRVertex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\shader\fsbase.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="..\..\shader\vsbase.txt">
+      <Filter>shader</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{1c475f92-e945-41bb-90c2-82cb83fce873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{d5c82b76-7ff4-4fdd-8cc1-9225b2609a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{121e02c8-c702-4481-b13a-4d6c00882146}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

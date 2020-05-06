@@ -1,0 +1,14 @@
+# dailybuild.control
+
+#Exclude
+#SolutionAlias
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#UseClosedSrc
+#CppMacro	DAILYBUILD
+#DontBuild
+#DontRun
+#Timeout
+#ExpectedStatus	0
+PipeProcess	GenKbEvent .....q
+#NeedIntervention
+KillProcess	PHShapeGL.exe

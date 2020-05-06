@@ -1,0 +1,783 @@
+% sprcs.tex
+%	Last update: 2017/03/30 F.Kanehori
+\newpage
+\section{sprcs.cpp}
+\label{sec:sprcs}
+
+\subsection{関数一覧(このソースの中にあるものだけ)}
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}top()}.
+		.2 FindNodeR() \RECURSE.
+		.2 get_node_info().
+		.3 debug_break_at().
+		.3 unqualified_name().
+		.3 analyze_syntax().
+		.4 analyze_function().
+		.5 analyze_init_funcargs().
+		.6 analyze_count_funcargs().
+		.5 get_node_info() \DESCRIBED.
+		.5 analyze_error().
+		.5 analyze_skip().
+		.4 analyze_array().
+		.5 analyze_get_id().
+		.5 unqualified_name().
+		.5 analyze_error().
+		.5 analyze_skip().
+		.4 analyze_qualifier().
+		.5 analyze_error().
+		.5 analyze_skip().
+		.4 analyze_vector().
+		.5 analyze_get_id().
+		.5 unqualified_name().
+		.5 analyze_error().
+		.5 analyze_skip().
+		.4 analyze_get_id().
+		.4 unqualified_name().
+		.4 analyze_error().
+		.2 \mc{\footnotesize{(次ページに続く)}}.
+	}
+	\end{minipage}\end{narrow}
+\end{narrow}
+\noindent
+\bf{関数一覧(続き)}
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}top()}.
+		.4 analyze_skip().
+		.3 analyze_type_hook().
+		.4 analyze_type_hook_1().
+		.5 unqualified_name().
+		.3 analyze_name_hook().
+		.4 replace_partial_string().
+		.3 set_type_info().
+		.4 analyze_enum().
+		.5 unqualified_name().
+		.5 cs_qualified_name().
+		.4 analyze_vector() \DESCRIBED.
+		.4 analyze_qualifier() \DESCRIBED.
+		.4 unqualified_name().
+		.4 strip_paren().
+		.4 analyze_cpp_type_repr().
+		.4 analyze_marshaltype().
+		.4 analyze_cs_type_hook().
+		.5 cs_qualified_name().
+		.2 cs_qualified_name().
+		.2 unqualified_name().
+		.2 print_nodes_info().
+		.2 dump_tree() \RECURSE.
+		.2 DescImp().
+		.3 get_node_info() \DESCRIBED.
+		.3 debug_break_at().
+		.3 unqualified_name().
+		.3 generate_new_class().
+		.4 get_struct_info().
+		.5 string_on_heap().
+		.5 FindNodeByAttrR() \RECURSE.
+		.2 \mc{\footnotesize{(次ページに続く)}}.
+	}
+	\end{minipage}\end{narrow}
+\end{narrow}
+\noindent
+\bf{関数一覧(続き)}
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}top()}.
+		.5 get_node_info() \DESCRIBED.
+		.5 make_wrapper_name().
+		.6 wrapper_name_print().
+		.7 make_wrapper_type().
+		.6 make_wrapper_type().
+		.4 is_newable_class().
+		.5 FindNodeR() \RECURSE.
+		.5 get_node_info() \DESCRIBED.
+		.4 is_virtual().
+		.4 generate_constructor().
+		.5 get_node_info() \DESCRIBED.
+		.5 need_generate_constructor().
+		.5 generate_constructor_with_full_members().
+		.6 strip_type_modifier().
+		.7 unqualified_name().
+		.7 strip_type_modifier_1().
+		.7 analyze_type_modifier().
+		.8 strip_type_modifier_1().
+		.4 free_struct_info().
+		.4 generate_type_conversion_operator().
+		.5 get_struct_info() \DESCRIBED.
+		.5 generate_type_conversion_operator_copy_members().
+		.5 free_struct_info().
+		.4 has_print_facility().
+		.5 unqualified_name().
+		.5 force_generate_tostring().
+		.4 print_facility_name().
+		.4 generate_to_string().
+		.5 print_facility_name().
+		.3 FindNode().
+		.2 \mc{\footnotesize{(次ページに続く)}}.
+	}
+	\end{minipage}\end{narrow}
+\end{narrow}
+\noindent
+\bf{関数一覧(続き)}
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}top()}.
+		.3 analyze_cs_type_hook_2().
+		.3 make_wrapper_name() \DESCRIBED.
+		.3 generate_wrapper_accessor().
+		.4 make_wrapper_name() \DESCRIBED.
+		.3 snap_path_info().
+		.3 generate_wrapper_accessor_struct().
+		.4 make_wrapper_type().
+		.4 make_wrapper_name() \DESCRIBED.
+		.4 make_wrapper_name_type_part().
+		.5 strip_type_modifier() \DESCRIBED.
+		.4 strip_type_modifier_1().
+		.4 cs_qualified_name().
+		.3 generate_string_get().
+		.3 generate_string_set().
+		.3 FindNodeByAttrR() \RECURSE.
+		.3 cs_qualified_name().
+		.3 generate_enum_def().
+		.4 get_node_info() \DESCRIBED.
+		.3 analyze_error().
+		.3 dump_node_info() \RECURSE.
+		.3 FindNodeR() \RECURSE.
+		.3 generate_new_class_struct().
+		.4 get_struct_info() \DESCRIBED.
+		.4 is_newable_class() \DESCRIBED.
+		.4 is_virtual().
+		.4 get_node_info() \DESCRIBED.
+		.4 make_wrapper_name() \DESCRIBED.
+		.4 FindNodeByAttrR() \RECURSE.
+		.4 generate_type_conversion_operators().
+		.5 get_struct_info() \DESCRIBED.
+		.2 \mc{\footnotesize{(次ページに続く)}}.
+	}
+	\end{minipage}\end{narrow}
+\end{narrow}
+\noindent
+\bf{関数一覧(続き)}
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}top()}.
+		.5 generate_type_conversion_operator_copy_members().
+		.5 free_struct_info().
+		.4 generate_type_conversion_operator() \DESCRIBED.
+		.2 IfImp().
+		.3 get_node_info() \DESCRIBED.
+		.3 debug_break_at().
+		.3 unqualified_name().
+		.3 generate_new_class() \DESCRIBED.
+		.3 FindNode().
+		.3 analyze_cs_type_hook_2().
+		.3 snap_path_info().
+		.3 FindNodeByAttrR() \RECURSE.
+		.3 overname().
+		.3 wrapper_name_print() \DESCRIBED.
+		.3 generate_string_set().
+		.3 analyze_error().
+		.3 dump_node_info() \RECURSE.
+		.3 generate_string_get().
+		.3 make_wrapper_name() \DESCRIBED.
+		.3 generate_wrapper_accessor_struct() \DESCRIBED.
+		.3 cs_qualified_name().
+		.3 unqualified_name().
+		.3 FindNodeR() \RECURSE.
+		.3 generate_enum_def() \DESCRIBED.
+		.2 TypeMapImp().
+		.3 get_node_info() \DESCRIBED.
+	}
+	\end{minipage}\end{narrow}
+\end{narrow}
+
+\bigskip
+\subsection{ファイルポインタ}
+\vspace{-10pt}
+\begin{longtable}{@{\hspace{-28pt}}ll}
+    ポインタ & 出力先 \\
+    \tt{cpp} & \tt{SprExport/xxx.cpp}に出力\\
+    \tt{cs}  & \tt{SprCSharp/xxx.cs}に出力\\
+    \tt{csp} & \tt{SprImport/xxx.cs}に出力\\
+    \tt{cpp_wrap} & \tt{SprExport/xxx.wrapper.cpp}に出力\\
+    \tt{cs_wrap}  & \tt{SprCSharp/xxx.wrapper.cs}に出力\\
+    \tt{csp_wrap} & \tt{SprImport/xxx.wrapper.csp}に出力\\
+    \tt{gip} & \tt{.info}に出力(デバッグ用情報ファイル)\\
+    \tt{snap_cpp}, \tt{snap_cpp_wrap} & それぞれ\tt{cpp}, \tt{cpp_wrap}のfile scope版\\
+    \tt{snap_cs}, \tt{cnap_cs_wrap}   & それぞれ\tt{cs}, \tt{cs_wrap}のfile scope版\\
+    \tt{snap_csp}, \tt{snap_csp_wrap} & それぞれ\tt{csp}, \tt{csp_wrap}のfile scope版\\
+\end{longtable}
+
+\bigskip
+\subsection{マクロ}
+\begin{narrow}[\WID]
+	\begin{tabular}{ll}
+	    \multicolumn{2}{l}{\tt{ALERT(node_or_str,message)}
+		\hspace{2em}(Alert) の出力}\\
+	    \tt{FREE_UNMANAGED_MEMORY}
+		& stringを返すために\CPP 側に一時的に確保した領域を\\
+		& 解放するコードを有効にする(メモリリークを抑える)\\
+	    \tt{DLLIMPORT} & \tt{DllImport}行の定義\\
+	\end{tabular}
+	\medskip
+
+	\begin{tabular}{ll}
+	    \tt{EQ(p,q)}  & 文字列の比較(一致でtrue)。
+				ポインタが\tt{NULL}だと例外発生\\
+	    \tt{EQc(p,q)} & 文字列の比較(一致でtrue)。
+				ポインタが\tt{NULL}だと\tt{false}\\
+	    \tt{EQ2(p,q)} & 先頭2文字の比較(一致でtrue)。
+				ポインタが\tt{NULL}だと例外発生。\\
+	    \tt{ENDWITH(p,s)} & 第1文字列が第2文字列で終わっているときtrue\\
+	    \tt{BEGINWITH(p,s)} & 第1文字列が第2文字列で始まっているときtrue\\
+	    \tt{ALIGNMENT}   & メモリ境界\\
+	    \tt{MAX_NAMELEN} & 識別子長の上限値(チェックなしで使っている箇所あり)\\
+	    \tt{HACK} & \tt{UTTimerIf::TimerFunc}に関する特別処理\\
+	\end{tabular}
+	\begin{narrow}[\WID]\small{%
+		\begin{description}
+		  \item	[※] マクロ\tt{ALIGNMENT}は
+			\tt{size_t}を\CS のどの型にするかに用いている。
+			ただし\FILE{sprcs.cpp}をビルドするplatformで決まるので、
+				生成された\CS ソースをビルドするplatformと合わせないと
+			結果が間違ってくる。
+			\CS 側の条件付きコンパイルに移行できれば解決する(?)。
+		\end{description}
+	}\end{narrow}
+	\medskip
+	以下はデバッグ用マクロ\\
+	\vspace{.5ex}
+	\begin{tabular}{p{80pt}l}
+	    \tt{SNAP}	& 次のデバッグ処理を有効にする\\
+			& \hspace{10pt}ファイルポインタ\tt{snap_xxx},
+			  \tt{snap_xxx_wrap} (file scope)\\
+			& \hspace{10pt}マクロ\tt{SNAP_ANA_PATHx},
+			  \tt{WRAPPER_NAME_PRINT}\\
+	    \tt{DUMP}	& マクロ\tt{DUMP_NODE_INFO}を有効にする\\
+	    \tt{DUMP_TREE} & ツリーダンプ(簡易版)を出力する(\FILE{.info}ファイル)\\
+	    \tt{SHOW_ALL_TYPES}
+			& Desc/Ifの子ノードで処理をスキップするノードもダンプする\\
+	    \tt{GATHER_INFO}
+			& デバッグ用情報ファイル(\FILE{.info})に情報を出力する\\
+	\end{tabular} \\
+	\begin{tabular}{ll}
+	    \tt{BREAK_NODE_NO}
+			& ノード番号によるブレークポイントを有効にする\\
+			& {\small{※ ノード番号を設定する}}\\
+			& {\small{※ 関数\FUNC{debug_break_at()}に
+				ブレークポイントを設定する必要あり}}\\
+	\end{tabular}\\
+	\begin{tabular}{ll}
+	    \tt{SNAP_ANA_PATH4(a,b,c,d)} & スナップショットマクロ(4引数)\\
+	    \tt{SNAP_ANA_PATH3(a,b,c)}   & スナップショットマクロ(3引数)\\
+	    \tt{WRAPPER_NAME_PRINT(a,b,c,d,e,f)}
+					 & ラッパクラス名のスナップショット\\
+	    \tt{DUMP_NODE_INFO(a,b,c,d)} & ノード情報のダンプ\\
+	\end{tabular}
+\end{narrow}
+
+\bigskip
+\subsection{構造体(新たに定義したもの)}
+\begin{enumerate}
+  \item	ノード解析情報\\
+	\vspace{.5ex}
+	\begin{tabular}{p{5pt}ll}
+	    \multicolumn{3}{l}{\tt{struct nodeinfo_t \{}}\\
+	    & \tt{int no;}	     & ノード番号\UDAGGER{1}\\
+	    & \tt{char* sym_name;}   & ノードのsym:name属性\UDAGGER{1}\\
+	    & \tt{char* name;}       & ノードのname属性\UDAGGER{1}\\
+	    & \tt{char* decl;}       & ノードのdecl属性\UDAGGER{1}\\
+	    & \tt{char* access;}     & ノードのaccess属性\UDAGGER{1}\\
+	    & \tt{char* storage;}    & ノードのstorage属性\UDAGGER{1}\\
+	    & \tt{char* kind;}       & ノードのkind属性\UDAGGER{1}\\
+	    & \tt{char* type;}       & ノードの type 属性\UDAGGER{1}\\
+	    & & \tt{is_function}なら\tt{uq_type}から取り出す\UDAGGER{2}\\
+	    & \tt{char* uq_name;}    & \tt{name}から
+					\STR{::}以前をすべて除いたもの
+					\UDAGGER{1}\\
+	    & \tt{char* uq_type;}    & \tt{type}から
+					\STR{Spr::}と\STR{std::}を除いたもの
+					\UDAGGER{1}\\
+	    & \tt{char* overname;}   & ノードのsym:overname属性\\
+	    &			     &	(関数のオーバーロード)\UDAGGER{1}\\
+	    & \tt{char* cpp_name;}   & \tt{uq_name}、または\tt{name_hook_table}で
+					置き換え\\
+	    &			     & たもの\UDAGGER{4}\\
+	    & \tt{char* cpp_type;}   & 解析した情報から再構成する\UDAGGER{3}\\
+	    & \tt{char* cs_name;}    & \tt{uq_name}の\STR{::}を\STR{_}で置き換えたもの
+					\UDAGGER{4}\\
+	    & \tt{char* cs_type;}    & \tt{TypeConv}テーブルで\tt{uq_type}に対応するもの
+					\UDAGGER{2}\\
+	    & \tt{char* cs_im_type;} & \tt{cs_type}から\STR{::}以前を取り除いたもの
+					\UDAGGER{5}\\
+	    & \tt{char* cs_marshaltype;}
+				     & \tt{TypeConv}テーブルで\tt{uq_type}に
+					対応するもの\\
+	    &			     & \tt{is_array}のときは特別\UDAGGER{6}\\
+	    & \tt{int is_typedef;}   & \tt{kind==typedef}のときtrue\UDAGGER{2}\\
+	    & \tt{int is_variable;}  & \tt{kind==variable}または\tt{uq_type}が基本型、\\
+	    &			     & \tt{void*}、\tt{string}のいずれかのときtrue
+					\UDAGGER{2}\\
+	\end{tabular}
+
+	\begin{tabular}{p{5pt}ll}
+	    & \tt{int is_intrinsic;} & \tt{uq_type}が基本型のときtrue\\
+	    & \tt{int is_vector;}    & \tt{uq_type}が\STR{[std::]vector<...>}ならtrue
+					\UDAGGER{8}\\
+	    & \tt{int is_string;}    & \tt{uq_type==string}または
+					\tt{uq_type==string}なら\\
+	    &			     & true\UDAGGER{2}\\
+	    & \tt{int is_function;}  & \tt{kind==function}かつ
+					\tt{kind!=typedef}なら\\
+	    &			     &	true\UDAGGER{1}\\
+	    & \tt{int is_struct;}    & \tt{kind==struct}のときtrue\UDAGGER{1}\\
+	    &			     & または\tt{TypeConv}テーブルに見つからないとき
+					true\UDAGGER{2}\\
+	    & \tt{int is_array;}     & \tt{array_size}がnon--NULLなら
+					その数値\UDAGGER{7}\\
+	    & \tt{int is_pointer;}   & \tt{pointer_level\orgRA 0}ならtrue\UDAGGER{7}\\
+	    & \tt{int is_reference;} & \tt{decl}が\STR{r.}を含んでいたら
+					true\UDAGGER{7}\UDAGGER{9}\\
+	    & \tt{int is_const;}     & \tt{decl}が\STR{q(const)}を含んでいたら
+					true\UDAGGER{9}\\
+	    & \tt{int is_volatile;}  & \tt{cpp_type}が\STR{q(volatile)}を含んでいたら
+					true\UDAGGER{9}\\
+	    & \tt{int is_enum;}	     & \tt{uq_type}が\STR{enum}で始まっていたら
+					true\UDAGGER{10}\\
+	    & \tt{int is_void;}	     & \tt{uq_type==void}かつ\tt{!is_pointer}なら
+					true\UDAGGER{1}\\
+	    & \tt{int is_void_ptr;}  & \tt{uq_type==void}かつ\tt{is_pointer}なら
+					true\UDAGGER{1}\\
+	    & \tt{int is_bool;}	     & \tt{uq_type==bool}のときtrue\UDAGGER{1}\\
+	    & \tt{int is_static;}    & \tt{storage==static}のときtrue\UDAGGER{1}\\
+	    & \tt{int is_virtual;}   & \tt{storage==virtual}のときtrue\UDAGGER{1}\\
+	    & \tt{char* array_size;} & \tt{decl}が\STR{a(...)}を含んでいたらその数値
+					\UDAGGER{11}\\
+	    & \tt{int pointer_level;}& \tt{decl}が\tt{p.}を含んでいる回数
+					\UDAGGER{7}\UDAGGER{9}\\
+	    & \tt{int num_args;}     & \tt{decl}が\STR{f(...)}を含んでいるとき
+					その引数の個数\UDAGGER{12}\\
+	    & \multicolumn{2}{l}{\tt{struct nodeinfo_t* funcargs;}}\\
+	    &			    & \tt{decl}の\STR{f(...)}を解析して設定
+					\UDAGGER{12}\UDAGGER{13}\\
+	    \multicolumn{3}{l}{\tt{\};}}\\
+	\end{tabular}
+
+	\medskip
+	\let\orgArrayStretch=\arraystretch
+	\def\arraystretch{0.9}
+	{\small{\begin{tabular}{ll}
+	    \UDAGGER{1}  & \tt{get_node_info()}で設定\\
+	    \UDAGGER{2}  & \tt{set_type_info()}で設定\\
+	    \UDAGGER{3}  & \tt{analyze_cpp_type_repr()}で設定\\
+	    \UDAGGER{4}  & \tt{analyze_name_hook()}で設定\\
+	    \UDAGGER{5}  & \tt{cs_type_hook()}で設定\\
+	    \UDAGGER{6}  & \tt{analyze_marshaltype()}で設定\\
+	    \UDAGGER{7}  & \tt{analyze_syntax()}で設定\\
+	    \UDAGGER{8}  & \tt{analyze_vector()}で設定\\
+	    \UDAGGER{9}  & \tt{analyze_type_modifier()}で設定\\
+	    \UDAGGER{10} & \tt{analyze_enum()}で設定\\
+	    \UDAGGER{11} & \tt{analyze_array()}で設定\\
+	    \UDAGGER{12} & \tt{analyze_init_funcargs()}で設定\\
+	\end{tabular}}}
+	\let\arraystretch\orgArrayStretch
+	\bigskip
+
+  \item	データ型変換テーブル(定数)\\
+	\vspace{.5ex}
+	\begin{tabular}{p{5pt}p{100pt}l}
+	    \multicolumn{3}{l}{\tt{struct typeconv_t \{}}\\
+	    & \tt{int kind;}	   & 種別：\\
+	    & &			\hspace{10pt}\small{1: 基本型, 2: void*,
+				3: string, 4: vector, 5: それ以外}\\
+	    & \tt{char* cpp_type;} & \CPP における型表現\\
+	    & \tt{char* cs_type;}  & \CS における型表現\\
+	    & \tt{char* cs_marshaltype;} & \STR{[MarshalAs(UnmanagedType.XX)]}の
+				\STR{XX}に\\
+	    & &			代入する型表現\\
+	    & \tt{int count;}	   & 未使用\\
+	    \multicolumn{3}{l}{\tt{\};}}\\
+	\end{tabular}
+	\medskip
+
+  \item	型修飾子テーブル(定数)\\
+	\vspace{.5ex}
+	\begin{tabular}{p{5pt}p{100pt}l}
+	    \multicolumn{3}{l}{\tt{static const char* type_modifiers[] = \{}}\\
+	    & \tt{"p."},	   & ポインタ\\
+	    & \tt{"r."},	   & 参照\\
+	    & \tt{"q(const).},	   & const\\
+	    & \tt{"qconst."},	   & const\\
+	    & \tt{"q(volatile)."}, & volatile\\
+	    & \tt{"qvolatile."},   & volatile\\
+	    & \tt{NULL} &\\
+	    \multicolumn{3}{l}{\tt{\};}}\\
+	\end{tabular}
+	\medskip
+
+  \item	クラスメンバ変数情報
+	\vspace{-1ex}
+	\begin{longtable}{p{5pt}p{100pt}l}
+	    \multicolumn{3}{l}{\tt{struct struct_info_t \{}}\\
+	    & \tt{char* name;}	    & クラス名\\
+	    & \tt{int num_members;} & メンバ変数個数\\
+	    & \multicolumn{2}{l}{\tt{struct struct_members_info_t** members;}}\\
+	    & &			メンバ情報テーブル\\
+	    \multicolumn{3}{l}{\tt{\};}}\\
+	    \multicolumn{3}{l}{\tt{struct struct_members_info_t \{}}\\
+	    & \tt{Node* node;} & ノードポインタ\\
+	    & \tt{char* name;} & \small{ノード情報のコピー(\FUNC{get_node_info()}で取得)}\\
+	    & \tt{char* cs_name;}    & 同上\\
+	    & \tt{char* cs_type;}    & 同上\\
+	    & \tt{char* cpp_name;}   & 同上\\
+	    & \tt{char* cpp_type;}   & 同上\\
+	    & \tt{int is_bool;}      & 同上\\
+	    & \tt{int is_vector;}    & 同上\\
+	    & \tt{int is_array;}     & 同上\\
+	    & \tt{int is_string;}    & 同上\\
+	    & \tt{int is_struct;}    & 同上\\
+	    & \tt{int is_pointer;}   & 同上\\
+	    & \tt{int is_reference;} & 同上\\
+	    \multicolumn{3}{l}{\tt{\};}}\\
+	\end{longtable}
+	\medskip
+
+  \item	マップ変数(新たに定義したもの)
+	\def\YA{\hspace{5pt}\RARROW\hspace{5pt}}
+	\begin{narrow}[10pt]
+		\tt{map<char*, char*> typedef_map;}
+			\YA\small{key: typedef 名, value: typedef 定義}\\
+		\tt{map<char*, int> class_map;}
+			\YA\small{[key: class/struct 名, value: 1]}\\
+		\tt{map<char*, int> enum_map;}
+			\YA\small{key: enum 名, value: 1}\\
+		\tt{map<char*, int> intf_map;}
+			\YA\small{key: If/IfInfo 名, value: 1}\\
+		\tt{map<char*, int> vintf_map;}
+			\YA\small{key: SPR_VIFDEF 名, value: 1}\\
+		\tt{map<string, int> delegate_key_map;}
+			\YA\small{key: 関数引数名, value: 1}\\
+		\tt{map<string, string> delegate_func_map;}
+			\YA\small{key: 関数引数名, value: 関数引数名}\\
+		\tt{map<string, string> delegate_type_map;}
+			\YA\small{key: 関数引数名, value: 関数型}\\
+		\tt{map<string, string> delegate_args_map;}\\
+			\hspace{100pt}
+			\YA\small{key: 関数引数名, value: 関数引数の引数}\\
+		\tt{map<string, int> signature_map;}
+			\YA\small{key: 関数引数名＋関数引数の引数, value: 1}\\
+		\tt{map<string, string> signature_args_map;}\\
+			\hspace{100pt}
+			\YA\small{key: 関数引数名, value: 関数引数の引数(cast形式)}\\
+		\tt{map<string, int> wrapper_map;}
+			\YA\small{key: wrapper 名, value: 1}\\
+		\tt{map<string, int> fd_pair_map;}
+			\YA\small{key: クラス名－末尾文字, value: 見つけた数}\\
+		\hspace{100pt}
+		\small{※ クラス名の末尾が\STR{f}か\STR{d}のもののみが対象}\\
+	\end{narrow}
+\end{enumerate}
+
+\subsection{処理の概要}
+\def\SPC{3pt}
+
+\subsubsection{DescImp()}
+\begin{enumerate}
+  \item	新しいクラスの生成開始\\
+	すべての子ノード(cdecl)について
+	\begin{narrow}[\WID]
+		\begin{enumerate}\def\labelenumiii{\arabic{enumiii})}
+		  \item	次のノードはスキップする
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	\tt{\%ignore}
+			  \item	変数でない
+			  \item	staticである(ただし\tt{static int}は
+				\tt{const int}にする)
+			  \item	\tt{protected}
+			  \item	\tt{private}
+			  \item	\tt{typedef}された関数ポインタ
+			\end{itemize}
+		  \item	次のような場合分けをしてコードを生成する
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	\tt{vector} or \tt{array}
+			  \item	基本型
+				\begin{itemize}\setlength{\itemindent}{\SPC}
+				  \item	ポインタ
+				  \item	\tt{bool}
+				  \item	その他
+				\end{itemize}
+			  \item	\tt{string}\ \LARROW
+				\hspace{5pt}無駄な\tt{if}のネストがある！
+			  \item	\tt{struct}
+				\begin{itemize}\setlength{\itemindent}{\SPC}
+				  \item	\tt{enum}
+				  \item	ポインタ
+				  \item	その他
+				\end{itemize}
+			  \item	\tt{enum}
+			\end{itemize}
+		\end{enumerate}
+	\end{narrow}
+  \item	クラス直下の\tt{enum}
+  \item	クラス生成終了（
+  \item	\tt{Struct}クラスの生成
+\end{enumerate}
+
+\subsubsection{IfImp()}
+\begin{enumerate}
+  \item	新しいクラスの生成開始\\
+	すべての子ノード(cdecl)について
+	\begin{narrow}[\WID]
+		\begin{enumerate}\def\labelenumiii{\arabic{enumiii})}
+		  \item	次のノードはスキップする
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	関数でない
+			  \item	\tt{private}
+			  \item	\tt{virtual}
+			  \item	\tt{defaultargs}
+			\end{itemize}
+		  \item	関数引数をdelegateするための前処理
+		  \item	tt{typedef}された関数はスキップする
+		\end{enumerate}
+		\medskip
+
+		\it{---SprExport---}
+		\begin{enumerate}\def\labelenumiii{\arabic{enumiii})}
+		  \item	関数定義
+		  \item	仮引数並び
+		  \item	実引数に関する前処理
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	\tt{vector} or \tt{array}
+			  \item	基本型
+			  \item	\tt{string}
+			  \item	\tt{struct}
+			\end{itemize}
+		  \item	関数本体
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	左辺側
+			  \item	右辺側
+			\end{itemize}
+		  \item	関数値に関する処理
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	\tt{vector} or \tt{array}
+			  \item	基本型
+			  \item	\tt{string}
+			  \item	\tt{struct}
+			\end{itemize}
+		\end{enumerate}
+		\medskip
+
+		\it{---SprCSharp---}
+		\begin{enumerate}\def\labelenumiii{\arabic{enumiii})}
+		  \item	関数引数の場合の前処理
+		  \item	関数定義
+		  \item	引数並び
+		  \item	引数に関する前処理
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	\tt{string}
+			  \item	その他
+			\end{itemize}
+		  \item	関数本体
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	左辺側
+			  \item	右辺側
+			\end{itemize}
+		  \item	関数値に関する後処理
+			\begin{itemize}\setlength{\itemindent}{\SPC}
+			  \item	\tt{bool}
+			  \item	\tt{char*}
+			  \item	\tt{string}
+			  \item	\tt{vector} or \it{array}
+			  \item	\tt{struct}
+			  \item	\tt{void}以外
+			\end{itemize}
+		\end{enumerate}
+		\medskip
+
+		\it{---SprImport---}
+		\begin{enumerate}\def\labelenumiii{\arabic{enumiii})}
+		  \item	関数宣言
+		  \item	引数並び
+		\end{enumerate}
+	\end{narrow}
+
+  \item	\tt{enum}
+\end{enumerate}
+
+\subsubsection{generate_new_class_struct()}
+\tt{class Vec3dStruct}など、{f}/{d}ペアをもつクラスの\CS\ local版クラス生成
+
+\subsubsection{generate_type_conversion_operator(),\\
+	       generate_type_conversion_operators(),\\
+	       generate_type_conversion_operator_copy_members()}
+暗黙の型変換定義の生成
+
+\subsubsection{is_newable_class()}
+constructorが\tt{private or protected}なら\tt{new}不可\\
+\CLASS{Spr::IfInfo}も\tt{new}不可
+
+\subsubsection{is_virtual()}
+次のものは\tt{virtual}
+\begin{narrow}[\WID]\CLASS{
+	UTAccessBase, UTTimerProvider,\\
+	FWSceneFactory, FWSdkFactory,\\
+	DRUpp,\\
+	DVInputPort, DVOutputPort, DVOrientation,\\
+	HISpidarCalcBase, HISpidarCalc3Dof, HISpidarCalc6Dof,\\
+	CRSdkFactory
+}\end{narrow}
+            
+\subsubsection{generate_constructor()}
+default constructorは必ず作る\\
+\tt{If}ならcast operatorを作る\\
+\tt{If}以外ならcopy constructor以外で定義されているconstructorを作る
+
+\subsubsection{need_generate_constructor()}
+次のものはconstructorを作る
+\begin{narrow}[\WID]\CLASS{
+	Vec2f, Vec2d, Vec3f, Vec3d, Vec4f, Vec4d,\\
+	Quaternionf, Quaterniond,\\
+	Posef, Posed,\\
+	Matrix3f, Matrix3d,\\
+	Vec2i, Vec3i, Vec6d,\\
+	Curve3f
+}\end{narrow}
+
+\subsubsection{generate_constructor_with_full_members()}
+全メンバを引数にもつconstructorを作る
+
+\subsubsection{has_print_facility()}
+メンバに\FUNC{Print}, \FUNC{print}, \FUNC{operator <<}をもつものは
+\FUNC{ToString()}生成可とする\\
+その他、\FUNC{ToString()}強制生成と判定したものも生成可とする
+
+\subsubsection{force_generate_tostring()}
+次のものは強制的に\FUNC{ToString()}を生成するものとする
+\begin{narrow}
+	\CLASS{Vec}, \CLASS{Quaternion}, \CLASS{Pose},
+	\CLASS{Matrix}, \CLASS{Affine}で始まるクラス\\
+	ただし\CLASS{MatrixExtension}は除く
+\end{narrow}
+
+\subsubsection{generate_to_string()}
+\FUNC{ToString()}関数を生成する
+
+\subsubsection{generate_enum_def()}
+\tt{enum}定義を生成する
+
+\subsubsection{make_wrapper_name(),\\
+	       make_wrapper_type(),\\
+	       make_wrapper_name_type_part()}
+wrapperクラス名を決める
+
+\subsubsection{generate_wrapper_accessor()}
+wrapperクラスのアクセッサを生成する
+
+\subsubsection{generate_wrapper_accessor_struct()}
+wrapperクラスの\CS\ local版クラスを生成する
+
+\subsubsection{generate_string_get(),\\
+	       generate_string_set()}
+\tt{string}のgetter/setter生成のヘルパー
+
+\subsubsection{get_node_info()}
+ノード情報の取得
+
+\subsubsection{unqualified_name()}
+\tt{Spr::}, \tt{std::}を取り除く\\
+\tt{forace==1}なら最後の\tt{:}以前を取り除く
+
+\subsubsection{cs_qualified_name()}
+修飾名の中の\tt{::}を\tt{.}に置き換える
+
+\subsubsection{set_type_info()}
+\tt{type}文字列を解析して
+\begin{narrow}{\tt
+	uq_type, cpp_type, cs_type,\\
+	is_typedef, is_variable, is_intrinsic, is_struct, is_string,\\
+	cs_marshaltype
+}\end{narrow}
+を設定する
+
+\subsubsection{analyze_vector()}
+\tt{type}または\tt{decl}の中の\tt{vector<...>}を解析して型情報を取り出す
+
+\subsubsection{analyze_enum()}
+\tt{enum}の判定をする
+
+\subsubsection{analyze_syntax()}
+\tt{decl}または\tt{type}の解析のトップ
+
+\subsubsection{analyze_get_id()}
+識別子部分の切り出し
+
+\subsubsection{analyze_function(),\\
+	       analyze_array()}
+\tt{function}および\tt{array}の解析をする
+
+\subsubsection{analyze_qualifier()}
+\tt{q(const)}の解析をする
+
+\subsubsection{analyze_type_modifier()}
+型修飾子の解析をする(\FUNC{analyze_qualifier()}と一部重複する)
+
+\subsubsection{strip_type_modifier(),\\
+	       strip_type_modifier_1()}
+型修飾子を取り除く
+
+\subsubsection{analyze_type_hook(),\\
+	       analyze_type_hook_1()}
+\tt{typedef_map}に登録されていたら型情報を置き換える
+
+\subsubsection{analyze_cs_type_hook()}
+\tt{managed $\leftrightarrow$ unmanaged}間でやりとりする情報の型を調整する(\CS 側)
+
+\subsubsection{analyze_cs_type_hook_2()}
+名前のうち\tt{.}以降を取り出す
+
+\subsubsection{analyze_name_hook()}
+名前の置換えをする
+\begin{itemize}
+  \item	\tt{checked}は\CS のreserved wordなので\tt{checked_}とする
+  \item その他、\tt{SprCOLLADA::}, \tt{gimite::}などは取り除く
+\end{itemize}
+
+\subsubsection{replace_partial_string()}
+文字列のうち指定された部分文字列を他の部分文字列で置き換える
+
+\subsubsection{analyze_skip()}
+次に文字\tt{.}が現れるまでスキップする
+
+\subsubsection{analyze_init_funcargs(),\\
+	       analyze_count_funcargs()}
+関数引数解析のための初期処理
+
+\subsubsection{overname()}
+オーバーロード関数の識別
+
+\subsubsection{analyze_cpp_type_repr()}
+\CPP の型表現を構成する
+
+\subsubsection{analyze_error()}
+解析時のエラー処理
+
+\subsubsection{get_struct_info(),\\
+	       free_struct_info()}
+\tt{StructInfo}の作成とメモリの解放
+
+\subsubsection{string_on_heap()}
+heap上にメモリを確保する
+
+\subsubsection{snap_path_info(),\\
+	       dump_node_info(),\\
+	       print_nodes_info(),\\
+	       dump_tree(),\\
+	       debug_break_at()}
+デバッグ用
+
+% end: sprcs.tex

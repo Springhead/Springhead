@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="grvisual.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.1313709"
+     inkscape:cx="470.72142"
+     inkscape:cy="775.65804"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:snap-grids="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1520"
+     inkscape:window-height="862"
+     inkscape:window-x="-32000"
+     inkscape:window-y="-32000"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="レイヤー 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-1-9"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(63.87863,-148.1487)"><flowRegion
+         id="flowRegion2987-7-4"><rect
+           id="rect2989-4-8"
+           width="187.14285"
+           height="31.428572"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-0-8">GRMesh</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(17.714286,-224.85714)"><flowRegion
+         id="flowRegion2987"><rect
+           id="rect2989"
+           width="187.14285"
+           height="31.428572"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991">GRVisual</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-1"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(63.93527,-180.82504)"><flowRegion
+         id="flowRegion2987-7"><rect
+           id="rect2989-4"
+           width="187.14285"
+           height="31.428572"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-0">GRFrame</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-1-9-2-1-5"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(63.90792,-115.25949)"><flowRegion
+         id="flowRegion2987-7-4-4-7-2"><rect
+           id="rect2989-4-8-5-1-7"
+           width="187.14285"
+           height="31.428572"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-0-8-5-1-6">GRCamera</flowPara></flowRoot>    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 46.428571,69.58526 0,157.37091"
+       id="path3128"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 47.285714,95.219326 24.285706,0"
+       id="path3130"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 47.000004,127.79076 24.285706,0"
+       id="path3130-9"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 47.428574,161.2193 24.285706,0"
+       id="path3130-2"
+       inkscape:connector-curvature="0" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-5"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(142.22098,-227.25361)"><flowRegion
+         id="flowRegion2987-1"><rect
+           id="rect2989-2"
+           width="237.85713"
+           height="33.57143"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-01"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM">描画アイテム</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-5-8"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM"
+       transform="translate(251.59124,-185.03626)"><flowRegion
+         id="flowRegion2987-1-7"><rect
+           id="rect2989-2-7"
+           width="237.85713"
+           height="33.57143"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM" /></flowRegion><flowPara
+         id="flowPara2991-01-8"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM">フレーム</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-5-8-3"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(251.59124,-152.8934)"><flowRegion
+         id="flowRegion2987-1-7-8"><rect
+           id="rect2989-2-7-3"
+           width="237.85713"
+           height="33.57143"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-01-8-7"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM">ポリゴンメッシュ</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-5-8-1"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(251.30553,-118.46483)"><flowRegion
+         id="flowRegion2987-1-7-0"><rect
+           id="rect2989-2-7-7"
+           width="237.85713"
+           height="33.57143"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-01-8-3"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM">カメラ</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-1-1"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(64.25566,-82.31909)"><flowRegion
+         id="flowRegion2987-7-7"><rect
+           id="rect2989-4-4"
+           width="187.14285"
+           height="31.428572"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-0-0">GRLight</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-1-9-9"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(64.19902,-49.64275)"><flowRegion
+         id="flowRegion2987-7-4-4"><rect
+           id="rect2989-4-8-8"
+           width="187.14285"
+           height="31.428572"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-0-8-8">GRMaterial</flowPara></flowRoot>    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 47.6061,193.72527 24.28571,0"
+       id="path3130-1"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 47.32039,226.29671 24.28571,0"
+       id="path3130-9-7"
+       inkscape:connector-curvature="0" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-5-8-15"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM"
+       transform="translate(251.91163,-86.53031)"><flowRegion
+         id="flowRegion2987-1-7-2"><rect
+           id="rect2989-2-7-76"
+           width="237.85713"
+           height="33.57143"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM" /></flowRegion><flowPara
+         id="flowPara2991-01-8-1"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM">ライト</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985-5-8-3-4"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       transform="translate(251.91163,-54.38745)"><flowRegion
+         id="flowRegion2987-1-7-8-2"><rect
+           id="rect2989-2-7-3-3"
+           width="237.85713"
+           height="33.57143"
+           x="17.142857"
+           y="265.21933"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
+         id="flowPara2991-01-8-7-2"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:HGPGothicM;-inkscape-font-specification:HGPGothicM">マテリアル</flowPara></flowRoot>  </g>
+</svg>

@@ -1,0 +1,14 @@
+# dailybuild.control
+
+#Exclude
+#SolutionAlias
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#UseClosedSrc
+#CppMacro	DAILYBUILD
+#DontBuild
+#DontRun
+Timeout		15
+#ExpectedStatus	0
+PipeProcess	GenKbEvent .\sh..J.J.G.l.l..Q
+#NeedIntervention
+KillProcess	IK.exe

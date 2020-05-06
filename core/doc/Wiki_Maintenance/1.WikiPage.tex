@@ -1,0 +1,142 @@
+% WikiPage.tex
+%	Last update: 2017/03/06 F.Kanehori
+\newpage
+\section{スクリプトの埋め込み}
+\label{sec:WikiPage}
+
+\noindent
+``開発者向け情報のページ''\,には、次のようなphpスクリプト呼出しが埋め込まれている。
+
+% -----------------------------------------------------------------------
+\subsection{テーブル(今朝のビルドの状況、Samplesのビルドの状況)の作成}
+% -----------------------------------------------------------------------
+\noindent
+引数で指定されたファイルを読んでhtmlテーブルタグを作成する。\\
+呼出し形式：
+\begin{narrow}[0pt]
+\begin{verbatim}
+    #dailybuild_result(
+            /export/home/WWW/docroots/springhead/daily_build,
+            Test.report,
+            result.log, 0, 4)
+    #dailybuild_result(
+            /export/home/WWW/docroots/springhead/daily_build,
+            Test.report,
+            result.log, 4, 2)
+\end{verbatim}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{レビジョン番号および日付の埋め込み(レビジョン \CDOTS との比較)}
+% -----------------------------------------------------------------------
+\noindent
+引数で指定されたファイルを読み、比較の対象となったレビジョンと
+その日付を抽出してインラインで返す。\\
+呼出し形式：
+\begin{narrow}[0pt]
+\begin{verbatim}
+    &dailybuild_result(
+        /export/home/WWW/docroots/springhead/daily_build,
+        Test.report);
+\end{verbatim}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{今朝のビルドの状況(過去のビルドの履歴)}
+% -----------------------------------------------------------------------
+\label{BuildResultOfTheDay}
+\noindent
+開発者向け情報のページで「今朝のビルドの状況（過去のビルドの履歴）」のリンクを辿ると、
+\begin{enumerate}
+  \setlength{\itemsep}{4pt}
+  \item	ページ``\,%
+	\URL{http://springhead.info/wiki/index.php?cmd=edit\&page=今朝のビルドの履歴}
+	\,''に遷移する。
+
+  \item	そこから次の形式でスクリプト build_history が呼び出される。
+	\begin{narrow}[0pt]
+	\begin{verbatim}
+    #build_history(http://springhead.info/wiki/index.php?
+        cmd=build_history&
+        base=/export/home/WWW/docroots/springhead/daily_build&
+        file=History.log&
+        type=1&
+        span=1&
+        unit=month&
+        sort=revision);
+	\end{verbatim}
+	\end{narrow}
+       	※ プラグイン呼出しの引数はurlencodeされていること。\\
+	※ クエリ引数の意味
+	\medskip
+	\begin{narrow}\begin{tabular}{|c|c|l|} \hline
+		引数 & 値 & \multicolumn{1}{c|}{説　明} \\\hline
+		cmd  & \tt{build_history} & 実行するスクリプト名 \\\hline
+		base & \UDAGGER{1}
+		     & \VAR{file}で指定されるファイルのあるディレクトリ \\\hline
+		file & \tt{History.log}
+		     & Springhead2の更新履歴ファイル名\UDAGGER{2} \\\hline
+		type & 1 & `1'なら今朝のビルド、`2'ならSamplesのビルド \\\hline
+		span & 1 & 履歴の表示範囲 \\\hline
+		unit & `month' & 履歴の表示単位 \\\hline
+		sort & `revision' & ソートキー \\\hline
+		\multicolumn{3}{l}{\UDAGGER{1}\hspace{5pt}
+			\tt{/export/home/WWW/docroots/springhaed/daily_build}} \\
+		\multicolumn{3}{l}{\UDAGGER{2}\hspace{5pt}
+			svn logコマンドで出力したもの}
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	引数で指定された「過去のビルドの履歴」ページ(html)が作成され、
+	そこにredirectする。
+\end{enumerate}
+
+\bf{注意}
+\begin{narrow}
+       	このページは、呼び出されると直ちにプラグインを呼び出して遷移を
+	引き起こすため、そのままでは編集することができない。
+	このページを編集するための手順は次のとおり。
+	\begin{enumerate}
+	  \item	スクリプト\FILE{build_history.inc.php}の先頭にある関数 \\
+		\HSKIP \FUNC{build_history_get_options()} \\
+           	のstatic array member \TT{`delayed_jump'}の値を\TT{1}とする。
+		\label{SettingToDelay}
+
+       	  \item	この状態でリンクを辿ればこのページが5秒間表示されるので、
+		その間にWikiの「編集」メニューを押す。
+	  \item	編集が終ったら\ref{SettingToDelay}. で再設定した値を
+		元の値\TT{0}に戻すこと。
+	\end{enumerate}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{Samplesのビルドの状況(過去のビルドの履歴)}
+% -----------------------------------------------------------------------
+次の点を除いて\ref{BuildResultOfTheDay} 今朝のビルドの状況(過去のビルドの履歴)と同じ。
+\begin{narrow}
+	リンクを辿ったときの遷移先：
+	\begin{narrow}
+		\URL{http://springhead.info/wiki/index.php?Samplesのビルドの履歴}
+	\end{narrow}
+	スクリプト呼出しのクエリ引数：
+	\begin{narrow}
+		\tt{type=1} \RARROW \ \tt{type=2}
+	\end{narrow}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{スクリプトのソース}
+% -----------------------------------------------------------------------
+\noindent
+\FILE{/home/WWW/docroots/springhead/wiki/plugin/dailybuild_result.inc.php}
+\begin{narrow}[20pt]\small{%
+	(\ref{sec:DailybuildResult} dailybuild_result.inc.php参照)
+}\end{narrow}
+
+\noindent
+\FILE{/home/WWW/docroots/springhead/wiki/plugin/build_history.inc.php}
+\begin{narrow}[20pt]\small{%
+	(\ref{sec:BuildHistory} build_history.inc.php参照)
+}\end{narrow}
+
+% end: WikiPage.tex

@@ -1,0 +1,224 @@
+% てんぷれ：
+%
+% \texttt{SPRPYTHONPATH}
+%
+% \begin{sourcecode}
+% \end{sourcecode}
+%
+
+\begin{chapterabstract}
+ゲームエンジンUnity上でSpringheadを利用する方法について述べます。この機能は開発中のため、予告なく大きな仕様変更をする場合があります。
+
+専用のDLLをロードすることにより、Springheadの機能をC\#から利用することが可能です。また、SpringheadにはUnityのGameObjectとSpringheadのオブジェクトを接続・同期するための一連のC\#スクリプトが含まれます。
+
+以降では、Unity上でSpringheadを利用するためのDLLと一連のC\#スクリプト群をまとめて SprUnity と呼びます。
+\end{chapterabstract}
+
+\section{Springhead C\# DLLのビルド}
+
+Springheadの機能をC\#で使うためには以下の3つのDLLファイルが必要になります。
+\begin{itemize}
+\item \text{\path{Springhead2\bin\win64\SprExport.dll}}
+\item \text{\path{Springhead2\bin\win64\SprImport.dll}}
+\item \text{\path{Springhead2\bin\win64\SprCSharp.dll}}
+\end{itemize}
+
+これらのDLLはSprUnityアセットには含まれているのでビルドする必要はありませんが、うまく動かない場合や、最新のソースを使いたい場合などは、ビルドする必要があります。これらのファイルをビルドするには、以下のソリューションファイルをVisual Studio 2013で開き、Release構成・x64プラットフォームでビルドします。
+\begin{align*}
+\text{\path{Springhead2\src\SprCSharp\SprCSharp12.0.sln}}
+\end{align*}
+
+
+\section{利用法}
+
+\subsection{環境変数PATHの設定}
+
+Springheadの動作は、\path{Springhead2\bin\win64}フォルダ内のdll群に依存しています。\path{Springhead2\bin\win64}フォルダの絶対パスを環境変数PATHに追加してください。
+
+環境変数の設定を避けたい場合は、Unityプロジェクト内のフォルダ\path{Assets\Springhead\Plugins}に必要なdllを全てコピーするという方法も使えるはずです。
+
+
+\subsection{動くか試してみる}
+
+Unityプロジェクト \path{Springhead2\src\Unity} をUnityエディタで開き、Scenesの中からRigidBodyを選んで開き、ゲームを実行してみてください。
+
+うまく動けば、箱が落ちたり、ボールが転がったりするはずです。
+
+
+\subsection{アセットのエクスポート}
+
+Unityプロジェクト \path{Springhead2\src\Unity} をUnityエディタで開き、AssetsのSpringheadフォルダを右クリックして Export Package を実行します。\footnote{将来的には、最初からエクスポートしたパッケージを配布することになると思います。}
+
+出てきたダイアログでSpringhead以下の全てのフォルダにチェックを入れ、Exportボタンを押し、適当な場所に適当なファイル名で保存します。拡張子は \path{.unitypackage} になります。ここでは、\path{Springhead2\SprUnity.unitypackage} に保存したものとして進めます。
+
+\subsection{自分のUnityプロジェクトにアセットをインポート} \label{sec:importasset}
+
+SprUnityを使いたいプロジェクトをUnityで開き、Assetsを右クリックして Import Package → Custom Package を選びます。ファイル選択ダイアログが開くので、先ほどエクスポートした \path{SprUnity.unitypackage} を選びます。インポート対象は特段の理由がなければ全てのファイルにチェックを入れます。インポートを実行すると、Assets内にSpringheadフォルダができます。
+
+
+\subsection{シーンの作成}
+
+PHSceneに対応するGameObjectを作成する必要があります。GameObjectメニュー → Create Empty を実行します。作ったオブジェクトには分かりやすい名前をつけるとよいです。ここではSpringheadSceneという名前を付けたものとします。
+
+SpringheadSceneオブジェクトを選択し、インスペクタで Add Component → Scripts → PH Scene Behaviour を選びます。これで、SpringheadSceneオブジェクトにPHSceneスクリプトが対応付けられました。PHSceneのプロパティは、PHSceneBehaviourスクリプトインスペクタで Ph Scene Descriptor を展開すると表示されます。重力の向きや各種閾値などをここで変更することができます。
+
+
+\subsection{剛体の作成}
+
+GameObject → 3D Object → Cube などを選び、オブジェクトを作成します。ここでは名前をCubeとします。Cubeオブジェクトは、SpringheadSceneオブジェクトの子オブジェクトとしてください。
+
+次にCubeオブジェクトのインスペクタから、Add Component → Scripts → PH Solid Behaviour を選びます。
+
+PHSolidBehaviourのインスペクタでは、Solid Descriptorを展開することで剛体のパラメータ（質量や、静止するかどうかなど）を設定できます。例えばDynamicalのチェックを外すと、床のように動かないオブジェクトになります。
+
+この時点でゲームを実行すると、箱が落ちていくはずです。
+
+
+\subsection{コリジョンの付与}
+
+Springheadで物理衝突判定を使うには、UnityオブジェクトのColliderとは別に、CDBoxBehaviourなどのスクリプトを紐付ける必要があります。
+
+Cubeオブジェクトを選択し、インスペクタで Add Component → Scripts → CD Box Behaviour を選びます。衝突判定形状のサイズはBox Colliderの大きさが使われます。
+
+Springhead剛体オブジェクトを2個用意し、片方のDynamicalのチェックを外して床とし、ゲームを実行すると、衝突の様子が確認できるでしょう。
+
+
+\subsection{関節の作成}
+
+TBW
+
+\subsection{IKの作成}
+
+TBW
+
+
+
+\section{デバッグの方法}
+
+SprUnityを利用するときに、Springhead DLL内部のデバッグを行いたい場合、DLLをDebug構成でビルドしておく必要があります。
+
+Unityエディタを起動した状態で、Springhead C\# DLLをビルドしたソリューションファイルをVisual Studioで開き、Unity.exeプロセスにアタッチします。この状態でゲームを実行すると、DLL内部でエラーが発生した時にVisual Studioでデバッグを行うことができます。
+
+
+
+\section{SprUnityを開発する方へ}
+
+\subsection{開発用Unityプロジェクト}
+
+SprUnityを開発するためのUnityプロジェクトが \path{Springhead2\src\Unity} にあります。SprUnityに必要なスクリプトはできるだけこのUnityプロジェクト内で開発してください（もし異なるUnityプロジェクトで開発した場合も最終的にこのプロジェクトに含めてください）。
+
+プロジェクトのフォルダ構成は以下の通りです。
+\begin{sourcecode}
++- Scenes/         開発用の各種シーン
++- Springhead/     Springheadアセット一式。このフォルダをエクスポートする想定
+   +- Editor/      SpringheadのためのUnityエディタ拡張スクリプト
+   +- Plugins/     Springhead C# DLLがここに入る
+   +- PHxxxx.cs    PHxxxxを使うためのUnity Script
+   +- ...
+\end{sourcecode}
+
+Springhead C\# DLLをビルドすると\path{Springhead2\bin\win64}に出力されるので、開発用Unityプロジェクトで利用するには\path{Springhead2\src\Unity\Assets\Springhead\Plugins}にコピーする必要があります。
+
+
+\subsection{Behaviour開発の手引き}
+
+Unity上で利用したいSpringheadクラスごとに\footnote{議論の余地あり}Behaviourスクリプトを作り、そのスクリプトにSpringheadオブジェクトの作成・Unityとの同期等を担当させてください。例えば\texttt{PHSolid}を担当するスクリプトは\texttt{PHSolidBehaviour}で、このスクリプトはゲーム開始時にSpringheadシーン内に\texttt{PHSolid}を作成し、1ステップごとに\texttt{PHSolid}の位置に応じてゲームオブジェクトの位置を変更します。
+
+Behaviourスクリプトの各変数・関数の役割を、\texttt{PHSceneBehaviour}を題材に解説します。
+
+\begin{sourcecode}
+using UnityEngine;
+using SprCs;
+
+public class PHSolidBehaviour : SprSceneObjBehaviour {
+\end{sourcecode}
+
+Springheadの機能を利用するのに\texttt{SprCs}名前空間をusingしておくと便利です。
+
+PHSdkやPHSceneの子要素を作成するBehaviourスクリプトは、\texttt{SprSceneObjBehaviour}を継承してください。これによりPHSceneBehaviourを探してPHSceneを取得する\texttt{phScene}プロパティや、\texttt{phSdk}プロパティが使えるようになるほか、インスペクタの値が変更された時に自動的にSpringheadオブジェクトのSetDescが呼ばれる機能などが実装されます。
+
+\begin{sourcecode}
+    public PHSolidDescStruct desc = null;
+
+    public override CsObject descStruct {
+        get { return desc; }
+        set { desc = value as PHSolidDescStruct; }
+    }
+
+    public override void ApplyDesc(CsObject from, CsObject to) {
+        (from as PHSolidDescStruct).ApplyTo(to as PHSolidDesc);
+    }
+
+    public override CsObject CreateDesc() {
+        return new PHSolidDesc();
+    }
+\end{sourcecode}
+
+\texttt{XXXDescStruct}型のpublic変数を作ることで、デスクリプタの内容が設定項目としてインスペクタに表示されます。
+ここでは\texttt{XXXDesc}ではなく\texttt{XXXDescStruct}を利用してください。また、初期値は必ず\texttt{null}として下さい。
+
+SprSceneObjBehaviourを継承するクラスは、\texttt{descStruct}プロパティ、\texttt{ApplyDesc}関数、\texttt{CreateDesc}関数を定義しなければなりません。これらはインスペクタの値が変更されたときに自動でSpringheadオブジェクトに反映されるようにするために必要です（必要が無い場合は中身のない（あるいは\texttt{null}を返す）関数を定義して下さい）。
+
+\begin{sourcecode}
+    public override ObjectIf Build() {
+        PHSolidIf so = phScene.CreateSolid (desc);
+        so.SetName("so:" + gameObject.name);
+
+        Vector3 v = gameObject.transform.position;
+        Quaternion q = gameObject.transform.rotation;
+        so.SetPose (new Posed(q.w, q.x, q.y, q.z, v.x, v.y, v.z));
+
+        return so;
+    }
+\end{sourcecode}
+
+\texttt{Build()}は、ゲーム開始時に、\texttt{Awake()}のタイミングで実行されます\footnote{スクリプトのイベント関数については \url{http://docs.unity3d.com/ja/current/Manual/ExecutionOrder.html} を参照}。
+
+ここでdescに従ってSpringheadオブジェクトを作成し、作成したオブジェクトをreturnしてください。
+
+\texttt{Build()}の戻り値はBehaviourの \texttt{sprObject} プロパティに代入され、Behaviour内部や他のBehaviourからアクセス可能になります。
+
+
+\begin{sourcecode}
+    void Link () {
+        // PHSolid場合は特にやることはない
+    }
+\end{sourcecode}
+
+\texttt{Link()}はあらゆるオブジェクトの\texttt{Build()}より後で呼ばれます。具体的には、\texttt{Build()}が\texttt{Awake()}のタイミングで実行されるのに対し、\texttt{Link()}は\texttt{Start()}のタイミングで実行されます。
+
+全オブジェクトの構築が終了した後に、構築されたオブジェクト同士の関係を設定（``Link''）する作業をここで行います。例えば\texttt{PHIKEndEffector}を\texttt{PHIKActuator}に\texttt{AddChildObject}するなど、全オブジェクト作成後でないと行えないような処理をここに記述します。
+
+\begin{sourcecode}
+    public void Update () {
+        if (sprObject != null) {
+            PHSolidIf so = sprObject as PHSolidIf;
+            if (so.IsDynamical()) {
+                // Dynamicalな剛体はSpringheadのシミュレーション結果をUnityに反映
+                Posed p = so.GetPose();
+                gameObject.transform.position = new Vector3((float)p.px, (float)p.py, (float)p.pz);
+                gameObject.transform.rotation = new Quaternion((float)p.x, (float)p.y, (float)p.z, (float)p.w);
+            } else {
+                // Dynamicalでない剛体はUnityの位置をSpringheadに反映（操作可能）
+                Vector3 v = gameObject.transform.position;
+                Quaternion q = gameObject.transform.rotation;
+                so.SetPose(new Posed(q.w, q.x, q.y, q.z, v.x, v.y, v.z));
+            }
+        }
+    }
+\end{sourcecode}
+
+Updateには、Springheadのシミュレーション結果をUnityのオブジェクトに反映するコードを書いて下さい。
+
+※なお、実際のPHSolidBehaviourでは、UpdateではなくUpdatePose関数が定義され、PHSceneBehaviourのUpdateが各SolidのUpdatePoseを呼ぶようになっています。これは剛体オブジェクトの位置の反映をPHSolidBehaviourのUpdateで行った場合、スキンメッシュの描画がうまくいかないためです。
+
+
+\subsection{スクリプト実行順序の設定}
+
+各Stepにおいて、PHSceneBehaviourは他のPhysics系スクリプトより先に実行される必要があります。新たにスクリプトを追加した場合などは、開発者が適切な実行順序を設定してください。設定したスクリプト実行順序はエクスポートされる情報に含まれるので、SprUnityのユーザは特に気にせず利用できます。
+
+実行順序の設定は Editメニュー → Project Settings → Script Execution Order から行います。
+
+
+
+

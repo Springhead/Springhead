@@ -1,0 +1,90 @@
+rml            H                   Ryumin-Light
+rmlv           V                   Ryumin-Light
+
+gbm            H                   GothicBBB-Medium
+gbmv           V                   GothicBBB-Medium
+
+%%% OTF package
+hminr-h        H                   Ryumin-Light
+hminr-v        V                   Ryumin-Light
+otf-ujmr-h     UniJIS-UTF16-H      Ryumin-Light
+otf-ujmr-v     UniJIS-UTF16-V      Ryumin-Light
+otf-cjmr-h     Adobe-Japan1-6      Ryumin-Light
+otf-cjmr-v     Identity-V          Ryumin-Light
+
+hgothr-h       H                   GothicBBB-Medium
+hgothr-v       V                   GothicBBB-Medium
+otf-ujgr-h     UniJIS-UTF16-H      GothicBBB-Medium
+otf-ujgr-v     UniJIS-UTF16-V      GothicBBB-Medium
+otf-cjgr-h     Adobe-Japan1-6      GothicBBB-Medium
+otf-cjgr-v     Identity-V          GothicBBB-Medium
+
+hminb-h        H                   Ryumin-Light,Bold
+hminb-v        V                   Ryumin-Light,Bold
+otf-ujmb-h     UniJIS-UTF16-H      Ryumin-Light,Bold
+otf-ujmb-v     UniJIS-UTF16-V      Ryumin-Light,Bold
+otf-cjmb-h     Adobe-Japan1-6      Ryumin-Light,Bold
+otf-cjmb-v     Identity-V          Ryumin-Light,Bold
+
+hgothb-h       H                   GothicBBB-Medium,Bold
+hgothb-v       V                   GothicBBB-Medium,Bold
+otf-ujgb-h     UniJIS-UTF16-H      GothicBBB-Medium,Bold
+otf-ujgb-v     UniJIS-UTF16-V      GothicBBB-Medium,Bold
+otf-cjgb-h     Adobe-Japan1-6      GothicBBB-Medium,Bold
+otf-cjgb-v     Identity-V          GothicBBB-Medium,Bold
+
+otf-ucmr-h     UniGB-UTF16-H       STSong-Light
+otf-ucmr-v     UniGB-UTF16-V       STSong-Light
+otf-ccmr-h     Adobe-GB1-5         STSong-Light
+otf-ccmr-v     Identity-V          STSong-Light
+
+%otf-ucgr-h     UniGB-UTF16-H      !AdobeHeitiStd-Regular.otf
+%otf-ucgr-v     UniGB-UTF16-V      !AdobeHeitiStd-Regular.otf
+%otf-ccgr-h     Adobe-GB1-5        !AdobeHeitiStd-Regular.otf
+%otf-ccgr-v     Identity-V         !AdobeHeitiStd-Regular.otf
+
+otf-utmr-h     UniCNS-UTF16-H      MSung-Light
+otf-utmr-v     UniCNS-UTF16-V      MSung-Light
+otf-ctmr-h     Adobe-CNS1-5        MSung-Light
+otf-ctmr-v     Identity-V          MSung-Light
+
+otf-utgr-h     UniCNS-UTF16-H      MHei-Medium
+otf-utgr-v     UniCNS-UTF16-V      MHei-Medium
+otf-ctgr-h     Adobe-CNS1-5        MHei-Medium
+otf-ctgr-v     Identity-V          MHei-Medium
+
+otf-ukmr-h     UniKS-UTF16-H       HYSMyeongJo-Medium
+otf-ukmr-v     UniKS-UTF16-V       HYSMyeongJo-Medium
+otf-ckmr-h     Adobe-Korea1-2      HYSMyeongJo-Medium
+otf-ckmr-v     Identity-V          HYSMyeongJo-Medium
+
+otf-ukgr-h     UniKS-UTF16-H       HYGoThic-Medium
+otf-ukgr-v     UniKS-UTF16-V       HYGoThic-Medium
+otf-ckgr-h     Adobe-Korea1-2      HYGoThic-Medium
+otf-ckgr-v     Identity-V          HYGoThic-Medium
+
+hiramin-w3-h   Adobe-Japan1-6     !HiraMinProN-W3.otf
+hiramin-w3-v   Identity-V         !HiraMinProN-W3.otf
+hiramin-w6-h   Adobe-Japan1-6     !HiraMinProN-W6.otf
+hiramin-w6-v   Identity-V         !HiraMinProN-W6.otf
+hirakaku-w3-h  Adobe-Japan1-6     !HiraKakuProN-W3.otf
+hirakaku-w3-v  Identity-V         !HiraKakuProN-W3.otf
+hirakaku-w6-h  Adobe-Japan1-6     !HiraKakuProN-W6.otf
+hirakaku-w6-v  Identity-V         !HiraKakuProN-W6.otf
+hiramaru-w4-h  Adobe-Japan1-6     !HiraMaruProN-W4.otf
+hiramaru-w4-v  Identity-V         !HiraMaruProN-W4.otf
+
+%%% UTF package
+hmr            H                   Ryumin-Light
+hmrv           V                   Ryumin-Light
+unijmin-h      UniJIS-UTF16-H      Ryumin-Light
+unijmin-v      UniJIS-UTF16-V      Ryumin-Light
+cidmin-h       Adobe-Japan1-6      Ryumin-Light
+cidmin-v       Identity-V          Ryumin-Light
+
+hkb            H                   GothicBBB-Medium
+hkbv           V                   GothicBBB-Medium
+unijgoth-h     UniJIS-UTF16-H      GothicBBB-Medium
+unijgoth-v     UniJIS-UTF16-V      GothicBBB-Medium
+cidgoth-h      Adobe-Japan1-6      GothicBBB-Medium
+cidgoth-v      Identity-V          GothicBBB-Medium

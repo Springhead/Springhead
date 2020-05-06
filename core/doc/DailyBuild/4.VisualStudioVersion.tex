@@ -1,0 +1,69 @@
+% VisualStudioVersion.tex
+%	Last update: 2017/03/13 F.Kanehori
+\newpage
+\section{Visual Studioのバージョン}
+\label{sec:RoutineWork}
+
+\noindent
+現在サポートしているVisual stduioは、
+\begin{narrow}
+	Visual Studio 2015 (Platform Toolset v140) \\
+	Visual Studio 2013 (Platform Toolset v120) \\
+	Visual Studio 2010 (Platform Toolset v100)
+\end{narrow}
+である。
+現在の主たるメンテナンス対象バージョンは Visual Studio 2013 であるが、
+DailyBuild はこれらのいずれのバージョンでも実行できるようにメンテナンスする
+必要がある
+(他のバージョンおよび他の構成の\BUILDANDTEST はDailyBuildとは別途行なう必要がある)。
+
+\vspace{-.5ex}
+\begin{description}
+  \item	[※]
+	他にVisual Studio 2008とVisual Studio 2012のソリューションファイルもあるが、
+	これらは最新の状態にはメンテナンスされていない。
+	今後もメンテナンスする必要はない。
+\end{description}
+
+\medskip
+\noindent
+特に次の場合に注意すること。
+\begin{enumerate}
+  \item	ヘッダファイルまたはソースファイルが追加・削除された場合 \\
+	プロジェクトファイルへの反映が、開発者が使用しているVisual Studioの
+	バージョンのみに限られてコミットされていることが多いで、
+	すべてが同じとなるようプロジェクトファイルをメンテナンスする必要がある。
+	\begin{description}
+	  \item	[※]
+		[参考]フォルダにある\FILE{DependCheckAll.bat}を
+		srcディレクトリで実行すると依存ファイルの差分が分かる。
+		ただし完全ではないかもしれない。
+	\end{description}
+
+  \item	新しいテストが追加された場合 \\
+	\tt{src/tests}または\tt{src/Samples}の下に新しいディレクトリが作られて
+	そこに追加された場合には、基本的には自動で組み込まれる。
+	ただし、ディレクトリ名とソリューション名とが異なるケースなどでは
+	うまく働かないので対処が必要である。
+	\begin{description}
+	  \item	[※]
+		``\ref{subsubsec:BuildVC} BuildVC.bat''を参照のこと。
+	\end{description}
+
+  \item	Wikiの「今朝のビルド」欄にある「レビジョンnnnn (yyyy/mm/dd)との比較」の
+	比較の対象となるレビジョンは、
+	\begin{narrow}
+		\verb|"D:\DailyBuild\Springhead2\test\Minitoring\etc\revision.old"| \\
+		\verb|"D:\DailyBuild\Springhead2\test\Minitoring\etc\revision.new"|
+	\end{narrow}
+	の二つのファイルで指定されている。
+	これらの比較は、テスト実行が出力するテキストの相違から機能・動作の変化を
+	捉えるための手掛かりとして実施している。
+	\begin{description}
+	  \item	[※]
+		``\ref{subsec:MakeReport} MakeReport.bat''の「関連ファイル」を
+		参照のこと。
+	\end{description}
+\end{enumerate}
+
+% end: VisualStudioVersion

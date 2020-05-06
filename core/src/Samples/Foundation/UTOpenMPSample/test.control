@@ -1,0 +1,14 @@
+# dailybuild.control
+
+#Exclude
+#SolutionAlias
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#UseClosedSrc
+#CppMacro	DAILYBUILD
+#DontBuild
+#DontRun
+#Timeout
+#ExpectedStatus	0
+PipeProcess	python $(BIN)/CatArgs.py -stdout 10\n10\n\n -kbevent \n
+#NeedIntervention
+#KillProcess

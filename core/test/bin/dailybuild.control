@@ -1,0 +1,25 @@
+# dailybuild.control
+
+#Exclude
+#Decend
+#SolutionAlias
+
+#Compile
+#UseClosedSrc
+#CppMacro	DAILYBUILD
+#CompileLog
+#CompileErrLog
+
+#Run
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#RunLog
+#RunErrLog
+#Timeout
+#ExpectedStatus	0
+#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#NeedIntervention
+#KillProcess
+
+#[dailybuild]
+
+#[all]

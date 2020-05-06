@@ -1,0 +1,92 @@
+ 1. % cd ./core/bin/src/swig
+ 2. % autoscan
+ 3. % mv configure.scan configure.ac-org
+    % cp configure.ac-org configure.ac
+    % vi configure.ac
+
+    ----------------------------------------
+    diff configure.ac-org configure.ac
+    ----------------------------------------
+    5c5,6
+    < AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+    ---
+    > AC_INIT([eswig], [2.0.4], [test@domain])
+    > AM_INIT_AUTOMAKE
+
+    10a12
+    > AC_PROG_CPP
+    11a14
+    > AC_PROG_YACC
+
+    31c34
+    < AC_OUTPUT
+    ---
+    > AC_OUTPUT(Makefile)
+    ----------------------------------------
+
+ 4. mv autogen.sh autogen.sh-org
+    cp autogen.sh-org autogen.sh
+    vi autogen.sh
+
+    ----------------------------------------
+    diff autogen.sh-org autogen.sh
+    ----------------------------------------
+    15c15
+    < cd CCache && ${AUTORECONF-autoreconf}
+    ---
+    > #cd CCache && ${AUTORECONF-autoreconf}
+    ----------------------------------------
+
+ 5. % vi Makefile.am
+
+    ----------------------------------------
+    cat Makefile.am
+    ----------------------------------------
+    SUBDIRS = Source
+    DIST_SUBDIRS = $(SUBDIRS)
+    ----------------------------------------
+
+ 6. % mv Source/Makefile.am Source/Makefile.am-org
+    % cp Source/Makefile.am-org Source/Makefile.am
+    % vi Source/makefile.am
+    
+    ----------------------------------------
+    diff Source/Makefile.am-org Source/Makefile.am
+    ----------------------------------------
+    9c9
+    < SWIG_CXX_DEFS = @SWILL@
+    ---
+    > #SWIG_CXX_DEFS = @SWILL@
+
+    72a73,74
+    > 		Modules/dll.cpp			\	<-- don't insert
+    > 		Modules/spr.cpp			\
+
+    94c96
+    < eswig_LDADD   = @SWIGLIBS@
+    ---
+    > #eswig_LDADD   = @SWIGLIBS@
+    ----------------------------------------
+
+ 7. % mkdir -p Tools/config
+ 8. % cp ./Missing-Tools/config/a[cx]* Tools/config
+ 9. % cp /usr/bin/shtool .
+10. % chmod +x autogen.sh
+
+11. % touch NEWS README AUTHORS ChangeLog
+12. % autoreconf -i
+13. % ./autogen.sh
+14. % ./configure CPPFLAGS=-Wwrite-strings
+15. % make
+16. % cp ./swig ../../swig/
+
+
+newly installed packages
+
+  243  sudo apt-get install autoscan
+  244  sudo apt-get install aclocal
+  248  sudo apt-get install autoconf automake libtool
+  254  sudo apt-get install dh-autoreconf
+  272  sudo apt-get install shtool
+  276  sudo apt-get install bison
+

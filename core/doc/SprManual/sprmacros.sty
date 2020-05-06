@@ -1,0 +1,134 @@
+\makeatletter
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% 参照
+% 
+\newcommand{\Fig}[1]{Fig\,\ref{fig_#1}}
+\newcommand{\Table}[1]{Table\,\ref{table_#1}}
+\newcommand{\式}[1]{式(\ref{eqn:#1})}
+\newcommand{\節}[1]{第\ref{sec_#1}節}
+\newcommand{\章}[1]{第\ref{chap_#1}章}
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% 図
+% 
+\newif\ifnoeps
+\newenvironment{fig}{\begin{figure}[h]\begin{center}}{\end{center}\end{figure}}
+\newcommand{\labelcap}[2]{\caption{#2}\label{fig_#1}}
+\newcommand{\epsopt}[2]{\ifnoeps \else \includegraphics[#2]{fig/#1.eps} \fi}
+\newcommand{\epscapopt}[3]{\epsopt{#1}{#3}\labelcap{#1}{#2}}
+\newcommand{\epscap}[2]{\epscapopt{#1}{#2}{width=0.6\hsize,clip}}
+\newcommand{\eps}[1]{\epsopt{#1}{width=0.6\hsize,clip}}
+
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% 色
+% 
+
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{verylightgray}{gray}{0.95}
+
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% 文書スタイル
+% 
+
+\newenvironment{chapterabstract}{%
+\gtfamily
+}{%
+\vskip 0.5\baselineskip
+}
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% 解説付き関数リファレンス
+% 
+
+\newenvironment{reference}[1]{%
+\def\FrameCommand{\textcolor{lightgray}{\vrule width 0.5zw} \hspace{5pt}}% 
+\MakeFramed {\advance\hsize-\width \FrameRestore}
+{\parindent=0truept{\ttfamily\bfseries #1}\sffamily クラス}
+\hrule height0.75pt
+\begin{description}
+}{%
+\end{description}
+\endMakeFramed
+}
+
+\newcommand{\classmember}[1]{%
+\item[\ttfamily #1] ~
+
+}
+
+\newcommand{\Plus}{\vspace{-0.4\baselineskip}\nopagebreak}
+
+\newcommand{\referencetitle}{}
+
+% \newcommand{\referencetitle}{%
+% {\parindent=0truept%
+% \begin{picture}(0,0)
+%   \put(0,0){\color[gray]{0.4}\rule[-0.31zw]{\linewidth}{1.4zw}}
+% \end{picture}%
+% {\color{white}\sffamily\bfseries Reference}}
+% }
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% 関数リファレンス一覧
+% 
+
+\newenvironment{lightreference}[1]{%
+\def\FrameCommand{\textcolor{lightgray}{\vrule width 0.5zw} \hspace{0pt}}% 
+\MakeFramed {\advance\hsize-\width \FrameRestore}
+\begin{tabular}{lll}
+\multicolumn{3}{l}{\texttt{#1}} \\ \midrule
+}{
+\end{tabular}
+\endMakeFramed
+}
+
+\newcommand{\member}[2]{\multicolumn{2}{l}{\texttt{#1}} & #2 \\}
+
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% ソースコード
+% 
+
+\newenvironment{sourcecode}{%
+\VerbatimEnvironment
+\def\FrameCommand{\hspace{2zw} \fcolorbox{lightgray}{lightgray}}%
+\MakeFramed {\advance\hsize-\width \FrameRestore}
+\small
+\baselineskip = 0.9\baselineskip
+\begin{Verbatim}
+}{
+\end{Verbatim}
+\small
+\baselineskip = 0.9\baselineskip
+\endMakeFramed
+}
+
+
+% --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+%
+% tips
+% 
+
+\newenvironment{tips}{
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.8\hsize} {\bfseries tips} \vskip 0.3\baselineskip \gtfamily \footnotesize %
+}{%
+\end{minipage}
+\end{Sbox}
+\fcolorbox{lightgray}{lightgray}
+\TheSbox
+\end{center}
+}
+
+\makeatother

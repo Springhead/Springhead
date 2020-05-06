@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="FrameworkStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWFemMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWFemMeshNew.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWGLUI.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWGLUT.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWHapticPointer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWOldSpringheadNodeHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWOldSpringheadStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWOpObj.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWOptimizer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWSdk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWSkeletonSensor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWSprTetgen.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWWin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWOPHapticHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWConsoleDebugMonitor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWTrajectoryPlanner.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWStaticTorqueOptimizer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Framework.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameworkDecl.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWFemMesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWFemMeshNew.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWGLUI.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWGLUT.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWGraphicsHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWHapticPointer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWObject.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWOldSpringheadDecl.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWOldSpringheadNode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWOldSpringheadNodeHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWOpObj.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWSdk.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWSkeletonSensor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWSprTetgen.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWWin.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SprFramework.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="SprFrameworkDecl.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWApp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWEditor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWFemMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWFemMeshNew.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWHapticPointer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWOpObj.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWOptimizer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWScene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWSdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWSkeletonSensor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWWin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FWOpHapticHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Framework\SprFWConsoleDebugMonitor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FWOptimizer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWStaticTorqueOptimizer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="FWTrajectoryPlanner.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{bd680a3a-bc71-4a80-a93e-01d2d3eb4083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1f157d2f-d658-44a9-8c19-f529ec37d868}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
