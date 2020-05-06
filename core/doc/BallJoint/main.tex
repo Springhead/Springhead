@@ -1,0 +1,60 @@
+\documentclass{jarticle}
+\usepackage{amsmath, amssymb, bm}
+
+\title{ボールジョイントの変換と可動範囲}
+\author{tazz}
+\date{}
+
+\setlength{\oddsidemargin}{0mm}
+\setlength{\textwidth}{160mm}
+
+\begin{document}
+\maketitle
+
+\begin{itemize}
+\item 13/10/08 最終更新
+\end{itemize}
+
+\section{本文}
+
+ボールジョイントの回転は基本的にソケットに対するプラグの回転をquaternionで表現するが，
+可動範囲などを指定する場合にはquaternion表現よりも3次元ユークリッド空間でパラメータ表現する方が便利である．
+SpringheadではSwing/Twist表現（以下S/T表現）と呼んでいるパラメータ表現を採用している．
+回転の手順は
+\begin{enumerate}
+\item xy面上のスイング軸に関してスイング角だけ回転
+\item 回転後の座標系のz軸に関してツイスト角だけ回転
+\end{enumerate}
+となる．
+オイラー角やヨー・ピッチ・ロール表現が三つの回転の合成であるのに対して二つの回転の合成で済むので式が簡単になるのが利点である．
+スイング軸がx軸に対して成す角をスイング方位角と呼ぶ．
+スイング方位角，スイング角およびツイスト角をそれぞれ$\theta^\mathrm{d}$，$\theta^\mathrm{s}$，$\theta^\mathrm{t}$とおき，
+これらをまとめて関節パラメータ$\theta = [\theta^\mathrm{d}; \, \theta^\mathrm{s}; \, \theta^\mathrm{t}]$とする．
+
+べクトル$\eta$を軸とした角度$\theta$の回転を表すquaternionを$q(\eta, \theta)$と書く．
+するとS/T表現による回転は
+\begin{align}
+\begin{aligned}
+q^\mathrm{st}(\theta^\mathrm{d}, \theta^\mathrm{s}, \theta^\mathrm{t}) \\
+&= q\left( \begin{bmatrix}\cos \theta^\mathrm{d} \\ \sin \theta^\mathrm{d} \\ 0 \end{bmatrix}, \theta^\mathrm{s} \right) \,
+   q\left( \begin{bmatrix}0 \\ 0 \\ 1\end{bmatrix}, \theta^\mathrm{t}\right) \\
+&= 
+\begin{bmatrix}
+ \cos (\frac{\theta^\mathrm{s}}{2}) \cos (\frac{\theta^\mathrm{t}}{2}) \\
+ \sin (\frac{\theta^\mathrm{s}}{2}) \cos (\theta^\mathrm{d} - \frac{\theta^\mathrm{t}}{2}) \\
+ \sin (\frac{\theta^\mathrm{s}}{2}) \sin (\theta^\mathrm{d} - \frac{\theta^\mathrm{t}}{2}) \\
+ \cos (\frac{\theta^\mathrm{s}}{2}) \sin (\frac{\theta^\mathrm{t}}{2})
+\end{bmatrix}
+\end{aligned}
+\end{align}
+と書ける．
+
+関節パラメータの時間微分$\dot{\theta}$から角速度$\omega$を得るヤコビ行列を求める．
+Quaternionの微分$\dot{q}$に対応する角速度は
+\begin{align}
+\begin{bmatrix}0 \\ \omega\end{bmatrix} = 2 \dot{q}\cdot{q}^{-1}
+\end{align}
+で与えられるので，
+
+
+\end{document}

@@ -1,0 +1,14 @@
+# dailybuild.control
+
+#Exclude
+SolutionAlias	BoxStack
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#UseClosedSrc
+CppMacro	DAILYBUILD
+#DontBuild
+#DontRun
+#Timeout
+#ExpectedStatus	0
+PipeProcess	GenKbEvent .hf.e.b.d.G..G.q
+#NeedIntervention
+#KillProcess

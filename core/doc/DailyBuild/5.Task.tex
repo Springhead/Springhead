@@ -1,0 +1,63 @@
+% DailyBuild.tex
+%	Last update: 2017/03/13) F.Kanehori
+\newpage
+\section{タスク}
+\label{sec:DailyBuild}
+
+\noindent
+DailyBuildは毎日タスクとして実行される。
+\begin{narrow}[\WID]\begin{tabular}{lll}
+    実行マシン & \multicolumn{2}{l}{\tt{MediaServer (192.168.91.4)}}\\
+    タスク名   & Task1: \tt{TestMain}   & 毎日 02:03 に起動\\
+	       & Task2: \tt{MakeReport} & 毎日 06:03 に起動\\
+\end{tabular}\end{narrow}
+\medskip
+
+% -----------------------------------------------------------------------
+\subsection{タスク TestMain}
+\label{subsec:TaskTestMain}
+% -----------------------------------------------------------------------
+\noindent
+\BUILDANDTEST を実行するタスク
+\begin{narrow}[\WID]\begin{tabular}{ll}
+    Script   & \verb|"D:\DailyBuild\Springhead2\test\TestMain.bat"|\\
+    作業領域 & \verb|"D:\DailyBuild\Springhead2Test\"|\\
+    概要 & 作業領域に最新バージョンをCheckoutしてそこでライブラリ作成および\\
+	 & \BUILDANDTEST を実行\\
+    結果 & \verb|"D:\DailyBuild\Springhead2Test\test\log\"| に作成\\
+    詳細 & ``\ref{subsec:TestMain} TestMain.bat''を参照のこと。\\
+\end{tabular}\end{narrow}
+\medskip
+
+% -----------------------------------------------------------------------
+\subsection{タスク MakeReport}
+\label{subsec:TaskMakeReport}
+% -----------------------------------------------------------------------
+\noindent
+過去のレビジョンでの実行結果との差分情報を作成するタスク
+\begin{narrow}[\WID]\begin{tabular}{ll}
+    Script & \verb|"D:\DailyBuild\Springhead2\test\MakeReport.bat"|\\
+    概要 & 指定された過去レビジョンの実行結果と最新レビジョンの実行結果とを比較\\
+	 & 較して差分情報を作成し、レポートファイルにまとめる。\\
+	 & 過去レビジョンの指定はファイル\\
+	 & \verb|"D:\DailyBuild\Springhead2\test\Monitoring\etc\revision.old"|\\
+	 &  で行なう。\\
+    詳細 & ``\ref{subsec:MakeReport} MakeReport.bat''を参照のこと。\\
+\end{tabular}\end{narrow}
+\medskip
+
+% -----------------------------------------------------------------------
+\subsection{タスク実行結果の参照}
+\label{subsec:ResultReference}
+% -----------------------------------------------------------------------
+\noindent
+ウェブ\tt{springhead.info/wiki}の``開発者向け情報''から参照できる。
+\begin{narrow}[\WID]\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l}
+    TestMain   & `今朝のビルドの状況',\\
+	       & `Samples のビルドの状況',\\
+	       & `今朝のビルドのログ'\\
+    MakeReport & `今朝のビルドについてまとめた報告',\\
+		 & `レビジョン nnnn (yyyy/mm/dd) との比較'\\
+\end{tabular}\end{narrow}
+
+% end: DailyBuild.tex

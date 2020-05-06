@@ -1,0 +1,45 @@
+FWScene fwScene{
+	FWObject fwFloor{
+		*grFrameFloor
+		*soFloor
+	}
+	FWFemMesh fwMesh{
+		*negi8r2s_tex3d	//	FEM用メッシュ
+		*grNegiFrame		//	フレーム
+		*soNegi				//	Solid
+	}
+	PHScene phScene{
+		gravity = 0 -9.8 0
+		timeStep = 0.002
+		numIteration = 10
+		
+		PHSolid soFloor{
+			dynamical = false
+			integrate = false
+			*grFloor
+		}
+		PHSolid soNegi{
+			*negi8r2s_tex3d
+			pose = 1 0 0 0  0 0.2 0
+		}
+	}
+	GRScene grScene{
+		GRFrame grNegiFrame{ *negi8r2s_tex3d }
+		GRFrame grFrameFloor{	*grFloor	}
+		GRLight light1 {						#SprGRRender.h GRMaterialDesc
+			ambient = 0.9 0.9 0.9 1.0			#Vec4f ambient
+			diffuse = 0.5 0.5 0.5 1.9			#Vec4f diffuse
+			specular = 0.1 0.1 0.1 1.0			#Vec4f specular
+			position = 1.0 1.0 1.0 0.0			#Vec4f position
+			range = 10000.0						#float range
+		}
+	}
+}
+Import{ path = "grFloor.x" }
+
+Import{ path = "./xFiles/negi/negi8r2s.x"}
+
+//Import{ path = "./xFiles/negi/negi111.x"}
+//Import{ path = "./xFiles/negi/negi2212.x"}
+//Import{ path = "./xFiles/negi/negir30.x"}
+//Import{ path = "./xFiles/negi/negi8r2sdiv.x"}

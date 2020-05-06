@@ -1,0 +1,2 @@
+SUBDIRS = Source
+DIST_SUBDIRS = $(SUBDIRS)

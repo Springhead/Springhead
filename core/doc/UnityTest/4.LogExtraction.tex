@@ -1,0 +1,117 @@
+% LogExtractoon.tex
+\newpage
+\section{LogExtraction}
+\label{LogExtraction}
+
+\subsection{概要}
+unityが生成したログファイルからコンパイラが生成したログの部分だけを抽出する。
+
+コンパイラが生成したログの部分の判定条件：
+\vspace{1mm}
+\begin{narrow}[8mm]%
+  \begin{tabular}{l}
+    \DQuote{CompilerOutput:}を含む行で始まり\\
+    \DQuote{EndCompilerOutput}を含む行で終る\\
+  \end{tabular}%
+\end{narrow}
+\vspace{1mm}
+
+この判定条件を満たす行を抽出する。
+
+特別な行として
+\begin{narrow}[8mm]%
+  \begin{tabular}{l}
+    \DQuote{--target:}で始まり\DQuote{.unity}で終る
+  \end{tabular}%
+\end{narrow}
+
+行も抽出する(抽出結果がどのシーンに関するものかを識別できるようにするため)
+
+\subsection{ヘルパーメソッド}
+\subsubsection{\tt{verbose(msg, level=0)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{バーバス情報の表示}
+    \Item{引数}{msg}{表示する文字列}
+    \Item{}{level}{表示制御変数}
+    \ItemMA{説明}{起動引数で指定した\tt{-v}オプションの個数が
+		\tt{level}で指定した数より大きい}
+    \ItemMA{}{ときにmsgを表示する}
+  \end{FuncSpec}
+
+\subsubsection{\tt{error(msg)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{エラーメッセージとして stderr に表示する}
+    \Item{引数}{msg}{エラーの内容}
+  \end{FuncSpec}
+
+\subsubsection{\tt{is_new(str, list)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{strがlistの中で初出かどうかを判定する}
+    \Item{引数}{str}{判定する文字列}
+    \Item{}{list}{既出文字列のリスト}
+    \ItemMA{説明}{strがlist の中になければ初出としてTrueを返し、strをlistに登録する}
+    \ItemMA{}{strが既にlistの中にあればFalseを返す}
+  \end{FuncSpec}
+
+\subsection{プログラムの説明}
+\subsubsection{起動形式}
+\hspace{8mm}\tt{log_extraction.py [}\it{options}\tt{\,] file}
+
+\subsubsection{起動引数の解析}
+  OptionParserパケージを用いて解析する
+
+  必須引数：\\
+    \begin{OptionList}
+      \Item{file}{}{解析するログファイルのパス}
+    \end{OptionList}
+
+  オプション引数：\\
+    \begin{OptionList}
+      \Item{-h}{}{ヘルプの出力}
+      \Item{-v}{}{バーバス情報出力指定(複数個指定可)}
+      \Item{-V}{}{バージョン情報表示}
+    \end{OptionList}
+
+\subsubsection{正規表現の定義とコンパイル}
+次のパターンにマッチさせる
+\vspace{1mm}
+\begin{narrow}[8mm]%
+  \begin{tabular}{ll}
+    pattern 1: & \verb|'^-target: (.+)\.unity$'|		\\ %$
+    pattern 2: & \verb|'^-----CompilerOutput:'|			\\
+    pattern 3: & \verb|'^-----EndCompilerOutput---------------'|\\
+  \end{tabular}%
+\end{narrow}
+\vspace{1mm}
+
+\subsubsection{出力(抽出)を制御する変数}
+読み込んだ行を出力するか否かは次の変数で制御する(True のとき出力する)
+\vspace{1mm}
+\begin{narrow}[8mm]%
+  \begin{tabular}{ll}
+    include & ある範囲(複数行)の出力を制御するために使用	\\
+	    & 特定のパターンにマッチしたら on または off する	\\
+	    & 初期値はoff (False)				\\
+    include_one & 単一の行に関して出力を制御する(次の行には影響しない)
+  \end{tabular}%
+\end{narrow}
+\vspace{1mm}
+
+\subsubsection{ファイルの各行について}
+\begin{enumerate}
+  \item include_oneをoffにする
+  \item パターンマッチを行ない制御変数を変化させる
+    \vspace{2mm}
+    \begin{narrow}[3mm]%
+      \begin{tabular}{|c|c|c|l|} \hline
+	マッチ & include & include_one & \multicolumn{1}{|c|}{説明}	\\ \hline
+	pattern 1 & --  & on  & シーン名の抽出		\\ \hline
+	pattern 2 & on  & --  & コンパイラ出力開始	\\ \hline
+	pattern 3 & off & on  & コンパイラ出力終了	\\ \hline
+      \end{tabular}%
+    \end{narrow}
+    \vspace{3mm}
+  \item includeかinclude_oneのいずれかがonならばこの行を出力する
+\end{enumerate}
+
+% end: LogExtraction.tex

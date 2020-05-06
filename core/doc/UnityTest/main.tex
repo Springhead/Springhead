@@ -1,0 +1,81 @@
+\documentclass[a4j,12pt]{jsarticle}
+\usepackage{dirtree}
+\usepackage{setspace}
+
+\setlength{\textheight}{\paperheight}   % 紙面縦幅を本文領域にする（BOTTOM=-TOP）
+\setlength{\topmargin}{4.6truemm}       % 上の余白を30mm（=1inch+4.6mm）に
+\addtolength{\topmargin}{-\headheight}  % 
+\addtolength{\topmargin}{-\headsep}     % ヘッダの分だけ本文領域を移動させる
+\addtolength{\textheight}{-60truemm}    % 下の余白も30mm（BOTTOM=-TOPだから+TOP+30mm）
+
+\setlength{\textwidth}{\paperwidth}     % 紙面横幅を本文領域にする（RIGHT=-LEFT）
+\setlength{\oddsidemargin}{-0.4truemm}  % 左の余白を25mm(=1inch-0.4mm)に
+\setlength{\evensidemargin}{-0.4truemm} % 
+\addtolength{\textwidth}{-50truemm}     % 右の余白も25mm（RIGHT=-LEFT）
+
+\begin{document}
+\include{macro}
+
+\begin{center}
+  \Large{UnityTestシステム}
+  \hspace{5mm}{\normalsize\input{LastUpdate}} \\
+\end{center}
+
+UnityTestシステムは、unity project内に存在するシーンファイル(.unity)のビルドと実行を自動的に実施するためのスクリプト群から成る。
+
+\begin{enumerate}
+  \item \tt{\UnityTestMain} (\ref{UnityTestMain} UnityTestMain参照)
+    \begin{itemize}
+      \item 実行環境および実行するシーンは初期化ファイルで指定する。
+      \item 初期化ファイルで指定されたシーンを順に\BuildRun する。
+      \item 個々のシーンの\BuildRun は、スクリプト\tt{UnityTest.py}で行なう。
+      \item Unityが出力するログは量が多いので、そのうちcompilerが出力した部分のみを
+	    \LogExtraction で抽出し、1つのログファイルにまとめる。
+  \end{itemize}
+
+  \item \tt{\UnityTest} (\ref{UnityTest} UnityTest参照)
+  \label{UnityTestPy}
+    \begin{itemize}
+      \item 指定された1つのシーンのビルドを行なう。
+      \item ビルドに成功してexeファイルが作成されたならばそれを実行する。
+      \item 最大実行時間を秒単位で指定することができる。
+      \item 実行環境などは初期化ファイルで指定する。
+    \end{itemize}
+
+  \item \tt{\Replace} (\ref{Replace} Replace参照)
+    \begin{itemize}
+      \item \BuildRun 環境を整えるために、設定ファイルの調整を行なう。
+    \end{itemize}
+
+  \item \tt{\LogExtraction} (\ref{LogExtraction} LogExtraction参照)
+    \begin{itemize}
+      \item \ref{UnityTestPy}.のビルドにおいてunity editorが出力したログファイルから、
+	コンパイラが出力した部分のみを(重複を除いて)抽出する。
+    \end{itemize}
+
+  \item \tt{\UnityBuildClass} (\ref{UnityBuildClass} UnityBuildClass参照)
+    \begin{itemize}
+      \item \ref{UnityTestPy}.のビルドをコマンドラインから実行させるための
+	    クラスを定義する。
+      \item 引数\ttt{-executeMode}に指定するのは\tt{UnityBuildClass.Build()}である。
+      \item このファイルはUnityProject下の\tt{Assets/.../Editor}ディレクトリに置く。
+    \end{itemize}
+\end{enumerate}
+
+UnityTestのスクリプト構成は次のとおりである。
+
+\begin{center}
+\begin{spacing}{0.7}
+\begin{minipage}{.7\textwidth}
+    \include{DocumentOrganization}
+\end{minipage}
+\end{spacing}
+\end{center}
+
+\include{1.UnityTestMain}
+\include{2.UnityTest}
+\include{3.Replace}
+\include{4.LogExtraction}
+\include{5.UnityBuildClass}
+
+\end{document}

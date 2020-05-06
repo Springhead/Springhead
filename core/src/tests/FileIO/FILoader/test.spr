@@ -1,0 +1,41 @@
+PHSdk{
+	CDSphere sphere{
+		material = {
+			mu = 0.2
+			mu0 = 0.5
+			e = 0.6
+		}
+		radius = 0.5
+	}
+	CDBox bigBox{
+		boxsize = 2.0 1.1 0.9
+	}
+	CDConvexMesh meshFloor{
+		vertices = [10 0 10 10 0 -10 -10 0 10   -10   0 -10 10 -10 10  
+			10 -10 -10   -10 -10 10   -10 -10 -10  ]
+	}
+	CDBox smallBox{
+		boxsize = 0.5 0.8 0.5
+	}	
+	PHScene scene1{
+		timeStep = 0.01 			//	timeStep
+		gravity = 0 -9.8 0  		//	gravity
+		numIteration = 15 
+		PHSolid soFloor{
+			dynamical = false 
+			*meshFloor
+		}
+		PHSolid soBlock1{
+			pose = 1.0 0.0 0.0  0.0 0.0 3.0 0.0	#pose{w x y z px py pz}
+			*bigBox
+		}
+		PHSolid soBlock2{
+			pose = 0.9 0.2 0.6  0.3 0.0 5.0 0.0	#pose{w x y z px py pz}
+			*smallBox
+		}
+		PHSolid soSphere1{
+			pose = 1.0 0.0 0.0  0.0 0.0 7.0 0.0	#pose{w x y z px py pz}
+			*sphere
+		}
+	}
+}

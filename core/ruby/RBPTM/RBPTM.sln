@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RBPTM", "RBPTM.vcproj", "{BB4217A2-E67D-4AC3-AA36-2989A6D67539}"
+	ProjectSection(ProjectDependencies) = postProject
+		{82F477C4-0098-4918-958D-AA162F567C42} = {82F477C4-0098-4918-958D-AA162F567C42}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "..\..\src\Base\Base.vcproj", "{82F477C4-0098-4918-958D-AA162F567C42}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{BB4217A2-E67D-4AC3-AA36-2989A6D67539}.Debug.ActiveCfg = Debug|Win32
+		{BB4217A2-E67D-4AC3-AA36-2989A6D67539}.Debug.Build.0 = Debug|Win32
+		{BB4217A2-E67D-4AC3-AA36-2989A6D67539}.Release.ActiveCfg = Release|Win32
+		{BB4217A2-E67D-4AC3-AA36-2989A6D67539}.Release.Build.0 = Release|Win32
+		{82F477C4-0098-4918-958D-AA162F567C42}.Debug.ActiveCfg = Debug|Win32
+		{82F477C4-0098-4918-958D-AA162F567C42}.Debug.Build.0 = Debug|Win32
+		{82F477C4-0098-4918-958D-AA162F567C42}.Release.ActiveCfg = Release|Win32
+		{82F477C4-0098-4918-958D-AA162F567C42}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

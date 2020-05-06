@@ -1,0 +1,6 @@
+static linkの場合にDLLをさがすとエラーになる。
+pythonのimport helperがそれをしてしまう。
+回避するためにPython.cxx に
+　オプション -static_link を追加
+　変数 static_linkを追加
+　static link時には当該箇所を出力しないように変更

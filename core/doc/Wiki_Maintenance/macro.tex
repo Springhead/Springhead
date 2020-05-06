@@ -1,0 +1,126 @@
+% macro.tex
+%	Last update: 2017/03/06 F.Kanehori
+
+\makeatletter
+
+% need original symbol
+\def\orgLA{<}
+\def\orgRA{>}
+
+% some character usage
+\catcode`\_=\active
+\catcode`\^=\active
+\catcode`\<=\active
+\catcode`\>=\active
+\def_{\ifmmode\sb\else\_\fi}
+\def^{\ifmmode\sp\else\^\fi}
+\def<{\ifmmode\langle\else$\langle$\fi}
+\def>{\ifmmode\rangle\else$\rangle$\fi}
+
+% alias for reducing braces
+\let\it@\it
+\let\tt@\tt
+\let\bf@\bf
+\def\it#1{{\it@{#1\,}}}
+\def\tt#1{{\tt@{#1}}}
+\def\bf#1{{\bf@{#1}}}
+
+\def\TT#1{{\tt@{\,#1\,}}}
+\def\Tt#1{{\tt@{\,#1}}}
+\def\tT#1{{\tt@{#1\,}}}
+
+% other alias
+\let\URL\tt
+
+% dimensions
+\def\HSKIP{\hspace{2ZW}}
+
+% abbreviations
+\def\RARROW{$\rightarrow$}
+\def\LARROW{$\leftarrow$}
+\def\UARROW{$\uparrow$}
+\def\DARROW{$\downarrow$}
+\def\DAGGER{$\dagger$}
+\def\UDAGGER#1{$^{\dagger #1}$}
+\def\CDOTS{$\cdots$}
+\def\LDOTS{$\ldots$}
+\def\VDOTS{$\vdots$}
+
+\def\TAG#1{\tt{\orgLA#1\orgRA}}
+\def\CONT{\ \ {\footnotesize{(éüÇÃçsÇ…ë±Ç≠)}}}
+
+% typewriter font
+\def\VAR#1{\tt{\,\$#1\,}}	% for variable name (preceded by '$')
+\def\FUNC#1{\tt{\,#1\,}}	% for functio name
+\def\FILE#1{\tt{\,"#1"\,}}	% for file name (double quoted)
+
+% source quotation
+\def\BEGINQUOTE{%
+	\\\rule{0pt}{1.8em}
+	{\scriptsize{\DARROW \DARROW Ç±Ç±Ç©ÇÁ \DARROW \DARROW}}\\}
+\def\ENDQUOTE{%
+	{\scriptsize{\UARROW \UARROW Ç±Ç±Ç‹Ç≈ \UARROW \UARROW}}\\
+	\rule{0pt}{1.9em}}
+
+%% quoted word
+%\def\SQuote#1{\hbox{\,\raise.4ex\hbox{{\tt `}}#1\tt{\raise.4ex\hbox{{\tt '}}}\,}}
+%\def\DQuote#1{\hbox{\,\raise.4ex\hbox{{\tt "}}#1\tt{\raise.4ex\hbox{{\tt "}}}\,}}
+
+%% rule
+%\def\rrule#1{\vbox{%
+%    \vspace{-1.0\baselineskip}
+%    \begin{flushright}
+%    \begin{tabular}{c} \hbox to #1{}\\\hline \end{tabular}
+%    \end{flushright}}
+%    \vspace{-0.5\baselineskip}}
+
+% styles for function description
+%
+\def\FuncDesc{\medskip\begingroup\begin{narrow}[10pt]}
+\def\endFuncDesc{\end{narrow}\endgroup}
+
+\def\FuncArgs{\medskip\begingroup\begin{narrow}[10pt]
+	\bf{à¯êî}\\
+	\begin{tabular}{@{\hspace{15pt}}ll}}
+\def\endFuncArgs{\end{tabular}\end{narrow}\endgroup}
+
+\def\FuncProc{\medskip\begingroup\begin{narrow}[10pt]
+	\bf{èàóù}
+	\begin{narrow}[8pt]\begin{enumerate}
+	\setlength\itemsep{.5em}}
+\def\endFuncProc{\end{enumerate}\end{narrow}\end{narrow}\endgroup}
+
+% narrower[size][margin]{body}
+%	charsize:	t, f, s, [n]
+%	margin:		[\the\leftmargin]
+%
+\def\narrow{\@ifnextchar[{\narrow@}{\narrow@def[Z][\the\leftmargin]}}
+\def\narrow@[#1]{%
+	\@ifnextchar[{\narrow@def[#1]}{\narrow@@[#1]}}
+\def\narrow@@[#1]{%
+	\ifx#1t \def\@size{t} \def\@mgn{\the\leftmargin} \else
+	\ifx#1f \def\@size{f} \def\@mgn{\the\leftmargin} \else
+	\ifx#1s \def\@size{s} \def\@mgn{\the\leftmargin} \else
+	\ifx#1n \def\@size{n} \def\@mgn{\the\leftmargin} \else
+	\ifx#1l \def\@size{l} \def\@mgn{\the\leftmargin} \else
+		\def\@size{Z} \def\@mgn{#1}	\fi\fi\fi\fi\fi
+	\narrow@def[\@size][\@mgn]}
+\def\narrow@repl#1{\def\@lmgn{\the\leftmargin} \def\@text{[#1]}}
+\def\narrow@same#1{\def\@lmgn{#1} \def\@text{}}
+\def\narrow@def[#1][#2]{%
+	\if#1t \def\font@def{Y} \let\font@size\tiny	    \else
+	\if#1f \def\font@def{Y} \let\font@size\footnotesize \else
+	\if#1s \def\font@def{Y} \let\font@size\small	    \else
+	\if#1n \def\font@def{Y} \let\font@size\normalsize   \else
+	\if#1l \def\font@def{Y} \let\font@size\large	    \else
+	\if#1Z \def\font@def{Y} \let\font@size\relax	    \else
+	       \def\font@def{N} \let\font@size\relax	    \fi\fi\fi\fi\fi\fi
+	\if\font@def Y \narrow@same{#2} \else \narrow@repl{#2} \fi
+	\list{}{\topsep 0pt \partopsep 0pt \parsep 0pt \itemsep 0pt
+		\rightmargin 0pt \leftmargin \@lmgn \relax}\item[]
+	\begingroup\font@size\@text}
+\def\end@narrow{\endgroup\endlist}
+\let\endnarrow\end@narrow
+
+\makeatother
+% end: marco.tex

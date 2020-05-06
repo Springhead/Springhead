@@ -1,0 +1,179 @@
+% TestMain.tex
+%	Last update: 2017/03/13 F.Kanehori
+%\newpage
+\subsection{TestMain.bat}
+\label{subsec:TestMain}
+
+タスクTestMainを実行するためのスクリプト(Windows batch file)。
+DailyBuild全体(MakeReportは含まない)の制御を行なう。
+DailyBuildで行なう作業については``\ref{sec:WhatIsDailyBuild} DailyBuildとは''を
+参照のこと。
+
+\medskip
+\noindent
+\bf{引数}：
+\begin{narrow}[\WID]
+	\begin{tabular}{l@{\hspace{20pt}}l}
+	    \tt{/t toolset_id}	& \small{ツールセットの識別
+				\{\tt{10.0 | 11.0 | 12.0 \rm{<default>} | ..}\}}\\
+	    \tt{/c config}	& \small{ビルド構成
+				\{ \tt{Debug \rm{<default>} | Release | .. } \}}\\
+	    \tt{/p platform}	& \small{ビルドプラットフォーム
+				\{ \tt{Win32 \rm{<default>} | x64} \}}\\
+	    \tt{/y python_ver}	& \small{Pythonのバージョン
+				\{ \tt{32 | 33 | 34 \rm{<default>}} \}}\\
+	    \tt{/r test_rep}	& \small{テスト用ローカルコピーのルート
+				\rm{<default: \tt{Springhead2Test}>}}\\
+	    \tt{/h}		& \small{使用方法の表示}
+	\end{tabular}
+	\medskip
+\end{narrow}
+
+\medskip
+\noindent
+\bf{関連スクリプト}：
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}D:\YEN DailyBuild\YEN}.
+		.2 Springhead2\YEN.
+		.3 test\YEN.
+		.4 \it{TestMain.bat}
+			\mc{\footnotesize{ \CDOTS\  DailyBuild全体の制御 \CDOTS
+			\ \bf{本スクリプト}}}.
+		.4 bat\YEN.
+		.5 \it{TestAll.bat}
+			\mc{\footnotesize{ \CDOTS \BUILDANDTEST の制御 \CDOTS
+			\ \ref{subsubsec:TestAll} 参照)}}.
+		.5 \it{BuildVC.bat}
+			\mc{\footnotesize{ \CDOTS 個々の\BUILDANDTEST の実行 \CDOTS
+			\ \ref{subsubsec:BuildVC} 参照)}}.
+		.5 \it{SwigAll.bat}
+			\mc{\footnotesize{ \CDOTS\ Swigの実行}}.
+		.5 \it{MakeDoc.bat}
+			\mc{\footnotesize{ \CDOTS ドキュメント作成の制御}}.
+		.3 src\YEN.
+		.4 \it{DelAll.bat}
+			\mc{\footnotesize{ \CDOTS 不要となったファイルの削除}}.
+		.3 \it{MakePack.bat}
+			\mc{\footnotesize{ \CDOTS 公開tarballの作成}}.
+	}
+	\end{minipage}\end{narrow}
+	\medskip
+\end{narrow}
+
+\medskip
+\noindent
+\bf{処理を制御する環境変数}：
+\begin{narrow}[\WID]
+	以下に示す処理の説明の各ステップは、実行時の環境変数で制御することができる。
+	各ステップの「制御変数名」に記述された環境変数が\tt{"skip"}と設定されて
+	いるときに限りそのステップは実行されない。
+	毎日のタスクにおけるDailyBuildの実行時にはこれらの環境変数は
+	すべて未定義としておく。
+	\begin{description}
+	  \item	[※]
+		これはデバッグ及びローカルでのテストのときに使用する。
+	\end{description}
+\end{narrow}
+
+\medskip
+\noindent
+\bf{ディレクトリ構成}：
+\begin{narrow}[\WID]
+	DailyBuild は、\verb|"D:\DailyBuild\Springhead2\test"|を現在ディレクトリ
+	として起動するが、スクリプト内部では相対ディレクトリを使用しているので、
+	以下では絶対パス形式表示をしているのに関わらず、
+	\verb|"D:\DailyBuild\Springhead2"|というドライブ・ディレクトリ名
+	には意味はない。
+	ただし、引数 \tt{"/r test_rep"} に指定するディレクトリは、
+	スクリプト起動ディレクトリから2階層上のディレクトリ
+	(前記の\verb|"D:\DailyBuild"|)からの相対指定となっている必要がある。
+\end{narrow}
+
+\bigskip
+\noindent
+\bf{処理の説明}：
+\begin{narrow}[15pt]\begin{enumerate}
+  \item	\tt{Springhead2/test}の更新を反映する\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& \tt{DAILYBUILD_UPDATE_SPRINGHEAD2}\\
+	    処理	& \verb|"D:\DailyBuild\Springhead2\"|以下を
+			  最新バージョンにする。
+	\end{tabular}
+	\medskip
+
+  \item	Springhead2Testにソースツリーを取得する\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& \tt{DAILYBUILD_CLEANUP_WORKSPACE}\\
+	    処理	& テストディレクトリ(Springhead2Test -- 引数\tt{/r}で変更可)
+			  以下\\
+			& に最新バージョンをCheckoutする。
+	\end{tabular}
+	\medskip
+
+  \item	公開できないファイルの削除と設定変更\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& \tt{DAILYBUILD_CLEANUP_WORKSPACE}\\
+	    処理	& 公開できないファイルを削除し、関連する設定を変更する。
+	\end{tabular}
+	\medskip
+
+  \item	テストを行なう\\
+	\def\argOVR#1{ (引数 \tt{#1} で変更可)}
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& DAILYBUILD_EXECUTE_TESTALL\\
+			& もう少し細かい制御については
+			  ``\ref{subsubsec:TestAll} TestAll.bat''を参照のこと。\\
+	    処理	& \BUILDANDTEST を実行する(\FILE{TestAll.bat})。\\
+			& 呼出し時の引数は次のとおり\\
+			& \hspace{10pt}\small{\begin{tabular}{ll}
+			    第1引数 & ツールセットID = 12.0 \argOVR{/t}\\
+			    第2引数 & ビルド構成 = Debug \argOVR{/c}\\
+			    第3引数 & プラットフォーム = Win32 \argOVR{/p}\\
+			    第4引数 & Pythonバージョン = 34 \argOVR{/y}\\
+			  \end{tabular}}\\
+			& 処理の詳細は``\ref{subsubsec:TestAll} TestAll.bat''を
+			  参照のこと。
+	\end{tabular}
+	\medskip
+
+  \item	ドキュメントを作る(doxygen)\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& DAILYBUILD_EXECUTE_MAKEDOC\\
+	    処理	& doxygenによりドキュメントを作成する
+			  (\FILE{MakeDoc.bat})
+	\end{tabular}
+	\medskip
+
+  \item	ソースツリー(\ENVREF{TEST_REPOSITORY}以下)をWebにコピー\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& DAILYBUILD_COPYTO_WEBBASE\\
+	    処理	& 作業ファイル等公開不要のものを削除
+			  (\FILE{DelAll.bat})し\\
+			& Webに公開するファイル群をサーバにコピーする\\
+	    コピー先	& \verb|\\haselab\HomeDirs\WWW\| \CONT\\
+			& \hspace{40pt}\verb|docroots\springhead\daily_build| 以下
+	\end{tabular}
+	\medskip
+
+  \item	外部公開用のアーカイブを作る\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& DAILYBUILD_MAKE_ARCHIVE\\
+	    処理	& 公開用のアーカイブ\FILE{Springhead2.tgz}を
+			  \FILE{MakePack.bat}\\
+			& で作成してサーバにコピーする\\
+	    コピー先	& \verb|\\haselab\HomeDirs\WWW\| \CONT\\
+			& \hspace{40pt}\verb|docroots\springhead\daily_build\pack|\\
+	\end{tabular}\\
+
+\end{enumerate}\end{narrow}
+
+% end: TestMain.tex

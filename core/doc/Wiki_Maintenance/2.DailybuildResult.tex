@@ -1,0 +1,159 @@
+% DailybuildResult.tex
+%	Last update: 2017/03/06 F.Kanehori
+\newpage
+\section{dailybuild_result.inc.php}
+\label{sec:DailybuildResult}
+
+% -----------------------------------------------------------------------
+\subsection{関数構成}
+% -----------------------------------------------------------------------
+テーブルの作成
+\begin{narrow}[10pt]
+	\begin{narrow}[20pt]\begin{minipage}{.7\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}\FUNC{\#dailybuild_result() in Wiki page}}.
+		.2 plugin_dailybuild_result_convert().
+		.3 dailybuild_make_array().
+		.3 dailybuild_make_table().
+	}
+	\end{minipage}\end{narrow}
+
+	\bigskip
+	比較対象レビジョン・日付取出し
+	\begin{narrow}[20pt]\begin{minipage}{.7\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}\FUNC{\&dailybuild_result() in Wiki page}}.
+		.2 plugin_dailybuild_result_inline().
+	}
+	\end{minipage}\end{narrow}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsection{関数の説明}
+% -----------------------------------------------------------------------
+\subsubsection{plugin_dailybuild_result_convert()}
+
+\begin{FuncDesc}
+Wikiから\FUNC{\#dailybuild_result()}で呼び出されたときのエントリーポイント。
+\end{FuncDesc}
+
+\begin{FuncProc}
+  \item	引数の取り出し \\
+	\begin{tabular}{ll}
+       	    \VAR{base}  & 以下の引数で指定されるファイルのあるディレクトリ \\
+	    \VAR{file1} & MakeReport が作成したレポートファイル名 \\
+	    \VAR{file2} & Dailybuild が作成した結果ファイル名 \\
+	    \VAR{start} & データ抽出開始フィールド位置
+			  (`tests'なら0, `Samples'なら4) \\
+	    \VAR{count} & 抽出データ数(`tests'なら4, `Samples'なら2)
+	\end{tabular}
+
+  \item	現在の日付の取り出し \\
+	\begin{tabular}{l}
+	    \VAR{file1}の3行目の第4フィールドから切り出す。
+	\end{tabular}
+
+  \item	結果ファイルの解析 \\
+	\begin{tabular}{ll}
+	    \VAR{content} & \VAR{file2}の全体 \\
+	    \VAR{lines}	& \VAR{content}を\TT{`)'}で分解した配列 \\
+		& \begin{tabular}{ll}
+			\VAR{lines[0]} & testsのビルド成功モジュール名を含む \\
+			\VAR{lines[1]} & testsのビルド失敗モジュール名を含む \\
+			\VAR{lines[2]} & testsの実行成功モジュール名を含む \\
+			\VAR{lines[3]} & testsの実行失敗モジュール名を含む \\
+			\VAR{lines[4]} & Samplesのビルド成功モジュール名を含む \\
+			\VAR{lines[5]} & Samplesのビルド失敗モジュール名を含む \\
+			\VAR{lines[6]} & Samplesの実行成功モジュール名を含む \\
+			\VAR{lines[7]} & Samplesの実行失敗モジュール名を含む
+		  \end{tabular} \\
+	\end{tabular} \\
+	\medskip
+        \VAR{lines}の添字\VAR{start}から\VAR{count}について、\VAR{result}連想配列に
+	モジュール名を取り出す。
+	\begin{narrow}[5pt]
+	    \begin{tabular}{@{\hspace{10pt}}ll}
+	        キー & \VAR{proc}と\VAR{code}のペア			\\
+		     & \VAR{proc}は\TT{"B"}又は\TT{"R"}
+			  \hspace{5pt}
+			  \TT{"B"}はBuild, \TT{"R"}はRunを表す		\\
+		     & \VAR{code}は\TT{"S"}又は\TT{"F"}
+			  \hspace{5pt}
+			  \TT{"S"}はSuccess, \TT{"F"}はFailure を表す 	\\
+	        値   & モジュール名のカンマで区切りリスト			\\
+		     & \VAR{lines[n]}の\TT{`)'}より後ろの部分
+		       \TT{("Lib:Mod[,Lib:Mod]\LDOTS")}
+	    \end{tabular}
+	\end{narrow}
+
+  \item	\FUNC{dailybuild_result_make_array()}を呼んで
+	\VAR{result}の内容を Lib 毎にまとめる。
+
+  \item	テーブルのhtmlコードを生成する(\TAG{table}\CDOTS\TAG{/table}) \\
+        固定部分以外は\FUNC{dailybuild_make_table()}を呼び出す。
+
+\end{FuncProc}
+
+% -----------------------------------------------------------------------
+\subsubsection{dailybuild_result_make_table(\$items, \$fcolor, \$bcolor, \$font)}
+
+\begin{FuncArgs}
+	\VAR{items}  & テーブルコンテンツの配列	\\
+	\VAR{fcolor} & 前面色(テキスト色)	\\
+	\VAR{bcolor} & 背面色			\\
+	\VAR{font}   & テキストフォントスタイル
+\end{FuncArgs}
+
+\begin{FuncProc}
+  \item	\VAR{items}の各要素は\TT{"Lib:Mod1,Mod2,\LDOTS"}という形式になっている。
+	これを、
+	\medskip
+	\begin{narrow}
+		\begin{tabular}{|l|l|} \hline
+		    \multicolumn{2}{|l|}{Lib:} \\\hline
+		    \hspace{5pt} & \TT{Mod1,Mod2,\LDOTS} \\\hline
+		\end{tabular} \\
+	\end{narrow}
+        というテーブルのコードにする。罫線は書かない。
+\end{FuncProc}
+
+% -----------------------------------------------------------------------
+\subsubsection{dailybuild_result_make_array(\$data)}
+
+\begin{FuncArgs}
+	\VAR{data} & モジュール名(\TT{"Lib:Mod"})のカンマ区切りリスト
+\end{FuncArgs}
+
+\begin{FuncProc}
+  \item \VAR{data}で与えられたリストをLib毎にまとめて次のような配列
+	\VAR{o_ary}にする。
+	\begin{narrow}[7pt]
+		\tt{data $=$ 
+	L1:M11,L1:M12,\LDOTS,L1:M1m,\LDOTS,Ln:Mn1,Ln:Mn2,\LDOTS,Ln:Mnl} \\
+		\hspace{15pt}\DARROW \\
+		\VAR{o_ary[0]} $=$ \ \tt{L1:M11,M12,\LDOTS,M1m} \\
+		\hspace{15pt}\VDOTS \\
+		\VAR{o_ary[n]} $=$ \ \tt{Ln:Mn1,Mn2,\LDOTS,Mnl}
+	\end{narrow}
+\end{FuncProc}
+
+% -----------------------------------------------------------------------
+\subsubsection{plugin_dailybuild_result_inline()}
+
+\begin{FuncDesc}
+Wikiから\FUNC{\&dailybuild_result()}で呼び出されたときのエントリーポイント。
+\end{FuncDesc}
+
+\begin{FuncProc}
+  \item	引数の取り出し \\
+	\begin{tabular}{ll}
+       	    \VAR{base} & 以下の引数で指定されるファイルのあるディレクトリ \\
+	    \VAR{file} & MakeReportが作成したレポートファイル名
+	\end{tabular}
+
+  \item	比較対象のレビジョン番号と日付の取り出し \\
+        \VAR{file}の2行目の第3フィールドからレビジョン番号を、
+	第4フィールドから日付を切り出す。
+\end{FuncProc}
+
+% end: DailyBuildResult.tex

@@ -1,0 +1,31 @@
+% WhatIsDailyBuild.tex
+%	Last update: 2017/03/13 F.Kanehori
+\newpage
+\section{DailyBuildとは}
+\label{sec:WhatIsDailyBuild}
+
+Springhead2に加えられた修正または新規に組み込まれたソースと
+既存ソースとの整合性の確認、
+また何らかの理由によるソースの劣化の防止等を目的として、
+次の処理をWindowsタスクとして日々(自動的に)実行している。
+
+\begin{enumerate}
+  \item	Repositoryから最新バージョンを取り出し、
+	著作権の関係で公開できないソースを削除した後
+	StubおよびSpringhead2 Libraryを作成する。
+  \item	\tt{tests}/\tt{Samples}以下にあるテストソリューションに対して
+	\BUILDANDTEST を実行する。
+	現在はVisual Studio 2013を使用し、Win32/Debugの構成でビルドを行っている。
+  \item	その結果(ログファイル)をRepositoryへ登録する。
+  \item	ログファイル、最新ドキュメン(Doxygenで作成)、使用したソース
+	および公開用tarballをWebに登録して公開する。
+\end{enumerate}
+
+\noindent
+この一連のタスクをDailyBuildと呼ぶ。
+
+\medskip
+また、DailyBuildの結果をWikiに反映させるためのタスクも日々実行している。
+このタスクをMakeReportと呼ぶ。
+
+% end: WhatIsDailyBuild.tex

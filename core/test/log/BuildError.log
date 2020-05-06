@@ -1,0 +1,122 @@
+日付 : 17.12.13 
+--- ビルドエラーのログ --- 
+ 
+*** Base: Quaternion *** 
+ 
+ 
+*** Collision: CDContGJK *** 
+ 
+ 
+*** Collision: CDShape *** 
+ 
+ 
+*** Collision: QuickHull2D *** 
+ 
+ 
+*** FileIO: FICollada *** 
+ 
+ 
+*** FileIO: FIImport *** 
+ 
+ 
+*** FileIO: FILoader *** 
+ 
+ 
+*** FileIO: FILoadGRScene *** 
+ 
+ 
+*** FileIO: FILoadMesh *** 
+ 
+ 
+*** Foundation: Cast *** 
+ 
+ 
+*** Foundation: Timer *** 
+ 
+ 
+*** Framework: FWAppBoxStack *** 
+ 
+ 
+*** Framework: FWAppDXTest *** 
+1>LINK : fatal error LNK1104: cannot open file 'd3dxof.lib'
+ 
+ 
+*** Framework: FWAppGLtest *** 
+8>FWAppGLtest.cpp(74): error C2065: '_crtBreakAlloc': undeclared identifier
+ 
+ 
+*** Framework: FWAppMultiWinTest *** 
+1>i:\dailybuild\springheadtest\core\src\tests\framework\fwappmultiwintest\MYApp.h(11): fatal error C1083: Cannot open include file: 'Framework/SprFWAppGLUT.h': No such file or directory (compiling source file MYApp.cpp)
+1>main.cpp(24): fatal error C1083: Cannot open include file: 'Framework/SprFWAppGLUT.h': No such file or directory
+ 
+ 
+*** Graphics: GRColorSpheres *** 
+ 
+ 
+*** Graphics: GRSimple *** 
+ 
+ 
+*** Graphics: GRVertrexBlending *** 
+5>main.cpp(47): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+5>main.cpp(47): error C2146: syntax error: missing ';' before identifier 'shaderP3fB4f'
+5>main.cpp(243): error C2039: 'InitShader': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(246): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(247): error C2065: 'shaderP3fB4f': undeclared identifier
+5>main.cpp(247): error C2660: 'Spr::GRRenderBaseIf::CreateShader': function does not take 0 arguments
+5>main.cpp(248): error C2039: 'GetShaderLocation': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(248): error C2065: 'shaderP3fB4f': undeclared identifier
+5>main.cpp(250): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(251): error C2065: 'shaderC3fP3fB4f': undeclared identifier
+5>main.cpp(251): error C2660: 'Spr::GRRenderBaseIf::CreateShader': function does not take 0 arguments
+5>main.cpp(252): error C2039: 'GetShaderLocation': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(252): error C2065: 'shaderC3fP3fB4f': undeclared identifier
+5>main.cpp(254): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(255): error C2065: 'shaderC4bP3fB4f': undeclared identifier
+5>main.cpp(255): error C2660: 'Spr::GRRenderBaseIf::CreateShader': function does not take 0 arguments
+5>main.cpp(256): error C2039: 'GetShaderLocation': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(256): error C2065: 'shaderC4bP3fB4f': undeclared identifier
+5>main.cpp(293): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(294): error C2664: 'void Spr::GRRenderBaseIf::DrawIndexed(Spr::GRRenderBaseIf::TPrimitiveType,GLuint *,void *,std::size_t,std::size_t)': cannot convert argument 2 from 'unsigned __int64 *' to 'GLuint *'
+5>main.cpp(299): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(308): error C2039: 'SetShaderFormat': is not a member of 'Spr::GRRenderIf'
+5>main.cpp(309): error C2664: 'void Spr::GRRenderBaseIf::DrawIndexed(Spr::GRRenderBaseIf::TPrimitiveType,GLuint *,void *,std::size_t,std::size_t)': cannot convert argument 2 from 'unsigned __int64 *' to 'GLuint *'
+ 
+ 
+*** GraphicsD3D: GRD3DLoadMesh *** 
+1>i:\dailybuild\springheadtest\core\include\GraphicsD3D/SprGRAnimationMesh.h(91): error C2061: syntax error: identifier 'LPD3DXEFFECT'
+1>main.cpp(65): error C2143: syntax error: missing ';' before '*'
+1>main.cpp(65): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+1>main.cpp(82): error C2227: left of '->ClearBuffer' must point to class/struct/union/generic type
+1>main.cpp(83): error C2227: left of '->BeginScene' must point to class/struct/union/generic type
+1>main.cpp(84): error C2664: 'void Spr::GRSceneIf::Render(Spr::GRRenderIf *)': cannot convert argument 1 from 'int *' to 'Spr::GRRenderIf *'
+1>main.cpp(89): error C2227: left of '->EndScene' must point to class/struct/union/generic type
+1>main.cpp(111): error C2227: left of '->PushLight' must point to class/struct/union/generic type
+1>main.cpp(125): error C2227: left of '->PushLight' must point to class/struct/union/generic type
+1>main.cpp(135): error C2227: left of '->Reshape' must point to class/struct/union/generic type
+1>main.cpp(311): error C2039: 'CreateDebugRender': is not a member of 'Spr::GRSdkIf'
+1>main.cpp(315): error C2227: left of '->SetDevice' must point to class/struct/union/generic type
+1>main.cpp(320): error C2227: left of '->Reshape' must point to class/struct/union/generic type
+1>main.cpp(346): error C2227: left of '->SetViewMatrix' must point to class/struct/union/generic type
+ 
+ 
+*** HumanInterface: KeyMouse *** 
+ 
+ 
+*** Physics: PHConstraintTest *** 
+ 
+ 
+*** Physics: PHPenaltyTest *** 
+ 
+ 
+*** Physics: PHShape *** 
+ 
+ 
+*** Physics: PHShapeGL *** 
+ 
+ 
+*** Physics: PHSimple *** 
+ 
+ 
+*** Physics: PHSimpleGL *** 
+ 
+ 

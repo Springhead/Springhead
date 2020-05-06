@@ -1,0 +1,545 @@
+% Settings.tex
+%	Last update: 2017/02/23 F.Kanehori
+\newpage
+\section{設定}
+\label{sec:Settings}
+
+この章では、混乱が起きないと思われる箇所については<14.0><PH>の記述を省略する。
+適宜補って解釈すること。
+
+%-------------------------------------------------------------------------------
+\subsection{ソリューション\sname{SprCSharp}のプロパティの設定}
+\label{subsec:SolutionProperty}
+
+Solution Explorerでソリューション\sname{SprCSharp (xx projects)}を選択
+
+\noindent
+Menu: [Project]--[Properties]でプロパティページを開く
+
+\vspace{.75ZH}
+\small{%
+\noindent
+[Common Properties]
+\begin{narrow}[\WID]
+    [Startup Project]--[Single startup project]
+    \begin{narrow}[\WID]
+	\verb|SprCsSample|
+    \end{narrow}
+
+    [Project Dependencies]
+
+    次の表のうち、Springhead Libraryに属するプロジェクトについては、
+    <EDP>または<IDP>に存在するものだけを対象とする。
+    \begin{narrow}[\WID]
+	\def\CW{23ZW}
+	\begin{longtable}{ll}
+	    プロジェクト	& 依存関係にあるプロジェクト \\\hline
+	    Base		& RunSwig \\
+	    Collision		& Foundation, RunSwig \\
+	    Creature		& Foundation, Framework, Physics, RunSwig \\
+	    FileIO		& Foundation, RunSwig \\
+	    Foundation		& Base, RunSwig \\
+	    Framework		& \ParBox{\CW}{%
+				  FileIO, Foundation, Graphics, Physics,
+				  RunSwig} \\
+	    Graphics		& Foundation, RunSwig \\
+	    HumanInterface	& Foundation, RunSwig \\
+	    Install		& SprCSharp, SprExport, SprImport \\
+	    NameManager		& なし \\
+	    Physics		& Collision, Fouondation, RunSwig \\
+	    RunSwig		& なし \\
+	    RunSwig_CSharp	& \ParBox{\CW}{%
+				  Base, Collision, Creature, FileIO, Foundation,
+				  Framework, Graphics, HumanInterface,
+				  NameManager, Physics, TargetManager} \\
+	    SprCSharp		& RunSwig_CSharp, SprImport \\
+	    SprCsSample		& SprCSharp, SprExport, SprImport \\
+	    SprExport		& \ParBox{\CW}{%
+				  Base, Collision, Creature, FioeIO, Foundation,
+				  Framework, Graphics, HumanINterface, Physics,
+				  RunSwig_CSharp} \\
+	    SprImport		& RunSwig_CSharp \\
+	    TargetManager	& なし \\\hline
+        \end{longtable}
+    \end{narrow}
+
+    \vspace{-2.0ZH}
+    [Configuration Properties]
+    \vspace{0.5ZH}
+    \begin{narrow}[\WID]
+	[Configuration]--[Configuration Manager...]
+	\begin{narrow}[\WID]
+	    SprCSharp, SprCsSample, SprImportのすべてについて
+	    \begin{enumerate}
+	      \item Platformに\SQuote{x86}と\SQuote{x64}を追加する
+		    \begin{narrow}[\WID]
+			    \CS プロジェクトには\SQuote{Win32}がないので
+			    \SQuote{x86}で代用する\\
+			    \SQuote{Any CPU}のドロップダウンリストで<New...>から選ぶ\\
+			    Create new project platformsのチェックははずしておく
+		    \end{narrow}
+	      \item Platformから\SQuote{Win32},\SQuote{x64}以外のものを削除する\\
+	      \item Project contextsを次のように設定する\small{
+		    \begin{longtable}{lllll}
+			Project$\dagger$ & & Config & Platform & Build \\\hline
+			\MC{5}{l}{[Debug]--[Win32]}	\\
+			& LibProj  & Debug   & Win32 & check \\
+			& \CS Proj & Debug   & x86   & check \\
+			& Others   & Debug   & Win32 & check \\\hline
+			\MC{5}{l}{[Release]--[Win32]}	\\
+			& LibProj  & Release & Win32 & check \\
+			& \CS Proj & Release & x86   & check \\
+			& Others   & Release & Win32 & check \\\hline
+			\MC{5}{l}{[Trace]--[Win32]}	\\
+			& LibProj  & Trace   & Win32 & check \\
+			& \CS Proj & Release & x86   & check \\
+			& Others   & Release & Win32 & check \\\hline
+			\MC{5}{l}{[Debug]--[x64]}	\\
+			& LibProj  & Debug   & x64   & check \\
+			& \CS Proj & Debug   & x64   & check \\
+			& Others   & Debug   & x64   & check \\\hline
+			\MC{5}{l}{[Release]--[x64]}	\\
+			& LibProj  & Release & x64   & check \\
+			& \CS Proj & Release & x64   & check \\
+			& Others   & Release & x64   & check \\\hline
+			\MC{5}{l}{[Trace]--[x64]}	\\
+			& LibProj  & Trace   & x64   & check \\
+			& \CS Proj & Release & x64   & check \\
+			& Others   & Release & x64   & check \\\hline
+		    \end{longtable}
+		    \def\CW{20ZW}
+		    $\dagger$ ただし\\
+		    \begin{narrow}[\WID]\begin{tabular}{lcl}
+			LibProj &=& \ParBox{\CW}{%
+				Base, Collision, Creature, FileIO, Foundation,
+				Framework, Graphics, HumanInterface, Physics,
+				RunSwig} \\
+			\CS Projs &=& CpsCSharp, SprCsSample, SprImport \\
+			Others  &=& \ParBox{\CW}{%
+				Install, NameManager, RunSwig_CSharp,
+				SprExport, TargetManager}
+		    \end{tabular}\end{narrow}
+		    \medskip
+		    とする。すなわち、\\
+		    \vspace{-1.0ZH}
+		    \begin{narrow}[\WID]\begin{tabular}{ll}
+			Configuration & \ParBox{\CW}{%
+				Springhead Library以外では\SQuote{Trace}がないので
+				\SQuote{Release}で代用する。} \\
+			Platforms     & \ParBox{\CW}{%
+				\CS プロジェクトでは\SQuote{Win32}がないので
+				\SQuote{x86}で代用する。}
+		    \end{tabular}\end{narrow}}
+	    \end{enumerate}
+	\end{narrow}
+    \end{narrow}
+\end{narrow}
+}
+
+%-------------------------------------------------------------------------------
+\subsection{参照の設定}
+\label{sebsec:ReferenceSettings}
+
+\noindent
+以下の表の各<\Project>について、
+
+\begin{narrow}[s][\WID]
+    Solution Explorerで<\Project>を選択
+
+    \vspace{.5ZH}
+    \begin{narrow}[\WID]
+	Menu: [Project]--[Add Reference...]
+
+	Name欄に示されたプロジェクトの中で次のものをチェックして[OK]
+
+	\vspace{-.75ZH}
+	\def\CW{25ZH}
+	\begin{narrow}[\WID]\begin{longtable}{ll}
+	<\Project> & Name \\\hline
+	    Collision	& Foundation \\
+	    Creature	& Foundation, Framework, Physics \\
+	    FileIO	& Foundation \\
+	    Foundation	& Base \\
+	    Framework	& FileIO, Foundation, Graphics, Physics \\
+	    Graphics	& Foundation \\
+	    HumanInterface	& Foundation \\
+	    Physics	& Collision, Foundation \\
+	    SprCSharp	& SprImport \\
+	    SprCsSample	& SprCSharp, SprImport \\
+	    SprExport	& \ParBox{\CW}{%
+			  Base, Collision, Creature, FileIO, Foundation,
+			  Framework, Graphics, HumanInterface, Physics} \\\hline
+	\end{longtable}\end{narrow}
+    \end{narrow}
+\end{narrow}
+
+%-------------------------------------------------------------------------------
+\subsection{各プロジェクトの設定}
+\label{sub:ProjectSettings}
+
+%-------------------------------------------------------------------------------
+\subsubsection{NameManager}
+\label{subsub:NameManager}
+
+\medskip
+\noindent
+Solution Explorerで[NameManager]--[Properties]を選択
+
+\medskip
+\small{%
+\noindent
+\SQuote{All Configurations}--\SQuote{All Platforms}について
+\vspace{.5ZH}
+\begin{narrow}[\WID]
+    [Configuration Properties]--[General]
+    \begin{narrow}[\WID]
+	[Output Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Intermediate Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Configuration Type]
+	\begin{narrow}[\WID]
+	    \verb|Makefile|
+	\end{narrow}
+	[Build Log File]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\| \CONT\\
+	    \verb|$(MSBuildProjectName).log|
+	\end{narrow}
+    \end{narrow}
+
+    [Configuration Properties]--[NMake]
+    \begin{narrow}[\WID]
+	[Build Command Line]
+	\begin{narrow}[\WID]
+	    \verb|nmake -f Makefile.NameManager|
+	\end{narrow}
+	[Rebuild All Command Line]
+	\begin{narrow}[\WID]
+	    \verb|nmake -f Makefile.NameManager|
+	\end{narrow}
+	[Clean Command Line]
+	\begin{narrow}[\WID]
+	    \verb|nmake -f Makefile.NameManager clean|
+	\end{narrow}
+	[Output]
+	\begin{narrow}[\WID]
+	    (空白)
+	\end{narrow}
+    \end{narrow}
+\end{narrow}
+}
+
+%-------------------------------------------------------------------------------
+\subsubsection{RunSwig_CSharp}
+\label{subsub:RunSwigCSharp}
+
+\medskip
+\noindent
+Solution Explorerで[RunSwig_CSharp]--[Properties]を選択
+
+\medskip
+\small{%
+\noindent
+\SQuote{All Configurations}--\SQuote{All Platforms}について
+\vspace{.5ZH}
+\begin{narrow}[\WID]
+    [Configuration Properties]--[General]
+    \begin{narrow}[\WID]
+	[Output Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Intermediate Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Configuration Type]
+	\begin{narrow}[\WID]
+	    \verb|Makefile|
+	\end{narrow}
+	[Build Log File]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\| \CONT\\
+	    \verb|$(MSBuildProjectName).log|
+	\end{narrow}
+    \end{narrow}
+
+    [Configuration Properties]--[NMake]
+    \begin{narrow}[\WID]
+	[Build Command Line]
+	\begin{narrow}[\WID]
+	    \verb|nmake -f Makefile.RunSwig_CSharp| \CONT\\
+	    \hspace{10mm}
+	    \verb|TARGET=<Physics>| \CONT\\
+	    \hspace{10mm}
+	    \verb|PLAT=$(PlatformShortName)|
+	    \verb|PROJECTDIR=$(ProjectDir)|
+	\end{narrow}
+	[Rebuild All Command Line]
+	\begin{narrow}[\WID]
+	    \verb|RunSwig_Clean && nmake -f Makefile.RunSwig_CSharp| \CONT\\
+	    \hspace{10mm}
+	    \verb|TARGET=<Physics>| \CONT\\
+	    \hspace{10mm}
+	    \verb|PLAT=$(PlatformShortName)|
+	    \verb|PROJECTDIR=$(ProjectDir)|
+	\end{narrow}
+	[Clean Command Line]
+	\begin{narrow}[\WID]
+	    \verb|RunSwig_Clean|
+	\end{narrow}
+	[Output]
+	\begin{narrow}[\WID]
+	    (空白)
+	\end{narrow}
+    \end{narrow}
+\end{narrow}
+}
+
+%-------------------------------------------------------------------------------
+\subsubsection{SprCSharp}
+\label{subsub:SprCSharp}
+
+\medskip
+\noindent
+Solution Explorerで[SprCSharp]--[Properties]を選択
+
+\medskip
+\begin{narrow}[s][\WID]
+    [Application]--[Assembly name]
+    \begin{narrow}[\WID]
+	\verb|SprCSharp|
+    \end{narrow}
+    [Application]--[Default namespace]
+    \begin{narrow}[\WID]
+	\verb|SprCSharp|
+    \end{narrow}
+    [Build]--[Output path]
+    \begin{narrow}[\WID]
+	(x86, x64)と(Debug, Release)との各組合せについて、
+	\begin{narrow}[\WID]
+	    \verb|..\<14.0>\bin\x86\Debug\|   \\
+	    \verb|..\<14.0>\bin\x86\Release\| \\
+	    \verb|..\<14.0>\bin\x64\Debug\|   \\
+	    \verb|..\<14.0>\bin\x64\Release\|
+	\end{narrow}
+	の中から適切なものを設定
+    \end{narrow}
+\end{narrow}
+
+%-------------------------------------------------------------------------------
+\subsubsection{SprCsSampleの設定}
+\label{subsub:SprCSharp}
+
+\medskip
+\noindent
+\ref{subsub:SprCSharp} SprCSharpと同様(SprCSharpをSprCsSampleと読み替える)
+
+%-------------------------------------------------------------------------------
+\subsubsection{SprExport}
+\label{subsub:SprExport}
+
+\medskip
+\noindent
+Solution Explorerで[SprCSharp]--[Properties]--[Configuration Properties]を選択
+
+\medskip
+\noindent
+\SQuote{All Configurations}--\SQuote{All Platforms}について
+
+\small{%
+(ただし、$\ddagger$を付した項目については、指定されたConfiguration/Platformについて)
+
+\medskip
+\begin{narrow}[\WID]
+    [General]
+    \begin{narrow}[\WID]
+	[Output Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(SolutionDir)$(VisualStudioVersion)\bin\| \CONT\\
+	    \verb|$(PlatformShortName)\$(Configuration)\|
+	\end{narrow}
+	[Intermediate Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Target Name]
+	\begin{narrow}[\WID]
+	    \verb|SprExport|
+	\end{narrow}
+	[Character Set]
+	\begin{narrow}[\WID]
+	    \verb|Use Multi-Byte Character Set|
+	\end{narrow}
+	[Common Language Runtime Support]
+	\begin{narrow}[\WID]
+	    \verb|No Common Language Runtime Supprot|
+	\end{narrow}
+    \end{narrow}
+
+    [C/\CPP]
+    \begin{narrow}[\WID]
+	[General]--[Additional Include Directories]
+	\begin{narrow}[\WID]
+	    \verb|../../../include;../../../src;%(AdditionalIncludeDirectories)|
+	\end{narrow}
+	[General]--[Common Language Runtime Support]
+	\begin{narrow}[\WID]
+	    \verb|No Common Language Runtime Supprot|
+	\end{narrow}
+	[General]--[SDL checks]
+	\begin{narrow}[\WID]
+	    \verb|Yes (/sdl)|
+	\end{narrow}
+	[General]--[Multi-procesor Compilation]
+	\begin{narrow}[s][\WID]
+	    \verb|Yes (/MP)|
+	\end{narrow}
+
+	[Optimization]--[Optimization]
+	\begin{narrow}[\WID]
+	    \makebox[25mm][l]{$\ddagger$ Debugでは}   \verb|Disables (/Od)|\\
+	    \makebox[25mm][l]{$\ddagger$ Releaseでは} \verb|Maximize Speed (/O2)|
+	\end{narrow}
+	[Optimization]--[Enable Intrinsic Functions]
+	\begin{narrow}[\WID]
+	    \makebox[25mm][l]{$\ddagger$ Debugでは}   \verb|No|\\
+	    \makebox[25mm][l]{$\ddagger$ Releaseでは} \verb|Yes (/Oi)|
+	\end{narrow}
+	[Optimization]--[Favor Size Or Speed]
+	\begin{narrow}[\WID]
+	    \makebox[25mm][l]{$\ddagger$ Debugでは}   \verb|Neither|\\
+	    \makebox[25mm][l]{$\ddagger$ Releaseでは} \verb|Favor fast code (/Ot)|
+	\end{narrow}
+	[Optimization]--[Omit Frame Pointers]
+	\begin{narrow}[\WID]
+	    \makebox[25mm][l]{$\ddagger$ Debugでは}   \verb|No (/Oy-)|\\
+	    \makebox[25mm][l]{$\ddagger$ Releaseでは} \verb|Yes (/Oy)|
+	\end{narrow}
+	[Optimization]--[Whole Program Optimization]
+	\begin{narrow}[\WID]
+	    \verb|No|
+	\end{narrow}
+
+	[Code Generation]--[Enable \CPP Exceptions]
+	\begin{narrow}[\WID]
+	    \verb|Yes with SEH Exceptions (/EHa)|
+	\end{narrow}
+	[Code Generation]--[Enable Floating Point Exceptions]
+	\begin{narrow}[\WID]
+	    \verb|Yes (/fp:except)|
+	\end{narrow}
+
+	[Precompiled Headers]--[Precompiled Header]
+	\begin{narrow}[\WID]
+	    \verb|Not Using Precompiled Headers|
+	\end{narrow}
+
+	[Advanced]--[Disable Specific Warnings]
+	\begin{narrow}[\WID]
+	    \verb|4244;4267|
+	\end{narrow}
+    \end{narrow}
+
+    [Linker]
+    \begin{narrow}[\WID]
+	[General]--[Enable Incremental Linking]
+	\begin{narrow}[\WID]
+	    \verb|No (/INCREMENTAL:NO)|
+	\end{narrow}
+	[General]--[Additional Libray Directories]
+	\begin{narrow}[\WID]
+	    \makebox[25mm][l]{$\ddagger$ Win32では} \verb|../../../lib/win32|\\
+	    \makebox[25mm][l]{$\ddagger$ x64では}   \verb|../../../lib/win64|
+	\end{narrow}
+
+	[Input]--[Additional Dependencies]
+	\begin{narrow}[\WID]
+	    \verb|XINPUT9_1_0.LIB;%(AdditionalDependencies)|
+	\end{narrow}
+	[Input]--[Ignore Specific Default Libraries]
+	\begin{narrow}[\WID]
+	    \verb|XINPUT.LIB|
+	\end{narrow}
+    \end{narrow}
+\end{narrow}
+}
+
+%-------------------------------------------------------------------------------
+\subsubsection{SprImportの設定}
+\label{subsub:SprImport}
+
+\medskip
+\noindent
+\ref{subsub:SprImport} SprCSharpと同様(SprCSharpをSprImportと読み替える)
+
+%-------------------------------------------------------------------------------
+\subsubsection{TargetManager}
+\label{subsub:TargetManager}
+
+\medskip
+\noindent
+全体構成(\SQuote{ALL})でもPhysics構成(\SQuote{PH})でもない場合のみ次の処理が必要
+(プロジェクト\pname{TargetManager}を新規に作成した場合)
+
+\medskip
+\noindent
+Solution Explorerで[TargetManager]--[Properties]を選択
+
+\medskip
+\small{%
+\noindent
+\SQuote{All Configurations}--\SQuote{All Platforms}について
+\vspace{.5ZH}
+\begin{narrow}[\WID]
+    [Configuration Properties]--[General]
+    \begin{narrow}[\WID]
+	[Output Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Intermediate Directory]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\|
+	\end{narrow}
+	[Configuration Type]
+	\begin{narrow}[\WID]
+	    \verb|Makefile|
+	\end{narrow}
+	[Build Log File]
+	\begin{narrow}[\WID]
+	    \verb|$(VisualStudioVersion)\$(Platform)\$(Configuration)\| \CONT\\
+	    \verb|$(MSBuildProjectName).log|
+	\end{narrow}
+    \end{narrow}
+
+    [Configuration Properties]--[NMake]
+    \begin{narrow}[\WID]
+	[Build Command Line]
+	\begin{narrow}[\WID]
+	    \verb|TargetManager <Physics>|
+	\end{narrow}
+	[Rebuild All Command Line]
+	\begin{narrow}[\WID]
+	    \verb|TargetManager <Physics>|
+	\end{narrow}
+	[Clean Command Line]
+	\begin{narrow}[\WID]
+	    (空白)
+	\end{narrow}
+	[Output]
+	\begin{narrow}[\WID]
+	    (空白)
+	\end{narrow}
+    \end{narrow}
+\end{narrow}
+}
+
+\bigskip
+\flushright{－以上－}
+% end: Settings.tex

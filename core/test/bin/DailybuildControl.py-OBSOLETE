@@ -1,0 +1,694 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# ======================================================================
+#  FILE:
+#	DailybuildControl.py
+#
+#  CLASS:
+#	DailybuildControl:
+#	    Manages dailybuild execution control parameters.
+#	    Should be called from where solution file exists.
+#
+#  INITIALIZER:
+#	obj = DailybuildControl(vs_version, verbose=0)
+#	    vs_version:	Visual Studio version.
+#			Can obtain by VisualStudio.get_version()
+#	    verbose:	Verbose level (int) (0: silent).
+#
+#  METHODS:
+#	build_option(platform, config, python=None)
+#	    Set build options and generate executable/log file name.
+#	    platform:	'Win32' or 'x64'
+#	    config:	'Debug', 'Release', 'Trace', ...
+#	    python:	Python version (int) (e.g. 34).
+#
+#	force_rebuild(clean)
+#	    Force 'rebuild' instead of normal 'build'.
+#	    clean:	(bool)
+#
+#	log_option(build, run)
+#	    Make log file or not.
+#	    build:	For build log (bool) (default: True)
+#	    run:	For run log   (bool) (default: True)
+#
+#	closed_src_control(control=UNUSE)
+#	    Set closed soruce control value.
+#	    control:	USE, UNUSE(default) or AUTO. 
+#
+#	override_exe_control(build, run)
+#	    Override execution control flags got from control file.
+#	    build:	Execute build step (bool)
+#	    run:	Execute run step   (bool)
+#
+#	value = get(key)
+#	    Get value associated with the key.
+#	    Available keys are:
+#		SOLUTION	Name of the solution.
+#		SOLUTION_DIR	Process base directory (absolute path).
+#		OUTDIR		Directory where executable to put.
+#		BINDIR		Directory path where related springhead
+#				binaries exists.
+#		PLATFORM	Platform name (e.g. '14.0').
+#		CONFIG		Configuration name with python version.
+#		PYTHON		Python version (e.g. 34).
+#		CLEAN		Force rebuild by removing exe and objs.
+#		OUTFILE		File path of an executable to generate.
+#		LOGFILES	Path list of log file (BUILD and RUN).
+#		EXCLUDE		Exclude this directory form the test.
+#		USE_CLOSED_SRC	Use closed source or not.
+#		CS_CONTROL	Closed soruce control (USE, UNUSE or AUTO).
+#		CS_CTRL_HEADER	Header file name for closed-src control.
+#		CPPMACRO	Macro definition for cpp preprocessor.
+#		EXE_CONTROLS	Execution control list (BUILD and RUN).
+#		LOG_CONTROLS	Log output control list (BUILD and RUN).
+#		PIPEPROCESS	Command line of the process whose stdout
+#				is redirected to stdin of main process.
+#		TIMEOUT		Runtime timeout value in seconds .
+#		EXPECTED	Expected run result (status code).
+#		NEEDINTERVENTION  Need manual intervention at runtime.
+#		KILLPROCESS	Need kill process explicitly.
+#	    value:	Value associated key.
+#
+#	result = has_error()
+#	    Returns True if setup process failed.
+#
+#	info()
+#	    Print information of this instance.
+#
+#	set_dry_run(flag)
+#	    Set/unset dry run flag.  If this flag is set, show command
+#	    line but do not execute it. (for debug use only)
+#	    flag:	(bool) (default: False)
+#
+# ----------------------------------------------------------------------
+#  VERSION:
+#	Ver 1.0  2016/10/05 F.Kanehori	First version.
+#	Ver 1.1  2016/10/19 F.Kanehori	Key 'pipeprocess' introduced.
+#	Ver 1.2  2016/11/17 F.Kanehori	Add new control keywords.
+#	Ver 1.2a 2017/01/11 F.Kanehori	Bug fixed.
+# ======================================================================
+import sys
+import os
+
+sys.path.append('../../bin/test')
+from Util import *
+from KvFile import *
+
+class DailybuildControl:
+
+	#  Keywords
+	#
+	SOLUTION	 = 0
+	SOLUTION_DIR	 = 1
+	OUTDIR		 = 2
+	BINDIR		 = 3
+	PLATFORM	 = 4
+	CONFIG		 = 5
+	PYTHON		 = 6
+	CLEAN		 = 7
+	OUTFILE 	 = 8
+	LOGFILES	 = 9
+	EXCLUDE		 = 10
+	USE_CLOSED_SRC	 = 11
+	CS_CONTROL	 = 12
+	CS_CTRL_HEADER	 = 13
+	CPPMACRO	 = 14
+	EXE_CONTROLS	 = 15
+	LOG_CONTROLS	 = 16
+	PIPEPROCESS	 = 17
+	TIMEOUT		 = 18
+	EXPECTED	 = 19
+	NEEDINTERVENTION = 20
+	KILLPROCESS	 = 21
+	# list indices
+	ERROR	= 0
+	BUILD	= 1
+	RUN	= 2
+	# closed source control
+	AUTO	= 0	# change header file accoding to control file
+	USE	= 1	# test solutions only with UseClosedSrc=True
+	UNUSE	= 2	# test solutions only with UseClosedSrc=False
+
+	#  Class initializer
+	#
+	def __init__(self, version, verbose=0):
+		self.prog = 'DailybuildControl'
+		self.solution = None
+		self.error = False
+		self.dry_run = False
+		self.verbose = verbose if verbose is not None else 0
+
+		# directories
+		self.dir = {}
+		self.dir['solution'] = os.getcwd()
+		self.dir['output'] = None
+		self.dir['log'] = 'log'
+		self.dir['bin'] = {}
+		self.dir['bin']['win32'] = None
+		self.dir['bin']['win64'] = None
+
+		# control file names
+		self.ctlfile = {}
+		self.ctlfile['solution'] = 'dailybuild.alias'
+		self.ctlfile['output'] = 'dailybuild.outdir'
+		self.ctlfile['force_dont_build'] = 'dailybuild.dont.build'
+		self.ctlfile['force_dont_run'] = 'dailybuild.dont.run'
+		self.ctlfile['force_do_build'] = 'dailybuild.do.build'
+		self.ctlfile['force_do_run'] = 'dailybuild.do.run'
+		self.ctlfile['timeout'] = 'dailybuild.timeout'
+		self.ctlfile['all'] = 'dailybuild.control'
+
+		# header file names
+		self.header = {}
+		self.header['closed_src_header'] = 'UseClosedSrcOrNot.h'
+
+		# controls
+		self.control = {}
+		self.control['exclude'] = False
+		self.control['use_closed_src'] = False
+		self.control['cs_control'] = self.UNUSE
+		self.control['exe'] = {}
+		self.control['exe'][self.BUILD] = True
+		self.control['exe'][self.RUN] = True
+		self.control['log'] = {}
+		self.control['log'][self.BUILD] = True
+		self.control['log'][self.RUN] = True
+		self.control['pipeprocess'] = None
+		self.control['timeout'] = None
+		self.control['expected'] = None
+		self.control['cppmacro'] = None
+		self.control['needintervention'] = None
+		self.control['killprocess'] = None
+
+		# file paths
+		self.path = {}
+		self.path['solution'] = None
+		self.path['output'] = None
+		self.path['log'] = {}
+		self.path['log'][self.BUILD] = None
+		self.path['log'][self.RUN] = None
+
+		# build options
+		self.opts = {}
+		self.opts['platform'] = None
+		self.opts['config'] = None
+		self.opts['python'] = None
+		self.opts['clean'] = False
+
+		# visual studio
+		self.vs = {}
+		self.vs['version'] = version
+
+		#
+		self.solution = self.dir['solution'].split('\\')[-1]
+		self.__read_dailybuild_controls(self.ctlfile['all'])
+		self.path['solution'] = self.solution + '.sln'
+		bindir = self.__find_directory('lib')
+		self.dir['bin']['win32'] = bindir + '\\' + 'win32'
+		self.dir['bin']['win64'] = bindir + '\\' + 'win64'
+		#
+		if self.verbose > 2:
+			self.info()
+
+	#  Set build options and generate executable/log file name.
+	#
+	def build_option(self, platform, config, python=None):
+		if 'EmbPython' in self.dir['solution']:
+			config += '_Py' + str(python)
+		self.opts['platform'] = platform
+		self.opts['config'] = config
+		self.opts['python'] = python
+		self.__set_output_dir()
+		self.__make_outfile_name()
+		self.__make_logfile_name()
+		if self.verbose > 1:
+			self.info()
+
+	#  Force 'rebuild' instead of normal 'build'.
+	#
+	def force_rebuild(self, clean):
+		self.opts['clean'] = clean
+
+	#  Make log file or not.  Initial value is True for both.
+	#
+	def log_option(self, build, run):
+		self.control['log'][self.BUILD] = build
+		self.control['log'][self.RUN] = run
+
+	#  Use closed soruce or not.
+	#
+	def closed_src_control(self, control=None):
+		if control is None:
+			control = self.UNUSE
+		if isinstance(control, str):
+			conv = {'use': self.USE, 'unuse': self.UNUSE,
+				'auto': self.AUTO}
+			if control in conv:
+				control = conv[control]
+			else:
+				control = self.UNUSE
+		self.control['cs_control'] = control
+
+	#  Override execution control flags got from control file.
+	#
+	def override_exe_control(self, build, run):
+		self.control['exe'][self.BUILD] = build
+		self.control['exe'][self.RUN] = run
+
+	#  Get the value associated with the key.
+	#
+	def get(self, key):
+		if key == self.SOLUTION:	return self.solution
+		elif key == self.SOLUTION_DIR:	return self.dir['solution']
+		elif key == self.OUTDIR:	return self.dir['output']
+		elif key == self.BINDIR:	return self.dir['bin']
+		elif key == self.PLATFORM:	return self.opts['platform']
+		elif key == self.CONFIG:	return self.opts['config']
+		elif key == self.PYTHON:	return self.opts['python']
+		elif key == self.CLEAN:		return self.opts['clean']
+		elif key == self.OUTFILE:	return self.path['output']
+		elif key == self.LOGFILES:	return self.path['log']
+		elif key == self.CS_CTRL_HEADER:return self.header['closed_src_header']
+		elif key == self.EXCLUDE:	return self.control['exclude']
+		elif key == self.USE_CLOSED_SRC:return self.control['use_closed_src']
+		elif key == self.CS_CONTROL:	return self.control['cs_control']
+		elif key == self.CPPMACRO:	return self.control['cppmacro']
+		elif key == self.EXE_CONTROLS:	return self.control['exe']
+		elif key == self.LOG_CONTROLS:	return self.control['log']
+		elif key == self.PIPEPROCESS:	return self.control['pipeprocess']
+		elif key == self.TIMEOUT:	return self.control['timeout']
+		elif key == self.EXPECTED:	return self.control['expected']
+		elif key == self.NEEDINTERVENTION:\
+						return self.control['needintervention']
+		elif key == self.KILLPROCESS:	return self.control['killprocess']
+		return None
+
+	#  Returns True if setup process failed.
+	#
+	def has_error(self):
+		return self.error
+
+	#  Print information of this instance.
+	#
+	def info(self):
+		print('DailybuildControl:')
+		print('  solution:   %s' % self.solution)
+		print('  directories')
+		print('    solution: %s' % Util.unixpath(self.dir['solution']))
+		print('    output:   %s' % Util.unixpath(self.dir['output']))
+		print('    log:      %s' % Util.unixpath(self.dir['log']))
+		print('    bin:      %s' % Util.unixpath(self.dir['bin']))
+		print('  controls')
+		print('    exe:      %s' % self.control['exe'])
+		print('    log:      %s' % self.control['log'])
+		print('    pipe-proc %s' % self.control['pipeprocess'])
+		print('    expected: %s' % self.control['expected'])
+		print('    timeout:  %s' % self.control['timeout'])
+		print('    intervene:%s' % self.control['needintervention'])
+		print('    killproc: %s' % self.control['killprocess'])
+		print('  paths')
+		print('    solution: %s' % Util.unixpath(self.path['solution']))
+		print('    output:   %s' % Util.unixpath(self.path['output']))
+		print('    log:      %s' % Util.unixpath(self.path['log']))
+		print('  build options')
+		print('    platform: %s' % self.opts['platform'])
+		print('    config:   %s' % self.opts['config'])
+		print('    python:   %s' % str(self.opts['python']))
+		print('    clean:    %s' % str(self.opts['clean']))
+		print('  Visual Studio')
+		print('    version:  %s' % str(self.vs['version']))
+
+	#  Set/unset dry run flag.
+	#
+	def set_dry_run(self, flag):
+		self.dry_run = flag
+
+	# --------------------------------------------------------------
+	#  For class private use
+	# --------------------------------------------------------------
+
+	#  Read dailybuild contril file.
+	#  Control file is searched and read from current directory to
+	#  go up until 'tests' or 'Samples' directory has found.  As for
+	#  the same key, lower level file has priority.
+	#
+	def __read_dailybuild_controls(self, fname):
+		# fname:	Dailybuild control file name.
+		cwd = self.dir['solution'].split('\\')
+		top = len(cwd)
+		for n in range(len(cwd)):
+			if cwd[n] in ['tests', 'Samples']:
+				top = n
+		for n in range(top, len(cwd)):
+			up = len(cwd) - n - 1
+			prefix = ''
+			for n in range(up):
+				prefix += '..\\'
+			if os.path.exists(prefix + fname):
+				kvf = KvFile(prefix + fname)
+				if kvf.read() > 0:
+					self.__set_control_values(kvf)
+		if self.verbose > 1:
+			cs_control_str = ['AUTO', 'USE', 'UNUSE']
+			print('\ndailybuild_controls:')
+			print('  Exclude        %s' % self.control['exclude'])
+			print('  SolutionAlias  %s' % self.solution)
+			print('  OutputDir      %s' % self.dir['output'])
+			print('  UseClosedSrc   %s' % self.control['use_closed_src'])
+			print('  CS control     %s' %
+					cs_control_str[self.control['cs_control']])
+			print('  CppMacro       %s' % self.control['cppmacro'])
+			print('  Build          %s' % self.control['exe'][self.BUILD])
+			print('  Run            %s' % self.control['exe'][self.RUN])
+			print('  Timeout        %s' % self.control['timeout'])
+			print('  ExpectedStatus %s' % self.control['expected'])
+			print('  NeedIntervene  %s' % self.control['needintervention'])
+			print('  KillProcess    %s' % self.control['killprocess'])
+
+	#  Set control value (for all key-value pairs).
+	#
+	def __set_control_values(self, kvf):
+		# kvf:		KvFile class object.
+		for key in kvf.keys():
+			self.__set_control_value(key.lower(), kvf.get(key))
+
+	#  Set control value (for one key-value pair).
+	#
+	def __set_control_value(self, key, value):
+		# key:		Control key.
+		# value:	Control value to set.
+		if key == 'exclude':
+			self.control['exclude'] = value
+		elif key == 'solutionalias':
+			self.solution = value
+		elif key == 'outputdir':
+			self.dir['output'] = value
+		elif key == 'useclosedsrc':
+			self.control['use_closed_src'] = value
+		elif key == 'cppmacro':
+			self.control['cppmacro'] = value
+		elif key == 'dontbuild':
+			self.control['exe'][self.BUILD] = not value
+		elif key == 'dontrun':
+			self.control['exe'][self.RUN] = not value
+		elif key == 'pipeprocess':
+			self.control['pipeprocess'] = value
+		elif key == 'timeout':
+			self.control['timeout'] = value
+		elif key == 'expectedstatus':
+			self.control['expected'] = value
+		elif key == 'needintervention':
+			self.control['needintervention'] = value
+		elif key == 'killprocess':
+			self.control['killprocess'] = value
+
+	#  Set output directory name.
+	#  Directory name is composed from toolset version, platform name,
+	#  configuration name and pythin version.  These parameters can be
+	#  specified by macro '$TOOLSET', '$PLATFORM', '$CONFIGURATION' and
+	#  '$PYTHON_VERSION' in the control file (key: 'OutputDir').
+	#
+	def __set_output_dir(self):
+		# default output directory is determined by build options
+		vsv = self.vs['version']
+		if vsv == '10.0':
+			vsv = '10'
+		platform = self.opts['platform']
+		config = self.opts['config']
+		py_version = self.opts['python']
+		self.dir['output'] = '\\'.join([vsv, platform, config])
+		#
+		if not os.path.exists(self.ctlfile['output']):
+			return
+		# output directory is taken from the file
+		line = self.__read_one_line(self.ctlfile['output'])
+		if line is not None:
+			line = line.replace('$TOOLSET', vsv)
+			line = line.replace('$PLATFORM', platform)
+			if '$PYTHON_VERSION' in line:
+				if py_version is None:
+					self.__error('python version not specified')
+					self.error = True
+					return
+				py_version = str(py_version)
+				line = line.replace('$PYTHON_VERSION', 'py' + py_version)
+			line = line.replace('$CONFIGURATION', config)
+			self.dir['output']= line.replace('/', '\\')
+
+	#  Generate output file name.
+	#
+	def __make_outfile_name(self):
+		path = self.dir['output'] + '\\' + self.solution + '.exe'
+		self.path['output'] = path
+
+	#  Generate log file name.
+	#
+	def __make_logfile_name(self):
+		platform = self.opts['platform']
+		config = self.opts['config']
+		base = self.dir['log']
+		base += '\\' + self.solution + '_' + self.vs['version']
+		base += '_' + platform + '_' + config
+		self.path['log'][self.BUILD] = base + '_build.log'
+		self.path['log'][self.RUN] = base + '_run.log'
+
+	#  Find directory having 'src' or 'test' as one of direct child
+	#  directories, and returns it with specified 'dir' appended.
+	#
+	def __find_directory(self, dir):
+		# dir:		Directory name to append.
+		dirs = self.dir['solution'].split('\\')
+		for n in range(len(dirs)):
+			if dirs[n] == 'src' or dirs[n] == 'test':
+				break
+		if n == len(dirs)-1:
+			self.__error("can't find %s directory" % dir)
+			self.error = True
+			return None
+		return '\\'.join(dirs[0:n]) + '\\' + dir
+
+	#  Replace macro definition in the file specified by 'path'.
+	#
+	def __replace(self, path, fm, to):
+		# path:		Path of the header file.
+		# fm:		Search pattern.
+		# to:		Replace pattern.
+		if path is None or not os.path.exists(path):
+			return
+		if self.verbose:
+			print('  replace: pattern: [%s] -> [%s]' % (fm, to))
+		try:
+			# read header file
+			lines = []
+			with open(path, 'r') as ifile:
+				for line in ifile:
+					lines.append(line.strip())
+			count = 0
+			replaced = []
+			for line in lines:
+				if fm in line:
+					line.replace(fm, to)
+					count += 1
+				replaced.append(line)
+			ifile.close()
+			if count == 0:
+				if self.verbose:
+					print('  no need to replace')
+					print()
+				return
+
+			# create tmp file
+			tmpfname = path + '.tmp'
+			with open(tmpfname, 'w') as ofile:
+				for line in lines:
+					ofile.write(line + '\n')
+			ofile.close()
+
+			# rename files
+			fout = Util.NULL
+			ferr = Util.NULL
+			args = 'rename %s %s.org >NUL 2>&1' % (path, path)
+			Util.exec(args, shell=True, dry_run=self.dry_run)
+			leafname = path.split('\\')[-1]
+			args = 'rename %s %s >NUL 2>&1' % (tmpfname, leafname)
+			Util.exec(args, shell=True, dry_run=self.dry_run)
+			if self.dry_run: print()
+
+		except IOError as err:
+			self.__error('%s' % (err))
+			self.error = True
+
+	#  Read one line data form 'path'.  Comment lines are ignored.
+	#
+	def __read_one_line(self, path):
+		lines = []
+		try:
+			with open(path, 'r') as ifile:
+				for line in ifile:
+					lines.append(line.strip())
+		except IOError as err:
+			# can't read file
+			self.__error('%s' % (err))
+			self.error = True
+			return None
+		lines = self.__skip_comment(lines, '#')
+		if lines is None or len(lines) == 0:
+			return None
+		if self.verbose:
+			print('  read: [%s]' % lines[0])
+		return lines[0]
+
+	#  soon will be obsoleted
+	#
+	def __skip_comment(self, lines, prefix):
+		if lines is None: return
+		skipped = []
+		for line in lines:
+			line = line.strip()
+			if line != '' and line[:len(prefix)] != prefix:
+				skipped.append(line)
+		return skipped
+
+	#  Print error message to stderr.
+	#
+	def __error(self, msg):
+		Util.error(self.prog + ': Error: ' + msg)
+
+# ----------------------------------------------------------------------
+#  Test main
+# ----------------------------------------------------------------------
+if __name__ == '__main__':
+
+	from optparse import OptionParser
+	from SpringheadTest import *
+	from VisualStudio import *
+
+	usage = 'Usage: %prog [options] directory'
+	parser = OptionParser(usage = usage)
+	parser.add_option('-t', '--toolset', dest='toolset',
+			default='14.0',
+			help='Visual Studio version [default: %default]')
+	parser.add_option('-D', '--dry-run',
+			dest='dry_run', action='store_true',
+			default=False, help='set dry-run mode')
+	parser.add_option('-c', '--closed_src_control',
+			dest='cs_control', default='unuse',
+			metavar='CTRL',
+			help="closed src control " +
+				"('use', 'unuse'(default) or 'auto')")
+	parser.add_option('-v', '--verbose',
+			dest='verbose', action='count',
+			default=0, help='set verbose mode')
+	parser.add_option('-w', '--vs-verbose',
+			dest='vs_verbose', action='count',
+			default=0, help='set VisualStudio verbose mode')
+	(options, args) = parser.parse_args()
+	if len(args) != 1:
+		Util.exec('DailybuildControl -h', shell=True)
+		sys.exit(-1)
+	if options.cs_control not in ['use', 'unuse', 'auto']:
+		print("Error: -c: must be one of 'use', 'unuse' or 'auto'")
+		sys.exit(-1)
+	testdir = args[0]
+
+	putlog = [True, True]		# [build, run]
+	runlog_lines = 10
+
+	def go(platform, config, py_version):
+		ctl.log_option(putlog[0], putlog[1])
+		ctl.build_option(platform, config, py_version)
+		if not ctl.has_error():
+			info(ctl)
+		vs.set_clean(ctl.get(ctl.OUTDIR), clean=True)
+		vs.set_log(ctl.get(ctl.LOGFILES)[ctl.BUILD])
+		status = vs.build(platform, ctl.get(ctl.CONFIG), py_version)
+		print('build result: %d' % status)
+		return status
+
+	def info(ctl):
+		cs_control_str = ['AUTO', 'USE', 'UNUSE']
+		print('DailybuildControl')
+		print('  solution:       %s' % ctl.get(ctl.SOLUTION))
+		print('  solution_dir:   %s' % ctl.get(ctl.SOLUTION_DIR))
+		print('  use_closed_src: %s' % ctl.get(ctl.USE_CLOSED_SRC))
+		print('  cs_control:     %s' %
+				cs_control_str[ctl.get(ctl.CS_CONTROL)])
+		print('  outfile:        %s' % ctl.get(ctl.OUTFILE))
+		print('  logfiles        %s' % ctl.get(ctl.LOGFILES))
+		print('  binary_dir:     %s' % ctl.get(ctl.BINDIR))
+		print('  exe_controls:   %s' % ctl.get(ctl.EXE_CONTROLS))
+		print('  log_controls:   %s' % ctl.get(ctl.LOG_CONTROLS))
+		print('  timeout:        %s' % ctl.get(ctl.TIMEOUT))
+		print()
+
+	def head(file, maxlines):
+		if not os.path.exists(file):
+			return 
+		with open(file) as f:
+			line = f.readline()
+			while line and maxlines > 0:
+				print(line.strip())
+				line = f.readline()
+				maxlines -= 1
+
+	cwd = os.getcwd()
+	os.chdir(testdir)
+
+	print('Visual Studio')
+	vs = VisualStudio(options.toolset, options.vs_verbose)
+	#print('DailybuildControl')
+	ctl = DailybuildControl(vs.get_version(), options.verbose)
+	vs.solution(ctl.get(ctl.SOLUTION))
+	if vs.has_error() or ctl.has_error():
+		os.chdir(cwd)
+		sys.exit(-1)
+	print('')
+
+	py_version = None
+	if 'EmbPython' in os.getcwd():
+		py_version = 34
+
+	vs.set_dry_run(options.dry_run)
+	ctl.set_dry_run(options.dry_run)
+
+	ctl.closed_src_control(options.cs_control)
+	use_closed_src = ctl.get(ctl.USE_CLOSED_SRC)
+	if options.cs_control == 'auto':
+		print('auto')
+		print('apply: %s' % use_closed_src)
+		st = SpringheadTest(vs, py_version, use_closed_src)
+		st.apply_use_closed_src(use_closed_src)
+
+	#timeout = ctl.get(ctl.TIMEOUT)
+	timeout = 5
+
+	status = go('Win32', 'Debug', py_version)
+	if status == 0:
+		exefile = ctl.get(ctl.OUTFILE)
+		logfile = ctl.get(ctl.LOGFILES)[ctl.RUN]
+		result = Util.exec(exefile,
+				stdout=logfile, stderr=Util.STDOUT,
+				timeout=timeout,
+				verbose=1, dry_run=options.dry_run)
+		head(logfile, runlog_lines)
+		augmsg = '(timeout)' if result == Util.ETIME else ''
+		print('run result: %d %s' % (result, augmsg))
+	input('Hit any key')
+	print('')
+
+	status = go('x64', 'Release', py_version)
+	if status == 0:
+		exefile = ctl.get(ctl.OUTFILE)
+		logfile = ctl.get(ctl.LOGFILES)[ctl.RUN]
+		result = Util.exec(exefile,
+				stdout=logfile, stderr=Util.STDOUT,
+				timeout=timeout,
+				verbose=1, dry_run=options.dry_run)
+		head(logfile, runlog_lines)
+		augmsg = '(timeout)' if result == Util.ETIME else ''
+		print('run result: %d %s' % (result, augmsg))
+
+	os.chdir(cwd)
+	sys.exit(0)
+
+# end: DailybuildControl.py

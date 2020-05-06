@@ -1,0 +1,42 @@
+Import { path = "grFloor.x" }
+Import { path = "phKumaBody.x" }
+Import { path = "grKuma.x" }
+
+FWScene fwScene{	
+	/* PHSolid‚ÆGRFrame‚Æ‚ÌŠÖ˜A•t‚¯ */
+	FWObject fwKuma{
+		*soKuma			// PHSolid
+		*grFrameKuma	// GRFrame
+	}
+	FWObject fwFloor{
+		*soFloor		// PHSolid
+		*grFrameFloor	// GRFrame
+	}
+
+	/* PHScene“à‚ÌObject */
+	PHScene phScene{
+		PHSolid soKuma{
+			pose = 1 0 0 0  -0.5 10 0
+			inertia = 10 0 0   0 1 0  0 0 10
+			dynamical = true
+			*phKumaBody			// link to xfile(physics model)
+		}
+		PHSolid soFloor{
+			dynamical = false
+			*grFloor		// link to xfile(physics model)
+		}
+	}
+	
+	/* GRScene“à‚ÌObject */
+	GRScene grScene{
+		GRFrame grFrameKuma { *grKuma }
+		GRFrame grFrameFloor{ *grFloor }
+		GRLight light1 {						#SprGRRender.h GRMaterialDesc
+			ambient = 0.2 0.2 0.2 1.0			#Vec4f ambient
+			diffuse = 1.0 1.0 1.0 1.0			#Vec4f diffuse
+			specular = 0.2 0.2 0.2 1.0			#Vec4f specular
+			position = 1.0 1.0 1.0 0.0			#Vec4f position
+			range = 10000.0						#float range
+		}
+	}
+}

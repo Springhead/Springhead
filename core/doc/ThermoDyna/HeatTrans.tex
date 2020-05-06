@@ -1,0 +1,2377 @@
+%%% なぜならば	故に	記号の定義
+
+\def\therefore{%
+\setlength{\unitlength}{1pt}%
+\thinlines %
+\begin{picture}(12,12)%
+\put(0, 0){.}
+\put(5, 8){.}
+\put(10,0){.}
+\end{picture}%
+}%
+
+\def\since{%
+\setlength{\unitlength}{1pt}%
+\thinlines %
+\begin{picture}(12,12)%
+\put(0 ,8){.}
+\put(5 , 0){.}
+\put(10,8){.}
+\end{picture}%
+}%
+
+%%%		記号の定義		ここまで
+
+
+%
+%
+\chapter{熱伝導シミュ}
+
+\section{熱伝達・伝導にまつわる語句・用語のまとめ}
+熱輻射（輻は常用漢字になく、戦後、「放射」に置き換えられた$[wikipedia:http://ja.wikipedia.org/wiki/％E6％94％BE％E5％B0％84$]）．
+：熱が電磁波として運ばれる現象、または物体が熱を電磁波として放出する現象をさす．
+\section{有限要素法について}
+\subsection{有限要素法の全体像}
+有限要素法の成り立ち，
+
+位置づけ，
+
+分類，
+
+特徴，
+
+一般的な説明
+\section{熱伝導問題のシミュレーション}
+%
+まず，熱伝導の支配方程式を導出する．
+式の導出には，矢川ら\cite{yagawa1983}，小林ら\cite{idoh1997}を参考にした．
+%
+支配方程式は，以下のエネルギー保存則に(経験則から生まれた)フーリエの法則を導入することで導出される(\cite{yagawa1983}pp.2(ブロック線図)，pp.8(図2.1)参照)．
+%
+%
+\subsubsection{エネルギー保存則}
+静止している連続体の内の微小直方体の持つ単位質量当りのエネルギー$E$は，
+\begin{equation}
+E = e
+\end{equation}
+ただし，$e$は内部エネルギーを表し，比熱$ c $，温度$T$を用いると，
+%
+\begin{equation}
+e = c T
+\end{equation}
+で表せる．
+%
+微小直方体要素中に含まれるエネルギーは密度を$\rho $とすると，
+$\rho Edxdydz = \rho c T dxdydz$である．
+単位時間当たり変化率は，$ \frac{\partial (\rho  c T)}{\partial t}dxdydz　$となる．
+ただし，微小直方体の$x,y,z$軸方向の微小幅をそれぞれ$ dx,dy,dz $とする．
+%
+エネルギー保存則より，
+\begin{eqnarray}\label{式65}
+&& \nonumber \frac{\partial (\rho c T)}{\partial t}dxdydz \\
+&& \nonumber =\left( 単位時間に外部から要素内部に供給される熱量\dot{Q}dxdydz\right) \\
+&& -\left( 単位時間に熱伝導によって外部に流出する熱量\dot{q} \right)
+\end{eqnarray}
+ここで，$\dot{Q}$は単位時間に単位体積当たりに外部から供給される熱量で，強制加熱，輻射，化学反応によるものなどがある．
+%
+ただし，内部で熱が発生しないものとする．発生したり，吸収して温度上昇以外のエネルギーとして変性が生じたりする場合には上式に加えて$ \dot{q} $に加わる熱量を考慮する必要がある．
+%
+%
+\clearpage
+\subsubsection{熱伝導による項}
+%
+\subsubsection{フーリエの法則：}
+単位時間に単位面積を移動する熱量は，その点における温度勾配に比例する
+
+%
+より，ある点における温度をT，熱伝導係数をλとすれば，その点におけるx,y,z方向に伝導する熱量の単位時間，単位面積当たりの値は，それぞれ
+$ -\lambda_{xx}\frac{\partial T}{\partial x} $,
+$ -\lambda_{yy}\frac{\partial T}{\partial y} $,
+$ -\lambda_{zz}\frac{\partial T}{\partial z} $
+と書ける．したがって，$dx,dy,dz$が十分に小さい時，$x_0$でx軸に垂直な面から流入する熱量は,
+$ \left( -\lambda_{xx}\frac{\partial T}{\partial x} \right) dydz $となる．
+微小距離$dx $離れた点 $ x_0 + dx $では，位置$x_0 $での温度勾配$ \frac{\partial T}{\partial x} $を用いて，$T_{x+dx}=T +\frac{\partial T}{\partial x} dx $となるので，流出する熱量は，
+$ -\lambda_{xx}\frac{ \partial T_{x+dx}}{\partial x} dydz = \left( -\lambda_{xx} \frac{\partial T}{\partial x} \right) dydz + \frac{\partial }{\partial x} \left( -\lambda_{xx} \frac{\partial T}{\partial x} \right) dxdydz  $となる．
+%
+%
+\begin{figure}[htb]
+\center
+\includegraphics[width = 14cm]{heatelem.eps}
+\caption{微小直方体に出入りする熱量}
+\label{fig:heatelem}
+\end{figure}
+%
+%
+よって，単位時間に単位直方体から流出する熱量は，
+$ \frac{\partial }{\partial x} \left( -\lambda_{xx} \frac{\partial T}{\partial x} \right) dxdydz  $
+となる．同様にして，$y,z$軸方向でも導出すると，式\ref{式65}の$ \dot{q}$は，
+\begin{equation}
+\dot{q} = - \left[ \frac{\partial }{\partial x} \left( -\lambda\frac{\partial T}{\partial x} \right) +\frac{\partial }{\partial y} \left( -\lambda\frac{\partial T}{\partial y} \right) 
++ \frac{\partial }{\partial z} \left( -\lambda\frac{\partial T}{\partial z} \right) \right] dxdydz
+\end{equation}
+となる．
+
+　以上より，式\ref{式65}に$ \dot{q} $を代入して，両辺をdxdxdzで除すると，
+%
+\begin{equation}\label{支配方程式}
+\rho c \frac{\partial T}{\partial t} = \frac{\partial Q}{\partial t} + \frac{\partial }{\partial x}\lambda_{xx}\frac{\partial T}{\partial x} + \frac{\partial }{\partial y}\lambda_{yy}\frac{\partial T}{\partial y} + \frac{\partial }{\partial z}\lambda_{zz}\frac{\partial T}{\partial z}
+\end{equation}
+ただし，比熱を$ c $とする．
+%
+%
+\subsubsection{熱伝導の支配方程式の離散化}\label{KFEM}
+%
+本節では，導かれた熱伝導の支配方程式を基に，
+%要検討
+%メッシュ形状の自由なモデルに対して
+固体内の３次元熱伝導式をガラーキン法で離散化する．
+式\ref{支配方程式}を整理すると次式になる．
+%
+\begin{equation}\label{支配方程式2}
+\rho c \frac{\partial T}{\partial t} = \frac{\partial }{\partial x} \left( \lambda \frac{\partial T}{\partial x} \right) + \frac{\partial }{\partial y} \left( \lambda \frac{\partial T}{\partial y} \right) + \frac{\partial }{\partial z} \left( \lambda \frac{\partial T}{\partial z}\right) + \dot{Q}
+\end{equation}
+ただし，T：温度, λ：熱伝導率, Q：内部発熱率($ \dot{Q}は単位時間に単位体積当たりに供給される熱量・発熱率 $), ρ：密度, c：比熱, t：時刻　
+である．本研究では，熱伝導する物質は等方性がある($ \lambda_{xx} = \lambda_{yy} = \lambda_{zz} = \lambda $)として計算を行う．
+%
+熱伝導問題の境界条件は，熱流速を$ q[W/m^2]$，境界上での外向き法線ベクトルを$n$
+%$ n (= n_x +n_y +n_z) $？
+%
+とするとフーリエの法則より次の式で与えられる(\cite{yagawa1983}のpp.103の(3)式)．
+%(()内の計算式は要出典かつ式\ref{Fourierapply}で未使用のため削除予定)．
+%
+%
+\begin{equation}\label{eqn1-2}
+	q = - [\lambda] \frac{\partial T}{\partial n}
+\end{equation}
+%(以下、削除)
+%\begin{equation}
+%\begin{pmatrix}
+% = -[\lambda](n \cdot ∇T) =-
+%\left[
+%	\begin{array}{ccc} 
+%	\lambda_{xx} & 0 & 0 \\
+%	0 & \lambda_{yy} & 0 \\
+%	0 & 0 & \lambda_{zz} \\
+%	\end{array}
+%	\right]
+%	\left[
+%	\begin{array}{c} 
+%	\frac{\partial T}{\partial x} n_x \\
+%	\frac{\partial T}{\partial y} n_y \\
+%	\frac{\partial T}{\partial z} n_z \\
+%	\end{array}
+%\right]
+%\end{pmatrix}
+%\end{equation}
+%
+%
+%
+
+以上より，熱伝導問題の支配方程式と有限要素の境界条件が与えられたので，支配方程式をガラーキン法によって離散化する．
+他に離散化する方法には，リッツ法もあるが，等価な式が出てくるため，省く．
+
+\subsection{ガラーキン法とは？(定義)}
+変分法の一種．変分法を拡張した重みつき残差法を基本とする近似解法
+
+
+\subsection{ガラーキン法に基づく有限要素法(\cite{yagawa1983}pp.104～を補完)}
+%
+解析対象を有限な要素に分割し，要素内の温度分布を次のように表現する．
+%
+\begin{equation}\label{eqn1-9}
+T(x,y,z,t)=[N(x,y,z)] \{T(t)\}_{ele}
+\end{equation}
+//　(要素内部の任意点の温度を有限要素の節点温度Tを使ってあらわした式)//
+
+%
+ただし，有限要素内での任意位置(x,y,z)・任意時間(t)の温度をT，要素内部温度とを結びつける重み関数$[ N ](1×nの行マトリクス，n:有限要素の接点数)$ と，
+ある時刻ｔにおける有限要素の節点温度ベクトル$\{ T \}_{ele} $で表す．
+%
+%
+$[N]$を重み関数として，式\ref{支配方程式2}にガラーキン法を適用すると，以下の式になる．
+%
+%
+\begin{equation}\label{galerkin}
+ \int_v [N]^T 
+\{
+\frac{\partial }{\partial x} \left( \lambda \frac{\partial T}{\partial x} \right) + \frac{\partial }{\partial y} \left( \lambda \frac{\partial T}{\partial y} \right) + \frac{\partial }{\partial z} \left( \lambda \frac{\partial T}{\partial z}\right) + \dot{Q} - \rho c\frac{\partial T}{\partial t} 
+\} dv = 0
+\end{equation}
+%一つ目の[N]^{T}(転置)はガラーキン法によるもの．もう一つの[N]はT=NTによるもの．
+%
+ただし，上付き添え字$T$は転置を，$v$は要素領域を表す．
+(ガラーキン法は$[N]^{T}$(転置)を付け加える．)
+
+%
+上式について，次のように３つの項に分けて考える．
+\begin{equation}\label{2diff}
+\int_v [ N ]^T 
+\{
+\frac{\partial }{\partial x} \left( \lambda \frac{\partial T}{\partial x} \right) + \frac{\partial }{\partial y} \left( \lambda \frac{\partial T}{\partial y} \right) + \frac{\partial }{\partial z} \left( \lambda \frac{\partial T}{\partial z}\right) 
+\} dv
+\end{equation}
+%
+\begin{equation}
+\int_v [ N ]^T 
+\frac{\partial Q}{\partial t}
+ dv
+\end{equation}
+%
+\begin{equation}
+\int_v [ N ]^T 
+\rho c\frac{\partial T}{\partial t}
+ dv
+\end{equation}
+%
+ここで，式\ref{2diff}は，２階微分項を含むので，部分積分を用いて1階微分に弱形式化を行う．
+%
+\begin{equation}\label{bubun}
+\int_v N \nabla^2 A dv= \int_S N \nabla A \cdot ndS- \int_v \nabla N \cdot \nabla A dv 
+\end{equation}
+%
+式\ref{bubun}を用いて，式\ref{2diff}を変形すると，次式のようになる．
+%
+%整式する
+\begin{eqnarray}\label{eqn1-8}
+\nonumber & & \int_v [ N ]^T \{ \frac{\partial }{\partial x} \left( \lambda \frac{\partial T}{\partial x} \right) + \frac{\partial }{\partial y} \left( \lambda \frac{\partial T}{\partial y} \right) + \frac{\partial }{\partial z} \left( \lambda \frac{\partial T}{\partial z}\right)  \} dv 	\\
+\nonumber & &= \int_S [ N]^T \left( \lambda \frac{\partial T}{\partial x} n_x + \lambda \frac{\partial T}{\partial y} n_y +\lambda \frac{\partial T}{\partial z} n_z \right) dS 			\\
+& & - \int_v \{ \frac{\partial [ N]^T }{\partial x} \left( \lambda \frac{\partial T}{\partial x}\right) +\frac{\partial \{ N\}^T }{\partial y} \left( \lambda \frac{\partial T}{\partial y}\right) + \frac{\partial \{ N\}^T }{\partial z} \left( \lambda \frac{\partial T}{\partial z}\right) \}
+dv
+\end{eqnarray}
+%
+%
+%（転置行列を使って表しても大して違い無いだろういう近似．大体は転置行列になるはずだからね．という目論見なんでしょうね．　←要根拠\cite{}）
+%
+
+式\ref{eqn1-9}を式\ref{eqn1-8}に適用すると，次式のようになる．
+ただし，節点温度は空間の関数ではないので，積分の外に出すことができる．
+%
+\begin{eqnarray}\label{eqn1-10}
+\nonumber & & \int_v [ N ]^T \{ \frac{\partial }{\partial x} \left( \lambda \frac{\partial T}{\partial x} \right) + \frac{\partial }{\partial y} \left( \lambda \frac{\partial T}{\partial y} \right) 			+ \frac{\partial }{\partial z} \left( \lambda \frac{\partial T}{\partial z}\right)  \} dv 		\\
+\nonumber & & = \int_S [ N]^T \left( \lambda \frac{\partial T}{\partial x} n_x + \lambda \frac{\partial T}{\partial y} n_y +\lambda \frac{\partial T}{\partial z} n_z \right) dS 			\\
+\nonumber & &	- \int_v \lambda \{ \frac{\partial [ N]^T }{\partial x} \frac{\partial  [N] \{T\}_{ele} }{\partial x} +\frac{\partial [ N]^T }{\partial y}  \frac{\partial [ N] \{T\}_{ele} }{\partial y} + \frac{\partial [ N]^T }{\partial z} \frac{\partial [ N] \{T\}_{ele} }{\partial z} \}
+dv \\
+\nonumber & & = \int_S [N]^T [\lambda] \frac{\partial T}{\partial n}dS　\\
+& & - \int_v \lambda \{ \frac{\partial [ N]^T }{\partial x}  \frac{\partial  [ N] }{\partial x} + \frac{\partial [ N]^T }{\partial y}  \frac{\partial [ N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]  }{\partial z} \} dv \cdot \{T\}_{ele}
+\end{eqnarray}
+//($[N]^{T}$(転置)はガラーキン法によるもの，$[N]$は$T=NT$によるもの)//
+
+
+式\ref{eqn1-10}の右辺第一項に式\ref{eqn1-2}のフーリエの法則の式を適用すると
+%
+\begin{equation}\label{Fourierapply}
+\int_S [N]^T[ \lambda] \frac{\partial T}{\partial n} dS = - \int_S q[N]^T dS
+\end{equation}
+%yagawaのpp.103　(3)式より\cite{yagawa1983}
+が得られる．以上より，支配方程式にガラーキン法を適用(\ref{galerkin})することで，次の離散化された式が得られる．
+%
+%
+\begin{eqnarray}\label{galerkin_s}
+\nonumber & & - \int_v \lambda \left\{ \frac{\partial [N]^T }{\partial x}  \frac{\partial  [N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]  }{\partial z} \right\} dv \cdot \{T\}_{ele} \\
+\nonumber & & - \int_S q[N]^T dS + \int_v [N]^T \frac{\partial Q}{\partial t} dv \\
+& & -  \int_v \rho c[N]^T [N] \frac{\partial \{T\}_{ele} }{\partial t} dv = 0
+\end{eqnarray}
+%
+両辺に$ -1 $をかけて
+%
+%
+\begin{eqnarray}\label{galerkin_s2}
+\nonumber & &  \int_v \lambda \left\{ \frac{\partial [N]^T }{\partial x}  \frac{\partial  [N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]  }{\partial z} \right\} dv \cdot \{T\}_{ele} \\
+\nonumber & & + \int_S q[N]^T dS - \int_v [N]^T \frac{\partial Q}{\partial t} dv \\
+& & +  \int_v \rho c[N]^T [N] \frac{\partial \{T\}_{ele} }{\partial t} dv = 0
+\end{eqnarray}
+%
+上式を整理すると、次式になる。
+
+\begin{eqnarray}
+[K]\{ T_{ele}\}+[C]\left\{ \frac{\partial T_{ele}}{\partial t}\right\} =\{ F \}
+\end{eqnarray}
+
+\begin{eqnarray}
+[K]
+&=&
+\int_v \lambda \left\{ \frac{\partial [N]^T }{\partial x}  \frac{\partial  [N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]  }{\partial z} \right\} dv \cdot \{T\}_{ele}
+\end{eqnarray}
+\begin{eqnarray}
+[C]
+&=&
+\int_v \rho c[N]^T [N] \frac{\partial \{T\}_{ele} }{\partial t} dv
+\end{eqnarray}
+\begin{eqnarray}\label{F}
+\{ F\}
+&=&
+\int_v [N]^T \frac{\partial Q}{\partial t} dv - \int_S q[N]^T dS
+\end{eqnarray}
+式\ref{F}中の$ \int_S q[N]^T dS $について$q$を次に示す境界条件と置き換えることで導入する。
+
+
+\subsection{温度境界条件}
+次に，境界条件について考える．
+境界条件には，温度固定条件，熱流速条件，熱伝達条件，熱輻射条件の4つの境界条件がある．
+%
+\subsubsection{温度境界条件：}
+温度固定境界条件は，有限要素法での固定境界条件に相当し，
+境界$S_1 $上で固定温度$ T_fix $とすると，
+\begin{equation}
+T = T_{fix}　　（境界S_1上で）
+\end{equation}
+
+熱流速境界条件：
+熱流速境界条件では，境界$S_2$上で熱流速$q_0 [W / (m \cdot K)]$が流出入するという境界条件であり，
+\begin{equation}
+q =  q_0　　（境界S_2上で）
+\end{equation}
+%
+したがって，式\ref{galerkin_s2}での境界積分項は，次式のようになる．
+%
+\begin{equation}
+\int_{S2} q[ N]^T dS　= \int_{S2} q_0[N]^T dS
+\end{equation}
+
+
+熱伝達境界条件：
+熱伝達境界条件では，境界$ S_3 $上で固体表面と周囲を流れる流体などのとの間での熱伝達が生じる．
+熱伝達率を$\alpha[W/(m^2 \cdot K)]$，周囲の流体などの温度を$T_c$とすると，
+%
+\begin{equation}
+q =  \alpha(T - T_c)　　（境界S_3上で）
+\end{equation}
+%
+同様にして，式\ref{galerkin_s2}での境界積分項は，次式のようになる．(ただし，要素全体の値ではなく，要素の節点の値を求めておきたいので$[N]^T$を乗じる順番を入れ替える．)
+%
+%
+\begin{eqnarray}\label{eqn_s3}
+\nonumber \int_{S3} q[N]^T dS　&=& \int_{S3} \alpha [N]^T (T - T_c) dS \\
+\nonumber &=& \int_{S3} \alpha [N]^T( [N] \cdot T_{ele} ) dS - \int_{S3} \alpha T_c [N]^T dS \\
+		  &=& \int_{S3} \alpha [ N]^T [N] dS \cdot T_{ele} - \int_{S3} \alpha T_c [ N]^T dS
+\end{eqnarray}
+
+熱輻射境界条件：
+熱輻射境界条件では，境界$S_4$上で周囲環境に対して熱輻射が行われる．
+熱輻射率を$h[W/(m^2 \cdot K]$，周囲環境温度を$T_{OUT}$とすると，次式のようになる．
+%
+%
+\begin{equation}
+q =  h(T - T_{OUT})　　（境界S_4上で）
+\end{equation}
+%
+同様にして，式\ref{galerkin_s2}での境界積分項は，次式のようになる．
+%
+\begin{eqnarray}
+\nonumber \int_{S4} q[ N]^T dS　&=& \int_{S3} h(T - T_{OUT}) [N]^T dS \\
+\nonumber &=& \int_{S4} h ( [N] \cdot T_{ele} ) [N]^T dS - \int_{S4} h T_{OUT} [N]^T dS \\
+		  &=& \int_{S4} h[N] [N]^T dS \cdot T_{ele} - \int_{S4} h T_{OUT} [N]^T dS
+\end{eqnarray}
+%
+%ただし，熱輻射は温度差のの４乗に比例するので，という式を，と近似して，捉える．
+%
+\clearpage
+\subsubsection{離散化された式}
+%
+以上より，熱伝導方程式の離散化式\ref{galerkin_s2}に境界条件を加味した式は，次のようになる．
+%
+\begin{equation}\label{risaneq}
+	[K] \{T \} + [C]\{\frac{\partial T}{\partial t} \} = \{ F \}
+\end{equation}
+%
+ただし，
+%
+\begin{eqnarray}\label{risanK}
+&& \nonumber [K] = \int_v \lambda \{ \frac{\partial [ N]^T }{\partial x}  \frac{\partial  [ N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]}{\partial z} \} dv \\
+& & 　　　+ \int_{S3} \alpha[N]^T [N] dS + \int_{S4} h[N]^T [N] dS \\ \label{risanC}
+&&  [C] = \int_v \rho c[N]^T [N] dv \\ \label{risanF}
+&& \nonumber \{F\} = \int_v \frac{\partial Q}{\partial t} dv - \int_{S2} q_0[N]^T dS + \int_{S3} \alpha T_c [N]^T dS \\
+& & 　　　+ \int_{S4} hT_{OUT} [N]^T dS 
+\end{eqnarray}
+%
+である．
+ただし，$ [K] $は熱伝導マトリクス，$ [C] $は熱容量マトリクス， $ \{F\} $は熱流速ベクトルである．
+
+また、以上のように空間的に離散化された式を時間について離散化を行い、式に含まれる積分値を求める。積分計算には、行列が含まれる。積分では、行列の成分ごとに積分計算を行う(\cite{femgairon})
+%
+%
+\subsubsection{時間に関しての離散化}
+ガラーキン法では，空間に関して離散化を行った．次に，時間に関して離散化を行う．
+時間に関する離散化手法として，台形公式を用いたクランク・ニコルソンの差分式(参考文献\cite{yagawa1983}(pp.117より))などが知られている．
+$0 <= \epsilon <=1.0 $となる、係数を用いて、時刻$t + \epsilon \Delta t(\Delta は微小時間増分) $における節点温度ベクトルを次のように表す。
+\begin{eqnarray} \label{T(t+e}
+\left\{ T\begin{pmatrix} t + \epsilon\Delta t \end{pmatrix} \right\}
+= \epsilon \left\{T(t + \Delta t) \right\} + (1 - \epsilon) \left\{T(t)\right\}
+\end{eqnarray}
+
+また，時刻$ t +\epsilon \Delta t $における節点温度ベクトルの時間微分を
+\begin{eqnarray} \label{dT/dt(t+e}
+\left\{ \frac{\partial T}{\partial t} \begin{pmatrix} t + \epsilon \Delta t \end{pmatrix} \right\}
+= 
+\frac{ \left\{T(t + \Delta t) \right\} - \left\{T(t)\right\} }{\Delta t}
+\end{eqnarray}
+と表す．
+ただし，$ \{T(t)\} $はある時間$t$における全体の節点温度ベクトルを表す．
+
+%
+式\ref{risaneq}に式\ref{T(t+e},\ref{dT/dt(t+e}を代入すると，
+
+\begin{eqnarray}\label{crankeq_e}
+\nonumber
+[K]\left\{ T(t + \epsilon \Delta t) \right\} +[C] \left\{ \frac{\partial T }{\partial t} (t + \epsilon \Delta t) \right\}
+&=&
+\{ F\}
+\end{eqnarray}
+
+\begin{eqnarray}\label{crankeq_e2}
+\nonumber
+[K]\left\{ \{ \epsilon T(t + \epsilon \Delta t)\} + (1 - \epsilon)\{T(t)\} \right\} +[C] \frac{1}{\Delta t} \left\{ \{ T(t + \Delta t)\} + \{ T(t)\} \right\} 
+=
+\{ F\}
+\\
+\begin{bmatrix} \epsilon [K] +  \frac{1}{ \Delta t} [C] \end{bmatrix}T(t + \Delta t)
+=
+\begin{bmatrix}-(1- \epsilon)[K] +\frac{1}{\Delta t} [C] \end{bmatrix} \{ T(t)\} + \{ F\}
+\end{eqnarray}
+以上より、$ \epsilon $を用いた一般式の導出ができた。以下では、の値によって変化する積分値について場合別に考える．
+
+ⅰ）$ \epsilon =0 $のとき（前進積分・陽解法）
+時間tの時の値を用いて、前進差分を用いた陽解法の計算になる。そのため、式は、次式のようになる。
+\begin{eqnarray}\label{crankeq_e2_0}
+\frac{1}{ \Delta t} [C] \left\{T(t + \Delta t) \right\}
+=
+\begin{bmatrix}-[K] +\frac{1}{\Delta t} [C] \end{bmatrix} \{ T(t)\} + \{ F\}
+\end{eqnarray}
+
+%(以下，木村さんによる説明)
+%(文献\cite{femgairon}の275ページが該当しそうな気がする。⇒間違い！？）
+%$ n+1 $時間後の節点温度のマトリクス$ \{ T \}_{n+1} $ を用いて，次式のように変形する．
+%
+%
+%\begin{eqnarray}\label{離散化式}
+%&& \nonumber	[K] \{T \} + [C]\left\{\frac{\partial T}{\partial t} \right\} = \{ F \} \\
+%&& \nonumber	[K] \{T \} + [C] \frac{ \{ T\}_{n+1} - \{ T \}_{n}}{h} = \{ F \} \\
+%&&  \begin{pmatrix} [K] + \frac{1}{h} [C] \end{pmatrix} \{ T \}_{n+1} = \{ F \} +\frac{1}{h} [C] \{ T \}_{n}
+%\end{eqnarray}
+%ただし，$ h $は単位微小時間とする．
+
+
+
+ⅱ）$ \epsilon =\frac{1}{2} $のとき、
+%時刻$ t+\frac{\Delta t }{2}(\Delta は微小時間増分) $における節点温度ベクトルを
+%\begin{eqnarray} \label{T(t+}
+%\left\{ T\begin{pmatrix}t+\frac{\Delta t}{2}\end{pmatrix} \right\} = \frac{1}{2}\begin{pmatrix} \left\{T(t + \Delta t) \right\} + \left\{T(t)\right\} \end{pmatrix}
+%\end{eqnarray}
+%と表す．
+%また，時刻$ t + \frac{\Delta t}{2} $における節点温度ベクトルの時間微分を
+%\begin{eqnarray} \label{dT/dt(t+}
+%\left\{ \frac{\partial T}{\partial t} \begin{pmatrix} t+\frac{\Delta t}{2} \end{pmatrix} \right\}
+%= 
+%\frac{ \left\{T(t + \Delta t) \right\} - \left\{T(t)\right\} }{\Delta t}
+%\end{eqnarray}
+%と表す．
+%ただし，$ \{T(t)\} $はある時間$t$における全体の節点温度ベクトルを表す．
+%
+%式\ref{risaneq}に式\ref{T(t+},\ref{dT/dt(t+}を代入すると，
+\begin{eqnarray}\label{crankeq_e2_0.5}
+\begin{bmatrix} \frac{1}{2}[K]+\frac{1}{\Delta t}[C] \end{bmatrix} \left\{ T(t+ \Delta t) \right\}
+&=& 
+\begin{bmatrix} -\frac{1}{2}[K] + \frac{1}{\Delta t}[C] \end{bmatrix} \{ T(t) \} + \{ F \}
+\end{eqnarray}
+これはクランク・ニコルソンの差分式と呼ばれる．$ \Delta t $の大きさがある程度(1sec～)大きくなると解が振動するとの報告がある．
+\[ (http://computation.cside.com/TA/time_integration_04.html　参照) \]
+そのため，シミュレーション実行時の時間にの設定には注意が必要である．
+
+
+ⅲ）$ \epsilon = 1$のとき（後退積分、完全陰解法）
+時間t+1の時の値を用いて、後退差分を用いた陰解法の計算になる。そのため、式は、次式のようになる。
+\begin{eqnarray}\label{crankeq_e2_1}
+\begin{bmatrix} [K] +  \frac{1}{ \Delta t} [C] \end{bmatrix}T(t + \Delta t)
+=
+\frac{1}{\Delta t} [C] \{ T(t)\} + \{ F\}
+\end{eqnarray}
+
+//以下、消去予定
+(上式の$T(t)$を$T(t + \Delta t))$に修正するだけで良いのか？)
+\begin{eqnarray}\label{crankeq_}
+\begin{bmatrix} \frac{1}{2}[K]+\frac{1}{\Delta t}[C] \end{bmatrix} \left\{ T(t+ \Delta t) \right\}
+&=& 
+\begin{bmatrix}-\frac{1}{2}[K] + \frac{1}{\Delta t}[C] \end{bmatrix} \{ T(t+\Delta t) \} + \{ F \}
+\end{eqnarray}
+となる。
+%
+
+
+%
+%
+\subsubsection{有限要素形状に合わせた離散化}
+%
+\subsubsection{2次元問題の場合}
+(1次)三角形要素の場合
+%
+物理量uを，
+\begin{equation}
+u = a x +b y + c
+\end{equation}
+とすると，
+%
+%
+\subsubsection{3次元問題の場合}
+(1次)四面体要素
+%
+3次元のモデルを四面体の有限要素のメッシュで区切る場合を考える．
+下図のように，１⇒２⇒３⇒１と右ねじをしめるように四面体要素の節点番号を決めると，頂点４が決まる．
+%
+\begin{figure}[htb]
+\center
+\includegraphics[width = 5cm]{tetrahedral.eps}
+\caption{四面体形状の有限要素}
+\label{fig:tetrahedral_screw_}
+\end{figure}
+%
+要素の各節点
+この要素内の任意点(x,y,z)における温度を$ T $とすると，係数$ a,b,c,d $を決めることで$ T $は次式のように表わすことができる．
+%
+\begin{equation}
+T(x,y,z) = a x +b y + c z +d
+\end{equation}
+%
+%
+係数$ a,b,c,d $は，各節点での温度$ T_1,T_2,T_3,T_4 $と各頂点の３次元座標($i＝1～4$のときに$x_i,y_i,z_i$が表す位置座標)を次の式のように代入した次の方程式を解いて求める．
+\begin{eqnarray}
+\nonumber T_1 = a x_1 +b y_1 + c z_1 +d \\
+\nonumber T_2 = a x_2 +b y_2 + c z_2 +d \\
+\nonumber T_3 = a x_3 +b y_3 + c z_3 +d \\
+T_4 = a x_4 +b y_4 + c z_4 +d
+\end{eqnarray}
+%
+%ただし，$x_i,y_i,z_i$は$i＝１～４$で各節点の番号に対応し，左辺の$ T_i $は各頂点での温度に対応する．
+%
+これを解いて求めた$ a,b,c,d $をまとめると，要素内の任意点の温度$T$は，形状関数$N$を用いて次式のように近似することができる．
+%
+\begin{equation}
+T = N_1 T_1 +N_2 T_2 + N_3 T_3 + N_4 T_4
+\end{equation}
+%
+ただし，$ N_1, N_2, N_3, N_4 $は次式に示す形状関数であり，
+%
+\begin{equation}
+N_i = \frac{1}{6V} ( a_i x + b_i y + c_i z +d_i )　　　(i=1,2,3,4)
+\end{equation}
+となる．
+%
+また，$ V $は四面体の体積を表し，図\ref{fig:tetrahedral_screw}の局所節点1,2,3を頂点とした三角形の面積と同三角形から局所節点４までの高さLとの積の３分の１と等しい．
+また，原点Oから節点1,2,3,4へのベクトルを用いると式\ref{v=1/6det}のようにかける．
+
+%
+%式中のVは，次式のように行列式による四面体要素の体積を計算したものである．
+%
+%
+\begin{equation}\label{v=1/6det}
+V = \frac{1}{6} det
+	\begin{array}{|cccc|}
+	1 & x_1 & y_1 & z_1 \\
+	1 & x_2 & y_2 & z_2 \\
+	1 & x_3 & y_3 & z_3 \\
+	1 & x_4 & y_4 & z_4 \\
+	\end{array}
+\end{equation}
+%
+%
+また，$a_i,b_i,c_i,d_i,$は，次に示す行列式の計算値である．
+%
+\begin{eqnarray}
+\nonumber a_i &=& (-1)^i (y_k z_l + y_l z_j + y_j z_k - y_k z_j - y_l z_k -y_j z_l) \\
+ &=& (-1)^i det
+	\begin{array}{|ccc|}
+	1 & y_j & z_j \\
+	1 & y_k & z_k \\
+	1 & y_l & z_l \\
+	\end{array} \\
+\nonumber b_i &=& (-1)^i (x_j z_l + x_k z_j + x_l z_k - x_l z_j - x_j z_k -x_k z_l) \\
+ &=& (-1)^i det
+	\begin{array}{|ccc|}
+	x_j & 1 & z_j \\
+	x_k & 1 & z_k \\
+	x_l & 1 & z_l \\
+	\end{array} \\
+\nonumber c_i &=& (-1)^i (x_j y_k + x_k y_l + x_l y_j - x_l y_k - x_j y_l -x_k y_j) \\
+ &=& (-1)^i det
+	\begin{array}{|ccc|}
+	x_j & y_j & 1 \\
+	x_k & y_k & 1 \\
+	x_l & y_l & 1 \\
+	\end{array} \\
+\nonumber d_i &=& (-1)^i (x_j y_k z_l + x_k y_l z_j + x_l y_j z_k - x_l y_k z_j - x_j y_l z_k -x_k  y_j z_l) \\
+ &=& (-1)^i det
+	\begin{array}{|ccc|}
+	x_j & y_j & z_j \\
+	x_k & y_k & z_k \\
+	x_l & y_l & z_l \\
+	\end{array} \\
+\end{eqnarray}
+%
+ただし，
+\begin{eqnarray}
+\nonumber i=1に対して，j=2,k=3,l=4 \\
+\nonumber i=2に対して，j=3,k=4,l=1 \\
+\nonumber i=3に対して，j=4,k=1,l=2 \\
+\nonumber i=4に対して，j=1,k=2,l=3
+\end{eqnarray}
+%
+の対応関係となっている．
+%
+%
+また，上に示した形状関数は，次の性質も示す．
+%
+\begin{eqnarray}
+&①& x,y,zの多項式である.\\
+&②& N_i(x_j,y_j,z_j) = \left \{
+\begin{array}{l}
+0　(i \neq jのとき) \\
+1　(i=jのとき)
+\end{array}
+\right.
+　(i=1,2,3,4, j=1,2,3,4)) \\
+&③& N_1 + N_2 + N_3 + N_4 = 1　\label{形状関数の和}
+\end{eqnarray} 
+%
+%
+四面体要素内の任意点$ (x,y,z) $での形状関数$ N_1 $の値は，節点$ 2,3,4 $で囲まれる面と節点1の間における物理量を近似するものであり，節点$ 2,3,4 $と点$ (x,y,x) $を頂点とする四面体の体積と節点$ 1,2,3,4 $で囲まれた四面体要素全体の体積の比に等しい．
+%
+\begin{figure}[htb]
+\center
+\includegraphics[width = 4cm]{tetrahedral.eps}
+\caption{四面体形状の有限要素}
+\label{fig:tetrahedral_screw}
+\end{figure}
+%
+同様に，形状関数$ N_2 $は，節点$ 1,3,4 $と要素内の任意点$ x,y,z $を頂点とする四面体の体積と有限要素全体の体積との比に等しい．
+
+また，たとえば，節点$ 2,3,4 $で囲まれる三角形平面上では，$ N_1 = 0 $なので(②の性質より)，物理量は，$ u_2,u_3,u_4 $に依存するが，$ u_1 $と無関係となる．
+
+節点$ 2,3,4 $で囲まれた三角形の面上の点任意点$ P(x,y,z,T) $の温度Tは，$ u_1 $の影響は受けず，物理量$ u_2,u_3,u_4 $にのみに依存する．
+%
+
+次に，熱伝導方程式の差分の式には，温度$ T $の$ x,y,z $方向の偏微分が含まれるため，これを求めることにする．
+%
+先に，求めた式
+%
+\begin{equation}
+\nonumber T = N_1 T_1 +N_2 T_2 + N_3 T_3 + N_4 T_4
+\end{equation}
+%
+より，各節点での温度$ T_i $(i=1,2,3,4)は，節点で固定の定数であるので，
+%
+\begin{eqnarray}
+\nonumber \frac{\partial T }{\partial x}  &=& \frac{\partial N_1 }{\partial x} T_1 + \frac{\partial N_2 }{\partial x} T_2 + \frac{\partial N_3 }{\partial x} T_3 + \frac{\partial N_4 }{\partial x} T_4   \\
+  &=& \frac{a_1 T_1 + a_2 T_2 + a_3 T_3 + a_4 T_4 }{6V}   \\  
+\frac{\partial T }{\partial y}  &=& \frac{b_1 T_1 + b_2 T_2 + b_3 T_3 + b_4 T_4 }{6V}  \\
+\frac{\partial T }{\partial z}  &=& \frac{c_1 T_1 + c_2 T_2 + c_3 T_3 + c_4 T_4 }{6V} 
+\end{eqnarray}
+%
+ここで，$ a_i～c_i,T_i　(i=1,2,3,4),V $は定数なので，$ \frac{\partial T }{\partial x},\frac{\partial T }{\partial y},\frac{\partial T }{\partial z} $は定数となる．
+%
+%
+
+
+以上より，$ \frac{\partial [N] }{\partial x} , \frac{\partial [N]^T }{\partial x} $を計算することができる．
+これらを有限要素ごとに求めて，積分し，全体剛性行列を作る．
+
+
+\subsubsection{形状関数を用いた、K1の導出(理論その１)}
+\begin{eqnarray}
+N_i = \frac{1}{6}(a_i x + b_i y + c_i z +d_i)
+\end{eqnarray}
+より、
+\begin{eqnarray}
+\frac{\partial [N]}{\partial x} = \frac{1}{6}
+\begin{array}{cccc}
+[a_1 & a_2 & a_3 & a_4 ]
+\end{array}
+\\
+\frac{\partial [N]}{\partial x}^{T} = \frac{1}{6}
+\begin{array}{cccc}
+[a_1 & a_2 & a_3 & a_4 ]
+\end{array}
+^{T}
+\\
+%%%
+\frac{\partial [N]}{\partial y} = \frac{1}{6}
+\begin{array}{cccc}
+[b_1 & b_2 & b_3 & b_4]
+\end{array}
+\\
+\frac{\partial [N]}{\partial y}^{T} = \frac{1}{6}
+\begin{array}{cccc}
+[b_1 & b_2 & b_3 & b_4]
+\end{array}
+^{T}
+\\
+%%%
+\frac{\partial [N]}{\partial z} = \frac{1}{6}
+\begin{array}{cccc}
+[c_1 & c_2 & c_3 & c_4 ]
+\end{array}
+\\
+\frac{\partial [N]}{\partial x}^{T} = \frac{1}{6}
+\begin{array}{cccc}
+[c_1 & c_2 & c_3 & c_4 ]
+\end{array}
+^{T}
+\end{eqnarray}
+上は、直前に説明があるので不要では？
+\begin{eqnarray}
+&&
+\frac{\partial [N]}{\partial x}\frac{\partial [N]^T}{\partial x}
++
+\frac{\partial [N]}{\partial y}\frac{\partial [N]^T}{\partial y}
++
+\frac{\partial [N]}{\partial z}\frac{\partial [N]^T}{\partial z}
+=
+\\
+\nonumber 
+&=& \frac{1}{36V^2}
+\left[
+\begin{array}{cccc}
+a_1^2 + b_1^2 + c_1^2 & a_1 a_2 + b_1 b_2 + c_1 c_2 & a_1 a_3 + b_1 b_3 + c_1 c_3 & a_1 a_4 + b_1 b_4 + c_1 c_4 \\
+a_2 a_1 + b_2 b_1 + c_2c_1 & a_2^2 + b_2^2 + c_2^2 & a_2 a_3 + b_2 b_3 + c_2 c_3 & a_2a_4 + b_2b_4 + c_2c_4\\
+\cdot & \cdot &  a_3^2 + b_3^2 + c_3^2 & a_3a_4 + b_3b_4 + c_3c_4 \\
+(対称) & \cdot & \cdot &  a_4^2 + b_4^2 + c_4^2
+\end{array}
+\right]
+\\
+&=& \frac{1}{36V^2}
+\left[
+K_b
+\right]
+(とおく)
+\end{eqnarray}
+
+↓これで正しいのか?ソース・出典はどこ！？
+\begin{eqnarray}\label{ijkl}
+\int \int \int \xi_1^i \xi_2^j \xi_3^k \xi_4^l d(volume) = 6V \frac{i! j! k ! l!}{(i+ j+ k+ l + 3)!}
+\end{eqnarray}
+
+
+以上より、
+\begin{eqnarray}\label{risanK1b}
+&& \nonumber (式\ref{risanK}の右辺第一項を再掲)： \\
+&& K_1 =  \int_v \lambda \left\{ \frac{\partial [ N]^T }{\partial x}  \frac{\partial  [ N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]}{\partial z} \right\} dv
+\\
+&& =
+\int_v \lambda
+\frac{1}{36V^2}
+\left[
+K_b
+\right]
+dv
+\\
+&& =
+\lambda
+\frac{1}{36V^2}
+\left[
+K_b
+\right]
+\int_v
+dv
+\end{eqnarray}
+%
+式\ref{ijkl}で$i=j=k=l=0 $のとき、
+%
+\begin{eqnarray}
+(式\ref{ijkl}) &=& 6V \frac{0!}{3!}
+\\
+&=& V
+\end{eqnarray}
+%
+だから、これを、上式に代入して、
+%
+\begin{eqnarray}
+K_1 &=&
+\lambda
+\frac{1}{36V^2}
+\left[
+K_b
+\right]
+V
+\\
+&=&
+\lambda
+\frac{1}{36V}
+\left[
+K_b
+\right]
+\end{eqnarray}
+
+
+\subsubsection{$ K_2 の導出 $}
+\begin{eqnarray}\label{ijk}
+\int \int \xi_1^i \xi_2^j \xi_3^k d(squae) = 2 \vartriangle (=三角形の面積) \cdot \frac{i! j! k ! }{(i+ j+ k + 2)!}
+\end{eqnarray}
+
+\begin{eqnarray}
+K_2 = \int_{S_3} \alpha [N]^T [N]dS
+\end{eqnarray}
+
+\begin{eqnarray}
+\nonumber[N]^T \cdot [N]
+&=&
+\left[
+\begin{array}{c}
+N_1\\
+N_2\\
+N_3\\
+N_4
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+N_1 & N_2 & N_3 & N_4
+\end{array}
+\right]\\
+&=&
+\left[
+\begin{array}{cccc}
+N_1^2 & N_1 N_2 & N_1 N_3 & N_1 N_4\\
+N_2 N_1 & N_2^2 & N_2 N_3 & N_2 N_4\\
+N_3 N_1 & N_3 N_2 & N_3^2 & N_3 N_4\\
+N_4 N_1 & N_4 N_2 & N_4 N_3 & N_4^2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+N_1 =0の時
+\nonumber k_{21}
+&=&
+\left[
+\begin{array}{cccc}
+0 & 0 & 0 &0\\
+0 & N_2^2 & N_2 N_3 & N_2 N_4\\
+0 & N_3 N_2 & N_3^2 & N_3 N_4\\
+0 & N_4 N_2 & N_4 N_3 & N_4^2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+N_2 =0の時
+\nonumber k_{22}
+&=&
+\left[
+\begin{array}{cccc}
+N_1^2 & 0 & N_1 N_3 & N_1 N_4\\
+0 & 0 & 0 & 0\\
+N_3 N_1 & 0 & N_3^2 & N_3 N_4\\
+N_4 N_1 & 0 & N_4 N_3 & N_4^2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+N_3 =0の時
+\nonumber k_{23}
+&=&
+\left[
+\begin{array}{cccc}
+N_1^2 & N_1 N_2 & 0 & N_1 N_4\\
+N_2 N_1 & N_2^2 & 0 & N_2 N_4\\
+0 & 0 & 0 & 0\\
+N_4 N_1 & N_4 N_2 & 0 & N_4^2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+N_4 =0の時
+\nonumber k_{24}
+&=&
+\left[
+\begin{array}{cccc}
+N_1^2 & N_1 N_2 & N_1 N_3 & 0\\
+N_2 N_1 & N_2^2 & N_2 N_3 & 0\\
+N_3 N_1 & N_3 N_2 & N_3^2 & 0\\
+0 & 0 & 0 & 0
+\end{array}
+\right]
+\end{eqnarray}
+
+
+\begin{eqnarray}
+\nonumber
+K2
+&=&
+\int_{\Delta 1 の面積}　k_{21} dS
++
+\int_{\Delta 2 の面積}　k_{22} dS
++
+\int_{\Delta 3 の面積}　k_{23} dS
++
+\int_{\Delta 4 の面積}　k_{24} dS
+\end{eqnarray}
+
+\begin{eqnarray}
+\nonumber
+&&
+\int_{\Delta 1 の面積}　k_{21} dS の要素
+\\
+\int_{\Delta 234}　{N_2}^2 dxdy
+&=&
+2 \Delta \frac{2!}{2+2}!
+\\
+&=&
+\frac{\Delta }{6}
+\\
+\cdot
+\cdot
+\end{eqnarray}
+以上より、
+
+\begin{eqnarray}
+\nonumber k_{21}
+&=&
+\frac{\Delta}{12}
+\left[
+\begin{array}{cccc}
+0 & 0 & 0 &0\\
+0 & 2 & 1 & 1\\
+0 & 1 & 2 & 1\\
+0 & 1 & 1 & 2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+\nonumber k_{22}
+&=&
+\frac{\Delta}{12}
+\left[
+\begin{array}{cccc}
+2 & 0 & 1 & 1\\
+0 & 0 & 0 & 0\\
+1 & 0 & 2 & 1\\
+1 & 0 & 1 & 2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+\nonumber k_{23}
+&=&
+\frac{\Delta}{12}
+\left[
+\begin{array}{cccc}
+2 & 1 & 0 & 1\\
+1 & 2 & 0 & 1\\
+0 & 0 & 0 & 0\\
+1 & 1 & 0 & 2
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+\nonumber k_{24}
+&=&
+\frac{\Delta}{12}
+\left[
+\begin{array}{cccc}
+2 & 1 & 1 & 0\\
+1 & 2 & 1 & 0\\
+1 & 1 & 2 & 0\\
+0 & 0 & 0 & 0
+\end{array}
+\right]
+\end{eqnarray}
+
+同様にして,$[C]$ は
+
+\begin{eqnarray}
+\nonumber C1
+&=&
+\frac{四面体の体積(Volume)}{20}
+\left[
+\begin{array}{cccc}
+2 & 1 & 1 & 1\\
+1 & 2 & 1 & 1\\
+1 & 1 & 2 & 1\\
+1 & 1 & 1 & 2
+\end{array}
+\right]
+\end{eqnarray}
+
+同様にして,$\{F\}$ は
+
+\begin{eqnarray}
+\nonumber f2
+&=&
+\int_{S2} q_0 [N]^T dS
+\\
+&=&
+\int_{S2}
+q_0
+\left[
+\begin{array}{c}
+N_1 \\
+N_2 \\
+N_3 \\
+N_4
+\end{array}
+\right]
+ dS
+\\
+%
+&=&
+q_0
+\frac{\Delta}{3}
+\left[
+\begin{array}{cccc}
+1 \\
+1 \\
+1 \\
+1
+\end{array}
+\right]
+\end{eqnarray}
+
+
+
+\subsubsection{要素内の節点間の計算式に変換する}
+%
+離散化した式\ref{risanK},\ref{risanC},\ref{risanF}を要素内の節点間の関係に直し，計算可能な式に変形する．
+%
+\subsection{$ (x,y,z) $座標系から $ (\xi,\eta,\zeta) $座標系への座標変換}
+\subsubsection{形状関数の座標変換}
+そこでまず，考えやすくするために，式\ref{risanK}の右辺第1,2,3項を$ K_1,K_2,K_3 $とおき， $ (\xi ,\eta,\zeta ) $座標系に変換する過程について考える．
+%
+\begin{eqnarray}\label{risanK1}
+&& \nonumber (式\ref{risanK}の右辺第一項を再掲)： \\
+&&K_1 =  \int_v \lambda \left\{ \frac{\partial [ N]^T }{\partial x}  \frac{\partial  [ N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]}{\partial z} \right\} dv
+\end{eqnarray}
+%
+以下，式\ref{risanK1}を$ (\xi ,\eta,\zeta ) $座標に変換して計算する過程を示す．
+%
+四面体要素内の任意点$ (x,y,z) $は形状関数$ N_1,N_2,N_3,N_4 $を用いて次式のように表せる．
+%
+式\ref{xyzN}の証明は，後に示す．
+%
+\begin{eqnarray}\label{xyzN}
+\nonumber x &=& N_1 x_1 + N_2 x_2 + N_3 x_3 + N_4 x_4 \\
+y &=& N_1 y_1 + N_2 y_2 + N_3 y_3 + N_4 y_4 \\
+\nonumber z &=& N_1 z_1 + N_2 z_2 + N_3 z_3 + N_4 z_4
+\end{eqnarray}
+%
+これを，図\ref{fig:zahyo_trans}のような座標系に変換する．
+%
+\begin{figure}[htb]
+\center
+\includegraphics[width = 10cm]{zahyo_trans.eps}
+\caption{$ (x,y,z) $座標系から，$ (\xi ,\eta,\zeta ) $座標系への変換}
+\label{fig:zahyo_trans}
+\end{figure}
+%
+デカルト座標系$ (x,y,z) $で表された四面体内の任意点を，四面体内の座標系$ (\xi ,\eta,\zeta ) $で表して，導き出される等式より座標変換を行う．
+
+式\ref{xyzN}を四面体内の座標系で表すと，次式\ref{xyzξ}の様になる．
+
+%
+\begin{eqnarray}\label{xyzξ}
+\nonumber x &=& (1-\xi -\eta -\zeta ) x_1 + \xi  x_2 +  \eta  x_3 + \zeta  x_4 \\
+y &=& (1-\xi - \eta -\zeta ) y_1 + \xi  y_2 +  \eta  y_3 + \zeta  y_4 \\
+\nonumber z &=& (1-\xi - \eta -\zeta ) z_1 + \xi  z_2 +  \eta  z_3 + \zeta  z_4
+\end{eqnarray}
+%
+%
+これらの式は以下より導出する．
+\begin{eqnarray}
+x=N 
+\left[\begin{array}{c}
+x_1 \\
+x_2 \\
+x_3 \\
+x_4 \\
+\end{array}
+\right]
+,
+y=N 
+\left[\begin{array}{c}
+y_1 \\
+y_2 \\
+y_3 \\
+y_4 \\
+\end{array}
+\right]
+,
+z=N
+\left[\begin{array}{c}
+z_1 \\
+z_2 \\
+z_3 \\
+z_4 \\
+\end{array}
+\right]
+,
+N=
+\left[\begin{array}{cccc}
+1-\xi - \eta -\zeta & \xi & \eta & \zeta
+\end{array}
+\right]
+\end{eqnarray}
+%
+とすると，
+%
+\begin{eqnarray}
+\nonumber
+x
+&=&
+N 
+\left[\begin{array}{c}
+ x_1 \\
+ x_2 \\
+ x_3 \\ 
+ x_4
+\end{array}
+\right]
+\\
+\nonumber
+&=&
+\left[\begin{array}{cccc}
+ 1-\xi - \eta -\zeta & \xi & \eta & \zeta
+\end{array}
+\right]
+\left[\begin{array}{c}
+ x_1 \\
+ x_2 \\
+ x_3 \\
+ x_4
+\end{array}
+\right]
+\\
+\nonumber
+&=&(1-\xi - \eta -\zeta )x_1 + \xi x_2 +  \eta x_3 + \zeta x_4
+\end{eqnarray}
+%
+同様にして，
+%
+\begin{eqnarray}
+y=(1-\xi - \eta -\zeta )y_1 + \xi y_2 +  \eta y_3 + \zeta y_4 \\
+\nonumber　z=(1-\xi - \eta -\zeta )z_1 + \xi z_2 +  \eta z_3 + \zeta z_4
+\end{eqnarray}
+%
+それぞれを変形して，
+%
+\begin{eqnarray}\label{xyzforJ}
+\nonumber　x &=& (x_2 - x_1)\xi +(x_3-x_1) \eta +(x_4-x_1)\zeta +x_1 \\
+ y &=& (y_2 - y_1)\xi +(y_3-y_1) \eta +(y_4-y_1)\zeta +y_1  \\
+\nonumber　z &=& (z_2 - z_1)\xi +(z_3-z_1) \eta +(z_4-z_1)\zeta + z_1 
+\end{eqnarray}
+%
+となる．
+
+計算に用いる領域は，$ 0≦\xi ≦1, 　0≦ \eta ≦1, 　0≦\zeta ≦1, 　0≦\xi + \eta +\zeta ≦1 $となるような四面体内部について考え，形状関数$ N(1×4の行マトリクス) $は次式のように置き換えたものを用いる．
+%
+\begin{eqnarray}
+N&=&
+\left[
+\begin{array}{cccc}
+N_{1} & N_{2} & N_{3} & N_{4}
+\end{array}
+\right]
+\\
+&=&
+\left[
+\begin{array}{cccc}
+1-\frac{V_{2}}{V}-\frac{V_{3}}{V}-\frac{V_{4}}{V} & \frac{V_{2}}{V} & \frac{V_{3}}{V} & \frac{V_{4}}{V}
+\end{array}
+\right]
+\\
+&=&
+\left[
+\begin{array}{cccc}
+1-\xi - \eta -\zeta & \xi & \eta & \zeta
+\end{array}
+\right]
+\end{eqnarray}
+
+ただし，$ V $は四面体要素の体積，$ V_{2},V_{3},V_{4} $はそれぞれ，節点$1,3,4$と要素内部の任意点$ (x,y,z) $を頂点とする四面体の体積，節点$1,2,4$と要素内部の任意点$ (x,y,z) $を頂点とする四面体の体積，節点$1,2,3$と要素内部の任意点$ (x,y,z) $を頂点とする四面体の体積を表す．また，\ref{形状関数の和}より，形状関数$ N_{1} $を表現する．
+
+\subsubsection{
+$
+\frac{\partial N}{\partial x} ,
+\frac{\partial N}{\partial y} ,
+\frac{\partial N}{\partial z} 
+$
+の$ (\xi, \eta, \zeta) $座標系への変換}
+
+次に，合成関数の偏微分法より，
+%
+\begin{eqnarray}
+\nonumber
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial \xi } \\
+\frac{\partial N}{\partial  \eta } \\
+\frac{\partial N}{\partial \zeta } \\
+\end{array}
+\right]
+&=&
+\left[
+\begin{array}{ccc}
+\frac{\partial x}{\partial \xi }\cdot \frac{\partial N}{\partial x} & \frac{\partial y}{\partial \xi }\cdot\frac{\partial N}{\partial y} & \frac{\partial z}{\partial \xi }\cdot\frac{\partial N}{\partial z} \\
+\frac{\partial x}{\partial  \eta }\cdot \frac{\partial N}{\partial x} & \frac{\partial y}{\partial  \eta }\cdot\frac{\partial N}{\partial y} & \frac{\partial z}{\partial  \eta }\cdot\frac{\partial N}{\partial z} \\
+\frac{\partial x}{\partial \zeta }\cdot \frac{\partial N}{\partial x} & \frac{\partial y}{\partial \zeta }\cdot\frac{\partial N}{\partial y} & \frac{\partial z}{\partial \zeta }\cdot\frac{\partial N}{\partial z} \\
+\end{array}
+\right] \\ \label{[J]}
+&=&
+\left[
+\begin{array}{ccc}
+\frac{\partial x}{\partial \xi } & \frac{\partial y}{\partial \xi } & \frac{\partial z}{\partial \xi } \\
+\frac{\partial x}{\partial  \eta } & \frac{\partial y}{\partial  \eta } & \frac{\partial z}{\partial  \eta } \\
+\frac{\partial x}{\partial \zeta } & \frac{\partial y}{\partial \zeta } & \frac{\partial z}{\partial \zeta } \\
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial x} \\
+\frac{\partial N}{\partial y} \\
+\frac{\partial N}{\partial z} \\
+\end{array}
+\right] \\
+&=&
+\left[
+\begin{array}{c}\label{NJN}
+J
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial x} \\
+\frac{\partial N}{\partial y} \\
+\frac{\partial N}{\partial z} \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+%
+ただし[J]はヤコビ行列である．両辺に$ [J]^{-1} $を乗じることにより次式を得る．
+%
+\begin{eqnarray}
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial x} \\
+\frac{\partial N}{\partial y} \\
+\frac{\partial N}{\partial z} \\
+\end{array}
+\right]
+=
+\left[
+\begin{array}{c}
+J
+\end{array}
+\right]
+^{-1}
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial \xi } \\
+\frac{\partial N}{\partial \eta } \\
+\frac{\partial N}{\partial \zeta } \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+%
+\begin{eqnarray}
+\nonumber
+[J]^{-1}
+&=&
+\frac{1}{det|J|}
+\left[
+\begin{array}{ccc}
+\frac{\partial y}{\partial  \eta }\cdot\frac{\partial z}{\partial \zeta } - \frac{\partial z}{\partial  \eta }\cdot\frac{\partial y}{\partial \zeta } & \frac{\partial z}{\partial \xi }\cdot\frac{\partial y}{\partial \zeta } - \frac{\partial y}{\partial \xi }\cdot\frac{\partial z}{\partial \zeta } & \frac{\partial y}{\partial \xi }\cdot\frac{\partial z}{\partial  \eta } - \frac{\partial z}{\partial \xi }\cdot\frac{\partial y}{\partial  \eta }
+\\
+\frac{\partial z}{\partial  \eta }\cdot\frac{\partial x}{\partial \zeta } - \frac{\partial x}{\partial  \eta }\cdot\frac{\partial z}{\partial \zeta } & \frac{\partial x}{\partial \xi }\cdot\frac{\partial z}{\partial \zeta } - \frac{\partial z}{\partial \xi }\cdot\frac{\partial x}{\partial \zeta } & \frac{\partial z}{\partial \xi }\cdot\frac{\partial x}{\partial  \eta }
+ - \frac{\partial x}{\partial \xi }\cdot\frac{\partial z}{\partial  \eta }
+\\
+\frac{\partial x}{\partial  \eta }\cdot\frac{\partial y}{\partial \zeta } - \frac{\partial y}{\partial  \eta }\cdot\frac{\partial x}{\partial \zeta } & \frac{\partial y}{\partial \xi }\cdot\frac{\partial x}{\partial \zeta } - \frac{\partial x}{\partial \xi }\cdot\frac{\partial y}{\partial \zeta } & \frac{\partial x}{\partial \xi }\cdot\frac{\partial y}{\partial  \eta } - \frac{\partial y}{\partial \xi }\cdot\frac{\partial x}{\partial  \eta }
+\end{array}
+\right]
+\end{eqnarray}
+%
+式\ref{xyzforJ}を代入して
+%
+\tiny{
+\begin{eqnarray}
+[J]^{-1}
+&=&
+%{\scriptstyle
+\frac{1}{det|J|}
+\left[
+\begin{array}{ccc}
+\nonumber (y_3-y_1)(z_4-z_1)-(z_3-z_1)(y_4-y_1) & (z_2-z_1)(y_4-y_1)-(y_2-y_1)(z_4-z_1) &
+(y_2-y_1)(z_3-z_1)- (z_2-z_1)(y_3-y_1) \\
+\nonumber (z_3-z_1)(x_4-x_1)-(x_3-x_1)(z_4-z_1) & (x_2-x_1)(z_4 -z_1) - (z_2-z_1)(x_4-x_1) & (z_2-z_1)(x_3-x_1)- (x_2-x_1)(z_3-z_1) \\
+\nonumber (x_3-x_1)(y_4-y_1)-(y_3-y_1)(x_4-x_1) & (y_2-y_1)(x_4-x_1) - (x_2-x_1)(y_4-y_1) & (x_2-x_1)(y_3-y_1) - (y_2-y_1)(x_3-x_1)
+\end{array}
+\right]
+\end{eqnarray}
+}
+\normalsize{}	%フォントサイズが通常の式番号の表示のため
+\begin{eqnarray}
+\end{eqnarray}
+%
+%
+となる．これを，
+\begin{eqnarray}
+\nonumber
+[J]^{-1}
+%\left[
+%}
+&=&
+\frac{1}{det|J|}
+[A]
+\\
+&=&
+\frac{1}{det|J|}
+\left[
+\begin{array}{ccc}\label{detJA}
+a_{11} & a_{12} & a_{13} \\
+a_{21} & a_{22} & a_{23} \\
+a_{31} & a_{32} & a_{33} \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+とおく．これより，$ [A] $の各要素は四面体の節点の座標値($ \in $実数)で構成された実数値行列であることが分かる．
+
+また，次式\ref{Jdef}より，
+\begin{eqnarray}\label{Jdef}
+[J] = \left[
+\begin{array}{ccc}
+\frac{\partial x}{\partial \xi } & \frac{\partial y}{\partial \xi } & \frac{\partial z}{\partial \xi } \\
+\frac{\partial x}{\partial  \eta } & \frac{\partial y}{\partial  \eta } & \frac{\partial z}{\partial  \eta } \\
+\frac{\partial x}{\partial \zeta } & \frac{\partial y}{\partial \zeta } & \frac{\partial z}{\partial \zeta } \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+%
+\begin{eqnarray}
+\nonumber det|J| &=& (x_2-x_1)(y_3-y_1)(z_4-z_1) + (y_2-y_1)(z_3-z_1)(x_4-x_1) +(z_2-z_1)(x_3-x_1)(y_4-y_1) \\
+\nonumber & & -(x_4-x_1)(y_3-y_1)(z_2-z_1) - (x_2-x_1)(y_4-y_1)(z_3-z_1) - (x_3-x_1)(y_2-y_1)(z_4-z_1) 
+\\
+\nonumber &=& (x_2-x_1)\{ (y_3-y_1)(z_4-z_1)-(y_4-y_1)(z_3-z_1) \} \\
+&&+ (y_2-y_1)\{ (z_3-z_1)(x_4-x_1)-(x_3-x_1)(z_4-z_1) \} \\
+\nonumber && + (z_2-z_1)\{ (x_3-x_1)(y_4-y_1)-(y_3-y_1)(x_4-x_1) \}
+\end{eqnarray}
+と書き下せる．
+
+%
+%
+%
+式\ref{NJN}を変形し，式\ref{detJA}を代入すると
+\begin{eqnarray}
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial x} \\
+\frac{\partial N}{\partial y} \\
+\frac{\partial N}{\partial z} \\
+\end{array}
+\right]
+&=&
+\left[
+\begin{array}{c}
+J
+\end{array}
+\right]
+^{-1}
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial \xi } \\
+\frac{\partial N}{\partial  \eta } \\
+\frac{\partial N}{\partial \zeta } \\
+\end{array}
+\right] \\
+&=&
+\frac{1}{det|J|}
+\left[
+\begin{array}{ccc}\label{detJA}
+a_{11} & a_{12} & a_{13} \\
+a_{21} & a_{22} & a_{23} \\
+a_{31} & a_{32} & a_{33} \\
+\end{array}
+\right]
+%
+\left[
+\begin{array}{c}
+\frac{\partial N}{\partial \xi } \\
+\frac{\partial N}{\partial  \eta } \\
+\frac{\partial N}{\partial \zeta } \\
+\end{array}
+\right]
+\\
+\nonumber
+&=&
+\frac{1}{det|J|}
+\left[
+\begin{array}{c}
+a_{11}\frac{\partial N}{\partial \xi } + a_{12}\frac{\partial N}{\partial  \eta } + a_{13}\frac{\partial N}{\partial \zeta } \\
+a_{21}\frac{\partial N}{\partial \xi } + a_{22}\frac{\partial N}{\partial  \eta } + a_{23}\frac{\partial N}{\partial \zeta } \\
+a_{31}\frac{\partial N}{\partial \xi } + a_{32}\frac{\partial N}{\partial  \eta } + a_{33}\frac{\partial N}{\partial \zeta } \\
+\end{array}
+\right]
+\\
+\nonumber
+&=&
+\frac{1}{det|J|}
+\left[
+\begin{array}{c}
+a_{11}\begin{array}{cccc}[-1 & 1 & 0 & 0]\end{array} + a_{12}\begin{array}{cccc}[-1 & 0 & 1 & 0]\end{array} + a_{13}\begin{array}{cccc}[-1 & 0 & 0 & 1]\end{array} \\
+a_{21}\begin{array}{cccc}[-1 & 1 & 0 & 0]\end{array} + a_{22}\begin{array}{cccc}[-1 & 0 & 1 & 0]\end{array} + a_{23}\begin{array}{cccc}[-1 & 0 & 0 & 1]\end{array} \\
+a_{31}\begin{array}{cccc}[-1 & 1 & 0 & 0]\end{array} + a_{32}\begin{array}{cccc}[-1 & 0 & 1 & 0]\end{array} + a_{33}\begin{array}{cccc}[-1 & 0 & 0 & 1]\end{array} \\
+\end{array}
+\right]
+\\
+&=& \label{a_11}
+\frac{1}{det|J|}
+\left[
+\begin{array}{cccc}
+-a_{11} - a_{12} - a_{13} & a_{11} & a_{12} & a_{13} \\
+-a_{21} - a_{22} - a_{23} & a_{21} & a_{22} & a_{23} \\
+-a_{31} - a_{32} - a_{33} & a_{31} & a_{32} & a_{33} \\
+\end{array}
+\right]
+\\
+&=& \label{N_xN_yN_z}
+\frac{1}{det|J|}
+\left[
+\begin{array}{c}
+\left[ N_x \right] \\
+\left[ N_y \right] \\
+\left[ N_z \right] \\
+\end{array}
+\right]
+\end{eqnarray}
+とおく。
+
+%となる．
+%式\ref{detJA}より，
+%$ \frac{\partial N}{\partial x} ,\frac{\partial N}{\partial y },\frac{\partial N}{\partial z } $
+%の各々について求める．
+%
+%\begin{eqnarray}
+%\nonumber
+%\frac{\partial N}{\partial x}
+%
+%&=&
+%\frac{1}{det|J|}\left[ a_{11}\frac{\partial N}{\partial \xi } + a_{12}\frac{\partial N}{\partial  \eta } + a_{13}\frac{\partial N}{\partial \zeta }  \right] \\
+%\nonumber
+%&=&
+%\frac{1}{det|J|}\left[a_{11}\left[\begin{array}{c}-1 \\ 1 \\ 0 \\ 0 \\ \end{array}\right] + a_{12}\left[\begin{array}{c}-1 \\ 0 \\ 1 \\ 0 \\ \end{array}\right] + a_{13}\left[\begin{array}{c}-1 \\ 0 \\ 0 \\ 1 \\ \end{array}\right]
+%\right] \\
+%\nonumber
+%&=&
+%\frac{1}{det|J|}\left[\begin{array}{c}-a_{11} - a_{12} - a_{13} \\ a_{11} \\ a_{12} \\ a_{13} \\ \end{array}
+%\right] \\
+%&=& \label{Nx}
+%\frac{1}{det|J|}\left[ N_x \right]　(とおく)
+%\end{eqnarray}
+%
+%\begin{eqnarray}
+%\nonumber
+%\frac{\partial N}{\partial y}
+%&=&
+%\frac{1}{det|J|}\left[\begin{array}{c}-a_{21} - a_{22} - a_{23} \\ a_{21} \\ a_{22} \\ a_{23} \\ \end{array}
+%\right] \\
+%&=& \label{Ny}
+%\frac{1}{det|J|}\left[ N_y \right]　(とおく)
+%\\
+%\nonumber
+%\frac{\partial N}{\partial z}
+%&=&
+%\frac{1}{det|J|}\left[\begin{array}{c}-a_{31} - a_{32} - a_{33} \\ a_{31} \\ a_{32} \\ a_{33} \\ \end{array}
+%\right] \\
+%&=& \label{Nz}
+%\frac{1}{det|J|}\left[ N_z \right]　(とおく)
+%\end{eqnarray}
+%
+%となる．
+
+また，四面体の体積$ V $は，
+%
+\begin{eqnarray}
+\nonumber
+6V
+&=&
+\left|
+\begin{array}{cccc}
+1   & 1   & 1   &   1 \\
+x_1 & x_2 & x_3 & x_4 \\
+y_1 & y_2 & y_3 & y_4 \\
+z_1 & z_2 & z_3 & z_4
+\end{array}
+\right|
+\\
+\nonumber
+&=&
+\left|
+\begin{array}{cccc}
+1 & x_1 & y_1 & z_1 \\
+1 & x_2 & y_2 & z_2 \\
+1 & x_3 & y_3 & z_3 \\
+1 & x_4 & y_4 & z_4
+\end{array}
+\right|
+\label{6V}
+\\
+&=&
+\left|
+\begin{array}{cccc}
+1 & x & y & z \\
+0 & x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+0 & x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+0 & x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right|
+(∵2，3，4行から1行を引く)
+\end{eqnarray}
+%
+
+\tiny{
+\begin{eqnarray}
+\nonumber
+\begin{pmatrix}
+=
+1
+\times
+\left|
+\begin{array}{ccc}
+x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right|
++
+0
+\times
+\left|
+\begin{array}{ccc}
+x & y & z \\
+x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right|
+&+&
+0
+\times
+\left|
+\begin{array}{ccc}
+x & y & z \\
+x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right|
+\\
+\nonumber
+&+&
+0
+\times
+\left|
+\begin{array}{ccc}
+x & y & z \\
+x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+\end{array}
+\right|
+\end{pmatrix}
+\end{eqnarray}
+}
+
+\normalsize{}
+
+%
+%
+\begin{eqnarray}
+\label{6V_}
+&=&
+\left|
+\begin{array}{ccc}
+x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right|
+(∵余因子展開で他の項は0倍)
+\end{eqnarray}
+%
+%
+式\ref{xyzforJ}を式\ref{[J]}に代入して,\\
+%
+\begin{eqnarray}
+\nonumber
+J
+&=&
+\left[
+\begin{array}{ccc}
+\frac{\partial x}{\partial \xi } & \frac{\partial y}{\partial \xi } & \frac{\partial z}{\partial \xi } \\
+\frac{\partial x}{\partial  \eta } & \frac{\partial y}{\partial  \eta } & \frac{\partial z}{\partial  \eta } \\
+\frac{\partial x}{\partial \zeta } & \frac{\partial y}{\partial \zeta } & \frac{\partial z}{\partial \zeta } \\
+\end{array}
+\right]
+\\
+\label{detJ}
+&=&
+\left[
+\begin{array}{ccc}
+x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+%
+式\ref{detJ}は式\ref{6V}と等しいので，
+%
+\begin{eqnarray}\label{6V}
+det|J|=6V
+\end{eqnarray}
+となる．
+
+また，
+%	
+%//以下，要根拠//$dxdydz = det|J|d\xi d\eta d\zeta $ である根拠を知りたい
+ヤコビアンの定義\cite{入門微分積分}より，
+\begin{eqnarray}
+\frac{\partial(x,y,z)}{\partial(\xi,\eta,\zeta)}
+&=& det
+\left[
+\begin{array}{ccc}
+\frac{\partial x}{\partial \xi } & \frac{\partial y}{\partial \xi } & \frac{\partial z}{\partial \xi } \\
+\frac{\partial x}{\partial  \eta } & \frac{\partial y}{\partial  \eta } & \frac{\partial z}{\partial  \eta } \\
+\frac{\partial x}{\partial \zeta } & \frac{\partial y}{\partial \zeta } & \frac{\partial z}{\partial \zeta }
+\end{array}
+\right]
+\end{eqnarray}
+これを変形して，
+\begin{eqnarray}
+dxdydz &=& det[J] d\xi d\eta d\zeta
+%
+\end{eqnarray}
+これらを用いて$dV$を座標変換する．
+%
+%
+\begin{eqnarray}\label{dV=1/6V}
+\nonumber dV &=& dxdydz \\
+\nonumber &=& det|J|d\xi d \eta d\zeta \\
+&=& 6V d\xi d \eta d\zeta
+\end{eqnarray}
+以上より，
+式\ref{risanK1}に，式\ref{N_xN_yN_z}，式\ref{6V}を代入．
+また、式\ref{dV=1/6V}を用いて，体積要素$ dV $の$(x,y,z)$座標から$(\xi ,\eta ,\zeta)$座標への変換式を用いる
+%
+%
+\begin{eqnarray}\label{conveq}
+\nonumber
+&&
+\int \int \int_{V_{\xi  \eta \zeta }}\lambda \left\{ \frac{1}{6V}[ N_x]^T  \frac{1}{6V}[ N_x] + \frac{1}{6V}[ N_y]^T  \frac{1}{6V}[ N_y] + \frac{1}{6V}[ N_z]^T  \frac{1}{6V}[ N_z] \right\} 6Vd\xi d \eta d\zeta 
+\\
+&=&\label{K_m_}
+\frac{6V}{36V^2}
+\lambda
+\int \int \int_{V_{\xi  \eta \zeta }}  \left\{ [ N_x]^T [ N_x] + [ N_y]^T [ N_y] + [ N_z]^T [ N_z] \right\} d\xi d \eta d\zeta
+\end{eqnarray}
+%
+ここで$ \left\{ [ N_x]^T [ N_x] + [ N_y]^T [ N_y] + [ N_z]^T [ N_z] \right\} = [K_m]$とすると(ただし$ [K_m] $ は実数値行列．
+
+%(∵式(\ref{Nx}，\ref{Ny}，\ref{Nz})より))，
+\begin{eqnarray}
+\nonumber
+K_m &=&
+[ N_x]^T [ N_x] + [ N_y]^T [ N_y] + [ N_z]^T [ N_z]
+\\
+\nonumber
+&=&
+\left[
+\begin{array}{c}
+-a_{11} -a_{12} -a_{13} \\
+a_{11} \\
+a_{12} \\
+a_{13}
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+-a_{11} -a_{12} -a_{13} & a_{11} & a_{12} & a_{13}
+\end{array}
+\right]
+\\
+\nonumber
+&&+
+\left[
+\begin{array}{c}
+-a_{21} -a_{22} -a_{23} \\
+a_{21} \\
+a_{22} \\
+a_{23}
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+-a_{21} -a_{22} -a_{23} & a_{21} & a_{22} & a_{23}
+\end{array}
+\right]
+\\
+\nonumber
+&&+
+\left[
+\begin{array}{c}
+-a_{31} -a_{32} -a_{33} \\
+a_{31} \\
+a_{32} \\
+a_{33}
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+-a_{31} -a_{32} -a_{33} & a_{31} & a_{32} & a_{33}
+\end{array}
+\right]
+\\
+\nonumber
+&=&
+\left[
+\begin{array}{cccc}
+(a_{11} +a_{12} +a_{13})^2 & \cdot & \cdot & -(a_{11} +a_{12} +a_{13})a_{13} \\
+-a_{11}(a_{11} + a_{12} +a_{13}) & {a_{11}}^2 & \cdot & \cdot \\
+-a_{12}(a_{11} +a_{12} +a_{13}) & a_{12}a_{11} & {a_{12}}^2 & \cdot \\
+-a_{13}(a_{11} +a_{12} +a_{13}) & a_{13}a_{11} & a{13}a_{12} & {a_{13}}^2
+\end{array}
+\right]
+\\
+\nonumber
+&& +
+\left[
+\begin{array}{cccc}
+(a_{21} +a_{22} +a_{23})^2 & \cdot & \cdot & -(a_{21} +a_{22} +a_{23})a_{23} \\
+-a_{21}(a_{21} + a_{22} +a_{23}) & {a_{21}}^2 & \cdot & \cdot \\
+-a_{22}(a_{21} +a_{22} +a_{23}) & a_{22}a_{11} & {a_{22}}^2 & \cdot \\
+-a_{23}(a_{21} +a_{22} +a_{23}) & a_{23}a_{11} & a{23}a_{22} & {a_{23}}^2
+\end{array}
+\right]
+\\
+\label{K_m__}
+&& +
+\left[
+\begin{array}{cccc}
+(a_{31} +a_{32} +a_{33})^2 & \cdot & \cdot & -(a_{31} +a_{32} +a_{33})a_{33} \\
+-a_{31}(a_{31} + a_{32} +a_{33}) & {a_{31}}^2 & \cdot & \cdot \\
+-a_{32}(a_{31} +a_{32} +a_{33}) & a_{32}a_{11} & {a_{32}}^2 & \cdot \\
+-a_{33}(a_{31} +a_{32} +a_{33}) & a_{33}a_{11} & a{33}a_{12} & {a_{33}}^2
+\end{array}
+\right]
+\end{eqnarray}
+%
+%
+\begin{eqnarray}
+\nonumber
+(K_1(=式\ref{K_m_}))
+&=& 
+\frac{\lambda}{6V}[K_m]
+\int \int \int_{V_{\xi  \eta \zeta }}  d\xi d \eta d\zeta \\
+\nonumber
+&=&
+\frac{\lambda}{6V}[K_m]
+\int_{0}^{1} \int_{0}^{1-\zeta }  \left[\xi \right]_{0}^{1- \eta -\zeta }  d \eta d\zeta \\
+\nonumber
+&=&
+\frac{\lambda}{6V}[K_m]
+\int_{0}^{1} \int_{0}^{1-\zeta } (1- \eta -\zeta ) d \eta d\zeta \\
+\nonumber
+&=&
+\frac{\lambda}{6V}[K_m]
+\int_{0}^{1} \left[ (1-\zeta )η-\frac{1}{2}η^2 \right]_0^{1-\zeta } dηd\zeta \\
+\nonumber
+&=&
+\frac{\lambda}{6V}[K_m]
+\int_{0}^{1} \frac{1}{2} (1-\zeta )^2  d\zeta \\
+\nonumber
+&=&
+\frac{\lambda}{6V}[K_m]
+\int_{0}^{1} \frac{1}{2} \left[ \frac{1}{3}\zeta ^3 - \zeta ^2 + \zeta  \right]_0^1  d\zeta \\
+&=&
+\frac{\lambda}{6V}[K_m]\frac{1}{6}
+=
+\frac{\lambda}{36V}[K_m]
+\end{eqnarray}
+と計算できる．
+ただし、$ K_m = $( 式 $ \ref{K_m__} $ )
+
+%gouse
+同様にして，$ K_2,K_3 $の導出も行う．
+%
+%
+\subsubsection{K2の導出}
+%
+\ref{eqn_s3}式より，各節点の値を求めたいので，順番を入れ替えて，
+\begin{eqnarray}\label{eqn_s3_2}
+\nonumber \int_{S3} q[N]^T dS　&=& \int_{S3} \alpha(T - T_c) [N]^T dS \\
+\nonumber &=& \int_{S3} [N]^T \alpha(T - T_c)  dS\\
+\nonumber &=& \int_{S3} \alpha [N]^T ( [N] \cdot T_{ele} ) dS - \int_{S3} \alpha [N]^T T_c  dS \\
+		  &=& \int_{S3} \alpha [N]^T [N] dS \cdot T_{ele} - \int_{S3} \alpha [N]^T T_c  dS
+\end{eqnarray}
+
+
+%
+%
+\subsubsection{$dS$の導出}
+$(x,y,z)$空間内のベクトル$u,v$の微小変化，$du,dv$は，単位ベクトル$e(i,j,k)$を用いて，
+%
+\begin{eqnarray}
+du
+&=&
+\left[
+\begin{array}{ccc}
+a_1 & a_2 & a_3
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+ i \\
+ j \\
+ k
+\end{array}
+\right]
+\end{eqnarray}
+
+\begin{eqnarray}
+dv
+&=&
+\left[
+\begin{array}{ccc}
+b_1 & b_2 & b_3
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+ i \\
+ j \\
+ k
+\end{array}
+\right]
+\end{eqnarray}
+%
+と表せる．
+
+また，空間中の三角形微小要素$dS$は
+$dS=\frac{1}{2} | du \times dv | $
+と表せる．
+%
+\begin{figure}[htb]
+\center
+\includegraphics[width = 4cm]{ds.eps}
+\caption{三角形微小要素$dS$}
+\label{fig:ds}
+\end{figure}
+%
+
+テーラーの定理より，
+\begin{eqnarray}
+x( \xi + d \xi,\eta,\zeta) &=& x(\xi,\eta,\zeta) + \frac{\partial}{\partial \xi} x(\xi,\eta,\zeta) d \xi \\
+\nonumber \frac{\partial}{\partial \xi} x(\xi,\eta,\zeta) d \xi &=& x( \xi + d \xi,\eta,\zeta) - x(\xi,\eta,\zeta) \\
+\nonumber &=& (x_2 - x_1)(\xi +d\xi)+(x_3-x_1)\eta + (x_4-x_1)\zeta \\ 
+\nonumber && - \{(x_2-x_1)\xi +(x_3-x_1)\eta +(x_4-x_1)\zeta\} \\
+&=& (x_2-x_1)d\xi
+\end{eqnarray}
+
+これらは，$ [J] $の各成分に$ d\xi , d\eta, d\zeta $を乗じたものである．
+ゆえに，次式になる．
+\begin{eqnarray}
+\nonumber
+[J]
+\begin{array}{ccc}
+[d\xi & d\eta & d\zeta]
+\end{array}
+%
+&=&
+%
+\left[
+\begin{array}{ccc}
+\frac{\partial x}{\partial \xi } & \frac{\partial y}{\partial \xi } & \frac{\partial z}{\partial \xi } \\
+\frac{\partial x}{\partial  \eta } & \frac{\partial y}{\partial  \eta } & \frac{\partial z}{\partial  \eta } \\
+\frac{\partial x}{\partial \zeta } & \frac{\partial y}{\partial \zeta } & \frac{\partial z}{\partial \zeta } \\
+\end{array}
+\right]
+%
+\begin{array}{ccc}
+[d\xi & d\eta & d\zeta]
+\end{array}
+\\
+&=& 
+\left[
+\begin{array}{ccc}
+x_2 - x_1 & y_2 - y_1 & z_2 - z_1 \\
+x_3 - x_1 & y_3 - y_1 & z_3 - z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 - z_1 \\
+\end{array}
+\right]
+\begin{array}{ccc}
+[d\xi & d\eta & d\zeta]
+\end{array}
+\end{eqnarray}
+%
+%
+式\ref{xyzforJ}を再掲する．
+\begin{eqnarray}\label{xyzξ_2}
+\nonumber x &=& (1-\xi -\eta -\zeta ) x_1 + \xi  x_2 +  \eta  x_3 + \zeta  x_4 \\
+\nonumber &=& (x_2 - x_1)\xi + (x_3 - x_1)\eta + (x_4 - x_1)\zeta + x_1\\
+ y &=& (y_2 - y_1)\xi +(y_3-y_1) \eta +(y_4-y_1)\zeta +y_1  \\
+\nonumber　z &=& (z_2 - z_1)\xi +(z_3-z_1) \eta +(z_4-z_1)\zeta +z_1 
+\end{eqnarray}
+だから，$u,v$の微小変化$ du, dv$を以下の式で表すとする．
+$\eta =0$ の$ \xi - \zeta $平面で考えると，
+
+\begin{eqnarray}
+d u &=& ( \frac{\partial x}{\partial \xi}d\xi) i + ( \frac{\partial y}{\partial \xi}d\xi) j +( \frac{\partial z}{\partial \xi}d\xi) k
+\\
+%
+d v &=& ( \frac{\partial x}{\partial \zeta}d\zeta) i + ( \frac{\partial y}{\partial \zeta}d\zeta) j +( \frac{\partial z}{\partial \zeta}d\zeta) k
+%
+\end{eqnarray}
+　　//↑に関して，η≠0の時の下の係数の計算はどうにか循環して計算できるように実装したい．
+
+
+%
+以上より，$ du \times dv $は単位ベクトル$e$を用いて，次式のように書ける．
+%
+\begin{eqnarray}
+\nonumber e=
+\left[
+\begin{array}{ccc}
+e_1 & e_2 & e_3
+\end{array}
+\right]
+\end{eqnarray}
+を用いて
+%
+%
+\begin{eqnarray}\label{duxdv}
+\nonumber du \times dv &=&
+\left|
+\begin{array}{ccc}
+e_1 & e_2 & e_3\\
+\frac{\partial x}{\partial  \xi} d\xi & \frac{\partial y}{\partial  \xi} d\xi & \frac{\partial z}{\partial  \xi} d\xi \\
+\frac{\partial x}{\partial  \zeta} d\zeta & \frac{\partial y}{\partial  \zeta} d\zeta & \frac{\partial z}{\partial  \zeta} d\zeta
+\end{array}
+\right|
+\\
+\nonumber &=& \left|
+\begin{array}{ccc}
+e_1 & e_2 & e_3\\
+\frac{\partial x}{\partial  \xi} & \frac{\partial y}{\partial  \xi}& \frac{\partial z}{\partial  \xi} \\
+\frac{\partial x}{\partial  \zeta} & \frac{\partial y}{\partial  \zeta} & \frac{\partial z}{\partial  \zeta}
+\end{array}
+\right| d \xi d \zeta
+\\
+\nonumber &=& \left|
+\begin{array}{ccc}
+e_1 & e_2 & e_3\\
+x_2 - x_1 & y_2 - y_1& z_2 -z_1 \\
+x_4 - x_1 & y_4 - y_1 & z_4 -z_1
+\end{array}
+\right| d \xi d \zeta
+\\
+\nonumber &=& \left[
+\begin{array}{c}
+(y_2 - y_1)(z_4 - z_1)e_1 - (z_2 - z_1)(y_4 - y_1)e_1\\
++(x_4 - x_1)(z_2 - z_1)e_2 - (x_2 - x_1)(z_4 - z_1)e_2\\
++(x_2 - x_1)(y_4 - y_1)e_3 - (x_4 - x_1)(y_2 - y_1)e_3\\
+\end{array}
+\right]
+d \xi d \zeta
+\\
+% 3x1 * 1x3 なら行列式の値と等しくはなる．
+&=& \left[
+\begin{array}{ccc}
+M_1 & M_2 & M_3
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+e_1\\
+e_2\\
+e_3
+\end{array}
+\right]
+d \xi d \zeta
+\end{eqnarray}
+%
+ただし，
+\begin{eqnarray}\label{M1M2M3}
+\begin{array}{c}
+M_1 = (y_2 - y_1)(z_4 - z_1) - (z_2 - z_1)(y_4 - y_1)\\
+M_2 = (x_4 - x_1)(z_2 - z_1) - (x_2 - x_1)(z_4 - z_1)\\
+M_3 = (x_2 - x_1)(y_4 - y_1) - (x_4 - x_1)(y_2 - y_1)
+\end{array}
+\end{eqnarray}
+とする．
+%
+式\ref{duxdv},\ref{M1M2M3},ピタゴラスの定理より，微小面積は次の様に計算できる．
+\begin{eqnarray}\label{ds=}
+\nonumber dS &=&
+|
+du \times dv
+|
+\\
+&=&
+\sqrt{ M_1^2 + M_2^2 + M_3^2} d \xi d \zeta
+\end{eqnarray}
+%
+ただし，$ 0 \leqq \zeta \leqq 1- \xi ,  0 \leqq \xi \leqq 1 $とする．
+(参考:また、$ dS,d\xi d\zeta $は微小面積要素なので、この段階では積分範囲の形状を考慮した$ \frac{1}{2} $は付さない。)
+%
+%
+%
+%
+\subsubsection{$K_2, K_3$を求める}
+ところで，Nの定義は，１×Nの行マトリクスであった．
+ゆえに，
+\begin{eqnarray}\label{NTN}
+\nonumber[N]^T \cdot [N]
+&=&
+\left[
+\begin{array}{c}
+N_1\\
+N_2\\
+N_3\\
+N_4
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+N_1 & N_2 & N_3 & N_4
+\end{array}
+\right]\\
+&=&
+\left[
+\begin{array}{cccc}
+N_1^2 & N_1 N_2 & N_1 N_3 & N_1 N_4\\
+N_2 N_1 & N_2^2 & N_2 N_3 & N_2 N_4\\
+N_3 N_1 & N_3 N_2 & N_3^2 & N_3 N_4\\
+N_4 N_1 & N_4 N_2 & N_4 N_3 & N_4^2
+\end{array}
+\right]
+\end{eqnarray}
+となり，対称行列となる．
+$N_1,N_2,N_3,N_4$はそれぞれ行列ではなく，行列の成分なので，対角成分と上半分（または下半分）を求めればよい．
+
+式\ref{risanK}の右辺第二，三項を計算するにあたり，式\ref{NTN}の行列の各要素について，積分計算を行う．
+これを要素ごとにまとめ，四面体要素全体の計算としてまとめることにする．
+%
+%
+\begin{eqnarray}\label{k2_23}
+&& \nonumber ([K]の第二，三項) = \int_{S3} \alpha[N]^T [N] dS + \int_{S4} h[N]^T [N] dS \\
+\end{eqnarray}
+%
+%\begin{eqnarray}
+%\nonumber ([K]の第二項) = \alpha \int_{S3} [N] [N]^T dS\\
+%\nonumber ([K]の第三項) = h \int_{S4} [N] [N]^T dS\\
+%\end{eqnarray}
+%
+そこで，本計算では，引き続き$ (x,y,z)$空間内の四面体を$ (\xi,\eta,\zeta) $空間内に座標変換した四面体内で考える．
+以下，$ \eta = 0 $とした$ \xi - \zeta $平面の面積分を考える．
+%
+\begin{figure}[htb]
+\center
+\includegraphics[width = 8cm]{xi_zeta_integra.eps}
+\caption{$ \xi - \zeta $平面での面積分$ \int_{0}^{1} d \xi \int_{0}^{1-\xi} d\zeta $}
+\label{fig:xi_zeta_integra}
+\end{figure}
+%
+%
+\begin{eqnarray}
+\nonumber \int_{0}^{1} [N]^T [N] dS &=& \int_{0}^{1} d\xi\int_{0}^{1-\xi} [N]^T [N] d\zeta \\
+\end{eqnarray}
+ここで，$ [N] [N]^T  $の行列(式\ref{NTN})に含まれる要素ごとに積分を行う．
+
+$i)$ $ N_1^2 $のとき
+\begin{eqnarray}
+\nonumber \int_0^1 \int_0^{1-\xi} N_1^2 d\zeta d\xi &=& \int_0^1 \int_0^{1-\xi} (1-\xi -\zeta )^2 d\zeta d\xi \\
+\nonumber &=& \int_0^1 -\frac{1}{3} \left[ (1 - \xi - \zeta)^3 \right]_0^{1-\xi} d\xi \\
+\nonumber &=& \int_0^1 \frac{1}{3} (1 - \xi )^3 d\xi \\
+\nonumber &=& -\frac{1}{12} \left[ (1 - \xi)^4 \right]_0^{1} \\
+&=& \frac{1}{12}
+\end{eqnarray}
+
+$ii)$ $N_1 N_2 $のとき
+
+$ \cdot $
+
+$ \cdot $
+
+$ \cdot $
+
+同様にして，$ N_2^2,N_3^2,...N_2 N_4,N_3 N_4 $を求める．
+また，$ N_1 N_2 $ ， $ N_2 N_1 $は積の順番を入れ替え可能なため，同値となる．
+
+求めた結果，以下のようになる．
+%
+\begin{eqnarray}
+\nonumber \int_{0}^{1} [N]^T [N] dS &=& \int_{0}^{1} d\xi\int_{0}^{1-\xi} [N]^T [N] d\zeta \\
+ &=& 
+\left[
+\begin{array}{cccc}
+\frac{1}{12} & \frac{1}{24} & 0 & \frac{1}{24} \\
+\frac{1}{24} & \frac{1}{12} & 0 & \frac{1}{24} \\
+0 & 0 & 0 & 0 \\
+\frac{1}{24} & \frac{1}{24} & 0 & \frac{1}{12}
+\end{array}
+\right]
+\\
+&=& 
+\frac{1}{24}
+\left[
+\begin{array}{cccc}
+2 & 1 & 0 & 1 \\
+1 & 2 & 0 & 1 \\
+0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 2
+\end{array}
+\right]
+\end{eqnarray}
+%
+ゆえに，式\ref{ds=}，\ref{k2_23}より，
+\begin{eqnarray}
+\nonumber ([K]の第2,3項から\alpha , hを除いたもの) &=& \int_{Sx} [N]^T [N] dS \\
+\nonumber &=& \int_{Sx} [N]^T [N]  \sqrt{ M_1^2 + M_2^2 + M_3^2} d \xi d \zeta \\
+\nonumber &=& \sqrt{ M_1^2 + M_2^2 + M_3^2}
+\left[
+\begin{array}{cccc}
+\frac{1}{12} & \frac{1}{24} & 0 & \frac{1}{24} \\
+\frac{1}{24} & \frac{1}{12} & 0 & \frac{1}{24} \\
+0 & 0 & 0 & 0 \\
+\frac{1}{24} & \frac{1}{24} & 0 & \frac{1}{12}
+\end{array}
+\right]
+\\
+\nonumber &=& \frac{ \sqrt{ M_1^2 + M_2^2 + M_3^2}}{2} \frac{1}{12}
+\left[
+\begin{array}{cccc}
+2 & 1 & 0 & 1 \\
+1 & 2 & 0 & 1 \\
+0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 2 \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+
+次に，熱容量マトリクスについての式の導出を行う．
+Kと同様にして最終的に$ (x,y,z) $空間に変換すると，次式のようになる(式\ref{dV=1/6V}を用いてdVを座標変換する)．
+\begin{eqnarray}
+(式\ref{risanC}の右辺) &=& \int_v \rho c [N]^T[N]dv \\
+\nonumber &=& \rho c\int_0^1\int_0^{1-\xi} \int_0^{1-\xi - \eta}[N]^T[N] det|J| d\xi d\eta d\zeta \\
+\nonumber
+&=& \rho c \cdot 6V
+\left[
+\begin{array}{cccc}
+\frac{1}{60} & \frac{1}{120} & \frac{1}{120} & \frac{1}{120} \\
+\frac{1}{120} & \frac{1}{60} & \frac{1}{120} & \frac{1}{120} \\
+\frac{1}{120} & \frac{1}{120} & \frac{1}{60} & \frac{1}{120} \\
+\frac{1}{120} & \frac{1}{120} & \frac{1}{120} & \frac{1}{60}
+\end{array}
+\right]
+\\
+&=& \frac{\rho c V}{20}
+\left[
+\begin{array}{cccc}
+2 & 1 & 1 & 1 \\
+1 & 2 & 1 & 1 \\
+1 & 1 & 2 & 1 \\
+1 & 1 & 1 & 2 \\
+\end{array}
+\right]
+\end{eqnarray}
+%
+また，熱流束ベクトルについても，
+Kと同様にして最終的に$ (x,y,z) $空間に変換すると，次式のようになる．
+\begin{eqnarray}
+(式\ref{risanF}の右辺より) &=& \int_s [N]^T ds \\
+&=&
+\sqrt{ M_1^2 + M_2^2 + M_3^2}
+\left[
+\begin{array}{c}
+\frac{1}{6} \\
+\frac{1}{6} \\
+0 \\
+\frac{1}{6} 
+\end{array}
+\right]
+\end{eqnarray}
+%
+%
+\begin{equation}\label{risaneq_2}
+	[K] \{T \} + [C]\{\frac{\partial T}{\partial t} \} = \{ F \}
+\end{equation}
+%
+ただし，
+\begin{eqnarray}\label{risanK_2}
+\nonumber
+[K] &=& \int_v \lambda \{ \frac{\partial [ N]^T }{\partial x}  \frac{\partial  [ N] }{\partial x} + \frac{\partial [N]^T }{\partial y}  \frac{\partial [N] }{\partial y} + \frac{\partial [N]^T }{\partial z}  \frac{\partial [N]}{\partial z} \} dv \\
+& & 　　　+ \int_{S3} \alpha[N]^T [N] dS + \int_{S4} h[N]^T [N] dS \\ 
+\nonumber
+&=&  \frac{\lambda}{6V}[K_m]　　　（\since 式\ref{conveq}より）　\\
+\nonumber
+  & &  +  
+\alpha \frac{ \sqrt{ M_1^2 + M_2^2 + M_3^2}}{2} \frac{1}{12}
+\left[
+\begin{array}{cccc}
+2 & 1 & 0 & 1 \\
+1 & 2 & 0 & 1 \\
+0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 2 \\
+\end{array}
+\right]
+ +  
+h \frac{ \sqrt{ M_1^2 + M_2^2 + M_3^2}}{2} \frac{1}{12}
+\left[
+\begin{array}{cccc}
+2 & 1 & 0 & 1 \\
+1 & 2 & 0 & 1 \\
+0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 2 \\
+\end{array}
+\right]
+\\
+\nonumber && (ただし，\eta=0の時)
+\\
+%
+%
+\label{risanC_2}
+[C] &=& \int_v \rho c[N]^T [N] dv \\
+&=& \frac{\rho c V}{20}
+\left[
+\begin{array}{cccc}
+2 & 1 & 1 & 1 \\
+1 & 2 & 1 & 1 \\
+1 & 1 & 2 & 1 \\
+1 & 1 & 1 & 2 \\
+\end{array}
+\right]
+\\
+%
+%
+\label{risan_F}
+\nonumber
+ \{F\} &=& \int_v \frac{\partial Q}{\partial t} dv - \int_{S2} q_0[N]^T dS + \int_{S3} \alpha T_c [N]^T dS \\
+& & 　　　+ \int_{S4} hT_{OUT} [N]^T dS \\
+&=& \int_v \frac{\partial Q}{\partial t} dv - q_0 \cdot \sqrt{ M_1^2 + M_2^2 + M_3^2}
+\left[
+\begin{array}{c}
+\frac{1}{6} \\
+\frac{1}{6} \\
+0 \\
+\frac{1}{6} 
+\end{array}
+\right] \\
+\nonumber &&+
+\alpha T_c \cdot \sqrt{ M_1^2 + M_2^2 + M_3^2}
+\left[
+\begin{array}{c}
+\frac{1}{6} \\
+\frac{1}{6} \\
+0 \\
+\frac{1}{6} 
+\end{array}
+\right]
++ hT_{OUT} \cdot
+\sqrt{ M_1^2 + M_2^2 + M_3^2}
+\left[
+\begin{array}{c}
+\frac{1}{6} \\
+\frac{1}{6} \\
+0 \\
+\frac{1}{6} 
+\end{array}
+\right]
+\\
+&& (ただし，\eta=0の時)
+\end{eqnarray}
+%
+%
+\subsection{数値計算法に合わせた式の変形}
+\subsubsection{逆行列を用いた解法}
+
+時間軸での差分式を用いて、$ t + \Delta t $ステップでの温度ベクトルを求めるためには、単に$ T(t + \Delta t)$の係数の全体剛性行列の逆行列を左から両辺にかければ良い。
+行列の成分は上三角と下三角とで(i,j)と(j,i)成分の値は同じになるはずである。
+しかし、縦×横がn次元として、nが300程度であれば、逆行列の計算には1秒程度で済むが、掃出し法の場合、ガウスの消去法？なので？、nが少し大きくなると、その３乗に比例して大きな計算コストがかかるようになる。プリプロセスとはいえ、現実的にデバッグするのが大変になってしまう。そこで、ガウスザイデル法を使って反復計算を行い、制度は劣るが繰り返し計算の回数で精度をあげていく手法をとる。
+ガウスザイデル法の詳しい計算の仕方については、次に述べる。
+
+
+\subsubsection{ガウスザイデル法}
+本研究では、数値計算の速度を重視し、計算精度を繰り返し計算回数での調節が期待できるガウスザイデル法を用いて計算を行う。また、並列計算も可能であると考えられ、GPUなどを使った超並列計算の実現を期待している。
+
+\begin{eqnarray}\label{Gaus}
+A x(n) + b &=& 0 \\
+(D-F)x(n) &=& -b \\
+x(n) &=& D^{-1}Fx(n) - D^{-1}b 
+\end{eqnarray}
+
+ただし、Dは、Aの対角成分のような行列。
+Fは、AからDを引いたものとなる。
+式\ref{crankeq}を当てはめると、次式になる。
+\begin{eqnarray}
+A &=& \begin{pmatrix} \frac{1}{2}[K]+\frac{1}{\Delta t}[C] \end{pmatrix} \\
+x[n] &=& \left\{ T(t+ \Delta t) \right\} \\
+-b &=& \begin{pmatrix}-\frac{1}{2}[K] + \frac{1}{\Delta t}[C] \end{pmatrix} \{ T(t) \} + \{ F \}
+\end{eqnarray}
+以上より、
+\begin{eqnarray}
+\nonumber T(t+\Delta t) = D^{-1} (-1)(\begin{pmatrix} \frac{1}{2}[K]+\frac{1}{\Delta t}[C] \end{pmatrix}の非対角成分)T(t) \\
+-D^{-1}({\begin{pmatrix}-\frac{1}{2}[K] + \frac{1}{\Delta t}[C] \end{pmatrix} \{ T(t) \} + \{ F \}})
+\end{eqnarray}
+
+上記で、$D$は、$A$の対角成分から作成した配列とする。
+また、$F$は$A$の非対角成分、すなわち、互いに異なる節点で作る四面体の辺と捉え、これを要素とする構造体とみなす。
+$-b$に相当する部分は、繰り返し計算前の温度ベクトル${T(t)}$を用いて作成する。
+
+
+
+まず、$ A $を求め、対角成分だけになるような行列を探し、$F,D $を定義して、計算を進める。
+上式より、$ x[n] $は節点の温度を表す$ n×1 $のベクトル${T(t+\Delta t)}$になる。
+ヤコビ法では、$x$を一度に更新するが、ガウス・ザイデル法では1行ずつ更新する。
+そのため、毎計算ステップで1つの節点が順々に更新されていく。
+右辺第一項の$ {T(t)} $は、随時更新された$i$行の温度については更新されたものを用いる。
+
+計算アルゴリズム式の模式図を次に示す。
+
+\begin{figure}[htb]
+\center
+\includegraphics[width = 12cm]{AT_BT_F.eps}
+\caption{ガウスザイデルの計算式}
+\label{fig:gauss1}
+\end{figure}
+
+\begin{figure}[htb]
+\center
+\includegraphics[width = 10cm]{matAdef.eps}
+\caption{ガウスザイデルの計算式2}
+\label{fig:matAdef}
+\end{figure}
+
+\begin{figure}[htb]
+\center
+\includegraphics[width = 12cm]{T_i.eps}
+\caption{ガウスザイデルの計算式3}
+\label{fig:T_i}
+\end{figure}
+
+\section{水分の蒸発}
+%
+\subsection{沸点温度未満の場合}
+食品と水の科学\cite{foodandwater}のpp.201によれば，
+蒸発は，その温度における飽和水蒸気圧$ H_s $と環境雰囲気中の水蒸気圧$ H_c $との差$ H_s - H_c $に支配され，単位表面積あたりの乾燥速度$ R_c $は次のように表せる．
+\begin{eqnarray}
+R_c = - \frac{W_0}{A} \cdot \frac{dW}{d\theta} = K(H_s - H_c)
+\end{eqnarray}
+%
+ただし，$ W_0 $：見かけの無水物質量，$ A $：見かけの乾燥表面積，$ \frac{dW}{d\theta} $：単位時間における単位材料無水物当りの水の質量の変化，$ K $：境膜物質移動係数．雰囲気の流速と共に増大する．
+
+メッシュの外殻を構成する要素の面積を用いて、蒸発する水分量を計算することができるはずである。
+
+これを有限要素法の計算式に組み込むためにはどうすればよいだろうか？
+

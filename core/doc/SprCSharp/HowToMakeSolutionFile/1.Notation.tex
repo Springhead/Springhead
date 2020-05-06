@@ -1,0 +1,114 @@
+% Notation.tex
+%	Last update: 2017/02/23 F.Kanehori
+\newpage
+\section{読み替えルール}
+\label{Notation}
+
+この文書では、``Visual Studio 2015''を示すために``<14.0>''という記法を、
+``Physicsを含む最小構成版''を示すために``<Physics>'', ``<PH>''など
+という記法を用いる。
+他の構成を作成する場合またはVisual Studioの別の版を使用する場合には、
+これら``<...>''の部分を適切に読み替える必要がある。
+次表に、その読み替え方法を示す。
+
+\small{%
+\begin{center}
+\begin{longtable}{p{25mm}p{90mm}}
+    \MC{1}{c}{\small この文書での記法} & \MC{1}{c}{\small 読み換え方法} \\\hline
+    <Physics>
+      & 最小構成作成の対象となる(Springheadの)プロジェクト名に読み替える。
+	ただし、\hfil
+	\vspace{.5ZH}
+	\vbox{
+	    \begin{itemize}
+		\item 全体構成を作成する場合は``(空文字列)''とする。
+		\item 複数のプロジェクトを対象とする場合はプロジェクト名を
+		      カンマで区切って並べる。
+	    \end{itemize}
+	    \vspace{.5ZH}
+	    \begin{tabular}{p{4mm}lcl}
+		(例) & Physicsを含む最小構成 & \ARROW & Physics \\
+		     & PhysicsとGraphics & \ARROW & Physics,Graphics \\
+		     & 全体構成 & \ARROW & (空文字列)
+	    \end{tabular}
+	}
+	\\\hline
+
+    <PH>
+      & 構成に与える名称(基本的にプロジェクトの略号)に読み替える。
+	ただし、全体構成を作成する場合は\SQuote{ALL}と読み替える。\hfil
+	\vspace{.5ZH}
+	\begin{tabular}{p{4mm}lcl}
+	    (例) & Physicsを含む最小構成 & \ARROW & PH \\
+		 & PhysicsとGraphics & \ARROW & PHGR \\
+		 & 全体構成 & \ARROW & ALL
+	\end{tabular}
+	\\\hline
+
+    <14.0>
+      & 使用するVisual Studioのバージョンに読み替える。
+	Visual Studioのマクロ \$(VisualStudioVersion) の値を使用する。
+	\hfil
+	\vspace{.5ZH}
+	\begin{tabular}{p{4mm}lcl}
+	    (例) & VS 2013 & \ARROW & 12.0 \\
+		 & VS 2015 & \ARROW & 14.0
+	\end{tabular}
+	\\\hline
+
+    <EDP>
+      & ソースレベルで陽に依存するプロジェクトに読み替える。
+	次の表のとおり。\hfil
+	\vspace{1ZH}
+	\begin{tabular}{ll}
+	    プロジェクト	& 依存するプロジェクト \\\hline
+	    Base		& なし \\
+	    Collision		& Foundation \\
+	    Creature		& Foundation, Framework, Physics \\
+	    FileIO		& Foundation \\
+	    Foundation		& Base \\
+	    Framework		& FileIO, Foundation, Graphics, Physics \\
+	    Graphics		& Foundation \\
+	    HumanInterface	& Foundation \\
+	    Physics		& Collision, Fouondation \\\hline
+	\end{tabular}
+\end{longtable}
+\begin{longtable}{p{25mm}p{90mm}}
+	%\vspace{.5ZH}
+	&\begin{narrow}[s][\WID]
+	    \hspace{-2.8mm}$\dagger$ 表は再帰的に見ること。例えば、
+
+	    \begin{tabular}{@{\hspace{10mm}}p{17mm}cl}
+		Physics		& \ARROW & Collision, Foundation \\
+		Collision	& \ARROW & Foundation \\
+		Foundation	& \ARROW & Base
+	    \end{tabular}
+
+	    なので、
+
+	    \begin{tabular}{@{\hspace{10mm}}p{17mm}cl}
+	        <Physics> & \ARROW & Base, Collision, Foundation
+	    \end{tabular}
+
+	    となる。
+	 \end{narrow}
+	\\\hline
+
+    <IDP>
+      & ライブラリレベルで陰に依存するプロジェクトに読み替える。\\
+      &	\small{\begin{tabular}{lcl}
+	    隠れ依存 & --- & すなわち、<EDP>だけではリンク時に未定義外部 \\
+		     &	   & シンボルが出る場合。
+	\end{tabular}}
+
+	\vspace{.5ZH}
+	\begin{tabular}{p{4mm}lcl}
+	    (例) & <Physics> & \ARROW & HumanInterface
+	\end{tabular}
+	\\\hline
+
+\end{longtable}
+\end{center}
+}
+
+% end: Notation.tex

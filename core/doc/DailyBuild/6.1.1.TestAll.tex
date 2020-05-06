@@ -1,0 +1,235 @@
+% TestAll.tex
+%	Last update: 2017/03/13 F.Kanehori
+%\newpage
+\subsubsection{TestAll.bat}
+\label{subsubsec:TestAll}
+
+スクリプト\FILE{TestMain.bat}から呼び出される。
+以下で示すターゲットのすべてに対して、
+引数で指定された条件に従ったソリューションの\BUILDANDTEST を制御する。
+
+\medskip
+\noindent
+\bf{ターゲットの指定方法}：
+\begin{narrow}[15pt]\begin{itemize}
+  \item	リスト変数\ENV{TARGET_LIST}に\tt{"Springhead2Test\YEN src}以下の
+	ディレクトリ名を列挙する。
+        ただし先頭のターゲットStubは特別(ライブラリ作成のためのターゲット)である。
+        ここに列挙したターゲットディレクトリおよびその直接のサブディレクトリ
+	すべてを\BUILDANDTEST の対象とする。
+
+  \item	リスト変数\ENV{DO_BLD_LIST}および\ENV{DO_RUN_LIST}の対応する値
+	(yes又はno)により、ビルドまたはテストを実行するか否かを制御できる。\\
+        現在の設定：
+	\vspace{.5ex}
+	\begin{narrow}[20pt]\small{\begin{tabular}{l@{\ \CDOTS\ }l}
+	    Stub	& ビルドのみ\\
+	    test	& ビルドおよびテスト\\
+	    Samples	& ビルドのみ\\
+	\end{tabular}}\end{narrow}
+	\medskip
+
+        また、\BUILDANDTEST 対象ディレクトリに次の名称のファイルを置くことで、
+	個々の\BUILDANDTEST 対象単位で実行するか否かを制御できる(空ファイルでよい)。
+	\vspace{.5ex}
+	\begin{narrow}[20pt]\small{\begin{tabular}{l@{\ \CDOTS\ }l}
+	    \FILE{dailybuild.do.build}	 & ビルドを実行する\\
+	    \FILE{dailybuild.do.run}	 & テストを実行する\\
+	    \FILE{dailybuild.dont.build} & ビルドを実行しない(実行指定より優先)\\
+	    \FILE{dailybuild.dont.run}	 & テストを実行しない(実行指定より優先)\\
+	\end{tabular}}\end{narrow}
+	\medskip
+
+  \item ターゲットを追加するときは、\ENV{TARGET_LIST}に追加するだけでなく、
+	ログファイル名の設定も追加する必要がある。関連するリスト変数は、
+	\vspace{.5ex}
+	\begin{narrow}[20pt]\small{\begin{tabular}{l@{\ \CDOTS\ }l}
+	    \ENV{BLD_SUCC_LOG_LIST} & ビルドログファイル名(成功ターゲット)\\
+	    \ENV{BLD_FAIL_LOG_LIST} & ビルドログファイル名(失敗ターゲット)\\
+	    \ENV{RUN_SUCC_LOG_LIST} & 実行ログファイル名(成功ターゲット)\\
+	    \ENV{RUN_FAIL_LOG_LIST} & 実行ログファイル名(失敗ターゲット)\\
+	\end{tabular}}\end{narrow}
+	\medskip
+
+  \item 同様に、ターゲットを追加するときは、実行制御変数名の設定も追加する必要がある。
+	設定するリスト変数名は\ENV{DO_CONTROL_LIST}である。現在の設定値は、
+	\begin{verbatim}
+    DO_CONTRIL_LIST=DAILYBUILD_EXECUTE_STUBBUILD ^
+                    DAILYBUILD_EXECUTE_BUILDRUN ^
+                    DAILYBUILD_EXECUTE_SAMPLEBUILD
+	\end{verbatim}
+	であり、それぞれStub, tests, Samplesの実行を制御する。
+
+  \item[※]
+	これらは見易くするためにリスト変数として設定するが、使用するときには配列変数
+	のように扱う(インデックスは\ENV{TARGET_LIST}に設定されたターゲットの順番)。\\
+	サブルーチン``\tt{:list_to_array}\,''でリスト変数から擬似配列変数にする。
+
+\end{itemize}\end{narrow}
+
+\medskip
+\noindent
+\bf{引数}：
+\begin{narrow}[\WID]
+	\begin{tabular}{l@{\hspace{20pt}}l}
+	    \tt{toolset_id}	& \small{ツールセットの識別
+				\{\tt{10.0 | 11.0 | 12.0 | ..}\}}\\
+	    \tt{config}		& \small{ビルド構成
+				\{\tt{Debug | Release | ..}\}}\\
+	    \tt{platform}	& \small{ビルドプラットフォーム
+				\{\tt{Win32 | x64}\}}\\
+	    \tt{python_version}	& \small{Pythonのバージョン
+				\{\tt{32 | 33 | 34}\}}\\
+	    \tt{test_repository}& \small{作業用ローカルコピーのルート}
+	\end{tabular}
+	\medskip
+\end{narrow}
+
+\medskip
+\noindent
+\bf{関連スクリプト}：
+\begin{narrow}[\WID]
+	\begin{narrow}[20pt]\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 {\hspace{-10mm}D:\YEN DailyBuild\YEN}.
+		.2 Springhead2\YEN.
+		.3 test\YEN.
+		.4 bat\YEN.
+		.5 \it{TestAll.bat}
+			\mc{\footnotesize{ \CDOTS \BUILDANDTEST 全体の制御 \CDOTS
+			\ \bf{本スクリプト}}}.
+		.5 \it{SwigAll.bat}
+			\mc{\footnotesize{ \CDOTS Swigの実行}}.
+		.5 \it{BuildVC.bat}
+			\mc{\footnotesize{ \CDOTS Visual Studioの実行}}.
+	}
+	\end{minipage}\end{narrow}
+	\medskip
+\end{narrow}
+
+\bigskip
+\noindent
+\bf{処理の説明}：
+\begin{narrow}[15pt]\begin{enumerate}
+  \item	必要なパスの設定\\
+	\FILE{devenv.exe}のあるディレクトリを環境変数\ENV{PATH}に追加する。
+	Visual Studio 2015までは、この設定でよいが、
+	今後のVisual Studioのバージョンによっては設定を変える必要が
+	あるかもしれない(変数\tt{TOOLSET_ID}の値に注意)。
+
+  \item	実行制御変数\\
+	ビルドまたはテストの実行を制御する環境変数名を、
+	配列変数\ENV{DO_CONTROLS}に設定する。
+	使用する環境変数は次のとおり。
+	\vspace{.5ex}
+	\begin{narrow}[20pt]\small{\begin{tabular}{l@{\ \CDOTS\ }l}
+	    \ENV{DAILYBUILD_EXECUTE_TESTALL}
+			& このバッチファイル自体の呼出しを制御\\
+	    \ENV{DAILYBUILD_EXECUTE_STUBBUILD}
+			& ターゲット Stub の実行を制御\\
+	    \ENV{DAILYBUILD_EXECUTE_BUILDRUN}
+			& ターゲット tests の実行を制御\\
+	    \ENV{DAILYBUILD_EXECUTE_SAMPLEBUILD}	
+			& ターゲット Samples の実行を制御\\
+	\end{tabular}}\end{narrow}
+	\medskip
+
+  \item	ビルド＆実行\\
+	ターゲット\ENV{TARGET_LIST}で指定した各ターゲットに対して次を実行する。
+	\begin{enumerate}
+	  \item	ターゲットの識別\\
+		実行するターゲットを識別し、ビルドおよびテストを実行するか否かを
+		決定する。
+
+	  \item	変数の初期化\\
+		\FILE{result.log}に書き出す情報を初期化する。
+		\label{subsec:TestAll:VarInit}
+
+	  \item	ログファイルの初期化\\
+		ログファイルに日付とタイトルを書き出す。
+
+	  \item	stub/libraryの作成(\ENV{TARGET_LIST}の先頭要素[=Stub]のとき)\\
+		\FILE{SwigAll.bat}を呼び出してlibraryを作成する。
+		\vspace{.5ex}
+		\begin{narrow}\small{\begin{tabular}{l@{\ \CDOTS\ }l}
+		    第1引数 &
+			ツールセットID (引数\tt{toolset_id}で指定された値)\\
+		    第2引数 &
+			ビルド構成 (引数\tt{configuration}で指定された値)\\
+		    第3引数 &
+			プラットフォーム (引数\tt{platform}で指定された値)\\
+		\end{tabular}}\end{narrow}
+		\medskip
+
+	  \item	ビルド\&実行(\ENV{TARGET_LIST}の先頭要素以外のとき)\\
+		ターゲットで指定されたディレクトリ及びその直下のすべての
+		サブディレクトリについて、ソリューションファイル
+		(\FILE{*[toolset_id].sln})が存在したならば、
+		バッチファイル\FILE{BuildVC.bat}を呼び出してビルドを実行する。
+		\vspace{.5ex}
+		\begin{narrow}\small{\begin{tabular}{c@{\ \CDOTS\ }l}
+		    第1引数  &
+			ツールセットID (引数\tt{toolset_id}で指定された値)\\
+		    第2引数  & 現在のターゲット名\\
+		    第3引数  & ソリューション名\\
+		    第4引数  & ソリューションディレクトリ名\\
+		    第5引数  &
+			ビルド構成 (引数\tt{configuration}で指定された値)\\
+		    第6引数  &
+			プラットフォーム (引数\tt{platform}で指定された値）\\
+		    第7引数  & ビルド指定 (yes or no)\\
+		    第8引数  & テスト実行指定 (yes or no)\\
+		    第9引数  & ログファイル名 (ビルド結果)\\
+		    第10引数 & ログファイル名 (ビルドエラー)\\
+		    第11引数 & ログファイル名 (実行結果)\\
+		    第12引数 & ログファイル名 (実行エラー)\\
+		    第13引数 &
+			Python バージョン (引数\tt{python_version}で指定された値)\\
+		\end{tabular}}\end{narrow}
+		\medskip
+		処理の詳細は``\ref{subsubsec:BuildVC} BuildVC.bat''を参照のこと。
+
+		ビルドに成功したらタグ登録の予約をする
+		(\ENV{AT_LEAST_ONE_BLD_SUCC \LARROW\ 1})。
+       	 	最後に処理の結果を\FILE{result.log}に書き出す。
+		\begin{description}
+		  \item[※]
+			\FILE{result.log}に書き出す順序
+			(ビルド成功 → ビルド失敗 → 実行成功 → 実行失敗)及び
+			(\ref{subsec:TestAll:VarInit})での初期化情報を変更すると、
+			ウェブページが正しく表示されなくなる恐れがあるので注意すること。
+		\end{description}
+	\end{enumerate}
+
+  \item	タグを登録\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& \tt{DAILYBUILD_COPYTO_TAGS}\\
+	    処理	& タグ登録が予約されていたら
+			  (\ENVREF{AT_LEAST_ONE_BLD_SUCC}=1)なら\\
+			& ば、サブバージョンにタグの登録を行なう。\\
+			& 次にSpringhead2の更新履歴を\FILE{History.log}に出力する。
+	\end{tabular}
+	\medskip
+
+  \item	ログをSambaにコピーする\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& \tt{DAILYBUILD_COPYTO_BUILDLOG}\\
+	    処理	& ログファイルをサーバにコピーする\\
+	    コピー先	& \verb|\\haselab\HomeDirs\WWW\| \CONT\\
+			& \hspace{40pt}\verb|docroots\springhead\daily_build| 以下\\
+	\end{tabular}\\
+	\medskip
+
+  \item	ログをSVNにコミトする\\
+	\VUP
+	\begin{tabular}{ll}
+	    制御変数名	& \tt{DAILYBUILD_COMMIT_BUILDLOG}\\
+	    処理	& ログファイルをサブバージョンにコミットする。\\
+			& メッセージは ``Autobuild done.'' である。\\
+	\end{tabular}\\
+
+\end{enumerate}\end{narrow}
+
+% end: TestAll.tex

@@ -1,0 +1,145 @@
+% UnityTestMain.tex
+\newpage
+\section{UnityTestMain}
+\label{UnityTestMain}
+
+\subsection{概要}
+初期化ファイル(起動引数 \tt{-i}\,\it{file}参照)で指定されたシーン(.unity)を、
+順次\BuildRun する。
+複数のシーンに対してテストを実行するためのラッパである。
+
+\subsection{ファイル}
+\begin{FileList}
+  \Item{\UnityTestMain}{スクリプトファイル}
+  \Item{UnityTestMain.ini}{初期化ファイル}
+\end{FileList}
+
+\subsection{関連スクリプト}
+\begin{FileList}
+  \Item{\UnityTest\,$\dagger$}{単一シーンのビルド＆ランを行なうスクリプト}
+  \Item{\KvFile}{初期化ファイルの解析スクリプト}
+  \Item{\LogExtraction\,$\dagger$}{ログの抽出スクリプト}
+  \ItemMA{\hspace{5.5mm}$\dagger$ 初期化ファイルにて変更可\VSkip{t}{5mm}}
+\end{FileList}
+
+\subsection{初期化ファイル}
+初期化ファイルはKey--Value--Pair\,(keyとvalueを空白またはタブで区切って定義した)%
+ファイルであること。次の項目を指定する。
+
+\begin{enumerate}
+  \item 必須項目
+	\VSkip{b}{2mm}
+	\begin{InitItem}
+	  \Item[T]{Key}{Value}
+	  \Item{UnityTestScript}{単一シーンの\BuildRun スクリプト(パス名)}
+	  \Item{ExtractScript}{ ログ抽出を行なうスクリプト(パス名)}
+	  \Item{Python}{Python実行形式(\tt{python.exe}) (パス名)}
+	  \Item{Springhead2}{Springhead2のルートディレクトリ(パス名)}
+	  \Item[n]{SceneList}{テストするシーンの名前を空白で区切って並べたリスト}
+	  \Item{}{(ファイル名) (\tt{.unity} はなくてもよい)}
+	  \ItemMA{備考：特に指定がない限り、パス名は絶対パスで指定することが望ましい。
+		   \VSkip{t}{5mm}}
+	\end{InitItem}
+	\\
+
+  \item 任意項目
+	\VSkip{b}{2mm}
+	\begin{InitItem}
+	  \Item[T]{Key}{Value}
+	  \Item[n]{UnityProject}{Unityプロジェクトのルート(パス名)}
+	  \Item{}{default: \tt{\$(Springhead2)/src/Unity}}
+	  \Item[n]{TestRoot}{UnityTest システムのルート(パス名)}
+	  \Item{}{default: \tt{\$(Springhead2)/src/UnityTest}}
+          \Item[n]{Inifile}{\tt{UnityTest.py}の初期化ファイル(パス名)}
+	  \Item{}{default: \tt{\$(TestRoot)/UnityTest.ini}}
+	  \Item[n]{ScenesDir}{シーンファイルが置かれているディレクトリ}
+	  \Item[n]{}{\tt{\$(UnityProject)}からの相対パス名}
+	  \Item{}{default: \tt{Assets/Scenes}}
+	  \Item[n]{TestMainLogFile}{UnityTestMain が作成するログファイル(パス名)}
+	  \Item{}{default: \tt{\$(TestRoot)/log/TestMain.log}}
+	  \ItemMA{備考：特に指定がない限り、パス名は絶対パスで指定することが望ましい。
+		   \VSkip{t}{5mm}}
+	\end{InitItem}
+	\\
+
+\end{enumerate}
+
+\subsection{ヘルパーメソッド}
+\subsubsection{\tt{s16(value)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{与えられた16ビットのビットパターンを符号付き整数に変換して返す}
+    \Item{引数}{value}{16ビットのビットパターン}
+  \end{FuncSpec}
+
+\subsubsection{\tt{logmsf(msg, file)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{指定されたmsgをfileに追加する}
+    \Item{引数}{msg}{ログメッセージ}
+    \Item{}{file}{書き出すファイル}
+  \end{FuncSpec}
+
+\subsubsection{\tt{verbose(msg, level=0)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{バーバス情報の表示}
+    \Item{引数}{msg}{メッセージ}
+    \Item{}{level}{表示制御変数}
+    \ItemMA{説明}{起動引数で指定した\tt{-v}オプションの個数が\tt{level}で指定した数より大きい}
+    \ItemMA{}{ときに msg を表示する}
+  \end{FuncSpec}
+
+\subsubsection{\tt{error(msg)}}
+  \begin{FuncSpec}
+    \ItemMA{概要}{stderrにmsgを書き出す(改行付き)}
+    \Item{引数}{msg}{メッセージ}
+  \end{FuncSpec}
+
+\subsection{プログラムの説明}
+\subsubsection{起動形式}
+\hspace{8mm}\tt{UnityTestMain.py [}\it{options}\tt{\,]}
+
+\subsubsection{起動引数の解析}
+  OptionParserパケージを用いて解析する
+
+  オプション引数：\\
+    \begin{OptionList}
+      \Item{-i}{file}{初期化ファイル名}
+      \Item{-l}{file}{ログファイル名}
+      \Item{-t}{time}{タイムアウト値(秒)}
+      \Item{-T}{}{スナップに日付と時刻を付加}
+      \Item{-1}{}{SceneListの最初の1つのみ実行(デバッグ用)}
+      \Item{-h}{}{ヘルプの出力}
+      \Item{-v}{}{バーバス情報出力指定(複数個指定可)}
+      \Item{-V}{}{バージョン情報表示}
+    \end{OptionList}
+    \vspace{4mm}
+
+\subsubsection{初期化ファイルの読み込み}
+初期化ファイル(\tt{-i}オプションで指定、default: \tt{./UnityTestMain.ini})を
+読んでパラメータを設定する。
+指定されなかったパラメータには次のデフォルト値を設定する。
+\vspace{2mm}
+
+\begin{DefaultList}
+  \Item{UnityProject}{\$(Springhead2)/src/Unity}
+  \Item{TestRoot}{\$(Springhead2)/src/UnityTest}
+  \Item{Inifile}{\$(TestRoot)/UnityTest.ini}
+  \Item{ScenesDir}{Assets/Scenes}
+  \Item{TestMainLogFile}{\$(TestRoot)/log/TestMain.log}
+\end{DefaultList}
+\vspace{4mm}
+
+\subsubsection{ログファイルの初期化}
+ログファイル(TestMainLogFile)を空にする。
+
+\subsubsection{SceneListに指定されたシーンのすべてについて}
+\begin{enumerate}
+  \item ログファイル(TestMainLogFile)にシーン名を追加する
+  \item シーンの\BuildRun を行なう(\UnityTest)
+  \label{UnityTestMainExecBuildRun}
+  \item \ref{UnityTestMainExecBuildRun}でunityが作成したログファイルから%
+	compilerが生成した部分を抽出し、
+        ログファイル(TestMainLogFile)に追加する
+	(\ref{LogExtraction}.LogExtraction参照)
+\end{enumerate}
+
+% end: UnityTestMain.tex

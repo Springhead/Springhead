@@ -1,0 +1,55 @@
+FWScene fwScene{	
+	/* PHSolid‚ÆGRFrame‚Æ‚ÌŠÖ˜A•t‚¯ */
+	FWObject fwBlock{
+		*soBlock			// PHSolid
+		*grFrameBlock		// GRFrame
+	}
+	FWObject fwFloor{
+		*soFloor		// PHSolid
+		*grFrameFloor	// GRFrame
+	}
+
+	/* PHScene“à‚ÌObject */
+	PHScene phScene{
+		PHSolid soBlock{
+			mass = 1
+			inertia = 1 0 0   0 1 0  0 0 1
+			pose = 1 0 0 0  0 1 0
+			dynamical = true
+			PHFrame{
+				CDBox cdBlock{
+					material = {
+						mu = 0.5
+						mu0 = 0.6
+						e = 0.5
+						density = 1.0
+					}
+					boxsize = 1 1 1
+				}
+			}
+		}
+		PHSolid soFloor{
+			mass = 20
+			pose = 1 0 0 0  0 -5 0
+			dynamical = false
+			PHFrame{
+				CDBox cdFloor{
+					boxsize = 10 11 10
+				}
+			}
+		}
+	}
+	
+	/* GRScene“à‚ÌObject */
+	GRScene grScene{
+		GRFrame grFrameBlock { }
+		GRFrame grFrameFloor{  }
+		GRLight light1 {						#SprGRRender.h GRMaterialDesc
+			ambient = 0.9 0.9 0.9 1.0			#Vec4f ambient
+			diffuse = 0.5 0.5 0.5 1.9			#Vec4f diffuse
+			specular = 0.1 0.1 0.1 1.0			#Vec4f specular
+			position = 1.0 1.0 1.0 0.0			#Vec4f position
+			range = 10000.0						#float range
+		}
+	}
+}

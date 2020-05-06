@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <Springhead>../../../../..</Springhead>
+    <SprInclude>$(Springhead)/core/include</SprInclude>
+    <SprSrc>$(Springhead)/core/src</SprSrc>
+    <SprBin>$(Springhead)/core/bin</SprBin>
+    <PythonInclude>$(Springhead)/core/include/Python</PythonInclude>
+    <Dependency>$(Springhead)/dependency</Dependency>
+    <DependencySrc>$(Dependency)/src</DependencySrc>
+    <DependencyLib>$(Dependency)/lib</DependencyLib>
+    <DependencyBin>$(Dependency)/bin</DependencyBin>
+    <Closed>$(Springhead)/closed</Closed>
+    <ClosedBin>$(Closed)/bin</ClosedBin>
+    <DailybuildRuntime32>$(SprBin)/win32;$(DependencyBin)/win32;$(ClosedBin)/win32</DailybuildRuntime32>
+    <DailybuildRuntime64>$(SprBin)/win64;$(DependencyBin)/win64;$(ClosedBin)/win64</DailybuildRuntime64>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="Springhead">
+      <Value>$(Springhead)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SprInclude">
+      <Value>$(SprInclude)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SprSrc">
+      <Value>$(SprSrc)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SprBin">
+      <Value>$(SprBin)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="PythonInclude">
+      <Value>$(PythonInclude)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="Dependency">
+      <Value>$(Dependency)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DependencySrc">
+      <Value>$(DependencySrc)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DependencyLib">
+      <Value>$(DependencyLib)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DependencyBin">
+      <Value>$(DependencyBin)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="Closed">
+      <Value>$(Closed)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ClosedBin">
+      <Value>$(ClosedBin)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DailybuildRuntime32">
+      <Value>$(DailybuildRuntime32)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DailybuildRuntime64">
+      <Value>$(DailybuildRuntime64);$(DailybuildRuntime32)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

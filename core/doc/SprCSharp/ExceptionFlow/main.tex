@@ -1,0 +1,261 @@
+\documentclass[a4j,12pt]{jsarticle}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{lscape}
+
+\setlength{\textheight}{\paperheight}   % 紙面縦幅を本文領域にする（BOTTOM=-TOP）
+\setlength{\topmargin}{4.6truemm}       % 上の余白を30mm（=1inch+4.6mm）に
+\addtolength{\topmargin}{-\headheight}  % 
+\addtolength{\topmargin}{-\headsep}     % ヘッダの分だけ本文領域を移動させる
+\addtolength{\textheight}{-60truemm}    % 下の余白も30mm（BOTTOM=-TOPだから+TOP+30mm）
+
+\setlength{\textwidth}{\paperwidth}     % 紙面横幅を本文領域にする（RIGHT=-LEFT）
+\setlength{\oddsidemargin}{-0.4truemm}  % 左の余白を25mm(=1inch-0.4mm)に
+\setlength{\evensidemargin}{-0.4truemm} % 
+\addtolength{\textwidth}{-50truemm}     % 右の余白も25mm（RIGHT=-LEFT）
+
+\def\null{}
+\def\csp{C\raise.5mm\hbox{\small \#}}
+\def\cpp{C\raise.5mm\hbox{\scriptsize +\kern -.2em+}}
+\def\figurenamestring{Fig }
+
+\def\medskip{\vspace{1.5mm}}
+\def\figurename{\figurenamestring}
+
+\begin{document}
+%
+\begin{center}
+  \large{\bf {\tt SprCSharp}における例外の取り扱い} \\
+  {\normalsize\input{LastUpdate}} \\
+\end{center}
+
+%  例外取り扱いの方針
+%
+\medskip
+\noindent
+\cpp で作成されたSpringhead libraryを\csp 側から呼び出す場合、
+library内で発生する例外の情報を\csp 側で取得するには次のような困難がある。
+\begin{enumerate}
+  \def\labelenumi{(\arabic{enumi})}
+  \item	library内で発生する``access violation'', ``array bounds exceeded''などの
+	例外はWindowsではStructured Exceptionとして扱われ、
+	通常の\cpp におけるtry～catchの仕組みでは捉えることができない。
+  \item	\cpp のコードはunmanaged space上で実行されるため、
+	library内で発生した例外を自動的にunmanaged--managed境界を超えて
+	伝搬させることができない。
+\end{enumerate}
+
+\noindent
+このため、次にような取り扱いを実装する。
+
+\begin{description}
+  \item	[Structured Exceptionの扱い]~
+	\begin{enumerate}
+	\def\labelenumi{\alph{enumi})}
+	  \item	Structured Exceptionは、プログラム実行時に
+		{\tt \,\_se\_translator\_function}型のハンドラSEHandler
+		({\tt se\_translator()})を登録することで捉えることができる
+		(このコードは/EHaオプション付きでビルドする必要がある)。
+	  \item	SEHandlerの中で{\tt std::exception}を継承した例外クラスSEH\_Exception
+		のインスタンスを生成してthrowすることにより、
+		通常のtry～catchコードで捕捉できる例外にすげ替えることができる。
+	  \item	SEHandlerは、例外を発生したtry節に対応するcatch節よりも前に呼び出される
+		ためSpringhead libraryの中でこれを捉えることも可能であるが、
+		libraryのコード自体に変更を加えることは望ましくないため、
+		そこではcatchせず、それを呼び出すアダプタメソッド(SprExport.dll)の中で
+		捉えるものとする。
+	  \item	アダプタメソッドにおいて例外を補足した時には、
+		例外を起こしたlibrary関数からアダプタメソッドまでのcall stackは
+		既に巻き戻されてしまっているため、
+		必要なtrace back情報を得ることができない。
+		このためSEHandlerが呼び出された時点
+		(SEHandlerは例外が発生したら最初に呼び出されるため、
+		例外発生時点でのcall stackがまだ残されている)でtrace back情報を
+		取得しておき、
+		後でこの情報を取り出す仕組みを作ることとする。
+		SEHandlerは複数回呼び出される可能性があるので、
+		2回目以降は何もしないようにする。
+	\end{enumerate}
+	\vspace{2mm}
+  \item	[unmanaged--managed境界を超えての例外伝搬]~
+	\begin{enumerate}
+	\def\labelenumi{\alph{enumi})}
+	  \item	\csp 側に{\tt SEHException}を継承した例外クラスSEH\_Exceptionを
+		用意し、``このクラスの例外をthrowするメソッド{\tt RaiseException()}を
+		呼び出す\cpp 関数{\tt raise\_managed\_exception()}''をSprExport.dll内
+		(unmanaged space)に登録する仕組みを用意する。
+	  \item	Springhead library内で例外が発生しSprExport.dll内でそれをcatchした
+		ならば、登録されている{\tt raise\_managed\_exception()}を呼び出す。
+	  \item	{\tt raise\_managed\_exception()}は\csp 側(managed space)で次のことを
+		実行する。
+		\begin{enumerate}
+		  \item	SEHandler(\cpp 側)が作成したtrace back情報を取り出す。
+		  \item	{\tt System.Exception}のインスタンスを生成してthrowする。
+			(a)で取り出したtrace back情報を例外情報とする。
+		\end{enumerate}
+	\end{enumerate}
+\end{description}
+
+\medskip
+\noindent
+以上の事項を次葉の\figurenamestring\ref{fig_exception_flow}に図示し、
+その後に説明を加える。
+
+関連するソースファイルは、\\
+\begin{tabular}{@{\hspace{10mm}}l}
+  {\tt SprCSharp/CSUtility.cs}	\\
+  {\tt SprImport/CSUtility.cs}	\\
+  {\tt SprExport/CSUtility.h}	\\
+  {\tt SprExport/CSutility.cpp}
+\end{tabular}\\
+である。
+
+%  例外フローの図
+%	BoundingBox: 0 250 850 850
+%
+\begin{landscape}
+\begin{figure}[t]
+\begin{center}
+\includegraphics[height=1.0\textwidth]{ExceptionFlow.eps}
+\end{center}
+\caption{例外の伝搬}
+\label{fig_exception_flow}
+\end{figure}
+\end{landscape}
+
+%  例外フローの説明
+%
+\noindent
+前葉の図に従って処理及び例外の流れを説明する。
+項番は図中の矢線番号に対応する。
+
+\def\srcfile#1#2{\\
+  \let\orgarraystretch\arraystretch
+  \ifx#1\null\else\def\arraystretch{.8}\fi
+  \begin{tabular}{@{\hspace{4mm}}l@{\hspace{3mm}}l}%
+  \ifx#1\null\else\rule{0pt}{4mm}\hbox to 6mm{\csp}&{\tt #1}\\\fi
+  \ifx#2\null\else\cpp&{\tt #2}\fi
+  \end{tabular}
+  \let\arraystretch\orgarraystretch
+  \vspace{1mm}
+}
+
+\begin{description}
+  \item	[初期化の流れ]~
+	\begin{enumerate}
+	\def\labelenumi{\roman{enumi})}
+	  \item	unmanaged space (SprExport.dll)にSEHandlerを登録する。
+		\srcfile{SEH\_Exception.init()}{Spr\_set\_se\_translator()}
+	  \item	クラスExceptionRaiserのインスタンスを生成する。
+		\srcfile{EXceptionRaiser.ExceptionRaiser()}{}
+	  \item	それをunmanaged spaceに登録する。
+		\srcfile{}{Spr\_register\_exception\_raiser()}
+	\end{enumerate}
+  \item	[処理/例外の流れ]~
+	\begin{enumerate}
+	\def\labelenumi{\arabic{enumi})}
+	  \item	ユーザソースから\csp 側(SprCSharp.dll)で定義されたクラス{\tt C}の
+		メソッドを呼び出す。
+		\srcfile{C.Method()}{}
+	  \item	{\tt C.Method()}(managed)からSprExport.dll(\cpp, unmanaged)で
+		定義されている対応メソッドを呼び出す。
+		\srcfile{SprExport.Spr\_C\_Method()}{Spr\_C\_Method()}
+	  \item	{\tt Spr\_C\_Method()}からSpringhead library中のメソッドが呼び出される。
+		\srcfile{}{C::Method()}
+	  \item	このメソッドの中でStructured Exceptionが発生する。
+	  \item	SEHandlerが呼び出される。
+		\srcfile{}{se\_translator()}
+	  \item	ここでcall stackのtrace backを行なう。
+		\srcfile{}{SEH\_Exception::trace()}
+	  \item	続けて {\tt SEH\_Exception}のインスタンスを生成してthrowする。
+		Springhead libraryの中ではこの例外はcatchせず、呼出し階層を遡って
+		SprExport.dllの中でcatchする。
+		\srcfile{}{Spr\_C\_Method()}
+	  \item	\csp 側に例外を伝搬するためのシーケンスを開始する。
+		\srcfile{}{SEH\_Exception::raise\_managed\_exception()}
+	  \item	unmanagedからmanagedを呼び出して、\csp の例外を発生させる。
+		\srcfile{ExceptionRaiser.RaiseException()}
+			{SEH\_Exception::raise\_managed\_exception()}
+	  \item	これをユーザソースで{\tt System.Exception}としてcatchする。
+	  \item	catchした例外インスタンスを引数としてstack trace情報を取得する。
+		ここでcatchした例外インスタンスは\csp 側のcall stackの情報しか
+		もっていない。
+		\srcfile{SEH\_Exception.what()}{}
+	  \item	unmanaged側で取得しておいたstack trace情報を取り出し、
+		引数で渡された\csp 側のstack trace情報とマージすることで
+		全stack trace情報を作成する。
+		\srcfile{SEH\_Exception.what()}{SEH\_Exception::what()}
+	\end{enumerate}
+\end{description}
+
+\noindent
+最後に、UnityからSpringhead libraryを呼び出す場合の注意点を記す。
+
+\def\narrow[#1]{\list{}{\topsep 0pt \partopsep 0pt
+    \parsep 0pt \itemsep 0pt \leftmargin #1 \relax}\item[]}
+\let\endnarrow\endlist
+
+\begin{itemize}
+  \item	例外伝搬機構の初期化を1回だけ行なう必要がある。
+	\begin{narrow}[8mm]{\tt
+	    using SprCS;\\
+	    SEH\_Exception.init();
+	}\end{narrow}
+	{\tt PHSceneBehaviour.cs}の{\tt Build()}の冒頭で初期化している。
+  \item	例外はSystem.Exceptionとして補足する。
+	stack traceは、補足した例外インスタンスを引数としてクラスSEH\_Exceptionの
+	メソッドwhat()を呼び出すことで取得する。
+	\begin{narrow}[8mm]{\tt
+            catch (System.Exception e) \{
+	    \begin{narrow}[8mm]
+		Debug.Log(SEH\_Exception.what(e));
+	    \end{narrow}
+	    \}
+	}\end{narrow}
+  \item	Unityのconsoleタブにおいて``Error Pause''をonにしておかないと、
+	例外発生と同時にUnityが終了してしまうので注意が必要である。
+
+\end{itemize}
+
+\medskip
+\noindent
+{\bf 【補足】例外処理のログ}
+\begin{narrow}[8mm]
+実行時に環境変数{\tt SRPCS\_LOGFILE}にファイルパスを設定しておけば、
+そこで指定されたファイルに{\,\tt "CSUtility.cpp"\,}で例外を処理した状況を
+出力することができる。
+
+\medskip\medskip
+ログのサンプル {\small (一部折り返し)}
+{\footnotesize
+\begin{verbatim}
+2106/07/25 11:51:49 [06088] DllMain: DLL_PROCESS_ATTACH: DLL is loaded dynamically.
+2106/07/25 11:51:49 [06088]  --- set SEH translator (0x105BCAB0).
+2106/07/25 11:51:49 [06088] ** managed-exception raiser registered **
+2106/07/25 11:51:50 [06088] ** enter: se_translator **
+2106/07/25 11:51:50 [06088] 
+SEH_Exception: EXCEPTION_ACCESS_VIOLATION at 0x0FD6F58A
+               Reading from address 0x00000005
+stack trace:
+0x001DE4D8: 
+[0] 0x0FD73539 SprExport.dll: Spr::ObjectIf::AddRef  
+               f:\project\springhead2\src\foundation\foundationstub.cpp: 217
+[1] 0x0FD31BD7 SprExport.dll: Spr::UTRef<Spr::PHSceneIf>::UTRef<Spr::PHSceneIf>  
+               f:\project\springhead2\include\base\baseutility.h: 132
+[2] 0x1029ABFF SprExport.dll: Spr::PHSdk::AddChildObject  
+               f:\project\springhead2\src\physics\phsdk.cpp: 187
+[3] 0x1029A92E SprExport.dll: Spr::PHSdk::CreateShape  
+               f:\project\springhead2\src\physics\phsdk.cpp: 155
+[4] 0x1016CF59 SprExport.dll: Spr::PHSdkIf::CreateShape  
+               f:\project\springhead2\src\physics\physicsstub.cpp: 3735
+[5] 0x10538C4D SprExport.dll: Spr_PHSdkIf_CreateShape  
+               f:\project\springhead2\src\sprcsharp\sprexport\csphysics.cpp: 11768
+2106/07/25 11:51:50 [06088] ** leave: se_translator **
+2106/07/25 11:51:56 [06088] DllMain: DLL_PROCESS_DETACH: 
+                                     DLL will be released by process termination.
+2106/07/25 11:51:56 [06088] - unset SEH translator (0x00000000).
+\end{verbatim}
+}
+\end{narrow}
+
+\end{document}
+% end: main.tex

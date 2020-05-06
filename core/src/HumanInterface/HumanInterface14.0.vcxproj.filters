@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="DRADAPIO.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRContecIsaCounter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRContecIsaDa.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRCyUsb20Sh4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRJoyStickGLUT.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRKeyMouseGLUT.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRKeyMouseWin32.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRNittaForce.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRPortIO.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRTokin3D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRUPP.CPP">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRUsb20Sh4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRUsb20Simple.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRUsbH8Simple.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DRWinDriver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HIBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HIDevice.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HILeap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HINovintFalcon.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HIRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HISdk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HISpaceNavigator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HISpidar.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HISpidarCalc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HISpidarMotor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HITrackball.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HIXbox360Controller.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HumanInterfaceStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Device.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRADAPIO.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRContecIsaCounter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRContecIsaDa.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRCyUsb20Sh4.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRJoyStickGLUT.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRKeyMouseGLUT.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRKeyMouseWin32.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRNittaForce.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRPortIO.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRTokin3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUPP.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUsb20Sh4.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUsb20Simple.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUsbH8Simple.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRUsbH8SimpleDef.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DRWinDriver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HIBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HIDevice.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HILeap.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HINovintFalcon.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HISdk.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HISkeletonSensor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HISpaceNavigator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HISpidar.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HISpidarCalc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HISpidarMotor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HITrackball.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HIXbox360Controller.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HumanInterface.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIBase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDevice.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDRUsb.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIJoyStick.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIKeyMouse.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHILeap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHINovint.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHISdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHISkeletonSensor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHISpaceNavigator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHISpidar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHITrackball.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\HumanInterface\SprHIXbox360Controller.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SprHumanInterface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{dca79153-e338-4c71-b4d4-5d78f118ba4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{7f90ef65-74a2-4e22-8eb9-7e37535d74db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

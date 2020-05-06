@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="PHBallJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHConstraint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHConstraintEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHContactDetector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHContactPoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHContactSurface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemCollision.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemMeshNew.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemMeshThermo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemPorousWOMove.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemThermo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemVibration.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFixJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHForceField.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHGear.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHGenericJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticPointer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHingeJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHIKActuator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHIKEndEffector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHIKEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHJointLimit.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHJointMotor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHLoadHandlers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpAnimation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpGroup.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpHapticController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpHapticRenderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpHapticRenderer2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpObj.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOPParticle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHOpSpHashColliAgent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHPathJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHPenaltyEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSdk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSkeleton.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSliderJoint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSolid.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSpring.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHTreeNode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticStepImpulse.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticStepLocalDynamics.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticStepLocalDynamicsDev.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticStepMulti.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticStepSingle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticStepBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHFemEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHHapticEngineRender.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PHAxisIndex.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHBallJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHConstraint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHConstraintEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHContactDetector.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHContactPoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHContactSurface.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemCollision.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemMesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemMeshNew.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemMeshThermo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemPorousWOMove.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemThermo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFemVibration.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHFixJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHForceField.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHGear.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHGenericJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticPointer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHingeJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHIKActuator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHIKEndEffector.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHIKEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHJointLimit.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHJointMotor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpAnimation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpDecompositionMethods.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpGroup.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpHapticController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpHapticRenderer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpObj.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpParticle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHOpSpHashColliAgent.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHPathJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHPenaltyEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSdk.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSkeleton.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSliderJoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSolid.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSpatial.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSpring.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHTreeNode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHEngine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHFemMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHFemMeshNew.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHHaptic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHIK.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHJoint.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHJointLimit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHNodeHandlers.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHOpObj.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHOpSpHashAgent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHScene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHSdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHSkeleton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Physics\SprPHSolid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SprPhysics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticStepImpulse.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticStepLocalDynamics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticStepLocalDynamicsDev.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticStepMulti.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticStepSingle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PHHapticStepBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{0cfbb863-b2ca-43c4-92fe-078723b56e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{0e35113e-c3d1-4886-9760-8e293bcce78d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{3a8461d8-eb6d-43b2-b497-2e43c419c505}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="lcpnote.txt">
+      <Filter>misc</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

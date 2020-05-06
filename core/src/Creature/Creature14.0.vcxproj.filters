@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CRGrabController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRBodyGenerator\CRBallHumanBodyGen.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRBody.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRBodyGenerator\CRBodyGen.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRBone.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRCreature.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatureStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CREngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRGazeController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRReachController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRSdk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRTouchSensor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRTrajectoryController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CRVisualSensor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Creature\SprCRBody.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRBone.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRCreature.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SprCreature.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCREngine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRReachController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRSdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRTouchSensor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Creature\SprCRVisualSensor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CRGazeController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRBodyGenerator\CRBallHumanBodyGen.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRBody.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRBodyGenerator\CRBodyGen.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRBone.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRCreature.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CREngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRGrabController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRReachController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRSdk.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRTouchSensor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRTrajectoryController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CRVisualSensor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{a3d02ab7-31da-4884-87fd-8f772a2462b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{c8adb6d4-33ba-483d-ae46-2e4b32799bdf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,560 @@
+% SolutionFramework.tex
+%	Last update: 2017/02/23 F.Kanehori
+\newpage
+\section{ソリューション枠組みの作成}
+\label{sec:SolutionFramework}
+
+ソリューション枠組みは次の手順で作成する。<ID>については下記の注を参照のこと。
+\vspace{.5ZH}
+\begin{enumerate}
+  \setlength{\itemsep}{.5ZH}
+  \item	ソリューション\sname{SprCSharp<ID>}および
+	プロジェクト\pname{SprCSharp<ID>}(\CS のClass Library)を新規に作成する。
+  \item	プロジェクト\pname{SprImport<ID>}(\CS のClass Library)を新規に作成して追加する。
+  \item	プロジェクト\pname{SprExport<ID>}(\CPP のClass Library)を新規に作成して追加する。
+  \item プロジェクト\pname{NameManager}(既存のプロジェクト)を追加する。
+  \item プロジェクト\pname{TargetManager<ID>}(既存のプロジェクト)を追加するか、
+	またはプロジェクト\pname{TargetManager<ID>}(\CPP のMakefile Project)を
+	新規に作成して追加する。
+	\label{OVTargetManager}
+  \item プロジェクト\pname{RunSwig_CSharp<ID>}(\CPP のMakefile Project)を新規に作成して
+	追加する。
+  \item	プロジェクト\pname{Install}(既存のプロジェクト)を追加する。
+  \item Springhead Libraryのプロジェクト(既存のプロジェクト)を追加する。
+  \item プロジェクト\pname{SprCsSample<ID>}(\CS のConsole Application)を新規に作成して
+	追加する。
+\end{enumerate}
+
+{\small{\begin{flushright}
+\begin{minipage}{.9\textwidth}
+\hrule
+\vspace{.5ZH}
+新規にプロジェクトを作成する場合には、既存のディレクトリ内に新規ファイルが
+作成されないように注意すること (既存のファイルが上書きされる恐れがある)。
+そのためには、新規プロジェクト作成時に指定するNameが、既存のディレクトリ名と
+一致しないようにすることが必要となる (そのために<ID>を付加している)。
+\vspace{-.7ZH}
+\begin{center}
+\begin{tabular}{ll}
+    <ID>$=$<PH> & \ref{OVTargetManager}. TargetManagerのとき \\
+    <ID>$=$<14.0><PH> & それ以外のとき
+\end{tabular}
+\end{center}
+\vspace{-.5ZH}
+これに伴い、ファイルのコピーおよびソリューションファイルの編集作業が必要となる。
+作業内容については、これ以降で詳しく述べる。
+\vspace{.5ZH}
+\hrule
+\end{minipage}
+\end{flushright}}}
+
+\medskip
+\noindent
+以降、ソリューションを作成するディレクトリを\DQuote{\tt{DIR}}とし、
+例示するファイル操作等は、このディレクトリで行なうものとして記述する。
+
+%-------------------------------------------------------------------------------
+\subsection{ソリューション\sname{SprCSharp<14.0><PH>}の作成}
+\label{sub:SprCSharp}
+ソリューション\sname{SprCSharp<14.0><PH>.sln}と
+プロジェクト\pname{SprCSharp<14.0><PH>.csproj}とを同時に作る。
+
+\medskip
+\begin{enumerate}
+  \item	Visual Studioを起動
+	\begin{narrow}[s][\WID]
+	    [New Project]--[Visual \CS]--[Class Library]
+	    \begin{narrow}[\WID]\begin{tabular}{ll}
+		Name:	  & \verb|SprCSharp<14.0><PH>| \\
+		Location: & \verb|DIR|
+	    \end{tabular}\end{narrow}
+	    \medskip
+	    Visual Studioを終了(変更を保存)
+	\end{narrow}
+	\medskip
+
+  \item	ディレクトリ\dname{SprCSharp<14.0><PH>}(=<NEWDIR>とする)が作成されるので
+	ソリューションファイルおよびプロジェクトファイルをコピー
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|DIR> cp <NEWDIR>\SprCSharp<14.0><PH>.sln .| \\
+	    \verb|DIR> cp <NEWDIR>\SprCSharp<14.0><PH>.csproj SprCSharp| \\
+	    $\dagger$コピー先のディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューションファイル\fname{DIR\SL SprCSharp<14.0><PH>.sln}を編集
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|Project(...) = "..." "SprCSharp<14.0><PH>.csproj",...| \\
+	    \hbox{\hspace{\WID}$\downarrow$} \\
+	    \verb|Project(...) = "..." "SprCSharp\SprCSharp<14.0><PH>.csproj",... | \\
+	    $\dagger$ディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	\small{Solution Explorerでプロジェクト\pname{SprCSharp<14.0><PH>}を展開}
+	\begin{narrow}[s][\WID]
+	    Class1.csを[Delete]
+
+	    [Add]--[Existing Item...] で次のものを追加
+	    \begin{narrow}[\WID]
+		\fname{cs_object.cs} \\
+		\fname{module.wrapper.cs} \\
+		\fname{module.wrapflushrightper.cs.prologue} \\
+		\fname{wrapper.cs} \\
+		\fname{CSUtility.cs}
+	    \end{narrow}
+	    次のものは、存在すれば[Add]--[Existing Item...]で追加、
+	    存在しなければ[Add]--[New Item...]--[Visual \CS\ Items]--[Class]で追加
+	    (この場合ソースファイルはダミー)
+	    \begin{narrow}[\WID]
+		\fname{CSBase.cs} \\
+		\fname{CSCollision.cs} \\
+		\fname{CSFoundation.cs} \\
+		\fname{CSPhysics.cs}
+	    \end{narrow}
+	    $\dagger$ここで追加するのは<EDP>に対応したもののみ
+	\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln} を終了(変更を保存)
+	\medskip
+
+  \item	ディレクトリ\dname{SprCSharp<14.0><PH>}を削除
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{プロジェクト\pname{SprImport<14.0><PH>}の追加}
+\label{sub:SprImport}
+新規に作成して追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	Solution Explorerで
+	ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+	\small{[Add]--[New Projcet...]--[Visual \CS]--[Class Library]}
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    Name:     & \verb|SprImport<14.0><PH>| \\
+	    Location: & \verb|DIR|
+	\end{tabular}\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item	ディレクトリ\dname{SprImport<14.0><PH>}(=<NEWDIR>とする)が作成されるので
+	プロジェクトファイルをコピー
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|DIR> cp <NEWDIR>\SprImport<14.0><PH>.csproj SprImport| \\
+	    $\dagger$コピー先のディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューションファイル\fname{DIR\SL SprCSharp<14.0><PH>.sln}を編集
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|Project(...) = "..." "<NEWDIR>\SprImport<14.0><PH>.cspproj",...| \\
+	    \hbox{\hspace{\WID}$\downarrow$} \\
+	    \verb|Project(...) = "..." "SprImport\SprImport<14.0><PH>.cspproj",...| \\
+	    $\dagger$ディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動する
+
+	Solution Explorerでプロジェクト\pname{SprImport<14.0><PH>}を展開
+	\begin{narrow}[s][\WID]
+	    Class1.csを[Delete]
+
+	    [Add]--[Existing Item...] で次のものを追加
+	    \begin{narrow}[\WID]
+		\fname{module.wrapper.cs} \\
+		\fname{module.wrapper.cs.prologue} \\
+		\fname{wrapper.cs} \\
+		\fname{CSUtility.cs}
+	    \end{narrow}
+	    次のものは、存在すれば[追加]--[既存の項目]で追加、
+	    存在しなければ[Add]--[New Item...]--[Visual \CS\ Items]--[Class]
+	    で追加(この場合ソースファイルはダミー)
+	    \begin{narrow}[\WID]
+		\fname{CSBase.cs} \\
+		\fname{CSCollision.cs} \\
+		\fname{CSFoundation.cs} \\
+		\fname{CSPhysics.cs}
+	    \end{narrow}
+	    $\dagger$ここで追加するのは<EDP>に対応したもののみ
+	\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item	ディレクトリ\dname{SprImport<14.0><PH>}を削除
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{プロジェクト\pname{SprExport<14.0><PH>}の追加}
+\label{sub:SprExport}
+新規に作成して追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	Solution Explorerで
+	ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+	\small{[Add]--[New Project...]--[Visual \CPP]--[CLR]--[Class Library]}
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    Name:     & \verb|SprExport<14.0><PH>| \\
+	    Location: & \verb|DIR|
+	\end{tabular}\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item	ディレクトリ\dname{SprExport<14.0><PH>}(=<NEWDIR>とする)が作成されるので
+	プロジェクトファイルをコピー
+
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|DIR> cp <NEWDIR>\SprExport<14.0><PH>.vcxproj SprExport| \\
+	    \verb|DIR> cp <NEWDIR>\SprExport<14.0><PH>.vcxproj.filters SprExport| \\
+	    $\dagger$コピー先のディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューションファイル\fname{DIR\SL SprCSharp<14.0><PH>.sln}を編集
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|Project(...) = "..." "<NEWDIR>\SprExport<14.0><PH>.vcxproj",...| \\
+	    \hbox{\hspace{\WID}$\downarrow$} \\
+	    \verb|Project(...) = "..." "SprExport\SprExport<14.0><PH>.vcxproj",...| \\
+	    $\dagger$ディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動する
+
+	Solution Explorerでプロジェクト\pname{SprExort<14.0><PH>}を展開
+	\begin{narrow}[s][\WID]
+	    [Header Files]
+	    \begin{narrow}[\WID]
+		フォルダ内のファイルをすべて[Remove]--[Remove]
+
+		[Add]--[Existing Item...] で次のものを追加
+		\begin{narrow}[\WID]
+		    \fname{CSUtility.h}
+		\end{narrow}
+	    \end{narrow}
+	    [Rersource Files]
+	    \begin{narrow}[\WID]
+		フォルダ内のファイルをすべて[Remove]--[Remove] \\
+		フォルダ内のファイルをすべて[Delete]
+	    \end{narrow}
+	    [Source Files]
+	    \begin{narrow}[\WID]
+		フォルダ内のファイルをすべて[Remove]--[Remove]
+
+		[Add]--[Existing Item...] で次のものを追加
+		\begin{narrow}[\WID]
+		    \fname{module.wrapper.cpp} \\
+		    \fname{module.wrapper.cpp.prologue} \\
+		    \fname{wrapper.cpp} \\
+		    \fname{CSUtility.cpp}
+		\end{narrow}
+		次のものは、存在すれば[Add]--[Existing Item...]で追加、
+		存在しなければ[Add]--[New Item...]--[Visual \CPP]--[\CPP\ File(.cpp)]
+		で追加(この場合ソースファイルはダミー)
+		\begin{narrow}[\WID]
+		    \fname{CSBase.cpp} \\
+		    \fname{CSCollision.cpp} \\
+		    \fname{CSFoundation.cpp} \\
+		    \fname{CSPhysics.cpp}
+		\end{narrow}
+		$\dagger$ここで追加するのは<EDP>に対応したもののみ
+	    \end{narrow}
+	    ReadMe.txtを[Remove]--[Remove]
+	\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item ディレクトリ\dname{SprExport<14.0><PH>}を削除
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{プロジェクト\pname{NameManager}の追加}
+\label{sub:NameManager}
+既存のプロジェクトを追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\sname{SprCSharp<14.0><PH>.sln}を起動
+	\begin{narrow}
+	Solution Explorerで
+	ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+	\small{[Add]--[Existing Project...]}
+	\begin{narrow}[s]
+	    \verb|DIR\NameManager\NameManager.vcxproj|
+	\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\end{narrow}
+	\medskip
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{プロジェクト\pname{TargetManager<PH>}の追加}
+\label{sub:TargetManager}
+プロジェクトファイル\fname{DIR\SL TargetManager\SL TargetManager<PH>.vcxproj}が
+存在するか否かで処理が異なる。
+
+\medskip
+\begin{itemize}
+  \item 存在する場合 --- 既存のプロジェクトを追加する。
+	\begin{enumerate}
+	  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	    Solution Explorerで
+	    ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+	    \begin{narrow}[s][\WID]
+		[Add]--[Existing Project...]
+		\begin{narrow}[\WID]
+		    \verb|DIR\TargetManager\TargetManager<PH>.vcxproj|
+		\end{narrow}
+	    \end{narrow}
+	    \medskip
+	    \fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	    \medskip
+	\end{enumerate}
+
+  \item	存在しない場合 --- 新規に作成して追加する。
+	\begin{enumerate}
+	  \item ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+		Solution Explorerで
+		ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+		\small{%
+		[Add]--[New Project...]--[Visual \CPP]--[General]--[Makefile Project]
+		\begin{narrow}[\WID]\begin{tabular}{ll}
+		    Name:     & \verb|TargetManager<PH>| \\
+		    Location: & \verb|DIR|
+	    	\end{tabular}\end{narrow}
+		[Finish]
+
+		[TaregetManager<PH>]--[Properties]
+		\begin{narrow}[\WID]
+		    [General]--[Project Defaults]--[Configuration Type]を Makefile
+		    にする
+
+		    [Apply]--[OK]
+		\end{narrow}
+		}
+		\medskip
+		\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+		\medskip
+
+	  \item	ディレクトリ\dname{TargetManager<PH>}=(<NEWDIR>とする)が作成されるので
+		プロジェクトファイルをコピー
+		\begin{narrow}[s][\WID]\begin{tabular}{ll}
+		    \verb|DIR> cp <NEWDIR>\TargetManager<PH>.vcxproj TargetManager| \\
+		    \verb|DIR> cp <NEWDIR>\TargetManager<PH>.vcxproj.filters TargetManager| \\
+		    $\dagger$コピー先のディレクトリ名に注意
+		\end{tabular}\end{narrow}
+		\medskip
+
+	  \item ソリューションファイル\fname{DIR\SL SprCSharp14.0.sln}を編集
+		\begin{narrow}[s][\WID]\begin{tabular}{ll}
+		    \verb|Project(...) = "..." "<NEWDIR>\TargetManager<PH>.vcxproj",...| \\
+		    \hbox{\hspace{10mm}$\downarrow$} \\
+		    \verb|Project(...) = "..." "TargetManager\TargetManager<PH>.vcxproj",...| \\
+		    $\dagger$ディレクトリ名に注意
+		\end{tabular}\end{narrow}
+		\medskip
+
+	  \item ソリューション\DQuote{SprCSharp<14.0><PH>.sln}を起動する
+
+		Solution Explorerで、Project TargetManager<PH>を展開
+		\begin{narrow}[s][\WID]
+		    [Header Files]を[Delete]
+
+		    [Resource Files]を[Delete]
+
+		    [Source Files]を[Delete]
+
+		    Readme.txtを[Remove]--[Remove]
+		\end{narrow}
+		\medskip
+		\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+		\medskip
+	\end{enumerate}
+\end{itemize}
+
+%-------------------------------------------------------------------------------
+\subsection{\pname{RunSwig_CSharp<14.0><PH>}の追加}
+\label{sub:RunSwigCSharp}
+新規に作成して追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	Solution Explorerで、
+	ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+	\small{%
+	[Add]--[New Project...]--[Visual \CPP]--[General]--[Makefile Project]
+	\begin{narrow}[\WID]\begin{tabular}{ll}
+	    Name:     & \verb|RunSwig_CSharp<14.0><PH>| \\
+	    Location: & \verb|DIR|
+	\end{tabular}\end{narrow}
+	\medskip
+	[Finish]
+
+	[RunSwig_CSharp14.0]--[Properties]
+	\begin{narrow}[\WID]
+	    [General]--[Project Defaults]--[Configuration Type]を Makefile にする
+
+	    [Apply]--[OK]
+	\end{narrow}
+	}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item	ディレクトリ\dname{RunSwig_CSharp<14.0><PH>}(=NEWDIRとする)が作成されるので
+	プロジェクトファイルをコピー
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|DIR> cp <NEWDIR>\RunSwig_CSharp<14.0><PH>.vcxproj RunSwig_CSharp| \\
+	    \verb|DIR> cp <NEWDIR>\RunSwig_CSharp<14.0><PH>.vcxproj.filters RunSwig_CSharp| \\
+	    $\dagger$コピー先のディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューションファイル\fname{DIR\SL SprCSharp14.0.sln}を編集
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|Project(...) = "..." "<NEWDIR>\RunSwig_CSharp<14.0><PH>.vcxproj",...| \\
+	    \hbox{\hspace{\WID}$\downarrow$} \\
+	    \verb|Project(...) = "..." "RunSwig_CSharp\RunSwig_CSharp<14.0><PH>.vcxproj",...| \\
+	    $\dagger$ディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動する
+
+	Solution Explorerでプロジェクト\pname{RunSwig_CSharp<14.0><PH>}を展開
+	\begin{narrow}[s][\WID]
+	    [Header Files]を[Delete]
+
+	    [Resource Files]を[Delete]
+
+	    [Source Files]を[Delete]
+
+	    Readme.txtを[Remove]--[Remove]
+
+	    [Add]--[Existing Item...] で次のものを追加
+	    \begin{narrow}[\WID]
+		\fname{CSharpSwig.bat} \\
+		\fname{Makefile.RunSwig_CSharp} \\
+		\fname{ReplaceInclude.py} \\
+		\fname{RunSwig_Clean.bat} \\
+		\fname{RunSWig_CSharp.bat}
+	    \end{narrow}
+	\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item ディレクトリ\dname{RunSwig_CSharp<14.0><PH>}を削除
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{プロジェクト\pname{Install}の追加}
+\label{sub:Install}
+既存のプロジェクトを追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	Solution Explorerで
+	ソリューション\pname{SprCSharp14.0 (xx projects)}を右クリック
+
+	\small{[Add]--[Existing Project...]}
+	\begin{narrow}
+	    \verb|DIR\Install\Install.vcxproj|
+	\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{Springhead Libraryプロジェクトの追加}
+\label{sub:SpringheadLibrary}
+既存のプロジェクトを追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	<EDP>および<IDP>に含まれるすべてのプロジェクトについて
+	\begin{narrow}[s][\WID]
+	    Solution Explorerで
+	    ソリューション\sname{SprCSharp<14.0><PH> (xx projects)}を右クリック
+
+	    [Add]--[Existing Project...]
+	    \begin{narrow}[\WID]
+		\verb|<...>\Springhead2\src\<|\Project\verb|>\<|%
+		\Project\verb|><14.0>.vcxproj|
+	    \end{narrow}
+	\end{narrow}
+	\medskip
+
+  \item	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\subsection{プロジェクト\pname{SprCsSample<14.0><PH>}の追加}
+\label{sub:SprCsSample}
+新規に作成して追加する。
+
+\medskip
+\begin{enumerate}
+  \item	ソリューション\fname{SprCSharp<14.0><PH>.sln}を起動
+
+	Solution Explorerで
+	ソリューション\sname{SprCSharp14.0 (xx projects)}を右クリック
+
+	\small{[Add]--[New Project...]--[Visual \CS]--[Console Application]}
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    Name:     & \verb|SprCsSample<14.0><PH>| \\
+	    Location: & \verb|DIR|
+	\end{tabular}\end{narrow}
+	\medskip
+	\fname{SprCSharp<14.0><PH>.sln}を終了(変更を保存)
+	\medskip
+
+  \item	ディレクトリ\dname{SprCsSample<14.0><PH>}(=<NEWDIR>とする)が作成されるので
+	プロジェクトファイルをコピー
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|DIR> cp <NEWDIR>\SprCsSample<14.0><PH>.csproj SprCsSample| \\
+	    $\dagger$コピー先のディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ソリューションファイル\fname{DIR\SL SprCSharp14.0.sln}を編集
+	\begin{narrow}[s][\WID]\begin{tabular}{ll}
+	    \verb|Project(...) = "..." "<NEWDIR>\SprCsSample<14.0><PH>.csproj",...| \\
+	    \hbox{\hspace{\WID}$\downarrow$} \\
+	    \verb|Project(...) = "..." "SprCsSample\SprCsSample<14.0><PH>.csproj",...| \\
+	    $\dagger$ディレクトリ名に注意
+	\end{tabular}\end{narrow}
+	\medskip
+
+  \item	ディレクトリ\dname{SprCsSample<14.0><PH>}を削除
+\end{enumerate}
+
+% end: SolutionFramework.tex

@@ -1,0 +1,55 @@
+\section{概要}
+
+本章ではよくあるトラブルとその対処方法を紹介します．
+
+\section{プログラムのビルド}
+
+主にVisual Studio上でSpringheadをビルド際によく遭遇するトラブルと対処法について述べます．
+\vspace{2mm}\\
+
+\noindent
+\begin{tabular}{p{10mm}p{110mm}}
+\textbf{現象} & 「include ファイルを開けません」というコンパイルエラーが出る \\
+\textbf{解決策} & プロジェクト設定でSpringheadのインクルードパスが設定されているか確認してください．
+\end{tabular}
+\vspace{2mm}\\
+\begin{tabular}{p{10mm}p{110mm}}
+\textbf{現象} & 「未解決の外部シンボル～が～で参照されました」というリンカエラーが出る \\
+\textbf{解決策} & プロジェクト設定でSpringheadのライブラリパスが設定されているか確認してください．
+\end{tabular}
+\vspace{2mm}\\
+\begin{tabular}{p{10mm}p{110mm}}
+\textbf{現象} & 「～は既に～で定義されています」というリンカエラーが出る\\
+\textbf{解決策} & プロジェクト設定で，ランタイムライブラリがユーザプログラムとSpringheadライブラリとで同一か確認してください．
+\end{tabular}
+\vspace{2mm}\\
+
+\section{物理シミュレーション関連}
+
+
+\section{ファイル関連}
+
+\noindent
+\begin{tabular}{p{15mm}p{110mm}}
+\textbf{現象} & ファイルがロードできない\\
+\textbf{解決策1} & プログラムの実行ディレクトリを確認し，ファイルのパスが適切か確認してください．\\
+\textbf{解決策2} & バイナリ形式のXファイルは読めません．テキスト形式で保存してください．\\
+\textbf{解決策3} & 特殊な方言が使われていて読めないこともあります．開発者に問い合わせてください．
+\end{tabular}
+\vspace{2mm}\\
+
+\section{その他のトラブル}
+
+\noindent
+\begin{tabular}{p{10mm}p{110mm}}
+\textbf{現象} &  なぜか動かない\\
+\textbf{解決策} & バージョンが古い可能性があります．まずsvn updateを実行してコードを最新にし，次にSpringheadライブラリのリビルドを行ってください．
+\end{tabular}
+\vspace{2mm}\\
+\begin{tabular}{p{10mm}p{110mm}}
+\textbf{現象} &  それでも動かない\\
+\textbf{解決策} & たまに(?)Springheadのバグであることがあります．開発者に問い合わせてください．
+\end{tabular}
+\vspace{2mm}\\
+
+

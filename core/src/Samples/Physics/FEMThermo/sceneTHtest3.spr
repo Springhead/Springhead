@@ -1,0 +1,96 @@
+FWScene fwScene{
+	FWObject fwFloor{
+		*grFrameFloor
+		*soFloor
+	}
+	FWFemMesh fwCheese{
+		*cheese_tex3d		//*negi8r2s_tex3d	//	FEM用メッシュ
+		*grCheeseFrame		//	フレーム
+		*soCheese				//	Solid
+	}
+	FWObject fwPan{								//FWFemMeshにすれば、フライパンの熱伝導や熱伝達ができる
+		*grFramePan		//	グラフィクス・モデル
+		*soPan		//	Solid
+	}
+	PHScene phScene{
+		gravity = 0 -9.8 0
+		timeStep = 0.002
+		numIteration = 10
+		
+		PHSolid soFloor{
+			dynamical = false			//
+			integrate = false			//
+			*grFloor
+		}
+		PHSolid soCheese{
+			*cheese_tex3d
+			pose = 1 0 0 0  0 0.2 0
+		}
+		PHSolid soPan{			
+			dynamical = false
+			integrate = false
+			pose = 1 0 0 0  0.0 0.1 0
+			//*grPan
+			PHFrame{
+				*phFryPan3_b01
+				*phFryPan3_b02
+				*phFryPan3_b03
+				*phFryPan3_b04
+				*phFryPan3_b05
+				*phFryPan3_b06
+				*phFryPan3_b07
+				*phFryPan3_b08
+				*phFryPan3_b09
+				*phFryPan3_b10
+				*phFryPan3_b11
+				*phFryPan3_b12
+				*phFryPan3_a
+			}
+		}
+	}
+	GRScene grScene{
+		GRFrame grCheeseFrame{ *cheese_tex3d  }
+		//↑/*negi8r2s_tex3d
+		GRFrame grFrameFloor{	*grFloor	}
+		GRFrame grFramePan{ *grfrypan3 }
+		GRLight light1 {						#SprGRRender.h GRMaterialDesc
+			ambient = 0.9 0.9 0.9 1.0			#Vec4f ambient
+			diffuse = 0.5 0.5 0.5 1.9			#Vec4f diffuse
+			specular = 0.1 0.1 0.1 1.0			#Vec4f specular
+			position = 1.0 1.0 1.0 0.0			#Vec4f position
+			range = 10000.0						#float range
+		}
+	}
+}
+Import{ path = "grFloor.x" }
+
+//Import{ path = "./xFiles/negi/negi8r2s.x"}
+//Import{ path = "./xFiles/negi/2cube.x"}
+//Import{ path = "./xFiles/negi/cube.x"}
+
+//Import{ path = "./xFiles/negi/negi8r2sdiv.x"}
+//Import{ path = "./xFiles/cheese/cube_test2.x"}
+//Import{ path = "./xFiles/cheese/cheese_test.x"}
+
+Import{ path = "./xFiles/cheese/cheese_test2.x"}			//	うまくロードできた　穴だらけ
+//Import{ path = "./xFiles/cheese/cheese_test3.x"}			//	穴が少ない
+//Import{ path = "./xFiles/cheese/cube_test4.x"}			//	ロードできたけど・・・
+//Import{ path = "./xFiles/cheese/cube_test5.x"}
+
+//	grフライパン
+//Import{ path = "./xFiles/frypan3/grfrypan3.x"}
+
+//	phフライパン　shape
+Import{ path = "./xFiles/frypan3/fry03ph_a.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b01.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b02.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b03.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b04.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b05.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b06.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b07.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b08.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b09.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b10.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b11.x"}
+Import{ path = "./xFiles/frypan3/fry03ph_b12.x"}

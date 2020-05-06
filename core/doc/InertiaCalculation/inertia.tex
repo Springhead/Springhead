@@ -1,0 +1,332 @@
+\documentclass{jarticle}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+
+\title{慣性行列の導出}
+
+\begin{document}
+\maketitle
+
+\section{定義}
+
+慣性行列（慣性テンソル）の定義は下記の通り．
+\begin{align}
+ I &= 
+\begin{bmatrix}
+ I_{x}	& -I_{xy}	& -I_{xz} \\
+-I_{xy}	&  I_{y}	& -I_{yz} \\
+-I_{xz} & -I_{yz}	&  I_{z}
+\end{bmatrix}
+\end{align}
+\begin{align*}
+I_x &= \rho \int_V (y^2 + z^2) dV, \\
+I_y &= \rho \int_V (x^2 + z^2) dV, \\
+I_z &= \rho \int_V (x^2 + y^2) dV, \\
+I_{xy} &= \rho \int_V xy \, dV, \\
+I_{yz} &= \rho \int_V yz \, dV, \\
+I_{xz} &= \rho \int_V xz \, dV.
+\end{align*}
+
+ベクトルで書くと
+\begin{align*}
+I
+&= - \rho \int_V (r^\times)^2 dV \\
+&= \rho \int_V (\|r\|^2 \bm{1} - r\,r^\mathsf{T}) dV \\
+&= \rho \int_V (\mathrm{tr}(r\,r^\mathsf{T}) \bm{1} - r\,r^\mathsf{T}) dV \\
+&= \rho ( \mathrm{tr}(\int_V r\,r^\mathsf{T} dV) \bm{1} - (\int_V r\,r^\mathsf{T} dV) )
+\end{align*}
+とも書ける．
+よって
+\begin{align}
+C = \int_V r\,r^\mathsf{T} dV
+\end{align}
+とおけば
+\begin{align}
+I = \rho (\mathrm{tr}(C)\bm{1} - C)
+\end{align}
+である．
+
+ある形状の各点$r$を$r' = r + b$と平行移動して得られる形状の慣性行列を求める．
+元の形状の慣性行列を$I$，変換された形状の慣性行列を$I'$とする．
+\begin{align*}
+I'
+&= -\rho \int_V ((r + b)^\times)^2 dV \\
+&= -\rho \int_V ((r^\times)^2 + 2 r^\times b^\times + (b^\times)^2) dV \\
+&= I - 2m (\bar{r})^\times b^\times - m(b^\times)^2
+\end{align*}
+ただし$\bar{r}$は基準点からみた元形状の重心．
+基準点が重心にある場合は$\bar{r} = 0$となるので
+\begin{align}
+I' = I - m (b^\times)^2
+\end{align}
+となり，よく知られた平行軸定理を得る．
+
+次に，ある形状の各点$r$を$r' = Ar$と線形変換して得られる形状の慣性行列を考える．
+元の形状の慣性行列を$I$，変換された形状の慣性行列を$I'$とする．
+まず上述の$C$を求めると
+\begin{align*}
+C'
+&= (\det A) \int_V (Ar)(Ar)^\mathsf{T} dV \\
+&= (\det A) A C A^\mathsf{T}
+\end{align*}
+ここで$\det A$がかかるのは線形変換によって微小体積が$dV$から$(\det A)dV$となるため．
+これより
+\begin{align}
+I' = \rho (\mathrm{tr}(C')\bm{1} - C')
+\end{align}
+
+\section{直方体}
+
+原点を中心とする直方体．
+各辺の長さを$l_x$，$l_y$，$l_z$とする．
+
+体積は
+\begin{align}
+V = l_x l_y l_z
+\end{align}
+
+慣性モーメントは
+\begin{align*}
+I_x
+&= \rho \int_x \int_y \int_z y^2 + z^2 dz dy dx \\
+&= \rho \int_x \int_y l_z y^2 + \frac{{l_z}^3}{12} dy dx \\
+&= \rho \int_x \frac{l_y l_z (l_y^2 + l_z^2)}{12} dx \\
+&= \frac{\rho V (l_y^2 + l_z^2)}{12}
+\end{align*}
+
+よって慣性テンソルは
+\begin{align}
+I =
+\frac{\rho V}{12}
+\begin{bmatrix}
+I_y^2 + I_z^2	& 0				& 0 			\\
+0				& I_x^2 + I_z^2	& 0				\\
+0				& 0				& I_x^2 + I_y^2
+\end{bmatrix}
+\end{align}
+
+\section{円柱}
+
+原点を中心とし，長さを$d$，半径を$r$，x軸を軸とする円柱．
+
+体積は
+\begin{align}
+V = \pi r^2 d
+\end{align}
+
+軸方向の慣性モーメントは
+\begin{align*}
+I_x
+&= \rho d \int_0^r s^2 (2 \pi s) ds = \frac{\rho \pi r^4 d}{2} = \rho V \frac{r^2}{2}
+\end{align*}
+軸に直交する方向の慣性モーメントは，
+\begin{align*}
+I_y 
+&= \rho \int_{0}^{\pi} \frac{(2r\sin\theta)^2 + d^2}{12} \cdot 2r\sin\theta \cdot d \cdot r\sin\theta d\theta \\
+&= \rho \int_{0}^{\pi} \frac{2r^2d\sin^2\theta(4r^2\sin^2\theta + d^2)}{12}d\theta \\
+&= \rho \int_{0}^{\pi} \frac{r^2d (1 - \cos2\theta)(2r^2(1 - \cos2\theta) + d^2)}{12}d\theta \\
+&= \rho \int_{0}^{\pi} \frac{2r^4d(1-\cos2\theta)^2 + r^2d^3(1-\cos2\theta)}{12} d\theta \\
+&= \rho \int_{0}^{\pi} \frac{(2r^4d + r^2d^3) - (4r^4d + r^2d^3) \cos2\theta + 2r^4d \cos^2 2\theta}{12} d\theta \\
+&= \rho \int_{0}^{\pi} \frac{(3r^4d + r^2d^3) - (4r^4d + r^2d^3) \cos2\theta + r^4d \cos4\theta}{12} d\theta \\
+&= \pi \rho \frac{3r^4d + r^2d^3}{12} \\
+&= \rho V \frac{3r^2 + d^2}{12}
+\end{align*}
+ただし積分の中で直方体の慣性モーメントを利用．
+
+よって慣性テンソルは
+\begin{align}
+I = \rho V
+\begin{bmatrix}
+\frac{r^2}{2}	& 0				        & 0 			        \\
+0				& \frac{3r^2 + d^2}{12}	& 0				        \\
+0				& 0				        & \frac{3r^2 + d^2}{12}
+\end{bmatrix}
+\end{align}
+
+\section{球}
+
+原点を中心とした半径$r$の球．
+
+体積は
+\begin{align}
+V = \frac{4}{3} \pi r^3
+\end{align}
+
+慣性モーメントは
+\begin{align*}
+I_x
+&= \rho \int_{-r}^{r} \frac{\pi}{2}(r^2 - x^2)^2 dx \\
+&= \rho \int_{-r}^{r} \frac{\pi}{2}(r^4 - 2r^2x^2 + x^4) dx \\
+&= \rho \frac{\pi}{2} (2r^5 - \frac{4}{3}r^5 + \frac{2}{5} r^5) \\
+&= \frac{8}{15} \rho \pi r^5 \\
+&= \rho V \frac{2}{5} r^2
+\end{align*}
+
+よって慣性テンソルは
+\begin{align}
+I =
+\rho V \frac{2}{5}r^2 \bm{1}
+\end{align}
+
+\section{半球}
+
+原点を中心とし，$x > 0$側のみの半径$r$の半球．
+
+体積は
+\begin{align}
+V = \frac{2}{3} \pi r^3
+\end{align}
+
+重心は
+\begin{align*}
+&\int_0^r \pi (r^2 - x^2) x dx = \frac{\pi}{4}r^4,\\
+& (\frac{\pi}{4}r^4) / (\frac{2}{3} \pi r^3) = \frac{3}{8}r
+\end{align*}
+より
+\begin{align}
+c = \begin{bmatrix}\frac{3}{8}r \\ 0 \\ 0\end{bmatrix}
+\end{align}
+
+原点に関する慣性モーメントは
+\begin{align*}
+I_x
+&= \rho \int_0^r \frac{\pi}{2} (r^2 - x^2)^2 dx = \frac{4}{15} \rho \pi r^5
+\end{align*}
+\begin{align*}
+I_y
+&= \rho \int_0^r (\frac{\pi}{4} (r^2 - x^2)^2 + \pi (r^2 - x^2) x^2) dx \\
+&= \frac{4}{15} \rho \pi r^5
+\end{align*}
+ただし積分の中で円柱の慣性モーメントを利用．
+よって慣性行列は
+\begin{align}
+I = \rho V \frac{2}{5} r^2 \bm{1}
+\end{align}
+と形は球と変わらず．対称に体積が半分になっているので当然の結果．
+ただし重心に関する慣性行列を得るには平行軸定理で変換が必要なので注意．
+
+\section{円錐}
+
+半径$r$，長さ$d$の円錐．
+ただし底面はyz面にあり，軸はx軸，頂点は$x > 0$側とする．
+
+体積は
+\begin{align}
+V = \frac{1}{3} \pi r^2 d
+\end{align}
+
+重心は
+\begin{align*}
+&\int_0^d \pi (\frac{r}{d}(d-x))^2 x dx = \frac{1}{12} \pi r^2 d^2, \\
+&(\frac{1}{12} \pi r^2 d^2) / (\frac{1}{3} \pi r^2 d) = \frac{1}{4}d
+\end{align*}
+より
+\begin{align}
+c = \begin{bmatrix}\frac{1}{4}d \\ 0 \\ 0\end{bmatrix}
+\end{align}
+
+慣性モーメントは
+\begin{align*}
+I_x
+&= \rho \int_0^d \frac{\pi}{2} (\frac{r}{d}(d-x))^4 dx \\
+&= \frac{1}{10} \rho \pi r^4 d
+\end{align*}
+\begin{align*}
+I_y
+&= \rho \int_0^d (\frac{\pi}{4}(\frac{r}{d}(d-x))^4 + \pi (\frac{r}{d}(d-x)^2)x^2) dx \\
+&= \rho \pi (\frac{1}{20} r^4d + \frac{1}{30} r^2d^3)
+\end{align*}
+
+\section{カプセル}
+
+半径$r$，長さ$d$，x軸を軸とするカプセル．
+
+体積は
+\begin{align}
+V = \frac{4}{3}\pi r^3 + \pi r^2 d
+\end{align}
+
+軸方向の慣性モーメントは
+\begin{align*}
+I_x
+&= \rho (\frac{4}{3} \pi r^3)(\frac{2}{5} r^2) + \rho (\pi r^2 d)(\frac{1}{2}r^2) \\
+&= \rho \pi (\frac{8}{15} r + \frac{1}{2}d)r^4
+\end{align*}
+軸に直交する方向の慣性モーメントは，x軸方向に$d/2$離れた半球部分二つと円柱から成るので
+\begin{align*}
+I_y
+&= \rho (\frac{4}{3}\pi r^3) (\frac{2}{5}r^2 + \frac{1}{4}d^2) + \rho (\pi r^2 d) (\frac{3r^2 + d^2}{12}) \\
+&= \rho \pi (\frac{8}{15}r^5 + \frac{1}{3}r^3d^2 + \frac{1}{4}r^4d + \frac{1}{12}r^2d^3)
+\end{align*}
+
+\section{正準四面体}
+
+\begin{align}
+\begin{bmatrix}0 \\ 0 \\ 0\end{bmatrix}, \,
+\begin{bmatrix}1 \\ 0 \\ 0\end{bmatrix}, \,
+\begin{bmatrix}0 \\ 1 \\ 0\end{bmatrix}, \,
+\begin{bmatrix}0 \\ 0 \\ 1\end{bmatrix}
+\end{align}
+の4点からなる四面体．
+
+\begin{align*}
+I_x
+&= \int_0^1 \int_0^{1-x} \int_0^{1-x-y} y^2 + z^2 dz dy dx \\
+&= \int_0^1 \int_0^{1-x} y^2(1-x-y) + \frac{1}{3} (1-x-y)^3 dy dx \\
+&= \int_0^1 \int_0^{1-x} (1-x)y^2 - y^3 + \frac{1}{3}(1-x-y)^3 dy dx \\
+&= \int_0^1 \frac{1}{3}(1-x)^4 - \frac{1}{4}(1-x)^4 + \frac{1}{12}(1-x)^4 dx \\
+&= \int_0^1 \frac{1}{6}(1-x)^4 dx = \frac{1}{30}
+\end{align*}
+\begin{align*}
+I_{xy}
+&= \int_0^1 \int_0^{1-x} \int_0^{1-x-y} xy dz dy dx \\
+&= \int_0^1 \int_0^{1-x} xy(1-x-y) dy dx \\
+&= \int_0^1 \int_0^{1-x} (1-x)xy - xy^2 dy dx \\
+&= \int_0^1 \frac{1}{2} x(1-x)^3 - \frac{1}{3} x(1-x)^3 dx \\
+&= \int_0^1 \frac{1}{6} x(1-x)^3 dx \\
+&= \frac{1}{6} \int_0^1 (1-x)^3 - (1-x)^4 dx \\
+&= \frac{1}{120}
+\end{align*}
+よって
+\begin{align}
+I =
+\begin{bmatrix}
+ \frac{1}{30}  & -\frac{1}{120} & -\frac{1}{120} \\
+-\frac{1}{120} &  \frac{1}{30}  & -\frac{1}{120} \\
+-\frac{1}{120} &  \frac{1}{120} &  \frac{1}{30}
+\end{bmatrix}
+\end{align}
+
+また，$C$行列は
+\begin{align}
+I =
+\begin{bmatrix}
+\frac{1}{60}  & \frac{1}{120} & \frac{1}{120} \\
+\frac{1}{120} & \frac{1}{60}  & \frac{1}{120} \\
+\frac{1}{120} & \frac{1}{120} & \frac{1}{60}
+\end{bmatrix}
+\end{align}
+
+\section{四面体}
+
+原点$O$，点$a$，$b$，$c$からなる四面体．
+
+体積は
+\begin{align}
+V = \frac{1}{6} |a \cdot (b \times c)|
+\end{align}
+
+重心は
+\begin{align}
+g = \frac{1}{4}(a + b + c)
+\end{align}
+
+慣性行列は正準四面体の慣性行列$I$を線形変換して得る．
+$[1;\,0;\,0]$，$[0;\,1;\,0]$，$[0;\,0;\,1]$をそれぞれ$a$，$b$，$c$へ移す変換は
+\begin{align*}
+A = [a\, b\, c]
+\end{align*}
+であるので，正準四面体の$C$を線形変換して$C'$，$I'$を求めればよい．
+
+\end{document}

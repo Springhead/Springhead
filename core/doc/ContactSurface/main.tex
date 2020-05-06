@@ -1,0 +1,215 @@
+\documentclass{jarticle}
+\usepackage{amsmath, amssymb, bm}
+\usepackage[dvipdfmx]{graphicx}
+
+\title{面接触の拘束表現}
+\author{tazz}
+\date{}
+
+\setlength{\oddsidemargin}{0mm}
+\setlength{\textwidth}{160mm}
+
+\begin{document}
+\maketitle
+
+\begin{itemize}
+\item 16/06/17 最終更新
+\end{itemize}
+
+\section{はじめに}
+
+点接触モデルは接触断面の各頂点に点接触拘束を一つ生成する．
+この方法では複雑な形状同士の接触を扱う際に点接触拘束の数が多くなり，結果として計算コストが増大する問題がある．
+その代わりに一つの接触断面に一つの面接触拘束を対応させる方法が考えられる．
+この方法では接触断面の形状によらず拘束にかかわる変数が固定であるため計算コストに関する優位性が期待できる．
+その反面，接触力の回転成分（モーメント）の射影に関する処理が複雑になるため注意が必要である．
+
+\section{面接触拘束のモデル}
+
+凸多角形状の接触断面を考え，その重心に拘束座標系の原点をおく．
+また，接触断面の法線方向をx軸とし，y軸とz軸はそれに合わせて定義する．
+
+拘束座標系における2物体の相対速度ベクトルを$(v, w)$とおく．$v$が並進速度で$w$が角速度である．
+また，拘束座標系原点において2物体に作用する拘束力（接触力）を$(f, n)$とする．$f$が並進力で$n$がモーメントである．
+
+接触モデルにおいて相対速度$(v, w)$と接触力$(f, n)$が満たすべき代数条件を厳密に書き下すと煩雑になる．
+しかし基本的には$v = 0$，$w = 0$を満たすような$(f, n)$を求め，これを適正な接触力の範囲に射影すると考えればよい．
+よって以下では$f$と$n$の射影操作に注目する．
+
+まず並進力x成分は負ではならない．
+\begin{align*}
+f_\mathrm{x} \ge 0
+\end{align*}
+次に並進力y, z成分は，x成分によって決まる摩擦円錐に含まれなければならない．
+\begin{align*}
+\left\| \begin{bmatrix} f_\mathrm{y} \\ f_\mathrm{z} \end{bmatrix} \right\| &\le \mu f_\mathrm{x}
+\end{align*}
+
+以上により並進力の射影操作を行った後，モーメントの射影を行う．
+まずモーメントのy成分とz成分については，接触力中心(center of pressure, CoP)を求め，それが
+接触断面に含まれるように射影する．
+CoPを$c = [0, c_\mathrm{y}, c_\mathrm{z}]$とするとき，以下を満たす．
+\begin{align*}
+ n_\mathrm{y} + c_\mathrm{z} f_\mathrm{x} &= 0, \\
+ n_\mathrm{z} - c_\mathrm{y} f_\mathrm{x} &= 0
+\end{align*}
+よってCoPは
+\begin{align*}
+ c_\mathrm{y} &=  n_\mathrm{z} / f_\mathrm{x}, \\
+ c_\mathrm{z} &= -n_\mathrm{y} / f_\mathrm{x}
+\end{align*}
+となる．
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=70mm]{section.eps}
+\end{center}
+\end{figure}
+
+図のように接触多角形の各頂点を半時計まわりに$p_0, p_1, \dots, p_{m-1}$とする（$m$は頂点数）
+表記の便宜上$p_m = p_0$とする．
+また，$p_i, p_{i+1}$がなす辺の法線を$\eta_i$とする．
+つまり
+\begin{align*}
+\eta_i = 
+\begin{bmatrix}
+ p_{i+1,z} - p_{i,z} \\
+-(p_{i+1,y} - p_{i,y})
+\end{bmatrix}
+\end{align*}
+である．
+なお以下の議論で$\eta_i$が単位ベクトルである必要はないので，正規化処理は不要である．
+
+図から明らかなように，点$c$が多角形の外部にあるとき，ある$i$について下記のいずれかが成り立つ
+\begin{itemize}
+\item $c$から多角形への最近点が$p_i$である
+\item $c$から多角形への最近点が辺$p_i$-$p_{i+1}$上の点である
+\end{itemize}
+これらの条件は排他的で，いずれか一つが必ず成立するので，
+順番に評価していき成立した条件に対応する射影操作を行えばよい．
+
+$c$の最近点が$p_i$であるかを判定するには
+\begin{align*}
+\begin{bmatrix} \eta_{i-1} & \eta_i \end{bmatrix}
+\begin{bmatrix} s \\ t \end{bmatrix}
+ = 
+ c - p_i
+\end{align*}
+を解いて$s > 0$，$t > 0$を調べる．
+このとき対応する射影操作は
+\begin{align*}
+c \rightarrow p_i
+\end{align*}
+である．
+
+$c$の最近点が辺$p_i$-$p_{i+1}$であるかを判定するには
+\begin{align*}
+\begin{bmatrix}
+p_{i+1} - p_i & \eta_i
+\end{bmatrix}
+\begin{bmatrix} s \\ t \end{bmatrix}
+ =
+ (c - p_i)
+\end{align*}
+を解いて$0 < s < 1$，$t > 0$を調べる．
+このとき対応する射影操作は
+\begin{align*}
+c \rightarrow (1 - s) p_i + s p_{i+1}
+\end{align*}
+である．
+上記のいずれの条件も成り立たなかった場合は$c$は接触多角形の境界あるいは内部に存在することになるので射影の必要はない．
+射影した$CoP$からモーメントを得るには
+\begin{align*}
+ n_\mathrm{y} = - c_\mathrm{z} f_\mathrm{x}, \\
+ n_\mathrm{z} =   c_\mathrm{y} f_\mathrm{x}
+\end{align*}
+とする．
+
+最後にモーメントのx成分の射影について考える．
+これには何らかの具体的な接触力分布を仮定する必要がある．
+yz平面上の点$(y,z)$に作用する単位面積あたりの力を$\phi_\mathrm{x}(y,z), \phi_\mathrm{y}(y,z), \phi_\mathrm{z}(y,z)$とする．
+CoPを中心とする半径$r$の円領域$S$を考え，この円の外では分布力は$0$とする．
+また，円の内部における力の分布を
+\begin{align*}
+\phi_\mathrm{x}(y, z) &= \bar{\phi}_\mathrm{x},   \\
+\phi_\mathrm{y}(y, z) &= \bar{\phi}_\mathrm{y} - \psi \sin\theta \\
+\phi_\mathrm{z}(y, z) &= \bar{\phi}_\mathrm{z} + \psi \cos\theta
+\end{align*}
+と定義する．
+ただし$\bar{\phi}_\mathrm{x}, \bar{\phi}_\mathrm{y}, \bar{\phi}_\mathrm{z}, \psi$は定数で，
+$\theta = \tan^{-1}(z/y)$である．
+円領域において分布力のx成分が一様であるので，明らかにCoPは円の中心となる．
+各成分について面積分すると
+\begin{align*}
+\int_S \phi_\mathrm{x}(y,z) dy dz &= \pi r^2 \bar{\phi}_\mathrm{x}, \\
+\int_S \phi_\mathrm{y}(y,z) dy dz &= \pi r^2 \bar{\phi}_\mathrm{y}, \\
+\int_S \phi_\mathrm{z}(y,z) dy dz &= \pi r^2 \bar{\phi}_\mathrm{z}
+\end{align*}
+となるので
+\begin{align*}
+\pi r^2 \bar{\phi}_\mathrm{x} &= f_\mathrm{x}, \\
+\pi r^2 \bar{\phi}_\mathrm{y} &= f_\mathrm{y}, \\
+\pi r^2 \bar{\phi}_\mathrm{z} &= f_\mathrm{z}
+\end{align*}
+である．
+一方，モーメントのx成分は
+\begin{align*}
+n_\mathrm{x}
+ &= \int_S (y \phi_\mathrm{z}(y,z) - z \phi_\mathrm{y}(y,z)) dy dz \\
+ &= \int_S (y (\bar{\phi}_\mathrm{z} + \psi \cos\theta ) - z (\bar{\phi}_\mathrm{y} - \psi \sin\theta ) ) dy dz \\
+ &= c_\mathrm{y} (\pi r^2 \phi_\mathrm{z}) - c_\mathrm{z} (\pi r^2 \phi_\mathrm{y})
+   + \int_S \rho^2 \psi d\rho d\theta \\
+ &= c_\mathrm{y} f_\mathrm{z} - c_\mathrm{z} f_\mathrm{y} + \frac{2}{3} r (\pi r^2 \psi)
+\end{align*}
+となる．
+さて，円領域の任意の点において，その点に作用する分布力はクーロン摩擦モデルを満たす必要がある．つまり
+\begin{align*}
+\left\| \begin{bmatrix} \phi_\mathrm{y}(y,z) \\ \phi_\mathrm{z}(y,z) \end{bmatrix} \right\| &\le \mu \phi_\mathrm{x}
+\end{align*}
+である．
+よって
+\begin{align*}
+\left\|
+ \begin{bmatrix}
+  \bar{\phi}_\mathrm{y} - \psi \sin\theta\\
+  \bar{\phi}_\mathrm{z} + \psi \cos\theta
+ \end{bmatrix}
+\right\|
+ &\le \mu \bar{\phi}_\mathrm{x}
+\end{align*}
+左辺が最大となる$\theta$を考えると
+\begin{align*}
+\left\|
+ \begin{bmatrix}
+  \bar{\phi}_\mathrm{y} \\
+  \bar{\phi}_\mathrm{z}
+ \end{bmatrix}
+\right\|
+ + |\psi| &\le \mu \phi_\mathrm{x}, \\
+\end{align*}
+となり，$\pi r^2$をかけて整理すると
+\begin{align*}
+|\pi r^2 \psi| &\le \mu f_\mathrm{x} - \left\| \begin{bmatrix} f_\mathrm{y} \\ f_\mathrm{z} \end{bmatrix} \right\|
+\end{align*}
+となる．
+上で求めた$n_\mathrm{x}$の式と合わせると結局
+\begin{align*}
+|n_\mathrm{x} - (c_\mathrm{y} f_\mathrm{z} - c_\mathrm{z} f_\mathrm{y})|
+ &\le \frac{2}{3}r \left( 
+ \mu f_\mathrm{x} - \left\| \begin{bmatrix} f_\mathrm{y} \\ f_\mathrm{z} \end{bmatrix} \right\|
+ \right)
+\end{align*}
+を得る．
+
+以上より一連の操作をまとめると
+\begin{enumerate}
+\item $f_\mathrm{x}$を射影
+\item $f_\mathrm{y}, f_\mathrm{z}$を射影
+\item $n_\mathrm{y}, n_\mathrm{z}, f_\mathrm{x}$から$r_\mathrm{y}, r_\mathrm{z}$を計算
+\item $r_\mathrm{y}, r_\mathrm{z}$を接触多角形内に射影
+\item 射影した$r_\mathrm{y}, r_\mathrm{z}$から$n_\mathrm{y}, n_\mathrm{z}$を逆算
+\item $n_\mathrm{x}$を射影
+\end{enumerate}
+となる．
+
+\end{document}

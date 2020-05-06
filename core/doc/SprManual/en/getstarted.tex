@@ -1,0 +1,214 @@
+Thie section explains how to download and use Springhead.
+
+\section{Download}
+You can download zip archive from the Springhead web site: \url{http://springhead.info/wiki/}.
+The update of the archive is not always often and you can't get new code from the archive.
+If you need latest code, please get code from subversion repository.
+
+\section{Getting source code using subversion}
+Springhead uses subversion for version control.
+The repository of springhead is placed on
+\begin{align*}
+\text{\url{http://springhead.info/spr2/Springhead2/trunk}}
+\end{align*}
+Every one can download from repository. 
+On the other hand, you need to be resigered as a developer if you want to commit your code.
+%Subversionによるコードの入手方法については\url{http://springhead.info/wiki/}にて解説されていますのでそちらを参照して下さい．
+
+\section{Development environment}
+
+Springheadは処理系非依存の思想のもとで開発されています．
+このため，原理的にはWindows, Max, Unixなどの多くの処理系で動作するはずです．
+しかしながら，ほとんどの開発メンバーがWindows上のVisual Studioを用いて開発を行っているため，それ以外の環境で問題無く動作する保証は残念ながらありません（多分動かないでしょう）．
+したがって，現状ではユーザーにもWindows + Visual Studioという環境での使用を推奨します．
+WindowsやVisual Studioのバージョンについては，Windows XP/Vista/7, Visual Studio 2008/2010では問題なく動作します．
+
+\section{Building Library}
+
+Springheadを入手したら，まずライブラリをビルドします．
+以下では，Springheadを保存したディレクトリを\path{C:\Springhead2}と仮定して話を進めます．
+まず，Visual Studioで以下のソリューションファイルを開いて下さい．
+\begin{align*}
+\text{\path{C:\Springhead2\src\Springhead**.sln}}
+\end{align*}
+ここで\url{**}にはVisual Studioのバーション番号は入ります．Visual Studio 2010なら\url{Springhead10.sln}，Visual Studio 2008なら\url{Springhead9.sln}を開いて下さい．
+その他のソリューションファイル，プロジェクトファイルも同様の規則でナンバリングしてあります．
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/libbuild.eps}
+\end{center}
+\caption{Building the library}
+\label{fig_libbuild}
+\end{figure}
+ソリューションを開いたらFig.\,\ref{fig_libbuild}に示すように\url{Springhead}プロジェクトをビルドしてください．
+ビルドに成功したら\path{C:\Springhead2\lib\win32\}ディレクトリにライブラリファイル\url{Springhead**.lib}が作成されるはずです．
+
+\begin{table}[t]
+\caption{Build configurations}
+\label{table_solution_config}
+\begin{tabular}{lll}
+\toprule
+構成名				& ビルド設定					& 作成されるライブラリファイル名	\\ \midrule
+\url{Release}		& multithread					& \url{Springhead**.lib}			\\
+\url{Debug}			& multithread, Debug			& \url{Springhead**D.lib}			\\
+\url{ReleaseDLL}	& multithread, DLL				& \url{Springhead**M.lib}			\\
+\url{DebugDLL}		& multithread, Debug, DLL		& \url{Springhead**MD.lib}			\\ \bottomrule
+\end{tabular}
+\end{table}
+
+Table\,\ref{table_solution_config}ビルドの設定ごとに異なるいくつかの構成が用意されています．
+ユーザアプリケーションの都合に合わせて使い分けてください．
+
+\section{サンプルプログラムのビルド}
+
+サンプルプログラムをビルドするには
+\begin{align*}
+\text{\path{C:\Springhead2\src\Samples\All**.sln}}
+\end{align*}
+を開きます．
+ビルドしたいサンプルをスタートアッププロジェクトに設定し，ビルド，実行してください．
+各プロジェクトは\path{C:\Springhead2\lib\win32\Springhead**.lib}をリンクするように設定されていますので，
+サンプルをビルドする前にライブラリのビルドが済んでいなければなりません．
+
+残念なことですが，すべてのサンプルプログラムが問題なく動作する状態には維持されていません．
+\url{Physics/BoxStack}や\url{Physics/Joints}が比較的良くメンテナンスされていますので試してみてください．
+
+\section{アプリケーションの作成}
+\label{sec_create_application}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/newproject1.eps}
+\end{center}
+\caption{Create new project}
+\label{fig_newproject1}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/newproject2.eps}
+\end{center}
+\caption{Project configuration}
+\label{fig_newproject2}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/newproject3.eps}
+\end{center}
+\caption{Create source file}
+\label{fig_newproject3}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/newproject4.eps}
+\end{center}
+\caption{Add include path}
+\label{fig_newproject4}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/newproject5.eps}
+\end{center}
+\caption{Add library path}
+\label{fig_newproject5}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{c}
+\includegraphics[width=.6\hsize]{../fig/newproject6_truncate.eps} \\
+\includegraphics[width=.6\hsize]{../fig/newproject7_truncate.eps}
+\end{tabular}
+\end{center}
+\caption{Specify library file}
+\label{fig_newproject6}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.6\hsize]{../fig/newproject8.eps}
+\end{center}
+\caption{Program running}
+\label{fig_newproject8}
+\end{figure}
+
+Springheadを使って簡単なアプリケーションプログラムを作成する道筋を説明します．
+以下ではVisual Studio 2010を想定します．
+
+\subsection*{プロジェクトの作成}
+
+「Visual C++ Win32プロジェクト」を作成します．プロジェクト名は好きな名前を付けてください．アプリケーションの設定で「コンソールアプリケーション」を選び，空のプロジェクトをチェックします．
+
+プロジェクトを作成したらソースファイルを作成します．
+ここでは仮に\url{main.cpp}とします．
+
+\subsection*{ソースコードの編集}
+
+\begin{table}[t]
+\caption{Simplest program code}
+\label{table_simplest_code}
+{\small
+\begin{sourcecode}
+#include <Springhead.h>
+#include <Framework/SprFWApp.h>
+using namespace Spr;
+
+class MyApp : public FWApp{
+public:
+    virtual void Init(int argc = 0, char* argv[] = 0){
+        FWApp::Init(argc, argv);
+
+        PHSdkIf* phSdk = GetSdk()->GetPHSdk();
+        PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+        CDBoxDesc bd;
+        
+        // 床を作成
+        PHSolidIf* floor = phscene->CreateSolid();
+        floor->SetDynamical(false);
+        bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
+        floor->AddShape(phSdk->CreateShape(bd));
+        floor->SetFramePosition(Vec3d(0, -1.0, 0));
+    
+        // 箱を作成
+        PHSolidIf* box = phscene->CreateSolid();
+        bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
+        box->AddShape(phSdk->CreateShape(bd));
+        box->SetFramePosition(Vec3d(0.0, 1.0, 0.0));
+
+        GetSdk()->SetDebugMode(true);
+    }
+} app;
+
+int main(int argc, char* argv[]){
+    app.Init(argc, argv);
+    app.StartMainLoop();
+    return 0;
+}
+\end{sourcecode}
+}
+\end{table}
+
+作成した\url{main.cpp}にTable\,\ref{table_simplest_code}に示すコードを書き込んでください．これがSpringheadを使用した（ほぼ）最小のプログラムコードです．
+
+\section*{プロジェクト設定}
+
+ビルドするまえにいくつかのプロジェクト設定が必要です．
+まずプロジェクトのプロパティページを開き，構成を「すべての構成」としてください．
+次に「C/C++ > 全般 > 追加のインクルードディレクトリ」に，Fig.\,\ref{fig_newproject4}のようにSpringheadのインクルードファイルへのパスを指定してください．
+さらに，「リンカー > 全般 > 追加のライブラリディレクトリ」にFig.\,\ref{fig_newproject5}のようにSpringheadのライブラリファイルへのパスを指定します．
+
+今度は構成を「Debug」にします．
+「C/C++ > コード生成 > ランタイムライブラリ」を「マルチスレッド デバッグ(/MTd)」にします．
+次に「リンカー > 入力 > 追加の依存ファイル」に\url{Springhead10D.lib}を追加してください．
+
+最後に構成を「Release」に切り替えて同様の設定をします．
+ランタイムライブラリを「マルチスレッド(/MT)」として，追加の依存ファイルに\url{Springhead10.lib}を追加します．
+
+\section*{ビルド・実行}
+
+以上で準備完了です．ビルド(F7)して，実行(F5)してみてください．
+Fig.\,\ref{fig_newproject8}のような画面が出てくれば成功です．
