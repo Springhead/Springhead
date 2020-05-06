@@ -43,12 +43,28 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	int NVertices();
 	int NFaces();
 	int NTets();
+	void SetVertexUpdateFlags(bool flg);
+	void SetVertexUpateFlag(int vid, bool flg);
 	double CompTetVolume(int tetID, bool bDeform);
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
 	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
 	bool SetVertexPositionW(int vtxId, Vec3d posW);
 	bool SetVertexPositionL(int vtxId, Vec3d posL);
-	unsigned GetnSurfaceFace();
+	bool SetVertexVelocityL(int vtxId, Vec3d posL);
+	Vec3d GetVertexVelocityL(int vtxId);
+	Vec3d GetVertexPositionL(int vtxId);
+	Vec3d GetVertexDisplacementL(int vtxId);
+	Vec3d GetVertexInitalPositionL(int vtxId);
+	void SetVelocity(Vec3d v);
+	int* GetTetVertexIds(int t);
+	int* GetFaceVertexIds(int f);
+	Vec3d GetFaceNormal(int f);
+	int GetSurfaceVertex(int i);
+	int NSurfaceVertices();
+	int NSurfaceFace();
+	bool CompTetShapeFunctionValue(const int& tetId, const Vec3d& posL, Vec4d& value, const bool& bDeform);
+	/// 面から四面体を探す
+	int FindTetFromFace(int faceId);
 };
 
 /// Femのデスクリプタ
@@ -56,6 +72,7 @@ struct PHFemBaseDesc{};
 /// Femの共通計算部分
 struct PHFemBaseIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemBase);
+	PHFemMeshNewIf* GetPHFemMesh();
 };
 
 /// 振動計算のデスクリプタ
@@ -101,9 +118,17 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
 	void DeleteBoundaryCondition();
+	bool FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW, bool bDeform);
+	bool SetDamping(int tetId, Vec3d posW, double damp_ratio);
+	// 力を加える
+	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
+	// 形状関数を使って任意の点の変位を取得する
+	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform);
+	// 形状関数を使って任意の点の速度を取得する
+	bool GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform);
+	// 形状関数を使って任意の点の位置(変化後)を取得する
+	bool GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform);
 #ifndef SWIG
-
-
 	// 境界条件を加える(頂点順）Add the voudnary conditions (vertex order)
 	bool AddBoundaryCondition(std::vector< Vec3i >& bcs); 
 	// 頂点に力を加える（ワールド座標系）  Applying force to the vertex (world coordinate system)

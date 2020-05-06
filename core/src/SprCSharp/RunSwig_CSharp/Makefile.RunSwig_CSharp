@@ -9,6 +9,8 @@
 #	Ver1.0  2015/07/23	F.Kanehori  初版
 #	Ver2.0  2016/12/07	F.Kanehori  ターゲット指定実装
 #	Ver3.0  2017/04/27	F.Kanehori  NameManager対応
+#					    Python executable directory moved
+#	Ver3.1  2017/08/28	F.Kanehori  Bug fixed.
 # ------------------------------------------------------------------------------
 DEBUG = 1
 
@@ -21,21 +23,20 @@ PLATFORM = win64
 TARGET	= ALL
 !ENDIF
 
-PROJDIR	= ..\..\..
-BINDIR	= $(PROJDIR)\bin\swig
-DLLDIR	= $(PROJDIR)\bin\$(PLATFORM)
-TOPDIR	= $(PROJDIR)\src\SprCSharp
+SPRTOP	= ..\..\..\..
+COREDIR	= $(SPRTOP)\core
+BINDIR	= $(COREDIR)\bin\swig
+DLLDIR	= $(COREDIR)\bin\$(PLATFORM)
+TOPDIR	= $(COREDIR)\src\SprCSharp
 MAKEDIR	= $(PROJECTDIR)
 EXPSRCDIR	= $(TOPDIR)\SprExport
 IMPSRCDIR	= $(TOPDIR)\SprImport
 CSSRCDIR	= $(TOPDIR)\SprCSharp
 IFILEDIR	= $(TOPDIR)
 
-PYTHON_VERSION	= 34
-PYTHONDIR	= $(PROJDIR)\bin\Python$(PYTHON_VERSION)
-PYTHON		= $(PYTHONDIR)\python
-PYTHONDLLDIR	= $(PROJDIR)\bin\win64
-NAMEMGRDIR	= $(PROJDIR)\src\SprCSharp\NameManager
+PYTHONADAPTER	= $(COREDIR)\src\RunSwig\python_adapter.bat
+PYTHON		= $(PYTHONADAPTER) -SprTop $(SPRTOP)
+NAMEMGRDIR	= $(COREDIR)\src\SprCSharp\NameManager
 NAMEMGR		= $(NAMEMGRDIR)\NameManager.bat
 
 !MESSAGE Makefile.RunSwig_CSharp
@@ -51,6 +52,7 @@ NAMEMGR		= $(NAMEMGRDIR)\NameManager.bat
 !MESSAGE    CSSRCDIR:   [$(CSSRCDIR)]
 !MESSAGE    IFILEDIR:   [$(IFILEDIR)]
 !MESSAGE    NAMEMGR:    [$(NAMEMGR)]
+!MESSAGE    PYTHON:     [$(PYTHON)]
 
 RUNSWIG 	= $(MAKEDIR)\RunSwig_CSharp.bat
 NAMEMGR_SCRIPT	= $(PYTHON) $(NAMEMGRDIR)\NameManager.py
@@ -102,7 +104,7 @@ all:	$(NAMEMGR) dlls
 
 $(NAMEMGR):	
 	$(NAMEMGR_SCRIPT) -i $(NAMEMGR_INI) -o $(NAMEMGR)
-	
+
 dlls:	$(DLLDIR)\SprExport.dll	\
 	$(DLLDIR)\SprImport.dll	\
 	$(DLLDIR)\SprCSharp.dll

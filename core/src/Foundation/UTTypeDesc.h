@@ -10,6 +10,7 @@
 
 #include <Base/BaseUtility.h>
 #include <Base/BaseTypeInfo.h>
+#include <Foundation/SprObject.h>
 #include <Foundation/Object.h>
 #include <set>
 #include <map>
@@ -58,81 +59,15 @@ namespace Spr{;
 	UTTypeDescのオブジェクトを作るためのソースはヘッダファイルを typedesc.exe が
 	パースして自動生成する．*/
 
-///	対象の型にアクセスするためのクラス
-class UTAccessBase:public UTRefCount{
-public:
-	virtual ~UTAccessBase(){}
-	///	オブジェクトの構築
-	virtual void* Create()=0;
-	///	オブジェクトの破棄
-	virtual void Delete(void* ptr)=0;
-	///	vector<T>::push_back(); return &back();
-	virtual void* VectorPush(void* v)=0;
-	///	vector<T>::pop_back();
-	virtual void VectorPop(void* v)=0;
-	///	vector<T>::at(pos);
-	virtual void* VectorAt(void* v, int pos)=0;
-	///	vector<T>::size();
-	virtual size_t VectorSize(const void* v)=0;
-	///
-	virtual size_t SizeOfVector()=0;
-};
-template <class T>
-class UTAccess:public UTAccessBase{
-	virtual void* Create(){ return DBG_NEW T; }
-	virtual void Delete(void* ptr){delete (T*)ptr; }
-#if defined _MSC_VER
-# pragma warning (push)
-# pragma warning (disable : 4172)
-#endif
-	virtual void* VectorPush(void* v){
-		((std::vector<T>*)v)->push_back(T());
-#ifdef	_WIN32
-		return &((std::vector<T>*)v)->back();
-#else
-		T tmp = ((std::vector<T>*)v)->back();
-		T* ptmp = &tmp;
-		return ptmp;
-#endif
-	}
-#if defined _MSC_VER
-# pragma warning (pop)
-#endif
-	virtual void VectorPop(void* v){
-		((std::vector<T>*)v)->pop_back();
-	}
-#if defined _MSC_VER
-# pragma warning (push)
-# pragma warning (disable : 4172)
-#endif
-	virtual void* VectorAt(void* v, int pos) {
-#ifdef	_WIN32
-		return &((std::vector<T>*)v)->at(pos);
-#else
-		T tmp = ((std::vector<T>*)v)->at(pos);
-		T* ptmp = &tmp;
-		return ptmp;
-#endif
-	}
-#if defined _MSC_VER
-# pragma warning (pop)
-#endif
-	size_t VectorSize(const void* v){
-		return ((const std::vector<T>*)v)->size();
-	}
-	virtual size_t SizeOfVector(){
-		return sizeof(std::vector<T>);
-	}
-};
-
 class UTTypeDescDb;
 
-///	型を表す
+
+///	型宣言文に対応する
 class SPR_DLL UTTypeDesc:public Object{
 public:
 	SPR_OBJECTDEF(UTTypeDesc);
 	enum { BIGVALUE= 0x40000000 };
-	///	レコードのフィールドを表す
+	///	構造体等のレコードのフィールドを表す
 	class SPR_DLL Field{
 	public:
 		typedef std::vector<std::pair<std::string, int> > Enums;
@@ -158,7 +93,6 @@ public:
 		~Field();
 		///	データのサイズ
 		size_t GetSize();
-		///
 		void Print(std::ostream& os) const;
 		///
 		void AddEnumConst(std::string name, int val);
@@ -240,16 +174,31 @@ public:
 	virtual ~UTTypeDesc(){}
 	///
 	void Print(std::ostream& os) const;
+	///
+	void SetIfInfo(const IfInfo* info);
 	///	型名
 	std::string GetTypeName() const { return typeName; }
 	///	型名
 	void SetTypeName(const char* s) { typeName = s; }
 	///	型のサイズ
 	size_t GetSize() { return size; }
+	///	型のサイズ
+	void SetSize(size_t sz) { size = sz; }
 	///	フィールドの追加
-	Field* AddField(std::string pre, std::string ty, std::string n, std::string post);
+	int AddField(std::string pre, std::string ty, std::string n, std::string post);
 	///	baseの追加
-	Field* AddBase(std::string tn);
+	int AddBase(std::string tn);
+	///	アクセサーの設定
+	void SetAccess(Spr::UTAccessBase* a) {
+		access = a;
+	}
+	///	フィールドのオフセットの設定
+	void SetOffset(int field, int offset) {
+		composit[field].offset = offset;
+	}
+	void AddEnumConst(int field, std::string name, int val){
+		composit[field].AddEnumConst(name, val);
+	}
 
 	///	組み立て型かどうか
 	bool IsPrimitive(){ return bPrimitive; }
@@ -262,7 +211,7 @@ public:
 	///	組み立て型のフィールドの数
 	int NFields() { return (int)composit.size(); }
 	///	フィールドのTypeDesc
-	UTTypeDesc* GetFieldType(int i) { return composit[i].type; }
+	UTTypeDescIf* GetFieldType(int i) { return composit[i].type->Cast(); }
 	///	Fieldが配列の場合の配列の長さを返す
 	int GetFieldLength(int i) { return composit[i].length; }
 	///	Fieldのvector場合のvectorの長さを返す
@@ -411,9 +360,11 @@ protected:
 };
 
 ///	型のデータベース
-class SPR_DLL UTTypeDescDb: public UTRefCount{
+
+class SPR_DLL UTTypeDescDb: public Object {
 	std::set<UTString, UTStringLess> addedGroups;
 public:
+	SPR_OBJECTDEF(UTTypeDescDb);
 	///	コンテナの型
 	typedef std::set< UTRef<UTTypeDesc>, UTContentsLess< UTRef<UTTypeDesc> > > Db;
 protected:
@@ -425,7 +376,11 @@ public:
 	///	
 	~UTTypeDescDb();
 	/**	型情報をデータベースに登録．	*/
-	void RegisterDesc(UTTypeDesc* n){
+	void RegisterDesc(UTTypeDescIf* t) {
+		UTTypeDesc* n = t->Cast();
+		RegisterDesc(n);
+	}
+	void RegisterDesc(UTTypeDesc* n) {
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
 			n->typeName = n->typeName.substr(prefix.length());
 		}
@@ -433,22 +388,22 @@ public:
 	}
 	/**	型名のAliasを登録	*/
 	void RegisterAlias(const char* src, const char* dest){
-		UTTypeDesc* srcDesc = Find(src);
+		UTTypeDesc* srcDesc = (UTTypeDesc*)Find(src);
 		assert(srcDesc);
 		UTTypeDesc* destDesc =DBG_NEW UTTypeDesc(*srcDesc);
 		destDesc->typeName = dest;
 		RegisterDesc(destDesc);
 	}
-	/**	型情報をプロトタイプリストに登録	*/
-	void RegisterProto(UTTypeDesc* n);
 	/**	型名のPrefix を設定．
 		型名をFindで検索する際に，検索キーにPrefixをつけたキーでも型名を検索する．	*/
 	void SetPrefix(std::string p);
 	/**	型情報を名前から検索する．
 		@param tn	型名．prefix は省略してよい．	*/
-	UTTypeDesc* Find(std::string tn);
+	UTTypeDescIf* Find(std::string tn);
 	///	DB内の型情報を、引数dbにリンク．
-	void Link(UTTypeDescDb* db=NULL);
+	void Link(UTTypeDescDbIf* db=NULL);
+	///	Pool内ののすべてのグループを使ってリンク
+	void LinkAll();
 	///	リンクの確認
 	bool LinkCheck();
 	///	DB内の型情報の表示
@@ -480,7 +435,7 @@ protected:
 	static UTRef<UTTypeDescDbPool> pool;
 public:
 	static UTTypeDescDbPool* SPR_CDECL GetPool();
-	static UTTypeDescDb* SPR_CDECL Get(std::string gp);
+	static UTTypeDescDbIf* SPR_CDECL Get(std::string gp);
 	static void SPR_CDECL Print(std::ostream& os);
 };
 

@@ -7,9 +7,9 @@
  */
 
 #include "PHOpDemo.h"
-#include "Physics\PHOpObj.h"
-#include "Framework\FWOpObj.h"
-#include "Physics\PHOpEngine.h"
+#include "Physics/PHOpObj.h"
+#include "Framework/FWOpObj.h"
+#include "Physics/PHOpEngine.h"
 
 #define USE_SPRFILE
 #define ESC 27

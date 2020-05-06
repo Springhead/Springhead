@@ -8,6 +8,7 @@
 #ifndef CDDETECTORIMP_H
 #define CDDETECTORIMP_H
 
+#include <SprCollision.h>
 #include "CDQuickHull3DImp.h"
 #include "CDConvex.h"
 
@@ -20,14 +21,7 @@ class CDFace;
 class CDConvex;
 struct PHSdkIf;
 
-/// Shapeの組の状態
-struct CDShapePairSt{
-	Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
-	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
-	unsigned lastContactCount;	///<	最後に接触した時刻
-	CDShapePairSt():depth(0), lastContactCount((unsigned)-2){}
-};
-class CDShapePair: public CDShapePairSt, public Object{
+class CDShapePair: public CDShapePairState, public Object{
 	SPR_OBJECTDEF(CDShapePair);
 public:
 	enum State{		//	接触があった場合だけ値が有効なフラグ。接触の有無は lastContactCountとscene.countを比較しないと分からない。
@@ -47,8 +41,8 @@ public:
 
 public:
 	CDShapePair():state(NONE){}
-	void SetState(const CDShapePairSt& s){
-		(CDShapePairSt&)*this = s;
+	void SetState(const CDShapePairState& s){
+		(CDShapePairState&)*this = s;
 	}
 	///	接触判定．接触が見つかった場合に接触状態を更新
 	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
@@ -67,6 +61,10 @@ public:
 	CDShapeIf* GetShape(int i){ return shape[i]->Cast(); }
 	/// closestpointをワールド座標系で取得する
 	Vec3d GetClosestPointOnWorld(int i){ return shapePoseW[i] * closestPoint[i]; }
+	///	shapePoseの取得
+	Posed GetShapePose(int i) { return shapePoseW[i]; }
+	///	接触法線の取得
+	Vec3d GetNormal() { return normal; }
 };
 
 ///	BBox同士の交差判定．交差していれば true．
@@ -97,6 +95,17 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end, 
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+
+//加速版（box等頂点の少ない形状に使うと遅いので注意）//2017/12追加 保坂
+int FASTCALL ContFindCommonPointAccel(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+
+//Ginoのアルゴリズム(GJK-Raycast) //2017/12追加　保坂
+int FASTCALL ContFindCommonPointGino(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+
 
 ///	デバッグ用のツール。ファイルに引数を保存する。
 void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
@@ -228,6 +237,110 @@ public:
 	/**	法線の計算．前回の法線の向きに物体を動かし，
 		物体を離して最近傍点を求める．	*/
 	void CalcNormal(CDShapePair* cp);
+};
+
+//EPA用の三角面構造体
+const double sikii = 1e-9;
+struct EPATri {
+	Vec3d vert[3];
+	Vec3d normal;
+	double distance;
+	Vec3f aidx[3];
+	Vec3f bidx[3];
+	bool swapidx = false;
+	EPATri::EPATri() {
+		distance = 100000;
+	}
+
+	EPATri::EPATri(Vec3d p1, Vec3d p2, Vec3d p3, double dist) {
+		vert[0] = p1;
+		vert[1] = p2;
+		vert[2] = p3;
+		distance = dist;
+		Vec3d v1 = p1 - p2;
+		Vec3d v2 = p2 - p3;
+		normal = v1 % v2;
+		if (normal.square() < sikii) {
+			distance = 1000000;
+			return;
+		}
+		if (normal*p1 < 0) normal *= -1;
+		normal.unitize();
+
+	}
+	EPATri::EPATri(Vec3d p1, Vec3d p2, Vec3d p3, Vec3d origin) {
+		vert[0] = p1;
+		vert[1] = p2;
+		vert[2] = p3;
+		Vec3d v1 = p1 - p2;
+		Vec3d v2 = p2 - p3;
+		normal = v1 % v2;
+		if (normal.square() < sikii) {
+			distance = 1000000;
+			return;
+		}
+		normal.unitize();
+		if (normal*(p1 - origin) < 0) {
+			normal *= -1;
+			vert[0] = p3;
+			vert[2] = p1;
+			swapidx = true;
+		}
+		distance = abs(normal*p2);
+		if (distance <= 0) distance = sikii;
+	}
+	bool operator < (const EPATri right) {
+		return distance < right.distance;
+	}
+
+	void EPATri::SetIdx(Vec3f i_a1, Vec3f i_a2, Vec3f i_a3, Vec3f i_b1, Vec3f i_b2, Vec3f i_b3) {
+		if (swapidx) {
+			aidx[0] = i_a3;
+			aidx[1] = i_a2;
+			aidx[2] = i_a1;
+			bidx[0] = i_b3;
+			bidx[1] = i_b2;
+			bidx[2] = i_b1;
+		}
+		else {
+			aidx[0] = i_a1;
+			aidx[1] = i_a2;
+			aidx[2] = i_a3;
+			bidx[0] = i_b1;
+			bidx[1] = i_b2;
+			bidx[2] = i_b3;
+		}
+	}
+};
+
+//辺の構造体
+struct EPAEdge {
+	Vec3d vert[2];
+	Vec3d aidx[2];
+	Vec3d bidx[2];
+	Vec3d vector;
+	EPAEdge::EPAEdge() {
+	}
+	EPAEdge::EPAEdge(Vec3d p1, Vec3d p2, Vec3d a1, Vec3d a2, Vec3d b1, Vec3d b2) {
+		vert[0] = p1;
+		vert[1] = p2;
+		aidx[0] = a1;
+		aidx[1] = a2;
+		bidx[0] = b1;
+		bidx[1] = b2;
+		vector = p1 - p2;
+	}
+
+	bool operator==(const EPAEdge e1) {
+
+		if ((vert[0] - e1.vert[0]).square() < sikii && (vert[1] - e1.vert[1]).square() < sikii) {
+			return true;
+		}
+		else if ((vert[0] - e1.vert[1]).square() < sikii && (vert[1] - e1.vert[0]).square() < sikii) {
+			return true;
+		}
+		else return false;
+	}
 };
 
 }

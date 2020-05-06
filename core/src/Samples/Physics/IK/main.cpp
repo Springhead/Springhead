@@ -624,7 +624,7 @@ public:
 #if _MSC_VER <= 1500
 #include <GL/glut.h>
 #endif
-int __cdecl main(int argc, char *argv[]) {
+int SPR_CDECL main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;

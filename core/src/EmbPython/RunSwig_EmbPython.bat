@@ -13,6 +13,7 @@
 ::  Version:
 ::	Ver 1.0  2014/10/29 F.Kanehori  初版
 ::	Ver 1.1  2017/06/15 F.Kanehori  依存リストに ".i" ファイルを追加
+::	Ver 2.0  2017/10/04 F.Kanehori  Visual Studio 2015 対応
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -59,8 +60,7 @@ set ARCH=
 if exist "%X32%" set ARCH=%X32%
 if exist "%X64%" set ARCH=%X64%
 set VSVER=
-if exist "%ARCH%\Microsoft Visual Studio 10.0" set VSVER=10.0
-if exist "%ARCH%\Microsoft Visual Studio 12.0" set VSVER=12.0
+if exist "%ARCH%\Microsoft Visual Studio 14.0" set VSVER=14.0
 set MAKEPATH="%ARCH%\Microsoft Visual Studio %VSVER%\VC\bin"
 if not exist %MAKEPATH% (
     echo %PROG%: can not find '%MAKE%' path.

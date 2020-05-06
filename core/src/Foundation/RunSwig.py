@@ -14,9 +14,14 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
-#	Ver 1.0a 2017/06/29 F.Kanehori	Add messages.
+#	Ver 1.01 2017/06/29 F.Kanehori	Add messages.
+#	Ver 1.1  2017/07/27 F.Kanehori	Python executable directory moved.
+#	Ver 1.2  2017/09/06 F.Kanehori	New python library に対応.
+#	Ver 1.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
+#	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
+#	Ver 1.5  2017/11/29 F.Kanehori	Python library path の変更.
 # ==============================================================================
-version = 1.0
+version = 1.4
 
 import sys
 import os
@@ -25,53 +30,41 @@ import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
-#
-cwd = os.getcwd().split(os.sep)[::-1]
-for n in range(len(cwd)):
-	if cwd[n] != 'src': continue
-	spr2 = '/'.join(cwd[::-1][0:len(cwd)-n-1])
-	break
-libdir = '%s/bin/test' % spr2
-sys.path.append('/usr/local/lib')
-sys.path.append(libdir)
-from TextFio import *
-from Util import *
-from Error import *
-
-# ----------------------------------------------------------------------
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-python_version = 34
 
 # ----------------------------------------------------------------------
-#  Globals
+#  Import Springhead2 python library.
 #
-U = Util()
-E = Error(prog)
-unix = U.is_unix()
+sys.path.append('../RunSwig')
+from FindSprPath import *
+spr_path = FindSprPath(prog)
+libdir = spr_path.abspath('pythonlib')
+sys.path.append(libdir)
+from TextFio import *
+from Error import *
+from Util import *
+from Proc import *
+
+# ----------------------------------------------------------------------
+#  Globals (part 1)
+#
+util = Util()
+error = Error(prog)
+unix = util.is_unix()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
-spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
-incdir = '%s/%s' % (spr2top, 'include')
-srcdir = '%s/%s' % (spr2top, 'src')
-bindir = '%s/%s' % (spr2top, 'bin')
+sprtop = spr_path.abspath()
+bindir = spr_path.abspath('bin')
+incdir = spr_path.abspath('inc')
+srcdir = spr_path.abspath('src')
 swigdir = '%s/%s' % (bindir, 'swig')
-pythondir = '%s/Python%s' % (bindir, python_version)
 
-incdir_rel = U.pathconv(os.path.relpath(incdir), 'unix')
-srcdir_rel = U.pathconv(os.path.relpath(srcdir), 'unix')
-
-# ----------------------------------------------------------------------
-#  Scripts
-#
-pythonexe = 'python%s' % (python_version if unix else '')
-python = '%s/%s' % (pythondir, pythonexe)
-make = 'make' if unix else 'nmake'
-swig = 'swig'
+incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
+srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 
 # ----------------------------------------------------------------------
 #  Paths
@@ -88,6 +81,9 @@ parser = OptionParser(usage = usage)
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
+parser.add_option('-P', '--python',
+                        dest='python', action='store', default='python',
+                        help='python command name')
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -112,6 +108,19 @@ verbose	= options.verbose
 dry_run	= options.dry_run
 
 # ----------------------------------------------------------------------
+#  Scripts
+#
+if options.python:
+	python = options.python
+make = 'make' if unix else 'nmake'
+swig = 'swig'
+
+# ----------------------------------------------------------------------
+#  Globals (part 2)
+#
+proc = Proc(dry_run=dry_run)
+
+# ----------------------------------------------------------------------
 #  Files
 #
 interfacefile = '%s.i' % module
@@ -123,8 +132,8 @@ stubfile = '%s/%s/%sStub.cpp' % (srcdir, module, module)
 #
 incf_names = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
 srcf_names = ['Foundation/UTTypeDesc.h']
-auxdep_inc = list(map(lambda x: '%s/%s' % (incdir, x), incf_names))
-auxdep_src = list(map(lambda x: '%s/%s' % (srcdir, x), srcf_names))
+auxdep_inc = list(map(lambda x: '%s/%s' % (incdir_rel, x), incf_names))
+auxdep_src = list(map(lambda x: '%s/%s' % (srcdir_rel, x), srcf_names))
 auxdep = copy.deepcopy(auxdep_inc)
 auxdep.extend(auxdep_src)
 
@@ -137,10 +146,10 @@ for target in target_list:
 	srcimp.extend(glob.glob('%s/%s/*.h' % (srcdir_rel, target)))
 	srcinfdep.extend(glob.glob('%s/%s/*.h' % (incdir_rel, target)))
 	srcimpdep.extend(glob.glob('%s/%s/*.h' % (srcdir_rel, target)))
-srcinf = U.pathconv(srcinf, 'unix')
-srcimp = U.pathconv(srcimp, 'unix')
-srcinfdep = U.pathconv(srcinfdep, 'unix')
-srcimpdep = U.pathconv(srcimpdep, 'unix')
+srcinf = util.pathconv(srcinf, 'unix')
+srcimp = util.pathconv(srcimp, 'unix')
+srcinfdep = util.pathconv(srcinfdep, 'unix')
+srcimpdep = util.pathconv(srcimpdep, 'unix')
 if verbose:
 	print('srcinf: %s' % srcinf)
 	print('srcimp: %s' % srcimp)
@@ -170,13 +179,13 @@ def output(fname, lines):
 			print('  %s' % line)
 	fobj = TextFio(fname, 'w', encoding='utf8')
 	if fobj.open() < 0:
-		E.print(fobj.error())
+		error.print(fobj.error(), exitcode=0)
 	if fobj.writelines(lines, '\n') < 0:
-		E.print(fobj.error())
+		error.print(fobj.error(), exitcode=0)
 	fobj.close()
 #
 path = '%s/%s' % (os.getcwd(), interfacefile)
-print('    *** %s: creating "%s"' % (prog, U.pathconv(path, 'unix')))
+print('    *** %s: creating "%s"' % (prog, util.pathconv(path, 'unix')))
 output(interfacefile, lines)
 
 # ----------------------------------------------------------------------
@@ -196,18 +205,19 @@ line += ' -DSWIG_%s -c++ %s' % (module, interfacefile)
 lines.append(line)
 #
 path = '%s/%s' % (os.getcwd(), makefile)
-print('    *** %s: creating "%s"' % (prog, U.pathconv(path, 'unix')))
-lines = U.pathconv(lines)
+print('    *** %s: creating "%s"' % (prog, util.pathconv(path, 'unix')))
+lines = util.pathconv(lines)
 output(makefile, lines)
 
 # ----------------------------------------------------------------------
 #  make を実行する.
 #
-cmd = '%s -f %s' % (make, U.pathconv(makefile))
-print('    *** %s: execute %s' % (prog, cmd))
-status = U.exec(cmd, addpath=addpath, shell=True, dry_run=dry_run)
+cmd = '%s -f %s' % (make, util.pathconv(makefile))
+proc.exec(cmd, addpath=addpath, shell=True)
+status = proc.wait()
 if status != 0:
-	E.print('%s failed (%d)' % (make, status))
+	msg = '%s failed (%d)' % (make, status)
+	error.print(msg, exitcode=0)
 
 sys.exit(0)
 

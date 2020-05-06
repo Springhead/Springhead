@@ -25,6 +25,9 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 %ignore Spr::DebugCSV;
 %ignore Spr::UTTimerIf::GetCallback;
 %ignore Spr::UTTimerIf::SetCallback;
+%ignore Spr::UTAccessBase;
+%ignore Spr::UTTypeDescIf::SetAccess;
+%ignore Spr::UTTypeDescIf::Create;
 %extend Spr::UTTimerIf{
 	PyObject* SetCallback(PyObject* arg){
 		ret_tmp = Py_None;

@@ -281,7 +281,7 @@ bool PHContactDetector::GetState(void* s) const {
 	es->nSolidPair = (size_t)NSolidPairs();
 	es->nShapePair = (size_t)NShapePairs();
 	PHSolidPairSt* solidStates = es->SolidStates();
-	CDShapePairSt* shapeStates = es->ShapeStates();
+	CDShapePairState* shapeStates = es->ShapeStates();
 	//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
 	int solidPos = 0;
 	int shapePos = 0;
@@ -311,7 +311,7 @@ void PHContactDetector::SetState(const void* s){
 	assert(es->nSolidPair == (size_t)NSolidPairs());
 	assert(es->nShapePair == (size_t)NShapePairs());
 	PHSolidPairSt* solidStates = es->SolidStates();
-	CDShapePairSt* shapeStates = es->ShapeStates();
+	CDShapePairState* shapeStates = es->ShapeStates();
 	//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
 	int solidPos = 0;
 	int shapePos = 0;

@@ -24,8 +24,14 @@ Springhead2/src/Samples/PHSceneState
 #include <map>
 #include <string.h>
 #include <vector>
-#include <Windows.h>
 #include "Physics/PHContactDetector.h"
+
+#ifdef _WIN32
+# include <windows.h>
+#else
+# include <unistd.h>
+# define Sleep(X) usleep(1000*X)
+#endif
 
 #pragma hdrstop
 using namespace Spr;
@@ -325,7 +331,7 @@ MyApp app;
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char *argv[]) {
+int SPR_CDECL main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;

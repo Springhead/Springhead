@@ -1,14 +1,31 @@
 # dailybuild.control
 
 #Exclude
+Descend
 #SolutionAlias
-OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-UseClosedSrc	False
+
+Compile
+#Platform
+#Configuration
+UseClosedSrc	unuse
 #CppMacro	DAILYBUILD
-#DontBuild
-#DontRun
-Timeout		10
+CompileLog	Build.log
+CompileErrLog	BuildError.log
+
+Run
+OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+RunLog		Run.log
+RunErrLog	RunError.log
+Timeout		15
 ExpectedStatus	0
 #PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
 #NeedIntervention
 #KillProcess
+
+[dailybuild]
+Platform	x64
+Configuration	Release
+
+[all]
+Platform	x86,x64
+Configuration	Debug,Release,Trace

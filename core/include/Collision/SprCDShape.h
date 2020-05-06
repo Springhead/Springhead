@@ -131,14 +131,6 @@ struct CDShapeIf : public NamedObjectIf{
 	void     CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose = Posed());
 };
 
-///	形状ペアの基本クラス
-struct CDShapePairIf : public ObjectIf{
-	SPR_IFDEF(CDShapePair);
-
-	/// 形状を取得する
-	CDShapeIf* GetShape(int i);
-};
-
 ///	凸形状の基本クラス
 struct CDConvexIf : public CDShapeIf{
 	SPR_IFDEF(CDConvex);

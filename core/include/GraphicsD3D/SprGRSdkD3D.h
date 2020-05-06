@@ -36,7 +36,7 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 };
 
 /**	@brief	DirectXのデバッグ情報レンダラーの基本クラス */
-struct GRDebugRenderD3DIf:public GRDebugRenderIf{
+struct GRDebugRenderD3DIf:public GRRenderIf{
 	SPR_IFDEF(GRDebugRenderD3D);
 };
 

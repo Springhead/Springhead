@@ -13,5 +13,7 @@
 #define SPR_COLLISION_H
 
 #include "Collision/SprCDShape.h"
+#include "Collision/SprCDDetector.h"
+#include "Collision/SprCDSpHash.h"
 
 #endif

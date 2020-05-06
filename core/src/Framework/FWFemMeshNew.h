@@ -13,9 +13,6 @@
 #include "../Physics/PHFemMeshNew.h"
 #include "FrameworkDecl.hpp"
 
-#include <GL/glew.h>
-#include <GL/glut.h>
-
 namespace Spr{;
 
 class GRMesh;
@@ -27,9 +24,10 @@ class FWFemMeshNew: public FWObject{
 	SPR_OBJECTDEF(FWFemMeshNew);		
 	SPR_DECLMEMBEROF_FWFemMeshNewDesc;
 public:
-	UTRef< PHFemMeshNew > phFemMesh;	///< 物理計算用のメッシュ
+	//UTRef< PHFemMeshNew > phFemMesh;	///< 物理計算用のメッシュ
+	PHFemMeshNew*  phFemMesh;
 	UTRef< GRMesh > grFemMesh;			///< 描画用のメッシュ
-	std::vector<int> vertexIdMap;		///< grFemMeshからphFemMeshへの頂点の対応表
+	std::vector<int> vertexIdMap;		///< grFemMeshからphFemMeshへ
 	//char* meshRoughness;			///< tetgenで生成するメッシュの粗さ
 	bool drawflag;
 	std::vector<float> texmode1Map;

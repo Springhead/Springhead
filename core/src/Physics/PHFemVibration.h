@@ -156,7 +156,7 @@ public:
 	// 力を加える
 	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
 	// 振動を抑える
-	bool Damping(int tetId, Vec3d posW, double damp_ratio);
+	bool SetDamping(int tetId, Vec3d posW, double damp_ratio);
 	// 減衰係数の設定
 	bool SetDampingRatio();
 

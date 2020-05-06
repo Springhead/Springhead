@@ -127,7 +127,7 @@ void CRTouchSensor::Step() {
 						unsigned	lastContCnt	= solidPair->GetLastContactCount(s, t);
 
 
-						if (contactStat == 1 || (contactStat == 2 && (lastContCnt == sceneCnt-1))) {
+						if (contactStat == 1 || (contactStat == 2 && ((int)lastContCnt == sceneCnt-1))) {
 							totalForce += force;
 
 							double		depth			= solidPair->GetContactDepth(s, t);

@@ -22,14 +22,11 @@ public:
 	virtual void UpdateHapticPointer();
 	virtual void StepHapticLoop() {}
 	virtual void StepHapticSync() {}
-	PHHapticRender* GetHapticRender(){
-		return engine->hapticRender;
-	}
 	virtual int NSolidsInHaptic() { return NHapticSolids(); }
 	virtual int NPointersInHaptic() { return NHapticPointers(); }
 	virtual PHHapticPointer* GetPointerInHaptic(int i) { return GetHapticPointer(i); }
 	virtual PHSolidForHaptic* GetSolidInHaptic(int i) { return GetHapticSolid(i); }
-	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j) { return (PHSolidPairForHaptic*)engine->GetSolidPair(i, j); }
+	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j);
 
 	//デバック用コード
 	virtual void StepSimulation();

@@ -5,6 +5,10 @@
  */
 #define USE_FREEGLUT
 
+/* GLUI使用コードを有効化する
+ */
+#define USE_GLUI
+
 /** 使用するOpenGLのバージョン
 	同時にUSE_FREEGLUTを定義することが必要
  */

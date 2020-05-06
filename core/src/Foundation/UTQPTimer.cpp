@@ -8,7 +8,10 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-#pragma comment(lib, "winmm.lib")
+
+#ifdef _WIN32
+# pragma comment(lib, "winmm.lib")
+#endif
 
 #include "UTQPTimer.h"
 #include <Base/BaseDebug.h>
@@ -42,7 +45,7 @@ static void QueryPerformanceCounter(LARGE_INTEGER* c) {
 	gettimeofday(&tv, NULL);
 	c->QuadPart = (LONGLONG) (tv.tv_sec * 1000000) + tv.tv_usec;
 }
-extern unsigned int sleep(unsigned int);	// ??
+//extern unsigned int sleep(unsigned int);	// ??
 static int QueryPerformanceFrequency(LARGE_INTEGER* f) {
 	LARGE_INTEGER c1, c2;
 	unsigned int seconds = 1;

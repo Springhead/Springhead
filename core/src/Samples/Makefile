@@ -10,7 +10,7 @@
 
 TOP_DIR 		= ../..
 
-SAMPLES_DIR		= BoxStack Joints Reach Vehicles
+SAMPLES_DIR		= Physics Graphics
 
 all:
 	@for dir in $(SAMPLES_DIR); \

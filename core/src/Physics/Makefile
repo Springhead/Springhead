@@ -14,14 +14,15 @@ TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
 FILTEROUT	= \
-	PHUniversalJoint.h \
-	PHUniversalJoint.cpp
+		PHUniversalJoint.h \
+		PHUniversalJoint.cpp
 
 SRCS		= $(wildcard *.cpp)
 SRCS		:= $(filter-out $(FILTEROUT), $(SRCS))
 OBJS 		= ${SRCS:.cpp=.o}
 
-CXXFLAGS	= -std=gnu++11
+CXXFLAGS	:= $(CXXFLAGS) \
+		-std=gnu++11
 
 ################################################################
 #	build management

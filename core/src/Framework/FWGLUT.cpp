@@ -13,6 +13,7 @@
 #include <SprDefs.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+
 #include <Framework/SprFWApp.h>
 #include <Framework/FWGLUT.h>
 #include <Framework/FWSdk.h>
@@ -199,7 +200,7 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 		}
 	}
 	// このWindowのglewコンテキストの初期化
-	int rv = glewInit();
+	//int rv = glewInit();
 
 	// windowに関連するコールバックの設定
 	RegisterCallbacks();

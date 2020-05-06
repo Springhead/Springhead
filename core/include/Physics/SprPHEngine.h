@@ -214,11 +214,20 @@ public:
 	SPR_IFDEF(PHIKEngine);
 };
 
+struct PHFemMeshIf;
+struct PHFemMeshNewIf;
 struct PHFemEngineIf : PHEngineIf{
 public:
+	SPR_IFDEF(PHFemEngine);
 	void SetTimeStep(double dt);
 	double GetTimeStep();
-	SPR_IFDEF(PHFemEngine);
+	int NMesh();
+	PHFemMeshIf* GetMesh(int i);
+	int NMeshNew();
+	PHFemMeshNewIf* GetMeshNew(int i);
+	void FEMSolidMatchRefresh();  //Refreshing the solid->FEMindex values
+	void InitContacts();	 //Used to match the FEM objects with their solids counterparts
+	void ClearContactVectors();
 };
 struct PHOpEngineIf : PHEngineIf{
 	SPR_IFDEF(PHOpEngine);

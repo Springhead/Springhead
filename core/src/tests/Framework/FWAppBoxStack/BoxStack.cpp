@@ -31,8 +31,6 @@ void BoxStack::Init(int argc, char* argv[]){
 	phscene->SetGravity(gravity);				
 	phscene->SetTimeStep(dt);
 	phscene->SetNumIteration((int)nIter);
-
-
 }
 
 void BoxStack::Reset(){
@@ -104,18 +102,10 @@ void BoxStack::BuildScene(){
 }
 
 int exitCount = 0;
-void BoxStack::Step(){
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	if(bStep) phscene->Step();
-	else if (bOneStep){
-		phscene->Step();
-		bOneStep = false;
-	}
-	glutPostRedisplay();
-	exitCount ++;
-	if (exitCount > 60.0/dt) exit(0);
+void BoxStack::UserFunc() {
+	exitCount++;
+	if (exitCount > 60.0 / dt) exit(0);
 }
-
 void BoxStack::Keyboard(int key, int x, int y){
 	exitCount = 0;
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();

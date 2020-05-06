@@ -14,6 +14,8 @@
 %ignore Spr::ObjectIf::DumpObjectR;
 %ignore Spr::SdkIf::CreateSdk;
 
+%ignore Spr::UTTypeDescDbIf::PrintPool;
+
 %feature("struct") Spr::IfInfo;
 
 #ifdef  DESCRIPTION

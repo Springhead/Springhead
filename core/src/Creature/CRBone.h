@@ -107,7 +107,7 @@ public:
 		int pos = -1;
 		for (int n=0; n<4; ++n) {
 			if (objs[n]!=NULL) { pos++; }
-			if (pos==i) { return objs[n]; }
+			if (pos==(int)i) { return objs[n]; }
 		}
 		return NULL;
 	}

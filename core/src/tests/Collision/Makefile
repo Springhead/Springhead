@@ -10,7 +10,7 @@
 
 TOP_DIR 		= ../../..
 
-COLLISION_TEST_DIR	= ContGJK QuickHull2D
+COLLISION_TEST_DIR	= CDContGJK QuickHull2D
 
 all:
 	@for dir in $(COLLISION_TEST_DIR); \

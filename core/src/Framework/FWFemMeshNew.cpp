@@ -265,7 +265,7 @@ void FWFemMeshNew::CreateGRFromPH(){
 		gmd.materialList[pf] = grFemMesh->materialList[pFaceMap[pf].face];
 	}
 
-	//	新しく作るGRMeshの頂点からphFemMeshの頂点への対応表
+	//	新しく作るGRMeshの頂点からphFemMeshの頂点への対応
 	vertexIdMap.resize(gmd.vertices.size(), -1);
 	//	対応表に応じて、頂点のテクスチャ座標を作成
 	//		phの１点がgrの頂点複数に対応する場合がある。
@@ -408,10 +408,12 @@ void FWFemMeshNew::SyncVibrationInfo(){
 	if(!grFemMesh) return;
 	grFemMesh->EnableAlwaysCreateBuffer();
 	// 頂点位置の同期
-	Vec3f* grVertices = grFemMesh->GetVertices();
-	for(int i = 0; i < (int)vertexIdMap.size(); i++){
-		int pId = vertexIdMap[i];
-		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
+	if (vertexIdMap.size()) {
+		Vec3f* grVertices = grFemMesh->GetVertices();
+		for (int i = 0; i < (int)vertexIdMap.size(); i++) {
+			int pId = vertexIdMap[i];
+			grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
+		}
 	}
 	// 変位で色変化
 	if(grFemMesh->NColors() < 1) return;
@@ -512,7 +514,7 @@ void FWFemMeshNew::SyncThermoInfo(){
 				for(unsigned gv = 0; gv < vertexIdMap.size(); ++gv){
 					float gvtxTemp;
 					int pv = vertexIdMap[gv];
-					float texend;
+					float texend = 0.0f;
 					if(fwfood == "fwNsteak"){
 						texend=0.25862f;
 					}else if(fwfood == "fwNegi" || fwfood == "fwPan"){
@@ -647,7 +649,7 @@ void FWFemMeshNew::Settexmode1Map(float temp){
 	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
 	double thcamstart = texstart + (thtex + kogetex + watex) * dtex;	//
 	
-	float gvtxTemp;
+	float gvtxTemp = 0.0f;
 
 	if(fwfood == "fwPan"){
 			gvtxTemp = texstart;// + dtex;		// ねずみ色の底面

@@ -1,10 +1,8 @@
 #ifndef SPRPHOPSPHASHAGENT_H
 #define SPRPHOPSPHASHAGENT_H
 
-//#include <Foundation/SprObject.h>
+#include <Collision/SprCDSpHash.h>
 #include <Physics/SprPHOpObj.h>
-//#include <Physics/PHOpObj.h>
-//#include <Physics/PHOpSpHashColliAgent.h>
 
 //class PHOpSpHashColliAgentDesc
 //{
@@ -23,7 +21,7 @@ struct PHOpSpHashColliAgentDesc{
 struct PHOpSpHashColliAgentIf: public ObjectIf{
 	SPR_IFDEF(PHOpSpHashColliAgent);
 	void EnableCollisionDetection(bool able = true);
-	void Initial(float cellSize, Bounds bounds);
+	void Initial(float cellSize, CDBounds bounds);
 	void OpCollisionProcedure(int myTimeStamp);
 	void OpCollisionProcedure();
 	void OpDirCollision();

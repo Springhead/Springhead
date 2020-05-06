@@ -23,7 +23,7 @@ namespace Spr {
 //	UppFunc
 //
 DRUpp::UppFunc::UppFunc(int aCmd, int anAr, int anBr,
-	int anIoa, int anIob, int anIoc, int anIod, char* anId)
+	int anIoa, int anIob, int anIoc, int anIod, const char* anId)
 	{
 	strncpy(id, anId, IDLEN);
 	id[IDLEN] = '\0';

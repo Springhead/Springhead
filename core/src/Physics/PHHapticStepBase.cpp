@@ -1,4 +1,6 @@
-#include "PHHapticStepBase.h"
+#include <Physics/PHHapticStepBase.h>
+#include <Physics/PHHapticEngine.h>
+
 namespace Spr{;
 
 //----------------------------------------------------------------------------
@@ -21,10 +23,6 @@ PHHapticPointer* PHHapticStepBase::GetHapticPointer(int i){
 PHSolidForHaptic* PHHapticStepBase::GetHapticSolid(int i){
 	return engine->hapticSolids[i];
 }
-PHHapticRender* PHHapticStepBase::GetHapticRender(){
-	return engine->hapticRender->Cast();
-}
-
 void PHHapticStepBase::StepPhysicsSimulation(){
 	engine->GetScene()->Step();
 }

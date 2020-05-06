@@ -32,7 +32,7 @@ public:
 	virtual void Step(){}
 
 	void SetPHFemMesh(PHFemMeshNew* m);
-	PHFemMeshNew* GetPHFemMesh();
+	PHFemMeshNewIf* GetPHFemMesh();
 	int NVertices();
 
 	/// 二階の時間積分

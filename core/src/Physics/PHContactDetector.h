@@ -29,8 +29,8 @@ public:
 
 public:
 	void Init (PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
-	void SetSt(const CDShapePairSt& s){ *((CDShapePairSt*)this) = s; }
-	void GetSt(      CDShapePairSt& s){ s = *this; }
+	void SetSt(const CDShapePairState& s){ *((CDShapePairState*)this) = s; }
+	void GetSt(      CDShapePairState& s){ s = *this; }
 	PHFrameIf* GetFrame(int i) { return (PHFrameIf*)frame[i]; }
 };
 
@@ -82,12 +82,12 @@ struct PHContactDetectorSt{
 		char* ptr = ((char*)this) + sizeof(*this);
 		return (PHSolidPairSt*)ptr;
 	}
-	CDShapePairSt* ShapeStates(){
+	CDShapePairState* ShapeStates(){
 		char* ptr = ((char*)this) + sizeof(*this) + nSolidPair*sizeof(PHSolidPairSt);
-		return (CDShapePairSt*)ptr;
+		return (CDShapePairState*)ptr;
 	}
 	size_t GetSize(){
-		return sizeof(*this) + nSolidPair*sizeof(PHSolidPairSt) + nShapePair*sizeof(CDShapePairSt);
+		return sizeof(*this) + nSolidPair*sizeof(PHSolidPairSt) + nShapePair*sizeof(CDShapePairState);
 	}
 	PHContactDetectorSt(int n=0, int m=0):nSolidPair(n), nShapePair(m){}
 };
@@ -114,7 +114,7 @@ public:
 		bool operator < (const Edge& s) const { return edge < s.edge; }
 
 		Edge(){}
-		Edge(int i, float e, bool _min): index(i), edge(e), bMin(_min){}
+		Edge(int i, float e, bool _min): edge(e), bMin(_min), index(i){}
 	};
 	
 	struct Cell{

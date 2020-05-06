@@ -194,10 +194,10 @@ public:
 				message = "box dropped.";
 			}else if(id==ID_SWITCHRENDER){
 				debugRender = !debugRender; 
-			}else if(id=ID_TEMPUP){
+			}else if(id==ID_TEMPUP){
 				FWObjectIf** fwobject = GetCurrentWin()->GetScene()->GetObjects();	
 				//fwScene
-			}else if(id=ID_TEMPDN){
+			}else if(id==ID_TEMPDN){
 
 			}
 
@@ -1147,7 +1147,7 @@ MyApp app;
 #if _MSC_VER <= 1500
 #include <GL/glut.h>
 #endif
-int __cdecl main(int argc, char *argv[]) {
+int SPR_CDECL main(int argc, char *argv[]) {
 	SEH_HANDLER_DEF
 	SEH_HANDLER_TRY
 

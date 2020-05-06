@@ -259,7 +259,7 @@ void PHFemVibration::Init(){
 } 
 
 void PHFemVibration::CompStiffnessMatrix(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	const int NTets = (int)mesh->tets.size();
 	const int NDof = NVertices() * 3;
 	matKIni.resize(NDof, NDof, 0.0);	// 初期化
@@ -338,8 +338,8 @@ void PHFemVibration::CompStiffnessMatrix(){
 void PHFemVibration::CompMassMatrix(){
 	/// 質量行列の計算
 	double totalMass = 0.0;
-	PHFemMeshNew* mesh = GetPHFemMesh();
-	const int NTets = (int)mesh->tets.size();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
+	const int NTets = (int)mesh->NTets();
 	const int NDof = NVertices() * 3;
 	matMIni.resize(NDof, NDof, 0.0);	// 初期化
 
@@ -373,8 +373,8 @@ void PHFemVibration::CompMassMatrix(){
 		// j:ブロック番号, k:ブロック番号
 		for(int j = 0; j < 4; j++){
 			for(int k = 0; k < 4; k++){
-				int id = mesh->tets[i].vertexIDs[j];
-				int id2 = mesh->tets[i].vertexIDs[k];
+				int id = mesh->GetTetVertexIds(i)[j];
+				int id2 = mesh->GetTetVertexIds(i)[k];
 				int t = id * 3;	int l = id2 * 3;
 				int h = 3;		int w = 3;
 				int te = j * 3;	int le = k * 3;
@@ -447,12 +447,7 @@ void PHFemVibration::Step(){
 
 
 	// 全頂点の更新フラグ初期化
-	PHFemMeshNew* mesh = GetPHFemMesh();
-	const int NVer = NVertices() ;
-	for(int i = 0; i < NVer; i++){
-		mesh->vertices[i].bUpdated = false ;
-	}
-
+	GetPHFemMesh()->SetVertexUpdateFlags(false);
 
 	qtimer.StartPoint("integration");
 	switch(analysis_mode){
@@ -920,13 +915,12 @@ void PHFemVibration::UpdateVerticesPosition(VVectord& _xd){
 	/// 計算結果をFemVertexに戻す
 	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)の順
 	int NVer = NVertices();
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	for(int i = 0; i < NVer; i++){
 		int id = i * 3;
 		Vec3d initialPos = mesh->GetVertexInitalPositionL(i);
-		GetPHFemMesh()->vertices[i].pos.x = _xd[id] + initialPos.x;
-		GetPHFemMesh()->vertices[i].pos.y = _xd[id + 1] + initialPos.y;		
-		GetPHFemMesh()->vertices[i].pos.z = _xd[id + 2] + initialPos.z;
+		Vec3d vpos(_xd[id] + initialPos.x, _xd[id + 1] + initialPos.y, _xd[id + 2] + initialPos.z);
+		GetPHFemMesh()->SetVertexPositionL(i, vpos);
 	}
 }
 
@@ -934,26 +928,24 @@ void PHFemVibration::UpdateVerticesVelocity(VVectord& _v){
 	/// 計算結果をFemVertexに戻す
 	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)の順
 	int NVer = NVertices();
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	for(int i = 0; i < NVer; i++){
 		int id = i * 3;
-		Vec3d initialPos = mesh->GetVertexInitalPositionL(i);
-		GetPHFemMesh()->vertices[i].vel.x = _v[id];
-		GetPHFemMesh()->vertices[i].vel.y = _v[id + 1];		
-		GetPHFemMesh()->vertices[i].vel.z = _v[id + 2];
+		//Vec3d initialPos = mesh->GetVertexInitalPositionL(i);
+		Vec3d vvel(_v[id], _v[id+1], _v[id+2]);
+		GetPHFemMesh()->SetVertexVelocityL(i, vvel);
 	}
 }
 
 
 std::vector< int > PHFemVibration::FindVertices(const int vtxId, const Vec3d _vecl){
 	std::vector< int > ve;
-	PHFemMeshNew* mesh = GetPHFemMesh();
-	std::vector< int > sv = mesh->surfaceVertices;
-	Vec3d base = mesh->vertices[vtxId].pos;
-	for(int i = 0; i < (int)sv.size(); i++){
-		Vec3d rel = mesh->vertices[sv[i]].pos - base;
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
+	Vec3d base = mesh->GetVertexPositionL(vtxId);
+	for(int i = 0; i < mesh->NSurfaceVertices(); i++){
+		Vec3d rel = mesh->GetVertexPositionL(mesh->GetSurfaceVertex(i)) - base;
 		double dot = rel * _vecl;
-		if(abs(dot) < 1e-1) ve.push_back(sv[i]);
+		if(abs(dot) < 1e-1) ve.push_back(mesh->GetSurfaceVertex(i));
 	}
 	return ve;
 }
@@ -989,7 +981,7 @@ bool PHFemVibration::AddBoundaryCondition(const int vtxId, const Vec3i dof = Vec
 
 bool PHFemVibration::AddBoundaryCondition(const std::vector< Vec3i >& bcs){ 
 	int NVer = NVertices();
-	if(NVer != bcs.size()) return false;
+	if(NVer != (int)bcs.size()) return false;
 	for(int i = 0; i < (int)bcs.size(); i++){
 		for(int j = 0; j < 3; j++){
 			if(bcs[i][j] == 1){
@@ -1097,7 +1089,7 @@ bool PHFemVibration::AddVertexForceW(int vtxId, Vec3d fW){
 }
 
 bool PHFemVibration::AddVertexForceW(std::vector< Vec3d > fWs){
-	if(NVertices() != fWs.size()) return false;
+	if(NVertices() != (int)fWs.size()) return false;
 	for(int i = 0; i < (int)fWs.size(); i++){
 		Vec3d fL = GetPHFemMesh()->GetPHSolid()->GetOrientation().Inv() * fWs[i];
 		AddVertexForceL(i, fL);
@@ -1106,7 +1098,7 @@ bool PHFemVibration::AddVertexForceW(std::vector< Vec3d > fWs){
 }
 
 bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec3d fL = inv * fW;
@@ -1115,10 +1107,8 @@ bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
 	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
 	mesh->CompTetShapeFunctionValue(tetId, posL, v, true);
 	for(int i = 0; i < 4; i++){
-		int vtxId = mesh->tets[tetId].vertexIDs[i];
-		mesh->vertices[vtxId].bUpdated=true;//更新フラグ
-
-
+		int vtxId = mesh->GetTetVertexIds(tetId)[i];
+		mesh->SetVertexUpateFlag(vtxId, true);	//更新フラグ
 		Vec3d fdiv = v[i] * fL;
 		AddVertexForceL(vtxId, fdiv);
 	}
@@ -1126,7 +1116,7 @@ bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
 }
 
 bool PHFemVibration::AddForceL(int tetId, Vec3d posW, Vec3d fL){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	//Vec3d fL = inv * fW;
@@ -1136,8 +1126,8 @@ bool PHFemVibration::AddForceL(int tetId, Vec3d posW, Vec3d fL){
 	mesh->CompTetShapeFunctionValue(tetId, posL, v, true);
 	//DSTR << this->GetName()  << " : " << tetId << std::endl;
 	for(int i = 0; i < 4; i++){
-		int vtxId = mesh->tets[tetId].vertexIDs[i];
-		mesh->vertices[vtxId].bUpdated=true;//更新フラグ  Update Flag
+		int vtxId = mesh->GetTetVertexIds(tetId)[i];
+		mesh->SetVertexUpateFlag(vtxId, true);	//更新フラグ  Update Flag
 
 		Vec3d fdiv = v[i] * fL;
 		AddVertexForceL(vtxId, fdiv);
@@ -1145,15 +1135,15 @@ bool PHFemVibration::AddForceL(int tetId, Vec3d posW, Vec3d fL){
 	return true;
 }
 
-bool PHFemVibration::Damping(int tetId, Vec3d posW, double damp_ratio){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+bool PHFemVibration::SetDamping(int tetId, Vec3d posW, double damp_ratio){
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
 	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
 	for(int i = 0; i < 4; i++){
-		int vtxId = mesh->tets[tetId].vertexIDs[i];
-		mesh->vertices[vtxId].bUpdated=true;//更新フラグ
+		int vtxId = mesh->GetTetVertexIds(tetId)[i];
+		mesh->SetVertexUpateFlag(vtxId, true);	//更新フラグ 
 		double r = pow(damp_ratio, v[i]);
 		if(0 <= vtxId && vtxId <= NVertices() -1){
 			int id = vtxId * 3;
@@ -1186,13 +1176,13 @@ bool PHFemVibration::SetDampingRatio(){
 
 bool PHFemVibration::GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform){
 	disp = Vec3d();
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
 	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
 	for(int i = 0; i < 4; i++){
-		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		int vtxId = mesh->GetTetVertexIds(tetId)[i];
 		disp += mesh->GetVertexDisplacementL(vtxId) * v[i];
 	}
 	mesh->GetPHSolid()->GetPose() * disp;
@@ -1201,14 +1191,14 @@ bool PHFemVibration::GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bD
 
 bool PHFemVibration::GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform){
 	vel = Vec3d();
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
 	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
 	mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform);
 	for(int i = 0; i < 4; i++){
-		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		int vtxId = mesh->GetTetVertexIds(tetId)[i];
 		vel += mesh->GetVertexVelocityL(vtxId) * v[i];
 	}
 	mesh->GetPHSolid()->GetPose() * vel;
@@ -1217,23 +1207,32 @@ bool PHFemVibration::GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform
 
 bool PHFemVibration::GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform){
 	pos = Vec3d();
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
 	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
 	mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform);
 	for(int i = 0; i < 4; i++){
-		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		int vtxId = mesh->GetTetVertexIds(tetId)[i];
 		pos += mesh->GetVertexPositionL(vtxId) * v[i];
 	}
 	mesh->GetPHSolid()->GetPose() * pos;
 	return true;
 }
 
+inline Vec3d CompFaceNormal(const Vec3d* pos) {
+	Vec3d vec[2];
+	vec[0] = pos[1] - pos[0];
+	vec[1] = pos[2] - pos[0];
+	// FemMeshの頂点は表面から見て時計周りに並ぶ
+	// 表面方向の法線は外積は反時計まわりにかける
+	return (vec[1] % vec[0]).unit();
+}
+
 bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], Vec3d& cp, double& dist, bool bDeform){
-	PHFemMeshNew* mesh = GetPHFemMesh();
-	const Vec3d normal = mesh->CompFaceNormal(fp);
+	//PHFemMeshNewIf* mesh = GetPHFemMesh();
+	const Vec3d normal = CompFaceNormal(fp);
 	const Vec3d p0 = fp[0] - p;			// pからfp[0]までのベクトル
 	dist = p0 * normal;					// pから面への距離
 	const Vec3d ortho = dist * normal;	// pから面へのベクトル
@@ -1259,16 +1258,17 @@ bool PHFemVibration::FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, 
 	// ワールド座標系で計算
 	faceIds.clear();
 	cpWs.clear();
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed pose = mesh->GetPHSolid()->GetPose();
-	std::vector< FemFace > faces = mesh->faces;
-	int nsf = GetPHFemMesh()->nSurfaceFace;
+//	std::vector< FemFace > faces = mesh->faces;
+	int nsf = GetPHFemMesh()->NSurfaceFace();
 	double dist = DBL_MAX;
 	for(int i = 0; i < nsf; i++){
 		Vec3d fp[3];
 		for(int j = 0; j < 3; j++){
-			if(bDeform)		fp[j] = pose * mesh->vertices[faces[i].vertexIDs[j]].pos;
-			else			fp[j] = pose * mesh->vertices[faces[i].vertexIDs[j]].initialPos;
+			int vid = mesh->GetFaceVertexIds(i)[j];
+			if(bDeform)		fp[j] = pose * mesh->GetVertexPositionL(vid);
+			else			fp[j] = pose * mesh->GetVertexInitalPositionL(vid);
 		}
 		Vec3d cpW;
 		double d;
@@ -1334,24 +1334,24 @@ void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
 //the pointer on the FEM surface. But this method considers the
 //contact normal and the tetra face normal to make it faster
 bool PHFemVibration::searchSurfaceTetra(Vec3d commonPointW, Vec3d contactNormalU, int &faceId, Vec3d &surfacePoint, bool bDeform) {
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNewIf* mesh = GetPHFemMesh();
 	Posed pose = mesh->GetPHSolid()->GetPose();
-	std::vector< FemFace > faces = mesh->faces;
-	int nsf = mesh->nSurfaceFace;
+	int nsf = mesh->NSurfaceFace();
 	faceId = 0;
 
 	double dist = DBL_MAX;
 	for(int i = 0; i < nsf; i++){
 
-		double cosine = (pose * faces[i].normal).unit() * contactNormalU;
+		double cosine = (pose * mesh->GetFaceNormal(i)).unit() * contactNormalU;
 		if (!(cosine > 0.9) ) {   // 0 degrees
 			//DSTR << "DEBUG mesh " << mesh->femIndex << " : " << cosine  << " : " << i << std::endl; 
 			continue; }  //Addition to the method
 
 		Vec3d fp[3];
 		for(int j = 0; j < 3; j++){
-			if(bDeform)		fp[j] = pose * mesh->vertices[faces[i].vertexIDs[j]].pos;
-			else			fp[j] = pose * mesh->vertices[faces[i].vertexIDs[j]].initialPos;
+			int vid = mesh->GetFaceVertexIds(i)[j];
+			if (bDeform)	fp[j] = pose * mesh->GetVertexPositionL(vid);
+			else			fp[j] = pose * mesh->GetVertexInitalPositionL(vid);
 		}
 		Vec3d cpW; 
 		double d;

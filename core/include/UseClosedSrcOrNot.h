@@ -1,4 +1,4 @@
-// ‚±‚Ìƒtƒ@ƒCƒ‹‚Ì“à—e‚ð•ÏX‚µ‚È‚¢‚±‚Æ
+ï»¿// ** DO NOT CHANGE THE CONTENTS OF THIS FILE **
 
-// Springhead2/closed ‚Ìƒ\[ƒX‚ðŽg—p‚·‚é‚©‚Ç‚¤‚©
+// Use Springhead/closed source or not.
 #define USE_CLOSED_SRC

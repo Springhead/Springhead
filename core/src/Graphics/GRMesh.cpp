@@ -289,12 +289,14 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfT4fC4fN3fP4f;
-		GRVertexElement::VFT4fC4fN3fP4f* v = (GRVertexElement::VFT4fC4fN3fP4f*)&vtxs[0];
-		
-		CopyVerticesAndWeights(v, vertices);
-		CopyNormals(v, normals);
-		CopyColors(v, colors);
-		CopyTexCoords3D(v, texCoords);
+		if (vtxs.size()) {
+			GRVertexElement::VFT4fC4fN3fP4f* v = (GRVertexElement::VFT4fC4fN3fP4f*)&vtxs[0];
+
+			CopyVerticesAndWeights(v, vertices);
+			CopyNormals(v, normals);
+			CopyColors(v, colors);
+			CopyTexCoords3D(v, texCoords);
+		}
 	}
 	else if (texCoords.size() && normals.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fC4fN3fP3f)/sizeof(float);
@@ -304,12 +306,14 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfT2fC4fN3fP3f;
-		GRVertexElement::VFT2fC4fN3fP3f* v = (GRVertexElement::VFT2fC4fN3fP3f*)&vtxs[0];
-		
-		CopyVertices(v, vertices);
-		CopyNormals(v, normals);
-		CopyColors(v, colors);
-		CopyTexCoords(v, texCoords);
+		if (vtxs.size()) {
+			GRVertexElement::VFT2fC4fN3fP3f* v = (GRVertexElement::VFT2fC4fN3fP3f*)&vtxs[0];
+
+			CopyVertices(v, vertices);
+			CopyNormals(v, normals);
+			CopyColors(v, colors);
+			CopyTexCoords(v, texCoords);
+		}
 	}
 	else if (texCoords.size() && normals.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fN3fP3f)/sizeof(float);
@@ -319,11 +323,13 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfT2fN3fP3f;
-		GRVertexElement::VFT2fN3fP3f* v = (GRVertexElement::VFT2fN3fP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFT2fN3fP3f* v = (GRVertexElement::VFT2fN3fP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyNormals(v, normals);
-		CopyTexCoords(v, texCoords);
+			CopyVertices(v, vertices);
+			CopyNormals(v, normals);
+			CopyTexCoords(v, texCoords);
+		}
 	}
 	else if (texCoords.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fC4bP3f)/sizeof(float);
@@ -332,11 +338,13 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfT2fC4bP3f;
-		GRVertexElement::VFT2fC4bP3f* v = (GRVertexElement::VFT2fC4bP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFT2fC4bP3f* v = (GRVertexElement::VFT2fC4bP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyColorsInt(v, colors);
-		CopyTexCoords(v, texCoords);
+			CopyVertices(v, vertices);
+			CopyColorsInt(v, colors);
+			CopyTexCoords(v, texCoords);
+		}
 	}
 	else if (normals.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFC4fN3fP3f)/sizeof(float);
@@ -345,11 +353,13 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfC4fN3fP3f;
-		GRVertexElement::VFC4fN3fP3f* v = (GRVertexElement::VFC4fN3fP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFC4fN3fP3f* v = (GRVertexElement::VFC4fN3fP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyNormals(v, normals);
-		CopyColors(v, colors);
+			CopyVertices(v, vertices);
+			CopyNormals(v, normals);
+			CopyColors(v, colors);
+		}
 	}
 	else if (normals.size()){
 		stride		 = sizeof(GRVertexElement::VFN3fP3f)/sizeof(float);
@@ -358,10 +368,12 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfN3fP3f;
-		GRVertexElement::VFN3fP3f* v = (GRVertexElement::VFN3fP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFN3fP3f* v = (GRVertexElement::VFN3fP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyNormals(v, normals);
+			CopyVertices(v, vertices);
+			CopyNormals(v, normals);
+		}
 	}
 	else if (tex3d && texCoords.size()){
 		stride		 = sizeof(GRVertexElement::VFT4fP4f)/sizeof(float);
@@ -370,10 +382,12 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfT4fP4f;
-		GRVertexElement::VFT4fP4f* v = (GRVertexElement::VFT4fP4f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFT4fP4f* v = (GRVertexElement::VFT4fP4f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyTexCoords3D2(v, texCoords);
+			CopyVertices(v, vertices);
+			CopyTexCoords3D2(v, texCoords);
+		}
 	}
 	else if (texCoords.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fP3f)/sizeof(float);
@@ -381,10 +395,12 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfT2fP3f;
-		GRVertexElement::VFT2fP3f* v = (GRVertexElement::VFT2fP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFT2fP3f* v = (GRVertexElement::VFT2fP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyTexCoords(v, texCoords);
+			CopyVertices(v, vertices);
+			CopyTexCoords(v, texCoords);
+		}
 	}
 	else if (colors.size()){
 		stride		 = sizeof(GRVertexElement::VFC4bP3f)/sizeof(float);
@@ -392,10 +408,12 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfC4bP3f;
-		GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
-		CopyColorsInt(v, colors);
+			CopyVertices(v, vertices);
+			CopyColorsInt(v, colors);
+		}
 	}
 	else{
 		stride		 = sizeof(GRVertexElement::VFP3f)/sizeof(float);
@@ -403,9 +421,11 @@ void GRMesh::MakeBuffer(){
 		
 		vtxs.resize(stride * nVtxs);
 		vtxFormat = GRVertexElement::vfP3f;
-		GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
+		if (vtxs.size()) {
+			GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
 
-		CopyVertices(v, vertices);
+			CopyVertices(v, vertices);
+		}
 	}
 
 	blendedVtxs.clear();
@@ -486,21 +506,21 @@ void GRMesh::Render(GRRenderIf* r){
 		}
 
 		render->SetVertexFormat(vtxFormat);
-		DrawBuffer(&blendedVtxs[0]);
+		if (blendedVtxs.size()) DrawBuffer(&blendedVtxs[0]);
 	}
 	else if (tex3d){	//	3d textureも strq をいじりたいので、毎回描画
 		if (r!=render) render = r;
 		if (render){
 			if (vtxs.empty()) MakeBuffer();
 			render->SetVertexFormat(vtxFormat);
-			DrawBuffer(&vtxs[0]);
+			if (vtxs.size()) DrawBuffer(&vtxs[0]);
 		}
 	}else if(alwaysCreateBuffer){
 		if (r!=render) render = r;
 		if (render){
 			MakeBuffer();
 			render->SetVertexFormat(vtxFormat);
-			DrawBuffer(&vtxs[0]);
+			if (vtxs.size()) DrawBuffer(&vtxs[0]);
 		}
 	}else{
 		if (r!=render || !list) CreateList(r);

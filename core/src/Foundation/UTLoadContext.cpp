@@ -483,8 +483,8 @@ void UTLoadContext::WriteString(std::string v){
 }
 void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	//	ノードの型情報を検索
-	UTTypeDesc* type = typeDbs.Top()->Find(tn);
-	if (!type) type = typeDbs.Top()->Find(tn + "Desc");	
+	UTTypeDesc* type = (UTTypeDesc*)typeDbs.Top()->Find(tn);
+	if (!type) type = (UTTypeDesc*)typeDbs.Top()->Find(tn + "Desc");
 
 	//	型情報をロード用イタレータにセット
 	fieldIts.PushType(type);
@@ -790,7 +790,7 @@ void UTLoadContext::RegisterGroupToDb(const char* gp){
 			UTString group(p, end);
 			p = end+1;
 			*handlerDbs.Top() += *UTLoadHandlerDbPool::Get(group.c_str());
-			*typeDbs.Top() += *UTTypeDescDbPool::Get(group.c_str());
+			*typeDbs.Top() += *(UTTypeDescDb*)UTTypeDescDbPool::Get(group.c_str());
 		}else{
 			break;
 		}

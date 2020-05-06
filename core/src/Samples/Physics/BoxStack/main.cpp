@@ -183,7 +183,7 @@ MyApp app;
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char *argv[]) {
+int SPR_CDECL main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;

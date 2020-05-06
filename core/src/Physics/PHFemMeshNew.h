@@ -126,6 +126,8 @@ public:
 	
 	/// 追加情報	基本情報からSetDesc()が計算して求める。
 	std::vector<int> surfaceVertices;	///< 物体表面の頂点のID
+	int GetSurfaceVertex(int i) { return surfaceVertices[i];  }
+	int NSurfaceVertices() { return (int)surfaceVertices.size();  }
 	std::vector<FemFace> faces;	///< 面
 	unsigned nSurfaceFace;		///< 物体表面に存在する面の数。表面：faces[0],..,faces[nSurfaceFace-1]、内面:faces[nSurfaceFace],..,faces[faces.size()]
 	std::vector<FemEdge> edges;	///< 辺
@@ -167,8 +169,15 @@ public:
 	int NVertices();
 	///	面の総数を返す
 	int NFaces();
+	int* GetFaceVertexIds(int f) { return faces[f].vertexIDs; }
+	Vec3d GetFaceNormal(int f) { return faces[f].normal; }
 	/// 四面体の総数を返す
 	int NTets();
+	///	四面体の頂点のIDを返す
+	int* GetTetVertexIds(int t) { return tets[t].vertexIDs; }
+	///	vertices[i].updatedFlag
+	void SetVertexUpdateFlags(bool flg);
+	void SetVertexUpateFlag(int vid, bool flg);
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//* 頂点に関する関数 */
@@ -188,6 +197,7 @@ public:
 	bool SetVertexPositionW(int vtxId, Vec3d posW);
 	/// 頂点の位置を指定する（ローカル座標系）
 	bool SetVertexPositionL(int vtxId, Vec3d posL);
+	bool SetVertexVelocityL(int vtxId, Vec3d posL);
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//* 四面体に関する関数 */
@@ -230,15 +240,17 @@ public:
 	/// 面の法線を返す
 	Vec3d CompFaceNormal(const Vec3d pos[3]);		// 任意の頂点
 	Vec3d CompFaceNormal(const int& faceId, const bool& bDeform);
-	unsigned GetnSurfaceFace(){return nSurfaceFace;}
+	int NSurfaceFace(){return nSurfaceFace;}
 
 	//For multiple object implementation VARIABLES
-	bool *contactVector;	//saves the contact configuration of the scene
-	int femIndex;			//stores the fem loading Index
-	KDVertex* root;         //stores the KDTree root  
-	RingBuffer<Vec3d>* ringVel;    //ring buffer to save the instant vel 
-	bool spheric;			//indicates the shape of the model (from SPR file)
-
+	std::vector<bool> contactVector;//saves the contact configuration of the scene
+	int femIndex;					//stores the fem loading Index
+	KDVertex* root;					//stores the KDTree root  
+	RingBuffer<Vec3d> ringVel;		//ring buffer to save the instant vel 
+	void SetVelocity(Vec3d v) { ringVel.WriteNoLimit(v);  }
+	bool spheric;					//indicates the shape of the model (from SPR file)
+	int GetFemIndex() { return femIndex;  }
+	
 
 	//For DEBUG FEM multiple collision
 	Vec3d debugFoundPoint;  //debug

@@ -10,12 +10,7 @@
 
 #include <SprDefs.h>
 #include <HumanInterface/HIDevice.h>
-#include <GL/glut.h>
 #include <map>
-
-#ifndef GLUTCALLBACK
-#define GLUTCALLBACK
-#endif
 
 namespace Spr {;
 
@@ -47,7 +42,6 @@ public:
 	void SetPollInterval(DVJoyStick* dv);
 	
 	static DRJoyStickGLUT*	instance;
-	static void GLUTCALLBACK OnUpdateStatic(unsigned int buttonMask, int x, int y, int z);
 };
 
 }	//	namespace Spr

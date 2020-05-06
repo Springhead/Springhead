@@ -166,6 +166,7 @@ void PHIKEngine::CalcJacobian() {
 }
 
 void PHIKEngine::IK(bool nopullback) {
+#ifdef USE_LAPACK
 	// 計算の準備（α・β・γの事前計算）
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->PrepareSolve();
@@ -238,6 +239,9 @@ void PHIKEngine::IK(bool nopullback) {
 			actuators[i]->MoveTempJoint();
 		}
 	}
+#else
+# pragma message("IK: define USE_LAPACK in SprDefs.h to use this function")
+#endif
 }
 
 void PHIKEngine::Limit() {

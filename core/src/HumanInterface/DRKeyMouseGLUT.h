@@ -10,13 +10,8 @@
 
 #include <SprDefs.h>
 #include <HumanInterface/HIDevice.h>
-#include <GL/glut.h>
 #include <vector>
 #include <deque>
-
-#ifndef GLUTCALLBACK
-#define GLUTCALLBACK
-#endif
 
 namespace Spr {;
 
@@ -57,11 +52,7 @@ public:
 	
 	///	HIRealDeviceの仮想関数
 	virtual bool Init();
-	//virtual void Register(HISdkIf* intf);
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
-
-	/// DRWinDeviceBaseの仮想関数
-	//virtual void RegisterCallback();
 
 	/// GLUTキーコードからSpringhead共通キーコードへの変換
 	int	ConvertKeyCode(int key, bool spr_to_glut, bool special);

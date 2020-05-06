@@ -48,6 +48,23 @@ struct PH1DJointNonLinearMotorDesc : public PH1DJointMotorDesc{
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
+/// 1自由度人体関節抵抗のインタフェース
+struct PHHuman1DJointResistanceIf : public PH1DJointNonLinearMotorIf {
+	SPR_IFDEF(PHHuman1DJointResistance);
+
+	double GetCurrentResistance();
+};
+/// 1自由度人体関節特性抵抗のデスクリプタ
+struct PHHuman1DJointResistanceDesc : public PH1DJointNonLinearMotorDesc {
+	SPR_DESCDEF(PHHuman1DJointResistance);
+	Vec4d coefficient;
+	PHHuman1DJointResistanceDesc() {
+		coefficient = Vec4d();
+	}
+};
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+
 /// ボールジョイントモータのインタフェース
 struct PHBallJointMotorIf : public SceneObjectIf {
 	SPR_IFDEF(PHBallJointMotor);
@@ -76,6 +93,27 @@ struct PHBallJointNonLinearMotorDesc : public PHBallJointMotorDesc{
 	SPR_DESCDEF(PHBallJointNonLinearMotor);
 
 	PHBallJointNonLinearMotorDesc() {
+	}
+};
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+
+/// 3自由度人体関節抵抗のインタフェース
+struct PHHumanBallJointResistanceIf : public PHBallJointNonLinearMotorIf {
+	SPR_IFDEF(PHHumanBallJointResistance);
+
+	Vec3d GetCurrentResistance();
+};
+/// 3自由度人体関節特性抵抗のデスクリプタ
+struct PHHumanBallJointResistanceDesc : public PHBallJointNonLinearMotorDesc {
+	SPR_DESCDEF(PHHumanBallJointResistance);
+	Vec4d xCoefficient;
+	Vec4d yCoefficient;
+	Vec4d zCoefficient;
+	PHHumanBallJointResistanceDesc() {
+		xCoefficient = Vec4d();
+		yCoefficient = Vec4d();
+		zCoefficient = Vec4d();
 	}
 };
 

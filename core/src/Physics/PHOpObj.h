@@ -196,7 +196,7 @@ namespace Spr{
 				objTargetVtsArr[vi * 3 + 1] = objTargetVts[vi].y;
 				objTargetVtsArr[vi * 3 + 2] = objTargetVts[vi].z;
 			}
-			int u = 0;
+			//int u = 0;
 		}
 
 		void UpdateItrTime(int itrT, bool useIndepParamflag)
@@ -317,7 +317,7 @@ namespace Spr{
 
 			}
 			std::sort(disCmpQue.begin(), disCmpQue.end());
-			int u = 0;
+			//int u = 0;
 
 			PHOpGroup* pg = new PHOpGroup();
 			pg->gMyIndex = i;
@@ -366,7 +366,7 @@ namespace Spr{
 
 			buildGroupCenter();
 			BuildBlendWeight();
-			int u2 = 0;
+			//int u2 = 0;
 
 			delete pg;
 			delete gplist;
@@ -376,7 +376,7 @@ namespace Spr{
 
 		void vertexBlending()
 		{
-			int count = 0;
+			//int count = 0;
 			/*if(unNormalobj)
 			{
 			targetVts[0]= objPArr[0].pCurrCtr;
@@ -384,7 +384,7 @@ namespace Spr{
 			}*/
 
 			//if (useTetgen)
-			count = objTargetVtsNum;
+			//count = objTargetVtsNum;
 			//	else count = targetMesh->NVertex();
 			for (int j = 0; j < assPsNum; j++)
 			{
@@ -452,7 +452,7 @@ namespace Spr{
 						u += objBlWeightArr[vertind][jm] * (pose * (ctrpose.Pos() + vert));// (taM *
 
 						//u += taB * (vert * blWeightArr[vertind][jm]);// (taM *//debug 
-						int ks = 0;
+						//int ks = 0;
 					}
 					//if (useTetgen)
 
@@ -755,7 +755,7 @@ namespace Spr{
 					if (pg.addPInds(dp.pInGrpList[pin]))
 						objPArr[dp.pInGrpList[pin]].pInGrpList.push_back(i);
 
-					int u = 0;
+					//int u = 0;
 				}
 
 			}
@@ -846,7 +846,7 @@ namespace Spr{
 					objPArr[j].pVectDisWeightArr[k] = (vp - objPArr[j].pCurrCtr).norm() / totalDis;
 
 				}
-				int u = 0;
+				//int u = 0;
 			}
 
 		}
@@ -977,7 +977,7 @@ namespace Spr{
 				for (int vi = 0; vi < objPArr[pi].pNvertex; vi++)
 					objVtoPmap[objPArr[pi].pVertArr[vi]] = pi;
 			}
-			int u = 0;
+			//int u = 0;
 		}
 
 
@@ -1106,7 +1106,7 @@ namespace Spr{
 
 			Vec3f gravity;
 			float timeStep;
-			Bounds bounds;//挙動範囲
+			CDBounds bounds;//挙動範囲
 
 			float alpha;
 			float beta;
@@ -1229,7 +1229,7 @@ namespace Spr{
 			float minX = 0.0, maxX = 0.0;
 			float minY = 0.0, maxY = 0.0;
 			float minZ = 0.0, maxZ = 0.0;
-			int axis = 0;
+			//int axis = 0;
 			if (assPsNum>0)
 			{
 				minX = objPArr[0].pCurrCtr.x;

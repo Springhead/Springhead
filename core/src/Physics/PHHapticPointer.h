@@ -91,6 +91,10 @@ public:
 	Posed	GetDefaultPose(){ return defaultPose; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
+	int		GetNeighborSolidId(int i) {
+		int j = neighborSolidIDs[i];
+		return j;
+	}
 	PHSolidIf*   GetNeighborSolid(int i) {
 		int j = neighborSolidIDs[i];
 		return DCAST(PHSceneIf,GetScene())->GetSolids()[j];
@@ -111,6 +115,7 @@ public:
 	}
 	void	AddHapticForce(const SpatialVector& f);
 	SpatialVector	GetHapticForce();
+	void ClearHapticForce();
 
 	virtual void UpdateVelocity(double dt){}
 	virtual void UpdatePosition(double dt){}

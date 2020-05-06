@@ -18,10 +18,16 @@
 
 namespace Spr{;
 
+class HIXbox360ControllerImpl;
+
 class HIXbox360Controller :public HIXbox360ControllerDesc, public HIHaptic{
+	friend HIXbox360ControllerImpl;
+
 protected:
-	DWORD controllerID;
-	XINPUT_STATE state;
+	// no UTRef because gcc will require full type information of HIXbox360ControllerImpl 
+	HIXbox360ControllerImpl* impl;
+	
+	int controllerID;
 	bool key[14];
 	Vec2i thumbL;
 	Vec2i thumbR;
@@ -36,7 +42,9 @@ protected:
 	Posef currPose;
 public:
 	SPR_OBJECTDEF(HIXbox360Controller);
+
 	HIXbox360Controller(const HIXbox360ControllerDesc& desc = HIXbox360ControllerDesc());
+	~HIXbox360Controller();
 
 	virtual bool Init();
 	virtual void Update(float dt);

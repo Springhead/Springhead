@@ -10,7 +10,9 @@
 
 #include <Framework/FWGLUT.h>
 
-#include <GL/glui.h>
+#ifdef USE_GLUI
+# include <GL/glui.h>
+#endif
 
 /** @brief GLUIを用いるアプリケーションクラス
 		   基本的にFWAppGLUIを自分のアプリケーションのクラスに継承させ，

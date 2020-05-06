@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+﻿#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -27,57 +27,49 @@
 #  Version:
 #	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
 #	Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
-#	Ver 1.1a 2017/06/29 F.Kanehori	Revise some messages.
+#	Ver 1.2  2017/07/24 F.Kanehori	Python executable directory moved.
+#	Ver 1.3  2017/09/04 F.Kanehori	New python library に対応.
+#	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
+#	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
+#	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
 # ==============================================================================
-version = 1.0
+version = 1.6
 
 import sys
 import os
 import glob
 from optparse import OptionParser
 
-#  Import Springhead2 python library.
-cwd = os.getcwd().split(os.sep)[::-1]
-for n in range(len(cwd)):
-	if cwd[n] != 'src': continue
-	spr2 = '/'.join(cwd[::-1][0:len(cwd)-n-1])
-	break
-libdir = '%s/bin/test' % spr2
-sys.path.append('/usr/local/lib')
-sys.path.append(libdir)
-from TextFio import *
-from Util import *
-from Error import *
-
 # ----------------------------------------------------------------------
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-python_version = 34
+
+# ----------------------------------------------------------------------
+#  Import Springhead python library.
+#
+from FindSprPath import *
+spr_path = FindSprPath(prog)
+libdir = spr_path.abspath('pythonlib')
+sys.path.append(libdir)
+from TextFio import *
+from Proc import *
+from FileOp import *
 
 # ----------------------------------------------------------------------
 #  Globals
 #
-E = Error(prog)
-U = Util()
-unix = U.is_unix()
+proc = Proc()
+f_op = FileOp()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
-spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
-srcdir = '%s/%s' % (spr2top, 'src')
-bindir = '%s/%s' % (spr2top, 'bin')
+sprtop = spr_path.abspath()
+bindir = spr_path.abspath('bin')
+srcdir = spr_path.abspath('src')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
-pythondir = '%s/Python%s' % (bindir, python_version)
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
-
-# ----------------------------------------------------------------------
-#  Scripts
-#
-pythonexe = 'python%s' % (python_version if unix else '')
-python = '%s/%s' % (pythondir, pythonexe)
-createmkf = '%s %s/create_mkf.py' % (python, runswigdir)
 
 # ----------------------------------------------------------------------
 #  Files
@@ -91,6 +83,12 @@ one_file = 'do_swigone.projs'
 #  Helper methods.
 #
 
+#  Verbose print.
+#
+def vprint(msg, level=0):
+	if verbose > level:
+		print(msg)
+
 #  Create makeifle.
 #
 def create(fname, proj, dept):
@@ -102,7 +100,9 @@ def create(fname, proj, dept):
 	flag = ' -v' if verbose else ''
 	cmnd = '%s%s' % (createmkf, flag)
 	args = '%s %s %s' % (fname, proj, dept)
-	Util.exec('%s %s' % (cmnd, args), shell=True, verbose=0)
+	#print('create_mkf.py%s %s' % (flag, args))
+	proc.exec('%s %s' % (cmnd, args), shell=True)
+	proc.wait()
 
 #  Do the job for one project.
 #
@@ -113,13 +113,23 @@ def do_process(proj, dept):
 	#  Option '-d': Delete makefile.
 	if options.delete:
 		if os.path.exists(makefile):
-			if verbose:
-				print('    *** %s: removing "%s"' % (proj, makefile))
-			Util.rm(makefile)
+			vprint('    *** %s: removing "%s"' % (proj, makefile))
+			f_op.rm(makefile)
 		if os.path.exists(one_file):
-			if verbose:
-				print('    *** %s: removing "%s"' % (proj, one_file))
-			Util.rm(one_file)
+			vprint('    *** %s: removing "%s"' % (proj, one_file))
+			f_op.rm(one_file)
+		int_file = '%s.i' % proj
+		if os.path.exists(int_file):
+			vprint('    *** %s: removing "%s"' % (proj, int_file))
+			f_op.rm(int_file)
+		stb_file = '%sStub.cpp' % proj
+		if os.path.exists(stb_file):
+			vprint('    *** %s: removing "%s"' % (proj, stb_file))
+			f_op.rm(stb_file)
+		hpp_file = '%sDecl.hpp' % proj
+		if os.path.exists(hpp_file):
+			vprint('    *** %s: removing "%s"' % (proj, hpp_file))
+			f_op.rm(hpp_file)
 
 	#  Option '-c': Create makefile.
 	if options.create:
@@ -134,7 +144,7 @@ def do_process(proj, dept):
 	#  Option '-r': Rename temporary makefile to makefile.
 	if options.rename:
 		print('    *** %s: renaming "%s -> %s"' % (proj, tempfile, makefile))
-		Util.mv(tempfile, makefile)
+		f_op.mv(tempfile, makefile)
 
 # ---------------------------------------------------------------------
 #  Options
@@ -159,6 +169,9 @@ parser.add_option('-t', '--maketmp',
 parser.add_option('-D', '--debug',
 			dest='debug', action='store_true', default=False,
 			help='for debug')
+parser.add_option('-P', '--python',
+                        dest='python', action='store', default='python',
+                        help='python command name')
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -173,6 +186,7 @@ parser.add_option('-V', '--version',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
+debug_projs = ''
 if len(args) > 0:
 	if options.debug:
 		debug_projs = list(map(lambda x: x.lower(), args))
@@ -181,10 +195,9 @@ if len(args) > 0:
 
 verbose = options.verbose
 if verbose:
-	print('  spr2top:   %s' % spr2top)
+	print('  sprtop:    %s' % sprtop)
 	print('  srcdir:    %s' % srcdir)
 	print('  bindir:    %s' % bindir)
-	print('  pythondir: %s' % pythondir)
 	print('  makefile:  %s' % makefile)
 	print('  tempfile:  %s' % tempfile)
 	print('  projfile:  %s' % projfile)
@@ -196,10 +209,16 @@ if verbose:
 	if options.maketmp: flags.append('-t')
 	if options.rename:  flags.append('-r')
 	print('  flags:     %s' % ' '.join(flags))
-	print('  python:    %s/%s' % (pythondir, python))
 	if options.debug:
 		print('  projs (for debug) -> %s' % debug_projs)
 	print()
+
+# ----------------------------------------------------------------------
+#  Scripts
+#
+if options.python:
+	python = options.python
+createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -217,13 +236,11 @@ fio.close()
 #
 curr_proj = os.getcwd().split(os.sep)[-1].lower()
 for line in lines:
-	if verbose > 1:
-		print('Def: [%s]' % line)
+	vprint('Def: [%s]' % line, 1)
 	fields = line.split()
 	proj = fields[0]
 	dept = fields[1] if len(fields) > 1 else None
-	if verbose > 1:
-		print('proj: %s <- %s' % (proj, dept))
+	vprint('proj: %s <- %s' % (proj, dept), 1)
 
 	#  Change to target directory.
 	cwd = os.getcwd()
@@ -241,8 +258,7 @@ for line in lines:
 			if fio.open() < 0:
 				E.print(fio.error())
 			line = '%s %s' % (proj, dept)
-			if verbose:
-				print('creating one file: "%s" [%s]' % (one_file, line))
+			vprint('creating one file: "%s" [%s]' % (one_file, line))
 			fio.writelines([line])
 			fio.close()
 		#  Do process.

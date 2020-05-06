@@ -5,15 +5,21 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#pragma comment(lib, "winmm.lib")
 
 #include "UTPreciseTimer.h"
 #include <Base/BaseDebug.h>
-#include <Windows.h>
-#include <mmsystem.h>
+
+#ifdef _WIN32
+# pragma comment(lib, "winmm.lib")
+# include <Windows.h>
+# include <mmsystem.h>
+#endif
 
 namespace Spr{;
+
 unsigned long UTPreciseTimer::freq;
+
+#ifdef _WIN32
 
 //生成時に1秒休み，周波数をカウントする
 UTPreciseTimer::UTPreciseTimer(): stopWatch(0), startFlag(false){
@@ -24,7 +30,7 @@ UTPreciseTimer::UTPreciseTimer(): stopWatch(0), startFlag(false){
 		Init();
 #else
 		freq = 100 * 1000;
-        freq *= 1000*1000;
+		freq *= 1000*1000;
 #endif
 	}
 }
@@ -126,7 +132,6 @@ int  UTPreciseTimer::CountUS()
 	return retval;
 }
 
-
 void UTPreciseTimer::CountAndWaitUS(int time)
 {
 	int elapsedtime;
@@ -152,5 +157,18 @@ unsigned long UTPreciseTimer::Clear(){
 	return rv;
 }
 
+#else
+
+UTPreciseTimer::UTPreciseTimer(){}
+void UTPreciseTimer::Init(int period){}
+void UTPreciseTimer::WaitUS(int time){}
+int  UTPreciseTimer::CountUS(){ return 0; }
+void UTPreciseTimer::CountAndWaitUS(int time){}
+unsigned long UTPreciseTimer::Start(){ return 0; }
+unsigned long UTPreciseTimer::Stop(){ return 0; }
+unsigned long UTPreciseTimer::Clear(){ return 0; }
+
+#endif
 
 }
+

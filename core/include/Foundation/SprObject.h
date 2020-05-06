@@ -72,6 +72,7 @@ public:
 	virtual ObjectIf* Create(const void* desc, ObjectIf* parent) =0;
 };
 
+struct UTTypeDescIf;
 /**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．
 1つのインタフェースクラスに付き1個のインスタンスができる．	*/
 class IfInfo: public UTRefCount{
@@ -101,6 +102,8 @@ public:
 		desc(NULL), state(NULL), baseList(bl), objInfo(o), className(cn), creator(NULL){id = ++maxId;}
 	///	デストラクタ
 	virtual ~IfInfo() {};
+	void SetState(UTTypeDescIf* t);
+	void SetDesc(UTTypeDescIf* t);
 	///	クラス名
 	virtual const char* ClassName() const =0;
 	///	ファクトリ(オブジェクトを生成するクラス)の登録
@@ -363,14 +366,93 @@ struct ObjectStatesIf: public ObjectIf{
 	static ObjectStatesIf* SPR_CDECL Create();
 };
 
-struct UTTypeDescIf{
+
+///	対象の型にアクセスするためのクラス
+class UTAccessBase :public UTRefCount {
+public:
+	virtual ~UTAccessBase() {}
+	///	オブジェクトの構築
+	virtual void* Create() = 0;
+	///	オブジェクトの破棄
+	virtual void Delete(void* ptr) = 0;
+	///	vector<T>::push_back(); return &back();
+	virtual void* VectorPush(void* v) = 0;
+	///	vector<T>::pop_back();
+	virtual void VectorPop(void* v) = 0;
+	///	vector<T>::at(pos);
+	virtual void* VectorAt(void* v, int pos) = 0;
+	///	vector<T>::size();
+	virtual size_t VectorSize(const void* v) = 0;
+	///
+	virtual size_t SizeOfVector() = 0;
+};
+template <class T>
+class UTAccess :public UTAccessBase {
+	virtual void* Create() { return DBG_NEW T; }
+	virtual void Delete(void* ptr) { delete (T*)ptr; }
+#if defined _MSC_VER
+# pragma warning (push)
+# pragma warning (disable : 4172)
+#endif
+	virtual void* VectorPush(void* v) {
+		((std::vector<T>*)v)->push_back(T());
+#ifdef	_WIN32
+		return &((std::vector<T>*)v)->back();
+#else
+		// ** FIX ME ** (This may cause memory leak!)
+		return (void*) new T(((std::vector<T>*)v)->back());
+#endif
+	}
+#if defined _MSC_VER
+# pragma warning (pop)
+#endif
+	virtual void VectorPop(void* v) {
+		((std::vector<T>*)v)->pop_back();
+	}
+#if defined _MSC_VER
+# pragma warning (push)
+# pragma warning (disable : 4172)
+#endif
+	virtual void* VectorAt(void* v, int pos) {
+#ifdef	_WIN32
+		return &((std::vector<T>*)v)->at(pos);
+#else
+		// ** FIX ME ** (This may cause memory leak!)
+		return (void*) new T(((std::vector<T>*)v)->at(pos));
+#endif
+	}
+#if defined _MSC_VER
+# pragma warning (pop)
+#endif
+	size_t VectorSize(const void* v) {
+		return ((const std::vector<T>*)v)->size();
+	}
+	virtual size_t SizeOfVector() {
+		return sizeof(std::vector<T>);
+	}
+};
+
+struct UTTypeDescIf: ObjectIf{
 	SPR_IFDEF(UTTypeDesc);
 	enum FieldType {
 		SINGLE, ARRAY, VECTOR
 	};
 	static UTTypeDescIf* FindTypeDesc(const char* typeName, const char* moduleName);
-	static void PrintPool(std::ostream& os);
-		///
+	
+	//------------------------------------------
+	//	TypeDescの作成に使用する関数
+	///	UTTypeDescをNewする。
+	static UTTypeDescIf* Create(std::string tn, int sz = 0);
+	//
+	void SetSize(size_t sz);
+	void SetAccess(UTAccessBase* a);
+	void SetOffset(int field, int offset);
+	void SetIfInfo(const IfInfo* info);
+	int AddField(std::string pre, std::string ty, std::string n, std::string post);
+	int AddBase(std::string tn);
+	void AddEnumConst(int field, std::string name, int val);
+
+	///	表示
 	void Print(std::ostream& os) const;
 	///	型名
 	std::string GetTypeName() const;
@@ -385,7 +467,7 @@ struct UTTypeDescIf{
 	///	組み立て型のフィールドの数
 	int NFields();
 	///	フィールドのTypeDesc
-	UTTypeDesc* GetFieldType(int i);
+	UTTypeDescIf* GetFieldType(int i);
 	///	Fieldが配列の場合の配列の長さを返す
 	int GetFieldLength(int i);
 	///	Fieldのvector場合のvectorの長さを返す
@@ -447,6 +529,37 @@ struct UTTypeDescIf{
 	void Write(std::ostream& os, void* base);
 	///	ストリームから読み出し
 	void Read(std::istream& is, void* base);
+};
+
+
+struct UTTypeDescDbIf : ObjectIf {
+	SPR_IFDEF(UTTypeDescDb);
+	///	全DBの内容を表示
+	static void PrintPool(std::ostream& os);
+	///	指定のDBを取得する
+	static UTTypeDescDbIf* GetDb(std::string n);
+	/**	型情報をデータベースに登録．	*/
+	void RegisterDesc(UTTypeDescIf* n);
+	/**	型名のAliasを登録	*/
+	void RegisterAlias(const char* src, const char* dest);
+	/**	型名のPrefix を設定．
+	型名をFindで検索する際に，検索キーにPrefixをつけたキーでも型名を検索する．	*/
+	void SetPrefix(std::string p);
+	/**	型情報を名前から検索する．
+	@param tn	型名．prefix は省略してよい．	*/
+	UTTypeDescIf* Find(std::string tn);
+	///	DB内の型情報を、引数dbにリンク．
+	void Link(UTTypeDescDbIf* db = NULL);
+	///	DB pool内のすべてのグループに対してLinkを呼び出す。
+	void LinkAll();
+	///	リンクの確認
+	bool LinkCheck();
+	///	DB内の型情報の表示
+	void Print(std::ostream& os) const;
+	///	グループ名
+	std::string GetGroup() const;
+	///	クリア
+	void Clear();
 };
 
 }

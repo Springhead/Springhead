@@ -9,7 +9,7 @@
 #include <Foundation/UTTypeDesc.h>
 
 namespace Spr{ 
-extern void RegisterTypeDescCreature(UTTypeDescDb* db);
+extern void RegisterTypeDescCreature(UTTypeDescDbIf* db);
 void SPR_CDECL CRRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
@@ -17,10 +17,10 @@ void SPR_CDECL CRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
-	UTTypeDescDb* pdb = UTTypeDescDbPool::Get("Physics");
-	UTTypeDescDb* gdb = UTTypeDescDbPool::Get("Graphics");
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Creature");
+	UTTypeDescDbIf* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDbIf* pdb = UTTypeDescDbPool::Get("Physics");
+	UTTypeDescDbIf* gdb = UTTypeDescDbPool::Get("Graphics");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("Creature");
 	assert(db);
 	RegisterTypeDescCreature(db);
 	db->Link();

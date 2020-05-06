@@ -5,6 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include <Base/Env.h>
 #include <Scilab/SprScilab.h>
 #include <Physics/PHFemPorousWOMove.h>
 #include <Base/Affine.h>
@@ -126,7 +127,7 @@ void PHFemPorousWOMove::Init(){
 #endif
 
 
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	
 	for(unsigned i = 0; i < mesh->vertices.size(); i++){
 		StateVertex vars;
@@ -598,7 +599,7 @@ void PHFemPorousWOMove::Step(double dt){
 	
 	//decrhoW(0.2);
 
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	////表面にある面を構成する3頂点の含水率の相加平均を面の含水率とし、その面における乾燥の段階を決定する, 
 	//for(unsigned fid = 0; fid < mesh->nSurfaceFace; fid++){
@@ -879,7 +880,7 @@ void PHFemPorousWOMove::Step(double dt){
 }
 
 void PHFemPorousWOMove::InitMatWO(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	int vtxSize = (int)mesh->vertices.size();
 
 	matWwAll.resize(vtxSize, vtxSize);
@@ -911,7 +912,7 @@ void PHFemPorousWOMove::InitMatWO(){
 }
 
 void PHFemPorousWOMove::InitMatC(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	int vtxSize = (int)mesh->vertices.size();
 	matCAll.resize(vtxSize, vtxSize);
 	matCAll.clear();
@@ -924,7 +925,7 @@ void PHFemPorousWOMove::InitMatC(){
 }
 
 void PHFemPorousWOMove::InitMatPc(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	int vtxSize = (int)mesh->vertices.size();
 	matPcwAll.resize(vtxSize, vtxSize);
 	matPcoAll.resize(vtxSize, vtxSize);
@@ -938,7 +939,7 @@ void PHFemPorousWOMove::InitMatPc(){
 }
 
 void PHFemPorousWOMove::InitVecF(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	int vtxSize = (int)mesh->vertices.size();
 
 	vecFwAll.resize(vtxSize, 1);
@@ -962,7 +963,7 @@ void PHFemPorousWOMove::InitVecF(){
 
 void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//この計算を呼び出すときに、各四面体ごとに計算するため、四面体の0番から順にこの計算を行う
 	//四面体を構成する4節点を節点の配列(Tetsには、節点の配列が作ってある)に入っている順番を使って、面の計算を行ったり、行列の計算を行ったりする。
@@ -1095,7 +1096,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 
 //void PHFemPorousWOMove::CreateMatk2(unsigned id){
 //
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	///	初期化
 //	tetVars[id].matk1W[1].clear();
@@ -1141,7 +1142,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //}
 
 //void PHFemPorousWOMove::CreateMatWOLocal(unsigned id){
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	//すべての四面体要素について係数行列を作る
 //	//[K1W1]、[K2W]、[K1O]、[K2O]を作る
@@ -1177,7 +1178,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //}
 
 //void PHFemPorousWOMove::CreateMatWOPcVecF2All(){
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
 //		CreateMatWOPcVecF2Local(tetid);
@@ -1220,7 +1221,7 @@ void PHFemPorousWOMove::CreateMatWOPcVecF2Local(unsigned tetid){
 //}
 
 void PHFemPorousWOMove::CreateMatCLocal(unsigned tetid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	//最後に入れる行列を初期化
 	if((tetVars[tetid].tetPorosity != tetVars[tetid].preTetPorosity) || (tetVars[tetid].rhoS != tetVars[tetid].preRhoS)){
@@ -1255,7 +1256,7 @@ void PHFemPorousWOMove::CreateMatCLocal(unsigned tetid){
 
 //void PHFemPorousWOMove::CreateMatCAll(){
 //
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	//全体剛性行列を作る
 //	if(matCChanged){
@@ -1278,7 +1279,7 @@ void PHFemPorousWOMove::CreateMatCLocal(unsigned tetid){
 
 void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	// 初期化
 	tetVars[tetid].vecFw[0].clear();
@@ -1330,7 +1331,7 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 }
 
 //void PHFemPorousWOMove::CreateVecF2(unsigned tetid){
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	if((tetVars[tetid].tetPorosity != tetVars[tetid].preTetPorosity) || (tetVars[tetid].rhoS != tetVars[tetid].preRhoS)){
 //		//初期化
@@ -1374,7 +1375,7 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //}
 
 //void PHFemPorousWOMove::CreateVecFLocal(unsigned id){
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	//CreateVecf1(id);
 //
@@ -1404,7 +1405,7 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //}
 
 //void PHFemPorousWOMove::CreateVecFAll(){
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //
 //	//要素の節点番号の場所に、その節点のfの値を入れる
 //	//j:要素の中の何番目か
@@ -1413,7 +1414,7 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //		vecFOAllSum.clear();
 //		for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
 //			for(unsigned j =0;j < 4; j++){
-//				int vtxid0 = GetPHFemMesh()->tets[tetid].vertexIDs[j];
+//				int vtxid0 = phFemMesh->tets[tetid].vertexIDs[j];
 //				vecFWAllSum[vtxid0][0] += tetVars[tetid].vecfW[0][j] + tetVars[tetid].vecfW[1][j];
 //				vecFOAllSum[vtxid0][0] += tetVars[tetid].vecfO[j];
 //			}
@@ -1428,7 +1429,7 @@ void PHFemPorousWOMove::CreateVecF1Local(unsigned tetid){
 //}
 
 void PHFemPorousWOMove::CreateMatVecAll(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
 		CreateMatWOPcVecF2Local(tetid);
@@ -1520,28 +1521,28 @@ void PHFemPorousWOMove::CreateMatVecAll(){
 }
 
 void PHFemPorousWOMove::CreateRhoWVecAll(){
-	rhoWVecAll.resize(GetPHFemMesh()->vertices.size(), 1);
+	rhoWVecAll.resize(phFemMesh->vertices.size(), 1);
 	SetRhoWAllToRhoWVecAll();
 }
 
 void PHFemPorousWOMove::CreateRhoOVecAll(){
-	rhoOVecAll.resize(GetPHFemMesh()->vertices.size(), 1);
+	rhoOVecAll.resize(phFemMesh->vertices.size(), 1);
 	SetRhoOAllToRhoOVecAll();
 }
 
 void PHFemPorousWOMove::InitPcVecAll(){
-	PcVecAll.resize(GetPHFemMesh()->vertices.size(), 1);
+	PcVecAll.resize(phFemMesh->vertices.size(), 1);
 }
 
 void PHFemPorousWOMove::InitTcAll(double temp){
-	for(unsigned i =0; i <GetPHFemMesh()->vertices.size();i++){
+	for(unsigned i =0; i <phFemMesh->vertices.size();i++){
 		vertexVars[i].Tc = temp;
 	}
 }
 
 double PHFemPorousWOMove::CalcTriangleArea(int id0, int id1, int id2){
 
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double area=0.0;								///	要改善	faces[id].areaに値を入れる 
 
@@ -1582,7 +1583,7 @@ double PHFemPorousWOMove::CalcTriangleArea(int id0, int id1, int id2){
 
 double PHFemPorousWOMove::CalcTetrahedraVolume(FemTet tet){
 
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	PTM::TMatrixRow<4,4,double> tempMat44;
 	for(unsigned i =0; i < 4; i++){
@@ -1634,7 +1635,7 @@ PTM::TMatrixCol<4,1,double> PHFemPorousWOMove::Create41Vec1(){
 
 void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
 #ifdef USE_LAPACK
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	//lapack利用
 	int n = (int)mesh->vertices.size();
 
@@ -1726,7 +1727,7 @@ void PHFemPorousWOMove::CalcWOContentDirect(double dt, double eps){
 }
 
 void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	int n = (int)mesh->vertices.size();
 
@@ -1784,7 +1785,7 @@ void PHFemPorousWOMove::CalcWOContentDirect2(double dt, double eps){
 }
 
 void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt, double eps){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	
 	double _eps = 1-eps;			// 1-epsの計算に利用
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool		//NofCycが0の時にすればいいのかも
@@ -1929,7 +1930,7 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 }
 
 //void PHFemPorousWOMove::CalcWOContentUsingScilab(double dt){
-//	PHFemMeshNew* mesh = GetPHFemMesh();
+//	PHFemMeshNew* mesh = phFemMesh;
 //	double eps = 0.5; 
 //
 //	dtMat[0][0] = dt;
@@ -2232,39 +2233,39 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 //}
 
 void PHFemPorousWOMove::SetRhoWAllToRhoWVecAll(){
-	unsigned vtxSize = (unsigned)GetPHFemMesh()->vertices.size();
+	unsigned vtxSize = (unsigned)phFemMesh->vertices.size();
 	for(unsigned i=0; i < vtxSize; i++){
 		rhoWVecAll[i][0] = vertexVars[i].rhoW;
 	}
 }
 
 void PHFemPorousWOMove::SetRhoOAllToRhoOVecAll(){
-	unsigned vtxSize = (unsigned)GetPHFemMesh()->vertices.size();
+	unsigned vtxSize = (unsigned)phFemMesh->vertices.size();
 	for(unsigned i=0; i < vtxSize; i++){
 		rhoOVecAll[i][0] = vertexVars[i].rhoO;
 	}
 }
 
 void PHFemPorousWOMove::UpdateVertexRhoWAll(){
-	for(unsigned vtxid=0; vtxid < GetPHFemMesh()->vertices.size(); vtxid++){
+	for(unsigned vtxid=0; vtxid < phFemMesh->vertices.size(); vtxid++){
 		vertexVars[vtxid].rhoW = rhoWVecAll[vtxid][0];
 	}
 }
 
 void PHFemPorousWOMove::UpdateVertexRhoOAll(){
-	for(unsigned vtxid=0; vtxid < GetPHFemMesh()->vertices.size(); vtxid++){
+	for(unsigned vtxid=0; vtxid < phFemMesh->vertices.size(); vtxid++){
 		vertexVars[vtxid].rhoO = rhoOVecAll[vtxid][0];
 	}
 }
 
 void PHFemPorousWOMove::InitAllVertexRhoW(){
-	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 		vertexVars[i].rhoW = 0.0;
 	}
 }
 
 void PHFemPorousWOMove::InitAllVertexRhoO(){
-	for(unsigned i=0; i < GetPHFemMesh()->vertices.size(); i++){
+	for(unsigned i=0; i < phFemMesh->vertices.size(); i++){
 		vertexVars[i].rhoO = 0.0;
 	}
 }
@@ -2302,7 +2303,7 @@ void PHFemPorousWOMove::SetVertexMo(unsigned vtxid, double mo){
 }
 
 void PHFemPorousWOMove::CalcVertexWOMu(unsigned vtxid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	double vtxTemp;
 	if(mesh->femThermo){
 		vtxTemp = mesh->GetPHFemThermo()->GetVertexTemp(vtxid);
@@ -2315,7 +2316,7 @@ void PHFemPorousWOMove::CalcVertexWOMu(unsigned vtxid){
 }
 
 void PHFemPorousWOMove::CalcVertexVolume(unsigned vtxid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	vertexVars[vtxid].vVolume = 0;
 	for(unsigned tetid=0; tetid < mesh->vertices[vtxid].tetIDs.size(); tetid++){
 		vertexVars[vtxid].vVolume += tetVars[mesh->vertices[vtxid].tetIDs[tetid]].volume / 4;
@@ -2380,7 +2381,7 @@ double PHFemPorousWOMove::GetVertexMo(unsigned vtxid){
 }
 
 void PHFemPorousWOMove::CalcFaceArea(unsigned faceid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	faceVars[faceid].area = CalcTriangleArea(mesh->faces[faceid].vertexIDs[0], mesh->faces[faceid].vertexIDs[1], mesh->faces[faceid].vertexIDs[2]);
 }
 
@@ -2393,7 +2394,7 @@ void PHFemPorousWOMove::SetFaceVaporPress(unsigned faceid, double vaporPress){
 }
 
 void PHFemPorousWOMove::CalcFaceMaxVaporPress(unsigned faceid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	double faceTemp;
 	if(mesh->GetPHFemThermo()){
 		faceTemp = (mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[faceid].vertexIDs[0]) + mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[faceid].vertexIDs[1]) + mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[faceid].vertexIDs[2])) / 3;
@@ -2404,7 +2405,7 @@ void PHFemPorousWOMove::CalcFaceMaxVaporPress(unsigned faceid){
 }
 
 void PHFemPorousWOMove::CalcFaceMaxVaporCont(unsigned faceid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	double faceTemp;
 	if(mesh->GetPHFemThermo()){
 		faceTemp = (mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[faceid].vertexIDs[0]) + mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[faceid].vertexIDs[1]) + mesh->GetPHFemThermo()->GetVertexTemp(mesh->faces[faceid].vertexIDs[2])) / 3;
@@ -2431,22 +2432,22 @@ double PHFemPorousWOMove::GetFaceMaxVaporPress(unsigned faceid){
 }
 
 void PHFemPorousWOMove::CalcTetVolume(unsigned tetid){
-	tetVars[tetid].volume = CalcTetrahedraVolume(GetPHFemMesh()->tets[tetid]);
+	tetVars[tetid].volume = CalcTetrahedraVolume(phFemMesh->tets[tetid]);
 }
 
 void PHFemPorousWOMove::CalcTetPorosity(unsigned tetid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	tetVars[tetid].tetPorosity = (vertexVars[mesh->tets[tetid].vertexIDs[0]].porosity + vertexVars[mesh->tets[tetid].vertexIDs[1]].porosity + vertexVars[mesh->tets[tetid].vertexIDs[2]].porosity + vertexVars[mesh->tets[tetid].vertexIDs[3]].porosity) / 4;
 }
 
 void PHFemPorousWOMove::CalcTetWOMu(unsigned tetid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	tetVars[tetid].tetMuW = (vertexVars[mesh->tets[tetid].vertexIDs[0]].muW + vertexVars[mesh->tets[tetid].vertexIDs[1]].muW + vertexVars[mesh->tets[tetid].vertexIDs[2]].muW + vertexVars[mesh->tets[tetid].vertexIDs[3]].muW) / 4;
 	tetVars[tetid].tetMuO = (vertexVars[mesh->tets[tetid].vertexIDs[0]].muO + vertexVars[mesh->tets[tetid].vertexIDs[1]].muO + vertexVars[mesh->tets[tetid].vertexIDs[2]].muO + vertexVars[mesh->tets[tetid].vertexIDs[3]].muO) / 4;
 }
 
 void PHFemPorousWOMove::CalcTetRhoS(unsigned tetid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	tetVars[tetid].rhoS = (vertexVars[mesh->tets[tetid].vertexIDs[0]].rhoS + vertexVars[mesh->tets[tetid].vertexIDs[1]].rhoS + vertexVars[mesh->tets[tetid].vertexIDs[2]].rhoS + vertexVars[mesh->tets[tetid].vertexIDs[3]].rhoS) / 4;
 }
 
@@ -2523,7 +2524,7 @@ PTM::VMatrixRow<double> PHFemPorousWOMove::inv2(PTM::VMatrixRow<double> mat){
 }
 
 double PHFemPorousWOMove::GetVtxWaterInTets(Vec3d temppos){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	PTM::TMatrixCol<4,4,double> Vertex;		//	四面体を成す4点の位置座標
 	PTM::TVector<4,double> coeffk;			//	形状関数的な？
@@ -2558,7 +2559,7 @@ double PHFemPorousWOMove::GetVtxWaterInTets(Vec3d temppos){
 }
 
 double PHFemPorousWOMove::GetVtxOilInTets(Vec3d temppos){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	PTM::TMatrixCol<4,4,double> Vertex;		//	四面体を成す4点の位置座標
 	PTM::TVector<4,double> coeffk;			//	形状関数的な？
@@ -2593,7 +2594,7 @@ double PHFemPorousWOMove::GetVtxOilInTets(Vec3d temppos){
 }
 
 double PHFemPorousWOMove::CalcWaterInnerTets(unsigned id,PTM::TVector<4,double> N){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double temp = 0.0;
 	for(unsigned i=0;i<4;i++){
@@ -2603,7 +2604,7 @@ double PHFemPorousWOMove::CalcWaterInnerTets(unsigned id,PTM::TVector<4,double> 
 };
 
 double PHFemPorousWOMove::CalcOilInnerTets(unsigned id,PTM::TVector<4,double> N){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	double temp = 0.0;
 	for(unsigned i=0;i<4;i++){
@@ -2675,7 +2676,7 @@ float PHFemPorousWOMove::calcGvtx(std::string fwfood, int pv, unsigned texture_m
 };
 
 void PHFemPorousWOMove::matWwOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream wwOut;
 	wwOut.open("matWw.csv",std::ios::app);
@@ -2691,7 +2692,7 @@ void PHFemPorousWOMove::matWwOut(){
 };
 
 void PHFemPorousWOMove::matWoOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream woOut;
 	woOut.open("matWo.csv",std::ios::app);
@@ -2707,7 +2708,7 @@ void PHFemPorousWOMove::matWoOut(){
 };
 
 void PHFemPorousWOMove::matOwOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream owOut;
 	owOut.open("matOw.csv",std::ios::app);
@@ -2723,7 +2724,7 @@ void PHFemPorousWOMove::matOwOut(){
 };
 
 void PHFemPorousWOMove::matOoOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream ooOut;
 	ooOut.open("matOo.csv",std::ios::app);
@@ -2739,7 +2740,7 @@ void PHFemPorousWOMove::matOoOut(){
 };
 
 void PHFemPorousWOMove::matPcwOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream pcwOut;
 	pcwOut.open("matPcw.csv",std::ios::app);
@@ -2755,7 +2756,7 @@ void PHFemPorousWOMove::matPcwOut(){
 };
 
 void PHFemPorousWOMove::matPcoOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream pcoOut;
 	pcoOut.open("matPco.csv",std::ios::app);
@@ -2771,7 +2772,7 @@ void PHFemPorousWOMove::matPcoOut(){
 };
 
 void PHFemPorousWOMove::matCOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream cOut;
 	cOut.open("matCpwom.csv",std::ios::app);
@@ -2787,7 +2788,7 @@ void PHFemPorousWOMove::matCOut(){
 };
 
 void PHFemPorousWOMove::vecFwAllOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream vecFwOut;
 	vecFwOut.open("vecFwAll.csv",std::ios::app);
@@ -2801,7 +2802,7 @@ void PHFemPorousWOMove::vecFwAllOut(){
 };
 
 void PHFemPorousWOMove::vecFoAllOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream vecFoOut;
 	vecFoOut.open("vecFoAll.csv",std::ios::app);
@@ -2814,7 +2815,7 @@ void PHFemPorousWOMove::vecFoAllOut(){
 };
 
 void PHFemPorousWOMove::vecFwFinalOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream vecFwOut;
 	vecFwOut.open("vecFwFinal.csv",std::ios::app);
@@ -2828,7 +2829,7 @@ void PHFemPorousWOMove::vecFwFinalOut(){
 };
 
 void PHFemPorousWOMove::vecFoFinalOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream vecFoOut;
 	vecFoOut.open("vecFoFinal.csv",std::ios::app);
@@ -2841,7 +2842,7 @@ void PHFemPorousWOMove::vecFoFinalOut(){
 };
 
 void PHFemPorousWOMove::vecPcAllOut(){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	std::ofstream vecPcAllOut;
 	vecPcAllOut.open("vecPcAll.csv",std::ios::app);
@@ -2854,7 +2855,7 @@ void PHFemPorousWOMove::vecPcAllOut(){
 };
 
 void PHFemPorousWOMove::decrhoW(double dec){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 
 	for(unsigned i=0; i < mesh->vertices.size() / 2; i++){
 		vertexVars[2*i+1].rhoW -= dec;
@@ -2891,7 +2892,7 @@ void PHFemPorousWOMove::outflowOverSaturation(unsigned vtxid){
 };
 
 double PHFemPorousWOMove::decideWetValue(unsigned vtxid){
-	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemMeshNew* mesh = phFemMesh;
 	
 	double outflowLiquid = vertexVars[vtxid].outflowOil + vertexVars[vtxid].outflowWater;
 	

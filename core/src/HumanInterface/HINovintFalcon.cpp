@@ -17,6 +17,8 @@
 
 namespace Spr {;
 
+#ifdef _WIN32
+
 #define HDLAPIENTRY  __stdcall
 
 typedef int HDLDeviceHandle;
@@ -29,10 +31,11 @@ typedef int HDLError;
 
 #define HDAL_NOT_CALIBRATED    0x04
 
+UTDllLoader* HINovintFalcon::sDllLoader;
+
 extern "C"{
 //	DLLスタブの実装
 
-UTDllLoader* HINovintFalcon::sDllLoader;
 #define dllLoader (*HINovintFalcon::sDllLoader)
 
 //	__declspec(dllexport) HDLDeviceHandle HDLAPIENTRY hdlInitNamedDevice(const char* deviceName, const char* configPath = 0);
@@ -88,7 +91,6 @@ UTDllLoader* HINovintFalcon::sDllLoader;
 #define DLLFUNC_ARGDEF	(int * pButtons)					//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(pButtons)							//	関数呼び出しの引数
 #include <Foundation/UTDllLoaderImpl.h>
-}
 
 //	__declspec(dllexport) HDLError HDLAPIENTRY hdlGetError();
 #define DLLFUNC_RTYPE	HDLError							//	返り型
@@ -136,7 +138,7 @@ UTDllLoader* HINovintFalcon::sDllLoader;
 #include <Foundation/UTDllLoaderImpl.h>
 
 #undef dllLoader
-
+}
 
 HINovintFalcon::HINovintFalcon(const HINovintFalconDesc& desc){
 	deviceHandle = HDL_INVALID_HANDLE;
@@ -174,9 +176,7 @@ void calibrateFalcon(){
 	int i;
 	int n = 30;
 	for (i=0; i< n && !isFalconCalibrated(); ++i){
-#ifdef _WIN32
 		Sleep(100);
-#endif
 		DSTR << ".";
 	}
 	if (i<n)	DSTR << "Calibration finished." << std::endl;
@@ -198,9 +198,7 @@ bool HINovintFalcon::Init(const void* desc){
 	testHDLError("Could not start servo thread");
 
 	// Sleep for 1sec to allow everything to start running.
-#ifdef _WIN32
 	Sleep(1000);
-#endif
 
 	// Make the device associated with the returned handle
 	// the current device.  All subsequent calls will
@@ -241,4 +239,19 @@ void HINovintFalcon::Update(float dt){
 	HIHaptic::Update(dt);
 }
 
-}//	namespace Spr
+#else
+
+HINovintFalcon::HINovintFalcon(const HINovintFalconDesc& desc){}
+HINovintFalcon::~HINovintFalcon(){}
+bool HINovintFalcon::Init(const void* desc){ return false; }
+bool HINovintFalcon::BeforeCalibration(){ return false; }
+bool HINovintFalcon::Calibration(){ return false; }
+int  HINovintFalcon::GetButton(int ch){ return 0; }
+int  HINovintFalcon::GetButtonBit(){ return 0; }
+void HINovintFalcon::Update(float dt){}
+
+#endif
+
+}
+//	namespace Spr
+

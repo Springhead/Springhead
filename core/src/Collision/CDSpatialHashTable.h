@@ -6,7 +6,7 @@
 
 namespace Spr{;
 
-//class Bounds
+//class CDBounds
 //		{
 //		public:
 //			m3Bounds(){}
@@ -88,7 +88,7 @@ public:
 		//pointをHashCellにaddしてみます、他のobjのpointも同じhashにいるなら、コリジョン発生する。
 		bool addNewP(int pIndex,int oIndex,int timestamp,int hashIndex,int axis)
 		{
-			int hashId = hashIndex;
+			//int hashId = hashIndex;
 			int count = 0;
 			IndexOfincludedObjInd= (-1) ;//
 			if(pcInfolist.size()>0)
@@ -207,7 +207,7 @@ class CDSpatialHashTable: public NamedObject
 	float posCoefft; //
 	float cellCoefft;
 
-	void init(float cellSize,Bounds  bounds)
+	void Init(float cellSize,CDBounds  bounds)
 	{//hash表、空間の構築
 		currHashs.reserve(reserveSize);
 		//params

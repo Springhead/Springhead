@@ -58,7 +58,7 @@ public :
 	Vec3f GetSecContactPosition(int secId);
 
 	void EnableCollisionDetection(bool able = true);
-	void Initial(float cellSize, Bounds  bounds);
+	void Initial(float cellSize, CDBounds  bounds);
 	void SetDebugMode(bool flag);
 	bool GetDebugMode();
 	bool IsCollisionEnabled();

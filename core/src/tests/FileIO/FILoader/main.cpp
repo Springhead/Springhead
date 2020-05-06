@@ -74,7 +74,7 @@ std::vector<GRMaterialDesc> material;
  param	 	なし
  return 	なし
  */
-void __cdecl display(){
+void SPR_CDECL display(){
 	render->ClearBuffer();
 	if (!fwScene){
 		fwScene = fwSdk->CreateScene();
@@ -127,7 +127,7 @@ void setMaterial() {
  param  	<in/--> h　　高さ
  return 	なし
  */
-void __cdecl reshape(int w, int h){
+void SPR_CDECL reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
@@ -138,7 +138,7 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void __cdecl keyboard(unsigned char key, int x, int y){
+void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
 		delete[] vtx;
 		std::cout << "exited by ESC key" << std::endl;
@@ -161,7 +161,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void __cdecl idle(){
+void SPR_CDECL idle(){
 	if(scene) {
 		scene->Step();
 	}
@@ -181,7 +181,7 @@ void __cdecl idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	{	//	glutMainLoop()を呼ぶと帰ってこないため、メモリリークが起きるので。
 		PHSdkIf::RegisterSdk();
 		GRSdkIf::RegisterSdk();

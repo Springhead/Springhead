@@ -14,7 +14,7 @@ using namespace Spr;
 
 
 namespace Spr{ 
-extern void RegisterTypeDescFileIO(UTTypeDescDb* db);
+extern void RegisterTypeDescFileIO(UTTypeDescDbIf* db);
 
 void SPR_CDECL FIRegisterTypeDescs(){
 	static bool bFirst=true;
@@ -22,7 +22,7 @@ void SPR_CDECL FIRegisterTypeDescs(){
 	bFirst = false;
 
 	UTRegisterTypeDescs();
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("FileIO");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("FileIO");
 	RegisterTypeDescFileIO(db);
 	db->Link();
 	db->LinkCheck();

@@ -457,7 +457,7 @@ public:
 	void Jacobi(Matrix3f &a, Matrix3f &v)
 	{
 		int i, j, n, p, q;
-		float prevoff, c, s;
+		float prevoff = 0.0f, c, s;
 		Matrix3f J, b, t;
 
 		// Initialize v to identity matrix

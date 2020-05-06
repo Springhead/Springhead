@@ -9,72 +9,142 @@ namespace Spr{;
 
 static int Ncontrollers = 0;
 
-HIXbox360Controller::HIXbox360Controller(const HIXbox360ControllerDesc& desc){
+class HIXbox360ControllerImpl{
+public:
+	HIXbox360Controller* owner;
+
+#ifdef _WIN32
+	XINPUT_STATE state;
+#endif
+
+public:
+#ifdef _WIN32
+	bool Init(){
+		ZeroMemory( &state, sizeof(XINPUT_STATE) );
+		DWORD dwResult = XInputGetState( owner->controllerID, &state);
+		if( dwResult == ERROR_SUCCESS ){ 
+			DSTR << "Succeed to connect." << std::endl;
+			return true;
+		}else{
+			DSTR << "Failed to connect Xbox Controller." << std::endl;
+			return false;
+		}
+	}
+	void Update(float dt){
+		UpdateState();
+		XINPUT_GAMEPAD g = state.Gamepad;
+
+		// 各種キー
+		for(int i = 0; i < 14; i++){
+			owner->key[i] = false;
+		}
+		if(g.wButtons & XINPUT_GAMEPAD_DPAD_UP)			owner->key[0] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)		owner->key[1] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)		owner->key[2] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)		owner->key[3] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_START)			owner->key[4] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_BACK)			owner->key[5] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)		owner->key[6] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)		owner->key[7] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)	owner->key[8] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)	owner->key[9] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_A)				owner->key[10] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_B)				owner->key[11] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_X)				owner->key[12] = true;
+		if(g.wButtons & XINPUT_GAMEPAD_Y)				owner->key[13] = true;
+	
+		// アナログスティック、ボタン
+		owner->thumbL = Vec2i((int)g.sThumbLX, (int)g.sThumbLY);
+		owner->thumbR = Vec2i((int)g.sThumbRX, (int)g.sThumbRY);
+		owner->leftTrigger = (int)g.bLeftTrigger;
+		owner->rightTrigger = (int)g.bRightTrigger;
+
+		// 正規化
+		owner->n_thumbL = (Vec2f)owner->thumbL / DIS_SHORT;
+		owner->n_thumbR = (Vec2f)owner->thumbR / DIS_SHORT;
+		owner->n_rightTrigger = (float)owner->rightTrigger / DIS_UCHAR;
+		owner->n_leftTrigger  = (float)owner->leftTrigger / DIS_UCHAR;
+	}
+	void UpdateState(){
+		ZeroMemory( &state, sizeof(XINPUT_STATE) );
+
+		DWORD dwResult = XInputGetState(owner->controllerID, &state);
+		if(dwResult != ERROR_SUCCESS){
+			//std::cout << "Can not update the Xbox360Controller states." << std::endl;
+		}
+		CheckDeadZone();
+	}
+	void CheckDeadZone(){
+		// Zero value if thumbsticks are within the dead zone 
+		if( (state.Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && 
+			 state.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) && 
+			(state.Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && 
+			 state.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) )
+		{	
+		   state.Gamepad.sThumbLX = 0;
+		   state.Gamepad.sThumbLY = 0;
+		}
+
+		if( (state.Gamepad.sThumbRX < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && 
+			 state.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) && 
+			(state.Gamepad.sThumbRY < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && 
+		state.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ) 
+		{
+		   state.Gamepad.sThumbRX = 0;
+		   state.Gamepad.sThumbRY = 0;
+		}
+	}
+	void SetVibration(Vec2f lr){
+		owner->vibScale = 1000.0f;
+		if(lr.x > owner->vibScale) lr.x = owner->vibScale;
+		if(lr.y > owner->vibScale) lr.y = owner->vibScale;
+
+		XINPUT_VIBRATION vib;
+		vib.wLeftMotorSpeed  = lr.x / owner->vibScale * DIS_USHORT;
+		vib.wRightMotorSpeed = lr.y / owner->vibScale * DIS_USHORT;
+		DWORD dwResult;
+		dwResult = XInputSetState(owner->controllerID, &vib);
+		if(dwResult != ERROR_SUCCESS){
+			std::cout << "Error at setting vibration of XBox Controller." << std::endl;
+		}
+	}
+#else
+	bool Init(){ return false; }
+	void Update(float dt){}
+	void UpdateState(){}
+	void CheckDeadZone(){}
+	void SetVibration(Vec2f lr){}		
+#endif
+};
+
+HIXbox360Controller::HIXbox360Controller (const HIXbox360ControllerDesc& desc): impl(NULL) {
 	controllerID = Ncontrollers;
 	Init();
 	Ncontrollers += 1;
 	if(Ncontrollers > MAX_CONTROLLERS) DSTR << "Can not connect a XboxController anymore!" << std::endl;
 }
 
+HIXbox360Controller::~HIXbox360Controller(){
+	if(impl)
+		delete impl;
+}
+
 bool HIXbox360Controller::Init(){
 	DSTR << "Connecting Xbox Controller " << controllerID << "." << std::endl;
-	ZeroMemory( &state, sizeof(XINPUT_STATE) );
-	DWORD dwResult = XInputGetState( controllerID, &state);
-	if( dwResult == ERROR_SUCCESS ){ 
-		DSTR << "Succeed to connect." << std::endl;
-		return true;
-	}else{
-		DSTR << "Failed to connect Xbox Controller." << std::endl;
-		return false;
+	if (!impl) {
+		impl = new HIXbox360ControllerImpl;
+		impl->owner = this;
 	}
+	return impl->Init();
 }
 
 void HIXbox360Controller::Update(float dt){
-	UpdateState();
-	XINPUT_GAMEPAD g = state.Gamepad;
-
-	// 各種キー
-	for(int i = 0; i < 14; i++){
-		key[i] = false;
-	}
-	if(g.wButtons & XINPUT_GAMEPAD_DPAD_UP)			key[0] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)		key[1] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)		key[2] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)		key[3] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_START)			key[4] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_BACK)			key[5] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)		key[6] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)		key[7] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)	key[8] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)	key[9] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_A)				key[10] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_B)				key[11] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_X)				key[12] = true;
-	if(g.wButtons & XINPUT_GAMEPAD_Y)				key[13] = true;
-
-	// アナログスティック、ボタン
-	thumbL = Vec2i((int)g.sThumbLX, (int)g.sThumbLY);
-	thumbR = Vec2i((int)g.sThumbRX, (int)g.sThumbRY);
-	leftTrigger = (int)g.bLeftTrigger;
-	rightTrigger = (int)g.bRightTrigger;
-
-	// 正規化
-	n_thumbL = (Vec2f)thumbL / DIS_SHORT;
-	n_thumbR = (Vec2f)thumbR / DIS_SHORT;
-	n_rightTrigger = (float)rightTrigger / DIS_UCHAR;
-	n_leftTrigger = (float)leftTrigger / DIS_UCHAR;
+	impl->Update(dt);
 
 	UpdatePose(dt);
 }
-
 void HIXbox360Controller::UpdateState(){
-	ZeroMemory( &state, sizeof(XINPUT_STATE) );
-
-	DWORD dwResult = XInputGetState(controllerID, &state);
-	if(dwResult != ERROR_SUCCESS){
-		//std::cout << "Can not update the Xbox360Controller states." << std::endl;
-	}
-	CheckDeadZone();
+	impl->UpdateState();
 }
 
 void HIXbox360Controller::UpdatePose(float dt){
@@ -122,24 +192,7 @@ void HIXbox360Controller::Comp3DoF(){
 }
 
 void HIXbox360Controller::CheckDeadZone(){
-	// Zero value if thumbsticks are within the dead zone 
-	if( (state.Gamepad.sThumbLX < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && 
-		 state.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) && 
-		(state.Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && 
-		 state.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) )
-	{	
-	   state.Gamepad.sThumbLX = 0;
-	   state.Gamepad.sThumbLY = 0;
-	}
-
-	if( (state.Gamepad.sThumbRX < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && 
-		 state.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) && 
-		(state.Gamepad.sThumbRY < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && 
-	state.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ) 
-	{
-	   state.Gamepad.sThumbRX = 0;
-	   state.Gamepad.sThumbRY = 0;
-	}
+	impl->CheckDeadZone();
 }
 
 void HIXbox360Controller::SetMaxVelocity(float v){
@@ -171,18 +224,7 @@ Vec3f HIXbox360Controller::GetAngularVelocity(){
 }
 
 void HIXbox360Controller::SetVibration(Vec2f lr){
-	vibScale = 1000.0f;
-	if(lr.x > vibScale) lr.x = vibScale;
-	if(lr.y > vibScale) lr.y = vibScale;
-
-	XINPUT_VIBRATION vib;
-	vib.wLeftMotorSpeed = lr.x / vibScale * DIS_USHORT;
-	vib.wRightMotorSpeed = lr.y / vibScale * DIS_USHORT;
-	DWORD dwResult;
-	dwResult = XInputSetState(controllerID, &vib);
-	if(dwResult != ERROR_SUCCESS){
-		std::cout << "Error at setting vibration of XBox Controller." << std::endl;
-	}
+	impl->SetVibration(lr);
 }
 
 }

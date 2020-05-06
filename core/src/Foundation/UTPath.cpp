@@ -127,8 +127,8 @@ UTString SPR_CDECL UTPath::GetCwd(){
 	UTString rv(buf);
 	rv += '\\';
 #else	
-	getcwd(buf, sizeof(buf));
-	UTString rv(buf);
+	char* pbuf = getcwd(buf, sizeof(buf));
+	UTString rv(pbuf);
 	rv += '/';
 #endif	
 	return rv;
@@ -150,8 +150,7 @@ void SPR_CDECL UTPath::CreateDir(UTString dirname){
 }
 
 UTString UTPath::FullPath(){
-	if (path.length() && path[0] == '\\'
-		|| path.length()>=2 && path[1] == ':'){
+	if ( (path.length() && path[0] == '\\') || (path.length()>=2 && path[1] == ':') ){
 		if (path.length()>=2 && path[0]=='\\' && path[1]!='\\'){
 			//	ドライブ名が省略されているので補完．
 			UTString cwd = GetCwd();
@@ -171,7 +170,7 @@ UTString UTPath::FullPath(){
 	}
 }
 UTString UTPath::RelPath(){
-	if (path.length() && path[0] == '\\' || path.length()>=2 && path[1] == ':'){
+	if ( (path.length() && path[0] == '\\') || (path.length()>=2 && path[1] == ':') ){
 		UTString fp = FullPath();
 		//	もともと絶対パス
 		UTString cwd = GetCwd();

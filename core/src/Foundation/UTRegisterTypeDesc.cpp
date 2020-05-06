@@ -15,16 +15,14 @@
 
 
 namespace Spr{ 
-//static UTTypeDesc* desc; 
-//static UTTypeDesc::Field* field; 
-extern void RegisterTypeDescFoundation(UTTypeDescDb* db);
+extern void RegisterTypeDescFoundation(UTTypeDescDbIf* db);
 
 void SPR_CDECL UTRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;
 
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDb* db = UTTypeDescDbPool::Get("Foundation")->Cast();
 	typedef unsigned char BYTE;
 	typedef unsigned short WORD;
 	typedef unsigned int DWORD;
@@ -49,7 +47,7 @@ void SPR_CDECL UTRegisterTypeDescs(){
 	db->RegisterDesc(new UTTypeDescNumber<double>("DOUBLE"));
 	db->RegisterDesc(new UTTypeDescString("string"));
 
-	RegisterTypeDescFoundation(db);
+	RegisterTypeDescFoundation(db->Cast());
 
 	db->Link();
 	db->LinkCheck();

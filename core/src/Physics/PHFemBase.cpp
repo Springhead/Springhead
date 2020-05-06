@@ -7,7 +7,7 @@ namespace Spr{;
 /* 計算モジュールの共通部分 */
 void PHFemBase::SetPHFemMesh(PHFemMeshNew* m){ phFemMesh = m; }
 
-PHFemMeshNew* PHFemBase::GetPHFemMesh(){ return phFemMesh; }
+PHFemMeshNewIf* PHFemBase::GetPHFemMesh(){ return phFemMesh->Cast(); }
 
 int PHFemBase::NVertices(){ return GetPHFemMesh()->NVertices(); }
 

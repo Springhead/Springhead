@@ -368,6 +368,32 @@ bool PHIKBallActuator::LimitTempJoint() {
 			}
 		}
 	}
+	PHBallJointIndependentLimitIf* iLimit = DCAST(PHBallJointIf, joint)->GetLimit()->Cast();
+	if (iLimit) {
+		Vec3d euler;
+		jointTempOri.ToEuler(euler);
+		euler = Vec3d(euler.z, euler.x, euler.y);
+		bool over = false;
+		Vec3d correct = Vec3d();
+		for (int i = 0; i < 3; i++) {
+			Vec2d range; iLimit->GetLimitRangeN(i, range);
+			if (euler[i] <= range[0]) {
+				over = true;
+				correct[i] = range[0] - euler[i];
+			}
+			else if (range[1] <= euler[i]) {
+				over = true;
+				correct[i] = range[1] - euler[i];
+			}
+		}
+		if (over) {
+			Quaterniond pullback;
+			pullback.FromEuler(Vec3d(correct.y, correct.z, correct.x));
+			jointTempOri = pullback * jointTempOri;
+			jointVelocity = Vec3d();
+			return true;
+		}
+	}
 	return false;
 }
 

@@ -1,4 +1,4 @@
-#ifndef UT_CLAPACK_H
+ï»¿#ifndef UT_CLAPACK_H
 #define UT_CLAPACK_H
 
 #include <SprDefs.h>
@@ -6,146 +6,13 @@
 #include <float.h>  // DBL_MIN DBL_MAX
 
 #ifdef USE_LAPACK
-# define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
-# if defined _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable:4267)
-#  pragma warning(disable:4005)
-# endif
-//#include <boost/numeric/ublas/fwd.hpp>
-# include <boost/numeric/bindings/lapack/driver/sygv.hpp>
-# include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
-# include <boost/numeric/bindings/lapack/driver/gesv.hpp>
-# include <boost/numeric/bindings/lapack/driver/gels.hpp>
-# include <boost/numeric/bindings/lapack/driver/gelsd.hpp>
-# include <boost/numeric/bindings/lapack/driver/gesdd.hpp>
-# include <boost/numeric/bindings/noop.hpp>
-# include <boost/numeric/bindings/ublas/banded.hpp>
-# include <boost/numeric/bindings/ublas/matrix.hpp>
-# include <boost/numeric/bindings/ublas/matrix_proxy.hpp>
-# include <boost/numeric/bindings/ublas/symmetric.hpp>
-# include <boost/numeric/bindings/ublas/vector.hpp>
-# include <boost/numeric/bindings/ublas/vector_proxy.hpp>
-# if defined _MSC_VER
-#  pragma warning(pop)
-# endif
-# if defined(_MSC_VER)
-#  ifdef TRACE		// Trace
-#   if (_MSC_VER == 1500)    // Visual Studio 2008
-#    ifdef _WIN64 
-#     pragma comment(lib, "LIBF2C10x64.lib")
-#     pragma comment(lib, "BLAS10x64.lib")
-#     pragma comment(lib, "CLAPACK10x64.lib")
-#    else
-#     pragma comment(lib, "LIBF2C10.lib")
-#     pragma comment(lib, "BLAS10.lib")
-#     pragma comment(lib, "CLAPACK10.lib")
-#    endif
-#   else			    // after Visual Studio 2010
-#    if (_MSC_VER == 1900)	// Visual Studio 2015
-#     ifdef _WIN64 
-#      pragma comment(lib, "LIBF2C14.0Tx64.lib")
-#      pragma comment(lib, "BLAS14.0Tx64.lib")
-#      pragma comment(lib, "CLAPACK14.0Tx64.lib")
-#     else
-#      pragma comment(lib, "LIBF2C14.0T.lib")
-#      pragma comment(lib, "BLAS14.0T.lib")
-#      pragma comment(lib, "CLAPACK14.0T.lib")
-#     endif
-#    else /* _MSC_VER */
-#     ifdef _WIN64 
-#      pragma comment(lib, "LIBF2C10Tx64.lib")
-#      pragma comment(lib, "BLAS10Tx64.lib")
-#      pragma comment(lib, "CLAPACK10Tx64.lib")
-#     else
-#      pragma comment(lib, "LIBF2C10T.lib")
-#      pragma comment(lib, "BLAS10T.lib")
-#      pragma comment(lib, "CLAPACK10T.lib")
-#     endif
-#    endif /* _MSC_VER */
-#   endif
-#  else /* TRACE */
-#   if (_MSC_VER == 1900)    // Visual Studio 2015
-#    ifdef _DEBUG
-#     ifdef _DLL		// Debug (former DebugDll)
-#      ifdef _WIN64
-#       pragma comment(lib, "LIBF2C14.0MDx64.lib")
-#       pragma comment(lib, "BLAS14.0MDx64.lib")
-#       pragma comment(lib, "CLAPACK14.0MDx64.lib")
-#      else
-#       pragma comment(lib, "LIBF2C14.0MD.lib")
-#       pragma comment(lib, "BLAS14.0MD.lib")
-#       pragma comment(lib, "CLAPACK14.0MD.lib")
-#      endif
-#     endif
-#    else
-#     ifdef _DLL		// Debug (former DebugDll)
-#      ifdef _WIN64
-#       pragma comment(lib, "LIBF2C14.0Mx64.lib")
-#       pragma comment(lib, "BLAS14.0Mx64.lib")
-#       pragma comment(lib, "CLAPACK14.0Mx64.lib")
-#      else
-#       pragma comment(lib, "LIBF2C14.0M.lib")
-#       pragma comment(lib, "BLAS14.0M.lib")
-#       pragma comment(lib, "CLAPACK14.0M.lib")
-#      endif
-#     endif
-#    endif
-#   else	/* _MSC_VER */
-#    ifdef _DEBUG
-#     ifdef _DLL		// Debug (former DebugDll)
-#      ifdef _WIN64 
-#       pragma comment(lib, "LIBF2C10MDx64.lib")
-#       pragma comment(lib, "BLAS10MDx64.lib")
-#       pragma comment(lib, "CLAPACK10MDx64.lib")
-#      else
-#       pragma comment(lib, "LIBF2C10MD.lib")
-#       pragma comment(lib, "BLAS10MD.lib")
-#       pragma comment(lib, "CLAPACK10MD.lib")
-#      endif
-#     else		// (former Debug)
-#      ifdef _WIN64 
-#       pragma comment(lib, "LIBF2C10Dx64.lib")
-#       pragma comment(lib, "BLAS10Dx64.lib")
-#       pragma comment(lib, "CLAPACK10Dx64.lib")
-#      else
-#       pragma comment(lib, "LIBF2C10D.lib")
-#       pragma comment(lib, "BLAS10D.lib")
-#       pragma comment(lib, "CLAPACK10D.lib")
-#      endif
-#     endif
-#    else /* _DEBUG */
-#     ifdef _DLL		// Release (former ReleaseDll)
-#      ifdef _WIN64 
-#       pragma comment(lib, "LIBF2C10Mx64.lib")
-#       pragma comment(lib, "BLAS10Mx64.lib")
-#       pragma comment(lib, "CLAPACK10Mx64.lib")
-#      else
-#       pragma comment(lib, "LIBF2C10M.lib")
-#       pragma comment(lib, "BLAS10M.lib")
-#       pragma comment(lib, "CLAPACK10M.lib")
-#      endif
-#     else		// (former Release)
-#      ifdef _WIN64 
-#       pragma comment(lib, "LIBF2C10x64.lib")
-#       pragma comment(lib, "BLAS10x64.lib")
-#       pragma comment(lib, "CLAPACK10x64.lib")
-#      else
-#       pragma comment(lib, "LIBF2C10.lib")
-#       pragma comment(lib, "BLAS10.lib")
-#       pragma comment(lib, "CLAPACK10.lib")
-#      endif
-#     endif
-#    endif /* _DEBUG */
-#   endif /* _MSC_VER */
-#  endif /* TRACE */
-# endif /* ifdef _MSC_VER */
+  #include "ClapackLibsDef.h"
 #endif /* USE_LAPACK */
 
 /*
-/ ƒŠƒ“ƒN‚·‚élibƒtƒ@ƒCƒ‹‚Í_cdecl‚ÅŒÄ‚Ño‚µ
-/ _fastcall‚ÅƒŠƒ“ƒN‚µ‚½‚¢ê‡‚Ípringhead2\src\boost\numeric\bindings\lapack\lapack.h
-/ ‚ÌŠÖ”‚ğ‚·‚×‚Ä_cdeclŒÄ‚Ño‚µ‚É‚·‚é‚±‚Æ
+/ ãƒªãƒ³ã‚¯ã™ã‚‹libãƒ•ã‚¡ã‚¤ãƒ«ã¯_cdeclã§å‘¼ã³å‡ºã—
+/ _fastcallã§ãƒªãƒ³ã‚¯ã—ãŸã„å ´åˆã¯pringhead2\src\boost\numeric\bindings\lapack\lapack.h
+/ ã®é–¢æ•°ã‚’ã™ã¹ã¦_cdeclå‘¼ã³å‡ºã—ã«ã™ã‚‹ã“ã¨
 */
 
 #include <boost/numeric/ublas/banded.hpp>
@@ -163,12 +30,12 @@
 
 namespace Spr{;
 
-/** @brief ˆê”Ê‰»ŒÅ—L’l–â‘è‚ğ‰ğ‚­Ax = lamda Bx (inv(B)Ax = lamda x)
-	@param a ‘ÎÌs—ñ
-	@param b ‘ÎÌs—ñ(a‚Æ“¯ƒTƒCƒY)
-	@param e ŒÅ—L’l‚ğ‚Ü‚Æ‚ß‚½ƒxƒNƒgƒ‹(•K—v‚È•ª‚¾‚¯j
-	@param v ŒÅ—LƒxƒNƒgƒ‹‚ğ‚Ü‚Æ‚ß‚½ƒxƒNƒgƒ‹(a‚ÌƒTƒCƒYAe‚ÌƒTƒCƒY)
-	@return ŒvZ‚É¬Œ÷‚µ‚½‚©‚Ç‚¤‚©B0:¬Œ÷A‚»‚êˆÈŠO:¸”s
+/** @brief ä¸€èˆ¬åŒ–å›ºæœ‰å€¤å•é¡Œã‚’è§£ãAx = lamda Bx (inv(B)Ax = lamda x)
+	@param a å¯¾ç§°è¡Œåˆ—
+	@param b å¯¾ç§°è¡Œåˆ—(aã¨åŒã‚µã‚¤ã‚º)
+	@param e å›ºæœ‰å€¤ã‚’ã¾ã¨ã‚ãŸãƒ™ã‚¯ãƒˆãƒ«(å¿…è¦ãªåˆ†ã ã‘ï¼‰
+	@param v å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’ã¾ã¨ã‚ãŸãƒ™ã‚¯ãƒˆãƒ«(aã®ã‚µã‚¤ã‚ºã€eã®ã‚µã‚¤ã‚º)
+	@return è¨ˆç®—ã«æˆåŠŸã—ãŸã‹ã©ã†ã‹ã€‚0:æˆåŠŸã€ãã‚Œä»¥å¤–:å¤±æ•—
 */
 template <class AD, class BD> 
 int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::VectorImp<BD>& e, PTM::MatrixImp<AD>& v){
@@ -189,7 +56,7 @@ int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vecto
 	vector_type evec(size);
 	matrix_type la(size, size), lb(size, size);
 
-	// s—ñ‚Ì‰ºOŠp‚ğg‚¤
+	// è¡Œåˆ—ã®ä¸‹ä¸‰è§’ã‚’ä½¿ã†
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j <= i; ++j) {
 			la(i, j) = a.item(i,j);
@@ -214,14 +81,14 @@ int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vecto
 #endif
 }
 
-/** @brief ˆê”Ê‰»ŒÅ—L’l–â‘èi‘I‘ğ•ªj‚ğ‰ğ‚­Ax = lamda Bx (inv(B)Ax = lamda x)
-	@param a ‘ÎÌs—ñ
-	@param b ‘ÎÌs—ñ(a‚Æ“¯ƒTƒCƒY)
-	@param e ŒÅ—L’l‚ğ‚Ü‚Æ‚ß‚½ƒxƒNƒgƒ‹(‘I‘ğ‚µ‚½”•ªj
-	@param v ŒÅ—LƒxƒNƒgƒ‹‚ğ‚Ü‚Æ‚ß‚½ƒxƒNƒgƒ‹(a‚ÌƒTƒCƒYA‘I‘ğ‚µ‚½”•ª)
-	@param start ŒÅ—L’l‚ÌƒCƒ“ƒfƒbƒNƒX(Å¬‚Í0)
-	@param interval start‚©‚ç‚ÌŒÅ—L’l‚Ì”(Å‘åa‚ÌƒTƒCƒYj
-	@return ŒvZ‚É¬Œ÷‚µ‚½‚©‚Ç‚¤‚©B0:¬Œ÷A‚»‚êˆÈŠO:¸”s
+/** @brief ä¸€èˆ¬åŒ–å›ºæœ‰å€¤å•é¡Œï¼ˆé¸æŠåˆ†ï¼‰ã‚’è§£ãAx = lamda Bx (inv(B)Ax = lamda x)
+	@param a å¯¾ç§°è¡Œåˆ—
+	@param b å¯¾ç§°è¡Œåˆ—(aã¨åŒã‚µã‚¤ã‚º)
+	@param e å›ºæœ‰å€¤ã‚’ã¾ã¨ã‚ãŸãƒ™ã‚¯ãƒˆãƒ«(é¸æŠã—ãŸæ•°åˆ†ï¼‰
+	@param v å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’ã¾ã¨ã‚ãŸãƒ™ã‚¯ãƒˆãƒ«(aã®ã‚µã‚¤ã‚ºã€é¸æŠã—ãŸæ•°åˆ†)
+	@param start å›ºæœ‰å€¤ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹(æœ€å°ã¯0)
+	@param interval startã‹ã‚‰ã®å›ºæœ‰å€¤ã®æ•°(æœ€å¤§aã®ã‚µã‚¤ã‚ºï¼‰
+	@return è¨ˆç®—ã«æˆåŠŸã—ãŸã‹ã©ã†ã‹ã€‚0:æˆåŠŸã€ãã‚Œä»¥å¤–:å¤±æ•—
 */
 template <class AD, class BD> 
 int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::VectorImp<BD>& e, PTM::MatrixImp<AD>& v, int start, int interval){
@@ -229,17 +96,17 @@ int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vect
 	e.clear();
 	v.clear();
 	int size = (int)a.height();
-	assert(a.width() == size);
-	assert(b.height() == size || b.width() == size);
-	assert(e.size() == interval);
-	assert(v.height() == size || b.width() == interval);
+	assert((int)a.width() == size);
+	assert((int)b.height() == size || (int)b.width() == size);
+	assert((int)e.size() == interval);
+	assert((int)v.height() == size || (int)b.width() == interval);
 
 	typedef TYPENAME AD::element_type element_type;
 	typedef typename bindings::remove_imaginary<element_type>::type real_type ;
 	typedef ublas::vector< real_type > vector_type;
 	typedef ublas::matrix< element_type, ublas::column_major > matrix_type;
 	matrix_type la(size, size), lb(size, size); 
-	// s—ñ‚Ì‰ºOŠp‚ğg‚¤
+	// è¡Œåˆ—ã®ä¸‹ä¸‰è§’ã‚’ä½¿ã†
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j <= i; ++j) {
 			la(i, j) = a.item(i,j);
@@ -249,15 +116,15 @@ int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vect
 	ublas::symmetric_adaptor< matrix_type, ublas::lower> la_uplo( la ) ; 
 	ublas::symmetric_adaptor< matrix_type, ublas::lower> lb_uplo( lb ) ;
 
-	real_type vl = DBL_MIN;				// ‹‚ß‚½‚¢ŒÅ—L’l‚Ì‰ºŒÀ‚ÆãŒÀ
+	real_type vl = DBL_MIN;				// æ±‚ã‚ãŸã„å›ºæœ‰å€¤ã®ä¸‹é™ã¨ä¸Šé™
 	real_type vu = DBL_MAX;		
-	int il = start + 1;					// ‹‚ß‚½‚¢ŒÅ—L’l‚ÌÅ¬ƒCƒ“ƒfƒbƒNƒXiÅ¬‚Í1)
-	int iu = start + interval;			// ‹‚ß‚½‚¢ŒÅ—L’l‚ÌÅ‘åƒCƒ“ƒfƒbƒNƒXiÅ‘å‚Ísize)
-	real_type abstol = 0.0;				// ‹–—eŒë·
-	int m = 0;							// ‹‚ß‚ç‚ê‚½ŒÅ—L’l‚Ì”
-	vector_type w(size);				// ŒÅ—L’lƒxƒNƒgƒ‹
-	matrix_type z(size, interval);		// ŒÅ—LƒxƒNƒgƒ‹
-	ublas::vector< int > ifail(size);	// ŒÅ—L’l‚ğ‹‚ß‚½Û‚Ìû‘©‚ÉŠÖ‚·‚éî•ñ
+	int il = start + 1;					// æ±‚ã‚ãŸã„å›ºæœ‰å€¤ã®æœ€å°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼ˆæœ€å°ã¯1)
+	int iu = start + interval;			// æ±‚ã‚ãŸã„å›ºæœ‰å€¤ã®æœ€å¤§ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼ˆæœ€å¤§ã¯size)
+	real_type abstol = 0.0;				// è¨±å®¹èª¤å·®
+	int m = 0;							// æ±‚ã‚ã‚‰ã‚ŒãŸå›ºæœ‰å€¤ã®æ•°
+	vector_type w(size);				// å›ºæœ‰å€¤ãƒ™ã‚¯ãƒˆãƒ«
+	matrix_type z(size, interval);		// å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«
+	ublas::vector< int > ifail(size);	// å›ºæœ‰å€¤ã‚’æ±‚ã‚ãŸéš›ã®åæŸã«é–¢ã™ã‚‹æƒ…å ±
 	int info = lapack::sygvx(1, 'V', 'I', la_uplo, lb_uplo, vl, vu, il, iu, abstol, m, w, z, ifail);
 
 	for(int i = 0; i < interval; i++)
@@ -269,37 +136,6 @@ int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vect
 	return info;
 #else
 # pragma message("sprsygvx: define USE_LAPACK in SprDefs.h to use this function")
-	return 0;
-#endif
-}
-
-// c.f.) http://d.hatena.ne.jp/blono/20081118/1227001319
-inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<double>& b, ublas::vector<double>& x, ublas::vector<double>& S, double rcond=0.01) {
-#ifdef USE_LAPACK
-    BOOST_UBLAS_CHECK(A.size1() == b.size(), ublas::external_logic());
-
-    ublas::matrix<double> B(b.size(), 1), X;
-    ublas::column(B, 0).assign(b);
-
-    ublas::matrix<double, ublas::column_major> CA(A), CX((std::max)(A.size1(), A.size2()), B.size2());
-    ublas::project(CX, ublas::range(0, B.size1()), ublas::range(0, B.size2())).assign(B);
-
-    lapack::optimal_workspace work;
-	int info;
-	fortran_int_t rank;
-
-	S.resize((std::min)(A.size1(), A.size2()));
-
-	info = (int) lapack::gelsd(CA, CX, S, rcond, rank, work);
-    BOOST_UBLAS_CHECK(info == 0, ublas::internal_logic());
-
-    X = ublas::project(CX, ublas::range(0, A.size2()), ublas::range(0, B.size2()));
-
-    x = ublas::column(X, 0);
-
-	return rank;
-#else
-# pragma message("least_squares: define USE_LAPACK in SprDefs.h to use this function")
 	return 0;
 #endif
 }
@@ -333,40 +169,6 @@ inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas:
     VT.assign_temporary(CCVT);
 #else
 # pragma message("svd: define USE_LAPACK in SprDefs.h to use this function")
-#endif
-}
-
-// c.f.) http://d.hatena.ne.jp/blono/20080913/1221328687
-template <class M, class MI>
-void invert(const M& m, MI& mi) {
-#ifdef USE_LAPACK
-    BOOST_UBLAS_CHECK(m.size1() == m.size2(), ublas::external_logic());
-
-    ublas::matrix<double>       lhs(m);
-    ublas::matrix<double>       rhs(ublas::identity_matrix<double>(m.size1()));
-    ublas::permutation_matrix<> pm(m.size1());
-
-    ublas::lu_factorize(lhs, pm);
-    ublas::lu_substitute(lhs, pm, rhs);
-
-    BOOST_UBLAS_CHECK(rhs.size1() == m.size1(), ublas::internal_logic());
-    BOOST_UBLAS_CHECK(rhs.size2() == m.size2(), ublas::internal_logic());
-
-	#if BOOST_UBLAS_TYPE_CHECK
-		BOOST_UBLAS_CHECK(
-			ublas::detail::expression_type_check(
-				ublas::prod(m, rhs),
-				ublas::identity_matrix<typename M::value_type>(m.size1())
-			),
-			ublas::internal_logic()
-		);
-	#endif
-
-    mi.resize(rhs.size1(), rhs.size2(), false);
-    mi.assign(rhs);
-    // mi.assign_temporary(rhs);
-#else
-# pragma message("invert: define USE_LAPACK in SprDefs.h to use this function")
 #endif
 }
 

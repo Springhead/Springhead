@@ -15,7 +15,7 @@
 
 #include <Graphics/SprGRFrame.h>
 #include <windows.h>
-#include <d3dx9.h>
+//#include <d3dx9.h>
 #include <vector>
 
 namespace Spr{;

@@ -13,6 +13,8 @@
 
 namespace Spr {
 
+#ifdef _WIN32
+
 void WBGetPortIO(){
 	static bool bFirst = true;
 	if (bFirst){
@@ -74,6 +76,8 @@ void bcb_outpw(unsigned short adr, unsigned short v){
 	}
 }
 
+
+#endif
 
 #endif
 

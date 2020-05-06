@@ -68,7 +68,11 @@ bool PHFemEngine::AddChildObject(ObjectIf* o){
 	}
 	PHFemMeshNew* mesh_n = o->Cast();
 	if(mesh_n){
+		mesh_n->femIndex = (int) meshes_n.size();
 		meshes_n.push_back(mesh_n);
+		for (int i = 0; i < (int)meshes_n.size(); ++i) {
+			meshes_n[i]->contactVector.resize(meshes_n.size());
+		}
 		return true;
 	}
 	return false;
@@ -284,6 +288,10 @@ void PHFemEngine::clearContacts(){
 		}
 	}
 }
-
+void PHFemEngine::ClearContactVectors() {
+	for (size_t j = 0; j < meshes_n.size(); j++)
+		for (size_t k = 0; k < meshes_n.size(); k++)
+			meshes_n[j]->contactVector[k] = false;
+}
 
 }

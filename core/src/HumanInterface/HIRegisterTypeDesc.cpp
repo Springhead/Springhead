@@ -9,17 +9,17 @@
 #include <HumanInterface/HISdk.h>
 
 namespace Spr{ 
-static UTTypeDesc* desc; 
-static UTTypeDesc::Field* field; 
-extern void RegisterTypeDescHumanInterface(UTTypeDescDb* db);
+//static UTTypeDesc* desc; 
+//static UTTypeDesc::Field* field; 
+extern void RegisterTypeDescHumanInterface(UTTypeDescDbIf* db);
 
 void SPR_CDECL HIRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;
 	UTRegisterTypeDescs();
-	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("HumanInterface");
+	UTTypeDescDbIf* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("HumanInterface");
 	assert(db);
 	RegisterTypeDescHumanInterface(db);
 	db->Link();

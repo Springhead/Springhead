@@ -8,7 +8,6 @@
 #ifndef _WIN32_WINNT
  #define _WIN32_WINNT 0x0500
 #endif
-#pragma hdrstop
 
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseWin32.h>
@@ -24,6 +23,8 @@ namespace Spr {;
 //---------------------------------------------------------------------
 //	DRKeyMouseWin32
 //
+
+#ifdef _WIN32
 
 const int keyMapping[][2] = {
 	{DVKeyCode::F1,			VK_F1},
@@ -219,5 +220,18 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 #pragma warning (pop)
 	return false;
 }
+
+#else
+
+DRKeyMouseWin32::DRKeyMouseWin32(const DRKeyMouseWin32Desc& desc){}
+bool DRKeyMouseWin32::Init(){ return false; }
+HIVirtualDeviceIf* DRKeyMouseWin32::Rent(const IfInfo* ii, const char* name, int portNo){ return 0; }
+int  DRKeyMouseWin32::ConvertKeyCode(int key, bool spr_to_win32){ return 0; }
+int  DRKeyMouseWin32::GetKeyState(int key){ return 0;}
+void DRKeyMouseWin32::GetMousePosition(int& x, int& y, int& time, int count){}
+bool DRKeyMouseWin32::PreviewMessage(void* m){ return false; }
+void DRKeyMouseWin32::UpdateMousePos(int x, int y){}
+
+#endif  // _WIN32
 
 }	//	namespace Spr

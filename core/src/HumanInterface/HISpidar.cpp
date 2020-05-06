@@ -10,6 +10,11 @@
  #pragma hdrstop
 #endif
 
+#ifdef _WIN32
+#else
+# define stricmp strcasecmp
+#endif
+
 /*
 //	モータの取り付け位置
 //	モータが直方体に取り付けられている場合

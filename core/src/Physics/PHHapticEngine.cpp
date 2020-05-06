@@ -1,5 +1,4 @@
 ﻿#include <Physics/PHHapticEngine.h>
-#include <Physics/PHHapticRender.h>
 #include <Physics/PHHapticStepMulti.h>
 #include <Physics/PHHapticStepImpulse.h>
 #include <Physics/PHHapticStepSingle.h>
@@ -246,7 +245,6 @@ PHHapticEngine::PHHapticEngine(){
 	hapticStep->engine = this;
 	hapticStepMode = MULTI_THREAD;
 	hapticSteps.push_back(hapticStep);
-	hapticRender = DBG_NEW PHHapticRender();
 }
 void PHHapticEngine::Step() { if (bEnabled && bPhysicStep) hapticStep->Step1(); }
 void PHHapticEngine::Step2() { if (bEnabled && bPhysicStep) hapticStep->Step2(); }
@@ -313,8 +311,8 @@ void PHHapticEngine::SetHapticStepMode(HapticStepMode mode){
 }
 
 void PHHapticEngine::StartDetection(){
-	// ContactModeの設定
-	SetContactMode();
+	// 物理シーンでのHapticPointerの接触判定の無効化
+	DisablePointerContactDetectionInPhysics();
 	// AABBの更新
 	UpdateEdgeList();
 	// 力覚ポインタごとに近傍物体を見つける
@@ -552,7 +550,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	}
 }
 
-void PHHapticEngine::SetContactMode(){
+void PHHapticEngine::DisablePointerContactDetectionInPhysics(){
 	// 力覚ポインタをシーンの接触から切る
 	for(int i = 0; i < (int)hapticPointers.size(); i++){
 		GetScene()->SetContactMode(hapticPointers[i]->Cast(), PHSceneDesc::MODE_NONE);

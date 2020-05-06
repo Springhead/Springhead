@@ -40,7 +40,7 @@ public:
 	void Init(int argc, char* argv[]);		
 	void Reset();
 	void BuildScene();
-	void Step();
+	void UserFunc();
 	void Keyboard(int key, int x, int y);
 }; 
 extern BoxStack bstack;

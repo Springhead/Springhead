@@ -29,6 +29,11 @@
 #define EXIT_TIMER	12000			// 強制終了させるステップ数
 #define TEST_FILEX	"GRTest.x"		// ロードするXファイル
 
+#if defined(DAILY_BUILD)
+  #undef  EXIT_TIMER
+  #define EXIT_TIMER	600			// 強制終了させるステップ数
+#endif
+
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
@@ -48,7 +53,7 @@ using namespace Spr;
  param	 	なし
  return 	なし
  */
-void __cdecl display(){
+void SPR_CDECL display(){
 	if (!scene){
 		std::cout << "scene == NULL. File may not found." << std::endl;
 		exit(-1);
@@ -66,7 +71,7 @@ void __cdecl display(){
  param  	<in/--> h　　高さ
  return 	なし
  */
-void __cdecl reshape(int w, int h){
+void SPR_CDECL reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
@@ -77,7 +82,7 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void __cdecl keyboard(unsigned char key, int x, int y){
+void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
 		std::cout << "exited by ESC key" << std::endl;
 		exit(0);
@@ -99,7 +104,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void __cdecl idle(){
+void SPR_CDECL idle(){
 //	if(scene && *scene) (*(scene))->Step();
 	glutPostRedisplay();
 	static int count;
@@ -116,7 +121,7 @@ void __cdecl idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
 
@@ -174,3 +179,4 @@ int __cdecl main(int argc, char* argv[]){
 	glutMainLoop();
 	return 0;
 }
+

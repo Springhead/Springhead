@@ -7,6 +7,9 @@
  */
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseGLUT.h>
+
+#include <GL/glut.h>
+
 #ifdef USE_HDRSTOP
  #pragma hdrstop
 #endif

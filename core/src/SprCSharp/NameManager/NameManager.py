@@ -24,26 +24,43 @@
 #	Ver 1.0  2017/01/16 F.Kanehori	First release version.
 #	Ver 1.1  2017/01/18 F.Kanehori	Change directory position (-d).
 #	Ver 1.2  2017/01/27 F.Kanehori	Bug fixed.
+#	Ver 1.3  2017/09/07 F.Kanehori	Change to new python library.
+#	Ver 1.4  2017/11/29 F.Kanehori	Change python library path.
 # ======================================================================
+version = 1.4
+
 import sys
 import os
 from optparse import OptionParser
 
-sys.path.append('../../../bin/test')
+# ----------------------------------------------------------------------
+#  Constants
+#
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+
+# ----------------------------------------------------------------------
+#  Import Springhead2 python library.
+#
+sys.path.append('../../RunSwig')
+from FindSprPath import *
+spr_path = FindSprPath(prog)
+libdir = spr_path.abspath('pythonlib')
+sys.path.append(libdir)
 from KvFile import *
 from Util import *
+from Proc import *
 from Error import *
 
 # ----------------------------------------------------------------------
 #  Constants and error wrapper
 #
-version = '1.0'
-prog = sys.argv[0].split('\\')[-1].split('.')[0]
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 
 # ----------------------------------------------------------------------
-#  Global variables
+#  Globals (part 1)
 #
-E = Error(prog)
+error = Error(prog)
+util = Util()
 
 # ----------------------------------------------------------------------
 #  Options
@@ -80,7 +97,8 @@ if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 if len(args) != 0:
-	Util.exec('python %s.py -h' % prog)
+	proc = Proc().exec('python %s.py -h' % prog)
+	proc.wait()
 	parser.error("incorrect number of arguments")
 	sys.exit(0)
 
@@ -100,17 +118,22 @@ if verbose:
 	print()
 
 # ----------------------------------------------------------------------
+#  Globals (part 2)
+#
+proc = Proc(verbose=verbose)
+
+# ----------------------------------------------------------------------
 #  Find base directory's absolute path.
 #
-dirlist = os.getcwd().split('\\')
+dirlist = os.getcwd().split(os.sep)
 found = False
 for n in range(len(dirlist)):
 	if dirlist[n] == srctop:
 		found = True
 		break
 if not found:
-	E.print('no such directory "%s"' % srctop)
-topdir = '\\'.join(dirlist[0:n]) if found else None
+	error.print('no such directory "%s"' % srctop)
+topdir = os.sep.join(dirlist[0:n]) if found else None
 
 # ----------------------------------------------------------------------
 #  Read name definitions.
@@ -118,7 +141,7 @@ topdir = '\\'.join(dirlist[0:n]) if found else None
 kvf = KvFile(inifile, sep='=')
 count = kvf.read(dic={'TOPDIR': topdir})
 if count < 0:
-	E.print(kvf.error())
+	error.print(kvf.error())
 keys = sorted(kvf.keys())
 
 if verbose:
@@ -130,7 +153,7 @@ if verbose:
 
 	print('names defined (%d):' % count)
 	for key in keys:
-		value = Util.unixpath(kvf.get(key))
+		value = util.pathconv(kvf.get(key), 'unix')
 		if os.path.isfile(value):	kind = 'file'
 		elif os.path.isdir(value):	kind = 'dir'
 		else:				kind = 'name'
@@ -148,11 +171,11 @@ trailers = [ '', 'rem end: %s' % outfile ]
 
 f = TextFio(outfile, 'w')
 if f.open() < 0:
-	E.print(f.error())
+	error.print(f.error())
 #
 f.writelines(headers)
 for key in keys:
-	line = 'set %s=%s' % (key, Util.pathconv(kvf.get(key)))
+	line = 'set %s=%s' % (key, util.pathconv(kvf.get(key)))
 	if verbose > 1:
 		print(line)
 	f.writeline(line)

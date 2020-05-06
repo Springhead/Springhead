@@ -20,8 +20,14 @@
 #  Version:
 #	Ver 1.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
 #	Ver 1.1	 2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
+#	Ver 1.1	 2017/07/31 F.Kanehori	Python executable directory moved.
+#	Ver 1.2  2017/09/06 F.Kanehori	New python library に対応.
+#	Ver 1.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
+#	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
+#	Ver 1.5  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
+#	Ver 1.6  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
 # ==============================================================================
-version = 1.0
+version = 1.6
 debug = True
 
 import sys
@@ -29,55 +35,44 @@ import os
 import glob
 from optparse import OptionParser
 
-#  Import Springhead2 python library.
-cwd = os.getcwd().split(os.sep)[::-1]
-for n in range(len(cwd)):
-	if cwd[n] != 'src': continue
-	spr2 = '/'.join(cwd[::-1][0:len(cwd)-n-1])
-	break
-libdir = '%s/bin/test' % spr2
-sys.path.append('/usr/local/lib')
-sys.path.append(libdir)
-from TextFio import *
-from Util import *
-from Error import *
-
 # ----------------------------------------------------------------------
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-python_version = 34
 verbose = 1 if debug else 0
 dry_run = 1 if debug else 0
 
 # ----------------------------------------------------------------------
-#  Globals
+#  Import Springhead2 python library.
 #
-E = Error(prog)
-U = Util()
-unix = U.is_unix()
+sys.path.append('../RunSwig')
+from FindSprPath import *
+spr_path = FindSprPath(prog)
+libdir = spr_path.abspath('pythonlib')
+sys.path.append(libdir)
+from TextFio import *
+from FileOp import *
+from Error import *
+from Util import *
+from Proc import *
+
+# ----------------------------------------------------------------------
+#  Globals (part 1)
+#
+error = Error(prog)
+util = Util()
+unix = util.is_unix()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
-spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
-incdir = '%s/%s' % (spr2top, 'include')
-srcdir = '%s/%s' % (spr2top, 'src')
-bindir = '%s/%s' % (spr2top, 'bin')
-pythondir = '%s/Python%s' % (bindir, python_version)
+sprtop = spr_path.abspath()
+bindir = spr_path.abspath('bin')
+incdir = spr_path.abspath('inc')
+srcdir = spr_path.abspath('src')
 swigdir = '%s/swig' % bindir
 foundation_dir = '%s/%s' % (srcdir, 'Foundation')
 framework_dir = '%s/%s' % (srcdir, 'Framework')
-
-# ----------------------------------------------------------------------
-#  Scripts
-#
-pythonexe = 'python%s' % (python_version if unix else '')
-python = '%s/%s' % (pythondir, pythonexe)
-nkf = '%s/nkf' % bindir
-swig = 'swig'
-make = 'make' if unix else 'nmake'
-runswig_foundation = '%s %s/RunSwig.py' % (python, foundation_dir)
 
 # ----------------------------------------------------------------------
 #  Files and etc.
@@ -93,9 +88,9 @@ stubcpp = '%sStub.cpp' % module		# in src/Framework
 def output(fname, lines):
 	fobj = TextFio(fname, 'w', encoding='utf8')
 	if fobj.open() < 0:
-		E.print(fobj.error())
+		error.print(fobj.error())
 	if fobj.writelines(lines, '\n') < 0:
-		E.print(fobj.error())
+		error.print(fobj.error())
 	fobj.close()
 
 
@@ -112,6 +107,9 @@ parser.add_option('-c', '--clean',
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
+parser.add_option('-P', '--python',
+                        dest='python', action='store', default='python',
+                        help='python command name')
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -134,17 +132,36 @@ verbose	= options.verbose
 dry_run	= options.dry_run
 
 # ----------------------------------------------------------------------
+#  Scripts
+#
+if options.python:
+	python = options.python
+nkf = 'nkf'
+swig = 'swig'
+make = 'make' if unix else 'nmake'
+runswig_foundation = '%s %s/RunSwig.py -P %s' % (python, foundation_dir, python)
+addpath = spr_path.abspath('buildtool')
+
+# ----------------------------------------------------------------------
+#  Globals (part 2)
+#
+proc = Proc(verbose=verbose, dry_run=dry_run)
+f_op = FileOp(verbose=verbose)
+
+# ----------------------------------------------------------------------
 #  src/Foundation へ移って RunSwig を実行する.
 #
 cmd = '%s Framework Foundation' % runswig_foundation
-status = U.exec(cmd, shell=True, dry_run=dry_run)
+proc.exec(cmd, shell=True)
+status = proc.wait()
 if status != 0:
-	E.print('%s failed (%d)' % (runswig_foundation, status))
+	msg = '%s failed (%d)' % (runswig_foundation, status)
+	error.print(msg, exitcode=0)
 
 # ----------------------------------------------------------------------
 #  swigtemp 下に SJIS world を作る.
 #
-swigtmp = '%s/swigtemp' % spr2top
+swigtmp = '%s/core/swigtemp' % sprtop
 tmp_inc = '%s/include' % swigtmp
 tmp_src = '%s/src' % swigtmp
 
@@ -153,30 +170,37 @@ incdir_names = ['Base', 'Framework']
 srcdir_names = ['Foundation', 'Framework']
 tmp_incdirs = list(map(lambda x: '%s/%s' % (tmp_inc, x), incdir_names))
 tmp_srcdirs = list(map(lambda x: '%s/%s' % (tmp_src, x), srcdir_names))
+v_save = verbose
+verbose = 1
 for dir in tmp_incdirs:
+	#print('[%s]' % dir)
 	if not os.path.exists(dir):
 		if verbose: print('creating %s' % dir)
 		os.makedirs(dir)
 for dir in tmp_srcdirs:
+	#print('[%s]' % dir)
 	if not os.path.exists(dir):
 		if verbose: print('creating %s' % dir)
 		os.makedirs(dir)
+verbose = v_save
 
 #  Convert kanji code into SJIS.
 incf_names = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
 srcf_names = ['Foundation/UTTypeDesc.h', 'Framework/FWOldSpringheadNodeHandler.h']
 for file in incf_names:
 	cmnd = '%s -s -O %s/%s %s/include/%s' % (nkf, incdir, file, swigtmp, file)
-	cmnd = U.pathconv(cmnd)
-	status = Util.exec(cmnd, shell=True, verbose=verbose, dry_run=dry_run)
+	cmnd = util.pathconv(cmnd)
+	proc.exec(cmnd, addpath=addpath, shell=True)
+	status = proc.wait()
 	if status != 0:
-		E.print('"%s" failed (%d)' % (U.pathconv(cmnd, 'unix'), status))
+		error.print('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
 for file in srcf_names:
 	cmnd = '%s -s -O %s/%s %s/src/%s' % (nkf, srcdir, file, swigtmp, file)
-	cmnd = U.pathconv(cmnd)
-	status = Util.exec(cmnd, shell=True, verbose=verbose, dry_run=dry_run)
+	cmnd = util.pathconv(cmnd)
+	proc.exec(cmnd, addpath=addpath, shell=True)
+	status = proc.wait()
 	if status != 0:
-		E.print('"%s" failed (%d)' % (U.pathconv(cmnd, 'unix'), status))
+		error.print('"%s" failed (%d)' % (util.pathconv(cmnd, 'unix'), status))
 
 # ----------------------------------------------------------------------
 #  ここからは swigtemp/src/Foundation に移って作業する.
@@ -184,14 +208,14 @@ for file in srcf_names:
 oldcwd = os.getcwd()
 os.chdir('%s/Foundation' % tmp_src)
 if verbose:
-	print('  chdir to %s' % U.pathconv(os.getcwd(), 'unix'))
+	print('  chdir to %s' % util.pathconv(os.getcwd(), 'unix'))
 
 # ----------------------------------------------------------------------
 #  swig のインターフェイスファイルを作成する.
 #
 srcimp = '%s/src/Framework/FWOldSpringheadNodeHandler.h' % swigtmp
 srcimpdep = '%s/Framework/FWOldSpringheadNodeHandler.h' % srcdir
-swigtmp_rel = Util.pathconv(os.path.relpath(swigtmp), 'unix')
+swigtmp_rel = util.pathconv(os.path.relpath(swigtmp), 'unix')
 
 print('src files: %s' % srcimp)
 lines = []
@@ -203,22 +227,26 @@ for file in srcf_names:
 	lines.append('%%include "%s/%s"' % (srcdir, file))
 if verbose:
 	path = '%s/%s' % (os.getcwd(), interfacefile)
-	print('  creating "%s"' % U.pathconv(path, 'unix'))
+	print('  creating "%s"' % util.pathconv(path, 'unix'))
 output(interfacefile, lines)
 
 # ----------------------------------------------------------------------
 #  makefile を作成する.
 #
-swigargs = '-I../%s/Lib' % swigdir
+srcimpdep_rel = os.path.relpath(srcimpdep)
+swigdir_rel = os.path.relpath(swigdir)
+#
+swigargs = '-I%s/Lib' % swigdir_rel
 swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
 cp = 'cp' if unix else 'copy'
 rm = 'rm' if unix else 'del'
 quiet = '>/dev/null 2>&1' if unix else '>NUL 2>&1'
+#
 lines = []
 lines.append('# Do not edit. %s will update this file.' % prog)
 lines.append('all:\t../../../src/Framework/%sStub.cpp' % module)
-lines.append('../../../src/Framework/%sStub.cpp:\t../%s' % (module, srcimpdep))
-lines.append('\t../%s/%s %s %s' % (swigdir, swig, swigargs, interfacefile))
+lines.append('../../../src/Framework/%sStub.cpp:\t%s' % (module, srcimpdep_rel))
+lines.append('\t%s/%s %s %s' % (swigdir_rel, swig, swigargs, interfacefile))
 lines.append('\t%s Spr%sDecl.hpp ../../../include/%s %s' % (cp, module, module, quiet))
 lines.append('\t%s %sStub.cpp ../../../src/Framework %s' % (cp, module, quiet))
 lines.append('\t%s %sDecl.hpp ../../../src/Framework %s' % (cp, module, quiet))
@@ -230,8 +258,8 @@ lines.append('\t-%s -f ../../../src/Framework/%sStub.cpp %s' % (rm, module, quie
 lines.append('\t-%s -f ../../../src/Framework/%sDecl.hpp %s' % (rm, module, quiet))
 if verbose:
 	path = '%s/%s' % (os.getcwd(), makefile)
-	print('  creating "%s"' % U.pathconv(path, 'unix'))
-lines = U.pathconv(lines)
+	print('  creating "%s"' % util.pathconv(path, 'unix'))
+lines = util.pathconv(lines)
 output(makefile, lines)
 
 # ----------------------------------------------------------------------
@@ -240,17 +268,18 @@ output(makefile, lines)
 cmd = '%s -f %s' % (make, makefile)
 if clean:
 	cmd += ' clean'
-status = U.exec(cmd, shell=True, dry_run=dry_run)
+proc.exec(cmd, shell=True)
+status = proc.wait()
 if status != 0:
-	E.print('%s failed (%d)' % (make, status))
+	error.print('%s failed (%d)' % (make, status))
 
 # ----------------------------------------------------------------------
 #  ファイルの後始末
 #
 os.chdir(oldcwd)
-U.rm('Framework.i', force=True)
-U.rm('FrameworkStub.cpp', force=True)
-U.rm('FrameworkStub.mak.txt', force=True)
+f_op.rm('Framework.i', force=True)
+f_op.rm('FrameworkStub.cpp', force=True)
+f_op.rm('FrameworkStub.mak.txt', force=True)
 
 # ----------------------------------------------------------------------
 #  処理終了.

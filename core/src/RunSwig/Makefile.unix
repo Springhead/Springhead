@@ -24,13 +24,17 @@
 #################################################################################
 #  Version:
 #	Ver 1.0  2017/04/20 F.Kanehori  Windows 版を unix 用に修正
+#	Ver 1.1  2017/08/23 F.Kanehori  Springhead tree 再構成に対応.
+#	Ver 1.2  2017/10/05 F.Kanehori  オプション PYTHON を子 make に渡す.
+#	Ver 1.21 2017/10/11 F.Kanehori  Trace info 追加.
+#	Ver 1.22 2017/10/25 F.Kanehori  使用する python の取得方法を変更.
 #################################################################################
+eq = $(and $(findstring $(1)X,$(2)X), $findstring $(2)X,$(1)X)
+opt = $(if $(call eq,$(1),),$(if $(call eq,$(2),),$(3),$(2)),$(1))
 
-#  Python の定義
+#  使用する Python (make のマクロで指定可能)
 #
-PYTHON_VERSION	= 34
-PYTHON_DIR	= ../../bin/Python$(PYTHON_VERSION)
-PYTHON		= $(PYTHON_DIR)/python$(PYTHON_VERSION)
+Python = $(call opt,$(PYTHON),$(SPR_PYTHON),python)
 
 #  ディレクトリの定義
 #
@@ -41,8 +45,8 @@ FRAMEWORK	= ../Framework
 
 #  使用するスクリプト
 #
-SCILABSWIG	= $(PYTHON) ScilabSwig.py
-RUNSWIGFW	= $(PYTHON) RunSwigFramework.py
+SCILABSWIG	= $(Python) ScilabSwig.py
+RUNSWIGFW	= $(Python) RunSwigFramework.py
 SCRIPT		= do_swigall.py
 
 #  前処理で作成するファイル
@@ -55,15 +59,19 @@ all:	PreWork RunSwig
 PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 $(SCILABSTUBHDR):	
+		echo target: SCILABSTUBHDR
 		cd $(FOUNDATION) && $(SCILABSWIG)
 
 $(FWOLDSPRSTUB):	
-		cd $(FRAMEWORK) && $(RUNSWIGFW)
+		echo target: FWOLDSPRSTUB
+		cd $(FRAMEWORK) && $(RUNSWIGFW) -P $(Python)
 
 RunSwig:	
-		$(PYTHON) $(BINDIR)/$(SCRIPT)
+		echo target: RunSwig
+		$(Python) $(BINDIR)/$(SCRIPT) -P $(Python)
 
 clean:		
-		$(PYTHON) $(BINDIR)/$(SCRIPT) --clean
+		echo target: clean
+		$(Python) $(BINDIR)/$(SCRIPT) --clean
 		/bin/rm -f $(SCILABSTUBHDR)
 		/bin/rm -f $(FWOLDSPRSTUB)

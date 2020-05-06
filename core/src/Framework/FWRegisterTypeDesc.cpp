@@ -12,8 +12,8 @@
 #endif
 
 namespace Spr{
-extern void RegisterTypeDescFramework(UTTypeDescDb* db);
-extern void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db);
+extern void RegisterTypeDescFramework(UTTypeDescDbIf* db);
+extern void RegisterTypeDescFWOldSpringhead(UTTypeDescDbIf* db);
 
 static UTTypeDesc* desc;
 static UTTypeDesc::Field* field;
@@ -23,11 +23,11 @@ void SPR_CDECL FWRegisterTypeDescs(){
 	bFirst=false;
 	//
 	UTRegisterTypeDescs();
-	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
-	UTTypeDescDb* pdb = UTTypeDescDbPool::Get("Physics");
-	UTTypeDescDb* gdb = UTTypeDescDbPool::Get("Graphics");
-	UTTypeDescDb* cdb = UTTypeDescDbPool::Get("Creature");
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Framework");
+	UTTypeDescDbIf* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDbIf* pdb = UTTypeDescDbPool::Get("Physics");
+	UTTypeDescDbIf* gdb = UTTypeDescDbPool::Get("Graphics");
+	UTTypeDescDbIf* cdb = UTTypeDescDbPool::Get("Creature");
+	UTTypeDescDbIf* db = UTTypeDescDbPool::Get("Framework");
 	RegisterTypeDescFramework(db);
 	db->Link();
 	db->Link(fdb);

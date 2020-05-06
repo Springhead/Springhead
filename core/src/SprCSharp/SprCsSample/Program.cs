@@ -14,6 +14,10 @@ namespace SprCsSample {
 
         static void Main(string[] args) {
 
+            var dllDirectory = @"..\..\..\..\..\..\..\libs\bin\win64";
+            var dllPath = Environment.GetEnvironmentVariable("PATH") + ";" + dllDirectory;
+            Environment.SetEnvironmentVariable("PATH", dllPath);
+
             ExceptionRaiser er = new ExceptionRaiser();
             try {
                 if (inc.Equals("A"))  inc = def;

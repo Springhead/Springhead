@@ -8,6 +8,7 @@
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
 #include <Graphics/GRMesh.h>
+#include <Graphics/GRSphere.h>
 
 namespace Spr{;
 
@@ -41,6 +42,8 @@ GRVisualIf* GRScene::CreateVisual(const IfInfo* info, const GRVisualDesc& desc, 
 		v = DBG_NEW GRLight((const GRLightDesc&)desc);
 	else if (info==GRMeshIf::GetIfInfoStatic()) 
 		v = DBG_NEW GRMesh((const GRMeshDesc&)desc);
+	else if (info == GRSphereIf::GetIfInfoStatic())
+		v = DBG_NEW GRSphere((const GRSphereDesc&)desc);
 	if(v){
 		v->SetScene(Cast());
 		if(parent) parent->AddChildObject(v->Cast());

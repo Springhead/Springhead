@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -69,7 +69,7 @@ CRBoneIf* CRBone::GetChildBone(int number) {
 
 #if 0
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ‹O“¹‰^“®
+// è»Œé“é‹å‹•
 void CRBone::SetOriginSolid(PHSolidIf* solid) {
 	originSolid = solid;
 }
@@ -97,7 +97,7 @@ CRTrajectoryNode CRBone::GetTrajectoryNode(int i) {
 }
 
 CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
-	/// ƒZƒOƒƒ“ƒg‚ª‘¶İ‚µ‚È‚¢ê‡
+	/// ã‚»ã‚°ãƒ¡ãƒ³ãƒˆãŒå­˜åœ¨ã—ãªã„å ´åˆ
 	if        (trajNodes.size() == 1) {
 		return trajNodes[0];
 	} else if (trajNodes.size() <= 0) {
@@ -106,17 +106,17 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 		return node;
 	}
 
-	/// ‚ªƒŒƒ“ƒWŠO‚Ìê‡
+	/// æ™‚åˆ»ãŒãƒ¬ãƒ³ã‚¸å¤–ã®å ´åˆ
 	if (time < trajNodes[0].time)      { return trajNodes[0]; } 
 	if (trajNodes.back().time <= time) { return trajNodes[trajNodes.size()-1]; }
 
-	/// t‚É‘Î‰‚·‚éƒZƒOƒƒ“ƒg‚ğŒ©‚Â‚¯‚é
+	/// æ™‚åˆ»tã«å¯¾å¿œã™ã‚‹ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã‚’è¦‹ã¤ã‘ã‚‹
 	size_t segment=0;
 	for (; segment<trajNodes.size()-1; ++segment) {
 		if (trajNodes[segment].time <= time && time < trajNodes[segment+1].time) { break; }
 	}
 
-	/// “–ŠYƒZƒOƒƒ“ƒg‚©‚ç‹O“¹‚ğŒvZ‚·‚é
+	/// å½“è©²ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã‹ã‚‰è»Œé“ã‚’è¨ˆç®—ã™ã‚‹
 	/*
 	Vec3d  r0 = trajNodes[segment].pose.Pos();
 	Vec6d  v0 = trajNodes[segment].dpose;
@@ -141,9 +141,9 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 		at[i] = trajNodes[segment].coeff[i] * Vec6d(0, 0,        2,        6*t, 12*pow(t,2), 20*pow(t,3));
 	}
 
-	/*/
+	/**/
 
-	// üŒ`•âŠÔ
+	// ç·šå½¢è£œé–“
 	if (tf > 1e-3) {
 		rt = (rf - r0) * (t / tf) + r0;
 	} else {

@@ -19,8 +19,12 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
+#	Ver 1.1	 2017/07/27 F.Kanehori	Python executable directory moved.
+#	Ver 1.2	 2017/09/06 F.Kanehori	New python library に対応.
+#	Ver 1.3  2017/11/08 F.Kanehori	Python library path の変更.
+#	Ver 1.4  2017/11/29 F.Kanehori	Python library path の変更.
 # ==============================================================================
-version = 1.0
+version = 1.4
 debug = False
 
 import sys
@@ -29,51 +33,45 @@ import glob
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
+#  Constants
+#
+prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+module = 'Scilab'
+
+# ----------------------------------------------------------------------
 #  Import Springhead2 python library.
 #
-cwd = os.getcwd().split(os.sep)[::-1]
-for n in range(len(cwd)):
-	if cwd[n] != 'src': continue
-	spr2 = '/'.join(cwd[::-1][0:len(cwd)-n-1])
-	break
-libdir = '%s/bin/test' % spr2
-sys.path.append('/usr/local/lib')
+sys.path.append('../RunSwig')
+from FindSprPath import *
+spr_path = FindSprPath(prog)
+libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from TextFio import *
 from Util import *
-from Error import *
-
-# ----------------------------------------------------------------------
-#  Constants
-#
-prog = sys.argv[0].split('\\')[-1].split('.')[0]
-python_version = 34
-module = 'Scilab'
+from Proc import *
 
 # ----------------------------------------------------------------------
 #  Globals
 #
-U = Util()
-unix = U.is_unix()
+util = Util()
+proc = Proc(dry_run=debug)
+unix = util.is_unix()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
-spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
-bindir = '%s/%s' % (spr2top, 'bin')
-srcdir = '%s/%s' % (spr2top, 'src')
-incdir = '%s/%s' % (spr2top, 'include')
+sprtop = spr_path.abspath()
+bindir = spr_path.abspath('bin')
+incdir = spr_path.abspath('inc')
+srcdir = spr_path.abspath('src')
 swigdir = '%s/%s' % (bindir, 'swig')
-pythondir = '%s/Python%s' % (bindir, python_version)
 
-incdir_rel = U.pathconv(os.path.relpath(incdir), 'unix')
-srcdir_rel = U.pathconv(os.path.relpath(srcdir), 'unix')
+incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
+srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 
 # ----------------------------------------------------------------------
 #  Scripts
 #
-pythonexe = 'python%s' % (python_version if unix else '')
-python = '%s/%s' % (pythondir, pythonexe)
 swig = '%s/swig -I%s/Lib' % (swigdir, swigdir)
 make = 'make' if unix else 'nmake'
 
@@ -123,18 +121,20 @@ verbose	= options.verbose
 
 lines = []
 lines.append('#\tDo not edit. %sSwig.py will update this file.' % module)
+lines.append('#')
 lines.append('all: %s' % stubpath)
 lines.append('%s: %s.i' % (stubpath, module))
+lines.append('\t@echo "    *** creating %s"' % stubfile)
 swigargs = '-dll -c++ %s.i' % module
 if unix:
 	rm = 'rm'
 	quiet = '>/dev/null 2>&1'
-	lines.append('\t%s %s' % (U.pathconv(swig), swigargs))
+	lines.append('\t%s %s' % (util.pathconv(swig), swigargs))
 	lines.append('\tmv -f %s %s %s' % (stubfile, stubpath, quiet))
 else:
 	rm = 'del'
 	quiet = '>NUL 2>&1'
-	lines.append('\t%s %s' % (U.pathconv(swig), swigargs))
+	lines.append('\t%s %s' % (util.pathconv(swig), swigargs))
 	lines.append('\tcopy %s %s %s' % (stubfile, os.path.split(stubpath)[0], quiet))
 	lines.append('\tdel %s %s' % (stubfile, quiet))
 lines.append('')
@@ -145,15 +145,15 @@ lines.append('\t-%s -f %s %s' % (rm, makefile, quiet))
 def output(fname):
 	fobj = TextFio(fname, 'w', encoding='utf8')
 	if fobj.open() < 0:
-		E.print(fobj.error())
+		E.print(fobj.error(), exitcode=0)
 	if fobj.writelines(lines, '\n') < 0:
-		E.print(fobj.error())
+		E.print(fobj.error(), exitcode=0)
 	fobj.close()
 #
 if verbose:
 	path = '%s/%s' % (os.getcwd(), makefile)
-	print('  creating "%s"' % U.pathconv(path, 'unix'))
-lines = U.pathconv(lines)
+	print('  creating "%s"' % util.pathconv(path, 'unix'))
+lines = util.pathconv(lines)
 output(makefile)
 
 # ----------------------------------------------------------------------
@@ -166,10 +166,11 @@ output(makefile)
 if unix: sys.exit(0)
 # ***************************************************
 
-cmd = '%s -f %s' % (make, U.pathconv(makefile))
+cmd = '%s -f %s' % (make, util.pathconv(makefile))
 if clean:
 	cmd += ' clean'
-U.exec(cmd, shell=True, dry_run=debug)
+proc.exec(cmd)
+proc.wait()
 
 sys.exit(0)
 

@@ -66,8 +66,8 @@
 # define finite _finite
 #else
 # include <cmath>
-# define isnan   std::isnan
-# define finite  std::isfinite
+# define isnan(x)   std::isnan(x)
+# define finite(x)  std::isfinite(x)
 #endif
 
 //	for Visual C++ 's strange spec of stl.

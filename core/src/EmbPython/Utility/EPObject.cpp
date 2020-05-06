@@ -132,7 +132,7 @@ PyTypeObject EPObjectType =
 	"EPObject",           /* tp_doc */
 	0,		               /* tp_traverse */
 	0,		               /* tp_clear */
-	EPObject_richcmp,		               /* tp_richcompare */
+	(richcmpfunc)EPObject_richcmp,		               /* tp_richcompare */
 	0,		               /* tp_weaklistoffset */
 	0,		               /* tp_iter */
 	0,		               /* tp_iternext */

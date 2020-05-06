@@ -1,4 +1,5 @@
 ﻿#include <Physics/PHHapticStepImpulse.h>
+#include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
 
@@ -39,7 +40,7 @@ void PHHapticStepImpulse::Step2(){
 }
 void PHHapticStepImpulse::StepHapticLoop() {
 	UpdateHapticPointer();
-	GetHapticRender()->HapticRendering(this);
+	engine->HapticRendering(this);
 }
 
 void PHHapticStepImpulse::SyncHaptic2Physic(){

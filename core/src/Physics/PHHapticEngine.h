@@ -10,190 +10,188 @@
 
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHHapticPointer.h>
-#include <Physics/PHHapticRender.h>
+#include <Physics/PHHapticStepBase.h>
 
 using namespace PTM;
 namespace Spr{;
+/// ガウスザイデル法を使いAx+b>0を解く
+template <class AD, class XD, class BD>
+void GaussSeidel(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b) {
+	int nIter = 15;					// 反復回数の上限
+	double error = 0.0;
+	double errorRange = 10e-8;		// 許容誤差
+	int n = (int)a.height();		// 連立方程式の数(行列aの行数)
+	std::vector< double > lastx;
+	for (int i = 0; i < n; i++) {
+		lastx.push_back(x[i]);
+		x[i] = 0;
+	}
+
+	for (int k = 0; k < nIter; k++) {
+		for (int i = 0; i < n; i++) {
+			double term1 = 0.0;
+			double term2 = 0.0;
+			for (int j = 0; j < i; j++) {
+				term1 += a[i][j] * x[j];
+			}
+			for (int j = i + 1; j < n; j++) {
+				term2 += a[i][j] * lastx[j];
+			}
+			// xの更新(繰り返し計算の式を使用)
+			x[i] = (-b[i] - term1 - term2) / a[i][i];
+			if (x[i] < 0) x[i] = 0.0;
+		}
+
+		// (lastx - x)の2乗の総和と誤差範囲を比較
+		error = 0.0;
+		for (int i = 0; i < n; i++) {
+			error += pow(x[i] - lastx[i], 2);
+			//DSTR << "iterete" << i << "," << x[i] << std::endl;
+		}
+		if (error < errorRange) {
+			//DSTR << "Finish the iteration in admissible error. " << std::endl;
+			//DSTR << k << std::endl;
+			return;
+		}
+
+		// 繰り返し計算のために更新後のxをlastxに保存
+		for (int i = 0; i < n; i++) lastx[i] = x[i];
+	}
+	//nIterで計算が終わらなかったので打ち切り
+	//static int iterError = 0;
+	//iterError += 1;
+	//DSTR << iterError << "Could not converge in iteration steps. Error = " << error << std::endl;
+	//CSVOUT << error << std::endl;
+}
+
+/// ガウスザイデル法を使いAx+b>0を解く
+template <class AD, class XD, class BD>
+void GaussSeidelMinMax(VectorImp<XD>& x, const VectorImp<XD>& xmin, const VectorImp<XD>& xmax, const MatrixImp<AD>& a, const VectorImp<BD>& b) {
+	int nIter = 15;					// 反復回数の上限
+	double error = 0.0;
+	double errorRange = 10e-8;		// 許容誤差
+	int n = (int)a.height();		// 連立方程式の数(行列aの行数)
+	std::vector< double > lastx;
+	for (int i = 0; i < n; i++) {
+		lastx.push_back(x[i]);
+		x[i] = 0;
+	}
+
+	for (int k = 0; k < nIter; k++) {
+		for (int i = 0; i < n; i++) {
+			double term1 = 0.0;
+			double term2 = 0.0;
+			for (int j = 0; j < i; j++) {
+				term1 += a[i][j] * x[j];
+			}
+			for (int j = i + 1; j < n; j++) {
+				term2 += a[i][j] * lastx[j];
+			}
+			// xの更新(繰り返し計算の式を使用)
+			x[i] = (-b[i] - term1 - term2) / a[i][i];
+			if (x[i] < xmin[i]) {
+				x[i] = xmin[i];
+			}
+			if (x[i] > xmax[i]) {
+				x[i] = xmax[i];
+			}
+		}
+
+		// (lastx - x)の2乗の総和と誤差範囲を比較
+		error = 0.0;
+		for (int i = 0; i < n; i++) {
+			error += pow(x[i] - lastx[i], 2);
+			//DSTR << "iterete" << i << "," << x[i] << std::endl;
+		}
+		if (error < errorRange) {
+			//DSTR << "Finish the iteration in admissible error. " << std::endl;
+			//DSTR << k << std::endl;
+			return;
+		}
+
+		// 繰り返し計算のために更新後のxをlastxに保存
+		for (int i = 0; i < n; i++) lastx[i] = x[i];
+	}
+	//nIterで計算が終わらなかったので打ち切り
+	//static int iterError = 0;
+	//iterError += 1;
+	//DSTR << iterError << "Could not converge in iteration steps. Error = " << error << std::endl;
+	//CSVOUT << error << std::endl;
+	return;
+}
 
 //----------------------------------------------------------------------------
-// PHSolidForHaptic
-//Haptic側からPhysics側へ渡す情報
-class PHSolidForHapticSt{
-public:
-	Vec3d force;			// 力覚レンダリングによって加わる全ての力
-	Vec3d torque;;			// 力覚レンダリングによって加わる全てのトルク
-};
-// Physics側からHaptic側へ渡す情報
-class PHSolidForHapticSt2{
-public:
-	PHSolid* sceneSolid;	// PHSceneが持つ剛体
-	
-	bool bPointer;			// 力覚ポインタであるかどうか
-	int  doSim;				// 近傍であるかどうか 0:近傍でない，1:はじめて近傍，2:継続して近傍
-
-	SpatialVector b;		///< 予測シミュレーションで求めたモビリティ（重力等の定数項）
-	SpatialVector curb;		///< 通常シミュレーションででた定数項
-	SpatialVector lastb;	///< 前回の予測シミュレーションで求めた定数項
-	SpatialVector bimpact;
-};
-
-class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public UTRefCount{  
-public:
-	PHSolid localSolid;		// sceneSolidのクローン
-
-	// 衝突判定用の一時変数
-	int NLocalFirst;		// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
-	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
-	PHSolidForHaptic();
-	PHSolid* GetLocalSolid(){ return &localSolid; }
-	void AddForce(Vec3d f);
-	void AddForce(Vec3d f, Vec3d r);
-};
-class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
-
-//----------------------------------------------------------------------------
-// PHShapePairForHaptic
-class PHSolidPairForHaptic;
-class PHShapePairForHaptic : public PHShapePair{
-public:	
-	SPR_OBJECTDEF(PHShapePairForHaptic);
-	// 0:solid、1:pointer
-	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
-	Posed lastShapePoseW[2];	///< 前回の形状姿勢
-	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
-	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
-	float springK;				///< バネ係数
-	float damperD;				///< ダンパ係数
-	float mu;					///< 動摩擦係数
-	float mu0;					///< 最大静止摩擦係数	
-	float timeVaryFrictionA;	///< 時変摩擦定数A
-	float timeVaryFrictionB;	///< 時変摩擦定数B
-	float timeVaryFrictionC;	///< 時変摩擦定数C
-	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
-	float muCur;				///< 計算された時変摩擦係数
-
-	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
-	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
-	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
-
-	PHShapePairForHaptic();
-	void Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
-	void UpdateCache();
-	/// 接触判定．近傍点対を常時更新
-	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
-	/// 接触時の判定
-	int OnDetect(unsigned ct, const Vec3d& center0);
-	bool AnalyzeContactRegion();
-	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
-	int NIrs() { return (int)irs.size();  }
-	int NIrsNormal() { return nIrsNormal;  }
-	Vec3d GetIrForce(int i) { return irs[i]->force;  }
-	double GetMu() { return muCur;  }
-};
-
-//----------------------------------------------------------------------------
-
-struct PHSolidPairForHapticSt{
-	Vec3d force;			///< 力覚ポインタがこの剛体に加える力
-	Vec3d torque;			///< 力覚ポインタがこの剛体に加えるトルク
-
-	Posed interpolationPose;	///< 剛体の補間姿勢
-	Posed lastInterpolationPose;
-	Posed initialRelativePose;	///< 接触開始時の相対位置姿勢
-	Posed relativePose;			///< 接触中の相対位置姿勢
-
-	unsigned contactCount;
-	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
-
-	Vec3d contactVibrationVel;
-	Vec3d lastStaticFrictionForce;
-	PHSolidPairForHapticIf::FrictionState  frictionState;
-};
-
-class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
-public:
-	SPR_OBJECTDEF(PHSolidPairForHaptic);
-	int solidID[2];
-	
-	int inLocal;	// 0:NONE, 1:in local first, 2:in local
-	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
-	//TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dで使うアクセレランス
-	SpatialMatrix A6D;
-	
-	PHSolidPairForHaptic();
-	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
-
-	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
-	PHShapePairForHapticIf*       GetShapePair(int i, int j){ return (PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
-	const PHShapePairForHapticIf* GetShapePair(int i, int j) const { return (const PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
-	PHSolidPairForHapticIf::FrictionState GetFrictionState() { return frictionState; }
-	unsigned GetContactCount() { return contactCount;  }
-	unsigned GetFrictionCount() { return fricCount; }
-
-	/// 交差が検知された後の処理
-	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
-};
-
-class PHHapticStepBase;
-//----------------------------------------------------------------------------
-/// PHHapticEngine,	This engine is initially disabled. Enable() muse be called prior to use.
+/** PHHapticEngine,	This engine is initially disabled. Enable() muse be called prior to use.
+	Time stepping of haptic engine is controlled by PHHapticStepXXX
+	In multi thread versions (other than PHHapticStepSingle), 
+	PHHapticStepXXX has copy of haptic pointers and solid pairs. 
+	They can be got by GetHapticPointerInHaptc() and GetSolidPairInHaptic()
+*/
 class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector{
-	std::vector< UTRef<PHHapticStepBase> > hapticSteps;
 public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
 	ACCESS_DESC(PHHapticEngine);
-	UTRef< PHHapticStepBase >               hapticStep;
-	UTRef< PHHapticRender >                 hapticRender;
-	PHHapticPointers                        hapticPointers;
-	PHSolidsForHaptic                       hapticSolids;
+	UTRef< PHHapticStepBase >               hapticStep;			///<	Manager timer stepping for phyics and haptic rendering.
+	PHHapticPointers                        hapticPointers;		///<	Haptic pointers correspond to haptic interface.
+	PHSolidsForHaptic                       hapticSolids;		///<	Partial copy of solids in PHScene for haptic rendering
 
 	///描画アクセスで落ちる場合があるかもで追加 2012.12.11 susa
 	PHSolidPairs solidPairsTemp;	///< hapticsの情報をグラフィクスで表示するためのキャッシュ
 
 	struct Edge{ Vec3f min, max; };
 	std::vector< Edge > edges;
+	// PHSceneからStep()を2回呼ぶためのクラス
+	class PHHapticEngineCallStep2 : public PHEngine {
+	public:
+		UTRef< PHHapticEngine > engine;
+		int GetPriority() const { return SGBP_HAPTICENGINE2; }
+		virtual void Step() { engine->Step2(); }
+	};
 
 protected:
+	std::vector< UTRef<PHHapticStepBase> > hapticSteps;
 	HapticStepMode hapticStepMode;
 public:
 	bool bPhysicStep;
 	PHHapticEngine();
 	//-------------------------------------------------------------------
 	// APIの実装
-	/// エンジンモードの選択
+	/// エンジンモードの選択	(Single, Multi or Local Dynamics)
 	void SetHapticStepMode(HapticStepMode mode);
 	/// 力覚ポインタの数を返す
 	int NPointers() { return (int)hapticPointers.size(); }
 	/// hapticSolidsの数を返す
 	int NSolids() { return (int)hapticSolids.size(); }
-	/// 力覚ポインタへのポインタを返す
+	/// Get haptic pointer in haptic engine (physics thread)
 	PHHapticPointerIf* GetPointer(int i){ return hapticPointers[i]->Cast(); }
-	///
+	///	Get solid pair in haptic engine (physics thread);
 	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairs.item(i, j); }
 
-	///	Haptic側を返す
-	/// 力覚ポインタの数を返す
+	//--------------------------------------
+	//	Functions to get objects in haptic thead = PHHapticStepXXX.
+	/// 力覚ポインタの数を返す。
 	int NPointersInHaptic();
-	/// hapticSolidsの数を返す
-	int NSolidsInHaptic();
-	/// 力覚ポインタへのポインタを返す
+	/// returns haptic pointer in haptic thread.
 	PHHapticPointerIf* GetPointerInHaptic(int i);
-	///
+	/// hapticSolidsの数を返す。
+	int NSolidsInHaptic();
+	/// returns solid pair in haptic thead.
 	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
 	/// state保存のために確保した領域を開放する
 	void ReleaseState();
-	///
+	///	cache of solid pairs in haptic thead. Used for displaying.
 	PHSolidPairForHapticIf* GetSolidPairTemp(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairsTemp.item(i, j); }
 
-	// PHContactDetectorの仮想関数
+	/// Implementaion for base class (PHContactDetector)
 	PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForHaptic(); }
 	
 	// PHHapticEngineの実装
-	///< シミュレーションループの更新（PHScene::Integrate()からコール）
+	///< Update simulation loop (called from PHScene::Integrate()) シミュレーションループの更新（PHScene::Integrate()からコール）
 	virtual void Step();
 	virtual void Step2();
-	///< 力覚ループの更新	
+	///< Time stepping for haptic rendering. 力覚ループの更新	
 	virtual void StepHapticLoop();
+	///< Syncronize physics and haptics
 	virtual void StepHapticSync();
 
 	///< 力覚レンダリング用の衝突判定開始
@@ -209,12 +207,10 @@ public:
 	bool DelChildObject(ObjectIf* o);
 	///< ShapePairの更新
 	void UpdateShapePairs(PHSolid* solid);
-	///< 接触モードの変更
-	virtual void SetContactMode();
-	//< エンジンモードの取得
+	///<	Time stepping for haptic rendering and physics
 	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
 
-	///<接触判定の有効化・無効化
+	///<	接触判定の有効化・無効化
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable);
 	void EnableContact(PHSolidIf** group, size_t length, bool bEnable);
 	void EnableContact(PHSolidIf* solid, bool bEnable);
@@ -228,14 +224,30 @@ public:
 	/// シミュレーションを実行した直後に実行されるコールバックを登録する
 	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
 
+protected:
+	///<	TO avoid to get force from other object to the haptic pointer, contact mode for PHScene must be set NONE.
+	virtual void DisablePointerContactDetectionInPhysics();
+
+
 public:
-	// PHSceneからStep()を2回呼ぶためのクラス
-	class PHHapticEngineCallStep2 : public PHEngine {
-	public:
-		UTRef< PHHapticEngine > engine;
-		int GetPriority() const { return SGBP_HAPTICENGINE2; }
-		virtual void Step() { engine->Step2(); }
-	};
+	// Implementation for haptic rendering. The definisions are in PHHapticEngineRender.cpp
+	///	start point of haptic rendering
+	virtual void HapticRendering(PHHapticStepBase* hs);
+	///	Compute all constraints.
+	void CompIntermediateRepresentationForDynamicProxy(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
+	///	Genreate constraints for surface normal
+	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
+		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
+	///	Generate constrants for static friction
+	bool CompFrictionIntermediateRepresentation(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+	///	PENALTY based haptic rendering
+	void PenaltyBasedRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
+	///	CONSTRAINT and DYNAMIC_PROXY based Haptic Rendering
+	void DynamicProxyRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
+	///	Add vibration to collision and state transition of friction (static to dynamic) events
+	void VibrationRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
+	///	Compute proxy's position which satisfy constrants of all intermediate representations.
+	void SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, PHHapticPointer* pointer, const PHIrs& irs);
 };
 
 }	//	namespace Spr
