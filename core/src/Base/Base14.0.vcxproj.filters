@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Affine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseDebug.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTypeInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseUtility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="StrBufBase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Base.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Combination.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyList.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuf.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="StrBufBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\Affine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\BaseDebug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\BaseTypeInfo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\BaseUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\Env.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\QuadProgram.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TCurve.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TinyMat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TinyVec.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TMatrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TMatrixUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TQuaternion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\TVector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\VectorDebug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Base\Spatial.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{2967c299-899c-4c63-aced-21f3473bf10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{b1181eb2-0b00-4502-8f31-8996cc0da787}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,18 +1,20 @@
-if exist pack\springhead2 rmdir /S /Q pack\springhead2
+setlocal
+if exist pack\springhead rmdir /S /Q pack\springhead
 if not exist pack mkdir pack
 cd pack
-svn export http://springhead.info/spr2/Springhead2/trunk ./Springhead2
+svn export http://springhead.info/spr2/Springhead/trunk ./Springhead
 
-cd springhead2
+cd springhead
 
 rem 公開できないファイルの削除と設定変更
 del /F /S /Q closed
-echo #undef USE_CLOSED_SRC > include/UseClosedSrcOrNot.h
+echo #undef USE_CLOSED_SRC > core/include/UseClosedSrcOrNot.h
 
-set PATH=%PATH%;bin
+set PATH=buildtool;%PATH%
 
-minitar -c -z9 ../Springhead2.tgz *.*
+minitar -c -z9 ../Springhead.tgz *.*
 cd ..
 cd ..
 
+endlocal
 exit /b

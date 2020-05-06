@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CDBox.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDCapsule.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDConvex.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDConvexMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDConvexMeshInterpolate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDCutRing.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDDetectorImp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDGJK.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDRegisterTypeDesc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDRoundCone.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDShape.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDSpatialHashTable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CDSphere.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Collision\SprCDShape.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Collision\SprCDSpHash.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CDBox.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDCapsule.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDCollisionFunctions.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDConvex.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDConvexMesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDConvexMeshInterpolate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDCutRing.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDDetectorImp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDQuickHull2D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDQuickHull2DImp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDQuickHull3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDQuickHull3DImp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDRoundCone.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDShape.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDSpatialHashTable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CDSphere.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Collision\SprCDDetector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{93fbe9ab-4ad8-45ef-a236-efc62326bf84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4d33d3a8-69f4-4fb4-a9bc-0f8c7e166d7e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
