@@ -286,7 +286,7 @@ class Proc:
 			out, err = self.proc.communicate()
 			status = Proc.ETIME
 		encoding = os.device_encoding(1)
-		if encodig is None:
+		if encoding is None:
 			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
 		out = out.decode(encoding) if out else None
 		err = err.decode(encoding) if err else None

@@ -554,8 +554,8 @@ void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	for(int i=0;i<3;++i){ p.damper[i+3]       = j->damperOri; }
 	for(int i=0;i<3;++i){ p.secondDamper[i]   = j->secondDamper[i]; }
 	for(int i=0;i<3;++i){ p.secondDamper[i+3] = j->secondDamperOri; }
-	for(int i=0;i<6;++i){ p.targetVelocity[i] = 0.0; } // PHSpringには無い
-	for(int i=0;i<6;++i){ p.offsetForce[i]    = 0.0; } // PHSpringには無い
+	for(int i=0;i<6;++i){ p.targetVelocity[i] = j->targetVelocity[i]; } 
+	for(int i=0;i<6;++i){ p.offsetForce[i]    = j->offsetForce[i]; } 
 	p.yieldStress    = j->yieldStress;
 	p.hardnessRate   = j->hardnessRate;
 }

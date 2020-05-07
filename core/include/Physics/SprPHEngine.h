@@ -107,6 +107,15 @@ public:
 	*/
 	double GetShrinkRateCorrection();
 
+	/** @brief set regularization parameter
+	    @param reg regularization parameter to be set 
+	*/
+	void SetRegularization(double reg);
+
+	/** @brief returns regularization parameter
+	*/
+	double GetRegularization();
+
 	/** @brief 接触領域を表示するための情報を更新するかどうか。FWScene::EnableRenderContact()が呼び出す。
 	*/
 	void EnableRenderContact(bool enable);
@@ -125,6 +134,7 @@ struct PHConstraintEngineDesc{
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	double	accelSOR;					///< SOR法の加速係数
 	double  dfEps;
+	double  regularization;
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
 	bool	bUseContactSurface;			///< 面接触を使う
@@ -142,6 +152,7 @@ struct PHConstraintEngineDesc{
 		freezeThreshold			 = 0.0;
 		accelSOR				 = 1.0;
 		dfEps                    = 0.0;
+		regularization           = 0.001;
 		bSaveConstraints         = false;
 		bUpdateAllState	         = true;
 		bUseContactSurface       = false;
@@ -242,6 +253,7 @@ public:
 	bool AddMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
 	bool RemoveMeshPair(PHFemMeshNewIf* m0, PHFemMeshNewIf* m1);
 	void ThermalTransfer();
+	void setheatTransferRatio(double setheatTransferRatio);
 
 	//	Old contact treatment codes for vibration simulation. Will be replaced by new functions.
 	void FEMSolidMatchRefresh();				//Refreshing the solid->FEMindex values

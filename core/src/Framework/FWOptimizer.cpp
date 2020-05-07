@@ -67,6 +67,7 @@ namespace Spr {
 			}
 		}
 		*/
+		phScene = phSceneInput; // <!!>
 	}
 
 	PHSceneIf* FWOptimizer::GetScene() { return phScene; }

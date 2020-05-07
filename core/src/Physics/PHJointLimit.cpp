@@ -249,6 +249,7 @@ void PHBallJointConeLimit::CompJacobian() {
 /// 可動域制限にかかっているか確認しどの自由度を速度拘束するかを設定
 void PHBallJointConeLimit::SetupAxisIndex() {
 	Vec2d limit[3] = { limitSwing, limitSwingDir, limitTwist };
+	bOnLimit = false;
 
 	axes.Clear();
 	for (int i=0; i<3; ++i) {
@@ -556,6 +557,7 @@ int PHBallJointSplineLimit::CheckIntersection(Vec2d base, Vec2d curr, double& mi
 void PHBallJointIndependentLimit::SetupAxisIndex(){
 	Vec2d limit[3] = { limitX, limitY, limitZ };
 
+	bOnLimit = false;
 	axes.Clear();
 	Vec3d delta;
 	joint->GetPosition().ToEuler(delta);
