@@ -160,7 +160,7 @@ if __name__ == '__main__':
 	verbose = 1
 
 	incdir = spr_path.abspath('inc')
-	hfile = '%s/UseClosedSrcOrNot.h' % incdir
+	hfile = '%s/SprUseClosedSrcOrNot.h' % incdir
 	use_path = 'UseClosedSrc.h.template'
 	unuse_path = 'UnuseClosedSrc.h.template'
 	patt = 'USE_CLOSED_SRC'

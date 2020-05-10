@@ -230,7 +230,7 @@ os.chdir(Util.pathconv(topdir))
 # preparations
 head_dir = spr_path.abspath('inc')
 tmpl_dir = '%s/bin' % spr_path.abspath('test')
-csc_head = '%s/UseClosedSrcOrNot.h' % head_dir
+csc_head = '%s/SprUseClosedSrcOrNot.h' % head_dir
 use_tmpl = '%s/UseClosedSrc.h.template' % tmpl_dir
 unuse_tmpl = '%s/UnuseClosedSrc.h.template' % tmpl_dir
 
