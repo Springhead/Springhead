@@ -12,6 +12,7 @@ TreeNodeTest ttest;
 
 const double dt = 0.02;
 void TreeNodeTest::Init(int argc, char* argv[]){
+	bRun = false;
 	FWApp::Init(argc, argv);
 	Vec3d pos = Vec3d(0, 6, 10.0);						// カメラ初期位置
 	GetCurrentWin()->GetTrackball()->SetPosition(pos);	// カメラ初期位置の設定
@@ -22,6 +23,16 @@ void TreeNodeTest::Init(int argc, char* argv[]){
 	phscene->SetGravity(Vec3d(0, -9.8, 0));				
 	phscene->SetTimeStep(dt);
 	phscene->SetNumIteration(5);
+}
+void TreeNodeTest::TimerFunc(int id) {
+	if (!bRun) return;
+	Step();
+}
+void TreeNodeTest::Step() {
+	UserFunc();
+	FWSceneIf* s = GetSdk()->GetScene();
+	if (s) s->Step();
+	PostRedisplay();
 }
 
 void TreeNodeTest::BuildScene(){
@@ -49,11 +60,9 @@ void TreeNodeTest::BuildScene(){
 	bd.boxsize = Vec3d(1, 0.2, 0.2);
 	CDBoxDesc bdTop = bd;
 	bdTop.boxsize.x = 0.2f;
-	const double rootDist = 8;
 	for (int tid = 0; tid < 2; ++tid) {
 		for (int i = 0; i < nLink; ++i) {
 			links[tid].push_back(phscene->CreateSolid(sd));
-			links[tid][i]->SetPose(Posed::Trn((-rootDist/2 + rootDist*tid) + i , 6, 0));
 			CDBoxIf* box = phsdk->CreateShape(i ? bd : bdTop)->Cast();
 			links[tid][i]->AddShape(box);
 			if (i > 0) {
@@ -62,23 +71,23 @@ void TreeNodeTest::BuildScene(){
 				links[tid][i]->SetShapePose(1, Posed::Trn(0,0.2,0));
 			}
 		}
+		const double rootDist = -2.5;
+		//	SetPoseを止め、原点に両法のRootを持っていくと、なぜか誤差が少なくなる。
+		links[tid][0]->SetPose(Posed::Trn(0, 4, -rootDist / 2 + rootDist * tid));
 		links[tid][0]->SetDynamical(false);
 		const double rot = Rad(90);
 		for (int i = 1; i < links[tid].size(); ++i) {
 			PHBallJointDesc djoint;
 			djoint.poseSocket.Pos() = i == 1 ? Vec3d(0,0,0) : Vec3d(0.5, 0, 0);
 			djoint.posePlug.Pos() = Vec3d(-0.5, 0, 0);
-			djoint.posePlug.Ori() = Quaterniond::Rot(rot, 'x');
-			Posed lp = links[tid][i]->GetPose();
-			lp.Ori() = Quaterniond::Rot(-rot*i, 'x') * lp.Ori();
-			links[tid][i]->SetPose(lp);
+			djoint.posePlug.Ori() = Quaterniond::Rot(rot, 'y');
 			if (tid == 0) {
 				djoint.spring = 100;
 				djoint.damper = 100;
 			}
 			else {
-				djoint.spring = 1;
-				djoint.damper = 1;
+				djoint.spring = 20;
+				djoint.damper = 20;
 			}
 			joints[tid].push_back(phscene->CreateJoint(links[tid][i - 1], links[tid][i], djoint)->Cast());
 		}
@@ -86,7 +95,10 @@ void TreeNodeTest::BuildScene(){
 	//	次をコメントアウトすると、TreeNode=フェザーストーンを使わない、全自由度の関節になる。
 	phscene->CreateTreeNodes(links[0][0]);	//	トルク計測用 PD強
 	phscene->CreateTreeNodes(links[1][0]);	//	トルク適用用 PD弱
-	phscene->SetContactMode(PHSceneDesc::MODE_NONE);
+
+	phscene->SetContactMode(PHSceneDesc::MODE_NONE);	//	No collision
+	phscene->SetPosesOfJointedSolids(links[0][0]);		//	Set initial poses of links[0]
+	phscene->SetPosesOfJointedSolids(links[1][0]);		//	Set initial poses of links[1]
 	//phscene->Print(DSTR);
 }
 
@@ -145,6 +157,12 @@ void TreeNodeTest::Keyboard(int key, int x, int y){
 	case DVKeyCode::ESC:
 		case  'q':
 			exit(0);
+			break;
+		case 'r':	//	run or stop
+			bRun = !bRun;
+			break;
+		case ' ':	//	step
+			Step();
 			break;
 		default:
 			break;

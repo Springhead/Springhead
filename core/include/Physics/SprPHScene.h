@@ -160,6 +160,16 @@ public:
 	int NSolids()const;
 
 	/** @brief Solidを取得する
+		@return Solidのインタフェースへのポインタ
+	 */
+	PHSolidIf* GetSolid(int idx);
+
+	/** @brief Solidのインデックスを取得する
+		@return Solidのインデックス
+	 */
+	int GetSolidIndex(PHSolidIf* s);
+
+	/** @brief Solidを取得する
 		@return Solidのインタフェースの配列へのポインタ
 	 */
 	PHSolidIf** GetSolids();
@@ -334,6 +344,10 @@ public:
 	/** @brief 光線を取得する
 	 */
 	PHRayIf* GetRay(int i);
+
+	/** @brief 関節で接続された剛体の姿勢を、関節にあわせて設定する。
+	 */
+	bool					SetPosesOfJointedSolids(const PHSolidIf* base);
 
 	/** @brief IKのノード（IKに用いることのできる可動物(=関節など)）を作成する．
 	 */

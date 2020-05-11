@@ -133,6 +133,10 @@ public:
 	int						NRays() const;
 	PHRayIf*				GetRay(int i);
 
+	bool					SetPosesOfJointedSolids(const PHSolidIf* base);
+protected:
+	bool					SetPosesOfJointedSolidsRecurs(PHSolidIf* base, PHSolids& solids);
+public:
 	PHIKActuatorIf*			CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
 	int						NIKActuators() const;
 	PHIKActuatorIf*			GetIKActuator(int i);
@@ -235,7 +239,7 @@ public:
 	PHIKEngineIf*			GetIKEngine();
 	PHFemEngineIf*			GetFemEngine();
 	PHHapticEngineIf*		GetHapticEngine();
-	PHOpEngineIf*				GetOpEngine();
+	PHOpEngineIf*			GetOpEngine();
 	PHOpSpHashColliAgentIf* GetOpColliAgent();
 	PHHapticPointerIf*		CreateHapticPointer();
 	void					SetStateMode(bool bConstraints);
