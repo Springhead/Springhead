@@ -1,33 +1,27 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ==============================================================================
-#  FILE:
-#	CheckClosedSrc.py
-#
 #  SYNOPSIS:
-#	python CheckClosedSrc.py [options]
-#
-#  OPTIONS:
-#	-s file		ヘッダファイルのサンプル ("UseColsedSrcOrNot.h.sample")
+#	python CheckClosedSrc.py
 #
 #  DESCRIPTION:
-#	Closed source の使用/非使用を定義するファイル "UseClosedSrcOrNot.h"
-#	を適切に用意するためのスクリプト。
+#	配布されたファイル"SprUseClosedSrcOrNot.h"では、closed sourceが使用
+#	できるようにマクロ"USE_CLOSED_SRC"が#defineされている。
+#	(これは誤コミットによるファイル変更のリスクが少ないと思われるから)
 #
-#	次の手順で処理を行なう．
-#	    (1)	Springhead/core/include に移動する。
-#	    (2)	UseClosedSrcOrNot.h がなければ、UseClosedSrcOrNot.h.sample を
-#		コピーして UseClosedSrcOrNot.h とする。
-#	    (3) UseClosedSrcOrNot.h で USE_CLOSED_SRC を define しているのに
-#		ディレクトリ ../../closed がなければ、UseClosedSrcOrNot.h の
-#		内容を #undef USE_CLOSED_SRC と書き換える。
-#	    (4) 元のディレクトリに戻る。
+#	もし"Springhead"と同じレベルに"closed"というディレクトリが存在しない
+#	ならば、マクロ"USE_CLOSED_SRC"の#defineを#undefと書き直すことにより
+#	closed sourceを使用しないようにする。
+#	ただし、既に#undefに書き換えられているならば何もしない。
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2019/01/08 F.Kanehori	初版
+#     Ver 1.00	 2019/01/08 F.Kanehori	初版
+#     Ver 1.01	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 2.00	 2020/04/09 F.Kanehori	方針の全面変更 (DESCRIPTION参照)
+#     Ver 2.01	 2020/04/12 F.Kanehori	Bug fix.
 # ==============================================================================
-version = 1.0
+version = '2.01'
 
 import sys
 import os
@@ -39,10 +33,9 @@ from optparse import OptionParser
 #  Constants
 #
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-patt = r'#define[ \t]+USE_CLOSED_SRC'
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import Springhead python library.
 #
 from FindSprPath import *
 spr_path = FindSprPath(prog)
@@ -50,30 +43,26 @@ libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from Proc import *
 from Error import *
-from Util import *
+#from Util import *
 
 # ----------------------------------------------------------------------
 #  Directories
 #
 sprtop = spr_path.abspath()
 incdir = spr_path.relpath('inc')
-closed = '../../closed'
+closed = '../../../closed'
 
 # ----------------------------------------------------------------------
 #  Files
 #
-header_file = 'UseClosedSrcOrNot.h'
-default_file = header_file + '.sample'
-saved_file = header_file + '.save'
+header_file = 'SprUseClosedSrcOrNot.h'
+tmp_file = header_file + '.tmp'
 
 # ----------------------------------------------------------------------
 #  オプションの定義
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
-parser.add_option('-s', '--sample-file', dest='sample_file',
-                        action='store', default=default_file,
-                        help='sample header file', metavar='FILE')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
                         help='set verbose count')
@@ -93,71 +82,51 @@ if len(args) != 0:
 	Proc().execute('python %s.py -h' % prog).wait()
 	sys.exit(0)
 
-sample_file = options.sample_file
 verbose = options.verbose
 
 # ----------------------------------------------------------------------
-#  Main process
-# ----------------------------------------------------------------------
-#  Step 1.
-#	Springhead/core/include に移動する。
+#  Springhead/core/include に移動する。
 #	
 cwd = os.getcwd()
 os.chdir(incdir)
 if verbose:
-	print('step 1: moved to %s' % os.getcwd().replace(os.sep, '/'))
+	print('cwd: %s' % os.getcwd().replace(os.sep, '/'))
 
 # ----------------------------------------------------------------------
-#  Step 2.
-#	UseClosedSrcOrNot.h がなければ、UseClosedSrcOrNot.h.sample を
-#	コピーして UseClosedSrcOrNot.h とする。
-#
-if not os.path.exists(header_file):
-	if verbose:
-		print('step 2: copying from %s' % sample_file)
-	path = shutil.copy(sample_file, header_file)
-
-# ----------------------------------------------------------------------
-#  Step 3.
-#	UseClosedSrcOrNot.h で USE_CLOSED_SRC を define しているのに
-#	ディレクトリ ../../closed がなければ、UseClosedSrcOrNot.h の
-#	内容を #undef USE_CLOSED_SRC と書き換える。
+#  ディレクトリ "../../closed" が存在しない場合に限り、
+#  ファイル "SprUseClosedSRcOrNot.h" 中に "#define USE_CLOSED_SRC"
+#  という行があれば、それを"#undef USE_CLOSED_SRC"と書き換える。
 #
 if not os.path.exists(closed):
+	patt = r'#define[ \t]+USE_CLOSED_SRC'
 	need_rewrite = False
+	lines_out = []
 	with open(header_file) as f:
 		lines = f.readlines()
 		for line in lines:
+			line = line.strip()
 			m = re.search(patt, line)
 			if m:
+				line = '#undef USE_CLOSED_SRC'
 				need_rewrite = True
-				break
-	f.close()
-	#
-	if need_rewrite:
-		shutil.move(header_file, saved_file)
-		out = open(header_file, 'w')
-		for line in lines:
-			if verbose:
-				print('        ==> %s' % line.strip())
-			m = re.search(patt, line)
-			if m:
-				line = '#undef USE_CLOSED_SRC\n'
 				if verbose:
-					print('step 3. -> %s' % line.strip())
-			out.write(line)
+					print('  line changed to: %s' % line)
+			lines_out.append(line)
+	f.close()
+
+	if need_rewrite:
+		out = open(tmp_file, 'w', newline="\n")
+		for line in lines_out:
+			out.write(line+'\n')
 		out.close()
-		f.close()
-		if os.path.exists(saved_file):
-			os.remove(saved_file)
+		shutil.move(tmp_file, header_file)
+		if verbose:
+			print('  rewrite file: "%s"' % header_file)
 
 # ----------------------------------------------------------------------
-#  Step 4.
-#	元のディレクトリに戻る。
+#  元のディレクトリに戻る。
 #
 os.chdir(cwd)
-if verbose:
-	print('step 4: returned to %s' % cwd.replace(os.sep, '/'))
 
 sys.exit(0)
 
