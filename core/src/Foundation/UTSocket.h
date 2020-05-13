@@ -25,6 +25,9 @@
 
 struct in_addr;
 
+#ifdef __unix__
+typedef unsigned int u_int32_t;
+#endif
 
 /*#ifdef GIMITE_WIN32
 #  //include <WinSock2.h>
