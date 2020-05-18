@@ -53,7 +53,6 @@
 #     Ver 3.07	 2019/02/26 F.Kanehori	Cmake環境に対応.
 #     Ver 3.08	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #     Ver 3.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
-#     Ver 3.10   2020/05/13 F.Kanehori	unix: Ver 3.08 に戻す.
 # ==============================================================================
 version = 3.09
 debug = False
@@ -172,8 +171,7 @@ verbose = options.verbose
 #
 if options.python:
 	python = options.python
-make = 'make' if unix else 'nmake /NOLOGO'
-#make = 'gmake' if unix else 'nmake /NOLOGO'
+make = 'gmake' if unix else 'nmake /NOLOGO'
 opts = '-P %s' % python
 makemanager = '%s "%s/make_manager.py" %s' % (python, runswigdir, opts)
 

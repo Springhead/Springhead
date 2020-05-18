@@ -133,7 +133,6 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 				double toi = dist / end;
 				shapePoseW[0].Pos() += toi*delta0;
 				shapePoseW[1].Pos() += toi*delta1;
-				DSTR << shapePoseW[0];
 				center = commonPoint = shapePoseW[0] * closestPoint[0];
 				depth = -(1-toi) * delta * normal;
 				if (depth <= 0){
@@ -227,8 +226,6 @@ found:;
 		DSTR << " / " << sum << std::endl;
 #endif
 	}
-	lastContactCount = ct;
-
 	//	debug dump
 	if (depth > 5 || depth < 0){
 		//DSTR << "depth=" << depth << std::endl;
@@ -239,6 +236,7 @@ found:;
 		// 本来はここに来ないようにするのがベスト　tazz
 		return false;	
 	}
+	lastContactCount = ct;
 	return true;
 }
 

@@ -25,6 +25,13 @@ Expected	0
 #RunErrLog	# Run error log file path
 #Intervention	False
 
+#UseCMake	True
+#CMakeBuildDir	build
+#CMakeTopDir	$(SprTop)
+#CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
+#CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
+CMakeOutputDir	$(CMakeBuildDir)/$CONFIGURATION
+
 [Windows]
 BuildLog	$(SprTest)/log/Build.log
 BuildErrLog	$(SprTest)/log/BuildError.log
@@ -36,9 +43,11 @@ SolutionAlias	Makefile
 Build		False
 BuildLog	$(SprTest)/log/tests.build.log
 BuildErrLog	$(SprTest)/log/tests.build.error.log
-OutputDir	.
-BinaryOutName	a.out
+#OutputDir	.
+CMakeOutputDir	$(CMakeBuildDir)
+#BinaryOutName	a.out
 Run		False
-RunLog		$(SprTest)/log/tests.run.log
-RunErrLog	$(SprTest)/log/tests.run.error.log
+RunLog		$(SprTest)/log/tests.run.lo
+#UseCMake	True
+unErrLog	$(SprTest)/log/tests.run.error.log
 

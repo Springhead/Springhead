@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -69,6 +69,9 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/26 F.Kanehori	First version.
+#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#	Ver 1.02 2018/04/19 F.Kanehori	Refine status check.
+#	Ver 1.03 2018/07/23 F.Kanehori	Change comment.
 # ======================================================================
 import sys
 import os
@@ -84,6 +87,7 @@ sys.path.append(libdir)
 
 from Fio import *
 from Error import *
+from Proc import *
 from FileOp import *
 from ConstDefs import *
 
@@ -92,10 +96,9 @@ class TestResult:
 	#
 	def __init__(self, fname, scratch=True, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.0
+		self.version = 1.01
 		#
 		self.verbose = verbose
-		self.E = Error(self.clsname)
 		#
 		self.rfname = fname + '.r'
 		self.vfname = fname + '.v'
@@ -118,7 +121,7 @@ class TestResult:
 	def set_info(self, name, category, info):
 		if category not in [RST.ERR, RST.SKP, RST.EXP]:
 			msg = 'bad category: %s' % category
-			slef.E.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 			return
 		#
 		if name not in self.visited:
@@ -135,15 +138,15 @@ class TestResult:
 	def set_result(self, name, category, platform, config, result):
 		if category not in [RST.BLD, RST.RUN]:
 			msg = 'bad category: %s' % category
-			slef.E.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 			return
 		if platform not in PLATS:
 			msg = 'bad platform: %s' % platform
-			slef.E.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 			return
 		if config not in CONFS:
 			msg = 'bad config: %s' % config
-			self.E.print(msg, alive=True)
+			Error(self.clsname).error(msg)
 			return
 		#
 		self.results[name][category][platform][config] = result
@@ -213,7 +216,7 @@ class TestResult:
 			if stat != 0:
 				continue
 			stat = r[v][RST.RUN][p][c]
-			if str(stat) == r[v][RST.RUN][RST.EXP]:
+			if str(stat) == str(r[v][RST.RUN][RST.EXP]):
 				succs[RST.RUN].append(module)
 			elif stat == Proc.ETIME:	# assume success
 				succs[RST.RUN].append(module)
@@ -284,12 +287,12 @@ class TestResult:
 			print('serializing data to "%s"' % fname)
 		f = Fio(fname, 'wb')
 		if f.open() < 0:
-			self.E.print(f.error(), alive=True)
+			Error(self.clsname).error(f.error())
 			return -1
 		try:
 			pickle.dump(obj, f.obj)
 		except pickle.PickleError as err:
-			self.E.print(err, alive=True)
+			Error(self.clsname).error(err)
 			f.close()
 			return -1
 		f.close()
@@ -304,12 +307,12 @@ class TestResult:
 			print('deserializing data from "%s"' % fname)
 		f = Fio(fname, 'rb')
 		if f.open() < 0:
-			self.E.print(err, alive=True)
+			Error(self.clsname).error(err)
 			return None
 		try:
 			obj = pickle.load(f.obj)
 		except pickle.PickleError as err:
-			self.E.print(err, alive=True)
+			Error(self.clsname).error(err)
 			f.close()
 			return None
 		f.close()
@@ -319,7 +322,7 @@ class TestResult:
 	#
 	def __edit_log_data(self, lines, name, succs, fails):
 		# arguments:
-		#   lines:	Edit result log data lines ([str]).
+		#   lines:	List to be appended edit lines ([str]).
 		#   name:	Test module name (str).
 		#   succs:	List of success module names ([str]).
 		#   fails:	List of failure module names ([str]).

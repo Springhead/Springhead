@@ -122,7 +122,7 @@ public:
 	UTTimerIf*				timer;			///< タイマ
 
 	///	形状のスケール
-	double					shapeScale;
+	float					shapeScale;
 	/// 床用の形状
 	CDBoxIf*				shapeFloor;
 	CDBoxIf*				shapeWallX;
@@ -469,8 +469,8 @@ public: /** 派生クラスが実装する関数 **/
 	virtual void OnAction(int menu, int id){
 		/// いつでも有効アクション
 		if(menu == MENU_ALWAYS){
-			if(id == ID_EXIT)
-				exit(0);
+			if (id == ID_EXIT)
+				EndMainLoop();
 			if(id == ID_RUN)
 				ToggleAction(menu, id);
 			if (id == ID_STEP)
@@ -661,11 +661,11 @@ public: /** FWAppの実装 **/
 
 		CDCapsuleDesc cd;
 		cd.radius = shapeScale * 1;
-		cd.length = shapeScale * 1;
+		cd.length = shapeScale * 4;
 		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 		
 		CDRoundConeDesc rcd;
-		rcd.length = shapeScale * 3;
+		rcd.length = shapeScale * 6;
 		rcd.radius = shapeScale * Vec2d(1, 2);
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 

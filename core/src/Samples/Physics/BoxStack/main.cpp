@@ -99,7 +99,7 @@ public:
 		SampleApp::OnStep();
 
 		// 床を揺らす
-		if (soFloor){
+		if (soFloor && floorShakeAmplitude){
 			double time = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
 			double omega = 2.0 * M_PI;
 			soFloor->SetFramePosition(Vec3d(floorShakeAmplitude*sin(time*omega),0,0));			
@@ -119,7 +119,8 @@ public:
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
-			Quaterniond q = Quaterniond::Rot(Rad(30.0), 'y');
+			static Quaterniond q = Quaterniond::Rot(Rad(0.0), 'y');
+			q = Quaterniond::Rot(Rad(90), 'y') * q;
 
 			if(id == ID_BOX){
 				Drop(SHAPE_BOX, GRRenderIf::RED, v, w, p, q);
@@ -171,6 +172,8 @@ public:
 				}
 				else{
 					floorShakeAmplitude = 0;
+					soFloor->SetFramePosition(Vec3d(0, 0, 0));
+					soFloor->SetVelocity(Vec3d(0, 0, 0));
 					message = "floor stopped.";
 				}
 			}

@@ -41,7 +41,9 @@ set CWD=%CD%
 cd ..
 if exist buildtool\ (
 	set TOOLPATH=%CD%\buildtool\win32
-	echo buildtool found at "%CD%\buildtool"
+	if %verbose% geq 1 (
+		echo buildtool found at "%CD%\buildtool"
+	)
 )
 :exec
 cd %CWD%

@@ -40,17 +40,27 @@
 #	Ver 3.0  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
 #	Ver 4.0  2017/07/31 F.Kanehori  Python adapter の導入
 #	Ver 4.1  2019/01/08 F.Kanehori  CheckClosedSrc の導入
+#	Ver 4.2  2019/04/03 F.Kanehori  オプション SPRSRCDIR の導入
+#	Ver 4.3  2020/04/20 F.Kanehori  python_adapter を do_python に変更
 #################################################################################
+
+#  srcディレクトリの設定
+#	引数 SPRSRCDIR が設定されていたらそこを src ディレクトリとする
+#	さもなければ .../core/src/RunSwig から起動されたと仮定する
+#
+!ifndef SPRSRCDIR
+SPRSRCDIR	= ..
+!endif
 
 #  Python アダプタの定義
 #
-PYTHON		= ..\RunSwig\python_adapter.bat
+PYTHON		= $(SPRSRCDIR)\do_python.bat
 
 #  ディレクトリの定義
 #
-INCDIR		= ..\..\include
-FOUNDATION	= ..\Foundation
-FRAMEWORK	= ..\Framework
+INCDIR		= $(SPRSRCDIR)\..\include
+FOUNDATION	= $(SPRSRCDIR)\Foundation
+FRAMEWORK	= $(SPRSRCDIR)\Framework
 SCILAB		= $(INCDIR)\Scilab
 
 #  使用するスクリプト
@@ -70,14 +80,18 @@ all:	PreWork RunSwig
 PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 ClosedSrcCtl:
+		@echo Makefile.win: ClosedSrcCtl
 		$(PYTHON) $(CHECKCLOSEDSRC)
 
-$(SCILABSTUBHDR):	
+$(SCILABSTUBHDR):
+		@echo Makefile.win: SCILABSTUBHDR (SciLab/ScilabStub.hpp)
 		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
 
-$(FWOLDSPRSTUB):	
+$(FWOLDSPRSTUB):
+		@echo Makefile.win: FWOLDSPRSTUB (Framework/FWOldSpringStub.cpp)
 		cd $(FRAMEWORK) && $(PYTHON) $(RUNSWIGFW)
 
-RunSwig:	
+RunSwig:
+		@echo Makefile.win: RunSwig (do_swigall)
 		$(PYTHON) $(SCRIPT)
 

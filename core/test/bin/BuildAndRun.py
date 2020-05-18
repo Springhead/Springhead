@@ -6,8 +6,9 @@
 #	    Build the solution and/or run the program.
 #
 #  INITIALIZER:
-#	obj = BuildAndRun(ccver, verbose=0, dry_run=False)
+#	obj = BuildAndRun(ctl, ccver, verbose=0, dry_run=False)
 #	arguments:
+#	    ctl:	Instance of ControlParams class.
 #	    ccver:	C-compiler version (str).
 #			    Windows: Visual Studio version (str).
 #			    unix:    gcc version (dummy).
@@ -43,6 +44,7 @@
 #		exefile:    Executable file path.
 #		args:	    Run time arguments.
 #		logfile:    Log file path (log will be appended).
+#		errlogfile: Error log file path (log will be appended).
 #		addpath:    Additional path to execute program.
 #		timeout:    Time out value in sec (num).
 #		pipeproc:   Process name whose output is piped to
@@ -58,13 +60,16 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/08 F.Kanehori	First version.
-#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
-#	Ver 1.11 2018/03/26 F.Kanehori	Bug fixed (for unix).
+#	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
+#	Ver 1.3  2019/08/07 F.Kanehori	Add parameter to initializer.
 # ======================================================================
 import sys
 import os
 import re
+from stat import *
+from ControlParams import *
+from CMake import *
 from VisualStudio import *
 
 # local python library
@@ -85,14 +90,16 @@ class BuildAndRun:
 
 	#  Class initializer.
 	#
-	def __init__(self, ccver, verbose=0, dry_run=False):
+	def __init__(self, ctl, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.1
+		self.version = 1.3
 		#
+		self.ctl = ctl
 		self.ccver = ccver
 		self.dry_run = dry_run
 		self.verbose = verbose
 		#
+		self.use_cmake = ctl.get(CFK.USE_CMAKE)
 		self.encoding = 'utf-8' if Util.is_unix() else 'cp932'
 		self.errmsg = None
 
@@ -193,25 +200,27 @@ class BuildAndRun:
 		logf = self.__open_log(logfile, 'a', RST.RUN)
 		errlogf = self.__open_log(errlogfile, 'a', RST.RUN)
 
-		# add target to Makefile.
-		if Util.is_unix():
-			exefile = 'make -f %s test' % exefile
-
 		# execute program.
+		shell= True if Util.is_unix() else False
 		if pipeprocess:
+			# proc1: target program.
+			# proc2: generate input stream to feed proc1.
 			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc2 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
-				      addpath=addpath, stdin=Proc.PIPE,
-				      stdout=tmplog, stderr=Proc.STDOUT)
-			proc2.execute(pipeprocess, shell=True, addpath=addpath,
+				      shell=shell, addpath=addpath,
+				      stdin=Proc.PIPE, stdout=tmplog,
+				      stderr=Proc.STDOUT)
+			proc2.execute(pipeprocess,
+				      shell=shell, addpath=addpath,
 				      stdout=Proc.PIPE)
-			proc2.wait()
 			stat = proc1.wait(timeout)
+			proc2.wait()
 		else:
+			# proc1: target program.
 			proc1 = Proc(verbose=self.verbose, dry_run=self.dry_run)
 			proc1.execute('%s %s' % (exefile, args),
-				   addpath=addpath, shell=True,
+				   addpath=addpath, shell=shell,
 				   stdout=tmplog, stderr=Proc.STDOUT)
 			stat = proc1.wait(timeout)
 
@@ -298,13 +307,21 @@ class BuildAndRun:
 		tmplog = '%s/%s_%s_%s_build.log' % \
 			(tmplogdir, self.clsname, self.platform, self.config)
 		os.makedirs(tmplogdir, exist_ok=True)
+		FileOp().touch(tmplog)
 
-		cmnd = 'make -f %s compile' % slnfile
+		if (self.use_cmake):
+			os.chdir('build')
+			target = 'all'
+		else:
+			target = 'compile'
+		cmnd = 'make -f %s %s' % (slnfile, target)
 		args = opt_flags[opts]
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
 		proc.execute('%s %s' % (cmnd, args), shell=True,
 				stdout=tmplog, stderr=Proc.STDOUT)
 		stat = proc.wait()
+		if (self.use_cmake):
+			os.chdir('..')
 
 		cmnd = '%s %s' % (cmnd, args)
 		loginfo = [cmnd, tmplog]
@@ -321,6 +338,7 @@ class BuildAndRun:
 		tmplog = 'log/%s_%s_%s_%s_build.log' % \
 			(self.clsname, self.ccver, self.platform, self.config)
 		FileOp().rm(tmplog)
+
 		if self.verbose > 1:
 			print('build solution (Windows)')
 			print('  slnfile: %s' % slnfile)
@@ -348,7 +366,8 @@ class BuildAndRun:
 		#   step:	Execute step (RST.BLD or RST.RUN).
 		# returns:	List of error messages (str[]).
 
-		fobj = TextFio(fname)
+		fsize = os.stat(fname).st_size
+		fobj = TextFio(fname, size=fsize)
 		if fobj.open() < 0:
 			msg = 'build' if step == RST.BLD else 'run'
 			msg += '_s: open error: "%s"' % fname
@@ -356,7 +375,7 @@ class BuildAndRun:
 		lines = fobj.read()
 		fobj.close()
 
-		patt = re.compile(' error ', re.I)
+		patt = re.compile(' error', re.I)
 		errors = []
 		for line in lines:
 			if patt.search(line):
@@ -393,7 +412,8 @@ class BuildAndRun:
 			logf.writelines(data)
 		elif kind == 2:
 			# data is the file name to be read
-			tmpf = TextFio(data)
+			fsize = os.stat(data).st_size
+			tmpf = TextFio(data, size=fsize)
 			if tmpf.open() < 0:
 				msg = 'build' if step == RST.BLD else 'run'
 				msg += '_w: open error: "%s"' % (name, data)

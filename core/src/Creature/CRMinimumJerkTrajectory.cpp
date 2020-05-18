@@ -29,14 +29,14 @@ void CRNDMinimumJerkTrajectory<T>::CompCoefficient() {
 }
 template<class T>
 T CRNDMinimumJerkTrajectory<T>::GetPosition(float t){
-	if (t < startTime) {
+	if (t < this->startTime) {
 		return startPosition;
 	}
-	else if (goalTime < t) {
+	else if (this->goalTime < t) {
 		return goalPosition;
 	}
-	double r = t - startTime;
-	double s = (t - startTime) / (goalTime - startTime);
+	double r = t - this->startTime;
+	double s = (t - this->startTime) / (this->goalTime - this->startTime);
 
 	Vec6d val = Vec6d(1, r, pow(r, 2), pow(r, 3), pow(r, 4), pow(r, 5));
 	T pos = T();
@@ -48,14 +48,14 @@ T CRNDMinimumJerkTrajectory<T>::GetPosition(float t){
 
 template<class T>
 T CRNDMinimumJerkTrajectory<T>::GetVelocity(float t) {
-	if (t < startTime) {
+	if (t < this->startTime) {
 		return startPosition;
 	}
-	else if (goalTime < t) {
+	else if (this->goalTime < t) {
 		return goalPosition;
 	}
-	double r = t - startTime;
-	double s = (t - startTime) / (goalTime - startTime);
+	double r = t - this->startTime;
+	double s = (t - this->startTime) / (this->goalTime - this->startTime);
 
 	Vec6d val = Vec6d(0, 1, 2 * r, 3 * pow(r, 2), 4 * pow(r, 3), 5 * pow(r, 4));
 	T vel = T();
@@ -71,13 +71,13 @@ T CRNDMinimumJerkTrajectory<T>::GetDeltaPosition(float t) {
 }
 
 Quaterniond CRQuaternionMinimumJerkTrajectory::GetPosition(float t) {
-	if (t < startTime) {
+	if (t < this->startTime) {
 		return startPosition;
 	}
-	else if (goalTime < t) {
+	else if (this->goalTime < t) {
 		return goalPosition;
 	}
-	double s = (double)(t - startTime) / (goalTime - startTime);
+	double s = (double)(t - this->startTime) / (this->goalTime - this->startTime);
 	double sr = positionCoefficient.GetPosition(s);
 	DSTR << sr << s << std::endl;
 	Quaterniond pos = interpolate(sr, startPosition, goalPosition);

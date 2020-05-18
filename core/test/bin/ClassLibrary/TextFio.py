@@ -34,6 +34,8 @@
 #	Ver 2.2  2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
 #	Ver 2.21 2018/02/22 F.Kanehori	writeline(): allow line=None.
 #	Ver 2.22 2018/03/12 F.Kanehori	Now OK for doxygen.
+#	Ver 2.23 2018/04/05 F.Kanehori	Bug fixed.
+#	Ver 2.24 2018/04/12 F.Kanehori	Bug fixed (encoding: utf-16).
 # ======================================================================
 import sys
 import io
@@ -193,19 +195,28 @@ class TextFio(Fio):
 		self.lines = []
 		count = 0
 		#
+		need_decode = True
 		try:
 			data = self.obj.read()
 			if isinstance(data, str):
 				# case: system stream
 				data = data.encode(self.encoding)
+				need_decode = False
 		except IOError as err:
 			msg = 'file read error: "%s" (line %d)\n%s' \
 					% (self.path, count, err)
 			self.errmsg = msg
 			return self.lines
 		#
-		#lines = data.decode(self.encoding).split('\n')[0:-1]
-		lines = data.decode(self.encoding).split('\n')
+		if need_decode:
+			try:
+				lines = data.decode(self.encoding).split('\n')
+			except UnicodeDecodeError:
+				fmt = '%s: decode error (encoding=%s)'
+				print(fmt % (self.clsname, self.encoding))
+				# Kludge: just want to convert byte to string.
+				lines = data.decode('utf-8').split('\n')
+
 		if lines[-1] == '\n':
 			lines = lines[:-1]
 		for line in lines:
@@ -353,8 +364,8 @@ class TextFio(Fio):
 	#   @returns		Determined character encoding (str).
 	#
 	def __check_encoding(self):
-		lookup = ['iso-2022-jp', 'ascii', 'euc-jp',
-			  'utf-8', 'utf-16', 'cp932']
+		lookup = ['iso-2022-jp', 'ascii', 'euc-jp', 'unicode',
+			  'utf-8', 'utf-16-le', 'utf-16-be', 'cp932']
 		try:
 			f = open(self.path, 'rb')
 			data = f.read(self.size)
@@ -369,11 +380,13 @@ class TextFio(Fio):
 				break
 			except:
 				pass
-
+		#
 		if encoding == 'utf-8':
-			# check if with BOM.
-			line = open(self.path, encoding='utf-8').readline()
-			if line[0] == '\ufeff':
+			# check if with BOM
+			f = open(self.path, encoding=encoding)
+			line = f.readline()
+			f.close()
+			if line[0] == 'ufeff':
 				encoding = 'utf-8-sig'
 		return encoding
 

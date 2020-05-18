@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  CLASS:
@@ -8,31 +8,40 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2018/02/07 F.Kanehori	First version.
+#	Ver 1.1  2018/03/15 F.Kanehori	Add: MAKE_TARGET.
+#	Ver 1.2  2019/09/25 F.Kanehori	Add: CMAKE related ones.
 # ======================================================================
 from enum import Enum
 
-class CFK():		#  Control File Keywords.
-	SPRTOP		= 'SprTop'
-	SPRTEST		= 'SprTest'
-	EXCLUDE		= 'Exclude'
-	DESCEND		= 'Descend'
-	SOLUTION_ALIAS	= 'SolutionAlias'
-	BUILD		= 'Build'
-	USE_CLOSED_SRC	= 'UseClosedSrc'
-	CPP_MACRO	= 'CppMacro'
-	BUILD_LOG	= 'BuildLog'
-	BUILD_ERR_LOG	= 'BuildErrLog'
-	RUN		= 'Run'
-	OUTPUT_DIR	= 'OutputDir'
-	BINARY_OUT	= 'BinaryOut'
-	TIMEOUT		= 'Timeout'
-	EXPECTED	= 'Expeted'
-	ADD_PATH	= 'AddPath'
-	PIPE_PROCESS	= 'PipeProcess'
-	KILL_PROCESS	= 'KillProcess'
-	RUN_LOG		= 'RunLog'
-	RUN_ERR_LOG	= 'RunErrLog'
-	INTERVENTION	= 'Intervention'
+class CFK():		 #  Control File Keywords.
+	SPRTOP		 = 'SprTop'
+	SPRTEST		 = 'SprTest'
+	EXCLUDE		 = 'Exclude'
+	DESCEND		 = 'Descend'
+	SOLUTION_ALIAS	 = 'SolutionAlias'
+	BUILD		 = 'Build'
+	USE_CLOSED_SRC	 = 'UseClosedSrc'
+	MAKE_TARGET	 = 'MakeTarget'
+	CPP_MACRO	 = 'CppMacro'
+	BUILD_LOG	 = 'BuildLog'
+	BUILD_ERR_LOG	 = 'BuildErrLog'
+	RUN		 = 'Run'
+	OUTPUT_DIR	 = 'OutputDir'
+	BINARY_OUT	 = 'BinaryOut'
+	TIMEOUT		 = 'Timeout'
+	EXPECTED	 = 'Expected'
+	ADD_PATH	 = 'AddPath'
+	PIPE_PROCESS	 = 'PipeProcess'
+	KILL_PROCESS	 = 'KillProcess'
+	RUN_LOG		 = 'RunLog'
+	RUN_ERR_LOG	 = 'RunErrLog'
+	INTERVENTION	 = 'Intervention'
+	USE_CMAKE	 = 'UseCMake'		# for CMake
+	CMAKE_BLDDIR	 = 'CMakeBuildDir'
+	CMAKE_TOPDIR	 = 'CMakeTopDir'
+	CMAKE_CONF_FILE	 = 'CMakeConfFile'
+	CMAKE_OPTS_FILE	 = 'CMakeOptsFile'
+	CMAKE_OUTPUT_DIR = 'CMakeOutputDir'
 
 class RST(Enum):		#  ReSulT category.
 	ERR		= 0	#    error iinformation

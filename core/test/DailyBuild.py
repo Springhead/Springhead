@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # ======================================================================
 #  SYNOPSIS:
-#	DailyBuild [options] test-repository
+#	DailyBuild [options] test-repository result-repository
 #	options:
 #	  -c conf:	Configurations (Debug | Release).
 #	  -p plat:	Platform (x86 | x64).
@@ -25,8 +25,13 @@
 #	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
 #	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
 #	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
+#	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
+#	Ver 1.51 2018/08/02 F.Kanehori	Bug fixed.
+#	Ver 1.52 2019/09/05 F.Kanehori	Set default VS version to 15.0.
+#	Ver 1.53 2019/12/16 F.Kanehori	New cleanup code for unix.
+#	Ver 1.54 2019/12/18 F.Kanehori	Bug fixed.
 # ======================================================================
-version = 1.21
+version = 1.54
 
 import sys
 import os
@@ -59,7 +64,7 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: python %prog [options] test-repository'
+usage = 'Usage: python %prog [options] test-repository result-repository'
 parser = OptionParser(usage = usage)
 parser.add_option('-c', '--conf', dest='conf',
 			action='store', default='Release',
@@ -69,7 +74,7 @@ parser.add_option('-p', '--plat', dest='plat',
 			help='test platform [default: %default]')
 if Util.is_windows():
 	parser.add_option('-t', '--toolset-id', dest='tool',
-			action='store', default='14.0',
+			action='store', default='15.0',
 			help='toolset ID [default: %default]')
 parser.add_option('-u', '--update-only',
 			dest='update_only', action='store_true', default=False,
@@ -97,13 +102,14 @@ parser.add_option('-A', '--as-is',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
-if len(args) != 1:
+if len(args) != 2:
 	Error(prog).error('incorrect number of arguments\n')
-	Proc().execute('python %s.py -h' % prog).wait()
+	Proc().execute('python %s.py -h' % prog, shell=True).wait()
 	sys.exit(-1)
 
 # get test repository name
 repository = Util.upath(args[0])
+result_repository = Util.upath(args[1])
 conf = options.conf
 plat = options.plat
 tool = options.tool if Util().is_windows() else None
@@ -170,10 +176,10 @@ print('%s: start: %s' % (prog, Util.now(format=date_format)))
 #  1st step: Make Springhead up-to-date.
 #
 if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD') and not skip_update:
-	pwd()
 	print('updating "Springhead"')
 	flush()
 	os.chdir(spr_topdir)
+	pwd()
 	cmnd = 'git pull --all'
 	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
 	rc, outstr, errstr = proc.output()
@@ -183,6 +189,21 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD') and not skip_update:
 		Print(errstr.split('\n'))
 	if rc != 0:
 		Error(prog).abort('updating failed: status %d' % rc)
+	#
+	print('updating "DailyBuild/Result"')
+	flush()
+	os.chdir('../%s' % result_repository)
+	pwd()
+	cmnd = 'git pull --all'
+	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
+	rc, outstr, errstr = proc.output()
+	Print(outstr.split('\n'))
+	if errstr:
+		Print('-- error --')
+		Print(errstr.split('\n'))
+	if rc != 0:
+		Error(prog).abort('updating failed: status %d' % rc)
+	#
 	os.chdir(start_dir)
 #
 if update_only:
@@ -203,7 +224,12 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 		# remove.  And also some idle time needs to remove
 		# top directory after all its contents are removed
 		# -- mistery.. (Windows only?).
-		FileOp().rm(repository, use_shutil=False, idle_time=1)
+		if Util.is_unix():
+			cmnd = '/bin/rm -rf %s' % repository
+			Proc().execute(cmnd, shell=True).wait()
+			
+		else:
+			FileOp().rm(repository, use_shutil=False, idle_time=1)
 	else:
 		print('test repository "%s" not exist' % repository)
 	print()
@@ -252,7 +278,8 @@ pwd()
 Print('Test start:')
 vflag = ' -v' if verbose else ''
 cmnd = 'python TestMainGit.py'
-args = '-p %s -c %s -t %s%s %s' % (plat, conf, tool, vflag, repository)
+args = '-p %s -c %s -t %s%s %s %s' % (plat, conf, tool, vflag, \
+				      repository, result_repository)
 rc = proc.execute([cmnd, args], shell=True).wait()
 Print('rc: %s' % rc)
 

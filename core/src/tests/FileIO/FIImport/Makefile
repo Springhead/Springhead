@@ -25,7 +25,7 @@ CXXFLAGS	:= $(CXXFLAGS) \
 		-std=gnu++11
 
 LDFLAGS		:= $(LDFLAGS) \
-		-L/usr/lib/X11
+		-llapack
 
 
 ################################################################

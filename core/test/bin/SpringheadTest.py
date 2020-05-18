@@ -40,8 +40,9 @@
 #	Ver 2.0  2018/02/22 F.Kanehori	全体の見直し.
 #	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 2.02 2018/03/22 F.Kanehori	Change date/time info format.
+#	Ver 2.03 2018/04/24 F.Kanehori	Omit redundant code.
 # =============================================================================
-version = 2.01
+version = 2.03
 
 import sys
 import os
@@ -51,7 +52,6 @@ from optparse import OptionParser
 import signal
 
 from ConstDefs import *
-from ControlParams import *
 from Traverse import *
 from TestResult import *
 from ClosedSrcControl import *
@@ -98,7 +98,7 @@ def make_list(obj, default=None):
 #  Options
 #
 usage = 'Usage: %prog [options] '\
-	+ 'test-dir res-file ctl-file [section]\n'\
+	+ 'test-dir res-file ctl-file section\n'\
 	+ '    test-dir:\ttest directory (relative to ".../core/src")\n'\
 	+ '    res-file:\ttest result file path (relative to ".../core/test")\n'\
 	+ '    ctl-file:\ttest control file name (leaf name)\n'\

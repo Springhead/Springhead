@@ -104,24 +104,10 @@ void BoxStack::BuildScene(){
 int exitCount = 0;
 void BoxStack::UserFunc() {
 	exitCount++;
-	if (exitCount == 1 || exitCount == 20) {
-		Keyboard(' ', 0, 0);
-	}
-	else if (exitCount == 40) {
-		Keyboard('n', 0, 0);
-	}else if (exitCount > 80) {
-		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-		for (int i = 0; i < phscene->NSolids(); ++i) {
-			if (phscene->GetSolid(i)->GetVelocity().norm() > 0.1) {
-				goto next;
-			}
-		}
-		exit(0);
-	}
-	next:
-	if (exitCount > 180.0 / dt) exit(-1);
+	if (exitCount > 60.0 / dt) exit(0);
 }
 void BoxStack::Keyboard(int key, int x, int y){
+	exitCount = 0;
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	switch (key) {
 		case ESC:

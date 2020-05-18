@@ -12,28 +12,16 @@ using namespace Spr;
 
 class TreeNodeTest : public FWApp{
 public:
-	FWWinIf* window;
+	std::vector<PHSolidIf*> links[2];		//	リンクのSolid
+	std::vector<PHBallJointIf*> joints[2];	//	リンクをつなぐジョイント
 
-	double dt;
-	Vec3d gravity;
-	double nIter;
-	bool bGravity;
-	// 剛体に使う変数
-	PHSolidIf* soFloor;
-	PHSolidIf* soPointer;
-	std::vector<PHSolidIf*> links[2];
-	std::vector<PHBallJointIf*> joints[2];
-	CDBoxIf* meshFloor;
+	bool bRun;	//	タイマーを走らせるかどうか
 	//デバック表示に使う変数
-	bool bDebug;
-	bool bStep;
-	bool bOneStep;
-
-	TreeNodeTest();	
 	void Init(int argc, char* argv[]);		
-	void Reset();
 	void BuildScene();
 	void UserFunc();
+	void TimerFunc(int id);
+	void Step();
 	void Keyboard(int key, int x, int y);
 }; 
 extern TreeNodeTest ttest;

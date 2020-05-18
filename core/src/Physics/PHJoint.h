@@ -41,7 +41,6 @@ protected:
 public:
 	typedef PTM::TVector<NDOF, double> VecNd;
 
-	/// 関節の位置・速度。ABAの場合は状態変数だが、BallJointの場合はpositionでなく、xJrel.qが状態変数になっている。2019.10.2 hase
 	VecNd position, velocity;
 
 	/// コンストラクタ

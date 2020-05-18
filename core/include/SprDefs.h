@@ -7,7 +7,7 @@
 
 /* GLUI使用コードを有効化する
  */
-//#define USE_GLUI
+#define USE_GLUI
 
 /** 使用するOpenGLのバージョン
 	同時にUSE_FREEGLUTを定義することが必要
@@ -26,9 +26,9 @@
 /** Springhead2/closed のソースを使用するかどうか
 	開発者以外は未定義としてください
  */
-//#include "UseClosedSrcOrNot.h"
+#include "SprUseClosedSrcOrNot.h"
 
 /** use this definition to use functions that use boost::numeric::bindings::lapack.
     see Foundation/UTClapack.h
  */
-//#define USE_LAPACK
+#define USE_LAPACK

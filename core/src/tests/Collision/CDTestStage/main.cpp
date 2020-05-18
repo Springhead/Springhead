@@ -264,7 +264,7 @@ void collisionTest() {
 	switch (colMethod)
 	{
 	case 0:
-		res = ContFindCommonPointGinoNew(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
+		res = ContFindCommonPointGinoPrec(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);
 		break;
 	case 1:
 		res = ContFindCommonPointAccel(mesh[0], mesh[1], pose[0], pose[1], dir, -DBL_MAX, dirLength, normal, pos[0], pos[1], dist);

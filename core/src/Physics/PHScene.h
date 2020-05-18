@@ -51,7 +51,6 @@ typedef std::vector< UTRef<PHRay> > PHRays;
 
 class SPR_DLL PHScene : public Scene, public PHSceneDesc{
 	SPR_OBJECTDEF(PHScene);
-	friend class PHConstraint;
 public:
 	PHEngines				engines;
 protected:
@@ -73,11 +72,11 @@ protected:
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 
 	UTPerformanceMeasureIf* performanceMeasure;
-public:
-	
-	friend class			PHSolid;
-	friend class			PHFrame;
-	friend class			Object;
+public:	
+	friend class PHBody;
+	friend class PHFrame;
+	friend class Object;
+	friend class PHConstraint;
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	///	コンストラクタ
@@ -97,7 +96,9 @@ public:
 	PHSdkIf*				GetSdk();
 	PHSolidIf*				CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	int						NSolids() const;
+	PHSolidIf*				GetSolid(int idx);
 	PHSolidIf**				GetSolids();
+	int						GetSolidIndex(PHSolidIf* s);
 	void					SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void					SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	void					SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
@@ -116,7 +117,6 @@ public:
 	int						NSolidPairs() const;
 	PHSolidPairForLCPIf*	GetSolidPair(int i, int j);
 	PHSolidPairForLCPIf*	GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap);
-//	UTCombination<UTRef<PHSolidPairForLCPIf>>	GetSolidPair();
 	PHRootNodeIf*			CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 	int						NRootNodes() const;
 	PHRootNodeIf*			GetRootNode(int i);

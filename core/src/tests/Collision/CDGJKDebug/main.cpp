@@ -19,8 +19,13 @@
 #endif
 using namespace Spr;
 
-void main() {
+int main() {
 	UTRef<PHSdkIf> sdk = PHSdkIf::CreateSdk();
+#if defined(_MSC_VER)
 	std::ifstream file("test\\ContFindCommonPointSaveParam.txt");
+#else
+	std::ifstream file("test/ContFindCommonPointSaveParam.txt");
+#endif
 	ContFindCommonPointCall(file, sdk);
+	return 0;
 }

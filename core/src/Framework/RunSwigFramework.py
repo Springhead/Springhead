@@ -18,19 +18,18 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.00  2017/05/10 F.Kanehori	Windows batch file から移植.
-#	Ver 1.01  2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
-#	Ver 1.01  2017/07/31 F.Kanehori	Python executable directory moved.
-#	Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
-#	Ver 1.03  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#	Ver 1.04  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 1.05  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
-#	Ver 1.06  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
-#	Ver 1.07  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#	Ver 1.08  2019/02/26 F.Kanehori	Cmake環境に対応.
-#	Ver 1.09  2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#	Ver 1.10  2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
-#	Ver 1.11  2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
+#	Ver 1.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
+#	Ver 1.1	 2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
+#	Ver 1.1	 2017/07/31 F.Kanehori	Python executable directory moved.
+#	Ver 1.2  2017/09/06 F.Kanehori	New python library に対応.
+#	Ver 1.3  2017/10/11 F.Kanehori	起動するpythonを引数化.
+#	Ver 1.4  2017/11/08 F.Kanehori	Python library path の変更.
+#	Ver 1.5  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
+#	Ver 1.6  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
+#	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#	Ver 1.8  2019/02/26 F.Kanehori	Cmake環境に対応.
+#	Ver 1.9  2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#	Ver 1.10 2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
 # ==============================================================================
 version = 1.10
 debug = False
@@ -148,8 +147,7 @@ if options.python:
 	python = options.python
 nkf = 'nkf'
 swig = 'swig'
-#make = 'gmake' if unix else 'nmake'
-make = 'make' if unix else 'nmake'
+make = 'gmake' if unix else 'nmake'
 runswig_foundation = '%s %s/RunSwig.py -P %s' % (python, foundation_dir, python)
 addpath = spr_path.abspath('buildtool')
 

@@ -22,7 +22,10 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	rotaionalWeight = 1e5;
 
 	//GMS用
+	bSimulation = false;
+	bMultiproxy = false;
 	proxyN = 3;
+	totalSlipState = 0;
 }
 
 //----------------------------------------------------------------------------

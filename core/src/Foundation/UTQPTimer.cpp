@@ -28,7 +28,7 @@
 
 namespace Spr{;
 
-#ifdef	__unix__
+#ifdef	__linux__
 /*
  *  unix対応のための暫定措置です。どなたか正しいコードに直してください。
  */

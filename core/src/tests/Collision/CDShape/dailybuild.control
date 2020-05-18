@@ -29,9 +29,6 @@ Expected	-1
 #[Windows]
 
 [unix]
-#SolutionAlias	Makefile
-Build		False
-#OutputDir	.
-#BinaryOutName	a.out
-Run		False
+Build		True
+Run		True
 

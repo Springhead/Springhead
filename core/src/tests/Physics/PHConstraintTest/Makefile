@@ -25,8 +25,7 @@ CXXFLAGS	:= $(CXXFLAGS) \
 		-std=gnu++11
 
 LDFLAGS		:= $(LDFLAGS) \
-		$(call add_lib,${SPR_LINUX_GNU_LIB}) \
-		-L/usr/lib/X11
+		-llapack
 
 
 ################################################################
@@ -42,7 +41,7 @@ compile:	$(OBJS)
 	$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
 
 test:	
-	./$(BIN_NAME)
+	-$(FORCE_TOMEOUT) ./$(BIN_NAME)
 
 
 ################################################################

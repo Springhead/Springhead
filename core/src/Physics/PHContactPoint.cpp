@@ -81,15 +81,14 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	solid[1] = s1;
 
 	for(int i = 0; i < 2; i++){
-		poseSolid[i].Pos() = solid[i]->GetCenterPosition();
-		poseSolid[i].Ori() = solid[i]->GetOrientation   ();
-		poseRel  [i] = sp->frame[i]->pose_abs.Inv() * pose;
-
 		// 接触点での速度場
+		poseRel[i] = sp->frame[i]->pose_abs.Inv() * pose;
 		Vec3d normal = (i == 0 ? 1.0 : -1.0) * poseRel[i].Ori() * Vec3d(1.0, 0.0, 0.0);
 		vc   [i] = mat[i]->CalcVelocity(poseRel[i].Pos(), normal);
 		vcabs[i] = poseRel[i].Ori().Conjugated() * vc[i];
-	
+
+		poseSolid[i].Pos() = solid[i]->GetFramePosition();
+		poseSolid[i].Ori() = solid[i]->GetOrientation();
 		// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = poseSolid[i].Ori().Conjugated() * pose.Ori();
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
@@ -109,6 +108,7 @@ void PHContactPoint::CompBias(){
 	double dtinv = scene->GetTimeStepInv();
 	double tol   = scene->GetContactTolerance();
 	double vth   = scene->GetImpactThreshold();
+	double fth	 = scene->GetFrictionThreshold();
 
 	//	速度が小さい場合は、跳ね返りなし。
 	if(vjrel[0] > - vth){
@@ -137,7 +137,8 @@ void PHContactPoint::CompBias(){
 
 	// determine static/dynamic friction based on tangential relative velocity
 	double vt = vjrel[1] + velField[1];
-	isStatic = (-vth < vt && vt < vth);
+	//isStatic = (-vth < vt && vt < vth);
+	isStatic = (-fth < vt && vt < fth);
 }
 
 bool PHContactPoint::Projection(double& f_, int i) {

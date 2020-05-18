@@ -15,7 +15,7 @@ double FWGroundConstraint::CalcEvalFunc() {
 	double gq = 1.0 - n1 * normal2;
 	double gp = abs(dPosition * normal1);
 #ifdef _DEBUG
-	DSTR << normal << initialPose << cSolid->GetPose() << dPosition << "rotationValue:" << gq << " positionValue:" << gp << std::endl;
+	//DSTR << normal << initialPose << cSolid->GetPose() << dPosition << "rotationValue:" << gq << " positionValue:" << gp << std::endl;
 #endif
 	return cWeight * (gq + gp);
 }

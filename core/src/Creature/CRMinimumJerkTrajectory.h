@@ -169,7 +169,7 @@ public:
 	CRPoseViaPointsMinimumJerkTrajectory() {};
 	~CRPoseViaPointsMinimumJerkTrajectory()
 	{
-		for (int i = 0; i < subs.size(); i++) {
+		for (int i = 0; i < (int)subs.size(); i++) {
 			//
 		}
 		subs.resize((size_t)0);

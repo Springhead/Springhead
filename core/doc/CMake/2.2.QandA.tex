@@ -1,5 +1,5 @@
 % 2.2.QandA.tex
-%	Last update: 2020/02/13 F.Kanehori
+%	Last update: 2020/03/30 F.Kanehori
 %newpage
 \subsection{Q\&A}
 \label{subsec:QandA}
@@ -8,7 +8,7 @@
 前項\KQuote{\ref{subsec:PreparationForApp} ビルドの準備} に従って作成した
 アプリケーションに関するQ\&A集です。
 以下\SprLib の Base プロジェクトを例にとって説明しますが、
-他のプロジェクト(Collision, Foundation, $\cdots$)についても同様です。
+他のプロジェクト(Collision, Foundationなど)についても同様です。
 
 \Important{%
 	unix上で\SprLib とアプリケーションの並行開発を行なうことはないと思われますので、
@@ -17,7 +17,8 @@
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
-\bf{プログラムの実行時に“リソースファイルが見つからない”というエラーが起きる}
+
+\bf{Q. プログラムの実行時に“リソースファイルが見つからない”というエラーが起きる}
 
 \medskip
 プログラムは作業ディレクトリ\BldDir 下に作成されます。
@@ -27,7 +28,8 @@ CMakeLists{} があるディレクトリ(\Path{C:/Develop/Application})から
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
-\bf{ソリューションファイルに新しいターゲットがある}
+
+\bf{Q. ソリューションファイルに新しいターゲットがある}
 
 \tt{ALL\_BUILD}
 \begin{narrow}
@@ -49,7 +51,8 @@ CMakeLists{} があるディレクトリ(\Path{C:/Develop/Application})から
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
-\bf{ソリューションまたはプロジェクトが環境外で変更された旨のメッセージが出る}
+
+\bf{Q. ソリューションまたはプロジェクトが環境外で変更された旨のメッセージが出る}
 
 \medskip
 これはアプリケーション側と\SprLib 側との整合性を保つために
@@ -63,14 +66,17 @@ CMakeLists{} があるディレクトリ(\Path{C:/Develop/Application})から
 	なお、「再読み込み」を指定するとVisual Studioの出力ウィンドウに表示されている
 	メッセージがすべてクリアされてしまいます。
 	これを防ぐには、一旦「無視」を指定し、
-	その後にソリューションを開き直せば同じ結果が得られます。}
+	その後にソリューションを開き直せば同じ結果が得られます。
+	なお、変更されるのはソリューションファイル/プロジェクトファイルだけなので、
+	「無視」のまま作業を続けても問題はないと思われます。}
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
-\bf{ディレクトリが作成できないエラーが発生する}
+
+\bf{Q. ディレクトリが作成できないエラーが発生する}
 
 \medskip
-\SprLib をビルドすると、ソースツリー上に\\
+\SprLib をビルドすると、ソースツリー上に \\
 \hspace{10pt}\Path{C:/Springhead/core/src/Base/\it{x64}/\it{15.0}/Base.dir} \\
 というディレクトリが作成されます(\it{x64}, \it{15.0}の部分は環境により異なります)。
 
@@ -90,12 +96,13 @@ CMakeLists{} があるディレクトリ(\Path{C:/Develop/Application})から
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
-\bf{ビルドの最適性が崩れる}
+
+\bf{Q. ビルドの最適性が崩れる}
 \label{subsec:QandA:CrumbleBuildOptimizeation}
 
 \medskip
-アプリケーション側で\Path{C:/Develop/Application/build/Base.Base.dir}などを削除すると、
-ビルド時にVisual Studioが\BldDir 下に\Path{Base.dir}を自動的に作成してしまうために
+アプリケーション側で\Path{C:/Develop/Application/build/Base/Base.dir}などを削除すると、
+ビルド時にVisual Studioが\BldDir 下に\Path{Base/Base.dir}を自動的に作成してしまうために
 ビルドの最適性が崩れてしまいます。
 
 \Important{%
@@ -109,7 +116,8 @@ CMakeLists{} があるディレクトリ(\Path{C:/Develop/Application})から
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
-\bf{sync configurationでファイルオープンエラーが発生する}
+
+\bf{Q. sync configurationでファイルオープンエラーが発生する}
 
 \medskip
 \SprLib 側で\Path{\BldDir/Base}下にあるプロジェクトファイル
@@ -120,9 +128,9 @@ sync ターゲット実行でlink先のファイルが見つからずに
 	> 1>sync configuration with C:/Springhead/core/src \\
 	> \hspace{10pt}：\\
 	> 1>Error : file open error : "Base/Base.vcxproj" \\
-	> 1>Traceback (most recent call last):
+	> 1>Traceback (most recent call last): \\
 	> \hspace{10pt}：\\
-}{command-1-3.eps}{cmake}
+}{command-2-2.eps}{cmake}
 
 のようなエラーが発生します。
 
@@ -131,6 +139,7 @@ sync ターゲット実行でlink先のファイルが見つからずに
 
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
+
 \bf{2019/9/30 (commit 1d8e5ce) 以前に配布したバージョンをご使用の場合}
 
 \bf{新しい配布ファイルから \CMakeLists{} を再作成すれば、 以下の問題は解消します。}

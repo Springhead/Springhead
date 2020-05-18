@@ -272,7 +272,8 @@ class VisualStudio:
 			devenvpath += '/Common7/IDE'
 		else:
 			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio/'
-			devenvpath += '2017/Community/common7/IDE'
+			devenvpath += '2017/Community/'
+			devenvpath += 'Common7/IDE'
 		if self.verbose:
 			print('  devenv path: %s' % devenvpath)
 		if not os.path.exists(Util.pathconv('%s/devenv.exe' % devenvpath)):

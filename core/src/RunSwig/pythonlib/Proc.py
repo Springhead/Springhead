@@ -28,6 +28,8 @@
 #	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
 #	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
 #	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
+#	Ver 1.32 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
+#	Ver 1.33 2018/06/28 F.Kanehori	Fixes spaces in homedir.
 # ======================================================================
 import sys
 import os
@@ -107,6 +109,7 @@ class Proc:
 		if isinstance(args, str):
 			args = args.split()
 		args = ' '.join(args)
+		args = self.__space_in_homedir(args)
 
 		# prepare output redirection file
 		rmode = 'r'			# open mode for input
@@ -137,6 +140,7 @@ class Proc:
 				stderr = 2
 			self.proc = dummy()	# dummy!
 			return self
+
 		if self.verbose > 1:
 			print('args to Popen')
 			print('  args: %s' % args)
@@ -150,6 +154,7 @@ class Proc:
 				stdout=self.fd[1],
 				stderr=self.fd[2],
 				creationflags=self.creationflags,
+				start_new_session=True,
 				env=new_env,
 				shell=shell)
 		self.pid = self.proc.pid
@@ -195,8 +200,10 @@ class Proc:
 			if self.verbose:
 				pid = self.proc.pid
 				print('  kill process (pid %d)' % pid)
-			#os.kill(proc.pid, signal.CTRL_BREAK_EVENT)
-			self.proc.terminate()
+			if Util.is_unix():
+				os.killpg(self.proc.pid, signal.SIGTERM)
+			else:
+				os.kill(self.proc.pid, signal.SIGTERM)
 
 		# cleanup
 		self.__close(self.fd[0], self.pipe[0])
@@ -297,6 +304,26 @@ class Proc:
 	# --------------------------------------------------------------
 	#  For class private use
 	# --------------------------------------------------------------
+
+	##  Double quote path in args if home dir name has space(s).
+	#   @param args		command args (str).
+	#   @returns		Replaced args if needed (str).
+	#
+	def __space_in_homedir(self, args):
+		new_args = args
+		homedir = Util.upath(os.path.expanduser('~'))
+		if args.find(homedir) >= 0 and homedir.find(' ') >= 0:
+			tmp_home = homedir.replace(' ', '@')
+			tmp_repl = args.replace(homedir, tmp_home)
+			org_list = tmp_repl.split()
+			new_list = []
+			for item in org_list:
+				if item.find('@') >= 0:
+					item = '"%s"' % item.replace('@', ' ')
+				new_list.append(item)
+			new_args = ' '.join(new_list)
+			#print('==> args replaced to [%s]' % new_args)
+		return new_args
 
 	##  Convert zero-extended-16bit-signed-int into 32bit-signed-int.
 	#   @param value	32-bit-unsigend-int value (int).

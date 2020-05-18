@@ -8,23 +8,22 @@ rem	第1引数：　platform (x86|win32 または x64|win64)
 rem	第2引数：　ライブラリ名 ([VS-version]+[configuration]+[platform])
 rem 
 set SUBDIR=%1
-if "!%SUBDIR!"=="x64" set SUBDIR=win64 
+if "!%SUBDIR!"=="x64" set SUBDIR=win64
 set EXT=%2
 
 rem 出力先
 rem	$(SPR_TOP)/generated/lib/{win32|win64}
 rem 
-set GENTOP=..\..\generated\lib
-set GENDIR=%GENTOP%\%SUBDIR%
-call :create_dir OUTDIR %GENDIR%
+set OUTTOP=..\..\generated\lib
+set OUTDIR=%OUTTOP%\%SUBDIR%
 if not exist %OUTDIR% (
     mkdir %OUTDIR%
 )
-set OUTPUT=%OUTDIR%/Springhead%EXT%.lib
+set OUTPUT=%OUTDIR%\Springhead%EXT%.lib
+echo output to "%OUTPUT%"
 
-echo off
 rem echo param [%1],[%2]
-rem echo GENIR,EXT [%GENDIR%],[%EXT%]
+rem echo GENIR,EXT [%OUTDIR%],[%EXT%]
 
 rem 入力ファイル
 rem 
@@ -54,11 +53,3 @@ if not "%INPUT%"=="" (
 
 endlocal
 exit /b
-
-rem ===========================================================================
-rem  絶対パスの設定
-rem 
-:create_dir
-    set %1=%~f2
-exit /b
-

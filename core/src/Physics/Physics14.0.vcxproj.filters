@@ -172,6 +172,12 @@
     <ClCompile Include="PHHapticEngineRender.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="PHFemEngineHeatTransfer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PHBody.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PHAxisIndex.h">
@@ -312,9 +318,6 @@
     <ClInclude Include="PHSolid.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="PHSpatial.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="PHSpring.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -389,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\Physics\SprPHJointMotor.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="PHBody.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
