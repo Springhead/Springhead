@@ -92,6 +92,7 @@ if(unix)
     set(COPT_DEFAULT	${COPT_WARNING_FLAGS}
 			${COPT_CONFIG}
 			-fPIC
+			-D__unix__
 			-std=gnu++11
 			-D__ccdecl=
 			-D__cdecl=)
