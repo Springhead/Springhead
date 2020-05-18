@@ -68,13 +68,14 @@ int __cdecl main(){
 			int time = timeGetTime();
 #endif
 			int diff = time - lastTime;
-			DPF("Duration: %d,  Freq: %f\n", diff, 1000.0 / diff * 1000);
+			DPF("\r\nDuration: %d,  Freq: %f\n", diff, 1000.0 / diff * 1000);
 			lastTime = time;
 		}
+		//DPF("t=%d", t);
 		spg->Update(0.001f);
-#if 0	//	Virtual floor
+#if 1	//	Virtual floor
 		Vec3f spgpos = spg->GetPosition();
-		std::cout << std::setprecision(2) << spgpos << std::endl;
+//		std::cout << std::setprecision(2) << spgpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);
 		if(spgpos.y < -0.015){
 			f.y = (float) (-(spgpos.y -  -0.015) * 1000);
