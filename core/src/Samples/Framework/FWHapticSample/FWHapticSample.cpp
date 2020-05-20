@@ -56,8 +56,10 @@ void FWHapticSample::BuildScene(){
 		pointer->CompInertia();								//	質量と慣性テンソルを密度から計算
 		pointer->SetLocalRange(0.02f);						//	局所シミュレーション範囲の設定
 		pointer->SetPosScale(1.0f);							//	力覚ポインタの移動スケールの設定
-		pointer->SetFrictionSpring(500.0f);					//	DynamicProxyの際の摩擦計算に使うバネ係数
-		pointer->SetReflexSpring(3000.0f);					//	力覚レンダリング用のバネ
+//		pointer->SetFrictionSpring(500.0f);					//	DynamicProxyの際の摩擦計算に使うバネ係数
+//		pointer->SetReflexSpring(3000.0f);					//	力覚レンダリング用のバネ
+		pointer->SetFrictionSpring(100.0f);					//	DynamicProxyの際の摩擦計算に使うバネ係数
+		pointer->SetReflexSpring(1000.0f);					//	力覚レンダリング用のバネ
 		pointer->SetReflexDamper(0.0f);						//	力覚レンダリング用のダンパ
 		pointer->SetRotationReflexSpring(30.0f);			//	力覚レンダリング用の回転バネ
 		pointer->SetRotationReflexDamper(0.0f);				//	力覚レンダリング用の回転ダンパ
@@ -90,12 +92,14 @@ void FWHapticSample::InitInterface(){
 		cyDesc.channel = i;
 		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
 	}
+	DRUARTMotorDriverDesc uartDesc;
+	hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &uartDesc);
 	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-
 	//	インタフェースの取得
 	device = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 #ifdef	_MSC_VER
-	if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
+	//	if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
+	if (device->Init(&HISpidarGDesc("SpidarG6T1"))) {
 #else
 	HISpidarGDesc tmpdesc = HISpidarGDesc((char*) "SpidarG6X3F");
 	if (device->Init(&tmpdesc)) {

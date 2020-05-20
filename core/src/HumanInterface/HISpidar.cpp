@@ -403,10 +403,10 @@ void HISpidarGDesc::Init(char* type){
 		float GY = 0.045f / 2;		//	y方向の辺の長さ/2
 		float GZ = 0.0;              //Used only for Spidar Finger grip configuration
 		Vec3f mp[8] = {
-			Vec3f(-0.141,	-0.096,	0.060),
-			Vec3f(-0.107,	-0.096,	0.060),
-			Vec3f(0.07736,	-0.096,	0.060),
-			Vec3f(0.11028,	-0.096,	0.060),
+			Vec3f(0.141,	-0.096,	0.060),
+			Vec3f(0.107,	-0.096,	0.060),
+			Vec3f(-0.07736,	-0.096,	0.060),
+			Vec3f(-0.11028,	-0.096,	0.060),
 
 			Vec3f(0,		0.0763,		-0.07341),
 			Vec3f(0,		0.0842,		-0.04443),
@@ -414,8 +414,8 @@ void HISpidarGDesc::Init(char* type){
 			Vec3f(0,		0.1156,	     0.07341),
 		};
 		Vec3f gp[4] = {
-			Vec3f(-0.010, 0.007, 0),
 			Vec3f(0.010, 0.007, 0),
+			Vec3f(-0.010, 0.007, 0),
 			Vec3f(0, -0.007, -0.010),
 			Vec3f(0, -0.007, 0.010)
 		};
