@@ -20,7 +20,7 @@ void FWHapticSample::BuildScene(){
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// シェイプ作成のためにPHSdkへのポインタをとってくる
 		phscene = GetSdk()->GetScene()->GetPHScene();		// 剛体作成のためにPHSceneへのポインタをとってくる
 
-		Vec3d pos = Vec3d(0, 0, 0.1);						// カメラ初期位置
+		Vec3d pos = Vec3d(0, 0.05, 0.1);						// カメラ初期位置
 		GetCurrentWin()->GetTrackball()->SetPosition(pos);	// カメラ初期位置の設定
 		GetSdk()->SetDebugMode(true);						// デバック表示の有効化
 		GetSdk()->GetScene()->EnableRenderHaptic(true);		//	力覚デバッグ表示ON
@@ -37,10 +37,11 @@ void FWHapticSample::BuildScene(){
 #if 1
 		PHSolidIf* soBox = phscene->CreateSolid();
 		bd.boxsize.clear(0.04f);
-		bd.material.density = 10000;
+		bd.material.density = 1000;
 		soBox->AddShape(phSdk->CreateShape(bd));
 		soBox->CompInertia();
-		soBox->SetCenterPosition(Vec3d(-0.05 , -0.035, 0.0));
+		soBox->SetPose(Posed::Rot(Rad(90), 'y') * soBox->GetPose());
+		soBox->SetCenterPosition(Vec3d(-0.05 , 0.02, 0.0));
 		soBox->SetName("soBox");
 #endif
 		// 力覚ポインタの作成
@@ -128,11 +129,11 @@ void FWHapticSample::Init(int argc, char* argv[]){
 	he->Enable(true);						            // 力覚エンジンの有効化
 
 #if 0	// シングルスレッドモード
-	he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
+	he->SetHapticStepMode(PHHapticEngineDesc::SINGLE_THREAD);
 	phscene->SetTimeStep(hdt);
-#elif 0
+#elif 1
 	// マルチスレッドモード
-	he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
+	he->SetHapticStepMode(PHHapticEngineDesc::MULTI_THREAD);
 	phscene->SetTimeStep(pdt);
 #else
 	// 局所シミュレーションモード
@@ -313,13 +314,14 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				// 新たに剛体を生成する
 				GetSdk()->GetScene()->GetPHScene()->GetHapticEngine()->ReleaseState();
 				CDBoxDesc bd;
-				bd.boxsize.clear(0.4f);
+				bd.boxsize.clear(0.04f);
+				bd.material.density = 1000;
 				PHSolidIf* box = phscene->CreateSolid();
-				box->SetMass(0.3f);
 				box->AddShape(GetSdk()->GetPHSdk()->CreateShape(bd));
-				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * (1/box->GetShape(0)->CalcVolume()) * (float)box->GetMass());
-				box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
+				box->CompInertia();
+				box->SetFramePosition(Vec3d(-0.05, 0.1, 0.0));
 			}
+			break;
 		case 'P':
 			bPause = !bPause;
 			break;
