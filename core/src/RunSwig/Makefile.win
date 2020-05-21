@@ -3,9 +3,15 @@
 #	Makefile.win
 #
 #  DESCRIPTION:
-#	他のプロジェクトのビルドより先に RunSwig を実行するためのプロジェクト.
-#	Makefile および当プロジェクトプロパティのコマンドラインとを組み合わせる
-#	ことで実現する.
+#	RunSwig を実行するための Makefile.
+#	次のターゲットを順に make する.
+#	(1) InstallSwig		必要に応じて swig のバイナリを make する.
+#	(2) ClosedSrcCtl	必要に応じて SprUseClosedSrcOrNot.h を生成する.
+#	(3) $(SCILABSTUBHDR)	ScilabStub.hpp を生成する.
+#	(4) $(FWOLDSPRSTUB)	FWOldSpringheadStub.cpp を生成する.
+#	(5) RunSwig		各プロジェクトの stub.cpp を swig で生成する.
+#
+#	Visual Studio の設定
 #
 #	[プロパティ]-[構成プロパティ]-[NMake] のコマンドラインに設定するコマンド
 #	とビルドメニューとの関係は, 次のようになっている.
@@ -35,13 +41,14 @@
 #
 #################################################################################
 #  Version:
-#	Ver 1.0	 2012/10/15 F.Kanehori
-#	Ver 2.0  2013/01/10 F.Kanehori  前処理を追加
-#	Ver 3.0  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
-#	Ver 4.0  2017/07/31 F.Kanehori  Python adapter の導入
-#	Ver 4.1  2019/01/08 F.Kanehori  CheckClosedSrc の導入
-#	Ver 4.2  2019/04/03 F.Kanehori  オプション SPRSRCDIR の導入
-#	Ver 4.3  2020/04/20 F.Kanehori  python_adapter を do_python に変更
+#	Ver 1.00  2012/10/15 F.Kanehori
+#	Ver 2.00  2013/01/10 F.Kanehori  前処理を追加
+#	Ver 3.00  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
+#	Ver 4.00  2017/07/31 F.Kanehori  Python adapter の導入
+#	Ver 4.01  2019/01/08 F.Kanehori  CheckClosedSrc の導入
+#	Ver 4.02  2019/04/03 F.Kanehori  オプション SPRSRCDIR の導入
+#	Ver 4.03  2020/04/20 F.Kanehori  python_adapter を do_python に変更
+#	Ver 4.04  2019/05/21 F.Kanehori  swig の自動生成化.
 #################################################################################
 
 #  srcディレクトリの設定
@@ -56,6 +63,12 @@ SPRSRCDIR	= ..
 #
 PYTHON		= $(SPRSRCDIR)\do_python.bat
 
+#  swig をビルドするためのパラメータ
+#
+BUILDSWIGPLAT	= x64
+BUILDSWIGCONF	= Release
+BUILDSWIGTOOL	= 15.0
+
 #  ディレクトリの定義
 #
 INCDIR		= $(SPRSRCDIR)\..\include
@@ -63,12 +76,20 @@ FOUNDATION	= $(SPRSRCDIR)\Foundation
 FRAMEWORK	= $(SPRSRCDIR)\Framework
 SCILAB		= $(INCDIR)\Scilab
 
+SWIGBUILDDIR	= $(SPRSRCDIR)\..\bin\src\swig\msvc
+SWIGINSTALLDIR	= ..\..\bin\swig
+SWIGMAKEFILE	= swig%BUILDSWIGTOOL%.sln
+SWIGBINARY	= $(SWIGINSTALLDIR)\swig.exe
+SWIGCSBINARY	= $(SWIGINSTALLDIR)\swig_sprcs.exe
+SWIGTMPBINARY	= $(SWIGBUILDDIR)\$(BUILDSWIGPLAT)\$(BUILDSWIGCONF)$(BUILDSWIGTOOL)\swig$(BUILDSWIGTOOL).exe
+
 #  使用するスクリプト
 #
 SCILABSWIG	= ScilabSwig.py
 RUNSWIGFW	= RunSwigFramework.py
 SCRIPT		= do_swigall.py
 CHECKCLOSEDSRC	= CheckClosedSrc.py
+BUILDSWIG	= BuildSwig.py
 
 #  前処理で作成するファイル
 #
@@ -77,7 +98,19 @@ FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
 all:	PreWork RunSwig
 
-PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+PreWork:	InstallSwig ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+
+InstallSwig:	BuildSwig $(SWIGBINARY)
+
+BuildSwig:
+		$(PYTHON) $(BUILDSWIG) -p $(BUILDSWIGPLAT) -c $(BUILDSWIGCONF) -t $(BUILDSWIGTOOL) $(SWIGBUILDDIR)
+
+$(SWIGBINARY):	$(SWIGTMPBINARY)
+		@echo Mkefile.win: Copying swig binary.
+		copy $(SWIGTMPBINARY) $(SWIGBINARY)
+		copy $(SWIGTMPBINARY) $(SWIGCSBINARY)
+
+$(SWIGTMPBINARY):	
 
 ClosedSrcCtl:
 		@echo Makefile.win: ClosedSrcCtl

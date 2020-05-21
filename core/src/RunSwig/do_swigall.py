@@ -204,7 +204,7 @@ for line in lines:
 	if debug:
 		print('proj: %s <- %s' % (proj, dept))
 
-	print()
+	#print()
 	print('*** %s ***' % proj)
 
 	#  Change to target directory.
@@ -222,17 +222,20 @@ for line in lines:
 
 	#  Do make.
 	if clean:
-		print('    %s: clean' % prog)
+		if trace:
+			print('    %s: clean' % prog)
 		f_op.rm('%s.i' % proj)
 		f_op.rm('%sStub.cpp' % proj)
 		f_op.rm('%sStub.mak.txt' % proj)
 	else:
 		cmd = '%s -f %s' % (make, makefile)
-		print('    %s: %s' % (prog, cmd))
+		if trace:
+			print('    %s: %s' % (prog, cmd))
 		proc.execute(cmd, addpath=addpath, shell=True)
 		proc.wait()
 		cmd = '%s -r' % util.pathconv(makemanager)
-		print('    %s: %s' % (prog, Util.upath(cmd)))
+		if trace:
+			print('    %s: %s' % (prog, Util.upath(cmd)))
 		proc.execute(cmd, addpath=addpath, shell=True)
 		proc.wait()
 
