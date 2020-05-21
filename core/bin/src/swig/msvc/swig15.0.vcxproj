@@ -212,8 +212,8 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig.exe"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -242,8 +242,8 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Comman
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig.exe"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -271,8 +271,8 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Comman
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig.exe"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -305,8 +305,8 @@ copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Comman
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig.exe"
-copy "$(OutDir)$(TargetName)$(TargetExt)" "../../../swig/swig_sprcs.exe"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
