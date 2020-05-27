@@ -82,6 +82,7 @@ protected:
 
 public:
 	SPR_OBJECTDEF(UTCMAESOptimizer);
+    ACCESS_DESC(UTCMAESOptimizer);
 
 	/// Constructor
 	UTCMAESOptimizer(const UTCMAESOptimizerDesc& desc = UTCMAESOptimizerDesc());
