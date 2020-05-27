@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,125 +13,125 @@
 
 namespace Spr{;
 
-///	‹O“¹‰^“®ƒRƒ“ƒgƒ[ƒ‰
+///	è»Œé“é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 struct CRReachControllerIf : public CRControllerIf{
 	SPR_IFDEF(CRReachController);
 
-	/** @brief “’B‚Ég‚¤ƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğİ’èEæ“¾‚·‚é
+	/** @brief åˆ°é”ã«ä½¿ã†ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’è¨­å®šãƒ»å–å¾—ã™ã‚‹
 	*/
 	void SetIKEndEffector(PHIKEndEffectorIf* ikEff, int n=0);
 	PHIKEndEffectorIf* GetIKEndEffector(int n=0);
 
-	/** @brief ÅI“’B–Ú•WˆÊ’u‚ğƒZƒbƒg‚·‚é
+	/** @brief æœ€çµ‚åˆ°é”ç›®æ¨™ä½ç½®ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	*/
 	void SetFinalPos(Vec3d pos);
 
-	/** @brief ÅI“’B–Ú•W‘¬“x‚ğƒZƒbƒg‚·‚éiƒfƒtƒHƒ‹ƒg‚Í (0,0,0)j
+	/** @brief æœ€çµ‚åˆ°é”ç›®æ¨™é€Ÿåº¦ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯ (0,0,0)ï¼‰
 	*/
 	void SetFinalVel(Vec3d vel);
 	
-	/** @brief Œo—R’n“_’Ê‰ß‚ğƒZƒbƒg‚·‚éi•‰‚Ìê‡AŒo—R’n“_‚ğ—p‚¢‚È‚¢j
+	/** @brief çµŒç”±åœ°ç‚¹é€šéæ™‚åˆ»ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆè² ã®å ´åˆã€çµŒç”±åœ°ç‚¹ã‚’ç”¨ã„ãªã„ï¼‰
 	*/
 	void SetViaTime(float time);
 
-	/** @brief Œo—R’n“_‚ğƒZƒbƒg‚·‚é
+	/** @brief çµŒç”±åœ°ç‚¹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	*/
 	void SetViaPos(Vec3d pos);
 
-	/** @brief ‹üƒ‚[ƒh‚ğ—LŒø‚É‚·‚é
+	/** @brief è¦–ç·šãƒ¢ãƒ¼ãƒ‰ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 	*/
 	void EnableLookatMode(bool bEnable);
 	bool IsLookatMode();
 
-	/** @brief è‚Ìg—p”‚ğİ’èEæ“¾‚·‚é
+	/** @brief æ‰‹ã®ä½¿ç”¨æ•°ã‚’è¨­å®šãƒ»å–å¾—ã™ã‚‹
 	*/
 	void SetNumUseHands(int n);
 	int GetNumUseHands();
 
-	/** @brief i”Ô–Ú‚Ì˜r‚Ì•t‚¯ªŠÖß‚ğƒZƒbƒg‚·‚éi‹——£‚ÉŠî‚Ã‚­g—p”»’è‚Ég‚¤j
+	/** @brief iç•ªç›®ã®è…•ã®ä»˜ã‘æ ¹é–¢ç¯€ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆè·é›¢ã«åŸºã¥ãä½¿ç”¨åˆ¤å®šã«ä½¿ã†ï¼‰
 	*/
 	void SetBaseJoint(int n, PHJointIf* jo);
 
 	// ----- ----- -----
 
-	/** @brief •½‹Ï“’B‘¬“x‚ğƒZƒbƒg‚·‚éi‚±‚±‚©‚ç–Ú•W“’BŠÔ‚ªŒvZ‚³‚ê‚éj
+	/** @brief å¹³å‡åˆ°é”é€Ÿåº¦ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆã“ã“ã‹ã‚‰ç›®æ¨™åˆ°é”æ™‚é–“ãŒè¨ˆç®—ã•ã‚Œã‚‹ï¼‰
 	*/
 	void SetAverageSpeed(double speed);
 	double GetAverageSpeed();
 
-	/** @brief ƒ}[ƒWƒ“iFinalPos‚©‚ç‚±‚Ì”¼Œa“à‚É“’B‚·‚ê‚Î‚æ‚¢j‚ğƒZƒbƒg‚·‚é
+	/** @brief ãƒãƒ¼ã‚¸ãƒ³ï¼ˆFinalPosã‹ã‚‰ã“ã®åŠå¾„å†…ã«åˆ°é”ã™ã‚Œã°ã‚ˆã„ï¼‰ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	*/
 	void SetMargin(double margin);
 
-	/** @brief “à‘¤ƒ}[ƒWƒ“iFinalPos‚©‚ç‚±‚Ì”¼Œa‚Ì’†‚É‚Í“ü‚ç‚È‚¢‚æ‚¤‚É‚·‚éj‚ğƒZƒbƒg‚·‚é
+	/** @brief å†…å´ãƒãƒ¼ã‚¸ãƒ³ï¼ˆFinalPosã‹ã‚‰ã“ã®åŠå¾„ã®ä¸­ã«ã¯å…¥ã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ï¼‰ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	*/
 	void SetInnerMargin(double margin);
 
-	/** @brief –Ú•W‚ª‚±‚Ì‘¬“xˆÈã‚É‚È‚Á‚½‚ç“’B–Ú•W‚ÌXV‚ğˆê’U’â~
+	/** @brief ç›®æ¨™ãŒã“ã®é€Ÿåº¦ä»¥ä¸Šã«ãªã£ãŸã‚‰åˆ°é”ç›®æ¨™ã®æ›´æ–°ã‚’ä¸€æ—¦åœæ­¢
 	*/
 	void SetWaitVel(double vel);
 
-	/** @brief WaitŒã‚É–Ú•W‚ª‚±‚Ì‘¬“xˆÈ‰º‚É‚È‚Á‚½‚ç“’B‰^“®‚ğƒŠƒXƒ^[ƒg
+	/** @brief Waitå¾Œã«ç›®æ¨™ãŒã“ã®é€Ÿåº¦ä»¥ä¸‹ã«ãªã£ãŸã‚‰åˆ°é”é‹å‹•ã‚’ãƒªã‚¹ã‚¿ãƒ¼ãƒˆ
 	*/
 	void SetRestartVel(double vel);
 
 	// ----- ----- -----
 
-	/** @brief ‹O“¹’Ê‰ß“_‚ÌˆÊ’uE‘¬“x‚ğ•Ô‚· s=0.0`1.0
+	/** @brief è»Œé“é€šéç‚¹ã®ä½ç½®ãƒ»é€Ÿåº¦ã‚’è¿”ã™ s=0.0ï½1.0
 	*/
 	Vec6d GetTrajectory(float s);
 
-	/** @brief –Ú•W“’BŠÔ‚ğ•Ô‚·
+	/** @brief ç›®æ¨™åˆ°é”æ™‚é–“ã‚’è¿”ã™
 	*/
 	float GetReachTime();
 
-	/** @brief Œ»İ‚ğ•Ô‚·
+	/** @brief ç¾åœ¨æ™‚åˆ»ã‚’è¿”ã™
 	*/
 	float GetTime();
 
-	/** @brief ƒfƒoƒbƒOî•ñ‚ğ•`‰æ‚·‚é
+	/** @brief ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’æç”»ã™ã‚‹
 	*/
 	void Draw();
 
 	// ----- ----- -----
 
-	/** @brief p¨§ŒäŠ®—¹‚ÌŠÔ‚ÌŠ„‡‚ğƒZƒbƒg‚·‚é
+	/** @brief å§¿å‹¢åˆ¶å¾¡å®Œäº†æ™‚ã®æ™‚é–“ã®å‰²åˆã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	*/
 	void SetOriControlCompleteTimeRatio(float oriTime);
 };
 
 //@{
-///	‹O“¹‰^“®ƒRƒ“ƒgƒ[ƒ‰‚ÌState
+///	è»Œé“é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®State
 struct CRReachControllerState{
-	/// ‹O“¹‰^“®ŠJn‚©‚ç‚ÌŒo‰ßŠÔ
+	/// è»Œé“é‹å‹•é–‹å§‹ã‹ã‚‰ã®çµŒéæ™‚é–“
 	float time;
 	
-	/// –Ú•W“’Bi‰^“®ŠJn‚ğ0‚Æ‚·‚éj
+	/// ç›®æ¨™åˆ°é”æ™‚åˆ»ï¼ˆé‹å‹•é–‹å§‹æ™‚ã‚’0ã¨ã™ã‚‹ï¼‰
 	float reachTime;
 
-	/// –Ú•WŒo—R“_’Ê‰ßiŒo—R“_‚ğg‚í‚È‚¢ê‡‚Í•‰‚Ì’l‚Æ‚·‚éj
+	/// ç›®æ¨™çµŒç”±ç‚¹é€šéæ™‚åˆ»ï¼ˆçµŒç”±ç‚¹ã‚’ä½¿ã‚ãªã„å ´åˆã¯è² ã®å€¤ã¨ã™ã‚‹ï¼‰
 	float viaTime;
 
-	/// p¨§ŒäŠ®—¹‚ÌŠÔ‚ÌŠ„‡
+	/// å§¿å‹¢åˆ¶å¾¡å®Œäº†æ™‚ã®æ™‚é–“ã®å‰²åˆ
 	float oricontTimeRatio;
 
-	/// ‰^“®ŠJn‚ÌˆÊ’uE‘¬“xEp¨EŠp‘¬“x
+	/// é‹å‹•é–‹å§‹æ™‚ã®ä½ç½®ãƒ»é€Ÿåº¦ãƒ»å§¿å‹¢ãƒ»è§’é€Ÿåº¦
 	Vec3d initPos, initVel, initAVel;
 	Quaterniond initOri;
 
-	/// Œo—R“_‚Ì–Ú•WˆÊ’uEp¨
+	/// çµŒç”±ç‚¹ã®ç›®æ¨™ä½ç½®ãƒ»å§¿å‹¢
 	Vec3d viaPos;
 	Quaterniond viaOri;
 
-	/// Œ»İ“’B–Ú•W‚Æ‚µ‚Ä‚¢‚éˆÊ’uE‘¬“xEp¨EŠp‘¬“x
+	/// ç¾åœ¨åˆ°é”ç›®æ¨™ã¨ã—ã¦ã„ã‚‹ä½ç½®ãƒ»é€Ÿåº¦ãƒ»å§¿å‹¢ãƒ»è§’é€Ÿåº¦
 	Vec3d targPos, targVel, targAVel;
 	Quaterniond targOri;
 
-	/// Œ»İ‚ÌˆÊ’uE‘¬“xEp¨EŠp‘¬“x
+	/// ç¾åœ¨ã®ä½ç½®ãƒ»é€Ÿåº¦ãƒ»å§¿å‹¢ãƒ»è§’é€Ÿåº¦
 	Vec3d currPos, currVel, currAVel;
 	Quaterniond currOri;
 
-	/// ÅI“I‚È‚Ì–Ú•WˆÊ’uE‘¬“xEp¨EŠp‘¬“x
+	/// æœ€çµ‚çš„ãªã®ç›®æ¨™ä½ç½®ãƒ»é€Ÿåº¦ãƒ»å§¿å‹¢ãƒ»è§’é€Ÿåº¦
 	Vec3d finalPos, finalVel, finalAVel;
 	Quaterniond finalOri;
 
@@ -145,23 +145,23 @@ struct CRReachControllerState{
 	}
 };
 
-/// ‹O“¹‰^“®ƒRƒ“ƒgƒ[ƒ‰‚ÌƒfƒXƒNƒŠƒvƒ^
+/// è»Œé“é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRReachControllerDesc : public CRControllerDesc, public CRReachControllerState {
 	SPR_DESCDEF(CRReachController);
 
-	// ƒ}[ƒWƒ“
+	// ãƒãƒ¼ã‚¸ãƒ³
 	double margin;
 
-	// “à‘¤ƒ}[ƒWƒ“
+	// å†…å´ãƒãƒ¼ã‚¸ãƒ³
 	double innerMargin;
 
-	// •½‹Ï“’B‘¬“x
+	// å¹³å‡åˆ°é”é€Ÿåº¦
 	double averageSpeed;
 
-	// –Ú•WXV‘Ò‚¿‘¬“x
+	// ç›®æ¨™æ›´æ–°å¾…ã¡é€Ÿåº¦
 	double waitVel;
 
-	// XV‘Ò‚¿Œã“’B‰^“®ÄŠJ‘¬“x
+	// æ›´æ–°å¾…ã¡å¾Œåˆ°é”é‹å‹•å†é–‹é€Ÿåº¦
 	double restartVel;
 
 	CRReachControllerDesc() {

@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
 *  All rights reserved.
 *  This software is free software. You can freely use, distribute and modify this
@@ -16,117 +16,117 @@ namespace Spr {
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-	// CRJointTimeSlice�̂ǂ̕ϐ��Ƀf�[�^�������Ă��邩�������t���O�̎w��Ɏg��
+	// CRJointTimeSliceのどの変数にデータが入っているかを示すフラグの指定に使う
 	enum CRJointTimeSliceFlag {
 		CRJT_SPRING, CRJT_DAMPER, CRJT_ANGLE, CRJT_VELOCITY, CRJT_ACCELERATION, CRJT_TORQUE
 	};
 
-	// ���鎞���ɂ�����֐߂̏�ԁi�܂��͖ڕW�l�j�������\����
+	// ある時刻における関節の状態（または目標値）を示す構造体
 	struct CRJointTimeSlice {
-		// �Ή�����{�[���i�P�Ȃ�f�[�^�Ƃ��Ďg�������ꍇ��NULL�ł������j
+		// 対応するボーン（単なるデータとして使いたい場合はNULLでもいい）
 		CRBoneIf* bone;
 
-		// ����
+		// 時刻
 		double time;
 
-		// �ǂ̕ϐ��Ƀf�[�^�������Ă��邩�������t���O
+		// どの変数にデータが入っているかを示すフラグ
 		bool enable[6];
 
-		// �o�l�W���̕W���l�ɑ΂���䗦
+		// バネ係数の標準値に対する比率
 		double springRatio;
 
-		// �_���p�W���̕W���l�ɑ΂���䗦
+		// ダンパ係数の標準値に対する比率
 		double damperRatio;
 	};
 
-	// -- �q���W�W���C���g�̏ꍇ
+	// -- ヒンジジョイントの場合
 	struct CRHingeJointTimeSlice : CRJointTimeSlice {
-		// �p�x
+		// 角度
 		double angle;
 
-		// �p���x
+		// 角速度
 		double velocity;
 
-		// �p�����x
+		// 角加速度
 		double acceleration;
 
-		// �g���N
+		// トルク
 		double torque;
 	};
 
-	// -- �{�[���W���C���g�̏ꍇ
+	// -- ボールジョイントの場合
 	struct CRBallJointTimeSlice : CRJointTimeSlice {
-		// �p��
+		// 姿勢
 		Quaterniond orientation;
 
-		// �p���x
+		// 角速度
 		Vec3d velocity;
 
-		// �p�����x
+		// 角加速度
 		Vec3d acceleration;
 
-		// �g���N
+		// トルク
 		Vec3d torque;
 	};
 
 	// ----- ----- ----- ----- -----
 
-	// �֐߂̏W���ɑ΂���JointTimeSlice
-	// �i�֐߂̏W���F�@�S�g��A�̂̈ꕔ�Ȃǁj
+	// 関節の集合に対するJointTimeSlice
+	// （関節の集合：　全身や、体の一部など）
 	struct CRJointsTimeSlice {
-		// �e�֐߂��Ƃ�TimeSlice�f�[�^
+		// 各関節ごとのTimeSliceデータ
 		std::vector<CRJointTimeSlice> jointTimeSlice;
 	};
 
-	// JointsTimeSlice�̎��n��f�[�^
+	// JointsTimeSliceの時系列データ
 	struct CRJointsTimeSeries {
 		std::vector<CRJointsTimeSlice> jointsTimeSlice;
 	};
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-	// CRSolidTimeSlice�̂ǂ̕ϐ��Ƀf�[�^�������Ă��邩�������t���O�̎w��Ɏg��
+	// CRSolidTimeSliceのどの変数にデータが入っているかを示すフラグの指定に使う
 	enum CRSolidTimeSliceFlag {
 		CRST_POSE, CRST_VELOCITY, CRST_ACCELERATION, CRST_SPRING, CRST_DAMPER
 	};
 
-	// ���鎞���ɂ����鍄�̂̏�ԁi�܂��͖ڕW�l�j�������\����
+	// ある時刻における剛体の状態（または目標値）を示す構造体
 	struct CRSolidTimeSlice {
-		// �Ή�����{�[���i�P�Ȃ�f�[�^�Ƃ��Ďg�������ꍇ��NULL�ł������j
+		// 対応するボーン（単なるデータとして使いたい場合はNULLでもいい）
 		CRBoneIf* bone;
 
-		// ����
+		// 時刻
 		double time;
 
-		// �ǂ̕ϐ��Ƀf�[�^�������Ă��邩�������t���O
+		// どの変数にデータが入っているかを示すフラグ
 		bool enable[5];
 
-		// �ʒu�E�p��
+		// 位置・姿勢
 		Posed pose;
 
-		// ���x�E�p���x
+		// 速度・角速度
 		Vec6d velocity;
 
-		// �����x�E�p�����x
+		// 加速度・角加速度
 		Vec6d acceleration;
 
-		// ���PD�����P�W���̕W���l�ɑ΂���䗦
+		// 手先PD制御のP係数の標準値に対する比率
 		double springRatio;
 
-		// ���PD�����D�W���̕W���l�ɑ΂���䗦
+		// 手先PD制御のD係数の標準値に対する比率
 		double damperRatio;
 	};
 
 	// ----- ----- ----- ----- -----
 
-	// ���̂̏W���ɑ΂���SolidTimeSlice
-	// �i���̂̏W���F�@�S�g��A�̂̈ꕔ�Ȃǁj
+	// 剛体の集合に対するSolidTimeSlice
+	// （剛体の集合：　全身や、体の一部など）
 	struct CRSolidsTimeSlice {
-		// �e���̂��Ƃ�TimeSlice�f�[�^
+		// 各剛体ごとのTimeSliceデータ
 		std::vector<CRSolidTimeSlice> solidTimeSlice;
 	};
 
-	// SolidsTimeSlice�̎��n��f�[�^
+	// SolidsTimeSliceの時系列データ
 	struct CRSolidsTimeSeries {
 		std::vector<CRSolidsTimeSlice> solidsTimeSlice;
 	};

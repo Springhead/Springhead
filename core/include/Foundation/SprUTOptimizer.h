@@ -1,4 +1,4 @@
-#ifndef SPR_UTOPTIMIZER_H
+ï»¿#ifndef SPR_UTOPTIMIZER_H
 #define SPR_UTOPTIMIZER_H
 
 #include <Springhead.h>
@@ -10,7 +10,7 @@
 namespace Spr{;
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// Å“K‰»ŒvZ
+// æœ€é©åŒ–è¨ˆç®—
 struct UTOptimizerIf : public ObjectIf {
 	SPR_IFDEF(UTOptimizer);
 
@@ -49,7 +49,7 @@ struct UTOptimizerIf : public ObjectIf {
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 struct UTCMAESOptimizerDesc;
-/// CMA-ES‚É‚æ‚éÅ“K‰»ŒvZ
+/// CMA-ESã«ã‚ˆã‚‹æœ€é©åŒ–è¨ˆç®—
 struct UTCMAESOptimizerIf : public UTOptimizerIf {
 	SPR_IFDEF(UTCMAESOptimizer);
 	void SetInitialValue(const double *initialValue);
@@ -71,7 +71,7 @@ struct UTCMAESOptimizerIf : public UTOptimizerIf {
 	double GetLambda();
 };
 
-/// CMAESÅ“K‰»‚ÌƒfƒXƒNƒŠƒvƒ^
+/// CMAESæœ€é©åŒ–ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct UTCMAESOptimizerDesc {
 	SPR_DESCDEF(UTCMAESOptimizer);
 

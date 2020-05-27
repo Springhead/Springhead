@@ -1,4 +1,4 @@
-#ifndef SPRCDSPHASH_H
+ï»¿#ifndef SPRCDSPHASH_H
 #define SPRCDSPHASH_H
 
 #include <Foundation/SprObject.h>
@@ -16,7 +16,7 @@ public:
 
 	inline void set(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
 
-	void clamp(Vec3f &pos) {//‹«ŠE‚ğ’´‚¦‚½“_‚ğ‚»‚Ì‚Ü‚Ü‹«ŠE‚Ì‚Ç‚±‚ëİ’è‚·‚é
+	void clamp(Vec3f &pos) {//å¢ƒç•Œã‚’è¶…ãˆãŸç‚¹ã‚’ãã®ã¾ã¾å¢ƒç•Œã®ã©ã“ã‚è¨­å®šã™ã‚‹
 		if (isEmpty()) return;
 		//pos.maximum(min);
 		maximum(pos, min);

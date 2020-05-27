@@ -1,4 +1,4 @@
-#ifndef SPR_CRTRAJECTORYPLANNER_H
+ï»¿#ifndef SPR_CRTRAJECTORYPLANNER_H
 #define SPR_CRTRAJECTORYPLANNER_H
 
 #include <Springhead.h>
@@ -10,10 +10,10 @@
 namespace Spr { ;
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// ƒgƒ‹ƒN•Ï‰»Å¬‰»ŒvZ
+// ãƒˆãƒ«ã‚¯å¤‰åŒ–æœ€å°åŒ–è¨ˆç®—
 
-// ‹óŠÔ“à‚ÌŒo—R“_w’è—pƒf[ƒ^
-struct ControlPoint { // ‰ü–¼ ViaPoint
+// ç©ºé–“å†…ã®çµŒç”±ç‚¹æŒ‡å®šç”¨ãƒ‡ãƒ¼ã‚¿
+struct ControlPoint { // æ”¹å ViaPoint
 	Posed pose;
 	SpatialVector vel;
 	SpatialVector acc;
@@ -28,7 +28,7 @@ struct ControlPoint { // ‰ü–¼ ViaPoint
 };
 
 
-// ƒgƒ‹ƒN•Ï‰»Å¬‰»ŒvZ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+// ãƒˆãƒ«ã‚¯å¤‰åŒ–æœ€å°åŒ–è¨ˆç®—ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct CRTrajectoryPlannerIf : public ObjectIf {
 	SPR_IFDEF(CRTrajectoryPlanner);
 
@@ -68,19 +68,19 @@ struct CRTrajectoryPlannerIf : public ObjectIf {
 	void EnableChangePullback(bool e);
 	bool IsEnabledChangePullback();
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Init();
-	//ƒGƒ“ƒhƒGƒtƒFƒNƒ^İ’è
+	//ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿è¨­å®š
 	void SetControlTarget(PHIKEndEffectorIf* e);
-	//ƒV[ƒ“İ’è
+	//ã‚·ãƒ¼ãƒ³è¨­å®š
 	void SetScene(PHSceneIf* s);
 	void AddViaPoint(ControlPoint c);
-	//ŠÖßŠp“xŸŒ³‹O“¹ŒvZ
+	//é–¢ç¯€è§’åº¦æ¬¡å…ƒè»Œé“è¨ˆç®—
 	void CalcTrajectory();
 	void CalcOneStep();
-	//N‰ñ–Ú‚ÌŒJ‚è•Ô‚µ‚©‚çÄŒvZ
+	//Nå›ç›®ã®ç¹°ã‚Šè¿”ã—ã‹ã‚‰å†è¨ˆç®—
 	void RecalcFromIterationN(int n);
-	//¶¬‚³‚ê‚½‹O“¹‚ğÀÛ“K—p
+	//ç”Ÿæˆã•ã‚ŒãŸè»Œé“ã‚’å®Ÿéš›é©ç”¨
 	void JointTrajStep(bool step);
 	//
 	bool Moving();
@@ -99,10 +99,10 @@ struct CRTrajectoryPlannerIf : public ObjectIf {
 	SpatialVector GetNotCorrectedVelocityData(int k, int n);
 };
 
-// ƒgƒ‹ƒN•Ï‰»Å¬‰»ŒvZ‚ÌƒfƒXƒNƒŠƒvƒ^
+// ãƒˆãƒ«ã‚¯å¤‰åŒ–æœ€å°åŒ–è¨ˆç®—ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRTrajectoryPlannerDesc {
 	SPR_DESCDEF(CRTrajectoryPlanner);
-	// Desc‚É‚¢‚ë‚¢‚ëˆÚ‚µ‚½‚¢
+	// Descã«ã„ã‚ã„ã‚ç§»ã—ãŸã„
 
 	double depth;
 	int maxIterate;

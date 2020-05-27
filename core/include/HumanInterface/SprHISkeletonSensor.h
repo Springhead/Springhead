@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHISkeletonSensor.h
- *	@brief ƒXƒPƒ‹ƒgƒ“iƒ{[ƒ“\‘¢j‚ğ”F¯‚·‚éƒZƒ“ƒTBKinect, Leapmotion‚È‚ÇB
+ *	@brief ã‚¹ã‚±ãƒ«ãƒˆãƒ³ï¼ˆãƒœãƒ¼ãƒ³æ§‹é€ ï¼‰ã‚’èªè­˜ã™ã‚‹ã‚»ãƒ³ã‚µã€‚Kinect, Leapmotionãªã©ã€‚
 */
 
 #ifndef HI_SKELETONSENSORIF_H
@@ -19,57 +19,57 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**	@brief SkeletonSensor‚ª•Ô‚·ƒXƒPƒ‹ƒgƒ“‚ÉŠÜ‚Ü‚ê‚éƒ{[ƒ“*/
+/**	@brief SkeletonSensorãŒè¿”ã™ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã«å«ã¾ã‚Œã‚‹ãƒœãƒ¼ãƒ³*/
 struct HIBoneIf: public ObjectIf{
 	SPR_IFDEF(HIBone);
 
-	/// e‚ğ•Ô‚·
+	/// è¦ªã‚’è¿”ã™
 	HIBoneIf* GetParent();
 
-	/// ˆÊ’u‚ğ•Ô‚·
+	/// ä½ç½®ã‚’è¿”ã™
 	Vec3d GetPosition();
-	/// •ûŒüƒxƒNƒgƒ‹i’·‚³1j‚ğ•Ô‚·
+	/// æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆé•·ã•1ï¼‰ã‚’è¿”ã™
 	Vec3d GetDirection();
-	/// ’·‚³‚ğ•Ô‚·
+	/// é•·ã•ã‚’è¿”ã™
 	double GetLength();
 };
 
-/**	@brief SkeletonSensor‚ª•Ô‚·ƒXƒPƒ‹ƒgƒ“*/
+/**	@brief SkeletonSensorãŒè¿”ã™ã‚¹ã‚±ãƒ«ãƒˆãƒ³*/
 struct HISkeletonIf: public ObjectIf{
 	SPR_IFDEF(HISkeleton);
 
-	/// ‘S‘Ì‚Ìp¨‚ğ•Ô‚·
+	/// å…¨ä½“ã®å§¿å‹¢ã‚’è¿”ã™
 	Posed GetPose();
-	/// ƒ{[ƒ“‚Ì”‚ğ•Ô‚·
+	/// ãƒœãƒ¼ãƒ³ã®æ•°ã‚’è¿”ã™
 	int NBones();
-	/// ƒ{[ƒ“‚ğ•Ô‚·
+	/// ãƒœãƒ¼ãƒ³ã‚’è¿”ã™
 	HIBoneIf* GetBone(int i);
-	/// ƒ‹[ƒgƒ{[ƒ“‚ğ•Ô‚·
+	/// ãƒ«ãƒ¼ãƒˆãƒœãƒ¼ãƒ³ã‚’è¿”ã™
 	HIBoneIf* GetRoot();
-	/// ’Í‚ñ‚Å‚é“x‚ğ•Ô‚·
+	/// æ´ã‚“ã§ã‚‹åº¦ã‚’è¿”ã™
 	float GetGrabStrength();
 
-	/// ƒgƒ‰ƒbƒLƒ“ƒOó‹µ
+	/// ãƒˆãƒ©ãƒƒã‚­ãƒ³ã‚°çŠ¶æ³
 	bool IsTracked();
 
-	/// ƒgƒ‰ƒbƒLƒ“ƒOID
+	/// ãƒˆãƒ©ãƒƒã‚­ãƒ³ã‚°ID
 	int GetTrackID();
 };
 
-/**	@brief SkeletonSensor‚ÌƒCƒ“ƒ^ƒtƒF[ƒX */
+/**	@brief SkeletonSensorã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ */
 struct HISkeletonSensorIf: public HIBaseIf{
 	SPR_IFDEF(HISkeletonSensor);
 
-	/// ƒXƒPƒ‹ƒgƒ“‚Ì”‚ğ•Ô‚·
+	/// ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®æ•°ã‚’è¿”ã™
 	int NSkeletons();
-	/// ƒXƒPƒ‹ƒgƒ“‚ğ•Ô‚·
+	/// ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’è¿”ã™
 	HISkeletonIf* GetSkeleton(int i);
 
-	// ƒXƒP[ƒ‹ŒW”‚ğƒZƒbƒg‚·‚é
+	// ã‚¹ã‚±ãƒ¼ãƒ«ä¿‚æ•°ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	void SetScale(double s);
-	// ’†SˆÊ’u‚ğƒZƒbƒg‚·‚é
+	// ä¸­å¿ƒä½ç½®ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	void SetCenter(Vec3d c);
-	// À•W²‚ÌŒü‚«‚ğŒˆ‚ß‚é‰ñ“]‚ğƒZƒbƒg‚·‚é
+	// åº§æ¨™è»¸ã®å‘ãã‚’æ±ºã‚ã‚‹å›è»¢ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	void SetRotation(Quaterniond q);
 
 };
