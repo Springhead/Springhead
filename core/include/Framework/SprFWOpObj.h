@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team
 *  All rights reserved.
 *  This software is free software. You can freely use, distribute and modify this
@@ -22,11 +22,11 @@ struct FWOpObjIf : FWObjectIf{
 	SPR_IFDEF(FWOpObj);
 	void Blend();
 
-	///	qƒIƒuƒWƒFƒNƒg‚Ì”
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°
 	 size_t NChildObject() const;
-	///	qƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	 ObjectIf* GetChildObject(size_t pos);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ 
 	 bool AddChildObject(ObjectIf* o);
 	 void CreateOpObjWithRadius(float r);
 	 void CreateOpObj();

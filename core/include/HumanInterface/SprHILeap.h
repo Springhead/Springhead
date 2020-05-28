@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,12 +19,12 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**	@brief Leapmotion‚ÌƒCƒ“ƒ^ƒtƒF[ƒX */
+/**	@brief Leapmotionã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ */
 struct HILeapIf: public HISkeletonSensorIf{
 	SPR_IFDEF(HILeap);
 };
 
-/**	@brief Leapmotion‚ÌƒfƒXƒNƒŠƒvƒ^ */
+/**	@brief Leapmotionã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ */
 struct HILeapDesc{
 	SPR_DESCDEF(HILeap);
 
@@ -32,13 +32,13 @@ struct HILeapDesc{
 	}
 };
 
-/** @brief LeapmotionUDP‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX */
+/** @brief LeapmotionUDPã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ */
 struct HILeapUDPIf: public HISkeletonSensorIf{
 	SPR_IFDEF(HILeapUDP);
 	bool calibrate(int formerLeapID);
 };
 
-/** @brief LeapmotionUDP‚ÌƒfƒXƒNƒŠƒvƒ^ */
+/** @brief LeapmotionUDPã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ */
 struct HILeapUDPDesc{
 	SPR_DESCDEF(HILeapUDP);
 

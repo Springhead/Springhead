@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHISkeletonSensor.h
- *	@brief ƒXƒPƒ‹ƒgƒ“iƒ{[ƒ“\‘¢j‚ğ”F¯‚·‚éƒZƒ“ƒTBKinect, Leapmotion‚È‚ÇB
+ *	@brief ã‚¹ã‚±ãƒ«ãƒˆãƒ³ï¼ˆãƒœãƒ¼ãƒ³æ§‹é€ ï¼‰ã‚’èªè­˜ã™ã‚‹ã‚»ãƒ³ã‚µã€‚Kinect, Leapmotionãªã©ã€‚
 */
 
 #ifndef FW_SKELETONSENSORIF_H
@@ -20,19 +20,19 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**	@brief SkeletonSensor‚ÌƒfƒXƒNƒŠƒvƒ^ */
+/**	@brief SkeletonSensorã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ */
 struct FWSkeletonSensorDesc {
-	// ‚ ‚ç‚©‚¶‚ß“o˜^‚³‚ê‚½PHSkeleton‚ª–³‚¢i‘«‚è‚È‚¢jê‡‚É©“®‚ÅPHSkeleton‚ğì‚é
+	// ã‚ã‚‰ã‹ã˜ã‚ç™»éŒ²ã•ã‚ŒãŸPHSkeletonãŒç„¡ã„ï¼ˆè¶³ã‚Šãªã„ï¼‰å ´åˆã«è‡ªå‹•ã§PHSkeletonã‚’ä½œã‚‹
 	bool bCreatePHSkeleton;
-	// PHSkeleton‚ª„‘Ì‚ğ‚Á‚Ä‚¢‚È‚©‚Á‚½‚çi‘«‚è‚È‚©‚Á‚½‚çj©“®‚ÅPHSolid‚ğì‚é
+	// PHSkeletonãŒå‰›ä½“ã‚’æŒã£ã¦ã„ãªã‹ã£ãŸã‚‰ï¼ˆè¶³ã‚Šãªã‹ã£ãŸã‚‰ï¼‰è‡ªå‹•ã§PHSolidã‚’ä½œã‚‹
 	bool bCreatePHSolid;
-	// ©“®‚ÅPHSolid‚ğì‚éÛ‚É©“®‚ÅCDShape‚àì¬‚·‚é
+	// è‡ªå‹•ã§PHSolidã‚’ä½œã‚‹éš›ã«è‡ªå‹•ã§CDShapeã‚‚ä½œæˆã™ã‚‹
 	bool bCreateCDShape;
-	// ©“®‚ÅPHSolid‚ğì‚éÛ‚ÉeqŠÖŒW‚ÉŠî‚¢‚ÄPHJoint‚àì¬‚·‚é
+	// è‡ªå‹•ã§PHSolidã‚’ä½œã‚‹éš›ã«è¦ªå­é–¢ä¿‚ã«åŸºã„ã¦PHJointã‚‚ä½œæˆã™ã‚‹
 	bool bCreatePHJoint;
-	// ©“®‚ÅPHSolid‚ğì‚éÛ‚É©“®‚Å‚Q‚Â‚ÌPHSolid‚ğì‚èŠÔ‚ğPHSpring‚Å‚Â‚È‚®
+	// è‡ªå‹•ã§PHSolidã‚’ä½œã‚‹éš›ã«è‡ªå‹•ã§ï¼’ã¤ã®PHSolidã‚’ä½œã‚Šé–“ã‚’PHSpringã§ã¤ãªã
 	bool bCreatePHSpring;
-	// ©“®‚Åì‚éRoundCone‚Ì’¼Œaiw‚Ì‘¾‚³j
+	// è‡ªå‹•ã§ä½œã‚‹RoundConeã®ç›´å¾„ï¼ˆï¼æŒ‡ã®å¤ªã•ï¼‰
 	Vec2d radius;
 
 	FWSkeletonSensorDesc() {
@@ -46,20 +46,20 @@ struct FWSkeletonSensorDesc {
 };
 
 struct PHSkeletonIf;
-/**	@brief SkeletonSensor‚ÌƒCƒ“ƒ^ƒtƒF[ƒX */
+/**	@brief SkeletonSensorã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ */
 struct FWSkeletonSensorIf: public SceneObjectIf {
 	SPR_IFDEF(FWSkeletonSensor);
 
-	/// ƒZƒ“ƒT‚©‚ç‚Ì“Ç‚İ‚İ‚ÆPHScene‚Ö‚Ì”½‰f‚ğs‚¤
+	/// ã‚»ãƒ³ã‚µã‹ã‚‰ã®èª­ã¿è¾¼ã¿ã¨PHSceneã¸ã®åæ˜ ã‚’è¡Œã†
 	void Update();
 
-	/// ’¼Œa‚ğƒZƒbƒg
+	/// ç›´å¾„ã‚’ã‚»ãƒƒãƒˆ
 	void SetRadius(Vec2d r);
 
-	/// ŠÖ˜A•t‚¯‚ç‚ê‚½HISkeletonSensor‚ğ•Ô‚·
+	/// é–¢é€£ä»˜ã‘ã‚‰ã‚ŒãŸHISkeletonSensorã‚’è¿”ã™
 	HISkeletonSensorIf* GetSensor();
 
-	/// ƒXƒPƒ‹ƒgƒ“î•ñ‚ğ•Ô‚·
+	/// ã‚¹ã‚±ãƒ«ãƒˆãƒ³æƒ…å ±ã‚’è¿”ã™
 	int NSkeleton();
 	PHSkeletonIf* GetSkeleton(int i);
 

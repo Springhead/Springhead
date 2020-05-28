@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,8 +16,8 @@ namespace Spr{;
 //@{
 
 struct FWFemMeshNewDesc: public FWObjectDesc{
-	unsigned kogetex; //è≈Ç∞ÉeÉNÉXÉ`ÉÉÇÃñáêî
-	std::string meshRoughness;			///< tetgenÇ≈ê∂ê¨Ç∑ÇÈÉÅÉbÉVÉÖÇÃëeÇ≥
+	unsigned kogetex; //ÁÑ¶„Åí„ÉÜ„ÇØ„Çπ„ÉÅ„É£„ÅÆÊûöÊï∞
+	std::string meshRoughness;			///< tetgen„ÅßÁîüÊàê„Åô„Çã„É°„ÉÉ„Ç∑„É•„ÅÆÁ≤ó„Åï
 	FWFemMeshNewDesc();
 	bool spheric;
 	void Init();

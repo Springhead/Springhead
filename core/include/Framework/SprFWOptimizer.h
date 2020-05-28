@@ -1,4 +1,4 @@
-#ifndef SPR_FWOPTIMIZER_H
+ï»¿#ifndef SPR_FWOPTIMIZER_H
 #define SPR_FWOPTIMIZER_H
 
 #include <Springhead.h>
@@ -8,20 +8,20 @@
 #include "../../closed/include/cmaes/cmaes.h"
 #endif
 
-#include<chrono> //trajectoryPlanner‚Ö
+#include<chrono> //trajectoryPlannerã¸
 #include<queue>
 
 namespace Spr{;
 
 /*
-  •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğg‚Á‚½Å“K‰»ŒvZ‚ÌŠî–{ƒNƒ‰ƒX
-  FWApp‚Ì‚æ‚¤‚É‚±‚ÌƒNƒ‰ƒX‚ğŒp³‚µ‚Ä“Æ©‚ÌÅ“K‰»ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğì¬‚·‚é‚±‚Æ‚ğ‘z’è‚·‚é  
+  ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä½¿ã£ãŸæœ€é©åŒ–è¨ˆç®—ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
+  FWAppã®ã‚ˆã†ã«ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã—ã¦ç‹¬è‡ªã®æœ€é©åŒ–ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä½œæˆã™ã‚‹ã“ã¨ã‚’æƒ³å®šã™ã‚‹  
 
 
 */
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// FWStaticTorqueOptimizer‚Ég‚¤S‘©ƒNƒ‰ƒX
+// FWStaticTorqueOptimizerã«ä½¿ã†æ‹˜æŸã‚¯ãƒ©ã‚¹
 
 class FWGroundConstraint{
 public:
@@ -61,7 +61,7 @@ struct JointPos {
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-//Unity‚Å•]‰¿’l‚Ì“à–ó‚ğ•\¦‚·‚é‚½‚ß‚Ì“]‘——p\‘¢‘Ì
+//Unityã§è©•ä¾¡å€¤ã®å†…è¨³ã‚’è¡¨ç¤ºã™ã‚‹ãŸã‚ã®è»¢é€ç”¨æ§‹é€ ä½“
 struct FWObjectiveValues{
 	double errorvalue = 0;
 	double torquevalue = 0;
@@ -73,8 +73,8 @@ struct FWObjectiveValues{
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// Framework‚ÌÅ“K‰»ŒvZ‚ÌŠî’êƒNƒ‰ƒX
-// ƒCƒ“ƒ^ƒtƒF[ƒX
+// Frameworkã®æœ€é©åŒ–è¨ˆç®—ã®åŸºåº•ã‚¯ãƒ©ã‚¹
+// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct FWOptimizerIf : public ObjectIf {
 	SPR_IFDEF(FWOptimizer);
 
@@ -123,7 +123,7 @@ struct FWOptimizerIf : public ObjectIf {
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 };
 
-// ƒfƒXƒNƒŠƒvƒ^
+// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct FWOptimizerDesc{
 	SPR_DESCDEF(FWOptimizer);
 
@@ -149,7 +149,7 @@ struct FWOptimizerDesc{
 
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
-// p¨Å“K‰»ŒvZ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+// å§¿å‹¢æœ€é©åŒ–è¨ˆç®—ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	SPR_IFDEF(FWStaticTorqueOptimizer);
 	
@@ -204,36 +204,36 @@ struct FWStaticTorqueOptimizerIf : public FWOptimizerIf {
 	void SetDifferentialWeight(double v);
 	double GetDifferentialWeight();
 
-	// GroundConstraint‚Ì’Ç‰ÁAæ“¾A‘SÁ‹
+	// GroundConstraintã®è¿½åŠ ã€å–å¾—ã€å…¨æ¶ˆå»
 	void AddPositionConst(FWGroundConstraint* f);
 	FWGroundConstraint GetGroundConst(int n);
 	void ClearGroundConst();
 
-	// UngroundedConstraint‚Ì’Ç‰ÁAæ“¾A‘SÁ‹
+	// UngroundedConstraintã®è¿½åŠ ã€å–å¾—ã€å…¨æ¶ˆå»
 	void AddPositionConst(FWUngroundedConstraint* f);
 	FWUngroundedConstraint GetUngroundConst(int n);
 	void ClearUngroundedConst();
 
-	// ƒgƒ‹ƒN•]‰¿‚ÌŠÖßƒEƒFƒCƒg‚Ìİ’è
+	// ãƒˆãƒ«ã‚¯è©•ä¾¡æ™‚ã®é–¢ç¯€ã‚¦ã‚§ã‚¤ãƒˆã®è¨­å®š
 	void SetJointWeight(PHJointIf* jo, double w);
 
-	/// CMAES‚Ìƒpƒ‰ƒ[ƒ^‚Ìİ’è
+	/// CMAESã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®è¨­å®š
 	void SetESParameters(double xs, double st, double tf, double la, double mi);
 
-	/// •]‰¿’l‚ğæ“¾
+	/// è©•ä¾¡å€¤ã‚’å–å¾—
 	FWObjectiveValues GetObjectiveValues();
 	
-	/// dSˆÊ’uæ“¾
+	/// é‡å¿ƒä½ç½®å–å¾—
 	Vec3f GetCenterOfGravity();
 
-	/// x‘½ŠpŒ`‚Ég‚í‚ê‚Ä‚¢‚é“_‚Ì”
+	/// æ”¯æŒå¤šè§’å½¢ã«ä½¿ã‚ã‚Œã¦ã„ã‚‹ç‚¹ã®æ•°
 	int NSupportPolygonVertices();
 
-	/// x‘½ŠpŒ`‚Ég‚í‚ê‚Ä‚¢‚é“_‚Ìæ“¾
+	/// æ”¯æŒå¤šè§’å½¢ã«ä½¿ã‚ã‚Œã¦ã„ã‚‹ç‚¹ã®å–å¾—
 	Vec3f GetSupportPolygonVerticesN(int n);
 };
 
-// p¨Å“K‰»ŒvZ‚ÌƒfƒXƒNƒŠƒvƒ^
+// å§¿å‹¢æœ€é©åŒ–è¨ˆç®—ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct FWStaticTorqueOptimizerDesc : public FWOptimizerDesc{
 	SPR_DESCDEF(FWStaticTorqueOptimizer);
 

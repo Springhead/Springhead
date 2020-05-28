@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprPHFemMeshNew.h
- *	@brief „‘Ì
+ *	@brief å‰›ä½“
 */
 #ifndef SPR_PH_FEMMESH_NEW_IF_H
 #define SPR_PH_FEMMESH_NEW_IF_H
@@ -23,16 +23,16 @@ struct PHFemVibrationIf;
 struct PHFemThermoIf;
 struct PHFemPorousWOMoveIf;
 
-///	FemMesh‚ÌƒXƒe[ƒg
+///	FemMeshã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 struct PHFemMeshNewState{};
-///	FemMesh‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+///	FemMeshã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHFemMeshNewDesc: public PHFemMeshNewState{
 	std::vector<Vec3d> vertices;
 	std::vector<int> tets;
 	std::vector<int> faces;
 	bool spheric;   //For multiple FEM implementation
 };
-/// PHFemMeshNew‚Ö‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// PHFemMeshNewã¸ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHFemMeshNewIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMeshNew);
 	void SetPHSolid(PHSolidIf* s);
@@ -63,19 +63,19 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	int NSurfaceVertices();
 	int NSurfaceFace();
 	bool CompTetShapeFunctionValue(const int& tetId, const Vec3d& posL, Vec4d& value, const bool& bDeform);
-	/// –Ê‚©‚çl–Ê‘Ì‚ğ’T‚·
+	/// é¢ã‹ã‚‰å››é¢ä½“ã‚’æ¢ã™
 	int FindTetFromFace(int faceId);
 };
 
-/// Fem‚ÌƒfƒXƒNƒŠƒvƒ^
+/// Femã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHFemBaseDesc{};
-/// Fem‚Ì‹¤’ÊŒvZ•”•ª
+/// Femã®å…±é€šè¨ˆç®—éƒ¨åˆ†
 struct PHFemBaseIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemBase);
 	PHFemMeshNewIf* GetPHFemMesh();
 };
 
-/// U“®ŒvZ‚ÌƒfƒXƒNƒŠƒvƒ^
+/// æŒ¯å‹•è¨ˆç®—ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHFemVibrationDesc : public PHFemBaseDesc{
 	enum ANALYSIS_MODE{
 		ANALYSIS_DIRECT,
@@ -87,16 +87,16 @@ struct PHFemVibrationDesc : public PHFemBaseDesc{
 		INT_SIMPLECTIC,
 		INT_NEWMARK_BETA,
 	};
-	double young;		///< ƒ„ƒ“ƒO—¦(Pa, N/m2)
-	double poisson;		///< ƒ|ƒAƒ\ƒ“”ä(*ˆê—l‚È—§•û‘Ì‚Ìê‡A-1 <= v <= 0.5)
-	double density;		///< –§“x(kg/m3)
-	double alpha;		///< ”S«Œ¸Š—¦
-	double beta;		///< \‘¢Œ¸Š—¦
-	std::vector<int> fixedVertices;	///< ŒÅ’è’¸“_‚ÌIDs
+	double young;		///< ãƒ¤ãƒ³ã‚°ç‡(Pa, N/m2)
+	double poisson;		///< ãƒã‚¢ã‚½ãƒ³æ¯”(*ä¸€æ§˜ãªç«‹æ–¹ä½“ã®å ´åˆã€-1 <= v <= 0.5)
+	double density;		///< å¯†åº¦(kg/m3)
+	double alpha;		///< ç²˜æ€§æ¸›è¡°ç‡
+	double beta;		///< æ§‹é€ æ¸›è¡°ç‡
+	std::vector<int> fixedVertices;	///< å›ºå®šé ‚ç‚¹ã®IDs
 	PHFemVibrationDesc();
 };
 
-/// U“®ŒvZ
+/// æŒ¯å‹•è¨ˆç®—
 struct PHFemVibrationIf : public PHFemBaseIf{
 	SPR_IFDEF(PHFemVibration);
 	void SetTimeStep(double dt);
@@ -120,45 +120,45 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	void DeleteBoundaryCondition();
 	bool FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW, bool bDeform);
 	bool SetDamping(int tetId, Vec3d posW, double damp_ratio);
-	// —Í‚ğ‰Á‚¦‚é
+	// åŠ›ã‚’åŠ ãˆã‚‹
 	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
-	// Œ`óŠÖ”‚ğg‚Á‚Ä”CˆÓ‚Ì“_‚Ì•ÏˆÊ‚ğæ“¾‚·‚é
+	// å½¢çŠ¶é–¢æ•°ã‚’ä½¿ã£ã¦ä»»æ„ã®ç‚¹ã®å¤‰ä½ã‚’å–å¾—ã™ã‚‹
 	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform);
-	// Œ`óŠÖ”‚ğg‚Á‚Ä”CˆÓ‚Ì“_‚Ì‘¬“x‚ğæ“¾‚·‚é
+	// å½¢çŠ¶é–¢æ•°ã‚’ä½¿ã£ã¦ä»»æ„ã®ç‚¹ã®é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
 	bool GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform);
-	// Œ`óŠÖ”‚ğg‚Á‚Ä”CˆÓ‚Ì“_‚ÌˆÊ’u(•Ï‰»Œã)‚ğæ“¾‚·‚é
+	// å½¢çŠ¶é–¢æ•°ã‚’ä½¿ã£ã¦ä»»æ„ã®ç‚¹ã®ä½ç½®(å¤‰åŒ–å¾Œ)ã‚’å–å¾—ã™ã‚‹
 	bool GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform);
 #ifndef SWIG
-	// ‹«ŠEğŒ‚ğ‰Á‚¦‚é(’¸“_‡jAdd the voudnary conditions (vertex order)
+	// å¢ƒç•Œæ¡ä»¶ã‚’åŠ ãˆã‚‹(é ‚ç‚¹é †ï¼‰Add the voudnary conditions (vertex order)
 	bool AddBoundaryCondition(std::vector< Vec3i >& bcs); 
-	// ’¸“_‚É—Í‚ğ‰Á‚¦‚éiƒ[ƒ‹ƒhÀ•WŒnj  Applying force to the vertex (world coordinate system)
+	// é ‚ç‚¹ã«åŠ›ã‚’åŠ ãˆã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰  Applying force to the vertex (world coordinate system)
 	bool AddVertexForceW(int vtxId, Vec3d fW);
-	// ’¸“_ŒQ‚É—Í‚ğ‰Á‚¦‚éiƒ[ƒ‹ƒhÀ•WŒnj Applying force to a group of vertices (world coordinate system)
+	// é ‚ç‚¹ç¾¤ã«åŠ›ã‚’åŠ ãˆã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰ Applying force to a group of vertices (world coordinate system)
 	bool AddVertexForceW(std::vector< Vec3d >& fWs);
 #endif
 	void SetbRecomp();	
 	void Init();
 };
 
-///FemThermo‚ÌƒfƒXƒNƒŠƒvƒ^
+///FemThermoã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHFemThermoDesc: public PHFemBaseDesc{
-	double rho;						//	–§“x
-	//double thConduct;				//”M“`“±—¦
-	//double thConduct_x;				//	x•ûŒü	”M“`“±—¦
-	//double thConduct_y;				//	y•ûŒü	”M“`“±—¦
-	//double thConduct_z;				//	z•ûŒü	”M“`“±—¦
-	double heatTrans;				//”M“`’B—¦			//class ß“_‚É‚ÍAheatTransRatio‚ª‘¶İ‚·‚é
-	double specificHeat;			//”ä”M
-	double radiantHeat;				//”MçtË—¦i‹ó‹C‚Ö‚Ì”M“`’B—¦j
-	//float	distance[10];			//	’†S‚©‚ç‚Ì‹——£	ˆê‚Â–Ú‚Í0.0
-	//float	ondo[10];				//	ã‹L‹——£‚Ì‰·“x
-	double initial_temp;			//	‹Ï¿‚È‰Šú‰·“xA
+	double rho;						//	å¯†åº¦
+	//double thConduct;				//ç†±ä¼å°ç‡
+	//double thConduct_x;				//	xæ–¹å‘	ç†±ä¼å°ç‡
+	//double thConduct_y;				//	yæ–¹å‘	ç†±ä¼å°ç‡
+	//double thConduct_z;				//	zæ–¹å‘	ç†±ä¼å°ç‡
+	double heatTrans;				//ç†±ä¼é”ç‡			//class ç¯€ç‚¹ã«ã¯ã€heatTransRatioãŒå­˜åœ¨ã™ã‚‹
+	double specificHeat;			//æ¯”ç†±
+	double radiantHeat;				//ç†±è¼»å°„ç‡ï¼ˆç©ºæ°—ã¸ã®ç†±ä¼é”ç‡ï¼‰
+	//float	distance[10];			//	ä¸­å¿ƒã‹ã‚‰ã®è·é›¢	ä¸€ã¤ç›®ã¯0.0
+	//float	ondo[10];				//	ä¸Šè¨˜è·é›¢ã®æ¸©åº¦
+	double initial_temp;			//	å‡è³ªãªåˆæœŸæ¸©åº¦ã€
 	PHFemThermoDesc();
 	void Init();
 	double weekPow_full;
 };
 
-///	‰·“x‚ÌFEM—p‚ÌƒƒbƒVƒ…
+///	æ¸©åº¦ã®FEMç”¨ã®ãƒ¡ãƒƒã‚·ãƒ¥
 struct PHFemThermoIf : public PHFemBaseIf{
 	SPR_IFDEF(PHFemThermo);
 	int GetSurfaceVertex(int id);
@@ -167,39 +167,39 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void SetVertexTc(int id,double temp,double heatTrans);
 	Vec3d GetPose(int id);
 	Vec3d GetSufVtxPose(unsigned id);
-	unsigned long GetStepCount();					///	ƒJƒEƒ“ƒg‚P
-	unsigned long GetStepCountCyc();				///	ƒJƒEƒ“ƒg‚P‚ª‰½T–Ú‚©	ŒvZ®:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
-	double GetVertexTemp(unsigned id);				// ƒƒbƒVƒ…ß“_‚Ì‰·“x‚ğæ“¾
-	double GetSufVertexTemp(unsigned id);			// ƒƒbƒVƒ…•\–Ê‚Ìß“_‰·“x‚ğæ“¾
+	unsigned long GetStepCount();					///	ã‚«ã‚¦ãƒ³ãƒˆï¼‘
+	unsigned long GetStepCountCyc();				///	ã‚«ã‚¦ãƒ³ãƒˆï¼‘ãŒä½•é€±ç›®ã‹	è¨ˆç®—å¼:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
+	double GetVertexTemp(unsigned id);				// ãƒ¡ãƒƒã‚·ãƒ¥ç¯€ç‚¹ã®æ¸©åº¦ã‚’å–å¾—
+	double GetSufVertexTemp(unsigned id);			// ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ã®ç¯€ç‚¹æ¸©åº¦ã‚’å–å¾—
 	void SetVertexTemp(unsigned id,double temp);
 	void SetVerticesTempAll(double temp);
-	void AddvecFAll(unsigned id,double dqdt);		//ƒZƒbƒg‚¾‚ÆA’l‚ğ‚»‚¤“ü‚ê‘Ö‚¦‚µ‚»‚¤‚È–¼‘O‚ÅŠëŒ¯BÀÛ‚É‚ÍAadd–”‚ÍAIH‰Á”MƒxƒNƒgƒ‹‚Ì‚İ‚ÉSet‚·‚éBƒxƒNƒgƒ‹‚ÉSet‚·‚éŠÖ”‚ğì‚Á‚ÄAƒ[ƒh‚µ‚Ä‚à‚¢‚¢‚Æv‚¤B
-	void SetvecFAll(unsigned id,double dqdt);		//FAll‚Ì¬•ª‚É‰ÁZ‚¾‚ªAŠëŒ¯
-	void SetRhoSpheat(double rho,double Cp);		//‘fŞŒÅ—L‚Ì•¨«
+	void AddvecFAll(unsigned id,double dqdt);		//ã‚»ãƒƒãƒˆã ã¨ã€å€¤ã‚’ãã†å…¥ã‚Œæ›¿ãˆã—ãã†ãªåå‰ã§å±é™ºã€‚å®Ÿéš›ã«ã¯ã€addåˆã¯ã€IHåŠ ç†±ãƒ™ã‚¯ãƒˆãƒ«ã®ã¿ã«Setã™ã‚‹ã€‚ãƒ™ã‚¯ãƒˆãƒ«ã«Setã™ã‚‹é–¢æ•°ã‚’ä½œã£ã¦ã€ãƒ­ãƒ¼ãƒ‰ã—ã¦ã‚‚ã„ã„ã¨æ€ã†ã€‚
+	void SetvecFAll(unsigned id,double dqdt);		//FAllã®æˆåˆ†ã«åŠ ç®—ã ãŒã€å±é™º
+	void SetRhoSpheat(double rho,double Cp);		//ç´ æå›ºæœ‰ã®ç‰©æ€§
 	Vec2d GetIHbandDrawVtx();
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);
-	void UpdateIHheatband(double xS,double xE,unsigned heatingMODE);//¬–ìŒ´’Ç‰Á
-	void UpdateIHheat(unsigned heating);	//	IH‰Á”Mó‘Ô‚ÌXV
-	void UpdateVecF();						//	”í‰Á”M•¨‘Ì‚Ì”M—¬‘©ƒŠƒZƒbƒg
-	void UpdateVecF_frypan();				//	”í‰Á”M•¨‘Ì‚Ì”M—¬‘©ƒŠƒZƒbƒg
+	void UpdateIHheatband(double xS,double xE,unsigned heatingMODE);//å°é‡åŸè¿½åŠ 
+	void UpdateIHheat(unsigned heating);	//	IHåŠ ç†±çŠ¶æ…‹ã®æ›´æ–°
+	void UpdateVecF();						//	è¢«åŠ ç†±ç‰©ä½“ã®ç†±æµæŸãƒªã‚»ãƒƒãƒˆ
+	void UpdateVecF_frypan();				//	è¢«åŠ ç†±ç‰©ä½“ã®ç†±æµæŸãƒªã‚»ãƒƒãƒˆ
 	void DecrMoist();						//	
 	void DecrMoist_velo(double vel);						//
 	void DecrMoist_vel(double dt);						//
 	void InitAllVertexTemp();
 	void SetInitThermoConductionParam(
-		double thConduct,		// thConduct:”M“`“±—¦
-		double rho,				// roh:–§“x
-		double specificHeat,	// specificHeat:”ä”M J/ (KEkg):1960
-		double heatTrans		// heatTrans:”M“`’B—¦ W/(m^2EK)
+		double thConduct,		// thConduct:ç†±ä¼å°ç‡
+		double rho,				// roh:å¯†åº¦
+		double specificHeat,	// specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960
+		double heatTrans		// heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
 		);
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
-	double GetArbitraryPointTemp(Vec3d temppos);			//	‘½•ªA–¢g—p
-	double GetVtxTempInTets(Vec3d temppos);					//	g—p‚µ‚Ä‚¢‚éŠÖ”	
+	double GetArbitraryPointTemp(Vec3d temppos);			//	å¤šåˆ†ã€æœªä½¿ç”¨
+	double GetVtxTempInTets(Vec3d temppos);					//	ä½¿ç”¨ã—ã¦ã„ã‚‹é–¢æ•°	
 	void InitVecFAlls();
 	double Get_thConduct();
 	bool SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin);
 	void SetThermalEmissivityToVerticesAll(double thermalEmissivity,double thermalEmissivity_const);
-	// ”M•úË“¯’èŠÖŒW
+	// ç†±æ”¾å°„åŒå®šé–¢ä¿‚
 	void SetOuterTemp(double temp);
 	void SetThermalRadiation(double ems,double ems_const);
 	void SetGaussCalcParam(unsigned cyc,double epsilon);
@@ -208,7 +208,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void SetWeekPow(double weekPow_);
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
-	void AfterSetDesc();												//‘Ss—ñ‚È‚Ç‚ğì‚è’¼‚·
+	void AfterSetDesc();												//å…¨è¡Œåˆ—ãªã©ã‚’ä½œã‚Šç›´ã™
 	//void ReProduceMat_Vec_ThermalRadiation();
 	void SetStopTimespan(double timespan);
 	void UpdateMatk_RadiantHeatToAir();
@@ -253,25 +253,25 @@ struct PHFemThermoIf : public PHFemBaseIf{
 
 struct PHFemPorousWOMoveDesc: public PHFemBaseDesc{
 	double wDiffAir;
-	double K;		//Z“§ŒW”
-	double kc;		//–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹‚ÌŒW”
-	double kp;		//–ÑŠÇˆ³—Í‚Ì’è”
-	double alpha;	//–ÑŠÇƒ|ƒeƒ“ƒVƒƒƒ‹‚ÌŒW”
-	double gamma;	//–ÑŠÇˆ³—Í‚ÌŒW”
-	double rhoWater;	//…‚Ì–§“x(g/m^3)
-	double rhoOil;	//–û‚Ì–§“x(g/m^3)
-	double rhowInit;	//ŠÜ…—¦‚Ì‰Šú’l
-	double rhooInit;	//ŠÜ–û—¦‚Ì‰Šú’l
-	double evapoRate;	//ö”­‘¬“x’è”
-	double denatTemp;	//•Ï«‰·“x	’¸“_‚ª‚±‚Ì‰·“x‚É’B‚·‚é‚ÆAŒ‹‡…‚ğŠÜ…—¦ƒxƒNƒgƒ‹‚É‰Á‚¦‚é
-	double boundWaterRatio;	//Œ‹‡…‚ÌŠ„‡ 0.15`0.25
-	double equilWaterCont;	//Œ¸—¦‘æ1’iŠ£‘‡Šú‚Ì•½tŠÜ…—Ê
-	double limitWaterCont;	//ŒÀŠE…•ª—Ê P—¦Š£‘‡Šú‚ÆŒ¸—¦‘æ1’iŠ£‘‡Šú‚Ìè‡’l
-	double boundaryThick;	//‹«–Œ‚ÌŒú‚³
-	double initMassAll;		//HŞ‚Ì‰Šú¿—Ê
-	double initWaterRatio;	//HŞ‚Ì¿—Ê‚É‘Î‚·‚é…•ª¿—Ê‚Ì‰Šú’l
-	double initOilRatio;	//HŞ‚Ì¿—Ê‚É‘Î‚·‚é–û¿—Ê‚Ì‰Šú’l
-	double shrinkageRatio;	//ƒ^ƒ“ƒpƒN¿•Ï«‚Ìûk—¦
+	double K;		//æµ¸é€ä¿‚æ•°
+	double kc;		//æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã®ä¿‚æ•°
+	double kp;		//æ¯›ç®¡åœ§åŠ›ã®å®šæ•°
+	double alpha;	//æ¯›ç®¡ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã®ä¿‚æ•°
+	double gamma;	//æ¯›ç®¡åœ§åŠ›ã®ä¿‚æ•°
+	double rhoWater;	//æ°´ã®å¯†åº¦(g/m^3)
+	double rhoOil;	//æ²¹ã®å¯†åº¦(g/m^3)
+	double rhowInit;	//å«æ°´ç‡ã®åˆæœŸå€¤
+	double rhooInit;	//å«æ²¹ç‡ã®åˆæœŸå€¤
+	double evapoRate;	//è’¸ç™ºé€Ÿåº¦å®šæ•°
+	double denatTemp;	//å¤‰æ€§æ¸©åº¦	é ‚ç‚¹ãŒã“ã®æ¸©åº¦ã«é”ã™ã‚‹ã¨ã€çµåˆæ°´ã‚’å«æ°´ç‡ãƒ™ã‚¯ãƒˆãƒ«ã«åŠ ãˆã‚‹
+	double boundWaterRatio;	//çµåˆæ°´ã®å‰²åˆ 0.15ï½0.25
+	double equilWaterCont;	//æ¸›ç‡ç¬¬1æ®µä¹¾ç‡¥æœŸã®å¹³è¡¡å«æ°´é‡
+	double limitWaterCont;	//é™ç•Œæ°´åˆ†é‡ æ’ç‡ä¹¾ç‡¥æœŸã¨æ¸›ç‡ç¬¬1æ®µä¹¾ç‡¥æœŸã®é–¾å€¤
+	double boundaryThick;	//å¢ƒè†œã®åšã•
+	double initMassAll;		//é£Ÿæã®åˆæœŸè³ªé‡
+	double initWaterRatio;	//é£Ÿæã®è³ªé‡ã«å¯¾ã™ã‚‹æ°´åˆ†è³ªé‡ã®åˆæœŸå€¤
+	double initOilRatio;	//é£Ÿæã®è³ªé‡ã«å¯¾ã™ã‚‹æ²¹è³ªé‡ã®åˆæœŸå€¤
+	double shrinkageRatio;	//ã‚¿ãƒ³ãƒ‘ã‚¯è³ªå¤‰æ€§æ™‚ã®åç¸®ç‡
 	Vec3d top;
 	Vec3d center;
 	Vec3d bottom;
