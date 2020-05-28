@@ -39,15 +39,18 @@ if(STANDALONE)
 	set(VS_VERSION "15.0")
 	set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
     else()
-        set(CMAKE_CXX_COMPILER "${GPP_PATH}/g++")
 	set(CMAKE_CONFIGURATION_TYPES Release)
-	set(LIBTYPE STATIC)
+	set(LIBTYPE SHARED)
     endif()
+    message(STATUS "Library type: ${LIBTYPE}")
     #
     set(OPTS_FILE_NAME "CMakeOpts.txt")
     set(OPTS_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}")
     set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
     include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
+    if(unix)
+        set(CMAKE_CXX_COMPILER "${GPP_PATH}/g++")
+    endif()
 endif() 
 
 # ------------------------------------------------------------------------------
@@ -271,18 +274,18 @@ if(STANDALONE)
 	    add_custom_command(TARGET ${Target}
 		POST_BUILD
 		COMMAND ranlib ${_libfile}
-		COMMAND mkdir -p ${_libdir}
+		COMMAND mkdir -p ${_install_dir}
 		COMMAND cp ${_libfile} ${_install_dir}
 		WORKING_DIRECTORY ${_wrkdir}
-		COMMENT [[  copying library file (STATIC)]]
+		COMMENT [[  copying static library file]]
 	    )
 	else()
 	    add_custom_command(TARGET ${Target}
 		POST_BUILD
-		COMMAND mkdir -p ${_libdir}
-		COMMAND cp ${_libfile} ${_install_dir}
+		COMMAND mkdir -p ${_install_dir}
+		COMMAND gcc -shared -o ${_install_dir}/lib${Target}.so -Wl,--whole-archive ${_libfile} -Wl,--no-whole-archive
 		WORKING_DIRECTORY ${_wrkdir}
-		COMMENT [[  copying library file ]]
+		COMMENT [[  generating shared library file ]]
 	    )
 	endif()
     endif()
