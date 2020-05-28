@@ -96,17 +96,13 @@ if(unix)
 			-std=gnu++11
 			-D__ccdecl=
 			-D__cdecl=)
+    if("${LIBTYPE}" STREQUAL "SHARED")
+	set(COPT_DEFAULT	${COPT_DEFAULT} -shared -fPIC)
+    endif()
     #
     if("${SPR_PROJS}" STREQUAL "${EMPTY}")
-	if("${LIBTYPE}" STREQUAL "STATIC")
-	    set(SPRLIB_PATHS	${SPR_TOP_DIR}/generated/lib)
-	    set(SPRLIB_NAMES	Springhead)
-	else()
-	    #  環境変数 LD_LIBRARY_PATH の設定も必要です
-	    #  Environment variable LD_LIBRARY_PATH should be set appropreately.
-	    set(SPRLIB_PATHS	)
-	    set(SPRLIB_NAMES	Springhead)
-	endif()
+	set(SPRLIB_PATHS	${SPR_TOP_DIR}/generated/lib)
+	set(SPRLIB_NAMES	Springhead)
     else()
 	set(SPRLIB_PATHS	${EMPTY})
 	set(SPRLIB_NAMES	${EMPTY})

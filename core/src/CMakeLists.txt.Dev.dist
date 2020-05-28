@@ -74,6 +74,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
+message(STATUS "Library type: ${LIBTYPE}")
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.

@@ -48,6 +48,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
+message(STATUS "Library type: ${LIBTYPE}")
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -189,11 +190,12 @@ if(Windows)
     endforeach() 
 elseif(unix)
     if("${LIBTYPE}" STREQUAL "STATIC")
-	set(LIB_SUFFIX a)
+	set(_lib_suffix a)
     else()
-	set(LIB_SUFFIX so)
+	set(_lib_suffix so)
     endif()
-    set(LIBNAME lib${Target}.${LIB_SUFFIX})
+    # suffix will be given later
+    set(LIBNAME lib${Target})
 endif()
 
 # ------------------------------------------------------------------------------
@@ -219,31 +221,18 @@ if(Windows)
 	COMMENT [[  generating Springhead Library... ]]
     )
 elseif(unix)
+    set(_outdir ${SPR_SRC_DIR})
+    set(_gendir ${SPR_TOP_DIR}/generated/lib)
     list(JOIN SPR_PROJS " " _members)
     set(_cmnd ./SpringheadLib.sh)
-    if("${LIBTYPE}" STREQUAL "STATIC")
-	set(_outdir ${SPR_SRC_DIR})
-	set(_gendir ${SPR_TOP_DIR}/generated/lib)
-	add_custom_target(${ProjectName} ALL
-	    COMMAND mkdir -p ${_outdir}
-	    COMMAND ${_cmnd} STATIC ${_outdir}/${LIBNAME} ${_members}
-	    COMMAND ranlib ${_outdir}/${LIBNAME}
-	    COMMAND mkdir -p ${_gendir}
-	    COMMAND cp ${_outdir}/${LIBNAME} ${_gendir}
-	    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	    DEPENDS ${SPR_PROJS}
-	    COMMENT [[  generating Springhead Library... ]]
-	)
-    else()
-	set(_outdir ${SPR_TOP_DIR}/generated/lib)
-	add_custom_target(${ProjectName} ALL
-	    COMMAND mkdir -p ${_outdir}
-	    COMMAND ${_cmnd} SHARED ${_outdir} ${_members}
-	    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	    DEPENDS ${SPR_PROJS}
-	    COMMENT [[  generating Springhead Library... ]]
-	)
-    endif()
+    add_custom_target(${ProjectName} ALL
+	COMMAND mkdir -p ${_outdir}
+	COMMAND ${_cmnd} ${LIBTYPE} ${_outdir} ${LIBNAME} ${_members}
+	COMMAND mkdir -p ${_gendir}
+	COMMAND cp ${_outdir}/${LIBNAME}.${_lib_suffix} ${_gendir}
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	DEPENDS ${SPR_PROJS}
+    )
 endif()
 
 # ------------------------------------------------------------------------------
@@ -271,8 +260,8 @@ if(Windows)
     endforeach()
 elseif(unix)
     if(DEFINED SPRINGHEAD_LIBRARY_DIR)
-	set(_libpath ${LIBDIR}/${LIBNAME})
-	message("** INSTALL: ${LIBNAME}: ${SPRINGHEAD_LIBRARY_DIR} **")
+	set(_libpath ${LIBDIR}/${LIBNAME}.${_lib_suffix})
+	message("** INSTALL: ${LIBNAME}.${_lib_suffix}: ${SPRINGHEAD_LIBRARY_DIR} **")
 	install(FILES ${_libpath}
 	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR}
 	    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
