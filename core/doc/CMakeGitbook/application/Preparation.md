@@ -41,10 +41,10 @@ set(TOPDIR "C:/Springhead")
 | `ProjectName` | プロジェクト名 |
 | `OOS_BLD_DIR` | CMake の作業領域 (ディレクトリ) の名前<br>本ドキュメントで *build* としているもの |
 | `CMAKE_CONFIGURATION_TYPES` | ビルド構成<br>unix の場合はここに複数の構成を指定することができません。作業ディレクトリを分けることで対処してください (`OOS_BLD_DIR` 参照)。 |
-| `LIBTYPE` | 作成するライブラリの種別<br>Windows の場合は`STATIC`を指定してください。 unix の場合は、`STATIC`なら`.a`を、`SHARED`なら`.so`を作成します。 <br>(現在 `SHARED` は実装されていません) |
+| `LIBTYPE` | 作成するライブラリの種別<br>Windows の場合は`STATIC`を指定してください。 unix の場合は、`STATIC`なら`.a`を、`SHARED`なら`.so`を作成します。 |
 | `SRCS` | ビルドの対象とするファイル<br>設定は`set(SRCS …)`または`file(GLOB SRCS …)`とします。後者ではワイルドカードが使えます。<br>`SRCS`の直後に`RELATIVE <base-dir>`を付加すると`<base-dir>`に対する相対パスとなります。デフォルトは`file(GLOB RELATIVE ${CMAKE_SORUCE_DIR} *.cpp *.h)`です。|
 | `EXECLUDE_SRCS` | ビルドの対象から外すファイル<br>`SRCS`でワイルドカードを使用した場合に有用です。上の`SRCS`で`RELATIVE`としていないときは絶対パスで指定します。 |
-| `SPR_PROJS` | アプリケーションに組み込む Springhead Library のプロジェクト名 (この中に RunSwig を含めてはいけません)<br>unix で "libSpringhead.a" をリンクするときは`${EMPTY}`のままとします。 |
+| `SPR_PROJS` | アプリケーションに組み込む Springhead Library のプロジェクト名 (この中に RunSwig を含めてはいけません)<br>unix で "libSpringhead.a" / "libSpringhead.so" をリンクするときは`${EMPTY}`のままとします。 |
 | `DEFINE_MACROS_ADD` | 追加のコンパイルマクロ指定 (`/D, -D` は不要です) |
 | `INCLUDE_PATHS_ADD` | 追加のインクルードパス指定 (`/I, -I` は不要です)<br>現在のディレクトリは`${CMAKE_SOURCE_DIR}`で参照できます。 |
 | `COMP_FLAGS_ADD` | 追加のコンパイラフラグ指定 |

@@ -26,6 +26,7 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 上記のライブラリファイルだけを作成することもできます。
 
 ** unix の場合 **
+<a id="embpython_unix"></a>
  
 ディレクトリ "C:/Springhead/core/src/EmbPython" に移動してください。
 
@@ -42,7 +43,6 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 
 ライブラリファイルは、ディレクトリ "C:/Springhead/generated/lib" に
 次の名前で作成されます。
-( SHARED 構成は未だ実装されていません )
 
 | STATIC 構成 | SHARED 構成 |
 |:--:|:--:|
@@ -85,7 +85,27 @@ DLL ファイルは "C:/Springhead/generated/bin/*arch*" に次の名前で作�
 
 ** unix の場合 **
 
-unix 版は未だ実装されていません。
+> 以下の作業は、[cmake](/install/Cmake.md) に従い "C:/Springhead/core/src" において
+ cmake が既に実行されていること、
+続いて、[前項](/install/EmbPython.md#embpython_unix) の記述に従い
+ "C:/Springhead/src/EmbPython" において
+ `cmake -DSTANDALONE=1` が既に実行されていることを前提としています
+ (これらの処理で作成されるファイルを必要とします)。
+
+ディレクトリ "C:/Springhead/core/embed/SprPythonDLL" に移動してください。
+
+次のように cmake コマンドを実行してから make コマンドを実行してください。
+
+```
+> chdir C:/Springhead/core/embed/SprPythonDLL
+> cmake -B build [generator]
+> chdir build
+> make
+```
+> *generator* については [cmake](/install/Cmake.md#generator) を参照してください。
+
+ライブラリファイルは、ディレクトリ "C:/Springhead/generated/lib" に
+ "libSpr.so" という名前で作成されます。
 
 - - -
 Windows Visual Studio 用のソリューションファイルを用いてビルドする方法については
