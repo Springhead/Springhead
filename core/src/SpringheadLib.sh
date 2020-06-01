@@ -29,7 +29,7 @@ if [ ${libtype} = "STATIC" ]; then
 
     echo step 1 ... creating thin archive
     /bin/rm -f ${outdir}/${libname}.a
-    ar cqT ${outdir}/${libname}I.a ${members}
+    ar cqT ${outdir}/${libname}.a ${members}
 
     echo step 2 ... creating \"${libname}.a\"
     echo -n "create ${outdir}/${libname}.a\\n${addcmnd}\\nsave\\nend" | ar -M
