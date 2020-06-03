@@ -43,6 +43,7 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 
 \medskip
 \bf{unixの場合}
+\label{subsec:EmbPython_SprPythonDLL_unix}
 \begin{narrow}
 	ディレクトリ\Path{C:/Springhead/core/src/EmbPython}に移動してください。
 
@@ -64,7 +65,6 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 	\medskip
 	ライブラリファイルは、
 	ディレクトリ\Path{C:/Springhead/generated/lib}に次の名前で作成されます。
-	(\tt{SHARED}構成は未だ実装されていません)
 
 	\medskip
 	\begin{narrow}[20pt]
@@ -137,7 +137,36 @@ Python インタプリタに対する外部拡張モジュールを生成する 
 \bigskip
 \bf{unixの場合}
 \begin{narrow}
-	unix版は未だ実装されていません。
+	\begin{narrow}[s]
+		%\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+		\thinrule{\linewidth}\\
+		以下の作業は、\KQuote{\ref{subsec:CmakeLibrary}} cmake に従い
+		\Path{C:/Springhead/core/src}においてcmakeが
+		既に実行されていること、
+		続いて、前項の記述に従い\Path{C:/Springhead/src/EmbPython}において
+		\tt{cmake -DSTANDALONE=1}が既に実行されていることを前提としています。
+		(これらの処理で作成されるファイルを必要とします)。\\
+		\Vskip{-1\baselineskip}\thinrule{\linewidth}\\
+	\end{narrow}
+	\Vskip{-1\baselineskip}
+	ディレクトリ\Path{C:/Springhead/core/embed/SprPythonDLL}に移動してください。
+
+	次のようにcmakeを実行してからmakeコマンドを実行してください。
+
+	\CmndLine{%
+		> chdir C:/Springhead/core/embed/SprPythonDLL\\
+		> cmkdir -B build [gt{enerator}]\\
+		> chdir build\\
+		> make\\
+	}{command-1-5-3.eps}{SprPythonDLL-unix}
+
+	\begin{narrow}[s]
+		\it{generator}については
+		\KQuote{\ref{subsec:CmakeLibrary} cmake} を参照してください。
+	\end{narrow}
+
+	ライブラリファイルは\Path{C:/Springhead/generated/bin}に
+	\Path{libSpr.so}という名前で作成されます
 \end{narrow}
 
 \medskip
