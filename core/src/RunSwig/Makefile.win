@@ -98,7 +98,8 @@ FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
 all:	PreWork RunSwig
 
-PreWork:	InstallSwig ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+#PreWork:	InstallSwig ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 InstallSwig:	BuildSwig $(SWIGBINARY)
 
