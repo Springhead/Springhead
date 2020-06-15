@@ -9,6 +9,18 @@
 思われますので、ここでは Windows 上で Visual Studio を使う場合について説明します。
 
 ----
+** Q. RunSwig のビルドで次のようなエラーが発生する **
+```
+1> ..\do_python.bat BuildSwig.py -p x64 -c Release -t 15.0 ..\..\bin\src\swig\msvc
+1> 情報: 与えられたパターンのファイルが見つかりませんでした。
+1> VisualStudio : error : devenv not found: Visual Studio 2017 (v141)
+```
+
+これは、Springhead Library を作成するために必要なツール swig の生成に
+失敗したことを示しています (swig の生成には devenv が必要です)。
+解決方法は [ビルドの準備 注意](/install/Preparation.md#devenv) を参照してください。
+
+----
 ** Q. プログラムの実行時に“リソースファイルが見つからない”というエラーが起きる **
 
 プログラムは作業ディレクトリ *build* の下に作成されます。

@@ -62,3 +62,23 @@ $ENV{variable} とすると環境変数の値を参照できます。
 ```
 
 以上で準備作業は終了です。
+
+<hr>
+<a id="devenv"></a>
+<strong>＊注意＊</strong>
+
+ダウンロード後最初のビルド時に swig のバイナリを生成しますが、
+この時使用するプログラム devenv.exe がパスに含まれていないと、
+RunSwig に失敗して Springhead Library が作成できません。
+これは Visual Studio をデフォルト以外の場所にインストールしている場合などで
+起きる現象です。
+
+この現象は、次のようにすると解消できます。
+
+```
+1.  "Visual Studio 用開発者コマンドプロンプト" を起動する
+2.  コマンド "where devenv.exe" を実行してパスを調べる
+3.  上で調べたパスを環境変数 PATH に加える
+4.  Visual Studio を再起動する
+```
+
