@@ -19,6 +19,7 @@ OBJS 		= ${SRCS:.cpp=.o}
 
 CXXFLAGS	:= $(CXXFLAGS) \
 		$(call add_inc,${SPR_BOOST_INC}) \
+		-DSPRINGHEAD
 		-std=gnu++11
 
 ################################################################
