@@ -86,9 +86,9 @@ endif()
 #  Additional compile macro(s).
 #	format:  "<name>=<value>" or "<name>"
 #	Do not prepend "/D" nor "-D" to macro body.
-#	See "CMakeOpts.txt.dist" for default paths.
+#	See "CMakeOpts.txt.dist" for default macros.
 #
-set(DEFINE_MACROS_ADD ${EMPTYY})
+set(DEFINE_MACROS_ADD ${EMPTY})
 
 # ------------------------------------------------------------------------------
 #  Additional include path(s).

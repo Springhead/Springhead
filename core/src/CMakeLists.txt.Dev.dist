@@ -97,11 +97,11 @@ include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
 #	Additional parameters are already read at the top of this file.
 #	We need merge process here.
 #
-set(DEFINE_MACROS               ${DEFINE_MACROS} ${DEFINE_MACROS_ADD})
-set(INCLUDE_PATHS               ${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
-set(COMP_FLAGS                  ${COMP_FLAGS_ADD} ${COMP_FLAGS})
-set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
-set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
+set(DEFINE_MACROS	${DEFINE_MACROS} ${DEFINE_MACROS_ADD})
+set(INCLUDE_PATHS	${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
+set(COMP_FLAGS		${COMP_FLAGS_ADD} ${COMP_FLAGS})
+set(LINK_FLAGS		${LINK_FLAGS_ADD} ${LINK_FLAGS})
+set(LIBRARY_PATHS	${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
 list(FIND LIBRARY_NAMES_ADD EmbPython _found)
 if(${_found} EQUAL -1)
     set(LIBRARY_NAMES	${SPRLIB_NAMES}
