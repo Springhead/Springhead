@@ -79,6 +79,8 @@
     <Compile Include="CSFramework.cs" />
     <Compile Include="CSGraphics.cs" />
     <Compile Include="CSHumanInterface.cs" />
+    <Compile Include="CSManualFoundation.cs" />
+    <Compile Include="CSManualPhysics.cs" />
     <Compile Include="CSPhysics.cs" />
     <Compile Include="CSUtility.cs" />
     <Compile Include="cs_object.cs" />
@@ -98,8 +100,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>$(SolutionPath)\..\..\..\..\buildtool\PatchLibraryProxy64.exe /target:Unity.exe /patch:$(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

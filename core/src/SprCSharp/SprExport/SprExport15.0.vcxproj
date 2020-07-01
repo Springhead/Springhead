@@ -205,8 +205,7 @@
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>$(SolutionPath)\..\..\..\..\buildtool\PatchLibraryProxy64.exe /target:Unity.exe /patch:$(TargetPath)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
