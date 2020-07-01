@@ -14,7 +14,6 @@
 #ifndef SPR_HIBase_H
 #define SPR_HIBase_H
 #include <HumanInterface/SprHIDevice.h>
-#include <HumanInterface/SprHumanInterfaceDecl.hpp>
 
 namespace Spr{;
 
