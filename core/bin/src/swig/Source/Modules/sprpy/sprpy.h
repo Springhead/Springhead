@@ -1,4 +1,4 @@
-#ifndef SPRPY_H
+﻿#ifndef SPRPY_H
 #define SPRPY_H
 
 #include<string>

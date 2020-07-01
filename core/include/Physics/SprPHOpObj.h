@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,14 +12,14 @@
 
 namespace Spr{;
 
-///	„‘Ì‚ÌƒXƒe[ƒg
+///	å‰›ä½“ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 struct PHOpObjState{
-	Vec3d		velocity;		///<	¿—Ê’†S‚Ì‘¬“x		(WorldŒn)
-	Vec3d		angVelocity;	///<	Šp‘¬“x				(WorldŒn)
-//	Vec3d		lastVelocity;	///<	‘O‰ñ‚Ì‘¬“x			(WorldŒn)
-//	Vec3d		lastAngVelocity;///<	‘O‰ñ‚ÌŠp‘¬“x			(WorldŒn)
-	Posed		pose;			///<	À•WŒ´“_‚ÌˆÊ’u‚ÆŒü‚«	(WorldŒn)
-//	Posed		lastPose;		///<	‘O‰ñ‚ÌˆÊ’u‚ÆŒü‚«		(WorldŒn)
+	Vec3d		velocity;		///<	è³ªé‡ä¸­å¿ƒã®é€Ÿåº¦		(Worldç³»)
+	Vec3d		angVelocity;	///<	è§’é€Ÿåº¦				(Worldç³»)
+//	Vec3d		lastVelocity;	///<	å‰å›ã®é€Ÿåº¦			(Worldç³»)
+//	Vec3d		lastAngVelocity;///<	å‰å›ã®è§’é€Ÿåº¦			(Worldç³»)
+	Posed		pose;			///<	åº§æ¨™åŸç‚¹ã®ä½ç½®ã¨å‘ã	(Worldç³»)
+//	Posed		lastPose;		///<	å‰å›ã®ä½ç½®ã¨å‘ã		(Worldç³»)
 };
 
 struct PHOpHapticRendererDesc{
@@ -47,45 +47,45 @@ struct PHOpHapticRendererDesc{
 };
 
 struct PHOpObjDesc : public PHOpObjState{
-	double		mass;			///<	¿—Ê
-	Matrix3d	inertia;		///<	Šµ«ƒeƒ“ƒ\ƒ‹	(LocalŒn)
-	Vec3d		center;			///<	¿—Ê’†S‚ÌˆÊ’u	(LocalŒn)
-	bool		dynamical;		///<	•¨—–@‘¥‚É]‚¤‚©(‘¬“x‚ÍÏ•ª‚³‚ê‚é)
+	double		mass;			///<	è³ªé‡
+	Matrix3d	inertia;		///<	æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«	(Localç³»)
+	Vec3d		center;			///<	è³ªé‡ä¸­å¿ƒã®ä½ç½®	(Localç³»)
+	bool		dynamical;		///<	ç‰©ç†æ³•å‰‡ã«å¾“ã†ã‹(é€Ÿåº¦ã¯ç©åˆ†ã•ã‚Œã‚‹)
 
-	////model’¸“_ŒQ
+	////modelé ‚ç‚¹ç¾¤
 	Vec3f *objTargetVts;
 	
-	//model’¸“_ƒf[ƒ^
+	//modelé ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	float objTargetVtsArr[10000];
 
-	//model’¸“_ŒQ”
+	//modelé ‚ç‚¹ç¾¤æ•°
 	int objTargetVtsNum;
-	//—±q‚Ì”
+	//ç²’å­ã®æ•°
 	int assPsNum;
-	//—±qgroup‚Ì”
+	//ç²’å­groupã®æ•°
 	int assGrpNum;
 	
-	//—±qgroup‚Ìlink”’è”
+	//ç²’å­groupã®linkæ•°å®šæ•°
 	int objGrouplinkCount;
 	//ObjectID
 	int objId;
-	//‹——£S‘©‚Ìswitch
+	//è·é›¢æ‹˜æŸã®switch
 	bool objUseDistCstr;
-	//Mesh‚ğ‚Á‚Ä‚¢‚È‚¢Object
+	//Meshã‚’æŒã£ã¦ã„ãªã„Object
 	bool objNoMeshObj;
-	//„‘Ì‚©
+	//å‰›ä½“ã‹
 	bool isRigid;
-	//—ÍŠoObject‚Æ‹æ•Ê‚Ì‚½‚ßg‚¤
+	//åŠ›è¦šObjectã¨åŒºåˆ¥ã®ãŸã‚ä½¿ã†
 	int objType;
-	//”¼Œa‚Ì•½‹Ï
+	//åŠå¾„ã®å¹³å‡
 	float objAverRadius;
-	//”¼Œa‚Ì•½‹Ï
+	//åŠå¾„ã®å¹³å‡
 	float objMaxRadius;
 
-	//ŒJ‚è•Ô‚·”‚¦Œv”
+	//ç¹°ã‚Šè¿”ã™æ•°ãˆè¨ˆæ•°
 	int objitrTime;
 
-	//FaceNormal‚ğBlend‚Ì‚Æ‚«‚ÉXV‚·‚é‚©
+	//FaceNormalã‚’Blendã®ã¨ãã«æ›´æ–°ã™ã‚‹ã‹
 	bool updateNormals;
 
 
@@ -100,7 +100,7 @@ struct PHOpObjDesc : public PHOpObjState{
 struct CDShapeIf; 
 struct PHTreeNodeIf;
 
-///	„‘Ì‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+///	å‰›ä½“ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHOpObjIf : public SceneObjectIf {
 	SPR_IFDEF(PHOpObj);
 	
@@ -148,110 +148,110 @@ struct PHOpObjIf : public SceneObjectIf {
 };
 struct PHOpParticleDesc {
 
-	//’¸“_”
+	//é ‚ç‚¹æ•°
 	int pNvertex;
-	//©•ª‚ÌƒOƒ‹[ƒvid
+	//è‡ªåˆ†ã®ã‚°ãƒ«ãƒ¼ãƒ—id
 	int pMyGroupInd;
-	//—±q‚Ìid
+	//ç²’å­ã®id
 	int pPId;
-	//Š‘®obj‚Ìid
+	//æ‰€å±objã®id
 	int pObjId;
-	//—±qd‚³ŒW”alpha(ŠJ”­’†)
+	//ç²’å­ç¡¬ã•ä¿‚æ•°alpha(é–‹ç™ºä¸­)
 	float pParaAlpha;
-	//ƒ}ƒEƒX‚ÉG‚ç‚ê‚½‚©ƒtƒ‰ƒO
+	//ãƒã‚¦ã‚¹ã«è§¦ã‚‰ã‚ŒãŸã‹ãƒ•ãƒ©ã‚°
 	bool hitedByMouse;
-	//’¸“_‚Â¿—Êi‰¼j
+	//é ‚ç‚¹æŒã¤è³ªé‡ï¼ˆä»®ï¼‰
 	float pSingleVMass;
-	//—±q‚Ì‘‡¿—ÊiŠJ”­’†j
+	//ç²’å­ã®ç·åˆè³ªé‡ï¼ˆé–‹ç™ºä¸­ï¼‰
 	float pTotalMass;
 	
-	//—±q‹…”¼Œai‹…‚Æ‚µ‚Äˆµ‚¤‚Ég‚¤j
+	//ç²’å­çƒåŠå¾„ï¼ˆçƒã¨ã—ã¦æ‰±ã†æ™‚ã«ä½¿ã†ï¼‰
 	float pRadii;
-	//“®“I—±q”¼Œa
+	//å‹•çš„ç²’å­åŠå¾„
 	float pDynamicRadius;
-	//å”¼Œavector
+	//ä¸»åŠå¾„vector
 	Vec3f pMainRadiusVec;
-	//•›”¼Œavector
+	//å‰¯åŠå¾„vector
 	Vec3f pSecRadiusVec;
-	//]”¼Œavector
+	//å¾“åŠå¾„vector
 	Vec3f pThrRadiusVec;
-	//å”¼Œa
+	//ä¸»åŠå¾„
 	float pMainRadius;
-	//•›”¼Œa
+	//å‰¯åŠå¾„
 	float pSecRadius;
-	//]”¼Œa
+	//å¾“åŠå¾„
 	float pThrRadius;
-	//—±q‚ÌŒ»İˆÊ’u
+	//ç²’å­ã®ç¾åœ¨ä½ç½®
 	Vec3f pCurrCtr;
-	//—±q‚Ì‰ŠúˆÊ’u
+	//ç²’å­ã®åˆæœŸä½ç½®
 	Vec3f pOrigCtr;
-	//—±q‚Ì—\‘ªˆÊ’u
+	//ç²’å­ã®äºˆæ¸¬ä½ç½®
 	Vec3f pNewCtr;
-	//—±q‚Ì‘¬“x
+	//ç²’å­ã®é€Ÿåº¦
 	Vec3f pVelocity;
-	//SPhash ‚ÉŒŸo‚³‚ê‚½‚©
+	//SPhash ã«æ¤œå‡ºã•ã‚ŒãŸã‹
 	bool isColliedbySphash;
-	//ColliCube‚ÉŒŸo‚³‚ê‚½‚©
+	//ColliCubeã«æ¤œå‡ºã•ã‚ŒãŸã‹
 	bool isColliedbyColliCube;
-	//ƒ}ƒEƒX‚É‚Â‚©‚Ü‚ê‚½‚©
+	//ãƒã‚¦ã‚¹ã«ã¤ã‹ã¾ã‚ŒãŸã‹
 	bool isFixedbyMouse;
-	//ŒÅ’è‚µ‚Ä‚é‚©
+	//å›ºå®šã—ã¦ã‚‹ã‹
 	bool isFixed;
-	//SPhash ‚É‰ğŒˆ‚·‚×‚µ‚©
+	//SPhash ã«è§£æ±ºã™ã¹ã—ã‹
 	bool isColliedSphashSolved;
-	//SPhash ‚É‚Ü‚à‚È‚­‰ğŒˆ‚·‚×‚µ‚©
+	//SPhash ã«ã¾ã‚‚ãªãè§£æ±ºã™ã¹ã—ã‹
 	bool isColliedSphashSolvedReady;
 	
-	//ŠO—Í
+	//å¤–åŠ›
 	Vec3f pExternalForce;
 	//not yet been used
 	Vec3f pExternalTorque;//not yet been used
 	//not yet been used
 	Vec3f pExternalDisplacement;
-	//ŠÜ‚ŞƒƒbƒVƒ…‚Ìindex
+	//å«ã‚€ãƒ¡ãƒƒã‚·ãƒ¥ã®index
 	std::vector<int> pFaceInd;
 	
-	//—±qƒ‚[ƒƒ“ƒgs—ñ
+	//ç²’å­ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆè¡Œåˆ—
 	Matrix3f pMomentR;
-	//—±q•ª‰ğŒã‰ñ“]s—ñ
+	//ç²’å­åˆ†è§£å¾Œå›è»¢è¡Œåˆ—
 	Matrix3f pSmR;
 	
-	//’¸“_Šµ«ƒ‚[ƒƒ“ƒg 
+	//é ‚ç‚¹æ…£æ€§ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ 
 	Matrix3f pMomentInertia;
-	//’¸“_Šµ«ƒ‚[ƒƒ“ƒg‚Ì‹t 
+	//é ‚ç‚¹æ…£æ€§ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã®é€† 
 	Matrix3f pInverseOfMomentInertia;
-	//’¸“_‚Ìå¬•ª•ªÍPCA‚É‚æ‚é‘È‰~‚ÌŒü‚«s—ñ
+	//é ‚ç‚¹ã®ä¸»æˆåˆ†åˆ†æPCAã«ã‚ˆã‚‹æ¥•å††ã®å‘ãè¡Œåˆ—
 	Matrix3f ellipRotMatrix;
-	//—±qŒÅ—LŒü‚«AellipRotMatrix‚©‚ç
+	//ç²’å­å›ºæœ‰å‘ãã€ellipRotMatrixã‹ã‚‰
 	Quaternionf ellipOrigOrint;
-	//—±qŠp‘¬“x
-	Vec3f pWvel;//Šp‘¬“xA’·‚³‚Í‘¬“x‚Ì‘å‚«‚³A•ûŒü‚Í‘¬“x‚Ì•ûŒü
+	//ç²’å­è§’é€Ÿåº¦
+	Vec3f pWvel;//è§’é€Ÿåº¦ã€é•·ã•ã¯é€Ÿåº¦ã®å¤§ãã•ã€æ–¹å‘ã¯é€Ÿåº¦ã®æ–¹å‘
 	//used to precalculation in Collision Detection;
 	Matrix3f pPreEllipA;
 
-	//Œ»İŒü‚«
+	//ç¾åœ¨å‘ã
 	Quaternionf pCurrOrint;
-	//‰ŠúŒü‚«
+	//åˆæœŸå‘ã
 	Quaternionf pOrigOrint;
-	//—\‘ªŒü‚«
+	//äºˆæ¸¬å‘ã
 	Quaternionf pNewOrint;
 	
 
 };
 struct PHOpGroupDesc {
-	//—±qƒOƒ‹[ƒv‚Ìid
+	//ç²’å­ã‚°ãƒ«ãƒ¼ãƒ—ã®id
 	int gMyIndex;
-	//ƒOƒ‹[ƒv‚Ìƒ‚[ƒƒ“ƒgs—ñ
+	//ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆè¡Œåˆ—
 	Matrix3f gAgroup;
-	//ƒOƒ‹[ƒv‚ÌŒÅ—LƒxƒNƒgƒ‹ŒQ
+	//ã‚°ãƒ«ãƒ¼ãƒ—ã®å›ºæœ‰ãƒ™ã‚¯ãƒˆãƒ«ç¾¤
 	Matrix3f gEigen;
-	//ƒOƒ‹[ƒv‚Ì¿—Ê
+	//ã‚°ãƒ«ãƒ¼ãƒ—ã®è³ªé‡
 	float gtotalMass;
-	//‰Šú’†S
+	//åˆæœŸä¸­å¿ƒ
 	Vec3f gOrigCenter;
-	//Œ»İ’†S
+	//ç¾åœ¨ä¸­å¿ƒ
 	Vec3f gCurrCenter;
-	//‚±‚ÌƒOƒ‹[ƒv‚ÉŠÜ‚Ş—±q‚Ì”
+	//ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã«å«ã‚€ç²’å­ã®æ•°
 	int gNptcl;
 };
 struct PHOpParticleIf : public ObjectIf{

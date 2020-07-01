@@ -95,7 +95,8 @@ if(unix)
 			-D__unix__
 			-std=gnu++11
 			-D__ccdecl=
-			-D__cdecl=)
+			-D__cdecl=
+			-D_cdecl=)
     if("${LIBTYPE}" STREQUAL "SHARED")
 	set(COPT_DEFAULT	${COPT_DEFAULT} -shared -fPIC)
     endif()

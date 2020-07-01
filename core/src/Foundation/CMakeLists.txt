@@ -65,7 +65,7 @@ if(Windows)
 elseif(unix)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target})
-    add_library(${Target} ${LIBTYPE} ${SRCS})
+    add_library(${Target} STATIC ${SRCS})
 endif()
 
 # ------------------------------------------------------------------------------

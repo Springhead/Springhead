@@ -74,9 +74,9 @@
 		(\tt{OOS\_BLD\_DIR}参照)。} \\\HLine
     &\tt{LIBTYPE}
 	& \RBox{作成するライブラリの種別\\
-		Windowsの場合は\tt{STATIC}を指定してください。unixの場合は、
-		\tt{STATIC}なら\tt{.a}を\tt{SHARED}なら\tt{.so}を作成します。\\
-		(現在\tt{SHARED}は実装されていません)} \\\HLine
+		Windowsの場合は\tt{STATIC}を指定してください。
+		unixの場合は、\tt{STATIC}なら\tt{.a}を\tt{SHARED}なら\tt{.so}を
+		作成します。}\\\HLine
     &\tt{SRCS}
 	& \RBox{ビルドの対象とするファイル\\
 		設定は\tt{set(SRCS …)}または\tt{file(GLOB SRCS …)}とします。
@@ -94,8 +94,8 @@
     &\tt{SPR\_PROJS}
 	& \RBox{アプリケーションに組み込む\SprLib のプロジェクト名
 		(この中にRunSwigを含めてはいけません)\\
-		unixで\Path{libSpringhead.a}をリンクするときは
-		\tt{\$\{EMPTY\}}のままとします。} \\\HLine
+		unixで\Path{libSpringhead.a}/\Path{libSpringhead.so}を
+		リンクするときは\tt{\$\{EMPTY\}}のままとします。} \\\HLine
     &\tt{DEFINE\_MACROS\_ADD}
 	& \RBox{追加のコンパイルマクロ指定 (\tt{/D}, \tt{-D}は不要です)} \\\HLine
     &\tt{INCLUDE\_PATHS\_ADD}

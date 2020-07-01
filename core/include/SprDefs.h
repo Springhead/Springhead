@@ -1,30 +1,30 @@
-/** ‹Œglut‚Ì‘ã‚í‚è‚Éfreeglut‚ðŽg‚¤
-	E“Á‚É——R‚ª–³‚¢ê‡‚Ífreeglut‚ª‚¨‚·‚·‚ß
-	EƒWƒ‡ƒCƒXƒeƒBƒbƒN‚È‚Ç‚Ìfreeglut‚É‚µ‚©‚È‚¢‹@”\‚ªŽg‚¢‚½‚¢ê‡‚Í•K—v
-	EOpenGL1.0‚æ‚èV‚µ‚¢ƒo[ƒWƒ‡ƒ“‚ªŽg—p‚µ‚½‚¢ê‡‚Í•K—v
+ï»¿/** æ—§glutã®ä»£ã‚ã‚Šã«freeglutã‚’ä½¿ã†
+	ãƒ»ç‰¹ã«ç†ç”±ãŒç„¡ã„å ´åˆã¯freeglutãŒãŠã™ã™ã‚
+	ãƒ»ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ãªã©ã®freeglutã«ã—ã‹ãªã„æ©Ÿèƒ½ãŒä½¿ã„ãŸã„å ´åˆã¯å¿…è¦
+	ãƒ»OpenGL1.0ã‚ˆã‚Šæ–°ã—ã„ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãŒä½¿ç”¨ã—ãŸã„å ´åˆã¯å¿…è¦
  */
 #define USE_FREEGLUT
 
-/* GLUIŽg—pƒR[ƒh‚ð—LŒø‰»‚·‚é
+/* GLUIä½¿ç”¨ã‚³ãƒ¼ãƒ‰ã‚’æœ‰åŠ¹åŒ–ã™ã‚‹
  */
 #define USE_GLUI
 
-/** Žg—p‚·‚éOpenGL‚Ìƒo[ƒWƒ‡ƒ“
-	“¯Žž‚ÉUSE_FREEGLUT‚ð’è‹`‚·‚é‚±‚Æ‚ª•K—v
+/** ä½¿ç”¨ã™ã‚‹OpenGLã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³
+	åŒæ™‚ã«USE_FREEGLUTã‚’å®šç¾©ã™ã‚‹ã“ã¨ãŒå¿…è¦
  */
 #define OPENGL_MAJOR_VERSION 3
 #define OPENGL_MINOR_VERSION 0
 
-/** GLEW‚ðŽg—p
+/** GLEWã‚’ä½¿ç”¨
  */
 #define USE_GLEW
 
-/** Physics‚ÅOpenMP‚ðŽg—p
+/** Physicsã§OpenMPã‚’ä½¿ç”¨
  */
 //#define USE_OPENMP_PHYSICS
 
-/** Springhead2/closed ‚Ìƒ\[ƒX‚ðŽg—p‚·‚é‚©‚Ç‚¤‚©
-	ŠJ”­ŽÒˆÈŠO‚Í–¢’è‹`‚Æ‚µ‚Ä‚­‚¾‚³‚¢
+/** Springhead2/closed ã®ã‚½ãƒ¼ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹ã‹ã©ã†ã‹
+	é–‹ç™ºè€…ä»¥å¤–ã¯æœªå®šç¾©ã¨ã—ã¦ãã ã•ã„
  */
 #include "SprUseClosedSrcOrNot.h"
 

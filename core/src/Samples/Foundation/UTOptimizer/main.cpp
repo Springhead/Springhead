@@ -21,6 +21,7 @@ public:
 		// --
 		// CMAESのパラメータを変更したい場合はここでdescにセットする
 		// --
+        desc.lambda = 20;
 
 		// 最適化クラスの作成
 		optimizer = DBG_NEW UTCMAESOptimizer(desc);
@@ -58,6 +59,8 @@ public:
 				DSTR << " -- " << std::endl;
 			}
 		}
+
+        DSTR << "Lambda : " << optimizer->GetLambda() << std::endl;
 
 		// 最適化が完了：結果を取得
 		double* result = optimizer->GetResult();

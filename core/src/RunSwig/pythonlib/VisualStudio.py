@@ -67,6 +67,7 @@
 #	Ver 1.5  2017/11/30 F.Kanehori	Python library path 変更.
 #	Ver 2.0  2018/02/07 F.Kanehori	全体の見直し.
 #	Ver 2.1  2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
+#	Ver 2.2  2020/06/11 F.Kanehori	devenv 探索方式変更.
 # ======================================================================
 import sys
 import os
@@ -98,15 +99,16 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.1
+		self.version = 2.2
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)
 		self.pf_toolset = pts	# e.g. v140
 		self.vs_version = vsv	# e.g. 14.0
 		self.vs_name = vsn	# e.g. Visual Studio 2015
-		self.vs_path = self.__get_vs_path(self.vs_version)
+		self.vs_path = None
 		#
+		self.devenv_found = None
 		self.solution_name = None
 		self.solution_dir = os.getcwd()
 		self.solution_file = None
@@ -119,6 +121,8 @@ class VisualStudio:
 		#
 		self.cmnd = None
 		self.errmsg = None
+		#
+		self.vs_path = self.__get_vs_path(self.vs_version)
 
 	#  Set solution file name.
 	#
@@ -223,6 +227,8 @@ class VisualStudio:
 		msg = None
 		if self.vs_version is None:
 			msg = 'Visual Studio version is not specified'
+		elif self.devenv_found is None:
+			msg = self.errmsg
 		elif self.solution_name is None:
 			msg = 'file not found: "%s"' % self.solution_file
 		if msg is not None:
@@ -266,21 +272,37 @@ class VisualStudio:
 		if version is None:
 			# bad VS version
 			return None
-		if self.vs_version <= '14.0':
+		devenv = 'devenv.exe'
+		devenvpath = None
+		# try 'where' command first
+		proc = Proc(verbose=0).execute('where %s' % devenv,
+					       stdout=Proc.PIPE, shell=True)
+		stat, out, err = proc.output();
+		if stat == 0:
+			out = out.split('\n')[0].strip()
+			devenvpath = '/'.join(out.split(os.sep)[:-1])
+
+		# try default install directory
+		elif self.vs_version <= '14.0':
 			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio '
 			devenvpath += version
 			devenvpath += '/Common7/IDE'
 		else:
-			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio/'
-			devenvpath += '2017/Community/'
-			devenvpath += 'Common7/IDE'
-		if self.verbose:
-			print('  devenv path: %s' % devenvpath)
-		if not os.path.exists(Util.pathconv('%s/devenv.exe' % devenvpath)):
-			msg = Util.pathconv(devenvpath)
-			self.errmsg = 'devenv not found: ' + msg
+			sys_base = 'C:/Program Files (x86)/Microsoft Visual Studio'
+			devenvpath = sys_base \
+				   + '/%s' % self.vs_name.split()[2] \
+				   + '/Community/Common7/IDE'
+		#if self.verbose:
+		#	print('  devenv path: %s' % devenvpath)
+		if devenvpath is None \
+		   or not os.path.exists(Util.pathconv('%s/%s' % (devenvpath, devenv))):
+			self.errmsg = 'devenv not found'
 			return None
 		#
+		print('devenvpath: %s' % devenvpath)
+		sys.stdout.flush()
+		if devenvpath is not None:
+			devenv_found = True
 		return devenvpath
 
 	#  Build solution.

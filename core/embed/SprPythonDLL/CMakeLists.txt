@@ -220,15 +220,14 @@ if(Windows)
 	SUFFIX ".${SUFFIX}"
     )
 elseif(unix)
-    set(LIBNAME libSpr)
-    set(OUTPUT_DIRECTORY_BASE ${SPR_TOP_DIR}/generated/bin)
-    set(OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY_BASE}/PYthon)
+    set(LIBNAME Spr)
+    set(OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    set(INSTALL_DIRECTORY ${SPR_TOP_DIR}/generated/bin)
     set(SUFFIX so)
 
     set_target_properties(${Target} PROPERTIES
-	RUNTIME_OUTPUT_NAME ${LIBNAME}
-	RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY}
-	SUFFIX ".${SUFFIX}"
+	LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY}
+	LIBRARY_OUTPUT_NAME ${LIBNAME}
     )
 endif()
 
@@ -324,6 +323,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Copy generated library file to "${SPR_TOP_DIR}/generated/lib"
 #
+set(_wrkdir ${CMAKE_CURRENT_BINARY_DIR})
 if(Windows)
     set(_install_dir ${OUTPUT_DIRECTORY_BASE})
     set(_libdir ${OUTPUT_DIRECTORY})
@@ -347,16 +347,19 @@ if(Windows)
 	COMMENT [[  copying DLL file ]]
     )
 elseif(unix)
-    set(_install_dir ${OUTPUT_DIRECTORY_BASE})
-    set(_libdir ${OUTPUT_DIRECTORY})
-    set(_libfile ${_libdir}/${OUTPUT_NAME})
+    set(_install_dir ${INSTALL_DIRECTORY})
+    set(_install_dir_conf ${INSTALL_DIRECTORY}/Python)
+    set(_libfile ${OUTPUT_DIRECTORY}/lib${LIBNAME}.${SUFFIX})
     file(TO_NATIVE_PATH ${_install_dir} _install_dir)
+    file(TO_NATIVE_PATH ${_install_dir_conf} _install_dir_conf)
     file(TO_NATIVE_PATH ${_libfile} _libfile)
 
     add_custom_command(TARGET ${Target}
 	POST_BUILD
-	COMMAND mkdir -p ${_libdir}
+	COMMAND mkdir -p ${_install_dir}
+	COMMAND mkdir -p ${_install_dir_conf}
 	COMMAND cp ${_libfile} ${_install_dir}
+	COMMAND cp ${_libfile} ${_install_dir_conf}
 	WORKING_DIRECTORY ${_wrkdir}
 	COMMENT [[  copying shared library file ]]
     )

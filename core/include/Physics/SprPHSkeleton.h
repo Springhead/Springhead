@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@
 
 /**
  *	@file SprPHSkeleton.h
- *	@brief ƒXƒPƒ‹ƒgƒ“
+ *	@brief ã‚¹ã‚±ãƒ«ãƒˆãƒ³
 */
 #ifndef SPR_PHSKELETONIF_H
 #define SPR_PHSKELETONIF_H
@@ -27,49 +27,49 @@ struct PHBoneIf : public SceneObjectIf{
 public:
 	SPR_IFDEF(PHBone);
 
-	/** @brief Solid‚ğİ’è‚·‚é
+	/** @brief Solidã‚’è¨­å®šã™ã‚‹
 	 */
 	void SetSolid(PHSolidIf* solid);
 
-	/** @brief Solid‚ğæ“¾‚·‚é
+	/** @brief Solidã‚’å–å¾—ã™ã‚‹
 	 */
 	PHSolidIf* GetSolid();
 
-	/** @brief Proxy Solid‚ğİ’è‚·‚é
+	/** @brief Proxy Solidã‚’è¨­å®šã™ã‚‹
 	 */
 	void SetProxySolid(PHSolidIf* solid);
 
-	/** @brief Proxy Solid‚ğæ“¾‚·‚é
+	/** @brief Proxy Solidã‚’å–å¾—ã™ã‚‹
 	 */
 	PHSolidIf* GetProxySolid();
 
-	/** @brief Joint‚ğİ’è‚·‚é
+	/** @brief Jointã‚’è¨­å®šã™ã‚‹
 	 */
 	void SetJoint(PHJointIf* joint);
 
-	/** @brief Joint‚ğæ“¾‚·‚é
+	/** @brief Jointã‚’å–å¾—ã™ã‚‹
 	 */
 	PHJointIf* GetJoint();
 
-	/** @brief eBone‚ğİ’è‚·‚é
+	/** @brief è¦ªBoneã‚’è¨­å®šã™ã‚‹
 	 */
 	void SetParent(PHBoneIf* parent);
 
-	/** @brief eBone‚ğæ“¾‚·‚é
+	/** @brief è¦ªBoneã‚’å–å¾—ã™ã‚‹
 	 */
 	PHBoneIf* GetParent();
 
 	// ----- ----- ----- ----- -----
 
-	/** @brief ƒ{[ƒ“‚Ì’·‚³‚ğƒZƒbƒg‚·‚é
+	/** @brief ãƒœãƒ¼ãƒ³ã®é•·ã•ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	 */
 	void SetLength(double length);
 
-	/** @brief ƒ{[ƒ“‚ÌŒü‚«‚ğƒZƒbƒg‚·‚éiqƒ{[ƒ“‚ÌPosition‚à“¯‚ÉƒZƒbƒg‚·‚éj
+	/** @brief ãƒœãƒ¼ãƒ³ã®å‘ãã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆå­ãƒœãƒ¼ãƒ³ã®Positionã‚‚åŒæ™‚ã«ã‚»ãƒƒãƒˆã™ã‚‹ï¼‰
 	 */
 	void SetDirection(Vec3d dir);
 
-	/** @brief ƒ{[ƒ“‚ÌˆÊ’u‚ğƒZƒbƒg‚·‚éieƒ{[ƒ“‚ÌDirection‚à“¯‚ÉƒZƒbƒg‚·‚éj
+	/** @brief ãƒœãƒ¼ãƒ³ã®ä½ç½®ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆè¦ªãƒœãƒ¼ãƒ³ã®Directionã‚‚åŒæ™‚ã«ã‚»ãƒƒãƒˆã™ã‚‹ï¼‰
 	 */
 	void SetPosition(Vec3d pos);
 
@@ -86,19 +86,19 @@ struct PHSkeletonIf : public SceneObjectIf{
 public:
 	SPR_IFDEF(PHSkeleton);
 
-	/** @brief Bone‚Ì”‚ğæ“¾‚·‚é
+	/** @brief Boneã®æ•°ã‚’å–å¾—ã™ã‚‹
 	 */
 	int NBones();
 
-	/** @brief Bone‚ğæ“¾‚·‚é
+	/** @brief Boneã‚’å–å¾—ã™ã‚‹
 	 */
 	PHBoneIf* GetBone(int i);
 
-	/** @brief Bone‚ğì¬‚·‚é
+	/** @brief Boneã‚’ä½œæˆã™ã‚‹
 	 */
 	PHBoneIf* CreateBone(PHBoneIf* parent, const PHBoneDesc& desc = PHBoneDesc());
 
-	/** @brief ’Í‚ñ‚Å‚é“x‚ğæ“¾‚·‚é
+	/** @brief æ´ã‚“ã§ã‚‹åº¦ã‚’å–å¾—ã™ã‚‹
 	 */
 	float GetGrabStrength();
 };

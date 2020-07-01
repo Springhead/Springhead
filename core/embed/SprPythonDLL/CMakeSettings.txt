@@ -12,6 +12,9 @@ if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
 elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
     set(Linux True)
     set(unix True)
+elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "FreeBSD")
+    set(FreeBSD True)
+    set(unix True)
 endif()
 set(Cygwin  False)
 set(MacOS   False)
@@ -47,8 +50,8 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
+#set(LIBTYPE STATIC)
+set(LIBTYPE SHARED)
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.

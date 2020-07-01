@@ -1,4 +1,4 @@
-#ifndef SPRFIOPSTATEHANDLER
+﻿#ifndef SPRFIOPSTATEHANDLER
 #define SPRFIOPSTATEHANDLER
 
 #include <Foundation/SprObject.h>

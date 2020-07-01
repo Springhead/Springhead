@@ -78,4 +78,23 @@
 \bigskip
 以上で準備作業は終了です。
 
+\bigskip
+\thinrule{\linewidth}
+
+\bf{[注意]}
+
+ダウンロード後最初のビルド時にswigのバイナリを生成しますが、
+この時使用するプログラム\tt{devenv.exe}がパスに含まれていないと、
+RunSwigに失敗して\SprLib が作成できません。
+これはVisual Studioをデフォルト以外の場所にインストールしている場合などで起きる現象です。
+
+この現象は、次のようにすると解消できます。
+
+\begin{enumerate}
+  \item	``Visual Studio用開発者コマンドプロンプト''を起動する
+  \item	コマンド\Path{where devenv.exe}を実行してパスを調べる
+  \item	上で調べたパスを環境変数\tt{PATH}に加える
+  \item	Visual Studioを再起動する
+\end{enumerate}
+
 % end: 1.2.Preparation.tex
