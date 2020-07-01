@@ -228,7 +228,7 @@
     <ClCompile Include="CSPhysics.cpp" />
     <ClCompile Include="CSUtility.cpp" />
     <ClCompile Include="module.wrapper.cpp" />
-    <ClCompile Include="ManualUTTimer.cpp" />
+    <ClCompile Include="CSManualUTTimer.cpp" />
     <ClCompile Include="wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>

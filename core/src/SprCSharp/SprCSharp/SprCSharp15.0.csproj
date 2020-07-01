@@ -86,7 +86,7 @@
     <Compile Include="cs_object.cs" />
     <Compile Include="module.wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ManualUTTimer.cs" />
+    <Compile Include="CSManualUTTimer.cs" />
     <Compile Include="wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
