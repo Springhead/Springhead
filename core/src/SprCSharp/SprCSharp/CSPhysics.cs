@@ -6531,9 +6531,11 @@ namespace SprCs {
 	}
 	public void AddShape(CDShapeIf shape) {
 	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _this, (IntPtr) shape);
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _this2, (IntPtr) shape);
 	}
 	public void AddShapes(CDShapeIf shBegin, CDShapeIf shEnd) {
 	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _this, (IntPtr) shBegin, (IntPtr) shEnd);
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _this2, (IntPtr) shBegin, (IntPtr) shEnd);
 	}
 	public void RemoveShape(int index) {
 	    SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _this, (int) index);
@@ -6560,6 +6562,7 @@ namespace SprCs {
 	}
 	public void SetShapePose(int index, Posed pose) {
 	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _this, (int) index, (IntPtr) pose);
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _this2, (int) index, (IntPtr) pose);
 	}
 	public void ClearShape() {
 	    SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _this);
@@ -6650,6 +6653,7 @@ namespace SprCs {
 	}
 	public void SetPose(Posed p) {
 	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _this, (IntPtr) p);
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _this2, (IntPtr) p);
 	}
 	public void SetVelocity(Vec3d v) {
 	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _this, (IntPtr) v);
@@ -7742,12 +7746,14 @@ namespace SprCs {
 	}
 	public void SetSocketPose(Posed pose) {
 	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _this, (IntPtr) pose);
+                SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_this2, (IntPtr)pose);
 	}
 	public void GetPlugPose(Posed pose) {
 	    SprExport.Spr_PHConstraintIf_GetPlugPose((IntPtr) _this, (IntPtr) pose);
 	}
 	public void SetPlugPose(Posed pose) {
 	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _this, (IntPtr) pose);
+                SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_this2, (IntPtr)pose);
 	}
 	public void GetRelativePose(Posed p) {
 	    SprExport.Spr_PHConstraintIf_GetRelativePose((IntPtr) _this, (IntPtr) p);
@@ -8306,6 +8312,7 @@ namespace SprCs {
 	}
 	public void SetTargetPosition(Quaterniond p) {
 	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _this, (IntPtr) p);
+	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _this2, (IntPtr) p);
 	}
 	public Quaterniond GetTargetPosition() {
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr) _this);
@@ -8313,6 +8320,7 @@ namespace SprCs {
 	}
 	public void SetTargetVelocity(Vec3d q) {
 	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _this, (IntPtr) q);
+	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _this2, (IntPtr) q);
 	}
 	public Vec3d GetTargetVelocity() {
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr) _this);
@@ -8425,6 +8433,7 @@ namespace SprCs {
 	}
 	public void SetTargetPosition(Vec3d targetPosition) {
 	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _this, (IntPtr) targetPosition);
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _this2, (IntPtr) targetPosition);
 	}
 	public Vec3d GetTargetPosition() {
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr) _this);
@@ -8432,6 +8441,7 @@ namespace SprCs {
 	}
 	public void SetTargetOrientation(Quaterniond targetOrientation) {
 	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _this, (IntPtr) targetOrientation);
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _this2, (IntPtr) targetOrientation);
 	}
 	public Quaterniond GetTargetOrientation() {
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr) _this);
@@ -8509,6 +8519,7 @@ namespace SprCs {
 	}
 	public void SetTargetVelocity(Vec6d targetVelocity) {
 	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _this, (IntPtr) targetVelocity);
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _this2, (IntPtr) targetVelocity);
 	}
 	public Vec6d GetTargetVelocity() {
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr) _this);
@@ -9911,8 +9922,10 @@ namespace SprCs {
 	}
 	public PHSolidIf CreateSolid(PHSolidDesc desc) {
 	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _this, (IntPtr) desc);
-            if (ptr == IntPtr.Zero) { return null; } 
+	    IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _this2, (IntPtr) desc);
+            if (ptr == IntPtr.Zero || ptr2 == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
+            obj._this2 = ptr2;
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
             return obj;
 	}
@@ -9963,36 +9976,48 @@ namespace SprCs {
 	}
 	public void SetContactMode(PHSolidIf lhs, PHSolidIf rhs, PHSceneDesc.ContactMode mode) {
 	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _this, (IntPtr) lhs, (IntPtr) rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _this2, (IntPtr) lhs._this2, (IntPtr) rhs._this2, (int) mode);
 	}
 	public void SetContactMode(PHSolidIf lhs, PHSolidIf rhs) {
 	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _this, (IntPtr) lhs, (IntPtr) rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _this2, (IntPtr) lhs._this2, (IntPtr) rhs._this2);
 	}
 	public void SetContactMode(PHSolidIf group, ulong length, PHSceneDesc.ContactMode mode) {
 	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _this, (IntPtr) group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _this2, (IntPtr) group._this2, (ulong) length, (int) mode);
 	}
 	public void SetContactMode(PHSolidIf group, ulong length) {
 	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _this, (IntPtr) group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _this2, (IntPtr) group._this2, (ulong) length);
 	}
 	public void SetContactMode(PHSolidIf solid, PHSceneDesc.ContactMode mode) {
 	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _this, (IntPtr) solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _this2, (IntPtr) solid._this2, (int) mode);
 	}
 	public void SetContactMode(PHSolidIf solid) {
 	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _this, (IntPtr) solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _this2, (IntPtr) solid._this2);
 	}
 	public void SetContactMode(PHSceneDesc.ContactMode mode) {
 	    SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr) _this, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr) _this2, (int) mode);
 	}
 	public void SetContactMode() {
 	    SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr) _this);
+	    SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr) _this2);
 	}
 	public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
 	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _this, (IntPtr) lhs, (IntPtr) rhs, (IntPtr) ii, (IntPtr) desc);
-            if (ptr == IntPtr.Zero) { return null; } 
+	    IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _this2, (IntPtr) lhs._this2, (IntPtr) rhs._this2, (IntPtr) ii, (IntPtr) desc);
+            if (ptr == IntPtr.Zero || ptr2 == IntPtr.Zero) {
+                return null;
+            } 
             PHJointIf obj = new PHJointIf(ptr);
+            obj._this2 = ptr2;
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) { return new PH1DJointIf(ptr); }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) { return new PHBallJointIf(ptr); }
+            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) { return new PHBallJointIf(ptr,ptr2); }
             if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) { return new PHFixJointIf(ptr); }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) { return new PHSpringIf(ptr); }
+            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) { return new PHSpringIf(ptr,ptr2); }
             if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) { return new PHMateIf(ptr); }
             if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) { return new PHHingeJointIf(ptr); }
             if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) { return new PHSliderJointIf(ptr); }
@@ -10415,7 +10440,24 @@ namespace SprCs {
 	    SprExport.Spr_PHSceneIf_SetMaterialBlending((IntPtr) _this, (int) mode);
 	}
 	public void Step() {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _this);
+            var phSceneIf = PHSceneIf.GetCSInstance(_this);
+            if (phSceneIf.threadMode) {
+                IntPtr nextStepPHScene = IntPtr.Zero;
+                IntPtr notNextStepPHScene = IntPtr.Zero;
+                phSceneIf.GetNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
+                SprExport.Spr_PHSceneIf_Step(nextStepPHScene);
+                phSceneIf.ChangeNextStep();
+                SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, nextStepPHScene); // nextStepPHSceneÅ®state
+                SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, notNextStepPHScene); // stateÅ®notNextStepPHScene
+            } else {
+                if (phSceneIf.show_this2) {
+                    SprExport.Spr_PHSceneIf_Step(_this2);
+                    SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, _this2); // _this2Å®state
+                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _this); // stateÅ®_this
+                } else {
+                    SprExport.Spr_PHSceneIf_Step(_this);
+                }
+            }
 	}
 	public void ClearForce() {
 	    SprExport.Spr_PHSceneIf_ClearForce((IntPtr) _this);
@@ -10536,9 +10578,10 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHSceneIf CreateScene(PHSceneDesc desc) {
-	    IntPtr ptr = SprExport.Spr_PHSdkIf_CreateScene((IntPtr) _this, (IntPtr) desc);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHSceneIf obj = PHSceneIf.GetCSInstance(ptr);
+	    IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr) _this, (IntPtr) desc);
+	    IntPtr ptr2 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr) _this, (IntPtr) desc);
+            if (ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) { return null; } 
+            PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1,ptr2);
             return obj;
 	}
 	public PHSceneIf CreateScene() {

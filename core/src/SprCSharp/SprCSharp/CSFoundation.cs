@@ -3185,7 +3185,8 @@ namespace SprCs {
 	}
 	public bool DelChildObject(ObjectIf o) {
 	    char ret = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o);
-	    return (ret == 0) ? false : true;
+	    char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // è„éËÇ≠Ç¢Ç©Ç»Ç¢
+	    return (ret == 0||ret2 == 0) ? false : true;
 	}
 	public void Clear() {
 	    SprExport.Spr_ObjectIf_Clear((IntPtr) _this);
@@ -3215,6 +3216,9 @@ namespace SprCs {
 	}
 	public void SetDesc(CsObject desc) {
 	    SprExport.Spr_ObjectIf_SetDesc((IntPtr) _this, (IntPtr) desc);
+            if (_this2 != IntPtr.Zero) {
+                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this2, (IntPtr)desc);
+            }
 	}
 	public ulong GetDescSize() {
 	    ulong result = (ulong) SprExport.Spr_ObjectIf_GetDescSize((IntPtr) _this);
