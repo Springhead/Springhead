@@ -10444,11 +10444,19 @@ namespace SprCs {
             if (phSceneIf.threadMode) {
                 IntPtr nextStepPHScene = IntPtr.Zero;
                 IntPtr notNextStepPHScene = IntPtr.Zero;
-                phSceneIf.GetNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
+                phSceneIf.GetNextStepAndNotNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
+                lock (phSceneIf.waitUntilNextStepCallbackDictionaryLock) { 
+                    phSceneIf.ExecWaitUntilNextStepCallbackList(nextStepPHScene); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
+                }
                 SprExport.Spr_PHSceneIf_Step(nextStepPHScene);
-                phSceneIf.ChangeNextStep();
                 SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, nextStepPHScene); // nextStepPHScene→state
-                SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, notNextStepPHScene); // state→notNextStepPHScene
+                //ここにnextStepPHSceneのwaitUntilが必要か
+                lock (phSceneIf.waitUntilNextStepCallbackDictionaryLock) { // ここの間にCallback追加されるとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう可能性がある
+                    phSceneIf.ExecWaitUntilNextStepCallbackList(nextStepPHScene);
+                    phSceneIf.ChangeNextStep(); // 上が終わればnextStepPHSceneを参照して良くなる
+                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, notNextStepPHScene); // state→notNextStepPHScene
+                    phSceneIf.ExecWaitUntilNextStepCallbackList(notNextStepPHScene);
+                }
             } else {
                 if (phSceneIf.show_this2) {
                     SprExport.Spr_PHSceneIf_Step(_this2);

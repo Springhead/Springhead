@@ -8,13 +8,16 @@ namespace SprCs {
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         public delegate void ThreadCallback();
-        public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
-        public void ExecWaitUntilNextStepCallbackList() {
-            lock (waitUntilNextStepCallbackList) {
-                foreach (var callback in waitUntilNextStepCallbackList) {
-                    callback();
-                }
-                waitUntilNextStepCallbackList.Clear();
+        //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
+        public void ExecWaitUntilNextStepCallbackList(IntPtr intPtr) { // Step側でLockする
+            foreach (var callback in waitUntilNextStepCallbackDictionary[intPtr]) {
+                callback();
+            }
+            waitUntilNextStepCallbackDictionary[intPtr].Clear();
+        }
+        public void AddWaitUntilNextStepCallback(IntPtr intPtr, ThreadCallback callback) {
+            lock (waitUntilNextStepCallbackDictionaryLock) { //StepのExecWaitUntilNextStepCallbackListに合わせてwaitUntilNextStepCallbackDictionaryでロック
+                waitUntilNextStepCallbackDictionary[intPtr].Add(callback);
             }
         }
         public static PHSceneIf CreateCSInstance(IntPtr defaultIntPtr, IntPtr threadIntPtr) { // 次にStepされるPHSceneIfを返す
@@ -22,6 +25,8 @@ namespace SprCs {
                 instances[defaultIntPtr] = new PHSceneIf(defaultIntPtr);
             }
             instances[defaultIntPtr]._this2 = threadIntPtr;
+            instances[defaultIntPtr].waitUntilNextStepCallbackDictionary[defaultIntPtr] = new List<ThreadCallback>(); // ここで初期化するしかないのか？
+            instances[defaultIntPtr].waitUntilNextStepCallbackDictionary[threadIntPtr] = new List<ThreadCallback>();
             return instances[defaultIntPtr];
         }
         public static PHSceneIf GetCSInstance(IntPtr intptr1) { // 引数にはGetSceneしてきた_thisを入れる
@@ -32,24 +37,40 @@ namespace SprCs {
             }
             return null;
         }
-        public void GetNextStepPHScene(ref IntPtr nextStepPHScene, ref IntPtr notNextStepPHScene) {
-            if (nextStep) {
-                nextStepPHScene = _this;
-                notNextStepPHScene = _this2;
-            } else {
-                nextStepPHScene = _this2;
-                notNextStepPHScene = _this;
+        public void GetNextStepAndNotNextStepPHScene(ref IntPtr nextStepPHScene, ref IntPtr notNextStepPHScene) {
+            lock (nextStepLock) {
+                if (nextStep) {
+                    nextStepPHScene = _this;
+                    notNextStepPHScene = _this2;
+                } else {
+                    nextStepPHScene = _this2;
+                    notNextStepPHScene = _this;
+                }
+            }
+        }
+        public IntPtr GetNotNextStepPHScene() { // GetやSetが使用
+            lock (nextStepLock) {
+                if (nextStep) {
+                    return _this;
+                } else {
+                    return _this2;
+                }
             }
         }
         public void ChangeNextStep() {
-            nextStep = !nextStep;
+            lock (nextStepLock) {
+                nextStep = !nextStep;
+            }
             //instances[_this2].nextStep = !nextStep;
         }
         public bool threadMode = false;
-        public bool nextStep = true; // 次Stepするか 下手すると二つとも
+        public bool nextStep = true; // true:次_thisがStep false:次_this2がStep 
         public bool show_this2 = false;
+        public readonly object waitUntilNextStepCallbackDictionaryLock = new object();
         private static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
+        private Dictionary<IntPtr, List<ThreadCallback>> waitUntilNextStepCallbackDictionary = new Dictionary<IntPtr, List<ThreadCallback>>();
         private ObjectStatesIf state = ObjectStatesIf.Create();
+        private readonly object nextStepLock = new object(); // nextStep用Lock変数
     }
 
     public partial class PHSpringIf : PHJointIf {
@@ -61,23 +82,26 @@ namespace SprCs {
         public void SetTargetVelocityAsync(Vec6d v) {
             var phSceneIf = GetCSPHSceneIf();
             var newV = new Vec6d(v);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetTargetVelocity(newV));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_this, (IntPtr)newV));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_this2, (IntPtr)newV));
         }
         public void SetTargetOrientationAsync(Quaterniond q) {
             var phSceneIf = GetCSPHSceneIf();
             var newQ = new Quaterniond(q);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetTargetOrientation(newQ));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_this, (IntPtr)newQ));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_this2, (IntPtr)newQ));
         }
         public void SetTargetPositionAsync(Vec3d p) {
             var phSceneIf = GetCSPHSceneIf();
             var newP = new Vec3d(p);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetTargetPosition(newP));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_this, (IntPtr)newP));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_this2, (IntPtr)newP));
         }
         public PHSceneIf GetCSPHSceneIf() {
             IntPtr ptr = SprExport.Spr_PHConstraintIf_GetScene((IntPtr)_this);
@@ -95,16 +119,18 @@ namespace SprCs {
         public void SetTargetVelocityAsync(Vec3d v) {
             var phSceneIf = GetCSPHSceneIf();
             var newV = new Vec3d(v);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetTargetVelocity(newV));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_this, (IntPtr)newV));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_this2, (IntPtr)newV));
         }
         public void SetTargetPositionAsync(Quaterniond q) {
             var phSceneIf = GetCSPHSceneIf();
             var newQ = new Quaterniond(q);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetTargetPosition(newQ));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this, (IntPtr)newQ));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this2, (IntPtr)newQ));
         }
         public PHSceneIf GetCSPHSceneIf() {
             IntPtr ptr = SprExport.Spr_PHConstraintIf_GetScene((IntPtr)_this);
@@ -118,16 +144,18 @@ namespace SprCs {
         public void SetPoseAsync(Posed p) {
             var phSceneIf = GetCSPHSceneIf();
             var newP = new Posed(p);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetPose(newP));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this, (IntPtr)newP));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this2, (IntPtr)newP));
         }
-        public void SetShapePoseAsync(int num, Posed p) {
+        public void SetShapePoseAsync(int index, Posed p) {
             var phSceneIf = GetCSPHSceneIf();
             var newP = new Posed(p);
-            lock (phSceneIf.waitUntilNextStepCallbackList) {
-                phSceneIf.waitUntilNextStepCallbackList.Add(() => SetShapePose(num, newP));
-            }
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this,
+                () => SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this, (int)index, (IntPtr)newP));
+            phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
+                () => SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this2, (int)index, (IntPtr)newP));
         }
         public PHSceneIf GetCSPHSceneIf() {
             IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_this);
