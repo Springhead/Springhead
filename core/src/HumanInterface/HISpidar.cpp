@@ -421,7 +421,7 @@ void HISpidarGDesc::Init(char* type){
 		};
 		Vec3f gps[8] = { gp[0], gp[1], gp[0], gp[1], 
 			gp[2], gp[3], gp[2], gp[3] };
-		Init(8, mp, gps, 0.04f, (3.14 * 16 * 0.001)/1024.0, 0.3f, 20.0f);
+		Init(8, mp, gps, 0.04f, (float)((3.14 * 16 * 0.001)/1024.0), 0.3f, 20.0f);
 		motors[2].lengthPerPulse *= -1;
 		motors[3].lengthPerPulse *= -1;
 		motors[4].lengthPerPulse *= -1;

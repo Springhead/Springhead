@@ -17,9 +17,10 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2020/05/18 F.Kanehori	èâî≈
+#	Ver 1.00 2020/05/18 F.Kanehori	èâî≈
+#	Ver 1.10 2020/06/11 F.Kanehori	devenv åüçıï˚éÆïœçX
 # ==============================================================================
-version = 1.0
+version = 1.10
 debug = False
 trace = False
 
@@ -131,6 +132,15 @@ if trace:
 	print('ENTER: %s at "%s"' % (prog, U.upath(cwd)))
 
 vs = VisualStudio(toolset)
+if vs.error() is not None:
+	if 'devenv not found' in vs.error():
+		print('  ***************************************************************')
+		print('  ** Swig is not built because devenv.exe not found.           **')
+		print('  ** Please add appropreate path to environment variable PATH. **')
+		print('  ** To find the path,                                         **')
+		print('  **   invoke "Developer Command Prompt for VS 20xx" and       **')
+		print('  **   type "where devenv.exe".                                **')
+		print('  ***************************************************************')
 vs.solution(sln_file)
 vs.set(VisualStudio.LOGFILE, logfile)
 vs.set(VisualStudio.DRYRUN, dry_run)

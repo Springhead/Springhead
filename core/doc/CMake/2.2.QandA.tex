@@ -18,6 +18,23 @@
 %-------------------------------------------------------------------------------
 \thinrule{\linewidth}
 
+\bf{Q. RunSwig のビルドで次のようなエラーが発生する}
+
+\begin{narrow}[f][15pt]
+\tt{1> ../do\_python.bat BuildSwig.py -p x64 -c Release -t 15.0 ../../bin/src/swig/msvc}\\
+\tt{1> 情報: 与えられたパターンのファイルが見つかりませんでした。}\\
+\tt{1> VisualStudio : error : devenv not found: Visual Studio 2017 (v141)}
+\end{narrow}
+
+\medskip
+これは、\SprLib を作成するために必要なツールswigの生成に失敗したことを示しています
+(swigの生成にはdevenvが必要です)。
+解決方法は\KQuote{\ref{subsec:Preparation} ビルドの準備}の最後にある
+\bf{[注意]}を参照してください。
+
+%-------------------------------------------------------------------------------
+\thinrule{\linewidth}
+
 \bf{Q. プログラムの実行時に“リソースファイルが見つからない”というエラーが起きる}
 
 \medskip
