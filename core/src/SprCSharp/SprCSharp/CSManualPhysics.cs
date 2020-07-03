@@ -61,16 +61,15 @@ namespace SprCs {
             lock (nextStepLock) {
                 nextStep = !nextStep;
             }
-            //instances[_this2].nextStep = !nextStep;
         }
         public bool threadMode = false;
         public bool nextStep = true; // true:次_thisがStep false:次_this2がStep 
+        public readonly object nextStepLock = new object(); // nextStep用Lock変数
         public bool show_this2 = false;
         public readonly object waitUntilNextStepCallbackDictionaryLock = new object();
         private static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
         private Dictionary<IntPtr, List<ThreadCallback>> waitUntilNextStepCallbackDictionary = new Dictionary<IntPtr, List<ThreadCallback>>();
         private ObjectStatesIf state = ObjectStatesIf.Create();
-        private readonly object nextStepLock = new object(); // nextStep用Lock変数
     }
 
     public partial class PHSpringIf : PHJointIf {
@@ -132,11 +131,6 @@ namespace SprCs {
             phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
                 () => SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this2, (IntPtr)newQ));
         }
-        public PHSceneIf GetCSPHSceneIf() {
-            IntPtr ptr = SprExport.Spr_PHConstraintIf_GetScene((IntPtr)_this);
-            if (ptr == IntPtr.Zero) { return null; }
-            return PHSceneIf.GetCSInstance(ptr);
-        }
     }
 
     public partial class PHSolidIf : PHBodyIf {
@@ -157,13 +151,32 @@ namespace SprCs {
             phSceneIf.AddWaitUntilNextStepCallback(phSceneIf._this2,
                 () => SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this2, (int)index, (IntPtr)newP));
         }
+    }
+
+    public partial class SceneObjectIf : NamedObjectIf {
         public PHSceneIf GetCSPHSceneIf() {
             IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_this);
             if (ptr == IntPtr.Zero) { return null; }
             return PHSceneIf.GetCSInstance(ptr);
         }
+        public IntPtr GetNotNextStepObject(bool nextStep) { // 呼ぶ側でphSceneIf.nextStepLockをlockする必要がある
+            if (nextStep) {
+                return _this2;
+            } else {
+                return _this;
+            }
+        }
     }
-    //public partial class PHBodyIf : SceneObjectIf {
-    //    public IntPtr _this2;
-    //}
+
+    public partial class PHBodyIf : SceneObjectIf {
+        public Posed GetPoseAsync() {
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.nextStepLock) {
+                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
+                    (IntPtr)GetNotNextStepObject(phSceneIf.nextStep)); // ここで取得されるPosedは直参照か複製か
+                return new Posed(ptr, true);
+            }
+        }
+    }
+
 }

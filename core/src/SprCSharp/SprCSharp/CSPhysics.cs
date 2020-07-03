@@ -6498,8 +6498,14 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public Posed GetPose() {
-	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr) _this);
-            return new Posed(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.nextStepLock) {
+                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
+                (IntPtr)GetNotNextStepObject(phSceneIf.nextStep)); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                return new Posed(ptr, true);
+            }
+            //IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);
+            //return new Posed(ptr, true);
 	}
 	public Vec3d GetVelocity() {
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetVelocity((IntPtr) _this);
