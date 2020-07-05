@@ -6499,13 +6499,16 @@ namespace SprCs {
 	}
 	public Posed GetPose() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.nextStepLock) {
-                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
-                (IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext)); // ここで取得されるPosedは複製
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
+                    (IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext)); // ここで取得されるPosedは複製
+                    return new Posed(ptr, true);
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);
                 return new Posed(ptr, true);
             }
-            //IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);
-            //return new Posed(ptr, true);
 	}
 	public Vec3d GetVelocity() {
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetVelocity((IntPtr) _this);
@@ -10448,20 +10451,19 @@ namespace SprCs {
 	public void Step() {
             var phSceneIf = PHSceneIf.GetCSInstance(_this);
             if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isStepping = true;
+                }
                 IntPtr nextStepPHScene = IntPtr.Zero;
                 IntPtr notNextStepPHScene = IntPtr.Zero;
                 phSceneIf.GetNextStepAndNotNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
-                lock (phSceneIf.waitUntilNextStepCallbackDictionaryLock) { 
-                    phSceneIf.ExecWaitUntilNextStepCallbackList(nextStepPHScene); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
-                }
                 SprExport.Spr_PHSceneIf_Step(nextStepPHScene);
-                SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, nextStepPHScene); // nextStepPHScene→state
-                //ここにnextStepPHSceneのwaitUntilが必要か
-                lock (phSceneIf.waitUntilNextStepCallbackDictionaryLock) { // ここの間にCallback追加されるとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう可能性がある
-                    phSceneIf.ExecWaitUntilNextStepCallbackList(nextStepPHScene);
-                    phSceneIf.ChangeNextStep(); // 上が終わればnextStepPHSceneを参照して良くなる
+                lock (phSceneIf.phSceneForGetSetLock) { 
+                    phSceneIf.ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
+                    SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, nextStepPHScene); // nextStepPHScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, notNextStepPHScene); // state→notNextStepPHScene
-                    phSceneIf.ExecWaitUntilNextStepCallbackList(notNextStepPHScene);
+                    phSceneIf.ChangeNextStep(); // 上が終わればnextStepPHSceneを参照して良くなる
+                    phSceneIf.isStepping = false;
                 }
             } else {
                 if (phSceneIf.show_this2) {
