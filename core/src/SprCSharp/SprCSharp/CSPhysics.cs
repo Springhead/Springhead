@@ -6501,7 +6501,7 @@ namespace SprCs {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             lock (phSceneIf.nextStepLock) {
                 IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
-                (IntPtr)GetNotNextStepObject(phSceneIf.nextStep)); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                (IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext)); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                 return new Posed(ptr, true);
             }
             //IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);

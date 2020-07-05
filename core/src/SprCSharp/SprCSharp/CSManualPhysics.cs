@@ -39,7 +39,7 @@ namespace SprCs {
         }
         public void GetNextStepAndNotNextStepPHScene(ref IntPtr nextStepPHScene, ref IntPtr notNextStepPHScene) {
             lock (nextStepLock) {
-                if (nextStep) {
+                if (step_thisOnNext) {
                     nextStepPHScene = _this;
                     notNextStepPHScene = _this2;
                 } else {
@@ -50,7 +50,7 @@ namespace SprCs {
         }
         public IntPtr GetNotNextStepPHScene() { // GetやSetが使用
             lock (nextStepLock) {
-                if (nextStep) {
+                if (step_thisOnNext) {
                     return _this;
                 } else {
                     return _this2;
@@ -59,11 +59,11 @@ namespace SprCs {
         }
         public void ChangeNextStep() {
             lock (nextStepLock) {
-                nextStep = !nextStep;
+                step_thisOnNext = !step_thisOnNext;
             }
         }
         public bool threadMode = false;
-        public bool nextStep = true; // true:次_thisがStep false:次_this2がStep 
+        public bool step_thisOnNext = true; // true:次_thisがStep false:次_this2がStep 
         public readonly object nextStepLock = new object(); // nextStep用Lock変数
         public bool show_this2 = false;
         public readonly object waitUntilNextStepCallbackDictionaryLock = new object();
@@ -173,7 +173,7 @@ namespace SprCs {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             lock (phSceneIf.nextStepLock) {
                 IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
-                    (IntPtr)GetNotNextStepObject(phSceneIf.nextStep)); // ここで取得されるPosedは直参照か複製か
+                    (IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext)); // ここで取得されるPosedは直参照か複製か
                 return new Posed(ptr, true);
             }
         }
