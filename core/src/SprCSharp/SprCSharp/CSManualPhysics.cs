@@ -5,12 +5,23 @@ using System.Text;
 
 namespace SprCs {
     public partial class PHSceneIf : SceneIf {
+        public bool isStepping = false;
+        public bool threadMode = false;
+        public bool step_thisOnNext = true; // true:次_thisがStep false:次_this2がStep 
+        public bool show_this2 = false;
+        public bool fixedUpdateFinished = true;
+        public readonly object phSceneForGetSetLock = new object();
+        private static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
+        private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
+        private ObjectStatesIf state = ObjectStatesIf.Create();
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         public delegate void ThreadCallback();
         //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
         public void ExecWaitUntilNextStepCallbackList() { // Step側でLockする
-            //Console.Write()
+            if (waitDuringStepCallbackList.Count != 0) {
+                Console.WriteLine("waitduringstepcallbacklist " + waitDuringStepCallbackList.Count);
+            }
             foreach (var callback in waitDuringStepCallbackList) {
                 callback();
             }
@@ -55,14 +66,40 @@ namespace SprCs {
         public void ChangeNextStep() {
             step_thisOnNext = !step_thisOnNext;
         }
-        public bool isStepping = false;
-        public bool threadMode = false;
-        public bool step_thisOnNext = true; // true:次_thisがStep false:次_this2がStep 
-        public bool show_this2 = false;
-        public readonly object phSceneForGetSetLock = new object();
-        private static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
-        private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
-        private ObjectStatesIf state = ObjectStatesIf.Create();
+        public void Step() {
+            var phSceneIf = PHSceneIf.GetCSInstance(_this);
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isStepping = true;
+                }
+
+                IntPtr nextStepPHScene = IntPtr.Zero;
+                IntPtr notNextStepPHScene = IntPtr.Zero;
+                phSceneIf.GetNextStepAndNotNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
+                SprExport.Spr_PHSceneIf_Step(nextStepPHScene);
+            } else {
+                if (phSceneIf.show_this2) {
+                    SprExport.Spr_PHSceneIf_Step(_this2);
+                    SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, _this2); // _this2→state
+                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _this); // state→_this
+                } else {
+                    SprExport.Spr_PHSceneIf_Step(_this);
+                }
+            }
+        }
+        public void Swap() {
+            var phSceneIf = PHSceneIf.GetCSInstance(_this);
+            IntPtr nextStepPHScene = IntPtr.Zero;
+            IntPtr notNextStepPHScene = IntPtr.Zero;
+            phSceneIf.GetNextStepAndNotNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
+                SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, nextStepPHScene); // nextStepPHScene→state
+                SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, notNextStepPHScene); // state→notNextStepPHScene
+                phSceneIf.ChangeNextStep(); // 上が終わればnextStepPHSceneを参照して良くなる
+                phSceneIf.isStepping = false;
+            }
+        }
     }
 
     public partial class PHSpringIf : PHJointIf {

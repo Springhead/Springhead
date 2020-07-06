@@ -6501,9 +6501,15 @@ namespace SprCs {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
-                    IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
-                    (IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext)); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
-                    return new Posed(ptr, true);
+                    if ((IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext) == IntPtr.Zero) {
+                        Console.WriteLine("GetPose null " + GetName());
+                        IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);
+                        return new Posed(ptr, true);
+                    } else {
+                        IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
+                        (IntPtr)GetNotNextStepObject(phSceneIf.step_thisOnNext)); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return new Posed(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);
@@ -6623,7 +6629,25 @@ namespace SprCs {
 	    SprExport.Spr_PHSolidIf_SetMass((IntPtr) _this, (double) m);
 	}
 	public void SetCenterOfMass(Vec3d center) {
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _this, (IntPtr) center);
+        var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        IntPtr steppingObject = IntPtr.Zero;
+                        IntPtr getsetObject = IntPtr.Zero;
+                        GetSteppingObjectAndGetSetObject(ref steppingObject, ref getsetObject);
+                        var newCenter = new Vec3d(center);
+                        SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)getsetObject, (IntPtr)newCenter);
+                        phSceneIf.AddWaitUntilNextStepCallback(
+                            () => SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)steppingObject, (IntPtr)newCenter));
+                    } else {
+                        SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_this, (IntPtr)center);
+                        SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_this2, (IntPtr)center);
+                    }
+                }
+            } else {
+                SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_this, (IntPtr)center);
+            }
 	}
 	public Matrix3d GetInertia() {
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetInertia((IntPtr) _this);
@@ -9932,7 +9956,10 @@ namespace SprCs {
 	public PHSolidIf CreateSolid(PHSolidDesc desc) {
 	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _this, (IntPtr) desc);
 	    IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _this2, (IntPtr) desc);
-            if (ptr == IntPtr.Zero || ptr2 == IntPtr.Zero) { return null; } 
+            if (ptr == IntPtr.Zero || ptr2 == IntPtr.Zero) {
+                Console.Write("Create Solid null");
+                return null;
+            } 
             PHSolidIf obj = new PHSolidIf(ptr);
             obj._this2 = ptr2;
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
@@ -10304,7 +10331,20 @@ namespace SprCs {
 	    return result;
 	}
 	public void SetTimeStep(double dt) {
-	    SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr) _this, (double) dt);
+            lock (phSceneForGetSetLock) {
+                if (isStepping) {
+                    IntPtr steppingObject = IntPtr.Zero;
+                    IntPtr getsetObject = IntPtr.Zero;
+                    GetNextStepAndNotNextStepPHScene(ref steppingObject, ref getsetObject);
+                    SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)getsetObject, (double)dt);
+                    AddWaitUntilNextStepCallback(
+                        () => SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)steppingObject, (double)dt));
+                } else {
+                    SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_this, (double)dt);
+                    SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_this2, (double)dt);
+                }
+            }
+	    //SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr) _this, (double) dt);
 	}
 	public double GetHapticTimeStep() {
 	    double result = (double) SprExport.Spr_PHSceneIf_GetHapticTimeStep((IntPtr) _this);
@@ -10448,33 +10488,6 @@ namespace SprCs {
 	public void SetMaterialBlending(int mode) {
 	    SprExport.Spr_PHSceneIf_SetMaterialBlending((IntPtr) _this, (int) mode);
 	}
-	public void Step() {
-            var phSceneIf = PHSceneIf.GetCSInstance(_this);
-            if (phSceneIf.threadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isStepping = true;
-                }
-                IntPtr nextStepPHScene = IntPtr.Zero;
-                IntPtr notNextStepPHScene = IntPtr.Zero;
-                phSceneIf.GetNextStepAndNotNextStepPHScene(ref nextStepPHScene, ref notNextStepPHScene);
-                SprExport.Spr_PHSceneIf_Step(nextStepPHScene);
-                lock (phSceneIf.phSceneForGetSetLock) { 
-                    phSceneIf.ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneÇåƒÇ‘Ç∆Save/Loadå„Ç…åƒÇŒÇÍÇÈÇ◊Ç´CallbackÇ™êÊÇ…é¿çsÇ≥ÇÍÇƒÇµÇ‹Ç§
-                    SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, nextStepPHScene); // nextStepPHSceneÅ®state
-                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, notNextStepPHScene); // stateÅ®notNextStepPHScene
-                    phSceneIf.ChangeNextStep(); // è„Ç™èIÇÌÇÍÇŒnextStepPHSceneÇéQè∆ÇµÇƒó«Ç≠Ç»ÇÈ
-                    phSceneIf.isStepping = false;
-                }
-            } else {
-                if (phSceneIf.show_this2) {
-                    SprExport.Spr_PHSceneIf_Step(_this2);
-                    SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, _this2); // _this2Å®state
-                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _this); // stateÅ®_this
-                } else {
-                    SprExport.Spr_PHSceneIf_Step(_this);
-                }
-            }
-	}
 	public void ClearForce() {
 	    SprExport.Spr_PHSceneIf_ClearForce((IntPtr) _this);
 	}
@@ -10596,7 +10609,10 @@ namespace SprCs {
 	public PHSceneIf CreateScene(PHSceneDesc desc) {
 	    IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr) _this, (IntPtr) desc);
 	    IntPtr ptr2 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr) _this, (IntPtr) desc);
-            if (ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) { return null; } 
+            if (ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
+                Console.WriteLine("Create Scene null");
+                return null;
+            } 
             PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1,ptr2);
             return obj;
 	}
