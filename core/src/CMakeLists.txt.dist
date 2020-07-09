@@ -32,15 +32,18 @@ set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_CORE_DIR "${TOPDIR}/core")
 set(SPR_SRC_DIR  "${TOPDIR}/core/src")
 set(SPR_INC_DIR  "${TOPDIR}/core/include")
+set(SPR_SWIG_DIR "${TOPDIR}/core/bin/src/swig/msvc")
 get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
 get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
 get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
 get_filename_component(SPR_INC_DIR ${SPR_INC_DIR} ABSOLUTE)
 get_filename_component(SPR_BLD_DIR ${PROJECT_BINARY_DIR} ABSOLUTE)
-message(STATUS "SPR_TOP_DIR: [${SPR_TOP_DIR}]")
-#message(STATUS "SPR_SRC_DIR: [${SPR_SRC_DIR}]")
-#message(STATUS "SPR_INC_DIR: [${SPR_INC_DIR}]")
-message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
+get_filename_component(SPR_SWIG_DIR ${SPR_SWIG_DIR} ABSOLUTE)
+message(STATUS "SPR_TOP_DIR:  [${SPR_TOP_DIR}]")
+#message(STATUS "SPR_SRC_DIR:  [${SPR_SRC_DIR}]")
+#message(STATUS "SPR_INC_DIR:  [${SPR_INC_DIR}]")
+message(STATUS "SPR_BLD_DIR:  [${SPR_BLD_DIR}]")
+message(STATUS "SPR_SWIG_DIR: [${SPR_SWIG_DIR}]")
 
 # ------------------------------------------------------------------------------
 #  Sytem environment.
@@ -180,6 +183,10 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     add_dependencies(${proj} ${DEP_LIST})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
+set(INCLUDED_BY_SPRLIB true)
+add_subdirectory(${SPR_SWIG_DIR} ${SPR_BLD_DIR}/swig)
+add_dependencies(RunSwig swig_install)
+add_dependencies(swig_install swig)
 
 # ------------------------------------------------------------------------------
 #  Main target.
