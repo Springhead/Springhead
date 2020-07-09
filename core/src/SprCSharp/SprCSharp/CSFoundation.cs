@@ -3215,9 +3215,11 @@ namespace SprCs {
 	    return (ret == 0) ? false : true;
 	}
 	public void SetDesc(CsObject desc) {
-	    SprExport.Spr_ObjectIf_SetDesc((IntPtr) _this, (IntPtr) desc);
-            if (_this2 != IntPtr.Zero) {
-                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this2, (IntPtr)desc);
+            // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
+            foreach (var _this in _thisArray) {
+                if (_this != IntPtr.Zero) {
+                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                }
             }
 	}
 	public ulong GetDescSize() {
