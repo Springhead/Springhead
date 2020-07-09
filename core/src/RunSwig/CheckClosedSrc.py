@@ -25,7 +25,7 @@ version = '2.10'
 
 import sys
 import os
-import re
+#import re
 import shutil
 from optparse import OptionParser
 
