@@ -103,7 +103,6 @@ namespace SprCs {
             lock (phSceneIf.phSceneForGetSetLock) {
                 if (isSwapping) { // Buffer↔Get
                     Console.WriteLine("Use Buffer");
-                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _thisArray[sceneForGet]); // state→phScene
                     var temp = sceneForBuffer;
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
