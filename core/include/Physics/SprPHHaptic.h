@@ -26,6 +26,7 @@ struct PHHapticPointerDesc {
 	};
 	///	haptic renderingのモード
 	HapticRenderMode renderMode;
+	PHHapticPointerDesc();
 };
 
 struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc

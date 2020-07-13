@@ -212,9 +212,14 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
+      <Command>copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig.exe &amp; copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig_sprcs.exe</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
       <Command>
       </Command>
-    </PostBuildEvent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -242,9 +247,14 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
+      <Command>copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig.exe &amp; copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig_sprcs.exe</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
       <Command>
       </Command>
-    </PostBuildEvent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -271,13 +281,18 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig.exe &amp; copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig_sprcs.exe</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
       </Command>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
+      <Command>
+      </Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -305,13 +320,18 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig.exe &amp; copy $(OutDir)$(ProjectName).exe ..\..\..\swig\swig_sprcs.exe</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
       </Command>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
+      <Command>
+      </Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

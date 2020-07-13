@@ -55,7 +55,7 @@
 #     Ver 3.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
 #     Ver 3.10   2020/05/13 F.Kanehori	unix: Ver 3.08 に戻す.
 # ==============================================================================
-version = 3.09
+version = 3.10
 debug = False
 trace = False
 dry_run = False
@@ -63,6 +63,7 @@ dry_run = False
 import sys
 import os
 import subprocess
+import re
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -121,14 +122,27 @@ else:
 	out, err = proc.communicate()
 	status = s16(proc.returncode)
 	if status != 0:
-		Error(prog).error('can not find "%s" path.' % make)
+		Error(prog).error('can not find "nmake" path.')
 	#
 	encoding = os.device_encoding(1)
+	print('os.device_encoding(1) returns [%s]' % encoding)
 	if encoding is None:
-		encoding = 'UTF-8' if unix else 'cp932'
+		stdout_info = str(sys.stdout)
+		print('sys.stdout returns [%s]' % stdout_info)
+		m = re.search("encoding='(.+)'", stdout_info)
+		if m:
+			encoding = m.group(1)
+			#if encoding == 'cp65001':
+			#	encoding = 'UTF-8'
+		else:
+			encoding = 'UTF-8' #if unix else 'cp932'
+			print('assume %s as default encoding' % encoding)
+	#
+	print('encoding: %s' % encoding)
 	makepath = out.decode(encoding) if out else None
 	if makepath is None:
-		Error(prog).error('can not decode "%s" path.' % make)
+		Error(prog).error('can not decode "nmake" path.')
+		makepath = ''
 	print('nmake path found: %s' % makepath.replace(os.sep, '/'))
 
 swigpath = '%s/%s' % (srcdir, 'Foundation')
