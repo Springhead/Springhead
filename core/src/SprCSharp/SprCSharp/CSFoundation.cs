@@ -3184,9 +3184,18 @@ namespace SprCs {
 	    return (ret == 0) ? false : true;
 	}
 	public bool DelChildObject(ObjectIf o) {
-	    char ret = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o);
-	    char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // 上手くいかない
-	    return (ret == 0||ret2 == 0) ? false : true;
+            char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
+            char ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[1], (IntPtr)o._thisArray[1]);
+            char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[2], (IntPtr)o._thisArray[2]);
+
+            //char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // 上手くいかない
+            if(ret0 == 0||ret1 == 0 || ret2 == 0) {
+                Console.Write("failed DelChildObject");
+                return false;
+            } else {
+                return true;
+            }
+            //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
 	}
 	public void Clear() {
 	    SprExport.Spr_ObjectIf_Clear((IntPtr) _this);
@@ -3211,15 +3220,52 @@ namespace SprCs {
 	    return result;
 	}
 	public bool GetDesc(CsObject desc) {
-	    char ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr) _this, (IntPtr) desc);
-	    return (ret == 0) ? false : true;
+	    char ret = (char)0; // <!!> これいいのか？
+            Console.WriteLine(GetIfInfo().ClassName());
+            //if (this._thisArray[0] == IntPtr.Zero) { // <!!> なぜ？
+            //    Console.WriteLine("_thisArray[0] == Zero");
+            //}
+            //if (this._thisArray[1] == IntPtr.Zero) {
+            //    Console.WriteLine("_thisArray[1] == Zero");
+            //}
+            //if (this._thisArray[2] == IntPtr.Zero) {
+            //    Console.WriteLine("_thisArray[2] == Zero");
+            //}
+            foreach (var phSceneIf in PHSceneIf.instances.Values) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (_thisArray[phSceneIf.sceneForGet] == IntPtr.Zero) {
+                        Console.WriteLine( "null _thisArrayClassName " + GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+                    } else {
+                        Console.WriteLine( "_thisArrayClassName " + GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
+                    }
+                }
+                break;
+            }
+            //ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+            return (ret == 0) ? false : true;
 	}
 	public void SetDesc(CsObject desc) {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-            foreach (var _this in _thisArray) {
-                if (_this != IntPtr.Zero) {
-                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+            List<object> locks = new List<object>();
+            foreach(var phSceneIf in PHSceneIf.instances.Values) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
+                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
+                        });
+                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
+                    } else {
+                    foreach (var _this in _thisArray) {
+                        if (_this != IntPtr.Zero) {
+                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                        }
+                    }
+                    }
                 }
+                break;
             }
 	}
 	public ulong GetDescSize() {
@@ -3287,7 +3333,7 @@ namespace SprCs {
 	    return Marshal.PtrToStringAnsi(ptr);
 	}
 	public void SetName(string n) {
-	    SprExport.Spr_NamedObjectIf_SetName((IntPtr) _this, (string) n);
+	    //SprExport.Spr_NamedObjectIf_SetName((IntPtr) _this, (string) n);
 	}
 	public NameManagerIf GetNameManager() {
 	    IntPtr ptr = SprExport.Spr_NamedObjectIf_GetNameManager((IntPtr) _this);

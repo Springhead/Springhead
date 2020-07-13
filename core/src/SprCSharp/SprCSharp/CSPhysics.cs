@@ -9999,33 +9999,44 @@ namespace SprCs {
             return obj;
 	}
 	public PHSolidIf CreateSolid(PHSolidDesc desc) {
-            lock (phSceneForGetSetLock) {
-                //List<IntPtr> ptrList = new List<IntPtr>();
-                //foreach(var _this in _thisArray) {
-                //    ptrList.Add(SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_this, (IntPtr)desc));
-                //}
-                //if (ptrList.Contains(IntPtr.Zero)) {
-                //    Console.Write("Create Solid null");
-                //    return null;
-                //}
-                //PHSolidIf obj = new PHSolidIf(ptrList[0]);
-                //for(int i = 0; i < _thisNumber; i++) {
-                //    obj._thisArray[i] = ptrList[i];
-                //}
-
-                IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
-                IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[1], (IntPtr)desc);
-                IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[2], (IntPtr)desc);
-                if (ptr0 == IntPtr.Zero || ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
-                    Console.Write("Create Solid null");
-                    return null;
+            if (threadMode) {
+                lock (phSceneForGetSetLock) {
+                    if (isStepping) {
+                            Console.WriteLine("Create Solid In isStepping");
+                        IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                        if (get == IntPtr.Zero) {
+                            Console.Write("Create Solid null");
+                            return null;
+                        }
+                        PHSolidIf obj = new PHSolidIf(get); // _thsis‚ÉGet‚ð“ü‚ê‚é
+                        obj._thisArray[sceneForGet] = get;
+                        AddWaitUntilNextStepCallback(() => {
+                        IntPtr step = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
+                        IntPtr buffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
+                        obj._thisArray[sceneForStep] = step;
+                        obj._thisArray[sceneForBuffer] = buffer;
+                        });
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(get); }
+                        return obj;
+                    } else {
+                            Console.WriteLine("Create Solid not In isStepping");
+                        IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
+                        IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[1], (IntPtr)desc);
+                        IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[2], (IntPtr)desc);
+                        if (ptr0 == IntPtr.Zero || ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
+                            Console.Write("Create Solid null");
+                            return null;
+                        }
+                        PHSolidIf obj = new PHSolidIf(ptr0); // _thsis‚ÉGet‚ð“ü‚ê‚é
+                        obj._thisArray[0] = ptr0;
+                        obj._thisArray[1] = ptr1;
+                        obj._thisArray[2] = ptr2;
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr0); }
+                        return obj;
+                    }
                 }
-                PHSolidIf obj = new PHSolidIf(ptr0);
-                obj._thisArray[0] = ptr0;
-                obj._thisArray[1] = ptr1;
-                obj._thisArray[2] = ptr2;
-                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr0); }
-                return obj;
+            } else {
+                return null;
             }
 	}
 	public PHSolidIf CreateSolid() {

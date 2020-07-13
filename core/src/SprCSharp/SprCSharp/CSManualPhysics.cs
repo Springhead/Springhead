@@ -16,7 +16,7 @@ namespace SprCs {
         public int sceneForGet = 1;
         public int sceneForBuffer = 2;
 
-        private static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
+        public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
         private ObjectStatesIf state = ObjectStatesIf.Create();
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -41,6 +41,11 @@ namespace SprCs {
                 instances[stepPHScene]._thisArray[0] = stepPHScene;
             }
             instances[stepPHScene]._thisArray[1] = bufferPHScene;
+            if (instances[stepPHScene]._thisArray[1] == IntPtr.Zero) {
+                        Console.WriteLine("instances[stepPHScene]._thisArray[1] null");
+            } else {
+                        Console.WriteLine("instances[stepPHScene]._thisArray[1] not null");
+            }
             instances[stepPHScene]._thisArray[2] = getPHScene;
             return instances[stepPHScene];
         }
@@ -62,45 +67,50 @@ namespace SprCs {
         //    }
         //}
         public void Step() {
-            var phSceneIf = PHSceneIf.GetCSInstance(_this);
-            if (phSceneIf.threadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isStepping = true;
+                    Console.WriteLine("Step "+ instances.Count);
+            if (threadMode) {
+                lock (phSceneForGetSetLock) {
+                    isStepping = true;
                 }
                 SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
             } else {
-                if (phSceneIf.show_this2) {
+                if (show_this2) {
                     SprExport.Spr_PHSceneIf_Step(_this2);
-                    SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, _this2); // _this2→state
-                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _this); // state→_this
+                    SprExport.Spr_ObjectStatesIf_SaveState(state._this, _this2); // _this2→state
+                    SprExport.Spr_ObjectStatesIf_LoadState(state._this, _this); // state→_this
                 } else {
                     SprExport.Spr_PHSceneIf_Step(_this);
                 }
             }
         }
         public void Swap() {
-            var phSceneIf = PHSceneIf.GetCSInstance(_thisArray[0]);
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
-                SprExport.Spr_ObjectStatesIf_SaveState(phSceneIf.state._this, _thisArray[sceneForStep]); // phScene→state
+                    Console.WriteLine("Swap");
+            lock (phSceneForGetSetLock) {
+                ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
+                    Console.WriteLine("Swap ExecWaitUntilNextStepCallbackList");
+                SprExport.Spr_ObjectStatesIf_SaveState(state._this, _thisArray[sceneForStep]); // phScene→state
+                    Console.WriteLine("Swap Spr_ObjectStatesIf_SaveState");
                 if (!isFixedUpdating) { // Step↔Get
-                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _thisArray[sceneForGet]); // state→phScene
+                    SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForGet]); // state→phScene
+                    Console.WriteLine("Swap not isFixedUpdating Spr_ObjectStatesIf_LoadState");
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
                 } else { // Step↔Buffer
                     isSwapping = true;
-                    SprExport.Spr_ObjectStatesIf_LoadState(phSceneIf.state._this, _thisArray[sceneForBuffer]); // state→phScene
+                    SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForBuffer]); // state→phScene
+                    Console.WriteLine("Swap isFixedUpdating Spr_ObjectStatesIf_LoadState");
                     var temp = sceneForStep;
                     sceneForStep = sceneForBuffer;
                     sceneForBuffer = temp;
                 }
-                phSceneIf.isStepping = false;
+                isStepping = false;
             }
+                    Console.WriteLine("Swap End");
         }
         public void SwapAfterFixedUpdate() {
-            var phSceneIf = PHSceneIf.GetCSInstance(_thisArray[0]);
-            lock (phSceneIf.phSceneForGetSetLock) {
+                    Console.WriteLine("SwapAfterFixedUpdate");
+            lock (phSceneForGetSetLock) {
                 if (isSwapping) { // Buffer↔Get
                     Console.WriteLine("Use Buffer");
                     var temp = sceneForBuffer;
