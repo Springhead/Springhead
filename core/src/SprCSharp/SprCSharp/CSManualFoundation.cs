@@ -17,13 +17,6 @@ namespace SprCs {
         public Posed(Posed p) { _this = SprExport.Spr_new_Posed_9(p.w, p.x, p.y, p.z, p.px, p.py, p.pz); _flag = true; }
     }
     public partial class ObjectIf : CsObject {
-        public const int _thisNumber = 3;
-        public IntPtr[] _thisArray = new IntPtr[_thisNumber];
         public IntPtr _this2;
-        public ObjectIf(IntPtr ptr, IntPtr ptr2, bool flag = false) {
-            _this = ptr;
-            _this2 = ptr2;
-            _flag = flag;
-        }
     }
 }

@@ -6,9 +6,15 @@ using System.Collections.Generic;
 namespace SprCs {
     public class CsObject {
         public IntPtr _this;
+        public const int _thisNumber = 3;
+        public IntPtr[] _thisArray = new IntPtr[_thisNumber] { IntPtr.Zero,IntPtr.Zero,IntPtr.Zero};
         public bool _flag;
         protected CsObject() { }
-        protected CsObject(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }
+        protected CsObject(IntPtr ptr, bool flag = false) {
+            _this = ptr;
+            _thisArray[0] = ptr;
+            _flag = flag;
+        }
         ~CsObject() { }
         public static implicit operator IntPtr(CsObject obj) {
             return (obj == null) ? IntPtr.Zero : obj._this;

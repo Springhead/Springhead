@@ -37,7 +37,10 @@ namespace SprCs {
         }
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene, IntPtr bufferPHScene, IntPtr getPHScene) { // 次にStepされるPHSceneIfを返す
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
-                instances[stepPHScene] = new PHSceneIf(stepPHScene);
+                var newPHSceneIf = new PHSceneIf(stepPHScene);
+                instances[stepPHScene] = newPHSceneIf;
+                instances[bufferPHScene] = newPHSceneIf;
+                instances[getPHScene] = newPHSceneIf;
                 instances[stepPHScene]._thisArray[0] = stepPHScene;
             }
             instances[stepPHScene]._thisArray[1] = bufferPHScene;
@@ -67,7 +70,6 @@ namespace SprCs {
         //    }
         //}
         public void Step() {
-                    Console.WriteLine("Step "+ instances.Count);
             if (threadMode) {
                 lock (phSceneForGetSetLock) {
                     isStepping = true;
@@ -84,35 +86,27 @@ namespace SprCs {
             }
         }
         public void Swap() {
-                    Console.WriteLine("Swap");
             lock (phSceneForGetSetLock) {
                 ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
-                    Console.WriteLine("Swap ExecWaitUntilNextStepCallbackList");
-                SprExport.Spr_ObjectStatesIf_SaveState(state._this, _thisArray[sceneForStep]); // phScene→state
-                    Console.WriteLine("Swap Spr_ObjectStatesIf_SaveState");
+                    SprExport.Spr_ObjectStatesIf_SaveState(state._this, _thisArray[sceneForStep]); // phScene→state
                 if (!isFixedUpdating) { // Step↔Get
                     SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForGet]); // state→phScene
-                    Console.WriteLine("Swap not isFixedUpdating Spr_ObjectStatesIf_LoadState");
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
                 } else { // Step↔Buffer
                     isSwapping = true;
                     SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForBuffer]); // state→phScene
-                    Console.WriteLine("Swap isFixedUpdating Spr_ObjectStatesIf_LoadState");
                     var temp = sceneForStep;
                     sceneForStep = sceneForBuffer;
                     sceneForBuffer = temp;
                 }
                 isStepping = false;
             }
-                    Console.WriteLine("Swap End");
         }
         public void SwapAfterFixedUpdate() {
-                    Console.WriteLine("SwapAfterFixedUpdate");
             lock (phSceneForGetSetLock) {
                 if (isSwapping) { // Buffer↔Get
-                    Console.WriteLine("Use Buffer");
                     var temp = sceneForBuffer;
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
@@ -197,7 +191,6 @@ namespace SprCs {
     }
     public partial class PHBallJointIf : PHJointIf {
         public PHBallJointIf(IntPtr ptr, IntPtr ptr1, IntPtr ptr2, bool flag = false) {
-            _this = ptr; // <!!> SetNameのために
             _thisArray[0] = ptr;
             _thisArray[1] = ptr1;
             _thisArray[2] = ptr2;
@@ -296,8 +289,21 @@ namespace SprCs {
 
     public partial class SceneObjectIf : NamedObjectIf {
         public PHSceneIf GetCSPHSceneIf() {
-            IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[0]);
-            if (ptr == IntPtr.Zero) { return null; }
+            IntPtr ptr = IntPtr.Zero;
+            if(_thisArray[0] != IntPtr.Zero) {
+                //Console.WriteLine("_thisArray[0] not Zero");
+                ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[0]);
+            } else if(_thisArray[1] != IntPtr.Zero) {
+                //Console.WriteLine("_thisArray[1] not Zero");
+                ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[1]);
+            } else if(_thisArray[2] != IntPtr.Zero) {
+                //Console.WriteLine("_thisArray[2] not Zero");
+                ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[2]);
+            }
+            if (ptr == IntPtr.Zero) {
+                Console.WriteLine("GetCSPHSceneIf null");
+                return null;
+            }
             return PHSceneIf.GetCSInstance(ptr);
         }
     }

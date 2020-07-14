@@ -3145,7 +3145,19 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _this);
+            IntPtr ptr = IntPtr.Zero;
+            if(_thisArray[0] != IntPtr.Zero) {
+	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
+            } else if(_thisArray[1] != IntPtr.Zero) {
+	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[1]);
+            } else if(_thisArray[2] != IntPtr.Zero) {
+	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[2]);
+            } else {
+	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _this);
+                var newIfInfo = new IfInfo(ptr);
+                Console.WriteLine(newIfInfo.ClassName() + " use _this");
+                return newIfInfo;
+            }
             return new IfInfo(ptr);
 	}
 	public static IfInfo GetIfInfoStatic() {
@@ -3184,12 +3196,16 @@ namespace SprCs {
 	    return (ret == 0) ? false : true;
 	}
 	public bool DelChildObject(ObjectIf o) {
+            Console.Write(this.GetIfInfo().ClassName() + " DelChildObject " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
-            char ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[1], (IntPtr)o._thisArray[1]);
-            char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[2], (IntPtr)o._thisArray[2]);
-
+            if (_thisArray[1] != IntPtr.Zero) {
+                char ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[1], (IntPtr)o._thisArray[1]);
+            }
+            if (_thisArray[2] != IntPtr.Zero) {
+                char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[2], (IntPtr)o._thisArray[2]);
+            }
             //char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // 上手くいかない
-            if(ret0 == 0||ret1 == 0 || ret2 == 0) {
+            if(ret0 == 0) {
                 Console.Write("failed DelChildObject");
                 return false;
             } else {
@@ -3233,12 +3249,12 @@ namespace SprCs {
             //}
             foreach (var phSceneIf in PHSceneIf.instances.Values) {
                 lock (phSceneIf.phSceneForGetSetLock) {
-                    if (_thisArray[phSceneIf.sceneForGet] == IntPtr.Zero) {
-                        Console.WriteLine( "null _thisArrayClassName " + GetIfInfo().ClassName());
-                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
-                    } else {
+                    if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
                         Console.WriteLine( "_thisArrayClassName " + GetIfInfo().ClassName());
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
+                    } else {
+                        Console.WriteLine( "null _thisArrayClassName " + GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
                     }
                 }
                 break;
@@ -3248,21 +3264,33 @@ namespace SprCs {
 	}
 	public void SetDesc(CsObject desc) {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-            List<object> locks = new List<object>();
             foreach(var phSceneIf in PHSceneIf.instances.Values) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
-                        });
-                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
-                    } else {
-                    foreach (var _this in _thisArray) {
-                        if (_this != IntPtr.Zero) {
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                        Console.WriteLine("Spr_ObjectIf_SetDesc isStepping");
+                        if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
+                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                                Console.WriteLine("Spr_ObjectIf_SetDesc isStepping in Callback");
+                                if (_thisArray[phSceneIf.sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
+                                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
+                                }
+                                if (_thisArray[phSceneIf.sceneForBuffer] != IntPtr.Zero) {
+                                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
+                                }
+                            });
+                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
+                        } else { // CDShapeなど
+                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                            });
                         }
-                    }
+                    } else {
+                        Console.WriteLine("Spr_ObjectIf_SetDesc notisStepping");
+                            foreach (var _this in _thisArray) {
+                                if (_this != IntPtr.Zero) {
+                                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                                }
+                            }
                     }
                 }
                 break;
