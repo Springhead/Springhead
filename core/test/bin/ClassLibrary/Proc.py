@@ -16,26 +16,28 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2017/08/19 F.Kanehori	First version.
+#	Ver 1.0   2017/08/19 F.Kanehori	First version.
 #					Separated from class Util.
-#	Ver 1.1  2017/09/14 F.Kanehori	Bug fixed.
-#	Ver 1.11 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
-#	Ver 1.12 2017/10/13 F.Kanehori	Set default encoding.
-#	Ver 1.13 2018/01/11 F.Kanehori	wait(): Enable dry_run.
-#	Ver 1.14 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
+#	Ver 1.1   2017/09/14 F.Kanehori	Bug fixed.
+#	Ver 1.11  2017/10/07 F.Kanehori	Dos intrinsic commands OK.
+#	Ver 1.12  2017/10/13 F.Kanehori	Set default encoding.
+#	Ver 1.13  2018/01/11 F.Kanehori	wait(): Enable dry_run.
+#	Ver 1.14  2018/02/21 F.Kanehori	Set dummy object to Proc.proc
 #					when dry_run flag specified.
-#	Ver 1.15 2018/03/12 F.Kanehori	Now OK for doxygen.
-#	Ver 1.2  2018/03/14 F.Kanehori	Change: exec() -> execute().
-#	Ver 1.3  2018/03/19 F.Kanehori	Change interface: output()
-#	Ver 1.31 2018/03/22 F.Kanehori	Bug fixed.
-#	Ver 1.32 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
-#	Ver 1.33 2018/06/28 F.Kanehori	Fixes spaces in homedir.
+#	Ver 1.15  2018/03/12 F.Kanehori	Now OK for doxygen.
+#	Ver 1.2   2018/03/14 F.Kanehori	Change: exec() -> execute().
+#	Ver 1.3   2018/03/19 F.Kanehori	Change interface: output()
+#	Ver 1.31  2018/03/22 F.Kanehori	Bug fixed.
+#	Ver 1.32  2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
+#	Ver 1.33  2018/06/28 F.Kanehori	Fixes spaces in homedir.
+#	Ver 1.34  2020/07/15 F.Kanehori	output(): Change decode strategy.
 # ======================================================================
 import sys
 import os
 import subprocess
 import signal
 import copy
+import re
 sys.path.append('/usr/local/lib')
 from Util import *
 
@@ -67,7 +69,8 @@ class Proc:
 	#
 	def __init__(self, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.14
+		self.version = 1.34
+		self.out_encoding = self.__system_encoding()
 		#
 		self.verbose = verbose
 		self.dry_run = dry_run
@@ -261,12 +264,13 @@ class Proc:
 
 	##  Get both stdout and stderr output from the process.
 	#   @param timeout	Time out value in seconds (int).
+	#   @param out_encoding	Encoding of output stream (str).
 	#   @returns		rc, out, err
 	#   @n status:		Process termination code (int).
 	#   @n out:		Output string got from stdout stream (str).
 	#   @n err:		Output string got from stderr stream (str).
 	#
-	def output(self, timeout=None):
+	def output(self, timeout=None, out_encoding=None):
 		if self.dry_run:
 			return 0, None, None
 		if self.proc is None:
@@ -276,8 +280,29 @@ class Proc:
 		if self.pipe[1] != Proc.PIPE and self.pipe[2] != Proc.PIPE:
 			if self.verbose:
 				print('  output is not redirected')
+			print('  output is not redirected')
 			return 0, None, None
-		#
+
+		# change encoding to decodable one
+		# only if nkf available and out_encoding is decodable.
+		if out_encoding is None:
+			out_encoding = self.out_encoding
+		if self.__has_nkf() and self.__is_decodable(out_encoding):
+			# change encoding if we can use nkf
+			enc_utf8 = ['cp65001', 'utf8', 'utf-8', 'utf_8']
+			enc_sjis = ['cp932', 'sjis', 'shift-jis']
+			nkf_arg = '-w'	# set 'utf8' as default encoding
+			if out_encoding in enc_utf8: nkf_arg = '-w'
+			if out_encoding in enc_sjis: nkf_arg = '-s'
+			cmnd = 'nkf %s' % nkf_arg
+			proc = subprocess.Popen(cmnd,
+					stdin=self.proc.stdout,
+					stdout=subprocess.PIPE,
+					shell=True)
+			stat = self.proc.wait()
+			self.proc = proc
+
+		# get output
 		try:
 			out, err = self.proc.communicate(timeout=timeout)
 			status = self.proc.returncode
@@ -285,11 +310,11 @@ class Proc:
 			self.proc.kill()
 			out, err = self.proc.communicate()
 			status = Proc.ETIME
-		encoding = os.device_encoding(1)
-		if encoding is None:
-			encoding = 'UTF-8' if Util.is_unix() else 'cp932'
-		out = out.decode(encoding) if out else None
-		err = err.decode(encoding) if err else None
+		#print('status: %d' % status)
+		#print('out: [%s]' % out)
+		#print('err: [%s]' % err)
+		out = out.decode(out_encoding) if out else None
+		err = err.decode(out_encoding) if err else None
 
 		# cleanup
 		self.__close(self.fd[0], self.pipe[0])
@@ -418,5 +443,45 @@ class Proc:
 		if dev == -2:	return 'stdout'
 		if dev == -3:	return '/dev/null'
 		return dev
+
+	##  Check if system has 'nkf' command or not.
+	#   @returns	True if 'nkf' command exists, False if else.
+	#
+	def __has_nkf(self):
+		cmnd = 'which nkf' if Util.is_unix() else 'where nkf'
+		rc = subprocess.Popen(cmnd, stdout=subprocess.DEVNULL,
+					    shell=True).wait()
+		return rc == 0
+
+	##  Get system encoding name.
+	#   @returns		System encoding name (str).
+	#
+	def __system_encoding(self):
+		encoding = os.device_encoding(1)
+		#print('os.device_encoding(1) returns [%s]' % encoding)
+		if encoding is None:
+			stdout_info = str(sys.stdout)
+			#print('sys.stdout returns [%s]' % stdout_info)
+			m = re.search("encoding='(.+)'", stdout_info)
+			if m:
+				encoding = m.group(1)
+			else:
+				encoding = 'utf-8'
+				#print('assume %s as default encoding' % encoding)
+		#print('encoding: %s' % encoding)
+		return encoding
+
+	##  Check if speicfied encoding is decodable.
+	#   @param encoding	Encoding name (str).
+	#   @returns		Decodable or not (bool).
+	#
+	def __is_decodable(self, encoding):
+		test_str = b'test'
+		try:
+			test_str.decode(encoding)
+			can_decode = True
+		except:
+			can_decode = False
+		return can_decode
 
 # end: Proc.py
