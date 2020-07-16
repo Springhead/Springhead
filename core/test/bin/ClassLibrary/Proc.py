@@ -31,6 +31,7 @@
 #	Ver 1.32  2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
 #	Ver 1.33  2018/06/28 F.Kanehori	Fixes spaces in homedir.
 #	Ver 1.34  2020/07/15 F.Kanehori	output(): Change decode strategy.
+#	Ver 1.341 2020/07/15 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -69,7 +70,7 @@ class Proc:
 	#
 	def __init__(self, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.34
+		self.version = 1.341
 		self.out_encoding = self.__system_encoding()
 		#
 		self.verbose = verbose
@@ -289,17 +290,18 @@ class Proc:
 			out_encoding = self.out_encoding
 		if self.__has_nkf() and self.__is_decodable(out_encoding):
 			# change encoding if we can use nkf
+			#print('has nkf and %s decodable' % out_encoding)
 			enc_utf8 = ['cp65001', 'utf8', 'utf-8', 'utf_8']
 			enc_sjis = ['cp932', 'sjis', 'shift-jis']
 			nkf_arg = '-w'	# set 'utf8' as default encoding
 			if out_encoding in enc_utf8: nkf_arg = '-w'
 			if out_encoding in enc_sjis: nkf_arg = '-s'
 			cmnd = 'nkf %s' % nkf_arg
+			#print('cmnd: %s' % cmnd)
 			proc = subprocess.Popen(cmnd,
 					stdin=self.proc.stdout,
 					stdout=subprocess.PIPE,
 					shell=True)
-			stat = self.proc.wait()
 			self.proc = proc
 
 		# get output
