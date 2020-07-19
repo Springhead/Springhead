@@ -3196,13 +3196,17 @@ namespace SprCs {
 	    return (ret == 0) ? false : true;
 	}
 	public bool DelChildObject(ObjectIf o) {
-            Console.Write(this.GetIfInfo().ClassName() + " DelChildObject " + o.GetIfInfo().ClassName()); // <!!> GravityEngineÇÕC++ì‡ïîÇ≈é¿ëïÇ≥ÇÍÇƒÇÈÅH
+            Console.WriteLine("DelChildObject");
+            Console.WriteLine(this.GetIfInfo().ClassName() + " DelChildObject " + o.GetIfInfo().ClassName()); // <!!> GravityEngineÇÕC++ì‡ïîÇ≈é¿ëïÇ≥ÇÍÇƒÇÈÅH
             char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
+            Console.WriteLine("DelChildObject _thisArray[0]");
             if (_thisArray[1] != IntPtr.Zero) {
                 char ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[1], (IntPtr)o._thisArray[1]);
+            Console.WriteLine("DelChildObject _thisArray[1]");
             }
             if (_thisArray[2] != IntPtr.Zero) {
                 char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[2], (IntPtr)o._thisArray[2]);
+            Console.WriteLine("DelChildObject _thisArray[1]");
             }
             //char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // è„éËÇ≠Ç¢Ç©Ç»Ç¢
             if(ret0 == 0) {

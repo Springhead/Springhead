@@ -6697,7 +6697,24 @@ namespace SprCs {
 	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _this, (IntPtr) I);
 	}
 	public void CompInertia() {
-	    SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _this);
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                            SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForBuffer]);
+                        });
+                        SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_this);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_this);
+            }
 	}
 	public void SetFramePosition(Vec3d p) {
 	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _this, (IntPtr) p);
@@ -8492,24 +8509,87 @@ namespace SprCs {
 	public void SetSecondDamper(Vec3d damper2) {
 	    SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _this, (IntPtr) damper2);
 	}
-	public void SetTargetPosition(Quaterniond p) {
-	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _this, (IntPtr) p);
-	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _this2, (IntPtr) p);
+	public void SetTargetPosition(Quaterniond q) {
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newQ = new Quaterniond(q);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
+                            SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
+                        });
+                        SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newQ);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this, (IntPtr)q);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this, (IntPtr)q);
+            }
 	}
 	public Quaterniond GetTargetPosition() {
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr) _this);
-            return new Quaterniond(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Quaterniond(ptr, true);
+            }
 	}
-	public void SetTargetVelocity(Vec3d q) {
-	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _this, (IntPtr) q);
-	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _this2, (IntPtr) q);
+	public void SetTargetVelocity(Vec3d v) {
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newV = new Vec3d(v);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                            SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                        });
+                        SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_this, (IntPtr)v);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_this, (IntPtr)v);
+            }
 	}
 	public Vec3d GetTargetVelocity() {
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr) _this);
-            return new Vec3d(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Vec3d(ptr, true);
+            }
 	}
 	public void SetOffsetForce(Vec3d ofst) {
-	    SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _this, (IntPtr) ofst);
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    Console.WriteLine(ofst);
+                    if (phSceneIf.isStepping) {
+                        Console.WriteLine("SetOffsetForce isStepping");
+                        var newV = new Vec3d(ofst);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                        });
+                        SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                    } else {
+                        Console.WriteLine("SetOffsetForce not isStepping");
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_this, (IntPtr)ofst);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_this, (IntPtr)ofst);
+            }
 	}
 	public Vec3d GetOffsetForce() {
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce((IntPtr) _this);
@@ -8556,8 +8636,12 @@ namespace SprCs {
             return obj;
 	}
 	public Vec3d GetMotorForce() {
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr) _this);
-            return new Vec3d(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Vec3d(ptr, true);
+            }
 	}
 	public Vec3d GetMotorForceN(int n) {
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForceN((IntPtr) _this, (int) n);
@@ -8614,20 +8698,62 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetTargetPosition(Vec3d targetPosition) {
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _this, (IntPtr) targetPosition);
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _this2, (IntPtr) targetPosition);
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newP = new Vec3d(targetPosition);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
+                            SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
+                        });
+                        SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newP);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_this, (IntPtr)targetPosition);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_this, (IntPtr)targetPosition);
+            }
 	}
 	public Vec3d GetTargetPosition() {
-	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr) _this);
-            return new Vec3d(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Vec3d(ptr, true);
+            }
 	}
 	public void SetTargetOrientation(Quaterniond targetOrientation) {
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _this, (IntPtr) targetOrientation);
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _this2, (IntPtr) targetOrientation);
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newQ = new Quaterniond(targetOrientation);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
+                            SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
+                        });
+                        SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newQ);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_this, (IntPtr)targetOrientation);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_this, (IntPtr)targetOrientation);
+            }
 	}
 	public Quaterniond GetTargetOrientation() {
-	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr) _this);
-            return new Quaterniond(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Quaterniond(ptr, true);
+            }
 	}
 	public void SetSpring(Vec3d spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
@@ -8799,19 +8925,62 @@ namespace SprCs {
             return new Vec3d(ptr, true);
 	}
 	public Vec6d GetMotorForce() {
-	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr) _this);
-            return new Vec6d(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Vec6d(ptr, true);
+            }
 	}
 	public void SetOffsetForce(Vec6d offsetForce) {
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _this, (IntPtr) offsetForce);
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newV = new Vec6d(offsetForce);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                        });
+                        SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_this, (IntPtr)offsetForce);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_this, (IntPtr)offsetForce);
+            }
 	}
 	public void SetTargetVelocity(Vec6d targetVelocity) {
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _this, (IntPtr) targetVelocity);
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _this2, (IntPtr) targetVelocity);
+            var phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.threadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newV = new Vec6d(targetVelocity);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                            SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                        });
+                        SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_this, (IntPtr)targetVelocity);
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_this, (IntPtr)targetVelocity);
+            }
 	}
 	public Vec6d GetTargetVelocity() {
-	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr) _this);
-            return new Vec6d(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+	            IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+                return new Vec6d(ptr, true);
+            }
 	}
     }
     public partial class PHMateIf : PHJointIf {
