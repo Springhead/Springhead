@@ -7797,18 +7797,29 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHSolidIf GetSocketSolid() {
-	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr) _this);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptr);
-            if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
-            return obj;
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+                IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHSolidIf obj = new PHSolidIf(ptr);
+                obj._thisArray[phSceneIf.sceneForGet] = ptr;
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
+                return obj;
+            }
 	}
 	public PHSolidIf GetPlugSolid() {
-	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid((IntPtr) _this);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptr);
-            if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
-            return obj;
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            lock (phSceneIf.phSceneForGetSetLock) {
+                phSceneIf.isFixedUpdating = true;
+                IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
+                    (IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                if (ptr == IntPtr.Zero) { return null; } 
+                PHSolidIf obj = new PHSolidIf(ptr);
+                obj._thisArray[phSceneIf.sceneForGet] = ptr;
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
+                return obj;
+            }
 	}
 	public PHSceneIf GetScene() {
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetScene((IntPtr) _this);
@@ -10534,14 +10545,23 @@ namespace SprCs {
             return obj;
 	}
 	public int NContacts() {
-	    int result = (int) SprExport.Spr_PHSceneIf_NContacts((IntPtr) _this);
-	    return result;
+            lock (phSceneForGetSetLock) {
+            isFixedUpdating = true;
+            int result = SprExport.Spr_PHSceneIf_NContacts(
+                (IntPtr)_thisArray[sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                return result;
+            }
 	}
 	public PHContactPointIf GetContact(int i) {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_GetContact((IntPtr) _this, (int) i);
+        lock (phSceneForGetSetLock) {
+            isFixedUpdating = true;
+            IntPtr ptr = SprExport.Spr_PHSceneIf_GetContact(
+                (IntPtr)_thisArray[sceneForGet],(int) i); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
             if (ptr == IntPtr.Zero) { return null; } 
             PHContactPointIf obj = new PHContactPointIf(ptr);
+                obj._thisArray[sceneForGet] = ptr;
             return obj;
+        }
 	}
 	public int NFemMeshes() {
 	    int result = (int) SprExport.Spr_PHSceneIf_NFemMeshes((IntPtr) _this);

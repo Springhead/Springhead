@@ -23,7 +23,16 @@ namespace SprCs {
             if ((object)a == null || (object)b == null) {
                 if ((object)a == null && (object)b == null) { return true; } else { return false; }
             } else {
-                return a._this == b._this;
+                bool result = false;
+                for(int i = 0; i < _thisNumber; i++) {
+                    if(a._thisArray[i] != IntPtr.Zero && b._thisArray[i] != IntPtr.Zero && a._thisArray[i] == b._thisArray[i]) {
+                        result = true;
+                    }
+                }
+                if(a._this != IntPtr.Zero && b._this != IntPtr.Zero && a._this == b._this ) {
+                    result = true;
+                }
+                return result;
             }
         }
         public static bool operator !=(CsObject a, CsObject b) {
