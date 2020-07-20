@@ -6739,13 +6739,11 @@ namespace SprCs {
 	}
 	public void SetPose(Posed p) {
             var phSceneIf = GetCSPHSceneIf();
-            if(phSceneIf == null) {
-                Console.WriteLine("phSceneIf null");
-            }
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Posed(p);
+                        Console.WriteLine("PHSolid.SetPose in isStepping");
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
                             SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
@@ -8438,6 +8436,7 @@ namespace SprCs {
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
+                        Console.WriteLine("PHBallJoint SetSpring in isStepping");
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             //Console.WriteLine("SetSpring in CallBack");
                             SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)spring);
@@ -8514,6 +8513,7 @@ namespace SprCs {
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
+                        Console.WriteLine("SetTargetPosition isStepping");
                         var newQ = new Quaterniond(q);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
@@ -8571,9 +8571,7 @@ namespace SprCs {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
-                    Console.WriteLine(ofst);
                     if (phSceneIf.isStepping) {
-                        Console.WriteLine("SetOffsetForce isStepping");
                         var newV = new Vec3d(ofst);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
@@ -8581,7 +8579,6 @@ namespace SprCs {
                         });
                         SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                     } else {
-                        Console.WriteLine("SetOffsetForce not isStepping");
                         foreach (var _this in _thisArray) {
                             SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_this, (IntPtr)ofst);
                         }

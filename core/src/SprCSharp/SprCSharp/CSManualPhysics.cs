@@ -19,6 +19,8 @@ namespace SprCs {
         public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
         private ObjectStatesIf state = ObjectStatesIf.Create();
+        private Dictionary<System.Object, bool> isSteppedFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
+
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         public delegate void ThreadCallback();
@@ -45,9 +47,9 @@ namespace SprCs {
             }
             instances[stepPHScene]._thisArray[1] = bufferPHScene;
             if (instances[stepPHScene]._thisArray[1] == IntPtr.Zero) {
-                        Console.WriteLine("instances[stepPHScene]._thisArray[1] null");
+                Console.WriteLine("instances[stepPHScene]._thisArray[1] null");
             } else {
-                        Console.WriteLine("instances[stepPHScene]._thisArray[1] not null");
+                Console.WriteLine("instances[stepPHScene]._thisArray[1] not null");
             }
             instances[stepPHScene]._thisArray[2] = getPHScene;
             return instances[stepPHScene];
@@ -88,12 +90,17 @@ namespace SprCs {
         public void Swap() {
             lock (phSceneForGetSetLock) {
                 ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
-                    SprExport.Spr_ObjectStatesIf_SaveState(state._this, _thisArray[sceneForStep]); // phScene→state
+                SprExport.Spr_ObjectStatesIf_SaveState(state._this, _thisArray[sceneForStep]); // phScene→state
                 if (!isFixedUpdating) { // Step↔Get
                     SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForGet]); // state→phScene
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
+
+                    List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
+                    foreach (var key in Keys) {
+                        isSteppedFlagDictionary[key] = true;
+                    }
                 } else { // Step↔Buffer
                     isSwapping = true;
                     SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForBuffer]); // state→phScene
@@ -102,6 +109,7 @@ namespace SprCs {
                     sceneForBuffer = temp;
                 }
                 isStepping = false;
+
             }
         }
         public void SwapAfterFixedUpdate() {
@@ -111,10 +119,33 @@ namespace SprCs {
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
                     isSwapping = false;
+
+                    List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
+                    foreach (var key in Keys) {
+                        isSteppedFlagDictionary[key] = true;
+                    }
                 }
                 isFixedUpdating = false;
             }
         }
+        public bool GetIsSteppedFlag(System.Object o) {
+            lock (phSceneForGetSetLock) {
+                if (!isSteppedFlagDictionary.ContainsKey(o)) {
+                    isSteppedFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
+                }
+                return isSteppedFlagDictionary[o];
+            }
+        }
+        public bool SetIsSteppedFlagFalse(System.Object o) {
+            lock (phSceneForGetSetLock) {
+                if (!isSteppedFlagDictionary.ContainsKey(o)) {
+                    return false;
+                }
+                isSteppedFlagDictionary[o] = false;
+                return true;
+            }
+        }
+
     }
 
     public partial class PHSpringIf : PHJointIf {
@@ -223,6 +254,7 @@ namespace SprCs {
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
+                        Console.WriteLine("SetTargetPositionAsync isStepping");
                         var newQ = new Quaterniond(q);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
@@ -290,13 +322,13 @@ namespace SprCs {
     public partial class SceneObjectIf : NamedObjectIf {
         public PHSceneIf GetCSPHSceneIf() {
             IntPtr ptr = IntPtr.Zero;
-            if(_thisArray[0] != IntPtr.Zero) {
+            if (_thisArray[0] != IntPtr.Zero) {
                 //Console.WriteLine("_thisArray[0] not Zero");
                 ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[0]);
-            } else if(_thisArray[1] != IntPtr.Zero) {
+            } else if (_thisArray[1] != IntPtr.Zero) {
                 //Console.WriteLine("_thisArray[1] not Zero");
                 ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[1]);
-            } else if(_thisArray[2] != IntPtr.Zero) {
+            } else if (_thisArray[2] != IntPtr.Zero) {
                 //Console.WriteLine("_thisArray[2] not Zero");
                 ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[2]);
             }
