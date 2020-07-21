@@ -75,6 +75,10 @@ namespace SprCs {
             if (threadMode) {
                 lock (phSceneForGetSetLock) {
                     isStepping = true;
+                    List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
+                    foreach (var key in Keys) {
+                        isSteppedFlagDictionary[key] = true;
+                    }
                 }
                 SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
             } else {
@@ -96,11 +100,6 @@ namespace SprCs {
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
-
-                    List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
-                    foreach (var key in Keys) {
-                        isSteppedFlagDictionary[key] = true;
-                    }
                 } else { // Step↔Buffer
                     isSwapping = true;
                     SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForBuffer]); // state→phScene
@@ -119,11 +118,6 @@ namespace SprCs {
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
                     isSwapping = false;
-
-                    List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
-                    foreach (var key in Keys) {
-                        isSteppedFlagDictionary[key] = true;
-                    }
                 }
                 isFixedUpdating = false;
             }
