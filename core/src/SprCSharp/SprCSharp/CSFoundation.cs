@@ -3196,8 +3196,7 @@ namespace SprCs {
 	    return (ret == 0) ? false : true;
 	}
 	public bool DelChildObject(ObjectIf o) {
-            Console.WriteLine("DelChildObject");
-            Console.WriteLine(this.GetIfInfo().ClassName() + " DelChildObject " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+            Console.WriteLine("DelChildObject(default) " + this.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
             Console.WriteLine("DelChildObject _thisArray[0]");
             if (_thisArray[1] != IntPtr.Zero) {
@@ -3239,66 +3238,14 @@ namespace SprCs {
 	    IntPtr result = (IntPtr) SprExport.Spr_ObjectIf_GetDescAddress((IntPtr) _this);
 	    return result;
 	}
-	public bool GetDesc(CsObject desc) {
+	public virtual bool GetDesc(CsObject desc) { // CDShapeIfの処理
 	    char ret = (char)0; // <!!> これいいのか？
-            Console.WriteLine(GetIfInfo().ClassName());
-            //if (this._thisArray[0] == IntPtr.Zero) { // <!!> なぜ？
-            //    Console.WriteLine("_thisArray[0] == Zero");
-            //}
-            //if (this._thisArray[1] == IntPtr.Zero) {
-            //    Console.WriteLine("_thisArray[1] == Zero");
-            //}
-            //if (this._thisArray[2] == IntPtr.Zero) {
-            //    Console.WriteLine("_thisArray[2] == Zero");
-            //}
-            foreach (var phSceneIf in PHSceneIf.instances.Values) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
-                        Console.WriteLine( "_thisArrayClassName " + GetIfInfo().ClassName());
-                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
-                    } else {
-                        Console.WriteLine( "null _thisArrayClassName " + GetIfInfo().ClassName());
-                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
-                    }
-                }
-                break;
-            }
-            //ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+            ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
             return (ret == 0) ? false : true;
 	}
-	public void SetDesc(CsObject desc) {
+	public virtual void SetDesc(CsObject desc) {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-            foreach(var phSceneIf in PHSceneIf.instances.Values) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    if (phSceneIf.isStepping) {
-                        Console.WriteLine("Spr_ObjectIf_SetDesc isStepping");
-                        if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
-                            phSceneIf.AddWaitUntilNextStepCallback(() => {
-                                Console.WriteLine("Spr_ObjectIf_SetDesc isStepping in Callback");
-                                if (_thisArray[phSceneIf.sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
-                                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
-                                }
-                                if (_thisArray[phSceneIf.sceneForBuffer] != IntPtr.Zero) {
-                                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
-                                }
-                            });
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
-                        } else { // CDShapeなど
-                            phSceneIf.AddWaitUntilNextStepCallback(() => {
-                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
-                            });
-                        }
-                    } else {
-                        Console.WriteLine("Spr_ObjectIf_SetDesc notisStepping");
-                            foreach (var _this in _thisArray) {
-                                if (_this != IntPtr.Zero) {
-                                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
-                                }
-                            }
-                    }
-                }
-                break;
-            }
+        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
 	}
 	public ulong GetDescSize() {
 	    ulong result = (ulong) SprExport.Spr_ObjectIf_GetDescSize((IntPtr) _this);
