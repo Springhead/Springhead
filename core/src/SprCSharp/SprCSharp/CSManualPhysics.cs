@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SprCs {
     public partial class PHSceneIf : SceneIf {
@@ -19,8 +20,11 @@ namespace SprCs {
         public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
         private ObjectStatesIf state = ObjectStatesIf.Create();
-        private Dictionary<System.Object, bool> isSteppedFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
-
+        public Dictionary<System.Object, bool> isSteppedFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
+        public readonly AutoResetEvent fixedUpdateAutoWait = new AutoResetEvent(false);
+        public bool allSteppedFlagsFalse = false;
+        public bool changeAllSteppedFlagsTrue = false;
+        public bool firstGetIsSteppedFlagInOneFixedUpdate = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         public delegate void ThreadCallback();
@@ -75,10 +79,7 @@ namespace SprCs {
             if (threadMode) {
                 lock (phSceneForGetSetLock) {
                     isStepping = true;
-                    List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
-                    foreach (var key in Keys) {
-                        isSteppedFlagDictionary[key] = true;
-                    }
+                    changeAllSteppedFlagsTrue = true;
                 }
                 SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
             } else {
@@ -125,17 +126,30 @@ namespace SprCs {
         public bool GetIsSteppedFlag(System.Object o) {
             lock (phSceneForGetSetLock) {
                 if (!isSteppedFlagDictionary.ContainsKey(o)) {
-                    isSteppedFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
+                    return isSteppedFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
+                } else {
+                    if (changeAllSteppedFlagsTrue && firstGetIsSteppedFlagInOneFixedUpdate) {
+                        List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
+                        foreach (var key in Keys) {
+                            isSteppedFlagDictionary[key] = true;
+                        }
+                        changeAllSteppedFlagsTrue = false;
+                    }
+                    firstGetIsSteppedFlagInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
+                    return isSteppedFlagDictionary[o];
                 }
-                return isSteppedFlagDictionary[o];
             }
         }
-        public bool SetIsSteppedFlagFalse(System.Object o) {
+        public bool SetIsSteppedFlagFalse(System.Object o) { // Flagが全てFalseになってからfixedUpdateAutoWaitをSetしないと更新されてないのにStepが実行される
             lock (phSceneForGetSetLock) {
                 if (!isSteppedFlagDictionary.ContainsKey(o)) {
                     return false;
                 }
                 isSteppedFlagDictionary[o] = false;
+                if (!isSteppedFlagDictionary.Values.Contains(true)) { // 更新されていないものがまだある
+                    //fixedUpdateAutoWait.Set();
+                    allSteppedFlagsFalse = true;
+                }
                 return true;
             }
         }
@@ -159,7 +173,7 @@ namespace SprCs {
             ObjectIf objectIf = this as ObjectIf;
             lock (phSceneForGetSetLock) {
                 if (isStepping) {
-                        Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
+                    Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                     AddWaitUntilNextStepCallback(() => {
                         Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
                         if (_thisArray[sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
