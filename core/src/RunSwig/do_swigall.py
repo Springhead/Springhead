@@ -54,8 +54,9 @@
 #     Ver 3.08	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #     Ver 3.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
 #     Ver 3.10   2020/05/13 F.Kanehori	unix: Ver 3.08 に戻す.
+#     Ver 3.11   2020/07/15 F.Kanehori	nmake path 探索コード変更.
 # ==============================================================================
-version = 3.09
+version = 3.11
 debug = False
 trace = False
 dry_run = False
@@ -63,6 +64,7 @@ dry_run = False
 import sys
 import os
 import subprocess
+import re
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -113,23 +115,17 @@ makefile = 'makefile.swig'
 if unix:
 	makepath = '/usr/bin'
 else:
-	def s16(value):
-		return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
 	cmnd = 'python find_path.py nmake.exe'
-	proc = subprocess.Popen(cmnd, stdout=subprocess.PIPE,
-				      stderr=subprocess.DEVNULL)
-	out, err = proc.communicate()
-	status = s16(proc.returncode)
-	if status != 0:
-		Error(prog).error('can not find "%s" path.' % make)
-	#
-	encoding = os.device_encoding(1)
-	if encoding is None:
-		encoding = 'UTF-8' if unix else 'cp932'
-	makepath = out.decode(encoding) if out else None
+	proc = Proc().execute(cmnd, stdout=Proc.PIPE, shell=True)
+	stat, out, err = proc.output()
+	if stat != 0:
+		out = None
+	makepath = out
 	if makepath is None:
-		Error(prog).error('can not decode "%s" path.' % make)
-	print('nmake path found: %s' % makepath.replace(os.sep, '/'))
+		Error(prog).error('can not find "nmake" path.')
+		makepath = ''
+	else:
+		print('nmake path found: %s' % makepath.replace(os.sep, '/'))
 
 swigpath = '%s/%s' % (srcdir, 'Foundation')
 addpath = os.pathsep.join([bindir, swigpath, makepath])

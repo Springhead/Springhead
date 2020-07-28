@@ -1,0 +1,21 @@
+#################################################################################
+#  SYNOPSIS
+#	nmake -f Makefile.SwigInstall			\
+#			SWIGBINARY=<swig-binary-path>	\
+#			INSTALLDIR=<install-directory-path>
+#
+#################################################################################
+#  Version:
+#	Ver 1.00  2020/07/08 F.Kanehori  Windows”Å
+#################################################################################
+
+all:	$(INSTALLDIR)\swig.exe $(INSTALLDIR)\swig_sprcs.exe
+
+$(INSTALLDIR)\swig.exe:		$(SWIGBINARY)
+	@echo "  install swig.exe"
+	@copy $(SWIGBINARY) $(INSTALLDIR)\swig.exe > NUL
+
+$(INSTALLDIR)\swig_sprcs.exe:	$(SWIGBINARY)
+	@echo "  install swig_sprcs.exe"
+	@copy $(SWIGBINARY) $(INSTALLDIR)\swig_sprcs.exe > NUL
+

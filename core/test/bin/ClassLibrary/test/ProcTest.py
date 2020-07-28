@@ -182,7 +182,9 @@ if kill_test_go:
 	Print('  sleep %d seconds' % waittime)
 	time.sleep(waittime)
 	P.kill()
+	Print('kill: returned')
 	P.wait()
+	Print('wait: returned')
 	print()
 	#
 	'''

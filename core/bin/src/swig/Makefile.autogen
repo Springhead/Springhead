@@ -1,0 +1,21 @@
+#  Makefile for installing swig binary.
+#
+
+SWIG	= ./swig
+MAKEF	= ./Makefile
+INSDIR	= ../../swig
+
+all:	$(INSDIR)/swig
+
+$(INSDIR)/swig:	$(MAKEF) makeswig
+	@echo install swig binary...
+	cp $(SWIG) $(INSDIR)/swig
+
+makeswig:	
+	@echo making swig binary...
+	make -s -f $(MAKEF)
+
+$(MAKEF):	
+	@echo configuring swig...
+	./buildswig.sh
+

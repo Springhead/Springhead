@@ -2,6 +2,9 @@
 #include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
+PHHapticPointerDesc::PHHapticPointerDesc() {
+	renderMode = CONSTRAINT;
+}
 
 PHHapticPointerHapticSt::PHHapticPointerHapticSt() {
 }
@@ -32,7 +35,7 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 // PHHapticPointer
 PHHapticPointer::PHHapticPointer(){
 	SetDynamical(false);
-	renderMode = DYNAMIC_PROXY;
+	renderMode = CONSTRAINT;
 }
 
 float PHHapticPointer::GetContactForce(int i){

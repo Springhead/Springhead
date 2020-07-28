@@ -98,19 +98,7 @@ FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
 all:	PreWork RunSwig
 
-PreWork:	InstallSwig ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
-
-InstallSwig:	BuildSwig $(SWIGBINARY)
-
-BuildSwig:
-		$(PYTHON) $(BUILDSWIG) -p $(BUILDSWIGPLAT) -c $(BUILDSWIGCONF) -t $(BUILDSWIGTOOL) $(SWIGBUILDDIR)
-
-$(SWIGBINARY):	$(SWIGTMPBINARY)
-		@echo Mkefile.win: Copying swig binary.
-		copy $(SWIGTMPBINARY) $(SWIGBINARY)
-		copy $(SWIGTMPBINARY) $(SWIGCSBINARY)
-
-$(SWIGTMPBINARY):	
+PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 ClosedSrcCtl:
 		@echo Makefile.win: ClosedSrcCtl

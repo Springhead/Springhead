@@ -10,6 +10,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation", "Foundation\Fo
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunSwig", "RunSwig\RunSwig14.0.vcxproj", "{4AC6C708-19C9-4CC1-A25B-D9682470411E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6BB5883E-1D19-4551-AF42-E80583A47872} = {6BB5883E-1D19-4551-AF42-E80583A47872}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "Base\Base14.0.vcxproj", "{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -76,6 +79,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Springhead", "Springhead14.
 		{F674A4D7-A183-4C53-815D-12E17B71C6A0} = {F674A4D7-A183-4C53-815D-12E17B71C6A0}
 		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F} = {90010CD8-7C45-481E-8697-AAB9B3FB9E4F}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "swig14.0", "..\bin\src\swig\msvc\swig14.0.vcxproj", "{6BB5883E-1D19-4551-AF42-E80583A47872}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -219,6 +224,18 @@ Global
 		{97A61237-928A-4AB9-BD0E-01441AE511B7}.Trace|Win32.Build.0 = Trace|Win32
 		{97A61237-928A-4AB9-BD0E-01441AE511B7}.Trace|x64.ActiveCfg = Trace|x64
 		{97A61237-928A-4AB9-BD0E-01441AE511B7}.Trace|x64.Build.0 = Trace|x64
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|Win32.Build.0 = Debug|Win32
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|x64.ActiveCfg = Debug|x64
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|x64.Build.0 = Debug|x64
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|Win32.ActiveCfg = Release|Win32
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|Win32.Build.0 = Release|Win32
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|x64.ActiveCfg = Release|x64
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|x64.Build.0 = Release|x64
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|Win32.ActiveCfg = Release|Win32
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|Win32.Build.0 = Release|Win32
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|x64.ActiveCfg = Release|x64
+		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

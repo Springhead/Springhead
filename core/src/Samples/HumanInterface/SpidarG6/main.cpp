@@ -60,6 +60,12 @@ int __cdecl main(){
 #ifdef _WIN32
 	lastTime = timeGetTime();
 #endif
+
+	float length[8];
+	for (int i = 0; i < 8; ++i) {
+		length[i] = spg->GetMotor(i)->GetLength();
+	}
+
 	while(!_kbhit()){
 		t += 1;
 		if (t >= 1000) {
@@ -73,7 +79,7 @@ int __cdecl main(){
 		}
 		//DPF("t=%d", t);
 		spg->Update(0.001f);
-#if 1	//	Virtual floor
+#if 0	//	Virtual floor
 		Vec3f spgpos = spg->GetPosition();
 //		std::cout << std::setprecision(2) << spgpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);
@@ -82,10 +88,20 @@ int __cdecl main(){
 		}
 		spg->SetForce(f, Vec3f());
 #else	//	print the position and the orientation of the grip
+	#if 1	//	print string length
 		for(size_t i=0; i<spg->NMotor(); ++i){
-			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();
+			std::cout << " " << printf(" %6.3f", (spg->GetMotor(i)->GetLength() - length[i]));
 		}
 		std::cout << std::endl;
+	#else	//	print pose
+		Vec6f pose;
+		pose.sub_vector(0, Vec3f()) = spg->GetPosition();
+		pose.sub_vector(3, Vec3f()) = spg->GetOrientation().Rotation();
+		for (size_t i = 0; i < pose.size(); ++i) {
+			printf(" %6.3f", pose[i]);
+		}
+		std::cout << std::endl;
+	#endif
 #endif
 	}
 #if 0	//	test for KeyMouseWin32
