@@ -1,5 +1,5 @@
 このファイルは, クラス Proc のテストで使用します。
-漢字のエンコードは utf-8 です。
+漢字のエンコードは sjis です。
 
 This file is used for class Proc test.
-Encoding of this file is 'utf-8'.
+Encoding of this file is 'sjis'.

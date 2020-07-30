@@ -650,12 +650,12 @@ void PHIKEngine::Step() {
 	
 	// <!!>
 	// ApplyExactState();
-
+	
 	Prepare();
 	FK();
 
 	// <!!>
-	// ApplyExactState(/* reverse = */ true);
+	// ApplyExactState(true);
 
 	size_t iter;
 	for (iter=0; iter<numIter; ++iter) {

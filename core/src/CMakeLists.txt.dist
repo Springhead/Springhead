@@ -183,10 +183,20 @@ foreach(proj IN ITEMS ${SPR_PROJS})
     add_dependencies(${proj} ${DEP_LIST})
     #message("   dependencies: ${proj} => ${DEP_LIST}")
 endforeach()
-set(INCLUDED_BY_SPRLIB true)
-add_subdirectory(${SPR_SWIG_DIR} ${SPR_BLD_DIR}/swig)
-add_dependencies(RunSwig swig_install)
-add_dependencies(swig_install swig)
+if(Windows)
+    set(INCLUDED_BY_SPRLIB true)
+    add_subdirectory(${SPR_SWIG_DIR} ${SPR_BLD_DIR}/swig)
+    add_dependencies(RunSwig swig_install)
+    add_dependencies(swig_install swig)
+elseif(unix)
+    set(SPR_SWIG_DIR "${TOPDIR}/core/bin/src/swig")
+    add_custom_target(genswig ALL
+	COMMAND make -s -f Makefile.autogen
+	WORKING_DIRECTORY ${SPR_SWIG_DIR}
+	COMMENT [[  checking/generating swig binary... ]]
+    )
+    add_dependencies(RunSwig genswig)
+endif()
 
 # ------------------------------------------------------------------------------
 #  Main target.

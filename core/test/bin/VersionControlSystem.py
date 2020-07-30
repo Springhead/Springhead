@@ -49,14 +49,15 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2017/01/11 F.Kanehori	First version (Subversion only).
-#	Ver 1.1  2017/09/13 F.Kanehori	Python library revised.
-#	Ver 1.2  2017/11/16 F.Kanehori	Python library path の変更.
-#	Ver 1.3  2017/12/20 F.Kanehori	GitHub 版実装.
-#	Ver 1.4  2018/01/18 F.Kanehori	Add get_file_content().
-#	Ver 1.5  2018/05/08 F.Kanehori	Code reviewd.
-#	Ver 1.6  2018/05/14 F.Kanehori	Use sprphys's commit id.
-#	Ver 2.0  2018/09/13 F.Kanehori	Subversion system obsoleted.
+#	Ver 1.00 2017/01/11 F.Kanehori	First version (Subversion only).
+#	Ver 1.10 2017/09/13 F.Kanehori	Python library revised.
+#	Ver 1.20 2017/11/16 F.Kanehori	Python library path の変更.
+#	Ver 1.30 2017/12/20 F.Kanehori	GitHub 版実装.
+#	Ver 1.40 2018/01/18 F.Kanehori	Add get_file_content().
+#	Ver 1.50 2018/05/08 F.Kanehori	Code reviewd.
+#	Ver 1.60 2018/05/14 F.Kanehori	Use sprphys's commit id.
+#	Ver 2.00 2018/09/13 F.Kanehori	Subversion system obsoleted.
+#	Ver 2.10 2020/07/16 F.Kanehori	Leave encoding problem to Proc.
 # ======================================================================
 import sys
 import os
@@ -205,17 +206,11 @@ class VersionControlSystem:
 			self.dirsave = None
 
 	def __exec(self, cmnd):
-		cmnd1 = cmnd
-		cmnd2 = 'nkf -w' if Util.is_unix() else 'nkf -s'
 		shell = True if Util.is_unix() else False
-		proc1 = Proc(verbose=self.verbose)	# git
-		proc2 = Proc(verbose=self.verbose)	# nkf
-		proc1.execute(cmnd1, stdout=Proc.PIPE, stderr=Proc.STDOUT,
-				     shell=shell)
-		proc2.execute(cmnd2, stdin=proc1.proc.stdout,
-				     stdout=Proc.PIPE, stderr=Proc.STDOUT,
-				     shell=shell)
-		status, out, err = proc2.output()
+		proc = Proc(verbose=self.verbose)	# git
+		proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT,
+				   shell=shell)
+		status, out, err = proc.output()
 		return status, out, err
 
 # ----------------------------------------------------------------------
