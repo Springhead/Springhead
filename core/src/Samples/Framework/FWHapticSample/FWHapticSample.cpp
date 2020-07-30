@@ -51,6 +51,7 @@ void FWHapticSample::BuildScene(){
 		bd.boxsize = Vec3f(0.02f, 0.02f, 0.02f);			//	１辺2cmの直方体
 		CDShapeIf* shape = phSdk->CreateShape(cd);			//	どちらかを作る
 		shape->SetDensity(0.006f / shape->CalcVolume());	//	指の重さは大体 6g
+
 		pointer->AddShape(shape);	// シェイプの追加
 		pointer->SetShapePose(0, Posed(Vec3d(), Quaterniond::Rot(Rad(10), 'z')));
 		pointer->SetDefaultPose(Posed());					//	力覚ポインタ初期姿勢の設定
@@ -68,8 +69,8 @@ void FWHapticSample::BuildScene(){
 		pointer->EnableRotation(false);
 		pointer->EnableFriction(true);
 		pointer->EnableVibration(true);
-		pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMIC_PROXY);
-		pointer->EnableTimeVaryFriction(true);
+		pointer->SetHapticRenderMode(PHHapticPointerDesc::CONSTRAINT);
+		pointer->EnableTimeVaryFriction(false);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(device);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer);		// PHHapticPointerIfの設定

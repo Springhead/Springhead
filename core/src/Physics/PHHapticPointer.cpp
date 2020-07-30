@@ -12,8 +12,8 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	bRotation = true;
 	bForce = false;
 	bFriction = true;
-	bTimeVaryFriction = true;
-	bMultiPoints = true;
+	bTimeVaryFriction = false;
+	bMultiPoints = false;
 	bVibration = false;
 	posScale = 1.0;
 	localRange = 1.0;

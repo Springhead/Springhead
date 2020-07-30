@@ -121,7 +121,7 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 	Vec3d dir = -1 * lastNormal;	// 力覚ポインタから見た剛体の移動方向
 	if(dir == Vec3d()){
 		dir = commonPoint - center0;
-		DSTR << "dir = Vec3d() in PHShapePariForHaptic::OnOnDetectClosestPoints" << std::endl;
+		DSTR << "dir==(0,0,0) n=" << normal << " use " << dir <<  " in PHShapePariForHaptic::OnDetect()" << std::endl;
 	}
 	double dist = 0.0;
 	int cp = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, 
@@ -134,7 +134,9 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 							-DBL_MAX, 1, normal, closestPoint[0], closestPoint[1], dist);
 		DSTR << cont << "ContFindCommonPoint do not find contact point" << std::endl;
 		cont++;
-	}	
+		ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir,
+			-DBL_MAX, 1, normal, closestPoint[0], closestPoint[1], dist);
+	}
 	return cp;
 }
 

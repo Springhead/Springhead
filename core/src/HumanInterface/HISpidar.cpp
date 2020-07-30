@@ -391,14 +391,19 @@ void HISpidarGDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 	}
 }
 
-void HISpidarGDesc::Init(char* type){
+void HISpidarGDesc::Init(const char* type){
 	if (stricmp(type, "SpidarG6T1") == 0) {
+		const double XINLEN = 155 / 1000.0;
+		const double XOUTLEN = (XINLEN + 37 * 2) / 1000.0;
+		const double ZINLEN = 102 / 1000.0;
+		const double ZOUTLEN = (ZINLEN + 39 * 2) / 1000.0;
+
 		nButton = 0;
 		Vec3f mp[8] = {
 			Vec3f(-0.1015,	-0.090,	0),
 			Vec3f(-0.0655,	-0.090,	0),
-			Vec3f( 0.1065,	-0.090,	0),
-			Vec3f( 0.1425,	-0.090,	0),
+			Vec3f(0.1065,	-0.090,	0),
+			Vec3f(0.1425,	-0.090,	0),
 			Vec3f(0,		0.07528,		-0.14172),
 			Vec3f(0,		0.08588,		-0.10522),
 			Vec3f(0,		0.10382,	    -0.02967),

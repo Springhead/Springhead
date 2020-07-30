@@ -144,6 +144,7 @@ bool PHSolidPair::ContDetect(unsigned int ct, double dt){
 bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool continuous){
 	PHFrame* fr0 = shapePair->frame[0];
 	PHFrame* fr1 = shapePair->frame[1];
+
 #if 0	// check PHFrame
 	for(int i=0; i<2; ++i){
 			int j;
@@ -155,7 +156,6 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 			}
 	}
 #endif
-
 	bool found = false;
 	if(continuous){	
 		const double alpha = 2.0;

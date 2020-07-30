@@ -163,7 +163,7 @@ struct HISpidarGDesc : HISpidarDesc{
 	SPR_DESCDEF(HISpidarG);
 
 	HISpidarGDesc();
-	HISpidarGDesc(char* type){
+	HISpidarGDesc(const char* type){
 		Init(type);
 	}
 	HISpidarGDesc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
@@ -172,7 +172,7 @@ struct HISpidarGDesc : HISpidarDesc{
 	///	パラメータによる初期化
 	void Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f);
 	///	SPIDARのタイプ指定による初期化
-	void Init(char* type);
+	void Init(const char* type);
 };
 
 //@}
