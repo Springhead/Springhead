@@ -62,12 +62,19 @@ void PHHapticStepImpulse::SyncHaptic2Physic(){
 		}
 	}
 	// レンダリングした力をシーンに反映
+	double forceScale = GetHapticTimeStep() / GetPhysicsTimeStep();
 	for(int i = 0; i < (int)hapticModel.hapticSolids.size(); i++){
 		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
 		if(hsolid->bPointer) continue;
+		/*//	For debug to watch feedback force to each dynamic solid
+		if (hsolid->force != Vec3d(0, 0, 0)) {
+			DSTR << "HapticStep i=" << i << " f:" << hsolid->force * forceScale << std::endl;
+		}
+		//	*/
+
 		PHSolid* sceneSolid = hsolid->sceneSolid;
-		sceneSolid->AddForce(hsolid->force * GetHapticTimeStep() / GetPhysicsTimeStep());
-		sceneSolid->AddTorque(hsolid->torque * GetHapticTimeStep() / GetPhysicsTimeStep());
+		sceneSolid->AddForce(hsolid->force * forceScale);
+		sceneSolid->AddTorque(hsolid->torque * forceScale);
 		hsolid->force.clear();
 		hsolid->torque.clear();
 	}

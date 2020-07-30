@@ -16,6 +16,7 @@ namespace Spr{;
 
 CDConvex::CDConvex(){
 	bboxReady = false;
+	volume = 0;
 }
 
 std::vector<int>& CDConvex::FindNeighbors(int vtx){

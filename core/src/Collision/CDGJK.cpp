@@ -1385,7 +1385,7 @@ inline bool CalcClosest(Vec3d& v) {
 			nSimplex[nVtx-1]=0;
 			for(int i = 0; i!=4; ++i){
 				int bit = 1<<i;
-				if ((s&bit) && det[s][i] < -1e-5){	//	ここが0でよいか謎
+				if ((s&bit) && det[s][i] < 0){	//	ここは0でないとだめ。1-e5ではだめ。
 					simplex[nVtx-1][nSimplex[nVtx-1]] = s & ~bit;
 					++ nSimplex[nVtx-1];
 				}

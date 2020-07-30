@@ -121,8 +121,6 @@ public:
 	UTRef<ObjectStatesIf>	states;			///< 状態保存用
 	UTTimerIf*				timer;			///< タイマ
 
-	///	形状のスケール
-	float					shapeScale;
 	/// 床用の形状
 	CDBoxIf*				shapeFloor;
 	CDBoxIf*				shapeWallX;
@@ -247,7 +245,7 @@ public:
 			for(int i=0; i < nv; ++i){
 				Vec3d v;
 				for(int c=0; c<3; ++c){
-					v[c] = ((rand() % 100) / 100.0 - 0.5) * 5 * 1.3 * shapeScale;
+					v[c] = ((rand() % 100) / 100.0 - 0.5) * 5 * 1.3 * ShapeScale();
 				}
 				md.vertices.push_back(v);
 			}
@@ -257,12 +255,12 @@ public:
 			for(int i = 0; i < 7; i++)
 				solid->AddShape(shapeBox);
 			Posed pose;
-			pose.Pos() = shapeScale * Vec3d( 3,  0,  0); solid->SetShapePose(1, pose);
-			pose.Pos() = shapeScale * Vec3d(-3,  0,  0); solid->SetShapePose(2, pose);
-			pose.Pos() = shapeScale * Vec3d( 0,  3,  0); solid->SetShapePose(3, pose);
-			pose.Pos() = shapeScale * Vec3d( 0, -3,  0); solid->SetShapePose(4, pose);
-			pose.Pos() = shapeScale * Vec3d( 0,  0,  3); solid->SetShapePose(5, pose);
-			pose.Pos() = shapeScale * Vec3d( 0,  0, -3); solid->SetShapePose(6, pose);
+			pose.Pos() = ShapeScale() * Vec3d( 3,  0,  0); solid->SetShapePose(1, pose);
+			pose.Pos() = ShapeScale() * Vec3d(-3,  0,  0); solid->SetShapePose(2, pose);
+			pose.Pos() = ShapeScale() * Vec3d( 0,  3,  0); solid->SetShapePose(3, pose);
+			pose.Pos() = ShapeScale() * Vec3d( 0, -3,  0); solid->SetShapePose(4, pose);
+			pose.Pos() = ShapeScale() * Vec3d( 0,  0,  3); solid->SetShapePose(5, pose);
+			pose.Pos() = ShapeScale() * Vec3d( 0,  0, -3); solid->SetShapePose(6, pose);
 		}
 		if (shape == SHAPE_COIN) {
 			solid->AddShape(shapeCoin);
@@ -351,6 +349,10 @@ public:
 		render->SetLighting(true);
 		render->SetDepthTest(true);
 	}
+
+	virtual double ShapeScale() {
+		return 1.0;
+	}
 	
 	SampleApp(){
 		showHelp	= false;
@@ -364,8 +366,6 @@ public:
 		yline		= 20;
 		xkeys		= 0;
 		xbrief		= 100;
-
-		shapeScale = 1.0;
 
 		/// いつでも有効系
 		AddMenu(MENU_ALWAYS, "");
@@ -470,6 +470,7 @@ public: /** 派生クラスが実装する関数 **/
 		/// いつでも有効アクション
 		if(menu == MENU_ALWAYS){
 			if (id == ID_EXIT)
+				Cleanup();
 				EndMainLoop();
 			if(id == ID_RUN)
 				ToggleAction(menu, id);
@@ -636,44 +637,44 @@ public: /** FWAppの実装 **/
 
 		/// 床用の形状
 		CDBoxDesc bd;
-		bd.boxsize = shapeScale * Vec3d(60, 2, 40);
+		bd.boxsize = ShapeScale() * Vec3d(60, 2, 40);
 		shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
-		bd.boxsize.y = shapeScale * 6;
+		bd.boxsize.y = ShapeScale() * 6;
 		CDBoxDesc wd = bd;
-		wd.boxsize.x = shapeScale * 2;
-		wd.boxsize.z += shapeScale * 4;
+		wd.boxsize.x = ShapeScale() * 2;
+		wd.boxsize.z += ShapeScale() * 4;
 		shapeWallZ = GetSdk()->GetPHSdk()->CreateShape(wd)->Cast();
 		wd = bd;
-		wd.boxsize.z = shapeScale * 2;
+		wd.boxsize.z = ShapeScale() * 2;
 		shapeWallX = GetSdk()->GetPHSdk()->CreateShape(wd)->Cast();
 
 		// 形状の作成
-		bd.boxsize = shapeScale * Vec3f(2, 2, 2);
+		bd.boxsize = ShapeScale() * Vec3f(2, 2, 2);
 		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		
 		CDSphereDesc sd;
-		sd.radius = shapeScale * 1;
+		sd.radius = ShapeScale() * 1;
 		shapeSphere = GetSdk()->GetPHSdk()->CreateShape(sd)->Cast();
 
 		CDEllipsoidDesc ed;
-		ed.radius *= shapeScale;
+		ed.radius *= ShapeScale();
 		shapeEllipsoid = GetSdk()->GetPHSdk()->CreateShape(ed)->Cast();
 
 		CDCapsuleDesc cd;
-		cd.radius = shapeScale * 1;
-		cd.length = shapeScale * 4;
+		cd.radius = ShapeScale() * 1;
+		cd.length = ShapeScale() * 4;
 		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 		
 		CDRoundConeDesc rcd;
-		rcd.length = shapeScale * 6;
-		rcd.radius = shapeScale * Vec2d(1, 2);
+		rcd.length = ShapeScale() * 6;
+		rcd.radius = ShapeScale() * Vec2d(1, 2);
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 
 		CDConvexMeshDesc coind;
 		const int nDiv = 12;
 		for (int i = 0; i < nDiv; ++i) {
-			const double r = shapeScale * 0.8;
-			const double h = shapeScale * 0.2;
+			const double r = ShapeScale() * 0.8;
+			const double h = ShapeScale() * 0.2;
 			coind.vertices.push_back(Quaterniond::Rot(Rad(360.0/nDiv * i), 'y')* Vec3d(r, -h / 2, 0));
 			coind.vertices.push_back(Quaterniond::Rot(Rad(360.0/nDiv * i), 'y')*Vec3d(r, +h / 2, 0));
 		}
@@ -712,6 +713,7 @@ public: /** FWAppの実装 **/
 		timer->SetInterval(25);
 		EnableIdleFunc(false);
 	}
+	virtual void Cleanup() {}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void TimerFunc(int id) {
