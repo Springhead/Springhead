@@ -11,7 +11,7 @@ namespace Spr{;
 
 PHMaterial::PHMaterial(){
 	e = 0.4f;
-	density = 1.0f;
+	density = 1000.0f;	//	Water's density in MKS
 	spring = 0.0f;
 	damper = 0.0f;
 
