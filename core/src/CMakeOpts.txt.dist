@@ -70,7 +70,10 @@ if(unix)
 	set(GPP_PATH	/usr/local/bin)
     endif()
     #
-    set(INCDIR_DEFAULT	/usr/X11R6/include
+    set(INCDIR_DEFAULT	/usr/include/boost
+			/usr/include/boost/regex
+			/usr/local/include/boost-numeric-bindings
+			/usr/X11R6/include
 			/usr/X11/include)
     #
     set(COPT_WARNING_FLAGS
@@ -91,7 +94,6 @@ if(unix)
     endif()
     set(COPT_DEFAULT	${COPT_WARNING_FLAGS}
 			${COPT_CONFIG}
-			-fPIC
 			-D__unix__
 			-std=gnu++11
 			-D__ccdecl=
@@ -107,15 +109,20 @@ if(unix)
 	set(SPRLIB_PATHS	${EMPTY})
 	set(SPRLIB_NAMES	${EMPTY})
     endif()
-    set(STDLIB_PATHS	/usr/local/lib /usr/lib /usr/X11R6/lib /usr/lib/X11)
-    set(STDLIB_NAMES	X11 Xi Xmu glui glut GLEW GLU GL m dl boost_regex)
+    set(STDLIB_PATHS		. $ENV{SPR_STDLIB_PATHS}
+				/usr/local/lib /usr/lib /usr/lib/X11
+				/use/share/gnulib
+				/lib/x86_64-linux-gnu
+				/usr/lib/x86_64-linux-gnu)
+    set(SHARED_STDLIB_NAMES	X11 Xi Xmu glui glut GLEW GLU GL m dl
+    				boost_regex lapack)
+    set(STATIC_STDLIB_NAMES	${EMPTY})
     #
     set(DEFINE_MACROS	${DEFINE_MACROS_DEFAULT})
     set(INCLUDE_PATHS	${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})
     set(COMP_FLAGS	${COPT_DEFAULT})
-    set(LINK_FLAGS	)
+    set(LINK_FLAGS	${EMPTY})
     set(LIBRARY_PATHS	${SPRLIB_PATHS} ${STDLIB_PATHS})
-    #set(LIBRARY_NAMES	${SPRLIB_NAMES} ${STDLIB_NAMES})
     #
 endif()	# unix
 
