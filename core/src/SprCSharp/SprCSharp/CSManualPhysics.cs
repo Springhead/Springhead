@@ -11,22 +11,26 @@ namespace SprCs {
         public bool isSwapping = false;
         public bool threadMode = false;
         public bool show_this2 = false;
-        public bool fixedUpdateFinished = true;
         public readonly object phSceneForGetSetLock = new object();
         public int sceneForStep = 0;
         public int sceneForGet = 1;
         public int sceneForBuffer = 2;
 
         public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
-        private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
-        private ObjectStatesIf state = ObjectStatesIf.Create();
-        public Dictionary<System.Object, bool> isSteppedFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public readonly AutoResetEvent fixedUpdateAutoWait = new AutoResetEvent(false);
-        public bool allSteppedFlagsFalse = false;
-        public bool changeAllSteppedFlagsTrue = false;
-        public bool firstGetIsSteppedFlagInOneFixedUpdate = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
+        //Set系メソッド用(fixedUpdateAutoWaitの実装にも関与)，速度などの更新にはこれが必須，位置の更新などの更新に関してはこの機能を一度も使用しないコードでは位置更新途中でStepが実行されかねない
+        public Dictionary<System.Object, bool> executeSetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
+        public bool changeAllExecuteSetFunctionFlagsTrue = false;
+        public bool firstGetExecuteSetFunctionInOneFixedUpdate = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
+
+        //Get系メソッド用，そのまま実行してもFixedUpdate中に値が変わらないため安全だが，より効率を求める場合に使用(デフォルトの機能用PHSceneの更新など)
+        public Dictionary<System.Object, bool> executeGetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
+        public bool changeAllExecuteGetFunctionFlagsTrue = false;
+        public bool firstGetExecuteGetFunctionInOneFixedUpdate = true;
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
+        private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
+        private ObjectStatesIf stateForSwap = ObjectStatesIf.Create();
         public delegate void ThreadCallback();
         //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
         public void ExecWaitUntilNextStepCallbackList() { // Step側でLockする
@@ -79,14 +83,14 @@ namespace SprCs {
             if (threadMode) {
                 lock (phSceneForGetSetLock) {
                     isStepping = true;
-                    changeAllSteppedFlagsTrue = true;
+                    changeAllExecuteSetFunctionFlagsTrue = true;
                 }
                 SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
             } else {
                 if (show_this2) {
                     SprExport.Spr_PHSceneIf_Step(_this2);
-                    SprExport.Spr_ObjectStatesIf_SaveState(state._this, _this2); // _this2→state
-                    SprExport.Spr_ObjectStatesIf_LoadState(state._this, _this); // state→_this
+                    SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _this2); // _this2→state
+                    SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _this); // state→_this
                 } else {
                     SprExport.Spr_PHSceneIf_Step(_this);
                 }
@@ -95,15 +99,16 @@ namespace SprCs {
         public void Swap() {
             lock (phSceneForGetSetLock) {
                 ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
-                SprExport.Spr_ObjectStatesIf_SaveState(state._this, _thisArray[sceneForStep]); // phScene→state
+                SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                 if (!isFixedUpdating) { // Step↔Get
-                    SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForGet]); // state→phScene
+                    SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
+                    changeAllExecuteGetFunctionFlagsTrue = true;
                 } else { // Step↔Buffer
                     isSwapping = true;
-                    SprExport.Spr_ObjectStatesIf_LoadState(state._this, _thisArray[sceneForBuffer]); // state→phScene
+                    SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForBuffer]); // state→phScene
                     var temp = sceneForStep;
                     sceneForStep = sceneForBuffer;
                     sceneForBuffer = temp;
@@ -119,41 +124,93 @@ namespace SprCs {
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
                     isSwapping = false;
+                    changeAllExecuteGetFunctionFlagsTrue = true;
                 }
                 isFixedUpdating = false;
             }
         }
-        public bool GetIsSteppedFlag(System.Object o) {
+        public bool GetExecuteSetFunctionFlag(System.Object o) {
             lock (phSceneForGetSetLock) {
-                if (!isSteppedFlagDictionary.ContainsKey(o)) {
-                    return isSteppedFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
+                if (!executeSetFunctionFlagDictionary.ContainsKey(o)) {
+                    return executeSetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
                 } else {
-                    if (changeAllSteppedFlagsTrue && firstGetIsSteppedFlagInOneFixedUpdate) {
-                        List<System.Object> Keys = new List<object>(isSteppedFlagDictionary.Keys);
+                    if (changeAllExecuteSetFunctionFlagsTrue && firstGetExecuteSetFunctionInOneFixedUpdate) { // FixedUpdate中のGetの一番最初でFlagをtrueにするのはchangeAllExecuteSetFunctionFlagsTrueがSpringheadスレッドで呼ばれるため，ここで呼ぶのが最適
+                        List<System.Object> Keys = new List<object>(executeSetFunctionFlagDictionary.Keys);
                         foreach (var key in Keys) {
-                            isSteppedFlagDictionary[key] = true;
+                            executeSetFunctionFlagDictionary[key] = true;
                         }
-                        changeAllSteppedFlagsTrue = false;
+                        changeAllExecuteSetFunctionFlagsTrue = false;
                     }
-                    firstGetIsSteppedFlagInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
-                    return isSteppedFlagDictionary[o];
+                    firstGetExecuteSetFunctionInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
+                    return executeSetFunctionFlagDictionary[o];
                 }
             }
         }
-        public bool SetIsSteppedFlagFalse(System.Object o) { // Flagが全てFalseになってからfixedUpdateAutoWaitをSetしないと更新されてないのにStepが実行される
+        public bool SetExecuteSetFunctionFlagFalse(System.Object o) { // Flagが全てFalseになってからfixedUpdateAutoWaitをSetしないと更新されてないのにStepが実行される
             lock (phSceneForGetSetLock) {
-                if (!isSteppedFlagDictionary.ContainsKey(o)) {
+                if (!executeSetFunctionFlagDictionary.ContainsKey(o)) {
                     return false;
                 }
-                isSteppedFlagDictionary[o] = false;
-                if (!isSteppedFlagDictionary.Values.Contains(true)) { // 更新されていないものがまだある
-                    //fixedUpdateAutoWait.Set();
-                    allSteppedFlagsFalse = true;
-                }
+                executeSetFunctionFlagDictionary[o] = false;
                 return true;
             }
         }
 
+        public bool GetExecuteGetFunctionFlag(System.Object o) {
+            lock (phSceneForGetSetLock) {
+                if (!executeGetFunctionFlagDictionary.ContainsKey(o)) {
+                    return executeGetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
+                } else {
+                    if (changeAllExecuteGetFunctionFlagsTrue && firstGetExecuteGetFunctionInOneFixedUpdate) {
+                        List<System.Object> Keys = new List<object>(executeGetFunctionFlagDictionary.Keys);
+                        foreach (var key in Keys) {
+                            executeGetFunctionFlagDictionary[key] = true;
+                        }
+                        changeAllExecuteGetFunctionFlagsTrue = false;
+                    }
+                    firstGetExecuteGetFunctionInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
+                    return executeGetFunctionFlagDictionary[o];
+                }
+            }
+        }
+        public bool SetExecuteGetFunctionFlagFalse(System.Object o) {
+            lock (phSceneForGetSetLock) {
+                if (!executeGetFunctionFlagDictionary.ContainsKey(o)) {
+                    return false;
+                }
+                executeGetFunctionFlagDictionary[o] = false;
+                return true;
+            }
+        }
+        public override bool DelChildObject(ObjectIf o) {
+            ObjectIf objectIf = this as ObjectIf;
+            Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+            // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
+            char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
+            lock (phSceneForGetSetLock) {
+                if (isStepping) {
+                    Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                    AddWaitUntilNextStepCallback(() => {
+                        Console.WriteLine("DelChildObject(overrided) In callback" + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                        SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
+                        SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]);
+                    });
+                    ret0[sceneForGet] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
+                } else {
+                    Console.WriteLine("DelChildObject(overrided) not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                    for (int num = 0; num < _thisNumber; num++) {
+                        ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
+                    }
+                }
+            }
+            if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
+                Console.Write("failed DelChildObject");
+                return false;
+            } else {
+                return true;
+            }
+            //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
+        }
         public override bool GetDesc(CsObject desc) {
             char ret = (char)0; // <!!> これいいのか？
             ObjectIf objectIf = this as ObjectIf;

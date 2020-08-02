@@ -3195,7 +3195,7 @@ namespace SprCs {
 	    char ret = SprExport.Spr_ObjectIf_AddChildObject((IntPtr) _this, (IntPtr) o);
 	    return (ret == 0) ? false : true;
 	}
-	public bool DelChildObject(ObjectIf o) {
+	public virtual bool DelChildObject(ObjectIf o) {
             Console.WriteLine("DelChildObject(default) " + this.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineÇÕC++ì‡ïîÇ≈é¿ëïÇ≥ÇÍÇƒÇÈÅH
             char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
             Console.WriteLine("DelChildObject _thisArray[0]");

@@ -10377,7 +10377,7 @@ namespace SprCs {
 	public PHSolidIf CreateSolid(PHSolidDesc desc) {
             if (threadMode) {
                 lock (phSceneForGetSetLock) {
-                    state = ObjectStatesIf.Create();
+                    stateForSwap = ObjectStatesIf.Create();
                     if (isStepping) {
                             Console.WriteLine("Create Solid In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
@@ -10619,7 +10619,7 @@ namespace SprCs {
             PHJointIf obj = new PHJointIf(IntPtr.Zero);
             if (threadMode) {
                 lock (phSceneForGetSetLock) {
-                    state = ObjectStatesIf.Create();
+                    stateForSwap = ObjectStatesIf.Create();
                     if (isStepping) {
                             Console.WriteLine("Create Joint In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForGet], (IntPtr) lhs._thisArray[sceneForGet], (IntPtr) rhs._thisArray[sceneForGet], (IntPtr) ii, (IntPtr)desc);
