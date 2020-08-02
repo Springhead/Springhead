@@ -6743,7 +6743,7 @@ namespace SprCs {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Posed(p);
-                        Console.WriteLine("PHSolid.SetPose in isStepping");
+                        //Console.WriteLine("PHSolid.SetPose in isStepping");
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
                             SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
@@ -8436,7 +8436,7 @@ namespace SprCs {
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
-                        Console.WriteLine("PHBallJoint SetSpring in isStepping");
+                        //Console.WriteLine("PHBallJoint SetSpring in isStepping");
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             //Console.WriteLine("SetSpring in CallBack");
                             SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)spring);
@@ -8513,7 +8513,7 @@ namespace SprCs {
             if (phSceneIf.threadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
-                        Console.WriteLine("SetTargetPosition isStepping");
+                        //Console.WriteLine("SetTargetPosition isStepping");
                         var newQ = new Quaterniond(q);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
