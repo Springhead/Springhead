@@ -350,7 +350,11 @@ bool DRUARTMotorDriver::ClearComRead() {
 
 bool DRUARTMotorDriver::InitCom() {
 #ifdef _WIN32
-	if (SetupComm(hUART, 1024, 1024) != TRUE) return false;
+	if (SetupComm(hUART, 1024, 1024) != TRUE) {
+		unsigned e = GetLastError();
+		DSTR << "SetupComm() " << e << std::endl;
+		return false;
+	}
 	if (!PurgeComm(hUART, PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR)) return false;
 	DWORD comError;
 	COMSTAT comStat;
@@ -427,6 +431,10 @@ bool DRUARTMotorDriver::Init(){
 			OPEN_EXISTING,
 			0,				//ポートの属性を指定:同期　非同期にしたいときはFILE_FLAG_OVERLAPPED
 			NULL);
+		if (hUART == INVALID_HANDLE_VALUE) {
+			DSTR << "CreateFile failed " << GetLastError() << std::endl;
+			return false;
+		}
 		if (InitCom()) {
 			impl->EnumBoards(hUART);
 			if (impl->boards.size() > 0) {
