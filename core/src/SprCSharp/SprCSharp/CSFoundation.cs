@@ -3146,19 +3146,23 @@ namespace SprCs {
         }
 	public IfInfo GetIfInfo() {
             IntPtr ptr = IntPtr.Zero;
-            if(_thisArray[0] != IntPtr.Zero) {
-	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
-            } else if(_thisArray[1] != IntPtr.Zero) {
-	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[1]);
-            } else if(_thisArray[2] != IntPtr.Zero) {
-	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[2]);
-            } else {
+            if (_thisArray[0] != IntPtr.Zero) {
+                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
+            } else if (_thisArray[1] != IntPtr.Zero) {
+                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[1]);
+            } else if (_thisArray[2] != IntPtr.Zero) {
+                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[2]);
+            } else if (_this != IntPtr.Zero) {
 	            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _this);
+            }
+            if(ptr == IntPtr.Zero) {
+                Console.WriteLine("GetIfInfo All null");
+                return null;
+            } else {
                 var newIfInfo = new IfInfo(ptr);
-                Console.WriteLine(newIfInfo.ClassName() + " use _this");
                 return newIfInfo;
             }
-            return new IfInfo(ptr);
+            //return new IfInfo(ptr);
 	}
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfoStatic();
@@ -3195,7 +3199,7 @@ namespace SprCs {
 	    char ret = SprExport.Spr_ObjectIf_AddChildObject((IntPtr) _this, (IntPtr) o);
 	    return (ret == 0) ? false : true;
 	}
-	public virtual bool DelChildObject(ObjectIf o) {
+	public virtual bool DelChildObject(ObjectIf o) { // åƒÇŒÇÍÇ»Ç¢ÇÕÇ∏
             Console.WriteLine("DelChildObject(default) " + this.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineÇÕC++ì‡ïîÇ≈é¿ëïÇ≥ÇÍÇƒÇÈÅH
             char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
             Console.WriteLine("DelChildObject _thisArray[0]");
@@ -3209,7 +3213,7 @@ namespace SprCs {
             }
             //char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // è„éËÇ≠Ç¢Ç©Ç»Ç¢
             if(ret0 == 0) {
-                Console.Write("failed DelChildObject");
+                Console.WriteLine("failed DelChildObject");
                 return false;
             } else {
                 return true;

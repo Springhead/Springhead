@@ -42,7 +42,11 @@ namespace SprCs {
 
         public override bool DelChildObject(ObjectIf o) {
             ObjectIf objectIf = this as ObjectIf;
-            Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+            if(objectIf.GetIfInfo() == null) {
+                Console.WriteLine("objectIf.GetIfInfo() null");
+            } else {
+                Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+            }
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
