@@ -10386,6 +10386,7 @@ namespace SprCs {
                             return null;
                         }
                         PHSolidIf obj = new PHSolidIf(get); // _thsis‚ÉGet‚ð“ü‚ê‚é
+                        obj.phSceneIf = this;
                         obj._thisArray[sceneForGet] = get;
                         Console.WriteLine(sceneForGet);
                         AddWaitUntilNextStepCallback(() => {
@@ -10407,6 +10408,7 @@ namespace SprCs {
                             return null;
                         }
                         PHSolidIf obj = new PHSolidIf(ptr0); // _thsis‚ÉGet‚ð“ü‚ê‚é
+                        obj.phSceneIf = this;
                         obj._thisArray[0] = ptr0;
                         obj._thisArray[1] = ptr1;
                         obj._thisArray[2] = ptr2;
@@ -10648,6 +10650,7 @@ namespace SprCs {
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) { return new PH1DJointIf(IntPtr.Zero); }
             if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
                     var newJoint = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    newJoint.phSceneIf = this;
                         if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                         IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr) lhs._thisArray[sceneForStep], (IntPtr) rhs._thisArray[sceneForStep], (IntPtr) ii, (IntPtr)desc);
@@ -10661,6 +10664,7 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) { return new PHFixJointIf(IntPtr.Zero); }
             if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
                         var newJoint = new PHSpringIf(obj._thisArray[0],obj._thisArray[1],obj._thisArray[2]);
+                    newJoint.phSceneIf = this;
                         if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr) lhs._thisArray[sceneForStep], (IntPtr) rhs._thisArray[sceneForStep], (IntPtr) ii, (IntPtr)desc);

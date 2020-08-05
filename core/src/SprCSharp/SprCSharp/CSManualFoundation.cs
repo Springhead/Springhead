@@ -21,7 +21,14 @@ namespace SprCs {
     }
 
     public partial class SceneObjectIf : NamedObjectIf {
+        public PHSceneIf phSceneIf = null;
         public PHSceneIf GetCSPHSceneIf() {
+            if(phSceneIf != null) {
+                return phSceneIf;
+            }
+            ObjectIf objectIf = this as ObjectIf;
+            Console.WriteLine("SceneObjectIf.GetCSPHScenIf phSceneIf null");
+            Console.WriteLine(objectIf.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             IntPtr ptr = IntPtr.Zero;
             if (_thisArray[0] != IntPtr.Zero) {
                 //Console.WriteLine("_thisArray[0] not Zero");
