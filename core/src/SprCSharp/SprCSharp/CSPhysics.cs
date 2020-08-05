@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading;
 #pragma warning disable 0108
 namespace SprCs {
     public partial class PHConstraintEngineDesc : CsObject {
@@ -8561,11 +8562,20 @@ namespace SprCs {
 	}
 	public Vec3d GetTargetVelocity() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-	            IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-                return new Vec3d(ptr, true);
+            var currentThread = Thread.CurrentThread;
+            if (currentThread == phSceneIf.stepThread) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                    return new Vec3d(ptr, true);
+                }
+            } else if(currentThread == phSceneIf.subThread){
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Vec3d(ptr, true);
+                }
             }
+            return null;
 	}
 	public void SetOffsetForce(Vec3d ofst) {
             var phSceneIf = GetCSPHSceneIf();
@@ -8717,11 +8727,20 @@ namespace SprCs {
 	}
 	public Vec3d GetTargetPosition() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-	            IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-                return new Vec3d(ptr, true);
+            var currentThread = Thread.CurrentThread;
+            if (currentThread == phSceneIf.stepThread) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                    return new Vec3d(ptr, true);
+                }
+            } else if (currentThread == phSceneIf.subThread) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Vec3d(ptr, true);
+                }
             }
+            return null;
 	}
 	public void SetTargetOrientation(Quaterniond targetOrientation) {
             var phSceneIf = GetCSPHSceneIf();
@@ -8776,15 +8795,24 @@ namespace SprCs {
 	public Vec3d GetSpring() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.threadMode) {
+            var currentThread = Thread.CurrentThread;
+            if (currentThread == phSceneIf.stepThread) {
                 lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec3d(ptr, true);
                 }
+            } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return new Vec3d(ptr, true);
+                    }
+                }
             } else {
-                return null;
+
             }
+            return null;
 	}
 	public void SetDamper(Vec3d damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();

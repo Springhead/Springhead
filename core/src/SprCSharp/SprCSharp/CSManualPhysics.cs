@@ -42,6 +42,9 @@ namespace SprCs {
         public Dictionary<System.Object, bool> executeGetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public bool changeAllExecuteGetFunctionFlagsTrue = false;
         public bool firstGetExecuteGetFunctionInOneFixedUpdate = true;
+
+        public Thread stepThread = null; // Stepを実行するスレッド
+        public Thread subThread = null; // 描画用のスレッド(Unity想定)
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
@@ -284,6 +287,7 @@ namespace SprCs {
             _thisArray[2] = ptr2;
             _flag = flag;
         }
+        /*
         public void SetTargetVelocityAsync(Vec6d v) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.threadMode) {
@@ -347,6 +351,7 @@ namespace SprCs {
                 SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_this, (IntPtr)p);
             }
         }
+        */
     }
     public partial class PHBallJointIf : PHJointIf {
         public PHBallJointIf(IntPtr ptr, IntPtr ptr1, IntPtr ptr2, bool flag = false) {
@@ -356,6 +361,7 @@ namespace SprCs {
             _flag = flag;
         }
         // Thread処理のためのメソッド
+        /*
         public void SetTargetVelocityAsync(Vec3d v) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.threadMode) {
@@ -399,8 +405,9 @@ namespace SprCs {
                 SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this, (IntPtr)q);
             }
         }
+        */
     }
-
+/*
     public partial class PHSolidIf : PHBodyIf {
         // Thread処理のためのメソッド
         public void SetPoseAsync(Posed p) {
@@ -458,5 +465,5 @@ namespace SprCs {
             }
         }
     }
-
+*/
 }
