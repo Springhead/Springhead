@@ -24,7 +24,7 @@ namespace SprCs {
         public bool isStepping = false;
         public bool isFixedUpdating = false;
         public bool isSwapping = false;
-        public bool threadMode = false;
+        public bool multiThreadMode = false;
         public bool show_this2 = false;
         public readonly object phSceneForGetSetLock = new object();
         public int sceneForStep = 0;
@@ -98,11 +98,7 @@ namespace SprCs {
         //    }
         //}
         public void Step() {
-            if (threadMode) {
-                lock (phSceneForGetSetLock) {
-                    isStepping = true;
-                    changeAllExecuteSetFunctionFlagsTrue = true;
-                }
+            if (multiThreadMode) {
                 lock (GetSdk().phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
                     SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
                 }

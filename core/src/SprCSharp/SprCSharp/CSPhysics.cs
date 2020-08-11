@@ -6500,7 +6500,7 @@ namespace SprCs {
         }
         public Posed GetPose() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     phSceneIf.isFixedUpdating = true;
                     IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
@@ -6508,7 +6508,7 @@ namespace SprCs {
                     return new Posed(ptr, true);
                 }
             } else {
-                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_this);
+                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_thisArray[0]);
                 return new Posed(ptr, true);
             }
         }
@@ -6542,34 +6542,42 @@ namespace SprCs {
         }
         public void AddShape(CDShapeIf shape) {
             var phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (phSceneIf.isStepping) {
-                    phSceneIf.AddWaitUntilNextStepCallback(() => {
-                        SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shape);
-                        SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shape);
-                    });
-                    SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)shape);
-                } else {
-                    foreach (var _this in _thisArray) {
-                        SprExport.Spr_PHBodyIf_AddShape((IntPtr)_this, (IntPtr)shape);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shape);
+                            SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shape);
+                        });
+                        SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)shape);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHBodyIf_AddShape((IntPtr)_this, (IntPtr)shape);
+                        }
                     }
                 }
+            } else {
+                SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[0], (IntPtr)shape);
             }
         }
         public void AddShapes(CDShapeIf shBegin, CDShapeIf shEnd) {
             var phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (phSceneIf.isStepping) {
-                    phSceneIf.AddWaitUntilNextStepCallback(() => {
-                        SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shBegin, (IntPtr)shEnd);
-                        SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shBegin, (IntPtr)shEnd);
-                    });
-                    SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)shBegin, (IntPtr)shEnd);
-                } else {
-                    foreach (var _this in _thisArray) {
-                        SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_this, (IntPtr)shBegin, (IntPtr)shEnd);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shBegin, (IntPtr)shEnd);
+                            SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shBegin, (IntPtr)shEnd);
+                        });
+                        SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)shBegin, (IntPtr)shEnd);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_this, (IntPtr)shBegin, (IntPtr)shEnd);
+                        }
                     }
                 }
+            } else {
+                SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[0], (IntPtr)shBegin, (IntPtr)shEnd);
             }
         }
         public void RemoveShape(int index) {
@@ -6597,7 +6605,7 @@ namespace SprCs {
         }
         public void SetShapePose(int index, Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Posed(pose);
@@ -6613,7 +6621,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this, (int)index, (IntPtr)pose);
+                SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[0], (int)index, (IntPtr)pose);
             }
         }
         public void ClearShape() {
@@ -6667,7 +6675,7 @@ namespace SprCs {
         }
         public void SetCenterOfMass(Vec3d center) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newCenter = new Vec3d(center);
@@ -6683,7 +6691,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_this, (IntPtr)center);
+                SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[0], (IntPtr)center);
             }
         }
         public Matrix3d GetInertia() {
@@ -6699,7 +6707,7 @@ namespace SprCs {
         }
         public void CompInertia() {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
@@ -6714,7 +6722,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_this);
+                SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[0]);
             }
         }
         public void SetFramePosition(Vec3d p) {
@@ -6740,7 +6748,7 @@ namespace SprCs {
         }
         public void SetPose(Posed p) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Posed(p);
@@ -6757,7 +6765,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this, (IntPtr)p);
+                SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[0], (IntPtr)p);
             }
         }
         public void SetVelocity(Vec3d v) {
@@ -7814,14 +7822,18 @@ namespace SprCs {
         }
         public PHSolidIf GetSocketSolid() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[phSceneIf.sceneForGet]);
-                if (ptr == IntPtr.Zero) { return null; }
-                PHSolidIf obj = new PHSolidIf(ptr);
-                obj._thisArray[phSceneIf.sceneForGet] = ptr;
-                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
-                return obj;
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    if (ptr == IntPtr.Zero) { return null; }
+                    PHSolidIf obj = new PHSolidIf(ptr);
+                    obj._thisArray[phSceneIf.sceneForGet] = ptr;
+                    if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
+                    return obj;
+                }
+            } else {
+                return null;
             }
         }
         public PHSolidIf GetPlugSolid() {
@@ -8434,7 +8446,7 @@ namespace SprCs {
         }
         public void SetSpring(double spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         //Console.WriteLine("PHBallJoint SetSpring in isStepping");
@@ -8458,7 +8470,7 @@ namespace SprCs {
         }
         public double GetSpring() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     phSceneIf.isFixedUpdating = true;
                     double result = SprExport.Spr_PHBallJointIf_GetSpring(
@@ -8471,7 +8483,7 @@ namespace SprCs {
         }
         public void SetDamper(double damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
@@ -8491,7 +8503,7 @@ namespace SprCs {
         }
         public double GetDamper() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     phSceneIf.isFixedUpdating = true;
                     double result = SprExport.Spr_PHBallJointIf_GetDamper(
@@ -8511,7 +8523,7 @@ namespace SprCs {
         }
         public void SetTargetPosition(Quaterniond q) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         //Console.WriteLine("SetTargetPosition isStepping");
@@ -8541,7 +8553,7 @@ namespace SprCs {
         }
         public void SetTargetVelocity(Vec3d v) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newV = new Vec3d(v);
@@ -8579,7 +8591,7 @@ namespace SprCs {
         }
         public void SetOffsetForce(Vec3d ofst) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newV = new Vec3d(ofst);
@@ -8706,7 +8718,7 @@ namespace SprCs {
         }
         public void SetTargetPosition(Vec3d targetPosition) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Vec3d(targetPosition);
@@ -8744,7 +8756,7 @@ namespace SprCs {
         }
         public void SetTargetOrientation(Quaterniond targetOrientation) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newQ = new Quaterniond(targetOrientation);
@@ -8773,7 +8785,7 @@ namespace SprCs {
         }
         public void SetSpring(Vec3d spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newSpring = new Vec3d(spring);
@@ -8794,7 +8806,7 @@ namespace SprCs {
         }
         public Vec3d GetSpring() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
                     lock (phSceneIf.phSceneForGetSetLock) {
@@ -8810,13 +8822,15 @@ namespace SprCs {
                     }
                 }
             } else {
-
+                IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring(
+                    (IntPtr)_thisArray[0]); // ‚±‚±‚ÅŽæ“¾‚³‚ê‚éPosed‚Í•¡»
+                return new Vec3d(ptr, true);
             }
             return null;
         }
         public void SetDamper(Vec3d damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newDamper = new Vec3d(damper);
@@ -8832,12 +8846,12 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_this, damper);
+                SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[0], damper);
             }
         }
         public Vec3d GetDamper() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     phSceneIf.isFixedUpdating = true;
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
@@ -8845,7 +8859,9 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 }
             } else {
-                return null;
+                IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
+                    (IntPtr)_thisArray[0]);
+                return new Vec3d(ptr, true);
             }
         }
         public void SetSecondDamper(Vec3d secondDamper) {
@@ -8857,7 +8873,7 @@ namespace SprCs {
         }
         public void SetSpringOri(double spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
@@ -8877,7 +8893,7 @@ namespace SprCs {
         }
         public double GetSpringOri() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     phSceneIf.isFixedUpdating = true;
                     double result = SprExport.Spr_PHSpringIf_GetSpringOri(
@@ -8890,7 +8906,7 @@ namespace SprCs {
         }
         public void SetDamperOri(double damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
@@ -8910,7 +8926,7 @@ namespace SprCs {
         }
         public double GetDamperOri() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     phSceneIf.isFixedUpdating = true;
                     double result = SprExport.Spr_PHSpringIf_GetDamperOri(
@@ -8959,7 +8975,7 @@ namespace SprCs {
         }
         public void SetOffsetForce(Vec6d offsetForce) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newV = new Vec6d(offsetForce);
@@ -8980,7 +8996,7 @@ namespace SprCs {
         }
         public void SetTargetVelocity(Vec6d targetVelocity) {
             var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
+            if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
                         var newV = new Vec6d(targetVelocity);
@@ -10403,7 +10419,7 @@ namespace SprCs {
             return obj;
         }
         public PHSolidIf CreateSolid(PHSolidDesc desc) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     stateForSwap = ObjectStatesIf.Create();
                     if (isStepping) {
@@ -10445,7 +10461,16 @@ namespace SprCs {
                     }
                 }
             } else {
-                return null;
+                IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
+                if (ptr0 == IntPtr.Zero) {
+                    Console.Write("Create Solid null not Thread");
+                    return null;
+                }
+                PHSolidIf obj = new PHSolidIf(ptr0); // _thsis‚ÉGet‚ð“ü‚ê‚é
+                obj.phSceneIf = this;
+                obj._thisArray[0] = ptr0;
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr0); }
+                return obj;
             }
         }
         public PHSolidIf CreateSolid() {
@@ -10494,7 +10519,7 @@ namespace SprCs {
             return obj;
         }
         public void SetContactMode(PHSolidIf lhs, PHSolidIf rhs, PHSceneDesc.ContactMode mode) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10513,7 +10538,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode(PHSolidIf lhs, PHSolidIf rhs) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10532,7 +10557,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode(PHSolidIf group, ulong length, PHSceneDesc.ContactMode mode) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10551,7 +10576,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode(PHSolidIf group, ulong length) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10570,7 +10595,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode(PHSolidIf solid, PHSceneDesc.ContactMode mode) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10589,7 +10614,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode(PHSolidIf solid) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10608,7 +10633,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode(PHSceneDesc.ContactMode mode) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10627,7 +10652,7 @@ namespace SprCs {
             }
         }
         public void SetContactMode() {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
@@ -10647,7 +10672,7 @@ namespace SprCs {
         }
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             PHJointIf obj = new PHJointIf(IntPtr.Zero);
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     stateForSwap = ObjectStatesIf.Create();
                     if (isStepping) {
@@ -10992,7 +11017,7 @@ namespace SprCs {
             return result;
         }
         public void SetTimeStep(double dt) {
-            if (threadMode) {
+            if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {

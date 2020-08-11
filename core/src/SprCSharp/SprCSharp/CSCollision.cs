@@ -293,10 +293,19 @@ namespace SprCs {
         }
     }
     public partial class CDShapeDesc : CsObject {
-        public CDShapeDesc() { _this = SprExport.Spr_new_CDShapeDesc(); _flag = true; }
+        public CDShapeDesc() {
+            Console.WriteLine("CDShapeDesc Constructor");
+            _this = SprExport.Spr_new_CDShapeDesc(); _flag = true;
+        }
         public CDShapeDesc(IntPtr ptr) : base(ptr) { }
         public CDShapeDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDShapeDesc() { if (_flag) { SprExport.Spr_delete_CDShapeDesc(_this); _flag = false; } }
+        ~CDShapeDesc() {
+            Console.WriteLine("CDShapeDesc Destructor");
+            if (_flag) {
+                Console.WriteLine("CDShapeDesc Destructor flag true");
+                SprExport.Spr_delete_CDShapeDesc(_this); _flag = false;
+            }
+        }
         public PHMaterial material {
             get { return new PHMaterial(SprExport.Spr_CDShapeDesc_addr_material(_this)); }
             set { SprExport.Spr_CDShapeDesc_set_material(_this, value); }
@@ -305,6 +314,7 @@ namespace SprCs {
     [System.Serializable]
     public class CDShapeDescStruct : CsObject {
         public CDShapeDescStruct() {
+            Console.WriteLine("CDShapeDescStruct Constructor");
             CDShapeDesc desc = new CDShapeDesc();
             ApplyFrom(desc, false);
         }
@@ -316,11 +326,13 @@ namespace SprCs {
             material = r.material;
         }
         public static implicit operator CDShapeDesc(CDShapeDescStruct m) {
+            Console.WriteLine("CDShapeDesc(CDShapeDescStruct m)");
             CDShapeDesc r = new CDShapeDesc();
             m.ApplyTo(r, true);
             return r;
         }
         public static implicit operator CDShapeDescStruct(CDShapeDesc r) {
+            Console.WriteLine("CDShapeDescStruct(CDShapeDesc r)");
             CDShapeDescStruct m = new CDShapeDescStruct();
             m.ApplyFrom(r, true);
             return m;
@@ -574,7 +586,10 @@ namespace SprCs {
         }
     }
     public partial class CDBoxDesc : CDShapeDesc {
-        public CDBoxDesc() { _this = SprExport.Spr_new_CDBoxDesc(); _flag = true; }
+        public CDBoxDesc() {
+            Console.WriteLine("CDBoxDesc Constructor");
+            _this = SprExport.Spr_new_CDBoxDesc(); _flag = true;
+        }
         public CDBoxDesc(IntPtr ptr) : base(ptr) { }
         public CDBoxDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public CDBoxDesc(Vec3d bs) { _this = SprExport.Spr_new_CDBoxDesc_2(bs); _flag = true; }
@@ -587,11 +602,13 @@ namespace SprCs {
     [System.Serializable]
     public class CDBoxDescStruct : CDShapeDescStruct {
         public CDBoxDescStruct() {
+            Console.WriteLine("CDBoxDescStruct Constructor");
             CDBoxDesc desc = new CDBoxDesc();
             ApplyFrom(desc, true);
         }
         public Vec3fStruct boxsize;
         public void ApplyTo(CDBoxDesc r, bool apply_to_base_class = false) {
+            Console.WriteLine("CDBoxDescStruct.ApplyTo");
             r.boxsize = boxsize;
             if (apply_to_base_class) {
                 base.ApplyTo(r, apply_to_base_class);
@@ -600,15 +617,18 @@ namespace SprCs {
         public void ApplyFrom(CDBoxDesc r, bool apply_to_base_class = false) {
             boxsize = r.boxsize;
             if (apply_to_base_class) {
+                Console.WriteLine("CDBoxDescStruct.ApplyFrom");
                 base.ApplyFrom(r, apply_to_base_class);
             }
         }
         public static implicit operator CDBoxDesc(CDBoxDescStruct m) {
+            Console.WriteLine("CDBoxDesc(CDBoxDescStruct m)");
             CDBoxDesc r = new CDBoxDesc();
             m.ApplyTo(r, true);
             return r;
         }
         public static implicit operator CDBoxDescStruct(CDBoxDesc r) {
+            Console.WriteLine("CDBoxDescStruct(CDBoxDesc r)");
             CDBoxDescStruct m = new CDBoxDescStruct();
             m.ApplyFrom(r, true);
             return m;
