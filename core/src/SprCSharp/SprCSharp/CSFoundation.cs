@@ -3144,7 +3144,7 @@ namespace SprCs {
             SprExport.Spr_ObjectIf_FreeString((IntPtr)ptr);
             return bstr;
         }
-        public IfInfo GetIfInfo() {
+        public IfInfo GetIfInfo() { // <!!> Ç±ÇÍÇ‡virtualÇ…ÇµÇƒé¿ëïÇµÇ»Ç¢Ç∆É_ÉÅÇ©ÅH
             IntPtr ptr = IntPtr.Zero;
             if (_thisArray[0] != IntPtr.Zero) {
                 ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[0]);

@@ -7833,18 +7833,31 @@ namespace SprCs {
                     return obj;
                 }
             } else {
-                return null;
+                IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[0]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHSolidIf obj = new PHSolidIf(ptr);
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
+                return obj;
             }
         }
         public PHSolidIf GetPlugSolid() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
+                        (IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    if (ptr == IntPtr.Zero) { return null; }
+                    PHSolidIf obj = new PHSolidIf(ptr);
+                    obj._thisArray[phSceneIf.sceneForGet] = ptr;
+                    if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
+                    return obj;
+                }
+            } else {
                 IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
-                    (IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    (IntPtr)_thisArray[0]);
                 if (ptr == IntPtr.Zero) { return null; }
                 PHSolidIf obj = new PHSolidIf(ptr);
-                obj._thisArray[phSceneIf.sceneForGet] = ptr;
                 if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
                 return obj;
             }
@@ -7874,20 +7887,24 @@ namespace SprCs {
         }
         public void SetSocketPose(Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (phSceneIf.isStepping) {
-                    var newPose = new Posed(pose);
-                    phSceneIf.AddWaitUntilNextStepCallback(() => {
-                        Console.WriteLine("SetSocketPose in Callback");
-                        SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
-                        SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
-                    });
-                    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newPose);
-                } else {
-                    foreach (var _this in _thisArray) {
-                        SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_this, (IntPtr)pose);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newPose = new Posed(pose);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            Console.WriteLine("SetSocketPose in Callback");
+                            SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
+                            SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
+                        });
+                        SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newPose);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_this, (IntPtr)pose);
+                        }
                     }
                 }
+            } else {
+                SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[0], (IntPtr)pose);
             }
         }
         public void GetPlugPose(Posed pose) {
@@ -7895,19 +7912,23 @@ namespace SprCs {
         }
         public void SetPlugPose(Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (phSceneIf.isStepping) {
-                    var newPose = new Posed(pose);
-                    phSceneIf.AddWaitUntilNextStepCallback(() => {
-                        SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
-                        SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
-                    });
-                    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newPose);
-                } else {
-                    foreach (var _this in _thisArray) {
-                        SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_this, (IntPtr)pose);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        var newPose = new Posed(pose);
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
+                            SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
+                        });
+                        SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newPose);
+                    } else {
+                        foreach (var _this in _thisArray) {
+                            SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_this, (IntPtr)pose);
+                        }
                     }
                 }
+            } else {
+                SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[0], (IntPtr)pose);
             }
         }
         public void GetRelativePose(Posed p) {
@@ -8465,7 +8486,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_this, (double)spring);
+                SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[0], (double)spring);
             }
         }
         public double GetSpring() {
@@ -8478,7 +8499,9 @@ namespace SprCs {
                     return result;
                 }
             } else {
-                return 0;
+                double result = SprExport.Spr_PHBallJointIf_GetSpring(
+                    (IntPtr)_thisArray[0]); // ここで取得されるPosedは複製
+                return result;
             }
         }
         public void SetDamper(double damper) {
@@ -8498,7 +8521,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_this, (double)damper);
+                SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[0], (double)damper);
             }
         }
         public double GetDamper() {
@@ -8511,7 +8534,9 @@ namespace SprCs {
                     return result;
                 }
             } else {
-                return 0;
+                double result = SprExport.Spr_PHBallJointIf_GetDamper(
+                    (IntPtr)_thisArray[0]); // ここで取得されるPosedは複製
+                return result;
             }
         }
         public Vec3d GetSecondDamper() {
@@ -8540,14 +8565,19 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_this, (IntPtr)q);
+                SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[0], (IntPtr)q);
             }
         }
         public Quaterniond GetTargetPosition() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Quaterniond(ptr, true);
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[0]);
                 return new Quaterniond(ptr, true);
             }
         }
@@ -8569,23 +8599,28 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_this, (IntPtr)v);
+                SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[0], (IntPtr)v);
             }
         }
         public Vec3d GetTargetVelocity() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            var currentThread = Thread.CurrentThread;
-            if (currentThread == phSceneIf.stepThread) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                    return new Vec3d(ptr, true);
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                        return new Vec3d(ptr, true);
+                    }
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Vec3d(ptr, true);
+                    }
                 }
-            } else if (currentThread == phSceneIf.subThread) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
-                    return new Vec3d(ptr, true);
-                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[0]);
+                return new Vec3d(ptr, true);
             }
             return null;
         }
@@ -8607,7 +8642,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_this, (IntPtr)ofst);
+                SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[0], (IntPtr)ofst);
             }
         }
         public Vec3d GetOffsetForce() {
@@ -8656,9 +8691,14 @@ namespace SprCs {
         }
         public Vec3d GetMotorForce() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Vec3d(ptr, true);
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[0]);
                 return new Vec3d(ptr, true);
             }
         }
@@ -8734,23 +8774,28 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_this, (IntPtr)targetPosition);
+                SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[0], (IntPtr)targetPosition);
             }
         }
         public Vec3d GetTargetPosition() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            var currentThread = Thread.CurrentThread;
-            if (currentThread == phSceneIf.stepThread) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                    return new Vec3d(ptr, true);
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                        return new Vec3d(ptr, true);
+                    }
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Vec3d(ptr, true);
+                    }
                 }
-            } else if (currentThread == phSceneIf.subThread) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
-                    return new Vec3d(ptr, true);
-                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[0]);
+                return new Vec3d(ptr, true);
             }
             return null;
         }
@@ -8772,14 +8817,19 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_this, (IntPtr)targetOrientation);
+                SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[0], (IntPtr)targetOrientation);
             }
         }
         public Quaterniond GetTargetOrientation() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Quaterniond(ptr, true);
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[0]);
                 return new Quaterniond(ptr, true);
             }
         }
@@ -8801,7 +8851,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_this, spring);
+                SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[0], spring);
             }
         }
         public Vec3d GetSpring() {
@@ -8888,7 +8938,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_this, (double)spring);
+                SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[0], (double)spring);
             }
         }
         public double GetSpringOri() {
@@ -8901,7 +8951,9 @@ namespace SprCs {
                     return result;
                 }
             } else {
-                return 0;
+                double result = SprExport.Spr_PHSpringIf_GetSpringOri(
+                    (IntPtr)_thisArray[0]); // ここで取得されるPosedは複製
+                return result;
             }
         }
         public void SetDamperOri(double damper) {
@@ -8921,7 +8973,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_this, (double)damper);
+                SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[0], (double)damper);
             }
         }
         public double GetDamperOri() {
@@ -8934,7 +8986,9 @@ namespace SprCs {
                     return result;
                 }
             } else {
-                return 0;
+                double result = SprExport.Spr_PHSpringIf_GetDamperOri(
+                    (IntPtr)_thisArray[0]); // ここで取得されるPosedは複製
+                return result;
             }
         }
         public void SetSecondDamperOri(double secondDamperOri) {
@@ -8967,9 +9021,14 @@ namespace SprCs {
         }
         public Vec6d GetMotorForce() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Vec6d(ptr, true);
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[0]);
                 return new Vec6d(ptr, true);
             }
         }
@@ -8991,7 +9050,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_this, (IntPtr)offsetForce);
+                SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[0], (IntPtr)offsetForce);
             }
         }
         public void SetTargetVelocity(Vec6d targetVelocity) {
@@ -9012,14 +9071,19 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_this, (IntPtr)targetVelocity);
+                SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[0], (IntPtr)targetVelocity);
             }
         }
         public Vec6d GetTargetVelocity() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                    return new Vec6d(ptr, true);
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[0]);
                 return new Vec6d(ptr, true);
             }
         }
@@ -10534,7 +10598,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_this, (IntPtr)lhs, (IntPtr)rhs, (int)mode);
+                SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0], (int)mode);
             }
         }
         public void SetContactMode(PHSolidIf lhs, PHSolidIf rhs) {
@@ -10553,7 +10617,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_this, (IntPtr)lhs, (IntPtr)rhs);
+                SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0]);
             }
         }
         public void SetContactMode(PHSolidIf group, ulong length, PHSceneDesc.ContactMode mode) {
@@ -10572,7 +10636,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_this, (IntPtr)group, (ulong)length, (int)mode);
+                SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[0], (IntPtr)group._thisArray[0], (ulong)length, (int)mode);
             }
         }
         public void SetContactMode(PHSolidIf group, ulong length) {
@@ -10591,7 +10655,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_this, (IntPtr)group, (ulong)length);
+                SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[0], (IntPtr)group._thisArray[0], (ulong)length);
             }
         }
         public void SetContactMode(PHSolidIf solid, PHSceneDesc.ContactMode mode) {
@@ -10610,7 +10674,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_this, (IntPtr)solid, (int)mode);
+                SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[0], (IntPtr)solid._thisArray[0], (int)mode);
             }
         }
         public void SetContactMode(PHSolidIf solid) {
@@ -10629,7 +10693,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_this, (IntPtr)solid);
+                SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[0], (IntPtr)solid._thisArray[0]);
             }
         }
         public void SetContactMode(PHSceneDesc.ContactMode mode) {
@@ -10648,7 +10712,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_this, (int)mode);
+                SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[0], (int)mode);
             }
         }
         public void SetContactMode() {
@@ -10667,12 +10731,12 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_this);
+                SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[0]);
             }
         }
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
-            PHJointIf obj = new PHJointIf(IntPtr.Zero);
             if (multiThreadMode) {
+                PHJointIf obj = new PHJointIf(IntPtr.Zero);
                 lock (phSceneForGetSetLock) {
                     stateForSwap = ObjectStatesIf.Create();
                     if (isStepping) {
@@ -10740,8 +10804,26 @@ namespace SprCs {
                     if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) { return new PHPlaneToPlaneMateIf(IntPtr.Zero); }
                     return obj;
                 }
+            } else { // コンストラクタの実装によって修正が必要
+                IntPtr ptr = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0], (IntPtr)ii, (IntPtr)desc);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHJointIf obj = new PHJointIf(ptr);
+                if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) { return new PH1DJointIf(ptr); }
+                if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) { return new PHBallJointIf(ptr); }
+                if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) { return new PHFixJointIf(ptr); }
+                if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) { return new PHSpringIf(ptr); }
+                if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) { return new PHMateIf(ptr); }
+                if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) { return new PHHingeJointIf(ptr); }
+                if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) { return new PHSliderJointIf(ptr); }
+                if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) { return new PHPathJointIf(ptr); }
+                if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) { return new PHGenericJointIf(ptr); }
+                if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) { return new PHPointToPointMateIf(ptr); }
+                if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) { return new PHPointToLineMateIf(ptr); }
+                if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) { return new PHPointToPlaneMateIf(ptr); }
+                if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) { return new PHLineToLineMateIf(ptr); }
+                if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) { return new PHPlaneToPlaneMateIf(ptr); }
+                return obj;
             }
-            return null;
         }
         public int NJoints() {
             int result = (int)SprExport.Spr_PHSceneIf_NJoints((IntPtr)_this);
@@ -10768,21 +10850,35 @@ namespace SprCs {
             return obj;
         }
         public int NContacts() {
-            lock (phSceneForGetSetLock) {
-                isFixedUpdating = true;
+            if (multiThreadMode) {
+                lock (phSceneForGetSetLock) {
+                    isFixedUpdating = true;
+                    int result = SprExport.Spr_PHSceneIf_NContacts(
+                        (IntPtr)_thisArray[sceneForGet]); // ここで取得されるPosedは複製
+                    return result;
+                }
+            } else {
                 int result = SprExport.Spr_PHSceneIf_NContacts(
-                    (IntPtr)_thisArray[sceneForGet]); // ここで取得されるPosedは複製
+                    (IntPtr)_thisArray[0]); // ここで取得されるPosedは複製
                 return result;
             }
         }
         public PHContactPointIf GetContact(int i) {
-            lock (phSceneForGetSetLock) {
-                isFixedUpdating = true;
+            if (multiThreadMode) {
+                lock (phSceneForGetSetLock) {
+                    isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHSceneIf_GetContact(
+                        (IntPtr)_thisArray[sceneForGet], (int)i); // ここで取得されるPosedは複製
+                    if (ptr == IntPtr.Zero) { return null; }
+                    PHContactPointIf obj = new PHContactPointIf(ptr);
+                    obj._thisArray[sceneForGet] = ptr;
+                    return obj;
+                }
+            } else {
                 IntPtr ptr = SprExport.Spr_PHSceneIf_GetContact(
-                    (IntPtr)_thisArray[sceneForGet], (int)i); // ここで取得されるPosedは複製
+                    (IntPtr)_thisArray[0], (int)i); // ここで取得されるPosedは複製
                 if (ptr == IntPtr.Zero) { return null; }
                 PHContactPointIf obj = new PHContactPointIf(ptr);
-                obj._thisArray[sceneForGet] = ptr;
                 return obj;
             }
         }
@@ -11032,7 +11128,7 @@ namespace SprCs {
                     }
                 }
             } else {
-                SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_this, (double)dt);
+                SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[0], (double)dt);
             }
             //SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr) _this, (double) dt);
         }
@@ -11220,15 +11316,23 @@ namespace SprCs {
             return obj;
         }
         public PHGravityEngineIf GetGravityEngine() {
-            IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
-            IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[1]);
-            IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[2]);
-            if (ptr == IntPtr.Zero) { return null; }
-            PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
-            obj._thisArray[0] = ptr;
-            obj._thisArray[1] = ptr1;
-            obj._thisArray[2] = ptr2;
-            return obj;
+            if (multiThreadMode) {
+                IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
+                IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[1]);
+                IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[2]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
+                obj._thisArray[0] = ptr;
+                obj._thisArray[1] = ptr1;
+                obj._thisArray[2] = ptr2;
+                return obj;
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
+                obj._thisArray[0] = ptr;
+                return obj;
+            }
         }
         public PHPenaltyEngineIf GetPenaltyEngine() {
             IntPtr ptr = SprExport.Spr_PHSceneIf_GetPenaltyEngine((IntPtr)_this);
@@ -11301,16 +11405,26 @@ namespace SprCs {
             IntPtr ptr = SprExport.Spr_PHSdkIf_GetIfInfoStatic();
             return new IfInfo(ptr);
         }
-        public PHSceneIf CreateScene(PHSceneDesc desc) {
-            IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
-            IntPtr ptr2 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
-            IntPtr ptr3 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
-            if (ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero || ptr3 == IntPtr.Zero) {
-                Console.WriteLine("Create Scene null");
-                return null;
+        public PHSceneIf CreateScene(PHSceneDesc desc, bool multiThreadMode = false) {
+            if (multiThreadMode) {
+                IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
+                IntPtr ptr2 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
+                IntPtr ptr3 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
+                if (ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero || ptr3 == IntPtr.Zero) {
+                    Console.WriteLine("Create Scene null");
+                    return null;
+                }
+                PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1, ptr2, ptr3);
+                return obj;
+            } else {
+                IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_this, (IntPtr)desc);
+                if (ptr1 == IntPtr.Zero) {
+                    Console.WriteLine("Create Scene null");
+                    return null;
+                }
+                PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1);
+                return obj;
             }
-            PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1, ptr2, ptr3);
-            return obj;
         }
         public PHSceneIf CreateScene() {
             IntPtr ptr = SprExport.Spr_PHSdkIf_CreateScene_1((IntPtr)_this);

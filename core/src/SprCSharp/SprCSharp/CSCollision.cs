@@ -1,3 +1,4 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -293,17 +294,25 @@ namespace SprCs {
         }
     }
     public partial class CDShapeDesc : CsObject {
+        private IntPtr _this_CDShapeDesc;
+        private bool _flag_CDShapeDesc;
+
         public CDShapeDesc() {
             Console.WriteLine("CDShapeDesc Constructor");
-            _this = SprExport.Spr_new_CDShapeDesc(); _flag = true;
+            Debug.Log("CDShapeDesc Constructor");
+            _this_CDShapeDesc = SprExport.Spr_new_CDShapeDesc();
+            _flag_CDShapeDesc = true;
+
+            _this = _this_CDShapeDesc;
+            _flag = true;
         }
         public CDShapeDesc(IntPtr ptr) : base(ptr) { }
         public CDShapeDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~CDShapeDesc() {
             Console.WriteLine("CDShapeDesc Destructor");
-            if (_flag) {
+            if (_flag_CDShapeDesc) {
                 Console.WriteLine("CDShapeDesc Destructor flag true");
-                SprExport.Spr_delete_CDShapeDesc(_this); _flag = false;
+                SprExport.Spr_delete_CDShapeDesc(_this_CDShapeDesc);
             }
         }
         public PHMaterial material {
@@ -588,6 +597,7 @@ namespace SprCs {
     public partial class CDBoxDesc : CDShapeDesc {
         public CDBoxDesc() {
             Console.WriteLine("CDBoxDesc Constructor");
+            Debug.Log("CDBoxDesc Constructor");
             _this = SprExport.Spr_new_CDBoxDesc(); _flag = true;
         }
         public CDBoxDesc(IntPtr ptr) : base(ptr) { }

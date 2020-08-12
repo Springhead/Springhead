@@ -25,7 +25,6 @@ namespace SprCs {
         public bool isFixedUpdating = false;
         public bool isSwapping = false;
         public bool multiThreadMode = false;
-        public bool show_this2 = false;
         public readonly object phSceneForGetSetLock = new object();
         public int sceneForStep = 0;
         public int sceneForGet = 1;
@@ -62,6 +61,14 @@ namespace SprCs {
         }
         public void AddWaitUntilNextStepCallback(ThreadCallback callback) {
             waitDuringStepCallbackList.Add(callback);
+        }
+        public static PHSceneIf CreateCSInstance(IntPtr stepPHScene) {
+            if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
+                var newPHSceneIf = new PHSceneIf(stepPHScene);
+                instances[stepPHScene] = newPHSceneIf;
+                instances[stepPHScene]._thisArray[0] = stepPHScene;
+            }
+            return instances[stepPHScene];
         }
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene, IntPtr bufferPHScene, IntPtr getPHScene) { // 次にStepされるPHSceneIfを返す
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
@@ -103,13 +110,7 @@ namespace SprCs {
                     SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
                 }
             } else {
-                if (show_this2) {
-                    SprExport.Spr_PHSceneIf_Step(_this2);
-                    SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _this2); // _this2→state
-                    SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _this); // state→_this
-                } else {
-                    SprExport.Spr_PHSceneIf_Step(_this);
-                }
+                SprExport.Spr_PHSceneIf_Step(_thisArray[0]);
             }
         }
         public void Swap() {
@@ -202,75 +203,92 @@ namespace SprCs {
             ObjectIf objectIf = this as ObjectIf;
             Console.WriteLine("DelChildObject(overrided) "/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-            char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
-            lock (phSceneForGetSetLock) {
-                if (isStepping) {
-                    //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-                    AddWaitUntilNextStepCallback(() => {
-                        //Console.WriteLine("DelChildObject(overrided) In callback" + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-                        var ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
-                        var ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]);
-                        if (ret1 == 0) {
-                            Console.WriteLine("failed DelChildObject ret1");
+            if (multiThreadMode) {
+                char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
+                lock (phSceneForGetSetLock) {
+                    if (isStepping) {
+                        //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                        AddWaitUntilNextStepCallback(() => {
+                            //Console.WriteLine("DelChildObject(overrided) In callback" + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                            var ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
+                            var ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]);
+                            if (ret1 == 0) {
+                                Console.WriteLine("failed DelChildObject ret1");
+                            }
+                            if (ret2 == 0) {
+                                Console.WriteLine("failed DelChildObject ret2");
+                            }
+                        });
+                        ret0[sceneForGet] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
+                    } else {
+                        //Console.WriteLine("DelChildObject(overrided) not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                        for (int num = 0; num < _thisNumber; num++) {
+                            ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
                         }
-                        if (ret2 == 0) {
-                            Console.WriteLine("failed DelChildObject ret2");
-                        }
-                    });
-                    ret0[sceneForGet] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
-                } else {
-                    //Console.WriteLine("DelChildObject(overrided) not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-                    for (int num = 0; num < _thisNumber; num++) {
-                        ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
                     }
                 }
-            }
-            if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
-                Console.WriteLine("failed DelChildObject");
-                return false;
+                if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
+                    Console.WriteLine("failed DelChildObject");
+                    return false;
+                } else {
+                    return true;
+                }
             } else {
-                return true;
+                var ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
+                if (ret0 == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
             //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
         }
         public override bool GetDesc(CsObject desc) {
             char ret = (char)0; // <!!> これいいのか？
             ObjectIf objectIf = this as ObjectIf;
-            lock (phSceneForGetSetLock) {
-                if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
-                    //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-                    ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
-                } else {
-                    //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-                    ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+            if (multiThreadMode) {
+                lock (phSceneForGetSetLock) {
+                    if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
+                                                                  //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                    } else {
+                        //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+                    }
                 }
+            } else {
+                ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
             }
             return (ret == 0) ? false : true;
         }
         public override void SetDesc(CsObject desc) {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             ObjectIf objectIf = this as ObjectIf;
-            lock (phSceneForGetSetLock) {
-                if (isStepping) {
-                    //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
-                    AddWaitUntilNextStepCallback(() => {
-                        //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
-                        if (_thisArray[sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
-                        }
-                        if (_thisArray[sceneForBuffer] != IntPtr.Zero) {
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
-                        }
-                    });
-                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
-                } else {
-                    //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
-                    foreach (var _this in _thisArray) {
-                        if (_this != IntPtr.Zero) {
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+            if (multiThreadMode) {
+                lock (phSceneForGetSetLock) {
+                    if (isStepping) {
+                        //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
+                        AddWaitUntilNextStepCallback(() => {
+                            //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
+                            if (_thisArray[sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
+                            }
+                            if (_thisArray[sceneForBuffer] != IntPtr.Zero) {
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
+                            }
+                        });
+                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                    } else {
+                        //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
+                        foreach (var _this in _thisArray) {
+                            if (_this != IntPtr.Zero) {
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                            }
                         }
                     }
                 }
+            } else {
+                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
             }
         }
     }
@@ -403,63 +421,63 @@ namespace SprCs {
         }
         */
     }
-/*
-    public partial class PHSolidIf : PHBodyIf {
-        // Thread処理のためのメソッド
-        public void SetPoseAsync(Posed p) {
-            var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    if (phSceneIf.isStepping) {
-                        var newP = new Posed(p);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
-                            SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
-                            SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
-                        });
-                        SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newP);
-                    } else {
-                        foreach (var _this in _thisArray) {
-                            SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this, (IntPtr)p);
+    /*
+        public partial class PHSolidIf : PHBodyIf {
+            // Thread処理のためのメソッド
+            public void SetPoseAsync(Posed p) {
+                var phSceneIf = GetCSPHSceneIf();
+                if (phSceneIf.threadMode) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        if (phSceneIf.isStepping) {
+                            var newP = new Posed(p);
+                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                                SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
+                                SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
+                            });
+                            SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newP);
+                        } else {
+                            foreach (var _this in _thisArray) {
+                                SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this, (IntPtr)p);
+                            }
                         }
                     }
+                } else {
+                    SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this, (IntPtr)p);
                 }
-            } else {
-                SprExport.Spr_PHSolidIf_SetPose((IntPtr)_this, (IntPtr)p);
             }
-        }
-        public void SetShapePoseAsync(int index, Posed p) {
-            var phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.threadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    if (phSceneIf.isStepping) {
-                        var newP = new Posed(p);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
-                            SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index, (IntPtr)newP);
-                            SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (int)index, (IntPtr)newP);
-                        });
-                        SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index, (IntPtr)newP);
-                    } else {
-                        foreach (var _this in _thisArray) {
-                            SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this, (int)index, (IntPtr)p);
+            public void SetShapePoseAsync(int index, Posed p) {
+                var phSceneIf = GetCSPHSceneIf();
+                if (phSceneIf.threadMode) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        if (phSceneIf.isStepping) {
+                            var newP = new Posed(p);
+                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                                SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index, (IntPtr)newP);
+                                SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (int)index, (IntPtr)newP);
+                            });
+                            SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index, (IntPtr)newP);
+                        } else {
+                            foreach (var _this in _thisArray) {
+                                SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this, (int)index, (IntPtr)p);
+                            }
                         }
                     }
+                } else {
+                    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this, (int)index, (IntPtr)p);
                 }
-            } else {
-                SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_this, (int)index, (IntPtr)p);
             }
         }
-    }
 
-    public partial class PHBodyIf : SceneObjectIf {
-        public Posed GetPoseAsync() {
-            PHSceneIf phSceneIf = GetCSPHSceneIf();
-            lock (phSceneIf.phSceneForGetSetLock) {
-                phSceneIf.isFixedUpdating = true;
-                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
-                    (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
-                return new Posed(ptr, true);
+        public partial class PHBodyIf : SceneObjectIf {
+            public Posed GetPoseAsync() {
+                PHSceneIf phSceneIf = GetCSPHSceneIf();
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    phSceneIf.isFixedUpdating = true;
+                    IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
+                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
+                    return new Posed(ptr, true);
+                }
             }
         }
-    }
-*/
+    */
 }

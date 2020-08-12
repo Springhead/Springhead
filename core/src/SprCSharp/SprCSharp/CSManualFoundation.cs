@@ -22,8 +22,8 @@ namespace SprCs {
 
     public partial class SceneObjectIf : NamedObjectIf {
         public PHSceneIf phSceneIf = null;
-        public PHSceneIf GetCSPHSceneIf() {
-            if(phSceneIf != null) {
+        public PHSceneIf GetCSPHSceneIf() { // DelChildObject対策のため，phSceneIfは保存されるように
+            if (phSceneIf != null) {
                 return phSceneIf;
             }
             ObjectIf objectIf = this as ObjectIf;
@@ -44,53 +44,65 @@ namespace SprCs {
                 Console.WriteLine("GetCSPHSceneIf null");
                 return null;
             }
-            return PHSceneIf.GetCSInstance(ptr);
+            return phSceneIf = PHSceneIf.GetCSInstance(ptr);
         }
 
         public override bool DelChildObject(ObjectIf o) {
             ObjectIf objectIf = this as ObjectIf;
-            if(objectIf.GetIfInfo() == null) {
+            if (objectIf.GetIfInfo() == null) {
                 Console.WriteLine("objectIf.GetIfInfo() null");
             } else {
                 Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             }
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-            char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (phSceneIf.isStepping) {
-                    phSceneIf.AddWaitUntilNextStepCallback(() => {
-                        SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)o._thisArray[phSceneIf.sceneForStep]);
-                        SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)o._thisArray[phSceneIf.sceneForBuffer]);
-                    });
-                    ret0[phSceneIf.sceneForGet] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)o._thisArray[phSceneIf.sceneForGet]);
-                } else {
-                    //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
-                    for (int num = 0; num < _thisNumber; num++) {
-                        ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
+            if (phSceneIf.multiThreadMode) {
+                char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)o._thisArray[phSceneIf.sceneForStep]);
+                            SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)o._thisArray[phSceneIf.sceneForBuffer]);
+                        });
+                        ret0[phSceneIf.sceneForGet] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)o._thisArray[phSceneIf.sceneForGet]);
+                    } else {
+                        //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
+                        for (int num = 0; num < _thisNumber; num++) {
+                            ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
+                        }
                     }
                 }
-            }
-            if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
-                Console.Write("failed DelChildObject");
-                return false;
+                if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
+                    Console.Write("failed DelChildObject");
+                    return false;
+                } else {
+                    return true;
+                }
             } else {
-                return true;
+                var ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
+                if (ret0 == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
-            //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
         }
         public override bool GetDesc(CsObject desc) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             char ret = (char)0; // <!!> これいいのか？
             ObjectIf objectIf = this as ObjectIf;
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
-                    //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-                    ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
-                } else {
-                    //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-                    ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
+                                                                            //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
+                    } else {
+                        //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+                    }
                 }
+            } else {
+                ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
             }
             return (ret == 0) ? false : true;
         }
@@ -98,27 +110,31 @@ namespace SprCs {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             ObjectIf objectIf = this as ObjectIf;
-            lock (phSceneIf.phSceneForGetSetLock) {
-                if (phSceneIf.isStepping) {
-                    //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
-                    phSceneIf.AddWaitUntilNextStepCallback(() => {
-                        //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
-                        if (_thisArray[phSceneIf.sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
-                        }
-                        if (_thisArray[phSceneIf.sceneForBuffer] != IntPtr.Zero) {
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
-                        }
-                    });
-                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
-                } else {
-                    //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
-                    foreach (var _this in _thisArray) {
-                        if (_this != IntPtr.Zero) {
-                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+            if (phSceneIf.multiThreadMode) {
+                lock (phSceneIf.phSceneForGetSetLock) {
+                    if (phSceneIf.isStepping) {
+                        //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
+                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
+                            if (_thisArray[phSceneIf.sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
+                            }
+                            if (_thisArray[phSceneIf.sceneForBuffer] != IntPtr.Zero) {
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
+                            }
+                        });
+                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
+                    } else {
+                        //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
+                        foreach (var _this in _thisArray) {
+                            if (_this != IntPtr.Zero) {
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                            }
                         }
                     }
                 }
+            } else {
+                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
             }
         }
     }
