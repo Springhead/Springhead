@@ -6555,8 +6555,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shape);
-                            SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shape);
                         });
+                        SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shape);
                         SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)shape);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -6575,8 +6575,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shBegin, (IntPtr)shEnd);
-                            SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shBegin, (IntPtr)shEnd);
                         });
+                        SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shBegin, (IntPtr)shEnd);
                         SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)shBegin, (IntPtr)shEnd);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -6671,8 +6671,8 @@ namespace SprCs {
                         var newP = new Posed(pose);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index, (IntPtr)newP);
-                            SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (int)index, (IntPtr)newP);
                         });
+                        SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (int)index, (IntPtr)newP);
                         SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index, (IntPtr)newP);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -6741,8 +6741,8 @@ namespace SprCs {
                         var newCenter = new Vec3d(center);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newCenter);
-                            SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newCenter);
                         });
+                        SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newCenter);
                         SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newCenter);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -6772,8 +6772,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                            SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForBuffer]);
                         });
+                        SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForBuffer]);
                         SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -6815,8 +6815,8 @@ namespace SprCs {
                         //Console.WriteLine("PHSolid.SetPose in isStepping");
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
-                            SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
                         });
+                        SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
                         SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newP);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -7966,8 +7966,8 @@ namespace SprCs {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             Console.WriteLine("SetSocketPose in Callback");
                             SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
-                            SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
                         });
+                        SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
                         SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newPose);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -7990,8 +7990,8 @@ namespace SprCs {
                         var newPose = new Posed(pose);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
-                            SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
                         });
+                        SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
                         SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newPose);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8546,8 +8546,8 @@ namespace SprCs {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             //Console.WriteLine("SetSpring in CallBack");
                             SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)spring);
-                            SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)spring);
                         });
+                        SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)spring);
                         //Console.WriteLine("SetSpring in isStepping");
                         SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForGet], (double)spring);
                     } else {
@@ -8591,8 +8591,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)damper);
-                            SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)damper);
                         });
+                        SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)damper);
                         SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForGet], (double)damper);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8643,8 +8643,8 @@ namespace SprCs {
                         var newQ = new Quaterniond(q);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
-                            SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
                         });
+                        SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
                         SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newQ);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8684,8 +8684,8 @@ namespace SprCs {
                         var newV = new Vec3d(v);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
-                            SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         });
+                        SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8725,8 +8725,8 @@ namespace SprCs {
                         var newV = new Vec3d(ofst);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
-                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         });
+                        SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8857,8 +8857,8 @@ namespace SprCs {
                         var newP = new Vec3d(targetPosition);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
-                            SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
                         });
+                        SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
                         SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newP);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8898,8 +8898,8 @@ namespace SprCs {
                         var newQ = new Quaterniond(targetOrientation);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
-                            SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
                         });
+                        SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
                         SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newQ);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8939,8 +8939,8 @@ namespace SprCs {
                         var newSpring = new Vec3d(spring);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep], newSpring);
-                            SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForBuffer], newSpring);
                         });
+                        SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForBuffer], newSpring);
                         SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForGet], newSpring);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -8982,8 +8982,8 @@ namespace SprCs {
                         var newDamper = new Vec3d(damper);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForStep], newDamper);
-                            SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForBuffer], newDamper);
                         });
+                        SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForBuffer], newDamper);
                         SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForGet], newDamper);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -9032,8 +9032,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)spring);
-                            SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)spring);
                         });
+                        SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)spring);
                         SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[phSceneIf.sceneForGet], (double)spring);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -9075,8 +9075,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)damper);
-                            SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)damper);
                         });
+                        SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)damper);
                         SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[phSceneIf.sceneForGet], (double)damper);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -9160,8 +9160,8 @@ namespace SprCs {
                         var newV = new Vec6d(offsetForce);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
-                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         });
+                        SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -9181,8 +9181,8 @@ namespace SprCs {
                         var newV = new Vec6d(targetVelocity);
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
-                            SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         });
+                        SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                     } else {
                         foreach (var _this in _thisArray) {
@@ -10616,19 +10616,19 @@ namespace SprCs {
                     if (isStepping) {
                         Console.WriteLine("Create Solid In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
-                        if (get == IntPtr.Zero) {
+                        IntPtr buffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
+                        if (get == IntPtr.Zero || buffer == IntPtr.Zero) {
                             Console.Write("Create Solid null");
                             return null;
                         }
                         PHSolidIf obj = new PHSolidIf(get); // _thsis‚ÉGet‚ð“ü‚ê‚é
                         obj.phSceneIf = this;
                         obj._thisArray[sceneForGet] = get;
+                        obj._thisArray[sceneForBuffer] = buffer;
                         Console.WriteLine(sceneForGet);
                         AddWaitUntilNextStepCallback(() => {
                             IntPtr step = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
-                            IntPtr buffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
                             obj._thisArray[sceneForStep] = step;
-                            obj._thisArray[sceneForBuffer] = buffer;
                         });
                         if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(get); }
                         Console.WriteLine("Create Solid In isStepping End");
@@ -10715,8 +10715,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (int)mode);
-                            SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (int)mode);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (int)mode);
                         SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForGet], (IntPtr)lhs._thisArray[sceneForGet], (IntPtr)rhs._thisArray[sceneForGet], (int)mode);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10734,8 +10734,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep]);
-                            SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer]);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer]);
                         SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForGet], (IntPtr)lhs._thisArray[sceneForGet], (IntPtr)rhs._thisArray[sceneForGet]);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10753,8 +10753,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForStep], (IntPtr)group._thisArray[sceneForStep], (ulong)length, (int)mode);
-                            SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length, (int)mode);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length, (int)mode);
                         SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForGet], (IntPtr)group._thisArray[sceneForGet], (ulong)length, (int)mode);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10772,8 +10772,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForStep], (IntPtr)group._thisArray[sceneForStep], (ulong)length);
-                            SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length);
                         SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForGet], (IntPtr)group._thisArray[sceneForGet], (ulong)length);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10791,8 +10791,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForStep], (IntPtr)solid._thisArray[sceneForStep], (int)mode);
-                            SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer], (int)mode);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer], (int)mode);
                         SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForGet], (IntPtr)solid._thisArray[sceneForGet], (int)mode);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10810,8 +10810,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForStep], (IntPtr)solid._thisArray[sceneForStep]);
-                            SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer]);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer]);
                         SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForGet], (IntPtr)solid._thisArray[sceneForGet]);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10829,8 +10829,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForStep], (int)mode);
-                            SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForBuffer], (int)mode);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForBuffer], (int)mode);
                         SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForGet], (int)mode);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10848,8 +10848,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForStep]);
-                            SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForBuffer]);
                         });
+                        SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForBuffer]);
                         SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForGet]);
                     } else {
                         for (int i = 0; i < _thisNumber; i++) {
@@ -10896,11 +10896,11 @@ namespace SprCs {
                         var newJoint = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
                         newJoint.phSceneIf = this;
                         if (isStepping) {
+                            IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
+                            newJoint._thisArray[sceneForBuffer] = buffer;
                             AddWaitUntilNextStepCallback(() => {
                                 IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
-                                IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
                                 newJoint._thisArray[sceneForStep] = step;
-                                newJoint._thisArray[sceneForBuffer] = buffer;
                             });
                         }
                         return newJoint;
@@ -10910,11 +10910,11 @@ namespace SprCs {
                         var newJoint = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
                         newJoint.phSceneIf = this;
                         if (isStepping) {
+                            IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
+                            newJoint._thisArray[sceneForBuffer] = buffer;
                             AddWaitUntilNextStepCallback(() => {
                                 IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
-                                IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
                                 newJoint._thisArray[sceneForStep] = step;
-                                newJoint._thisArray[sceneForBuffer] = buffer;
                             });
                         }
                         return newJoint;
@@ -11245,8 +11245,8 @@ namespace SprCs {
                     if (isStepping) {
                         AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[sceneForStep], (double)dt);
-                            SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[sceneForBuffer], (double)dt);
                         });
+                        SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[sceneForBuffer], (double)dt);
                         SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[sceneForGet], (double)dt);
                     } else {
                         foreach (var _this in _thisArray) {

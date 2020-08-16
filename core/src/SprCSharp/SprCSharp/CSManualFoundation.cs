@@ -63,8 +63,8 @@ namespace SprCs {
                     if (phSceneIf.isStepping) {
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)o._thisArray[phSceneIf.sceneForStep]);
-                            SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)o._thisArray[phSceneIf.sceneForBuffer]);
                         });
+                        ret0[phSceneIf.sceneForBuffer] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)o._thisArray[phSceneIf.sceneForBuffer]);
                         ret0[phSceneIf.sceneForGet] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)o._thisArray[phSceneIf.sceneForGet]);
                     } else {
                         //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
@@ -96,7 +96,7 @@ namespace SprCs {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
                     if (_thisArray[phSceneIf.sceneForStep] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり,PHIKEnginが呼んでるな
-                                                                            //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                                                                             //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
                     } else {
                         Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
@@ -128,13 +128,9 @@ namespace SprCs {
                         //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
-                            if (_thisArray[phSceneIf.sceneForStep] != IntPtr.Zero) { // こっちにCDShapeも入りえる
-                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
-                            }
-                            if (_thisArray[phSceneIf.sceneForBuffer] != IntPtr.Zero) {
-                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
-                            }
+                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
                         });
+                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
                         SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
                     } else {
                         //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
