@@ -6501,16 +6501,24 @@ namespace SprCs {
         public Posed GetPose() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
-                    (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                    (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                     return new Posed(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
+                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return new Posed(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_thisArray[0]);
                 return new Posed(ptr, true);
             }
+            return null;
         }
         public Vec3d GetVelocity() {
             IntPtr ptr = SprExport.Spr_PHBodyIf_GetVelocity((IntPtr)_this);
@@ -6590,18 +6598,70 @@ namespace SprCs {
             SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr)_this, (IntPtr)shape);
         }
         public int NShape() {
-            int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_this);
-            return result;
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                    return result;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return result;
+                    }
+                }
+            } else {
+                int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_thisArray[0]);
+                return result;
+            }
+            return 0;
         }
         public CDShapeIf GetShape(int index) {
-            IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr)_this, (int)index);
-            if (ptr == IntPtr.Zero) { return null; }
-            CDShapeIf obj = new CDShapeIf(ptr);
-            return obj;
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index);
+                    if (ptr == IntPtr.Zero) { return null; }
+                    CDShapeIf obj = new CDShapeIf(ptr);
+                    return obj;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index);
+                        if (ptr == IntPtr.Zero) { return null; }
+                        CDShapeIf obj = new CDShapeIf(ptr);
+                        return obj;
+                    }
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr)_thisArray[0], (int)index);
+                if (ptr == IntPtr.Zero) { return null; }
+                CDShapeIf obj = new CDShapeIf(ptr);
+                return obj;
+            }
+            return null;
         }
         public Posed GetShapePose(int index) {
-            IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_this, (int)index);
-            return new Posed(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index);
+                    return new Posed(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index);
+                        return new Posed(ptr, true);
+                    }
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_thisArray[0], (int)index);
+                return new Posed(ptr, true);
+            }
+            return null;
         }
         public void SetShapePose(int index, Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
@@ -7843,15 +7903,26 @@ namespace SprCs {
         public PHSolidIf GetPlugSolid() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        (IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     if (ptr == IntPtr.Zero) { return null; }
                     PHSolidIf obj = new PHSolidIf(ptr);
-                    obj._thisArray[phSceneIf.sceneForGet] = ptr;
+                    obj._thisArray[phSceneIf.sceneForStep] = ptr;
                     if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
                     return obj;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        if (ptr == IntPtr.Zero) { return null; }
+                        PHSolidIf obj = new PHSolidIf(ptr);
+                        obj._thisArray[phSceneIf.sceneForGet] = ptr;
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
+                        return obj;
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
@@ -7861,6 +7932,7 @@ namespace SprCs {
                 if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
                 return obj;
             }
+            return null;
         }
         public PHSceneIf GetScene() {
             IntPtr ptr = SprExport.Spr_PHConstraintIf_GetScene((IntPtr)_this);
@@ -8492,17 +8564,25 @@ namespace SprCs {
         public double GetSpring() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     double result = SprExport.Spr_PHBallJointIf_GetSpring(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                     return result;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        double result = SprExport.Spr_PHBallJointIf_GetSpring(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return result;
+                    }
                 }
             } else {
                 double result = SprExport.Spr_PHBallJointIf_GetSpring(
                     (IntPtr)_thisArray[0]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                 return result;
             }
+            return 0;
         }
         public void SetDamper(double damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
@@ -8527,17 +8607,25 @@ namespace SprCs {
         public double GetDamper() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     double result = SprExport.Spr_PHBallJointIf_GetDamper(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                     return result;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        double result = SprExport.Spr_PHBallJointIf_GetDamper(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return result;
+                    }
                 }
             } else {
                 double result = SprExport.Spr_PHBallJointIf_GetDamper(
                     (IntPtr)_thisArray[0]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                 return result;
             }
+            return 0;
         }
         public Vec3d GetSecondDamper() {
             IntPtr ptr = SprExport.Spr_PHBallJointIf_GetSecondDamper((IntPtr)_this);
@@ -8571,15 +8659,22 @@ namespace SprCs {
         public Quaterniond GetTargetPosition() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Quaterniond(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Quaterniond(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[0]);
                 return new Quaterniond(ptr, true);
             }
+            return null;
         }
         public void SetTargetVelocity(Vec3d v) {
             var phSceneIf = GetCSPHSceneIf();
@@ -8607,10 +8702,8 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
-                        IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                        return new Vec3d(ptr, true);
-                    }
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                    return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneForGetSetLock) {
                         phSceneIf.isFixedUpdating = true;
@@ -8782,10 +8875,8 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
-                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                        return new Vec3d(ptr, true);
-                    }
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                    return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneForGetSetLock) {
                         phSceneIf.isFixedUpdating = true;
@@ -8823,15 +8914,22 @@ namespace SprCs {
         public Quaterniond GetTargetOrientation() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Quaterniond(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Quaterniond(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[0]);
                 return new Quaterniond(ptr, true);
             }
+            return null;
         }
         public void SetSpring(Vec3d spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
@@ -8859,10 +8957,8 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
-                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                        return new Vec3d(ptr, true);
-                    }
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+                    return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneForGetSetLock) {
                         phSceneIf.isFixedUpdating = true;
@@ -8902,17 +8998,25 @@ namespace SprCs {
         public Vec3d GetDamper() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                     return new Vec3d(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return new Vec3d(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
                     (IntPtr)_thisArray[0]);
                 return new Vec3d(ptr, true);
             }
+            return null;
         }
         public void SetSecondDamper(Vec3d secondDamper) {
             SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr)_this, (IntPtr)secondDamper);
@@ -8944,17 +9048,25 @@ namespace SprCs {
         public double GetSpringOri() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     double result = SprExport.Spr_PHSpringIf_GetSpringOri(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                     return result;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        double result = SprExport.Spr_PHSpringIf_GetSpringOri(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return result;
+                    }
                 }
             } else {
                 double result = SprExport.Spr_PHSpringIf_GetSpringOri(
                     (IntPtr)_thisArray[0]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                 return result;
             }
+            return 0;
         }
         public void SetDamperOri(double damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
@@ -8979,17 +9091,25 @@ namespace SprCs {
         public double GetDamperOri() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
                     double result = SprExport.Spr_PHSpringIf_GetDamperOri(
-                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                     return result;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        double result = SprExport.Spr_PHSpringIf_GetDamperOri(
+                            (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return result;
+                    }
                 }
             } else {
                 double result = SprExport.Spr_PHSpringIf_GetDamperOri(
                     (IntPtr)_thisArray[0]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                 return result;
             }
+            return 0;
         }
         public void SetSecondDamperOri(double secondDamperOri) {
             SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr)_this, (double)secondDamperOri);
@@ -9077,15 +9197,22 @@ namespace SprCs {
         public Vec6d GetTargetVelocity() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec6d(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Vec6d(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[0]);
                 return new Vec6d(ptr, true);
             }
+            return null;
         }
     }
     public partial class PHMateIf : PHJointIf {

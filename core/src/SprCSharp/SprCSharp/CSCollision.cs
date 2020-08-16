@@ -298,8 +298,8 @@ namespace SprCs {
         private bool _flag_CDShapeDesc;
 
         public CDShapeDesc() {
-            Console.WriteLine("CDShapeDesc Constructor");
-            Debug.Log("CDShapeDesc Constructor");
+            //Console.WriteLine("CDShapeDesc Constructor");
+            //Debug.Log("CDShapeDesc Constructor");
             _this_CDShapeDesc = SprExport.Spr_new_CDShapeDesc();
             _flag_CDShapeDesc = true;
 
@@ -309,9 +309,9 @@ namespace SprCs {
         public CDShapeDesc(IntPtr ptr) : base(ptr) { }
         public CDShapeDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~CDShapeDesc() {
-            Console.WriteLine("CDShapeDesc Destructor");
+            //Console.WriteLine("CDShapeDesc Destructor");
             if (_flag_CDShapeDesc) {
-                Console.WriteLine("CDShapeDesc Destructor flag true");
+                //Console.WriteLine("CDShapeDesc Destructor flag true");
                 SprExport.Spr_delete_CDShapeDesc(_this_CDShapeDesc);
             }
         }
@@ -323,7 +323,7 @@ namespace SprCs {
     [System.Serializable]
     public class CDShapeDescStruct : CsObject {
         public CDShapeDescStruct() {
-            Console.WriteLine("CDShapeDescStruct Constructor");
+            //Console.WriteLine("CDShapeDescStruct Constructor");
             CDShapeDesc desc = new CDShapeDesc();
             ApplyFrom(desc, false);
         }
@@ -596,8 +596,8 @@ namespace SprCs {
     }
     public partial class CDBoxDesc : CDShapeDesc {
         public CDBoxDesc() {
-            Console.WriteLine("CDBoxDesc Constructor");
-            Debug.Log("CDBoxDesc Constructor");
+            //Console.WriteLine("CDBoxDesc Constructor");
+            //Debug.Log("CDBoxDesc Constructor");
             _this = SprExport.Spr_new_CDBoxDesc(); _flag = true;
         }
         public CDBoxDesc(IntPtr ptr) : base(ptr) { }
