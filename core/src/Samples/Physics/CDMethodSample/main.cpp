@@ -72,6 +72,7 @@ public:
 	double avePhaseTime[3] = {0,0,0};
 	Vec3d floorShakeAmplitude;
 	bool bSlider = false;
+	double shapeScale;		// fk
 
 public:
 	virtual void Init(int argc, char* argv[]) {
