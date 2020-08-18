@@ -8720,17 +8720,29 @@ namespace SprCs {
         public void SetOffsetForce(Vec3d ofst) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    if (phSceneIf.isStepping) {
-                        var newV = new Vec3d(ofst);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
-                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    var newV = new Vec3d(ofst);
+                    lock (phSceneIf.phSceneForGetSetLock) { // callbackForStepThreadÇsubThreadÇ≈éQè∆Ç∑ÇÈÇÃÇ≈ïKóvÇ»lock
+                        phSceneIf.AddCallbackForStepThread(() => {
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         });
-                        SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
-                        SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
-                    } else {
-                        foreach (var _this in _thisArray) {
-                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_this, (IntPtr)ofst);
+                        SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                    }
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        if (phSceneIf.isStepping) {
+                            var newV = new Vec3d(ofst);
+                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                                SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                            });
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                            SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                        } else {
+                            foreach (var _this in _thisArray) {
+                                SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_this, (IntPtr)ofst);
+                            }
                         }
                     }
                 }
@@ -8739,8 +8751,26 @@ namespace SprCs {
             }
         }
         public Vec3d GetOffsetForce() {
-            IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce((IntPtr)_this);
-            return new Vec3d(ptr, true);
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce(
+                    (IntPtr)_thisArray[phSceneIf.sceneForStep]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                    return new Vec3d(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce(
+                        (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
+                        return new Vec3d(ptr, true);
+                    }
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce((IntPtr)_thisArray[0]);
+                return new Vec3d(ptr, true);
+            }
+            return null;
         }
         public void SetOffsetForceN(int n, Vec3d ofst) {
             SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr)_this, (int)n, (IntPtr)ofst);

@@ -35,6 +35,7 @@ namespace SprCs {
         //Set系メソッド用(fixedUpdateAutoWaitの実装にも関与)，速度などの更新にはこれが必須，位置の更新などの更新に関してはこの機能を一度も使用しないコードでは位置更新途中でStepが実行されかねない
         public Dictionary<System.Object, bool> executeSetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public bool changeAllExecuteSetFunctionFlagsTrue = false;
+        public bool changedAllExecuteSetFunctionFlagsTrue = true;
         public bool firstGetExecuteSetFunctionInOneFixedUpdate = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
 
         //Get系メソッド用，そのまま実行してもFixedUpdate中に値が変わらないため安全だが，より効率を求める場合に使用(デフォルトの機能用PHSceneの更新など)
@@ -47,6 +48,8 @@ namespace SprCs {
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThread = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>();
         private ObjectStatesIf stateForSwap = ObjectStatesIf.Create();
         public delegate void ThreadCallback();
         //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
@@ -61,6 +64,27 @@ namespace SprCs {
         }
         public void AddWaitUntilNextStepCallback(ThreadCallback callback) {
             waitDuringStepCallbackList.Add(callback);
+        }
+        public void ExecCallbackForStepThread() {
+            if (callbackForStepThread.Count != 0) {
+                Console.WriteLine("callbackForStepThread " + callbackForStepThread.Count);
+            }
+            foreach (var callback in callbackForStepThread) {
+                callback();
+            }
+            callbackForStepThread.Clear();
+        }
+        public void AddCallbackForStepThread(ThreadCallback callback) {
+            callbackForStepThread.Add(callback);
+        }
+        public void ExecCallbackForStepThreadOnSwapAfterFixedUpdate() {
+            if (callbackForStepThreadOnSwapAfterFixedUpdate.Count != 0) {
+                Console.WriteLine("callbackForStepThreadOnSwapAfterFixedUpdate " + callbackForStepThreadOnSwapAfterFixedUpdate.Count);
+            }
+            foreach (var callback in callbackForStepThreadOnSwapAfterFixedUpdate) {
+                callback();
+            }
+            callbackForStepThreadOnSwapAfterFixedUpdate.Clear();
         }
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene) {
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
@@ -118,13 +142,18 @@ namespace SprCs {
                 ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
                 SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                 if (!isFixedUpdating) { // Step↔Get
+                    ExecCallbackForStepThread();
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
+                    Console.WriteLine("Swap Step↔Get changeAllExecuteGetFunctionFlagsTrue = true");
                     changeAllExecuteGetFunctionFlagsTrue = true;
                 } else { // Step↔Buffer
+                    Console.WriteLine("Swap Step↔Buffer");
                     isSwapping = true;
+                    callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>(callbackForStepThread); // ディープコピー
+                    callbackForStepThread.Clear();
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForBuffer]); // state→phScene
                     var temp = sceneForStep;
                     sceneForStep = sceneForBuffer;
@@ -137,10 +166,12 @@ namespace SprCs {
         public void SwapAfterFixedUpdate() {
             lock (phSceneForGetSetLock) {
                 if (isSwapping) { // Buffer↔Get
+                    ExecCallbackForStepThreadOnSwapAfterFixedUpdate(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
                     var temp = sceneForBuffer;
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
                     isSwapping = false;
+                    Console.WriteLine("SwapAfterFixedUpdate changeAllExecuteGetFunctionFlagsTrue = true");
                     changeAllExecuteGetFunctionFlagsTrue = true;
                 }
                 isFixedUpdating = false;
@@ -157,6 +188,7 @@ namespace SprCs {
                             executeSetFunctionFlagDictionary[key] = true;
                         }
                         changeAllExecuteSetFunctionFlagsTrue = false;
+                        changedAllExecuteSetFunctionFlagsTrue = true;
                     }
                     firstGetExecuteSetFunctionInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
                     return executeSetFunctionFlagDictionary[o];
