@@ -28,8 +28,8 @@ namespace SprCs {
                 return phSceneIf;
             }
             ObjectIf objectIf = this as ObjectIf;
-            Console.WriteLine("SceneObjectIf.GetCSPHScenIf phSceneIf null");
-            Console.WriteLine(objectIf.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+            //Console.WriteLine("SceneObjectIf.GetCSPHScenIf phSceneIf null");
+            //Console.WriteLine(objectIf.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             IntPtr ptr = IntPtr.Zero;
             if (_thisArray[0] != IntPtr.Zero) {
                 //Console.WriteLine("_thisArray[0] not Zero");
@@ -53,7 +53,7 @@ namespace SprCs {
             if (objectIf.GetIfInfo() == null) {
                 Console.WriteLine("objectIf.GetIfInfo() null");
             } else {
-                Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                //Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             }
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
@@ -99,7 +99,7 @@ namespace SprCs {
                                                                              //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
                     } else {
-                        Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
                     }
                 } else if (currentThread == phSceneIf.subThread) {
@@ -108,7 +108,7 @@ namespace SprCs {
                                                                                 //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                             ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
                         } else {
-                            Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                            //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                             ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
                         }
                     }
