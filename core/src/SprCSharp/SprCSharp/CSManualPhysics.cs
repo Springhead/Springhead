@@ -50,7 +50,8 @@ namespace SprCs {
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
         private List<ThreadCallback> callbackForStepThread = new List<ThreadCallback>();
         private List<ThreadCallback> callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>();
-        private ObjectStatesIf stateForSwap = ObjectStatesIf.Create();
+        public ObjectStatesIf stateForSwap;
+        private bool callObjectStatesIf_Create = true;
         public delegate void ThreadCallback();
         //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
         public void ExecWaitUntilNextStepCallbackList() { // Step側でLockする
@@ -143,6 +144,10 @@ namespace SprCs {
                     Console.WriteLine("isSwapping True");
                 }
                 ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
+                if (callObjectStatesIf_Create) {
+                    stateForSwap = ObjectStatesIf.Create();
+                    callObjectStatesIf_Create = false;
+                }
                 SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                 if (!isFixedUpdating) { // Step↔Get
                     ExecCallbackForStepThread();

@@ -951,10 +951,23 @@ namespace SprCs {
         }
     }
     public partial class PHSolidState : CsObject {
-        public PHSolidState() { _this = SprExport.Spr_new_PHSolidState(); _flag = true; }
+        private IntPtr _this_PHSolidState;
+        private bool _flag_PHSolidState;
+
+        public PHSolidState() {
+            _this_PHSolidState = SprExport.Spr_new_PHSolidState();
+            _flag_PHSolidState = true;
+
+            _this = _this_PHSolidState;
+            _flag = true;
+        }
         public PHSolidState(IntPtr ptr) : base(ptr) { }
         public PHSolidState(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~PHSolidState() { if (_flag) { SprExport.Spr_delete_PHSolidState(_this); _flag = false; } }
+        ~PHSolidState() {
+            if (_flag_PHSolidState) {
+                SprExport.Spr_delete_PHSolidState(_this_PHSolidState);
+            }
+        }
         public Vec3d velocity {
             get { return new Vec3d(SprExport.Spr_PHSolidState_addr_velocity(_this)); }
             set { SprExport.Spr_PHSolidState_set_velocity(_this, value); }
@@ -1646,10 +1659,22 @@ namespace SprCs {
         }
     }
     public partial class PHConstraintDesc : CsObject {
-        public PHConstraintDesc() { _this = SprExport.Spr_new_PHConstraintDesc(); _flag = true; }
+        private IntPtr _this_PHConstraintDesc;
+        private bool _flag_PHConstraintDesc;
+        public PHConstraintDesc() {
+            _this_PHConstraintDesc = SprExport.Spr_new_PHConstraintDesc();
+            _flag_PHConstraintDesc = true;
+
+            _this = _this_PHConstraintDesc;
+            _flag = true;
+        }
         public PHConstraintDesc(IntPtr ptr) : base(ptr) { }
         public PHConstraintDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~PHConstraintDesc() { if (_flag) { SprExport.Spr_delete_PHConstraintDesc(_this); _flag = false; } }
+        ~PHConstraintDesc() {
+            if (_flag_PHConstraintDesc) {
+                SprExport.Spr_delete_PHConstraintDesc(_this_PHConstraintDesc);
+            }
+        }
         public bool bEnabled {
             get {
                 byte ret = (byte)SprExport.Spr_PHConstraintDesc_get_bEnabled(_this);
@@ -1700,10 +1725,23 @@ namespace SprCs {
         }
     }
     public partial class PHJointDesc : PHConstraintDesc {
-        public PHJointDesc() { _this = SprExport.Spr_new_PHJointDesc(); _flag = true; }
+        private IntPtr _this_PHJointDesc;
+        private bool _flag_PHJointDesc;
+
+        public PHJointDesc() {
+            _this_PHJointDesc = SprExport.Spr_new_PHJointDesc();
+            _flag_PHJointDesc = true;
+
+            _this = _this_PHJointDesc;
+            _flag = true;
+        }
         public PHJointDesc(IntPtr ptr) : base(ptr) { }
         public PHJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~PHJointDesc() { if (_flag) { SprExport.Spr_delete_PHJointDesc(_this); _flag = false; } }
+        ~PHJointDesc() {
+            if (_flag_PHJointDesc) {
+                SprExport.Spr_delete_PHJointDesc(_this_PHJointDesc);
+            }
+        }
         public double fMax {
             get { return SprExport.Spr_PHJointDesc_get_fMax(_this); }
             set { SprExport.Spr_PHJointDesc_set_fMax(_this, value); }
@@ -4777,10 +4815,23 @@ namespace SprCs {
         }
     }
     public partial class PHSceneState : CsObject {
-        public PHSceneState() { _this = SprExport.Spr_new_PHSceneState(); _flag = true; }
+        private IntPtr _this_PHSceneState;
+        private bool _flag_PHSceneState;
+
+        public PHSceneState() {
+            _this_PHSceneState = SprExport.Spr_new_PHSceneState();
+            _flag_PHSceneState = true;
+
+            _this = _this_PHSceneState;
+            _flag = true;
+        }
         public PHSceneState(IntPtr ptr) : base(ptr) { }
         public PHSceneState(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~PHSceneState() { if (_flag) { SprExport.Spr_delete_PHSceneState(_this); _flag = false; } }
+        ~PHSceneState() {
+            if (_flag_PHSceneState) {
+                SprExport.Spr_delete_PHSceneState(_this_PHSceneState);
+            }
+        }
         public double timeStep {
             get { return SprExport.Spr_PHSceneState_get_timeStep(_this); }
             set { SprExport.Spr_PHSceneState_set_timeStep(_this, value); }
@@ -10653,7 +10704,11 @@ namespace SprCs {
         public PHSolidIf CreateSolid(PHSolidDesc desc) {
             if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
-                    stateForSwap = ObjectStatesIf.Create();
+                    Console.WriteLine("Spr_ObjectStatesIf_ReleaseState In Create Solid");
+                    if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
+                        SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]);
+                    }
+                    callObjectStatesIf_Create = true;
                     if (isStepping) {
                         Console.WriteLine("Create Solid In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
@@ -10994,7 +11049,11 @@ namespace SprCs {
             if (multiThreadMode) {
                 PHJointIf obj = new PHJointIf(IntPtr.Zero);
                 lock (phSceneForGetSetLock) {
-                    stateForSwap = ObjectStatesIf.Create();
+                    Console.WriteLine("Spr_ObjectStatesIf_ReleaseState In Create Joint");
+                    if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
+                        SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]); // 恐らくstateForSwap._thisと_thisArray[sceneForGet]が同じ構造でないといけないのでここで
+                    }
+                    callObjectStatesIf_Create = true;
                     if (isStepping) {
                         Console.WriteLine("Create Joint In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForGet], (IntPtr)lhs._thisArray[sceneForGet], (IntPtr)rhs._thisArray[sceneForGet], (IntPtr)ii, (IntPtr)desc);
