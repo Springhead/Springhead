@@ -74,6 +74,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
+message(STATUS "Library type: ${SPRLIBTYPE}")
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -102,13 +103,47 @@ set(COMP_FLAGS                  ${COMP_FLAGS_ADD} ${COMP_FLAGS})
 set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
 set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
 list(FIND LIBRARY_NAMES_ADD EmbPython _found)
-if(${_found} EQUAL -1)
-    set(LIBRARY_NAMES	${SPRLIB_NAMES}
-			${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+if(Windows)
+    if(${_found} EQUAL -1)
+	set(LIBRARY_NAMES	${SPRLIB_NAMES}
+				${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+    else()
+ 	list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
+ 	set(LIBRARY_NAMES	EmbPython ${SPRLIB_NAMES}
+				${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+    endif()
 else()
-    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
-    set(LIBRARY_NAMES	EmbPython ${SPRLIB_NAMES}
-			${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
+    set(SHARED_LIBRARY_NAMES	${SHARED_LIBRARY_NAMES_ADD}
+				${SHARED_STDLIB_NAMES})
+    set(STATIC_LIBRARY_NAMES	${STATIC_LIBRARY_NAMES_ADD}
+				${STATIC_STDLIB_NAMES})
+    if("${SPRLIBTYPE}" STREQUAL "SHARED")
+	if(${_found} EQUAL -1)
+	    set(SHARED_LIBRARY_NAMES	${SPRLIB_NAMES}
+					${SHARED_LIBRARY_NAMES})
+	else()
+	    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
+	    set(SHARED_LIBRARY_NAMES	EmbPython
+					${SPRLIB_NAMES}
+					${SHARED_LIBRARY_NAMES})
+	endif()
+    else()
+	if(${_found} EQUAL -1)
+	    set(STATIC_LIBRARY_NAMES	${SPRLIB_NAMES}
+					${SHARED_LIBRARY_NAMES}
+					${STATIC_LIBRARY_NAMES})
+	else()
+	    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
+	    set(STATIC_LIBRARY_NAMES	EmbPython
+					${SPRLIB_NAMES}
+					${SHARED_LIBRARY_NAMES}
+					${STATIC_LIBRARY_NAMES})
+	endif()
+	#  Discard standard shared libraries.
+	set(SHARED_LIBRARY_NAMES	${EMPTY})
+    endif()
+#message("SHARED_LIBRARY_NAMES: ${SHARED_LIBRARY_NAMES}")
+#message("STATIC_LIBRARY_NAMES: ${STATIC_LIBRARY_NAMES}")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -214,7 +249,7 @@ elseif(unix)
     foreach(_flag ${COMP_FLAGS})
 	target_compile_options(${Target} PRIVATE ${_flag})
     endforeach()
-    set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+    set(CMAKE_CXX_COMPILER "${GPP_PATH}/g++")
 endif()
 foreach(_macro ${DEFINE_MACROS})
 	target_compile_definitions(${Target} PRIVATE ${_macro})
@@ -308,8 +343,29 @@ if(Windows)
     )
 else()
     set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
+
+    if(NOT "${SHARED_LIBRARY_NAMES}" STREQUAL "${EMPTY}")
+	# expand semicolon-joined-stirng element to list
+	set(_out ${EMPTY})
+	foreach(_elm ${LIBRARY_PATHS})
+	    string(REPLACE ":" ";" _tmp ${_elm})
+	    list(APPEND _out ${_tmp})
+	endforeach()
+	set(LIBRARY_PATHS ${_out})
+
+	# change into g++ option format
+	set(_flags_c "@")
+	set(_flags_r "@")
+	foreach(_path ${LIBRARY_PATHS})
+	    set(_flags_c "-L${_path} ${_flags_c}")
+	    set(_flags_r "${_path},${_flags_r}")
+	endforeach()
+	string(REPLACE " @" "" _flags_c ${_flags_c})
+	string(REPLACE ",@" "" _flags_r ${_flags_r})
+    endif()
+
     foreach(_path ${LIBRARY_PATHS})
-	target_link_directories(${Target} BEFORE PRIVATE ${_path})
+	target_link_directories(${Target} PUBLIC "${_path}")
     endforeach()
 endif()
 
@@ -327,9 +383,32 @@ if(Windows)
 	target_link_libraries(${Target} $<$<CONFIG:${_conf}>:${_lib}>)
     endforeach()
 else()
-    foreach(_name ${LIBRARY_NAMES})
-	target_link_libraries(${Target} ${_name})
+    set(_tmp_names "@")
+    foreach(_name ${SHARED_LIBRARY_NAMES})
+	set(_tmp_names "${_tmp_names},-l${_name}")
     endforeach()
+    string(REPLACE "@," "" _library_names "${_tmp_names}")
+    if(NOT "${_library_names}" STREQUAL "@")
+	target_link_libraries(${Target} "-Wl,-Bdynamic,${_library_names}")
+	message("++ shared libraries: ${_library_names}")
+    endif()
+
+    if(NOT "${SHARED_LIBRARY_NAMES}" STREQUAL "${EMPTY}")
+	set(_tmp_names "@")
+	foreach(_name ${STATIC_LIBRARY_NAMES})
+	    set(_tmp_names "-l${_name},${_tmp_names}")
+	endforeach()
+	string(REPLACE ",@" "" _library_names "${_tmp_names}")
+	if(NOT "${_library_names}" STREQUAL "@")
+	    target_link_libraries(${Target} "-Wl,-Bstatic,${_library_names}")
+	    message("++ static libraries: ${_library_names}")
+	endif()
+    else()
+	foreach(_name ${STATIC_LIBRARY_NAMES})
+            target_link_libraries(${Target} ${_name})
+	    message("++ static libraries: ${_name}")
+	endforeach()
+    endif()
 endif()
 
 # ------------------------------------------------------------------------------

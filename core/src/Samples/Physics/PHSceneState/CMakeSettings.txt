@@ -43,12 +43,12 @@ else()
 endif()
 
 # ------------------------------------------------------------------------------
-#  Library type.
+#  Springhead library type.
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
+set(SPRLIBTYPE STATIC)
+#set(SPRLIBTYPE SHARED)
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
@@ -86,9 +86,9 @@ endif()
 #  Additional compile macro(s).
 #	format:  "<name>=<value>" or "<name>"
 #	Do not prepend "/D" nor "-D" to macro body.
-#	See "CMakeOpts.txt.dist" for default paths.
+#	See "CMakeOpts.txt.dist" for default macros.
 #
-set(DEFINE_MACROS_ADD ${EMPTYY})
+set(DEFINE_MACROS_ADD ${EMPTY})
 
 # ------------------------------------------------------------------------------
 #  Additional include path(s).
@@ -98,7 +98,9 @@ set(DEFINE_MACROS_ADD ${EMPTYY})
 if(Windows)
     set(INCLUDE_PATHS_ADD ${EMPTY})
 else()
-    set(INCLUDE_PATHS_ADD $ENV{SPR_BOOST_INC})
+    set(INCLUDE_PATHS_ADD 	/usr/include/boost
+				/usr/include/boost/regex
+				/usr/local/include/boost-numeric-bindings)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -136,7 +138,14 @@ if(Windows)
 #    set(LIBRARY_NAMES_RELEASE python35.lib)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
-    set(LIBRARY_NAMES_ADD lapack)
+    set(STATIC_LIBRARY_NAMES_ADD ${EMPTY})
+    set(SHARED_LIBRARY_NAMES_ADD ${EMPTY})
+    #
+    #  for backward compatibility
+    #
+    set(LIBRARY_NAMES_ADD ${EMPTY})
+    set(STATIC_LIBRARY_NAMES_ADD ${LIBRARY_NAMES_ADD}
+				 ${STATIC_LIBRARY_NAMES_ADD})
 endif()
 
 # ------------------------------------------------------------------------------

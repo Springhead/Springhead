@@ -74,7 +74,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
-message(STATUS "Library type: ${LIBTYPE}")
+message(STATUS "Library type: ${SPRLIBTYPE}")
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -128,18 +128,19 @@ else()
 					${SHARED_LIBRARY_NAMES})
 	endif()
     else()
-	#  Discard standard shared libraries.
-	set(SHARED_LIBRARY_NAMES	${EMPTY})
-
 	if(${_found} EQUAL -1)
 	    set(STATIC_LIBRARY_NAMES	${SPRLIB_NAMES}
+					${SHARED_LIBRARY_NAMES}
 					${STATIC_LIBRARY_NAMES})
 	else()
 	    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
 	    set(STATIC_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
+					${SHARED_LIBRARY_NAMES}
 					${STATIC_LIBRARY_NAMES})
 	endif()
+	#  Discard standard shared libraries.
+	set(SHARED_LIBRARY_NAMES	${EMPTY})
     endif()
 #message("SHARED_LIBRARY_NAMES: ${SHARED_LIBRARY_NAMES}")
 #message("STATIC_LIBRARY_NAMES: ${STATIC_LIBRARY_NAMES}")
@@ -343,7 +344,7 @@ if(Windows)
 else()
     set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
 
-    if("${SPRLIBTYPE}" STREQUAL "SHARED")
+    if(NOT "${SHARED_LIBRARY_NAMES}" STREQUAL "${EMPTY}")
 	# expand semicolon-joined-stirng element to list
 	set(_out ${EMPTY})
 	foreach(_elm ${LIBRARY_PATHS})

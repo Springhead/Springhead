@@ -82,6 +82,10 @@ set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 #  for Windows specific
 set(VS_VERSION			"15.0")
 
+if(Windows)
+    set(DEFINE_MACROS		${DEFINE_MACROS} WINDOWS_IGNORE_PACKING_MISMATCH)
+endif()
+
 #  for both Windows and Linux
 set(DEFINE_MACROS_ADD		)
 
