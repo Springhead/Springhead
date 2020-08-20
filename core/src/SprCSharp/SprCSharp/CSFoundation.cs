@@ -3413,7 +3413,7 @@ namespace SprCs {
         public static ObjectStatesIf Create() {
             IntPtr ptr = SprExport.Spr_ObjectStatesIf_Create();
             if (ptr == IntPtr.Zero) { return null; }
-            ObjectStatesIf obj = new ObjectStatesIf(ptr);
+            ObjectStatesIf obj = new ObjectStatesIf(ptr,true);
             return obj;
         }
     }

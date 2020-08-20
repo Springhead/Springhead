@@ -3962,7 +3962,7 @@ extern "C" {
 	return _ptr;
     }
     __declspec(dllexport) void __cdecl Spr_delete_ObjectStatesIf(HANDLE v) {
-        try { delete (ObjectStatesIf*) v; }
+        try { delete (ObjectStates*) v; }
         catch (SEH_Exception e) { e.raise_managed_exception("SprExport.dll"); }
     }
     __declspec(dllexport) HANDLE __cdecl Spr_ObjectStatesIf_ToString(HANDLE _this) {
