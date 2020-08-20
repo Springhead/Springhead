@@ -45,8 +45,10 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
+if(NOT LIBTYPE)
+    set(LIBTYPE STATIC)
+    #set(LIBTYPE SHARED)
+endif()
 
 # ------------------------------------------------------------------------------
 #  Springhead projects to incorporate in the application program.
