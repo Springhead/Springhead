@@ -15,7 +15,8 @@
 > copy C:/Springhead/core/src/CMakeSettings.txt.Dev.dist CMakeSettings.txt
 ```
 
-> .dist ファイルが誤って変更されてしまうのを防ぐためにも、
+> 配布ファイルの拡張子が ".dist" となっているのは、
+これらのファイルが誤って変更 (コミット) されてしまうのを防ぐためです。
 リネームではなくコピーをお願いします。
 
 ** "CMakeTopdir.txt" の編集 **
@@ -41,7 +42,7 @@ set(TOPDIR "C:/Springhead")
 | `ProjectName` | プロジェクト名 |
 | `OOS_BLD_DIR` | CMake の作業領域 (ディレクトリ) の名前<br>本ドキュメントで *build* としているもの |
 | `CMAKE_CONFIGURATION_TYPES` | ビルド構成<br>unix の場合はここに複数の構成を指定することができません。作業ディレクトリを分けることで対処してください (`OOS_BLD_DIR` 参照)。 |
-| `LIBTYPE` | 作成するライブラリの種別<br>Windows の場合は`STATIC`を指定してください。 unix の場合は、`STATIC`なら`.a`を、`SHARED`なら`.so`を作成します。 |
+| `SPRLIBTYPE` | リンクする Springhead Library の種別<br>Windows の場合は`STATIC`を指定してください。 unix の場合は、`STATIC`なら`libSpringhead.a`を、`SHARED`なら`libSpringhead.so`をリンクします。 |
 | `SRCS` | ビルドの対象とするファイル<br>設定は`set(SRCS …)`または`file(GLOB SRCS …)`とします。後者ではワイルドカードが使えます。<br>`SRCS`の直後に`RELATIVE <base-dir>`を付加すると`<base-dir>`に対する相対パスとなります。デフォルトは`file(GLOB RELATIVE ${CMAKE_SORUCE_DIR} *.cpp *.h)`です。|
 | `EXECLUDE_SRCS` | ビルドの対象から外すファイル<br>`SRCS`でワイルドカードを使用した場合に有用です。上の`SRCS`で`RELATIVE`としていないときは絶対パスで指定します。 |
 | `SPR_PROJS` | アプリケーションに組み込む Springhead Library のプロジェクト名 (この中に RunSwig を含めてはいけません)<br>unix で "libSpringhead.a" / "libSpringhead.so" をリンクするときは`${EMPTY}`のままとします。 |
@@ -50,8 +51,11 @@ set(TOPDIR "C:/Springhead")
 | `COMP_FLAGS_ADD` | 追加のコンパイラフラグ指定 |
 | `LINK_FLAGS_ADD` | 追加のリンカフラグ指定 |
 | `LIBRARY_PATHS_ADD` | 追加のライブラリパス指定 (`-L` は不要です) |
-| `LIBRARY_NAMES_ADD` | 追加のライブラリファイル名 ( `-l`は不要です) |
+| `LIBRARY_NAMES_ADD` | `SPRLIBTYPE`が`STATIC`の場合<br>追加のライブラリファイル名 ( `-l`は不要です) |
+| `STATIC_LIBRARY_NAMES_ADD` | `SPRLIBTYPE`が`SHARED`の場合<br>追加の静的ライブラリファイル名 ( `-l`は不要です) |
+| `SHARED_LIBRARY_NAMES_ADD` | `SPRLIBTYPE`が`SHARED`の場合<br>追加の共有ライブラリファイル名 ( `-l`は不要です) |
 | `EXCLUDE_LIBRARY_NAMES` | リンクの対象から外すライブラリファイル名<br>デフォルトで組み込まれてしまうライブラリファイルを排除するために使用します。 |
+| `VS_VERSION` | 使用する Visual Studio のバージョン<br>リンクするライブラリファイルを指定します。<br>*注意* ここで指定する値は、生成されるソリューションファイルのバージョンとは関係ありません。 |
 | `DEBUGGER_WORKING_DIRECTORY` | Visual Studio Debugger の作業ディレクトリ名<br>デバッガはこのディレクトリで起動されたように振る舞います。 |
 | `DEBUGGER_COMMAND_ARGUMENTS` | Visual Studio Debugger に渡すコマンド引数 |
 

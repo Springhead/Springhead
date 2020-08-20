@@ -20,7 +20,26 @@
 > copy CMakeLists.txt.dist CMakeLists.txt
 ```
 
-配布されたビルド条件で問題なければ、これで準備は終了です。
+ビルド条件を変更する場合には、
+配布されたファイル "CMakeSettings.txt.dist" を "CMakeSettings.txt" という名前で
+コピーして、変数を適宜変更してください。
+
+```
+> copy CMakeSettings.txt.dist CMakeSettings.txt
+> edit CMakeSettings.txt
+```
+
++ Visual Studio のバージョンを変更する場合： 
+変数 `VS_VERSION` を修正します (デフォルトは 15.0 です)。
+ここで指定した値は、生成されるライブラリファイルの名前に組み込まれます。<br>
+**注意**　ここで指定する値と生成されるソリューションファイルのバージョンとは
+関係がありあません。
+
++ リンクする Springhead Library の種別を変更する場合： 
+変数 `SPRLIBTYPE` を修正します (デフォルトは STATIC です)。
+共有ライブラリをリンクする場合には、この値を SHARED とします。
+
+これらのビルド条件で問題なければ、これで準備は終了です。
 [ビルド](/install/Build.md) へ進んでください。
 
 <br>
