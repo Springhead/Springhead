@@ -420,7 +420,9 @@ bool DRUARTMotorDriver::Init(){
 	}
 	impl->boards.clear();
 	for (auto comPort : comPorts) {
-		hUART = CreateFile(comPort.c_str(),
+		std::string path("\\\\.\\");
+		path.append(comPort);
+		hUART = CreateFile(path.c_str(),
 			GENERIC_READ | GENERIC_WRITE,
 			0,				//ポートの共有方法を指定:オブジェクトは共有しない
 			NULL,			//セキュリティ属性:ハンドルを子プロセスへ継承しない
@@ -433,6 +435,7 @@ bool DRUARTMotorDriver::Init(){
 				break;
 			}
 		}
+		CloseHandle(hUART);
 	}
 	//	デバイスの登録
 	for (int i = 0; i < impl->currentMap.size(); ++i) {
