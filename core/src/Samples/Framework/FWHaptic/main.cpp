@@ -126,6 +126,7 @@ public:
 	void InitHumanInterface() {
 		HISdkIf* hiSdk = GetSdk()->GetHISdk();
 		//	Driver for SPIDAR driver with SH4 in Win32(x86)
+#ifdef USE_CLOSED_SRC
 		DRUsb20Sh4Desc usb20Sh4Desc;
 		for (int i = 0; i < 10; ++i) {
 			usb20Sh4Desc.channel = i;
@@ -137,6 +138,7 @@ public:
 			cyDesc.channel = i;
 			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
 		}
+#endif
 		//	Driver for UART SPIDAR driver.
 		DRUARTMotorDriverDesc uartDesc;
 		hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &uartDesc);

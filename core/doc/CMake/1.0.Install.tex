@@ -8,12 +8,27 @@
 この章では、\SprLib のダウンロード及びビルドの方法について説明します。
 
 \medskip
-\SprLib は、Windowsおよびunixの両方のプラットフォームに対応しており、
+\SprLib は、Windowsおよびunixの両プラットフォームに対応しており、
 ビルド環境はCMakeを用いて生成します
 (WindowsではVisual Studio用のsolution file / project file、unixでは\tt{Makefile})。
 
 \Important{%
 	Visual Studio 2015/2017用のsolution file / project fileも配布していますが、
 	今後のバージョンアップに対応することを期待しないでください。}
+
+\Vskip{-.75\baselineskip}
+\Important{%
+	動作を確認しているプラットフォームは、以下のとおりです。\\
+	\begin{tabular}{@{\hspace{20pt}}l} \\
+	    \multicolumn{1}{l}{Windows:} \\
+	    Windows 10 Enterprise	\\
+	    Microsoft Visual Studio Community 2017, Version 15.9.4 \\
+	    Windows SDK version 10.0.18362.0 \\
+	    cmake version 3.13.32 \\
+	    \multicolumn{1}{l}{unix:} \\
+	    Ubuntu 19.04.4 LTS (x86\_64) \\
+	    cmake version 3.18.0 \\
+	\end{tabular}
+}
 
 % end: 1.0.Install.tex

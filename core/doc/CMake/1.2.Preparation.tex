@@ -27,6 +27,24 @@
 }{command-1-2-a.eps}{CMakeLists.txt}
 
 \medskip
+ビルド条件を変更する場合には、
+配布されたファイル\Path{CMakeSettings.txt.dist}を\Path{CMakeSettings.txt}という名前で
+コピーして、変数を適宜変更してください。
+
+\CmndLine{%
+	> \it{copy} \CMakeLists{.dist} \CMakeLists{}\\
+	> \it{edit} \CMakeLists{}
+}{command-1-2-d.eps}{CMakeSettings.txt}
+
+\begin{itemize}
+  \item	Visual Studioのバージョンを変更する場合： \\
+	変数\tt{VS\_VERSION}を修正します(デフォルトは\tt{15.0}です)。
+	ここで指定した値は、生成されるライブラリファイルの名前に組み込まれます。\\
+	\bf{注意}　ここで指定する値と生成されるソリューションファイルのバージョンとは
+	関係がありあません
+\end{itemize}
+
+\medskip
 配布されたビルド条件で問題なければ、これで準備は終了です。
 \KQuote{\ref{subsec:Build} ビルド}へ進んでください。
 

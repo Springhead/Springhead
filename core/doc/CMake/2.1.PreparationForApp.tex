@@ -72,11 +72,11 @@
 		unixの場合はここに複数の構成を指定することができません。
 		作業ディレクトリを分けることで対処してください
 		(\tt{OOS\_BLD\_DIR}参照)。} \\\HLine
-    &\tt{LIBTYPE}
-	& \RBox{作成するライブラリの種別\\
+    &\tt{SPRLIBTYPE}
+	& \RBox{リンクする\SprLib{}の種別\\
 		Windowsの場合は\tt{STATIC}を指定してください。
 		unixの場合は、\tt{STATIC}なら\tt{.a}を\tt{SHARED}なら\tt{.so}を
-		作成します。}\\\HLine
+		リンクします。}\\\HLine
     &\tt{SRCS}
 	& \RBox{ビルドの対象とするファイル\\
 		設定は\tt{set(SRCS …)}または\tt{file(GLOB SRCS …)}とします。
@@ -108,11 +108,23 @@
     &\tt{LIBRARY\_PATHS\_ADD}
 	& \RBox{追加のライブラリパス指定 (\tt{-L}は不要です)} \\\HLine
     &\tt{LIBRARY\_NAMES\_ADD}
-	& \RBox{追加のライブラリファイル名 (\tt{-l}は不要です)} \\\HLine
+	& \RBox{\tt{SPRLIBTYPE}が\tt{STATIC}の場合 \\
+		追加のライブラリファイル名 (\tt{-l}は不要です)} \\\HLine
+    &\multicolumn{2}{l|}{\tt{STATIC\_LIBRARY\_NAMES\_ADD}} \\
+	&& \RBox{\tt{SPRLIBTYPE}が\tt{SHARED}の場合 \\
+		追加の静的ライブラリファイル名 (\tt{-l}は不要です)} \\\HLine
+    &\multicolumn{2}{l|}{\tt{SHARED\_LIBRARY\_NAMES\_ADD}} \\
+	&& \RBox{\tt{SPRLIBTYPE}が\tt{SHARED}の場合 \\
+		追加の共有ライブラリファイル名 (\tt{-l}は不要です)} \\\HLine
     &\multicolumn{2}{l|}{\tt{EXCLUDE\_LIBRARY\_NAMES}} \\
 	&& \RBox{リンクの対象から外すライブラリファイル名\\
 		デフォルトで組み込まれてしまうライブラリファイルを
 		排除するために指定します。} \\\HLine
+    &\tt{VS\_VERSION}
+	& \RBox{使用するVisual Studioのバージョン \\
+		リンクする\SprLib{}ファイルを指定します。\\
+		\bf{注意} ここで指定する値は、生成されるソリューションファイルの
+		バージョンとは関係ありません。} \\\HLine
     &\multicolumn{2}{l|}{\tt{DEBUGGER\_WORKING\_DIRECTORY}} \\
 	&& \RBox{Visual Studio Debuggerの作業ディレクトリ名\\
 		デバッガはこのディレクトリで起動されたように振る舞います。} \\\HLine
