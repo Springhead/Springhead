@@ -157,6 +157,8 @@ struct HISpidarGIf: public HISpidarIf{
 	int GetButton(size_t i);
 	///
 	size_t NButton() const;
+	///
+	void SetWeight(float s = 0.3f, float t = 1.0f, float r = 6.0f);
 };
 ///	SpidarG6のデスクリプタ
 struct HISpidarGDesc : HISpidarDesc{

@@ -110,6 +110,7 @@ void HISpidarCalc3Dof::Update(){
 HISpidarCalc6Dof::HISpidarCalc6Dof(){	
 	//Setting of default value
 	lambda_r=0.3f;
+	angleMax = M_PI / 2;	//	SPIDARのグリップは90度以上回転しないと仮定
 }
 
 HISpidarCalc6Dof::~HISpidarCalc6Dof(){	
@@ -165,7 +166,14 @@ void HISpidarCalc6Dof::Update(){
 		
 		float a = delta.norm();
 		if (a > 1e-10) ori = Quaternionf::Rot(a, delta/a) * ori;
-		
+		if (angleMax) {
+			if (ori.Theta() > angleMax) {
+				ori = Quaternionf::Rot(angleMax, ori.Axis());
+			}else if (ori.Theta() < -angleMax) {
+				ori = Quaternionf::Rot(-angleMax, ori.Axis());
+			}
+		}
+
 		UpdatePos();
 		MakeWireVec();
 	}

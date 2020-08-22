@@ -89,6 +89,7 @@ protected:
 	std::vector<Vec3f> wireMoment;				///<	ワイヤ方向単位ベクトル（回転モーメント）
 	Vec3f rotForce;								///<	回転力
 	float lambda_r;								///<	二次形式　回転項の係数
+	float angleMax;								///<	回転の最大値
 	
 public:
 	HISpidarCalc6Dof();

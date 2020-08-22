@@ -55,6 +55,7 @@ public:
 	///	コンストラクタ	chは背面のスイッチになる予定
 	DRUARTMotorDriver(const DRUARTMotorDriverDesc& d = DRUARTMotorDriverDesc());
 	virtual ~DRUARTMotorDriver();
+	int NMotor() { return counts.size(); }
 
 	///	初期化
 	virtual bool Init();
