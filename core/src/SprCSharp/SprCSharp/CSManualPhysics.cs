@@ -48,6 +48,18 @@ namespace SprCs {
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
         private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForSubThreadForDelete = new List<ThreadCallback>(); // subTheadのdelete時にstepThreadで参照するとsceneForGet,sceneForBufferに対して実行できないため，参照してからDelete
+        public bool DeletingOnSubThread { // delete中にStepが呼ばれることを防ぐ,callbackForSubThreadForDeleteの個数により判定可能
+            get {
+                lock (phSceneForGetSetLock) {
+                    if (callbackForSubThreadForDelete.Count == 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
         private List<ThreadCallback> callbackForStepThread = new List<ThreadCallback>();
         private List<ThreadCallback> callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>();
         public ObjectStatesIf stateForSwap;
@@ -65,6 +77,18 @@ namespace SprCs {
         }
         public void AddWaitUntilNextStepCallback(ThreadCallback callback) {
             waitDuringStepCallbackList.Add(callback);
+        }
+        public void ExecCallbackForSubThreadForDelete() {
+            if (callbackForSubThreadForDelete.Count != 0) {
+                Console.WriteLine("callbackForSubThreadForDelete " + callbackForSubThreadForDelete.Count);
+            }
+            foreach (var callback in callbackForSubThreadForDelete) {
+                callback();
+            }
+            callbackForSubThreadForDelete.Clear();
+        }
+        public void AddCallbackForSubThreadForDelete(ThreadCallback callback) {
+            callbackForSubThreadForDelete.Add(callback);
         }
         public void ExecCallbackForStepThread() {
             if (callbackForStepThread.Count != 0) {
@@ -131,8 +155,14 @@ namespace SprCs {
         //}
         public void Step() {
             if (multiThreadMode) {
+                if (isSwapping) {
+                    Console.WriteLine("isSwapping True before Step");
+                }
                 lock (GetSdk().phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
                     SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
+                }
+                if (isSwapping) {
+                    Console.WriteLine("isSwapping True after Step");
                 }
             } else {
                 SprExport.Spr_PHSceneIf_Step(_thisArray[0]);
@@ -141,9 +171,9 @@ namespace SprCs {
         public void Swap() {
             lock (phSceneForGetSetLock) {
                 if (isSwapping) {
-                    Console.WriteLine("isSwapping True");
+                    Console.WriteLine("isSwapping True in Swap");
                 }
-                ExecWaitUntilNextStepCallbackList(); // NotnextStepPHSceneを呼ぶとSave/Load後に呼ばれるべきCallbackが先に実行されてしまう
+                ExecWaitUntilNextStepCallbackList();
                 if (callObjectStatesIf_Create) {
                     stateForSwap = ObjectStatesIf.Create();
                     callObjectStatesIf_Create = false;
@@ -152,6 +182,7 @@ namespace SprCs {
                 if (!isFixedUpdating) { // Step↔Get
                     ExecCallbackForStepThread();
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
+                    ExecCallbackForSubThreadForDelete(); // LoadStateの前で実行するとstateForSwapとphSceneの状態が変わってしまう
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
@@ -174,12 +205,18 @@ namespace SprCs {
         public void SwapAfterFixedUpdate() {
             lock (phSceneForGetSetLock) {
                 if (isSwapping) { // Buffer↔Get
+                    Console.WriteLine("SwapAfterFixedUpdate called");
+                    if (isStepping) {
+                        Console.WriteLine("isStepping True");
+                    }
                     ExecCallbackForStepThreadOnSwapAfterFixedUpdate(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
+                    lock (GetSdk().phSdkLock) { // subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行 <!!> lockが二重になっているため、デッドロックの可能性あり
+                        ExecCallbackForSubThreadForDelete();
+                    }
                     var temp = sceneForBuffer;
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
                     isSwapping = false;
-                    Console.WriteLine("SwapAfterFixedUpdate changeAllExecuteGetFunctionFlagsTrue = true");
                     changeAllExecuteGetFunctionFlagsTrue = true;
                 }
                 isFixedUpdating = false;
@@ -246,9 +283,9 @@ namespace SprCs {
             if (multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
                 lock (phSceneForGetSetLock) {
-                    if (isStepping) {
+                    if (isStepping || isSwapping) {
                         //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-                        AddWaitUntilNextStepCallback(() => {
+                        AddCallbackForSubThreadForDelete(() => {
                             Console.WriteLine("DelChildObject(overrided) In callback"/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
                             var ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
                             if (ret1 == 0) {
