@@ -19,6 +19,7 @@ namespace Spr{;
 ///	
 struct DRUARTMotorDriverIf : public HIRealDeviceIf{
 	SPR_IFDEF(DRUARTMotorDriver);
+	int NMotor();
 };
 struct DRUARTMotorDriverDesc{
 	SPR_DESCDEF(DRUARTMotorDriver);

@@ -40,6 +40,7 @@ public:
 		ID_CALIB,
 		ID_TIME_VARY_FRICTION,
 		ID_FEEDBACK_FORCE,
+		ID_FRICTION,
 		ID_BOX,
 		ID_CAPSULE,
 		ID_ROUNDCONE,
@@ -58,10 +59,12 @@ public:
 
 		AddAction(MENU_MAIN, ID_CALIB, "Calibrate human interface");
 		AddHotKey(MENU_MAIN, ID_CALIB, 'c');
-		AddAction(MENU_MAIN, ID_TIME_VARY_FRICTION, "Time vary frction / static friction");
-		AddHotKey(MENU_MAIN, ID_TIME_VARY_FRICTION, 'T');
-		AddAction(MENU_MAIN, ID_FEEDBACK_FORCE, "Force feedback ");
-		AddHotKey(MENU_MAIN, ID_FEEDBACK_FORCE, 'f');
+		AddAction(MENU_MAIN, ID_FEEDBACK_FORCE, "Ouput force feedback").enabled = false;
+		AddHotKey(MENU_MAIN, ID_FEEDBACK_FORCE, 'o');
+		AddAction(MENU_MAIN, ID_TIME_VARY_FRICTION, "Time vary static frction").enabled = false;
+		AddHotKey(MENU_MAIN, ID_TIME_VARY_FRICTION, 't');
+		AddAction(MENU_MAIN, ID_FRICTION, "Frictoin").enabled = true;
+		AddHotKey(MENU_MAIN, ID_FRICTION, 'f');
 
 		AddAction(MENU_MAIN, ID_BOX, "drop box");
 		AddHotKey(MENU_MAIN, ID_BOX, 'b');
@@ -147,8 +150,12 @@ public:
 
 		//	Try to create SPIDAR and calibrate it
 		device = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-		//	if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
-		if (device->Init(&HISpidarGDesc("SpidarG6T1"))) {
+		DRUARTMotorDriverIf* ud = (DRUARTMotorDriverIf*) hiSdk->FindRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic());
+		if (ud->NMotor() >= 8 && device->Init(&HISpidarGDesc("SpidarG6T1"))) {
+			device->Calibration();
+			((UTRef<HISpidarGIf>)device)->SetWeight(0.3, 1.0, 6.0 * 0);
+		}
+		else if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
 			device->Calibration();
 		}
 		else {	//	If failed, try to create an XBOX
@@ -211,7 +218,7 @@ public:
 		pointer->SetRotationReflexSpring(30.0f);			//	Coefficient of rotaional spring for haptic rendering (of normal force)
 		pointer->SetRotationReflexDamper(0.0f);				//	Coefficient of rotaional damper for haptic rendering (of normal force)
 		pointer->SetName("hpPointer");						//	name of haptic pointer solid in the phscene
-		pointer->EnableRotation(false);						//	use rotation of haptic pointer or not
+		pointer->EnableRotation(true);						//	use rotation of haptic pointer or not
 		pointer->EnableFriction(true);						//	Render friction or not
 		pointer->EnableVibration(true);						//	Add vibration when impulse occur during haptic rendering.
 		pointer->SetHapticRenderMode(PHHapticPointerDesc::CONSTRAINT);
@@ -275,15 +282,39 @@ public:
 				message = "Human interface device calibrated.";
 			}
 			if (id == ID_TIME_VARY_FRICTION) {
-				pointer->EnableTimeVaryFriction(!pointer->IsTimeVaryFriction());
+				if (ToggleAction(MENU_MAIN, ID_TIME_VARY_FRICTION)) {
+					pointer->EnableTimeVaryFriction(true);
+				}
+				else {
+					pointer->EnableTimeVaryFriction(false);
+				}
 				//message = "timeVaryFriction:" + pointer->IsTimeVaryFriction();
 			}
 			if (id == ID_FEEDBACK_FORCE) {
 				if (ToggleAction(MENU_MAIN, ID_FEEDBACK_FORCE)) {
-					if (pointer) pointer->EnableForce(false);
+					if (pointer) pointer->EnableForce(true);
 				}
 				else {
-					if (pointer) pointer->EnableForce(true);
+					if (pointer) pointer->EnableForce(false);
+				}
+			}
+			if (id == ID_FRICTION) {
+				static PHMaterial matOrg[2];
+				if (ToggleAction(MENU_MAIN, ID_FRICTION)) {
+					if (pointer && soFloor) {
+						PHMaterial mat = matOrg[0] = pointer->GetShape(0)->GetMaterial();
+						mat.mu = 0;  mat.mu0 = 0;
+						pointer->GetShape(0)->SetMaterial(mat);
+						mat = matOrg[1] = soFloor->GetShape(0)->GetMaterial();
+						mat.mu = 0;  mat.mu0 = 0;
+						soFloor->GetShape(0)->SetMaterial(mat);
+					}
+				}
+				else {
+					if (pointer && soFloor) {
+						pointer->GetShape(0)->SetMaterial(matOrg[0]);
+						soFloor->GetShape(0)->SetMaterial(matOrg[1]);
+					}
 				}
 			}
 			if(id == ID_BOX){
@@ -316,7 +347,12 @@ public:
 			}
 			if (message == "") {
 				Action& act = menus[menu][id];
-				message = act.message[!act.enabled];
+				if (act.message[1] == "") {
+					message = act.message[0] + (act.enabled ? " enabled." : " disabled.");
+				}
+				else {
+					message = act.message[!act.enabled];
+				}
 			}
 		}
 		SampleApp::OnAction(menu, id);

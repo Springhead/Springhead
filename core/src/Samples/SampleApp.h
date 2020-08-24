@@ -163,14 +163,15 @@ public:
 		menus[menu].brief = brief;
 	}
 	/// アクションの登録
-	void AddAction(int menu, int id, UTString desc, UTString msg = "", UTString descd = "", UTString msgd = ""){
+	Action& AddAction(int menu, int id, UTString desc, UTString msg = "", UTString descd = "", UTString msgd = ""){
 		Action& act = menus[menu][id];
 		act.id		= id;
 		act.enabled = true;
 		act.desc[0] = desc;
 		act.desc[1] = (descd == "" ? desc : descd);
-		act.message[0] = msg;
+		act.message[0] = (msg == "") ? desc: msg;
 		act.message[1] = (msgd == "" ? msg : msgd);
+		return act;
 	}
 	/// アクションとキーの対応
 	void AddHotKey(int menu, int id, int key, UTString alt = ""){
