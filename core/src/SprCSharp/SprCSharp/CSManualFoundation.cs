@@ -125,7 +125,7 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneForGetSetLock) {
                     if (phSceneIf.isStepping) {
-                        //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
+                        Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                         phSceneIf.AddWaitUntilNextStepCallback(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
                             SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
@@ -133,7 +133,7 @@ namespace SprCs {
                         SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)desc);
                         SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
                     } else {
-                        //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
+                        Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
                         foreach (var _this in _thisArray) {
                             if (_this != IntPtr.Zero) {
                                 SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);

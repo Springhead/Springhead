@@ -29,7 +29,7 @@ namespace SprCs {
         public int sceneForStep = 0;
         public int sceneForGet = 1;
         public int sceneForBuffer = 2;
-
+        public int stepCount = 0; // デバッグ用、subThread側で取得する値が何回目のStepの結果か
         public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
         public readonly AutoResetEvent fixedUpdateAutoWait = new AutoResetEvent(false);
         //Set系メソッド用(fixedUpdateAutoWaitの実装にも関与)，速度などの更新にはこれが必須，位置の更新などの更新に関してはこの機能を一度も使用しないコードでは位置更新途中でStepが実行されかねない
@@ -65,6 +65,10 @@ namespace SprCs {
         public ObjectStatesIf stateForSwap;
         private bool callObjectStatesIf_Create = true;
         public delegate void ThreadCallback();
+        // Test用
+        public bool debugSceneForGet = false;
+        public bool debugSceneForBuffer = false;
+        private bool isFirstForDebugSceneForBuffer = true;
         //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
         public void ExecWaitUntilNextStepCallbackList() { // Step側でLockする
             if (waitDuringStepCallbackList.Count != 0) {
@@ -76,6 +80,7 @@ namespace SprCs {
             waitDuringStepCallbackList.Clear();
         }
         public void AddWaitUntilNextStepCallback(ThreadCallback callback) {
+            Console.WriteLine("AddWaitUntilNextStepCallback");
             waitDuringStepCallbackList.Add(callback);
         }
         public void ExecCallbackForSubThreadForDelete() {
@@ -159,7 +164,26 @@ namespace SprCs {
                     Console.WriteLine("isSwapping True before Step");
                 }
                 lock (GetSdk().phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
-                    SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
+                    if (!debugSceneForGet && !debugSceneForBuffer) {
+                        SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
+                        Console.WriteLine("not debug");
+                    } else if (debugSceneForGet) {
+                        SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForGet]);
+                        changeAllExecuteGetFunctionFlagsTrue = true;
+                        stepCount++;
+                        Console.WriteLine("debugSceneForGet");
+                    } else if (debugSceneForBuffer) {
+                        if (isFirstForDebugSceneForBuffer) {
+                            var temp = sceneForBuffer;
+                            sceneForBuffer = sceneForGet;
+                            sceneForGet = temp;
+                            isFirstForDebugSceneForBuffer = false;
+                        }
+                        SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForGet]);
+                        changeAllExecuteGetFunctionFlagsTrue = true;
+                        stepCount++;
+                        Console.WriteLine("debugSceneForBuffer");
+                    }
                 }
                 if (isSwapping) {
                     Console.WriteLine("isSwapping True after Step");
@@ -186,6 +210,7 @@ namespace SprCs {
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
+                    stepCount++;
                     Console.WriteLine("Swap Step↔Get changeAllExecuteGetFunctionFlagsTrue = true");
                     changeAllExecuteGetFunctionFlagsTrue = true;
                 } else { // Step↔Buffer
@@ -216,6 +241,7 @@ namespace SprCs {
                     var temp = sceneForBuffer;
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
+                    stepCount++;
                     isSwapping = false;
                     changeAllExecuteGetFunctionFlagsTrue = true;
                 }
@@ -341,7 +367,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 lock (phSceneForGetSetLock) {
                     if (isStepping) {
-                        //Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
+                        Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                         AddWaitUntilNextStepCallback(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
                             SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
@@ -349,7 +375,7 @@ namespace SprCs {
                         SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
                         SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
                     } else {
-                        //Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
+                        Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
                         foreach (var _this in _thisArray) {
                             if (_this != IntPtr.Zero) {
                                 SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
