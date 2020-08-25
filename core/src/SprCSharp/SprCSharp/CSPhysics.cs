@@ -8795,8 +8795,8 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    var newV = new Vec3d(ofst);
                     lock (phSceneIf.phSceneForGetSetLock) { // callbackForStepThread‚ðsubThread‚ÅŽQÆ‚·‚é‚Ì‚Å•K—v‚Èlock
+                        var newV = new Vec3d(ofst);
                         SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                         phSceneIf.AddCallbackForStepThread(() => {
                             SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
@@ -8888,15 +8888,22 @@ namespace SprCs {
         public Vec3d GetMotorForce() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec3d(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Vec3d(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[0]);
                 return new Vec3d(ptr, true);
             }
+            return null;
         }
         public Vec3d GetMotorForceN(int n) {
             IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForceN((IntPtr)_this, (int)n);
@@ -9245,30 +9252,49 @@ namespace SprCs {
         public Vec6d GetMotorForce() {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    phSceneIf.isFixedUpdating = true;
-                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec6d(ptr, true);
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        phSceneIf.isFixedUpdating = true;
+                        IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+                        return new Vec6d(ptr, true);
+                    }
                 }
             } else {
                 IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[0]);
                 return new Vec6d(ptr, true);
             }
+            return null;
         }
         public void SetOffsetForce(Vec6d offsetForce) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
-                    if (phSceneIf.isStepping) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
                         var newV = new Vec6d(offsetForce);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
-                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                        SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                        phSceneIf.AddCallbackForStepThread(() => {
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                         });
-                        SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
-                        SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
-                    } else {
-                        foreach (var _this in _thisArray) {
-                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_this, (IntPtr)offsetForce);
+                    }
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneForGetSetLock) {
+                        if (phSceneIf.isStepping) {
+                            var newV = new Vec6d(offsetForce);
+                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                                SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
+                            });
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
+                            SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
+                        } else {
+                            foreach (var _this in _thisArray) {
+                                SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_this, (IntPtr)offsetForce);
+                            }
                         }
                     }
                 }
