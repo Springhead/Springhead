@@ -43,8 +43,7 @@
 #	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
 #	Ver 1.3  2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
 #	Ver 1.4  2019/09/25 F.Kanehori	OK for dailybuild cmake version.
-#	Ver 1.41 2019/10/02 F.Kanehori	Add '.cmake' to console report.
-#	Ver 1.42 2019/12/04 F.Kanehori	Change '.cmake' report timing.
+#	Ver 1.5  2020/08/24 F.Kanehori	Add LIB_TYPE control.
 # ======================================================================
 import sys
 import os
@@ -145,6 +144,10 @@ class Traverse:
 				print('using %s' % out.split('\n')[0])
 			else:
 				print('do not use cmake')
+			libtype = ctl.get(CFK.LIB_TYPE)
+			if not libtype:
+				libtype = 'STATIC'
+			print('createing %s library' % libtype)
 
 		# check test condition
 		is_cand = self.__is_candidate_dir(cwd, ctl)
