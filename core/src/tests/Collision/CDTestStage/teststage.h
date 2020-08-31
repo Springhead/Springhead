@@ -1,9 +1,11 @@
 ﻿#pragma once
 
-#include <GL/glut.h>
-
+#ifdef	_WIN32
+	#include <GL/glut.h>
+#endif
 #ifdef	__unix__
-  #define vsprintf_s(b,s,f,a) vsnprintf(b,(int)sizeof(b),f,a)
+	#include <GL/freeglut.h>
+	#define vsprintf_s(b,s,f,a) vsnprintf(b,(int)sizeof(b),f,a)
 #endif
 
 using namespace Spr;

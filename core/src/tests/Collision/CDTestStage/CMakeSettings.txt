@@ -47,8 +47,10 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(SPRLIBTYPE STATIC)
-#set(SPRLIBTYPE SHARED)
+if(NOT SPRLIBTYPE)
+    set(SPRLIBTYPE STATIC)
+    #set(SPRLIBTYPE SHARED)
+endif()
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
@@ -98,9 +100,7 @@ set(DEFINE_MACROS_ADD ${EMPTY})
 if(Windows)
     set(INCLUDE_PATHS_ADD ${EMPTY})
 else()
-    set(INCLUDE_PATHS_ADD 	/usr/include/boost
-				/usr/include/boost/regex
-				/usr/local/include/boost-numeric-bindings)
+    set(INCLUDE_PATHS_ADD ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------
