@@ -10,6 +10,7 @@ SolutionAlias	** DO NOT INHERIT **
 Build		True
 UseClosedSrc	False
 #CppMacro	DAILYBUILD
+#LibType	STATIC
 #BuildLog	# Build log file path
 #BuildErrLog	# Build error log file path
 

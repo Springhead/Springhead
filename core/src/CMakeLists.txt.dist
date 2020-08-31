@@ -254,7 +254,7 @@ elseif(unix)
     set(_cmnd ./SpringheadLib.sh)
     add_custom_target(${ProjectName} ALL
 	COMMAND mkdir -p ${_outdir}
-	COMMAND ${_cmnd} ${LIBTYPE} ${_outdir} ${LIBNAME} ${_members}
+	COMMAND ${_cmnd} ${LIBTYPE} ${SPR_BLD_DIR} ${_outdir} ${LIBNAME} ${_members}
 	COMMAND mkdir -p ${_gendir}
 	COMMAND cp ${_outdir}/${LIBNAME}.${_lib_suffix} ${_gendir}
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

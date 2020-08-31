@@ -11,6 +11,7 @@
 #Build		True
 #UseClosedSrc	True
 #CppMacro	DAILYBUILD
+#LibType	STATIC
 #BuildLog	# Build log file path
 #BuildErrLog	# Build error log file path
 

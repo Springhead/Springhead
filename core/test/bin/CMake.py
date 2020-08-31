@@ -31,7 +31,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2019/09/19 F.Kanehori	First version.
-#	Ver 1.01 2019/12/05 F.Kanehori	Fixed for unix.
+#	Ver 1.1  2020/08/24 F.Kanehori	Add LIB_TYPE control.
 # ======================================================================
 import sys
 import os
@@ -115,6 +115,7 @@ class CMake:
 
 		#  Execuete cmake.
 		#
+		libtype = self.ctl.get(CFK.LIB_TYPE)
 		topdir = self.ctl.get(CFK.CMAKE_TOPDIR)
 		blddir = self.ctl.get(CFK.CMAKE_BLDDIR)
 		conf = self.ctl.get(CFK.CMAKE_CONF_FILE)
@@ -124,8 +125,11 @@ class CMake:
 		if topdir:  cmnd += ' -D TOPDIR=%s' % topdir
 		if conf:    cmnd += ' -D CONF=%s' % conf
 		if opts:    cmnd += ' -D OPTS=%s' % opts
+		if not libtype:
+			libtype = 'STATIC'
 		cmnd += ' -B %s' % blddir
 		cmnd += ' -G %s' % self.generator
+		cmnd += ' -D LIBTYPE=%s -D SPRLIBTYPE=%s' % (libtype, libtype)
 		#
 		logobj = self.__open(self.logfile)
 		proc = Proc(verbose=0)	#self.verbose)

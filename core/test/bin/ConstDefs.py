@@ -10,6 +10,7 @@
 #	Ver 1.0  2018/02/07 F.Kanehori	First version.
 #	Ver 1.1  2018/03/15 F.Kanehori	Add: MAKE_TARGET.
 #	Ver 1.2  2019/09/25 F.Kanehori	Add: CMAKE related ones.
+#	Ver 1.3  2020/08/20 F.Kanehori	Add: LIB_TYPE.
 # ======================================================================
 from enum import Enum
 
@@ -23,6 +24,7 @@ class CFK():		 #  Control File Keywords.
 	USE_CLOSED_SRC	 = 'UseClosedSrc'
 	MAKE_TARGET	 = 'MakeTarget'
 	CPP_MACRO	 = 'CppMacro'
+	LIB_TYPE	 = 'LibType'
 	BUILD_LOG	 = 'BuildLog'
 	BUILD_ERR_LOG	 = 'BuildErrLog'
 	RUN		 = 'Run'
