@@ -70,7 +70,8 @@ if(unix)
 	set(GPP_PATH	/usr/local/bin)
     endif()
     #
-    set(INCDIR_DEFAULT	/usr/include/boost
+    set(INCDIR_DEFAULT	/usr/include
+			/usr/include/boost
 			/usr/include/boost/regex
 			/usr/local/include/boost-numeric-bindings
 			/usr/X11R6/include
