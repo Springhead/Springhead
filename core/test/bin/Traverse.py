@@ -503,12 +503,16 @@ class Traverse:
 			delim = ':'
 		else:
 			delim = ';'
-			bintop = '%s/dependency/bin' % spr_path.abspath()
+			spr_bin = '%s/core/bin' % spr_path.abspath()
+			dep_bin = '%s/dependency/bin' % spr_path.abspath()
 			if platform == 'x86' or platform.lower() == 'win32':
-				adds.append('%s/win32' % bintop)
+				adds.append('%s/win32' % spr_bin)
+				adds.append('%s/win32' % dep_bin)
 			if platform == 'x64' or platform.lower() == 'win64':
-				adds.append('%s/win64' % bintop)
-				adds.append('%s/win32' % bintop)
+				adds.append('%s/win64' % spr_bin)
+				adds.append('%s/win64' % dep_bin)
+				adds.append('%s/win32' % spr_bin)
+				adds.append('%s/win32' % dep_bin)
 		return delim.join(adds)
 
 	#  Print report (with newline control).
