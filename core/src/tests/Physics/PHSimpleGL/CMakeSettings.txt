@@ -20,7 +20,7 @@ set(MacOS   False)
 #  Project name.
 #	Define porject name here.
 #
-set(ProjectName PHsimpleGL)
+set(ProjectName PHSimpleGL)
 
 # ------------------------------------------------------------------------------
 #  Binary(working) directory name used when you cmake Springhead library.
