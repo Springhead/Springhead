@@ -16,6 +16,24 @@ projs=$*
 #echo "libname: ${libname}"
 #echo "projs:   ${projs}"
 
+function fun() { 
+    # object files
+    objs=`/bin/ls $1 | grep '\.o'`
+    # directories
+    files=`/bin/ls $1`
+    tmpobjs=
+    for f in $files; do
+        if [ -d $1/$f ]; then 
+            tmpobjs=`fun $1/$f`
+            for tmpf in $tmpobjs; do
+                objs="$objs $f/$tmpf"
+            done
+        fi      
+    done    
+    echo $objs
+    return 0
+}
+
 if [ ${libtype} = "STATIC" ]; then
     #
     # step 1-3:  combine archive files to one file
@@ -26,10 +44,10 @@ if [ ${libtype} = "STATIC" ]; then
     for proj in ${projs}
     do
 	pushd ${builddir}/${proj}/CMakeFiles/${proj}.dir > /dev/null
-	for lib in ${outdir}/${proj}/lib${proj}.a
+	objs=`fun .`
+	for obj in $objs;
 	do
-	    echo "[${lib}]"
-	    ar -t ${lib} | xargs ar rvs ${outdir}/${libname}.a
+	    ar rvs ${outdir}/${libname}.a $objs
 	done
 	popd > /dev/null
     done
