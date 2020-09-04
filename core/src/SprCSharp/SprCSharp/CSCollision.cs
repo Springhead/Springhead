@@ -612,13 +612,11 @@ namespace SprCs {
     [System.Serializable]
     public class CDBoxDescStruct : CDShapeDescStruct {
         public CDBoxDescStruct() {
-            Console.WriteLine("CDBoxDescStruct Constructor");
             CDBoxDesc desc = new CDBoxDesc();
             ApplyFrom(desc, true);
         }
         public Vec3fStruct boxsize;
         public void ApplyTo(CDBoxDesc r, bool apply_to_base_class = false) {
-            Console.WriteLine("CDBoxDescStruct.ApplyTo");
             r.boxsize = boxsize;
             if (apply_to_base_class) {
                 base.ApplyTo(r, apply_to_base_class);
@@ -627,18 +625,15 @@ namespace SprCs {
         public void ApplyFrom(CDBoxDesc r, bool apply_to_base_class = false) {
             boxsize = r.boxsize;
             if (apply_to_base_class) {
-                Console.WriteLine("CDBoxDescStruct.ApplyFrom");
                 base.ApplyFrom(r, apply_to_base_class);
             }
         }
         public static implicit operator CDBoxDesc(CDBoxDescStruct m) {
-            Console.WriteLine("CDBoxDesc(CDBoxDescStruct m)");
             CDBoxDesc r = new CDBoxDesc();
             m.ApplyTo(r, true);
             return r;
         }
         public static implicit operator CDBoxDescStruct(CDBoxDesc r) {
-            Console.WriteLine("CDBoxDescStruct(CDBoxDesc r)");
             CDBoxDescStruct m = new CDBoxDescStruct();
             m.ApplyFrom(r, true);
             return m;

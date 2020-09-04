@@ -80,7 +80,7 @@ namespace SprCs {
             waitDuringStepCallbackList.Clear();
         }
         public void AddWaitUntilNextStepCallback(ThreadCallback callback) {
-            Console.WriteLine("AddWaitUntilNextStepCallback");
+            //Console.WriteLine("AddWaitUntilNextStepCallback");
             waitDuringStepCallbackList.Add(callback);
         }
         public void ExecCallbackForSubThreadForDelete() {
@@ -193,6 +193,10 @@ namespace SprCs {
             }
         }
         public void Swap() {
+            while (isSwapping) { // falseになるまで待つ，Step用Callback(ExecWaitUntilNextStepCallbackList)の直後が良いがlock周りを考えるとここでなくてはならない
+                Console.WriteLine("Wait isSwapping");
+                Thread.Sleep(1); // 通常FixedUpdateが20millisecondsで呼ばれていることを考えるとSleepは短くて良い(調べところちょうど良さそう)
+            }
             lock (phSceneForGetSetLock) {
                 if (isSwapping) {
                     Console.WriteLine("isSwapping True in Swap");
@@ -202,9 +206,9 @@ namespace SprCs {
                     stateForSwap = ObjectStatesIf.Create();
                     callObjectStatesIf_Create = false;
                 }
-                SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                 if (!isFixedUpdating) { // Step↔Get
-                    ExecCallbackForStepThread();
+                    ExecCallbackForStepThread(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
+                    SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
                     ExecCallbackForSubThreadForDelete(); // LoadStateの前で実行するとstateForSwapとphSceneの状態が変わってしまう
                     var temp = sceneForStep;
@@ -218,6 +222,7 @@ namespace SprCs {
                     isSwapping = true;
                     callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>(callbackForStepThread); // ディープコピー
                     callbackForStepThread.Clear();
+                    SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForBuffer]); // state→phScene
                     var temp = sceneForStep;
                     sceneForStep = sceneForBuffer;
@@ -242,8 +247,8 @@ namespace SprCs {
                     sceneForBuffer = sceneForGet;
                     sceneForGet = temp;
                     stepCount++;
-                    isSwapping = false;
                     changeAllExecuteGetFunctionFlagsTrue = true;
+                    isSwapping = false;
                 }
                 isFixedUpdating = false;
             }
@@ -319,12 +324,14 @@ namespace SprCs {
                             }
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]); // 全てCallbackで実行しないとstepThreadで実行されるものが参照できなくなる
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
+                            callObjectStatesIf_Create = true;
                         });
                     } else {
                         //Console.WriteLine("DelChildObject(overrided) not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
                         for (int num = 0; num < _thisNumber; num++) {
                             ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
                         }
+                        callObjectStatesIf_Create = true;
                     }
                 }
                 if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
