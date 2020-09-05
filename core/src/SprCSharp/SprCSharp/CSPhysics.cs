@@ -6558,7 +6558,7 @@ namespace SprCs {
                     (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return new Posed(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
                         (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -6602,9 +6602,9 @@ namespace SprCs {
         public void AddShape(CDShapeIf shape) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shape);
                         });
                         SprExport.Spr_PHBodyIf_AddShape((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shape);
@@ -6622,9 +6622,9 @@ namespace SprCs {
         public void AddShapes(CDShapeIf shBegin, CDShapeIf shEnd) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)shBegin, (IntPtr)shEnd);
                         });
                         SprExport.Spr_PHBodyIf_AddShapes((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)shBegin, (IntPtr)shEnd);
@@ -6656,7 +6656,7 @@ namespace SprCs {
                     int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return result;
@@ -6678,7 +6678,7 @@ namespace SprCs {
                     CDShapeIf obj = new CDShapeIf(ptr);
                     return obj;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index);
                         if (ptr == IntPtr.Zero) { return null; }
@@ -6702,7 +6702,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index);
                     return new Posed(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index);
                         return new Posed(ptr, true);
@@ -6717,10 +6717,10 @@ namespace SprCs {
         public void SetShapePose(int index, Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Posed(pose);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForStep], (int)index, (IntPtr)newP);
                         });
                         SprExport.Spr_PHBodyIf_SetShapePose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (int)index, (IntPtr)newP);
@@ -6787,10 +6787,10 @@ namespace SprCs {
         public void SetCenterOfMass(Vec3d center) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newCenter = new Vec3d(center);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newCenter);
                         });
                         SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newCenter);
@@ -6819,9 +6819,9 @@ namespace SprCs {
         public void CompInertia() {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                         });
                         SprExport.Spr_PHSolidIf_CompInertia((IntPtr)_thisArray[phSceneIf.sceneForBuffer]);
@@ -6862,7 +6862,7 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         var newP = new Posed(p);
                         SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
                         phSceneIf.AddCallbackForStepThread(() => {
@@ -6871,10 +6871,10 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         if (phSceneIf.isStepping) {
                             var newP = new Posed(p);
-                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            phSceneIf.AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
                             });
                             SprExport.Spr_PHSolidIf_SetPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
@@ -7954,7 +7954,7 @@ namespace SprCs {
                     if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
                     return obj;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         if (ptr == IntPtr.Zero) { return null; }
@@ -7986,7 +7986,7 @@ namespace SprCs {
                     if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr); }
                     return obj;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]);
@@ -8033,10 +8033,10 @@ namespace SprCs {
         public void SetSocketPose(Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newPose = new Posed(pose);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             Console.WriteLine("SetSocketPose in Callback");
                             SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
                         });
@@ -8058,10 +8058,10 @@ namespace SprCs {
         public void SetPlugPose(Posed pose) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newPose = new Posed(pose);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newPose);
                         });
                         SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newPose);
@@ -8613,10 +8613,10 @@ namespace SprCs {
         public void SetSpring(double spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         //Console.WriteLine("PHBallJoint SetSpring in isStepping");
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             //Console.WriteLine("SetSpring in CallBack");
                             SprExport.Spr_PHBallJointIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)spring);
                         });
@@ -8643,7 +8643,7 @@ namespace SprCs {
                         (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         double result = SprExport.Spr_PHBallJointIf_GetSpring(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -8660,9 +8660,9 @@ namespace SprCs {
         public void SetDamper(double damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)damper);
                         });
                         SprExport.Spr_PHBallJointIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)damper);
@@ -8686,7 +8686,7 @@ namespace SprCs {
                         (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         double result = SprExport.Spr_PHBallJointIf_GetDamper(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -8710,11 +8710,11 @@ namespace SprCs {
         public void SetTargetPosition(Quaterniond q) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         //Console.WriteLine("SetTargetPosition isStepping");
                         var newQ = new Quaterniond(q);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
                         });
                         SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
@@ -8737,7 +8737,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Quaterniond(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Quaterniond(ptr, true);
@@ -8752,10 +8752,10 @@ namespace SprCs {
         public void SetTargetVelocity(Vec3d v) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newV = new Vec3d(v);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                         });
                         SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
@@ -8778,7 +8778,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec3d(ptr, true);
@@ -8795,7 +8795,7 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) { // callbackForStepThreadをsubThreadで参照するので必要なlock
+                    lock (phSceneIf.phSceneLock) { // callbackForStepThreadをsubThreadで参照するので必要なlock
                         var newV = new Vec3d(ofst);
                         SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                         phSceneIf.AddCallbackForStepThread(() => {
@@ -8804,10 +8804,10 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         if (phSceneIf.isStepping) {
                             var newV = new Vec3d(ofst);
-                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            phSceneIf.AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                             });
                             SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
@@ -8832,7 +8832,7 @@ namespace SprCs {
                     (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce(
                         (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -8893,7 +8893,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec3d(ptr, true);
@@ -8962,10 +8962,10 @@ namespace SprCs {
         public void SetTargetPosition(Vec3d targetPosition) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newP = new Vec3d(targetPosition);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newP);
                         });
                         SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newP);
@@ -8988,7 +8988,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec3d(ptr, true);
@@ -9003,10 +9003,10 @@ namespace SprCs {
         public void SetTargetOrientation(Quaterniond targetOrientation) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newQ = new Quaterniond(targetOrientation);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newQ);
                         });
                         SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newQ);
@@ -9029,7 +9029,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Quaterniond(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Quaterniond(ptr, true);
@@ -9044,10 +9044,10 @@ namespace SprCs {
         public void SetSpring(Vec3d spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newSpring = new Vec3d(spring);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep], newSpring);
                         });
                         SprExport.Spr_PHSpringIf_SetSpring((IntPtr)_thisArray[phSceneIf.sceneForBuffer], newSpring);
@@ -9070,7 +9070,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -9087,10 +9087,10 @@ namespace SprCs {
         public void SetDamper(Vec3d damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newDamper = new Vec3d(damper);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForStep], newDamper);
                         });
                         SprExport.Spr_PHSpringIf_SetDamper((IntPtr)_thisArray[phSceneIf.sceneForBuffer], newDamper);
@@ -9114,7 +9114,7 @@ namespace SprCs {
                         (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -9138,9 +9138,9 @@ namespace SprCs {
         public void SetSpringOri(double spring) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)spring);
                         });
                         SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)spring);
@@ -9164,7 +9164,7 @@ namespace SprCs {
                         (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         double result = SprExport.Spr_PHSpringIf_GetSpringOri(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -9181,9 +9181,9 @@ namespace SprCs {
         public void SetDamperOri(double damper) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[phSceneIf.sceneForStep], (double)damper);
                         });
                         SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (double)damper);
@@ -9207,7 +9207,7 @@ namespace SprCs {
                         (IntPtr)_thisArray[phSceneIf.sceneForStep]); // ここで取得されるPosedは複製
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         double result = SprExport.Spr_PHSpringIf_GetDamperOri(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // ここで取得されるPosedは複製
@@ -9257,7 +9257,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec6d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec6d(ptr, true);
@@ -9274,7 +9274,7 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         var newV = new Vec6d(offsetForce);
                         SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                         phSceneIf.AddCallbackForStepThread(() => {
@@ -9283,10 +9283,10 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         if (phSceneIf.isStepping) {
                             var newV = new Vec6d(offsetForce);
-                            phSceneIf.AddWaitUntilNextStepCallback(() => {
+                            phSceneIf.AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                             });
                             SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
@@ -9305,10 +9305,10 @@ namespace SprCs {
         public void SetTargetVelocity(Vec6d targetVelocity) {
             var phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         var newV = new Vec6d(targetVelocity);
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                         });
                         SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
@@ -9331,7 +9331,7 @@ namespace SprCs {
                     IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForStep]);
                     return new Vec6d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         phSceneIf.isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec6d(ptr, true);
@@ -10740,7 +10740,7 @@ namespace SprCs {
         }
         public PHSolidIf CreateSolid(PHSolidDesc desc) {
             if (multiThreadMode) {
-                lock (phSceneForGetSetLock) {
+                lock (phSceneLock) {
                     Console.WriteLine("Spr_ObjectStatesIf_ReleaseState In Create Solid");
                     if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
                         SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]);
@@ -10759,7 +10759,7 @@ namespace SprCs {
                         obj._thisArray[sceneForGet] = get;
                         obj._thisArray[sceneForBuffer] = buffer;
                         Console.WriteLine(sceneForGet);
-                        AddWaitUntilNextStepCallback(() => {
+                        AddCallbackForSubThread(() => {
                             IntPtr step = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
                             obj._thisArray[sceneForStep] = step;
                         });
@@ -10846,7 +10846,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (int)mode);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (int)mode);
@@ -10854,9 +10854,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (int)mode);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (int)mode);
@@ -10876,7 +10876,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep]);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer]);
@@ -10884,9 +10884,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep]);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer]);
@@ -10906,7 +10906,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForStep], (IntPtr)group._thisArray[sceneForStep], (ulong)length, (int)mode);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length, (int)mode);
@@ -10914,9 +10914,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForStep], (IntPtr)group._thisArray[sceneForStep], (ulong)length, (int)mode);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length, (int)mode);
@@ -10936,7 +10936,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForStep], (IntPtr)group._thisArray[sceneForStep], (ulong)length);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length);
@@ -10944,9 +10944,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForStep], (IntPtr)group._thisArray[sceneForStep], (ulong)length);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr)_thisArray[sceneForBuffer], (IntPtr)group._thisArray[sceneForBuffer], (ulong)length);
@@ -10966,7 +10966,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForStep], (IntPtr)solid._thisArray[sceneForStep], (int)mode);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer], (int)mode);
@@ -10974,9 +10974,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForStep], (IntPtr)solid._thisArray[sceneForStep], (int)mode);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer], (int)mode);
@@ -10996,7 +10996,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForStep], (IntPtr)solid._thisArray[sceneForStep]);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer]);
@@ -11004,9 +11004,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForStep], (IntPtr)solid._thisArray[sceneForStep]);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr)_thisArray[sceneForBuffer], (IntPtr)solid._thisArray[sceneForBuffer]);
@@ -11026,7 +11026,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForStep], (int)mode);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForBuffer], (int)mode);
@@ -11034,9 +11034,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForStep], (int)mode);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_6((IntPtr)_thisArray[sceneForBuffer], (int)mode);
@@ -11056,7 +11056,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == stepThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForStep]);
                         AddCallbackForStepThread(() => {
                             SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForBuffer]);
@@ -11064,9 +11064,9 @@ namespace SprCs {
                         });
                     }
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         if (isStepping) {
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForStep]);
                             });
                             SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr)_thisArray[sceneForBuffer]);
@@ -11085,7 +11085,7 @@ namespace SprCs {
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             if (multiThreadMode) {
                 PHJointIf obj = new PHJointIf(IntPtr.Zero);
-                lock (phSceneForGetSetLock) {
+                lock (phSceneLock) {
                     Console.WriteLine("Spr_ObjectStatesIf_ReleaseState In Create Joint");
                     if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
                         SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]); // 恐らくstateForSwap._thisと_thisArray[sceneForGet]が同じ構造でないといけないのでここで
@@ -11123,7 +11123,7 @@ namespace SprCs {
                         if (isStepping) {
                             IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
                             newJoint._thisArray[sceneForBuffer] = buffer;
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
                                 newJoint._thisArray[sceneForStep] = step;
                             });
@@ -11137,7 +11137,7 @@ namespace SprCs {
                         if (isStepping) {
                             IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
                             newJoint._thisArray[sceneForBuffer] = buffer;
-                            AddWaitUntilNextStepCallback(() => {
+                            AddCallbackForSubThread(() => {
                                 IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
                                 newJoint._thisArray[sceneForStep] = step;
                             });
@@ -11209,7 +11209,7 @@ namespace SprCs {
                         (IntPtr)_thisArray[sceneForStep]); // ここで取得されるPosedは複製
                     return result;
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         isFixedUpdating = true;
                         int result = SprExport.Spr_PHSceneIf_NContacts(
                             (IntPtr)_thisArray[sceneForGet]); // ここで取得されるPosedは複製
@@ -11234,7 +11234,7 @@ namespace SprCs {
                     obj._thisArray[sceneForStep] = ptr;
                     return obj;
                 } else if (currentThread == subThread) {
-                    lock (phSceneForGetSetLock) {
+                    lock (phSceneLock) {
                         isFixedUpdating = true;
                         IntPtr ptr = SprExport.Spr_PHSceneIf_GetContact(
                             (IntPtr)_thisArray[sceneForGet], (int)i); // ここで取得されるPosedは複製
@@ -11486,9 +11486,9 @@ namespace SprCs {
         }
         public void SetTimeStep(double dt) {
             if (multiThreadMode) {
-                lock (phSceneForGetSetLock) {
+                lock (phSceneLock) {
                     if (isStepping) {
-                        AddWaitUntilNextStepCallback(() => {
+                        AddCallbackForSubThread(() => {
                             SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[sceneForStep], (double)dt);
                         });
                         SprExport.Spr_PHSceneIf_SetTimeStep((IntPtr)_thisArray[sceneForBuffer], (double)dt);

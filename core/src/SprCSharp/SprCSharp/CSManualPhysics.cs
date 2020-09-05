@@ -25,7 +25,7 @@ namespace SprCs {
         public bool isFixedUpdating = false;
         public bool isSwapping = false;
         public bool multiThreadMode = false;
-        public readonly object phSceneForGetSetLock = new object();
+        public readonly object phSceneLock = new object();
         public int sceneForStep = 0;
         public int sceneForGet = 1;
         public int sceneForBuffer = 2;
@@ -47,12 +47,12 @@ namespace SprCs {
         public Thread subThread = null; // 描画用のスレッド(Unity想定)
         // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
         // Thread処理用
-        private List<ThreadCallback> waitDuringStepCallbackList = new List<ThreadCallback>();
-        private List<ThreadCallback> callbackForSubThreadForDelete = new List<ThreadCallback>(); // subTheadのdelete時にstepThreadで参照するとsceneForGet,sceneForBufferに対して実行できないため，参照してからDelete
+        private List<ThreadCallback> callbackForSubThreadList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForSubThreadForDeleteList = new List<ThreadCallback>(); // subTheadのdelete時にstepThreadで参照するとsceneForGet,sceneForBufferに対して実行できないため，参照してからDelete
         public bool DeletingOnSubThread { // delete中にStepが呼ばれることを防ぐ,callbackForSubThreadForDeleteの個数により判定可能
             get {
-                lock (phSceneForGetSetLock) {
-                    if (callbackForSubThreadForDelete.Count == 0) {
+                lock (phSceneLock) {
+                    if (callbackForSubThreadForDeleteList.Count == 0) {
                         return false;
                     } else {
                         return true;
@@ -60,8 +60,8 @@ namespace SprCs {
                 }
             }
         }
-        private List<ThreadCallback> callbackForStepThread = new List<ThreadCallback>();
-        private List<ThreadCallback> callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThreadList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThreadOnSwapAfterFixedUpdateList = new List<ThreadCallback>();
         public ObjectStatesIf stateForSwap;
         private bool callObjectStatesIf_Create = true;
         public delegate void ThreadCallback();
@@ -69,52 +69,54 @@ namespace SprCs {
         public bool debugSceneForGet = false;
         public bool debugSceneForBuffer = false;
         private bool isFirstForDebugSceneForBuffer = true;
-        //public List<ThreadCallback> waitUntilNextStepCallbackList = new List<ThreadCallback>();
-        public void ExecWaitUntilNextStepCallbackList() { // Step側でLockする
-            if (waitDuringStepCallbackList.Count != 0) {
-                Console.WriteLine("waitduringstepcallbacklist " + waitDuringStepCallbackList.Count);
+
+        public void ExecCallbackForSubThreadList() {
+            if (callbackForSubThreadList.Count != 0) {
+                Console.WriteLine("CallbackForSubThread " + callbackForSubThreadList.Count);
             }
-            foreach (var callback in waitDuringStepCallbackList) {
+            foreach (var callback in callbackForSubThreadList) {
                 callback();
             }
-            waitDuringStepCallbackList.Clear();
+            callbackForSubThreadList.Clear();
         }
-        public void AddWaitUntilNextStepCallback(ThreadCallback callback) {
-            //Console.WriteLine("AddWaitUntilNextStepCallback");
-            waitDuringStepCallbackList.Add(callback);
+        public void AddCallbackForSubThread(ThreadCallback callback) {
+            callbackForSubThreadList.Add(callback);
         }
-        public void ExecCallbackForSubThreadForDelete() {
-            if (callbackForSubThreadForDelete.Count != 0) {
-                Console.WriteLine("callbackForSubThreadForDelete " + callbackForSubThreadForDelete.Count);
+
+        public void ExecCallbackForSubThreadForDeleteList() {
+            if (callbackForSubThreadForDeleteList.Count != 0) {
+                Console.WriteLine("callbackForSubThreadForDelete " + callbackForSubThreadForDeleteList.Count);
             }
-            foreach (var callback in callbackForSubThreadForDelete) {
+            foreach (var callback in callbackForSubThreadForDeleteList) {
                 callback();
             }
-            callbackForSubThreadForDelete.Clear();
+            callbackForSubThreadForDeleteList.Clear();
         }
         public void AddCallbackForSubThreadForDelete(ThreadCallback callback) {
-            callbackForSubThreadForDelete.Add(callback);
+            callbackForSubThreadForDeleteList.Add(callback);
         }
-        public void ExecCallbackForStepThread() {
-            if (callbackForStepThread.Count != 0) {
-                Console.WriteLine("callbackForStepThread " + callbackForStepThread.Count);
+
+        public void ExecCallbackForStepThreadList() {
+            if (callbackForStepThreadList.Count != 0) {
+                Console.WriteLine("callbackForStepThread " + callbackForStepThreadList.Count);
             }
-            foreach (var callback in callbackForStepThread) {
+            foreach (var callback in callbackForStepThreadList) {
                 callback();
             }
-            callbackForStepThread.Clear();
+            callbackForStepThreadList.Clear();
         }
         public void AddCallbackForStepThread(ThreadCallback callback) {
-            callbackForStepThread.Add(callback);
+            callbackForStepThreadList.Add(callback);
         }
-        public void ExecCallbackForStepThreadOnSwapAfterFixedUpdate() {
-            if (callbackForStepThreadOnSwapAfterFixedUpdate.Count != 0) {
-                Console.WriteLine("callbackForStepThreadOnSwapAfterFixedUpdate " + callbackForStepThreadOnSwapAfterFixedUpdate.Count);
+
+        public void ExecCallbackForStepThreadOnSwapAfterFixedUpdateList() {
+            if (callbackForStepThreadOnSwapAfterFixedUpdateList.Count != 0) {
+                Console.WriteLine("callbackForStepThreadOnSwapAfterFixedUpdate " + callbackForStepThreadOnSwapAfterFixedUpdateList.Count);
             }
-            foreach (var callback in callbackForStepThreadOnSwapAfterFixedUpdate) {
+            foreach (var callback in callbackForStepThreadOnSwapAfterFixedUpdateList) {
                 callback();
             }
-            callbackForStepThreadOnSwapAfterFixedUpdate.Clear();
+            callbackForStepThreadOnSwapAfterFixedUpdateList.Clear();
         }
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene) {
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
@@ -124,6 +126,7 @@ namespace SprCs {
             }
             return instances[stepPHScene];
         }
+
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene, IntPtr bufferPHScene, IntPtr getPHScene) { // 次にStepされるPHSceneIfを返す
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
                 var newPHSceneIf = new PHSceneIf(stepPHScene);
@@ -197,20 +200,20 @@ namespace SprCs {
                 Console.WriteLine("Wait isSwapping");
                 Thread.Sleep(1); // 通常FixedUpdateが20millisecondsで呼ばれていることを考えるとSleepは短くて良い(調べところちょうど良さそう)
             }
-            lock (phSceneForGetSetLock) {
+            lock (phSceneLock) {
                 if (isSwapping) {
                     Console.WriteLine("isSwapping True in Swap");
                 }
-                ExecWaitUntilNextStepCallbackList();
+                ExecCallbackForSubThreadList();
                 if (callObjectStatesIf_Create) {
                     stateForSwap = ObjectStatesIf.Create();
                     callObjectStatesIf_Create = false;
                 }
                 if (!isFixedUpdating) { // Step↔Get
-                    ExecCallbackForStepThread(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
+                    ExecCallbackForStepThreadList(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
-                    ExecCallbackForSubThreadForDelete(); // LoadStateの前で実行するとstateForSwapとphSceneの状態が変わってしまう
+                    ExecCallbackForSubThreadForDeleteList(); // LoadStateの前で実行するとstateForSwapとphSceneの状態が変わってしまう
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
                     sceneForGet = temp;
@@ -220,8 +223,8 @@ namespace SprCs {
                 } else { // Step↔Buffer
                     Console.WriteLine("Swap Step↔Buffer");
                     isSwapping = true;
-                    callbackForStepThreadOnSwapAfterFixedUpdate = new List<ThreadCallback>(callbackForStepThread); // ディープコピー
-                    callbackForStepThread.Clear();
+                    callbackForStepThreadOnSwapAfterFixedUpdateList = new List<ThreadCallback>(callbackForStepThreadList); // ディープコピー
+                    callbackForStepThreadList.Clear();
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForBuffer]); // state→phScene
                     var temp = sceneForStep;
@@ -233,15 +236,15 @@ namespace SprCs {
             }
         }
         public void SwapAfterFixedUpdate() {
-            lock (phSceneForGetSetLock) {
+            lock (phSceneLock) {
                 if (isSwapping) { // Buffer↔Get
                     Console.WriteLine("SwapAfterFixedUpdate called");
                     if (isStepping) {
                         Console.WriteLine("isStepping True");
                     }
-                    ExecCallbackForStepThreadOnSwapAfterFixedUpdate(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
+                    ExecCallbackForStepThreadOnSwapAfterFixedUpdateList(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
                     lock (GetSdk().phSdkLock) { // subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行 <!!> lockが二重になっているため、デッドロックの可能性あり
-                        ExecCallbackForSubThreadForDelete();
+                        ExecCallbackForSubThreadForDeleteList();
                     }
                     var temp = sceneForBuffer;
                     sceneForBuffer = sceneForGet;
@@ -254,7 +257,7 @@ namespace SprCs {
             }
         }
         public bool GetExecuteSetFunctionFlag(System.Object o) {
-            lock (phSceneForGetSetLock) {
+            lock (phSceneLock) {
                 if (!executeSetFunctionFlagDictionary.ContainsKey(o)) {
                     return executeSetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
                 } else {
@@ -272,7 +275,7 @@ namespace SprCs {
             }
         }
         public bool SetExecuteSetFunctionFlagFalse(System.Object o) { // Flagが全てFalseになってからfixedUpdateAutoWaitをSetしないと更新されてないのにStepが実行される
-            lock (phSceneForGetSetLock) {
+            lock (phSceneLock) {
                 if (!executeSetFunctionFlagDictionary.ContainsKey(o)) {
                     return false;
                 }
@@ -282,7 +285,7 @@ namespace SprCs {
         }
 
         public bool GetExecuteGetFunctionFlag(System.Object o) {
-            lock (phSceneForGetSetLock) {
+            lock (phSceneLock) {
                 if (!executeGetFunctionFlagDictionary.ContainsKey(o)) {
                     return executeGetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
                 } else {
@@ -299,7 +302,7 @@ namespace SprCs {
             }
         }
         public bool SetExecuteGetFunctionFlagFalse(System.Object o) {
-            lock (phSceneForGetSetLock) {
+            lock (phSceneLock) {
                 if (!executeGetFunctionFlagDictionary.ContainsKey(o)) {
                     return false;
                 }
@@ -313,7 +316,7 @@ namespace SprCs {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             if (multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
-                lock (phSceneForGetSetLock) {
+                lock (phSceneLock) {
                     if (isStepping || isSwapping) {
                         //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
                         AddCallbackForSubThreadForDelete(() => {
@@ -354,7 +357,7 @@ namespace SprCs {
             char ret = (char)0; // <!!> これいいのか？
             ObjectIf objectIf = this as ObjectIf;
             if (multiThreadMode) {
-                lock (phSceneForGetSetLock) {
+                lock (phSceneLock) {
                     if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
                                                                   //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
@@ -372,10 +375,10 @@ namespace SprCs {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             ObjectIf objectIf = this as ObjectIf;
             if (multiThreadMode) {
-                lock (phSceneForGetSetLock) {
+                lock (phSceneLock) {
                     if (isStepping) {
                         Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
-                        AddWaitUntilNextStepCallback(() => {
+                        AddCallbackForSubThread(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
                             SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
                         });

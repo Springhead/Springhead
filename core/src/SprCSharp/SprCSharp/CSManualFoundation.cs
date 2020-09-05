@@ -59,9 +59,9 @@ namespace SprCs {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             if (phSceneIf.multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)o._thisArray[phSceneIf.sceneForStep]);
                         });
                         ret0[phSceneIf.sceneForBuffer] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)o._thisArray[phSceneIf.sceneForBuffer]);
@@ -103,7 +103,7 @@ namespace SprCs {
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
                     }
                 } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneForGetSetLock) {
+                    lock (phSceneIf.phSceneLock) {
                         if (_thisArray[phSceneIf.sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
                                                                                 //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                             ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)desc);
@@ -123,10 +123,10 @@ namespace SprCs {
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             ObjectIf objectIf = this as ObjectIf;
             if (phSceneIf.multiThreadMode) {
-                lock (phSceneIf.phSceneForGetSetLock) {
+                lock (phSceneIf.phSceneLock) {
                     if (phSceneIf.isStepping) {
                         Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
-                        phSceneIf.AddWaitUntilNextStepCallback(() => {
+                        phSceneIf.AddCallbackForSubThread(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
                             SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)desc);
                         });
