@@ -60,7 +60,7 @@ namespace SprCs {
             if (phSceneIf.multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
                 lock (phSceneIf.phSceneLock) {
-                    if (phSceneIf.isStepping) {
+                    if (phSceneIf.isStepThreadRunning) {
                         phSceneIf.AddCallbackForSubThread(() => {
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)o._thisArray[phSceneIf.sceneForStep]);
                         });
@@ -124,7 +124,7 @@ namespace SprCs {
             ObjectIf objectIf = this as ObjectIf;
             if (phSceneIf.multiThreadMode) {
                 lock (phSceneIf.phSceneLock) {
-                    if (phSceneIf.isStepping) {
+                    if (phSceneIf.isStepThreadRunning) {
                         Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                         phSceneIf.AddCallbackForSubThread(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
