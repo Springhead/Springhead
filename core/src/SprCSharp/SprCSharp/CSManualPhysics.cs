@@ -21,8 +21,8 @@ namespace SprCs {
         }
     }
     public partial class PHSceneIf : SceneIf {
-        public bool isStepThreadRunning = false;
-        public bool isSubThreadRunning = false;
+        public bool isStepThreadExecuting = false;
+        public bool isSubThreadExecuting = false;
         public bool isSwapping = false;
         public bool multiThreadMode = false;
         public readonly object phSceneLock = new object();
@@ -36,12 +36,12 @@ namespace SprCs {
         public Dictionary<System.Object, bool> executeSetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public bool changeAllExecuteSetFunctionFlagsTrue = false;
         public bool changedAllExecuteSetFunctionFlagsTrue = true;
-        public bool firstGetExecuteSetFunctionInOneFixedUpdate = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
+        public bool firstGetExecuteSetFunctionInSubThreadOneExecution = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
 
         //Get系メソッド用，そのまま実行してもFixedUpdate中に値が変わらないため安全だが，より効率を求める場合に使用(デフォルトの機能用PHSceneの更新など)
         public Dictionary<System.Object, bool> executeGetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public bool changeAllExecuteGetFunctionFlagsTrue = false;
-        public bool firstGetExecuteGetFunctionInOneFixedUpdate = true;
+        public bool firstGetExecuteGetFunctionInSubThreadOneExecution = true;
 
         public Thread stepThread = null; // Stepを実行するスレッド
         public Thread subThread = null; // 描画用のスレッド(Unity想定)
@@ -61,7 +61,7 @@ namespace SprCs {
             }
         }
         private List<ThreadCallback> callbackForStepThreadList = new List<ThreadCallback>();
-        private List<ThreadCallback> callbackForStepThreadOnSwapAfterFixedUpdateList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThreadOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>();
         public ObjectStatesIf stateForSwap;
         private bool callObjectStatesIf_Create = true;
         public delegate void ThreadCallback();
@@ -109,14 +109,14 @@ namespace SprCs {
             callbackForStepThreadList.Add(callback);
         }
 
-        public void ExecCallbackForStepThreadOnSwapAfterFixedUpdateList() {
-            if (callbackForStepThreadOnSwapAfterFixedUpdateList.Count != 0) {
-                Console.WriteLine("callbackForStepThreadOnSwapAfterFixedUpdate " + callbackForStepThreadOnSwapAfterFixedUpdateList.Count);
+        public void ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution() {
+            if (callbackForStepThreadOnSwapAfterSubThreadOneExecutionList.Count != 0) {
+                Console.WriteLine("callbackForStepThreadOnSwapAfterSubThreadOneExecution " + callbackForStepThreadOnSwapAfterSubThreadOneExecutionList.Count);
             }
-            foreach (var callback in callbackForStepThreadOnSwapAfterFixedUpdateList) {
+            foreach (var callback in callbackForStepThreadOnSwapAfterSubThreadOneExecutionList) {
                 callback();
             }
-            callbackForStepThreadOnSwapAfterFixedUpdateList.Clear();
+            callbackForStepThreadOnSwapAfterSubThreadOneExecutionList.Clear();
         }
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene) {
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
@@ -209,7 +209,7 @@ namespace SprCs {
                     stateForSwap = ObjectStatesIf.Create();
                     callObjectStatesIf_Create = false;
                 }
-                if (!isSubThreadRunning) { // Step↔Get
+                if (!isSubThreadExecuting) { // Step↔Get
                     ExecCallbackForStepThreadList(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
@@ -223,7 +223,7 @@ namespace SprCs {
                 } else { // Step↔Buffer
                     Console.WriteLine("Swap Step↔Buffer");
                     isSwapping = true;
-                    callbackForStepThreadOnSwapAfterFixedUpdateList = new List<ThreadCallback>(callbackForStepThreadList); // ディープコピー
+                    callbackForStepThreadOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>(callbackForStepThreadList); // ディープコピー
                     callbackForStepThreadList.Clear();
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForBuffer]); // state→phScene
@@ -231,18 +231,18 @@ namespace SprCs {
                     sceneForStep = sceneForBuffer;
                     sceneForBuffer = temp;
                 }
-                isStepThreadRunning = false;
+                isStepThreadExecuting = false;
 
             }
         }
-        public void SwapAfterFixedUpdate() {
+        public void SwapAfterSubThreadOneExecution() {
             lock (phSceneLock) {
                 if (isSwapping) { // Buffer↔Get
-                    Console.WriteLine("SwapAfterFixedUpdate called");
-                    if (isStepThreadRunning) {
+                    Console.WriteLine("SwapAfterSubThreadOneExecution called");
+                    if (isStepThreadExecuting) {
                         Console.WriteLine("isStepping True");
                     }
-                    ExecCallbackForStepThreadOnSwapAfterFixedUpdateList(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
+                    ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
                     lock (GetSdk().phSdkLock) { // subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行 <!!> lockが二重になっているため、デッドロックの可能性あり
                         ExecCallbackForSubThreadForDeleteList();
                     }
@@ -253,7 +253,7 @@ namespace SprCs {
                     changeAllExecuteGetFunctionFlagsTrue = true;
                     isSwapping = false;
                 }
-                isSubThreadRunning = false;
+                isSubThreadExecuting = false;
             }
         }
         public bool GetExecuteSetFunctionFlag(System.Object o) {
@@ -261,7 +261,7 @@ namespace SprCs {
                 if (!executeSetFunctionFlagDictionary.ContainsKey(o)) {
                     return executeSetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
                 } else {
-                    if (changeAllExecuteSetFunctionFlagsTrue && firstGetExecuteSetFunctionInOneFixedUpdate) { // FixedUpdate中のGetの一番最初でFlagをtrueにするのはchangeAllExecuteSetFunctionFlagsTrueがSpringheadスレッドで呼ばれるため，ここで呼ぶのが最適
+                    if (changeAllExecuteSetFunctionFlagsTrue && firstGetExecuteSetFunctionInSubThreadOneExecution) { // FixedUpdate中のGetの一番最初でFlagをtrueにするのはchangeAllExecuteSetFunctionFlagsTrueがSpringheadスレッドで呼ばれるため，ここで呼ぶのが最適
                         List<System.Object> Keys = new List<object>(executeSetFunctionFlagDictionary.Keys);
                         foreach (var key in Keys) {
                             executeSetFunctionFlagDictionary[key] = true;
@@ -269,7 +269,7 @@ namespace SprCs {
                         changeAllExecuteSetFunctionFlagsTrue = false;
                         changedAllExecuteSetFunctionFlagsTrue = true;
                     }
-                    firstGetExecuteSetFunctionInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
+                    firstGetExecuteSetFunctionInSubThreadOneExecution = false; // こいつはlock要らないがここしか書けなそう
                     return executeSetFunctionFlagDictionary[o];
                 }
             }
@@ -289,14 +289,14 @@ namespace SprCs {
                 if (!executeGetFunctionFlagDictionary.ContainsKey(o)) {
                     return executeGetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
                 } else {
-                    if (changeAllExecuteGetFunctionFlagsTrue && firstGetExecuteGetFunctionInOneFixedUpdate) {
+                    if (changeAllExecuteGetFunctionFlagsTrue && firstGetExecuteGetFunctionInSubThreadOneExecution) {
                         List<System.Object> Keys = new List<object>(executeGetFunctionFlagDictionary.Keys);
                         foreach (var key in Keys) {
                             executeGetFunctionFlagDictionary[key] = true;
                         }
                         changeAllExecuteGetFunctionFlagsTrue = false;
                     }
-                    firstGetExecuteGetFunctionInOneFixedUpdate = false; // こいつはlock要らないがここしか書けなそう
+                    firstGetExecuteGetFunctionInSubThreadOneExecution = false; // こいつはlock要らないがここしか書けなそう
                     return executeGetFunctionFlagDictionary[o];
                 }
             }
@@ -317,7 +317,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
                 lock (phSceneLock) {
-                    if (isStepThreadRunning || isSwapping) {
+                    if (isStepThreadExecuting || isSwapping) {
                         //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
                         AddCallbackForSubThreadForDelete(() => {
                             Console.WriteLine("DelChildObject(overrided) In callback"/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
@@ -376,7 +376,7 @@ namespace SprCs {
             ObjectIf objectIf = this as ObjectIf;
             if (multiThreadMode) {
                 lock (phSceneLock) {
-                    if (isStepThreadRunning) {
+                    if (isStepThreadExecuting) {
                         Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                         AddCallbackForSubThread(() => {
                             //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
