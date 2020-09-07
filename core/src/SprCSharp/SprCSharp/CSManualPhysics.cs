@@ -60,8 +60,10 @@ namespace SprCs {
                 }
             }
         }
-        private List<ThreadCallback> callbackForStepThreadList = new List<ThreadCallback>();
-        private List<ThreadCallback> callbackForStepThreadOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>();
+
+        private List<ThreadCallback> callbackForStepThreadToSceneForBufferList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThreadToSceneForGetList = new List<ThreadCallback>();
+        private List<ThreadCallback> callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>();
         public ObjectStatesIf stateForSwap;
         private bool callObjectStatesIf_Create = true;
         public delegate void ThreadCallback();
@@ -96,27 +98,37 @@ namespace SprCs {
             callbackForSubThreadForDeleteList.Add(callback);
         }
 
-        public void ExecCallbackForStepThreadList() {
-            if (callbackForStepThreadList.Count != 0) {
-                Console.WriteLine("callbackForStepThread " + callbackForStepThreadList.Count);
+        public void ExecCallbackForStepThreadToSceneForBufferList() {
+            if (callbackForStepThreadToSceneForBufferList.Count != 0) {
+                Console.WriteLine("callbackForStepThreadToSceneForBuffer " + callbackForStepThreadToSceneForBufferList.Count);
             }
-            foreach (var callback in callbackForStepThreadList) {
+            foreach (var callback in callbackForStepThreadToSceneForBufferList) {
                 callback();
             }
-            callbackForStepThreadList.Clear();
+            callbackForStepThreadToSceneForBufferList.Clear();
         }
-        public void AddCallbackForStepThread(ThreadCallback callback) {
-            callbackForStepThreadList.Add(callback);
+        public void ExecCallbackForStepThreadToSceneForGetList() {
+            if (callbackForStepThreadToSceneForGetList.Count != 0) {
+                Console.WriteLine("callbackForStepThreadToSceneForGet " + callbackForStepThreadToSceneForGetList.Count);
+            }
+            foreach (var callback in callbackForStepThreadToSceneForGetList) {
+                callback();
+            }
+            callbackForStepThreadToSceneForGetList.Clear();
+        }
+        public void AddCallbackForStepThread(ThreadCallback callbackToSceneForBuffer,ThreadCallback callbackToSceneForGet) {
+            callbackForStepThreadToSceneForBufferList.Add(callbackToSceneForBuffer);
+            callbackForStepThreadToSceneForGetList.Add(callbackToSceneForGet);
         }
 
         public void ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution() {
-            if (callbackForStepThreadOnSwapAfterSubThreadOneExecutionList.Count != 0) {
-                Console.WriteLine("callbackForStepThreadOnSwapAfterSubThreadOneExecution " + callbackForStepThreadOnSwapAfterSubThreadOneExecutionList.Count);
+            if (callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList.Count != 0) {
+                Console.WriteLine("callbackForStepThreadOnSwapAfterSubThreadOneExecution " + callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList.Count);
             }
-            foreach (var callback in callbackForStepThreadOnSwapAfterSubThreadOneExecutionList) {
+            foreach (var callback in callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList) {
                 callback();
             }
-            callbackForStepThreadOnSwapAfterSubThreadOneExecutionList.Clear();
+            callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList.Clear();
         }
         public static PHSceneIf CreateCSInstance(IntPtr stepPHScene) {
             if (!instances.ContainsKey(stepPHScene)) { // defaultIntPtrをinstances[defaultIntPtr]._thisに代入
@@ -210,7 +222,8 @@ namespace SprCs {
                     callObjectStatesIf_Create = false;
                 }
                 if (!isSubThreadExecuting) { // Step↔Get
-                    ExecCallbackForStepThreadList(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
+                    ExecCallbackForStepThreadToSceneForBufferList(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
+                    ExecCallbackForStepThreadToSceneForGetList(); 
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
                     ExecCallbackForSubThreadForDeleteList(); // LoadStateの前で実行するとstateForSwapとphSceneの状態が変わってしまう
@@ -223,8 +236,9 @@ namespace SprCs {
                 } else { // Step↔Buffer
                     Console.WriteLine("Swap Step↔Buffer");
                     isSwapping = true;
-                    callbackForStepThreadOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>(callbackForStepThreadList); // ディープコピー
-                    callbackForStepThreadList.Clear();
+                    ExecCallbackForStepThreadToSceneForBufferList(); // 現在のBufferはStepとなるため，ここで実行しなければならない
+                    callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>(callbackForStepThreadToSceneForGetList); // ディープコピー
+                    callbackForStepThreadToSceneForGetList.Clear();
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForBuffer]); // state→phScene
                     var temp = sceneForStep;
