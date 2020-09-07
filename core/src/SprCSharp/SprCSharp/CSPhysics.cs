@@ -10735,20 +10735,17 @@ namespace SprCs {
         public PHSolidIf CreateSolid(PHSolidDesc desc) {
             if (multiThreadMode) {
                 lock (phSceneLock) {
-                    Console.WriteLine("Spr_ObjectStatesIf_ReleaseState In Create Solid");
                     if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
                         SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]);
                     }
                     callObjectStatesIf_Create = true;
                     if (isStepThreadExecuting) {
-                        Console.WriteLine("Create Solid In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
                         IntPtr buffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
                         if (get == IntPtr.Zero || buffer == IntPtr.Zero) {
-                            Console.Write("Create Solid null");
                             return null;
                         }
-                        PHSolidIf obj = new PHSolidIf(get); // _thsisにGetを入れる
+                        PHSolidIf obj = new PHSolidIf(get); // _thisにGetを入れる
                         obj.phSceneIf = this;
                         obj._thisArray[sceneForGet] = get;
                         obj._thisArray[sceneForBuffer] = buffer;
@@ -10758,15 +10755,12 @@ namespace SprCs {
                             obj._thisArray[sceneForStep] = step;
                         });
                         if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(get); }
-                        Console.WriteLine("Create Solid In isStepping End");
                         return obj;
                     } else {
-                        Console.WriteLine("Create Solid not In isStepping");
                         IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
                         IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[1], (IntPtr)desc);
                         IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[2], (IntPtr)desc);
                         if (ptr0 == IntPtr.Zero || ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
-                            Console.Write("Create Solid null");
                             return null;
                         }
                         PHSolidIf obj = new PHSolidIf(ptr0); // _thsisにGetを入れる
@@ -10781,7 +10775,6 @@ namespace SprCs {
             } else {
                 IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
                 if (ptr0 == IntPtr.Zero) {
-                    Console.Write("Create Solid null not Thread");
                     return null;
                 }
                 PHSolidIf obj = new PHSolidIf(ptr0); // _thsisにGetを入れる
@@ -11064,28 +11057,23 @@ namespace SprCs {
             if (multiThreadMode) {
                 PHJointIf obj = new PHJointIf(IntPtr.Zero);
                 lock (phSceneLock) {
-                    Console.WriteLine("Spr_ObjectStatesIf_ReleaseState In Create Joint");
                     if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
                         SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]); // 恐らくstateForSwap._thisと_thisArray[sceneForGet]が同じ構造でないといけないのでここで
                     }
                     callObjectStatesIf_Create = true;
                     if (isStepThreadExecuting) {
-                        Console.WriteLine("Create Joint In isStepping");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForGet], (IntPtr)lhs._thisArray[sceneForGet], (IntPtr)rhs._thisArray[sceneForGet], (IntPtr)ii, (IntPtr)desc);
                         if (get == IntPtr.Zero) {
-                            Console.Write("Create Joint null");
                             return null;
                         }
                         obj._thisArray[sceneForGet] = get;
                         Console.WriteLine(sceneForGet);
                         obj._this = obj._thisArray[sceneForGet];
                     } else {
-                        Console.WriteLine("Create Joint not In isStepping");
                         IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0], (IntPtr)ii, (IntPtr)desc);
                         IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[1], (IntPtr)lhs._thisArray[1], (IntPtr)rhs._thisArray[1], (IntPtr)ii, (IntPtr)desc);
                         IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[2], (IntPtr)lhs._thisArray[2], (IntPtr)rhs._thisArray[2], (IntPtr)ii, (IntPtr)desc);
                         if (ptr0 == IntPtr.Zero || ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
-                            Console.Write("Create Joint null");
                             return null;
                         }
                         obj._thisArray[0] = ptr0;
