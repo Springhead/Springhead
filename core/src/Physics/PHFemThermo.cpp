@@ -2211,6 +2211,9 @@ void PHFemThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned mode)
 	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 }		// /*CalcIHdqdt_add*/
 
+void PHFemThermo::setIhRatio(double a) {
+	IhRatio = a;
+}
 void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mode){
 	PHFemMeshNew* mesh = phFemMesh;
 
@@ -2260,7 +2263,7 @@ void PHFemThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mo
 	//求めた距離に応じて、設定された初期条件を満たすような温度分布を作る
 	float r[11];		//	10こめの外側が必要なため
 	for(unsigned i=0;i<11;++i){
-		r[i] = 0.01 * i;
+		r[i] = IhRatio * i;//optimize
 		
 	}
 
