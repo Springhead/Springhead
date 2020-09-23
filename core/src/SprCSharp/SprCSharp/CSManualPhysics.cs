@@ -31,7 +31,7 @@ namespace SprCs {
         public int sceneForBuffer = 2;
         public int stepCount = 0; // デバッグ用、subThread側で取得する値が何回目のStepの結果か
         public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
-        public readonly AutoResetEvent fixedUpdateAutoWait = new AutoResetEvent(false);
+        public readonly AutoResetEvent subThreadAutoWait = new AutoResetEvent(false);
         //Set系メソッド用(fixedUpdateAutoWaitの実装にも関与)，速度などの更新にはこれが必須，位置の更新などの更新に関してはこの機能を一度も使用しないコードでは位置更新途中でStepが実行されかねない
         public Dictionary<System.Object, bool> executeSetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public bool changeAllExecuteSetFunctionFlagsTrue = false;
