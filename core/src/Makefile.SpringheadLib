@@ -1,0 +1,26 @@
+#  Makefile for combining libraries.
+#
+#  arguments:
+#	LIBTYPE		'STATIC' or 'SHARED'
+#	BUILDDIR	cmake working directory (=${CMAKE_BINARY_DIR})
+#	OUTDIR		output directory
+#	LIBNAME		library name
+#	MEMBERS		members to combine
+#
+.PHONY:	all
+
+XMEMBERS = $(subst @, ,$(MEMBERS))
+ifeq ($(LIBTYPE),STATIC)
+	SUFFIX = a
+else
+	SUFFIX = so
+endif
+
+all:	$(LIBNAME).$(SUFFIX)
+
+$(LIBNAME).a:	lastbuilt.static
+	./SpringheadLib.sh STATIC $(BUILDDIR) $(OUTDIR) $(LIBNAME) $(XMEMBERS)
+
+$(LIBNAME).so:	lastbuilt.shared
+	./SpringheadLib.sh SHARED $(BUILDDIR) $(OUTDIR) $(LIBNAME) $(XMEMBERS)
+

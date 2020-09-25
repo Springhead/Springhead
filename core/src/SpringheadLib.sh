@@ -40,7 +40,7 @@ if [ ${libtype} = "STATIC" ]; then
     #
     /bin/rm -f ${outdir}/${libname}.a
 
-    echo step 1 ... creating \"${libname}.a\"
+    echo step 1 ... creating static library
     for proj in ${projs}
     do
 	pushd ${builddir}/${proj}/CMakeFiles/${proj}.dir > /dev/null
