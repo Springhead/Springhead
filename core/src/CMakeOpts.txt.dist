@@ -88,7 +88,7 @@ if(unix)
 			-Wno-reorder
 			-Wno-sign-compare
 			-Wno-unknown-pragmas)
-    if(${CMAKE_CONFIGURATION_TYPES} STREQUAL Debug)
+    if("${CMAKE_CONFIGURATION_TYPES}" STREQUAL "Debug")
 	set(COPT_CONFIG	-g)
     else()
 	set(COPT_CONFIG	-O2)

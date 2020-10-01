@@ -352,46 +352,7 @@ endif()
 #	install(FILES ...) を定義しておく。
 #
 
-# 仮のターゲット
-set(Target ${ProjectName})			# 仮のターゲットの定義
-set(DummyFileDir ${CMAKE_BINARY_DIR}/dummy)	# 仮の生成物の置き場所
-file(MAKE_DIRECTORY ${DummyFileDir})
-
-set(DummySrcFile ${DummyFileDir}/_cmake_export_dummy.cpp) # ダミーソース
-file(TOUCH ${DummySrcFile})
-set(SRCS ${DummySrcFile})
-add_library(${Target} STATIC ${SRCS})		# 仮のライブラリの生成
-add_dependencies(${Target} ${RealTarget})
-target_include_directories(${Target} INTERFACE
-    $<BUILD_INTERFACE:${SPR_INC_DIR}>
-    $<INSTALL_INTERFACE:${ProjectName}/include>
-)
-if(Windows)
-    set_target_properties(${Target}
-	PROPERTIES
-	OUTPUT_NAME_DEBUG	  ${ProjectName}${LIBBASE_DEBUG}
-	OUTPUT_NAME_RELEASE	  ${ProjectName}${LIBBASE_RELEASE}
-	OUTPUT_NAME_TRACE	  ${ProjectName}${LIBBASE_TRACE}
-	ARCHIVE_OUTPUT_DIRECTORY_DEBUG	  ${DummyFileDir}/Debug
-	ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${DummyFileDir}/Release
-	ARCHIVE_OUTPUT_DIRECTORY_TRACE	  ${DummyFileDir}/Trace
-    )	
-    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
-elseif(unix)
-    set_target_properties(${Target}
-	PROPERTIES
-	OUTPUT_NAME		  ${LIBNAME}
-	ARCHIVE_OUTPUT_DIRECTORY  ${DummyFileDir}
-    )	
-endif()
-
-# ------------------------------------------------------------------------------
-#  Export.
-#
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
-set(ExportName ${ProjectName})
-set(ExportConf ${ProjectName}Config)
-
+# Install先の定義
 if(SPR_HEADERS_INSTALL_DIR)
     if(IS_ABSOLUTE ${SPR_HEADERS_INSTALL_DIR})
 	set(_dir ${SPR_HEADERS_INSTALL_DIR})
@@ -415,12 +376,49 @@ endif()
 message("** install directory: \"${CMAKE_INSTALL_PREFIX}\" (PREFIX)")
 message("**      header files: \"${SPR_HEADERS_INSTALL_DIR}\"")
 message("**      library file: \"${SPR_LIBRARY_INSTALL_DIR}\"")
+
+# 仮のターゲット
+set(Target ${ProjectName})			# 仮のターゲットの定義
+set(DUMMY_OUT_DIR ${CMAKE_BINARY_DIR}/dummy)	# 仮の生成物の置き場所
+file(MAKE_DIRECTORY ${DUMMY_OUT_DIR})
+
+set(DummySrcFile ${DUMMY_OUT_DIR}/_cmake_export_dummy.cpp) # ダミーソース
+file(TOUCH ${DummySrcFile})
+set(SRCS ${DummySrcFile})
+add_library(${Target} ${LIBTYPE} ${SRCS})	# 仮のライブラリの生成
+add_dependencies(${Target} ${RealTarget})
+target_include_directories(${Target} INTERFACE
+    $<BUILD_INTERFACE:${SPR_INC_DIR}>
+    $<INSTALL_INTERFACE:${SPR_HEADERS_INSTALL_DIR}>
+)
+if(Windows)
+    set_target_properties(${Target} PROPERTIES
+	OUTPUT_NAME_DEBUG	  ${ProjectName}${LIBBASE_DEBUG}
+	OUTPUT_NAME_RELEASE	  ${ProjectName}${LIBBASE_RELEASE}
+	OUTPUT_NAME_TRACE	  ${ProjectName}${LIBBASE_TRACE}
+	ARCHIVE_OUTPUT_DIRECTORY_DEBUG	  ${DUMMY_OUT_DIR}/Debug
+	ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${DUMMY_OUT_DIR}/Release
+	ARCHIVE_OUTPUT_DIRECTORY_TRACE	  ${DUMMY_OUT_DIR}/Trace
+    )	
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
+elseif(unix)
+    set_target_properties(${Target} PROPERTIES
+	OUTPUT_NAME		  ${ProjectName}
+	ARCHIVE_OUTPUT_DIRECTORY  ${DUMMY_OUT_DIR}
+    )	
+endif()
+
+# ------------------------------------------------------------------------------
+#  Export.
+#
+set(ExportName ${ProjectName})
+set(ExportConf ${ProjectName}Config)
 message("** config files:      \"${ExportName}/${ExportConf}*.cmake\"")
 
 install(TARGETS ${ProjectName}
 	EXPORT ${ExportConf}
-	INCLUDES DESTINATION ${SPR_HEADERS_INSTALL_DIR}
 	ARCHIVE DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	LIBRARY DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
 )
 install(EXPORT ${ExportConf}
 	NAMESPACE ${ExportName}::
@@ -457,7 +455,7 @@ if(Windows)
 	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
     )
 elseif(unix)
-    install(FILES ${LIBDIR}/${LIBNAME}
+    install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
 	    DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
 	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
     )

@@ -90,8 +90,8 @@ if(Windows)
 elseif(unix)
 #    set(CMAKE_INSTALL_PREFIX	"/usr/local")
 endif()
-#set(SPR_HEADERS_INSTALL_DIR	"Spriinghead/include")
-#set(SPR_LIBRARY_INSTALL_DIR	"Spriinghead/lib")
+#set(SPR_HEADERS_INSTALL_DIR	"Springhead/include")
+#set(SPR_LIBRARY_INSTALL_DIR	"Springhead/lib")
 
 
 # ==============================================================================
