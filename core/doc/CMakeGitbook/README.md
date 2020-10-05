@@ -7,8 +7,8 @@
 
 > 改 訂 履 歴
 
+第2.3版　find\_package  への対応<br>
 第2.2版　unix shared library への対応<br>
-第2.1版　unix shared library への対応 (仮)<br>
 第2.0版　全面改訂 及び Gitbookへの移行<br>
 第1.1版　RunSwigのclean/rebuildを実装<br>
 第1.0版　初版
