@@ -10744,6 +10744,8 @@ namespace SprCs {
         public PHSolidIf CreateSolid(PHSolidDesc desc) {
             if (multiThreadMode) {
                 lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
+                    Console.WriteLine("isSetFunctionCalledInSubThread = true");
                     if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
                         SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._this, _thisArray[sceneForGet]);
                     }

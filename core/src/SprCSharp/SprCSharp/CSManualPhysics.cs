@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace SprCs {
     public partial class PHSdkIf : SdkIf {
-        public readonly object phSdkLock = new object();
+        public static readonly object phSdkLock = new object();
         public override bool DelChildObject(ObjectIf o) { // PHSDKから引数CDShapeBehaviourで呼ばれることを想定
             lock (phSdkLock) {
                 Console.WriteLine("PHSdkIf.DelChildObject");
@@ -22,7 +22,8 @@ namespace SprCs {
     }
     public partial class PHSceneIf : SceneIf {
         public bool isStepThreadExecuting = false;
-        public bool isSubThreadExecuting = false;
+        public bool isSubThreadExecuting = false; // subThreadの一実行でGetFunctionが呼ばれた場合，一実行中にSwapが呼ばれないようにする
+        public bool isSetFunctionCalledInSubThread = false; // subThreadの一実行でSetFunctionが呼ばれた場合，一実行中に物理エンジンStepが実行されないようにする
         public bool isSwapping = false;
         public bool multiThreadMode = false;
         public readonly object phSceneLock = new object();
@@ -32,11 +33,13 @@ namespace SprCs {
         public int stepCount = 0; // デバッグ用、subThread側で取得する値が何回目のStepの結果か
         public static Dictionary<IntPtr, PHSceneIf> instances = new Dictionary<IntPtr, PHSceneIf>();
         public readonly AutoResetEvent subThreadWait = new AutoResetEvent(false);
+        public readonly ManualResetEvent stepWaitForSetFunction = new ManualResetEvent(true); // stepがSetFunction呼び終わりまで待つ
         //Set系メソッド用(fixedUpdateAutoWaitの実装にも関与)，速度などの更新にはこれが必須，位置の更新などの更新に関してはこの機能を一度も使用しないコードでは位置更新途中でStepが実行されかねない
         public Dictionary<System.Object, bool> executeSetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
         public bool changeAllExecuteSetFunctionFlagsTrue = false;
         public bool changedAllExecuteSetFunctionFlagsTrue = true;
         public bool firstGetExecuteSetFunctionInSubThreadOneExecution = true; // FixedUpdateのDefaultExecutionOrderを使わないための苦肉の策
+        public bool stopStepThreadExecutionStartForSetFunction = false; // スタートするのを止めるフラグ
 
         //Get系メソッド用，そのまま実行してもFixedUpdate中に値が変わらないため安全だが，より効率を求める場合に使用(デフォルトの機能用PHSceneの更新など)
         public Dictionary<System.Object, bool> executeGetFunctionFlagDictionary = new Dictionary<System.Object, bool>(); // インスタンスごとにステップ済みかのフラグを用意，trueにするのはTimer内，falseにするのは各インスタンス
@@ -116,7 +119,7 @@ namespace SprCs {
             }
             callbackForStepThreadToSceneForGetList.Clear();
         }
-        public void AddCallbackForStepThread(ThreadCallback callbackToSceneForBuffer,ThreadCallback callbackToSceneForGet) {
+        public void AddCallbackForStepThread(ThreadCallback callbackToSceneForBuffer, ThreadCallback callbackToSceneForGet) {
             callbackForStepThreadToSceneForBufferList.Add(callbackToSceneForBuffer);
             callbackForStepThreadToSceneForGetList.Add(callbackToSceneForGet);
         }
@@ -178,7 +181,7 @@ namespace SprCs {
                 if (isSwapping) {
                     Console.WriteLine("isSwapping True before Step");
                 }
-                lock (GetSdk().phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
+                lock (PHSdkIf.phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
                     if (!debugSceneForGet && !debugSceneForBuffer) {
                         SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
                         Console.WriteLine("not debug");
@@ -223,9 +226,10 @@ namespace SprCs {
                 }
                 if (!isSubThreadExecuting) { // Step↔Get
                     ExecCallbackForStepThreadToSceneForBufferList(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
-                    ExecCallbackForStepThreadToSceneForGetList(); 
+                    ExecCallbackForStepThreadToSceneForGetList();
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
                     SprExport.Spr_ObjectStatesIf_LoadState(stateForSwap._this, _thisArray[sceneForGet]); // state→phScene
+                    Console.WriteLine("ExecCallbackForSubThreadForDeleteList In Swap");
                     ExecCallbackForSubThreadForDeleteList(); // LoadStateの前で実行するとstateForSwapとphSceneの状態が変わってしまう
                     var temp = sceneForStep;
                     sceneForStep = sceneForGet;
@@ -250,24 +254,25 @@ namespace SprCs {
             }
         }
         public void SwapAfterSubThreadOneExecution() {
-            lock (phSceneLock) {
-                if (isSwapping) { // Buffer↔Get
-                    Console.WriteLine("SwapAfterSubThreadOneExecution called");
-                    if (isStepThreadExecuting) {
-                        Console.WriteLine("isStepping True");
+            lock (PHSdkIf.phSdkLock) { // phSdkLock→phSceneLockの順番であればデッドロックにはならないはず
+                lock (phSceneLock) {
+                    if (isSwapping) { // Buffer↔Get
+                        Console.WriteLine("SwapAfterSubThreadOneExecution called");
+                        if (isStepThreadExecuting) {
+                            Console.WriteLine("isStepping True");
+                        }
+                        ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
+                        Console.WriteLine("ExecCallbackForSubThreadForDeleteList In SwapAfterSubThreadOneExecution");
+                        ExecCallbackForSubThreadForDeleteList();// subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行
+                        var temp = sceneForBuffer;
+                        sceneForBuffer = sceneForGet;
+                        sceneForGet = temp;
+                        stepCount++;
+                        changeAllExecuteGetFunctionFlagsTrue = true;
+                        isSwapping = false;
                     }
-                    ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
-                    lock (GetSdk().phSdkLock) { // subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行 <!!> lockが二重になっているため、デッドロックの可能性あり
-                        ExecCallbackForSubThreadForDeleteList();
-                    }
-                    var temp = sceneForBuffer;
-                    sceneForBuffer = sceneForGet;
-                    sceneForGet = temp;
-                    stepCount++;
-                    changeAllExecuteGetFunctionFlagsTrue = true;
-                    isSwapping = false;
+                    isSubThreadExecuting = false;
                 }
-                isSubThreadExecuting = false;
             }
         }
         public bool GetExecuteSetFunctionFlag(System.Object o) {
