@@ -20,15 +20,14 @@ setlocal enabledelayedexpansion
 ::	・環境変数に"skip"と設定した時のみ対応部分をスキップする
 ::
 ::  VERSION
-::	Ver 1.0  2013/10/24 F.Kanehori	バッチファイルの再構築
-::	Ver 1.1  2013/11/20 F.Kanehori	新変数導入：MAKE_ARCHIVE
-::	Ver 1.1a 2013/11/20 F.Kanehori	e/s の alias として y/n を導入
-::	Ver 1.1b 2014/10/23 F.Kanehori	bug fixed
-::	Ver 1.2  2016/06/02 F.Kanehori	新制御変数の導入 (.._ELIMINATE_CLOSED)
-::	Ver 1.3  2017/08/07 F.Kanehori	変更 (.._SPRINGHEAD2 -> .._SPRINGHEAD)
-::	Ver 1.4  2017/12/21 F.Kanehori	変更 (.._COPYTO_TAGS -> .._GEN_HISTORY)
-::	Ver 1.5  2017/12/25 F.Kanehori	TestAll 実行条件変更
-::	Ver 1.6  2018/04/26 F.Kanehori	新制御変数の導入 (.._COMMIT_RESULTLOG)
+::	Ver 1.00  2013/10/24 F.Kanehori	バッチファイルの再構築
+::	Ver 1.01  2013/11/20 F.Kanehori	新変数導入：MAKE_ARCHIVE
+::	Ver 1.02  2016/06/02 F.Kanehori	新制御変数の導入 (.._ELIMINATE_CLOSED)
+::	Ver 1.03  2017/08/07 F.Kanehori	変更 (.._SPRINGHEAD2 -> .._SPRINGHEAD)
+::	Ver 1.04  2017/12/21 F.Kanehori	変更 (.._COPYTO_TAGS -> .._GEN_HISTORY)
+::	Ver 1.05  2017/12/25 F.Kanehori	TestAll 実行条件変更
+::	Ver 1.06  2018/04/26 F.Kanehori	新制御変数の導入 (.._COMMIT_RESULTLOG)
+::	Ver 1.07  2020/10/12 F.Kanehori	新制御変数の導入 (.._EXECUTE_EMBPYTHON)
 :: ============================================================================
 set PROG=%~n0
 
@@ -44,7 +43,7 @@ rem for TestMain.bat
 set ENVMAIN1=%PREFIX%UPDATE_SPRINGHEAD %PREFIX%CLEANUP_WORKSPACE %PREFIX%ELIMINATE_CLOSED
 set ENVMAIN2=%PREFIX%EXECUTE_MAKEDOC %PREFIX%COPYTO_WEBBASE
 rem for TestALL.bat
-set ENVTEST1=%PREFIX%EXECUTE_STUBBUILD %PREFIX%EXECUTE_BUILDRUN %PREFIX%EXECUTE_SAMPLEBUILD
+set ENVTEST1=%PREFIX%EXECUTE_STUBBUILD %PREFIX%EXECUTE_EMBPYTHON %PREFIX%EXECUTE_BUILDRUN %PREFIX%EXECUTE_SAMPLEBUILD
 set ENVTEST2=%PREFIX%GEN_HISTORY %PREFIX%COMMIT_RESULTLOG %PREFIX%COPYTO_BUILDLOG
 ::
 :: (these are SVN version only)
