@@ -44,6 +44,7 @@
 #	Ver 1.3  2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
 #	Ver 1.4  2019/09/25 F.Kanehori	OK for dailybuild cmake version.
 #	Ver 1.5  2020/08/24 F.Kanehori	Add LIB_TYPE control.
+#	Ver 1.6  2020/10/12 F.Kanehori	Add EMBPYTON control.
 # ======================================================================
 import sys
 import os
@@ -147,7 +148,7 @@ class Traverse:
 			libtype = ctl.get(CFK.LIB_TYPE)
 			if not libtype:
 				libtype = 'STATIC'
-			print('createing %s library' % libtype)
+			print('creating %s library' % libtype)
 
 		# check test condition
 		is_cand = self.__is_candidate_dir(cwd, ctl)
@@ -371,6 +372,7 @@ class Traverse:
 
 		# file header info
 		testids = { TESTID.STUB: 'スタブ',
+			    TESTID.EMBPYTHON: 'EmbPython',
 			    TESTID.TESTS: '',
 			    TESTID.SAMPLES: 'サンプル',
 			    TESTID.OTHER: 'その他' }
@@ -459,6 +461,8 @@ class Traverse:
 		# returns:	Has solution file or not (bool).
 
 		slnfile = self.__solution_file_name(ctl, dir, ccver)
+		if slnfile == 'EmbPython':	# special case
+			return True
 		return os.path.exists(slnfile)
 
 	#  Make output binary path.

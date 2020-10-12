@@ -32,6 +32,7 @@
 #  VERSION:
 #	Ver 1.0  2019/09/19 F.Kanehori	First version.
 #	Ver 1.1  2020/08/24 F.Kanehori	Add LIB_TYPE control.
+#	Ver 1.2  2020/10/12 F.Kanehori	Add CMAKE_OPTIONS control.
 # ======================================================================
 import sys
 import os
@@ -120,11 +121,14 @@ class CMake:
 		blddir = self.ctl.get(CFK.CMAKE_BLDDIR)
 		conf = self.ctl.get(CFK.CMAKE_CONF_FILE)
 		opts = self.ctl.get(CFK.CMAKE_OPTS_FILE)
+		cmake_options = self.ctl.get(CFK.CMAKE_OPTIONS)
 		#
 		cmnd = 'cmake'
 		if topdir:  cmnd += ' -D TOPDIR=%s' % topdir
 		if conf:    cmnd += ' -D CONF=%s' % conf
 		if opts:    cmnd += ' -D OPTS=%s' % opts
+		if cmake_options:
+			    cmnd += ' ' + cmake_options
 		if not libtype:
 			libtype = 'STATIC'
 		cmnd += ' -B %s' % blddir

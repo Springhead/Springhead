@@ -4,18 +4,18 @@
 #SprTop		# Set automatically.
 #SprTest	# Set automatically [$(SptTop)/core/test].
 
-#Exclude	False
-#Descend	True
-#SolutionAlias	# Ailas name for solution file
+Exclude		False
+Descend		False
+SolutionAlias	** DO NOT INHERIT **
 
-#Build		True
+Build		True
 #UseClosedSrc	True
 #CppMacro	DAILYBUILD
-#LibType	STATIC
+#LibType	SHARED
 #BuildLog	# Build log file path
 #BuildErrLog	# Build error log file path
 
-#Run		True
+Run		False
 #OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
 #BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
 #Timeout	# time out value in sec
@@ -33,7 +33,7 @@
 #CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
 #CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
 #CMakeOutputDir	$CMakeBuildDir/$CONFIGURATION
-#CMakeOptions	# options for cmake itself
+CMakeOptions	-DSTANDALONE=1
 
 #[Windows]
 

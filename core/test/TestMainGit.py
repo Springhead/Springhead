@@ -36,6 +36,7 @@
 #	Ver 1.5  2018/09/10 F.Kanehori	RevisionInfo.py implemented.
 #	Ver 1.6  2019/01/10 F.Kanehori	Add closed-source control.
 #	Ver 1.7  2019/08/05 F.Kanehori	Add HowToUseCMake document.
+#	Ver 1.8  2020/10/12 F.Kanehori	Add build of EmbPython Library.
 # ======================================================================
 version = 1.7
 
@@ -275,6 +276,8 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 	test_dirs = []
 	if check_exec('DAILYBUILD_EXECUTE_STUBBUILD'):
 		test_dirs.append(['.', '-S'])
+	if check_exec('DAILYBUILD_EXECUTE_EMBPYTHON'):
+		test_dirs.append(['EmbPython'])
 	if check_exec('DAILYBUILD_EXECUTE_BUILDRUN'):
 		test_dirs.append(['tests'])
 	if check_exec('DAILYBUILD_EXECUTE_SAMPLEBUILD'):
