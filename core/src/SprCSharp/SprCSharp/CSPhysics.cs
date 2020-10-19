@@ -6873,6 +6873,7 @@ namespace SprCs {
                         });
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
+                        phSceneIf.isSetFunctionCalledInSubThread = true; // 場所としてはここがベスト(isStepThreadExecutingがtrueの時もこれをしないと途中で実行される)
                         if (phSceneIf.isStepThreadExecuting) {
                             var newP = new Posed(p);
                             phSceneIf.AddCallbackForSubThread(() => {
