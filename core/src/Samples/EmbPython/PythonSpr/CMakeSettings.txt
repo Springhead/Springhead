@@ -79,8 +79,7 @@ if(Windows)
 		HumanInterface Physics)
     set(SPR_PROJS ${SPR_PROJS} EmbPython)
 else()
-    #set(SPR_PROJS ${EMPTY})
-    set(SPR_PROJS EmbPython)
+    set(SPR_PROJS ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------

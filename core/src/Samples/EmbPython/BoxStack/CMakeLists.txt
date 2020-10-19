@@ -102,7 +102,17 @@ set(INCLUDE_PATHS               ${INCLUDE_PATHS_ADD} ${INCLUDE_PATHS})
 set(COMP_FLAGS                  ${COMP_FLAGS_ADD} ${COMP_FLAGS})
 set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
 set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
-list(FIND LIBRARY_NAMES_ADD EmbPython _found)
+
+list(FIND SHARED_LIBRARY_NAMES_ADD EmbPython _found_shared)
+list(FIND STATIC_LIBRARY_NAMES_ADD EmbPython _found_static)
+set(_found 0)
+if(${_found_shared} EQUAL 0 OR ${_found_static} EQUAL 0)
+    set(_found 1)
+endif()
+if(${_found} EQUAL 0)
+    message("++ EMbPython found in LIBRARY_NAMES_ADD")
+endif()
+
 if(Windows)
     if(${_found} EQUAL -1)
 	set(LIBRARY_NAMES	${SPRLIB_NAMES}
@@ -133,17 +143,18 @@ else()
 					${SHARED_LIBRARY_NAMES}
 					${STATIC_LIBRARY_NAMES})
 	else()
-	    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
-	    set(STATIC_LIBRARY_NAMES	EmbPython
+	    if(${_found_shared} EQUAL 0)
+		list(REMOVE_ITEM SHARED_LIBRARY_NAMES EmbPython)
+	    endif()
+	    set(SHARED_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
-					${SHARED_LIBRARY_NAMES}
-					${STATIC_LIBRARY_NAMES})
+					${SHARED_LIBRARY_NAMES})
 	endif()
 	#  Discard standard shared libraries.
-	set(SHARED_LIBRARY_NAMES	${EMPTY})
+	#set(SHARED_LIBRARY_NAMES	${EMPTY})
     endif()
-#message("SHARED_LIBRARY_NAMES: ${SHARED_LIBRARY_NAMES}")
-#message("STATIC_LIBRARY_NAMES: ${STATIC_LIBRARY_NAMES}")
+#message("** SHARED_LIBRARY_NAMES: ${SHARED_LIBRARY_NAMES}")
+#message("** STATIC_LIBRARY_NAMES: ${STATIC_LIBRARY_NAMES}")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -389,7 +400,7 @@ else()
     endforeach()
     string(REPLACE "@," "" _library_names "${_tmp_names}")
     if(NOT "${_library_names}" STREQUAL "@")
-	target_link_libraries(${Target} "-Wl,-Bdynamic,${_library_names}")
+	target_link_libraries(${Target} "-Wl,--start-group -Wl,-Bdynamic,${_library_names}")
 	message("++ shared libraries: ${_library_names}")
     endif()
 
