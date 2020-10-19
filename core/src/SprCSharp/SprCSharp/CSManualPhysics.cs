@@ -264,6 +264,7 @@ namespace SprCs {
                         ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
                         Console.WriteLine("ExecCallbackForSubThreadForDeleteList In SwapAfterSubThreadOneExecution");
                         ExecCallbackForSubThreadForDeleteList();// subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行
+                        Console.WriteLine("End ExecCallbackForSubThreadForDeleteList In SwapAfterSubThreadOneExecution");
                         var temp = sceneForBuffer;
                         sceneForBuffer = sceneForGet;
                         sceneForGet = temp;
@@ -336,6 +337,7 @@ namespace SprCs {
             if (multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
                 lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
                     if (isStepThreadExecuting || isSwapping) {
                         //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
                         AddCallbackForSubThreadForDelete(() => {
