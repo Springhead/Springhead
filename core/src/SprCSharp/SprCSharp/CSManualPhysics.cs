@@ -397,6 +397,7 @@ namespace SprCs {
             ObjectIf objectIf = this as ObjectIf;
             if (multiThreadMode) {
                 lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
                     if (isStepThreadExecuting) {
                         Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
                         AddCallbackForSubThread(() => {
