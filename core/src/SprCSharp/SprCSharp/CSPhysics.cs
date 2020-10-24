@@ -6559,7 +6559,7 @@ namespace SprCs {
                     return new Posed(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose(
                         (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return new Posed(ptr, true);
@@ -6659,7 +6659,7 @@ namespace SprCs {
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         int result = (int)SprExport.Spr_PHBodyIf_NShape((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return result;
                     }
@@ -6681,7 +6681,7 @@ namespace SprCs {
                     return obj;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index);
                         if (ptr == IntPtr.Zero) { return null; }
                         CDShapeIf obj = new CDShapeIf(ptr);
@@ -6705,7 +6705,7 @@ namespace SprCs {
                     return new Posed(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr)_thisArray[phSceneIf.sceneForGet], (int)index);
                         return new Posed(ptr, true);
                     }
@@ -7962,7 +7962,7 @@ namespace SprCs {
                     return obj;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         if (ptr == IntPtr.Zero) { return null; }
                         PHSolidIf obj = new PHSolidIf(ptr);
@@ -7994,7 +7994,7 @@ namespace SprCs {
                     return obj;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         if (ptr == IntPtr.Zero) { return null; }
@@ -8654,7 +8654,7 @@ namespace SprCs {
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         double result = SprExport.Spr_PHBallJointIf_GetSpring(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return result;
@@ -8698,7 +8698,7 @@ namespace SprCs {
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         double result = SprExport.Spr_PHBallJointIf_GetDamper(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return result;
@@ -8750,7 +8750,7 @@ namespace SprCs {
                     return new Quaterniond(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Quaterniond(ptr, true);
                     }
@@ -8792,7 +8792,7 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec3d(ptr, true);
                     }
@@ -8848,7 +8848,7 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce(
                         (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return new Vec3d(ptr, true);
@@ -8909,7 +8909,7 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec3d(ptr, true);
                     }
@@ -9005,7 +9005,7 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec3d(ptr, true);
                     }
@@ -9047,7 +9047,7 @@ namespace SprCs {
                     return new Quaterniond(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Quaterniond(ptr, true);
                     }
@@ -9089,7 +9089,7 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return new Vec3d(ptr, true);
@@ -9134,7 +9134,7 @@ namespace SprCs {
                     return new Vec3d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return new Vec3d(ptr, true);
@@ -9185,7 +9185,7 @@ namespace SprCs {
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         double result = SprExport.Spr_PHSpringIf_GetSpringOri(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return result;
@@ -9229,7 +9229,7 @@ namespace SprCs {
                     return result;
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         double result = SprExport.Spr_PHSpringIf_GetDamperOri(
                             (IntPtr)_thisArray[phSceneIf.sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return result;
@@ -9279,7 +9279,7 @@ namespace SprCs {
                     return new Vec6d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec6d(ptr, true);
                     }
@@ -9356,7 +9356,7 @@ namespace SprCs {
                     return new Vec6d(ptr, true);
                 } else if (currentThread == phSceneIf.subThread) {
                     lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isSubThreadExecuting = true;
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr)_thisArray[phSceneIf.sceneForGet]);
                         return new Vec6d(ptr, true);
                     }
@@ -11241,7 +11241,7 @@ namespace SprCs {
                     return result;
                 } else if (currentThread == subThread) {
                     lock (phSceneLock) {
-                        isSubThreadExecuting = true;
+                        isGetFunctionCalledInSubThread = true;
                         int result = SprExport.Spr_PHSceneIf_NContacts(
                             (IntPtr)_thisArray[sceneForGet]); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         return result;
@@ -11266,7 +11266,7 @@ namespace SprCs {
                     return obj;
                 } else if (currentThread == subThread) {
                     lock (phSceneLock) {
-                        isSubThreadExecuting = true;
+                        isGetFunctionCalledInSubThread = true;
                         IntPtr ptr = SprExport.Spr_PHSceneIf_GetContact(
                             (IntPtr)_thisArray[sceneForGet], (int)i); // Ç±Ç±Ç≈éÊìæÇ≥ÇÍÇÈPosedÇÕï°êª
                         if (ptr == IntPtr.Zero) { return null; }

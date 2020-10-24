@@ -7,7 +7,8 @@ using System.Threading;
 namespace SprCs {
     public partial class PHSdkIf : SdkIf {
         public static readonly object phSdkLock = new object();
-        public override bool DelChildObject(ObjectIf o) { // PHSDKから引数CDShapeBehaviourで呼ばれることを想定
+        public override bool DelChildObject(ObjectIf o) { 
+            // PHSDKから引数CDShapeBehaviourで呼ばれることを想定，PHSdkIfからPHSceneIfを参照し処理を分けることが難しいためisGetFunctionCalledInSubThreadなどのフラグは使っていない
             lock (phSdkLock) {
                 Console.WriteLine("PHSdkIf.DelChildObject");
                 char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
@@ -22,7 +23,7 @@ namespace SprCs {
     }
     public partial class PHSceneIf : SceneIf {
         public bool isStepThreadExecuting = false;
-        public bool isSubThreadExecuting = false; // subThreadの一実行でGetFunctionが呼ばれた場合，一実行中にSwapが呼ばれないようにする
+        public bool isGetFunctionCalledInSubThread = false; // subThreadの一実行でGetFunctionが呼ばれた場合，一実行中にSwapが呼ばれないようにする
         public bool isSetFunctionCalledInSubThread = false; // subThreadの一実行でSetFunctionが呼ばれた場合，一実行中に物理エンジンStepが実行されないようにする
         public bool isSwapping = false;
         public bool multiThreadMode = false;
@@ -224,7 +225,7 @@ namespace SprCs {
                     stateForSwap = ObjectStatesIf.Create();
                     callObjectStatesIf_Create = false;
                 }
-                if (!isSubThreadExecuting) { // Step↔Get
+                if (!isGetFunctionCalledInSubThread) { // Step↔Get
                     ExecCallbackForStepThreadToSceneForBufferList(); // SetState系メソッドはStateを変更するためSave/LoadStateより前で実行(後や中間で実行するとSceneごとに値が変化する)
                     ExecCallbackForStepThreadToSceneForGetList();
                     SprExport.Spr_ObjectStatesIf_SaveState(stateForSwap._this, _thisArray[sceneForStep]); // phScene→state
@@ -272,7 +273,7 @@ namespace SprCs {
                         changeAllExecuteGetFunctionFlagsTrue = true;
                         isSwapping = false;
                     }
-                    isSubThreadExecuting = false;
+                    isGetFunctionCalledInSubThread = false;
                 }
             }
         }
