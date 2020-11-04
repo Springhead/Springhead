@@ -278,6 +278,9 @@ namespace SprCs {
             }
         }
         public bool GetExecuteSetFunctionFlag(System.Object o) {
+            if (!multiThreadMode) {
+                return true;
+            }
             lock (phSceneLock) {
                 if (!executeSetFunctionFlagDictionary.ContainsKey(o)) {
                     return executeSetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
@@ -306,6 +309,9 @@ namespace SprCs {
         }
 
         public bool GetExecuteGetFunctionFlag(System.Object o) {
+            if (!multiThreadMode) {
+                return true;
+            }
             lock (phSceneLock) {
                 if (!executeGetFunctionFlagDictionary.ContainsKey(o)) {
                     return executeGetFunctionFlagDictionary[o] = true; // 恐らく初期値trueで問題ない，制御されてないのにStepされても困るし
@@ -379,13 +385,24 @@ namespace SprCs {
             char ret = (char)0; // <!!> これいいのか？
             ObjectIf objectIf = this as ObjectIf;
             if (multiThreadMode) {
-                lock (phSceneLock) {
-                    if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
-                                                                  //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == stepThread) {
+                    if (_thisArray[sceneForStep] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり,PHIKEnginが呼んでるな
+                                                                             //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
                     } else {
                         //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
                         ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+                    }
+                } else if (currentThread == subThread) {
+                    lock (phSceneLock) {
+                        if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
+                                                                                //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                            ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                        } else {
+                            //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                            ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+                        }
                     }
                 }
             } else {
