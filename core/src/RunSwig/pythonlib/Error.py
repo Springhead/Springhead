@@ -65,7 +65,13 @@ class Error:
 		if alive and self.verbose and die:
 			msg_str += ' -> exit code %d' % exitcode
 		#
-		print(msg_str, file=self.out)
+		if sys.version_info[0] >= 3:
+			print(msg_str, file=self.out)
+		else:
+			if self.out == sys.stdout:
+				sys.stdout.write(msg_str + '\n')
+			else:
+				sys.stderr.write(msg_str + '\n')
 		self.out.flush()
 		if die and not alive:
 			sys.exit(exitcode)

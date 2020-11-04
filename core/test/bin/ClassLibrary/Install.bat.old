@@ -5,6 +5,7 @@ rem  Install class libray files to Springhead2 bin-directory.
 rem ====================================================================
 
 set FILES=Error.py FileOp.py Fio.py KvFile.py Proc.py TextFio.py Util.py
+set FILES=%FILES% VisualStudio.py SetupFile.py
 set INSDIR=..\..\..\src\RunSwig\pythonlib
 
 call :to_abspath %INSDIR%
