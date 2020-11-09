@@ -6,9 +6,15 @@ using System.Collections.Generic;
 namespace SprCs {
     public class CsObject {
         public IntPtr _this;
+        public const int _thisNumber = 3;
+        public IntPtr[] _thisArray = new IntPtr[_thisNumber] { IntPtr.Zero,IntPtr.Zero,IntPtr.Zero};
         public bool _flag;
         protected CsObject() { }
-        protected CsObject(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }
+        protected CsObject(IntPtr ptr, bool flag = false) {
+            _this = ptr;
+            _thisArray[0] = ptr;
+            _flag = flag;
+        }
         ~CsObject() { }
         public static implicit operator IntPtr(CsObject obj) {
             return (obj == null) ? IntPtr.Zero : obj._this;
@@ -17,7 +23,16 @@ namespace SprCs {
             if ((object)a == null || (object)b == null) {
                 if ((object)a == null && (object)b == null) { return true; } else { return false; }
             } else {
-                return a._this == b._this;
+                bool result = false;
+                for(int i = 0; i < _thisNumber; i++) {
+                    if(a._thisArray[i] != IntPtr.Zero && b._thisArray[i] != IntPtr.Zero && a._thisArray[i] == b._thisArray[i]) {
+                        result = true;
+                    }
+                }
+                if(a._this != IntPtr.Zero && b._this != IntPtr.Zero && a._this == b._this ) {
+                    result = true;
+                }
+                return result;
             }
         }
         public static bool operator !=(CsObject a, CsObject b) {

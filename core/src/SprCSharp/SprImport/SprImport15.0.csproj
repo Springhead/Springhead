@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SprImport</RootNamespace>
     <AssemblyName>SprImport</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -75,6 +75,7 @@
     <Compile Include="CSUtility.cs" />
     <Compile Include="module.wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CSManualUTTimer.cs" />
     <Compile Include="wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,8 +83,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>$(SolutionPath)\..\..\..\..\buildtool\PatchLibraryProxy64.exe /target:Unity.exe /patch:$(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

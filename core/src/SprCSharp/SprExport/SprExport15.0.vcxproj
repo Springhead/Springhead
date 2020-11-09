@@ -205,8 +205,7 @@
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>$(SolutionPath)\..\..\..\..\buildtool\PatchLibraryProxy64.exe /target:Unity.exe /patch:$(TargetPath)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -229,6 +228,7 @@
     <ClCompile Include="CSPhysics.cpp" />
     <ClCompile Include="CSUtility.cpp" />
     <ClCompile Include="module.wrapper.cpp" />
+    <ClCompile Include="CSManualUTTimer.cpp" />
     <ClCompile Include="wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
