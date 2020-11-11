@@ -53,7 +53,7 @@ namespace SprCs {
             if (objectIf.GetIfInfo() == null) {
                 Console.WriteLine("objectIf.GetIfInfo() null");
             } else {
-                //Console.WriteLine("DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                Console.WriteLine("SceneObjectIf.DelChildObject(overrided) " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
             }
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない

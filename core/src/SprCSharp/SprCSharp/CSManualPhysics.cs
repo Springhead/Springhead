@@ -255,7 +255,7 @@ namespace SprCs {
             }
         }
         public void SwapAfterSubThreadOneExecution() {
-            lock (PHSdkIf.phSdkLock) { // phSdkLock→phSceneLockの順番であればデッドロックにはならないはず
+            lock (PHSdkIf.phSdkLock) { // <!!> stepThreadでphSceneLockをしているとphSdkLock→phSceneLockの順番でロックを掛けるとデッドロックになる可能性あり
                 lock (phSceneLock) {
                     if (isSwapping) { // Buffer↔Get
                         Console.WriteLine("SwapAfterSubThreadOneExecution called");
@@ -264,7 +264,9 @@ namespace SprCs {
                         }
                         ExecCallbackForStepThreadOnSwapAfterSubThreadOneExecution(); // ここで単にExecCallbackForStepThreadしてしまうと実行中のstepThreadのeveryTimeCallbackListで実行されたSet系メソッドのCallbackを実行してしまう
                         Console.WriteLine("ExecCallbackForSubThreadForDeleteList In SwapAfterSubThreadOneExecution");
-                        ExecCallbackForSubThreadForDeleteList();// subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行
+                        if (!isStepThreadExecuting) { // たらい回し作戦
+                            ExecCallbackForSubThreadForDeleteList();// subThreadで実行されるためStep中にsceneForStepに参照してはならないがSetのようにcallbackForSubThreadに登録してもsceneForGetにアクセスすることになるため、ここで実行
+                        }
                         Console.WriteLine("End ExecCallbackForSubThreadForDeleteList In SwapAfterSubThreadOneExecution");
                         var temp = sceneForBuffer;
                         sceneForBuffer = sceneForGet;
@@ -339,7 +341,7 @@ namespace SprCs {
         }
         public override bool DelChildObject(ObjectIf o) {
             ObjectIf objectIf = this as ObjectIf;
-            Console.WriteLine("DelChildObject(overrided) "/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
+            Console.WriteLine("PHSceneIf.DelChildObject "/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
             // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
             if (multiThreadMode) {
                 char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
@@ -348,17 +350,17 @@ namespace SprCs {
                     if (isStepThreadExecuting || isSwapping) {
                         //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
                         AddCallbackForSubThreadForDelete(() => {
-                            Console.WriteLine("DelChildObject(overrided) In callback"/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
+                            Console.WriteLine("PHSceneIf.DelChildObject In callback"/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
                             var ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
                             if (ret1 == 0) {
-                                Console.WriteLine("failed DelChildObject ret1");
+                                Console.WriteLine("failed PHSceneIf.DelChildObject ret1");
                             }
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]); // 全てCallbackで実行しないとstepThreadで実行されるものが参照できなくなる
                             SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
                             callObjectStatesIf_Create = true;
                         });
                     } else {
-                        //Console.WriteLine("DelChildObject(overrided) not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                        Console.WriteLine("PHSceneIf.DelChildObject not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
                         for (int num = 0; num < _thisNumber; num++) {
                             ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
                         }
@@ -366,12 +368,13 @@ namespace SprCs {
                     }
                 }
                 if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
-                    Console.WriteLine("failed DelChildObject");
+                    Console.WriteLine("failed PHSceneIf.DelChildObject");
                     return false;
                 } else {
                     return true;
                 }
             } else {
+                Console.WriteLine("PHSceneIf.DelChildObject not multi");
                 var ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
                 if (ret0 == 0) {
                     return false;
