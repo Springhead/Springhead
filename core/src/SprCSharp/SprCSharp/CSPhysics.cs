@@ -9296,12 +9296,15 @@ namespace SprCs {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
                     var newV = new Vec6d(offsetForce);
+                    Console.WriteLine("PHSpringIf.SetOffsetForce");
                     SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                     phSceneIf.AddCallbackForStepThread(
                         () => {
+                            Console.WriteLine("PHSpringIf.SetOffsetForce in Callback for sceneForBuffer");
                             SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         },
                         () => {
+                            Console.WriteLine("PHSpringIf.SetOffsetForce in Callback for sceneForGet");
                             SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                         });
                 } else if (currentThread == phSceneIf.subThread) {
@@ -10772,7 +10775,9 @@ namespace SprCs {
                     }
                     callObjectStatesIf_Create = true;
                     if (isStepThreadExecuting) {
+                        Console.WriteLine("CreateSolid sceneForGet in isStepThreadExecuting");
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                        Console.WriteLine("CreateSolid sceneForBuffer in isStepThreadExecuting");
                         IntPtr buffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
                         if (get == IntPtr.Zero || buffer == IntPtr.Zero) {
                             return null;
@@ -10783,12 +10788,14 @@ namespace SprCs {
                         obj._thisArray[sceneForBuffer] = buffer;
                         Console.WriteLine(sceneForGet);
                         AddCallbackForSubThread(() => {
+                            Console.WriteLine("CreateSolid sceneForStep callback in isStepThreadExecuting");
                             IntPtr step = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
                             obj._thisArray[sceneForStep] = step;
                         });
                         if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(get); }
                         return obj;
                     } else {
+                        Console.WriteLine("CreateSolid not in isStepThreadExecuting");
                         IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
                         IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[1], (IntPtr)desc);
                         IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[2], (IntPtr)desc);
@@ -10805,6 +10812,7 @@ namespace SprCs {
                     }
                 }
             } else {
+                Console.WriteLine("CreateSolid not in multiThreadMode");
                 IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
                 if (ptr0 == IntPtr.Zero) {
                     return null;
