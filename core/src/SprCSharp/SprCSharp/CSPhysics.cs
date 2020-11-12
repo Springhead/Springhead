@@ -9296,15 +9296,12 @@ namespace SprCs {
                 var currentThread = Thread.CurrentThread;
                 if (currentThread == phSceneIf.stepThread) {
                     var newV = new Vec6d(offsetForce);
-                    Console.WriteLine("PHSpringIf.SetOffsetForce");
                     SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)newV);
                     phSceneIf.AddCallbackForStepThread(
                         () => {
-                            Console.WriteLine("PHSpringIf.SetOffsetForce in Callback for sceneForBuffer");
                             SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)newV);
                         },
                         () => {
-                            Console.WriteLine("PHSpringIf.SetOffsetForce in Callback for sceneForGet");
                             SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)newV);
                         });
                 } else if (currentThread == phSceneIf.subThread) {
