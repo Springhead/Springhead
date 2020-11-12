@@ -456,6 +456,8 @@ bool DRUARTMotorDriver::Init(){
 }
 void DRUARTMotorDriver::WriteVoltage(int ch, float v) {
 	currents[ch] = (int)(v * (4096.0 / 3.3));
+	if (currents[ch] > 4095) currents[ch] = 4095;
+	if (currents[ch] < -4095) currents[ch] = -4095;
 }
 void DRUARTMotorDriver::WriteDigit(int ch, int v) {
 	currents[ch] = v;
