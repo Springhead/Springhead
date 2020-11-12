@@ -11133,10 +11133,12 @@ namespace SprCs {
                     callObjectStatesIf_Create = true;
                     if (isStepThreadExecuting) {
                         IntPtr get = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForGet], (IntPtr)lhs._thisArray[sceneForGet], (IntPtr)rhs._thisArray[sceneForGet], (IntPtr)ii, (IntPtr)desc);
-                        if (get == IntPtr.Zero) {
+                        IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
+                        if (get == IntPtr.Zero || buffer == IntPtr.Zero) {
                             return null;
                         }
                         obj._thisArray[sceneForGet] = get;
+                        obj._thisArray[sceneForBuffer] = buffer;
                         Console.WriteLine(sceneForGet);
                         obj._this = obj._thisArray[sceneForGet];
                     } else {
@@ -11157,9 +11159,7 @@ namespace SprCs {
                         var newJoint = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
                         newJoint.phSceneIf = this;
                         if (isStepThreadExecuting) {
-                            IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
-                            newJoint._thisArray[sceneForBuffer] = buffer;
-                            AddCallbackForSubThread(() => {
+                            AddCallbackForSubThread(() => { // newJoint‚ª‚±‚±‚É‚µ‚©‚È‚¢‚½‚ß
                                 IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
                                 newJoint._thisArray[sceneForStep] = step;
                             });
@@ -11171,8 +11171,6 @@ namespace SprCs {
                         var newJoint = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
                         newJoint.phSceneIf = this;
                         if (isStepThreadExecuting) {
-                            IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
-                            newJoint._thisArray[sceneForBuffer] = buffer;
                             AddCallbackForSubThread(() => {
                                 IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
                                 newJoint._thisArray[sceneForStep] = step;
