@@ -55,8 +55,9 @@
 #     Ver 3.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
 #     Ver 3.10   2020/05/13 F.Kanehori	unix: Ver 3.08 に戻す.
 #     Ver 3.11   2020/07/15 F.Kanehori	nmake path 探索コード変更.
+#     Ver 3.12   2020/11/11 F.Kanehori	Setup 導入期間開始.
 # ==============================================================================
-version = 3.11
+version = 3.12
 debug = False
 trace = False
 dry_run = False
@@ -66,6 +67,10 @@ import os
 import subprocess
 import re
 from optparse import OptionParser
+
+# --------------------------------------------
+SetupExists = os.path.exists('../setup.conf')
+# --------------------------------------------
 
 # ----------------------------------------------------------------------
 #  Constants
@@ -87,6 +92,11 @@ from Error import *
 from Util import *
 from Proc import *
 from FileOp import *
+
+if SetupExists:
+	from SetupFile import *
+	sf = SetupFile('../setup.conf', verbose=1)
+	sf.add_environment()
 
 # ----------------------------------------------------------------------
 #  Globals (part 1)
@@ -112,23 +122,28 @@ makefile = 'makefile.swig'
 # ----------------------------------------------------------------------
 #  Paths
 #
-if unix:
-	makepath = '/usr/bin'
+if SetupExists:
+	swigpath = '%s/%s' % (srcdir, 'Foundation')
+	addpath = os.pathsep.join([bindir, swigpath])
+	print('%s: 移行処理 -> makepath 削除' % prog)
 else:
-	cmnd = 'python find_path.py nmake.exe'
-	proc = Proc().execute(cmnd, stdout=Proc.PIPE, shell=True)
-	stat, out, err = proc.output()
-	if stat != 0:
-		out = None
-	makepath = out
-	if makepath is None:
-		Error(prog).error('can not find "nmake" path.')
-		makepath = ''
+	if unix:
+		makepath = '/usr/bin'
 	else:
-		print('nmake path found: %s' % makepath.replace(os.sep, '/'))
+		cmnd = 'python find_path.py nmake.exe'
+		proc = Proc().execute(cmnd, stdout=Proc.PIPE, shell=True)
+		stat, out, err = proc.output()
+		if stat != 0:
+			out = None
+		makepath = out
+		if makepath is None:
+			Error(prog).error('can not find "nmake" path.')
+			makepath = ''
+		else:
+			print('nmake path found: %s' % makepath.replace(os.sep, '/'))
 
-swigpath = '%s/%s' % (srcdir, 'Foundation')
-addpath = os.pathsep.join([bindir, swigpath, makepath])
+	swigpath = '%s/%s' % (srcdir, 'Foundation')
+	addpath = os.pathsep.join([bindir, swigpath, makepath])
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -140,9 +155,12 @@ parser = OptionParser(usage = usage)
 parser.add_option('-c', '--clean',
                         dest='clean', action='store_true', default=False,
                         help='execute target clean')
-parser.add_option('-P', '--python',
+####
+if not SetupExists:
+	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
+####
 parser.add_option('-v', '--verbose',
                         dest='verbose', action='count', default=0,
                         help='set verbose count')
@@ -166,12 +184,19 @@ verbose = options.verbose
 # ----------------------------------------------------------------------
 #  Scripts
 #
-if options.python:
-	python = options.python
+####
+if not SetupExists:
+	if options.python:
+		python = options.python
+####
 make = 'make' if unix else 'nmake /NOLOGO'
-#make = 'gmake' if unix else 'nmake /NOLOGO'
-opts = '-P %s' % python
-makemanager = '%s "%s/make_manager.py" %s' % (python, runswigdir, opts)
+####
+if SetupExists:
+	makemanager = 'python "%s/make_manager.py"' % runswigdir
+else:
+	opts = '-P %s' % python
+	makemanager = '%s "%s/make_manager.py" %s' % (python, runswigdir, opts)
+####
 
 # ----------------------------------------------------------------------
 #  Globals (part 2)

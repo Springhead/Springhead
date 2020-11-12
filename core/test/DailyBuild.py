@@ -26,12 +26,9 @@
 #	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
 #	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
 #	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
-#	Ver 1.51 2018/08/02 F.Kanehori	Bug fixed.
-#	Ver 1.52 2019/09/05 F.Kanehori	Set default VS version to 15.0.
-#	Ver 1.53 2019/12/16 F.Kanehori	New cleanup code for unix.
-#	Ver 1.54 2019/12/18 F.Kanehori	Bug fixed.
+#	Ver 1.6  2020/11/09 F.Kanehori	Setup mechanism incorporated.
 # ======================================================================
-version = 1.54
+version = 1.6
 
 import sys
 import os
@@ -60,6 +57,7 @@ from FileOp import *
 from Proc import *
 from Util import *
 from Error import *
+from SetupFile import *
 
 # ----------------------------------------------------------------------
 #  Options
@@ -72,6 +70,9 @@ parser.add_option('-c', '--conf', dest='conf',
 parser.add_option('-p', '--plat', dest='plat',
 			action='store', default='x64',
 			help='test platform [default: %default]')
+parser.add_option('-s', '--setup-file', dest='setup_file',
+			action='store', default='setup.conf',
+			help='environment setup file [default: %default]')
 if Util.is_windows():
 	parser.add_option('-t', '--toolset-id', dest='tool',
 			action='store', default='15.0',
@@ -118,6 +119,7 @@ skip_update = options.skip_update
 verbose = options.verbose
 dry_run = options.dry_run
 as_is = options.as_is
+setup_file = options.setup_file
 
 if repository == 'Springhead':
 	msg = 'Are you sure to test on "Springhead" directory? [y/n] '
@@ -130,9 +132,11 @@ if repository == 'Springhead':
 #  Globals
 #
 spr_topdir = spr_path.abspath()
+spr_srcdir = spr_path.abspath('src')
 start_dir = spr_path.abspath('test')
 prep_dir = os.path.abspath('%s/..' % spr_topdir)
 proc = Proc(verbose=verbose, dry_run=dry_run)
+setup_script = 'setup.sh' if Util.is_unix() else 'setup.bat'
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -171,6 +175,29 @@ def flush():
 #  Process start.
 #
 print('%s: start: %s' % (prog, Util.now(format=date_format)))
+
+#  Setup paths.
+#
+setup_file = '%s/%s' % (spr_srcdir, setup_file)
+if os.path.exists(setup_file):
+	cwd = os.getcwd()
+	os.chdir(spr_srcdir)	
+	cmnd = 'python setup.py -c'
+	stat = proc.execute(cmnd).wait()
+	os.chdir(cwd)
+	if stat == -1:
+		Error(prog).info('can\'t setup test environment.')
+		Error(prog).info('execute "%s" first.' % setup_script)
+		sys.exit(1)
+	if stat < 0:
+		Error(prog).abort('botch: setup file not found')
+	#
+	sf = SetupFile(setup_file)
+	sf.add_environment()
+	print('using setup file "%s"' % setup_file)
+else:
+	Error(prog).warn('setup file "%s" not found' % setup_file)
+	Error(prog).warn('hope all executables are in current path')
 
 # ----------------------------------------------------------------------
 #  1st step: Make Springhead up-to-date.

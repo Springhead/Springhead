@@ -15,16 +15,22 @@
 #	複数のパスが見つかったならば最初に見つかったたものを採用する。
 #
 #  VERSION:
-#       Ver 1.0  2019/07/29 F.Kanehori	初版
-#       Ver 1.01 2019/07/31 F.Kanehori	Bug fixed (uname NOT FOUND).
+#     Ver 1.0   2019/07/29 F.Kanehori	初版
+#     Ver 1.01  2019/07/31 F.Kanehori	Bug fixed (uname NOT FOUND).
+#     Ver 2.00  2020/11/12 F.Kanehori	Setup 導入期間開始.
 # ==============================================================================
-version = '1.0'
+version = '2.00'
 
 import os
 import sys
 import subprocess
 import re
 from optparse import OptionParser
+
+# --------------------------------------------
+SetupExists = os.path.exists('../setup.conf')
+if SetupExists: sys.exit(0)
+# --------------------------------------------
 
 # ----------------------------------------------------------------------
 #  Constants

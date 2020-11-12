@@ -4,7 +4,10 @@
 #  CLASS:	SetupFile(path, verbose=0, register=False)
 #
 #  METHODS:
-#	add_environment()	必要なパスを設定する
+#	add_environment(force)	環境変数 _setup_done_ が未設定ならば
+#				必要なパス及び環境変数を設定する
+#				引数 force が指定されたら環境変数の
+#				設定状況に拘わらず処理を行なう
 #	keys = get_key(section)	指定したセクションにある全キーを返す
 #				section は PATH または DATA の何れか
 #	value = get_path(key)	指定したキーの値(パス)を返す
@@ -32,6 +35,7 @@ class SetupFile:
 	#
 	PATH	= 'path'
 	DATA	= 'data'
+	DONE	= '_setup_done_'
 
 	##  The initializer.
 	#   @param path		Setup file path (str).
@@ -55,12 +59,15 @@ class SetupFile:
 
 	##  Add registered paths to current path.
 	#
-	def add_environment(self):
+	def add_environment(self, force=False):
+		if not force and os.getenv(self.DONE) == 'true':
+			# add_environment is already done
+			return
 		if not self.file_read:
 			self.__read_file()
 		#
 		if len(self.path_list) <= 0:
-			if self.verbose:
+			if self.verbose > 1:
 				print('no paths added')
 			return
 		#
@@ -72,11 +79,16 @@ class SetupFile:
 			paths.append(Util.pathconv(self.path_list[prog]))
 		add_path = self.path_sep.join(paths)
 		if self.verbose:
-			print('paths.ADD: [%s]' % add_path)
+			#print('paths.ADD: [%s]' % add_path)
+			for prog in self.path_list.keys():
+				path = '%s%s%s' % (self.path_list[prog], os.sep, prog)
+				print('using %s' % path)
+			sys.stdout.flush()
 		#
 		env = os.environ['PATH']
-		os.environ['PATH'] = '%s:%s' % (add_path, env)
-		if self.verbose:
+		os.environ['PATH'] = '%s%s%s' % (add_path, self.path_sep, env)
+		os.environ[self.DONE] = 'true'
+		if self.verbose > 1:
 			print('paths.ENV: [%s]' % os.environ['PATH'])
 		return
 
@@ -214,7 +226,7 @@ class SetupFile:
 		for key in keys:
 			self.data_list[key] = kvf.get(key)
 
-		if self.verbose:
+		if self.verbose > 1:
 			for key in self.path_list.keys():
 				print('path: %s = %s' % (key, self.path_list[key]))
 			for key in self.data_list.keys():

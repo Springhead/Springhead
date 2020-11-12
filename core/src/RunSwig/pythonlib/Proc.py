@@ -32,6 +32,7 @@
 #	Ver 1.33  2018/06/28 F.Kanehori	Fixes spaces in homedir.
 #	Ver 1.34  2020/07/15 F.Kanehori	output(): Change decode strategy.
 #	Ver 1.341 2020/07/15 F.Kanehori	Bug fixed.
+#	Ver 1.342 2020/11/09 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -452,6 +453,7 @@ class Proc:
 	def __has_nkf(self):
 		cmnd = 'which nkf' if Util.is_unix() else 'where nkf'
 		rc = subprocess.Popen(cmnd, stdout=subprocess.DEVNULL,
+					    stderr=subprocess.DEVNULL,
 					    shell=True).wait()
 		return rc == 0
 

@@ -1497,7 +1497,7 @@ public:
 					Printf(CS, "            if (ptr == IntPtr.Zero) { return null; } \n", ni.cs_type, ni.cs_type);
 					Printf(CS, "            %s obj = new %s(ptr);\n", ni.cs_type, ni.cs_type);
 					// Printf(CS, "            return Activator.CreateInstance(IfInfoToCsType.FindType(obj.GetIfInfo()), ptr) as %s;\n", ni.cs_type);
-					for (int j = 0; j < childClassMap[ni.cs_type].size(); j++) {
+					for (int j = 0; j < (int) childClassMap[ni.cs_type].size(); j++) {
 						Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) { return new %s(ptr); }\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
 					}
 					Printf(CS, "            return obj;\n");
@@ -2235,13 +2235,13 @@ public:
 			updated = false;
 			for (std::map<string, std::vector<string> >::iterator it = childClassMap.begin(); it != childClassMap.end(); it++) {
 
-				for (int i = 0; i < it->second.size(); i++) {
+				for (int i = 0; i < (int) it->second.size(); i++) {
 					string child = it->second[i];
-					for (int j = 0; j < childClassMap[child].size(); j++) {
+					for (int j = 0; j < (int) childClassMap[child].size(); j++) {
 						string grandChild = childClassMap[child][j];
 
 						bool found = false;
-						for (int k = 0; k < it->second.size(); k++) {
+						for (int k = 0; k < (int) it->second.size(); k++) {
 							if (it->second[k] == grandChild) {
 								found = true;
 								break;

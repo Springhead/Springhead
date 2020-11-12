@@ -26,8 +26,9 @@
 #	Ver 1.05  2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #	Ver 1.06  2020/04/31 F.Kanehori	unix: gmake をデフォルトに.
 #	Ver 1.07  2020/05/13 F.Kanehori	unix: Ver 1.05 に戻す.
+#	Ver 1.08  2020/11/11 F.Kanehori	nmake のロゴを抑止する.
 # ==============================================================================
-version = 1.6
+version = 1.08
 debug = False
 trace = False
 
@@ -84,7 +85,7 @@ srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 #
 swig = '%s/swig -I%s/Lib' % (swigdir, swigdir)
 #make = 'gmake' if unix else 'nmake'
-make = 'make' if unix else 'nmake'
+make = 'make' if unix else 'nmake /NOLOGO'
 
 # ----------------------------------------------------------------------
 #  Files

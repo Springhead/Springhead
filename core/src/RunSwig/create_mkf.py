@@ -18,16 +18,17 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/20 F.Kanehori	Windows batch file から移植.
-#	Ver 1.1	 2017/06/29 F.Kanehori	makefile.swig は do_swigall.projs に依存
-#	Ver 1.2	 2017/07/24 F.Kanehori	Python executable directory moved.
-#	Ver 1.3  2017/09/06 F.Kanehori	New python library に対応.
-#	Ver 1.4  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#	Ver 1.5  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 1.6  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.7  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.00	2017/04/20 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01	2017/06/29 F.Kanehori	makefile.swig は do_swigall.projs に依存
+#     Ver 1.02	2017/07/24 F.Kanehori	Python executable directory moved.
+#     Ver 1.03  2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.04  2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.05  2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.06  2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.07  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.08  2020/11/12 F.Kanehori	Setup 導入期間開始.
 # ==============================================================================
-version = 1.7
+version = '1.08'
 debug = False
 trace = False
 
@@ -36,6 +37,10 @@ import os
 import glob
 import copy
 from optparse import OptionParser
+
+# --------------------------------------------
+SetupExists = os.path.exists('../setup.conf')
+# --------------------------------------------
 
 # ----------------------------------------------------------------------
 #  Constants
@@ -127,9 +132,12 @@ parser = OptionParser(usage = usage)
 parser.add_option('-D', '--debug',
 			dest='debug', action='store_true', default=False,
 			help='for debug')
-parser.add_option('-P', '--python',
+####
+if not SetupExists:
+	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
+####
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -163,10 +171,16 @@ if verbose:
 # ----------------------------------------------------------------------
 #  Scripts
 #
-if options.python:
-	python = options.python
-makemanager = '%s "%s/make_manager.py" -P %s' % (python, util.pathconv(runswigdir), python)
-swig = '%s "%s/RunSwig.py" -P %s' % (python, util.pathconv(swigdir), python)
+####
+if SetupExists:
+	makemanager = 'python "%s/make_manager.py"' % util.pathconv(runswigdir)
+	swig = 'python "%s/RunSwig.py"' % util.pathconv(swigdir)
+else:
+	if options.python:
+		python = options.python
+	makemanager = '%s "%s/make_manager.py" -P %s' % (python, util.pathconv(runswigdir), python)
+	swig = '%s "%s/RunSwig.py" -P %s' % (python, util.pathconv(swigdir), python)
+####
 
 # ----------------------------------------------------------------------
 #   Swig に渡す引数
@@ -227,12 +241,22 @@ lines.append('')
 lines.append('all:\t%s%s' % (project, stubfile))
 lines.append('')
 
-lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
-lines.append(util.pathconv('\t' + ECHO(4, 'make_manager.py -P %s -t' % python)))
-lines.append(util.pathconv('\t%s -t' % makemanager))
-lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py -P %s %s' % (python, swigargs))))
-lines.append(util.pathconv('\t%s %s' % (swig, swigargs)))
-lines.append('')
+####
+if not SetupExists:
+	lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
+	lines.append(util.pathconv('\t' + ECHO(4, 'make_manager.py -P %s -t' % python)))
+	lines.append(util.pathconv('\t%s -t' % makemanager))
+	lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py -P %s %s' % (python, swigargs))))
+	lines.append(util.pathconv('\t%s %s' % (swig, swigargs)))
+	lines.append('')
+else:
+	lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
+	lines.append(util.pathconv('\t' + ECHO(4, 'make_manager.py -t')))
+	lines.append(util.pathconv('\t%s -t' % makemanager))
+	lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py %s' % swigargs)))
+	lines.append(util.pathconv('\t%s %s' % (swig, swigargs)))
+	lines.append('')
+####
 
 lines.append('$(PROJDEF):\t')
 lines.append('\t')
