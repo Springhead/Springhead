@@ -26,7 +26,7 @@
 	> \it{copy} \CMakeLists{.dist} \CMakeLists{}
 }{command-1-2-a.eps}{CMakeLists.txt}
 
-\medskip
+\bigskip
 ビルド条件を変更する場合には、
 配布されたファイル\Path{CMakeSettings.txt.dist}を\Path{CMakeSettings.txt}という名前で
 コピーして、変数を適宜変更してください。
@@ -34,7 +34,7 @@
 \CmndLine{%
 	> \it{copy} \CMakeLists{.dist} \CMakeLists{}\\
 	> \it{edit} \CMakeLists{}
-}{command-1-2-d.eps}{CMakeSettings.txt}
+}{command-1-2-b.eps}{CMakeSettings.txt}
 
 \begin{itemize}
   \item	Visual Studioのバージョンを変更する場合： \\
@@ -55,31 +55,77 @@
 必要な編集をします。
 編集の方法は\QCMakeConf{}に記述されています。
 
-\def\cite#1{\hspace{10pt}\footnotesize{#1}}
 \def\somewhere{"C:/\it{somewhere}/\it{appropreate}"}
 \CmndLine{%
 	> \it{copy} \CMakeConf{.txt} \CMakeConf{}\\
 	> \it{edit} \CMakeConf{}\\
-	\hspace{20pt}:\\
+}{command-1-2-c.eps}{CMakeConf.txt}
+
+\bigskip
+\bf{独自にインストールしたパッケージを使用するとき} (2.3版 改訂)
+
+変数\tt{CMALE\_PREFIX\_PATH}にパッケージを探索するパスを設定します。
+\def\cite#1{\hspace{10pt}\footnotesize{#1}}
+\CmndLine{%
 	\cite{set(CMAKE\_PREFIX\_PATH "C:/somewhre/appropreate")} \\
 	\cite{\hspace{20pt}\#\hspace{40pt}{(\rm{use absolute path)}}}\\
 	\cite{\hspace{20pt}\#\hspace{40pt}%
 		{(\rm{multiple paths must be separated by `newline' or `semicolon')}}}\\
 	\cite{)}\\
-	\hspace{20pt}:\\
-	\cite{set(SPRINGHEAD\_INCLUDE\_PREFIX       "C:/somewhere/appropreate)}\\
-	\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_DEBUG   "C:/somewhere/appropreate)}\\
-	\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_RELEASE "C:/somewhere/appropreate)}
-}{command-1-2-b.eps}{CMakeConf.txt}
-
+}{command-1-2-d.eps}{PackageImport}
 \medskip
-\begin{narrow}[s][20pt]
-	変数\it{variable}に値\it{value}を設定するには
-	\tt{set(\it{variable} "\it{value}"}) とします。
-	途中に空白やセミコロンを含まない文字列ならば引用符は省略できます。
-	また、\tt{\$\{\it{variable}\}}とすると他の変数の値を、
-	\tt{\$ENV\{\it{variable}\}}とすると環境変数の値を参照できます。
-	文字`\tt{\#}'以降はコメントです。
+\begin{narrow}[s]
+	実際に探索するパスは、\tt{<prefix> | <prefix>/(cmake|CMake) |}
+	\tt{<prefix>/<name>* | <prefix>/<name>*/(cmake|CMake)}などです。
+	ここで\tt{\,<prefix>\,}は変数に設定したパス、
+	\tt{\,<name>\,}はパッケージ名を表します。
+	詳細はcmakeのドキュメントを参照してください。
+\end{narrow}
+
+\bigskip
+\bf{ライブラリファイルとヘッダファイルのインストール先を設定するとき} (2.3版 改訂)
+
+変数\tt{CMAKE\_INSTALL\_PREFIX}にインストール先を絶対パスで設定します。
+この設定をすることにより、\tt{find\_package(Springhaed, REQUIRED)}として
+\SprLib を簡単に導入することができるようになります。
+\CmndLine{%
+	\cite{set(CMAKE\_INSTALL\_PREFIX "C:/where/to/install")} \\
+	\cite{\hspace{20pt}\#\hspace{40pt}{(\rm{use absolute path)}}}\\
+}{command-1-2-e.eps}{PackageExport}
+\medskip
+実際にファイルがインストールされるディレクトリは
+\Vskip{-.3\baselineskip}
+\def\IP{\$\{CMAKE\_INSTALL\_PREFIX\}}
+\begin{narrow}[s]
+	\begin{tabular}{lcl}
+		\tt{config files} & → & \tt{\IP/Springhead} \\
+		\tt{header files} & → & \tt{\IP/Springhead/include} \\
+		\tt{library file} & → & \tt{\IP/Springhead/lib} \\
+	\end{tabular}
+\end{narrow}
+\Vskip{.2\baselineskip}
+です。
+これらのうち、ヘッダファイルとライブラリファイルのインストール先は
+次の変数を設定することで変更が可能です。
+絶対パスまたは\tt{\,\IP\,}からの相対パスで指定してください。
+\Vskip{-.3\baselineskip}
+\CmndLine{%
+	\cite{set(SPR\_HEADERS\_INSTALL\_DIR "header files のインストール先")} \\
+	\cite{set(SPR\_LIBRARY\_INSTALL\_DIR "library file のインストール先")} \\
+}{command-1-2-f.eps}{OldInstall}
+
+\bigskip
+\small{\bf{[注意]}}
+
+\begin{narrow}[s]
+	次の変数は以前のバージョンとの互換のために残してありますが、
+	将来的には廃止する予定です。
+	なお、これらの変数を設定してもfind\_packageには対応しません。
+	\CmndLine{%
+		\cite{set(SPRINGHEAD\_INCLUDE\_PREFIX       "C:/somewhere/appropreate)}\\
+		\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_DEBUG   "C:/somewhere/appropreate)}\\
+		\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_RELEASE "C:/somewhere/appropreate)}
+	}{command-1-2-g.eps}{OldInstall}
 \end{narrow}
 
 \bigskip
@@ -91,10 +137,21 @@
 	> \it{copy} \CMakeOpts{.dist} \CMakeOpts{}\\
 	> \it{edit} \CMakeOpts{}\\
 	\hspace{20pt}:\\
-}{command-1-2-c.eps}{CMakeOpts.txt}
+}{command-1-2-h.eps}{CMakeOpts.txt}
 
 \bigskip
 以上で準備作業は終了です。
+
+\medskip
+\small{\bf{[参考]}}
+\begin{narrow}[s][20pt]
+	変数\it{variable}に値\it{value}を設定するには
+	\tt{set(\it{variable} "\it{value}"}) とします。
+	途中に空白やセミコロンを含まない文字列ならば引用符は省略できます。
+	また、\tt{\$\{\it{variable}\}}とすると他の変数の値を、
+	\tt{\$ENV\{\it{variable}\}}とすると環境変数の値を参照できます。
+	文字`\tt{\#}'以降はコメントです。
+\end{narrow}
 
 \bigskip
 \thinrule{\linewidth}

@@ -235,6 +235,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void RevVertexNormalAll();
 	void SetWeekPowFULL(double weekPow_full);
 	void SetweekPow_FULL(double setweekPow_FULL);
+	void setIhRatio(double a);
 	void Setems(double setems);
 	void Setems_steak(double setems_steak);
 	void SetthConduct(double thConduct);

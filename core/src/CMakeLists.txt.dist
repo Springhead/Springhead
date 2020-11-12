@@ -1,15 +1,16 @@
 # CMakeLists.txt for Springhead
 
 cmake_minimum_required(VERSION 3.1)
+set(SPRINGHEAD_PROJECT_VERSION 1.0.0)
 
 # ------------------------------------------------------------------------------
 #  Read project name.
 #
 if(EXISTS "${CMAKE_SOURCE_DIR}/CMakeSettings.txt")
-    message("reading \"CMakeSettings.txt\"")
+    message(STATUS "reading \"CMakeSettings.txt\"")
     set(SETTING_FILE "CMakeSettings.txt")
 else()
-    message("reading \"CMakeSettings.txt.dist\"")
+    message(STATUS "reading \"CMakeSettings.txt.dist\"")
     set(SETTING_FILE "CMakeSettings.txt.dist")
 endif()
 include("${CMAKE_SOURCE_DIR}/${SETTING_FILE}")
@@ -18,8 +19,10 @@ message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME}")
 # ------------------------------------------------------------------------------
 #  Definition of project.
 #
-message(STATUS "Project: ${ProjectName}")
-project(${ProjectName} CXX)
+set(ProjectVersion ${SPRINGHEAD_PROJECT_VERSION})
+project(${ProjectName} VERSION ${ProjectVersion} LANGUAGES CXX)
+message(STATUS "Project: ${ProjectName}, Version ${ProjectVersion}")
+
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_USE_RELATIVE_PATHS true)
 
@@ -159,6 +162,17 @@ elseif(unix)
 endif()
 
 # ------------------------------------------------------------------------------
+#  Definition of last build library type record file.
+#
+set(LASTBUILD_LIBTYPE_STATIC ${SPR_SRC_DIR}/lastbuilt.static)
+set(LASTBUILD_LIBTYPE_SHARED ${SPR_SRC_DIR}/lastbuilt.shared)
+if("${LIBTYPE}" STREQUAL "STATIC")
+    set(LASTBUILD_LIBTYPE_FILE ${LASTBUILD_LIBTYPE_STATIC})
+else()
+    set(LASTBUILD_LIBTYPE_FILE ${LASTBUILD_LIBTYPE_SHARED})
+endif()
+
+# ------------------------------------------------------------------------------
 #  Define depending projects.
 #
 set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
@@ -201,9 +215,9 @@ endif()
 # ------------------------------------------------------------------------------
 #  Main target.
 #
-set(Target ${ProjectName})
+set(RealTarget integrate)
 if(Windows)
-    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${RealTarget})
 endif()
 set(OUTDIR_BASE ${SPR_TOP_DIR}/generated/lib)
 if(Windows)
@@ -213,7 +227,7 @@ if(Windows)
 	string(TOUPPER ${_tmp} _conf)
 	set(LIBBASE_${_conf} ${VS_VERSION}${LIB_SUFFIX_${_conf}}${_platform})
 	set(LIBCMND_${_conf} SpringheadLib.bat ${_platform} ${LIBBASE_${_conf}})
-	set(LIBNAME_${_conf} ${Target}${LIBBASE_${_conf}}.${LIB_SUFFIX})
+	set(LIBNAME_${_conf} ${ProjectName}${LIBBASE_${_conf}}.${LIB_SUFFIX})
     endforeach() 
 elseif(unix)
     if("${LIBTYPE}" STREQUAL "STATIC")
@@ -222,7 +236,7 @@ elseif(unix)
 	set(_lib_suffix so)
     endif()
     # suffix will be given later
-    set(LIBNAME lib${Target})
+    set(LIBNAME lib${ProjectName})
 endif()
 
 # ------------------------------------------------------------------------------
@@ -239,7 +253,7 @@ elseif(unix)
 endif()
 
 if(Windows)
-    add_custom_target(${ProjectName} ALL
+    add_custom_target(${RealTarget} ALL
 	COMMAND if "'$(Configuration)'" equ "'Debug'"   ${LIBCMND_DEBUG}
 	COMMAND if "'$(Configuration)'" equ "'Release'" ${LIBCMND_RELEASE}
 	COMMAND if "'$(Configuration)'" equ "'Trace'"   ${LIBCMND_TRACE}
@@ -250,51 +264,212 @@ if(Windows)
 elseif(unix)
     set(_outdir ${SPR_SRC_DIR})
     set(_gendir ${SPR_TOP_DIR}/generated/lib)
-    list(JOIN SPR_PROJS " " _members)
+    set(_makefile ./Makefile.SpringheadLib)
+    list(JOIN SPR_PROJS "@" _members)
     set(_cmnd ./SpringheadLib.sh)
-    add_custom_target(${ProjectName} ALL
+    add_custom_target(${RealTarget} ALL
 	COMMAND mkdir -p ${_outdir}
-	COMMAND ${_cmnd} ${LIBTYPE} ${_outdir} ${LIBNAME} ${_members}
+	COMMAND make -f ${_makefile} LIBTYPE=${LIBTYPE} BUILDDIR=${SPR_BLD_DIR} OUTDIR=${_outdir} LIBNAME=${LIBNAME} MEMBERS="${_members}"
 	COMMAND mkdir -p ${_gendir}
 	COMMAND cp ${_outdir}/${LIBNAME}.${_lib_suffix} ${_gendir}
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	DEPENDS ${SPR_PROJS}
+	COMMENT [[  generating Springhead Library... ]]
     )
 endif()
 
 # ------------------------------------------------------------------------------
-#  Install.
+#  Since "if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT) ... endif()" won't
+#  work, take another choice.
 #
-if(DEFINED SPRINGHEAD_INCLUDE_PREFIX)
-    message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
-    install(DIRECTORY ${SPR_INC_DIR}
-	DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
-    )
-endif()
 if(Windows)
-    set(_libdir ${SPRINGHEAD_LIBRARY_DIR}})
-    foreach(_tmp Debug Release)
-	string(TOUPPER ${_tmp} _conf)
-	if(DEFINED SPRINGHEAD_LIBRARY_DIR_${_conf})
-	    set(_libpath ${LIBDIR}/${LIBNAME_${_conf}})
-	    message("** INSTALL: ${LIBNAME_${_conf}}: ${_libdir}_${_conf} **")
-	    install(FILES ${_libpath}
-		DESTINATION ${SPRINGHEAD_LIBRARY_DIR_${_conf}}
-		PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-		CONFIGURATIONS ${_tmp}
-	    )
-	endif()
-    endforeach()
-elseif(unix)
-    if(DEFINED SPRINGHEAD_LIBRARY_DIR)
-	set(_libpath ${LIBDIR}/${LIBNAME}.${_lib_suffix})
-	message("** INSTALL: ${LIBNAME}.${_lib_suffix}: ${SPRINGHEAD_LIBRARY_DIR} **")
-	install(FILES ${_libpath}
-	    DESTINATION ${SPRINGHEAD_LIBRARY_DIR}
-	    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	    CONFIGURATIONS Release
+    set(_default_prefix ${EMPTY})
+else(unix)
+    set(_default_prefix /usr/local)
+endif()
+
+# ------------------------------------------------------------------------------
+#  Install.
+#	*** This section remains only for compatibility with older version. ***
+#	*** Following directives are now replaced by CMAKE_INSTALL_PREFIX.  ***
+#	***	SPRINGHEAD_INCLUDE_PREFIX				    ***
+#	***	SPRINGHEAD_LIBRARY_DIR, SPRINGHEAD_LIBRARY_DIR_<CONFIG>	    ***
+#
+if("${CMAKE_INSTALL_PREFIX}" STREQUAL "${_default_prefix}")
+    if(DEFINED SPRINGHEAD_INCLUDE_PREFIX)
+	message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
+	install(DIRECTORY ${SPR_INC_DIR}
+		DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
+		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 	)
     endif()
+    if(Windows)
+	set(_libdir ${SPRINGHEAD_LIBRARY_DIR}})
+	foreach(_tmp Debug Release)
+	    string(TOUPPER ${_tmp} _conf)
+	    if(DEFINED SPRINGHEAD_LIBRARY_DIR_${_conf})
+		set(_libpath ${LIBDIR}/${LIBNAME_${_conf}})
+		message("** INSTALL: ${LIBNAME_${_conf}}: ${_libdir}_${_conf} **")
+		install(FILES ${_libpath}
+			DESTINATION ${_libdir}_${_conf}
+			PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+			CONFIGURATIONS ${_tmp}
+		)
+	    endif()
+	endforeach()
+    elseif(unix)
+	if(DEFINED SPRINGHEAD_LIBRARY_DIR)
+	    set(_libpath ${LIBDIR}/${LIBNAME}.${_lib_suffix})
+	    message("** INSTALL: ${LIBNAME}.${_lib_suffix}: ${_libdir} **")
+	    install(FILES ${_libpath}
+		    DESTINATION ${_libdir}
+		    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+		    CONFIGURATIONS Release
+	    )
+	endif()
+    endif()
+    return()
 endif()
+
+# ------------------------------------------------------------------------------
+#  Cmake の export は、add_liibrary/add_executable で定義されたターゲットに
+#  対してでないと機能しないようです (configureでエラーとなる)。
+#  そのため、以下のような小細工をしています。
+#   (1)	仮のライブラリを作成するターゲット "Springhead" を新たに作成する。
+#   (2)	従来 add_custom_target で作成していたターゲット "Springhead" の名前を
+#	"integrate" と変更する。各プロジェクトで作成した .lib を統合して
+#	Springhhead*.lib を作成する作業は、従来どおりこのターゲットで行なう。
+#   (3)	仮のターゲットで生成するファイルは "${CMAKE_BINARY_DIR}/dummy" の下に
+#	置く。ただし生成するライブラリファイルの名前は、インストールすべき
+#	ライブラリファイルの名前と一致させておく (インストールされるライブラリ
+#	はこのターゲットで作成するものなので、こうしておかないといけない)。
+#   (4)	仮のターゲットを export する。インストール先は、install directive の
+#	属性として指定するだけでよい。ヘッダファイルのインストールは別途
+#	install(FILES ...) で指定しないといけない。
+#   (5) このままだと、.sln で INSTALL を実行したとき、(3) で生成した仮の
+#	ライブラリファイルがインストールされてしまうので、"integrate" で生成
+#	した正しいライブラリファイルをインストール先にコピーするための指定
+#	install(FILES ...) を定義しておく。
+#
+
+# Install先の定義
+if(SPR_HEADERS_INSTALL_DIR)
+    if(IS_ABSOLUTE ${SPR_HEADERS_INSTALL_DIR})
+	set(_dir ${SPR_HEADERS_INSTALL_DIR})
+    else()
+	set(_dir ${CMAKE_INSTALL_PREFIX}/${SPR_HEADERS_INSTALL_DIR})
+    endif()
+    file(RELATIVE_PATH SPR_HEADERS_INSTALL_DIR ${CMAKE_INSTALL_PREFIX} ${_dir})
+else()
+    set(SPR_HEADERS_INSTALL_DIR ${ExportName}/include)
+endif()
+if(SPR_LIBRARY_INSTALL_DIR)
+    if(IS_ABSOLUTE ${SPR_LIBRARY_INSTALL_DIR})
+	set(_dir ${SPD_LIBRARY_INSTALL_DIR})
+    else()
+	set(_dir ${CMAKE_INSTALL_PREFIX}/${SPR_LIBRARY_INSTALL_DIR})
+    endif()
+    file(RELATIVE_PATH SPR_LIBRARY_INSTALL_DIR ${CMAKE_INSTALL_PREFIX} ${_dir})
+else()
+    set(SPR_LIBRARY_INSTALL_DIR ${ExportName}/lib)
+endif()
+message("** install directory: \"${CMAKE_INSTALL_PREFIX}\" (PREFIX)")
+message("**      header files: \"${SPR_HEADERS_INSTALL_DIR}\"")
+message("**      library file: \"${SPR_LIBRARY_INSTALL_DIR}\"")
+
+# 仮のターゲット
+set(Target ${ProjectName})			# 仮のターゲットの定義
+set(DUMMY_OUT_DIR ${CMAKE_BINARY_DIR}/dummy)	# 仮の生成物の置き場所
+file(MAKE_DIRECTORY ${DUMMY_OUT_DIR})
+
+set(DummySrcFile ${DUMMY_OUT_DIR}/_cmake_export_dummy.cpp) # ダミーソース
+file(TOUCH ${DummySrcFile})
+set(SRCS ${DummySrcFile})
+add_library(${Target} ${LIBTYPE} ${SRCS})	# 仮のライブラリの生成
+add_dependencies(${Target} ${RealTarget})
+target_include_directories(${Target} INTERFACE
+    $<BUILD_INTERFACE:${SPR_INC_DIR}>
+    $<INSTALL_INTERFACE:${SPR_HEADERS_INSTALL_DIR}>
+)
+if(Windows)
+    set_target_properties(${Target} PROPERTIES
+	OUTPUT_NAME_DEBUG	  ${ProjectName}${LIBBASE_DEBUG}
+	OUTPUT_NAME_RELEASE	  ${ProjectName}${LIBBASE_RELEASE}
+	OUTPUT_NAME_TRACE	  ${ProjectName}${LIBBASE_TRACE}
+	ARCHIVE_OUTPUT_DIRECTORY_DEBUG	  ${DUMMY_OUT_DIR}/Debug
+	ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${DUMMY_OUT_DIR}/Release
+	ARCHIVE_OUTPUT_DIRECTORY_TRACE	  ${DUMMY_OUT_DIR}/Trace
+    )	
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
+elseif(unix)
+    set_target_properties(${Target} PROPERTIES
+	OUTPUT_NAME		  ${ProjectName}
+	ARCHIVE_OUTPUT_DIRECTORY  ${DUMMY_OUT_DIR}
+    )	
+endif()
+
+# ------------------------------------------------------------------------------
+#  Export.
+#
+set(ExportName ${ProjectName})
+set(ExportConf ${ProjectName}Config)
+message("** config files:      \"${ExportName}/${ExportConf}*.cmake\"")
+
+install(TARGETS ${ProjectName}
+	EXPORT ${ExportConf}
+	ARCHIVE DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	LIBRARY DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+)
+install(EXPORT ${ExportConf}
+	NAMESPACE ${ExportName}::
+	DESTINATION ${ExportName}
+	FILE ${ExportConf}.cmake
+	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+)
+# install header files
+file(GLOB HEADERS ${SPR_INC_DIR}/*.h)
+install(FILES ${HEADERS}
+	DESTINATION ${SPR_HEADERS_INSTALL_DIR}
+)
+foreach(_proj ${SPR_PROJS})
+    file(GLOB HEADERS ${SPR_INC_DIR}/${_proj}/*.h)
+    install(FILES ${HEADERS}
+	    DESTINATION ${SPR_HEADERS_INSTALL_DIR}/${_proj}
+    )
+endforeach()
+# install library file
+if(Windows)
+    install(FILES ${LIBDIR}/${LIBNAME_DEBUG}
+	    DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	    CONFIGURATIONS Debug
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+    install(FILES ${LIBDIR}/${LIBNAME_RELEASE}
+	    DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	    CONFIGURATIONS Release
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+    install(FILES ${LIBDIR}/${LIBNAME_TRACE}
+	    DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	    CONFIGURATIONS Trace
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+elseif(unix)
+    install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
+	    DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+endif()
+# Package version fileの生成
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+	${CMAKE_BINARY_DIR}/${ExportConf}-version.cmake
+	${VERSION_CONFIG}
+	COMPATIBILITY AnyNewerVersion
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${ExportConf}-version.cmake
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/${ExportName}
+	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+)
 
 # end: CMakeLists.txt

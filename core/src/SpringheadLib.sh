@@ -1,12 +1,13 @@
 #!/bin/bash -f
 
 if [ $# -lt 4 ]; then
-    echo "Usage: $0 SHARED outdir libname proj1 proj2 ..."
-    echo "       $0 STATIC outdir libname proj1 proj2 ..."
+    echo "Usage: $0 SHARED builddir outdir libname proj1 proj2 ..."
+    echo "       $0 STATIC builddir outdir libname proj1 proj2 ..."
     exit 1
 fi
 
 libtype=$1; shift
+builddir=$1; shift
 outdir=$1; shift
 libname=$1; shift
 projs=$*
@@ -15,26 +16,43 @@ projs=$*
 #echo "libname: ${libname}"
 #echo "projs:   ${projs}"
 
+function fun() { 
+    # object files
+    objs=`/bin/ls $1 | grep '\.o'`
+    # directories
+    files=`/bin/ls $1`
+    tmpobjs=
+    for f in $files; do
+        if [ -d $1/$f ]; then 
+            tmpobjs=`fun $1/$f`
+            for tmpf in $tmpobjs; do
+                objs="$objs $f/$tmpf"
+            done
+        fi      
+    done    
+    echo $objs
+    return 0
+}
+
 if [ ${libtype} = "STATIC" ]; then
     #
     # step 1-3:  combine archive files to one file
     #
-    members=
-    addcmnd=
+    /bin/rm -f ${outdir}/${libname}.a
+
+    echo step 1 ... creating static library
     for proj in ${projs}
     do
-	members="${members} ${proj}/lib${proj}.a"
-	addcmnd="${addcmnd}addlib ${proj}/lib${proj}.a\\n"
+	pushd ${builddir}/${proj}/CMakeFiles/${proj}.dir > /dev/null
+	objs=`fun .`
+	for obj in $objs;
+	do
+	    ar rvs ${outdir}/${libname}.a $objs
+	done
+	popd > /dev/null
     done
 
-    echo step 1 ... creating thin archive
-    /bin/rm -f ${outdir}/${libname}.a
-    ar cqT ${outdir}/${libname}.a ${members}
-
-    echo step 2 ... creating \"${libname}.a\"
-    echo -n "create ${outdir}/${libname}.a\\n${addcmnd}\\nsave\\nend" | ar -M
-
-    echo step 3 ... ranlib \"${libname}.a\"
+    echo step 2 ... ranlib \"${libname}.a\"
     ranlib ${outdir}/${libname}.a
     #ar t ${libname}.a
 fi

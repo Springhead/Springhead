@@ -23,6 +23,7 @@
 #    Cmake never recognize them.
 #
 # ==============================================================================
+set(SPRINGHEAD_TOPDIR_VERSION 1.0.0)
 
 #set(TOPDIR "C:/Springhead")
 

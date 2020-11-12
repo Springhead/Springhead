@@ -41,6 +41,7 @@
 #	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
 #	Ver 2.02 2018/03/22 F.Kanehori	Change date/time info format.
 #	Ver 2.03 2018/04/24 F.Kanehori	Omit redundant code.
+#	Ver 2.1  2020/10/12 F.Kanehori	Add EmbPython Library creation.
 # =============================================================================
 version = 2.03
 
@@ -217,6 +218,8 @@ else:
 	test_path = Util.upath(os.path.abspath(test_dir))
 if test_path.lower() == src_path.lower():
 	testid = TESTID.STUB
+if 'EmbPython' in test_path:
+	testid = TESTID.EMBPYTHON
 if 'tests' in test_path:
 	testid = TESTID.TESTS
 if 'Samples' in test_path:

@@ -151,4 +151,14 @@ endif()
 string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
 message("     ${CMD_OUTPUT}")
 
+# ------------------------------------------------------------------------------
+#  Record this build state.
+#
+add_custom_command(TARGET ${Target}
+    POST_BUILD
+    COMMAND echo "LASTLIBTYPE=${LIBTYPE}" > ${LASTBUILD_LIBTYPE_FILE}
+    BYPRODUCTS ${LASTBUILD_LIBTYPE_FILE}
+    COMMANT [[  last build library type: ${LIBTYPE}  ]]
+)
+
 # end: CMakeLists.txt

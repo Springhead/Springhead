@@ -1,0 +1,44 @@
+# dailybuild.control
+#	Set "** DO NOT INHERIT **" to prevent upper inheritance
+
+#SprTop		# Set automatically.
+#SprTest	# Set automatically [$(SptTop)/core/test].
+
+Exclude		False
+Descend		False
+SolutionAlias	** DO NOT INHERIT **
+
+Build		True
+#UseClosedSrc	True
+#CppMacro	DAILYBUILD
+#LibType	SHARED
+#BuildLog	# Build log file path
+#BuildErrLog	# Build error log file path
+
+Run		False
+#OutputDir	#$TOOLSET/$PLATFORM/$CONFIGURATION
+#BinaryOut	# output binary name if diffrent from "<solution-name>.exe"
+#Timeout	# time out value in sec
+#Expected	0
+#AddPath
+#PipeProcess	#GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#KillProcess	# Use to kill process invoked as pipe process (if needed).
+#RunLog		# Run log file path
+#RunErrLog	# Run error log file path
+#Intervention	False
+
+#UseCMake	False
+#CMakeBuildDir	# CMake work directoru name
+#CMakeTopDir	$(SprTop)
+#CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
+#CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt
+#CMakeOutputDir	$CMakeBuildDir/$CONFIGURATION
+CMakeOptions	-DSTANDALONE=1
+
+#[Windows]
+
+#[unix]
+#SolutionAlias	Makefile
+#OutputDir	.
+#BinaryOutName	a.out
+

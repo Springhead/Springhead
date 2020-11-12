@@ -83,8 +83,8 @@
 		後者ではワイルドカードが使えます。\\
 		\tt{SRCS}の直後に``\tt{RELATIVE <\it{base-dir}>}''を付加すると
 		相対パス指定となります。デフォルトは \\
-		%\ \ {\footnotesize{\tt{file(GLOB \SetRelPath\ *.cpp *.h)}}} \\
-		\hspace{5pt}{\small{\tt{file(GLOB \SetRelPath\ *.cpp *.h)}}} \\
+		%\ \ {\footnotesize{\tt{file(GLOB SRCS \SetRelPath\ *.cpp *.h)}}} \\
+		\hspace{5pt}{\small{\tt{file(GLOB SRCS \SetRelPath\ *.cpp *.h)}}} \\
 		です。} \\\HLine
     &\tt{EXCLUDE\_SRCS}
 	& \RBox{ビルドの対象から外すファイル\\

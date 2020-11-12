@@ -24,6 +24,15 @@ CXXFLAGS	:= $(CXXFLAGS) \
 		-D__cdecl= \
 		-std=gnu++11
 
+LDFLAGS         := $(LDFLAGS) \
+                -L/home/kanehori/Project/SpringheadTest/generated/lib \
+                -Wl,-rpath,/home/kanehori/Project/SpringheadTest/generated/lib:/usr/local/lib \
+                -Bdynamic \
+                -lEmbPython \
+                -lSpringhead \
+                -lpython3.4m \
+                -llapack
+
 
 ################################################################
 #	compile, link and go

@@ -10,6 +10,8 @@
 #	Ver 1.0  2018/02/07 F.Kanehori	First version.
 #	Ver 1.1  2018/03/15 F.Kanehori	Add: MAKE_TARGET.
 #	Ver 1.2  2019/09/25 F.Kanehori	Add: CMAKE related ones.
+#	Ver 1.3  2020/08/20 F.Kanehori	Add: LIB_TYPE.
+#	Ver 1.4  2020/10/12 F.Kanehori	Add: CMAKE_OPTIONS.
 # ======================================================================
 from enum import Enum
 
@@ -23,6 +25,7 @@ class CFK():		 #  Control File Keywords.
 	USE_CLOSED_SRC	 = 'UseClosedSrc'
 	MAKE_TARGET	 = 'MakeTarget'
 	CPP_MACRO	 = 'CppMacro'
+	LIB_TYPE	 = 'LibType'
 	BUILD_LOG	 = 'BuildLog'
 	BUILD_ERR_LOG	 = 'BuildErrLog'
 	RUN		 = 'Run'
@@ -42,6 +45,7 @@ class CFK():		 #  Control File Keywords.
 	CMAKE_CONF_FILE	 = 'CMakeConfFile'
 	CMAKE_OPTS_FILE	 = 'CMakeOptsFile'
 	CMAKE_OUTPUT_DIR = 'CMakeOutputDir'
+	CMAKE_OPTIONS	 = 'CMakeOptions'
 
 class RST(Enum):		#  ReSulT category.
 	ERR		= 0	#    error iinformation
@@ -57,9 +61,10 @@ class CSU(Enum):		#  Closed Srouce Usage.
 
 class TESTID(Enum):		#  Test ID.
 	STUB		= 0	#     Stub build.
-	TESTS		= 1	#     src/tests.
-	SAMPLES		= 2	#     src/Samples
-	OTHER		= 3	#     others
+	EMBPYTHON	= 1	#     EmbPython build.
+	TESTS		= 2	#     src/tests.
+	SAMPLES		= 3	#     src/Samples
+	OTHER		= 4	#     others
 
 #  List of platform names.
 #

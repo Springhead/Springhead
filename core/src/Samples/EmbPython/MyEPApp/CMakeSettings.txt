@@ -79,8 +79,7 @@ if(Windows)
 		HumanInterface Physics)
     set(SPR_PROJS ${SPR_PROJS} EmbPython)
 else()
-    #set(SPR_PROJS ${EMPTY})
-    set(SPR_PROJS EmbPython)
+    set(SPR_PROJS ${EMPTY})
 endif()
 
 # ------------------------------------------------------------------------------
@@ -140,7 +139,7 @@ if(Windows)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
     set(STATIC_LIBRARY_NAMES_ADD ${EMPTY})
-    set(SHARED_LIBRARY_NAMES_ADD ${EMPTY})
+    set(SHARED_LIBRARY_NAMES_ADD EmbPython python3.4m)
     #
     #  for backward compatibility
     #

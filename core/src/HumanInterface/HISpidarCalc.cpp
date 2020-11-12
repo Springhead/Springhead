@@ -110,7 +110,7 @@ void HISpidarCalc3Dof::Update(){
 HISpidarCalc6Dof::HISpidarCalc6Dof(){	
 	//Setting of default value
 	lambda_r=0.3f;
-	angleMax = M_PI / 2;	//	SPIDARのグリップは90度以上回転しないと仮定
+	angleMax = (float) (M_PI / 2);	//	SPIDARのグリップは90度以上回転しないと仮定
 }
 
 HISpidarCalc6Dof::~HISpidarCalc6Dof(){	

@@ -520,6 +520,10 @@ public:
 	//時間表示
 	double		cpstime;		//[sec] 　1　/　PHFemThermo呼び出し回数[1/sec]
 
+	//setRatio
+	void setIhRatio(double a);
+	double IhRatio;
+
 public:
 	void DecrMoist();
 	void DecrMoist_vel(double dt);

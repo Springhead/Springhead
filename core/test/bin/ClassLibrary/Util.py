@@ -21,6 +21,7 @@
 #	Ver 2.1  2017/09/11 F.Kanehori	Add alias method for pathconv().
 #	Ver 2.2  2018/02/19 F.Kanehori	Change default date/time format.
 #	Ver 2.21 2018/03/08 F.Kanehori	Now OK for doxygen.
+#	Ver 2.22 2020/11/01 F.Kanehori	Fix comment.
 # ======================================================================
 import sys
 import os
@@ -48,7 +49,7 @@ class Util:
 	def pathconv(self, **keywords): return Util.pathconv(**keywords)
 	##  Get current date string.
 	#   Class instance version of Util.date().
-	#   @returns		Date string.
+	#   @returns		Path string.
 	def date(self, **keywords): return Util.date(**keywords)
 	##  Get current time string.
 	#   Class instance version of Util.time().
