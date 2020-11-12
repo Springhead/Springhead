@@ -62,6 +62,8 @@ SPRSRCDIR	= ..
 #  Python アダプタの定義
 #
 PYTHON		= $(SPRSRCDIR)\do_python.bat
+####
+PYTHON		= python
 
 #  swig をビルドするためのパラメータ
 #
@@ -89,7 +91,7 @@ SCILABSWIG	= ScilabSwig.py
 RUNSWIGFW	= RunSwigFramework.py
 SCRIPT		= do_swigall.py
 CHECKCLOSEDSRC	= CheckClosedSrc.py
-BUILDSWIG	= BuildSwig.py
+##BUILDSWIG	= BuildSwig.py
 
 #  前処理で作成するファイル
 #

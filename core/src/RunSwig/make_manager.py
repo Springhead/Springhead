@@ -22,25 +22,30 @@
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
-#     Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
-#     Ver 1.2	 2017/07/24 F.Kanehori	Python executable directory moved.
-#     Ver 1.3	 2017/09/04 F.Kanehori	New python library に対応.
-#     Ver 1.4	 2017/10/11 F.Kanehori	起動するpythonを引数化.
-#     Ver 1.5	 2017/11/08 F.Kanehori	Python library path の変更.
-#     Ver 1.6	 2017/11/29 F.Kanehori	Python library path の変更.
-#     Ver 1.7	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#     Ver 1.8	 2019/02/21 F.Kanehori	Cmake環境に対応.
-#     Ver 1.9	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.00	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01	 2017/04/17 F.Kanehori	Suppress warnig message.
+#     Ver 1.02	 2017/07/24 F.Kanehori	Python executable directory moved.
+#     Ver 1.03	 2017/09/04 F.Kanehori	New python library に対応.
+#     Ver 1.04	 2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.05	 2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.06	 2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.07	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.08	 2019/02/21 F.Kanehori	Cmake環境に対応.
+#     Ver 1.09	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #     Ver 1.10	 2019/09/18 F.Kanehori	Cmakeが生成したファイルの後始末を追加.
+#     Ver 1.11   2020/11/11 F.Kanehori	Setup 導入期間開始.
 # ==============================================================================
-version = 1.10
+version = '1.11'
 trace = False
 
 import sys
 import os
 import glob
 from optparse import OptionParser
+
+# --------------------------------------------
+SetupExists = os.path.exists('../setup.conf')
+# --------------------------------------------
 
 # ----------------------------------------------------------------------
 #  Constants
@@ -61,6 +66,12 @@ from TextFio import *
 from Proc import *
 from FileOp import *
 from Error import *
+
+if SetupExists:
+	print('%s: 移行処理' % prog)
+	from SetupFile import *
+	sf = SetupFile('../setup.conf', verbose=1)
+	sf.add_environment()
 
 # ----------------------------------------------------------------------
 #  Globals
@@ -170,9 +181,12 @@ parser.add_option('-t', '--maketmp',
 parser.add_option('-D', '--debug',
 			dest='debug', action='store_true', default=False,
 			help='for debug')
-parser.add_option('-P', '--python',
+####
+if not SetupExists:
+	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
+####
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -236,9 +250,14 @@ if verbose:
 # ----------------------------------------------------------------------
 #  Scripts
 #
-if options.python:
-	python = options.python
-createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
+####
+if SetupExists:
+	createmkf = 'python %s/create_mkf.py' % runswigdir
+else:
+	if options.python:
+		python = options.python
+	createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
+####
 
 # ----------------------------------------------------------------------
 #  Main process

@@ -12,6 +12,7 @@
 #	step 1:		Python のバージョンをチェックする。
 #	step 2:		セットアップファイルが存在するならば、
 #			その内容の整合性を検査する。
+#			-c オプションが指定されていたらここで終わり。
 #	step 3:		必要なバイナリのパスの現状を調べる。
 #	step 4:		次の何れかの場合は次の step へ進む。
 #			さもなければこれで終了。
@@ -20,19 +21,24 @@
 #	　		　・ファイルの内容と現在の状況に相違がある
 #	　		　・'-f'オプションが指定されている
 #	step 5:		処理継続の確認をする (-f オプション無指定時)
-#	step 6:		swigをmakeする。
-#	step 7:		セットアップファイルを(再)作成する。
+#	step 6:		ビルドパラメータを設定する。
+#	step 7:		swigをmakeする。
+#	step 8:		セットアップファイルを(再)作成する。
 #
+#  -c オプションが指定されたときの終了コード:
+#	     0:		セットアップファイルに記録されたプログラムが
+#			すべて起動可能である。
+#	    -1:		起動できないプログラムがある。
+#	    -2:		セットアップファイルが存在しない。
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2020/11/04 F.Kanehori	First version.
+#     Ver 1.00  2020/11/09 F.Kanehori	First version.
 # ======================================================================
-version = 1.0
+version = "1.00"
 
 import sys
 import os
 import platform
-import datetime
 import shutil
 from optparse import OptionParser
 
@@ -48,14 +54,12 @@ from Util import *
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 progpath = sys.argv[0]
 
-required_windows = [ 'nmake', 'devenv', 'swig', 'cmake', 'nkf' ]
-required_unix = [ 'gcc', 'gmake', 'swig', 'cmake' ]
+required_windows = [ 'devenv', 'swig', 'cmake', 'nkf' ]
+required_unix = [ 'gcc', 'gmake', 'swig', 'cmake', 'nkf' ]
 required = required_unix if Util.is_unix() else required_windows
-optional_tools = [ 'cmake', 'nkf' ]
+optional_tools = [ 'cmake' ]
 
-PLAT = 'x64'
 CONF = 'Release'
-VERS = '15.0'		# replaced later
 
 # ----------------------------------------------------------------------
 #  Globals
@@ -78,7 +82,9 @@ def has_nkf():
 def get_path(name):
 	return paths[name] if name in paths else None
 
+version_save = version
 from setup_helpers import *
+version = version_save
 
 # ----------------------------------------------------------------------
 #  Options
@@ -133,7 +139,7 @@ if out == not_found():
 	abort("pan: can't find python's path.")
 print('found (version %s)' % ver)
 out = '/'.join(U.upath(out.strip()).split('/')[:-1])
-paths['python'] = out
+paths['python'] = U.pathconv(out)
 versions['python'] = ver
 
 # ----------------------------------------------------------------------
@@ -151,10 +157,10 @@ if os.path.exists(setup_file):
 	print('setup file ("%s") exists.' % U.upath(setup_file))
 
 	# ファイル内容の整合性の検査
-	print('paths recoarded in the file are ...')
 	sf = SetupFile(setup_file, verbose=verbose, register=True)
 	keys_path = sf.get_keys(sf.PATH)
 	keys_data = sf.get_keys(sf.DATA)
+
 	for prog in required:
 		sys.stdout.write('-- checking path for %s ... ' % prog)
 		if not prog in keys_path:
@@ -188,6 +194,22 @@ if os.path.exists(setup_file):
 else:
 	print()
 	print('setup file ("%s") not exists.' % U.upath(setup_file))
+
+if check:
+	# -c オプション指定時はここまで
+	print('check done')
+	print()
+
+	# ファイル内容の表示
+	print('paths recoarded in the file are ...')
+	for prog in keys_path:
+		print('%s\t%s' % (prog, sf.get_path(prog)))
+	#
+	if len(progs_lacking) > 0:
+		sys.exit(-1)	# 起動できないプログラムがある
+	if not os.path.exists(setup_file):
+		sys.exit(-2)	# セットアップファイルがない
+	sys.exit(0)
 
 # ----------------------------------------------------------------------
 #  step 3
@@ -231,9 +253,28 @@ if not setup_needed:
 	print()
 	print('information')
 	for prog in required:
+		# ファイルに情報があり、かつ実行できる
 		if prog in path_registered.keys() and \
 			   path_registered[prog] != not_found():
 			continue
+
+		# ファイル情報の有無に関係なく、実行ができない
+		if path_scanned[prog] == not_found():
+			if prog in optional_tools:
+				continue
+			if prog == 'nmake':
+				if path_scanned['swig'] != not_found():
+					# swigがあればnamkeは不要
+					continue
+				bin = 'swig'
+			else:
+				bin = 'Springhead'
+			msg = "'%s' is required to build %s but not found" % (prog, bin)
+			setup_cant_go_on = True
+			setup_reason_fail.append(msg)
+			continue
+
+		# ファイルに情報はないが、実行できる
 		msg = 'setup info (%s) is not sufficient' % prog
 		if prog in optional_tools:
 			setup_recommended = True
@@ -248,8 +289,7 @@ if not setup_needed:
 			setup_reason_need.append(msg)
 			print('-- %s: required to build Springhead' % prog)
 			continue
-
-
+	
 #  ファイルの内容と現在の状況に相違がある
 if not setup_needed:
 	print()
@@ -289,6 +329,8 @@ if not setup_needed:
 				path_regd += ' (%s)' % vers_regd
 			if path_scan != not_found():
 				path_scan += ' (%s)' % vers_scan
+			path_regd = path_regd.replace('()', '(n/a)')
+			path_scan = path_scan.replace('()', '(n/a)')
 			print('-- %s:' % prog)
 			print('     in setup file ... %s' % path_regd)
 			print('     now available ... %s' % path_scan)
@@ -297,6 +339,8 @@ if not setup_needed:
 			print('-- %s:' % prog)
 			path_regd = '%s (%s)' % (path_regd, vers_regd)
 			path_scan = '%s (%s)' % (path_scan, vers_scan)
+			path_regd = path_regd.replace('()', '(n/a)')
+			path_scan = path_scan.replace('()', '(n/a)')
 			print('     in setup file ... %s' % path_regd)
 			print('     now available ... %s' % path_scan)
 
@@ -311,17 +355,17 @@ print()
 print('check result is ...')
 if setup_cant_go_on:
 	reason = set(setup_reason_fail)
-	print('-- setup failed (reason: %s)' % ', '.join(reason))
+	print('-- setup failed (reason: %s).' % ', '.join(reason))
 elif setup_needed:
 	reason = set(setup_reason_need)
-	print('-- setup is required (reason: %s)' % ', '.join(reason))
+	print('-- setup is required (reason: %s).' % ', '.join(reason))
 elif setup_recommended:
 	reason = set(setup_reason_recm)
-	print('-- setup is recommended (reason: %s)' % ', '.join(reason))
+	print('-- setup is recommended (reason: %s).' % ', '.join(reason))
 elif force:
-	print('-- no need to setup, but force option \'-f\' specified')
+	print('-- no need to setup, but force option \'-f\' specified.')
 else:
-	print('-- no need to execute \'setup\'')
+	print('-- no need to execute \'setup\'.')
 	
 # ----------------------------------------------------------------------
 #  step 5
@@ -341,14 +385,22 @@ if not force:
 
 # ----------------------------------------------------------------------
 #  step 6
+#	ビルドパラメータを設定する
+#
+parms['plat'] = 'x%s' % platform.architecture()[0].replace('bit', '')
+parms['conf'] = 'Release'
+if is_windows:
+	parms['vers'] = vers_scanned['devenv'].split('.')[0] + '.0'
+
+# ----------------------------------------------------------------------
+#  step 7
 #	swigをmakeする。
 #
 print()
 print('-- making swig ... ')
 
 #  make 環境を設定する
-sf = SetupFile(setup_file, verbose=verbose)
-sf.add_environment()
+env_set = False
 
 #  make する
 cwd = os.getcwd()
@@ -358,20 +410,26 @@ if is_unix:
 	if stat == 0:
 		shutil.copy('./swig', '../../swig')
 else:
+	env = os.environ['PATH']
+	os.environ['PATH'] = '%s;%s' % (path_scanned['devenv'], env)
 	os.chdir('../bin/src/swig/msvc')
-	path = sf.get_path('cmake')
-	plat = sf.get_data('plat')
-	conf = sf.get_data('conf')
-	vers = sf.get_data('vers')
+	path = path_scanned['cmake']
+	plat = parms['plat']
+	conf = parms['conf']
+	vers = parms['vers']
+	print('PATH_cmake: %s' % path)
 	stat = make_swig_windows(path, plat, conf, vers)
 os.chdir(cwd)
-print('OK' if stat == 0 else 'failed')
+if stat == 0:
+	print('OK')
+else:
+	sys.exit(stat)
 
 #  生成した swig のパスを登録する
 out, ver = try_find(which, 'swig')
 if out == not_found():
 	#print('NOT FOUND')
-	path_scanned[prog] = not_found()
+	path_scanned[prog] = not_found() 
 	vers_scanned[prog] = ''
 #print('found (version: %s)' % ver)
 # directory部分だけにする
@@ -382,17 +440,11 @@ vers_scanned['swig'] = ver
 
 
 # ----------------------------------------------------------------------
-#  step 7
+#  step 8
 #	セットアップファイルを(再)作成する。
 #
 print()
 print('-- (re)generating setup file ...')
-
-#  ビルドパラメータの設定
-parms['plat'] = 'x%s' % platform.architecture()[0].replace('bit', '')
-parms['conf'] = 'Release'
-if is_windows:
-	parms['vers'] = vers_scanned['devenv'].split('.')[0] + '.0'
 if verbose:
 	print('\nprogram paths')
 	for prog in path_scanned:

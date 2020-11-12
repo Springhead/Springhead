@@ -4,6 +4,7 @@ setlocal enabledelayedexpansion
 ::  SYNOPSIS
 ::	setup [-f (--force) ]
 ::	  -f (--force)	セットアップファイルを無条件に再作成する。
+::	  -c (--check)	セットアップファイルの整合性を検査する。
 ::
 ::  DESCRIPTION
 ::	ここでは実行できる python を見つけ、setup.py を実行する。
@@ -14,7 +15,7 @@ setlocal enabledelayedexpansion
 ::	python が見つからないときはメッセージを表示して処理を中止する。
 :: ----------------------------------------------------------------------------
 ::  VERSION
-::	Ver 1.0  2020/11/04 F.Kanehori	初版
+::	Ver 1.0  2020/11/09 F.Kanehori	初版
 :: ============================================================================
 set PROG=%~n0
 set DEBUG=0

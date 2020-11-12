@@ -72,7 +72,7 @@ PreWork:	InstallSwig ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 InstallSwig:	MakeSwig $(SWIGBINARY)
 
 MakeSwig:	
-		cd $(SWIGMAKEDIR) && ./buildswig.sh
+		cd $(SWIGMAKEDIR) && $(BUILDSWIG)
 		#cd $(SWIGMAKEDIR) && make -f $(SWIGMAKEFILE)
 
 $(SWIGBINARY):	$(SWIGMAKEDIR)/Source/eswig

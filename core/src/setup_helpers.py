@@ -5,9 +5,9 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2020/11/04 F.Kanehori	First version.
+#     Ver 1.00  2020/11/11 F.Kanehori	First version.
 # ======================================================================
-version = 1.0
+version = '1.00'
 
 import sys
 import os
@@ -43,7 +43,7 @@ exec_devenv = False		# バージョン情報が取得できない!
 def execute(cmnd, timeout=None, stdout=Proc.PIPE):
 	# execute command
 	proc = Proc().execute(cmnd, stdout=stdout,	#stdout=Proc.PIPE,
-				    stderr=Proc.STDOUT, shell=True)
+				    stderr=Proc.NULL, shell=True)
 	# get output
 	if stdout == Proc.PIPE:
 		status, out, err = proc.output(timeout)
@@ -113,7 +113,7 @@ def try_find_common(which, prog, ver_patt, first=False, check_path=None):
 	if check_path is None:
 		cmnd = '%s %s' % (which, prog)
 		stat, out = execute(cmnd)
-		if stat != 0:
+		if stat != 0 or out is None:
 			return not_found(), None
 		out = out.split('\n')[0].strip()
 	else:
@@ -142,7 +142,10 @@ def try_find_devenv(which):
 		print('found multiple "devenv"')
 		print('     Please select which one to use')
 		for n in range(len(path)):
-			print('\t(%d) %s' % (n+1, upath(path[n])))
+			path[n] = upath(path[n].strip())
+			tmp_path = '/'.join(path[n].split('/')[:-1])
+			vers = get_vs_version(tmp_path)
+			print('\t(%d) %s (%s)' % (n+1, path[n], vers))
 		while True:
 			try:
 				n = int(input('     enter number: '))
@@ -198,7 +201,10 @@ def try_find_swig(which, prog, ver_patt):
 	path = '../bin/swig/%s' % swig
 	cmnd = Util.pathconv('%s -version' % path)
 	stat, out = execute(cmnd)
-	ver = match(out.split('\n'), ver_patt, first=True)
+	if stat == 0 and out is not None:
+		ver = match(out.split('\n'), ver_patt, first=True)
+	else:
+		ver = None
 	out = path if ver is not None else not_found()
 	return out, ver
 
@@ -244,7 +250,7 @@ def make_swig_unix():
 def make_swig_windows(path, plat, conf, vers):
 	VS = { '15.0':	'Visual Studio 15',
 	       '16.0':	'Visual Studio 16' }
-	if path is not None:
+	if path is not None and path != not_found():
 		print('-- generating solution file by cmake ...')
 		print()
 		cmake = '%s/cmake' % path
@@ -270,9 +276,7 @@ def make_swig_windows(path, plat, conf, vers):
 			Error(caller).error('swig build failed')
 		else:
 			os.chdir('../../../../swig')
-			stat, out = execute('dir swig.exe')
-			if stat == 0:
-				print(out)
+			show_swig_entry(out)
 	else:
 		print('-- no cmake found')
 		print()
@@ -287,10 +291,21 @@ def make_swig_windows(path, plat, conf, vers):
 			Error(caller).error('swig build failed')
 		else:
 			os.chdir('../../../swig')
-			stat, out = execute('dir swig.exe')
-			if stat == 0:
-				print(out)
+			show_swig_entry(out)
 	return stat
+
+# ----------------------------------------------------------------------
+#  Show swig.exe's directory entry.
+#
+def show_swig_entry(lines):
+	stat, out = execute('dir swig.exe')
+	if stat == 0:
+		print()
+		lines = out.split('\n')
+		for line in lines:
+			if 'swig.exe' in line:
+				print(line)
+		print()
 
 # ----------------------------------------------------------------------
 #  Change path separators.

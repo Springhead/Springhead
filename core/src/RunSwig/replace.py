@@ -11,12 +11,12 @@
 #	Find the pattern <from> in the file and replace them to <to>.
 #
 #  VERSION:
-#       Ver 1.0  2016/06/16 F.Kanehori	First version
-#       Ver 2.0  2016/06/23 F.Kanehori	Command syntax changed
+#       Ver 1.00 2016/06/16 F.Kanehori	First version
+#       Ver 2.00 2016/06/23 F.Kanehori	Command syntax changed
 #					Multiple pattern replace implemented
-#       Ver 2.1	 2019/02/26 F.Kanehori	Move 'outfile' arg to option.
+#       Ver 2.01 2019/02/26 F.Kanehori	Move 'outfile' arg to option.
 # ==============================================================================
-version = '2.1'
+version = '2.01'
 
 import os
 import sys

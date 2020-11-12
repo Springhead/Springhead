@@ -5,6 +5,12 @@ setlocal enabledelayedexpansion
 ::	set _SPRTOP_=<Springheadのトップディレクトリ>
 ::	do_python.bat script.py [args..]	（Windows 専用）
 ::
+::  重大な変更
+::	この do_python.bat は廃止し、setup 機構で必要な設定 (swig の生成、
+::	パスの設定) を行なうように変更する。
+::	ただし移行期間を設け、その間は setup file が存在しない場合に限り
+::	従来の処理を実行する (存在するときは何もしない)。
+::
 ::  DESCRIPTION
 ::	Python script を実行するための Windows 用アダプタ。
 ::	"Springhead/buildtool" が利用できるときは、それを使って実行する。
@@ -20,8 +26,9 @@ setlocal enabledelayedexpansion
 ::
 ::  VERSION
 ::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
-::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更
+::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
 ::	Ver 2.0  2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
+::	Ver 3.0  2020/11/09 F.Kanehori	Setup 導入移行期間開始.
 :: ============================================================================
 set verbose=0
 
@@ -39,6 +46,18 @@ set CWD=%CD%
 	goto :loop
 :found
 cd ..
+
+::++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+:: 移行期間の処理
+if exist %CD%\core\src\setup.conf (
+	echo 移行処理 -^> python %*
+	cd %CWD%
+	python %*
+	exit /b
+)
+echo do_python: invoke DOS batch
+::++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 if exist buildtool\ (
 	set TOOLPATH=%CD%\buildtool\win32
 	if %verbose% geq 1 (
