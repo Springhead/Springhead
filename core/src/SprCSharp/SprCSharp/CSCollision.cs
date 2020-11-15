@@ -1,4 +1,3 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,164 +5,164 @@ using System.Runtime.InteropServices;
 #pragma warning disable 0108
 namespace SprCs {
     public partial class PHMaterial : CsObject {
-        public PHMaterial() { _this = SprExport.Spr_new_PHMaterial(); _flag = true; }
+        public PHMaterial() { _thisArray[0] = SprExport.Spr_new_PHMaterial(); _flag = true; }
         public PHMaterial(IntPtr ptr) : base(ptr) { }
         public PHMaterial(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~PHMaterial() { if (_flag) { SprExport.Spr_delete_PHMaterial(_this); _flag = false; } }
+        ~PHMaterial() { if (_flag) { SprExport.Spr_delete_PHMaterial(_thisArray[0]); _flag = false; } }
         public float density {
-            get { return SprExport.Spr_PHMaterial_get_density(_this); }
-            set { SprExport.Spr_PHMaterial_set_density(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_density(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_density(_thisArray[0], value); }
         }
         public float mu {
-            get { return SprExport.Spr_PHMaterial_get_mu(_this); }
-            set { SprExport.Spr_PHMaterial_set_mu(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_mu(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_mu(_thisArray[0], value); }
         }
         public float mu0 {
-            get { return SprExport.Spr_PHMaterial_get_mu0(_this); }
-            set { SprExport.Spr_PHMaterial_set_mu0(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_mu0(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_mu0(_thisArray[0], value); }
         }
         public float e {
-            get { return SprExport.Spr_PHMaterial_get_e(_this); }
-            set { SprExport.Spr_PHMaterial_set_e(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_e(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_e(_thisArray[0], value); }
         }
         public float spring {
-            get { return SprExport.Spr_PHMaterial_get_spring(_this); }
-            set { SprExport.Spr_PHMaterial_set_spring(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_spring(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_spring(_thisArray[0], value); }
         }
         public float damper {
-            get { return SprExport.Spr_PHMaterial_get_damper(_this); }
-            set { SprExport.Spr_PHMaterial_set_damper(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_damper(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_damper(_thisArray[0], value); }
         }
         public float reflexSpring {
-            get { return SprExport.Spr_PHMaterial_get_reflexSpring(_this); }
-            set { SprExport.Spr_PHMaterial_set_reflexSpring(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_reflexSpring(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_reflexSpring(_thisArray[0], value); }
         }
         public float reflexDamper {
-            get { return SprExport.Spr_PHMaterial_get_reflexDamper(_this); }
-            set { SprExport.Spr_PHMaterial_set_reflexDamper(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_reflexDamper(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_reflexDamper(_thisArray[0], value); }
         }
         public float frictionSpring {
-            get { return SprExport.Spr_PHMaterial_get_frictionSpring(_this); }
-            set { SprExport.Spr_PHMaterial_set_frictionSpring(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_frictionSpring(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_frictionSpring(_thisArray[0], value); }
         }
         public float frictionDamper {
-            get { return SprExport.Spr_PHMaterial_get_frictionDamper(_this); }
-            set { SprExport.Spr_PHMaterial_set_frictionDamper(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_frictionDamper(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_frictionDamper(_thisArray[0], value); }
         }
         public float vibA {
-            get { return SprExport.Spr_PHMaterial_get_vibA(_this); }
-            set { SprExport.Spr_PHMaterial_set_vibA(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_vibA(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_vibA(_thisArray[0], value); }
         }
         public float vibB {
-            get { return SprExport.Spr_PHMaterial_get_vibB(_this); }
-            set { SprExport.Spr_PHMaterial_set_vibB(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_vibB(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_vibB(_thisArray[0], value); }
         }
         public float vibW {
-            get { return SprExport.Spr_PHMaterial_get_vibW(_this); }
-            set { SprExport.Spr_PHMaterial_set_vibW(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_vibW(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_vibW(_thisArray[0], value); }
         }
         public float vibT {
-            get { return SprExport.Spr_PHMaterial_get_vibT(_this); }
-            set { SprExport.Spr_PHMaterial_set_vibT(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_vibT(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_vibT(_thisArray[0], value); }
         }
         public bool vibContact {
             get {
-                byte ret = (byte)SprExport.Spr_PHMaterial_get_vibContact(_this);
+                byte ret = (byte)SprExport.Spr_PHMaterial_get_vibContact(_thisArray[0]);
                 return (ret == 0) ? false : true;
             }
             set {
                 byte val = (byte)(value ? 1 : 0);
-                SprExport.Spr_PHMaterial_set_vibContact(_this, (char)val);
+                SprExport.Spr_PHMaterial_set_vibContact(_thisArray[0], (char)val);
             }
         }
         public bool vibFric {
             get {
-                byte ret = (byte)SprExport.Spr_PHMaterial_get_vibFric(_this);
+                byte ret = (byte)SprExport.Spr_PHMaterial_get_vibFric(_thisArray[0]);
                 return (ret == 0) ? false : true;
             }
             set {
                 byte val = (byte)(value ? 1 : 0);
-                SprExport.Spr_PHMaterial_set_vibFric(_this, (char)val);
+                SprExport.Spr_PHMaterial_set_vibFric(_thisArray[0], (char)val);
             }
         }
         public float timeVaryFrictionA {
-            get { return SprExport.Spr_PHMaterial_get_timeVaryFrictionA(_this); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionA(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_timeVaryFrictionA(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionA(_thisArray[0], value); }
         }
         public float timeVaryFrictionB {
-            get { return SprExport.Spr_PHMaterial_get_timeVaryFrictionB(_this); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionB(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_timeVaryFrictionB(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionB(_thisArray[0], value); }
         }
         public float timeVaryFrictionC {
-            get { return SprExport.Spr_PHMaterial_get_timeVaryFrictionC(_this); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionC(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_timeVaryFrictionC(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionC(_thisArray[0], value); }
         }
         public float frictionViscosity {
-            get { return SprExport.Spr_PHMaterial_get_frictionViscosity(_this); }
-            set { SprExport.Spr_PHMaterial_set_frictionViscosity(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_frictionViscosity(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_frictionViscosity(_thisArray[0], value); }
         }
         public float stribeckVelocity {
-            get { return SprExport.Spr_PHMaterial_get_stribeckVelocity(_this); }
-            set { SprExport.Spr_PHMaterial_set_stribeckVelocity(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_stribeckVelocity(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_stribeckVelocity(_thisArray[0], value); }
         }
         public float stribeckmu {
-            get { return SprExport.Spr_PHMaterial_get_stribeckmu(_this); }
-            set { SprExport.Spr_PHMaterial_set_stribeckmu(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_stribeckmu(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_stribeckmu(_thisArray[0], value); }
         }
         public vectorwrapper_float mus {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_mus(_this)); }
-            set { SprExport.Spr_PHMaterial_set_mus(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_mus(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_mus(_thisArray[0], value); }
         }
         public vectorwrapper_float mu0s {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_mu0s(_this)); }
-            set { SprExport.Spr_PHMaterial_set_mu0s(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_mu0s(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_mu0s(_thisArray[0], value); }
         }
         public vectorwrapper_float timeVaryFrictionAs {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionAs(_this)); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionAs(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionAs(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionAs(_thisArray[0], value); }
         }
         public vectorwrapper_float timeVaryFrictionBs {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionBs(_this)); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionBs(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionBs(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionBs(_thisArray[0], value); }
         }
         public vectorwrapper_float timeVaryFrictionDs {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionDs(_this)); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionDs(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionDs(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionDs(_thisArray[0], value); }
         }
         public vectorwrapper_float timeVaryFrictionCs {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionCs(_this)); }
-            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionCs(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_timeVaryFrictionCs(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_timeVaryFrictionCs(_thisArray[0], value); }
         }
         public vectorwrapper_float stribeckVelocitys {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_stribeckVelocitys(_this)); }
-            set { SprExport.Spr_PHMaterial_set_stribeckVelocitys(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_stribeckVelocitys(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_stribeckVelocitys(_thisArray[0], value); }
         }
         public vectorwrapper_float stribeckmus {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_stribeckmus(_this)); }
-            set { SprExport.Spr_PHMaterial_set_stribeckmus(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_stribeckmus(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_stribeckmus(_thisArray[0], value); }
         }
         public vectorwrapper_double c {
-            get { return new vectorwrapper_double(SprExport.Spr_PHMaterial_addr_c(_this)); }
-            set { SprExport.Spr_PHMaterial_set_c(_this, value); }
+            get { return new vectorwrapper_double(SprExport.Spr_PHMaterial_addr_c(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_c(_thisArray[0], value); }
         }
         public vectorwrapper_float bristleK {
-            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_bristleK(_this)); }
-            set { SprExport.Spr_PHMaterial_set_bristleK(_this, value); }
+            get { return new vectorwrapper_float(SprExport.Spr_PHMaterial_addr_bristleK(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_bristleK(_thisArray[0], value); }
         }
         public int velocityFieldMode {
-            get { return SprExport.Spr_PHMaterial_get_velocityFieldMode(_this); }
-            set { SprExport.Spr_PHMaterial_set_velocityFieldMode(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_velocityFieldMode(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_velocityFieldMode(_thisArray[0], value); }
         }
         public Vec3d velocityFieldAxis {
-            get { return new Vec3d(SprExport.Spr_PHMaterial_addr_velocityFieldAxis(_this)); }
-            set { SprExport.Spr_PHMaterial_set_velocityFieldAxis(_this, value); }
+            get { return new Vec3d(SprExport.Spr_PHMaterial_addr_velocityFieldAxis(_thisArray[0])); }
+            set { SprExport.Spr_PHMaterial_set_velocityFieldAxis(_thisArray[0], value); }
         }
         public double velocityFieldMagnitude {
-            get { return SprExport.Spr_PHMaterial_get_velocityFieldMagnitude(_this); }
-            set { SprExport.Spr_PHMaterial_set_velocityFieldMagnitude(_this, value); }
+            get { return SprExport.Spr_PHMaterial_get_velocityFieldMagnitude(_thisArray[0]); }
+            set { SprExport.Spr_PHMaterial_set_velocityFieldMagnitude(_thisArray[0], value); }
         }
         public Vec3d CalcVelocity(Vec3d pos, Vec3d normal) {
-            IntPtr ptr = SprExport.Spr_PHMaterial_CalcVelocity((IntPtr)_this, (IntPtr)pos, (IntPtr)normal);
+            IntPtr ptr = SprExport.Spr_PHMaterial_CalcVelocity((IntPtr)_thisArray[0], (IntPtr)pos, (IntPtr)normal);
             return new Vec3d(ptr, true);
         }
     }
@@ -294,36 +293,18 @@ namespace SprCs {
         }
     }
     public partial class CDShapeDesc : CsObject {
-        private IntPtr _this_CDShapeDesc;
-        private bool _flag_CDShapeDesc;
-
-        public CDShapeDesc() {
-            //Console.WriteLine("CDShapeDesc Constructor");
-            //Debug.Log("CDShapeDesc Constructor");
-            _this_CDShapeDesc = SprExport.Spr_new_CDShapeDesc();
-            _flag_CDShapeDesc = true;
-
-            _this = _this_CDShapeDesc;
-            _flag = true;
-        }
+        public CDShapeDesc() { _thisArray[0] = SprExport.Spr_new_CDShapeDesc(); _flag = true; }
         public CDShapeDesc(IntPtr ptr) : base(ptr) { }
         public CDShapeDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDShapeDesc() {
-            //Console.WriteLine("CDShapeDesc Destructor");
-            if (_flag_CDShapeDesc) {
-                //Console.WriteLine("CDShapeDesc Destructor flag true");
-                SprExport.Spr_delete_CDShapeDesc(_this_CDShapeDesc);
-            }
-        }
+        ~CDShapeDesc() { if (_flag) { SprExport.Spr_delete_CDShapeDesc(_thisArray[0]); _flag = false; } }
         public PHMaterial material {
-            get { return new PHMaterial(SprExport.Spr_CDShapeDesc_addr_material(_this)); }
-            set { SprExport.Spr_CDShapeDesc_set_material(_this, value); }
+            get { return new PHMaterial(SprExport.Spr_CDShapeDesc_addr_material(_thisArray[0])); }
+            set { SprExport.Spr_CDShapeDesc_set_material(_thisArray[0], value); }
         }
     }
     [System.Serializable]
     public class CDShapeDescStruct : CsObject {
         public CDShapeDescStruct() {
-            //Console.WriteLine("CDShapeDescStruct Constructor");
             CDShapeDesc desc = new CDShapeDesc();
             ApplyFrom(desc, false);
         }
@@ -335,26 +316,24 @@ namespace SprCs {
             material = r.material;
         }
         public static implicit operator CDShapeDesc(CDShapeDescStruct m) {
-            Console.WriteLine("CDShapeDesc(CDShapeDescStruct m)");
             CDShapeDesc r = new CDShapeDesc();
             m.ApplyTo(r, true);
             return r;
         }
         public static implicit operator CDShapeDescStruct(CDShapeDesc r) {
-            Console.WriteLine("CDShapeDescStruct(CDShapeDesc r)");
             CDShapeDescStruct m = new CDShapeDescStruct();
             m.ApplyFrom(r, true);
             return m;
         }
     }
     public partial class CDConvexMeshDesc : CDShapeDesc {
-        public CDConvexMeshDesc() { _this = SprExport.Spr_new_CDConvexMeshDesc(); _flag = true; }
+        public CDConvexMeshDesc() { _thisArray[0] = SprExport.Spr_new_CDConvexMeshDesc(); _flag = true; }
         public CDConvexMeshDesc(IntPtr ptr) : base(ptr) { }
         public CDConvexMeshDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDConvexMeshDesc() { if (_flag) { SprExport.Spr_delete_CDConvexMeshDesc(_this); _flag = false; } }
+        ~CDConvexMeshDesc() { if (_flag) { SprExport.Spr_delete_CDConvexMeshDesc(_thisArray[0]); _flag = false; } }
         public vectorwrapper_Vec3f vertices {
-            get { return new vectorwrapper_Vec3f(SprExport.Spr_CDConvexMeshDesc_addr_vertices(_this)); }
-            set { SprExport.Spr_CDConvexMeshDesc_set_vertices(_this, value); }
+            get { return new vectorwrapper_Vec3f(SprExport.Spr_CDConvexMeshDesc_addr_vertices(_thisArray[0])); }
+            set { SprExport.Spr_CDConvexMeshDesc_set_vertices(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -388,10 +367,10 @@ namespace SprCs {
         }
     }
     public partial class CDConvexMeshInterpolateDesc : CDConvexMeshDesc {
-        public CDConvexMeshInterpolateDesc() { _this = SprExport.Spr_new_CDConvexMeshInterpolateDesc(); _flag = true; }
+        public CDConvexMeshInterpolateDesc() { _thisArray[0] = SprExport.Spr_new_CDConvexMeshInterpolateDesc(); _flag = true; }
         public CDConvexMeshInterpolateDesc(IntPtr ptr) : base(ptr) { }
         public CDConvexMeshInterpolateDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDConvexMeshInterpolateDesc() { if (_flag) { SprExport.Spr_delete_CDConvexMeshInterpolateDesc(_this); _flag = false; } }
+        ~CDConvexMeshInterpolateDesc() { if (_flag) { SprExport.Spr_delete_CDConvexMeshInterpolateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
     public class CDConvexMeshInterpolateDescStruct : CDConvexMeshDescStruct {
@@ -421,13 +400,13 @@ namespace SprCs {
         }
     }
     public partial class CDSphereDesc : CDShapeDesc {
-        public CDSphereDesc() { _this = SprExport.Spr_new_CDSphereDesc(); _flag = true; }
+        public CDSphereDesc() { _thisArray[0] = SprExport.Spr_new_CDSphereDesc(); _flag = true; }
         public CDSphereDesc(IntPtr ptr) : base(ptr) { }
         public CDSphereDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDSphereDesc() { if (_flag) { SprExport.Spr_delete_CDSphereDesc(_this); _flag = false; } }
+        ~CDSphereDesc() { if (_flag) { SprExport.Spr_delete_CDSphereDesc(_thisArray[0]); _flag = false; } }
         public float radius {
-            get { return SprExport.Spr_CDSphereDesc_get_radius(_this); }
-            set { SprExport.Spr_CDSphereDesc_set_radius(_this, value); }
+            get { return SprExport.Spr_CDSphereDesc_get_radius(_thisArray[0]); }
+            set { SprExport.Spr_CDSphereDesc_set_radius(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -461,13 +440,13 @@ namespace SprCs {
         }
     }
     public partial class CDEllipsoidDesc : CDShapeDesc {
-        public CDEllipsoidDesc() { _this = SprExport.Spr_new_CDEllipsoidDesc(); _flag = true; }
+        public CDEllipsoidDesc() { _thisArray[0] = SprExport.Spr_new_CDEllipsoidDesc(); _flag = true; }
         public CDEllipsoidDesc(IntPtr ptr) : base(ptr) { }
         public CDEllipsoidDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDEllipsoidDesc() { if (_flag) { SprExport.Spr_delete_CDEllipsoidDesc(_this); _flag = false; } }
+        ~CDEllipsoidDesc() { if (_flag) { SprExport.Spr_delete_CDEllipsoidDesc(_thisArray[0]); _flag = false; } }
         public Vec3d radius {
-            get { return new Vec3d(SprExport.Spr_CDEllipsoidDesc_addr_radius(_this)); }
-            set { SprExport.Spr_CDEllipsoidDesc_set_radius(_this, value); }
+            get { return new Vec3d(SprExport.Spr_CDEllipsoidDesc_addr_radius(_thisArray[0])); }
+            set { SprExport.Spr_CDEllipsoidDesc_set_radius(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -501,17 +480,17 @@ namespace SprCs {
         }
     }
     public partial class CDCapsuleDesc : CDShapeDesc {
-        public CDCapsuleDesc() { _this = SprExport.Spr_new_CDCapsuleDesc(); _flag = true; }
+        public CDCapsuleDesc() { _thisArray[0] = SprExport.Spr_new_CDCapsuleDesc(); _flag = true; }
         public CDCapsuleDesc(IntPtr ptr) : base(ptr) { }
         public CDCapsuleDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDCapsuleDesc() { if (_flag) { SprExport.Spr_delete_CDCapsuleDesc(_this); _flag = false; } }
+        ~CDCapsuleDesc() { if (_flag) { SprExport.Spr_delete_CDCapsuleDesc(_thisArray[0]); _flag = false; } }
         public float radius {
-            get { return SprExport.Spr_CDCapsuleDesc_get_radius(_this); }
-            set { SprExport.Spr_CDCapsuleDesc_set_radius(_this, value); }
+            get { return SprExport.Spr_CDCapsuleDesc_get_radius(_thisArray[0]); }
+            set { SprExport.Spr_CDCapsuleDesc_set_radius(_thisArray[0], value); }
         }
         public float length {
-            get { return SprExport.Spr_CDCapsuleDesc_get_length(_this); }
-            set { SprExport.Spr_CDCapsuleDesc_set_length(_this, value); }
+            get { return SprExport.Spr_CDCapsuleDesc_get_length(_thisArray[0]); }
+            set { SprExport.Spr_CDCapsuleDesc_set_length(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -548,17 +527,17 @@ namespace SprCs {
         }
     }
     public partial class CDRoundConeDesc : CDShapeDesc {
-        public CDRoundConeDesc() { _this = SprExport.Spr_new_CDRoundConeDesc(); _flag = true; }
+        public CDRoundConeDesc() { _thisArray[0] = SprExport.Spr_new_CDRoundConeDesc(); _flag = true; }
         public CDRoundConeDesc(IntPtr ptr) : base(ptr) { }
         public CDRoundConeDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDRoundConeDesc() { if (_flag) { SprExport.Spr_delete_CDRoundConeDesc(_this); _flag = false; } }
+        ~CDRoundConeDesc() { if (_flag) { SprExport.Spr_delete_CDRoundConeDesc(_thisArray[0]); _flag = false; } }
         public Vec2f radius {
-            get { return new Vec2f(SprExport.Spr_CDRoundConeDesc_addr_radius(_this)); }
-            set { SprExport.Spr_CDRoundConeDesc_set_radius(_this, value); }
+            get { return new Vec2f(SprExport.Spr_CDRoundConeDesc_addr_radius(_thisArray[0])); }
+            set { SprExport.Spr_CDRoundConeDesc_set_radius(_thisArray[0], value); }
         }
         public float length {
-            get { return SprExport.Spr_CDRoundConeDesc_get_length(_this); }
-            set { SprExport.Spr_CDRoundConeDesc_set_length(_this, value); }
+            get { return SprExport.Spr_CDRoundConeDesc_get_length(_thisArray[0]); }
+            set { SprExport.Spr_CDRoundConeDesc_set_length(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -595,18 +574,14 @@ namespace SprCs {
         }
     }
     public partial class CDBoxDesc : CDShapeDesc {
-        public CDBoxDesc() {
-            //Console.WriteLine("CDBoxDesc Constructor");
-            //Debug.Log("CDBoxDesc Constructor");
-            _this = SprExport.Spr_new_CDBoxDesc(); _flag = true;
-        }
+        public CDBoxDesc() { _thisArray[0] = SprExport.Spr_new_CDBoxDesc(); _flag = true; }
         public CDBoxDesc(IntPtr ptr) : base(ptr) { }
         public CDBoxDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public CDBoxDesc(Vec3d bs) { _this = SprExport.Spr_new_CDBoxDesc_2(bs); _flag = true; }
-        ~CDBoxDesc() { if (_flag) { SprExport.Spr_delete_CDBoxDesc(_this); _flag = false; } }
+        public CDBoxDesc(Vec3d bs) { _thisArray[0] = SprExport.Spr_new_CDBoxDesc_2(bs); _flag = true; }
+        ~CDBoxDesc() { if (_flag) { SprExport.Spr_delete_CDBoxDesc(_thisArray[0]); _flag = false; } }
         public Vec3f boxsize {
-            get { return new Vec3f(SprExport.Spr_CDBoxDesc_addr_boxsize(_this)); }
-            set { SprExport.Spr_CDBoxDesc_set_boxsize(_this, value); }
+            get { return new Vec3f(SprExport.Spr_CDBoxDesc_addr_boxsize(_thisArray[0])); }
+            set { SprExport.Spr_CDBoxDesc_set_boxsize(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -640,21 +615,21 @@ namespace SprCs {
         }
     }
     public partial class CDShapePairState : CsObject {
-        public CDShapePairState() { _this = SprExport.Spr_new_CDShapePairState(); _flag = true; }
+        public CDShapePairState() { _thisArray[0] = SprExport.Spr_new_CDShapePairState(); _flag = true; }
         public CDShapePairState(IntPtr ptr) : base(ptr) { }
         public CDShapePairState(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDShapePairState() { if (_flag) { SprExport.Spr_delete_CDShapePairState(_this); _flag = false; } }
+        ~CDShapePairState() { if (_flag) { SprExport.Spr_delete_CDShapePairState(_thisArray[0]); _flag = false; } }
         public Vec3d normal {
-            get { return new Vec3d(SprExport.Spr_CDShapePairState_addr_normal(_this)); }
-            set { SprExport.Spr_CDShapePairState_set_normal(_this, value); }
+            get { return new Vec3d(SprExport.Spr_CDShapePairState_addr_normal(_thisArray[0])); }
+            set { SprExport.Spr_CDShapePairState_set_normal(_thisArray[0], value); }
         }
         public double depth {
-            get { return SprExport.Spr_CDShapePairState_get_depth(_this); }
-            set { SprExport.Spr_CDShapePairState_set_depth(_this, value); }
+            get { return SprExport.Spr_CDShapePairState_get_depth(_thisArray[0]); }
+            set { SprExport.Spr_CDShapePairState_set_depth(_thisArray[0], value); }
         }
         public uint lastContactCount {
-            get { return SprExport.Spr_CDShapePairState_get_lastContactCount(_this); }
-            set { SprExport.Spr_CDShapePairState_set_lastContactCount(_this, value); }
+            get { return SprExport.Spr_CDShapePairState_get_lastContactCount(_thisArray[0]); }
+            set { SprExport.Spr_CDShapePairState_set_lastContactCount(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -688,41 +663,41 @@ namespace SprCs {
         }
     }
     public partial class CDBounds : CsObject {
-        public CDBounds() { _this = SprExport.Spr_new_CDBounds(); _flag = true; }
+        public CDBounds() { _thisArray[0] = SprExport.Spr_new_CDBounds(); _flag = true; }
         public CDBounds(IntPtr ptr) : base(ptr) { }
         public CDBounds(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public CDBounds(Vec3d min0, Vec3d max0) { _this = SprExport.Spr_new_CDBounds_3(min0, max0); _flag = true; }
-        ~CDBounds() { if (_flag) { SprExport.Spr_delete_CDBounds(_this); _flag = false; } }
+        public CDBounds(Vec3d min0, Vec3d max0) { _thisArray[0] = SprExport.Spr_new_CDBounds_3(min0, max0); _flag = true; }
+        ~CDBounds() { if (_flag) { SprExport.Spr_delete_CDBounds(_thisArray[0]); _flag = false; } }
         public Vec3f min {
-            get { return new Vec3f(SprExport.Spr_CDBounds_addr_min(_this)); }
-            set { SprExport.Spr_CDBounds_set_min(_this, value); }
+            get { return new Vec3f(SprExport.Spr_CDBounds_addr_min(_thisArray[0])); }
+            set { SprExport.Spr_CDBounds_set_min(_thisArray[0], value); }
         }
         public Vec3f max {
-            get { return new Vec3f(SprExport.Spr_CDBounds_addr_max(_this)); }
-            set { SprExport.Spr_CDBounds_set_max(_this, value); }
+            get { return new Vec3f(SprExport.Spr_CDBounds_addr_max(_thisArray[0])); }
+            set { SprExport.Spr_CDBounds_set_max(_thisArray[0], value); }
         }
         public void set(Vec3d min0, Vec3d max0) {
-            SprExport.Spr_CDBounds_set((IntPtr)_this, (IntPtr)min0, (IntPtr)max0);
+            SprExport.Spr_CDBounds_set((IntPtr)_thisArray[0], (IntPtr)min0, (IntPtr)max0);
         }
         public void clamp(Vec3f pos) {
-            SprExport.Spr_CDBounds_clamp((IntPtr)_this, (IntPtr)pos);
+            SprExport.Spr_CDBounds_clamp((IntPtr)_thisArray[0], (IntPtr)pos);
         }
         public bool isEmpty() {
-            char ret = SprExport.Spr_CDBounds_isEmpty((IntPtr)_this);
+            char ret = SprExport.Spr_CDBounds_isEmpty((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public void minimum(Vec3f self, Vec3f other) {
-            SprExport.Spr_CDBounds_minimum((IntPtr)_this, (IntPtr)self, (IntPtr)other);
+            SprExport.Spr_CDBounds_minimum((IntPtr)_thisArray[0], (IntPtr)self, (IntPtr)other);
         }
         public void maximum(Vec3f self, Vec3f other) {
-            SprExport.Spr_CDBounds_maximum((IntPtr)_this, (IntPtr)self, (IntPtr)other);
+            SprExport.Spr_CDBounds_maximum((IntPtr)_thisArray[0], (IntPtr)self, (IntPtr)other);
         }
     }
     public partial class CDSpatialHashTableDesc : CsObject {
-        public CDSpatialHashTableDesc() { _this = SprExport.Spr_new_CDSpatialHashTableDesc(); _flag = true; }
+        public CDSpatialHashTableDesc() { _thisArray[0] = SprExport.Spr_new_CDSpatialHashTableDesc(); _flag = true; }
         public CDSpatialHashTableDesc(IntPtr ptr) : base(ptr) { }
         public CDSpatialHashTableDesc(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~CDSpatialHashTableDesc() { if (_flag) { SprExport.Spr_delete_CDSpatialHashTableDesc(_this); _flag = false; } }
+        ~CDSpatialHashTableDesc() { if (_flag) { SprExport.Spr_delete_CDSpatialHashTableDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
     public class CDSpatialHashTableDescStruct : CsObject {
@@ -746,21 +721,21 @@ namespace SprCs {
         }
     }
     public partial class CDShapeIf : NamedObjectIf {
-        public CDShapeIf() { _this = SprExport.Spr_new_CDShapeIf(); _flag = true; }
+        public CDShapeIf() { _thisArray[0] = SprExport.Spr_new_CDShapeIf(); _flag = true; }
         public CDShapeIf(IntPtr ptr) : base(ptr) { }
         public CDShapeIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDShapeIf(CsCastObject target) {
-            return (target._info.Inherit(CDShapeIf.GetIfInfoStatic()) ? new CDShapeIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDShapeIf.GetIfInfoStatic()) ? new CDShapeIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDShapeIf() { if (_flag) { SprExport.Spr_delete_CDShapeIf(_this); _flag = false; } }
+        ~CDShapeIf() { if (_flag) { SprExport.Spr_delete_CDShapeIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDShapeIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapeIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDShapeIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDShapeIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapeIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -768,159 +743,159 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public void SetStaticFriction(float mu0) {
-            SprExport.Spr_CDShapeIf_SetStaticFriction((IntPtr)_this, (float)mu0);
+            SprExport.Spr_CDShapeIf_SetStaticFriction((IntPtr)_thisArray[0], (float)mu0);
         }
         public float GetStaticFriction() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetStaticFriction((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetStaticFriction((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetDynamicFriction(float mu) {
-            SprExport.Spr_CDShapeIf_SetDynamicFriction((IntPtr)_this, (float)mu);
+            SprExport.Spr_CDShapeIf_SetDynamicFriction((IntPtr)_thisArray[0], (float)mu);
         }
         public float GetDynamicFriction() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetDynamicFriction((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetDynamicFriction((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetElasticity(float e) {
-            SprExport.Spr_CDShapeIf_SetElasticity((IntPtr)_this, (float)e);
+            SprExport.Spr_CDShapeIf_SetElasticity((IntPtr)_thisArray[0], (float)e);
         }
         public float GetElasticity() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetElasticity((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetElasticity((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetDensity(float d) {
-            SprExport.Spr_CDShapeIf_SetDensity((IntPtr)_this, (float)d);
+            SprExport.Spr_CDShapeIf_SetDensity((IntPtr)_thisArray[0], (float)d);
         }
         public float GetDensity() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetDensity((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetDensity((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetContactSpring(float K) {
-            SprExport.Spr_CDShapeIf_SetContactSpring((IntPtr)_this, (float)K);
+            SprExport.Spr_CDShapeIf_SetContactSpring((IntPtr)_thisArray[0], (float)K);
         }
         public float GetContactSpring() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetContactSpring((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetContactSpring((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetContactDamper(float D) {
-            SprExport.Spr_CDShapeIf_SetContactDamper((IntPtr)_this, (float)D);
+            SprExport.Spr_CDShapeIf_SetContactDamper((IntPtr)_thisArray[0], (float)D);
         }
         public float GetContactDamper() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetContactDamper((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetContactDamper((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetReflexSpring(float K) {
-            SprExport.Spr_CDShapeIf_SetReflexSpring((IntPtr)_this, (float)K);
+            SprExport.Spr_CDShapeIf_SetReflexSpring((IntPtr)_thisArray[0], (float)K);
         }
         public float GetReflexSpring() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetReflexSpring((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetReflexSpring((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetReflexDamper(float D) {
-            SprExport.Spr_CDShapeIf_SetReflexDamper((IntPtr)_this, (float)D);
+            SprExport.Spr_CDShapeIf_SetReflexDamper((IntPtr)_thisArray[0], (float)D);
         }
         public float GetReflexDamper() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetReflexDamper((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetReflexDamper((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetFrictionSpring(float K) {
-            SprExport.Spr_CDShapeIf_SetFrictionSpring((IntPtr)_this, (float)K);
+            SprExport.Spr_CDShapeIf_SetFrictionSpring((IntPtr)_thisArray[0], (float)K);
         }
         public float GetFrictionSpring() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetFrictionSpring((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetFrictionSpring((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetFrictionDamper(float D) {
-            SprExport.Spr_CDShapeIf_SetFrictionDamper((IntPtr)_this, (float)D);
+            SprExport.Spr_CDShapeIf_SetFrictionDamper((IntPtr)_thisArray[0], (float)D);
         }
         public float GetFrictionDamper() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetFrictionDamper((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetFrictionDamper((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetVibration(float vibA, float vibB, float vibW) {
-            SprExport.Spr_CDShapeIf_SetVibration((IntPtr)_this, (float)vibA, (float)vibB, (float)vibW);
+            SprExport.Spr_CDShapeIf_SetVibration((IntPtr)_thisArray[0], (float)vibA, (float)vibB, (float)vibW);
         }
         public void SetVibA(float vibA) {
-            SprExport.Spr_CDShapeIf_SetVibA((IntPtr)_this, (float)vibA);
+            SprExport.Spr_CDShapeIf_SetVibA((IntPtr)_thisArray[0], (float)vibA);
         }
         public float GetVibA() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetVibA((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetVibA((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetVibB(float vibB) {
-            SprExport.Spr_CDShapeIf_SetVibB((IntPtr)_this, (float)vibB);
+            SprExport.Spr_CDShapeIf_SetVibB((IntPtr)_thisArray[0], (float)vibB);
         }
         public float GetVibB() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetVibB((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetVibB((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetVibW(float vibW) {
-            SprExport.Spr_CDShapeIf_SetVibW((IntPtr)_this, (float)vibW);
+            SprExport.Spr_CDShapeIf_SetVibW((IntPtr)_thisArray[0], (float)vibW);
         }
         public float GetVibW() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetVibW((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetVibW((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetVibT(float vibT) {
-            SprExport.Spr_CDShapeIf_SetVibT((IntPtr)_this, (float)vibT);
+            SprExport.Spr_CDShapeIf_SetVibT((IntPtr)_thisArray[0], (float)vibT);
         }
         public float GetVibT() {
-            float result = (float)SprExport.Spr_CDShapeIf_GetVibT((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_GetVibT((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetVibContact(bool vibContact) {
-            SprExport.Spr_CDShapeIf_SetVibContact((IntPtr)_this, (bool)vibContact);
+            SprExport.Spr_CDShapeIf_SetVibContact((IntPtr)_thisArray[0], (bool)vibContact);
         }
         public bool GetVibContact() {
-            char ret = SprExport.Spr_CDShapeIf_GetVibContact((IntPtr)_this);
+            char ret = SprExport.Spr_CDShapeIf_GetVibContact((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public PHMaterial GetMaterial() {
-            IntPtr ptr = SprExport.Spr_CDShapeIf_GetMaterial((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapeIf_GetMaterial((IntPtr)_thisArray[0]);
             return new PHMaterial(ptr, true);
         }
         public void SetMaterial(PHMaterial mat) {
-            SprExport.Spr_CDShapeIf_SetMaterial((IntPtr)_this, (IntPtr)mat);
+            SprExport.Spr_CDShapeIf_SetMaterial((IntPtr)_thisArray[0], (IntPtr)mat);
         }
         public float CalcVolume() {
-            float result = (float)SprExport.Spr_CDShapeIf_CalcVolume((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDShapeIf_CalcVolume((IntPtr)_thisArray[0]);
             return result;
         }
         public Vec3f CalcCenterOfMass() {
-            IntPtr ptr = SprExport.Spr_CDShapeIf_CalcCenterOfMass((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapeIf_CalcCenterOfMass((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public Matrix3f CalcMomentOfInertia() {
-            IntPtr ptr = SprExport.Spr_CDShapeIf_CalcMomentOfInertia((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapeIf_CalcMomentOfInertia((IntPtr)_thisArray[0]);
             return new Matrix3f(ptr, true);
         }
         public bool IsInside(Vec3f p) {
-            char ret = SprExport.Spr_CDShapeIf_IsInside((IntPtr)_this, (IntPtr)p);
+            char ret = SprExport.Spr_CDShapeIf_IsInside((IntPtr)_thisArray[0], (IntPtr)p);
             return (ret == 0) ? false : true;
         }
         public void CalcBBox(Vec3f bbmin, Vec3f bbmax, Posed pose) {
-            SprExport.Spr_CDShapeIf_CalcBBox((IntPtr)_this, (IntPtr)bbmin, (IntPtr)bbmax, (IntPtr)pose);
+            SprExport.Spr_CDShapeIf_CalcBBox((IntPtr)_thisArray[0], (IntPtr)bbmin, (IntPtr)bbmax, (IntPtr)pose);
         }
         public void CalcBBox(Vec3f bbmin, Vec3f bbmax) {
-            SprExport.Spr_CDShapeIf_CalcBBox_1((IntPtr)_this, (IntPtr)bbmin, (IntPtr)bbmax);
+            SprExport.Spr_CDShapeIf_CalcBBox_1((IntPtr)_thisArray[0], (IntPtr)bbmin, (IntPtr)bbmax);
         }
     }
     public partial class CDConvexIf : CDShapeIf {
-        public CDConvexIf() { _this = SprExport.Spr_new_CDConvexIf(); _flag = true; }
+        public CDConvexIf() { _thisArray[0] = SprExport.Spr_new_CDConvexIf(); _flag = true; }
         public CDConvexIf(IntPtr ptr) : base(ptr) { }
         public CDConvexIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDConvexIf(CsCastObject target) {
-            return (target._info.Inherit(CDConvexIf.GetIfInfoStatic()) ? new CDConvexIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDConvexIf.GetIfInfoStatic()) ? new CDConvexIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDConvexIf() { if (_flag) { SprExport.Spr_delete_CDConvexIf(_this); _flag = false; } }
+        ~CDConvexIf() { if (_flag) { SprExport.Spr_delete_CDConvexIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDConvexIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDConvexIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDConvexIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -928,30 +903,30 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public double CurvatureRadius(Vec3d p) {
-            double result = (double)SprExport.Spr_CDConvexIf_CurvatureRadius((IntPtr)_this, (IntPtr)p);
+            double result = (double)SprExport.Spr_CDConvexIf_CurvatureRadius((IntPtr)_thisArray[0], (IntPtr)p);
             return result;
         }
         public Vec3d Normal(Vec3d p) {
-            IntPtr ptr = SprExport.Spr_CDConvexIf_Normal((IntPtr)_this, (IntPtr)p);
+            IntPtr ptr = SprExport.Spr_CDConvexIf_Normal((IntPtr)_thisArray[0], (IntPtr)p);
             return new Vec3d(ptr, true);
         }
     }
     public partial class CDFaceIf : ObjectIf {
-        public CDFaceIf() { _this = SprExport.Spr_new_CDFaceIf(); _flag = true; }
+        public CDFaceIf() { _thisArray[0] = SprExport.Spr_new_CDFaceIf(); _flag = true; }
         public CDFaceIf(IntPtr ptr) : base(ptr) { }
         public CDFaceIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDFaceIf(CsCastObject target) {
-            return (target._info.Inherit(CDFaceIf.GetIfInfoStatic()) ? new CDFaceIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDFaceIf.GetIfInfoStatic()) ? new CDFaceIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDFaceIf() { if (_flag) { SprExport.Spr_delete_CDFaceIf(_this); _flag = false; } }
+        ~CDFaceIf() { if (_flag) { SprExport.Spr_delete_CDFaceIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDFaceIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDFaceIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDFaceIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDFaceIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDFaceIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -959,30 +934,30 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public int NIndex() {
-            int result = (int)SprExport.Spr_CDFaceIf_NIndex((IntPtr)_this);
+            int result = (int)SprExport.Spr_CDFaceIf_NIndex((IntPtr)_thisArray[0]);
             return result;
         }
         public int GetIndices() {
-            int result = (int)SprExport.Spr_CDFaceIf_GetIndices((IntPtr)_this);
+            int result = (int)SprExport.Spr_CDFaceIf_GetIndices((IntPtr)_thisArray[0]);
             return result;
         }
     }
     public partial class CDQuadFaceIf : ObjectIf {
-        public CDQuadFaceIf() { _this = SprExport.Spr_new_CDQuadFaceIf(); _flag = true; }
+        public CDQuadFaceIf() { _thisArray[0] = SprExport.Spr_new_CDQuadFaceIf(); _flag = true; }
         public CDQuadFaceIf(IntPtr ptr) : base(ptr) { }
         public CDQuadFaceIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDQuadFaceIf(CsCastObject target) {
-            return (target._info.Inherit(CDQuadFaceIf.GetIfInfoStatic()) ? new CDQuadFaceIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDQuadFaceIf.GetIfInfoStatic()) ? new CDQuadFaceIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDQuadFaceIf() { if (_flag) { SprExport.Spr_delete_CDQuadFaceIf(_this); _flag = false; } }
+        ~CDQuadFaceIf() { if (_flag) { SprExport.Spr_delete_CDQuadFaceIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDQuadFaceIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDQuadFaceIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDQuadFaceIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDQuadFaceIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDQuadFaceIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -990,30 +965,30 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public int NIndex() {
-            int result = (int)SprExport.Spr_CDQuadFaceIf_NIndex((IntPtr)_this);
+            int result = (int)SprExport.Spr_CDQuadFaceIf_NIndex((IntPtr)_thisArray[0]);
             return result;
         }
         public int GetIndices() {
-            int result = (int)SprExport.Spr_CDQuadFaceIf_GetIndices((IntPtr)_this);
+            int result = (int)SprExport.Spr_CDQuadFaceIf_GetIndices((IntPtr)_thisArray[0]);
             return result;
         }
     }
     public partial class CDConvexMeshIf : CDConvexIf {
-        public CDConvexMeshIf() { _this = SprExport.Spr_new_CDConvexMeshIf(); _flag = true; }
+        public CDConvexMeshIf() { _thisArray[0] = SprExport.Spr_new_CDConvexMeshIf(); _flag = true; }
         public CDConvexMeshIf(IntPtr ptr) : base(ptr) { }
         public CDConvexMeshIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDConvexMeshIf(CsCastObject target) {
-            return (target._info.Inherit(CDConvexMeshIf.GetIfInfoStatic()) ? new CDConvexMeshIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDConvexMeshIf.GetIfInfoStatic()) ? new CDConvexMeshIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDConvexMeshIf() { if (_flag) { SprExport.Spr_delete_CDConvexMeshIf(_this); _flag = false; } }
+        ~CDConvexMeshIf() { if (_flag) { SprExport.Spr_delete_CDConvexMeshIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDConvexMeshIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1021,40 +996,40 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public CDFaceIf GetFace(int i) {
-            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetFace((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetFace((IntPtr)_thisArray[0], (int)i);
             if (ptr == IntPtr.Zero) { return null; }
             CDFaceIf obj = new CDFaceIf(ptr);
             return obj;
         }
         public int NFace() {
-            int result = (int)SprExport.Spr_CDConvexMeshIf_NFace((IntPtr)_this);
+            int result = (int)SprExport.Spr_CDConvexMeshIf_NFace((IntPtr)_thisArray[0]);
             return result;
         }
         public arraywrapper_Vec3f GetVertices() {
-            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetVertices((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetVertices((IntPtr)_thisArray[0]);
             return new arraywrapper_Vec3f(ptr);
         }
         public int NVertex() {
-            int result = (int)SprExport.Spr_CDConvexMeshIf_NVertex((IntPtr)_this);
+            int result = (int)SprExport.Spr_CDConvexMeshIf_NVertex((IntPtr)_thisArray[0]);
             return result;
         }
     }
     public partial class CDConvexMeshInterpolateIf : CDConvexMeshIf {
-        public CDConvexMeshInterpolateIf() { _this = SprExport.Spr_new_CDConvexMeshInterpolateIf(); _flag = true; }
+        public CDConvexMeshInterpolateIf() { _thisArray[0] = SprExport.Spr_new_CDConvexMeshInterpolateIf(); _flag = true; }
         public CDConvexMeshInterpolateIf(IntPtr ptr) : base(ptr) { }
         public CDConvexMeshInterpolateIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDConvexMeshInterpolateIf(CsCastObject target) {
-            return (target._info.Inherit(CDConvexMeshInterpolateIf.GetIfInfoStatic()) ? new CDConvexMeshInterpolateIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDConvexMeshInterpolateIf.GetIfInfoStatic()) ? new CDConvexMeshInterpolateIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDConvexMeshInterpolateIf() { if (_flag) { SprExport.Spr_delete_CDConvexMeshInterpolateIf(_this); _flag = false; } }
+        ~CDConvexMeshInterpolateIf() { if (_flag) { SprExport.Spr_delete_CDConvexMeshInterpolateIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDConvexMeshInterpolateIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexMeshInterpolateIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDConvexMeshInterpolateIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDConvexMeshInterpolateIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDConvexMeshInterpolateIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1063,21 +1038,21 @@ namespace SprCs {
         }
     }
     public partial class CDSphereIf : CDConvexIf {
-        public CDSphereIf() { _this = SprExport.Spr_new_CDSphereIf(); _flag = true; }
+        public CDSphereIf() { _thisArray[0] = SprExport.Spr_new_CDSphereIf(); _flag = true; }
         public CDSphereIf(IntPtr ptr) : base(ptr) { }
         public CDSphereIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDSphereIf(CsCastObject target) {
-            return (target._info.Inherit(CDSphereIf.GetIfInfoStatic()) ? new CDSphereIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDSphereIf.GetIfInfoStatic()) ? new CDSphereIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDSphereIf() { if (_flag) { SprExport.Spr_delete_CDSphereIf(_this); _flag = false; } }
+        ~CDSphereIf() { if (_flag) { SprExport.Spr_delete_CDSphereIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDSphereIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDSphereIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDSphereIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDSphereIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDSphereIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1085,29 +1060,29 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public float GetRadius() {
-            float result = (float)SprExport.Spr_CDSphereIf_GetRadius((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDSphereIf_GetRadius((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetRadius(float r) {
-            SprExport.Spr_CDSphereIf_SetRadius((IntPtr)_this, (float)r);
+            SprExport.Spr_CDSphereIf_SetRadius((IntPtr)_thisArray[0], (float)r);
         }
     }
     public partial class CDEllipsoidIf : CDConvexIf {
-        public CDEllipsoidIf() { _this = SprExport.Spr_new_CDEllipsoidIf(); _flag = true; }
+        public CDEllipsoidIf() { _thisArray[0] = SprExport.Spr_new_CDEllipsoidIf(); _flag = true; }
         public CDEllipsoidIf(IntPtr ptr) : base(ptr) { }
         public CDEllipsoidIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDEllipsoidIf(CsCastObject target) {
-            return (target._info.Inherit(CDEllipsoidIf.GetIfInfoStatic()) ? new CDEllipsoidIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDEllipsoidIf.GetIfInfoStatic()) ? new CDEllipsoidIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDEllipsoidIf() { if (_flag) { SprExport.Spr_delete_CDEllipsoidIf(_this); _flag = false; } }
+        ~CDEllipsoidIf() { if (_flag) { SprExport.Spr_delete_CDEllipsoidIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDEllipsoidIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDEllipsoidIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDEllipsoidIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDEllipsoidIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDEllipsoidIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1115,29 +1090,29 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public Vec3d GetRadius() {
-            IntPtr ptr = SprExport.Spr_CDEllipsoidIf_GetRadius((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDEllipsoidIf_GetRadius((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public void SetRadius(Vec3d r) {
-            SprExport.Spr_CDEllipsoidIf_SetRadius((IntPtr)_this, (IntPtr)r);
+            SprExport.Spr_CDEllipsoidIf_SetRadius((IntPtr)_thisArray[0], (IntPtr)r);
         }
     }
     public partial class CDCapsuleIf : CDConvexIf {
-        public CDCapsuleIf() { _this = SprExport.Spr_new_CDCapsuleIf(); _flag = true; }
+        public CDCapsuleIf() { _thisArray[0] = SprExport.Spr_new_CDCapsuleIf(); _flag = true; }
         public CDCapsuleIf(IntPtr ptr) : base(ptr) { }
         public CDCapsuleIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDCapsuleIf(CsCastObject target) {
-            return (target._info.Inherit(CDCapsuleIf.GetIfInfoStatic()) ? new CDCapsuleIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDCapsuleIf.GetIfInfoStatic()) ? new CDCapsuleIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDCapsuleIf() { if (_flag) { SprExport.Spr_delete_CDCapsuleIf(_this); _flag = false; } }
+        ~CDCapsuleIf() { if (_flag) { SprExport.Spr_delete_CDCapsuleIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDCapsuleIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDCapsuleIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDCapsuleIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDCapsuleIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDCapsuleIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1145,36 +1120,36 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public float GetRadius() {
-            float result = (float)SprExport.Spr_CDCapsuleIf_GetRadius((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDCapsuleIf_GetRadius((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetRadius(float r) {
-            SprExport.Spr_CDCapsuleIf_SetRadius((IntPtr)_this, (float)r);
+            SprExport.Spr_CDCapsuleIf_SetRadius((IntPtr)_thisArray[0], (float)r);
         }
         public float GetLength() {
-            float result = (float)SprExport.Spr_CDCapsuleIf_GetLength((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDCapsuleIf_GetLength((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetLength(float l) {
-            SprExport.Spr_CDCapsuleIf_SetLength((IntPtr)_this, (float)l);
+            SprExport.Spr_CDCapsuleIf_SetLength((IntPtr)_thisArray[0], (float)l);
         }
     }
     public partial class CDRoundConeIf : CDConvexIf {
-        public CDRoundConeIf() { _this = SprExport.Spr_new_CDRoundConeIf(); _flag = true; }
+        public CDRoundConeIf() { _thisArray[0] = SprExport.Spr_new_CDRoundConeIf(); _flag = true; }
         public CDRoundConeIf(IntPtr ptr) : base(ptr) { }
         public CDRoundConeIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDRoundConeIf(CsCastObject target) {
-            return (target._info.Inherit(CDRoundConeIf.GetIfInfoStatic()) ? new CDRoundConeIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDRoundConeIf.GetIfInfoStatic()) ? new CDRoundConeIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDRoundConeIf() { if (_flag) { SprExport.Spr_delete_CDRoundConeIf(_this); _flag = false; } }
+        ~CDRoundConeIf() { if (_flag) { SprExport.Spr_delete_CDRoundConeIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDRoundConeIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDRoundConeIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDRoundConeIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDRoundConeIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDRoundConeIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1182,39 +1157,39 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public Vec2f GetRadius() {
-            IntPtr ptr = SprExport.Spr_CDRoundConeIf_GetRadius((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDRoundConeIf_GetRadius((IntPtr)_thisArray[0]);
             return new Vec2f(ptr, true);
         }
         public float GetLength() {
-            float result = (float)SprExport.Spr_CDRoundConeIf_GetLength((IntPtr)_this);
+            float result = (float)SprExport.Spr_CDRoundConeIf_GetLength((IntPtr)_thisArray[0]);
             return result;
         }
         public void SetRadius(Vec2f r) {
-            SprExport.Spr_CDRoundConeIf_SetRadius((IntPtr)_this, (IntPtr)r);
+            SprExport.Spr_CDRoundConeIf_SetRadius((IntPtr)_thisArray[0], (IntPtr)r);
         }
         public void SetLength(float l) {
-            SprExport.Spr_CDRoundConeIf_SetLength((IntPtr)_this, (float)l);
+            SprExport.Spr_CDRoundConeIf_SetLength((IntPtr)_thisArray[0], (float)l);
         }
         public void SetWidth(Vec2f r) {
-            SprExport.Spr_CDRoundConeIf_SetWidth((IntPtr)_this, (IntPtr)r);
+            SprExport.Spr_CDRoundConeIf_SetWidth((IntPtr)_thisArray[0], (IntPtr)r);
         }
     }
     public partial class CDBoxIf : CDConvexIf {
-        public CDBoxIf() { _this = SprExport.Spr_new_CDBoxIf(); _flag = true; }
+        public CDBoxIf() { _thisArray[0] = SprExport.Spr_new_CDBoxIf(); _flag = true; }
         public CDBoxIf(IntPtr ptr) : base(ptr) { }
         public CDBoxIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDBoxIf(CsCastObject target) {
-            return (target._info.Inherit(CDBoxIf.GetIfInfoStatic()) ? new CDBoxIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDBoxIf.GetIfInfoStatic()) ? new CDBoxIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDBoxIf() { if (_flag) { SprExport.Spr_delete_CDBoxIf(_this); _flag = false; } }
+        ~CDBoxIf() { if (_flag) { SprExport.Spr_delete_CDBoxIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDBoxIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDBoxIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDBoxIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDBoxIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDBoxIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1222,40 +1197,40 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public Vec3f GetBoxSize() {
-            IntPtr ptr = SprExport.Spr_CDBoxIf_GetBoxSize((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDBoxIf_GetBoxSize((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public arraywrapper_Vec3f GetVertices() {
-            IntPtr ptr = SprExport.Spr_CDBoxIf_GetVertices((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDBoxIf_GetVertices((IntPtr)_thisArray[0]);
             return new arraywrapper_Vec3f(ptr);
         }
         public CDFaceIf GetFace(int i) {
-            IntPtr ptr = SprExport.Spr_CDBoxIf_GetFace((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_CDBoxIf_GetFace((IntPtr)_thisArray[0], (int)i);
             if (ptr == IntPtr.Zero) { return null; }
             CDFaceIf obj = new CDFaceIf(ptr);
             return obj;
         }
         public Vec3f SetBoxSize(Vec3f boxsize) {
-            IntPtr ptr = SprExport.Spr_CDBoxIf_SetBoxSize((IntPtr)_this, (IntPtr)boxsize);
+            IntPtr ptr = SprExport.Spr_CDBoxIf_SetBoxSize((IntPtr)_thisArray[0], (IntPtr)boxsize);
             return new Vec3f(ptr, true);
         }
     }
     public partial class CDShapePairIf : ObjectIf {
-        public CDShapePairIf() { _this = SprExport.Spr_new_CDShapePairIf(); _flag = true; }
+        public CDShapePairIf() { _thisArray[0] = SprExport.Spr_new_CDShapePairIf(); _flag = true; }
         public CDShapePairIf(IntPtr ptr) : base(ptr) { }
         public CDShapePairIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDShapePairIf(CsCastObject target) {
-            return (target._info.Inherit(CDShapePairIf.GetIfInfoStatic()) ? new CDShapePairIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDShapePairIf.GetIfInfoStatic()) ? new CDShapePairIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDShapePairIf() { if (_flag) { SprExport.Spr_delete_CDShapePairIf(_this); _flag = false; } }
+        ~CDShapePairIf() { if (_flag) { SprExport.Spr_delete_CDShapePairIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDShapePairIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapePairIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDShapePairIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1263,7 +1238,7 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public CDShapeIf GetShape(int i) {
-            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetShape((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetShape((IntPtr)_thisArray[0], (int)i);
             if (ptr == IntPtr.Zero) { return null; }
             CDShapeIf obj = new CDShapeIf(ptr);
             if (obj.GetIfInfo() == CDConvexIf.GetIfInfoStatic()) { return new CDConvexIf(ptr); }
@@ -1277,34 +1252,34 @@ namespace SprCs {
             return obj;
         }
         public Posed GetShapePose(int i) {
-            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetShapePose((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetShapePose((IntPtr)_thisArray[0], (int)i);
             return new Posed(ptr, true);
         }
         public Vec3d GetClosestPointOnWorld(int i) {
-            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetClosestPointOnWorld((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetClosestPointOnWorld((IntPtr)_thisArray[0], (int)i);
             return new Vec3d(ptr, true);
         }
         public Vec3d GetNormal() {
-            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetNormal((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDShapePairIf_GetNormal((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
     }
     public partial class CDSpatialHashTableIf : ObjectIf {
-        public CDSpatialHashTableIf() { _this = SprExport.Spr_new_CDSpatialHashTableIf(); _flag = true; }
+        public CDSpatialHashTableIf() { _thisArray[0] = SprExport.Spr_new_CDSpatialHashTableIf(); _flag = true; }
         public CDSpatialHashTableIf(IntPtr ptr) : base(ptr) { }
         public CDSpatialHashTableIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator CDSpatialHashTableIf(CsCastObject target) {
-            return (target._info.Inherit(CDSpatialHashTableIf.GetIfInfoStatic()) ? new CDSpatialHashTableIf(target._this, target._flag) : null);
+            return (target._info.Inherit(CDSpatialHashTableIf.GetIfInfoStatic()) ? new CDSpatialHashTableIf(target._thisArray[0], target._flag) : null);
         }
-        ~CDSpatialHashTableIf() { if (_flag) { SprExport.Spr_delete_CDSpatialHashTableIf(_this); _flag = false; } }
+        ~CDSpatialHashTableIf() { if (_flag) { SprExport.Spr_delete_CDSpatialHashTableIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_CDSpatialHashTableIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDSpatialHashTableIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_CDSpatialHashTableIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_CDSpatialHashTableIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_CDSpatialHashTableIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -1312,10 +1287,10 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public void Init(float cellSize, CDBounds bounds) {
-            SprExport.Spr_CDSpatialHashTableIf_Init((IntPtr)_this, (float)cellSize, (IntPtr)bounds);
+            SprExport.Spr_CDSpatialHashTableIf_Init((IntPtr)_thisArray[0], (float)cellSize, (IntPtr)bounds);
         }
         public bool ReducedSelectPointsToAdd(Vec3f pCtr, float radius, int objInd, int pInd, int timestamp) {
-            char ret = SprExport.Spr_CDSpatialHashTableIf_ReducedSelectPointsToAdd((IntPtr)_this, (IntPtr)pCtr, (float)radius, (int)objInd, (int)pInd, (int)timestamp);
+            char ret = SprExport.Spr_CDSpatialHashTableIf_ReducedSelectPointsToAdd((IntPtr)_thisArray[0], (IntPtr)pCtr, (float)radius, (int)objInd, (int)pInd, (int)timestamp);
             return (ret == 0) ? false : true;
         }
     }

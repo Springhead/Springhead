@@ -5,18 +5,18 @@ using System.Runtime.InteropServices;
 #pragma warning disable 0108
 namespace SprCs {
     public partial class ObjectIfs : CsObject {
-        public ObjectIfs() { _this = SprExport.Spr_new_ObjectIfs(); _flag = true; }
+        public ObjectIfs() { _thisArray[0] = SprExport.Spr_new_ObjectIfs(); _flag = true; }
         public ObjectIfs(IntPtr ptr) : base(ptr) { }
         public ObjectIfs(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~ObjectIfs() { if (_flag) { SprExport.Spr_delete_ObjectIfs(_this); _flag = false; } }
+        ~ObjectIfs() { if (_flag) { SprExport.Spr_delete_ObjectIfs(_thisArray[0]); _flag = false; } }
         public void Push(ObjectIf obj) {
-            SprExport.Spr_ObjectIfs_Push((IntPtr)_this, (IntPtr)obj);
+            SprExport.Spr_ObjectIfs_Push((IntPtr)_thisArray[0], (IntPtr)obj);
         }
         public void Pop() {
-            SprExport.Spr_ObjectIfs_Pop((IntPtr)_this);
+            SprExport.Spr_ObjectIfs_Pop((IntPtr)_thisArray[0]);
         }
         public ObjectIf Top() {
-            IntPtr ptr = SprExport.Spr_ObjectIfs_Top((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_ObjectIfs_Top((IntPtr)_thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; }
             ObjectIf obj = new ObjectIf(ptr);
             if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) { return new NamedObjectIf(ptr); }
@@ -32,38 +32,38 @@ namespace SprCs {
         public UTAccessBase(IntPtr ptr) : base(ptr) { }
         public UTAccessBase(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public IntPtr Create() {
-            IntPtr result = (IntPtr)SprExport.Spr_UTAccessBase_Create((IntPtr)_this);
+            IntPtr result = (IntPtr)SprExport.Spr_UTAccessBase_Create((IntPtr)_thisArray[0]);
             return result;
         }
         public void Delete(CsObject ptr_) {
-            SprExport.Spr_UTAccessBase_Delete((IntPtr)_this, (IntPtr)ptr_);
+            SprExport.Spr_UTAccessBase_Delete((IntPtr)_thisArray[0], (IntPtr)ptr_);
         }
         public IntPtr VectorPush(CsObject v) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTAccessBase_VectorPush((IntPtr)_this, (IntPtr)v);
+            IntPtr result = (IntPtr)SprExport.Spr_UTAccessBase_VectorPush((IntPtr)_thisArray[0], (IntPtr)v);
             return result;
         }
         public void VectorPop(CsObject v) {
-            SprExport.Spr_UTAccessBase_VectorPop((IntPtr)_this, (IntPtr)v);
+            SprExport.Spr_UTAccessBase_VectorPop((IntPtr)_thisArray[0], (IntPtr)v);
         }
         public IntPtr VectorAt(CsObject v, int pos) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTAccessBase_VectorAt((IntPtr)_this, (IntPtr)v, (int)pos);
+            IntPtr result = (IntPtr)SprExport.Spr_UTAccessBase_VectorAt((IntPtr)_thisArray[0], (IntPtr)v, (int)pos);
             return result;
         }
         public ulong VectorSize(CsObject v) {
-            ulong result = (ulong)SprExport.Spr_UTAccessBase_VectorSize((IntPtr)_this, (IntPtr)v);
+            ulong result = (ulong)SprExport.Spr_UTAccessBase_VectorSize((IntPtr)_thisArray[0], (IntPtr)v);
             return result;
         }
         public ulong SizeOfVector() {
-            ulong result = (ulong)SprExport.Spr_UTAccessBase_SizeOfVector((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_UTAccessBase_SizeOfVector((IntPtr)_thisArray[0]);
             return result;
         }
     }
     public partial class Vec2f : CsObject {
-        public Vec2f() { _this = SprExport.Spr_new_Vec2f(); _flag = true; }
+        public Vec2f() { _thisArray[0] = SprExport.Spr_new_Vec2f(); _flag = true; }
         public Vec2f(IntPtr ptr) : base(ptr) { }
         public Vec2f(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec2f(float x, float y) { _this = SprExport.Spr_new_Vec2f_3(x, y); _flag = true; }
-        ~Vec2f() { if (_flag) { SprExport.Spr_delete_Vec2f(_this); _flag = false; } }
+        public Vec2f(float x, float y) { _thisArray[0] = SprExport.Spr_new_Vec2f_3(x, y); _flag = true; }
+        ~Vec2f() { if (_flag) { SprExport.Spr_delete_Vec2f(_thisArray[0]); _flag = false; } }
         public static explicit operator Vec2f(Vec2d d) {
             Vec2f f = new Vec2f();
             f.x = (float)d.x;
@@ -138,29 +138,29 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_fi_set_Vec2f(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec2f_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec2f_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec2f_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float x {
-            get { return SprExport.Spr_Vec2f_get_x(_this); }
-            set { SprExport.Spr_Vec2f_set_x(_this, value); }
+            get { return SprExport.Spr_Vec2f_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec2f_set_x(_thisArray[0], value); }
         }
         public float y {
-            get { return SprExport.Spr_Vec2f_get_y(_this); }
-            set { SprExport.Spr_Vec2f_set_y(_this, value); }
+            get { return SprExport.Spr_Vec2f_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec2f_set_y(_thisArray[0], value); }
         }
         public float square() {
-            float result = (float)SprExport.Spr_Vec2f_square((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec2f_square((IntPtr)_thisArray[0]);
             return result;
         }
         public float norm() {
-            float result = (float)SprExport.Spr_Vec2f_norm((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec2f_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec2f_unitize((IntPtr)_this);
+            SprExport.Spr_Vec2f_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -197,11 +197,11 @@ namespace SprCs {
         }
     }
     public partial class Vec2d : CsObject {
-        public Vec2d() { _this = SprExport.Spr_new_Vec2d(); _flag = true; }
+        public Vec2d() { _thisArray[0] = SprExport.Spr_new_Vec2d(); _flag = true; }
         public Vec2d(IntPtr ptr) : base(ptr) { }
         public Vec2d(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec2d(double x, double y) { _this = SprExport.Spr_new_Vec2d_3(x, y); _flag = true; }
-        ~Vec2d() { if (_flag) { SprExport.Spr_delete_Vec2d(_this); _flag = false; } }
+        public Vec2d(double x, double y) { _thisArray[0] = SprExport.Spr_new_Vec2d_3(x, y); _flag = true; }
+        ~Vec2d() { if (_flag) { SprExport.Spr_delete_Vec2d(_thisArray[0]); _flag = false; } }
         public static implicit operator Vec2d(Vec2f f) {
             Vec2d d = new Vec2d();
             d.x = f.x;
@@ -276,29 +276,29 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_di_set_Vec2d(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec2d_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec2d_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec2d_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double x {
-            get { return SprExport.Spr_Vec2d_get_x(_this); }
-            set { SprExport.Spr_Vec2d_set_x(_this, value); }
+            get { return SprExport.Spr_Vec2d_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec2d_set_x(_thisArray[0], value); }
         }
         public double y {
-            get { return SprExport.Spr_Vec2d_get_y(_this); }
-            set { SprExport.Spr_Vec2d_set_y(_this, value); }
+            get { return SprExport.Spr_Vec2d_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec2d_set_y(_thisArray[0], value); }
         }
         public double square() {
-            double result = (double)SprExport.Spr_Vec2d_square((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec2d_square((IntPtr)_thisArray[0]);
             return result;
         }
         public double norm() {
-            double result = (double)SprExport.Spr_Vec2d_norm((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec2d_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec2d_unitize((IntPtr)_this);
+            SprExport.Spr_Vec2d_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -335,11 +335,11 @@ namespace SprCs {
         }
     }
     public partial class Vec3f : CsObject {
-        public Vec3f() { _this = SprExport.Spr_new_Vec3f(); _flag = true; }
+        public Vec3f() { _thisArray[0] = SprExport.Spr_new_Vec3f(); _flag = true; }
         public Vec3f(IntPtr ptr) : base(ptr) { }
         public Vec3f(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec3f(float x, float y, float z) { _this = SprExport.Spr_new_Vec3f_4(x, y, z); _flag = true; }
-        ~Vec3f() { if (_flag) { SprExport.Spr_delete_Vec3f(_this); _flag = false; } }
+        public Vec3f(float x, float y, float z) { _thisArray[0] = SprExport.Spr_new_Vec3f_4(x, y, z); _flag = true; }
+        ~Vec3f() { if (_flag) { SprExport.Spr_delete_Vec3f(_thisArray[0]); _flag = false; } }
         public static explicit operator Vec3f(Vec3d d) {
             Vec3f f = new Vec3f();
             f.x = (float)d.x;
@@ -417,33 +417,33 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_fi_set_Vec3f(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec3f_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec3f_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec3f_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float x {
-            get { return SprExport.Spr_Vec3f_get_x(_this); }
-            set { SprExport.Spr_Vec3f_set_x(_this, value); }
+            get { return SprExport.Spr_Vec3f_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec3f_set_x(_thisArray[0], value); }
         }
         public float y {
-            get { return SprExport.Spr_Vec3f_get_y(_this); }
-            set { SprExport.Spr_Vec3f_set_y(_this, value); }
+            get { return SprExport.Spr_Vec3f_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec3f_set_y(_thisArray[0], value); }
         }
         public float z {
-            get { return SprExport.Spr_Vec3f_get_z(_this); }
-            set { SprExport.Spr_Vec3f_set_z(_this, value); }
+            get { return SprExport.Spr_Vec3f_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Vec3f_set_z(_thisArray[0], value); }
         }
         public float square() {
-            float result = (float)SprExport.Spr_Vec3f_square((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec3f_square((IntPtr)_thisArray[0]);
             return result;
         }
         public float norm() {
-            float result = (float)SprExport.Spr_Vec3f_norm((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec3f_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec3f_unitize((IntPtr)_this);
+            SprExport.Spr_Vec3f_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -484,11 +484,11 @@ namespace SprCs {
         }
     }
     public partial class Vec3d : CsObject {
-        public Vec3d() { _this = SprExport.Spr_new_Vec3d(); _flag = true; }
+        public Vec3d() { _thisArray[0] = SprExport.Spr_new_Vec3d(); _flag = true; }
         public Vec3d(IntPtr ptr) : base(ptr) { }
         public Vec3d(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec3d(double x, double y, double z) { _this = SprExport.Spr_new_Vec3d_4(x, y, z); _flag = true; }
-        ~Vec3d() { if (_flag) { SprExport.Spr_delete_Vec3d(_this); _flag = false; } }
+        public Vec3d(double x, double y, double z) { _thisArray[0] = SprExport.Spr_new_Vec3d_4(x, y, z); _flag = true; }
+        ~Vec3d() { if (_flag) { SprExport.Spr_delete_Vec3d(_thisArray[0]); _flag = false; } }
         public static implicit operator Vec3d(Vec3f f) {
             Vec3d d = new Vec3d();
             d.x = f.x;
@@ -566,33 +566,33 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_di_set_Vec3d(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec3d_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec3d_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec3d_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double x {
-            get { return SprExport.Spr_Vec3d_get_x(_this); }
-            set { SprExport.Spr_Vec3d_set_x(_this, value); }
+            get { return SprExport.Spr_Vec3d_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec3d_set_x(_thisArray[0], value); }
         }
         public double y {
-            get { return SprExport.Spr_Vec3d_get_y(_this); }
-            set { SprExport.Spr_Vec3d_set_y(_this, value); }
+            get { return SprExport.Spr_Vec3d_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec3d_set_y(_thisArray[0], value); }
         }
         public double z {
-            get { return SprExport.Spr_Vec3d_get_z(_this); }
-            set { SprExport.Spr_Vec3d_set_z(_this, value); }
+            get { return SprExport.Spr_Vec3d_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Vec3d_set_z(_thisArray[0], value); }
         }
         public double square() {
-            double result = (double)SprExport.Spr_Vec3d_square((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec3d_square((IntPtr)_thisArray[0]);
             return result;
         }
         public double norm() {
-            double result = (double)SprExport.Spr_Vec3d_norm((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec3d_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec3d_unitize((IntPtr)_this);
+            SprExport.Spr_Vec3d_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -633,11 +633,11 @@ namespace SprCs {
         }
     }
     public partial class Vec4f : CsObject {
-        public Vec4f() { _this = SprExport.Spr_new_Vec4f(); _flag = true; }
+        public Vec4f() { _thisArray[0] = SprExport.Spr_new_Vec4f(); _flag = true; }
         public Vec4f(IntPtr ptr) : base(ptr) { }
         public Vec4f(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec4f(float x, float y, float z, float w) { _this = SprExport.Spr_new_Vec4f_5(x, y, z, w); _flag = true; }
-        ~Vec4f() { if (_flag) { SprExport.Spr_delete_Vec4f(_this); _flag = false; } }
+        public Vec4f(float x, float y, float z, float w) { _thisArray[0] = SprExport.Spr_new_Vec4f_5(x, y, z, w); _flag = true; }
+        ~Vec4f() { if (_flag) { SprExport.Spr_delete_Vec4f(_thisArray[0]); _flag = false; } }
         public static explicit operator Vec4f(Vec4d d) {
             Vec4f f = new Vec4f();
             f.x = (float)d.x;
@@ -699,37 +699,37 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_fi_set_Vec4f(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec4f_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec4f_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec4f_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float x {
-            get { return SprExport.Spr_Vec4f_get_x(_this); }
-            set { SprExport.Spr_Vec4f_set_x(_this, value); }
+            get { return SprExport.Spr_Vec4f_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec4f_set_x(_thisArray[0], value); }
         }
         public float y {
-            get { return SprExport.Spr_Vec4f_get_y(_this); }
-            set { SprExport.Spr_Vec4f_set_y(_this, value); }
+            get { return SprExport.Spr_Vec4f_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec4f_set_y(_thisArray[0], value); }
         }
         public float z {
-            get { return SprExport.Spr_Vec4f_get_z(_this); }
-            set { SprExport.Spr_Vec4f_set_z(_this, value); }
+            get { return SprExport.Spr_Vec4f_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Vec4f_set_z(_thisArray[0], value); }
         }
         public float w {
-            get { return SprExport.Spr_Vec4f_get_w(_this); }
-            set { SprExport.Spr_Vec4f_set_w(_this, value); }
+            get { return SprExport.Spr_Vec4f_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Vec4f_set_w(_thisArray[0], value); }
         }
         public float square() {
-            float result = (float)SprExport.Spr_Vec4f_square((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec4f_square((IntPtr)_thisArray[0]);
             return result;
         }
         public float norm() {
-            float result = (float)SprExport.Spr_Vec4f_norm((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec4f_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec4f_unitize((IntPtr)_this);
+            SprExport.Spr_Vec4f_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -774,11 +774,11 @@ namespace SprCs {
         }
     }
     public partial class Vec4d : CsObject {
-        public Vec4d() { _this = SprExport.Spr_new_Vec4d(); _flag = true; }
+        public Vec4d() { _thisArray[0] = SprExport.Spr_new_Vec4d(); _flag = true; }
         public Vec4d(IntPtr ptr) : base(ptr) { }
         public Vec4d(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec4d(double x, double y, double z, double w) { _this = SprExport.Spr_new_Vec4d_5(x, y, z, w); _flag = true; }
-        ~Vec4d() { if (_flag) { SprExport.Spr_delete_Vec4d(_this); _flag = false; } }
+        public Vec4d(double x, double y, double z, double w) { _thisArray[0] = SprExport.Spr_new_Vec4d_5(x, y, z, w); _flag = true; }
+        ~Vec4d() { if (_flag) { SprExport.Spr_delete_Vec4d(_thisArray[0]); _flag = false; } }
         public static implicit operator Vec4d(Vec4f f) {
             Vec4d d = new Vec4d();
             d.x = f.x;
@@ -840,37 +840,37 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_di_set_Vec4d(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec4d_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec4d_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec4d_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double x {
-            get { return SprExport.Spr_Vec4d_get_x(_this); }
-            set { SprExport.Spr_Vec4d_set_x(_this, value); }
+            get { return SprExport.Spr_Vec4d_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec4d_set_x(_thisArray[0], value); }
         }
         public double y {
-            get { return SprExport.Spr_Vec4d_get_y(_this); }
-            set { SprExport.Spr_Vec4d_set_y(_this, value); }
+            get { return SprExport.Spr_Vec4d_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec4d_set_y(_thisArray[0], value); }
         }
         public double z {
-            get { return SprExport.Spr_Vec4d_get_z(_this); }
-            set { SprExport.Spr_Vec4d_set_z(_this, value); }
+            get { return SprExport.Spr_Vec4d_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Vec4d_set_z(_thisArray[0], value); }
         }
         public double w {
-            get { return SprExport.Spr_Vec4d_get_w(_this); }
-            set { SprExport.Spr_Vec4d_set_w(_this, value); }
+            get { return SprExport.Spr_Vec4d_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Vec4d_set_w(_thisArray[0], value); }
         }
         public double square() {
-            double result = (double)SprExport.Spr_Vec4d_square((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec4d_square((IntPtr)_thisArray[0]);
             return result;
         }
         public double norm() {
-            double result = (double)SprExport.Spr_Vec4d_norm((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec4d_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec4d_unitize((IntPtr)_this);
+            SprExport.Spr_Vec4d_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -915,11 +915,11 @@ namespace SprCs {
         }
     }
     public partial class Quaternionf : CsObject {
-        public Quaternionf() { _this = SprExport.Spr_new_Quaternionf(); _flag = true; }
+        public Quaternionf() { _thisArray[0] = SprExport.Spr_new_Quaternionf(); _flag = true; }
         public Quaternionf(IntPtr ptr) : base(ptr) { }
         public Quaternionf(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Quaternionf(float w, float x, float y, float z) { _this = SprExport.Spr_new_Quaternionf_5(w, x, y, z); _flag = true; }
-        ~Quaternionf() { if (_flag) { SprExport.Spr_delete_Quaternionf(_this); _flag = false; } }
+        public Quaternionf(float w, float x, float y, float z) { _thisArray[0] = SprExport.Spr_new_Quaternionf_5(w, x, y, z); _flag = true; }
+        ~Quaternionf() { if (_flag) { SprExport.Spr_delete_Quaternionf(_thisArray[0]); _flag = false; } }
         public static explicit operator Quaternionf(Quaterniond d) {
             Quaternionf f = new Quaternionf();
             f.x = (float)d.x;
@@ -974,61 +974,61 @@ namespace SprCs {
             return new Matrix3f(ptr, true);
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Quaternionf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float x {
-            get { return SprExport.Spr_Quaternionf_get_x(_this); }
-            set { SprExport.Spr_Quaternionf_set_x(_this, value); }
+            get { return SprExport.Spr_Quaternionf_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Quaternionf_set_x(_thisArray[0], value); }
         }
         public float y {
-            get { return SprExport.Spr_Quaternionf_get_y(_this); }
-            set { SprExport.Spr_Quaternionf_set_y(_this, value); }
+            get { return SprExport.Spr_Quaternionf_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Quaternionf_set_y(_thisArray[0], value); }
         }
         public float z {
-            get { return SprExport.Spr_Quaternionf_get_z(_this); }
-            set { SprExport.Spr_Quaternionf_set_z(_this, value); }
+            get { return SprExport.Spr_Quaternionf_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Quaternionf_set_z(_thisArray[0], value); }
         }
         public float w {
-            get { return SprExport.Spr_Quaternionf_get_w(_this); }
-            set { SprExport.Spr_Quaternionf_set_w(_this, value); }
+            get { return SprExport.Spr_Quaternionf_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Quaternionf_set_w(_thisArray[0], value); }
         }
         public float W() {
-            float result = (float)SprExport.Spr_Quaternionf_W((IntPtr)_this);
+            float result = (float)SprExport.Spr_Quaternionf_W((IntPtr)_thisArray[0]);
             return result;
         }
         public float X() {
-            float result = (float)SprExport.Spr_Quaternionf_X((IntPtr)_this);
+            float result = (float)SprExport.Spr_Quaternionf_X((IntPtr)_thisArray[0]);
             return result;
         }
         public float Y() {
-            float result = (float)SprExport.Spr_Quaternionf_Y((IntPtr)_this);
+            float result = (float)SprExport.Spr_Quaternionf_Y((IntPtr)_thisArray[0]);
             return result;
         }
         public float Z() {
-            float result = (float)SprExport.Spr_Quaternionf_Z((IntPtr)_this);
+            float result = (float)SprExport.Spr_Quaternionf_Z((IntPtr)_thisArray[0]);
             return result;
         }
         public Vec3f V() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_V((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_V((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public Vec3f RotationHalf() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_RotationHalf((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_RotationHalf((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public Vec3f Rotation() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_Rotation((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_Rotation((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public Vec3f Axis() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_Axis((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_Axis((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public float Theta() {
-            float result = (float)SprExport.Spr_Quaternionf_Theta((IntPtr)_this);
+            float result = (float)SprExport.Spr_Quaternionf_Theta((IntPtr)_thisArray[0]);
             return result;
         }
         public static Quaternionf Rot(float angle, Vec3f axis) {
@@ -1044,21 +1044,21 @@ namespace SprCs {
             return new Quaternionf(ptr, true);
         }
         public Quaternionf Inv() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_Inv((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_Inv((IntPtr)_thisArray[0]);
             return new Quaternionf(ptr, true);
         }
         public void Conjugate() {
-            SprExport.Spr_Quaternionf_Conjugate((IntPtr)_this);
+            SprExport.Spr_Quaternionf_Conjugate((IntPtr)_thisArray[0]);
         }
         public Quaternionf Conjugated() {
-            IntPtr ptr = SprExport.Spr_Quaternionf_Conjugated((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaternionf_Conjugated((IntPtr)_thisArray[0]);
             return new Quaternionf(ptr, true);
         }
         public void RotationArc(Vec3f lhs, Vec3f rhs) {
-            SprExport.Spr_Quaternionf_RotationArc((IntPtr)_this, (IntPtr)lhs, (IntPtr)rhs);
+            SprExport.Spr_Quaternionf_RotationArc((IntPtr)_thisArray[0], (IntPtr)lhs, (IntPtr)rhs);
         }
         public void Euler(float heading, float attitude, float bank) {
-            SprExport.Spr_Quaternionf_Euler((IntPtr)_this, (float)heading, (float)attitude, (float)bank);
+            SprExport.Spr_Quaternionf_Euler((IntPtr)_thisArray[0], (float)heading, (float)attitude, (float)bank);
         }
     }
     [System.Serializable]
@@ -1103,11 +1103,11 @@ namespace SprCs {
         }
     }
     public partial class Quaterniond : CsObject {
-        public Quaterniond() { _this = SprExport.Spr_new_Quaterniond(); _flag = true; }
+        public Quaterniond() { _thisArray[0] = SprExport.Spr_new_Quaterniond(); _flag = true; }
         public Quaterniond(IntPtr ptr) : base(ptr) { }
         public Quaterniond(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Quaterniond(double w, double x, double y, double z) { _this = SprExport.Spr_new_Quaterniond_5(w, x, y, z); _flag = true; }
-        ~Quaterniond() { if (_flag) { SprExport.Spr_delete_Quaterniond(_this); _flag = false; } }
+        public Quaterniond(double w, double x, double y, double z) { _thisArray[0] = SprExport.Spr_new_Quaterniond_5(w, x, y, z); _flag = true; }
+        ~Quaterniond() { if (_flag) { SprExport.Spr_delete_Quaterniond(_thisArray[0]); _flag = false; } }
         public static implicit operator Quaterniond(Quaternionf f) {
             Quaterniond d = new Quaterniond();
             d.x = f.x;
@@ -1162,61 +1162,61 @@ namespace SprCs {
             return new Matrix3d(ptr, true);
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Quaterniond_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double x {
-            get { return SprExport.Spr_Quaterniond_get_x(_this); }
-            set { SprExport.Spr_Quaterniond_set_x(_this, value); }
+            get { return SprExport.Spr_Quaterniond_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Quaterniond_set_x(_thisArray[0], value); }
         }
         public double y {
-            get { return SprExport.Spr_Quaterniond_get_y(_this); }
-            set { SprExport.Spr_Quaterniond_set_y(_this, value); }
+            get { return SprExport.Spr_Quaterniond_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Quaterniond_set_y(_thisArray[0], value); }
         }
         public double z {
-            get { return SprExport.Spr_Quaterniond_get_z(_this); }
-            set { SprExport.Spr_Quaterniond_set_z(_this, value); }
+            get { return SprExport.Spr_Quaterniond_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Quaterniond_set_z(_thisArray[0], value); }
         }
         public double w {
-            get { return SprExport.Spr_Quaterniond_get_w(_this); }
-            set { SprExport.Spr_Quaterniond_set_w(_this, value); }
+            get { return SprExport.Spr_Quaterniond_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Quaterniond_set_w(_thisArray[0], value); }
         }
         public double W() {
-            double result = (double)SprExport.Spr_Quaterniond_W((IntPtr)_this);
+            double result = (double)SprExport.Spr_Quaterniond_W((IntPtr)_thisArray[0]);
             return result;
         }
         public double X() {
-            double result = (double)SprExport.Spr_Quaterniond_X((IntPtr)_this);
+            double result = (double)SprExport.Spr_Quaterniond_X((IntPtr)_thisArray[0]);
             return result;
         }
         public double Y() {
-            double result = (double)SprExport.Spr_Quaterniond_Y((IntPtr)_this);
+            double result = (double)SprExport.Spr_Quaterniond_Y((IntPtr)_thisArray[0]);
             return result;
         }
         public double Z() {
-            double result = (double)SprExport.Spr_Quaterniond_Z((IntPtr)_this);
+            double result = (double)SprExport.Spr_Quaterniond_Z((IntPtr)_thisArray[0]);
             return result;
         }
         public Vec3d V() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_V((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_V((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public Vec3d RotationHalf() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_RotationHalf((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_RotationHalf((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public Vec3d Rotation() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_Rotation((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_Rotation((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public Vec3d Axis() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_Axis((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_Axis((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public double Theta() {
-            double result = (double)SprExport.Spr_Quaterniond_Theta((IntPtr)_this);
+            double result = (double)SprExport.Spr_Quaterniond_Theta((IntPtr)_thisArray[0]);
             return result;
         }
         public static Quaterniond Rot(double angle, Vec3d axis) {
@@ -1232,21 +1232,21 @@ namespace SprCs {
             return new Quaterniond(ptr, true);
         }
         public Quaterniond Inv() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_Inv((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_Inv((IntPtr)_thisArray[0]);
             return new Quaterniond(ptr, true);
         }
         public void Conjugate() {
-            SprExport.Spr_Quaterniond_Conjugate((IntPtr)_this);
+            SprExport.Spr_Quaterniond_Conjugate((IntPtr)_thisArray[0]);
         }
         public Quaterniond Conjugated() {
-            IntPtr ptr = SprExport.Spr_Quaterniond_Conjugated((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Quaterniond_Conjugated((IntPtr)_thisArray[0]);
             return new Quaterniond(ptr, true);
         }
         public void RotationArc(Vec3d lhs, Vec3d rhs) {
-            SprExport.Spr_Quaterniond_RotationArc((IntPtr)_this, (IntPtr)lhs, (IntPtr)rhs);
+            SprExport.Spr_Quaterniond_RotationArc((IntPtr)_thisArray[0], (IntPtr)lhs, (IntPtr)rhs);
         }
         public void Euler(double heading, double attitude, double bank) {
-            SprExport.Spr_Quaterniond_Euler((IntPtr)_this, (double)heading, (double)attitude, (double)bank);
+            SprExport.Spr_Quaterniond_Euler((IntPtr)_thisArray[0], (double)heading, (double)attitude, (double)bank);
         }
     }
     [System.Serializable]
@@ -1291,12 +1291,12 @@ namespace SprCs {
         }
     }
     public partial class Posef : CsObject {
-        public Posef() { _this = SprExport.Spr_new_Posef(); _flag = true; }
+        public Posef() { _thisArray[0] = SprExport.Spr_new_Posef(); _flag = true; }
         public Posef(IntPtr ptr) : base(ptr) { }
         public Posef(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Posef(Vec3f p, Quaternionf q) { _this = SprExport.Spr_new_Posef_8(p, q); _flag = true; }
-        public Posef(float w, float x, float y, float z, float px, float py, float pz) { _this = SprExport.Spr_new_Posef_9(w, x, y, z, px, py, pz); _flag = true; }
-        ~Posef() { if (_flag) { SprExport.Spr_delete_Posef(_this); _flag = false; } }
+        public Posef(Vec3f p, Quaternionf q) { _thisArray[0] = SprExport.Spr_new_Posef_8(p, q); _flag = true; }
+        public Posef(float w, float x, float y, float z, float px, float py, float pz) { _thisArray[0] = SprExport.Spr_new_Posef_9(w, x, y, z, px, py, pz); _flag = true; }
+        ~Posef() { if (_flag) { SprExport.Spr_delete_Posef(_thisArray[0]); _flag = false; } }
         public static explicit operator Posef(Posed d) {
             Posef f = new Posef();
             f.w = (float)d.w;
@@ -1321,105 +1321,105 @@ namespace SprCs {
             return new Posef(ptr, true);
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Posef_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posef_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Posef_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float w {
-            get { return SprExport.Spr_Posef_get_w(_this); }
-            set { SprExport.Spr_Posef_set_w(_this, value); }
+            get { return SprExport.Spr_Posef_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_w(_thisArray[0], value); }
         }
         public float x {
-            get { return SprExport.Spr_Posef_get_x(_this); }
-            set { SprExport.Spr_Posef_set_x(_this, value); }
+            get { return SprExport.Spr_Posef_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_x(_thisArray[0], value); }
         }
         public float y {
-            get { return SprExport.Spr_Posef_get_y(_this); }
-            set { SprExport.Spr_Posef_set_y(_this, value); }
+            get { return SprExport.Spr_Posef_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_y(_thisArray[0], value); }
         }
         public float z {
-            get { return SprExport.Spr_Posef_get_z(_this); }
-            set { SprExport.Spr_Posef_set_z(_this, value); }
+            get { return SprExport.Spr_Posef_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_z(_thisArray[0], value); }
         }
         public float px {
-            get { return SprExport.Spr_Posef_get_px(_this); }
-            set { SprExport.Spr_Posef_set_px(_this, value); }
+            get { return SprExport.Spr_Posef_get_px(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_px(_thisArray[0], value); }
         }
         public float py {
-            get { return SprExport.Spr_Posef_get_py(_this); }
-            set { SprExport.Spr_Posef_set_py(_this, value); }
+            get { return SprExport.Spr_Posef_get_py(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_py(_thisArray[0], value); }
         }
         public float pz {
-            get { return SprExport.Spr_Posef_get_pz(_this); }
-            set { SprExport.Spr_Posef_set_pz(_this, value); }
+            get { return SprExport.Spr_Posef_get_pz(_thisArray[0]); }
+            set { SprExport.Spr_Posef_set_pz(_thisArray[0], value); }
         }
         public Vec3f Pos() {
-            IntPtr ptr = SprExport.Spr_Posef_Pos((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posef_Pos((IntPtr)_thisArray[0]);
             return new Vec3f(ptr, true);
         }
         public Quaternionf Ori() {
-            IntPtr ptr = SprExport.Spr_Posef_Ori((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posef_Ori((IntPtr)_thisArray[0]);
             return new Quaternionf(ptr, true);
         }
         public float W() {
-            float result = (float)SprExport.Spr_Posef_W((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_W((IntPtr)_thisArray[0]);
             return result;
         }
         public float X() {
-            float result = (float)SprExport.Spr_Posef_X((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_X((IntPtr)_thisArray[0]);
             return result;
         }
         public float Y() {
-            float result = (float)SprExport.Spr_Posef_Y((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_Y((IntPtr)_thisArray[0]);
             return result;
         }
         public float Z() {
-            float result = (float)SprExport.Spr_Posef_Z((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_Z((IntPtr)_thisArray[0]);
             return result;
         }
         public float Px() {
-            float result = (float)SprExport.Spr_Posef_Px((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_Px((IntPtr)_thisArray[0]);
             return result;
         }
         public float Py() {
-            float result = (float)SprExport.Spr_Posef_Py((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_Py((IntPtr)_thisArray[0]);
             return result;
         }
         public float Pz() {
-            float result = (float)SprExport.Spr_Posef_Pz((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_Pz((IntPtr)_thisArray[0]);
             return result;
         }
         public float PosX() {
-            float result = (float)SprExport.Spr_Posef_PosX((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_PosX((IntPtr)_thisArray[0]);
             return result;
         }
         public float PosY() {
-            float result = (float)SprExport.Spr_Posef_PosY((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_PosY((IntPtr)_thisArray[0]);
             return result;
         }
         public float PosZ() {
-            float result = (float)SprExport.Spr_Posef_PosZ((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_PosZ((IntPtr)_thisArray[0]);
             return result;
         }
         public float OriX() {
-            float result = (float)SprExport.Spr_Posef_OriX((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_OriX((IntPtr)_thisArray[0]);
             return result;
         }
         public float OriY() {
-            float result = (float)SprExport.Spr_Posef_OriY((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_OriY((IntPtr)_thisArray[0]);
             return result;
         }
         public float OriZ() {
-            float result = (float)SprExport.Spr_Posef_OriZ((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_OriZ((IntPtr)_thisArray[0]);
             return result;
         }
         public float OriW() {
-            float result = (float)SprExport.Spr_Posef_OriW((IntPtr)_this);
+            float result = (float)SprExport.Spr_Posef_OriW((IntPtr)_thisArray[0]);
             return result;
         }
         public Posef Inv() {
-            IntPtr ptr = SprExport.Spr_Posef_Inv((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posef_Inv((IntPtr)_thisArray[0]);
             return new Posef(ptr, true);
         }
         public static Posef Unit() {
@@ -1509,12 +1509,12 @@ namespace SprCs {
         }
     }
     public partial class Posed : CsObject {
-        public Posed() { _this = SprExport.Spr_new_Posed(); _flag = true; }
+        public Posed() { _thisArray[0] = SprExport.Spr_new_Posed(); _flag = true; }
         public Posed(IntPtr ptr) : base(ptr) { }
         public Posed(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Posed(Vec3d p, Quaterniond q) { _this = SprExport.Spr_new_Posed_8(p, q); _flag = true; }
-        public Posed(double w, double x, double y, double z, double px, double py, double pz) { _this = SprExport.Spr_new_Posed_9(w, x, y, z, px, py, pz); _flag = true; }
-        ~Posed() { if (_flag) { SprExport.Spr_delete_Posed(_this); _flag = false; } }
+        public Posed(Vec3d p, Quaterniond q) { _thisArray[0] = SprExport.Spr_new_Posed_8(p, q); _flag = true; }
+        public Posed(double w, double x, double y, double z, double px, double py, double pz) { _thisArray[0] = SprExport.Spr_new_Posed_9(w, x, y, z, px, py, pz); _flag = true; }
+        ~Posed() { if (_flag) { SprExport.Spr_delete_Posed(_thisArray[0]); _flag = false; } }
         public static implicit operator Posed(Posef f) {
             Posed d = new Posed();
             d.w = f.w;
@@ -1539,105 +1539,105 @@ namespace SprCs {
             return new Posed(ptr, true);
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Posed_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posed_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Posed_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double w {
-            get { return SprExport.Spr_Posed_get_w(_this); }
-            set { SprExport.Spr_Posed_set_w(_this, value); }
+            get { return SprExport.Spr_Posed_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_w(_thisArray[0], value); }
         }
         public double x {
-            get { return SprExport.Spr_Posed_get_x(_this); }
-            set { SprExport.Spr_Posed_set_x(_this, value); }
+            get { return SprExport.Spr_Posed_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_x(_thisArray[0], value); }
         }
         public double y {
-            get { return SprExport.Spr_Posed_get_y(_this); }
-            set { SprExport.Spr_Posed_set_y(_this, value); }
+            get { return SprExport.Spr_Posed_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_y(_thisArray[0], value); }
         }
         public double z {
-            get { return SprExport.Spr_Posed_get_z(_this); }
-            set { SprExport.Spr_Posed_set_z(_this, value); }
+            get { return SprExport.Spr_Posed_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_z(_thisArray[0], value); }
         }
         public double px {
-            get { return SprExport.Spr_Posed_get_px(_this); }
-            set { SprExport.Spr_Posed_set_px(_this, value); }
+            get { return SprExport.Spr_Posed_get_px(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_px(_thisArray[0], value); }
         }
         public double py {
-            get { return SprExport.Spr_Posed_get_py(_this); }
-            set { SprExport.Spr_Posed_set_py(_this, value); }
+            get { return SprExport.Spr_Posed_get_py(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_py(_thisArray[0], value); }
         }
         public double pz {
-            get { return SprExport.Spr_Posed_get_pz(_this); }
-            set { SprExport.Spr_Posed_set_pz(_this, value); }
+            get { return SprExport.Spr_Posed_get_pz(_thisArray[0]); }
+            set { SprExport.Spr_Posed_set_pz(_thisArray[0], value); }
         }
         public Vec3d Pos() {
-            IntPtr ptr = SprExport.Spr_Posed_Pos((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posed_Pos((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public Quaterniond Ori() {
-            IntPtr ptr = SprExport.Spr_Posed_Ori((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posed_Ori((IntPtr)_thisArray[0]);
             return new Quaterniond(ptr, true);
         }
         public double W() {
-            double result = (double)SprExport.Spr_Posed_W((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_W((IntPtr)_thisArray[0]);
             return result;
         }
         public double X() {
-            double result = (double)SprExport.Spr_Posed_X((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_X((IntPtr)_thisArray[0]);
             return result;
         }
         public double Y() {
-            double result = (double)SprExport.Spr_Posed_Y((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_Y((IntPtr)_thisArray[0]);
             return result;
         }
         public double Z() {
-            double result = (double)SprExport.Spr_Posed_Z((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_Z((IntPtr)_thisArray[0]);
             return result;
         }
         public double Px() {
-            double result = (double)SprExport.Spr_Posed_Px((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_Px((IntPtr)_thisArray[0]);
             return result;
         }
         public double Py() {
-            double result = (double)SprExport.Spr_Posed_Py((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_Py((IntPtr)_thisArray[0]);
             return result;
         }
         public double Pz() {
-            double result = (double)SprExport.Spr_Posed_Pz((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_Pz((IntPtr)_thisArray[0]);
             return result;
         }
         public double PosX() {
-            double result = (double)SprExport.Spr_Posed_PosX((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_PosX((IntPtr)_thisArray[0]);
             return result;
         }
         public double PosY() {
-            double result = (double)SprExport.Spr_Posed_PosY((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_PosY((IntPtr)_thisArray[0]);
             return result;
         }
         public double PosZ() {
-            double result = (double)SprExport.Spr_Posed_PosZ((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_PosZ((IntPtr)_thisArray[0]);
             return result;
         }
         public double OriX() {
-            double result = (double)SprExport.Spr_Posed_OriX((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_OriX((IntPtr)_thisArray[0]);
             return result;
         }
         public double OriY() {
-            double result = (double)SprExport.Spr_Posed_OriY((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_OriY((IntPtr)_thisArray[0]);
             return result;
         }
         public double OriZ() {
-            double result = (double)SprExport.Spr_Posed_OriZ((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_OriZ((IntPtr)_thisArray[0]);
             return result;
         }
         public double OriW() {
-            double result = (double)SprExport.Spr_Posed_OriW((IntPtr)_this);
+            double result = (double)SprExport.Spr_Posed_OriW((IntPtr)_thisArray[0]);
             return result;
         }
         public Posed Inv() {
-            IntPtr ptr = SprExport.Spr_Posed_Inv((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Posed_Inv((IntPtr)_thisArray[0]);
             return new Posed(ptr, true);
         }
         public static Posed Unit() {
@@ -1727,11 +1727,11 @@ namespace SprCs {
         }
     }
     public partial class Vec2i : CsObject {
-        public Vec2i() { _this = SprExport.Spr_new_Vec2i(); _flag = true; }
+        public Vec2i() { _thisArray[0] = SprExport.Spr_new_Vec2i(); _flag = true; }
         public Vec2i(IntPtr ptr) : base(ptr) { }
         public Vec2i(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec2i(int x, int y) { _this = SprExport.Spr_new_Vec2i_3(x, y); _flag = true; }
-        ~Vec2i() { if (_flag) { SprExport.Spr_delete_Vec2i(_this); _flag = false; } }
+        public Vec2i(int x, int y) { _thisArray[0] = SprExport.Spr_new_Vec2i_3(x, y); _flag = true; }
+        ~Vec2i() { if (_flag) { SprExport.Spr_delete_Vec2i(_thisArray[0]); _flag = false; } }
         public static Vec2i operator -(Vec2i a) {
             bool ap = (object)a == null;
             IntPtr ptr = SprExport.Spr_unary_operator_neg_vv_Vec2i(a);
@@ -1800,37 +1800,37 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_ii_set_Vec2i(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec2i_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec2i_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec2i_FreeString((IntPtr)ptr);
             return bstr;
         }
         public int x {
-            get { return SprExport.Spr_Vec2i_get_x(_this); }
-            set { SprExport.Spr_Vec2i_set_x(_this, value); }
+            get { return SprExport.Spr_Vec2i_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec2i_set_x(_thisArray[0], value); }
         }
         public int y {
-            get { return SprExport.Spr_Vec2i_get_y(_this); }
-            set { SprExport.Spr_Vec2i_set_y(_this, value); }
+            get { return SprExport.Spr_Vec2i_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec2i_set_y(_thisArray[0], value); }
         }
         public int square() {
-            int result = (int)SprExport.Spr_Vec2i_square((IntPtr)_this);
+            int result = (int)SprExport.Spr_Vec2i_square((IntPtr)_thisArray[0]);
             return result;
         }
         public int norm() {
-            int result = (int)SprExport.Spr_Vec2i_norm((IntPtr)_this);
+            int result = (int)SprExport.Spr_Vec2i_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec2i_unitize((IntPtr)_this);
+            SprExport.Spr_Vec2i_unitize((IntPtr)_thisArray[0]);
         }
     }
     public partial class Vec3i : CsObject {
-        public Vec3i() { _this = SprExport.Spr_new_Vec3i(); _flag = true; }
+        public Vec3i() { _thisArray[0] = SprExport.Spr_new_Vec3i(); _flag = true; }
         public Vec3i(IntPtr ptr) : base(ptr) { }
         public Vec3i(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec3i(int x, int y, int z) { _this = SprExport.Spr_new_Vec3i_4(x, y, z); _flag = true; }
-        ~Vec3i() { if (_flag) { SprExport.Spr_delete_Vec3i(_this); _flag = false; } }
+        public Vec3i(int x, int y, int z) { _thisArray[0] = SprExport.Spr_new_Vec3i_4(x, y, z); _flag = true; }
+        ~Vec3i() { if (_flag) { SprExport.Spr_delete_Vec3i(_thisArray[0]); _flag = false; } }
         public static Vec3i operator -(Vec3i a) {
             bool ap = (object)a == null;
             IntPtr ptr = SprExport.Spr_unary_operator_neg_vv_Vec3i(a);
@@ -1901,41 +1901,41 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_ii_set_Vec3i(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec3i_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec3i_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec3i_FreeString((IntPtr)ptr);
             return bstr;
         }
         public int x {
-            get { return SprExport.Spr_Vec3i_get_x(_this); }
-            set { SprExport.Spr_Vec3i_set_x(_this, value); }
+            get { return SprExport.Spr_Vec3i_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec3i_set_x(_thisArray[0], value); }
         }
         public int y {
-            get { return SprExport.Spr_Vec3i_get_y(_this); }
-            set { SprExport.Spr_Vec3i_set_y(_this, value); }
+            get { return SprExport.Spr_Vec3i_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec3i_set_y(_thisArray[0], value); }
         }
         public int z {
-            get { return SprExport.Spr_Vec3i_get_z(_this); }
-            set { SprExport.Spr_Vec3i_set_z(_this, value); }
+            get { return SprExport.Spr_Vec3i_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Vec3i_set_z(_thisArray[0], value); }
         }
         public int square() {
-            int result = (int)SprExport.Spr_Vec3i_square((IntPtr)_this);
+            int result = (int)SprExport.Spr_Vec3i_square((IntPtr)_thisArray[0]);
             return result;
         }
         public int norm() {
-            int result = (int)SprExport.Spr_Vec3i_norm((IntPtr)_this);
+            int result = (int)SprExport.Spr_Vec3i_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec3i_unitize((IntPtr)_this);
+            SprExport.Spr_Vec3i_unitize((IntPtr)_thisArray[0]);
         }
     }
     public partial class Vec4i : CsObject {
-        public Vec4i() { _this = SprExport.Spr_new_Vec4i(); _flag = true; }
+        public Vec4i() { _thisArray[0] = SprExport.Spr_new_Vec4i(); _flag = true; }
         public Vec4i(IntPtr ptr) : base(ptr) { }
         public Vec4i(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec4i(int x, int y, int z, int w) { _this = SprExport.Spr_new_Vec4i_5(x, y, z, w); _flag = true; }
-        ~Vec4i() { if (_flag) { SprExport.Spr_delete_Vec4i(_this); _flag = false; } }
+        public Vec4i(int x, int y, int z, int w) { _thisArray[0] = SprExport.Spr_new_Vec4i_5(x, y, z, w); _flag = true; }
+        ~Vec4i() { if (_flag) { SprExport.Spr_delete_Vec4i(_thisArray[0]); _flag = false; } }
         public static Vec4i operator -(Vec4i a) {
             bool ap = (object)a == null;
             IntPtr ptr = SprExport.Spr_unary_operator_neg_vv_Vec4i(a);
@@ -1989,45 +1989,45 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_ii_set_Vec4i(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec4i_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec4i_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec4i_FreeString((IntPtr)ptr);
             return bstr;
         }
         public int x {
-            get { return SprExport.Spr_Vec4i_get_x(_this); }
-            set { SprExport.Spr_Vec4i_set_x(_this, value); }
+            get { return SprExport.Spr_Vec4i_get_x(_thisArray[0]); }
+            set { SprExport.Spr_Vec4i_set_x(_thisArray[0], value); }
         }
         public int y {
-            get { return SprExport.Spr_Vec4i_get_y(_this); }
-            set { SprExport.Spr_Vec4i_set_y(_this, value); }
+            get { return SprExport.Spr_Vec4i_get_y(_thisArray[0]); }
+            set { SprExport.Spr_Vec4i_set_y(_thisArray[0], value); }
         }
         public int z {
-            get { return SprExport.Spr_Vec4i_get_z(_this); }
-            set { SprExport.Spr_Vec4i_set_z(_this, value); }
+            get { return SprExport.Spr_Vec4i_get_z(_thisArray[0]); }
+            set { SprExport.Spr_Vec4i_set_z(_thisArray[0], value); }
         }
         public int w {
-            get { return SprExport.Spr_Vec4i_get_w(_this); }
-            set { SprExport.Spr_Vec4i_set_w(_this, value); }
+            get { return SprExport.Spr_Vec4i_get_w(_thisArray[0]); }
+            set { SprExport.Spr_Vec4i_set_w(_thisArray[0], value); }
         }
         public int square() {
-            int result = (int)SprExport.Spr_Vec4i_square((IntPtr)_this);
+            int result = (int)SprExport.Spr_Vec4i_square((IntPtr)_thisArray[0]);
             return result;
         }
         public int norm() {
-            int result = (int)SprExport.Spr_Vec4i_norm((IntPtr)_this);
+            int result = (int)SprExport.Spr_Vec4i_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec4i_unitize((IntPtr)_this);
+            SprExport.Spr_Vec4i_unitize((IntPtr)_thisArray[0]);
         }
     }
     public partial class Vec6f : CsObject {
-        public Vec6f() { _this = SprExport.Spr_new_Vec6f(); _flag = true; }
+        public Vec6f() { _thisArray[0] = SprExport.Spr_new_Vec6f(); _flag = true; }
         public Vec6f(IntPtr ptr) : base(ptr) { }
         public Vec6f(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec6f(float vx, float vy, float vz, float wx, float wy, float wz) { _this = SprExport.Spr_new_Vec6f_7(vx, vy, vz, wx, wy, wz); _flag = true; }
-        ~Vec6f() { if (_flag) { SprExport.Spr_delete_Vec6f(_this); _flag = false; } }
+        public Vec6f(float vx, float vy, float vz, float wx, float wy, float wz) { _thisArray[0] = SprExport.Spr_new_Vec6f_7(vx, vy, vz, wx, wy, wz); _flag = true; }
+        ~Vec6f() { if (_flag) { SprExport.Spr_delete_Vec6f(_thisArray[0]); _flag = false; } }
         public static explicit operator Vec6f(Vec6d d) {
             Vec6f f = new Vec6f();
             f.vx = (float)d.vx;
@@ -2091,45 +2091,45 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_fi_set_Vec6f(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec6f_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec6f_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec6f_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float vx {
-            get { return SprExport.Spr_Vec6f_get_vx(_this); }
-            set { SprExport.Spr_Vec6f_set_vx(_this, value); }
+            get { return SprExport.Spr_Vec6f_get_vx(_thisArray[0]); }
+            set { SprExport.Spr_Vec6f_set_vx(_thisArray[0], value); }
         }
         public float vy {
-            get { return SprExport.Spr_Vec6f_get_vy(_this); }
-            set { SprExport.Spr_Vec6f_set_vy(_this, value); }
+            get { return SprExport.Spr_Vec6f_get_vy(_thisArray[0]); }
+            set { SprExport.Spr_Vec6f_set_vy(_thisArray[0], value); }
         }
         public float vz {
-            get { return SprExport.Spr_Vec6f_get_vz(_this); }
-            set { SprExport.Spr_Vec6f_set_vz(_this, value); }
+            get { return SprExport.Spr_Vec6f_get_vz(_thisArray[0]); }
+            set { SprExport.Spr_Vec6f_set_vz(_thisArray[0], value); }
         }
         public float wx {
-            get { return SprExport.Spr_Vec6f_get_wx(_this); }
-            set { SprExport.Spr_Vec6f_set_wx(_this, value); }
+            get { return SprExport.Spr_Vec6f_get_wx(_thisArray[0]); }
+            set { SprExport.Spr_Vec6f_set_wx(_thisArray[0], value); }
         }
         public float wy {
-            get { return SprExport.Spr_Vec6f_get_wy(_this); }
-            set { SprExport.Spr_Vec6f_set_wy(_this, value); }
+            get { return SprExport.Spr_Vec6f_get_wy(_thisArray[0]); }
+            set { SprExport.Spr_Vec6f_set_wy(_thisArray[0], value); }
         }
         public float wz {
-            get { return SprExport.Spr_Vec6f_get_wz(_this); }
-            set { SprExport.Spr_Vec6f_set_wz(_this, value); }
+            get { return SprExport.Spr_Vec6f_get_wz(_thisArray[0]); }
+            set { SprExport.Spr_Vec6f_set_wz(_thisArray[0], value); }
         }
         public float square() {
-            float result = (float)SprExport.Spr_Vec6f_square((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec6f_square((IntPtr)_thisArray[0]);
             return result;
         }
         public float norm() {
-            float result = (float)SprExport.Spr_Vec6f_norm((IntPtr)_this);
+            float result = (float)SprExport.Spr_Vec6f_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec6f_unitize((IntPtr)_this);
+            SprExport.Spr_Vec6f_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -2182,11 +2182,11 @@ namespace SprCs {
         }
     }
     public partial class Vec6d : CsObject {
-        public Vec6d() { _this = SprExport.Spr_new_Vec6d(); _flag = true; }
+        public Vec6d() { _thisArray[0] = SprExport.Spr_new_Vec6d(); _flag = true; }
         public Vec6d(IntPtr ptr) : base(ptr) { }
         public Vec6d(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Vec6d(double vx, double vy, double vz, double wx, double wy, double wz) { _this = SprExport.Spr_new_Vec6d_7(vx, vy, vz, wx, wy, wz); _flag = true; }
-        ~Vec6d() { if (_flag) { SprExport.Spr_delete_Vec6d(_this); _flag = false; } }
+        public Vec6d(double vx, double vy, double vz, double wx, double wy, double wz) { _thisArray[0] = SprExport.Spr_new_Vec6d_7(vx, vy, vz, wx, wy, wz); _flag = true; }
+        ~Vec6d() { if (_flag) { SprExport.Spr_delete_Vec6d(_thisArray[0]); _flag = false; } }
         public static implicit operator Vec6d(Vec6f f) {
             Vec6d d = new Vec6d();
             d.vx = f.vx;
@@ -2250,45 +2250,45 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_di_set_Vec6d(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Vec6d_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Vec6d_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Vec6d_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double vx {
-            get { return SprExport.Spr_Vec6d_get_vx(_this); }
-            set { SprExport.Spr_Vec6d_set_vx(_this, value); }
+            get { return SprExport.Spr_Vec6d_get_vx(_thisArray[0]); }
+            set { SprExport.Spr_Vec6d_set_vx(_thisArray[0], value); }
         }
         public double vy {
-            get { return SprExport.Spr_Vec6d_get_vy(_this); }
-            set { SprExport.Spr_Vec6d_set_vy(_this, value); }
+            get { return SprExport.Spr_Vec6d_get_vy(_thisArray[0]); }
+            set { SprExport.Spr_Vec6d_set_vy(_thisArray[0], value); }
         }
         public double vz {
-            get { return SprExport.Spr_Vec6d_get_vz(_this); }
-            set { SprExport.Spr_Vec6d_set_vz(_this, value); }
+            get { return SprExport.Spr_Vec6d_get_vz(_thisArray[0]); }
+            set { SprExport.Spr_Vec6d_set_vz(_thisArray[0], value); }
         }
         public double wx {
-            get { return SprExport.Spr_Vec6d_get_wx(_this); }
-            set { SprExport.Spr_Vec6d_set_wx(_this, value); }
+            get { return SprExport.Spr_Vec6d_get_wx(_thisArray[0]); }
+            set { SprExport.Spr_Vec6d_set_wx(_thisArray[0], value); }
         }
         public double wy {
-            get { return SprExport.Spr_Vec6d_get_wy(_this); }
-            set { SprExport.Spr_Vec6d_set_wy(_this, value); }
+            get { return SprExport.Spr_Vec6d_get_wy(_thisArray[0]); }
+            set { SprExport.Spr_Vec6d_set_wy(_thisArray[0], value); }
         }
         public double wz {
-            get { return SprExport.Spr_Vec6d_get_wz(_this); }
-            set { SprExport.Spr_Vec6d_set_wz(_this, value); }
+            get { return SprExport.Spr_Vec6d_get_wz(_thisArray[0]); }
+            set { SprExport.Spr_Vec6d_set_wz(_thisArray[0], value); }
         }
         public double square() {
-            double result = (double)SprExport.Spr_Vec6d_square((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec6d_square((IntPtr)_thisArray[0]);
             return result;
         }
         public double norm() {
-            double result = (double)SprExport.Spr_Vec6d_norm((IntPtr)_this);
+            double result = (double)SprExport.Spr_Vec6d_norm((IntPtr)_thisArray[0]);
             return result;
         }
         public void unitize() {
-            SprExport.Spr_Vec6d_unitize((IntPtr)_this);
+            SprExport.Spr_Vec6d_unitize((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -2341,10 +2341,10 @@ namespace SprCs {
         }
     }
     public partial class Curve3f : CsObject {
-        public Curve3f() { _this = SprExport.Spr_new_Curve3f(); _flag = true; }
+        public Curve3f() { _thisArray[0] = SprExport.Spr_new_Curve3f(); _flag = true; }
         public Curve3f(IntPtr ptr) : base(ptr) { }
         public Curve3f(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        ~Curve3f() { if (_flag) { SprExport.Spr_delete_Curve3f(_this); _flag = false; } }
+        ~Curve3f() { if (_flag) { SprExport.Spr_delete_Curve3f(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
     public class Curve3fStruct : CsObject {
@@ -2368,12 +2368,12 @@ namespace SprCs {
         }
     }
     public partial class Matrix3f : CsObject {
-        public Matrix3f() { _this = SprExport.Spr_new_Matrix3f(); _flag = true; }
+        public Matrix3f() { _thisArray[0] = SprExport.Spr_new_Matrix3f(); _flag = true; }
         public Matrix3f(IntPtr ptr) : base(ptr) { }
         public Matrix3f(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Matrix3f(Vec3f ex, Vec3f ey, Vec3f ez) { _this = SprExport.Spr_new_Matrix3f_10(ex, ey, ez); _flag = true; }
-        public Matrix3f(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33) { _this = SprExport.Spr_new_Matrix3f_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
-        ~Matrix3f() { if (_flag) { SprExport.Spr_delete_Matrix3f(_this); _flag = false; } }
+        public Matrix3f(Vec3f ex, Vec3f ey, Vec3f ez) { _thisArray[0] = SprExport.Spr_new_Matrix3f_10(ex, ey, ez); _flag = true; }
+        public Matrix3f(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33) { _thisArray[0] = SprExport.Spr_new_Matrix3f_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
+        ~Matrix3f() { if (_flag) { SprExport.Spr_delete_Matrix3f(_thisArray[0]); _flag = false; } }
         public static explicit operator Matrix3f(Matrix3d d) {
             Matrix3f f = new Matrix3f();
             f.xx = (float)d.xx;
@@ -2434,64 +2434,64 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_vi_set_Matrix3f(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Matrix3f_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Matrix3f_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Matrix3f_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float xx {
-            get { return SprExport.Spr_Matrix3f_get_xx(_this); }
-            set { SprExport.Spr_Matrix3f_set_xx(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_xx(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_xx(_thisArray[0], value); }
         }
         public float xy {
-            get { return SprExport.Spr_Matrix3f_get_xy(_this); }
-            set { SprExport.Spr_Matrix3f_set_xy(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_xy(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_xy(_thisArray[0], value); }
         }
         public float xz {
-            get { return SprExport.Spr_Matrix3f_get_xz(_this); }
-            set { SprExport.Spr_Matrix3f_set_xz(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_xz(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_xz(_thisArray[0], value); }
         }
         public float yx {
-            get { return SprExport.Spr_Matrix3f_get_yx(_this); }
-            set { SprExport.Spr_Matrix3f_set_yx(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_yx(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_yx(_thisArray[0], value); }
         }
         public float yy {
-            get { return SprExport.Spr_Matrix3f_get_yy(_this); }
-            set { SprExport.Spr_Matrix3f_set_yy(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_yy(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_yy(_thisArray[0], value); }
         }
         public float yz {
-            get { return SprExport.Spr_Matrix3f_get_yz(_this); }
-            set { SprExport.Spr_Matrix3f_set_yz(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_yz(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_yz(_thisArray[0], value); }
         }
         public float zx {
-            get { return SprExport.Spr_Matrix3f_get_zx(_this); }
-            set { SprExport.Spr_Matrix3f_set_zx(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_zx(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_zx(_thisArray[0], value); }
         }
         public float zy {
-            get { return SprExport.Spr_Matrix3f_get_zy(_this); }
-            set { SprExport.Spr_Matrix3f_set_zy(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_zy(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_zy(_thisArray[0], value); }
         }
         public float zz {
-            get { return SprExport.Spr_Matrix3f_get_zz(_this); }
-            set { SprExport.Spr_Matrix3f_set_zz(_this, value); }
+            get { return SprExport.Spr_Matrix3f_get_zz(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3f_set_zz(_thisArray[0], value); }
         }
         public ulong height() {
-            ulong result = (ulong)SprExport.Spr_Matrix3f_height((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_Matrix3f_height((IntPtr)_thisArray[0]);
             return result;
         }
         public ulong width() {
-            ulong result = (ulong)SprExport.Spr_Matrix3f_width((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_Matrix3f_width((IntPtr)_thisArray[0]);
             return result;
         }
         public void resize(ulong h, ulong w) {
-            SprExport.Spr_Matrix3f_resize((IntPtr)_this, (ulong)h, (ulong)w);
+            SprExport.Spr_Matrix3f_resize((IntPtr)_thisArray[0], (ulong)h, (ulong)w);
         }
         public ulong stride() {
-            ulong result = (ulong)SprExport.Spr_Matrix3f_stride((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_Matrix3f_stride((IntPtr)_thisArray[0]);
             return result;
         }
         public void clear() {
-            SprExport.Spr_Matrix3f_clear((IntPtr)_this);
+            SprExport.Spr_Matrix3f_clear((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -2556,12 +2556,12 @@ namespace SprCs {
         }
     }
     public partial class Matrix3d : CsObject {
-        public Matrix3d() { _this = SprExport.Spr_new_Matrix3d(); _flag = true; }
+        public Matrix3d() { _thisArray[0] = SprExport.Spr_new_Matrix3d(); _flag = true; }
         public Matrix3d(IntPtr ptr) : base(ptr) { }
         public Matrix3d(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Matrix3d(Vec3d ex, Vec3d ey, Vec3d ez) { _this = SprExport.Spr_new_Matrix3d_10(ex, ey, ez); _flag = true; }
-        public Matrix3d(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) { _this = SprExport.Spr_new_Matrix3d_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
-        ~Matrix3d() { if (_flag) { SprExport.Spr_delete_Matrix3d(_this); _flag = false; } }
+        public Matrix3d(Vec3d ex, Vec3d ey, Vec3d ez) { _thisArray[0] = SprExport.Spr_new_Matrix3d_10(ex, ey, ez); _flag = true; }
+        public Matrix3d(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) { _thisArray[0] = SprExport.Spr_new_Matrix3d_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
+        ~Matrix3d() { if (_flag) { SprExport.Spr_delete_Matrix3d(_thisArray[0]); _flag = false; } }
         public static implicit operator Matrix3d(Matrix3f f) {
             Matrix3d d = new Matrix3d();
             d.xx = f.xx;
@@ -2622,64 +2622,64 @@ namespace SprCs {
             set { SprExport.Spr_unary_operator_index_vi_set_Matrix3d(this, i, value); }
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Matrix3d_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Matrix3d_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Matrix3d_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double xx {
-            get { return SprExport.Spr_Matrix3d_get_xx(_this); }
-            set { SprExport.Spr_Matrix3d_set_xx(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_xx(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_xx(_thisArray[0], value); }
         }
         public double xy {
-            get { return SprExport.Spr_Matrix3d_get_xy(_this); }
-            set { SprExport.Spr_Matrix3d_set_xy(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_xy(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_xy(_thisArray[0], value); }
         }
         public double xz {
-            get { return SprExport.Spr_Matrix3d_get_xz(_this); }
-            set { SprExport.Spr_Matrix3d_set_xz(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_xz(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_xz(_thisArray[0], value); }
         }
         public double yx {
-            get { return SprExport.Spr_Matrix3d_get_yx(_this); }
-            set { SprExport.Spr_Matrix3d_set_yx(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_yx(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_yx(_thisArray[0], value); }
         }
         public double yy {
-            get { return SprExport.Spr_Matrix3d_get_yy(_this); }
-            set { SprExport.Spr_Matrix3d_set_yy(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_yy(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_yy(_thisArray[0], value); }
         }
         public double yz {
-            get { return SprExport.Spr_Matrix3d_get_yz(_this); }
-            set { SprExport.Spr_Matrix3d_set_yz(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_yz(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_yz(_thisArray[0], value); }
         }
         public double zx {
-            get { return SprExport.Spr_Matrix3d_get_zx(_this); }
-            set { SprExport.Spr_Matrix3d_set_zx(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_zx(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_zx(_thisArray[0], value); }
         }
         public double zy {
-            get { return SprExport.Spr_Matrix3d_get_zy(_this); }
-            set { SprExport.Spr_Matrix3d_set_zy(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_zy(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_zy(_thisArray[0], value); }
         }
         public double zz {
-            get { return SprExport.Spr_Matrix3d_get_zz(_this); }
-            set { SprExport.Spr_Matrix3d_set_zz(_this, value); }
+            get { return SprExport.Spr_Matrix3d_get_zz(_thisArray[0]); }
+            set { SprExport.Spr_Matrix3d_set_zz(_thisArray[0], value); }
         }
         public ulong height() {
-            ulong result = (ulong)SprExport.Spr_Matrix3d_height((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_Matrix3d_height((IntPtr)_thisArray[0]);
             return result;
         }
         public ulong width() {
-            ulong result = (ulong)SprExport.Spr_Matrix3d_width((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_Matrix3d_width((IntPtr)_thisArray[0]);
             return result;
         }
         public void resize(ulong h, ulong w) {
-            SprExport.Spr_Matrix3d_resize((IntPtr)_this, (ulong)h, (ulong)w);
+            SprExport.Spr_Matrix3d_resize((IntPtr)_thisArray[0], (ulong)h, (ulong)w);
         }
         public ulong stride() {
-            ulong result = (ulong)SprExport.Spr_Matrix3d_stride((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_Matrix3d_stride((IntPtr)_thisArray[0]);
             return result;
         }
         public void clear() {
-            SprExport.Spr_Matrix3d_clear((IntPtr)_this);
+            SprExport.Spr_Matrix3d_clear((IntPtr)_thisArray[0]);
         }
     }
     [System.Serializable]
@@ -2744,11 +2744,11 @@ namespace SprCs {
         }
     }
     public partial class Affinef : CsObject {
-        public Affinef() { _this = SprExport.Spr_new_Affinef(); _flag = true; }
+        public Affinef() { _thisArray[0] = SprExport.Spr_new_Affinef(); _flag = true; }
         public Affinef(IntPtr ptr) : base(ptr) { }
         public Affinef(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Affinef(Affinef a) { _this = SprExport.Spr_new_Affinef_17(a); _flag = true; }
-        ~Affinef() { if (_flag) { SprExport.Spr_delete_Affinef(_this); _flag = false; } }
+        public Affinef(Affinef a) { _thisArray[0] = SprExport.Spr_new_Affinef_17(a); _flag = true; }
+        ~Affinef() { if (_flag) { SprExport.Spr_delete_Affinef(_thisArray[0]); _flag = false; } }
         public static explicit operator Affinef(Affined d) {
             Affinef f = new Affinef();
             f.xx = (float)d.xx;
@@ -2770,74 +2770,74 @@ namespace SprCs {
             return f;
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Affinef_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Affinef_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Affinef_FreeString((IntPtr)ptr);
             return bstr;
         }
         public float xx {
-            get { return SprExport.Spr_Affinef_get_xx(_this); }
-            set { SprExport.Spr_Affinef_set_xx(_this, value); }
+            get { return SprExport.Spr_Affinef_get_xx(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_xx(_thisArray[0], value); }
         }
         public float xy {
-            get { return SprExport.Spr_Affinef_get_xy(_this); }
-            set { SprExport.Spr_Affinef_set_xy(_this, value); }
+            get { return SprExport.Spr_Affinef_get_xy(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_xy(_thisArray[0], value); }
         }
         public float xz {
-            get { return SprExport.Spr_Affinef_get_xz(_this); }
-            set { SprExport.Spr_Affinef_set_xz(_this, value); }
+            get { return SprExport.Spr_Affinef_get_xz(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_xz(_thisArray[0], value); }
         }
         public float xw {
-            get { return SprExport.Spr_Affinef_get_xw(_this); }
-            set { SprExport.Spr_Affinef_set_xw(_this, value); }
+            get { return SprExport.Spr_Affinef_get_xw(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_xw(_thisArray[0], value); }
         }
         public float yx {
-            get { return SprExport.Spr_Affinef_get_yx(_this); }
-            set { SprExport.Spr_Affinef_set_yx(_this, value); }
+            get { return SprExport.Spr_Affinef_get_yx(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_yx(_thisArray[0], value); }
         }
         public float yy {
-            get { return SprExport.Spr_Affinef_get_yy(_this); }
-            set { SprExport.Spr_Affinef_set_yy(_this, value); }
+            get { return SprExport.Spr_Affinef_get_yy(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_yy(_thisArray[0], value); }
         }
         public float yz {
-            get { return SprExport.Spr_Affinef_get_yz(_this); }
-            set { SprExport.Spr_Affinef_set_yz(_this, value); }
+            get { return SprExport.Spr_Affinef_get_yz(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_yz(_thisArray[0], value); }
         }
         public float yw {
-            get { return SprExport.Spr_Affinef_get_yw(_this); }
-            set { SprExport.Spr_Affinef_set_yw(_this, value); }
+            get { return SprExport.Spr_Affinef_get_yw(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_yw(_thisArray[0], value); }
         }
         public float zx {
-            get { return SprExport.Spr_Affinef_get_zx(_this); }
-            set { SprExport.Spr_Affinef_set_zx(_this, value); }
+            get { return SprExport.Spr_Affinef_get_zx(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_zx(_thisArray[0], value); }
         }
         public float zy {
-            get { return SprExport.Spr_Affinef_get_zy(_this); }
-            set { SprExport.Spr_Affinef_set_zy(_this, value); }
+            get { return SprExport.Spr_Affinef_get_zy(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_zy(_thisArray[0], value); }
         }
         public float zz {
-            get { return SprExport.Spr_Affinef_get_zz(_this); }
-            set { SprExport.Spr_Affinef_set_zz(_this, value); }
+            get { return SprExport.Spr_Affinef_get_zz(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_zz(_thisArray[0], value); }
         }
         public float zw {
-            get { return SprExport.Spr_Affinef_get_zw(_this); }
-            set { SprExport.Spr_Affinef_set_zw(_this, value); }
+            get { return SprExport.Spr_Affinef_get_zw(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_zw(_thisArray[0], value); }
         }
         public float px {
-            get { return SprExport.Spr_Affinef_get_px(_this); }
-            set { SprExport.Spr_Affinef_set_px(_this, value); }
+            get { return SprExport.Spr_Affinef_get_px(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_px(_thisArray[0], value); }
         }
         public float py {
-            get { return SprExport.Spr_Affinef_get_py(_this); }
-            set { SprExport.Spr_Affinef_set_py(_this, value); }
+            get { return SprExport.Spr_Affinef_get_py(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_py(_thisArray[0], value); }
         }
         public float pz {
-            get { return SprExport.Spr_Affinef_get_pz(_this); }
-            set { SprExport.Spr_Affinef_set_pz(_this, value); }
+            get { return SprExport.Spr_Affinef_get_pz(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_pz(_thisArray[0], value); }
         }
         public float pw {
-            get { return SprExport.Spr_Affinef_get_pw(_this); }
-            set { SprExport.Spr_Affinef_set_pw(_this, value); }
+            get { return SprExport.Spr_Affinef_get_pw(_thisArray[0]); }
+            set { SprExport.Spr_Affinef_set_pw(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -2930,11 +2930,11 @@ namespace SprCs {
         }
     }
     public partial class Affined : CsObject {
-        public Affined() { _this = SprExport.Spr_new_Affined(); _flag = true; }
+        public Affined() { _thisArray[0] = SprExport.Spr_new_Affined(); _flag = true; }
         public Affined(IntPtr ptr) : base(ptr) { }
         public Affined(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public Affined(Affined a) { _this = SprExport.Spr_new_Affined_17(a); _flag = true; }
-        ~Affined() { if (_flag) { SprExport.Spr_delete_Affined(_this); _flag = false; } }
+        public Affined(Affined a) { _thisArray[0] = SprExport.Spr_new_Affined_17(a); _flag = true; }
+        ~Affined() { if (_flag) { SprExport.Spr_delete_Affined(_thisArray[0]); _flag = false; } }
         public static implicit operator Affined(Affinef f) {
             Affined d = new Affined();
             d.xx = f.xx;
@@ -2956,74 +2956,74 @@ namespace SprCs {
             return d;
         }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_Affined_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_Affined_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_Affined_FreeString((IntPtr)ptr);
             return bstr;
         }
         public double xx {
-            get { return SprExport.Spr_Affined_get_xx(_this); }
-            set { SprExport.Spr_Affined_set_xx(_this, value); }
+            get { return SprExport.Spr_Affined_get_xx(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_xx(_thisArray[0], value); }
         }
         public double xy {
-            get { return SprExport.Spr_Affined_get_xy(_this); }
-            set { SprExport.Spr_Affined_set_xy(_this, value); }
+            get { return SprExport.Spr_Affined_get_xy(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_xy(_thisArray[0], value); }
         }
         public double xz {
-            get { return SprExport.Spr_Affined_get_xz(_this); }
-            set { SprExport.Spr_Affined_set_xz(_this, value); }
+            get { return SprExport.Spr_Affined_get_xz(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_xz(_thisArray[0], value); }
         }
         public double xw {
-            get { return SprExport.Spr_Affined_get_xw(_this); }
-            set { SprExport.Spr_Affined_set_xw(_this, value); }
+            get { return SprExport.Spr_Affined_get_xw(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_xw(_thisArray[0], value); }
         }
         public double yx {
-            get { return SprExport.Spr_Affined_get_yx(_this); }
-            set { SprExport.Spr_Affined_set_yx(_this, value); }
+            get { return SprExport.Spr_Affined_get_yx(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_yx(_thisArray[0], value); }
         }
         public double yy {
-            get { return SprExport.Spr_Affined_get_yy(_this); }
-            set { SprExport.Spr_Affined_set_yy(_this, value); }
+            get { return SprExport.Spr_Affined_get_yy(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_yy(_thisArray[0], value); }
         }
         public double yz {
-            get { return SprExport.Spr_Affined_get_yz(_this); }
-            set { SprExport.Spr_Affined_set_yz(_this, value); }
+            get { return SprExport.Spr_Affined_get_yz(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_yz(_thisArray[0], value); }
         }
         public double yw {
-            get { return SprExport.Spr_Affined_get_yw(_this); }
-            set { SprExport.Spr_Affined_set_yw(_this, value); }
+            get { return SprExport.Spr_Affined_get_yw(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_yw(_thisArray[0], value); }
         }
         public double zx {
-            get { return SprExport.Spr_Affined_get_zx(_this); }
-            set { SprExport.Spr_Affined_set_zx(_this, value); }
+            get { return SprExport.Spr_Affined_get_zx(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_zx(_thisArray[0], value); }
         }
         public double zy {
-            get { return SprExport.Spr_Affined_get_zy(_this); }
-            set { SprExport.Spr_Affined_set_zy(_this, value); }
+            get { return SprExport.Spr_Affined_get_zy(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_zy(_thisArray[0], value); }
         }
         public double zz {
-            get { return SprExport.Spr_Affined_get_zz(_this); }
-            set { SprExport.Spr_Affined_set_zz(_this, value); }
+            get { return SprExport.Spr_Affined_get_zz(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_zz(_thisArray[0], value); }
         }
         public double zw {
-            get { return SprExport.Spr_Affined_get_zw(_this); }
-            set { SprExport.Spr_Affined_set_zw(_this, value); }
+            get { return SprExport.Spr_Affined_get_zw(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_zw(_thisArray[0], value); }
         }
         public double px {
-            get { return SprExport.Spr_Affined_get_px(_this); }
-            set { SprExport.Spr_Affined_set_px(_this, value); }
+            get { return SprExport.Spr_Affined_get_px(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_px(_thisArray[0], value); }
         }
         public double py {
-            get { return SprExport.Spr_Affined_get_py(_this); }
-            set { SprExport.Spr_Affined_set_py(_this, value); }
+            get { return SprExport.Spr_Affined_get_py(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_py(_thisArray[0], value); }
         }
         public double pz {
-            get { return SprExport.Spr_Affined_get_pz(_this); }
-            set { SprExport.Spr_Affined_set_pz(_this, value); }
+            get { return SprExport.Spr_Affined_get_pz(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_pz(_thisArray[0], value); }
         }
         public double pw {
-            get { return SprExport.Spr_Affined_get_pw(_this); }
-            set { SprExport.Spr_Affined_set_pw(_this, value); }
+            get { return SprExport.Spr_Affined_get_pw(_thisArray[0]); }
+            set { SprExport.Spr_Affined_set_pw(_thisArray[0], value); }
         }
     }
     [System.Serializable]
@@ -3116,72 +3116,56 @@ namespace SprCs {
         }
     }
     public partial class SpatialVector : CsObject {
-        public SpatialVector() { _this = SprExport.Spr_new_SpatialVector(); _flag = true; }
+        public SpatialVector() { _thisArray[0] = SprExport.Spr_new_SpatialVector(); _flag = true; }
         public SpatialVector(IntPtr ptr) : base(ptr) { }
         public SpatialVector(IntPtr ptr, bool flag) : base(ptr, flag) { }
-        public SpatialVector(Vec3d _v, Vec3d _w) { _this = SprExport.Spr_new_SpatialVector_2(_v, _w); _flag = true; }
-        ~SpatialVector() { if (_flag) { SprExport.Spr_delete_SpatialVector(_this); _flag = false; } }
+        public SpatialVector(Vec3d _v, Vec3d _w) { _thisArray[0] = SprExport.Spr_new_SpatialVector_2(_v, _w); _flag = true; }
+        ~SpatialVector() { if (_flag) { SprExport.Spr_delete_SpatialVector(_thisArray[0]); _flag = false; } }
         public Vec3d v() {
-            IntPtr ptr = SprExport.Spr_SpatialVector_v((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SpatialVector_v((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
         public Vec3d w() {
-            IntPtr ptr = SprExport.Spr_SpatialVector_w((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SpatialVector_w((IntPtr)_thisArray[0]);
             return new Vec3d(ptr, true);
         }
     }
     public partial class ObjectIf : CsObject {
-        public ObjectIf() { _this = SprExport.Spr_new_ObjectIf(); _flag = true; }
+        public ObjectIf() { _thisArray[0] = SprExport.Spr_new_ObjectIf(); _flag = true; }
         public ObjectIf(IntPtr ptr) : base(ptr) { }
         public ObjectIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator ObjectIf(CsCastObject target) {
-            return (target._info.Inherit(ObjectIf.GetIfInfoStatic()) ? new ObjectIf(target._this, target._flag) : null);
+            return (target._info.Inherit(ObjectIf.GetIfInfoStatic()) ? new ObjectIf(target._thisArray[0], target._flag) : null);
         }
-        ~ObjectIf() { if (_flag) { SprExport.Spr_delete_ObjectIf(_this); _flag = false; } }
+        ~ObjectIf() { if (_flag) { SprExport.Spr_delete_ObjectIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_ObjectIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_ObjectIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_ObjectIf_FreeString((IntPtr)ptr);
             return bstr;
         }
-        public IfInfo GetIfInfo() { // <!!> これもvirtualにして実装しないとダメか？
-            IntPtr ptr = IntPtr.Zero;
-            if (_thisArray[0] != IntPtr.Zero) {
-                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
-            } else if (_thisArray[1] != IntPtr.Zero) {
-                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[1]);
-            } else if (_thisArray[2] != IntPtr.Zero) {
-                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[2]);
-            } else if (_this != IntPtr.Zero) {
-                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_this);
-            }
-            if (ptr == IntPtr.Zero) {
-                Console.WriteLine("GetIfInfo All null");
-                return null;
-            } else {
-                var newIfInfo = new IfInfo(ptr);
-                return newIfInfo;
-            }
-            //return new IfInfo(ptr);
+        public IfInfo GetIfInfo() {
+            IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
+            return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
             IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
         }
         public int AddRef() {
-            int result = (int)SprExport.Spr_ObjectIf_AddRef((IntPtr)_this);
+            int result = (int)SprExport.Spr_ObjectIf_AddRef((IntPtr)_thisArray[0]);
             return result;
         }
         public int RefCount() {
-            int result = (int)SprExport.Spr_ObjectIf_RefCount((IntPtr)_this);
+            int result = (int)SprExport.Spr_ObjectIf_RefCount((IntPtr)_thisArray[0]);
             return result;
         }
         public ulong NChildObject() {
-            ulong result = (ulong)SprExport.Spr_ObjectIf_NChildObject((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_ObjectIf_NChildObject((IntPtr)_thisArray[0]);
             return result;
         }
         public ObjectIf GetChildObject(ulong pos) {
-            IntPtr ptr = SprExport.Spr_ObjectIf_GetChildObject((IntPtr)_this, (ulong)pos);
+            IntPtr ptr = SprExport.Spr_ObjectIf_GetChildObject((IntPtr)_thisArray[0], (ulong)pos);
             if (ptr == IntPtr.Zero) { return null; }
             ObjectIf obj = new ObjectIf(ptr);
             if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) { return new NamedObjectIf(ptr); }
@@ -3196,35 +3180,18 @@ namespace SprCs {
             return obj;
         }
         public bool AddChildObject(ObjectIf o) {
-            char ret = SprExport.Spr_ObjectIf_AddChildObject((IntPtr)_this, (IntPtr)o);
+            char ret = SprExport.Spr_ObjectIf_AddChildObject((IntPtr)_thisArray[0], (IntPtr)o);
             return (ret == 0) ? false : true;
         }
-        public virtual bool DelChildObject(ObjectIf o) { // 呼ばれないはず
-            Console.WriteLine("DelChildObject(default) " + this.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-            char ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
-            Console.WriteLine("DelChildObject _thisArray[0]");
-            if (_thisArray[1] != IntPtr.Zero) {
-                char ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[1], (IntPtr)o._thisArray[1]);
-                Console.WriteLine("DelChildObject _thisArray[1]");
-            }
-            if (_thisArray[2] != IntPtr.Zero) {
-                char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[2], (IntPtr)o._thisArray[2]);
-                Console.WriteLine("DelChildObject _thisArray[1]");
-            }
-            //char ret2 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _this, (IntPtr) o._this2); // 上手くいかない
-            if (ret0 == 0) {
-                Console.WriteLine("failed DelChildObject");
-                return false;
-            } else {
-                return true;
-            }
-            //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
+        public bool DelChildObject(ObjectIf o) {
+            char ret = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o);
+            return (ret == 0) ? false : true;
         }
         public void Clear() {
-            SprExport.Spr_ObjectIf_Clear((IntPtr)_this);
+            SprExport.Spr_ObjectIf_Clear((IntPtr)_thisArray[0]);
         }
         public ObjectIf CreateObject(IfInfo info, CsObject desc) {
-            IntPtr ptr = SprExport.Spr_ObjectIf_CreateObject((IntPtr)_this, (IntPtr)info, (IntPtr)desc);
+            IntPtr ptr = SprExport.Spr_ObjectIf_CreateObject((IntPtr)_thisArray[0], (IntPtr)info, (IntPtr)desc);
             if (ptr == IntPtr.Zero) { return null; }
             ObjectIf obj = new ObjectIf(ptr);
             if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) { return new NamedObjectIf(ptr); }
@@ -3239,72 +3206,70 @@ namespace SprCs {
             return obj;
         }
         public IntPtr GetDescAddress() {
-            IntPtr result = (IntPtr)SprExport.Spr_ObjectIf_GetDescAddress((IntPtr)_this);
+            IntPtr result = (IntPtr)SprExport.Spr_ObjectIf_GetDescAddress((IntPtr)_thisArray[0]);
             return result;
         }
-        public virtual bool GetDesc(CsObject desc) { // CDShapeIfの処理
-            char ret = (char)0; // <!!> これいいのか？
-            ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_this, (IntPtr)desc);
+        public bool GetDesc(CsObject desc) {
+            char ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
             return (ret == 0) ? false : true;
         }
-        public virtual void SetDesc(CsObject desc) {
-            // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+        public void SetDesc(CsObject desc) {
+            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
         }
         public ulong GetDescSize() {
-            ulong result = (ulong)SprExport.Spr_ObjectIf_GetDescSize((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_ObjectIf_GetDescSize((IntPtr)_thisArray[0]);
             return result;
         }
         public IntPtr GetStateAddress() {
-            IntPtr result = (IntPtr)SprExport.Spr_ObjectIf_GetStateAddress((IntPtr)_this);
+            IntPtr result = (IntPtr)SprExport.Spr_ObjectIf_GetStateAddress((IntPtr)_thisArray[0]);
             return result;
         }
         public bool GetState(CsObject state) {
-            char ret = SprExport.Spr_ObjectIf_GetState((IntPtr)_this, (IntPtr)state);
+            char ret = SprExport.Spr_ObjectIf_GetState((IntPtr)_thisArray[0], (IntPtr)state);
             return (ret == 0) ? false : true;
         }
         public void SetState(CsObject state) {
-            SprExport.Spr_ObjectIf_SetState((IntPtr)_this, (IntPtr)state);
+            SprExport.Spr_ObjectIf_SetState((IntPtr)_thisArray[0], (IntPtr)state);
         }
         public bool WriteState(string fileName) {
             IntPtr remote1 = Marshal.StringToBSTR(fileName);
-            char ret = SprExport.Spr_ObjectIf_WriteState((IntPtr)_this, (IntPtr)remote1);
+            char ret = SprExport.Spr_ObjectIf_WriteState((IntPtr)_thisArray[0], (IntPtr)remote1);
             Marshal.FreeBSTR(remote1);
             return (ret == 0) ? false : true;
         }
         public bool ReadState(string fileName) {
             IntPtr remote1 = Marshal.StringToBSTR(fileName);
-            char ret = SprExport.Spr_ObjectIf_ReadState((IntPtr)_this, (IntPtr)remote1);
+            char ret = SprExport.Spr_ObjectIf_ReadState((IntPtr)_thisArray[0], (IntPtr)remote1);
             Marshal.FreeBSTR(remote1);
             return (ret == 0) ? false : true;
         }
         public ulong GetStateSize() {
-            ulong result = (ulong)SprExport.Spr_ObjectIf_GetStateSize((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_ObjectIf_GetStateSize((IntPtr)_thisArray[0]);
             return result;
         }
         public void ConstructState(CsObject m) {
-            SprExport.Spr_ObjectIf_ConstructState((IntPtr)_this, (IntPtr)m);
+            SprExport.Spr_ObjectIf_ConstructState((IntPtr)_thisArray[0], (IntPtr)m);
         }
         public void DestructState(CsObject m) {
-            SprExport.Spr_ObjectIf_DestructState((IntPtr)_this, (IntPtr)m);
+            SprExport.Spr_ObjectIf_DestructState((IntPtr)_thisArray[0], (IntPtr)m);
         }
     }
     public partial class NamedObjectIf : ObjectIf {
-        public NamedObjectIf() { _this = SprExport.Spr_new_NamedObjectIf(); _flag = true; }
+        public NamedObjectIf() { _thisArray[0] = SprExport.Spr_new_NamedObjectIf(); _flag = true; }
         public NamedObjectIf(IntPtr ptr) : base(ptr) { }
         public NamedObjectIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator NamedObjectIf(CsCastObject target) {
-            return (target._info.Inherit(NamedObjectIf.GetIfInfoStatic()) ? new NamedObjectIf(target._this, target._flag) : null);
+            return (target._info.Inherit(NamedObjectIf.GetIfInfoStatic()) ? new NamedObjectIf(target._thisArray[0], target._flag) : null);
         }
-        ~NamedObjectIf() { if (_flag) { SprExport.Spr_delete_NamedObjectIf(_this); _flag = false; } }
+        ~NamedObjectIf() { if (_flag) { SprExport.Spr_delete_NamedObjectIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_NamedObjectIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_NamedObjectIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_NamedObjectIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_NamedObjectIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_NamedObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3312,14 +3277,14 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public string GetName() {
-            IntPtr ptr = SprExport.Spr_NamedObjectIf_GetName((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_NamedObjectIf_GetName((IntPtr)_thisArray[0]);
             return Marshal.PtrToStringAnsi(ptr);
         }
         public void SetName(string n) {
-            //SprExport.Spr_NamedObjectIf_SetName((IntPtr) _this, (string) n);
+            SprExport.Spr_NamedObjectIf_SetName((IntPtr)_thisArray[0], (string)n);
         }
         public NameManagerIf GetNameManager() {
-            IntPtr ptr = SprExport.Spr_NamedObjectIf_GetNameManager((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_NamedObjectIf_GetNameManager((IntPtr)_thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; }
             NameManagerIf obj = new NameManagerIf(ptr);
             if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) { return new SceneIf(ptr); }
@@ -3328,21 +3293,21 @@ namespace SprCs {
         }
     }
     public partial class SceneObjectIf : NamedObjectIf {
-        public SceneObjectIf() { _this = SprExport.Spr_new_SceneObjectIf(); _flag = true; }
+        public SceneObjectIf() { _thisArray[0] = SprExport.Spr_new_SceneObjectIf(); _flag = true; }
         public SceneObjectIf(IntPtr ptr) : base(ptr) { }
         public SceneObjectIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator SceneObjectIf(CsCastObject target) {
-            return (target._info.Inherit(SceneObjectIf.GetIfInfoStatic()) ? new SceneObjectIf(target._this, target._flag) : null);
+            return (target._info.Inherit(SceneObjectIf.GetIfInfoStatic()) ? new SceneObjectIf(target._thisArray[0], target._flag) : null);
         }
-        ~SceneObjectIf() { if (_flag) { SprExport.Spr_delete_SceneObjectIf(_this); _flag = false; } }
+        ~SceneObjectIf() { if (_flag) { SprExport.Spr_delete_SceneObjectIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_SceneObjectIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SceneObjectIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_SceneObjectIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3350,34 +3315,34 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public SceneIf GetScene() {
-            IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr)_thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; }
             SceneIf obj = new SceneIf(ptr);
             return obj;
         }
         public SceneObjectIf CloneObject() {
-            IntPtr ptr = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr)_thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; }
             SceneObjectIf obj = new SceneObjectIf(ptr);
             return obj;
         }
     }
     public partial class ObjectStatesIf : ObjectIf {
-        public ObjectStatesIf() { _this = SprExport.Spr_new_ObjectStatesIf(); _flag = true; }
+        public ObjectStatesIf() { _thisArray[0] = SprExport.Spr_new_ObjectStatesIf(); _flag = true; }
         public ObjectStatesIf(IntPtr ptr) : base(ptr) { }
         public ObjectStatesIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator ObjectStatesIf(CsCastObject target) {
-            return (target._info.Inherit(ObjectStatesIf.GetIfInfoStatic()) ? new ObjectStatesIf(target._this, target._flag) : null);
+            return (target._info.Inherit(ObjectStatesIf.GetIfInfoStatic()) ? new ObjectStatesIf(target._thisArray[0], target._flag) : null);
         }
-        ~ObjectStatesIf() { if (_flag) { SprExport.Spr_delete_ObjectStatesIf(_this); _flag = false; } }
+        ~ObjectStatesIf() { if (_flag) { SprExport.Spr_delete_ObjectStatesIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_ObjectStatesIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_ObjectStatesIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_ObjectStatesIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_ObjectStatesIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_ObjectStatesIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3385,54 +3350,54 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public void AllocateState(ObjectIf o) {
-            SprExport.Spr_ObjectStatesIf_AllocateState((IntPtr)_this, (IntPtr)o);
+            SprExport.Spr_ObjectStatesIf_AllocateState((IntPtr)_thisArray[0], (IntPtr)o);
         }
         public void ReleaseState(ObjectIf o) {
-            SprExport.Spr_ObjectStatesIf_ReleaseState((IntPtr)_this, (IntPtr)o);
+            SprExport.Spr_ObjectStatesIf_ReleaseState((IntPtr)_thisArray[0], (IntPtr)o);
         }
         public ulong CalcStateSize(ObjectIf o) {
-            ulong result = (ulong)SprExport.Spr_ObjectStatesIf_CalcStateSize((IntPtr)_this, (IntPtr)o);
+            ulong result = (ulong)SprExport.Spr_ObjectStatesIf_CalcStateSize((IntPtr)_thisArray[0], (IntPtr)o);
             return result;
         }
         public void SaveState(ObjectIf o) {
-            SprExport.Spr_ObjectStatesIf_SaveState((IntPtr)_this, (IntPtr)o);
+            SprExport.Spr_ObjectStatesIf_SaveState((IntPtr)_thisArray[0], (IntPtr)o);
         }
         public void LoadState(ObjectIf o) {
-            SprExport.Spr_ObjectStatesIf_LoadState((IntPtr)_this, (IntPtr)o);
+            SprExport.Spr_ObjectStatesIf_LoadState((IntPtr)_thisArray[0], (IntPtr)o);
         }
         public void SingleSave(ObjectIf o) {
-            SprExport.Spr_ObjectStatesIf_SingleSave((IntPtr)_this, (IntPtr)o);
+            SprExport.Spr_ObjectStatesIf_SingleSave((IntPtr)_thisArray[0], (IntPtr)o);
         }
         public void SingleLoad(ObjectIf o) {
-            SprExport.Spr_ObjectStatesIf_SingleLoad((IntPtr)_this, (IntPtr)o);
+            SprExport.Spr_ObjectStatesIf_SingleLoad((IntPtr)_thisArray[0], (IntPtr)o);
         }
         public bool IsAllocated() {
-            char ret = SprExport.Spr_ObjectStatesIf_IsAllocated((IntPtr)_this);
+            char ret = SprExport.Spr_ObjectStatesIf_IsAllocated((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public static ObjectStatesIf Create() {
             IntPtr ptr = SprExport.Spr_ObjectStatesIf_Create();
             if (ptr == IntPtr.Zero) { return null; }
-            ObjectStatesIf obj = new ObjectStatesIf(ptr,true);
+            ObjectStatesIf obj = new ObjectStatesIf(ptr);
             return obj;
         }
     }
     public partial class UTTypeDescIf : ObjectIf {
-        public UTTypeDescIf() { _this = SprExport.Spr_new_UTTypeDescIf(); _flag = true; }
+        public UTTypeDescIf() { _thisArray[0] = SprExport.Spr_new_UTTypeDescIf(); _flag = true; }
         public UTTypeDescIf(IntPtr ptr) : base(ptr) { }
         public UTTypeDescIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator UTTypeDescIf(CsCastObject target) {
-            return (target._info.Inherit(UTTypeDescIf.GetIfInfoStatic()) ? new UTTypeDescIf(target._this, target._flag) : null);
+            return (target._info.Inherit(UTTypeDescIf.GetIfInfoStatic()) ? new UTTypeDescIf(target._thisArray[0], target._flag) : null);
         }
-        ~UTTypeDescIf() { if (_flag) { SprExport.Spr_delete_UTTypeDescIf(_this); _flag = false; } }
+        ~UTTypeDescIf() { if (_flag) { SprExport.Spr_delete_UTTypeDescIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTypeDescIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3462,23 +3427,23 @@ namespace SprCs {
             return obj;
         }
         public void SetSize(ulong sz) {
-            SprExport.Spr_UTTypeDescIf_SetSize((IntPtr)_this, (ulong)sz);
+            SprExport.Spr_UTTypeDescIf_SetSize((IntPtr)_thisArray[0], (ulong)sz);
         }
         public void SetAccess(UTAccessBase a) {
-            SprExport.Spr_UTTypeDescIf_SetAccess((IntPtr)_this, (IntPtr)a);
+            SprExport.Spr_UTTypeDescIf_SetAccess((IntPtr)_thisArray[0], (IntPtr)a);
         }
         public void SetOffset(int field, int offset) {
-            SprExport.Spr_UTTypeDescIf_SetOffset((IntPtr)_this, (int)field, (int)offset);
+            SprExport.Spr_UTTypeDescIf_SetOffset((IntPtr)_thisArray[0], (int)field, (int)offset);
         }
         public void SetIfInfo(IfInfo info) {
-            SprExport.Spr_UTTypeDescIf_SetIfInfo((IntPtr)_this, (IntPtr)info);
+            SprExport.Spr_UTTypeDescIf_SetIfInfo((IntPtr)_thisArray[0], (IntPtr)info);
         }
         public int AddField(string pre, string ty, string n, string post) {
             IntPtr remote1 = Marshal.StringToBSTR(pre);
             IntPtr remote2 = Marshal.StringToBSTR(ty);
             IntPtr remote3 = Marshal.StringToBSTR(n);
             IntPtr remote4 = Marshal.StringToBSTR(post);
-            int result = (int)SprExport.Spr_UTTypeDescIf_AddField((IntPtr)_this, (IntPtr)remote1, (IntPtr)remote2, (IntPtr)remote3, (IntPtr)remote4);
+            int result = (int)SprExport.Spr_UTTypeDescIf_AddField((IntPtr)_thisArray[0], (IntPtr)remote1, (IntPtr)remote2, (IntPtr)remote3, (IntPtr)remote4);
             Marshal.FreeBSTR(remote1);
             Marshal.FreeBSTR(remote2);
             Marshal.FreeBSTR(remote3);
@@ -3487,146 +3452,146 @@ namespace SprCs {
         }
         public int AddBase(string tn) {
             IntPtr remote1 = Marshal.StringToBSTR(tn);
-            int result = (int)SprExport.Spr_UTTypeDescIf_AddBase((IntPtr)_this, (IntPtr)remote1);
+            int result = (int)SprExport.Spr_UTTypeDescIf_AddBase((IntPtr)_thisArray[0], (IntPtr)remote1);
             Marshal.FreeBSTR(remote1);
             return result;
         }
         public void AddEnumConst(int field, string name, int val) {
             IntPtr remote2 = Marshal.StringToBSTR(name);
-            SprExport.Spr_UTTypeDescIf_AddEnumConst((IntPtr)_this, (int)field, (IntPtr)remote2, (int)val);
+            SprExport.Spr_UTTypeDescIf_AddEnumConst((IntPtr)_thisArray[0], (int)field, (IntPtr)remote2, (int)val);
             Marshal.FreeBSTR(remote2);
         }
         public string GetTypeName() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetTypeName((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetTypeName((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTypeDescIf_FreeString_GetTypeName(ptr);
             return bstr;
         }
         public void SetTypeName(string s) {
-            SprExport.Spr_UTTypeDescIf_SetTypeName((IntPtr)_this, (string)s);
+            SprExport.Spr_UTTypeDescIf_SetTypeName((IntPtr)_thisArray[0], (string)s);
         }
         public ulong GetSize() {
-            ulong result = (ulong)SprExport.Spr_UTTypeDescIf_GetSize((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_UTTypeDescIf_GetSize((IntPtr)_thisArray[0]);
             return result;
         }
         public bool IsPrimitive() {
-            char ret = SprExport.Spr_UTTypeDescIf_IsPrimitive((IntPtr)_this);
+            char ret = SprExport.Spr_UTTypeDescIf_IsPrimitive((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool IsSimple() {
-            char ret = SprExport.Spr_UTTypeDescIf_IsSimple((IntPtr)_this);
+            char ret = SprExport.Spr_UTTypeDescIf_IsSimple((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public int NFields() {
-            int result = (int)SprExport.Spr_UTTypeDescIf_NFields((IntPtr)_this);
+            int result = (int)SprExport.Spr_UTTypeDescIf_NFields((IntPtr)_thisArray[0]);
             return result;
         }
         public int GetFieldLength(int i) {
-            int result = (int)SprExport.Spr_UTTypeDescIf_GetFieldLength((IntPtr)_this, (int)i);
+            int result = (int)SprExport.Spr_UTTypeDescIf_GetFieldLength((IntPtr)_thisArray[0], (int)i);
             return result;
         }
         public int GetFieldVectorSize(int i, CsObject base_) {
-            int result = (int)SprExport.Spr_UTTypeDescIf_GetFieldVectorSize((IntPtr)_this, (int)i, (IntPtr)base_);
+            int result = (int)SprExport.Spr_UTTypeDescIf_GetFieldVectorSize((IntPtr)_thisArray[0], (int)i, (IntPtr)base_);
             return result;
         }
         public string GetFieldLengthName(int i) {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetFieldLengthName((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetFieldLengthName((IntPtr)_thisArray[0], (int)i);
             return Marshal.PtrToStringAnsi(ptr);
         }
         public FieldType GetFieldVarType(int i) {
-            int result = SprExport.Spr_UTTypeDescIf_GetFieldVarType((IntPtr)_this, (int)i);
+            int result = SprExport.Spr_UTTypeDescIf_GetFieldVarType((IntPtr)_thisArray[0], (int)i);
             return (UTTypeDescIf.FieldType)result;
         }
         public bool GetFieldIsReference(int i) {
-            char ret = SprExport.Spr_UTTypeDescIf_GetFieldIsReference((IntPtr)_this, (int)i);
+            char ret = SprExport.Spr_UTTypeDescIf_GetFieldIsReference((IntPtr)_thisArray[0], (int)i);
             return (ret == 0) ? false : true;
         }
         public string GetFieldName(int i) {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetFieldName((IntPtr)_this, (int)i);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetFieldName((IntPtr)_thisArray[0], (int)i);
             return Marshal.PtrToStringAnsi(ptr);
         }
         public IntPtr GetFieldAddress(int i, CsObject base_, int pos) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_GetFieldAddress((IntPtr)_this, (int)i, (IntPtr)base_, (int)pos);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_GetFieldAddress((IntPtr)_thisArray[0], (int)i, (IntPtr)base_, (int)pos);
             return result;
         }
         public IntPtr GetFieldAddressEx(int i, CsObject base_, int pos) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_GetFieldAddressEx((IntPtr)_this, (int)i, (IntPtr)base_, (int)pos);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_GetFieldAddressEx((IntPtr)_thisArray[0], (int)i, (IntPtr)base_, (int)pos);
             return result;
         }
         public string ReadToString(int i, CsObject base_, int pos) {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_ReadToString((IntPtr)_this, (int)i, (IntPtr)base_, (int)pos);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_ReadToString((IntPtr)_thisArray[0], (int)i, (IntPtr)base_, (int)pos);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTypeDescIf_FreeString_ReadToString(ptr);
             return bstr;
         }
         public void WriteFromString(string from, int i, CsObject base_, int pos) {
             IntPtr remote1 = Marshal.StringToBSTR(from);
-            SprExport.Spr_UTTypeDescIf_WriteFromString((IntPtr)_this, (IntPtr)remote1, (int)i, (IntPtr)base_, (int)pos);
+            SprExport.Spr_UTTypeDescIf_WriteFromString((IntPtr)_thisArray[0], (IntPtr)remote1, (int)i, (IntPtr)base_, (int)pos);
             Marshal.FreeBSTR(remote1);
         }
         public IfInfo GetIfInfoOfType() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfoOfType((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfoOfType((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public bool IsBool() {
-            char ret = SprExport.Spr_UTTypeDescIf_IsBool((IntPtr)_this);
+            char ret = SprExport.Spr_UTTypeDescIf_IsBool((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool IsNumber() {
-            char ret = SprExport.Spr_UTTypeDescIf_IsNumber((IntPtr)_this);
+            char ret = SprExport.Spr_UTTypeDescIf_IsNumber((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool IsString() {
-            char ret = SprExport.Spr_UTTypeDescIf_IsString((IntPtr)_this);
+            char ret = SprExport.Spr_UTTypeDescIf_IsString((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool ReadBool(CsObject ptr_) {
-            char ret = SprExport.Spr_UTTypeDescIf_ReadBool((IntPtr)_this, (IntPtr)ptr_);
+            char ret = SprExport.Spr_UTTypeDescIf_ReadBool((IntPtr)_thisArray[0], (IntPtr)ptr_);
             return (ret == 0) ? false : true;
         }
         public void WriteBool(bool val, CsObject ptr_) {
-            SprExport.Spr_UTTypeDescIf_WriteBool((IntPtr)_this, (bool)val, (IntPtr)ptr_);
+            SprExport.Spr_UTTypeDescIf_WriteBool((IntPtr)_thisArray[0], (bool)val, (IntPtr)ptr_);
         }
         public double ReadNumber(CsObject ptr_) {
-            double result = (double)SprExport.Spr_UTTypeDescIf_ReadNumber((IntPtr)_this, (IntPtr)ptr_);
+            double result = (double)SprExport.Spr_UTTypeDescIf_ReadNumber((IntPtr)_thisArray[0], (IntPtr)ptr_);
             return result;
         }
         public void WriteNumber(double val, CsObject ptr_) {
-            SprExport.Spr_UTTypeDescIf_WriteNumber((IntPtr)_this, (double)val, (IntPtr)ptr_);
+            SprExport.Spr_UTTypeDescIf_WriteNumber((IntPtr)_thisArray[0], (double)val, (IntPtr)ptr_);
         }
         public string ReadString(CsObject ptr_) {
-            IntPtr ptr = SprExport.Spr_UTTypeDescIf_ReadString((IntPtr)_this, (IntPtr)ptr_);
+            IntPtr ptr = SprExport.Spr_UTTypeDescIf_ReadString((IntPtr)_thisArray[0], (IntPtr)ptr_);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTypeDescIf_FreeString_ReadString(ptr);
             return bstr;
         }
         public void WriteString(string val, CsObject ptr_) {
-            SprExport.Spr_UTTypeDescIf_WriteString((IntPtr)_this, (string)val, (IntPtr)ptr_);
+            SprExport.Spr_UTTypeDescIf_WriteString((IntPtr)_thisArray[0], (string)val, (IntPtr)ptr_);
         }
         public IntPtr Create() {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_Create_2((IntPtr)_this);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_Create_2((IntPtr)_thisArray[0]);
             return result;
         }
         public void Delete(CsObject ptr_) {
-            SprExport.Spr_UTTypeDescIf_Delete((IntPtr)_this, (IntPtr)ptr_);
+            SprExport.Spr_UTTypeDescIf_Delete((IntPtr)_thisArray[0], (IntPtr)ptr_);
         }
         public IntPtr VectorPush(CsObject v) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_VectorPush((IntPtr)_this, (IntPtr)v);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_VectorPush((IntPtr)_thisArray[0], (IntPtr)v);
             return result;
         }
         public void VectorPop(CsObject v) {
-            SprExport.Spr_UTTypeDescIf_VectorPop((IntPtr)_this, (IntPtr)v);
+            SprExport.Spr_UTTypeDescIf_VectorPop((IntPtr)_thisArray[0], (IntPtr)v);
         }
         public IntPtr VectorAt(CsObject v, int pos) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_VectorAt((IntPtr)_this, (IntPtr)v, (int)pos);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTypeDescIf_VectorAt((IntPtr)_thisArray[0], (IntPtr)v, (int)pos);
             return result;
         }
         public ulong VectorSize(CsObject v) {
-            ulong result = (ulong)SprExport.Spr_UTTypeDescIf_VectorSize((IntPtr)_this, (IntPtr)v);
+            ulong result = (ulong)SprExport.Spr_UTTypeDescIf_VectorSize((IntPtr)_thisArray[0], (IntPtr)v);
             return result;
         }
         public ulong SizeOfVector() {
-            ulong result = (ulong)SprExport.Spr_UTTypeDescIf_SizeOfVector((IntPtr)_this);
+            ulong result = (ulong)SprExport.Spr_UTTypeDescIf_SizeOfVector((IntPtr)_thisArray[0]);
             return result;
         }
         public enum FieldType : int {
@@ -3634,21 +3599,21 @@ namespace SprCs {
         }
     }
     public partial class UTTypeDescDbIf : ObjectIf {
-        public UTTypeDescDbIf() { _this = SprExport.Spr_new_UTTypeDescDbIf(); _flag = true; }
+        public UTTypeDescDbIf() { _thisArray[0] = SprExport.Spr_new_UTTypeDescDbIf(); _flag = true; }
         public UTTypeDescDbIf(IntPtr ptr) : base(ptr) { }
         public UTTypeDescDbIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator UTTypeDescDbIf(CsCastObject target) {
-            return (target._info.Inherit(UTTypeDescDbIf.GetIfInfoStatic()) ? new UTTypeDescDbIf(target._this, target._flag) : null);
+            return (target._info.Inherit(UTTypeDescDbIf.GetIfInfoStatic()) ? new UTTypeDescDbIf(target._thisArray[0], target._flag) : null);
         }
-        ~UTTypeDescDbIf() { if (_flag) { SprExport.Spr_delete_UTTypeDescDbIf(_this); _flag = false; } }
+        ~UTTypeDescDbIf() { if (_flag) { SprExport.Spr_delete_UTTypeDescDbIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTypeDescDbIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3664,63 +3629,63 @@ namespace SprCs {
             return obj;
         }
         public void RegisterDesc(UTTypeDescIf n) {
-            SprExport.Spr_UTTypeDescDbIf_RegisterDesc((IntPtr)_this, (IntPtr)n);
+            SprExport.Spr_UTTypeDescDbIf_RegisterDesc((IntPtr)_thisArray[0], (IntPtr)n);
         }
         public void RegisterAlias(string src, string dest) {
-            SprExport.Spr_UTTypeDescDbIf_RegisterAlias((IntPtr)_this, (string)src, (string)dest);
+            SprExport.Spr_UTTypeDescDbIf_RegisterAlias((IntPtr)_thisArray[0], (string)src, (string)dest);
         }
         public void SetPrefix(string p) {
             IntPtr remote1 = Marshal.StringToBSTR(p);
-            SprExport.Spr_UTTypeDescDbIf_SetPrefix((IntPtr)_this, (IntPtr)remote1);
+            SprExport.Spr_UTTypeDescDbIf_SetPrefix((IntPtr)_thisArray[0], (IntPtr)remote1);
             Marshal.FreeBSTR(remote1);
         }
         public UTTypeDescIf Find(string tn) {
             IntPtr remote1 = Marshal.StringToBSTR(tn);
-            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_Find((IntPtr)_this, (IntPtr)remote1);
+            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_Find((IntPtr)_thisArray[0], (IntPtr)remote1);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; }
             UTTypeDescIf obj = new UTTypeDescIf(ptr);
             return obj;
         }
         public void Link(UTTypeDescDbIf db) {
-            SprExport.Spr_UTTypeDescDbIf_Link((IntPtr)_this, (IntPtr)db);
+            SprExport.Spr_UTTypeDescDbIf_Link((IntPtr)_thisArray[0], (IntPtr)db);
         }
         public void Link() {
-            SprExport.Spr_UTTypeDescDbIf_Link_1((IntPtr)_this);
+            SprExport.Spr_UTTypeDescDbIf_Link_1((IntPtr)_thisArray[0]);
         }
         public void LinkAll() {
-            SprExport.Spr_UTTypeDescDbIf_LinkAll((IntPtr)_this);
+            SprExport.Spr_UTTypeDescDbIf_LinkAll((IntPtr)_thisArray[0]);
         }
         public bool LinkCheck() {
-            char ret = SprExport.Spr_UTTypeDescDbIf_LinkCheck((IntPtr)_this);
+            char ret = SprExport.Spr_UTTypeDescDbIf_LinkCheck((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public string GetGroup() {
-            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetGroup((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetGroup((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTypeDescDbIf_FreeString_GetGroup(ptr);
             return bstr;
         }
         public void Clear() {
-            SprExport.Spr_UTTypeDescDbIf_Clear((IntPtr)_this);
+            SprExport.Spr_UTTypeDescDbIf_Clear((IntPtr)_thisArray[0]);
         }
     }
     public partial class NameManagerIf : NamedObjectIf {
-        public NameManagerIf() { _this = SprExport.Spr_new_NameManagerIf(); _flag = true; }
+        public NameManagerIf() { _thisArray[0] = SprExport.Spr_new_NameManagerIf(); _flag = true; }
         public NameManagerIf(IntPtr ptr) : base(ptr) { }
         public NameManagerIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator NameManagerIf(CsCastObject target) {
-            return (target._info.Inherit(NameManagerIf.GetIfInfoStatic()) ? new NameManagerIf(target._this, target._flag) : null);
+            return (target._info.Inherit(NameManagerIf.GetIfInfoStatic()) ? new NameManagerIf(target._thisArray[0], target._flag) : null);
         }
-        ~NameManagerIf() { if (_flag) { SprExport.Spr_delete_NameManagerIf(_this); _flag = false; } }
+        ~NameManagerIf() { if (_flag) { SprExport.Spr_delete_NameManagerIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_NameManagerIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_NameManagerIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_NameManagerIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_NameManagerIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_NameManagerIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3730,7 +3695,7 @@ namespace SprCs {
         public NamedObjectIf FindObject(string name, string cls) {
             IntPtr remote1 = Marshal.StringToBSTR(name);
             IntPtr remote2 = Marshal.StringToBSTR(cls);
-            IntPtr ptr = SprExport.Spr_NameManagerIf_FindObject_2((IntPtr)_this, (IntPtr)remote1, (IntPtr)remote2);
+            IntPtr ptr = SprExport.Spr_NameManagerIf_FindObject_2((IntPtr)_thisArray[0], (IntPtr)remote1, (IntPtr)remote2);
             Marshal.FreeBSTR(remote1);
             Marshal.FreeBSTR(remote2);
             if (ptr == IntPtr.Zero) { return null; }
@@ -3743,7 +3708,7 @@ namespace SprCs {
         }
         public NamedObjectIf FindObject(string name) {
             IntPtr remote1 = Marshal.StringToBSTR(name);
-            IntPtr ptr = SprExport.Spr_NameManagerIf_FindObject_3((IntPtr)_this, (IntPtr)remote1);
+            IntPtr ptr = SprExport.Spr_NameManagerIf_FindObject_3((IntPtr)_thisArray[0], (IntPtr)remote1);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; }
             NamedObjectIf obj = new NamedObjectIf(ptr);
@@ -3755,21 +3720,21 @@ namespace SprCs {
         }
     }
     public partial class SceneIf : NameManagerIf {
-        public SceneIf() { _this = SprExport.Spr_new_SceneIf(); _flag = true; }
+        public SceneIf() { _thisArray[0] = SprExport.Spr_new_SceneIf(); _flag = true; }
         public SceneIf(IntPtr ptr) : base(ptr) { }
         public SceneIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator SceneIf(CsCastObject target) {
-            return (target._info.Inherit(SceneIf.GetIfInfoStatic()) ? new SceneIf(target._this, target._flag) : null);
+            return (target._info.Inherit(SceneIf.GetIfInfoStatic()) ? new SceneIf(target._thisArray[0], target._flag) : null);
         }
-        ~SceneIf() { if (_flag) { SprExport.Spr_delete_SceneIf(_this); _flag = false; } }
+        ~SceneIf() { if (_flag) { SprExport.Spr_delete_SceneIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_SceneIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SceneIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_SceneIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_SceneIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SceneIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3778,21 +3743,21 @@ namespace SprCs {
         }
     }
     public partial class SdkIf : NameManagerIf {
-        public SdkIf() { _this = SprExport.Spr_new_SdkIf(); _flag = true; }
+        public SdkIf() { _thisArray[0] = SprExport.Spr_new_SdkIf(); _flag = true; }
         public SdkIf(IntPtr ptr) : base(ptr) { }
         public SdkIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator SdkIf(CsCastObject target) {
-            return (target._info.Inherit(SdkIf.GetIfInfoStatic()) ? new SdkIf(target._this, target._flag) : null);
+            return (target._info.Inherit(SdkIf.GetIfInfoStatic()) ? new SdkIf(target._thisArray[0], target._flag) : null);
         }
-        ~SdkIf() { if (_flag) { SprExport.Spr_delete_SdkIf(_this); _flag = false; } }
+        ~SdkIf() { if (_flag) { SprExport.Spr_delete_SdkIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_SdkIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SdkIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_SdkIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_SdkIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_SdkIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3801,21 +3766,21 @@ namespace SprCs {
         }
     }
     public partial class UTTimerIf : ObjectIf {
-        public UTTimerIf() { _this = SprExport.Spr_new_UTTimerIf(); _flag = true; }
+        public UTTimerIf() { _thisArray[0] = SprExport.Spr_new_UTTimerIf(); _flag = true; }
         public UTTimerIf(IntPtr ptr) : base(ptr) { }
         public UTTimerIf(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public static implicit operator UTTimerIf(CsCastObject target) {
-            return (target._info.Inherit(UTTimerIf.GetIfInfoStatic()) ? new UTTimerIf(target._this, target._flag) : null);
+            return (target._info.Inherit(UTTimerIf.GetIfInfoStatic()) ? new UTTimerIf(target._thisArray[0], target._flag) : null);
         }
-        ~UTTimerIf() { if (_flag) { SprExport.Spr_delete_UTTimerIf(_this); _flag = false; } }
+        ~UTTimerIf() { if (_flag) { SprExport.Spr_delete_UTTimerIf(_thisArray[0]); _flag = false; } }
         public override string ToString() {
-            IntPtr ptr = SprExport.Spr_UTTimerIf_ToString((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTimerIf_ToString((IntPtr)_thisArray[0]);
             string bstr = Marshal.PtrToStringBSTR(ptr);
             SprExport.Spr_UTTimerIf_FreeString((IntPtr)ptr);
             return bstr;
         }
         public IfInfo GetIfInfo() {
-            IntPtr ptr = SprExport.Spr_UTTimerIf_GetIfInfo((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_UTTimerIf_GetIfInfo((IntPtr)_thisArray[0]);
             return new IfInfo(ptr);
         }
         public static IfInfo GetIfInfoStatic() {
@@ -3823,7 +3788,7 @@ namespace SprCs {
             return new IfInfo(ptr);
         }
         public IntPtr TimerFunc(int id) {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTimerIf_TimerFunc((IntPtr)_this, (int)id);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTimerIf_TimerFunc((IntPtr)_thisArray[0], (int)id);
             return result;
         }
         public static uint NTimers() {
@@ -3843,55 +3808,55 @@ namespace SprCs {
             return obj;
         }
         public uint GetID() {
-            uint result = (uint)SprExport.Spr_UTTimerIf_GetID((IntPtr)_this);
+            uint result = (uint)SprExport.Spr_UTTimerIf_GetID((IntPtr)_thisArray[0]);
             return result;
         }
         public uint GetResolution() {
-            uint result = (uint)SprExport.Spr_UTTimerIf_GetResolution((IntPtr)_this);
+            uint result = (uint)SprExport.Spr_UTTimerIf_GetResolution((IntPtr)_thisArray[0]);
             return result;
         }
         public bool SetResolution(uint r) {
-            char ret = SprExport.Spr_UTTimerIf_SetResolution((IntPtr)_this, (uint)r);
+            char ret = SprExport.Spr_UTTimerIf_SetResolution((IntPtr)_thisArray[0], (uint)r);
             return (ret == 0) ? false : true;
         }
         public uint GetInterval() {
-            uint result = (uint)SprExport.Spr_UTTimerIf_GetInterval((IntPtr)_this);
+            uint result = (uint)SprExport.Spr_UTTimerIf_GetInterval((IntPtr)_thisArray[0]);
             return result;
         }
         public bool SetInterval(uint i) {
-            char ret = SprExport.Spr_UTTimerIf_SetInterval((IntPtr)_this, (uint)i);
+            char ret = SprExport.Spr_UTTimerIf_SetInterval((IntPtr)_thisArray[0], (uint)i);
             return (ret == 0) ? false : true;
         }
         public IntPtr GetCallbackArg() {
-            IntPtr result = (IntPtr)SprExport.Spr_UTTimerIf_GetCallbackArg((IntPtr)_this);
+            IntPtr result = (IntPtr)SprExport.Spr_UTTimerIf_GetCallbackArg((IntPtr)_thisArray[0]);
             return result;
         }
         public Mode GetMode() {
-            int result = SprExport.Spr_UTTimerIf_GetMode((IntPtr)_this);
+            int result = SprExport.Spr_UTTimerIf_GetMode((IntPtr)_thisArray[0]);
             return (UTTimerIf.Mode)result;
         }
         public bool SetMode(UTTimerIf.Mode m) {
-            char ret = SprExport.Spr_UTTimerIf_SetMode((IntPtr)_this, (int)m);
+            char ret = SprExport.Spr_UTTimerIf_SetMode((IntPtr)_thisArray[0], (int)m);
             return (ret == 0) ? false : true;
         }
         public bool IsStarted() {
-            char ret = SprExport.Spr_UTTimerIf_IsStarted((IntPtr)_this);
+            char ret = SprExport.Spr_UTTimerIf_IsStarted((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool IsRunning() {
-            char ret = SprExport.Spr_UTTimerIf_IsRunning((IntPtr)_this);
+            char ret = SprExport.Spr_UTTimerIf_IsRunning((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool Start() {
-            char ret = SprExport.Spr_UTTimerIf_Start((IntPtr)_this);
+            char ret = SprExport.Spr_UTTimerIf_Start((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public bool Stop() {
-            char ret = SprExport.Spr_UTTimerIf_Stop((IntPtr)_this);
+            char ret = SprExport.Spr_UTTimerIf_Stop((IntPtr)_thisArray[0]);
             return (ret == 0) ? false : true;
         }
         public void Call() {
-            SprExport.Spr_UTTimerIf_Call((IntPtr)_this);
+            SprExport.Spr_UTTimerIf_Call((IntPtr)_thisArray[0]);
         }
         public enum Mode : int {
             MULTIMEDIA = 0, THREAD = MULTIMEDIA + 1, FRAMEWORK = THREAD + 1, IDLE = FRAMEWORK + 1
@@ -3902,11 +3867,11 @@ namespace SprCs {
         public IfInfo(IntPtr ptr) : base(ptr) { }
         public IfInfo(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public bool Inherit(IfInfo info) {
-            char ret = SprExport.Spr_IfInfo_Inherit((IntPtr)_this, (IntPtr)info);
+            char ret = SprExport.Spr_IfInfo_Inherit((IntPtr)_thisArray[0], (IntPtr)info);
             return (ret == 0) ? false : true;
         }
         public string ClassName() {
-            IntPtr ptr = SprExport.Spr_IfInfo_ClassName((IntPtr)_this);
+            IntPtr ptr = SprExport.Spr_IfInfo_ClassName((IntPtr)_thisArray[0]);
             return Marshal.PtrToStringAnsi(ptr);
         }
     }

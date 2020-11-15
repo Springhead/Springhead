@@ -7,7 +7,7 @@ namespace SprCs {
     // wrapper base class
     //
     public class wrapper : CsObject {
-        public wrapper(IntPtr ptr) { _this = ptr; _nelm = 0; }
+        public wrapper(IntPtr ptr) { _thisArray[0] = ptr; _nelm = 0; }
         protected wrapper() {}
         ~wrapper() {}
         protected uint _nelm;
@@ -19,7 +19,7 @@ namespace SprCs {
         protected arraywrapper() {}
         public arraywrapper(IntPtr ptr) : base(ptr) {}
         public arraywrapper(uint size, uint nelm) {
-            _this = SprExport.Spr_arraywrapper_new(size, nelm);
+            _thisArray[0] = SprExport.Spr_arraywrapper_new(size, nelm);
             _nelm = nelm;
         }
     }
@@ -133,10 +133,10 @@ namespace SprCs {
     public class arraywrapper_char_p : arraywrapper {
         public arraywrapper_char_p(IntPtr ptr) : base(ptr) {}
         public arraywrapper_char_p(uint nelm) : base((uint) IntPtr.Size, nelm+1) {
-            SprExport.Spr_array_init_char_p(_this, nelm+1);
+            SprExport.Spr_array_init_char_p(_thisArray[0], nelm+1);
         }
         ~arraywrapper_char_p() {
-            SprExport.Spr_array_delete_char_p(_this, _nelm);
+            SprExport.Spr_array_delete_char_p(_thisArray[0], _nelm);
         }
         public string this[int index] {
             get {

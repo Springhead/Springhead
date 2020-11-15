@@ -1437,7 +1437,7 @@ public:
 			// 引数並び
 			sep_needed = 0;
 			if (!ni.is_static) {
-				Printf(CS, "(IntPtr) _this");
+				Printf(CS, "(IntPtr) _thisArray[0]");
 				sep_needed = 1;
 			}
 			for (int j = 0; j < ni.num_args; j++) {
@@ -2853,7 +2853,7 @@ public:
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "    }\n");
 			// [cs]
-			Printf(CS, "\t~%s() { if (_flag) { SprExport.Spr_delete_%s(_this); _flag = false; } }\n", uq_name, uq_name);
+			Printf(CS, "\t~%s() { if (_flag) { SprExport.Spr_delete_%s(_thisArray[0]); _flag = false; } }\n", uq_name, uq_name);
 			// [csp]
 			Printf(CSP, "\t%s\n", DLLIMPORT);
 			Printf(CSP, "\tpublic static extern void Spr_delete_%s(IntPtr _this);\n", uq_name);
@@ -3019,12 +3019,12 @@ public:
 
 			// [cs]
 			SNAP_ANA_PATH1(fps, FD_CS, "generate: default constructor");
-			Printf(CS, "\tpublic %s() { _this = SprExport.Spr_new_%s(); _flag = true; }\n", name, uq_name);
+			Printf(CS, "\tpublic %s() { _thisArray[0] = SprExport.Spr_new_%s(); _flag = true; }\n", name, uq_name);
 #if (FREE_UNMANAGED_MEMORY == 1)
 			Printf(CS, "\tpublic %s(IntPtr ptr) : base(ptr) {}\n", name);
 			Printf(CS, "\tpublic %s(IntPtr ptr, bool flag) : base(ptr, flag) {}\n", name);
 #else
-			Printf(CS, "\tpublic %s(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }\n", name, uq_name);
+			Printf(CS, "\tpublic %s(IntPtr ptr, bool flag = false) { _thisArray[0] = ptr; _flag = flag; }\n", name, uq_name);
 #endif
 			// [csp]
 			SNAP_ANA_PATH1(fps, FD_CSP, "generate: default constructor");
@@ -3037,12 +3037,12 @@ public:
 			Printf(CS, "\tpublic %s(IntPtr ptr) : base(ptr) { }\n", name);
 			Printf(CS, "\tpublic %s(IntPtr ptr, bool flag) : base(ptr, flag) { }\n", name);
 #else
-			Printf(CS, "\tpublic %s(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }\n", name, uq_name);
+			Printf(CS, "\tpublic %s(IntPtr ptr, bool flag = false) { _thisArray[0] = ptr; _flag = flag; }\n", name, uq_name);
 #endif
 		}
 		// Cast Operator
 		if (ENDWITH(uq_name, "If")) {
-			Printf(CS, "\tpublic static implicit operator %s(CsCastObject target) {\n\t\treturn (target._info.Inherit(%s.GetIfInfoStatic()) ? new %s(target._this, target._flag) : null);\n\t}\n", name, name, name);
+			Printf(CS, "\tpublic static implicit operator %s(CsCastObject target) {\n\t\treturn (target._info.Inherit(%s.GetIfInfoStatic()) ? new %s(target._thisArray[0], target._flag) : null);\n\t}\n", name, name, name);
 		}
 
 		// If クラスではこれ以上の constructor は作らない
@@ -3153,7 +3153,7 @@ public:
 							RETURN_new(8, _ptr);
 
 							// [cs]
-							Printf(CS, "\t%s%s%s { _this = SprExport.Spr_new_%s_%d%s; _flag = true; }\n", access, name, formal_args_cs.c_str(), uq_name, count, actual_args_cs.c_str());
+							Printf(CS, "\t%s%s%s { _thisArray[0] = SprExport.Spr_new_%s_%d%s; _flag = true; }\n", access, name, formal_args_cs.c_str(), uq_name, count, actual_args_cs.c_str());
 							// [csp]
 							Printf(CSP, "\t%s\n", DLLIMPORT);
 							Printf(CSP, "\tpublic static extern IntPtr Spr_new_%s_%d%s;\n", uq_name, count, formal_args_csp.c_str());
@@ -3239,7 +3239,7 @@ public:
 			}
 			Printf(CS, ") {\n");
 
-			Printf(CS, "\t    _this = SprExport.Spr_new_%s_99(", name);
+			Printf(CS, "\t    _thisArray[0] = SprExport.Spr_new_%s_99(", name);
 			for (int i = 0; i < struct_info->num_members; i++) {
 				StructMembersInfo* mp = struct_info->members[i];
 				Printf(CS, "%s", mp->cs_name);
@@ -3652,7 +3652,7 @@ public:
 		//
 		SNAP_ANA_PATH2(fps, FD_CS, "generate: ToString", print_facility_name(print_facility_type));
 		Printf(CS, "        public override string ToString() {\n");
-		Printf(CS, "            IntPtr ptr = SprExport.Spr_%s_ToString((IntPtr) _this);\n", c_name);
+		Printf(CS, "            IntPtr ptr = SprExport.Spr_%s_ToString((IntPtr) _thisArray[0]);\n", c_name);
 		Printf(CS, "            string bstr = Marshal.PtrToStringBSTR(ptr);\n");
 #if (FREE_UNMANAGED_MEMORY == 1)
 		Printf(CS, "            SprExport.Spr_%s_FreeString((IntPtr) ptr);\n", c_name);
@@ -3870,8 +3870,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: intrinsic: pointer");
 		// [cs]
 		Printf(CS,  "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
-		Printf(CS,  "\t    get { return SprExport.Spr_%s_get_%s(_this); }\n", ci.uq_name, ni.uq_name);
-		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    get { return SprExport.Spr_%s_get_%s(_thisArray[0]); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_thisArray[0], value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "\t}\n");
 		if (is_already_generated(ni, ci)) return;
 
@@ -3899,12 +3899,12 @@ public:
 		// [cs]
 		Printf(CS, "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
 		Printf(CS, "\t    get {\n");
-		Printf(CS, "\t        byte ret = (byte) SprExport.Spr_%s_get_%s(_this);\n", ci.uq_name, ni.uq_name);
+		Printf(CS, "\t        byte ret = (byte) SprExport.Spr_%s_get_%s(_thisArray[0]);\n", ci.uq_name, ni.uq_name);
 		Printf(CS, "\t        return (ret == 0) ? false : true;\n");
 		Printf(CS, "\t    }\n");
 		Printf(CS, "\t    set {\n");
 		Printf(CS, "\t        byte val = (byte) (value ? 1 : 0);\n");
-		Printf(CS, "\t        SprExport.Spr_%s_set_%s(_this, (char) val);\n", ci.uq_name, ni.uq_name);
+		Printf(CS, "\t        SprExport.Spr_%s_set_%s(_thisArray[0], (char) val);\n", ci.uq_name, ni.uq_name);
 		Printf(CS, "\t    }\n");
 		Printf(CS, "\t}\n");
 		if (is_already_generated(ni, ci)) return;
@@ -3932,8 +3932,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: intrinsic");
 		// [cs]
 		Printf(CS,  "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
-		Printf(CS,  "\t    get { return SprExport.Spr_%s_get_%s(_this); }\n", ci.uq_name, ni.uq_name);
-		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    get { return SprExport.Spr_%s_get_%s(_thisArray[0]); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_thisArray[0], value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "\t}\n");
 		if (is_already_generated(ni, ci)) return;
 
@@ -3966,7 +3966,7 @@ public:
 		// [cs]　受け渡しは BSTR
 		Printf(CS, "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
 		Printf(CS, "\t    get {\n");
-		Printf(CS, "\t        IntPtr ptr = SprExport.Spr_%s_get_%s(_this);\n", ci.uq_name, ni.uq_name);
+		Printf(CS, "\t        IntPtr ptr = SprExport.Spr_%s_get_%s(_thisArray[0]);\n", ci.uq_name, ni.uq_name);
 		Printf(CS, "\t        string bstr = Marshal.PtrToStringBSTR(ptr);\n");
 #if (FREE_UNMANAGED_MEMORY == 1)
 		Printf(CS, "\t        SprExport.Spr_%s_FreeString_%s(ptr);\n", ci.uq_name, ni.uq_name);
@@ -3975,7 +3975,7 @@ public:
 		Printf(CS, "\t    }\n");
 		Printf(CS, "\t    set {\n");
 		Printf(CS, "\t        IntPtr pbstr = Marshal.StringToBSTR(value);\n");
-		Printf(CS, "\t        SprExport.Spr_%s_set_%s(_this, pbstr);\n", ci.uq_name, ni.uq_name);
+		Printf(CS, "\t        SprExport.Spr_%s_set_%s(_thisArray[0], pbstr);\n", ci.uq_name, ni.uq_name);
 		Printf(CS, "\t    }\n");
 		Printf(CS, "\t}\n");
 		if (is_already_generated(ni, ci)) return;
@@ -4021,8 +4021,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: vector");
 		// [cs]
 		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_addr_%s(_this)); }\n", wrapper_name, ci.uq_name, ni.uq_name);
-		Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_addr_%s(_thisArray[0])); }\n", wrapper_name, ci.uq_name, ni.uq_name);
+		Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_thisArray[0], value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "        }\n");
 		if (is_already_generated(ni, ci)) return;
 
@@ -4058,8 +4058,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: array");
 		// [cs]
 		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_addr_%s(_this)); }\n", wrapper_name, ci.uq_name, ni.uq_name);
-		Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_addr_%s(_thisArray[0])); }\n", wrapper_name, ci.uq_name, ni.uq_name);
+		Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_thisArray[0], value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "        }\n");
 		if (is_already_generated(ni, ci)) return;
 
@@ -4093,8 +4093,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: struct: enum");
 		// [cs]
 		Printf(CS,  "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
-		Printf(CS,  "\t    get { return (%s) SprExport.Spr_%s_get_%s(_this); }\n", ni.cs_type, ci.uq_name, ni.uq_name);
-		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_this, (int) value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    get { return (%s) SprExport.Spr_%s_get_%s(_thisArray[0]); }\n", ni.cs_type, ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_thisArray[0], (int) value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "\t}\n");
 
 		// [cpp]
@@ -4120,8 +4120,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: struct: pointer");
 		// [cs]
 		Printf(CS,  "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
-		Printf(CS,  "\t    get { return new %s(SprExport.Spr_%s_get_%s(_this)); }\n", ni.uq_type, ci.uq_name, ni.uq_name);
-		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    get { return new %s(SprExport.Spr_%s_get_%s(_thisArray[0])); }\n", ni.uq_type, ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_thisArray[0], value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "\t}\n");
 
 		// [cpp]
@@ -4153,8 +4153,8 @@ public:
 		// [cs]
 		char* cs_type = cs_qualified_name(strip_type_modifier(ni.cs_type));
 		Printf(CS,  "\tpublic %s %s {\n", cs_type, ni.cs_name);
-		Printf(CS,  "\t    get { return new %s(SprExport.Spr_%s_addr_%s(_this)); }\n", cs_type, ci.uq_name, ni.uq_name);
-		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    get { return new %s(SprExport.Spr_%s_addr_%s(_thisArray[0])); }\n", cs_type, ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_thisArray[0], value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "\t}\n");
 
 		// [cpp]
@@ -4184,8 +4184,8 @@ public:
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: enum");
 		// [cs]
 		Printf(CS,  "\tpublic %s %s {\n", ni.cs_type, ni.cs_name);
-		Printf(CS,  "\t    get { return (%s) SprExport.Spr_%s_get_%s(_this); }\n", ni.cs_type, ci.uq_name, ni.uq_name);
-		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_this, (int) value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    get { return (%s) SprExport.Spr_%s_get_%s(_thisArray[0]); }\n", ni.cs_type, ci.uq_name, ni.uq_name);
+		Printf(CS,  "\t    set { SprExport.Spr_%s_set_%s(_thisArray[0], (int) value); }\n", ci.uq_name, ni.uq_name);
 		Printf(CS,  "\t}\n");
 
 		// [cpp]
