@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GRVertexBlending", "GRVertrexBlending14.0.vcxproj", "{5E9D7EA7-0E16-4779-B46D-B7D0FC107F89}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GRVertexBlending", "GRVertexBlending14.0.vcxproj", "{5E9D7EA7-0E16-4779-B46D-B7D0FC107F89}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "..\..\..\Base\Base14.0.vcxproj", "{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}"
 	ProjectSection(ProjectDependencies) = postProject
