@@ -2747,7 +2747,9 @@ public:
 			Printf(cs, "\tpublic void ApplyTo(%s r, bool apply_to_base_class = false) {\n", name);
 			for (int i = 0; i < struct_info->num_members; i++) {
 				StructMembersInfo* mp = struct_info->members[i];
-				Printf(cs, "\t\tr.%s = %s;\n", mp->cs_name, mp->cs_name);
+				if (!(EQ(mp->cs_type, "vectorwrapper_float") || EQ(mp->cs_type, "vectorwrapper_double"))) { // vectorwrapper_float,vectorwrapper_doubleのシリアライズが上手くいかずエラーが起こるため，一時的に生成しないように
+					Printf(cs, "\t\tr.%s = %s;\n", mp->cs_name, mp->cs_name);
+				}
 			}
 			if (parents.size() > 0 && need_apply[1]) {	// need apply to base classes
 				Printf(cs, "\t\tif (apply_to_base_class) {\n");
@@ -2759,7 +2761,9 @@ public:
 			Printf(cs, "\tpublic void ApplyFrom(%s r, bool apply_to_base_class = false) {\n", name);
 			for (int i = 0; i < struct_info->num_members; i++) {
 				StructMembersInfo* mp = struct_info->members[i];
-				Printf(cs, "\t\t%s = r.%s;\n", mp->cs_name, mp->cs_name);
+				if (!(EQ(mp->cs_type, "vectorwrapper_float") || EQ(mp->cs_type, "vectorwrapper_double"))) { // vectorwrapper_float,vectorwrapper_doubleのシリアライズが上手くいかずエラーが起こるため，一時的に生成しないように
+					Printf(cs, "\t\t%s = r.%s;\n", mp->cs_name, mp->cs_name);
+				}
 			}
 			if (parents.size() > 0 && need_apply[1]) {	// need apply to base classes
 				Printf(cs, "\t\tif (apply_to_base_class) {\n");
