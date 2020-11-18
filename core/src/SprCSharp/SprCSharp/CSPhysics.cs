@@ -5102,6 +5102,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5110,23 +5111,29 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public int GetPriority() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHEngineIf_GetPriority((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void Step() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHEngineIf_Step((IntPtr) _thisArray[0]);
 	}
 	public void Enable(bool on) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHEngineIf_Enable((IntPtr) _thisArray[0], (bool) on);
 	}
 	public void Enable() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _thisArray[0]);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHEngineIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public PHSceneIf GetScene() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHEngineIf_GetScene((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSceneIf obj = new PHSceneIf(ptr);
@@ -5148,6 +5155,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5156,63 +5164,80 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHConstraintsIf GetContactPoints() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintEngineIf_GetContactPoints((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHConstraintsIf obj = new PHConstraintsIf(ptr);
             return obj;
 	}
 	public void SetVelCorrectionRate(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetVelCorrectionRate((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetVelCorrectionRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHConstraintEngineIf_GetVelCorrectionRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetPosCorrectionRate(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetPosCorrectionRate((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetPosCorrectionRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHConstraintEngineIf_GetPosCorrectionRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetContactCorrectionRate(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetContactCorrectionRate((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetContactCorrectionRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHConstraintEngineIf_GetContactCorrectionRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetBSaveConstraints(bool value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetBSaveConstraints((IntPtr) _thisArray[0], (bool) value);
 	}
 	public void SetUpdateAllSolidState(bool flag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetUpdateAllSolidState((IntPtr) _thisArray[0], (bool) flag);
 	}
 	public void SetUseContactSurface(bool flag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetUseContactSurface((IntPtr) _thisArray[0], (bool) flag);
 	}
 	public void SetShrinkRate(double data) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRate((IntPtr) _thisArray[0], (double) data);
 	}
 	public double GetShrinkRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHConstraintEngineIf_GetShrinkRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetShrinkRateCorrection(double data) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRateCorrection((IntPtr) _thisArray[0], (double) data);
 	}
 	public double GetShrinkRateCorrection() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHConstraintEngineIf_GetShrinkRateCorrection((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetRegularization(double reg) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_SetRegularization((IntPtr) _thisArray[0], (double) reg);
 	}
 	public double GetRegularization() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHConstraintEngineIf_GetRegularization((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void EnableRenderContact(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[0], (bool) enable);
 	}
     }
@@ -5231,6 +5256,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHGravityEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5254,6 +5280,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPenaltyEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5277,64 +5304,82 @@ namespace SprCs {
             return bstr;
         }
 	public void SetMaxVelocity(double maxVel) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetMaxVelocity((IntPtr) _thisArray[0], (double) maxVel);
 	}
 	public double GetMaxVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEngineIf_GetMaxVelocity((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetMaxAngularVelocity(double maxAV) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetMaxAngularVelocity((IntPtr) _thisArray[0], (double) maxAV);
 	}
 	public double GetMaxAngularVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEngineIf_GetMaxAngularVelocity((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetMaxActuatorVelocity(double maxAV) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetMaxActuatorVelocity((IntPtr) _thisArray[0], (double) maxAV);
 	}
 	public double GetMaxActuatorVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEngineIf_GetMaxActuatorVelocity((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetRegularizeParam(double epsilon) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetRegularizeParam((IntPtr) _thisArray[0], (double) epsilon);
 	}
 	public double GetRegularizeParam() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEngineIf_GetRegularizeParam((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetIterCutOffAngVel(double epsilon) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetIterCutOffAngVel((IntPtr) _thisArray[0], (double) epsilon);
 	}
 	public double GetIterCutOffAngVel() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEngineIf_GetIterCutOffAngVel((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetIntpRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetIntpRate((IntPtr) _thisArray[0]);
 	}
 	public int GetIntpRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHIKEngineIf_GetIntpRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void ApplyExactState(bool reverse) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_ApplyExactState((IntPtr) _thisArray[0], (bool) reverse);
 	}
 	public void ApplyExactState() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_ApplyExactState_1((IntPtr) _thisArray[0]);
 	}
 	public void SetNumIter(int numIter) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_SetNumIter((IntPtr) _thisArray[0], (int) numIter);
 	}
 	public int GetNumIter() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHIKEngineIf_GetNumIter((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void FK() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEngineIf_FK((IntPtr) _thisArray[0]);
 	}
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5358,6 +5403,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5366,56 +5412,71 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetTimeStep(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
 	}
 	public double GetTimeStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemEngineIf_GetTimeStep((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetVibrationTransfer(bool bEnable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_SetVibrationTransfer((IntPtr) _thisArray[0], (bool) bEnable);
 	}
 	public void SetThermalTransfer(bool bEnable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_SetThermalTransfer((IntPtr) _thisArray[0], (bool) bEnable);
 	}
 	public int NMeshNew() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemEngineIf_NMeshNew((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHFemMeshNewIf GetMeshNew(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemEngineIf_GetMeshNew((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHFemMeshNewIf obj = new PHFemMeshNewIf(ptr);
             return obj;
 	}
 	public bool AddMeshPair(PHFemMeshNewIf m0, PHFemMeshNewIf m1) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[0], (IntPtr) m0, (IntPtr) m1);
 	    return (ret == 0) ? false : true;
 	}
 	public bool RemoveMeshPair(PHFemMeshNewIf m0, PHFemMeshNewIf m1) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[0], (IntPtr) m0, (IntPtr) m1);
 	    return (ret == 0) ? false : true;
 	}
 	public void ThermalTransfer() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_ThermalTransfer((IntPtr) _thisArray[0]);
 	}
 	public void setheatTransferRatio(double setheatTransferRatio) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_setheatTransferRatio((IntPtr) _thisArray[0], (double) setheatTransferRatio);
 	}
 	public void FEMSolidMatchRefresh() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_FEMSolidMatchRefresh((IntPtr) _thisArray[0]);
 	}
 	public void InitContacts() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_InitContacts((IntPtr) _thisArray[0]);
 	}
 	public void ClearContactVectors() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemEngineIf_ClearContactVectors((IntPtr) _thisArray[0]);
 	}
 	public int NMesh() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHFemMeshIf GetMesh(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemEngineIf_GetMesh((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHFemMeshIf obj = new PHFemMeshIf(ptr);
@@ -5438,6 +5499,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5446,68 +5508,86 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetTimeStep(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
 	}
 	public double GetTimeStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHOpEngineIf_GetTimeStep((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetGravity(bool gflag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetGravity((IntPtr) _thisArray[0], (bool) gflag);
 	}
 	public void InitialHapticRenderer(int objId) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_InitialHapticRenderer((IntPtr) _thisArray[0], (int) objId);
 	}
 	public arraywrapper_PHOpObjDesc GetOpObj(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpEngineIf_GetOpObj((IntPtr) _thisArray[0], (int) i);
             return new arraywrapper_PHOpObjDesc(ptr);
 	}
 	public void StepWithBlend() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_StepWithBlend((IntPtr) _thisArray[0]);
 	}
 	public int AddOpObj() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHOpEngineIf_AddOpObj((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetHapticSolveEnable(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetHapticSolveEnable((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public bool IsHapticSolve() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpEngineIf_IsHapticSolve((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetProxyCorrectionEnable(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetProxyCorrectionEnable((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public bool IsProxyCorrection() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpEngineIf_IsProxyCorrection((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetUpdateNormal(bool flag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetUpdateNormal((IntPtr) _thisArray[0], (bool) flag);
 	}
 	public bool IsUpdateNormal(int obji) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpEngineIf_IsUpdateNormal((IntPtr) _thisArray[0], (int) obji);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetUseHaptic(bool hapticUsage) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetUseHaptic((IntPtr) _thisArray[0], (bool) hapticUsage);
 	}
 	public bool GetUseHaptic() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpEngineIf_GetUseHaptic((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public PHOpObjIf GetOpObjIf(int obji) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpEngineIf_GetOpObjIf((IntPtr) _thisArray[0], (int) obji);
             if (ptr == IntPtr.Zero) { return null; } 
             PHOpObjIf obj = new PHOpObjIf(ptr);
             return obj;
 	}
 	public int GetOpObjNum() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHOpEngineIf_GetOpObjNum((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public ObjectIf GetOpAnimator() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpEngineIf_GetOpAnimator((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             ObjectIf obj = new ObjectIf(ptr);
@@ -5520,6 +5600,7 @@ namespace SprCs {
             return obj;
 	}
 	public ObjectIf GetOpHapticController() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpEngineIf_GetOpHapticController((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             ObjectIf obj = new ObjectIf(ptr);
@@ -5532,6 +5613,7 @@ namespace SprCs {
             return obj;
 	}
 	public ObjectIf GetOpHapticRenderer() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpEngineIf_GetOpHapticRenderer((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             ObjectIf obj = new ObjectIf(ptr);
@@ -5544,27 +5626,34 @@ namespace SprCs {
             return obj;
 	}
 	public void SetIterationCount(int count) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetIterationCount((IntPtr) _thisArray[0], (int) count);
 	}
 	public int GetIterationCount() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHOpEngineIf_GetIterationCount((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetAnimationFlag(bool flag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetAnimationFlag((IntPtr) _thisArray[0], (bool) flag);
 	}
 	public bool GetAnimationFlag() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpEngineIf_GetAnimationFlag((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetDrawPtclR(float r) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_SetDrawPtclR((IntPtr) _thisArray[0], (float) r);
 	}
 	public float GetDrawPtclR() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpEngineIf_GetDrawPtclR((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void InitialNoMeshHapticRenderer() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[0]);
 	}
     }
@@ -5583,6 +5672,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5606,6 +5696,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshThermoIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5614,169 +5705,219 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public int GetSurfaceVertex(int id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshThermoIf_GetSurfaceVertex((IntPtr) _thisArray[0], (int) id);
 	    return result;
 	}
 	public int NSurfaceVertices() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshThermoIf_NSurfaceVertices((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetVertexTc(int id, double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc((IntPtr) _thisArray[0], (int) id, (double) temp);
 	}
 	public void SetVertexTc(int id, double temp, double heatTrans) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc_1((IntPtr) _thisArray[0], (int) id, (double) temp, (double) heatTrans);
 	}
 	public Vec3d GetPose(int id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshThermoIf_GetPose((IntPtr) _thisArray[0], (int) id);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetSufVtxPose(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshThermoIf_GetSufVtxPose((IntPtr) _thisArray[0], (uint) id);
             return new Vec3d(ptr, true);
 	}
 	public uint GetStepCount() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    uint result = (uint) SprExport.Spr_PHFemMeshThermoIf_GetStepCount((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public uint GetStepCountCyc() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    uint result = (uint) SprExport.Spr_PHFemMeshThermoIf_GetStepCountCyc((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetVertexTemp(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemMeshThermoIf_GetVertexTemp((IntPtr) _thisArray[0], (uint) id);
 	    return result;
 	}
 	public double GetSufVertexTemp(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemMeshThermoIf_GetSufVertexTemp((IntPtr) _thisArray[0], (uint) id);
 	    return result;
 	}
 	public void SetVertexTemp(uint id, double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTemp((IntPtr) _thisArray[0], (uint) id, (double) temp);
 	}
 	public void SetVerticesTempAll(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetVerticesTempAll((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void AddvecFAll(uint id, double dqdt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_AddvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
 	}
 	public void SetvecFAll(uint id, double dqdt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
 	}
 	public void SetRhoSpheat(double rho, double Cp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetRhoSpheat((IntPtr) _thisArray[0], (double) rho, (double) Cp);
 	}
 	public uint GetNFace() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    uint result = (uint) SprExport.Spr_PHFemMeshThermoIf_GetNFace((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public vectorwrapper_Vec3d GetFaceEdgeVtx(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshThermoIf_GetFaceEdgeVtx((IntPtr) _thisArray[0], (uint) id);
             return new vectorwrapper_Vec3d(ptr);
 	}
 	public Vec3d GetFaceEdgeVtx(uint id, uint vtx) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshThermoIf_GetFaceEdgeVtx_1((IntPtr) _thisArray[0], (uint) id, (uint) vtx);
             return new Vec3d(ptr, true);
 	}
 	public Vec2d GetIHbandDrawVtx() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshThermoIf_GetIHbandDrawVtx((IntPtr) _thisArray[0]);
             return new Vec2d(ptr, true);
 	}
 	public void CalcIHdqdt_atleast(double r, double R, double dqdtAll, uint num) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[0], (double) r, (double) R, (double) dqdtAll, (uint) num);
 	}
 	public void UpdateIHheatband(double xS, double xE, uint heatingMODE) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheatband((IntPtr) _thisArray[0], (double) xS, (double) xE, (uint) heatingMODE);
 	}
 	public void UpdateIHheat(uint heating) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheat((IntPtr) _thisArray[0], (uint) heating);
 	}
 	public void UpdateVecF() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF((IntPtr) _thisArray[0]);
 	}
 	public void UpdateVecF_frypan() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[0]);
 	}
 	public void DecrMoist() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist((IntPtr) _thisArray[0]);
 	}
 	public void DecrMoist_velo(double vel) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_velo((IntPtr) _thisArray[0], (double) vel);
 	}
 	public void DecrMoist_vel(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_vel((IntPtr) _thisArray[0], (double) dt);
 	}
 	public void InitAllVertexTemp() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_InitAllVertexTemp((IntPtr) _thisArray[0]);
 	}
 	public void SetInitThermoConductionParam(double thConduct, double rho, double specificHeat, double heatTrans) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[0], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
 	}
 	public void SetParamAndReCreateMatrix(double thConduct0, double roh0, double specificHeat0) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[0], (double) thConduct0, (double) roh0, (double) specificHeat0);
 	}
 	public double GetArbitraryPointTemp(Vec3d temppos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemMeshThermoIf_GetArbitraryPointTemp((IntPtr) _thisArray[0], (IntPtr) temppos);
 	    return result;
 	}
 	public double GetVtxTempInTets(Vec3d temppos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemMeshThermoIf_GetVtxTempInTets((IntPtr) _thisArray[0], (IntPtr) temppos);
 	    return result;
 	}
 	public void InitVecFAlls() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_InitVecFAlls((IntPtr) _thisArray[0]);
 	}
 	public double Get_thConduct() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemMeshThermoIf_Get_thConduct((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public bool SetConcentricHeatMap(vectorwrapper_double r, vectorwrapper_double temp, Vec2d origin) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[0], (IntPtr) r, (IntPtr) temp, (IntPtr) origin);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetThermalEmissivityToVerticesAll(double thermalEmissivity, double thermalEmissivity_const) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[0], (double) thermalEmissivity, (double) thermalEmissivity_const);
 	}
 	public void SetOuterTemp(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetOuterTemp((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void SetThermalRadiation(double ems, double ems_const) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetThermalRadiation((IntPtr) _thisArray[0], (double) ems, (double) ems_const);
 	}
 	public void SetGaussCalcParam(uint cyc, double epsilon) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetGaussCalcParam((IntPtr) _thisArray[0], (uint) cyc, (double) epsilon);
 	}
 	public void InitTcAll(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_InitTcAll((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void InitToutAll(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_InitToutAll((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void SetWeekPow(double weekPow_) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetWeekPow((IntPtr) _thisArray[0], (double) weekPow_);
 	}
 	public void SetIHParamWEEK(double inr_, double outR_, double weekPow_) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetIHParamWEEK((IntPtr) _thisArray[0], (double) inr_, (double) outR_, (double) weekPow_);
 	}
 	public void SetHeatTransRatioToAllVertex(double heatTransR_) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[0], (double) heatTransR_);
 	}
 	public void AfterSetDesc() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_AfterSetDesc((IntPtr) _thisArray[0]);
 	}
 	public void SetStopTimespan(double timespan) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_SetStopTimespan((IntPtr) _thisArray[0], (double) timespan);
 	}
 	public void UpdateMatk_RadiantHeatToAir() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[0]);
 	}
 	public void ActivateVtxbeRadiantHeat() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[0]);
 	}
 	public void OutputMatKall() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_OutputMatKall((IntPtr) _thisArray[0]);
 	}
 	public void IfRadiantHeatTrans() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[0]);
 	}
     }
@@ -5795,6 +5936,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5803,9 +5945,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetPHSolid(PHSolidIf s) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[0], (IntPtr) s);
 	}
 	public PHSolidIf GetPHSolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetPHSolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -5813,113 +5957,140 @@ namespace SprCs {
             return obj;
 	}
 	public PHFemVibrationIf GetPHFemVibration() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetPHFemVibration((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHFemVibrationIf obj = new PHFemVibrationIf(ptr);
             return obj;
 	}
 	public PHFemThermoIf GetPHFemThermo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetPHFemThermo((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHFemThermoIf obj = new PHFemThermoIf(ptr);
             return obj;
 	}
 	public PHFemPorousWOMoveIf GetPHFemPorousWOMove() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetPHFemPorousWOMove((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHFemPorousWOMoveIf obj = new PHFemPorousWOMoveIf(ptr);
             return obj;
 	}
 	public int NVertices() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NVertices((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int NFaces() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NFaces((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int NTets() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NTets((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetVertexUpdateFlags(bool flg) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpdateFlags((IntPtr) _thisArray[0], (bool) flg);
 	}
 	public void SetVertexUpateFlag(int vid, bool flg) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpateFlag((IntPtr) _thisArray[0], (int) vid, (bool) flg);
 	}
 	public double CompTetVolume(int tetID, bool bDeform) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemMeshNewIf_CompTetVolume((IntPtr) _thisArray[0], (int) tetID, (bool) bDeform);
 	    return result;
 	}
 	public bool AddVertexDisplacementW(int vtxId, Vec3d disW) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementW((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) disW);
 	    return (ret == 0) ? false : true;
 	}
 	public bool AddVertexDisplacementL(int vtxId, Vec3d disL) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementL((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) disL);
 	    return (ret == 0) ? false : true;
 	}
 	public bool SetVertexPositionW(int vtxId, Vec3d posW) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionW((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) posW);
 	    return (ret == 0) ? false : true;
 	}
 	public bool SetVertexPositionL(int vtxId, Vec3d posL) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionL((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) posL);
 	    return (ret == 0) ? false : true;
 	}
 	public bool SetVertexVelocityL(int vtxId, Vec3d posL) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexVelocityL((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) posL);
 	    return (ret == 0) ? false : true;
 	}
 	public Vec3d GetVertexVelocityL(int vtxId) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetVertexVelocityL((IntPtr) _thisArray[0], (int) vtxId);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetVertexPositionL(int vtxId) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetVertexPositionL((IntPtr) _thisArray[0], (int) vtxId);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetVertexDisplacementL(int vtxId) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetVertexDisplacementL((IntPtr) _thisArray[0], (int) vtxId);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetVertexInitalPositionL(int vtxId) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetVertexInitalPositionL((IntPtr) _thisArray[0], (int) vtxId);
             return new Vec3d(ptr, true);
 	}
 	public void SetVelocity(Vec3d v) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemMeshNewIf_SetVelocity((IntPtr) _thisArray[0], (IntPtr) v);
 	}
 	public int GetTetVertexIds(int t) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_GetTetVertexIds((IntPtr) _thisArray[0], (int) t);
 	    return result;
 	}
 	public int GetFaceVertexIds(int f) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_GetFaceVertexIds((IntPtr) _thisArray[0], (int) f);
 	    return result;
 	}
 	public Vec3d GetFaceNormal(int f) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemMeshNewIf_GetFaceNormal((IntPtr) _thisArray[0], (int) f);
             return new Vec3d(ptr, true);
 	}
 	public int GetSurfaceVertex(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_GetSurfaceVertex((IntPtr) _thisArray[0], (int) i);
 	    return result;
 	}
 	public int NSurfaceVertices() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceVertices((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int NSurfaceFace() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceFace((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public bool CompTetShapeFunctionValue(int tetId, Vec3d posL, Vec4d value, bool bDeform) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 	    return (ret == 0) ? false : true;
 	}
 	public int FindTetFromFace(int faceId) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[0], (int) faceId);
 	    return result;
 	}
@@ -5939,6 +6110,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemBaseIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5947,6 +6119,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHFemMeshNewIf GetPHFemMesh() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemBaseIf_GetPHFemMesh((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHFemMeshNewIf obj = new PHFemMeshNewIf(ptr);
@@ -5968,6 +6141,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemVibrationIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -5976,98 +6150,125 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetTimeStep(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
 	}
 	public double GetTimeStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemVibrationIf_GetTimeStep((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetYoungModulus(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetYoungModulus((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetYoungModulus() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemVibrationIf_GetYoungModulus((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetPoissonsRatio(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetPoissonsRatio((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetPoissonsRatio() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemVibrationIf_GetPoissonsRatio((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDensity(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetDensity((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetDensity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemVibrationIf_GetDensity((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetAlpha(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetAlpha((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetAlpha() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemVibrationIf_GetAlpha((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetBeta(double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetBeta((IntPtr) _thisArray[0], (double) value);
 	}
 	public double GetBeta() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemVibrationIf_GetBeta((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetBoundary(int vtxIds) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetBoundary((IntPtr) _thisArray[0], (int) vtxIds);
 	}
 	public void ClearBoundary() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_ClearBoundary((IntPtr) _thisArray[0]);
 	}
 	public vectorwrapper_int GetBoundary() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemVibrationIf_GetBoundary((IntPtr) _thisArray[0]);
             return new vectorwrapper_int(ptr);
 	}
 	public void SetAnalysisMode(PHFemVibrationDesc.ANALYSIS_MODE mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetAnalysisMode((IntPtr) _thisArray[0], (int) mode);
 	}
 	public void SetIntegrationMode(PHFemVibrationDesc.INTEGRATION_MODE mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetIntegrationMode((IntPtr) _thisArray[0], (int) mode);
 	}
 	public bool AddBoundaryCondition(int vtxId, Vec3i dof) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_AddBoundaryCondition((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) dof);
 	    return (ret == 0) ? false : true;
 	}
 	public void DeleteBoundaryCondition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_DeleteBoundaryCondition((IntPtr) _thisArray[0]);
 	}
 	public bool FindNeighborTetrahedron(Vec3d posW, int tetId, Vec3d cpW, bool bDeform) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[0], (IntPtr) posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 	    return (ret == 0) ? false : true;
 	}
 	public bool SetDamping(int tetId, Vec3d posW, double damp_ratio) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_SetDamping((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (double) damp_ratio);
 	    return (ret == 0) ? false : true;
 	}
 	public bool AddForce(int tetId, Vec3d posW, Vec3d fW) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_AddForce((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (IntPtr) fW);
 	    return (ret == 0) ? false : true;
 	}
 	public bool GetDisplacement(int tetId, Vec3d posW, Vec3d disp, bool bDeform) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_GetDisplacement((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (IntPtr) disp, (bool) bDeform);
 	    return (ret == 0) ? false : true;
 	}
 	public bool GetVelocity(int tetId, Vec3d posW, Vec3d vel, bool bDeform) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_GetVelocity((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (IntPtr) vel, (bool) bDeform);
 	    return (ret == 0) ? false : true;
 	}
 	public bool GetPosition(int tetId, Vec3d posW, Vec3d pos, bool bDeform) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemVibrationIf_GetPosition((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (IntPtr) pos, (bool) bDeform);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetbRecomp() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_SetbRecomp((IntPtr) _thisArray[0]);
 	}
 	public void Init() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _thisArray[0]);
 	}
     }
@@ -6086,6 +6287,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemThermoIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -6094,268 +6296,348 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public int GetSurfaceVertex(int id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemThermoIf_GetSurfaceVertex((IntPtr) _thisArray[0], (int) id);
 	    return result;
 	}
 	public int NSurfaceVertices() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemThermoIf_NSurfaceVertices((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetVertexTc(int id, double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexTc((IntPtr) _thisArray[0], (int) id, (double) temp);
 	}
 	public void SetVertexTc(int id, double temp, double heatTrans) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexTc_1((IntPtr) _thisArray[0], (int) id, (double) temp, (double) heatTrans);
 	}
 	public Vec3d GetPose(int id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemThermoIf_GetPose((IntPtr) _thisArray[0], (int) id);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetSufVtxPose(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemThermoIf_GetSufVtxPose((IntPtr) _thisArray[0], (uint) id);
             return new Vec3d(ptr, true);
 	}
 	public uint GetStepCount() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    uint result = (uint) SprExport.Spr_PHFemThermoIf_GetStepCount((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public uint GetStepCountCyc() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    uint result = (uint) SprExport.Spr_PHFemThermoIf_GetStepCountCyc((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetVertexTemp(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetVertexTemp((IntPtr) _thisArray[0], (uint) id);
 	    return result;
 	}
 	public double GetSufVertexTemp(uint id) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetSufVertexTemp((IntPtr) _thisArray[0], (uint) id);
 	    return result;
 	}
 	public void SetVertexTemp(uint id, double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexTemp((IntPtr) _thisArray[0], (uint) id, (double) temp);
 	}
 	public void SetVerticesTempAll(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVerticesTempAll((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void AddvecFAll(uint id, double dqdt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_AddvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
 	}
 	public void SetvecFAll(uint id, double dqdt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
 	}
 	public void SetRhoSpheat(double rho, double Cp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetRhoSpheat((IntPtr) _thisArray[0], (double) rho, (double) Cp);
 	}
 	public Vec2d GetIHbandDrawVtx() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemThermoIf_GetIHbandDrawVtx((IntPtr) _thisArray[0]);
             return new Vec2d(ptr, true);
 	}
 	public void CalcIHdqdt_atleast(double r, double R, double dqdtAll, uint num) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[0], (double) r, (double) R, (double) dqdtAll, (uint) num);
 	}
 	public void UpdateIHheatband(double xS, double xE, uint heatingMODE) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_UpdateIHheatband((IntPtr) _thisArray[0], (double) xS, (double) xE, (uint) heatingMODE);
 	}
 	public void UpdateIHheat(uint heating) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_UpdateIHheat((IntPtr) _thisArray[0], (uint) heating);
 	}
 	public void UpdateVecF() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_UpdateVecF((IntPtr) _thisArray[0]);
 	}
 	public void UpdateVecF_frypan() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[0]);
 	}
 	public void DecrMoist() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_DecrMoist((IntPtr) _thisArray[0]);
 	}
 	public void DecrMoist_velo(double vel) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_DecrMoist_velo((IntPtr) _thisArray[0], (double) vel);
 	}
 	public void DecrMoist_vel(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_DecrMoist_vel((IntPtr) _thisArray[0], (double) dt);
 	}
 	public void InitAllVertexTemp() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_InitAllVertexTemp((IntPtr) _thisArray[0]);
 	}
 	public void SetInitThermoConductionParam(double thConduct, double rho, double specificHeat, double heatTrans) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[0], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
 	}
 	public void SetParamAndReCreateMatrix(double thConduct0, double roh0, double specificHeat0) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[0], (double) thConduct0, (double) roh0, (double) specificHeat0);
 	}
 	public double GetArbitraryPointTemp(Vec3d temppos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetArbitraryPointTemp((IntPtr) _thisArray[0], (IntPtr) temppos);
 	    return result;
 	}
 	public double GetVtxTempInTets(Vec3d temppos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetVtxTempInTets((IntPtr) _thisArray[0], (IntPtr) temppos);
 	    return result;
 	}
 	public void InitVecFAlls() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_InitVecFAlls((IntPtr) _thisArray[0]);
 	}
 	public double Get_thConduct() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_Get_thConduct((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public bool SetConcentricHeatMap(vectorwrapper_double r, vectorwrapper_double temp, Vec2d origin) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[0], (IntPtr) r, (IntPtr) temp, (IntPtr) origin);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetThermalEmissivityToVerticesAll(double thermalEmissivity, double thermalEmissivity_const) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[0], (double) thermalEmissivity, (double) thermalEmissivity_const);
 	}
 	public void SetOuterTemp(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetOuterTemp((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void SetThermalRadiation(double ems, double ems_const) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetThermalRadiation((IntPtr) _thisArray[0], (double) ems, (double) ems_const);
 	}
 	public void SetGaussCalcParam(uint cyc, double epsilon) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetGaussCalcParam((IntPtr) _thisArray[0], (uint) cyc, (double) epsilon);
 	}
 	public void InitTcAll(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_InitTcAll((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void InitToutAll(double temp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_InitToutAll((IntPtr) _thisArray[0], (double) temp);
 	}
 	public void SetWeekPow(double weekPow_) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetWeekPow((IntPtr) _thisArray[0], (double) weekPow_);
 	}
 	public void SetIHParamWEEK(double inr_, double outR_, double weekPow_) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetIHParamWEEK((IntPtr) _thisArray[0], (double) inr_, (double) outR_, (double) weekPow_);
 	}
 	public void SetHeatTransRatioToAllVertex(double heatTransR_) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[0], (double) heatTransR_);
 	}
 	public void AfterSetDesc() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_AfterSetDesc((IntPtr) _thisArray[0]);
 	}
 	public void SetStopTimespan(double timespan) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetStopTimespan((IntPtr) _thisArray[0], (double) timespan);
 	}
 	public void UpdateMatk_RadiantHeatToAir() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[0]);
 	}
 	public void ReCreateMatrix(double thConduct0) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_ReCreateMatrix((IntPtr) _thisArray[0], (double) thConduct0);
 	}
 	public void ActivateVtxbeRadiantHeat() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[0]);
 	}
 	public void OutputMatKall() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_OutputMatKall((IntPtr) _thisArray[0]);
 	}
 	public void IfRadiantHeatTrans() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[0]);
 	}
 	public void IfRadiantHeatTransSteak() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTransSteak((IntPtr) _thisArray[0]);
 	}
 	public float calcGvtx(string fwfood, int pv, uint texture_mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
             IntPtr remote1 = Marshal.StringToBSTR(fwfood);
 	    float result = (float) SprExport.Spr_PHFemThermoIf_calcGvtx((IntPtr) _thisArray[0], (IntPtr) remote1, (int) pv, (uint) texture_mode);
             Marshal.FreeBSTR(remote1);
 	    return result;
 	}
 	public void SetTimeStep(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
 	}
 	public Vec3d GetVertexNormal(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemThermoIf_GetVertexNormal((IntPtr) _thisArray[0], (uint) vtxid);
             return new Vec3d(ptr, true);
 	}
 	public void SetVertexHeatTransRatio(uint vtxid, double heattransRatio) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexHeatTransRatio((IntPtr) _thisArray[0], (uint) vtxid, (double) heattransRatio);
 	}
 	public void SetVertexBeRadiantHeat(uint vtxid, bool flag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexBeRadiantHeat((IntPtr) _thisArray[0], (uint) vtxid, (bool) flag);
 	}
 	public double GetVertexArea(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetVertexArea((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
 	public void SetVertexToofar(uint vtxid, bool tooFar) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexToofar((IntPtr) _thisArray[0], (uint) vtxid, (bool) tooFar);
 	}
 	public bool GetVertexToofar(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHFemThermoIf_GetVertexToofar((IntPtr) _thisArray[0], (uint) vtxid);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetVertexBeCondVtxs(uint vtxid, bool becondVtxs) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetVertexBeCondVtxs((IntPtr) _thisArray[0], (uint) vtxid, (bool) becondVtxs);
 	}
 	public void CreateVecFAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_CreateVecFAll((IntPtr) _thisArray[0]);
 	}
 	public void CalcFaceNormalAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_CalcFaceNormalAll((IntPtr) _thisArray[0]);
 	}
 	public void CalcVertexNormalAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_CalcVertexNormalAll((IntPtr) _thisArray[0]);
 	}
 	public void InitFaceNormalAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_InitFaceNormalAll((IntPtr) _thisArray[0]);
 	}
 	public void InitVertexNormalAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_InitVertexNormalAll((IntPtr) _thisArray[0]);
 	}
 	public void RevVertexNormalAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_RevVertexNormalAll((IntPtr) _thisArray[0]);
 	}
 	public void SetWeekPowFULL(double weekPow_full) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetWeekPowFULL((IntPtr) _thisArray[0], (double) weekPow_full);
 	}
 	public void SetweekPow_FULL(double setweekPow_FULL) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetweekPow_FULL((IntPtr) _thisArray[0], (double) setweekPow_FULL);
 	}
 	public void setIhRatio(double a) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_setIhRatio((IntPtr) _thisArray[0], (double) a);
 	}
 	public void Setems(double setems) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_Setems((IntPtr) _thisArray[0], (double) setems);
 	}
 	public void Setems_steak(double setems_steak) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_Setems_steak((IntPtr) _thisArray[0], (double) setems_steak);
 	}
 	public void SetthConduct(double thConduct) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetthConduct((IntPtr) _thisArray[0], (double) thConduct);
 	}
 	public double GetWeekPowFULL() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetWeekPowFULL((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public Vec3d GetVertexPose(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemThermoIf_GetVertexPose((IntPtr) _thisArray[0], (uint) vtxid);
             return new Vec3d(ptr, true);
 	}
 	public void OutTetVolumeAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_OutTetVolumeAll((IntPtr) _thisArray[0]);
 	}
 	public int GetTetsV(uint tetid, uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemThermoIf_GetTetsV((IntPtr) _thisArray[0], (uint) tetid, (uint) vtxid);
 	    return result;
 	}
 	public void VecFNegativeCheck() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_VecFNegativeCheck((IntPtr) _thisArray[0]);
 	}
 	public double GetVecFElem(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetVecFElem((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
 	public int GetTetVNums(uint id, uint num) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHFemThermoIf_GetTetVNums((IntPtr) _thisArray[0], (uint) id, (uint) num);
 	    return result;
 	}
 	public double GetInitialTemp() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemThermoIf_GetInitialTemp((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void UpdateVertexTempAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_UpdateVertexTempAll((IntPtr) _thisArray[0]);
 	}
 	public void SetThermoCameraScale(double minTemp, double maxTemp) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _thisArray[0], (double) minTemp, (double) maxTemp);
 	}
     }
@@ -6374,6 +6656,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFemPorousWOMoveIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -6382,62 +6665,78 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetTimeStep(double dt) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemPorousWOMoveIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
 	}
 	public double GetTimeStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetTimeStep((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void UpdateVertexRhoWAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoWAll((IntPtr) _thisArray[0]);
 	}
 	public void UpdateVertexRhoOAll() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoOAll((IntPtr) _thisArray[0]);
 	}
 	public void SetVertexMw(uint vtxid, double mw) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMw((IntPtr) _thisArray[0], (uint) vtxid, (double) mw);
 	}
 	public void SetVertexMo(uint vtxid, double mo) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMo((IntPtr) _thisArray[0], (uint) vtxid, (double) mo);
 	}
 	public double GetVertexMw(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexMw((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
 	public double GetVertexMo(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexMo((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
 	public double GetVtxWaterInTets(Vec3d temppos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVtxWaterInTets((IntPtr) _thisArray[0], (IntPtr) temppos);
 	    return result;
 	}
 	public double GetVtxOilInTets(Vec3d temppos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVtxOilInTets((IntPtr) _thisArray[0], (IntPtr) temppos);
 	    return result;
 	}
 	public double GetVertexRhoW(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexRhoW((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
 	public double GetVertexRhoO(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexRhoO((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
 	public float calcGvtx(string fwfood, int pv, uint texture_mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
             IntPtr remote1 = Marshal.StringToBSTR(fwfood);
 	    float result = (float) SprExport.Spr_PHFemPorousWOMoveIf_calcGvtx((IntPtr) _thisArray[0], (IntPtr) remote1, (int) pv, (uint) texture_mode);
             Marshal.FreeBSTR(remote1);
 	    return result;
 	}
 	public void setGravity(Vec3d g) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFemPorousWOMoveIf_setGravity((IntPtr) _thisArray[0], (IntPtr) g);
 	}
 	public double decideWetValue(uint faceid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _thisArray[0], (uint) faceid);
 	    return result;
 	}
 	public double GetVtxSaturation(uint vtxid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVtxSaturation((IntPtr) _thisArray[0], (uint) vtxid);
 	    return result;
 	}
@@ -6457,6 +6756,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFrameIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -6465,13 +6765,16 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public Posed GetPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFrameIf_GetPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
 	public void SetPose(Posed p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHFrameIf_SetPose((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public CDShapeIf GetShape() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             CDShapeIf obj = new CDShapeIf(ptr);
@@ -6493,6 +6796,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -6501,73 +6805,92 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public Posed GetPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
 	public Vec3d GetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetVelocity((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetAngularVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetAngularVelocity((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetCenterOfMass() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetCenterOfMass((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetFramePosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetFramePosition((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetCenterPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetCenterPosition((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public bool IsDynamical() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBodyIf_IsDynamical((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public bool IsFrozen() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBodyIf_IsFrozen((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void AddShape(CDShapeIf shape) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[0], (IntPtr) shape);
 	}
 	public void AddShapes(CDShapeIf shBegin, CDShapeIf shEnd) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[0], (IntPtr) shBegin, (IntPtr) shEnd);
 	}
 	public void RemoveShape(int index) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _thisArray[0], (int) index);
 	}
 	public void RemoveShapes(int idxBegin, int idxEnd) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_RemoveShapes((IntPtr) _thisArray[0], (int) idxBegin, (int) idxEnd);
 	}
 	public void RemoveShape(CDShapeIf shape) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[0], (IntPtr) shape);
 	}
 	public int NShape() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHBodyIf_NShape((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public CDShapeIf GetShape(int index) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[0], (int) index);
             if (ptr == IntPtr.Zero) { return null; } 
             CDShapeIf obj = new CDShapeIf(ptr);
             return obj;
 	}
 	public Posed GetShapePose(int index) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr) _thisArray[0], (int) index);
             return new Posed(ptr, true);
 	}
 	public void SetShapePose(int index, Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[0], (int) index, (IntPtr) pose);
 	}
 	public void ClearShape() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _thisArray[0]);
 	}
 	public void GetBBox(Vec3d bbmin, Vec3d bbmax, bool world) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBodyIf_GetBBox((IntPtr) _thisArray[0], (IntPtr) bbmin, (IntPtr) bbmax, (bool) world);
 	}
     }
@@ -6586,6 +6909,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -6594,98 +6918,126 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void AddForce(Vec3d f) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_AddForce((IntPtr) _thisArray[0], (IntPtr) f);
 	}
 	public void AddTorque(Vec3d t) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_AddTorque((IntPtr) _thisArray[0], (IntPtr) t);
 	}
 	public void AddForce(Vec3d f, Vec3d r) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_AddForce_1((IntPtr) _thisArray[0], (IntPtr) f, (IntPtr) r);
 	}
 	public double GetMass() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSolidIf_GetMass((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetMassInv() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSolidIf_GetMassInv((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetMass(double m) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetMass((IntPtr) _thisArray[0], (double) m);
 	}
 	public void SetCenterOfMass(Vec3d center) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[0], (IntPtr) center);
 	}
 	public Matrix3d GetInertia() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetInertia((IntPtr) _thisArray[0]);
             return new Matrix3d(ptr, true);
 	}
 	public Matrix3d GetInertiaInv() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetInertiaInv((IntPtr) _thisArray[0]);
             return new Matrix3d(ptr, true);
 	}
 	public void SetInertia(Matrix3d I) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[0], (IntPtr) I);
 	}
 	public void CompInertia() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _thisArray[0]);
 	}
 	public void SetFramePosition(Vec3d p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public void SetCenterPosition(Vec3d p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public Vec3d GetDeltaPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetDeltaPosition((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetDeltaPosition(Vec3d p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetDeltaPosition_1((IntPtr) _thisArray[0], (IntPtr) p);
             return new Vec3d(ptr, true);
 	}
 	public Quaterniond GetOrientation() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetOrientation((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public void SetOrientation(Quaterniond q) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[0], (IntPtr) q);
 	}
 	public void SetPose(Posed p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public void SetVelocity(Vec3d v) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[0], (IntPtr) v);
 	}
 	public void SetAngularVelocity(Vec3d av) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[0], (IntPtr) av);
 	}
 	public Vec3d GetForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetForce((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetTorque() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetTorque((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetGravity(bool bOn) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetGravity((IntPtr) _thisArray[0], (bool) bOn);
 	}
 	public void SetDynamical(bool bOn) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetDynamical((IntPtr) _thisArray[0], (bool) bOn);
 	}
 	public bool IsDynamical() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHSolidIf_IsDynamical((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetStationary(bool bOn) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[0], (bool) bOn);
 	}
 	public bool IsStationary() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHSolidIf_IsStationary((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public PHTreeNodeIf GetTreeNode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSolidIf_GetTreeNode((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptr);
@@ -6862,6 +7214,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticPointerIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -6870,147 +7223,188 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetHapticRenderMode(PHHapticPointerDesc.HapticRenderMode m) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetHapticRenderMode((IntPtr) _thisArray[0], (int) m);
 	}
 	public PHHapticPointerDesc.HapticRenderMode GetHapticRenderMode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = SprExport.Spr_PHHapticPointerIf_GetHapticRenderMode((IntPtr) _thisArray[0]);
             return (PHHapticPointerDesc.HapticRenderMode) result;
 	}
 	public void EnableRotation(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableRotation((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsRotation() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsRotation((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableForce(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableForce((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsForce((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableFriction(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableFriction((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsFriction() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsFriction((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableTimeVaryFriction(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableTimeVaryFriction((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsTimeVaryFriction() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsTimeVaryFriction((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableVibration(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableVibration((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsVibration() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsVibration((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableMultiPoints(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableMultiPoints((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsMultiPoints() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsMultiPoints((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableMultiProxy(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableMultiProxy((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsMultiProxy() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsMultiProxy((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EnableSimulation(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_EnableSimulation((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsSimulation() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHHapticPointerIf_IsSimulation((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetFrictionSpring(float s) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetFrictionSpring((IntPtr) _thisArray[0], (float) s);
 	}
 	public float GetFrictionSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetFrictionSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetFrictionDamper(float s) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetFrictionDamper((IntPtr) _thisArray[0], (float) s);
 	}
 	public float GetFrictionDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetFrictionDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetReflexSpring(float s) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetReflexSpring((IntPtr) _thisArray[0], (float) s);
 	}
 	public float GetReflexSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetReflexSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetReflexDamper(float d) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetReflexDamper((IntPtr) _thisArray[0], (float) d);
 	}
 	public float GetReflexDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetReflexDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetRotationReflexSpring(float s) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexSpring((IntPtr) _thisArray[0], (float) s);
 	}
 	public float GetRotationReflexSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetRotationReflexSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetRotationReflexDamper(float d) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexDamper((IntPtr) _thisArray[0], (float) d);
 	}
 	public float GetRotationReflexDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetRotationReflexDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetLocalRange(float r) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetLocalRange((IntPtr) _thisArray[0], (float) r);
 	}
 	public float GetLocalRange() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetLocalRange((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetPosScale(double scale) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetPosScale((IntPtr) _thisArray[0], (double) scale);
 	}
 	public double GetPosScale() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHHapticPointerIf_GetPosScale((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetRotationalWeight(double w) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetRotationalWeight((IntPtr) _thisArray[0], (double) w);
 	}
 	public double GetRotationalWeight() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHHapticPointerIf_GetRotationalWeight((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDefaultPose(Posed p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetDefaultPose((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public Posed GetDefaultPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticPointerIf_GetDefaultPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
 	public int NNeighborSolids() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticPointerIf_NNeighborSolids((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int GetNeighborSolidId(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticPointerIf_GetNeighborSolidId((IntPtr) _thisArray[0], (int) i);
 	    return result;
 	}
 	public PHSolidIf GetNeighborSolid(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticPointerIf_GetNeighborSolid((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -7018,42 +7412,53 @@ namespace SprCs {
             return obj;
 	}
 	public float GetContactForce(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHHapticPointerIf_GetContactForce((IntPtr) _thisArray[0], (int) i);
 	    return result;
 	}
 	public SpatialVector GetHapticForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticPointerIf_GetHapticForce((IntPtr) _thisArray[0]);
             return new SpatialVector(ptr, true);
 	}
 	public SpatialVector GetProxyVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticPointerIf_GetProxyVelocity((IntPtr) _thisArray[0]);
             return new SpatialVector(ptr, true);
 	}
 	public void SetProxyN(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetProxyN((IntPtr) _thisArray[0], (int) n);
 	}
 	public int GetProxyN() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticPointerIf_GetProxyN((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int GetTotalSlipState() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticPointerIf_GetTotalSlipState((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int GetSlipState(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticPointerIf_GetSlipState((IntPtr) _thisArray[0], (int) i);
 	    return result;
 	}
 	public void SetProxyVelocity(SpatialVector spv) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_SetProxyVelocity((IntPtr) _thisArray[0], (IntPtr) spv);
 	}
 	public void AddHapticForce(SpatialVector f) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[0], (IntPtr) f);
 	}
 	public void ClearHapticForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_ClearHapticForce((IntPtr) _thisArray[0]);
 	}
 	public void UpdateHumanInterface(Posed pose, SpatialVector vel) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[0], (IntPtr) pose, (IntPtr) vel);
 	}
     }
@@ -7196,6 +7601,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticEngineIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7204,59 +7610,72 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetHapticStepMode(PHHapticEngineDesc.HapticStepMode mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticEngineIf_SetHapticStepMode((IntPtr) _thisArray[0], (int) mode);
 	}
 	public PHHapticEngineDesc.HapticStepMode GetHapticStepMode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = SprExport.Spr_PHHapticEngineIf_GetHapticStepMode((IntPtr) _thisArray[0]);
             return (PHHapticEngineDesc.HapticStepMode) result;
 	}
 	public int NSolids() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolids((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int NPointers() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointers((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHHapticPointerIf GetPointer(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticEngineIf_GetPointer((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHHapticPointerIf obj = new PHHapticPointerIf(ptr);
             return obj;
 	}
 	public PHSolidPairForHapticIf GetSolidPair(int i, int j) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[0], (int) i, (int) j);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptr);
             return obj;
 	}
 	public int NSolidsInHaptic() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolidsInHaptic((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int NPointersInHaptic() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointersInHaptic((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHHapticPointerIf GetPointerInHaptic(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticEngineIf_GetPointerInHaptic((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHHapticPointerIf obj = new PHHapticPointerIf(ptr);
             return obj;
 	}
 	public PHSolidPairForHapticIf GetSolidPairInHaptic(int i, int j) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[0], (int) i, (int) j);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptr);
             return obj;
 	}
 	public void StepPhysicsSimulation() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticEngineIf_StepPhysicsSimulation((IntPtr) _thisArray[0]);
 	}
 	public void ReleaseState() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHHapticEngineIf_ReleaseState((IntPtr) _thisArray[0]);
 	}
 	public IntPtr Callback(CsObject arg) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr result = (IntPtr) SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _thisArray[0], (IntPtr) arg);
 	    return result;
 	}
@@ -7276,6 +7695,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7284,9 +7704,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetSolid(PHSolidIf solid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid);
 	}
 	public PHSolidIf GetSolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetSolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -7294,9 +7716,11 @@ namespace SprCs {
             return obj;
 	}
 	public void SetParentActuator(PHIKActuatorIf ika) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[0], (IntPtr) ika);
 	}
 	public PHIKActuatorIf GetParentActuator() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetParentActuator((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptr);
@@ -7306,135 +7730,173 @@ namespace SprCs {
             return obj;
 	}
 	public void Enable(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_Enable((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHIKEndEffectorIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetTargetLocalPosition(Vec3d localPosition) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalPosition((IntPtr) _thisArray[0], (IntPtr) localPosition);
 	}
 	public Vec3d GetTargetLocalPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetLocalPosition((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetTargetLocalDirection(Vec3d localDirection) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalDirection((IntPtr) _thisArray[0], (IntPtr) localDirection);
 	}
 	public Vec3d GetTargetLocalDirection() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetLocalDirection((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void EnablePositionControl(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_EnablePositionControl((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public bool IsPositionControlEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHIKEndEffectorIf_IsPositionControlEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetPositionPriority(double priority) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetPositionPriority((IntPtr) _thisArray[0], (double) priority);
 	}
 	public double GetPositionPriority() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEndEffectorIf_GetPositionPriority((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetTargetPosition(Vec3d position) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetPosition((IntPtr) _thisArray[0], (IntPtr) position);
 	}
 	public Vec3d GetTargetPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetPosition((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void EnableOrientationControl(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_EnableOrientationControl((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public bool IsOrientationControlEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHIKEndEffectorIf_IsOrientationControlEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetOrientationPriority(double priority) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetOrientationPriority((IntPtr) _thisArray[0], (double) priority);
 	}
 	public double GetOrientationPriority() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKEndEffectorIf_GetOrientationPriority((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetOriCtlMode(PHIKEndEffectorDesc.OriCtlMode mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetOriCtlMode((IntPtr) _thisArray[0], (int) mode);
 	}
 	public PHIKEndEffectorDesc.OriCtlMode GetOriCtlMode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = SprExport.Spr_PHIKEndEffectorIf_GetOriCtlMode((IntPtr) _thisArray[0]);
             return (PHIKEndEffectorDesc.OriCtlMode) result;
 	}
 	public void SetTargetOrientation(Quaterniond orientation) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetOrientation((IntPtr) _thisArray[0], (IntPtr) orientation);
 	}
 	public Quaterniond GetTargetOrientation() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetOrientation((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public void SetTargetDirection(Vec3d direction) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetDirection((IntPtr) _thisArray[0], (IntPtr) direction);
 	}
 	public Vec3d GetTargetDirection() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetDirection((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetTargetLookat(Vec3d lookat) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLookat((IntPtr) _thisArray[0], (IntPtr) lookat);
 	}
 	public Vec3d GetTargetLookat() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetLookat((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetTargetVelocity(Vec3d velocity) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetVelocity((IntPtr) _thisArray[0], (IntPtr) velocity);
 	}
 	public Vec3d GetTargetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetVelocity((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetTargetAngularVelocity(Vec3d angVel) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetAngularVelocity((IntPtr) _thisArray[0], (IntPtr) angVel);
 	}
 	public Vec3d GetTargetAngularVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetAngularVelocity((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void EnableForceControl(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_EnableForceControl((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public void SetTargetForce(Vec3d force, Vec3d workingPoint) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce((IntPtr) _thisArray[0], (IntPtr) force, (IntPtr) workingPoint);
 	}
 	public void SetTargetForce(Vec3d force) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce_1((IntPtr) _thisArray[0], (IntPtr) force);
 	}
 	public Vec3d GetTargetForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetForce((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetTargetForceWorkingPoint() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetForceWorkingPoint((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void EnableTorqueControl(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_EnableTorqueControl((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public void SetTargetTorque(Vec3d torque) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetTorque((IntPtr) _thisArray[0], (IntPtr) torque);
 	}
 	public Vec3d GetTargetTorque() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetTargetTorque((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Posed GetSolidTempPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKEndEffectorIf_GetSolidTempPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
 	public void ApplyExactState() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _thisArray[0]);
 	}
     }
@@ -7453,6 +7915,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7461,46 +7924,59 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void PrepareSolve() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_PrepareSolve((IntPtr) _thisArray[0]);
 	}
 	public void ProceedSolve() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_ProceedSolve((IntPtr) _thisArray[0]);
 	}
 	public void Move() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_Move((IntPtr) _thisArray[0]);
 	}
 	public void ApplyExactState(bool reverse) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_ApplyExactState((IntPtr) _thisArray[0], (bool) reverse);
 	}
 	public void ApplyExactState() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_ApplyExactState_1((IntPtr) _thisArray[0]);
 	}
 	public void SetBias(float bias) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_SetBias((IntPtr) _thisArray[0], (float) bias);
 	}
 	public float GetBias() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHIKActuatorIf_GetBias((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetPullbackRate(double pullbackRate) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_SetPullbackRate((IntPtr) _thisArray[0], (double) pullbackRate);
 	}
 	public double GetPullbackRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKActuatorIf_GetPullbackRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void Enable(bool enable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKActuatorIf_Enable((IntPtr) _thisArray[0], (bool) enable);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHIKActuatorIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public int NAncestors() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHIKActuatorIf_NAncestors((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHIKActuatorIf GetAncestor(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetAncestor((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptr);
@@ -7510,6 +7986,7 @@ namespace SprCs {
             return obj;
 	}
 	public PHIKActuatorIf GetParent() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetParent((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptr);
@@ -7519,10 +7996,12 @@ namespace SprCs {
             return obj;
 	}
 	public int NChildActuators() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHIKActuatorIf GetChildActuator(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetChildActuator((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptr);
@@ -7532,16 +8011,19 @@ namespace SprCs {
             return obj;
 	}
 	public PHIKEndEffectorIf GetChildEndEffector() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetChildEndEffector((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptr);
             return obj;
 	}
 	public Posed GetSolidTempPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetSolidTempPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
 	public Posed GetSolidPullbackPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKActuatorIf_GetSolidPullbackPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
@@ -7561,6 +8043,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKBallActuatorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7569,25 +8052,31 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetJoint(PHBallJointIf joint) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
 	}
 	public PHBallJointIf GetJoint() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKBallActuatorIf_GetJoint((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointIf obj = new PHBallJointIf(ptr);
             return obj;
 	}
 	public void SetJointTempOri(Quaterniond ori) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKBallActuatorIf_SetJointTempOri((IntPtr) _thisArray[0], (IntPtr) ori);
 	}
 	public void SetPullbackTarget(Quaterniond ori) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _thisArray[0], (IntPtr) ori);
 	}
 	public Quaterniond GetJointTempOri() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKBallActuatorIf_GetJointTempOri((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public Quaterniond GetPullbackTarget() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKBallActuatorIf_GetPullbackTarget((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
@@ -7607,6 +8096,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKHingeActuatorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7615,25 +8105,31 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetJoint(PHHingeJointIf joint) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
 	}
 	public PHHingeJointIf GetJoint() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKHingeActuatorIf_GetJoint((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHHingeJointIf obj = new PHHingeJointIf(ptr);
             return obj;
 	}
 	public void SetJointTempAngle(double angle) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKHingeActuatorIf_SetJointTempAngle((IntPtr) _thisArray[0], (double) angle);
 	}
 	public void SetPullbackTarget(double angle) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _thisArray[0], (double) angle);
 	}
 	public double GetJointTempAngle() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKHingeActuatorIf_GetJointTempAngle((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetPullbackTarget() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHIKHingeActuatorIf_GetPullbackTarget((IntPtr) _thisArray[0]);
 	    return result;
 	}
@@ -7653,6 +8149,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKSpringActuatorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7661,25 +8158,31 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetJoint(PHSpringIf joint) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
 	}
 	public PHSpringIf GetJoint() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKSpringActuatorIf_GetJoint((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSpringIf obj = new PHSpringIf(ptr);
             return obj;
 	}
 	public void SetJointTempPose(Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKSpringActuatorIf_SetJointTempPose((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public void SetPullbackTarget(Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public Posed GetJointTempPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKSpringActuatorIf_GetJointTempPose((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
 	public Posed GetPullbackTarget() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHIKSpringActuatorIf_GetPullbackTarget((IntPtr) _thisArray[0]);
             return new Posed(ptr, true);
 	}
@@ -7699,6 +8202,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7707,6 +8211,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHSolidIf GetSocketSolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -7714,6 +8219,7 @@ namespace SprCs {
             return obj;
 	}
 	public PHSolidIf GetPlugSolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -7721,59 +8227,75 @@ namespace SprCs {
             return obj;
 	}
 	public PHSceneIf GetScene() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetScene((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSceneIf obj = new PHSceneIf(ptr);
             return obj;
 	}
 	public void Enable(bool bEnable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_Enable((IntPtr) _thisArray[0], (bool) bEnable);
 	}
 	public void Enable() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_Enable_1((IntPtr) _thisArray[0]);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHConstraintIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public bool IsArticulated() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHConstraintIf_IsArticulated((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void GetSocketPose(Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_GetSocketPose((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public void SetSocketPose(Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public void GetPlugPose(Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_GetPlugPose((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public void SetPlugPose(Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public void GetRelativePose(Posed p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_GetRelativePose((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public Vec3d GetRelativePoseR() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetRelativePoseR((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Quaterniond GetRelativePoseQ() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetRelativePoseQ((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public Quaternionf GetAbsolutePoseQ() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetAbsolutePoseQ((IntPtr) _thisArray[0]);
             return new Quaternionf(ptr, true);
 	}
 	public void GetRelativeVelocity(Vec3d v, Vec3d w) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_GetRelativeVelocity((IntPtr) _thisArray[0], (IntPtr) v, (IntPtr) w);
 	}
 	public void GetConstraintForce(Vec3d f, Vec3d t) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHConstraintIf_GetConstraintForce((IntPtr) _thisArray[0], (IntPtr) f, (IntPtr) t);
 	}
 	public bool IsYielded() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHConstraintIf_IsYielded((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
@@ -7793,6 +8315,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7801,6 +8324,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHConstraintIf FindBySolidPair(PHSolidIf lhs, PHSolidIf rhs) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
             if (ptr == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptr);
@@ -7823,6 +8347,7 @@ namespace SprCs {
             return obj;
 	}
 	public Vec3d GetTotalForce(PHSolidIf lhs, PHSolidIf rhs) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
             return new Vec3d(ptr, true);
 	}
@@ -7842,6 +8367,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHContactPointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7865,6 +8391,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7873,9 +8400,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetMaxForce(double max) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _thisArray[0], (double) max);
 	}
 	public double GetMaxForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHJointIf_GetMaxForce((IntPtr) _thisArray[0]);
 	    return result;
 	}
@@ -7895,6 +8424,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -7903,18 +8433,21 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PH1DJointLimitIf CreateLimit(PH1DJointLimitDesc desc) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[0], (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
 	}
 	public PH1DJointLimitIf CreateLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
 	}
 	public PH1DJointMotorIf CreateMotor(IfInfo ii, PH1DJointMotorDesc desc) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptr);
@@ -7923,6 +8456,7 @@ namespace SprCs {
             return obj;
 	}
 	public PH1DJointMotorIf CreateMotor(IfInfo ii) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[0], (IntPtr) ii);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptr);
@@ -7931,113 +8465,143 @@ namespace SprCs {
             return obj;
 	}
 	public bool AddMotor(PH1DJointMotorIf m) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[0], (IntPtr) m);
 	    return (ret == 0) ? false : true;
 	}
 	public bool RemoveMotor(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PH1DJointIf_RemoveMotor((IntPtr) _thisArray[0], (int) n);
 	    return (ret == 0) ? false : true;
 	}
 	public bool IsCyclic() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PH1DJointIf_IsCyclic((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetCyclic(bool on) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetCyclic((IntPtr) _thisArray[0], (bool) on);
 	}
 	public double GetPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetPosition((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetVelocity((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public bool HasLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PH1DJointIf_HasLimit((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public PH1DJointLimitIf GetLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_GetLimit((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
 	}
 	public void SetSpring(double spring) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetSpring((IntPtr) _thisArray[0], (double) spring);
 	}
 	public double GetSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDamper(double damper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetDamper((IntPtr) _thisArray[0], (double) damper);
 	}
 	public double GetDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetSecondDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetSecondDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetSecondDamper(double input) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetSecondDamper((IntPtr) _thisArray[0], (double) input);
 	}
 	public void SetTargetPosition(double targetPosition) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetTargetPosition((IntPtr) _thisArray[0], (double) targetPosition);
 	}
 	public double GetTargetPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetTargetPosition((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetTargetVelocity(double v) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetTargetVelocity((IntPtr) _thisArray[0], (double) v);
 	}
 	public double GetTargetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetTargetVelocity((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetOffsetForce(double dat) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetOffsetForce((IntPtr) _thisArray[0], (double) dat);
 	}
 	public double GetOffsetForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetOffsetForce((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetOffsetForceN(int n, double dat) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetOffsetForceN((IntPtr) _thisArray[0], (int) n, (double) dat);
 	}
 	public double GetOffsetForceN(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetOffsetForceN((IntPtr) _thisArray[0], (int) n);
 	    return result;
 	}
 	public double GetYieldStress() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetYieldStress((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetYieldStress(double yS) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetYieldStress((IntPtr) _thisArray[0], (double) yS);
 	}
 	public double GetHardnessRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetHardnessRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetHardnessRate(double hR) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetHardnessRate((IntPtr) _thisArray[0], (double) hR);
 	}
 	public void SetSecondMoment(double sM) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointIf_SetSecondMoment((IntPtr) _thisArray[0], (double) sM);
 	}
 	public double GetSecondMoment() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetSecondMoment((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public int NMotors() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PH1DJointMotorIf GetMotors() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointIf_GetMotors((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptr);
@@ -8046,14 +8610,17 @@ namespace SprCs {
             return obj;
 	}
 	public double GetMotorForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetMotorForce((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public double GetMotorForceN(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetMotorForceN((IntPtr) _thisArray[0], (int) n);
 	    return result;
 	}
 	public double GetLimitForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointIf_GetLimitForce((IntPtr) _thisArray[0]);
 	    return result;
 	}
@@ -8073,6 +8640,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHingeJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8096,6 +8664,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSliderJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8119,6 +8688,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPathIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8127,15 +8697,19 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void AddPoint(double s, Posed pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[0], (double) s, (IntPtr) pose);
 	}
 	public void SetLoop(bool bOnOff) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHPathIf_SetLoop((IntPtr) _thisArray[0], (bool) bOnOff);
 	}
 	public void SetLoop() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _thisArray[0]);
 	}
 	public bool IsLoop() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHPathIf_IsLoop((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
@@ -8155,6 +8729,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPathJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8163,6 +8738,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetPosition(double q) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _thisArray[0], (double) q);
 	}
     }
@@ -8181,6 +8757,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHGenericJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8189,9 +8766,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetCallback(PHGenericJointCallback cb) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[0], (IntPtr) cb);
 	}
 	public void SetParam(string name, double value) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
             IntPtr remote1 = Marshal.StringToBSTR(name);
 	    SprExport.Spr_PHGenericJointIf_SetParam((IntPtr) _thisArray[0], (IntPtr) remote1, (double) value);
             Marshal.FreeBSTR(remote1);
@@ -8212,6 +8791,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8220,6 +8800,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHBallJointLimitIf CreateLimit(IfInfo ii, PHBallJointLimitDesc desc) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptr);
@@ -8229,6 +8810,7 @@ namespace SprCs {
             return obj;
 	}
 	public PHBallJointLimitIf CreateLimit(IfInfo ii) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[0], (IntPtr) ii);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptr);
@@ -8238,6 +8820,7 @@ namespace SprCs {
             return obj;
 	}
 	public PHBallJointMotorIf CreateMotor(IfInfo ii, PHBallJointMotorDesc desc) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptr);
@@ -8246,6 +8829,7 @@ namespace SprCs {
             return obj;
 	}
 	public PHBallJointMotorIf CreateMotor(IfInfo ii) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[0], (IntPtr) ii);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptr);
@@ -8254,30 +8838,37 @@ namespace SprCs {
             return obj;
 	}
 	public bool AddMotor(PHBallJointMotorIf m) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[0], (IntPtr) m);
 	    return (ret == 0) ? false : true;
 	}
 	public bool RemoveMotor(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBallJointIf_RemoveMotor((IntPtr) _thisArray[0], (int) n);
 	    return (ret == 0) ? false : true;
 	}
 	public Vec3d GetAngle() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetAngle((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Quaterniond GetPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetPosition((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public Vec3d GetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetVelocity((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public bool HasLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBallJointIf_HasLimit((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public PHBallJointLimitIf GetLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetLimit((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptr);
@@ -8287,80 +8878,102 @@ namespace SprCs {
             return obj;
 	}
 	public void SetSpring(double spring) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetSpring((IntPtr) _thisArray[0], (double) spring);
 	}
 	public double GetSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHBallJointIf_GetSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDamper(double damper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetDamper((IntPtr) _thisArray[0], (double) damper);
 	}
 	public double GetDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHBallJointIf_GetDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public Vec3d GetSecondDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetSecondDamper((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetSecondDamper(Vec3d damper2) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _thisArray[0], (IntPtr) damper2);
 	}
 	public void SetTargetPosition(Quaterniond p) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _thisArray[0], (IntPtr) p);
 	}
 	public Quaterniond GetTargetPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public void SetTargetVelocity(Vec3d q) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _thisArray[0], (IntPtr) q);
 	}
 	public Vec3d GetTargetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetOffsetForce(Vec3d ofst) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _thisArray[0], (IntPtr) ofst);
 	}
 	public Vec3d GetOffsetForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForce((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetOffsetForceN(int n, Vec3d ofst) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr) _thisArray[0], (int) n, (IntPtr) ofst);
 	}
 	public Vec3d GetOffsetForceN(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetOffsetForceN((IntPtr) _thisArray[0], (int) n);
             return new Vec3d(ptr, true);
 	}
 	public void SetYieldStress(double yS) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetYieldStress((IntPtr) _thisArray[0], (double) yS);
 	}
 	public double GetYieldStress() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHBallJointIf_GetYieldStress((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetHardnessRate(double hR) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetHardnessRate((IntPtr) _thisArray[0], (double) hR);
 	}
 	public double GetHardnessRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHBallJointIf_GetHardnessRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetSecondMoment(Vec3d m) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIf_SetSecondMoment((IntPtr) _thisArray[0], (IntPtr) m);
 	}
 	public Vec3d GetSecondMoment() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetSecondMoment((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public int NMotors() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHBallJointMotorIf GetMotors() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotors((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptr);
@@ -8369,14 +8982,17 @@ namespace SprCs {
             return obj;
 	}
 	public Vec3d GetMotorForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetMotorForceN(int n) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetMotorForceN((IntPtr) _thisArray[0], (int) n);
             return new Vec3d(ptr, true);
 	}
 	public Vec3d GetLimitForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIf_GetLimitForce((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
@@ -8396,6 +9012,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFixJointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8419,6 +9036,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8427,93 +9045,119 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetTargetPosition(Vec3d targetPosition) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[0], (IntPtr) targetPosition);
 	}
 	public Vec3d GetTargetPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetTargetOrientation(Quaterniond targetOrientation) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[0], (IntPtr) targetOrientation);
 	}
 	public Quaterniond GetTargetOrientation() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr) _thisArray[0]);
             return new Quaterniond(ptr, true);
 	}
 	public void SetSpring(Vec3d spring) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[0], (IntPtr) spring);
 	}
 	public Vec3d GetSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetSpring((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetDamper(Vec3d damper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[0], (IntPtr) damper);
 	}
 	public Vec3d GetDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetDamper((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetSecondDamper(Vec3d secondDamper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[0], (IntPtr) secondDamper);
 	}
 	public Vec3d GetSecondDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetSecondDamper((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetSpringOri(double spring) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr) _thisArray[0], (double) spring);
 	}
 	public double GetSpringOri() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSpringIf_GetSpringOri((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDamperOri(double damper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr) _thisArray[0], (double) damper);
 	}
 	public double GetDamperOri() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSpringIf_GetDamperOri((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetSecondDamperOri(double secondDamperOri) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr) _thisArray[0], (double) secondDamperOri);
 	}
 	public double GetSecondDamperOri() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSpringIf_GetSecondDamperOri((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetYieldStress(double yieldStress) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetYieldStress((IntPtr) _thisArray[0], (double) yieldStress);
 	}
 	public double GetYieldStress() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSpringIf_GetYieldStress((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetHardnessRate(double hardnessRate) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetHardnessRate((IntPtr) _thisArray[0], (double) hardnessRate);
 	}
 	public double GetHardnessRate() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHSpringIf_GetHardnessRate((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetSecondMoment(Vec3d secondMoment) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[0], (IntPtr) secondMoment);
 	}
 	public Vec3d GetSecondMoment() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetSecondMoment((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public Vec6d GetMotorForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr) _thisArray[0]);
             return new Vec6d(ptr, true);
 	}
 	public void SetOffsetForce(Vec6d offsetForce) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[0], (IntPtr) offsetForce);
 	}
 	public void SetTargetVelocity(Vec6d targetVelocity) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[0], (IntPtr) targetVelocity);
 	}
 	public Vec6d GetTargetVelocity() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr) _thisArray[0]);
             return new Vec6d(ptr, true);
 	}
@@ -8533,6 +9177,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHMateIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8556,6 +9201,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPointToPointMateIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8579,6 +9225,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPointToLineMateIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8602,6 +9249,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPointToPlaneMateIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8610,9 +9258,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void GetRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHPointToPlaneMateIf_GetRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
     }
@@ -8631,6 +9281,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHLineToLineMateIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8654,6 +9305,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPlaneToPlaneMateIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8677,6 +9329,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHTreeNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8685,20 +9338,25 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void Enable(bool bEnable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHTreeNodeIf_Enable((IntPtr) _thisArray[0], (bool) bEnable);
 	}
 	public void Enable() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHTreeNodeIf_Enable_1((IntPtr) _thisArray[0]);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHTreeNodeIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public int NChildren() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHTreeNodeIf GetParentNode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHTreeNodeIf_GetParentNode((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptr);
@@ -8713,6 +9371,7 @@ namespace SprCs {
             return obj;
 	}
 	public PHTreeNodeIf GetChildNode(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHTreeNodeIf_GetChildNode((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptr);
@@ -8727,12 +9386,14 @@ namespace SprCs {
             return obj;
 	}
 	public PHRootNodeIf GetRootNode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHTreeNodeIf_GetRootNode((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptr);
             return obj;
 	}
 	public PHSolidIf GetSolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHTreeNodeIf_GetSolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -8755,6 +9416,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRootNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8778,6 +9440,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHTreeNode1DIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8801,6 +9464,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHingeJointNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8824,6 +9488,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSliderJointNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8847,6 +9512,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHPathJointNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8870,6 +9536,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHGenericJointNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8893,6 +9560,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8916,6 +9584,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHFixJointNodeIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8939,6 +9608,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHGearIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -8947,33 +9617,42 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void Enable(bool bEnable) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHGearIf_Enable((IntPtr) _thisArray[0], (bool) bEnable);
 	}
 	public void Enable() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHGearIf_Enable_1((IntPtr) _thisArray[0]);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHGearIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetRatio(double ratio) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHGearIf_SetRatio((IntPtr) _thisArray[0], (double) ratio);
 	}
 	public double GetRatio() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHGearIf_GetRatio((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetOffset(double offset) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHGearIf_SetOffset((IntPtr) _thisArray[0], (double) offset);
 	}
 	public double GetOffset() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHGearIf_GetOffset((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetMode(int mode) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHGearIf_SetMode((IntPtr) _thisArray[0], (int) mode);
 	}
 	public int GetMode() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHGearIf_GetMode((IntPtr) _thisArray[0]);
 	    return result;
 	}
@@ -8993,6 +9672,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointLimitIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9001,33 +9681,42 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointLimitIf_SetRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void GetRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointLimitIf_GetRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void SetSpring(double spring) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointLimitIf_SetSpring((IntPtr) _thisArray[0], (double) spring);
 	}
 	public double GetSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointLimitIf_GetSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDamper(double damper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointLimitIf_SetDamper((IntPtr) _thisArray[0], (double) damper);
 	}
 	public double GetDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PH1DJointLimitIf_GetDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public bool IsOnLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PH1DJointLimitIf_IsOnLimit((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void Enable(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PH1DJointLimitIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
@@ -9047,6 +9736,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointLimitIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9055,34 +9745,43 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetSpring(double rSpring) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointLimitIf_SetSpring((IntPtr) _thisArray[0], (double) rSpring);
 	}
 	public double GetSpring() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHBallJointLimitIf_GetSpring((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetDamper(double rDamper) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointLimitIf_SetDamper((IntPtr) _thisArray[0], (double) rDamper);
 	}
 	public double GetDamper() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHBallJointLimitIf_GetDamper((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetLimitDir(Vec3d limDir) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointLimitIf_SetLimitDir((IntPtr) _thisArray[0], (IntPtr) limDir);
 	}
 	public Vec3d GetLimitDir() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointLimitIf_GetLimitDir((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public bool IsOnLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBallJointLimitIf_IsOnLimit((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void Enable(bool b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _thisArray[0], (bool) b);
 	}
 	public bool IsEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBallJointLimitIf_IsEnabled((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
@@ -9102,6 +9801,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointConeLimitIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9110,21 +9810,27 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetSwingRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void GetSwingRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointConeLimitIf_GetSwingRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void SetSwingDirRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingDirRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void GetSwingDirRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointConeLimitIf_GetSwingDirRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void SetTwistRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void GetTwistRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointConeLimitIf_GetTwistRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
     }
@@ -9143,6 +9849,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointSplineLimitIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9151,21 +9858,27 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void AddNode(PHSplineLimitNode node) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode((IntPtr) _thisArray[0], (IntPtr) node);
 	}
 	public void AddNode(double S, double SD, double dS, double dSD, double tMin, double tMax) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_1((IntPtr) _thisArray[0], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax);
 	}
 	public void AddNode(PHSplineLimitNode node, int pos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_2((IntPtr) _thisArray[0], (IntPtr) node, (int) pos);
 	}
 	public void AddNode(double S, double SD, double dS, double dSD, double tMin, double tMax, int pos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_3((IntPtr) _thisArray[0], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax, (int) pos);
 	}
 	public void SetPoleTwistRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
 	public void GetPoleTwistRange(Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointSplineLimitIf_GetPoleTwistRange((IntPtr) _thisArray[0], (IntPtr) range);
 	}
     }
@@ -9184,6 +9897,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointIndependentLimitIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9192,17 +9906,21 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public bool IsOnLimit() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHBallJointIndependentLimitIf_IsOnLimit((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public int AxesEnabled() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHBallJointIndependentLimitIf_AxesEnabled((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetLimitRangeN(int n, Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[0], (int) n, (IntPtr) range);
 	}
 	public void GetLimitRangeN(int n, Vec2d range) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointIndependentLimitIf_GetLimitRangeN((IntPtr) _thisArray[0], (int) n, (IntPtr) range);
 	}
     }
@@ -9221,6 +9939,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointMotorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9244,6 +9963,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PH1DJointNonLinearMotorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9252,12 +9972,15 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetSpring(PH1DJointNonLinearMotorDesc.FunctionMode m, CsObject param) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpring((IntPtr) _thisArray[0], (int) m, (IntPtr) param);
 	}
 	public void SetDamper(PH1DJointNonLinearMotorDesc.FunctionMode m, CsObject param) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetDamper((IntPtr) _thisArray[0], (int) m, (IntPtr) param);
 	}
 	public void SetSpringDamper(PH1DJointNonLinearMotorDesc.FunctionMode smode, PH1DJointNonLinearMotorDesc.FunctionMode dmode, CsObject sparam, CsObject dparam) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[0], (int) smode, (int) dmode, (IntPtr) sparam, (IntPtr) dparam);
 	}
     }
@@ -9276,6 +9999,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHuman1DJointResistanceIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9284,6 +10008,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public double GetCurrentResistance() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    double result = (double) SprExport.Spr_PHHuman1DJointResistanceIf_GetCurrentResistance((IntPtr) _thisArray[0]);
 	    return result;
 	}
@@ -9303,6 +10028,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointMotorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9326,6 +10052,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBallJointNonLinearMotorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9334,6 +10061,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetFuncFromDatabaseN(int n, int i, int j, CsObject sparam, CsObject dparam) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArray[0], (int) n, (int) i, (int) j, (IntPtr) sparam, (IntPtr) dparam);
 	}
     }
@@ -9352,6 +10080,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHumanBallJointResistanceIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9360,6 +10089,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public Vec3d GetCurrentResistance() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHHumanBallJointResistanceIf_GetCurrentResistance((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
@@ -9379,6 +10109,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSpringMotorIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9402,6 +10133,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpObjIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9410,55 +10142,71 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public bool initialPHOpObj(Vec3f vts, int vtsNum, float pSize) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[0], (IntPtr) vts, (int) vtsNum, (float) pSize);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetGravity(bool bOn) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetGravity((IntPtr) _thisArray[0], (bool) bOn);
 	}
 	public void SimpleSimulationStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SimpleSimulationStep((IntPtr) _thisArray[0]);
 	}
 	public void AddVertextoLocalBuffer(Vec3f v) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_AddVertextoLocalBuffer((IntPtr) _thisArray[0], (IntPtr) v);
 	}
 	public bool InitialObjUsingLocalBuffer(float pSize) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpObjIf_InitialObjUsingLocalBuffer((IntPtr) _thisArray[0], (float) pSize);
 	    return (ret == 0) ? false : true;
 	}
 	public void positionPredict() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_positionPredict((IntPtr) _thisArray[0]);
 	}
 	public void groupStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_groupStep((IntPtr) _thisArray[0]);
 	}
 	public void integrationStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_integrationStep((IntPtr) _thisArray[0]);
 	}
 	public void ReducedPositionProject() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_ReducedPositionProject((IntPtr) _thisArray[0]);
 	}
 	public void positionProject() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_positionProject((IntPtr) _thisArray[0]);
 	}
 	public void SetDefaultLinkNum(int linkNum) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetDefaultLinkNum((IntPtr) _thisArray[0], (int) linkNum);
 	}
 	public void BuildBlendWeight() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_BuildBlendWeight((IntPtr) _thisArray[0]);
 	}
 	public void buildGroupCenter() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_buildGroupCenter((IntPtr) _thisArray[0]);
 	}
 	public int GetVertexNum() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHOpObjIf_GetVertexNum((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public Vec3f GetVertex(int vi) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpObjIf_GetVertex((IntPtr) _thisArray[0], (int) vi);
             return new Vec3f(ptr, true);
 	}
 	public ObjectIf GetOpParticle(int pi) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpObjIf_GetOpParticle((IntPtr) _thisArray[0], (int) pi);
             if (ptr == IntPtr.Zero) { return null; } 
             ObjectIf obj = new ObjectIf(ptr);
@@ -9471,6 +10219,7 @@ namespace SprCs {
             return obj;
 	}
 	public ObjectIf GetOpGroup(int gi) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpObjIf_GetOpGroup((IntPtr) _thisArray[0], (int) gi);
             if (ptr == IntPtr.Zero) { return null; } 
             ObjectIf obj = new ObjectIf(ptr);
@@ -9483,63 +10232,80 @@ namespace SprCs {
             return obj;
 	}
 	public int GetobjVtoPmap(int vi) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHOpObjIf_GetobjVtoPmap((IntPtr) _thisArray[0], (int) vi);
 	    return result;
 	}
 	public float GetVtxBlendWeight(int Vtxi, int Grpi) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpObjIf_GetVtxBlendWeight((IntPtr) _thisArray[0], (int) Vtxi, (int) Grpi);
 	    return result;
 	}
 	public void SetVelocityDamping(float vd) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetVelocityDamping((IntPtr) _thisArray[0], (float) vd);
 	}
 	public float GetVelocityDamping() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpObjIf_GetVelocityDamping((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public float GetBoundLength() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpObjIf_GetBoundLength((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetBound(float b) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetBound((IntPtr) _thisArray[0], (float) b);
 	}
 	public void SetTimeStep(float t) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetTimeStep((IntPtr) _thisArray[0], (float) t);
 	}
 	public float GetTimeStep() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpObjIf_GetTimeStep((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public float GetObjBeta() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpObjIf_GetObjBeta((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void SetObjBeta(float beta) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetObjBeta((IntPtr) _thisArray[0], (float) beta);
 	}
 	public void SetObjAlpha(float alpha) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetObjAlpha((IntPtr) _thisArray[0], (float) alpha);
 	}
 	public float GetObjAlpha() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpObjIf_GetObjAlpha((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public bool GetObjDstConstraint() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpObjIf_GetObjDstConstraint((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void SetObjDstConstraint(bool d) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetObjDstConstraint((IntPtr) _thisArray[0], (bool) d);
 	}
 	public void SetObjItrTime(int itrT) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_SetObjItrTime((IntPtr) _thisArray[0], (int) itrT);
 	}
 	public int GetObjItrTime() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHOpObjIf_GetObjItrTime((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public void StoreOrigPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[0]);
 	}
     }
@@ -9636,6 +10402,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpHapticControllerIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9644,52 +10411,66 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetHCForceReady(bool flag) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticControllerIf_SetHCForceReady((IntPtr) _thisArray[0], (bool) flag);
 	}
 	public bool GetHCForceReady() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpHapticControllerIf_GetHCForceReady((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public bool CheckProxyState() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpHapticControllerIf_CheckProxyState((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void AddColliedPtcl(int pIndex, int objindex, Vec3f ctcPos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticControllerIf_AddColliedPtcl((IntPtr) _thisArray[0], (int) pIndex, (int) objindex, (IntPtr) ctcPos);
 	}
 	public bool BeginLogForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpHapticControllerIf_BeginLogForce((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void EndLogForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticControllerIf_EndLogForce((IntPtr) _thisArray[0]);
 	}
 	public void setC_ObstacleRadius(float r) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticControllerIf_setC_ObstacleRadius((IntPtr) _thisArray[0], (float) r);
 	}
 	public Vec3f GetUserPos() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpHapticControllerIf_GetUserPos((IntPtr) _thisArray[0]);
             return new Vec3f(ptr, true);
 	}
 	public Vec3f GetHCPosition() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpHapticControllerIf_GetHCPosition((IntPtr) _thisArray[0]);
             return new Vec3f(ptr, true);
 	}
 	public void SetHCPosition(Vec3f pos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticControllerIf_SetHCPosition((IntPtr) _thisArray[0], (IntPtr) pos);
 	}
 	public void SetHCPose(Posef pose) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _thisArray[0], (IntPtr) pose);
 	}
 	public Posef GetHCPose() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpHapticControllerIf_GetHCPose((IntPtr) _thisArray[0]);
             return new Posef(ptr, true);
 	}
 	public float GetC_ObstacleRadius() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHOpHapticControllerIf_GetC_ObstacleRadius((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public Vec3f GetCurrentOutputForce() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpHapticControllerIf_GetCurrentOutputForce((IntPtr) _thisArray[0]);
             return new Vec3f(ptr, true);
 	}
@@ -9709,6 +10490,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpHapticRendererIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9717,9 +10499,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetRigid(bool set) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _thisArray[0], (bool) set);
 	}
 	public bool IsRigid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    char ret = SprExport.Spr_PHOpHapticRendererIf_IsRigid((IntPtr) _thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
@@ -9739,6 +10523,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHOpAnimationIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9747,15 +10532,19 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void AddAnimationP(int objIndex, int pIndex, Vec3f start, Vec3f end, float totalTime) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpAnimationIf_AddAnimationP((IntPtr) _thisArray[0], (int) objIndex, (int) pIndex, (IntPtr) start, (IntPtr) end, (float) totalTime);
 	}
 	public void AddAnimationP(int objIndex, int pIndex, Vec3f force, float totalTime) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpAnimationIf_AddAnimationP_1((IntPtr) _thisArray[0], (int) objIndex, (int) pIndex, (IntPtr) force, (float) totalTime);
 	}
 	public void AnimationStep(CsObject opEngine) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpAnimationIf_AnimationStep((IntPtr) _thisArray[0], (IntPtr) opEngine);
 	}
 	public void AnimationIntergration(CsObject opEngine) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[0], (IntPtr) opEngine);
 	}
     }
@@ -9843,6 +10632,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRayIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -9851,35 +10641,44 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public Vec3d GetOrigin() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRayIf_GetOrigin((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetOrigin(Vec3d ori) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[0], (IntPtr) ori);
 	}
 	public Vec3d GetDirection() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRayIf_GetDirection((IntPtr) _thisArray[0]);
             return new Vec3d(ptr, true);
 	}
 	public void SetDirection(Vec3d dir) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[0], (IntPtr) dir);
 	}
 	public void Apply() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHRayIf_Apply((IntPtr) _thisArray[0]);
 	}
 	public int NHits() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public arraywrapper_PHRaycastHit GetHits() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRayIf_GetHits((IntPtr) _thisArray[0]);
             return new arraywrapper_PHRaycastHit(ptr);
 	}
 	public arraywrapper_PHRaycastHit GetNearest() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRayIf_GetNearest((IntPtr) _thisArray[0]);
             return new arraywrapper_PHRaycastHit(ptr);
 	}
 	public arraywrapper_PHRaycastHit GetDynamicalNearest() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHRayIf_GetDynamicalNearest((IntPtr) _thisArray[0]);
             return new arraywrapper_PHRaycastHit(ptr);
 	}
@@ -10610,6 +11409,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBoneIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -10618,9 +11418,11 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public void SetSolid(PHSolidIf solid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid);
 	}
 	public PHSolidIf GetSolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBoneIf_GetSolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -10628,9 +11430,11 @@ namespace SprCs {
             return obj;
 	}
 	public void SetProxySolid(PHSolidIf solid) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[0], (IntPtr) solid);
 	}
 	public PHSolidIf GetProxySolid() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBoneIf_GetProxySolid((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptr);
@@ -10638,9 +11442,11 @@ namespace SprCs {
             return obj;
 	}
 	public void SetJoint(PHJointIf joint) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
 	}
 	public PHJointIf GetJoint() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBoneIf_GetJoint((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHJointIf obj = new PHJointIf(ptr);
@@ -10661,21 +11467,26 @@ namespace SprCs {
             return obj;
 	}
 	public void SetParent(PHBoneIf parent) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[0], (IntPtr) parent);
 	}
 	public PHBoneIf GetParent() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHBoneIf_GetParent((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
 	}
 	public void SetLength(double length) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetLength((IntPtr) _thisArray[0], (double) length);
 	}
 	public void SetDirection(Vec3d dir) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetDirection((IntPtr) _thisArray[0], (IntPtr) dir);
 	}
 	public void SetPosition(Vec3d pos) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _thisArray[0], (IntPtr) pos);
 	}
     }
@@ -10694,6 +11505,7 @@ namespace SprCs {
             return bstr;
         }
 	public IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -10702,28 +11514,33 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public int NBones() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    int result = (int) SprExport.Spr_PHSkeletonIf_NBones((IntPtr) _thisArray[0]);
 	    return result;
 	}
 	public PHBoneIf GetBone(int i) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_GetBone((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
 	}
 	public PHBoneIf CreateBone(PHBoneIf parent, PHBoneDesc desc) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[0], (IntPtr) parent, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
 	}
 	public PHBoneIf CreateBone(PHBoneIf parent) {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[0], (IntPtr) parent);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
 	}
 	public float GetGrabStrength() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
 	    float result = (float) SprExport.Spr_PHSkeletonIf_GetGrabStrength((IntPtr) _thisArray[0]);
 	    return result;
 	}

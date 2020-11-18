@@ -1376,6 +1376,15 @@ public:
 				argnames[j] = csname;
 			}
 			Printf(CS, ") {\n");
+
+			// SceneObjectIfのphSceneIf取得
+			if (!ni.is_static) {
+				Node* scene_object_if = FindNodeByAttrR(topnode, "name", "Spr::SceneObjectIf");
+				if (isChildClass(n, scene_object_if, topnode)) {
+					Printf(CS, "\t\tPHSceneIf phSceneIf = GetCSPHSceneIf();\n");
+				}
+			}
+
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
@@ -1860,6 +1869,31 @@ public:
 			}
 			n = nextSibling(n);
 		}
+	}
+
+	// targetのIfクラスがparentを継承しているかを判断する
+	bool isChildClass(Node *target, Node *parent, Node *topnode) {
+		char* suffix = "If";
+		Strings bases;
+		GetBaseList(bases, Getattr(target, "baselist"), suffix);
+		for (int i = 0; i < bases.size(); i++) {
+			// bases[i]には「Spr::」部分と「If」部分がないため，付け加える
+			string if_name = "Spr::";
+			if_name += string(bases[i]);
+			if_name += string(suffix);
+			
+			// if_nameからノードを取得
+			Node* current_parent = FindNodeByAttrR(topnode, "name", (char *)if_name.c_str());
+			if (current_parent != NULL) {
+				if (current_parent == parent) {
+					return true;
+				}
+				if (isChildClass(current_parent, parent, topnode)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/* Top of the parse tree */
