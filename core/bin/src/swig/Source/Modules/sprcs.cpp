@@ -1385,6 +1385,31 @@ public:
 				}
 			}
 
+			function_not_multiThread(fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+		}
+
+		// IfImp にも enum がある
+		//
+		if (!class_already_defined) {
+			Nodes enums;
+			FindNodeR(enums, n, "enum");
+			for (unsigned i = 0; i < enums.size(); ++i) {
+				char* name = cs_qualified_name(Char(Getattr(enums[i], "type")));
+				if (!name || !BEGINWITH(name, "enum ")) continue;
+				name += 5;
+				if (EQ(name, "")) continue;
+				//generate_enum_def(CS, "\t", enums[i], NULL, __LINE__, "IfImp");
+				FP_generate_enum_def(fps, FD_CS, __LINE__, "\t", enums[i], NULL, "IfImp");
+			}
+		}
+
+		if (!class_already_defined) {
+			Printf(CS,  "    }\n");
+		}
+	}
+
+	// マルチスレッド出ない箇所の処理
+	void function_not_multiThread(DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
@@ -1580,26 +1605,6 @@ public:
 				Printf(CSP, "\tpublic static extern void Spr_%s_FreeString_%s(IntPtr ptr);\n", ci.uq_name, ni.uq_name);
 			}
 #endif
-		}
-
-		// IfImp にも enum がある
-		//
-		if (!class_already_defined) {
-			Nodes enums;
-			FindNodeR(enums, n, "enum");
-			for (unsigned i = 0; i < enums.size(); ++i) {
-				char* name = cs_qualified_name(Char(Getattr(enums[i], "type")));
-				if (!name || !BEGINWITH(name, "enum ")) continue;
-				name += 5;
-				if (EQ(name, "")) continue;
-				//generate_enum_def(CS, "\t", enums[i], NULL, __LINE__, "IfImp");
-				FP_generate_enum_def(fps, FD_CS, __LINE__, "\t", enums[i], NULL, "IfImp");
-			}
-		}
-
-		if (!class_already_defined) {
-			Printf(CS,  "    }\n");
-		}
 	}
 
 	char* argname(char* name, int n) {
