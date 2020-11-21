@@ -1378,20 +1378,33 @@ public:
 			Printf(CS, ") {\n");
 
 			// SceneObjectIfのphSceneIf取得
+			bool is_sceneobjectif_getfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないGetメソッド
 			if (!ni.is_static) {
 				Node* scene_object_if = FindNodeByAttrR(topnode, "name", "Spr::SceneObjectIf");
 				if (isChildClass(n, scene_object_if, topnode)) {
-					Printf(CS, "\t\tPHSceneIf phSceneIf = GetCSPHSceneIf();\n");
+					is_sceneobjectif_getfunction = true;
 				}
 			}
-			//Printf(CS, "\t\t{\n");
-			csfunction_code(fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-			//Printf(CS, "\t\t}\n");
-			//Printf(CS, "\t\t{\n");
-			//csfunction_code(fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-			//Printf(CS, "\t\t}\n");
+			if (is_sceneobjectif_getfunction) {
+				Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
+				Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
+				Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
+				Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
+				csfunction_code(/* multithread = */true, /* in_stepThread = */true, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
+				Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
+				Printf(CS, "					phSceneIf.isGetFunctionCalledInSubThread = true;\n");
+				csfunction_code(/* multithread = */true, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "				}\n");
+				Printf(CS, "			}\n");
+				Printf(CS, "		} else {\n");
+			}
+			csfunction_code(/* multithread = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+			if (is_sceneobjectif_getfunction) {
+				Printf(CS, "		}\n");
+				Printf(CS, "		throw new InvalidOperationException();\n");
+			}
 			Printf(CS, "\t}\n");
-
 			// [csp]
 			//
 			// 関数宣言
@@ -1469,7 +1482,7 @@ public:
 	}
 
 	// SprCSharpメソッドの中身のコード，マルチスレッドであるか，呼ばれるスレッド，stepThread実行中かどうかによって変化する
-	void csfunction_code(DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
+	void csfunction_code(bool multithread, bool in_stepthread, bool is_stepthread_executing ,DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
@@ -1531,7 +1544,17 @@ public:
 			// 引数並び
 			sep_needed = 0;
 			if (!ni.is_static) {
-				Printf(CS, "(IntPtr) _thisArray[0]");
+				if (multithread) {
+					if (in_stepthread) {
+						Printf(CS, "(IntPtr) _thisArray[phSceneIf.sceneForStep]");
+					}
+					else {
+						Printf(CS, "(IntPtr) _thisArray[phSceneIf.sceneForGet]");
+					}
+				}
+				else {
+					Printf(CS, "(IntPtr) _thisArray[0]");
+				}
 				sep_needed = 1;
 			}
 			for (int j = 0; j < ni.num_args; j++) {
@@ -2069,6 +2092,7 @@ public:
 		// Printf(cs, "using System.Linq;\n");
 		Printf(cs, "using System.Text;\n");
 		Printf(cs, "using System.Runtime.InteropServices;\n");
+		Printf(cs, "using System.Threading;\n");
 		Printf(cs, "#pragma warning disable 0108\n");
 		/**
 		Nodes nss;

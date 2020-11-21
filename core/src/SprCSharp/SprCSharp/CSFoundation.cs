@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading;
 #pragma warning disable 0108
 namespace SprCs {
     public partial class ObjectIfs : CsObject {
