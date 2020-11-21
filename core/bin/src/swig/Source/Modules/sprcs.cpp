@@ -1384,8 +1384,68 @@ public:
 					Printf(CS, "\t\tPHSceneIf phSceneIf = GetCSPHSceneIf();\n");
 				}
 			}
+			//Printf(CS, "\t\t{\n");
+			csfunction_code(fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+			//Printf(CS, "\t\t}\n");
+			//Printf(CS, "\t\t{\n");
+			//csfunction_code(fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+			//Printf(CS, "\t\t}\n");
+			Printf(CS, "\t}\n");
 
-			function_not_multiThread(fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+			// [csp]
+			//
+			// 関数宣言
+			SNAP_ANA_PATH1(fps, FD_CSP, "function: cdecl");
+			Printf(CSP, "\t%s\n", DLLIMPORT);
+			//
+			if (ni.is_vector) {
+				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: vector");
+				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
+			}
+#if (CAN_FUNC_RETURN_ARRAY == 1)
+			else if (ni.is_array) {
+				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: array");
+				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
+			}
+#endif /*CAN_FUNC_RETURN_ARRAY*/
+			else if (ni.is_string || (ni.is_pointer && EQ(ni.uq_type, "char"))) {
+				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: string");
+				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
+			}
+			else if (is_enum_node) {
+				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: enum");
+				Printf(CSP, "\tpublic static extern int Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
+			}
+			else {
+				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: ");
+				char* cpp_return_type = (ni.is_bool) ? (char*) "char" : ni.cs_im_type;
+				Printf(CSP, "\tpublic static extern %s Spr_%s_%s%s(", cpp_return_type, ci.uq_name, ni.uq_name, overname(ni));
+			}
+			// 引数並び
+			sep_needed = 0;
+			if (!ni.is_static) {
+				Printf(CSP, "IntPtr _this");
+				sep_needed = 1;
+			}
+			for (int j = 0; j < ni.num_args; j++) {
+				NodeInfo& ai = ni.funcargs[j];
+				char* csname = argname(ai.cs_name, j);
+				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
+				if (sep_needed) Printf(CSP, ", ");
+				if (is_enum_node_a)	{ Printf(CSP, "%s %s", "int" /*ai.cs_type*/, csname); }
+				else if (ai.is_struct)	{ Printf(CSP, "IntPtr %s", csname); }
+				else if (ai.is_string)	{ Printf(CSP, "IntPtr %s", csname); }
+				else if (ai.is_vector || ai.is_array)	{ Printf(CSP, "IntPtr %s", csname); }
+				else			{ Printf(CSP, "%s %s", ai.cs_im_type, csname); }
+				sep_needed = 1;
+			}
+			Printf(CSP, ");\n");
+#if (FREE_UNMANAGED_MEMORY == 1)
+			if (ni.is_string) {
+				Printf(CSP, "\t%s\n", DLLIMPORT);
+				Printf(CSP, "\tpublic static extern void Spr_%s_FreeString_%s(IntPtr ptr);\n", ci.uq_name, ni.uq_name);
+			}
+#endif
 		}
 
 		// IfImp にも enum がある
@@ -1408,8 +1468,8 @@ public:
 		}
 	}
 
-	// マルチスレッド出ない箇所の処理
-	void function_not_multiThread(DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
+	// SprCSharpメソッドの中身のコード，マルチスレッドであるか，呼ばれるスレッド，stepThread実行中かどうかによって変化する
+	void csfunction_code(DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
@@ -1549,62 +1609,6 @@ public:
 				SNAP_ANA_PATH1(fps, FD_CS, "function_return: non-void");
 				Printf(CS, "\t    return result;\n");
 			}
-			Printf(CS, "\t}\n");
-
-			// [csp]
-			//
-			// 関数宣言
-			SNAP_ANA_PATH1(fps, FD_CSP, "function: cdecl");
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			//
-			if (ni.is_vector) {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: vector");
-				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			}
-#if (CAN_FUNC_RETURN_ARRAY == 1)
-			else if (ni.is_array) {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: array");
-				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			}
-#endif /*CAN_FUNC_RETURN_ARRAY*/
-			else if (ni.is_string || (ni.is_pointer && EQ(ni.uq_type, "char"))) {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: string");
-				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			}
-			else if (is_enum_node) {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: enum");
-				Printf(CSP, "\tpublic static extern int Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			}
-			else {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: ");
-				char* cpp_return_type = (ni.is_bool) ? (char*) "char" : ni.cs_im_type;
-				Printf(CSP, "\tpublic static extern %s Spr_%s_%s%s(", cpp_return_type, ci.uq_name, ni.uq_name, overname(ni));
-			}
-			// 引数並び
-			sep_needed = 0;
-			if (!ni.is_static) {
-				Printf(CSP, "IntPtr _this");
-				sep_needed = 1;
-			}
-			for (int j = 0; j < ni.num_args; j++) {
-				NodeInfo& ai = ni.funcargs[j];
-				char* csname = argname(ai.cs_name, j);
-				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
-				if (sep_needed) Printf(CSP, ", ");
-				if (is_enum_node_a)	{ Printf(CSP, "%s %s", "int" /*ai.cs_type*/, csname); }
-				else if (ai.is_struct)	{ Printf(CSP, "IntPtr %s", csname); }
-				else if (ai.is_string)	{ Printf(CSP, "IntPtr %s", csname); }
-				else if (ai.is_vector || ai.is_array)	{ Printf(CSP, "IntPtr %s", csname); }
-				else			{ Printf(CSP, "%s %s", ai.cs_im_type, csname); }
-				sep_needed = 1;
-			}
-			Printf(CSP, ");\n");
-#if (FREE_UNMANAGED_MEMORY == 1)
-			if (ni.is_string) {
-				Printf(CSP, "\t%s\n", DLLIMPORT);
-				Printf(CSP, "\tpublic static extern void Spr_%s_FreeString_%s(IntPtr ptr);\n", ci.uq_name, ni.uq_name);
-			}
-#endif
 	}
 
 	char* argname(char* name, int n) {
