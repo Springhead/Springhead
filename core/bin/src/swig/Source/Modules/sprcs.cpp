@@ -1377,12 +1377,18 @@ public:
 			}
 			Printf(CS, ") {\n");
 
-			// SceneObjectIfのphSceneIf取得
+			// SceneObjectIfの継承をしたメソッドはGet系メソッドとSet系メソッドで定型文が違うため，別処理
 			bool is_sceneobjectif_getfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないGetメソッド
+			bool is_sceneobjectif_setfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないSetメソッド
 			if (!ni.is_static) {
 				Node* scene_object_if = FindNodeByAttrR(topnode, "name", "Spr::SceneObjectIf");
 				if (isChildClass(n, scene_object_if, topnode)) {
-					is_sceneobjectif_getfunction = true;
+					if (string(ni.cs_name).find("Get") != std::string::npos) {
+						is_sceneobjectif_getfunction = true;
+					}
+					else {
+						is_sceneobjectif_setfunction = true; // Get系メソッドをSet系メソッドの定型文に当てはめても，動作するはずなのでGetという名前以外すべて
+					}
 				}
 			}
 			if (is_sceneobjectif_getfunction) {
@@ -1390,19 +1396,44 @@ public:
 				Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 				Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 				Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
-				csfunction_code(/* multithread = */true, /* in_stepThread = */true, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */true, /* is_setfunction = */false, /* in_stepThread = */true, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 				Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 				Printf(CS, "					phSceneIf.isGetFunctionCalledInSubThread = true;\n");
-				csfunction_code(/* multithread = */true, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */true, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "				}\n");
 				Printf(CS, "			}\n");
 				Printf(CS, "		} else {\n");
-			}
-			csfunction_code(/* multithread = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-			if (is_sceneobjectif_getfunction) {
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "		}\n");
 				Printf(CS, "		throw new InvalidOperationException();\n");
+			}
+			else if (is_sceneobjectif_setfunction) {
+				Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
+				Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
+				Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
+				Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
+				NewArgumentForCallback(ni, ci, argnames);
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
+				Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
+				Printf(CS, "					phSceneIf.isSetFunctionCalledInSubThread = true;\n");
+				Printf(CS, "					if (phSceneIf.isStepThreadExecuting) {;\n");
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "					} else {;\n");
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "					}\n");
+				Printf(CS, "				}\n");
+				Printf(CS, "			}\n");
+				Printf(CS, "		} else {\n");
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "		}\n");
+				if (!ni.is_void) {
+					Printf(CS, "		throw new InvalidOperationException();\n");
+				}
+			}
+			else {
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 			}
 			Printf(CS, "\t}\n");
 			// [csp]
@@ -1482,7 +1513,7 @@ public:
 	}
 
 	// SprCSharpメソッドの中身のコード，マルチスレッドであるか，呼ばれるスレッド，stepThread実行中かどうかによって変化する
-	void csfunction_code(bool multithread, bool in_stepthread, bool is_stepthread_executing ,DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
+	void csfunction_code(bool multithread, bool in_stepthread, bool is_stepthread_executing , bool is_setfunction, DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
@@ -1634,6 +1665,48 @@ public:
 			}
 	}
 
+	// マルチスレッドのコールバック用にメソッド内で引数をnewするコード
+	void NewArgumentForCallback(NodeInfo& ni, NodeInfo& ci, char** argnames) {
+		for (int j = 0; j < ni.num_args; j++) {
+			NodeInfo& ai = ni.funcargs[j];
+			char* uqname = argname(ai.uq_name, j);
+			char* csname = argname(ai.cs_name, j);
+			string key(ci.uq_name);
+			key.append(".");
+			key.append(uqname);
+			if (ai.is_function && (delegate_func_map.find(key) != delegate_func_map.end())) {
+				// 関数
+				Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
+			}
+			else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
+				// struct
+				if (!ai.is_enum) {
+					Printf(CS, "%s %s = new %s(%s)", cs_qualified_name(ai.uq_type), string("new_").append(csname).c_str(), cs_qualified_name(ai.uq_type), csname);
+					Printf(CS, ";// not enum");
+				}
+				//Printf(CS, ";// struct");
+			}
+			else if (ai.is_vector || ai.is_array) {
+				// vector or array
+				char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ai, ci, "function_args");
+				Printf(CS, "%s %s = new %s(%s)", wrapper_name, string("new_").append(csname).c_str(), wrapper_name, csname);
+				Printf(CS, ";// vector or array");
+			}
+			else if (ai.is_void_ptr) {
+				//Printf(CS, "CsObject %s", csname);
+			}
+			else if (!ai.is_intrinsic){
+				if (ai.is_string) {
+					Printf(CS, "%s %s = string.Copy(%s)", ai.cs_type, string("new_").append(csname).c_str(), csname);
+				}
+				else {
+					Printf(CS, "%s %s = new %s(%s)", ai.cs_type, string("new_").append(csname).c_str(), ai.cs_type, csname);
+					Printf(CS, ";// intrinsic");
+				}
+			}
+			Printf(CS, ";\n");
+		}
+	}
 	char* argname(char* name, int n) {
 		if (name) return name;
 		char buff[8];
