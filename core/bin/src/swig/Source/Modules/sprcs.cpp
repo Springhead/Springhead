@@ -1413,14 +1413,16 @@ public:
 				Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 				Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 				Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
-				NewArgumentForCallback(ni, ci, argnames);
-				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				char **callback_argnames = NewArgumentForCallback(ni, ci, argnames, topnode);
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 				Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 				Printf(CS, "					phSceneIf.isSetFunctionCalledInSubThread = true;\n");
 				Printf(CS, "					if (phSceneIf.isStepThreadExecuting) {;\n");
-				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				NewArgumentForCallback(ni, ci, argnames, topnode);
+				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "					} else {;\n");
+				// ここではコールバックを使用しないので引数をnewする必要はない
 				csfunction_code(/* multithread = */false, /* is_setfunction = */false, /* in_stepThread = */false, /* is_stepthread_executing = */false, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "					}\n");
 				Printf(CS, "				}\n");
@@ -1665,47 +1667,63 @@ public:
 			}
 	}
 
-	// マルチスレッドのコールバック用にメソッド内で引数をnewするコード
-	void NewArgumentForCallback(NodeInfo& ni, NodeInfo& ci, char** argnames) {
+	// マルチスレッドのコールバック用にメソッド内で引数をnewするコード，引数名を返す
+	char** NewArgumentForCallback(NodeInfo& ni, NodeInfo& ci, char** argnames, Node* topnode) {
+		char** callback_argnames = NULL;
+		if (ni.num_args > 0) {
+			callback_argnames = new char*[ni.num_args];
+		}
+		for (int j = 0; j < ni.num_args; j++) {
+			callback_argnames[j] = new char[sizeof(argnames[j])];
+			strcpy(callback_argnames[j], argnames[j]);
+		}
+
 		for (int j = 0; j < ni.num_args; j++) {
 			NodeInfo& ai = ni.funcargs[j];
 			char* uqname = argname(ai.uq_name, j);
-			char* csname = argname(ai.cs_name, j);
+			char* csname = argnames[j];
 			string key(ci.uq_name);
 			key.append(".");
 			key.append(uqname);
+			string callback_argname_str = string("new_").append(csname); // コールバック用引数※ここを左辺const char*型で右辺.c_str()をすると下で使用する際に空文字列になる，恐らく.c_str()はスコープが一文?
+			char *callback_argname = new char[sizeof(callback_argname_str.c_str())];
+			strcpy(callback_argname, callback_argname_str.c_str());
 			if (ai.is_function && (delegate_func_map.find(key) != delegate_func_map.end())) {
-				// 関数
-				Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
+				// ToDo?:関数
+				//Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
+				Printf(CS, "// function\n");
 			}
 			else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
 				// struct
-				if (!ai.is_enum) {
-					Printf(CS, "%s %s = new %s(%s)", cs_qualified_name(ai.uq_type), string("new_").append(csname).c_str(), cs_qualified_name(ai.uq_type), csname);
-					Printf(CS, ";// not enum");
+				if(FindNodeByAttrR(topnode, "enumtype", ai.type) == NULL){ // enum以外(ai.is_enumはenumでもTrueだった)
+					Printf(CS, "%s %s = new %s(%s);\n", cs_qualified_name(ai.uq_type), callback_argname, cs_qualified_name(ai.uq_type), csname);
+					callback_argnames[j] = (char*)callback_argname;
 				}
-				//Printf(CS, ";// struct");
+				Printf(CS, "// is_struct\n");
 			}
 			else if (ai.is_vector || ai.is_array) {
 				// vector or array
 				char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ai, ci, "function_args");
-				Printf(CS, "%s %s = new %s(%s)", wrapper_name, string("new_").append(csname).c_str(), wrapper_name, csname);
-				Printf(CS, ";// vector or array");
+				Printf(CS, "%s %s = new %s(%s);\n", wrapper_name, callback_argname, wrapper_name, csname);
+				Printf(CS, "// vector or array\n");
 			}
 			else if (ai.is_void_ptr) {
+				// ToDo?
 				//Printf(CS, "CsObject %s", csname);
+				Printf(CS, "// is_void_ptr\n");
 			}
 			else if (!ai.is_intrinsic){
 				if (ai.is_string) {
-					Printf(CS, "%s %s = string.Copy(%s)", ai.cs_type, string("new_").append(csname).c_str(), csname);
+					Printf(CS, "%s %s = string.Copy(%s);\n", ai.cs_type, string("new_").append(csname).c_str(), csname);
 				}
 				else {
-					Printf(CS, "%s %s = new %s(%s)", ai.cs_type, string("new_").append(csname).c_str(), ai.cs_type, csname);
-					Printf(CS, ";// intrinsic");
+					Printf(CS, "%s %s = new %s(%s);\n", ai.cs_type, callback_argname, ai.cs_type, csname);
 				}
+				callback_argnames[j] = (char*)callback_argname;
+				Printf(CS, "// intrinsic\n");
 			}
-			Printf(CS, ";\n");
 		}
+		return callback_argnames;
 	}
 	char* argname(char* name, int n) {
 		if (name) return name;
