@@ -1397,17 +1397,17 @@ public:
 				Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 				Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 				Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
-				csfunction_code(/* multithread = */true, /* off_lvalue = */false, "phSceneIf.sceneForStep", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */true, /* off_lvalue = */false, /* string_index = */ 0, "phSceneIf.sceneForStep", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 				Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 				Printf(CS, "					phSceneIf.isGetFunctionCalledInSubThread = true;\n");
-				csfunction_code(/* multithread = */true, /* off_lvalue = */false, "phSceneIf.sceneForGet", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */true, /* off_lvalue = */false, /* string_index = */ 0, "phSceneIf.sceneForGet", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "				}\n");
 				Printf(CS, "			}\n");
 				Printf(CS, "		} else {\n");
-				csfunction_code(/* multithread = */false, /* off_lvalue = */false, "0", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */false, /* string_index = */ 0, "0", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "		}\n");
 				Printf(CS, "		throw new InvalidOperationException();\n");
@@ -1417,32 +1417,40 @@ public:
 				Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 				Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 				Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
+				int string_index = 0;
 				char **callback_argnames = NewArgumentForCallback(ni, ci, argnames, topnode);
-				csfunction_code(/* multithread = */false, /* off_lvalue = */false, "phSceneIf.sceneForStep", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */false, /* string_index = */ 0, "phSceneIf.sceneForStep", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "				phSceneIf.AddCallbackForStepThread(\n");
 				Printf(CS, "					() => {\n");
-				csfunction_code(/* multithread = */false, /* off_lvalue = */true, "phSceneIf.sceneForBuffer", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */true, /* string_index = */ string_index, "phSceneIf.sceneForBuffer", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "					},\n");
 				Printf(CS, "					() => {\n");
-				csfunction_code(/* multithread = */false, /* off_lvalue = */true, "phSceneIf.sceneForGet", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				string_index++;
+				csfunction_code(/* multithread = */false, /* off_lvalue = */true, /* string_index = */ string_index, "phSceneIf.sceneForGet", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				Printf(CS, "				});\n");
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 				Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 				Printf(CS, "					phSceneIf.isSetFunctionCalledInSubThread = true;\n");
-				Printf(CS, "					if (phSceneIf.isStepThreadExecuting) {;\n");
+				Printf(CS, "					if (phSceneIf.isStepThreadExecuting) {\n");
 				NewArgumentForCallback(ni, ci, argnames, topnode);
-				csfunction_code(/* multithread = */false, /* off_lvalue = */false, "phSceneIf.sceneForStep", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "						phSceneIf.AddCallbackForSubThread(() => {\n");
+				string_index++;
+				csfunction_code(/* multithread = */false, /* off_lvalue = */true, /* string_index = */ string_index, "phSceneIf.sceneForStep", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				Printf(CS, "						});\n");
+				string_index++;
+				csfunction_code(/* multithread = */false, /* off_lvalue = */true, /* string_index = */ string_index, "phSceneIf.sceneForBuffer", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */false, /* string_index = */ 0, "phSceneIf.sceneForGet", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "					} else {;\n");
 				// ここではコールバックを使用しないので引数をnewする必要はない
-				csfunction_code(/* multithread = */false, /* off_lvalue = */false, "0", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */false, /* string_index = */ 0, "0", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "					}\n");
 				Printf(CS, "				}\n");
 				Printf(CS, "			}\n");
 				Printf(CS, "		} else {\n");
-				csfunction_code(/* multithread = */false, /* off_lvalue = */false, "0",fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */false, /* string_index = */ 0, "0",fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 				Printf(CS, "		}\n");
 				if (!ni.is_void) {
@@ -1450,7 +1458,7 @@ public:
 				}
 			}
 			else {
-				csfunction_code(/* multithread = */false, /* off_lvalue = */false, "0", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+				csfunction_code(/* multithread = */false, /* off_lvalue = */false, /* string_index = */ 0, "0", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 				CSFunctionReturnCode(ni, ci, topnode);
 			}
 			Printf(CS, "\t}\n");
@@ -1531,7 +1539,7 @@ public:
 	}
 
 	// SprCSharpメソッドの中身のコード，マルチスレッドであるか，呼ばれるスレッド，stepThread実行中かどうかによって変化する
-	void csfunction_code(bool multithread, bool off_lvalue, string _thisarray_index, DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
+	void csfunction_code(bool multithread, bool off_lvalue, int string_index, string _thisarray_index, DOHFile* fps[], Node* topnode, Node* n, NodeInfo& ni, char** argnames, void** cleanup1, void** cleanup2, Node* is_enum_node, NodeInfo& ci, int sep_needed, bool class_already_defined = false) {			
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
 			for (int j = 0; j < ni.num_args; j++) {
@@ -1539,7 +1547,12 @@ public:
 				char tmpbuff[MAX_NAMELEN+6+1];
 				if (ai.is_string) {
 					SNAP_ANA_PATH1(fps, FD_CS, "function_args: string");
-					sprintf(tmpbuff, "remote%d", j+1);
+					if(off_lvalue){
+						sprintf(tmpbuff, "callback_remote%d", string_index+j+1);
+					}
+					else {
+						sprintf(tmpbuff, "remote%d", j+1);
+					}
 					Printf(CS, "            IntPtr %s = Marshal.StringToBSTR(%s);\n", tmpbuff, argname(ai.uq_name, j));
 					argnames[j] = Char(NewString(tmpbuff));
 					cleanup1[j] = argnames[j];
