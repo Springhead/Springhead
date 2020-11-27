@@ -9,8 +9,18 @@ namespace SprCs {
         public IntPtr[] _thisArray = new IntPtr[_thisNumber] { IntPtr.Zero,IntPtr.Zero,IntPtr.Zero };
         public bool _flag;
         protected CsObject() { }
-        protected CsObject(IntPtr ptr, bool flag = false) {
-            _thisArray[0] = ptr;
+        //protected CsObject(IntPtr ptr, bool flag = false) {
+        //    _thisArray[0] = ptr;
+        //    _flag = flag;
+        //}
+        protected CsObject(IntPtr ptr, int sceneIndex = 0, bool flag = false) {
+            _thisArray[sceneIndex] = ptr;
+            _flag = flag;
+        }
+        protected CsObject(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag = false) {
+            _thisArray[0] = ptr0;
+            _thisArray[1] = ptr1;
+            _thisArray[2] = ptr2;
             _flag = flag;
         }
         ~CsObject() { }

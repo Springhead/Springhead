@@ -7,8 +7,12 @@ using System.Threading;
 namespace SprCs {
     public partial class PHConstraintEngineDesc : CsObject {
 	public PHConstraintEngineDesc() { _thisArray[0] = SprExport.Spr_new_PHConstraintEngineDesc(); _flag = true; }
-	public PHConstraintEngineDesc(IntPtr ptr) : base(ptr) {}
-	public PHConstraintEngineDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHConstraintEngineDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHConstraintEngineDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHConstraintEngineDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHConstraintEngineDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHConstraintEngineDesc() { if (_flag) { SprExport.Spr_delete_PHConstraintEngineDesc(_thisArray[0]); _flag = false; } }
 	public int method {
 	    get { return SprExport.Spr_PHConstraintEngineDesc_get_method(_thisArray[0]); }
@@ -177,8 +181,12 @@ namespace SprCs {
     }
     public partial class PHIKEngineDesc : CsObject {
 	public PHIKEngineDesc() { _thisArray[0] = SprExport.Spr_new_PHIKEngineDesc(); _flag = true; }
-	public PHIKEngineDesc(IntPtr ptr) : base(ptr) {}
-	public PHIKEngineDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKEngineDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKEngineDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKEngineDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKEngineDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKEngineDesc() { if (_flag) { SprExport.Spr_delete_PHIKEngineDesc(_thisArray[0]); _flag = false; } }
 	public ulong numIter {
 	    get { return SprExport.Spr_PHIKEngineDesc_get_numIter(_thisArray[0]); }
@@ -270,8 +278,12 @@ namespace SprCs {
     }
     public partial class PHFemMeshState : CsObject {
 	public PHFemMeshState() { _thisArray[0] = SprExport.Spr_new_PHFemMeshState(); _flag = true; }
-	public PHFemMeshState(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemMeshState() { if (_flag) { SprExport.Spr_delete_PHFemMeshState(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -297,8 +309,12 @@ namespace SprCs {
     }
     public partial class PHFemMeshDesc : PHFemMeshState {
 	public PHFemMeshDesc() { _thisArray[0] = SprExport.Spr_new_PHFemMeshDesc(); _flag = true; }
-	public PHFemMeshDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemMeshDesc() { if (_flag) { SprExport.Spr_delete_PHFemMeshDesc(_thisArray[0]); _flag = false; } }
         public vectorwrapper_Vec3d vertices {
             get { return new vectorwrapper_Vec3d(SprExport.Spr_PHFemMeshDesc_addr_vertices(_thisArray[0])); }
@@ -348,8 +364,12 @@ namespace SprCs {
     }
     public partial class PHFemMeshThermoDesc : PHFemMeshDesc {
 	public PHFemMeshThermoDesc() { _thisArray[0] = SprExport.Spr_new_PHFemMeshThermoDesc(); _flag = true; }
-	public PHFemMeshThermoDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshThermoDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshThermoDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshThermoDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshThermoDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshThermoDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemMeshThermoDesc() { if (_flag) { SprExport.Spr_delete_PHFemMeshThermoDesc(_thisArray[0]); _flag = false; } }
 	public double rho {
 	    get { return SprExport.Spr_PHFemMeshThermoDesc_get_rho(_thisArray[0]); }
@@ -447,8 +467,12 @@ namespace SprCs {
     }
     public partial class PHFemMeshNewState : CsObject {
 	public PHFemMeshNewState() { _thisArray[0] = SprExport.Spr_new_PHFemMeshNewState(); _flag = true; }
-	public PHFemMeshNewState(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshNewState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshNewState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshNewState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshNewState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshNewState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemMeshNewState() { if (_flag) { SprExport.Spr_delete_PHFemMeshNewState(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -474,8 +498,12 @@ namespace SprCs {
     }
     public partial class PHFemMeshNewDesc : PHFemMeshNewState {
 	public PHFemMeshNewDesc() { _thisArray[0] = SprExport.Spr_new_PHFemMeshNewDesc(); _flag = true; }
-	public PHFemMeshNewDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshNewDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshNewDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshNewDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshNewDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshNewDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemMeshNewDesc() { if (_flag) { SprExport.Spr_delete_PHFemMeshNewDesc(_thisArray[0]); _flag = false; } }
         public vectorwrapper_Vec3d vertices {
             get { return new vectorwrapper_Vec3d(SprExport.Spr_PHFemMeshNewDesc_addr_vertices(_thisArray[0])); }
@@ -535,8 +563,12 @@ namespace SprCs {
     }
     public partial class PHFemBaseDesc : CsObject {
 	public PHFemBaseDesc() { _thisArray[0] = SprExport.Spr_new_PHFemBaseDesc(); _flag = true; }
-	public PHFemBaseDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemBaseDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemBaseDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemBaseDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemBaseDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemBaseDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemBaseDesc() { if (_flag) { SprExport.Spr_delete_PHFemBaseDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -562,8 +594,12 @@ namespace SprCs {
     }
     public partial class PHFemVibrationDesc : PHFemBaseDesc {
 	public PHFemVibrationDesc() { _thisArray[0] = SprExport.Spr_new_PHFemVibrationDesc(); _flag = true; }
-	public PHFemVibrationDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemVibrationDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemVibrationDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemVibrationDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemVibrationDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemVibrationDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemVibrationDesc() { if (_flag) { SprExport.Spr_delete_PHFemVibrationDesc(_thisArray[0]); _flag = false; } }
 	public double young {
 	    get { return SprExport.Spr_PHFemVibrationDesc_get_young(_thisArray[0]); }
@@ -643,8 +679,12 @@ namespace SprCs {
     }
     public partial class PHFemThermoDesc : PHFemBaseDesc {
 	public PHFemThermoDesc() { _thisArray[0] = SprExport.Spr_new_PHFemThermoDesc(); _flag = true; }
-	public PHFemThermoDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemThermoDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemThermoDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemThermoDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemThermoDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemThermoDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemThermoDesc() { if (_flag) { SprExport.Spr_delete_PHFemThermoDesc(_thisArray[0]); _flag = false; } }
 	public double rho {
 	    get { return SprExport.Spr_PHFemThermoDesc_get_rho(_thisArray[0]); }
@@ -721,8 +761,12 @@ namespace SprCs {
     }
     public partial class PHFemPorousWOMoveDesc : PHFemBaseDesc {
 	public PHFemPorousWOMoveDesc() { _thisArray[0] = SprExport.Spr_new_PHFemPorousWOMoveDesc(); _flag = true; }
-	public PHFemPorousWOMoveDesc(IntPtr ptr) : base(ptr) {}
-	public PHFemPorousWOMoveDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFemPorousWOMoveDesc() { if (_flag) { SprExport.Spr_delete_PHFemPorousWOMoveDesc(_thisArray[0]); _flag = false; } }
 	public double wDiffAir {
 	    get { return SprExport.Spr_PHFemPorousWOMoveDesc_get_wDiffAir(_thisArray[0]); }
@@ -918,8 +962,12 @@ namespace SprCs {
     }
     public partial class PHFrameDesc : CsObject {
 	public PHFrameDesc() { _thisArray[0] = SprExport.Spr_new_PHFrameDesc(); _flag = true; }
-	public PHFrameDesc(IntPtr ptr) : base(ptr) {}
-	public PHFrameDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFrameDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFrameDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFrameDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFrameDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFrameDesc() { if (_flag) { SprExport.Spr_delete_PHFrameDesc(_thisArray[0]); _flag = false; } }
 	public Posed pose {
 	    get { return new Posed(SprExport.Spr_PHFrameDesc_addr_pose(_thisArray[0])); }
@@ -952,8 +1000,12 @@ namespace SprCs {
     }
     public partial class PHSolidState : CsObject {
 	public PHSolidState() { _thisArray[0] = SprExport.Spr_new_PHSolidState(); _flag = true; }
-	public PHSolidState(IntPtr ptr) : base(ptr) {}
-	public PHSolidState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSolidState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSolidState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSolidState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSolidState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSolidState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSolidState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSolidState() { if (_flag) { SprExport.Spr_delete_PHSolidState(_thisArray[0]); _flag = false; } }
 	public Vec3d velocity {
 	    get { return new Vec3d(SprExport.Spr_PHSolidState_addr_velocity(_thisArray[0])); }
@@ -1000,8 +1052,12 @@ namespace SprCs {
     }
     public partial class PHSolidDesc : PHSolidState {
 	public PHSolidDesc() { _thisArray[0] = SprExport.Spr_new_PHSolidDesc(); _flag = true; }
-	public PHSolidDesc(IntPtr ptr) : base(ptr) {}
-	public PHSolidDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSolidDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSolidDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSolidDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSolidDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSolidDesc() { if (_flag) { SprExport.Spr_delete_PHSolidDesc(_thisArray[0]); _flag = false; } }
 	public double mass {
 	    get { return SprExport.Spr_PHSolidDesc_get_mass(_thisArray[0]); }
@@ -1077,8 +1133,12 @@ namespace SprCs {
     }
     public partial class PHCollisionListener : CsObject {
 	public PHCollisionListener() { _thisArray[0] = SprExport.Spr_new_PHCollisionListener(); _flag = true; }
-	public PHCollisionListener(IntPtr ptr) : base(ptr) {}
-	public PHCollisionListener(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHCollisionListener(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHCollisionListener(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHCollisionListener(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHCollisionListener(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHCollisionListener() { if (_flag) { SprExport.Spr_delete_PHCollisionListener(_thisArray[0]); _flag = false; } }
 	public void OnDetect(PHSolidPairIf sop, CDShapePairIf shp, uint ct, double dt) {
 	    SprExport.Spr_PHCollisionListener_OnDetect((IntPtr) _thisArray[0], (IntPtr) sop, (IntPtr) shp, (uint) ct, (double) dt);
@@ -1089,8 +1149,12 @@ namespace SprCs {
     }
     public partial class PHHapticPointerDesc : CsObject {
 	public PHHapticPointerDesc() { _thisArray[0] = SprExport.Spr_new_PHHapticPointerDesc(); _flag = true; }
-	public PHHapticPointerDesc(IntPtr ptr) : base(ptr) {}
-	public PHHapticPointerDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHapticPointerDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHapticPointerDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHapticPointerDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHapticPointerDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHHapticPointerDesc() { if (_flag) { SprExport.Spr_delete_PHHapticPointerDesc(_thisArray[0]); _flag = false; } }
 	public HapticRenderMode renderMode {
 	    get { return (HapticRenderMode) SprExport.Spr_PHHapticPointerDesc_get_renderMode(_thisArray[0]); }
@@ -1126,8 +1190,12 @@ namespace SprCs {
     }
     public partial class PHHapticEngineDesc : CsObject {
 	public PHHapticEngineDesc() { _thisArray[0] = SprExport.Spr_new_PHHapticEngineDesc(); _flag = true; }
-	public PHHapticEngineDesc(IntPtr ptr) : base(ptr) {}
-	public PHHapticEngineDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHapticEngineDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHapticEngineDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHapticEngineDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHapticEngineDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHHapticEngineDesc() { if (_flag) { SprExport.Spr_delete_PHHapticEngineDesc(_thisArray[0]); _flag = false; } }
 	public enum HapticStepMode : int {
 	    SINGLE_THREAD, MULTI_THREAD = SINGLE_THREAD + 1, LOCAL_DYNAMICS = MULTI_THREAD + 1
@@ -1156,8 +1224,12 @@ namespace SprCs {
     }
     public partial class PHIKEndEffectorState : CsObject {
 	public PHIKEndEffectorState() { _thisArray[0] = SprExport.Spr_new_PHIKEndEffectorState(); _flag = true; }
-	public PHIKEndEffectorState(IntPtr ptr) : base(ptr) {}
-	public PHIKEndEffectorState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKEndEffectorState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKEndEffectorState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKEndEffectorState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKEndEffectorState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKEndEffectorState() { if (_flag) { SprExport.Spr_delete_PHIKEndEffectorState(_thisArray[0]); _flag = false; } }
 	public Posed solidTempPose {
 	    get { return new Posed(SprExport.Spr_PHIKEndEffectorState_addr_solidTempPose(_thisArray[0])); }
@@ -1190,8 +1262,12 @@ namespace SprCs {
     }
     public partial class PHIKEndEffectorDesc : PHIKEndEffectorState {
 	public PHIKEndEffectorDesc() { _thisArray[0] = SprExport.Spr_new_PHIKEndEffectorDesc(); _flag = true; }
-	public PHIKEndEffectorDesc(IntPtr ptr) : base(ptr) {}
-	public PHIKEndEffectorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKEndEffectorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKEndEffectorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKEndEffectorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKEndEffectorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKEndEffectorDesc() { if (_flag) { SprExport.Spr_delete_PHIKEndEffectorDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -1397,8 +1473,12 @@ namespace SprCs {
     }
     public partial class PHIKActuatorState : CsObject {
 	public PHIKActuatorState() { _thisArray[0] = SprExport.Spr_new_PHIKActuatorState(); _flag = true; }
-	public PHIKActuatorState(IntPtr ptr) : base(ptr) {}
-	public PHIKActuatorState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKActuatorState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKActuatorState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKActuatorState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKActuatorState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKActuatorState() { if (_flag) { SprExport.Spr_delete_PHIKActuatorState(_thisArray[0]); _flag = false; } }
 	public Posed solidTempPose {
 	    get { return new Posed(SprExport.Spr_PHIKActuatorState_addr_solidTempPose(_thisArray[0])); }
@@ -1473,8 +1553,12 @@ namespace SprCs {
     }
     public partial class PHIKActuatorDesc : PHIKActuatorState {
 	public PHIKActuatorDesc() { _thisArray[0] = SprExport.Spr_new_PHIKActuatorDesc(); _flag = true; }
-	public PHIKActuatorDesc(IntPtr ptr) : base(ptr) {}
-	public PHIKActuatorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKActuatorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKActuatorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKActuatorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKActuatorDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -1527,8 +1611,12 @@ namespace SprCs {
     }
     public partial class PHIKBallActuatorDesc : PHIKActuatorDesc {
 	public PHIKBallActuatorDesc() { _thisArray[0] = SprExport.Spr_new_PHIKBallActuatorDesc(); _flag = true; }
-	public PHIKBallActuatorDesc(IntPtr ptr) : base(ptr) {}
-	public PHIKBallActuatorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKBallActuatorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKBallActuatorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKBallActuatorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKBallActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKBallActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKBallActuatorDesc(_thisArray[0]); _flag = false; } }
 	public Quaterniond pullbackTarget {
 	    get { return new Quaterniond(SprExport.Spr_PHIKBallActuatorDesc_addr_pullbackTarget(_thisArray[0])); }
@@ -1567,8 +1655,12 @@ namespace SprCs {
     }
     public partial class PHIKHingeActuatorDesc : PHIKActuatorDesc {
 	public PHIKHingeActuatorDesc() { _thisArray[0] = SprExport.Spr_new_PHIKHingeActuatorDesc(); _flag = true; }
-	public PHIKHingeActuatorDesc(IntPtr ptr) : base(ptr) {}
-	public PHIKHingeActuatorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKHingeActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKHingeActuatorDesc(_thisArray[0]); _flag = false; } }
 	public double pullbackTarget {
 	    get { return SprExport.Spr_PHIKHingeActuatorDesc_get_pullbackTarget(_thisArray[0]); }
@@ -1607,8 +1699,12 @@ namespace SprCs {
     }
     public partial class PHIKSpringActuatorDesc : PHIKActuatorDesc {
 	public PHIKSpringActuatorDesc() { _thisArray[0] = SprExport.Spr_new_PHIKSpringActuatorDesc(); _flag = true; }
-	public PHIKSpringActuatorDesc(IntPtr ptr) : base(ptr) {}
-	public PHIKSpringActuatorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHIKSpringActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKSpringActuatorDesc(_thisArray[0]); _flag = false; } }
 	public Posed pullbackTarget {
 	    get { return new Posed(SprExport.Spr_PHIKSpringActuatorDesc_addr_pullbackTarget(_thisArray[0])); }
@@ -1647,8 +1743,12 @@ namespace SprCs {
     }
     public partial class PHConstraintDesc : CsObject {
 	public PHConstraintDesc() { _thisArray[0] = SprExport.Spr_new_PHConstraintDesc(); _flag = true; }
-	public PHConstraintDesc(IntPtr ptr) : base(ptr) {}
-	public PHConstraintDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHConstraintDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHConstraintDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHConstraintDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHConstraintDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHConstraintDesc() { if (_flag) { SprExport.Spr_delete_PHConstraintDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -1701,8 +1801,12 @@ namespace SprCs {
     }
     public partial class PHJointDesc : PHConstraintDesc {
 	public PHJointDesc() { _thisArray[0] = SprExport.Spr_new_PHJointDesc(); _flag = true; }
-	public PHJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHJointDesc() { if (_flag) { SprExport.Spr_delete_PHJointDesc(_thisArray[0]); _flag = false; } }
 	public double fMax {
 	    get { return SprExport.Spr_PHJointDesc_get_fMax(_thisArray[0]); }
@@ -1741,8 +1845,12 @@ namespace SprCs {
     }
     public partial class PH1DJointDesc : PHJointDesc {
 	public PH1DJointDesc() { _thisArray[0] = SprExport.Spr_new_PH1DJointDesc(); _flag = true; }
-	public PH1DJointDesc(IntPtr ptr) : base(ptr) {}
-	public PH1DJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PH1DJointDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointDesc(_thisArray[0]); _flag = false; } }
 	public bool cyclic {
 	    get {
@@ -1850,8 +1958,12 @@ namespace SprCs {
     }
     public partial class PHHingeJointDesc : PH1DJointDesc {
 	public PHHingeJointDesc() { _thisArray[0] = SprExport.Spr_new_PHHingeJointDesc(); _flag = true; }
-	public PHHingeJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHHingeJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHingeJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHingeJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHingeJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHingeJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHHingeJointDesc() { if (_flag) { SprExport.Spr_delete_PHHingeJointDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -1883,8 +1995,12 @@ namespace SprCs {
     }
     public partial class PHSliderJointDesc : PH1DJointDesc {
 	public PHSliderJointDesc() { _thisArray[0] = SprExport.Spr_new_PHSliderJointDesc(); _flag = true; }
-	public PHSliderJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHSliderJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSliderJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSliderJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSliderJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSliderJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSliderJointDesc() { if (_flag) { SprExport.Spr_delete_PHSliderJointDesc(_thisArray[0]); _flag = false; } }
 	public bool bConstraintY {
 	    get {
@@ -1955,8 +2071,12 @@ namespace SprCs {
     }
     public partial class PHPathPoint : CsObject {
 	public PHPathPoint() { _thisArray[0] = SprExport.Spr_new_PHPathPoint(); _flag = true; }
-	public PHPathPoint(IntPtr ptr) : base(ptr) {}
-	public PHPathPoint(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathPoint(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathPoint(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathPoint(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathPoint(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public PHPathPoint(double _s, Posed _pose) { _thisArray[0] = SprExport.Spr_new_PHPathPoint_4(_s, _pose); _flag = true; }
 	~PHPathPoint() { if (_flag) { SprExport.Spr_delete_PHPathPoint(_thisArray[0]); _flag = false; } }
 	public double s {
@@ -1970,8 +2090,12 @@ namespace SprCs {
     }
     public partial class PHPathDesc : CsObject {
 	public PHPathDesc() { _thisArray[0] = SprExport.Spr_new_PHPathDesc(); _flag = true; }
-	public PHPathDesc(IntPtr ptr) : base(ptr) {}
-	public PHPathDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPathDesc() { if (_flag) { SprExport.Spr_delete_PHPathDesc(_thisArray[0]); _flag = false; } }
         public vectorwrapper_PHPathPoint points {
             get { return new vectorwrapper_PHPathPoint(SprExport.Spr_PHPathDesc_addr_points(_thisArray[0])); }
@@ -2017,8 +2141,12 @@ namespace SprCs {
     }
     public partial class PHPathJointDesc : PH1DJointDesc {
 	public PHPathJointDesc() { _thisArray[0] = SprExport.Spr_new_PHPathJointDesc(); _flag = true; }
-	public PHPathJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHPathJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPathJointDesc() { if (_flag) { SprExport.Spr_delete_PHPathJointDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2050,8 +2178,12 @@ namespace SprCs {
     }
     public partial class PHGenericJointCallback : CsObject {
 	public PHGenericJointCallback() { _thisArray[0] = SprExport.Spr_new_PHGenericJointCallback(); _flag = true; }
-	public PHGenericJointCallback(IntPtr ptr) : base(ptr) {}
-	public PHGenericJointCallback(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGenericJointCallback(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGenericJointCallback(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGenericJointCallback(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGenericJointCallback(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHGenericJointCallback() { if (_flag) { SprExport.Spr_delete_PHGenericJointCallback(_thisArray[0]); _flag = false; } }
 	public void SetParam(PHGenericJointIf jnt, string name, double value) {
             IntPtr remote2 = Marshal.StringToBSTR(name);
@@ -2089,8 +2221,12 @@ namespace SprCs {
     }
     public partial class PHGenericJointDesc : PH1DJointDesc {
 	public PHGenericJointDesc() { _thisArray[0] = SprExport.Spr_new_PHGenericJointDesc(); _flag = true; }
-	public PHGenericJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHGenericJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGenericJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGenericJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGenericJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGenericJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHGenericJointDesc() { if (_flag) { SprExport.Spr_delete_PHGenericJointDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2122,8 +2258,12 @@ namespace SprCs {
     }
     public partial class PHBallJointDesc : PHJointDesc {
 	public PHBallJointDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointDesc(); _flag = true; }
-	public PHBallJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointDesc(_thisArray[0]); _flag = false; } }
 	public double spring {
 	    get { return SprExport.Spr_PHBallJointDesc_get_spring(_thisArray[0]); }
@@ -2218,8 +2358,12 @@ namespace SprCs {
     }
     public partial class PHFixJointDesc : PHJointDesc {
 	public PHFixJointDesc() { _thisArray[0] = SprExport.Spr_new_PHFixJointDesc(); _flag = true; }
-	public PHFixJointDesc(IntPtr ptr) : base(ptr) {}
-	public PHFixJointDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFixJointDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFixJointDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFixJointDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFixJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFixJointDesc() { if (_flag) { SprExport.Spr_delete_PHFixJointDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2251,8 +2395,12 @@ namespace SprCs {
     }
     public partial class PHSpringDesc : PHJointDesc {
 	public PHSpringDesc() { _thisArray[0] = SprExport.Spr_new_PHSpringDesc(); _flag = true; }
-	public PHSpringDesc(IntPtr ptr) : base(ptr) {}
-	public PHSpringDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSpringDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSpringDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSpringDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSpringDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSpringDesc() { if (_flag) { SprExport.Spr_delete_PHSpringDesc(_thisArray[0]); _flag = false; } }
 	public Vec3d targetPosition {
 	    get { return new Vec3d(SprExport.Spr_PHSpringDesc_addr_targetPosition(_thisArray[0])); }
@@ -2375,8 +2523,12 @@ namespace SprCs {
     }
     public partial class PHMateDesc : PHJointDesc {
 	public PHMateDesc() { _thisArray[0] = SprExport.Spr_new_PHMateDesc(); _flag = true; }
-	public PHMateDesc(IntPtr ptr) : base(ptr) {}
-	public PHMateDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHMateDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHMateDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHMateDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHMateDesc() { if (_flag) { SprExport.Spr_delete_PHMateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2408,8 +2560,12 @@ namespace SprCs {
     }
     public partial class PHPointToPointMateDesc : PHMateDesc {
 	public PHPointToPointMateDesc() { _thisArray[0] = SprExport.Spr_new_PHPointToPointMateDesc(); _flag = true; }
-	public PHPointToPointMateDesc(IntPtr ptr) : base(ptr) {}
-	public PHPointToPointMateDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPointToPointMateDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPointToPointMateDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPointToPointMateDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPointToPointMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPointToPointMateDesc() { if (_flag) { SprExport.Spr_delete_PHPointToPointMateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2441,8 +2597,12 @@ namespace SprCs {
     }
     public partial class PHPointToLineMateDesc : PHMateDesc {
 	public PHPointToLineMateDesc() { _thisArray[0] = SprExport.Spr_new_PHPointToLineMateDesc(); _flag = true; }
-	public PHPointToLineMateDesc(IntPtr ptr) : base(ptr) {}
-	public PHPointToLineMateDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPointToLineMateDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPointToLineMateDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPointToLineMateDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPointToLineMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPointToLineMateDesc() { if (_flag) { SprExport.Spr_delete_PHPointToLineMateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2474,8 +2634,12 @@ namespace SprCs {
     }
     public partial class PHPointToPlaneMateDesc : PHMateDesc {
 	public PHPointToPlaneMateDesc() { _thisArray[0] = SprExport.Spr_new_PHPointToPlaneMateDesc(); _flag = true; }
-	public PHPointToPlaneMateDesc(IntPtr ptr) : base(ptr) {}
-	public PHPointToPlaneMateDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPointToPlaneMateDesc() { if (_flag) { SprExport.Spr_delete_PHPointToPlaneMateDesc(_thisArray[0]); _flag = false; } }
 	public Vec2d range {
 	    get { return new Vec2d(SprExport.Spr_PHPointToPlaneMateDesc_addr_range(_thisArray[0])); }
@@ -2514,8 +2678,12 @@ namespace SprCs {
     }
     public partial class PHLineToLineMateDesc : PHMateDesc {
 	public PHLineToLineMateDesc() { _thisArray[0] = SprExport.Spr_new_PHLineToLineMateDesc(); _flag = true; }
-	public PHLineToLineMateDesc(IntPtr ptr) : base(ptr) {}
-	public PHLineToLineMateDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHLineToLineMateDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHLineToLineMateDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHLineToLineMateDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHLineToLineMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHLineToLineMateDesc() { if (_flag) { SprExport.Spr_delete_PHLineToLineMateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2547,8 +2715,12 @@ namespace SprCs {
     }
     public partial class PHPlaneToPlaneMateDesc : PHMateDesc {
 	public PHPlaneToPlaneMateDesc() { _thisArray[0] = SprExport.Spr_new_PHPlaneToPlaneMateDesc(); _flag = true; }
-	public PHPlaneToPlaneMateDesc(IntPtr ptr) : base(ptr) {}
-	public PHPlaneToPlaneMateDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPlaneToPlaneMateDesc() { if (_flag) { SprExport.Spr_delete_PHPlaneToPlaneMateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2580,8 +2752,12 @@ namespace SprCs {
     }
     public partial class PHTreeNodeDesc : CsObject {
 	public PHTreeNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHTreeNodeDesc(); _flag = true; }
-	public PHTreeNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHTreeNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHTreeNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHTreeNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHTreeNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHTreeNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHTreeNodeDesc() { if (_flag) { SprExport.Spr_delete_PHTreeNodeDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -2620,8 +2796,12 @@ namespace SprCs {
     }
     public partial class PHRootNodeDesc : PHTreeNodeDesc {
 	public PHRootNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHRootNodeDesc(); _flag = true; }
-	public PHRootNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHRootNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHRootNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHRootNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHRootNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHRootNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHRootNodeDesc() { if (_flag) { SprExport.Spr_delete_PHRootNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2653,8 +2833,12 @@ namespace SprCs {
     }
     public partial class PHTreeNode1DDesc : PHTreeNodeDesc {
 	public PHTreeNode1DDesc() { _thisArray[0] = SprExport.Spr_new_PHTreeNode1DDesc(); _flag = true; }
-	public PHTreeNode1DDesc(IntPtr ptr) : base(ptr) {}
-	public PHTreeNode1DDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHTreeNode1DDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHTreeNode1DDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHTreeNode1DDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHTreeNode1DDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHTreeNode1DDesc() { if (_flag) { SprExport.Spr_delete_PHTreeNode1DDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2686,8 +2870,12 @@ namespace SprCs {
     }
     public partial class PHHingeJointNodeDesc : PHTreeNode1DDesc {
 	public PHHingeJointNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHHingeJointNodeDesc(); _flag = true; }
-	public PHHingeJointNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHHingeJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHingeJointNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHingeJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHingeJointNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHingeJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHHingeJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHHingeJointNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2719,8 +2907,12 @@ namespace SprCs {
     }
     public partial class PHSliderJointNodeDesc : PHTreeNode1DDesc {
 	public PHSliderJointNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHSliderJointNodeDesc(); _flag = true; }
-	public PHSliderJointNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHSliderJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSliderJointNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSliderJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSliderJointNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSliderJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSliderJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHSliderJointNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2752,8 +2944,12 @@ namespace SprCs {
     }
     public partial class PHPathJointNodeDesc : PHTreeNode1DDesc {
 	public PHPathJointNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHPathJointNodeDesc(); _flag = true; }
-	public PHPathJointNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHPathJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathJointNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathJointNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHPathJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHPathJointNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2785,8 +2981,12 @@ namespace SprCs {
     }
     public partial class PHGenericJointNodeDesc : PHTreeNode1DDesc {
 	public PHGenericJointNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHGenericJointNodeDesc(); _flag = true; }
-	public PHGenericJointNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHGenericJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGenericJointNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGenericJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGenericJointNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGenericJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHGenericJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHGenericJointNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2818,8 +3018,12 @@ namespace SprCs {
     }
     public partial class PHBallJointNodeDesc : PHTreeNodeDesc {
 	public PHBallJointNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointNodeDesc(); _flag = true; }
-	public PHBallJointNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2851,8 +3055,12 @@ namespace SprCs {
     }
     public partial class PHFixJointNodeDesc : PHTreeNodeDesc {
 	public PHFixJointNodeDesc() { _thisArray[0] = SprExport.Spr_new_PHFixJointNodeDesc(); _flag = true; }
-	public PHFixJointNodeDesc(IntPtr ptr) : base(ptr) {}
-	public PHFixJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFixJointNodeDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFixJointNodeDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFixJointNodeDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFixJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHFixJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHFixJointNodeDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2884,8 +3092,12 @@ namespace SprCs {
     }
     public partial class PHGearDesc : CsObject {
 	public PHGearDesc() { _thisArray[0] = SprExport.Spr_new_PHGearDesc(); _flag = true; }
-	public PHGearDesc(IntPtr ptr) : base(ptr) {}
-	public PHGearDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGearDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGearDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGearDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGearDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHGearDesc() { if (_flag) { SprExport.Spr_delete_PHGearDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -2945,8 +3157,12 @@ namespace SprCs {
     }
     public partial class PH1DJointLimitDesc : CsObject {
 	public PH1DJointLimitDesc() { _thisArray[0] = SprExport.Spr_new_PH1DJointLimitDesc(); _flag = true; }
-	public PH1DJointLimitDesc(IntPtr ptr) : base(ptr) {}
-	public PH1DJointLimitDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointLimitDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointLimitDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointLimitDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PH1DJointLimitDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointLimitDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -3006,8 +3222,12 @@ namespace SprCs {
     }
     public partial class PHBallJointLimitDesc : CsObject {
 	public PHBallJointLimitDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointLimitDesc(); _flag = true; }
-	public PHBallJointLimitDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointLimitDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointLimitDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointLimitDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointLimitDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointLimitDesc(_thisArray[0]); _flag = false; } }
 	public bool bEnabled {
 	    get {
@@ -3067,8 +3287,12 @@ namespace SprCs {
     }
     public partial class PHBallJointConeLimitDesc : PHBallJointLimitDesc {
 	public PHBallJointConeLimitDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointConeLimitDesc(); _flag = true; }
-	public PHBallJointConeLimitDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointConeLimitDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointConeLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointConeLimitDesc(_thisArray[0]); _flag = false; } }
 	public Vec2d limitSwing {
 	    get { return new Vec2d(SprExport.Spr_PHBallJointConeLimitDesc_addr_limitSwing(_thisArray[0])); }
@@ -3121,8 +3345,12 @@ namespace SprCs {
     }
     public partial class PHSplineLimitNode : CsObject {
 	public PHSplineLimitNode() { _thisArray[0] = SprExport.Spr_new_PHSplineLimitNode(); _flag = true; }
-	public PHSplineLimitNode(IntPtr ptr) : base(ptr) {}
-	public PHSplineLimitNode(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSplineLimitNode(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSplineLimitNode(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSplineLimitNode(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSplineLimitNode(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public PHSplineLimitNode(double s, double sd, double ds, double dsd, double tmn, double tmx) { _thisArray[0] = SprExport.Spr_new_PHSplineLimitNode_8(s, sd, ds, dsd, tmn, tmx); _flag = true; }
 	~PHSplineLimitNode() { if (_flag) { SprExport.Spr_delete_PHSplineLimitNode(_thisArray[0]); _flag = false; } }
 	public double swing {
@@ -3152,8 +3380,12 @@ namespace SprCs {
     }
     public partial class PHBallJointSplineLimitDesc : PHBallJointLimitDesc {
 	public PHBallJointSplineLimitDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointSplineLimitDesc(); _flag = true; }
-	public PHBallJointSplineLimitDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointSplineLimitDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointSplineLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointSplineLimitDesc(_thisArray[0]); _flag = false; } }
         public vectorwrapper_PHSplineLimitNode nodes {
             get { return new vectorwrapper_PHSplineLimitNode(SprExport.Spr_PHBallJointSplineLimitDesc_addr_nodes(_thisArray[0])); }
@@ -3199,8 +3431,12 @@ namespace SprCs {
     }
     public partial class PHBallJointIndependentLimitDesc : PHBallJointLimitDesc {
 	public PHBallJointIndependentLimitDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointIndependentLimitDesc(); _flag = true; }
-	public PHBallJointIndependentLimitDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointIndependentLimitDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointIndependentLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointIndependentLimitDesc(_thisArray[0]); _flag = false; } }
 	public Vec2d limitX {
 	    get { return new Vec2d(SprExport.Spr_PHBallJointIndependentLimitDesc_addr_limitX(_thisArray[0])); }
@@ -3253,8 +3489,12 @@ namespace SprCs {
     }
     public partial class PH1DJointMotorDesc : CsObject {
 	public PH1DJointMotorDesc() { _thisArray[0] = SprExport.Spr_new_PH1DJointMotorDesc(); _flag = true; }
-	public PH1DJointMotorDesc(IntPtr ptr) : base(ptr) {}
-	public PH1DJointMotorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointMotorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointMotorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointMotorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PH1DJointMotorDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointMotorDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -3280,8 +3520,12 @@ namespace SprCs {
     }
     public partial class PH1DJointNonLinearMotorDesc : PH1DJointMotorDesc {
 	public PH1DJointNonLinearMotorDesc() { _thisArray[0] = SprExport.Spr_new_PH1DJointNonLinearMotorDesc(); _flag = true; }
-	public PH1DJointNonLinearMotorDesc(IntPtr ptr) : base(ptr) {}
-	public PH1DJointNonLinearMotorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PH1DJointNonLinearMotorDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointNonLinearMotorDesc(_thisArray[0]); _flag = false; } }
 	public enum FunctionMode : int {
 	    LINEAR = 0, HUMANJOINTRESITANCE = LINEAR + 1
@@ -3316,8 +3560,12 @@ namespace SprCs {
     }
     public partial class PHHuman1DJointResistanceDesc : PH1DJointNonLinearMotorDesc {
 	public PHHuman1DJointResistanceDesc() { _thisArray[0] = SprExport.Spr_new_PHHuman1DJointResistanceDesc(); _flag = true; }
-	public PHHuman1DJointResistanceDesc(IntPtr ptr) : base(ptr) {}
-	public PHHuman1DJointResistanceDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHHuman1DJointResistanceDesc() { if (_flag) { SprExport.Spr_delete_PHHuman1DJointResistanceDesc(_thisArray[0]); _flag = false; } }
 	public Vec4d coefficient {
 	    get { return new Vec4d(SprExport.Spr_PHHuman1DJointResistanceDesc_addr_coefficient(_thisArray[0])); }
@@ -3356,8 +3604,12 @@ namespace SprCs {
     }
     public partial class PHBallJointMotorDesc : CsObject {
 	public PHBallJointMotorDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointMotorDesc(); _flag = true; }
-	public PHBallJointMotorDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointMotorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointMotorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointMotorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointMotorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointMotorDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointMotorDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -3383,8 +3635,12 @@ namespace SprCs {
     }
     public partial class PHBallJointNonLinearMotorDesc : PHBallJointMotorDesc {
 	public PHBallJointNonLinearMotorDesc() { _thisArray[0] = SprExport.Spr_new_PHBallJointNonLinearMotorDesc(); _flag = true; }
-	public PHBallJointNonLinearMotorDesc(IntPtr ptr) : base(ptr) {}
-	public PHBallJointNonLinearMotorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBallJointNonLinearMotorDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointNonLinearMotorDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -3416,8 +3672,12 @@ namespace SprCs {
     }
     public partial class PHHumanBallJointResistanceDesc : PHBallJointNonLinearMotorDesc {
 	public PHHumanBallJointResistanceDesc() { _thisArray[0] = SprExport.Spr_new_PHHumanBallJointResistanceDesc(); _flag = true; }
-	public PHHumanBallJointResistanceDesc(IntPtr ptr) : base(ptr) {}
-	public PHHumanBallJointResistanceDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHHumanBallJointResistanceDesc() { if (_flag) { SprExport.Spr_delete_PHHumanBallJointResistanceDesc(_thisArray[0]); _flag = false; } }
 	public Vec4d xCoefficient {
 	    get { return new Vec4d(SprExport.Spr_PHHumanBallJointResistanceDesc_addr_xCoefficient(_thisArray[0])); }
@@ -3470,8 +3730,12 @@ namespace SprCs {
     }
     public partial class PHSpringMotorDesc : CsObject {
 	public PHSpringMotorDesc() { _thisArray[0] = SprExport.Spr_new_PHSpringMotorDesc(); _flag = true; }
-	public PHSpringMotorDesc(IntPtr ptr) : base(ptr) {}
-	public PHSpringMotorDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSpringMotorDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSpringMotorDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSpringMotorDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSpringMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSpringMotorDesc() { if (_flag) { SprExport.Spr_delete_PHSpringMotorDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -3497,8 +3761,12 @@ namespace SprCs {
     }
     public partial class PHInactiveSolids : CsObject {
 	public PHInactiveSolids() { _thisArray[0] = SprExport.Spr_new_PHInactiveSolids(); _flag = true; }
-	public PHInactiveSolids(IntPtr ptr) : base(ptr) {}
-	public PHInactiveSolids(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHInactiveSolids(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHInactiveSolids(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHInactiveSolids(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHInactiveSolids(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHInactiveSolids() { if (_flag) { SprExport.Spr_delete_PHInactiveSolids(_thisArray[0]); _flag = false; } }
         public vectorwrapper_string solids {
             get { return new vectorwrapper_string(SprExport.Spr_PHInactiveSolids_addr_solids(_thisArray[0])); }
@@ -3507,8 +3775,12 @@ namespace SprCs {
     }
     public partial class PHOpObjState : CsObject {
 	public PHOpObjState() { _thisArray[0] = SprExport.Spr_new_PHOpObjState(); _flag = true; }
-	public PHOpObjState(IntPtr ptr) : base(ptr) {}
-	public PHOpObjState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpObjState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpObjState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpObjState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpObjState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpObjState() { if (_flag) { SprExport.Spr_delete_PHOpObjState(_thisArray[0]); _flag = false; } }
 	public Vec3d velocity {
 	    get { return new Vec3d(SprExport.Spr_PHOpObjState_addr_velocity(_thisArray[0])); }
@@ -3555,8 +3827,12 @@ namespace SprCs {
     }
     public partial class PHOpHapticRendererDesc : CsObject {
 	public PHOpHapticRendererDesc() { _thisArray[0] = SprExport.Spr_new_PHOpHapticRendererDesc(); _flag = true; }
-	public PHOpHapticRendererDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpHapticRendererDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpHapticRendererDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpHapticRendererDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpHapticRendererDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpHapticRendererDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpHapticRendererDesc() { if (_flag) { SprExport.Spr_delete_PHOpHapticRendererDesc(_thisArray[0]); _flag = false; } }
 	public float extForceSpring {
 	    get { return SprExport.Spr_PHOpHapticRendererDesc_get_extForceSpring(_thisArray[0]); }
@@ -3750,8 +4026,12 @@ namespace SprCs {
     }
     public partial class PHOpObjDesc : PHOpObjState {
 	public PHOpObjDesc() { _thisArray[0] = SprExport.Spr_new_PHOpObjDesc(); _flag = true; }
-	public PHOpObjDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpObjDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpObjDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpObjDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpObjDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpObjDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpObjDesc() { if (_flag) { SprExport.Spr_delete_PHOpObjDesc(_thisArray[0]); _flag = false; } }
 	public double mass {
 	    get { return SprExport.Spr_PHOpObjDesc_get_mass(_thisArray[0]); }
@@ -3943,8 +4223,12 @@ namespace SprCs {
     }
     public partial class PHOpParticleDesc : CsObject {
 	public PHOpParticleDesc() { _thisArray[0] = SprExport.Spr_new_PHOpParticleDesc(); _flag = true; }
-	public PHOpParticleDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpParticleDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpParticleDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpParticleDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpParticleDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpParticleDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpParticleDesc() { if (_flag) { SprExport.Spr_delete_PHOpParticleDesc(_thisArray[0]); _flag = false; } }
 	public int pNvertex {
 	    get { return SprExport.Spr_PHOpParticleDesc_get_pNvertex(_thisArray[0]); }
@@ -4299,8 +4583,12 @@ namespace SprCs {
     }
     public partial class PHOpGroupDesc : CsObject {
 	public PHOpGroupDesc() { _thisArray[0] = SprExport.Spr_new_PHOpGroupDesc(); _flag = true; }
-	public PHOpGroupDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpGroupDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpGroupDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpGroupDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpGroupDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpGroupDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpGroupDesc() { if (_flag) { SprExport.Spr_delete_PHOpGroupDesc(_thisArray[0]); _flag = false; } }
 	public int gMyIndex {
 	    get { return SprExport.Spr_PHOpGroupDesc_get_gMyIndex(_thisArray[0]); }
@@ -4375,8 +4663,12 @@ namespace SprCs {
     }
     public partial class PHOpHapticControllerDesc : CsObject {
 	public PHOpHapticControllerDesc() { _thisArray[0] = SprExport.Spr_new_PHOpHapticControllerDesc(); _flag = true; }
-	public PHOpHapticControllerDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpHapticControllerDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpHapticControllerDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpHapticControllerDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpHapticControllerDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpHapticControllerDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpHapticControllerDesc() { if (_flag) { SprExport.Spr_delete_PHOpHapticControllerDesc(_thisArray[0]); _flag = false; } }
 	public float posScale {
 	    get { return SprExport.Spr_PHOpHapticControllerDesc_get_posScale(_thisArray[0]); }
@@ -4634,8 +4926,12 @@ namespace SprCs {
     }
     public partial class PHOpAnimationDesc : CsObject {
 	public PHOpAnimationDesc() { _thisArray[0] = SprExport.Spr_new_PHOpAnimationDesc(); _flag = true; }
-	public PHOpAnimationDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpAnimationDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpAnimationDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpAnimationDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpAnimationDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpAnimationDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpAnimationDesc() { if (_flag) { SprExport.Spr_delete_PHOpAnimationDesc(_thisArray[0]); _flag = false; } }
 	public float timestep {
 	    get { return SprExport.Spr_PHOpAnimationDesc_get_timestep(_thisArray[0]); }
@@ -4668,8 +4964,12 @@ namespace SprCs {
     }
     public partial class PHOpSpHashColliAgentDesc : CsObject {
 	public PHOpSpHashColliAgentDesc() { _thisArray[0] = SprExport.Spr_new_PHOpSpHashColliAgentDesc(); _flag = true; }
-	public PHOpSpHashColliAgentDesc(IntPtr ptr) : base(ptr) {}
-	public PHOpSpHashColliAgentDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHOpSpHashColliAgentDesc() { if (_flag) { SprExport.Spr_delete_PHOpSpHashColliAgentDesc(_thisArray[0]); _flag = false; } }
 	public bool useDirColli {
 	    get {
@@ -4715,8 +5015,12 @@ namespace SprCs {
     }
     public partial class PHRaycastHit : CsObject {
 	public PHRaycastHit() { _thisArray[0] = SprExport.Spr_new_PHRaycastHit(); _flag = true; }
-	public PHRaycastHit(IntPtr ptr) : base(ptr) {}
-	public PHRaycastHit(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHRaycastHit(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHRaycastHit(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHRaycastHit(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHRaycastHit(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHRaycastHit() { if (_flag) { SprExport.Spr_delete_PHRaycastHit(_thisArray[0]); _flag = false; } }
 	public PHSolidIf solid {
 	    get { return new PHSolidIf(SprExport.Spr_PHRaycastHit_get_solid(_thisArray[0])); }
@@ -4737,8 +5041,12 @@ namespace SprCs {
     }
     public partial class PHRayDesc : CsObject {
 	public PHRayDesc() { _thisArray[0] = SprExport.Spr_new_PHRayDesc(); _flag = true; }
-	public PHRayDesc(IntPtr ptr) : base(ptr) {}
-	public PHRayDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHRayDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHRayDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHRayDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHRayDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHRayDesc() { if (_flag) { SprExport.Spr_delete_PHRayDesc(_thisArray[0]); _flag = false; } }
 	public Vec3d origin {
 	    get { return new Vec3d(SprExport.Spr_PHRayDesc_addr_origin(_thisArray[0])); }
@@ -4778,8 +5086,12 @@ namespace SprCs {
     }
     public partial class PHSceneState : CsObject {
 	public PHSceneState() { _thisArray[0] = SprExport.Spr_new_PHSceneState(); _flag = true; }
-	public PHSceneState(IntPtr ptr) : base(ptr) {}
-	public PHSceneState(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSceneState(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSceneState(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSceneState(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSceneState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSceneState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSceneState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSceneState() { if (_flag) { SprExport.Spr_delete_PHSceneState(_thisArray[0]); _flag = false; } }
 	public double timeStep {
 	    get { return SprExport.Spr_PHSceneState_get_timeStep(_thisArray[0]); }
@@ -4829,8 +5141,12 @@ namespace SprCs {
     }
     public partial class PHSceneDesc : PHSceneState {
 	public PHSceneDesc() { _thisArray[0] = SprExport.Spr_new_PHSceneDesc(); _flag = true; }
-	public PHSceneDesc(IntPtr ptr) : base(ptr) {}
-	public PHSceneDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSceneDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSceneDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSceneDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSceneDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSceneDesc() { if (_flag) { SprExport.Spr_delete_PHSceneDesc(_thisArray[0]); _flag = false; } }
 	public Vec3d gravity {
 	    get { return new Vec3d(SprExport.Spr_PHSceneDesc_addr_gravity(_thisArray[0])); }
@@ -5009,8 +5325,12 @@ namespace SprCs {
     }
     public partial class PHSdkDesc : CsObject {
 	public PHSdkDesc() { _thisArray[0] = SprExport.Spr_new_PHSdkDesc(); _flag = true; }
-	public PHSdkDesc(IntPtr ptr) : base(ptr) {}
-	public PHSdkDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSdkDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSdkDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSdkDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSdkDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSdkDesc() { if (_flag) { SprExport.Spr_delete_PHSdkDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -5036,8 +5356,12 @@ namespace SprCs {
     }
     public partial class PHBoneDesc : CsObject {
 	public PHBoneDesc() { _thisArray[0] = SprExport.Spr_new_PHBoneDesc(); _flag = true; }
-	public PHBoneDesc(IntPtr ptr) : base(ptr) {}
-	public PHBoneDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBoneDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBoneDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBoneDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBoneDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHBoneDesc() { if (_flag) { SprExport.Spr_delete_PHBoneDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -5063,8 +5387,12 @@ namespace SprCs {
     }
     public partial class PHSkeletonDesc : CsObject {
 	public PHSkeletonDesc() { _thisArray[0] = SprExport.Spr_new_PHSkeletonDesc(); _flag = true; }
-	public PHSkeletonDesc(IntPtr ptr) : base(ptr) {}
-	public PHSkeletonDesc(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSkeletonDesc(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSkeletonDesc(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSkeletonDesc(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSkeletonDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~PHSkeletonDesc() { if (_flag) { SprExport.Spr_delete_PHSkeletonDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -5090,8 +5418,12 @@ namespace SprCs {
     }
     public partial class PHEngineIf : SceneObjectIf {
 	public PHEngineIf() { _thisArray[0] = SprExport.Spr_new_PHEngineIf(); _flag = true; }
-	public PHEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHEngineIf.GetIfInfoStatic()) ? new PHEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -5168,8 +5500,10 @@ SprExport.Spr_PHEngineIf_Step((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHEngineIf_Step((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHEngineIf_Step((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHEngineIf_Step((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHEngineIf_Step((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -5199,8 +5533,10 @@ SprExport.Spr_PHEngineIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForStep], (bo
 						});
 SprExport.Spr_PHEngineIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) on);
 	    SprExport.Spr_PHEngineIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) on);
-					} else {;
-	    SprExport.Spr_PHEngineIf_Enable((IntPtr) _thisArray[0], (bool) on);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHEngineIf_Enable((IntPtr) _this, (bool) on);
+						}
 					}
 				}
 			}
@@ -5230,8 +5566,10 @@ SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -5288,8 +5626,12 @@ SprExport.Spr_PHEngineIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer])
     }
     public partial class PHConstraintEngineIf : PHEngineIf {
 	public PHConstraintEngineIf() { _thisArray[0] = SprExport.Spr_new_PHConstraintEngineIf(); _flag = true; }
-	public PHConstraintEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHConstraintEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHConstraintEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHConstraintEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHConstraintEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHConstraintEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHConstraintEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHConstraintEngineIf.GetIfInfoStatic()) ? new PHConstraintEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -5372,8 +5714,10 @@ SprExport.Spr_PHConstraintEngineIf_SetVelCorrectionRate((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHConstraintEngineIf_SetVelCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHConstraintEngineIf_SetVelCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetVelCorrectionRate((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetVelCorrectionRate((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -5423,8 +5767,10 @@ SprExport.Spr_PHConstraintEngineIf_SetPosCorrectionRate((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHConstraintEngineIf_SetPosCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHConstraintEngineIf_SetPosCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetPosCorrectionRate((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetPosCorrectionRate((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -5474,8 +5820,10 @@ SprExport.Spr_PHConstraintEngineIf_SetContactCorrectionRate((IntPtr) _thisArray[
 						});
 SprExport.Spr_PHConstraintEngineIf_SetContactCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHConstraintEngineIf_SetContactCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetContactCorrectionRate((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetContactCorrectionRate((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -5525,8 +5873,10 @@ SprExport.Spr_PHConstraintEngineIf_SetBSaveConstraints((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHConstraintEngineIf_SetBSaveConstraints((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) value);
 	    SprExport.Spr_PHConstraintEngineIf_SetBSaveConstraints((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) value);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetBSaveConstraints((IntPtr) _thisArray[0], (bool) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetBSaveConstraints((IntPtr) _this, (bool) value);
+						}
 					}
 				}
 			}
@@ -5556,8 +5906,10 @@ SprExport.Spr_PHConstraintEngineIf_SetUpdateAllSolidState((IntPtr) _thisArray[ph
 						});
 SprExport.Spr_PHConstraintEngineIf_SetUpdateAllSolidState((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) flag);
 	    SprExport.Spr_PHConstraintEngineIf_SetUpdateAllSolidState((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) flag);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetUpdateAllSolidState((IntPtr) _thisArray[0], (bool) flag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetUpdateAllSolidState((IntPtr) _this, (bool) flag);
+						}
 					}
 				}
 			}
@@ -5587,8 +5939,10 @@ SprExport.Spr_PHConstraintEngineIf_SetUseContactSurface((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHConstraintEngineIf_SetUseContactSurface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) flag);
 	    SprExport.Spr_PHConstraintEngineIf_SetUseContactSurface((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) flag);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetUseContactSurface((IntPtr) _thisArray[0], (bool) flag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetUseContactSurface((IntPtr) _this, (bool) flag);
+						}
 					}
 				}
 			}
@@ -5618,8 +5972,10 @@ SprExport.Spr_PHConstraintEngineIf_SetShrinkRate((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHConstraintEngineIf_SetShrinkRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) data);
 	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) data);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRate((IntPtr) _thisArray[0], (double) data);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRate((IntPtr) _this, (double) data);
+						}
 					}
 				}
 			}
@@ -5669,8 +6025,10 @@ SprExport.Spr_PHConstraintEngineIf_SetShrinkRateCorrection((IntPtr) _thisArray[p
 						});
 SprExport.Spr_PHConstraintEngineIf_SetShrinkRateCorrection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) data);
 	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRateCorrection((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) data);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRateCorrection((IntPtr) _thisArray[0], (double) data);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetShrinkRateCorrection((IntPtr) _this, (double) data);
+						}
 					}
 				}
 			}
@@ -5720,8 +6078,10 @@ SprExport.Spr_PHConstraintEngineIf_SetRegularization((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHConstraintEngineIf_SetRegularization((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) reg);
 	    SprExport.Spr_PHConstraintEngineIf_SetRegularization((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) reg);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_SetRegularization((IntPtr) _thisArray[0], (double) reg);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_SetRegularization((IntPtr) _this, (double) reg);
+						}
 					}
 				}
 			}
@@ -5771,8 +6131,10 @@ SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -5783,8 +6145,12 @@ SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[phSce
     }
     public partial class PHGravityEngineIf : PHEngineIf {
 	public PHGravityEngineIf() { _thisArray[0] = SprExport.Spr_new_PHGravityEngineIf(); _flag = true; }
-	public PHGravityEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHGravityEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGravityEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGravityEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGravityEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGravityEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHGravityEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHGravityEngineIf.GetIfInfoStatic()) ? new PHGravityEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -5822,8 +6188,12 @@ SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[phSce
     }
     public partial class PHPenaltyEngineIf : PHEngineIf {
 	public PHPenaltyEngineIf() { _thisArray[0] = SprExport.Spr_new_PHPenaltyEngineIf(); _flag = true; }
-	public PHPenaltyEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHPenaltyEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPenaltyEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPenaltyEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPenaltyEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPenaltyEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPenaltyEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHPenaltyEngineIf.GetIfInfoStatic()) ? new PHPenaltyEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -5861,8 +6231,12 @@ SprExport.Spr_PHConstraintEngineIf_EnableRenderContact((IntPtr) _thisArray[phSce
     }
     public partial class PHIKEngineIf : PHEngineIf {
 	public PHIKEngineIf() { _thisArray[0] = SprExport.Spr_new_PHIKEngineIf(); _flag = true; }
-	public PHIKEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHIKEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHIKEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHIKEngineIf.GetIfInfoStatic()) ? new PHIKEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -5895,8 +6269,10 @@ SprExport.Spr_PHIKEngineIf_SetMaxVelocity((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHIKEngineIf_SetMaxVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) maxVel);
 	    SprExport.Spr_PHIKEngineIf_SetMaxVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) maxVel);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetMaxVelocity((IntPtr) _thisArray[0], (double) maxVel);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetMaxVelocity((IntPtr) _this, (double) maxVel);
+						}
 					}
 				}
 			}
@@ -5946,8 +6322,10 @@ SprExport.Spr_PHIKEngineIf_SetMaxAngularVelocity((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHIKEngineIf_SetMaxAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) maxAV);
 	    SprExport.Spr_PHIKEngineIf_SetMaxAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) maxAV);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetMaxAngularVelocity((IntPtr) _thisArray[0], (double) maxAV);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetMaxAngularVelocity((IntPtr) _this, (double) maxAV);
+						}
 					}
 				}
 			}
@@ -5997,8 +6375,10 @@ SprExport.Spr_PHIKEngineIf_SetMaxActuatorVelocity((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHIKEngineIf_SetMaxActuatorVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) maxAV);
 	    SprExport.Spr_PHIKEngineIf_SetMaxActuatorVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) maxAV);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetMaxActuatorVelocity((IntPtr) _thisArray[0], (double) maxAV);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetMaxActuatorVelocity((IntPtr) _this, (double) maxAV);
+						}
 					}
 				}
 			}
@@ -6048,8 +6428,10 @@ SprExport.Spr_PHIKEngineIf_SetRegularizeParam((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHIKEngineIf_SetRegularizeParam((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) epsilon);
 	    SprExport.Spr_PHIKEngineIf_SetRegularizeParam((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) epsilon);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetRegularizeParam((IntPtr) _thisArray[0], (double) epsilon);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetRegularizeParam((IntPtr) _this, (double) epsilon);
+						}
 					}
 				}
 			}
@@ -6099,8 +6481,10 @@ SprExport.Spr_PHIKEngineIf_SetIterCutOffAngVel((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHIKEngineIf_SetIterCutOffAngVel((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) epsilon);
 	    SprExport.Spr_PHIKEngineIf_SetIterCutOffAngVel((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) epsilon);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetIterCutOffAngVel((IntPtr) _thisArray[0], (double) epsilon);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetIterCutOffAngVel((IntPtr) _this, (double) epsilon);
+						}
 					}
 				}
 			}
@@ -6150,8 +6534,10 @@ SprExport.Spr_PHIKEngineIf_SetIntpRate((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHIKEngineIf_SetIntpRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKEngineIf_SetIntpRate((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetIntpRate((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetIntpRate((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6201,8 +6587,10 @@ SprExport.Spr_PHIKEngineIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHIKEngineIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) reverse);
 	    SprExport.Spr_PHIKEngineIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) reverse);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_ApplyExactState((IntPtr) _thisArray[0], (bool) reverse);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_ApplyExactState((IntPtr) _this, (bool) reverse);
+						}
 					}
 				}
 			}
@@ -6232,8 +6620,10 @@ SprExport.Spr_PHIKEngineIf_ApplyExactState_1((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHIKEngineIf_ApplyExactState_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKEngineIf_ApplyExactState_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_ApplyExactState_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_ApplyExactState_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6263,8 +6653,10 @@ SprExport.Spr_PHIKEngineIf_SetNumIter((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHIKEngineIf_SetNumIter((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) numIter);
 	    SprExport.Spr_PHIKEngineIf_SetNumIter((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) numIter);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_SetNumIter((IntPtr) _thisArray[0], (int) numIter);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_SetNumIter((IntPtr) _this, (int) numIter);
+						}
 					}
 				}
 			}
@@ -6314,8 +6706,10 @@ SprExport.Spr_PHIKEngineIf_FK((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHIKEngineIf_FK((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKEngineIf_FK((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKEngineIf_FK((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEngineIf_FK((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6350,8 +6744,12 @@ SprExport.Spr_PHIKEngineIf_FK((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
     }
     public partial class PHFemEngineIf : PHEngineIf {
 	public PHFemEngineIf() { _thisArray[0] = SprExport.Spr_new_PHFemEngineIf(); _flag = true; }
-	public PHFemEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHFemEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemEngineIf.GetIfInfoStatic()) ? new PHFemEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -6408,8 +6806,10 @@ SprExport.Spr_PHFemEngineIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHFemEngineIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHFemEngineIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_SetTimeStep((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -6459,8 +6859,10 @@ SprExport.Spr_PHFemEngineIf_SetVibrationTransfer((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHFemEngineIf_SetVibrationTransfer((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bEnable);
 	    SprExport.Spr_PHFemEngineIf_SetVibrationTransfer((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bEnable);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_SetVibrationTransfer((IntPtr) _thisArray[0], (bool) bEnable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_SetVibrationTransfer((IntPtr) _this, (bool) bEnable);
+						}
 					}
 				}
 			}
@@ -6490,8 +6892,10 @@ SprExport.Spr_PHFemEngineIf_SetThermalTransfer((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemEngineIf_SetThermalTransfer((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bEnable);
 	    SprExport.Spr_PHFemEngineIf_SetThermalTransfer((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bEnable);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_SetThermalTransfer((IntPtr) _thisArray[0], (bool) bEnable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_SetThermalTransfer((IntPtr) _this, (bool) bEnable);
+						}
 					}
 				}
 			}
@@ -6523,9 +6927,11 @@ SprExport.Spr_PHFemEngineIf_NMeshNew((IntPtr) _thisArray[phSceneIf.sceneForStep]
 SprExport.Spr_PHFemEngineIf_NMeshNew((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemEngineIf_NMeshNew((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemEngineIf_NMeshNew((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemEngineIf_NMeshNew((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -6593,9 +6999,11 @@ SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForSt
 SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m0, (IntPtr) new_m1);
 	    char ret = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m0, (IntPtr) new_m1);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[0], (IntPtr) m0, (IntPtr) m1);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _this, (IntPtr) m0, (IntPtr) m1);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -6637,9 +7045,11 @@ SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneFo
 SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m0, (IntPtr) new_m1);
 	    char ret = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m0, (IntPtr) new_m1);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[0], (IntPtr) m0, (IntPtr) m1);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _this, (IntPtr) m0, (IntPtr) m1);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -6671,8 +7081,10 @@ SprExport.Spr_PHFemEngineIf_ThermalTransfer((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemEngineIf_ThermalTransfer((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemEngineIf_ThermalTransfer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_ThermalTransfer((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_ThermalTransfer((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6702,8 +7114,10 @@ SprExport.Spr_PHFemEngineIf_setheatTransferRatio((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHFemEngineIf_setheatTransferRatio((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) setheatTransferRatio);
 	    SprExport.Spr_PHFemEngineIf_setheatTransferRatio((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) setheatTransferRatio);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_setheatTransferRatio((IntPtr) _thisArray[0], (double) setheatTransferRatio);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_setheatTransferRatio((IntPtr) _this, (double) setheatTransferRatio);
+						}
 					}
 				}
 			}
@@ -6733,8 +7147,10 @@ SprExport.Spr_PHFemEngineIf_FEMSolidMatchRefresh((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHFemEngineIf_FEMSolidMatchRefresh((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemEngineIf_FEMSolidMatchRefresh((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_FEMSolidMatchRefresh((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_FEMSolidMatchRefresh((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6764,8 +7180,10 @@ SprExport.Spr_PHFemEngineIf_InitContacts((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemEngineIf_InitContacts((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemEngineIf_InitContacts((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_InitContacts((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_InitContacts((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6795,8 +7213,10 @@ SprExport.Spr_PHFemEngineIf_ClearContactVectors((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemEngineIf_ClearContactVectors((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemEngineIf_ClearContactVectors((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemEngineIf_ClearContactVectors((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemEngineIf_ClearContactVectors((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -6828,9 +7248,11 @@ SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -6872,8 +7294,12 @@ SprExport.Spr_PHFemEngineIf_NMesh((IntPtr) _thisArray[phSceneIf.sceneForBuffer])
     }
     public partial class PHOpEngineIf : PHEngineIf {
 	public PHOpEngineIf() { _thisArray[0] = SprExport.Spr_new_PHOpEngineIf(); _flag = true; }
-	public PHOpEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHOpEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpEngineIf.GetIfInfoStatic()) ? new PHOpEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -6930,8 +7356,10 @@ SprExport.Spr_PHOpEngineIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHOpEngineIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHOpEngineIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetTimeStep((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -6981,8 +7409,10 @@ SprExport.Spr_PHOpEngineIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHOpEngineIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) gflag);
 	    SprExport.Spr_PHOpEngineIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) gflag);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetGravity((IntPtr) _thisArray[0], (bool) gflag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetGravity((IntPtr) _this, (bool) gflag);
+						}
 					}
 				}
 			}
@@ -7012,8 +7442,10 @@ SprExport.Spr_PHOpEngineIf_InitialHapticRenderer((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHOpEngineIf_InitialHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) objId);
 	    SprExport.Spr_PHOpEngineIf_InitialHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) objId);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_InitialHapticRenderer((IntPtr) _thisArray[0], (int) objId);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_InitialHapticRenderer((IntPtr) _this, (int) objId);
+						}
 					}
 				}
 			}
@@ -7063,8 +7495,10 @@ SprExport.Spr_PHOpEngineIf_StepWithBlend((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHOpEngineIf_StepWithBlend((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpEngineIf_StepWithBlend((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_StepWithBlend((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_StepWithBlend((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -7096,9 +7530,11 @@ SprExport.Spr_PHOpEngineIf_AddOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep])
 SprExport.Spr_PHOpEngineIf_AddOpObj((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHOpEngineIf_AddOpObj((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHOpEngineIf_AddOpObj((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHOpEngineIf_AddOpObj((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -7130,8 +7566,10 @@ SprExport.Spr_PHOpEngineIf_SetHapticSolveEnable((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHOpEngineIf_SetHapticSolveEnable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHOpEngineIf_SetHapticSolveEnable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetHapticSolveEnable((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetHapticSolveEnable((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -7181,8 +7619,10 @@ SprExport.Spr_PHOpEngineIf_SetProxyCorrectionEnable((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHOpEngineIf_SetProxyCorrectionEnable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHOpEngineIf_SetProxyCorrectionEnable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetProxyCorrectionEnable((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetProxyCorrectionEnable((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -7232,8 +7672,10 @@ SprExport.Spr_PHOpEngineIf_SetUpdateNormal((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHOpEngineIf_SetUpdateNormal((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) flag);
 	    SprExport.Spr_PHOpEngineIf_SetUpdateNormal((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) flag);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetUpdateNormal((IntPtr) _thisArray[0], (bool) flag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetUpdateNormal((IntPtr) _this, (bool) flag);
+						}
 					}
 				}
 			}
@@ -7283,8 +7725,10 @@ SprExport.Spr_PHOpEngineIf_SetUseHaptic((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHOpEngineIf_SetUseHaptic((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) hapticUsage);
 	    SprExport.Spr_PHOpEngineIf_SetUseHaptic((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) hapticUsage);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetUseHaptic((IntPtr) _thisArray[0], (bool) hapticUsage);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetUseHaptic((IntPtr) _this, (bool) hapticUsage);
+						}
 					}
 				}
 			}
@@ -7512,8 +7956,10 @@ SprExport.Spr_PHOpEngineIf_SetIterationCount((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHOpEngineIf_SetIterationCount((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) count);
 	    SprExport.Spr_PHOpEngineIf_SetIterationCount((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) count);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetIterationCount((IntPtr) _thisArray[0], (int) count);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetIterationCount((IntPtr) _this, (int) count);
+						}
 					}
 				}
 			}
@@ -7563,8 +8009,10 @@ SprExport.Spr_PHOpEngineIf_SetAnimationFlag((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHOpEngineIf_SetAnimationFlag((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) flag);
 	    SprExport.Spr_PHOpEngineIf_SetAnimationFlag((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) flag);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetAnimationFlag((IntPtr) _thisArray[0], (bool) flag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetAnimationFlag((IntPtr) _this, (bool) flag);
+						}
 					}
 				}
 			}
@@ -7614,8 +8062,10 @@ SprExport.Spr_PHOpEngineIf_SetDrawPtclR((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHOpEngineIf_SetDrawPtclR((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) r);
 	    SprExport.Spr_PHOpEngineIf_SetDrawPtclR((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) r);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_SetDrawPtclR((IntPtr) _thisArray[0], (float) r);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_SetDrawPtclR((IntPtr) _this, (float) r);
+						}
 					}
 				}
 			}
@@ -7665,8 +8115,10 @@ SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -7677,8 +8129,12 @@ SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[phSce
     }
     public partial class PHFemMeshIf : SceneObjectIf {
 	public PHFemMeshIf() { _thisArray[0] = SprExport.Spr_new_PHFemMeshIf(); _flag = true; }
-	public PHFemMeshIf(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemMeshIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemMeshIf.GetIfInfoStatic()) ? new PHFemMeshIf(target._thisArray[0], target._flag) : null);
 	}
@@ -7716,8 +8172,12 @@ SprExport.Spr_PHOpEngineIf_InitialNoMeshHapticRenderer((IntPtr) _thisArray[phSce
     }
     public partial class PHFemMeshThermoIf : PHFemMeshIf {
 	public PHFemMeshThermoIf() { _thisArray[0] = SprExport.Spr_new_PHFemMeshThermoIf(); _flag = true; }
-	public PHFemMeshThermoIf(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshThermoIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshThermoIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshThermoIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshThermoIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshThermoIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemMeshThermoIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemMeshThermoIf.GetIfInfoStatic()) ? new PHFemMeshThermoIf(target._thisArray[0], target._flag) : null);
 	}
@@ -7796,9 +8256,11 @@ SprExport.Spr_PHFemMeshThermoIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.s
 SprExport.Spr_PHFemMeshThermoIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemMeshThermoIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshThermoIf_NSurfaceVertices((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshThermoIf_NSurfaceVertices((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -7830,8 +8292,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetVertexTc((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetVertexTc((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) id, (double) temp);
 	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) id, (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc((IntPtr) _thisArray[0], (int) id, (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc((IntPtr) _this, (int) id, (double) temp);
+						}
 					}
 				}
 			}
@@ -7861,8 +8325,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetVertexTc_1((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetVertexTc_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) id, (double) temp, (double) heatTrans);
 	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) id, (double) temp, (double) heatTrans);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc_1((IntPtr) _thisArray[0], (int) id, (double) temp, (double) heatTrans);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTc_1((IntPtr) _this, (int) id, (double) temp, (double) heatTrans);
+						}
 					}
 				}
 			}
@@ -8012,8 +8478,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetVertexTemp((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) id, (double) temp);
 	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) id, (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTemp((IntPtr) _thisArray[0], (uint) id, (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetVertexTemp((IntPtr) _this, (uint) id, (double) temp);
+						}
 					}
 				}
 			}
@@ -8043,8 +8511,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetVerticesTempAll((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetVerticesTempAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemMeshThermoIf_SetVerticesTempAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetVerticesTempAll((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetVerticesTempAll((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -8074,8 +8544,10 @@ SprExport.Spr_PHFemMeshThermoIf_AddvecFAll((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemMeshThermoIf_AddvecFAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) id, (double) dqdt);
 	    SprExport.Spr_PHFemMeshThermoIf_AddvecFAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) id, (double) dqdt);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_AddvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_AddvecFAll((IntPtr) _this, (uint) id, (double) dqdt);
+						}
 					}
 				}
 			}
@@ -8105,8 +8577,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetvecFAll((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetvecFAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) id, (double) dqdt);
 	    SprExport.Spr_PHFemMeshThermoIf_SetvecFAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) id, (double) dqdt);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetvecFAll((IntPtr) _this, (uint) id, (double) dqdt);
+						}
 					}
 				}
 			}
@@ -8136,8 +8610,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetRhoSpheat((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetRhoSpheat((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) rho, (double) Cp);
 	    SprExport.Spr_PHFemMeshThermoIf_SetRhoSpheat((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) rho, (double) Cp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetRhoSpheat((IntPtr) _thisArray[0], (double) rho, (double) Cp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetRhoSpheat((IntPtr) _this, (double) rho, (double) Cp);
+						}
 					}
 				}
 			}
@@ -8247,8 +8723,10 @@ SprExport.Spr_PHFemMeshThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHFemMeshThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) r, (double) R, (double) dqdtAll, (uint) num);
 	    SprExport.Spr_PHFemMeshThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) r, (double) R, (double) dqdtAll, (uint) num);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[0], (double) r, (double) R, (double) dqdtAll, (uint) num);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_CalcIHdqdt_atleast((IntPtr) _this, (double) r, (double) R, (double) dqdtAll, (uint) num);
+						}
 					}
 				}
 			}
@@ -8278,8 +8756,10 @@ SprExport.Spr_PHFemMeshThermoIf_UpdateIHheatband((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHFemMeshThermoIf_UpdateIHheatband((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) xS, (double) xE, (uint) heatingMODE);
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheatband((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) xS, (double) xE, (uint) heatingMODE);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheatband((IntPtr) _thisArray[0], (double) xS, (double) xE, (uint) heatingMODE);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheatband((IntPtr) _this, (double) xS, (double) xE, (uint) heatingMODE);
+						}
 					}
 				}
 			}
@@ -8309,8 +8789,10 @@ SprExport.Spr_PHFemMeshThermoIf_UpdateIHheat((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemMeshThermoIf_UpdateIHheat((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) heating);
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheat((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) heating);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheat((IntPtr) _thisArray[0], (uint) heating);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_UpdateIHheat((IntPtr) _this, (uint) heating);
+						}
 					}
 				}
 			}
@@ -8340,8 +8822,10 @@ SprExport.Spr_PHFemMeshThermoIf_UpdateVecF((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemMeshThermoIf_UpdateVecF((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -8371,8 +8855,10 @@ SprExport.Spr_PHFemMeshThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHFemMeshThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_UpdateVecF_frypan((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -8402,8 +8888,10 @@ SprExport.Spr_PHFemMeshThermoIf_DecrMoist((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemMeshThermoIf_DecrMoist((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -8433,8 +8921,10 @@ SprExport.Spr_PHFemMeshThermoIf_DecrMoist_velo((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemMeshThermoIf_DecrMoist_velo((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) vel);
 	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_velo((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) vel);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_velo((IntPtr) _thisArray[0], (double) vel);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_velo((IntPtr) _this, (double) vel);
+						}
 					}
 				}
 			}
@@ -8464,8 +8954,10 @@ SprExport.Spr_PHFemMeshThermoIf_DecrMoist_vel((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemMeshThermoIf_DecrMoist_vel((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_vel((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_vel((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_DecrMoist_vel((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -8495,8 +8987,10 @@ SprExport.Spr_PHFemMeshThermoIf_InitAllVertexTemp((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHFemMeshThermoIf_InitAllVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_InitAllVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_InitAllVertexTemp((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_InitAllVertexTemp((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -8526,8 +9020,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
 	    SprExport.Spr_PHFemMeshThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[0], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetInitThermoConductionParam((IntPtr) _this, (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
+						}
 					}
 				}
 			}
@@ -8557,8 +9053,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[ph
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thConduct0, (double) roh0, (double) specificHeat0);
 	    SprExport.Spr_PHFemMeshThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thConduct0, (double) roh0, (double) specificHeat0);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[0], (double) thConduct0, (double) roh0, (double) specificHeat0);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetParamAndReCreateMatrix((IntPtr) _this, (double) thConduct0, (double) roh0, (double) specificHeat0);
+						}
 					}
 				}
 			}
@@ -8628,8 +9126,10 @@ SprExport.Spr_PHFemMeshThermoIf_InitVecFAlls((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemMeshThermoIf_InitVecFAlls((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_InitVecFAlls((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_InitVecFAlls((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_InitVecFAlls((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -8693,9 +9193,11 @@ SprExport.Spr_PHFemMeshThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[phScene
 SprExport.Spr_PHFemMeshThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) r, (IntPtr) temp, (IntPtr) new_origin);
 	    char ret = SprExport.Spr_PHFemMeshThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) r, (IntPtr) temp, (IntPtr) new_origin);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[0], (IntPtr) r, (IntPtr) temp, (IntPtr) origin);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshThermoIf_SetConcentricHeatMap((IntPtr) _this, (IntPtr) r, (IntPtr) temp, (IntPtr) origin);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -8727,8 +9229,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _this
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thermalEmissivity, (double) thermalEmissivity_const);
 	    SprExport.Spr_PHFemMeshThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thermalEmissivity, (double) thermalEmissivity_const);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[0], (double) thermalEmissivity, (double) thermalEmissivity_const);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _this, (double) thermalEmissivity, (double) thermalEmissivity_const);
+						}
 					}
 				}
 			}
@@ -8758,8 +9262,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetOuterTemp((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetOuterTemp((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemMeshThermoIf_SetOuterTemp((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetOuterTemp((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetOuterTemp((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -8789,8 +9295,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetThermalRadiation((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetThermalRadiation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) ems, (double) ems_const);
 	    SprExport.Spr_PHFemMeshThermoIf_SetThermalRadiation((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) ems, (double) ems_const);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetThermalRadiation((IntPtr) _thisArray[0], (double) ems, (double) ems_const);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetThermalRadiation((IntPtr) _this, (double) ems, (double) ems_const);
+						}
 					}
 				}
 			}
@@ -8820,8 +9328,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetGaussCalcParam((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetGaussCalcParam((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) cyc, (double) epsilon);
 	    SprExport.Spr_PHFemMeshThermoIf_SetGaussCalcParam((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) cyc, (double) epsilon);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetGaussCalcParam((IntPtr) _thisArray[0], (uint) cyc, (double) epsilon);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetGaussCalcParam((IntPtr) _this, (uint) cyc, (double) epsilon);
+						}
 					}
 				}
 			}
@@ -8851,8 +9361,10 @@ SprExport.Spr_PHFemMeshThermoIf_InitTcAll((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemMeshThermoIf_InitTcAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemMeshThermoIf_InitTcAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_InitTcAll((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_InitTcAll((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -8882,8 +9394,10 @@ SprExport.Spr_PHFemMeshThermoIf_InitToutAll((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemMeshThermoIf_InitToutAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemMeshThermoIf_InitToutAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_InitToutAll((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_InitToutAll((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -8913,8 +9427,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetWeekPow((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetWeekPow((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) weekPow_);
 	    SprExport.Spr_PHFemMeshThermoIf_SetWeekPow((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) weekPow_);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetWeekPow((IntPtr) _thisArray[0], (double) weekPow_);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetWeekPow((IntPtr) _this, (double) weekPow_);
+						}
 					}
 				}
 			}
@@ -8944,8 +9460,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetIHParamWEEK((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetIHParamWEEK((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) inr_, (double) outR_, (double) weekPow_);
 	    SprExport.Spr_PHFemMeshThermoIf_SetIHParamWEEK((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) inr_, (double) outR_, (double) weekPow_);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetIHParamWEEK((IntPtr) _thisArray[0], (double) inr_, (double) outR_, (double) weekPow_);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetIHParamWEEK((IntPtr) _this, (double) inr_, (double) outR_, (double) weekPow_);
+						}
 					}
 				}
 			}
@@ -8975,8 +9493,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) heatTransR_);
 	    SprExport.Spr_PHFemMeshThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) heatTransR_);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[0], (double) heatTransR_);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _this, (double) heatTransR_);
+						}
 					}
 				}
 			}
@@ -9006,8 +9526,10 @@ SprExport.Spr_PHFemMeshThermoIf_AfterSetDesc((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemMeshThermoIf_AfterSetDesc((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_AfterSetDesc((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_AfterSetDesc((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_AfterSetDesc((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -9037,8 +9559,10 @@ SprExport.Spr_PHFemMeshThermoIf_SetStopTimespan((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemMeshThermoIf_SetStopTimespan((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) timespan);
 	    SprExport.Spr_PHFemMeshThermoIf_SetStopTimespan((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) timespan);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_SetStopTimespan((IntPtr) _thisArray[0], (double) timespan);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_SetStopTimespan((IntPtr) _this, (double) timespan);
+						}
 					}
 				}
 			}
@@ -9068,8 +9592,10 @@ SprExport.Spr_PHFemMeshThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[
 						});
 SprExport.Spr_PHFemMeshThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -9099,8 +9625,10 @@ SprExport.Spr_PHFemMeshThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHFemMeshThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -9130,8 +9658,10 @@ SprExport.Spr_PHFemMeshThermoIf_OutputMatKall((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemMeshThermoIf_OutputMatKall((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_OutputMatKall((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_OutputMatKall((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_OutputMatKall((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -9161,8 +9691,10 @@ SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -9173,8 +9705,12 @@ SprExport.Spr_PHFemMeshThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf
     }
     public partial class PHFemMeshNewIf : SceneObjectIf {
 	public PHFemMeshNewIf() { _thisArray[0] = SprExport.Spr_new_PHFemMeshNewIf(); _flag = true; }
-	public PHFemMeshNewIf(IntPtr ptr) : base(ptr) {}
-	public PHFemMeshNewIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemMeshNewIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemMeshNewIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemMeshNewIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemMeshNewIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemMeshNewIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemMeshNewIf.GetIfInfoStatic()) ? new PHFemMeshNewIf(target._thisArray[0], target._flag) : null);
 	}
@@ -9235,8 +9771,10 @@ SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_s);
 	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_s);
-					} else {;
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[0], (IntPtr) s);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _this, (IntPtr) s);
+						}
 					}
 				}
 			}
@@ -9375,9 +9913,11 @@ SprExport.Spr_PHFemMeshNewIf_NVertices((IntPtr) _thisArray[phSceneIf.sceneForSte
 SprExport.Spr_PHFemMeshNewIf_NVertices((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NVertices((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NVertices((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NVertices((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -9411,9 +9951,11 @@ SprExport.Spr_PHFemMeshNewIf_NFaces((IntPtr) _thisArray[phSceneIf.sceneForStep])
 SprExport.Spr_PHFemMeshNewIf_NFaces((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NFaces((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NFaces((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NFaces((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -9447,9 +9989,11 @@ SprExport.Spr_PHFemMeshNewIf_NTets((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PHFemMeshNewIf_NTets((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NTets((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NTets((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NTets((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -9481,8 +10025,10 @@ SprExport.Spr_PHFemMeshNewIf_SetVertexUpdateFlags((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHFemMeshNewIf_SetVertexUpdateFlags((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) flg);
 	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpdateFlags((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) flg);
-					} else {;
-	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpdateFlags((IntPtr) _thisArray[0], (bool) flg);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpdateFlags((IntPtr) _this, (bool) flg);
+						}
 					}
 				}
 			}
@@ -9512,8 +10058,10 @@ SprExport.Spr_PHFemMeshNewIf_SetVertexUpateFlag((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemMeshNewIf_SetVertexUpateFlag((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vid, (bool) flg);
 	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpateFlag((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vid, (bool) flg);
-					} else {;
-	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpateFlag((IntPtr) _thisArray[0], (int) vid, (bool) flg);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshNewIf_SetVertexUpateFlag((IntPtr) _this, (int) vid, (bool) flg);
+						}
 					}
 				}
 			}
@@ -9545,9 +10093,11 @@ SprExport.Spr_PHFemMeshNewIf_CompTetVolume((IntPtr) _thisArray[phSceneIf.sceneFo
 SprExport.Spr_PHFemMeshNewIf_CompTetVolume((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetID, (bool) bDeform);
 	    double result = (double) SprExport.Spr_PHFemMeshNewIf_CompTetVolume((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetID, (bool) bDeform);
 	    return result;
-					} else {;
-	    double result = (double) SprExport.Spr_PHFemMeshNewIf_CompTetVolume((IntPtr) _thisArray[0], (int) tetID, (bool) bDeform);
+					} else {
+						foreach (var _this in _thisArray) {
+	    double result = (double) SprExport.Spr_PHFemMeshNewIf_CompTetVolume((IntPtr) _this, (int) tetID, (bool) bDeform);
 	    return result;
+						}
 					}
 				}
 			}
@@ -9585,9 +10135,11 @@ SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementW((IntPtr) _thisArray[phSceneI
 SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementW((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxId, (IntPtr) new_disW);
 	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementW((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxId, (IntPtr) new_disW);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementW((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) disW);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementW((IntPtr) _this, (int) vtxId, (IntPtr) disW);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -9625,9 +10177,11 @@ SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementL((IntPtr) _thisArray[phSceneI
 SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementL((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxId, (IntPtr) new_disL);
 	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementL((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxId, (IntPtr) new_disL);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementL((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) disL);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshNewIf_AddVertexDisplacementL((IntPtr) _this, (int) vtxId, (IntPtr) disL);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -9665,9 +10219,11 @@ SprExport.Spr_PHFemMeshNewIf_SetVertexPositionW((IntPtr) _thisArray[phSceneIf.sc
 SprExport.Spr_PHFemMeshNewIf_SetVertexPositionW((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxId, (IntPtr) new_posW);
 	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionW((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxId, (IntPtr) new_posW);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionW((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) posW);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionW((IntPtr) _this, (int) vtxId, (IntPtr) posW);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -9705,9 +10261,11 @@ SprExport.Spr_PHFemMeshNewIf_SetVertexPositionL((IntPtr) _thisArray[phSceneIf.sc
 SprExport.Spr_PHFemMeshNewIf_SetVertexPositionL((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxId, (IntPtr) new_posL);
 	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionL((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxId, (IntPtr) new_posL);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionL((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) posL);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexPositionL((IntPtr) _this, (int) vtxId, (IntPtr) posL);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -9745,9 +10303,11 @@ SprExport.Spr_PHFemMeshNewIf_SetVertexVelocityL((IntPtr) _thisArray[phSceneIf.sc
 SprExport.Spr_PHFemMeshNewIf_SetVertexVelocityL((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxId, (IntPtr) new_posL);
 	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexVelocityL((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxId, (IntPtr) new_posL);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexVelocityL((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) posL);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshNewIf_SetVertexVelocityL((IntPtr) _this, (int) vtxId, (IntPtr) posL);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -9863,8 +10423,10 @@ SprExport.Spr_PHFemMeshNewIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemMeshNewIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_v);
 	    SprExport.Spr_PHFemMeshNewIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_v);
-					} else {;
-	    SprExport.Spr_PHFemMeshNewIf_SetVelocity((IntPtr) _thisArray[0], (IntPtr) v);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemMeshNewIf_SetVelocity((IntPtr) _this, (IntPtr) v);
+						}
 					}
 				}
 			}
@@ -9976,9 +10538,11 @@ SprExport.Spr_PHFemMeshNewIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.scen
 SprExport.Spr_PHFemMeshNewIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceVertices((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceVertices((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -10012,9 +10576,11 @@ SprExport.Spr_PHFemMeshNewIf_NSurfaceFace((IntPtr) _thisArray[phSceneIf.sceneFor
 SprExport.Spr_PHFemMeshNewIf_NSurfaceFace((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceFace((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceFace((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshNewIf_NSurfaceFace((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -10056,9 +10622,11 @@ SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSce
 SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
 	    char ret = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _this, (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -10092,9 +10660,11 @@ SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[phSceneIf.scene
 SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) faceId);
 	    int result = (int) SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) faceId);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[0], (int) faceId);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _this, (int) faceId);
 	    return result;
+						}
 					}
 				}
 			}
@@ -10107,8 +10677,12 @@ SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[phSceneIf.scene
     }
     public partial class PHFemBaseIf : SceneObjectIf {
 	public PHFemBaseIf() { _thisArray[0] = SprExport.Spr_new_PHFemBaseIf(); _flag = true; }
-	public PHFemBaseIf(IntPtr ptr) : base(ptr) {}
-	public PHFemBaseIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemBaseIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemBaseIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemBaseIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemBaseIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemBaseIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemBaseIf.GetIfInfoStatic()) ? new PHFemBaseIf(target._thisArray[0], target._flag) : null);
 	}
@@ -10172,8 +10746,12 @@ SprExport.Spr_PHFemMeshNewIf_FindTetFromFace((IntPtr) _thisArray[phSceneIf.scene
     }
     public partial class PHFemVibrationIf : PHFemBaseIf {
 	public PHFemVibrationIf() { _thisArray[0] = SprExport.Spr_new_PHFemVibrationIf(); _flag = true; }
-	public PHFemVibrationIf(IntPtr ptr) : base(ptr) {}
-	public PHFemVibrationIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemVibrationIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemVibrationIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemVibrationIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemVibrationIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemVibrationIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemVibrationIf.GetIfInfoStatic()) ? new PHFemVibrationIf(target._thisArray[0], target._flag) : null);
 	}
@@ -10230,8 +10808,10 @@ SprExport.Spr_PHFemVibrationIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemVibrationIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHFemVibrationIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetTimeStep((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -10281,8 +10861,10 @@ SprExport.Spr_PHFemVibrationIf_SetYoungModulus((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemVibrationIf_SetYoungModulus((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHFemVibrationIf_SetYoungModulus((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetYoungModulus((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetYoungModulus((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -10332,8 +10914,10 @@ SprExport.Spr_PHFemVibrationIf_SetPoissonsRatio((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemVibrationIf_SetPoissonsRatio((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHFemVibrationIf_SetPoissonsRatio((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetPoissonsRatio((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetPoissonsRatio((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -10383,8 +10967,10 @@ SprExport.Spr_PHFemVibrationIf_SetDensity((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemVibrationIf_SetDensity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHFemVibrationIf_SetDensity((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetDensity((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetDensity((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -10434,8 +11020,10 @@ SprExport.Spr_PHFemVibrationIf_SetAlpha((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHFemVibrationIf_SetAlpha((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHFemVibrationIf_SetAlpha((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetAlpha((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetAlpha((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -10485,8 +11073,10 @@ SprExport.Spr_PHFemVibrationIf_SetBeta((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHFemVibrationIf_SetBeta((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) value);
 	    SprExport.Spr_PHFemVibrationIf_SetBeta((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) value);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetBeta((IntPtr) _thisArray[0], (double) value);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetBeta((IntPtr) _this, (double) value);
+						}
 					}
 				}
 			}
@@ -10536,8 +11126,10 @@ SprExport.Spr_PHFemVibrationIf_SetBoundary((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemVibrationIf_SetBoundary((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxIds);
 	    SprExport.Spr_PHFemVibrationIf_SetBoundary((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxIds);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetBoundary((IntPtr) _thisArray[0], (int) vtxIds);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetBoundary((IntPtr) _this, (int) vtxIds);
+						}
 					}
 				}
 			}
@@ -10567,8 +11159,10 @@ SprExport.Spr_PHFemVibrationIf_ClearBoundary((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemVibrationIf_ClearBoundary((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemVibrationIf_ClearBoundary((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_ClearBoundary((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_ClearBoundary((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -10620,8 +11214,10 @@ SprExport.Spr_PHFemVibrationIf_SetAnalysisMode((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemVibrationIf_SetAnalysisMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) mode);
 	    SprExport.Spr_PHFemVibrationIf_SetAnalysisMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) mode);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetAnalysisMode((IntPtr) _thisArray[0], (int) mode);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetAnalysisMode((IntPtr) _this, (int) mode);
+						}
 					}
 				}
 			}
@@ -10653,8 +11249,10 @@ SprExport.Spr_PHFemVibrationIf_SetIntegrationMode((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHFemVibrationIf_SetIntegrationMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) mode);
 	    SprExport.Spr_PHFemVibrationIf_SetIntegrationMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) mode);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetIntegrationMode((IntPtr) _thisArray[0], (int) mode);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetIntegrationMode((IntPtr) _this, (int) mode);
+						}
 					}
 				}
 			}
@@ -10690,9 +11288,11 @@ SprExport.Spr_PHFemVibrationIf_AddBoundaryCondition((IntPtr) _thisArray[phSceneI
 SprExport.Spr_PHFemVibrationIf_AddBoundaryCondition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) vtxId, (IntPtr) new_dof);
 	    char ret = SprExport.Spr_PHFemVibrationIf_AddBoundaryCondition((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) vtxId, (IntPtr) new_dof);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemVibrationIf_AddBoundaryCondition((IntPtr) _thisArray[0], (int) vtxId, (IntPtr) dof);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemVibrationIf_AddBoundaryCondition((IntPtr) _this, (int) vtxId, (IntPtr) dof);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -10724,8 +11324,10 @@ SprExport.Spr_PHFemVibrationIf_DeleteBoundaryCondition((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHFemVibrationIf_DeleteBoundaryCondition((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemVibrationIf_DeleteBoundaryCondition((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_DeleteBoundaryCondition((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_DeleteBoundaryCondition((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -10765,9 +11367,11 @@ SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSce
 SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
 	    char ret = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[0], (IntPtr) posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _this, (IntPtr) posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -10805,9 +11409,11 @@ SprExport.Spr_PHFemVibrationIf_SetDamping((IntPtr) _thisArray[phSceneIf.sceneFor
 SprExport.Spr_PHFemVibrationIf_SetDamping((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) new_posW, (double) damp_ratio);
 	    char ret = SprExport.Spr_PHFemVibrationIf_SetDamping((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) new_posW, (double) damp_ratio);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemVibrationIf_SetDamping((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (double) damp_ratio);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemVibrationIf_SetDamping((IntPtr) _this, (int) tetId, (IntPtr) posW, (double) damp_ratio);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -10849,9 +11455,11 @@ SprExport.Spr_PHFemVibrationIf_AddForce((IntPtr) _thisArray[phSceneIf.sceneForSt
 SprExport.Spr_PHFemVibrationIf_AddForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) new_posW, (IntPtr) new_fW);
 	    char ret = SprExport.Spr_PHFemVibrationIf_AddForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) new_posW, (IntPtr) new_fW);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemVibrationIf_AddForce((IntPtr) _thisArray[0], (int) tetId, (IntPtr) posW, (IntPtr) fW);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemVibrationIf_AddForce((IntPtr) _this, (int) tetId, (IntPtr) posW, (IntPtr) fW);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -10943,8 +11551,10 @@ SprExport.Spr_PHFemVibrationIf_SetbRecomp((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemVibrationIf_SetbRecomp((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemVibrationIf_SetbRecomp((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_SetbRecomp((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_SetbRecomp((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -10974,8 +11584,10 @@ SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _thisArray[phSceneIf.sceneForStep])
 						});
 SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -10986,8 +11598,12 @@ SprExport.Spr_PHFemVibrationIf_Init((IntPtr) _thisArray[phSceneIf.sceneForBuffer
     }
     public partial class PHFemThermoIf : PHFemBaseIf {
 	public PHFemThermoIf() { _thisArray[0] = SprExport.Spr_new_PHFemThermoIf(); _flag = true; }
-	public PHFemThermoIf(IntPtr ptr) : base(ptr) {}
-	public PHFemThermoIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemThermoIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemThermoIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemThermoIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemThermoIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemThermoIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemThermoIf.GetIfInfoStatic()) ? new PHFemThermoIf(target._thisArray[0], target._flag) : null);
 	}
@@ -11066,9 +11682,11 @@ SprExport.Spr_PHFemThermoIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.scene
 SprExport.Spr_PHFemThermoIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHFemThermoIf_NSurfaceVertices((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHFemThermoIf_NSurfaceVertices((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHFemThermoIf_NSurfaceVertices((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -11100,8 +11718,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexTc((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexTc((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) id, (double) temp);
 	    SprExport.Spr_PHFemThermoIf_SetVertexTc((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) id, (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexTc((IntPtr) _thisArray[0], (int) id, (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexTc((IntPtr) _this, (int) id, (double) temp);
+						}
 					}
 				}
 			}
@@ -11131,8 +11751,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexTc_1((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexTc_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) id, (double) temp, (double) heatTrans);
 	    SprExport.Spr_PHFemThermoIf_SetVertexTc_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) id, (double) temp, (double) heatTrans);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexTc_1((IntPtr) _thisArray[0], (int) id, (double) temp, (double) heatTrans);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexTc_1((IntPtr) _this, (int) id, (double) temp, (double) heatTrans);
+						}
 					}
 				}
 			}
@@ -11282,8 +11904,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) id, (double) temp);
 	    SprExport.Spr_PHFemThermoIf_SetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) id, (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexTemp((IntPtr) _thisArray[0], (uint) id, (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexTemp((IntPtr) _this, (uint) id, (double) temp);
+						}
 					}
 				}
 			}
@@ -11313,8 +11937,10 @@ SprExport.Spr_PHFemThermoIf_SetVerticesTempAll((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemThermoIf_SetVerticesTempAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemThermoIf_SetVerticesTempAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVerticesTempAll((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVerticesTempAll((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -11344,8 +11970,10 @@ SprExport.Spr_PHFemThermoIf_AddvecFAll((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHFemThermoIf_AddvecFAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) id, (double) dqdt);
 	    SprExport.Spr_PHFemThermoIf_AddvecFAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) id, (double) dqdt);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_AddvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_AddvecFAll((IntPtr) _this, (uint) id, (double) dqdt);
+						}
 					}
 				}
 			}
@@ -11375,8 +12003,10 @@ SprExport.Spr_PHFemThermoIf_SetvecFAll((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHFemThermoIf_SetvecFAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) id, (double) dqdt);
 	    SprExport.Spr_PHFemThermoIf_SetvecFAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) id, (double) dqdt);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetvecFAll((IntPtr) _thisArray[0], (uint) id, (double) dqdt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetvecFAll((IntPtr) _this, (uint) id, (double) dqdt);
+						}
 					}
 				}
 			}
@@ -11406,8 +12036,10 @@ SprExport.Spr_PHFemThermoIf_SetRhoSpheat((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_SetRhoSpheat((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) rho, (double) Cp);
 	    SprExport.Spr_PHFemThermoIf_SetRhoSpheat((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) rho, (double) Cp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetRhoSpheat((IntPtr) _thisArray[0], (double) rho, (double) Cp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetRhoSpheat((IntPtr) _this, (double) rho, (double) Cp);
+						}
 					}
 				}
 			}
@@ -11457,8 +12089,10 @@ SprExport.Spr_PHFemThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) r, (double) R, (double) dqdtAll, (uint) num);
 	    SprExport.Spr_PHFemThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) r, (double) R, (double) dqdtAll, (uint) num);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_CalcIHdqdt_atleast((IntPtr) _thisArray[0], (double) r, (double) R, (double) dqdtAll, (uint) num);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_CalcIHdqdt_atleast((IntPtr) _this, (double) r, (double) R, (double) dqdtAll, (uint) num);
+						}
 					}
 				}
 			}
@@ -11488,8 +12122,10 @@ SprExport.Spr_PHFemThermoIf_UpdateIHheatband((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemThermoIf_UpdateIHheatband((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) xS, (double) xE, (uint) heatingMODE);
 	    SprExport.Spr_PHFemThermoIf_UpdateIHheatband((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) xS, (double) xE, (uint) heatingMODE);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_UpdateIHheatband((IntPtr) _thisArray[0], (double) xS, (double) xE, (uint) heatingMODE);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_UpdateIHheatband((IntPtr) _this, (double) xS, (double) xE, (uint) heatingMODE);
+						}
 					}
 				}
 			}
@@ -11519,8 +12155,10 @@ SprExport.Spr_PHFemThermoIf_UpdateIHheat((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_UpdateIHheat((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) heating);
 	    SprExport.Spr_PHFemThermoIf_UpdateIHheat((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) heating);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_UpdateIHheat((IntPtr) _thisArray[0], (uint) heating);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_UpdateIHheat((IntPtr) _this, (uint) heating);
+						}
 					}
 				}
 			}
@@ -11550,8 +12188,10 @@ SprExport.Spr_PHFemThermoIf_UpdateVecF((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHFemThermoIf_UpdateVecF((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_UpdateVecF((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_UpdateVecF((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_UpdateVecF((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -11581,8 +12221,10 @@ SprExport.Spr_PHFemThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_UpdateVecF_frypan((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_UpdateVecF_frypan((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -11612,8 +12254,10 @@ SprExport.Spr_PHFemThermoIf_DecrMoist((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHFemThermoIf_DecrMoist((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_DecrMoist((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_DecrMoist((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_DecrMoist((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -11643,8 +12287,10 @@ SprExport.Spr_PHFemThermoIf_DecrMoist_velo((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemThermoIf_DecrMoist_velo((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) vel);
 	    SprExport.Spr_PHFemThermoIf_DecrMoist_velo((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) vel);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_DecrMoist_velo((IntPtr) _thisArray[0], (double) vel);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_DecrMoist_velo((IntPtr) _this, (double) vel);
+						}
 					}
 				}
 			}
@@ -11674,8 +12320,10 @@ SprExport.Spr_PHFemThermoIf_DecrMoist_vel((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemThermoIf_DecrMoist_vel((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHFemThermoIf_DecrMoist_vel((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_DecrMoist_vel((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_DecrMoist_vel((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -11705,8 +12353,10 @@ SprExport.Spr_PHFemThermoIf_InitAllVertexTemp((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemThermoIf_InitAllVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_InitAllVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_InitAllVertexTemp((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_InitAllVertexTemp((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -11736,8 +12386,10 @@ SprExport.Spr_PHFemThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHFemThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
 	    SprExport.Spr_PHFemThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetInitThermoConductionParam((IntPtr) _thisArray[0], (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetInitThermoConductionParam((IntPtr) _this, (double) thConduct, (double) rho, (double) specificHeat, (double) heatTrans);
+						}
 					}
 				}
 			}
@@ -11767,8 +12419,10 @@ SprExport.Spr_PHFemThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[phScen
 						});
 SprExport.Spr_PHFemThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thConduct0, (double) roh0, (double) specificHeat0);
 	    SprExport.Spr_PHFemThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thConduct0, (double) roh0, (double) specificHeat0);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetParamAndReCreateMatrix((IntPtr) _thisArray[0], (double) thConduct0, (double) roh0, (double) specificHeat0);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetParamAndReCreateMatrix((IntPtr) _this, (double) thConduct0, (double) roh0, (double) specificHeat0);
+						}
 					}
 				}
 			}
@@ -11838,8 +12492,10 @@ SprExport.Spr_PHFemThermoIf_InitVecFAlls((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_InitVecFAlls((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_InitVecFAlls((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_InitVecFAlls((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_InitVecFAlls((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -11903,9 +12559,11 @@ SprExport.Spr_PHFemThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[phSceneIf.s
 SprExport.Spr_PHFemThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) r, (IntPtr) temp, (IntPtr) new_origin);
 	    char ret = SprExport.Spr_PHFemThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) r, (IntPtr) temp, (IntPtr) new_origin);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHFemThermoIf_SetConcentricHeatMap((IntPtr) _thisArray[0], (IntPtr) r, (IntPtr) temp, (IntPtr) origin);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHFemThermoIf_SetConcentricHeatMap((IntPtr) _this, (IntPtr) r, (IntPtr) temp, (IntPtr) origin);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -11937,8 +12595,10 @@ SprExport.Spr_PHFemThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArra
 						});
 SprExport.Spr_PHFemThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thermalEmissivity, (double) thermalEmissivity_const);
 	    SprExport.Spr_PHFemThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thermalEmissivity, (double) thermalEmissivity_const);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _thisArray[0], (double) thermalEmissivity, (double) thermalEmissivity_const);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetThermalEmissivityToVerticesAll((IntPtr) _this, (double) thermalEmissivity, (double) thermalEmissivity_const);
+						}
 					}
 				}
 			}
@@ -11968,8 +12628,10 @@ SprExport.Spr_PHFemThermoIf_SetOuterTemp((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_SetOuterTemp((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemThermoIf_SetOuterTemp((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetOuterTemp((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetOuterTemp((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -11999,8 +12661,10 @@ SprExport.Spr_PHFemThermoIf_SetThermalRadiation((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemThermoIf_SetThermalRadiation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) ems, (double) ems_const);
 	    SprExport.Spr_PHFemThermoIf_SetThermalRadiation((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) ems, (double) ems_const);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetThermalRadiation((IntPtr) _thisArray[0], (double) ems, (double) ems_const);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetThermalRadiation((IntPtr) _this, (double) ems, (double) ems_const);
+						}
 					}
 				}
 			}
@@ -12030,8 +12694,10 @@ SprExport.Spr_PHFemThermoIf_SetGaussCalcParam((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemThermoIf_SetGaussCalcParam((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) cyc, (double) epsilon);
 	    SprExport.Spr_PHFemThermoIf_SetGaussCalcParam((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) cyc, (double) epsilon);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetGaussCalcParam((IntPtr) _thisArray[0], (uint) cyc, (double) epsilon);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetGaussCalcParam((IntPtr) _this, (uint) cyc, (double) epsilon);
+						}
 					}
 				}
 			}
@@ -12061,8 +12727,10 @@ SprExport.Spr_PHFemThermoIf_InitTcAll((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHFemThermoIf_InitTcAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemThermoIf_InitTcAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_InitTcAll((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_InitTcAll((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -12092,8 +12760,10 @@ SprExport.Spr_PHFemThermoIf_InitToutAll((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHFemThermoIf_InitToutAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) temp);
 	    SprExport.Spr_PHFemThermoIf_InitToutAll((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) temp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_InitToutAll((IntPtr) _thisArray[0], (double) temp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_InitToutAll((IntPtr) _this, (double) temp);
+						}
 					}
 				}
 			}
@@ -12123,8 +12793,10 @@ SprExport.Spr_PHFemThermoIf_SetWeekPow((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHFemThermoIf_SetWeekPow((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) weekPow_);
 	    SprExport.Spr_PHFemThermoIf_SetWeekPow((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) weekPow_);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetWeekPow((IntPtr) _thisArray[0], (double) weekPow_);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetWeekPow((IntPtr) _this, (double) weekPow_);
+						}
 					}
 				}
 			}
@@ -12154,8 +12826,10 @@ SprExport.Spr_PHFemThermoIf_SetIHParamWEEK((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemThermoIf_SetIHParamWEEK((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) inr_, (double) outR_, (double) weekPow_);
 	    SprExport.Spr_PHFemThermoIf_SetIHParamWEEK((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) inr_, (double) outR_, (double) weekPow_);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetIHParamWEEK((IntPtr) _thisArray[0], (double) inr_, (double) outR_, (double) weekPow_);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetIHParamWEEK((IntPtr) _this, (double) inr_, (double) outR_, (double) weekPow_);
+						}
 					}
 				}
 			}
@@ -12185,8 +12859,10 @@ SprExport.Spr_PHFemThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHFemThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) heatTransR_);
 	    SprExport.Spr_PHFemThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) heatTransR_);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _thisArray[0], (double) heatTransR_);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetHeatTransRatioToAllVertex((IntPtr) _this, (double) heatTransR_);
+						}
 					}
 				}
 			}
@@ -12216,8 +12892,10 @@ SprExport.Spr_PHFemThermoIf_AfterSetDesc((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_AfterSetDesc((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_AfterSetDesc((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_AfterSetDesc((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_AfterSetDesc((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12247,8 +12925,10 @@ SprExport.Spr_PHFemThermoIf_SetStopTimespan((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemThermoIf_SetStopTimespan((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) timespan);
 	    SprExport.Spr_PHFemThermoIf_SetStopTimespan((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) timespan);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetStopTimespan((IntPtr) _thisArray[0], (double) timespan);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetStopTimespan((IntPtr) _this, (double) timespan);
+						}
 					}
 				}
 			}
@@ -12278,8 +12958,10 @@ SprExport.Spr_PHFemThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHFemThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_UpdateMatk_RadiantHeatToAir((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12309,8 +12991,10 @@ SprExport.Spr_PHFemThermoIf_ReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemThermoIf_ReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thConduct0);
 	    SprExport.Spr_PHFemThermoIf_ReCreateMatrix((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thConduct0);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_ReCreateMatrix((IntPtr) _thisArray[0], (double) thConduct0);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_ReCreateMatrix((IntPtr) _this, (double) thConduct0);
+						}
 					}
 				}
 			}
@@ -12340,8 +13024,10 @@ SprExport.Spr_PHFemThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHFemThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_ActivateVtxbeRadiantHeat((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12371,8 +13057,10 @@ SprExport.Spr_PHFemThermoIf_OutputMatKall((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemThermoIf_OutputMatKall((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_OutputMatKall((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_OutputMatKall((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_OutputMatKall((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12402,8 +13090,10 @@ SprExport.Spr_PHFemThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTrans((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTrans((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12433,8 +13123,10 @@ SprExport.Spr_PHFemThermoIf_IfRadiantHeatTransSteak((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHFemThermoIf_IfRadiantHeatTransSteak((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTransSteak((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTransSteak((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_IfRadiantHeatTransSteak((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12482,11 +13174,13 @@ SprExport.Spr_PHFemThermoIf_calcGvtx((IntPtr) _thisArray[phSceneIf.sceneForBuffe
 	    float result = (float) SprExport.Spr_PHFemThermoIf_calcGvtx((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) remote1, (int) pv, (uint) texture_mode);
             Marshal.FreeBSTR(remote1);
 	    return result;
-					} else {;
+					} else {
+						foreach (var _this in _thisArray) {
             IntPtr remote1 = Marshal.StringToBSTR(fwfood);
-	    float result = (float) SprExport.Spr_PHFemThermoIf_calcGvtx((IntPtr) _thisArray[0], (IntPtr) remote1, (int) pv, (uint) texture_mode);
+	    float result = (float) SprExport.Spr_PHFemThermoIf_calcGvtx((IntPtr) _this, (IntPtr) remote1, (int) pv, (uint) texture_mode);
             Marshal.FreeBSTR(remote1);
 	    return result;
+						}
 					}
 				}
 			}
@@ -12520,8 +13214,10 @@ SprExport.Spr_PHFemThermoIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHFemThermoIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHFemThermoIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetTimeStep((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -12571,8 +13267,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexHeatTransRatio((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexHeatTransRatio((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) vtxid, (double) heattransRatio);
 	    SprExport.Spr_PHFemThermoIf_SetVertexHeatTransRatio((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) vtxid, (double) heattransRatio);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexHeatTransRatio((IntPtr) _thisArray[0], (uint) vtxid, (double) heattransRatio);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexHeatTransRatio((IntPtr) _this, (uint) vtxid, (double) heattransRatio);
+						}
 					}
 				}
 			}
@@ -12602,8 +13300,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexBeRadiantHeat((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexBeRadiantHeat((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) vtxid, (bool) flag);
 	    SprExport.Spr_PHFemThermoIf_SetVertexBeRadiantHeat((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) vtxid, (bool) flag);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexBeRadiantHeat((IntPtr) _thisArray[0], (uint) vtxid, (bool) flag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexBeRadiantHeat((IntPtr) _this, (uint) vtxid, (bool) flag);
+						}
 					}
 				}
 			}
@@ -12653,8 +13353,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexToofar((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexToofar((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) vtxid, (bool) tooFar);
 	    SprExport.Spr_PHFemThermoIf_SetVertexToofar((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) vtxid, (bool) tooFar);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexToofar((IntPtr) _thisArray[0], (uint) vtxid, (bool) tooFar);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexToofar((IntPtr) _this, (uint) vtxid, (bool) tooFar);
+						}
 					}
 				}
 			}
@@ -12704,8 +13406,10 @@ SprExport.Spr_PHFemThermoIf_SetVertexBeCondVtxs((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemThermoIf_SetVertexBeCondVtxs((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) vtxid, (bool) becondVtxs);
 	    SprExport.Spr_PHFemThermoIf_SetVertexBeCondVtxs((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) vtxid, (bool) becondVtxs);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetVertexBeCondVtxs((IntPtr) _thisArray[0], (uint) vtxid, (bool) becondVtxs);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetVertexBeCondVtxs((IntPtr) _this, (uint) vtxid, (bool) becondVtxs);
+						}
 					}
 				}
 			}
@@ -12735,8 +13439,10 @@ SprExport.Spr_PHFemThermoIf_CreateVecFAll((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHFemThermoIf_CreateVecFAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_CreateVecFAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_CreateVecFAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_CreateVecFAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12766,8 +13472,10 @@ SprExport.Spr_PHFemThermoIf_CalcFaceNormalAll((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemThermoIf_CalcFaceNormalAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_CalcFaceNormalAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_CalcFaceNormalAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_CalcFaceNormalAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12797,8 +13505,10 @@ SprExport.Spr_PHFemThermoIf_CalcVertexNormalAll((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemThermoIf_CalcVertexNormalAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_CalcVertexNormalAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_CalcVertexNormalAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_CalcVertexNormalAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12828,8 +13538,10 @@ SprExport.Spr_PHFemThermoIf_InitFaceNormalAll((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemThermoIf_InitFaceNormalAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_InitFaceNormalAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_InitFaceNormalAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_InitFaceNormalAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12859,8 +13571,10 @@ SprExport.Spr_PHFemThermoIf_InitVertexNormalAll((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemThermoIf_InitVertexNormalAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_InitVertexNormalAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_InitVertexNormalAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_InitVertexNormalAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12890,8 +13604,10 @@ SprExport.Spr_PHFemThermoIf_RevVertexNormalAll((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHFemThermoIf_RevVertexNormalAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_RevVertexNormalAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_RevVertexNormalAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_RevVertexNormalAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -12921,8 +13637,10 @@ SprExport.Spr_PHFemThermoIf_SetWeekPowFULL((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHFemThermoIf_SetWeekPowFULL((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) weekPow_full);
 	    SprExport.Spr_PHFemThermoIf_SetWeekPowFULL((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) weekPow_full);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetWeekPowFULL((IntPtr) _thisArray[0], (double) weekPow_full);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetWeekPowFULL((IntPtr) _this, (double) weekPow_full);
+						}
 					}
 				}
 			}
@@ -12952,8 +13670,10 @@ SprExport.Spr_PHFemThermoIf_SetweekPow_FULL((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemThermoIf_SetweekPow_FULL((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) setweekPow_FULL);
 	    SprExport.Spr_PHFemThermoIf_SetweekPow_FULL((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) setweekPow_FULL);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetweekPow_FULL((IntPtr) _thisArray[0], (double) setweekPow_FULL);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetweekPow_FULL((IntPtr) _this, (double) setweekPow_FULL);
+						}
 					}
 				}
 			}
@@ -12983,8 +13703,10 @@ SprExport.Spr_PHFemThermoIf_setIhRatio((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHFemThermoIf_setIhRatio((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) a);
 	    SprExport.Spr_PHFemThermoIf_setIhRatio((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) a);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_setIhRatio((IntPtr) _thisArray[0], (double) a);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_setIhRatio((IntPtr) _this, (double) a);
+						}
 					}
 				}
 			}
@@ -13014,8 +13736,10 @@ SprExport.Spr_PHFemThermoIf_Setems((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHFemThermoIf_Setems((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) setems);
 	    SprExport.Spr_PHFemThermoIf_Setems((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) setems);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_Setems((IntPtr) _thisArray[0], (double) setems);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_Setems((IntPtr) _this, (double) setems);
+						}
 					}
 				}
 			}
@@ -13045,8 +13769,10 @@ SprExport.Spr_PHFemThermoIf_Setems_steak((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_Setems_steak((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) setems_steak);
 	    SprExport.Spr_PHFemThermoIf_Setems_steak((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) setems_steak);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_Setems_steak((IntPtr) _thisArray[0], (double) setems_steak);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_Setems_steak((IntPtr) _this, (double) setems_steak);
+						}
 					}
 				}
 			}
@@ -13076,8 +13802,10 @@ SprExport.Spr_PHFemThermoIf_SetthConduct((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHFemThermoIf_SetthConduct((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) thConduct);
 	    SprExport.Spr_PHFemThermoIf_SetthConduct((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) thConduct);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetthConduct((IntPtr) _thisArray[0], (double) thConduct);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetthConduct((IntPtr) _this, (double) thConduct);
+						}
 					}
 				}
 			}
@@ -13147,8 +13875,10 @@ SprExport.Spr_PHFemThermoIf_OutTetVolumeAll((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHFemThermoIf_OutTetVolumeAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_OutTetVolumeAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_OutTetVolumeAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_OutTetVolumeAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -13198,8 +13928,10 @@ SprExport.Spr_PHFemThermoIf_VecFNegativeCheck((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemThermoIf_VecFNegativeCheck((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_VecFNegativeCheck((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_VecFNegativeCheck((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_VecFNegativeCheck((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -13289,8 +14021,10 @@ SprExport.Spr_PHFemThermoIf_UpdateVertexTempAll((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHFemThermoIf_UpdateVertexTempAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemThermoIf_UpdateVertexTempAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_UpdateVertexTempAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_UpdateVertexTempAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -13320,8 +14054,10 @@ SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) minTemp, (double) maxTemp);
 	    SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) minTemp, (double) maxTemp);
-					} else {;
-	    SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _thisArray[0], (double) minTemp, (double) maxTemp);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _this, (double) minTemp, (double) maxTemp);
+						}
 					}
 				}
 			}
@@ -13332,8 +14068,12 @@ SprExport.Spr_PHFemThermoIf_SetThermoCameraScale((IntPtr) _thisArray[phSceneIf.s
     }
     public partial class PHFemPorousWOMoveIf : PHFemBaseIf {
 	public PHFemPorousWOMoveIf() { _thisArray[0] = SprExport.Spr_new_PHFemPorousWOMoveIf(); _flag = true; }
-	public PHFemPorousWOMoveIf(IntPtr ptr) : base(ptr) {}
-	public PHFemPorousWOMoveIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFemPorousWOMoveIf(CsCastObject target) {
 		return (target._info.Inherit(PHFemPorousWOMoveIf.GetIfInfoStatic()) ? new PHFemPorousWOMoveIf(target._thisArray[0], target._flag) : null);
 	}
@@ -13390,8 +14130,10 @@ SprExport.Spr_PHFemPorousWOMoveIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemPorousWOMoveIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dt);
 	    SprExport.Spr_PHFemPorousWOMoveIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dt);
-					} else {;
-	    SprExport.Spr_PHFemPorousWOMoveIf_SetTimeStep((IntPtr) _thisArray[0], (double) dt);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemPorousWOMoveIf_SetTimeStep((IntPtr) _this, (double) dt);
+						}
 					}
 				}
 			}
@@ -13441,8 +14183,10 @@ SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoWAll((IntPtr) _thisArray[phScen
 						});
 SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoWAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoWAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoWAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoWAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -13472,8 +14216,10 @@ SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoOAll((IntPtr) _thisArray[phScen
 						});
 SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoOAll((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoOAll((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoOAll((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemPorousWOMoveIf_UpdateVertexRhoOAll((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -13503,8 +14249,10 @@ SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMw((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMw((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) vtxid, (double) mw);
 	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMw((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) vtxid, (double) mw);
-					} else {;
-	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMw((IntPtr) _thisArray[0], (uint) vtxid, (double) mw);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMw((IntPtr) _this, (uint) vtxid, (double) mw);
+						}
 					}
 				}
 			}
@@ -13534,8 +14282,10 @@ SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMo((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMo((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) vtxid, (double) mo);
 	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMo((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) vtxid, (double) mo);
-					} else {;
-	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMo((IntPtr) _thisArray[0], (uint) vtxid, (double) mo);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemPorousWOMoveIf_SetVertexMo((IntPtr) _this, (uint) vtxid, (double) mo);
+						}
 					}
 				}
 			}
@@ -13703,11 +14453,13 @@ SprExport.Spr_PHFemPorousWOMoveIf_calcGvtx((IntPtr) _thisArray[phSceneIf.sceneFo
 	    float result = (float) SprExport.Spr_PHFemPorousWOMoveIf_calcGvtx((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) remote1, (int) pv, (uint) texture_mode);
             Marshal.FreeBSTR(remote1);
 	    return result;
-					} else {;
+					} else {
+						foreach (var _this in _thisArray) {
             IntPtr remote1 = Marshal.StringToBSTR(fwfood);
-	    float result = (float) SprExport.Spr_PHFemPorousWOMoveIf_calcGvtx((IntPtr) _thisArray[0], (IntPtr) remote1, (int) pv, (uint) texture_mode);
+	    float result = (float) SprExport.Spr_PHFemPorousWOMoveIf_calcGvtx((IntPtr) _this, (IntPtr) remote1, (int) pv, (uint) texture_mode);
             Marshal.FreeBSTR(remote1);
 	    return result;
+						}
 					}
 				}
 			}
@@ -13745,8 +14497,10 @@ SprExport.Spr_PHFemPorousWOMoveIf_setGravity((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHFemPorousWOMoveIf_setGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_g);
 	    SprExport.Spr_PHFemPorousWOMoveIf_setGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_g);
-					} else {;
-	    SprExport.Spr_PHFemPorousWOMoveIf_setGravity((IntPtr) _thisArray[0], (IntPtr) g);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFemPorousWOMoveIf_setGravity((IntPtr) _this, (IntPtr) g);
+						}
 					}
 				}
 			}
@@ -13778,9 +14532,11 @@ SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _thisArray[phSceneIf.s
 SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (uint) faceid);
 	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _thisArray[phSceneIf.sceneForGet], (uint) faceid);
 	    return result;
-					} else {;
-	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _thisArray[0], (uint) faceid);
+					} else {
+						foreach (var _this in _thisArray) {
+	    double result = (double) SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _this, (uint) faceid);
 	    return result;
+						}
 					}
 				}
 			}
@@ -13813,8 +14569,12 @@ SprExport.Spr_PHFemPorousWOMoveIf_decideWetValue((IntPtr) _thisArray[phSceneIf.s
     }
     public partial class PHFrameIf : SceneObjectIf {
 	public PHFrameIf() { _thisArray[0] = SprExport.Spr_new_PHFrameIf(); _flag = true; }
-	public PHFrameIf(IntPtr ptr) : base(ptr) {}
-	public PHFrameIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFrameIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFrameIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFrameIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFrameIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFrameIf(CsCastObject target) {
 		return (target._info.Inherit(PHFrameIf.GetIfInfoStatic()) ? new PHFrameIf(target._thisArray[0], target._flag) : null);
 	}
@@ -13895,8 +14655,10 @@ SprExport.Spr_PHFrameIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (In
 						});
 SprExport.Spr_PHFrameIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
 	    SprExport.Spr_PHFrameIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
-					} else {;
-	    SprExport.Spr_PHFrameIf_SetPose((IntPtr) _thisArray[0], (IntPtr) p);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHFrameIf_SetPose((IntPtr) _this, (IntPtr) p);
+						}
 					}
 				}
 			}
@@ -13933,8 +14695,12 @@ SprExport.Spr_PHFrameIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (
     }
     public partial class PHBodyIf : SceneObjectIf {
 	public PHBodyIf() { _thisArray[0] = SprExport.Spr_new_PHBodyIf(); _flag = true; }
-	public PHBodyIf(IntPtr ptr) : base(ptr) {}
-	public PHBodyIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBodyIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBodyIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBodyIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBodyIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBodyIf(CsCastObject target) {
 		return (target._info.Inherit(PHBodyIf.GetIfInfoStatic()) ? new PHBodyIf(target._thisArray[0], target._flag) : null);
 	}
@@ -14155,8 +14921,10 @@ SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (In
 						});
 SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shape);
 	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shape);
-					} else {;
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[0], (IntPtr) shape);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _this, (IntPtr) shape);
+						}
 					}
 				}
 			}
@@ -14194,8 +14962,10 @@ SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForStep], (I
 						});
 SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
 	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
-					} else {;
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[0], (IntPtr) shBegin, (IntPtr) shEnd);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _this, (IntPtr) shBegin, (IntPtr) shEnd);
+						}
 					}
 				}
 			}
@@ -14225,8 +14995,10 @@ SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index);
 	    SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index);
-					} else {;
-	    SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _thisArray[0], (int) index);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_RemoveShape((IntPtr) _this, (int) index);
+						}
 					}
 				}
 			}
@@ -14256,8 +15028,10 @@ SprExport.Spr_PHBodyIf_RemoveShapes((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHBodyIf_RemoveShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) idxBegin, (int) idxEnd);
 	    SprExport.Spr_PHBodyIf_RemoveShapes((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) idxBegin, (int) idxEnd);
-					} else {;
-	    SprExport.Spr_PHBodyIf_RemoveShapes((IntPtr) _thisArray[0], (int) idxBegin, (int) idxEnd);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_RemoveShapes((IntPtr) _this, (int) idxBegin, (int) idxEnd);
+						}
 					}
 				}
 			}
@@ -14291,8 +15065,10 @@ SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForStep]
 						});
 SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shape);
 	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shape);
-					} else {;
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[0], (IntPtr) shape);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _this, (IntPtr) shape);
+						}
 					}
 				}
 			}
@@ -14324,9 +15100,11 @@ SprExport.Spr_PHBodyIf_NShape((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PHBodyIf_NShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHBodyIf_NShape((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHBodyIf_NShape((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHBodyIf_NShape((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -14408,8 +15186,10 @@ SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index, (IntPtr) new_pose);
 	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index, (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[0], (int) index, (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _this, (int) index, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -14439,8 +15219,10 @@ SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -14468,8 +15250,12 @@ SprExport.Spr_PHBodyIf_ClearShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer])
     }
     public partial class PHSolidIf : PHBodyIf {
 	public PHSolidIf() { _thisArray[0] = SprExport.Spr_new_PHSolidIf(); _flag = true; }
-	public PHSolidIf(IntPtr ptr) : base(ptr) {}
-	public PHSolidIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSolidIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSolidIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSolidIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSolidIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSolidIf(CsCastObject target) {
 		return (target._info.Inherit(PHSolidIf.GetIfInfoStatic()) ? new PHSolidIf(target._thisArray[0], target._flag) : null);
 	}
@@ -14530,8 +15316,10 @@ SprExport.Spr_PHSolidIf_AddForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (I
 						});
 SprExport.Spr_PHSolidIf_AddForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_f);
 	    SprExport.Spr_PHSolidIf_AddForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_f);
-					} else {;
-	    SprExport.Spr_PHSolidIf_AddForce((IntPtr) _thisArray[0], (IntPtr) f);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_AddForce((IntPtr) _this, (IntPtr) f);
+						}
 					}
 				}
 			}
@@ -14565,8 +15353,10 @@ SprExport.Spr_PHSolidIf_AddTorque((IntPtr) _thisArray[phSceneIf.sceneForStep], (
 						});
 SprExport.Spr_PHSolidIf_AddTorque((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_t);
 	    SprExport.Spr_PHSolidIf_AddTorque((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_t);
-					} else {;
-	    SprExport.Spr_PHSolidIf_AddTorque((IntPtr) _thisArray[0], (IntPtr) t);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_AddTorque((IntPtr) _this, (IntPtr) t);
+						}
 					}
 				}
 			}
@@ -14604,8 +15394,10 @@ SprExport.Spr_PHSolidIf_AddForce_1((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHSolidIf_AddForce_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_f, (IntPtr) new_r);
 	    SprExport.Spr_PHSolidIf_AddForce_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_f, (IntPtr) new_r);
-					} else {;
-	    SprExport.Spr_PHSolidIf_AddForce_1((IntPtr) _thisArray[0], (IntPtr) f, (IntPtr) r);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_AddForce_1((IntPtr) _this, (IntPtr) f, (IntPtr) r);
+						}
 					}
 				}
 			}
@@ -14675,8 +15467,10 @@ SprExport.Spr_PHSolidIf_SetMass((IntPtr) _thisArray[phSceneIf.sceneForStep], (do
 						});
 SprExport.Spr_PHSolidIf_SetMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) m);
 	    SprExport.Spr_PHSolidIf_SetMass((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) m);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetMass((IntPtr) _thisArray[0], (double) m);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetMass((IntPtr) _this, (double) m);
+						}
 					}
 				}
 			}
@@ -14710,8 +15504,10 @@ SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_center);
 	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_center);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[0], (IntPtr) center);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _this, (IntPtr) center);
+						}
 					}
 				}
 			}
@@ -14785,8 +15581,10 @@ SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_I);
 	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_I);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[0], (IntPtr) I);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _this, (IntPtr) I);
+						}
 					}
 				}
 			}
@@ -14816,8 +15614,10 @@ SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _thisArray[phSceneIf.sceneForStep])
 						});
 SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_CompInertia((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -14851,8 +15651,10 @@ SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
 	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[0], (IntPtr) p);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _this, (IntPtr) p);
+						}
 					}
 				}
 			}
@@ -14886,8 +15688,10 @@ SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
 	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[0], (IntPtr) p);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _this, (IntPtr) p);
+						}
 					}
 				}
 			}
@@ -14981,8 +15785,10 @@ SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_q);
 	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_q);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[0], (IntPtr) q);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _this, (IntPtr) q);
+						}
 					}
 				}
 			}
@@ -15016,8 +15822,10 @@ SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (In
 						});
 SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
 	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[0], (IntPtr) p);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _this, (IntPtr) p);
+						}
 					}
 				}
 			}
@@ -15051,8 +15859,10 @@ SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_v);
 	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_v);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[0], (IntPtr) v);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _this, (IntPtr) v);
+						}
 					}
 				}
 			}
@@ -15086,8 +15896,10 @@ SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_av);
 	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_av);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[0], (IntPtr) av);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _this, (IntPtr) av);
+						}
 					}
 				}
 			}
@@ -15157,8 +15969,10 @@ SprExport.Spr_PHSolidIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHSolidIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bOn);
 	    SprExport.Spr_PHSolidIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bOn);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetGravity((IntPtr) _thisArray[0], (bool) bOn);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetGravity((IntPtr) _this, (bool) bOn);
+						}
 					}
 				}
 			}
@@ -15188,8 +16002,10 @@ SprExport.Spr_PHSolidIf_SetDynamical((IntPtr) _thisArray[phSceneIf.sceneForStep]
 						});
 SprExport.Spr_PHSolidIf_SetDynamical((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bOn);
 	    SprExport.Spr_PHSolidIf_SetDynamical((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bOn);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetDynamical((IntPtr) _thisArray[0], (bool) bOn);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetDynamical((IntPtr) _this, (bool) bOn);
+						}
 					}
 				}
 			}
@@ -15239,8 +16055,10 @@ SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bOn);
 	    SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bOn);
-					} else {;
-	    SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[0], (bool) bOn);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _this, (bool) bOn);
+						}
 					}
 				}
 			}
@@ -15321,8 +16139,12 @@ SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHShapePairForLCPIf : CDShapePairIf {
 	public PHShapePairForLCPIf() { _thisArray[0] = SprExport.Spr_new_PHShapePairForLCPIf(); _flag = true; }
-	public PHShapePairForLCPIf(IntPtr ptr) : base(ptr) {}
-	public PHShapePairForLCPIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHShapePairForLCPIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHShapePairForLCPIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHShapePairForLCPIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHShapePairForLCPIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHShapePairForLCPIf(CsCastObject target) {
 		return (target._info.Inherit(PHShapePairForLCPIf.GetIfInfoStatic()) ? new PHShapePairForLCPIf(target._thisArray[0], target._flag) : null);
 	}
@@ -15369,8 +16191,12 @@ SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHSolidPairIf : ObjectIf {
 	public PHSolidPairIf() { _thisArray[0] = SprExport.Spr_new_PHSolidPairIf(); _flag = true; }
-	public PHSolidPairIf(IntPtr ptr) : base(ptr) {}
-	public PHSolidPairIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSolidPairIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSolidPairIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSolidPairIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSolidPairIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSolidPairIf(CsCastObject target) {
 		return (target._info.Inherit(PHSolidPairIf.GetIfInfoStatic()) ? new PHSolidPairIf(target._thisArray[0], target._flag) : null);
 	}
@@ -15416,8 +16242,12 @@ SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHSolidPairForLCPIf : PHSolidPairIf {
 	public PHSolidPairForLCPIf() { _thisArray[0] = SprExport.Spr_new_PHSolidPairForLCPIf(); _flag = true; }
-	public PHSolidPairForLCPIf(IntPtr ptr) : base(ptr) {}
-	public PHSolidPairForLCPIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSolidPairForLCPIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSolidPairForLCPIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSolidPairForLCPIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSolidPairForLCPIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSolidPairForLCPIf(CsCastObject target) {
 		return (target._info.Inherit(PHSolidPairForLCPIf.GetIfInfoStatic()) ? new PHSolidPairForLCPIf(target._thisArray[0], target._flag) : null);
 	}
@@ -15468,8 +16298,12 @@ SprExport.Spr_PHSolidIf_SetStationary((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHHapticPointerIf : PHSolidIf {
 	public PHHapticPointerIf() { _thisArray[0] = SprExport.Spr_new_PHHapticPointerIf(); _flag = true; }
-	public PHHapticPointerIf(IntPtr ptr) : base(ptr) {}
-	public PHHapticPointerIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHapticPointerIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHapticPointerIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHapticPointerIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHapticPointerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHHapticPointerIf(CsCastObject target) {
 		return (target._info.Inherit(PHHapticPointerIf.GetIfInfoStatic()) ? new PHHapticPointerIf(target._thisArray[0], target._flag) : null);
 	}
@@ -15528,8 +16362,10 @@ SprExport.Spr_PHHapticPointerIf_SetHapticRenderMode((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHHapticPointerIf_SetHapticRenderMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) m);
 	    SprExport.Spr_PHHapticPointerIf_SetHapticRenderMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) m);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetHapticRenderMode((IntPtr) _thisArray[0], (int) m);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetHapticRenderMode((IntPtr) _this, (int) m);
+						}
 					}
 				}
 			}
@@ -15579,8 +16415,10 @@ SprExport.Spr_PHHapticPointerIf_EnableRotation((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHHapticPointerIf_EnableRotation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableRotation((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableRotation((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableRotation((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15630,8 +16468,10 @@ SprExport.Spr_PHHapticPointerIf_EnableForce((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHHapticPointerIf_EnableForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableForce((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableForce((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15681,8 +16521,10 @@ SprExport.Spr_PHHapticPointerIf_EnableFriction((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHHapticPointerIf_EnableFriction((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableFriction((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableFriction((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableFriction((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15732,8 +16574,10 @@ SprExport.Spr_PHHapticPointerIf_EnableTimeVaryFriction((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHHapticPointerIf_EnableTimeVaryFriction((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableTimeVaryFriction((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableTimeVaryFriction((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableTimeVaryFriction((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15783,8 +16627,10 @@ SprExport.Spr_PHHapticPointerIf_EnableVibration((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHHapticPointerIf_EnableVibration((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableVibration((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableVibration((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableVibration((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15834,8 +16680,10 @@ SprExport.Spr_PHHapticPointerIf_EnableMultiPoints((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHHapticPointerIf_EnableMultiPoints((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableMultiPoints((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableMultiPoints((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableMultiPoints((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15885,8 +16733,10 @@ SprExport.Spr_PHHapticPointerIf_EnableMultiProxy((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHHapticPointerIf_EnableMultiProxy((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableMultiProxy((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableMultiProxy((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableMultiProxy((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15936,8 +16786,10 @@ SprExport.Spr_PHHapticPointerIf_EnableSimulation((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHHapticPointerIf_EnableSimulation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHHapticPointerIf_EnableSimulation((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_EnableSimulation((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_EnableSimulation((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -15987,8 +16839,10 @@ SprExport.Spr_PHHapticPointerIf_SetFrictionSpring((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHHapticPointerIf_SetFrictionSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) s);
 	    SprExport.Spr_PHHapticPointerIf_SetFrictionSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) s);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetFrictionSpring((IntPtr) _thisArray[0], (float) s);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetFrictionSpring((IntPtr) _this, (float) s);
+						}
 					}
 				}
 			}
@@ -16038,8 +16892,10 @@ SprExport.Spr_PHHapticPointerIf_SetFrictionDamper((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHHapticPointerIf_SetFrictionDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) s);
 	    SprExport.Spr_PHHapticPointerIf_SetFrictionDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) s);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetFrictionDamper((IntPtr) _thisArray[0], (float) s);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetFrictionDamper((IntPtr) _this, (float) s);
+						}
 					}
 				}
 			}
@@ -16089,8 +16945,10 @@ SprExport.Spr_PHHapticPointerIf_SetReflexSpring((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHHapticPointerIf_SetReflexSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) s);
 	    SprExport.Spr_PHHapticPointerIf_SetReflexSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) s);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetReflexSpring((IntPtr) _thisArray[0], (float) s);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetReflexSpring((IntPtr) _this, (float) s);
+						}
 					}
 				}
 			}
@@ -16140,8 +16998,10 @@ SprExport.Spr_PHHapticPointerIf_SetReflexDamper((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHHapticPointerIf_SetReflexDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) d);
 	    SprExport.Spr_PHHapticPointerIf_SetReflexDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) d);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetReflexDamper((IntPtr) _thisArray[0], (float) d);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetReflexDamper((IntPtr) _this, (float) d);
+						}
 					}
 				}
 			}
@@ -16191,8 +17051,10 @@ SprExport.Spr_PHHapticPointerIf_SetRotationReflexSpring((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHHapticPointerIf_SetRotationReflexSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) s);
 	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) s);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexSpring((IntPtr) _thisArray[0], (float) s);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexSpring((IntPtr) _this, (float) s);
+						}
 					}
 				}
 			}
@@ -16242,8 +17104,10 @@ SprExport.Spr_PHHapticPointerIf_SetRotationReflexDamper((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHHapticPointerIf_SetRotationReflexDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) d);
 	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) d);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexDamper((IntPtr) _thisArray[0], (float) d);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetRotationReflexDamper((IntPtr) _this, (float) d);
+						}
 					}
 				}
 			}
@@ -16293,8 +17157,10 @@ SprExport.Spr_PHHapticPointerIf_SetLocalRange((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHHapticPointerIf_SetLocalRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) r);
 	    SprExport.Spr_PHHapticPointerIf_SetLocalRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) r);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetLocalRange((IntPtr) _thisArray[0], (float) r);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetLocalRange((IntPtr) _this, (float) r);
+						}
 					}
 				}
 			}
@@ -16344,8 +17210,10 @@ SprExport.Spr_PHHapticPointerIf_SetPosScale((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHHapticPointerIf_SetPosScale((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) scale);
 	    SprExport.Spr_PHHapticPointerIf_SetPosScale((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) scale);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetPosScale((IntPtr) _thisArray[0], (double) scale);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetPosScale((IntPtr) _this, (double) scale);
+						}
 					}
 				}
 			}
@@ -16395,8 +17263,10 @@ SprExport.Spr_PHHapticPointerIf_SetRotationalWeight((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHHapticPointerIf_SetRotationalWeight((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) w);
 	    SprExport.Spr_PHHapticPointerIf_SetRotationalWeight((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) w);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetRotationalWeight((IntPtr) _thisArray[0], (double) w);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetRotationalWeight((IntPtr) _this, (double) w);
+						}
 					}
 				}
 			}
@@ -16450,8 +17320,10 @@ SprExport.Spr_PHHapticPointerIf_SetDefaultPose((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHHapticPointerIf_SetDefaultPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
 	    SprExport.Spr_PHHapticPointerIf_SetDefaultPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetDefaultPose((IntPtr) _thisArray[0], (IntPtr) p);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetDefaultPose((IntPtr) _this, (IntPtr) p);
+						}
 					}
 				}
 			}
@@ -16503,9 +17375,11 @@ SprExport.Spr_PHHapticPointerIf_NNeighborSolids((IntPtr) _thisArray[phSceneIf.sc
 SprExport.Spr_PHHapticPointerIf_NNeighborSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHHapticPointerIf_NNeighborSolids((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHHapticPointerIf_NNeighborSolids((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHHapticPointerIf_NNeighborSolids((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -16646,8 +17520,10 @@ SprExport.Spr_PHHapticPointerIf_SetProxyN((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHHapticPointerIf_SetProxyN((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n);
 	    SprExport.Spr_PHHapticPointerIf_SetProxyN((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetProxyN((IntPtr) _thisArray[0], (int) n);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetProxyN((IntPtr) _this, (int) n);
+						}
 					}
 				}
 			}
@@ -16741,8 +17617,10 @@ SprExport.Spr_PHHapticPointerIf_SetProxyVelocity((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHHapticPointerIf_SetProxyVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_spv);
 	    SprExport.Spr_PHHapticPointerIf_SetProxyVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_spv);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_SetProxyVelocity((IntPtr) _thisArray[0], (IntPtr) spv);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_SetProxyVelocity((IntPtr) _this, (IntPtr) spv);
+						}
 					}
 				}
 			}
@@ -16776,8 +17654,10 @@ SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_f);
 	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_f);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[0], (IntPtr) f);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _this, (IntPtr) f);
+						}
 					}
 				}
 			}
@@ -16807,8 +17687,10 @@ SprExport.Spr_PHHapticPointerIf_ClearHapticForce((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHHapticPointerIf_ClearHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHHapticPointerIf_ClearHapticForce((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_ClearHapticForce((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_ClearHapticForce((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -16846,8 +17728,10 @@ SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose, (IntPtr) new_vel);
 	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose, (IntPtr) new_vel);
-					} else {;
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[0], (IntPtr) pose, (IntPtr) vel);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _this, (IntPtr) pose, (IntPtr) vel);
+						}
 					}
 				}
 			}
@@ -16858,8 +17742,12 @@ SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phScene
     }
     public partial class PHShapePairForHapticIf : CDShapePairIf {
 	public PHShapePairForHapticIf() { _thisArray[0] = SprExport.Spr_new_PHShapePairForHapticIf(); _flag = true; }
-	public PHShapePairForHapticIf(IntPtr ptr) : base(ptr) {}
-	public PHShapePairForHapticIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHShapePairForHapticIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHShapePairForHapticIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHShapePairForHapticIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHShapePairForHapticIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHShapePairForHapticIf(CsCastObject target) {
 		return (target._info.Inherit(PHShapePairForHapticIf.GetIfInfoStatic()) ? new PHShapePairForHapticIf(target._thisArray[0], target._flag) : null);
 	}
@@ -16910,8 +17798,12 @@ SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phScene
     }
     public partial class PHSolidPairForHapticIf : PHSolidPairIf {
 	public PHSolidPairForHapticIf() { _thisArray[0] = SprExport.Spr_new_PHSolidPairForHapticIf(); _flag = true; }
-	public PHSolidPairForHapticIf(IntPtr ptr) : base(ptr) {}
-	public PHSolidPairForHapticIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSolidPairForHapticIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSolidPairForHapticIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSolidPairForHapticIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSolidPairForHapticIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSolidPairForHapticIf(CsCastObject target) {
 		return (target._info.Inherit(PHSolidPairForHapticIf.GetIfInfoStatic()) ? new PHSolidPairForHapticIf(target._thisArray[0], target._flag) : null);
 	}
@@ -16982,8 +17874,12 @@ SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phScene
     }
     public partial class PHHapticEngineIf : PHEngineIf {
 	public PHHapticEngineIf() { _thisArray[0] = SprExport.Spr_new_PHHapticEngineIf(); _flag = true; }
-	public PHHapticEngineIf(IntPtr ptr) : base(ptr) {}
-	public PHHapticEngineIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHapticEngineIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHapticEngineIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHapticEngineIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHapticEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHHapticEngineIf(CsCastObject target) {
 		return (target._info.Inherit(PHHapticEngineIf.GetIfInfoStatic()) ? new PHHapticEngineIf(target._thisArray[0], target._flag) : null);
 	}
@@ -17042,8 +17938,10 @@ SprExport.Spr_PHHapticEngineIf_SetHapticStepMode((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHHapticEngineIf_SetHapticStepMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) mode);
 	    SprExport.Spr_PHHapticEngineIf_SetHapticStepMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) mode);
-					} else {;
-	    SprExport.Spr_PHHapticEngineIf_SetHapticStepMode((IntPtr) _thisArray[0], (int) mode);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticEngineIf_SetHapticStepMode((IntPtr) _this, (int) mode);
+						}
 					}
 				}
 			}
@@ -17095,9 +17993,11 @@ SprExport.Spr_PHHapticEngineIf_NSolids((IntPtr) _thisArray[phSceneIf.sceneForSte
 SprExport.Spr_PHHapticEngineIf_NSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolids((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolids((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolids((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -17131,9 +18031,11 @@ SprExport.Spr_PHHapticEngineIf_NPointers((IntPtr) _thisArray[phSceneIf.sceneForS
 SprExport.Spr_PHHapticEngineIf_NPointers((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointers((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointers((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointers((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -17219,9 +18121,11 @@ SprExport.Spr_PHHapticEngineIf_NSolidsInHaptic((IntPtr) _thisArray[phSceneIf.sce
 SprExport.Spr_PHHapticEngineIf_NSolidsInHaptic((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolidsInHaptic((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolidsInHaptic((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHHapticEngineIf_NSolidsInHaptic((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -17255,9 +18159,11 @@ SprExport.Spr_PHHapticEngineIf_NPointersInHaptic((IntPtr) _thisArray[phSceneIf.s
 SprExport.Spr_PHHapticEngineIf_NPointersInHaptic((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointersInHaptic((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointersInHaptic((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHHapticEngineIf_NPointersInHaptic((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -17341,8 +18247,10 @@ SprExport.Spr_PHHapticEngineIf_StepPhysicsSimulation((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHHapticEngineIf_StepPhysicsSimulation((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHHapticEngineIf_StepPhysicsSimulation((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHHapticEngineIf_StepPhysicsSimulation((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticEngineIf_StepPhysicsSimulation((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -17372,8 +18280,10 @@ SprExport.Spr_PHHapticEngineIf_ReleaseState((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHHapticEngineIf_ReleaseState((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHHapticEngineIf_ReleaseState((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHHapticEngineIf_ReleaseState((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHHapticEngineIf_ReleaseState((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -17407,9 +18317,11 @@ SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _thisArray[phSceneIf.sceneForSt
 SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) arg);
 	    IntPtr result = (IntPtr) SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) arg);
 	    return result;
-					} else {;
-	    IntPtr result = (IntPtr) SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _thisArray[0], (IntPtr) arg);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr result = (IntPtr) SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _this, (IntPtr) arg);
 	    return result;
+						}
 					}
 				}
 			}
@@ -17422,8 +18334,12 @@ SprExport.Spr_PHHapticEngineIf_Callback((IntPtr) _thisArray[phSceneIf.sceneForBu
     }
     public partial class PHIKEndEffectorIf : SceneObjectIf {
 	public PHIKEndEffectorIf() { _thisArray[0] = SprExport.Spr_new_PHIKEndEffectorIf(); _flag = true; }
-	public PHIKEndEffectorIf(IntPtr ptr) : base(ptr) {}
-	public PHIKEndEffectorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKEndEffectorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKEndEffectorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKEndEffectorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKEndEffectorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHIKEndEffectorIf(CsCastObject target) {
 		return (target._info.Inherit(PHIKEndEffectorIf.GetIfInfoStatic()) ? new PHIKEndEffectorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -17484,8 +18400,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
 	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _this, (IntPtr) solid);
+						}
 					}
 				}
 			}
@@ -17548,8 +18466,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ika);
 	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ika);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[0], (IntPtr) ika);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _this, (IntPtr) ika);
+						}
 					}
 				}
 			}
@@ -17614,8 +18534,10 @@ SprExport.Spr_PHIKEndEffectorIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForSte
 						});
 SprExport.Spr_PHIKEndEffectorIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHIKEndEffectorIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_Enable((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_Enable((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -17669,8 +18591,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalPosition((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_localPosition);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_localPosition);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalPosition((IntPtr) _thisArray[0], (IntPtr) localPosition);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalPosition((IntPtr) _this, (IntPtr) localPosition);
+						}
 					}
 				}
 			}
@@ -17724,8 +18648,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalDirection((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_localDirection);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_localDirection);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalDirection((IntPtr) _thisArray[0], (IntPtr) localDirection);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLocalDirection((IntPtr) _this, (IntPtr) localDirection);
+						}
 					}
 				}
 			}
@@ -17775,8 +18701,10 @@ SprExport.Spr_PHIKEndEffectorIf_EnablePositionControl((IntPtr) _thisArray[phScen
 						});
 SprExport.Spr_PHIKEndEffectorIf_EnablePositionControl((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHIKEndEffectorIf_EnablePositionControl((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_EnablePositionControl((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_EnablePositionControl((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -17826,8 +18754,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetPositionPriority((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetPositionPriority((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) priority);
 	    SprExport.Spr_PHIKEndEffectorIf_SetPositionPriority((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) priority);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetPositionPriority((IntPtr) _thisArray[0], (double) priority);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetPositionPriority((IntPtr) _this, (double) priority);
+						}
 					}
 				}
 			}
@@ -17881,8 +18811,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_position);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_position);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetPosition((IntPtr) _thisArray[0], (IntPtr) position);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetPosition((IntPtr) _this, (IntPtr) position);
+						}
 					}
 				}
 			}
@@ -17932,8 +18864,10 @@ SprExport.Spr_PHIKEndEffectorIf_EnableOrientationControl((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHIKEndEffectorIf_EnableOrientationControl((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHIKEndEffectorIf_EnableOrientationControl((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_EnableOrientationControl((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_EnableOrientationControl((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -17983,8 +18917,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetOrientationPriority((IntPtr) _thisArray[phSce
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetOrientationPriority((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) priority);
 	    SprExport.Spr_PHIKEndEffectorIf_SetOrientationPriority((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) priority);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetOrientationPriority((IntPtr) _thisArray[0], (double) priority);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetOrientationPriority((IntPtr) _this, (double) priority);
+						}
 					}
 				}
 			}
@@ -18036,8 +18972,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetOriCtlMode((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetOriCtlMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) mode);
 	    SprExport.Spr_PHIKEndEffectorIf_SetOriCtlMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) mode);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetOriCtlMode((IntPtr) _thisArray[0], (int) mode);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetOriCtlMode((IntPtr) _this, (int) mode);
+						}
 					}
 				}
 			}
@@ -18091,8 +19029,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetOrientation((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_orientation);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_orientation);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetOrientation((IntPtr) _thisArray[0], (IntPtr) orientation);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetOrientation((IntPtr) _this, (IntPtr) orientation);
+						}
 					}
 				}
 			}
@@ -18146,8 +19086,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetDirection((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_direction);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_direction);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetDirection((IntPtr) _thisArray[0], (IntPtr) direction);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetDirection((IntPtr) _this, (IntPtr) direction);
+						}
 					}
 				}
 			}
@@ -18201,8 +19143,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetLookat((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetLookat((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lookat);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLookat((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lookat);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLookat((IntPtr) _thisArray[0], (IntPtr) lookat);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetLookat((IntPtr) _this, (IntPtr) lookat);
+						}
 					}
 				}
 			}
@@ -18256,8 +19200,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_velocity);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_velocity);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetVelocity((IntPtr) _thisArray[0], (IntPtr) velocity);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetVelocity((IntPtr) _this, (IntPtr) velocity);
+						}
 					}
 				}
 			}
@@ -18311,8 +19257,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetAngularVelocity((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_angVel);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_angVel);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetAngularVelocity((IntPtr) _thisArray[0], (IntPtr) angVel);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetAngularVelocity((IntPtr) _this, (IntPtr) angVel);
+						}
 					}
 				}
 			}
@@ -18362,8 +19310,10 @@ SprExport.Spr_PHIKEndEffectorIf_EnableForceControl((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHIKEndEffectorIf_EnableForceControl((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHIKEndEffectorIf_EnableForceControl((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_EnableForceControl((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_EnableForceControl((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -18401,8 +19351,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetForce((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_force, (IntPtr) new_workingPoint);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_force, (IntPtr) new_workingPoint);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce((IntPtr) _thisArray[0], (IntPtr) force, (IntPtr) workingPoint);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce((IntPtr) _this, (IntPtr) force, (IntPtr) workingPoint);
+						}
 					}
 				}
 			}
@@ -18436,8 +19388,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetForce_1((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetForce_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_force);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_force);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce_1((IntPtr) _thisArray[0], (IntPtr) force);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetForce_1((IntPtr) _this, (IntPtr) force);
+						}
 					}
 				}
 			}
@@ -18507,8 +19461,10 @@ SprExport.Spr_PHIKEndEffectorIf_EnableTorqueControl((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHIKEndEffectorIf_EnableTorqueControl((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHIKEndEffectorIf_EnableTorqueControl((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_EnableTorqueControl((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_EnableTorqueControl((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -18542,8 +19498,10 @@ SprExport.Spr_PHIKEndEffectorIf_SetTargetTorque((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHIKEndEffectorIf_SetTargetTorque((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_torque);
 	    SprExport.Spr_PHIKEndEffectorIf_SetTargetTorque((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_torque);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_SetTargetTorque((IntPtr) _thisArray[0], (IntPtr) torque);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_SetTargetTorque((IntPtr) _this, (IntPtr) torque);
+						}
 					}
 				}
 			}
@@ -18613,8 +19571,10 @@ SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sc
 						});
 SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -18625,8 +19585,12 @@ SprExport.Spr_PHIKEndEffectorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sc
     }
     public partial class PHIKActuatorIf : SceneObjectIf {
 	public PHIKActuatorIf() { _thisArray[0] = SprExport.Spr_new_PHIKActuatorIf(); _flag = true; }
-	public PHIKActuatorIf(IntPtr ptr) : base(ptr) {}
-	public PHIKActuatorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKActuatorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKActuatorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKActuatorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHIKActuatorIf(CsCastObject target) {
 		return (target._info.Inherit(PHIKActuatorIf.GetIfInfoStatic()) ? new PHIKActuatorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -18683,8 +19647,10 @@ SprExport.Spr_PHIKActuatorIf_PrepareSolve((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHIKActuatorIf_PrepareSolve((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKActuatorIf_PrepareSolve((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_PrepareSolve((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_PrepareSolve((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -18714,8 +19680,10 @@ SprExport.Spr_PHIKActuatorIf_ProceedSolve((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHIKActuatorIf_ProceedSolve((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKActuatorIf_ProceedSolve((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_ProceedSolve((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_ProceedSolve((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -18745,8 +19713,10 @@ SprExport.Spr_PHIKActuatorIf_Move((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHIKActuatorIf_Move((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKActuatorIf_Move((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_Move((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_Move((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -18776,8 +19746,10 @@ SprExport.Spr_PHIKActuatorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHIKActuatorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) reverse);
 	    SprExport.Spr_PHIKActuatorIf_ApplyExactState((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) reverse);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_ApplyExactState((IntPtr) _thisArray[0], (bool) reverse);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_ApplyExactState((IntPtr) _this, (bool) reverse);
+						}
 					}
 				}
 			}
@@ -18807,8 +19779,10 @@ SprExport.Spr_PHIKActuatorIf_ApplyExactState_1((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHIKActuatorIf_ApplyExactState_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHIKActuatorIf_ApplyExactState_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_ApplyExactState_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_ApplyExactState_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -18838,8 +19812,10 @@ SprExport.Spr_PHIKActuatorIf_SetBias((IntPtr) _thisArray[phSceneIf.sceneForStep]
 						});
 SprExport.Spr_PHIKActuatorIf_SetBias((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) bias);
 	    SprExport.Spr_PHIKActuatorIf_SetBias((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) bias);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_SetBias((IntPtr) _thisArray[0], (float) bias);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_SetBias((IntPtr) _this, (float) bias);
+						}
 					}
 				}
 			}
@@ -18889,8 +19865,10 @@ SprExport.Spr_PHIKActuatorIf_SetPullbackRate((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHIKActuatorIf_SetPullbackRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) pullbackRate);
 	    SprExport.Spr_PHIKActuatorIf_SetPullbackRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) pullbackRate);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_SetPullbackRate((IntPtr) _thisArray[0], (double) pullbackRate);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_SetPullbackRate((IntPtr) _this, (double) pullbackRate);
+						}
 					}
 				}
 			}
@@ -18940,8 +19918,10 @@ SprExport.Spr_PHIKActuatorIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHIKActuatorIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) enable);
 	    SprExport.Spr_PHIKActuatorIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) enable);
-					} else {;
-	    SprExport.Spr_PHIKActuatorIf_Enable((IntPtr) _thisArray[0], (bool) enable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKActuatorIf_Enable((IntPtr) _this, (bool) enable);
+						}
 					}
 				}
 			}
@@ -18993,9 +19973,11 @@ SprExport.Spr_PHIKActuatorIf_NAncestors((IntPtr) _thisArray[phSceneIf.sceneForSt
 SprExport.Spr_PHIKActuatorIf_NAncestors((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHIKActuatorIf_NAncestors((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHIKActuatorIf_NAncestors((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHIKActuatorIf_NAncestors((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -19099,9 +20081,11 @@ SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _thisArray[phSceneIf.scene
 SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -19215,8 +20199,12 @@ SprExport.Spr_PHIKActuatorIf_NChildActuators((IntPtr) _thisArray[phSceneIf.scene
     }
     public partial class PHIKBallActuatorIf : PHIKActuatorIf {
 	public PHIKBallActuatorIf() { _thisArray[0] = SprExport.Spr_new_PHIKBallActuatorIf(); _flag = true; }
-	public PHIKBallActuatorIf(IntPtr ptr) : base(ptr) {}
-	public PHIKBallActuatorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKBallActuatorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKBallActuatorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKBallActuatorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKBallActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHIKBallActuatorIf(CsCastObject target) {
 		return (target._info.Inherit(PHIKBallActuatorIf.GetIfInfoStatic()) ? new PHIKBallActuatorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -19277,8 +20265,10 @@ SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
 	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
-					} else {;
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _this, (IntPtr) joint);
+						}
 					}
 				}
 			}
@@ -19338,8 +20328,10 @@ SprExport.Spr_PHIKBallActuatorIf_SetJointTempOri((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHIKBallActuatorIf_SetJointTempOri((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ori);
 	    SprExport.Spr_PHIKBallActuatorIf_SetJointTempOri((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ori);
-					} else {;
-	    SprExport.Spr_PHIKBallActuatorIf_SetJointTempOri((IntPtr) _thisArray[0], (IntPtr) ori);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKBallActuatorIf_SetJointTempOri((IntPtr) _this, (IntPtr) ori);
+						}
 					}
 				}
 			}
@@ -19373,8 +20365,10 @@ SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ori);
 	    SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ori);
-					} else {;
-	    SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _thisArray[0], (IntPtr) ori);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _this, (IntPtr) ori);
+						}
 					}
 				}
 			}
@@ -19425,8 +20419,12 @@ SprExport.Spr_PHIKBallActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf
     }
     public partial class PHIKHingeActuatorIf : PHIKActuatorIf {
 	public PHIKHingeActuatorIf() { _thisArray[0] = SprExport.Spr_new_PHIKHingeActuatorIf(); _flag = true; }
-	public PHIKHingeActuatorIf(IntPtr ptr) : base(ptr) {}
-	public PHIKHingeActuatorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKHingeActuatorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKHingeActuatorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKHingeActuatorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKHingeActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHIKHingeActuatorIf(CsCastObject target) {
 		return (target._info.Inherit(PHIKHingeActuatorIf.GetIfInfoStatic()) ? new PHIKHingeActuatorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -19487,8 +20485,10 @@ SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
 	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
-					} else {;
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _this, (IntPtr) joint);
+						}
 					}
 				}
 			}
@@ -19544,8 +20544,10 @@ SprExport.Spr_PHIKHingeActuatorIf_SetJointTempAngle((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHIKHingeActuatorIf_SetJointTempAngle((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) angle);
 	    SprExport.Spr_PHIKHingeActuatorIf_SetJointTempAngle((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) angle);
-					} else {;
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJointTempAngle((IntPtr) _thisArray[0], (double) angle);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJointTempAngle((IntPtr) _this, (double) angle);
+						}
 					}
 				}
 			}
@@ -19575,8 +20577,10 @@ SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) angle);
 	    SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) angle);
-					} else {;
-	    SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _thisArray[0], (double) angle);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _this, (double) angle);
+						}
 					}
 				}
 			}
@@ -19627,8 +20631,12 @@ SprExport.Spr_PHIKHingeActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneI
     }
     public partial class PHIKSpringActuatorIf : PHIKActuatorIf {
 	public PHIKSpringActuatorIf() { _thisArray[0] = SprExport.Spr_new_PHIKSpringActuatorIf(); _flag = true; }
-	public PHIKSpringActuatorIf(IntPtr ptr) : base(ptr) {}
-	public PHIKSpringActuatorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHIKSpringActuatorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHIKSpringActuatorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHIKSpringActuatorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHIKSpringActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHIKSpringActuatorIf(CsCastObject target) {
 		return (target._info.Inherit(PHIKSpringActuatorIf.GetIfInfoStatic()) ? new PHIKSpringActuatorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -19689,8 +20697,10 @@ SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
 	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
-					} else {;
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _this, (IntPtr) joint);
+						}
 					}
 				}
 			}
@@ -19750,8 +20760,10 @@ SprExport.Spr_PHIKSpringActuatorIf_SetJointTempPose((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHIKSpringActuatorIf_SetJointTempPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
 	    SprExport.Spr_PHIKSpringActuatorIf_SetJointTempPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJointTempPose((IntPtr) _thisArray[0], (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJointTempPose((IntPtr) _this, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -19785,8 +20797,10 @@ SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
 	    SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _thisArray[0], (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _this, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -19837,8 +20851,12 @@ SprExport.Spr_PHIKSpringActuatorIf_SetPullbackTarget((IntPtr) _thisArray[phScene
     }
     public partial class PHConstraintIf : SceneObjectIf {
 	public PHConstraintIf() { _thisArray[0] = SprExport.Spr_new_PHConstraintIf(); _flag = true; }
-	public PHConstraintIf(IntPtr ptr) : base(ptr) {}
-	public PHConstraintIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHConstraintIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHConstraintIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHConstraintIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHConstraintIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHConstraintIf(CsCastObject target) {
 		return (target._info.Inherit(PHConstraintIf.GetIfInfoStatic()) ? new PHConstraintIf(target._thisArray[0], target._flag) : null);
 	}
@@ -19979,8 +20997,10 @@ SprExport.Spr_PHConstraintIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHConstraintIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bEnable);
 	    SprExport.Spr_PHConstraintIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bEnable);
-					} else {;
-	    SprExport.Spr_PHConstraintIf_Enable((IntPtr) _thisArray[0], (bool) bEnable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintIf_Enable((IntPtr) _this, (bool) bEnable);
+						}
 					}
 				}
 			}
@@ -20010,8 +21030,10 @@ SprExport.Spr_PHConstraintIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHConstraintIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHConstraintIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHConstraintIf_Enable_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintIf_Enable_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -20102,8 +21124,10 @@ SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
 	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[0], (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _this, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -20154,8 +21178,10 @@ SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
 	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[0], (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _this, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -20297,8 +21323,12 @@ SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForB
     }
     public partial class PHConstraintsIf : SceneObjectIf {
 	public PHConstraintsIf() { _thisArray[0] = SprExport.Spr_new_PHConstraintsIf(); _flag = true; }
-	public PHConstraintsIf(IntPtr ptr) : base(ptr) {}
-	public PHConstraintsIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHConstraintsIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHConstraintsIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHConstraintsIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHConstraintsIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHConstraintsIf(CsCastObject target) {
 		return (target._info.Inherit(PHConstraintsIf.GetIfInfoStatic()) ? new PHConstraintsIf(target._thisArray[0], target._flag) : null);
 	}
@@ -20401,8 +21431,9 @@ SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.scen
             if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) { return new PHLineToLineMateIf(ptr); }
             if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) { return new PHPlaneToPlaneMateIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _this, (IntPtr) lhs, (IntPtr) rhs);
             if (ptr == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptr);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) { return new PHContactPointIf(ptr); }
@@ -20422,6 +21453,7 @@ SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.scen
             if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) { return new PHLineToLineMateIf(ptr); }
             if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) { return new PHPlaneToPlaneMateIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -20472,8 +21504,12 @@ SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.scen
     }
     public partial class PHContactPointIf : PHConstraintIf {
 	public PHContactPointIf() { _thisArray[0] = SprExport.Spr_new_PHContactPointIf(); _flag = true; }
-	public PHContactPointIf(IntPtr ptr) : base(ptr) {}
-	public PHContactPointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHContactPointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHContactPointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHContactPointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHContactPointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHContactPointIf(CsCastObject target) {
 		return (target._info.Inherit(PHContactPointIf.GetIfInfoStatic()) ? new PHContactPointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -20511,8 +21547,12 @@ SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.scen
     }
     public partial class PHJointIf : PHConstraintIf {
 	public PHJointIf() { _thisArray[0] = SprExport.Spr_new_PHJointIf(); _flag = true; }
-	public PHJointIf(IntPtr ptr) : base(ptr) {}
-	public PHJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHJointIf.GetIfInfoStatic()) ? new PHJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -20569,8 +21609,10 @@ SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) max);
 	    SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) max);
-					} else {;
-	    SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _thisArray[0], (double) max);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _this, (double) max);
+						}
 					}
 				}
 			}
@@ -20601,8 +21643,12 @@ SprExport.Spr_PHJointIf_SetMaxForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer
     }
     public partial class PH1DJointIf : PHJointIf {
 	public PH1DJointIf() { _thisArray[0] = SprExport.Spr_new_PH1DJointIf(); _flag = true; }
-	public PH1DJointIf(IntPtr ptr) : base(ptr) {}
-	public PH1DJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PH1DJointIf(CsCastObject target) {
 		return (target._info.Inherit(PH1DJointIf.GetIfInfoStatic()) ? new PH1DJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -20669,11 +21715,13 @@ SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuff
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[0], (IntPtr) desc);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _this, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
+						}
 					}
 				}
 			}
@@ -20713,11 +21761,13 @@ SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBu
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _this);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptr);
             return obj;
+						}
 					}
 				}
 			}
@@ -20769,13 +21819,15 @@ SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuff
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) { return new PH1DJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) { return new PHHuman1DJointResistanceIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _this, (IntPtr) ii, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptr);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) { return new PH1DJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) { return new PHHuman1DJointResistanceIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -20825,13 +21877,15 @@ SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBu
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) { return new PH1DJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) { return new PHHuman1DJointResistanceIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[0], (IntPtr) ii);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _this, (IntPtr) ii);
             if (ptr == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptr);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) { return new PH1DJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) { return new PHHuman1DJointResistanceIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -20873,9 +21927,11 @@ SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
 	    char ret = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[0], (IntPtr) m);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _this, (IntPtr) m);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -20909,9 +21965,11 @@ SprExport.Spr_PH1DJointIf_RemoveMotor((IntPtr) _thisArray[phSceneIf.sceneForStep
 SprExport.Spr_PH1DJointIf_RemoveMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n);
 	    char ret = SprExport.Spr_PH1DJointIf_RemoveMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PH1DJointIf_RemoveMotor((IntPtr) _thisArray[0], (int) n);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PH1DJointIf_RemoveMotor((IntPtr) _this, (int) n);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -20963,8 +22021,10 @@ SprExport.Spr_PH1DJointIf_SetCyclic((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PH1DJointIf_SetCyclic((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) on);
 	    SprExport.Spr_PH1DJointIf_SetCyclic((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) on);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetCyclic((IntPtr) _thisArray[0], (bool) on);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetCyclic((IntPtr) _this, (bool) on);
+						}
 					}
 				}
 			}
@@ -21036,9 +22096,11 @@ SprExport.Spr_PH1DJointIf_HasLimit((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PH1DJointIf_HasLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    char ret = SprExport.Spr_PH1DJointIf_HasLimit((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PH1DJointIf_HasLimit((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PH1DJointIf_HasLimit((IntPtr) _this);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -21096,8 +22158,10 @@ SprExport.Spr_PH1DJointIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PH1DJointIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) spring);
 	    SprExport.Spr_PH1DJointIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) spring);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetSpring((IntPtr) _thisArray[0], (double) spring);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetSpring((IntPtr) _this, (double) spring);
+						}
 					}
 				}
 			}
@@ -21147,8 +22211,10 @@ SprExport.Spr_PH1DJointIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PH1DJointIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) damper);
 	    SprExport.Spr_PH1DJointIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) damper);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetDamper((IntPtr) _thisArray[0], (double) damper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetDamper((IntPtr) _this, (double) damper);
+						}
 					}
 				}
 			}
@@ -21218,8 +22284,10 @@ SprExport.Spr_PH1DJointIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PH1DJointIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) input);
 	    SprExport.Spr_PH1DJointIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) input);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetSecondDamper((IntPtr) _thisArray[0], (double) input);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetSecondDamper((IntPtr) _this, (double) input);
+						}
 					}
 				}
 			}
@@ -21249,8 +22317,10 @@ SprExport.Spr_PH1DJointIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PH1DJointIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) targetPosition);
 	    SprExport.Spr_PH1DJointIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) targetPosition);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetTargetPosition((IntPtr) _thisArray[0], (double) targetPosition);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetTargetPosition((IntPtr) _this, (double) targetPosition);
+						}
 					}
 				}
 			}
@@ -21300,8 +22370,10 @@ SprExport.Spr_PH1DJointIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PH1DJointIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) v);
 	    SprExport.Spr_PH1DJointIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) v);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetTargetVelocity((IntPtr) _thisArray[0], (double) v);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetTargetVelocity((IntPtr) _this, (double) v);
+						}
 					}
 				}
 			}
@@ -21351,8 +22423,10 @@ SprExport.Spr_PH1DJointIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PH1DJointIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) dat);
 	    SprExport.Spr_PH1DJointIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) dat);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetOffsetForce((IntPtr) _thisArray[0], (double) dat);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetOffsetForce((IntPtr) _this, (double) dat);
+						}
 					}
 				}
 			}
@@ -21402,8 +22476,10 @@ SprExport.Spr_PH1DJointIf_SetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PH1DJointIf_SetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n, (double) dat);
 	    SprExport.Spr_PH1DJointIf_SetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n, (double) dat);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetOffsetForceN((IntPtr) _thisArray[0], (int) n, (double) dat);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetOffsetForceN((IntPtr) _this, (int) n, (double) dat);
+						}
 					}
 				}
 			}
@@ -21473,8 +22549,10 @@ SprExport.Spr_PH1DJointIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PH1DJointIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) yS);
 	    SprExport.Spr_PH1DJointIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) yS);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetYieldStress((IntPtr) _thisArray[0], (double) yS);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetYieldStress((IntPtr) _this, (double) yS);
+						}
 					}
 				}
 			}
@@ -21524,8 +22602,10 @@ SprExport.Spr_PH1DJointIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PH1DJointIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) hR);
 	    SprExport.Spr_PH1DJointIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) hR);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetHardnessRate((IntPtr) _thisArray[0], (double) hR);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetHardnessRate((IntPtr) _this, (double) hR);
+						}
 					}
 				}
 			}
@@ -21555,8 +22635,10 @@ SprExport.Spr_PH1DJointIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PH1DJointIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) sM);
 	    SprExport.Spr_PH1DJointIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) sM);
-					} else {;
-	    SprExport.Spr_PH1DJointIf_SetSecondMoment((IntPtr) _thisArray[0], (double) sM);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointIf_SetSecondMoment((IntPtr) _this, (double) sM);
+						}
 					}
 				}
 			}
@@ -21608,9 +22690,11 @@ SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -21715,8 +22799,12 @@ SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer])
     }
     public partial class PHHingeJointIf : PH1DJointIf {
 	public PHHingeJointIf() { _thisArray[0] = SprExport.Spr_new_PHHingeJointIf(); _flag = true; }
-	public PHHingeJointIf(IntPtr ptr) : base(ptr) {}
-	public PHHingeJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHingeJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHingeJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHingeJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHingeJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHHingeJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHHingeJointIf.GetIfInfoStatic()) ? new PHHingeJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -21754,8 +22842,12 @@ SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer])
     }
     public partial class PHSliderJointIf : PH1DJointIf {
 	public PHSliderJointIf() { _thisArray[0] = SprExport.Spr_new_PHSliderJointIf(); _flag = true; }
-	public PHSliderJointIf(IntPtr ptr) : base(ptr) {}
-	public PHSliderJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSliderJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSliderJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSliderJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSliderJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSliderJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHSliderJointIf.GetIfInfoStatic()) ? new PHSliderJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -21793,8 +22885,12 @@ SprExport.Spr_PH1DJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer])
     }
     public partial class PHPathIf : SceneObjectIf {
 	public PHPathIf() { _thisArray[0] = SprExport.Spr_new_PHPathIf(); _flag = true; }
-	public PHPathIf(IntPtr ptr) : base(ptr) {}
-	public PHPathIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPathIf(CsCastObject target) {
 		return (target._info.Inherit(PHPathIf.GetIfInfoStatic()) ? new PHPathIf(target._thisArray[0], target._flag) : null);
 	}
@@ -21855,8 +22951,10 @@ SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (do
 						});
 SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) s, (IntPtr) new_pose);
 	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) s, (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[0], (double) s, (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _this, (double) s, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -21886,8 +22984,10 @@ SprExport.Spr_PHPathIf_SetLoop((IntPtr) _thisArray[phSceneIf.sceneForStep], (boo
 						});
 SprExport.Spr_PHPathIf_SetLoop((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bOnOff);
 	    SprExport.Spr_PHPathIf_SetLoop((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bOnOff);
-					} else {;
-	    SprExport.Spr_PHPathIf_SetLoop((IntPtr) _thisArray[0], (bool) bOnOff);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHPathIf_SetLoop((IntPtr) _this, (bool) bOnOff);
+						}
 					}
 				}
 			}
@@ -21917,8 +23017,10 @@ SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -21949,8 +23051,12 @@ SprExport.Spr_PHPathIf_SetLoop_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
     }
     public partial class PHPathJointIf : PH1DJointIf {
 	public PHPathJointIf() { _thisArray[0] = SprExport.Spr_new_PHPathJointIf(); _flag = true; }
-	public PHPathJointIf(IntPtr ptr) : base(ptr) {}
-	public PHPathJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPathJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHPathJointIf.GetIfInfoStatic()) ? new PHPathJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -22007,8 +23113,10 @@ SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) q);
 	    SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) q);
-					} else {;
-	    SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _thisArray[0], (double) q);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _this, (double) q);
+						}
 					}
 				}
 			}
@@ -22019,8 +23127,12 @@ SprExport.Spr_PHPathJointIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForBu
     }
     public partial class PHGenericJointIf : PH1DJointIf {
 	public PHGenericJointIf() { _thisArray[0] = SprExport.Spr_new_PHGenericJointIf(); _flag = true; }
-	public PHGenericJointIf(IntPtr ptr) : base(ptr) {}
-	public PHGenericJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGenericJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGenericJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGenericJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGenericJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHGenericJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHGenericJointIf.GetIfInfoStatic()) ? new PHGenericJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -22081,8 +23193,10 @@ SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_cb);
 	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_cb);
-					} else {;
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[0], (IntPtr) cb);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _this, (IntPtr) cb);
+						}
 					}
 				}
 			}
@@ -22128,10 +23242,12 @@ SprExport.Spr_PHGenericJointIf_SetParam((IntPtr) _thisArray[phSceneIf.sceneForBu
             IntPtr remote1 = Marshal.StringToBSTR(name);
 	    SprExport.Spr_PHGenericJointIf_SetParam((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) remote1, (double) value);
             Marshal.FreeBSTR(remote1);
-					} else {;
+					} else {
+						foreach (var _this in _thisArray) {
             IntPtr remote1 = Marshal.StringToBSTR(name);
-	    SprExport.Spr_PHGenericJointIf_SetParam((IntPtr) _thisArray[0], (IntPtr) remote1, (double) value);
+	    SprExport.Spr_PHGenericJointIf_SetParam((IntPtr) _this, (IntPtr) remote1, (double) value);
             Marshal.FreeBSTR(remote1);
+						}
 					}
 				}
 			}
@@ -22144,8 +23260,12 @@ SprExport.Spr_PHGenericJointIf_SetParam((IntPtr) _thisArray[phSceneIf.sceneForBu
     }
     public partial class PHBallJointIf : PHJointIf {
 	public PHBallJointIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointIf(); _flag = true; }
-	public PHBallJointIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointIf.GetIfInfoStatic()) ? new PHBallJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -22222,14 +23342,16 @@ SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBu
             if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) { return new PHBallJointSplineLimitIf(ptr); }
             if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) { return new PHBallJointIndependentLimitIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _this, (IntPtr) ii, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptr);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) { return new PHBallJointConeLimitIf(ptr); }
             if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) { return new PHBallJointSplineLimitIf(ptr); }
             if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) { return new PHBallJointIndependentLimitIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -22282,14 +23404,16 @@ SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneFor
             if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) { return new PHBallJointSplineLimitIf(ptr); }
             if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) { return new PHBallJointIndependentLimitIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[0], (IntPtr) ii);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _this, (IntPtr) ii);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptr);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) { return new PHBallJointConeLimitIf(ptr); }
             if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) { return new PHBallJointSplineLimitIf(ptr); }
             if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) { return new PHBallJointIndependentLimitIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -22344,13 +23468,15 @@ SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBu
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) { return new PHBallJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) { return new PHHumanBallJointResistanceIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _this, (IntPtr) ii, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptr);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) { return new PHBallJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) { return new PHHumanBallJointResistanceIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -22400,13 +23526,15 @@ SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneFor
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) { return new PHBallJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) { return new PHHumanBallJointResistanceIf(ptr); }
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[0], (IntPtr) ii);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _this, (IntPtr) ii);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptr);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) { return new PHBallJointNonLinearMotorIf(ptr); }
             if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) { return new PHHumanBallJointResistanceIf(ptr); }
             return obj;
+						}
 					}
 				}
 			}
@@ -22448,9 +23576,11 @@ SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep]
 SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
 	    char ret = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[0], (IntPtr) m);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _this, (IntPtr) m);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -22484,9 +23614,11 @@ SprExport.Spr_PHBallJointIf_RemoveMotor((IntPtr) _thisArray[phSceneIf.sceneForSt
 SprExport.Spr_PHBallJointIf_RemoveMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n);
 	    char ret = SprExport.Spr_PHBallJointIf_RemoveMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHBallJointIf_RemoveMotor((IntPtr) _thisArray[0], (int) n);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHBallJointIf_RemoveMotor((IntPtr) _this, (int) n);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -22580,9 +23712,11 @@ SprExport.Spr_PHBallJointIf_HasLimit((IntPtr) _thisArray[phSceneIf.sceneForStep]
 SprExport.Spr_PHBallJointIf_HasLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    char ret = SprExport.Spr_PHBallJointIf_HasLimit((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHBallJointIf_HasLimit((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHBallJointIf_HasLimit((IntPtr) _this);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -22649,8 +23783,10 @@ SprExport.Spr_PHBallJointIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHBallJointIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) spring);
 	    SprExport.Spr_PHBallJointIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) spring);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetSpring((IntPtr) _thisArray[0], (double) spring);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetSpring((IntPtr) _this, (double) spring);
+						}
 					}
 				}
 			}
@@ -22700,8 +23836,10 @@ SprExport.Spr_PHBallJointIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHBallJointIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) damper);
 	    SprExport.Spr_PHBallJointIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) damper);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetDamper((IntPtr) _thisArray[0], (double) damper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetDamper((IntPtr) _this, (double) damper);
+						}
 					}
 				}
 			}
@@ -22775,8 +23913,10 @@ SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_damper2);
 	    SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_damper2);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _thisArray[0], (IntPtr) damper2);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetSecondDamper((IntPtr) _this, (IntPtr) damper2);
+						}
 					}
 				}
 			}
@@ -22810,8 +23950,10 @@ SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
 	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _thisArray[0], (IntPtr) p);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetTargetPosition((IntPtr) _this, (IntPtr) p);
+						}
 					}
 				}
 			}
@@ -22865,8 +24007,10 @@ SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_q);
 	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_q);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _thisArray[0], (IntPtr) q);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetTargetVelocity((IntPtr) _this, (IntPtr) q);
+						}
 					}
 				}
 			}
@@ -22920,8 +24064,10 @@ SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ofst);
 	    SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ofst);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _thisArray[0], (IntPtr) ofst);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetOffsetForce((IntPtr) _this, (IntPtr) ofst);
+						}
 					}
 				}
 			}
@@ -22975,8 +24121,10 @@ SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n, (IntPtr) new_ofst);
 	    SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n, (IntPtr) new_ofst);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr) _thisArray[0], (int) n, (IntPtr) ofst);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetOffsetForceN((IntPtr) _this, (int) n, (IntPtr) ofst);
+						}
 					}
 				}
 			}
@@ -23026,8 +24174,10 @@ SprExport.Spr_PHBallJointIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHBallJointIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) yS);
 	    SprExport.Spr_PHBallJointIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) yS);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetYieldStress((IntPtr) _thisArray[0], (double) yS);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetYieldStress((IntPtr) _this, (double) yS);
+						}
 					}
 				}
 			}
@@ -23077,8 +24227,10 @@ SprExport.Spr_PHBallJointIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHBallJointIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) hR);
 	    SprExport.Spr_PHBallJointIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) hR);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetHardnessRate((IntPtr) _thisArray[0], (double) hR);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetHardnessRate((IntPtr) _this, (double) hR);
+						}
 					}
 				}
 			}
@@ -23132,8 +24284,10 @@ SprExport.Spr_PHBallJointIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHBallJointIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
 	    SprExport.Spr_PHBallJointIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
-					} else {;
-	    SprExport.Spr_PHBallJointIf_SetSecondMoment((IntPtr) _thisArray[0], (IntPtr) m);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIf_SetSecondMoment((IntPtr) _this, (IntPtr) m);
+						}
 					}
 				}
 			}
@@ -23185,9 +24339,11 @@ SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForStep])
 SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -23292,8 +24448,12 @@ SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer
     }
     public partial class PHFixJointIf : PHJointIf {
 	public PHFixJointIf() { _thisArray[0] = SprExport.Spr_new_PHFixJointIf(); _flag = true; }
-	public PHFixJointIf(IntPtr ptr) : base(ptr) {}
-	public PHFixJointIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFixJointIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFixJointIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFixJointIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFixJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFixJointIf(CsCastObject target) {
 		return (target._info.Inherit(PHFixJointIf.GetIfInfoStatic()) ? new PHFixJointIf(target._thisArray[0], target._flag) : null);
 	}
@@ -23331,8 +24491,12 @@ SprExport.Spr_PHBallJointIf_NMotors((IntPtr) _thisArray[phSceneIf.sceneForBuffer
     }
     public partial class PHSpringIf : PHJointIf {
 	public PHSpringIf() { _thisArray[0] = SprExport.Spr_new_PHSpringIf(); _flag = true; }
-	public PHSpringIf(IntPtr ptr) : base(ptr) {}
-	public PHSpringIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSpringIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSpringIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSpringIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSpringIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSpringIf(CsCastObject target) {
 		return (target._info.Inherit(PHSpringIf.GetIfInfoStatic()) ? new PHSpringIf(target._thisArray[0], target._flag) : null);
 	}
@@ -23393,8 +24557,10 @@ SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetPosition);
 	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetPosition);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[0], (IntPtr) targetPosition);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _this, (IntPtr) targetPosition);
+						}
 					}
 				}
 			}
@@ -23448,8 +24614,10 @@ SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetOrientation);
 	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetOrientation);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[0], (IntPtr) targetOrientation);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _this, (IntPtr) targetOrientation);
+						}
 					}
 				}
 			}
@@ -23503,8 +24671,10 @@ SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_spring);
 	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_spring);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[0], (IntPtr) spring);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _this, (IntPtr) spring);
+						}
 					}
 				}
 			}
@@ -23558,8 +24728,10 @@ SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_damper);
 	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_damper);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[0], (IntPtr) damper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _this, (IntPtr) damper);
+						}
 					}
 				}
 			}
@@ -23613,8 +24785,10 @@ SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_secondDamper);
 	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_secondDamper);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[0], (IntPtr) secondDamper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _this, (IntPtr) secondDamper);
+						}
 					}
 				}
 			}
@@ -23664,8 +24838,10 @@ SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) spring);
 	    SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) spring);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr) _thisArray[0], (double) spring);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetSpringOri((IntPtr) _this, (double) spring);
+						}
 					}
 				}
 			}
@@ -23715,8 +24891,10 @@ SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) damper);
 	    SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) damper);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr) _thisArray[0], (double) damper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetDamperOri((IntPtr) _this, (double) damper);
+						}
 					}
 				}
 			}
@@ -23766,8 +24944,10 @@ SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) secondDamperOri);
 	    SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) secondDamperOri);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr) _thisArray[0], (double) secondDamperOri);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetSecondDamperOri((IntPtr) _this, (double) secondDamperOri);
+						}
 					}
 				}
 			}
@@ -23817,8 +24997,10 @@ SprExport.Spr_PHSpringIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHSpringIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) yieldStress);
 	    SprExport.Spr_PHSpringIf_SetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) yieldStress);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetYieldStress((IntPtr) _thisArray[0], (double) yieldStress);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetYieldStress((IntPtr) _this, (double) yieldStress);
+						}
 					}
 				}
 			}
@@ -23868,8 +25050,10 @@ SprExport.Spr_PHSpringIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHSpringIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) hardnessRate);
 	    SprExport.Spr_PHSpringIf_SetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) hardnessRate);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetHardnessRate((IntPtr) _thisArray[0], (double) hardnessRate);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetHardnessRate((IntPtr) _this, (double) hardnessRate);
+						}
 					}
 				}
 			}
@@ -23923,8 +25107,10 @@ SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_secondMoment);
 	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_secondMoment);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[0], (IntPtr) secondMoment);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _this, (IntPtr) secondMoment);
+						}
 					}
 				}
 			}
@@ -23998,8 +25184,10 @@ SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_offsetForce);
 	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_offsetForce);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[0], (IntPtr) offsetForce);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _this, (IntPtr) offsetForce);
+						}
 					}
 				}
 			}
@@ -24033,8 +25221,10 @@ SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetVelocity);
 	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetVelocity);
-					} else {;
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[0], (IntPtr) targetVelocity);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _this, (IntPtr) targetVelocity);
+						}
 					}
 				}
 			}
@@ -24065,8 +25255,12 @@ SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneFo
     }
     public partial class PHMateIf : PHJointIf {
 	public PHMateIf() { _thisArray[0] = SprExport.Spr_new_PHMateIf(); _flag = true; }
-	public PHMateIf(IntPtr ptr) : base(ptr) {}
-	public PHMateIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHMateIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHMateIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHMateIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHMateIf(CsCastObject target) {
 		return (target._info.Inherit(PHMateIf.GetIfInfoStatic()) ? new PHMateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24104,8 +25298,12 @@ SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneFo
     }
     public partial class PHPointToPointMateIf : PHMateIf {
 	public PHPointToPointMateIf() { _thisArray[0] = SprExport.Spr_new_PHPointToPointMateIf(); _flag = true; }
-	public PHPointToPointMateIf(IntPtr ptr) : base(ptr) {}
-	public PHPointToPointMateIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPointToPointMateIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPointToPointMateIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPointToPointMateIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPointToPointMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPointToPointMateIf(CsCastObject target) {
 		return (target._info.Inherit(PHPointToPointMateIf.GetIfInfoStatic()) ? new PHPointToPointMateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24143,8 +25341,12 @@ SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneFo
     }
     public partial class PHPointToLineMateIf : PHMateIf {
 	public PHPointToLineMateIf() { _thisArray[0] = SprExport.Spr_new_PHPointToLineMateIf(); _flag = true; }
-	public PHPointToLineMateIf(IntPtr ptr) : base(ptr) {}
-	public PHPointToLineMateIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPointToLineMateIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPointToLineMateIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPointToLineMateIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPointToLineMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPointToLineMateIf(CsCastObject target) {
 		return (target._info.Inherit(PHPointToLineMateIf.GetIfInfoStatic()) ? new PHPointToLineMateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24182,8 +25384,12 @@ SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneFo
     }
     public partial class PHPointToPlaneMateIf : PHMateIf {
 	public PHPointToPlaneMateIf() { _thisArray[0] = SprExport.Spr_new_PHPointToPlaneMateIf(); _flag = true; }
-	public PHPointToPlaneMateIf(IntPtr ptr) : base(ptr) {}
-	public PHPointToPlaneMateIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPointToPlaneMateIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPointToPlaneMateIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPointToPlaneMateIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPointToPlaneMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPointToPlaneMateIf(CsCastObject target) {
 		return (target._info.Inherit(PHPointToPlaneMateIf.GetIfInfoStatic()) ? new PHPointToPlaneMateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24244,8 +25450,10 @@ SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_range);
 	    SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[0], (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _this, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -24273,8 +25481,12 @@ SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneF
     }
     public partial class PHLineToLineMateIf : PHMateIf {
 	public PHLineToLineMateIf() { _thisArray[0] = SprExport.Spr_new_PHLineToLineMateIf(); _flag = true; }
-	public PHLineToLineMateIf(IntPtr ptr) : base(ptr) {}
-	public PHLineToLineMateIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHLineToLineMateIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHLineToLineMateIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHLineToLineMateIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHLineToLineMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHLineToLineMateIf(CsCastObject target) {
 		return (target._info.Inherit(PHLineToLineMateIf.GetIfInfoStatic()) ? new PHLineToLineMateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24312,8 +25524,12 @@ SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneF
     }
     public partial class PHPlaneToPlaneMateIf : PHMateIf {
 	public PHPlaneToPlaneMateIf() { _thisArray[0] = SprExport.Spr_new_PHPlaneToPlaneMateIf(); _flag = true; }
-	public PHPlaneToPlaneMateIf(IntPtr ptr) : base(ptr) {}
-	public PHPlaneToPlaneMateIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPlaneToPlaneMateIf(CsCastObject target) {
 		return (target._info.Inherit(PHPlaneToPlaneMateIf.GetIfInfoStatic()) ? new PHPlaneToPlaneMateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24351,8 +25567,12 @@ SprExport.Spr_PHPointToPlaneMateIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneF
     }
     public partial class PHTreeNodeIf : SceneObjectIf {
 	public PHTreeNodeIf() { _thisArray[0] = SprExport.Spr_new_PHTreeNodeIf(); _flag = true; }
-	public PHTreeNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHTreeNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHTreeNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHTreeNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHTreeNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHTreeNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHTreeNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHTreeNodeIf.GetIfInfoStatic()) ? new PHTreeNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24409,8 +25629,10 @@ SprExport.Spr_PHTreeNodeIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForStep], (
 						});
 SprExport.Spr_PHTreeNodeIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bEnable);
 	    SprExport.Spr_PHTreeNodeIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bEnable);
-					} else {;
-	    SprExport.Spr_PHTreeNodeIf_Enable((IntPtr) _thisArray[0], (bool) bEnable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHTreeNodeIf_Enable((IntPtr) _this, (bool) bEnable);
+						}
 					}
 				}
 			}
@@ -24440,8 +25662,10 @@ SprExport.Spr_PHTreeNodeIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForStep])
 						});
 SprExport.Spr_PHTreeNodeIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHTreeNodeIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHTreeNodeIf_Enable_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHTreeNodeIf_Enable_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -24493,9 +25717,11 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForStep]
 SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -24663,8 +25889,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHRootNodeIf : PHTreeNodeIf {
 	public PHRootNodeIf() { _thisArray[0] = SprExport.Spr_new_PHRootNodeIf(); _flag = true; }
-	public PHRootNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHRootNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHRootNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHRootNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHRootNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHRootNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHRootNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHRootNodeIf.GetIfInfoStatic()) ? new PHRootNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24702,8 +25932,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHTreeNode1DIf : PHTreeNodeIf {
 	public PHTreeNode1DIf() { _thisArray[0] = SprExport.Spr_new_PHTreeNode1DIf(); _flag = true; }
-	public PHTreeNode1DIf(IntPtr ptr) : base(ptr) {}
-	public PHTreeNode1DIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHTreeNode1DIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHTreeNode1DIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHTreeNode1DIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHTreeNode1DIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHTreeNode1DIf(CsCastObject target) {
 		return (target._info.Inherit(PHTreeNode1DIf.GetIfInfoStatic()) ? new PHTreeNode1DIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24741,8 +25975,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHHingeJointNodeIf : PHTreeNode1DIf {
 	public PHHingeJointNodeIf() { _thisArray[0] = SprExport.Spr_new_PHHingeJointNodeIf(); _flag = true; }
-	public PHHingeJointNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHHingeJointNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHingeJointNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHingeJointNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHingeJointNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHingeJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHHingeJointNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHHingeJointNodeIf.GetIfInfoStatic()) ? new PHHingeJointNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24780,8 +26018,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHSliderJointNodeIf : PHTreeNode1DIf {
 	public PHSliderJointNodeIf() { _thisArray[0] = SprExport.Spr_new_PHSliderJointNodeIf(); _flag = true; }
-	public PHSliderJointNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHSliderJointNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSliderJointNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSliderJointNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSliderJointNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSliderJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSliderJointNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHSliderJointNodeIf.GetIfInfoStatic()) ? new PHSliderJointNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24819,8 +26061,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHPathJointNodeIf : PHTreeNode1DIf {
 	public PHPathJointNodeIf() { _thisArray[0] = SprExport.Spr_new_PHPathJointNodeIf(); _flag = true; }
-	public PHPathJointNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHPathJointNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHPathJointNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHPathJointNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHPathJointNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHPathJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHPathJointNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHPathJointNodeIf.GetIfInfoStatic()) ? new PHPathJointNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24858,8 +26104,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHGenericJointNodeIf : PHTreeNode1DIf {
 	public PHGenericJointNodeIf() { _thisArray[0] = SprExport.Spr_new_PHGenericJointNodeIf(); _flag = true; }
-	public PHGenericJointNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHGenericJointNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGenericJointNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGenericJointNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGenericJointNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGenericJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHGenericJointNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHGenericJointNodeIf.GetIfInfoStatic()) ? new PHGenericJointNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24897,8 +26147,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHBallJointNodeIf : PHTreeNodeIf {
 	public PHBallJointNodeIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointNodeIf(); _flag = true; }
-	public PHBallJointNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointNodeIf.GetIfInfoStatic()) ? new PHBallJointNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24936,8 +26190,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHFixJointNodeIf : PHTreeNodeIf {
 	public PHFixJointNodeIf() { _thisArray[0] = SprExport.Spr_new_PHFixJointNodeIf(); _flag = true; }
-	public PHFixJointNodeIf(IntPtr ptr) : base(ptr) {}
-	public PHFixJointNodeIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHFixJointNodeIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHFixJointNodeIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHFixJointNodeIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHFixJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHFixJointNodeIf(CsCastObject target) {
 		return (target._info.Inherit(PHFixJointNodeIf.GetIfInfoStatic()) ? new PHFixJointNodeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -24975,8 +26233,12 @@ SprExport.Spr_PHTreeNodeIf_NChildren((IntPtr) _thisArray[phSceneIf.sceneForBuffe
     }
     public partial class PHGearIf : SceneObjectIf {
 	public PHGearIf() { _thisArray[0] = SprExport.Spr_new_PHGearIf(); _flag = true; }
-	public PHGearIf(IntPtr ptr) : base(ptr) {}
-	public PHGearIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHGearIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHGearIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHGearIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHGearIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHGearIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHGearIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHGearIf(CsCastObject target) {
 		return (target._info.Inherit(PHGearIf.GetIfInfoStatic()) ? new PHGearIf(target._thisArray[0], target._flag) : null);
 	}
@@ -25033,8 +26295,10 @@ SprExport.Spr_PHGearIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForStep], (bool
 						});
 SprExport.Spr_PHGearIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bEnable);
 	    SprExport.Spr_PHGearIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bEnable);
-					} else {;
-	    SprExport.Spr_PHGearIf_Enable((IntPtr) _thisArray[0], (bool) bEnable);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHGearIf_Enable((IntPtr) _this, (bool) bEnable);
+						}
 					}
 				}
 			}
@@ -25064,8 +26328,10 @@ SprExport.Spr_PHGearIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHGearIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHGearIf_Enable_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHGearIf_Enable_1((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHGearIf_Enable_1((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -25115,8 +26381,10 @@ SprExport.Spr_PHGearIf_SetRatio((IntPtr) _thisArray[phSceneIf.sceneForStep], (do
 						});
 SprExport.Spr_PHGearIf_SetRatio((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) ratio);
 	    SprExport.Spr_PHGearIf_SetRatio((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) ratio);
-					} else {;
-	    SprExport.Spr_PHGearIf_SetRatio((IntPtr) _thisArray[0], (double) ratio);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHGearIf_SetRatio((IntPtr) _this, (double) ratio);
+						}
 					}
 				}
 			}
@@ -25166,8 +26434,10 @@ SprExport.Spr_PHGearIf_SetOffset((IntPtr) _thisArray[phSceneIf.sceneForStep], (d
 						});
 SprExport.Spr_PHGearIf_SetOffset((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) offset);
 	    SprExport.Spr_PHGearIf_SetOffset((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) offset);
-					} else {;
-	    SprExport.Spr_PHGearIf_SetOffset((IntPtr) _thisArray[0], (double) offset);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHGearIf_SetOffset((IntPtr) _this, (double) offset);
+						}
 					}
 				}
 			}
@@ -25217,8 +26487,10 @@ SprExport.Spr_PHGearIf_SetMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (int
 						});
 SprExport.Spr_PHGearIf_SetMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) mode);
 	    SprExport.Spr_PHGearIf_SetMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) mode);
-					} else {;
-	    SprExport.Spr_PHGearIf_SetMode((IntPtr) _thisArray[0], (int) mode);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHGearIf_SetMode((IntPtr) _this, (int) mode);
+						}
 					}
 				}
 			}
@@ -25249,8 +26521,12 @@ SprExport.Spr_PHGearIf_SetMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (i
     }
     public partial class PH1DJointLimitIf : SceneObjectIf {
 	public PH1DJointLimitIf() { _thisArray[0] = SprExport.Spr_new_PH1DJointLimitIf(); _flag = true; }
-	public PH1DJointLimitIf(IntPtr ptr) : base(ptr) {}
-	public PH1DJointLimitIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointLimitIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointLimitIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointLimitIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PH1DJointLimitIf(CsCastObject target) {
 		return (target._info.Inherit(PH1DJointLimitIf.GetIfInfoStatic()) ? new PH1DJointLimitIf(target._thisArray[0], target._flag) : null);
 	}
@@ -25311,8 +26587,10 @@ SprExport.Spr_PH1DJointLimitIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PH1DJointLimitIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_range);
 	    SprExport.Spr_PH1DJointLimitIf_SetRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PH1DJointLimitIf_SetRange((IntPtr) _thisArray[0], (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointLimitIf_SetRange((IntPtr) _this, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -25359,8 +26637,10 @@ SprExport.Spr_PH1DJointLimitIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PH1DJointLimitIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) spring);
 	    SprExport.Spr_PH1DJointLimitIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) spring);
-					} else {;
-	    SprExport.Spr_PH1DJointLimitIf_SetSpring((IntPtr) _thisArray[0], (double) spring);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointLimitIf_SetSpring((IntPtr) _this, (double) spring);
+						}
 					}
 				}
 			}
@@ -25410,8 +26690,10 @@ SprExport.Spr_PH1DJointLimitIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PH1DJointLimitIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) damper);
 	    SprExport.Spr_PH1DJointLimitIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) damper);
-					} else {;
-	    SprExport.Spr_PH1DJointLimitIf_SetDamper((IntPtr) _thisArray[0], (double) damper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointLimitIf_SetDamper((IntPtr) _this, (double) damper);
+						}
 					}
 				}
 			}
@@ -25481,8 +26763,10 @@ SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -25513,8 +26797,12 @@ SprExport.Spr_PH1DJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHBallJointLimitIf : SceneObjectIf {
 	public PHBallJointLimitIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointLimitIf(); _flag = true; }
-	public PHBallJointLimitIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointLimitIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointLimitIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointLimitIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointLimitIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointLimitIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointLimitIf.GetIfInfoStatic()) ? new PHBallJointLimitIf(target._thisArray[0], target._flag) : null);
 	}
@@ -25571,8 +26859,10 @@ SprExport.Spr_PHBallJointLimitIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHBallJointLimitIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) rSpring);
 	    SprExport.Spr_PHBallJointLimitIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) rSpring);
-					} else {;
-	    SprExport.Spr_PHBallJointLimitIf_SetSpring((IntPtr) _thisArray[0], (double) rSpring);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointLimitIf_SetSpring((IntPtr) _this, (double) rSpring);
+						}
 					}
 				}
 			}
@@ -25622,8 +26912,10 @@ SprExport.Spr_PHBallJointLimitIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHBallJointLimitIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) rDamper);
 	    SprExport.Spr_PHBallJointLimitIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) rDamper);
-					} else {;
-	    SprExport.Spr_PHBallJointLimitIf_SetDamper((IntPtr) _thisArray[0], (double) rDamper);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointLimitIf_SetDamper((IntPtr) _this, (double) rDamper);
+						}
 					}
 				}
 			}
@@ -25677,8 +26969,10 @@ SprExport.Spr_PHBallJointLimitIf_SetLimitDir((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHBallJointLimitIf_SetLimitDir((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_limDir);
 	    SprExport.Spr_PHBallJointLimitIf_SetLimitDir((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_limDir);
-					} else {;
-	    SprExport.Spr_PHBallJointLimitIf_SetLimitDir((IntPtr) _thisArray[0], (IntPtr) limDir);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointLimitIf_SetLimitDir((IntPtr) _this, (IntPtr) limDir);
+						}
 					}
 				}
 			}
@@ -25748,8 +27042,10 @@ SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) b);
 	    SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) b);
-					} else {;
-	    SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _thisArray[0], (bool) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _this, (bool) b);
+						}
 					}
 				}
 			}
@@ -25780,8 +27076,12 @@ SprExport.Spr_PHBallJointLimitIf_Enable((IntPtr) _thisArray[phSceneIf.sceneForBu
     }
     public partial class PHBallJointConeLimitIf : PHBallJointLimitIf {
 	public PHBallJointConeLimitIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointConeLimitIf(); _flag = true; }
-	public PHBallJointConeLimitIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointConeLimitIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointConeLimitIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointConeLimitIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointConeLimitIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointConeLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointConeLimitIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointConeLimitIf.GetIfInfoStatic()) ? new PHBallJointConeLimitIf(target._thisArray[0], target._flag) : null);
 	}
@@ -25842,8 +27142,10 @@ SprExport.Spr_PHBallJointConeLimitIf_SetSwingRange((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHBallJointConeLimitIf_SetSwingRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_range);
 	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingRange((IntPtr) _thisArray[0], (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingRange((IntPtr) _this, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -25894,8 +27196,10 @@ SprExport.Spr_PHBallJointConeLimitIf_SetSwingDirRange((IntPtr) _thisArray[phScen
 						});
 SprExport.Spr_PHBallJointConeLimitIf_SetSwingDirRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_range);
 	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingDirRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingDirRange((IntPtr) _thisArray[0], (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointConeLimitIf_SetSwingDirRange((IntPtr) _this, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -25946,8 +27250,10 @@ SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_range);
 	    SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _thisArray[0], (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _this, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -25975,8 +27281,12 @@ SprExport.Spr_PHBallJointConeLimitIf_SetTwistRange((IntPtr) _thisArray[phSceneIf
     }
     public partial class PHBallJointSplineLimitIf : PHBallJointLimitIf {
 	public PHBallJointSplineLimitIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointSplineLimitIf(); _flag = true; }
-	public PHBallJointSplineLimitIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointSplineLimitIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointSplineLimitIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointSplineLimitIf.GetIfInfoStatic()) ? new PHBallJointSplineLimitIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26037,8 +27347,10 @@ SprExport.Spr_PHBallJointSplineLimitIf_AddNode((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHBallJointSplineLimitIf_AddNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_node);
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_node);
-					} else {;
-	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode((IntPtr) _thisArray[0], (IntPtr) node);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode((IntPtr) _this, (IntPtr) node);
+						}
 					}
 				}
 			}
@@ -26068,8 +27380,10 @@ SprExport.Spr_PHBallJointSplineLimitIf_AddNode_1((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHBallJointSplineLimitIf_AddNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax);
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax);
-					} else {;
-	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_1((IntPtr) _thisArray[0], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_1((IntPtr) _this, (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax);
+						}
 					}
 				}
 			}
@@ -26103,8 +27417,10 @@ SprExport.Spr_PHBallJointSplineLimitIf_AddNode_2((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHBallJointSplineLimitIf_AddNode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_node, (int) pos);
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_node, (int) pos);
-					} else {;
-	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_2((IntPtr) _thisArray[0], (IntPtr) node, (int) pos);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_2((IntPtr) _this, (IntPtr) node, (int) pos);
+						}
 					}
 				}
 			}
@@ -26134,8 +27450,10 @@ SprExport.Spr_PHBallJointSplineLimitIf_AddNode_3((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHBallJointSplineLimitIf_AddNode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax, (int) pos);
 	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax, (int) pos);
-					} else {;
-	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_3((IntPtr) _thisArray[0], (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax, (int) pos);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointSplineLimitIf_AddNode_3((IntPtr) _this, (double) S, (double) SD, (double) dS, (double) dSD, (double) tMin, (double) tMax, (int) pos);
+						}
 					}
 				}
 			}
@@ -26169,8 +27487,10 @@ SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_range);
 	    SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _thisArray[0], (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _this, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -26198,8 +27518,12 @@ SprExport.Spr_PHBallJointSplineLimitIf_SetPoleTwistRange((IntPtr) _thisArray[phS
     }
     public partial class PHBallJointIndependentLimitIf : PHBallJointLimitIf {
 	public PHBallJointIndependentLimitIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointIndependentLimitIf(); _flag = true; }
-	public PHBallJointIndependentLimitIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointIndependentLimitIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointIndependentLimitIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointIndependentLimitIf.GetIfInfoStatic()) ? new PHBallJointIndependentLimitIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26278,9 +27602,11 @@ SprExport.Spr_PHBallJointIndependentLimitIf_AxesEnabled((IntPtr) _thisArray[phSc
 SprExport.Spr_PHBallJointIndependentLimitIf_AxesEnabled((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHBallJointIndependentLimitIf_AxesEnabled((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHBallJointIndependentLimitIf_AxesEnabled((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHBallJointIndependentLimitIf_AxesEnabled((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -26316,8 +27642,10 @@ SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[p
 						});
 SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n, (IntPtr) new_range);
 	    SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n, (IntPtr) new_range);
-					} else {;
-	    SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[0], (int) n, (IntPtr) range);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _this, (int) n, (IntPtr) range);
+						}
 					}
 				}
 			}
@@ -26345,8 +27673,12 @@ SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[p
     }
     public partial class PH1DJointMotorIf : SceneObjectIf {
 	public PH1DJointMotorIf() { _thisArray[0] = SprExport.Spr_new_PH1DJointMotorIf(); _flag = true; }
-	public PH1DJointMotorIf(IntPtr ptr) : base(ptr) {}
-	public PH1DJointMotorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointMotorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointMotorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointMotorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PH1DJointMotorIf(CsCastObject target) {
 		return (target._info.Inherit(PH1DJointMotorIf.GetIfInfoStatic()) ? new PH1DJointMotorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26384,8 +27716,12 @@ SprExport.Spr_PHBallJointIndependentLimitIf_SetLimitRangeN((IntPtr) _thisArray[p
     }
     public partial class PH1DJointNonLinearMotorIf : PH1DJointMotorIf {
 	public PH1DJointNonLinearMotorIf() { _thisArray[0] = SprExport.Spr_new_PH1DJointNonLinearMotorIf(); _flag = true; }
-	public PH1DJointNonLinearMotorIf(IntPtr ptr) : base(ptr) {}
-	public PH1DJointNonLinearMotorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PH1DJointNonLinearMotorIf(CsCastObject target) {
 		return (target._info.Inherit(PH1DJointNonLinearMotorIf.GetIfInfoStatic()) ? new PH1DJointNonLinearMotorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26446,8 +27782,10 @@ SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpring((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) m, (IntPtr) param);
 	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) m, (IntPtr) param);
-					} else {;
-	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpring((IntPtr) _thisArray[0], (int) m, (IntPtr) param);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpring((IntPtr) _this, (int) m, (IntPtr) param);
+						}
 					}
 				}
 			}
@@ -26481,8 +27819,10 @@ SprExport.Spr_PH1DJointNonLinearMotorIf_SetDamper((IntPtr) _thisArray[phSceneIf.
 						});
 SprExport.Spr_PH1DJointNonLinearMotorIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) m, (IntPtr) param);
 	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) m, (IntPtr) param);
-					} else {;
-	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetDamper((IntPtr) _thisArray[0], (int) m, (IntPtr) param);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetDamper((IntPtr) _this, (int) m, (IntPtr) param);
+						}
 					}
 				}
 			}
@@ -26520,8 +27860,10 @@ SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[phSc
 						});
 SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) smode, (int) dmode, (IntPtr) sparam, (IntPtr) dparam);
 	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) smode, (int) dmode, (IntPtr) sparam, (IntPtr) dparam);
-					} else {;
-	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[0], (int) smode, (int) dmode, (IntPtr) sparam, (IntPtr) dparam);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _this, (int) smode, (int) dmode, (IntPtr) sparam, (IntPtr) dparam);
+						}
 					}
 				}
 			}
@@ -26532,8 +27874,12 @@ SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[phSc
     }
     public partial class PHHuman1DJointResistanceIf : PH1DJointNonLinearMotorIf {
 	public PHHuman1DJointResistanceIf() { _thisArray[0] = SprExport.Spr_new_PHHuman1DJointResistanceIf(); _flag = true; }
-	public PHHuman1DJointResistanceIf(IntPtr ptr) : base(ptr) {}
-	public PHHuman1DJointResistanceIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHHuman1DJointResistanceIf(CsCastObject target) {
 		return (target._info.Inherit(PHHuman1DJointResistanceIf.GetIfInfoStatic()) ? new PHHuman1DJointResistanceIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26591,8 +27937,12 @@ SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[phSc
     }
     public partial class PHBallJointMotorIf : SceneObjectIf {
 	public PHBallJointMotorIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointMotorIf(); _flag = true; }
-	public PHBallJointMotorIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointMotorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointMotorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointMotorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointMotorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointMotorIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointMotorIf.GetIfInfoStatic()) ? new PHBallJointMotorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26630,8 +27980,12 @@ SprExport.Spr_PH1DJointNonLinearMotorIf_SetSpringDamper((IntPtr) _thisArray[phSc
     }
     public partial class PHBallJointNonLinearMotorIf : PHBallJointMotorIf {
 	public PHBallJointNonLinearMotorIf() { _thisArray[0] = SprExport.Spr_new_PHBallJointNonLinearMotorIf(); _flag = true; }
-	public PHBallJointNonLinearMotorIf(IntPtr ptr) : base(ptr) {}
-	public PHBallJointNonLinearMotorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBallJointNonLinearMotorIf(CsCastObject target) {
 		return (target._info.Inherit(PHBallJointNonLinearMotorIf.GetIfInfoStatic()) ? new PHBallJointNonLinearMotorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26692,8 +28046,10 @@ SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArr
 						});
 SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) n, (int) i, (int) j, (IntPtr) sparam, (IntPtr) dparam);
 	    SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) n, (int) i, (int) j, (IntPtr) sparam, (IntPtr) dparam);
-					} else {;
-	    SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArray[0], (int) n, (int) i, (int) j, (IntPtr) sparam, (IntPtr) dparam);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _this, (int) n, (int) i, (int) j, (IntPtr) sparam, (IntPtr) dparam);
+						}
 					}
 				}
 			}
@@ -26704,8 +28060,12 @@ SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArr
     }
     public partial class PHHumanBallJointResistanceIf : PHBallJointNonLinearMotorIf {
 	public PHHumanBallJointResistanceIf() { _thisArray[0] = SprExport.Spr_new_PHHumanBallJointResistanceIf(); _flag = true; }
-	public PHHumanBallJointResistanceIf(IntPtr ptr) : base(ptr) {}
-	public PHHumanBallJointResistanceIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHHumanBallJointResistanceIf(CsCastObject target) {
 		return (target._info.Inherit(PHHumanBallJointResistanceIf.GetIfInfoStatic()) ? new PHHumanBallJointResistanceIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26763,8 +28123,12 @@ SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArr
     }
     public partial class PHSpringMotorIf : SceneObjectIf {
 	public PHSpringMotorIf() { _thisArray[0] = SprExport.Spr_new_PHSpringMotorIf(); _flag = true; }
-	public PHSpringMotorIf(IntPtr ptr) : base(ptr) {}
-	public PHSpringMotorIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSpringMotorIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSpringMotorIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSpringMotorIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSpringMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSpringMotorIf(CsCastObject target) {
 		return (target._info.Inherit(PHSpringMotorIf.GetIfInfoStatic()) ? new PHSpringMotorIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26802,8 +28166,12 @@ SprExport.Spr_PHBallJointNonLinearMotorIf_SetFuncFromDatabaseN((IntPtr) _thisArr
     }
     public partial class PHOpObjIf : SceneObjectIf {
 	public PHOpObjIf() { _thisArray[0] = SprExport.Spr_new_PHOpObjIf(); _flag = true; }
-	public PHOpObjIf(IntPtr ptr) : base(ptr) {}
-	public PHOpObjIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpObjIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpObjIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpObjIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpObjIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpObjIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpObjIf.GetIfInfoStatic()) ? new PHOpObjIf(target._thisArray[0], target._flag) : null);
 	}
@@ -26866,9 +28234,11 @@ SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForSte
 SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
 	    char ret = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[0], (IntPtr) vts, (int) vtsNum, (float) pSize);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _this, (IntPtr) vts, (int) vtsNum, (float) pSize);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -26900,8 +28270,10 @@ SprExport.Spr_PHOpObjIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHOpObjIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) bOn);
 	    SprExport.Spr_PHOpObjIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) bOn);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetGravity((IntPtr) _thisArray[0], (bool) bOn);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetGravity((IntPtr) _this, (bool) bOn);
+						}
 					}
 				}
 			}
@@ -26931,8 +28303,10 @@ SprExport.Spr_PHOpObjIf_SimpleSimulationStep((IntPtr) _thisArray[phSceneIf.scene
 						});
 SprExport.Spr_PHOpObjIf_SimpleSimulationStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_SimpleSimulationStep((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SimpleSimulationStep((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SimpleSimulationStep((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -26966,8 +28340,10 @@ SprExport.Spr_PHOpObjIf_AddVertextoLocalBuffer((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHOpObjIf_AddVertextoLocalBuffer((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_v);
 	    SprExport.Spr_PHOpObjIf_AddVertextoLocalBuffer((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_v);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_AddVertextoLocalBuffer((IntPtr) _thisArray[0], (IntPtr) v);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_AddVertextoLocalBuffer((IntPtr) _this, (IntPtr) v);
+						}
 					}
 				}
 			}
@@ -26999,9 +28375,11 @@ SprExport.Spr_PHOpObjIf_InitialObjUsingLocalBuffer((IntPtr) _thisArray[phSceneIf
 SprExport.Spr_PHOpObjIf_InitialObjUsingLocalBuffer((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) pSize);
 	    char ret = SprExport.Spr_PHOpObjIf_InitialObjUsingLocalBuffer((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) pSize);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHOpObjIf_InitialObjUsingLocalBuffer((IntPtr) _thisArray[0], (float) pSize);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHOpObjIf_InitialObjUsingLocalBuffer((IntPtr) _this, (float) pSize);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -27033,8 +28411,10 @@ SprExport.Spr_PHOpObjIf_positionPredict((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHOpObjIf_positionPredict((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_positionPredict((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_positionPredict((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_positionPredict((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27064,8 +28444,10 @@ SprExport.Spr_PHOpObjIf_groupStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHOpObjIf_groupStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_groupStep((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_groupStep((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_groupStep((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27095,8 +28477,10 @@ SprExport.Spr_PHOpObjIf_integrationStep((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHOpObjIf_integrationStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_integrationStep((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_integrationStep((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_integrationStep((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27126,8 +28510,10 @@ SprExport.Spr_PHOpObjIf_ReducedPositionProject((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHOpObjIf_ReducedPositionProject((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_ReducedPositionProject((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_ReducedPositionProject((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_ReducedPositionProject((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27157,8 +28543,10 @@ SprExport.Spr_PHOpObjIf_positionProject((IntPtr) _thisArray[phSceneIf.sceneForSt
 						});
 SprExport.Spr_PHOpObjIf_positionProject((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_positionProject((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_positionProject((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_positionProject((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27188,8 +28576,10 @@ SprExport.Spr_PHOpObjIf_SetDefaultLinkNum((IntPtr) _thisArray[phSceneIf.sceneFor
 						});
 SprExport.Spr_PHOpObjIf_SetDefaultLinkNum((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) linkNum);
 	    SprExport.Spr_PHOpObjIf_SetDefaultLinkNum((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) linkNum);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetDefaultLinkNum((IntPtr) _thisArray[0], (int) linkNum);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetDefaultLinkNum((IntPtr) _this, (int) linkNum);
+						}
 					}
 				}
 			}
@@ -27219,8 +28609,10 @@ SprExport.Spr_PHOpObjIf_BuildBlendWeight((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHOpObjIf_BuildBlendWeight((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_BuildBlendWeight((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_BuildBlendWeight((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_BuildBlendWeight((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27250,8 +28642,10 @@ SprExport.Spr_PHOpObjIf_buildGroupCenter((IntPtr) _thisArray[phSceneIf.sceneForS
 						});
 SprExport.Spr_PHOpObjIf_buildGroupCenter((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_buildGroupCenter((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_buildGroupCenter((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_buildGroupCenter((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27449,8 +28843,10 @@ SprExport.Spr_PHOpObjIf_SetVelocityDamping((IntPtr) _thisArray[phSceneIf.sceneFo
 						});
 SprExport.Spr_PHOpObjIf_SetVelocityDamping((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) vd);
 	    SprExport.Spr_PHOpObjIf_SetVelocityDamping((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) vd);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetVelocityDamping((IntPtr) _thisArray[0], (float) vd);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetVelocityDamping((IntPtr) _this, (float) vd);
+						}
 					}
 				}
 			}
@@ -27520,8 +28916,10 @@ SprExport.Spr_PHOpObjIf_SetBound((IntPtr) _thisArray[phSceneIf.sceneForStep], (f
 						});
 SprExport.Spr_PHOpObjIf_SetBound((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) b);
 	    SprExport.Spr_PHOpObjIf_SetBound((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) b);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetBound((IntPtr) _thisArray[0], (float) b);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetBound((IntPtr) _this, (float) b);
+						}
 					}
 				}
 			}
@@ -27551,8 +28949,10 @@ SprExport.Spr_PHOpObjIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHOpObjIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) t);
 	    SprExport.Spr_PHOpObjIf_SetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) t);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetTimeStep((IntPtr) _thisArray[0], (float) t);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetTimeStep((IntPtr) _this, (float) t);
+						}
 					}
 				}
 			}
@@ -27622,8 +29022,10 @@ SprExport.Spr_PHOpObjIf_SetObjBeta((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHOpObjIf_SetObjBeta((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) beta);
 	    SprExport.Spr_PHOpObjIf_SetObjBeta((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) beta);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetObjBeta((IntPtr) _thisArray[0], (float) beta);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetObjBeta((IntPtr) _this, (float) beta);
+						}
 					}
 				}
 			}
@@ -27653,8 +29055,10 @@ SprExport.Spr_PHOpObjIf_SetObjAlpha((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHOpObjIf_SetObjAlpha((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) alpha);
 	    SprExport.Spr_PHOpObjIf_SetObjAlpha((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) alpha);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetObjAlpha((IntPtr) _thisArray[0], (float) alpha);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetObjAlpha((IntPtr) _this, (float) alpha);
+						}
 					}
 				}
 			}
@@ -27724,8 +29128,10 @@ SprExport.Spr_PHOpObjIf_SetObjDstConstraint((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHOpObjIf_SetObjDstConstraint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) d);
 	    SprExport.Spr_PHOpObjIf_SetObjDstConstraint((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) d);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetObjDstConstraint((IntPtr) _thisArray[0], (bool) d);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetObjDstConstraint((IntPtr) _this, (bool) d);
+						}
 					}
 				}
 			}
@@ -27755,8 +29161,10 @@ SprExport.Spr_PHOpObjIf_SetObjItrTime((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHOpObjIf_SetObjItrTime((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) itrT);
 	    SprExport.Spr_PHOpObjIf_SetObjItrTime((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) itrT);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_SetObjItrTime((IntPtr) _thisArray[0], (int) itrT);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_SetObjItrTime((IntPtr) _this, (int) itrT);
+						}
 					}
 				}
 			}
@@ -27806,8 +29214,10 @@ SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[phSceneIf.sceneForStep
 						});
 SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -27818,8 +29228,12 @@ SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHOpParticleIf : ObjectIf {
 	public PHOpParticleIf() { _thisArray[0] = SprExport.Spr_new_PHOpParticleIf(); _flag = true; }
-	public PHOpParticleIf(IntPtr ptr) : base(ptr) {}
-	public PHOpParticleIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpParticleIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpParticleIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpParticleIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpParticleIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpParticleIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpParticleIf.GetIfInfoStatic()) ? new PHOpParticleIf(target._thisArray[0], target._flag) : null);
 	}
@@ -27861,8 +29275,12 @@ SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHOpGroupIf : ObjectIf {
 	public PHOpGroupIf() { _thisArray[0] = SprExport.Spr_new_PHOpGroupIf(); _flag = true; }
-	public PHOpGroupIf(IntPtr ptr) : base(ptr) {}
-	public PHOpGroupIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpGroupIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpGroupIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpGroupIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpGroupIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpGroupIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpGroupIf.GetIfInfoStatic()) ? new PHOpGroupIf(target._thisArray[0], target._flag) : null);
 	}
@@ -27896,8 +29314,12 @@ SprExport.Spr_PHOpObjIf_StoreOrigPose((IntPtr) _thisArray[phSceneIf.sceneForBuff
     }
     public partial class PHOpHapticControllerIf : SceneObjectIf {
 	public PHOpHapticControllerIf() { _thisArray[0] = SprExport.Spr_new_PHOpHapticControllerIf(); _flag = true; }
-	public PHOpHapticControllerIf(IntPtr ptr) : base(ptr) {}
-	public PHOpHapticControllerIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpHapticControllerIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpHapticControllerIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpHapticControllerIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpHapticControllerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpHapticControllerIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpHapticControllerIf.GetIfInfoStatic()) ? new PHOpHapticControllerIf(target._thisArray[0], target._flag) : null);
 	}
@@ -27954,8 +29376,10 @@ SprExport.Spr_PHOpHapticControllerIf_SetHCForceReady((IntPtr) _thisArray[phScene
 						});
 SprExport.Spr_PHOpHapticControllerIf_SetHCForceReady((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) flag);
 	    SprExport.Spr_PHOpHapticControllerIf_SetHCForceReady((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) flag);
-					} else {;
-	    SprExport.Spr_PHOpHapticControllerIf_SetHCForceReady((IntPtr) _thisArray[0], (bool) flag);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticControllerIf_SetHCForceReady((IntPtr) _this, (bool) flag);
+						}
 					}
 				}
 			}
@@ -28007,9 +29431,11 @@ SprExport.Spr_PHOpHapticControllerIf_CheckProxyState((IntPtr) _thisArray[phScene
 SprExport.Spr_PHOpHapticControllerIf_CheckProxyState((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    char ret = SprExport.Spr_PHOpHapticControllerIf_CheckProxyState((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHOpHapticControllerIf_CheckProxyState((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHOpHapticControllerIf_CheckProxyState((IntPtr) _this);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -28045,8 +29471,10 @@ SprExport.Spr_PHOpHapticControllerIf_AddColliedPtcl((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHOpHapticControllerIf_AddColliedPtcl((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) pIndex, (int) objindex, (IntPtr) new_ctcPos);
 	    SprExport.Spr_PHOpHapticControllerIf_AddColliedPtcl((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) pIndex, (int) objindex, (IntPtr) new_ctcPos);
-					} else {;
-	    SprExport.Spr_PHOpHapticControllerIf_AddColliedPtcl((IntPtr) _thisArray[0], (int) pIndex, (int) objindex, (IntPtr) ctcPos);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticControllerIf_AddColliedPtcl((IntPtr) _this, (int) pIndex, (int) objindex, (IntPtr) ctcPos);
+						}
 					}
 				}
 			}
@@ -28078,9 +29506,11 @@ SprExport.Spr_PHOpHapticControllerIf_BeginLogForce((IntPtr) _thisArray[phSceneIf
 SprExport.Spr_PHOpHapticControllerIf_BeginLogForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    char ret = SprExport.Spr_PHOpHapticControllerIf_BeginLogForce((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return (ret == 0) ? false : true;
-					} else {;
-	    char ret = SprExport.Spr_PHOpHapticControllerIf_BeginLogForce((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    char ret = SprExport.Spr_PHOpHapticControllerIf_BeginLogForce((IntPtr) _this);
 	    return (ret == 0) ? false : true;
+						}
 					}
 				}
 			}
@@ -28112,8 +29542,10 @@ SprExport.Spr_PHOpHapticControllerIf_EndLogForce((IntPtr) _thisArray[phSceneIf.s
 						});
 SprExport.Spr_PHOpHapticControllerIf_EndLogForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHOpHapticControllerIf_EndLogForce((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHOpHapticControllerIf_EndLogForce((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticControllerIf_EndLogForce((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -28143,8 +29575,10 @@ SprExport.Spr_PHOpHapticControllerIf_setC_ObstacleRadius((IntPtr) _thisArray[phS
 						});
 SprExport.Spr_PHOpHapticControllerIf_setC_ObstacleRadius((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (float) r);
 	    SprExport.Spr_PHOpHapticControllerIf_setC_ObstacleRadius((IntPtr) _thisArray[phSceneIf.sceneForGet], (float) r);
-					} else {;
-	    SprExport.Spr_PHOpHapticControllerIf_setC_ObstacleRadius((IntPtr) _thisArray[0], (float) r);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticControllerIf_setC_ObstacleRadius((IntPtr) _this, (float) r);
+						}
 					}
 				}
 			}
@@ -28218,8 +29652,10 @@ SprExport.Spr_PHOpHapticControllerIf_SetHCPosition((IntPtr) _thisArray[phSceneIf
 						});
 SprExport.Spr_PHOpHapticControllerIf_SetHCPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pos);
 	    SprExport.Spr_PHOpHapticControllerIf_SetHCPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pos);
-					} else {;
-	    SprExport.Spr_PHOpHapticControllerIf_SetHCPosition((IntPtr) _thisArray[0], (IntPtr) pos);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticControllerIf_SetHCPosition((IntPtr) _this, (IntPtr) pos);
+						}
 					}
 				}
 			}
@@ -28253,8 +29689,10 @@ SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _thisArray[phSceneIf.sce
 						});
 SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
 	    SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
-					} else {;
-	    SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _thisArray[0], (IntPtr) pose);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _this, (IntPtr) pose);
+						}
 					}
 				}
 			}
@@ -28325,8 +29763,12 @@ SprExport.Spr_PHOpHapticControllerIf_SetHCPose((IntPtr) _thisArray[phSceneIf.sce
     }
     public partial class PHOpHapticRendererIf : SceneObjectIf {
 	public PHOpHapticRendererIf() { _thisArray[0] = SprExport.Spr_new_PHOpHapticRendererIf(); _flag = true; }
-	public PHOpHapticRendererIf(IntPtr ptr) : base(ptr) {}
-	public PHOpHapticRendererIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpHapticRendererIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpHapticRendererIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpHapticRendererIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpHapticRendererIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpHapticRendererIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpHapticRendererIf.GetIfInfoStatic()) ? new PHOpHapticRendererIf(target._thisArray[0], target._flag) : null);
 	}
@@ -28383,8 +29825,10 @@ SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (bool) set);
 	    SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _thisArray[phSceneIf.sceneForGet], (bool) set);
-					} else {;
-	    SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _thisArray[0], (bool) set);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _this, (bool) set);
+						}
 					}
 				}
 			}
@@ -28415,8 +29859,12 @@ SprExport.Spr_PHOpHapticRendererIf_SetRigid((IntPtr) _thisArray[phSceneIf.sceneF
     }
     public partial class PHOpAnimationIf : SceneObjectIf {
 	public PHOpAnimationIf() { _thisArray[0] = SprExport.Spr_new_PHOpAnimationIf(); _flag = true; }
-	public PHOpAnimationIf(IntPtr ptr) : base(ptr) {}
-	public PHOpAnimationIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpAnimationIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpAnimationIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpAnimationIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpAnimationIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpAnimationIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpAnimationIf.GetIfInfoStatic()) ? new PHOpAnimationIf(target._thisArray[0], target._flag) : null);
 	}
@@ -28481,8 +29929,10 @@ SprExport.Spr_PHOpAnimationIf_AddAnimationP((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHOpAnimationIf_AddAnimationP((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) objIndex, (int) pIndex, (IntPtr) new_start, (IntPtr) new_end, (float) totalTime);
 	    SprExport.Spr_PHOpAnimationIf_AddAnimationP((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) objIndex, (int) pIndex, (IntPtr) new_start, (IntPtr) new_end, (float) totalTime);
-					} else {;
-	    SprExport.Spr_PHOpAnimationIf_AddAnimationP((IntPtr) _thisArray[0], (int) objIndex, (int) pIndex, (IntPtr) start, (IntPtr) end, (float) totalTime);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpAnimationIf_AddAnimationP((IntPtr) _this, (int) objIndex, (int) pIndex, (IntPtr) start, (IntPtr) end, (float) totalTime);
+						}
 					}
 				}
 			}
@@ -28516,8 +29966,10 @@ SprExport.Spr_PHOpAnimationIf_AddAnimationP_1((IntPtr) _thisArray[phSceneIf.scen
 						});
 SprExport.Spr_PHOpAnimationIf_AddAnimationP_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) objIndex, (int) pIndex, (IntPtr) new_force, (float) totalTime);
 	    SprExport.Spr_PHOpAnimationIf_AddAnimationP_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) objIndex, (int) pIndex, (IntPtr) new_force, (float) totalTime);
-					} else {;
-	    SprExport.Spr_PHOpAnimationIf_AddAnimationP_1((IntPtr) _thisArray[0], (int) objIndex, (int) pIndex, (IntPtr) force, (float) totalTime);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpAnimationIf_AddAnimationP_1((IntPtr) _this, (int) objIndex, (int) pIndex, (IntPtr) force, (float) totalTime);
+						}
 					}
 				}
 			}
@@ -28549,8 +30001,10 @@ SprExport.Spr_PHOpAnimationIf_AnimationStep((IntPtr) _thisArray[phSceneIf.sceneF
 						});
 SprExport.Spr_PHOpAnimationIf_AnimationStep((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) opEngine);
 	    SprExport.Spr_PHOpAnimationIf_AnimationStep((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) opEngine);
-					} else {;
-	    SprExport.Spr_PHOpAnimationIf_AnimationStep((IntPtr) _thisArray[0], (IntPtr) opEngine);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpAnimationIf_AnimationStep((IntPtr) _this, (IntPtr) opEngine);
+						}
 					}
 				}
 			}
@@ -28582,8 +30036,10 @@ SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[phSceneI
 						});
 SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) opEngine);
 	    SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) opEngine);
-					} else {;
-	    SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[0], (IntPtr) opEngine);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _this, (IntPtr) opEngine);
+						}
 					}
 				}
 			}
@@ -28594,8 +30050,12 @@ SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[phSceneI
     }
     public partial class PHOpSpHashColliAgentIf : ObjectIf {
 	public PHOpSpHashColliAgentIf() { _thisArray[0] = SprExport.Spr_new_PHOpSpHashColliAgentIf(); _flag = true; }
-	public PHOpSpHashColliAgentIf(IntPtr ptr) : base(ptr) {}
-	public PHOpSpHashColliAgentIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHOpSpHashColliAgentIf(CsCastObject target) {
 		return (target._info.Inherit(PHOpSpHashColliAgentIf.GetIfInfoStatic()) ? new PHOpSpHashColliAgentIf(target._thisArray[0], target._flag) : null);
 	}
@@ -28663,8 +30123,12 @@ SprExport.Spr_PHOpAnimationIf_AnimationIntergration((IntPtr) _thisArray[phSceneI
     }
     public partial class PHRayIf : SceneObjectIf {
 	public PHRayIf() { _thisArray[0] = SprExport.Spr_new_PHRayIf(); _flag = true; }
-	public PHRayIf(IntPtr ptr) : base(ptr) {}
-	public PHRayIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHRayIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHRayIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHRayIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHRayIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHRayIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHRayIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHRayIf(CsCastObject target) {
 		return (target._info.Inherit(PHRayIf.GetIfInfoStatic()) ? new PHRayIf(target._thisArray[0], target._flag) : null);
 	}
@@ -28745,8 +30209,10 @@ SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep], (In
 						});
 SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ori);
 	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ori);
-					} else {;
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[0], (IntPtr) ori);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _this, (IntPtr) ori);
+						}
 					}
 				}
 			}
@@ -28800,8 +30266,10 @@ SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_dir);
 	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_dir);
-					} else {;
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[0], (IntPtr) dir);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _this, (IntPtr) dir);
+						}
 					}
 				}
 			}
@@ -28831,8 +30299,10 @@ SprExport.Spr_PHRayIf_Apply((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 						});
 SprExport.Spr_PHRayIf_Apply((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    SprExport.Spr_PHRayIf_Apply((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {;
-	    SprExport.Spr_PHRayIf_Apply((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHRayIf_Apply((IntPtr) _this);
+						}
 					}
 				}
 			}
@@ -28864,9 +30334,11 @@ SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHRayIf_NHits((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -28939,8 +30411,12 @@ SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
     }
     public partial class PHSceneIf : SceneIf {
 	public PHSceneIf() { _thisArray[0] = SprExport.Spr_new_PHSceneIf(); _flag = true; }
-	public PHSceneIf(IntPtr ptr) : base(ptr) {}
-	public PHSceneIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSceneIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSceneIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSceneIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSceneIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSceneIf(CsCastObject target) {
 		return (target._info.Inherit(PHSceneIf.GetIfInfoStatic()) ? new PHSceneIf(target._thisArray[0], target._flag) : null);
 	}
@@ -29571,8 +31047,12 @@ SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
     }
     public partial class PHSdkIf : SdkIf {
 	public PHSdkIf() { _thisArray[0] = SprExport.Spr_new_PHSdkIf(); _flag = true; }
-	public PHSdkIf(IntPtr ptr) : base(ptr) {}
-	public PHSdkIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSdkIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSdkIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSdkIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSdkIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSdkIf(CsCastObject target) {
 		return (target._info.Inherit(PHSdkIf.GetIfInfoStatic()) ? new PHSdkIf(target._thisArray[0], target._flag) : null);
 	}
@@ -29590,18 +31070,6 @@ SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_PHSdkIf_GetIfInfoStatic();
             return new IfInfo(ptr);
-	}
-	public PHSceneIf CreateScene(PHSceneDesc desc) {
-	    IntPtr ptr = SprExport.Spr_PHSdkIf_CreateScene((IntPtr) _thisArray[0], (IntPtr) desc);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHSceneIf obj = new PHSceneIf(ptr);
-            return obj;
-	}
-	public PHSceneIf CreateScene() {
-	    IntPtr ptr = SprExport.Spr_PHSdkIf_CreateScene_1((IntPtr) _thisArray[0]);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHSceneIf obj = new PHSceneIf(ptr);
-            return obj;
 	}
 	public int NScene() {
 	    int result = (int) SprExport.Spr_PHSdkIf_NScene((IntPtr) _thisArray[0]);
@@ -29650,8 +31118,12 @@ SprExport.Spr_PHRayIf_NHits((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
     }
     public partial class PHBoneIf : SceneObjectIf {
 	public PHBoneIf() { _thisArray[0] = SprExport.Spr_new_PHBoneIf(); _flag = true; }
-	public PHBoneIf(IntPtr ptr) : base(ptr) {}
-	public PHBoneIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHBoneIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHBoneIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHBoneIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHBoneIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHBoneIf(CsCastObject target) {
 		return (target._info.Inherit(PHBoneIf.GetIfInfoStatic()) ? new PHBoneIf(target._thisArray[0], target._flag) : null);
 	}
@@ -29712,8 +31184,10 @@ SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (In
 						});
 SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
 	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _this, (IntPtr) solid);
+						}
 					}
 				}
 			}
@@ -29776,8 +31250,10 @@ SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep]
 						});
 SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
 	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[0], (IntPtr) solid);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _this, (IntPtr) solid);
+						}
 					}
 				}
 			}
@@ -29840,8 +31316,10 @@ SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (In
 						});
 SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
 	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _this, (IntPtr) joint);
+						}
 					}
 				}
 			}
@@ -29943,8 +31421,10 @@ SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (I
 						});
 SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent);
 	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[0], (IntPtr) parent);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _this, (IntPtr) parent);
+						}
 					}
 				}
 			}
@@ -30000,8 +31480,10 @@ SprExport.Spr_PHBoneIf_SetLength((IntPtr) _thisArray[phSceneIf.sceneForStep], (d
 						});
 SprExport.Spr_PHBoneIf_SetLength((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) length);
 	    SprExport.Spr_PHBoneIf_SetLength((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) length);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetLength((IntPtr) _thisArray[0], (double) length);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetLength((IntPtr) _this, (double) length);
+						}
 					}
 				}
 			}
@@ -30035,8 +31517,10 @@ SprExport.Spr_PHBoneIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep],
 						});
 SprExport.Spr_PHBoneIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_dir);
 	    SprExport.Spr_PHBoneIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_dir);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetDirection((IntPtr) _thisArray[0], (IntPtr) dir);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetDirection((IntPtr) _this, (IntPtr) dir);
+						}
 					}
 				}
 			}
@@ -30070,8 +31554,10 @@ SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], 
 						});
 SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pos);
 	    SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pos);
-					} else {;
-	    SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _thisArray[0], (IntPtr) pos);
+					} else {
+						foreach (var _this in _thisArray) {
+	    SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _this, (IntPtr) pos);
+						}
 					}
 				}
 			}
@@ -30082,8 +31568,12 @@ SprExport.Spr_PHBoneIf_SetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer]
     }
     public partial class PHSkeletonIf : SceneObjectIf {
 	public PHSkeletonIf() { _thisArray[0] = SprExport.Spr_new_PHSkeletonIf(); _flag = true; }
-	public PHSkeletonIf(IntPtr ptr) : base(ptr) {}
-	public PHSkeletonIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public PHSkeletonIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public PHSkeletonIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public PHSkeletonIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public PHSkeletonIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator PHSkeletonIf(CsCastObject target) {
 		return (target._info.Inherit(PHSkeletonIf.GetIfInfoStatic()) ? new PHSkeletonIf(target._thisArray[0], target._flag) : null);
 	}
@@ -30142,9 +31632,11 @@ SprExport.Spr_PHSkeletonIf_NBones((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 SprExport.Spr_PHSkeletonIf_NBones((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    int result = (int) SprExport.Spr_PHSkeletonIf_NBones((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 	    return result;
-					} else {;
-	    int result = (int) SprExport.Spr_PHSkeletonIf_NBones((IntPtr) _thisArray[0]);
+					} else {
+						foreach (var _this in _thisArray) {
+	    int result = (int) SprExport.Spr_PHSkeletonIf_NBones((IntPtr) _this);
 	    return result;
+						}
 					}
 				}
 			}
@@ -30216,11 +31708,13 @@ SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuff
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[0], (IntPtr) parent, (IntPtr) desc);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _this, (IntPtr) parent, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
+						}
 					}
 				}
 			}
@@ -30264,11 +31758,13 @@ SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBu
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
-					} else {;
-	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[0], (IntPtr) parent);
+					} else {
+						foreach (var _this in _thisArray) {
+	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _this, (IntPtr) parent);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr);
             return obj;
+						}
 					}
 				}
 			}

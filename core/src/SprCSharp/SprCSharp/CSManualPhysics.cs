@@ -7,6 +7,28 @@ using System.Threading;
 namespace SprCs {
     public partial class PHSdkIf : SdkIf {
         public static readonly object phSdkLock = new object();
+        public PHSceneIf CreateScene(PHSceneDesc desc, bool multiThreadMode = false) {
+            if (multiThreadMode) {
+                IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_thisArray[0], (IntPtr)desc);
+                IntPtr ptr2 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_thisArray[0], (IntPtr)desc);
+                IntPtr ptr3 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_thisArray[0], (IntPtr)desc);
+                if (ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero || ptr3 == IntPtr.Zero) {
+                    Console.WriteLine("Create Scene null");
+                    return null;
+                }
+                PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1, ptr2, ptr3);
+                return obj;
+            } else {
+                IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_thisArray[0], (IntPtr)desc);
+                if (ptr1 == IntPtr.Zero) {
+                    Console.WriteLine("Create Scene null");
+                    return null;
+                }
+                PHSceneIf obj = PHSceneIf.CreateCSInstance(ptr1);
+                return obj;
+            }
+        }
+
         //public override bool DelChildObject(ObjectIf o) { 
         //    // PHSDKから引数CDShapeBehaviourで呼ばれることを想定，PHSdkIfからPHSceneIfを参照し処理を分けることが難しいためisGetFunctionCalledInSubThreadなどのフラグは使っていない
         //    lock (phSdkLock) {
@@ -440,22 +462,5 @@ namespace SprCs {
         //        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
         //    }
         //}
-    }
-
-    public partial class PHSpringIf : PHJointIf {
-        public PHSpringIf(IntPtr ptr, IntPtr ptr1, IntPtr ptr2, bool flag = false) {
-            _thisArray[0] = ptr;
-            _thisArray[1] = ptr1;
-            _thisArray[2] = ptr2;
-            _flag = flag;
-        }
-    }
-    public partial class PHBallJointIf : PHJointIf {
-        public PHBallJointIf(IntPtr ptr, IntPtr ptr1, IntPtr ptr2, bool flag = false) {
-            _thisArray[0] = ptr;
-            _thisArray[1] = ptr1;
-            _thisArray[2] = ptr2;
-            _flag = flag;
-        }
     }
 }

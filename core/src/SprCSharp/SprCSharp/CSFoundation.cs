@@ -7,8 +7,12 @@ using System.Threading;
 namespace SprCs {
     public partial class ObjectIfs : CsObject {
 	public ObjectIfs() { _thisArray[0] = SprExport.Spr_new_ObjectIfs(); _flag = true; }
-	public ObjectIfs(IntPtr ptr) : base(ptr) {}
-	public ObjectIfs(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public ObjectIfs(IntPtr ptr) : base(ptr, 0, false) {}
+	public ObjectIfs(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public ObjectIfs(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public ObjectIfs(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public ObjectIfs(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public ObjectIfs(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~ObjectIfs() { if (_flag) { SprExport.Spr_delete_ObjectIfs(_thisArray[0]); _flag = false; } }
 	public void Push(ObjectIf obj) {
 	    SprExport.Spr_ObjectIfs_Push((IntPtr) _thisArray[0], (IntPtr) obj);
@@ -30,8 +34,12 @@ namespace SprCs {
     }
     public partial class UTAccessBase : CsObject {
 	protected UTAccessBase() {}
-	public UTAccessBase(IntPtr ptr) : base(ptr) { }
-	public UTAccessBase(IntPtr ptr, bool flag) : base(ptr, flag) { }
+	public UTAccessBase(IntPtr ptr) : base(ptr, 0, false) { }
+	public UTAccessBase(IntPtr ptr, bool flag) : base(ptr, 0, flag) { }
+	public UTAccessBase(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) { }
+	public UTAccessBase(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) { }
+	public UTAccessBase(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) { }
+	public UTAccessBase(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) { }
 	public IntPtr Create() {
 	    IntPtr result = (IntPtr) SprExport.Spr_UTAccessBase_Create((IntPtr) _thisArray[0]);
 	    return result;
@@ -61,8 +69,12 @@ namespace SprCs {
     }
     public partial class Vec2f : CsObject {
 	public Vec2f() { _thisArray[0] = SprExport.Spr_new_Vec2f(); _flag = true; }
-	public Vec2f(IntPtr ptr) : base(ptr) {}
-	public Vec2f(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec2f(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec2f(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec2f(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec2f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec2f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec2f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec2f(float x, float y) { _thisArray[0] = SprExport.Spr_new_Vec2f_3(x, y); _flag = true; }
 	~Vec2f() { if (_flag) { SprExport.Spr_delete_Vec2f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec2f(Vec2d d) {
@@ -199,8 +211,12 @@ namespace SprCs {
     }
     public partial class Vec2d : CsObject {
 	public Vec2d() { _thisArray[0] = SprExport.Spr_new_Vec2d(); _flag = true; }
-	public Vec2d(IntPtr ptr) : base(ptr) {}
-	public Vec2d(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec2d(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec2d(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec2d(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec2d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec2d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec2d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec2d(double x, double y) { _thisArray[0] = SprExport.Spr_new_Vec2d_3(x, y); _flag = true; }
 	~Vec2d() { if (_flag) { SprExport.Spr_delete_Vec2d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec2d(Vec2f f) {
@@ -337,8 +353,12 @@ namespace SprCs {
     }
     public partial class Vec3f : CsObject {
 	public Vec3f() { _thisArray[0] = SprExport.Spr_new_Vec3f(); _flag = true; }
-	public Vec3f(IntPtr ptr) : base(ptr) {}
-	public Vec3f(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec3f(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec3f(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec3f(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec3f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec3f(float x, float y, float z) { _thisArray[0] = SprExport.Spr_new_Vec3f_4(x, y, z); _flag = true; }
 	~Vec3f() { if (_flag) { SprExport.Spr_delete_Vec3f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec3f(Vec3d d) {
@@ -486,8 +506,12 @@ namespace SprCs {
     }
     public partial class Vec3d : CsObject {
 	public Vec3d() { _thisArray[0] = SprExport.Spr_new_Vec3d(); _flag = true; }
-	public Vec3d(IntPtr ptr) : base(ptr) {}
-	public Vec3d(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec3d(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec3d(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec3d(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec3d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec3d(double x, double y, double z) { _thisArray[0] = SprExport.Spr_new_Vec3d_4(x, y, z); _flag = true; }
 	~Vec3d() { if (_flag) { SprExport.Spr_delete_Vec3d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec3d(Vec3f f) {
@@ -635,8 +659,12 @@ namespace SprCs {
     }
     public partial class Vec4f : CsObject {
 	public Vec4f() { _thisArray[0] = SprExport.Spr_new_Vec4f(); _flag = true; }
-	public Vec4f(IntPtr ptr) : base(ptr) {}
-	public Vec4f(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec4f(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec4f(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec4f(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec4f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec4f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec4f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec4f(float x, float y, float z, float w) { _thisArray[0] = SprExport.Spr_new_Vec4f_5(x, y, z, w); _flag = true; }
 	~Vec4f() { if (_flag) { SprExport.Spr_delete_Vec4f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec4f(Vec4d d) {
@@ -776,8 +804,12 @@ namespace SprCs {
     }
     public partial class Vec4d : CsObject {
 	public Vec4d() { _thisArray[0] = SprExport.Spr_new_Vec4d(); _flag = true; }
-	public Vec4d(IntPtr ptr) : base(ptr) {}
-	public Vec4d(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec4d(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec4d(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec4d(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec4d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec4d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec4d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec4d(double x, double y, double z, double w) { _thisArray[0] = SprExport.Spr_new_Vec4d_5(x, y, z, w); _flag = true; }
 	~Vec4d() { if (_flag) { SprExport.Spr_delete_Vec4d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec4d(Vec4f f) {
@@ -917,8 +949,12 @@ namespace SprCs {
     }
     public partial class Quaternionf : CsObject {
 	public Quaternionf() { _thisArray[0] = SprExport.Spr_new_Quaternionf(); _flag = true; }
-	public Quaternionf(IntPtr ptr) : base(ptr) {}
-	public Quaternionf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Quaternionf(IntPtr ptr) : base(ptr, 0, false) {}
+	public Quaternionf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Quaternionf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Quaternionf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Quaternionf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Quaternionf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Quaternionf(float w, float x, float y, float z) { _thisArray[0] = SprExport.Spr_new_Quaternionf_5(w, x, y, z); _flag = true; }
 	~Quaternionf() { if (_flag) { SprExport.Spr_delete_Quaternionf(_thisArray[0]); _flag = false; } }
 	public static explicit operator Quaternionf(Quaterniond d) {
@@ -1105,8 +1141,12 @@ namespace SprCs {
     }
     public partial class Quaterniond : CsObject {
 	public Quaterniond() { _thisArray[0] = SprExport.Spr_new_Quaterniond(); _flag = true; }
-	public Quaterniond(IntPtr ptr) : base(ptr) {}
-	public Quaterniond(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Quaterniond(IntPtr ptr) : base(ptr, 0, false) {}
+	public Quaterniond(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Quaterniond(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Quaterniond(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Quaterniond(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Quaterniond(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Quaterniond(double w, double x, double y, double z) { _thisArray[0] = SprExport.Spr_new_Quaterniond_5(w, x, y, z); _flag = true; }
 	~Quaterniond() { if (_flag) { SprExport.Spr_delete_Quaterniond(_thisArray[0]); _flag = false; } }
 	public static implicit operator Quaterniond(Quaternionf f) {
@@ -1293,8 +1333,12 @@ namespace SprCs {
     }
     public partial class Posef : CsObject {
 	public Posef() { _thisArray[0] = SprExport.Spr_new_Posef(); _flag = true; }
-	public Posef(IntPtr ptr) : base(ptr) {}
-	public Posef(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Posef(IntPtr ptr) : base(ptr, 0, false) {}
+	public Posef(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Posef(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Posef(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Posef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Posef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Posef(Vec3f p, Quaternionf q) { _thisArray[0] = SprExport.Spr_new_Posef_8(p, q); _flag = true; }
 	public Posef(float w, float x, float y, float z, float px, float py, float pz) { _thisArray[0] = SprExport.Spr_new_Posef_9(w, x, y, z, px, py, pz); _flag = true; }
 	~Posef() { if (_flag) { SprExport.Spr_delete_Posef(_thisArray[0]); _flag = false; } }
@@ -1511,8 +1555,12 @@ namespace SprCs {
     }
     public partial class Posed : CsObject {
 	public Posed() { _thisArray[0] = SprExport.Spr_new_Posed(); _flag = true; }
-	public Posed(IntPtr ptr) : base(ptr) {}
-	public Posed(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Posed(IntPtr ptr) : base(ptr, 0, false) {}
+	public Posed(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Posed(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Posed(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Posed(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Posed(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Posed(Vec3d p, Quaterniond q) { _thisArray[0] = SprExport.Spr_new_Posed_8(p, q); _flag = true; }
 	public Posed(double w, double x, double y, double z, double px, double py, double pz) { _thisArray[0] = SprExport.Spr_new_Posed_9(w, x, y, z, px, py, pz); _flag = true; }
 	~Posed() { if (_flag) { SprExport.Spr_delete_Posed(_thisArray[0]); _flag = false; } }
@@ -1729,8 +1777,12 @@ namespace SprCs {
     }
     public partial class Vec2i : CsObject {
 	public Vec2i() { _thisArray[0] = SprExport.Spr_new_Vec2i(); _flag = true; }
-	public Vec2i(IntPtr ptr) : base(ptr) {}
-	public Vec2i(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec2i(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec2i(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec2i(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec2i(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec2i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec2i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec2i(int x, int y) { _thisArray[0] = SprExport.Spr_new_Vec2i_3(x, y); _flag = true; }
 	~Vec2i() { if (_flag) { SprExport.Spr_delete_Vec2i(_thisArray[0]); _flag = false; } }
 	public static Vec2i operator- (Vec2i a) {
@@ -1828,8 +1880,12 @@ namespace SprCs {
     }
     public partial class Vec3i : CsObject {
 	public Vec3i() { _thisArray[0] = SprExport.Spr_new_Vec3i(); _flag = true; }
-	public Vec3i(IntPtr ptr) : base(ptr) {}
-	public Vec3i(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec3i(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec3i(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec3i(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec3i(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec3i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec3i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec3i(int x, int y, int z) { _thisArray[0] = SprExport.Spr_new_Vec3i_4(x, y, z); _flag = true; }
 	~Vec3i() { if (_flag) { SprExport.Spr_delete_Vec3i(_thisArray[0]); _flag = false; } }
 	public static Vec3i operator- (Vec3i a) {
@@ -1933,8 +1989,12 @@ namespace SprCs {
     }
     public partial class Vec4i : CsObject {
 	public Vec4i() { _thisArray[0] = SprExport.Spr_new_Vec4i(); _flag = true; }
-	public Vec4i(IntPtr ptr) : base(ptr) {}
-	public Vec4i(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec4i(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec4i(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec4i(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec4i(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec4i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec4i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec4i(int x, int y, int z, int w) { _thisArray[0] = SprExport.Spr_new_Vec4i_5(x, y, z, w); _flag = true; }
 	~Vec4i() { if (_flag) { SprExport.Spr_delete_Vec4i(_thisArray[0]); _flag = false; } }
 	public static Vec4i operator- (Vec4i a) {
@@ -2025,8 +2085,12 @@ namespace SprCs {
     }
     public partial class Vec6f : CsObject {
 	public Vec6f() { _thisArray[0] = SprExport.Spr_new_Vec6f(); _flag = true; }
-	public Vec6f(IntPtr ptr) : base(ptr) {}
-	public Vec6f(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec6f(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec6f(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec6f(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec6f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec6f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec6f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec6f(float vx, float vy, float vz, float wx, float wy, float wz) { _thisArray[0] = SprExport.Spr_new_Vec6f_7(vx, vy, vz, wx, wy, wz); _flag = true; }
 	~Vec6f() { if (_flag) { SprExport.Spr_delete_Vec6f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec6f(Vec6d d) {
@@ -2184,8 +2248,12 @@ namespace SprCs {
     }
     public partial class Vec6d : CsObject {
 	public Vec6d() { _thisArray[0] = SprExport.Spr_new_Vec6d(); _flag = true; }
-	public Vec6d(IntPtr ptr) : base(ptr) {}
-	public Vec6d(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Vec6d(IntPtr ptr) : base(ptr, 0, false) {}
+	public Vec6d(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Vec6d(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Vec6d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Vec6d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Vec6d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Vec6d(double vx, double vy, double vz, double wx, double wy, double wz) { _thisArray[0] = SprExport.Spr_new_Vec6d_7(vx, vy, vz, wx, wy, wz); _flag = true; }
 	~Vec6d() { if (_flag) { SprExport.Spr_delete_Vec6d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec6d(Vec6f f) {
@@ -2343,8 +2411,12 @@ namespace SprCs {
     }
     public partial class Curve3f : CsObject {
 	public Curve3f() { _thisArray[0] = SprExport.Spr_new_Curve3f(); _flag = true; }
-	public Curve3f(IntPtr ptr) : base(ptr) {}
-	public Curve3f(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Curve3f(IntPtr ptr) : base(ptr, 0, false) {}
+	public Curve3f(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Curve3f(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Curve3f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Curve3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Curve3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	~Curve3f() { if (_flag) { SprExport.Spr_delete_Curve3f(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2370,8 +2442,12 @@ namespace SprCs {
     }
     public partial class Matrix3f : CsObject {
 	public Matrix3f() { _thisArray[0] = SprExport.Spr_new_Matrix3f(); _flag = true; }
-	public Matrix3f(IntPtr ptr) : base(ptr) {}
-	public Matrix3f(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Matrix3f(IntPtr ptr) : base(ptr, 0, false) {}
+	public Matrix3f(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Matrix3f(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Matrix3f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Matrix3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Matrix3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Matrix3f(Vec3f ex, Vec3f ey, Vec3f ez) { _thisArray[0] = SprExport.Spr_new_Matrix3f_10(ex, ey, ez); _flag = true; }
 	public Matrix3f(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33) { _thisArray[0] = SprExport.Spr_new_Matrix3f_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
 	~Matrix3f() { if (_flag) { SprExport.Spr_delete_Matrix3f(_thisArray[0]); _flag = false; } }
@@ -2558,8 +2634,12 @@ namespace SprCs {
     }
     public partial class Matrix3d : CsObject {
 	public Matrix3d() { _thisArray[0] = SprExport.Spr_new_Matrix3d(); _flag = true; }
-	public Matrix3d(IntPtr ptr) : base(ptr) {}
-	public Matrix3d(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Matrix3d(IntPtr ptr) : base(ptr, 0, false) {}
+	public Matrix3d(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Matrix3d(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Matrix3d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Matrix3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Matrix3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Matrix3d(Vec3d ex, Vec3d ey, Vec3d ez) { _thisArray[0] = SprExport.Spr_new_Matrix3d_10(ex, ey, ez); _flag = true; }
 	public Matrix3d(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) { _thisArray[0] = SprExport.Spr_new_Matrix3d_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
 	~Matrix3d() { if (_flag) { SprExport.Spr_delete_Matrix3d(_thisArray[0]); _flag = false; } }
@@ -2746,8 +2826,12 @@ namespace SprCs {
     }
     public partial class Affinef : CsObject {
 	public Affinef() { _thisArray[0] = SprExport.Spr_new_Affinef(); _flag = true; }
-	public Affinef(IntPtr ptr) : base(ptr) {}
-	public Affinef(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Affinef(IntPtr ptr) : base(ptr, 0, false) {}
+	public Affinef(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Affinef(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Affinef(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Affinef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Affinef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Affinef(Affinef a) { _thisArray[0] = SprExport.Spr_new_Affinef_17(a); _flag = true; }
 	~Affinef() { if (_flag) { SprExport.Spr_delete_Affinef(_thisArray[0]); _flag = false; } }
 	public static explicit operator Affinef(Affined d) {
@@ -2932,8 +3016,12 @@ namespace SprCs {
     }
     public partial class Affined : CsObject {
 	public Affined() { _thisArray[0] = SprExport.Spr_new_Affined(); _flag = true; }
-	public Affined(IntPtr ptr) : base(ptr) {}
-	public Affined(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public Affined(IntPtr ptr) : base(ptr, 0, false) {}
+	public Affined(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public Affined(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public Affined(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public Affined(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public Affined(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public Affined(Affined a) { _thisArray[0] = SprExport.Spr_new_Affined_17(a); _flag = true; }
 	~Affined() { if (_flag) { SprExport.Spr_delete_Affined(_thisArray[0]); _flag = false; } }
 	public static implicit operator Affined(Affinef f) {
@@ -3118,8 +3206,12 @@ namespace SprCs {
     }
     public partial class SpatialVector : CsObject {
 	public SpatialVector() { _thisArray[0] = SprExport.Spr_new_SpatialVector(); _flag = true; }
-	public SpatialVector(IntPtr ptr) : base(ptr) {}
-	public SpatialVector(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public SpatialVector(IntPtr ptr) : base(ptr, 0, false) {}
+	public SpatialVector(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public SpatialVector(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public SpatialVector(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public SpatialVector(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public SpatialVector(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public SpatialVector(Vec3d _v, Vec3d _w) { _thisArray[0] = SprExport.Spr_new_SpatialVector_2(_v, _w); _flag = true; }
 	~SpatialVector() { if (_flag) { SprExport.Spr_delete_SpatialVector(_thisArray[0]); _flag = false; } }
 	public Vec3d v() {
@@ -3133,8 +3225,12 @@ namespace SprCs {
     }
     public partial class ObjectIf : CsObject {
 	public ObjectIf() { _thisArray[0] = SprExport.Spr_new_ObjectIf(); _flag = true; }
-	public ObjectIf(IntPtr ptr) : base(ptr) {}
-	public ObjectIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public ObjectIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public ObjectIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public ObjectIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public ObjectIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public ObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public ObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator ObjectIf(CsCastObject target) {
 		return (target._info.Inherit(ObjectIf.GetIfInfoStatic()) ? new ObjectIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3257,8 +3353,12 @@ namespace SprCs {
     }
     public partial class NamedObjectIf : ObjectIf {
 	public NamedObjectIf() { _thisArray[0] = SprExport.Spr_new_NamedObjectIf(); _flag = true; }
-	public NamedObjectIf(IntPtr ptr) : base(ptr) {}
-	public NamedObjectIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public NamedObjectIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public NamedObjectIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public NamedObjectIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public NamedObjectIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public NamedObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public NamedObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator NamedObjectIf(CsCastObject target) {
 		return (target._info.Inherit(NamedObjectIf.GetIfInfoStatic()) ? new NamedObjectIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3295,8 +3395,12 @@ namespace SprCs {
     }
     public partial class SceneObjectIf : NamedObjectIf {
 	public SceneObjectIf() { _thisArray[0] = SprExport.Spr_new_SceneObjectIf(); _flag = true; }
-	public SceneObjectIf(IntPtr ptr) : base(ptr) {}
-	public SceneObjectIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public SceneObjectIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public SceneObjectIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public SceneObjectIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public SceneObjectIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public SceneObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public SceneObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator SceneObjectIf(CsCastObject target) {
 		return (target._info.Inherit(SceneObjectIf.GetIfInfoStatic()) ? new SceneObjectIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3330,8 +3434,12 @@ namespace SprCs {
     }
     public partial class ObjectStatesIf : ObjectIf {
 	public ObjectStatesIf() { _thisArray[0] = SprExport.Spr_new_ObjectStatesIf(); _flag = true; }
-	public ObjectStatesIf(IntPtr ptr) : base(ptr) {}
-	public ObjectStatesIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public ObjectStatesIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public ObjectStatesIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public ObjectStatesIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public ObjectStatesIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public ObjectStatesIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public ObjectStatesIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator ObjectStatesIf(CsCastObject target) {
 		return (target._info.Inherit(ObjectStatesIf.GetIfInfoStatic()) ? new ObjectStatesIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3385,8 +3493,12 @@ namespace SprCs {
     }
     public partial class UTTypeDescIf : ObjectIf {
 	public UTTypeDescIf() { _thisArray[0] = SprExport.Spr_new_UTTypeDescIf(); _flag = true; }
-	public UTTypeDescIf(IntPtr ptr) : base(ptr) {}
-	public UTTypeDescIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public UTTypeDescIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public UTTypeDescIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public UTTypeDescIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public UTTypeDescIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public UTTypeDescIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public UTTypeDescIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator UTTypeDescIf(CsCastObject target) {
 		return (target._info.Inherit(UTTypeDescIf.GetIfInfoStatic()) ? new UTTypeDescIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3601,8 +3713,12 @@ namespace SprCs {
     }
     public partial class UTTypeDescDbIf : ObjectIf {
 	public UTTypeDescDbIf() { _thisArray[0] = SprExport.Spr_new_UTTypeDescDbIf(); _flag = true; }
-	public UTTypeDescDbIf(IntPtr ptr) : base(ptr) {}
-	public UTTypeDescDbIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public UTTypeDescDbIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public UTTypeDescDbIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public UTTypeDescDbIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public UTTypeDescDbIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public UTTypeDescDbIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public UTTypeDescDbIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator UTTypeDescDbIf(CsCastObject target) {
 		return (target._info.Inherit(UTTypeDescDbIf.GetIfInfoStatic()) ? new UTTypeDescDbIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3673,8 +3789,12 @@ namespace SprCs {
     }
     public partial class NameManagerIf : NamedObjectIf {
 	public NameManagerIf() { _thisArray[0] = SprExport.Spr_new_NameManagerIf(); _flag = true; }
-	public NameManagerIf(IntPtr ptr) : base(ptr) {}
-	public NameManagerIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public NameManagerIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public NameManagerIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public NameManagerIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public NameManagerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public NameManagerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public NameManagerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator NameManagerIf(CsCastObject target) {
 		return (target._info.Inherit(NameManagerIf.GetIfInfoStatic()) ? new NameManagerIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3722,8 +3842,12 @@ namespace SprCs {
     }
     public partial class SceneIf : NameManagerIf {
 	public SceneIf() { _thisArray[0] = SprExport.Spr_new_SceneIf(); _flag = true; }
-	public SceneIf(IntPtr ptr) : base(ptr) {}
-	public SceneIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public SceneIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public SceneIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public SceneIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public SceneIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public SceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public SceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator SceneIf(CsCastObject target) {
 		return (target._info.Inherit(SceneIf.GetIfInfoStatic()) ? new SceneIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3745,8 +3869,12 @@ namespace SprCs {
     }
     public partial class SdkIf : NameManagerIf {
 	public SdkIf() { _thisArray[0] = SprExport.Spr_new_SdkIf(); _flag = true; }
-	public SdkIf(IntPtr ptr) : base(ptr) {}
-	public SdkIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public SdkIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public SdkIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public SdkIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public SdkIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public SdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public SdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator SdkIf(CsCastObject target) {
 		return (target._info.Inherit(SdkIf.GetIfInfoStatic()) ? new SdkIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3768,8 +3896,12 @@ namespace SprCs {
     }
     public partial class UTTimerIf : ObjectIf {
 	public UTTimerIf() { _thisArray[0] = SprExport.Spr_new_UTTimerIf(); _flag = true; }
-	public UTTimerIf(IntPtr ptr) : base(ptr) {}
-	public UTTimerIf(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	public UTTimerIf(IntPtr ptr) : base(ptr, 0, false) {}
+	public UTTimerIf(IntPtr ptr, bool flag) : base(ptr, 0, flag) {}
+	public UTTimerIf(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) {}
+	public UTTimerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
+	public UTTimerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
+	public UTTimerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
 	public static implicit operator UTTimerIf(CsCastObject target) {
 		return (target._info.Inherit(UTTimerIf.GetIfInfoStatic()) ? new UTTimerIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3865,8 +3997,12 @@ namespace SprCs {
     }
     public partial class IfInfo : CsObject {
 	protected IfInfo() {}
-	public IfInfo(IntPtr ptr) : base(ptr) { }
-	public IfInfo(IntPtr ptr, bool flag) : base(ptr, flag) { }
+	public IfInfo(IntPtr ptr) : base(ptr, 0, false) { }
+	public IfInfo(IntPtr ptr, bool flag) : base(ptr, 0, flag) { }
+	public IfInfo(IntPtr ptr, int sceneIndex) : base(ptr, sceneIndex, false) { }
+	public IfInfo(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) { }
+	public IfInfo(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) { }
+	public IfInfo(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) { }
 	public bool Inherit(IfInfo info) {
 	    char ret = SprExport.Spr_IfInfo_Inherit((IntPtr) _thisArray[0], (IntPtr) info);
 	    return (ret == 0) ? false : true;
