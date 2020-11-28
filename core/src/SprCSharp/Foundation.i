@@ -102,6 +102,10 @@
 %feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6d;
 %feature("operator", def="MATRIX_OPERATOR") Spr::Matrix3f;
 %feature("operator", def="MATRIX_OPERATOR") Spr::Matrix3d;
+%feature("virtual_function") Spr::ObjectIf::SetDesc;
+%feature("virtual_function") Spr::ObjectIf::GetDesc;
+%feature("virtual_function") Spr::ObjectIf::DelChildObject;
+%feature("virtual_function") Spr::NamedObjectIf::SetName;
 
 //%feature("withfunc") Spr::Posed;
 //%feature("withfunc") Spr::Vec3d;

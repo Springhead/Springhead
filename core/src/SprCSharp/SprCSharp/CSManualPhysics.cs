@@ -7,6 +7,13 @@ using System.Threading;
 namespace SprCs {
     public partial class PHSdkIf : SdkIf {
         public static readonly object phSdkLock = new object();
+        //public static PHSdkIf phSdkIf;
+        //public static PHSdkIf CreateSdk(PHSdkDesc desc) {
+        //    IntPtr ptr = SprExport.Spr_PHSdkIf_CreateSdk((IntPtr)desc);
+        //    if (ptr == IntPtr.Zero) { return null; }
+        //    PHSdkIf obj = new PHSdkIf(ptr, 0);
+        //    return obj;
+        //}
         public PHSceneIf CreateScene(PHSceneDesc desc, bool multiThreadMode = false) {
             if (multiThreadMode) {
                 IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_thisArray[0], (IntPtr)desc);
@@ -91,13 +98,16 @@ namespace SprCs {
         private List<ThreadCallback> callbackForStepThreadToSceneForGetList = new List<ThreadCallback>();
         private List<ThreadCallback> callbackForStepThreadToSceneForGetOnSwapAfterSubThreadOneExecutionList = new List<ThreadCallback>();
         public ObjectStatesIf stateForSwap;
-        private bool callObjectStatesIf_Create = true;
+        public bool callObjectStatesIf_Create = true;
         public delegate void ThreadCallback();
         // Test用
         public bool debugSceneForGet = false;
         public bool debugSceneForBuffer = false;
         private bool isFirstForDebugSceneForBuffer = true;
 
+        public PHSceneIf GetCSPHSceneIf() { // 自動生成コードをSceneObjectIfと同じにするため
+            return this;
+        }
         public void ExecCallbackForSubThreadList() {
             if (callbackForSubThreadList.Count != 0) {
                 Console.WriteLine("CallbackForSubThread " + callbackForSubThreadList.Count);
@@ -361,106 +371,108 @@ namespace SprCs {
                 return true;
             }
         }
-        //public override bool DelChildObject(ObjectIf o) {
-        //    ObjectIf objectIf = this as ObjectIf;
-        //    Console.WriteLine("PHSceneIf.DelChildObject "/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
-        //    // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-        //    if (multiThreadMode) {
-        //        char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
-        //        lock (phSceneLock) {
-        //            isSetFunctionCalledInSubThread = true;
-        //            if (isStepThreadExecuting || isSwapping) {
-        //                //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-        //                AddCallbackForSubThreadForDelete(() => {
-        //                    Console.WriteLine("PHSceneIf.DelChildObject In callback"/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
-        //                    var ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
-        //                    if (ret1 == 0) {
-        //                        Console.WriteLine("failed PHSceneIf.DelChildObject ret1");
-        //                    }
-        //                    SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]); // 全てCallbackで実行しないとstepThreadで実行されるものが参照できなくなる
-        //                    SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
-        //                    callObjectStatesIf_Create = true;
-        //                });
-        //            } else {
-        //                Console.WriteLine("PHSceneIf.DelChildObject not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
-        //                for (int num = 0; num < _thisNumber; num++) {
-        //                    ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
-        //                }
-        //                callObjectStatesIf_Create = true;
-        //            }
-        //        }
-        //        if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
-        //            Console.WriteLine("failed PHSceneIf.DelChildObject");
-        //            return false;
-        //        } else {
-        //            return true;
-        //        }
-        //    } else {
-        //        Console.WriteLine("PHSceneIf.DelChildObject not multi");
-        //        var ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
-        //        if (ret0 == 0) {
-        //            return false;
-        //        } else {
-        //            return true;
-        //        }
-        //    }
-        //    //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
-        //}
-        //public override bool GetDesc(CsObject desc) {
-        //    char ret = (char)0; // <!!> これいいのか？
-        //    ObjectIf objectIf = this as ObjectIf;
-        //    if (multiThreadMode) {
-        //        var currentThread = Thread.CurrentThread;
-        //        if (currentThread == stepThread) {
-        //            if (_thisArray[sceneForStep] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり,PHIKEnginが呼んでるな
-        //                                                                     //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-        //                ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
-        //            } else {
-        //                //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-        //                ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
-        //            }
-        //        } else if (currentThread == subThread) {
-        //            lock (phSceneLock) {
-        //                if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
-        //                                                                        //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-        //                    ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
-        //                } else {
-        //                    //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
-        //                    ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
-        //                }
-        //            }
-        //        }
-        //    } else {
-        //        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
-        //    }
-        //    return (ret == 0) ? false : true;
-        //}
-        //public override void SetDesc(CsObject desc) {
-        //    // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
-        //    ObjectIf objectIf = this as ObjectIf;
-        //    if (multiThreadMode) {
-        //        lock (phSceneLock) {
-        //            isSetFunctionCalledInSubThread = true;
-        //            if (isStepThreadExecuting) {
-        //                Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
-        //                AddCallbackForSubThread(() => {
-        //                    //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
-        //                    SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
-        //                });
-        //                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
-        //                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
-        //            } else {
-        //                Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
-        //                foreach (var _this in _thisArray) {
-        //                    if (_this != IntPtr.Zero) {
-        //                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    } else {
-        //        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
-        //    }
-        //}
+        public override bool DelChildObject(ObjectIf o) {
+            ObjectIf objectIf = this as ObjectIf;
+            Console.WriteLine("PHSceneIf.DelChildObject "/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
+            // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
+            if (multiThreadMode) {
+                char[] ret0 = new char[_thisNumber] { (char)1, (char)1, (char)1 };
+                lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
+                    if (isStepThreadExecuting || isSwapping) {
+                        //Console.WriteLine("DelChildObject(overrided) isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                        AddCallbackForSubThreadForDelete(() => {
+                            Console.WriteLine("PHSceneIf.DelChildObject In callback"/* + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()*/); // <!!> GravityEngineはC++内部で実装されてる？
+                            var ret1 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForStep], (IntPtr)o._thisArray[sceneForStep]);
+                            if (ret1 == 0) {
+                                Console.WriteLine("failed PHSceneIf.DelChildObject ret1");
+                            }
+                            SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForBuffer], (IntPtr)o._thisArray[sceneForBuffer]); // 全てCallbackで実行しないとstepThreadで実行されるものが参照できなくなる
+                            SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[sceneForGet], (IntPtr)o._thisArray[sceneForGet]);
+                            callObjectStatesIf_Create = true;
+                        });
+                    } else {
+                        Console.WriteLine("PHSceneIf.DelChildObject not isStepping " + objectIf.GetIfInfo().ClassName() + " " + o.GetIfInfo().ClassName()); // <!!> GravityEngineはC++内部で実装されてる？
+                        for (int num = 0; num < _thisNumber; num++) {
+                            ret0[num] = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[num], (IntPtr)o._thisArray[num]);
+                        }
+                        callObjectStatesIf_Create = true;
+                    }
+                }
+                if (ret0[0] == 0 || ret0[1] == 0 || ret0[2] == 0) {
+                    Console.WriteLine("failed PHSceneIf.DelChildObject");
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                Console.WriteLine("PHSceneIf.DelChildObject not multi");
+                var ret0 = SprExport.Spr_ObjectIf_DelChildObject((IntPtr)_thisArray[0], (IntPtr)o._thisArray[0]);
+                if (ret0 == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            //return (ret0 == 0||ret1 == 0 || ret2 == 0) ? false : true;
+        }
+        public override bool GetDesc(CsObject desc) {
+            char ret = (char)0; // <!!> これいいのか？
+            ObjectIf objectIf = this as ObjectIf;
+            if (multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == stepThread) {
+                    if (_thisArray[sceneForStep] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり,PHIKEnginが呼んでるな
+                                                                   //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
+                    } else {
+                        //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                        ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
+                    }
+                } else if (currentThread == subThread) {
+                    lock (phSceneLock) {
+                        if (_thisArray[sceneForGet] != IntPtr.Zero) { // sceneForGet以外作られてない可能性あり
+                                                                      //Console.WriteLine("GetDesc(override) _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                            ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                        } else {
+                            //Console.WriteLine("GetDesc(override) null _thisArrayClassName " + objectIf.GetIfInfo().ClassName());
+                            ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
+                        }
+                    }
+                }
+            } else {
+                ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
+            }
+            return (ret == 0) ? false : true;
+        }
+        public override void SetDesc(CsObject desc) {
+            // <!!> CDShapeは_thisだけしか作らないためnullチェックが必要、ここにもlockを掛ける必要があるがPHSceneIfにアクセスできない
+            ObjectIf objectIf = this as ObjectIf;
+            if (multiThreadMode) {
+                lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
+                    if (isStepThreadExecuting) {
+                        Console.WriteLine("SetDesc(override)" + " isStepping " + objectIf.GetIfInfo().ClassName());
+                        AddCallbackForSubThread(() => {
+                            //Console.WriteLine("SetDesc(override)" + " isStepping in Callback " + objectIf.GetIfInfo().ClassName());
+                            SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
+                        });
+                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
+                        SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                    } else {
+                        Console.WriteLine("SetDesc(override)" + " not isStepping " + objectIf.GetIfInfo().ClassName());
+                        foreach (var _this in _thisArray) {
+                            if (_this != IntPtr.Zero) {
+                                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_this, (IntPtr)desc);
+                            }
+                        }
+                    }
+                }
+            } else {
+                SprExport.Spr_ObjectIf_SetDesc((IntPtr)_thisArray[0], (IntPtr)desc);
+            }
+        }
+        public override void SetName(string n) {
+        }
     }
 }
