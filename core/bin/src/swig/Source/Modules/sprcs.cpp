@@ -1382,37 +1382,59 @@ public:
 				Printf(CS, ") {\n");
 
 				// SceneObjectIfの継承をしたメソッドはGet系メソッドとSet系メソッドで定型文が違うため，別処理
-				bool is_sceneobjectif_getfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないGetメソッド
-				bool is_sceneobjectif_setfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないSetメソッド
+				//bool is_sceneobjectif_getfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないGetメソッド
+				//bool is_sceneobjectif_setfunction = false; // SceneObjectIfを継承したIfクラスのスタティックでないSetメソッド
 				bool is_change_objectstate_function = false; // ObjectStateのメモリ構成が変更されるメソッド
+
+				bool is_call_all_thisArray = false; // 全ての_thisArrayでメソッドを実行する
+				bool is_phsceneobject = false; // phSceneに含まれるオブジェクト
+				bool is_return_thisArray0 = false; // _thisArray[0]に設定してリターン
 				if (!ni.is_static) {
 					Node* scene_object_if = FindNodeByAttrR(topnode, "name", "Spr::SceneObjectIf");
 					Node* phscene_if = FindNodeByAttrR(topnode, "name", "Spr::PHSceneIf");
-					if (isChildClass(n, scene_object_if, topnode) || n == phscene_if) {
+					if ((isChildClass(n, scene_object_if, topnode) || n == phscene_if)) {
+						is_phsceneobject = true;
+
 						if (string(ni.cs_name).find("Get") == 0 || // 先頭がGet,Is
 							string(ni.cs_name).find("Is") == 0) {
-							is_sceneobjectif_getfunction = true;
+							is_call_all_thisArray = false;
 						}
 						else if(string(ni.cs_name).find("Create") == 0){ // Create系はほとんど
 							is_change_objectstate_function = true;
+							is_call_all_thisArray = true;
 						}
 						else {
-							is_sceneobjectif_setfunction = true; // Get系メソッドをSet系メソッドの定型文に当てはめても，動作するはずなのでGetという名前以外すべて
+							is_call_all_thisArray = true;
 						}
+
+						if (ni.is_struct && ENDWITH(ni.cs_type, "If")) { // ifクラスは全て呼ぶ
+							is_call_all_thisArray = true;
+						}
+						
+						//Node* cs_type_node = FindNodeByAttrR(topnode, "name", ni.cs_type);
+						//if (cs_type_node == NULL) {
+						//	Printf(CS, "		// NULL;\n");
+						//}
+						//else {
+						//	Printf(CS, "		// %s;\n", get_node_info(fps, cs_type_node).cs_name);
+						//}
+						//if (!isChildClass(cs_type_node, scene_object_if, topnode) && !(cs_type_node == phscene_if)) { // 戻り値の型がPHSceneSceneのObject以外
+						//	is_return_thisArray0 = true;
+						//}
 					}
 				}
-				if (is_sceneobjectif_getfunction) {
+				if (is_phsceneobject && !is_call_all_thisArray) {
 					Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
 					Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 					Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 					Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
 					csfunction_code(/* multithread = */true, /* lvalue_name = */"Step", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Step", false, "phSceneIf.sceneForStep", false);
+					CSFunctionReturnCode(ni, ci, topnode, "Step", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForStep", false);
 					Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 					Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 					Printf(CS, "					phSceneIf.isGetFunctionCalledInSubThread = true;\n");
 					csfunction_code(/* multithread = */true, /* lvalue_name = */"Get", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Get", false, "phSceneIf.sceneForGet", false);
+					CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", false);
 					Printf(CS, "				}\n");
 					Printf(CS, "			}\n");
 					Printf(CS, "		} else {\n");
@@ -1421,7 +1443,7 @@ public:
 					Printf(CS, "		}\n");
 					Printf(CS, "		throw new InvalidOperationException();\n");
 				}
-				else if (is_sceneobjectif_setfunction || is_change_objectstate_function) {
+				else if (is_phsceneobject && is_call_all_thisArray) {
 					Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
 					Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 					Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
@@ -1437,7 +1459,7 @@ public:
 					string_index++;
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Get", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					Printf(CS, "				});\n");
-					CSFunctionReturnCode(ni, ci, topnode, "Step", false, "phSceneIf.sceneForStep", false);
+					CSFunctionReturnCode(ni, ci, topnode, "Step", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForStep", false);
 					Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 					Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 					Printf(CS, "					phSceneIf.isSetFunctionCalledInSubThread = true;\n");
@@ -1456,14 +1478,14 @@ public:
 					string_index++;
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Buffer", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForBuffer]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Get", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Get", false, "phSceneIf.sceneForGet", true);
+					CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", true);
 					Printf(CS, "					} else {\n");
 					//Printf(CS, "						foreach (var _this in _thisArray) {\n");
 					// ここではコールバックを使用しないので引数をnewする必要はない
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Step", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Buffer", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForBuffer]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Get", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Get", true, "phSceneIf.sceneForGet", true);
+					CSFunctionReturnCode(ni, ci, topnode, "Get", !is_return_thisArray0, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", true);
 					//Printf(CS, "						}\n");
 					Printf(CS, "					}\n");
 					Printf(CS, "				}\n");
@@ -2053,8 +2075,11 @@ public:
 		}
 	}
 
-	// targetのIfクラスがparentを継承しているかを判断する
+	// targetのIfクラスがparentを継承しているかを判断する 自身でもTrue
 	bool isChildClass(Node *target, Node *parent, Node *topnode) {
+		if (target == parent) {
+			return true;
+		}
 		char* suffix = "If";
 		Strings bases;
 		GetBaseList(bases, Getattr(target, "baselist"), suffix);
@@ -2067,9 +2092,6 @@ public:
 			// if_nameからノードを取得
 			Node* current_parent = FindNodeByAttrR(topnode, "name", (char *)if_name.c_str());
 			if (current_parent != NULL) {
-				if (current_parent == parent) {
-					return true;
-				}
 				if (isChildClass(current_parent, parent, topnode)) {
 					return true;
 				}
