@@ -7,13 +7,28 @@ using System.Threading;
 namespace SprCs {
     public partial class PHSdkIf : SdkIf {
         public static readonly object phSdkLock = new object();
-        //public static PHSdkIf phSdkIf;
-        //public static PHSdkIf CreateSdk(PHSdkDesc desc) {
-        //    IntPtr ptr = SprExport.Spr_PHSdkIf_CreateSdk((IntPtr)desc);
-        //    if (ptr == IntPtr.Zero) { return null; }
-        //    PHSdkIf obj = new PHSdkIf(ptr, 0);
-        //    return obj;
-        //}
+        public static PHSdkIf phSdkIf = null;
+        public static PHSdkIf CreateSdk(PHSdkDesc desc) {
+            IntPtr ptr = SprExport.Spr_PHSdkIf_CreateSdk((IntPtr)desc);
+            if (ptr == IntPtr.Zero) { return null; }
+            PHSdkIf obj = new PHSdkIf(ptr, 0);
+            if (phSdkIf != null) {
+                throw new NotSupportedException();
+            }
+            phSdkIf = obj;
+            return obj;
+        }
+        public static PHSdkIf CreateSdk() {
+            IntPtr ptr = SprExport.Spr_PHSdkIf_CreateSdk_1();
+            if (ptr == IntPtr.Zero) { return null; }
+            PHSdkIf obj = new PHSdkIf(ptr);
+            if (phSdkIf != null) {
+                throw new NotSupportedException();
+            }
+            phSdkIf = obj;
+            return obj;
+        }
+
         public PHSceneIf CreateScene(PHSceneDesc desc, bool multiThreadMode = false) {
             if (multiThreadMode) {
                 IntPtr ptr1 = SprExport.Spr_PHSdkIf_CreateScene((IntPtr)_thisArray[0], (IntPtr)desc);
@@ -104,6 +119,10 @@ namespace SprCs {
         public bool debugSceneForGet = false;
         public bool debugSceneForBuffer = false;
         private bool isFirstForDebugSceneForBuffer = true;
+
+        public PHSdkIf GetSdk() {
+            return PHSdkIf.phSdkIf;
+        }
 
         public PHSceneIf GetCSPHSceneIf() { // 自動生成コードをSceneObjectIfと同じにするため
             return this;

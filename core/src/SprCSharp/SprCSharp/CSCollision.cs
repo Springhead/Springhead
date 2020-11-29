@@ -13,6 +13,8 @@ namespace SprCs {
 	public PHMaterial(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHMaterial(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHMaterial(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHMaterial(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public PHMaterial(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHMaterial() { if (_flag) { SprExport.Spr_delete_PHMaterial(_thisArray[0]); _flag = false; } }
 	public float density {
 	    get { return SprExport.Spr_PHMaterial_get_density(_thisArray[0]); }
@@ -285,6 +287,8 @@ namespace SprCs {
 	public CDShapeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDShapeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDShapeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDShapeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDShapeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDShapeDesc() { if (_flag) { SprExport.Spr_delete_CDShapeDesc(_thisArray[0]); _flag = false; } }
 	public PHMaterial material {
 	    get { return new PHMaterial(SprExport.Spr_CDShapeDesc_addr_material(_thisArray[0])); }
@@ -323,6 +327,8 @@ namespace SprCs {
 	public CDConvexMeshDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDConvexMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDConvexMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDConvexMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDConvexMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDConvexMeshDesc() { if (_flag) { SprExport.Spr_delete_CDConvexMeshDesc(_thisArray[0]); _flag = false; } }
         public vectorwrapper_Vec3f vertices {
             get { return new vectorwrapper_Vec3f(SprExport.Spr_CDConvexMeshDesc_addr_vertices(_thisArray[0])); }
@@ -367,6 +373,8 @@ namespace SprCs {
 	public CDConvexMeshInterpolateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDConvexMeshInterpolateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDConvexMeshInterpolateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDConvexMeshInterpolateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDConvexMeshInterpolateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDConvexMeshInterpolateDesc() { if (_flag) { SprExport.Spr_delete_CDConvexMeshInterpolateDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -404,6 +412,8 @@ namespace SprCs {
 	public CDSphereDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDSphereDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDSphereDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDSphereDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDSphereDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDSphereDesc() { if (_flag) { SprExport.Spr_delete_CDSphereDesc(_thisArray[0]); _flag = false; } }
 	public float radius {
 	    get { return SprExport.Spr_CDSphereDesc_get_radius(_thisArray[0]); }
@@ -448,6 +458,8 @@ namespace SprCs {
 	public CDEllipsoidDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDEllipsoidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDEllipsoidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDEllipsoidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDEllipsoidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDEllipsoidDesc() { if (_flag) { SprExport.Spr_delete_CDEllipsoidDesc(_thisArray[0]); _flag = false; } }
 	public Vec3d radius {
 	    get { return new Vec3d(SprExport.Spr_CDEllipsoidDesc_addr_radius(_thisArray[0])); }
@@ -492,6 +504,8 @@ namespace SprCs {
 	public CDCapsuleDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDCapsuleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDCapsuleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDCapsuleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDCapsuleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDCapsuleDesc() { if (_flag) { SprExport.Spr_delete_CDCapsuleDesc(_thisArray[0]); _flag = false; } }
 	public float radius {
 	    get { return SprExport.Spr_CDCapsuleDesc_get_radius(_thisArray[0]); }
@@ -543,6 +557,8 @@ namespace SprCs {
 	public CDRoundConeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDRoundConeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDRoundConeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDRoundConeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDRoundConeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDRoundConeDesc() { if (_flag) { SprExport.Spr_delete_CDRoundConeDesc(_thisArray[0]); _flag = false; } }
 	public Vec2f radius {
 	    get { return new Vec2f(SprExport.Spr_CDRoundConeDesc_addr_radius(_thisArray[0])); }
@@ -594,6 +610,8 @@ namespace SprCs {
 	public CDBoxDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDBoxDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDBoxDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDBoxDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDBoxDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public CDBoxDesc(Vec3d bs) { _thisArray[0] = SprExport.Spr_new_CDBoxDesc_2(bs); _flag = true; }
 	~CDBoxDesc() { if (_flag) { SprExport.Spr_delete_CDBoxDesc(_thisArray[0]); _flag = false; } }
 	public Vec3f boxsize {
@@ -639,6 +657,8 @@ namespace SprCs {
 	public CDShapePairState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDShapePairState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDShapePairState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDShapePairState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDShapePairState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDShapePairState() { if (_flag) { SprExport.Spr_delete_CDShapePairState(_thisArray[0]); _flag = false; } }
 	public Vec3d normal {
 	    get { return new Vec3d(SprExport.Spr_CDShapePairState_addr_normal(_thisArray[0])); }
@@ -691,6 +711,8 @@ namespace SprCs {
 	public CDBounds(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDBounds(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDBounds(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDBounds(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDBounds(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public CDBounds(Vec3d min0, Vec3d max0) { _thisArray[0] = SprExport.Spr_new_CDBounds_3(min0, max0); _flag = true; }
 	~CDBounds() { if (_flag) { SprExport.Spr_delete_CDBounds(_thisArray[0]); _flag = false; } }
 	public Vec3f min {
@@ -726,6 +748,8 @@ namespace SprCs {
 	public CDSpatialHashTableDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDSpatialHashTableDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDSpatialHashTableDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDSpatialHashTableDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDSpatialHashTableDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~CDSpatialHashTableDesc() { if (_flag) { SprExport.Spr_delete_CDSpatialHashTableDesc(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -757,6 +781,8 @@ namespace SprCs {
 	public CDShapeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDShapeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDShapeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDShapeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDShapeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDShapeIf(CsCastObject target) {
 		return (target._info.Inherit(CDShapeIf.GetIfInfoStatic()) ? new CDShapeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -921,6 +947,8 @@ namespace SprCs {
 	public CDConvexIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDConvexIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDConvexIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDConvexIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDConvexIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDConvexIf(CsCastObject target) {
 		return (target._info.Inherit(CDConvexIf.GetIfInfoStatic()) ? new CDConvexIf(target._thisArray[0], target._flag) : null);
 	}
@@ -956,6 +984,8 @@ namespace SprCs {
 	public CDFaceIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDFaceIf(CsCastObject target) {
 		return (target._info.Inherit(CDFaceIf.GetIfInfoStatic()) ? new CDFaceIf(target._thisArray[0], target._flag) : null);
 	}
@@ -991,6 +1021,8 @@ namespace SprCs {
 	public CDQuadFaceIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDQuadFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDQuadFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDQuadFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDQuadFaceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDQuadFaceIf(CsCastObject target) {
 		return (target._info.Inherit(CDQuadFaceIf.GetIfInfoStatic()) ? new CDQuadFaceIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1026,6 +1058,8 @@ namespace SprCs {
 	public CDConvexMeshIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDConvexMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDConvexMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDConvexMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDConvexMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDConvexMeshIf(CsCastObject target) {
 		return (target._info.Inherit(CDConvexMeshIf.GetIfInfoStatic()) ? new CDConvexMeshIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1047,7 +1081,7 @@ namespace SprCs {
 	public CDFaceIf GetFace(int i) {
 	    IntPtr ptr = SprExport.Spr_CDConvexMeshIf_GetFace((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
-            CDFaceIf obj = new CDFaceIf(ptr);
+            CDFaceIf obj = new CDFaceIf(ptr, 0);
             return obj;
 	}
 	public int NFace() {
@@ -1071,6 +1105,8 @@ namespace SprCs {
 	public CDConvexMeshInterpolateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDConvexMeshInterpolateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDConvexMeshInterpolateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDConvexMeshInterpolateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDConvexMeshInterpolateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDConvexMeshInterpolateIf(CsCastObject target) {
 		return (target._info.Inherit(CDConvexMeshInterpolateIf.GetIfInfoStatic()) ? new CDConvexMeshInterpolateIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1098,6 +1134,8 @@ namespace SprCs {
 	public CDSphereIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDSphereIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDSphereIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDSphereIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDSphereIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDSphereIf(CsCastObject target) {
 		return (target._info.Inherit(CDSphereIf.GetIfInfoStatic()) ? new CDSphereIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1132,6 +1170,8 @@ namespace SprCs {
 	public CDEllipsoidIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDEllipsoidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDEllipsoidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDEllipsoidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDEllipsoidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDEllipsoidIf(CsCastObject target) {
 		return (target._info.Inherit(CDEllipsoidIf.GetIfInfoStatic()) ? new CDEllipsoidIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1166,6 +1206,8 @@ namespace SprCs {
 	public CDCapsuleIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDCapsuleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDCapsuleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDCapsuleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDCapsuleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDCapsuleIf(CsCastObject target) {
 		return (target._info.Inherit(CDCapsuleIf.GetIfInfoStatic()) ? new CDCapsuleIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1207,6 +1249,8 @@ namespace SprCs {
 	public CDRoundConeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDRoundConeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDRoundConeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDRoundConeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDRoundConeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDRoundConeIf(CsCastObject target) {
 		return (target._info.Inherit(CDRoundConeIf.GetIfInfoStatic()) ? new CDRoundConeIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1251,6 +1295,8 @@ namespace SprCs {
 	public CDBoxIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDBoxIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDBoxIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDBoxIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDBoxIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDBoxIf(CsCastObject target) {
 		return (target._info.Inherit(CDBoxIf.GetIfInfoStatic()) ? new CDBoxIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1280,7 +1326,7 @@ namespace SprCs {
 	public CDFaceIf GetFace(int i) {
 	    IntPtr ptr = SprExport.Spr_CDBoxIf_GetFace((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
-            CDFaceIf obj = new CDFaceIf(ptr);
+            CDFaceIf obj = new CDFaceIf(ptr, 0);
             return obj;
 	}
 	public Vec3f SetBoxSize(Vec3f boxsize) {
@@ -1296,6 +1342,8 @@ namespace SprCs {
 	public CDShapePairIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDShapePairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDShapePairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDShapePairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDShapePairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDShapePairIf(CsCastObject target) {
 		return (target._info.Inherit(CDShapePairIf.GetIfInfoStatic()) ? new CDShapePairIf(target._thisArray[0], target._flag) : null);
 	}
@@ -1317,15 +1365,39 @@ namespace SprCs {
 	public CDShapeIf GetShape(int i) {
 	    IntPtr ptr = SprExport.Spr_CDShapePairIf_GetShape((IntPtr) _thisArray[0], (int) i);
             if (ptr == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptr);
-            if (obj.GetIfInfo() == CDConvexIf.GetIfInfoStatic()) { return new CDConvexIf(ptr); }
-            if (obj.GetIfInfo() == CDConvexMeshIf.GetIfInfoStatic()) { return new CDConvexMeshIf(ptr); }
-            if (obj.GetIfInfo() == CDSphereIf.GetIfInfoStatic()) { return new CDSphereIf(ptr); }
-            if (obj.GetIfInfo() == CDEllipsoidIf.GetIfInfoStatic()) { return new CDEllipsoidIf(ptr); }
-            if (obj.GetIfInfo() == CDCapsuleIf.GetIfInfoStatic()) { return new CDCapsuleIf(ptr); }
-            if (obj.GetIfInfo() == CDRoundConeIf.GetIfInfoStatic()) { return new CDRoundConeIf(ptr); }
-            if (obj.GetIfInfo() == CDBoxIf.GetIfInfoStatic()) { return new CDBoxIf(ptr); }
-            if (obj.GetIfInfo() == CDConvexMeshInterpolateIf.GetIfInfoStatic()) { return new CDConvexMeshInterpolateIf(ptr); }
+            CDShapeIf obj = new CDShapeIf(ptr, 0);
+            if (obj.GetIfInfo() == CDConvexIf.GetIfInfoStatic()) {
+				CDConvexIf appropriate_type = new CDConvexIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDConvexMeshIf.GetIfInfoStatic()) {
+				CDConvexMeshIf appropriate_type = new CDConvexMeshIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDSphereIf.GetIfInfoStatic()) {
+				CDSphereIf appropriate_type = new CDSphereIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDEllipsoidIf.GetIfInfoStatic()) {
+				CDEllipsoidIf appropriate_type = new CDEllipsoidIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDCapsuleIf.GetIfInfoStatic()) {
+				CDCapsuleIf appropriate_type = new CDCapsuleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDRoundConeIf.GetIfInfoStatic()) {
+				CDRoundConeIf appropriate_type = new CDRoundConeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDBoxIf.GetIfInfoStatic()) {
+				CDBoxIf appropriate_type = new CDBoxIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == CDConvexMeshInterpolateIf.GetIfInfoStatic()) {
+				CDConvexMeshInterpolateIf appropriate_type = new CDConvexMeshInterpolateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
 	public Posed GetShapePose(int i) {
@@ -1349,6 +1421,8 @@ namespace SprCs {
 	public CDSpatialHashTableIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public CDSpatialHashTableIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public CDSpatialHashTableIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public CDSpatialHashTableIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public CDSpatialHashTableIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator CDSpatialHashTableIf(CsCastObject target) {
 		return (target._info.Inherit(CDSpatialHashTableIf.GetIfInfoStatic()) ? new CDSpatialHashTableIf(target._thisArray[0], target._flag) : null);
 	}

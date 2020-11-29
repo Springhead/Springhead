@@ -13,6 +13,8 @@ namespace SprCs {
 	public ObjectIfs(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public ObjectIfs(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public ObjectIfs(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public ObjectIfs(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public ObjectIfs(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~ObjectIfs() { if (_flag) { SprExport.Spr_delete_ObjectIfs(_thisArray[0]); _flag = false; } }
 	public void Push(ObjectIf obj) {
 	    SprExport.Spr_ObjectIfs_Push((IntPtr) _thisArray[0], (IntPtr) obj);
@@ -23,12 +25,27 @@ namespace SprCs {
 	public ObjectIf Top() {
 	    IntPtr ptr = SprExport.Spr_ObjectIfs_Top((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptr);
-            if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) { return new NamedObjectIf(ptr); }
-            if (obj.GetIfInfo() == ObjectStatesIf.GetIfInfoStatic()) { return new ObjectStatesIf(ptr); }
-            if (obj.GetIfInfo() == UTTypeDescIf.GetIfInfoStatic()) { return new UTTypeDescIf(ptr); }
-            if (obj.GetIfInfo() == UTTypeDescDbIf.GetIfInfoStatic()) { return new UTTypeDescDbIf(ptr); }
-            if (obj.GetIfInfo() == UTTimerIf.GetIfInfoStatic()) { return new UTTimerIf(ptr); }
+            ObjectIf obj = new ObjectIf(ptr, 0);
+            if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) {
+				NamedObjectIf appropriate_type = new NamedObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == ObjectStatesIf.GetIfInfoStatic()) {
+				ObjectStatesIf appropriate_type = new ObjectStatesIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTypeDescIf.GetIfInfoStatic()) {
+				UTTypeDescIf appropriate_type = new UTTypeDescIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTypeDescDbIf.GetIfInfoStatic()) {
+				UTTypeDescDbIf appropriate_type = new UTTypeDescDbIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTimerIf.GetIfInfoStatic()) {
+				UTTimerIf appropriate_type = new UTTimerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
     }
@@ -40,6 +57,8 @@ namespace SprCs {
 	public UTAccessBase(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) { }
 	public UTAccessBase(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) { }
 	public UTAccessBase(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) { }
+	public UTAccessBase(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) { }
+	public UTAccessBase(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) { }
 	public IntPtr Create() {
 	    IntPtr result = (IntPtr) SprExport.Spr_UTAccessBase_Create((IntPtr) _thisArray[0]);
 	    return result;
@@ -75,6 +94,8 @@ namespace SprCs {
 	public Vec2f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec2f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec2f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec2f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec2f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec2f(float x, float y) { _thisArray[0] = SprExport.Spr_new_Vec2f_3(x, y); _flag = true; }
 	~Vec2f() { if (_flag) { SprExport.Spr_delete_Vec2f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec2f(Vec2d d) {
@@ -217,6 +238,8 @@ namespace SprCs {
 	public Vec2d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec2d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec2d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec2d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec2d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec2d(double x, double y) { _thisArray[0] = SprExport.Spr_new_Vec2d_3(x, y); _flag = true; }
 	~Vec2d() { if (_flag) { SprExport.Spr_delete_Vec2d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec2d(Vec2f f) {
@@ -359,6 +382,8 @@ namespace SprCs {
 	public Vec3f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec3f(float x, float y, float z) { _thisArray[0] = SprExport.Spr_new_Vec3f_4(x, y, z); _flag = true; }
 	~Vec3f() { if (_flag) { SprExport.Spr_delete_Vec3f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec3f(Vec3d d) {
@@ -512,6 +537,8 @@ namespace SprCs {
 	public Vec3d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec3d(double x, double y, double z) { _thisArray[0] = SprExport.Spr_new_Vec3d_4(x, y, z); _flag = true; }
 	~Vec3d() { if (_flag) { SprExport.Spr_delete_Vec3d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec3d(Vec3f f) {
@@ -665,6 +692,8 @@ namespace SprCs {
 	public Vec4f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec4f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec4f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec4f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec4f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec4f(float x, float y, float z, float w) { _thisArray[0] = SprExport.Spr_new_Vec4f_5(x, y, z, w); _flag = true; }
 	~Vec4f() { if (_flag) { SprExport.Spr_delete_Vec4f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec4f(Vec4d d) {
@@ -810,6 +839,8 @@ namespace SprCs {
 	public Vec4d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec4d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec4d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec4d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec4d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec4d(double x, double y, double z, double w) { _thisArray[0] = SprExport.Spr_new_Vec4d_5(x, y, z, w); _flag = true; }
 	~Vec4d() { if (_flag) { SprExport.Spr_delete_Vec4d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec4d(Vec4f f) {
@@ -955,6 +986,8 @@ namespace SprCs {
 	public Quaternionf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Quaternionf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Quaternionf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Quaternionf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Quaternionf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Quaternionf(float w, float x, float y, float z) { _thisArray[0] = SprExport.Spr_new_Quaternionf_5(w, x, y, z); _flag = true; }
 	~Quaternionf() { if (_flag) { SprExport.Spr_delete_Quaternionf(_thisArray[0]); _flag = false; } }
 	public static explicit operator Quaternionf(Quaterniond d) {
@@ -1147,6 +1180,8 @@ namespace SprCs {
 	public Quaterniond(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Quaterniond(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Quaterniond(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Quaterniond(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Quaterniond(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Quaterniond(double w, double x, double y, double z) { _thisArray[0] = SprExport.Spr_new_Quaterniond_5(w, x, y, z); _flag = true; }
 	~Quaterniond() { if (_flag) { SprExport.Spr_delete_Quaterniond(_thisArray[0]); _flag = false; } }
 	public static implicit operator Quaterniond(Quaternionf f) {
@@ -1339,6 +1374,8 @@ namespace SprCs {
 	public Posef(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Posef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Posef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Posef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Posef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Posef(Vec3f p, Quaternionf q) { _thisArray[0] = SprExport.Spr_new_Posef_8(p, q); _flag = true; }
 	public Posef(float w, float x, float y, float z, float px, float py, float pz) { _thisArray[0] = SprExport.Spr_new_Posef_9(w, x, y, z, px, py, pz); _flag = true; }
 	~Posef() { if (_flag) { SprExport.Spr_delete_Posef(_thisArray[0]); _flag = false; } }
@@ -1561,6 +1598,8 @@ namespace SprCs {
 	public Posed(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Posed(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Posed(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Posed(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Posed(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Posed(Vec3d p, Quaterniond q) { _thisArray[0] = SprExport.Spr_new_Posed_8(p, q); _flag = true; }
 	public Posed(double w, double x, double y, double z, double px, double py, double pz) { _thisArray[0] = SprExport.Spr_new_Posed_9(w, x, y, z, px, py, pz); _flag = true; }
 	~Posed() { if (_flag) { SprExport.Spr_delete_Posed(_thisArray[0]); _flag = false; } }
@@ -1783,6 +1822,8 @@ namespace SprCs {
 	public Vec2i(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec2i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec2i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec2i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec2i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec2i(int x, int y) { _thisArray[0] = SprExport.Spr_new_Vec2i_3(x, y); _flag = true; }
 	~Vec2i() { if (_flag) { SprExport.Spr_delete_Vec2i(_thisArray[0]); _flag = false; } }
 	public static Vec2i operator- (Vec2i a) {
@@ -1886,6 +1927,8 @@ namespace SprCs {
 	public Vec3i(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec3i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec3i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec3i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec3i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec3i(int x, int y, int z) { _thisArray[0] = SprExport.Spr_new_Vec3i_4(x, y, z); _flag = true; }
 	~Vec3i() { if (_flag) { SprExport.Spr_delete_Vec3i(_thisArray[0]); _flag = false; } }
 	public static Vec3i operator- (Vec3i a) {
@@ -1995,6 +2038,8 @@ namespace SprCs {
 	public Vec4i(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec4i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec4i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec4i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec4i(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec4i(int x, int y, int z, int w) { _thisArray[0] = SprExport.Spr_new_Vec4i_5(x, y, z, w); _flag = true; }
 	~Vec4i() { if (_flag) { SprExport.Spr_delete_Vec4i(_thisArray[0]); _flag = false; } }
 	public static Vec4i operator- (Vec4i a) {
@@ -2091,6 +2136,8 @@ namespace SprCs {
 	public Vec6f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec6f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec6f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec6f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec6f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec6f(float vx, float vy, float vz, float wx, float wy, float wz) { _thisArray[0] = SprExport.Spr_new_Vec6f_7(vx, vy, vz, wx, wy, wz); _flag = true; }
 	~Vec6f() { if (_flag) { SprExport.Spr_delete_Vec6f(_thisArray[0]); _flag = false; } }
 	public static explicit operator Vec6f(Vec6d d) {
@@ -2254,6 +2301,8 @@ namespace SprCs {
 	public Vec6d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Vec6d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Vec6d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Vec6d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Vec6d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Vec6d(double vx, double vy, double vz, double wx, double wy, double wz) { _thisArray[0] = SprExport.Spr_new_Vec6d_7(vx, vy, vz, wx, wy, wz); _flag = true; }
 	~Vec6d() { if (_flag) { SprExport.Spr_delete_Vec6d(_thisArray[0]); _flag = false; } }
 	public static implicit operator Vec6d(Vec6f f) {
@@ -2417,6 +2466,8 @@ namespace SprCs {
 	public Curve3f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Curve3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Curve3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Curve3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Curve3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~Curve3f() { if (_flag) { SprExport.Spr_delete_Curve3f(_thisArray[0]); _flag = false; } }
     }
     [System.Serializable]
@@ -2448,6 +2499,8 @@ namespace SprCs {
 	public Matrix3f(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Matrix3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Matrix3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Matrix3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Matrix3f(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Matrix3f(Vec3f ex, Vec3f ey, Vec3f ez) { _thisArray[0] = SprExport.Spr_new_Matrix3f_10(ex, ey, ez); _flag = true; }
 	public Matrix3f(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33) { _thisArray[0] = SprExport.Spr_new_Matrix3f_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
 	~Matrix3f() { if (_flag) { SprExport.Spr_delete_Matrix3f(_thisArray[0]); _flag = false; } }
@@ -2640,6 +2693,8 @@ namespace SprCs {
 	public Matrix3d(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Matrix3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Matrix3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Matrix3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Matrix3d(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Matrix3d(Vec3d ex, Vec3d ey, Vec3d ez) { _thisArray[0] = SprExport.Spr_new_Matrix3d_10(ex, ey, ez); _flag = true; }
 	public Matrix3d(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) { _thisArray[0] = SprExport.Spr_new_Matrix3d_11(m11, m12, m13, m21, m22, m23, m31, m32, m33); _flag = true; }
 	~Matrix3d() { if (_flag) { SprExport.Spr_delete_Matrix3d(_thisArray[0]); _flag = false; } }
@@ -2832,6 +2887,8 @@ namespace SprCs {
 	public Affinef(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Affinef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Affinef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Affinef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Affinef(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Affinef(Affinef a) { _thisArray[0] = SprExport.Spr_new_Affinef_17(a); _flag = true; }
 	~Affinef() { if (_flag) { SprExport.Spr_delete_Affinef(_thisArray[0]); _flag = false; } }
 	public static explicit operator Affinef(Affined d) {
@@ -3022,6 +3079,8 @@ namespace SprCs {
 	public Affined(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public Affined(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public Affined(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public Affined(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public Affined(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public Affined(Affined a) { _thisArray[0] = SprExport.Spr_new_Affined_17(a); _flag = true; }
 	~Affined() { if (_flag) { SprExport.Spr_delete_Affined(_thisArray[0]); _flag = false; } }
 	public static implicit operator Affined(Affinef f) {
@@ -3212,6 +3271,8 @@ namespace SprCs {
 	public SpatialVector(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public SpatialVector(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public SpatialVector(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public SpatialVector(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public SpatialVector(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public SpatialVector(Vec3d _v, Vec3d _w) { _thisArray[0] = SprExport.Spr_new_SpatialVector_2(_v, _w); _flag = true; }
 	~SpatialVector() { if (_flag) { SprExport.Spr_delete_SpatialVector(_thisArray[0]); _flag = false; } }
 	public Vec3d v() {
@@ -3231,6 +3292,8 @@ namespace SprCs {
 	public ObjectIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public ObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public ObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public ObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public ObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator ObjectIf(CsCastObject target) {
 		return (target._info.Inherit(ObjectIf.GetIfInfoStatic()) ? new ObjectIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3241,7 +3304,7 @@ namespace SprCs {
             SprExport.Spr_ObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3264,23 +3327,50 @@ namespace SprCs {
 	public ObjectIf GetChildObject(ulong pos) {
 	    IntPtr ptr = SprExport.Spr_ObjectIf_GetChildObject((IntPtr) _thisArray[0], (ulong) pos);
             if (ptr == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptr);
-            if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) { return new NamedObjectIf(ptr); }
-            if (obj.GetIfInfo() == ObjectStatesIf.GetIfInfoStatic()) { return new ObjectStatesIf(ptr); }
-            if (obj.GetIfInfo() == UTTypeDescIf.GetIfInfoStatic()) { return new UTTypeDescIf(ptr); }
-            if (obj.GetIfInfo() == UTTypeDescDbIf.GetIfInfoStatic()) { return new UTTypeDescDbIf(ptr); }
-            if (obj.GetIfInfo() == UTTimerIf.GetIfInfoStatic()) { return new UTTimerIf(ptr); }
-            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) { return new SceneObjectIf(ptr); }
-            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) { return new NameManagerIf(ptr); }
-            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) { return new SceneIf(ptr); }
-            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) { return new SdkIf(ptr); }
+            ObjectIf obj = new ObjectIf(ptr, 0);
+            if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) {
+				NamedObjectIf appropriate_type = new NamedObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == ObjectStatesIf.GetIfInfoStatic()) {
+				ObjectStatesIf appropriate_type = new ObjectStatesIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTypeDescIf.GetIfInfoStatic()) {
+				UTTypeDescIf appropriate_type = new UTTypeDescIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTypeDescDbIf.GetIfInfoStatic()) {
+				UTTypeDescDbIf appropriate_type = new UTTypeDescDbIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTimerIf.GetIfInfoStatic()) {
+				UTTimerIf appropriate_type = new UTTimerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) {
+				SceneObjectIf appropriate_type = new SceneObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) {
+				NameManagerIf appropriate_type = new NameManagerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) {
+				SceneIf appropriate_type = new SceneIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) {
+				SdkIf appropriate_type = new SdkIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
 	public bool AddChildObject(ObjectIf o) {
 	    char ret = SprExport.Spr_ObjectIf_AddChildObject((IntPtr) _thisArray[0], (IntPtr) o);
 	    return (ret == 0) ? false : true;
 	}
-	public bool DelChildObject(ObjectIf o) {
+	public virtual bool DelChildObject(ObjectIf o) {
 	    char ret = SprExport.Spr_ObjectIf_DelChildObject((IntPtr) _thisArray[0], (IntPtr) o);
 	    return (ret == 0) ? false : true;
 	}
@@ -3290,27 +3380,54 @@ namespace SprCs {
 	public ObjectIf CreateObject(IfInfo info, CsObject desc) {
 	    IntPtr ptr = SprExport.Spr_ObjectIf_CreateObject((IntPtr) _thisArray[0], (IntPtr) info, (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptr);
-            if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) { return new NamedObjectIf(ptr); }
-            if (obj.GetIfInfo() == ObjectStatesIf.GetIfInfoStatic()) { return new ObjectStatesIf(ptr); }
-            if (obj.GetIfInfo() == UTTypeDescIf.GetIfInfoStatic()) { return new UTTypeDescIf(ptr); }
-            if (obj.GetIfInfo() == UTTypeDescDbIf.GetIfInfoStatic()) { return new UTTypeDescDbIf(ptr); }
-            if (obj.GetIfInfo() == UTTimerIf.GetIfInfoStatic()) { return new UTTimerIf(ptr); }
-            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) { return new SceneObjectIf(ptr); }
-            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) { return new NameManagerIf(ptr); }
-            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) { return new SceneIf(ptr); }
-            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) { return new SdkIf(ptr); }
+            ObjectIf obj = new ObjectIf(ptr, 0);
+            if (obj.GetIfInfo() == NamedObjectIf.GetIfInfoStatic()) {
+				NamedObjectIf appropriate_type = new NamedObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == ObjectStatesIf.GetIfInfoStatic()) {
+				ObjectStatesIf appropriate_type = new ObjectStatesIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTypeDescIf.GetIfInfoStatic()) {
+				UTTypeDescIf appropriate_type = new UTTypeDescIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTypeDescDbIf.GetIfInfoStatic()) {
+				UTTypeDescDbIf appropriate_type = new UTTypeDescDbIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == UTTimerIf.GetIfInfoStatic()) {
+				UTTimerIf appropriate_type = new UTTimerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) {
+				SceneObjectIf appropriate_type = new SceneObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) {
+				NameManagerIf appropriate_type = new NameManagerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) {
+				SceneIf appropriate_type = new SceneIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) {
+				SdkIf appropriate_type = new SdkIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
 	public IntPtr GetDescAddress() {
 	    IntPtr result = (IntPtr) SprExport.Spr_ObjectIf_GetDescAddress((IntPtr) _thisArray[0]);
 	    return result;
 	}
-	public bool GetDesc(CsObject desc) {
+	public virtual bool GetDesc(CsObject desc) {
 	    char ret = SprExport.Spr_ObjectIf_GetDesc((IntPtr) _thisArray[0], (IntPtr) desc);
 	    return (ret == 0) ? false : true;
 	}
-	public void SetDesc(CsObject desc) {
+	public virtual void SetDesc(CsObject desc) {
 	    SprExport.Spr_ObjectIf_SetDesc((IntPtr) _thisArray[0], (IntPtr) desc);
 	}
 	public ulong GetDescSize() {
@@ -3359,6 +3476,8 @@ namespace SprCs {
 	public NamedObjectIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public NamedObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public NamedObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public NamedObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public NamedObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator NamedObjectIf(CsCastObject target) {
 		return (target._info.Inherit(NamedObjectIf.GetIfInfoStatic()) ? new NamedObjectIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3369,7 +3488,7 @@ namespace SprCs {
             SprExport.Spr_NamedObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_NamedObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3381,15 +3500,21 @@ namespace SprCs {
 	    IntPtr ptr = SprExport.Spr_NamedObjectIf_GetName((IntPtr) _thisArray[0]);
 	    return Marshal.PtrToStringAnsi(ptr);
 	}
-	public void SetName(string n) {
+	public virtual void SetName(string n) {
 	    SprExport.Spr_NamedObjectIf_SetName((IntPtr) _thisArray[0], (string) n);
 	}
 	public NameManagerIf GetNameManager() {
 	    IntPtr ptr = SprExport.Spr_NamedObjectIf_GetNameManager((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
-            NameManagerIf obj = new NameManagerIf(ptr);
-            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) { return new SceneIf(ptr); }
-            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) { return new SdkIf(ptr); }
+            NameManagerIf obj = new NameManagerIf(ptr, 0);
+            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) {
+				SceneIf appropriate_type = new SceneIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) {
+				SdkIf appropriate_type = new SdkIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
     }
@@ -3401,6 +3526,8 @@ namespace SprCs {
 	public SceneObjectIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public SceneObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public SceneObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public SceneObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public SceneObjectIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator SceneObjectIf(CsCastObject target) {
 		return (target._info.Inherit(SceneObjectIf.GetIfInfoStatic()) ? new SceneObjectIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3411,10 +3538,10 @@ namespace SprCs {
             SprExport.Spr_SceneObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+	//public virtual IfInfo GetIfInfo() {
+	//    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
+ //           return new IfInfo(ptr);
+	//}
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -3422,13 +3549,13 @@ namespace SprCs {
 	public SceneIf GetScene() {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
-            SceneIf obj = new SceneIf(ptr);
+            SceneIf obj = new SceneIf(ptr, 0);
             return obj;
 	}
 	public SceneObjectIf CloneObject() {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
-            SceneObjectIf obj = new SceneObjectIf(ptr);
+            SceneObjectIf obj = new SceneObjectIf(ptr, 0);
             return obj;
 	}
     }
@@ -3440,6 +3567,8 @@ namespace SprCs {
 	public ObjectStatesIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public ObjectStatesIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public ObjectStatesIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public ObjectStatesIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public ObjectStatesIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator ObjectStatesIf(CsCastObject target) {
 		return (target._info.Inherit(ObjectStatesIf.GetIfInfoStatic()) ? new ObjectStatesIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3450,7 +3579,7 @@ namespace SprCs {
             SprExport.Spr_ObjectStatesIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_ObjectStatesIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3487,7 +3616,7 @@ namespace SprCs {
 	public static ObjectStatesIf Create() {
 	    IntPtr ptr = SprExport.Spr_ObjectStatesIf_Create();
             if (ptr == IntPtr.Zero) { return null; } 
-            ObjectStatesIf obj = new ObjectStatesIf(ptr);
+            ObjectStatesIf obj = new ObjectStatesIf(ptr, 0);
             return obj;
 	}
     }
@@ -3499,6 +3628,8 @@ namespace SprCs {
 	public UTTypeDescIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public UTTypeDescIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public UTTypeDescIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public UTTypeDescIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public UTTypeDescIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator UTTypeDescIf(CsCastObject target) {
 		return (target._info.Inherit(UTTypeDescIf.GetIfInfoStatic()) ? new UTTypeDescIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3509,7 +3640,7 @@ namespace SprCs {
             SprExport.Spr_UTTypeDescIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3520,7 +3651,7 @@ namespace SprCs {
 	public static UTTypeDescIf FindTypeDesc(string typeName, string moduleName) {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescIf_FindTypeDesc((string) typeName, (string) moduleName);
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTypeDescIf obj = new UTTypeDescIf(ptr);
+            UTTypeDescIf obj = new UTTypeDescIf(ptr, 0);
             return obj;
 	}
 	public static UTTypeDescIf Create(string tn, int sz) {
@@ -3528,7 +3659,7 @@ namespace SprCs {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescIf_Create((IntPtr) remote1, (int) sz);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTypeDescIf obj = new UTTypeDescIf(ptr);
+            UTTypeDescIf obj = new UTTypeDescIf(ptr, 0);
             return obj;
 	}
 	public static UTTypeDescIf Create(string tn) {
@@ -3536,7 +3667,7 @@ namespace SprCs {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescIf_Create_1((IntPtr) remote1);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTypeDescIf obj = new UTTypeDescIf(ptr);
+            UTTypeDescIf obj = new UTTypeDescIf(ptr, 0);
             return obj;
 	}
 	public void SetSize(ulong sz) {
@@ -3719,6 +3850,8 @@ namespace SprCs {
 	public UTTypeDescDbIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public UTTypeDescDbIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public UTTypeDescDbIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public UTTypeDescDbIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public UTTypeDescDbIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator UTTypeDescDbIf(CsCastObject target) {
 		return (target._info.Inherit(UTTypeDescDbIf.GetIfInfoStatic()) ? new UTTypeDescDbIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3729,7 +3862,7 @@ namespace SprCs {
             SprExport.Spr_UTTypeDescDbIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3742,7 +3875,7 @@ namespace SprCs {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetDb((IntPtr) remote1);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTypeDescDbIf obj = new UTTypeDescDbIf(ptr);
+            UTTypeDescDbIf obj = new UTTypeDescDbIf(ptr, 0);
             return obj;
 	}
 	public void RegisterDesc(UTTypeDescIf n) {
@@ -3761,7 +3894,7 @@ namespace SprCs {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_Find((IntPtr) _thisArray[0], (IntPtr) remote1);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTypeDescIf obj = new UTTypeDescIf(ptr);
+            UTTypeDescIf obj = new UTTypeDescIf(ptr, 0);
             return obj;
 	}
 	public void Link(UTTypeDescDbIf db) {
@@ -3795,6 +3928,8 @@ namespace SprCs {
 	public NameManagerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public NameManagerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public NameManagerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public NameManagerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public NameManagerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator NameManagerIf(CsCastObject target) {
 		return (target._info.Inherit(NameManagerIf.GetIfInfoStatic()) ? new NameManagerIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3805,7 +3940,7 @@ namespace SprCs {
             SprExport.Spr_NameManagerIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_NameManagerIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3820,11 +3955,23 @@ namespace SprCs {
             Marshal.FreeBSTR(remote1);
             Marshal.FreeBSTR(remote2);
             if (ptr == IntPtr.Zero) { return null; } 
-            NamedObjectIf obj = new NamedObjectIf(ptr);
-            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) { return new SceneObjectIf(ptr); }
-            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) { return new NameManagerIf(ptr); }
-            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) { return new SceneIf(ptr); }
-            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) { return new SdkIf(ptr); }
+            NamedObjectIf obj = new NamedObjectIf(ptr, 0);
+            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) {
+				SceneObjectIf appropriate_type = new SceneObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) {
+				NameManagerIf appropriate_type = new NameManagerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) {
+				SceneIf appropriate_type = new SceneIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) {
+				SdkIf appropriate_type = new SdkIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
 	public NamedObjectIf FindObject(string name) {
@@ -3832,11 +3979,23 @@ namespace SprCs {
 	    IntPtr ptr = SprExport.Spr_NameManagerIf_FindObject_3((IntPtr) _thisArray[0], (IntPtr) remote1);
             Marshal.FreeBSTR(remote1);
             if (ptr == IntPtr.Zero) { return null; } 
-            NamedObjectIf obj = new NamedObjectIf(ptr);
-            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) { return new SceneObjectIf(ptr); }
-            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) { return new NameManagerIf(ptr); }
-            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) { return new SceneIf(ptr); }
-            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) { return new SdkIf(ptr); }
+            NamedObjectIf obj = new NamedObjectIf(ptr, 0);
+            if (obj.GetIfInfo() == SceneObjectIf.GetIfInfoStatic()) {
+				SceneObjectIf appropriate_type = new SceneObjectIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == NameManagerIf.GetIfInfoStatic()) {
+				NameManagerIf appropriate_type = new NameManagerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SceneIf.GetIfInfoStatic()) {
+				SceneIf appropriate_type = new SceneIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            if (obj.GetIfInfo() == SdkIf.GetIfInfoStatic()) {
+				SdkIf appropriate_type = new SdkIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
             return obj;
 	}
     }
@@ -3848,6 +4007,8 @@ namespace SprCs {
 	public SceneIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public SceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public SceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public SceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public SceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator SceneIf(CsCastObject target) {
 		return (target._info.Inherit(SceneIf.GetIfInfoStatic()) ? new SceneIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3858,7 +4019,7 @@ namespace SprCs {
             SprExport.Spr_SceneIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_SceneIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3875,6 +4036,8 @@ namespace SprCs {
 	public SdkIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public SdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public SdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public SdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public SdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator SdkIf(CsCastObject target) {
 		return (target._info.Inherit(SdkIf.GetIfInfoStatic()) ? new SdkIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3885,7 +4048,7 @@ namespace SprCs {
             SprExport.Spr_SdkIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_SdkIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3902,6 +4065,8 @@ namespace SprCs {
 	public UTTimerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public UTTimerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public UTTimerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public UTTimerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
+	public UTTimerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator UTTimerIf(CsCastObject target) {
 		return (target._info.Inherit(UTTimerIf.GetIfInfoStatic()) ? new UTTimerIf(target._thisArray[0], target._flag) : null);
 	}
@@ -3912,7 +4077,7 @@ namespace SprCs {
             SprExport.Spr_UTTimerIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public IfInfo GetIfInfo() {
+	public virtual IfInfo GetIfInfo() {
 	    IntPtr ptr = SprExport.Spr_UTTimerIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
 	}
@@ -3931,13 +4096,13 @@ namespace SprCs {
 	public static UTTimerIf Get(uint id) {
 	    IntPtr ptr = SprExport.Spr_UTTimerIf_Get((uint) id);
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTimerIf obj = new UTTimerIf(ptr);
+            UTTimerIf obj = new UTTimerIf(ptr, 0);
             return obj;
 	}
 	public static UTTimerIf Create() {
 	    IntPtr ptr = SprExport.Spr_UTTimerIf_Create();
             if (ptr == IntPtr.Zero) { return null; } 
-            UTTimerIf obj = new UTTimerIf(ptr);
+            UTTimerIf obj = new UTTimerIf(ptr, 0);
             return obj;
 	}
 	public uint GetID() {
@@ -4003,6 +4168,8 @@ namespace SprCs {
 	public IfInfo(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) { }
 	public IfInfo(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) { }
 	public IfInfo(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) { }
+	public IfInfo(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) { }
+	public IfInfo(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) { }
 	public bool Inherit(IfInfo info) {
 	    char ret = SprExport.Spr_IfInfo_Inherit((IntPtr) _thisArray[0], (IntPtr) info);
 	    return (ret == 0) ? false : true;

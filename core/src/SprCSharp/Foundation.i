@@ -106,6 +106,7 @@
 %feature("virtual_function") Spr::ObjectIf::GetDesc;
 %feature("virtual_function") Spr::ObjectIf::DelChildObject;
 %feature("virtual_function") Spr::NamedObjectIf::SetName;
+%feature("virtual_function") Spr::ObjectIf::GetIfInfo;
 
 //%feature("withfunc") Spr::Posed;
 //%feature("withfunc") Spr::Vec3d;
