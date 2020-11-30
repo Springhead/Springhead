@@ -3538,25 +3538,121 @@ namespace SprCs {
             SprExport.Spr_SceneObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	//public virtual IfInfo GetIfInfo() {
-	//    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
- //           return new IfInfo(ptr);
-	//}
+	public virtual IfInfo GetIfInfo() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
+		if (phSceneIf.multiThreadMode) {;
+			var currentThread = Thread.CurrentThread;
+			if (currentThread == phSceneIf.stepThread) {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+            return new IfInfo(ptrStep);
+			} else if (currentThread == phSceneIf.subThread) {
+				lock (phSceneIf.phSceneLock) {
+					phSceneIf.isGetFunctionCalledInSubThread = true;
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+            return new IfInfo(ptrGet);
+				}
+			}
+		} else {
+	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
+            return new IfInfo(ptr);
+		}
+		throw new InvalidOperationException();
+	}
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}
 	public SceneIf GetScene() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
+		if (phSceneIf.multiThreadMode) {;
+			var currentThread = Thread.CurrentThread;
+			if (currentThread == phSceneIf.stepThread) {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+				phSceneIf.AddCallbackForStepThread(
+					() => {
+	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
+					},
+					() => {
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+				});
+            if (ptrStep == IntPtr.Zero) { return null; } 
+            SceneIf obj = new SceneIf(ptrStep, phSceneIf.sceneForStep);
+            return obj;
+			} else if (currentThread == phSceneIf.subThread) {
+				lock (phSceneIf.phSceneLock) {
+					phSceneIf.isSetFunctionCalledInSubThread = true;
+					if (phSceneIf.isStepThreadExecuting) {
+						phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+						});
+	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+            if (ptrGet == IntPtr.Zero) { return null; } 
+            SceneIf obj = new SceneIf(ptrGet, phSceneIf.sceneForGet);
+            return obj;
+					} else {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+            if (ptrGet == IntPtr.Zero) { return null; } 
+            SceneIf obj = new SceneIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            return obj;
+					}
+				}
+			}
+		} else {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             SceneIf obj = new SceneIf(ptr, 0);
             return obj;
+		}
+		throw new InvalidOperationException();
 	}
 	public SceneObjectIf CloneObject() {
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
+		if (phSceneIf.multiThreadMode) {;
+			var currentThread = Thread.CurrentThread;
+			if (currentThread == phSceneIf.stepThread) {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+				phSceneIf.AddCallbackForStepThread(
+					() => {
+	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
+					},
+					() => {
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+				});
+            if (ptrStep == IntPtr.Zero) { return null; } 
+            SceneObjectIf obj = new SceneObjectIf(ptrStep, phSceneIf.sceneForStep);
+            return obj;
+			} else if (currentThread == phSceneIf.subThread) {
+				lock (phSceneIf.phSceneLock) {
+					phSceneIf.isSetFunctionCalledInSubThread = true;
+					if (phSceneIf.isStepThreadExecuting) {
+						phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+						});
+	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+            if (ptrGet == IntPtr.Zero) { return null; } 
+            SceneObjectIf obj = new SceneObjectIf(ptrGet, phSceneIf.sceneForGet);
+            return obj;
+					} else {
+	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForGet]);
+            if (ptrGet == IntPtr.Zero) { return null; } 
+            SceneObjectIf obj = new SceneObjectIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            return obj;
+					}
+				}
+			}
+		} else {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             SceneObjectIf obj = new SceneObjectIf(ptr, 0);
             return obj;
+		}
+		throw new InvalidOperationException();
 	}
     }
     public partial class ObjectStatesIf : ObjectIf {

@@ -1502,6 +1502,10 @@ public:
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"", /* string_index = */ 0, "_thisArray[0]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false);
 				}
+				// 作業変数の解放
+				if (argnames) delete argnames;
+				if (cleanup1) delete cleanup1;
+				if (cleanup2) delete cleanup2;
 				Printf(CS, "\t}\n");
 			}
 			// [csp]
@@ -1670,14 +1674,10 @@ public:
 				sep_needed = 1;
 			}
 			Printf(CS, ");\n");
-			// 作業変数の解放
-			if (argnames) delete argnames;
 			for (int j = 0; j < ni.num_args; j++) {
 				if (cleanup1[j]) Printf(CS, "            Marshal.FreeBSTR(%s);\n", cleanup1[j]);
 				if (cleanup2[j]) Printf(CS, "            Marshal.FreeHGlobal(%s);\n", cleanup2[j]);
 			}
-			if (cleanup1) delete cleanup1;
-			if (cleanup2) delete cleanup2;
 	}
 
 	// 戻り値のための処理
@@ -1755,7 +1755,7 @@ public:
 			callback_argnames = new char*[ni.num_args];
 		}
 		for (int j = 0; j < ni.num_args; j++) {
-			callback_argnames[j] = new char[sizeof(argnames[j])];
+			callback_argnames[j] = new char[strlen(argnames[j])+1+4]; // '\0'と"new_"を分も確保
 			strcpy(callback_argnames[j], argnames[j]);
 		}
 
@@ -1767,7 +1767,7 @@ public:
 			key.append(".");
 			key.append(uqname);
 			string callback_argname_str = string("new_").append(csname); // コールバック用引数※ここを左辺const char*型で右辺.c_str()をすると下で使用する際に空文字列になる，恐らく.c_str()はスコープが一文?
-			char *callback_argname = new char[sizeof(callback_argname_str.c_str())];
+			char *callback_argname = new char[strlen(callback_argname_str.c_str())+1];
 			strcpy(callback_argname, callback_argname_str.c_str());
 			if (ai.is_function && (delegate_func_map.find(key) != delegate_func_map.end())) {
 				// ToDo?:関数
@@ -1778,6 +1778,7 @@ public:
 				// struct
 				if(FindNodeByAttrR(topnode, "enumtype", ai.type) == NULL){ // enum以外(ai.is_enumはenumでもTrueだった)
 					Printf(CS, "%s %s = new %s(%s);\n", cs_qualified_name(ai.uq_type), callback_argname, cs_qualified_name(ai.uq_type), csname);
+					Printf(CS, "// NewArgument equal %d %d\n", sizeof(argnames[j]), sizeof(callback_argname));
 					callback_argnames[j] = (char*)callback_argname;
 				}
 				Printf(CS, "// is_struct\n");
