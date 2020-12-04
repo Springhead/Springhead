@@ -35906,30 +35906,23 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHIKEngineIf GetIKEngine() {
-		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {
-			var currentThread = Thread.CurrentThread;
-			if (currentThread == phSceneIf.stepThread) {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-            if (ptrStep == IntPtr.Zero) { return null; } 
-            PHIKEngineIf obj = new PHIKEngineIf(ptrStep, phSceneIf.sceneForStep);
+        if (multiThreadMode) {
+            IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[0]);
+            IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[1]);
+            IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[2]);
+            if (ptr == IntPtr.Zero) { return null; }
+            PHIKEngineIf obj = new PHIKEngineIf(ptr);
+            obj._thisArray[0] = ptr;
+            obj._thisArray[1] = ptr1;
+            obj._thisArray[2] = ptr2;
             return obj;
-			} else if (currentThread == phSceneIf.subThread) {
-				lock (phSceneIf.phSceneLock) {
-					phSceneIf.isGetFunctionCalledInSubThread = true;
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-            if (ptrGet == IntPtr.Zero) { return null; } 
-            PHIKEngineIf obj = new PHIKEngineIf(ptrGet, phSceneIf.sceneForGet);
+        } else {
+            IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[0]);
+            if (ptr == IntPtr.Zero) { return null; }
+            PHIKEngineIf obj = new PHIKEngineIf(ptr);
+            obj._thisArray[0] = ptr;
             return obj;
-				}
-			}
-		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr) _thisArray[0]);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHIKEngineIf obj = new PHIKEngineIf(ptr, 0);
-            return obj;
-		}
-		throw new InvalidOperationException();
+        }
 	}
 	public PHFemEngineIf GetFemEngine() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
