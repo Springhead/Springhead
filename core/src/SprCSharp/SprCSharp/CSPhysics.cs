@@ -5602,7 +5602,7 @@ namespace SprCs {
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -5626,7 +5626,7 @@ namespace SprCs {
 	}
 	public int GetPriority() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHEngineIf_GetPriority((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -5745,7 +5745,7 @@ namespace SprCs {
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHEngineIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -5832,7 +5832,7 @@ namespace SprCs {
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -5935,7 +5935,7 @@ namespace SprCs {
 	}
 	public double GetVelCorrectionRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHConstraintEngineIf_GetVelCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -5988,7 +5988,7 @@ namespace SprCs {
 	}
 	public double GetPosCorrectionRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHConstraintEngineIf_GetPosCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6041,7 +6041,7 @@ namespace SprCs {
 	}
 	public double GetContactCorrectionRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHConstraintEngineIf_GetContactCorrectionRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6193,7 +6193,7 @@ namespace SprCs {
 	}
 	public double GetShrinkRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHConstraintEngineIf_GetShrinkRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6246,7 +6246,7 @@ namespace SprCs {
 	}
 	public double GetShrinkRateCorrection() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHConstraintEngineIf_GetShrinkRateCorrection((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6299,7 +6299,7 @@ namespace SprCs {
 	}
 	public double GetRegularization() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHConstraintEngineIf_GetRegularization((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6373,7 +6373,7 @@ namespace SprCs {
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHGravityEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6418,7 +6418,7 @@ namespace SprCs {
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPenaltyEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6496,7 +6496,7 @@ namespace SprCs {
 	}
 	public double GetMaxVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEngineIf_GetMaxVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6549,7 +6549,7 @@ namespace SprCs {
 	}
 	public double GetMaxAngularVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEngineIf_GetMaxAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6602,7 +6602,7 @@ namespace SprCs {
 	}
 	public double GetMaxActuatorVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEngineIf_GetMaxActuatorVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6655,7 +6655,7 @@ namespace SprCs {
 	}
 	public double GetRegularizeParam() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEngineIf_GetRegularizeParam((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6708,7 +6708,7 @@ namespace SprCs {
 	}
 	public double GetIterCutOffAngVel() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEngineIf_GetIterCutOffAngVel((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6761,7 +6761,7 @@ namespace SprCs {
 	}
 	public int GetIntpRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHIKEngineIf_GetIntpRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6880,7 +6880,7 @@ namespace SprCs {
 	}
 	public int GetNumIter() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHIKEngineIf_GetNumIter((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6933,7 +6933,7 @@ namespace SprCs {
 	}
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -6978,7 +6978,7 @@ namespace SprCs {
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -7035,7 +7035,7 @@ namespace SprCs {
 	}
 	public double GetTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemEngineIf_GetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -7583,7 +7583,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -7640,7 +7640,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public double GetTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHOpEngineIf_GetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -7726,7 +7726,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public arraywrapper_PHOpObjDesc GetOpObj(int i) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpEngineIf_GetOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i);
@@ -7850,7 +7850,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public bool IsHapticSolve() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpEngineIf_IsHapticSolve((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -7903,7 +7903,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public bool IsProxyCorrection() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpEngineIf_IsProxyCorrection((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -7956,7 +7956,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public bool IsUpdateNormal(int obji) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpEngineIf_IsUpdateNormal((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) obji);
@@ -8009,7 +8009,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public bool GetUseHaptic() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpEngineIf_GetUseHaptic((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8075,7 +8075,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public int GetOpObjNum() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHOpEngineIf_GetOpObjNum((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8094,6 +8094,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 		throw new InvalidOperationException();
 	}
 	public ObjectIf GetOpAnimator() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -8107,7 +8108,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpAnimator((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, phSceneIf.sceneForStep);
+            ObjectIf obj = new ObjectIf(ptrStep, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8143,7 +8144,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpEngineIf_GetOpAnimator((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpAnimator((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrGet, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8174,7 +8175,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpEngineIf_GetOpAnimator((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpAnimator((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8236,6 +8237,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 		throw new InvalidOperationException();
 	}
 	public ObjectIf GetOpHapticController() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -8249,7 +8251,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpHapticController((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, phSceneIf.sceneForStep);
+            ObjectIf obj = new ObjectIf(ptrStep, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8285,7 +8287,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpEngineIf_GetOpHapticController((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpHapticController((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrGet, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8316,7 +8318,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpEngineIf_GetOpHapticController((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpHapticController((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8378,6 +8380,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 		throw new InvalidOperationException();
 	}
 	public ObjectIf GetOpHapticRenderer() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -8391,7 +8394,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, phSceneIf.sceneForStep);
+            ObjectIf obj = new ObjectIf(ptrStep, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8427,7 +8430,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpEngineIf_GetOpHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrGet, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8458,7 +8461,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpEngineIf_GetOpHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHOpEngineIf_GetOpHapticRenderer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -8554,7 +8557,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public int GetIterationCount() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHOpEngineIf_GetIterationCount((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8607,7 +8610,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public bool GetAnimationFlag() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpEngineIf_GetAnimationFlag((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8660,7 +8663,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public float GetDrawPtclR() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpEngineIf_GetDrawPtclR((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8734,7 +8737,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8779,7 +8782,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshThermoIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8803,7 +8806,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public int GetSurfaceVertex(int id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemMeshThermoIf_GetSurfaceVertex((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) id);
@@ -8927,7 +8930,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public Vec3d GetPose(int id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshThermoIf_GetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) id);
@@ -8947,7 +8950,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public Vec3d GetSufVtxPose(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshThermoIf_GetSufVtxPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -8967,7 +8970,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public uint GetStepCount() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    uint resultStep = (uint) SprExport.Spr_PHFemMeshThermoIf_GetStepCount((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -8987,7 +8990,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public uint GetStepCountCyc() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    uint resultStep = (uint) SprExport.Spr_PHFemMeshThermoIf_GetStepCountCyc((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -9007,7 +9010,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public double GetVertexTemp(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemMeshThermoIf_GetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -9027,7 +9030,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public double GetSufVertexTemp(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemMeshThermoIf_GetSufVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -9212,7 +9215,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public uint GetNFace() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    uint resultStep = (uint) SprExport.Spr_PHFemMeshThermoIf_GetNFace((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -9232,7 +9235,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public vectorwrapper_Vec3d GetFaceEdgeVtx(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshThermoIf_GetFaceEdgeVtx((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -9252,7 +9255,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public Vec3d GetFaceEdgeVtx(uint id, uint vtx) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshThermoIf_GetFaceEdgeVtx_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id, (uint) vtx);
@@ -9272,7 +9275,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public Vec2d GetIHbandDrawVtx() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshThermoIf_GetIHbandDrawVtx((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -9655,7 +9658,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public double GetArbitraryPointTemp(Vec3d temppos) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemMeshThermoIf_GetArbitraryPointTemp((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) temppos);
@@ -9675,7 +9678,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public double GetVtxTempInTets(Vec3d temppos) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemMeshThermoIf_GetVtxTempInTets((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) temppos);
@@ -9728,7 +9731,7 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 	}
 	public double Get_thConduct() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemMeshThermoIf_Get_thConduct((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -10316,7 +10319,7 @@ Vec2d new_origin = new Vec2d(origin);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshNewIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11015,7 +11018,7 @@ Vec3d new_posL = new Vec3d(posL);
 	}
 	public Vec3d GetVertexVelocityL(int vtxId) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshNewIf_GetVertexVelocityL((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) vtxId);
@@ -11035,7 +11038,7 @@ Vec3d new_posL = new Vec3d(posL);
 	}
 	public Vec3d GetVertexPositionL(int vtxId) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshNewIf_GetVertexPositionL((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) vtxId);
@@ -11055,7 +11058,7 @@ Vec3d new_posL = new Vec3d(posL);
 	}
 	public Vec3d GetVertexDisplacementL(int vtxId) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshNewIf_GetVertexDisplacementL((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) vtxId);
@@ -11075,7 +11078,7 @@ Vec3d new_posL = new Vec3d(posL);
 	}
 	public Vec3d GetVertexInitalPositionL(int vtxId) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshNewIf_GetVertexInitalPositionL((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) vtxId);
@@ -11134,7 +11137,7 @@ Vec3d new_v = new Vec3d(v);
 	}
 	public int GetTetVertexIds(int t) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemMeshNewIf_GetTetVertexIds((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) t);
@@ -11154,7 +11157,7 @@ Vec3d new_v = new Vec3d(v);
 	}
 	public int GetFaceVertexIds(int f) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemMeshNewIf_GetFaceVertexIds((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) f);
@@ -11174,7 +11177,7 @@ Vec3d new_v = new Vec3d(v);
 	}
 	public Vec3d GetFaceNormal(int f) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemMeshNewIf_GetFaceNormal((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) f);
@@ -11194,7 +11197,7 @@ Vec3d new_v = new Vec3d(v);
 	}
 	public int GetSurfaceVertex(int i) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemMeshNewIf_GetSurfaceVertex((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i);
@@ -11395,7 +11398,7 @@ Vec4d new_value = new Vec4d(value);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemBaseIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11486,7 +11489,7 @@ Vec4d new_value = new Vec4d(value);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemVibrationIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11543,7 +11546,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public double GetTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemVibrationIf_GetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11596,7 +11599,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public double GetYoungModulus() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemVibrationIf_GetYoungModulus((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11649,7 +11652,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public double GetPoissonsRatio() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemVibrationIf_GetPoissonsRatio((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11702,7 +11705,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public double GetDensity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemVibrationIf_GetDensity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11755,7 +11758,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public double GetAlpha() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemVibrationIf_GetAlpha((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11808,7 +11811,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public double GetBeta() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemVibrationIf_GetBeta((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -11894,7 +11897,7 @@ Vec4d new_value = new Vec4d(value);
 	}
 	public vectorwrapper_int GetBoundary() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemVibrationIf_GetBoundary((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -12203,7 +12206,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public bool GetDisplacement(int tetId, Vec3d posW, Vec3d disp, bool bDeform) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHFemVibrationIf_GetDisplacement((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) posW, (IntPtr) disp, (bool) bDeform);
@@ -12223,7 +12226,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public bool GetVelocity(int tetId, Vec3d posW, Vec3d vel, bool bDeform) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHFemVibrationIf_GetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) posW, (IntPtr) vel, (bool) bDeform);
@@ -12243,7 +12246,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public bool GetPosition(int tetId, Vec3d posW, Vec3d pos, bool bDeform) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHFemVibrationIf_GetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) posW, (IntPtr) pos, (bool) bDeform);
@@ -12350,7 +12353,7 @@ Vec3d new_fW = new Vec3d(fW);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemThermoIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -12374,7 +12377,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public int GetSurfaceVertex(int id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemThermoIf_GetSurfaceVertex((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) id);
@@ -12498,7 +12501,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public Vec3d GetPose(int id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemThermoIf_GetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) id);
@@ -12518,7 +12521,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public Vec3d GetSufVtxPose(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemThermoIf_GetSufVtxPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -12538,7 +12541,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public uint GetStepCount() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    uint resultStep = (uint) SprExport.Spr_PHFemThermoIf_GetStepCount((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -12558,7 +12561,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public uint GetStepCountCyc() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    uint resultStep = (uint) SprExport.Spr_PHFemThermoIf_GetStepCountCyc((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -12578,7 +12581,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public double GetVertexTemp(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -12598,7 +12601,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public double GetSufVertexTemp(uint id) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetSufVertexTemp((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id);
@@ -12783,7 +12786,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public Vec2d GetIHbandDrawVtx() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemThermoIf_GetIHbandDrawVtx((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -13166,7 +13169,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public double GetArbitraryPointTemp(Vec3d temppos) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetArbitraryPointTemp((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) temppos);
@@ -13186,7 +13189,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public double GetVtxTempInTets(Vec3d temppos) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetVtxTempInTets((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) temppos);
@@ -13239,7 +13242,7 @@ Vec3d new_fW = new Vec3d(fW);
 	}
 	public double Get_thConduct() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_Get_thConduct((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -13967,7 +13970,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public Vec3d GetVertexNormal(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemThermoIf_GetVertexNormal((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -14053,7 +14056,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVertexArea(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetVertexArea((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -14106,7 +14109,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public bool GetVertexToofar(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHFemThermoIf_GetVertexToofar((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -14559,7 +14562,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetWeekPowFULL() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetWeekPowFULL((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -14579,7 +14582,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public Vec3d GetVertexPose(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemThermoIf_GetVertexPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -14632,7 +14635,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public int GetTetsV(uint tetid, uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemThermoIf_GetTetsV((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) tetid, (uint) vtxid);
@@ -14685,7 +14688,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVecFElem(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetVecFElem((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -14705,7 +14708,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public int GetTetVNums(uint id, uint num) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHFemThermoIf_GetTetVNums((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) id, (uint) num);
@@ -14725,7 +14728,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetInitialTemp() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemThermoIf_GetInitialTemp((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -14832,7 +14835,7 @@ string new_fwfood = string.Copy(fwfood);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFemPorousWOMoveIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -14889,7 +14892,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15041,7 +15044,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVertexMw(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexMw((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -15061,7 +15064,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVertexMo(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexMo((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -15081,7 +15084,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVtxWaterInTets(Vec3d temppos) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVtxWaterInTets((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) temppos);
@@ -15101,7 +15104,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVtxOilInTets(Vec3d temppos) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVtxOilInTets((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) temppos);
@@ -15121,7 +15124,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVertexRhoW(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexRhoW((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -15141,7 +15144,7 @@ string new_fwfood = string.Copy(fwfood);
 	}
 	public double GetVertexRhoO(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVertexRhoO((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -15300,7 +15303,7 @@ Vec3d new_g = new Vec3d(g);
 	}
 	public double GetVtxSaturation(uint vtxid) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHFemPorousWOMoveIf_GetVtxSaturation((IntPtr) _thisArray[phSceneIf.sceneForStep], (uint) vtxid);
@@ -15341,7 +15344,7 @@ Vec3d new_g = new Vec3d(g);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFrameIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15365,7 +15368,7 @@ Vec3d new_g = new Vec3d(g);
 	}
 	public Posed GetPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFrameIf_GetPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15423,6 +15426,7 @@ Posed new_p = new Posed(p);
 		}
 	}
 	public CDShapeIf GetShape() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -15436,7 +15440,7 @@ Posed new_p = new Posed(p);
 	    IntPtr ptrGet = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptrStep, phSceneIf.sceneForStep);
+            CDShapeIf obj = new CDShapeIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -15448,14 +15452,14 @@ Posed new_p = new Posed(p);
 	    IntPtr ptrBuffer = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptrGet, phSceneIf.sceneForGet);
+            CDShapeIf obj = new CDShapeIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 	    IntPtr ptrBuffer = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHFrameIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            CDShapeIf obj = new CDShapeIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -15491,7 +15495,7 @@ Posed new_p = new Posed(p);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15515,7 +15519,7 @@ Posed new_p = new Posed(p);
 	}
 	public Posed GetPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15535,7 +15539,7 @@ Posed new_p = new Posed(p);
 	}
 	public Vec3d GetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15555,7 +15559,7 @@ Posed new_p = new Posed(p);
 	}
 	public Vec3d GetAngularVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15575,7 +15579,7 @@ Posed new_p = new Posed(p);
 	}
 	public Vec3d GetCenterOfMass() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15595,7 +15599,7 @@ Posed new_p = new Posed(p);
 	}
 	public Vec3d GetFramePosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15615,7 +15619,7 @@ Posed new_p = new Posed(p);
 	}
 	public Vec3d GetCenterPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15635,7 +15639,7 @@ Posed new_p = new Posed(p);
 	}
 	public bool IsDynamical() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHBodyIf_IsDynamical((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15655,7 +15659,7 @@ Posed new_p = new Posed(p);
 	}
 	public bool IsFrozen() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHBodyIf_IsFrozen((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -15893,6 +15897,7 @@ CDShapeIf new_shape = new CDShapeIf(shape);
 		throw new InvalidOperationException();
 	}
 	public CDShapeIf GetShape(int index) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -15906,7 +15911,7 @@ CDShapeIf new_shape = new CDShapeIf(shape);
 	    IntPtr ptrGet = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptrStep, phSceneIf.sceneForStep);
+            CDShapeIf obj = new CDShapeIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -15918,14 +15923,14 @@ CDShapeIf new_shape = new CDShapeIf(shape);
 	    IntPtr ptrBuffer = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index);
 	    IntPtr ptrGet = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptrGet, phSceneIf.sceneForGet);
+            CDShapeIf obj = new CDShapeIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index);
 	    IntPtr ptrBuffer = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index);
 	    IntPtr ptrGet = SprExport.Spr_PHBodyIf_GetShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            CDShapeIf obj = new CDShapeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            CDShapeIf obj = new CDShapeIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -15940,7 +15945,7 @@ CDShapeIf new_shape = new CDShapeIf(shape);
 	}
 	public Posed GetShapePose(int index) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBodyIf_GetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index);
@@ -16030,7 +16035,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public void GetBBox(Vec3d bbmin, Vec3d bbmax, bool world) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHBodyIf_GetBBox((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) bbmin, (IntPtr) bbmax, (bool) world);
@@ -16068,7 +16073,7 @@ Posed new_pose = new Posed(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16215,7 +16220,7 @@ Vec3d new_r = new Vec3d(r);
 	}
 	public double GetMass() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSolidIf_GetMass((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16235,7 +16240,7 @@ Vec3d new_r = new Vec3d(r);
 	}
 	public double GetMassInv() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSolidIf_GetMassInv((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16325,7 +16330,7 @@ Vec3d new_center = new Vec3d(center);
 	}
 	public Matrix3d GetInertia() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16345,7 +16350,7 @@ Vec3d new_center = new Vec3d(center);
 	}
 	public Matrix3d GetInertiaInv() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetInertiaInv((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16509,7 +16514,7 @@ Vec3d new_p = new Vec3d(p);
 	}
 	public Vec3d GetDeltaPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetDeltaPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16529,7 +16534,7 @@ Vec3d new_p = new Vec3d(p);
 	}
 	public Vec3d GetDeltaPosition(Vec3d p) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetDeltaPosition_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
@@ -16549,7 +16554,7 @@ Vec3d new_p = new Vec3d(p);
 	}
 	public Quaterniond GetOrientation() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16717,7 +16722,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public Vec3d GetForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16737,7 +16742,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public Vec3d GetTorque() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSolidIf_GetTorque((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16823,7 +16828,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsDynamical() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHSolidIf_IsDynamical((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -16876,7 +16881,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsStationary() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHSolidIf_IsStationary((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17259,7 +17264,7 @@ Vec3d new_av = new Vec3d(av);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticPointerIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17317,8 +17322,9 @@ Vec3d new_av = new Vec3d(av);
 		}
 	}
 	public PHHapticPointerDesc.HapticRenderMode GetHapticRenderMode() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = SprExport.Spr_PHHapticPointerIf_GetHapticRenderMode((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17371,7 +17377,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsRotation() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsRotation((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17424,7 +17430,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17477,7 +17483,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsFriction() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsFriction((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17530,7 +17536,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsTimeVaryFriction() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsTimeVaryFriction((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17583,7 +17589,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsVibration() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsVibration((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17636,7 +17642,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsMultiPoints() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsMultiPoints((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17689,7 +17695,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsMultiProxy() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsMultiProxy((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17742,7 +17748,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public bool IsSimulation() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHHapticPointerIf_IsSimulation((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17795,7 +17801,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetFrictionSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetFrictionSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17848,7 +17854,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetFrictionDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetFrictionDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17901,7 +17907,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetReflexSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetReflexSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -17954,7 +17960,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetReflexDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetReflexDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18007,7 +18013,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetRotationReflexSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetRotationReflexSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18060,7 +18066,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetRotationReflexDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetRotationReflexDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18113,7 +18119,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public float GetLocalRange() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetLocalRange((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18166,7 +18172,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public double GetPosScale() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHHapticPointerIf_GetPosScale((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18219,7 +18225,7 @@ Vec3d new_av = new Vec3d(av);
 	}
 	public double GetRotationalWeight() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHHapticPointerIf_GetRotationalWeight((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18278,7 +18284,7 @@ Posed new_p = new Posed(p);
 	}
 	public Posed GetDefaultPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticPointerIf_GetDefaultPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18336,7 +18342,7 @@ Posed new_p = new Posed(p);
 	}
 	public int GetNeighborSolidId(int i) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHHapticPointerIf_GetNeighborSolidId((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i);
@@ -18418,7 +18424,7 @@ Posed new_p = new Posed(p);
 	}
 	public float GetContactForce(int i) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHHapticPointerIf_GetContactForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i);
@@ -18438,7 +18444,7 @@ Posed new_p = new Posed(p);
 	}
 	public SpatialVector GetHapticForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticPointerIf_GetHapticForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18458,7 +18464,7 @@ Posed new_p = new Posed(p);
 	}
 	public SpatialVector GetProxyVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticPointerIf_GetProxyVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18511,7 +18517,7 @@ Posed new_p = new Posed(p);
 	}
 	public int GetProxyN() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHHapticPointerIf_GetProxyN((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18531,7 +18537,7 @@ Posed new_p = new Posed(p);
 	}
 	public int GetTotalSlipState() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHHapticPointerIf_GetTotalSlipState((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18551,7 +18557,7 @@ Posed new_p = new Posed(p);
 	}
 	public int GetSlipState(int i) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHHapticPointerIf_GetSlipState((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i);
@@ -18878,7 +18884,7 @@ SpatialVector new_vel = new SpatialVector(vel);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticEngineIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -18936,8 +18942,9 @@ SpatialVector new_vel = new SpatialVector(vel);
 		}
 	}
 	public PHHapticEngineDesc.HapticStepMode GetHapticStepMode() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = SprExport.Spr_PHHapticEngineIf_GetHapticStepMode((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19078,6 +19085,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 		throw new InvalidOperationException();
 	}
 	public PHSolidPairForHapticIf GetSolidPair(int i, int j) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -19091,7 +19099,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 	    IntPtr ptrGet = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrStep, phSceneIf.sceneForStep);
+            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -19103,14 +19111,14 @@ SpatialVector new_vel = new SpatialVector(vel);
 	    IntPtr ptrBuffer = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) i, (int) j);
 	    IntPtr ptrGet = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrGet, phSceneIf.sceneForGet);
+            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i, (int) j);
 	    IntPtr ptrBuffer = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) i, (int) j);
 	    IntPtr ptrGet = SprExport.Spr_PHHapticEngineIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -19246,6 +19254,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 		throw new InvalidOperationException();
 	}
 	public PHSolidPairForHapticIf GetSolidPairInHaptic(int i, int j) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -19259,7 +19268,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 	    IntPtr ptrGet = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrStep, phSceneIf.sceneForStep);
+            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -19271,14 +19280,14 @@ SpatialVector new_vel = new SpatialVector(vel);
 	    IntPtr ptrBuffer = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) i, (int) j);
 	    IntPtr ptrGet = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrGet, phSceneIf.sceneForGet);
+            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i, (int) j);
 	    IntPtr ptrBuffer = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) i, (int) j);
 	    IntPtr ptrGet = SprExport.Spr_PHHapticEngineIf_GetSolidPairInHaptic((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            PHSolidPairForHapticIf obj = new PHSolidPairForHapticIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -19420,7 +19429,7 @@ SpatialVector new_vel = new SpatialVector(vel);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19707,7 +19716,7 @@ PHIKActuatorIf new_ika = new PHIKActuatorIf(ika);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHIKEndEffectorIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19766,7 +19775,7 @@ Vec3d new_localPosition = new Vec3d(localPosition);
 	}
 	public Vec3d GetTargetLocalPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetLocalPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19825,7 +19834,7 @@ Vec3d new_localDirection = new Vec3d(localDirection);
 	}
 	public Vec3d GetTargetLocalDirection() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetLocalDirection((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19878,7 +19887,7 @@ Vec3d new_localDirection = new Vec3d(localDirection);
 	}
 	public bool IsPositionControlEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHIKEndEffectorIf_IsPositionControlEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19931,7 +19940,7 @@ Vec3d new_localDirection = new Vec3d(localDirection);
 	}
 	public double GetPositionPriority() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEndEffectorIf_GetPositionPriority((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -19990,7 +19999,7 @@ Vec3d new_position = new Vec3d(position);
 	}
 	public Vec3d GetTargetPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20043,7 +20052,7 @@ Vec3d new_position = new Vec3d(position);
 	}
 	public bool IsOrientationControlEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHIKEndEffectorIf_IsOrientationControlEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20096,7 +20105,7 @@ Vec3d new_position = new Vec3d(position);
 	}
 	public double GetOrientationPriority() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKEndEffectorIf_GetOrientationPriority((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20150,8 +20159,9 @@ Vec3d new_position = new Vec3d(position);
 		}
 	}
 	public PHIKEndEffectorDesc.OriCtlMode GetOriCtlMode() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = SprExport.Spr_PHIKEndEffectorIf_GetOriCtlMode((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20210,7 +20220,7 @@ Quaterniond new_orientation = new Quaterniond(orientation);
 	}
 	public Quaterniond GetTargetOrientation() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20269,7 +20279,7 @@ Vec3d new_direction = new Vec3d(direction);
 	}
 	public Vec3d GetTargetDirection() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20328,7 +20338,7 @@ Vec3d new_lookat = new Vec3d(lookat);
 	}
 	public Vec3d GetTargetLookat() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetLookat((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20387,7 +20397,7 @@ Vec3d new_velocity = new Vec3d(velocity);
 	}
 	public Vec3d GetTargetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20446,7 +20456,7 @@ Vec3d new_angVel = new Vec3d(angVel);
 	}
 	public Vec3d GetTargetAngularVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20583,7 +20593,7 @@ Vec3d new_force = new Vec3d(force);
 	}
 	public Vec3d GetTargetForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20603,7 +20613,7 @@ Vec3d new_force = new Vec3d(force);
 	}
 	public Vec3d GetTargetForceWorkingPoint() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetForceWorkingPoint((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20695,7 +20705,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public Vec3d GetTargetTorque() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetTargetTorque((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20715,7 +20725,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public Posed GetSolidTempPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKEndEffectorIf_GetSolidTempPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -20789,7 +20799,7 @@ Vec3d new_torque = new Vec3d(torque);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKActuatorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21011,7 +21021,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public float GetBias() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHIKActuatorIf_GetBias((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21064,7 +21074,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public double GetPullbackRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKActuatorIf_GetPullbackRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21117,7 +21127,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHIKActuatorIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21541,7 +21551,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public Posed GetSolidTempPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKActuatorIf_GetSolidTempPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21561,7 +21571,7 @@ Vec3d new_torque = new Vec3d(torque);
 	}
 	public Posed GetSolidPullbackPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKActuatorIf_GetSolidPullbackPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21602,7 +21612,7 @@ Vec3d new_torque = new Vec3d(torque);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKBallActuatorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21787,7 +21797,7 @@ Quaterniond new_ori = new Quaterniond(ori);
 	}
 	public Quaterniond GetJointTempOri() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKBallActuatorIf_GetJointTempOri((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21807,7 +21817,7 @@ Quaterniond new_ori = new Quaterniond(ori);
 	}
 	public Quaterniond GetPullbackTarget() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKBallActuatorIf_GetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -21848,7 +21858,7 @@ Quaterniond new_ori = new Quaterniond(ori);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKHingeActuatorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22021,7 +22031,7 @@ PHHingeJointIf new_joint = new PHHingeJointIf(joint);
 	}
 	public double GetJointTempAngle() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKHingeActuatorIf_GetJointTempAngle((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22041,7 +22051,7 @@ PHHingeJointIf new_joint = new PHHingeJointIf(joint);
 	}
 	public double GetPullbackTarget() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHIKHingeActuatorIf_GetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22082,7 +22092,7 @@ PHHingeJointIf new_joint = new PHHingeJointIf(joint);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKSpringActuatorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22267,7 +22277,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public Posed GetJointTempPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKSpringActuatorIf_GetJointTempPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22287,7 +22297,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public Posed GetPullbackTarget() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHIKSpringActuatorIf_GetPullbackTarget((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22328,7 +22338,7 @@ Posed new_pose = new Posed(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22588,7 +22598,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHConstraintIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22608,7 +22618,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public bool IsArticulated() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHConstraintIf_IsArticulated((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22628,7 +22638,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public void GetSocketPose(Posed pose) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHConstraintIf_GetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
@@ -22682,7 +22692,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public void GetPlugPose(Posed pose) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHConstraintIf_GetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
@@ -22736,7 +22746,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public void GetRelativePose(Posed p) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHConstraintIf_GetRelativePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
@@ -22753,7 +22763,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public Vec3d GetRelativePoseR() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintIf_GetRelativePoseR((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22773,7 +22783,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public Quaterniond GetRelativePoseQ() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintIf_GetRelativePoseQ((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22793,7 +22803,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public Quaternionf GetAbsolutePoseQ() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintIf_GetAbsolutePoseQ((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22813,7 +22823,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public void GetRelativeVelocity(Vec3d v, Vec3d w) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHConstraintIf_GetRelativeVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) v, (IntPtr) w);
@@ -22830,7 +22840,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public void GetConstraintForce(Vec3d f, Vec3d t) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHConstraintIf_GetConstraintForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) f, (IntPtr) t);
@@ -22847,7 +22857,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public bool IsYielded() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHConstraintIf_IsYielded((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22888,7 +22898,7 @@ Posed new_pose = new Posed(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -23222,7 +23232,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 	}
 	public Vec3d GetTotalForce(PHSolidIf lhs, PHSolidIf rhs) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs);
@@ -23262,26 +23272,13 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
             return bstr;
         }
 	public IfInfo GetIfInfo() {
-		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
-			var currentThread = Thread.CurrentThread;
-			if (currentThread == phSceneIf.stepThread) {
-	    IntPtr ptrStep = SprExport.Spr_PHContactPointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-            return new IfInfo(ptrStep);
-			} else if (currentThread == phSceneIf.subThread) {
-				lock (phSceneIf.phSceneLock) {
-					phSceneIf.isGetFunctionCalledInSubThread = true;
-	    IntPtr ptrGet = SprExport.Spr_PHContactPointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-            return new IfInfo(ptrGet);
-				}
-			}
-		} else {
+// feature:only_use_thisarray0
+// Error:MissMatch
 	    IntPtr ptr = SprExport.Spr_PHContactPointIf_GetIfInfo((IntPtr) _thisArray[0]);
             return new IfInfo(ptr);
-		}
-		throw new InvalidOperationException();
 	}
 	public static IfInfo GetIfInfoStatic() {
+// feature:only_use_thisarray0
 	    IntPtr ptr = SprExport.Spr_PHContactPointIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}
@@ -23308,7 +23305,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -23365,7 +23362,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 	}
 	public double GetMaxForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHJointIf_GetMaxForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -23406,7 +23403,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -23790,7 +23787,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public bool IsCyclic() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PH1DJointIf_IsCyclic((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -23843,7 +23840,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -23863,7 +23860,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24000,7 +23997,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24053,7 +24050,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24073,7 +24070,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetSecondDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24159,7 +24156,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetTargetPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24212,7 +24209,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetTargetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24265,7 +24262,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetOffsetForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24318,7 +24315,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetOffsetForceN(int n) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) n);
@@ -24338,7 +24335,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetYieldStress() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24391,7 +24388,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetHardnessRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24477,7 +24474,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetSecondMoment() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24613,7 +24610,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetMotorForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetMotorForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24633,7 +24630,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetMotorForceN(int n) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetMotorForceN((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) n);
@@ -24653,7 +24650,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 	}
 	public double GetLimitForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointIf_GetLimitForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24694,7 +24691,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHingeJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24739,7 +24736,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSliderJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24784,7 +24781,7 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPathIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24911,7 +24908,7 @@ Posed new_pose = new Posed(pose);
 	}
 	public bool IsLoop() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHPathIf_IsLoop((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -24952,7 +24949,7 @@ Posed new_pose = new Posed(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPathJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25030,7 +25027,7 @@ Posed new_pose = new Posed(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHGenericJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25169,7 +25166,7 @@ string new_name = string.Copy(name);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25657,7 +25654,7 @@ PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
 	}
 	public Vec3d GetAngle() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetAngle((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25677,7 +25674,7 @@ PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
 	}
 	public Quaterniond GetPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25697,7 +25694,7 @@ PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
 	}
 	public Vec3d GetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25882,7 +25879,7 @@ PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
 	}
 	public double GetSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHBallJointIf_GetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25935,7 +25932,7 @@ PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
 	}
 	public double GetDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHBallJointIf_GetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -25955,7 +25952,7 @@ PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
 	}
 	public Vec3d GetSecondDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26053,7 +26050,7 @@ Quaterniond new_p = new Quaterniond(p);
 	}
 	public Quaterniond GetTargetPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26112,7 +26109,7 @@ Vec3d new_q = new Vec3d(q);
 	}
 	public Vec3d GetTargetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26171,7 +26168,7 @@ Vec3d new_ofst = new Vec3d(ofst);
 	}
 	public Vec3d GetOffsetForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26230,7 +26227,7 @@ Vec3d new_ofst = new Vec3d(ofst);
 	}
 	public Vec3d GetOffsetForceN(int n) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetOffsetForceN((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) n);
@@ -26283,7 +26280,7 @@ Vec3d new_ofst = new Vec3d(ofst);
 	}
 	public double GetYieldStress() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHBallJointIf_GetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26336,7 +26333,7 @@ Vec3d new_ofst = new Vec3d(ofst);
 	}
 	public double GetHardnessRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHBallJointIf_GetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26395,7 +26392,7 @@ Vec3d new_m = new Vec3d(m);
 	}
 	public Vec3d GetSecondMoment() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26531,7 +26528,7 @@ Vec3d new_m = new Vec3d(m);
 	}
 	public Vec3d GetMotorForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetMotorForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26551,7 +26548,7 @@ Vec3d new_m = new Vec3d(m);
 	}
 	public Vec3d GetMotorForceN(int n) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetMotorForceN((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) n);
@@ -26571,7 +26568,7 @@ Vec3d new_m = new Vec3d(m);
 	}
 	public Vec3d GetLimitForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_GetLimitForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26612,7 +26609,7 @@ Vec3d new_m = new Vec3d(m);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFixJointIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26657,7 +26654,7 @@ Vec3d new_m = new Vec3d(m);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26718,7 +26715,7 @@ Vec3d new_targetPosition = new Vec3d(targetPosition);
 	}
 	public Vec3d GetTargetPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26775,7 +26772,7 @@ Quaterniond new_targetOrientation = new Quaterniond(targetOrientation);
 	}
 	public Quaterniond GetTargetOrientation() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26832,7 +26829,7 @@ Vec3d new_spring = new Vec3d(spring);
 	}
 	public Vec3d GetSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26889,7 +26886,7 @@ Vec3d new_damper = new Vec3d(damper);
 	}
 	public Vec3d GetDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26946,7 +26943,7 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 	}
 	public Vec3d GetSecondDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -26999,7 +26996,7 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 	}
 	public double GetSpringOri() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSpringIf_GetSpringOri((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27052,7 +27049,7 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 	}
 	public double GetDamperOri() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSpringIf_GetDamperOri((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27105,7 +27102,7 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 	}
 	public double GetSecondDamperOri() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSpringIf_GetSecondDamperOri((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27158,7 +27155,7 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 	}
 	public double GetYieldStress() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSpringIf_GetYieldStress((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27211,7 +27208,7 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 	}
 	public double GetHardnessRate() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSpringIf_GetHardnessRate((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27268,7 +27265,7 @@ Vec3d new_secondMoment = new Vec3d(secondMoment);
 	}
 	public Vec3d GetSecondMoment() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27288,7 +27285,7 @@ Vec3d new_secondMoment = new Vec3d(secondMoment);
 	}
 	public Vec6d GetMotorForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetMotorForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27382,7 +27379,7 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
 	}
 	public Vec6d GetTargetVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringIf_GetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27423,7 +27420,7 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHMateIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27468,7 +27465,7 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPointToPointMateIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27513,7 +27510,7 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPointToLineMateIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27558,7 +27555,7 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPointToPlaneMateIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27621,7 +27618,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetRange(Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHPointToPlaneMateIf_GetRange((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) range);
@@ -27659,7 +27656,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHLineToLineMateIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27704,7 +27701,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPlaneToPlaneMateIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27749,7 +27746,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHTreeNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -27839,7 +27836,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHTreeNodeIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28374,7 +28371,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRootNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28419,7 +28416,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHTreeNode1DIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28464,7 +28461,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHingeJointNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28509,7 +28506,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSliderJointNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28554,7 +28551,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHPathJointNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28599,7 +28596,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHGenericJointNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28644,7 +28641,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28689,7 +28686,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHFixJointNodeIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28734,7 +28731,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHGearIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28824,7 +28821,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHGearIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28877,7 +28874,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetRatio() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHGearIf_GetRatio((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28930,7 +28927,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetOffset() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHGearIf_GetOffset((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -28983,7 +28980,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public int GetMode() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHGearIf_GetMode((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29024,7 +29021,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointLimitIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29087,7 +29084,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetRange(Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PH1DJointLimitIf_GetRange((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) range);
@@ -29137,7 +29134,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointLimitIf_GetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29190,7 +29187,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PH1DJointLimitIf_GetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29210,7 +29207,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public bool IsOnLimit() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PH1DJointLimitIf_IsOnLimit((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29263,7 +29260,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PH1DJointLimitIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29304,7 +29301,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointLimitIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29361,7 +29358,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetSpring() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHBallJointLimitIf_GetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29414,7 +29411,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetDamper() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHBallJointLimitIf_GetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29473,7 +29470,7 @@ Vec3d new_limDir = new Vec3d(limDir);
 	}
 	public Vec3d GetLimitDir() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointLimitIf_GetLimitDir((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29493,7 +29490,7 @@ Vec3d new_limDir = new Vec3d(limDir);
 	}
 	public bool IsOnLimit() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHBallJointLimitIf_IsOnLimit((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29546,7 +29543,7 @@ Vec3d new_limDir = new Vec3d(limDir);
 	}
 	public bool IsEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHBallJointLimitIf_IsEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29587,7 +29584,7 @@ Vec3d new_limDir = new Vec3d(limDir);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointConeLimitIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -29650,7 +29647,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetSwingRange(Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHBallJointConeLimitIf_GetSwingRange((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) range);
@@ -29706,7 +29703,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetSwingDirRange(Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHBallJointConeLimitIf_GetSwingDirRange((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) range);
@@ -29762,7 +29759,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetTwistRange(Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHBallJointConeLimitIf_GetTwistRange((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) range);
@@ -29800,7 +29797,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointSplineLimitIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30007,7 +30004,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetPoleTwistRange(Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHBallJointSplineLimitIf_GetPoleTwistRange((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) range);
@@ -30045,7 +30042,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIndependentLimitIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30069,7 +30066,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public bool IsOnLimit() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHBallJointIndependentLimitIf_IsOnLimit((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30166,7 +30163,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public void GetLimitRangeN(int n, Vec2d range) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    SprExport.Spr_PHBallJointIndependentLimitIf_GetLimitRangeN((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) n, (IntPtr) range);
@@ -30204,7 +30201,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointMotorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30249,7 +30246,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointNonLinearMotorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30409,7 +30406,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHuman1DJointResistanceIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30433,7 +30430,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public double GetCurrentResistance() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHHuman1DJointResistanceIf_GetCurrentResistance((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30474,7 +30471,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointMotorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30519,7 +30516,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointNonLinearMotorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30601,7 +30598,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHumanBallJointResistanceIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30625,7 +30622,7 @@ Vec2d new_range = new Vec2d(range);
 	}
 	public Vec3d GetCurrentResistance() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHHumanBallJointResistanceIf_GetCurrentResistance((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30666,7 +30663,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSpringMotorIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -30711,7 +30708,7 @@ Vec2d new_range = new Vec2d(range);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpObjIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31184,7 +31181,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public int GetVertexNum() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHOpObjIf_GetVertexNum((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31204,7 +31201,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public Vec3f GetVertex(int vi) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpObjIf_GetVertex((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) vi);
@@ -31223,6 +31220,7 @@ Vec3f new_v = new Vec3f(v);
 		throw new InvalidOperationException();
 	}
 	public ObjectIf GetOpParticle(int pi) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -31236,7 +31234,7 @@ Vec3f new_v = new Vec3f(v);
 	    IntPtr ptrGet = SprExport.Spr_PHOpObjIf_GetOpParticle((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) pi);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, phSceneIf.sceneForStep);
+            ObjectIf obj = new ObjectIf(ptrStep, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -31272,7 +31270,7 @@ Vec3f new_v = new Vec3f(v);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpObjIf_GetOpParticle((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) pi);
 	    IntPtr ptrGet = SprExport.Spr_PHOpObjIf_GetOpParticle((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) pi);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrGet, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -31303,7 +31301,7 @@ Vec3f new_v = new Vec3f(v);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpObjIf_GetOpParticle((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) pi);
 	    IntPtr ptrGet = SprExport.Spr_PHOpObjIf_GetOpParticle((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) pi);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -31365,6 +31363,7 @@ Vec3f new_v = new Vec3f(v);
 		throw new InvalidOperationException();
 	}
 	public ObjectIf GetOpGroup(int gi) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -31378,7 +31377,7 @@ Vec3f new_v = new Vec3f(v);
 	    IntPtr ptrGet = SprExport.Spr_PHOpObjIf_GetOpGroup((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) gi);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, phSceneIf.sceneForStep);
+            ObjectIf obj = new ObjectIf(ptrStep, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -31414,7 +31413,7 @@ Vec3f new_v = new Vec3f(v);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpObjIf_GetOpGroup((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) gi);
 	    IntPtr ptrGet = SprExport.Spr_PHOpObjIf_GetOpGroup((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) gi);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrGet, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -31445,7 +31444,7 @@ Vec3f new_v = new Vec3f(v);
 	    IntPtr ptrBuffer = SprExport.Spr_PHOpObjIf_GetOpGroup((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) gi);
 	    IntPtr ptrGet = SprExport.Spr_PHOpObjIf_GetOpGroup((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) gi);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            ObjectIf obj = new ObjectIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            ObjectIf obj = new ObjectIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
@@ -31508,7 +31507,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public int GetobjVtoPmap(int vi) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHOpObjIf_GetobjVtoPmap((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) vi);
@@ -31528,7 +31527,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public float GetVtxBlendWeight(int Vtxi, int Grpi) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpObjIf_GetVtxBlendWeight((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) Vtxi, (int) Grpi);
@@ -31581,7 +31580,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public float GetVelocityDamping() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpObjIf_GetVelocityDamping((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31601,7 +31600,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public float GetBoundLength() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpObjIf_GetBoundLength((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31687,7 +31686,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public float GetTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpObjIf_GetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31707,7 +31706,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public float GetObjBeta() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpObjIf_GetObjBeta((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31793,7 +31792,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public float GetObjAlpha() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpObjIf_GetObjAlpha((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31813,7 +31812,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public bool GetObjDstConstraint() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpObjIf_GetObjDstConstraint((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -31899,7 +31898,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public int GetObjItrTime() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHOpObjIf_GetObjItrTime((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32063,7 +32062,7 @@ Vec3f new_v = new Vec3f(v);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpHapticControllerIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32120,7 +32119,7 @@ Vec3f new_v = new Vec3f(v);
 	}
 	public bool GetHCForceReady() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpHapticControllerIf_GetHCForceReady((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32321,7 +32320,7 @@ Vec3f new_ctcPos = new Vec3f(ctcPos);
 	}
 	public Vec3f GetUserPos() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpHapticControllerIf_GetUserPos((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32341,7 +32340,7 @@ Vec3f new_ctcPos = new Vec3f(ctcPos);
 	}
 	public Vec3f GetHCPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpHapticControllerIf_GetHCPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32439,7 +32438,7 @@ Posef new_pose = new Posef(pose);
 	}
 	public Posef GetHCPose() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpHapticControllerIf_GetHCPose((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32459,7 +32458,7 @@ Posef new_pose = new Posef(pose);
 	}
 	public float GetC_ObstacleRadius() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHOpHapticControllerIf_GetC_ObstacleRadius((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32479,7 +32478,7 @@ Posef new_pose = new Posef(pose);
 	}
 	public Vec3f GetCurrentOutputForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpHapticControllerIf_GetCurrentOutputForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32520,7 +32519,7 @@ Posef new_pose = new Posef(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpHapticRendererIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32577,7 +32576,7 @@ Posef new_pose = new Posef(pose);
 	}
 	public bool IsRigid() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHOpHapticRendererIf_IsRigid((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32618,7 +32617,7 @@ Posef new_pose = new Posef(pose);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHOpAnimationIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32892,7 +32891,7 @@ Vec3f new_force = new Vec3f(force);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRayIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32916,7 +32915,7 @@ Vec3f new_force = new Vec3f(force);
 	}
 	public Vec3d GetOrigin() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRayIf_GetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32973,7 +32972,7 @@ Vec3d new_ori = new Vec3d(ori);
 	}
 	public Vec3d GetDirection() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRayIf_GetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33100,8 +33099,9 @@ Vec3d new_dir = new Vec3d(dir);
 		throw new InvalidOperationException();
 	}
 	public arraywrapper_PHRaycastHit GetHits() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRayIf_GetHits((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33120,8 +33120,9 @@ Vec3d new_dir = new Vec3d(dir);
 		throw new InvalidOperationException();
 	}
 	public arraywrapper_PHRaycastHit GetNearest() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRayIf_GetNearest((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33140,8 +33141,9 @@ Vec3d new_dir = new Vec3d(dir);
 		throw new InvalidOperationException();
 	}
 	public arraywrapper_PHRaycastHit GetDynamicalNearest() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHRayIf_GetDynamicalNearest((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33182,7 +33184,7 @@ Vec3d new_dir = new Vec3d(dir);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33442,7 +33444,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	}
 	public int GetSolidIndex(PHSolidIf s) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s);
@@ -33561,6 +33563,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHSolidPairForLCPIf GetSolidPair(int i, int j) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33574,7 +33577,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, phSceneIf.sceneForStep);
+            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -33586,14 +33589,14 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) i, (int) j);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, phSceneIf.sceneForGet);
+            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) i, (int) j);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) i, (int) j);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) i, (int) j);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -33607,6 +33610,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHSolidPairForLCPIf GetSolidPair(PHSolidIf lhs, PHSolidIf rhs, bool bSwap) {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33624,7 +33628,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (bool) bSwap);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, phSceneIf.sceneForStep);
+            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -33640,14 +33644,14 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (bool) bSwap);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (bool) bSwap);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, phSceneIf.sceneForGet);
+            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs, (bool) bSwap);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs, (bool) bSwap);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs, (bool) bSwap);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -33963,296 +33967,6 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		} else {
 	    SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr) _thisArray[0]);
 		}
-	}
-	public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
-		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
-			var currentThread = Thread.CurrentThread;
-			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHJointDesc new_desc = new PHJointDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_ii, (IntPtr) new_desc);
-				phSceneIf.AddCallbackForStepThread(
-					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_ii, (IntPtr) new_desc);
-					},
-					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_ii, (IntPtr) new_desc);
-				});
-            if (ptrStep == IntPtr.Zero) { return null; } 
-            PHJointIf obj = new PHJointIf(ptrStep, phSceneIf.sceneForStep);
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
-				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
-				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
-				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
-				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
-				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
-				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
-				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
-				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
-				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
-				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
-				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
-				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
-				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
-				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-			} else if (currentThread == phSceneIf.subThread) {
-				lock (phSceneIf.phSceneLock) {
-					phSceneIf.isSetFunctionCalledInSubThread = true;
-					if (phSceneIf.stateForSwap != null) {
-						SprExport.Spr_ObjectStatesIf_ReleaseState(phSceneIf.stateForSwap._thisArray[0], _thisArray[phSceneIf.sceneForGet]);
-					}
-					phSceneIf.callObjectStatesIf_Create = true;
-					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHJointDesc new_desc = new PHJointDesc(desc);
-// intrinsic
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_ii, (IntPtr) new_desc);
-						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_ii, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_ii, (IntPtr) new_desc);
-            if (ptrGet == IntPtr.Zero) { return null; } 
-            PHJointIf obj = new PHJointIf(ptrGet, phSceneIf.sceneForGet);
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
-				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
-				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
-				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
-				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
-				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
-				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
-				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
-				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
-				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
-				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
-				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
-				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
-				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
-				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) ii, (IntPtr) desc);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) ii, (IntPtr) desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) ii, (IntPtr) desc);
-            if (ptrGet == IntPtr.Zero) { return null; } 
-            PHJointIf obj = new PHJointIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
-				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
-				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
-				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
-				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
-				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
-				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
-				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
-				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
-				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
-				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
-				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
-				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
-				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
-				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-					}
-				}
-			}
-		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) ii, (IntPtr) desc);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHJointIf obj = new PHJointIf(ptr, 0);
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
-				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
-				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
-				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
-				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
-				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
-				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
-				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
-				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
-				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
-				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
-				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
-				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
-				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
-				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-		}
-		throw new InvalidOperationException();
 	}
 	public int NJoints() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
@@ -36796,7 +36510,7 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 	}
 	public double GetTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36816,7 +36530,7 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 	}
 	public double GetTimeStepInv() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetTimeStepInv((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36869,7 +36583,7 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 	}
 	public double GetHapticTimeStep() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetHapticTimeStep((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36922,7 +36636,7 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 	}
 	public uint GetCount() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    uint resultStep = (uint) SprExport.Spr_PHSceneIf_GetCount((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37012,7 +36726,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public Vec3d GetGravity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37098,7 +36812,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetAirResistanceRateForVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetAirResistanceRateForVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37118,7 +36832,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetAirResistanceRateForAngularVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetAirResistanceRateForAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37171,7 +36885,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetContactTolerance() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetContactTolerance((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37224,7 +36938,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetImpactThreshold() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetImpactThreshold((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37277,7 +36991,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetFrictionThreshold() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetFrictionThreshold((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37330,7 +37044,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetMaxVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetMaxVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37383,7 +37097,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetMaxAngularVelocity() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetMaxAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37436,7 +37150,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetMaxForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetMaxForce((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37489,7 +37203,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetMaxMoment() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetMaxMoment((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37542,7 +37256,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetMaxDeltaPosition() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetMaxDeltaPosition((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37595,7 +37309,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public double GetMaxDeltaOrientation() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    double resultStep = (double) SprExport.Spr_PHSceneIf_GetMaxDeltaOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37615,7 +37329,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public int GetLCPSolver() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHSceneIf_GetLCPSolver((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37668,7 +37382,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public int GetNumIteration() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHSceneIf_GetNumIteration((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37787,7 +37501,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public bool IsContactDetectionEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHSceneIf_IsContactDetectionEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37840,7 +37554,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public bool IsCCDEnabled() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    char retStep = SprExport.Spr_PHSceneIf_IsCCDEnabled((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37893,7 +37607,7 @@ Vec3d new_accel = new Vec3d(accel);
 	}
 	public int GetBroadPhaseMode() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    int resultStep = (int) SprExport.Spr_PHSceneIf_GetBroadPhaseMode((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -37987,39 +37701,6 @@ Vec3f new_extent = new Vec3f(extent);
 			}
 		} else {
 	    SprExport.Spr_PHSceneIf_SetMaterialBlending((IntPtr) _thisArray[0], (int) mode);
-		}
-	}
-	public void Step() {
-		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
-			var currentThread = Thread.CurrentThread;
-			if (currentThread == phSceneIf.stepThread) {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-				phSceneIf.AddCallbackForStepThread(
-					() => {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
-					},
-					() => {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-				});
-			} else if (currentThread == phSceneIf.subThread) {
-				lock (phSceneIf.phSceneLock) {
-					phSceneIf.isSetFunctionCalledInSubThread = true;
-					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					} else {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-					}
-				}
-			}
-		} else {
-	    SprExport.Spr_PHSceneIf_Step((IntPtr) _thisArray[0]);
 		}
 	}
 	public void ClearForce() {
@@ -38739,6 +38420,7 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHOpSpHashColliAgentIf GetOpColliAgent() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -38752,7 +38434,7 @@ Vec3f new_extent = new Vec3f(extent);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetOpColliAgent((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            PHOpSpHashColliAgentIf obj = new PHOpSpHashColliAgentIf(ptrStep, phSceneIf.sceneForStep);
+            PHOpSpHashColliAgentIf obj = new PHOpSpHashColliAgentIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -38764,14 +38446,14 @@ Vec3f new_extent = new Vec3f(extent);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_GetOpColliAgent((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetOpColliAgent((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHOpSpHashColliAgentIf obj = new PHOpSpHashColliAgentIf(ptrGet, phSceneIf.sceneForGet);
+            PHOpSpHashColliAgentIf obj = new PHOpSpHashColliAgentIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetOpColliAgent((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_GetOpColliAgent((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetOpColliAgent((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHOpSpHashColliAgentIf obj = new PHOpSpHashColliAgentIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            PHOpSpHashColliAgentIf obj = new PHOpSpHashColliAgentIf(ptrGet, 0);
             return obj;
 					}
 				}
@@ -38984,7 +38666,7 @@ Vec3f new_extent = new Vec3f(extent);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHBoneIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -39728,7 +39410,7 @@ Vec3d new_pos = new Vec3d(pos);
         }
 	public IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -39948,7 +39630,7 @@ PHBoneIf new_parent = new PHBoneIf(parent);
 	}
 	public float GetGrabStrength() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    float resultStep = (float) SprExport.Spr_PHSkeletonIf_GetGrabStrength((IntPtr) _thisArray[phSceneIf.sceneForStep]);

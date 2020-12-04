@@ -228,40 +228,40 @@ namespace SprCs {
         //        }
         //    }
         //}
-        //public void Step() {
-        //    if (multiThreadMode) {
-        //        if (isSwapping) {
-        //            Console.WriteLine("isSwapping True before Step");
-        //        }
-        //        lock (PHSdkIf.phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
-        //            if (!debugSceneForGet && !debugSceneForBuffer) {
-        //                SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
-        //                Console.WriteLine("not debug");
-        //            } else if (debugSceneForGet) {
-        //                SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForGet]);
-        //                changeAllExecuteGetFunctionFlagsTrue = true;
-        //                stepCount++;
-        //                Console.WriteLine("debugSceneForGet");
-        //            } else if (debugSceneForBuffer) {
-        //                if (isFirstForDebugSceneForBuffer) {
-        //                    var temp = sceneForBuffer;
-        //                    sceneForBuffer = sceneForGet;
-        //                    sceneForGet = temp;
-        //                    isFirstForDebugSceneForBuffer = false;
-        //                }
-        //                SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForGet]);
-        //                changeAllExecuteGetFunctionFlagsTrue = true;
-        //                stepCount++;
-        //                Console.WriteLine("debugSceneForBuffer");
-        //            }
-        //        }
-        //        if (isSwapping) {
-        //            Console.WriteLine("isSwapping True after Step");
-        //        }
-        //    } else {
-        //        SprExport.Spr_PHSceneIf_Step(_thisArray[0]);
-        //    }
-        //}
+        public void Step() {
+            if (multiThreadMode) {
+                if (isSwapping) {
+                    Console.WriteLine("isSwapping True before Step");
+                }
+                lock (PHSdkIf.phSdkLock) { // phSdkのDelChildObjectはStep中に呼ばれないように
+                    if (!debugSceneForGet && !debugSceneForBuffer) {
+                        SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForStep]);
+                        Console.WriteLine("not debug");
+                    } else if (debugSceneForGet) {
+                        SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForGet]);
+                        changeAllExecuteGetFunctionFlagsTrue = true;
+                        stepCount++;
+                        Console.WriteLine("debugSceneForGet");
+                    } else if (debugSceneForBuffer) {
+                        if (isFirstForDebugSceneForBuffer) {
+                            var temp = sceneForBuffer;
+                            sceneForBuffer = sceneForGet;
+                            sceneForGet = temp;
+                            isFirstForDebugSceneForBuffer = false;
+                        }
+                        SprExport.Spr_PHSceneIf_Step(_thisArray[sceneForGet]);
+                        changeAllExecuteGetFunctionFlagsTrue = true;
+                        stepCount++;
+                        Console.WriteLine("debugSceneForBuffer");
+                    }
+                }
+                if (isSwapping) {
+                    Console.WriteLine("isSwapping True after Step");
+                }
+            } else {
+                SprExport.Spr_PHSceneIf_Step(_thisArray[0]);
+            }
+        }
         public void Swap() {
             while (isSwapping) { // falseになるまで待つ，Step用Callback(ExecWaitUntilNextStepCallbackList)の直後が良いがlock周りを考えるとここでなくてはならない
                 Console.WriteLine("Wait isSwapping");
@@ -493,5 +493,318 @@ namespace SprCs {
         }
         public override void SetName(string n) {
         }
+
+        public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                ;
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    PHSolidIf new_lhs = new PHSolidIf(lhs);
+                    // intrinsic
+                    PHSolidIf new_rhs = new PHSolidIf(rhs);
+                    // intrinsic
+                    IfInfo new_ii = new IfInfo(ii);
+                    // intrinsic
+                    PHJointDesc new_desc = new PHJointDesc(desc);
+                    // intrinsic
+                    //_[function_prep: 1586] 
+                    //_[function_body: 1617] 
+                    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
+                    phSceneIf.AddCallbackForStepThread(
+                        () => {
+                        //_[function_prep: 1586] 
+                        //_[function_body: 1617] 
+                        IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
+                        },
+                        () => {
+                        //_[function_prep: 1586] 
+                        //_[function_body: 1617] 
+                        IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
+                        });
+                    if (ptrStep == IntPtr.Zero) { return null; }
+                    PHJointIf obj = new PHJointIf(ptrStep, phSceneIf.sceneForStep);
+                    if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+                        PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+                        PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+                        PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+                        PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+                        PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+                        PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+                        PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+                        PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+                        PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+                        PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+                        PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+                        PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+                        PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+                        PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    return obj;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneLock) {
+                        phSceneIf.isSetFunctionCalledInSubThread = true;
+                        if (phSceneIf.stateForSwap != null) {
+                            SprExport.Spr_ObjectStatesIf_ReleaseState(phSceneIf.stateForSwap._thisArray[0], _thisArray[phSceneIf.sceneForGet]);
+                        }
+                        phSceneIf.callObjectStatesIf_Create = true;
+                        if (phSceneIf.isStepThreadExecuting) {
+                            PHSolidIf new_lhs = lhs;
+                            // intrinsic
+                            PHSolidIf new_rhs = rhs;
+                            // intrinsic
+                            IfInfo new_ii = new IfInfo(ii);
+                            // intrinsic
+                            PHJointDesc new_desc = new PHJointDesc(desc);
+                            // intrinsic
+                            phSceneIf.AddCallbackForSubThread(() => {
+                                //_[function_prep: 1586] 
+                                //_[function_body: 1617] 
+                                IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)new_lhs._thisArray[phSceneIf.sceneForStep], (IntPtr)new_rhs._thisArray[phSceneIf.sceneForStep], (IntPtr)new_ii, (IntPtr)new_desc);
+                            });
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)new_lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr)new_rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr)new_ii, (IntPtr)new_desc);
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)new_lhs._thisArray[phSceneIf.sceneForGet], (IntPtr)new_rhs._thisArray[phSceneIf.sceneForGet], (IntPtr)new_ii, (IntPtr)new_desc);
+                            if (ptrGet == IntPtr.Zero) { return null; }
+                            PHJointIf obj = new PHJointIf(ptrGet, phSceneIf.sceneForGet);
+                            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+                                PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+                                PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+                                PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+                                PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+                                PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+                                PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+                                PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+                                PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+                                PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+                                PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+                                PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+                                PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+                                PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+                                PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            return obj;
+                        } else {
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)lhs._thisArray[phSceneIf.sceneForStep], (IntPtr)rhs._thisArray[phSceneIf.sceneForStep], (IntPtr)ii, (IntPtr)desc);
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr)rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)lhs._thisArray[phSceneIf.sceneForGet], (IntPtr)rhs._thisArray[phSceneIf.sceneForGet], (IntPtr)ii, (IntPtr)desc);
+                            if (ptrGet == IntPtr.Zero) { return null; }
+                            PHJointIf obj = new PHJointIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+                            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+                                PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+                                PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+                                PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+                                PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+                                PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+                                PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+                                PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+                                PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+                                PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+                                PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+                                PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+                                PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+                                PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+                                PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                                return appropriate_type;
+                            }
+                            return obj;
+                        }
+                    }
+                }
+            } else {
+                //_[function_prep: 1586] 
+                //_[function_body: 1617] 
+                IntPtr ptr = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[0], (IntPtr)lhs, (IntPtr)rhs, (IntPtr)ii, (IntPtr)desc);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHJointIf obj = new PHJointIf(ptr, 0);
+                if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+                    PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+                    PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+                    PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+                    PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+                    PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+                    PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+                    PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+                    PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+                    PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+                    PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+                    PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+                    PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+                    PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+                    PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                return obj;
+            }
+            throw new InvalidOperationException();
+        }
+
     }
 }

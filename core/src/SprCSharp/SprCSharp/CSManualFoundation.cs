@@ -147,25 +147,25 @@ namespace SprCs {
         public override void SetName(string n) {
         }
 
-        public override IfInfo GetIfInfo() {
-            PHSceneIf phSceneIf = GetCSPHSceneIf();
-            if (phSceneIf.multiThreadMode) {
-                var currentThread = Thread.CurrentThread;
-                if (currentThread == phSceneIf.stepThread) {
-                    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr)_thisArray[phSceneIf.sceneForStep]);
-                    return new IfInfo(ptrStep);
-                } else if (currentThread == phSceneIf.subThread) {
-                    lock (phSceneIf.phSceneLock) {
-                        phSceneIf.isGetFunctionCalledInSubThread = true;
-                        IntPtr ptrGet = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_thisArray[phSceneIf.sceneForGet]);
-                        return new IfInfo(ptrGet);
-                    }
-                }
-            } else {
-                IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_thisArray[0]);
-                return new IfInfo(ptr);
-            }
-            throw new InvalidOperationException();
-        }
+        //public override IfInfo GetIfInfo() {
+        //    PHSceneIf phSceneIf = GetCSPHSceneIf();
+        //    if (phSceneIf.multiThreadMode) {
+        //        var currentThread = Thread.CurrentThread;
+        //        if (currentThread == phSceneIf.stepThread) {
+        //            IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr)_thisArray[phSceneIf.sceneForStep]);
+        //            return new IfInfo(ptrStep);
+        //        } else if (currentThread == phSceneIf.subThread) {
+        //            lock (phSceneIf.phSceneLock) {
+        //                phSceneIf.isGetFunctionCalledInSubThread = true;
+        //                IntPtr ptrGet = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_thisArray[phSceneIf.sceneForGet]);
+        //                return new IfInfo(ptrGet);
+        //            }
+        //        }
+        //    } else {
+        //        IntPtr ptr = SprExport.Spr_PHBodyIf_GetPose((IntPtr)_thisArray[0]);
+        //        return new IfInfo(ptr);
+        //    }
+        //    throw new InvalidOperationException();
+        //}
     }
 }

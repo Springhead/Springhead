@@ -26,6 +26,9 @@
 %feature("only_cs_ignore") Spr::PHSdkIf::CreateScene;
 %feature("only_cs_ignore") Spr::PHSdkIf::CreateSdk;
 %feature("only_cs_ignore") Spr::PHSceneIf::GetSdk;
+%feature("only_cs_ignore") Spr::PHSceneIf::CreateJoint;
+%feature("only_cs_ignore") Spr::PHSceneIf::Step;
+%feature("only_use_thisarray0") Spr::PHContactPointIf;
 
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

@@ -3540,7 +3540,7 @@ namespace SprCs {
         }
 	public virtual IfInfo GetIfInfo() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
+		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
 	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -3563,6 +3563,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public SceneIf GetScene() {
+		// is_return_thisArray0;
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -3576,7 +3577,7 @@ namespace SprCs {
 	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
-            SceneIf obj = new SceneIf(ptrStep, phSceneIf.sceneForStep);
+            SceneIf obj = new SceneIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -3588,14 +3589,14 @@ namespace SprCs {
 	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            SceneIf obj = new SceneIf(ptrGet, phSceneIf.sceneForGet);
+            SceneIf obj = new SceneIf(ptrGet, 0);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetScene((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            SceneIf obj = new SceneIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            SceneIf obj = new SceneIf(ptrGet, 0);
             return obj;
 					}
 				}

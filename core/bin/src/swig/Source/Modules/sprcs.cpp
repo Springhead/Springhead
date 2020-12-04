@@ -1389,6 +1389,19 @@ public:
 				bool is_call_all_thisArray = false; // 全ての_thisArrayでメソッドを実行する
 				bool is_phsceneobject = false; // phSceneに含まれるオブジェクト
 				bool is_return_thisArray0 = false; // _thisArray[0]に設定してリターン
+
+				bool is_all_elements_thisArray_class = false; // メンバが所属しているクラスが3つの_thisArrayを使用するか
+				bool is_all_elements_thisArray_return = false; // returnする戻り値のクラスが3つの_thisArrayを使用するか
+				is_all_elements_thisArray_class = IsUseAll_thisArray(n, topnode);
+				if (GetFlagAttr(n, "feature:only_use_thisarray0")) {
+					Printf(CS, "// feature:only_use_thisarray0\n");
+				}
+				//if (IsUseAll_thisArray(n, topnode)) {
+				//	Printf(CS, "// IsUseAll_thisArray true\n");
+				//}
+				//else {
+				//	Printf(CS, "// IsUseAll_thisArray false\n");
+				//}
 				if (!ni.is_static) {
 					Node* scene_object_if = FindNodeByAttrR(topnode, "name", "Spr::SceneObjectIf");
 					Node* phscene_if = FindNodeByAttrR(topnode, "name", "Spr::PHSceneIf");
@@ -1410,22 +1423,21 @@ public:
 						if (ni.is_struct && ENDWITH(ni.cs_type, "If")) { // ifクラスは全て呼ぶ
 							is_call_all_thisArray = true;
 						}
-						
-						//Node* cs_type_node = FindNodeByAttrR(topnode, "name", ni.cs_type);
-						//if (cs_type_node == NULL) {
-						//	Printf(CS, "		// NULL;\n");
-						//}
-						//else {
-						//	Printf(CS, "		// %s;\n", get_node_info(fps, cs_type_node).cs_name);
-						//}
-						//if (!isChildClass(cs_type_node, scene_object_if, topnode) && !(cs_type_node == phscene_if)) { // 戻り値の型がPHSceneSceneのObject以外
-						//	is_return_thisArray0 = true;
-						//}
+						//string sprname = "Spr::";
+						//sprname += ni.cs_type;
+						Node* cs_type_node = FindNodeByAttrR(topnode, "name", ni.type);
+						if (cs_type_node != NULL && !isChildClass(cs_type_node, scene_object_if, topnode) && !(cs_type_node == phscene_if)) { // 戻り値の型がPHSceneSceneのObject以外
+							Printf(CS, "		// is_return_thisArray0;\n");
+							is_return_thisArray0 = true;
+						}
 					}
 				}
-				if (is_phsceneobject && !is_call_all_thisArray) {
+				if (!ni.is_static && is_all_elements_thisArray_class != is_phsceneobject) {
+					Printf(CS, "// Error:MissMatch\n");
+				}
+				if (!ni.is_static && is_all_elements_thisArray_class && !is_call_all_thisArray) {
 					Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
-					Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
+					Printf(CS, "		if (phSceneIf.multiThreadMode) {\n");
 					Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 					Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
 					csfunction_code(/* multithread = */true, /* lvalue_name = */"Step", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
@@ -1443,7 +1455,7 @@ public:
 					Printf(CS, "		}\n");
 					Printf(CS, "		throw new InvalidOperationException();\n");
 				}
-				else if (is_phsceneobject && is_call_all_thisArray) {
+				else if (!ni.is_static && is_all_elements_thisArray_class && is_call_all_thisArray) {
 					Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
 					Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 					Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
@@ -2076,10 +2088,25 @@ public:
 		}
 	}
 
+	// targetが_thisArrayを全て使用するクラスであるか
+	bool IsUseAll_thisArray(Node* n, Node *topnode) {
+		if (GetFlagAttr(n, "feature:only_use_thisarray0")) {
+			return false;
+		}
+		Node* scene_object_if = FindNodeByAttrR(topnode, "name", "Spr::SceneObjectIf");
+		Node* phscene_if = FindNodeByAttrR(topnode, "name", "Spr::PHSceneIf");
+		if ((isChildClass(n, scene_object_if, topnode) || n == phscene_if)) {
+			return true;
+		}
+		return false;
+	}
 	// targetのIfクラスがparentを継承しているかを判断する 自身でもTrue
 	bool isChildClass(Node *target, Node *parent, Node *topnode) {
 		if (target == parent) {
 			return true;
+		}
+		if (target == NULL) {
+			return false;
 		}
 		char* suffix = "If";
 		Strings bases;
