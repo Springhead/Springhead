@@ -58,6 +58,24 @@ namespace SprCs {
 
     public partial class ObjectIf {
         public CsCastObject Cast() { return new CsCastObject(this); }
+
+        public virtual IfInfo GetIfInfo() {
+            IntPtr ptr = IntPtr.Zero;
+            if (_thisArray[0] != IntPtr.Zero) {
+                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
+            } else if (_thisArray[1] != IntPtr.Zero) {
+                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[1]);
+            } else if (_thisArray[2] != IntPtr.Zero) {
+                ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[2]);
+            }
+            if (ptr == IntPtr.Zero) {
+                Console.WriteLine("GetIfInfo All null");
+                return null;
+            } else {
+                var newIfInfo = new IfInfo(ptr);
+                return newIfInfo;
+            }
+        }
     }
 
     public class CsCastObject {

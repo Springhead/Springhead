@@ -3304,25 +3304,8 @@ namespace SprCs {
             SprExport.Spr_ObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-public virtual IfInfo GetIfInfo() {
-                    IntPtr ptr = IntPtr.Zero;
-        if (_thisArray[0] != IntPtr.Zero) {
-            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[0]);
-        } else if (_thisArray[1] != IntPtr.Zero) {
-            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[1]);
-        } else if (_thisArray[2] != IntPtr.Zero) {
-            ptr = SprExport.Spr_ObjectIf_GetIfInfo((IntPtr)_thisArray[2]);
-        }
-        if (ptr == IntPtr.Zero) {
-            Console.WriteLine("GetIfInfo All null");
-            return null;
-        } else {
-            var newIfInfo = new IfInfo(ptr);
-            return newIfInfo;
-        }
-}
 
-        public static IfInfo GetIfInfoStatic() {
+    public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}

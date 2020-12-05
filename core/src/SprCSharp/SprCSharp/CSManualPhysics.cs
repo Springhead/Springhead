@@ -494,6 +494,47 @@ namespace SprCs {
         public override void SetName(string n) {
         }
 
+        public PHGravityEngineIf GetGravityEngine() {
+            if (multiThreadMode) {
+                IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
+                IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[1]);
+                IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[2]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
+                obj._thisArray[0] = ptr;
+                obj._thisArray[1] = ptr1;
+                obj._thisArray[2] = ptr2;
+                return obj;
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
+                obj._thisArray[0] = ptr;
+                return obj;
+            }
+
+        }
+
+        public PHIKEngineIf GetIKEngine() {
+            if (multiThreadMode) {
+                IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[0]);
+                IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[1]);
+                IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[2]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHIKEngineIf obj = new PHIKEngineIf(ptr);
+                obj._thisArray[0] = ptr;
+                obj._thisArray[1] = ptr1;
+                obj._thisArray[2] = ptr2;
+                return obj;
+            } else {
+                IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[0]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHIKEngineIf obj = new PHIKEngineIf(ptr);
+                obj._thisArray[0] = ptr;
+                return obj;
+            }
+        }
+
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
@@ -513,14 +554,14 @@ namespace SprCs {
                     IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForStep], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
                     phSceneIf.AddCallbackForStepThread(
                         () => {
-                        //_[function_prep: 1586] 
-                        //_[function_body: 1617] 
-                        IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForBuffer], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
                         },
                         () => {
-                        //_[function_prep: 1586] 
-                        //_[function_body: 1617] 
-                        IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
+                            //_[function_prep: 1586] 
+                            //_[function_body: 1617] 
+                            IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[phSceneIf.sceneForGet], (IntPtr)new_lhs, (IntPtr)new_rhs, (IntPtr)new_ii, (IntPtr)new_desc);
                         });
                     if (ptrStep == IntPtr.Zero) { return null; }
                     PHJointIf obj = new PHJointIf(ptrStep, phSceneIf.sceneForStep);

@@ -35858,27 +35858,6 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 
-    public PHGravityEngineIf GetGravityEngine() {
-        if (multiThreadMode) {
-            IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
-            IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[1]);
-            IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[2]);
-            if (ptr == IntPtr.Zero) { return null; }
-            PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
-            obj._thisArray[0] = ptr;
-            obj._thisArray[1] = ptr1;
-            obj._thisArray[2] = ptr2;
-            return obj;
-        } else {
-            IntPtr ptr = SprExport.Spr_PHSceneIf_GetGravityEngine((IntPtr)_thisArray[0]);
-            if (ptr == IntPtr.Zero) { return null; }
-            PHGravityEngineIf obj = new PHGravityEngineIf(ptr);
-            obj._thisArray[0] = ptr;
-            return obj;
-        }
-
-    }
-
 	public PHPenaltyEngineIf GetPenaltyEngine() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
@@ -35904,25 +35883,6 @@ Vec3f new_extent = new Vec3f(extent);
             return obj;
 		}
 		throw new InvalidOperationException();
-	}
-	public PHIKEngineIf GetIKEngine() {
-        if (multiThreadMode) {
-            IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[0]);
-            IntPtr ptr1 = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[1]);
-            IntPtr ptr2 = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[2]);
-            if (ptr == IntPtr.Zero) { return null; }
-            PHIKEngineIf obj = new PHIKEngineIf(ptr);
-            obj._thisArray[0] = ptr;
-            obj._thisArray[1] = ptr1;
-            obj._thisArray[2] = ptr2;
-            return obj;
-        } else {
-            IntPtr ptr = SprExport.Spr_PHSceneIf_GetIKEngine((IntPtr)_thisArray[0]);
-            if (ptr == IntPtr.Zero) { return null; }
-            PHIKEngineIf obj = new PHIKEngineIf(ptr);
-            obj._thisArray[0] = ptr;
-            return obj;
-        }
 	}
 	public PHFemEngineIf GetFemEngine() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
