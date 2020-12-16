@@ -23,12 +23,13 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "found python (Version `python --version | sed -e 's/Python //i'`)"
+python_path=`which python`
 
 
 if [ $DEBUG -ne 0 ]; then
-	echo "python setup.py $*"
+	echo "python setup.py $* $python_path"
 fi
-python setup.py $*
+python setup.py $* $python_path
 
 exit 0
 # end: setup.sh
