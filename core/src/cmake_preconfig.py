@@ -76,7 +76,7 @@ def fatal(msg, exitcode=1):
 # ----------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: %prog [options] texmain'
+usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
 #
 parser.add_option('-v', '--verbose', dest='verbose',
@@ -96,7 +96,6 @@ verbose = options.verbose
 # ----------------------------------------------------------------------
 #  メイン処理開始
 #
-
 for arg in args:
 	link, target = arg.replace(os.sep, '/').split('=')
 	if verbose:

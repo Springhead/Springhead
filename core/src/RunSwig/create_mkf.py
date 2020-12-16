@@ -26,10 +26,9 @@
 #     Ver 1.05  2017/11/08 F.Kanehori	Python library path の変更.
 #     Ver 1.06  2017/11/29 F.Kanehori	Python library path の変更.
 #     Ver 1.07  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#     Ver 1.08  2020/11/12 F.Kanehori	Setup 導入期間開始.
+#     Ver 1.08  2020/12/14 F.Kanehori	Setup 導入テスト開始.
 # ==============================================================================
 version = '1.08'
-debug = False
 trace = False
 
 import sys
@@ -38,25 +37,33 @@ import glob
 import copy
 from optparse import OptionParser
 
-# --------------------------------------------
-SetupExists = os.path.exists('../setup.conf')
-# --------------------------------------------
-
 # ----------------------------------------------------------------------
-#  Constants
+#  Identify myself
 #
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
 	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
+from SetupFile import *
 from TextFio import *
 from Util import *
 from Error import *
@@ -64,16 +71,28 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Globals
 #
-error = Error(prog)
-util = Util()
+E = Error(prog)
+U = Util()
+unix = U.is_unix()
 
 # ----------------------------------------------------------------------
-#  Directories and paths
+#  Directories
 #
-sprtop = spr_path.abspath()
-bindir = spr_path.relpath('bin')
-incdir = spr_path.relpath('inc')
-srcdir = spr_path.relpath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	if os.getenv('swig') is None:
+		sf = SetupFile('%s/setup.conf' % SrcDir)
+		sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	incdir = os.path.relpath('%s/../include' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.relpath('bin')
+	incdir = spr_path.relpath('inc')
+	srcdir = spr_path.relpath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 swigdir = '%s/%s' % (srcdir, 'Foundation')
 
@@ -113,10 +132,12 @@ excludes = []
 def filelist(dir, excludes=[]):
 	files = sorted(glob.glob('%s/*.h' % dir))
 	list(map(lambda x: files.remove(x), excludes))
-	return util.pathconv(files, 'unix')
+	return U.pathconv(files, 'unix')
 
+#  helper
+#
 def ECHO(indent, msg):
-	if Util.is_unix():
+	if unix:
 		str = '@echo "' + ' '*indent + msg + '"'
 	else:
 		str = '@echo.' + ' '*indent + msg
@@ -132,12 +153,12 @@ parser = OptionParser(usage = usage)
 parser.add_option('-D', '--debug',
 			dest='debug', action='store_true', default=False,
 			help='for debug')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if not SetupExists:
 	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -171,16 +192,17 @@ if verbose:
 # ----------------------------------------------------------------------
 #  Scripts
 #
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
-	makemanager = 'python "%s/make_manager.py"' % util.pathconv(runswigdir)
-	swig = 'python "%s/RunSwig.py"' % util.pathconv(swigdir)
+	python = sf.getenv('python')
+	makemanager = '%s "%s/make_manager.py"' % (python, U.pathconv(runswigdir))
+	swig = '%s "%s/RunSwig.py"' % (python, U.pathconv(swigdir))
 else:
 	if options.python:
 		python = options.python
-	makemanager = '%s "%s/make_manager.py" -P %s' % (python, util.pathconv(runswigdir), python)
-	swig = '%s "%s/RunSwig.py" -P %s' % (python, util.pathconv(swigdir), python)
-####
+	makemanager = '%s "%s/make_manager.py" -P %s' % (python, U.pathconv(runswigdir), python)
+	swig = '%s "%s/RunSwig.py" -P %s' % (python, U.pathconv(swigdir), python)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
 #   Swig に渡す引数
@@ -241,22 +263,22 @@ lines.append('')
 lines.append('all:\t%s%s' % (project, stubfile))
 lines.append('')
 
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if not SetupExists:
 	lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
-	lines.append(util.pathconv('\t' + ECHO(4, 'make_manager.py -P %s -t' % python)))
-	lines.append(util.pathconv('\t%s -t' % makemanager))
-	lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py -P %s %s' % (python, swigargs))))
-	lines.append(util.pathconv('\t%s %s' % (swig, swigargs)))
+	#lines.append(U.pathconv('\t' + ECHO(4, '%s -t' % makemanager)))
+	lines.append(U.pathconv('\t%s -t' % makemanager))
+	#lines.append(U.pathconv('\t' + ECHO(4, '%s %s' % (swig, swigargs))))
+	lines.append(U.pathconv('\t%s %s' % (swig, swigargs)))
 	lines.append('')
 else:
 	lines.append('%s%s:\t$(PROJDEF) $(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
-	lines.append(util.pathconv('\t' + ECHO(4, 'make_manager.py -t')))
-	lines.append(util.pathconv('\t%s -t' % makemanager))
-	lines.append(util.pathconv('\t' + ECHO(4, 'RunSwig.py %s' % swigargs)))
-	lines.append(util.pathconv('\t%s %s' % (swig, swigargs)))
+	#lines.append(U.pathconv('\t' + ECHO(4, '%s -t' % makemanager)))
+	lines.append(U.pathconv('\t%s -t' % makemanager))
+	#lines.append(U.pathconv('\t' + ECHO(4, 'RunSwig.py %s' % swigargs)))
+	lines.append(U.pathconv('\t%s %s' % (swig, swigargs)))
 	lines.append('')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 lines.append('$(PROJDEF):\t')
 lines.append('\t')
@@ -279,9 +301,9 @@ if verbose:
 #
 fobj = TextFio(makefile, 'w', encoding='utf8')
 if fobj.open() < 0:
-	error.print(fobj.error())
+	E.abort(fobj.error())
 if fobj.writelines(lines, '\n') < 0:
-	error.print(fobj.error())
+	E.abort(fobj.error())
 fobj.close()
 
 # ----------------------------------------------------------------------

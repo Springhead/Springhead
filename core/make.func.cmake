@@ -1,4 +1,5 @@
 #  make.func.cmake
+set(MakeFuncCmakeVersion 1.0)
 
 # ------------------------------------------------------------------------------
 #  function split()
@@ -186,5 +187,28 @@ function(get_build_dir cmake_build_dir output)
 	list(GET _tmp_dir_list ${result} _tmp_build_dir)
 	set(${output} ${_tmp_build_dir} PARENT_SCOPE)
 endfunction()
+
+# ------------------------------------------------------------------------------
+#  ${cmake_dir}/${setup_conf} ファイルが存在するか調べる。
+#
+macro(setup_file_exists setup_file output)
+	if(EXISTS ${setup_file})
+		set(${output} True)
+	else()
+		set(${output} False)
+	endif()
+endmacro()
+
+# ------------------------------------------------------------------------------
+#  ${cmake_dir}/${setup_conf} ファイルから VS version を取り出す。
+#
+macro(get_vs_version setup_file output)
+	if(EXISTS ${setup_file})
+		file(STRINGS ${setup_file} _vers REGEX "vers[ 	]+([0-9.]+)")
+		set(${output} ${_vers})
+	else()
+		set(${output} "")
+	endif()
+endmacro()
 
 # end: make.func.cmake

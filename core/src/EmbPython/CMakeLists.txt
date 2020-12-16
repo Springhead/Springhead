@@ -215,13 +215,8 @@ else()
 endif()
 
 set(_wrkdir ${CMAKE_CURRENT_SOURCE_DIR})
-if(Windows)
-    set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
-elseif(unix)
-    set(_tmp_cmnd python)
-endif()
-set(_tmp_args ${SPR_SRC_DIR}/EmbPython/RunSwig_EmbPython.py)
-file(TO_NATIVE_PATH ${_tmp_args} _tmp_args)
+set(_args ${SPR_SRC_DIR}/EmbPython/RunSwig_EmbPython.py)
+file(TO_NATIVE_PATH ${_args} _args)
 
 add_custom_target(${CleanTarget}
     BYPRODUCTS ${genereated_files}
@@ -229,7 +224,7 @@ add_custom_target(${CleanTarget}
 )
 add_custom_command(
     OUTPUT ${generated_files}
-    COMMAND set _SPRTOP_=${SPR_TOP_DIR} & ${_tmp_cmnd} ${_tmp_args}
+    COMMAND python ${_args}
     WORKING_DIRECTORY ${_wrkdir}
     COMMENT [[  generating EmbPython sources ]]
 )

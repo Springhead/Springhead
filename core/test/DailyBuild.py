@@ -26,7 +26,7 @@
 #	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
 #	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
 #	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
-#	Ver 1.6  2020/11/09 F.Kanehori	Setup mechanism incorporated.
+#	Ver 1.6  2020/12/14 F.Kanehori	Setup 導入テスト開始.
 # ======================================================================
 version = 1.6
 
@@ -180,9 +180,15 @@ print('%s: start: %s' % (prog, Util.now(format=date_format)))
 #
 setup_file = '%s/%s' % (spr_srcdir, setup_file)
 if os.path.exists(setup_file):
+	# identify python first
+	cmnd = 'where python'
+	stat, out, err = Proc().execute(cmnd, stdout=proc.PIPE, shell=True).output()
+	python_path = Util.upath(out.strip())
+	print('using %s' % python_path)
+	#
 	cwd = os.getcwd()
 	os.chdir(spr_srcdir)	
-	cmnd = 'python setup.py -c'
+	cmnd = 'python setup.py -c %s' % python_path
 	stat = proc.execute(cmnd).wait()
 	os.chdir(cwd)
 	if stat == -1:
@@ -193,11 +199,11 @@ if os.path.exists(setup_file):
 		Error(prog).abort('botch: setup file not found')
 	#
 	sf = SetupFile(setup_file)
-	sf.add_environment()
+	sf.setenv()
+	python = os.getenv('python')
 	print('using setup file "%s"' % setup_file)
 else:
 	Error(prog).warn('setup file "%s" not found' % setup_file)
-	Error(prog).warn('hope all executables are in current path')
 
 # ----------------------------------------------------------------------
 #  1st step: Make Springhead up-to-date.

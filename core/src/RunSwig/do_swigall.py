@@ -55,7 +55,7 @@
 #     Ver 3.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
 #     Ver 3.10   2020/05/13 F.Kanehori	unix: Ver 3.08 に戻す.
 #     Ver 3.11   2020/07/15 F.Kanehori	nmake path 探索コード変更.
-#     Ver 3.12   2020/11/11 F.Kanehori	Setup 導入期間開始.
+#     Ver 3.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
 # ==============================================================================
 version = 3.12
 debug = False
@@ -68,48 +68,64 @@ import subprocess
 import re
 from optparse import OptionParser
 
-# --------------------------------------------
-SetupExists = os.path.exists('../setup.conf')
-# --------------------------------------------
-
 # ----------------------------------------------------------------------
-#  Constants
+#  Identify myself
 #
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
 	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import local python library.
 #
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	#  移行後は FindSprPath のインポートは不要
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
+from SetupFile import *
 from TextFio import *
 from Error import *
 from Util import *
 from Proc import *
 from FileOp import *
 
-if SetupExists:
-	from SetupFile import *
-	sf = SetupFile('../setup.conf', verbose=1)
-	sf.add_environment()
-
 # ----------------------------------------------------------------------
-#  Globals (part 1)
+#  Globals (abbreviation)
 #
-util = Util()
-unix = util.is_unix()
+U = Util()
+E = Error(prog)
+unix = U.is_unix()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
-sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	if os.getenv('swig') is None:
+		print('%s: 移行処理' % prog)
+		sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
+		sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.abspath('bin')
+	srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
@@ -122,11 +138,15 @@ makefile = 'makefile.swig'
 # ----------------------------------------------------------------------
 #  Paths
 #
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	swigpath = '%s/%s' % (srcdir, 'Foundation')
-	addpath = os.pathsep.join([bindir, swigpath])
-	print('%s: 移行処理 -> makepath 削除' % prog)
+	addpath = os.pathsep.join([swigbindir, bindir, swigpath])
+	#print('%s: 移行処理 -> makepath 削除' % prog)
+
+	#  移行期間が終了したら find_path.py は不要になるので削除
 else:
+	swigbindir = '%s/swig' % bindir
 	if unix:
 		makepath = '/usr/bin'
 	else:
@@ -143,7 +163,8 @@ else:
 			print('nmake path found: %s' % makepath.replace(os.sep, '/'))
 
 	swigpath = '%s/%s' % (srcdir, 'Foundation')
-	addpath = os.pathsep.join([bindir, swigpath, makepath])
+	addpath = os.pathsep.join([swigbindir, bindir, swigpath, makepath])
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -155,12 +176,12 @@ parser = OptionParser(usage = usage)
 parser.add_option('-c', '--clean',
                         dest='clean', action='store_true', default=False,
                         help='execute target clean')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if not SetupExists:
 	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
                         dest='verbose', action='count', default=0,
                         help='set verbose count')
@@ -184,22 +205,25 @@ verbose = options.verbose
 # ----------------------------------------------------------------------
 #  Scripts
 #
-####
-if not SetupExists:
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	python = sf.getenv('python')
+	if unix:
+		make = sf.getenv('gmake')
+		make = '%s __python__=PYTHON_PATH MIGRATION_TEST=true' % make
+	else:
+		make = '%s /NOLOGO' % sf.getenv('nmake')
+	makemanager = '%s "%s/make_manager.py"' % (python, runswigdir)
+else:
 	if options.python:
 		python = options.python
-####
-make = 'make' if unix else 'nmake /NOLOGO'
-####
-if SetupExists:
-	makemanager = 'python "%s/make_manager.py"' % runswigdir
-else:
+	make = 'make' if unix else 'nmake /NOLOGO'
 	opts = '-P %s' % python
 	makemanager = '%s "%s/make_manager.py" %s' % (python, runswigdir, opts)
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
-#  Globals (part 2)
+#  Globals (instances)
 #
 proc = Proc(verbose=verbose, dry_run=dry_run)
 f_op = FileOp(verbose=verbose)
@@ -254,9 +278,9 @@ for line in lines:
 			print('    %s: %s' % (prog, cmd))
 		proc.execute(cmd, addpath=addpath, shell=True)
 		proc.wait()
-		cmd = '%s -r' % util.pathconv(makemanager)
+		cmd = '%s -r' % U.pathconv(makemanager)
 		if trace:
-			print('    %s: %s' % (prog, Util.upath(cmd)))
+			print('    %s: %s' % (prog, U.upath(cmd)))
 		proc.execute(cmd, addpath=addpath, shell=True)
 		proc.wait()
 

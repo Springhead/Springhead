@@ -33,7 +33,7 @@
 #     Ver 1.08	 2019/02/21 F.Kanehori	Cmake環境に対応.
 #     Ver 1.09	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #     Ver 1.10	 2019/09/18 F.Kanehori	Cmakeが生成したファイルの後始末を追加.
-#     Ver 1.11   2020/11/11 F.Kanehori	Setup 導入期間開始.
+#     Ver 1.11   2020/12/16 F.Kanehori	Setup 導入テスト開始.
 # ==============================================================================
 version = '1.11'
 trace = False
@@ -43,40 +43,42 @@ import os
 import glob
 from optparse import OptionParser
 
-# --------------------------------------------
-SetupExists = os.path.exists('../setup.conf')
-# --------------------------------------------
-
 # ----------------------------------------------------------------------
-#  Constants
+#  Identify myself
 #
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
 	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	#  移行後は FindSprPath のインポートは不要
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
+from SetupFile import *
 from TextFio import *
 from Proc import *
 from FileOp import *
 from Error import *
 
-if SetupExists:
-	print('%s: 移行処理' % prog)
-	from SetupFile import *
-	sf = SetupFile('../setup.conf', verbose=1)
-	sf.add_environment()
-
 # ----------------------------------------------------------------------
 #  Globals
 #
-proc = Proc()
 f_op = FileOp()
 
 # ----------------------------------------------------------------------
@@ -109,8 +111,8 @@ def create(fname, proj, dept):
 	cmnd = '%s%s' % (createmkf, flag)
 	args = '%s %s %s' % (fname, proj, dept)
 	#print('create_mkf.py%s %s' % (flag, args))
-	proc.execute('%s %s' % (cmnd, args), shell=True)
-	proc.wait()
+	Proc().execute('%s %s' % (cmnd, args), shell=True)
+	Proc().wait()
 
 #  Do the job for one project.
 #
@@ -181,12 +183,12 @@ parser.add_option('-t', '--maketmp',
 parser.add_option('-D', '--debug',
 			dest='debug', action='store_true', default=False,
 			help='for debug')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if not SetupExists:
 	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -225,14 +227,23 @@ if options.rename:  flags.append('-r')
 #
 
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-sprtop = spr_path.abspath()
-##bindir = spr_path.relpath('bin')
-##srcdir = spr_path.relpath('src')
-bindir = spr_path.abspath('bin')
-srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	if os.getenv('swig') is None:
+		print('%s: 移行処理' % prog)
+		sf = SetupFile('%s/setup.conf' % SrcDir)
+		sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.abspath('bin')
+	srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
+swigbindir = '%s/swig' % bindir
 
 if verbose:
 	print('  sprtop:    %s' % sprtop)
@@ -250,14 +261,16 @@ if verbose:
 # ----------------------------------------------------------------------
 #  Scripts
 #
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
-	createmkf = 'python %s/create_mkf.py' % runswigdir
+	python = sf.getenv('python')
+	createmkf = '%s %s/create_mkf.py' % (python, runswigdir)
 else:
 	if options.python:
 		python = options.python
 	createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
-####
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+os.environ['PATH'] = '%s%s%s' % (swigbindir, os.pathsep, os.getenv('PATH'))
 
 # ----------------------------------------------------------------------
 #  Main process

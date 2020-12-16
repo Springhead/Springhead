@@ -24,6 +24,9 @@ file(TO_NATIVE_PATH "${PRJ_BLD_DIR}" PRJ_BLD_DIR)
 #message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
 #message(STATUS "${Target}: PRJ_BLD_DIR: [${PRJ_BLD_DIR}]")
 
+# Setup file exists?
+message("     setup file exists: ${SetupExists}")
+
 # RunSwig directory
 set(RSSrcDir ${SPR_SRC_DIR}/RunSwig)
 set(RSBldDir ${PRJ_BLD_DIR}/RunSwig)
@@ -69,6 +72,7 @@ foreach(_file ${generated_files})
     #message("     generate: ${_file}")
 endforeach()
 
+# ------------------------------------------------------------------------------
 # main target
 #
 if(Windows)
@@ -76,12 +80,9 @@ if(Windows)
 	BYPRODUCTS ${genereated_files}
 	DEPENDS ${generated_files}
     )
-    set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
-    set(_tmp_args ${RSSrcDir}\\make_manager.py -A -c)
     add_custom_command(
 	OUTPUT ${generated_files}
-	COMMAND set _SPRTOP_=${SPR_TOP_DIR} & ${_tmp_cmnd} ${_tmp_args}
-	COMMAND ${Make} -f ${RSSrcDir}\\${Makefile}
+	COMMAND cmd /c MakeWin_Wrapper.bat -build
 	WORKING_DIRECTORY ${RSSrcDir}
 	COMMENT [[  generating files...]]
     )
@@ -97,6 +98,16 @@ elseif(unix)
     )
 endif()
 
+# ------------------------------------------------------------------------------
+# set python be invokable
+#
+if(Windows AND EXISTS ${SPR_TOP_DIR}/buildtool/win32/python.exe)
+    set(_python ${SPR_TOP_DIR}\\buildtool\\win32\\python.exe)
+else()
+    set(_python python)
+endif()
+
+# ------------------------------------------------------------------------------
 # integrate intermediate directory
 #	${CMAKE_BINARY_DIR}/${Target}/${Target}.dir
 #	linked to (for Windows)
@@ -118,17 +129,11 @@ set(LINKLIST
     "${LINKDIR}=${ACTDIR}/${INTDIR}"
     "${LOGDIR}=${ACTDIR}/${INTDIR}" ;
 )
-set(_script_dir ${SPR_SRC_DIR})
-if(Windows)
-    set(_tmp_cmnd cmd /c ${SPR_SRC_DIR}\\do_python.bat)
-    set(_tmp_args ${_script_dir}\\cmake_preconfig.py -v ${LINKLIST})
-else()
-    set(_tmp_cmnd python)
-    set(_tmp_args ${_script_dir}/cmake_preconfig.py -v ${LINKLIST})
-endif()
-set(ENV{_SPRTOP_} ${SPR_TOP_DIR})
+set(_script ${SPR_SRC_DIR}/cmake_preconfig.py)
+file(TO_NATIVE_PATH "${_script}" _script)
+set(_tmp_args -v ${LINKLIST})
 execute_process(
-    COMMAND ${_tmp_cmnd} ${_tmp_args}
+    COMMAND ${_python} ${_script} ${_tmp_args}
     RESULT_VARIABLE CMD_RESULT
     OUTPUT_VARIABLE CMD_OUTPUT
     ERROR_VARIABLE CMD_ERROR

@@ -15,29 +15,55 @@ setlocal enabledelayedexpansion
 ::	python が見つからないときはメッセージを表示して処理を中止する。
 :: ----------------------------------------------------------------------------
 ::  VERSION
-::	Ver 1.0  2020/11/09 F.Kanehori	初版
+::	Ver 1.0  2020/11/10 F.Kanehori	初版
 :: ============================================================================
 set PROG=%~n0
+set CWD=%CD%
 set DEBUG=0
 
+:: -------------------------------------------------------------
+::  このスクリプトは "<SprTop>/core/src" に置く
+::
+cd /d %~dp0
+set ScriptDir=%CD%
+cd %ScriptDir%
+
+:: -------------------------------------------------------------
+::  準備
+::
 call :backquote where where
 set $where=%$result%
 
+:: -------------------------------------------------------------
+::  Python を見つける
+::
 set $path=..\..\buildtool\win32
 if exist "%$path%\python.exe" (
 	set $python=%$path%\python.exe
-	if not %DEBUG% equ 0 (echo -- found python: !$python!)
+	echo -- found python: !$python!
 ) else (
+	rem  %HOME%\AppData\Local\Microsoft\WindowsApps が見つかる場合
+	rem	この python は使えない!
+	rem
+	set FAKE_PYTHON=%HOME%\AppData\Local\Microsoft\WindowsApps\python.exe
+	call :backquote where python
+	if "!$result!" equ "!FAKE_PYTHON!" (
+		echo Found "!$result!", but you can't use it.
+		goto :message
+	)
+	rem  実行できる python が見つかった
+	rem
 	call :which
 	if not "!$result!" == "" (
 		set $python=!$result!
-		if not %DEBUG% equ 0 (echo -- found python: !$python!)
+		echo -- found python: !$python!
 	)
 )
 if "%$python%" == "" (
 	echo Can't find 'python'.
-	echo We need python to build Springhead Library.
-	echo "https://github.com/sprphys/buildtool" provides minimum python environment for Windows.
+:message
+	echo We need 'python' to build Springhead Library.
+	echo "https://github.com/sprphys/buildtool" provides required environment for Windows.
 	exit /b 1
 )
 
@@ -50,11 +76,14 @@ if "%1" == "-o" (
 rem -------- ここまで --------------------------------
 
 if not %DEBUG% equ 0 (echo %$python% setup.py %*)
-%$python% setup.py %*
+%$python% setup.py %* %$python%
 
 endlocal
 exit /b
 
+:: ----------------------------------------------------------------------------
+::  ローカル関数
+::
 :which
 	setlocal enabledelayedexpansion
 	call :backquote python --version

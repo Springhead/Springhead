@@ -18,17 +18,18 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.00  2017/05/10 F.Kanehori	Windows batch file から移植.
-#	Ver 1.01  2017/07/27 F.Kanehori	Python executable directory moved.
-#	Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
-#	Ver 1.03  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 1.04  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.05  2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#	Ver 1.06  2020/04/31 F.Kanehori	unix: gmake をデフォルトに.
-#	Ver 1.07  2020/05/13 F.Kanehori	unix: Ver 1.05 に戻す.
-#	Ver 1.08  2020/11/11 F.Kanehori	nmake のロゴを抑止する.
+#     Ver 1.00  2017/05/10 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01  2017/07/27 F.Kanehori	Python executable directory moved.
+#     Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.03  2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.04  2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.05  2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.06  2020/04/31 F.Kanehori	unix: gmake をデフォルトに.
+#     Ver 1.07  2020/05/13 F.Kanehori	unix: Ver 1.05 に戻す.
+#     Ver 1.08  2020/11/11 F.Kanehori	nmake のロゴを抑止する.
+#     Ver 1.09  2020/12/16 F.Kanehori	Setup 導入テスト開始.
 # ==============================================================================
-version = 1.08
+version = 1.09
 debug = False
 trace = False
 
@@ -36,6 +37,17 @@ import sys
 import os
 import glob
 from optparse import OptionParser
+
+# ----------------------------------------------------------------------
+#  Locate myself
+#
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+
+# --------------------------------------------
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+print('@@@@ ScilabSwig: SetupExists: %s' % SetupExists)
+# --------------------------------------------
 
 # ----------------------------------------------------------------------
 #  Constants
@@ -47,19 +59,22 @@ if trace:
 	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import Springhead python library.
 #
 sys.path.append('../RunSwig')
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-if spr_path.top is None:
-	if os.environ.get('SPR_TOP_DIR', None) is not None:
-		spr_path.top = os.environ.get('SPR_TOP_DIR')
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
 from TextFio import *
 from Util import *
 from Proc import *
+from SetupFile import *
 
 # ----------------------------------------------------------------------
 #  Globals
@@ -71,10 +86,25 @@ unix = util.is_unix()
 # ----------------------------------------------------------------------
 #  Directories
 #
-sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-incdir = spr_path.abspath('inc')
-srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
+	sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	incdir = os.path.relpath('%s/../include' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+	print('@@@@@@ RunSwigFramework: sprtop: %s' % sprtop)
+	print('@@@@@@ RunSwigFramework: bindir: %s' % bindir)
+	print('@@@@@@ RunSwigFramework: incdir: %s' % incdir)
+	print('@@@@@@ RunSwigFramework: srcdir: %s' % srcdir)
+	print('@@@@@@ RunSwigFramework: cwd: %s' % os.getcwd())
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.relpath('bin')
+	incdir = spr_path.relpath('inc')
+	srcdir = spr_path.relpath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 swigdir = '%s/%s' % (bindir, 'swig')
 
 incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
@@ -83,9 +113,18 @@ srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 # ----------------------------------------------------------------------
 #  Scripts
 #
-swig = '%s/swig -I%s/Lib' % (swigdir, swigdir)
-#make = 'gmake' if unix else 'nmake'
-make = 'make' if unix else 'nmake /NOLOGO'
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	if unix:
+		make = sf.getenv('gmake')
+	else:
+		make = '%s /NOLOGO' % sf.getenv('nmake')
+	swig = sf.getenv('swig')
+else:
+	swig = 'swig'
+	make = 'gmake' if unix else 'nmake'
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+swig = '%s -I%s/Lib' % (swig, swigdir)
 
 # ----------------------------------------------------------------------
 #  Files

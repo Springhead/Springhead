@@ -28,44 +28,39 @@ setlocal enabledelayedexpansion
 ::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
 ::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
 ::	Ver 2.0  2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
-::	Ver 3.0  2020/11/09 F.Kanehori	Setup 導入移行期間開始.
+::	Ver 3.0  2020/12/07 F.Kanehori	Setup 導入移行期間開始.
 :: ============================================================================
+set CWD=%CD%
 set verbose=0
 
-::----------------------------------------------
-::  buildtool の相対パス
-::	現在の位置から上へたどって最初に見つけた"core"ディレクトリの
-::	一段上位のディレクトリをSpringheadのトップディレクトリとする
+::-----------------------------------------------------------------------------
+:: Springhead tree のトップへ移動する
+::	このスクリプトは "<top>/core/src" に置く。
 ::
-set CWD=%CD%
-:loop
-	call :leaf %CD%
-	if "%_ret_%" equ "" goto :exec
-	if "%_ret_%" equ "core" goto :found
-	cd ..
-	goto :loop
-:found
-cd ..
+cd /d %~dp0
+cd ..\..
+set SprTop=%CD%
+cd %CWD%
 
-::++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 :: 移行期間の処理
-if exist %CD%\core\src\setup.conf (
-	echo 移行処理 -^> python %*
-	cd %CWD%
-	python %*
-	exit /b
+::	移行期間終了後は _wrapper python args.. を呼び出す
+::	だけにする
+::
+if exist %SprTop%\core\src\setup.conf (
+	echo 移行処理 -^> _wrapper python %*
+	cmd /c ..\_wrapper.bat python %*
+	exit /b 0
 )
 echo do_python: invoke DOS batch
-::++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 if exist buildtool\ (
-	set TOOLPATH=%CD%\buildtool\win32
+	set TOOLPATH=%SprTop%\buildtool\win32
 	if %verbose% geq 1 (
-		echo buildtool found at "%CD%\buildtool"
+		echo buildtool found at "%SprTop%\buildtool"
 	)
 )
-:exec
-cd %CWD%
 
 :: 引数はそのまま渡す
 set ARGS=%*
