@@ -44,7 +44,6 @@ ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
 SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
-#print('@@@@ RunSwig: SetupExists: %s' % SetupExists)
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
@@ -91,11 +90,6 @@ if SetupExists:
 	bindir = os.path.relpath('%s/../bin' % SrcDir)
 	incdir = os.path.relpath('%s/../include' % SrcDir)
 	srcdir = os.path.relpath(SrcDir)
-	#print('@@@@@@ RunSwig: sprtop: %s' % sprtop)
-	#print('@@@@@@ RunSwig: bindir: %s' % bindir)
-	#print('@@@@@@ RunSwig: incdir: %s' % incdir)
-	#print('@@@@@@ RunSwig: srcdir: %s' % srcdir)
-	#print('@@@@@@ RunSwig: cwd: %s' % os.getcwd())
 else:
 	sprtop = spr_path.abspath()
 	bindir = spr_path.relpath('bin')
@@ -108,9 +102,9 @@ incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
 srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 
 # ----------------------------------------------------------------------
-#  Paths
+#  Be sure to invoke swig which is build for Springhead.
 #
-addpath = os.pathsep.join([bindir, swigdir])
+addpath = os.pathsep.join([swigdir, bindir])
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -274,7 +268,7 @@ if status != 0:
 	Error(prog).put(msg, exitcode=0, alive=True)
 
 if trace:
-	print('EXIT: %s' % prog)
+	print('LEAVE: %s' % prog)
 	sys.stdout.flush()
 sys.exit(0)
 

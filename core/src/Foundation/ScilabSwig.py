@@ -46,7 +46,6 @@ ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 # --------------------------------------------
 SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
 SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
-print('@@@@ ScilabSwig: SetupExists: %s' % SetupExists)
 # --------------------------------------------
 
 # ----------------------------------------------------------------------
@@ -94,11 +93,6 @@ if SetupExists:
 	bindir = os.path.relpath('%s/../bin' % SrcDir)
 	incdir = os.path.relpath('%s/../include' % SrcDir)
 	srcdir = os.path.relpath(SrcDir)
-	print('@@@@@@ RunSwigFramework: sprtop: %s' % sprtop)
-	print('@@@@@@ RunSwigFramework: bindir: %s' % bindir)
-	print('@@@@@@ RunSwigFramework: incdir: %s' % incdir)
-	print('@@@@@@ RunSwigFramework: srcdir: %s' % srcdir)
-	print('@@@@@@ RunSwigFramework: cwd: %s' % os.getcwd())
 else:
 	sprtop = spr_path.abspath()
 	bindir = spr_path.relpath('bin')

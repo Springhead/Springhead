@@ -181,7 +181,7 @@ print('%s: start: %s' % (prog, Util.now(format=date_format)))
 setup_file = '%s/%s' % (spr_srcdir, setup_file)
 if os.path.exists(setup_file):
 	# identify python first
-	cmnd = 'where python'
+	cmnd = '%s python' % 'which' if Util.is_unix() else 'where'
 	stat, out, err = Proc().execute(cmnd, stdout=proc.PIPE, shell=True).output()
 	python_path = Util.upath(out.strip())
 	print('using %s' % python_path)
