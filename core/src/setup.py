@@ -115,6 +115,9 @@ parser = OptionParser(usage = usage)
 parser.add_option('-c', '--check', dest='check',
 			action='store_true', default=False,
 			help='check setup-file contents')
+parser.add_option('-d', '--devenv-number', dest='devenv_number', metavar='number',
+			action='store', type='int', default=None,
+			help='devenv selection number (Windows only)')
 parser.add_option('-f', '--force', dest='force',
 			action='store_true', default=False,
 			help='force rewrite setup-file')
@@ -142,6 +145,7 @@ if len(args) != 1:
 	print_usage()
 #
 check = options.check
+devenv_number = options.devenv_number
 force = options.force
 Force = options.Force
 verbose = options.verbose
@@ -149,6 +153,8 @@ verbose = options.verbose
 if verbose:
 	print('python: "%s"' % python_path)
 	if check: print('option -c')
+	if devenv_number != 0:
+		print('option -d = %s' % devenv_number)
 	if force: print('option -f')
 	if Force: print('option -F')
 if Force:
@@ -215,7 +221,7 @@ if os.path.exists(setup_file):
 				ver = info['installVers']
 				os.environ[vs_path_interface] = out
 		else:
-			out, ver = try_find(which, prog, path)
+			out, ver = try_find(which, prog, path, devenv_number)
 		if ver is None:
 			out = prog
 			ver = SetupFile.NOTFOUND
@@ -257,7 +263,7 @@ print()
 print('currently available binaries are ...')
 for prog in required:
 	sys.stdout.write('-- checking %s ... ' % prog)
-	out, ver = try_find(which, prog)
+	out, ver = try_find(which, prog, None, devenv_number)
 	if out == SetupFile.NOTFOUND:
 		print('NOT FOUND')
 		prog_scanned[prog] = SetupFile.NOTFOUND
@@ -560,6 +566,8 @@ fio.close()
 print()
 sf = SetupFile(setup_file)
 sf.show()
+print()
+print('written to "%s"' % Util.upath(os.path.abspath(setup_file)))
 
 #  終了
 #

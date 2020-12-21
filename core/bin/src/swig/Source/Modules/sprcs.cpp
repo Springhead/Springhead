@@ -1595,7 +1595,7 @@ public:
 
 	char* argname(char* name, int n) {
 		if (name) return name;
-		char buff[8];
+		char buff[17];
 		sprintf(buff, "arg%02d_", (n+1));
 		return Char(NewString(buff));
 	}

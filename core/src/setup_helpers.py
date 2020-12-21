@@ -65,7 +65,7 @@ def match(lines, patt, first=False):
 # ----------------------------------------------------------------------
 #  個別のプログラムの処理
 #
-def try_find(which, prog, check_path=None):
+def try_find(which, prog, check_path=None, devenv_number=None):
 	out, ver = SetupFile.NOTFOUND, None
 	if prog == 'python':
 		out, ver = try_find_python(which, check_path)
@@ -73,7 +73,7 @@ def try_find(which, prog, check_path=None):
 		patt = r'cmake .+ ([\d\.]+$)'
 		out, ver = try_find_common(which, prog, patt, True, check_path)
 	if prog == 'devenv':
-		out, ver = try_find_devenv(which)
+		out, ver = try_find_devenv(which, devenv_number)
 	if prog == 'nmake':
 		out, ver = try_find_nmake(which)
 	if prog == 'gcc':
@@ -114,7 +114,8 @@ def try_find_common(which, prog, ver_patt, first=False, check_path=None):
 
 #  devenv
 #
-def try_find_devenv(which):
+def try_find_devenv(which, selection_number):
+	print('selection_number: %s' % selection_number)
 	vsinfo = vswhere()
 	if vsinfo is None:
 		return SetupFile.NOTFOUND, None
@@ -132,14 +133,22 @@ def try_find_devenv(which):
 			path = vsinfo[n]['productPath']
 			vers = vsinfo[n]['installVers']
 			print('\t(%d) %s (%s)' % (n+1, path, vers))
-		while True:
-			try:
-				n = int(input('     enter number: '))
-			except:
-				n = 0
-			if 1 <= n and n <= len(path):
-				break
-			print('\tWrong number (should be 1..%d)' % len(path))
+		if selection_number != None:
+			n = int(selection_number)
+			if n < 1 or len(vsinfo) < n:
+				msg = 'option \'-d\' gives wrong number %d ' % n \
+				    + '(should be between 1 and %d).' % len(vsinfo)
+				Error(caller).abort(msg)
+			print('     selection forced to (%d) ... ' % n)
+		else:
+			while True:
+				try:
+					n = int(input('     enter number: '))
+				except:
+					n = 0
+				if 1 <= n and n <= len(vsinfo):
+					break
+				print('\tWrong number (should be 1..%d)' % len(vsinfo))
 		path = vsinfo[n-1]['productPath']
 		vers = vsinfo[n-1]['installVers']
 		index = n - 1

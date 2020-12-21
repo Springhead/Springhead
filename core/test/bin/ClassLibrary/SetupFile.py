@@ -100,7 +100,7 @@ class SetupFile:
 
 		# 移行期間中の特別処理
 		os.environ['MIGRATION_TEST'] = 'true'
-		print('MIGRATION_TEST: %s' % os.getenv('MIGRATION_TEST'))
+		#print('MIGRATION_TEST: %s' % os.getenv('MIGRATION_TEST'))
 
 		## for debug
 		#cmnd1 = 'printenv' if Util.is_unix() else 'env'
@@ -116,7 +116,10 @@ class SetupFile:
 	#   @n			Otherwise None
 	#
 	def getenv(self, prog):
-		return '"' + os.getenv('__%s__' % prog) + '"'
+		env = os.getenv('__%s__' % prog)
+		if Util.is_windows():
+			env = '"' + env + '"'
+		return env
 
 	##  Get registered path associated with the prog.
 	#   @section		SetpFile.{PROG | PATH | DATA}

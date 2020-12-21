@@ -14,7 +14,7 @@
 #	    src/FWOldSpringheadDecl.hpp
 #	    src/FWOldSpringheadStub.cpp
 #	作業ディレクトリ：
-#	    Springhead2 の直下に swigtemp というディレクトリを作り使用する.
+#	    Springhead/core の下に swigtemp というディレクトリを作り使用する.
 #
 # ==============================================================================
 #  Version:
@@ -32,6 +32,7 @@
 #     Ver 1.10  2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
 #     Ver 1.11  2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
 #     Ver 1.12  2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.121 2020/12/16 F.Kanehori	Bug fix.
 # ==============================================================================
 version = 1.12
 debug = False
@@ -285,8 +286,9 @@ output(interfacefile, lines)
 srcimpdep_rel = os.path.relpath(srcimpdep)
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
-	swig_bin = Util.upath(os.path.relpath(swig))
-	swigargs = '-I%s/Lib' % swig_bin
+	swig_bin = Util.upath(swig)
+	swigdir_rel = os.path.relpath('/'.join(swig_bin.split('/')[0:-1]))
+	swigargs = '-I%s/Lib' % swigdir_rel
 else:
 	swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
 	swigargs = '-I%s/Lib' % swigdir_rel

@@ -139,6 +139,7 @@ makefile = 'makefile.swig'
 #  Paths
 #
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+swigbindir = '%s/swig' % bindir
 if SetupExists:
 	swigpath = '%s/%s' % (srcdir, 'Foundation')
 	addpath = os.pathsep.join([swigbindir, bindir, swigpath])
@@ -146,7 +147,6 @@ if SetupExists:
 
 	#  移行期間が終了したら find_path.py は不要になるので削除
 else:
-	swigbindir = '%s/swig' % bindir
 	if unix:
 		makepath = '/usr/bin'
 	else:
@@ -210,7 +210,7 @@ if SetupExists:
 	python = sf.getenv('python')
 	if unix:
 		make = sf.getenv('gmake')
-		make = '%s __python__=PYTHON_PATH MIGRATION_TEST=true' % make
+		make = '%s MIGRATION_TEST=true' % make
 	else:
 		make = '%s /NOLOGO' % sf.getenv('nmake')
 	makemanager = '%s "%s/make_manager.py"' % (python, runswigdir)
