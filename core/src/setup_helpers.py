@@ -5,7 +5,8 @@
 #
 # ----------------------------------------------------------------------
 #  Version:
-#     Ver 1.00  2020/12/03 F.Kanehori	First version.
+#     Ver 1.00   2020/12/03 F.Kanehori	First version.
+#     Ver 1.00.1 2021/01/07 F.Kanehori	Bug fixed.
 # ======================================================================
 version = '1.00'
 
@@ -272,8 +273,8 @@ def make_swig_unix(clean):
 	return stat
 
 def make_swig_windows(cmake, devenv, plat, conf, vers, clean):
-	VS = { '15.0':	'Visual Studio 15',
-	       '16.0':	'Visual Studio 16' }
+	VS = { '15.0':	'Visual Studio 15 2017',
+	       '16.0':	'Visual Studio 16 2019' }
 	if cmake is not None and cmake != SetupFile.NOTFOUND:
 		print('-- generating solution file by cmake ...')
 		print()
@@ -348,7 +349,7 @@ def upath(path):
 #
 def print_usage():
 	print()
-	cmnd = 'python %s --help' % progpath
+	cmnd = 'python setup.py --help'
 	subprocess.Popen(cmnd, shell=True).wait()
 	sys.exit(1)
 

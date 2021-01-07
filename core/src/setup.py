@@ -7,6 +7,8 @@
 #	    -f:		無条件に再セットアップを実行する。
 #	    -F:		-f と同様 (swig を clean build する)。
 #	    -c:		セットアップファイルの検査のみを実行する。
+#	    -s:		セットアップファイル名称
+#	    -d:		devenv の選択番号 (ユーザ入力なし)
 #
 #	python-path	Python binary のパス
 #			buildtool の python を使うときは python が
@@ -37,10 +39,11 @@
 #	    -1:		起動できないプログラムがある。
 #	    -2:		セットアップファイルが存在しない。
 # ----------------------------------------------------------------------
-#  Version:
-#     Ver 1.00  2020/12/14 F.Kanehori	First version.
+#  VERSION:
+#     Ver 1.00   2020/12/14 F.Kanehori	初版
+#     Ver 1.00.1 2021/01/06 F.Kanehori	微修正
 # ======================================================================
-version = "1.00"
+version = "1.00.1"
 
 import sys
 import os
@@ -83,7 +86,7 @@ CONF = 'Release'
 # ----------------------------------------------------------------------
 #  Globals
 #
-setup_file = './setup.conf'
+##setup_file = './setup.conf'
 progs = {}
 paths = {}
 versions = {}
@@ -109,7 +112,7 @@ version = version_save
 # ----------------------------------------------------------------------
 #  Options
 #
-usage = 'Usage: %prog [options] texmain'
+usage = 'Usage: %prog [options] python-path'
 parser = OptionParser(usage = usage)
 #
 parser.add_option('-c', '--check', dest='check',
@@ -127,6 +130,10 @@ parser.add_option('-F', '--Force', dest='Force',
 parser.add_option('-o', '--old-version', dest='old_version',
 			action='store_true', default=False,
 			help='invoke python version 2.7')
+parser.add_option('-s', '--setup-file', dest='setup_file',
+			action='store', default='setup.conf',
+			metavar='FILE',
+			help='setup file name (defailt: %default)')
 parser.add_option('-v', '--verbose', dest='verbose',
 			action='count', default=0,
 			help='set verbose mode')
@@ -139,24 +146,26 @@ if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 #
-python_path = args[0]
 if len(args) != 1:
 	E.error('incorrect number of arguments')
 	print_usage()
+python_path = args[0]
 #
 check = options.check
 devenv_number = options.devenv_number
 force = options.force
 Force = options.Force
+setup_file = options.setup_file
 verbose = options.verbose
 #
 if verbose:
-	print('python: "%s"' % python_path)
-	if check: print('option -c')
+	print('python: "%s"' % U.upath(python_path))
+	if check: print('%s: option -c' % prog)
 	if devenv_number != 0:
-		print('option -d = %s' % devenv_number)
-	if force: print('option -f')
-	if Force: print('option -F')
+		print('%s: devenv number: %s' % (prog, devenv_number))
+	if force: print('%s: option -f' % prog)
+	if Force: print('%s: option -F' % prog)
+	print('%s: setup file: %s' % (prog, U.upath(setup_file)))
 if Force:
 	force = True
 
@@ -237,12 +246,12 @@ else:
 
 if check:
 	# ファイル内容の表示
-	print('progs recoarded in the file are ...')
+	print('progs recorded in the file are ...')
 	for prog in keys_prog:
-		print('%s\t%s' % (prog, sf.get_path(prog)))
-	print('paths recoarded in the file are ...')
+		print('    %s\t%s' % (prog, Util.upath(sf.get_prog(prog))))
+	print('paths recorded in the file are ...')
 	for key in keys_path:
-		print('%s\t%s' % (key, sf.get_path(key)))
+		print('    %s\t%s' % (key, Util.upath(sf.get_path(key))))
 
 	# -c オプション指定時はここまで
 	print('check done')
@@ -342,7 +351,7 @@ if not setup_needed:
 		vers_regd = vers_registered[prog]
 		vers_scan = vers_scanned[prog]
 		if path_regd is None and path_scan is not None:
-			msg = '%s is now available' % prog
+			msg = '"%s" is now available' % prog
 			if prog in optional_tools:
 				setup_recommended = True
 				setup_reason_recm.append(msg)
@@ -351,7 +360,7 @@ if not setup_needed:
 				setup_reason_need.append(msg)
 
 		elif path_regd is not None and path_scan is None:
-			msg = '%s not found on this system' % prog
+			msg = '"%s" not found on this system' % prog
 			if prog in optional_tools:
 				setup_needed = True
 				setup_reason_need.append(msg)
@@ -360,7 +369,7 @@ if not setup_needed:
 				setup_reason_fail.append(msg)
 
 		elif path_regd != path_scan:
-			msg = '%s: path differs' % prog
+			msg = '"%s" path differs' % prog
 			if prog in optional_tools:
 				setup_recommended = True
 				setup_reason_recm.append(msg)

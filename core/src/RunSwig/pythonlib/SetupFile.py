@@ -85,7 +85,7 @@ class SetupFile:
 			name = '__%s__' % prog
 			path = self.prog_list[prog]
 			os.environ[name] = Util.pathconv(path)
-			print('using %s' % path)
+			print('using\t%s' % Util.upath(path))
 		#
 		for key in self.path_list:
 			if self.path_list[key] is None \

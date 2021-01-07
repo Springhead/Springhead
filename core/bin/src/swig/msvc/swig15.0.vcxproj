@@ -124,7 +124,7 @@
     <ProjectGuid>{6BB5883E-1D19-4551-AF42-E80583A47872}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>swig120</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

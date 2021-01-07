@@ -15,11 +15,14 @@ setlocal enabledelayedexpansion
 ::	python が見つからないときはメッセージを表示して処理を中止する。
 :: ----------------------------------------------------------------------------
 ::  VERSION
-::	Ver 1.0  2020/11/10 F.Kanehori	初版
+::     Ver 1.0    2020/11/10 F.Kanehori	初版
+::     Ver 1.00.1 2021/01/07 F.Kanehori	微修正
 :: ============================================================================
 set PROG=%~n0
 set CWD=%CD%
 set DEBUG=0
+call :leafname %0
+set PROG=%$result%
 
 :: -------------------------------------------------------------
 ::  このスクリプトは "<SprTop>/core/src" に置く
@@ -75,7 +78,7 @@ if "%1" == "-o" (
 )
 rem -------- ここまで --------------------------------
 
-if not %DEBUG% equ 0 (echo %$python% setup.py %*)
+if not %DEBUG% equ 0 (echo %PROG%: %$python% setup.py %* %$python)
 %$python% setup.py %* %$python%
 
 endlocal
@@ -99,6 +102,12 @@ exit /b
 	for /f "usebackq tokens=*" %%a in (`%* 2^> NUL`) do (
 		if "!result!" == "" (set result=%%a)
 	)
+	(endlocal && set $result=%result%)
+ 	exit /b
+
+:leafname
+	setlocal enabledelayedexpansion
+	set result=%~n1%~x1
 	(endlocal && set $result=%result%)
  	exit /b
 

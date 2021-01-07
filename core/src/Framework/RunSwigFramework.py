@@ -18,23 +18,24 @@
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.00  2017/05/10 F.Kanehori	Windows batch file から移植.
-#     Ver 1.01  2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
-#     Ver 1.01  2017/07/31 F.Kanehori	Python executable directory moved.
-#     Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
-#     Ver 1.03  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#     Ver 1.04  2017/11/08 F.Kanehori	Python library path の変更.
-#     Ver 1.05  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
-#     Ver 1.06  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
-#     Ver 1.07  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#     Ver 1.08  2019/02/26 F.Kanehori	Cmake環境に対応.
-#     Ver 1.09  2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#     Ver 1.10  2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
-#     Ver 1.11  2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
-#     Ver 1.12  2020/12/14 F.Kanehori	Setup 導入テスト開始.
-#     Ver 1.121 2020/12/16 F.Kanehori	Bug fix.
+#     Ver 1.00   2017/05/10 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01   2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
+#     Ver 1.01   2017/07/31 F.Kanehori	Python executable directory moved.
+#     Ver 1.02   2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.03   2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.04   2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.05   2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
+#     Ver 1.06   2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
+#     Ver 1.07   2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.08   2019/02/26 F.Kanehori	Cmake環境に対応.
+#     Ver 1.09   2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.10   2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
+#     Ver 1.11   2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
+#     Ver 1.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.12.1 2020/12/16 F.Kanehori	Bug fix.
+#     Ver 1.12.2 2021/01/07 F.Kanehori	Bug fix.
 # ==============================================================================
-version = 1.12
+version = '1.12.2'
 debug = False
 trace = False
 
@@ -286,7 +287,7 @@ output(interfacefile, lines)
 srcimpdep_rel = os.path.relpath(srcimpdep)
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
-	swig_bin = Util.upath(swig)
+	swig_bin = Util.upath(swig.replace('"', ''))
 	swigdir_rel = os.path.relpath('/'.join(swig_bin.split('/')[0:-1]))
 	swigargs = '-I%s/Lib' % swigdir_rel
 else:

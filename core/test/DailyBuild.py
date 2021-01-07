@@ -7,6 +7,9 @@
 #	  -c conf:	Configurations (Debug | Release).
 #	  -p plat:	Platform (x86 | x64).
 #	  -t tool:	Visual Studio toolset ID. (Windows only)
+#	  -s file:	Setup file name (default: setup.conf).
+#	  -S:		Execute setup process first.
+#	  -d num:	Devenv selection number (default: 1).
 #
 #  DESCRIPTION:
 #	テストの環境を整えてから TestMainGit.py を呼び出す.
@@ -19,16 +22,18 @@
 #	必要がある.
 #	****************************************************************
 #
+# ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2017/12/03 F.Kanehori	アダプタとして新規作成.
-#	Ver 1.1  2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#	Ver 1.2  2018/03/05 F.Kanehori	TestMainGit.py に移行.
-#	Ver 1.3  2018/03/19 F.Kanehori	Proc.output() changed.
-#	Ver 1.4  2018/03/22 F.Kanehori	Change git pull/clone step.
-#	Ver 1.5  2018/05/01 F.Kanehori	Add: Result repository.
-#	Ver 1.6  2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.00   2017/12/03 F.Kanehori	アダプタとして新規作成.
+#     Ver 1.01   2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
+#     Ver 1.02   2018/03/05 F.Kanehori	TestMainGit.py に移行.
+#     Ver 1.03   2018/03/19 F.Kanehori	Proc.output() changed.
+#     Ver 1.04   2018/03/22 F.Kanehori	Change git pull/clone step.
+#     Ver 1.05   2018/05/01 F.Kanehori	Add: Result repository.
+#     Ver 1.06   2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.07   2021/01/07 F.Kanehori	Setup 自動実行設定追加.
 # ======================================================================
-version = 1.6
+version = "1.07"
 
 import sys
 import os
@@ -54,6 +59,7 @@ spr_path = FindSprPath(prog)
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
 from FileOp import *
+from TextFio import *
 from Proc import *
 from Util import *
 from Error import *
@@ -67,6 +73,10 @@ parser = OptionParser(usage = usage)
 parser.add_option('-c', '--conf', dest='conf',
 			action='store', default='Release',
 			help='test configuration [default: %default]')
+if Util.is_windows():
+	parser.add_option('-d', '--devenv-num', dest='devenv_num',
+			action='store', default='1',
+			help='devenv spcify number [default: %default]')
 parser.add_option('-p', '--plat', dest='plat',
 			action='store', default='x64',
 			help='test platform [default: %default]')
@@ -89,6 +99,9 @@ parser.add_option('-v', '--verbose',
 parser.add_option('-D', '--dry-run', dest='dry_run',
 			action='store_true', default=False,
 			help='set dry-run mode')
+parser.add_option('-S', '--setup', dest='setup',
+			action='store_true', default=False,
+			help='execute setup process first')
 parser.add_option('-V', '--version',
 			dest='version', action='store_true', default=False,
 			help='show version')
@@ -113,13 +126,15 @@ repository = Util.upath(args[0])
 result_repository = Util.upath(args[1])
 conf = options.conf
 plat = options.plat
-tool = options.tool if Util().is_windows() else None
+tool = options.tool if Util.is_windows() else None
 update_only = options.update_only
 skip_update = options.skip_update
 verbose = options.verbose
 dry_run = options.dry_run
 as_is = options.as_is
 setup_file = options.setup_file
+setup = options.setup
+devenv_num = options.devenv_num
 
 if repository == 'Springhead':
 	msg = 'Are you sure to test on "Springhead" directory? [y/n] '
@@ -176,15 +191,48 @@ def flush():
 #
 print('%s: start: %s' % (prog, Util.now(format=date_format)))
 
+#  Setup if needed
+#
+if setup:
+	# execute setup -F if '-S' option specified
+	print('execute setup process (-S)')
+	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
+	cmnd = Util.pathconv(cmnd)
+	args = '-F -d 1 -s %s' % setup_file
+	if verbose:
+		args += ' -v'
+		print('%s: %s %s' % (prog, cmnd, args))
+	stat = Proc().execute('%s %s' % (cmnd, args), shell=True).wait()
+	if stat != 0:
+		Error(prog).info('setup failed (%d)' % stat)
+		sys.exit(1)
+	print()
+
 #  Setup paths.
 #
 setup_file = '%s/%s' % (spr_srcdir, setup_file)
 if os.path.exists(setup_file):
 	# identify python first
-	cmnd = '%s python' % 'which' if Util.is_unix() else 'where'
+	print('check contents (setup.conf)')
+	'''
+	cmnd = '%s python' % ('which' if Util.is_unix() else 'where')
 	stat, out, err = Proc().execute(cmnd, stdout=proc.PIPE, shell=True).output()
 	python_path = Util.upath(out.strip())
-	print('using %s' % python_path)
+	'''
+	fio = TextFio(setup_file, 'r')
+	if fio.open() != 0:
+		Error(prog).abort('can not open "%s"' % setup_file)
+	lines = fio.read()
+	fio.close()
+	python_path = None
+	for line in lines:
+		tmp = line.split()
+		if len(tmp) == 2 and tmp[0] == 'python':
+			python_path = tmp[1]
+			break
+	if python_path is None:
+		Error(prog).abort('can not found python path')
+	print('using %s' % Util.upath(python_path))
 	#
 	cwd = os.getcwd()
 	os.chdir(spr_srcdir)	
@@ -201,6 +249,7 @@ if os.path.exists(setup_file):
 	sf = SetupFile(setup_file)
 	sf.setenv()
 	python = os.getenv('python')
+	print()
 	print('using setup file "%s"' % setup_file)
 else:
 	Error(prog).warn('setup file "%s" not found' % setup_file)
