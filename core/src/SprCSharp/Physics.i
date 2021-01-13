@@ -28,6 +28,8 @@
 %feature("only_cs_ignore") Spr::PHSceneIf::GetSdk;
 %feature("only_cs_ignore") Spr::PHSceneIf::CreateJoint;
 %feature("only_cs_ignore") Spr::PHSceneIf::Step;
+%feature("only_cs_ignore") Spr::PHSceneIf::GetGravityEngine;
+%feature("only_cs_ignore") Spr::PHSceneIf::GetIKEngine;
 %feature("only_thisArray0_class") Spr::PHContactPointIf;
 %feature("only_thisArray0_method") Spr::PHSceneIf::GetContact;
 

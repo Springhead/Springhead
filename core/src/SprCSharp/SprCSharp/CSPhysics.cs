@@ -31630,6 +31630,7 @@ Vec3d new_dir = new Vec3d(dir);
 	    IntPtr ptr = SprExport.Spr_PHSceneIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}
+// feature:only_cs_ignore GetSdk PHSdkIf 
 	public PHSolidIf CreateSolid(PHSolidDesc desc) {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
@@ -32258,6 +32259,7 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 	    SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr) _thisArray[0]);
 		}
 	}
+// feature:only_cs_ignore CreateJoint PHJointIf 
 	public int NJoints() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
@@ -35503,6 +35505,7 @@ Vec3f new_extent = new Vec3f(extent);
 	    SprExport.Spr_PHSceneIf_SetMaterialBlending((IntPtr) _thisArray[0], (int) mode);
 		}
 	}
+// feature:only_cs_ignore Step void 
 	public void ClearForce() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
@@ -35857,7 +35860,7 @@ Vec3f new_extent = new Vec3f(extent);
 		}
 		throw new InvalidOperationException();
 	}
-
+// feature:only_cs_ignore GetGravityEngine PHGravityEngineIf 
 	public PHPenaltyEngineIf GetPenaltyEngine() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
@@ -35884,6 +35887,7 @@ Vec3f new_extent = new Vec3f(extent);
 		}
 		throw new InvalidOperationException();
 	}
+// feature:only_cs_ignore GetIKEngine PHIKEngineIf 
 	public PHFemEngineIf GetFemEngine() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
@@ -36133,6 +36137,8 @@ Vec3f new_extent = new Vec3f(extent);
 	    IntPtr ptr = SprExport.Spr_PHSdkIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}
+// feature:only_cs_ignore CreateScene PHSceneIf 
+// feature:only_cs_ignore CreateScene PHSceneIf 
 	public int NScene() {
 	    int result = (int) SprExport.Spr_PHSdkIf_NScene((IntPtr) _thisArray[0]);
 	    return result;
@@ -36162,6 +36168,8 @@ Vec3f new_extent = new Vec3f(extent);
             CDShapeIf obj = new CDShapeIf(ptr, 0);
             return obj;
 	}
+// feature:only_cs_ignore CreateSdk PHSdkIf 
+// feature:only_cs_ignore CreateSdk PHSdkIf 
 	public static void RegisterSdk() {
 	    SprExport.Spr_PHSdkIf_RegisterSdk();
 	}

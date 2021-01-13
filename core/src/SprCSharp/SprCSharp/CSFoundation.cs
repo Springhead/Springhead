@@ -3304,8 +3304,8 @@ namespace SprCs {
             SprExport.Spr_ObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-
-    public static IfInfo GetIfInfoStatic() {
+// feature:only_cs_ignore GetIfInfo IfInfo 
+	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_ObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}
@@ -3485,10 +3485,7 @@ namespace SprCs {
             SprExport.Spr_NamedObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_NamedObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_NamedObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -3535,26 +3532,7 @@ namespace SprCs {
             SprExport.Spr_SceneObjectIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {
-			var currentThread = Thread.CurrentThread;
-			if (currentThread == phSceneIf.stepThread) {
-	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-            return new IfInfo(ptrStep);
-			} else if (currentThread == phSceneIf.subThread) {
-				lock (phSceneIf.phSceneLock) {
-					phSceneIf.isGetFunctionCalledInSubThread = true;
-	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[phSceneIf.sceneForGet]);
-            return new IfInfo(ptrGet);
-				}
-			}
-		} else {
-	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-		}
-		throw new InvalidOperationException();
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_SceneObjectIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -3652,10 +3630,7 @@ namespace SprCs {
             SprExport.Spr_ObjectStatesIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_ObjectStatesIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_ObjectStatesIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -3713,10 +3688,7 @@ namespace SprCs {
             SprExport.Spr_UTTypeDescIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -3935,10 +3907,7 @@ namespace SprCs {
             SprExport.Spr_UTTypeDescDbIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_UTTypeDescDbIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -4013,10 +3982,7 @@ namespace SprCs {
             SprExport.Spr_NameManagerIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_NameManagerIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_NameManagerIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -4092,10 +4058,7 @@ namespace SprCs {
             SprExport.Spr_SceneIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_SceneIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_SceneIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -4121,10 +4084,7 @@ namespace SprCs {
             SprExport.Spr_SdkIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_SdkIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_SdkIf_GetIfInfoStatic();
             return new IfInfo(ptr);
@@ -4150,10 +4110,7 @@ namespace SprCs {
             SprExport.Spr_UTTimerIf_FreeString((IntPtr) ptr);
             return bstr;
         }
-	public virtual IfInfo GetIfInfo() {
-	    IntPtr ptr = SprExport.Spr_UTTimerIf_GetIfInfo((IntPtr) _thisArray[0]);
-            return new IfInfo(ptr);
-	}
+// feature:only_cs_ignore GetIfInfo IfInfo 
 	public static IfInfo GetIfInfoStatic() {
 	    IntPtr ptr = SprExport.Spr_UTTimerIf_GetIfInfoStatic();
             return new IfInfo(ptr);

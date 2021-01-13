@@ -1301,6 +1301,9 @@ public:
 
 			// [cs]
 			//
+			if (GetFlagAttr(members[i], "feature:only_cs_ignore")) {
+				Printf(CS, "// feature:only_cs_ignore %s %s \n", ni.cs_name, ni.cs_type);
+			}
 			if (GetFlagAttr(members[i], "feature:only_cs_ignore") == NULL) {
 				SNAP_ANA_PATH1(fps, FD_CS, "function: cdecl");
 				argnames = NULL;
