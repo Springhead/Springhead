@@ -32,8 +32,9 @@
 #     Ver 1.05   2018/05/01 F.Kanehori	Add: Result repository.
 #     Ver 1.06   2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.07   2021/01/07 F.Kanehori	Setup 自動実行設定追加.
+#     Ver 1.07.1 2021/01/13 F.Kanehori	Bug fix.
 # ======================================================================
-version = "1.07"
+version = "1.07.1"
 
 import sys
 import os
@@ -134,7 +135,8 @@ dry_run = options.dry_run
 as_is = options.as_is
 setup_file = options.setup_file
 setup = options.setup
-devenv_num = options.devenv_num
+if Util.is_windows():
+	devenv_num = options.devenv_num
 
 if repository == 'Springhead':
 	msg = 'Are you sure to test on "Springhead" directory? [y/n] '
@@ -198,7 +200,7 @@ if setup:
 	print('execute setup process (-S)')
 	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
 	cmnd = Util.pathconv(cmnd)
-	args = '-F -d 1 -s %s' % setup_file
+	args = '-F -d %s -s %s' % (devenv_num, setup_file)
 	if verbose:
 		args += ' -v'
 		print('%s: %s %s' % (prog, cmnd, args))
