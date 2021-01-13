@@ -1,5 +1,20 @@
 #!/bin/bash -f
 
+# Parse command line arguments.
+#
+FLAGS=
+Sflag=
+while [ "$1" != "" ]
+do
+    case "$1" in
+	"-S")	Sflag=-S;;
+	*)	FLAGS="$FLAGS $1";;
+    esac
+    shift
+done
+
+# Set test environment.
+#
 export DAILYBUILD_UPDATE_SPRINGHEAD=skip
 export DAILYBUILD_CLEANUP_WORKSPACE=skip
 
@@ -23,10 +38,25 @@ else
 	exit 1
 fi
 
+# Setup if $Sflag speciried.
+#
+if [ "$Sflag" = "-S" ]; then
+	echo "Execute setup process."
+	pushd ../src
+	./setup.sh -f
+	if [ $? -eq 0 ]; then
+		echo "Setup done"
+	else
+		echo "Setup failed"
+		exit -1
+	fi
+	popd 
+fi
+
+# Test start.
+#
 CONF=Release
 PLAT=x64
-GCCV=5.4.0
-VRBS=0
 TEST_REPOSITORY=SpringheadTest
 DAILYBUILD_RESULT=DailyBuildResult/Result
 
