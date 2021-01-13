@@ -7,8 +7,9 @@
 #  Version:
 #     Ver 1.00   2020/12/03 F.Kanehori	First version.
 #     Ver 1.00.1 2021/01/07 F.Kanehori	Bug fixed.
+#     Ver 1.00.2 2021/01/13 F.Kanehori	Bug fixed.
 # ======================================================================
-version = '1.00'
+version = '1.00.2'
 
 import sys
 import os
@@ -124,7 +125,7 @@ def try_find_devenv(which, selection_number):
 	if len(vsinfo) == 1:
 		# only one VS found
 		path = vsinfo[0]['productPath']
-		vers = vsinfo[0]['productVers']
+		vers = vsinfo[0]['installVers']
 		index = 0
 	else:
 		# multiple VS's found

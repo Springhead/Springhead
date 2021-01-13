@@ -541,7 +541,7 @@ if verbose:
 
 #  ファイルへの書き出し
 lines = []
-lines.append('# %s' % setup_file)
+lines.append('# %s' % setup_file.split(os.sep)[-1])
 lines.append('')
 lines.append('[prog]')
 lines.append('python\t%s' % progs['python'])

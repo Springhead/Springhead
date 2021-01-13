@@ -30,8 +30,10 @@ TEST_REPOSITORY=SpringheadTest
 DAILYBUILD_RESULT=DailyBuildResult/Result
 
 cd $StartDir
+echo "python DailyBuild.py -u $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT"
 python DailyBuild.py -u $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT
 echo
+echo "python DailyBuild.py -U $Sflag $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT"
 python DailyBuild.py -U $Sflag $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT
 
 exit 0

@@ -192,69 +192,7 @@ def flush():
 #  Process start.
 #
 print('%s: start: %s' % (prog, Util.now(format=date_format)))
-
-#  Setup if needed
-#
-if setup:
-	# execute setup -F if '-S' option specified
-	print('execute setup process (-S)')
-	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
-	cmnd = Util.pathconv(cmnd)
-	args = '-F -d %s -s %s' % (devenv_num, setup_file)
-	if verbose:
-		args += ' -v'
-		print('%s: %s %s' % (prog, cmnd, args))
-	stat = Proc().execute('%s %s' % (cmnd, args), shell=True).wait()
-	if stat != 0:
-		Error(prog).info('setup failed (%d)' % stat)
-		sys.exit(1)
-	print()
-
-#  Setup paths.
-#
-setup_file = '%s/%s' % (spr_srcdir, setup_file)
-if os.path.exists(setup_file):
-	# identify python first
-	print('check contents (setup.conf)')
-	'''
-	cmnd = '%s python' % ('which' if Util.is_unix() else 'where')
-	stat, out, err = Proc().execute(cmnd, stdout=proc.PIPE, shell=True).output()
-	python_path = Util.upath(out.strip())
-	'''
-	fio = TextFio(setup_file, 'r')
-	if fio.open() != 0:
-		Error(prog).abort('can not open "%s"' % setup_file)
-	lines = fio.read()
-	fio.close()
-	python_path = None
-	for line in lines:
-		tmp = line.split()
-		if len(tmp) == 2 and tmp[0] == 'python':
-			python_path = tmp[1]
-			break
-	if python_path is None:
-		Error(prog).abort('can not found python path')
-	print('using %s' % Util.upath(python_path))
-	#
-	cwd = os.getcwd()
-	os.chdir(spr_srcdir)	
-	cmnd = 'python setup.py -c %s' % python_path
-	stat = proc.execute(cmnd).wait()
-	os.chdir(cwd)
-	if stat == -1:
-		Error(prog).info('can\'t setup test environment.')
-		Error(prog).info('execute "%s" first.' % setup_script)
-		sys.exit(1)
-	if stat < 0:
-		Error(prog).abort('botch: setup file not found')
-	#
-	sf = SetupFile(setup_file)
-	sf.setenv()
-	python = os.getenv('python')
-	print()
-	print('using setup file "%s"' % setup_file)
-else:
-	Error(prog).warn('setup file "%s" not found' % setup_file)
+cwd = os.getcwd()
 
 # ----------------------------------------------------------------------
 #  1st step: Make Springhead up-to-date.
@@ -350,12 +288,81 @@ if check_exec('DAILYBUILD_CLEANUP_WORKSPACE'):
 #  The process hereafter will be executed under test-repository.
 #
 os.chdir('%s/%s' % (prep_dir, repository))
+cwd = os.getcwd()
 pwd()
 Print('moved to test repository')
 Print()
 
 # ----------------------------------------------------------------------
-#  4th step: Execute DailyBuild test.
+#  4th step: Setup process.
+#
+if setup:
+	# execute setup -F if '-S' option specified
+	print('execute setup process (-S)')
+	os.chdir('core/src')
+
+	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
+	cmnd = Util.pathconv(cmnd)
+	if Util.is_windows():
+		args = '-f -d %s -s %s' % (devenv_num, setup_file)
+	else:
+		args = '-f -s %s' % setup_file
+	if verbose:
+		args += ' -v'
+		print('%s: %s %s' % (prog, cmnd, args))
+	stat = Proc().execute('%s %s' % (cmnd, args), shell=True).wait()
+	os.chdir(cwd)
+	if stat != 0:
+		Error(prog).info('setup failed (%d)' % stat)
+		sys.exit(1)
+	print()
+
+# set pargram paths to environment variable.
+#
+setup_file = '%s/%s' % (spr_srcdir, setup_file)
+if os.path.exists(setup_file):
+	# identify python first
+	print('check contents (setup.conf)')
+	os.chdir('core/src')
+
+	# get python path from setup.conf
+	fio = TextFio(setup_file, 'r')
+	if fio.open() != 0:
+		Error(prog).abort('can not open "%s"' % setup_file)
+	lines = fio.read()
+	fio.close()
+	python_path = None
+	for line in lines:
+		tmp = line.split()
+		if len(tmp) == 2 and tmp[0] == 'python':
+			python_path = tmp[1]
+			break
+	if python_path is None:
+		Error(prog).abort('can not found python path')
+	print('using %s' % Util.upath(python_path))
+
+	# setup paths
+	cmnd = '%s setup.py -c %s' % (python_path, python_path)
+	stat = proc.execute(cmnd, shell=True).wait()
+	os.chdir(cwd)
+	if stat == -1:
+		Error(prog).info('can\'t setup test environment.')
+		Error(prog).info('execute "%s" first.' % setup_script)
+		sys.exit(1)
+	if stat < 0:
+		Error(prog).abort('botch: setup file not found')
+	#
+	sf = SetupFile(setup_file)
+	sf.setenv()
+	python = os.getenv('python')
+	print()
+	print('using setup file "%s"' % setup_file)
+else:
+	Error(prog).warn('setup file "%s" not found' % setup_file)
+
+
+# ----------------------------------------------------------------------
+#  5th step: Execute DailyBuild test.
 #
 os.chdir('core/test')
 pwd()
