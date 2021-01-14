@@ -32,7 +32,7 @@
 #     Ver 1.05   2018/05/01 F.Kanehori	Add: Result repository.
 #     Ver 1.06   2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.07   2021/01/07 F.Kanehori	Setup 自動実行設定追加.
-#     Ver 1.07.1 2021/01/13 F.Kanehori	Bug fix.
+#     Ver 1.07.1 2021/01/14 F.Kanehori	Bug fix.
 # ======================================================================
 version = "1.07.1"
 
@@ -304,9 +304,9 @@ if setup:
 	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
 	cmnd = Util.pathconv(cmnd)
 	if Util.is_windows():
-		args = '-f -d %s -s %s' % (devenv_num, setup_file)
+		args = '-R %s -f -d %s -s %s' % (repository, devenv_num, setup_file)
 	else:
-		args = '-f -s %s' % setup_file
+		args = '-R %s -f -s %s' % (repository, setup_file)
 	if verbose:
 		args += ' -v'
 		print('%s: %s %s' % (prog, cmnd, args))
@@ -319,7 +319,6 @@ if setup:
 
 # set pargram paths to environment variable.
 #
-setup_file = '%s/%s' % (spr_srcdir, setup_file)
 if os.path.exists(setup_file):
 	# identify python first
 	print('check contents (setup.conf)')

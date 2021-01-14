@@ -42,6 +42,7 @@
 #  VERSION:
 #     Ver 1.00   2020/12/14 F.Kanehori	初版
 #     Ver 1.00.1 2021/01/06 F.Kanehori	微修正
+#     Ver 1.01   2021/01/14 F.Kanehori	setup 自動実行組み込み
 # ======================================================================
 version = "1.00.1"
 
@@ -130,6 +131,9 @@ parser.add_option('-F', '--Force', dest='Force',
 parser.add_option('-o', '--old-version', dest='old_version',
 			action='store_true', default=False,
 			help='invoke python version 2.7')
+parser.add_option('-R', '--repository', dest='repository',
+			action='store', default=None,
+			help='repository name')
 parser.add_option('-s', '--setup-file', dest='setup_file',
 			action='store', default='setup.conf',
 			metavar='FILE',
@@ -155,6 +159,7 @@ check = options.check
 devenv_number = options.devenv_number
 force = options.force
 Force = options.Force
+repository = options.repository
 setup_file = options.setup_file
 verbose = options.verbose
 #
@@ -194,6 +199,9 @@ vers_registered = {}
 prog_scanned = {}
 vers_scanned = {}
 progs_lacking = []
+
+if repository is not None:
+	os.chdir(os.path.abspath('../../../%s/core/src' % repository))
 
 if os.path.exists(setup_file):
 	print()
