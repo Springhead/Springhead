@@ -65,6 +65,86 @@ namespace SprCs {
         //    }
         //}
     }
+
+    public partial class PHContactPointIf : PHConstraintIf {
+        public override PHSolidIf GetSocketSolid() {
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptrStep = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[0]);
+                    if (ptrStep == IntPtr.Zero) { return null; }
+                    PHSolidIf obj = new PHSolidIf(ptrStep, phSceneIf.sceneForStep);
+                    if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
+                        PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    return obj;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneLock) {
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
+                        IntPtr ptrGet = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[0]);
+                        if (ptrGet == IntPtr.Zero) { return null; }
+                        PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
+                            PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                            return appropriate_type;
+                        }
+                        return obj;
+                    }
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHConstraintIf_GetSocketSolid((IntPtr)_thisArray[0]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHSolidIf obj = new PHSolidIf(ptr, 0);
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
+                    PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                return obj;
+            }
+            throw new InvalidOperationException();
+        }
+        public virtual PHSolidIf GetPlugSolid() {
+            PHSceneIf phSceneIf = GetCSPHSceneIf();
+            if (phSceneIf.multiThreadMode) {
+                var currentThread = Thread.CurrentThread;
+                if (currentThread == phSceneIf.stepThread) {
+                    IntPtr ptrStep = SprExport.Spr_PHConstraintIf_GetPlugSolid((IntPtr)_thisArray[0]);
+                    if (ptrStep == IntPtr.Zero) { return null; }
+                    PHSolidIf obj = new PHSolidIf(ptrStep, phSceneIf.sceneForStep);
+                    if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
+                        PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        return appropriate_type;
+                    }
+                    return obj;
+                } else if (currentThread == phSceneIf.subThread) {
+                    lock (phSceneIf.phSceneLock) {
+                        phSceneIf.isGetFunctionCalledInSubThread = true;
+                        IntPtr ptrGet = SprExport.Spr_PHConstraintIf_GetPlugSolid((IntPtr)_thisArray[0]);
+                        if (ptrGet == IntPtr.Zero) { return null; }
+                        PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
+                            PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                            return appropriate_type;
+                        }
+                        return obj;
+                    }
+                }
+            } else {
+                IntPtr ptr = SprExport.Spr_PHConstraintIf_GetPlugSolid((IntPtr)_thisArray[0]);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHSolidIf obj = new PHSolidIf(ptr, 0);
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
+                    PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                    return appropriate_type;
+                }
+                return obj;
+            }
+            throw new InvalidOperationException();
+        }
+    }
+
     public partial class PHSceneIf : SceneIf {
         public bool isStepThreadExecuting = false;
         public bool isGetFunctionCalledInSubThread = false; // subThreadの一実行でGetFunctionが呼ばれた場合，一実行中にSwapが呼ばれないようにする

@@ -21276,7 +21276,7 @@ Posed new_pose = new Posed(pose);
 	    IntPtr ptr = SprExport.Spr_PHConstraintIf_GetIfInfoStatic();
             return new IfInfo(ptr);
 	}
-	public PHSolidIf GetSocketSolid() {
+	public virtual PHSolidIf GetSocketSolid() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -21314,7 +21314,7 @@ Posed new_pose = new Posed(pose);
 		}
 		throw new InvalidOperationException();
 	}
-	public PHSolidIf GetPlugSolid() {
+	public virtual PHSolidIf GetPlugSolid() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
