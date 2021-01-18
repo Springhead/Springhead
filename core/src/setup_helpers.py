@@ -7,7 +7,7 @@
 #  Version:
 #     Ver 1.00   2020/12/03 F.Kanehori	First version.
 #     Ver 1.00.1 2021/01/07 F.Kanehori	Bug fixed.
-#     Ver 1.00.2 2021/01/13 F.Kanehori	Bug fixed.
+#     Ver 1.00.2 2021/01/15 F.Kanehori	Bug fixed.
 # ======================================================================
 version = '1.00.2'
 
@@ -111,6 +111,8 @@ def try_find_common(which, prog, ver_patt, first=False, check_path=None):
 		out = check_path
 	prog = '%s --version' % prog
 	stat, ver_out = execute(prog)
+	if ver_out is None:
+		stat, ver_out = execute(prog, stderr=Proc.STDOUT)
 	ver = match(ver_out.split('\n'), ver_patt, first)
 	return out, ver
 
@@ -172,7 +174,10 @@ def vswhere():
 	patt_install_path = r'installationPath: (.+)'
 	patt_install_vers = r'installationVersion: (.+)'
 	patt_product_path = r'productPath: (.+)'
-	for line in out.split(os.linesep):
+	linesep_in = os.linesep in out
+	newline_in = '\n' in out
+	split_ch = os.linesep if linesep_in else '\n'
+	for line in out.split(split_ch):
 		result = re.match(patt_instance_id, line)
 		if result:
 			# instance id: new VS found
