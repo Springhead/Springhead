@@ -32,7 +32,7 @@
 #     Ver 1.05   2018/05/01 F.Kanehori	Add: Result repository.
 #     Ver 1.06   2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.07   2021/01/07 F.Kanehori	Setup 自動実行設定追加.
-#     Ver 1.07.1 2021/01/13 F.Kanehori	Bug fix.
+#     Ver 1.07.1 2021/01/14 F.Kanehori	Bug fix.
 # ======================================================================
 version = "1.07.1"
 

@@ -22,6 +22,7 @@ if "%1" neq "" (
 )
 
 call :get_sprtop %CD%
+rem set TESTREPOSITORY=SpringheadTest
 cd %CWD%
 echo test directory: %TESTREPOSITORY%
 
