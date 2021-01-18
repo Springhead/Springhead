@@ -1,7 +1,11 @@
 % 1.2.Setup.tex
 %	Last update: 2021/01/18 F.Kanehori
 %\newpage
+\ifLwarp
+\subsection{セットアップ}
+\else
 \subsection{セットアップ {\small\normalfont (2.4版 追加)}}
+\fi
 \label{subsec:Setup}
 \parindent=0pt
 
@@ -27,7 +31,11 @@
 
 %\Vskip{.5\baselineskip}
 \begin{narrow}
+    \ifLwarp
+    \begin{tabular}{p{60pt}p{\Width}}\hline
+    \else
     \begin{longtable}{p{60pt}p{\Width}}\hline
+    \fi
 	\tt{python} & \RBox{%
 		複数のプラットフォームに統一して対応するため。
 		{\em{buildtoolサブモジュール}}がダウンロードされていれば、
@@ -44,7 +52,11 @@
 		unix環境のビルドツール。} \\\hline
 	\tt{nkf} & \RBox{%
 		字化け防止のため。} \\\hline
+    \ifLwarp
+    \end{tabular}
+    \else
     \end{longtable}
+    \fi
 \end{narrow}
 
 Springheadのセットアップでは、これらのツールの存在を確認するとともに、
