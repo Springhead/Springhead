@@ -1,0 +1,183 @@
+% 1.2.Setup.tex
+%	Last update: 2021/01/18 F.Kanehori
+%\newpage
+\ifLwarp
+\subsection{セットアップ}
+\else
+\subsection{セットアップ {\small\normalfont (2.4版 追加)}}
+\fi
+\label{subsec:Setup}
+\parindent=0pt
+
+\SprLib のビルドを行なう度に
+必要なツールの確認(\tt{python}のバージョン, 拡張版\tt{swig}の存在など)を
+行なうことは、多少なりともオーバーヘッドを伴います。
+これらLibrary作成のための環境設定を前もって済ませておくことがセットアップの目的です。
+セットアップが済んでいるか否かは、セットアップファイル
+\Path{C:/Springhead/core/src/setup.conf}が存在するかどうかで判断します。
+
+\Important{%
+	当面は、セットアップを行なわなくても\SprLib のビルドに支障はありません
+	(従来どおりです)。
+	また、セットアップファイルを削除することで、
+	セットアップ前の状態を復元できます。
+	ただし、将来はセットアップを必須とする予定です。}
+
+\bigskip
+\SprLib のビルドでは、次のツールを使用します。
+
+\def\Width{260pt}
+% see macro.tex for LBox and RBox
+
+%\Vskip{.5\baselineskip}
+\begin{narrow}
+    \ifLwarp
+    \begin{tabular}{p{60pt}p{\Width}}\hline
+    \else
+    \begin{longtable}{p{60pt}p{\Width}}\hline
+    \fi
+	\tt{python} & \RBox{%
+		複数のプラットフォームに統一して対応するため。
+		{\em{buildtoolサブモジュール}}がダウンロードされていれば、
+		そこに収録されているpythonを優先して使用します。} \\\hline
+	\tt{cmake} & \RBox{%
+		solution file/Makefile の生成を自動化するため。
+		インストールされていることが望ましい。} \\\hline
+	\tt{swig} & \RBox{%
+		Springhead用に拡張されたもの。
+		EmbPython ライブラリをビルドするのに必要。} \\\hline
+	\tt{devenv}, \tt{nmake} & \RBox{%
+		Windows環境におけるVisual Studioのビルドツール。} \\\hline
+	\tt{gcc}, \tt{gmake} & \RBox{%
+		unix環境のビルドツール。} \\\hline
+	\tt{nkf} & \RBox{%
+		字化け防止のため。} \\\hline
+    \ifLwarp
+    \end{tabular}
+    \else
+    \end{longtable}
+    \fi
+\end{narrow}
+
+Springheadのセットアップでは、これらのツールの存在を確認するとともに、
+拡張されたswigをビルドします。
+また、Windows環境で複数のVisual Studioがインストールされている場合には、
+使用するVisual Studioのバージョンを選択します。
+
+\Important{※ 必要なツールはパスに登録しておいてください。}
+
+\medskip
+確認されたツールのパス、バージョン等の情報はセットアップファイルに記録され、
+以降、\SprLib のビルド時に参照されます。
+
+\bigskip
+\bf{◯ セットアップの方法}
+
+\medskip
+ディレクトリ\Path{C:/Springhead/core/src}に移動して、
+スクリプト\tt{setup}を実行します。
+
+Windows の場合
+
+\CmndLine{%
+	> chdir C:/Springhead/core/src \\
+	> setup \\
+	-- found python: ../../buildtool/win32/python.exe \\
+	-- checking python ... found (version 3.4.0) \\
+ 	\\
+	setup file ("setup.conf") not exists. \\
+ 	\\
+	currently available binaries are ... \\
+	-- checking devenv ... selection\_number: None \\
+		\hspace{20pt}found (version: 15.9.28307.222) \\
+	-- checking nmake ... found (version: 14.16.27025.1) \\
+	-- checking swig ... NOT FOUND \\
+	-- checking cmake ... found (version: 3.18.3) \\
+	-- checking nkf ... found (version: 2.1.1 (2010-08-08)) \\
+ 	\\
+	check result is ... \\
+	-- setup is required (reason: setup file "setup.conf" not found). \\
+ 	\\
+	continue? [y/n]:  \\
+}{command-1-2-a.eps}{SetupFristWindows}
+\medskip
+ここでは\tt{y}で答えてください。
+すると拡張版 swig のビルドが実行された後、セットアップファイルが作成されます。
+セットアップ作業はこれで終わりです。
+
+\medskip
+\begin{small}
+(注) \tt{devenv}が複数見つかった場合は次のようになりますので、
+	適切な番号を選択してください。
+
+\CmndLine{%
+-- checking devenv ... selection\_number: None \\
+found multiple "devenv" \\
+Please select which one to use \\
+\hspace{20pt}(1) C:/Program Files (x86)/Microsoft Visual Studio/2017/ \Cont\\
+	\hspace{60pt}Community/Common7/IDE/devenv.exe (15.9.28307.222) \\
+\hspace{20pt}(2) C:/Users/someone/Application/Common7/IDE/devenv.exe \Cont\\
+	\hspace{60pt}(16.8.30804.86) \\
+enter number:
+}{command-1-2-b.eps}{SetupFristWindowsMulti}
+\end{small}
+
+\bigskip
+unix の場合
+
+Windows の場合と同様ですが、
+
+\CmndLine{%
+	> chdir /Springhead/core/src \\
+	> ./setup.sh
+}{command-1-2-c.eps}{SetupFristUnix}
+
+としてください。
+
+\bigskip
+\bf{◯ 再セットアップの方法}
+
+初めてのセットアップと同様、次のようにしてスクリプトを実行してください。
+
+\CmndLine{%
+	> chdir C:/Springhead/core/src \\
+	> setup         (Windows の場合) \\
+	> ./setup.sh    (unix の場合)
+}{command-1-2-d.eps}{ReSetup}
+
+\medskip
+必要な環境に変更がなければ
+
+\CmndLine{%
+	check result is ... \\
+	-- no need to execute 'setup'. \\
+	done
+}{command-1-2-e.eps}{ReSetupNoNeed}
+
+となり、スクリプトは終了します。
+
+何らかの変更がある場合、たとえば
+
+\Vskip{-.3\baselineskip}
+\begin{itemize}
+  \item	使用するVisual Studioのバージョンを変えたいとき
+	(新しい Visual Studio をインストールした場合など)
+  \item	cmakeの使用を始めたいとき
+  \item	拡張版swigの再ビルドが必要となったとき (別途アナウンスをします)
+\end{itemize}
+
+などの場合には
+
+\CmndLine{%
+	check result is ... \\
+	-- setup is required (reason: "devenv" path differs, \Cont\\
+	\hspace{60pt}"nmake" path differs). \\
+	\\
+	continue? [y/n]: 
+}{command-1-2-f.eps}{ReSetupNeed}
+
+となりますので、\tt{y}で答えてください。
+必要な処理が実行され、セットアップファイルが更新されます。
+
+\bigskip
+% end 1.2.Setup.tex
