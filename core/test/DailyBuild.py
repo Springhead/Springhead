@@ -304,9 +304,9 @@ if setup:
 	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
 	cmnd = Util.pathconv(cmnd)
 	if Util.is_windows():
-		args = '-f -d %s -s %s' % (devenv_num, setup_file)
+		args = '-R %s -f -d %s -s %s' % (repository, devenv_num, setup_file)
 	else:
-		args = '-f -s %s' % setup_file
+		args = '-R %s -f -s %s' % (repository, setup_file)
 	if verbose:
 		args += ' -v'
 		print('%s: %s %s' % (prog, cmnd, args))
@@ -319,7 +319,6 @@ if setup:
 
 # set pargram paths to environment variable.
 #
-setup_file = '%s/%s' % (spr_srcdir, setup_file)
 if os.path.exists(setup_file):
 	# identify python first
 	print('check contents (setup.conf)')

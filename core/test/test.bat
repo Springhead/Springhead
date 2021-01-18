@@ -20,6 +20,7 @@ if "%1" neq "" (
 ) else (
 	cd ..\..
 )
+
 call :get_sprtop %CD%
 cd %CWD%
 echo test directory: %TESTREPOSITORY%
