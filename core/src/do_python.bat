@@ -2,7 +2,6 @@
 setlocal enabledelayedexpansion
 :: ============================================================================
 ::  SYNOPSIS
-::	set _SPRTOP_=<Springheadのトップディレクトリ>
 ::	do_python.bat script.py [args..]	（Windows 専用）
 ::
 ::  重大な変更
@@ -25,11 +24,13 @@ setlocal enabledelayedexpansion
 ::	ならない。
 ::
 ::  VERSION
-::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
-::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
-::	Ver 2.0  2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
-::	Ver 3.0  2020/12/07 F.Kanehori	Setup 導入移行期間開始.
+::    Ver 1.00   2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
+::    Ver 1.01   2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
+::    Ver 2.00   2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
+::    Ver 3.00   2020/12/07 F.Kanehori	Setup 導入移行期間開始.
+::    Ver 3.00.1 2021/01/20 F.Kanehori	Setup 処理修正
 :: ============================================================================
+set PROG=%~n0
 set CWD=%CD%
 set verbose=0
 
@@ -48,14 +49,19 @@ cd %CWD%
 ::	だけにする
 ::
 if exist %SprTop%\core\src\setup.conf (
-	echo 移行処理 -^> _wrapper python %*
-	cmd /c ..\_wrapper.bat python %*
+	endlocal
+	for /f "tokens=1,2" %%a in (%SprTop%\core\src\setup.conf) do (
+		if "%%a" equ "python" (set python=%%b & goto :out)
+	)
+	:out
+	setlocal enabledelayedexpansion
+	echo 移行処理 -^> %python% %*
+	cmd /c python %*
 	exit /b 0
 )
-echo do_python: invoke DOS batch
 ::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-if exist buildtool\ (
+echo %PROG%: invoke DOS batch
+if exist %SprTop%\buildtool\ (
 	set TOOLPATH=%SprTop%\buildtool\win32
 	if %verbose% geq 1 (
 		echo buildtool found at "%SprTop%\buildtool"
