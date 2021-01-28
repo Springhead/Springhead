@@ -31960,18 +31960,18 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
+PHSolidIf new_lhs = lhs;
 // intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
+PHSolidIf new_rhs = rhs;
 // intrinsic
 // is_struct
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
@@ -31983,14 +31983,14 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 // intrinsic
 // is_struct
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
 					} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
 					}
 				}
 			}
