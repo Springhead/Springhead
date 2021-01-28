@@ -21,7 +21,29 @@
 	(従来どおりです)。
 	また、セットアップファイルを削除することで、
 	セットアップ前の状態を復元できます。
-	ただし、将来はセットアップを必須とする予定です。}
+	ただし、将来はセットアップを必須とする予定です。\\
+	\Vskip{-.8\baselineskip}
+	\bf{unixの場合} (2.4a版 追記)\\
+	\Vskip{-.8\baselineskip}
+	\begin{itemize}
+	  \item	デフォルトのpythonのバージョンが2となっている場合
+		(\tt{python --version}で確認)には、
+		バージョン3以上のpythonをインストールし
+		pythonという名前でリンクを張ってください
+		(\Path{/usr/local/bin}にpython3があるかも知れません)。\\
+		例えば \tt{cd /usr/local/bin; sudo ln -s python3.4 python}\\
+		\Vskip{-.7\baselineskip}
+	  \item	デフォルトでgmakeが見つからない場合(\tt{which gmake}で確認)には、
+		gmakeという名前でmakeにリンクを張ってください。\\
+		例えば \tt{cd /usr/bin; sudo ln -s `which make` gmake}\\
+		なお、\tt{make --version} としたときに
+		\tt{GNU Make 4.1}などとGNU Makeの表示がでないときは、
+		gmakeのインストールが必要となります。\\
+		\Vskip{-.7\baselineskip}
+	  \item	デフォルトでnkfが見つからない場合(\tt{which nkf}で確認)には、
+		nkfをインストールしてください。
+	\end{itemize}
+}
 
 \bigskip
 \SprLib のビルドでは、次のツールを使用します。
@@ -51,7 +73,7 @@
 	\tt{gcc}, \tt{gmake} & \RBox{%
 		unix環境のビルドツール。} \\\hline
 	\tt{nkf} & \RBox{%
-		字化け防止のため。} \\\hline
+		encodingを変換するため。(2.4a版 修正)} \\\hline
     \ifLwarp
     \end{tabular}
     \else
