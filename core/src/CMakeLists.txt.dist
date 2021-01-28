@@ -93,6 +93,7 @@ set(LINK_FLAGS		${LINK_FLAGS_ADD} ${LINK_FLAGS})
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeConf.txt".
 #	(3) Default file: "${SPR_SRC_DIR}/CMakeConf.txt.dist".
 #
+set(CMAKE_INSTALL_PREFIX ${EMPTY} CACHE STRING "force empty" FORCE)
 set(CONF_FILE_NAME "CMakeConf.txt")
 set(CONF_FILE "${CMAKE_SOURCE_DIR}/${CONF_FILE_NAME}")
 set(CONF_DEFAULT_FILE "${SPR_SRC_DIR}/${CONF_FILE_NAME}.dist")
@@ -287,9 +288,9 @@ endif()
 #  work, take another choice.
 #
 if(Windows)
-    set(_default_prefix ${EMPTY})
+    set(_default_prefix "C:/Program Files")
 else(unix)
-    set(_default_prefix /usr/local)
+    set(_default_prefix "/usr/local")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -299,7 +300,8 @@ endif()
 #	***	SPRINGHEAD_INCLUDE_PREFIX				    ***
 #	***	SPRINGHEAD_LIBRARY_DIR, SPRINGHEAD_LIBRARY_DIR_<CONFIG>	    ***
 #
-if("${CMAKE_INSTALL_PREFIX}" STREQUAL "${_default_prefix}")
+if("${CMAKE_INSTALL_PREFIX}" STREQUAL "${EMPTY}")
+    set(CMAKE_INSTALL_PREFIX ${_default_prefix})
     if(DEFINED SPRINGHEAD_INCLUDE_PREFIX)
 	message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
 	install(DIRECTORY ${SPR_INC_DIR}
@@ -377,9 +379,9 @@ if(SPR_LIBRARY_INSTALL_DIR)
 else()
     set(SPR_LIBRARY_INSTALL_DIR ${ExportName}/lib)
 endif()
-message("** install directory: \"${CMAKE_INSTALL_PREFIX}\" (PREFIX)")
-message("**      header files: \"${SPR_HEADERS_INSTALL_DIR}\"")
-message("**      library file: \"${SPR_LIBRARY_INSTALL_DIR}\"")
+message("** install directory: \"${CMAKE_INSTALL_PREFIX}\" (CMAKE_INSTALL_PREFIX)")
+message("**      header files: \"${CMAKE_INSTALL_PREFIX}/${SPR_HEADERS_INSTALL_DIR}\"")
+message("**      library file: \"${CMAKE_INSTALL_PREFIX}/${SPR_LIBRARY_INSTALL_DIR}\"")
 
 # 仮のターゲット
 set(Target ${ProjectName})			# 仮のターゲットの定義
@@ -417,7 +419,7 @@ endif()
 #
 set(ExportName ${ProjectName})
 set(ExportConf ${ProjectName}Config)
-message("** config files:      \"${ExportName}/${ExportConf}*.cmake\"")
+message("** config files:      \"${CMAKE_INSTALL_PREFIX}/${ExportName}/${ExportConf}*.cmake\"")
 
 install(TARGETS ${ProjectName}
 	EXPORT ${ExportConf}
