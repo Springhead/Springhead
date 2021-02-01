@@ -1,7 +1,7 @@
 # CMakeLists.txt for Springhead
 
 cmake_minimum_required(VERSION 3.1)
-set(SPRINGHEAD_PROJECT_VERSION 1.0.0)
+set(SPRINGHEAD_PROJECT_VERSION 1.1.0)
 
 # ------------------------------------------------------------------------------
 #  Read project name.
@@ -62,6 +62,17 @@ message(STATUS "Library type: ${LIBTYPE}")
 include("${SPR_CORE_DIR}/make.func.cmake")
 
 # ------------------------------------------------------------------------------
+#  Check if setup file exists.
+#
+set(SetupFileName ${SPR_SRC_DIR}/setup.conf)
+if(EXISTS ${SetupFileName})
+    set(SetupExists True)
+else()
+    set(SetupExists False)
+endif()
+message(STATUS "SetupFile exists: ${SetupExists}")
+
+# ------------------------------------------------------------------------------
 #  Read compiler/linker option file (try to find in following order).
 #	(1) File specified by option "-D OPTS=<file>".
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeOpts.txt".
@@ -93,7 +104,6 @@ set(LINK_FLAGS		${LINK_FLAGS_ADD} ${LINK_FLAGS})
 #	(2) "${CMAKE_SOURCE_DIR}/CMakeConf.txt".
 #	(3) Default file: "${SPR_SRC_DIR}/CMakeConf.txt.dist".
 #
-set(CMAKE_INSTALL_PREFIX ${EMPTY} CACHE STRING "force empty" FORCE)
 set(CONF_FILE_NAME "CMakeConf.txt")
 set(CONF_FILE "${CMAKE_SOURCE_DIR}/${CONF_FILE_NAME}")
 set(CONF_DEFAULT_FILE "${SPR_SRC_DIR}/${CONF_FILE_NAME}.dist")
@@ -316,60 +326,85 @@ endif()
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${Target})
 
 # ------------------------------------------------------------------------------
-#  Since "if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT) ... endif()" won't
-#  work, take another choice.
-#
-if(Windows)
-    set(_default_prefix "C:/Program Files")
-else(unix)
-    set(_default_prefix "/usr/local")
-endif()
-
-# ------------------------------------------------------------------------------
-#  Install.
+#  Install (for OLDER VERSION).
 #	*** This section remains only for compatibility with older version. ***
 #	*** Following directives are now replaced by CMAKE_INSTALL_PREFIX.  ***
 #	***	SPRINGHEAD_INCLUDE_PREFIX				    ***
 #	***	SPRINGHEAD_LIBRARY_DIR, SPRINGHEAD_LIBRARY_DIR_<CONFIG>	    ***
 #
-if("${CMAKE_INSTALL_PREFIX}" STREQUAL "${EMPTY}")
-    set(CMAKE_INSTALL_PREFIX ${_default_prefix})
+set(OLDER_INSTALLATION_DIRECTIVE False)
+if(Windows)
+    if(DEFINED SPRINGHEAD_INCLUDE_PREFIX
+	    OR DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG
+	    OR DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
+	set(OLDER_INSTALLATION_DIRECTIVE True)
+    endif()
+elseif(unix)
+    if(DEFINED SPRINGHEAD_INCLUDE_PREFIX
+	    OR DEFINED SPRINGHEAD_LIBRARY_DIR)
+	set(OLDER_INSTALLATION_DIRECTIVE True)
+    endif()
+endif()
+if(${OLDER_INSTALLATION_DIRECTIVE})
+    message("** OLDER INSTALLATION DIRECTIVE FOUND")
     if(DEFINED SPRINGHEAD_INCLUDE_PREFIX)
-	message("** INSTALL: Headers: ${SPRINGHEAD_INCLUDE_PREFIX} **")
-	install(DIRECTORY ${SPR_INC_DIR}
+	message("** install headers: ${SPRINGHEAD_INCLUDE_PREFIX}")
+	file(GLOB HEADERS ${SPR_INC_DIR}/*.h)
+	install(FILES ${HEADERS}
 		DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}
 		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 	)
+	foreach(_proj ${SPR_PROJS})
+	    file(GLOB HEADERS ${SPR_INC_DIR}/${_proj}/*.h)
+	    install(FILES ${HEADERS}
+		    DESTINATION ${SPRINGHEAD_INCLUDE_PREFIX}/${_proj}
+		    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    	    )
+	endforeach()
     endif()
     if(Windows)
-	set(_libdir ${SPRINGHEAD_LIBRARY_DIR}})
-	foreach(_tmp Debug Release)
-	    string(TOUPPER ${_tmp} _conf)
-	    if(DEFINED SPRINGHEAD_LIBRARY_DIR_${_conf})
-		set(_libpath ${LIBDIR}/${LIBNAME_${_conf}})
-		message("** INSTALL: ${LIBNAME_${_conf}}: ${_libdir}_${_conf} **")
-		install(FILES ${_libpath}
-			DESTINATION ${_libdir}_${_conf}
-			PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-			CONFIGURATIONS ${_tmp}
-		)
-	    endif()
-	endforeach()
+	if(DEFINED SPRINGHEAD_LIBRARY_DIR_DEBUG)
+	    message("** install library: ${SPRINGHEAD_LIBRARY_DIR_DEBUG} (Debug)")
+	    install(FILES ${LIBDIR}/${LIBNAME_DEBUG}
+		    DESTINATION ${SPRINGHEAD_LIBRARY_DIR_DEBUG}
+		    CONFIGURATIONS Debug
+		    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+	    )
+	endif()
+	if(DEFINED SPRINGHEAD_LIBRARY_DIR_RELEASE)
+	    message("** install library: ${SPRINGHEAD_LIBRARY_DIR_RELEASE} (Release)")
+	    install(FILES ${LIBDIR}/${LIBNAME_RELEASE}
+		    DESTINATION ${SPRINGHEAD_LIBRARY_DIR_RELEASE}
+		    CONFIGURATIONS Release
+		    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+	    )
+	endif()
     elseif(unix)
 	if(DEFINED SPRINGHEAD_LIBRARY_DIR)
-	    set(_libpath ${LIBDIR}/${LIBNAME}.${_lib_suffix})
-	    message("** INSTALL: ${LIBNAME}.${_lib_suffix}: ${_libdir} **")
-	    install(FILES ${_libpath}
-		    DESTINATION ${_libdir}
+	    install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
+		    DESTINATION ${SPRINGHEAD_LIBRARY_DIR}
 		    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-		    CONFIGURATIONS Release
 	    )
 	endif()
     endif()
+endif()	# ${OLDER_INSTALLATION_DIRECTIVE}
+
+# ------------------------------------------------------------------------------
+#  Do not make INSTALL target if
+#	DO_NOT_GENERATE_INSTALL_TARGET is defined, or
+#	CMAKE_INSTALL_PREFIX is not defined, or
+#	CMAKE_INSTALL_PREFIX is defind but empty.
+#
+if(DO_NOT_GENERATE_INSTALL_TARGET
+	OR OLDER_INSTALLATION_DIRECTIVE
+	OR NOT CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX ${EMPTY} CACHE STRING "set empty" FORCE)
     return()
 endif()
 
 # ------------------------------------------------------------------------------
+#  Install.
+#
 #  Cmake の export は、add_liibrary/add_executable で定義されたターゲットに
 #  対してでないと機能しないようです (configureでエラーとなる)。
 #  そのため、以下のような小細工をしています。
@@ -414,6 +449,7 @@ endif()
 message("** install directory: \"${CMAKE_INSTALL_PREFIX}\" (CMAKE_INSTALL_PREFIX)")
 message("**      header files: \"${CMAKE_INSTALL_PREFIX}/${SPR_HEADERS_INSTALL_DIR}\"")
 message("**      library file: \"${CMAKE_INSTALL_PREFIX}/${SPR_LIBRARY_INSTALL_DIR}\"")
+set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE STRING "" FORCE)
 
 # ------------------------------------------------------------------------------
 #  Export.
@@ -437,11 +473,13 @@ install(EXPORT ${ExportConf}
 file(GLOB HEADERS ${SPR_INC_DIR}/*.h)
 install(FILES ${HEADERS}
 	DESTINATION ${SPR_HEADERS_INSTALL_DIR}
+	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
 foreach(_proj ${SPR_PROJS})
     file(GLOB HEADERS ${SPR_INC_DIR}/${_proj}/*.h)
     install(FILES ${HEADERS}
 	    DESTINATION ${SPR_HEADERS_INSTALL_DIR}/${_proj}
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
     )
 endforeach()
 # install library file

@@ -85,6 +85,22 @@
 \bigskip
 \bf{ライブラリファイルとヘッダファイルのインストール先を設定するとき} (2.3版 改訂)
 
+\begin{narrow}[s]
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	変数の設定はGUIからでも行なえます。
+	ただし GUIでの設定より\Path{CMakeConf.txt}の設定の方が優先されます。
+	また、GUIで\tt{CMAKE\_INSTALL\_PREFIX}を空に設定した場合、
+	または \Path{CMakeConf.txt}で \tt{DO\_NOT\_GENERATE\_INSTALL\_TARGET}
+	を指定した場合には、
+	インストールを行なうためのターゲットルールは生成されません。
+	なお、\Path{CMakeConf.txt}で\tt{CMAKE\_INSTALL\_PREFIX}に空文字列を
+	設定した場合には、GUIの場合とは異なり、デフォルトのインストールパス
+ 	(Windowsでは\Path{C:/Program Files}、unixでは\Path{/usr/local})が
+	使用されます。(2.4b版 追加)
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	\Vskip{.3\baselineskip}
+\end{narrow}
+
 変数\tt{CMAKE\_INSTALL\_PREFIX}にインストール先を絶対パスで設定します。
 この設定をすることにより、\tt{find\_package(Springhaed, REQUIRED)}として
 \SprLib を簡単に導入することができるようになります。

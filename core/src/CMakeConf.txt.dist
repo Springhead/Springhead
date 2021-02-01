@@ -8,11 +8,10 @@
 #		変数 CMAKE_PREFIX_PATH を定義すれば、dependency の代わりに
 #		それらのパッケージを参照するようになります。
 #	インストールディレクトリの設定
-#		変数 CMAKE_INSTALL_PREFIX を定義すれば、次のファイルを指定
-#		するディレクトリにインストールできます。
-#		　・コンパイルに必要なヘッダファイル
-#		　・ビルドしたライブラリファイル
-#		　・find_packageを可能とするためのコンフィグファイル
+#		変数 CMAKE_INSTALL_PREFIX を定義すれば、ヘッダファイル及び
+#		ライブラリファイルのインストール先を変更できます。
+#		インストールしたファイルは、find_package で参照可能です。
+#		INSTALL ターゲット自体の生成を抑止することもできます
 #    下記を参照のこと。
 #
 #    This file defines following matters.
@@ -20,13 +19,14 @@
 #		To use external package instead of 'dependency', define
 #		installed path(s) to CMAKE_PREFIX_PATH.
 #	Install directory
-#		Create target 'INSTALL' to install generated library file
-#		and header files needed for compilation. Config files for
-#		find_package are also installed.
+#		Change install directory of header files, generated 
+#		library file and config file by redidfining variable
+#		CMAKE_INSTALL_PREFIX. You can find these files using
+#		find_package directive.
 #    See below for details.
 #
 # ==============================================================================
-set(SPRINGHEAD_CMAKECONF_VERSION 1.0.0)
+set(SPRINGHEAD_CMAKECONF_VERSION 1.1.0)
 
 # ------------------------------------------------------------------------------
 #  External packages (boost, glew and freeglut).
@@ -57,13 +57,20 @@ endif()
 # ------------------------------------------------------------------------------
 #  Install directories (library and headers).
 #
-#　　変数 CMAKE_INSTALL_PREFIX を定義すれば、ヘッダファイル、ライブラリファイル
-#　　及びコンフィグファイルが以下に示すディレクトリにインストールされます。
+#    ヘッダファイル、ライブラリファイル及びコンフィグファイルのインストール先は
+#    自動的に次のディレクトリに設定されます (デフォルト動作)。
+#    By default, header files, generated library file and configuration file
+#    will be installed under following directories.
+#	Windows:	C:/Program Files/Springhead
+#	unix:		/usr/local/Springhead
+#
+#    インストール先を変更するには、変数 CMAKE_INSTALL_PREFIX にインストール先の
+#    ディレクトリを設定してください (GUIで設定することもできます)。
 #	※ 変数の値は絶対パスで定義してください。
 #	※ 実際にインストールするにはターゲット "INSTALL" を実行してください。
 #
-#    To install header files, generated library file and configuration file
-#    where you want, uncomment and redefine following parameters appropreately
+#    To change default action, uncomment and set new path to the variable
+#    CMAKE_INSTALL_PREFIX.
 #    NOTE:	
 #       Use absolute path.
 #       Execute "INSTALL" target to install actually.
@@ -93,18 +100,24 @@ endif()
 set(SPR_HEADERS_INSTALL_DIR	"Springhead/include")
 set(SPR_LIBRARY_INSTALL_DIR	"Springhead/lib")
 
+#    次の行のコメントを外せば、INSTALL ターゲットは生成しません。
+#    To uncomment following line, you can suppress creating INSTALL target.
+
+#set(DO_NOT_GENERATE_INSTALL_TARGET True)
 
 # ==============================================================================
 #　　以下は、旧バージョンとの互換のためのものです。
+#    以下の定義をすると CMAKE_INSATLL_PREFIX の指定は無効となります。
 #　　旧バージョンの設定では find_package は使用できません。
 #
 #    Followings are only for compatibility with older version.
+#    These definition cancel out CMAKE_INSTALL_PREFIX.
 #    You can't use find_package with older version.
 #
 if(Windows)
-#    set(SPRINGHEAD_INCLUDE_PREFIX      "C:/usr/local")
-#    set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/usr/local/lib")
-#    set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/usr/local/lib")
+#    set(SPRINGHEAD_INCLUDE_PREFIX      "C:/XProgram Files/Springhead")
+#    set(SPRINGHEAD_LIBRARY_DIR_DEBUG   "C:/Program Files/Springhead/lib")
+#    set(SPRINGHEAD_LIBRARY_DIR_RELEASE "C:/Program Files/Springhead/lib")
 elseif(unix)
 #    set(SPRINGHEAD_INCLUDE_PREFIX      "/usr/local/Springhead")
 #    set(SPRINGHEAD_LIBRARY_DIR		"/usr/local/Springhead/lib")
