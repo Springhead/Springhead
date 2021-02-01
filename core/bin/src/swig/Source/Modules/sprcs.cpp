@@ -1672,13 +1672,26 @@ public:
 					//DUMP_NODE_INFO(fps, FD_CS, "argtype is enum", ei);
 				}
 #endif
+				// 引数が_thisArrayを3つ全て使う物であるか？
+				bool is_use_all_thisArray = false;
+				Node* arg_cs_type_node = FindNodeByAttrR(topnode, "name", ai.type);
+				if (arg_cs_type_node != NULL) {
+					is_use_all_thisArray = IsUseAll_thisArray(arg_cs_type_node, topnode);
+				}
+
 				if (sep_needed) Printf(CS, ", ");
 				if	(is_enum_node_a)		{ Printf(CS, "(int) "); }
 				else if (ai.is_struct)			{ Printf(CS, "(IntPtr) "); }
 				else if (ai.is_string)			{ Printf(CS, "(IntPtr) "); }
 				else if (ai.is_vector || ai.is_array)	{ Printf(CS, "(IntPtr) "); }
 				else					{ Printf(CS, "(%s) ", ai.cs_im_type); }
-				Printf(CS, "%s", argnames[j]);
+				
+				if (is_use_all_thisArray) {
+					Printf(CS, "%s.%s", argnames[j],instance_name);
+				}
+				else {
+					Printf(CS, "%s", argnames[j]);
+				}
 				sep_needed = 1;
 			}
 			Printf(CS, ");\n");
@@ -1805,12 +1818,14 @@ public:
 			else if (!ai.is_intrinsic){
 				if (ai.is_string) {
 					Printf(CS, "%s %s = string.Copy(%s);\n", ai.cs_type, string("new_").append(csname).c_str(), csname);
+					callback_argnames[j] = (char*)callback_argname;
+					Printf(CS, "// intrinsic\n");
 				}
-				else {
-					Printf(CS, "%s %s = new %s(%s);\n", ai.cs_type, callback_argname, ai.cs_type, csname);
+				else { // Ifクラス(PHSolidIfなど)は複製してもPHSceneに参照があり意味がないためnewしない
+					//Printf(CS, "%s %s = new %s(%s);\n", ai.cs_type, callback_argname, ai.cs_type, csname);
+					callback_argnames[j] = (char*)csname;
+					Printf(CS, "// IfClass\n");
 				}
-				callback_argnames[j] = (char*)callback_argname;
-				Printf(CS, "// intrinsic\n");
 			}
 		}
 		return callback_argnames;

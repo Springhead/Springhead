@@ -2253,36 +2253,36 @@ namespace SprCs {
 	~PHGenericJointCallback() { if (_flag) { SprExport.Spr_delete_PHGenericJointCallback(_thisArray[0]); _flag = false; } }
 	public void SetParam(PHGenericJointIf jnt, string name, double value) {
             IntPtr remote2 = Marshal.StringToBSTR(name);
-	    SprExport.Spr_PHGenericJointCallback_SetParam((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) remote2, (double) value);
+	    SprExport.Spr_PHGenericJointCallback_SetParam((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) remote2, (double) value);
             Marshal.FreeBSTR(remote2);
 	}
 	public bool IsCyclic(PHGenericJointIf jnt) {
-	    char ret = SprExport.Spr_PHGenericJointCallback_IsCyclic((IntPtr) _thisArray[0], (IntPtr) jnt);
+	    char ret = SprExport.Spr_PHGenericJointCallback_IsCyclic((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0]);
 	    return (ret == 0) ? false : true;
 	}
 	public void GetMovableAxes(PHGenericJointIf jnt, int n, int indices) {
-	    SprExport.Spr_PHGenericJointCallback_GetMovableAxes((IntPtr) _thisArray[0], (IntPtr) jnt, (int) n, (int) indices);
+	    SprExport.Spr_PHGenericJointCallback_GetMovableAxes((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (int) n, (int) indices);
 	}
 	public void CompBias(PHGenericJointIf jnt, Vec3d dbv, Vec3d dbw, Vec3d prel, Quaterniond qrel, Vec3d vrel, Vec3d wrel) {
-	    SprExport.Spr_PHGenericJointCallback_CompBias((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) dbv, (IntPtr) dbw, (IntPtr) prel, (IntPtr) qrel, (IntPtr) vrel, (IntPtr) wrel);
+	    SprExport.Spr_PHGenericJointCallback_CompBias((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) dbv, (IntPtr) dbw, (IntPtr) prel, (IntPtr) qrel, (IntPtr) vrel, (IntPtr) wrel);
 	}
 	public void CompError(PHGenericJointIf jnt, Vec3d Bv, Vec3d Bw, Vec3d prel, Quaterniond qrel) {
-	    SprExport.Spr_PHGenericJointCallback_CompError((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) Bv, (IntPtr) Bw, (IntPtr) prel, (IntPtr) qrel);
+	    SprExport.Spr_PHGenericJointCallback_CompError((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) Bv, (IntPtr) Bw, (IntPtr) prel, (IntPtr) qrel);
 	}
 	public void UpdateJointState(PHGenericJointIf jnt, double pos, double vel, Vec3d prel, Quaterniond qrel, Vec3d vrel, Vec3d wrel) {
-	    SprExport.Spr_PHGenericJointCallback_UpdateJointState((IntPtr) _thisArray[0], (IntPtr) jnt, (double) pos, (double) vel, (IntPtr) prel, (IntPtr) qrel, (IntPtr) vrel, (IntPtr) wrel);
+	    SprExport.Spr_PHGenericJointCallback_UpdateJointState((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (double) pos, (double) vel, (IntPtr) prel, (IntPtr) qrel, (IntPtr) vrel, (IntPtr) wrel);
 	}
 	public void CompJointJacobian(PHGenericJointIf jnt, Vec3d Jv, Vec3d Jw, double pos) {
-	    SprExport.Spr_PHGenericJointCallback_CompJointJacobian((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) Jv, (IntPtr) Jw, (double) pos);
+	    SprExport.Spr_PHGenericJointCallback_CompJointJacobian((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) Jv, (IntPtr) Jw, (double) pos);
 	}
 	public void CompJointCoriolisAccel(PHGenericJointIf jnt, Vec3d cv, Vec3d cw, double pos, double vel) {
-	    SprExport.Spr_PHGenericJointCallback_CompJointCoriolisAccel((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) cv, (IntPtr) cw, (double) pos, (double) vel);
+	    SprExport.Spr_PHGenericJointCallback_CompJointCoriolisAccel((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) cv, (IntPtr) cw, (double) pos, (double) vel);
 	}
 	public void CompRelativePosition(PHGenericJointIf jnt, Vec3d prel, Quaterniond qrel, double pos) {
-	    SprExport.Spr_PHGenericJointCallback_CompRelativePosition((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) prel, (IntPtr) qrel, (double) pos);
+	    SprExport.Spr_PHGenericJointCallback_CompRelativePosition((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) prel, (IntPtr) qrel, (double) pos);
 	}
 	public void CompRelativeVelocity(PHGenericJointIf jnt, Vec3d vrel, Vec3d wrel, double pos, double vel) {
-	    SprExport.Spr_PHGenericJointCallback_CompRelativeVelocity((IntPtr) _thisArray[0], (IntPtr) jnt, (IntPtr) vrel, (IntPtr) wrel, (double) pos, (double) vel);
+	    SprExport.Spr_PHGenericJointCallback_CompRelativeVelocity((IntPtr) _thisArray[0], (IntPtr) jnt._thisArray[0], (IntPtr) vrel, (IntPtr) wrel, (double) pos, (double) vel);
 	}
     }
     public partial class PHGenericJointDesc : PH1DJointDesc {
@@ -7130,43 +7130,39 @@ namespace SprCs {
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHFemMeshNewIf new_m0 = new PHFemMeshNewIf(m0);
-// intrinsic
-PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
-// intrinsic
-	    char retStep = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m0, (IntPtr) new_m1);
+// IfClass
+// IfClass
+	    char retStep = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0._thisArray[phSceneIf.sceneForStep], (IntPtr) m1._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retBuffer = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0._thisArray[phSceneIf.sceneForBuffer], (IntPtr) m1._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retGet = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0._thisArray[phSceneIf.sceneForGet], (IntPtr) m1._thisArray[phSceneIf.sceneForGet]);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHFemMeshNewIf new_m0 = new PHFemMeshNewIf(m0);
-// intrinsic
-PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retStep = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0._thisArray[phSceneIf.sceneForStep], (IntPtr) m1._thisArray[phSceneIf.sceneForStep]);
 						});
-	    char retBuffer = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m0, (IntPtr) new_m1);
-	    char retGet = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retBuffer = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0._thisArray[phSceneIf.sceneForBuffer], (IntPtr) m1._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0._thisArray[phSceneIf.sceneForGet], (IntPtr) m1._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					} else {
-	    char retStep = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0, (IntPtr) m1);
-	    char retBuffer = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0, (IntPtr) m1);
-	    char retGet = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0, (IntPtr) m1);
+	    char retStep = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0._thisArray[phSceneIf.sceneForStep], (IntPtr) m1._thisArray[phSceneIf.sceneForStep]);
+	    char retBuffer = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0._thisArray[phSceneIf.sceneForBuffer], (IntPtr) m1._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0._thisArray[phSceneIf.sceneForGet], (IntPtr) m1._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					}
 				}
 			}
 		} else {
-	    char ret = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[0], (IntPtr) m0, (IntPtr) m1);
+	    char ret = SprExport.Spr_PHFemEngineIf_AddMeshPair((IntPtr) _thisArray[0], (IntPtr) m0._thisArray[0], (IntPtr) m1._thisArray[0]);
 	    return (ret == 0) ? false : true;
 		}
 		throw new InvalidOperationException();
@@ -7176,43 +7172,39 @@ PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHFemMeshNewIf new_m0 = new PHFemMeshNewIf(m0);
-// intrinsic
-PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
-// intrinsic
-	    char retStep = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m0, (IntPtr) new_m1);
+// IfClass
+// IfClass
+	    char retStep = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0._thisArray[phSceneIf.sceneForStep], (IntPtr) m1._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retBuffer = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0._thisArray[phSceneIf.sceneForBuffer], (IntPtr) m1._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retGet = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0._thisArray[phSceneIf.sceneForGet], (IntPtr) m1._thisArray[phSceneIf.sceneForGet]);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHFemMeshNewIf new_m0 = new PHFemMeshNewIf(m0);
-// intrinsic
-PHFemMeshNewIf new_m1 = new PHFemMeshNewIf(m1);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retStep = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0._thisArray[phSceneIf.sceneForStep], (IntPtr) m1._thisArray[phSceneIf.sceneForStep]);
 						});
-	    char retBuffer = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m0, (IntPtr) new_m1);
-	    char retGet = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m0, (IntPtr) new_m1);
+	    char retBuffer = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0._thisArray[phSceneIf.sceneForBuffer], (IntPtr) m1._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0._thisArray[phSceneIf.sceneForGet], (IntPtr) m1._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					} else {
-	    char retStep = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0, (IntPtr) m1);
-	    char retBuffer = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0, (IntPtr) m1);
-	    char retGet = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0, (IntPtr) m1);
+	    char retStep = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m0._thisArray[phSceneIf.sceneForStep], (IntPtr) m1._thisArray[phSceneIf.sceneForStep]);
+	    char retBuffer = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m0._thisArray[phSceneIf.sceneForBuffer], (IntPtr) m1._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m0._thisArray[phSceneIf.sceneForGet], (IntPtr) m1._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					}
 				}
 			}
 		} else {
-	    char ret = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[0], (IntPtr) m0, (IntPtr) m1);
+	    char ret = SprExport.Spr_PHFemEngineIf_RemoveMeshPair((IntPtr) _thisArray[0], (IntPtr) m0._thisArray[0], (IntPtr) m1._thisArray[0]);
 	    return (ret == 0) ? false : true;
 		}
 		throw new InvalidOperationException();
@@ -10053,36 +10045,34 @@ Vec2d new_origin = new Vec2d(origin);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_s = new PHSolidIf(s);
-// intrinsic
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_s);
+// IfClass
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_s);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) s._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_s);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) s._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_s = new PHSolidIf(s);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_s);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_s);
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_s);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) s._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) s._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s);
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) s);
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) s);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) s._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) s._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[0], (IntPtr) s);
+	    SprExport.Spr_PHFemMeshNewIf_SetPHSolid((IntPtr) _thisArray[0], (IntPtr) s._thisArray[0]);
 		}
 	}
 	public PHSolidIf GetPHSolid() {
@@ -10829,32 +10819,28 @@ Vec3d new_v = new Vec3d(v);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_posL = new Vec3d(posL);
-// intrinsic
-Vec4d new_value = new Vec4d(value);
-// intrinsic
-	    char retStep = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
+// IfClass
+// IfClass
+	    char retStep = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
+	    char retBuffer = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
+	    char retGet = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_posL = new Vec3d(posL);
-// intrinsic
-Vec4d new_value = new Vec4d(value);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
+	    char retStep = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 						});
-	    char retBuffer = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
-	    char retGet = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) new_posL, (IntPtr) new_value, (bool) bDeform);
+	    char retBuffer = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
+	    char retGet = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
 	    return (retGet == 0) ? false : true;
 					} else {
 	    char retStep = SprExport.Spr_PHFemMeshNewIf_CompTetShapeFunctionValue((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) tetId, (IntPtr) posL, (IntPtr) value, (bool) bDeform);
@@ -11583,15 +11569,14 @@ Vec3i new_dof = new Vec3i(dof);
 Vec3d new_posW = new Vec3d(posW);
 // NewArgument equal 8 8
 // is_struct
-Vec3d new_cpW = new Vec3d(cpW);
-// intrinsic
-	    char retStep = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
+// IfClass
+	    char retStep = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
+	    char retBuffer = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
+	    char retGet = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
@@ -11601,13 +11586,12 @@ Vec3d new_cpW = new Vec3d(cpW);
 Vec3d new_posW = new Vec3d(posW);
 // NewArgument equal 8 8
 // is_struct
-Vec3d new_cpW = new Vec3d(cpW);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
+	    char retStep = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 						});
-	    char retBuffer = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
-	    char retGet = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_posW, (int) tetId, (IntPtr) new_cpW, (bool) bDeform);
+	    char retBuffer = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
+	    char retGet = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
 	    return (retGet == 0) ? false : true;
 					} else {
 	    char retStep = SprExport.Spr_PHFemVibrationIf_FindNeighborTetrahedron((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) posW, (int) tetId, (IntPtr) cpW, (bool) bDeform);
@@ -15156,27 +15140,25 @@ Posed new_p = new Posed(p);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-CDShapeIf new_shape = new CDShapeIf(shape);
-// intrinsic
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_shape);
+// IfClass
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shape);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shape);
 					},
 					() => {
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) shape);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-CDShapeIf new_shape = new CDShapeIf(shape);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shape);
 						});
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shape);
-	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shape);
+	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) shape);
 					} else {
 	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shape);
 	    SprExport.Spr_PHBodyIf_AddShape((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shape);
@@ -15193,31 +15175,27 @@ CDShapeIf new_shape = new CDShapeIf(shape);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-CDShapeIf new_shBegin = new CDShapeIf(shBegin);
-// intrinsic
-CDShapeIf new_shEnd = new CDShapeIf(shEnd);
-// intrinsic
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
+// IfClass
+// IfClass
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shBegin, (IntPtr) shEnd);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shBegin, (IntPtr) shEnd);
 					},
 					() => {
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) shBegin, (IntPtr) shEnd);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-CDShapeIf new_shBegin = new CDShapeIf(shBegin);
-// intrinsic
-CDShapeIf new_shEnd = new CDShapeIf(shEnd);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shBegin, (IntPtr) shEnd);
 						});
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
-	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shBegin, (IntPtr) new_shEnd);
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shBegin, (IntPtr) shEnd);
+	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) shBegin, (IntPtr) shEnd);
 					} else {
 	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shBegin, (IntPtr) shEnd);
 	    SprExport.Spr_PHBodyIf_AddShapes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shBegin, (IntPtr) shEnd);
@@ -15300,27 +15278,25 @@ CDShapeIf new_shEnd = new CDShapeIf(shEnd);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-CDShapeIf new_shape = new CDShapeIf(shape);
-// intrinsic
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_shape);
+// IfClass
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shape);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shape);
 					},
 					() => {
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) shape);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-CDShapeIf new_shape = new CDShapeIf(shape);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shape);
 						});
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_shape);
-	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_shape);
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shape);
+	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) shape);
 					} else {
 	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) shape);
 	    SprExport.Spr_PHBodyIf_RemoveShape_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) shape);
@@ -15403,27 +15379,25 @@ CDShapeIf new_shape = new CDShapeIf(shape);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Posed new_pose = new Posed(pose);
-// intrinsic
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index, (IntPtr) new_pose);
+// IfClass
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index, (IntPtr) pose);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index, (IntPtr) new_pose);
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index, (IntPtr) pose);
 					},
 					() => {
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index, (IntPtr) new_pose);
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index, (IntPtr) pose);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Posed new_pose = new Posed(pose);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index, (IntPtr) new_pose);
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index, (IntPtr) pose);
 						});
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index, (IntPtr) new_pose);
-	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index, (IntPtr) new_pose);
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index, (IntPtr) pose);
+	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForGet], (int) index, (IntPtr) pose);
 					} else {
 	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForStep], (int) index, (IntPtr) pose);
 	    SprExport.Spr_PHBodyIf_SetShapePose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (int) index, (IntPtr) pose);
@@ -15731,27 +15705,25 @@ Vec3d new_r = new Vec3d(r);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_center = new Vec3d(center);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_center);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) center);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_center);
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) center);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_center);
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) center);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_center = new Vec3d(center);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_center);
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) center);
 						});
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_center);
-	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_center);
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) center);
+	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) center);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) center);
 	    SprExport.Spr_PHSolidIf_SetCenterOfMass((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) center);
@@ -15808,27 +15780,25 @@ Vec3d new_center = new Vec3d(center);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Matrix3d new_I = new Matrix3d(I);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_I);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) I);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_I);
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) I);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_I);
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) I);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Matrix3d new_I = new Matrix3d(I);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_I);
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) I);
 						});
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_I);
-	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_I);
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) I);
+	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) I);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) I);
 	    SprExport.Spr_PHSolidIf_SetInertia((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) I);
@@ -15878,27 +15848,25 @@ Matrix3d new_I = new Matrix3d(I);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_p = new Vec3d(p);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_p);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) p);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_p = new Vec3d(p);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 						});
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
-	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
+	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) p);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 	    SprExport.Spr_PHSolidIf_SetFramePosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
@@ -15915,27 +15883,25 @@ Vec3d new_p = new Vec3d(p);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_p = new Vec3d(p);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_p);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) p);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_p = new Vec3d(p);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 						});
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
-	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
+	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) p);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 	    SprExport.Spr_PHSolidIf_SetCenterPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
@@ -16012,27 +15978,25 @@ Vec3d new_p = new Vec3d(p);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Quaterniond new_q = new Quaterniond(q);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_q);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) q);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_q);
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) q);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_q);
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) q);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Quaterniond new_q = new Quaterniond(q);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_q);
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) q);
 						});
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_q);
-	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_q);
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) q);
+	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) q);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) q);
 	    SprExport.Spr_PHSolidIf_SetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) q);
@@ -16049,27 +16013,25 @@ Quaterniond new_q = new Quaterniond(q);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Posed new_p = new Posed(p);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_p);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) p);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Posed new_p = new Posed(p);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 						});
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_p);
-	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_p);
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
+	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) p);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) p);
 	    SprExport.Spr_PHSolidIf_SetPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) p);
@@ -16086,27 +16048,25 @@ Posed new_p = new Posed(p);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_v = new Vec3d(v);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_v);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) v);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_v);
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) v);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_v);
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) v);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_v = new Vec3d(v);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_v);
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) v);
 						});
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_v);
-	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_v);
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) v);
+	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) v);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) v);
 	    SprExport.Spr_PHSolidIf_SetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) v);
@@ -16123,27 +16083,25 @@ Vec3d new_v = new Vec3d(v);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_av = new Vec3d(av);
-// intrinsic
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_av);
+// IfClass
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) av);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_av);
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) av);
 					},
 					() => {
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_av);
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) av);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_av = new Vec3d(av);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_av);
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) av);
 						});
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_av);
-	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_av);
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) av);
+	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) av);
 					} else {
 	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) av);
 	    SprExport.Spr_PHSolidIf_SetAngularVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) av);
@@ -17959,27 +17917,25 @@ SpatialVector new_spv = new SpatialVector(spv);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-SpatialVector new_f = new SpatialVector(f);
-// intrinsic
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_f);
+// IfClass
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) f);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_f);
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) f);
 					},
 					() => {
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_f);
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) f);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-SpatialVector new_f = new SpatialVector(f);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_f);
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) f);
 						});
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_f);
-	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_f);
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) f);
+	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) f);
 					} else {
 	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) f);
 	    SprExport.Spr_PHHapticPointerIf_AddHapticForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) f);
@@ -18029,31 +17985,27 @@ SpatialVector new_f = new SpatialVector(f);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Posed new_pose = new Posed(pose);
-// intrinsic
-SpatialVector new_vel = new SpatialVector(vel);
-// intrinsic
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_pose, (IntPtr) new_vel);
+// IfClass
+// IfClass
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose, (IntPtr) vel);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose, (IntPtr) new_vel);
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose, (IntPtr) vel);
 					},
 					() => {
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose, (IntPtr) new_vel);
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) pose, (IntPtr) vel);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Posed new_pose = new Posed(pose);
-// intrinsic
-SpatialVector new_vel = new SpatialVector(vel);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_pose, (IntPtr) new_vel);
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose, (IntPtr) vel);
 						});
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose, (IntPtr) new_vel);
-	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose, (IntPtr) new_vel);
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose, (IntPtr) vel);
+	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) pose, (IntPtr) vel);
 					} else {
 	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose, (IntPtr) vel);
 	    SprExport.Spr_PHHapticPointerIf_UpdateHumanInterface((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose, (IntPtr) vel);
@@ -18641,36 +18593,34 @@ SpatialVector new_vel = new SpatialVector(vel);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+// IfClass
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid);
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid);
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid);
+	    SprExport.Spr_PHIKEndEffectorIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid._thisArray[0]);
 		}
 	}
 	public PHSolidIf GetSolid() {
@@ -18716,36 +18666,34 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHIKActuatorIf new_ika = new PHIKActuatorIf(ika);
-// intrinsic
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ika);
+// IfClass
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ika._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ika);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ika._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ika);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ika._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHIKActuatorIf new_ika = new PHIKActuatorIf(ika);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ika);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ika._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ika);
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ika);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ika._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ika._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ika);
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ika);
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ika);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ika._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ika._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ika._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[0], (IntPtr) ika);
+	    SprExport.Spr_PHIKEndEffectorIf_SetParentActuator((IntPtr) _thisArray[0], (IntPtr) ika._thisArray[0]);
 		}
 	}
 	public PHIKActuatorIf GetParentActuator() {
@@ -20615,36 +20563,34 @@ Vec3d new_torque = new Vec3d(torque);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHBallJointIf new_joint = new PHBallJointIf(joint);
-// intrinsic
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+// IfClass
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHBallJointIf new_joint = new PHBallJointIf(joint);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint);
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint);
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+	    SprExport.Spr_PHIKBallActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint._thisArray[0]);
 		}
 	}
 	public PHBallJointIf GetJoint() {
@@ -20841,36 +20787,34 @@ Quaterniond new_ori = new Quaterniond(ori);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHHingeJointIf new_joint = new PHHingeJointIf(joint);
-// intrinsic
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+// IfClass
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHHingeJointIf new_joint = new PHHingeJointIf(joint);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint);
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint);
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+	    SprExport.Spr_PHIKHingeActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint._thisArray[0]);
 		}
 	}
 	public PHHingeJointIf GetJoint() {
@@ -21055,36 +20999,34 @@ PHHingeJointIf new_joint = new PHHingeJointIf(joint);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSpringIf new_joint = new PHSpringIf(joint);
-// intrinsic
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+// IfClass
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSpringIf new_joint = new PHSpringIf(joint);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint);
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint);
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+	    SprExport.Spr_PHIKSpringActuatorIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint._thisArray[0]);
 		}
 	}
 	public PHSpringIf GetJoint() {
@@ -21506,27 +21448,25 @@ Posed new_pose = new Posed(pose);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Posed new_pose = new Posed(pose);
-// intrinsic
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_pose);
+// IfClass
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose);
 					},
 					() => {
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) pose);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Posed new_pose = new Posed(pose);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
 						});
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
-	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose);
+	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) pose);
 					} else {
 	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
 	    SprExport.Spr_PHConstraintIf_SetSocketPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose);
@@ -21560,27 +21500,25 @@ Posed new_pose = new Posed(pose);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Posed new_pose = new Posed(pose);
-// intrinsic
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_pose);
+// IfClass
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose);
 					},
 					() => {
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) pose);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Posed new_pose = new Posed(pose);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
 						});
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_pose);
-	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_pose);
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose);
+	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) pose);
 					} else {
 	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) pose);
 	    SprExport.Spr_PHConstraintIf_SetPlugPose((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) pose);
@@ -21773,17 +21711,15 @@ Posed new_pose = new Posed(pose);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptrStep, phSceneIf.sceneForStep);
@@ -21856,15 +21792,13 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs);
-	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
@@ -21933,9 +21867,9 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
             }
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs);
-	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs);
-	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
@@ -22007,7 +21941,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptr, 0);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
@@ -22083,17 +22017,17 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
             return new Vec3d(ptrStep, true);
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isGetFunctionCalledInSubThread = true;
-	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             return new Vec3d(ptrGet, true);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptr = SprExport.Spr_PHConstraintsIf_GetTotalForce((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0]);
             return new Vec3d(ptr, true);
 		}
 		throw new InvalidOperationException();
@@ -22275,15 +22209,14 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrStep, 0);
@@ -22296,13 +22229,12 @@ PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet, 0);
             return obj;
@@ -22379,17 +22311,15 @@ PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrStep, 0);
@@ -22410,15 +22340,13 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet, 0);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
@@ -22469,15 +22397,14 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrStep, 0);
@@ -22498,13 +22425,12 @@ IfInfo new_ii = new IfInfo(ii);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
-	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
+	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet, 0);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
@@ -22555,28 +22481,26 @@ IfInfo new_ii = new IfInfo(ii);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
-// intrinsic
-	    char retStep = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m);
+// IfClass
+	    char retStep = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
+	    char retBuffer = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
+	    char retGet = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m);
+	    char retStep = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m);
 						});
-	    char retBuffer = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
-	    char retGet = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
+	    char retBuffer = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m);
+	    char retGet = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m);
 	    return (retGet == 0) ? false : true;
 					} else {
 	    char retStep = SprExport.Spr_PH1DJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m);
@@ -23587,27 +23511,25 @@ PH1DJointMotorIf new_m = new PH1DJointMotorIf(m);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Posed new_pose = new Posed(pose);
-// intrinsic
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (double) s, (IntPtr) new_pose);
+// IfClass
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (double) s, (IntPtr) pose);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) s, (IntPtr) new_pose);
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) s, (IntPtr) pose);
 					},
 					() => {
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) s, (IntPtr) new_pose);
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) s, (IntPtr) pose);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Posed new_pose = new Posed(pose);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (double) s, (IntPtr) new_pose);
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (double) s, (IntPtr) pose);
 						});
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) s, (IntPtr) new_pose);
-	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) s, (IntPtr) new_pose);
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) s, (IntPtr) pose);
+	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (double) s, (IntPtr) pose);
 					} else {
 	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (double) s, (IntPtr) pose);
 	    SprExport.Spr_PHPathIf_AddPoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (double) s, (IntPtr) pose);
@@ -23833,27 +23755,25 @@ Posed new_pose = new Posed(pose);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHGenericJointCallback new_cb = new PHGenericJointCallback(cb);
-// intrinsic
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_cb);
+// IfClass
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) cb);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_cb);
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) cb);
 					},
 					() => {
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_cb);
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) cb);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHGenericJointCallback new_cb = new PHGenericJointCallback(cb);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_cb);
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) cb);
 						});
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_cb);
-	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_cb);
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) cb);
+	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) cb);
 					} else {
 	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) cb);
 	    SprExport.Spr_PHGenericJointIf_SetCallback((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) cb);
@@ -23972,17 +23892,15 @@ string new_name = string.Copy(name);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrStep, 0);
@@ -24007,15 +23925,13 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
@@ -24078,15 +23994,14 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrStep, 0);
@@ -24111,13 +24026,12 @@ IfInfo new_ii = new IfInfo(ii);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet, 0);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
@@ -24180,17 +24094,15 @@ IfInfo new_ii = new IfInfo(ii);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrStep, phSceneIf.sceneForStep);
@@ -24211,15 +24123,13 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
@@ -24270,15 +24180,14 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrStep, phSceneIf.sceneForStep);
@@ -24299,13 +24208,12 @@ IfInfo new_ii = new IfInfo(ii);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
-	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
+	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
@@ -24356,39 +24264,37 @@ IfInfo new_ii = new IfInfo(ii);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
-// intrinsic
-	    char retStep = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m);
+// IfClass
+	    char retStep = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
+	    char retBuffer = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
+	    char retGet = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m._thisArray[phSceneIf.sceneForGet]);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHBallJointMotorIf new_m = new PHBallJointMotorIf(m);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_m);
+	    char retStep = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m._thisArray[phSceneIf.sceneForStep]);
 						});
-	    char retBuffer = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_m);
-	    char retGet = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_m);
+	    char retBuffer = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					} else {
-	    char retStep = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m);
-	    char retBuffer = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m);
-	    char retGet = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m);
+	    char retStep = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) m._thisArray[phSceneIf.sceneForStep]);
+	    char retBuffer = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) m._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) m._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					}
 				}
 			}
 		} else {
-	    char ret = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[0], (IntPtr) m);
+	    char ret = SprExport.Spr_PHBallJointIf_AddMotor((IntPtr) _thisArray[0], (IntPtr) m._thisArray[0]);
 	    return (ret == 0) ? false : true;
 		}
 		throw new InvalidOperationException();
@@ -25382,27 +25288,25 @@ Vec3d new_m = new Vec3d(m);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_targetPosition = new Vec3d(targetPosition);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_targetPosition);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetPosition);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetPosition);
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetPosition);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetPosition);
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) targetPosition);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_targetPosition = new Vec3d(targetPosition);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_targetPosition);
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetPosition);
 						});
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetPosition);
-	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetPosition);
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetPosition);
+	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) targetPosition);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetPosition);
 	    SprExport.Spr_PHSpringIf_SetTargetPosition((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetPosition);
@@ -25439,27 +25343,25 @@ Vec3d new_targetPosition = new Vec3d(targetPosition);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Quaterniond new_targetOrientation = new Quaterniond(targetOrientation);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_targetOrientation);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetOrientation);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetOrientation);
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetOrientation);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetOrientation);
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) targetOrientation);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Quaterniond new_targetOrientation = new Quaterniond(targetOrientation);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_targetOrientation);
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetOrientation);
 						});
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetOrientation);
-	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetOrientation);
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetOrientation);
+	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) targetOrientation);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetOrientation);
 	    SprExport.Spr_PHSpringIf_SetTargetOrientation((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetOrientation);
@@ -25496,27 +25398,25 @@ Quaterniond new_targetOrientation = new Quaterniond(targetOrientation);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_spring = new Vec3d(spring);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_spring);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) spring);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_spring);
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) spring);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_spring);
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) spring);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_spring = new Vec3d(spring);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_spring);
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) spring);
 						});
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_spring);
-	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_spring);
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) spring);
+	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) spring);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) spring);
 	    SprExport.Spr_PHSpringIf_SetSpring((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) spring);
@@ -25553,27 +25453,25 @@ Vec3d new_spring = new Vec3d(spring);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_damper = new Vec3d(damper);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_damper);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) damper);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_damper);
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) damper);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_damper);
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) damper);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_damper = new Vec3d(damper);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_damper);
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) damper);
 						});
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_damper);
-	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_damper);
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) damper);
+	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) damper);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) damper);
 	    SprExport.Spr_PHSpringIf_SetDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) damper);
@@ -25610,27 +25508,25 @@ Vec3d new_damper = new Vec3d(damper);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_secondDamper = new Vec3d(secondDamper);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_secondDamper);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) secondDamper);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_secondDamper);
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) secondDamper);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_secondDamper);
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) secondDamper);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_secondDamper = new Vec3d(secondDamper);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_secondDamper);
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) secondDamper);
 						});
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_secondDamper);
-	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_secondDamper);
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) secondDamper);
+	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) secondDamper);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) secondDamper);
 	    SprExport.Spr_PHSpringIf_SetSecondDamper((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) secondDamper);
@@ -25932,27 +25828,25 @@ Vec3d new_secondDamper = new Vec3d(secondDamper);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_secondMoment = new Vec3d(secondMoment);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_secondMoment);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) secondMoment);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_secondMoment);
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) secondMoment);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_secondMoment);
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) secondMoment);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_secondMoment = new Vec3d(secondMoment);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_secondMoment);
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) secondMoment);
 						});
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_secondMoment);
-	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_secondMoment);
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) secondMoment);
+	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) secondMoment);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) secondMoment);
 	    SprExport.Spr_PHSpringIf_SetSecondMoment((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) secondMoment);
@@ -26009,27 +25903,25 @@ Vec3d new_secondMoment = new Vec3d(secondMoment);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec6d new_offsetForce = new Vec6d(offsetForce);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_offsetForce);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) offsetForce);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_offsetForce);
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) offsetForce);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_offsetForce);
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) offsetForce);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec6d new_offsetForce = new Vec6d(offsetForce);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_offsetForce);
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) offsetForce);
 						});
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_offsetForce);
-	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_offsetForce);
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) offsetForce);
+	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) offsetForce);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) offsetForce);
 	    SprExport.Spr_PHSpringIf_SetOffsetForce((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) offsetForce);
@@ -26046,27 +25938,25 @@ Vec6d new_offsetForce = new Vec6d(offsetForce);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec6d new_targetVelocity = new Vec6d(targetVelocity);
-// intrinsic
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_targetVelocity);
+// IfClass
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetVelocity);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetVelocity);
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetVelocity);
 					},
 					() => {
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetVelocity);
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) targetVelocity);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec6d new_targetVelocity = new Vec6d(targetVelocity);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_targetVelocity);
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetVelocity);
 						});
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_targetVelocity);
-	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_targetVelocity);
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetVelocity);
+	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) targetVelocity);
 					} else {
 	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) targetVelocity);
 	    SprExport.Spr_PHSpringIf_SetTargetVelocity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) targetVelocity);
@@ -29270,28 +29160,26 @@ Vec2d new_range = new Vec2d(range);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3f new_vts = new Vec3f(vts);
-// intrinsic
-	    char retStep = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
+// IfClass
+	    char retStep = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) vts, (int) vtsNum, (float) pSize);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
+	    char retBuffer = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) vts, (int) vtsNum, (float) pSize);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
+	    char retGet = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) vts, (int) vtsNum, (float) pSize);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3f new_vts = new Vec3f(vts);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
+	    char retStep = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) vts, (int) vtsNum, (float) pSize);
 						});
-	    char retBuffer = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
-	    char retGet = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_vts, (int) vtsNum, (float) pSize);
+	    char retBuffer = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) vts, (int) vtsNum, (float) pSize);
+	    char retGet = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) vts, (int) vtsNum, (float) pSize);
 	    return (retGet == 0) ? false : true;
 					} else {
 	    char retStep = SprExport.Spr_PHOpObjIf_initialPHOpObj((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) vts, (int) vtsNum, (float) pSize);
@@ -31383,27 +31271,25 @@ Vec3f new_force = new Vec3f(force);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_ori = new Vec3d(ori);
-// intrinsic
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ori);
+// IfClass
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ori);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ori);
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ori);
 					},
 					() => {
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ori);
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ori);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_ori = new Vec3d(ori);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ori);
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ori);
 						});
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ori);
-	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ori);
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ori);
+	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ori);
 					} else {
 	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ori);
 	    SprExport.Spr_PHRayIf_SetOrigin((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ori);
@@ -31440,27 +31326,25 @@ Vec3d new_ori = new Vec3d(ori);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_dir = new Vec3d(dir);
-// intrinsic
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_dir);
+// IfClass
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) dir);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_dir);
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) dir);
 					},
 					() => {
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_dir);
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) dir);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_dir = new Vec3d(dir);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_dir);
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) dir);
 						});
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_dir);
-	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_dir);
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) dir);
+	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) dir);
 					} else {
 	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) dir);
 	    SprExport.Spr_PHRayIf_SetDirection((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) dir);
@@ -31636,15 +31520,14 @@ Vec3d new_dir = new Vec3d(dir);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidDesc new_desc = new PHSolidDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptrStep, phSceneIf.sceneForStep);
@@ -31661,13 +31544,12 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidDesc new_desc = new PHSolidDesc(desc);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
@@ -31830,17 +31712,17 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-	    int resultStep = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s);
+	    int resultStep = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) s._thisArray[phSceneIf.sceneForStep]);
 	    return resultStep;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isGetFunctionCalledInSubThread = true;
-	    int resultGet = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) s);
+	    int resultGet = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) s._thisArray[phSceneIf.sceneForGet]);
 	    return resultGet;
 				}
 			}
 		} else {
-	    int result = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[0], (IntPtr) s);
+	    int result = (int) SprExport.Spr_PHSceneIf_GetSolidIndex((IntPtr) _thisArray[0], (IntPtr) s._thisArray[0]);
 	    return result;
 		}
 		throw new InvalidOperationException();
@@ -31934,21 +31816,21 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs, (bool) bSwap);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (bool) bSwap);
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrStep, 0);
             return obj;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isGetFunctionCalledInSubThread = true;
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs, (bool) bSwap);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (bool) bSwap);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptrGet, 0);
             return obj;
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs, (bool) bSwap);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_GetSolidPair_1((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0], (bool) bSwap);
             if (ptr == IntPtr.Zero) { return null; } 
             PHSolidPairForLCPIf obj = new PHSolidPairForLCPIf(ptr, 0);
             return obj;
@@ -31960,33 +31842,29 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_lhs = lhs;
-// intrinsic
-PHSolidIf new_rhs = rhs;
-// intrinsic
+// IfClass
+// IfClass
 // is_struct
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
+// IfClass
+// IfClass
 // is_struct
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) new_rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (int) mode);
 					} else {
 	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (int) mode);
 	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (int) mode);
@@ -31995,7 +31873,7 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 				}
 			}
 		} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0], (int) mode);
 		}
 	}
 	public void SetContactMode(PHSolidIf lhs, PHSolidIf rhs) {
@@ -32003,40 +31881,36 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs);
+// IfClass
+// IfClass
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_lhs = new PHSolidIf(lhs);
-// intrinsic
-PHSolidIf new_rhs = new PHSolidIf(rhs);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs);
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs);
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs);
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
+	    SprExport.Spr_PHSceneIf_SetContactMode_1((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0]);
 		}
 	}
 	public void SetContactMode(PHSolidIf group, ulong length, PHSceneDesc.ContactMode mode) {
@@ -32044,38 +31918,36 @@ PHSolidIf new_rhs = new PHSolidIf(rhs);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_group = new PHSolidIf(group);
-// intrinsic
+// IfClass
 // is_struct
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group._thisArray[phSceneIf.sceneForStep], (ulong) length, (int) mode);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group._thisArray[phSceneIf.sceneForBuffer], (ulong) length, (int) mode);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group._thisArray[phSceneIf.sceneForGet], (ulong) length, (int) mode);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_group = new PHSolidIf(group);
-// intrinsic
+// IfClass
 // is_struct
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group._thisArray[phSceneIf.sceneForStep], (ulong) length, (int) mode);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_group, (ulong) length, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group._thisArray[phSceneIf.sceneForBuffer], (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group._thisArray[phSceneIf.sceneForGet], (ulong) length, (int) mode);
 					} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group, (ulong) length, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group, (ulong) length, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group._thisArray[phSceneIf.sceneForStep], (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group._thisArray[phSceneIf.sceneForBuffer], (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group._thisArray[phSceneIf.sceneForGet], (ulong) length, (int) mode);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[0], (IntPtr) group, (ulong) length, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_2((IntPtr) _thisArray[0], (IntPtr) group._thisArray[0], (ulong) length, (int) mode);
 		}
 	}
 	public void SetContactMode(PHSolidIf group, ulong length) {
@@ -32083,36 +31955,34 @@ PHSolidIf new_group = new PHSolidIf(group);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_group = new PHSolidIf(group);
-// intrinsic
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_group, (ulong) length);
+// IfClass
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group._thisArray[phSceneIf.sceneForStep], (ulong) length);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group._thisArray[phSceneIf.sceneForBuffer], (ulong) length);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group._thisArray[phSceneIf.sceneForGet], (ulong) length);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_group = new PHSolidIf(group);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group._thisArray[phSceneIf.sceneForStep], (ulong) length);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_group, (ulong) length);
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group._thisArray[phSceneIf.sceneForBuffer], (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group._thisArray[phSceneIf.sceneForGet], (ulong) length);
 					} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group, (ulong) length);
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group, (ulong) length);
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) group._thisArray[phSceneIf.sceneForStep], (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) group._thisArray[phSceneIf.sceneForBuffer], (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) group._thisArray[phSceneIf.sceneForGet], (ulong) length);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[0], (IntPtr) group, (ulong) length);
+	    SprExport.Spr_PHSceneIf_SetContactMode_3((IntPtr) _thisArray[0], (IntPtr) group._thisArray[0], (ulong) length);
 		}
 	}
 	public void SetContactMode(PHSolidIf solid, PHSceneDesc.ContactMode mode) {
@@ -32120,38 +31990,36 @@ PHSolidIf new_group = new PHSolidIf(group);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 // is_struct
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep], (int) mode);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer], (int) mode);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet], (int) mode);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 // is_struct
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep], (int) mode);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet], (int) mode);
 					} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid, (int) mode);
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer], (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet], (int) mode);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[0], (IntPtr) solid, (int) mode);
+	    SprExport.Spr_PHSceneIf_SetContactMode_4((IntPtr) _thisArray[0], (IntPtr) solid._thisArray[0], (int) mode);
 		}
 	}
 	public void SetContactMode(PHSolidIf solid) {
@@ -32159,36 +32027,34 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+// IfClass
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid);
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid);
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[0], (IntPtr) solid);
+	    SprExport.Spr_PHSceneIf_SetContactMode_5((IntPtr) _thisArray[0], (IntPtr) solid._thisArray[0]);
 		}
 	}
 	public void SetContactMode(PHSceneDesc.ContactMode mode) {
@@ -32629,17 +32495,15 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_root = new PHSolidIf(root);
-// intrinsic
-PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_root, (IntPtr) new_desc);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_root, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_root, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrStep, phSceneIf.sceneForStep);
@@ -32652,22 +32516,20 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_root = new PHSolidIf(root);
-// intrinsic
-PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_root, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_root, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_root, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root, (IntPtr) desc);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root, (IntPtr) desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root, (IntPtr) desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -32675,7 +32537,7 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[0], (IntPtr) root, (IntPtr) desc);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[0], (IntPtr) root._thisArray[0], (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptr, 0);
             return obj;
@@ -32687,15 +32549,14 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_root = new PHSolidIf(root);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_root);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_root);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_root);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrStep, phSceneIf.sceneForStep);
@@ -32708,20 +32569,19 @@ PHSolidIf new_root = new PHSolidIf(root);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_root = new PHSolidIf(root);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_root);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_root);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_root);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -32729,7 +32589,7 @@ PHSolidIf new_root = new PHSolidIf(root);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[0], (IntPtr) root);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[0], (IntPtr) root._thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptr, 0);
             return obj;
@@ -32787,19 +32647,16 @@ PHSolidIf new_root = new PHSolidIf(root);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHTreeNodeIf new_parent = new PHTreeNodeIf(parent);
-// intrinsic
-PHSolidIf new_child = new PHSolidIf(child);
-// intrinsic
-PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent, (IntPtr) new_child, (IntPtr) new_desc);
+// IfClass
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent, (IntPtr) new_child, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent, (IntPtr) new_child, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrStep, phSceneIf.sceneForStep);
@@ -32844,17 +32701,14 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHTreeNodeIf new_parent = new PHTreeNodeIf(parent);
-// intrinsic
-PHSolidIf new_child = new PHSolidIf(child);
-// intrinsic
-PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent, (IntPtr) new_child, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent, (IntPtr) new_child, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent, (IntPtr) new_child, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
@@ -32891,9 +32745,9 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             }
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent, (IntPtr) child, (IntPtr) desc);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent, (IntPtr) child, (IntPtr) desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent, (IntPtr) child, (IntPtr) desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
@@ -32933,7 +32787,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[0], (IntPtr) parent, (IntPtr) child, (IntPtr) desc);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[0], (IntPtr) parent._thisArray[0], (IntPtr) child._thisArray[0], (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptr, 0);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
@@ -32977,17 +32831,15 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHTreeNodeIf new_parent = new PHTreeNodeIf(parent);
-// intrinsic
-PHSolidIf new_child = new PHSolidIf(child);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent, (IntPtr) new_child);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent, (IntPtr) new_child);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent, (IntPtr) new_child);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrStep, phSceneIf.sceneForStep);
@@ -33032,15 +32884,13 @@ PHSolidIf new_child = new PHSolidIf(child);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHTreeNodeIf new_parent = new PHTreeNodeIf(parent);
-// intrinsic
-PHSolidIf new_child = new PHSolidIf(child);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent, (IntPtr) new_child);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent, (IntPtr) new_child);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent, (IntPtr) new_child);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
@@ -33077,9 +32927,9 @@ PHSolidIf new_child = new PHSolidIf(child);
             }
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent, (IntPtr) child);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent, (IntPtr) child);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent, (IntPtr) child);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
@@ -33119,7 +32969,7 @@ PHSolidIf new_child = new PHSolidIf(child);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[0], (IntPtr) parent, (IntPtr) child);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[0], (IntPtr) parent._thisArray[0], (IntPtr) child._thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptr, 0);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
@@ -33163,15 +33013,14 @@ PHSolidIf new_child = new PHSolidIf(child);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrStep, phSceneIf.sceneForStep);
@@ -33184,20 +33033,19 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -33205,7 +33053,7 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[0], (IntPtr) solid);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[0], (IntPtr) solid._thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptr, 0);
             return obj;
@@ -33217,19 +33065,16 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PH1DJointIf new_lhs = new PH1DJointIf(lhs);
-// intrinsic
-PH1DJointIf new_rhs = new PH1DJointIf(rhs);
-// intrinsic
-PHGearDesc new_desc = new PHGearDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_desc);
+// IfClass
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrStep, phSceneIf.sceneForStep);
@@ -33242,24 +33087,21 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PH1DJointIf new_lhs = new PH1DJointIf(lhs);
-// intrinsic
-PH1DJointIf new_rhs = new PH1DJointIf(rhs);
-// intrinsic
-PHGearDesc new_desc = new PHGearDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) desc);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -33267,7 +33109,7 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs, (IntPtr) desc);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0], (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptr, 0);
             return obj;
@@ -33279,17 +33121,15 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PH1DJointIf new_lhs = new PH1DJointIf(lhs);
-// intrinsic
-PH1DJointIf new_rhs = new PH1DJointIf(rhs);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrStep, phSceneIf.sceneForStep);
@@ -33302,22 +33142,20 @@ PH1DJointIf new_rhs = new PH1DJointIf(rhs);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PH1DJointIf new_lhs = new PH1DJointIf(lhs);
-// intrinsic
-PH1DJointIf new_rhs = new PH1DJointIf(rhs);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_lhs, (IntPtr) new_rhs);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_lhs, (IntPtr) new_rhs);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs, (IntPtr) rhs);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs, (IntPtr) rhs);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -33325,7 +33163,7 @@ PH1DJointIf new_rhs = new PH1DJointIf(rhs);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[0], (IntPtr) lhs, (IntPtr) rhs);
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptr, 0);
             return obj;
@@ -33383,15 +33221,14 @@ PH1DJointIf new_rhs = new PH1DJointIf(rhs);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHPathDesc new_desc = new PHPathDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHPathIf obj = new PHPathIf(ptrStep, phSceneIf.sceneForStep);
@@ -33404,13 +33241,12 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHPathDesc new_desc = new PHPathDesc(desc);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHPathIf obj = new PHPathIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
@@ -33533,15 +33369,14 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHRayDesc new_desc = new PHRayDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHRayIf obj = new PHRayIf(ptrStep, phSceneIf.sceneForStep);
@@ -33554,13 +33389,12 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHRayDesc new_desc = new PHRayDesc(desc);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRayIf obj = new PHRayIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
@@ -33683,39 +33517,37 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_base_ = new PHSolidIf(base_);
-// intrinsic
-	    char retStep = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_base_);
+// IfClass
+	    char retStep = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) base_._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    char retBuffer = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_base_);
+	    char retBuffer = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) base_._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    char retGet = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_base_);
+	    char retGet = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) base_._thisArray[phSceneIf.sceneForGet]);
 				});
 	    return (retStep == 0) ? false : true;
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_base_ = new PHSolidIf(base_);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    char retStep = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_base_);
+	    char retStep = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) base_._thisArray[phSceneIf.sceneForStep]);
 						});
-	    char retBuffer = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_base_);
-	    char retGet = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_base_);
+	    char retBuffer = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) base_._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) base_._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					} else {
-	    char retStep = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) base_);
-	    char retBuffer = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) base_);
-	    char retGet = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) base_);
+	    char retStep = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) base_._thisArray[phSceneIf.sceneForStep]);
+	    char retBuffer = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) base_._thisArray[phSceneIf.sceneForBuffer]);
+	    char retGet = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) base_._thisArray[phSceneIf.sceneForGet]);
 	    return (retGet == 0) ? false : true;
 					}
 				}
 			}
 		} else {
-	    char ret = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[0], (IntPtr) base_);
+	    char ret = SprExport.Spr_PHSceneIf_SetPosesOfJointedSolids((IntPtr) _thisArray[0], (IntPtr) base_._thisArray[0]);
 	    return (ret == 0) ? false : true;
 		}
 		throw new InvalidOperationException();
@@ -33725,17 +33557,15 @@ PHSolidIf new_base_ = new PHSolidIf(base_);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptrStep, phSceneIf.sceneForStep);
@@ -33760,15 +33590,13 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
@@ -33831,15 +33659,14 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptrStep, phSceneIf.sceneForStep);
@@ -33864,13 +33691,12 @@ IfInfo new_ii = new IfInfo(ii);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-IfInfo new_ii = new IfInfo(ii);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_ii);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_ii);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_ii);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet, phSceneIf.sceneForGet);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
@@ -34015,15 +33841,14 @@ IfInfo new_ii = new IfInfo(ii);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrStep, phSceneIf.sceneForStep);
@@ -34036,13 +33861,12 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
@@ -34211,15 +34035,14 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHSkeletonIf obj = new PHSkeletonIf(ptrStep, 0);
@@ -34232,13 +34055,12 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSkeletonIf obj = new PHSkeletonIf(ptrGet, 0);
             return obj;
@@ -34494,27 +34316,25 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-Vec3d new_accel = new Vec3d(accel);
-// intrinsic
-	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_accel);
+// IfClass
+	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) accel);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_accel);
+	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) accel);
 					},
 					() => {
-	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_accel);
+	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) accel);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-Vec3d new_accel = new Vec3d(accel);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_accel);
+	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) accel);
 						});
-	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_accel);
-	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_accel);
+	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) accel);
+	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) accel);
 					} else {
 	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) accel);
 	    SprExport.Spr_PHSceneIf_SetGravity((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) accel);
@@ -36150,7 +35970,7 @@ Vec3f new_extent = new Vec3f(extent);
             return obj;
 	}
 	public void MergeScene(PHSceneIf scene0, PHSceneIf scene1) {
-	    SprExport.Spr_PHSdkIf_MergeScene((IntPtr) _thisArray[0], (IntPtr) scene0, (IntPtr) scene1);
+	    SprExport.Spr_PHSdkIf_MergeScene((IntPtr) _thisArray[0], (IntPtr) scene0._thisArray[0], (IntPtr) scene1._thisArray[0]);
 	}
 	public CDShapeIf CreateShape(IfInfo ii, CDShapeDesc desc) {
 	    IntPtr ptr = SprExport.Spr_PHSdkIf_CreateShape((IntPtr) _thisArray[0], (IntPtr) ii, (IntPtr) desc);
@@ -36223,36 +36043,34 @@ Vec3f new_extent = new Vec3f(extent);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+// IfClass
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid);
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid);
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid);
+	    SprExport.Spr_PHBoneIf_SetSolid((IntPtr) _thisArray[0], (IntPtr) solid._thisArray[0]);
 		}
 	}
 	public PHSolidIf GetSolid() {
@@ -36298,36 +36116,34 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+// IfClass
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHSolidIf new_solid = new PHSolidIf(solid);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_solid);
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_solid);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid);
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid);
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[0], (IntPtr) solid);
+	    SprExport.Spr_PHBoneIf_SetProxySolid((IntPtr) _thisArray[0], (IntPtr) solid._thisArray[0]);
 		}
 	}
 	public PHSolidIf GetProxySolid() {
@@ -36373,36 +36189,34 @@ PHSolidIf new_solid = new PHSolidIf(solid);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHJointIf new_joint = new PHJointIf(joint);
-// intrinsic
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+// IfClass
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHJointIf new_joint = new PHJointIf(joint);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_joint);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_joint);
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_joint);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint);
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint);
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) joint._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) joint._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) joint._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint);
+	    SprExport.Spr_PHBoneIf_SetJoint((IntPtr) _thisArray[0], (IntPtr) joint._thisArray[0]);
 		}
 	}
 	public PHJointIf GetJoint() {
@@ -36604,36 +36418,34 @@ PHJointIf new_joint = new PHJointIf(joint);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHBoneIf new_parent = new PHBoneIf(parent);
-// intrinsic
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent);
+// IfClass
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
 				});
 			} else if (currentThread == phSceneIf.subThread) {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHBoneIf new_parent = new PHBoneIf(parent);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
 						});
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent);
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
 					} else {
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent);
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent);
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
 					}
 				}
 			}
 		} else {
-	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[0], (IntPtr) parent);
+	    SprExport.Spr_PHBoneIf_SetParent((IntPtr) _thisArray[0], (IntPtr) parent._thisArray[0]);
 		}
 	}
 	public PHBoneIf GetParent() {
@@ -36869,17 +36681,15 @@ Vec3d new_pos = new Vec3d(pos);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHBoneIf new_parent = new PHBoneIf(parent);
-// intrinsic
-PHBoneDesc new_desc = new PHBoneDesc(desc);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent, (IntPtr) new_desc);
+// IfClass
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrStep, phSceneIf.sceneForStep);
@@ -36892,22 +36702,20 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHBoneIf new_parent = new PHBoneIf(parent);
-// intrinsic
-PHBoneDesc new_desc = new PHBoneDesc(desc);
-// intrinsic
+// IfClass
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent, (IntPtr) new_desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent, (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent, (IntPtr) new_desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent, (IntPtr) desc);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent, (IntPtr) desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent, (IntPtr) desc);
+	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -36915,7 +36723,7 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[0], (IntPtr) parent, (IntPtr) desc);
+	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[0], (IntPtr) parent._thisArray[0], (IntPtr) desc);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr, 0);
             return obj;
@@ -36927,15 +36735,14 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-PHBoneIf new_parent = new PHBoneIf(parent);
-// intrinsic
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent);
+// IfClass
+	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
 					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
 					},
 					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent);
+	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
 				});
             if (ptrStep == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrStep, phSceneIf.sceneForStep);
@@ -36948,20 +36755,19 @@ PHBoneIf new_parent = new PHBoneIf(parent);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-PHBoneIf new_parent = new PHBoneIf(parent);
-// intrinsic
+// IfClass
 						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_parent);
+	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
 						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_parent);
-	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_parent);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrGet, phSceneIf.sceneForGet);
             return obj;
 					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent);
-	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent);
+	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
+	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
             return obj;
@@ -36969,7 +36775,7 @@ PHBoneIf new_parent = new PHBoneIf(parent);
 				}
 			}
 		} else {
-	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[0], (IntPtr) parent);
+	    IntPtr ptr = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[0], (IntPtr) parent._thisArray[0]);
             if (ptr == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptr, 0);
             return obj;
