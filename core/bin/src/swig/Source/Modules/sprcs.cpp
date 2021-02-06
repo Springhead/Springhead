@@ -1795,8 +1795,11 @@ public:
 				//Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
 				Printf(CS, "// function\n");
 			}
-			else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
-				// struct
+			else if (ai.is_struct && !ai.is_pointer /*&& !ai.is_reference*/) {
+				// struct(Vec3d,Posedなど)
+				// Descクラス
+				// ai.is_struct:true is_pointer:false is_notpointer:true の場合、Descクラスらしい
+				// ai.is_struct:true is_pointer:true is_notpointer:false の場合、Ifクラスらしい
 				if(FindNodeByAttrR(topnode, "enumtype", ai.type) == NULL){ // enum以外(ai.is_enumはenumでもTrueだった)
 					Printf(CS, "%s %s = new %s(%s);\n", cs_qualified_name(ai.uq_type), callback_argname, cs_qualified_name(ai.uq_type), csname);
 					Printf(CS, "// NewArgument equal %d %d\n", sizeof(argnames[j]), sizeof(callback_argname));
