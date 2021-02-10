@@ -7,6 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class Error (Ver 3.0).
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 sys.path.append('..')

@@ -24,18 +24,19 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/11/06 F.Kanehori	Release version.
-#	Ver 1.1  2017/01/11 F.Kanehori	Interface changed: read()
+#     Ver 1.00   2016/11/06 F.Kanehori	Release version.
+#     Ver 1.01   2017/01/11 F.Kanehori	Interface changed: read()
 #					Added: writeline()
-#	Ver 1.2  2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
-#	Ver 1.3  2017/04/06 F.Kanehori	Newline code depends os.
-#	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
-#	Ver 2.1  2017/09/13 F.Kanehori	Add flush().
-#	Ver 2.2  2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
-#	Ver 2.21 2018/02/22 F.Kanehori	writeline(): allow line=None.
-#	Ver 2.22 2018/03/12 F.Kanehori	Now OK for doxygen.
-#	Ver 2.23 2018/04/05 F.Kanehori	Bug fixed.
-#	Ver 2.24 2018/04/12 F.Kanehori	Bug fixed (encoding: utf-16).
+#     Ver 1.02   2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
+#     Ver 1.03   2017/04/06 F.Kanehori	Newline code depends os.
+#     Ver 2.00   2017/04/10 F.Kanehori	Ported to unix.
+#     Ver 2.01   2017/09/13 F.Kanehori	Add flush().
+#     Ver 2.02   2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
+#     Ver 2.02.1 2018/02/22 F.Kanehori	writeline(): allow line=None.
+#     Ver 2.02.2 2018/03/12 F.Kanehori	Now OK for doxygen.
+#     Ver 2.02.3 2018/04/05 F.Kanehori	Bug fixed.
+#     Ver 2.02.4 2018/04/12 F.Kanehori	Bug fixed (encoding: utf-16).
+#     Ver 2.03   2021/02/08 F.Kanehori	Can run on python 2.7.
 # ======================================================================
 import sys
 import io
@@ -110,9 +111,14 @@ class TextFio(Fio):
 		     nl=None, verbose=0):
 		#
 		self.clsname = self.__class__.__name__
-		self.version = 2.2
+		self.version = 2.03
 		#
-		super().__init__(path, mode, verbose=verbose)
+		self.major = sys.version_info[0]
+		#
+		if self.major >= 3:
+			super().__init__(path, mode, verbose=verbose)
+		else:
+			super(TextFio, self).__init__(path, mode, verbose)
 		self.mode = mode	# override
 		self.encoding = encoding
 		self.size = size
@@ -137,8 +143,12 @@ class TextFio(Fio):
 		if self.mode == 'r':
 			# encoding check (decode) requires 'bytes' type
 			self.mode = 'rb'
-		status = super().open(encoding=self.encoding)
+		if self.major >= 3:
+			status = super().open(encoding=self.encoding)
+		else:
+			status = super(TextFio, self).open(self.encoding)
 		self.mode = org_mode
+		# self.obj is set by super.open()
 		if status < 0:
 			return status
 		#
@@ -200,8 +210,9 @@ class TextFio(Fio):
 			data = self.obj.read()
 			if isinstance(data, str):
 				# case: system stream
-				data = data.encode(self.encoding)
-				need_decode = False
+				if Util.is_windows():
+					data = data.encode(self.encoding)
+					need_decode = False
 		except IOError as err:
 			msg = 'file read error: "%s" (line %d)\n%s' \
 					% (self.path, count, err)
@@ -365,7 +376,7 @@ class TextFio(Fio):
 	#
 	def __check_encoding(self):
 		lookup = ['iso-2022-jp', 'ascii', 'euc-jp', 'unicode',
-			  'utf-8', 'utf-16-le', 'utf-16-be', 'cp932']
+			  'utf-8', 'cp932', 'utf-16-le', 'utf-16-be']
 		try:
 			f = open(self.path, 'rb')
 			data = f.read(self.size)
@@ -383,7 +394,10 @@ class TextFio(Fio):
 		#
 		if encoding == 'utf-8':
 			# check if with BOM
-			f = open(self.path, encoding=encoding)
+			if self.major >= 3:
+				f = open(self.path, encoding=encoding)
+			else:
+				f = open(self.path, 'r')
 			line = f.readline()
 			f.close()
 			if line[0] == 'ufeff':

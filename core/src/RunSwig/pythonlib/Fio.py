@@ -10,12 +10,13 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/11/06 F.Kanehori	Release version.
-#	Ver 1.1  2017/01/11 F.Kanehori	Rewrite method: open().
-#	Ver 1.2  2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
-#	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
-#	Ver 2.01 2017/09/08 F.Kanehori	Some subtle change.
-#	Ver 2.02 2018/03/12 F.Kanehori	Now OK for doxygen.
+#     Ver 1.00   2016/11/06 F.Kanehori	Release version.
+#     Ver 1.01   2017/01/11 F.Kanehori	Rewrite method: open().
+#     Ver 1.02   2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
+#     Ver 2.00   2017/04/10 F.Kanehori	Ported to unix.
+#     Ver 2.00.1 2017/09/08 F.Kanehori	Some subtle change.
+#     Ver 2.00.2 2018/03/12 F.Kanehori	Now OK for doxygen.
+#     Ver 2.01   2021/02/08 F.Kanehori	Can run on python 2.7.
 # ======================================================================
 import sys
 import os
@@ -23,7 +24,7 @@ import io
 
 ##  Base class for file input/output.
 #
-class Fio:
+class Fio(object):
 	##  The initializer.
 	#   @param path		File path to open (str)
 	#			or system stream object
@@ -45,6 +46,8 @@ class Fio:
 		self.obj = None		# file object
 		self.opened = False
 		self.errmsg = None
+		#
+		self.major = sys.version_info[0]
 
 	##  Open the the file.
 	#   @param encoding	Character encoding (text file, write open only).
@@ -73,7 +76,10 @@ class Fio:
 			self.close()
 			self.opened = False
 		try:
-			self.obj = open(path, mode, encoding=encoding)
+			if self.major >= 3:
+				self.obj = open(path, mode, encoding=encoding)
+			else:
+				self.obj = open(path, mode)
 			self.opened = True
 			status = 0
 		except IOError as err:

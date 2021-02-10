@@ -16,13 +16,15 @@
 #	
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/06/13 F.Kanehori	Release version.
-#	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
-#	Ver 3.0  2017/12/06 F.Kanehori	Section construction introduced.
-#	Ver 3.1  2018/02/05 F.Kanehori	Bug fixed.
-#	Ver 3.11 2018/03/12 F.Kanehori	Now OK for doxygen.
-#	Ver 3.12 2018/05/07 F.Kanehori	Bug fixed.
+#     Ver 1.00   2016/06/13 F.Kanehori	Release version.
+#     Ver 2.00   2017/04/10 F.Kanehori	Ported to unix.
+#     Ver 3.00   2017/12/06 F.Kanehori	Section construction introduced.
+#     Ver 3.01   2018/02/05 F.Kanehori	Bug fixed.
+#     Ver 3.01.1 2018/03/12 F.Kanehori	Now OK for doxygen.
+#     Ver 3.01.2 2018/05/07 F.Kanehori	Bug fixed.
+#     Ver 3.02   2021/02/10 F.Kanehori	Can run on python 2.7.
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 import re

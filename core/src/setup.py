@@ -50,6 +50,9 @@ import sys
 import os
 import platform
 import shutil
+import glob
+import stat
+import subprocess
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -68,6 +71,7 @@ if not os.path.exists('./RunSwig/pythonlib'):
 	print('%s: please invoke this at ".../core/src"' % prog)
 	sys.exit(1)
 sys.path.append('./RunSwig/pythonlib')
+from Proc import *
 from TextFio import *
 from SetupFile import *
 from Error import *
@@ -106,9 +110,81 @@ def has_nkf():
 def get_path(name):
 	return progs[name] if name in progs else None
 
-version_save = version
-from setup_helpers import *
-version = version_save
+# ----------------------------------------------
+#  コマンドを実行してその出力を得る
+#
+def execute(cmnd, timeout=None, stdout=Proc.PIPE, stderr=Proc.NULL):
+        # execute command
+        proc = Proc().execute(cmnd, stdout=stdout,
+                                    stderr=stderr, shell=True)
+        # get output
+        if stdout == Proc.PIPE:
+                status, out, err = proc.output(timeout)
+        else:
+                status = proc.wait(timeout=timeout)
+                out = ''
+        return status, out
+
+# ----------------------------------------------
+#  簡易grep
+#
+def match(lines, patt, first=False, flags=0):
+        matches = []
+        for line in lines:
+                m = re.search(patt, line, flags)
+                if m:
+                        matches.append(m.group(1))
+        if matches == []:
+                matches = None
+        elif first:
+                matches = matches[0]
+        return matches
+
+# ----------------------------------------------
+#  バージョン 3 以上の python を見つける
+#
+def try_find_newer_python():
+	candidates = ['/usr/local/bin']
+	found = []
+	cwd = os.getcwd()
+	for dir in candidates:
+		os.chdir(dir)
+		files = glob.glob('python*')
+		for f in files:
+			e_ok = os.path.isfile(f) and os.access(f, os.X_OK)
+			if not e_ok:
+				continue
+			found.append('%s/%s' % (dir, f))
+			break
+		os.chdir(cwd)
+	if found == []:
+		# not found
+		return 0, 0, 0, None
+
+	ver_patt = r'Python ([\d\.]+)'
+	major = 0
+	minor = 0
+	micro = 0
+	for candidate in found:
+		print('   try %s' % candidate)
+		cmnd = '%s --version' % candidate
+		proc = subprocess.Popen(cmnd,
+					stdout=subprocess.PIPE,
+					stderr=subprocess.STDOUT,
+					shell=True)
+		try:
+			out, err = proc.communicate()
+			status = 0
+		except:
+			proc.kill()
+			status = 1
+		if status != 0:
+			continue
+		ver = match(out.split('\n'), ver_patt, True, re.I)
+		major, minor, micro = ver.split('.')
+		if major >= 3:
+			break
+	return major, minor, micro, candidate
 
 # ----------------------------------------------------------------------
 #  Options
@@ -182,10 +258,28 @@ if Force:
 sys.stdout.write('-- checking python ... ')
 (major, minor, micro, release, serial) = sys.version_info
 if major < 3:
-	abort('python version 3 or greater is required.')
+	sys.stdout.write('\n   older version found')
+	if is_unix:
+		print(' ... try to find newer one ... ')
+		major, minor, micro, path = try_find_newer_python()
+		if major < 3:
+			E.abort('python version 3 or greater is required.')
+		#cmnd = '%s, %s' % (path, path, ', '.join(sys.argv))
+		#print('CMND: %s' % cmnd)
+		child_pid = os.fork()
+		os.execv(path, [path]+sys.argv)
+		#os.waitpid(child_pid)
+		sys.exit(0)
+
+print()
+version_save = version
+from setup_helpers import *
+version = version_save
+
 out, ver = try_find(which, 'python', os.path.abspath(python_path))
 if out == SetupFile.NOTFOUND:
-	abort("pan: can't find python's path.")
+	print()
+	E.abort("can't find python's path.", prompt='Pan')
 print('found (version %s)' % ver)
 progs['python'] = U.pathconv(out.strip())
 versions['python'] = ver

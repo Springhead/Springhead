@@ -17,15 +17,17 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2017/08/20 F.Kanehori	First version.
-#	Ver 1.1  2017/09/11 F.Kanehori	Aargument 'dry_run' added.
-#	Ver 1.2  2017/09/11 F.Kanehori	Implement move() for unix.
-#	Ver 1.3  2017/10/23 F.Kanehori	Add argument to ls().
-#	Ver 1.4  2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
-#	Ver 1.5  2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
-#	Ver 1.6  2018/03/14 F.Kanehori	Dealt with new Error class.
-#	Ver 1.7  2018/04/19 F.Kanehori	New edition of ls().
+#     Ver 1.00   2017/08/20 F.Kanehori	First version.
+#     Ver 1.01   2017/09/11 F.Kanehori	Aargument 'dry_run' added.
+#     Ver 1.02   2017/09/11 F.Kanehori	Implement move() for unix.
+#     Ver 1.03   2017/10/23 F.Kanehori	Add argument to ls().
+#     Ver 1.04   2018/03/01 F.Kanehori	Rewrite cp/mv/rm using shutil.
+#     Ver 1.05   2018/03/05 F.Kanehori	Add mkdir()/rmdir()/makedirs().
+#     Ver 1.06   2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.07   2018/04/19 F.Kanehori	New edition of ls().
+#     Ver 1.08   2021/02/04 F.Kanehori	Can run on python 2.7.
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 import datetime
@@ -34,8 +36,9 @@ import glob
 import shutil
 import math
 import re
-from pathlib import Path
+#from pathlib import Path
 from time import sleep
+from stat import *
 
 sys.path.append('/usr/local/lib')
 from Util import *
@@ -54,11 +57,13 @@ class FileOp:
 	#
 	def __init__(self, info=0, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.51
+		self.version = 1.08
 		#
 		self.info = info
 		self.dry_run = dry_run
 		self.verbose = verbose
+		#
+		self.major = sys.version_info[0]
 
 	##  Unix like copy (cp) command.
 	#   @param src		Source file path (str).
@@ -204,18 +209,27 @@ class FileOp:
 		if not no_create:
 			flags |= os.O_CREAT
 		try:
-			fd = os.open(path, flags=flags, mode=mode)
+			#fd = os.open(path, flags=flags, mode=mode)
+			fd = os.open(path, flags, mode)
 		except:
 			if no_create:
 				return 0
 			return 1
 		#
-		ns_atime, ns_mtime = self.__time_to_set()
 		if not isinstance(fd, int):
 			fd = fd.fileno()
-		fn = fd if os.utime in os.supports_fd else path
-		ns = (ns_atime, ns_mtime)
-		os.utime(fn, ns=ns)
+		ns_atime, ns_mtime = self.__time_to_set()
+		#ns = (ns_atime, ns_mtime)
+		if self.major >= 3:
+			fn = fd if os.utime in os.supports_fd else path
+			ns = (ns_atime, ns_mtime)
+			os.utime(fn, ns=ns)
+		else:
+			fn = path
+			ns_atime = (ns_atime // 1000000000) - 9*60*60
+			ns_mtime = (ns_mtime // 1000000000) - 9*60*60
+			ns = (ns_atime, ns_mtime)
+			os.utime(fn, ns)
 		os.close(fd)
 		return 0
 
@@ -438,7 +452,14 @@ class FileOp:
 			print(fmt % (CC, YY, MM, DD, hh, mm, ss, ms))
 		yy = CC * 100 + YY
 		dt = datetime.datetime(yy, MM, DD, hh, mm, ss, ms)
-		ts = int(dt.timestamp() * 1000000 + 0.0000005) * 1000
+		if self.major >= 3:
+			ts = int(dt.timestamp() * 1000000 + 0.0000005) * 1000
+		else:
+			dt1 = (dt - datetime.datetime(1970,1,1)).total_seconds()
+			dt2 = datetime.timedelta(milliseconds=1).total_seconds()
+			dt = dt1 // dt2
+			ts = int(dt * 1000000 + 0.0000005)
+		#print("{:,}".format(ts))
 		return ts, ts
 
 	##  Count satisfying given condition in the list.
@@ -493,7 +514,8 @@ class FileOp:
 		fstat = info['stat']
 		if fstat is None:
 			return fname	# no stat info available
-		fmode = stat.filemode(fstat.st_mode)
+		#fmode = stat.filemode(fstat.st_mode)
+		fmode = self.__filemode(fstat.st_mode)
 		fdrive = os.path.splitdrive(fname)[0].lower()
 		cdrive = os.path.splitdrive(os.getcwd())[0].lower()
 		if fdrive == cdrive:
@@ -534,7 +556,8 @@ class FileOp:
 				dirname = os.path.dirname(path)
 				filetostat = '%s/%s' % (dirname, linkedfile)
 			linkedstat = os.stat(filetostat)
-			linkedmode = stat.filemode(linkedstat.st_mode)
+			#linkedmode = stat.filemode(linkedstat.st_mode)
+			linkedmode = self.__filemode(linkedstat.st_mode)
 			info = self.__add_modifier(linkedfile, linkedmode)
 			return '%s -> %s' % (path, info)
 		return path
@@ -549,10 +572,34 @@ class FileOp:
 		info = {'isdir': isdir, 'root': root, 'name': name}
 		fname = root if isdir else '%s/%s' % (root, name)
 		try:
+			os.stat_float_times(True)
 			fstat = os.stat(fname)
 			info['stat'] = fstat
 		except:
 			info['stat'] = None
 		return info
+
+	##  Wrapper function of stat.filemode
+	#   @param mode		File mode
+	#   @returns		File mode string in '-rwxrwxrwx' format.
+	#
+	def __filemode(self, st_mode):
+		if self.major >= 3:
+			# version 3 or later
+			return stat.filemode(st_mode)
+		#
+		# for older version (2.7)
+		#
+		fmode = 'd' if S_ISDIR(st_mode) else '-'
+		fmode += 'r' if (st_mode & S_IRUSR) else '-'
+		fmode += 'w' if (st_mode & S_IWUSR) else '-'
+		fmode += 'x' if (st_mode & S_IXUSR) else '-'
+		fmode += 'r' if (st_mode & S_IRGRP) else '-'
+		fmode += 'w' if (st_mode & S_IWGRP) else '-'
+		fmode += 'x' if (st_mode & S_IXGRP) else '-'
+		fmode += 'r' if (st_mode & S_IROTH) else '-'
+		fmode += 'w' if (st_mode & S_IWOTH) else '-'
+		fmode += 'x' if (st_mode & S_IXOTH) else '-'
+		return fmode
 
 # end: FileOp.py

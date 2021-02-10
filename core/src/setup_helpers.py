@@ -84,6 +84,7 @@ def try_find(which, prog, check_path=None, devenv_number=None):
 	if prog == 'gmake':
 		patt = r'[mM]ake.* ([\d\.]+$)'
 		out, ver = try_find_common(which, prog, patt, True, check_path)
+		out, ver = check_if_gmake(out, ver, patt, True)
 	if prog == 'nkf':
 		patt = r'.+Version ([\d\.]+ \(.+\))'
 		out, ver = try_find_common(which, prog, patt, True, check_path)
@@ -246,6 +247,44 @@ def try_find_nmake(which):
 	else:
 		ver = match(ver_out.split(os.sep), ver_patt)
 	return path, ver[0]
+
+#  make
+#
+def check_if_gmake(path, ver, ver_patt, first):
+	testfile = 'setup.test.Makefile'
+	cmnd = '%s -f %s' % (path, testfile)
+	status, out = execute(cmnd)
+	if status == 0:
+		return path, ver
+
+	# try to find 'make' in the PATH.
+	#
+	env_path = os.getenv('PATH').split(os.pathsep)
+	for p in env_path:
+		cmnd = '/bin/ls %s/make' % p
+		status, out = execute(cmnd, stdout=Proc.NULL)
+		#print('TRY: %s -> %d' % (p, status))
+		if status != 0:
+			continue
+
+		# test if GNU function works
+		#	make -f setup.test.Makefile
+		status, out = execute(cmnd, stdout=Proc.NULL)
+		if status != 0:
+			# this make does not work!
+			continue
+		# get version
+		prog = '%s/make' % p
+		cmnd = '%s --version' % prog
+		stat, ver_out = execute(cmnd)
+		if ver_out is None:
+			stat, ver_out = execute(cmnd, stderr=Proc.STDOUT)
+		ver = match(ver_out.split('\n'), ver_patt, first)
+		return prog, ver
+
+	# can not find suitable one
+	#
+	return SetupFile.NOTFOUND, None
 
 #  gcc
 #

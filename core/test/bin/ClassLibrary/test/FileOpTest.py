@@ -7,6 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class FileOp (for Ver 1.4 and after).
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 import glob
@@ -57,11 +58,11 @@ def remove_all(top):
 
 def make_tree(top):
 	remove_all(top)
-	os.makedirs(top, exist_ok=True)
-	os.makedirs(testpath(top, 'test1'), exist_ok=True)
-	os.makedirs(testpath(top, 'test1/test1'), exist_ok=True)
-	os.makedirs(testpath(top, 'test2'), exist_ok=True)
-	os.makedirs(testpath(top, 'test3'), exist_ok=True)
+	Util.makedirs(top, exist_ok=True)
+	Util.makedirs(testpath(top, 'test1'), exist_ok=True)
+	Util.makedirs(testpath(top, 'test1/test1'), exist_ok=True)
+	Util.makedirs(testpath(top, 'test2'), exist_ok=True)
+	Util.makedirs(testpath(top, 'test3'), exist_ok=True)
 	FileOp().touch(testpath(top, 'test1/file_op_test_x'))
 	FileOp().touch(testpath(top, 'test1/file_op_test_y'))
 	FileOp().touch(testpath(top, 'wild_x.txt'))
@@ -98,7 +99,10 @@ verbose = 0
 dry_run = True
 top = 'test/file_op_test'
 remove_tree(top)
+'''
 os.makedirs(top)
+'''
+Util.makedirs(top)
 
 # ls
 #
@@ -160,8 +164,8 @@ if 'cp' in test_suit:
 		remove_tree(another_fs)
 		if os.path.exists(another_fs):
 			os.rmdir(another_fs)
-	#Ls(F, top)
-	#print()
+	Ls(F, top)
+	print()
 	for dry_run in [True, False]:
 		opt = 'dry_run' if dry_run else 'test'
 		print('-- cp (%s) --' % opt)
@@ -177,8 +181,8 @@ if 'cp' in test_suit:
 		F.cp(src, testpath(top, 'test2/file_op_test_2'))
 		F.cp(src, testpath(top, 'test3'))
 		F.cp(testpath(top, 'test1'), testpath(top, 'test4'))
-		Ls(F, top)
-		print()
+		#Ls(F, top)
+		#print()
 
 		if Util.is_windows():
 			F.cp(testpath(top, 'test1'), another_fs)
