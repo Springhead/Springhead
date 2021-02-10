@@ -31677,17 +31677,24 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 PHSolidDesc new_desc = new PHSolidDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
+                            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
 				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+						phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+                            appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+						});
 				return appropriate_type;
-            }
+                            } else {
+						phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+                            obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+						});
+                            }
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
