@@ -31643,78 +31643,66 @@ Vec3d new_dir = new Vec3d(dir);
             return new IfInfo(ptr);
 	}
 // feature:only_cs_ignore GetSdk PHSdkIf 
-	public PHSolidIf CreateSolid(PHSolidDesc desc) {
-		PHSceneIf phSceneIf = GetCSPHSceneIf();
-		if (phSceneIf.multiThreadMode) {;
-			var currentThread = Thread.CurrentThread;
-			if (currentThread == phSceneIf.stepThread) {
-PHSolidDesc new_desc = new PHSolidDesc(desc);
-// NewArgument equal 8 8
-// is_struct
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-				phSceneIf.AddCallbackForStepThread(
-					() => {
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-					},
-					() => {
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
-				});
-            if (ptrStep == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptrStep, phSceneIf.sceneForStep);
-            if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
-				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
+        public PHSolidIf CreateSolid(PHSolidDesc desc) {
+            if (multiThreadMode) {
+                lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
+                    Console.WriteLine("isSetFunctionCalledInSubThread = true");
+                    if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
+                        SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._thisArray[0], _thisArray[sceneForGet]);
+                    }
+                    callObjectStatesIf_Create = true;
+                    if (isStepThreadExecuting) {
+                        Console.WriteLine("CreateSolid sceneForGet in isStepThreadExecuting");
+                        IntPtr get = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForGet], (IntPtr)desc);
+                        Console.WriteLine("CreateSolid sceneForBuffer in isStepThreadExecuting");
+                        IntPtr buffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForBuffer], (IntPtr)desc);
+                        if (get == IntPtr.Zero || buffer == IntPtr.Zero) {
+                            return null;
+                        }
+                        PHSolidIf obj = new PHSolidIf(get); // _thisにGetを入れる
+                        obj.phSceneIf = this;
+                        obj._thisArray[sceneForGet] = get;
+                        obj._thisArray[sceneForBuffer] = buffer;
+                        Console.WriteLine(sceneForGet);
+                        AddCallbackForSubThread(() => {
+                            Console.WriteLine("CreateSolid sceneForStep callback in isStepThreadExecuting");
+                            IntPtr step = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[sceneForStep], (IntPtr)desc);
+                            obj._thisArray[sceneForStep] = step;
+                        });
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(get); }
+                        return obj;
+                    } else {
+                        Console.WriteLine("CreateSolid not in isStepThreadExecuting");
+                        IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
+                        IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[1], (IntPtr)desc);
+                        IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[2], (IntPtr)desc);
+                        if (ptr0 == IntPtr.Zero || ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
+                            return null;
+                        }
+                        PHSolidIf obj = new PHSolidIf(ptr0); // _thsisにGetを入れる
+                        obj.phSceneIf = this;
+                        obj._thisArray[0] = ptr0;
+                        obj._thisArray[1] = ptr1;
+                        obj._thisArray[2] = ptr2;
+                        if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr0); }
+                        return obj;
+                    }
+                }
+            } else {
+                Console.WriteLine("CreateSolid not in multiThreadMode");
+                IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr)_thisArray[0], (IntPtr)desc);
+                if (ptr0 == IntPtr.Zero) {
+                    return null;
+                }
+                PHSolidIf obj = new PHSolidIf(ptr0); // _thsisにGetを入れる
+                obj.phSceneIf = this;
+                obj._thisArray[0] = ptr0;
+                if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) { return new PHHapticPointerIf(ptr0); }
+                return obj;
             }
-            return obj;
-			} else if (currentThread == phSceneIf.subThread) {
-				lock (phSceneIf.phSceneLock) {
-					phSceneIf.isSetFunctionCalledInSubThread = true;
-					if (phSceneIf.stateForSwap != null) {
-						SprExport.Spr_ObjectStatesIf_ReleaseState(phSceneIf.stateForSwap._thisArray[0], _thisArray[phSceneIf.sceneForGet]);
-					}
-					phSceneIf.callObjectStatesIf_Create = true;
-					if (phSceneIf.isStepThreadExecuting) {
-PHSolidDesc new_desc = new PHSolidDesc(desc);
-// NewArgument equal 8 8
-// is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
-            if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
-            if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
-				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-					} else {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
-	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) desc);
-	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) desc);
-            if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
-            if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
-				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-					}
-				}
-			}
-		} else {
-	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[0], (IntPtr) desc);
-            if (ptr == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptr, 0);
-            if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
-				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-				return appropriate_type;
-            }
-            return obj;
-		}
-		throw new InvalidOperationException();
-	}
+        }
+
 	public PHSolidIf CreateSolid() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;

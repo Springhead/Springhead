@@ -614,7 +614,97 @@ namespace SprCs {
                 return obj;
             }
         }
+                public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
+            if (multiThreadMode) {
+                PHJointIf obj = new PHJointIf(IntPtr.Zero);
+                lock (phSceneLock) {
+                    isSetFunctionCalledInSubThread = true;
+                    if (stateForSwap != null) { // Createをメモリリークさせないために，一番最初のCreateをしないため，一番最初だけnullになる
+                        SprExport.Spr_ObjectStatesIf_ReleaseState(stateForSwap._thisArray[0], _thisArray[sceneForGet]); // 恐らくstateForSwap._thisと_thisArray[sceneForGet]が同じ構造でないといけないのでここで
+                    }
+                    callObjectStatesIf_Create = true;
+                    if (isStepThreadExecuting) {
+                        IntPtr get = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForGet], (IntPtr)lhs._thisArray[sceneForGet], (IntPtr)rhs._thisArray[sceneForGet], (IntPtr)ii, (IntPtr)desc);
+                        IntPtr buffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForBuffer], (IntPtr)lhs._thisArray[sceneForBuffer], (IntPtr)rhs._thisArray[sceneForBuffer], (IntPtr)ii, (IntPtr)desc);
+                        if (get == IntPtr.Zero || buffer == IntPtr.Zero) {
+                            return null;
+                        }
+                        obj._thisArray[sceneForGet] = get;
+                        obj._thisArray[sceneForBuffer] = buffer;
+                        Console.WriteLine(sceneForGet);
+                        obj._thisArray[0] = obj._thisArray[sceneForGet];
+                    } else {
+                        IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0], (IntPtr)ii, (IntPtr)desc);
+                        IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[1], (IntPtr)lhs._thisArray[1], (IntPtr)rhs._thisArray[1], (IntPtr)ii, (IntPtr)desc);
+                        IntPtr ptr2 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[2], (IntPtr)lhs._thisArray[2], (IntPtr)rhs._thisArray[2], (IntPtr)ii, (IntPtr)desc);
+                        if (ptr0 == IntPtr.Zero || ptr1 == IntPtr.Zero || ptr2 == IntPtr.Zero) {
+                            return null;
+                        }
+                        obj._thisArray[0] = ptr0;
+                        obj._thisArray[1] = ptr1;
+                        obj._thisArray[2] = ptr2;
+                        obj._thisArray[0] = obj._thisArray[0];
+                    }
 
+                    if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) { return new PH1DJointIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+                        var newJoint = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        newJoint.phSceneIf = this;
+                        if (isStepThreadExecuting) {
+                            AddCallbackForSubThread(() => { // newJointがここにしかないため
+                                IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
+                                newJoint._thisArray[sceneForStep] = step;
+                            });
+                        }
+                        return newJoint;
+                    }
+                    if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) { return new PHFixJointIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+                        var newJoint = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+                        newJoint.phSceneIf = this;
+                        if (isStepThreadExecuting) {
+                            AddCallbackForSubThread(() => {
+                                IntPtr step = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[sceneForStep], (IntPtr)lhs._thisArray[sceneForStep], (IntPtr)rhs._thisArray[sceneForStep], (IntPtr)ii, (IntPtr)desc);
+                                newJoint._thisArray[sceneForStep] = step;
+                            });
+                        }
+                        return newJoint;
+                    }
+                    if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) { return new PHMateIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) { return new PHHingeJointIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) { return new PHSliderJointIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) { return new PHPathJointIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) { return new PHGenericJointIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) { return new PHPointToPointMateIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) { return new PHPointToLineMateIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) { return new PHPointToPlaneMateIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) { return new PHLineToLineMateIf(IntPtr.Zero); }
+                    if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) { return new PHPlaneToPlaneMateIf(IntPtr.Zero); }
+                    return obj;
+                }
+            } else { // コンストラクタの実装によって修正が必要
+                IntPtr ptr = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0], (IntPtr)ii, (IntPtr)desc);
+                if (ptr == IntPtr.Zero) { return null; }
+                PHJointIf obj = new PHJointIf(ptr);
+                if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) { return new PH1DJointIf(ptr); }
+                if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) { return new PHBallJointIf(ptr); }
+                if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) { return new PHFixJointIf(ptr); }
+                if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) { return new PHSpringIf(ptr); }
+                if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) { return new PHMateIf(ptr); }
+                if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) { return new PHHingeJointIf(ptr); }
+                if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) { return new PHSliderJointIf(ptr); }
+                if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) { return new PHPathJointIf(ptr); }
+                if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) { return new PHGenericJointIf(ptr); }
+                if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) { return new PHPointToPointMateIf(ptr); }
+                if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) { return new PHPointToLineMateIf(ptr); }
+                if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) { return new PHPointToPlaneMateIf(ptr); }
+                if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) { return new PHLineToLineMateIf(ptr); }
+                if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) { return new PHPlaneToPlaneMateIf(ptr); }
+                return obj;
+            }
+        }
+
+/*
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {
@@ -926,6 +1016,7 @@ namespace SprCs {
             }
             throw new InvalidOperationException();
         }
+        */
 
     }
 }
