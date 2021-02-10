@@ -614,7 +614,8 @@ namespace SprCs {
                 return obj;
             }
         }
-                public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
+
+        public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             if (multiThreadMode) {
                 PHJointIf obj = new PHJointIf(IntPtr.Zero);
                 lock (phSceneLock) {
