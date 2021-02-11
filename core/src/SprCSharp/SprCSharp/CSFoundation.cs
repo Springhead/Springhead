@@ -3583,13 +3583,11 @@ namespace SprCs {
 				lock (phSceneIf.phSceneLock) {
 					phSceneIf.isSetFunctionCalledInSubThread = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             SceneObjectIf obj = new SceneObjectIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_SceneObjectIf_CloneObject((IntPtr) _thisArray[phSceneIf.sceneForStep]);

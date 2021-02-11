@@ -632,8 +632,8 @@ namespace SprCs {
                         }
                         obj._thisArray[sceneForGet] = get;
                         obj._thisArray[sceneForBuffer] = buffer;
-                        Console.WriteLine(sceneForGet);
                         obj._thisArray[0] = obj._thisArray[sceneForGet];
+                        Console.WriteLine("CreateJoint in isStepThreadExecuting");
                     } else {
                         IntPtr ptr0 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[0], (IntPtr)lhs._thisArray[0], (IntPtr)rhs._thisArray[0], (IntPtr)ii, (IntPtr)desc);
                         IntPtr ptr1 = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr)_thisArray[1], (IntPtr)lhs._thisArray[1], (IntPtr)rhs._thisArray[1], (IntPtr)ii, (IntPtr)desc);
@@ -645,6 +645,7 @@ namespace SprCs {
                         obj._thisArray[1] = ptr1;
                         obj._thisArray[2] = ptr2;
                         obj._thisArray[0] = obj._thisArray[0];
+                        Console.WriteLine("CreateJoint in not isStepThreadExecuting");
                     }
 
                     if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) { return new PH1DJointIf(IntPtr.Zero); }

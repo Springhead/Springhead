@@ -1431,27 +1431,27 @@ public:
 				if (!ni.is_static && is_all_elements_thisArray_class != is_phsceneobject) {
 					//Printf(CS, "// Error:MissMatch\n");
 				}
-				if (!ni.is_static && is_all_elements_thisArray_class && !is_all_elements_thisArray_method) {
+				if (!ni.is_static && is_all_elements_thisArray_class && !is_all_elements_thisArray_method) { // GetPoseなど
 					Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
 					Printf(CS, "		if (phSceneIf.multiThreadMode) {\n");
 					Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
 					Printf(CS, "			if (currentThread == phSceneIf.stepThread) {\n");
 					csfunction_code(/* multithread = */true, /* lvalue_name = */"Step", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Step", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForStep", false);
+					CSFunctionReturnCode(ni, ci, topnode, "Step", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForStep", false, fps);
 					Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 					Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 					Printf(CS, "					phSceneIf.isGetFunctionCalledInSubThread = true;\n");
 					csfunction_code(/* multithread = */true, /* lvalue_name = */"Get", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", false);
+					CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", false, fps);
 					Printf(CS, "				}\n");
 					Printf(CS, "			}\n");
 					Printf(CS, "		} else {\n");
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"", /* string_index = */ 0, "_thisArray[0]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false);
+					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false, fps);
 					Printf(CS, "		}\n");
 					Printf(CS, "		throw new InvalidOperationException();\n");
 				}
-				else if (!ni.is_static && is_all_elements_thisArray_class && is_all_elements_thisArray_method) {
+				else if (!ni.is_static && is_all_elements_thisArray_class && is_all_elements_thisArray_method) { // SetPoseなど
 					Printf(CS, "		PHSceneIf phSceneIf = GetCSPHSceneIf();\n");
 					Printf(CS, "		if (phSceneIf.multiThreadMode) {;\n");
 					Printf(CS, "			var currentThread = Thread.CurrentThread;\n");
@@ -1467,7 +1467,7 @@ public:
 					string_index++;
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Get", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					Printf(CS, "				});\n");
-					CSFunctionReturnCode(ni, ci, topnode, "Step", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForStep", false);
+					CSFunctionReturnCode(ni, ci, topnode, "Step", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForStep", false, fps);
 					Printf(CS, "			} else if (currentThread == phSceneIf.subThread) {\n");
 					Printf(CS, "				lock (phSceneIf.phSceneLock) {\n");
 					Printf(CS, "					phSceneIf.isSetFunctionCalledInSubThread = true;\n");
@@ -1479,28 +1479,32 @@ public:
 					}
 					Printf(CS, "					if (phSceneIf.isStepThreadExecuting) {\n");
 					NewArgumentForCallback(ni, ci, argnames, topnode);
-					Printf(CS, "						phSceneIf.AddCallbackForSubThread(() => {\n");
-					string_index++;
-					csfunction_code(/* multithread = */false, /* lvalue_name = */"Step", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					Printf(CS, "						});\n");
+
+					if (!(ni.is_struct && ENDWITH(ni.cs_type, "If"))) { // !このif文はCSFunctionReturnCodeでAddCallbackForSubThreadに登録する場合に対応するための物
+						Printf(CS, "						phSceneIf.AddCallbackForSubThread(() => {\n");
+						string_index++;
+						csfunction_code(/* multithread = */false, /* lvalue_name = */"Step", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+						Printf(CS, "						});\n");
+					}
 					string_index++;
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Buffer", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForBuffer]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Get", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", true);
+					CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", true, fps, /* multithread = */false, /* lvalue_name = */"Step", /* string_index = */ string_index, "_thisArray[phSceneIf.sceneForStep]", n, callback_argnames, cleanup1, cleanup2, sep_needed, class_already_defined);
+					//CSFunctionReturnCode(ni, ci, topnode, "Get", false, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", false, fps);
 					Printf(CS, "					} else {\n");
 					//Printf(CS, "						foreach (var _this in _thisArray) {\n");
 					// ここではコールバックを使用しないので引数をnewする必要はない
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Step", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Buffer", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForBuffer]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"Get", /* string_index = */ 0, "_thisArray[phSceneIf.sceneForGet]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "Get", !is_return_thisArray0, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", true);
+					CSFunctionReturnCode(ni, ci, topnode, "Get", !is_return_thisArray0, is_return_thisArray0 ? "0" : "phSceneIf.sceneForGet", false, fps);
 					//Printf(CS, "						}\n");
 					Printf(CS, "					}\n");
 					Printf(CS, "				}\n");
 					Printf(CS, "			}\n");
 					Printf(CS, "		} else {\n");
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"", /* string_index = */ 0, "_thisArray[0]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false);
+					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false, fps);
 					Printf(CS, "		}\n");
 					if (!ni.is_void) {
 						Printf(CS, "		throw new InvalidOperationException();\n");
@@ -1508,7 +1512,7 @@ public:
 				}
 				else {
 					csfunction_code(/* multithread = */false, /* lvalue_name = */"", /* string_index = */ 0, "_thisArray[0]", fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false);
+					CSFunctionReturnCode(ni, ci, topnode, "", false, "0", false, fps);
 				}
 				// 作業変数の解放
 				if (argnames) delete argnames;
@@ -1701,8 +1705,8 @@ public:
 			}
 	}
 
-	// 戻り値のための処理
-	void CSFunctionReturnCode(NodeInfo& ni, NodeInfo& ci, Node* topnode, char* lvalue_name, bool ifclass_all_thisArray, char* instance_index, bool subthread) {
+	// 戻り値のための処理 引数subthread以降はcsfunction_codeの引数のため
+	void CSFunctionReturnCode(NodeInfo& ni, NodeInfo& ci, Node* topnode, char* lvalue_name, bool ifclass_all_thisArray, char* instance_index, bool subthread, DOHFile* fps[], bool multithread = false, char* lvalue_name_csfunction = NULL,int string_index = 0, char* instance_name = NULL, Node* n = NULL, char** argnames = NULL, void** cleanup1 = NULL, void** cleanup2 = NULL, int sep_needed = 0, bool class_already_defined = false) {
 		Node* is_enum_node = (ni.is_struct) ? FindNodeByAttrR(topnode, "enumtype", ni.type) : NULL;
 	  	// 関数戻り値のための後処理
 	  	if (ni.is_bool) {
@@ -1737,18 +1741,28 @@ public:
 				}
 				else {
 					Printf(CS, "            %s obj = new %s(ptr%s, %s);\n", ni.cs_type, ni.cs_type, lvalue_name, instance_index);
+					if (subthread) {
+						Printf(CS, "            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;\n");
+					}
 				}
 				// Printf(CS, "            return Activator.CreateInstance(IfInfoToCsType.FindType(obj.GetIfInfo()), ptr) as %s;\n", ni.cs_type);
 				for (int j = 0; j < childClassMap[ni.cs_type].size(); j++) {
 					Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) {\n", childClassMap[ni.cs_type][j].c_str());
 					Printf(CS, "				%s appropriate_type = new %s(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
 					if (subthread) {
-						//Printf(CS, "				phSceneIf.AddCallbackForSubThread(() => {;\n");
-						//csfunction_code(/* multithread = */false, /* off_lvalue = */true, /* string_index = */ 0, "_thisArray[phSceneIf.sceneForStep]", fps, topnode, n, ni, callback_argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
-						//Printf(CS, "					;\n");
-						//Printf(CS, "				};\n");
+						Printf(CS, "				phSceneIf.AddCallbackForSubThread(() => {\n");
+						csfunction_code(/* multithread = */false, /* lvalue_name = */lvalue_name_csfunction, /* string_index = */ string_index, instance_name, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+						Printf(CS, "					appropriate_type.%s = ptr%s;\n", instance_name, lvalue_name_csfunction);
+						Printf(CS, "				});\n");
 					}
 					Printf(CS, "				return appropriate_type;\n");
+					if (subthread) {
+						Printf(CS, "            } else {\n");
+						Printf(CS, "				phSceneIf.AddCallbackForSubThread(() => {\n");
+						csfunction_code(/* multithread = */false, /* lvalue_name = */lvalue_name_csfunction, /* string_index = */ string_index, instance_name, fps, topnode, n, ni, argnames, cleanup1, cleanup2, is_enum_node, ci, sep_needed, class_already_defined);
+						Printf(CS, "					obj.%s = ptr%s;\n", instance_name, lvalue_name_csfunction);
+						Printf(CS, "				});\n");
+					}
 					Printf(CS, "            }\n");
 					//Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) { return new %s(ptr); }\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
 				}

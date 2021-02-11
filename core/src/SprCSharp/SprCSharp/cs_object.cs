@@ -19,6 +19,11 @@ namespace SprCs {
             _thisArray[2] = ptr2;
             _flag = flag;
         }
+        protected CsObject(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag = false) {
+            _thisArray[ptr0Index] = ptr0;
+            _thisArray[ptr1Index] = ptr1;
+            _flag = flag;
+        }
         protected CsObject(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag = false) {
             _thisArray[ptr0Index] = ptr0;
             _thisArray[ptr1Index] = ptr1;

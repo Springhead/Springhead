@@ -21862,76 +21862,218 @@ Posed new_pose = new Posed(pose);
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHConstraintIf obj = new PHConstraintIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
 				PHContactPointIf appropriate_type = new PHContactPointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
 				PHJointIf appropriate_type = new PHJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -22302,13 +22444,11 @@ PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -22352,13 +22492,11 @@ PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22418,20 +22556,36 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -22502,20 +22656,36 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -24011,24 +24181,49 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -24111,24 +24306,49 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -24213,20 +24433,36 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -24297,20 +24533,36 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -31681,20 +31933,20 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
-                            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
 				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
-						phSceneIf.AddCallbackForSubThread(() => {
+				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-                            appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
-						});
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
-                            } else {
-						phSceneIf.AddCallbackForSubThread(() => {
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-                            obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-						});
-                            }
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+            }
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -31750,16 +32002,23 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
 				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -32661,13 +32920,11 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -32713,13 +32970,11 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
@@ -32851,44 +33106,114 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -33033,44 +33358,114 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -33181,13 +33576,11 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
@@ -33241,13 +33634,11 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 PHGearDesc new_desc = new PHGearDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33295,13 +33686,11 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHGearIf obj = new PHGearIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
@@ -33397,13 +33786,11 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 PHPathDesc new_desc = new PHPathDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHPathIf obj = new PHPathIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33447,13 +33834,11 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHPathIf obj = new PHPathIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33549,13 +33934,11 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 PHRayDesc new_desc = new PHRayDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRayIf obj = new PHRayIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33599,13 +33982,11 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHRayIf obj = new PHRayIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33755,24 +34136,49 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -33855,24 +34261,49 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
 				return appropriate_type;
+            } else {
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
             }
             return obj;
 					} else {
@@ -34029,13 +34460,11 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -34079,13 +34508,11 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -34227,13 +34654,11 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSkeletonIf obj = new PHSkeletonIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -34277,13 +34702,11 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHSkeletonIf obj = new PHSkeletonIf(ptrGet, 0);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36011,13 +36434,11 @@ Vec3f new_extent = new Vec3f(extent);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHHapticPointerIf obj = new PHHapticPointerIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36883,13 +37304,11 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 PHBoneDesc new_desc = new PHBoneDesc(desc);
 // NewArgument equal 8 8
 // is_struct
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -36935,13 +37354,11 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
 // IfClass
-						phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
-						});
 	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
             PHBoneIf obj = new PHBoneIf(ptrGet, phSceneIf.sceneForGet);
+            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
