@@ -7,7 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class Util (Ver 2.0 and later).
 # ======================================================================
-from __future__ import print_function
+#from __future__ import print_function
 import sys
 import os
 sys.path.append('..')

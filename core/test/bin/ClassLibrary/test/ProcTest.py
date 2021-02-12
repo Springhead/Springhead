@@ -7,7 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class Proc (Ver 1.3 and after).
 # ======================================================================
-from __future__ import print_function
+#from __future__ import print_function
 import sys
 import os
 import time

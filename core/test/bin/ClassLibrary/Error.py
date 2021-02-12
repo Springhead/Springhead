@@ -24,7 +24,7 @@
 #     Ver 3.00.1 2018/03/19 F.Kanehori	Documentation.
 #     Ver 3.01   2021/02/04 F.Kanehori	Can run on python 2.7.
 # ======================================================================
-from __future__ import print_function
+#from __future__ import print_function
 import sys
 
 ##  Error handling class.

@@ -26,7 +26,7 @@
 #     Ver 2.02.2 2020/11/01 F.Kanehori	Fix comment.
 #     Ver 2.03   2021/02/04 F.Kanehori	Can run on python 2.7.
 # ======================================================================
-from __future__ import print_function
+#from __future__ import print_function
 import sys
 import os
 import datetime
