@@ -24,7 +24,7 @@
 #     Ver 3.01.2 2018/05/07 F.Kanehori	Bug fixed.
 #     Ver 3.02   2021/02/10 F.Kanehori	Can run on python 2.7.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 import re

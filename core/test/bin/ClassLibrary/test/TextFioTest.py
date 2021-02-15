@@ -11,7 +11,7 @@
 #	This test program works on python 2.7.17 UNLESS output is
 #	redirected.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 sys.path.append('..')

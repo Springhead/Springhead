@@ -29,7 +29,7 @@
 #     Ver 1.01   2020/12/03 F.Kanehori	Add: getenv()
 #     Ver 1.02   2021/02/10 F.Kanehori	Can run on pytho9n 2.7.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 from KvFile import *

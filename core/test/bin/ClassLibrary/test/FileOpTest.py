@@ -7,7 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class FileOp (for Ver 1.4 and after).
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 import glob

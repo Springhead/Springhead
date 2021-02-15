@@ -7,7 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class SetupFile.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 sys.path.append('..')

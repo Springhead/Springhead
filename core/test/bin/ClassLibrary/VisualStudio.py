@@ -69,7 +69,7 @@
 #     Ver 2.01   2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
 #     Ver 2.02   2020/06/11 F.Kanehori	devenv 探索方式変更.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 

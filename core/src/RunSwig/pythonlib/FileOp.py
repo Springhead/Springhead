@@ -27,7 +27,7 @@
 #     Ver 1.07   2018/04/19 F.Kanehori	New edition of ls().
 #     Ver 1.08   2021/02/04 F.Kanehori	Can run on python 2.7.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 import datetime

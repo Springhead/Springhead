@@ -35,7 +35,7 @@
 #     Ver 1.03.6 2020/11/09 F.Kanehori	Bug fixed.
 #     Ver 1.04   2021/02/10 F.Kanehori	Can run on python 2.7.
 # ======================================================================
-#from __future__ import print_function
+from __future__ import print_function
 import sys
 import os
 if sys.version_info[0] >= 3:
