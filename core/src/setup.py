@@ -32,6 +32,7 @@
 #	step 7:		パス情報を設定する。
 #	step 8:		swigをmakeする。
 #	step 9:		セットアップファイルを(再)作成する。
+#	step 10:	CMakeLists.txt がなければ作成(copy)する。
 #
 #  -c オプションが指定されたときの終了コード:
 #	     0:		セットアップファイルに記録されたプログラムが
@@ -43,8 +44,10 @@
 #     Ver 1.00   2020/12/14 F.Kanehori	初版
 #     Ver 1.00.1 2021/01/06 F.Kanehori	微修正
 #     Ver 1.01   2021/01/14 F.Kanehori	setup 自動実行組み込み
+#     Ver 1.01.1 2021/02/15 F.Kanehori	修正
 # ======================================================================
-version = "1.00.1"
+from __future__ import print_function
+version = "1.01.1"
 
 import sys
 import os
@@ -73,15 +76,17 @@ if not os.path.exists('./RunSwig/pythonlib'):
 sys.path.append('./RunSwig/pythonlib')
 from Proc import *
 from TextFio import *
+from FileOp import *
 from SetupFile import *
 from Error import *
 from Util import *
+from setup_helpers import *
 
 # ----------------------------------------------------------------------
 #  Constants
 #
-required_windows = [ 'devenv', 'nmake', 'swig', 'cmake', 'nkf' ]
-required_unix = [ 'gcc', 'swig', 'cmake', 'gmake', 'nkf' ]
+required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake', 'nkf' ]
+required_unix = [ 'python', 'gcc', 'swig', 'cmake', 'gmake', 'nkf' ]
 required = required_unix if Util.is_unix() else required_windows
 optional_tools = [ 'cmake' ]
 
@@ -91,7 +96,6 @@ CONF = 'Release'
 # ----------------------------------------------------------------------
 #  Globals
 #
-##setup_file = './setup.conf'
 progs = {}
 paths = {}
 versions = {}
@@ -111,36 +115,6 @@ def get_path(name):
 	return progs[name] if name in progs else None
 
 # ----------------------------------------------
-#  コマンドを実行してその出力を得る
-#
-def execute(cmnd, timeout=None, stdout=Proc.PIPE, stderr=Proc.NULL):
-        # execute command
-        proc = Proc().execute(cmnd, stdout=stdout,
-                                    stderr=stderr, shell=True)
-        # get output
-        if stdout == Proc.PIPE:
-                status, out, err = proc.output(timeout)
-        else:
-                status = proc.wait(timeout=timeout)
-                out = ''
-        return status, out
-
-# ----------------------------------------------
-#  簡易grep
-#
-def match(lines, patt, first=False, flags=0):
-        matches = []
-        for line in lines:
-                m = re.search(patt, line, flags)
-                if m:
-                        matches.append(m.group(1))
-        if matches == []:
-                matches = None
-        elif first:
-                matches = matches[0]
-        return matches
-
-# ----------------------------------------------
 #  バージョン 3 以上の python を見つける
 #
 def try_find_newer_python():
@@ -155,7 +129,6 @@ def try_find_newer_python():
 			if not e_ok:
 				continue
 			found.append('%s/%s' % (dir, f))
-			break
 		os.chdir(cwd)
 	if found == []:
 		# not found
@@ -166,7 +139,7 @@ def try_find_newer_python():
 	minor = 0
 	micro = 0
 	for candidate in found:
-		print('   try %s' % candidate)
+		print('   try %s ... ' % candidate, end='')
 		cmnd = '%s --version' % candidate
 		proc = subprocess.Popen(cmnd,
 					stdout=subprocess.PIPE,
@@ -179,11 +152,17 @@ def try_find_newer_python():
 			proc.kill()
 			status = 1
 		if status != 0:
+			print('sorry, won\'t work')
 			continue
 		ver = match(out.split('\n'), ver_patt, True, re.I)
+		if ver is None:
+			print('sorry, won\'t work')
+			continue
 		major, minor, micro = ver.split('.')
 		if major >= 3:
+			print('ok, ', end='')
 			break
+		#print()
 	return major, minor, micro, candidate
 
 # ----------------------------------------------------------------------
@@ -255,34 +234,25 @@ if Force:
 #	Python のバージョンをチェックする。
 #	python のメジャーバージョンは 3 以上でなければならない。
 #
-sys.stdout.write('-- checking python ... ')
+print('-- checking python ... ', end='')
 (major, minor, micro, release, serial) = sys.version_info
 if major < 3:
-	sys.stdout.write('\n   older version found')
+	print('\n   older version found', end='')
 	if is_unix:
 		print(' ... try to find newer one ... ')
 		major, minor, micro, path = try_find_newer_python()
-		if major < 3:
+		if major == 0:
 			E.abort('python version 3 or greater is required.')
-		#cmnd = '%s, %s' % (path, path, ', '.join(sys.argv))
-		#print('CMND: %s' % cmnd)
-		child_pid = os.fork()
-		os.execv(path, [path]+sys.argv)
-		#os.waitpid(child_pid)
-		sys.exit(0)
+		python_path = path
+	else:
+		print()
+		msg = 'python version 3 or greater is required.\n' \
+		    + 'you may want to inistall "buildtool" submodule'
+		E.abort(msg)
 
-print()
 version_save = version
-from setup_helpers import *
+#from setup_helpers import *
 version = version_save
-
-out, ver = try_find(which, 'python', os.path.abspath(python_path))
-if out == SetupFile.NOTFOUND:
-	print()
-	E.abort("can't find python's path.", prompt='Pan')
-print('found (version %s)' % ver)
-progs['python'] = U.pathconv(out.strip())
-versions['python'] = ver
 
 # ----------------------------------------------------------------------
 #  step 2
@@ -307,7 +277,7 @@ if os.path.exists(setup_file):
 	keys_path = sf.get_keys(sf.PATH)
 
 	for prog in required:
-		sys.stdout.write('-- checking path for %s ... ' % prog)
+		print('-- checking path for %s ... ' % prog, end='')
 		if not prog in keys_prog:
 			prog_registered[prog] = None
 			vers_registered[prog] = SetupFile.NOTFOUND
@@ -373,14 +343,19 @@ if check:
 print()
 print('currently available binaries are ...')
 for prog in required:
-	sys.stdout.write('-- checking %s ... ' % prog)
-	out, ver = try_find(which, prog, None, devenv_number)
+	print('-- checking %s ... ' % prog, end='')
+	check_path = None
+	if prog == 'python':
+		check_path = python_path
+	out, ver = try_find(which, prog, check_path, devenv_number)
 	if out == SetupFile.NOTFOUND:
 		print('NOT FOUND')
 		prog_scanned[prog] = SetupFile.NOTFOUND
 		vers_scanned[prog] = ''
 		continue
 	print('found (version: %s)' % ver)
+	if prog == 'python':
+		out = python_path
 	path = os.path.abspath(U.upath(out.strip()))
 	prog_scanned[prog] = path
 	vers_scanned[prog] = ver
@@ -532,7 +507,10 @@ if not force and not setup_needed and not setup_recommended:
 	sys.exit(0)
 if not force:
 	print()
-	yn = input('continue? [y/n]: ')
+	if sys.version_info[0] >= 3:
+		yn = input('continue? [y/n]: ')
+	else:
+		yn = raw_input('continue? [y/n]: ')
 	if yn != 'y' and yn != 'Y':
 		print('done')
 		sys.exit(0)
@@ -646,7 +624,7 @@ lines = []
 lines.append('# %s' % setup_file.split(os.sep)[-1])
 lines.append('')
 lines.append('[prog]')
-lines.append('python\t%s' % progs['python'])
+#lines.append('python\t%s' % progs['python'])
 for prog in required:
 	if prog_scanned[prog] == '':
 		continue
@@ -678,11 +656,43 @@ print()
 sf = SetupFile(setup_file)
 sf.show()
 print()
-print('written to "%s"' % Util.upath(os.path.abspath(setup_file)))
+print('   written to "%s"' % Util.upath(os.path.abspath(setup_file)))
+
+# ----------------------------------------------------------------------
+#  step 10:
+#	CMakeLists.txt がなければ作成(copy)する。
+#
+cmakefile = 'CMakeLists.txt'
+distfile  = 'CMakeLists.txt.dist'
+print()
+print('createing "%s" if not exists ...' % cmakefile)
+file_exists = os.path.exists(cmakefile)
+if file_exists:
+	print('-- file exists (remains as it is)')
+	cmnd = 'diff' if is_unix else 'fc /L'
+	args = ' %s %s' % (distfile, cmakefile)
+	stat, out = execute(cmnd+args, stderr=Proc.STDOUT)
+	patt = '***** CM' if is_windows else ''
+	if stat != 0 or out is not None and patt in out:
+		print()
+		print('** the file is different from "%s" \
+				+ "as follows **' % distfile)
+		print('** please check if it is okey **')
+		print()
+		print(out)
+else:
+	print('-- file does not exist')
+	stat = FileOp().cp(distfile, cmakefile)
+	if stat == 0:
+		print('-- copied from "%s" successfully' % distfile)
+	else:
+		print('-- copy fialed (status: %d)' % stat)
+print()
 
 #  終了
 #
-print('done')
+major, minor, micro, release, serial = sys.version_info
+print('done (%s.%s.%s)' % (major, minor, micro))
 sys.exit(0)
 
 # end: setup.py

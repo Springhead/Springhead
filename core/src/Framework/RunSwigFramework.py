@@ -34,8 +34,10 @@
 #     Ver 1.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.12.1 2020/12/16 F.Kanehori	Bug fix.
 #     Ver 1.12.2 2021/01/07 F.Kanehori	Bug fix.
+#     Ver 1.13   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = '1.12.2'
+from __future__ import print_function
+version = '1.13'
 debug = False
 trace = False
 

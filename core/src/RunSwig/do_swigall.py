@@ -56,15 +56,20 @@
 #     Ver 3.10   2020/05/13 F.Kanehori	unix: Ver 3.08 に戻す.
 #     Ver 3.11   2020/07/15 F.Kanehori	nmake path 探索コード変更.
 #     Ver 3.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 3.13   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = 3.12
+from __future__ import print_function
+version = 3.13
 debug = False
 trace = False
 dry_run = False
 
 import sys
 import os
-import subprocess
+if sys.version_info[0] >= 3:
+	import subprocess
+else:
+	import subprocess32 as subprocess
 import re
 from optparse import OptionParser
 

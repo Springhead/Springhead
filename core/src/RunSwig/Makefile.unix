@@ -82,7 +82,7 @@ PreWork:	$(MAKESWIG) ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 InstallSwig:	MakeSwig $(SWIGBINARY)
 
 DontMakeSwig:	
-		@echo "Makefile.unix: $(FILENAME) foound"
+		@echo "Makefile.unix: $(FILENAME) found"
 
 MakeSwig:	
 		cd $(SWIGMAKEDIR) && $(BUILDSWIG)

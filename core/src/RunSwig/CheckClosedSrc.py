@@ -21,8 +21,10 @@
 #     Ver 2.01	 2020/04/12 F.Kanehori	Bug fix.
 #     Ver 2.10	 2020/05/12 F.Kanehori	再度方針の全面変更 (DESCRIPTION参照)
 #     Ver 2.10.1 2020/11/11 F.Kanehori	不要なコードの削除
+#     Ver 2.11   2021/02/17 F.Kanehori	Python 2.7 対応
 # ==============================================================================
-version = '2.10.1'
+from __future__ import print_function
+version = '2.11'
 
 import sys
 import os

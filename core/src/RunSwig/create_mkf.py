@@ -18,17 +18,19 @@
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.00	2017/04/20 F.Kanehori	Windows batch file から移植.
-#     Ver 1.01	2017/06/29 F.Kanehori	makefile.swig は do_swigall.projs に依存
-#     Ver 1.02	2017/07/24 F.Kanehori	Python executable directory moved.
-#     Ver 1.03  2017/09/06 F.Kanehori	New python library に対応.
-#     Ver 1.04  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#     Ver 1.05  2017/11/08 F.Kanehori	Python library path の変更.
-#     Ver 1.06  2017/11/29 F.Kanehori	Python library path の変更.
-#     Ver 1.07  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#     Ver 1.08  2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.00	 2017/04/20 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01	 2017/06/29 F.Kanehori	makefile.swig は do_swigall.projs に依存
+#     Ver 1.02	 2017/07/24 F.Kanehori	Python executable directory moved.
+#     Ver 1.03   2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.04   2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.05   2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.06   2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.07   2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.08   2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.09   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = '1.08'
+from __future__ import print_function
+version = '1.09'
 trace = False
 
 import sys

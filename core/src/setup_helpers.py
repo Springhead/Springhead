@@ -8,8 +8,9 @@
 #     Ver 1.00   2020/12/03 F.Kanehori	First version.
 #     Ver 1.00.1 2021/01/07 F.Kanehori	Bug fixed.
 #     Ver 1.00.2 2021/01/15 F.Kanehori	Bug fixed.
+#     Ver 1.01   2021/02/15 F.Kanehori	try_find_python() 修正
 # ======================================================================
-version = '1.00.2'
+version = '1.01'
 
 import sys
 import os
@@ -52,10 +53,10 @@ def execute(cmnd, timeout=None, stdout=Proc.PIPE, stderr=Proc.NULL):
 # ----------------------------------------------------------------------
 #  簡易grep
 #
-def match(lines, patt, first=False):
+def match(lines, patt, first=False, flags=0):
 	matches = []
 	for line in lines:
-		m = re.search(patt, line)
+		m = re.search(patt, line, flags)
 		if m:
 			matches.append(m.group(1))
 	if matches == []:
@@ -96,8 +97,22 @@ def try_find(which, prog, check_path=None, devenv_number=None):
 #  python
 #
 def try_find_python(which, python_path):
-	(major, minor, micro, release, serial) = sys.version_info
-	return python_path, '%s.%s.%s' % (major, minor, micro)
+	if python_path is None:
+		(major, minor, micro, release, serial) = sys.version_info
+		stat, out = execute('which python')
+		if out != 0:
+			Error(caller).abort('python not found', prompt='Pan')
+		python_path = os.path.abspath(out)
+		return python_path, '%s.%s.%s' % (major, minor, micro)
+	#
+	cmnd = '%s --version' % python_path
+	stat, out = execute(cmnd, stderr=Proc.STDOUT)
+	if stat != 0 or out is None:
+		return SetupFile.NOTFOUND, None
+	ver_out = out.split('\n')[0].strip()
+	ver_patt = r'Python[\s\t]+([\d\.]+$)'
+	ver = match(ver_out.split('\n'), ver_patt, True)
+	return out, ver
 
 #  common check
 #

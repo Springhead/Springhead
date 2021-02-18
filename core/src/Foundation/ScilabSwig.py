@@ -18,18 +18,20 @@
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.00  2017/05/10 F.Kanehori	Windows batch file から移植.
-#     Ver 1.01  2017/07/27 F.Kanehori	Python executable directory moved.
-#     Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
-#     Ver 1.03  2017/11/08 F.Kanehori	Python library path の変更.
-#     Ver 1.04  2017/11/29 F.Kanehori	Python library path の変更.
-#     Ver 1.05  2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#     Ver 1.06  2020/04/31 F.Kanehori	unix: gmake をデフォルトに.
-#     Ver 1.07  2020/05/13 F.Kanehori	unix: Ver 1.05 に戻す.
-#     Ver 1.08  2020/11/11 F.Kanehori	nmake のロゴを抑止する.
-#     Ver 1.09  2020/12/16 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.00   2017/05/10 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01   2017/07/27 F.Kanehori	Python executable directory moved.
+#     Ver 1.02   2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.03   2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.04   2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.05   2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.06   2020/04/31 F.Kanehori	unix: gmake をデフォルトに.
+#     Ver 1.07   2020/05/13 F.Kanehori	unix: Ver 1.05 に戻す.
+#     Ver 1.08   2020/11/11 F.Kanehori	nmake のロゴを抑止する.
+#     Ver 1.09   2020/12/16 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.10   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = 1.09
+from __future__ import print_function
+version = 1.10
 debug = False
 trace = False
 

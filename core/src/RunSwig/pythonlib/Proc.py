@@ -19,21 +19,10 @@
 #     Ver 1.00   2017/08/19 F.Kanehori	First version.
 #					Separated from class Util.
 #     Ver 1.01   2017/09/14 F.Kanehori	Bug fixed.
-#     Ver 1.01.1 2017/10/07 F.Kanehori	Dos intrinsic commands OK.
-#     Ver 1.01.2 2017/10/13 F.Kanehori	Set default encoding.
-#     Ver 1.01.3 2018/01/11 F.Kanehori	wait(): Enable dry_run.
-#     Ver 1.01.4 2018/02/21 F.Kanehori	Set dummy object to Proc.proc
-#					when dry_run flag specified.
-#     Ver 1.01.5 2018/03/12 F.Kanehori	Now OK for doxygen.
 #     Ver 1.02   2018/03/14 F.Kanehori	Change: exec() -> execute().
 #     Ver 1.03   2018/03/19 F.Kanehori	Change interface: output()
-#     Ver 1.03.1 2018/03/22 F.Kanehori	Bug fixed.
-#     Ver 1.03.2 2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
-#     Ver 1.03.3 2018/06/28 F.Kanehori	Fixes spaces in homedir.
-#     Ver 1.03.4 2020/07/15 F.Kanehori	output(): Change decode strategy.
-#     Ver 1.03.5 2020/07/15 F.Kanehori	Bug fixed.
-#     Ver 1.03.6 2020/11/09 F.Kanehori	Bug fixed.
 #     Ver 1.04   2021/02/10 F.Kanehori	Can run on python 2.7.
+#     Ver 1.04.1 2021/02/18 F.Kanehori	Fix (in case called from make).
 # ======================================================================
 from __future__ import print_function
 import sys
@@ -119,6 +108,8 @@ class Proc:
 		
 		# conversion of path in args
 		if isinstance(args, str):
+			args = args.split()
+		if sys.version_info[0] < 3 and isinstance(args, unicode):
 			args = args.split()
 		args = ' '.join(args)
 		args = self.__space_in_homedir(args)

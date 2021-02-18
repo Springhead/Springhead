@@ -34,8 +34,10 @@
 #     Ver 1.09	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #     Ver 1.10	 2019/09/18 F.Kanehori	Cmakeが生成したファイルの後始末を追加.
 #     Ver 1.11   2020/12/16 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.12   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = '1.11'
+from __future__ import print_function
+version = '1.12'
 trace = False
 
 import sys
@@ -110,9 +112,9 @@ def create(fname, proj, dept):
 	flag = ' -v' if verbose else ''
 	cmnd = '%s%s' % (createmkf, flag)
 	args = '%s %s %s' % (fname, proj, dept)
-	#print('create_mkf.py%s %s' % (flag, args))
-	Proc().execute('%s %s' % (cmnd, args), shell=True)
-	Proc().wait()
+	#print('%s %s' % (cmnd, args))
+	stat = Proc().execute('%s %s' % (cmnd, args), shell=True).wait()
+	#print('--- stat: %d' % stat)
 
 #  Do the job for one project.
 #
@@ -120,6 +122,7 @@ def do_process(proj, dept):
 	# proj:	    Project name.
 	# dept:	    Dependent projects.
 
+	#print('do_process: enter')
 	#  Option '-d': Delete makefile.
 	if options.delete:
 		if os.path.exists(makefile):
@@ -159,6 +162,7 @@ def do_process(proj, dept):
 				# OK, nothing to do.
 				return
 		f_op.mv(tempfile, makefile)
+	#print('do_process: leave')
 
 # ---------------------------------------------------------------------
 #  Options
@@ -230,7 +234,9 @@ from FindSprPath import *
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	if os.getenv('swig') is None:
-		print('%s: 移行処理' % prog)
+		v = sys.version_info
+		v_info = '%s.%s.%s' % (v.major, v.minor, v.micro)
+		print('%s: 移行処理 (%s)' % (prog, v_info))
 		sf = SetupFile('%s/setup.conf' % SrcDir)
 		sf.setenv()
 	sprtop = os.path.abspath('%s/../..' % SrcDir)
