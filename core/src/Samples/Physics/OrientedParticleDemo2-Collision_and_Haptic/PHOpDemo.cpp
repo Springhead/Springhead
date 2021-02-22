@@ -16,7 +16,7 @@
 #define USE_SPRFILE
 #define ESC 27
 //#define USE_AVG_RADIUS
-#define COLLISION_DEMO
+//#define COLLISION_DEMO
 
 #ifndef COLLISION_DEMO
 #define HAPTIC_DEMO
@@ -287,13 +287,15 @@ void PHOpDemo::InitInterface(){
 			cyDesc.channel = i;
 			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
 		}
+		hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &DRUARTMotorDriverDesc());
 		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 		hiSdk->Print(DSTR);
 		hiSdk->Print(std::cout);
 
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 #ifdef	_MSC_VER
-		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+//		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+		spg->Init(&HISpidarGDesc("SpidarG6T1"));
 #else
 		HISpidarGDesc tmpdesc = HISpidarGDesc((char *) "SpidarG6X3R");
 		spg->Init(&tmpdesc);

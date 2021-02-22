@@ -96,7 +96,15 @@ bool HISdk::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
-
+bool HISdk::DelChildObject(ObjectIf* o) {
+	for (auto it = drPool.begin(); it != drPool.end(); ++it) {
+		if (o == (*it)->Cast()) {
+			drPool.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
 HIBaseIf* HISdk::CreateHumanInterface(const IfInfo* keyInfo){
 	return DCAST(HIBaseIf, CreateObject(keyInfo, NULL));
 }

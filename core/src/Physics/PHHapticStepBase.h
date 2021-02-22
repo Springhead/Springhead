@@ -133,7 +133,7 @@ public:
 	double GetMu() { return muCur;  }
 
 	// GMS用
-	double GetMus(int id) { return muCurs[id]; }
+	double GetMus(int id) { return id < muCurs.size() ? muCurs[id] : muCur; }
 };
 
 //----------------------------------------------------------------------------

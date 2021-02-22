@@ -151,59 +151,46 @@ public:
 	bool Update() {
 		bool rv = false;
 #ifdef _WIN32
-		if (nCommandBuffered < (boards.size() + 1)) {
-			// if command is not buffered too much.
-			// write command to boards
-			for (auto board : boards) {
-				board->WriteCmd(CI_CURRENT, *this);
-				//DPF("S");
-				nCommandBuffered++;
-			}
-			// send commands to uart
-			SendUart();
-			if (boards.size()) {
-				nCommandBuffered++;
-			}
-			rv = true;
+		// if command is not buffered too much.
+		// write command to boards
+		for (auto board : boards) {
+			board->WriteCmd(CI_CURRENT, *this);
+			nCommandBuffered++;
 		}
-		else {
-			DPF("nCommandBuffered = %d\n", nCommandBuffered);
+		// send commands to uart
+		SendUart();
+		if (boards.size()) {
+			nCommandBuffered++;		//	SendUart() Sends CI_BOARD_INFO to get '\0' which works as event character for UART.
 		}
+		rv = true;
 		while (nCommandBuffered) {
-/*			DWORD comErr;
-			COMSTAT comStat;
-			ClearCommError(owner->hUART, &comErr, &comStat);
-			if (comStat.cbInQue == 0) {
-				break;
+			while (readPos == 0) {
+				DWORD nRead;
+				ReadFile(owner->hUART, &cmdHeader, 1, &nRead, NULL);
+				readPos = nRead;
+				//	DSTR << "Recv " << std::setbase(16) << (int)cmdHeader.header << " nCommandBuffered = " << nCommandBuffered << std::endl;
 			}
-			else {
-*/				while (readPos == 0) {
-					DWORD nRead;
-					ReadFile(owner->hUART, &cmdHeader, 1, &nRead, NULL);
-					readPos = nRead;
-				}
-				for (auto board : boards) {
-					if (board->GetBoardId() == cmdHeader.boardId) {
-						board->RetStart()[0] = cmdHeader.header;
-						//DPF("board->RetStart()[0] : %x\n", board->RetStart()[0]);
-						int retLen = board->RetLen();
-						if (retLen == 0) {
-							DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0" << std::endl;
-						}
-						DWORD nRead;
-						ReadFile(owner->hUART, (char*)(board->RetStart() + readPos), retLen - readPos, &nRead, NULL);
-						readPos += nRead;
-						if (readPos == retLen) {
-							board->ReadRet(cmdHeader.commandId, *this);
-							//DPF("R");
-							readPos = 0;
-							nCommandBuffered--;
-						}
-						//else  DPF("Wait: %d/%d\n", readPos, retLen); }
-						break;
+			for (auto board : boards) {
+				if (board->GetBoardId() == cmdHeader.boardId) {
+					board->RetStart()[0] = cmdHeader.header;
+					//DPF("board->RetStart()[0] : %x\n", board->RetStart()[0]);
+					int retLen = board->RetLen();
+					if (retLen == 0) {
+						DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0" << std::endl;
 					}
+					DWORD nRead;
+					ReadFile(owner->hUART, (char*)(board->RetStart() + readPos), retLen - readPos, &nRead, NULL);
+					readPos += nRead;
+					if (readPos == retLen) {
+						board->ReadRet(cmdHeader.commandId, *this);
+						//DPF("R");
+						readPos = 0;
+						nCommandBuffered--;
+					}
+					//else  DPF("Wait: %d/%d\n", readPos, retLen); }
+					break;
 				}
-//			}
+			}
 		}
 #endif //_WIN32
 		return rv;
@@ -259,7 +246,7 @@ public:
 			WriteFile(owner->hUART, &cmd, 1, NULL, NULL);
 			WriteFile(owner->hUART, zeros, 5, NULL, NULL);
 		}
-		FlushFileBuffers(owner->hUART);
+		//FlushFileBuffers(owner->hUART);
 	}
 	//	override BoardCmdBase
 	virtual short GetControlMode() {

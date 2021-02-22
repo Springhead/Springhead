@@ -52,7 +52,9 @@ int __cdecl main(){
 	//spg->Init(&HISpidar4DDesc());
 
 	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	//	spg->Init(&HISpidarGDesc("SpidarG6T1"));
+	HISpidarGDesc desc("SpidarG6T1");
+	for (int i = 0; i < 8; ++i) desc.motors[i].minForce = 0.3;
+	//spg->Init(&desc);
 	spg->Init(&HISpidarGDesc("SpidarG6X3L"));
 	spg->Calibration();
 
@@ -67,10 +69,15 @@ int __cdecl main(){
 		length[i] = spg->GetMotor(i)->GetLength();
 	}
 	enum Mode {
+		NONE,
 		STRING,
 		POSE,
 		FORCE,
-	} mode = STRING;
+		TENSE,
+		DEBUG,
+	} mode = NONE;
+	std::string help = "ESC/Q: Quit,  f: force feedback,  s: string,  p: pose,  c: calibration.";
+	std::cout << std::endl << help << std::endl;
 	while(1){
 		if (_kbhit()) {
 			switch (_getch()) {
@@ -83,6 +90,16 @@ int __cdecl main(){
 			case 'F':
 				mode = FORCE;
 				std::cout << "force feedback mode." << std::endl;
+				break;
+			case 'T':
+			case 't':
+				mode = TENSE;
+				std::cout << "Full tense mode." << std::endl;
+				break;
+			case 'd':
+			case 'D':
+				mode = DEBUG;
+				std::cout << "Debug mode." << std::endl;
 				break;
 			case 's':
 			case 'S':
@@ -98,6 +115,10 @@ int __cdecl main(){
 			case 'c':
 				spg->Calibration();
 				std::cout << "Calibrate." << std::endl;
+				break;
+			default:
+				mode = NONE;
+				std::cout << help << std::endl;
 				break;
 			}
 		}
@@ -122,6 +143,24 @@ int __cdecl main(){
 				f.y = (float)(-(spgpos.y - -0.015) * 1000);
 			}
 			spg->SetForce(f, Vec3f());
+			Vec6f pose;
+			pose.sub_vector(0, Vec3f()) = spg->GetPosition();
+			pose.sub_vector(3, Vec3f()) = spg->GetOrientation().Rotation();
+			for (size_t i = 0; i < pose.size(); ++i) {
+				printf(" %7.4f", pose[i]);
+			}
+			std::cout << std::endl;
+		}else if (mode == TENSE) {
+			for (int i = 0; i < spg->NMotor(); ++i) {
+				spg->GetMotor(i)->SetForce(100.0f);
+			}
+			Vec6f pose;
+			pose.sub_vector(0, Vec3f()) = spg->GetPosition();
+			pose.sub_vector(3, Vec3f()) = spg->GetOrientation().Rotation();
+			for (size_t i = 0; i < pose.size(); ++i) {
+				printf(" %7.4f", pose[i]);
+			}
+			std::cout << std::endl;
 		}
 		else if (mode == STRING) {
 			//	print string length
@@ -137,6 +176,9 @@ int __cdecl main(){
 				printf(" %7.4f", pose[i]);
 			}
 			std::cout << std::endl;
+		}
+		else if (mode == DEBUG) {
+			spg->SetForce(Vec3d(10000, 0, 0), Vec3d(10000, 0, 0));
 		}
 	}
 next:;

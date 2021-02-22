@@ -26,6 +26,8 @@ public:
 	virtual void Rendered(GRRenderIf* render){}
 	void Enable(bool on = true){ enabled = on; }
 	bool IsEnabled(){ return enabled; }
+	virtual void SetMaterial(GRMaterialIf*) {}
+	virtual GRMaterialIf* GetMaterial() { return NULL; }
 
 	GRVisual(){ enabled = true; }
 };

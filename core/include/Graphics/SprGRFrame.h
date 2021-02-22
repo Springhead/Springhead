@@ -26,6 +26,7 @@ struct GRRenderIf;
 struct GRVisualDesc{
 };
 
+struct GRMaterialIf;
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
 struct GRVisualIf: public SceneObjectIf{
 	SPR_IFDEF(GRVisual);
@@ -38,6 +39,11 @@ struct GRVisualIf: public SceneObjectIf{
 	void Enable(bool on = true);
 	/// 有効/無効状態の取得
 	bool IsEnabled();
+
+	///
+	GRMaterialIf* GetMaterial();
+	///
+	void SetMaterial(GRMaterialIf* mat);
 };
 		
 ///	DirectX の Frame の変換を表す FrameTransformMatrix ノードを読むためのDesc
