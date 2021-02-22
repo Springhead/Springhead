@@ -14,25 +14,30 @@
 #	    src/FWOldSpringheadDecl.hpp
 #	    src/FWOldSpringheadStub.cpp
 #	作業ディレクトリ：
-#	    Springhead2 の直下に swigtemp というディレクトリを作り使用する.
+#	    Springhead/core の下に swigtemp というディレクトリを作り使用する.
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.00  2017/05/10 F.Kanehori	Windows batch file から移植.
-#	Ver 1.01  2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
-#	Ver 1.01  2017/07/31 F.Kanehori	Python executable directory moved.
-#	Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
-#	Ver 1.03  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#	Ver 1.04  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 1.05  2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
-#	Ver 1.06  2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
-#	Ver 1.07  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#	Ver 1.08  2019/02/26 F.Kanehori	Cmake環境に対応.
-#	Ver 1.09  2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#	Ver 1.10  2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
-#	Ver 1.11  2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
+#     Ver 1.00   2017/05/10 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01   2017/07/06 F.Kanehori	作業ファイルの後始末を追加.
+#     Ver 1.01   2017/07/31 F.Kanehori	Python executable directory moved.
+#     Ver 1.02   2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.03   2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.04   2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.05   2017/11/15 F.Kanehori	Windows 版の nkf は buildtool を使用.
+#     Ver 1.06   2017/11/29 F.Kanehori	pythonlib: buildtool -> src/RunSwig.
+#     Ver 1.07   2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.08   2019/02/26 F.Kanehori	Cmake環境に対応.
+#     Ver 1.09   2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.10   2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
+#     Ver 1.11   2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
+#     Ver 1.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.12.1 2020/12/16 F.Kanehori	Bug fix.
+#     Ver 1.12.2 2021/01/07 F.Kanehori	Bug fix.
+#     Ver 1.13   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = 1.10
+from __future__ import print_function
+version = '1.13'
 debug = False
 trace = False
 
@@ -40,6 +45,16 @@ import sys
 import os
 import glob
 from optparse import OptionParser
+
+# ----------------------------------------------------------------------
+#  Locate myself
+#
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+
+# --------------------------------------------
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+# --------------------------------------------
 
 # ----------------------------------------------------------------------
 #  Constants
@@ -52,37 +67,50 @@ verbose = 1 if debug else 0
 dry_run = 1 if debug else 0
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import Springhead python library.
 #
 sys.path.append('../RunSwig')
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-if spr_path.top is None:
-	if os.environ.get('SPR_TOP_DIR', None) is not None:
-		spr_path.top = os.environ.get('SPR_TOP_DIR')
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
 from TextFio import *
 from FileOp import *
 from Error import *
 from Util import *
 from Proc import *
+from SetupFile import *
+
+# ----------------------------------------------------------------------
+#  Directories
+#
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
+	sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	incdir = os.path.relpath('%s/../include' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.relpath('bin')
+	incdir = spr_path.relpath('inc')
+	srcdir = spr_path.relpath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+foundation_dir = '%s/%s' % (srcdir, 'Foundation')
+framework_dir = '%s/%s' % (srcdir, 'Framework')
 
 # ----------------------------------------------------------------------
 #  Globals (part 1)
 #
 util = Util()
 unix = util.is_unix()
-
-# ----------------------------------------------------------------------
-#  Directories
-#
-sprtop = spr_path.abspath()
-bindir = spr_path.abspath('bin')
-incdir = spr_path.abspath('inc')
-srcdir = spr_path.abspath('src')
-foundation_dir = '%s/%s' % (srcdir, 'Foundation')
-framework_dir = '%s/%s' % (srcdir, 'Framework')
 
 # ----------------------------------------------------------------------
 #  Files and etc.
@@ -117,9 +145,12 @@ parser.add_option('-c', '--clean',
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
-parser.add_option('-P', '--python',
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if not SetupExists:
+	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -144,14 +175,26 @@ dry_run	= options.dry_run
 # ----------------------------------------------------------------------
 #  Scripts
 #
-if options.python:
-	python = options.python
-nkf = 'nkf'
-swig = 'swig'
-#make = 'gmake' if unix else 'nmake'
-make = 'make' if unix else 'nmake'
-runswig_foundation = '%s %s/RunSwig.py -P %s' % (python, foundation_dir, python)
-addpath = spr_path.abspath('buildtool')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	python = sf.getenv('python')
+	if unix:
+		make = sf.getenv('gmake')
+	else:
+		make = '%s /NOLOGO' % sf.getenv('nmake')
+	nkf = sf.getenv('nkf')
+	swig = sf.getenv('swig')
+	runswig_foundation = '%s %s/RunSwig.py' % (python, foundation_dir)
+	addpath = os.path.abspath('%s/../..' % SrcDir)
+else:
+	if options.python:
+		python = options.python
+	nkf = 'nkf'
+	swig = 'swig'
+	make = 'gmake' if unix else 'nmake /NOLOGO'
+	runswig_foundation = '%s %s/RunSwig.py -P %s' % (python, foundation_dir, python)
+	addpath = spr_path.abspath('buildtool')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
 #  Globals (part 2)
@@ -244,8 +287,15 @@ output(interfacefile, lines)
 #  makefile を作成する.
 #
 srcimpdep_rel = os.path.relpath(srcimpdep)
-swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
-swigargs = '-I%s/Lib' % swigdir_rel
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	swig_bin = Util.upath(swig.replace('"', ''))
+	swigdir_rel = os.path.relpath('/'.join(swig_bin.split('/')[0:-1]))
+	swigargs = '-I%s/Lib' % swigdir_rel
+else:
+	swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
+	swigargs = '-I%s/Lib' % swigdir_rel
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
 cp = 'cp' if unix else 'copy'
 rm = 'rm' if unix else 'del'
@@ -255,7 +305,12 @@ lines = []
 lines.append('# Do not edit. %s will update this file.' % prog)
 lines.append('all:\t../../../src/Framework/%sStub.cpp' % module)
 lines.append('../../../src/Framework/%sStub.cpp:\t%s' % (module, srcimpdep_rel))
-lines.append('\t%s/%s %s %s' % (swigdir_rel, swig, swigargs, interfacefile))
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	lines.append('\t%s %s %s' % (swig_bin, swigargs, interfacefile))
+else:
+	lines.append('\t%s/%s %s %s' % (swigdir_rel, swig, swigargs, interfacefile))
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 lines.append('\t%s Spr%sDecl.hpp ../../../include/%s %s' % (cp, module, module, quiet))
 lines.append('\t%s %sStub.cpp ../../../src/Framework %s' % (cp, module, quiet))
 lines.append('\t%s %sDecl.hpp ../../../src/Framework %s' % (cp, module, quiet))

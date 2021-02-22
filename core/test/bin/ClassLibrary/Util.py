@@ -13,16 +13,20 @@
 #	string = time()
 #	string = now()
 #
+#	makedirs(path[, mode])
+#
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/10/13 F.Kanehori	Release version.
-#	Ver 2.0  2017/08/19 F.Kanehori	Some methods are moved to
+#     Ver 1.00   2016/10/13 F.Kanehori	Release version.
+#     Ver 2.00   2017/08/19 F.Kanehori	Some methods are moved to
 #					Proc class and FileOp class.
-#	Ver 2.1  2017/09/11 F.Kanehori	Add alias method for pathconv().
-#	Ver 2.2  2018/02/19 F.Kanehori	Change default date/time format.
-#	Ver 2.21 2018/03/08 F.Kanehori	Now OK for doxygen.
-#	Ver 2.22 2020/11/01 F.Kanehori	Fix comment.
+#     Ver 2.01   2017/09/11 F.Kanehori	Add alias method for pathconv().
+#     Ver 2.02   2018/02/19 F.Kanehori	Change default date/time format.
+#     Ver 2.02.1 2018/03/08 F.Kanehori	Now OK for doxygen.
+#     Ver 2.02.2 2020/11/01 F.Kanehori	Fix comment.
+#     Ver 2.03   2021/02/04 F.Kanehori	Can run on python 2.7.
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 import datetime
@@ -34,7 +38,7 @@ class Util:
 	#
 	def __init__(self):
 		self.clsname = self.__class__.__name__
-		self.version = 2.21
+		self.version = 2.03
 	##  Determine if currently running under unix.
 	#   Class instance version of Util.is_unix().
 	#   @returns		True if yes, False otherwise.
@@ -59,6 +63,10 @@ class Util:
 	#   Class instance version of Util.now().
 	#   @returns		Date and time string.
 	def now(self, **keywords): return Util.now(**keywords)
+	##  Wrapper of makefirs (version 3 and after).
+	#   Class instance version of Util.makefies().
+	#   @returns		none
+	def makedirs(self, **keywords): return Util.makedirs(**keywords)
 
 	##  Determine if currently running under unix.
 	#   @returns		True if yes, False otherwise.
@@ -149,5 +157,19 @@ class Util:
 	@staticmethod
 	def now(format='%Y-%m-%d %H:%M:%S'):
 		return datetime.datetime.now().strftime(format)
+
+	##  Wrapper of makefirs (version 3 and after).
+	#   @param name		Directory name to create.
+	#   @param mode		Permission mode of the directory.
+	#   @param exist_ok	Do not raise exception if directory
+	#			already exists.
+	#   @returns		none
+	#
+	@staticmethod
+	def makedirs(name, mode=0o777, exist_ok=False):
+		exists = os.path.exists(name) and os.path.isdir(name)
+		if exists and exist_ok:
+			return
+		os.makedirs(name, mode)
 
 # end: Util.py

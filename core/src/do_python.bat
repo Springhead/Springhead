@@ -2,8 +2,13 @@
 setlocal enabledelayedexpansion
 :: ============================================================================
 ::  SYNOPSIS
-::	set _SPRTOP_=<Springheadのトップディレクトリ>
 ::	do_python.bat script.py [args..]	（Windows 専用）
+::
+::  重大な変更
+::	この do_python.bat は廃止し、setup 機構で必要な設定 (swig の生成、
+::	パスの設定) を行なうように変更する。
+::	ただし移行期間を設け、その間は setup file が存在しない場合に限り
+::	従来の処理を実行する (存在するときは何もしない)。
 ::
 ::  DESCRIPTION
 ::	Python script を実行するための Windows 用アダプタ。
@@ -19,34 +24,49 @@ setlocal enabledelayedexpansion
 ::	ならない。
 ::
 ::  VERSION
-::	Ver 1.0  2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
-::	Ver 1.1  2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更
-::	Ver 2.0  2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
+::    Ver 1.00   2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
+::    Ver 1.01   2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
+::    Ver 2.00   2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
+::    Ver 3.00   2020/12/07 F.Kanehori	Setup 導入移行期間開始.
+::    Ver 3.00.1 2021/01/20 F.Kanehori	Setup 処理修正
 :: ============================================================================
+set PROG=%~n0
+set CWD=%CD%
 set verbose=0
 
-::----------------------------------------------
-::  buildtool の相対パス
-::	現在の位置から上へたどって最初に見つけた"core"ディレクトリの
-::	一段上位のディレクトリをSpringheadのトップディレクトリとする
+::-----------------------------------------------------------------------------
+:: Springhead tree のトップへ移動する
+::	このスクリプトは "<top>/core/src" に置く。
 ::
-set CWD=%CD%
-:loop
-	call :leaf %CD%
-	if "%_ret_%" equ "" goto :exec
-	if "%_ret_%" equ "core" goto :found
-	cd ..
-	goto :loop
-:found
-cd ..
-if exist buildtool\ (
-	set TOOLPATH=%CD%\buildtool\win32
+cd /d %~dp0
+cd ..\..
+set SprTop=%CD%
+cd %CWD%
+
+::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+:: 移行期間の処理
+::	移行期間終了後は _wrapper python args.. を呼び出す
+::	だけにする
+::
+if exist %SprTop%\core\src\setup.conf (
+	endlocal
+	for /f "tokens=1,2" %%a in (%SprTop%\core\src\setup.conf) do (
+		if "%%a" equ "python" (set python=%%b & goto :out)
+	)
+	:out
+	setlocal enabledelayedexpansion
+	echo 移行処理 -^> %python% %*
+	cmd /c python %*
+	exit /b 0
+)
+::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+echo %PROG%: invoke DOS batch
+if exist %SprTop%\buildtool\ (
+	set TOOLPATH=%SprTop%\buildtool\win32
 	if %verbose% geq 1 (
-		echo buildtool found at "%CD%\buildtool"
+		echo buildtool found at "%SprTop%\buildtool"
 	)
 )
-:exec
-cd %CWD%
 
 :: 引数はそのまま渡す
 set ARGS=%*

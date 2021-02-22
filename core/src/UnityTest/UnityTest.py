@@ -204,7 +204,7 @@ if result == 0:
 	exitcode = result
 
 # ----------------------------------------------------------------------
-#  Revice ProjectSettings
+#  Revive ProjectSettings
 #
 verbose('reviving ' + setting_file)
 

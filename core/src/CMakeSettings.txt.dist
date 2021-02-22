@@ -83,7 +83,14 @@ set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 # ******************************************************************************
 
 #  for Windows specific
-set(VS_VERSION			"15.0")
+if(Windows)
+    if(DEFINED MakeFuncCmakeVersion AND SetupExists)
+	get_vs_version(${SetupFileName} _result)
+	string(REGEX MATCHALL "[0-9\.]+" VS_VERSION ${_result})
+    else() 
+	set(VS_VERSION		"15.0")
+    endif()
+endif()
 
 if(Windows)
     set(DEFINE_MACROS		${DEFINE_MACROS} WINDOWS_IGNORE_PACKING_MISMATCH)

@@ -36,6 +36,7 @@ if "%OUT%" equ "" (
 )
 
 :done
+echo %PROG%: %MAKEPATH%
 endlocal && (set MAKEPATH=%MAKEPATH%)
 exit /b
 

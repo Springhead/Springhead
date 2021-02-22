@@ -4,11 +4,12 @@
 
 * [インストール](install/1.0.Install.md)
   * [ダウンロード](install/1.1.Download.md)
-  * [ビルドの準備](install/1.2.Preparation.md)
-  * [cmake](install/1.3.Cmake.md)
-  * [ビルド](install/1.4.Build.md)
-  * [EmbPython](install/1.5.EmbPython.md)
-  * [CMakeを利用しない場合(非推奨)](install/1.6.DontUseCmake.md)
+  * [セットアップ](install/1.2.Setup.md)
+  * [ビルドの準備](install/1.3.Preparation.md)
+  * [cmake](install/1.4.Cmake.md)
+  * [ビルド](install/1.5.Build.md)
+  * [EmbPython](install/1.6.EmbPython.md)
+  * [CMakeを利用しない場合(非推奨)](install/1.7.DontUseCmake.md)
 
 * [アプリケーションのビルド (開発者向け)](application/2.0.Application.md)
   * [ビルドの準備](application/2.1.Preparation.md)

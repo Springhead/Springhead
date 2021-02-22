@@ -12,17 +12,19 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/11/06 F.Kanehori	First version.
-#	Ver 2.0  2017/04/10 F.Kanehori	Ported to unix.
-#	Ver 2.01 2017/08/15 F.Kanehori	Change test case message.
-#	Ver 2.1  2017/09/11 F.Kanehori	Update print().
-#	Ver 2.2  2017/09/13 F.Kanehori	Add abort().
-#	Ver 2.3  2018/01/10 F.Kanehori	Add arg 'alive' to print().
-#	Ver 2.21 2018/03/09 F.Kanehori	Now OK for doxygen.
-#	Ver 3.0  2018/03/14 F.Kanehori	Change method name (print->put).
+#     Ver 1.00   2016/11/06 F.Kanehori	First version.
+#     Ver 2.00   2017/04/10 F.Kanehori	Ported to unix.
+#     Ver 2.01   2017/08/15 F.Kanehori	Change test case message.
+#     Ver 2.01   2017/09/11 F.Kanehori	Update print().
+#     Ver 2.02   2017/09/13 F.Kanehori	Add abort().
+#     Ver 2.03   2018/01/10 F.Kanehori	Add arg 'alive' to print().
+#     Ver 2.03.1 2018/03/09 F.Kanehori	Now OK for doxygen.
+#     Ver 3.00   2018/03/14 F.Kanehori	Change method name (print->put).
 #					Add error(), warn(), info().
-#	Ver 3.01 2018/03/19 F.Kanehori	Documentation.
+#     Ver 3.00.1 2018/03/19 F.Kanehori	Documentation.
+#     Ver 3.01   2021/02/04 F.Kanehori	Can run on python 2.7.
 # ======================================================================
+from __future__ import print_function
 import sys
 
 ##  Error handling class.
@@ -35,7 +37,7 @@ class Error:
 	#
 	def __init__(self, prog, out=sys.stderr, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 3.0
+		self.version = 3.01
 		#
 		self.prog = prog
 		self.out  = out
@@ -65,13 +67,7 @@ class Error:
 		if alive and self.verbose and die:
 			msg_str += ' -> exit code %d' % exitcode
 		#
-		if sys.version_info[0] >= 3:
-			print(msg_str, file=self.out)
-		else:
-			if self.out == sys.stdout:
-				sys.stdout.write(msg_str + '\n')
-			else:
-				sys.stderr.write(msg_str + '\n')
+		print(msg_str, file=self.out)
 		self.out.flush()
 		if die and not alive:
 			sys.exit(exitcode)

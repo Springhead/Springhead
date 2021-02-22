@@ -20,12 +20,14 @@
 #     Ver 2.00	 2020/04/09 F.Kanehori	方針の全面変更 (DESCRIPTION参照)
 #     Ver 2.01	 2020/04/12 F.Kanehori	Bug fix.
 #     Ver 2.10	 2020/05/12 F.Kanehori	再度方針の全面変更 (DESCRIPTION参照)
+#     Ver 2.10.1 2020/11/11 F.Kanehori	不要なコードの削除
+#     Ver 2.11   2021/02/17 F.Kanehori	Python 2.7 対応
 # ==============================================================================
-version = '2.10'
+from __future__ import print_function
+version = '2.11'
 
 import sys
 import os
-#import re
 import shutil
 from optparse import OptionParser
 
@@ -44,7 +46,6 @@ sys.path.append(libdir)
 from TextFio import *
 from Proc import *
 from Error import *
-#from Util import *
 
 # ----------------------------------------------------------------------
 #  Directories

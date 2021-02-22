@@ -1,15 +1,15 @@
 #!/bin/bash
 # ============================================================================
 #  SYNOPSIS
-#       buildswig [-f]
-#         -f		強制的に configure から実行する
+#       buildswig [-f | -F]
+#         -c		make clean && make を実行する
 #
 #  DESCRIPTION
 #       swig バイナリを生成する
 #       Makefile がないときは configure から実行する
 # ----------------------------------------------------------------------------
 #  VERSION
-#       Ver 1.0  2020/11/04 F.Kanehori  改定初版
+#       Ver 1.0  2020/11/16 F.Kanehori  改定初版
 # ============================================================================
 PROG=`basename $0 .sh`
 DEBUG=0
@@ -22,9 +22,9 @@ SWIGDIR=${COREDIR}/bin/src/swig
 
 # Get command line options
 #
-force_flag=False
-if [ "$1" = "-f" ]; then
-	force_flag=True
+clean_flag=false
+if [ "$1" = "-c" ]; then
+	clean_flag=true
 	shift
 fi
 
@@ -35,12 +35,19 @@ cd ${SWIGDIR}
 
 # Execute configure if Makefile does not exist
 #
-if [ ! -e XMakefile -o "$force_flag" = "True" ]; then
+if [ ! -e Makefile ]; then
 	chmod +x autogen.sh configure
 	touch NEWS README AUTHORS ChangeLog
 	autoreconf -i 2>&1 | tee autoconf.log
 	./autogen.sh 2>&1 | tee autogen.log
 	./configure CPPFLAGS=-Wwrite-strings 2>&1 | tee configure.log
+	clean_flag=true
+fi
+
+# Clean up old objects
+#
+if [ $clean_flag = true ]; then
+	make --no-print-directory clean 2>&1 
 fi
 
 # Execute make

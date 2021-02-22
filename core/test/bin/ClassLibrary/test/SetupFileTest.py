@@ -7,6 +7,7 @@
 #  DESCRIPTION:
 #	Test program for class SetupFile.
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 sys.path.append('..')
@@ -33,8 +34,11 @@ if os.path.exists(setupfile):
 # make new setup file
 #
 print('-- setup new data --')
-S.add_path('prog1', '/home/usr/foo/bin')
-S.add_path('prog2', 'C:\\Users\\usr\\bar\\bin')
+S.add_prog('prog1', '/home/usr/foo/bin/prog1')
+S.add_prog('prog2', 'C:\\Users\\usr\\bar\\bin\\prog2')
+
+S.add_path('path1', '/home/usr/foo/bin')
+S.add_path('path2', 'C:\\Users\\usr\\bar\\bin')
 
 S.add_data('plat', 'x64')
 S.add_data('conf', 'Release')
@@ -49,7 +53,7 @@ S.show()
 
 # set paths to environment variable
 #
-S.add_environment()
+S.setenv()
 
 sys.exit(0)
 

@@ -6,11 +6,17 @@
 #
 #  DESCRIPTION:
 #	Test program for class TextFio (Ver 2.2).
+#
+#  NOTE:
+#	This test program works on python 2.7.17 UNLESS output is
+#	redirected.
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
 sys.path.append('..')
 from TextFio import *
+from Util import *
 
 # ----------------------------------------------------------------------
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
@@ -35,6 +41,7 @@ def fileread(f, which='lines', filters=None):
 	else:
 		lines = f.read()
 		infos = f.lineinfo()
+		print(infos)
 	f.close()
 	if which == 'lines':
 		return lines
@@ -65,12 +72,15 @@ print()
 encs = ['utf8', 'sjis', 'unicode', 'jis', 'euc', 'ascii', 'utf8-bom', 'utf16']
 for enc in encs:
 	fname = 'test/TextFioTest.' + enc
-	f = TextFio(fname, verbose=verbose)
+	f = TextFio(fname, encoding='utf_8', verbose=verbose)
 	lines = fileread(f)
 	print()
 
 print('---------------------------------------')
-files = ['test/TextFioTest.txt', 'test/empty.txt']
+if Util.is_unix():
+	files = ['test/TextFioTest.utf8', 'test/empty.txt']
+else:
+	files = ['test/TextFioTest.sjis', 'test/empty.txt']
 encoding = 'auto'
 for file in files:
 	f = TextFio(file, verbose=verbose)

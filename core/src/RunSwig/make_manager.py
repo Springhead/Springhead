@@ -22,19 +22,22 @@
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
-#     Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
-#     Ver 1.2	 2017/07/24 F.Kanehori	Python executable directory moved.
-#     Ver 1.3	 2017/09/04 F.Kanehori	New python library に対応.
-#     Ver 1.4	 2017/10/11 F.Kanehori	起動するpythonを引数化.
-#     Ver 1.5	 2017/11/08 F.Kanehori	Python library path の変更.
-#     Ver 1.6	 2017/11/29 F.Kanehori	Python library path の変更.
-#     Ver 1.7	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#     Ver 1.8	 2019/02/21 F.Kanehori	Cmake環境に対応.
-#     Ver 1.9	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.00	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#     Ver 1.01	 2017/04/17 F.Kanehori	Suppress warnig message.
+#     Ver 1.02	 2017/07/24 F.Kanehori	Python executable directory moved.
+#     Ver 1.03	 2017/09/04 F.Kanehori	New python library に対応.
+#     Ver 1.04	 2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.05	 2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.06	 2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.07	 2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.08	 2019/02/21 F.Kanehori	Cmake環境に対応.
+#     Ver 1.09	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
 #     Ver 1.10	 2019/09/18 F.Kanehori	Cmakeが生成したファイルの後始末を追加.
+#     Ver 1.11   2020/12/16 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.12   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = 1.10
+from __future__ import print_function
+version = '1.12'
 trace = False
 
 import sys
@@ -43,20 +46,33 @@ import glob
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  Identify myself
 #
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
 	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	#  移行後は FindSprPath のインポートは不要
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
+from SetupFile import *
 from TextFio import *
 from Proc import *
 from FileOp import *
@@ -65,7 +81,6 @@ from Error import *
 # ----------------------------------------------------------------------
 #  Globals
 #
-proc = Proc()
 f_op = FileOp()
 
 # ----------------------------------------------------------------------
@@ -97,9 +112,9 @@ def create(fname, proj, dept):
 	flag = ' -v' if verbose else ''
 	cmnd = '%s%s' % (createmkf, flag)
 	args = '%s %s %s' % (fname, proj, dept)
-	#print('create_mkf.py%s %s' % (flag, args))
-	proc.execute('%s %s' % (cmnd, args), shell=True)
-	proc.wait()
+	#print('%s %s' % (cmnd, args))
+	stat = Proc().execute('%s %s' % (cmnd, args), shell=True).wait()
+	#print('--- stat: %d' % stat)
 
 #  Do the job for one project.
 #
@@ -107,6 +122,7 @@ def do_process(proj, dept):
 	# proj:	    Project name.
 	# dept:	    Dependent projects.
 
+	#print('do_process: enter')
 	#  Option '-d': Delete makefile.
 	if options.delete:
 		if os.path.exists(makefile):
@@ -146,6 +162,7 @@ def do_process(proj, dept):
 				# OK, nothing to do.
 				return
 		f_op.mv(tempfile, makefile)
+	#print('do_process: leave')
 
 # ---------------------------------------------------------------------
 #  Options
@@ -170,9 +187,12 @@ parser.add_option('-t', '--maketmp',
 parser.add_option('-D', '--debug',
 			dest='debug', action='store_true', default=False,
 			help='for debug')
-parser.add_option('-P', '--python',
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if not SetupExists:
+	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -211,14 +231,25 @@ if options.rename:  flags.append('-r')
 #
 
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-sprtop = spr_path.abspath()
-##bindir = spr_path.relpath('bin')
-##srcdir = spr_path.relpath('src')
-bindir = spr_path.abspath('bin')
-srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	if os.getenv('swig') is None:
+		v = sys.version_info
+		v_info = '%s.%s.%s' % (v.major, v.minor, v.micro)
+		print('%s: 移行処理 (%s)' % (prog, v_info))
+		sf = SetupFile('%s/setup.conf' % SrcDir)
+		sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.abspath('bin')
+	srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
+swigbindir = '%s/swig' % bindir
 
 if verbose:
 	print('  sprtop:    %s' % sprtop)
@@ -236,9 +267,16 @@ if verbose:
 # ----------------------------------------------------------------------
 #  Scripts
 #
-if options.python:
-	python = options.python
-createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	python = sf.getenv('python')
+	createmkf = '%s %s/create_mkf.py' % (python, runswigdir)
+else:
+	if options.python:
+		python = options.python
+	createmkf = '%s %s/create_mkf.py -P %s' % (python, runswigdir, python)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+os.environ['PATH'] = '%s%s%s' % (swigbindir, os.pathsep, os.getenv('PATH'))
 
 # ----------------------------------------------------------------------
 #  Main process

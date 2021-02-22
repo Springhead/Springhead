@@ -101,6 +101,13 @@ eswig_SOURCES =	CParse/cscanner.c		\
 bin_PROGRAMS = eswig
 #eswig_LDADD   = @SWIGLIBS@
 
+# Avoid anoying warnings
+eswig_CFLAGS	= \
+		-Wno-write-strings		\
+		-Wno-discarded-qualifiers
+eswig_CXXFLAGS	= \
+		-Wno-write-strings
+
 # Override the link stage to avoid using Libtool
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 

@@ -1,5 +1,5 @@
 % 1.2.Preparation.tex
-%	Last update: 2020/02/13 F.Kanehori
+%	Last update: 2020/02/18 F.Kanehori
 %\newpage
 \subsection{ビルドの準備}
 \label{subsec:Preparation}
@@ -19,12 +19,14 @@
 \end{center}
 
 \bigskip
-配布されたファイル\QCMakeLists{.dist}を\QCMakeLists{}という名前でコピーします。
+セットアップを実行していない場合には、
+配布されたファイル\QCMakeLists{.dist}を\QCMakeLists{}という名前でコピーしてください
+(2.4c版 修正)。
 
 \CmndLine{%
 	> chdir C:/Springhead/core/src\\
 	> \it{copy} \CMakeLists{.dist} \CMakeLists{}
-}{command-1-2-a.eps}{CMakeLists.txt}
+}{command-1-3-a.eps}{CMakeLists.txt}
 
 \bigskip
 ビルド条件を変更する場合には、
@@ -34,7 +36,7 @@
 \CmndLine{%
 	> \it{copy} \CMakeLists{.dist} \CMakeLists{}\\
 	> \it{edit} \CMakeLists{}
-}{command-1-2-b.eps}{CMakeSettings.txt}
+}{command-1-3-b.eps}{CMakeSettings.txt}
 
 \begin{itemize}
   \item	Visual Studioのバージョンを変更する場合： \\
@@ -59,7 +61,7 @@
 \CmndLine{%
 	> \it{copy} \CMakeConf{.txt} \CMakeConf{}\\
 	> \it{edit} \CMakeConf{}\\
-}{command-1-2-c.eps}{CMakeConf.txt}
+}{command-1-3-c.eps}{CMakeConf.txt}
 
 \bigskip
 \bf{独自にインストールしたパッケージを使用するとき} (2.3版 改訂)
@@ -72,7 +74,7 @@
 	\cite{\hspace{20pt}\#\hspace{40pt}%
 		{(\rm{multiple paths must be separated by `newline' or `semicolon')}}}\\
 	\cite{)}\\
-}{command-1-2-d.eps}{PackageImport}
+}{command-1-3-d.eps}{PackageImport}
 \medskip
 \begin{narrow}[s]
 	実際に探索するパスは、\tt{<prefix> | <prefix>/(cmake|CMake) |}
@@ -85,13 +87,29 @@
 \bigskip
 \bf{ライブラリファイルとヘッダファイルのインストール先を設定するとき} (2.3版 改訂)
 
+\begin{narrow}[s]
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	変数の設定はGUIからでも行なえます。
+	ただし GUIでの設定より\Path{CMakeConf.txt}の設定の方が優先されます。
+	また、GUIで\tt{CMAKE\_INSTALL\_PREFIX}を空に設定した場合、
+	または \Path{CMakeConf.txt}で \tt{DO\_NOT\_GENERATE\_INSTALL\_TARGET}
+	を指定した場合には、
+	インストールを行なうためのターゲットルールは生成されません。
+	なお、\Path{CMakeConf.txt}で\tt{CMAKE\_INSTALL\_PREFIX}に空文字列を
+	設定した場合には、GUIの場合とは異なり、デフォルトのインストールパス
+ 	(Windowsでは\Path{C:/Program Files}、unixでは\Path{/usr/local})が
+	使用されます。(2.4b版 追加)
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	\Vskip{.3\baselineskip}
+\end{narrow}
+
 変数\tt{CMAKE\_INSTALL\_PREFIX}にインストール先を絶対パスで設定します。
 この設定をすることにより、\tt{find\_package(Springhaed, REQUIRED)}として
 \SprLib を簡単に導入することができるようになります。
 \CmndLine{%
 	\cite{set(CMAKE\_INSTALL\_PREFIX "C:/where/to/install")} \\
 	\cite{\hspace{20pt}\#\hspace{40pt}{(\rm{use absolute path)}}}\\
-}{command-1-2-e.eps}{PackageExport}
+}{command-1-3-e.eps}{PackageExport}
 \medskip
 実際にファイルがインストールされるディレクトリは
 \Vskip{-.3\baselineskip}
@@ -112,7 +130,7 @@
 \CmndLine{%
 	\cite{set(SPR\_HEADERS\_INSTALL\_DIR "header files のインストール先")} \\
 	\cite{set(SPR\_LIBRARY\_INSTALL\_DIR "library file のインストール先")} \\
-}{command-1-2-f.eps}{OldInstall}
+}{command-1-3-f.eps}{OldInstall}
 
 \bigskip
 \small{\bf{[注意]}}
@@ -125,7 +143,7 @@
 		\cite{set(SPRINGHEAD\_INCLUDE\_PREFIX       "C:/somewhere/appropreate)}\\
 		\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_DEBUG   "C:/somewhere/appropreate)}\\
 		\cite{set(SPRINGHEAD\_LIBRARY\_DIR\_RELEASE "C:/somewhere/appropreate)}
-	}{command-1-2-g.eps}{OldInstall}
+	}{command-1-3-g.eps}{OldInstall}
 \end{narrow}
 
 \bigskip
@@ -137,7 +155,7 @@
 	> \it{copy} \CMakeOpts{.dist} \CMakeOpts{}\\
 	> \it{edit} \CMakeOpts{}\\
 	\hspace{20pt}:\\
-}{command-1-2-h.eps}{CMakeOpts.txt}
+}{command-1-3-h.eps}{CMakeOpts.txt}
 
 \bigskip
 以上で準備作業は終了です。

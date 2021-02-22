@@ -13,20 +13,23 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.00  2017/04/24 F.Kanehori	Windows batch file から移植.
-#	Ver 1.011 2017/06/29 F.Kanehori	Add messages.
-#	Ver 1.01  2017/07/27 F.Kanehori	Python executable directory moved.
-#	Ver 1.02  2017/09/06 F.Kanehori	New python library に対応.
-#	Ver 1.03  2017/10/11 F.Kanehori	起動するpythonを引数化.
-#	Ver 1.04  2017/11/08 F.Kanehori	Python library path の変更.
-#	Ver 1.05  2017/11/29 F.Kanehori	Python library path の変更.
-#	Ver 1.06  2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
-#	Ver 1.07  2019/02/26 F.Kanehori	Cmake環境に対応.
-#	Ver 1.08  2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#	Ver 1.09  2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
-#	Ver 1.10  2020/05/13 F.Kanehori	unix: Ver 1.08 に戻す.
+#     Ver 1.00   2017/04/24 F.Kanehori	Windows batch file から移植.
+#     Ver 1.011  2017/06/29 F.Kanehori	Add messages.
+#     Ver 1.01   2017/07/27 F.Kanehori	Python executable directory moved.
+#     Ver 1.02   2017/09/06 F.Kanehori	New python library に対応.
+#     Ver 1.03   2017/10/11 F.Kanehori	起動するpythonを引数化.
+#     Ver 1.04   2017/11/08 F.Kanehori	Python library path の変更.
+#     Ver 1.05   2017/11/29 F.Kanehori	Python library path の変更.
+#     Ver 1.06   2018/07/03 F.Kanehori	空白を含むユーザ名に対応.
+#     Ver 1.07   2019/02/26 F.Kanehori	Cmake環境に対応.
+#     Ver 1.08   2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 1.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
+#     Ver 1.10   2020/05/13 F.Kanehori	unix: Ver 1.08 に戻す.
+#     Ver 1.11   2020/12/09 F.Kanehori	Setup 導入期間開始.
+#     Ver 1.12   2021/02/17 F.Kanehori	Python 2.7 対応.
 # ==============================================================================
-version = 1.8
+from __future__ import print_function
+version = 1.12
 trace = False
 
 import sys
@@ -34,6 +37,16 @@ import os
 import glob
 import copy
 from optparse import OptionParser
+
+# ----------------------------------------------------------------------
+#  Locate myself
+#
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
 #  Constants
@@ -44,20 +57,23 @@ if trace:
 	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
-#  Import Springhead2 python library.
+#  Import Springhead python library.
 #
 sys.path.append('../RunSwig')
 from FindSprPath import *
-spr_path = FindSprPath(prog)
-if spr_path.top is None:
-	if os.environ.get('SPR_TOP_DIR', None) is not None:
-		spr_path.top = os.environ.get('SPR_TOP_DIR')
-libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	libdir = '%s/RunSwig/pythonlib' % SrcDir
+else:
+	spr_path = FindSprPath(prog)
+	libdir = spr_path.abspath('pythonlib')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sys.path.append(libdir)
 from TextFio import *
 from Error import *
 from Util import *
 from Proc import *
+from SetupFile import *
 
 # ----------------------------------------------------------------------
 #  Globals (part 1)
@@ -68,22 +84,29 @@ unix = util.is_unix()
 # ----------------------------------------------------------------------
 #  Directories
 #
-sprtop = spr_path.abspath()
-##bindir = spr_path.relpath('bin')
-##incdir = spr_path.relpath('inc')
-##srcdir = spr_path.relpath('src')
-bindir = spr_path.abspath('bin')
-incdir = spr_path.abspath('inc')
-srcdir = spr_path.abspath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
+	sf.setenv()
+	sprtop = os.path.abspath('%s/../..' % SrcDir)
+	bindir = os.path.relpath('%s/../bin' % SrcDir)
+	incdir = os.path.relpath('%s/../include' % SrcDir)
+	srcdir = os.path.relpath(SrcDir)
+else:
+	sprtop = spr_path.abspath()
+	bindir = spr_path.relpath('bin')
+	incdir = spr_path.relpath('inc')
+	srcdir = spr_path.relpath('src')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 swigdir = '%s/%s' % (bindir, 'swig')
 
 incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
 srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 
 # ----------------------------------------------------------------------
-#  Paths
+#  Be sure to invoke swig which is build for Springhead.
 #
-addpath = os.pathsep.join([bindir, swigdir])
+addpath = os.pathsep.join([swigdir, bindir])
 
 # ----------------------------------------------------------------------
 #  Main process
@@ -95,9 +118,11 @@ parser = OptionParser(usage = usage)
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -124,11 +149,20 @@ dry_run	= options.dry_run
 # ----------------------------------------------------------------------
 #  Scripts
 #
-if options.python:
-	python = options.python
-#make = 'gmake' if unix else 'nmake'
-make = 'make' if unix else 'nmake'
-swig = 'swig'
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if SetupExists:
+	python = sf.getenv('python')
+	if unix:
+		make = sf.getenv('gmake')
+	else:
+		make = '%s /NOLOGO' % sf.getenv('nmake')
+	swig = sf.getenv('swig')
+else:
+	if options.python:
+		python = options.python
+	make = 'gmake' if unix else 'nmake /NOLOGO'
+	swig = 'swig'
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
 #  Globals (part 2)
@@ -214,7 +248,8 @@ line += ' '.join(auxdep)
 line += ' ' + ' '.join(srcinfdep)
 line += ' ' + ' '.join(srcimpdep)
 lines.append(line)
-line = '\t%s/%s -I%s/Lib' % (swigdir, swig, swigdir)
+####line = '\t%s/%s -I%s/Lib' % (swigdir, swig, swigdir)
+line = '\t%s -I%s/Lib' % (swig, swigdir)
 line += ' -spr -w305,312,319,325,401,402'
 line += ' -DSWIG_%s -c++ %s' % (module, interfacefile)
 lines.append(line)
@@ -235,7 +270,7 @@ if status != 0:
 	Error(prog).put(msg, exitcode=0, alive=True)
 
 if trace:
-	print('EXIT: %s' % prog)
+	print('LEAVE: %s' % prog)
 	sys.stdout.flush()
 sys.exit(0)
 

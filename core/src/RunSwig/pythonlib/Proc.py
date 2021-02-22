@@ -16,26 +16,21 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0   2017/08/19 F.Kanehori	First version.
+#     Ver 1.00   2017/08/19 F.Kanehori	First version.
 #					Separated from class Util.
-#	Ver 1.1   2017/09/14 F.Kanehori	Bug fixed.
-#	Ver 1.11  2017/10/07 F.Kanehori	Dos intrinsic commands OK.
-#	Ver 1.12  2017/10/13 F.Kanehori	Set default encoding.
-#	Ver 1.13  2018/01/11 F.Kanehori	wait(): Enable dry_run.
-#	Ver 1.14  2018/02/21 F.Kanehori	Set dummy object to Proc.proc
-#					when dry_run flag specified.
-#	Ver 1.15  2018/03/12 F.Kanehori	Now OK for doxygen.
-#	Ver 1.2   2018/03/14 F.Kanehori	Change: exec() -> execute().
-#	Ver 1.3   2018/03/19 F.Kanehori	Change interface: output()
-#	Ver 1.31  2018/03/22 F.Kanehori	Bug fixed.
-#	Ver 1.32  2018/04/05 F.Kanehori	Bug fixed (kill at timeout).
-#	Ver 1.33  2018/06/28 F.Kanehori	Fixes spaces in homedir.
-#	Ver 1.34  2020/07/15 F.Kanehori	output(): Change decode strategy.
-#	Ver 1.341 2020/07/15 F.Kanehori	Bug fixed.
+#     Ver 1.01   2017/09/14 F.Kanehori	Bug fixed.
+#     Ver 1.02   2018/03/14 F.Kanehori	Change: exec() -> execute().
+#     Ver 1.03   2018/03/19 F.Kanehori	Change interface: output()
+#     Ver 1.04   2021/02/10 F.Kanehori	Can run on python 2.7.
+#     Ver 1.04.1 2021/02/18 F.Kanehori	Fix (in case called from make).
 # ======================================================================
+from __future__ import print_function
 import sys
 import os
-import subprocess
+if sys.version_info[0] >= 3:
+	import subprocess
+else:
+	import subprocess32 as subprocess
 import signal
 import copy
 import re
@@ -71,6 +66,8 @@ class Proc:
 	def __init__(self, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
 		self.version = 1.341
+		#
+		self.major = sys.version_info[0]
 		self.out_encoding = self.__system_encoding()
 		#
 		self.verbose = verbose
@@ -111,6 +108,8 @@ class Proc:
 		
 		# conversion of path in args
 		if isinstance(args, str):
+			args = args.split()
+		if sys.version_info[0] < 3 and isinstance(args, unicode):
 			args = args.split()
 		args = ' '.join(args)
 		args = self.__space_in_homedir(args)
@@ -452,6 +451,7 @@ class Proc:
 	def __has_nkf(self):
 		cmnd = 'which nkf' if Util.is_unix() else 'where nkf'
 		rc = subprocess.Popen(cmnd, stdout=subprocess.DEVNULL,
+					    stderr=subprocess.DEVNULL,
 					    shell=True).wait()
 		return rc == 0
 
@@ -459,7 +459,10 @@ class Proc:
 	#   @returns		System encoding name (str).
 	#
 	def __system_encoding(self):
-		encoding = os.device_encoding(1)
+		if self.major >= 3:
+			encoding = os.device_encoding(1)
+		else:
+			encoding = sys.stdout.encoding
 		#print('os.device_encoding(1) returns [%s]' % encoding)
 		if encoding is None:
 			stdout_info = str(sys.stdout)

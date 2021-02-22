@@ -14,9 +14,9 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	 2016/12/07 F.Kanehori	‰”Å
-::	Ver 1.1	 2017/01/16 F.Kanehori	NameManger “±“ü
-::	Ver 1.1a 2017/01/18 F.Kanehori	Bug fixed.
+::     Ver 1.00  2016/12/07 F.Kanehori	‰”Å
+::     Ver 1.01  2017/01/16 F.Kanehori	NameManger “±“ü
+::     Ver 1.01a 2017/01/18 F.Kanehori	Bug fixed.
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
