@@ -51,6 +51,7 @@ version = "1.01.1"
 
 import sys
 import os
+import re
 import platform
 import shutil
 import glob
@@ -92,6 +93,9 @@ optional_tools = [ 'cmake' ]
 
 vs_path_interface = '__vs_path_interface__'
 CONF = 'Release'
+
+cmakefile = 'CMakeLists.txt'
+cmakedistfile = 'CMakeLists.txt.dist'
 
 # ----------------------------------------------------------------------
 #  Globals
@@ -164,6 +168,62 @@ def try_find_newer_python():
 			break
 		#print()
 	return major, minor, micro, candidate
+
+# ----------------------------------------------
+#  CMakeLists.txt のバージョンを取り出す
+#
+def take_cmakelists_ver(fname):
+	fio = TextFio(fname, 'r', encoding='utf8', size=16384)
+	ver = None
+	patt = r'(SPRINGHEAD_PROJECT_VERSION [\d\.]+)'
+	if fio.open() == 0:
+		for line in fio.read():
+			m = re.search(patt, line)
+			if m:
+				ver = m.group(1)
+				break
+		fio.close()
+	return ver
+
+# ----------------------------------------------
+#  CMakeLists.txt にバージョン情報以外の差分があるか調べる
+#
+def take_cmakelists_diff(oldfile, newfile):
+	cmnd = 'diff' if is_unix else 'fc /L'
+	args = '%s %s' % (oldfile, newfile)
+	stat, out = execute('%s %s' % (cmnd, args), stderr=Proc.STDOUT)
+	diffs = []
+	if stat != 0 or out is not None:
+		ver_head = 'set(SPRINGHEAD_PROJECT_VERSION'
+		ver_head_len = len(ver_head)
+		first = True
+		which = '>'
+		for line in out.split('\n'):
+			print('[%s]' % line.strip())
+			if first and is_windows:
+				first = False	# 余計な行は不要
+				continue
+			if line[0:ver_head_len] == ver_head:
+				continue
+			line = line.strip()
+			#if line == '' or line.strip()[0:1] == '#':
+			if line == '':
+				continue
+			if is_unix:
+				pass
+			else:
+				if line[0:5] == '*****':
+					which = '>' if which == '<' else '<'
+					continue
+			diffs.append('%s %s' % (which, line))
+			print('append')
+	if diffs == []:
+		result = 'none'
+	else:
+		cmnd = 'diff' if is_unix else 'FC /LB1'
+		result = '%s %s %s\n' % (cmnd, cmakefile, cmakedistfile)
+		result += '\n'.join(diffs)
+	return result
 
 # ----------------------------------------------------------------------
 #  Options
@@ -251,7 +311,6 @@ if major < 3:
 		E.abort(msg)
 
 version_save = version
-#from setup_helpers import *
 version = version_save
 
 # ----------------------------------------------------------------------
@@ -316,6 +375,25 @@ else:
 	print()
 	print('setup file ("%s") not exists.' % U.upath(setup_file))
 
+# ----------------------------------------------------------------------
+#  step 2.1
+#	CMakeLists.txt が存在するならばそのバージョンを検査する。
+#
+cmakelists_exist = False
+cmakelists_older = False
+if os.path.exists(cmakefile):
+	print()
+	print('"%s" exists ... ' % cmakefile, end='')
+
+	# ファイル内容の整合性の検査
+	cmakelists_exist = True
+	dist_ver = take_cmakelists_ver(cmakedistfile)
+	curr_ver = take_cmakelists_ver(cmakefile)
+	print('(%s)' % curr_ver)
+	cmakelists_older = (dist_ver != curr_ver)
+
+#  整合性検査終了
+#
 if check:
 	# ファイル内容の表示
 	print('progs recorded in the file are ...')
@@ -324,10 +402,14 @@ if check:
 	print('paths recorded in the file are ...')
 	for key in keys_path:
 		print('    %s\t%s' % (key, Util.upath(sf.get_path(key))))
+	if cmakelists_older:
+		print('CMakeLists.txt version')
+		print('    current: %s' % curr_ver)
+		print('    latest:  %s' % dist_ver)
 
 	# -c オプション指定時はここまで
-	print('check done')
 	print()
+	print('done (python %s.%s.%s)' % (major, minor, micro))
 
 	#
 	if len(progs_lacking) > 0:
@@ -472,6 +554,23 @@ if not setup_needed:
 			print('     in setup file ... %s' % path_regd)
 			print('     now available ... %s' % path_scan)
 
+#  CMakeLists.txt が存在ない
+if not cmakelists_exist:
+	setup_needed = True
+	setup_reason_need.append('"%s" does not exist' % cmakefile)
+
+#  CMakeLists.txt のバージョンが古い
+if cmakelists_older:
+	print()
+	msg = 'differences between %s and %s are ... ' % (cmakedistfile, cmakefile)
+	print('%s' % msg, end='')
+	difflist = take_cmakelists_diff(cmakedistfile, cmakefile)
+	if difflist != 'none':
+		print()
+	print(difflist)
+	setup_needed = True
+	setup_reason_need.append('"%s" version is older' % cmakefile)
+
 #  '-f/-F'オプションが指定されている
 if force:	# -F sets -f implicitly
 	setup_needed = True
@@ -503,7 +602,8 @@ else:
 if setup_cant_go_on:
 	E.abort('aborted')
 if not force and not setup_needed and not setup_recommended:
-	print('done')
+	print()
+	print('done (python %s.%s.%s)' % (major, minor, micro))
 	sys.exit(0)
 if not force:
 	print()
@@ -512,7 +612,8 @@ if not force:
 	else:
 		yn = raw_input('continue? [y/n]: ')
 	if yn != 'y' and yn != 'Y':
-		print('done')
+		print()
+		print('done (python %s.%s.%s)' % (major, minor, micro))
 		sys.exit(0)
 
 # ----------------------------------------------------------------------
@@ -662,29 +763,12 @@ print('   written to "%s"' % Util.upath(os.path.abspath(setup_file)))
 #  step 10:
 #	CMakeLists.txt がなければ作成(copy)する。
 #
-cmakefile = 'CMakeLists.txt'
-distfile  = 'CMakeLists.txt.dist'
-print()
-print('createing "%s" if not exists ...' % cmakefile)
-file_exists = os.path.exists(cmakefile)
-if file_exists:
-	print('-- file exists (remains as it is)')
-	cmnd = 'diff' if is_unix else 'fc /L'
-	args = ' %s %s' % (distfile, cmakefile)
-	stat, out = execute(cmnd+args, stderr=Proc.STDOUT)
-	patt = '***** CM' if is_windows else ''
-	if stat != 0 or out is not None and patt in out:
-		print()
-		print('** the file is different from "%s" \
-				+ "as follows **' % distfile)
-		print('** please check if it is okey **')
-		print()
-		print(out)
-else:
-	print('-- file does not exist')
-	stat = FileOp().cp(distfile, cmakefile)
+if not cmakelists_exist or cmakelists_older:
+	print()
+	print('creating "%s"' % cmakefile)
+	stat = FileOp().cp(cmakedistfile, cmakefile)
 	if stat == 0:
-		print('-- copied from "%s" successfully' % distfile)
+		print('-- copied from "%s" successfully' % cmakedistfile)
 	else:
 		print('-- copy fialed (status: %d)' % stat)
 print()
@@ -692,7 +776,7 @@ print()
 #  終了
 #
 major, minor, micro, release, serial = sys.version_info
-print('done (%s.%s.%s)' % (major, minor, micro))
+print('done (python %s.%s.%s)' % (major, minor, micro))
 sys.exit(0)
 
 # end: setup.py
