@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -27,68 +27,62 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{97A61237-928A-4AB9-BD0E-01441AE511B7}</ProjectGuid>
+    <ProjectGuid>{4AC6C708-19C9-4CC1-A25B-D9682470411E}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
-    <ProjectName>Springhead</ProjectName>
+    <ProjectName>RunSwig</ProjectName>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="SpringheadMacros.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="SpringheadMacros.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="SpringheadMacros.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="SpringheadMacros.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="SpringheadMacros.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="SpringheadMacros.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -98,20 +92,20 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfDebug)$(Platform)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfDebug)$(Platform)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del ..\..\generated\lib\win32\Springhead$(VisualStudioVersion)$(LibConfDebug)$(Platform).lib</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfDebug)$(Platform)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfDebug)$(Platform)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del ..\..\generated\lib\win64\Springhead$(VisualStudioVersion)$(LibConfDebug)$(Platform).lib</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>
@@ -120,79 +114,47 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfRelease)$(Platform)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfRelease)$(Platform)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del ..\..\generated\lib\win32\Springhead$(VisualStudioVersion)$(LibConfRelease)$(Platform).lib</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeOutput>
-    </NMakeOutput>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfRelease)$(Platform)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfRelease)$(Platform)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del ..\..\generated\lib\win64\Springhead$(VisualStudioVersion)$(LibConfRelease)$(Platform).lib</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
-    <NMakeOutput>
-    </NMakeOutput>
+    <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfTrace)$(Platform)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfTrace)$(Platform)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del ..\..\generated\lib\win32\Springhead$(VisualStudioVersion)$(LibConfTrace)$(Platform).lib</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
-    <NMakeOutput>
-    </NMakeOutput>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
-    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfTrace)$(Platform)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>SpringheadLib.bat $(Platform) $(VisualStudioVersion)$(LibConfTrace)$(Platform)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del ..\..\generated\lib\win64\Springhead$(VisualStudioVersion)$(LibConfTrace)$(Platform).lib</NMakeCleanCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="SpringheadLib.bat" />
+    <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\SprDefs.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Base\Base15.0.vcxproj">
-      <Project>{90010cd8-7c45-481e-8697-aab9b3fb9e4f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Collision\Collision15.0.vcxproj">
-      <Project>{8c62959e-9e67-4439-836e-25be57501463}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Creature\Creature15.0.vcxproj">
-      <Project>{f674a4d7-a183-4c53-815d-12e17b71c6a0}</Project>
-    </ProjectReference>
-    <ProjectReference Include="FileIO\FileIO15.0.vcxproj">
-      <Project>{3ca4689d-77da-4b2e-a718-cbb6a8ff04d7}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Foundation\Foundation15.0.vcxproj">
-      <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Framework\Framework15.0.vcxproj">
-      <Project>{755660be-3b1e-416b-b795-4f653c83a43a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Graphics\Graphics15.0.vcxproj">
-      <Project>{a339c0ca-d5fb-4dfa-9bcf-826739790653}</Project>
-    </ProjectReference>
-    <ProjectReference Include="HumanInterface\HumanInterface15.0.vcxproj">
-      <Project>{05138f41-5673-4e19-a5c7-2a684488b23a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Physics\Physics15.0.vcxproj">
-      <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
-    </ProjectReference>
+    <None Include="Makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

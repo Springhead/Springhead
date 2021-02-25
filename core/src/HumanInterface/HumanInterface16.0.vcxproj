@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -27,49 +27,49 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A2B91F83-DF0A-473D-9C3B-059673CD2046}</ProjectGuid>
-    <RootNamespace>Physics</RootNamespace>
-    <ProjectName>Physics</ProjectName>
+    <ProjectGuid>{05138F41-5673-4E19-A5C7-2A684488B23A}</ProjectGuid>
+    <RootNamespace>HumanInterface</RootNamespace>
+    <ProjectName>HumanInterface</ProjectName>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -142,22 +142,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>false</SmallerTypeCheck>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
-      <FloatingPointModel>Strict</FloatingPointModel>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -168,40 +167,37 @@
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
-    <Lib />
-    <Lib />
-    <Lib />
-    <Lib />
-    <PostBuildEvent>
-      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
-    </PostBuildEvent>
     <Lib>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>false</SmallerTypeCheck>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <OmitFramePointers>false</OmitFramePointers>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
-      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -228,22 +224,22 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <OpenMPSupport>true</OpenMPSupport>
-      <BrowseInformation>false</BrowseInformation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -257,11 +253,10 @@
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
       <PreserveSbr>false</PreserveSbr>
     </Bscmake>
+    <Lib />
     <Lib>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
-    </Lib>
-    <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
@@ -275,21 +270,21 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <OpenMPSupport>true</OpenMPSupport>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -302,11 +297,10 @@
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
+    <Lib />
     <Lib>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
-    </Lib>
-    <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
@@ -320,21 +314,21 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <OpenMPSupport>true</OpenMPSupport>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -347,11 +341,10 @@
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
+    <Lib />
     <Lib>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
-    </Lib>
-    <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
@@ -365,21 +358,21 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);$(ClosedSrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SPRINGHEAD;_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <OpenMPSupport>true</OpenMPSupport>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -392,10 +385,7 @@
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
-    <Lib>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
-    </Lib>
+    <Lib />
     <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
@@ -405,149 +395,101 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PHBallJoint.cpp" />
-    <ClCompile Include="PHBody.cpp" />
-    <ClCompile Include="PHConstraint.cpp" />
-    <ClCompile Include="PHConstraintEngine.cpp" />
-    <ClCompile Include="PHContactDetector.cpp" />
-    <ClCompile Include="PHContactPoint.cpp" />
-    <ClCompile Include="PHContactSurface.cpp" />
-    <ClCompile Include="PHFemEngine.cpp" />
-    <ClCompile Include="PHFemEngineHeatTransfer.cpp" />
-    <ClCompile Include="PHForceField.cpp" />
-    <ClCompile Include="PHGear.cpp" />
-    <ClCompile Include="PHGenericJoint.cpp" />
-    <ClCompile Include="PHHapticEngine.cpp" />
-    <ClCompile Include="PHHapticEngineRender.cpp" />
-    <ClCompile Include="PHHapticPointer.cpp" />
-    <ClCompile Include="PHHapticStepBase.cpp" />
-    <ClCompile Include="PHHapticStepImpulse.cpp" />
-    <ClCompile Include="PHHapticStepLocalDynamics.cpp" />
-    <ClCompile Include="PHHapticStepLocalDynamicsDev.cpp" />
-    <ClCompile Include="PHHapticStepMulti.cpp" />
-    <ClCompile Include="PHHapticStepSingle.cpp" />
-    <ClCompile Include="PHOpAnimation.cpp" />
-    <ClCompile Include="PHOpEngine.cpp" />
-    <ClCompile Include="PHOpHapticController.cpp" />
-    <ClCompile Include="PHOpHapticRenderer.cpp" />
-    <ClCompile Include="PHOpHapticRenderer2.cpp" />
-    <ClCompile Include="PHOpObj.cpp" />
-    <ClCompile Include="PHOpGroup.cpp" />
-    <ClCompile Include="PHOPParticle.cpp" />
-    <ClCompile Include="PHEngine.cpp" />
-    <ClCompile Include="PHFemBase.cpp" />
-    <ClCompile Include="PHFemCollision.cpp" />
-    <ClCompile Include="PHFemMesh.cpp" />
-    <ClCompile Include="PHFemMeshNew.cpp" />
-    <ClCompile Include="PHFemMeshThermo.cpp" />
-    <ClCompile Include="PHFemPorousWOMove.cpp" />
-    <ClCompile Include="PHFemThermo.cpp" />
-    <ClCompile Include="PHFemVibration.cpp" />
-    <ClCompile Include="PHFixJoint.cpp" />
-    <ClCompile Include="PHHingeJoint.cpp" />
-    <ClCompile Include="PHIKActuator.cpp" />
-    <ClCompile Include="PHIKEndEffector.cpp" />
-    <ClCompile Include="PHIKEngine.cpp" />
-    <ClCompile Include="PHJoint.cpp" />
-    <ClCompile Include="PHJointLimit.cpp" />
-    <ClCompile Include="PHJointMotor.cpp" />
-    <ClCompile Include="PHLoadHandlers.cpp" />
-    <ClCompile Include="PHOpSpHashColliAgent.cpp" />
-    <ClCompile Include="PHPathJoint.cpp" />
-    <ClCompile Include="PHPenaltyEngine.cpp" />
-    <ClCompile Include="PHRegisterTypeDesc.cpp" />
-    <ClCompile Include="PHScene.cpp" />
-    <ClCompile Include="PHSdk.cpp" />
-    <ClCompile Include="PHSkeleton.cpp" />
-    <ClCompile Include="PHSliderJoint.cpp" />
-    <ClCompile Include="PHSolid.cpp" />
-    <ClCompile Include="PHSpring.cpp" />
-    <ClCompile Include="PHTreeNode.cpp" />
-    <ClCompile Include="PhysicsStub.cpp" />
+    <ClCompile Include="DRADAPIO.cpp" />
+    <ClCompile Include="DRContecIsaCounter.cpp" />
+    <ClCompile Include="DRContecIsaDa.cpp" />
+    <ClCompile Include="DRCyUsb20Sh4.cpp" />
+    <ClCompile Include="DRJoyStickGLUT.cpp" />
+    <ClCompile Include="DRKeyMouseGLUT.cpp" />
+    <ClCompile Include="DRKeyMouseWin32.cpp" />
+    <ClCompile Include="DRNittaForce.cpp" />
+    <ClCompile Include="DRPortIO.cpp" />
+    <ClCompile Include="DRTokin3D.cpp" />
+    <ClCompile Include="DRUartMotorDriver.cpp" />
+    <ClCompile Include="DRUartMotorDriver\WROOM\main\softRobot\Board.cpp" />
+    <ClCompile Include="DRUPP.CPP" />
+    <ClCompile Include="DRUsb20Sh4.cpp" />
+    <ClCompile Include="DRUsb20Simple.cpp" />
+    <ClCompile Include="DRUsbH8Simple.cpp" />
+    <ClCompile Include="DRWinDriver.cpp" />
+    <ClCompile Include="HIBase.cpp" />
+    <ClCompile Include="HIDevice.cpp" />
+    <ClCompile Include="HILeap.cpp" />
+    <ClCompile Include="HINovintFalcon.cpp" />
+    <ClCompile Include="HIRegisterTypeDesc.cpp" />
+    <ClCompile Include="HISdk.cpp" />
+    <ClCompile Include="HISpaceNavigator.cpp" />
+    <ClCompile Include="HISpidar.cpp" />
+    <ClCompile Include="HISpidarCalc.cpp" />
+    <ClCompile Include="HISpidarMotor.cpp" />
+    <ClCompile Include="HITrackball.cpp" />
+    <ClCompile Include="HIXbox360Controller.cpp" />
+    <ClCompile Include="HumanInterfaceStub.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Physics\SprPHOpObj.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHOpSpHashAgent.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHSkeleton.h" />
-    <ClInclude Include="PHAxisIndex.h" />
-    <ClInclude Include="PHBallJoint.h" />
-    <ClInclude Include="PHBody.h" />
-    <ClInclude Include="PHConstraint.h" />
-    <ClInclude Include="PHConstraintEngine.h" />
-    <ClInclude Include="PHContactDetector.h" />
-    <ClInclude Include="PHContactPoint.h" />
-    <ClInclude Include="PHContactSurface.h" />
-    <ClInclude Include="PHForceField.h" />
-    <ClInclude Include="PHGear.h" />
-    <ClInclude Include="PHGenericJoint.h" />
-    <ClInclude Include="PHHapticEngine.h" />
-    <ClInclude Include="PHHapticPointer.h" />
-    <ClInclude Include="PHHapticStepBase.h" />
-    <ClInclude Include="PHHapticStepImpulse.h" />
-    <ClInclude Include="PHHapticStepLocalDynamics.h" />
-    <ClInclude Include="PHHapticStepLocalDynamicsDev.h" />
-    <ClInclude Include="PHHapticStepMulti.h" />
-    <ClInclude Include="PHHapticStepSingle.h" />
-    <ClInclude Include="PHOpAnimation.h" />
-    <ClInclude Include="PHOpEngine.h" />
-    <ClInclude Include="PHOpHapticController.h" />
-    <ClInclude Include="PHOpHapticRenderer.h" />
-    <ClInclude Include="PHOpObj.h" />
-    <ClInclude Include="PHOpDecompositionMethods.h" />
-    <ClInclude Include="PHOpGroup.h" />
-    <ClInclude Include="PHOpParticle.h" />
-    <ClInclude Include="PHEngine.h" />
-    <ClInclude Include="PHFemBase.h" />
-    <ClInclude Include="PHFemCollision.h" />
-    <ClInclude Include="PHFemEngine.h" />
-    <ClInclude Include="PHFemMesh.h" />
-    <ClInclude Include="PHFemMeshNew.h" />
-    <ClInclude Include="PHFemMeshThermo.h" />
-    <ClInclude Include="PHFemPorousWOMove.h" />
-    <ClInclude Include="PHFemThermo.h" />
-    <ClInclude Include="PHFemVibration.h" />
-    <ClInclude Include="PHFixJoint.h" />
-    <ClInclude Include="PHHingeJoint.h" />
-    <ClInclude Include="PHIKActuator.h" />
-    <ClInclude Include="PHIKEndEffector.h" />
-    <ClInclude Include="PHIKEngine.h" />
-    <ClInclude Include="PHJoint.h" />
-    <ClInclude Include="PHJointLimit.h" />
-    <ClInclude Include="PHJointMotor.h" />
-    <ClInclude Include="PHOpSpHashColliAgent.h" />
-    <ClInclude Include="PHPathJoint.h" />
-    <ClInclude Include="PHPenaltyEngine.h" />
-    <ClInclude Include="PHScene.h" />
-    <ClInclude Include="PHSdk.h" />
-    <ClInclude Include="PHSkeleton.h" />
-    <ClInclude Include="PHSliderJoint.h" />
-    <ClInclude Include="PHSolid.h" />
-    <ClInclude Include="PHSpring.h" />
-    <ClInclude Include="PHTreeNode.h" />
-    <ClInclude Include="Physics.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHEngine.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHFemMesh.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHFemMeshNew.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHHaptic.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHIK.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHJoint.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHJointLimit.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHNodeHandlers.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHScene.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHSdk.h" />
-    <ClInclude Include="..\..\include\Physics\SprPHSolid.h" />
-    <ClInclude Include="..\..\include\SprPhysics.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDRUart.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHILeap.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISkeletonSensor.h" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="DRADAPIO.h" />
+    <ClInclude Include="DRContecIsaCounter.h" />
+    <ClInclude Include="DRContecIsaDa.h" />
+    <ClInclude Include="DRCyUsb20Sh4.h" />
+    <ClInclude Include="DRJoyStickGLUT.h" />
+    <ClInclude Include="DRKeyMouseGLUT.h" />
+    <ClInclude Include="DRKeyMouseWin32.h" />
+    <ClInclude Include="DRNittaForce.h" />
+    <ClInclude Include="DRPortIO.h" />
+    <ClInclude Include="DRTokin3D.h" />
+    <ClInclude Include="DRUartMotorDriver.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\commandCommon.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\commandTemplate.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\control.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\env.h" />
+    <ClInclude Include="DRUartMotorDriver\PIC\fixed.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\Board.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\BoardBase.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\CommandWROOM.h" />
+    <ClInclude Include="DRUartMotorDriver\WROOM\main\softRobot\esp_log.h" />
+    <ClInclude Include="DRUPP.h" />
+    <ClInclude Include="DRUsb20Sh4.h" />
+    <ClInclude Include="DRUsb20Simple.h" />
+    <ClInclude Include="DRUsbH8Simple.h" />
+    <ClInclude Include="DRUsbH8SimpleDef.h" />
+    <ClInclude Include="DRWinDriver.h" />
+    <ClInclude Include="HIBase.h" />
+    <ClInclude Include="HIDevice.h" />
+    <ClInclude Include="HILeap.h" />
+    <ClInclude Include="HINovintFalcon.h" />
+    <ClInclude Include="HISdk.h" />
+    <ClInclude Include="HISkeletonSensor.h" />
+    <ClInclude Include="HISpaceNavigator.h" />
+    <ClInclude Include="HISpidar.h" />
+    <ClInclude Include="HISpidarCalc.h" />
+    <ClInclude Include="HISpidarMotor.h" />
+    <ClInclude Include="HITrackball.h" />
+    <ClInclude Include="HIXbox360Controller.h" />
+    <ClInclude Include="HumanInterface.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIJoyStick.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISpaceNavigator.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHITrackball.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIXbox360Controller.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIBase.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDevice.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIDRUsb.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIKeyMouse.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHINovint.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISdk.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHISpidar.h" />
+    <ClInclude Include="..\..\include\SprHumanInterface.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="lcpnote.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Collision\Collision15.0.vcxproj">
-      <Project>{8c62959e-9e67-4439-836e-25be57501463}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Foundation\Foundation15.0.vcxproj">
       <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DRUartMotorDriver\PCRobokey\commandId.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
