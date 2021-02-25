@@ -1,5 +1,5 @@
 % 1.2.Setup.tex
-%	Last update: 2021/01/18 F.Kanehori
+%	Last update: 2021/02/18 F.Kanehori
 %\newpage
 \ifLwarp
 \subsection{セットアップ}
@@ -26,12 +26,11 @@
 	\bf{unixの場合} (2.4a版 追記)\\
 	\Vskip{-.8\baselineskip}
 	\begin{itemize}
-	  \item	デフォルトのpythonのバージョンが2となっている場合
-		(\tt{python --version}で確認)には、
-		バージョン3以上のpythonをインストールし
-		pythonという名前でリンクを張ってください
-		(\Path{/usr/local/bin}にpython3があるかも知れません)。\\
-		例えば \tt{cd /usr/local/bin; sudo ln -s python3.4 python}\\
+	  \item	使用するpython scriptはpython version 3ベースで記述されています。
+		拡張モジュール等を使用することでpython 2.7.17での動作は確認して
+		いますが、今後の修正において対応しきれないことも考えられます。
+		Python 3以降のバージョンが使える環境をお使いください。
+		(2.4c版 変更) \\
 		\Vskip{-.7\baselineskip}
 	  \item	デフォルトでgmakeが見つからない場合(\tt{which gmake}で確認)には、
 		gmakeという名前でmakeにリンクを張ってください。\\
@@ -59,9 +58,11 @@
     \begin{longtable}{p{60pt}p{\Width}}\hline
     \fi
 	\tt{python} & \RBox{%
-		複数のプラットフォームに統一して対応するため。
+		複数のプラットフォームに統一して対応するため。\\
+		Windowsの場合は、
 		{\em{buildtoolサブモジュール}}がダウンロードされていれば、
-		そこに収録されているpythonを優先して使用します。} \\\hline
+		そこに収録されているpythonを優先して使用します (2.4c版 修正)。}
+		\\\hline
 	\tt{cmake} & \RBox{%
 		solution file/Makefile の生成を自動化するため。
 		インストールされていることが望ましい。} \\\hline
@@ -83,14 +84,23 @@
 
 Springheadのセットアップでは、これらのツールの存在を確認するとともに、
 拡張されたswigをビルドします。
-また、Windows環境で複数のVisual Studioがインストールされている場合には、
-使用するVisual Studioのバージョンを選択します。
+Windows環境で複数のVisual Studioがインストールされている場合には、
+使用するVisual Studioのバージョンを選択することができます。
+unix環境でデフォルトのpython のバージョンが2の場合には、
+\Path{/usr/local/bin}にバージョン3以降のものがあれば
+それを使用するように設定します (2.4c版 修正)。
 
-\Important{※ 必要なツールはパスに登録しておいてください。}
+\Important{%
+※ \tt{devenv}以外のツールは\tt{PATH}に登録しておいてください。 (2.4c版 修正)}
 
 \medskip
 確認されたツールのパス、バージョン等の情報はセットアップファイルに記録され、
 以降、\SprLib のビルド時に参照されます。
+また、cmakeに必要なファイル\CMakeLists{}は配布セットの中には含まれておらず、
+\CMakeLists{.dist}からコピーして作成することを前提としていますが、
+セットアップではこのコピー作業を自動的に実行します。
+ただし、既にセットアップファイルが存在する場合にはコピーは実行せず、
+元のファイルを保持します。 (2.4c版 追加)
 
 \bigskip
 \bf{◯ セットアップの方法}
@@ -184,7 +194,7 @@ Windows の場合と同様ですが、
 \begin{itemize}
   \item	使用するVisual Studioのバージョンを変えたいとき
 	(新しい Visual Studio をインストールした場合など)
-  \item	cmakeの使用を始めたいとき
+  \item	cmakeが\tt{PATH}に登録されたとき (2.4c版 修正)
   \item	拡張版swigの再ビルドが必要となったとき (別途アナウンスをします)
 \end{itemize}
 
@@ -200,6 +210,11 @@ Windows の場合と同様ですが、
 
 となりますので、\tt{y}で答えてください。
 必要な処理が実行され、セットアップファイルが更新されます。
+
+\Important{%
+何らかの理由で上記の``\tt{continue? [y/n]:}''が表示されないとき、
+または強制的にセットアップファイルを再作成したいときには、
+\tt{setup}コマンドに\,\tt{-f}オプションを付けて実行してください。 (2.4c版 追加)}
 
 \bigskip
 % end 1.2.Setup.tex

@@ -10,6 +10,7 @@
 
 #include <Graphics/SprGRSphere.h>
 #include <Graphics/GRFrame.h>
+#include <Graphics/GRRender.h>
 
 namespace Spr{;
 
@@ -33,7 +34,8 @@ public:
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 	virtual bool AddChildObject(ObjectIf* o);
-
+	virtual void SetMaterial(GRMaterialIf* mat) { material = mat->Cast(); }
+	virtual GRMaterialIf* GetMaterial() { return material->Cast(); }
 	void SetRender(GRRenderIf* r) {render = r;}
 };
 }

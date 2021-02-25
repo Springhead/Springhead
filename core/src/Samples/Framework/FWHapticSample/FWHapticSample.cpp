@@ -90,9 +90,16 @@ void FWHapticSample::InitInterface(){
 	}
 	// x64
 	DRCyUsb20Sh4Desc cyDesc;
+	bool bFoundCy;
 	for(int i=0; i<10; ++i){
 		cyDesc.channel = i;
-		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+		DRCyUsb20Sh4If* cy = hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc)->Cast();
+		if (cy && cy->NChildObject()) {
+			bFoundCy = true;
+		}
+		else {
+			hiSdk->DelChildObject(cy);
+		}
 	}
 	DRUARTMotorDriverDesc uartDesc;
 	hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &uartDesc);
@@ -100,8 +107,14 @@ void FWHapticSample::InitInterface(){
 	//	インタフェースの取得
 	device = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 #ifdef	_MSC_VER
-	//	if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
-	if (device->Init(&HISpidarGDesc("SpidarG6T1"))) {
+	bool bFound = false;
+	if (bFoundCy) {
+		bFound = device->Init(&HISpidarGDesc("SpidarG6X3F"));
+	}
+	else {
+		bFound = device->Init(&HISpidarGDesc("SpidarG6T1"));
+	}
+	if (bFound) {
 #else
 	HISpidarGDesc tmpdesc = HISpidarGDesc((char*) "SpidarG6X3F");
 	if (device->Init(&tmpdesc)) {

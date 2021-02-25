@@ -42,6 +42,7 @@ public:
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 	virtual void Clear();
 
 	/// インタフェースの実装
