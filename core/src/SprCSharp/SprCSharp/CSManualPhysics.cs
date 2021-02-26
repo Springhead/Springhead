@@ -615,6 +615,7 @@ namespace SprCs {
             }
         }
 
+/*
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             if (multiThreadMode) {
                 PHJointIf obj = new PHJointIf(IntPtr.Zero);
@@ -706,7 +707,6 @@ namespace SprCs {
             }
         }
 
-/*
         public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
             PHSceneIf phSceneIf = GetCSPHSceneIf();
             if (phSceneIf.multiThreadMode) {

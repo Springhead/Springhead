@@ -26,7 +26,7 @@
 %feature("only_cs_ignore") Spr::PHSdkIf::CreateScene;
 %feature("only_cs_ignore") Spr::PHSdkIf::CreateSdk;
 %feature("only_cs_ignore") Spr::PHSceneIf::GetSdk;
-%feature("only_cs_ignore") Spr::PHSceneIf::CreateJoint;
+//%feature("only_cs_ignore") Spr::PHSceneIf::CreateJoint;
 %feature("only_cs_ignore") Spr::PHSceneIf::Step;
 %feature("only_cs_ignore") Spr::PHSceneIf::GetGravityEngine;
 %feature("only_cs_ignore") Spr::PHSceneIf::GetIKEngine;

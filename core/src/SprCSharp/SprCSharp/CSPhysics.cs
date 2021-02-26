@@ -13,6 +13,8 @@ namespace SprCs {
 	public PHConstraintEngineDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHConstraintEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHConstraintEngineDesc() { if (_flag) { SprExport.Spr_delete_PHConstraintEngineDesc(_thisArray[0]); _flag = false; } }
@@ -189,6 +191,8 @@ namespace SprCs {
 	public PHIKEngineDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKEngineDesc() { if (_flag) { SprExport.Spr_delete_PHIKEngineDesc(_thisArray[0]); _flag = false; } }
@@ -288,6 +292,8 @@ namespace SprCs {
 	public PHFemMeshState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemMeshState() { if (_flag) { SprExport.Spr_delete_PHFemMeshState(_thisArray[0]); _flag = false; } }
@@ -321,6 +327,8 @@ namespace SprCs {
 	public PHFemMeshDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemMeshDesc() { if (_flag) { SprExport.Spr_delete_PHFemMeshDesc(_thisArray[0]); _flag = false; } }
@@ -378,6 +386,8 @@ namespace SprCs {
 	public PHFemMeshThermoDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemMeshThermoDesc() { if (_flag) { SprExport.Spr_delete_PHFemMeshThermoDesc(_thisArray[0]); _flag = false; } }
@@ -483,6 +493,8 @@ namespace SprCs {
 	public PHFemMeshNewState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshNewState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemMeshNewState() { if (_flag) { SprExport.Spr_delete_PHFemMeshNewState(_thisArray[0]); _flag = false; } }
@@ -516,6 +528,8 @@ namespace SprCs {
 	public PHFemMeshNewDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshNewDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemMeshNewDesc() { if (_flag) { SprExport.Spr_delete_PHFemMeshNewDesc(_thisArray[0]); _flag = false; } }
@@ -583,6 +597,8 @@ namespace SprCs {
 	public PHFemBaseDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemBaseDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemBaseDesc() { if (_flag) { SprExport.Spr_delete_PHFemBaseDesc(_thisArray[0]); _flag = false; } }
@@ -616,6 +632,8 @@ namespace SprCs {
 	public PHFemVibrationDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemVibrationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemVibrationDesc() { if (_flag) { SprExport.Spr_delete_PHFemVibrationDesc(_thisArray[0]); _flag = false; } }
@@ -703,6 +721,8 @@ namespace SprCs {
 	public PHFemThermoDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemThermoDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemThermoDesc() { if (_flag) { SprExport.Spr_delete_PHFemThermoDesc(_thisArray[0]); _flag = false; } }
@@ -787,6 +807,8 @@ namespace SprCs {
 	public PHFemPorousWOMoveDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemPorousWOMoveDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFemPorousWOMoveDesc() { if (_flag) { SprExport.Spr_delete_PHFemPorousWOMoveDesc(_thisArray[0]); _flag = false; } }
@@ -990,6 +1012,8 @@ namespace SprCs {
 	public PHFrameDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFrameDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFrameDesc() { if (_flag) { SprExport.Spr_delete_PHFrameDesc(_thisArray[0]); _flag = false; } }
@@ -1030,6 +1054,8 @@ namespace SprCs {
 	public PHSolidState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSolidState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSolidState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSolidState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSolidState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSolidState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSolidState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSolidState() { if (_flag) { SprExport.Spr_delete_PHSolidState(_thisArray[0]); _flag = false; } }
@@ -1084,6 +1110,8 @@ namespace SprCs {
 	public PHSolidDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSolidDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSolidDesc() { if (_flag) { SprExport.Spr_delete_PHSolidDesc(_thisArray[0]); _flag = false; } }
@@ -1167,6 +1195,8 @@ namespace SprCs {
 	public PHCollisionListener(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHCollisionListener(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHCollisionListener() { if (_flag) { SprExport.Spr_delete_PHCollisionListener(_thisArray[0]); _flag = false; } }
@@ -1185,6 +1215,8 @@ namespace SprCs {
 	public PHHapticPointerDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHapticPointerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHHapticPointerDesc() { if (_flag) { SprExport.Spr_delete_PHHapticPointerDesc(_thisArray[0]); _flag = false; } }
@@ -1228,6 +1260,8 @@ namespace SprCs {
 	public PHHapticEngineDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHapticEngineDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHHapticEngineDesc() { if (_flag) { SprExport.Spr_delete_PHHapticEngineDesc(_thisArray[0]); _flag = false; } }
@@ -1264,6 +1298,8 @@ namespace SprCs {
 	public PHIKEndEffectorState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKEndEffectorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKEndEffectorState() { if (_flag) { SprExport.Spr_delete_PHIKEndEffectorState(_thisArray[0]); _flag = false; } }
@@ -1304,6 +1340,8 @@ namespace SprCs {
 	public PHIKEndEffectorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKEndEffectorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKEndEffectorDesc() { if (_flag) { SprExport.Spr_delete_PHIKEndEffectorDesc(_thisArray[0]); _flag = false; } }
@@ -1517,6 +1555,8 @@ namespace SprCs {
 	public PHIKActuatorState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKActuatorState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKActuatorState() { if (_flag) { SprExport.Spr_delete_PHIKActuatorState(_thisArray[0]); _flag = false; } }
@@ -1599,6 +1639,8 @@ namespace SprCs {
 	public PHIKActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKActuatorDesc(_thisArray[0]); _flag = false; } }
@@ -1659,6 +1701,8 @@ namespace SprCs {
 	public PHIKBallActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKBallActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKBallActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKBallActuatorDesc(_thisArray[0]); _flag = false; } }
@@ -1705,6 +1749,8 @@ namespace SprCs {
 	public PHIKHingeActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKHingeActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKHingeActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKHingeActuatorDesc(_thisArray[0]); _flag = false; } }
@@ -1751,6 +1797,8 @@ namespace SprCs {
 	public PHIKSpringActuatorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKSpringActuatorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHIKSpringActuatorDesc() { if (_flag) { SprExport.Spr_delete_PHIKSpringActuatorDesc(_thisArray[0]); _flag = false; } }
@@ -1797,6 +1845,8 @@ namespace SprCs {
 	public PHConstraintDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHConstraintDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHConstraintDesc() { if (_flag) { SprExport.Spr_delete_PHConstraintDesc(_thisArray[0]); _flag = false; } }
@@ -1857,6 +1907,8 @@ namespace SprCs {
 	public PHJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHJointDesc() { if (_flag) { SprExport.Spr_delete_PHJointDesc(_thisArray[0]); _flag = false; } }
@@ -1903,6 +1955,8 @@ namespace SprCs {
 	public PH1DJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PH1DJointDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointDesc(_thisArray[0]); _flag = false; } }
@@ -2018,6 +2072,8 @@ namespace SprCs {
 	public PHHingeJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHingeJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHHingeJointDesc() { if (_flag) { SprExport.Spr_delete_PHHingeJointDesc(_thisArray[0]); _flag = false; } }
@@ -2057,6 +2113,8 @@ namespace SprCs {
 	public PHSliderJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSliderJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSliderJointDesc() { if (_flag) { SprExport.Spr_delete_PHSliderJointDesc(_thisArray[0]); _flag = false; } }
@@ -2135,6 +2193,8 @@ namespace SprCs {
 	public PHPathPoint(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathPoint(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public PHPathPoint(double _s, Posed _pose) { _thisArray[0] = SprExport.Spr_new_PHPathPoint_4(_s, _pose); _flag = true; }
@@ -2156,6 +2216,8 @@ namespace SprCs {
 	public PHPathDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPathDesc() { if (_flag) { SprExport.Spr_delete_PHPathDesc(_thisArray[0]); _flag = false; } }
@@ -2209,6 +2271,8 @@ namespace SprCs {
 	public PHPathJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPathJointDesc() { if (_flag) { SprExport.Spr_delete_PHPathJointDesc(_thisArray[0]); _flag = false; } }
@@ -2248,6 +2312,8 @@ namespace SprCs {
 	public PHGenericJointCallback(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGenericJointCallback(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHGenericJointCallback() { if (_flag) { SprExport.Spr_delete_PHGenericJointCallback(_thisArray[0]); _flag = false; } }
@@ -2293,6 +2359,8 @@ namespace SprCs {
 	public PHGenericJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGenericJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHGenericJointDesc() { if (_flag) { SprExport.Spr_delete_PHGenericJointDesc(_thisArray[0]); _flag = false; } }
@@ -2332,6 +2400,8 @@ namespace SprCs {
 	public PHBallJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointDesc(_thisArray[0]); _flag = false; } }
@@ -2434,6 +2504,8 @@ namespace SprCs {
 	public PHFixJointDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFixJointDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFixJointDesc() { if (_flag) { SprExport.Spr_delete_PHFixJointDesc(_thisArray[0]); _flag = false; } }
@@ -2473,6 +2545,8 @@ namespace SprCs {
 	public PHSpringDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSpringDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSpringDesc() { if (_flag) { SprExport.Spr_delete_PHSpringDesc(_thisArray[0]); _flag = false; } }
@@ -2603,6 +2677,8 @@ namespace SprCs {
 	public PHMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHMateDesc() { if (_flag) { SprExport.Spr_delete_PHMateDesc(_thisArray[0]); _flag = false; } }
@@ -2642,6 +2718,8 @@ namespace SprCs {
 	public PHPointToPointMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPointToPointMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPointToPointMateDesc() { if (_flag) { SprExport.Spr_delete_PHPointToPointMateDesc(_thisArray[0]); _flag = false; } }
@@ -2681,6 +2759,8 @@ namespace SprCs {
 	public PHPointToLineMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPointToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPointToLineMateDesc() { if (_flag) { SprExport.Spr_delete_PHPointToLineMateDesc(_thisArray[0]); _flag = false; } }
@@ -2720,6 +2800,8 @@ namespace SprCs {
 	public PHPointToPlaneMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPointToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPointToPlaneMateDesc() { if (_flag) { SprExport.Spr_delete_PHPointToPlaneMateDesc(_thisArray[0]); _flag = false; } }
@@ -2766,6 +2848,8 @@ namespace SprCs {
 	public PHLineToLineMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHLineToLineMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHLineToLineMateDesc() { if (_flag) { SprExport.Spr_delete_PHLineToLineMateDesc(_thisArray[0]); _flag = false; } }
@@ -2805,6 +2889,8 @@ namespace SprCs {
 	public PHPlaneToPlaneMateDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPlaneToPlaneMateDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPlaneToPlaneMateDesc() { if (_flag) { SprExport.Spr_delete_PHPlaneToPlaneMateDesc(_thisArray[0]); _flag = false; } }
@@ -2844,6 +2930,8 @@ namespace SprCs {
 	public PHTreeNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHTreeNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHTreeNodeDesc() { if (_flag) { SprExport.Spr_delete_PHTreeNodeDesc(_thisArray[0]); _flag = false; } }
@@ -2890,6 +2978,8 @@ namespace SprCs {
 	public PHRootNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHRootNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHRootNodeDesc() { if (_flag) { SprExport.Spr_delete_PHRootNodeDesc(_thisArray[0]); _flag = false; } }
@@ -2929,6 +3019,8 @@ namespace SprCs {
 	public PHTreeNode1DDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHTreeNode1DDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHTreeNode1DDesc() { if (_flag) { SprExport.Spr_delete_PHTreeNode1DDesc(_thisArray[0]); _flag = false; } }
@@ -2968,6 +3060,8 @@ namespace SprCs {
 	public PHHingeJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHingeJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHHingeJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHHingeJointNodeDesc(_thisArray[0]); _flag = false; } }
@@ -3007,6 +3101,8 @@ namespace SprCs {
 	public PHSliderJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSliderJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSliderJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHSliderJointNodeDesc(_thisArray[0]); _flag = false; } }
@@ -3046,6 +3142,8 @@ namespace SprCs {
 	public PHPathJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHPathJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHPathJointNodeDesc(_thisArray[0]); _flag = false; } }
@@ -3085,6 +3183,8 @@ namespace SprCs {
 	public PHGenericJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGenericJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHGenericJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHGenericJointNodeDesc(_thisArray[0]); _flag = false; } }
@@ -3124,6 +3224,8 @@ namespace SprCs {
 	public PHBallJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointNodeDesc(_thisArray[0]); _flag = false; } }
@@ -3163,6 +3265,8 @@ namespace SprCs {
 	public PHFixJointNodeDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFixJointNodeDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHFixJointNodeDesc() { if (_flag) { SprExport.Spr_delete_PHFixJointNodeDesc(_thisArray[0]); _flag = false; } }
@@ -3202,6 +3306,8 @@ namespace SprCs {
 	public PHGearDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGearDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHGearDesc() { if (_flag) { SprExport.Spr_delete_PHGearDesc(_thisArray[0]); _flag = false; } }
@@ -3269,6 +3375,8 @@ namespace SprCs {
 	public PH1DJointLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PH1DJointLimitDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointLimitDesc(_thisArray[0]); _flag = false; } }
@@ -3336,6 +3444,8 @@ namespace SprCs {
 	public PHBallJointLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointLimitDesc(_thisArray[0]); _flag = false; } }
@@ -3403,6 +3513,8 @@ namespace SprCs {
 	public PHBallJointConeLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointConeLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointConeLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointConeLimitDesc(_thisArray[0]); _flag = false; } }
@@ -3463,6 +3575,8 @@ namespace SprCs {
 	public PHSplineLimitNode(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSplineLimitNode(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public PHSplineLimitNode(double s, double sd, double ds, double dsd, double tmn, double tmx) { _thisArray[0] = SprExport.Spr_new_PHSplineLimitNode_8(s, sd, ds, dsd, tmn, tmx); _flag = true; }
@@ -3500,6 +3614,8 @@ namespace SprCs {
 	public PHBallJointSplineLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointSplineLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointSplineLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointSplineLimitDesc(_thisArray[0]); _flag = false; } }
@@ -3553,6 +3669,8 @@ namespace SprCs {
 	public PHBallJointIndependentLimitDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointIndependentLimitDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointIndependentLimitDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointIndependentLimitDesc(_thisArray[0]); _flag = false; } }
@@ -3613,6 +3731,8 @@ namespace SprCs {
 	public PH1DJointMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PH1DJointMotorDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointMotorDesc(_thisArray[0]); _flag = false; } }
@@ -3646,6 +3766,8 @@ namespace SprCs {
 	public PH1DJointNonLinearMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PH1DJointNonLinearMotorDesc() { if (_flag) { SprExport.Spr_delete_PH1DJointNonLinearMotorDesc(_thisArray[0]); _flag = false; } }
@@ -3688,6 +3810,8 @@ namespace SprCs {
 	public PHHuman1DJointResistanceDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHuman1DJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHHuman1DJointResistanceDesc() { if (_flag) { SprExport.Spr_delete_PHHuman1DJointResistanceDesc(_thisArray[0]); _flag = false; } }
@@ -3734,6 +3858,8 @@ namespace SprCs {
 	public PHBallJointMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointMotorDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointMotorDesc(_thisArray[0]); _flag = false; } }
@@ -3767,6 +3893,8 @@ namespace SprCs {
 	public PHBallJointNonLinearMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointNonLinearMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBallJointNonLinearMotorDesc() { if (_flag) { SprExport.Spr_delete_PHBallJointNonLinearMotorDesc(_thisArray[0]); _flag = false; } }
@@ -3806,6 +3934,8 @@ namespace SprCs {
 	public PHHumanBallJointResistanceDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHumanBallJointResistanceDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHHumanBallJointResistanceDesc() { if (_flag) { SprExport.Spr_delete_PHHumanBallJointResistanceDesc(_thisArray[0]); _flag = false; } }
@@ -3866,6 +3996,8 @@ namespace SprCs {
 	public PHSpringMotorDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSpringMotorDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSpringMotorDesc() { if (_flag) { SprExport.Spr_delete_PHSpringMotorDesc(_thisArray[0]); _flag = false; } }
@@ -3899,6 +4031,8 @@ namespace SprCs {
 	public PHInactiveSolids(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHInactiveSolids(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHInactiveSolids() { if (_flag) { SprExport.Spr_delete_PHInactiveSolids(_thisArray[0]); _flag = false; } }
@@ -3915,6 +4049,8 @@ namespace SprCs {
 	public PHOpObjState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpObjState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpObjState() { if (_flag) { SprExport.Spr_delete_PHOpObjState(_thisArray[0]); _flag = false; } }
@@ -3969,6 +4105,8 @@ namespace SprCs {
 	public PHOpHapticRendererDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpHapticRendererDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpHapticRendererDesc() { if (_flag) { SprExport.Spr_delete_PHOpHapticRendererDesc(_thisArray[0]); _flag = false; } }
@@ -4170,6 +4308,8 @@ namespace SprCs {
 	public PHOpObjDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpObjDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpObjDesc() { if (_flag) { SprExport.Spr_delete_PHOpObjDesc(_thisArray[0]); _flag = false; } }
@@ -4369,6 +4509,8 @@ namespace SprCs {
 	public PHOpParticleDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpParticleDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpParticleDesc() { if (_flag) { SprExport.Spr_delete_PHOpParticleDesc(_thisArray[0]); _flag = false; } }
@@ -4731,6 +4873,8 @@ namespace SprCs {
 	public PHOpGroupDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpGroupDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpGroupDesc() { if (_flag) { SprExport.Spr_delete_PHOpGroupDesc(_thisArray[0]); _flag = false; } }
@@ -4813,6 +4957,8 @@ namespace SprCs {
 	public PHOpHapticControllerDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpHapticControllerDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpHapticControllerDesc() { if (_flag) { SprExport.Spr_delete_PHOpHapticControllerDesc(_thisArray[0]); _flag = false; } }
@@ -5078,6 +5224,8 @@ namespace SprCs {
 	public PHOpAnimationDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpAnimationDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpAnimationDesc() { if (_flag) { SprExport.Spr_delete_PHOpAnimationDesc(_thisArray[0]); _flag = false; } }
@@ -5118,6 +5266,8 @@ namespace SprCs {
 	public PHOpSpHashColliAgentDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpSpHashColliAgentDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHOpSpHashColliAgentDesc() { if (_flag) { SprExport.Spr_delete_PHOpSpHashColliAgentDesc(_thisArray[0]); _flag = false; } }
@@ -5171,6 +5321,8 @@ namespace SprCs {
 	public PHRaycastHit(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHRaycastHit(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHRaycastHit() { if (_flag) { SprExport.Spr_delete_PHRaycastHit(_thisArray[0]); _flag = false; } }
@@ -5199,6 +5351,8 @@ namespace SprCs {
 	public PHRayDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHRayDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHRayDesc() { if (_flag) { SprExport.Spr_delete_PHRayDesc(_thisArray[0]); _flag = false; } }
@@ -5246,6 +5400,8 @@ namespace SprCs {
 	public PHSceneState(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSceneState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSceneState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSceneState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSceneState(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSceneState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSceneState(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSceneState() { if (_flag) { SprExport.Spr_delete_PHSceneState(_thisArray[0]); _flag = false; } }
@@ -5303,6 +5459,8 @@ namespace SprCs {
 	public PHSceneDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSceneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSceneDesc() { if (_flag) { SprExport.Spr_delete_PHSceneDesc(_thisArray[0]); _flag = false; } }
@@ -5489,6 +5647,8 @@ namespace SprCs {
 	public PHSdkDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSdkDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSdkDesc() { if (_flag) { SprExport.Spr_delete_PHSdkDesc(_thisArray[0]); _flag = false; } }
@@ -5522,6 +5682,8 @@ namespace SprCs {
 	public PHBoneDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBoneDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHBoneDesc() { if (_flag) { SprExport.Spr_delete_PHBoneDesc(_thisArray[0]); _flag = false; } }
@@ -5555,6 +5717,8 @@ namespace SprCs {
 	public PHSkeletonDesc(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSkeletonDesc(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	~PHSkeletonDesc() { if (_flag) { SprExport.Spr_delete_PHSkeletonDesc(_thisArray[0]); _flag = false; } }
@@ -5588,6 +5752,8 @@ namespace SprCs {
 	public PHEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHEngineIf(CsCastObject target) {
@@ -5764,6 +5930,7 @@ namespace SprCs {
 		throw new InvalidOperationException();
 	}
 	public PHSceneIf GetScene() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -5798,6 +5965,8 @@ namespace SprCs {
 	public PHConstraintEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHConstraintEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHConstraintEngineIf(CsCastObject target) {
@@ -5835,6 +6004,7 @@ namespace SprCs {
             return new IfInfo(ptr);
 	}
 	public PHConstraintsIf GetContactPoints() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -6319,6 +6489,8 @@ namespace SprCs {
 	public PHGravityEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGravityEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHGravityEngineIf(CsCastObject target) {
@@ -6364,6 +6536,8 @@ namespace SprCs {
 	public PHPenaltyEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPenaltyEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPenaltyEngineIf(CsCastObject target) {
@@ -6409,6 +6583,8 @@ namespace SprCs {
 	public PHIKEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHIKEngineIf(CsCastObject target) {
@@ -6924,6 +7100,8 @@ namespace SprCs {
 	public PHFemEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemEngineIf(CsCastObject target) {
@@ -7100,6 +7278,7 @@ namespace SprCs {
 		throw new InvalidOperationException();
 	}
 	public PHFemMeshNewIf GetMeshNew(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -7395,6 +7574,7 @@ namespace SprCs {
 		throw new InvalidOperationException();
 	}
 	public PHFemMeshIf GetMesh(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -7441,6 +7621,8 @@ namespace SprCs {
 	public PHOpEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpEngineIf(CsCastObject target) {
@@ -7956,24 +8138,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -7987,24 +8164,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8018,24 +8190,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8054,24 +8221,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8085,24 +8247,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8116,24 +8273,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8152,24 +8304,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8183,24 +8330,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8214,24 +8356,19 @@ namespace SprCs {
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -8440,6 +8577,8 @@ namespace SprCs {
 	public PHFemMeshIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemMeshIf(CsCastObject target) {
@@ -8485,6 +8624,8 @@ namespace SprCs {
 	public PHFemMeshThermoIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemMeshThermoIf(CsCastObject target) {
@@ -10004,6 +10145,8 @@ Vec2d new_origin = new Vec2d(origin);
 	public PHFemMeshNewIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemMeshNewIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemMeshNewIf(CsCastObject target) {
@@ -10076,6 +10219,7 @@ Vec2d new_origin = new Vec2d(origin);
 		}
 	}
 	public PHSolidIf GetPHSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -10114,6 +10258,7 @@ Vec2d new_origin = new Vec2d(origin);
 		throw new InvalidOperationException();
 	}
 	public PHFemVibrationIf GetPHFemVibration() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -10140,6 +10285,7 @@ Vec2d new_origin = new Vec2d(origin);
 		throw new InvalidOperationException();
 	}
 	public PHFemThermoIf GetPHFemThermo() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -10166,6 +10312,7 @@ Vec2d new_origin = new Vec2d(origin);
 		throw new InvalidOperationException();
 	}
 	public PHFemPorousWOMoveIf GetPHFemPorousWOMove() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -10911,6 +11058,8 @@ Vec4d new_value = new Vec4d(value);
 	public PHFemBaseIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemBaseIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemBaseIf(CsCastObject target) {
@@ -10948,6 +11097,7 @@ Vec4d new_value = new Vec4d(value);
             return new IfInfo(ptr);
 	}
 	public PHFemMeshNewIf GetPHFemMesh() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -10982,6 +11132,8 @@ Vec4d new_value = new Vec4d(value);
 	public PHFemVibrationIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemVibrationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemVibrationIf(CsCastObject target) {
@@ -11848,6 +12000,8 @@ Vec3d new_fW = new Vec3d(fW);
 	public PHFemThermoIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemThermoIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemThermoIf(CsCastObject target) {
@@ -14312,6 +14466,8 @@ string new_fwfood = string.Copy(fwfood);
 	public PHFemPorousWOMoveIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFemPorousWOMoveIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFemPorousWOMoveIf(CsCastObject target) {
@@ -14821,6 +14977,8 @@ Vec3d new_g = new Vec3d(g);
 	public PHFrameIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFrameIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFrameIf(CsCastObject target) {
@@ -14951,6 +15109,8 @@ Posed new_p = new Posed(p);
 	public PHBodyIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBodyIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBodyIf(CsCastObject target) {
@@ -15484,6 +15644,8 @@ Posed new_pose = new Posed(pose);
 	public PHSolidIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSolidIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSolidIf(CsCastObject target) {
@@ -16341,6 +16503,7 @@ Vec3d new_av = new Vec3d(av);
 		throw new InvalidOperationException();
 	}
 	public PHTreeNodeIf GetTreeNode() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -16351,32 +16514,25 @@ Vec3d new_av = new Vec3d(av);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -16390,32 +16546,25 @@ Vec3d new_av = new Vec3d(av);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -16429,32 +16578,25 @@ Vec3d new_av = new Vec3d(av);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -16471,6 +16613,8 @@ Vec3d new_av = new Vec3d(av);
 	public PHShapePairForLCPIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHShapePairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHShapePairForLCPIf(CsCastObject target) {
@@ -16525,6 +16669,8 @@ Vec3d new_av = new Vec3d(av);
 	public PHSolidPairIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSolidPairIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSolidPairIf(CsCastObject target) {
@@ -16581,6 +16727,8 @@ Vec3d new_av = new Vec3d(av);
 	public PHSolidPairForLCPIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSolidPairForLCPIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSolidPairForLCPIf(CsCastObject target) {
@@ -16639,6 +16787,8 @@ Vec3d new_av = new Vec3d(av);
 	public PHHapticPointerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHapticPointerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHHapticPointerIf(CsCastObject target) {
@@ -17731,6 +17881,7 @@ Posed new_p = new Posed(p);
 		throw new InvalidOperationException();
 	}
 	public PHSolidIf GetNeighborSolid(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -18086,6 +18237,8 @@ SpatialVector new_vel = new SpatialVector(vel);
 	public PHShapePairForHapticIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHShapePairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHShapePairForHapticIf(CsCastObject target) {
@@ -18144,6 +18297,8 @@ SpatialVector new_vel = new SpatialVector(vel);
 	public PHSolidPairForHapticIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSolidPairForHapticIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSolidPairForHapticIf(CsCastObject target) {
@@ -18222,6 +18377,8 @@ SpatialVector new_vel = new SpatialVector(vel);
 	public PHHapticEngineIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHapticEngineIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHHapticEngineIf(CsCastObject target) {
@@ -18354,6 +18511,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 		throw new InvalidOperationException();
 	}
 	public PHHapticPointerIf GetPointer(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -18446,6 +18604,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 		throw new InvalidOperationException();
 	}
 	public PHHapticPointerIf GetPointerInHaptic(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -18612,6 +18771,8 @@ SpatialVector new_vel = new SpatialVector(vel);
 	public PHIKEndEffectorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKEndEffectorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHIKEndEffectorIf(CsCastObject target) {
@@ -18684,6 +18845,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 		}
 	}
 	public PHSolidIf GetSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -18757,6 +18919,7 @@ SpatialVector new_vel = new SpatialVector(vel);
 		}
 	}
 	public PHIKActuatorIf GetParentActuator() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -18767,12 +18930,10 @@ SpatialVector new_vel = new SpatialVector(vel);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -18786,12 +18947,10 @@ SpatialVector new_vel = new SpatialVector(vel);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -18805,12 +18964,10 @@ SpatialVector new_vel = new SpatialVector(vel);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -19921,6 +20078,8 @@ Vec3d new_torque = new Vec3d(torque);
 	public PHIKActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHIKActuatorIf(CsCastObject target) {
@@ -20302,6 +20461,7 @@ Vec3d new_torque = new Vec3d(torque);
 		throw new InvalidOperationException();
 	}
 	public PHIKActuatorIf GetAncestor(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -20312,12 +20472,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20331,12 +20489,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20350,12 +20506,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20364,6 +20518,7 @@ Vec3d new_torque = new Vec3d(torque);
 		throw new InvalidOperationException();
 	}
 	public PHIKActuatorIf GetParent() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -20374,12 +20529,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20393,12 +20546,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20412,12 +20563,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20446,6 +20595,7 @@ Vec3d new_torque = new Vec3d(torque);
 		throw new InvalidOperationException();
 	}
 	public PHIKActuatorIf GetChildActuator(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -20456,12 +20606,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20475,12 +20623,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20494,12 +20640,10 @@ Vec3d new_torque = new Vec3d(torque);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -20508,6 +20652,7 @@ Vec3d new_torque = new Vec3d(torque);
 		throw new InvalidOperationException();
 	}
 	public PHIKEndEffectorIf GetChildEndEffector() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -20582,6 +20727,8 @@ Vec3d new_torque = new Vec3d(torque);
 	public PHIKBallActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKBallActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHIKBallActuatorIf(CsCastObject target) {
@@ -20654,6 +20801,7 @@ Vec3d new_torque = new Vec3d(torque);
 		}
 	}
 	public PHBallJointIf GetJoint() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -20806,6 +20954,8 @@ Quaterniond new_ori = new Quaterniond(ori);
 	public PHIKHingeActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKHingeActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHIKHingeActuatorIf(CsCastObject target) {
@@ -20878,6 +21028,7 @@ Quaterniond new_ori = new Quaterniond(ori);
 		}
 	}
 	public PHHingeJointIf GetJoint() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -21018,6 +21169,8 @@ Quaterniond new_ori = new Quaterniond(ori);
 	public PHIKSpringActuatorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHIKSpringActuatorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHIKSpringActuatorIf(CsCastObject target) {
@@ -21090,6 +21243,7 @@ Quaterniond new_ori = new Quaterniond(ori);
 		}
 	}
 	public PHSpringIf GetJoint() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -21242,6 +21396,8 @@ Posed new_pose = new Posed(pose);
 	public PHConstraintIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHConstraintIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHConstraintIf(CsCastObject target) {
@@ -21279,6 +21435,7 @@ Posed new_pose = new Posed(pose);
             return new IfInfo(ptr);
 	}
 	public virtual PHSolidIf GetSocketSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -21317,6 +21474,7 @@ Posed new_pose = new Posed(pose);
 		throw new InvalidOperationException();
 	}
 	public virtual PHSolidIf GetPlugSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -21355,6 +21513,7 @@ Posed new_pose = new Posed(pose);
 		throw new InvalidOperationException();
 	}
 	public PHSceneIf GetScene() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -21738,6 +21897,8 @@ Posed new_pose = new Posed(pose);
 	public PHConstraintsIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHConstraintsIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHConstraintsIf(CsCastObject target) {
@@ -21775,6 +21936,7 @@ Posed new_pose = new Posed(pose);
             return new IfInfo(ptr);
 	}
 	public PHConstraintIf FindBySolidPair(PHSolidIf lhs, PHSolidIf rhs) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -21794,64 +21956,49 @@ Posed new_pose = new Posed(pose);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
 				PHContactPointIf appropriate_type = new PHContactPointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
 				PHJointIf appropriate_type = new PHJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -21865,8 +22012,7 @@ Posed new_pose = new Posed(pose);
 	    IntPtr ptrBuffer = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHConstraintIf obj = new PHConstraintIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHConstraintIf obj = new PHConstraintIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
 				PHContactPointIf appropriate_type = new PHContactPointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -21874,207 +22020,117 @@ Posed new_pose = new Posed(pose);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
 				PHJointIf appropriate_type = new PHJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHConstraintsIf_FindBySolidPair((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
@@ -22085,64 +22141,49 @@ Posed new_pose = new Posed(pose);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
 				PHContactPointIf appropriate_type = new PHContactPointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
 				PHJointIf appropriate_type = new PHJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22157,64 +22198,49 @@ Posed new_pose = new Posed(pose);
             if (obj.GetIfInfo() == PHContactPointIf.GetIfInfoStatic()) {
 				PHContactPointIf appropriate_type = new PHContactPointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHJointIf.GetIfInfoStatic()) {
 				PHJointIf appropriate_type = new PHJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22251,6 +22277,8 @@ Posed new_pose = new Posed(pose);
 	public PHContactPointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHContactPointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHContactPointIf(CsCastObject target) {
@@ -22280,6 +22308,8 @@ Posed new_pose = new Posed(pose);
 	public PHJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHJointIf(CsCastObject target) {
@@ -22378,6 +22408,8 @@ Posed new_pose = new Posed(pose);
 	public PH1DJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PH1DJointIf(CsCastObject target) {
@@ -22447,8 +22479,7 @@ PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -22495,8 +22526,7 @@ PH1DJointLimitDesc new_desc = new PH1DJointLimitDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PH1DJointLimitIf obj = new PH1DJointLimitIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -22538,8 +22568,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22559,8 +22588,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -22568,25 +22596,19 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
@@ -22597,8 +22619,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22613,8 +22634,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22641,8 +22661,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22659,8 +22678,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PH1DJointMotorIf obj = new PH1DJointMotorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -22668,25 +22686,19 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PH1DJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
@@ -22697,8 +22709,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -22713,8 +22724,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -23518,8 +23528,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -23533,8 +23542,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -23548,8 +23556,7 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
             if (obj.GetIfInfo() == PH1DJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PH1DJointNonLinearMotorIf appropriate_type = new PH1DJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHuman1DJointResistanceIf.GetIfInfoStatic()) {
 				PHHuman1DJointResistanceIf appropriate_type = new PHHuman1DJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -23626,6 +23633,8 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 	public PHHingeJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHingeJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHHingeJointIf(CsCastObject target) {
@@ -23671,6 +23680,8 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 	public PHSliderJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSliderJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSliderJointIf(CsCastObject target) {
@@ -23716,6 +23727,8 @@ PH1DJointMotorDesc new_desc = new PH1DJointMotorDesc(desc);
 	public PHPathIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPathIf(CsCastObject target) {
@@ -23886,6 +23899,8 @@ Posed new_pose = new Posed(pose);
 	public PHPathJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPathJointIf(CsCastObject target) {
@@ -23964,6 +23979,8 @@ Posed new_pose = new Posed(pose);
 	public PHGenericJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGenericJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHGenericJointIf(CsCastObject target) {
@@ -24101,6 +24118,8 @@ string new_name = string.Copy(name);
 	public PHBallJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointIf(CsCastObject target) {
@@ -24159,12 +24178,10 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24184,8 +24201,7 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -24193,38 +24209,26 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
@@ -24235,12 +24239,10 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24255,12 +24257,10 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24287,12 +24287,10 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24309,8 +24307,7 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHBallJointLimitIf obj = new PHBallJointLimitIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -24318,38 +24315,26 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateLimit_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
@@ -24360,12 +24345,10 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24380,12 +24363,10 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24394,6 +24375,7 @@ PHBallJointLimitDesc new_desc = new PHBallJointLimitDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHBallJointMotorIf CreateMotor(IfInfo ii, PHBallJointMotorDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -24415,8 +24397,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24436,8 +24417,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -24445,25 +24425,19 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
@@ -24474,8 +24448,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24490,8 +24463,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24500,6 +24472,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHBallJointMotorIf CreateMotor(IfInfo ii) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -24518,8 +24491,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24536,8 +24508,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHBallJointMotorIf obj = new PHBallJointMotorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -24545,25 +24516,19 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHBallJointIf_CreateMotor_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
@@ -24574,8 +24539,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24590,8 +24554,7 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24786,12 +24749,10 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24805,12 +24766,10 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -24824,12 +24783,10 @@ PHBallJointMotorDesc new_desc = new PHBallJointMotorDesc(desc);
             if (obj.GetIfInfo() == PHBallJointConeLimitIf.GetIfInfoStatic()) {
 				PHBallJointConeLimitIf appropriate_type = new PHBallJointConeLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointSplineLimitIf.GetIfInfoStatic()) {
 				PHBallJointSplineLimitIf appropriate_type = new PHBallJointSplineLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIndependentLimitIf.GetIfInfoStatic()) {
 				PHBallJointIndependentLimitIf appropriate_type = new PHBallJointIndependentLimitIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -25424,6 +25381,7 @@ Vec3d new_m = new Vec3d(m);
 		throw new InvalidOperationException();
 	}
 	public PHBallJointMotorIf GetMotors() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -25434,8 +25392,7 @@ Vec3d new_m = new Vec3d(m);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -25449,8 +25406,7 @@ Vec3d new_m = new Vec3d(m);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -25464,8 +25420,7 @@ Vec3d new_m = new Vec3d(m);
             if (obj.GetIfInfo() == PHBallJointNonLinearMotorIf.GetIfInfoStatic()) {
 				PHBallJointNonLinearMotorIf appropriate_type = new PHBallJointNonLinearMotorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHumanBallJointResistanceIf.GetIfInfoStatic()) {
 				PHHumanBallJointResistanceIf appropriate_type = new PHHumanBallJointResistanceIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -25542,6 +25497,8 @@ Vec3d new_m = new Vec3d(m);
 	public PHFixJointIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFixJointIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFixJointIf(CsCastObject target) {
@@ -25587,6 +25544,8 @@ Vec3d new_m = new Vec3d(m);
 	public PHSpringIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSpringIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSpringIf(CsCastObject target) {
@@ -26369,6 +26328,8 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
 	public PHMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHMateIf(CsCastObject target) {
@@ -26414,6 +26375,8 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
 	public PHPointToPointMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPointToPointMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPointToPointMateIf(CsCastObject target) {
@@ -26459,6 +26422,8 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
 	public PHPointToLineMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPointToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPointToLineMateIf(CsCastObject target) {
@@ -26504,6 +26469,8 @@ Vec6d new_targetVelocity = new Vec6d(targetVelocity);
 	public PHPointToPlaneMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPointToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPointToPlaneMateIf(CsCastObject target) {
@@ -26605,6 +26572,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHLineToLineMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHLineToLineMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHLineToLineMateIf(CsCastObject target) {
@@ -26650,6 +26619,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHPlaneToPlaneMateIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPlaneToPlaneMateIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPlaneToPlaneMateIf(CsCastObject target) {
@@ -26695,6 +26666,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHTreeNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHTreeNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHTreeNodeIf(CsCastObject target) {
@@ -26838,6 +26811,7 @@ Vec2d new_range = new Vec2d(range);
 		throw new InvalidOperationException();
 	}
 	public PHTreeNodeIf GetParentNode() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -26848,32 +26822,25 @@ Vec2d new_range = new Vec2d(range);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -26887,32 +26854,25 @@ Vec2d new_range = new Vec2d(range);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -26926,32 +26886,25 @@ Vec2d new_range = new Vec2d(range);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -26960,6 +26913,7 @@ Vec2d new_range = new Vec2d(range);
 		throw new InvalidOperationException();
 	}
 	public PHTreeNodeIf GetChildNode(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -26970,32 +26924,25 @@ Vec2d new_range = new Vec2d(range);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -27009,32 +26956,25 @@ Vec2d new_range = new Vec2d(range);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -27048,32 +26988,25 @@ Vec2d new_range = new Vec2d(range);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -27082,6 +27015,7 @@ Vec2d new_range = new Vec2d(range);
 		throw new InvalidOperationException();
 	}
 	public PHRootNodeIf GetRootNode() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -27108,6 +27042,7 @@ Vec2d new_range = new Vec2d(range);
 		throw new InvalidOperationException();
 	}
 	public PHSolidIf GetSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -27154,6 +27089,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHRootNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHRootNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHRootNodeIf(CsCastObject target) {
@@ -27199,6 +27136,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHTreeNode1DIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHTreeNode1DIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHTreeNode1DIf(CsCastObject target) {
@@ -27244,6 +27183,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHHingeJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHingeJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHHingeJointNodeIf(CsCastObject target) {
@@ -27289,6 +27230,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHSliderJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSliderJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSliderJointNodeIf(CsCastObject target) {
@@ -27334,6 +27277,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHPathJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHPathJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHPathJointNodeIf(CsCastObject target) {
@@ -27379,6 +27324,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHGenericJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGenericJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHGenericJointNodeIf(CsCastObject target) {
@@ -27424,6 +27371,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHBallJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointNodeIf(CsCastObject target) {
@@ -27469,6 +27418,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHFixJointNodeIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHFixJointNodeIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHFixJointNodeIf(CsCastObject target) {
@@ -27514,6 +27465,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHGearIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHGearIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHGearIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHGearIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHGearIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHGearIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHGearIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHGearIf(CsCastObject target) {
@@ -27804,6 +27757,8 @@ Vec2d new_range = new Vec2d(range);
 	public PH1DJointLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PH1DJointLimitIf(CsCastObject target) {
@@ -28084,6 +28039,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHBallJointLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointLimitIf(CsCastObject target) {
@@ -28367,6 +28324,8 @@ Vec3d new_limDir = new Vec3d(limDir);
 	public PHBallJointConeLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointConeLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointConeLimitIf(CsCastObject target) {
@@ -28580,6 +28539,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHBallJointSplineLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointSplineLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointSplineLimitIf(CsCastObject target) {
@@ -28825,6 +28786,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHBallJointIndependentLimitIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointIndependentLimitIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointIndependentLimitIf(CsCastObject target) {
@@ -28984,6 +28947,8 @@ Vec2d new_range = new Vec2d(range);
 	public PH1DJointMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PH1DJointMotorIf(CsCastObject target) {
@@ -29029,6 +28994,8 @@ Vec2d new_range = new Vec2d(range);
 	public PH1DJointNonLinearMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PH1DJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PH1DJointNonLinearMotorIf(CsCastObject target) {
@@ -29189,6 +29156,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHHuman1DJointResistanceIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHuman1DJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHHuman1DJointResistanceIf(CsCastObject target) {
@@ -29254,6 +29223,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHBallJointMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointMotorIf(CsCastObject target) {
@@ -29299,6 +29270,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHBallJointNonLinearMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBallJointNonLinearMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBallJointNonLinearMotorIf(CsCastObject target) {
@@ -29381,6 +29354,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHHumanBallJointResistanceIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHHumanBallJointResistanceIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHHumanBallJointResistanceIf(CsCastObject target) {
@@ -29446,6 +29421,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHSpringMotorIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSpringMotorIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSpringMotorIf(CsCastObject target) {
@@ -29491,6 +29468,8 @@ Vec2d new_range = new Vec2d(range);
 	public PHOpObjIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpObjIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpObjIf(CsCastObject target) {
@@ -30025,24 +30004,19 @@ Vec3f new_v = new Vec3f(v);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -30056,24 +30030,19 @@ Vec3f new_v = new Vec3f(v);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -30087,24 +30056,19 @@ Vec3f new_v = new Vec3f(v);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -30123,24 +30087,19 @@ Vec3f new_v = new Vec3f(v);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -30154,24 +30113,19 @@ Vec3f new_v = new Vec3f(v);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -30185,24 +30139,19 @@ Vec3f new_v = new Vec3f(v);
             if (obj.GetIfInfo() == PHSolidPairIf.GetIfInfoStatic()) {
 				PHSolidPairIf appropriate_type = new PHSolidPairIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpParticleIf.GetIfInfoStatic()) {
 				PHOpParticleIf appropriate_type = new PHOpParticleIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpGroupIf.GetIfInfoStatic()) {
 				PHOpGroupIf appropriate_type = new PHOpGroupIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpSpHashColliAgentIf.GetIfInfoStatic()) {
 				PHOpSpHashColliAgentIf appropriate_type = new PHOpSpHashColliAgentIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForLCPIf.GetIfInfoStatic()) {
 				PHSolidPairForLCPIf appropriate_type = new PHSolidPairForLCPIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSolidPairForHapticIf.GetIfInfoStatic()) {
 				PHSolidPairForHapticIf appropriate_type = new PHSolidPairForHapticIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -30663,6 +30612,8 @@ Vec3f new_v = new Vec3f(v);
 	public PHOpParticleIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpParticleIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpParticleIf(CsCastObject target) {
@@ -30712,6 +30663,8 @@ Vec3f new_v = new Vec3f(v);
 	public PHOpGroupIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpGroupIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpGroupIf(CsCastObject target) {
@@ -30753,6 +30706,8 @@ Vec3f new_v = new Vec3f(v);
 	public PHOpHapticControllerIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpHapticControllerIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpHapticControllerIf(CsCastObject target) {
@@ -31210,6 +31165,8 @@ Posef new_pose = new Posef(pose);
 	public PHOpHapticRendererIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpHapticRendererIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpHapticRendererIf(CsCastObject target) {
@@ -31308,6 +31265,8 @@ Posef new_pose = new Posef(pose);
 	public PHOpAnimationIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpAnimationIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpAnimationIf(CsCastObject target) {
@@ -31507,6 +31466,8 @@ Vec3f new_force = new Vec3f(force);
 	public PHOpSpHashColliAgentIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHOpSpHashColliAgentIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHOpSpHashColliAgentIf(CsCastObject target) {
@@ -31582,6 +31543,8 @@ Vec3f new_force = new Vec3f(force);
 	public PHRayIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHRayIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHRayIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHRayIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHRayIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHRayIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHRayIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHRayIf(CsCastObject target) {
@@ -31858,6 +31821,8 @@ Vec3d new_dir = new Vec3d(dir);
 	public PHSceneIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSceneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSceneIf(CsCastObject target) {
@@ -31896,6 +31861,7 @@ Vec3d new_dir = new Vec3d(dir);
 	}
 // feature:only_cs_ignore GetSdk PHSdkIf 
 	public PHSolidIf CreateSolid(PHSolidDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -31932,8 +31898,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHSolidIf obj = new PHSolidIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
 				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -31941,12 +31906,12 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -31975,6 +31940,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHSolidIf CreateSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -32005,8 +31971,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSolidIf obj = new PHSolidIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHSolidIf obj = new PHSolidIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHHapticPointerIf.GetIfInfoStatic()) {
 				PHHapticPointerIf appropriate_type = new PHHapticPointerIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -32014,12 +31979,12 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSolid_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -32068,6 +32033,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHSolidIf GetSolid(int idx) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -32126,6 +32092,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHSolidIf GetSolids() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -32523,7 +32490,299 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 	    SprExport.Spr_PHSceneIf_SetContactMode_7((IntPtr) _thisArray[0]);
 		}
 	}
-// feature:only_cs_ignore CreateJoint PHJointIf 
+	public PHJointIf CreateJoint(PHSolidIf lhs, PHSolidIf rhs, IfInfo ii, PHJointDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
+		PHSceneIf phSceneIf = GetCSPHSceneIf();
+		if (phSceneIf.multiThreadMode) {;
+			var currentThread = Thread.CurrentThread;
+			if (currentThread == phSceneIf.stepThread) {
+// IfClass
+// IfClass
+// IfClass
+PHJointDesc new_desc = new PHJointDesc(desc);
+// NewArgument equal 8 8
+// is_struct
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+				phSceneIf.AddCallbackForStepThread(
+					() => {
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
+					},
+					() => {
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
+				});
+            if (ptrStep == IntPtr.Zero) { return null; } 
+            PHJointIf obj = new PHJointIf(ptrStep, phSceneIf.sceneForStep);
+            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            return obj;
+			} else if (currentThread == phSceneIf.subThread) {
+				lock (phSceneIf.phSceneLock) {
+					phSceneIf.isSetFunctionCalledInSubThread = true;
+					if (phSceneIf.stateForSwap != null) {
+						SprExport.Spr_ObjectStatesIf_ReleaseState(phSceneIf.stateForSwap._thisArray[0], _thisArray[phSceneIf.sceneForGet]);
+					}
+					phSceneIf.callObjectStatesIf_Create = true;
+					if (phSceneIf.isStepThreadExecuting) {
+// IfClass
+// IfClass
+// IfClass
+PHJointDesc new_desc = new PHJointDesc(desc);
+// NewArgument equal 8 8
+// is_struct
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
+            if (ptrGet == IntPtr.Zero) { return null; } 
+            PHJointIf obj = new PHJointIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
+            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+				return appropriate_type;
+			} else { 
+				phSceneIf.AddCallbackForSubThread(() => {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
+					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
+				});
+			}
+            return obj;
+					} else {
+	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
+	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) desc);
+	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) desc);
+            if (ptrGet == IntPtr.Zero) { return null; } 
+            PHJointIf obj = new PHJointIf(ptrStep, ptrBuffer, ptrGet, phSceneIf.sceneForStep, phSceneIf.sceneForBuffer, phSceneIf.sceneForGet);
+            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            return obj;
+					}
+				}
+			}
+		} else {
+	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateJoint((IntPtr) _thisArray[0], (IntPtr) lhs._thisArray[0], (IntPtr) rhs._thisArray[0], (IntPtr) ii, (IntPtr) desc);
+            if (ptr == IntPtr.Zero) { return null; } 
+            PHJointIf obj = new PHJointIf(ptr, 0);
+            if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
+				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
+				return appropriate_type;
+            }
+            return obj;
+		}
+		throw new InvalidOperationException();
+	}
 	public int NJoints() {
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
@@ -32545,6 +32804,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHJointIf GetJoint(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -32555,56 +32815,43 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -32618,56 +32865,43 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -32681,56 +32915,43 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -32805,6 +33026,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHFemMeshIf GetFemMesh(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -32863,6 +33085,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHFemMeshNewIf GetFemMeshNew(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -32889,6 +33112,7 @@ PHSolidDesc new_desc = new PHSolidDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRootNodeIf CreateRootNode(PHSolidIf root, PHRootNodeDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -32923,8 +33147,7 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHRootNodeIf obj = new PHRootNodeIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -32945,10 +33168,12 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRootNodeIf CreateRootNode(PHSolidIf root) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
+                    Console.WriteLine("CS CreateRootNode phSceneIf.stepThread");
 // IfClass
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
@@ -32969,14 +33194,15 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
+                    Console.WriteLine("CS CreateRootNode phSceneIf.isStepThreadExecuting");
 // IfClass
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHRootNodeIf obj = new PHRootNodeIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
+                    Console.WriteLine("CS CreateRootNode !phSceneIf.isStepThreadExecuting");
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
@@ -32987,8 +33213,11 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 				}
 			}
 		} else {
+                    Console.WriteLine("CS CreateRootNode !phSceneIf.multiThreadMode");
 	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[0], (IntPtr) root._thisArray[0]);
-            if (ptr == IntPtr.Zero) { return null; } 
+            if (ptr == IntPtr.Zero) {
+                    Console.WriteLine("CS CreateRootNode !phSceneIf.multiThreadMode IntPtr.Zero");
+                    return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptr, 0);
             return obj;
 		}
@@ -33015,6 +33244,7 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRootNodeIf GetRootNode(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -33041,6 +33271,7 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHTreeNodeIf CreateTreeNode(PHTreeNodeIf parent, PHSolidIf child, PHTreeNodeDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33063,32 +33294,25 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -33109,8 +33333,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -33118,103 +33341,61 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) new_desc);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33225,32 +33406,25 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -33265,32 +33439,25 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -33299,6 +33466,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHTreeNodeIf CreateTreeNode(PHTreeNodeIf parent, PHSolidIf child) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33318,32 +33486,25 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -33361,8 +33522,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) child._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) child._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHTreeNodeIf obj = new PHTreeNodeIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -33370,103 +33530,61 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) child._thisArray[phSceneIf.sceneForStep]);
@@ -33477,32 +33595,25 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -33517,32 +33628,25 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
             if (obj.GetIfInfo() == PHRootNodeIf.GetIfInfoStatic()) {
 				PHRootNodeIf appropriate_type = new PHRootNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHTreeNode1DIf.GetIfInfoStatic()) {
 				PHTreeNode1DIf appropriate_type = new PHTreeNode1DIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointNodeIf.GetIfInfoStatic()) {
 				PHBallJointNodeIf appropriate_type = new PHBallJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointNodeIf.GetIfInfoStatic()) {
 				PHFixJointNodeIf appropriate_type = new PHFixJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointNodeIf.GetIfInfoStatic()) {
 				PHHingeJointNodeIf appropriate_type = new PHHingeJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointNodeIf.GetIfInfoStatic()) {
 				PHSliderJointNodeIf appropriate_type = new PHSliderJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointNodeIf.GetIfInfoStatic()) {
 				PHPathJointNodeIf appropriate_type = new PHPathJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointNodeIf.GetIfInfoStatic()) {
 				PHGenericJointNodeIf appropriate_type = new PHGenericJointNodeIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -33551,6 +33655,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRootNodeIf CreateTreeNodes(PHSolidIf solid) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33579,8 +33684,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) solid._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) solid._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHRootNodeIf obj = new PHRootNodeIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHRootNodeIf obj = new PHRootNodeIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateTreeNodes((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) solid._thisArray[phSceneIf.sceneForStep]);
@@ -33601,6 +33705,7 @@ PHTreeNodeDesc new_desc = new PHTreeNodeDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHGearIf CreateGear(PH1DJointIf lhs, PH1DJointIf rhs, PHGearDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33637,8 +33742,7 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHGearIf obj = new PHGearIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHGearIf obj = new PHGearIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33659,6 +33763,7 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHGearIf CreateGear(PH1DJointIf lhs, PH1DJointIf rhs) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33689,8 +33794,7 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) lhs._thisArray[phSceneIf.sceneForBuffer], (IntPtr) rhs._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) lhs._thisArray[phSceneIf.sceneForGet], (IntPtr) rhs._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHGearIf obj = new PHGearIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHGearIf obj = new PHGearIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateGear_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) lhs._thisArray[phSceneIf.sceneForStep], (IntPtr) rhs._thisArray[phSceneIf.sceneForStep]);
@@ -33731,6 +33835,7 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHGearIf GetGear(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -33757,6 +33862,7 @@ PHGearDesc new_desc = new PHGearDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHPathIf CreatePath(PHPathDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33789,8 +33895,7 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHPathIf obj = new PHPathIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHPathIf obj = new PHPathIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33811,6 +33916,7 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHPathIf CreatePath() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33837,8 +33943,7 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHPathIf obj = new PHPathIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHPathIf obj = new PHPathIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreatePath_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -33879,6 +33984,7 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHPathIf GetPath(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -33905,6 +34011,7 @@ PHPathDesc new_desc = new PHPathDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRayIf CreateRay(PHRayDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33937,8 +34044,7 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHRayIf obj = new PHRayIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHRayIf obj = new PHRayIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -33959,6 +34065,7 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRayIf CreateRay() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -33985,8 +34092,7 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHRayIf obj = new PHRayIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHRayIf obj = new PHRayIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRay_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -34027,6 +34133,7 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHRayIf GetRay(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -34093,6 +34200,7 @@ PHRayDesc new_desc = new PHRayDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHIKActuatorIf CreateIKActuator(IfInfo ii, PHIKActuatorDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -34114,12 +34222,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34139,8 +34245,7 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii, (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii, (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -34148,38 +34253,26 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) new_desc);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii, (IntPtr) desc);
@@ -34190,12 +34283,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34210,12 +34301,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34224,6 +34313,7 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHIKActuatorIf CreateIKActuator(IfInfo ii) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -34242,12 +34332,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34264,8 +34352,7 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) ii);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) ii);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHIKActuatorIf obj = new PHIKActuatorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
@@ -34273,38 +34360,26 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
-				phSceneIf.AddCallbackForSubThread(() => {
-	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
-					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
-				});
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					appropriate_type._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
 				return appropriate_type;
-            } else {
+			} else { 
 				phSceneIf.AddCallbackForSubThread(() => {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
 					obj._thisArray[phSceneIf.sceneForStep] = ptrStep;
 				});
-            }
+			}
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKActuator_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) ii);
@@ -34315,12 +34390,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34335,12 +34408,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34369,6 +34440,7 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHIKActuatorIf GetIKActuator(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -34379,12 +34451,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34398,12 +34468,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34417,12 +34485,10 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
             if (obj.GetIfInfo() == PHIKBallActuatorIf.GetIfInfoStatic()) {
 				PHIKBallActuatorIf appropriate_type = new PHIKBallActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKHingeActuatorIf.GetIfInfoStatic()) {
 				PHIKHingeActuatorIf appropriate_type = new PHIKHingeActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKSpringActuatorIf.GetIfInfoStatic()) {
 				PHIKSpringActuatorIf appropriate_type = new PHIKSpringActuatorIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -34431,6 +34497,7 @@ PHIKActuatorDesc new_desc = new PHIKActuatorDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHIKEndEffectorIf CreateIKEndEffector(PHIKEndEffectorDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -34463,8 +34530,7 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -34485,6 +34551,7 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHIKEndEffectorIf CreateIKEndEffector() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -34511,8 +34578,7 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHIKEndEffectorIf obj = new PHIKEndEffectorIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateIKEndEffector_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -34553,6 +34619,7 @@ PHIKEndEffectorDesc new_desc = new PHIKEndEffectorDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHIKEndEffectorIf GetIKEndEffector(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -34657,8 +34724,7 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSkeletonIf obj = new PHSkeletonIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHSkeletonIf obj = new PHSkeletonIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -34705,8 +34771,7 @@ PHSkeletonDesc new_desc = new PHSkeletonDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHSkeletonIf obj = new PHSkeletonIf(ptrGet, 0);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHSkeletonIf obj = new PHSkeletonIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateSkeleton_1((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36143,6 +36208,7 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHEngineIf GetEngine(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36153,28 +36219,22 @@ Vec3f new_extent = new Vec3f(extent);
             if (obj.GetIfInfo() == PHConstraintEngineIf.GetIfInfoStatic()) {
 				PHConstraintEngineIf appropriate_type = new PHConstraintEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGravityEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGravityEngineIf.GetIfInfoStatic()) {
 				PHGravityEngineIf appropriate_type = new PHGravityEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPenaltyEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPenaltyEngineIf.GetIfInfoStatic()) {
 				PHPenaltyEngineIf appropriate_type = new PHPenaltyEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKEngineIf.GetIfInfoStatic()) {
 				PHIKEngineIf appropriate_type = new PHIKEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFemEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFemEngineIf.GetIfInfoStatic()) {
 				PHFemEngineIf appropriate_type = new PHFemEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpEngineIf.GetIfInfoStatic()) {
 				PHOpEngineIf appropriate_type = new PHOpEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHapticEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHapticEngineIf.GetIfInfoStatic()) {
 				PHHapticEngineIf appropriate_type = new PHHapticEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -36188,28 +36248,22 @@ Vec3f new_extent = new Vec3f(extent);
             if (obj.GetIfInfo() == PHConstraintEngineIf.GetIfInfoStatic()) {
 				PHConstraintEngineIf appropriate_type = new PHConstraintEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGravityEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGravityEngineIf.GetIfInfoStatic()) {
 				PHGravityEngineIf appropriate_type = new PHGravityEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPenaltyEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPenaltyEngineIf.GetIfInfoStatic()) {
 				PHPenaltyEngineIf appropriate_type = new PHPenaltyEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKEngineIf.GetIfInfoStatic()) {
 				PHIKEngineIf appropriate_type = new PHIKEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFemEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFemEngineIf.GetIfInfoStatic()) {
 				PHFemEngineIf appropriate_type = new PHFemEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpEngineIf.GetIfInfoStatic()) {
 				PHOpEngineIf appropriate_type = new PHOpEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHapticEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHapticEngineIf.GetIfInfoStatic()) {
 				PHHapticEngineIf appropriate_type = new PHHapticEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -36223,28 +36277,22 @@ Vec3f new_extent = new Vec3f(extent);
             if (obj.GetIfInfo() == PHConstraintEngineIf.GetIfInfoStatic()) {
 				PHConstraintEngineIf appropriate_type = new PHConstraintEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGravityEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGravityEngineIf.GetIfInfoStatic()) {
 				PHGravityEngineIf appropriate_type = new PHGravityEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPenaltyEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPenaltyEngineIf.GetIfInfoStatic()) {
 				PHPenaltyEngineIf appropriate_type = new PHPenaltyEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHIKEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHIKEngineIf.GetIfInfoStatic()) {
 				PHIKEngineIf appropriate_type = new PHIKEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFemEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFemEngineIf.GetIfInfoStatic()) {
 				PHFemEngineIf appropriate_type = new PHFemEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHOpEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHOpEngineIf.GetIfInfoStatic()) {
 				PHOpEngineIf appropriate_type = new PHOpEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHapticEngineIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHapticEngineIf.GetIfInfoStatic()) {
 				PHHapticEngineIf appropriate_type = new PHHapticEngineIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -36253,6 +36301,7 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHConstraintEngineIf GetConstraintEngine() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36280,6 +36329,7 @@ Vec3f new_extent = new Vec3f(extent);
 	}
 // feature:only_cs_ignore GetGravityEngine PHGravityEngineIf 
 	public PHPenaltyEngineIf GetPenaltyEngine() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36307,6 +36357,7 @@ Vec3f new_extent = new Vec3f(extent);
 	}
 // feature:only_cs_ignore GetIKEngine PHIKEngineIf 
 	public PHFemEngineIf GetFemEngine() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36333,6 +36384,7 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHHapticEngineIf GetHapticEngine() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36359,6 +36411,7 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHOpEngineIf GetOpEngine() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36411,6 +36464,7 @@ Vec3f new_extent = new Vec3f(extent);
 		throw new InvalidOperationException();
 	}
 	public PHHapticPointerIf CreateHapticPointer() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -36437,8 +36491,7 @@ Vec3f new_extent = new Vec3f(extent);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHHapticPointerIf obj = new PHHapticPointerIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHHapticPointerIf obj = new PHHapticPointerIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateHapticPointer((IntPtr) _thisArray[phSceneIf.sceneForStep]);
@@ -36533,6 +36586,8 @@ Vec3f new_extent = new Vec3f(extent);
 	public PHSdkIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSdkIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSdkIf(CsCastObject target) {
@@ -36598,6 +36653,8 @@ Vec3f new_extent = new Vec3f(extent);
 	public PHBoneIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHBoneIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHBoneIf(CsCastObject target) {
@@ -36670,6 +36727,7 @@ Vec3f new_extent = new Vec3f(extent);
 		}
 	}
 	public PHSolidIf GetSolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36743,6 +36801,7 @@ Vec3f new_extent = new Vec3f(extent);
 		}
 	}
 	public PHSolidIf GetProxySolid() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36816,6 +36875,7 @@ Vec3f new_extent = new Vec3f(extent);
 		}
 	}
 	public PHJointIf GetJoint() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -36826,56 +36886,43 @@ Vec3f new_extent = new Vec3f(extent);
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -36889,56 +36936,43 @@ Vec3f new_extent = new Vec3f(extent);
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -36952,56 +36986,43 @@ Vec3f new_extent = new Vec3f(extent);
             if (obj.GetIfInfo() == PH1DJointIf.GetIfInfoStatic()) {
 				PH1DJointIf appropriate_type = new PH1DJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHBallJointIf.GetIfInfoStatic()) {
 				PHBallJointIf appropriate_type = new PHBallJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHFixJointIf.GetIfInfoStatic()) {
 				PHFixJointIf appropriate_type = new PHFixJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSpringIf.GetIfInfoStatic()) {
 				PHSpringIf appropriate_type = new PHSpringIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHMateIf.GetIfInfoStatic()) {
 				PHMateIf appropriate_type = new PHMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHHingeJointIf.GetIfInfoStatic()) {
 				PHHingeJointIf appropriate_type = new PHHingeJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHSliderJointIf.GetIfInfoStatic()) {
 				PHSliderJointIf appropriate_type = new PHSliderJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPathJointIf.GetIfInfoStatic()) {
 				PHPathJointIf appropriate_type = new PHPathJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHGenericJointIf.GetIfInfoStatic()) {
 				PHGenericJointIf appropriate_type = new PHGenericJointIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPointMateIf.GetIfInfoStatic()) {
 				PHPointToPointMateIf appropriate_type = new PHPointToPointMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToLineMateIf.GetIfInfoStatic()) {
 				PHPointToLineMateIf appropriate_type = new PHPointToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPointToPlaneMateIf.GetIfInfoStatic()) {
 				PHPointToPlaneMateIf appropriate_type = new PHPointToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHLineToLineMateIf.GetIfInfoStatic()) {
 				PHLineToLineMateIf appropriate_type = new PHLineToLineMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
-            }
-            if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
+            }else if (obj.GetIfInfo() == PHPlaneToPlaneMateIf.GetIfInfoStatic()) {
 				PHPlaneToPlaneMateIf appropriate_type = new PHPlaneToPlaneMateIf(obj._thisArray[0], obj._thisArray[1], obj._thisArray[2]);
 				return appropriate_type;
             }
@@ -37045,6 +37066,7 @@ Vec3f new_extent = new Vec3f(extent);
 		}
 	}
 	public PHBoneIf GetParent() {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -37190,6 +37212,8 @@ Vec3d new_pos = new Vec3d(pos);
 	public PHSkeletonIf(IntPtr ptr, int sceneIndex, bool flag) : base(ptr, sceneIndex, flag) {}
 	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2) : base(ptr0, ptr1, ptr2, false) {}
 	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, bool flag) : base(ptr0, ptr1, ptr2, flag) {}
+	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index) : base(ptr0, ptr1, ptr0Index, ptr1Index, false) {}
+	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, int ptr0Index, int ptr1Index, bool flag) : base(ptr0, ptr1, ptr0Index, ptr1Index, flag) {}
 	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, false) {}
 	public PHSkeletonIf(IntPtr ptr0, IntPtr ptr1, IntPtr ptr2, int ptr0Index, int ptr1Index, int ptr2Index, bool flag) : base(ptr0, ptr1, ptr2, ptr0Index, ptr1Index, ptr2Index, flag) {}
 	public static implicit operator PHSkeletonIf(CsCastObject target) {
@@ -37247,6 +37271,7 @@ Vec3d new_pos = new Vec3d(pos);
 		throw new InvalidOperationException();
 	}
 	public PHBoneIf GetBone(int i) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {
 			var currentThread = Thread.CurrentThread;
@@ -37273,6 +37298,7 @@ Vec3d new_pos = new Vec3d(pos);
 		throw new InvalidOperationException();
 	}
 	public PHBoneIf CreateBone(PHBoneIf parent, PHBoneDesc desc) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -37307,8 +37333,7 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer], (IntPtr) new_desc);
 	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet], (IntPtr) new_desc);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHBoneIf obj = new PHBoneIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHBoneIf obj = new PHBoneIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep], (IntPtr) desc);
@@ -37329,6 +37354,7 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 		throw new InvalidOperationException();
 	}
 	public PHBoneIf CreateBone(PHBoneIf parent) {
+// is_all_elements_thisArray_class is_return_thisArray0
 		PHSceneIf phSceneIf = GetCSPHSceneIf();
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
@@ -37357,8 +37383,7 @@ PHBoneDesc new_desc = new PHBoneDesc(desc);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) parent._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) parent._thisArray[phSceneIf.sceneForGet]);
             if (ptrGet == IntPtr.Zero) { return null; } 
-            PHBoneIf obj = new PHBoneIf(ptrGet, phSceneIf.sceneForGet);
-            obj._thisArray[phSceneIf.sceneForBuffer] = ptrBuffer;
+            PHBoneIf obj = new PHBoneIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
 	    IntPtr ptrStep = SprExport.Spr_PHSkeletonIf_CreateBone_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) parent._thisArray[phSceneIf.sceneForStep]);
