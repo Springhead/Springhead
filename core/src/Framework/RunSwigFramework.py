@@ -189,7 +189,10 @@ if SetupExists:
 else:
 	if options.python:
 		python = options.python
-	nkf = 'nkf'
+	if unix:
+		nkf = 'nkf'
+	else:
+		nkf = '%s/../../buildtool/nkf.exe' % SrcDir
 	swig = 'swig'
 	make = 'gmake' if unix else 'nmake /NOLOGO'
 	runswig_foundation = '%s %s/RunSwig.py -P %s' % (python, foundation_dir, python)
