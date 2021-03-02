@@ -20,6 +20,21 @@
 プロジェクト\tt{BodStack}をスタートアッププロジェクトに設定してビルドすれば
 実行形式バイナリが生成されます。
 
+\medskip
+実行時にDLLが見つからないというエラーが発生した場合には、
+\begin{center}\begin{tabular}{lcl}\hline
+	32ビット環境のときは & --- & \SprTop{\dependency\bin\win32} \\\hline
+	64ビット環境のときは & --- & \SprTop{\dependency\bin\win64} \\
+				 & & \SprTop{\dependency\bin\win32} \\
+				 & & の両方 \\\hline
+\end{tabular} \end{center}
+にパスを通してください。
+Visual Studioから実行するときは、
+プログラムのプロパティを開き、
+[構成プロパティ]---[デバッグ]---[環境] に
+``\,\tt{path=上記のパス}''とします。
+
+\medskip
 \begin{narrow}[15pt]
 	\begin{figure}[h]
 	\begin{center}
