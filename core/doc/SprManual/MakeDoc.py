@@ -23,7 +23,7 @@
 #     Ver 1.2    2019/01/31 F.Kanehori	Texlive 2014 is obsoleted.
 #     Ver 1.2.1  2021/03/03 F.Kanehori	Remove unneccessary path setting.
 # =============================================================================
-version = 1.2.1
+version = '1.2.1'
 
 import sys
 import os
