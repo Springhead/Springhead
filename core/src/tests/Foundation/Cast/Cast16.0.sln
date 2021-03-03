@@ -1,8 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cast", "Cast14.0.vcxproj", "{868EED3F-4EE0-4B3D-8D79-FCA1A910460B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cast", "Cast16.0.vcxproj", "{868EED3F-4EE0-4B3D-8D79-FCA1A910460B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A875ED2-B0F8-4DAA-B351-4CF30852EC89}
 	EndGlobalSection
 EndGlobal
