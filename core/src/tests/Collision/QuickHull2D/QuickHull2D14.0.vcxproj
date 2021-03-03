@@ -156,6 +156,7 @@
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead14.0DWin32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -180,6 +181,7 @@
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead14.0Dx64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -207,6 +209,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead14.0Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
@@ -234,6 +237,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead14.0TWin32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -261,6 +265,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead14.0x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
@@ -288,27 +293,11 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead14.0Tx64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Base\Base14.0.vcxproj">
-      <Project>{90010cd8-7c45-481e-8697-aab9b3fb9e4f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Collision\Collision14.0.vcxproj">
-      <Project>{8c62959e-9e67-4439-836e-25be57501463}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Foundation\Foundation14.0.vcxproj">
-      <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Physics\Physics14.0.vcxproj">
-      <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\RunSwig\RunSwig14.0.vcxproj">
-      <Project>{4ac6c708-19c9-4cc1-a25b-d9682470411e}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

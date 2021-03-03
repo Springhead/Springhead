@@ -39,7 +39,7 @@
 #     Ver 1.8    2020/10/12 F.Kanehori	Add build of EmbPython Library.
 #     Ver 1.9    2021/03/03 F.Kanehori	Add HowToBuildSpringhead_Windows.
 # ======================================================================
-version = 1.9
+version = '1.9'
 
 import sys
 import os
