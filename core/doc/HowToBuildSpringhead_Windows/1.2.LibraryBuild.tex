@@ -1,0 +1,43 @@
+% 1.2.LibraryBuild.tex
+%	Last update: 2021/03/02 F.Kanehori
+%\newpage
+\subsection{\SprLib のビルド}
+\label{subsec:Library_Build}
+\parindent=0pt
+
+ディレクトリ\SprTop{\core\src}へ移動します。
+
+\bigskip
+複数のソリューションファイルがあります。
+使用するVisual Studioのバージョンに合ったものを使用してください。
+
+\Important{%
+	\Path{Springhead##.#.sln}の \tt{\#\#.\#} の部分がバージョンを表します。\\
+	\tt{14.0}が2015用、\tt{15.0}が2017用、\tt{16.0}が2019用です。
+}
+
+\bigskip
+ソリューションファイルをVisual Studioで起動したら、
+Springheadを``スタートアッププロジェクト''に指定してビルドします。
+ライブラリファイルは、\\
+\hspace{20pt}\Path{C:\Springhead\generated\lib\win64} \\
+または\\
+\hspace{20pt}\Path{C:\Springhead\generated\lib\win32} \\
+のいずれかに生成されます。
+
+ライブラリファイル名は次のようになります。
+\begin{center}\begin{tabular}{lll}\hline
+	構成名 & ライブラリファイル名 & ビルド設定 \\\hline
+	\tt{Release} & \tt{Springhead\#\#.lib}  & multithread, DLL \\
+	\tt{Debug}   & \tt{Springhead\#\#D.lib} & multithread, Debug, DLL \\
+	\tt{Trace}   & \tt{Springhead\#\#T.lib} & multithread, Debug, DLL \\\hline
+	\multicolumn{3}{l}{\footnotesize{\vbox{\vbox to 1mm{}
+		\hbox{・ \tt{\#\#}は、Visual Studioバージョン及び
+			プラットフォームを表す\url{Win32}又は\url{x64}との組み合}
+		\hbox{\phantom{・ }わせとなります(\Path{15.0x64}など)．}
+		\hbox{・ \tt{Trace}構成とは，
+			フレームポインタ情報付き\url{Release}構成のことです．}}}}
+\end{tabular}\end{center}
+
+\bigskip
+% end 1.2.LibraryBuild.tex

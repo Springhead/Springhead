@@ -1,0 +1,56 @@
+% 1.3.EmbPythonBuild.tex
+%	Last update: 2021/03/02 F.Kanehori
+%\newpage
+\subsection{EmbPythonのビルド}
+\label{subsec:EmbPython_Build}
+\parindent=0pt
+
+\subsubsection{Springhead アプリケーションに Python インタプリタを組み込む場合}
+
+ディレクトリ\SprTop{\core\src\EmbPython}に移動します。
+\label{subsubsec:EmbPythonInterpreter}
+
+\medskip
+適切なバージョンのソリューションファイル
+\Path{EmbPython##.#.sln}をVisual Studio起動し、
+ターゲットEmbPythonをビルドします。
+ライブラリファイルは、\\
+\hspace{20pt}\Path{C:\Springhead\core\src\EmbPython}\\
+に次の名前で生成されます。
+
+\begin{center}
+\begin{tabular}{l@{\ \ ---\ \ }l}\hline
+	構成名 & ライブラリファイル名 \\\hline
+	\tt{Relase} & \tt{EmbPython\#\#.lib}  \\
+	\tt{Debug}  & \tt{EmbPython\#\#D.lib} \\
+	\tt{Trace}  & \tt{EmbPython\#\#T.lib} \\\hline
+	\multicolumn{2}{l}{\footnotesize{\vbox{\vbox to 1mm{}
+		\hbox{・ \tt{\#\#}については前節と同様}}}}
+\end{tabular}
+\end{center}
+
+\bigskip
+\subsubsection{Pythonインタプリタに対する外部拡張モジュール(Python DLL, pyd)を作成する場合}
+\label{subsubsec:EmbPythonDLL}
+
+\medskip
+ディレクトリ\SprTop{\core\embed}に移動します。
+
+適切なバージョンのソリューションファイル
+\Path{SprPythonDLL##.#.sln}をVisualStudioで起動し、
+ターゲットSprPythonDLLをビルドします。
+DLLファイルは、\\
+\hspace{20pt}\Path{C:\Springhead\generated\bin\x64}\\
+または\\
+\hspace{20pt}\Path{C:\Springhead\generated\bin\x32}\\
+に次の名前で生成されます。
+
+\begin{center}\begin{tabular}{l@{\ \ ---\ \ }l}\hline
+	構成名 & DLLファイル名 \\\hline
+	\tt{Relase} & \tt{Spr.pyd}  \\
+	\tt{Debug}  & \tt{SprD.pyd} \\
+	\tt{Trace}  & \tt{SprT.pyd} \\\hline
+\end{tabular}\end{center}
+
+\bigskip
+% end 1.3.EmbPythonBuild.tex
