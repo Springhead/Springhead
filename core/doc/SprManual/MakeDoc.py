@@ -18,11 +18,12 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/21 F.Kanehori	First version.
-#	Ver 1.1  2018/12/06 F.Kanehori	Now both pdf and html version available.
-#	Ver 1.2  2019/01/31 F.Kanehori	Texlive 2014 is obsoleted.
+#     Ver 1.0    2018/02/21 F.Kanehori	First version.
+#     Ver 1.1    2018/12/06 F.Kanehori	Now both pdf and html version available.
+#     Ver 1.2    2019/01/31 F.Kanehori	Texlive 2014 is obsoleted.
+#     Ver 1.2.1  2021/03/03 F.Kanehori	Remove unneccessary path setting.
 # =============================================================================
-version = 1.2
+version = 1.2.1
 
 import sys
 import os
@@ -96,7 +97,7 @@ curr_date = Util.date(format='%Y-%m%d')
 curr_time = Util.time(format='%H%M')
 opts = 'DATE=%s TIME=%s' % (curr_date, curr_time)
 cmnd = '%s %s' % (make_pdf, opts)
-#addpath = texlive2014_path
+#addpath = texlive2018_path
 
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
@@ -118,7 +119,7 @@ if stat == 0:
 #  Clean up.
 #
 cmnd = '%s clean' % make_pdf
-addpath = texlive2014_path
+#addpath = texlive2018_path
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 

@@ -28,17 +28,18 @@
 #	These control parameters are hard coded on this file.
 #
 #  VERSION:
-#	Ver 1.0  2018/03/05 F.Kanehori	First version.
-#	Ver 1.1  2018/04/26 F.Kanehori	Commit result.log to git server.
-#	Ver 1.2  2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
-#	Ver 1.3  2018/08/16 F.Kanehori	Do not make documents on unix.
-#	Ver 1.4  2018/09/04 F.Kanehori	Test on unix released.
-#	Ver 1.5  2018/09/10 F.Kanehori	RevisionInfo.py implemented.
-#	Ver 1.6  2019/01/10 F.Kanehori	Add closed-source control.
-#	Ver 1.7  2019/08/05 F.Kanehori	Add HowToUseCMake document.
-#	Ver 1.8  2020/10/12 F.Kanehori	Add build of EmbPython Library.
+#     Ver 1.0    2018/03/05 F.Kanehori	First version.
+#     Ver 1.1    2018/04/26 F.Kanehori	Commit result.log to git server.
+#     Ver 1.2    2018/05/01 F.Kanehori	Git pull for DailyBuild/Result.
+#     Ver 1.3    2018/08/16 F.Kanehori	Do not make documents on unix.
+#     Ver 1.4    2018/09/04 F.Kanehori	Test on unix released.
+#     Ver 1.5    2018/09/10 F.Kanehori	RevisionInfo.py implemented.
+#     Ver 1.6    2019/01/10 F.Kanehori	Add closed-source control.
+#     Ver 1.7    2019/08/05 F.Kanehori	Add HowToUseCMake document.
+#     Ver 1.8    2020/10/12 F.Kanehori	Add build of EmbPython Library.
+#     Ver 1.9    2021/03/03 F.Kanehori	Add HowToBuildSpringhead_Windows.
 # ======================================================================
-version = 1.7
+version = 1.9
 
 import sys
 import os
@@ -468,7 +469,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../doc/HowToBuildSpringhead_Windows')
+	os.chdir('../HowToBuildSpringhead_Windows')
 	Print('  HowToBuildSpringhead_Windows')
 	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
