@@ -29,26 +29,6 @@
   <ItemGroup>
     <ClCompile Include="FWAppGLtest.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Base\Base14.0.vcxproj">
-      <Project>{90010cd8-7c45-481e-8697-aab9b3fb9e4f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Collision\Collision14.0.vcxproj">
-      <Project>{8c62959e-9e67-4439-836e-25be57501463}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Foundation\Foundation14.0.vcxproj">
-      <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Framework14.0.vcxproj">
-      <Project>{755660be-3b1e-416b-b795-4f653c83a43a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Graphics\Graphics14.0.vcxproj">
-      <Project>{a339c0ca-d5fb-4dfa-9bcf-826739790653}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\HumanInterface\HumanInterface14.0.vcxproj">
-      <Project>{05138f41-5673-4e19-a5c7-2a684488b23a}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5F363A63-D199-437B-B620-158B15B7F244}</ProjectGuid>
     <RootNamespace>FWAppGLtest140</RootNamespace>
@@ -179,7 +159,7 @@
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead14.0DWin32.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -205,7 +185,7 @@
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead14.0Dx64.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -234,7 +214,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead14.0Win32.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -263,7 +243,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead14.0TWin32.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -292,7 +272,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead14.0x64.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -321,7 +301,7 @@
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead14.0Tx64.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

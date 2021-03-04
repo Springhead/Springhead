@@ -1,8 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FWAppBoxStack", "FWAppBoxStack14.0.vcxproj", "{3C304055-D49F-48DC-9C5D-D08538A8A6A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FWAppBoxStack", "FWAppBoxStack16.0.vcxproj", "{3C304055-D49F-48DC-9C5D-D08538A8A6A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03FF6698-9504-49FD-B040-5CD6A27ED4AD}
 	EndGlobalSection
 EndGlobal

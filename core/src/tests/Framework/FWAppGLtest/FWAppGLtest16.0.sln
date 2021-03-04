@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FWAppGLtest", "FWAppGLtest15.0.vcxproj", "{5F363A63-D199-437B-B620-158B15B7F244}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FWAppGLtest", "FWAppGLtest16.0.vcxproj", "{5F363A63-D199-437B-B620-158B15B7F244}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8F98C68-7E90-4808-B709-E70A6553C77B}"
 EndProject
