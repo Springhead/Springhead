@@ -93,14 +93,14 @@
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
@@ -115,14 +115,14 @@
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
     <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
@@ -135,14 +135,14 @@
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -clean</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>..\do_python  make_manager.py -A -d</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
     <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>

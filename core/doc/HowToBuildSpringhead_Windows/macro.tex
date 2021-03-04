@@ -1,5 +1,5 @@
 % macro.tex
-%	Last update: 2020/02/13 F.Kanehori
+%	Last update: 2021/03/04 F.Kanehori
 
 \makeatletter
 
@@ -169,8 +169,12 @@
 \def\Important#1{%
 	\begin{spacing}{0.75}
 	\begin{center}\begin{minipage}[l]{.9\linewidth}
-	    \Vskip{0pt}\thinrule{\linewidth}\\
-	    {\small #1}
+	    \Vskip{0pt}\thinrule{\linewidth}
+	    \begin{center}
+		\Vskip{-.3\baselineskip}
+		\begin{minipage}[l]{.97\linewidth}{\small #1}\end{minipage}
+		\Vskip{-.8\baselineskip}
+	    \end{center}
 	    \Vskip{0\baselineskip}\thinrule{\linewidth}
 	\end{minipage}\end{center}
 	\end{spacing}}

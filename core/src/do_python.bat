@@ -4,35 +4,27 @@ setlocal enabledelayedexpansion
 ::  SYNOPSIS
 ::	do_python.bat script.py [args..]	（Windows 専用）
 ::
-::  重大な変更
-::	この do_python.bat は廃止し、setup 機構で必要な設定 (swig の生成、
-::	パスの設定) を行なうように変更する。
-::	ただし移行期間を設け、その間は setup file が存在しない場合に限り
-::	従来の処理を実行する (存在するときは何もしない)。
-::
 ::  DESCRIPTION
 ::	Python script を実行するための Windows 用アダプタ。
 ::	"Springhead/buildtool" が利用できるときは、それを使って実行する。
 ::	さもなければ、デフォルトで利用できる python を使って実行する。
-::	デフォルトで python が利用できない場合、または python のバージョンが
-::	3 より古い場合は、メッセージを表示して処理を中止する。
+::	デフォルトで python が利用できない場合はメッセージを表示して
+::	処理を中止する。
 ::	
-::	このファイルは Windows 専用である。またSpringehadのトップディレクトリ
-::	を取得するために環境変数 "_SPRTOP_" を使用する。本スクリプトを呼ぶ前に
-::	この環境変数を設定しておくこと。
-::	unix の場合はデフォルトで Python が使用できるようにしておかなければ
-::	ならない。
+::	このファイルは Windows 専用である。
+::	このファイルは "<top-dir>/core/src" に置く。
 ::
 ::  VERSION
-::    Ver 1.00   2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
-::    Ver 1.01   2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
-::    Ver 2.00   2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
-::    Ver 3.00   2020/12/07 F.Kanehori	Setup 導入移行期間開始.
-::    Ver 3.00.1 2021/01/20 F.Kanehori	Setup 処理修正
+::    Ver 1.0    2019/10/10 F.Kanehori	RunSwig から移動. -SprTop は廃止.
+::    Ver 1.1    2020/04/16 F.Kanehori	_SPRTOP_ のデフォルトを変更.
+::    Ver 2.0    2020/05/09 F.Kanehori	_SPRTOP_ は廃止.
+::    Ver 3.0    2020/12/07 F.Kanehori	Setup 導入移行期間開始.
+::    Ver 4.0    2021/03/04 F.Kanehori	Setupは非標準、python 2.7もOK.
 :: ============================================================================
 set PROG=%~n0
-set CWD=%CD%
+set START_DIR=%CD%
 set verbose=0
+set dry_run=0
 
 ::-----------------------------------------------------------------------------
 :: Springhead tree のトップへ移動する
@@ -41,82 +33,43 @@ set verbose=0
 cd /d %~dp0
 cd ..\..
 set SprTop=%CD%
-cd %CWD%
+cd %START_DIR%
 
-::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-:: 移行期間の処理
-::	移行期間終了後は _wrapper python args.. を呼び出す
-::	だけにする
+::-----------------------------------------------------------------------------
+:: "%SprTop%/buildtool/win32/python.exe" があれば、それを使用する。
+:: さもなければデフォルトの python を使用する。
 ::
-if exist %SprTop%\core\src\setup.conf (
-	endlocal
-	for /f "tokens=1,2" %%a in (%SprTop%\core\src\setup.conf) do (
-		if "%%a" equ "python" (set python=%%b & goto :out)
-	)
-	:out
-	setlocal enabledelayedexpansion
-	echo 移行処理 -^> %python% %*
-	cmd /c python %*
-	exit /b 0
-)
-::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-echo %PROG%: invoke DOS batch
-if exist %SprTop%\buildtool\ (
-	set TOOLPATH=%SprTop%\buildtool\win32
-	if %verbose% geq 1 (
-		echo buildtool found at "%SprTop%\buildtool"
+set BUILDTOOL_PATH=%SprTop%\buildtool\win32
+if exist "%BUILDTOOL_PATH%\python.exe" (
+	set path=%BUILDTOOL_PATH%;!PATH!
+	if %verbose% geq 2 (
+		echo buildtool found at "%BUILDTOOL_PATH%"
 	)
 )
-
-:: 引数はそのまま渡す
-set ARGS=%*
-
-::----------------------------------------------
-::  Python を実行できるようにする
-::
-if exist "%TOOLPATH%\python.exe" (
-	PATH=!TOOLPATH!;!PATH!
 ) else (
 	where python >NUL 2>& 1
 	if !ERRORLEVEL! neq 0 (
 		echo Python not found.
-		endlocal
-		exit /b
-	)
-	for /f "tokens=*" %%a in ('python -V') do set OUT=%%a
-	set VER=!OUT:Python =!
-	set MAJOR=!VER:~0,1!
-	set MINOR=!VER:~2,1!
-	if !MAJOR! neq 3 (
-		echo !OUT! found.
-		echo Use Python 3 or later version.
+		echo We need python to build Springhead Library.
 		endlocal
 		exit /b
 	)
 )
 if %verbose% geq 1 (
-	rem where python
-	python -V
+	python --version
 )
 
 ::----------------------------------------------
-::  Python を実行する
+::  Python を実行する（引数はそのまま渡す）
 ::
-if %verbose% geq 2 (
-	echo cwd: %CD%
+set ARGS=%*
+if %dry_run% neq 0 (
 	echo python %ARGS%
+) else (
+	python %ARGS%
 )
-rem if %verbose% geq 1 (
-rem 	echo.
-rem )
-rem echo python %ARGS%
-python %ARGS%
 
 endlocal
 exit /b
 
-::----------------------------------------------
-:leaf
-	set _ret_=%~nx1
-	exit /b
-
+:: end: do_python.bat

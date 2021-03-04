@@ -41,16 +41,15 @@
 #
 #################################################################################
 #  Version:
-#     Ver 1.0    2012/10/15 F.Kanehori
-#     Ver 2.0    2013/01/10 F.Kanehori  前処理を追加
-#     Ver 3.0    2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
-#     Ver 4.0    2017/07/31 F.Kanehori  Python adapter の導入
-#     Ver 4.1    2019/01/08 F.Kanehori  CheckClosedSrc の導入
-#     Ver 4.2    2019/04/03 F.Kanehori  オプション SPRSRCDIR の導入
-#     Ver 4.3    2020/04/20 F.Kanehori  python_adapter を do_python に変更
-#     Ver 4.4    2019/05/21 F.Kanehori  swig の自動生成化.
-#     Ver 4.5    2020/12/14 F.Kanehori  setup 導入テスト開始.
-#     Ver 4.6    2021/03/04 F.Kanehori  Python 設定変更.
+#     Ver 1.00  2012/10/15 F.Kanehori
+#     Ver 2.00  2013/01/10 F.Kanehori  前処理を追加
+#     Ver 3.00  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
+#     Ver 4.00  2017/07/31 F.Kanehori  Python adapter の導入
+#     Ver 4.01  2019/01/08 F.Kanehori  CheckClosedSrc の導入
+#     Ver 4.02  2019/04/03 F.Kanehori  オプション SPRSRCDIR の導入
+#     Ver 4.03  2020/04/20 F.Kanehori  python_adapter を do_python に変更
+#     Ver 4.04  2019/05/21 F.Kanehori  swig の自動生成化.
+#     Ver 4.05  2020/12/14 F.Kanehori  setup 導入テスト開始.
 #################################################################################
 
 #  srcディレクトリの設定
@@ -61,9 +60,9 @@
 SPRSRCDIR	= ..
 !endif
 
-#  Python の設定
+#  Python がパスに入っていること
 #
-PYTHON		= ..\do_python.bat
+PYTHON		= python
 
 #  ディレクトリの定義
 #
@@ -89,7 +88,6 @@ all:	PreWork RunSwig
 PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
 ClosedSrcCtl:
-		@$(PYTHON) --version
 		@echo Makefile.win: ClosedSrcCtl
 		$(PYTHON) $(CHECKCLOSEDSRC)
 
