@@ -169,7 +169,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
-      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead15.0DWin32.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions>/berbose %(AdditionalOptions) /ignore:4099</AdditionalOptions>
@@ -202,7 +202,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
-      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead15.0Dx64.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions> /ignore:4099</AdditionalOptions>
@@ -235,7 +235,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead15.0Win32.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions>/VERBOSE %(AdditionalOptions) /ignore:4099</AdditionalOptions>
@@ -268,7 +268,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../../../../../generated/lib/win32/Springhead15.0TWin32.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions> /ignore:4099</AdditionalOptions>
@@ -301,7 +301,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead15.0x64.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions> /ignore:4099</AdditionalOptions>
@@ -334,7 +334,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../../../../../generated/lib/win64/Springhead15.0Tx64.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>XINPUT.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions> /ignore:4099</AdditionalOptions>
@@ -342,6 +342,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Base\Base15.0.vcxproj">
+      <Project>{90010cd8-7c45-481e-8697-aab9b3fb9e4f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Collision\Collision15.0.vcxproj">
+      <Project>{8c62959e-9e67-4439-836e-25be57501463}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Foundation\Foundation15.0.vcxproj">
+      <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Physics\Physics15.0.vcxproj">
+      <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RunSwig\RunSwig15.0.vcxproj">
+      <Private>false</Private>
+      <Project>{4ac6c708-19c9-4cc1-a25b-d9682470411e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

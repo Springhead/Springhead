@@ -20,6 +20,7 @@ class TimerProviderGL: public UTTimerProvider{
 	Args args;
 	static void __cdecl Callback(int a){
 		Arg* arg = (Arg*)a;
+
 		if (!arg->bStop){
 			arg->timer->Call();
 			glutTimerFunc(arg->timer->GetInterval(), Callback, a);

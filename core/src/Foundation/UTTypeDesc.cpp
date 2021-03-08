@@ -528,6 +528,7 @@ void UTTypeDescFieldIt::SetFieldInfo(void* base){
 	if (!field->type){
 		DSTR << type->GetTypeName() << " has NULL field type" << std::endl;
 		type->Print(DSTR);
+
 		assert(0);
 	}
 	fieldType = GetTypeId(field->type);

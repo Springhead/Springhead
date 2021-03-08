@@ -1,8 +1,20 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.0
+VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quaternion", "Quaternion15.0.vcxproj", "{016EC61B-CBDC-4DBC-8CFC-EC65767FC60E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F} = {90010CD8-7C45-481E-8697-AAB9B3FB9E4F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "..\..\..\Base\Base15.0.vcxproj", "{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunSwig", "..\..\..\RunSwig\RunSwig15.0.vcxproj", "{4AC6C708-19C9-4CC1-A25B-D9682470411E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,11 +38,32 @@ Global
 		{016EC61B-CBDC-4DBC-8CFC-EC65767FC60E}.Trace|Win32.Build.0 = Trace|Win32
 		{016EC61B-CBDC-4DBC-8CFC-EC65767FC60E}.Trace|x64.ActiveCfg = Trace|x64
 		{016EC61B-CBDC-4DBC-8CFC-EC65767FC60E}.Trace|x64.Build.0 = Trace|x64
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Debug|Win32.Build.0 = Debug|Win32
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Debug|x64.ActiveCfg = Debug|x64
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Debug|x64.Build.0 = Debug|x64
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Release|Win32.ActiveCfg = Release|Win32
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Release|Win32.Build.0 = Release|Win32
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Release|x64.ActiveCfg = Release|x64
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Release|x64.Build.0 = Release|x64
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Trace|Win32.ActiveCfg = Trace|Win32
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Trace|Win32.Build.0 = Trace|Win32
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Trace|x64.ActiveCfg = Trace|x64
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}.Trace|x64.Build.0 = Trace|x64
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Debug|Win32.Build.0 = Debug|Win32
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Debug|x64.ActiveCfg = Debug|x64
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Debug|x64.Build.0 = Debug|x64
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Release|Win32.ActiveCfg = Release|Win32
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Release|Win32.Build.0 = Release|Win32
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Release|x64.ActiveCfg = Release|x64
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Release|x64.Build.0 = Release|x64
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Trace|Win32.ActiveCfg = Trace|Win32
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Trace|Win32.Build.0 = Trace|Win32
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Trace|x64.ActiveCfg = Trace|x64
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E}.Trace|x64.Build.0 = Trace|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E9745B9A-C711-4920-AA29-75CD46BD3312}
 	EndGlobalSection
 EndGlobal
