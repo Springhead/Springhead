@@ -35,6 +35,16 @@ Visual Studioから実行するときは、
 ``\,\tt{path=上記のパス}''とします。
 
 \medskip
+また、実行時に Assertion エラーが発生し
+\begin{narrow}
+``You have to define USE\_CLOSED\_SRC in SprDefs.h to use Spidar''
+\end{narrow}
+などと表示された場合には、
+\SprTop{\core\include\SprUseClosedSrcOrNot.h}にある
+\tt{\#undef}を \tt{\#define}と変更し、
+ライブラリ及びサンプルプログラムを再ビルドしてください。
+
+\bigskip
 \begin{narrow}[15pt]
 	\begin{figure}[h]
 	\begin{center}
