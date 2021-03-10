@@ -1,18 +1,36 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 15.0.28307.0
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xbox360Controller", "Xbox360Controller15.0.vcxproj", "{1A90B15C-934C-46E0-ACAC-1F393A1A23F6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "..\..\..\Base\Base15.0.vcxproj", "{90010CD8-7C45-481E-8697-AAB9B3FB9E4F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "..\..\..\Collision\Collision15.0.vcxproj", "{8C62959E-9E67-4439-836E-25BE57501463}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+		{916BF063-5A94-4652-B355-62220EF17768} = {916BF063-5A94-4652-B355-62220EF17768}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation", "..\..\..\Foundation\Foundation15.0.vcxproj", "{916BF063-5A94-4652-B355-62220EF17768}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+		{90010CD8-7C45-481E-8697-AAB9B3FB9E4F} = {90010CD8-7C45-481E-8697-AAB9B3FB9E4F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HumanInterface", "..\..\..\HumanInterface\HumanInterface15.0.vcxproj", "{05138F41-5673-4E19-A5C7-2A684488B23A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "..\..\..\Physics\Physics15.0.vcxproj", "{A2B91F83-DF0A-473D-9C3B-059673CD2046}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunSwig", "..\..\..\RunSwig\RunSwig15.0.vcxproj", "{4AC6C708-19C9-4CC1-A25B-D9682470411E}"
 EndProject
@@ -113,5 +131,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE2C2A6F-14A3-41A5-A053-D25724E760F0}
 	EndGlobalSection
 EndGlobal

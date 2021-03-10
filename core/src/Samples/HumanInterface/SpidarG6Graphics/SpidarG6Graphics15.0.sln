@@ -1,6 +1,7 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 15.0.28307.0
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpidarG6Graphics", "SpidarG6Graphics15.0.vcxproj", "{FAA50F9A-4D1B-4B70-931D-521094D927DA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -38,12 +39,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "..\..\..\Framework\Framework15.0.vcxproj", "{755660BE-3B1E-416B-B795-4F653C83A43A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+		{A2B91F83-DF0A-473D-9C3B-059673CD2046} = {A2B91F83-DF0A-473D-9C3B-059673CD2046}
+		{A339C0CA-D5FB-4DFA-9BCF-826739790653} = {A339C0CA-D5FB-4DFA-9BCF-826739790653}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "..\..\..\Graphics\Graphics15.0.vcxproj", "{A339C0CA-D5FB-4DFA-9BCF-826739790653}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "..\..\..\Physics\Physics15.0.vcxproj", "{A2B91F83-DF0A-473D-9C3B-059673CD2046}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileIO", "..\..\..\FileIO\FileIO15.0.vcxproj", "{3CA4689D-77DA-4B2E-A718-CBB6A8FF04D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AC6C708-19C9-4CC1-A25B-D9682470411E} = {4AC6C708-19C9-4CC1-A25B-D9682470411E}
+		{916BF063-5A94-4652-B355-62220EF17768} = {916BF063-5A94-4652-B355-62220EF17768}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -178,5 +194,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A3254AB-9E4C-4F73-8587-E63F8B7BA049}
 	EndGlobalSection
 EndGlobal
