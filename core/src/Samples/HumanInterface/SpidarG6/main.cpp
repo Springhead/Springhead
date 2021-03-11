@@ -53,7 +53,7 @@ int __cdecl main(){
 
 	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	HISpidarGDesc desc("SpidarG6T1");
-	for (int i = 0; i < 8; ++i) desc.motors[i].minForce = 0.3;
+	for (int i = 0; i < 8; ++i) desc.motors[i].minForce = 0.3f;
 	//spg->Init(&desc);
 	spg->Init(&HISpidarGDesc("SpidarG6X3L"));
 	spg->Calibration();
@@ -151,7 +151,7 @@ int __cdecl main(){
 			}
 			std::cout << std::endl;
 		}else if (mode == TENSE) {
-			for (int i = 0; i < spg->NMotor(); ++i) {
+			for (int i = 0; i < (int) spg->NMotor(); ++i) {
 				spg->GetMotor(i)->SetForce(100.0f);
 			}
 			Vec6f pose;
