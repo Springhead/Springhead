@@ -1,10 +1,14 @@
 % 1.2.LibraryBuild.tex
-%	Last update: 2021/03/04 F.Kanehori
+%	Last update: 2021/03/11 F.Kanehori
 %\newpage
 \subsection{\SprLib のビルド}
 \label{subsec:Library_Build}
 \parindent=0pt
 
+\SprLib のビルド方法について説明します。
+ただし、サンプルプログラムをビルドする場合に限りこの節での作業は不要です。
+
+\bigskip
 ディレクトリ\SprTop{\core\src}へ移動します。
 
 \bigskip
@@ -12,8 +16,14 @@
 使用するVisual Studioのバージョンに合ったものを使用してください。
 
 \Important{%
-	\Path{Springhead##.#.sln}の \tt{\#\#.\#} の部分がバージョンを表します。
-	\tt{14.0}が2015用、\tt{15.0}が2017用、\tt{16.0}が2019用です。
+	\Path{Springhead##.#.sln}の \tt{\#\#.\#} の部分がバージョンを表します。\\
+	\Vskip{-.8\baselineskip}
+	\hspace{20pt}
+	\begin{tabular}{l@{\hspace{5pt}---\hspace{5pt}}l}
+		\tt{14.0} & 2015用 \\
+		\tt{15.0} & 2017用 \\
+		\tt{16.0} & 2019用 \\
+	\end{tabular}
 }
 
 \bigskip
@@ -25,6 +35,7 @@ Springheadを``スタートアッププロジェクト''に指定してビルド
 \hspace{20pt}\Path{C:\Springhead\generated\lib\win32} \\
 のいずれかに生成されます。
 
+\medskip
 ライブラリファイル名は次のようになります。
 \begin{center}\begin{tabular}{lll}\hline
 	構成名 & ライブラリファイル名 & ビルド設定 \\\hline
