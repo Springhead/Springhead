@@ -12,7 +12,7 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2021/03/02 F.Kanehori	First version.
+#	Ver 1.0  2021/03/15 F.Kanehori	First version.
 # =============================================================================
 version = 1.0
 
@@ -92,7 +92,6 @@ stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
 	print('%s:HowToBuildSpringhead_Windows.pdf generated.' % prog)
 
-'''
 # (2) create html version.
 #opts = '-v -E -K -R -c'
 opts = '-E -H -K -R -c -v -v'
@@ -102,7 +101,6 @@ proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
 	print('%s: HowToBuildSpringhead_Windows.html generated.' % prog)
-'''
 
 # ----------------------------------------------------------------------
 #  Clean up.
