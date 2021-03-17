@@ -23,7 +23,7 @@ if "%1" equ "pdf" (
 
 ) else if "%1" equ "html" (
     set CWD=%CD%
-    if "!CWD:~-13!" equ "HowToBuildSpringhead_Windows" (set OPT=)
+    if "!CWD:~-13!" equ "SprInstallGuide" (set OPT=)
     if "!CWD:~-3!" equ "tmp" (set OPT=-S)
 
     if "!OPT!" equ "-S" (cd ..)

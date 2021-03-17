@@ -10,7 +10,7 @@
 ######################################################################
 
 TOPFILE	= main.tex
-PDFNAME	= HowToBuildSpringhead_Windows.pdf
+PDFNAME	= SprInstallGuide.pdf
 INSPATH	= ../../../generated/doc
 
 TEXFILE = $(PDFNAME:.pdf=.tex)

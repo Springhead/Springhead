@@ -11,12 +11,13 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/11/29 F.Kanehori	First version.
-#	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
-#	Ver 1.2  2019/08/05 F.Kanehori	HowToUseCMake version.
-#	Ver 1.3  2021/03/02 F.Kanehori	HowToBuildSpringhead_Windows version.
+#     Ver 1.0    2018/11/29 F.Kanehori	First version.
+#     Ver 1.1    2019/01/29 F.Kanehori	Add: call html_escape()
+#     Ver 1.2    2019/08/05 F.Kanehori	HowToUseCMake version.
+#     Ver 1.3    2021/03/02 F.Kanehori	HowToBuildSpringhead_Windows version.
+#     Ver 1.4    2021/03/02 F.Kanehori	ドキュメント名称変更
 # ======================================================================
-version = 1.3
+version = '1.4'
 
 import sys
 import os
@@ -34,7 +35,7 @@ PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
 
 # for test
-svg_dir = '../../../../../../HowToBuildSpringhead_Windows-fig/svg'.replace('/', os.sep)
+svg_dir = '../../../../../../SprInstallGuide-fig/svg'.replace('/', os.sep)
 
 # ----------------------------------------------------------------------
 #  External tools.
@@ -575,10 +576,10 @@ if options.replace_tex_esc:
 	sys.stdout.flush()
 #
 if options.copy:
-	#  生成されたファイルを"generated/doc/HowToBuildSpringhead_Windows"にコピーする
+	#  生成されたファイルを"generated/doc/SprInstallGuide"にコピーする
 	#
 	fmdir = wrkspace
-	todir = '../../../../generated/doc/HowToBuildSpringhead_Windows'
+	todir = '../../../../generated/doc/SprInstallGuide'
 	#
 	targets = ['lateximages', 'fig/*.svg', '*.html', '*.css']
 	if verbose:

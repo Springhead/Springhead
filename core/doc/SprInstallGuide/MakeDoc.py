@@ -8,13 +8,14 @@
 #	    -V:		    Show version.
 #
 #  DESCRIPTION:
-#	Generate "HowToBuildSpringhead_Windows" manual.
+#	Generate "SprInstallGuide" manual.
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2021/03/15 F.Kanehori	First version.
+#     Ver 1.0.1  2021/03/17 F.Kanehori	ドキュメント名称変更
+#     Ver 1.0    2021/03/15 F.Kanehori	First version.
 # =============================================================================
-version = 1.0
+version = '1.0.1'
 
 import sys
 import os
@@ -90,7 +91,7 @@ cmnd = '%s %s' % (make_pdf, opts)
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
-	print('%s:HowToBuildSpringhead_Windows.pdf generated.' % prog)
+	print('%s:SprInstallGuide.pdf generated.' % prog)
 
 # (2) create html version.
 #opts = '-v -E -K -R -c'
@@ -100,7 +101,7 @@ cmnd = '%s %s %s main_html.tex' % (python, make_html, opts)
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
-	print('%s: HowToBuildSpringhead_Windows.html generated.' % prog)
+	print('%s: SprInstallGuide.html generated.' % prog)
 
 # ----------------------------------------------------------------------
 #  Clean up.
