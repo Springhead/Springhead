@@ -26,6 +26,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="create_mkf.py" />
+    <None Include="Makefile.win" />
+    <None Include="MakeWin_Wrapper.bat" />
+    <None Include="make_manager.py" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4AC6C708-19C9-4CC1-A25B-D9682470411E}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
@@ -150,12 +156,6 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <Text Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Makefile" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
