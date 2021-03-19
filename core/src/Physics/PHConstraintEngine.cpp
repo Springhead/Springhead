@@ -226,6 +226,24 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 
 //----------------------------------------------------------------------------
 // PHConstraintEngine
+PHConstraintEngineDesc::PHConstraintEngineDesc() {
+	numIter = 15;
+	numIterCorrection = 0;
+	numIterContactCorrection = 0;
+	velCorrectionRate = 0.3;
+	posCorrectionRate = 0.3;
+	contactCorrectionRate = 0.1;
+	shrinkRate = 0.7;
+	shrinkRateCorrection = 0.7;
+	freezeThreshold = 0.0;
+	accelSOR = 1.0;
+	dfEps = 0.0;
+	regularization = 0.001;
+	bSaveConstraints = false;
+	bUpdateAllState = true;
+	bUseContactSurface = false;
+	bReport = false;
+}
 
 PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasureIf* pm):
 	timeCollision(pm->Count("collision")), 
