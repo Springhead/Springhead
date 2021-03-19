@@ -364,11 +364,11 @@ void PHIKEngine::LQIK(bool nopullback) {
 	qr(JJt, Q, L);
 	
 	Li.resize(L.size1(), L.size2());
-	for (int i = 0; i < (int)J.size1(); i++) {
+	for (int i = 0; i < (int) J.size1(); i++) {
 		Li.at_element(i, i) = 1 / L(i, i);
 	}
-	for (int i = 0; i < J.size1(); i++) {
-		for (int j = i + 1; j < L.size1(); j++) {
+	for (int i = 0; i < (int) J.size1(); i++) {
+		for (int j = i + 1; j < (int) L.size1(); j++) {
 			double s = 0;
 			for (int k = i; k < j; k++) s += Li(i, k) * L(k, j);
 			Li(i, j) = -s / L(j, j);
@@ -541,7 +541,7 @@ void PHIKEngine::LagrangeMultiplierIK(bool nopullback) {
 	x.clear();
 	for (int iter = 0; iter < iterGaussSeidel; ++iter) {
 		// 動作確認のため、普通に行列表現で
-		for (int i = 0; i < W.size(); i++) {
+		for (int i = 0; i < (int) W.size(); i++) {
 			double d = x[i];
 			x[i] = x[i] + ((JtWeV[i] - ublas::inner_prod(ublas::row(JstWeJs, i), x)) / JstWeJs.at_element(i, i));
 			if (std::abs(d - x[i]) < 1e-10) {
@@ -550,7 +550,7 @@ void PHIKEngine::LagrangeMultiplierIK(bool nopullback) {
 		}
 	}
 //finGS:	// 2020-0420 fk: suppress warning (unused label)
-	for (int i = 0; i < x.size(); i++) {
+	for (int i = 0; i < (int) x.size(); i++) {
 		W[i] = x[i];
 	}
 

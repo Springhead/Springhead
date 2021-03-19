@@ -1,12 +1,11 @@
 % 2.0.SampleBuild.tex
-%	Last update: 2021/03/02 F.Kanehori
+%	Last update: 2021/03/15 F.Kanehori
 \newpage
 \section{サンプルプログラムのビルド}
 \label{sec:SampleBuild}
 \parindent=0pt
 
 サンプルプログラムのビルド方法について説明します。
-サンプルプログラムでは\SprLib を使用しますので、予めビルドしておいてください。
 
 \bigskip
 サンプルプログラムは、\SprTop{\core\src\Samples}以下に置かれています。
@@ -16,7 +15,7 @@
 \SprTop{\core\src\Samples\Physics\BoxStack}に移動します。
 
 適切なバージョンのソリューションファイル
-\Path{BoxStack##.#.sln}をVisual Studioで開き、
+\SlnFile{BoxStack}{nn.n}をVisual Studioで開き、
 プロジェクト\tt{BodStack}をスタートアッププロジェクトに設定してビルドすれば
 実行形式バイナリが生成されます。
 
@@ -41,8 +40,7 @@ Visual Studioから実行するときは、
 \end{narrow}
 などと表示された場合には、
 \SprTop{\core\include\SprUseClosedSrcOrNot.h}にある
-\tt{\#undef}を \tt{\#define}と変更し、
-ライブラリ及びサンプルプログラムを再ビルドしてください。
+\tt{\#undef}を \tt{\#define}と変更し、サンプルプログラムを再ビルドしてください。
 
 \bigskip
 \begin{narrow}[15pt]

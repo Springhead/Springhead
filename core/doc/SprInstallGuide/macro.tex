@@ -160,11 +160,11 @@
 \end{narrow}
 \fi}
 
-\def\LBox#1{%
-	\vbox{\hbox{\tt{#1}}\vfill}}
-\def\RBox#1{%
-	\parbox[t]{\Width}{%
-	\Vskip{-.4\baselineskip}#1\Vskip{-.3\baselineskip}}}
+%\def\LBox#1{%
+%	\vbox{\hbox{\tt{#1}}\vfill}}
+%\def\RBox#1{%
+%	\parbox[t]{\Width}{%
+%	\Vskip{-.4\baselineskip}#1\Vskip{-.3\baselineskip}}}
 
 \def\Important#1{%
 	\begin{spacing}{0.75}
@@ -179,30 +179,9 @@
 	\end{minipage}\end{center}
 	\end{spacing}}
 
-\def\Anno#1{\rm{\footnotesize{ \CDots\  #1}}}
-\def\SolutionFile{ソリューションファイル[1]}
-\def\ProjectFile{プロジェクトファイル[2]}
-\def\cmake{\tt{cmake}}
-\def\make{\tt{make}}
 \def\SprLib{Springhead Library}
-\def\SprProj{Springheadプロジェクト}
-\def\VS{Visual Studio}
-
 \def\SprTop#1{\Path{C:\Springhead#1}}
-\def\AppTop#1{\Path{C:/Develop/Application{#1}}}
-\def\BldDir{{\it{build\/}}}
-
-\def\CMakeLists#1{\tt{CMakeLists.txt{#1}}}
-\def\CMakeSettings#1{\tt{CMakeSettings.txt{#1}}}
-\def\CMakeOpts#1{\tt{CMakeOpts.txt{#1}}}
-\def\CMakeConf#1{\tt{CMakeConf.txt{#1}}}
-\def\CMakeTopdir#1{\tt{CMakeTopdir.txt{#1}}}
-
-\def\QCMakeLists#1{\Path{\CMakeLists{#1}}}
-\def\QCMakeSettings#1{\Path{\CMakeSettings{#1}}}
-\def\QCMakeOpts#1{\Path{\CMakeOpts{#1}}}
-\def\QCMakeConf#1{\Path{\CMakeConf{#1}}}
-\def\QCMakeTopdir#1{\Path{\CMakeTopdir{#1}}}
+\def\SlnFile#1#2{\DQuote{\tt{#1}\,\it{#2}\tt{.sln}}}
 
 \makeatother
 

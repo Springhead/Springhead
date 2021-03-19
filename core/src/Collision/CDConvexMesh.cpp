@@ -258,7 +258,7 @@ void CDConvexMesh::CalcMetrics(){
 	inertia = Matrix3f::Zero();
 
 	// 各面と原点からなる四面体の体積，重心，慣性行列を計算
-	for(int i = 0; i < faces.size(); i++){
+	for(int i = 0; i < (int) faces.size(); i++){
 		CDFace& f = faces[i];
 		Vec3f& v0 = base[f.vtxs[0]];
 		Vec3f& v1 = base[f.vtxs[1]];

@@ -298,7 +298,7 @@ public:
 	virtual void SetAll(ControlMode controlMode, unsigned char targetCountReadMin, unsigned char targetCountReadMax,
 		unsigned short tickMin, unsigned short tickMax,
 		SDEC* pos, SDEC* vel, SDEC* current, SDEC* force, SDEC* touch) {
-		for (int i = 0; i < owner->counts.size(); ++i) owner->UpdateCounter(i, pos[i]);
+		for (int i = 0; i < (int) owner->counts.size(); ++i) owner->UpdateCounter(i, pos[i]);
 	}
 	virtual void SetMotorPos(short p, int i) {  
 		owner->UpdateCounter(i, p);
@@ -450,10 +450,10 @@ bool DRUARTMotorDriver::Init(){
 		CloseHandle(hUART);
 	}
 	//	ƒfƒoƒCƒX‚Ì“o˜^
-	for (int i = 0; i < impl->currentMap.size(); ++i) {
+	for (int i = 0; i < (int) impl->currentMap.size(); ++i) {
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 	}
-	for (int i = 0; i < impl->motorMap.size(); ++i) {
+	for (int i = 0; i < (int) impl->motorMap.size(); ++i) {
 		AddChildObject((DBG_NEW Counter(this, i))->Cast());
 	}
 	return true;

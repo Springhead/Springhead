@@ -52,10 +52,8 @@ int __cdecl main(){
 	//spg->Init(&HISpidar4DDesc());
 
 	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	HISpidarGDesc desc("SpidarG6X4R");
-	for (int i = 0; i < 8; ++i) desc.motors[i].minForce = 0.3;
-	spg->Init(&desc);
-	//spg->Init(&HISpidarGDesc("SpidarG6X3L"));
+	//	spg->Init(&HISpidarGDesc("SpidarG6X4R"));
+	spg->Init(&HISpidarGDesc("SpidarG6X3L"));
 	spg->Calibration();
 
 	int t = 0;
