@@ -531,7 +531,7 @@ namespace Spr
 		sscanf_s(s, "%i", fsize);
 		for (int j = 0; j<*fsize; j++)
 		{
-			dfobj.objPArr[i].pFaceInd.size();
+			//dfobj.objPArr[i].pFaceInd.size();
 			fgets(s, len, f);
 			int *index = new int;
 			sscanf_s(s, "%i", index);

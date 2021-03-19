@@ -12,6 +12,10 @@
 #include <Foundation/UTTimer.h>
 #include <Framework/FWGraphicsHandler.h>
 #include <Framework/FWWin.h>
+#include <GL/glut.h>
+#ifndef GLUTCALLBACK
+#define GLUTCALLBACK
+#endif
 
 namespace Spr{;
 
@@ -33,18 +37,18 @@ protected:
 	static FWGLUT*	GetInstance();
 
 	/** コールバック関数 */
-	static void SPR_CDECL GlutDisplayFunc();
-	static void SPR_CDECL GlutReshapeFunc(int w, int h);
-	static void SPR_CDECL GlutTimerFunc(int id);
-	static void SPR_CDECL GlutIdleFunc();
-	static void SPR_CDECL GlutMouseFunc(int button, int state, int x, int y);
-	static void SPR_CDECL GlutMotionFunc(int x, int y);
-	static void SPR_CDECL GlutPassiveMotionFunc(int x, int y);
-	static void SPR_CDECL GlutKeyFunc(unsigned char ch, int x, int y);
-	static void SPR_CDECL GlutSpecialKeyFunc(int ch, int x, int y);
-	static void SPR_CDECL GlutCloseFunc();
+	static void GLUTCALLBACK GlutDisplayFunc();
+	static void GLUTCALLBACK GlutReshapeFunc(int w, int h);
+	static void GLUTCALLBACK GlutTimerFunc(int id);
+	static void GLUTCALLBACK GlutIdleFunc();
+	static void GLUTCALLBACK GlutMouseFunc(int button, int state, int x, int y);
+	static void GLUTCALLBACK GlutMotionFunc(int x, int y);
+	static void GLUTCALLBACK GlutPassiveMotionFunc(int x, int y);
+	static void GLUTCALLBACK GlutKeyFunc(unsigned char ch, int x, int y);
+	static void GLUTCALLBACK GlutSpecialKeyFunc(int ch, int x, int y);
+	static void GLUTCALLBACK GlutCloseFunc();
 #ifdef USE_FREEGLUT
-	static void SPR_CDECL GlutMouseWheelFunc(int, int, int, int);
+	static void GLUTCALLBACK GlutMouseWheelFunc(int, int, int, int);
 #endif
 	static void SPR_CDECL AtExit();
 

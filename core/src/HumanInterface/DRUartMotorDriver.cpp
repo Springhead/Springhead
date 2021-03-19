@@ -10,12 +10,6 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <Springhead.h>
-#include <HumanInterface/DRUartMotorDriver.h>
-#include <HumanInterface/DRUartMotorDriver/WROOM/main/softRobot/CommandWROOM.h>
-#include <HumanInterface/DRUartMotorDriver/WROOM/main/softRobot/Board.h>
-#undef NMOTOR
-#undef NTARGET
-#undef NFORCE
 
 #ifdef _WIN32
 #include <windows.h>
@@ -38,6 +32,15 @@
 #define FALSE	false
 #define INVALID_HANDLE_VALUE	NULL
 #endif
+
+#include <HumanInterface/DRUartMotorDriver.h>
+#include <HumanInterface/DRUartMotorDriver/WROOM/main/softRobot/CommandWROOM.h>
+#include <HumanInterface/DRUartMotorDriver/WROOM/main/softRobot/Board.h>
+#undef NMOTOR
+#undef NTARGET
+#undef NFORCE
+
+
 
 #include <sstream>
 
@@ -164,14 +167,24 @@ public:
 		}
 		rv = true;
 		while (nCommandBuffered) {
+			int failCount = 0;
 			while (readPos == 0) {
 				DWORD nRead;
 				ReadFile(owner->hUART, &cmdHeader, 1, &nRead, NULL);
 				readPos = nRead;
 				//	DSTR << "Recv " << std::setbase(16) << (int)cmdHeader.header << " nCommandBuffered = " << nCommandBuffered << std::endl;
+				failCount++;
+				if (failCount > 10) {
+					nCommandBuffered = 0;
+					cmdHeader.header = 0;
+					readPos = 1;
+					break;
+				}
 			}
+			bool bBoardFound = false;
 			for (auto board : boards) {
 				if (board->GetBoardId() == cmdHeader.boardId) {
+					bBoardFound = true;
 					board->RetStart()[0] = cmdHeader.header;
 					//DPF("board->RetStart()[0] : %x\n", board->RetStart()[0]);
 					int retLen = board->RetLen();
@@ -190,6 +203,10 @@ public:
 					//else  DPF("Wait: %d/%d\n", readPos, retLen); }
 					break;
 				}
+			}
+			if (!bBoardFound) {
+				assert(readPos == 1);
+				readPos = 0;
 			}
 		}
 #endif //_WIN32

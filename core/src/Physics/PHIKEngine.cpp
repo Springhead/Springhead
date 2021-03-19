@@ -364,7 +364,7 @@ void PHIKEngine::LQIK(bool nopullback) {
 	qr(JJt, Q, L);
 	
 	Li.resize(L.size1(), L.size2());
-	for (int i = 0; i < J.size1(); i++) {
+	for (int i = 0; i < (int)J.size1(); i++) {
 		Li.at_element(i, i) = 1 / L(i, i);
 	}
 	for (int i = 0; i < J.size1(); i++) {

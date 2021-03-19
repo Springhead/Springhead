@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Framework/SprFWApp.h>
 #include <Framework/FWGLUI.h>
+#include <Framework/SprFWApp.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -20,7 +20,7 @@ FWGLUI* FWGLUI::GetInstance(){
 FWGLUI::~FWGLUI(){
 }
 
-void FWGLUI::GLUIUpdateFunc(int id){
+void FWGLUI::GluiUpdateFunc(int id){
 	FWApp::GetApp()->OnControlUpdate(FWGLUI::GetInstance()->ctrls[id]->Cast());
 }
 
@@ -29,7 +29,22 @@ void FWGLUI::GLUIUpdateFunc(int id){
 void FWGLUI::EnableIdleFunc(bool on){
 	idleFuncFlag = on;
 	// GLUIに渡す
-	GLUI_Master.set_glutIdleFunc(on ? FWGLUT::GlutIdleFunc : NULL);
+	GLUI_Master.set_glutIdleFunc(on ? FWGLUI::GlutIdleFunc : NULL);
+}
+void FWGLUI::GlutIdleFunc() {
+	FWGLUT::GlutIdleFunc();
+}
+void GLUICALLBACK FWGLUI::GluiReshapeFunc(int w, int h) {
+	FWGLUT::GlutReshapeFunc(w,h);
+}
+void GLUICALLBACK FWGLUI::GluiMouseFunc(int button, int state, int x, int y) {
+	FWGLUT::GlutMouseFunc(button, state, x, y);
+}
+void GLUICALLBACK FWGLUI::GluiKeyFunc(unsigned char ch, int x, int y) {
+	FWGLUT::GlutKeyFunc(ch, x, y);
+}
+void GLUICALLBACK FWGLUI::GluiSpecialKeyFunc(int ch, int x, int y){
+	FWGLUT::GlutSpecialKeyFunc(ch, x, y);
 }
 
 void FWGLUI::CalcViewport(int& l, int& t, int& w, int& h){
@@ -42,10 +57,10 @@ void FWGLUI::RegisterCallbacks(){
 	glutPassiveMotionFunc(FWGLUT::GlutPassiveMotionFunc);
 
 	// 以下4つはGLUIが乗っ取る必要がある
-	GLUI_Master.set_glutReshapeFunc	(FWGLUT::GlutReshapeFunc);
-	GLUI_Master.set_glutMouseFunc	(FWGLUT::GlutMouseFunc);
-	GLUI_Master.set_glutKeyboardFunc(FWGLUT::GlutKeyFunc);
-	GLUI_Master.set_glutSpecialFunc	(FWGLUT::GlutSpecialKeyFunc);
+	GLUI_Master.set_glutReshapeFunc	(FWGLUI::GluiReshapeFunc);
+	GLUI_Master.set_glutMouseFunc	(FWGLUI::GluiMouseFunc);
+	GLUI_Master.set_glutKeyboardFunc(FWGLUI::GluiKeyFunc);
+	GLUI_Master.set_glutSpecialFunc	(FWGLUI::GluiSpecialKeyFunc);
 }
 
 FWDialog*	FWGLUI::CreateDialog(FWWin* owner, const FWDialogDesc& desc){
@@ -114,13 +129,13 @@ FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWCont
 		const FWButtonDesc& btnDesc = (const FWButtonDesc&)desc;
 		if(btnDesc.style == FWButtonDesc::PUSH_BUTTON){
 			if(par)
-				 handle = glui->add_button_to_panel(gluiPanel, btnDesc.label.c_str(), id, &GLUIUpdateFunc);
-			else handle = glui->add_button(btnDesc.label.c_str(), id, &GLUIUpdateFunc);
+				 handle = glui->add_button_to_panel(gluiPanel, btnDesc.label.c_str(), id, GluiUpdateFunc);
+			else handle = glui->add_button(btnDesc.label.c_str(), id, &GluiUpdateFunc);
 		}
 		else if(btnDesc.style == FWButtonDesc::CHECK_BUTTON){
 			if(par)
-				 handle = glui->add_checkbox_to_panel(gluiPanel, btnDesc.label.c_str(), 0, id, &GLUIUpdateFunc);
-			else handle = glui->add_checkbox(btnDesc.label.c_str(), 0, id, &GLUIUpdateFunc);
+				 handle = glui->add_checkbox_to_panel(gluiPanel, btnDesc.label.c_str(), 0, id, &GluiUpdateFunc);
+			else handle = glui->add_checkbox(btnDesc.label.c_str(), 0, id, &GluiUpdateFunc);
 		}
 		else if(btnDesc.style == FWButtonDesc::RADIO_BUTTON){
 			if(par && par->GetStyle() == FWPanelDesc::RADIOGROUP)
@@ -147,8 +162,8 @@ FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWCont
 		default:					style = GLUI_EDITTEXT_TEXT;
 		}
 		if(par)
-			 handle = glui->add_edittext_to_panel(gluiPanel, desc.label.c_str(), style, 0, id, &GLUIUpdateFunc);
-		else handle = glui->add_edittext(desc.label.c_str(), style, 0, id, &GLUIUpdateFunc);
+			 handle = glui->add_edittext_to_panel(gluiPanel, desc.label.c_str(), style, 0, id, &GluiUpdateFunc);
+		else handle = glui->add_edittext(desc.label.c_str(), style, 0, id, &GluiUpdateFunc);
 		FWTextBox* text = DBG_NEW FWTextBox();
 		text->handle = handle;
 
@@ -162,20 +177,20 @@ FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWCont
 	}
 	else if(ii == FWRotationControlIf::GetIfInfoStatic()){
 		if(par)
-			 handle = glui->add_rotation_to_panel(gluiPanel, desc.label.c_str(), 0, id, &GLUIUpdateFunc);
-		else handle = glui->add_rotation(desc.label.c_str(), 0, id, &GLUIUpdateFunc);
+			 handle = glui->add_rotation_to_panel(gluiPanel, desc.label.c_str(), 0, id, &GluiUpdateFunc);
+		else handle = glui->add_rotation(desc.label.c_str(), 0, id, &GluiUpdateFunc);
 		ctrls.push_back(DBG_NEW FWRotationControl());
 	}
 	else if(ii == FWTranslationControlIf::GetIfInfoStatic()){
 		if(par)
-			 handle = glui->add_translation_to_panel(gluiPanel, desc.label.c_str(), desc.style, 0, id, &GLUIUpdateFunc);
-		else handle = glui->add_translation(desc.label.c_str(), desc.style, 0, id, &GLUIUpdateFunc);
+			 handle = glui->add_translation_to_panel(gluiPanel, desc.label.c_str(), desc.style, 0, id, &GluiUpdateFunc);
+		else handle = glui->add_translation(desc.label.c_str(), desc.style, 0, id, &GluiUpdateFunc);
 		ctrls.push_back(DBG_NEW FWTranslationControl());
 	}
 	else if(ii == FWListBoxIf::GetIfInfoStatic()){
 		if(par)
-			 handle = glui->add_listbox_to_panel(gluiPanel, desc.label.c_str(), 0, id, &GLUIUpdateFunc);
-		else handle = glui->add_listbox(desc.label.c_str(), 0, id, &GLUIUpdateFunc);
+			 handle = glui->add_listbox_to_panel(gluiPanel, desc.label.c_str(), 0, id, &GluiUpdateFunc);
+		else handle = glui->add_listbox(desc.label.c_str(), 0, id, &GluiUpdateFunc);
 		ctrls.push_back(DBG_NEW FWListBox());
 	}
 	else return 0;

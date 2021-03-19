@@ -1,4 +1,5 @@
 ﻿#include <HumanInterface/HIXbox360Controller.h>
+#include <Foundation/UTDllLoader.h>
 
 namespace Spr{;
 
@@ -19,9 +20,25 @@ public:
 
 public:
 #ifdef _WIN32
+	static Spr::UTDllLoader dllLoader;
+	typedef DWORD TXInputGetState(
+		DWORD        dwUserIndex,
+		XINPUT_STATE* pState
+	);
+	typedef DWORD TXInputSetState(
+		DWORD            dwUserIndex,
+		XINPUT_VIBRATION* pVibration
+	);
+
+	static TXInputGetState* xInputGetState;
+	static TXInputSetState* xInputSetState;
 	bool Init(){
+		if (!dllLoader.Load("Xinput1_3.dll")) return false;
+		if (!xInputGetState) xInputGetState = (TXInputGetState*)dllLoader.GetProc("XInputGetState");
+		if (!xInputSetState) xInputSetState = (TXInputSetState*)dllLoader.GetProc("XInputSetState");
+
 		ZeroMemory( &state, sizeof(XINPUT_STATE) );
-		DWORD dwResult = XInputGetState( owner->controllerID, &state);
+		DWORD dwResult = xInputGetState( owner->controllerID, &state);
 		if( dwResult == ERROR_SUCCESS ){ 
 			DSTR << "Succeed to connect." << std::endl;
 			return true;
@@ -68,7 +85,7 @@ public:
 	void UpdateState(){
 		ZeroMemory( &state, sizeof(XINPUT_STATE) );
 
-		DWORD dwResult = XInputGetState(owner->controllerID, &state);
+		DWORD dwResult = xInputGetState(owner->controllerID, &state);
 		if(dwResult != ERROR_SUCCESS){
 			//std::cout << "Can not update the Xbox360Controller states." << std::endl;
 		}
@@ -103,7 +120,7 @@ public:
 		vib.wLeftMotorSpeed  = lr.x / owner->vibScale * DIS_USHORT;
 		vib.wRightMotorSpeed = lr.y / owner->vibScale * DIS_USHORT;
 		DWORD dwResult;
-		dwResult = XInputSetState(owner->controllerID, &vib);
+		dwResult = xInputSetState(owner->controllerID, &vib);
 		if(dwResult != ERROR_SUCCESS){
 			std::cout << "Error at setting vibration of XBox Controller." << std::endl;
 		}
@@ -116,6 +133,12 @@ public:
 	void SetVibration(Vec2f lr){}		
 #endif
 };
+#ifdef _WIN32
+Spr::UTDllLoader HIXbox360ControllerImpl::dllLoader;
+HIXbox360ControllerImpl::TXInputGetState* HIXbox360ControllerImpl::xInputGetState;
+HIXbox360ControllerImpl::TXInputSetState* HIXbox360ControllerImpl::xInputSetState;
+#endif
+
 
 HIXbox360Controller::HIXbox360Controller (const HIXbox360ControllerDesc& desc): impl(NULL) {
 	controllerID = Ncontrollers;

@@ -9,9 +9,11 @@
 #define FWGLUI_H
 
 #include <Framework/FWGLUT.h>
+#include <GL/glut.h>
 
-#ifdef USE_GLUI
-# include <GL/glui.h>
+#include <GL/glui.h>
+#ifndef GLUICALLBACK
+#define GLUICALLBACK
 #endif
 
 /** @brief GLUIを用いるアプリケーションクラス
@@ -41,8 +43,13 @@ protected:
 	static FWGLUI* GetInstance();
 
 	/** コールバック関数*/
-	static void SPR_CDECL GLUIUpdateFunc(int id);
-	
+	static void GLUICALLBACK GluiUpdateFunc(int id);
+	static void GLUICALLBACK GlutIdleFunc();
+	static void GLUICALLBACK GluiReshapeFunc(int w, int h);
+	static void GLUICALLBACK GluiMouseFunc(int button, int state, int x, int y);
+	static void GLUICALLBACK GluiKeyFunc(unsigned char ch, int x, int y);
+	static void GLUICALLBACK GluiSpecialKeyFunc(int ch, int x, int y);
+
 	virtual void RegisterCallbacks();
 public:
 	virtual void EnableIdleFunc(bool on = true);

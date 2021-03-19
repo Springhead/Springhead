@@ -214,6 +214,7 @@ struct FWTextBoxDesc : FWControlDesc{
 		intMax = 0;
 		floatMin = 0.0f;
 		floatMax = 0.0f;
+		spinner = false;
 	}
 };
 

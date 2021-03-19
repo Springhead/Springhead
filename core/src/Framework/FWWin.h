@@ -11,13 +11,16 @@ namespace Spr{;
 
 struct FWSceneIf;
 
+#pragma warning(disable : 26495)
+
 class FWWinBase : public Object{
 public:
 	SPR_OBJECTDEF(FWWinBase);
+
 	SPR_DECLMEMBEROF_FWWinBaseDesc;
 
-	int			id;			///< ウィンドウID
-	void*		handle;		///< 内部オブジェクトのハンドル
+	int			id = -1;			///< ウィンドウID
+	void*		handle = NULL;		///< 内部オブジェクトのハンドル
 	
 	int			GetID()			{ return id; }
 	

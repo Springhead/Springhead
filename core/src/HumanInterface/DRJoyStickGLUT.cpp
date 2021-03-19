@@ -12,7 +12,7 @@
 #include <GL/glut.h>
 
 #ifndef GLUTCALLBACK
-#define GLUTCALLBACK
+#  define GLUTCALLBACK
 #endif
 
 #ifdef USE_HDRSTOP
@@ -52,7 +52,9 @@ void DRJoyStickGLUT::SetPollInterval(DVJoyStick* dv){
 	int wid = dv->GetPortNo();
 	int widCur = glutGetWindow();
 	glutSetWindow(wid);
+#ifdef FREEGLUT
 	glutJoystickFunc(OnUpdateStatic, dv->pollInterval);
+#endif
 	glutSetWindow(widCur);
 }
 
