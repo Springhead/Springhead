@@ -227,6 +227,7 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 //----------------------------------------------------------------------------
 // PHConstraintEngine
 PHConstraintEngineDesc::PHConstraintEngineDesc() {
+	method = PHSceneDesc::SOLVER_GS;	//	This initial value will override by PHSceneDesc::method
 	numIter = 15;
 	numIterCorrection = 0;
 	numIterContactCorrection = 0;
@@ -238,7 +239,9 @@ PHConstraintEngineDesc::PHConstraintEngineDesc() {
 	freezeThreshold = 0.0;
 	accelSOR = 1.0;
 	dfEps = 0.0;
-	regularization = 0.001;
+	//	拘束力計算を安定化させる係数、大きくすると拘束力が弱くなり、すり抜けるなどの問題が起きる。
+	//	A coefficient to stabilize the constraint force calculation; The larger regularization makes constraint forces weaker and problems such as tunneling could occur.
+	regularization = 1e-6;
 	bSaveConstraints = false;
 	bUpdateAllState = true;
 	bUseContactSurface = false;

@@ -203,6 +203,7 @@ public:
 			soFloor->SetShapePose(4, Posed::Trn(0, y, (shapeFloor->GetBoxSize().z + shapeWallX->GetBoxSize().z) / 2));
 		}
 		GetFWScene()->SetSolidMaterial(GRRenderIf::GRAY, soFloor);
+		soFloor->CompInertia();
 
 		return soFloor;
 	}
