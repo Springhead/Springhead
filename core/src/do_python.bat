@@ -24,14 +24,14 @@ setlocal enabledelayedexpansion
 set dry_run=0
 set verbose=0
 
-set SprTop=..\..
+set SprTop=..\..\..
 ::-----------------------------------------------------------------------------
 :: "%SprTop%/buildtool/win32/python.exe" があれば、それを使用する。
 :: さもなければデフォルトの python を使用する。
 ::
 set BUILDTOOL_PATH=%SprTop%\buildtool\win32
 if exist "%BUILDTOOL_PATH%\python.exe" (
-	set path=%BUILDTOOL_PATH%;!PATH!
+	set PATH=%BUILDTOOL_PATH%;!PATH!
 )
 
 set python_found=0
