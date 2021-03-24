@@ -17,24 +17,25 @@
 #  NOTE:
 #	****************************************************************
 #	新しい Visual Studio に対応するには、"bin/visualStudio.py" の
-#	  (1) __get_vsibnfo() に新しいバージョンの情報を追加する.
+#	  (1) __get_vsinfo() に新しいバージョンの情報を追加する.
 #	  (2) __get_vs_path() に devenv のパスを設定する.
 #	必要がある.
 #	****************************************************************
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#     Ver 1.00   2017/12/03 F.Kanehori	アダプタとして新規作成.
-#     Ver 1.01   2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
-#     Ver 1.02   2018/03/05 F.Kanehori	TestMainGit.py に移行.
-#     Ver 1.03   2018/03/19 F.Kanehori	Proc.output() changed.
-#     Ver 1.04   2018/03/22 F.Kanehori	Change git pull/clone step.
-#     Ver 1.05   2018/05/01 F.Kanehori	Add: Result repository.
-#     Ver 1.06   2020/12/14 F.Kanehori	Setup 導入テスト開始.
-#     Ver 1.07   2021/01/07 F.Kanehori	Setup 自動実行設定追加.
-#     Ver 1.07.1 2021/01/14 F.Kanehori	Bug fix.
+#     Ver 1.0    2017/12/03 F.Kanehori	アダプタとして新規作成.
+#     Ver 1.1    2017/12/25 F.Kanehori	TestMainGit.bat は無条件に実行.
+#     Ver 1.2    2018/03/05 F.Kanehori	TestMainGit.py に移行.
+#     Ver 1.3    2018/03/19 F.Kanehori	Proc.output() changed.
+#     Ver 1.4    2018/03/22 F.Kanehori	Change git pull/clone step.
+#     Ver 1.5    2018/05/01 F.Kanehori	Add: Result repository.
+#     Ver 1.6    2020/12/14 F.Kanehori	Setup 導入テスト開始.
+#     Ver 1.7    2021/01/07 F.Kanehori	Setup 自動実行設定追加.
+#     Ver 1.7.1  2021/01/14 F.Kanehori	Bug fix.
+#     Ver 1.7.2  2021/03/24 F.Kanehori	コメント修正.
 # ======================================================================
-version = "1.07.1"
+version = "1.07.2"
 
 import sys
 import os
@@ -317,7 +318,7 @@ if setup:
 		sys.exit(1)
 	print()
 
-# set pargram paths to environment variable.
+# set program paths to environment variable.
 #
 if os.path.exists(setup_file):
 	# identify python first
