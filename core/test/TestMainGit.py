@@ -38,8 +38,9 @@
 #     Ver 1.7    2019/08/05 F.Kanehori	Add HowToUseCMake document.
 #     Ver 1.8    2020/10/12 F.Kanehori	Add build of EmbPython Library.
 #     Ver 1.9    2021/03/03 F.Kanehori	Add HowToBuildSpringhead_Windows.
+#     Ver 1.10   2021/03/24 F.Kanehori	Add SprInstallGuide.
 # ======================================================================
-version = '1.9'
+version = '1.10'
 
 import sys
 import os
@@ -469,8 +470,8 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../HowToBuildSpringhead_Windows')
-	Print('  HowToBuildSpringhead_Windows')
+	os.chdir('../SprInstallGuide')
+	Print('  SprInstallGuide')
 	cmnd = 'python MakeDoc.py'
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
