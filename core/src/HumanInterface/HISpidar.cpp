@@ -435,33 +435,33 @@ void HISpidarGDesc::Init(const char* type) {
 		float PY = 0.190f / 2;		//	y方向の辺の長さ/2
 		float PZ = 0.138f / 2;		//	z方向の辺の長さ/2
 		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
-		float GX = 0.045f / 2;		//	x方向の辺の長さ/2
-		float GY = 0.045f / 2;		//	y方向の辺の長さ/2
-		float GZ = 0.0;              //Used only for Spidar Finger grip configuration
-		Matrix3f rot = Matrix3f::Rot((float)Rad(bLeft ? -45 : 45), 'y');
+		float GX = 0.031f / 2;		//	
+		float GY = 0.035f / 2;		//	
+		float GZ = 0.025f / 2;      //	
+		Matrix3f rot = Matrix3f();	//	Rot((float)Rad(bLeft ? -45 : 45), 'y');
 		Vec3f motorPos[2][8] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 			{
-				rot * Vec3f(-PX,-PY, PZ),
-				rot * Vec3f(PX,-PY, PZ),
-				rot * Vec3f(PX,-PY,-PZ),
-				rot * Vec3f(-PX,-PY,-PZ),
-				rot * Vec3f(-PX, PY, PZ),
-				rot * Vec3f(PX, PY, PZ),
-				rot * Vec3f(PX, PY,-PZ),
-				rot * Vec3f(-PX, PY,-PZ),
+				rot * Vec3f( PX, -PY, -PZ),
+				rot * Vec3f( PX, -PY,  PZ),
+				rot * Vec3f(-PX, -PY,  PZ),
+				rot * Vec3f(-PX, -PY, -PZ),
+				rot * Vec3f( PX,  PY, -PZ),
+				rot * Vec3f( PX,  PY,  PZ),
+				rot * Vec3f(-PX,  PY,  PZ),
+				rot * Vec3f(-PX,  PY, -PZ),
 			},
 			{
-				rot* Vec3f(-GX, 0.0f, 0.0f),
-				rot* Vec3f(GX, 0.0f, 0.0f),
-				rot* Vec3f(0.0f,  -GY, 0.0f),
-				rot* Vec3f(0.0f,  -GY, 0.0f),
-				rot* Vec3f(-GX, 0.0f, 0.0f),
-				rot* Vec3f(GX, 0.0f, 0.0f),
-				rot * Vec3f(0.0f, GY, 0.0f),
-				rot * Vec3f(0.0f, GY, 0.0f),
+				rot* Vec3f(0.0f,  -GY,  -GZ),
+				rot* Vec3f(GX,   0.0f,   GZ),
+				rot* Vec3f(-GX,  0.0f,   GZ),
+				rot* Vec3f(0.0f,  -GY,  -GZ),
+				rot* Vec3f(0.0f,   GY,  -GZ),
+				rot* Vec3f(GX,   0.0f,   GZ),
+				rot* Vec3f(-GX,  0.0f,   GZ),
+				rot* Vec3f(0.0f,   GY,  -GZ),
 			}
 		};
-		Init(8, motorPos[0], motorPos[1], 0.04f, (float)(0.051645 / 1000.0), 0.3f, 20.0f);
+		Init(8, motorPos[0], motorPos[1], 0.08f, (float)(0.03485 / 1000.0), 0.3f, 20.0f);
 		motors[0].lengthPerPulse *= -1;
 		motors[1].lengthPerPulse *= -1;
 

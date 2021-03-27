@@ -138,7 +138,7 @@ int __cdecl main(){
 			//		std::cout << std::setprecision(2) << spgpos << std::endl;
 			Vec3f f(0.0, 0.0, 0.0);
 			if (spgpos.y < -0.015) {
-				f.y = (float)(-(spgpos.y - -0.015) * 1000);
+				f.y = (float)(-(spgpos.y - -0.015) * 5000);
 			}
 			spg->SetForce(f, Vec3f());
 			Vec6f pose;
