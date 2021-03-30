@@ -15,6 +15,32 @@
 
 namespace Spr {;
 
+std::string UTDllLoader::FindSpringhead() {
+	char exePath[1024 * 2];
+	GetModuleFileName(NULL, exePath, sizeof(exePath));
+	PathRemoveFileSpec(exePath);
+	while (1) {
+		char* backslash = strrchr(exePath, '\\');
+		char* slash = strrchr(exePath, '/');
+		char* end = backslash > slash ? backslash : slash;
+		if (!end) {
+			return "";
+		}
+		*end = '\0';
+		//	add springhead\dependency or dependency and check exsistance.
+		char buf[1024 * 2];
+		strcpy(buf, exePath);
+		strcat(buf, "\\Springhead");
+		if (PathFileExists(buf)) {
+			return buf;
+		}
+		strcpy(buf, exePath);
+		strcat(buf, "\\dependency");
+		if (PathFileExists(buf)) {
+			return exePath;
+		}
+	}
+}
 void UTDllLoader::AddDllPath(const char* path) {
 #ifdef _WIN32
 	if (!path) {
@@ -25,6 +51,9 @@ void UTDllLoader::AddDllPath(const char* path) {
 			char* backslash = strrchr(exePath, '\\');
 			char* slash = strrchr(exePath, '/');
 			char* end = backslash > slash ? backslash : slash;
+			if (!end) {
+				return;
+			}
 			*end = '\0';
 			//	add springhead\dependency or dependency and check exsistance.
 			char buf[1024*2];

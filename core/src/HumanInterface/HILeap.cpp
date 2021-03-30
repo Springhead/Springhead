@@ -39,11 +39,22 @@ HILeap::~HILeap() {
 
 bool HILeap::Init(const void* desc) {
 	// Leapmotionを初期化
-	#if defined(_WIN64)
-		dllLoaderLeap.Load("LeapLoader.dll", ".;$(SPRINGHEAD2)\\bin\\win64");
-	#else
-		dllLoaderLeap.Load("LeapLoader.dll", ".;$(SPRINGHEAD2)\\bin\\win32");
-	#endif
+	std::string sprRoot = dllLoaderLeap.FindSpringhead();
+#ifdef _M_AMD64
+	dllLoaderLeap.AddDllPath((sprRoot + "\\closed\\bin\\win64").c_str());
+	if (sprRoot.length()) {
+		sprRoot.append("\\core\\bin\\win64");
+	}
+	sprRoot = ".;$(SPRINGHEAD2)\\core\\bin\\win64;" + sprRoot;
+	dllLoaderLeap.Load("LeapLoader.dll", sprRoot.c_str());
+#else
+	dllLoaderLeap.AddDllPath((sprRoot + "closed\\bin\\win32").c_str());
+	if (sprRoot.length()) {
+		sprRoot.append("\\core\\bin\\win32");
+	}
+	sprRoot = ".;$(SPRINGHEAD2)\\core\\bin\\win32;" + sprRoot;
+	dllLoaderLeap.Load("LeapLoader.dll", sprRoot.c_str());
+#endif
 
 	typedef void* (SPR_CDECL *CreateLeapControllerType)(void);
 	CreateLeapControllerType CreateLeapController = (CreateLeapControllerType)(dllLoaderLeap.GetProc("CreateLeapController"));
