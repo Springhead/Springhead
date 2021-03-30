@@ -6,12 +6,52 @@
 #include <stdlib.h>
 #ifdef _WIN32	
 # include <Windows.h>
+# include <shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
 #else
 # include <dlfcn.h>
 # include <string.h>
 #endif
 
 namespace Spr {;
+
+void UTDllLoader::AddDllPath(const char* path) {
+#ifdef _WIN32
+	if (!path) {
+		char exePath[1024*2];
+		GetModuleFileName(NULL, exePath, sizeof(exePath));
+		PathRemoveFileSpec(exePath);
+		while (1) {
+			char* backslash = strrchr(exePath, '\\');
+			char* slash = strrchr(exePath, '/');
+			char* end = backslash > slash ? backslash : slash;
+			*end = '\0';
+			//	add springhead\dependency or dependency and check exsistance.
+			char buf[1024*2];
+			strcpy(buf, exePath);
+			strcat(buf, "\\Springhead");
+#ifdef _M_AMD64
+# define DEPENDENCY_PATH	"\\dependency\\bin\\win64"
+#else
+# define DEPENDENCY_PATH	"\\dependency\\bin\\win32"
+#endif
+			if (PathFileExists(buf)) {
+				strcat(buf, DEPENDENCY_PATH);
+			}
+			else {
+				strcpy(buf, exePath);
+				strcat(buf, DEPENDENCY_PATH);
+			}
+			if (PathFileExists(buf)) {	//	if  dependency\\bin\\win32 or win64 found
+				path = buf;
+			}
+		}
+		
+	}
+	::SetDllDirectory(path);
+#endif
+}
+
 void UTDllLoader::Init(){
 	module = NULL;
 	dllName[0] = '\0';

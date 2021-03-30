@@ -34,6 +34,7 @@ public:
 	bool IsLoaded() {
 		return module != NULL;
 	}
+	static void AddDllPath(const char* path = NULL);
 protected:
 	void Init();
 	void Cleanup();

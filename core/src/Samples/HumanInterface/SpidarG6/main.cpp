@@ -43,17 +43,24 @@ int __cdecl main(){
 	}
 	//	UART Motor Driver
 	DRUARTMotorDriverDesc umDesc;
-	hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &umDesc);
+	DRUARTMotorDriverIf* uartMotorDriver = hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &umDesc)->Cast();
 	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	hiSdk->Print(DSTR);
 	hiSdk->Print(std::cout);
 
-	//UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	//spg->Init(&HISpidar4DDesc());
-
+#if 0	//	Use SPIDAR 4 (3DOF) device.
+	UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	spg->Init(&HISpidar4DDesc());
+#else	//	Use SPIDAR G (6DOF) device.
 	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	//	spg->Init(&HISpidarGDesc("SpidarG6X4R"));
-	spg->Init(&HISpidarGDesc("SpidarG6X3L"));
+	if (uartMotorDriver->NMotor() >= 8) {	//	UART driver
+		spg->Init(&HISpidarGDesc("SpidarG6X4R"));
+	}
+	else {									//	SH4 driver
+		spg->Init(&HISpidarGDesc("SpidarG6X3L"));
+	}
+#endif
+
 	spg->Calibration();
 
 	int t = 0;
@@ -66,14 +73,15 @@ int __cdecl main(){
 	for (int i = 0; i < 8; ++i) {
 		length[i] = spg->GetMotor(i)->GetLength();
 	}
-	enum Mode {
+	enum class Mode {
 		NONE,
 		STRING,
 		POSE,
 		FORCE,
 		TENSE,
 		DEBUG,
-	} mode = NONE;
+	} mode = Mode::NONE;
+
 	std::string help = "ESC/Q: Quit,  f: force feedback,  s: string,  p: pose,  c: calibration.";
 	std::cout << std::endl << help << std::endl;
 	while(1){
@@ -86,27 +94,27 @@ int __cdecl main(){
 				goto next;
 			case 'f':
 			case 'F':
-				mode = FORCE;
+				mode = Mode::FORCE;
 				std::cout << "force feedback mode." << std::endl;
 				break;
 			case 'T':
 			case 't':
-				mode = TENSE;
+				mode = Mode::TENSE;
 				std::cout << "Full tense mode." << std::endl;
 				break;
 			case 'd':
 			case 'D':
-				mode = DEBUG;
+				mode = Mode::DEBUG;
 				std::cout << "Debug mode." << std::endl;
 				break;
 			case 's':
 			case 'S':
-				mode = STRING;
+				mode = Mode::STRING;
 				std::cout << "string length mode." << std::endl;
 				break;
 			case 'p':
 			case 'P':
-				mode = POSE;
+				mode = Mode::POSE;
 				std::cout << "pose mode." << std::endl;
 				break;
 			case 'C':
@@ -115,7 +123,7 @@ int __cdecl main(){
 				std::cout << "Calibrate." << std::endl;
 				break;
 			default:
-				mode = NONE;
+				mode = Mode::NONE;
 				std::cout << help << std::endl;
 				break;
 			}
@@ -132,7 +140,7 @@ int __cdecl main(){
 		}
 		//DPF("t=%d", t);
 		spg->Update(0.001f);
-		if (mode == FORCE) {
+		if (mode == Mode::FORCE) {
 			//	Virtual floor
 			Vec3f spgpos = spg->GetPosition();
 			//		std::cout << std::setprecision(2) << spgpos << std::endl;
@@ -148,7 +156,7 @@ int __cdecl main(){
 				printf(" %7.4f", pose[i]);
 			}
 			std::cout << std::endl;
-		}else if (mode == TENSE) {
+		}else if (mode == Mode::TENSE) {
 			for (int i = 0; i < spg->NMotor(); ++i) {
 				spg->GetMotor(i)->SetForce(100.0f);
 			}
@@ -160,13 +168,13 @@ int __cdecl main(){
 			}
 			std::cout << std::endl;
 		}
-		else if (mode == STRING) {
+		else if (mode == Mode::STRING) {
 			//	print string length
 			for (size_t i = 0; i < spg->NMotor(); ++i) {
-				printf(" %7.4f", spg->GetMotor(i)->GetLength() - length[i]);
+				printf(" %7.4f", (double)spg->GetMotor(i)->GetLength() - length[i]);
 			}
 			std::cout << std::endl;
-		}else if (mode == POSE){
+		}else if (mode == Mode::POSE){
 			Vec6f pose;
 			pose.sub_vector(0, Vec3f()) = spg->GetPosition();
 			pose.sub_vector(3, Vec3f()) = spg->GetOrientation().Rotation();
@@ -175,7 +183,7 @@ int __cdecl main(){
 			}
 			std::cout << std::endl;
 		}
-		else if (mode == DEBUG) {
+		else if (mode == Mode::DEBUG) {
 			spg->SetForce(Vec3d(10000, 0, 0), Vec3d(10000, 0, 0));
 		}
 	}
