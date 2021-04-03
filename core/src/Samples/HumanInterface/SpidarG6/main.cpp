@@ -145,17 +145,16 @@ int __cdecl main(){
 			Vec3f spgpos = spg->GetPosition();
 			//		std::cout << std::setprecision(2) << spgpos << std::endl;
 			Vec3f f(0.0, 0.0, 0.0);
-			if (spgpos.y < -0.015) {
-				f.y = (float)(-(spgpos.y - -0.015) * 5000);
+			const float floorPosition = -0.005f;
+			if (spgpos.y < floorPosition) {
+				f.y = (float)(-(spgpos.y - floorPosition) * 1000);
 			}
 			spg->SetForce(f, Vec3f());
 			Vec6f pose;
 			pose.sub_vector(0, Vec3f()) = spg->GetPosition();
 			pose.sub_vector(3, Vec3f()) = spg->GetOrientation().Rotation();
-			for (size_t i = 0; i < pose.size(); ++i) {
-				printf(" %7.4f", pose[i]);
-			}
-			std::cout << std::endl;
+			//	for (size_t i = 0; i < pose.size(); ++i) { printf(" %7.4f", pose[i]); }
+			//	std::cout << std::endl;
 		}else if (mode == Mode::TENSE) {
 			for (int i = 0; i < spg->NMotor(); ++i) {
 				spg->GetMotor(i)->SetForce(100.0f);
