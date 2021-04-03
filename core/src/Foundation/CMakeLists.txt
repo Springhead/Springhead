@@ -42,6 +42,10 @@ if(EXCLUDE_SRCS)
     list(REMOVE_ITEM SRCS ${EXCLUDE_SRCS})
 endif()
 
+if(unix)
+    list(APPEND SRCS ../kludge_for_unix/kludge.cpp)
+endif()
+
 # ------------------------------------------------------------------------------
 #  Definition of library.
 #

@@ -13,6 +13,10 @@
 # include <string.h>
 #endif
 
+#ifdef __unix__
+# include "../kludge_for_unix/kludge.h"
+#endif
+
 namespace Spr {;
 
 std::string UTDllLoader::FindSpringhead() {
