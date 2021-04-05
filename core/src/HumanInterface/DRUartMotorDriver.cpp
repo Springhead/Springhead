@@ -43,6 +43,7 @@
 
 
 #include <sstream>
+#include <iomanip>
 
 #ifdef USE_HDRSTOP
  #pragma hdrstop
