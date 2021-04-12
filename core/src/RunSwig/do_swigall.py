@@ -154,7 +154,10 @@ if SetupExists:
 else:
 	if unix:
 		makepath = '/usr/bin'
+		swigpath = '%s/%s' % (srcdir, 'Foundation')
+		addpath = os.pathsep.join([swigbindir, bindir, swigpath, makepath])
 	else:
+		'''
 		cmnd = 'python find_path.py nmake.exe'
 		proc = Proc().execute(cmnd, stdout=Proc.PIPE, shell=True)
 		stat, out, err = proc.output()
@@ -166,9 +169,14 @@ else:
 			makepath = ''
 		else:
 			print('nmake path found: %s' % makepath.replace(os.sep, '/'))
+		'''
+		swigpath = '%s/%s' % (srcdir, 'Foundation')
+		addpath = os.pathsep.join([swigbindir, bindir, swigpath])
 
+	'''
 	swigpath = '%s/%s' % (srcdir, 'Foundation')
 	addpath = os.pathsep.join([swigbindir, bindir, swigpath, makepath])
+	'''
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
