@@ -43,6 +43,7 @@
 
 
 #include <sstream>
+#include <iomanip>
 
 #ifdef USE_HDRSTOP
  #pragma hdrstop
@@ -189,7 +190,7 @@ public:
 					//DPF("board->RetStart()[0] : %x\n", board->RetStart()[0]);
 					int retLen = board->RetLen();
 					if (retLen == 0) {
-						DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0" << std::endl;
+						DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0. for cmd=" << std::setbase(16) << cmdHeader.header << std::endl;
 					}
 					DWORD nRead;
 					ReadFile(owner->hUART, (char*)(board->RetStart() + readPos), retLen - readPos, &nRead, NULL);

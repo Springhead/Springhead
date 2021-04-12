@@ -124,7 +124,7 @@ file(GLOB SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 )
 list(APPEND SRCS ${generated_srcs})
 if(STANDALONE AND unix)
-    list(APPEND SRCS kludge.cpp)
+    list(APPEND SRCS ../kludge_for_unix/kludge.cpp)
 endif()
 
 # ------------------------------------------------------------------------------

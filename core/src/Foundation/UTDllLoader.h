@@ -34,6 +34,8 @@ public:
 	bool IsLoaded() {
 		return module != NULL;
 	}
+	static void AddDllPath(const char* path = NULL);
+	static std::string FindSpringhead();
 protected:
 	void Init();
 	void Cleanup();
