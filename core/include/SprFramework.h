@@ -16,6 +16,8 @@
 #include "Framework/SprFWWin.h"
 #include "Framework/SprFWHapticPointer.h"
 #include "Framework/SprFWSkeletonSensor.h"
+#include "Framework/SprFWJoyStick.h"
+#include "Framework/SprFWKeyMouse.h"
 #include "Framework/SprFWOptimizer.h"
 
 #endif

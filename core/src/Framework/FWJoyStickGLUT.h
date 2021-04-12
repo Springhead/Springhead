@@ -10,19 +10,20 @@
 
 #include <SprDefs.h>
 #include <HumanInterface/HIDevice.h>
+#include <Framework/SprFWJoyStick.h>
 #include <map>
 
 namespace Spr {;
 
 ///	DVKeyMouse
-class DRJoyStickGLUT: public HIRealDevice{
+class FWJoyStickGLUT: public HIRealDevice{
 public:
-	SPR_OBJECTDEF(DRJoyStickGLUT);
+	SPR_OBJECTDEF(FWJoyStickGLUT);
 	
 	class DV: public DVJoyStick{
 	public:
-		DV(DRJoyStickGLUT* dr, int ch):DVJoyStick(dr, ch){}
-		DRJoyStickGLUT* GetRealDevice(){ return realDevice->Cast(); }
+		DV(FWJoyStickGLUT* dr, int ch):DVJoyStick(dr, ch){}
+		FWJoyStickGLUT* GetRealDevice(){ return realDevice->Cast(); }
 
 		virtual void SetPollInterval(int ms){
 			pollInterval = ms;
@@ -31,8 +32,8 @@ public:
 	};
 
 public:
-	DRJoyStickGLUT();
-	
+	FWJoyStickGLUT(const FWJoyStickGLUTDesc& desc = FWJoyStickGLUTDesc());
+
 	///	初期化
 	virtual bool Init();
 	///	仮想デバイスの登録
@@ -41,7 +42,7 @@ public:
 	void OnUpdate(unsigned int buttonMask, int x, int y, int z);
 	void SetPollInterval(DVJoyStick* dv);
 	
-	static DRJoyStickGLUT*	instance;
+	static FWJoyStickGLUT*	instance;
 };
 
 }	//	namespace Spr

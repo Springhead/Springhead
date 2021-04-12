@@ -5,11 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef DRKeyMouseGLUT_H
-#define DRKeyMouseGLUT_H
+#ifndef FWKeyMouseGLUT_H
+#define FWKeyMouseGLUT_H
 
 #include <SprDefs.h>
 #include <HumanInterface/HIDevice.h>
+#include <Framework/SprFWKeyMouse.h>
 #include <vector>
 #include <deque>
 
@@ -24,9 +25,9 @@ namespace Spr {;
 	　そのコールバックを呼ぶ
 
  */
-class DRKeyMouseGLUT: public HIRealDevice{
+class FWKeyMouseGLUT: public HIRealDevice{
 public:
-	SPR_OBJECTDEF(DRKeyMouseGLUT);
+	SPR_OBJECTDEF(FWKeyMouseGLUT);
 	///	仮想デバイス(KeyMouse)
 	class DV: public DVKeyMouse{
 	public:
@@ -34,10 +35,10 @@ public:
 		std::deque<Vec2i>	mousePoints;
 	public:
 
-		DV(DRKeyMouseGLUT* dr, int ch):DVKeyMouse(dr, ch){
+		DV(FWKeyMouseGLUT* dr, int ch):DVKeyMouse(dr, ch){
 			mousePoints.resize(64);
 		}
-		DRKeyMouseGLUT* GetRealDevice(){ return realDevice->Cast(); }
+		FWKeyMouseGLUT* GetRealDevice(){ return realDevice->Cast(); }
 		
 		virtual void OnMouse(int button, int state, int x, int y);
 		virtual void OnMouseMove(int button, int x, int y, int zdelta);
@@ -48,7 +49,7 @@ public:
 	int	buttonState;
 
 public:
-	DRKeyMouseGLUT(const DRKeyMouseGLUTDesc& desc = DRKeyMouseGLUTDesc());
+	FWKeyMouseGLUT(const FWKeyMouseGLUTDesc& desc = FWKeyMouseGLUTDesc());
 	
 	///	HIRealDeviceの仮想関数
 	virtual bool Init();

@@ -50,10 +50,8 @@ public:
 	HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL, int portNum = -1);
 	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
 	
-	void			RegisterRealDevice(HIRealDeviceIf* dev);	
 	HIRealDeviceIf* FindRealDevice(const char* name);
 	HIRealDeviceIf*	FindRealDevice(const IfInfo* ii);
-	void			RegisterVirtualDevice(HIVirtualDeviceIf* dev);
 	HIBaseIf*		CreateHumanInterface(const IfInfo* keyInfo);
 	HIBaseIf*		CreateHumanInterface(const char* name);
 	HIRealDeviceIf* AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);

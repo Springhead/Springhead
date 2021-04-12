@@ -13,14 +13,13 @@
 #include <Framework/FWGraphicsHandler.h>
 #include <Framework/FWWin.h>
 #include <GL/glut.h>
+#include <Framework/FWJoyStickGLUT.h>
+#include <Framework/FWKeyMouseGLUT.h>
 #ifndef GLUTCALLBACK
 #define GLUTCALLBACK
 #endif
 
 namespace Spr{;
-
-class DRKeyMouseGLUT;
-class DRJoyStickGLUT;
 
 /**
 	FWGraphicsHandlerのGLUTによる実装
@@ -31,8 +30,8 @@ public:
 protected:
 	bool	idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
 	
-	DRKeyMouseGLUT*	keyMouse;
-	DRJoyStickGLUT*	joyStick;
+	FWKeyMouseGLUT*	keyMouse;
+	FWJoyStickGLUT*	joyStick;
 
 	static FWGLUT*	GetInstance();
 

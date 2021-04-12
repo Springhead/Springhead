@@ -46,10 +46,13 @@ namespace Spr {;
 class HISpidar: public HIHaptic{
 protected:
 	bool bGood;
+	std::string type;						///<	type of SPIDAR
 	std::vector<HISpidarMotor>	motors;		///<	モータ
 
 public:
 	SPR_OBJECTDEF_ABST(HISpidar);
+
+	const char* GetSpidarType() { return type.c_str(); }
 
 	///	モータを取得
 	HISpidarMotorIf* GetMotor(size_t i){ return motors[i].Cast(); }

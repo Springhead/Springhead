@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <HumanInterface/HISdk.h>
-#include <HumanInterface/DRKeyMouseGLUT.h>
+#include <Framework/FWKeyMouseGLUT.h>
 
 #include <GL/glut.h>
 
@@ -18,7 +18,7 @@ namespace Spr {;
 
 //---------------------------------------------------------------------
 
-void DRKeyMouseGLUT::DV::GetMousePosition(int& x, int& y, int& time, int count){
+void FWKeyMouseGLUT::DV::GetMousePosition(int& x, int& y, int& time, int count){
 	if(count < (int)mousePoints.size()){
 		x = mousePoints[count].x;
 		y = mousePoints[count].y;
@@ -27,14 +27,14 @@ void DRKeyMouseGLUT::DV::GetMousePosition(int& x, int& y, int& time, int count){
 	time = 0;
 }
 
-void DRKeyMouseGLUT::DV::OnMouse(int button, int state, int x, int y){
+void FWKeyMouseGLUT::DV::OnMouse(int button, int state, int x, int y){
 	mousePoints.push_front(Vec2i(x, y));
 	mousePoints.pop_back();
 
 	DVKeyMouse::OnMouse(button, state, x, y);
 }
 
-void DRKeyMouseGLUT::DV::OnMouseMove(int button, int x, int y, int zdelta){
+void FWKeyMouseGLUT::DV::OnMouseMove(int button, int x, int y, int zdelta){
 	mousePoints.push_front(Vec2i(x, y));
 	mousePoints.pop_back();
 
@@ -42,25 +42,25 @@ void DRKeyMouseGLUT::DV::OnMouseMove(int button, int x, int y, int zdelta){
 }
 
 //---------------------------------------------------------------------
-//	DRKeyMouseGLUT
+//	FWKeyMouseGLUT
 //
 
-int	DRKeyMouseGLUT::ConvertKeyCode(int key, bool spr_to_glut, bool special){
+int	FWKeyMouseGLUT::ConvertKeyCode(int key, bool spr_to_glut, bool special){
 	if(spr_to_glut)
 		return (key < 256 ? key : key - 256);
 	return (special ? key + 256 : key);
 }
 
-DRKeyMouseGLUT::DRKeyMouseGLUT(const DRKeyMouseGLUTDesc& desc){
+FWKeyMouseGLUT::FWKeyMouseGLUT(const FWKeyMouseGLUTDesc& desc){
 	buttonState = 0;
 }
 
-bool DRKeyMouseGLUT::Init(){
+bool FWKeyMouseGLUT::Init(){
 	SetName("KeyMouseGLUT");
 	return true;
 }
 
-HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
+HIVirtualDeviceIf* FWKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
 
 	// 既存の仮想デバイスがなければ作成
@@ -72,7 +72,7 @@ HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int por
 	return dv;
 }
 
-void DRKeyMouseGLUT::OnMouse(int button, int state, int x, int y){
+void FWKeyMouseGLUT::OnMouse(int button, int state, int x, int y){
 	int st;
 	if(state == GLUT_DOWN)
 		 st = DVButtonSt::DOWN;
@@ -103,7 +103,7 @@ void DRKeyMouseGLUT::OnMouse(int button, int state, int x, int y){
 	if(st == DVButtonSt::UP)
 		buttonState = 0;
 }
-void DRKeyMouseGLUT::OnMotion(int x, int y){
+void FWKeyMouseGLUT::OnMotion(int x, int y){
 	int wid = glutGetWindow();
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVKeyMouse* dv = GetChildObject(i)->Cast();
@@ -111,7 +111,7 @@ void DRKeyMouseGLUT::OnMotion(int x, int y){
 			dv->OnMouseMove(buttonState, x, y, 0);
 	}
 }
-void DRKeyMouseGLUT::OnPassiveMotion(int x, int y){
+void FWKeyMouseGLUT::OnPassiveMotion(int x, int y){
 	int wid = glutGetWindow();
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVKeyMouse* dv = GetChildObject(i)->Cast();
@@ -119,7 +119,7 @@ void DRKeyMouseGLUT::OnPassiveMotion(int x, int y){
 			dv->OnMouseMove(buttonState, x, y, 0);
 	}
 }
-void DRKeyMouseGLUT::OnKey(unsigned char ch, int x, int y){
+void FWKeyMouseGLUT::OnKey(unsigned char ch, int x, int y){
 	int wid = glutGetWindow();
 	int key = ConvertKeyCode(ch, false, false);
 	for(int i = 0; i < (int)NChildObject(); i++){
@@ -128,7 +128,7 @@ void DRKeyMouseGLUT::OnKey(unsigned char ch, int x, int y){
 			dv->OnKey(DVKeySt::PRESSED, key, x, y);
 	}
 }
-void DRKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
+void FWKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
 	int wid = glutGetWindow();
 	int key = ConvertKeyCode(ch, false, true);
 	for(int i = 0; i < (int)NChildObject(); i++){
@@ -138,7 +138,7 @@ void DRKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
 	}
 }
 
-void DRKeyMouseGLUT::OnMouseWheel(int wheel, int direction, int x, int y){
+void FWKeyMouseGLUT::OnMouseWheel(int wheel, int direction, int x, int y){
 	int wid = glutGetWindow();
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVKeyMouse* dv = GetChildObject(i)->Cast();

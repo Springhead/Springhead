@@ -54,13 +54,5 @@ struct DVJoyStickIf: public HIVirtualDeviceIf{
 	int  GetPollInterval();
 
 };
-
-/**
-	GLUTジョイスティック
- **/
-struct DRJoyStickGLUTIf: public HIRealDeviceIf{
-	SPR_IFDEF(DRJoyStickGLUT);
-};
-
 }	//	namespace Spr
 #endif

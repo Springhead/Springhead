@@ -16,6 +16,8 @@
 #include <Framework/FWFemMeshNew.h>
 #include <Framework/FWOpObj.h>
 #include <Framework/FWStaticTorqueOptimizer.h>
+#include <Framework/FWKeyMouseGLUT.h>
+#include <Framework/FWJoyStickGLUT.h>
 #include <Physics/PHSdk.h>
 #include <Physics/PHScene.h>
 #include <Graphics/GRSdk.h>
@@ -57,15 +59,19 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWOpObj));
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWOptimizer));
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWStaticTorqueOptimizer));
+	
+	//	For HISDK
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FWKeyMouseGLUT));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FWJoyStickGLUT));
 }
 
 FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 	FWSdk* rv = DBG_NEW FWSdk;
-	FWSdkIf::RegisterSdk();
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
 	HISdkIf::RegisterSdk();
-	
+	FWSdkIf::RegisterSdk();
+
 	return rv->Cast();
 }
 

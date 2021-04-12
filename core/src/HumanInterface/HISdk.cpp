@@ -8,7 +8,7 @@
 //#include <Springhead.h>
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseWin32.h>
-#include <HumanInterface/DRKeyMouseGLUT.h>
+//#include <HumanInterface/FWKeyMouseGLUT.h>
 #include <HumanInterface/DRUsb20Simple.h>
 #include <HumanInterface/DRUsb20Sh4.h>
 #include <HumanInterface/DRCyUsb20Sh4.h>
@@ -39,7 +39,6 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HIRegisterTypeDescs();
 
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRKeyMouseWin32));
-	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRKeyMouseGLUT));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUsb20Simple));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUsb20Sh4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRCyUsb20Sh4));

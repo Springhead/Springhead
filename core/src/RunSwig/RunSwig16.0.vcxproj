@@ -28,6 +28,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="create_mkf.py" />
+    <None Include="do_swigall.projs" />
+    <None Include="do_swigall.py" />
+    <None Include="find_path.py" />
     <None Include="Makefile.win" />
     <None Include="MakeWin_Wrapper.bat" />
     <None Include="make_manager.py" />

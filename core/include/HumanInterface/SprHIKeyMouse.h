@@ -149,15 +149,5 @@ struct DRKeyMouseWin32Desc{
 	SPR_DESCDEF(DRKeyMouseWin32);
 };
 
-/**
-	GLUTマウス
- **/
-struct DRKeyMouseGLUTIf: public HIRealDeviceIf{
-	SPR_IFDEF(DRKeyMouseGLUT);
-};
-struct DRKeyMouseGLUTDesc{
-	SPR_DESCDEF(DRKeyMouseGLUT);
-};
-
 }	//	namespace Spr
 #endif

@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#include <HumanInterface/DRJoyStickGLUT.h>
+#include <Framework/FWJoyStickGLUT.h>
 #include <HumanInterface/HISdk.h>
 
 #include <GL/glut.h>
@@ -21,21 +21,21 @@
 
 namespace Spr {;
 
-DRJoyStickGLUT* DRJoyStickGLUT::instance = 0;
+FWJoyStickGLUT* FWJoyStickGLUT::instance = 0;
 
-DRJoyStickGLUT::DRJoyStickGLUT(){
+FWJoyStickGLUT::FWJoyStickGLUT(const FWJoyStickGLUTDesc& desc){
 }
 
-bool DRJoyStickGLUT::Init(){
+bool FWJoyStickGLUT::Init(){
 	SetName("JoyStickGLUT");
 	return true;
 }
 
-HIVirtualDeviceIf* DRJoyStickGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
+HIVirtualDeviceIf* FWJoyStickGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
 
 	// 既存の仮想デバイスがなければ作成
-	if(!dv){
+	if(ii == DVJoyStickIf::GetIfInfoStatic() && !dv){
 		DVJoyStick* js = DBG_NEW DV(this, portNo);
 		AddChildObject(js->Cast());
 		SetPollInterval(js);
@@ -46,9 +46,9 @@ HIVirtualDeviceIf* DRJoyStickGLUT::Rent(const IfInfo* ii, const char* n, int por
 }
 
 static void GLUTCALLBACK OnUpdateStatic(unsigned int buttonMask, int x, int y, int z) {
-	DRJoyStickGLUT::instance->OnUpdate(buttonMask, x, y, z);
+	FWJoyStickGLUT::instance->OnUpdate(buttonMask, x, y, z);
 }
-void DRJoyStickGLUT::SetPollInterval(DVJoyStick* dv){
+void FWJoyStickGLUT::SetPollInterval(DVJoyStick* dv){
 	int wid = dv->GetPortNo();
 	int widCur = glutGetWindow();
 	glutSetWindow(wid);
@@ -58,7 +58,7 @@ void DRJoyStickGLUT::SetPollInterval(DVJoyStick* dv){
 	glutSetWindow(widCur);
 }
 
-void DRJoyStickGLUT::OnUpdate(unsigned int buttonMask, int x, int y, int z){
+void FWJoyStickGLUT::OnUpdate(unsigned int buttonMask, int x, int y, int z){
 	int wid = glutGetWindow();
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVJoyStick* dv = GetChildObject(i)->Cast();

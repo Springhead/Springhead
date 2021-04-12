@@ -82,6 +82,8 @@ struct HISpidarMotorDesc{
 };
 struct HISpidarIf : public HIHapticIf{
 	SPR_VIFDEF(HISpidar);
+	///	Spidar's type (string to identify type of the SPIDAR
+	const char* GetSpidarType();
 	/// 最小出力の設定
 	void SetLimitMinForce(float f);
 	/// 最大出力の設定
@@ -93,7 +95,7 @@ struct HISpidarIf : public HIHapticIf{
 };
 struct HISpidarDesc{
 	SPR_DESCDEF(HISpidar);
-	
+	std::string type;
 	std::vector<HISpidarMotorDesc> motors;
 	int	nButton;
 };

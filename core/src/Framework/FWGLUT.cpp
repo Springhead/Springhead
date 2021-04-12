@@ -22,8 +22,8 @@
 #include <Framework/FWSdk.h>
 #include <Graphics/GRSdk.h>
 #include <HumanInterface/HISdk.h>
-#include <HumanInterface/DRKeyMouseGLUT.h>
-#include <HumanInterface/DRJoyStickGLUT.h>
+#include <Framework/FWKeyMouseGLUT.h>
+#include <Framework/FWJoyStickGLUT.h>
 #include <sstream>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -148,8 +148,8 @@ void FWGLUT::Init(int argc, char** argv){
 	
 	// キーボード・マウスとジョイスティックデバイスの登録
 	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
-	keyMouse = hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic())->Cast();
-	joyStick = hiSdk->AddRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic())->Cast();
+	keyMouse = hiSdk->AddRealDevice(FWKeyMouseGLUTIf::GetIfInfoStatic())->Cast();
+	joyStick = hiSdk->AddRealDevice(FWJoyStickGLUTIf::GetIfInfoStatic())->Cast();
 }
 
 bool FWGLUT::StartTimer(UTTimer* timer){
@@ -237,11 +237,11 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
 	HIRealDeviceIf* dr;
 	if(desc.useKeyMouse){
-		dr = hiSdk->FindRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
+		dr = hiSdk->FindRealDevice(FWKeyMouseGLUTIf::GetIfInfoStatic());
 		win->keyMouse = dr->Rent(DVKeyMouseIf::GetIfInfoStatic(), "", wid)->Cast();
 	}
 	if(desc.useJoyStick){
-		dr = hiSdk->FindRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic());
+		dr = hiSdk->FindRealDevice(FWJoyStickGLUTIf::GetIfInfoStatic());
 		win->joyStick = dr->Rent(DVJoyStickIf::GetIfInfoStatic(), "", wid)->Cast();
 	}
 

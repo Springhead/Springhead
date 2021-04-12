@@ -93,9 +93,10 @@ void HISpidar4Desc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 	}
 }
 
-void HISpidar4Desc::InitSpidarG(char* type){
-	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0){
-		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
+void HISpidar4Desc::InitSpidarG(char* type_){
+	type = type_;
+	if (stricmp(type.c_str(), "SpidarG6X3L")==0 || stricmp(type.c_str(), "SpidarG6X3R")==0){
+		bool bLeft = stricmp(type.c_str(), "SpidarG6X3L")==0;
 		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
 		const float PX = 0.12f/2;		//	x方向の辺の長さ/2
 		const float PY = 0.14f/2;		//	y方向の辺の長さ/2
@@ -149,9 +150,10 @@ void HISpidar4Desc::InitSpidarG(char* type){
 	}
 }
 
-void HISpidar4Desc::InitSpidarBig(char* type){
-	if (stricmp(type, "SpidarL")==0 || stricmp(type, "SpidarR")==0){
-		bool bLeft = stricmp(type, "SpidarL")==0;
+void HISpidar4Desc::InitSpidarBig(char* type_){
+	type = type_;
+	if (stricmp(type.c_str(), "SpidarL")==0 || stricmp(type.c_str(), "SpidarR")==0){
+		bool bLeft = stricmp(type.c_str(), "SpidarL")==0;
 		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
 		const float PX = 0.625f/2;		//	x方向の辺の長さ/2
 		const float PY = 0.54f/2;		//	y方向の辺の長さ/2

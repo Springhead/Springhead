@@ -398,8 +398,6 @@
     <ClCompile Include="DRContecIsaCounter.cpp" />
     <ClCompile Include="DRContecIsaDa.cpp" />
     <ClCompile Include="DRCyUsb20Sh4.cpp" />
-    <ClCompile Include="DRJoyStickGLUT.cpp" />
-    <ClCompile Include="DRKeyMouseGLUT.cpp" />
     <ClCompile Include="DRKeyMouseWin32.cpp" />
     <ClCompile Include="DRNittaForce.cpp" />
     <ClCompile Include="DRPortIO.cpp" />
@@ -434,8 +432,6 @@
     <ClInclude Include="DRContecIsaCounter.h" />
     <ClInclude Include="DRContecIsaDa.h" />
     <ClInclude Include="DRCyUsb20Sh4.h" />
-    <ClInclude Include="DRJoyStickGLUT.h" />
-    <ClInclude Include="DRKeyMouseGLUT.h" />
     <ClInclude Include="DRKeyMouseWin32.h" />
     <ClInclude Include="DRNittaForce.h" />
     <ClInclude Include="DRPortIO.h" />
