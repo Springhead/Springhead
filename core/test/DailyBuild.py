@@ -5,9 +5,14 @@
 #	DailyBuild [options] test-repository result-repository
 #	options:
 #	  -c conf:	Configurations (Debug | Release).
+#	  -f:		Do not confir about test repository.
 #	  -p plat:	Platform (x86 | x64).
-#	  -t tool:	Visual Studio toolset ID. (Windows only)
 #	  -s file:	Setup file name (default: setup.conf).
+#	  -t tool:	Visual Studio toolset ID. (Windows only)
+#	  -u:		Repository update only.
+#	  -A:		As-is (do not update nore clone repository).
+#	  -D:		Dry run.
+#	  -U:		Skip repository update.
 #	  -S:		Execute setup process first.
 #	  -d num:	Devenv selection number (default: 1).
 #
@@ -32,10 +37,9 @@
 #     Ver 1.5    2018/05/01 F.Kanehori	Add: Result repository.
 #     Ver 1.6    2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.7    2021/01/07 F.Kanehori	Setup 自動実行設定追加.
-#     Ver 1.7.1  2021/01/14 F.Kanehori	Bug fix.
-#     Ver 1.7.2  2021/03/24 F.Kanehori	コメント修正.
+#     Ver 1.7.1  2021/03/24 F.Kanehori	Add: -f flag.
 # ======================================================================
-version = "1.07.2"
+version = "1.7.1"
 
 import sys
 import os
@@ -79,6 +83,9 @@ if Util.is_windows():
 	parser.add_option('-d', '--devenv-num', dest='devenv_num',
 			action='store', default='1',
 			help='devenv spcify number [default: %default]')
+parser.add_option('-f', '--force', dest='force',
+			action='store_true', default=False,
+			help='do not confirm about test repository')
 parser.add_option('-p', '--plat', dest='plat',
 			action='store', default='x64',
 			help='test platform [default: %default]')
@@ -92,12 +99,17 @@ if Util.is_windows():
 parser.add_option('-u', '--update-only',
 			dest='update_only', action='store_true', default=False,
 			help='execute \'git pull\' only')
+####
 parser.add_option('-U', '--skip-update',
 			dest='skip_update', action='store_true', default=False,
 			help='skip \'git pull\'')
+####
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose mode')
+parser.add_option('-A', '--as-is',
+			dest='as_is', action='count', default=0,
+			help='do not update nor clear test repository')
 parser.add_option('-D', '--dry-run', dest='dry_run',
 			action='store_true', default=False,
 			help='set dry-run mode')
@@ -107,9 +119,6 @@ parser.add_option('-S', '--setup', dest='setup',
 parser.add_option('-V', '--version',
 			dest='version', action='store_true', default=False,
 			help='show version')
-parser.add_option('-A', '--as-is',
-			dest='as_is', action='count', default=0,
-			help='do not update nor clear test repository')
 
 # ----------------------------------------------------------------------
 #  Process for command line
@@ -129,22 +138,25 @@ result_repository = Util.upath(args[1])
 conf = options.conf
 plat = options.plat
 tool = options.tool if Util.is_windows() else None
+as_is = options.as_is
 update_only = options.update_only
+####
 skip_update = options.skip_update
+####
+force = options.force
 verbose = options.verbose
 dry_run = options.dry_run
-as_is = options.as_is
 setup_file = options.setup_file
 setup = options.setup
 if Util.is_windows():
 	devenv_num = options.devenv_num
 
-if repository == 'Springhead':
+if repository == 'Springhead' and force == False:
 	msg = 'Are you sure to test on "Springhead" directory? [y/n] '
 	ans = input(msg)
 	if ans != 'y':
 		print('abort')
-		exit(-1)
+		sys.exit(-1)
 
 # ----------------------------------------------------------------------
 #  Globals
