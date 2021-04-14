@@ -13,12 +13,6 @@
     <ClCompile Include="DRCyUsb20Sh4.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="DRJoyStickGLUT.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="DRKeyMouseGLUT.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="DRKeyMouseWin32.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -106,12 +100,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="DRCyUsb20Sh4.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="DRJoyStickGLUT.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="DRKeyMouseGLUT.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="DRKeyMouseWin32.h">
