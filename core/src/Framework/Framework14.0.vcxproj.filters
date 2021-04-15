@@ -67,6 +67,8 @@
     <ClCompile Include="FWStaticTorqueOptimizer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="FWJoyStickGLUT.cpp" />
+    <ClCompile Include="FWKeyMouseGLUT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework.h">
@@ -177,6 +179,10 @@
     <ClInclude Include="FWStaticTorqueOptimizer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="FWJoyStickGLUT.h" />
+    <ClInclude Include="FWKeyMouseGLUT.h" />
+    <ClInclude Include="..\..\include\Framework\SprFWJoyStick.h" />
+    <ClInclude Include="..\..\include\Framework\SprFWKeyMouse.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
