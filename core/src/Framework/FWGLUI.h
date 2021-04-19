@@ -11,7 +11,12 @@
 #include <Framework/FWGLUT.h>
 #include <GL/glut.h>
 
-#include <GL/glui.h>
+#ifdef USE_GLUI
+# include <GL/glui.h>
+#endif
+
+#undef  CreateDialog
+
 #ifndef GLUICALLBACK
 #define GLUICALLBACK
 #endif

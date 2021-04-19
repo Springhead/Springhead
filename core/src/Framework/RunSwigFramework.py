@@ -35,9 +35,10 @@
 #     Ver 1.12.1 2020/12/16 F.Kanehori	Bug fix.
 #     Ver 1.12.2 2021/01/07 F.Kanehori	Bug fix.
 #     Ver 1.13   2021/02/17 F.Kanehori	Python 2.7 対応.
+#     Ver 1.14   2021/04/14 F.Kanehori	不要なコードの削除.
 # ==============================================================================
 from __future__ import print_function
-version = '1.13'
+version = '1.14'
 debug = False
 trace = False
 
@@ -202,6 +203,7 @@ else:
 proc = Proc(verbose=verbose, dry_run=dry_run)
 f_op = FileOp(verbose=verbose)
 
+'''
 # ----------------------------------------------------------------------
 #  src/Foundation へ移って RunSwig を実行する.
 #
@@ -211,6 +213,7 @@ status = proc.wait()
 if status != 0:
 	msg = '%s failed (%d)' % (runswig_foundation, status)
 	Error(prog).error(msg)
+'''
 
 # ----------------------------------------------------------------------
 #  swigtemp 下に SJIS world を作る.
