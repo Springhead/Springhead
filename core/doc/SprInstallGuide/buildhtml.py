@@ -16,6 +16,7 @@
 #     Ver 1.2    2019/08/05 F.Kanehori	HowToUseCMake version.
 #     Ver 1.3    2021/03/02 F.Kanehori	HowToBuildSpringhead_Windows version.
 #     Ver 1.4    2021/03/02 F.Kanehori	ドキュメント名称変更
+#     Ver 1.4.1  2021/04/19 F.Kanehori	Bug fixed.
 # ======================================================================
 version = '1.4'
 
@@ -40,8 +41,8 @@ svg_dir = '../../../../../../SprInstallGuide-fig/svg'.replace('/', os.sep)
 # ----------------------------------------------------------------------
 #  External tools.
 #
-sed = 'c:/usr/hidden/bin/sed'
-nkf = 'c:/usr/hidden/bin/nkf'
+sed = 'sed'
+nkf = 'nkf'
 python = 'c:/python35/python'
 pdflatex = 'pdflatex'
 lwarpmk = 'lwarpmk'
