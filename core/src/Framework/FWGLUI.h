@@ -12,6 +12,7 @@
 #include <GL/glut.h>
 
 #include <GL/glui.h>
+#undef  CreateDialogA
 #ifndef GLUICALLBACK
 #define GLUICALLBACK
 #endif

@@ -399,6 +399,8 @@
     <ClCompile Include="FWGLUI.cpp" />
     <ClCompile Include="FWGLUT.cpp" />
     <ClCompile Include="FWHapticPointer.cpp" />
+    <ClCompile Include="FWJoyStickGLUT.cpp" />
+    <ClCompile Include="FWKeyMouseGLUT.cpp" />
     <ClCompile Include="FWObject.cpp" />
     <ClCompile Include="FWOldSpringheadNodeHandler.cpp" />
     <ClCompile Include="FWOldSpringheadStub.cpp" />
@@ -419,6 +421,8 @@
     <ClInclude Include="..\..\include\Framework\SprFWFemMesh.h" />
     <ClInclude Include="..\..\include\Framework\SprFWFemMeshNew.h" />
     <ClInclude Include="..\..\include\Framework\SprFWHapticPointer.h" />
+    <ClInclude Include="..\..\include\Framework\SprFWJoyStick.h" />
+    <ClInclude Include="..\..\include\Framework\SprFWKeyMouse.h" />
     <ClInclude Include="..\..\include\Framework\SprFWOpObj.h" />
     <ClInclude Include="..\..\include\Framework\SprFWOptimizer.h" />
     <ClInclude Include="..\..\include\Framework\SprFWSkeletonSensor.h" />
@@ -428,6 +432,8 @@
     <ClInclude Include="FWFemMeshNew.h" />
     <ClInclude Include="FWGraphicsHandler.h" />
     <ClInclude Include="FWHapticPointer.h" />
+    <ClInclude Include="FWJoyStickGLUT.h" />
+    <ClInclude Include="FWKeyMouseGLUT.h" />
     <ClInclude Include="FWOpHapticHandler.h" />
     <ClInclude Include="FWOpObj.h" />
     <ClInclude Include="FWOptimizer.h" />
