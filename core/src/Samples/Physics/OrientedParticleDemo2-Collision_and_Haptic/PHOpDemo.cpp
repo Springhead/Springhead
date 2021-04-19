@@ -299,7 +299,7 @@ void PHOpDemo::InitInterface(){
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 #ifdef	_MSC_VER
 		if (device->GetIfInfo() == DRUARTMotorDriverIf::GetIfInfoStatic()) {
-			spg->Init(&HISpidarGDesc("SpidarG6X4"));
+			spg->Init(&HISpidarGDesc("SpidarG6X4R"));
 		}
 		else {
 			spg->Init(&HISpidarGDesc("SpidarG6X3R"));
