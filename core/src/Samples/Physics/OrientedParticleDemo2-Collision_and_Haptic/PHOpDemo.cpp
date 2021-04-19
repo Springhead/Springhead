@@ -271,6 +271,7 @@ void PHOpDemo::TimerFunc(int id)
 }
 void PHOpDemo::InitInterface(){
 	HISdkIf* hiSdk = GetSdk()->GetHISdk();
+	HIDeviceIf* deviceFound = NULL;
 
 	if (humanInterface == SPIDAR){
 		// x86
@@ -279,23 +280,30 @@ void PHOpDemo::InitInterface(){
 		DRUsb20Sh4Desc usb20Sh4Desc;
 		for (int i = 0; i< 10; ++i){
 			usb20Sh4Desc.channel = i;
-			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+			HIDeviceIf* device = hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+			if (device && !deviceFound) deviceFound = device;
 		}
 		// x64
 		DRCyUsb20Sh4Desc cyDesc;
 		for(int i=0; i<10; ++i){
 			cyDesc.channel = i;
-			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+			HIDeviceIf* device = hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+			if (device && !deviceFound) deviceFound = device;
 		}
-		hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &DRUARTMotorDriverDesc());
+		HIDeviceIf* device = hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &DRUARTMotorDriverDesc());
+		if (device && !deviceFound) deviceFound = device;
 		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 		hiSdk->Print(DSTR);
 		hiSdk->Print(std::cout);
 
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 #ifdef	_MSC_VER
-//		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-		spg->Init(&HISpidarGDesc("SpidarG6T1"));
+		if (device->GetIfInfo() == DRUARTMotorDriverIf::GetIfInfoStatic()) {
+			spg->Init(&HISpidarGDesc("SpidarG6X4"));
+		}
+		else {
+			spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+		}
 #else
 		HISpidarGDesc tmpdesc = HISpidarGDesc((char *) "SpidarG6X3R");
 		spg->Init(&tmpdesc);
