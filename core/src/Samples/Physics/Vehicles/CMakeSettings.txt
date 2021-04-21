@@ -47,8 +47,8 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(SPRLIBTYPE STATIC)
-#set(SPRLIBTYPE SHARED)
+set(LIBTYPE STATIC)
+#set(LIBTYPE SHARED)
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
@@ -75,9 +75,8 @@ set(EXCLUDE_SRCS car.cpp)
 #  If you need Springehad library only, leave this parameter unchaged.
 #
 if(Windows)
-    set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
+    set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics
 		HumanInterface Physics)
-    #set(SPR_PROJS ${SPR_PROJS} EmbPython)
 else()
     set(SPR_PROJS ${EMPTY})
 endif()

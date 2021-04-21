@@ -47,8 +47,8 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(SPRLIBTYPE STATIC)
-#set(SPRLIBTYPE SHARED)
+set(LIBTYPE STATIC)
+#set(LIBTYPE SHARED)
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
