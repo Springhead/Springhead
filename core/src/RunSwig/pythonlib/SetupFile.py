@@ -4,15 +4,16 @@
 #  CLASS:	SetupFile(path, verbose=0, register=False)
 #
 #  METHODS:
-#	setenv(force)		環境変数 _setup_done_ が未設定ならば
-#				セットアップファイルの path セクション
-#				に設定されているプログラムを環境変数に
-#				設定する。
-#				  os.environ[__prog__] = path/prog
-#				引数 force が指定されたら環境変数の
-#				設定状況に拘わらず処理を行なう
-#	getenv(prog)		環境変数 __prog__ の値を取得する
-#	keys = get_key(section)	指定したセクションにある全キーを返す
+#	setenv(force)
+#		環境変数 _setup_done_ が未設定ならばセットアップファイル
+#		の path セクションに設定されているプログラムを環境変数に
+#		設定する.
+#		    os.environ[__prog__] = path/prog
+#		引数 force が指定されたら環境変数の設定状況に拘わらず
+#		処理を行なう.
+#	getenv(prog)
+#		環境変数 __prog__ の値を取得する.
+#	keys = get_key(section)	指定したセクションにある全キーを返す.
 #				section は PROG, PATH, DATA の何れか
 #	value = get_prog(key)	指定したキーの値(プログラムパス)を返す
 #	value = get_path(key)	指定したキーの値(パス)を返す
@@ -25,9 +26,10 @@
 #
 # ----------------------------------------------------------------------
 #  Version:
-#     Ver 1.00   2020/11/25 F.Kanehori	Release version.
-#     Ver 1.01   2020/12/03 F.Kanehori	Add: getenv()
-#     Ver 1.02   2021/02/10 F.Kanehori	Can run on pytho9n 2.7.
+#     Ver 1.0    2020/11/25 F.Kanehori	Release version.
+#     Ver 1.1    2020/12/03 F.Kanehori	Add: getenv()
+#     Ver 1.2    2021/02/10 F.Kanehori	Can run on python 2.7.
+#     Ver 1.2.1  2021/04/01 F.Kanehori	メッセージ修正.
 # ======================================================================
 from __future__ import print_function
 import sys
@@ -35,8 +37,6 @@ import os
 from KvFile import *
 from TextFio import *
 from Util import *
-## for debug
-#from Proc import *
 
 ##  Setup file manipulation class.
 #
@@ -56,7 +56,7 @@ class SetupFile:
 	#
 	def __init__(self, path, verbose=0, register=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.00
+		self.version = '1.2.1'
 		#
 		self.path = path
 		self.filename = Util.upath(path).split('/')[-1]
@@ -80,6 +80,7 @@ class SetupFile:
 		if not self.file_read:
 			self.__read_file()
 		#
+		print('  setup: using "%s"' % Util.upath(self.path))
 		for prog in self.prog_list:
 			if self.prog_list[prog] is None \
 				or self.prog_list[prog] == self.NOTFOUND \
@@ -88,7 +89,7 @@ class SetupFile:
 			name = '__%s__' % prog
 			path = self.prog_list[prog]
 			os.environ[name] = Util.pathconv(path)
-			print('using\t%s' % Util.upath(path))
+			#print('setup: using\t%s' % Util.upath(path))
 		#
 		for key in self.path_list:
 			if self.path_list[key] is None \
@@ -97,22 +98,12 @@ class SetupFile:
 			name = '__%s__' % key
 			path = self.path_list[key]
 			os.environ[name] = Util.pathconv(path)
-			print('%s: %s' % (key, path))
+			#print('%s: %s' % (key, path))
+			if key in ['sprtop', 'VSinstall']:
+				print('  setup: %s: %s' % (key, Util.upath(path)))
 		#
 		os.environ[self.DONE] = 'true'
 
-		# 移行期間中の特別処理
-		os.environ['MIGRATION_TEST'] = 'true'
-		#print('MIGRATION_TEST: %s' % os.getenv('MIGRATION_TEST'))
-
-		## for debug
-		#cmnd1 = 'printenv' if Util.is_unix() else 'env'
-		#cmnd2 = 'grep __'
-		#proc1 = Proc().execute(cmnd1, stdout=Proc.PIPE)
-		#proc2 = Proc().execute(cmnd2, stdin=proc1.proc.stdout)
-		#proc1.wait()
-		#proc2.wait()
-			
 	##  Get specified program path from environment variable.
 	#   @prog		Program name to get path (str)
 	#   @returns		Program path if defined (str)

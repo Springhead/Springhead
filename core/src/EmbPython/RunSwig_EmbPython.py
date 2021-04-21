@@ -6,16 +6,15 @@
 #
 #  DESCRIPTION:
 #	ファイルの依存関係を調べて、EmbPythonSwig.py を最適に実行する.
-#	実行するプロジェクトは ../../src/RunSwig/do_swigall.projs に定義する.
+#	実行するプロジェクトは ../RunSwig/project_dependencies.py で定義する.
 #	ただしプロジェクト Base は定義の有無に関わりなく実行する.
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2020/02/19 F.Kanehori	Windows batch file から移植.
+#     Ver 1.0	 2020/02/19 F.Kanehori	Windows batch file から移植.
+#     Ver 2.0	 2021/04/08 F.Kanehori	全面見直し.
 # ==============================================================================
-version = 1.0
-debug = False
-trace = False
+version = 2.0
 
 import sys
 import os
@@ -23,9 +22,16 @@ import glob
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/src/EmbPython" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
+
+sys.path.append('%s/RunSwig' % SrcDir)
+from Trace import *
+trace =  Trace().flag(prog)
 if trace:
 	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
@@ -39,53 +45,66 @@ if path[-1] == 'build' or path[-2] != 'src':
 	os.chdir('..')
 
 # ----------------------------------------------------------------------
-#  Import Springhead python library.
+#  Springhead python library の導入
 #
-sys.path.append('../RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
+from SetupFile import *
 from TextFio import *
 from Proc import *
 from Util import *
 from Error import *
 
 # ----------------------------------------------------------------------
-#  Globals
+#  セットアップファイルが存在するならば準備をしておく
 #
+if SetupExists:
+	sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
+	sf.setenv()
 
-#  ディレクトリの定義
-basedir = '../..'
+# ----------------------------------------------------------------------
+#  ディレクトリパスには絶対パスを使用する (cmake 使用時の混乱を避けるため)
+#
+basedir = os.path.abspath('%s/..' % SrcDir)
 bindir	= '%s/bin' % basedir
 srcdir	= '%s/src' % basedir
 incdir	= '%s/include' % basedir
 etcdir	= '%s/RunSwig' % srcdir
 embpythondir = '.'
 
+# ----------------------------------------------------------------------
 #  依存関係にはないと見做すファイルの一覧
 #
 excludes = []
 
-#  makefile に出力するときのパス
+# ----------------------------------------------------------------------
+#  makefile に出力するときのパス表記
 #
 incdir_out = '../../include'
 srcdir_out = '../../src'
 embdir_out = '../../src/EmbPython'
 
+# ----------------------------------------------------------------------
 #  使用するファイル名
 #
 projfile = 'do_swigall.projs'
 makefile = 'Makefile_EmbPython.swig'
 
-#  使用するプログラム名
+# ----------------------------------------------------------------------
+#  外部スクリプト
 #
-make = 'nmake' if Util.is_windows() else 'make'
+if SetupExists:
+	if Util.is_unix():
+		make = sf.getenv('gmake')
+	else:
+		make = '%s /NOLOGO' % sf.getenv('nmake')
+else:
+	make = 'make' if Util.is_unix() else 'nmake /NOLOGO'
 swig = 'EmbPythonSwig.py'
 
 # ----------------------------------------------------------------------
 #  内部使用メソッド
-# ---------------------------------------------------------------------
+#
 
 #  ヘッダファイル情報を収集する
 #
@@ -155,7 +174,7 @@ def make_makefile(module, fname, interfs, inchdrs, srchdrs):
 		msg = '%s: write failed' % fname
 		Error(prog).abort(msg)
 
-#
+#  verbose用
 #
 def print_list(title, elms):
 	print('  %s' % title)
@@ -189,36 +208,17 @@ dry_run = options.dry_run
 verbose = options.verbose
 
 # ----------------------------------------------------------------------
-#  make はインストールされているか
+#  プロジェクトとその依存関係の定義を取り込む
 #
-cmnd = '%s -help' % make if Util.is_unix() else '%s /?' % make
-rc_make = Proc(dry_run=dry_run).execute(cmnd,
-		 stdout=Proc.NULL, stderr=Proc.NULL, shell=True).wait()
-if rc_make != 0:
-	Error(prog).abort('can\'t find "%s"' % make)
+from project_dependencies import *
+proj_depts['Base'] = 'None'
+projs = proj_depts.keys()
 
 # ----------------------------------------------------------------------
-#  処理するモジュールの一覧を作成
-#
-fname = '%s/%s' % (etcdir, projfile)
-fio = TextFio(fname, 'r')
-if fio.open() != 0:
-	Error(prog).abort('open error: "%s"' % fname)
-lines = fio.read()
-fio.close()
-
-projs = ['Base']
-for line in lines:
-	if not line: continue
-	projs.append(line.split()[0])
-if verbose:
-	print('  PROJS: %s' % projs)
-
-# ----------------------------------------------------------------------
-#  処理開始
+#  Base 以外の各プロジェクト毎に処理を行なう.
 #
 for proj in projs:
-	print('Project: %s' % proj, flush=True)
+	print('  ** %s **' % proj, flush=True)
 
 	#  ヘッダ情報を収集する
 	interfs, inchdrs, srchdrs = collect_headers(proj)
@@ -236,8 +236,6 @@ for proj in projs:
 	rc = Proc(dry_run=dry_run).execute(cmnd, shell=True).wait()
 	if rc != 0:
 		Error(prog).abort('%s failed' % make)
-	print()
-	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
 #  終了

@@ -212,10 +212,12 @@ if(EXISTS "setup.conf")
     message("** setup.conf exists")
 else()
     if(Windows)
-	set(INCLUDED_BY_SPRLIB true)
-	add_subdirectory(${SPR_SWIG_DIR} ${SPR_BLD_DIR}/swig)
-	add_dependencies(RunSwig swig_install)
-	add_dependencies(swig_install swig)
+	# Building swig is no more needed on Windows.
+	#
+	#set(INCLUDED_BY_SPRLIB true)
+	#add_subdirectory(${SPR_SWIG_DIR} ${SPR_BLD_DIR}/swig)
+	#add_dependencies(RunSwig swig_install)
+	#add_dependencies(swig_install swig)
     elseif(unix)
 	set(SPR_SWIG_DIR "${TOPDIR}/core/bin/src/swig")
 	add_custom_target(genswig ALL

@@ -4,7 +4,7 @@
 #ifdef _WIN32
 #include <Windows.h>
 #else
-#include "kludge.h"
+#include "../kludge_for_unix/kludge.h"
 #define __debugbreak()
 #define _set_se_translator(x)
 #endif

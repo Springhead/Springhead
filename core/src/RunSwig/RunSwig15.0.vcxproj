@@ -98,15 +98,15 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig &amp;&amp; nmake /NOLOGO -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig &amp;&amp; nmake /NOLOGO -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig</NMakeCleanCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
@@ -120,15 +120,15 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig &amp;&amp; nmake /NOLOGO -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig &amp;&amp; nmake /NOLOGO -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig</NMakeCleanCommandLine>
     <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
@@ -140,15 +140,15 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig &amp;&amp; nmake /NOLOGO -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>MakeWin_Wrapper -build</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>MakeWin_Wrapper -rebuild</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>MakeWin_Wrapper -clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.win</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig &amp;&amp; nmake /NOLOGO -f Makefile.win</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>..\do_python.bat RunSwig_clean.py --RunSwig</NMakeCleanCommandLine>
     <NMakeOutput />
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>

@@ -1,0 +1,9 @@
+# KvFileTest.ini2
+#
+SingleKey	SingleValue
+ListKey		Elem01
+ListKey		Elem02
+ListKey		True
+ListKey		Elem04
+
+# end: KvFileTest.ini

@@ -5,12 +5,11 @@
 #
 # ----------------------------------------------------------------------
 #  Version:
-#     Ver 1.00   2020/12/03 F.Kanehori	First version.
-#     Ver 1.00.1 2021/01/07 F.Kanehori	Bug fixed.
-#     Ver 1.00.2 2021/01/15 F.Kanehori	Bug fixed.
-#     Ver 1.01   2021/02/15 F.Kanehori	try_find_python() 修正
+#     Ver 1.0    2020/12/03 F.Kanehori	First version.
+#     Ver 1.1    2021/02/15 F.Kanehori	try_find_python() 修正.
+#     Ver 1.1.1  2021/04/01 F.Kanehori	Bug fix.
 # ======================================================================
-version = '1.01'
+version = '1.1.1'
 
 import sys
 import os
@@ -89,6 +88,12 @@ def try_find(which, prog, check_path=None, devenv_number=None):
 	if prog == 'nkf':
 		patt = r'.+Version ([\d\.]+ \(.+\))'
 		out, ver = try_find_common(which, prog, patt, True, check_path)
+		if out == SetupFile.NOTFOUND:
+			path_save = os.environ.get('PATH')
+			os.environ['PATH'] = '../../buildtool;%s' % path_save
+			out, ver = try_find_common(which, prog, patt, True, None)
+			os.environ['PATH'] = path_save
+		sys.stdout.flush()
 	if prog == 'swig':
 		patt = r'SWIG Version ([\d\.]+)'
 		out, ver = try_find_swig(which, prog, patt)
@@ -256,11 +261,10 @@ def try_find_nmake(which):
 	#
 	ver_patt = r'Version ([\d\.]+)'
 	stat, ver_out = execute(path, stderr=Proc.STDOUT)
-	if stat != 0:
+	ver = match(ver_out.split(os.sep), ver_patt)
+	if ver is None:
 		Error(caller).warn('can\'t get nmake version')
-		ver = 'unknown'
-	else:
-		ver = match(ver_out.split(os.sep), ver_patt)
+		ver = ['unknown']
 	return path, ver[0]
 
 #  make

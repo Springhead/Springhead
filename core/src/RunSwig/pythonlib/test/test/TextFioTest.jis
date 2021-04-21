@@ -1,0 +1,15 @@
+# Text.jis
+#	これは漢字のエンコーディングを確認するための行
+#
+/* another designetor */
+
+001: Normal line
+002: Normal line
+# Comment line
+003: Mixed line		# comment
+004: Mixed line		// comment
+005: First line		\
+	Middle line	\
+	Last line
+
+# end: TextFioTest.txt

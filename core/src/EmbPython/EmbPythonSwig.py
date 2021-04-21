@@ -5,15 +5,14 @@
 #	EmbPythonSwig module
 #
 #  DESCRIPTION:
-#	swigを実行して、EmbPythonに関連するファイル(.cpp, .h)を生成する.
+#	swigを実行して、EmbPythonに関連するファイル(.cpp/.h)を生成する.
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2020/02/20 F.Kanehori	Windows batch file から移植.
+#     Ver 1.0	 2020/02/20 F.Kanehori	Windows batch file から移植.
+#     Ver 2.0	 2021/04/08 F.Kanehori	全面見直し.
 # ==============================================================================
-version = 1.0
-debug = False
-trace = False
+version = 2.0
 
 import sys
 import os
@@ -22,37 +21,39 @@ import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/src/EmbPython" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
+
+sys.path.append('%s/RunSwig' % SrcDir)
+from Trace import *
+trace =  Trace().flag(prog)
 if trace:
 	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
 	sys.stdout.flush()
 
 # ----------------------------------------------------------------------
-#  Import Springhead python library.
+#  Springhead python library の導入
 #
-sys.path.append('../RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from TextFio import *
 from FileOp import *
 from Proc import *
+from Util import *
 from Error import *
 
 # ----------------------------------------------------------------------
-#  Globals
+#  ディレクトリパスには絶対パスを使用する (cmake 使用時の混乱を避けるため)
 #
+topdir	= os.path.abspath('%s/../..' % SrcDir)
+incdir	= '%s/core/include' % topdir
+swigdir = '%s/core/bin/swig' % topdir
 
-#  ディレクトリの定義
-coredir	= '../..'
-topdir	= '%s/..' % coredir
-incdir	= '%s/include' % coredir
-swigdir = os.path.abspath('%s/bin/swig' % coredir)
-
-#  使用するプログラム名
+# ----------------------------------------------------------------------
+#  外部スクリプト
 #
 def installed(path, test='--help'):
 	path = Util.wpath(path) if Util.is_windows() else path
@@ -63,7 +64,7 @@ def installed(path, test='--help'):
 
 swig   = 'swig'
 astyle = 'astyle'
-if not installed(astyle):
+if not installed(astyle) and Util.is_windows():
 	bindir = '%s/buildtool' % topdir
 	astyle = '%s/astyle' % bindir
 	if not os.path.exists(bindir) or not installed(astyle):
@@ -114,12 +115,10 @@ sprh = 'SprEP%s.h' % module
 #
 print('** Swig Part **', flush=True)
 cmnd = '%s/%s' % (Util.pathconv(swigdir), swig)
-args = '-I%s/Lib -cpperraswarn -sprpy -DSWIG_PY_SPR -c++ -DPYTHON_H_PATH="Python/Python.h" %s.i'\
-	% (swigdir, module)
-rc = Proc(dry_run=dry_run, verbose=verbose)\
-	.execute('%s %s' % (cmnd, args), shell=True)\
-	.wait()
-sys.stdout.flush()
+args = '-I%s/Lib -cpperraswarn -sprpy -DSWIG_PY_SPR -c++' % swigdir \
+	+ ' -DPYTHON_H_PATH="Python/Python.h" %s.i' % module
+proc = Proc(dry_run=dry_run, verbose=verbose)
+rc = proc.execute('%s %s' % (cmnd, args), shell=True).wait()
 if rc != 0:
 	msg = 'swig failed'
 	Error(prog).error(msg)
@@ -144,7 +143,7 @@ if astyle is not None:
 	fop.rm('EP%s.*.orig' % module)
 
 # ----------------------------------------------------------------------
-#  ファイルを生成する
+#  ファイル(.cpp/.h)の生成
 #
 print('** Arange Part **', flush=True)
 fop = FileOp()

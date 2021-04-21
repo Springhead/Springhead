@@ -11,7 +11,6 @@ if("${TOPDIR}" STREQUAL "")
 endif()
 set(SPR_TOP_DIR  "${TOPDIR}")
 set(SPR_SRC_DIR  "${TOPDIR}/core/src")
-set(SPR_INC_DIR  "${TOPDIR}/core/include")
 get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
 get_filename_component(SPR_TOP_DIR ${SPR_TOP_DIR} ABSOLUTE)
 get_filename_component(SPR_SRC_DIR ${SPR_SRC_DIR} ABSOLUTE)
@@ -24,8 +23,13 @@ file(TO_NATIVE_PATH "${PRJ_BLD_DIR}" PRJ_BLD_DIR)
 #message(STATUS "${Target}: SPR_SRC_DIR: [${SPR_SRC_DIR}]")
 #message(STATUS "${Target}: PRJ_BLD_DIR: [${PRJ_BLD_DIR}]")
 
-# Setup file exists?
-message("     setup file exists: ${SetupExists}")
+# ------------------------------------------------------------------------------
+#  Check if setup file exists.
+#
+set(SetupFileName ${SPR_SRC_DIR}/setup.conf)
+if(EXISTS ${SetupFileName})
+    message(STATUS "${SetupFileName} exists")
+endif()
 
 # RunSwig directory
 set(RSSrcDir ${SPR_SRC_DIR}/RunSwig)
@@ -36,7 +40,7 @@ file(TO_NATIVE_PATH "${RSBldDir}" RSBldDir)
 #message(STATUS "${Target}: RSBldDir: [${RSBldDir}]")
 
 if(Windows)
-    set(Make nmake)
+    set(Make "nmake /NOLOGO")
     set(Makefile Makefile.win)
 elseif(Linux)
     set(Make make)
@@ -49,8 +53,7 @@ endif()
 # RunSwig generate files
 #	These files are removed when 'clean' target executed
 #
-set(_for_all @.i @Decl.hpp @Stub.cpp @Stub.mak.txt do_swigone.projs 
-	     makefile.swig Spr@Decl.hpp swig_spr.log)
+set(_for_all @.i @Decl.hpp @Stub.cpp @Stub.makefile Spr@Decl.hpp swig_spr.log)
 set(_for_FW  FWOldSpringheadDecl.hpp FWOldSpringheadStub.cpp)
 
 set(generated_files)
@@ -73,32 +76,6 @@ foreach(_file ${generated_files})
 endforeach()
 
 # ------------------------------------------------------------------------------
-# main target
-#
-if(Windows)
-    add_custom_target(${Target}
-	BYPRODUCTS ${genereated_files}
-	DEPENDS ${generated_files}
-    )
-    add_custom_command(
-	OUTPUT ${generated_files}
-	COMMAND cmd /c MakeWin_Wrapper.bat -build
-	WORKING_DIRECTORY ${RSSrcDir}
-	COMMENT [[  generating files...]]
-    )
-elseif(unix)
-    set(_tmp_cmnd python)
-    set(_tmp_args ${RSSrcDir}/make_manager.py -A -c)
-    add_custom_target(${Target}
-	COMMAND _SPRTOP_=${SPR_TOP_DIR} ${_tmp_cmnd} ${_tmp_args}
-	COMMAND ${Make} -f ${RSSrcDir}/${Makefile}
-	BYPRODUCTS ${generated_files}
-	WORKING_DIRECTORY ${RSSrcDir}
-	COMMENT [[  generating files...]]
-    )
-endif()
-
-# ------------------------------------------------------------------------------
 # set python be invokable
 #
 if(Windows AND EXISTS ${SPR_TOP_DIR}/buildtool/win32/python.exe)
@@ -108,44 +85,33 @@ else()
 endif()
 
 # ------------------------------------------------------------------------------
-# integrate intermediate directory
-#	${CMAKE_BINARY_DIR}/${Target}/${Target}.dir
-#	linked to (for Windows)
-#	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
-#	or (for unix)
-#	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${Target}.dir
+# main target
 #
-set(INTDIR ${Target}.dir)
-set(LOGDIR ${ARCHITECTURE})		# created by add_custom_target
-set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE})
 if(Windows)
-    set(ACTDIR ${ACTDIR}/${VS_VERSION})
-    set(LINKDIR ${INTDIR})
+    add_custom_target(${Target}
+	BYPRODUCTS ${genereated_files}
+	DEPENDS ${generated_files}
+    )
+    add_custom_command(
+	OUTPUT ${generated_files}
+	COMMAND IF EXIST "${SetupFileName}" (echo [ setup file exists ])
+	COMMAND ${_python} RunSwig_clean.py --cmake
+	COMMAND cmd /c ${Make} -f ${Makefile}
+	WORKING_DIRECTORY ${RSSrcDir}
+	COMMENT [[  generating files...]]
+    )
 elseif(unix)
-    set(LINKDIR .${CMAKE_FILES_DIRECTORY}/${INTDIR})
-    set(LOGDIR  .${CMAKE_FILES_DIRECTORY}/${INTDIR})
+    add_custom_target(${Target}
+	BYPRODUCTS ${genereated_files}
+	DEPENDS ${generated_files}
+    )
+    add_custom_command(
+	OUTPUT ${generated_files}
+	COMMAND ${Make} -f ${RSSrcDir}/${Makefile}
+	BYPRODUCTS ${generated_files}
+	WORKING_DIRECTORY ${RSSrcDir}
+	COMMENT [[  generating files...]]
+    )
 endif()
-set(LINKLIST
-    "${LINKDIR}=${ACTDIR}/${INTDIR}"
-    "${LOGDIR}=${ACTDIR}/${INTDIR}" ;
-)
-set(_script ${SPR_SRC_DIR}/cmake_preconfig.py)
-file(TO_NATIVE_PATH "${_script}" _script)
-set(_tmp_args -v ${LINKLIST})
-execute_process(
-    COMMAND ${_python} ${_script} ${_tmp_args}
-    RESULT_VARIABLE CMD_RESULT
-    OUTPUT_VARIABLE CMD_OUTPUT
-    ERROR_VARIABLE CMD_ERROR
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-)
-if(${CMD_RESULT})
-    message("Error: ${CMD_ERROR}")
-endif()
-if(NOT "${CMD_OUTPUT}" STREQUAL "")
-    string(REPLACE "\n" "\n     " CMD_OUTPUT ${CMD_OUTPUT})
-endif()
-string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
-message("     ${CMD_OUTPUT}")
 
 # end: CMakeLists.txt

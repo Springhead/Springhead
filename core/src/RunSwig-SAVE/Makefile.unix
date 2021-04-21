@@ -1,0 +1,116 @@
+﻿#################################################################################
+#  FILE:
+#	Makefile.unix
+#
+#  DESCRIPTION:
+#	各プロジェクトに対して, 必要に応じて RunSwig を実行させる makefile.
+#
+#	RunSwig 実行のための手順：
+#
+#	処理概要：
+#	    このファイルを make するにあたり, 各プロジェクトに対して予め次の
+#	    処理を施しておく.
+#		compile	    ⇒ makefile.swig がなければ生成する.
+#		recompile   ⇒ makefile.swig を削除した後, 新たに生成する.
+#		clean	    ⇒ makefile.swig を削除する.
+#	    実際の処理は, make_manager.py に次の引数を与えることで実現する.
+#		compile	    ⇒ python make_manager.py -A -c
+#		recompile   ⇒ python make_manager.py -A -d -c
+#		clean	    ⇒ python make_manager.py -A -d
+#
+#	    各プロジェクトに対して, make -f makefile.swig を実行する.
+#	    この処理は, この makefile で実現する.
+#
+#################################################################################
+#  Version:
+#	Ver 1.00  2017/04/20 F.Kanehori  Windows 版を unix 用に修正
+#	Ver 1.01  2017/08/23 F.Kanehori  Springhead tree 再構成に対応.
+#	Ver 1.02  2017/10/05 F.Kanehori  オプション PYTHON を子 make に渡す.
+#	Ver 1.03  2019/01/08 F.Kanehori  CheckClosedSrc の導入
+#	Ver 1.04  2019/05/18 F.Kanehori  swig の自動生成化.
+#	Ver 1.05  2020/12/16 F.Kanehori  setup 導入テスト開始.
+#################################################################################
+ifeq ($(_SPRTOP_),)
+SPRSRCDIR	= ..
+else
+SPRSRCDIR	= $(_SPRTOP_)/core/src
+endif
+
+#  Python がパスに入っていること
+#
+PYTHON		= python
+
+#  ディレクトリの定義
+#
+INCDIR		= $(SPRSRCDIR)/../include
+FOUNDATION	= $(SPRSRCDIR)/Foundation
+FRAMEWORK	= $(SPRSRCDIR)/Framework
+SCILAB		= $(INCDIR)/Scilab
+
+SWIGMAKEDIR	= $(SPRSRCDIR)/../bin/src/swig
+SWIGINSTALLDIR	= $(SPRSRCDIR)/../bin/swig
+SWIGMAKEFILE	= Makefile
+SWIGBINARY	= $(SWIGINSTALLDIR)/swig
+
+#  使用するスクリプト
+#
+SCILABSWIG	= ScilabSwig.py
+RUNSWIGFW	= RunSwigFramework.py
+SCRIPT		= do_swigall.py
+CHECKCLOSEDSRC	= CheckClosedSrc.py
+BUILDSWIG	= ./buildswig.sh
+
+#  前処理で作成するファイル
+#
+SCILABSTUBHDR	= $(INCDIR)/ScilabStub.hpp
+FWOLDSPRSTUB	= $(FRAMEWORK)/FWOldSpringheadStub.cpp
+
+#  setup.conf があるならば swig は既に make されている
+#
+FILENAME	= $(SPRSRCDI)/setup.conf
+FILEEXISTS	= $(shell ls | grep $(FILENAME))
+ifeq ($(FILEEXISTS),$(FILENAME))
+	MAKESWIG	= DontMakeSwig
+else
+	MAKESWIG	= InstallSwig
+endif
+
+all:	PreWork RunSwig
+
+PreWork:	$(MAKESWIG) ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+
+InstallSwig:	MakeSwig $(SWIGBINARY)
+
+DontMakeSwig:	
+		@echo "Makefile.unix: $(FILENAME) found"
+
+MakeSwig:	
+		cd $(SWIGMAKEDIR) && $(BUILDSWIG)
+
+$(SWIGBINARY):	$(SWIGMAKEDIR)/Source/eswig
+		@echo copying swig binary
+		cp $(SWIGMAKEDIR)/swig $(SWIGINSTALLDIR)
+
+$(SWIGMAKEDIR)/Source/eswig:
+
+ClosedSrcCtl:
+		@echo Makefile.unix: ClosedSrcCtl
+		$(PYTHON) $(CHECKCLOSEDSRC)
+
+$(SCILABSTUBHDR):	
+		@echo Makefile.unix: SCILABSTUBHDR [SciLab/ScilabStub.hpp]
+		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
+
+$(FWOLDSPRSTUB):	
+		@echo Makefile.unix: FWOLDSPRSTUB [Framework/FWOldSpringStub.cpp]
+		cd $(FRAMEWORK) && $(PYTHON) $(RUNSWIGFW)
+
+RunSwig:	
+		@echo Makefile.unix: RunSwig [$(SCRIPT) -- gmake -f makefile.swig]
+		$(PYTHON) $(SCRIPT)
+
+clean:		
+		@echo Makefile.unix: clean
+		$(PYTHON) $(SCRIPT) --clean
+		/bin/rm -f $(SCILABSTUBHDR)
+		/bin/rm -f $(FWOLDSPRSTUB)

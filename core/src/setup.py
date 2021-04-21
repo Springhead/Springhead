@@ -41,13 +41,12 @@
 #	    -2:		セットアップファイルが存在しない。
 # ----------------------------------------------------------------------
 #  VERSION:
-#     Ver 1.00   2020/12/14 F.Kanehori	初版
-#     Ver 1.00.1 2021/01/06 F.Kanehori	微修正
-#     Ver 1.01   2021/01/14 F.Kanehori	setup 自動実行組み込み
-#     Ver 1.01.1 2021/02/15 F.Kanehori	修正
+#     Ver 1.0    2020/12/14 F.Kanehori	初版.
+#     Ver 1.1    2021/01/14 F.Kanehori	setup 自動実行組み込み.
+#     Ver 1.2    2021/04/01 F.Kanehori	Windows では swig 生成を中止.
 # ======================================================================
 from __future__ import print_function
-version = "1.01.1"
+version = "1.2"
 
 import sys
 import os
@@ -86,10 +85,12 @@ from setup_helpers import *
 # ----------------------------------------------------------------------
 #  Constants
 #
-required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake', 'nkf' ]
+#required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake', 'nkf' ]
+required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake' ]
 required_unix = [ 'python', 'gcc', 'swig', 'cmake', 'gmake', 'nkf' ]
 required = required_unix if Util.is_unix() else required_windows
-optional_tools = [ 'cmake' ]
+#optional_tools = [ 'cmake' ]
+optional_tools = [ 'cmake', 'nkf' ]
 
 vs_path_interface = '__vs_path_interface__'
 CONF = 'Release'
@@ -605,7 +606,7 @@ if not force and not setup_needed and not setup_recommended:
 	print()
 	print('done (python %s.%s.%s)' % (major, minor, micro))
 	sys.exit(0)
-if not force:
+if not force and is_unix or os.path.exists(setup_file):
 	print()
 	if sys.version_info[0] >= 3:
 		yn = input('continue? [y/n]: ')
@@ -622,8 +623,10 @@ if not force:
 #
 parms['plat'] = 'x%s' % platform.architecture()[0].replace('bit', '')
 parms['conf'] = 'Release'
+'''
 if is_windows:
 	parms['vers'] = vers_scanned['devenv'].split('.')[0] + '.0'
+'''
 
 # ----------------------------------------------------------------------
 #  step 7
@@ -632,12 +635,14 @@ print()
 print('-- setting path information --')
 
 #  Visual Studio installation path
+'''
 if is_windows:
 	vsinfo = vswhere()
 	info = identify_vsinfo(vsinfo, prog_scanned['devenv'])
 	vs_install_path = info['installPath']
 	paths['VSinstall'] = vs_install_path
 	print('-- Visual Studio install path: %s' % vs_install_path)
+'''
 
 cwd = os.getcwd().split(os.sep)[::-1]
 top = None
@@ -662,7 +667,7 @@ print('-- Springhead top directory: %s' % sprtop)
 print()
 cmake_path = Util.upath(prog_scanned['cmake'])
 if cmake_path != 'NOT FOUND':
-	print('-- making swig ... using "%s"' % cmake_path)
+	print('-- using swig ... "%s"' % cmake_path)
 else:
 	print('-- making swig')
 
@@ -677,6 +682,7 @@ if is_unix:
 	if stat == 0:
 		shutil.copy('./swig', '../../swig')
 else:
+	'''
 	env = os.environ['PATH']
 	os.environ['PATH'] = '%s;%s' % (prog_scanned['devenv'], env)
 	os.chdir('../bin/src/swig/msvc')
@@ -685,7 +691,11 @@ else:
 	plat = parms['plat']
 	conf = parms['conf']
 	vers = parms['vers']
+	print('no need to build swig')
+	stat = 0
 	stat = make_swig_windows(cmake, devenv, plat, conf, vers, Force)
+	'''
+	stat = 0
 os.chdir(cwd)
 if stat == 0:
 	print('OK')
@@ -738,11 +748,6 @@ lines.append('')
 lines.append('[data]')
 for key in parms.keys():
 	lines.append('%s\t%s' % (key, parms[key]))
-
-#  移行期間中は次の変数も設定しておく
-#	移行期間が終了したら削除すること
-lines.append('')
-lines.append('MIGRATION_TEST\ttrue')
 
 fio = TextFio(setup_file, 'w')
 if fio.open() < 0:
