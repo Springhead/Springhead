@@ -273,6 +273,7 @@ void PHOpDemo::InitInterface(){
 	HISdkIf* hiSdk = GetSdk()->GetHISdk();
 	HIDeviceIf* deviceFound = NULL;
 
+	bool bCySpidar = false;
 	if (humanInterface == SPIDAR){
 		// x86
 		DRUsb20SimpleDesc usbSimpleDesc;
@@ -281,14 +282,20 @@ void PHOpDemo::InitInterface(){
 		for (int i = 0; i< 10; ++i){
 			usb20Sh4Desc.channel = i;
 			HIDeviceIf* device = hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-			if (device && !deviceFound) deviceFound = device;
+			if (device && !deviceFound) {
+				deviceFound = device;
+				bCySpidar = true;
+			}
 		}
 		// x64
 		DRCyUsb20Sh4Desc cyDesc;
 		for(int i=0; i<10; ++i){
 			cyDesc.channel = i;
 			HIDeviceIf* device = hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-			if (device && !deviceFound) deviceFound = device;
+			if (device && !deviceFound) {
+				deviceFound = device;
+				bCySpidar = true;
+			}
 		}
 		HIDeviceIf* device = hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &DRUARTMotorDriverDesc());
 		if (device && !deviceFound) deviceFound = device;
@@ -298,7 +305,7 @@ void PHOpDemo::InitInterface(){
 
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 #ifdef	_MSC_VER
-		if (device->GetIfInfo() == DRUARTMotorDriverIf::GetIfInfoStatic()) {
+		if (!bCySpidar /* device->GetIfInfo() == DRUARTMotorDriverIf::GetIfInfoStatic() */) {
 			spg->Init(&HISpidarGDesc("SpidarG6X4R"));
 		}
 		else {
