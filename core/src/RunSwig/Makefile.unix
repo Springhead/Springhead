@@ -10,8 +10,11 @@
 #	(1) MakeSwig		必要に応じて拡張版 swig を生成する.
 #	(2) ClosedSrcCtl	必要に応じて SprUseClosedSrcOrNot.h を生成する.
 #	(3) $(SCILABSTUBHDR)	ScilabStub.hpp を生成する.
-#	(4) $(FWOLDSPRSTUB)	FWOldSpringheadStub.cpp を生成する.
-#	(5) RunSwig		do_swigall.py を実行することで, 各プロジェクト
+#	(4) CleanCMakeDummy	cmake が作成したダミーファイルを削除する.
+#				※ "*Stub.*"の実体がないとcmakeが動かないために
+#				　　作成したダミーファイル
+#	(5) $(FWOLDSPRSTUB)	FWOldSpringheadStub.cpp を生成する.
+#	(6) RunSwig		do_swigall.py を実行することで, 各プロジェクト
 #				について
 #				(a) interface file "<proj>.i" を生成
 #				(b) make file "<proj>Stub.makefile" を生成
@@ -32,6 +35,7 @@
 #     Ver 1.4	 2019/05/18 F.Kanehori  swig の自動生成化.
 #     Ver 1.5	 2020/12/16 F.Kanehori	setup 導入テスト開始.
 #     Ver 1.6	 2021/04/08 F.Kanehori	コメント等修正.
+#     Ver 1.6.1	 2021/04/26 F.Kanehori	Bug fix.
 #################################################################################
 
 ifeq ($(_SPRTOP_),)
@@ -85,7 +89,7 @@ endif
 #
 all:	PreWork RunSwig
 
-PreWork:	$(MAKESWIG) ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+PreWork:	$(MAKESWIG) ClosedSrcCtl $(SCILABSTUBHDR) CleanCMakeDummy $(FWOLDSPRSTUB)
 
 InstallSwig:	MakeSwig $(SWIGBINARY)
 
@@ -109,13 +113,15 @@ $(SCILABSTUBHDR):
 		@echo Makefile.unix: SCILABSTUBHDR [SciLab/ScilabStub.hpp]
 		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
 
+CleanCMakeDummy:	
+		@echo Makefile.unix: CleanCMakeDummy
+		cd $(RUNSWIG) && $(PYTHON) $(CLEANSCRIPT) --cmake
+
 $(FWOLDSPRSTUB):	
 		@echo Makefile.unix: FWOLDSPRSTUB [Framework/FWOldSpringStub.cpp]
-		cd $(RUNSWIG) && $(PYTHON) $(CLEANSCRIPT) --cmake
-		$(PYTHON) $(RUNSWIGFW)
+		cd $(RUNSWIG) && $(PYTHON) $(RUNSWIGFW)
 
 RunSwig:	
 		@echo Makefile.unix: RunSwig [do_swigall]
-		cd $(RUNSWIG) && $(PYTHON) $(CLEANSCRIPT) --cmake
-		$(PYTHON) $(SCRIPT)
+		cd $(RUNSWIG) && $(PYTHON) $(SCRIPT)
 
