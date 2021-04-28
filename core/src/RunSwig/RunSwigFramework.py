@@ -20,9 +20,10 @@
 #  Version:
 #     Ver 1.0    2017/05/10 F.Kanehori	Windows batch file から移植.
 #     Ver 2.0    2021/04/14 F.Kanehori	全面見直し.
+#     Ver 2.0.1	 2021/04/14 F.Kanehori	bug fix.
 # ==============================================================================
 from __future__ import print_function
-version = '2.0'
+version = '2.0.1'
 
 import sys
 import os
@@ -209,7 +210,10 @@ output(interfacefile, lines)
 #
 srcimpdep_rel = os.path.relpath(srcimpdep)
 swigdir = os.path.relpath('%s/core/bin/swig' % sprtop)
-swigbin = Util.pathconv('%s/%s' % (swigdir, swig))
+if SetupExists:
+	swigbin = Util.pathconv(swig)
+else:
+	swigbin = Util.pathconv('%s/%s' % (swigdir, swig))
 swigargs = '-I%s/Lib -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++' % swigdir
 cp = 'cp' if Util.is_unix() else 'copy'
 rm = 'rm' if Util.is_unix() else 'del'
