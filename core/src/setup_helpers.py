@@ -149,15 +149,18 @@ def try_find_devenv(which, selection_number):
 		# only one VS found
 		path = vsinfo[0]['productPath']
 		vers = vsinfo[0]['installVers']
-		index = 0
+		name = vsinfo[0]['displayName']
 	else:
 		# multiple VS's found
 		print('found multiple "devenv"')
-		print('     Please select which one to use')
+		print('     Select number (or \'0\' to try another one)')
 		for n in range(len(vsinfo)):
 			path = vsinfo[n]['productPath']
 			vers = vsinfo[n]['installVers']
-			print('\t(%d) %s (%s)' % (n+1, path, vers))
+			name = vsinfo[n]['displayName']
+			#print('\t(%d) %s (%s)' % (n+1, path, vers))
+			print('\t(%d) %s (%s)' % (n+1, name, vers))
+		print('\t(0) try another one')
 		if selection_number != None:
 			n = int(selection_number)
 			if n < 1 or len(vsinfo) < n:
@@ -166,17 +169,13 @@ def try_find_devenv(which, selection_number):
 				Error(caller).abort(msg)
 			print('     selection forced to (%d) ... ' % n)
 		else:
-			while True:
-				try:
-					n = int(input('     enter number: '))
-				except:
-					n = 0
-				if 1 <= n and n <= len(vsinfo):
-					break
-				print('\tWrong number (should be 1..%d)' % len(vsinfo))
-		path = vsinfo[n-1]['productPath']
-		vers = vsinfo[n-1]['installVers']
-		index = n - 1
+			n = select_number(0, len(vsinfo))
+			if n == 0:
+				path, vers, name = try_another_devenv()
+			else:
+				path = vsinfo[n-1]['productPath']
+				vers = vsinfo[n-1]['installVers']
+				name = vsinfo[n-1]['displayName']
 	#
 	os.environ[vs_path_interface] = path
 	sys.stdout.write('\t')
@@ -195,6 +194,7 @@ def vswhere():
 	patt_install_path = r'installationPath: (.+)'
 	patt_install_vers = r'installationVersion: (.+)'
 	patt_product_path = r'productPath: (.+)'
+	patt_display_name = r'displayName: (.+)'
 	linesep_in = os.linesep in out
 	newline_in = '\n' in out
 	split_ch = os.linesep if linesep_in else '\n'
@@ -219,7 +219,49 @@ def vswhere():
 		if result:
 			# product path (= devenv.exe path)
 			vsinfo[vsinfo_ix]['productPath'] = result.group(1)
+			continue
+		result = re.match(patt_display_name, line)
+		if result:
+			# display name (Visual Studio Name)
+			vsinfo[vsinfo_ix]['displayName'] = result.group(1)
 	return vsinfo
+
+def select_number(min, max):
+	while True:
+		try:
+			n = int(input('     enter number: '))
+		except:
+			n = -1
+		if min <= n and n <= max:
+			return n
+		print('\tWrong number (should be %d..%d)' % (min, max))
+	# not come here
+
+def try_another_devenv():
+	## これは私のマシンのインストール状況に合わせたコードです
+	## 汎用化されている訳ではありません
+	path = SetupFile.NOTFOUND
+	vers = 'unknown'
+	name = 'unknown'
+	stat, out = execute('where devenv.exe')
+	if stat != 0:
+		return SetupFile.NOTFOUND, None, None
+	path = out.strip()
+	stat, out = execute('devenv /?')
+	if stat == 0:
+		patt1 = r'Microsoft Visual Studio\s+(\d+)\s+Version\s+([\d\.]+)\.'
+		patt2 = r'Microsoft Visual Studio (.+)\s+バージョン ([\d\.])+。'
+		lines = out.split('\r\n')
+		for line in lines:
+			m = re.search(patt1, line)
+			if not m:
+				m = re.search(patt2, line)
+			if m:
+				name = m.group(1)
+				vers = m.group(2)
+				break
+	#print('RETURN: [%s] [%s] [%s]' % (path, vers, name))
+	return path, vers, name
 
 def identify_vsinfo(vsinfo, vs_path):
 	for info in vsinfo:

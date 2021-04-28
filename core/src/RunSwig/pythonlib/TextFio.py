@@ -24,19 +24,16 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#     Ver 1.00   2016/11/06 F.Kanehori	Release version.
-#     Ver 1.01   2017/01/11 F.Kanehori	Interface changed: read()
+#     Ver 1.0    2016/11/06 F.Kanehori	Release version.
+#     Ver 1.1    2017/01/11 F.Kanehori	Interface changed: read()
 #					Added: writeline()
-#     Ver 1.02   2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
-#     Ver 1.03   2017/04/06 F.Kanehori	Newline code depends os.
-#     Ver 2.00   2017/04/10 F.Kanehori	Ported to unix.
-#     Ver 2.01   2017/09/13 F.Kanehori	Add flush().
-#     Ver 2.02   2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
-#     Ver 2.02.1 2018/02/22 F.Kanehori	writeline(): allow line=None.
-#     Ver 2.02.2 2018/03/12 F.Kanehori	Now OK for doxygen.
-#     Ver 2.02.3 2018/04/05 F.Kanehori	Bug fixed.
-#     Ver 2.02.4 2018/04/12 F.Kanehori	Bug fixed (encoding: utf-16).
-#     Ver 2.03   2021/02/08 F.Kanehori	Can run on python 2.7.
+#     Ver 1.2    2017/01/12 F.Kanehori	Now sys.std{in|out|err} is OK.
+#     Ver 1.3    2017/04/06 F.Kanehori	Newline code depends os.
+#     Ver 2.0    2017/04/10 F.Kanehori	Ported to unix.
+#     Ver 2.1    2017/09/13 F.Kanehori	Add flush().
+#     Ver 2.2    2018/01/25 F.Kanehori	Add encoding 'utf8-bom'.
+#     Ver 2.3    2021/02/08 F.Kanehori	Can run on python 2.7.
+#     Ver 2.3.1  2021/04/22 F.Kanehori	Bug fix.
 # ======================================================================
 import sys
 import io
@@ -111,7 +108,7 @@ class TextFio(Fio):
 		     nl=None, verbose=0):
 		#
 		self.clsname = self.__class__.__name__
-		self.version = 2.03
+		self.version = '2.3.1'
 		#
 		self.major = sys.version_info[0]
 		#
@@ -213,20 +210,25 @@ class TextFio(Fio):
 				if Util.is_windows():
 					data = data.encode(self.encoding)
 					need_decode = False
+		except UnicodeDecodeError:
+			pass
 		except IOError as err:
 			msg = 'file read error: "%s" (line %d)\n%s' \
 					% (self.path, count, err)
 			self.errmsg = msg
 			return self.lines
 		#
+		if sys.version_info[0] < 3:
+			lines = data + '\n'
 		if need_decode:
 			try:
 				lines = data.decode(self.encoding).split('\n')
 			except UnicodeDecodeError:
 				fmt = '%s: decode error (encoding=%s)'
-				print(fmt % (self.clsname, self.encoding))
 				# Kludge: just want to convert byte to string.
 				lines = data.decode('utf-8').split('\n')
+		else:
+			lines = lines.split('\n')
 
 		if lines[-1] == '\n':
 			lines = lines[:-1]

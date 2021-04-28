@@ -40,7 +40,9 @@ set $where=%$result%
 :: -------------------------------------------------------------
 ::  Python Çå©Ç¬ÇØÇÈ
 ::
-set $path=..\..\buildtool\win32
+rem set $path=..\..\buildtool\win32
+call :to_abspath ..\..\buildtool\win32
+set $path=%$abspath%
 if exist "%$path%\python.exe" (
 	set $python=%$path%\python.exe
 	echo -- found python: !$python!
@@ -56,11 +58,8 @@ if exist "%$path%\python.exe" (
 	)
 	rem  é¿çsÇ≈Ç´ÇÈ python Ç™å©Ç¬Ç©Ç¡ÇΩ
 	rem
-	call :which
-	if not "!$result!" == "" (
-		set $python=!$result!
-		echo -- found python: !$python!
-	)
+	set $python=!$result!
+	echo -- found python: !$result!
 )
 if "%$python%" == "" (
 	echo Can't find 'python'.
@@ -110,5 +109,8 @@ exit /b
 	set result=%~n1%~x1
 	(endlocal && set $result=%result%)
  	exit /b
+
+:to_abspath
+	set $abspath=%~f1
 
 ::end: setup.bat

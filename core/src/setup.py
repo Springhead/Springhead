@@ -86,7 +86,7 @@ from setup_helpers import *
 #  Constants
 #
 #required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake', 'nkf' ]
-required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake' ]
+required_windows = [ 'python', 'devenv', 'swig', 'cmake' ]
 required_unix = [ 'python', 'gcc', 'swig', 'cmake', 'gmake', 'nkf' ]
 required = required_unix if Util.is_unix() else required_windows
 #optional_tools = [ 'cmake' ]
@@ -295,6 +295,8 @@ if Force:
 #	Python のバージョンをチェックする。
 #	python のメジャーバージョンは 3 以上でなければならない。
 #
+(major, minor, micro, release, serial) = sys.version_info
+'''
 print('-- checking python ... ', end='')
 (major, minor, micro, release, serial) = sys.version_info
 if major < 3:
@@ -310,7 +312,7 @@ if major < 3:
 		msg = 'python version 3 or greater is required.\n' \
 		    + 'you may want to inistall "buildtool" submodule'
 		E.abort(msg)
-
+'''
 version_save = version
 version = version_save
 
@@ -358,9 +360,16 @@ if os.path.exists(setup_file):
 				ver = None
 			else:
 				info = identify_vsinfo(vsinfo, path)
-				out = info['productPath']
-				ver = info['installVers']
-				os.environ[vs_path_interface] = out
+				if info is None:
+					path, vers, name = try_another_devenv()
+					if path != SetupFile.NOTFOUND:
+						out = path
+						ver = vers
+						os.environ[vs_path_interface] = out
+				else:
+					out = info['productPath']
+					ver = info['installVers']
+					os.environ[vs_path_interface] = out
 		else:
 			out, ver = try_find(which, prog, path, devenv_number)
 		if ver is None:
@@ -443,6 +452,10 @@ for prog in required:
 	prog_scanned[prog] = path
 	vers_scanned[prog] = ver
 
+if prog_scanned['devenv'] == SetupFile.NOTFOUND:
+	print('-- devenv not found ... available VS version unknown')
+	vers_scanned['devenv'] = 'unknown'
+
 # ----------------------------------------------------------------------
 #  step 4
 #	次の何れかの場合は次の step へ進む。さもなければこれで終了。
@@ -464,6 +477,11 @@ if not setup_needed:
 	print()
 	print('information')
 	for prog in required:
+		# 直接実行する訳ではないので見つからなくてもよい
+		# ただし VS version 情報は不明となる
+		if prog in ['devenv', 'nmake']:
+			continue
+
 		# ファイルに情報があり、かつ実行できる
 		if prog in prog_registered.keys() and \
 			   prog_registered[prog] != SetupFile.NOTFOUND:
@@ -623,10 +641,8 @@ if not force and is_unix or os.path.exists(setup_file):
 #
 parms['plat'] = 'x%s' % platform.architecture()[0].replace('bit', '')
 parms['conf'] = 'Release'
-'''
 if is_windows:
 	parms['vers'] = vers_scanned['devenv'].split('.')[0] + '.0'
-'''
 
 # ----------------------------------------------------------------------
 #  step 7
