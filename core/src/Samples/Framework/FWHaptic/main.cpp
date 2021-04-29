@@ -52,7 +52,7 @@ public:
 	};
 
 private:
-	double ShapeScale(){ return 0.01; }
+	double ShapeScale(){ return 0.006; }
 public:
 	MyApp(){
 		appName = "FWHaptic";
@@ -151,7 +151,7 @@ public:
 		//	Try to create SPIDAR and calibrate it
 		device = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		DRUARTMotorDriverIf* ud = (DRUARTMotorDriverIf*) hiSdk->FindRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic());
-		if (ud->NMotor() >= 8 && device->Init(&HISpidarGDesc("SpidarG6T1"))) {
+		if (ud->NMotor() >= 8 && device->Init(&HISpidarGDesc("SpidarG6X4R"))) {
 			device->Calibration();
 			((UTRef<HISpidarGIf>)device)->SetWeight(0.3, 1.0, 6.0 * 0);
 		}

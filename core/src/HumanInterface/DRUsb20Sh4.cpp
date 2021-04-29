@@ -16,8 +16,8 @@
 namespace Spr {;
 DRUsb20Sh4::DRUsb20Sh4(const DRUsb20Sh4Desc& d):DRUsb20Simple(d){}
 bool DRUsb20Sh4::Init(){
-	DSTR << "You have to define USE_CLOSED_SRC in SprDefs.h to use Spidar" << std::endl;
-	assert(0);
+	DSTR << "You have to define USE_CLOSED_SRC in SprDefs.h to use SPIDARs by Cyverse" << std::endl;
+	//	assert(0);
 	return false;}
 void DRUsb20Sh4::Update(){}
 void DRUsb20Sh4::UsbUpdate(){}
