@@ -1,43 +1,29 @@
 ﻿#################################################################################
-#  FILE:
-#	Makefile.win
+#  SYNOPSIS:
+#	nmake -f Makefile.win
 #
 #  DESCRIPTION:
-#	RunSwig を実行するための Makefile.
+#	Springhead.sln の RunSwig プロジェクトをビルドすると呼び出される.
+#	各プロジェクトに Stub ファイルを生成するための makefile.
+#
 #	次のターゲットを順に make する.
-#	(1) InstallSwig		必要に応じて swig のバイナリを make する.
-#	(2) ClosedSrcCtl	必要に応じて SprUseClosedSrcOrNot.h を生成する.
-#	(3) $(SCILABSTUBHDR)	ScilabStub.hpp を生成する.
-#	(4) $(FWOLDSPRSTUB)	FWOldSpringheadStub.cpp を生成する.
-#	(5) RunSwig		各プロジェクトの stub.cpp を swig で生成する.
+#	(1) ClosedSrcCtl	必要に応じて SprUseClosedSrcOrNot.h を生成する.
+#	(2) $(SCILABSTUBHDR)	ScilabStub.hpp を生成する.
+#	(3) $(FWOLDSPRSTUB)	FWOldSpringheadStub.cpp を生成する.
+#	(4) RunSwig		do_swigall.py を実行することで, 各プロジェクト
+#				について
+#				(a) interface file "<proj>.i" を生成
+#				(b) make file "<proj>Stub.makefile" を生成
+#				(c) make "<proj>Stub.makefile" を実行
+#				することで, "<proj>Stub.cpp" を生成する.
 #
 #	Visual Studio の設定
+#	    生成ファイルの削除は Visual Studio の 'クリーン' ターゲットでは
+#	    実行されないので, スクリプト RunSwig_clean.py を使用する.
 #
-#	[プロパティ]-[構成プロパティ]-[NMake] のコマンドラインに設定するコマンド
-#	とビルドメニューとの関係は, 次のようになっている.
-#	　　ビルド　　⇒　ビルドコマンドライン
-#	　　リビルド　⇒　クリーンコマンドライン → すべてリビルドコマンドライン
-#	　　クリーン　⇒　クリーンコマンドライン
-#
-#	よって, 次のような設定により機能を実現する.
-#	(各ディレクトリについて)
-#	　　(コマンドラインによって）
-#		ビルド時　　⇒　Makefile がなければ作成 → make の実行
-#		リビルド時　⇒　Makefile を強制再作成 → make の実行
-#		クリーン時　⇒　Makefile を削除
-#	　　(Makefile.swig によって)
-#		RunSwig が実行されると判定された時　⇒　Makefile を強制再作成
-#		(ただし一時ファイルに作成しておき make 終了後に rename する)
-#
-#	この Makefile からは $(SCRIPT) を呼び出すだけ.
-#	Makefile 作成/削除の制御は, make_manager.bat スクリプトで集中管理する.
-#
-#	プロパティのコマンドラインに実際に設定するコマンドは次のとおり.
-#
-#	ビルドコマンドライン：	 make_manager.bat -A -c && nmake -f Makefile
-#	すべてリビルドコマンドライン：
-#				 make_manager.bat -A -d -c && nmake -f Makefile
-#	クリーンコマンドライン： make_manager.bat -A -d
+#	    プロパティのコマンドラインに実際に設定するコマンドは次のとおり.
+#	    ・ビルドコマンド	nmake -f Makefile
+#	    ・クリーンコマンド	..\do_python.bat RunSwig_clean.py --RunSwig
 #
 #################################################################################
 #  Version:
@@ -51,6 +37,7 @@
 #     Ver 4.4    2019/05/21 F.Kanehori  swig の自動生成化.
 #     Ver 4.5    2020/12/14 F.Kanehori  setup 導入テスト開始.
 #     Ver 4.6    2021/03/04 F.Kanehori  Python 設定変更.
+#     Ver 4.7    2021/04/08 F.Kanehori  コメント等修正.
 #################################################################################
 
 #  srcディレクトリの設定
@@ -79,29 +66,34 @@ RUNSWIGFW	= RunSwigFramework.py
 SCRIPT		= do_swigall.py
 CHECKCLOSEDSRC	= CheckClosedSrc.py
 
-#  前処理で作成するファイル
+#  PreWork で作成するファイル
 #
 SCILABSTUBHDR	= $(SCILAB)\ScilabStub.hpp
 FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
+#  ターゲット
+#
 all:	PreWork RunSwig
 
 PreWork:	ClosedSrcCtl $(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
-ClosedSrcCtl:
-		@$(PYTHON) --version
+ClosedSrcCtl:	
+		@echo.
 		@echo Makefile.win: ClosedSrcCtl
 		$(PYTHON) $(CHECKCLOSEDSRC)
 
-$(SCILABSTUBHDR):
+$(SCILABSTUBHDR):	
+		@echo.
 		@echo Makefile.win: SCILABSTUBHDR (SciLab/ScilabStub.hpp)
 		cd $(FOUNDATION) && $(PYTHON) $(SCILABSWIG)
 
-$(FWOLDSPRSTUB):
+$(FWOLDSPRSTUB):	
+		@echo.
 		@echo Makefile.win: FWOLDSPRSTUB (Framework/FWOldSpringStub.cpp)
-		cd $(FRAMEWORK) && $(PYTHON) $(RUNSWIGFW)
+		$(PYTHON) $(RUNSWIGFW)
 
-RunSwig:
+RunSwig:	
+		@echo.
 		@echo Makefile.win: RunSwig (do_swigall)
 		$(PYTHON) $(SCRIPT)
 

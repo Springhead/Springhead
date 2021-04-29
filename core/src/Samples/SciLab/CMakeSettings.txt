@@ -76,7 +76,6 @@ set(EXCLUDE_SRCS ${EMPTY})
 #
 if(${Windows})
     set(SPR_PROJS Base Collision FileIO Foundation Framework Graphics Physics)
-    #set(SPR_PROJS ${SPR_PROJS} EmbPython)
 else()
     set(SPR_PROJS ${EMPTY})
 endif()

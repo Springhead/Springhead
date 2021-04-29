@@ -31,7 +31,8 @@ file(GLOB SRCS *.cpp *.h
 )
 file(GLOB COMMON_HDRS
 	${SPR_INC_DIR}/SprFoundation.h
-	${SPR_INC_DIR}/${Target}/*.h)
+	${SPR_INC_DIR}/${Target}/*.h
+)
 file(GLOB EXCLUDE_SRCS 
 	Foundation.h
 )
@@ -43,7 +44,11 @@ if(EXCLUDE_SRCS)
 endif()
 
 if(unix)
-    list(APPEND SRCS ../kludge_for_unix/kludge.cpp)
+    file(GLOB KLUDGES
+	${SPR_SRC_DIR}/kludge_for_unix/*.h
+	${SPR_SRC_DIR}/kludge_for_unix/*.cpp
+    )
+    list(APPEND SRCS ${KLUDGES})
 endif()
 
 # ------------------------------------------------------------------------------
@@ -104,53 +109,6 @@ endif()
 if(DEFINED GLUT_INCLUDE_DIR)
     target_include_directories(${Target} BEFORE PRIVATE ${GLUT_INCLUDE_DIR})
 endif()
-
-# ------------------------------------------------------------------------------
-# set python be invokable
-#
-if(Windows AND EXISTS ${SPR_TOP_DIR}/buildtool/win32/python.exe)
-    set(_python ${SPR_TOP_DIR}\\buildtool\\win32\\python.exe)
-else()
-    set(_python python)
-endif()
-
-# ------------------------------------------------------------------------------
-#  Integrate intermediate directory.
-#	${CMAKE_BINARY_DIR}/${Target}/${Target}.dir
-#	linked to (for Windows)
-#	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${VS_VERSION}/${Target}.dir
-#	or (for unix)
-#	  => ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE}/${Target}.dir
-#
-set(INTDIR ${Target}.dir)
-set(ACTDIR ${SPR_SRC_DIR}/${Target}/${ARCHITECTURE})
-if(Windows)
-    set(ACTDIR ${ACTDIR}/${VS_VERSION})
-    set(LINKDIR ${INTDIR})
-elseif(unix)
-    set(LINKDIR .${CMAKE_FILES_DIRECTORY}/${INTDIR})
-endif()
-set(LINKLIST
-    "${LINKDIR}=${ACTDIR}/${INTDIR}"
-)
-set(_script ${SPR_SRC_DIR}/cmake_preconfig.py)
-file(TO_NATIVE_PATH "${_script}" _script)
-set(_tmp_args -v ${LINKLIST})
-execute_process(
-    COMMAND ${_python} ${_script} ${_tmp_args}
-    RESULT_VARIABLE CMD_RESULT
-    OUTPUT_VARIABLE CMD_OUTPUT
-    ERROR_VARIABLE CMD_ERROR
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-)
-if(${CMD_RESULT})
-    message("Error: ${CMD_ERROR}")
-endif()
-if(NOT "${CMD_OUTPUT}" STREQUAL "")
-    string(REPLACE "\n" "\n     " CMD_OUTPUT ${CMD_OUTPUT})
-endif()
-string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
-message("     ${CMD_OUTPUT}")
 
 # ------------------------------------------------------------------------------
 #  Record this build state.

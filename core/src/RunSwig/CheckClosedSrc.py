@@ -5,26 +5,30 @@
 #	python CheckClosedSrc.py
 #
 #  DESCRIPTION:
-#	"SprDefs.h"からインクルードされるファイル"SprUseClosedSrcOrNot.h"を、
-#	次の条件で作成する。
+#	Makefile.{win|unix} の ClosedSrcCtl ターゲットから呼び出される.
+#	"SprDefs.h"からインクルードされるファイル"SprUseClosedSrcOrNot.h"を
+#	次の条件で作成する.
 #
-#	"core/include"に既に"SprUseClosedSrcOrNot.h"が存在しないときに限り、
-#	次の内容を"core/include/SprUseClosedSrcOrNot.h"として書き出す。
-#	    "#define USE_CLOSED_SRC"	"Springhead/closed"が存在する
-#	    "#undef USE_CLOSED_SRC"	"Springhead/closed"が存在しない
+#	"core/include"に既に"SprUseClosedSrcOrNot.h"が存在しないときに限り
+#	次の内容を"core/include/SprUseClosedSrcOrNot.h"として書き出す.
+#
+#	  "Springhead/closed"が存在するならば → "#define USE_CLOSED_SRC"
+#	  "Springhead/closed"が存在しないならば → "#undef USE_CLOSED_SRC"
+#
+#	補足	Makefile.win は, Springhead.sln の RunSwig プロジェクトを
+#		ビルドすると実行される.
 #
 # ==============================================================================
 #  Version:
-#     Ver 1.00	 2019/01/08 F.Kanehori	初版
-#     Ver 1.01	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
-#     Ver 2.00	 2020/04/09 F.Kanehori	方針の全面変更 (DESCRIPTION参照)
-#     Ver 2.01	 2020/04/12 F.Kanehori	Bug fix.
-#     Ver 2.10	 2020/05/12 F.Kanehori	再度方針の全面変更 (DESCRIPTION参照)
-#     Ver 2.10.1 2020/11/11 F.Kanehori	不要なコードの削除
-#     Ver 2.11   2021/02/17 F.Kanehori	Python 2.7 対応
+#     Ver 1.0	 2019/01/08 F.Kanehori	初版
+#     Ver 1.1	 2019/04/01 F.Kanehori	Python library path 検索方法変更.
+#     Ver 2.0	 2020/04/09 F.Kanehori	方針の全面変更 (DESCRIPTION参照).
+#     Ver 2.1	 2020/05/12 F.Kanehori	再度方針の全面変更 (DESCRIPTION参照).
+#     Ver 2.2    2021/02/17 F.Kanehori	Python 2.7 対応.
+#     Ver 2.3    2021/03/25 F.Kanehori	全面見直し.
 # ==============================================================================
 from __future__ import print_function
-version = '2.11'
+version = '2.3'
 
 import sys
 import os
@@ -32,30 +36,36 @@ import shutil
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/src/RunSwig" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+from Trace import *
+trace = Trace().flag(prog)
+if trace:
+	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
+	sys.stdout.flush()
+
+SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
 
 # ----------------------------------------------------------------------
-#  Import Springhead python library.
+#  Springhead python library の導入
 #
-from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from TextFio import *
 from Proc import *
 from Error import *
 
 # ----------------------------------------------------------------------
-#  Directories
+#  ディレクトリパスには絶対パスを使用する (cmake 使用時の混乱を避けるため)
 #
-sprtop = spr_path.abspath()
-incdir = spr_path.relpath('inc')
+sprtop = os.path.abspath('%s/../..' % SrcDir)
+incdir = '%s/core/include' % sprtop
 closed = '%s/closed' % sprtop
 
 # ----------------------------------------------------------------------
-#  Files
+#  使用するファイル名
 #
 header_file = 'SprUseClosedSrcOrNot.h'
 tmp_file = header_file + '.tmp'
@@ -102,6 +112,9 @@ if os.path.exists(header_file):
 		print('%s: file exists. bothing to do.' % prog)
 	#  処理終了
 	os.chdir(cwd)
+	if trace:
+		print('LEAVE: %s' % prog)
+		sys.stdout.flush()
 	sys.exit(0)
 
 # ----------------------------------------------------------------------
@@ -126,7 +139,7 @@ fio = TextFio(header_file, 'w')
 if fio.open() != 0:
 	Error(prog).error('can not open file "%s"' % header_file)
 if fio.writelines(lines) != 0:
-	Error(prog).error('write failed on file  %s"' % header_file)
+	Error(prog).error('write failed on file "%s"' % header_file)
 fio.close()
 print('%s: "%s" written with "%s"' % (prog, header_file, macro))
 
@@ -134,6 +147,9 @@ print('%s: "%s" written with "%s"' % (prog, header_file, macro))
 #  処理終了
 #	
 os.chdir(cwd)
+if trace:
+	print('LEAVE: %s' % prog)
+	sys.stdout.flush()
 sys.exit(0)
 
 # end: CheckClosedSrc.py

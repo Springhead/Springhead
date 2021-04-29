@@ -220,6 +220,17 @@ elseif(unix)
 endif()
 
 # ------------------------------------------------------------------------------
+#  Definition of last build library type record file.
+#
+set(LASTBUILD_LIBTYPE_STATIC ${SPR_SRC_DIR}/lastbuilt.static)
+set(LASTBUILD_LIBTYPE_SHARED ${SPR_SRC_DIR}/lastbuilt.shared)
+if("${LIBTYPE}" STREQUAL "STATIC")
+    set(LASTBUILD_LIBTYPE_FILE ${LASTBUILD_LIBTYPE_STATIC})
+else()
+    set(LASTBUILD_LIBTYPE_FILE ${LASTBUILD_LIBTYPE_SHARED})
+endif()
+
+# ------------------------------------------------------------------------------
 #  Main target.
 #
 if(EXCLUDE_SRCS)
@@ -283,24 +294,6 @@ else()
 endif()
 
 # ------------------------------------------------------------------------------
-#  Add target to synchronize configuration with ${SRR_SRC_DIR}.
-#
-if(SPR_PROJS AND Windows)
-    set(SYNC "sync")
-    set(_tmp_args "-v"
-		  "-a" "\"$(Platform)\""
-		  "-c" "\"$(Configuration)\""
-		  "${SPR_SRC_DIR}/${OOS_BLD_DIR}" "${CMAKE_BINARY_DIR}"
-		  "${Target}" "${SPR_PROJS}")
-    file(TO_NATIVE_PATH "${_tmp_args}" _tmp_args)
-    add_custom_target(${SYNC}
-	COMMAND python ${SPR_SRC_DIR}/cmake_sync.py ${_tmp_args}
-	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-	COMMENT "sync configuration with ${SPR_SRC_DIR}"
-    )
-endif()
-
-# ------------------------------------------------------------------------------
 #  Define depending projects.
 #
 if(SPR_PROJS AND Windows)
@@ -324,8 +317,6 @@ if(SPR_PROJS AND Windows)
 	add_dependencies(${proj} ${DEP_LIST})
 	#message("   dependencies: ${proj} => ${DEP_LIST}")
     endforeach()
-    add_dependencies(RunSwig ${SYNC})
-    add_dependencies(${Target} ${SPR_PROJS} ${SYNC})
 endif()
 
 # ------------------------------------------------------------------------------
