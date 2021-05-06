@@ -22,7 +22,12 @@ PHIKEngineDesc::PHIKEngineDesc():
 	maxAngVel(Rad(500)), // 500[deg/s]
 	maxActVel(Rad(30)),  //  10[deg/s]
 	regularizeParam(0.7)
-{}
+{
+	regularizeParam2 = 0.5;
+	regularizeMode = 0;
+	iterGaussSeidel = 100;
+	solverMode = Mode::SVD;
+}
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEngine
