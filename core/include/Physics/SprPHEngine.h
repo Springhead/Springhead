@@ -156,17 +156,19 @@ public:
 
 struct PHIKEngineDesc{
 	size_t	numIter;
-	double  maxVel, maxAngVel, maxActVel;
-	double  regularizeParam = 0.2;
-	double  regularizeParam2 = 0.5;
-	int     regularizeMode = 0;
-	int     iterGaussSeidel = 100;
-	enum    Mode {
+	double  maxVel;
+	double  maxAngVel;
+	double  maxActVel;
+	double  regularizeParam;
+	double  regularizeParam2;
+	int     regularizeMode;
+	int     iterGaussSeidel;
+	enum Mode {
 		SVD,
 		QR,
 		LM,
 	};
-	Mode   solverMode = Mode::SVD;
+	int solverMode;
 
 	PHIKEngineDesc();
 };
