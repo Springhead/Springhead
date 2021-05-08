@@ -459,7 +459,8 @@ public: /** 派生クラスが実装する関数 **/
 
 	/// 1ステップのシミュレーション
 	virtual void OnStep(){
-		GetFWScene()->Step();
+		FWSceneIf* fwScene = GetFWScene();
+		if (fwScene) fwScene->Step();
 	}
 
 	/// 描画
