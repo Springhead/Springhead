@@ -1,39 +1,176 @@
-#! /bin/sh
+#! /bin/bash
 
-# Parse command line arguments.
+# =============================================================================
+#  SYNOPSIS
+#	DailyBuild.sh [options] [test-repository] [result-repository]]
 #
-FLAGS=
-Sflag=
-while [ "$1" != "" ]
-do
-    case "$1" in
-	"-S")	Sflag=-S;;
-	*)	FLAGS="$FLAGS $1";;
+#	OPTIONS:
+#	    --do-not-clone:	クローンを実行せず既存のレポジトリを使用する.
+#				--hook オプションより前に指定すること.
+#	    --hook:		クローン後, "DailyBuildHook/hook.sh" が適用
+#				される.
+#
+#	ARGUMENTS:
+#	    test-repository:	テストを実行するディレクトリ.
+#				既存のディレクトリの場合その内容は破棄される.
+#				デフォルトは "Springhead".
+#	    result-repository:	テスト結果が置かれるディレクトリ.
+#				デフォルトは "DailyBuildResult\Result"
+#
+#  DESCRIPTION
+#	DailyBuild を実行を制御する (crontab に登録する).
+#	  (1) test-repository に最新のコミットを clone する.
+#	  (2) 指定があれば hook を適用する (ファイルのすげ替え).
+#	  (3) テストを実行する.
+#
+#	Python が実行できること. このファイルはテストマシンの "~/Project" に
+#	コピーし, そこから起動する.
+#
+#	起動パラメータの例
+#	  DailyBuild.sh Springhead DailyBuildResult/Result
+#
+#	このファイル "DailyBuild.sh" 及び "hook.sh" は, DailyBuild を実行
+#	しても自動的にはアップデートされない. 変更があったときは手動でコピー
+#	すること.
+#	
+#  VERSION
+#     Ver 1.0   2021/05/10 F.Kanehori	バッチファイルの再構築.
+# =============================================================================
+PROG=`basename $0`
+CWD=`pwd`
+DEBUG=0
+
+CLONE=yes
+HOOK=no
+ARGS[1]="Springhead"			# default test repository
+ARGS[2]="DailyBuildResult/Result"	# default result repository
+OPTS=""		# "-c Release -p x64"
+
+function usage () {
+	echo "DailyBuild [options] [test-repository [result-repository]]"
+	echo
+	echo "  options:"
+	echo "    --do-not-clone: Do not clone source tree (must be a first option)."
+	echo "    --hook:         Apply hook script (\"DailyBuildHook/hook.sh\")."
+	echo "    -c conf:        Configurations (Debug | Release)."
+	echo "    -p plat:        Platform (x86 | x64)."
+	echo
+	echo "  arguments:"
+	echo "    test_repository:   test repository (default: Springhead)"
+	echo "    result_repository: result repository (default: DailyBuildResult/Result)"
+	echo
+}
+
+# ----------------------------------------------------------------------
+#  Step 0
+#	引数の解析
+#
+POS=1
+for opt in "$@"; do
+    case "${opt}" in
+	'--do-not-clone')
+		CLONE="no" && shift
+		;;
+	'--hook' )
+		HOOK="yes" && shift
+		;;
+	'-h' | '--help' )
+		usage
+		exit 0
+		;;
+	-* )
+		echo "illegal option -- '$( echo $1 | sed 's/^-*//' )'" 1>&2
+		exit 1
+		;;
+	* )
+		if [ $POS -gt 2 ]; then
+			echo "too many arguments"
+			exit 1
+		fi
+		ARGS[${POS}]=$1 && POS=$((POS + 1)) && shift
+		;;
     esac
-    shift
 done
+TEST_REPOSITORY=${ARGS[1]}
+RESULT_REPOSITORY=${ARGS[2]}
 
-# Set test environment.
-#
-StartDir=$HOME/Project/Springhead/core/test
-DefFile=$StartDir/SprEnvDef.sh
+REMOTE_REPOSITORY="https://github.com/sprphys/Springhead"
+HOOKFILE="DailyBuildHook/hook.sh"
 
-if [ -f $DefFile ]; then
-	. $DefFile
+echo "test repository:   [$TEST_REPOSITORY]"
+echo "result repository: [$RESULT_REPOSITORY]"
+echo "conf : [$CONF]"
+echo "plat : [$PLAT]"
+echo "clone: [$CLONE]"
+echo "hook:  [$HOOK]"
+
+if [ "$HOOK" != "no" ] && [ ! -e $HOOKFILE ]; then
+	echo "--hook specified, but \"$HOOKFILE\" does not exist."
+	echo "abort"
+	exit 1
+fi
+if [ $DEBUG -ne 0 ]; then
+	echo -n "OK [y/n]? "
+	read x
+	if [ "$x" != "y" ]; then
+		echo "done"
+		exit 0
+	fi
 fi
 
-# Use -A option to skip following steps.
-#	Update Springhead to HEAD status - git pull.
-#	Cleanup SpringheadTest - rm and git clone.
+# ----------------------------------------------------------------------
+#  Step 1
+#	必要なツールの確認 (python が実行できること)
+#
+PYTHON=python
 
-TEST_REPOSITORY=SpringheadTest
-DAILYBUILD_RESULT=DailyBuildResult/Result
+TOOLS=$PYTHON
+ok="ok"
+for tool in $TOOLS; do
+	which $tool >NUL 2>&1
+	if [ $? -ne 0 ]; then
+		echo "$PROG: we need '$tool'"
+		ok="no"
+	fi
+done
+if [ "$ok" != "ok" ]; then
+	echo "abort"
+	exit 1
+fi
 
-cd $StartDir
-echo "python DailyBuild.py -u $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT"
-python DailyBuild.py -u $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT
-echo
-echo "python DailyBuild.py -U $Sflag $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT"
-python DailyBuild.py -U $Sflag $FLAGS $TEST_REPOSITORY $DAILYBUILD_RESULT
+# ----------------------------------------------------------------------
+#  Step 2
+#	Springhead を最新の状態にする.
+#
+if [ "$CLONE" == "yes" ]; then
+	# 古いテストレポジトリがあったら削除して更の状態にする.
+	if [ -d $TEST_REPOSITORY ]; then
+		echo "$PROG: removing directory \"$TEST_REPOSITORY\""
+		/bin/rm -rf $TEST_REPOSITORY
+	fi
+fi
+echo "cloning $REMOTE_REPOSITORY"
+git clone $REMOTE_REPOSITORY $TEST_REPOSITORY
+
+# ----------------------------------------------------------------------
+#  Step 3
+#	Hook ファイルが存在したらそれを実行する.
+#
+if [ "$HOOK" != "no" ]; then
+	echo "$PROG: calling hook \"$HOOKFILE\"."
+	sh $HOOKFILE $TEST_REPOSITORY
+fi
+
+# ----------------------------------------------------------------------
+#  Step 4
+#	テストを実行する
+#
+cd "$TEST_REPOSITORY/core/test"
+echo "$PROG: test directory: \"`pwd`\""
+echo "$PYTHON DailyBuild.py -A -f $OPTS $TEST_REPOSITORY $RESULT_REPOSITORY"
+$PYTHON DailyBuild.py -A -f $OPTS $TEST_REPOSITORY $RESULT_REPOSITORY
+echo "rc: $?"
+echo "done"
 
 exit 0
+#end: DailyBuild.sh

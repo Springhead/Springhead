@@ -154,16 +154,14 @@ exit /b
 :usage
 	echo DailyBuild [options] [test-repository [result-repository]]
 	echo+
-	echo   options:
-	echo     --do-not-clone: Do not clone source tree (must be a first option).
-	echo     --hook:         Apply hook script ("DailyBuildHook\hook.bat").
-	echo     -c conf:        Configurations (Debug ^| Release).
-	echo     -p plat:        Platform (x86 ^| x64).
-	echo     -t tool:        Visual Studio toolset ID (15.0, ...).
+	echo options:
+	echo     --do-not-clone: do not clone source tree (must be first option).
+	echo     --hook file:    apply hook script.
 	echo+
-	echo   arguments:
+	echo arguments:
 	echo     test_repository:   test repository (default: Springhead)
 	echo     result_repository: result repository (default: DailyBuildResult/Result)
+	echo+
 	exit /b
 
 ::end: DailyBuild.bat

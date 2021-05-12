@@ -5,7 +5,7 @@
 #	DailyBuild [options] test-repository result-repository
 #	options:
 #	  -c conf:	Configurations (Debug | Release).
-#	  -f:		Do not confir about test repository.
+#	  -f:		Do not confirm about test repository.
 #	  -p plat:	Platform (x86 | x64).
 #	  -s file:	Setup file name (default: setup.conf).
 #	  -t tool:	Visual Studio toolset ID. (Windows only)
