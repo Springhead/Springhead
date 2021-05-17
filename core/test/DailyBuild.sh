@@ -15,7 +15,7 @@
 #				既存のディレクトリの場合その内容は破棄される.
 #				デフォルトは "Springhead".
 #	    result-repository:	テスト結果が置かれるディレクトリ.
-#				デフォルトは "DailyBuildResult\Result"
+#				デフォルトは "DailyBuildResult/Result"
 #
 #  DESCRIPTION
 #	DailyBuild を実行を制御する (crontab に登録する).
@@ -66,6 +66,7 @@ function usage () {
 #	引数の解析
 #
 POS=1
+OPT=
 for opt in "$@"; do
     case "${opt}" in
 	'--do-not-clone')
@@ -73,6 +74,9 @@ for opt in "$@"; do
 		;;
 	'--hook' )
 		HOOK="yes" && shift
+		;;
+	'-S' )
+		OPT="-S" && shift
 		;;
 	'-h' | '--help' )
 		usage
@@ -103,6 +107,7 @@ echo "conf : [$CONF]"
 echo "plat : [$PLAT]"
 echo "clone: [$CLONE]"
 echo "hook:  [$HOOK]"
+echo "OPT:   [$OPT]"
 
 if [ "$HOOK" != "no" ] && [ ! -e $HOOKFILE ]; then
 	echo "--hook specified, but \"$HOOKFILE\" does not exist."
@@ -148,17 +153,18 @@ if [ "$CLONE" == "yes" ]; then
 		echo "$PROG: removing directory \"$TEST_REPOSITORY\""
 		/bin/rm -rf $TEST_REPOSITORY
 	fi
+	echo "cloning $REMOTE_REPOSITORY"
+	git clone $REMOTE_REPOSITORY $TEST_REPOSITORY
 fi
-echo "cloning $REMOTE_REPOSITORY"
-git clone $REMOTE_REPOSITORY $TEST_REPOSITORY
 
 # ----------------------------------------------------------------------
 #  Step 3
 #	Hook ファイルが存在したらそれを実行する.
 #
 if [ "$HOOK" != "no" ]; then
+	abs_dir=$(cd "$TEST_REPOSITORY" && pwd)
 	echo "$PROG: calling hook \"$HOOKFILE\"."
-	sh $HOOKFILE $TEST_REPOSITORY
+	/bin/bash $HOOKFILE $abs_dir
 fi
 
 # ----------------------------------------------------------------------
@@ -167,8 +173,8 @@ fi
 #
 cd "$TEST_REPOSITORY/core/test"
 echo "$PROG: test directory: \"`pwd`\""
-echo "$PYTHON DailyBuild.py -A -f $OPTS $TEST_REPOSITORY $RESULT_REPOSITORY"
-$PYTHON DailyBuild.py -A -f $OPTS $TEST_REPOSITORY $RESULT_REPOSITORY
+echo "$PYTHON DailyBuild.py -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY"
+$PYTHON DailyBuild.py -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY
 echo "rc: $?"
 echo "done"
 

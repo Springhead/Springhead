@@ -44,6 +44,7 @@
 #     Ver 1.0    2020/12/14 F.Kanehori	初版.
 #     Ver 1.1    2021/01/14 F.Kanehori	setup 自動実行組み込み.
 #     Ver 1.2    2021/04/01 F.Kanehori	Windows では swig 生成を中止.
+#     Ver 1.2.1  2021/05/13 F.Kanehori	Bug fix.
 # ======================================================================
 from __future__ import print_function
 version = "1.2"
@@ -167,7 +168,7 @@ def try_find_newer_python():
 		if major >= 3:
 			print('ok, ', end='')
 			break
-		#print()
+		##print()
 	return major, minor, micro, candidate
 
 # ----------------------------------------------
@@ -330,7 +331,7 @@ if repository is not None:
 	os.chdir(os.path.abspath('../../../%s/core/src' % repository))
 
 if os.path.exists(setup_file):
-	print()
+	##print()
 	print('setup file ("%s") exists.' % U.upath(setup_file))
 
 	# ファイル内容の整合性の検査
@@ -382,8 +383,8 @@ if os.path.exists(setup_file):
 			print('%s (%s)' % (SetupFile.NOTFOUND, path))
 			progs_lacking.append(prog)
 else:
-	print()
-	print('setup file ("%s") not exists.' % U.upath(setup_file))
+	##print()
+	print('setup file ("%s") not found.' % U.upath(setup_file))
 
 # ----------------------------------------------------------------------
 #  step 2.1
@@ -452,7 +453,7 @@ for prog in required:
 	prog_scanned[prog] = path
 	vers_scanned[prog] = ver
 
-if prog_scanned['devenv'] == SetupFile.NOTFOUND:
+if is_windows and prog_scanned['devenv'] == SetupFile.NOTFOUND:
 	print('-- devenv not found ... available VS version unknown')
 	vers_scanned['devenv'] = 'unknown'
 
@@ -576,7 +577,7 @@ if not setup_needed:
 #  CMakeLists.txt が存在ない
 if not cmakelists_exist:
 	setup_needed = True
-	setup_reason_need.append('"%s" does not exist' % cmakefile)
+	setup_reason_need.append('"%s" not found' % cmakefile)
 
 #  CMakeLists.txt のバージョンが古い
 if cmakelists_older:

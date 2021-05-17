@@ -23,6 +23,7 @@ CWD=`pwd`
 echo "[$PROG] was called from $CWD."
 DEBUG=0
 HOOKDIR="DailyBuildHook"
+HOOKLOG="$CWD/hook.log"
 
 if [ "$1" == "" ]; then
 	echo "Usage: $PROG test-repository"
@@ -42,12 +43,12 @@ cd $HOOKDIR
 for file in `find core -name '*'`; do
 	if [ -f $file ]; then
 		echo -n "$PROG: applying \"$file\" ... "
-		cp -f $file $REPOSITORY/$file >"hook.log" 2>&1
+		cp -f $file $REPOSITORY/$file >$HOOKLOG 2>&1
 		if [ $? -eq 0 ]; then
 			echo "OK"
 		else
 			echo "NG"
-			cat "hook.log"
+			cat $HOOKLOG
 		fi
 	fi
 done

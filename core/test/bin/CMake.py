@@ -30,9 +30,10 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2019/09/19 F.Kanehori	First version.
-#	Ver 1.1  2020/08/24 F.Kanehori	Add LIB_TYPE control.
-#	Ver 1.2  2020/10/12 F.Kanehori	Add CMAKE_OPTIONS control.
+#     Ver 1.0	 2019/09/19 F.Kanehori	First version.
+#     Ver 1.1	 2020/08/24 F.Kanehori	Add LIB_TYPE control.
+#     Ver 1.2	 2020/10/12 F.Kanehori	Add CMAKE_OPTIONS control.
+#     Ver 1.2.1  2021/05/17 F.Kanehori	Add -D SPRTOP option.
 # ======================================================================
 import sys
 import os
@@ -46,6 +47,7 @@ from FindSprPath import *
 spr_path = FindSprPath('ControlParams')
 libdir = spr_path.abspath('pythonlib')
 sys.path.append(libdir)
+from SetupFile import *
 from Proc import *
 from FileOp import *
 from Error import *
@@ -73,6 +75,18 @@ class CMake:
 		self.config = config
 		self.logfile = logfile
 		self.verbose = verbose
+		#
+		# このファイルは ".../core/test/bin" に置くこと
+		script_dir = os.path.abspath(__file__).split(os.sep)[:-1]
+		script_dir = os.sep.join(script_dir)
+		setup_file = script_dir+'../../../src/setup.conf'
+		setup_file = os.path.abspath(setup_file)
+		self.setup_file_exists = False
+		if os.path.exists(setup_file):
+			print('  setup file exists')
+			self.setup_file_exists = True
+			self.sf = SetupFile(setup_file)
+			self.sf.setenv()
 		#
 		self.generator = self.__find_generator(ccver)
 		self.error = Error(self.clsname)
@@ -124,6 +138,8 @@ class CMake:
 		cmake_options = self.ctl.get(CFK.CMAKE_OPTIONS)
 		#
 		cmnd = 'cmake'
+		if self.setup_file_exists:
+			cmnd = self.sf.getenv('cmake')
 		if topdir:  cmnd += ' -D TOPDIR=%s' % topdir
 		if conf:    cmnd += ' -D CONF=%s' % conf
 		if opts:    cmnd += ' -D OPTS=%s' % opts

@@ -47,7 +47,7 @@ if [ ${libtype} = "STATIC" ]; then
 	objs=`fun .`
 	for obj in $objs;
 	do
-	    ar rvs ${outdir}/${libname}.a $objs
+	    ar qvs ${outdir}/${libname}.a $objs
 	done
 	popd > /dev/null
     done
