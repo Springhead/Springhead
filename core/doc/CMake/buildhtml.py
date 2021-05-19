@@ -14,8 +14,9 @@
 #	Ver 1.0  2018/11/29 F.Kanehori	First version.
 #	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
 #	Ver 1.2  2019/08/05 F.Kanehori	HowToUseCMake version.
+#	Ver 1.3  2021/05/19 F.Kanehori	Reconstruct: CMake version.
 # ======================================================================
-version = 1.2
+version = 1.3
 
 import sys
 import os
@@ -33,7 +34,7 @@ PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
 
 # for test
-svg_dir = '../../../../../../HowToUseCMake-fig/svg'.replace('/', os.sep)
+svg_dir = '../../../../../../CMake-fig/svg'.replace('/', os.sep)
 
 # ----------------------------------------------------------------------
 #  External tools.

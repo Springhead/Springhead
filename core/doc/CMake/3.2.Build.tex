@@ -1,0 +1,66 @@
+% 3.2.Build.tex
+%	Last update: 2021/03/17 F.Kanehori
+%\newpage
+\subsection{ビルド}
+\label{subsec:Build}
+\parindent=0pt
+
+ライブラリのビルドについては特に説明することはありません。
+
+\medskip
+\bf{unixの場合}
+\begin{narrow}
+	ディレクトリ\BldDir へ移動してmakeコマンドを実行してください。
+	\KQuoteS \ref{subsec:SetInstallDirectory} インストールディレクトリの設定
+	\KQuoteE でライブラリファイルのインストール先を指定していなければ、
+	ライブラリファイルは\SprTop{/generated/lib}に生成されます。
+\end{narrow}
+
+\medskip
+\bf{Windowsの場合}
+\begin{narrow}
+	ディレクトリ\BldDir へ移動して\Path{Springhead.sln}をVisual Studioで実行し、
+	プロジェクトSpringheadをビルドしてください。
+	\KQuoteS \ref{subsec:SetInstallDirectory} インストールディレクトリの設定
+	\KQuoteE でライブラリファイルのインストール先を指定していなければ、
+	ライブラリファイルは\SprTop{/generated/lib/<\it{arch}>}に生成されます。
+	\tt{<\it{arch}>} はマシンのアーキテクチャに従い、
+	\Path{win64}または\Path{win32}のいずれかです。
+\end{narrow}
+
+%-------------------------------------------------------------------------------
+\bigskip
+\thinrule{\linewidth}
+
+\bf{\tt{INSTALL}時の注意}
+
+\begin{narrow}
+ヘッダファイルとライブラリファイルのインストール先を指定している場合、
+ターゲット\tt{INSTALL}を実行してもライブラリファイルが正しくインストールされない、
+またはインストールされたファイルの内容が不正、という現象が発生しています。
+申し訳ございません。
+続けてもう一度\tt{INSTALL}を実行していただければ、
+正しいライブラリファイルがインストールされます。
+\end{narrow}
+
+\thinrule{\linewidth}
+
+\bigskip
+
+\SprLib を使用したプログラムの実行時にDLLが見つからないというエラーが発生した
+場合には、
+\def\Width{.55\linewidth}
+\begin{center}\begin{tabular}{l@{ --- }l}
+	\hline
+	32ビット環境のときは & \RBox{\SprTop{/dependency/bin/win32}} \\
+	64ビット環境のときは & \RBox{\SprTop{/dependecny/bin/win64}と \\
+				     \SprTop{/dependecny/bin/win32} の両方} \\
+	\hline
+\end{tabular}\end{center}
+にパスを通してください。
+Visual Studioから実行するときは、
+プログラムのプロパティを開き、
+[構成プロパティ]---[デバッグ]---[環境] に
+``\,\tt{path=上記のパス}''とします。
+
+% end: 3.2.Build.tex

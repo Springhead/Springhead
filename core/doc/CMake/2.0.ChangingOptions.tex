@@ -1,0 +1,65 @@
+% 2.0.ChangingOptions.tex
+%	Last update: 2021/05/17 F.Kanehori
+\newpage
+\section{オプションの変更}
+\label{sec:ChangingOptions}
+\parindent=0pt
+
+この章では、
+\begin{itemize}
+  \item	外部パッケージを利用する
+  \item	ライブラリとヘッダファイルのインストール先を指定する
+  \item	ビルド条件を変更する
+\end{itemize}
+などに対する設定方法について説明します。
+
+配布されたデフォルト状態のままで構わない場合には、
+次の章\KQuoteS \ref{sec:Build} ビルド\KQuoteE に進んでください。
+
+\bigskip
+配布キットの中には、\Path{.../Springhead/src}に次のファイルが含まれています。
+
+\medskip
+\def\Width{200pt}	% see macro.tex for LBox and RBox
+\begin{center}
+\begin{tabular}{ll}\hline
+	\CMakeConf{.dist} &  \RBox{%
+		外部パッケージ導入の設定を定義する。\\
+		ヘッダファイル/ライブラリファイルのインストール先の設定
+		を定義する。} \\
+	\CMakeSettings{.dist} &  \RBox{%
+		ビルドパラメータの設定を行なう。} \\\hline
+\end{tabular}
+\end{center}
+
+\medskip
+これらのファイルには各設定の既定値が設定されており、
+これらの値はcmake実行時に参照され使用されます。
+
+これらの既定値を変更する場合には、上記の該当するファイルを次のような名前で
+コピーし、コピーしたファイルを編集します(もとのファイルは変更しないでください)。
+cmakeは実行時にこれらのコピーされたファイルを優先して参照します。
+
+\medskip
+\begin{center}
+\begin{tabular}{lcl}\hline
+	\hfil 配布名 \hfil     & → & \hfil 変更する名前 \hfil \\\hline
+	\CMakeConf{.dist}      & → & \CMakeConf{} \\
+	\CMakeSettings{.dist}  & → & \CMakeSettings{} \\\hline
+\end{tabular}
+\end{center}
+
+\bigskip
+\small{\bf{[参考]}}
+\begin{narrow}[s][20pt]
+	変数\it{variable}に値\it{value}を設定するには
+	\tt{set(\it{variable} "\it{value}"}) とします。
+	複数の値を設定するときは、空白文字で区切って並べたものを\it{value}とします。
+	途中に空白やセミコロンを含まない文字列ならば引用符は省略できます。
+	また、\tt{\$\{\it{variable}\}}とすると他の変数の値を、
+	\tt{\$ENV\{\it{variable}\}}とすると環境変数の値を参照できます。
+	文字`\tt{\#}'以降はコメントです。
+\end{narrow}
+
+\bigskip
+% end: 2.0.ChangingOptions.tex

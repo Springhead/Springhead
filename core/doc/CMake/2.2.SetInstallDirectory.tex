@@ -1,0 +1,57 @@
+% 2.2.SetInstallDirectory.tex
+%	Last update: 2021/05/17 F.Kanehori
+%\newpage
+\subsection{ライブラリとヘッダファイルのインストール先を指定する}
+\label{subsec:SetInstallDirectory}
+\parindent=0pt
+
+ライブラリファイルとヘッダファイルのインストール先を設定する場合は、
+ファイル\Path{\CMakeConf{}}の内容を次のように編集します。
+
+\begin{narrow}[s]
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	変数の設定はGUIからでも行なえます。
+	ただし GUIでの設定より\Path{CMakeConf.txt}の設定の方が優先されます。
+	また、GUIで\tt{CMAKE\_INSTALL\_PREFIX}を空に設定した場合、
+	または \Path{CMakeConf.txt}で \tt{DO\_NOT\_GENERATE\_INSTALL\_TARGET}
+	を指定した場合には、
+	インストールを行なうためのターゲットルールは生成されません。
+	なお、\Path{CMakeConf.txt}で\tt{CMAKE\_INSTALL\_PREFIX}に空文字列を
+	設定した場合には、GUIの場合とは異なり、デフォルトのインストールパス
+ 	(Windowsでは\Path{C:/Program Files}、unixでは\Path{/usr/local})が
+	使用されます。
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	\Vskip{.3\baselineskip}
+\end{narrow}
+
+変数\tt{CMAKE\_INSTALL\_PREFIX}にインストール先を絶対パスで設定します。
+この設定をすることにより、\tt{find\_package(Springhaed, REQUIRED)}として
+\SprLib を簡単に導入することができるようになります。
+\CmndLine{%
+	\cite{set(CMAKE\_INSTALL\_PREFIX ".../where/to/install")} \\
+	\cite{\hspace{20pt}\#\hspace{40pt}{(\rm{use absolute path)}}}\\
+}{chap-2-2-set-install-prefix.eps}{Set install prefix}
+\medskip
+実際にファイルがインストールされるディレクトリは
+\Vskip{-.3\baselineskip}
+\def\IP{\$\{CMAKE\_INSTALL\_PREFIX\}}
+\begin{narrow}[s]
+	\begin{tabular}{lcl}
+		\tt{config files} & → & \tt{\IP/Springhead} \\
+		\tt{header files} & → & \tt{\IP/Springhead/include} \\
+		\tt{library file} & → & \tt{\IP/Springhead/lib} \\
+	\end{tabular}
+\end{narrow}
+\Vskip{.2\baselineskip}
+です。
+これらのうち、ヘッダファイルとライブラリファイルのインストール先は
+次の変数を設定することで変更が可能です。
+絶対パスまたは\tt{\,\IP\,}からの相対パスで指定してください。
+\Vskip{-.3\baselineskip}
+\CmndLine{%
+	\cite{set(SPR\_HEADERS\_INSTALL\_DIR "header files のインストール先")} \\
+	\cite{set(SPR\_LIBRARY\_INSTALL\_DIR "library file のインストール先")} \\
+}{chap-2-2-set-install-dir.eps}{Set install directory}
+
+\bigskip
+% end: 2.2.SetInstallDirectory.tex

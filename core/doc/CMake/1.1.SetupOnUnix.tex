@@ -1,0 +1,88 @@
+% 1.1.SetupOnUnix.tex
+%	Last update: 2021/05/13 F.Kanehori
+%\newpage
+\subsection{unixでのセットアップ}
+\label{subsec:SetupOnUnix}
+\parindent=0pt
+
+\subsubsection{初めてのセットアップ}
+\label{subsubsec:FirstSetupOnUnix}
+
+ディレクトリ\SprTop{/core/src}に移動して、
+スクリプト\tt{setup.sh}を実行します。
+
+\CmndLine{%
+	> chdir .../Springhead/core/src \\
+	> ./setup.sh \\
+	found python (Version 3.4.2) \\
+	setup file ("setup.conf") not found. \\
+	\\
+	currently available binaries are ... \\
+	-- checking python ... found (version: 3.4.2) \\
+	-- checking gcc ... found (version: 7.5.0) \\
+	-- checking swig ... found (version: 2.0.4) \\
+	-- checking cmake ... found (version: 3.18.0) \\
+	-- checking gmake ... found (version: 4.1) \\
+	-- checking nkf ... found (version: 2.1.4 (2015-12-12)) \\
+	\\
+	check result is ... \\
+	-- setup is required (reason: setup file "setup.conf" not found, \\
+	"CMakeLists.txt" not found). \\
+	\\
+	continue? [y/n]: 
+}{chap-1-1-setup.eps}{Setup}
+\medskip
+ここで\tt{y}と答えればセットアップファイルが作成されます。
+セットアップ作業はこれで終わりです。
+
+\subsubsection{再セットアップ}
+\label{subsubsec:ReSetupOnUnix}
+
+初めてのセットアップと同様、次のようにしてスクリプトを実行してください。
+
+\CmndLine{%
+	> chdir .../Springhead/core/src \\
+	> ./setup.sh
+}{chap-1-1-re-setup.eps}{Re-setup}
+
+\medskip
+必要な環境に変更がなければ
+
+\CmndLine{%
+	\ \ : \\
+	check result is ... \\
+	-- no need to execute 'setup'. \\
+	done
+}{chap-1-1-no-need-to-re-setup.eps}{No need to re-setup}
+
+となり、スクリプトは終了します。
+
+何らかの変更がある場合、たとえば
+
+\Vskip{-.3\baselineskip}
+\begin{itemize}
+  \item	使用するツールのバージョン/PATHを変更する場合
+  \item	拡張版swigの再ビルドが必要となったとき
+\end{itemize}
+
+などの場合には
+
+\CmndLine{%
+	\ \ : \\
+	check result is ... \\
+	-- setup is required (reason: "swig" need to be rebuilt). \\
+	\\
+	continue? [y/n]: 
+}{chap-1-1-re-setup-needed.eps}{Re-setup is needed}
+
+などとなりますので、\tt{y}で答えてください。
+必要な処理が実行され、セットアップファイルが更新されます。
+
+\Important{%
+	何らかの理由で上記の``\tt{continue? [y/n]:}''が表示されないとき、
+	または強制的にセットアップファイルを再作成したいときには、
+	\tt{setup}コマンドに\,\tt{`-f'}オプションを付けて実行してください。
+}
+
+\bigskip
+% end 1.1.SetupOnUnix.tex

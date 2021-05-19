@@ -8,13 +8,14 @@
 #	    -V:		    Show version.
 #
 #  DESCRIPTION:
-#	Generate "HowToUseCMake" manual.
+#	Generate "CMake" manual.
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2019/08/05 F.Kanehori	First version.
+#	Ver 1.1  2021/05/19 F.Kanehori	CMake version.
 # =============================================================================
-version = 1.0
+version = 1.1
 
 import sys
 import os
@@ -90,7 +91,7 @@ cmnd = '%s %s' % (make_pdf, opts)
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
-	print('%s:HowToUseCMake.pdf generated.' % prog)
+	print('%s:CMake.pdf generated.' % prog)
 
 # (2) create html version.
 #opts = '-v -E -K -R -c'
@@ -100,7 +101,7 @@ cmnd = '%s %s %s main_html.tex' % (python, make_html, opts)
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
-	print('%s: HowToUseCMake.html generated.' % prog)
+	print('%s: CMake.html generated.' % prog)
 
 # ----------------------------------------------------------------------
 #  Clean up.

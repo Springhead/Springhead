@@ -1,0 +1,43 @@
+% 2.3.BuildParameters.tex
+%	Last update: 2021/05/17 F.Kanehori
+%\newpage
+\subsection{ビルドパラメータを変更する}
+\label{subsec:BuildParameters}
+\parindent=0pt
+
+ファイル\Path{\CMakeSettings{}}に定義されている変数のうち、
+次のものは変更することができます。
+
+\def\Width{250pt}
+\begin{center}
+\ifLwarp
+\begin{tabular}{ll} \hline
+\else
+\begin{longtable}{ll} \hline
+\fi
+	\tt{OOS\_BLD\_DIR} & \RBox{%
+		CMakeの生成物を格納する作業場所(ディレクトリ)の名称。\\
+		デフォルト値は\tt{build}。} \\
+	\tt{VS\_VERSION} & \RBox{%
+		Visual Studioのバージョン。
+		\tt{devenv}がPATHに含まれているならば、セットアップ時に
+		自動的に設定されます。
+		そうでない場合には、適切な値を設定してください。} \\
+	\tt{COMP\_FLAGS\_ADD} & \RBox{%
+		追加するコンパイルフラグ。\\
+		既定値\tt{COMP\_FLAGS}は\Path{CMakeOpts{.dist}}に定義されています。} \\
+	\tt{LINK\_FLAGS\_ADD} & \RBox{%
+		追加するリンクフラグ。\\
+		既定値\tt{COMP\_FLAGS}は\Path{CMakeOpts{.dist}}に定義されています。} \\
+		\hline
+\ifLwarp
+\end{tabular}
+\else
+\end{longtable}
+\fi
+\end{center}
+
+その他の変数は変更しないでください。
+
+\bigskip
+% end: 2.3.BuildParameters.tex

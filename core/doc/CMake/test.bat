@@ -23,7 +23,7 @@ if "%1" equ "pdf" (
 
 ) else if "%1" equ "html" (
     set CWD=%CD%
-    if "!CWD:~-13!" equ "HowToUseCMake" (set OPT=)
+    if "!CWD:~-13!" equ "CMake" (set OPT=)
     if "!CWD:~-3!" equ "tmp" (set OPT=-S)
 
     if "!OPT!" equ "-S" (cd ..)
@@ -33,6 +33,7 @@ if "%1" equ "pdf" (
     if %VERBOSE% equ 1	set ARGS=!ARGS! -v
 
     echo test start at "%CD%"
+    echo python buildhtml.py !ARGS! main_html.tex
     python buildhtml.py !ARGS! main_html.tex
 
     if "!OPT!" equ "-S" (cd tmp)

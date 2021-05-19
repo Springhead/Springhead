@@ -1,0 +1,30 @@
+% 2.1.ImportPackages.tex
+%	Last update: 2021/05/17 F.Kanehori
+%\newpage
+\subsection{外部パッケージを利用する}
+\label{subsec:ImportPackages}
+\parindent=0pt
+
+別途インストールしたパッケージを使用する場合は、
+ファイル\Path{\CMakeConf{}}の内容を次のように編集します。
+
+\medskip
+変数\tt{CMALE\_PREFIX\_PATH}にパッケージを探索するパスを設定する。
+\def\cite#1{\hspace{10pt}\footnotesize{#1}}
+\CmndLine{%
+	\cite{set(CMAKE\_PREFIX\_PATH ".../somewhre/appropreate")} \\
+	\cite{\hspace{20pt}\#\hspace{40pt}{(\rm{use absolute path)}}}\\
+	\cite{\hspace{20pt}\#\hspace{40pt}%
+		{(\rm{multiple paths must be separated by `newline' or `semicolon')}}}\\
+	\cite{)}\\
+}{chap-1-3-cmake-prefix-path.eps}{PackageImport}
+\medskip
+\begin{narrow}[s]
+	実際に探索するパスは、\tt{<prefix> | <prefix>/(cmake|CMake) |}
+	\tt{<prefix>/<name>* | <prefix>/<name>*/(cmake|CMake)}などです。
+	ここで\tt{\,<prefix>\,}は変数に設定したパス、
+	\tt{\,<name>\,}はパッケージ名を表します。
+	詳細はcmakeのドキュメントを参照してください。
+\end{narrow}
+
+% end: 2.1.ImportPackages.tex

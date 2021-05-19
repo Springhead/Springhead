@@ -1,0 +1,104 @@
+% 1.2.SetupOnWindows.tex
+%	Last update: 2021/05/17 F.Kanehori
+%\newpage
+\subsection{Windowsでのセットアップ}
+\label{subsec:SetupOnWindows}
+\parindent=0pt
+
+\subsubsection{初めてのセットアップ}
+\label{subsubsec:FirstSetupOnWindows}
+
+ディレクトリ\Path{.../Springhead/core/src}に移動して、
+スクリプト\tt{setup.bat}を実行します。
+
+\CmndLine{%
+	> chdir .../Springhead/core/src \\
+	> setup.bat \\
+	-- found python: C:/Python/python.exe \\
+	\\
+	setup file ("setup.conf") not exists. \\
+	\\
+	currently available binaries are ... \\
+	-- checking python ... found (version: 3.5.4) \\
+	-- checking devenv ... selection\_number: None \\
+	    found (version: 15.9.28307.222) \\
+	-- checking swig ... found (version: 2.0.4) \\
+	-- checking cmake ... found (version: 3.18.1) \\
+	\\
+	check result is ... \\
+	-- setup is required (reason: "CMakeLists.txt" does not exist, \\
+	setup file "setup.conf" not found). \\
+	\ \ : \\
+	-- (re)generating setup file ... \\
+	\ \ :
+}{chap-1-2-setup.eps}{Setup on Windows}
+\medskip
+セットアップ作業は以上です。
+
+\medskip
+\begin{small}
+(注) \tt{devenv}が複数見つかった場合は次のようになりますので、
+	適切な番号を選択してください。
+
+\CmndLine{%
+	-- checking devenv ... selection\_number: None \\
+	found multiple "devenv" \\
+	Select number (or '0' to try another one) \\
+	\hspace{10pt}(1) Visual Studio Community 2017 (15.9.28307.222) \\
+	\hspace{10pt}(2) Visual Studio Community 2019 (16.9.31129.286) \\
+	\hspace{10pt}(0) try another one \\
+	enter number:
+}{chap-1-2-multiple-devenv.eps}{Found multiple devenv}
+\end{small}
+
+\subsubsection{再セットアップ}
+\label{subsubsec:ReSetupOnWindows}
+
+初めてのセットアップと同様、次のようにしてスクリプトを実行してください。
+
+\CmndLine{%
+	> chdir C:/Springhead/core/src \\
+	> setup.bat
+}{chap-1-2-re-setup.eps}{Re-Setup on Windows}
+
+\medskip
+必要な環境に変更がなければ
+
+\CmndLine{%
+	check result is ... \\
+	-- no need to execute 'setup'. \\
+	done
+}{chap-1-2-no-need-to-re-setup.eps}{No need to Re-Setup}
+
+となり、スクリプトは終了します。
+
+何らかの変更がある場合、たとえば
+
+\Vskip{-.3\baselineskip}
+\begin{itemize}
+  \item	使用するVisual Studioのバージョンを変更する場合
+	(新しい Visual Studio をインストールした場合など)
+  \item	使用するツールのバージョン/PATHを変更する場合
+\end{itemize}
+
+などの場合には
+
+\CmndLine{%
+	check result is ... \\
+	-- setup is required (reason: "devenv" path differs, \Cont\\
+	\hspace{60pt}"nmake" path differs). \\
+	\\
+	continue? [y/n]: 
+}{chap-1-2-re-setup-needed.eps}{Re-Setup is needed}
+
+などとなりますので、\tt{y}で答えてください。
+必要な処理が実行され、セットアップファイルが更新されます。
+
+\Important{%
+	何らかの理由で上記の``\tt{continue? [y/n]:}''が表示されないとき、
+	または強制的にセットアップファイルを再作成したいときには、
+	\tt{setup}コマンドに\,\tt{-f}オプションを付けて実行してください。
+}
+
+\bigskip
+% end 1.2.SetupOnWindows.tex

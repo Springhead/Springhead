@@ -1,0 +1,107 @@
+% 1.0.Setup.tex
+%	Last update: 2021/05/17 F.Kanehori
+\newpage
+\section{セットアップ}
+\label{chap:Setup}
+\parindent=0pt
+
+\SprLib は、unixおよびWindowsの両プラットフォームに対応しており、
+ビルド環境はCMakeを用いて生成することができます
+(unixではMakefile、WindowsではVisual Studio用のsolution/project file)。
+
+この章では、\SprLib のセットアップ方法について、
+unixとWindowsのそれぞれについて説明します。
+
+\Important{%
+	動作を確認しているプラットフォームは、以下のとおりです。\\
+	\begin{tabular}{@{\hspace{20pt}}l} \\
+	    \multicolumn{1}{l}{unix:} \\
+	    Ubuntu 19.04.4 LTS (x86\_64) \\
+	    cmake version 3.18.0 \\
+	    \multicolumn{1}{l}{Windows:} \\
+	    Windows 10 Enterprise	\\
+	    Microsoft Visual Studio Community 2019, Version 16.9.3 \\
+	    Windows SDK version 10.0.18362.0 \\
+	    cmake version 3.18.1 \\
+	\end{tabular}
+}
+
+\bigskip
+本書では、\SprLib をインストールしたディレクトリを\SprTop{}と表記します。
+実際にインストールしたディレクトリに合わせて適宜読み替えてください。
+
+\bigskip
+セットアップでは、
+\begin{itemize}
+  \item	ビルドに必要なツールの確認
+  \item	拡張版\tt{swig}のビルド (unixのみ)
+  \item	\Path{CMakeLists.txt}の準備
+\end{itemize}
+などを実施します。
+
+セットアップで得られた情報はセットアップファイル\\
+\hspace{10pt}\SetupPath\\
+に記録され、
+CMake及びビルドの実行時に参照されます。
+また、セットアップが済んでいるか否かはこのファイルが存在するか否かで判断します。
+
+なお、セットアップファイルを削除することでセットアップ前の状態を復元できます。
+
+\newpage
+\SprLib のビルドで使用するツールは次のものです。
+
+\def\Width{260pt}	% see macro.tex for LBox and RBox
+\begin{narrow}
+    \ifLwarp
+    \begin{tabular}{p{80pt}p{\Width}}\hline
+    \else
+    \begin{longtable}{p{80pt}p{\Width}}\hline
+    \fi
+	\tt{python} & \RBox{%
+		複数のプラットフォームに統一して対応するため。\\
+		ビルドで使用するpython scriptはpython version 3ベースで記述されています。
+		拡張モジュール等を使用することでpython 2.7.17での動作は確認して
+		いますが、今後の修正において対応しきれないことも考えられます。
+		Python 3以降のバージョンが使える環境をお使いください。} \\\hline
+	\tt{cmake} & \RBox{%
+		Solution file/Makefile の生成を自動化するため。} \\\hline
+	\tt{swig} & \RBox{%
+		Springhead用に拡張されたもの。
+		EmbPythonライブラリをビルドするのに必要。
+		unixの場合にはセットアップ時に生成します。
+		Windowsの場合には配布セットに含まれたものを使用します。} \\\hline
+	\tt{gcc}, \tt{gmake} & \RBox{%
+		unix環境のビルドツール。} \\\hline
+	\tt{devenv}, \tt{nmake} & \RBox{%
+		Windows環境におけるVisual Studioのビルドツール。
+		Visual Studioのインストールキットに含まれています} \\\hline
+	\tt{nkf} & \RBox{%
+		encoding変換のため。
+		なくても大丈夫ですが、一部のメッセージが文字化けする
+		可能性があります。} \\\hline
+    \ifLwarp
+    \end{tabular}
+    \else
+    \end{longtable}
+    \fi
+\end{narrow}
+
+次の点にご注意ください。
+\begin{itemize}
+  \item	unix環境において、
+	デフォルトでgmakeが見つからない場合(\tt{which gmake}で確認できます)には、
+	gmakeという名前でmakeにリンクを張ってください。\\
+	例えば \tt{cd /usr/bin; sudo ln -s `which make` gmake}\\
+	なお、\tt{make --version} としたときに
+	\tt{GNU Make 4.1}などとGNU Makeの表示がでないときは、
+	gmakeのインストールが必要となります。\\
+	\Vskip{-.7\baselineskip}
+  \item	unixの場合、必要なツールはすべて\tt{PATH}に登録しておいてください。
+  \item	Windows環境で複数のVisual Studioがインストールされている場合には、
+	使用するVisual Studioのバージョンを選択することができます(後述)。
+  \item	Windowsの場合、\tt{devenv}以外のツールは
+	\tt{PATH}に登録しておいてください。
+\end{itemize}
+
+\bigskip
+% end: 1.0.Setup.tex
