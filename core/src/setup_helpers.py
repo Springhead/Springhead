@@ -282,24 +282,30 @@ def try_find_nmake(which):
 	info = identify_vsinfo(vsinfo, vs_path)
 	if info is None:
 		Error(caller).warn('can\'t get VS installation info')
-		return SetupFile.NOTFOUND, None
-	# 
-	cmnd = 'where /R "%s" nmake.exe' % info['installPath']
-	stat, out = execute(cmnd)
-	if stat != 0:
-		# not found
-		return SetupFile.NOTFOUND, None
-	is_x64 = sys.maxsize > 2**32
-	if is_x64:
-		# run on 64bit machine
-		for line in out.split(os.linesep):
-			if 'Hostx64\\x64' in line:
-				break
+		# vsinfo が取得できない → PATH に入っていればそれを使う
+		cmnd = 'where nmake.exe'
+		stat, out = execute(cmnd)
+		if stat != 0:
+			return SetupFile.NOTFOUND, None
+		path = out.split(os.linesep)[0]
 	else:
-		for line in out.split(os.linesep):
-			if 'Hostx86\\x86' in line:
-				break
-	path = line
+		cmnd = 'where /R "%s" nmake.exe' % info['installPath']
+		stat, out = execute(cmnd)
+		if stat != 0:
+			# not found
+			return SetupFile.NOTFOUND, None
+		else:
+			is_x64 = sys.maxsize > 2**32
+			if is_x64:
+				# run on 64bit machine
+				for line in out.split(os.linesep):
+					if 'Hostx64\\x64' in line:
+						break
+			else:
+				for line in out.split(os.linesep):
+					if 'Hostx86\\x86' in line:
+						break
+			path = line
 	#
 	ver_patt = r'Version ([\d\.]+)'
 	stat, ver_out = execute(path, stderr=Proc.STDOUT)

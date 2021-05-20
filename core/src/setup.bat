@@ -77,7 +77,7 @@ if "%1" == "-o" (
 )
 rem -------- ‚±‚±‚Ü‚Å --------------------------------
 
-if not %DEBUG% equ 0 (echo %PROG%: %$python% setup.py %* %$python)
+if not %DEBUG% equ 0 (echo %PROG%: %$python% setup.py %* %$python%)
 %$python% setup.py %* %$python%
 
 endlocal
