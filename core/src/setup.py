@@ -45,9 +45,10 @@
 #     Ver 1.1    2021/01/14 F.Kanehori	setup 自動実行組み込み.
 #     Ver 1.2    2021/04/01 F.Kanehori	Windows では swig 生成を中止.
 #     Ver 1.2.1  2021/05/13 F.Kanehori	Bug fix.
+#     Ver 1.2.2  2021/05/20 F.Kanehori	Bug fix.
 # ======================================================================
 from __future__ import print_function
-version = "1.2"
+version = "1.2.2"
 
 import sys
 import os
@@ -87,7 +88,7 @@ from setup_helpers import *
 #  Constants
 #
 #required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake', 'nkf' ]
-required_windows = [ 'python', 'devenv', 'swig', 'cmake' ]
+required_windows = [ 'python', 'devenv', 'nmake', 'swig', 'cmake' ]
 required_unix = [ 'python', 'gcc', 'swig', 'cmake', 'gmake', 'nkf' ]
 required = required_unix if Util.is_unix() else required_windows
 #optional_tools = [ 'cmake' ]
@@ -599,6 +600,19 @@ if force:	# -F sets -f implicitly
 	else:
 		msg = 'force option \'-f\' specified'
 	setup_reason_need = [msg]
+
+#  必要なプログラムが揃っていない
+for prog in required:
+	if prog in prog_scanned and prog_scanned[prog] == SetupFile.NOTFOUND:
+		# 必要なプログラムが揃っていない
+		msg = ''
+		if prog in ['nmake', 'cmake']:
+			msg = "put into 'PATH ' may resolve this"
+		if prog in ['swig']:
+			msg = "revive 'swig' from GitHub"
+		setup_cant_go_on = True
+		setup_reason_fail = ["lacking required program '%s', " % prog
+				   + "put into 'PATH' may resolve this"]
 
 #  判定結果の提示
 print()
