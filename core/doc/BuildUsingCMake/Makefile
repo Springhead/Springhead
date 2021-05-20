@@ -10,7 +10,7 @@
 ######################################################################
 
 TOPFILE	= main.tex
-PDFNAME	= HowToUseCMake.pdf
+PDFNAME	= BuildUsingCMake.pdf
 INSPATH	= ../../../generated/doc
 
 TEXFILE = $(PDFNAME:.pdf=.tex)
@@ -20,20 +20,16 @@ INSFILE	= $(INSPATH)/$(PDFNAME)
 SRCS	=\
 	main.tex		\
 	macro.tex		\
-	1.0.Install		\
-	1.1.Download		\
-	1.2.Preparation		\
-	1.3.Cmake		\
-	1.4.Build		\
-	2.0.Application		\
-	2.1.PreparationForApp	\
-	2.2.QandA		\
-	2.3.0.Background	\
-	2.3.1.OldMethod		\
-	2.3.2.CmakeMethod	\
-	2.3.3.Problems		\
-	2.3.4.Solutions		\
-	2.3.5.Implementation	\
+	1.0.Setup		\
+	1.1.SetupOnUnix		\
+	1.2.SetupOnWindows	\
+	2.0.ChangingOptions	\
+	2.1.ImportPackages	\
+	2.2.SetInstallDirectory	\
+	2.3.BuildParameters	\
+	3.0.CmakeAndBuild	\
+	3.1.Cmake		\
+	3.2.Build		\
 	LastUpdate.tex
 
 TIMESTAMPFILE	= timestamp.tex

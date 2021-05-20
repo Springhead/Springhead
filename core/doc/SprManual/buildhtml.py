@@ -11,10 +11,11 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/11/29 F.Kanehori	First version.
-#	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
+#     Ver 1.0	 2018/11/29 F.Kanehori	First version.
+#     Ver 1.1	 2019/01/29 F.Kanehori	Add: call html_escape()
+#     Ver 1.1.1	 2021/05/19 F.Kanehori	Test svg directory changed.
 # ======================================================================
-version = 1.1
+version = '1.1.1'
 
 import sys
 import os
@@ -32,7 +33,7 @@ PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
 
 # for test
-svg_dir = '../../../../../../SprManual-fig/svg'.replace('/', os.sep)
+svg_dir = '../../../../../../svg-fig/SprManual'.replace('/', os.sep)
 
 # ----------------------------------------------------------------------
 #  External tools.

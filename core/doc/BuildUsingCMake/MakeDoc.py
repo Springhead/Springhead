@@ -8,12 +8,13 @@
 #	    -V:		    Show version.
 #
 #  DESCRIPTION:
-#	Generate "CMake" manual.
+#	Generate "BuildUsingCMake" manual.
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2019/08/05 F.Kanehori	First version.
-#	Ver 1.1  2021/05/19 F.Kanehori	CMake version.
+#     Ver 1.0	 2019/08/05 F.Kanehori	First version.
+#     Ver 1.1	 2021/05/19 F.Kanehori	CMake version.
+#     Ver 1.2	 2021/05/20 F.Kanehori	Rename to BuildUsingCMake.
 # =============================================================================
 version = 1.1
 
@@ -91,7 +92,7 @@ cmnd = '%s %s' % (make_pdf, opts)
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
-	print('%s:CMake.pdf generated.' % prog)
+	print('%s:BuildUsingCMake.pdf generated.' % prog)
 
 # (2) create html version.
 #opts = '-v -E -K -R -c'
@@ -101,7 +102,7 @@ cmnd = '%s %s %s main_html.tex' % (python, make_html, opts)
 proc = Proc(dry_run=dry_run, verbose=verbose)
 stat = proc.execute(cmnd, addpath=addpath).wait()
 if stat == 0:
-	print('%s: CMake.html generated.' % prog)
+	print('%s: BuildUsingCMake.html generated.' % prog)
 
 # ----------------------------------------------------------------------
 #  Clean up.

@@ -14,7 +14,7 @@
 #	Ver 1.0  2018/11/29 F.Kanehori	First version.
 #	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
 #	Ver 1.2  2019/08/05 F.Kanehori	HowToUseCMake version.
-#	Ver 1.3  2021/05/19 F.Kanehori	Reconstruct: CMake version.
+#	Ver 1.3  2021/05/19 F.Kanehori	Rename to BuildUsingCMake.
 # ======================================================================
 version = 1.3
 
@@ -34,7 +34,7 @@ PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
 
 # for test
-svg_dir = '../../../../../../CMake-fig/svg'.replace('/', os.sep)
+svg_dir = '../../../../../../svg-fig/BuildUsingCMake'.replace('/', os.sep)
 
 # ----------------------------------------------------------------------
 #  External tools.
@@ -578,7 +578,7 @@ if options.copy:
 	#  生成されたファイルを"generated/doc/HowToUseCMake"にコピーする
 	#
 	fmdir = wrkspace
-	todir = '../../../../generated/doc/HowToUseCMake'
+	todir = '../../../../generated/doc/BuildUsingCMake'
 	#
 	targets = ['lateximages', 'fig/*.svg', '*.html', '*.css']
 	if verbose:

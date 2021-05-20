@@ -17,8 +17,9 @@
 #     Ver 1.3    2021/03/02 F.Kanehori	HowToBuildSpringhead_Windows version.
 #     Ver 1.4    2021/03/02 F.Kanehori	ドキュメント名称変更
 #     Ver 1.4.1  2021/04/19 F.Kanehori	Bug fixed.
+#     Ver 1.4.2	 2021/05/19 F.Kanehori	Test svg directory changed.
 # ======================================================================
-version = '1.4'
+version = '1.4.2'
 
 import sys
 import os
@@ -36,7 +37,7 @@ PIPE = subprocess.PIPE
 NULL = subprocess.DEVNULL
 
 # for test
-svg_dir = '../../../../../../SprInstallGuide-fig/svg'.replace('/', os.sep)
+svg_dir = '../../../../../../svg-fig/SprInstallGuide'.replace('/', os.sep)
 
 # ----------------------------------------------------------------------
 #  External tools.
