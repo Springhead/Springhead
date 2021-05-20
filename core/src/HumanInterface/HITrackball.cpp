@@ -82,7 +82,7 @@ void HITrackball::SetAngle(float lon, float lat){
 }
 
 void HITrackball::GetAngle(float& lon, float& lat){
-	lon = latitude, lat = latitude;
+	lon = longitude, lat = latitude;
 }
 
 void HITrackball::SetDistance(float dist){
