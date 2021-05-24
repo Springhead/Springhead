@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(Target CDContGJK)
+set(Target PHPenaltyTest)
 set(ProjectName ${Target})
 project(${ProjectName} CXX)
 

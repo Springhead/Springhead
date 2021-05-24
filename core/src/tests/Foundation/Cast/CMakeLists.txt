@@ -74,7 +74,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
-message(STATUS "Library type: ${SPRLIBTYPE}")
+message(STATUS "Library type: ${LIBTYPE}")
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -117,7 +117,7 @@ else()
 				${SHARED_STDLIB_NAMES})
     set(STATIC_LIBRARY_NAMES	${STATIC_LIBRARY_NAMES_ADD}
 				${STATIC_STDLIB_NAMES})
-    if("${SPRLIBTYPE}" STREQUAL "SHARED")
+    if("${LIBTYPE}" STREQUAL "SHARED")
 	if(${_found} EQUAL -1)
 	    set(SHARED_LIBRARY_NAMES	${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES})

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(Target CDContGJK)
+set(Target FIImport)
 set(ProjectName ${Target})
 project(${ProjectName} CXX)
 
@@ -37,7 +37,7 @@ endif()
 # --------------------------------------------------------------
 #  Main target
 #
-file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
+set(SRCS main.cpp)
 add_executable(${Target} ${SRCS})
 if(Windows)
     target_link_libraries(${Target}
