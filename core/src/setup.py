@@ -604,6 +604,9 @@ if force:	# -F sets -f implicitly
 #  必要なプログラムが揃っていない
 for prog in required:
 	if prog in prog_scanned and prog_scanned[prog] == SetupFile.NOTFOUND:
+		if is_unix and prog in ['swig']:
+			# unixの場合は後でmakeするのでOK
+			continue
 		# 必要なプログラムが揃っていない
 		msg = ''
 		if prog in ['nmake', 'cmake']:
