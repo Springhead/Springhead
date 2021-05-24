@@ -47,14 +47,14 @@ if [ ${libtype} = "STATIC" ]; then
 	objs=`fun .`
 	for obj in $objs;
 	do
-	    ar qvs ${outdir}/${libname}.a $objs
+	    ar qs ${outdir}/${libname}.a $objs
 	done
 	popd > /dev/null
     done
 
     echo step 2 ... ranlib \"${libname}.a\"
     ranlib ${outdir}/${libname}.a
-    #ar t ${libname}.a
+    ar t ${outdir}/${libname}.a $objs
 fi
 
 if [ $libtype = "SHARED" ]; then
