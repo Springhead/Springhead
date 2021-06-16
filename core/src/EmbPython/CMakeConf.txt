@@ -1,0 +1,78 @@
+# ==============================================================================
+#  CMakeConf.txt
+#    ** このファイルを直接編集してコミットしないようにお願いします **
+#    ** DO NOT edit and commit this file. **
+#
+#    このファイルでは、次の事項を設定します。
+#	インストールディレクトリの設定
+#		変数 CMAKE_INSTALL_PREFIX を定義すれば、ヘッダファイル及び
+#		ライブラリファイルのインストール先を変更できます。
+#		インストールしたファイルは、find_package で参照可能です。
+#		INSTALL ターゲット自体の生成を抑止することもできます
+#    下記を参照のこと。
+#
+#    This file defines following matters.
+#	Install directory
+#		Change install directory of header files, generated 
+#		library file and config file by redidfining variable
+#		CMAKE_INSTALL_PREFIX. You can find these files using
+#		find_package directive.
+#    See below for details.
+#
+# ==============================================================================
+set(SPRINGHEAD_CMAKECONF_VERSION 1.1.0)
+
+# ------------------------------------------------------------------------------
+#  Install directories (library and headers).
+#
+#    ヘッダファイル、ライブラリファイル及びコンフィグファイルのインストール先は
+#    自動的に次のディレクトリに設定されます (デフォルト動作)。
+#    By default, header files, generated library file and configuration file
+#    will be installed under following directories.
+#	Windows:	C:/Program Files/EmbPython
+#	unix:		/usr/local/EmbPython
+#
+#    インストール先を変更するには、変数 CMAKE_INSTALL_PREFIX にインストール先の
+#    ディレクトリを設定してください (GUIで設定することもできます)。
+#	※ 変数の値は絶対パスで定義してください。
+#	※ 実際にインストールするにはターゲット "INSTALL" を実行してください。
+#
+#    To change default action, uncomment and set new path to the variable
+#    CMAKE_INSTALL_PREFIX.
+#    NOTE:	
+#       Use absolute path.
+#       Execute "INSTALL" target to install actually.
+#
+#    ファイルのインストール先は次のとおりです。
+#    Files are installed into following directries;
+#       ${CMAKE_INSTALL_PREFIX}/EmbPython/*.cmake	(configurations)
+#                              /EmbPython/include/*.h	(headers)
+#                              /EmbPython/lib/*.lib	(libraries)
+#
+#    ヘッダファイル及びライブラリファイルのインストール先は、次の変数を定義
+#    することで変更することができます (コンフィグファイルのインストール先を
+#    変更することはできません)。相対パスの場合は ${CMAKE_INSTALL_PREFIX} から
+#    の相対と解釈されます。
+#    Install directory for header files and/or library file can be changed
+#    by specifying following variabels. Relative path is interpreted as that
+#    from ${CMAKE_INSTALL_PREFIX}.
+#
+#	EMBPYTOHN_HEADERS_INSTALL_DIR		for header files
+#	EMBPYTOHN_LIBRARY_INSTALL_DIR		for library file
+# ------------------------------------------------------------------------------
+if(Windows)
+#    set(CMAKE_INSTALL_PREFIX	"C:/Program Files")
+    set(CMAKE_INSTALL_PREFIX	"$ENV{HOME}/EXPORT/Springhead")
+elseif(unix)
+#    set(CMAKE_INSTALL_PREFIX	"/usr/local")
+    set(CMAKE_INSTALL_PREFIX	"$ENV{HOME}/EXPORT/Springhead")
+endif()
+set(EMBPYTHON_HEADERS_INSTALL_DIR	"EmbPython/include")
+set(EMBPYTHON_LIBRARY_INSTALL_DIR	"EmbPython/lib")
+
+#    次の行のコメントを外せば、INSTALL ターゲットは生成しません。
+#    To uncomment following line, you can suppress creating INSTALL target.
+
+#set(DO_NOT_GENERATE_INSTALL_TARGET True)
+
+# end: CMakeConf.txt

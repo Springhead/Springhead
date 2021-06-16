@@ -20,7 +20,7 @@ set(MacOS   False)
 #  Project name.
 #	Define porject name here.
 #
-set(ProjectName MyEPApp)
+set(ProjectName PythonSpr)
 
 # ------------------------------------------------------------------------------
 #  Binary(working) directory name used when you cmake Springhead library.
@@ -47,8 +47,13 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
+if(NOT DEFINED LIBTYPE)
+    if(Windows)
+	set(LIBTYPE STATIC)
+    else()
+	set(LIBTYPE SHARED)
+    endif()
+endif()
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
@@ -123,7 +128,8 @@ endif()
 if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
-    set(LIBRARY_PATHS_ADD ${EMPTY})
+    set(LIBRARY_PATHS_ADD ${TOPDIR}/generated/lib
+			  /lib/x86_64-linux-gnu)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -138,8 +144,12 @@ if(Windows)
 #    set(LIBRARY_NAMES_RELEASE python35.lib)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
-    set(STATIC_LIBRARY_NAMES_ADD ${EMPTY})
-    set(SHARED_LIBRARY_NAMES_ADD EmbPython python3.4m)
+    if("${LIBTYPE}" STREQUAL "STATIC")
+	set(STATIC_LIBRARY_NAMES_ADD EmbPython)
+    else()
+	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
+	set(SHARED_LIBRARY_NAMES_ADD EmbPython)
+    endif()
     #
     #  for backward compatibility
     #

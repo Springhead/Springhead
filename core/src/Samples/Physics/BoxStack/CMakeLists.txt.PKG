@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # --------------------------------------------------------------
 #  Project definition
 #
-set(ProjectName CDContGJK)
+set(ProjectName BoxStack)
 project(${ProjectName} CXX)
 set(Target ${ProjectName})
 

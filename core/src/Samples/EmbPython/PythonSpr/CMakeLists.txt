@@ -74,7 +74,7 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
-message(STATUS "Library type: ${SPRLIBTYPE}")
+message(STATUS "Library type: ${LIBTYPE}")
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -106,15 +106,15 @@ set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
 list(FIND SHARED_LIBRARY_NAMES_ADD EmbPython _found_shared)
 list(FIND STATIC_LIBRARY_NAMES_ADD EmbPython _found_static)
 set(_found 0)
-if(${_found_shared} EQUAL 0 OR ${_found_static} EQUAL 0)
+if(${_found_shared} GREATER -1 OR ${_found_static} GREATER -1)
     set(_found 1)
 endif()
-if(${_found} EQUAL 0)
+if(${_found} EQUAL 1)
     message("++ EMbPython found in LIBRARY_NAMES_ADD")
 endif()
 
 if(Windows)
-    if(${_found} EQUAL -1)
+    if(${_found} EQUAL 0)
 	set(LIBRARY_NAMES	${SPRLIB_NAMES}
 				${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
     else()
@@ -127,23 +127,23 @@ else()
 				${SHARED_STDLIB_NAMES})
     set(STATIC_LIBRARY_NAMES	${STATIC_LIBRARY_NAMES_ADD}
 				${STATIC_STDLIB_NAMES})
-    if("${SPRLIBTYPE}" STREQUAL "SHARED")
-	if(${_found} EQUAL -1)
+    if("${LIBTYPE}" STREQUAL "SHARED")
+	if(${_found} EQUAL 0)
 	    set(SHARED_LIBRARY_NAMES	${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES})
 	else()
-	    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
+	    list(REMOVE_ITEM SHARED_LIBRARY_NAMES_ADD EmbPython)
 	    set(SHARED_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES})
 	endif()
     else()
-	if(${_found} EQUAL -1)
+	if(${_found} EQUAL 0)
 	    set(STATIC_LIBRARY_NAMES	${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES}
 					${STATIC_LIBRARY_NAMES})
 	else()
-	    if(${_found_shared} EQUAL 0)
+	    if(${_found_shared} GREATER -1)
 		list(REMOVE_ITEM SHARED_LIBRARY_NAMES EmbPython)
 	    endif()
 	    set(SHARED_LIBRARY_NAMES	EmbPython

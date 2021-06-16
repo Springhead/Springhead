@@ -6,6 +6,7 @@
 #
 if(STANDALONE)
     cmake_minimum_required(VERSION 3.1)
+    set(EMBPYTHON_PROJECT_VERSION 1.1.0)
     set(ProjectName EmbPython)
     message(STATUS "Project: ${ProjectName}")
     project(${ProjectName} CXX)
@@ -35,23 +36,37 @@ if(STANDALONE)
     #
     if(Windows)
 	set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
-	set(LIBTYPE STATIC)
-	set(VS_VERSION "15.0")
+	if(NOT DEFINED LIBTYPE)
+	    set(LIBTYPE STATIC)
+	endif()
+	if(NOT DEFINED VS_VERSION)
+	    set(VS_VERSION "15.0")
+	endif()
 	set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
     else()
 	set(CMAKE_CONFIGURATION_TYPES Release)
-	set(LIBTYPE SHARED)
+	if(NOT DEFINED LIBTYPE)
+	    set(LIBTYPE SHARED)
+	    set(LIB_SUFFIX so)
+	else()
+	    set(LIB_SUFFIX a)
+	endif()
     endif()
     message(STATUS "Library type: ${LIBTYPE}")
     #
     set(OPTS_FILE_NAME "CMakeOpts.txt")
-    set(OPTS_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}")
+    set(OPTS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${OPTS_FILE_NAME}")
     set(OPTS_DEFAULT_FILE "${SPR_SRC_DIR}/${OPTS_FILE_NAME}.dist")
     include_file(OPTS ${OPTS_FILE} ${OPTS_DEFAULT_FILE})
     if(unix)
         set(CMAKE_CXX_COMPILER	"${GPP_PATH}/g++")
 	set(CMAKE_CXX_FLAGS	"-Wno-write-strings")
     endif()
+    #
+    set(CONF_FILE_NAME "CMakeConf.txt")
+    set(CONF_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${CONF_FILE_NAME}")
+    set(CONF_DEFAULT_FILE "${SPR_SRC_DIR}/${CONF_FILE_NAME}.dist")
+    include_file(CONF ${CONF_FILE} ${CONF_DEFAULT_FILE})
 endif() 
 
 # ------------------------------------------------------------------------------
@@ -69,7 +84,7 @@ endif()
 
 # ------------------------------------------------------------------------------
 # EmbPython_RunSwig generate files.
-#	These files are removed when 'clean' target executed.
+#	These files should be removed when 'clean' target executed.
 #
 set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
 		HumanInterface Physics)
@@ -143,7 +158,7 @@ endif()
 # ------------------------------------------------------------------------------
 #  Main target.
 #
-add_library(${Target} STATIC ${SRCS})
+add_library(${Target} ${LIBTYPE} ${SRCS})
 
 # ------------------------------------------------------------------------------
 #  Apply local settings.
@@ -186,21 +201,23 @@ if(Windows)
     set(LIB_SUFFIX_RELEASE  )
     set(LIB_SUFFIX_TRACE   T)
     set(_platform ${CMAKE_GENERATOR_PLATFORM})
-    set(_output_name_DEBUG   "${Target}${VS_VERSION}${LIB_SUFFIX_DEBUG}${_platform}")
-    set(_output_name_RELEASE "${Target}${VS_VERSION}${LIB_SUFFIX_RELEASE}${_platform}")
-    set(_output_name_TRACE   "${Target}${VS_VERSION}${LIB_SUFFIX_TRACE}${_platform}")
+    set(OUTPUT_NAME_DEBUG   "${Target}${VS_VERSION}${LIB_SUFFIX_DEBUG}${_platform}")
+    set(OUTPUT_NAME_RELEASE "${Target}${VS_VERSION}${LIB_SUFFIX_RELEASE}${_platform}")
+    set(OUTPUT_NAME_TRACE   "${Target}${VS_VERSION}${LIB_SUFFIX_TRACE}${_platform}")
     set_target_properties("${Target}" PROPERTIES
-	OUTPUT_NAME_DEBUG   ${_output_name_DEBUG}
-	OUTPUT_NAME_RELEASE ${_output_name_RELEASE}
-	OUTPUT_NAME_TRACE   ${_output_name_TRACE}
+	OUTPUT_NAME_DEBUG   ${OUTPUT_NAME_DEBUG}
+	OUTPUT_NAME_RELEASE ${OUTPUT_NAME_RELEASE}
+	OUTPUT_NAME_TRACE   ${OUTPUT_NAME_TRACE}
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG   ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPR_SRC_DIR}/${Target}
 	ARCHIVE_OUTPUT_DIRECTORY_TRACE   ${SPR_SRC_DIR}/${Target}
     )
 elseif(unix)
-    set(_output_name "lib${Target}.a")
+    set(OUTPUT_NAME ${Target})
     set_target_properties("${Target}" PROPERTIES
+	OUTPUT_NAME ${OUTPUT_NAME}
 	ARCHIVE_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target}
+	LIBRARY_OUTPUT_DIRECTORY ${SPR_SRC_DIR}/${Target}
     )
 endif()
 
@@ -223,9 +240,14 @@ add_custom_target(${CleanTarget}
     BYPRODUCTS ${genereated_files}
     DEPENDS ${generated_files} ${_external_dependencies}
 )
+if(Windows)
+    set(_python ${SPR_SRC_DIR}/do_python.bat)
+else()
+    set(_python python)
+endif()
 add_custom_command(
     OUTPUT ${generated_files}
-    COMMAND python ${_args}
+    COMMAND ${_python} ${_args}
     WORKING_DIRECTORY ${_wrkdir}
     COMMENT [[  generating EmbPython sources ]]
 )
@@ -245,7 +267,7 @@ if(STANDALONE)
 	set(_libdir ${SPR_SRC_DIR}/${Target})
 	foreach(_tmp ${CMAKE_CONFIGURATION_TYPES})
 	    string(TOUPPER ${_tmp} _conf)
-	    set(_libfile_${_conf} ${_libdir}/${_output_name_${_conf}}.lib)
+	    set(_libfile_${_conf} ${_libdir}/${OUTPUT_NAME_${_conf}}.lib)
 	    file(TO_NATIVE_PATH ${_libfile_${_conf}} _libfile_${_conf})
 	    set(_cmnd_${_conf} copy ${_libfile_${_conf}} ${_install_dir})
 	endforeach()
@@ -263,10 +285,8 @@ if(STANDALONE)
 	set(_install_dir ${SPR_TOP_DIR}/generated/lib)
 	file(TO_NATIVE_PATH ${_install_dir} _install_dir)
 
-	set(_libdir ${SPR_SRC_DIR}/${Target})
-	set(_libfile ${_libdir}/${_output_name})
-
 	if("${LIBTYPE}" STREQUAL "STATIC")
+	    set(_libfile ${CMAKE_CURRENT_SOURCE_DIR}/lib${OUTPUT_NAME}.a)
 	    add_custom_command(TARGET ${Target}
 		POST_BUILD
 		COMMAND ranlib ${_libfile}
@@ -276,15 +296,136 @@ if(STANDALONE)
 		COMMENT [[  copying static library file]]
 	    )
 	else()
+	    set(_libfile ${CMAKE_CURRENT_SOURCE_DIR}/lib${OUTPUT_NAME}.so)
 	    add_custom_command(TARGET ${Target}
 		POST_BUILD
 		COMMAND mkdir -p ${_install_dir}
-		COMMAND gcc -shared -o ${_install_dir}/lib${Target}.so -Wl,--whole-archive ${_libfile} -Wl,--no-whole-archive
+		COMMAND cp ${_libfile} ${_install_dir}
 		WORKING_DIRECTORY ${_wrkdir}
-		COMMENT [[  generating shared library file ]]
+		COMMENT [[  copying static library file]]
 	    )
 	endif()
     endif()
+    set(LIBDIR ${_libdir})
+    set(GENDIR ${SPR_TOP_DIR}/generated/lib)
 endif()
+unset(LIBTYPE CACHE)
+unset(VS_VERSION CACHE)
+
+# ------------------------------------------------------------------------------
+#  If "STANDALONE" and "CMAKE_INSTALL_PREFIX" is defined, install headeres
+#  and library.  Otherwise, no more process.
+#
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/CMakeConf.txt")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/CMakeConf.txt")
+endif()
+if(NOT STANDALONE OR NOT CMAKE_INSTALL_PREFIX)
+    return()
+endif()
+unset(STANDALONE CACHE)
+string(REPLACE "\\" "/" CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+
+# ------------------------------------------------------------------------------
+#  Install
+#	See "../CMakeLists.txt.dist" for detail.
+#
+set(ExportName ${ProjectName})
+
+set(EMB_HEADERS_INSTALL_DIR ${EMBPYTHON_HEADERS_INSTALL_DIR})
+set(EMB_LIBRARY_INSTALL_DIR ${EMBPYTHON_LIBRARY_INSTALL_DIR})
+if(EMB_HEADERS_INSTALL_DIR)
+    if(IS_ABSOLUTE ${EMB_HEADERS_INSTALL_DIR})
+	set(_dir ${EMB_HEADERS_INSTALL_DIR})
+    else()
+	set(_dir ${CMAKE_INSTALL_PREFIX}/${EMB_HEADERS_INSTALL_DIR})
+    endif()
+    file(RELATIVE_PATH EMB_HEADERS_INSTALL_DIR ${CMAKE_INSTALL_PREFIX} ${_dir})
+else()
+    set(EMB_HEADERS_INSTALL_DIR ${ExportName}/include)
+endif()
+if(EMB_LIBRARY_INSTALL_DIR)
+    if(IS_ABSOLUTE ${EMB_LIBRARY_INSTALL_DIR})
+	set(_dir ${SPD_LIBRARY_INSTALL_DIR})
+    else()
+	set(_dir ${CMAKE_INSTALL_PREFIX}/${EMB_LIBRARY_INSTALL_DIR})
+    endif()
+    file(RELATIVE_PATH EMB_LIBRARY_INSTALL_DIR ${CMAKE_INSTALL_PREFIX} ${_dir})
+else()
+    set(EMB_LIBRARY_INSTALL_DIR ${ExportName}/lib)
+endif()
+message("** install directory: \"${CMAKE_INSTALL_PREFIX}\" (CMAKE_INSTALL_PREFIX)")
+message("**      header files: \"${CMAKE_INSTALL_PREFIX}/${EMB_HEADERS_INSTALL_DIR}\"")
+message("**      library file: \"${CMAKE_INSTALL_PREFIX}/${EMB_LIBRARY_INSTALL_DIR}\"")
+set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE STRING "" FORCE)
+
+# ------------------------------------------------------------------------------
+#  Export.
+#
+set(ExportConf ${ProjectName}Config)
+message("** config files:      \"${CMAKE_INSTALL_PREFIX}/${ExportName}/${ExportConf}*.cmake\"")
+
+install(TARGETS ${ProjectName}
+	EXPORT ${ExportConf}
+	INCLUDES DESTINATION ${EMB_HEADERS_INSTALL_DIR}
+	ARCHIVE DESTINATION ${EMB_LIBRARY_INSTALL_DIR}
+	LIBRARY DESTINATION ${EMB_LIBRARY_INSTALL_DIR}
+)
+install(EXPORT ${ExportConf}
+	NAMESPACE ${ExportName}::
+	DESTINATION ${ExportName}
+	FILE ${ExportConf}.cmake
+	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+)
+# install header files
+install(DIRECTORY ${SPR_INC_DIR}/EmbPython
+	FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+	DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+			      GROUP_READ GROUP_WRITE
+			      WORLD_READ WORLD_WRITE
+	DESTINATION ${EMB_HEADERS_INSTALL_DIR}/
+	FILES_MATCHING PATTERN "*.h"
+)
+install(DIRECTORY ${SPR_INC_DIR}/Python
+	FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+	DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+			      GROUP_READ GROUP_WRITE
+			      WORLD_READ WORLD_WRITE
+	DESTINATION ${EMB_HEADERS_INSTALL_DIR}/
+	FILES_MATCHING PATTERN "*.h"
+)
+# install library file
+if(Windows)
+    install(FILES ${GENDIR}/${OUTPUT_NAME_DEBUG}.lib
+	    DESTINATION ${EMB_LIBRARY_INSTALL_DIR}
+	    CONFIGURATIONS Debug
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+    install(FILES ${GENDIR}/${OUTPUT_NAME_RELEASE}.lib
+	    DESTINATION ${EMB_LIBRARY_INSTALL_DIR}
+	    CONFIGURATIONS Release
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+    install(FILES ${GENDIR}/${OUTPUT_NAME_TRACE}.lib
+	    DESTINATION ${EMB_LIBRARY_INSTALL_DIR}
+	    CONFIGURATIONS Trace
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+elseif(unix)
+    install(FILES ${GENDIR}/lib${OUTPUT_NAME}.${LIB_SUFFIX}
+	    DESTINATION ${EMB_LIBRARY_INSTALL_DIR}
+	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    )
+endif()
+# Package version fileの生成
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+	${CMAKE_BINARY_DIR}/${ExportConf}-version.cmake
+	VERSION ${EMBPYTHON_PROJECT_VERSION}
+	COMPATIBILITY AnyNewerVersion
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${ExportConf}-version.cmake
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/${ExportName}
+	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+)
 
 # end: CMakeLists.txt

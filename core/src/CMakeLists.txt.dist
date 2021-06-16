@@ -323,10 +323,45 @@ elseif(unix)
     set_target_properties(${Target} PROPERTIES
 	OUTPUT_NAME		  ${ProjectName}
 	ARCHIVE_OUTPUT_DIRECTORY  ${DUMMY_OUT_DIR}
+	LIBRARY_OUTPUT_DIRECTORY  ${DUMMY_OUT_DIR}
     )	
 endif()
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${Target})
 
+#  ターゲット INSTALL をビルドしたときに誤ってここで作成したダミーライブラリが
+#  インストールされてしまうのを防ぐために、ダミーライブラリを正しいライブラリ
+#  ファイルで上書きしておく。
+#   ※ cmake の install 対象は、本来はここで作成したダミーライブラリである。
+#
+file(TO_NATIVE_PATH "${LIBDIR}" _libdir_in)
+file(TO_NATIVE_PATH "${DUMMY_OUT_DIR}" _libdir_out)
+if(Windows)
+    set(_inf_D ${_libdir_in}\\${LIBNAME_DEBUG})
+    set(_inf_R ${_libdir_in}\\${LIBNAME_RELEASE})
+    set(_inf_T ${_libdir_in}\\${LIBNAME_TRACE})
+    set(_outf_D ${_libdir_out}\\Debug\\${LIBNAME_DEBUG})
+    set(_outf_R ${_libdir_out}\\Release\\${LIBNAME_RELEASE})
+    set(_outf_T ${_libdir_out}\\Trace\\${LIBNAME_TRACE})
+    add_custom_command(TARGET ${Target}
+	    POST_BUILD
+	    COMMAND if "'$(Configuration)'" equ "'Debug'"   copy ${_inf_D} ${_outf_D}
+	    COMMAND if "'$(Configuration)'" equ "'Debug'"   echo copy ${_inf_D} ${_outf_D}
+	    COMMAND if "'$(Configuration)'" equ "'Release'" copy ${_inf_R} ${_outf_R}
+	    COMMAND if "'$(Configuration)'" equ "'Trace'"   copy ${_inf_T} ${_outf_T}
+	    BYPRODUCTS ${_outf_D} ${_outf_R} ${_outf_T}
+	    COMMENT [[  replacing dummy library to genuine one ]]
+    )
+else()
+    set(_inf ${_libdir_in}/${LIBNAME}.${_lib_suffix})
+    set(_outf ${_libdir_out}/${LIBNAME}.${_lib_suffix})
+    add_custom_command(TARGET ${Target}
+	    POST_BUILD
+	    COMMAND cp ${_inf} ${_outf}
+	    BYPRODUCTS ${_outf}
+	    COMMENT [[  replacing dummy library to genuine one ]]
+    )
+endif()
+   
 # ------------------------------------------------------------------------------
 #  Install (for OLDER VERSION).
 #	*** This section remains only for compatibility with older version. ***
@@ -419,15 +454,15 @@ endif()
 #	ライブラリファイルの名前と一致させておく (インストールされるライブラリ
 #	はこのターゲットで作成するものなので、こうしておかないといけない)。
 #   (4)	仮のターゲットを export する。インストール先は、install directive の
-#	属性として指定するだけでよい。ヘッダファイルのインストールは別途
-#	install(FILES ...) で指定しないといけない。
-#   (5) このままだと、.sln で INSTALL を実行したとき、(3) で生成した仮の
-#	ライブラリファイルがインストールされてしまうので、"integrate" で生成
-#	した正しいライブラリファイルをインストール先にコピーするための指定
-#	install(FILES ...) を定義しておく。
+#	属性として指定するだけでよい。ヘッダファイル及びライブラリファイルの
+#	インストールは別途 install(FILES ...) で指定する.
 #
+set(ExportName ${ProjectName})
 
 # Install先の定義
+if(Windows)
+	string(REPLACE "\\" "/" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+endif()
 if(SPR_HEADERS_INSTALL_DIR)
     if(IS_ABSOLUTE ${SPR_HEADERS_INSTALL_DIR})
 	set(_dir ${SPR_HEADERS_INSTALL_DIR})
@@ -456,14 +491,14 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE STRING "" FORCE)
 # ------------------------------------------------------------------------------
 #  Export.
 #
-set(ExportName ${ProjectName})
 set(ExportConf ${ProjectName}Config)
 message("** config files:      \"${CMAKE_INSTALL_PREFIX}/${ExportName}/${ExportConf}*.cmake\"")
 
 install(TARGETS ${ProjectName}
 	EXPORT ${ExportConf}
-	ARCHIVE DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
-	LIBRARY DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	INCLUDES DESTINATION ${SPR_HEADERS_INSTALL_DIR}
+	ARCHIVE  DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+	LIBRARY  DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
 )
 install(EXPORT ${ExportConf}
 	NAMESPACE ${ExportName}::
@@ -478,10 +513,13 @@ install(FILES ${HEADERS}
 	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
 foreach(_proj ${SPR_PROJS})
-    file(GLOB HEADERS ${SPR_INC_DIR}/${_proj}/*.h)
-    install(FILES ${HEADERS}
-	    DESTINATION ${SPR_HEADERS_INSTALL_DIR}/${_proj}
-	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+    install(DIRECTORY ${SPR_INC_DIR}/${_proj}
+	    FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+	    DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+				  GROUP_READ GROUP_WRITE
+				  WORLD_READ WORLD_WRITE
+	    DESTINATION ${SPR_HEADERS_INSTALL_DIR}
+	    FILES_MATCHING PATTERN "*.h"
     )
 endforeach()
 # install library file
