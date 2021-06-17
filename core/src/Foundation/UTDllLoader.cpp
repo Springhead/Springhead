@@ -150,7 +150,11 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	GetEnv(dll, dllName);
 	GetEnv(path, addPath);
 	sprintf(pathOrg, "PATH=%s", getenv("PATH"));
+#ifdef _WIN32	
 	sprintf(pathNew, "PATH=%s;%s", path, getenv("PATH"));
+#else
+	sprintf(pathNew, "PATH=%s:%s", path, getenv("PATH"));
+#endif		
 	putenv(pathNew);
 	DSTR << "PathNew: " << pathNew << std::endl;
 #ifdef _WIN32	

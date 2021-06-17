@@ -113,16 +113,12 @@ if(unix)
     #
     set(STDLIB_PATHS		. $ENV{SPR_STDLIB_PATHS}
 				/usr/local/lib /usr/lib /usr/lib/X11
-				/use/share/gnulib
+				/usr/share/gnulib
 				/lib/x86_64-linux-gnu
 				/usr/lib/x86_64-linux-gnu)
     set(SHARED_STDLIB_NAMES	X11 Xi Xmu glui glut GLEW GLU GL m dl
     				boost_regex lapack)
     set(STATIC_STDLIB_NAMES	${EMPTY})
-    if("${LIBTYPE}" STREQUAL "STATIC")
-	set(STDLIB_NAMES	${SHARED_STDLIB_NAMES}
-				${STATIC_STDLIB_NAMES})
-    endif()
     #
     set(DEFINE_MACROS	${DEFINE_MACROS_DEFAULT})
     set(INCLUDE_PATHS	${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})

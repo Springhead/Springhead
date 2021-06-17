@@ -24,11 +24,13 @@ set(CMAKE_USE_RELATIVE_PATHS true)
 
 # ------------------------------------------------------------------------------
 #  Determine top directory of Springhead tree.
-#	If cmake option "-D TOPDIR=<absolute-dir-path>" is specified,
-#	<absolute-dir-path> is the one.
-#	Otherwise, "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt" SHOULD contain the
-#	definition of top directory like;
-#	    set(TOPDIR "<absolute-dir-path>")
+#	TOPDIR is decided in the following order;
+#	(1) cmake option "-D TOPDIR=<absolute-dir-path>"
+#	(2) content of the file "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt"
+#	    format aof the file is
+#		set(TOPDIR "<absolute-dir-path>")
+#	(3) TOPDIR=../../../../..
+#
 #	For DailyBuild:
 #	    Cmake option "-D TOPDIR_FILE=<absolute-file-path>" specifies
 #	    the definition file instead of directory name itself.
@@ -36,6 +38,7 @@ set(CMAKE_USE_RELATIVE_PATHS true)
 if(DEFINED TOPDIR)
     # ok
 elseif(DEFINED TOPDIR_FILE)
+    # for dailybuild
     if(NOT EXISTS ${TOPDIR_FILE})
 	message("Error: File \"${TOPDIR_FILE}\" not found")
 	return()
@@ -43,11 +46,16 @@ elseif(DEFINED TOPDIR_FILE)
     include(${TOPDIR_FILE})
 else()
     set(TOPDIR_FILE "${CMAKE_SOURCE_DIR}/CMakeTopdir.txt")
-    if(NOT EXISTS ${TOPDIR_FILE})
-	message("Error: File \"${TOPDIR_FILE}\" not found")
-	return()
+    if(EXISTS ${TOPDIR_FILE})
+	include(${TOPDIR_FILE})
+    else()
+	set(TOPDIR ../../../../..)
+	get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
     endif()
-    include(${TOPDIR_FILE})
+endif()
+if(NOT DEFINED TOPDIR)
+    message("Error: File \"${TOPDIR_FILE}\" not found")
+    return()
 endif()
 if(NOT EXISTS "${TOPDIR}")
     message("Error: Directory \"${TOPDIR}\" not found")
@@ -74,7 +82,9 @@ message(STATUS "SPR_BLD_DIR: [${SPR_BLD_DIR}]")
 include("${SPR_CORE_DIR}/make.system.cmake")
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_GENERATOR_PLATFORM ${ARCHITECTURE})
-message(STATUS "Library type: ${SPRLIBTYPE}")
+message(STATUS "Library type: ${LIBTYPE}")
+set(_libtype ${LIBTYPE})
+unset(LIBTYPE CACHE)
 
 # ------------------------------------------------------------------------------
 #  Read function definitions.
@@ -103,14 +113,20 @@ set(COMP_FLAGS                  ${COMP_FLAGS_ADD} ${COMP_FLAGS})
 set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
 set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
 
-list(FIND SHARED_LIBRARY_NAMES_ADD EmbPython _found_shared)
-list(FIND STATIC_LIBRARY_NAMES_ADD EmbPython _found_static)
-set(_found 0)
-if(${_found_shared} EQUAL 0 OR ${_found_static} EQUAL 0)
-    set(_found 1)
-endif()
-if(${_found} EQUAL 0)
-    message("++ EMbPython found in LIBRARY_NAMES_ADD")
+if(Windows)
+    list(FIND LIBRARY_NAMES_ADD EmbPython _found)
+    if(${_found} GREATER -1)
+	message("++ EMbPython found in LIBRARY_NAMES_ADD")
+    endif()
+else()
+    list(FIND SHARED_LIBRARY_NAMES_ADD EmbPython _found_shared)
+    list(FIND STATIC_LIBRARY_NAMES_ADD EmbPython _found_static)
+    if(${_found_shared} GREATER -1)
+	message("++ EMbPython found in SHARED_LIBRARY_NAMES_ADD")
+    endif()
+    if(${_found_static} GREATER -1)
+	message("++ EMbPython found in STATIC_LIBRARY_NAMES_ADD")
+    endif()
 endif()
 
 if(Windows)
@@ -119,42 +135,41 @@ if(Windows)
 				${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
     else()
  	list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
- 	set(LIBRARY_NAMES	EmbPython ${SPRLIB_NAMES}
+ 	set(LIBRARY_NAMES	EmbPython
+				${SPRLIB_NAMES}
 				${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
     endif()
 else()
+    list(REMOVE_ITEM SHARED_LIBRARY_NAMES_ADD EmbPython)
+    list(REMOVE_ITEM STATIC_LIBRARY_NAMES_ADD EmbPython)
     set(SHARED_LIBRARY_NAMES	${SHARED_LIBRARY_NAMES_ADD}
 				${SHARED_STDLIB_NAMES})
     set(STATIC_LIBRARY_NAMES	${STATIC_LIBRARY_NAMES_ADD}
 				${STATIC_STDLIB_NAMES})
-    if("${SPRLIBTYPE}" STREQUAL "SHARED")
-	if(${_found} EQUAL -1)
+    if("${_libtype}" STREQUAL "SHARED")
+	if(${_found_shared} EQUAL -1)
 	    set(SHARED_LIBRARY_NAMES	${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES})
 	else()
-	    list(REMOVE_ITEM LIBRARY_NAMES_ADD EmbPython)
 	    set(SHARED_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
-					${SHARED_LIBRARY_NAMES})
+					${SHARED_LIBRARY_NAMES}
+					python3.4m pthread-2.27)
 	endif()
     else()
-	if(${_found} EQUAL -1)
+	if(${_found_static} EQUAL -1)
 	    set(STATIC_LIBRARY_NAMES	${SPRLIB_NAMES}
-					${SHARED_LIBRARY_NAMES}
 					${STATIC_LIBRARY_NAMES})
 	else()
-	    if(${_found_shared} EQUAL 0)
-		list(REMOVE_ITEM SHARED_LIBRARY_NAMES EmbPython)
-	    endif()
-	    set(SHARED_LIBRARY_NAMES	EmbPython
+	    set(STATIC_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
-					${SHARED_LIBRARY_NAMES})
+					${STATIC_LIBRARY_NAMES})
+	    set(SHARED_LIBRARY_NAMES	${SHARED_LIBRARY_NAMES}
+					python3.4m pthread-2.27)
 	endif()
-	#  Discard standard shared libraries.
-	#set(SHARED_LIBRARY_NAMES	${EMPTY})
     endif()
-#message("** SHARED_LIBRARY_NAMES: ${SHARED_LIBRARY_NAMES}")
-#message("** STATIC_LIBRARY_NAMES: ${STATIC_LIBRARY_NAMES}")
+message("** SHARED_LIBRARY_NAMES: ${SHARED_LIBRARY_NAMES}")
+message("** STATIC_LIBRARY_NAMES: ${STATIC_LIBRARY_NAMES}")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -235,7 +250,7 @@ endif()
 #
 set(LASTBUILD_LIBTYPE_STATIC ${SPR_SRC_DIR}/lastbuilt.static)
 set(LASTBUILD_LIBTYPE_SHARED ${SPR_SRC_DIR}/lastbuilt.shared)
-if("${LIBTYPE}" STREQUAL "STATIC")
+if("${_libtype}" STREQUAL "STATIC")
     set(LASTBUILD_LIBTYPE_FILE ${LASTBUILD_LIBTYPE_STATIC})
 else()
     set(LASTBUILD_LIBTYPE_FILE ${LASTBUILD_LIBTYPE_SHARED})
@@ -354,20 +369,9 @@ else()
 	    list(APPEND _out ${_tmp})
 	endforeach()
 	set(LIBRARY_PATHS ${_out})
-
-	# change into g++ option format
-	set(_flags_c "@")
-	set(_flags_r "@")
-	foreach(_path ${LIBRARY_PATHS})
-	    set(_flags_c "-L${_path} ${_flags_c}")
-	    set(_flags_r "${_path},${_flags_r}")
-	endforeach()
-	string(REPLACE " @" "" _flags_c ${_flags_c})
-	string(REPLACE ",@" "" _flags_r ${_flags_r})
     endif()
-
     foreach(_path ${LIBRARY_PATHS})
-	target_link_directories(${Target} PUBLIC "${_path}")
+	target_link_directories(${Target} PRIVATE "${_path}")
     endforeach()
 endif()
 
@@ -385,31 +389,29 @@ if(Windows)
 	target_link_libraries(${Target} $<$<CONFIG:${_conf}>:${_lib}>)
     endforeach()
 else()
-    set(_tmp_names "@")
-    foreach(_name ${SHARED_LIBRARY_NAMES})
-	set(_tmp_names "${_tmp_names},-l${_name}")
-    endforeach()
-    string(REPLACE "@," "" _library_names "${_tmp_names}")
-    if(NOT "${_library_names}" STREQUAL "@")
-	target_link_libraries(${Target} "-Wl,--start-group -Wl,-Bdynamic,${_library_names}")
-	message("++ shared libraries: ${_library_names}")
-    endif()
-
-    if(NOT "${SHARED_LIBRARY_NAMES}" STREQUAL "${EMPTY}")
+    # STATIC library
+    if(NOT "${STATIC_LIBRARY_NAMES}" STREQUAL "${ENPTY}")
 	set(_tmp_names "@")
 	foreach(_name ${STATIC_LIBRARY_NAMES})
-	    set(_tmp_names "-l${_name},${_tmp_names}")
+	    set(_tmp_names "${_tmp_names},-l${_name}")
 	endforeach()
-	string(REPLACE ",@" "" _library_names "${_tmp_names}")
+	string(REPLACE "@," "" _library_names "${_tmp_names}")
 	if(NOT "${_library_names}" STREQUAL "@")
 	    target_link_libraries(${Target} "-Wl,-Bstatic,${_library_names}")
 	    message("++ static libraries: ${_library_names}")
 	endif()
-    else()
-	foreach(_name ${STATIC_LIBRARY_NAMES})
-            target_link_libraries(${Target} ${_name})
-	    message("++ static libraries: ${_name}")
+    endif()
+    # SHARED library
+    if(NOT "${SHARED_LIBRARY_NAMES}" STREQUAL "${ENPTY}")
+	set(_tmp_names "@")
+	foreach(_name ${SHARED_LIBRARY_NAMES})
+	    set(_tmp_names "${_tmp_names},-l${_name}")
 	endforeach()
+	string(REPLACE "@," "" _library_names "${_tmp_names}")
+	if(NOT "${_library_names}" STREQUAL "@")
+	    target_link_libraries(${Target} "-Wl,-Bdynamic,${_library_names}")
+	    message("++ shared libraries: ${_library_names}")
+	endif()
     endif()
 endif()
 
@@ -431,5 +433,10 @@ if(Windows)
 	endif()
     endforeach()
 endif()
+
+# ------------------------------------------------------------------------------
+#  Clean up.
+#
+unset(LASTBUILD_LIBTYPE_FILE CACHE)
 
 # end: CMakeLists.txt

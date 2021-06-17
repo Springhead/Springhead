@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # --------------------------------------------------------------
 #  Project definition
 #
-set(ProjectName CDContGJK)
+set(ProjectName PythonSpr)
 project(${ProjectName} CXX)
 set(Target ${ProjectName})
 
@@ -19,11 +19,11 @@ endif()
 # --------------------------------------------------------------
 #  Import Package
 #
-set(PackageNames Springhead)
+set(PackageNames EmbPython Springhead)
 if(Windows)
     set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT")
 else()
-    set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT")
+    set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT/Springhead")
 endif()
 file(TO_NATIVE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 
@@ -93,6 +93,7 @@ elseif(unix)
 	)
     endforeach()
     target_link_libraries(${Target}
+	EmbPython::EmbPython
 	Springhead::Springhead
 	-ldl
 	-Wl,-Bdynamic,-lglui,-lglut,-lGLEW,-lGLU,-lGL,-lboost_regex,-llapack,-lpython3.4m,-lpthread-2.27
