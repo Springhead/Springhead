@@ -1,5 +1,5 @@
 % 3.1.Cmake.tex
-%	Last update: 2021/05/17 F.Kanehori
+%	Last update: 2021/06/17 F.Kanehori
 %\newpage
 \subsection{CMake}
 \label{subsec:CMake}
@@ -14,7 +14,7 @@ CMakeにはConfigureとGenerateの2段階があります。
 \CmndLine{%
 	> chdir .../Springhead\\
 	> mkdir build\\
-	> cmake -B build [\it{generator}]
+	> cmake -B \it{build} [\it{generator}]
 }{chap-3-1-cmake-cui.eps}{cmake cui}
 
 \medskip
@@ -31,7 +31,7 @@ CMakeにはConfigureとGenerateの2段階があります。
 	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
 	\hspace{5pt}\it{generator}の例\\
 	\begin{tabular}{@{\hspace{15pt}}l@{\hspace{10pt}}l}
-	    Windows:	& \tt{-G "Visual Studio 15 2017" -A x64} \\
+	    Windows:	& \tt{-G "Visual Studio 16 2019" -A x64} \\
 	    unix:	& \tt{-G "Unix Makefiles"} \\
 	\end{tabular}\\
 	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\

@@ -1,0 +1,46 @@
+% 4.1.BuildOnUnix.tex
+%	Last update: 2021/06/17 F.Kanehori
+%\newpage
+\subsection{unixでのビルド}
+\label{subsec:BuildOnUnix}
+\parindent=0pt
+
+ディレクトリ\Path{.../Springhead/core/src/EmbPython}に移動し、
+次のようにcmakeコマンド及びmakeコマンドを実行します。
+
+\CmndLine{%
+	> chdir .../Springhead/core/src/EmbPython \\
+	> cmake -B \it{build} -D STANDALONE=1 [-D LIBTYPE=STATIC] \\
+	> chdir \it{build} \\
+	> make
+}{chap-4-1-EmbPythonBuild.eps}{Building EmbPython library}
+
+\medskip
+cmakeの最後の引数\Path{-D LIBTYPE=STATIC}を
+指定したときはstatic library (\tt{libEmbPython.a})が、
+省略したときはshared library (\tt{libEmbPython.so})が、
+\Path{.../Springhead/generated/lib}に作成されます。
+
+\bigskip
+作成するライブラリファイルのインストール先を指定する場合は、
+配布ファイルセットの中にある
+\Path{.../Springhead/core/src/CMakeConf.txt.dist}を
+\Path{CMakeConf.txt}という名前でコピーしてインストール先を設定し、
+上記のmakeコマンドの代わりにmake installコマンドを実行してください。
+
+インストール先の設定方法は、
+\KQuote{\ref{subsec:SetInstallDirectory}
+ライブラリとヘッダファイルのインストール先を指定する}
+をご覧ください。
+
+\CmndLine{%
+	> chdir .../Springhead/core/src/EmbPython \\
+	> cp ../CMakeConf.txt.dist CMakeConf.txt \\
+	> \it{edit} CMakeConf.txt \\
+	> cmake -B \it{build} -D STANDALONE=1 [-D LIBTYPE=STATIC] \\
+	> chdir \it{build} \\
+	> make install
+}{chap-4-1-EmbPythonBuild-and-Install.eps}{Installing EmbPython library}
+
+\bigskip
+% end: 4.1.BuildOnUnix.tex

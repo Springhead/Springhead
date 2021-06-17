@@ -1,5 +1,5 @@
 % 3.2.Build.tex
-%	Last update: 2021/03/17 F.Kanehori
+%	Last update: 2021/06/09 F.Kanehori
 %\newpage
 \subsection{ビルド}
 \label{subsec:Build}
@@ -11,9 +11,12 @@
 \bf{unixの場合}
 \begin{narrow}
 	ディレクトリ\BldDir へ移動してmakeコマンドを実行してください。
-	\KQuoteS \ref{subsec:SetInstallDirectory} インストールディレクトリの設定
-	\KQuoteE でライブラリファイルのインストール先を指定していなければ、
 	ライブラリファイルは\SprTop{/generated/lib}に生成されます。
+
+	インストール先を指定した場合(\KQuoteS \ref{subsec:SetInstallDirectory} 
+	インストールディレクトリの設定\KQuoteE 参照)には、
+	makeコマンドの代わりにmake installコマンドを実行してください。
+	ライブラリファイル(及びヘッダファイル)は指定した場所にインストールされます。
 \end{narrow}
 
 \medskip
@@ -21,31 +24,36 @@
 \begin{narrow}
 	ディレクトリ\BldDir へ移動して\Path{Springhead.sln}をVisual Studioで実行し、
 	プロジェクトSpringheadをビルドしてください。
-	\KQuoteS \ref{subsec:SetInstallDirectory} インストールディレクトリの設定
-	\KQuoteE でライブラリファイルのインストール先を指定していなければ、
-	ライブラリファイルは\SprTop{/generated/lib/<\it{arch}>}に生成されます。
+	ライブラリファイルは\\
+	\SprTop{/generated/lib/<\it{arch}>}に生成されます。
 	\tt{<\it{arch}>} はマシンのアーキテクチャに従い、
 	\Path{win64}または\Path{win32}のいずれかです。
+
+	インストール先を指定した場合(\KQuoteS \ref{subsec:SetInstallDirectory} 
+	インストールディレクトリの設定\KQuoteE 参照)には、
+	プロジェクトSpringheadのビルドに続けて
+	プロジェクトINSTALLを(プロジェクトのみ)ビルドしてください。
+	ライブラリファイル(及びヘッダファイル)は指定した場所にインストールされます。
 \end{narrow}
 
 %-------------------------------------------------------------------------------
 \bigskip
 \thinrule{\linewidth}
-
-\bf{\tt{INSTALL}時の注意}
-
-\begin{narrow}
-ヘッダファイルとライブラリファイルのインストール先を指定している場合、
-ターゲット\tt{INSTALL}を実行してもライブラリファイルが正しくインストールされない、
-またはインストールされたファイルの内容が不正、という現象が発生しています。
-申し訳ございません。
-続けてもう一度\tt{INSTALL}を実行していただければ、
-正しいライブラリファイルがインストールされます。
-\end{narrow}
-
-\thinrule{\linewidth}
-
-\bigskip
+%
+%\bf{\tt{INSTALL}時の注意}
+%
+%\begin{narrow}
+%ヘッダファイルとライブラリファイルのインストール先を指定している場合、
+%ターゲット\tt{INSTALL}を実行してもライブラリファイルが正しくインストールされない、
+%またはインストールされたファイルの内容が不正、という現象が発生しています。
+%申し訳ございません。
+%続けてもう一度\tt{INSTALL}を実行していただければ、
+%正しいライブラリファイルがインストールされます。
+%\end{narrow}
+%
+%\thinrule{\linewidth}
+%\bigskip
+\medskip
 
 \SprLib を使用したプログラムの実行時にDLLが見つからないというエラーが発生した
 場合には、
