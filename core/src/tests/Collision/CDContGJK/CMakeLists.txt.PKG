@@ -138,6 +138,13 @@ if(Windows)
     )
     message("** add library directory: \"${DEPENDENCY}/lib/win64\"")
     message("** add library directory: \"${DEPENDENCY}/lib/win32\"")
+    # ------------------------------------------------------
+    #  Set working directory to VS debugger.
+    #
+    set_target_properties(${Target} PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	VS_DEBUGGER_COMMAND_ARGUMENTS ""
+    )
 else()
     target_include_directories(${Target}
 	# ------------------------------------------------------

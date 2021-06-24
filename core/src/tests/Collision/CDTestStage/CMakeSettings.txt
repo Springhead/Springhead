@@ -47,8 +47,13 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
+if(NOT DEFINED LIBTYPE)
+    if(Windows)
+	set(LIBTYPE STATIC)
+    else()
+	set(LIBTYPE SHARED)
+    endif()
+endif()
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
@@ -96,7 +101,9 @@ set(DEFINE_MACROS_ADD ${EMPTY})
 if(Windows)
     set(INCLUDE_PATHS_ADD ${EMPTY})
 else()
-    set(INCLUDE_PATHS_ADD ${EMPTY})
+    set(INCLUDE_PATHS_ADD 	/usr/include/boost
+				/usr/include/boost/regex
+				/usr/local/include/boost-numeric-bindings)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -119,7 +126,7 @@ endif()
 if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
-    set(LIBRARY_PATHS_ADD ${EMPTY})
+    set(LIBRARY_PATHS_ADD /lib/x86_64-linux-gnu)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -134,8 +141,13 @@ if(Windows)
 #    set(LIBRARY_NAMES_RELEASE python35.lib)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
-    set(STATIC_LIBRARY_NAMES_ADD ${EMPTY})
-    set(SHARED_LIBRARY_NAMES_ADD ${EMPTY})
+    if("${LIBTYPE}" STREQUAL "STATIC")
+	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
+    else()
+	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
+    endif()
     #
     #  for backward compatibility
     #

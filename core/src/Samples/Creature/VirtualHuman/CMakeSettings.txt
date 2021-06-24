@@ -47,8 +47,13 @@ endif()
 #	Select one of STATIC or SHARED.
 #	(Type SHARED is not supported for Windows)
 #
-set(LIBTYPE STATIC)
-#set(LIBTYPE SHARED)
+if(NOT DEFINED LIBTYPE)
+    if(Windows)
+	set(LIBTYPE STATIC)
+    else()
+	set(LIBTYPE SHARED)
+    endif()
+endif()
 
 # ------------------------------------------------------------------------------
 #  Source/include file names to incorporate to the application program.
@@ -57,7 +62,7 @@ set(LIBTYPE STATIC)
 #	If you want to refer current (sublevel) source directory, use
 #	${CMAKE_CURRENT_SOURCE_DIR} instead.
 #
-file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} main.cpp *.h)
+file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
 
 # ------------------------------------------------------------------------------
 #  Source/include file name(s) to EXCLUDE from compilation.
@@ -66,7 +71,7 @@ file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} main.cpp *.h)
 #	We recomend to use absolute path if file exists outside of
 #	current source directory (${CMAKE_SOURCE_DIR}).
 #
-set(EXCLUDE_SRCS ${EMPTY})
+set(EXCLUDE_SRCS VirtualHuman.cpp)
 
 # ------------------------------------------------------------------------------
 #  Springhead projects to incorporate in the application program.
@@ -122,7 +127,7 @@ endif()
 if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
-    set(LIBRARY_PATHS_ADD ${EMPTY})
+    set(LIBRARY_PATHS_ADD /lib/x86_64-linux-gnu)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -137,8 +142,13 @@ if(Windows)
 #    set(LIBRARY_NAMES_RELEASE python35.lib)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
-    set(STATIC_LIBRARY_NAMES_ADD ${EMPTY})
-    set(SHARED_LIBRARY_NAMES_ADD ${EMPTY})
+    if("${LIBTYPE}" STREQUAL "STATIC")
+	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
+    else()
+	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
+    endif()
     #
     #  for backward compatibility
     #

@@ -80,9 +80,7 @@ set(EXCLUDE_SRCS ${EMPTY})
 #  If you need Springehad library only, leave this parameter unchaged.
 #
 if(Windows)
-    set(SPR_PROJS Base Collision Creature FileIO Foundation Framework Graphics
-		HumanInterface Physics)
-    set(SPR_PROJS ${SPR_PROJS} EmbPython)
+    set(SPR_PROJS Base Collision Foundation HumanInterface Physics)
 else()
     set(SPR_PROJS ${EMPTY})
 endif()
@@ -128,8 +126,7 @@ endif()
 if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
-    set(LIBRARY_PATHS_ADD ${TOPDIR}/generated/lib
-			  /lib/x86_64-linux-gnu)
+    set(LIBRARY_PATHS_ADD /lib/x86_64-linux-gnu)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -145,10 +142,11 @@ if(Windows)
 #    set(LIBRARY_NAMES_TRACE   python35.lib)
 else()
     if("${LIBTYPE}" STREQUAL "STATIC")
-	set(STATIC_LIBRARY_NAMES_ADD EmbPython)
+	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
     else()
 	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
-	set(SHARED_LIBRARY_NAMES_ADD EmbPython)
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
     endif()
     #
     #  for backward compatibility

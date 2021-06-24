@@ -361,6 +361,8 @@ else()
 	    COMMENT [[  replacing dummy library to genuine one ]]
     )
 endif()
+unset(LIBTYPE CACHE)
+unset(VS_VERSION CACHE)
    
 # ------------------------------------------------------------------------------
 #  Install (for OLDER VERSION).
@@ -540,10 +542,18 @@ if(Windows)
 	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
     )
 elseif(unix)
-    install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
-	    DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
-	    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-    )
+    if("${LIB_SUFFIX}" STREQUAL "a")
+        install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
+		DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+	)
+    else()
+        install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
+		DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
+		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+			    OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+	)
+    endif()
 endif()
 # Package version fileの生成
 include(CMakePackageConfigHelpers)

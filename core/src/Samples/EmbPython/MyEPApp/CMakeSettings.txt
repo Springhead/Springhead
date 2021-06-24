@@ -20,7 +20,7 @@ set(MacOS   False)
 #  Project name.
 #	Define porject name here.
 #
-set(ProjectName PythonSpr)
+set(ProjectName MyEPApp)
 
 # ------------------------------------------------------------------------------
 #  Binary(working) directory name used when you cmake Springhead library.
@@ -128,8 +128,7 @@ endif()
 if(Windows)
     set(LIBRARY_PATHS_ADD ${EMPTY})
 else()
-    set(LIBRARY_PATHS_ADD ${TOPDIR}/generated/lib
-			  /lib/x86_64-linux-gnu)
+    set(LIBRARY_PATHS_ADD /lib/x86_64-linux-gnu)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -146,6 +145,7 @@ if(Windows)
 else()
     if("${LIBTYPE}" STREQUAL "STATIC")
 	set(STATIC_LIBRARY_NAMES_ADD EmbPython)
+	set(SHARED_LIBRARY_NAMES_ADD ${Empty})
     else()
 	set(STATIC_LIBRARY_NAMES_ADD ${Empty})
 	set(SHARED_LIBRARY_NAMES_ADD EmbPython)

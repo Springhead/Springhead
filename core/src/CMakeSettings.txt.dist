@@ -47,8 +47,11 @@ endif()
 #	(Type SHARED is not supported for Windows)
 #
 if(NOT LIBTYPE)
-    set(LIBTYPE STATIC)
-    #set(LIBTYPE SHARED)
+    if(Windows)
+	set(LIBTYPE STATIC)
+    else()
+	set(LIBTYPE SHARED)
+    endif()
 endif()
 
 # ------------------------------------------------------------------------------

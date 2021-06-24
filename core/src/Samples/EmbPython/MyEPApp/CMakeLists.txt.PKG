@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # --------------------------------------------------------------
 #  Project definition
 #
-set(ProjectName PythonSpr)
+set(ProjectName MyEPApp)
 project(${ProjectName} CXX)
 set(Target ${ProjectName})
 
@@ -21,7 +21,7 @@ endif()
 #
 set(PackageNames EmbPython Springhead)
 if(Windows)
-    set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT")
+    set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT/Springhead")
 else()
     set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT/Springhead")
 endif()
@@ -64,6 +64,7 @@ if(Windows)
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE	)
     set(CMAKE_EXE_LINKER_FLAGS_TRACE	)
     target_link_libraries(${Target}
+	EmbPython::EmbPython
 	Springhead::Springhead
     )
 elseif(unix)
@@ -130,7 +131,7 @@ if(Windows)
 	#  NOTE: This program directly refers header files 
 	#	 placed under "${TOPDIR}/core/src".
 	#
-	PRIVATE ${TOPDIR}/core/src
+	#PRIVATE ${TOPDIR}/core/src
     )
     message("** add include directory: \"${DEPENDENCY}/src\"")
     message("** add include directory: \"${TOPDIR}/core/src\"")
@@ -139,6 +140,13 @@ if(Windows)
     )
     message("** add library directory: \"${DEPENDENCY}/lib/win64\"")
     message("** add library directory: \"${DEPENDENCY}/lib/win32\"")
+    # ------------------------------------------------------
+    #  Set working directory to VS debugger.
+    #
+    set_target_properties(${Target} PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	VS_DEBUGGER_COMMAND_ARGUMENTS ""
+    )
 else()
     target_include_directories(${Target}
 	# ------------------------------------------------------

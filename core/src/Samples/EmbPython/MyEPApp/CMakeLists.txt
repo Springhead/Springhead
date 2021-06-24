@@ -114,8 +114,8 @@ set(LINK_FLAGS                  ${LINK_FLAGS_ADD} ${LINK_FLAGS})
 set(LIBRARY_PATHS               ${LIBRARY_PATHS} ${LIBRARY_PATHS_ADD})
 
 if(Windows)
-    list(FIND LIBRARY_NAMES_ADD EmbPython _found)
-    if(${_found} GREATER -1)
+    list(FIND LIBRARY_NAMES_ADD EmbPython EmbPython_found)
+    if(${EmbPython_found} GREATER -1)
 	message("++ EMbPython found in LIBRARY_NAMES_ADD")
     endif()
 else()
@@ -130,7 +130,7 @@ else()
 endif()
 
 if(Windows)
-    if(${_found} EQUAL -1)
+    if(${EmbPython_found} EQUAL -1)
 	set(LIBRARY_NAMES	${SPRLIB_NAMES}
 				${LIBRARY_NAMES_ADD} ${STDLIB_NAMES})
     else()
@@ -151,7 +151,6 @@ else()
 	    set(SHARED_LIBRARY_NAMES	${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES})
 	else()
-	    #list(REMOVE_ITEM SHARED_LIBRARY_NAMES_ADD EmbPython)
 	    set(SHARED_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
 					${SHARED_LIBRARY_NAMES}
@@ -162,7 +161,6 @@ else()
 	    set(STATIC_LIBRARY_NAMES	${SPRLIB_NAMES}
 					${STATIC_LIBRARY_NAMES})
 	else()
-	    #list(REMOVE_ITEM SHARED_LIBRARY_NAMES EmbPython)
 	    set(STATIC_LIBRARY_NAMES	EmbPython
 					${SPRLIB_NAMES}
 					${STATIC_LIBRARY_NAMES})
@@ -328,7 +326,9 @@ if(SPR_PROJS AND Windows)
     set(DEP_Base)
     set(DEP_Collision Foundation)
     set(DEP_Creature Foundation Framework Physics)
-    set(DEP_EmbPython)
+    if(${EmbPython_found} GREATER -1)
+	set(DEP_EmbPython)
+    endif()
     set(DEP_FileIO Foundation)
     set(DEP_Foundation Base)
     set(DEP_Framework FileIO Foundation Graphics Physics)

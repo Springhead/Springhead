@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(Target FILoadGRScene)
-set(ProjectName ${Target})
+# --------------------------------------------------------------
+#  Project definition
+#
+set(ProjectName FILoadGRScene)
 project(${ProjectName} CXX)
+set(Target ${ProjectName})
 
 # --------------------------------------------------------------
 #  Which OS
@@ -14,9 +17,9 @@ else()
 endif()
 
 # --------------------------------------------------------------
-#  Import Springhead Package
+#  Import Package
 #
-set(PackageName Springhead)
+set(PackageNames Springhead)
 if(Windows)
     set(CMAKE_PREFIX_PATH "$ENV{HOME}/EXPORT")
 else()
@@ -24,33 +27,78 @@ else()
 endif()
 file(TO_NATIVE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 
-message("finding package: ${PackageName} (${CMAKE_PREFIX_PATH})")
-cmake_policy(SET CMP0074 NEW)
-find_package(${PackageName} REQUIRED)
-if(${PackageName}_FOUND)
-    message("-- Package ${PackageName} found")
-else()
-    message("** ${PackageName} NOT FOUND")
-    return()
-endif()
+foreach(_package ${PackageNames})
+    message("finding package: ${_package} (${CMAKE_PREFIX_PATH})")
+    cmake_policy(SET CMP0074 NEW)
+    find_package(${_package} REQUIRED)
+    if(${_package}_FOUND)
+	message("-- Package ${_package} found")
+    else()
+	message("** ${_package} NOT FOUND")
+	Preturn()
+    endif()
+endforeach()
 
 # --------------------------------------------------------------
 #  Main target
 #
 file(GLOB SRCS RELATIVE ${CMAKE_SOURCE_DIR} *.cpp *.h)
-add_executable(${Target} ${SRCS})
 if(Windows)
+    set(ARCH ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID})
+    set(PROC ${CMAKE_HOST_SYSTEM_PROCESSOR})
+    if (${ARCH} MATCHES "[xX]64" OR ${PROC} STREQUAL "x86_64"
+				 OR ${PROC} STREQUAL "AMD64")
+	add_executable(${Target} ${SRCS})
+	set(_arch X64)
+    else()
+	add_executable(${Target} WIN32 ${SRCS})
+	set(_arch X86)
+    endif()
+    set(DEFINE_MACROS			)
+    set(CMAKE_CXX_FLAGS			"/EHsc /openmp")
+    set(CMAKE_CXX_FLAGS_DEBUG		)
+    set(CMAKE_CXX_FLAGS_RELEASE		)
+    set(CMAKE_CXX_FLAGS_TRACE		)
+    set(CMAKE_EXE_LINKER_FLAGS		"/MACHINE:${_arch}")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG	)
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE	)
+    set(CMAKE_EXE_LINKER_FLAGS_TRACE	)
     target_link_libraries(${Target}
 	Springhead::Springhead
     )
-else()
+elseif(unix)
+    add_executable(${Target} ${SRCS})
     set(CMAKE_CXX_COMPILER "/usr/bin/g++")
-    set(CMAKE_CXX_FLAGS	-std=gnu++11)
+    if("${CMAKE_CONFIGURATION_TYPES}" STREQUAL "Debug")
+	set(COPT_CONFIG	-g)
+    else()
+	set(COPT_CONFIG	-O2)
+    endif()
+    set(COMP_FLAGS	${COPT_CONFIG}
+			-std=gnu++11
+			-D__ccdecl=
+			-D__cdecl=)
+    foreach(_flag ${COMP_FLAGS})
+        target_compile_options(${Target} PRIVATE ${_flag})
+    endforeach()
+    set(STDLIB_PATHS            /usr/local/lib /usr/lib /usr/lib/X11
+                                /use/share/gnulib
+                                /lib/x86_64-linux-gnu
+                                /usr/lib/x86_64-linux-gnu)
+    set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
+    foreach(_path ${STDLIB_PATHS})
+	message("** add library path: ${_path}")
+	target_link_directories(${Target} BEFORE
+	    PRIVATE ${_path}
+	)
+    endforeach()
     target_link_libraries(${Target}
 	Springhead::Springhead
-	glui glut GLEW GLU GL boost_regex lapack
+	-ldl
+	-Wl,-Bdynamic,-lglui,-lglut,-lGLEW,-lGLU,-lGL,-lboost_regex,-llapack,-lpython3.4m,-lpthread-2.27
     )
 endif()
+
 set_target_properties(${Target}
     PROPERTIES
     OUTPUT_NAME		${Target}
@@ -63,27 +111,48 @@ set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${ProjectName})
 
 # --------------------------------------------------------------
 #  Program specific definitions
+#	NOTE:	Defining TOPDIR (top directory of Springhead
+#		source tree) below is *NOT PORTABLE*.
 #
+if(DEFINED TOPDIR)
+	#  TOPDIR is given by cmake command line.
+else()
+	set(TOPDIR ${CMAKE_SOURCE_DIR}/../../../../..)
+endif()
+get_filename_component(TOPDIR ${TOPDIR} ABSOLUTE)
+
 if(Windows)
-    get_filename_component(TOPDIR ${CMAKE_SOURCE_DIR}/../../../../.. ABSOLUTE)
-    set(SPRSRC ${TOPDIR}/core/src)
     set(DEPENDENCY ${TOPDIR}/dependency)
     target_include_directories(${Target}
-	PRIVATE ${SPRSRC}
 	PRIVATE ${DEPENDENCY}/src
+	# ------------------------------------------------------
+	#  NOTE: This program directly refers header files 
+	#	 placed under "${TOPDIR}/core/src".
+	#
+	#PRIVATE ${TOPDIR}/core/src
     )
-    message("** add include directory: \"${SPRSRC}\"")
     message("** add include directory: \"${DEPENDENCY}/src\"")
+    message("** add include directory: \"${TOPDIR}/core/src\"")
     target_link_directories(${Target}
 	PRIVATE ${DEPENDENCY}/lib/win64 ${DEPENDENCY}/lib/win32
     )
     message("** add library directory: \"${DEPENDENCY}/lib/win64\"")
     message("** add library directory: \"${DEPENDENCY}/lib/win32\"")
-else()
-    get_filename_component(TOPDIR ${CMAKE_SOURCE_DIR}/../../../../.. ABSOLUTE)
-    set(SPRSRC ${TOPDIR}/core/src)
-    target_include_directories(${Target}
-	PRIVATE ${SPRSRC}
+    # ------------------------------------------------------
+    #  Set working directory to VS debugger.
+    #
+    set_target_properties(${Target} PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	VS_DEBUGGER_COMMAND_ARGUMENTS ""
     )
-    message("** add include directory: \"${SPRSRC}\"")
+else()
+    target_include_directories(${Target}
+	# ------------------------------------------------------
+	#  NOTE: This program directly refers header files 
+	#	 placed under "${TOPDIR}/core/src".
+	#
+	PRIVATE ${TOPDIR}/core/src
+    )
+    message("** add include directory: \"${TOPDIR}/core/src\"")
 endif()
+
