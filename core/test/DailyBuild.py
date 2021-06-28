@@ -38,8 +38,9 @@
 #     Ver 1.6    2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.7    2021/01/07 F.Kanehori	Setup 自動実行設定追加.
 #     Ver 1.7.1  2021/03/24 F.Kanehori	Add: -f flag.
+#     Ver 1.7.2  2021/06/28 F.Kanehori	DailyBuild マシン用特別措置
 # ======================================================================
-version = "1.7.1"
+version = "1.7.2"
 
 import sys
 import os
@@ -332,6 +333,7 @@ if setup:
 
 # set program paths to environment variable.
 #
+python = 'python'
 if os.path.exists(setup_file):
 	# identify python first
 	print('check contents (setup.conf)')
@@ -369,9 +371,13 @@ if os.path.exists(setup_file):
 	python = os.getenv('python')
 	print()
 	print('using setup file "%s"' % setup_file)
+
+elif os.path.exists('C:/Python35_for_DailyBuild'):
+	# DailyBuild のための特別措置
+	python = 'C:/Python35_for_DailyBuild/python.exe'
+	print('using "%s"' % python)
 else:
 	Error(prog).warn('setup file "%s" not found' % setup_file)
-
 
 # ----------------------------------------------------------------------
 #  5th step: Execute DailyBuild test.
@@ -380,7 +386,7 @@ os.chdir('core/test')
 pwd()
 Print('Test start:')
 vflag = ' -v' if verbose else ''
-cmnd = 'python TestMainGit.py'
+cmnd = '%s TestMainGit.py' % python
 args = '-p %s -c %s -t %s%s %s %s' % (plat, conf, tool, vflag, \
 				      repository, result_repository)
 rc = proc.execute([cmnd, args], shell=True).wait()

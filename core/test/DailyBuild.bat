@@ -107,6 +107,15 @@ for %%t in (%TOOLS%) do (
 	if !ERRORLEVEL! neq 0 (
 		echo %PROG%: we need '%%t'
 		set OK=no
+		::  DailyBuild É}ÉVÉìÇ≈ÇÃì¡ï èàóù
+		if "%%t" equ "python.exe" (
+			for /f "usebackq delims=" %%a in (`hostname`) do set HOSTNAME=%%a
+			if "!HOSTNAME!" equ "DESKTOP-KD3C7HS" (
+				set PYTHON=C:\Python35_for_DailyBuild\python.exe
+				echo using "!PYTHON!"
+				set OK=ok
+			)
+		)
 	)
 )
 if "%OK%" neq "ok" (
