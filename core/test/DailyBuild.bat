@@ -36,12 +36,25 @@ setlocal enabledelayedexpansion
 ::				Springhead DailyBuildResult/Result
 ::	タスクスケジューラの開始 (オプション)(T) は "I:\DailyBuild" とする.
 ::
-::	このファイル "DailyBuild.bat" 及び "hook.bat" は, DailyBuild を実行
-::	しても自動的にはアップデートされない. 変更があったときは手動でコピー
-::	すること.
+::  IMPORTANT
+::	このファイルを置く位置
+::	    .../DailyBuild/DailyBuildHook
+::			  /DailyBuildTestTools	…… 必要なツールを置く位置
+::			  /Springhead		…… テストレポジトリ
+::			  DailyBuild.bat	…… このファイルはここに置く
+::
+::	このファイル "DailyBuild.bat" 及び "DailyBuildHook/hook.bat" は,
+::	DailyBuild を実行しても自動的にはアップデートされない.
+::	変更があったときは手動でコピーすること.
+::
+::	Springhead Library 作成は外部ツールの存在を前提とせずに実行可能とする.
+::	そのため python, nkf などのツールは PATH には登録しない.
+::	ただし DailyBuild を実行するためにはこれらのツールが必要となるので,
+::	DailyBuildTestTools に配置したツールを絶対パス起動の条件で使用する.
 ::	
 ::  VERSION
 ::     Ver 1.0   2021/05/10 F.Kanehori	バッチファイルの再構築.
+::     Ver 1.1   2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%CD%
@@ -96,26 +109,22 @@ if %DEBUG% neq 0 (
 
 :: ---------------------------------------------------------------------
 ::  Step 1
-::	必要なツールの確認 (python が実行できること)
+::	必要なツールの確認
 ::
-set PYTHON=python.exe
+call :abspath DailyBuildTestTools
+set TOOLSBASE=%$result%
+set PYTHON=%TOOLSBASE%\Python\python.exe
+set NKF=%TOOLSBASE%\bin\nkf.exe
+set SED=%TOOLSBASE%\sed\bin\sed.exe
+set CMAKE=%TOOLSBASE%\cmake\bin\cmake.exe
 
-set TOOLS=%PYTHON%
+set TOOLS=%PYTHON% %NKF% %SED% %CMAKE%
 set OK=ok
 for %%t in (%TOOLS%) do (
-	where %%t >NUL 2>&1
+	%%t --version >NUL 2>&1
 	if !ERRORLEVEL! neq 0 (
-		echo %PROG%: we need '%%t'
+		echo Error: "%%t" not found
 		set OK=no
-		::  DailyBuild マシンでの特別処理
-		if "%%t" equ "python.exe" (
-			for /f "usebackq delims=" %%a in (`hostname`) do set HOSTNAME=%%a
-			if "!HOSTNAME!" equ "DESKTOP-KD3C7HS" (
-				set PYTHON=C:\Python35_for_DailyBuild\python.exe
-				echo using "!PYTHON!"
-				set OK=ok
-			)
-		)
 	)
 )
 if "%OK%" neq "ok" (
@@ -160,6 +169,10 @@ endlocal
 exit /b
 
 :: ---------------------------------------------------------------------
+:abspath
+	set $result=%~f1
+	exit /b
+
 :usage
 	echo DailyBuild [options] [test-repository [result-repository]]
 	echo+

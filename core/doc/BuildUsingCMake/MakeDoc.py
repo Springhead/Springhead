@@ -15,8 +15,9 @@
 #     Ver 1.0	 2019/08/05 F.Kanehori	First version.
 #     Ver 1.1	 2021/05/19 F.Kanehori	CMake version.
 #     Ver 1.2	 2021/05/20 F.Kanehori	Rename to BuildUsingCMake.
+#     Ver 1.3	 2021/07/01 F.Kanehori	DailyBuildTestTools 導入.
 # =============================================================================
-version = 1.1
+version = 1.3
 
 import sys
 import os
@@ -42,8 +43,11 @@ from Proc import *
 #  Programs
 #
 python = 'python'
-make_pdf = 'make' if Util.is_unix() else 'nmake'
 make_html = 'buildhtml.py'
+if Util.is_unix():
+	make_pdf = 'make'
+else:
+	make_pdf = '../../../../DailyBuildTestTools/bin/nmake'
 
 # ----------------------------------------------------------------------
 #  Paths

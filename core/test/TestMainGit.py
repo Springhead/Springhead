@@ -40,8 +40,9 @@
 #     Ver 1.9    2021/03/03 F.Kanehori	Add HowToBuildSpringhead_Windows.
 #     Ver 1.10   2021/03/24 F.Kanehori	Add SprInstallGuide.
 #     Ver 1.11   2021/05/20 F.Kanehori	Rename 'CMake' to 'BuildUsingCMake'.
+#     Ver 1.12   2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
 # ======================================================================
-version = '1.11'
+version = '1.12'
 
 import sys
 import os
@@ -50,13 +51,20 @@ from time import sleep
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test" に置く	
+#
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-2])
+SrcDir = os.path.abspath('%s/core/src' % TopDir).replace(os.sep, '/')
+TestDir = os.path.abspath('%s/core/test' % TopDir).replace(os.sep, '/')
+BaseDir = os.path.abspath('%s/..' % TopDir).replace(os.sep, '/')
+ToolsDir = '%s/DailyBuildTestTools' % BaseDir
+
+# ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
-sys.path.append('../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('SpringheadTest')
-srcdir = spr_path.abspath('src')
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
@@ -83,6 +91,58 @@ date_record = 'Test.date'
 commit_id = 'Springhead.commit.id'
 log_user = 'demo'
 log_server = 'haselab.net'
+
+# ----------------------------------------------------------------------
+#  Determine python's path
+#	If setup file exists, use python described in the file.
+#	Otherwise, use DailyBuildTestTools/Python/python.exe.
+#
+setup_file = '%s/setup.conf' % SrcDir
+python = 'python'
+if os.path.exists(setup_file):
+	# identify python first
+	print('check contents (setup.conf)')
+	os.chdir('core/src')
+
+	# get python path from setup.conf
+	fio = TextFio(setup_file, 'r')
+	if fio.open() != 0:
+		Error(prog).abort('can not open "%s"' % setup_file)
+	lines = fio.read()
+	fio.close()
+	python_path = None
+	for line in lines:
+		tmp = line.split()
+		if len(tmp) == 2 and tmp[0] == 'python':
+			python_path = tmp[1]
+			break
+	if python_path is None:
+		Error(prog).abort('can not found python path')
+	print('using %s' % Util.upath(python_path))
+
+	# setup paths
+	cmnd = '%s setup.py -c %s' % (python_path, python_path)
+	stat = proc.execute(cmnd, shell=True).wait()
+	os.chdir(cwd)
+	if stat == -1:
+		Error(prog).info('can\'t setup test environment.')
+		Error(prog).info('execute "%s" first.' % setup_script)
+		sys.exit(1)
+	if stat < 0:
+		Error(prog).abort('botch: setup file not found')
+	#
+	sf = SetupFile(setup_file)
+	sf.setenv()
+	python = os.getenv('python')
+	print()
+	print('using setup file "%s"' % setup_file)
+
+elif os.path.exists('%s/Python/python.exe' % ToolsDir):
+	# DailyBuild のための特別措置
+	python = '%s/Python/python.exe' % ToolsDir
+	print('using "%s"' % python)
+else:
+	Error(prog).warn('setup file "%s" not found' % setup_file)
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -198,8 +258,7 @@ if len(args) != 2:
 	parser.error("incorrect number of arguments")
 
 # get arguments
-topdir = spr_path.abspath()
-repository = '%s/../%s' % (topdir, args[0])
+repository = '%s/%s' % (BaseDir, args[0])
 repository = Util.upath(os.path.abspath(repository))
 if not os.path.isdir(repository):
 	msg = '"%s" is not a directory' % repository
@@ -243,7 +302,6 @@ print('   result repository: [%s]' % result_repository)
 if not os.path.exists(repository):
 	print('making test repository: [%s]' % repository)
 	os.makedirs(repository, exist_ok=True)
-testdir = spr_path.abspath('test')
 start_dir = os.getcwd()
 os.chdir(repository)
 
@@ -255,9 +313,9 @@ if not os.path.exists('core/test/bin'):
 #  Create closed-source-control file (UseClosedSrcOrNot.h).
 #	Following script must be done at RunSwig directory!
 #
-runswigdir = '%s/RunSwig' % srcdir
+runswigdir = '%s/RunSwig' % SrcDir
 os.chdir(runswigdir)
-cmnd = 'python CheckClosedSrc.py'
+cmnd = '%s CheckClosedSrc.py' % python
 rc = Proc().execute(cmnd, shell=shell).wait()
 os.chdir(repository)
 
@@ -265,7 +323,7 @@ os.chdir(repository)
 #  Remove log files.
 #
 Print('clearing log files')
-os.chdir('%s/log' % testdir)
+os.chdir('%s/log' % TestDir)
 fop = FileOp(info=1, dry_run=dry_run, verbose=verbose)
 fop.rm('*')
 os.chdir(repository)
@@ -274,7 +332,7 @@ os.chdir(repository)
 #  Test Go!
 #
 if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
-	os.chdir('%s/bin' % testdir)
+	os.chdir('%s/bin' % TestDir)
 	#
 	test_dirs = []
 	if check_exec('DAILYBUILD_EXECUTE_STUBBUILD'):
@@ -287,7 +345,7 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		test_dirs.append(['Samples'])
 	#
 	csusage = 'unuse'	#  We do not use closed sources.
-	cmnd = 'python SpringheadTest.py'
+	cmnd = '%s SpringheadTest.py' % python
 	opts = '-p %s -c %s -C %s' % (plat, conf, csusage)
 	if verbose:
 		opts += ' -v'
@@ -318,10 +376,10 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 #
 if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_commit_resultlog):
 	Print('generating sprphys/Springhead HEAD commit-id file')
-	logdir = '%s/log' % testdir
+	logdir = '%s/log' % TestDir
 	os.chdir(logdir)
 	#
-	cmnd = 'python ../bin/RevisionInfo.py -S HEAD'
+	cmnd = '%s ../bin/RevisionInfo.py -S HEAD' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	rc = proc.execute(cmnd, shell=shell,
 			  stdout=commit_id, stderr=Proc.STDOUT).wait()
@@ -340,7 +398,7 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_commit_resultlog):
 		target_dir = result_repository
 		cert_dir = '../..'
 		aux_msg = '(Windows)'
-	logdir = '%s/log' % testdir
+	logdir = '%s/log' % TestDir
 	os.chdir(logdir)
 	#
 	logfiles = ['result.log']
@@ -382,12 +440,12 @@ if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_commit_resultlog):
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	Print('making history log')
-	logdir = '%s/log' % testdir
+	logdir = '%s/log' % TestDir
 	os.chdir(logdir)
 	#
 	hist_path = '%s/%s' % (logdir, history_log)
 	extract = 'result.log'
-	cmnd = 'python ../bin/RevisionInfo.py'
+	cmnd = '%s ../bin/RevisionInfo.py' % python
 	if Util.is_unix():
 		args = '-R -u -f %s all' % extract
 	else:
@@ -402,7 +460,7 @@ if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 #
 if check_exec('DAILYBUILD_GEN_HISTORY', unix_gen_history):
 	Print('making test date information')
-	os.chdir('%s/log' % testdir)
+	os.chdir('%s/log' % TestDir)
 	#
 	date_and_time = Util.now('%Y-%m%d %H:%M:%S')
 	lines = [
@@ -427,7 +485,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 	if Util.is_unix():
 		tohost = '%s@%s' % (log_user, log_server)
 		todir = '/home/WWW/docroots/springhead/dailybuild/log.unix'
-		fmdir = os.path.abspath('%s/log' % testdir)
+		fmdir = os.path.abspath('%s/log' % TestDir)
 		proc = Proc(verbose=verbose, dry_run=dry_run)
 		pkey = '%s/.ssh/id_rsa' % os.environ['HOME']
 		opts = '-i %s -o "StrictHostKeyChecking=no"' % pkey
@@ -442,7 +500,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 		dirname = 'log'
 		docroot = '//haselab/HomeDirs/WWW/docroots'
 		webbase = '%s/springhead/dailybuild/%s' % (docroot, dirname)
-		logdir = '%s/log' % testdir
+		logdir = '%s/log' % TestDir
 		#
 		copy_all(logdir, webbase, False, dry_run)
 	os.chdir(repository)
@@ -455,37 +513,37 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	#
 	os.chdir('core/include')
 	Print('  SpringheadDoc')
-	cmnd = 'python SpringheadDoc.py'
+	cmnd = '%s SpringheadDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../src')
 	Print('  SpringheadImpDoc')
-	cmnd = 'python SpringheadImpDoc.py'
+	cmnd = '%s SpringheadImpDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../doc/SprManual')
 	Print('  SprManual')
-	cmnd = 'python MakeDoc.py'
+	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../SprInstallGuide')
 	Print('  SprInstallGuide')
-	cmnd = 'python MakeDoc.py'
+	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../BuildUsingCMake')
 	Print('  BuildUsingCMake')
-	cmnd = 'python MakeDoc.py'
+	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
 	os.chdir('../CMakeGitbook')
 	Print('  CMakeGitbook')
-	cmnd = 'python MakeDoc.py'
+	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#

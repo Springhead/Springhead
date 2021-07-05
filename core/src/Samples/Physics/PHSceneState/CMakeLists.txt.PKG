@@ -151,6 +151,7 @@ else()
 	#  NOTE: This program directly refers header files 
 	#	 placed under "${TOPDIR}/core/src".
 	#
+	PRIVATE /usr/local/include/boost-numeric-bindings
 	PRIVATE ${TOPDIR}/core/src
     )
     message("** add include directory: \"${TOPDIR}/core/src\"")

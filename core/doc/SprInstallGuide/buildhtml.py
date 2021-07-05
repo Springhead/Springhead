@@ -16,10 +16,9 @@
 #     Ver 1.2    2019/08/05 F.Kanehori	HowToUseCMake version.
 #     Ver 1.3    2021/03/02 F.Kanehori	HowToBuildSpringhead_Windows version.
 #     Ver 1.4    2021/03/02 F.Kanehori	ドキュメント名称変更
-#     Ver 1.4.1  2021/04/19 F.Kanehori	Bug fixed.
-#     Ver 1.4.2	 2021/05/19 F.Kanehori	Test svg directory changed.
+#     Ver 1.5	 2021/07/01 F.Kanehori	DailyBuildTestTool 導入
 # ======================================================================
-version = '1.4.2'
+version = '1.5'
 
 import sys
 import os
@@ -42,9 +41,17 @@ svg_dir = '../../../../../../svg-fig/SprInstallGuide'.replace('/', os.sep)
 # ----------------------------------------------------------------------
 #  External tools.
 #
+addpath_base = '../../../../DailyBuildTestTools'
+path_to_add = [	'%s/Python' % addpath_base,
+		'%s/bin' % addpath_base,
+		'%s/sed/bin' % addpath_base]
+x = map(lambda x: os.path.abspath(x) , path_to_add)
+addpath = os.pathsep.join(map(lambda x: os.path.abspath(x) , path_to_add))
+env = os.environ['PATH']
+os.environ['PATH'] = '%s%s%s' % (addpath, os.pathsep, env)
 sed = 'sed'
 nkf = 'nkf'
-python = 'c:/python35/python'
+python = 'python'
 pdflatex = 'pdflatex'
 lwarpmk = 'lwarpmk'
 

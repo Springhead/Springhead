@@ -4,6 +4,7 @@ setlocal enabledelayedexpansion
 set CWD=%CD%
 call :leafname ..\..
 set ROOTDIR=%$result%
+set TESTDIR=%ROOTDIR%\core\test
 
 set CONF=Release
 set PLAT=x64
@@ -15,6 +16,10 @@ set RESULTREPOSITORY=DailyBuildResult/Result
 set ARGS=--do-not-clone -c %CONF% -p %PLAT% -t %TOOL%
 set CMND=DailyBuild.bat %ARGS% %TESTREPOSITORY% %RESULTREPOSITORY%
 
+set SCRIPT=DailyBuild.bat
+set SAVEFILE=%SCRIPT%-SAVE
+cd ..\..\..
+copy %TESTDIR%\%SCRIPT% .
 echo %CMND%
 %CMND%
 

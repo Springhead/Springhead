@@ -36,14 +36,12 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/11/17 F.Kanehori	First version.
-#	Ver 2.0  2018/02/22 F.Kanehori	全体の見直し.
-#	Ver 2.01 2018/03/14 F.Kanehori	Dealt with new Error class.
-#	Ver 2.02 2018/03/22 F.Kanehori	Change date/time info format.
-#	Ver 2.03 2018/04/24 F.Kanehori	Omit redundant code.
-#	Ver 2.1  2020/10/12 F.Kanehori	Add EmbPython Library creation.
+#     Ver 1.0	 2016/11/17 F.Kanehori	First version.
+#     Ver 2.0	 2018/02/22 F.Kanehori	全体の見直し.
+#     Ver 2.1	 2020/10/12 F.Kanehori	Add EmbPython Library creation.
+#     Ver 2.2	 2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
 # =============================================================================
-version = 2.03
+version = '2.2'
 
 import sys
 import os
@@ -59,24 +57,82 @@ from ClosedSrcControl import *
 from KeyInterruption import *
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-date_format = '%Y/%m/%d %H:%M:%S'
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+SrcDir = os.path.abspath('%s/core/src' % TopDir).replace(os.sep, '/')
+BaseDir = os.path.abspath('%s/..' % TopDir).replace(os.sep, '/')
+ToolsDir = '%s/DailyBuildTestTools' % BaseDir
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('SpringheadTest')
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
 from Proc import *
 from FileOp import *
 from TextFio import *
+
+# ----------------------------------------------------------------------
+#  Constants
+#
+date_format = '%Y/%m/%d %H:%M:%S'
+
+# ----------------------------------------------------------------------
+#  Determine python's path
+#	If setup file exists, use python described in the file.
+#	Otherwise, use DailyBuildTestTools/Python/python.exe.
+#
+setup_file = '%s/setup.conf' % SrcDir
+python = 'python'
+if os.path.exists(setup_file):
+	# identify python first
+	print('check contents (setup.conf)')
+	os.chdir('core/src')
+
+	# get python path from setup.conf
+	fio = TextFio(setup_file, 'r')
+	if fio.open() != 0:
+		Error(prog).abort('can not open "%s"' % setup_file)
+	lines = fio.read()
+	fio.close()
+	python_path = None
+	for line in lines:
+		tmp = line.split()
+		if len(tmp) == 2 and tmp[0] == 'python':
+			python_path = tmp[1]
+			break
+	if python_path is None:
+		Error(prog).abort('can not found python path')
+	print('using %s' % Util.upath(python_path))
+
+	# setup paths
+	cmnd = '%s setup.py -c %s' % (python_path, python_path)
+	stat = proc.execute(cmnd, shell=True).wait()
+	os.chdir(cwd)
+	if stat == -1:
+		Error(prog).info('can\'t setup test environment.')
+		Error(prog).info('execute "%s" first.' % setup_script)
+		sys.exit(1)
+	if stat < 0:
+		Error(prog).abort('botch: setup file not found')
+	#
+	sf = SetupFile(setup_file)
+	sf.setenv()
+	python = os.getenv('python')
+	print()
+	print('using setup file "%s"' % setup_file)
+
+elif os.path.exists('%s/Python/python.exe' % ToolsDir):
+	# DailyBuild のための特別措置
+	python = '%s/Python/python.exe' % ToolsDir
+	print('using "%s"' % python)
+else:
+	Error(prog).warn('setup file "%s" not found' % setup_file)
 
 # ----------------------------------------------------------------------
 #  Simple helpers.
@@ -254,7 +310,7 @@ csc.revive()
 
 # back to start directory and make "result.log".
 os.chdir(cwd)
-cmnd = 'python GenResultLog.py'
+cmnd = '%s GenResultLog.py' % python
 outf = '-o ../log/result.log'
 args = 'r %s %s %s' % (res_file, platforms[0], configs[0])
 print(' '.join([cmnd, outf, args]))

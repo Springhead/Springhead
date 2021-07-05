@@ -11,12 +11,13 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/11/29 F.Kanehori	First version.
-#	Ver 1.1  2019/01/29 F.Kanehori	Add: call html_escape()
-#	Ver 1.2  2019/08/05 F.Kanehori	HowToUseCMake version.
-#	Ver 1.3  2021/05/19 F.Kanehori	Rename to BuildUsingCMake.
+#     Ver 1.0	 2018/11/29 F.Kanehori	First version.
+#     Ver 1.1	 2019/01/29 F.Kanehori	Add: call html_escape()
+#     Ver 1.2	 2019/08/05 F.Kanehori	HowToUseCMake version.
+#     Ver 1.3	 2021/05/19 F.Kanehori	Rename to BuildUsingCMake.
+#     Ver 1.4	 2021/07/01 F.Kanehori	DailyBuildTestTool 導入
 # ======================================================================
-version = 1.3
+version = 1.4
 
 import sys
 import os
@@ -39,9 +40,17 @@ svg_dir = '../../../../../../svg-fig/BuildUsingCMake'.replace('/', os.sep)
 # ----------------------------------------------------------------------
 #  External tools.
 #
+addpath_base = '../../../../DailyBuildTestTools'
+path_to_add = [	'%s/Python' % addpath_base,
+		'%s/bin' % addpath_base,
+		'%s/sed/bin' % addpath_base]
+x = map(lambda x: os.path.abspath(x) , path_to_add)
+addpath = os.pathsep.join(map(lambda x: os.path.abspath(x) , path_to_add))
+env = os.environ['PATH']
+os.environ['PATH'] = '%s%s%s' % (addpath, os.pathsep, env)
 sed = 'sed'
 nkf = 'nkf'
-python = 'c:/python35/python'
+python = 'python'
 pdflatex = 'pdflatex'
 lwarpmk = 'lwarpmk'
 
@@ -575,7 +584,7 @@ if options.replace_tex_esc:
 	sys.stdout.flush()
 #
 if options.copy:
-	#  生成されたファイルを"generated/doc/HowToUseCMake"にコピーする
+	#  生成されたファイルを"generated/doc/BuildUsingCMake"にコピーする
 	#
 	fmdir = wrkspace
 	todir = '../../../../generated/doc/BuildUsingCMake'

@@ -21,9 +21,9 @@
 #     Ver 1.0    2018/02/21 F.Kanehori	First version.
 #     Ver 1.1    2018/12/06 F.Kanehori	Now both pdf and html version available.
 #     Ver 1.2    2019/01/31 F.Kanehori	Texlive 2014 is obsoleted.
-#     Ver 1.2.1  2021/03/03 F.Kanehori	Remove unneccessary path setting.
+#     Ver 1.3	 2021/07/01 F.Kanehori	DailyBuildTestTools 導入.
 # =============================================================================
-version = '1.2.1'
+version = '1.3'
 
 import sys
 import os
@@ -49,14 +49,16 @@ from Proc import *
 #  Programs
 #
 python = 'python'
-make_pdf = 'make' if Util.is_unix() else 'nmake'
 make_html = 'buildhtml.py'
+if Util.is_unix():
+	make_pdf = 'make'
+else:
+	make_pdf = '../../../../DailyBuildTestTools/bin/nmake'
 
 # ----------------------------------------------------------------------
 #  Paths
 #	Now we do not need to use texlive 2014 (2019/01/31).
 #
-#texlive2014_path = 'C:/texlive/2014/bin/win32'
 texlive2018_path = 'C:/texlive/2018/bin/win32'
 addpath = None
 

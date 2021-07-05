@@ -37,10 +37,9 @@
 #     Ver 1.5    2018/05/01 F.Kanehori	Add: Result repository.
 #     Ver 1.6    2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.7    2021/01/07 F.Kanehori	Setup 自動実行設定追加.
-#     Ver 1.7.1  2021/03/24 F.Kanehori	Add: -f flag.
-#     Ver 1.7.2  2021/06/28 F.Kanehori	DailyBuild マシン用特別措置
+#     Ver 1.8	 2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
 # ======================================================================
-version = "1.7.2"
+version = "1.8"
 
 import sys
 import os
@@ -50,20 +49,23 @@ from time import sleep
 from datetime import *
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/test" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-url_git = 'https://github.com/sprphys/Springhead'
-url_svn = 'http://springhead.info/spr2/Springhead/trunk/closed'
-date_format = '%Y/%m/%d %H:%M:%S'
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-2])
+BaseDir = os.path.abspath('%s/..' % TopDir).replace(os.sep, '/')
+ToolsDir = '%s/DailyBuildTestTools' % BaseDir
+
+spr_topdir = TopDir
+spr_srcdir = '%s/core/src' % TopDir
+start_dir = '%s/core/test' % TopDir
+prep_dir = BaseDir
 
 # ----------------------------------------------------------------------
 #  Local python library
 #
-sys.path.append('../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % spr_srcdir
 sys.path.append(libdir)
 from FileOp import *
 from TextFio import *
@@ -71,6 +73,13 @@ from Proc import *
 from Util import *
 from Error import *
 from SetupFile import *
+
+# ----------------------------------------------------------------------
+#  Constants
+#
+url_git = 'https://github.com/sprphys/Springhead'
+url_svn = 'http://springhead.info/spr2/Springhead/trunk/closed'
+date_format = '%Y/%m/%d %H:%M:%S'
 
 # ----------------------------------------------------------------------
 #  Options
@@ -162,10 +171,6 @@ if repository == 'Springhead' and force == False:
 # ----------------------------------------------------------------------
 #  Globals
 #
-spr_topdir = spr_path.abspath()
-spr_srcdir = spr_path.abspath('src')
-start_dir = spr_path.abspath('test')
-prep_dir = os.path.abspath('%s/..' % spr_topdir)
 proc = Proc(verbose=verbose, dry_run=dry_run)
 setup_script = 'setup.sh' if Util.is_unix() else 'setup.bat'
 
@@ -331,7 +336,10 @@ if setup:
 		sys.exit(1)
 	print()
 
-# set program paths to environment variable.
+# ----------------------------------------------------------------------
+#  Determine python's path
+#	If setup file exists, use python described in the file.
+#	Otherwise, use DailyBuildTestTools/Python/python.exe.
 #
 python = 'python'
 if os.path.exists(setup_file):
@@ -372,9 +380,9 @@ if os.path.exists(setup_file):
 	print()
 	print('using setup file "%s"' % setup_file)
 
-elif os.path.exists('C:/Python35_for_DailyBuild'):
+elif os.path.exists('%s/Python/python.exe' % ToolsDir):
 	# DailyBuild のための特別措置
-	python = 'C:/Python35_for_DailyBuild/python.exe'
+	python = '%s/Python/python.exe' % ToolsDir
 	print('using "%s"' % python)
 else:
 	Error(prog).warn('setup file "%s" not found' % setup_file)

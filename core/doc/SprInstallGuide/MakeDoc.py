@@ -12,10 +12,10 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#     Ver 1.0.1  2021/03/17 F.Kanehori	ドキュメント名称変更
 #     Ver 1.0    2021/03/15 F.Kanehori	First version.
+#     Ver 1.1	 2021/07/01 F.Kanehori	DailyBuildTestTools 導入.
 # =============================================================================
-version = '1.0.1'
+version = '1.1'
 
 import sys
 import os
@@ -41,8 +41,11 @@ from Proc import *
 #  Programs
 #
 python = 'python'
-make_pdf = 'make' if Util.is_unix() else 'nmake'
 make_html = 'buildhtml.py'
+if Util.is_unix():
+	make_pdf = 'make'
+else:
+	make_pdf = '../../../../DailyBuildTestTools/bin/nmake'
 
 # ----------------------------------------------------------------------
 #  Paths
