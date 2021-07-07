@@ -59,26 +59,26 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#     Ver 1.00   2016/10/06 F.Kanehori	First version.
-#     Ver 1.01   2016/11/09 F.Kanehori	Add method: get_toolset.
-#     Ver 1.02   2017/09/07 F.Kanehori	Python library revised.
-#     Ver 1.03   2017/09/14 F.Kanehori	Change return value: error().
-#     Ver 1.04   2017/11/16 F.Kanehori	Python library path 変更.
-#     Ver 1.05   2017/11/30 F.Kanehori	Python library path 変更.
-#     Ver 2.00   2018/02/07 F.Kanehori	全体の見直し.
-#     Ver 2.01   2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
-#     Ver 2.02   2020/06/11 F.Kanehori	devenv 探索方式変更.
+#     Ver 1.0	 2016/10/06 F.Kanehori	First version.
+#     Ver 1.1	 2016/11/09 F.Kanehori	Add method: get_toolset.
+#     Ver 1.2	 2017/09/07 F.Kanehori	Python library revised.
+#     Ver 1.3	 2017/09/14 F.Kanehori	Change return value: error().
+#     Ver 1.4	 2017/11/16 F.Kanehori	Python library path 変更.
+#     Ver 1.5	 2017/11/30 F.Kanehori	Python library path 変更.
+#     Ver 2.0	 2018/02/07 F.Kanehori	全体の見直し.
+#     Ver 2.1	 2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
+#     Ver 2.2	 2020/06/11 F.Kanehori	devenv 探索方式変更.
+#     Ver 2.2.1	 2021/07/07 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 from __future__ import print_function
 import sys
 import os
 
 # local python library
+#	このスクリプトは ".../core/src/RunSwig/pythonlin" に置く
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('VisualStudio')
-libdir = spr_path.abspath('pythonlib')
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+libdir = ScriptFileDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
@@ -100,7 +100,7 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.2
+		self.version = '2.2.1'
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)

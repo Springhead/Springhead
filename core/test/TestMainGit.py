@@ -40,7 +40,7 @@
 #     Ver 1.9    2021/03/03 F.Kanehori	Add HowToBuildSpringhead_Windows.
 #     Ver 1.10   2021/03/24 F.Kanehori	Add SprInstallGuide.
 #     Ver 1.11   2021/05/20 F.Kanehori	Rename 'CMake' to 'BuildUsingCMake'.
-#     Ver 1.12   2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 1.12   2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
 # ======================================================================
 version = '1.12'
 
@@ -91,58 +91,6 @@ date_record = 'Test.date'
 commit_id = 'Springhead.commit.id'
 log_user = 'demo'
 log_server = 'haselab.net'
-
-# ----------------------------------------------------------------------
-#  Determine python's path
-#	If setup file exists, use python described in the file.
-#	Otherwise, use DailyBuildTestTools/Python/python.exe.
-#
-setup_file = '%s/setup.conf' % SrcDir
-python = 'python'
-if os.path.exists(setup_file):
-	# identify python first
-	print('check contents (setup.conf)')
-	os.chdir('core/src')
-
-	# get python path from setup.conf
-	fio = TextFio(setup_file, 'r')
-	if fio.open() != 0:
-		Error(prog).abort('can not open "%s"' % setup_file)
-	lines = fio.read()
-	fio.close()
-	python_path = None
-	for line in lines:
-		tmp = line.split()
-		if len(tmp) == 2 and tmp[0] == 'python':
-			python_path = tmp[1]
-			break
-	if python_path is None:
-		Error(prog).abort('can not found python path')
-	print('using %s' % Util.upath(python_path))
-
-	# setup paths
-	cmnd = '%s setup.py -c %s' % (python_path, python_path)
-	stat = proc.execute(cmnd, shell=True).wait()
-	os.chdir(cwd)
-	if stat == -1:
-		Error(prog).info('can\'t setup test environment.')
-		Error(prog).info('execute "%s" first.' % setup_script)
-		sys.exit(1)
-	if stat < 0:
-		Error(prog).abort('botch: setup file not found')
-	#
-	sf = SetupFile(setup_file)
-	sf.setenv()
-	python = os.getenv('python')
-	print()
-	print('using setup file "%s"' % setup_file)
-
-elif os.path.exists('%s/Python/python.exe' % ToolsDir):
-	# DailyBuild のための特別措置
-	python = '%s/Python/python.exe' % ToolsDir
-	print('using "%s"' % python)
-else:
-	Error(prog).warn('setup file "%s" not found' % setup_file)
 
 # ----------------------------------------------------------------------
 #  Local methods.
@@ -295,6 +243,18 @@ print('   platform:          [%s]' % plat)
 print('   configuration:     [%s]' % conf)
 print('   test repository:   [%s]' % repository)
 print('   result repository: [%s]' % result_repository)
+
+# ----------------------------------------------------------------------
+#  Python's path
+#	unix:	  default python
+#	Windows:  .../DailyBuildTestTools/Python/python.exe.
+#
+if Util().is_windows():
+	python = '%s/Python/python.exe' % ToolsDir
+	print('using "%s"' % python)
+else:
+	python = 'python'
+	print('using default python')
 
 # ----------------------------------------------------------------------
 #  Go to test repository.
@@ -511,37 +471,37 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 	Print('making documents')
 	#
-	os.chdir('core/include')
+	os.chdir('%s/core/include' % TopDir)
 	Print('  SpringheadDoc')
 	cmnd = '%s SpringheadDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../src')
+	os.chdir('%s/core/src' % TopDir)
 	Print('  SpringheadImpDoc')
 	cmnd = '%s SpringheadImpDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../doc/SprManual')
+	os.chdir('%s/core/doc/SprManual' % TopDir)
 	Print('  SprManual')
 	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../SprInstallGuide')
+	os.chdir('%s/core/doc/SprInstallGuide' % TopDir)
 	Print('  SprInstallGuide')
 	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../BuildUsingCMake')
+	os.chdir('%s/core/doc/BuildUsingCMake' % TopDir)
 	Print('  BuildUsingCMake')
 	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)
 	proc.execute(cmnd, shell=shell).wait()
 	#
-	os.chdir('../CMakeGitbook')
+	os.chdir('%s/core/doc/CMakeGitBook' % TopDir)
 	Print('  CMakeGitbook')
 	cmnd = '%s MakeDoc.py' % python
 	proc = Proc(verbose=verbose, dry_run=dry_run)

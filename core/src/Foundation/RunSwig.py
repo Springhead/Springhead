@@ -26,10 +26,11 @@
 #     Ver 1.09   2020/04/30 F.Kanehori	unix: gmake をデフォルトに.
 #     Ver 1.10   2020/05/13 F.Kanehori	unix: Ver 1.08 に戻す.
 #     Ver 1.11   2020/12/09 F.Kanehori	Setup 導入期間開始.
-#     Ver 1.12   2021/02/17 F.Kanehori	Python 2.7 対応.
+#     Ver 1.12	 2021/02/17 F.Kanehori	Python 2.7 対応.
+#     Ver 1.13	 2021/07/07 F.Kanehori	DailyBuildTestTools の導入.
 # ==============================================================================
 from __future__ import print_function
-version = 1.12
+version = '1.13'
 trace = False
 
 import sys
@@ -39,35 +40,18 @@ import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Locate myself
+#  このスクリプトは ".../core/src/Foundation" に置く	
 #
 ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
 SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# ----------------------------------------------------------------------
-#  Constants
-#
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
 	print('ENTER: %s' % prog)
 	sys.stdout.flush()
 
-# ----------------------------------------------------------------------
-#  Import Springhead python library.
-#
-sys.path.append('../RunSwig')
-from FindSprPath import *
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-if SetupExists:
-	libdir = '%s/RunSwig/pythonlib' % SrcDir
-else:
-	spr_path = FindSprPath(prog)
-	libdir = spr_path.abspath('pythonlib')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from TextFio import *
 from Error import *
@@ -84,27 +68,20 @@ unix = util.is_unix()
 # ----------------------------------------------------------------------
 #  Directories
 #
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
 	sf.setenv()
-	sprtop = os.path.abspath('%s/../..' % SrcDir)
-	bindir = os.path.relpath('%s/../bin' % SrcDir)
-	incdir = os.path.relpath('%s/../include' % SrcDir)
-	srcdir = os.path.relpath(SrcDir)
-else:
-	sprtop = spr_path.abspath()
-	bindir = spr_path.relpath('bin')
-	incdir = spr_path.relpath('inc')
-	srcdir = spr_path.relpath('src')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+sprtop = os.path.abspath(TopDir)
+bindir = os.path.relpath('%s/core/bin' % TopDir)
+incdir = os.path.relpath('%s/core/include' % TopDir)
+srcdir = os.path.relpath(SrcDir)
 swigdir = '%s/%s' % (bindir, 'swig')
 
 incdir_rel = util.pathconv(os.path.relpath(incdir), 'unix')
 srcdir_rel = util.pathconv(os.path.relpath(srcdir), 'unix')
 
 # ----------------------------------------------------------------------
-#  Be sure to invoke swig which is build for Springhead.
+#  Be sure to invoke Springhead version swig.
 #
 addpath = os.pathsep.join([swigdir, bindir])
 
@@ -118,11 +95,9 @@ parser = OptionParser(usage = usage)
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')

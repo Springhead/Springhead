@@ -32,13 +32,12 @@
 #     Ver 1.10   2020/04/30 F.Kanehori	unix: gmake をデフォルトにする.
 #     Ver 1.11   2020/05/13 F.Kanehori	unix: Ver 1.09 に戻す.
 #     Ver 1.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
-#     Ver 1.12.1 2020/12/16 F.Kanehori	Bug fix.
-#     Ver 1.12.2 2021/01/07 F.Kanehori	Bug fix.
 #     Ver 1.13   2021/02/17 F.Kanehori	Python 2.7 対応.
 #     Ver 1.14   2021/04/14 F.Kanehori	不要なコードの削除.
+#     Ver 1.15	 2021/07/07 F.Kanehori	DailyBuildTestTools の導入.
 # ==============================================================================
 from __future__ import print_function
-version = '1.14'
+version = '1.15'
 debug = False
 trace = False
 
@@ -48,37 +47,18 @@ import glob
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Locate myself
+#  このスクリプトは ".../core/src/Framework" に置く	
 #
 ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
-
-# --------------------------------------------
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 SrcDir = '/'.join(ScriptFileDir.split(os.sep)[:-1])
 SetupExists = os.path.exists('%s/setup.conf' % SrcDir)
-# --------------------------------------------
-
-# ----------------------------------------------------------------------
-#  Constants
-#
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 if trace:
-	print('ENTER: %s: %s' % (prog, sys.argv[1:]))
+	print('ENTER: %s' % prog)
 	sys.stdout.flush()
-verbose = 1 if debug else 0
-dry_run = 1 if debug else 0
 
-# ----------------------------------------------------------------------
-#  Import Springhead python library.
-#
-sys.path.append('../RunSwig')
-from FindSprPath import *
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-if SetupExists:
-	libdir = '%s/RunSwig/pythonlib' % SrcDir
-else:
-	spr_path = FindSprPath(prog)
-	libdir = spr_path.abspath('pythonlib')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from TextFio import *
 from FileOp import *
@@ -88,22 +68,24 @@ from Proc import *
 from SetupFile import *
 
 # ----------------------------------------------------------------------
+#  Constants
+#
+verbose = 1 if debug else 0
+dry_run = 1 if debug else 0
+
+# ----------------------------------------------------------------------
 #  Directories
 #
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	sf = SetupFile('%s/setup.conf' % SrcDir, verbose=1)
 	sf.setenv()
-	sprtop = os.path.abspath('%s/../..' % SrcDir)
-	bindir = os.path.relpath('%s/../bin' % SrcDir)
-	incdir = os.path.relpath('%s/../include' % SrcDir)
-	srcdir = os.path.relpath(SrcDir)
-else:
-	sprtop = spr_path.abspath()
-	bindir = spr_path.relpath('bin')
-	incdir = spr_path.relpath('inc')
-	srcdir = spr_path.relpath('src')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sprtop = os.path.abspath(TopDir)
+bindir = os.path.relpath('%s/core/bin' % TopDir)
+incdir = os.path.relpath('%s/core/include' % TopDir)
+srcdir = os.path.relpath(SrcDir)
+
 foundation_dir = '%s/%s' % (srcdir, 'Foundation')
 framework_dir = '%s/%s' % (srcdir, 'Framework')
 
@@ -146,12 +128,10 @@ parser.add_option('-c', '--clean',
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if not SetupExists:
 	parser.add_option('-P', '--python',
                         dest='python', action='store', default='python',
                         help='python command name')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -176,7 +156,6 @@ dry_run	= options.dry_run
 # ----------------------------------------------------------------------
 #  Scripts
 #
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	python = sf.getenv('python')
 	if unix:
@@ -195,25 +174,12 @@ else:
 	make = 'gmake' if unix else 'nmake /NOLOGO'
 	runswig_foundation = '%s %s/RunSwig.py -P %s' % (python, foundation_dir, python)
 	addpath = spr_path.abspath('buildtool')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # ----------------------------------------------------------------------
 #  Globals (part 2)
 #
 proc = Proc(verbose=verbose, dry_run=dry_run)
 f_op = FileOp(verbose=verbose)
-
-'''
-# ----------------------------------------------------------------------
-#  src/Foundation へ移って RunSwig を実行する.
-#
-cmd = '%s Framework Foundation' % runswig_foundation
-proc.execute(cmd, shell=True)
-status = proc.wait()
-if status != 0:
-	msg = '%s failed (%d)' % (runswig_foundation, status)
-	Error(prog).error(msg)
-'''
 
 # ----------------------------------------------------------------------
 #  swigtemp 下に SJIS world を作る.
@@ -290,7 +256,6 @@ output(interfacefile, lines)
 #  makefile を作成する.
 #
 srcimpdep_rel = os.path.relpath(srcimpdep)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	swig_bin = Util.upath(swig.replace('"', ''))
 	swigdir_rel = os.path.relpath('/'.join(swig_bin.split('/')[0:-1]))
@@ -298,7 +263,6 @@ if SetupExists:
 else:
 	swigdir_rel = Util.upath(os.path.relpath('%s/core/bin/swig' % sprtop))
 	swigargs = '-I%s/Lib' % swigdir_rel
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
 cp = 'cp' if unix else 'copy'
 rm = 'rm' if unix else 'del'
@@ -308,12 +272,10 @@ lines = []
 lines.append('# Do not edit. %s will update this file.' % prog)
 lines.append('all:\t../../../src/Framework/%sStub.cpp' % module)
 lines.append('../../../src/Framework/%sStub.cpp:\t%s' % (module, srcimpdep_rel))
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if SetupExists:
 	lines.append('\t%s %s %s' % (swig_bin, swigargs, interfacefile))
 else:
 	lines.append('\t%s/%s %s %s' % (swigdir_rel, swig, swigargs, interfacefile))
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 lines.append('\t%s Spr%sDecl.hpp ../../../include/%s %s' % (cp, module, module, quiet))
 lines.append('\t%s %sStub.cpp ../../../src/Framework %s' % (cp, module, quiet))
 lines.append('\t%s %sDecl.hpp ../../../src/Framework %s' % (cp, module, quiet))

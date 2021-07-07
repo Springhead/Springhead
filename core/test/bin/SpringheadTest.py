@@ -39,7 +39,7 @@
 #     Ver 1.0	 2016/11/17 F.Kanehori	First version.
 #     Ver 2.0	 2018/02/22 F.Kanehori	全体の見直し.
 #     Ver 2.1	 2020/10/12 F.Kanehori	Add EmbPython Library creation.
-#     Ver 2.2	 2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 2.2	 2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
 # =============================================================================
 version = '2.2'
 
@@ -81,58 +81,6 @@ from TextFio import *
 #  Constants
 #
 date_format = '%Y/%m/%d %H:%M:%S'
-
-# ----------------------------------------------------------------------
-#  Determine python's path
-#	If setup file exists, use python described in the file.
-#	Otherwise, use DailyBuildTestTools/Python/python.exe.
-#
-setup_file = '%s/setup.conf' % SrcDir
-python = 'python'
-if os.path.exists(setup_file):
-	# identify python first
-	print('check contents (setup.conf)')
-	os.chdir('core/src')
-
-	# get python path from setup.conf
-	fio = TextFio(setup_file, 'r')
-	if fio.open() != 0:
-		Error(prog).abort('can not open "%s"' % setup_file)
-	lines = fio.read()
-	fio.close()
-	python_path = None
-	for line in lines:
-		tmp = line.split()
-		if len(tmp) == 2 and tmp[0] == 'python':
-			python_path = tmp[1]
-			break
-	if python_path is None:
-		Error(prog).abort('can not found python path')
-	print('using %s' % Util.upath(python_path))
-
-	# setup paths
-	cmnd = '%s setup.py -c %s' % (python_path, python_path)
-	stat = proc.execute(cmnd, shell=True).wait()
-	os.chdir(cwd)
-	if stat == -1:
-		Error(prog).info('can\'t setup test environment.')
-		Error(prog).info('execute "%s" first.' % setup_script)
-		sys.exit(1)
-	if stat < 0:
-		Error(prog).abort('botch: setup file not found')
-	#
-	sf = SetupFile(setup_file)
-	sf.setenv()
-	python = os.getenv('python')
-	print()
-	print('using setup file "%s"' % setup_file)
-
-elif os.path.exists('%s/Python/python.exe' % ToolsDir):
-	# DailyBuild のための特別措置
-	python = '%s/Python/python.exe' % ToolsDir
-	print('using "%s"' % python)
-else:
-	Error(prog).warn('setup file "%s" not found' % setup_file)
 
 # ----------------------------------------------------------------------
 #  Simple helpers.
@@ -256,6 +204,18 @@ if verbose:
 	print('  audit:          %s' % audit)
 	print('  dry_run:        %s' % dry_run)
 	print('  scratch:        %s' % scratch)
+
+# ----------------------------------------------------------------------
+#  Python's path
+#	unix:	  default python
+#	Windows:  .../DailyBuildTestTools/Python/python.exe.
+#
+if Util().is_windows():
+	python = '%s/Python/python.exe' % ToolsDir
+	print('using "%s"' % python)
+else:
+	python = 'python'
+	print('using default python')
 
 # ----------------------------------------------------------------------
 #  Test start.

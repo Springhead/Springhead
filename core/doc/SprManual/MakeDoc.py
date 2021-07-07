@@ -30,17 +30,17 @@ import os
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/doc/SprMannual" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+SrcDir = '%s/core/src' % TopDir
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('SpringheadTest')
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from Util import *
 from Proc import *

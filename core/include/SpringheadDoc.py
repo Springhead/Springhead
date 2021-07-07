@@ -23,20 +23,17 @@ import os
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/include" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-doxy_file = 'springhead.doxy'
-target_name = 'Reference'
-generate_chm = False
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-2])
+SrcDir = '%s/core/src' % TopDir
 
 # ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
-sys.path.append('../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('SpringheadTest')
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
@@ -44,11 +41,18 @@ from Proc import *
 from FileOp import *
 
 # ----------------------------------------------------------------------
+#  Constants
+#
+doxy_file = 'springhead.doxy'
+target_name = 'Reference'
+generate_chm = False
+
+# ----------------------------------------------------------------------
 #  Directories.
 #
-rootdir = spr_path.relpath()
-coredir = spr_path.relpath('core')
-testdir = spr_path.relpath('test')
+rootdir = TopDir
+coredir = '%s/core' % rootdir
+testdir = '%s/core/test' % rootdir
 tooldir = '%s/buildtool' % rootdir
 dpt_dir = '%s/dependency/src' % rootdir
 out_dir = '%s/generated/doc' % rootdir

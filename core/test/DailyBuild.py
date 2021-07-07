@@ -37,7 +37,7 @@
 #     Ver 1.5    2018/05/01 F.Kanehori	Add: Result repository.
 #     Ver 1.6    2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.7    2021/01/07 F.Kanehori	Setup 自動実行設定追加.
-#     Ver 1.8	 2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 1.8	 2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
 # ======================================================================
 version = "1.8"
 
@@ -233,7 +233,7 @@ if check_exec('DAILYBUILD_UPDATE_SPRINGHEAD') and not skip_update:
 	#
 	print('updating "DailyBuild/Result"')
 	flush()
-	os.chdir('../%s' % result_repository)
+	os.chdir('%s/../%s' % (spr_topdir, result_repository))
 	pwd()
 	cmnd = 'git pull --all'
 	proc.execute(cmnd, stdout=Proc.PIPE, stderr=Proc.STDOUT, shell=True)
@@ -318,7 +318,7 @@ Print()
 if setup:
 	# execute setup -F if '-S' option specified
 	print('execute setup process (-S)')
-	os.chdir('core/src')
+	os.chdir(spr_srcdir)
 
 	cmnd = '%s%s%s' % (spr_srcdir, os.sep, setup_script)
 	cmnd = Util.pathconv(cmnd)
@@ -345,7 +345,7 @@ python = 'python'
 if os.path.exists(setup_file):
 	# identify python first
 	print('check contents (setup.conf)')
-	os.chdir('core/src')
+	os.chdir(spr_srcdir)
 
 	# get python path from setup.conf
 	fio = TextFio(setup_file, 'r')
@@ -390,7 +390,7 @@ else:
 # ----------------------------------------------------------------------
 #  5th step: Execute DailyBuild test.
 #
-os.chdir('core/test')
+os.chdir(start_dir)
 pwd()
 Print('Test start:')
 vflag = ' -v' if verbose else ''

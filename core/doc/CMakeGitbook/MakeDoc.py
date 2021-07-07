@@ -12,9 +12,10 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2020/04/01 F.Kanehori	First version.
+#     Ver 1.0	 2020/04/01 F.Kanehori	First version.
+#     Ver 1.1	 2021/07/07 F.Kanehori	DailyBuildTestTools 導入.
 # =============================================================================
-version = 1.0
+version = '1.1'
 
 import sys
 import os
@@ -26,12 +27,17 @@ from optparse import OptionParser
 prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
 
 # ----------------------------------------------------------------------
+#  このスクリプトは ".../core/doc/CMakeGitbook" に置く	
+#
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+SrcDir = '%s/core/src' % TopDir
+
+# ----------------------------------------------------------------------
 #  Import Springhead python library.
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('SpringheadTest')
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/RunSwig/pythonlib' % SrcDir
 sys.path.append(libdir)
 from Util import *
 from Proc import *
