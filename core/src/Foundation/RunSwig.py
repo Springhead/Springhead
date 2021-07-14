@@ -27,7 +27,7 @@
 #     Ver 1.10   2020/05/13 F.Kanehori	unix: Ver 1.08 に戻す.
 #     Ver 1.11   2020/12/09 F.Kanehori	Setup 導入期間開始.
 #     Ver 1.12	 2021/02/17 F.Kanehori	Python 2.7 対応.
-#     Ver 1.13	 2021/07/07 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 1.13	 2021/07/07 F.Kanehori	libdir 取得方式変更.
 # ==============================================================================
 from __future__ import print_function
 version = '1.13'

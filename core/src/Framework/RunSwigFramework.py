@@ -34,7 +34,7 @@
 #     Ver 1.12   2020/12/14 F.Kanehori	Setup 導入テスト開始.
 #     Ver 1.13   2021/02/17 F.Kanehori	Python 2.7 対応.
 #     Ver 1.14   2021/04/14 F.Kanehori	不要なコードの削除.
-#     Ver 1.15	 2021/07/07 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 1.14.1 2021/07/07 F.Kanehori	libdir 取得方式変更.
 # ==============================================================================
 from __future__ import print_function
 version = '1.15'
