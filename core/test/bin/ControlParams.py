@@ -34,24 +34,29 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2016/10/05 F.Kanehori	First version.
-#	Ver 2.0  2017/08/10 F.Kanehori	Name changed: script, param file.
-#	Ver 3.0  2017/09/13 F.Kanehori	Python library revised.
-#	Ver 4.0  2018/02/26 F.Kanehori	全体の見直し.
-#	Ver 4.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.0	 2016/10/05 F.Kanehori	First version.
+#     Ver 2.0	 2017/08/10 F.Kanehori	Name changed: script, param file.
+#     Ver 3.0	 2017/09/13 F.Kanehori	Python library revised.
+#     Ver 4.0	 2018/02/26 F.Kanehori	全体の見直し.
+#     Ver 4.0.1	 2018/03/14 F.Kanehori	新 Error クラス対応.
+#     Ver 4.0.2	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('ControlParams')
-libdir = spr_path.abspath('pythonlib')
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from KvFile import *
-
 from ConstDefs import *
 
 class ControlParams:
@@ -59,7 +64,7 @@ class ControlParams:
 	#
 	def __init__(self, fname, section=None, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 4.01
+		self.version = '4.0.2'
 		#
 		self.fname = fname
 		self.section = section
@@ -158,9 +163,8 @@ class ControlParams:
 		# arguments:
 		#   dic:	Dictionary to set.
 
-		spr_path = FindSprPath(self.clsname)
-		dic['SprTop'] = spr_path.abspath()
-		dic['SprTest'] = spr_path.abspath('test')
+		dic['SprTop'] = os.path.abspath(TopDir)
+		dic['SprTest'] = os.path.abspath('%s/core/test' % TopDir)
 
 
 # ----------------------------------------------------------------------

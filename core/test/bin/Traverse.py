@@ -38,13 +38,14 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/26 F.Kanehori	First version.
-#	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
-#	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
-#	Ver 1.3  2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
-#	Ver 1.4  2019/09/25 F.Kanehori	OK for dailybuild cmake version.
-#	Ver 1.5  2020/08/24 F.Kanehori	Add LIB_TYPE control.
-#	Ver 1.6  2020/10/12 F.Kanehori	Add EMBPYTON control.
+#     Ver 1.0	 2018/02/26 F.Kanehori	First version.
+#     Ver 1.1	 2018/03/15 F.Kanehori	Bug fixed (for unix).
+#     Ver 1.2	 2018/08/07 F.Kanehori	Execute binary directly (unix).
+#     Ver 1.3	 2019/08/07 F.Kanehori	Pass 'ctl' to BuildAndRun.
+#     Ver 1.4	 2019/09/25 F.Kanehori	OK for dailybuild cmake version.
+#     Ver 1.5	 2020/08/24 F.Kanehori	Add LIB_TYPE control.
+#     Ver 1.6	 2020/10/12 F.Kanehori	Add EMBPYTON control.
+#     Ver 1.6.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
@@ -54,12 +55,17 @@ from BuildAndRun import *
 from KeyInterruption import *
 from StructuredException import *
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('Traverse')
-libdir = spr_path.abspath('pythonlib')
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
@@ -507,8 +513,8 @@ class Traverse:
 			delim = ':'
 		else:
 			delim = ';'
-			spr_bin = '%s/core/bin' % spr_path.abspath()
-			dep_bin = '%s/dependency/bin' % spr_path.abspath()
+			spr_bin = '%s/core/bin' % os.path.abspath(TopDir)
+			dep_bin = '%s/dependency/bin' % os.path.abspath(TopDir)
 			if platform == 'x86' or platform.lower() == 'win32':
 				adds.append('%s/win32' % spr_bin)
 				adds.append('%s/win32' % dep_bin)

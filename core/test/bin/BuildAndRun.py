@@ -59,25 +59,32 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/08 F.Kanehori	First version.
-#	Ver 1.1  2018/03/15 F.Kanehori	Bug fixed (for unix).
-#	Ver 1.2  2018/08/07 F.Kanehori	Execute binary directly (unix).
-#	Ver 1.3  2019/08/07 F.Kanehori	Add parameter to initializer.
+#     Ver 1.0	 2018/02/08 F.Kanehori	First version.
+#     Ver 1.1	 2018/03/15 F.Kanehori	Bug fixed (for unix).
+#     Ver 1.2	 2018/08/07 F.Kanehori	Execute binary directly (unix).
+#     Ver 1.3	 2019/08/07 F.Kanehori	Add parameter to initializer.
+#     Ver 1.3.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
 import re
 from stat import *
+
 from ControlParams import *
 from CMake import *
 from VisualStudio import *
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('BuildAndRun')
-libdir = spr_path.abspath('pythonlib')
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
@@ -92,7 +99,7 @@ class BuildAndRun:
 	#
 	def __init__(self, ctl, ccver, verbose=0, dry_run=False):
 		self.clsname = self.__class__.__name__
-		self.version = 1.3
+		self.version = '1.3.1'
 		#
 		self.ctl = ctl
 		self.ccver = ccver

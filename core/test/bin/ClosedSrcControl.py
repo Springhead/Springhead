@@ -28,8 +28,9 @@
 #	    arguments:	    None
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/08 F.Kanehori	First version.
-#	Ver 1.01 2018/02/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.0	 2018/02/08 F.Kanehori	First version.
+#     Ver 1.0.1	 2018/02/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.0.2	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
@@ -37,14 +38,18 @@ import re
 
 from ConstDefs import *
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('ControlParams')
-libdir = spr_path.abspath('pythonlib')
-sys.path.append(libdir)
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
+sys.path.append(libdir)
 from FileOp import *
 from TextFio import *
 from Error import *
@@ -54,7 +59,7 @@ class ClosedSrcControl:
 	#
 	def __init__(self, path, use_path, unuse_path, dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.01
+		self.version = '1.0.2'
 		#
 		self.org_path = self.__normalize_path(path)
 		self.template = { CSU.USE:   self.__normalize_path(use_path),
@@ -162,7 +167,7 @@ if __name__ == '__main__':
 	dry_run = False
 	verbose = 1
 
-	incdir = spr_path.abspath('inc')
+	incdir = os.path.abspath('%s/core/include' % TopDir)
 	hfile = '%s/SprUseClosedSrcOrNot.h' % incdir
 	use_path = 'UseClosedSrc.h.template'
 	unuse_path = 'UnuseClosedSrc.h.template'

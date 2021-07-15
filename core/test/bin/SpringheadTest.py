@@ -40,8 +40,9 @@
 #     Ver 2.0	 2018/02/22 F.Kanehori	全体の見直し.
 #     Ver 2.1	 2020/10/12 F.Kanehori	Add EmbPython Library creation.
 #     Ver 2.2	 2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 2.2.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # =============================================================================
-version = '2.2'
+version = '2.2.1'
 
 import sys
 import os
@@ -63,6 +64,8 @@ ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
 prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
 TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 SrcDir = os.path.abspath('%s/core/src' % TopDir).replace(os.sep, '/')
+IncDir = os.path.abspath('%s/core/include' % TopDir).replace(os.sep, '/')
+TestDir = os.path.abspath('%s/core/test' % TopDir).replace(os.sep, '/')
 BaseDir = os.path.abspath('%s/..' % TopDir).replace(os.sep, '/')
 ToolsDir = '%s/DailyBuildTestTools' % BaseDir
 
@@ -160,13 +163,13 @@ if len(args) != 4:
 
 # get arguments
 test_dir = args[0]
-res_file = '%s/%s' % (spr_path.abspath('test'), args[1])
+res_file = '%s/%s' % (os.path.abspath(TestDir), args[1])
 ctl_file = args[2]
 section = args[3]
 
 top = Util.pathconv(test_dir)
 if not os.path.exists(top):
-	top = '%s/%s' % (spr_path.abspath('src'), top)
+	top = '%s/%s' % (os.path.abspath(SrcDir), top)
 	if not os.path.exists(top):
 		Error(prog).abort('bad test directory: "%s"' % test_dir)
 top = Util.upath(top)
@@ -227,9 +230,9 @@ print('with args: %s' % args)
 # test id
 #	'Test_id' affects only log file header.
 testid = TESTID.OTHER
-src_path = Util.upath(spr_path.abspath('src'))
+src_path = Util.upath(os.path.abspath(SrcDir))
 if test_dir == '.':
-	test_path = spr_path.abspath('src')
+	test_path = os.path.abspath(SrcDir)
 else:
 	test_path = Util.upath(os.path.abspath(test_dir))
 if test_path.lower() == src_path.lower():
@@ -247,8 +250,8 @@ topdir = '%s/%s' % (src_path, Util.upath(test_dir))
 os.chdir(Util.pathconv(topdir))
 
 # preparations
-head_dir = spr_path.abspath('inc')
-tmpl_dir = '%s/bin' % spr_path.abspath('test')
+head_dir = os.path.abspath(IncDir)
+tmpl_dir = '%s/bin' % os.path.abspath(TestDir)
 csc_head = '%s/SprUseClosedSrcOrNot.h' % head_dir
 use_tmpl = '%s/UseClosedSrc.h.template' % tmpl_dir
 unuse_tmpl = '%s/UnuseClosedSrc.h.template' % tmpl_dir

@@ -68,16 +68,22 @@
 #     Ver 2.0    2018/02/07 F.Kanehori	全体の見直し.
 #     Ver 2.1    2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
 #     Ver 2.2    2021/03/24 F.Kanehori	Visual Studio 2019 に対応.
+#     Ver 2.2.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('VisualStudio')
-libdir = spr_path.abspath('pythonlib')
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from Error import *
 from Util import *
@@ -99,7 +105,7 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 2.2
+		self.version = '2.2.1'
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)

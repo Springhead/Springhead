@@ -19,10 +19,11 @@
 #
 # -----------------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/22 F.Kanehori	First version.
-#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.0	 2018/02/22 F.Kanehori	First version.
+#     Ver 1.0.1	 2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.0.2	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # =============================================================================
-version = 1.01
+version = '1.0.2'
 
 import sys
 import os
@@ -33,17 +34,16 @@ from ConstDefs import *
 from TestResult import *
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 
 # ----------------------------------------------------------------------
-#  Import Springhead python library.
+#  Springhead python library の導入
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('GenResultLog')
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from Error import *
 from TextFio import *

@@ -68,23 +68,28 @@
 #
 # ----------------------------------------------------------------------
 #  VERSION:
-#	Ver 1.0  2018/02/26 F.Kanehori	First version.
-#	Ver 1.01 2018/03/14 F.Kanehori	Dealt with new Error class.
-#	Ver 1.02 2018/04/19 F.Kanehori	Refine status check.
-#	Ver 1.03 2018/07/23 F.Kanehori	Change comment.
+#     Ver 1.0	 2018/02/26 F.Kanehori	First version.
+#     Ver 1.0.1	 2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 1.0.2	 2018/04/19 F.Kanehori	Refine status check.
+#     Ver 1.0.3	 2018/07/23 F.Kanehori	Change comment.
+#     Ver 1.0.4	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
 import pickle
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('ControlParams')
-libdir = spr_path.abspath('pythonlib')
-sys.path.append(libdir)
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
+sys.path.append(libdir)
 from Fio import *
 from Error import *
 from Proc import *
@@ -96,7 +101,7 @@ class TestResult:
 	#
 	def __init__(self, fname, scratch=True, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.01
+		self.version = '1.0.4'
 		#
 		self.verbose = verbose
 		#

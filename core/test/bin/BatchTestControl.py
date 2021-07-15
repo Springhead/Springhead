@@ -37,47 +37,52 @@
 #		$SpringheadTop/src/Samples
 #
 #  VERSION:
-#	Ver 1.0  2016/11/16 F.Kanehori	First version.
-#	Ver 1.1  2017/01/11 F.Kanehori	Use VersionControlSystem class.
-#	Ver 2.0  2017/08/10 F.Kanehori	DailybuildControl -> ControlParams.
-#	Ver 2.1  2017/09/14 F.Kanehori	Python library revised.
-#	Ver 2.2  2017/09/27 F.Kanehori	Log file format changed.
+#     Ver 1.0	 2016/11/16 F.Kanehori	First version.
+#     Ver 1.1	 2017/01/11 F.Kanehori	Use VersionControlSystem class.
+#     Ver 2.0	 2017/08/10 F.Kanehori	DailybuildControl -> ControlParams.
+#     Ver 2.1	 2017/09/14 F.Kanehori	Python library revised.
+#     Ver 2.2	 2017/09/27 F.Kanehori	Log file format changed.
 #					Introduce serialization facility.
-#	Ver 2.3  2017/11/16 F.Kanehori	Python library path の変更.
-#	Ver 2.4  2017/11/30 F.Kanehori	Python library path の変更.
-#	Ver 2.5  2017/12/07 F.Kanehori	Interface の見直し.
-#	Ver 2.51 2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 2.3	 2017/11/16 F.Kanehori	Python library path の変更.
+#     Ver 2.4	 2017/11/30 F.Kanehori	Python library path の変更.
+#     Ver 2.5	 2017/12/07 F.Kanehori	Interface の見直し.
+#     Ver 2.5.1	 2018/03/14 F.Kanehori	Dealt with new Error class.
+#     Ver 2.5.2	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # =============================================================================
-version = 2.51
+version = '2.5.2'
 
 import sys
 import os
 import glob
 import pickle
 from optparse import OptionParser
+
 from VisualStudio import *
 from SpringheadTest import *
 from VersionControlSystem import *
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
-max_loglines = 10
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
 
 # ----------------------------------------------------------------------
-#  Import Springhead python library.
+#  Springhead python library の導入
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from FileOp import *
 from TextFio import *
 from Error import *
 from Util import *
 from Proc import *
+
+# ----------------------------------------------------------------------
+#  Constants
+#
+max_loglines = 10
 
 # ----------------------------------------------------------------------
 #  File names

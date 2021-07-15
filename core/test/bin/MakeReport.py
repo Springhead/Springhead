@@ -12,13 +12,14 @@
 #	Report file can be viewed by 'Excel'.
 #
 #  VERSION:
-#	Ver 1.0  2016/11/17 F.Kanehori	First release version.
-#	Ver 2.0  2017/09/21 F.Kanehori	Log file format changed.
-#	Ver 2.1  2017/09/28 F.Kanehori	Add separator for tests/Samples.
-#	Ver 2.2  2017/11/16 F.Kanehori	Python library path の変更.
-#	Ver 2.3  2017/11/30 F.Kanehori	Python library path の変更.
+#     Ver 1.0	 2016/11/17 F.Kanehori	First release version.
+#     Ver 2.0	 2017/09/21 F.Kanehori	Log file format changed.
+#     Ver 2.1	 2017/09/28 F.Kanehori	Add separator for tests/Samples.
+#     Ver 2.2	 2017/11/16 F.Kanehori	Python library path の変更.
+#     Ver 2.3	 2017/11/30 F.Kanehori	Python library path の変更.
+#     Ver 2.3.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
-version = '2.3'
+version = '2.3.1'
 
 import sys
 import os
@@ -27,9 +28,21 @@ import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
-#  Constants
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-prog = sys.argv[0].split(os.sep)[-1].split('.')[0]
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
+sys.path.append(libdir)
+from TextFio import *
+
+# ----------------------------------------------------------------------
+#  Constants
 #
 PROJ = 0	# = [ PRJ1, PRJ2, PRJ3 ]
 USE_CS = 1	# = [ True, False ]
@@ -43,16 +56,6 @@ W32  = 0	# for platform: Win32
 X64  = 1	# for platform: x64
 BLD  = 0	# for execution stage: build
 RUN  = 1	# for execution stage: run
-
-# ----------------------------------------------------------------------
-#  Import Springhead python library.
-#
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath(prog)
-libdir = spr_path.abspath('pythonlib')
-sys.path.append(libdir)
-from TextFio import *
 
 # ----------------------------------------------------------------------
 #  Options

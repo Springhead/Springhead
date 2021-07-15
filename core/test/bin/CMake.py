@@ -34,18 +34,25 @@
 #     Ver 1.1	 2020/08/24 F.Kanehori	Add LIB_TYPE control.
 #     Ver 1.2	 2020/10/12 F.Kanehori	Add CMAKE_OPTIONS control.
 #     Ver 1.2.1  2021/05/17 F.Kanehori	Add -D SPRTOP option.
+#     Ver 1.2.2	 2021/07/15 F.Kanehori	libdir 取得方式変更.
 # ======================================================================
 import sys
 import os
 import glob
+
 from ControlParams import *
 
-# local python library
+# ----------------------------------------------------------------------
+#  このスクリプトは ".../core/test/bin" に置く	
 #
-sys.path.append('../../src/RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('ControlParams')
-libdir = spr_path.abspath('pythonlib')
+ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
+prog = sys.argv[0].replace('/', os.sep).split(os.sep)[-1].split('.')[0]
+TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-3])
+
+# ----------------------------------------------------------------------
+#  Springhead python library の導入
+#
+libdir = '%s/core/src/RunSwig/pythonlib' % TopDir
 sys.path.append(libdir)
 from SetupFile import *
 from Proc import *
@@ -67,7 +74,7 @@ class CMake:
 	#
 	def __init__(self, ctl, ccver, platform, config, logfile, verbose):
 		self.clsname = self.__class__.__name__
-		self.version = 1.0
+		self.version = '1.2.2'
 		#
 		self.ctl = ctl
 		self.ccver = ccver
