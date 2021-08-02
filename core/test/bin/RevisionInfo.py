@@ -82,6 +82,9 @@ def contents(url, wrkdir, fname, platform, rev, prev_id):
 	content = vcs.get_file_content(fname, rev[0], platform)
 	spr_id_fname = 'Springhead.commit.id'
 	spr_id_info = vcs.get_file_content(spr_id_fname, rev[0])
+	if spr_id_info is None:
+		#print('RevisionInfo: can not id_info: %s id:%s' % (fname, rev[0]))
+		return
 	if spr_id_info[0:9] == 'Traceback' or \
 	   spr_id_info[0:6] == 'python' or \
 	   spr_id_info[0:5] == 'fatal':
