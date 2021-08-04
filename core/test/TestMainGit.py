@@ -41,8 +41,9 @@
 #     Ver 1.10   2021/03/24 F.Kanehori	Add SprInstallGuide.
 #     Ver 1.11   2021/05/20 F.Kanehori	Rename 'CMake' to 'BuildUsingCMake'.
 #     Ver 1.12   2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
+#     Ver 1.13   2021/08/04 F.Kanehori	Add nkf path for web report.
 # ======================================================================
-version = '1.12'
+version = '1.13'
 
 import sys
 import os
@@ -330,6 +331,18 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		flush()
 	#
 	os.chdir(repository)
+
+# ----------------------------------------------------------------------
+#  Build and run test has been done at this point.
+#  Add some tools which DailyBuild needs hereafter.
+#
+if check_exec('DAILYBUILD_COMMIT_RESULTLOG', unix_commit_resultlog):
+	demo_path_nkf = 'I:\\DailyBuild\\Springhead\\buildtool'
+	demo_nkf = '%s\\nkf.exe' % demo_path_nkf
+	if os.path.exists(demo_nkf):
+		newpath = demo_path_nkf + os.pathsep + os.environ['PATH']
+		os.environ['PATH'] = newpath
+		print('add path: %s' % demo_path_nkf)
 
 # ----------------------------------------------------------------------
 #  Generate sprphys/Springhead HEAD commit-id file.
