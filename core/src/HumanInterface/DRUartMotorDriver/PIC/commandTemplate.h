@@ -57,14 +57,18 @@ struct SetGetParam##BOARD{    /* CI_SETPARAM / CI_GETPARAM */       \
     unsigned char type;                                             \
     union {                                                         \
         struct {                                                    \
-            SDEC k[BOARD##_NMOTOR];	/* P */                         \
-            SDEC b[BOARD##_NMOTOR];	/* D */                         \
+            SDEC PACKED k[BOARD##_NMOTOR];	/* P */                 \
+            SDEC PACKED b[BOARD##_NMOTOR];	/* D */                 \
         }PACKED pd;													\
         struct {                                                    \
-            SDEC min[BOARD##_NMOTOR];	/* Tq min */                \
-            SDEC max[BOARD##_NMOTOR];	/* Tq max */                \
+            SDEC PACKED min[BOARD##_NMOTOR];	/* Tq min */        \
+            SDEC PACKED max[BOARD##_NMOTOR];	/* Tq max */        \
         }PACKED torque;												\
-        SDEC a[BOARD##_NMOTOR];	/* Current */                       \
+        struct {                                                    \
+            SDEC PACKED cos[BOARD##_NMOTOR];	/* magnet sensors */\
+            SDEC PACKED sin[BOARD##_NMOTOR];	/* magnet sensors */\
+        }PACKED magnet;												\
+        SDEC PACKED a[BOARD##_NMOTOR];	/* Current */               \
         unsigned char boardId;	/* boardId */                       \
         unsigned long baudrate[2];	/* baudrate */                  \
         struct MotorHeatLimit##BOARD heat;                          \
@@ -146,22 +150,8 @@ enum BOARD##CommandLenEnum{																	\
     BOARD##_CLEN_SET_PARAM = 1+sizeof_field(union CommandPacket##BOARD, param),             \
 	BOARD##_CLEN_RESET_SENSOR = 1+sizeof_field(union CommandPacket##BOARD, resetSensor),	\
     BOARD##_CLEN_GET_PARAM = 1 + 1,															\
-};																	\
-const unsigned char cmdPacketLen##BOARD[CI_NCOMMAND] = {			\
-    BOARD##_CLEN_NONE,												\
-    BOARD##_CLEN_BOARD_INFO,										\
-	BOARD##_CLEN_SET_CMDLEN,										\
-	BOARD##_CLEN_ALL,												\
-	BOARD##_CLEN_SENSOR,											\
-    BOARD##_CLEN_DIRECT,											\
-    BOARD##_CLEN_CURRENT,											\
-    BOARD##_CLEN_INTERPOLATE,										\
-    BOARD##_CLEN_FORCE_CONTROL,										\
-    BOARD##_CLEN_SET_PARAM,											\
-	BOARD##_CLEN_RESET_SENSOR,  									\
-    BOARD##_CLEN_GET_PARAM,                                         \
-};																	\
-
+};                          																\
+extern const unsigned char cmdPacketLen##BOARD[CI_NCOMMAND];                                \
 
 #define DEFINE_ReturnPacket(BOARD, CURRENT, FORCE, TOUCH)		\
 START_PACKED													\
@@ -223,9 +213,9 @@ union ReturnPacket##BOARD {										\
 				SDEC pos[BOARD##_NMOTOR];						\
 				union {											\
 					SDEC vel[BOARD##_NMOTOR];					\
-					NOT##CURRENT(SDEC current[1];)				\
+					NOT##FORCE(SDEC force[1];)					\
 				} PACKED;										\
-				CURRENT(SDEC current[BOARD##_NCURRENT];)		\
+				FORCE(SDEC force[BOARD##_NFORCE];)				\
 			}PACKED current;									\
 			struct {    /* CI_INTERPOLATE, CI_FORCE_CONTROL */	\
 				SDEC pos[BOARD##_NMOTOR];						\
@@ -249,7 +239,31 @@ enum BOARD##ReturnLenEnum{										\
     BOARD##_RLEN_GET_PARAM = 1+sizeof_field(union ReturnPacket##BOARD, param),          \
     BOARD##_RLEN_NO_RETURN = 0,															\
 };																						\
-const unsigned char retPacketLen##BOARD[CI_NCOMMAND]={									\
+extern const unsigned char retPacketLen##BOARD[CI_NCOMMAND];                            \
+        
+#define DEFINE_Packets(BOARD, CURRENT, FORCE, TOUCH)			\
+DEFINE_CommandPacket(BOARD, CURRENT, FORCE, TOUCH)				\
+DEFINE_ReturnPacket(BOARD, CURRENT, FORCE, TOUCH)				\
+
+        
+#define DEFINE_CommandPacketLen(BOARD)                              \
+    const unsigned char cmdPacketLen##BOARD[CI_NCOMMAND] = {		\
+    BOARD##_CLEN_NONE,												\
+    BOARD##_CLEN_BOARD_INFO,										\
+	BOARD##_CLEN_SET_CMDLEN,										\
+	BOARD##_CLEN_ALL,												\
+	BOARD##_CLEN_SENSOR,											\
+    BOARD##_CLEN_DIRECT,											\
+    BOARD##_CLEN_CURRENT,											\
+    BOARD##_CLEN_INTERPOLATE,										\
+    BOARD##_CLEN_FORCE_CONTROL,										\
+    BOARD##_CLEN_SET_PARAM,											\
+	BOARD##_CLEN_RESET_SENSOR,  									\
+    BOARD##_CLEN_GET_PARAM,                                         \
+};																	\
+        
+#define DEFINE_ReturnPacketLen(BOARD)                                                   \
+    const unsigned char retPacketLen##BOARD[CI_NCOMMAND]={  							\
     BOARD##_RLEN_NONE,																	\
     BOARD##_RLEN_BOARD_INFO,															\
     BOARD##_RLEN_NONE,	/* CI_SET_CMDLEN */												\
@@ -264,11 +278,10 @@ const unsigned char retPacketLen##BOARD[CI_NCOMMAND]={									\
     BOARD##_RLEN_GET_PARAM,                                                             \
 };
 
-
-#define DEFINE_Packets(BOARD, CURRENT, FORCE, TOUCH)			\
-DEFINE_CommandPacket(BOARD, CURRENT, FORCE, TOUCH)				\
-DEFINE_ReturnPacket(BOARD, CURRENT, FORCE, TOUCH)				\
-
+#define DEFINE_PacketLens(BOARD)		\
+DEFINE_CommandPacketLen(BOARD)			\
+DEFINE_ReturnPacketLen(BOARD)			\
+        
 
 #define CHOOSE_BoardInfo(BOARD)     							\
 enum BoardInfo{                     							\
@@ -281,8 +294,13 @@ enum BoardInfo{                     							\
 };																\
 typedef union CommandPacket##BOARD CommandPacket;				\
 typedef union ReturnPacket##BOARD ReturnPacket;					\
-const unsigned char* const cmdPacketLen = cmdPacketLen##BOARD;	\
-const unsigned char* const retPacketLen = retPacketLen##BOARD;	\
+extern const unsigned char* const cmdPacketLen;                 \
+extern const unsigned char* const retPacketLen;                 \
 typedef struct MotorHeatLimit##BOARD MotorHeatLimit;            \
 
+#define CHOOSE_BoardInfoImpl(BOARD)     						\
+DEFINE_PacketLens(BOARD);                                       \
+const unsigned char* const cmdPacketLen = cmdPacketLen##BOARD;	\
+const unsigned char* const retPacketLen = retPacketLen##BOARD;	\
+        
 #endif

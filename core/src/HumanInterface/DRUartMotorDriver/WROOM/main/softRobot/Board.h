@@ -1,4 +1,8 @@
 #pragma once
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
+
 #include "BoardBase.h"
 #include "esp_log.h"
 #ifndef SPRINGHEAD
@@ -15,7 +19,7 @@ namespace Spr {
 
 #else
 
-inline void updateMotorPos(SDEC mpos, char index){
+inline void updateMotorPos(SDEC mpos, char index) {
 	SDEC diff = mpos - (SDEC)(allBoards.motorPos[(int)index]);
 	allBoards.motorPos[(int)index] += diff;
 }
@@ -172,8 +176,11 @@ public:
 		case CI_CURRENT:
 			for (int i = 0; i < GetNMotor(); ++i) {
 				updateMotorPos(ret.direct.pos[i] - MOTOROFFSET(i), motorMap[i]);
-				packet.SetMotorPos(ret.direct.pos[i] - MOTOROFFSET(i), motorMap[i]);
-				packet.SetMotorVel(ret.direct.vel[i], motorMap[i]);
+				packet.SetMotorPos(ret.current.pos[i] - MOTOROFFSET(i), motorMap[i]);
+				packet.SetMotorVel(ret.current.vel[i], motorMap[i]);
+			}
+			for (int i = 0; i < GetNForce(); ++i) {
+				packet.SetForce(ret.current.force[i], forceMap[i]);
 			}
 			//ESP_LOGI(Tag(), "Direct Motor Pos: %d %d %d %d\n", packet.MotorPos(0),  packet.MotorPos(1), packet.MotorPos(2),  packet.MotorPos(3));
 			break;

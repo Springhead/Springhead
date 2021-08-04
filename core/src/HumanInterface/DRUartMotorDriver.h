@@ -27,8 +27,9 @@ public:
 	SPR_OBJECTDEF(DRUARTMotorDriver);
 	SPR_DECLMEMBEROF_DRUARTMotorDriverDesc;
 	friend DRUARTMotorDriverImpl;
-	std::vector<int> counts, offsets;
+	std::vector<int> counts, offsets, velocities;
 	std::vector<int> currents;
+	std::vector<int> forces;
 	int retry, retryMax;
 
 	///	仮想デバイス(DA)
@@ -51,11 +52,22 @@ public:
 		virtual long Count() { return GetRealDevice()->ReadCount(portNo); }
 		virtual void Update() { GetRealDevice()->Update(); }
 	};
+	///	仮想デバイス(A/Dコンバータ)
+	class Ad : public DVAd {
+	public:
+		Ad(DRUARTMotorDriver* r, int c) :DVAd(r, c) {}
+		DRUARTMotorDriver* GetRealDevice() { return realDevice->Cast(); }
+
+		virtual float Voltage() { return GetRealDevice()->ReadForce(portNo); }
+		virtual int Digit() { return GetRealDevice()->ReadForce(portNo); }
+	};
+
 public:
 	///	コンストラクタ	chは背面のスイッチになる予定
 	DRUARTMotorDriver(const DRUARTMotorDriverDesc& d = DRUARTMotorDriverDesc());
 	virtual ~DRUARTMotorDriver();
-	int NMotor() { return (int) counts.size(); }
+	int NMotor() { return (int)counts.size(); }
+	int NForce() { return (int)forces.size(); }
 
 	///	初期化
 	virtual bool Init();
@@ -66,9 +78,15 @@ public:
 	void WriteDigit(int ch, int v);
 	///	カウンタ値の設定
 	void WriteCount(int ch, long c);
-	///	カウンタ値の読み出し
+	///	read counter
 	long ReadCount(int ch);
 	void UpdateCounter(int ch, short ct);
+	///	read velocity
+	long ReadVelocity(int ch);
+	void UpdateVelocity(int ch, short ct);
+	///	Read force sensor
+	long ReadForce(int ch);
+	void UpdateForce(int ch, short ct);
 
 	///	状態の更新
 	virtual void Update();

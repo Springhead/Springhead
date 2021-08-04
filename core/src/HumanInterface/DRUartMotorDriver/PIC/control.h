@@ -27,7 +27,7 @@ extern SDEC lastRatio[NMOTOR];				//	pwm ratio actually applied to motor
 ///	PD control and current control
 #define PDPARAM_K   SDEC_ONE
 #define PDPARAM_B   ((SDEC)(1.5*SDEC_ONE))
-#define PDPARAM_A   ((SDEC)(0.5*SDEC_ONE))
+#define PDPARAM_A   ((SDEC)(1.5*SDEC_ONE))
 struct PdParam{
     SDEC k[NMOTOR];
     SDEC b[NMOTOR];
@@ -67,8 +67,8 @@ extern SDEC forceControlJK[NFORCE][NMOTOR];
 #define NAXIS	(NMOTOR+NFORCE/2)	//	NAXIS=NMOTOR+NFORCE/2
 extern SDEC mcos[NAXIS], msin[NAXIS];
 extern SDEC currentSense[NMOTOR];
-extern const SDEC mcosOffset[NAXIS];
-extern const SDEC msinOffset[NAXIS];
+extern SDEC mcosOffset[NAXIS];
+extern SDEC msinOffset[NAXIS];
 
 
 struct Target{
@@ -99,28 +99,8 @@ void targetsInit();
 void targetsAddOrUpdate(short* pos, short period, unsigned char count);
 void targetsForceControlAddOrUpdate(SDEC* pos, SDEC JK[NFORCE][NMOTOR],short period, unsigned char count);
 void targetsWrite();
-inline unsigned char targetsWriteAvail(){
-	signed char len = targets.read - targets.write;
-	if (len < 0) len += NTARGET;
-#if 0
-	if (len > NTARGET){
-		PIC_LOGE("targetsWriteAvail() w:%d r:%d len:%d", targets.write, targets.read, len);
-		assert(len <= NTARGET);
-	}
-#endif
-	return len;
-}
-inline unsigned char targetsReadAvail(){
-	signed char len = targets.write - targets.read;
-	if (len <= 0) len += NTARGET;
-#if 0
-	if (len > NTARGET){
-		PIC_LOGE("targetsReadAvail w:%d r:%d len:%d", targets.write, targets.read, len);
-		assert(len <= NTARGET);
-	}
-#endif
-	return len;
-}
+unsigned char targetsWriteAvail();
+unsigned char targetsReadAvail();
 int targetsCountMin();
 int targetsCountMax();
 
@@ -133,12 +113,12 @@ void setPwmWithLimit(int ch, SDEC ratio);
 
 extern SDEC forceOffset[NFORCE];
 
-inline SDEC getForceRaw(int ch){
+static inline SDEC getForceRaw(int ch){
 	if (ch == 0) return mcos[3];
 	if (ch == 1) return msin[3];
 	return 0;
 }
-inline SDEC getForce(int ch){
+static inline SDEC getForce(int ch){
 	if (ch == 0) return mcos[3] - forceOffset[ch];
 	if (ch == 1) return msin[3] - forceOffset[ch];
 	return 0;

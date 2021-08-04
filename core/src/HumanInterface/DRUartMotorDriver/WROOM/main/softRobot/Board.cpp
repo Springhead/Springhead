@@ -1,9 +1,15 @@
 #include "Board.h"
 #include <string.h>
 
+DEFINE_PacketLens(B1M);
+DEFINE_PacketLens(B1F);
+DEFINE_PacketLens(B2M);
+DEFINE_PacketLens(B2F);
+DEFINE_PacketLens(B3M);
+DEFINE_PacketLens(B3F);
+
+
 BoardRetBase::~BoardRetBase(){}
-
-
 
 BoardFactoryBase* BoardFactories::Find(const char* name) {
 	for(iterator it = begin(); it != end(); ++it){

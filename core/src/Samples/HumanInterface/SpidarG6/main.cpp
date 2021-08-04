@@ -53,7 +53,7 @@ int __cdecl main(){
 	spg->Init(&HISpidar4DDesc());
 #else	//	Use SPIDAR G (6DOF) device.
 	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	if (uartMotorDriver->NMotor() >= 8) {	//	UART driver
+	if (uartMotorDriver->NMotor() >= 0) {	//	UART driver
 		spg->Init(&HISpidarGDesc("SpidarG6X4R"));
 	}
 	else {									//	SH4 driver
@@ -171,6 +171,11 @@ int __cdecl main(){
 			//	print string length
 			for (size_t i = 0; i < spg->NMotor(); ++i) {
 				printf(" %7.4f", (double)spg->GetMotor(i)->GetLength() - length[i]);
+			}
+			if (uartMotorDriver->NForce() > 0) {
+				for (size_t i = 0; i < uartMotorDriver->NForce(); ++i) {
+					printf(" %6d", uartMotorDriver->ReadForce((int)i));
+				}
 			}
 			std::cout << std::endl;
 		}else if (mode == Mode::POSE){

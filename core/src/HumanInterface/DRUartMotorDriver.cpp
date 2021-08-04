@@ -145,8 +145,10 @@ public:
 		uart_write_bytes(port, zero, 5);
 #endif
 		owner->counts.resize(motorMap.size(), 0);
+		owner->velocities.resize(motorMap.size(), 0);
 		owner->offsets.resize(motorMap.size(), 0);
 		owner->currents.resize(currentMap.size(), 0);
+		owner->forces.resize(forceMap.size(), 0);
 		return true;
 	}
 	int readPos = 0;
@@ -154,6 +156,7 @@ public:
 	CommandHeader cmdHeader;
 	bool Update() {
 		bool rv = false;
+		int waitCount = 0;
 #ifdef _WIN32
 		// if command is not buffered too much.
 		// write command to boards
@@ -191,6 +194,8 @@ public:
 					int retLen = board->RetLen();
 					if (retLen == 0) {
 						DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0. for cmd=" << std::setbase(16) << cmdHeader.header << std::endl;
+						readPos = 0;
+						retLen = -1;
 					}
 					DWORD nRead;
 					ReadFile(owner->hUART, (char*)(board->RetStart() + readPos), retLen - readPos, &nRead, NULL);
@@ -200,6 +205,15 @@ public:
 						//DPF("R");
 						readPos = 0;
 						nCommandBuffered--;
+						waitCount = 0;
+					}
+					else {
+						waitCount++;
+						if (waitCount > 200) {
+							waitCount = 0;
+							nCommandBuffered = 0;
+							break;
+						}
 					}
 					//else  DPF("Wait: %d/%d\n", readPos, retLen); }
 					break;
@@ -301,16 +315,14 @@ public:
 		SDEC* pos, SDEC* vel, SDEC* current, SDEC* force, SDEC* touch) {
 		for (int i = 0; i < (int) owner->counts.size(); ++i) owner->UpdateCounter(i, pos[i]);
 	}
-	virtual void SetMotorPos(short p, int i) {  
-		owner->UpdateCounter(i, p);
-	}
-	virtual void SetMotorVel(short v, int i) {}
+	virtual void SetMotorPos(short p, int i) { owner->UpdateCounter(i, p); }
+	virtual void SetMotorVel(short v, int i) { owner->UpdateVelocity(i, v);  }
 	virtual void SetTargetCountReadMin(unsigned char c) {}
 	virtual void SetTargetCountReadMax(unsigned char c) {}
 	virtual void SetTickMin(unsigned short t) {}
 	virtual void SetTickMax(unsigned short t) {}
 	virtual void SetCurrent(short c, int i) {}
-	virtual void SetForce(short f, int i) {}
+	virtual void SetForce(short f, int i) { owner->UpdateForce(i, f); }
 	virtual void SetTouch(short t, int i) {}
 	virtual void SetBoardInfo(int systemId, int nTarget, int nMotor, int nCurrent, int nForce, int nTouch) {}
 	virtual void SetParamType(short type) {}
@@ -454,8 +466,11 @@ bool DRUARTMotorDriver::Init(){
 	for (int i = 0; i < (int) impl->currentMap.size(); ++i) {
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 	}
-	for (int i = 0; i < (int) impl->motorMap.size(); ++i) {
+	for (int i = 0; i < (int)impl->motorMap.size(); ++i) {
 		AddChildObject((DBG_NEW Counter(this, i))->Cast());
+	}
+	for (int i = 0; i < (int)impl->forceMap.size(); ++i) {
+		AddChildObject((DBG_NEW Ad(this, i))->Cast());
 	}
 	return true;
 }
@@ -476,6 +491,18 @@ long DRUARTMotorDriver::ReadCount(int ch) {
 void DRUARTMotorDriver::UpdateCounter(int ch, short ct) {
 	SDEC diff = ct - (SDEC)(counts[ch]);
 	counts[ch] += diff;
+}
+long DRUARTMotorDriver::ReadVelocity(int ch) {
+	return velocities[ch];
+}
+void DRUARTMotorDriver::UpdateVelocity(int ch, short ct) {
+	velocities[ch] = ct;
+}
+long DRUARTMotorDriver::ReadForce(int ch) {
+	return forces[ch];
+}
+void DRUARTMotorDriver::UpdateForce(int ch, short f) {
+	forces[ch] = f;
 }
 
 void DRUARTMotorDriver::Update() {

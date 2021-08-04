@@ -527,6 +527,7 @@ public:
 	/** 物性（摩擦係数、跳ね返り係数）の合成ルールを設定
 	 */
 	void SetMaterialBlending(int mode);
+	void GetMaterialBlending();
 
 	/** @brief シーンの時刻を進める
 	 */
