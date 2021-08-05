@@ -35,6 +35,7 @@
 #     Ver 1.1	 2018/09/13 F.Kanehori	VersionControlsystem revised.
 #     Ver 1.1.1	 2019/07/31 F.Kanehori	Comment fixed.
 #     Ver 1.1.2	 2021/07/15 F.Kanehori	libdir 取得方式変更.
+#     Ver 1.1.3	 2021/08/05 F.Kanehori	Bug fix.
 # ======================================================================
 version = '1.1.2'
 
@@ -82,6 +83,24 @@ def contents(url, wrkdir, fname, platform, rev, prev_id):
 	content = vcs.get_file_content(fname, rev[0], platform)
 	spr_id_fname = 'Springhead.commit.id'
 	spr_id_info = vcs.get_file_content(spr_id_fname, rev[0])
+	#
+	# special trap	2021-0805
+	#	Remove extra debug info remaining by mistake.
+	#
+	#print('DEBUG: spr_id_info: [%s]' % spr_id_info)
+	if spr_id_info.startswith('@@'):
+		tmp = spr_id_info.split('\n')
+		#print('DEBUG: len: %s' % len(tmp))
+		if len(tmp) == 4:
+			spr_id_info = tmp[2] + '\n'
+			#print('---->: spr_id_info: [%s]' % spr_id_info)
+		elif tmp[0].startswith('try'):
+			#print('---->  DROP <----')
+			return
+		elif tmp[1].startswith('Traceback'):
+			#print('---->  DROP <----')
+			return
+	#
 	if spr_id_info is None:
 		#print('RevisionInfo: can not id_info: %s id:%s' % (fname, rev[0]))
 		return
