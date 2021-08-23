@@ -76,8 +76,8 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -87,22 +87,22 @@
     </NMakePreprocessorDefinitions>
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -1,36 +1,48 @@
 @echo off
-:: ***********************************************************************************
-::  File:
-::	CSharpSwig.bat
-::
+setlocal enabledelayedexpansion
+:: =============================================================================
 ::  SYNOPSIS:
 ::	CSharpSwig module [swigmacro]
+::	    module	モジュール名
+::	    swigmacro	swig に渡すマクロ（#ifdef swigmacro として使う）
 ::
-::  ARGUMENTS:
-::	module		モジュール名
-::	swigmacro	swig に渡すマクロ（#ifdef swigmacro として使う）
-::
-::  Description:
+::  DESCRIPTION:
 ::	Springhead のライブラリ(DLL) を C# から利用するためのコードを生成する。
 ::
-:: ***********************************************************************************
-::  Version:
-::	Ver 1.0	 2015/01/26 F.Kanehori  初版
-::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
-::	Ver 3.0	 2016/12/01 F.Kanehori  ターゲット指定実装
-::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
-::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
-:: ***********************************************************************************
-setlocal enabledelayedexpansion
+:: -----------------------------------------------------------------------------
+::  VERSION:
+::     Ver 1.0	 2015/01/26 F.Kanehori  初版
+::     Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
+::     Ver 3.0	 2016/12/01 F.Kanehori  ターゲット指定実装
+::     Ver 3.1	 2016/12/15 F.Kanehori	ラッパファイル作成方式変更
+::     Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
+::     Ver 4.0	 2021/07/19 F.Kanehori	見直し.
+:: =============================================================================
 set PROG=%~n0
-set CWD=%cd%
-set DEBUG=1
+set DEBUG=0
 
+:: ----------------------------------------------------------------------
+::  このスクリプトは "<SprTop>/core/src/SprCSharp/RunSwig_CSharp" に置く
+::
+set CWD=%cd%
+cd /d %~dp0\..\..\..\..
+set SprTop=%CD%
+cd ..
+set SprBase=%CD%
+cd %CWD%
+set CspDir=%SprTop%\core\src\SprCSharp
+
+:: ------------------------
+::  デバッグ情報出力の設定
+:: ------------------------
 if %DEBUG% == 1 (
     set CS_INFO=SprInfo
     if not exist !CS_INFO! mkdir !CS_INFO!
 )
 
+:: ------------
+::  引数の処理
+:: ------------
 set MODULE=%1
 if "%MODULE%" equ "" (
     echo %PROG%: Error: Module name MUST be specified.
@@ -44,17 +56,35 @@ if "%1" equ "dumptree" set DUMPTREE=1
 
 if %DEBUG% == 1 (
     echo %~nx0
-    echo MODULE: [%MODULE%]
-    echo MACRO:  [%MACRO%]
+    echo+  MODULE:  [%MODULE%]
+    echo+  MACRO:   [%MACRO%]
 )
 
 :: ------------------------
 ::  共通環境変数を読み込む
 :: ------------------------
-call .\NameManager\NameManager.bat
-echo. 
-echo *** %MODULE% ***
-echo using src directory: %SRCDIR%
+set NAMEMANAGER=%CspDir%\NameManager\NameManager.bat
+if not exist %NAMEMANAGER% (
+	:: NameManager.bat が存在しないときは何もしない
+	echo "NameManager.bat" not found.
+	exit /b
+)
+call %NAMEMANAGER%
+if %DEBUG% == 1 (
+    call :show_abspath INCDIR %INCDIR%
+    call :show_abspath SRCDIR %SRCDIR%
+    call :show_abspath ETCDIR %ETCDIR%
+    call :show_abspath CS_SRC %CS_SRC%
+    call :show_abspath CS_IMP %CS_IMP%
+    call :show_abspath CS_EXP %CS_EXP%
+    call :show_abspath TARGETFILE %TARGETFILE%
+    echo+  SWIG     %SWIG%
+)
+
+echo+ 
+echo+  *** %MODULE% ***
+echo+  using src directory: %SRCDIR%
+echo+  SWIG: %SWIG%
 
 :: ----------
 ::  各種定義
@@ -86,12 +116,19 @@ if exist %MODULE%.i (
 ) else (
     echo "%MODULE%.i" not found
 )
-echo. 
+echo+ 
 
 :: ----------
 ::  処理終了
 :: ----------
 endlocal
+exit /b
+
+::-------------
+::  デバッグ用
+::-------------
+:show_abspath
+    echo+  %1:  %~f2
 exit /b
 
 ::end CSharpSWig.bat

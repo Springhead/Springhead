@@ -1,60 +1,70 @@
 @echo off
-:: ***********************************************************************************
-::  FILE:
-::      RunSwig_Clean.bat
+setlocal enabledelayedexpansion
+:: =============================================================================
+::  SYNOPSIS
+::      RunSwig_Clean project-list
 ::
 ::  DESCRIPTION:
 ::      RunSwig_CSharp で作成されたファイルを削除する.
 ::      プロジェクト RunSwig_CSharp の [ソリューションのクリーン] から呼ばれる.
 ::
-:: ***********************************************************************************
-::  Version:
-::	Ver 1.0	 2015/03/18 F.Kanehori	初版
-::	Ver 2.0	 2016/12/05 F.Kanehori	リンク構成指定実装
-::	Ver 2.1	 2017/01/16 F.Kanehori	NameManger 導入
-::	Ver 2.2	 2017/08/09 F.Kanehori	削除するファイルを追加
-::	Ver 2.3	 2017/08/28 F.Kanehori	NameManager.bat がないときの処理を追加.
-::	Ver 2.31 2017/09/07 F.Kanehori	Bug fixed.
-:: ***********************************************************************************
-setlocal enabledelayedexpansion
+:: -----------------------------------------------------------------------------
+::  VERSION:
+::    Ver 1.0	 2015/03/18 F.Kanehori	初版
+::    Ver 2.0	 2016/12/05 F.Kanehori	リンク構成指定実装
+::    Ver 2.1	 2017/01/16 F.Kanehori	NameManger 導入
+::    Ver 2.2	 2017/08/09 F.Kanehori	削除するファイルを追加
+::    Ver 2.3	 2017/08/28 F.Kanehori	NameManager.bat がないときの処理を追加.
+::    Ver 2.3.1	 2017/09/07 F.Kanehori	Bug fixed.
+::    Ver 2.3.2	 2021/07/19 F.Kanehori	プロジェクト名取得方法変更.
+:: =============================================================================
 set PROG=%~n0
+set DEBUG=0
+
+:: ----------------------------------------------------------------------
+::  このスクリプトは "<SprTop>/core/src/SprCSharp/RunSwig_CSharp" に置く
+::
 set CWD=%cd%
-set DEBUG=1
+cd /d %~dp0\..\..\..\..
+set SprTop=%CD%
+cd %CWD%
+set CspDir=%SprTop%\core\src\SprCSharp
 
 :: ------------------------
 ::  共通環境変数を読み込む
 :: ------------------------
-set NAMEMANAGER=..\NameManager\NameManager.bat
+set NAMEMANAGER=%CspDir%\NameManager\NameManager.bat
 if not exist %NAMEMANAGER% (
 	:: NameManager.bat が存在しないときは何もしない
-	echo "NameManager.bat" does not exist.
+	echo "NameManager.bat" not found.
 	exit /b
 )
 call %NAMEMANAGER%
 if %DEBUG% == 1 (
-    echo %PROG%
-    echo CWD: %CWD%
-    call :show_abspath TOPDIR %TOPDIR%
-    call :show_abspath SRCDIR %SRCDIR%
-    call :show_abspath ETCDIR %ETCDIR%
-    call :show_abspath CS_SRC %CS_SRC%
-    call :show_abspath CS_IMP %CS_IMP%
-    call :show_abspath CS_EXP %CS_EXP%
-    echo. 
+	echo %PROG%
+	echo+  CWD:          %CD%
+	echo+  TARGETFILE:   %TARGETFILE%
+	call :show_abspath TOPDIR %TOPDIR%
+	call :show_abspath SRCDIR %SRCDIR%
+	call :show_abspath ETCDIR %ETCDIR%
+	call :show_abspath CS_SRC %CS_SRC%
+	call :show_abspath CS_IMP %CS_IMP%
+	call :show_abspath CS_EXP %CS_EXP%
+	call :show_abspath RUNSWIGCSHARP %RUNSWIGCSHARP%
 )
 
-:: --------------------
-::  使用するファイル名
-:: --------------------
-set PROJFILE=do_swigall.projs
-set TARGETFILE=..\TargetManager\target.last
-
-:: ------------------------------
-::  処理するモジュール一覧を作成
-:: ------------------------------
-set PROJECTS=Base
-for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do set PROJECTS=!PROJECTS! %%m
-if %DEBUG% == 1 echo Projects are: %PROJECTS%
+:: ----------------------------------
+::  処理するモジュール一覧を読み込む
+:: ----------------------------------
+set PYTHON=%SprTop%\buildtool\win32\python.exe
+if not exist %PYTHON% (
+	set PYTHON=python
+)
+%PYTHON% %RUNSWIGCSHARP%\make_projs_file.py all_projs.bat PROJECTS
+call all_projs.bat PROJECTS
+if %DEBUG% == 1 (
+	echo+  Projects are: %PROJECTS%
+)
 
 :: ----------
 ::  処理開始
@@ -74,7 +84,8 @@ set SUFFIX=exe dll pdb exp lib config manifest
 for %%s in (%SUFFIX%) do (
 	del /S /Q %SPRCSHARP%\14.0\*.%%s > NUL 2>&1
 )
-echo. > %TARGETFILE%
+type NUL > %TARGETFILE%
+echo+  target file:  %TARGETFILE%
 
 :: ----------
 ::  処理終了
@@ -82,11 +93,11 @@ echo. > %TARGETFILE%
 endlocal
 exit /b
 
-:: -----------------------------------------------------------------------------------
+:: ---------------------------------------------------------------------
 ::  デバッグ用
-:: -----------------------------------------------------------------------------------
+::
 :show_abspath
-    echo %1:  [%~f2]
+    echo+  %1:       %~f2
 exit /b
 
 ::end RunSwig_Clean.bat

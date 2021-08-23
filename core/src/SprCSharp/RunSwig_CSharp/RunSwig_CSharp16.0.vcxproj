@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,7 +26,7 @@
     <None Include="RunSwig_CSharp.bat" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{58CA43B0-E26F-49F0-B6EB-A8A4A773712C}</ProjectGuid>
+    <ProjectGuid>{6F5A2986-1F4C-4ED8-871C-9B218603EFB1}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -34,22 +34,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -74,10 +74,10 @@
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <OutDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
+    <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -85,24 +85,24 @@
     </NMakeOutput>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <OutDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
+    <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
+    <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=Physics PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(ProjectDir)\..\..\..\..</NMakeReBuildCommandLine>
+    <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>RunSwig_Clean &amp;&amp; nmake /NOLOGO -f Makefile.RunSwig_CSharp TARGET=ALL PLAT=$(PlatformShortName) PROJECTDIR=$(ProjectDir) TOPDIR=$(SolutionDir)\..\..\..</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RunSwig_Clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

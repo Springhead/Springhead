@@ -1,18 +1,27 @@
-#  Makefile.RunSwig_CSharp
-# ------------------------------------------------------------------------------
-#  Arguments:
-#	TARGET={ ALL | Physics }  Target link modules
-#	PROJECTDIR=dir		  Project directory
-#	PLAT={ x86 | x64 }	  build platform
+# ==============================================================================
+#  SYNOPSIS:
+#	nmake -f Makefile.RunSwig_CSharp
 #
-#  Version:
-#	Ver1.0  2015/07/23	F.Kanehori  初版
-#	Ver2.0  2016/12/07	F.Kanehori  ターゲット指定実装
-#	Ver3.0  2017/04/27	F.Kanehori  NameManager対応
-#					    Python executable directory moved
-#	Ver3.1  2017/08/28	F.Kanehori  Bug fixed.
+#  ARGUMENTS:
+#	TARGET={ ALL | Physics }  DLL configuration (default: ALL)
+#	PROJECTDIR=dir		  Project directory
+#	PLAT={ x86 | x64 }	  build platform (default: x64)
+#
+#  DESCRIPTION:
+#	".i" ファイルを基に, SprExport/SprImport/SprCSharp のソースファイル
+#	.cpp/.cs を生成する.
+#
 # ------------------------------------------------------------------------------
-DEBUG = 1
+#  VERSION:
+#	Ver 1.0	 2015/07/23	F.Kanehori  初版
+#	Ver 2.0	 2016/12/07	F.Kanehori  ターゲット指定実装
+#	Ver 3.0	 2017/04/27	F.Kanehori  NameManager対応
+#					    Python executable directory moved
+#	Ver 3.1	 2017/08/28	F.Kanehori  Bug fixed.
+#	Ver 3.2	 2021/07/19	F.Kanehori  TOPDIR を引数でもらう.
+#					    以前の TOPDIR は CSPDIR に変更.
+# ==============================================================================
+DEBUG	= 0
 
 !IF "$(PLAT)" == "x86"
 PLATFORM = win32
@@ -23,27 +32,29 @@ PLATFORM = win64
 TARGET	= ALL
 !ENDIF
 
-SPRTOP	= ..\..\..\..
+SPRTOP	= $(TOPDIR)
 COREDIR	= $(SPRTOP)\core
 BINDIR	= $(COREDIR)\bin\swig
 DLLDIR	= $(COREDIR)\bin\$(PLATFORM)
-TOPDIR	= $(COREDIR)\src\SprCSharp
+CSPDIR	= $(COREDIR)\src\SprCSharp
 MAKEDIR	= $(PROJECTDIR)
-EXPSRCDIR	= $(TOPDIR)\SprExport
-IMPSRCDIR	= $(TOPDIR)\SprImport
-CSSRCDIR	= $(TOPDIR)\SprCSharp
-IFILEDIR	= $(TOPDIR)
+RSCSPDIR	= $(CSPDIR)\RunSwig_CSharp
+EXPSRCDIR	= $(CSPDIR)\SprExport
+IMPSRCDIR	= $(CSPDIR)\SprImport
+CSSRCDIR	= $(CSPDIR)\SprCSharp
+IFILEDIR	= $(CSPDIR)
 
 PYTHON		= $(COREDIR)\src\do_python.bat
 NAMEMGRDIR	= $(COREDIR)\src\SprCSharp\NameManager
 NAMEMGR		= $(NAMEMGRDIR)\NameManager.bat
 
+!IF $(DEBUG)
 !MESSAGE Makefile.RunSwig_CSharp
 !MESSAGE Using parameters ...
 !MESSAGE    TARGET:     [$(TARGET)]
 !MESSAGE    PLATFORM:   [$(PLATFORM)]
 !MESSAGE    PRJDIR:     [$(PROJECTDIR)]
-!MESSAGE    TOPDIR:     [$(TOPDIR)]
+!MESSAGE    CSPDIR:     [$(CSPDIR)]
 !MESSAGE    MAKEDIR:    [$(MAKEDIR)]
 !MESSAGE    DLLDIR:     [$(DLLDIR)]
 !MESSAGE    EXPSRCDIR:  [$(EXPSRCDIR)]
@@ -52,11 +63,12 @@ NAMEMGR		= $(NAMEMGRDIR)\NameManager.bat
 !MESSAGE    IFILEDIR:   [$(IFILEDIR)]
 !MESSAGE    NAMEMGR:    [$(NAMEMGR)]
 !MESSAGE    PYTHON:     [$(PYTHON)]
+!ENDIF
 
-RUNSWIG 	= $(MAKEDIR)\RunSwig_CSharp.bat
+RUNSWIG 	= $(RSCSPDIR)\RunSwig_CSharp.bat
 NAMEMGR_SCRIPT	= $(PYTHON) $(NAMEMGRDIR)\NameManager.py
 NAMEMGR_INI	= $(NAMEMGRDIR)\NameManager.ini
-
+RUNSWIG_CLEAN 	= $(MAKEDIR)\RunSwig_Clean.bat
 
 EXPSRCS	= $(EXPSRCDIR)\CSBase.cpp		\
 	  $(EXPSRCDIR)\CSCollision.cpp		\
@@ -107,6 +119,9 @@ $(NAMEMGR):
 dlls:	$(DLLDIR)\SprExport.dll	\
 	$(DLLDIR)\SprImport.dll	\
 	$(DLLDIR)\SprCSharp.dll
+
+clean:
+	$(RUNSWIG_CLEAN)
 
 $(DLLDIR)\SprExport.dll:	$(EXPSRCS)
 

@@ -1,0 +1,131 @@
+# ==============================================================================
+#  CMakeOpts.txt
+#    ** このファイルを直接編集してコミットしないようにお願いします **
+#    ** DO NOT edit and commit this file. **
+#
+#    次の変数を定義する
+#    This file defines following variable.
+#
+#	DEFINE_MACROS		Compile macros.
+#	INCLUDE_PATHS		Include paths.
+#	COMP_FLAGS		Compile options.
+#	LINK_FLAGS		Link options.
+#
+#    Windows (Visual Studio):
+#	COMP_FLAGS_<conf>	Configuration specific compile options.
+#	LINK_FLAGS_<conf>	Configuration specific link options.
+#		where <conf> is one of "DEBUG", "RELEASE" or "TRACE".
+#
+#    ${ARCHITECTURE} is passed as  "x86" or "x64" accoding to paltform using.
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+#  for both Windows and unix
+#
+set(DEFINE_MACROS_DEFAULT	SPRINGHEAD)
+set(INCLUDE_PATHS_DEFAULT	.
+				${SPR_INC_DIR}
+				${SPR_SRC_DIR})
+
+# ------------------------------------------------------------------------------
+#  for Windows (Visual Studio)
+#
+if(Windows)
+    set(INCDIR_DEFAULT	${SPR_TOP_DIR}/dependency/src)
+    #
+    set(COPT_DEFAULT	"/Zi /W3 /sdl /MP /D _LIB /GF- /Gm- /EHa /GS /Gy- /Qpar \
+			 /arch:AVX /fp:precise /openmp \
+			 /wd\"4996\" /wd\"4244\" /wd\"4267\" /wd\"4251\" /FC")
+    set(COPT_DEBUG	"/JMC /Od /Ob0 /Oy- /RTC1 /MDd /fp:except /Gd")
+    set(COPT_RELEASE	"/O2 /Ob2 /Ot /Oy /MD /Gr")
+    set(COPT_TRACE	"/O2 /Ob2 /Ot /Oy- /D TRACE /Gr")
+    #
+    string(TOUPPER ${ARCHITECTURE} _arch)
+    set(LOPT_DEFAULT	"/ERRORREPORT:PROMPT /IGNORE:4099 /IGNORE:4221 /NXCOMPAT \
+			 /MANIFEST:NO /MANIFESTUAC:YES /DYNAMICBASE /NOLOGO \
+			 /MACHINE:${_arch}")
+    set(LOPT_DEBUG	/DEBUG)
+    set(LOPT_RELEASE	)
+    set(LOPT_TRACE	)
+    #
+    set(DEFINE_MACROS		${DEFINE_MACROS_DEFAULT})
+    set(INCLUDE_PATHS		${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})
+    set(COMP_FLAGS		${COPT_DEFAULT})
+    set(COMP_FLAGS_DEBUG	${COPT_DEBUG})
+    set(COMP_FLAGS_RELEASE	${COPT_RELEASE})
+    set(COMP_FLAGS_TRACE	${COPT_TRACE})
+    set(LINK_FLAGS		${LOPT_DEFAULT})
+    set(LINK_FLAGS_DEBUG	${LOPT_DEFAULT} ${LOPT_DEBUG})
+    set(LINK_FLAGS_RELEASE	${LOPT_DEFAULT} ${LOPT_RELEASE})
+    set(LINK_FLAGS_TRACE	${LOPT_DEFAULT} ${LOPT_TRACE})
+endif()	# Windows
+
+# ------------------------------------------------------------------------------
+#  Compile options for unix (g++).
+#
+if(unix)
+    set(GPP_PATH	/usr/bin)
+    if(FreeBSD)
+	set(GPP_PATH	/usr/local/bin)
+    endif()
+    #
+    set(INCDIR_DEFAULT	/usr/include
+			/usr/include/boost
+			/usr/include/boost/regex
+			/usr/local/include/boost-numeric-bindings
+			/usr/X11R6/include
+			/usr/X11/include)
+    #
+    set(COPT_WARNING_FLAGS
+			-Wall
+			-Wno-unused-variable
+			-Wno-unused-but-set-variable
+			-Wno-unused-result
+			-Wno-unused-value
+			-Wno-unused-local-typedefs
+			-Wno-unused-function
+			-Wno-reorder
+			-Wno-sign-compare
+			-Wno-unknown-pragmas)
+    if("${CMAKE_CONFIGURATION_TYPES}" STREQUAL "Debug")
+	set(COPT_CONFIG	-g)
+    else()
+	set(COPT_CONFIG	-O2)
+    endif()
+    set(COPT_DEFAULT	${COPT_WARNING_FLAGS}
+			${COPT_CONFIG}
+			-D__unix__
+			-std=gnu++11
+			-D__ccdecl=
+			-D__cdecl=)
+    if("${LIBTYPE}" STREQUAL "SHARED")
+	set(COPT_DEFAULT	${COPT_DEFAULT} -shared -fPIC)
+    endif()
+    #
+    if("${SPR_PROJS}" STREQUAL "${EMPTY}")
+	set(SPRLIB_PATHS	${SPR_TOP_DIR}/generated/lib)
+	set(SPRLIB_NAMES	Springhead)
+    else()
+	set(SPRLIB_PATHS	${EMPTY})
+	set(SPRLIB_NAMES	${EMPTY})
+    endif()
+    #
+    set(STDLIB_PATHS		. $ENV{SPR_STDLIB_PATHS}
+				/usr/local/lib /usr/lib /usr/lib/X11
+				/usr/share/gnulib
+				/lib/x86_64-linux-gnu
+				/usr/lib/x86_64-linux-gnu)
+    set(SHARED_STDLIB_NAMES	X11 Xi Xmu glui glut GLEW GLU GL m dl
+    				boost_regex lapack)
+    set(STATIC_STDLIB_NAMES	${EMPTY})
+    #
+    set(DEFINE_MACROS	${DEFINE_MACROS_DEFAULT})
+    set(INCLUDE_PATHS	${INCLUDE_PATHS_DEFAULT} ${INCDIR_DEFAULT})
+    set(COMP_FLAGS	${COPT_DEFAULT})
+    set(LINK_FLAGS	${EMPTY})
+    set(LIBRARY_PATHS	${SPRLIB_PATHS} ${STDLIB_PATHS})
+    #
+endif()	# unix
+
+# end: CMakeOpts.txt

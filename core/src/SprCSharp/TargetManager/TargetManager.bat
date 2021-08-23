@@ -1,26 +1,48 @@
 @echo off
-:: ***********************************************************************************
-::  FILE:
-::      TargetManager.bat
-::
+setlocal enabledelayedexpansion
+:: =============================================================================
 ::  SYNOPSIS:
 ::	TargetManager target
 ::	    target:		ターゲット名
 ::
 ::  DESCRIPTION:
-::      ファイル"target.last"に記録されたターゲット名と引数で指定されたターゲット名
-::	とが異なっていたならば、ターゲット RunSwig_CSharp が生成するファイルを削除
-::	することでこのターゲットが必ず実行されるようにする.
+::	指定されたターゲットが必ず実行されるように制御する.
+::	具体的には, 指定されたターゲット名がファイル target.last に記録されて
+::	いるものとが異なるならば, ターゲット RunSwig_CSharp が生成するファイル
+::	を削除する.
 ::
-:: ***********************************************************************************
-::  Version:
-::     Ver 1.00  2016/12/07 F.Kanehori	初版
-::     Ver 1.01  2017/01/16 F.Kanehori	NameManger 導入
-::     Ver 1.01a 2017/01/18 F.Kanehori	Bug fixed.
-:: ***********************************************************************************
-setlocal enabledelayedexpansion
+:: -----------------------------------------------------------------------------
+::  VERSION:
+::    Ver 1.0	 2016/12/07 F.Kanehori	初版
+::    Ver 1.1	 2017/01/16 F.Kanehori	NameManger の導入.
+::    Ver 1.1.1	 2021/07/28 F.Kanehori	見直し.
+:: =============================================================================
 set PROG=%~n0
-set DEBUG=1
+set DEBUG=0
+
+:: ----------------------------------------------------------------------
+::  このスクリプトは "<SprTop>/core/src/SprCSharp/TargetManager" に置く
+::
+set CWD=%cd%
+cd /d %~dp0\..\..\..\..
+set SprTop=%CD%
+cd %CWD%
+set CspDir=%SprTop%\core\src\SprCSharp
+
+:: ------------------------
+::  共通環境変数を読み込む
+:: ------------------------
+set NAMEMANAGER=%CspDir%\NameManager\NameManager.bat
+if not exist %NAMEMANAGER% (
+	:: NameManager.bat が存在しないときは何もしない
+	echo "NameManager.bat" not found.
+	exit /b
+)
+call %NAMEMANAGER%
+if %DEBUG% == 1 (
+	echo TARGET FILE:  %TARGETFILE%
+	echo CLEAN SCRIPT: %CSHARPCLEAN%
+)
 
 :: ------------
 ::  引数の処理
@@ -33,31 +55,25 @@ if "%TARGET%" equ "" (
 	exit /b
 )
 
-:: ------------------------
-::  共通環境変数を読み込む
-:: ------------------------
-call ..\NameManager\NameManager.bat
-if %DEBUG% == 1 (
-	echo TARGET FILE:  %TARGETFILE%
-	echo CLEAN SCRIPT: %CSHARPCLEAN%
-)
-
 :: ----------------------------------
 ::  記録されたターゲット名を読み出す
 :: ----------------------------------
 for /f %%t in (%TARGETFILE%) do set LASTTARGET=%%t
-if %DEBUG% == 1 echo LASTTARGET: %LASTTARGET%
+if %DEBUG% == 1 (
+	echo LASTTARGET: %LASTTARGET%
+)
 
 :: --------------------------
 ::  比較を行ない処理を決める
 :: --------------------------
 if "%TARGET%" equ "%LASTTARGET%" (
 	:: 一致したので何もしなくて良い
-	echo %PROG%: %LASTTARGET% -^> %TARGET%
+	echo+  %PROG%: %LASTTARGET% -^> %TARGET%
 ) else (
 	:: 異なったのでファイルの削除を行なう
-	echo %PROG%: %LASTTARGET% -^> %TARGET%, clearing files
-	%CSHARPCLEAN% 
+	echo+  %PROG%: %LASTTARGET% -^> %TARGET%, clearing files
+	%CSHARPCLEAN%
+	echo %TARGET% > %TARGETFILE%
 )
 
 :: ----------
@@ -66,8 +82,7 @@ if "%TARGET%" equ "%LASTTARGET%" (
 endlocal
 exit /b
 
-:: -----------------------------------------------------------------------------------
-:: -----------------------------------------------------------------------------------
+:: ---------------------------------------------------------------------
 :usage
 	echo Usage: %PROG% target
 	echo            target:	ALL ^| Physics ^| ...

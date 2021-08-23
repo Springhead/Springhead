@@ -1,17 +1,27 @@
-#  File: Makefile.NameManager
+# ==============================================================================
+#  SYNOPSIS:
+#	nmake -f Makefile.NameManager
+#
+#  DESCRIPTION:
+#	$(INIFILE) から $(OUTFILE) を生成する.
+#
+# ------------------------------------------------------------------------------
+#  VERSION:
+#	Ver 1.0	 2021/07/19	F.Kanehori  バージョン管理開始
+# ==============================================================================
 			
 INIFILE	= NameManager.ini
 SCRIPT	= NameManager.py
-TARGET	= NameManager.bat
+OUTFILE	= NameManager.bat
 PYTHON	= ..\..\do_python.bat
 
-all:	$(TARGET)
+all:	$(OUTFILE)
 
-$(TARGET):	$(INIFILE) $(SCRIPT)
-		$(PYTHON) $(SCRIPT)
+$(OUTFILE):	$(INIFILE) $(SCRIPT)
+		$(PYTHON) $(SCRIPT) -i $(INIFILE) -o $(OUTFILE)
 
 clean:		
-		del $(TARGET) >NUL 2>&1
+		del $(OUTFILE) >NUL 2>&1
 
 $(INIFILE):			
 

@@ -5,10 +5,7 @@ import sys
 import os
 import glob
 
-sys.path.append('../RunSwig')
-from FindSprPath import *
-spr_path = FindSprPath('SpringheadTest')
-libdir = spr_path.abspath('pythonlib')
+sys.path.append('../RunSwig/pythonlib')
 sys.path.append(libdir)
 from Proc import *
 

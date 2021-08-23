@@ -1,63 +1,74 @@
 @echo off
 setlocal enabledelayedexpansion
-:: ***********************************************************************************
-::  SYNOPSIS:	RunSwig_CSharp target
-::
-::  ARGUMENTS:
-::	target		リンクするプロジェクトの指定
-::	    ALL		すべてのプロジェクトを含む構成とする.
-::	    Physics	Physics を含む最小の構成とするを含む構成とする.
+:: =============================================================================
+::  SYNOPSIS:
+::	RunSwig_CSharp target
+::	    target	    DLL構成
+::		ALL	    すべてのプロジェクトを含む構成とする.
+::		Physics	    Physicsを含む最小の構成とするを含む構成とする.
 ::	
 ::  DESCRIPTION:
-::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
+::      ファイルの依存関係を調べて、CSharpSwig.bat を最適に実行する.
 ::	※ このスクリプトで作成した makefile を実行する.
 ::
-::    　実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
-::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
+::	構成に組み込むプロジェクトの名称は make_projs_file.py によって作成
+::	されるバッチファイルを実行することで環境変数 PROJECTS に取り込む.
 ::
-:: ***********************************************************************************
+::  NOTE:
+::	このバッチファイルから nmake を実行するので, PATH に入れておくか
+::	setup を実行しておくこと.
+::
+:: =============================================================================
 ::  VERSION:
-::    Ver 1.00	 2015/03/18 F.Kanehori  初版
-::    Ver 2.00	 2016/02/08 F.Kanehori  wrapper file 統合
-::    Ver 3.00	 2016/12/07 F.Kanehori  リンク構成指定実装
-::    Ver 3.01   2016/12/15 F.Kanehori	ラッパファイル作成方式変更
-::    Ver 3.02	 2017/01/16 F.Kanehori	NameManger 導入
-::    Ver 3.03   2017/08/07 F.Kanehori	Bug fixed.
-::    Ver 3.03.1 2019/07/25 F.Kanehori	使用 nmake の表示 (デバッグ用)
-::    Ver 4.00   2021/01/20 F.Kanehori	Setup 導入移行期間開始
-:: ***********************************************************************************
+::     Ver 1.0	 2015/03/18 F.Kanehori  初版
+::     Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
+::     Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
+::     Ver 3.1   2016/12/15 F.Kanehori	ラッパファイル作成方式変更
+::     Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
+::     Ver 3.3   2017/08/07 F.Kanehori	Bug fixed.
+::     Ver 4.0   2021/01/20 F.Kanehori	Setup 導入移行期間開始
+::     Ver 4.1   2021/07/19 F.Kanehori	見直し.
+:: =============================================================================
 set PROG=%~n0
-set CWD=%CD%
 set DEBUG=1
 
-::-----------------------------------------------------------------------------
-:: Springhead tree のトップへ移動する
-::	このスクリプトは "<top>/core/src" に置く。
+:: ----------------------------------------------------------------------
+::  このスクリプトは "<SprTop>/core/src/SprCSharp/RunSwig_CSharp" に置く
 ::
-cd /d %~dp0
-cd ..\..\..\..
+set CWD=%cd%
+cd /d %~dp0\..\..\..\..
 set SprTop=%CD%
+cd ..
+set SprBase=%CD%
 cd %CWD%
+set CspDir=%SprTop%\core\src\SprCSharp
+set RSCspDir=%CspDir%\RunSwig_CSharp
 
-::-----------------------------------------------------------------------------
+:: ------------
 ::  引数の処理
-::
+:: ------------
 set TARGET=%1
 if "%TARGET%" equ "" (
     echo Usage: %PROG% target
     echo     target     ALL ^| Physics ^| ...
     exit /b
 )
+echo %~nx0
 if %DEBUG% == 1 (
-    echo TARGET: [%TARGET%]
+    echo+  TARGET:  %TARGET%
 )
 
-::-----------------------------------------------------------------------------
+:: ------------------------
 ::  共通環境変数を読み込む
-::
-call ..\NameManager\NameManager.bat
+:: ------------------------
+set NAMEMANAGER=%CspDir%\NameManager\NameManager.bat
+if not exist %NAMEMANAGER% (
+	:: NameManager.bat が存在しないときは何もしない
+	echo "NameManager.bat" not found.
+	exit /b
+)
+call %NAMEMANAGER%
 if %DEBUG% == 1 (
-    echo %~nx0
     call :show_abspath INCDIR %INCDIR%
     call :show_abspath SRCDIR %SRCDIR%
     call :show_abspath ETCDIR %ETCDIR%
@@ -65,54 +76,30 @@ if %DEBUG% == 1 (
     call :show_abspath CS_IMP %CS_IMP%
     call :show_abspath CS_EXP %CS_EXP%
     call :show_abspath TARGETFILE %TARGETFILE%
-    echo. 
 )
 
-::-----------------------------------------------------------------------------
-:: 依存関係にはないと見做すファイルの一覧
-::
+:: ----------------------------------------
+::  依存関係にはないと見做すファイルの一覧
+:: ----------------------------------------
 set EXCLUDES=
 
-::-----------------------------------------------------------------------------
-:: makefile に出力するときのパス
-::
+:: -----------------------------------
+::  makefile に出力するときのパス表記
+:: -----------------------------------
 set INCDIROUT=..\..\include
 set SRCDIROUT=..\..\src
 set CSHARPSWIG=RunSwig_CSharp\%CSHARPSWIG%
 
-::-----------------------------------------------------------------------------
-:: 使用するファイル名
-::
+:: --------------------
+::  使用するファイル名
+:: --------------------
 set MAKEFILE=Makefile_CSharp.swig
 
 ::-----------------------------------------------------------------------------
-:: 使用するパス
+::  モジュールの依存関係表を作成する.
 ::
-::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-:: 移行期間の処理
-::
-if exist %SprTop%\core\src\setup.conf (
-	set MAKEPATH=
-	for /f "tokens=1,*" %%a in (%SprTop%\core\src\setup.conf) do (
-		if "%%a" equ "nmake" (set NMAKEBIN=%%b & goto :out)
-	)
-	:out
-	set MAKEPATH=!NMAKEBIN:\nmake.exe=!
-	echo 移行処理: using !MAKEPATH!\nmake.exe
-)
-rem なぜか else が効かない!
-if not exist %SprTop%\core\src\setup.conf (
-	echo %PROG%: invoke DOS batch
-	call ..\NameManager\SetMakePath.bat
-	call :dequote !MAKEPATH!
-	set MAKEPATH=!$ret!
-	if not exist !MAKEPATH! (
-		echo %PROG%: Error: can not find 'nmake' path.
-		exit /b
-	)
-	echo using !MAKEPATH!\nmake.exe
-)
-::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+set MODULE_DEPTS=%RSCspDir%\module.depts
+%PYTHON% %RSCspDir%\make_projs_file.py %MODULE_DEPTS%
 
 ::-----------------------------------------------------------------------------
 ::  処理するモジュール一覧を作成
@@ -121,14 +108,19 @@ set PROJECTS=Base
 set SWIGMACRO=
 
 if /i "%TARGET%" equ "ALL" (
-	for /f "tokens=1,*" %%m in (%PROJSFILE%) do (
+	for /f "tokens=1,*" %%m in (%MODULE_DEPTS%) do (
     		set PROJECTS=!PROJECTS! %%m
 	)
 ) else (
 	for %%t in (%TARGET:,= %) do (
-		for /f "tokens=1,*" %%m in (%PROJSFILE%) do (
-			if "%%m" equ "%%t" (
-	    			set PROJECTS=!PROJECTS! %%n %%m
+		if "%%t" equ "PH" (
+			set REAL_TARGET=Physics
+		) else (
+			set REAL_TARGET=%%t
+		)
+		for /f "tokens=1,*" %%m in (%MODULE_DEPTS%) do (
+			if "%%m" equ "!REAL_TARGET!" (
+	    			set PROJECTS=!PROJECTS! %%n !REAL_TARGET!
 	    			set PROJECTS=!PROJECTS:,= !
 	    			:: 重複要素を取り除く
 	    			call :bag_to_set PROJECTS_tmp "!PROJECTS!"
@@ -158,13 +150,16 @@ for %%p in (%PROJECTS%) do (
 
 set IFILES=%IFILES:~1%
 
-echo Projects:  [%PROJECTS%]
-echo SWIGMACRO: [%SWIGMACRO%]
-echo IFiles:    [%IFILES%]
+echo+  Projects:  [%PROJECTS%]
+echo+  SWIGMACRO: [%SWIGMACRO%]
+echo+  IFiles:    [%IFILES%]
 
 ::-----------------------------------------------------------------------------
 ::  モジュールにまたがる初期化
 ::
+cd %CspDir%
+rem echo+  SIGNATUREFILE:     %SIGNATUREFILE%
+rem echo+  WRAPPERSBUILTFILE: %WRAPPERSBUILTFILE%
 call :truncate_file %SIGNATUREFILE%
 del /f %WRAPPERSBUILTFILE% > NUL 2>&1
 
@@ -182,29 +177,33 @@ for %%d in (%CS_SRC% %CS_IMP% %CS_EXP%) do (
 ::-----------------------------------------------------------------------------
 ::  処理開始
 ::
-echo add path: "%MAKEPATH%"
+echo+  add path: "%MAKEPATH%"
 PATH=%MAKEPATH%;%PATH%
 
-echo making ...
+echo+  making ...
+cd %CspDir%
+set MAKE=%NMAKE% /nologo
 for %%p in (%PROJECTS%) do (
-    echo   Project: %%p
+    echo+    Project: %%p
     set MKFILE=%MAKEFILE%.%%p
     call :collect_headers %%p
-    call :make_makefile %%p ..\!MKFILE! "!INCHDRS!" "!SRCHDRS!" "%IFILES%"
-    cd ..
+    call :make_makefile %%p !MKFILE! "!INCHDRS!" "!SRCHDRS!" "%IFILES%"
+    rem cd %CspDir%
+    rem echo cmd /c %MAKE% -f !MKFILE!
     if %DEBUG% gtr 1 (
 	cmd /c %MAKE% -f !MKFILE!
     ) else (
 	cmd /c %MAKE% -f !MKFILE! > NUL 2>&1
     )
-    cd %CWD%
+    rem cd %CWD%
 )
+cd %CS_SRC%
 
 ::-----------------------------------------------------------------------------
 ::  wrapper file をまとめる
 ::
 if exist %WRAPPERSBUILTFILE% (
-    echo combining wrapper files
+    echo+  combining wrapper files
     set WF_SRC=%SUBDIR_SRC:/=\%\%MOD_WRAPPERFILE_SRC%
     set WF_IMP=%SUBDIR_IMP:/=\%\%MOD_WRAPPERFILE_IMP%
     set WF_EXP=%SUBDIR_EXP:/=\%\%MOD_WRAPPERFILE_EXP%
@@ -223,7 +222,7 @@ if exist %WRAPPERSBUILTFILE% (
 ::-----------------------------------------------------------------------------
 ::  TARGET をファイルに記録する
 ::
-echo last target: %TARGET%
+echo+  last target: %TARGET%
 echo %TARGET% > %TARGETFILE%
 
 ::-----------------------------------------------------------------------------
@@ -404,7 +403,7 @@ exit /b
 ::  デバッグ用
 ::-----------------------------------------------------------------------------
 :show_abspath
-    echo %1:  [%~f2]
+    echo+  %1:  %~f2
 exit /b
 
 ::end RunSwig_CSharp.bat
