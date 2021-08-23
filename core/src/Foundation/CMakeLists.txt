@@ -1,4 +1,6 @@
-# CMakeLists.txt for Collision
+# CMakeLists.txt for Foundation
+#
+set(FOUNDATION_VERSION 1.1.0)		# 2021/08/23 バージョン管理開始
 
 # ------------------------------------------------------------------------------
 #  Set target name.
@@ -15,15 +17,6 @@ endif()
 
 # ------------------------------------------------------------------------------
 #  Define sources and headers.
-#
-file(STRINGS "RunSwig_gen_files.txt" _tmp_buff)
-string(REPLACE " " ";" _tmp_buff ${_tmp_buff})
-foreach(_file ${_tmp_buff})
-    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${_file})
-	message("     create dummy file: ${_file}")
-	file(TOUCH ${_file})
-    endif()
-endforeach()
 #
 file(GLOB SRCS *.cpp *.h
 	QuadProg++.cc
@@ -50,6 +43,12 @@ if(unix)
     )
     list(APPEND SRCS ${KLUDGES})
 endif()
+
+file(STRINGS "RunSwig_gen_files.txt" _tmp_buff)
+set_source_files_properties(_tmp_buff
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PROPERTIES GENERATED TRUE
+)
 
 # ------------------------------------------------------------------------------
 #  Definition of library.
