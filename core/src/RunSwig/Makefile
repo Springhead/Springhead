@@ -13,6 +13,7 @@
 #     Ver 1.0	 2017/05/10 F.Kanehori	unix 用に新規に作成.
 #     Ver 2.0	 2017/08/21 F.Kanehori  Springhead tree 再構成に対応.
 #     Ver 2.1	 2021/04/08 F.Kanehori  コードの整理. SPR_PYTON の廃止.
+#     Ver 2.1.1	 2021/08/30 F.Kanehori  不要コードの整理.
 # ==============================================================================
 
 eq = $(and $(findstring $(1)X,$(2)X), $findstring $(2)X,$(1)X)
@@ -30,7 +31,6 @@ SWIGTEMP	= ../../swigtemp
 #  使用するスクリプト
 #
 MAKE		= gmake
-CLEAN		= RunSwig_clean.py
 
 #  Make のオプション
 #

@@ -1,5 +1,6 @@
 # CMakeLists.txt for RunSwig
 #	CMake variable "SPRINGHEAD_TOPDIR" must be set by the caller.
+set(COLLISION_VERSION 1.1.1)		# 2021/08/30 bug fix
 
 # target
 set(Target "RunSwig")
@@ -56,8 +57,12 @@ endif()
 set(_for_all @.i @Decl.hpp @Stub.cpp @Stub.makefile Spr@Decl.hpp swig_spr.log)
 set(_for_FW  FWOldSpringheadDecl.hpp FWOldSpringheadStub.cpp)
 
+# Swig does not apply to project 'Base'.
+set(_projs ${SPR_PROJS})
+list(REMOVE_ITEM _projs Base)
+#
 set(generated_files)
-foreach(_dir ${SPR_PROJS})
+foreach(_dir ${_projs})
     foreach(_file ${_for_all})
 	set(_tmp ${SPR_SRC_DIR}/${_dir}/${_file})
 	string(REPLACE @ ${_dir} _tmp ${_tmp})
@@ -76,33 +81,25 @@ foreach(_file ${generated_files})
 endforeach()
 
 # ------------------------------------------------------------------------------
-# set python be invokable
-#
-if(Windows AND EXISTS ${SPR_TOP_DIR}/buildtool/win32/python.exe)
-    set(_python ${SPR_TOP_DIR}\\buildtool\\win32\\python.exe)
-else()
-    set(_python python)
-endif()
-
-# ------------------------------------------------------------------------------
 # main target
 #
 if(Windows)
     add_custom_target(${Target}
-	BYPRODUCTS ${genereated_files}
+	#BYPRODUCTS ${generated_files}
+	COMMAND echo mark generated files.
 	DEPENDS ${generated_files}
     )
     add_custom_command(
 	OUTPUT ${generated_files}
 	COMMAND IF EXIST "${SetupFileName}" (echo [ setup file exists ])
-	COMMAND ${_python} RunSwig_clean.py --cmake
 	COMMAND cmd /c ${Make} -f ${Makefile}
 	WORKING_DIRECTORY ${RSSrcDir}
 	COMMENT [[  generating files...]]
     )
 elseif(unix)
     add_custom_target(${Target}
-	BYPRODUCTS ${genereated_files}
+	#BYPRODUCTS ${generated_files}
+	COMMAND echo mark generated files.
 	DEPENDS ${generated_files}
     )
     add_custom_command(
