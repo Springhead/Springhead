@@ -25,6 +25,7 @@ typedef unsigned char	uint8_t;
  typedef unsigned short	uint16_t;
  typedef unsigned int	uint32_t;
  typedef unsigned long ulong;
+#elif __GNUC__
 #else
  #error processor macro is undefined.
 #endif

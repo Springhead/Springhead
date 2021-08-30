@@ -242,7 +242,7 @@ public:
 			break;
 		default:
 			ESP_LOGE(Tag(), "ReadRet(): Command Id error %d", cmdId);
-			assert(0);
+			//assert(0);
 		}
 	}
 };
