@@ -14,11 +14,25 @@ namespace SprCsSample {
 
         static void Main(string[] args) {
 
-            //var dllDirectory = @"..\..\..\..\..\..\..\libs\bin\win64";
-            var dllDirectory = @"..\..\..\..\..\..\..\generated\bin\win64"
-                + @";..\..\..\..\..\..\..\generated\bin\win32"
-                + @";..\..\..\..\..\..\..\dependency\bin\win64"
-                + @";..\..\..\..\..\..\..\dependency\bin\win32";
+	    // DLLのあるディレクトリを求めるための準備
+	    //	  cmakeを使ったか否かでcurrent directotyが異なるためのKludge
+	    var CurrDirectory = System.IO.Directory.GetCurrentDirectory();
+	    var CurrDirectories = CurrDirectory.Split('\\');
+	    var ToIndex = 0;
+	    for (int i = CurrDirectories.Length-1; i >= 0; i--) {
+		if (CurrDirectories[i].Equals("core")) {
+		    ToIndex = i;
+		    break;
+		}
+	    }
+	    var TopDirectory = "";
+	    for (int i = 0; i < ToIndex; i++) {
+		TopDirectory += CurrDirectories[i] + @"\";
+	    }
+	    // ここまで
+	    var dllPath_64 = TopDirectory + @"generated\bin\win64";
+	    var dllPath_32 = TopDirectory + @"generated\bin\win32";
+            var dllDirectory = dllPath_64 + ";" + dllPath_32;
             var dllPath = Environment.GetEnvironmentVariable("PATH") + ";" + dllDirectory;
             Environment.SetEnvironmentVariable("PATH", dllPath);
 
@@ -42,7 +56,11 @@ namespace SprCsSample {
             catch (System.Exception e) {
                 System.Console.WriteLine(SEH_Exception.what(e));
             }
-            CSlog.Print("Test End");
+	    try {
+                CSlog.Print("Test End");
+	    } catch (System.Exception e) {
+		//Console.WriteLine(e.ToString());
+	    }
         }
 
 #if SprCSTest

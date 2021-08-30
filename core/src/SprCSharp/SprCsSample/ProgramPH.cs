@@ -16,6 +16,16 @@ namespace SprCsSample {
 
         static void Main(string[] args) {
 
+            var topDirectory = @"..\..\..\..\..\..\..\";
+#if CMake
+	    topDirectory = @"..\..\..\..\..\..\";
+#endif
+	    var dllPath_64 = topDirectory + @"generated\bin\win64";
+	    var dllPath_32 = topDirectory + @"generated\bin\win32";
+            var dllDirectory = dllPath_64 + ";" + dllPath_32;
+            var dllPath = Environment.GetEnvironmentVariable("PATH") + ";" + dllDirectory;
+            Environment.SetEnvironmentVariable("PATH", dllPath);
+
             ExceptionRaiser er = new ExceptionRaiser();
             try {
                 if (inc.Equals("A"))  inc = def;
@@ -36,7 +46,11 @@ namespace SprCsSample {
             catch (System.Exception e) {
                 System.Console.WriteLine(SEH_Exception.what(e));
             }
-            CSlog.Print("Test End");
+	    try {
+                CSlog.Print("Test End");
+	    } catch (System.Exception e) {
+		//Console.WriteLine(e.ToString());
+	    }
         }
 
 #if SprCSTest

@@ -200,7 +200,7 @@ def __cp(src, dst):
 			dst = '%s/%s' % (dst, '/'.join(plist[:-1]))
 		if not os.path.exists(dst):
 			Print('  creating directory %s' % dst)
-			os.makedirs(dst)
+			os.makedirs(dst, exist_ok=True)
 		if verbose > 1:
 			Print('  cp: %s -> %s' % (src, dst))
 		src_cnv = pathconv(src)
@@ -213,7 +213,7 @@ def __cp(src, dst):
 		if not os.path.exists(dst):
 			abspath = os.path.abspath(dst)
 			Print('  creating directory %s' % pathconv(abspath, True))
-			os.makedirs(dst)
+			os.makedirs(dst, exist_ok=True)
 		if verbose > 1:
 			Print('  cp: %s -> %s' % (src, dst))
 		src_cnv = pathconv(src)

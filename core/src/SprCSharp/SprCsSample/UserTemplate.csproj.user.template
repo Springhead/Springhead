@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <Project ToolsVersion="@VS_VERSION@" xmlns="http://schemas.Microsoft.com/developer/msbuild/2003">
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+      <LocalDebuggerEnvironment>PATH=@BIN_PATH@;%PATH%</LocalDebuggerEnvironment>
+      <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+      <LocalDebuggerEnvironment>PATH=@BIN_PATH@;%PATH%</LocalDebuggerEnvironment>
+      <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <DefineConstants>XXX</DefineConstants>
+      <LocalDebuggerEnvironment>PATH=@BIN_PATH@;%PATH%</LocalDebuggerEnvironment>
+      <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      <LocalDebuggerEnvironment>PATH=@BIN_PATH@;%PATH%</LocalDebuggerEnvironment>
+      <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    </PropertyGroup>
+  </Project>

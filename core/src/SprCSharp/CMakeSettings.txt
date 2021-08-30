@@ -1,0 +1,64 @@
+# ******************************************************************************
+#  CMake settings for SprCSharp
+#	This applies only for Windows.
+# ******************************************************************************
+set(SPRCSHARP_SETTINGS_VERSION 1.0.0)
+set(EMPTY)
+
+# ------------------------------------------------------------------------------
+#  Target configurration.
+#	Select one of ALL or PH.
+#	    ALL     Full library version.
+#	    PH	    Minimum library version including Physics library.
+#  NOTE:
+#	The same effect will be achieved by supplying follwing option
+#	to cmake.
+#	    > cmake -D TARGET_TYPE=ALL -B build -A x64 -G ...
+#	    > cmake -D TARGET_TYPE=PH  -B build -A x64 -G ...
+#
+if(NOT DEFINED TARGET_TYPE)
+    set(TARGET_TYPE		ALL)
+    #set(TARGET_TYPE		PH)
+endif()
+
+# ------------------------------------------------------------------------------
+#  Binary(working) directory name used when you cmake Springhead library.
+#	In order to optimize build process between Springhead projects and
+#	your application program, you should adopt take "out-of-source"
+#	build method.
+#
+set(OOS_BLD_DIR "build")
+
+# ------------------------------------------------------------------------------
+#  Configuration type(s).
+#	Remove unneccessary configuration type(s).
+#	Windows (Visual Studio) allows multiple configuration.
+#	Unix (make) allows only single configuration (Debug or Release).
+#
+set(CMAKE_CONFIGURATION_TYPES Debug Release Trace)
+
+# ------------------------------------------------------------------------------
+#  Visual Studio Version.
+#	"MakeFuncCmakeVersion" is defined in ${SRP_CORE_DIR}/make.func/cmake".
+#
+set(SetupFileName ${SPR_SRC_DIR}/setip.conf)
+if(DEFINED MakeFuncCmakeVersion AND SetupExists)
+    get_vs_version(${SetupFileName} _result)
+    string(REGEX MATCHALL "[0-9\.]+" VS_VERSION ${_result})
+else() 
+    set(VS_VERSION "16.0")
+endif()
+
+# ------------------------------------------------------------------------------
+#  Visual Studio Debugger settings.
+#	DEBUGGER_WORKING_DIRECTORY:
+#		Debugger working directory. Default is ${CMAKE_SOURCE_DIR},
+#		i.e. the directory where this file (CMakeLists.txt) is.
+#	DEBUGGER_COMMAND_ARGUMENTS:
+#		Debugger command line arguments.
+if(Windows)
+    set(DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    set(DEBUGGER_COMMAND_ARGUMENTS ${EMPTY})
+endif()
+
+# end: CMakeSettings.txt

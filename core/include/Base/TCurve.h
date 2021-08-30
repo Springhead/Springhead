@@ -356,25 +356,26 @@ public:
 	typedef TQuaternion<T>	pos_t;
 	typedef TVec3<T>	vel_t;
 	typedef T	real_t;
+	typedef typename TCurve<TQuaternion<T>, TVec3<T>, T>::Point Point;
 
 	pos_t	CalcPos(real_t t){
 		std::pair<int,int> seg = GetSegment(t);
-		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
-		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
+		Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
+		Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
 		return InterpolateOri(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
 	vel_t	CalcVel(real_t t){
 		std::pair<int,int> seg = GetSegment(t);
-		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
-		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
+		Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
+		Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
 		return InterpolateAngvel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
 	vel_t	CalcAcc(real_t t){
 		std::pair<int,int> seg = GetSegment(t);
-		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
-		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
+		Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
+		Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
 		return InterpolateAngacc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
