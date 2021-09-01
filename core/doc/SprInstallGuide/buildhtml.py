@@ -17,6 +17,7 @@
 #     Ver 1.3    2021/03/02 F.Kanehori	HowToBuildSpringhead_Windows version.
 #     Ver 1.4    2021/03/02 F.Kanehori	ドキュメント名称変更
 #     Ver 1.5	 2021/07/01 F.Kanehori	DailyBuildTestTool 導入
+#     Ver 1.5.1	 2021/08/26 F.Kanehori	Kludge
 # ======================================================================
 version = '1.5'
 
@@ -219,13 +220,17 @@ def __cp(src, dst):
 			os.makedirs(dst, exist_ok=True)
 		if verbose > 1:
 			Print('  cp: %s -> %s' % (src, dst))
-		src_cnv = pathconv(src)
-		dst_cnv = pathconv(dst)
+		src_cnv = pathconv(os.path.abspath(src)) + '\\*.*'
+		dst_cnv = pathconv(os.path.abspath(dst))
 		if is_unix():
 			cmnd = 'cp -r %s %s' % (src_cnv, dst_cnv)
 		else:
 			cmnd = 'xcopy /I /E /S /Y /Q %s %s' % (src_cnv, dst_cnv)
+			#  なぜかこのxcopyが動作しないのでKludge
+			#  原因が判ったら直すこと
+			cmnd = "copy %s\\*.* %s" % (src, dst_cnv)
 		rc = wait(execute(cmnd, stdout=NULL, stderr=NULL, shell=True))
+		Print('rc: %s' % rc)
 
 	return rc
 
