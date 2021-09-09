@@ -1,4 +1,6 @@
 # CMakeLists.txt for EmbPython
+#
+set(COLLISION_VERSION 1.1.1)		# 2021/09/02 メッセージ修正
 
 # ------------------------------------------------------------------------------
 #  Commandline option "-DSTANDALONE=1" indicates 'standalone' version of
@@ -302,7 +304,7 @@ if(STANDALONE)
 		COMMAND mkdir -p ${_install_dir}
 		COMMAND cp ${_libfile} ${_install_dir}
 		WORKING_DIRECTORY ${_wrkdir}
-		COMMENT [[  copying static library file]]
+		COMMENT [[  copying shared library file]]
 	    )
 	endif()
     endif()

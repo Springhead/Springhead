@@ -1,17 +1,37 @@
 #!/bin/bash -f
 
+# Function definition
+#
+function usage() {
+	echo "Usage: $0 [--do-not-clone] [--hook]"
+}
+
 # Parse command line arguments.
 #
-FLAGS=
-Sflag=
+CLONE=""
+HOOK=""
+HOOKONLY=""
 while [ "$1" != "" ]
 do
     case "$1" in
-	"-S")	Sflag=-S;;
-	*)	FLAGS="$FLAGS $1";;
+        "--hook")	  HOOK="--hook";;
+        "--hook-only")	  HOOKONLY="--hook-only";;
+        "--do-not-clone") CLONE="--do-not-clone";;
+	*)		  usage; exit 0;;
     esac
     shift
 done
+
+# Check
+#
+if [ "$CLONE" == "" ]; then
+	read -p "cloning from remote repository ... ok [y/n]? " yn
+	if [ "$yn" != "y" ]; then
+		usage
+		echo "abort"
+		exit 1
+	fi
+fi
 
 # Set test environment.
 #
@@ -30,45 +50,12 @@ export DAILYBUILD_COPYTO_BUILDLOGskip
 export DAILYBUILD_EXECUTE_MAKEDOC=skip
 export DAILYBUILD_COPYTO_WEBBASEskip
 
-DefFile=SprEnvDef.sh
-if [ -f $DefFile ]; then
-        . $DefFile
-else
-	echo "$DefFile not found"
-	exit 1
-fi
-
-# Setup if $Sflag speciried.
+# Execute test
 #
-if [ "$Sflag" = "-S" ]; then
-	echo "Execute setup process."
-	pushd ../src
-	./setup.sh -f
-	if [ $? -eq 0 ]; then
-		echo "Setup done"
-	else
-		echo "Setup failed"
-		exit -1
-	fi
-	popd 
-fi
-
-# Test start.
-#
-CONF=Release
-PLAT=x64
-TEST_REPOSITORY=SpringheadTest
-DAILYBUILD_RESULT=DailyBuildResult/Result
-
-cd ../../../$TEST_REPOSITORY/core/test
-echo test directory:  `pwd`
-echo test started at: `date -R`
-
-OPTS="-c $CONF -p $PLAT"
-cmnd="python TestMainGit.py $OPTS $TEST_REPOSITORY $DAILYBUILD_RESULT"
-echo $cmnd
-$cmnd
-
-echo test ended at: `date -R`
+CMND="./DailyBuild.sh -S $CLONE $HOOK $HOOKONLY"
+echo $CMND
+$CMND
+echo "rc $?"
 
 exit 0
+

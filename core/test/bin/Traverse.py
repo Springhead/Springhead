@@ -46,6 +46,8 @@
 #     Ver 1.5	 2020/08/24 F.Kanehori	Add LIB_TYPE control.
 #     Ver 1.6	 2020/10/12 F.Kanehori	Add EMBPYTON control.
 #     Ver 1.6.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
+#     Ver 1.7	 2021/09/01 F.Kanehori	Springhead/EmbPython ログ分離.
+#     Ver 1.7.1	 2021/09/06 F.Kanehori	Log: 名称,モードを変更.
 # ======================================================================
 import sys
 import os
@@ -83,7 +85,7 @@ class Traverse:
 			timeout, report=True, audit=False,
 			dry_run=False, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = 1.4
+		self.version = '1.7.1'
 		#
 		self.testid = testid
 		self.result = result
@@ -136,8 +138,14 @@ class Traverse:
 			Error(self.clsname).error(ctl.error())
 			return -1
 		if self.once:
-			self.__init_log(ctl.get(CFK.BUILD_LOG), RST.BLD)
-			self.__init_log(ctl.get(CFK.BUILD_ERR_LOG), RST.BLD, RST.ERR)
+			if self.testid == TESTID.EMBPYTHON:
+				buildlog = CFK.EMB_BUILD_LOG
+				builderrlog = CFK.EMB_BUILD_ERR_LOG
+			else:
+				buildlog = CFK.BUILD_LOG
+				builderrlog = CFK.BUILD_ERR_LOG
+			self.__init_log(ctl.get(buildlog), RST.BLD)
+			self.__init_log(ctl.get(builderrlog), RST.BLD, RST.ERR)
 			self.__init_log(ctl.get(CFK.RUN_LOG), RST.RUN)
 			self.__init_log(ctl.get(CFK.RUN_ERR_LOG), RST.RUN, RST.ERR)
 			self.once = False
@@ -244,7 +252,8 @@ class Traverse:
 				#
 				if ctl.get(CFK.USE_CMAKE):
 					self.__report('%s' % config, '.cmake', False)
-					logfile = ctl.get(CFK.BUILD_LOG)
+					logfile = ctl.get(CFK.CMAKE_LOG)
+					logfile = logfile.replace('.log', '.%s.log' % self.testid)
 					cmake = CMake(ctl, self.toolset,
 				      		platform, None, logfile, self.verbose)
 					status = cmake.preparation()
@@ -389,7 +398,7 @@ class Traverse:
 			(testids[self.testid], steps[step], err)
 
 		# write header
-		f = TextFio(path, 'w', encoding=self.encoding)
+		f = TextFio(path, 'a', encoding=self.encoding)
 		if f.open() < 0:
 			msg = '__init_log: open error "%s"', path
 			Error(self.clsname).error(msg)

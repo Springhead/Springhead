@@ -151,7 +151,7 @@ if runswig:
 			removed.append(f)
 			f_op.rm(f)
 	os.chdir(cwd)
-	os.chdir('%s/FRamework' % srcdir)
+	os.chdir('%s/Framework' % srcdir)
 	files = ['FWOldSpringheadStub.cpp', 'FWOldSpringheadDecl.hpp']
 	for f in files:
 		if os.path.exists(f):

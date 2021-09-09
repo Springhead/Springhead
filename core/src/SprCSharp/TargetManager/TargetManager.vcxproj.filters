@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="F:\Project\SpringheadDevelop\core\src\SprCSharp\build\CMakeFiles\9ad4cb62bc36cb5085fc4c4a62f0e52a\TargetManager.rule">
+    <CustomBuild Include="F:\Project\SpringheadTest\core\src\SprCSharp\build\CMakeFiles\5f558b48d506a2fce42b68590d59fca8\TargetManager.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager" />
+    <None Include="F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{8D6430AA-5162-3328-AC23-A1BCAAE73F42}</UniqueIdentifier>
+      <UniqueIdentifier>{E5E6481F-A7A9-3CBE-8D7D-2466DF6C8B5F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

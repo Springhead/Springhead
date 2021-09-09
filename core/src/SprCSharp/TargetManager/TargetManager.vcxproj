@@ -18,7 +18,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ED054B83-CD59-3871-948C-99D6F0EC5CC3}</ProjectGuid>
+    <ProjectGuid>{3DB75743-7D67-3421-BBA3-E4AB1FB0D3CC}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
@@ -85,16 +85,16 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="F:\Project\SpringheadDevelop\core\src\SprCSharp\build\CMakeFiles\9ad4cb62bc36cb5085fc4c4a62f0e52a\TargetManager.rule">
+    <CustomBuild Include="F:\Project\SpringheadTest\core\src\SprCSharp\build\CMakeFiles\5f558b48d506a2fce42b68590d59fca8\TargetManager.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">  checking/modifying target.last ... </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-cd F:\Project\SpringheadDevelop\core\src\SprCSharp
+cd F:\Project\SpringheadTest\core\src\SprCSharp
 if %errorlevel% neq 0 goto :cmEnd
 F:
 if %errorlevel% neq 0 goto :cmEnd
-echo F:/Project/SpringheadDevelop/core/src/SprCSharp/TargetManager/TargetManager.bat PH
+echo F:/Project/SpringheadTest/core/src/SprCSharp/TargetManager/TargetManager.bat PH
 if %errorlevel% neq 0 goto :cmEnd
-call F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\TargetManager.bat PH
+call F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\TargetManager.bat PH
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -103,18 +103,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">  checking/modifying target.last ... </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-cd F:\Project\SpringheadDevelop\core\src\SprCSharp
+cd F:\Project\SpringheadTest\core\src\SprCSharp
 if %errorlevel% neq 0 goto :cmEnd
 F:
 if %errorlevel% neq 0 goto :cmEnd
-echo F:/Project/SpringheadDevelop/core/src/SprCSharp/TargetManager/TargetManager.bat PH
+echo F:/Project/SpringheadTest/core/src/SprCSharp/TargetManager/TargetManager.bat PH
 if %errorlevel% neq 0 goto :cmEnd
-call F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\TargetManager.bat PH
+call F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\TargetManager.bat PH
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -123,18 +123,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
       <Message Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">  checking/modifying target.last ... </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">setlocal
-cd F:\Project\SpringheadDevelop\core\src\SprCSharp
+cd F:\Project\SpringheadTest\core\src\SprCSharp
 if %errorlevel% neq 0 goto :cmEnd
 F:
 if %errorlevel% neq 0 goto :cmEnd
-echo F:/Project/SpringheadDevelop/core/src/SprCSharp/TargetManager/TargetManager.bat PH
+echo F:/Project/SpringheadTest/core/src/SprCSharp/TargetManager/TargetManager.bat PH
 if %errorlevel% neq 0 goto :cmEnd
-call F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\TargetManager.bat PH
+call F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\TargetManager.bat PH
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -143,18 +143,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">false</VerifyInputsAndOutputsExist>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="F:\Project\SpringheadDevelop\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager">
+    <None Include="F:\Project\SpringheadTest\core\src\SprCSharp\TargetManager\CMakeFiles\TargetManager">
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="F:\Project\SpringheadDevelop\core\src\SprCSharp\NameManager\NameManager.vcxproj">
-      <Project>{59F4BADD-43CB-3691-8854-F7C507D26AEB}</Project>
+    <ProjectReference Include="F:\Project\SpringheadTest\core\src\SprCSharp\NameManager\NameManager.vcxproj">
+      <Project>{21DF7B9E-2A24-3290-93AC-F221ED3BE20B}</Project>
       <Name>NameManager</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

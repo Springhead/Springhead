@@ -1,6 +1,6 @@
 # CMakeLists.txt for RunSwig
 #	CMake variable "SPRINGHEAD_TOPDIR" must be set by the caller.
-set(COLLISION_VERSION 1.1.1)		# 2021/08/30 bug fix
+set(COLLISION_VERSION 1.1.2)		# 2021/09/09 bug fix
 
 # target
 set(Target "RunSwig")
@@ -85,8 +85,6 @@ endforeach()
 #
 if(Windows)
     add_custom_target(${Target}
-	#BYPRODUCTS ${generated_files}
-	COMMAND echo mark generated files.
 	DEPENDS ${generated_files}
     )
     add_custom_command(
@@ -98,14 +96,11 @@ if(Windows)
     )
 elseif(unix)
     add_custom_target(${Target}
-	#BYPRODUCTS ${generated_files}
-	COMMAND echo mark generated files.
 	DEPENDS ${generated_files}
     )
     add_custom_command(
 	OUTPUT ${generated_files}
 	COMMAND ${Make} -f ${RSSrcDir}/${Makefile}
-	BYPRODUCTS ${generated_files}
 	WORKING_DIRECTORY ${RSSrcDir}
 	COMMENT [[  generating files...]]
     )
