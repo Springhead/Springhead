@@ -1,5 +1,6 @@
 #  make.func.cmake
-set(MakeFuncCmakeVersion 1.0)
+set(MakeFuncCmakeVersion 1.1)		# add function: to_absolute_path()
+					#		to_relatice_path()
 
 # ------------------------------------------------------------------------------
 #  function split()
@@ -186,6 +187,24 @@ function(get_build_dir cmake_build_dir output)
 	math(EXPR result "${_tmp_list_len} - 1")
 	list(GET _tmp_dir_list ${result} _tmp_build_dir)
 	set(${output} ${_tmp_build_dir} PARENT_SCOPE)
+endfunction()
+
+# ------------------------------------------------------------------------------
+#  ${rel_path}で与えられたパスを絶対パスに変換する.
+#
+function(to_absolute_path rel_path output)
+	get_filename_component(_abs_path ${rel_path} ABSOLUTE)
+	set(${output} ${_abs_path} PARENT_SCOPE)
+endfunction()
+
+# ------------------------------------------------------------------------------
+#  ${abs_path}で与えられたパスを${base_dir}を起点とした相対パスに変換する.
+#
+function(to_relative_path abs_path base_dir output)
+	to_absolute_path(${abs_path} abs_path)
+	to_absolute_path(${base_dir} base_dir)
+	file(RELATIVE_PATH _rel_path ${base_dir} ${abs_path})
+	set(${output} ${_rel_path} PARENT_SCOPE)
 endfunction()
 
 # ------------------------------------------------------------------------------

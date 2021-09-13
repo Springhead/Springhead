@@ -12,7 +12,7 @@ set(EMPTY)
 #	    PH	    Minimum library version including Physics library.
 #  NOTE:
 #	The same effect will be achieved by supplying follwing option
-#	to cmake.
+#	to cmake (Overides the definition here).
 #	    > cmake -D TARGET_TYPE=ALL -B build -A x64 -G ...
 #	    > cmake -D TARGET_TYPE=PH  -B build -A x64 -G ...
 #

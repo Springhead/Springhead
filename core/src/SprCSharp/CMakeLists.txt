@@ -89,7 +89,7 @@ set(LINK_FLAGS		${LINK_FLAGS_ADD} ${LINK_FLAGS})
 #
 set(PYTHON "${TOPDIR}/buildtool/win32/python.exe")
 if(NOT EXISTS ${PYTHON})
-    set(PYTON "${TOPDIR}/../DAilyBuildTestTools/Python/pyton.exe")
+    set(PYTON "${TOPDIR}/../DailyBuildTestTools/Python/pyton.exe")
     if(NOT EXISTS ${PYTHON})
 	set(PYTHON python)	# default python
     endif()
@@ -232,44 +232,8 @@ add_dependencies(TargetManager NameManager)
 add_dependencies(Install SprExport SprImport SprCSharp)
 
 add_subdirectory(SprCsSample SprCsSample)
-#add_dependencies(SprCsSample Install)
+add_dependencies(SprCsSample Install)
 add_dependencies(SprCsSample SprExport SprImport SprCSharp Install)
-
-# ------------------------------------------------------------------------------
-#  Set test environment.
-#
-#  Make template file.
-##if("${ARCHITECTURE}" STREQUAL "x64")
-##    set(_plat win64)
-##else()
-##    set(_plat win32)
-##endif()
-##set(_bin_path ${SPR_TOP_DIR}/generated/bin/${_plat})
-##file(TO_NATIVE_PATH ${_bin_path} _bin_path)
-##set(_template_in UserTemplate.vcxproj.user.template)
-##set(_template_out UserTemplate.vcxproj.user)
-##file(READ ${_template_in} _buff)
-##string(REPLACE "@VS_VERSION@" ${VS_VERSION} _buff ${_buff})
-##string(REPLACE "@BIN_PATH@" "${_bin_path}\;" _buff ${_buff})
-##file(WRITE ${_template_out} ${_buff})
-##message("** debugger environment: add path \"${_bin_path}\"")
-##set_target_properties(${Target} PROPERTIES
-##    VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-##    VS_DEBUGGER_COMMAND_ARGUMENTS ${TOPDIR}
-##)
-##message("** debugger environment: working directory \"${_bin_path}\"")
-
-#  Configure the template file
-##SET(USER_FILE ${Target}.vcxproj.user)
-##SET(OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/${USER_FILE})
-##CONFIGURE_FILE(${_template_out} ${USER_FILE} @ONLY)
-
-#  Set working directory to VS debugger.
-##foreach(_prop DEBUGGER_WORKING_DIRECTORY DEBUGGER_COMMAND_ARGUMENTS)
-##    if(DEFINED ${_prop})
-##	set_target_properties(${Target} PROPERTIES VS_${_prop} ${CMAKE_CURRENT_SOURCE_DIR})
-##    endif()
-##endforeach()
 
 # ------------------------------------------------------------------------------
 #  Clean up.
