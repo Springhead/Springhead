@@ -22,19 +22,19 @@
 	  \item	多くの場合に、生成された行に対応するソース行番号が含まれている。
 
 	  \item	\tt{"//+"}で始まる番号はノード番号であるが、
-		\tt{get_node_info()}が呼び出される度に割り当てられるので
+		\tt{get\_node\_info()}が呼び出される度に割り当てられるので
 		ノードの識別には役に立たない(同じノードに複数の番号が割り当てられる)。
 		\begin{description}
 		  \item	[※]
-			ソース中のマクロ\tt{BREAK_NODE_NO}に上記のノード番号を設定し、
-			関数\FUNC{debug_break_at()}にブレークポイントを設定すれば、
-			その行が生成される(\FUNC{get_node_info()}が呼ばれる)タイミング
+			ソース中のマクロ\tt{BREAK\_NODE\_NO}に上記のノード番号を設定し、
+			関数\FUNC{debug\_break\_at()}にブレークポイントを設定すれば、
+			その行が生成される(\FUNC{get\_node\_info()}が呼ばれる)タイミング
 			で停止させることができる。
 		\end{description}
 
 	  \item	\CPP 側で\FUNC{::SysAllocStringLen()}により割り当てたメモリを解放する
 		コードは\\
-		\hspace{20pt}\verb|#ifdef FREE_UNMANAGED_MEMORY| ～ \verb|#endif|\\
+		\hspace{20pt}\verb|#ifdef FREE\_UNMANAGED\_MEMORY| ～ \verb|#endif|\\
 		で囲まれている。現在のままで特にメモリ関連の不都合が起きないのであれば、
 		適当なタイミングでこれを外した方がよいと思われる。
 	\end{itemize}
@@ -52,10 +52,10 @@
         が生成される。
 
   \item	\FILE{cp.bat}を実行すると、これを\FILE{Springhead2/bin/swig/}にコピーする。
-        このとき、ファイル名を\FILE{swig_sprcs.exe}とリネームする。
+        このとき、ファイル名を\FILE{swig\_sprcs.exe}とリネームする。
 	\begin{itemize}
 	  \item	\FILE{cp.bat}の引数については\tt{cp.bat -h}を実行のこと。
-	  \item	リネームする名前(\FILE{swig_sprcs.exe})は\FILE{cp.bat}に
+	  \item	リネームする名前(\FILE{swig\_sprcs.exe})は\FILE{cp.bat}に
 		ハードコードされている。
 	\end{itemize}
 
@@ -75,8 +75,8 @@
 	    \tt{"FWApp::Timers"} & \tt{"std::vector<(UTRef<(UTTimerIf)>)>"}\\
 	    \multicolumn{2}{l}{\tt{"PHEngines::base::iterator"}}\\
 		& \tt{"std::vector<(UTRef<(PHEngine)>)>::iterator"}\\
-	    \multicolumn{2}{l}{\tt{"PHEngines::base::const_iterator"}}\\
-		& \tt{"std::vector<(UTRef<(PHEngine)>)>::const_iterator"}\\
+	    \multicolumn{2}{l}{\tt{"PHEngines::base::const\_iterator"}}\\
+		& \tt{"std::vector<(UTRef<(PHEngine)>)>::const\_iterator"}\\
 	\end{tabular}}
 
   \item	templateクラス\\
@@ -85,22 +85,22 @@
 
   \item	識別子名の置き換え処理\\
 	\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l@{\hspace{20pt}}l}
-	    \tt{"checked"} & \tt{"checked_"} & \small{\CS のリザーブドワード}\\
+	    \tt{"checked"} & \tt{"checked\_"} & \small{\CS のリザーブドワード}\\
 	\end{tabular}
 	\medskip
 
   \item	スコープの置き換え\\
 	\medskip
 	\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l}
-	    \tt{"SprCOLLADA::physics_material"} & \tt{"physics_material"}\\
-	    \tt{"SprCOLLADA::physics_materialCommon"} & \tt{"physics_materialCommon"}\\
-	    \tt{"gimite::ip_address"} & \tt{"ip_address"}\\
-	    \tt{"gimite::socket_address"} & \tt{"socket_address"}\\
-	    \tt{"gimite::socket_streambuf"} & \tt{"socket_streambuf"}\\
-	    \tt{"gimite::socket_stream"} & \tt{"socket_stream"}\\
-	    \tt{"gimite::bound_socket"} & \tt{"bound_socket"}\\
-	    \tt{"gimite::server_stream_socket"} & \tt{"server_stream_socket"}\\
-	    \tt{"gimite::diagram_socket"} & \tt{"diagram_socket"}\\
+	    \tt{"SprCOLLADA::physics\_material"} & \tt{"physics\_material"}\\
+	    \tt{"SprCOLLADA::physics\_materialCommon"} & \tt{"physics\_materialCommon"}\\
+	    \tt{"gimite::ip\_address"} & \tt{"ip\_address"}\\
+	    \tt{"gimite::socket\_address"} & \tt{"socket\_address"}\\
+	    \tt{"gimite::socket\_streambuf"} & \tt{"socket\_streambuf"}\\
+	    \tt{"gimite::socket\_stream"} & \tt{"socket\_stream"}\\
+	    \tt{"gimite::bound\_socket"} & \tt{"bound\_socket"}\\
+	    \tt{"gimite::server\_stream\_socket"} & \tt{"server\_stream\_socket"}\\
+	    \tt{"gimite::diagram\_socket"} & \tt{"diagram\_socket"}\\
 	\end{tabular}
 	\medskip
 
@@ -129,9 +129,9 @@
 \noindent
 \bf{出力ファイル}
 \begin{enumerate}
-  \item	\FILE{cs_object.cs}, \FILE{wrappers.cs}\\
+  \item	\FILE{cs\_object.cs}, \FILE{wrappers.cs}\\
 	wrapperクラス(\FILE{wrappers.cs})は
-	\tt{CsObject}クラス(\FILE{cs_object.cs})を継承する。
+	\tt{CsObject}クラス(\FILE{cs\_object.cs})を継承する。
 
   \item	\FILE{CSxxxx.wrapper.cs}\\
 	\tt{xxxx} (Collision, Graphics, HumanInterface, Physics)の各々について、
@@ -139,8 +139,8 @@
 
 	\tt{wrapper}クラスの命名規則は、
 	\begin{narrow}
-		\tt{vectorwrapper_<\it{CLASS}>_<\it{MEMBER}>}\\
-		\tt{arraywrapper_<\it{CLASS}>_<\it{MEMBER}>}
+		\tt{vectorwrapper\_<\it{CLASS}>\_<\it{MEMBER}>}\\
+		\tt{arraywrapper\_<\it{CLASS}>\_<\it{MEMBER}>}
 	\end{narrow}
 	ここで <\it{CLASS}> はこのメンバが属するクラス名、
 	<\it{MEMEBER}> はメンバ名である( ラス名を含めているのは、
