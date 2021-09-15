@@ -1,7 +1,7 @@
 # CMakeLists.txt for SprCSharp
 
 cmake_minimum_required(VERSION 3.1)
-set(SPRCSHARP_PROJECT_VERSION 1.0.0)
+set(SPRCSHARP_PROJECT_VERSION 1.0.1)	# Change default target to 'Install'.
 
 # ------------------------------------------------------------------------------
 #  Definition of project.
@@ -209,7 +209,7 @@ set(DummySrcFile ${DUMMY_OUT_DIR}/_cmake_dummy.cpp) # ダミーソース
 file(TOUCH ${DummySrcFile})
 set(SRCS ${DummySrcFile})
 add_library(${Target} ${LIBTYPE} ${SRCS})	# 仮のライブラリの生成
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT SprCsSample)
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT Install)
 #
 #  Following variable need to be set something.
 set(CMAKE_EXE_LINKER_FLAGS_TRACE /Dummy)
@@ -223,16 +223,15 @@ add_subdirectory(SprImport SprImport)
 add_subdirectory(SprCSharp SprCSharp)
 add_subdirectory(Install Install)
 
-add_dependencies(${Target} SprCSharp)
+add_dependencies(Install ${Target} SprExport SprImport SprCSharp)
+add_dependencies(${Target} SprCSharp SprExport SprImport)
 add_dependencies(SprCSharp SprExport SprImport)
 add_dependencies(SprExport RunSwig_CSharp)
 add_dependencies(SprImport RunSwig_CSharp)
 add_dependencies(RunSwig_CSharp TargetManager ${SPR_PROJS})
 add_dependencies(TargetManager NameManager)
-add_dependencies(Install SprExport SprImport SprCSharp)
 
 add_subdirectory(SprCsSample SprCsSample)
-add_dependencies(SprCsSample Install)
 add_dependencies(SprCsSample SprExport SprImport SprCSharp Install)
 
 # ------------------------------------------------------------------------------
