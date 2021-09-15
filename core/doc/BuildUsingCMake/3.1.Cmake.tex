@@ -1,5 +1,5 @@
 % 3.1.Cmake.tex
-%	Last update: 2021/06/17 F.Kanehori
+%	Last update: 2021/09/15 F.Kanehori
 %\newpage
 \subsection{CMake}
 \label{subsec:CMake}
@@ -14,7 +14,7 @@ CMakeにはConfigureとGenerateの2段階があります。
 \CmndLine{%
 	> chdir .../Springhead\\
 	> mkdir build\\
-	> cmake -B \it{build} [\it{generator}]
+	> cmake -B \it{build} [\it{generator}] [\it{libtype}]
 }{chap-3-1-cmake-cui.eps}{cmake cui}
 
 \medskip
@@ -36,6 +36,23 @@ CMakeにはConfigureとGenerateの2段階があります。
 	\end{tabular}\\
 	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
 \end{narrow}
+
+\Vskip{-.2\baselineskip}
+\it{libtype}は生成するライブラリのタイプを指定するパラメータで、
+次の何れかを指定します。
+
+\begin{narrow}[s]
+	\Vskip{-.2\baselineskip}\thinrule{\linewidth}\\
+	\begin{tabular}{@{\hspace{15pt}}l@{\hspace{10pt}}l}
+	    Windows:	& \tt{-D STATIC} (\tt{SHREAD}は指定できません) \\
+	    unix:	& \tt{-D STATIC}または \tt{-D SHARED} \\
+	\end{tabular}\\
+	\Vskip{-.5\baselineskip}\thinrule{\linewidth}\\
+\end{narrow}
+
+\Vskip{-.5\baselineskip}
+通常ライブラリタイプはファイル\Path{\CMakeSettings{}}で指定しますが、
+パラメータ\it{libtype}の指定はそれより優先します。
 
 \bigskip
 cmake--guiを利用する場合は、
