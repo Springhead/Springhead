@@ -453,14 +453,14 @@ void HISpidarGDesc::Init(const char* type) {
 				rot * Vec3f(-PX,  PY, -PZ),
 			},
 			{
-				rot* Vec3f(0, -GY, -GZ),
-				rot* Vec3f(0, -GY, -GZ),
-				rot* Vec3f(GX,  0,  GZ),
-				rot* Vec3f(-GX,  0,  GZ),
-				rot* Vec3f(0,  GY, -GZ),
-				rot* Vec3f(0,  GY, -GZ),
-				rot* Vec3f(GX,  0,  GZ),
-				rot* Vec3f(-GX,  0,  GZ),
+				rot* Vec3f(  0, -GY, 0),
+				rot* Vec3f(  0, -GY, 0),
+				rot* Vec3f( GX,   0, 0),
+				rot* Vec3f(-GX,   0, 0),
+				rot* Vec3f(  0,  GY, 0),
+				rot* Vec3f(  0,  GY, 0),
+				rot* Vec3f( GX,   0, 0),
+				rot* Vec3f(-GX,   0, 0),
 			}
 		};
 		Init(8, motorPos[0], motorPos[1], 0.08f, (float)(0.03485 / 1000.0), 0.2f, 20.0f);
