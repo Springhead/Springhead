@@ -12,6 +12,7 @@
 #	Ver 1.2  2019/09/25 F.Kanehori	Add: CMAKE related ones.
 #	Ver 1.3  2020/08/20 F.Kanehori	Add: LIB_TYPE.
 #	Ver 1.4  2020/10/12 F.Kanehori	Add: CMAKE_OPTIONS.
+#	Ver 1.5  2021/09/01 F.Kanehori	Add: CMAKE_LOG, EMB_BUILD_*.
 # ======================================================================
 from enum import Enum
 
@@ -26,8 +27,11 @@ class CFK():		 #  Control File Keywords.
 	MAKE_TARGET	 = 'MakeTarget'
 	CPP_MACRO	 = 'CppMacro'
 	LIB_TYPE	 = 'LibType'
+	CMAKE_LOG	 = 'CMakeLog'
 	BUILD_LOG	 = 'BuildLog'
 	BUILD_ERR_LOG	 = 'BuildErrLog'
+	EMB_BUILD_LOG	 = 'EmbPythonLog'
+	EMB_BUILD_ERR_LOG	= 'EmbPythonErrLog'
 	RUN		 = 'Run'
 	OUTPUT_DIR	 = 'OutputDir'
 	BINARY_OUT	 = 'BinaryOut'

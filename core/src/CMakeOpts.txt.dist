@@ -19,6 +19,7 @@
 #    ${ARCHITECTURE} is passed as  "x86" or "x64" accoding to paltform using.
 #
 # ==============================================================================
+set(SPRINGHEAD_SMAKEOPTS_VERSION 1.1.0)		# バージョン管理開始.
 
 # ------------------------------------------------------------------------------
 #  for both Windows and unix

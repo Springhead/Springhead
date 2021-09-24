@@ -10,7 +10,6 @@ SolutionAlias	Springhead
 Build		True
 UseClosedSrc	False
 #CppMacro	DAILYBUILD
-#LibType	STATIC
 #BuildLog	# Build log file path
 #BuildErrLog	# Build error log file path
 
@@ -34,14 +33,22 @@ CMakeTopDir	$(SprTop)
 CMakeOutputDir	$(CMakeBuildDir)/$CONFIGURATION
 
 [Windows]
+LibType		STATIC
+CMakeLog	$(SprTest)/log/CMake.log
 BuildLog	$(SprTest)/log/StubBuild.log
 BuildErrLog	$(SprTest)/log/StubBuildError.log
+EmbPythonLog	$(SprTest)/log/EmbPythonBuild.log
+EmbPythonErrLog	$(SprTest)/log/EmbPythonBuildError.log
 
 [unix]
 SolutionAlias	Makefile
 MakeTarget	install
+LibType		SHARED
+CMakeLog	$(SprTest)/log/cmake.log
 BuildLog	$(SprTest)/log/springhead.lib.log
 BuildErrLog	$(SprTest)/log/springhead.lib.error.log
+EmbPythonLog	$(SprTest)/log/embpython.lib.log
+EmbPythonErrLog	$(SprTest)/log/embpython.lib.error.log
 #OutputDir	.
 UseCMake	True
 CMakeOutputDir	$(CMakeBuildDir)

@@ -1,0 +1,123 @@
+% 2.ByCMake.tex
+%	Last update: 2021/09/13 F.Kanehori
+\newpage
+\section{CMakeを使用する場合}
+\label{sec:bycmake}
+\parindent=0pt
+
+配布されているソリューションファイルの替わりに、
+CMakeを利用してソリューションファイルを作成することもできます。
+
+\medskip
+配布されているソリューションファイルには、
+DLL構成別に全体構成用(\tt{SprCSharp\it{nn}.sln})と
+Physicsを含む最小構成用(\tt{SprCSharp\it{nn}PH.sln})との2種類があります。
+
+一方CMakeで使用する\tt{CMakeLists.txt}には構成による区別はなく、
+構成の違いは
+%\Vskip{-.5\baselineskip}
+\begin{enumerate}
+  \item	設定ファイル\tt{CMakeSettings.txt}で指定
+  \item	\tt{cmake}コマンドの引数で指定
+\end{enumerate}
+%\Vskip{-.5\baselineskip}
+の何れか方法で指定します。
+
+%%
+%%
+\medskip
+\subsection{設定ファイルで指定する場合}
+\label{subsec:UseSettingFile}
+
+全体構成のDLLを作成する場合は特に設定は必要ありません。
+\tt{SprCSharp}ディレクトリでcmakeを実行してください。
+
+\CmndLine{%
+	> chdir <topdir>/core/src/SprCSharp\\
+	> mkdir build\\
+	> cmake -B \it{build} [\it{generator}]\\
+}
+
+\medskip
+\it{generatorの}詳細は、コマンドプロンプトで\tt{cmake --help}とすると確認できます。
+\it{generator}を省略した場合には
+インストールされているVisual Studioの最新バージョンがが選択されるようです。
+ただし、マシンアーキテクチャは自動的には判定されません。
+64ビットマシンの場合には \tt{-A x64}を指定してください。
+これを忘れるとVisual Studioのプラットフォームが\tt{x64}となりません。
+
+\bigskip
+全体構成以外のDLLを作成する場合には、設定ファイルの準備が必要です。
+配布されているファイル\FILE{CMakeSettings.txt.dist}を
+\FILE{CMakeSettings.txt}という名前でコピーしてください。
+
+\CmndLine{%
+	> copy CMakeSettings.txt.dist CMakeSettings.txt
+}
+
+次にコピーしたファイルを次のように編集します。
+
+まず、ファイルの先頭付近の``Target configurration.''セクションを
+\CmndLine{%
+    set(TARGET\_TYPE		ALL)\\
+    \#set(TARGET\_TYPE		PH)\\
+    \hspace{40pt}↓\\
+    \#set(TARGET\_TYPE		ALL)\\
+    set(TARGET\_TYPE		PH)
+}
+と変更します。
+ここでは構成の名前を\tt{PH}としていますが(現在では\tt{PH}以外の構成は
+定義されていません)、新しい構成を定義したときにはその名前を指定します。
+
+\medskip
+さらに、必要ならばファイルの末尾付近の``Visual Studio Version.''セクションにある
+\tt{VS\_VERSION}を適切な値に書き換えます。
+なお、Springhead Libraryのビルド時にsetupを実行している場合には、
+セットアップ情報を元に適切な値が自動的に設定されますので書き換えは不要です。
+\CmndLine{%
+    set(VS\_VERSION "16.0")\\
+    \hspace{40pt}↓\\
+    set(VS\_VERSION "…")
+}
+
+%%
+%%
+\bigskip
+\subsection{cmakeのコマンド引数で設定する場合}
+\label{subsec:UseSettingFile}
+
+cmakeコマンドの引数\tt{TARGET_TYPE}で直接DLL構成を指定することもできます。
+
+\begin{narrow}
+	\Vskip{.6\baselineskip}
+	\begin{tabular}{l@{\hspace{20pt}}l} \hline
+		\multicolumn{1}{c}{コマンド引数}
+					& \multicolumn{1}{c}{DLL構成}	\\ \hline
+		{\small (この引数を省略したとき)}	& 全体構成DLL	\\
+		\tt{-D TARGET\_TYPE=ALL}		& 全体構成DLL	\\
+		\tt{-D TARGET\_TYPE=PH}	& Physicsを含む最小構成DLL	\\ \hline
+	\end{tabular}
+	\Vskip{.6\baselineskip}
+\end{narrow}
+
+\Vskip{-.5\baselineskip}
+\CmndLine{%
+	(例)\\
+	> cmake -B \it{build} -D TARGET\_TYPE=PH \it{generator}
+}
+
+\medskip
+\tt{PH}以外の新たな構成を作成した場合は、
+\tt{TARGET\_TYPE}の右辺に新しい構成に応じたタイプ名を設定します。
+なお、コマンド引数での指定は設置ファイルでの指定より優先します。
+
+\medskip
+次に\tt{-B}オプションで指定したディレクトリへ移動して
+\Path{SprCSharpMain.sln}をVisual Studioで開き、
+ターゲット``Install''をビルドします。
+
+\medskip
+DLLファイルが作成される場所およびサンプルプログラムについては
+\ref{sec:bydistfile}の場合と同様です。
+
+% end: 2.ByCMake.tex

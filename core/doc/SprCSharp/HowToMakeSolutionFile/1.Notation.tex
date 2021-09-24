@@ -1,10 +1,10 @@
 % Notation.tex
-%	Last update: 2017/02/23 F.Kanehori
+%	Last update: 2021/08/25 F.Kanehori
 \newpage
 \section{読み替えルール}
 \label{Notation}
 
-この文書では、``Visual Studio 2015''を示すために``<14.0>''という記法を、
+この文書では、``Visual Studio 2019''を示すために``<16.0>''という記法を、
 ``Physicsを含む最小構成版''を示すために``<Physics>'', ``<PH>''など
 という記法を用いる。
 他の構成を作成する場合またはVisual Studioの別の版を使用する場合には、
@@ -45,14 +45,15 @@
 	\end{tabular}
 	\\\hline
 
-    <14.0>
+    <16.0>
       & 使用するVisual Studioのバージョンに読み替える。
 	Visual Studioのマクロ \$(VisualStudioVersion) の値を使用する。
 	\hfil
 	\vspace{.5ZH}
 	\begin{tabular}{p{4mm}lcl}
-	    (例) & VS 2013 & \ARROW & 12.0 \\
-		 & VS 2015 & \ARROW & 14.0
+	    (例) & VS 2015 & \ARROW & 14.0 \\
+		 & VS 2017 & \ARROW & 15.0 \\
+		 & VS 2019 & \ARROW & 16.0
 	\end{tabular}
 	\\\hline
 
@@ -67,10 +68,11 @@
 	    Creature		& Foundation, Framework, Physics \\
 	    FileIO		& Foundation \\
 	    Foundation		& Base \\
-	    Framework		& FileIO, Foundation, Graphics, Physics \\
+	    Framework		& FileIO, Foundation, Graphics, \\
+				& HumanInterface, Physics \\
 	    Graphics		& Foundation \\
 	    HumanInterface	& Foundation \\
-	    Physics		& Collision, Fouondation \\\hline
+	    Physics		& Collision, Foundation \\\hline
 	\end{tabular}
 \end{longtable}
 \begin{longtable}{p{25mm}p{90mm}}
@@ -103,7 +105,7 @@
 
 	\vspace{.5ZH}
 	\begin{tabular}{p{4mm}lcl}
-	    (例) & <Physics> & \ARROW & HumanInterface
+	    (例) & <Physics> & \ARROW & HumanInterface ... (要調査)
 	\end{tabular}
 	\\\hline
 

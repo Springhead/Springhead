@@ -1,7 +1,9 @@
-# CMakeLists.txt for Springhead
-
+# ******************************************************************************
+#  CMakeLists.txt for Springhead
+#
+# ******************************************************************************
+set(SPRINGHEAD_PROJECT_VERSION 1.1.0)		# バージョン管理開始.
 cmake_minimum_required(VERSION 3.1)
-set(SPRINGHEAD_PROJECT_VERSION 1.1.0)
 
 # ------------------------------------------------------------------------------
 #  Read project name.
@@ -356,6 +358,7 @@ else()
     set(_outf ${_libdir_out}/${LIBNAME}.${_lib_suffix})
     add_custom_command(TARGET ${Target}
 	    POST_BUILD
+	    COMMAND echo cp ${_inf} ${_outf}
 	    COMMAND cp ${_inf} ${_outf}
 	    BYPRODUCTS ${_outf}
 	    COMMENT [[  replacing dummy library to genuine one ]]
@@ -506,7 +509,7 @@ install(EXPORT ${ExportConf}
 	NAMESPACE ${ExportName}::
 	DESTINATION ${ExportName}
 	FILE ${ExportConf}.cmake
-	PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
 # install header files
 file(GLOB HEADERS ${SPR_INC_DIR}/*.h)
@@ -518,8 +521,8 @@ foreach(_proj ${SPR_PROJS})
     install(DIRECTORY ${SPR_INC_DIR}/${_proj}
 	    FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 	    DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-				  GROUP_READ GROUP_WRITE
-				  WORLD_READ WORLD_WRITE
+				  GROUP_READ GROUP_EXECUTE
+				  WORLD_READ WORLD_EXECUTE
 	    DESTINATION ${SPR_HEADERS_INSTALL_DIR}
 	    FILES_MATCHING PATTERN "*.h"
     )
@@ -550,8 +553,9 @@ elseif(unix)
     else()
         install(FILES ${LIBDIR}/${LIBNAME}.${_lib_suffix}
 		DESTINATION ${SPR_LIBRARY_INSTALL_DIR}
-		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-			    OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+			    GROUP_READ GROUP_EXECUTE
+			    WORLD_READ WORLD_EXECUTE
 	)
     endif()
 endif()

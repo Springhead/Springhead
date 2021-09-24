@@ -1,3 +1,4 @@
+@echo off
 setlocal enabledelayedexpansion
 
 set FILENAME=main
@@ -17,7 +18,7 @@ copy %FILENAME%.pdf %FILENAME%_%TIMESTAMP%.pdf
 
 if "%1" equ "-t" (
 	%FILENAME%.pdf
-	del %FILENAME%_%TIMESTAMP%.pdf *.aux *.log *.ilg
+	del *.pdf *.aux *.log *.ilg *.dvi *.toc timestamp.tex
 )
 
 endlocal

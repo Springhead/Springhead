@@ -1,6 +1,6 @@
 # CMakeLists.txt for HumanInterface
 #
-set(HUMANINTERFACE_VERSION 1.1.0)	# 2021/08/23 バージョン管理開始
+set(HUMANINTERFACE_VERSION 1.1.1)	# 2021/09/09 Fix GENERATED attribute.
 
 # ------------------------------------------------------------------------------
 #  Set target name.
@@ -36,10 +36,14 @@ if(EXCLUDE_SRCS)
 endif()
 
 file(STRINGS "RunSwig_gen_files.txt" _tmp_buff)
-set_source_files_properties(_tmp_buff
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    PROPERTIES GENERATED TRUE
-)
+foreach(_file ${_tmp_buff})
+    #message("     mark generated: \"${_file}\"")
+    list(APPEND SRCS ${_file})
+    set_source_files_properties(${_file}
+	DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+ 	PROPERTIES GENERATED TRUE
+    )
+endforeach()
 
 # ------------------------------------------------------------------------------
 #  Definition of library.

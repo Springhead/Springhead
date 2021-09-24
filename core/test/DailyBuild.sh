@@ -9,6 +9,7 @@
 #				--hook オプションより前に指定すること.
 #	    --hook:		クローン後, "DailyBuildHook/hook.sh" が適用
 #				される.
+#	    --hook-only:	--hook を適用後, 処理を終了する.
 #
 #	ARGUMENTS:
 #	    test-repository:	テストを実行するディレクトリ.
@@ -34,7 +35,8 @@
 #	すること.
 #	
 #  VERSION
-#     Ver 1.0   2021/05/10 F.Kanehori	バッチファイルの再構築.
+#     Ver 1.0    2021/05/10 F.Kanehori	バッチファイルの再構築.
+#     Ver 1.1	 2021/09/08 F.Kanehori	Add -S option to DailyBuild.py.
 # =============================================================================
 PROG=`basename $0`
 CWD=`pwd`
@@ -42,6 +44,7 @@ DEBUG=0
 
 CLONE=yes
 HOOK=no
+HOOKONLY="no"
 ARGS[1]="Springhead"			# default test repository
 ARGS[2]="DailyBuildResult/Result"	# default result repository
 OPTS=""		# "-c Release -p x64"
@@ -52,6 +55,7 @@ function usage () {
 	echo "  options:"
 	echo "    --do-not-clone: Do not clone source tree (must be a first option)."
 	echo "    --hook:         Apply hook script (\"DailyBuildHook/hook.sh\")."
+	echo "    --hook-only:    Apply hook script then exit."
 	echo "    -c conf:        Configurations (Debug | Release)."
 	echo "    -p plat:        Platform (x86 | x64)."
 	echo
@@ -74,6 +78,10 @@ for opt in "$@"; do
 		;;
 	'--hook' )
 		HOOK="yes" && shift
+		;;
+	'--hook-only' )
+		HOOK="yes"
+		HOOKONLY="yes" && shift
 		;;
 	'-S' )
 		OPT="-S" && shift
@@ -132,7 +140,7 @@ PYTHON=python
 TOOLS=$PYTHON
 ok="ok"
 for tool in $TOOLS; do
-	which $tool >NUL 2>&1
+	which $tool >/dev/null 2>&1
 	if [ $? -ne 0 ]; then
 		echo "$PROG: we need '$tool'"
 		ok="no"
@@ -166,6 +174,9 @@ if [ "$HOOK" != "no" ]; then
 	echo "$PROG: calling hook \"$HOOKFILE\"."
 	/bin/bash $HOOKFILE $abs_dir
 fi
+if [ "$HOOKONLY" == "yes" ]; then
+	exit 0
+fi
 
 # ----------------------------------------------------------------------
 #  Step 4
@@ -174,7 +185,7 @@ fi
 cd "$TEST_REPOSITORY/core/test"
 echo "$PROG: test directory: \"`pwd`\""
 echo "$PYTHON DailyBuild.py -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY"
-$PYTHON DailyBuild.py -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY
+$PYTHON DailyBuild.py -S -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY
 echo "rc: $?"
 echo "done"
 

@@ -20,21 +20,22 @@
 #  VERSION:
 #     Ver 1.0	 2017/01/16 F.Kanehori	First release version.
 #     Ver 1.1	 2017/01/18 F.Kanehori	Change directory position (-d).
-#     Ver 1.2	 2017/01/27 F.Kanehori	Bug fixed.
+#     Ver 1.2	 2017/01/27 F.Kanehori	Bug fix.
 #     Ver 1.3	 2017/09/07 F.Kanehori	Change to new python library.
 #     Ver 1.4	 2017/11/29 F.Kanehori	Change python library path.
 #     Ver 1.5	 2021/07/15 F.Kanehori	追加: オプション --cmake.
+#     Ver 1.5.1	 2021/09/13 F.Kanehori	Bug fix.
 # ==============================================================================
-version = "1.5"
+version = "1.5.1"
 debug = False
 trace = False
 
 import sys
 import os
+import re
 from optparse import OptionParser
 
 # -----------------------------------------------------------------------------
-# ----------------------------------------------------------------------
 #  このスクリプトは ".../core/src/SprCSharp/NameManager" に置く	
 #
 ScriptFileDir = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1])
@@ -157,6 +158,9 @@ else:
 	else:
 		nmake = 'nmake'			# default nmake
 #
+python = re.sub(r'^"(.*)"$', r'\1', python)	# strip enclosing quotation
+nmake = re.sub(r'^"(.*)"$', r'\1', nmake)
+nmake.replace('""', '"')
 kvf.set('PYTHON', python)
 kvf.set('NMAKE', nmake)
 

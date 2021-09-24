@@ -10,7 +10,6 @@ SolutionAlias	** DO NOT INHERIT **
 Build		True
 UseClosedSrc	False
 #CppMacro	DAILYBUILD
-#LibType	STATIC
 #BuildLog	# Build log file path
 #BuildErrLog	# Build error log file path
 
@@ -34,12 +33,16 @@ Expected	0
 CMakeOutputDir	$(CMakeBuildDir)/$CONFIGURATION
 
 [Windows]
+LibType		STATIC
+CMakeLog	$(SprTest)/log/CMake.log
 BuildLog	$(SprTest)/log/SamplesBuild.log
 BuildErrLog	$(SprTest)/log/SamplesBuildError.log
 
 [unix]
 SolutionAlias	Makefile
 Build		False
+LibType		SHARED
+CMakeLog	$(SprTest)/log/cmake.log
 BuildLog	$(SprTest)/log/samples.build.log
 BuildErrLog	$(SprTest)/log/samples.build.error.log
 #OutputDir	.

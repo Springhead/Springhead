@@ -1,10 +1,10 @@
 % Settings.tex
-%	Last update: 2017/02/23 F.Kanehori
+%	Last update: 2021/08/25 F.Kanehori
 \newpage
 \section{設定}
 \label{sec:Settings}
 
-この章では、混乱が起きないと思われる箇所については<14.0><PH>の記述を省略する。
+この章では、混乱が起きないと思われる箇所については<16.0><PH>の記述を省略する。
 適宜補って解釈すること。
 
 %-------------------------------------------------------------------------------
@@ -40,25 +40,31 @@ Menu: [Project]--[Properties]でプロパティページを開く
 	    FileIO		& Foundation, RunSwig \\
 	    Foundation		& Base, RunSwig \\
 	    Framework		& \ParBox{\CW}{%
-				  FileIO, Foundation, Graphics, Physics,
+				  FileIO, Foundation, Graphics, Physics, \\
 				  RunSwig} \\
 	    Graphics		& Foundation, RunSwig \\
 	    HumanInterface	& Foundation, RunSwig \\
-	    Install		& SprCSharp, SprExport, SprImport \\
+	    Install		& \ParBox{\CW}{%
+				  SprCSharp<16.0>, SprExport<16.0>, \\
+				  SprImport<16.0>} \\
 	    NameManager		& なし \\
-	    Physics		& Collision, Fouondation, RunSwig \\
+	    Physics		& Collision, Foundation, RunSwig \\
 	    RunSwig		& なし \\
-	    RunSwig_CSharp	& \ParBox{\CW}{%
+	    RunSwig\_CSharp<16.0> & \ParBox{\CW}{%
 				  Base, Collision, Creature, FileIO, Foundation,
 				  Framework, Graphics, HumanInterface,
 				  NameManager, Physics, TargetManager} \\
-	    SprCSharp		& RunSwig_CSharp, SprImport \\
-	    SprCsSample		& SprCSharp, SprExport, SprImport \\
-	    SprExport		& \ParBox{\CW}{%
+	    SprCSharp<16.0>	& \ParBox{\CW}{%
+				  RunSwig\_CSharp<16.0>, SprExport<16.0>, \\
+				  SprImport<16.0>} \\
+	    SprCsSample<16.0>	& \ParBox{\CW}{%
+				  SprCSharp<16.0>, SprExport<16.0>, \\
+				  SprImport<16.0>} \\
+	    SprExport<16.0>	& \ParBox{\CW}{%
 				  Base, Collision, Creature, FioeIO, Foundation,
 				  Framework, Graphics, HumanINterface, Physics,
-				  RunSwig_CSharp} \\
-	    SprImport		& RunSwig_CSharp \\
+				  RunSwig\_CSharp<16.0>} \\
+	    SprImport		& RunSwig\_CSharp<16.0> \\
 	    TargetManager	& なし \\\hline
         \end{longtable}
     \end{narrow}
@@ -69,7 +75,7 @@ Menu: [Project]--[Properties]でプロパティページを開く
     \begin{narrow}[\WID]
 	[Configuration]--[Configuration Manager...]
 	\begin{narrow}[\WID]
-	    SprCSharp, SprCsSample, SprImportのすべてについて
+	    SprCSharp<16.0>, SprCsSample<16.0>, SprImport<16.0>のすべてについて
 	    \begin{enumerate}
 	      \item Platformに\SQuote{x86}と\SQuote{x64}を追加する
 		    \begin{narrow}[\WID]
@@ -114,10 +120,11 @@ Menu: [Project]--[Properties]でプロパティページを開く
 				Base, Collision, Creature, FileIO, Foundation,
 				Framework, Graphics, HumanInterface, Physics,
 				RunSwig} \\
-			\CS Projs &=& CpsCSharp, SprCsSample, SprImport \\
+			\CS Projs &=& CpsCSharp<16.0>, SprCsSample<16.0>,
+				      SprImport<16.0> \\
 			Others  &=& \ParBox{\CW}{%
-				Install, NameManager, RunSwig_CSharp,
-				SprExport, TargetManager}
+				Install, NameManager, RunSwig\_CSharp<16.0>,
+				SprExport<16.0>, TargetManager}
 		    \end{tabular}\end{narrow}
 		    \medskip
 		    とする。すなわち、\\
@@ -164,8 +171,8 @@ Menu: [Project]--[Properties]でプロパティページを開く
 	    Graphics	& Foundation \\
 	    HumanInterface	& Foundation \\
 	    Physics	& Collision, Foundation \\
-	    SprCSharp	& SprImport \\
-	    SprCsSample	& SprCSharp, SprImport \\
+	    SprCSharp	& SprImport<16.0> \\
+	    SprCsSample	& SprCSharp<16.0>, SprImport<16.0> \\
 	    SprExport	& \ParBox{\CW}{%
 			  Base, Collision, Creature, FileIO, Foundation,
 			  Framework, Graphics, HumanInterface, Physics} \\\hline
@@ -235,12 +242,12 @@ Solution Explorerで[NameManager]--[Properties]を選択
 }
 
 %-------------------------------------------------------------------------------
-\subsubsection{RunSwig_CSharp}
+\subsubsection{RunSwig\_CSharp}
 \label{subsub:RunSwigCSharp}
 
 \medskip
 \noindent
-Solution Explorerで[RunSwig_CSharp]--[Properties]を選択
+Solution Explorerで[RunSwig\_CSharp]--[Properties]を選択
 
 \medskip
 \small{%
@@ -323,10 +330,10 @@ Solution Explorerで[SprCSharp]--[Properties]を選択
     \begin{narrow}[\WID]
 	(x86, x64)と(Debug, Release)との各組合せについて、
 	\begin{narrow}[\WID]
-	    \verb|..\<14.0>\bin\x86\Debug\|   \\
-	    \verb|..\<14.0>\bin\x86\Release\| \\
-	    \verb|..\<14.0>\bin\x64\Debug\|   \\
-	    \verb|..\<14.0>\bin\x64\Release\|
+	    \verb|..\<16.0>\bin\x86\Debug\|   \\
+	    \verb|..\<16.0>\bin\x86\Release\| \\
+	    \verb|..\<16.0>\bin\x64\Debug\|   \\
+	    \verb|..\<16.0>\bin\x64\Release\|
 	\end{narrow}
 	の中から適切なものを設定
     \end{narrow}

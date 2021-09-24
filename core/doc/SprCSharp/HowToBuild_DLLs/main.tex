@@ -1,7 +1,11 @@
+% main.tex
+%	Last update: 2021/08/25 F.Kanehori
+%
 \documentclass[a4j,12pt]{jsarticle}
 \usepackage{dirtree}
 \usepackage{setspace}
 \usepackage{longtable}
+\usepackage{arydshln}
 
 \setlength{\textheight}{\paperheight}   % 紙面縦幅を本文領域にする（BOTTOM=-TOP）
 \setlength{\topmargin}{4.6truemm}       % 上の余白を30mm（=1inch+4.6mm）に
@@ -15,32 +19,28 @@
 \addtolength{\textwidth}{-50truemm}     % 右の余白も25mm（RIGHT=-LEFT）
 
 \begin{document}
-\include{macro}
+\input{macro}
 
 \begin{center}
-  \Large{SprCSharpの新しい構成の作り方} \\
+  \Large{\CS 用plugin (DLL)のビルド方法} \\
   {\normalsize\input{LastUpdate}} \\
 \end{center}
 
-SprCSharpの新しい構成の作成方法について、
-「Visual Studio 2019を使用した``Physicsを含む最小構成版のSprCSharp''の作成」
-を例として記述する。
+\bigskip
+\noindent
+本ドキュメントでは、
+\CPP で作成されたSpringhead Libraryを\CS から使用するためのplugin (DLL)の
+ビルド方法について記述する。
 
-\medskip
-最初に、他の構成を作成する場合またはVisual Studioの別の版を使用する場合に、
-以下の文書をどのように読み替えたら良いかについて述べる。
-次に、新しいソリューションを作成するにあっての準備作業について述べ、
-その後、新しいソリューションの枠組みの作り方、
-新しいソリューションの設定の方法の順に述べる。
-
-\vfil
+%\vfil
+\vspace{2cm}
+\setcounter{tocdepth}{3}
 \tableofcontents
 %-------------------------------
-\input{1.Notation}
-\input{2.Preparation}
-\input{3.SolutionFramework}
-\input{4.Settings}
-%-------------------------------
-\vspace{5mm}
+\input{1.ByDistFile}
+\input{2.ByCMake}
+% ---------------------------
 
 \end{document}
+
+% end: main.tex

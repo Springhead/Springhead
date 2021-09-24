@@ -24,9 +24,10 @@
 #     Ver 2.0	 2013/01/07 F.Kanehori	全面改訂
 #     Ver 3.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
 #     Ver 4.0    2021/04/08 F.Kanehori	全面見直し.
+#     Ver 4.1    2021/08/30 F.Kanehori	ダミー stub ファイル削除は廃止.
 # ==============================================================================
 from __future__ import print_function
-version = '4.0'
+version = '4.1'
 dry_run = False
 debug = False
 
@@ -138,12 +139,6 @@ for proj,dept in sorted(proj_depts.items(), key=lambda x: x[0]):
 	if debug:
 		print('chdir: %s' % target_dir)
 	os.chdir(target_dir)
-
-	#  空のstubファイルがあれば削除する
-	stubfile = '%sStub.cpp' % proj
-	if os.path.exists(stubfile) and os.path.getsize(stubfile) == 0:
-		print('    removed: %s' % stubfile)
-		os.remove(stubfile)
 
 	#  RunSwig.py を実行する
 	#	".i", ".makefile" を生成 → make (swig) を実行
