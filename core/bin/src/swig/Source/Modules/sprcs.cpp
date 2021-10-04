@@ -2681,7 +2681,18 @@ public:
 			if (mp->is_struct && !(mp->is_array || mp->is_vector || is_enum_node)) {
 				Printf(CS, "\tpublic %sStruct %s;\n", mp->cs_type, mp->cs_name);
 			} else {
-				Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
+                if (mp->is_array || mp->is_vector) {
+                    // vectorwrapper / arraywrapper ではなく List を使う
+                    if (string(mp->cpp_type) == "unsigned int") {
+                        Printf(CS, "\tpublic List<uint> %s;\n", mp->cs_name);
+                    } else if (string(mp->cpp_type) == "size_t") {
+                        Printf(CS, "\tpublic List<uint> %s;\n", mp->cs_name);
+                    } else {
+                        Printf(CS, "\tpublic List<%s> %s;\n", mp->cpp_type, mp->cs_name);
+                    }
+                } else {
+                    Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
+                }
 			}
 			string key(mp->cs_name);
 			name_duplicated_map[key] = 1;

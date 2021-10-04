@@ -1,6 +1,7 @@
 // wrapper.cs
 //
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace SprCs {
@@ -67,6 +68,17 @@ namespace SprCs {
         public float this[int index] {
             get { return (float) SprExport.Spr_vector_get_float(this, index); }
             set { SprExport.Spr_vector_set_float(this, index, value); }
+        }
+
+        public static implicit operator List<float>(vectorwrapper_float m) {
+            List<float> r = new List<float>();
+            // ここで変換する（未実装）
+            return r;
+        }
+        public static implicit operator vectorwrapper_float(List<float> r) {
+            vectorwrapper_float m = new vectorwrapper_float(IntPtr.Zero);
+            // ここで変換する（未実装）
+            return m;
         }
     }
     //  double
