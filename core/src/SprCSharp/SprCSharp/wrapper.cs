@@ -8,7 +8,8 @@ namespace SprCs {
     // wrapper base class
     //
     public class wrapper : CsObject {
-        public wrapper(IntPtr ptr) { _this = ptr; _nelm = 0; }
+        public wrapper(IntPtr ptr) : base(ptr) { _nelm = 0; }
+        public wrapper(IntPtr ptr, bool flag) : base(ptr, flag) { _nelm = 0; }
         protected wrapper() {}
         ~wrapper() {}
         protected uint _nelm;
@@ -104,6 +105,7 @@ namespace SprCs {
     //  float
     public class vectorwrapper_float : wrapper {
         public vectorwrapper_float(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper_float(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public int size() { return (int) SprExport.Spr_vector_size_float(this); }
         public void push_back(float value) { SprExport.Spr_vector_push_back_float(this, value); }
         public void clear() { SprExport.Spr_vector_clear_float(this); }
@@ -119,17 +121,18 @@ namespace SprCs {
             return r;
         }
         public static implicit operator vectorwrapper_float(List<float> r) {
-            GCHandle handle = GCHandle.Alloc(r.ToArray(), GCHandleType.Pinned);
-            vectorwrapper_float m = new vectorwrapper_float(IntPtr.Zero);
+            vectorwrapper_float m = new vectorwrapper_float(SprExport.Spr_vector_new_float(), true);
             // ここで変換する（未実装）
             //for (int i = 0; i < r.Count; i++)
             //    m.push_back(r[i]);
             return m;
         }
+        ~vectorwrapper_float() { if (_flag) { SprExport.Spr_vector_delete_float(_this); _flag = false; } }
     }
     //  double
     public class vectorwrapper_double : wrapper {
-        public vectorwrapper_double(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper_double(IntPtr ptr) : base(ptr) { }
+        public vectorwrapper_double(IntPtr ptr, bool flag) : base(ptr, flag) { }
         public int size() { return (int) SprExport.Spr_vector_size_double(this); }
         public void push_back(double value) { SprExport.Spr_vector_push_back_double(this, value); }
         public void clear() { SprExport.Spr_vector_clear_double(this); }
@@ -145,12 +148,13 @@ namespace SprCs {
             return r;
         }
         public static implicit operator vectorwrapper_double(List<double> r) {
-            vectorwrapper_double m = new vectorwrapper_double(IntPtr.Zero);
+            vectorwrapper_double m = new vectorwrapper_double(SprExport.Spr_vector_new_double(), true);
             // ここで変換する（未実装）
             //for (int i = 0; i < r.Count; i++)
             //    m.push_back(r[i]);
             return m;
         }
+        ~vectorwrapper_double() { if (_flag) { SprExport.Spr_vector_delete_double(_this); _flag = false; } }
     }
     //  string
     public class vectorwrapper_string : wrapper {

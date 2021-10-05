@@ -80,6 +80,13 @@ extern "C" {
         (*vecptr).clear();
     }
     //  float
+    __declspec(dllexport) HANDLE __cdecl Spr_vector_new_float() {
+        return (HANDLE) new vector<float>;
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_delete_float(HANDLE ptr) {
+        vector<float>* vecptr = (vector<float>*)ptr;
+        delete(vecptr);
+    }
     __declspec(dllexport) float __cdecl Spr_vector_get_float(HANDLE ptr, int index) {
         vector<float>* vecptr = (vector<float>*) ptr;
         return (*vecptr)[index];
@@ -101,6 +108,13 @@ extern "C" {
         (*vecptr).clear();
     }
     //  double
+    __declspec(dllexport) HANDLE __cdecl Spr_vector_new_double() {
+        return (HANDLE) new vector<double>;
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_delete_double(HANDLE ptr) {
+        vector<double>* vecptr = (vector<double>*)ptr;
+        delete(vecptr);
+    }
     __declspec(dllexport) double __cdecl Spr_vector_get_double(HANDLE ptr, int index) {
         vector<double>* vecptr = (vector<double>*) ptr;
         return (*vecptr)[index];
