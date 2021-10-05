@@ -36,6 +36,20 @@ namespace SprCs {
             get { return (int) SprExport.Spr_vector_get_int(this, index); }
             set { SprExport.Spr_vector_set_int(this, index, value); }
         }
+        public static implicit operator List<int>(vectorwrapper_int m) {
+            List<int> r = new List<int>();
+            // ここで変換する（未実装）
+            //for (int i = 0; i < m.size(); i++)
+            //    r.Add(m[i]);
+            return r;
+        }
+        public static implicit operator vectorwrapper_int(List<int> r) {
+            vectorwrapper_int m = new vectorwrapper_int(IntPtr.Zero);
+            // ここで変換する（未実装）
+            //for (int i = 0; i < r.Count; i++)
+            //    m.push_back(r[i]);
+            return m;
+        }
     }
     //  unsigned int
     public class vectorwrapper_unsigned_int : wrapper {
@@ -46,6 +60,20 @@ namespace SprCs {
         public uint this[int index] {
             get { return (uint) SprExport.Spr_vector_get_unsigned_int(this, index); }
             set { SprExport.Spr_vector_set_unsigned_int(this, index, value); }
+        }
+        public static implicit operator List<uint>(vectorwrapper_unsigned_int m) {
+            List<uint> r = new List<uint>();
+            // ここで変換する（未実装）
+            //for (int i = 0; i < m.size(); i++)
+            //    r.Add(m[i]);
+            return r;
+        }
+        public static implicit operator vectorwrapper_unsigned_int(List<uint> r) {
+            vectorwrapper_unsigned_int m = new vectorwrapper_unsigned_int(IntPtr.Zero);
+            // ここで変換する（未実装）
+            //for (int i = 0; i < r.Count; i++)
+            //    m.push_back(r[i]);
+            return m;
         }
     }
     //  size_t
@@ -58,6 +86,20 @@ namespace SprCs {
             get { return (ulong) SprExport.Spr_vector_get_size_t(this, index); }
             set { SprExport.Spr_vector_set_size_t(this, index, value); }
         }
+        public static implicit operator List<uint>(vectorwrapper_size_t m) {
+            List<uint> r = new List<uint>();
+            // ここで変換する（未実装）
+            //for (int i = 0; i < m.size(); i++)
+            //    r.Add(m[i]);
+            return r;
+        }
+        public static implicit operator vectorwrapper_size_t(List<uint> r) {
+            vectorwrapper_size_t m = new vectorwrapper_size_t(IntPtr.Zero);
+            // ここで変換する（未実装）
+            //for (int i = 0; i < r.Count; i++)
+            //    m.push_back(r[i]);
+            return m;
+        }
     }
     //  float
     public class vectorwrapper_float : wrapper {
@@ -69,15 +111,19 @@ namespace SprCs {
             get { return (float) SprExport.Spr_vector_get_float(this, index); }
             set { SprExport.Spr_vector_set_float(this, index, value); }
         }
-
         public static implicit operator List<float>(vectorwrapper_float m) {
             List<float> r = new List<float>();
             // ここで変換する（未実装）
+            //for (int i = 0; i < m.size(); i++)
+            //    r.Add(m[i]);
             return r;
         }
         public static implicit operator vectorwrapper_float(List<float> r) {
+            GCHandle handle = GCHandle.Alloc(r.ToArray(), GCHandleType.Pinned);
             vectorwrapper_float m = new vectorwrapper_float(IntPtr.Zero);
             // ここで変換する（未実装）
+            //for (int i = 0; i < r.Count; i++)
+            //    m.push_back(r[i]);
             return m;
         }
     }
@@ -90,6 +136,20 @@ namespace SprCs {
         public double this[int index] {
             get { return (double) SprExport.Spr_vector_get_double(this, index); }
             set { SprExport.Spr_vector_set_double(this, index, value); }
+        }
+        public static implicit operator List<double>(vectorwrapper_double m) {
+            List<double> r = new List<double>();
+            // ここで変換する（未実装）
+            //for (int i = 0; i < m.size(); i++)
+            //    r.Add(m[i]);
+            return r;
+        }
+        public static implicit operator vectorwrapper_double(List<double> r) {
+            vectorwrapper_double m = new vectorwrapper_double(IntPtr.Zero);
+            // ここで変換する（未実装）
+            //for (int i = 0; i < r.Count; i++)
+            //    m.push_back(r[i]);
+            return m;
         }
     }
     //  string
@@ -111,6 +171,20 @@ namespace SprCs {
                 Marshal.FreeBSTR(pbstr);
             }
         }
+        public static implicit operator List<string>(vectorwrapper_string m) {
+            List<string> r = new List<string>();
+            // ここで変換する（未実装）
+            //for (int i = 0; i < m.size(); i++)
+            //    r.Add(m[i]);
+            return r;
+        }
+        public static implicit operator vectorwrapper_string(List<string> r) {
+            vectorwrapper_string m = new vectorwrapper_string(IntPtr.Zero);
+            // ここで変換する（未実装）
+            //for (int i = 0; i < r.Count; i++)
+            //    m.push_back(r[i]);
+            return m;
+        }
     }
 
     // array
@@ -122,6 +196,16 @@ namespace SprCs {
             get { return (int) SprExport.Spr_array_get_int(this, index); }
             set { SprExport.Spr_array_set_int(this, index, value); }
         }
+        public static implicit operator List<int>(arraywrapper_int m) {
+            List<int> r = new List<int>();
+            // ここで変換する（未実装）
+            return r;
+        }
+        public static implicit operator arraywrapper_int(List<int> r) {
+            arraywrapper_int m = new arraywrapper_int(IntPtr.Zero);
+            // ここで変換する（未実装）
+            return m;
+        }
     }
     //  float
     public class arraywrapper_float : arraywrapper {
@@ -131,6 +215,16 @@ namespace SprCs {
             get { return (float) SprExport.Spr_array_get_float(this, index); }
             set { SprExport.Spr_array_set_float(this, index, value); }
         }
+        public static implicit operator List<float>(arraywrapper_float m) {
+            List<float> r = new List<float>();
+            // ここで変換する（未実装）
+            return r;
+        }
+        public static implicit operator arraywrapper_float(List<float> r) {
+            arraywrapper_float m = new arraywrapper_float(IntPtr.Zero);
+            // ここで変換する（未実装）
+            return m;
+        }
     }
     //  double
     public class arraywrapper_double : arraywrapper {
@@ -139,6 +233,16 @@ namespace SprCs {
         public double this[int index] {
             get { return (double) SprExport.Spr_array_get_double(this, index); }
             set { SprExport.Spr_array_set_double(this, index, value); }
+        }
+        public static implicit operator List<double>(arraywrapper_double m) {
+            List<double> r = new List<double>();
+            // ここで変換する（未実装）
+            return r;
+        }
+        public static implicit operator arraywrapper_double(List<double> r) {
+            arraywrapper_double m = new arraywrapper_double(IntPtr.Zero);
+            // ここで変換する（未実装）
+            return m;
         }
     }
     //  char*
