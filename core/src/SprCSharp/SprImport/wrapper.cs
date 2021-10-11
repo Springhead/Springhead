@@ -14,6 +14,10 @@ namespace SprCs {
         // std::vector
         //  int
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern IntPtr Spr_vector_new_int();
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern void Spr_vector_delete_int(IntPtr ptr);
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern int Spr_vector_get_int(IntPtr ptr, int index);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_set_int(IntPtr ptr, int index, int value);
@@ -24,6 +28,10 @@ namespace SprCs {
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_clear_int(IntPtr ptr);
         //  unsigned int
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern IntPtr Spr_vector_new_unsigned_int();
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern void Spr_vector_delete_unsigned_int(IntPtr ptr);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern uint Spr_vector_get_unsigned_int(IntPtr ptr, int index);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
@@ -36,6 +44,10 @@ namespace SprCs {
         public static extern void Spr_vector_clear_unsigned_int(IntPtr ptr);
         //  size_t
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern IntPtr Spr_vector_new_size_t();
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern void Spr_vector_delete_size_t(IntPtr ptr);
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern ulong Spr_vector_get_size_t(IntPtr ptr, int index);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_set_size_t(IntPtr ptr, int index, ulong value);
@@ -46,9 +58,9 @@ namespace SprCs {
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_clear_size_t(IntPtr ptr);
         //  float
-        [DllImport("SprExport.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern IntPtr Spr_vector_new_float();
-        [DllImport("SprExport.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_delete_float(IntPtr ptr);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern float Spr_vector_get_float(IntPtr ptr, int index);
@@ -61,9 +73,9 @@ namespace SprCs {
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_clear_float(IntPtr ptr);
         //  double
-        [DllImport("SprExport.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern IntPtr Spr_vector_new_double();
-        [DllImport("SprExport.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_delete_double(IntPtr ptr);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern double Spr_vector_get_double(IntPtr ptr, int index);
@@ -77,13 +89,17 @@ namespace SprCs {
         public static extern void Spr_vector_clear_double(IntPtr ptr);
         //  string
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern IntPtr Spr_vector_new_string();
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern void Spr_vector_delete_string(IntPtr ptr);
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern IntPtr Spr_vector_get_string(IntPtr ptr, int index);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_set_string(IntPtr ptr, int index, IntPtr value);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern int Spr_vector_size_string(IntPtr ptr);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
-        public static extern void Spr_vector_push_back_string(IntPtr ptr, string value);
+        public static extern void Spr_vector_push_back_string(IntPtr ptr, IntPtr value);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_vector_clear_string(IntPtr ptr);
 

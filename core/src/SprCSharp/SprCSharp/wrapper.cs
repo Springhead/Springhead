@@ -30,6 +30,10 @@ namespace SprCs {
     //  int
     public class vectorwrapper_int : wrapper {
         public vectorwrapper_int(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper_int(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        ~vectorwrapper_int() {
+		if (_flag) { SprExport.Spr_vector_delete_int(_this); _flag = false;}
+	}
         public int size() { return (int) SprExport.Spr_vector_size_int(this); }
         public void push_back(int value) { SprExport.Spr_vector_push_back_int(this, value); }
         public void clear() { SprExport.Spr_vector_clear_int(this); }
@@ -39,22 +43,26 @@ namespace SprCs {
         }
         public static implicit operator List<int>(vectorwrapper_int m) {
             List<int> r = new List<int>();
-            // ここで変換する（未実装）
-            //for (int i = 0; i < m.size(); i++)
-            //    r.Add(m[i]);
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_int(ptr); i++)
+                r.Add(SprExport.Spr_vector_get_int(ptr, i));
             return r;
         }
         public static implicit operator vectorwrapper_int(List<int> r) {
-            vectorwrapper_int m = new vectorwrapper_int(IntPtr.Zero);
-            // ここで変換する（未実装）
-            //for (int i = 0; i < r.Count; i++)
-            //    m.push_back(r[i]);
+	    IntPtr vec = SprExport.Spr_vector_new_int();
+            vectorwrapper_int m = new vectorwrapper_int(vec, true);
+            for (int i = 0; i < r.Count; i++)
+                SprExport.Spr_vector_push_back_int(m._this, r[i]);
             return m;
         }
     }
     //  unsigned int
     public class vectorwrapper_unsigned_int : wrapper {
         public vectorwrapper_unsigned_int(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper_unsigned_int(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        ~vectorwrapper_unsigned_int() {
+		if (_flag) { SprExport.Spr_vector_delete_unsigned_int(_this); _flag = false;}
+	}
         public int size() { return (int) SprExport.Spr_vector_size_unsigned_int(this); }
         public void push_back(uint value) { SprExport.Spr_vector_push_back_unsigned_int(this, value); }
         public void clear() { SprExport.Spr_vector_clear_unsigned_int(this); }
@@ -64,22 +72,26 @@ namespace SprCs {
         }
         public static implicit operator List<uint>(vectorwrapper_unsigned_int m) {
             List<uint> r = new List<uint>();
-            // ここで変換する（未実装）
-            //for (int i = 0; i < m.size(); i++)
-            //    r.Add(m[i]);
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_unsigned_int(ptr); i++)
+                r.Add(SprExport.Spr_vector_get_unsigned_int(ptr, i));
             return r;
         }
         public static implicit operator vectorwrapper_unsigned_int(List<uint> r) {
-            vectorwrapper_unsigned_int m = new vectorwrapper_unsigned_int(IntPtr.Zero);
-            // ここで変換する（未実装）
-            //for (int i = 0; i < r.Count; i++)
-            //    m.push_back(r[i]);
+	    IntPtr vec = SprExport.Spr_vector_new_unsigned_int();
+            vectorwrapper_unsigned_int m = new vectorwrapper_unsigned_int(vec, true);
+            for (int i = 0; i < r.Count; i++)
+                SprExport.Spr_vector_push_back_unsigned_int(m._this, r[i]);
             return m;
         }
     }
     //  size_t
     public class vectorwrapper_size_t : wrapper {
         public vectorwrapper_size_t(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper_size_t(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        ~vectorwrapper_size_t() {
+		if (_flag) { SprExport.Spr_vector_delete_size_t(_this); _flag = false;}
+	}
         public int size() { return (int) SprExport.Spr_vector_size_size_t(this); }
         public void push_back(ulong value) { SprExport.Spr_vector_push_back_size_t(this, value); }
         public void clear() { SprExport.Spr_vector_clear_size_t(this); }
@@ -87,18 +99,32 @@ namespace SprCs {
             get { return (ulong) SprExport.Spr_vector_get_size_t(this, index); }
             set { SprExport.Spr_vector_set_size_t(this, index, value); }
         }
+        public static implicit operator List<ulong>(vectorwrapper_size_t m) {
+            List<ulong> r = new List<ulong>();
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_size_t(ptr); i++)
+                r.Add(SprExport.Spr_vector_get_size_t(ptr, i));
+            return r;
+        }
+        public static implicit operator vectorwrapper_size_t(List<ulong> r) {
+	    IntPtr vec = SprExport.Spr_vector_new_size_t();
+            vectorwrapper_size_t m = new vectorwrapper_size_t(vec, true);
+            for (int i = 0; i < r.Count; i++)
+                SprExport.Spr_vector_push_back_size_t(m._this, r[i]);
+            return m;
+        }
         public static implicit operator List<uint>(vectorwrapper_size_t m) {
             List<uint> r = new List<uint>();
-            // ここで変換する（未実装）
-            //for (int i = 0; i < m.size(); i++)
-            //    r.Add(m[i]);
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_size_t(ptr); i++)
+                r.Add((uint) SprExport.Spr_vector_get_size_t(ptr, i));
             return r;
         }
         public static implicit operator vectorwrapper_size_t(List<uint> r) {
-            vectorwrapper_size_t m = new vectorwrapper_size_t(IntPtr.Zero);
-            // ここで変換する（未実装）
-            //for (int i = 0; i < r.Count; i++)
-            //    m.push_back(r[i]);
+	    IntPtr vec = SprExport.Spr_vector_new_size_t();
+            vectorwrapper_size_t m = new vectorwrapper_size_t(vec, true);
+            for (int i = 0; i < r.Count; i++)
+                SprExport.Spr_vector_push_back_size_t(m._this, r[i]);
             return m;
         }
     }
@@ -106,6 +132,9 @@ namespace SprCs {
     public class vectorwrapper_float : wrapper {
         public vectorwrapper_float(IntPtr ptr) : base(ptr) {}
         public vectorwrapper_float(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        ~vectorwrapper_float() {
+		if (_flag) { SprExport.Spr_vector_delete_float(_this); _flag = false;}
+	}
         public int size() { return (int) SprExport.Spr_vector_size_float(this); }
         public void push_back(float value) { SprExport.Spr_vector_push_back_float(this, value); }
         public void clear() { SprExport.Spr_vector_clear_float(this); }
@@ -115,24 +144,26 @@ namespace SprCs {
         }
         public static implicit operator List<float>(vectorwrapper_float m) {
             List<float> r = new List<float>();
-            // ここで変換する（未実装）
-            //for (int i = 0; i < m.size(); i++)
-            //    r.Add(m[i]);
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_float(ptr); i++)
+                r.Add(SprExport.Spr_vector_get_float(ptr, i));
             return r;
         }
         public static implicit operator vectorwrapper_float(List<float> r) {
-            vectorwrapper_float m = new vectorwrapper_float(SprExport.Spr_vector_new_float(), true);
-            // ここで変換する（未実装）
-            //for (int i = 0; i < r.Count; i++)
-            //    m.push_back(r[i]);
+	    IntPtr vec = SprExport.Spr_vector_new_float();
+            vectorwrapper_float m = new vectorwrapper_float(vec, true);
+            for (int i = 0; i < r.Count; i++)
+                SprExport.Spr_vector_push_back_float(m._this, r[i]);
             return m;
         }
-        ~vectorwrapper_float() { if (_flag) { SprExport.Spr_vector_delete_float(_this); _flag = false; } }
     }
     //  double
     public class vectorwrapper_double : wrapper {
         public vectorwrapper_double(IntPtr ptr) : base(ptr) { }
         public vectorwrapper_double(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        ~vectorwrapper_double() {
+		if (_flag) { SprExport.Spr_vector_delete_double(_this); _flag = false;}
+	}
         public int size() { return (int) SprExport.Spr_vector_size_double(this); }
         public void push_back(double value) { SprExport.Spr_vector_push_back_double(this, value); }
         public void clear() { SprExport.Spr_vector_clear_double(this); }
@@ -142,25 +173,28 @@ namespace SprCs {
         }
         public static implicit operator List<double>(vectorwrapper_double m) {
             List<double> r = new List<double>();
-            // ここで変換する（未実装）
-            //for (int i = 0; i < m.size(); i++)
-            //    r.Add(m[i]);
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_double(ptr); i++)
+                r.Add(SprExport.Spr_vector_get_double(ptr, i));
             return r;
         }
         public static implicit operator vectorwrapper_double(List<double> r) {
-            vectorwrapper_double m = new vectorwrapper_double(SprExport.Spr_vector_new_double(), true);
-            // ここで変換する（未実装）
-            //for (int i = 0; i < r.Count; i++)
-            //    m.push_back(r[i]);
+	    IntPtr vec = SprExport.Spr_vector_new_double();
+            vectorwrapper_double m = new vectorwrapper_double(vec, true);
+            for (int i = 0; i < r.Count; i++)
+                SprExport.Spr_vector_push_back_double(m._this, r[i]);
             return m;
         }
-        ~vectorwrapper_double() { if (_flag) { SprExport.Spr_vector_delete_double(_this); _flag = false; } }
     }
     //  string
     public class vectorwrapper_string : wrapper {
         public vectorwrapper_string(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper_string(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        ~vectorwrapper_string() {
+		if (_flag) { SprExport.Spr_vector_delete_string(_this); _flag = false;}
+	}
         public int size() { return (int) SprExport.Spr_vector_size_string(this); }
-        public void push_back(string value) { SprExport.Spr_vector_push_back_string(this, value); }
+        public void push_back(IntPtr value) { SprExport.Spr_vector_push_back_string(this, value); }
         public void clear() { SprExport.Spr_vector_clear_string(this); }
         public string this[int index] {
             get {
@@ -177,16 +211,22 @@ namespace SprCs {
         }
         public static implicit operator List<string>(vectorwrapper_string m) {
             List<string> r = new List<string>();
-            // ここで変換する（未実装）
-            //for (int i = 0; i < m.size(); i++)
-            //    r.Add(m[i]);
+	    var ptr = (IntPtr) m;
+            for (int i = 0; i < SprExport.Spr_vector_size_string(ptr); i++) {
+                IntPtr tmp = SprExport.Spr_vector_get_string(ptr, i);
+                string bstr = Marshal.PtrToStringBSTR(tmp);
+                Marshal.FreeBSTR(tmp);
+                r.Add(bstr);
+	    }
             return r;
         }
         public static implicit operator vectorwrapper_string(List<string> r) {
-            vectorwrapper_string m = new vectorwrapper_string(IntPtr.Zero);
-            // ここで変換する（未実装）
-            //for (int i = 0; i < r.Count; i++)
-            //    m.push_back(r[i]);
+	    IntPtr vec = SprExport.Spr_vector_new_string();
+            vectorwrapper_string m = new vectorwrapper_string(vec, true);
+            for (int i = 0; i < r.Count; i++) {
+                IntPtr pbstr = Marshal.StringToBSTR(r[i]);
+                SprExport.Spr_vector_push_back_string(m._this, pbstr);
+	    }
             return m;
         }
     }
