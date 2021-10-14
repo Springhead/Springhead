@@ -8,38 +8,46 @@ namespace SprCs {
     // wrapper base class
     //
     public class wrapper : CsObject {
-        public wrapper(IntPtr ptr) : base(ptr) { _nelm = 0; }
-        public wrapper(IntPtr ptr, bool flag) : base(ptr, flag) { _nelm = 0; }
+        public wrapper(IntPtr ptr) : base(ptr) {}
+        public wrapper(IntPtr ptr, bool flag) : base(ptr, flag) {}
         protected wrapper() {}
         ~wrapper() {}
-        protected uint _nelm;
     }
     public class vectorwrapper : wrapper {
         public vectorwrapper(IntPtr ptr) : base(ptr) {}
+        public vectorwrapper(IntPtr ptr, bool flag) : base(ptr, flag) {}
+	protected vectorwrapper() {}
+        protected uint _nelm;
     }
     public class arraywrapper : wrapper {
-        protected arraywrapper() {}
         public arraywrapper(IntPtr ptr) : base(ptr) {}
         public arraywrapper(uint size, uint nelm) {
             _this = SprExport.Spr_arraywrapper_new(size, nelm);
             _nelm = nelm;
         }
+        protected arraywrapper() {}
+        protected uint _size;
+        protected uint _nelm;
     }
 
     // std::vector
     //  int
-    public class vectorwrapper_int : wrapper {
+    public class vectorwrapper_int : vectorwrapper {
+        public vectorwrapper_int() {
+		_this = SprExport.Spr_vector_new_int();
+		_flag = true;
+	}
         public vectorwrapper_int(IntPtr ptr) : base(ptr) {}
-        public vectorwrapper_int(IntPtr ptr, bool flag) : base(ptr, flag) { }
+        public vectorwrapper_int(IntPtr ptr, bool flag) : base(ptr, flag) {}
         ~vectorwrapper_int() {
 		if (_flag) { SprExport.Spr_vector_delete_int(_this); _flag = false;}
 	}
-        public int size() { return (int) SprExport.Spr_vector_size_int(this); }
-        public void push_back(int value) { SprExport.Spr_vector_push_back_int(this, value); }
-        public void clear() { SprExport.Spr_vector_clear_int(this); }
+        public int size() { return (int) SprExport.Spr_vector_size_int(_this); }
+        public void push_back(int value) { SprExport.Spr_vector_push_back_int(_this, value); }
+        public void clear() { SprExport.Spr_vector_clear_int(_this); }
         public int this[int index] {
-            get { return (int) SprExport.Spr_vector_get_int(this, index); }
-            set { SprExport.Spr_vector_set_int(this, index, value); }
+            get { return (int) SprExport.Spr_vector_get_int(_this, index); }
+            set { SprExport.Spr_vector_set_int(_this, index, value); }
         }
         public static implicit operator List<int>(vectorwrapper_int m) {
             List<int> r = new List<int>();
@@ -57,18 +65,22 @@ namespace SprCs {
         }
     }
     //  unsigned int
-    public class vectorwrapper_unsigned_int : wrapper {
+    public class vectorwrapper_unsigned_int : vectorwrapper {
+        public vectorwrapper_unsigned_int() {
+		_this = SprExport.Spr_vector_new_unsigned_int();
+		_flag = true;
+	}
         public vectorwrapper_unsigned_int(IntPtr ptr) : base(ptr) {}
         public vectorwrapper_unsigned_int(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~vectorwrapper_unsigned_int() {
 		if (_flag) { SprExport.Spr_vector_delete_unsigned_int(_this); _flag = false;}
 	}
-        public int size() { return (int) SprExport.Spr_vector_size_unsigned_int(this); }
-        public void push_back(uint value) { SprExport.Spr_vector_push_back_unsigned_int(this, value); }
-        public void clear() { SprExport.Spr_vector_clear_unsigned_int(this); }
+        public int size() { return (int) SprExport.Spr_vector_size_unsigned_int(_this); }
+        public void push_back(uint value) { SprExport.Spr_vector_push_back_unsigned_int(_this, value); }
+        public void clear() { SprExport.Spr_vector_clear_unsigned_int(_this); }
         public uint this[int index] {
-            get { return (uint) SprExport.Spr_vector_get_unsigned_int(this, index); }
-            set { SprExport.Spr_vector_set_unsigned_int(this, index, value); }
+            get { return (uint) SprExport.Spr_vector_get_unsigned_int(_this, index); }
+            set { SprExport.Spr_vector_set_unsigned_int(_this, index, value); }
         }
         public static implicit operator List<uint>(vectorwrapper_unsigned_int m) {
             List<uint> r = new List<uint>();
@@ -86,18 +98,22 @@ namespace SprCs {
         }
     }
     //  size_t
-    public class vectorwrapper_size_t : wrapper {
+    public class vectorwrapper_size_t : vectorwrapper {
+        public vectorwrapper_size_t() {
+		_this = SprExport.Spr_vector_new_size_t();
+		_flag = true;
+	}
         public vectorwrapper_size_t(IntPtr ptr) : base(ptr) {}
         public vectorwrapper_size_t(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~vectorwrapper_size_t() {
 		if (_flag) { SprExport.Spr_vector_delete_size_t(_this); _flag = false;}
 	}
-        public int size() { return (int) SprExport.Spr_vector_size_size_t(this); }
-        public void push_back(ulong value) { SprExport.Spr_vector_push_back_size_t(this, value); }
-        public void clear() { SprExport.Spr_vector_clear_size_t(this); }
+        public int size() { return (int) SprExport.Spr_vector_size_size_t(_this); }
+        public void push_back(ulong value) { SprExport.Spr_vector_push_back_size_t(_this, value); }
+        public void clear() { SprExport.Spr_vector_clear_size_t(_this); }
         public ulong this[int index] {
-            get { return (ulong) SprExport.Spr_vector_get_size_t(this, index); }
-            set { SprExport.Spr_vector_set_size_t(this, index, value); }
+            get { return (ulong) SprExport.Spr_vector_get_size_t(_this, index); }
+            set { SprExport.Spr_vector_set_size_t(_this, index, value); }
         }
         public static implicit operator List<ulong>(vectorwrapper_size_t m) {
             List<ulong> r = new List<ulong>();
@@ -129,18 +145,22 @@ namespace SprCs {
         }
     }
     //  float
-    public class vectorwrapper_float : wrapper {
+    public class vectorwrapper_float : vectorwrapper {
+        public vectorwrapper_float() {
+		_this = SprExport.Spr_vector_new_float();
+		_flag = true;
+	}
         public vectorwrapper_float(IntPtr ptr) : base(ptr) {}
         public vectorwrapper_float(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~vectorwrapper_float() {
 		if (_flag) { SprExport.Spr_vector_delete_float(_this); _flag = false;}
 	}
-        public int size() { return (int) SprExport.Spr_vector_size_float(this); }
-        public void push_back(float value) { SprExport.Spr_vector_push_back_float(this, value); }
-        public void clear() { SprExport.Spr_vector_clear_float(this); }
+        public int size() { return (int) SprExport.Spr_vector_size_float(_this); }
+        public void push_back(float value) { SprExport.Spr_vector_push_back_float(_this, value); }
+        public void clear() { SprExport.Spr_vector_clear_float(_this); }
         public float this[int index] {
-            get { return (float) SprExport.Spr_vector_get_float(this, index); }
-            set { SprExport.Spr_vector_set_float(this, index, value); }
+            get { return (float) SprExport.Spr_vector_get_float(_this, index); }
+            set { SprExport.Spr_vector_set_float(_this, index, value); }
         }
         public static implicit operator List<float>(vectorwrapper_float m) {
             List<float> r = new List<float>();
@@ -158,18 +178,22 @@ namespace SprCs {
         }
     }
     //  double
-    public class vectorwrapper_double : wrapper {
+    public class vectorwrapper_double : vectorwrapper {
+        public vectorwrapper_double() {
+		_this = SprExport.Spr_vector_new_double();
+		_flag = true;
+	}
         public vectorwrapper_double(IntPtr ptr) : base(ptr) { }
         public vectorwrapper_double(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~vectorwrapper_double() {
 		if (_flag) { SprExport.Spr_vector_delete_double(_this); _flag = false;}
 	}
-        public int size() { return (int) SprExport.Spr_vector_size_double(this); }
-        public void push_back(double value) { SprExport.Spr_vector_push_back_double(this, value); }
-        public void clear() { SprExport.Spr_vector_clear_double(this); }
+        public int size() { return (int) SprExport.Spr_vector_size_double(_this); }
+        public void push_back(double value) { SprExport.Spr_vector_push_back_double(_this, value); }
+        public void clear() { SprExport.Spr_vector_clear_double(_this); }
         public double this[int index] {
-            get { return (double) SprExport.Spr_vector_get_double(this, index); }
-            set { SprExport.Spr_vector_set_double(this, index, value); }
+            get { return (double) SprExport.Spr_vector_get_double(_this, index); }
+            set { SprExport.Spr_vector_set_double(_this, index, value); }
         }
         public static implicit operator List<double>(vectorwrapper_double m) {
             List<double> r = new List<double>();
@@ -187,25 +211,29 @@ namespace SprCs {
         }
     }
     //  string
-    public class vectorwrapper_string : wrapper {
+    public class vectorwrapper_string : vectorwrapper {
+        public vectorwrapper_string() {
+		_this = SprExport.Spr_vector_new_string();
+		_flag = true;
+	}
         public vectorwrapper_string(IntPtr ptr) : base(ptr) {}
         public vectorwrapper_string(IntPtr ptr, bool flag) : base(ptr, flag) { }
         ~vectorwrapper_string() {
 		if (_flag) { SprExport.Spr_vector_delete_string(_this); _flag = false;}
 	}
-        public int size() { return (int) SprExport.Spr_vector_size_string(this); }
-        public void push_back(IntPtr value) { SprExport.Spr_vector_push_back_string(this, value); }
-        public void clear() { SprExport.Spr_vector_clear_string(this); }
+        public int size() { return (int) SprExport.Spr_vector_size_string(_this); }
+        public void push_back(IntPtr value) { SprExport.Spr_vector_push_back_string(_this, value); }
+        public void clear() { SprExport.Spr_vector_clear_string(_this); }
         public string this[int index] {
             get {
-                IntPtr ptr = SprExport.Spr_vector_get_string(this, index);
+                IntPtr ptr = SprExport.Spr_vector_get_string(_this, index);
                 string bstr = Marshal.PtrToStringBSTR(ptr);
                 Marshal.FreeBSTR(ptr);
                 return bstr;
             }
             set {
                 IntPtr pbstr = Marshal.StringToBSTR(value);
-                SprExport.Spr_vector_set_string(this, index, pbstr);
+                SprExport.Spr_vector_set_string(_this, index, pbstr);
                 Marshal.FreeBSTR(pbstr);
             }
         }

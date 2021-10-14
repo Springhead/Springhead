@@ -154,7 +154,8 @@ namespace SprCsSample {
 
             // vector member
             PHFemMeshNewDesc descFemMeshNew = new PHFemMeshNewDesc();
-            vectorwrapper_int tets = descFemMeshNew.tets;
+            //vectorwrapper_int tets = descFemMeshNew.tets;
+            vectorwrapper_int tets = new vectorwrapper_int();
 	    GRBlendMeshDesc descBlendMesh = new GRBlendMeshDesc();
 	    GRSkinWeightDesc descSkinWeight = new GRSkinWeightDesc();
 	    PHMaterial phMaterial = new PHMaterial();
@@ -166,7 +167,7 @@ namespace SprCsSample {
             put("vec<int>", "2  ", tets.size());
             put("vec<int>", "101", tets[0]);
             put("vec<int>", "102", tets[1]);
-            tets.clear();
+            //tets.clear();
             tets[0] = 201;
             tets[1] = 202;
             put("vec<int>", "2  ", tets.size());
@@ -191,7 +192,7 @@ namespace SprCsSample {
             put("vec<unsigned int>", "2  ", descSkinWeight.indices.size());
             put("vec<unsigned int>", "101", descSkinWeight.indices[0]);
             put("vec<unsigned int>", "102", descSkinWeight.indices[1]);
-            descSkinWeight.indices.clear();
+            //descSkinWeight.indices.clear();
             descSkinWeight.indices[0] = 201;
             descSkinWeight.indices[1] = 202;
             put("vec<unsigned int>", "2  ", descSkinWeight.indices.size());
@@ -216,7 +217,7 @@ namespace SprCsSample {
             put("vec<size_t>", "2  ", descBlendMesh.faces.size());
             put("vec<size_t>", "101", descBlendMesh.faces[0]);
             put("vec<size_t>", "102", descBlendMesh.faces[1]);
-            descBlendMesh.faces.clear();
+            //descBlendMesh.faces.clear();
             descBlendMesh.faces[0] = 201;
             descBlendMesh.faces[1] = 202;
             put("vec<size_t>", "2  ", descBlendMesh.faces.size());
@@ -242,6 +243,7 @@ namespace SprCsSample {
             put("vec<float>", "2  ", phMaterial.mus.size());
             put("vec<float>", "0.1", phMaterial.mus[0]);
             put("vec<float>", "0.2", phMaterial.mus[1]);
+            //phMaterial.mus.clear();
 	    phMaterial.mus[0] = 0.3F;
 	    phMaterial.mus[1] = 0.4F;
             put("vec<float>", "2  ", phMaterial.mus.size());
