@@ -7,7 +7,7 @@ namespace SprCs {
     public class CsObject {
         public IntPtr _this;
         public bool _flag;
-        protected CsObject() { }
+        protected CsObject() { _this = IntPtr.Zero; _flag = false; }
         protected CsObject(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }
         ~CsObject() { }
         public static implicit operator IntPtr(CsObject obj) {

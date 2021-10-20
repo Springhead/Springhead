@@ -2023,7 +2023,7 @@ public:
 		SNAP_ANA_PATH1(fps, FD_CS, "module");
 		Printf(cs, "using System;\n");
 		Printf(cs, "using System.Collections.Generic;\n");
-		// Printf(cs, "using System.Linq;\n");
+		Printf(cs, "using System.Linq;\n");
 		Printf(cs, "using System.Text;\n");
 		Printf(cs, "using System.Runtime.InteropServices;\n");
 		Printf(cs, "#pragma warning disable 0108\n");
@@ -2681,7 +2681,18 @@ public:
 			if (mp->is_struct && !(mp->is_array || mp->is_vector || is_enum_node)) {
 				Printf(CS, "\tpublic %sStruct %s;\n", mp->cs_type, mp->cs_name);
 			} else {
-				Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
+                if (mp->is_array || mp->is_vector) {
+                    // vectorwrapper / arraywrapper ではなく List を使う
+                    if (string(mp->cpp_type) == "unsigned int") {
+                        Printf(CS, "\tpublic List<uint> %s;\n", mp->cs_name);
+                    } else if (string(mp->cpp_type) == "size_t") {
+                        Printf(CS, "\tpublic List<uint> %s;\n", mp->cs_name);
+                    } else {
+                        Printf(CS, "\tpublic List<%s> %s;\n", mp->cpp_type, mp->cs_name);
+                    }
+                } else {
+                    Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
+                }
 			}
 			string key(mp->cs_name);
 			name_duplicated_map[key] = 1;
@@ -4335,6 +4346,16 @@ public:
 			Printf(CS,  "            get { return new %s(SprExport.Spr_%s_%s_get_%s(_ptr, index)); }\n", ni.cs_type, ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_ptr, index, value); }\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "        }\n");
+		}
+		if (EQ(wrapper_type, "vector")) {
+			Printf(CS, "        public static implicit operator List<%s>(%s m) {\n", ni.cs_type, wrapper_name);
+			Printf(CS, "            List<%s> r = new List<%s>();\n", ni.cs_type, ni.cs_type);
+			Printf(CS, "            return r;\n");
+			Printf(CS, "        }\n");
+			Printf(CS, "        public static implicit operator %s(List<%s> r) {\n", wrapper_name, ni.cs_type);
+			Printf(CS, "            %s m = new %s(IntPtr.Zero);\n", wrapper_name, wrapper_name);
+			Printf(CS, "            return m;\n");
+			Printf(CS, "        }\n");
 		}
 		Printf(CS,  "    }\n");
 

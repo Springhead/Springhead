@@ -1,5 +1,16 @@
-﻿using System;
+﻿// vector<string> のテストを行なう方法
+//	Springhead には、std::vector<std::string> のテストを行なうための適切な
+//	データ構造が見当たらない。そこで次のようなパッチをしてテストする。
+//	終わったら必ず元に戻すこと。
+//  (1) ".../include/Physics/SprPHFemMeshNew.h" に "#include <string>" を追加する
+//  (2) ".../include/Physics/SprPHFemMeshNew.h" の struct PHFemMeshNewDesc の
+//	定義に std::vector<std::string> test_s; を追加する。
+//  (3) 次の行の #define を有効にする。
+//#define	SprCSTest_vector_string
+
+using System;
 using System.Collections.Generic;
+//using System.Collections;
 using System.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -7,7 +18,8 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvacfroFs";
+        //static string def = "itvacfroFs";
+        static string def = "itvacroFs";
         static string inc = "A";	// include: "A" for all
         static string exc = " ";	// exclude:
         static string brk = "n";	// set "y" if run under debugger
@@ -142,23 +154,171 @@ namespace SprCsSample {
 
             // vector member
             PHFemMeshNewDesc descFemMeshNew = new PHFemMeshNewDesc();
-            vectorwrapper_int tets = descFemMeshNew.tets;
+            //vectorwrapper_int tets = descFemMeshNew.tets;
+            vectorwrapper_int tets = new vectorwrapper_int();
+	    GRBlendMeshDesc descBlendMesh = new GRBlendMeshDesc();
+	    GRSkinWeightDesc descSkinWeight = new GRSkinWeightDesc();
+	    PHMaterial phMaterial = new PHMaterial();
+
             // intrinsic element
+	/* int - member */
             tets.push_back(101);
             tets.push_back(102);
             put("vec<int>", "2  ", tets.size());
             put("vec<int>", "101", tets[0]);
             put("vec<int>", "102", tets[1]);
-            tets.clear();
-            tets.push_back(101);
-            tets.push_back(102);
+            //tets.clear();
             tets[0] = 201;
             tets[1] = 202;
-            tets.push_back(203);
-            put("vec<int>", "3  ", tets.size());
+            put("vec<int>", "2  ", tets.size());
             put("vec<int>", "201", tets[0]);
             put("vec<int>", "202", tets[1]);
-            put("vec<int>", "203", tets[2]);
+	/* int - whole */
+	    var csList_i = new List<int>();
+	    csList_i.Add(301);
+	    csList_i.Add(302);
+	    tets.clear();
+	    tets = csList_i;
+            put("List to vec<int>", "2  ", tets.size());
+            put("List to vec<int>", "301", tets[0]);
+            put("List to vec<int>", "302", tets[1]);
+	    csList_i = tets;
+            put("vec to List<int>", "2  ", csList_i.Count);
+            put("vec to List<int>", "301", csList_i[0]);
+            put("vec to List<int>", "302", csList_i[1]);
+	/* unsigned int - member */
+            descSkinWeight.indices.push_back(101);
+            descSkinWeight.indices.push_back(102);
+            put("vec<unsigned int>", "2  ", descSkinWeight.indices.size());
+            put("vec<unsigned int>", "101", descSkinWeight.indices[0]);
+            put("vec<unsigned int>", "102", descSkinWeight.indices[1]);
+            //descSkinWeight.indices.clear();
+            descSkinWeight.indices[0] = 201;
+            descSkinWeight.indices[1] = 202;
+            put("vec<unsigned int>", "2  ", descSkinWeight.indices.size());
+            put("vec<unsigned int>", "201", descSkinWeight.indices[0]);
+            put("vec<unsigned int>", "202", descSkinWeight.indices[1]);
+	/* unsigned int - whole */
+	    var csList_u = new List<uint>();
+	    csList_u.Add(301);
+	    csList_u.Add(302);
+	    descSkinWeight.indices.clear();
+	    descSkinWeight.indices = csList_u;
+            put("List to vec<unsigned int>", "2  ", descSkinWeight.indices.size());
+            put("List to vec<unsigned int>", "301", descSkinWeight.indices[0]);
+            put("List to vec<unsigned int>", "302", descSkinWeight.indices[1]);
+	    csList_u = descSkinWeight.indices;
+            put("vec to List<unsigned int>", "2  ", csList_u.Count);
+            put("vec to List<unsigned int>", "301", csList_u[0]);
+            put("vec to List<unsigned int>", "302", csList_u[1]);
+	/* size_t - member */
+            descBlendMesh.faces.push_back(101);
+            descBlendMesh.faces.push_back(102);
+            put("vec<size_t>", "2  ", descBlendMesh.faces.size());
+            put("vec<size_t>", "101", descBlendMesh.faces[0]);
+            put("vec<size_t>", "102", descBlendMesh.faces[1]);
+            //descBlendMesh.faces.clear();
+            descBlendMesh.faces[0] = 201;
+            descBlendMesh.faces[1] = 202;
+            put("vec<size_t>", "2  ", descBlendMesh.faces.size());
+            put("vec<size_t>", "201", descBlendMesh.faces[0]);
+            put("vec<size_t>", "202", descBlendMesh.faces[1]);
+	/* size_t - whole */
+	    var csList_s = new List<ulong>();
+	    csList_s.Add(301);
+	    csList_s.Add(302);
+	    descBlendMesh.faces.clear();
+	    descBlendMesh.faces = csList_s;
+            put("List to vec<size_t>", "2  ", descBlendMesh.faces.size());
+            put("List to vec<size_t>", "301", descBlendMesh.faces[0]);
+            put("List to vec<size_t>", "302", descBlendMesh.faces[1]);
+	    csList_s = descBlendMesh.faces;
+            put("vec to List<size_t>", "2  ", csList_s.Count);
+            put("vec to List<size_t>", "301", csList_s[0]);
+            put("vec to List<size_t>", "302", csList_s[1]);
+	/* float - member */
+	    phMaterial.mus.clear();
+	    phMaterial.mus.push_back(0.1F);
+	    phMaterial.mus.push_back(0.2F);
+            put("vec<float>", "2  ", phMaterial.mus.size());
+            put("vec<float>", "0.1", phMaterial.mus[0]);
+            put("vec<float>", "0.2", phMaterial.mus[1]);
+            //phMaterial.mus.clear();
+	    phMaterial.mus[0] = 0.3F;
+	    phMaterial.mus[1] = 0.4F;
+            put("vec<float>", "2  ", phMaterial.mus.size());
+            put("vec<float>", "0.3", phMaterial.mus[0]);
+            put("vec<float>", "0.4", phMaterial.mus[1]);
+	/* float - whole */
+	    var csList_f = new List<float>();
+	    csList_f.Add(0.1F);
+	    csList_f.Add(0.2F);
+	    phMaterial.mus.clear();
+	    phMaterial.mus = csList_f;
+            put("List to vec<float>", "2  ", phMaterial.mus.size());
+            put("List to vec<float>", "0.1", phMaterial.mus[0]);
+            put("List to vec<float>", "0.2", phMaterial.mus[1]);
+	    csList_f = phMaterial.mus;
+            put("vec to List<float>", "2  ", csList_f.Count);
+            put("vec to List<float>", "0.1", csList_f[0]);
+            put("vec to List<float>", "0.2", csList_f[1]);
+	/* double - member */
+	    phMaterial.c.clear();
+	    phMaterial.c.push_back(0.1D);
+	    phMaterial.c.push_back(0.2D);
+            put("vec<double>", "3  ", phMaterial.c.size());
+            put("vec<double>", "0.1", phMaterial.c[0]);
+            put("vec<double>", "0.2", phMaterial.c[1]);
+	    phMaterial.c[0] = 0.3D;
+	    phMaterial.c[1] = 0.4D;
+            put("vec<double>", "2  ", phMaterial.c.size());
+            put("vec<double>", "0.3", phMaterial.c[0]);
+            put("vec<double>", "0.4", phMaterial.c[1]);
+	/* double - whole */
+	    var csList_d = new List<double>();
+	    csList_d.Add(0.1D);
+	    csList_d.Add(0.2D);
+	    phMaterial.c.clear();
+	    phMaterial.c = csList_d;
+            put("List to vec<double>", "2  ", phMaterial.c.size());
+            put("List to vec<double>", "0.1", phMaterial.c[0]);
+            put("List to vec<double>", "0.2", phMaterial.c[1]);
+	    csList_d = phMaterial.c;
+            put("vec to List<double>", "2  ", csList_d.Count);
+            put("vec to List<double>", "0.1", csList_d[0]);
+            put("vec to List<double>", "0.2", csList_d[1]);
+#if SprCSTest_vector_string
+	/* string - member */
+	    descFemMeshNew.test_s.clear();
+	    IntPtr pbstr_1 = Marshal.StringToBSTR("abc");
+	    IntPtr pbstr_2 = Marshal.StringToBSTR("def");
+	    descFemMeshNew.test_s.push_back(pbstr_1);
+	    descFemMeshNew.test_s.push_back(pbstr_2);
+	    Marshal.FreeBSTR(pbstr_1);
+	    Marshal.FreeBSTR(pbstr_2);
+            put("vec<string>", "3  ", descFemMeshNew.test_s.size());
+            put("vec<string>", "abc", descFemMeshNew.test_s[0]);
+            put("vec<string>", "def", descFemMeshNew.test_s[1]);
+	    descFemMeshNew.test_s[0] = "abc";
+	    descFemMeshNew.test_s[1] = "def";
+            put("vec<string>", "2  ", descFemMeshNew.test_s.size());
+            put("vec<string>", "abc", descFemMeshNew.test_s[0]);
+            put("vec<string>", "def", descFemMeshNew.test_s[1]);
+	/* double - whole */
+	    var csList_st = new List<string>();
+	    csList_st.Add("abc");
+	    csList_st.Add("def");
+	    descFemMeshNew.test_s.clear();
+	    descFemMeshNew.test_s = csList_st;
+            put("List to vec<string>", "2  ", descFemMeshNew.test_s.size());
+            put("List to vec<string>", "abc", descFemMeshNew.test_s[0]);
+            put("List to vec<string>", "def", descFemMeshNew.test_s[1]);
+	    csList_st = descFemMeshNew.test_s;
+            put("vec to List<string>", "2  ", descFemMeshNew.test_s.size());
+            put("vec to List<string>", "abc", descFemMeshNew.test_s[0]);
+            put("vec to List<string>", "def", descFemMeshNew.test_s[1]);
+#endif
+
             // structure element
             vectorwrapper_Vec3d vertices = descFemMeshNew.vertices;
             vertices.push_back(new Vec3d(0.1, 0.2, 0.3));
@@ -362,6 +522,12 @@ namespace SprCsSample {
 
         static void test_func_args() {
             test_name("function arguments");
+
+	    var r = new List<double>(){ 0.1D, 0.2D, 0.3D };
+	    var t = new List<double>(){ 0.4D, 0.5D, 0.6D };
+	    Vec2d o = new Vec2d(0.0D, 0.0D);
+	    PHFemMeshThermoIf ifFemMeshThermo = new PHFemMeshThermoIf();
+	    bool b = ifFemMeshThermo.SetConcentricHeatMap(r, t, o);
 
             // 引数をちゃんと設定しないと例外が起きる！！
             if (brk != "y") return;
