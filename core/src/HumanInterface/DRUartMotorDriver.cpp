@@ -452,7 +452,7 @@ bool DRUARTMotorDriver::Init(){
 			NULL);
 		if (hUART == INVALID_HANDLE_VALUE) {
 			DSTR << "CreateFile failed " << GetLastError() << std::endl;
-			return false;
+			continue;
 		}
 		if (InitCom()) {
 			impl->EnumBoards(hUART);

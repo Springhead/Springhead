@@ -9,14 +9,21 @@ using namespace Spr;
 
 extern "C" {
     // wrapper base class
-    //  vectorwrapper
-    //  arraywrapper
+    // vectorwrapper
+    // arraywrapper
     __declspec(dllexport) HANDLE __cdecl Spr_arraywrapper_new(unsigned int size, unsigned int nelm) {
         return (HANDLE) new char[size * nelm];
     }
 
     // std::vector
     //  int
+    __declspec(dllexport) HANDLE __cdecl Spr_vector_new_int() {
+        return (HANDLE) new vector<int>;
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_delete_int(HANDLE ptr) {
+        vector<int>* vec = (vector<int>*) ptr;
+        vector<int>().swap(*vec);
+    }
     __declspec(dllexport) int __cdecl Spr_vector_get_int(HANDLE ptr, int index) {
         vector<int>* vecptr = (vector<int>*) ptr;
         return (*vecptr)[index];
@@ -38,6 +45,13 @@ extern "C" {
         (*vecptr).clear();
     }
     //  unsigned int
+    __declspec(dllexport) HANDLE __cdecl Spr_vector_new_unsigned_int() {
+        return (HANDLE) new vector<unsigned int>;
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_delete_unsigned_int(HANDLE ptr) {
+        vector<unsigned int>* vec = (vector<unsigned int>*) ptr;
+        vector<unsigned int>().swap(*vec);
+    }
     __declspec(dllexport) unsigned int __cdecl Spr_vector_get_unsigned_int(HANDLE ptr, int index) {
         vector<unsigned int>* vecptr = (vector<unsigned int>*) ptr;
         return (*vecptr)[index];
@@ -59,6 +73,13 @@ extern "C" {
         (*vecptr).clear();
     }
     //  size_t
+    __declspec(dllexport) HANDLE __cdecl Spr_vector_new_size_t() {
+        return (HANDLE) new vector<size_t>;
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_delete_size_t(HANDLE ptr) {
+        vector<size_t>* vec = (vector<size_t>*) ptr;
+        vector<size_t>().swap(*vec);
+    }
     __declspec(dllexport) size_t __cdecl Spr_vector_get_size_t(HANDLE ptr, int index) {
         vector<size_t>* vecptr = (vector<size_t>*) ptr;
         return (*vecptr)[index];
@@ -84,8 +105,8 @@ extern "C" {
         return (HANDLE) new vector<float>;
     }
     __declspec(dllexport) void __cdecl Spr_vector_delete_float(HANDLE ptr) {
-        vector<float>* vecptr = (vector<float>*)ptr;
-        delete(vecptr);
+        vector<float>* vecptr = (vector<float>*) ptr;
+        vector<float>().swap(*vecptr);
     }
     __declspec(dllexport) float __cdecl Spr_vector_get_float(HANDLE ptr, int index) {
         vector<float>* vecptr = (vector<float>*) ptr;
@@ -112,8 +133,8 @@ extern "C" {
         return (HANDLE) new vector<double>;
     }
     __declspec(dllexport) void __cdecl Spr_vector_delete_double(HANDLE ptr) {
-        vector<double>* vecptr = (vector<double>*)ptr;
-        delete(vecptr);
+        vector<double>* vecptr = (vector<double>*) ptr;
+        vector<double>().swap(*vecptr);
     }
     __declspec(dllexport) double __cdecl Spr_vector_get_double(HANDLE ptr, int index) {
         vector<double>* vecptr = (vector<double>*) ptr;
@@ -136,6 +157,13 @@ extern "C" {
         (*vecptr).clear();
     }
     //  string
+    __declspec(dllexport) HANDLE __cdecl Spr_vector_new_string() {
+        return (HANDLE) new vector<string>;
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_delete_string(HANDLE ptr) {
+        vector<string>* vecptr = (vector<string>*) ptr;
+        vector<string>().swap(*vecptr);
+    }
     __declspec(dllexport) HANDLE __cdecl Spr_vector_get_string(HANDLE ptr, int index) {
         BSTR result = NULL;
         vector<string>* vecptr = (vector<string>*) ptr;
@@ -160,9 +188,14 @@ extern "C" {
         vector<string>* vecptr = (vector<string>*) ptr;
         return (int) (*vecptr).size();
     }
-    __declspec(dllexport) void __cdecl Spr_vector_push_back_string(HANDLE ptr, string value) {
-        vector<string>* vecptr = (vector<string>*) ptr;
-        (*vecptr).push_back(value);
+    __declspec(dllexport) void __cdecl Spr_vector_push_back_string(HANDLE ptr, HANDLE value) {
+        int lenMB = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) value, -1, NULL, 0, NULL, NULL);
+        if (lenMB > 0) {
+            LPSTR addr = (LPSTR) ::SysAllocStringLen(0, lenMB);
+            ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) value, -1, addr, lenMB, NULL, NULL);
+            vector<string>* vecptr = (vector<string>*) ptr;
+            (*vecptr).push_back(string(addr));
+        }
     }
     __declspec(dllexport) void __cdecl Spr_vector_clear_string(HANDLE ptr) {
         vector<string>* vecptr = (vector<string>*) ptr;
