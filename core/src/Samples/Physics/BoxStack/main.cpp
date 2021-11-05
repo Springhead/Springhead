@@ -88,8 +88,30 @@ public:
 	}
 	~MyApp(){}
 
+	virtual double ShapeScale() {		//	scale all shapes and positions.
+		return 0.01;
+	}
 	virtual void BuildScene(){
+		FWWinIf* win = GetCurrentWin();
+		win->GetTrackball()->SetTarget(ShapeScale() * Vec3d(0, 6, 0));		//	gaze taget	
+		win->GetTrackball()->SetPosition(ShapeScale() * Vec3f(0, 25, 50));	//	view point
 		soFloor = CreateFloor(true);
+		
+		GetFWScene()->SetAxisScale(ShapeScale(), ShapeScale(), ShapeScale());
+		GetFWScene()->SetAxisStyle(FWSceneIf::AXIS_ARROWS);
+		GetFWScene()->SetRenderMode();
+
+		PHSceneDesc pd;
+		GetPHScene()->GetDesc(&pd);
+		pd.timeStep = 1.0 / 60;
+		pd.contactTolerance = 0.001 * 0.4;
+		pd.airResistanceRateForAngularVelocity = 0.98;
+		GetPHScene()->SetDesc(&pd);
+		PHConstraintEngineDesc ed;
+		GetPHScene()->GetConstraintEngine()->GetDesc(&ed);
+		ed.freezeThreshold = 0;
+		ed.contactCorrectionRate = 0.5;
+		GetPHScene()->GetConstraintEngine()->SetDesc(&ed);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
@@ -118,7 +140,7 @@ public:
 
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
-			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
+			Vec3d v, w(0.0, 0.0, 0.2), p = ShapeScale() * Vec3f(0.5, 20.0, 0.0);
 			static Quaterniond q = Quaterniond::Rot(Rad(0.0), 'y');
 			q = Quaterniond::Rot(Rad(90), 'y') * q;
 
