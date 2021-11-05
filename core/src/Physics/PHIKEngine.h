@@ -59,9 +59,6 @@ public:
 	// 全関節角変位（IK計算結果）
 	vector_type W;
 
-	// エンドエフェクタのウェイトベクトル
-	diag_matrix_type We;
-
 	// ラグランジェ乗数
 	vector_type l;
 	vector_type Vl;

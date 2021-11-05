@@ -110,7 +110,12 @@ public:
 				ndof = 6;
 				bNDOFChanged = true;
 			}
-		} else if (bPosition || bOrientation) {
+		} else if (!bPosition && !bOrientation) {
+			if (ndof != 0) {
+				ndof = 0;
+				bNDOFChanged = true;
+			}
+		} else {
 			if (ndof != 3) {
 				ndof = 3;
 				bNDOFChanged = true;

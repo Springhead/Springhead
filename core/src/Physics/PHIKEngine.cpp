@@ -114,7 +114,6 @@ void PHIKEngine::Prepare(bool second) {
 		V.resize(m);    V.clear();
 		Wp.resize(n);   Wp.clear();
 		l.resize(m);    l.clear();
-		We.resize(m, m);   We.clear();
 
 		lastM = m;
 		lastN = n;
