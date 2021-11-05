@@ -1246,13 +1246,13 @@ void FWScene::DrawCoordinateAxis(GRRenderIf* render, float scale, bool solid_or_
 		float lhead = 0.20f * scale;
 		// x
 		render->SetMaterial(matAxis.x);
-		render->DrawArrow(Vec3f(), Vec3f(1.0f, 0.0f, 0.0f), rbar, rhead, lhead, 16, solid_or_wire);
+		render->DrawArrow(Vec3f(), scale * Vec3f(1.0f, 0.0f, 0.0f), rbar, rhead, lhead, 16, solid_or_wire);
 		// y
 		render->SetMaterial(matAxis.y);
-		render->DrawArrow(Vec3f(), Vec3f(0.0f, 1.0f, 0.0f), rbar, rhead, lhead, 16, solid_or_wire);
+		render->DrawArrow(Vec3f(), scale * Vec3f(0.0f, 1.0f, 0.0f), rbar, rhead, lhead, 16, solid_or_wire);
 		// z
 		render->SetMaterial(matAxis.z);
-		render->DrawArrow(Vec3f(), Vec3f(0.0f, 0.0f, 1.0f), rbar, rhead, lhead, 16, solid_or_wire);
+		render->DrawArrow(Vec3f(), scale * Vec3f(0.0f, 0.0f, 1.0f), rbar, rhead, lhead, 16, solid_or_wire);
 	}
 }
 

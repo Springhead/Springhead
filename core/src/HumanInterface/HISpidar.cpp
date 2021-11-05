@@ -443,14 +443,14 @@ void HISpidarGDesc::Init(const char* type) {
 		Matrix3f rot = Matrix3f();	//	Rot((float)Rad(bLeft ? -45 : 45), 'y');
 		Vec3f motorPos[2][8] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 			{
+				rot * Vec3f(-PX, -PY, -PZ),
 				rot * Vec3f( PX, -PY, -PZ),
 				rot * Vec3f( PX, -PY,  PZ),
 				rot * Vec3f(-PX, -PY,  PZ),
-				rot * Vec3f(-PX, -PY, -PZ),
+				rot * Vec3f(-PX,  PY, -PZ),
 				rot * Vec3f( PX,  PY, -PZ),
 				rot * Vec3f( PX,  PY,  PZ),
 				rot * Vec3f(-PX,  PY,  PZ),
-				rot * Vec3f(-PX,  PY, -PZ),
 			},
 			{
 				rot* Vec3f(  0, -GY, 0),

@@ -55,9 +55,11 @@ int __cdecl main(){
 	UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	if (uartMotorDriver->NMotor() >= 0) {	//	UART driver
 		spg->Init(&HISpidarGDesc("SpidarG6X4R"));
+		DSTR << "Init SpidarG6X4R" << std::endl;
 	}
 	else {									//	SH4 driver
-		spg->Init(&HISpidarGDesc("SpidarG6X3L"));
+		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+		DSTR << "Init SpidarG6X3R" << std::endl;
 	}
 #endif
 
