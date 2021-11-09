@@ -161,6 +161,7 @@ struct PHMaterial{
 	float mu;				///< 動摩擦摩擦係数
 	float mu0;				///< 静止摩擦係数	
 	float e;				///< 跳ね返り係数
+	float rotationFriction;	///< 点接触の回転摩擦の並進に対する割合
 	// 静接触の粘弾性．springとdamperが0の場合は粘弾性なし
 	float spring;			///< 静接触のバネ係数
 	float damper;			///< 静接触のダンパ係数

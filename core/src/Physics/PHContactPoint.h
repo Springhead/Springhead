@@ -25,7 +25,7 @@ public:
 
 	PHShapePairForLCP* shapePair;
 	Posed  pose;
-	double mu0, mu, e;
+	double mu0, mu, rotationFriction, e;
 	double spring, damper;
 
 	double fx, flim0, flim;
