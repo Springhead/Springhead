@@ -29,21 +29,25 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		mu0 = std::min(mat[0]->mu0, mat[1]->mu0);
 		mu  = std::min(mat[0]->mu , mat[1]->mu );
 		e   = std::min(mat[0]->e  , mat[1]->e  );
+		rotationFriction = std::min(mat[0]->rotationFriction, mat[1]->rotationFriction);
 		break;
 	case PHSceneDesc::BLEND_MAX:
 		mu0 = std::max(mat[0]->mu0, mat[1]->mu0);
 		mu  = std::max(mat[0]->mu , mat[1]->mu );
 		e   = std::max(mat[0]->e  , mat[1]->e  );
+		rotationFriction = std::max(mat[0]->rotationFriction, mat[1]->rotationFriction);
 		break;
 	case PHSceneDesc::BLEND_AVE_ADD:
 		mu0 = 0.5 * (mat[0]->mu0 + mat[1]->mu0);
 		mu  = 0.5 * (mat[0]->mu  + mat[1]->mu );
 		e   = 0.5 * (mat[0]->e   + mat[1]->e  );
+		rotationFriction = 0.5 * (mat[0]->rotationFriction + mat[1]->rotationFriction);
 		break;
 	case PHSceneDesc::BLEND_AVE_MUL:
 		mu0 = sqrt(mat[0]->mu0 * mat[1]->mu0);
 		mu  = sqrt(mat[0]->mu  * mat[1]->mu );
 		e   = sqrt(mat[0]->e   * mat[1]->e  );
+		rotationFriction = sqrt(mat[0]->rotationFriction * mat[1]->rotationFriction);
 		break;
 	}
 	
@@ -97,7 +101,9 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	// relative velocity of contact motor in local coord
 	velField = vcabs[1] - vcabs[0];
 	
-	movableAxes.Enable(3);
+	if (rotationFriction == 0.0f) {
+		movableAxes.Enable(3);
+	}
 	movableAxes.Enable(4);
 	movableAxes.Enable(5);
 }
@@ -158,30 +164,20 @@ bool PHContactPoint::Projection(double& f_, int i) {
 		return false;
 	}
 	else{
+		float lim = isStatic ? flim0 : flim;
+		if (i == 3 && rotationFriction != 0.0f) {
+			lim *= rotationFriction;
+		}
 		// 静止摩擦
-		if(isStatic){
-			if (f_ > flim0){
-				f_ = flim0;
-				return true;
-			}
-			if (f_ < -flim0){
-				f_ = -flim0;
-				return true;
-			}
-			return false;
+		if (f_ > lim){
+			f_ = lim;
+			return true;
 		}
-		// 動摩擦
-		else{
-			if (f_ > flim){
-				f_ = flim;
-				return true;
-			}
-			if (f_ < -flim){
-				f_ = -flim;
-				return true;
-			}
-			return false;
+		if (f_ < -lim){
+			f_ = -lim;
+			return true;
 		}
+		return false;
 	}
 }
 
