@@ -1,6 +1,4 @@
-﻿//#define	SprCSTest
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -13,15 +11,29 @@ namespace SprCsSample {
         static string inc = "A";	// include: "A" for all
         static string exc = "s";	// exclude:
         static string brk = "n";	// set "y" if run under debugger
+        static int OK = 0;
+        static int NG = 0;
 
         static void Main(string[] args) {
 
-            var topDirectory = @"..\..\..\..\..\..\..\";
-#if CMake
-	    topDirectory = @"..\..\..\..\..\..\";
-#endif
-	    var dllPath_64 = topDirectory + @"generated\bin\win64";
-	    var dllPath_32 = topDirectory + @"generated\bin\win32";
+	    // DLLのあるディレクトリを求めるための準備
+	    //	  cmakeを使ったか否かでcurrent directotyが異なるためのKludge
+	    var CurrDirectory = System.IO.Directory.GetCurrentDirectory();
+	    var CurrDirectories = CurrDirectory.Split('\\');
+	    var ToIndex = 0;
+	    for (int i = CurrDirectories.Length-1; i >= 0; i--) {
+		if (CurrDirectories[i].Equals("core")) {
+		    ToIndex = i;
+		    break;
+		}
+	    }
+	    var TopDirectory = "";
+	    for (int i = 0; i < ToIndex; i++) {
+		TopDirectory += CurrDirectories[i] + @"\";
+	    }
+	    // ここまで
+	    var dllPath_64 = TopDirectory + @"generated\bin\win64";
+	    var dllPath_32 = TopDirectory + @"generated\bin\win32";
             var dllDirectory = dllPath_64 + ";" + dllPath_32;
             var dllPath = Environment.GetEnvironmentVariable("PATH") + ";" + dllDirectory;
             Environment.SetEnvironmentVariable("PATH", dllPath);
@@ -29,9 +41,6 @@ namespace SprCsSample {
             ExceptionRaiser er = new ExceptionRaiser();
             try {
                 if (inc.Equals("A"))  inc = def;
-#if SprCSTest
-                if (check_test("C"))  test_constructor();
-#endif
                 if (check_test("i"))  test_intrinsic();
                 if (check_test("t"))  test_tostring();
                 if (check_test("v"))  test_vector();
@@ -51,29 +60,9 @@ namespace SprCsSample {
 	    } catch (System.Exception e) {
 		//Console.WriteLine(e.ToString());
 	    }
+            System.Console.WriteLine("----");
+            System.Console.WriteLine("Passed: " + OK + ", Failed: " + NG);
         }
-
-#if SprCSTest
-        static void test_constructor() {
-            test_name("constructor");
-
-            SprCSTest cst = new SprCSTest();
-            put("Vec3d        ", "(1,2,3)  ", cst.R1());
-            put("vector<Vec3d>", "[(1,2,3)]", edit_vectorwrapper(cst.R2(), 0));
-            put("Vec3d*       ", "[(1,2,3)]", cst.R3());
-            //arraywrapper_Vec3d awR4 = cst.R4();
-            //put("Vec3d[0]     ", "[(1,2,3)]", edit_arraywrapper(awR4, 0));
-            //put("Vec3d[1]     ", "[(11,22,33)]", edit_arraywrapper(awR4, 1));
-            //put("Vec3d[2]     ", "[(111,222,333)]", edit_arraywrapper(awR4, 2));
-            put("int          ", "1        ", cst.R5());
-            put("vector<int>  ", "[1]      ", edit_vectorwrapper(cst.R6(), 0));
-            put("int*         ", "[1]      ", cst.R7());
-            //arraywrapper_int awR8 = cst.R8();
-            //put("int[0]       ", "[1]      ", edit_arraywrapper(awR8, 0));
-            //put("int[1]       ", "[11]      ", edit_arraywrapper(awR8, 1));
-            //put("int[2]       ", "[111]      ", edit_arraywrapper(awR8, 2));
-        }
-#endif
 
         static void test_intrinsic() {
             test_name("intrinsic");
@@ -81,13 +70,8 @@ namespace SprCsSample {
             // intrinsic member
             PHSceneDesc descScene = new PHSceneDesc();
             PHRaycastHit raycastHit = new PHRaycastHit();
-	    /***
-            GRVertexElement vertexelm = new GRVertexElement();
-	    ***/
+            //-- GRVertexElement vertexelm = new GRVertexElement();
             // simple
-	    /***
-            vertexelm.offset = 123;              put("short ", "123  ", vertexelm.offset);
-	    ***/
             descScene.numIteration = 123;        put("int   ", "123  ", descScene.numIteration);
             descScene.bCCDEnabled = true;        put("bool  ", "True ", descScene.bCCDEnabled);
             raycastHit.distance = 0.123F;        put("float ", "0.123", raycastHit.distance);
@@ -96,9 +80,9 @@ namespace SprCsSample {
             descScene.gravity.x = 0;
             descScene.gravity.y = 0;
             descScene.gravity.z = -4.5;
-/**/        put("set by elm", "(0.0, 0.0, -4.5)", descScene.gravity);
+            put("set by elm", "(0.0, 0.0, -4.5)", descScene.gravity);
             descScene.gravity = new Vec3d(2.5, -5.2, 0.5);
-/**/        put("set struct", "(2.5, -5.2, 0.5)", descScene.gravity);
+            put("set struct", "(2.5, -5.2, 0.5)", descScene.gravity);
             // structure
             Vec3d v3d = new Vec3d(0.1, 0.2, 0.3);
             put("Vec new", "(0.1, 0.2, 0.3)", v3d);
@@ -112,9 +96,8 @@ namespace SprCsSample {
             test_name("ToString");
 
             Vec3d v3d = new Vec3d(0.1, 0.2, 0.3);
-            //string s = v3d.ToString();
-/**/        put("ToString", "(0.1, 0.2, 0.3)", v3d.ToString());
-/**/        System.Console.WriteLine("ToString: implicit ToString call           : " + v3d);
+            put("ToString", "(0.1, 0.2, 0.3)", edit_vector(v3d));
+            System.Console.WriteLine("     ToString: implicit ToString call           : " + v3d);
 
             PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
@@ -124,13 +107,6 @@ namespace SprCsSample {
             phSolid.SetPose(new Posed(1, 0, 0, 0, 0, 2, 0));
             put_title("ToString: phSolid");
             put_indent(2, phSolid.ToString());
-
-	    /***
-            FWWinBaseDesc descWinBase = new FWWinBaseDesc();
-            FWSdkIf fwSdk = FWSdkIf.CreateSdk();
-            put_title("ToString: fwSdk.ToString");
-            put_indent(2, fwSdk.ToString());
-	    ***/
         }
 
         static void test_vector() {
@@ -163,44 +139,22 @@ namespace SprCsSample {
             put("vec<Vec3d>", "0.1", vertices[0].x);
             put("vec<Vec3d>", "0.2", vertices[0].y);
             put("vec<Vec3d>", "0.3", vertices[0].z);
-            put("vec<Vec3d>", "(0.4, 0.5, 0.6)", vertices[1].ToString());
+            put("vec<Vec3d>", "(0.4, 0.5, 0.6)", edit_vector(vertices[1]));
         }
 
         static void test_array() {
             test_name("array");
 
-            PHOpObjDesc descOpObj = new PHOpObjDesc();
-	    /***
-            GRMeshFace meshFace = new GRMeshFace();
-            for (int i = 0; i < 4; i++) {
-                meshFace.indices[i] = 100 + i;
-            }
-            for (int i = 0; i < 4; i++) {
-                System.Console.WriteLine("array<int>: expected: " + (100 + i) + " result: " + meshFace.indices[i]);
-            }
-	    ***/
-            arraywrapper_int iarray = new arraywrapper_int(4);
-	    /***
-            for (int i = 0; i < 4; i++) {
-                meshFace.indices[i] = 200 + i;
-            }
-	    ***/
             string[] strsrc = { "abc", "def", "gh", "jklm" };
             arraywrapper_char_p icharp = new arraywrapper_char_p(4);
             for (int i = 0; i < 4; i++) {
                 icharp[i] = strsrc[i];
             }
             for (int i = 0; i < 4; i++) {
-                put("array<char*>", strsrc[i], icharp[i]);
+                put("array<char*>", strsrc[i]+"\\0", icharp[i]);
             }
-	    /***
-            meshFace.indices = iarray;
-            for (int i = 0; i < 4; i++) {
-                System.Console.WriteLine("array<int>: expected: " + (200 + i) + " result: " + meshFace.indices[i]);
-            }
-	    ***/
             Vec3i v3i = new Vec3i(1, 2, 3);
-            System.Console.WriteLine("array<int> alloc(3): result:   " + v3i);
+            System.Console.WriteLine("array<int> alloc(3): result:   " + edit_vector(v3i));
 
             Vec3i[] v3ia = new Vec3i[3];
             for (int i = 0; i < 3; i++) {
@@ -209,68 +163,47 @@ namespace SprCsSample {
             string result = string.Format("(({0}, {1}, {2}), ({3}, {4}, {5}), ({6}, {7}, {8}))",
                 v3ia[0][0], v3ia[0][1], v3ia[0][2], v3ia[1][0], v3ia[1][1], v3ia[1][2], v3ia[2][0], v3ia[2][1], v3ia[2][2]);
             put2("array<int> Vec3i[3]: ", "((10, 10, 10), (20, 20, 20), (30, 30, 30))", result);
-
-            //CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
-            //for (int x = 0; x < 10; x++) {
-            //    for (int y = 0; y < 10; y++) {
-            //        for (int z = 0; z < 10; z++) {
-            //            descMesh.vertices.push_back(new Vec3f(x, y, z));
-            //        }
-            //    }
-            //}
-            //PHSdkIf phSdk = PHSdkIf.CreateSdk();
-            //CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), (CDConvexMeshDesc)descMesh) as CDConvexMeshIf;
-            //var vertices = mesh.GetVertices();
-            //for (int i = 0; i < mesh.NVertex(); i++) {
-            //    put_indent(2, vertices[i]);
-            //}
         }
 
         static void test_type_conv() {
             test_name("type conversion");
 
-            string msg_f3 = "f2d: (1, 2, 3)";
-            string msg_d3 = "d2f: (4, 5, 6)";
+            string msg_f3 = "(1.0, 2.0, 3.0)";
+            string msg_d3 = "(4.0, 5.0, 6.0)";
 
             Vec3f f3 = new Vec3f(1, 2, 3);
             Vec3d d3 = new Vec3d(4, 5, 6);
-            put("type_conv", msg_f3, f3);
-//            print_vec3f(d3, msg_f3);    // This cause CS1502 and CS1503 compile error. <- OK
-            put("type_conv", msg_d3, (Vec3f) d3);
+            Vec3d to_d = f3;
+          //Vec3f to_f = d3;		// This cause CS0266 compile error
+            Vec3f to_f = (Vec3f) d3;
+            put("type_conv: f2d", msg_f3, to_d);
+            put("type_conv: d2f", msg_d3, to_f);
 
             Vec3fStruct f3s = f3;
             Vec3dStruct d3s = d3;
-            put("type_conv", msg_f3, "(" + f3s.x + ", " + f3s.y + ", " + f3s.z + ")");
-//            print_vec3fs(d3s, msg_d3);  // This cause CS1502 and CS1503 compile error. <- OK
-            put("type_conv", msg_d3,
-                "(" + ((Vec3fStruct)d3s).x + ", " + ((Vec3fStruct)d3s).y + ", " + ((Vec3fStruct)d3s).z + ")");
+            put("type_conv: f2d", msg_f3, edit_vector(f3s));
+            put("type_conv: d2f", msg_d3, edit_vector((Vec3fStruct)d3s));
 
             // -----
             // 戻り値の自動型変換のテスト
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             CDBoxDesc descBox = new CDBoxDesc();
-            descBox.boxsize = new Vec3f(1,4,9);
             CDShapeIf shape = phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox);
-            // ↑ CreateShapeはCDBoxIfオブジェクトを返す。それをCDShapeIfで受ける。
 
-            // CDShapeIf型の変数に格納されているが中身はCDBoxIfなので型変換可能。
-            //CDBoxIf box = shape as CDBoxIf;
-            //put("type_conv", "(1, 4, 9)", box.GetBoxSize().ToString());
-
-            // CDBoxIf is not a CDSphereIf なので nullになることが期待される。
-            CDSphereIf sphere = shape as CDSphereIf;
-            if (sphere == null) {
+            // CDShapeIf is a NamedObjectIf なのでnullにはならず型変換される。
+            NamedObjectIf named_obj = shape as NamedObjectIf;
+            if (named_obj == null) {
                 put("type_conv", "null", "null");
             } else {
-                put("type_conv", "null", sphere.ToString());
+                put("type_conv", "<CDBox shape0/>", named_obj.ToString());
             }
             
-            // CDBoxIf is a CDConvexIf なのでnullにはならず型変換される。
-            CDConvexIf convex = shape as CDConvexIf;
-            if (convex == null) {
-                put("type_conv", "not null", "null");
+            // CDShapeIf is not a CDBoxIf なのでnullになることが期待される。
+            CDBoxIf box = shape as CDBoxIf;
+            if (box == null) {
+                put("type_conv", "null", "null");
             } else {
-                put("type_conv", "not null", convex.ToString());
+                put("type_conv", "not null", box.ToString());
             }
 
             // -----
@@ -305,31 +238,34 @@ namespace SprCsSample {
             CDSphereDesc descSphere1 = structSphere1;
             CDSphereDescStruct structSphere2 = new CDSphereDescStruct();
             CDSphereDesc descSphere2 = structSphere2;
-            descSphere2.radius = 2;
-            descSphere2.material.density = 2;
             //
             put("DescStruct: radius      ", "1", structSphere1.radius);
-            put("DescStruct: base.density", "1", structSphere1.material.density);
-            structSphere1.ApplyFrom(descSphere2);
+            put("DescStruct: base.density", "1000", structSphere1.material.density);
             put("ApplyFrom:");
-            put("DescStruct: radius      ", "2", structSphere1.radius);
-            put("DescStruct: base.density", "1", structSphere1.material.density);
-            structSphere1 = descSphere2;
-            put("assignment:");
+            descSphere2.radius = 2;
+            descSphere2.material.density = 2;
+            structSphere1.ApplyFrom(descSphere2);
             put("DescStruct: radius      ", "2", structSphere1.radius);
             put("DescStruct: base.density", "2", structSphere1.material.density);
-            //
+            put("assignment:");
             descSphere2.radius = 3;
             descSphere2.material.density = 3;
-            structSphere1.ApplyFrom(descSphere2);
-            put("ApplyTo:");
-            put("DescStruct: radius      ", "3", structSphere1.radius);
-            put("DescStruct: base.density", "2", structSphere1.material.density);
-            structSphere1.material.density = 3;
-            descSphere1 = structSphere2;
-            put("assignment:");
+            structSphere1 = descSphere2;
             put("DescStruct: radius      ", "3", structSphere1.radius);
             put("DescStruct: base.density", "3", structSphere1.material.density);
+            //
+            put("ApplyTo:");
+            structSphere1.radius = 4;
+            structSphere1.material.density = 4;
+            structSphere1.ApplyTo(descSphere2);
+            put("Desc: radius      ", "4", descSphere2.radius);
+            put("Desc: base.density", "4", descSphere2.material.density);
+            put("assignment:");
+            structSphere1.radius = 5;
+            structSphere1.material.density = 5;
+            descSphere2 = structSphere1;
+            put("Desc: radius      ", "5", descSphere2.radius);
+            put("Desc: base.density", "5", descSphere2.material.density);
 
             //
             // ---- 比較 ----
@@ -363,28 +299,6 @@ namespace SprCsSample {
             // 引数をちゃんと設定しないと例外が起きる！！
             if (brk != "y") return;
 
-            // default argument
-	    /***
-            FWApp app = new FWApp();
-            FWWinDesc desc = new FWWinDesc();
-            FWWinIf winif = new FWWinIf();
-            try { FWWinIf win1 = app.CreateWin(); }
-                catch (System.Exception e) { put(SEH_Exception.what(e)); }
-            try { FWWinIf win2 = app.CreateWin(desc); }
-                catch (System.Exception e) { put(SEH_Exception.what(e)); }
-            try { FWWinIf win3 = app.CreateWin(desc, winif); }
-                catch (System.Exception e) { put(SEH_Exception.what(e)); }
-
-            // NULL pointer as argument
-            try { FWWinIf win4 = app.CreateWin(desc, null); }
-                catch (System.Exception e) { put(SEH_Exception.what(e)); }
-
-            // これ以降のコードは正常には動作はしない － 例外が起きて停止する。
-            // デバッガで止めて値を確認すること。
-            //
-            if (brk != "y") return;
-	    ***/
-
             // [int]
             CDShapePairIf shapePairIf = new CDShapePairIf();
             shapePairIf.GetShape(123);
@@ -413,9 +327,6 @@ namespace SprCsSample {
             PHHapticPointerDesc descHaptic = new PHHapticPointerDesc();
             PHHapticPointerIf phHaptic = phScene.CreateHapticPointer();
 
-            //HISdkDesc descHi = new HISdkDesc();
-            //HISdkIf hiSdk = HISdkIf.CreateSdk();
-
             put("ret int   ", "3    ", phScene.NSolids());
             for (int i = 0; i < 20; i++) {
                 phScene.Step();
@@ -425,12 +336,12 @@ namespace SprCsSample {
             put("ret float ", "2.345", phHaptic.GetLocalRange());
             put("ret double", "0.005", phScene.GetTimeStep());
             phScene.SetMaxVelocity(1.23);
-            put("ret double", "0.123", phScene.GetMaxVelocity());
+            put("ret double", "1.23", phScene.GetMaxVelocity());
             phScene.EnableContactDetection(false);
             put("ret bool  ", "False", phScene.IsContactDetectionEnabled());
             phScene.EnableContactDetection(true);
             put("ret bool  ", "True ", phScene.IsContactDetectionEnabled());
-            put("ret size_t", "152? ", phScene.GetDescSize());
+            put("ret size_t", "160 ", phScene.GetDescSize());
             put("ret Vec3d ", "(0.0, -9.8, 0.0)", phScene.GetGravity());
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
             put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
@@ -445,18 +356,11 @@ namespace SprCsSample {
                     }
                 }
             }
-            //PHSdkIf phSdk = PHSdkIf.CreateSdk();
-            CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
-            //mesh.GetVertices();
-            //arraywrapper_Vec3f vertices = mesh.GetVertices();
             Vec3f[] v3fr = new Vec3f[8];
             v3fr[0] = new Vec3f(0, 0, 0); v3fr[1] = new Vec3f(0, 0, 9);
             v3fr[2] = new Vec3f(0, 9, 0); v3fr[3] = new Vec3f(0, 9, 9);
             v3fr[4] = new Vec3f(9, 0, 0); v3fr[5] = new Vec3f(9, 0, 9);
             v3fr[6] = new Vec3f(9, 9, 0); v3fr[7] = new Vec3f(9, 9, 9);
-            //for (int i = 0; i< 8; i++) {
-            //    put("ret_array", edit_vector(v3fr[i]), vertices[i]);
-            //}
         }
 
         static void test_operator() {
@@ -467,19 +371,19 @@ namespace SprCsSample {
             Vec3f v3b = new Vec3f(0.4f, 0.5f, 0.6f);
             Vec3f v3c = new Vec3f(0.1f, 0.2f, 0.3f);	// v3c == v3a
             Vec3f v3d;
-            put("vector unary  -", "(-0.1, -0.2, -0.3)", -v3a);
-            put("vector binary +", "( 0.5,  0.7,  0.9)", v3a + v3b);
-            put("vector binary -", "(-0.3, -0.3, -0.3)", v3a - v3b);
-            put("vector binary *", "( 0.2,  0.4,  0.6)", v3a * 2);
-            put("vector binary *", "( 0.8,  1.0,  1.2)", 2 * v3b);
-            put("vector binary /", "( 0.05, 0.10,  0.15)", v3a / 2);
+            put("vector unary  -", "(-0.1, -0.2, -0.3)", edit_vector(-v3a));
+            put("vector binary +", "(0.5, 0.7, 0.9)", edit_vector(v3a + v3b));
+            put("vector binary -", "(-0.3, -0.3, -0.3)", edit_vector(v3a - v3b));
+            put("vector binary *", "(0.2, 0.4, 0.6)", edit_vector(v3a * 2));
+            put("vector binary *", "(0.8, 1.0, 1.2)", edit_vector(2 * v3b));
+            put("vector binary /", "(0.05, 0.10, 0.15)", edit_vector(v3a / 2, 2));
             put("vector binary *", "  0.32", v3a * v3b);
-            put("vector binary %", "(-0.03, 0.06, -0.03)", v3a % v3b);
-            put("vector binary ^", "(-0.03, 0.06, -0.03)", v3a ^ v3b);
-            v3d = v3a; v3d += v3b; put("vector binary +=", "( 0.5,  0.7,  0.9)", v3d);
-            v3d = v3a; v3d -= v3b; put("vector binary -=", "(-0.3, -0.3, -0.3)", v3d);
-            v3d = v3a; v3d *= 2;   put("vector binary *=", "( 0.2,  0.4,  0.6)", v3d);
-            v3d = v3a; v3d /= 2;   put("vector binary /=", "(0.05, 0.10, 0.15)", v3d);
+            put("vector binary %", "(-0.03, 0.06, -0.03)", edit_vector(v3a % v3b, 2));
+            put("vector binary ^", "(-0.03, 0.06, -0.03)", edit_vector(v3a ^ v3b, 2));
+            v3d = v3a; v3d += v3b; put("vector binary +=", "(0.5, 0.7, 0.9)", edit_vector(v3d));
+            v3d = v3a; v3d -= v3b; put("vector binary -=", "(-0.3, -0.3, -0.3)", edit_vector(v3d));
+            v3d = v3a; v3d *= 2;   put("vector binary *=", "(0.2, 0.4, 0.6)", edit_vector(v3d));
+            v3d = v3a; v3d /= 2;   put("vector binary /=", "(0.05, 0.10, 0.15)", edit_vector(v3d, 2));
             put("vector binary ==", "True ", v3a == v3c);
             put("vector binary ==", "False", v3a == v3b);
             put("vector binary !=", "True ", v3a != v3b);
@@ -523,7 +427,7 @@ namespace SprCsSample {
             Vec3f pv1 = new Vec3f(1.0f, 2.0f, 3.0f);
             Posef pr1 = new Posef(-36.0f, 12.0f, 42.0f, 24.0f, -25.0f, 66.0f, 97.0f);
             put2("pose binary *", edit_pose(pr1), edit_pose(pp1 * pp2));
-            put2("pose binary *", "(59, 66, 85)", (pp1 * pv1));
+            put2("pose binary *", "(59.0, 66.0, 85.0)", edit_vector((pp1 * pv1)));
 
 	    // indexing
             System.Console.WriteLine("");
@@ -550,8 +454,8 @@ namespace SprCsSample {
 
             // TVector
             Vec3f v31 = new Vec3f(1.0f, 2.0f, 3.0f);
-            put("Vec3f: square ", "14.0", v31.square());
-            put("Vec3f: norm   ", "3.7416574", v31.norm());
+            put("Vec3f: square ", "14.0", string.Format("{0:f1}", v31.square()));
+            put("Vec3f: norm   ", "3.741657", string.Format("{0:f6}", v31.norm()));
             Vec3f v3u = v31; v3u.unitize();
             Vec3f v3r = new Vec3f(0.2672612f, 0.5345225f, 0.8017837f);
             put2("Vec3f: unitize", edit_vector(v3r), edit_vector(v3u));
@@ -674,12 +578,46 @@ namespace SprCsSample {
 	static void put(string s = "") { System.Console.WriteLine(s); }
 
 	static void put(string title, object expected, object result) {
-	        string line = title + ": expected: " + expected + ", result: " + result;
-	        System.Console.WriteLine(line);
-	}
-        static void put2(string title, object expected, object result) {
-            string line = title + ":\n  expected: " + expected + ",\n  result:   " + result;
+            //System.Console.Write(result.GetType()+" ");
+            switch (result) {
+                case SprCs.Vec3f v3f:
+                    result = edit_vector(v3f);
+                    break;
+                case SprCs.Vec3d v3d:
+                    result = edit_vector(v3d);
+                    break;
+                case SprCs.Vec4f v4f:
+                    result = edit_vector(v4f);
+                    break;
+                case SprCs.Matrix3f m3f:
+                    result = edit_matrix(m3f);
+                    break;
+                default:
+                    result = result.ToString().Trim();
+                    break;
+            }
+            string exp = expected.ToString().Trim();
+            string res = result.ToString().Trim();
+            res = res.Replace("\0", "\\0");
+            string judge = exp == res ? "OK" : "--";
+            System.Console.Write("[" + judge + "] ");
+            string line = title + ": expected: " + exp + ", result: " + res;
             System.Console.WriteLine(line);
+            if (judge == "OK") OK++;
+            if (judge != "OK") NG++;
+        }
+        static void put2(string title, object expected, object result) {
+            //System.Console.Write(result.GetType()+" ");
+            string exp = expected.ToString().Trim();
+            string res = result.ToString().Trim();
+            string judge = exp == res ? "OK" : "--";
+            System.Console.Write("[" + judge + "] ");
+            string line = title + ":\n"
+                                + "     expected: " + exp + ",\n"
+                                + "     result:   " + res;
+            System.Console.WriteLine(line);
+            if (judge == "OK") OK++;
+            if (judge != "OK") NG++;
         }
         static void put_title(string title) {
             System.Console.WriteLine(title + ":");
@@ -700,36 +638,52 @@ namespace SprCsSample {
             }
         }
 	//
-	static string edit_vector(Vec3f v) { return "( " + v.x + ", " + v.y + ", " + v.z + " )"; }
-	static string edit_vector(Vec3d v) { return "( " + v.x + ", " + v.y + ", " + v.z + " )"; }
-	static string edit_vector(Vec4f v) { return "( " + v.w + ", " + v.x + ", " + v.y + ", " + v.z + " )"; }
+	static string edit_vector(Vec3i v) {
+            return string.Format("({0}, {1}, {2})", v.x, v.y, v.z);
+        }
+	static string edit_vector(Vec3f v) {
+            return string.Format("({0:f1}, {1:f1}, {2:f1})", v.x, v.y, v.z);
+        }
+	static string edit_vector(Vec3d v, int fraction=1) {
+            string s;
+            if (fraction == 2)
+                s = string.Format("({0:f2}, {1:f2}, {2:f2})", v.x, v.y, v.z);
+            else
+                s = string.Format("({0:f1}, {1:f1}, {2:f1})", v.x, v.y, v.z);
+            return s;
+        }
+	static string edit_vector(Vec4f v) {
+            return string.Format("({0:f1}, {1:f1}, {2:f1}, {3:f1})", v.w, v.x, v.y, v.z);
+        }
 	static string edit_matrix(Matrix3f m) {
-            return "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " )"
-                 + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " )"
-                 + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))";
+            return string.Format("({0:f1}, {1:f1}, {2:f1})", m.xx, m.yx, m.zx) +
+                   string.Format("({0:f1}, {1:f1}, {2:f1})", m.xy, m.yy, m.zy) +
+                   string.Format("({0:f1}, {1:f1}, {2:f1})", m.xz, m.yz, m.zz);
 	}
 	static string edit_matrix(Matrix3d m) {
-            return "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " )"
-                 + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " )"
-                 + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))";
+            return string.Format("({0:f1}, {1:f1}, {2:f1})", m.xx, m.yx, m.zx) +
+                   string.Format("({0:f1}, {1:f1}, {2:f1})", m.xy, m.yy, m.zy) +
+                   string.Format("({0:f1}, {1:f1}, {2:f1})", m.xz, m.yz, m.zz);
 	}
 	static string edit_quaternion(Quaternionf q) {
-            return "( " + q.w + ",  " + q.x + ",  " + q.y + ",  " +  q.z + " )";
+            return string.Format("({0:f1}, {1:f1}, {2:f1}, {3:f1})", q.w, q.x, q.y, q.z);
 	}
 	static string edit_pose(Posef p) {
-            return "( " + p.w + ", " + p.x + ", " + p.y + ", " + p.z
-                 + ", " + p.px + ", " + p.py + ", " + p.pz + " )";
+            return string.Format("({0:f1}, {1:f1}, {2:f1}, {3:f1}, {4:f1}), {5:f1}, {6:f1}",
+                                 p.w, p.x, p.y, p.z, p.px, p.py, p.pz);
 	}
 
 	static string edit_vectorwrapper(vectorwrapper_Vec3d v, int ix) {
-	    return "( " + v[ix].x + ", " + v[ix].y + ", " + v[ix].z + " )";
+            return string.Format("({0:f1}, {1:f1}, {2:f1})", v[ix].x, v[ix].y, v[ix].z);
 	}
 	static string edit_vectorwrapper(vectorwrapper_int v, int ix) {
 	    return v[ix].ToString();
 	}
+/***
 	static string edit_arraywrapper(arraywrapper_Vec3d a, int ix) {
-	    return "( " + a[ix].x + ", " + a[ix].y + ", " + a[ix].z + " )";
+            return string.Format("({0:f1}, {1:f1}, {2:f1})", a[ix].x, a[ix].y, a[ix].z);
 	}
+***/
 	static string edit_arraywrapper(arraywrapper_int a, int ix) {
 	    return a[ix].ToString();
 	}

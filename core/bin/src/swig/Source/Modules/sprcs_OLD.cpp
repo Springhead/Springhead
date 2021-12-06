@@ -15,7 +15,6 @@
 #include <fstream>
 #include <iostream>
 #include <stdarg.h>
-#include <regex>
 using namespace std;
 typedef std::vector<string> Strings;
 typedef std::vector<Node*> Nodes;
@@ -237,8 +236,8 @@ const int FD_ALL	= FD_CPP | FD_CS | FD_CSP;
   #define RETURN_p		return TC_VAR_p
   #define RETURN_v		return _val
   //
-  #define TRY_begin(n,T,V)	Printf(CPP, "%s%s %s = (%s) NULL;\n%stry { %s = ", TC_I(n), T, #V, T, TC_I(n), #V)
-  #define TRY_begin_new(n,T,V)	Printf(CPP, "\n%s%s %s = (%s) NULL;\n%stry { %s = ", TC_I(n), #T, #V, #T, TC_I(n), #V)
+  #define TRY_begin(n,T,V)	Printf(CPP, "%s%s %s = (%s) 0;\n%stry { %s = ", TC_I(n), T, #V, T, TC_I(n), #V)
+  #define TRY_begin_new(n,T,V)	Printf(CPP, "\n%s%s %s = (%s) 0;\n%stry { %s = ", TC_I(n), #T, #V, #T, TC_I(n), #V)
   #define TRY_begin_NEW(n,T,V)	TRY_begin(n,T,V)
   #define TRY_begin_void(n)	Printf(CPP, "%stry { ", TC_I(n))
   #define TRY_cont(n)		Printf(CPP, " ");
@@ -295,20 +294,15 @@ map<string, int> accessor_generation_map;
 map<string, Node*> template_class_map;
 map<string, Nodes> template_function_map;
 map<string, TemplateClassInfo*> template_class_info_map;
-map<string, NodeInfo> class_node_map;
-map<string, char*> class_parent_map;
 static int function_count = 0;
 
 #define	MAX_NAMELEN	256
 #define	HACK		1
 
-//#define	_DEBUG
 #ifdef	_DEBUG
   #define SNAP			1
   #define DUMP			1
   #define DUMP_TREE		1
-  #define DUMP_NODE		1
-  #define DUMP_STRUCT		0
   #define SHOW_ALL_TYPES	0
   #define GATHER_INFO		1
   #define BREAK_NODE_NO		0
@@ -316,8 +310,6 @@ static int function_count = 0;
   #define SNAP			0
   #define DUMP			0
   #define DUMP_TREE		0
-  #define DUMP_NODE		0
-  #define DUMP_STRUCT		0
   #define SHOW_ALL_TYPES	0
   #define GATHER_INFO		0
   #define BREAK_NODE_NO		0
@@ -336,19 +328,12 @@ static int function_count = 0;
   #define SNAP_ANA_PATH2L(x,y,L,a,b)
   #define WRAPPER_NAME_PRINT(x,y,L,a,b)
 #endif
-#if (DUMP_NODE == 1)
+#if (DUMP == 1)
   #define DUMP_NODE_INFO(x,y,a,b)	dump_node_info(x,y,__LINE__,a,b)
   #define DUMP_NODE_INFO_L(x,y,L,a,b)	dump_node_info(x,y,L,a,b)
 #else
   #define DUMP_NODE_INFO(x,y,a,b)
   #define DUMP_NODE_INFO_L(x,y,L,a,b)
-#endif
-#if (DUMP_STRUCT == 1)
-  #define DUMP_STRUCT_INFO(x,y,a)	dump_struct_info(x,y,__LINE__,a)
-  #define DUMP_STRUCT_INFO_L(x,y,L,a)	dump_struct_info(x,y,L,a)
-#else
-  #define DUMP_STRUCT_INFO(x,y,a)
-  #define DUMP_STRUCT_INFO_L(x,y,L,a)
 #endif
 #if (GATHER_INFO == 1)
   DOHFile* gip;
@@ -478,10 +463,10 @@ public:
 			// vector or array
 			if (ni.is_vector || ni.is_array) {
 				if (ni.is_struct) {
-					string wrapper_key(make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "generate: wrapper key"));
-					generate_wrapper_accessor(fps, topnode, ni, ci, "vector or array", __LINE__);
+					string wrapper_key(make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "generate wrapper key"));
+					generate_wrapper_accessor(fps, topnode, ni, ci, "variable", __LINE__);
 					if (wrapper_map.find(wrapper_key) == wrapper_map.end()) {
-						generate_wrapper_accessor_struct(topnode, members[i], ni, ci, "vector/array member", __LINE__);
+						generate_wrapper_accessor_struct(topnode, members[i], ni, ci, "variable", __LINE__);
 						wrapper_map[wrapper_key] = 1;
 					}
 				}
@@ -516,18 +501,8 @@ public:
 			// struct
 			else if (ni.is_struct) {
 				Node* is_enum_node = FindNodeByAttrR(topnode, "enumtype", ni.type);
-				// vector
-				if (ni.is_vector) {
-					SNAP_ANA_PATH1(fps, FD_ALL, "PAN: struct: vector");
-					generate_accessor_for_type_struct(fps, ni, ci);
-				}
-				// array
-				else if (ni.is_array) {
-					SNAP_ANA_PATH1(fps, FD_ALL, "PAN: struct: array");
-					generate_accessor_for_type_struct(fps, ni, ci);
-				}
 				// enum
-				else if (is_enum_node) {
+				if (is_enum_node) {
 					SNAP_ANA_PATH1(fps, FD_ALL, "variable: struct: enum");
 					DUMP_NODE_INFO(fps, FD_CS, "is_enum_node", get_node_info(fps, is_enum_node));
 					generate_accessor_for_type_struct_enum(fps, topnode, ni, ci);
@@ -542,7 +517,7 @@ public:
 					SNAP_ANA_PATH1(fps, FD_ALL, "variable: struct");
 					generate_accessor_for_type_struct(fps, ni, ci);
 				}
-				string wrapper_key(make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "generate: wrapper key"));
+				string wrapper_key(make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "generate wrapper key"));
 				if (wrapper_map.find(wrapper_key) == wrapper_map.end()) {
 					generate_wrapper_accessor_struct(topnode, members[i], ni, ci, "struct", __LINE__);
 					wrapper_map[wrapper_key] = 1;
@@ -562,6 +537,7 @@ public:
 				}
 				for (unsigned int i = 0; i < enumNodes.size(); i++) {
 					NodeInfo& ei = ni;
+					//generate_enum_def(CS, "\t", enumNodes[i], ei.cs_type, __LINE__, "DescImp");
 					FP_generate_enum_def(fps, FD_CS, __LINE__, "\t", enumNodes[i], ei.cs_type, "DescImp");
 					if (ni.name) {
 						generate_accessor_for_type_enum(fps, ni, ci);
@@ -584,6 +560,7 @@ public:
 			if (!name || !BEGINWITH(name, "enum ")) continue;
 			name += 5;
 			if (EQ(name, "")) continue;
+			//generate_enum_def(CS, "\t", enums[i], NULL, __LINE__, "DescImp");
 			FP_generate_enum_def(fps, FD_CS, __LINE__, "\t", enums[i], NULL, "DescImp");
 		}
 
@@ -1035,6 +1012,8 @@ public:
 				NodeInfo& ai = ni.funcargs[j];
 				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
 				char argbuff[MAX_NAMELEN+1];
+				//char tmpname[16];
+				//sprintf(tmpname, "arg%d_", j+1);
 				char* tmpname = argname(NULL, j);
 				// vector or array
 				if (ai.is_vector || ai.is_array) {
@@ -1517,6 +1496,7 @@ public:
 				else if (ENDWITH(ni.cs_type, "If")) {
 					Printf(CS, "            if (ptr == IntPtr.Zero) { return null; } \n", ni.cs_type, ni.cs_type);
 					Printf(CS, "            %s obj = new %s(ptr);\n", ni.cs_type, ni.cs_type);
+					// Printf(CS, "            return Activator.CreateInstance(IfInfoToCsType.FindType(obj.GetIfInfo()), ptr) as %s;\n", ni.cs_type);
 					for (int j = 0; j < (int) childClassMap[ni.cs_type].size(); j++) {
 						Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) { return new %s(ptr); }\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
 					}
@@ -1603,6 +1583,7 @@ public:
 				if (!name || !BEGINWITH(name, "enum ")) continue;
 				name += 5;
 				if (EQ(name, "")) continue;
+				//generate_enum_def(CS, "\t", enums[i], NULL, __LINE__, "IfImp");
 				FP_generate_enum_def(fps, FD_CS, __LINE__, "\t", enums[i], NULL, "IfImp");
 			}
 		}
@@ -2002,6 +1983,7 @@ public:
 		AddTemplateClassR(top, template_class_map, template_function_map, template_class_info_map);
 #if (GATHER_INFO == 1)
 		for (auto itr = template_class_map.begin(); itr != template_class_map.end(); itr++) {
+			//Printf(gip, "template_class_map: class: %s\n", itr->first.c_str());
 			PRINTifno(gip, "template_class_map: class: %s\n", itr->first.c_str());
 		}
 		for (auto itr = template_function_map.begin(); itr != template_function_map.end(); itr++) {
@@ -2223,32 +2205,6 @@ public:
 #if (DUMP_TREE == 1 && GATHER_INFO == 1)
 		dump_tree(top);
 #endif
-		// Collect class node and its parent information.
-		for(unsigned i=0; i<descs.size(); ++i) {
-			NodeInfo& ci = get_node_info(fps, descs[i]);
-			if (class_node_map.find(ci.sym_name) == class_node_map.end()) {
-				class_node_map[ci.sym_name] = ci;
-				// get parent list
-				Nodes parents;
-				DOH* baselist = Getattr(descs[i], "baselist");
-				for (int i = 0; i < DohLen(baselist); i++) {
-					DOHString* b = DohGetitem(baselist, i);
-					if (b) {
-						if (is_if_class(fps, descs[i], Char(b))) {
-							Node* node = FindNodeByAttrR(top, "sym:name", Char(b));
-							if (node) parents.push_back(node);
-						}
-					}
-				}
-				// get direct parent
-				char* parent_name = NULL;
-				if (parents.size() > 0) {
-					parent_name = Char(Getattr(parents[0], "sym:name"));
-				}
-				class_parent_map[ci.sym_name] = parent_name;
-				//PRINTF(fps, FD_ALL, "//_[class list: %d] %s : %s\n", __LINE__, ci.sym_name, (parent_name != NULL) ? parent_name : "");
-			}
-		}
 		// ----- ----- ----- ----- -----
 		for(unsigned i=0; i<descs.size(); ++i){
 			string csname = Char(Getattr(descs[i], "sym:name"));
@@ -2424,12 +2380,12 @@ public:
 		Printf(csp, "}\n");	// namespace SprCs
 
 		//	ツリーのダンプを出力
-	/***
+/***
 		char filename[] = "swig_sprcs_\0                       ";
 		strcat(filename, Char(Getattr(modules.front(), "name")));
 		strcat(filename, ".log");
 		log = NewFile(filename, "w", NULL);
-	***/
+***/
 		string filename("swig_sprcs_");
 		filename.append(Char(Getattr(modules.front(), "name")));
 		filename.append(".log");
@@ -2724,12 +2680,19 @@ public:
 			Node* is_enum_node = FindNodeByAttrR(topnode, "enumtype", ni.type);
 			if (mp->is_struct && !(mp->is_array || mp->is_vector || is_enum_node)) {
 				Printf(CS, "\tpublic %sStruct %s;\n", mp->cs_type, mp->cs_name);
-			} else if (mp->is_vector || mp->is_array) {
-				const char* wrappername = mp->is_vector ? "vectorwrapper" : "arraywrapper";
-				std::string cpp_type = std::regex_replace(mp->cpp_type, std::regex(" "), "_");
-                        	Printf(CS, "\tpublic %s_%s %s = new %s_%s();\n", wrappername, cpp_type.c_str(), mp->cs_name, wrappername, cpp_type.c_str());
-                	} else {
-                    		Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
+			} else {
+                if (mp->is_array || mp->is_vector) {
+                    // vectorwrapper / arraywrapper ではなく List を使う
+                    if (string(mp->cpp_type) == "unsigned int") {
+                        Printf(CS, "\tpublic List<uint> %s;\n", mp->cs_name);
+                    } else if (string(mp->cpp_type) == "size_t") {
+                        Printf(CS, "\tpublic List<uint> %s;\n", mp->cs_name);
+                    } else {
+                        Printf(CS, "\tpublic List<%s> %s;\n", mp->cpp_type, mp->cs_name);
+                    }
+                } else {
+                    Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
+                }
 			}
 			string key(mp->cs_name);
 			name_duplicated_map[key] = 1;
@@ -2747,7 +2710,7 @@ public:
 
 		// generate type conversion operators
 		need_apply[0] = true;
-		generate_type_conversion_operators(fps, topnode, struct_info, need_apply, name, parents);
+		generate_type_conversion_operators(fps, struct_info, need_apply, name, parents);
 		//
 		int len = strlen(name);
 		char* name_tmp = new char[len+1];
@@ -2762,10 +2725,6 @@ public:
 		delete name_tmp;
 
 		Printf(CS,  "    }\n");
-	}
-
-	void generate_size_and_pushback(DOHFile* fps[], Node* node, char* name, char* uq_name, char* cpp_name) {
-		Printf(CS, "// @@ name: %s, uq_name: %s, cpp_name: %s\n", name, uq_name, cpp_name);
 	}
 
 	void generate_type_conversion_operator(DOHFile* fps[], Node* topnode, char* complete_name, char* name, char from_type, char* suffix = "") {
@@ -2788,61 +2747,38 @@ public:
 		free_struct_info(struct_info);
 	}
 
-	void generate_type_conversion_operators(DOHFile* fps[], Node* topnode, StructInfo* struct_info, bool need_apply[2], char* name, Nodes parents) {
+	void generate_type_conversion_operators(DOHFile* fps[], StructInfo* struct_info, bool need_apply[2], char* name, Nodes parents) {
 		if (need_apply[0]) {	// need generate ApplyTo/ApplyFrom
 			SNAP_ANA_PATH1(fps, FD_CS, "generate: type conversion operators");
-  			DUMP_STRUCT_INFO(fps, FD_CS, struct_info);
-			char* pname = NULL;
-			if (class_parent_map.find(name) != class_parent_map.end()) {
-				pname = class_parent_map[name];
+			char* pname = "";
+			if (parents.size() > 0) {
+				pname = Char(Getattr(parents[0], "sym:name"));
 			}
-			//
-			Printf(cs, "// _[Find class node: %d] %s\n", __LINE__, name);
-			StructInfo* class_struct_info = get_struct_info(fps, topnode, name);
-  			DUMP_STRUCT_INFO(fps, FD_CS, class_struct_info);
 
-			// ApplyTo (XX <- XXStruct)
-			Printf(cs, "\tpublic void ApplyTo(%s r, bool apply_to_base_class=true) {\n", name);
-			for (int i = 0; i < class_struct_info->num_members; i++) {
-				StructMembersInfo* mp = class_struct_info->members[i];
-				if (mp->is_vector) {
-					Printf(cs, "\t\tr.%s.clear();\n", mp->cs_name);
-					Printf(cs, "\t\tint _%s_count_%04d = %s.size();\n", name, i, mp->cs_name);
-					Printf(cs, "\t\tfor (int i = 0; i < _%s_count_%04d; i++) {\n", name, i);
-					Printf(cs, "\t\t\tr.%s.push_back(%s[i]);\n", mp->cs_name, mp->cs_name);
-					Printf(cs, "\t\t}\n");
-				} else {
-					Printf(cs, "\t\tr.%s = %s;\n", mp->cs_name, mp->cs_name);
-				}
-			}
-			if (pname != NULL && need_apply[1]) {	// need apply to base classes
-				Printf(cs, "\t\tif (apply_to_base_class) {\n");
-				Printf(cs, "\t\t    base.ApplyTo((%s) r, apply_to_base_class);\n", pname);
-				Printf(cs, "\t\t}\n");
-			}
-			Printf(cs, "\t}\n");
-
-			// ApplyFrom (XXStruct <- XX)
-			Printf(cs, "\tpublic void ApplyFrom(%s r, bool apply_to_base_class=true) {\n", name);
+			Printf(cs, "\tpublic void ApplyTo(%s r, bool apply_to_base_class = false) {\n", name);
 			for (int i = 0; i < struct_info->num_members; i++) {
 				StructMembersInfo* mp = struct_info->members[i];
-				if (mp->is_vector) {
-					Printf(cs, "\t\t%s.clear();\n", mp->cs_name);
-					Printf(cs, "\t\tint _%s_count_%04d = r.%s.size();\n", name, i, mp->cs_name);
-					Printf(cs, "\t\tfor (int i = 0; i < _%s_count_%04d; i++) {\n", name, i);
-					Printf(cs, "\t\t\t%s.push_back(r.%s[i]);\n", mp->cs_name, mp->cs_name);
-					Printf(cs, "\t\t}\n");
-				} else {
-					Printf(cs, "\t\t%s = r.%s;\n", mp->cs_name, mp->cs_name);
-				}
+				Printf(cs, "\t\tr.%s = %s;\n", mp->cs_name, mp->cs_name);
 			}
-			if (pname != NULL && need_apply[1]) {	// need apply to base classes
+			if (parents.size() > 0 && need_apply[1]) {	// need apply to base classes
 				Printf(cs, "\t\tif (apply_to_base_class) {\n");
-				//Printf(cs, "\t\t    base.ApplyFrom((%sStruct) r, apply_to_base_class);\n", pname);
-				Printf(cs, "\t\t    base.ApplyFrom((%s) r, apply_to_base_class);\n", pname);
+				Printf(cs, "\t\t    base.ApplyTo(r, apply_to_base_class);\n");
 				Printf(cs, "\t\t}\n");
 			}
 			Printf(cs, "\t}\n");
+
+			Printf(cs, "\tpublic void ApplyFrom(%s r, bool apply_to_base_class = false) {\n", name);
+			for (int i = 0; i < struct_info->num_members; i++) {
+				StructMembersInfo* mp = struct_info->members[i];
+				Printf(cs, "\t\t%s = r.%s;\n", mp->cs_name, mp->cs_name);
+			}
+			if (parents.size() > 0 && need_apply[1]) {	// need apply to base classes
+				Printf(cs, "\t\tif (apply_to_base_class) {\n");
+				Printf(cs, "\t\t    base.ApplyFrom(r, apply_to_base_class);\n");
+				Printf(cs, "\t\t}\n");
+			}
+			Printf(cs, "\t}\n");
+
 			Printf(cs, "\tpublic static implicit operator %s(%sStruct m) {\n", name, name);
 			Printf(cs, "\t    %s r = new %s();\n", name, name);
 			Printf(cs, "\t    m.ApplyTo(r, true);\n");
@@ -2856,7 +2792,6 @@ public:
 			Printf(cs, "\t}\n");
 		} else {
 			SNAP_ANA_PATH1(fps, FD_CS, "generate: type conversion operators: not Desc");
-  			DUMP_STRUCT_INFO(fps, FD_CS, struct_info);
 			Printf(cs, "\tpublic static implicit operator %s(%sStruct m) {\n", name, name);
 			Printf(cs, "\t    %s r = new %s();\n", name, name);
 			generate_type_conversion_operator_copy_members(cs, struct_info, "r", "m");
@@ -2888,7 +2823,6 @@ public:
 		SNAP_ANA_PATH2(fps, FD_CPP, "generate: class", name);
 		// [cs]
 		SNAP_ANA_PATH2(fps, FD_CS, "generate: class", name);
-  		DUMP_STRUCT_INFO(fps, FD_CS, struct_info);
 		//Printf(CS, "    [StructLayout(LayoutKind.Sequential,Pack=%d)]\n", ALIGNMENT);
 		Printf(CS, "    public partial class %s", name);
 
@@ -2926,7 +2860,6 @@ public:
 			// destructor
 			// [cpp]
 			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_delete_%s(HANDLE v) {\n", uq_name);
-			Printf(CPP, "        if (v == NULL) return;\n");
 			Printf(CPP, "        try { delete (%s*) v; }\n", cpp_name);
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "    }\n");
@@ -2955,9 +2888,6 @@ public:
 		}
 		delete name_tmp;
 
-		SNAP_ANA_PATH1(fps, FD_CS, "GENERATE APPLYTO/FROM");
-
-
 		// generate overload operators
 		void* attrline = GetFlagAttr(node, "feature:operator:def");
 		if (attrline != NULL) {
@@ -2967,7 +2897,7 @@ public:
 			//	sepc:		op-sym,types,[func-name][,type[,type]]
 			//	op-sym:		演算子記号（+,- など）
 			//	types="r12":	"r12" はそれぞれ 演算結果,オペランド1,オペランド2 の型指定
-			//	func-name:	演算を識別する名前（typesとfunc-nameで一意になること）【省略可】
+			//	func-name:	演算を識別する名前（typesとfinc-nameで一意になること）【省略可】
 			//	type:		types で S または O を指定したとき その具体的な型名
 			//	
 			//	"r12" に指定できるのもの
@@ -3130,7 +3060,7 @@ public:
 		if (!ENDWITH(uq_name, "If")) {
                		int has_constructor = Cmp(Getattr(node, "allocate:has_constructor"), "1") == 0;
                		int public_constructor = Cmp(Getattr(node, "allocate:public_constructor"), "1") == 0;
-               		// int copy_constructor = Cmp(Getattr(node, "allocate:copy_constructor"), "1") == 0;
+               		//int copy_constructor = Cmp(Getattr(node, "allocate:copy_constructor"), "1") == 0;
                		// int has_destructor = Cmp(Getattr(node, "allocate:has_destructor"), "1") == 0;
                		// int default_destructor = Cmp(Getattr(node, "allocate:default_destructor"), "1") == 0;
 #if (DUMP == 1)
@@ -3796,7 +3726,7 @@ public:
 			NodeInfo& ni = get_node_info(fps, info->node);
 			PRINTF(fps, FD_ALL, "//   (%d/%d): %s %s\n", (i+1), struct_info->num_members, ni.cpp_type, ni.cpp_name);
 			string key(ni.cs_name);
-			string wrapper_key(make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "generate: wrapper key for parents"));
+			string wrapper_key(make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "generate wrapper key for parents"));
 			bool duplicated = (dupe_map.find(key) != dupe_map.end());
 			bool generated = (wrapper_map.find(wrapper_key) != wrapper_map.end());
 			if (!duplicated && !generated) {
@@ -3813,7 +3743,7 @@ public:
 	}
 
 	char* make_wrapper_type(NodeInfo& ni) {
-		return (char*) (ni.is_vector ? "vector" : (ni.is_array ? "array" : "struct"));
+		return (char*) (ni.is_vector ? "vector" : "array");
 	}
 
 	char* make_wrapper_name(DOHFile* fps[], int flag, int line, NodeInfo& ni, NodeInfo& ci, char* label) {
@@ -3895,36 +3825,26 @@ public:
 #endif
 
 	void generate_wrapper_accessor(DOHFile* fps[], Node* topnode, NodeInfo& ni, NodeInfo& ci, char* label, int line) {
-		if (ni.is_intrinsic) {
-			if (ni.is_vector) {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: intrinsic: vector");
-				generate_accessor_for_type_vector_intrinsic(fps, ni, ci);
-			} else if (ni.is_array) {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: intrinsic: array");
-				generate_accessor_for_type_array_intrinsic(fps, ni, ci);
+		if (ni.is_vector) {
+			SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: vector");
+			generate_accessor_for_type_vector(fps, ni, ci);
+		} else if (ni.is_array) {
+			SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: array");
+			generate_accessor_for_type_array(fps, ni, ci);
+		} else if (ni.is_intrinsic) {
+			if (ni.is_pointer) {
+				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: accessor: intrinsic: pointer");
+				generate_accessor_for_type_intrinsic_pointer(fps, ni, ci);
+			} else if (ni.is_bool) {
+				SNAP_ANA_PATH2L(fps, FD_ALL, line, "generate: accessor: intrinsic: bool", label);
+				generate_accessor_for_type_intrinsic_bool(fps, ni, ci);
 			} else {
-				if (ni.is_pointer) {
-					SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: accessor: intrinsic: pointer");
-					generate_accessor_for_type_intrinsic_pointer(fps, ni, ci);
-				} else if (ni.is_bool) {
-					SNAP_ANA_PATH2L(fps, FD_ALL, line, "generate: accessor: intrinsic: bool", label);
-					generate_accessor_for_type_intrinsic_bool(fps, ni, ci);
-				} else {
-					SNAP_ANA_PATH2L(fps, FD_ALL, line, "generate: accessor: intrinsic", label);
-					generate_accessor_for_type_intrinsic(fps, ni, ci);
-				}
+				SNAP_ANA_PATH2L(fps, FD_ALL, line, "generate: accessor: intrinsic", label);
+				generate_accessor_for_type_intrinsic(fps, ni, ci);
 			}
 		} else if (ni.is_string) {
-			if (ni.is_vector) {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: string: vector");
-				generate_accessor_for_type_vector_string(fps, ni, ci);
-			} else if (ni.is_array) {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: string: array");
-				generate_accessor_for_type_array_string(fps, ni, ci);
-			} else {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: string");
-				generate_accessor_for_type_string(fps, ni, ci);
-			}
+			SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrapper accessor: string");
+			generate_accessor_for_type_string(fps, ni, ci);
 		} else if (ni.is_struct) {
 			Node* is_enum_node = FindNodeByAttrR(topnode, "enumtype", ni.type);
 			if (is_enum_node) {
@@ -3935,14 +3855,6 @@ public:
 			else if (ni.is_pointer) {
 				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrpper accessor: struct: pointer");
 				generate_accessor_for_type_struct_pointer(fps, ni, ci);
-			}
-			else if (ni.is_vector) {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrpper accessor: struct: vector");
-				generate_accessor_for_type_vector_struct(fps, ni, ci);
-			}
-			else if (ni.is_array) {
-				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrpper accessor: struct: array");
-				generate_accessor_for_type_array_struct(fps, ni, ci);
 			}
 			else {
 				SNAP_ANA_PATH1L(fps, FD_ALL, line, "generate: wrpper accessor: struct");
@@ -4080,7 +3992,6 @@ public:
 		if (is_already_generated(ni, ci)) return;
 
 		// [cpp]　受け渡しは BSTR
-//vector<string>は未対応
 		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_get_%s(HANDLE _this) {\n", ci.uq_name, ni.uq_name);
 		Printf(CPP, "        BSTR result = NULL;\n");
 		Printf(CPP, "        try {\n");
@@ -4114,6 +4025,79 @@ public:
 #endif
 	}
 
+	void generate_accessor_for_type_vector(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
+		//char* wrapper_name = make_wrapper_name(CPP, CS, CSP, ni, ci, "vector", __LINE__);
+		char* wrapper_name = make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "vector");
+
+		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: vector");
+		// [cs]
+		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
+		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_addr_%s(_this)); }\n", wrapper_name, ci.uq_name, ni.uq_name);
+		Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "        }\n");
+		if (is_already_generated(ni, ci)) return;
+
+		// [cpp]
+		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_addr_%s(HANDLE _this) {\n", ci.uq_name, ni.uq_name);
+		Printf(CPP, "        HANDLE _ptr = NULL;\n");
+		Printf(CPP, "        try { _ptr = &(*((%s*)_this)).%s; }\n", ci.cpp_name, ni.uq_name);
+		Printf(CPP, "        %s\n", CATCH_code);
+		Printf(CPP, "        return _ptr;\n");
+		Printf(CPP, "    }\n");
+		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_set_%s(HANDLE _this, HANDLE _ptr) {\n", ci.uq_name, ni.uq_name);
+		Printf(CPP, "        try {\n");
+		Printf(CPP, "            if (&(*((%s*)_this)).%s != _ptr) {\n", ci.cpp_name, ni.uq_name);
+		Printf(CPP, "                vector<%s>* src = (vector<%s>*) _ptr;\n", ni.cpp_type, ni.cpp_type);
+		Printf(CPP, "                vector<%s>* dst = &(*((%s*)_this)).%s;\n", ni.cpp_type, ci.cpp_name, ni.uq_name);
+		Printf(CPP, "                copy(src->begin(), src->end(), back_inserter(*dst));\n");
+		Printf(CPP, "            }\n");
+		Printf(CPP, "        }\n");
+		Printf(CPP, "        %s\n", CATCH_code);
+		Printf(CPP, "    }\n");
+
+		// [csp]
+		Printf(CSP, "\t%s\n", DLLIMPORT);
+		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_addr_%s(IntPtr _this);\n", ci.uq_name, ni.uq_name);
+		Printf(CSP, "\t%s\n", DLLIMPORT);
+		Printf(CSP, "\tpublic static extern void Spr_%s_set_%s(IntPtr _this, IntPtr _ptr);\n", ci.uq_name, ni.uq_name);
+	}
+
+	void generate_accessor_for_type_array(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
+		//char* wrapper_name = make_wrapper_name(CPP, CS, CSP, ni, ci, "vector", __LINE__);
+		char* wrapper_name = make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "vector");
+
+		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: array");
+		// [cs]
+		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
+		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_addr_%s(_this)); }\n", wrapper_name, ci.uq_name, ni.uq_name);
+		Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_this, value); }\n", ci.uq_name, ni.uq_name);
+		Printf(CS,  "        }\n");
+		if (is_already_generated(ni, ci)) return;
+
+		// [cpp]
+		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_addr_%s(HANDLE _this) {\n", ci.uq_name, ni.uq_name);
+		Printf(CPP, "        HANDLE _ptr = NULL;\n");
+		Printf(CPP, "        try { _ptr = &(*((%s*)_this)).%s; }\n", ci.cpp_name, ni.uq_name);
+		Printf(CPP, "        %s\n", CATCH_code);
+		Printf(CPP, "        return _ptr;\n");
+		Printf(CPP, "    }\n");
+		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_set_%s(HANDLE _this, HANDLE _ptr) {\n", ci.uq_name, ni.uq_name);
+		Printf(CPP, "        try {\n");
+		Printf(CPP, "            if (&(*((%s*)_this)).%s != _ptr) {\n", ci.cpp_name, ni.uq_name);
+		int size = atoi(ni.array_size);
+		Printf(CPP, "                memcpy_s(((%s*)_ptr)->%s, %d*sizeof(%s), _ptr, %d*sizeof(%s));\n", ci.cpp_name, ni.uq_name, size, ni.cpp_type, size, ni.cpp_type);
+		Printf(CPP, "            }\n");
+		Printf(CPP, "        }\n");
+		Printf(CPP, "        %s\n", CATCH_code);
+		Printf(CPP, "    }\n");
+
+		// [csp]
+		Printf(CSP, "\t%s\n", DLLIMPORT);
+		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_addr_%s(IntPtr _this);\n", ci.uq_name, ni.uq_name);
+		Printf(CSP, "\t%s\n", DLLIMPORT);
+		Printf(CSP, "\tpublic static extern void Spr_%s_set_%s(IntPtr _this, IntPtr _ptr);\n", ci.uq_name, ni.uq_name);
+	}
+
 	void generate_accessor_for_type_struct_enum(DOHFile* fps[], Node* topnode, NodeInfo& ni, NodeInfo& ci) {
 		Node* is_enum_node = FindNodeByAttrR(topnode, "enumtype", ni.type);
 
@@ -4142,6 +4126,7 @@ public:
 		Printf(CSP, "\t%s\n", DLLIMPORT);
 		Printf(CSP, "\tpublic static extern void Spr_%s_set_%s(IntPtr _this, int value);\n", ci.uq_name, ni.uq_name);
 	}
+
 	void generate_accessor_for_type_struct_pointer(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
 		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: struct: pointer");
 		// [cs]
@@ -4160,6 +4145,7 @@ public:
 		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_set_%s(HANDLE _this, HANDLE _ptr) {\n", ci.uq_name, ni.uq_name);
 		Printf(CPP, "        try {\n");
 		Printf(CPP, "            if (&(((%s*)_this)->%s) != _ptr) {\n", ci.cpp_name, ni.uq_name);
+//@@		//Printf(CPP, "                *((%s*)_this)->%s = *((%s*)_ptr);\n", ci.cpp_name, ni.uq_name, ni.uq_type);
 		Printf(CPP, "                ((%s*)_this)->%s = ((%s*)_ptr);\n", ci.cpp_name, ni.uq_name, ni.uq_type);
 		Printf(CPP, "            }\n");
 		Printf(CPP, "        }\n");
@@ -4250,8 +4236,7 @@ public:
 		DOHFile* fps[3] = { NULL, NULL, NULL };
 		create_wrapper_accessor_file(fps, topnode, wrapper_name);
 		WRAPPER_NAME_PRINT(fps, FD_ALL, line, ni, label);
-		DUMP_NODE_INFO(fps, FD_ALL, "generate_wrapper_accessor_struct ci", ci);
-		DUMP_NODE_INFO(fps, FD_ALL, "generate_wrapper_accessor_struct ni", ni);
+		DUMP_NODE_INFO(fps, FD_CSP, "WRAPPER", ni);
 
 		char* cpp_type = strip_type_modifier(ni.cpp_type);
 		Node* is_enum_node = FindNodeByAttrR(topnode, "enumtype", ni.type);
@@ -4259,18 +4244,7 @@ public:
 		// [cpp]
 		SNAP_ANA_PATH2(fps, FD_CPP, "generate_wrapper_accessor_struct", wrapper_type);
 		if (EQ(wrapper_type, "vector")) {
-			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_new_%s() {\n", wrapper_type, type_name);
-			Printf(CPP, "        HANDLE _ptr = NULL;\n");
-			Printf(CPP, "        try { _ptr = new vector<%s>; }\n", cpp_type);
-			Printf(CPP, "        %s\n", CATCH_code);
-			Printf(CPP, "        return _ptr;\n");
-			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_delete_%s(HANDLE ptr) {\n", wrapper_type, type_name);
-			Printf(CPP, "        if (ptr == NULL) return;\n");
-			Printf(CPP, "        vector<%s>* vec = (vector<%s>*) ptr;\n", type_name, type_name);
-			Printf(CPP, "        vector<%s>().swap(*vec);\n", type_name);
-			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_get_%s(HANDLE ptr, int index) {\n", wrapper_type, type_name);
+			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_get_%s(HANDLE ptr, int index) {\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CPP, "        HANDLE _ptr = NULL;\n");
 			Printf(CPP, "        try {\n");
 			Printf(CPP, "            vector<%s>* vecptr = (vector<%s>*) ptr;\n", cpp_type, cpp_type);
@@ -4279,14 +4253,16 @@ public:
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "        return _ptr;\n");
 			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_set_%s(HANDLE ptr, int index, HANDLE value) {\n", wrapper_type, type_name);
+			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE ptr, int index, HANDLE value) {\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CPP, "        try {\n");
-			Printf(CPP, "            vector<%s>* vecptr = (vector<%s>*) ptr;\n", cpp_type, cpp_type);
-			Printf(CPP, "            (*vecptr)[index] = *((%s*) value);\n", cpp_type);
+			Printf(CPP, "            if (ptr != value) {\n");
+			Printf(CPP, "                vector<%s>* vecptr = (vector<%s>*) ptr;\n", cpp_type, cpp_type);
+			Printf(CPP, "                (*vecptr)[index] = *((%s*) value);\n", cpp_type);
+			Printf(CPP, "            }\n");
 			Printf(CPP, "        }\n");
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) int __cdecl Spr_%s_size_%s(HANDLE ptr) {\n", wrapper_type, type_name);
+			Printf(CPP, "    __declspec(dllexport) int __cdecl Spr_%s_%s_size_%s(HANDLE ptr) {\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CPP, "        int _val = 0;\n");
 			Printf(CPP, "        try {\n");
 			Printf(CPP, "            vector<%s>* vecptr = (vector<%s>*) ptr;\n", cpp_type, cpp_type);
@@ -4295,51 +4271,21 @@ public:
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "        return _val;\n");
 			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_push_back_%s(HANDLE ptr, HANDLE value) {\n", wrapper_type, type_name);
+			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_push_back_%s(HANDLE ptr, HANDLE value) {\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CPP, "        try {\n");
 			Printf(CPP, "            vector<%s>* vecptr = (vector<%s>*) ptr;\n", cpp_type, cpp_type);
 			Printf(CPP, "            (*vecptr).push_back(*((%s*) value));\n", cpp_type);
 			Printf(CPP, "        }\n");
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_clear_%s(HANDLE ptr) {\n", wrapper_type, type_name, cpp_type);
+			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_clear_%s(HANDLE ptr) {\n", ci.uq_name, wrapper_type, type_name, cpp_type);
 			Printf(CPP, "        try {\n");
 			Printf(CPP, "            vector<%s>* vecptr = (vector<%s>*) ptr;\n", cpp_type, cpp_type);
 			Printf(CPP, "            (*vecptr).clear();\n");
 			Printf(CPP, "        }\n");
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "    }\n");
-		}
-		else if (EQ(wrapper_type, "array")) {
-			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_new_%s(int size) {\n", wrapper_type, type_name);
-			Printf(CPP, "        HANDLE _ptr = NULL;\n");
-			Printf(CPP, "        try { _ptr = new %s[size]; }\n", cpp_type);
-			Printf(CPP, "        %s\n", CATCH_code);
-			Printf(CPP, "        return _ptr;\n");
-			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_delete_%s(HANDLE ptr) {\n", wrapper_type, type_name);
-			Printf(CPP, "        if (ptr == NULL) return;\n");
-			Printf(CPP, "        try { delete[] (%s*) ptr; }\n", cpp_type, cpp_type);
-			Printf(CPP, "        %s\n", CATCH_code);
-			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_get_%s(HANDLE ptr, int index) {\n", wrapper_type, type_name);
-			Printf(CPP, "        HANDLE _ptr = NULL;\n");
-			Printf(CPP, "        try {\n");
-			Printf(CPP, "            %s* aryptr = (%s*) ptr;\n", cpp_type, cpp_type);
-			Printf(CPP, "            _ptr = (HANDLE) &aryptr[index];\n");
-			Printf(CPP, "        }\n");
-			Printf(CPP, "        %s\n", CATCH_code);
-			Printf(CPP, "        return _ptr;\n");
-			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_set_%s(HANDLE ptr, int index, HANDLE value) {\n", wrapper_type, type_name);
-			Printf(CPP, "        try {\n");
-			Printf(CPP, "            %s* aryptr = (%s*) ptr;\n", cpp_type, cpp_type);
-			Printf(CPP, "            aryptr[index] = *((%s*) value);\n", cpp_type);
-			Printf(CPP, "        }\n");
-			Printf(CPP, "        %s\n", CATCH_code);
-			Printf(CPP, "    }\n");
-		}
-		else if (is_enum_node) {
+		} else if (is_enum_node) {
 			char* cpp_type = unqualified_name(ni.cpp_type, 0/*force*/);
 			Printf(CPP, "    __declspec(dllexport) int __cdecl Spr_%s_%s_get_%s(HANDLE ptr, int index) {\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CPP, "        int _val = 0;\n");
@@ -4350,14 +4296,27 @@ public:
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "        return _val;\n");
 			Printf(CPP, "    }\n");
-			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_new_%s() {\n", ci.uq_name, wrapper_type, type_name);
-			Printf(CPP, "        vector<%s>* ptr = new vector<%s>;\n", ci.uq_name, ci.uq_name);
-			Printf(CPP, "        return (HANDLE) ptr;\n");
-			Printf(CPP, "    }\n");
 			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE ptr, int index, int value) {\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CPP, "        try {\n");
 			Printf(CPP, "            %s* aryptr = (%s*) ptr;\n", cpp_type, cpp_type);
 			Printf(CPP, "            aryptr[index] = (%s) value;\n", cpp_type);
+			Printf(CPP, "        }\n");
+			Printf(CPP, "        %s\n", CATCH_code);
+			Printf(CPP, "    }\n");
+		} else { // array
+			Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_get_%s(HANDLE ptr, int index) {\n", ci.uq_name, wrapper_type, type_name);
+			Printf(CPP, "        HANDLE _ptr = NULL;\n");
+			Printf(CPP, "        try {\n");
+			Printf(CPP, "            %s* aryptr = (%s*) ptr;\n", ni.cpp_type, ni.cpp_type);
+			Printf(CPP, "            _ptr = (HANDLE) (aryptr + index);\n");
+			Printf(CPP, "        }\n");
+			Printf(CPP, "        %s\n", CATCH_code);
+			Printf(CPP, "        return _ptr;\n");
+			Printf(CPP, "    }\n");
+			Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE ptr, int index, HANDLE value) {\n", ci.uq_name, wrapper_type, type_name);
+			Printf(CPP, "        try {\n");
+			Printf(CPP, "            %s* aryptr = (%s*) ptr;\n", ni.cpp_type, ni.cpp_type);
+			Printf(CPP, "            aryptr[index] = *((%s*) value);\n", ni.cpp_type);
 			Printf(CPP, "        }\n");
 			Printf(CPP, "        %s\n", CATCH_code);
 			Printf(CPP, "    }\n");
@@ -4367,166 +4326,42 @@ public:
 		SNAP_ANA_PATH2(fps, FD_CS, "generate_wrapper_accessor_struct", wrapper_type);
 		char* cs_type = cs_qualified_name(strip_type_modifier(ni.uq_type));
 
+		Printf(CS,  "    public class %s : wrapper {\n", wrapper_name);
+		Printf(CS,  "        private IntPtr _ptr;\n");
+		Printf(CS,  "        public %s(IntPtr ptr) { _ptr = ptr; }\n", wrapper_name);
+		Printf(CS,  "        protected %s() {}\n", wrapper_name);
+		Printf(CS,  "        ~%s() {}\n", wrapper_name);
 		if (EQ(wrapper_type, "vector")) {
-			Printf(CS,  "    public class %s : vectorwrapper {\n", wrapper_name);
-			Printf(CS,  "        public %s() {\n", wrapper_name);
-			Printf(CS,  "            _this = SprExport.Spr_%s_new_%s();\n", wrapper_type, type_name);
-			Printf(CS,  "            _flag = true;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public %s(IntPtr ptr) : base(ptr) {}\n", wrapper_name);
-			Printf(CS,  "        public %s(IntPtr ptr, bool flag) : base(ptr, flag) {}\n", wrapper_name);
-			Printf(CS,  "        ~%s() {\n", wrapper_name);
-			Printf(CS,  "            if (_flag) { SprExport.Spr_%s_delete_%s(_this); _flag = false; }\n", wrapper_type, type_name);
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public %s this[int index] {\n", type_name);
-			Printf(CS,  "            get { return new %s(SprExport.Spr_%s_get_%s(_this, index)); }\n", type_name, wrapper_type, type_name);
-			Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_this, index, value); }\n", wrapper_type, type_name);
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public int size() { return (int) SprExport.Spr_%s_size_%s(_this); }\n", wrapper_type, type_name);
-			Printf(CS,  "        public void push_back(%s value) { SprExport.Spr_%s_push_back_%s(_this, value); }\n", type_name, wrapper_type, type_name);
-			Printf(CS,  "        public void clear() { SprExport.Spr_%s_clear_%s(_this); }\n", wrapper_type, type_name);
-			//
-			Printf(CS,  "        public static implicit operator List<%s>(%s m) {\n", ni.cs_type, wrapper_name);
-			Printf(CS,  "            List<%s> r = new List<%s>();\n", ni.cs_type, ni.cs_type);
-			Printf(CS,  "            int size = SprExport.Spr_%s_size_%s(m._this);\n", wrapper_type, type_name);
-			Printf(CS,  "            for (int i = 0; i < size; i++) {\n");
-			Printf(CS,  "                IntPtr member = SprExport.Spr_%s_get_%s(m._this, i);\n", wrapper_type, type_name);
-			Printf(CS,  "                r.Add(new %s(member));\n", type_name);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return r;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s(List<%s> r) {\n", wrapper_name, type_name);
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s();\n", wrapper_type, type_name);
-			Printf(CS,  "            %s m = new %s(ptr, true);\n", wrapper_name, wrapper_name);
-			Printf(CS,  "            for (int i = 0; i < (int) r.Count; i++) {\n");
-			Printf(CS,  "                SprExport.Spr_%s_push_back_%s(ptr, r[i]);\n", wrapper_type, type_name);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return m;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s[](%s m) {\n", ni.cs_type, wrapper_name);
-			Printf(CS,  "            int size = SprExport.Spr_%s_size_%s(m._this);\n", wrapper_type, type_name);
-			Printf(CS,  "            %s[] r = new %s[size];\n", ni.cs_type, ni.cs_type);
-			Printf(CS,  "            for (int i = 0; i < size; i++) {\n");
-			Printf(CS,  "                 IntPtr ptr = SprExport.Spr_%s_get_%s(m._this, i);\n", wrapper_type, type_name);
-			Printf(CS,  "                 r[i] = new %s(ptr);\n", ni.cs_type);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return r;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s(%s[] r) {\n", wrapper_name, type_name);
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s();\n", wrapper_type, type_name);
-			Printf(CS,  "            %s m = new %s(ptr, true);\n", wrapper_name, wrapper_name);
-			Printf(CS,  "            for (int i = 0; i < r.Length; i++) {\n");
-			Printf(CS,  "                SprExport.Spr_%s_push_back_%s(m._this, r[i]);\n", wrapper_type, type_name);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return m;\n");
-			Printf(CS,  "        }\n");
+			Printf(CS,  "        public int size() { return (int) SprExport.Spr_%s_%s_size_%s(_ptr); }\n", ci.uq_name, wrapper_type, type_name);
+			Printf(CS,  "        public void push_back(%s value) { SprExport.Spr_%s_%s_push_back_%s(_ptr, value); }\n", ni.cs_type, ci.uq_name, wrapper_type, type_name);
+			Printf(CS,  "        public void clear() { SprExport.Spr_%s_%s_clear_%s(_ptr); }\n", ci.uq_name, wrapper_type, type_name);
 		}
-		else if (EQ(wrapper_type, "array")) {
-			Printf(CS,  "    public class %s : arraywrapper {\n", wrapper_name);
-			Printf(CS,  "        public %s() {\n", wrapper_name);
-			Printf(CS,  "            _this = SprExport.Spr_%s_new_%s(%s);\n", wrapper_type, type_name, ni.array_size);
-			Printf(CS,  "            _flag = true;\n");
-			Printf(CS,  "            _nelm = %s;\n", ni.array_size);
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public %s(IntPtr ptr) : base(ptr) {}\n", wrapper_name);
-			Printf(CS,  "        public %s(IntPtr ptr, bool flag) : base(ptr, flag) {}\n", wrapper_name);
-			Printf(CS,  "        ~%s() {\n", wrapper_name);
-			Printf(CS,  "            if (_flag) { SprExport.Spr_%s_delete_%s(_this); _flag = false; }\n", wrapper_type, type_name);
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public %s this[int index] {\n", type_name);
-			Printf(CS,  "            get { return new %s(SprExport.Spr_%s_get_%s(_this, index)); }\n", type_name, wrapper_type, type_name);
-			Printf(CS,  "            set { SprExport.Spr_%s_set_%s(_this, index, value); }\n", wrapper_type, type_name);
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public int size() { return (int) _nelm; }\n");
-			//
-			Printf(CS,  "        public static implicit operator List<%s>(%s m) {\n", ni.cs_type, wrapper_name);
-			Printf(CS,  "            List<%s> r = new List<%s>();\n", ni.cs_type, ni.cs_type);
-			Printf(CS,  "            for (int i = 0; i < (int) m._nelm; i++) {\n");
-			Printf(CS,  "                IntPtr member = SprExport.Spr_%s_get_%s(m._this, i);\n", wrapper_type, type_name);
-			Printf(CS,  "                r.Add(new %s(member));\n", type_name);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return r;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s(List<%s> r) {\n", wrapper_name, type_name);
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s(r.Count);\n", wrapper_type, type_name);
-			Printf(CS,  "            %s m = new %s(ptr, true);\n", wrapper_name, wrapper_name);
-			Printf(CS,  "            for (int i = 0; i < (int) r.Count; i++) {\n");
-			Printf(CS,  "                SprExport.Spr_%s_set_%s(m._this, i, r[i]);\n", wrapper_type, type_name);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return m;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s[](%s m) {\n", ni.cs_type, wrapper_name);
-			Printf(CS,  "            int size = (int) m._nelm;\n");
-			Printf(CS,  "            %s[] r = new %s[size];\n", ni.cs_type, ni.cs_type);
-			Printf(CS,  "            for (int i = 0; i < size; i++) {\n");
-			Printf(CS,  "                 IntPtr ptr = SprExport.Spr_%s_get_%s(m._this, i);\n", wrapper_type, type_name);
-			Printf(CS,  "                 r[i] = new %s(ptr);\n", ni.cs_type);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return r;\n");
-			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s(%s[] r) {\n", wrapper_name, type_name);
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s(r.Length);\n", wrapper_type, type_name);
-			Printf(CS,  "            %s m = new %s(ptr, true);\n", wrapper_name, wrapper_name);
-			Printf(CS,  "            for (int i = 0; i < r.Length; i++) {\n");
-			Printf(CS,  "                SprExport.Spr_%s_set_%s(m._this, i, r[i]);\n", wrapper_type, type_name);
-			Printf(CS,  "            }\n");
-			Printf(CS,  "            return m;\n");
-			Printf(CS,  "        }\n");
-		}
-		else if (is_enum_node) {
-			Printf(CS,  "    public class %s : wrapper {\n", wrapper_name);
-			Printf(CS,  "        private IntPtr _ptr;\n");
-			Printf(CS,  "        public %s(IntPtr ptr) { _ptr = ptr; }\n", wrapper_name);
-			Printf(CS,  "        public %s(IntPtr ptr, bool flag) { _ptr = ptr; _flag = flag; }\n", wrapper_name);
-			Printf(CS,  "        protected %s() {}\n", wrapper_name);
-			Printf(CS,  "        ~%s() {}\n", wrapper_name);
+		if (is_enum_node) {
 			Printf(CS,  "        public %s this[int index] {\n", cs_type);
 			Printf(CS,  "            get { return (%s) SprExport.Spr_%s_%s_get_%s(_ptr, index); }\n", cs_type, ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_ptr, index, (int) value); }\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "        }\n");
 		} else {
-			Printf(CS,  "    public class %s : wrapper {\n", wrapper_name);
-			Printf(CS,  "        private IntPtr _ptr;\n");
-			Printf(CS,  "        public %s(IntPtr ptr) { _ptr = ptr; }\n", wrapper_name);
-			Printf(CS,  "        public %s(IntPtr ptr, bool flag) { _ptr = ptr; _flag = flag; }\n", wrapper_name);
-			Printf(CS,  "        protected %s() {}\n", wrapper_name);
-			Printf(CS,  "        ~%s() {}\n", wrapper_name);
 			Printf(CS,  "        public %s this[int index] {\n", cs_type);
 			Printf(CS,  "            get { return new %s(SprExport.Spr_%s_%s_get_%s(_ptr, index)); }\n", ni.cs_type, ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_ptr, index, value); }\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "        }\n");
 		}
+		if (EQ(wrapper_type, "vector")) {
+			Printf(CS, "        public static implicit operator List<%s>(%s m) {\n", ni.cs_type, wrapper_name);
+			Printf(CS, "            List<%s> r = new List<%s>();\n", ni.cs_type, ni.cs_type);
+			Printf(CS, "            return r;\n");
+			Printf(CS, "        }\n");
+			Printf(CS, "        public static implicit operator %s(List<%s> r) {\n", wrapper_name, ni.cs_type);
+			Printf(CS, "            %s m = new %s(IntPtr.Zero);\n", wrapper_name, wrapper_name);
+			Printf(CS, "            return m;\n");
+			Printf(CS, "        }\n");
+		}
 		Printf(CS,  "    }\n");
 
 		// [csp]
 		SNAP_ANA_PATH2(fps, FD_CSP, "generate_wrapper_accessor_struct", wrapper_type);
-		if (EQ(wrapper_type, "vector")) {
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern IntPtr Spr_%s_new_%s();\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern void Spr_%s_delete_%s(IntPtr _ptr);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern IntPtr Spr_%s_get_%s(IntPtr _ptr, int index);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern void Spr_%s_set_%s(IntPtr _ptr, int index, IntPtr value);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern int Spr_%s_size_%s(IntPtr _ptr);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern void Spr_%s_push_back_%s(IntPtr _ptr, IntPtr value);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern void Spr_%s_clear_%s(IntPtr _ptr);\n", wrapper_type, type_name);
-		}
-		else if (EQ(wrapper_type, "array")) {
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern IntPtr Spr_%s_new_%s(int _size);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern void Spr_%s_delete_%s(IntPtr _ptr);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern IntPtr Spr_%s_get_%s(IntPtr _ptr, int index);\n", wrapper_type, type_name);
-			Printf(CSP, "\t%s\n", DLLIMPORT);
-			Printf(CSP, "\tpublic static extern void Spr_%s_set_%s(IntPtr _ptr, int index, IntPtr value);\n", wrapper_type, type_name);
-		}
-		else if (is_enum_node) {
+		if (is_enum_node) {
 			Printf(CSP, "\t%s\n", DLLIMPORT);
 			Printf(CSP, "\tpublic static extern int Spr_%s_%s_get_%s(IntPtr _ptr, int index);\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CSP, "\t%s\n", DLLIMPORT);
@@ -4537,212 +4372,19 @@ public:
 			Printf(CSP, "\t%s\n", DLLIMPORT);
 			Printf(CSP, "\tpublic static extern void Spr_%s_%s_set_%s(IntPtr _ptr, int index, IntPtr value);\n", ci.uq_name, wrapper_type, type_name);
 		}
-	}
-
-	void generate_accessor_for_type_vector_intrinsic(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
-		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: vector: intrinsic");
-		DUMP_NODE_INFO(fps, FD_ALL, "generate_wrapper_accessor_struct ci", ci);
-		DUMP_NODE_INFO(fps, FD_ALL, "generate_wrapper_accessor_struct ni", ni);
-
-		char* wrapper_name = make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "vector");
-		char* wrapper_type = make_wrapper_type(ni);
-		char* type_name = make_wrapper_name_type_part(ni.uq_type, ni.pointer_level);
-
-		// [cs]
-		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "            get { return new %s(SprExport.Spr_%s_%s_addr_%s(_this)); }\n", wrapper_name, ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_this, value); }\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "        }\n");
-
-		/***  クラス名＋メンバ名で識別するようにしたので重複は生じない ***
-		char wrapper_key[1024];
-		sprintf_s(wrapper_key, sizeof(wrapper_key), "%s_%s_%s", ci.uq_name, wrapper_type, ni.uq_name);
-		bool already_generated = (wrapper_map.find(wrapper_key) != wrapper_map.end());
-		if (!already_generated) {
-			Printf(CS,  "//_[wrapper name: NEW: %d] %s\n", __LINE__, wrapper_key);
-			wrapper_map[wrapper_key] = 1;
-		} else {
-			Printf(CS,  "//_[wrapper name: DUP: %d] %s\n", __LINE__, wrapper_key);
-			return;
+		Printf(CSP, "\t%s\n", DLLIMPORT);
+		Printf(CSP, "\tpublic static extern int Spr_%s_%s_size_%s(IntPtr _ptr);\n", ci.uq_name, wrapper_type, type_name);
+		if (EQ(wrapper_type, "vector")) {
+			Printf(CSP, "\t%s\n", DLLIMPORT);
+			Printf(CSP, "\tpublic static extern void Spr_%s_%s_push_back_%s(IntPtr _ptr, IntPtr value);\n", ci.uq_name, wrapper_type, type_name);
+			Printf(CSP, "\t%s\n", DLLIMPORT);
+			Printf(CSP, "\tpublic static extern void Spr_%s_%s_clear_%s(IntPtr _ptr);\n", ci.uq_name, wrapper_type, type_name);
 		}
-		***/
-
-		// [cpp]
-		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_addr_%s(HANDLE _this) {\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CPP, "        HANDLE _ptr = NULL;\n");
-		Printf(CPP, "        try { _ptr = &(*((%s*)_this)).%s; }\n", ci.cpp_name, ni.uq_name);
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "        return _ptr;\n");
-		Printf(CPP, "    }\n");
-		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE _this, HANDLE _ptr) {\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CPP, "        try {\n");
-		Printf(CPP, "            if (&(*((%s*)_this)).%s != _ptr) {\n", ci.cpp_name, ni.uq_name);
-		Printf(CPP, "                vector<%s>* src = (vector<%s>*) _ptr;\n", ni.cpp_type, ni.cpp_type);
-		Printf(CPP, "                vector<%s>* dst = &(*((%s*)_this)).%s;\n", ni.cpp_type, ci.cpp_name, ni.uq_name);
-		Printf(CPP, "                copy(src->begin(), src->end(), back_inserter(*dst));\n");
-		Printf(CPP, "            }\n");
-		Printf(CPP, "        }\n");
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "    }\n");
-
-		// [csp]
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s_addr_%s(IntPtr _this);\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern void Spr_%s_%s_set_%s(IntPtr _this, IntPtr _ptr);\n", ci.uq_name, wrapper_type, ni.uq_name);
 	}
-
-	void generate_accessor_for_type_vector_struct(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
-		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: vector: struct");
-		DUMP_NODE_INFO(fps, FD_ALL, "generate_wrapper_accessor_struct ci", ci);
-		DUMP_NODE_INFO(fps, FD_ALL, "generate_wrapper_accessor_struct ni", ni);
-
-		char* wrapper_name = make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "vector");
-		char* wrapper_type = make_wrapper_type(ni);
-		char* cpp_type = strip_type_modifier(ni.cpp_type);
-		char* type_name = make_wrapper_name_type_part(ni.uq_type, ni.pointer_level);
-		
-		// [cs]
-		char* cs_type = cs_qualified_name(strip_type_modifier(ni.cs_type));
-		Printf(CS,  "    public %s %s {\n", wrapper_name, ni.uq_name);
-		Printf(CS,  "        get { return new %s(SprExport.Spr_%s_%s_get_%s(_this)); }\n", wrapper_name, ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "        set { SprExport.Spr_%s_%s_set_%s(_this, value._this); }\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "    }\n");
-
-		/***  クラス名＋メンバ名で識別するようにしたので重複は生じない ***
-		char wrapper_key[1024];
-		sprintf_s(wrapper_key, sizeof(wrapper_key), "%s_%s_%s", ci.uq_name, wrapper_type, type_name);
-		bool already_generated = (wrapper_map.find(wrapper_key) != wrapper_map.end());
-		if (!already_generated) {
-			Printf(CS,  "//_[wrapper name: NEW: %d] %s\n", __LINE__, wrapper_key);
-			wrapper_map[wrapper_key] = 1;
-		} else {
-			Printf(CS,  "//_[wrapper name: DUP: %d] %s\n", __LINE__, wrapper_key);
-			return;
-		}
-		***/
-
-		// [cpp]
-		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_get_%s(HANDLE _this) {\n", ci.uq_name, wrapper_type, ni.cpp_name);
-		Printf(CPP, "        HANDLE _ptr = NULL;\n");
-		Printf(CPP, "        try { _ptr = (vector<%s>*) &((%s*)_this)->%s; }\n", cpp_type, ci.uq_name, ni.cpp_name);
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "        return _ptr;\n");
-		Printf(CPP, "    }\n");
-		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE _this, HANDLE value) {\n", ci.uq_name, wrapper_type, ni.cpp_name);
-		Printf(CPP, "        try { ((%s*)_this)->%s = *((std::vector<%s>*) value); }\n", ci.uq_name, ni.cpp_name, cpp_type);
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "    }\n");
-
-		// [csp]
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s_get_%s(IntPtr _this);\n", ci.uq_name, wrapper_type, ni.cpp_name);
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern void Spr_%s_%s_set_%s(IntPtr _this, IntPtr value);\n", ci.uq_name, wrapper_type, ni.cpp_name);
-	}
-
-	void generate_accessor_for_type_vector_string(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
-		// vector<strig> は未対応
-		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: vector: struct");
-		SNAP_ANA_PATH1(fps, FD_ALL, "@@ sorry not implemented @@");
-	}
-
-	void generate_accessor_for_type_array_intrinsic(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
-		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: array: intrinsic");
-		DUMP_NODE_INFO(fps, FD_ALL, "accessor: array: intrinsic: ci:", ci);
-		DUMP_NODE_INFO(fps, FD_ALL, "accessor: array: intrinsic: ni:", ni);
-
-		char* wrapper_name = make_wrapper_name(fps, FD_ALL, __LINE__, ni, ci, "array");
-		char* wrapper_type = make_wrapper_type(ni);
-		char* type_name = make_wrapper_name_type_part(ni.uq_type, ni.pointer_level);
-
-		// [cs]
-		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "            get { %s wapper = new %s(SprExport.Spr_%s_%s_addr_%s(_this));\n", wrapper_name, wrapper_name, ci.uq_name, wrapper_type,ni.uq_name);
-		Printf(CS,  "                  wapper._nelm = %s;\n", ni.array_size);
-		Printf(CS,  "                  return wapper;\n");
-		Printf(CS,  "            }\n");
-		Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_this, value); }\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "        }\n");
-		if (is_already_generated(ni, ci)) return;
-
-		// [cpp]
-		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_addr_%s(HANDLE _this) {\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CPP, "        HANDLE _ptr = NULL;\n");
-		Printf(CPP, "        try { _ptr = &((%s*) _this)->%s[0]; }\n", ci.uq_name, ni.uq_name);
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "        return _ptr;\n");
-		Printf(CPP, "    }\n");
-		int size = atoi(ni.array_size);
-		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE _this, HANDLE _ptr) {\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CPP, "        try {\n");
-		Printf(CPP, "            if (&(*((%s*)_this)).%s != _ptr) {\n", ci.cpp_name, ni.uq_name);
-		Printf(CPP, "                %s* src = (%s*) _ptr;\n", ni.cpp_type, ni.cpp_type);
-		Printf(CPP, "                %s* dst = &((%s*) _this)->%s[0];\n", ni.cpp_type, ci.cpp_name, ni.uq_name);
-		Printf(CPP, "                memcpy((void*) dst, (const void*) src, sizeof(((%s*) _this)->%s));\n", ci.cpp_name, ni.uq_name);
-		Printf(CPP, "            }\n");
-		Printf(CPP, "        }\n");
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "    }\n");
-
-		// [csp]
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s_addr_%s(IntPtr _this);\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern void Spr_%s_%s_set_%s(IntPtr _this, IntPtr _ptr);\n", ci.uq_name, wrapper_type, ni.uq_name);
-	}
-
-	void generate_accessor_for_type_array_struct(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
-		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: array: struct");
-		char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ni, ci, "array of struct");
-		char* wrapper_type = make_wrapper_type(ni);
-		char* cs_type = cs_qualified_name(strip_type_modifier(ni.cs_type));
-
-		// [cs]
-		Printf(CS,  "\tpublic %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "\t    get { %s wrapper = new %s(SprExport.Spr_%s_%s_addr_%s(_this));\n", wrapper_name, wrapper_name, ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "\t          wrapper._nelm = %s;\n", ni.array_size);
-		Printf(CS,  "\t          return wrapper;\n");
-		Printf(CS,  "\t    }\n");
-		Printf(CS,  "\t    set { SprExport.Spr_%s_%s_set_%s(_this, value); }\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CS,  "\t}\n");
-
-		// [cpp]
-		Printf(CPP, "    __declspec(dllexport) HANDLE __cdecl Spr_%s_%s_addr_%s(HANDLE _this) {\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CPP, "        HANDLE _ptr = NULL;\n");
-		Printf(CPP, "        try { _ptr = &((%s*) _this)->%s[0]; }\n", ci.uq_name, ni.uq_name);
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "        return _ptr;\n");
-		Printf(CPP, "    }\n");
-		int size = atoi(ni.array_size);
-		Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_%s_set_%s(HANDLE _this, HANDLE _ptr) {\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CPP, "        try {\n");
-		Printf(CPP, "            if (&(*((%s*)_this)).%s != _ptr) {\n", ci.cpp_name, ni.uq_name);
-		Printf(CPP, "                %s* src = (%s*) _ptr;\n", ni.cpp_type, ni.cpp_type);
-		Printf(CPP, "                %s* dst = &((%s*) _this)->%s[0];\n", ni.cpp_type, ci.cpp_name, ni.uq_name);
-		Printf(CPP, "                memcpy((void*) dst, (const void*) src, sizeof(((%s*) _this)->%s));\n", ci.cpp_name, ni.uq_name);
-		Printf(CPP, "            }\n");
-		Printf(CPP, "        }\n");
-		Printf(CPP, "        %s\n", CATCH_code);
-		Printf(CPP, "    }\n");
-
-		// [csp]
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s_addr_%s(IntPtr _this);\n", ci.uq_name, wrapper_type, ni.uq_name);
-		Printf(CSP, "\t%s\n", DLLIMPORT);
-		Printf(CSP, "\tpublic static extern void Spr_%s_%s_set_%s(IntPtr _this, IntPtr _ptr);\n", ci.uq_name, wrapper_type, ni.uq_name);
-	}
-
-	void generate_accessor_for_type_array_string(DOHFile* fps[], NodeInfo& ni, NodeInfo& ci) {
-		// string[] は未対応
-		SNAP_ANA_PATH1(fps, FD_ALL, "accessor: vector: struct");
-	}
-
 
 	void generate_string_get(DOHFile* file, char* indent, char* result, char* c_name, char* v_name) {
 		if (c_name) {
-			////Printf(file, "%sstring str = ((%s*) _this)->%s.c_str();\n", indent, c_name, v_name);
-			Printf(file, "%sstring str = ((%s*) _this)->%s;\n", indent, c_name, v_name);
+			Printf(file, "%sstring str = ((%s*) _this)->%s.c_str();\n", indent, c_name, v_name);
 			Printf(file, "%sconst char* cstr = str.c_str();\n", indent);
 		} else {
 			Printf(file, "%sconst char* cstr = %s.c_str();\n", indent, v_name);
@@ -5612,29 +5254,6 @@ public:
 		for (int i = 0; i < ni.num_args; i++) {
 			PRINTF(fps, flag, "//%sarg %d:\n", indent, i+1);
 			dump_node_info(fps, flag, line, "", ni.funcargs[i], nest+1);
-		}
-	}
-#endif
-
-#if (DUMP == 1)
-	void dump_struct_info(DOHFile* fps[], int flag, int line, StructInfo* si) {
-		PRINTF(fps, flag, "// _StructInfo: %s: %d\n", si->name, line);
-		StructMembersInfo** members = si->members;
-		for (int n = 0; n < si->num_members; n++) {
-			StructMembersInfo* mp = members[n];
-			PRINTF(fps, flag, "// member %d\n", n);
-			if (mp->name)	 	 PRINTF(fps, flag, "//     name: %s\n", mp->name);
-			if (mp->cs_name)	 PRINTF(fps, flag, "//     cs_name: %s\n", mp->cs_name);
-			if (mp->cs_type)	 PRINTF(fps, flag, "//     cs_type: %s\n", mp->cs_type);
-			if (mp->cpp_name)	 PRINTF(fps, flag, "//     cpp_name: %s\n", mp->cpp_name);
-			if (mp->cpp_type)	 PRINTF(fps, flag, "//     cpp_type: %s\n", mp->cpp_type);
-			if (mp->is_bool)	 PRINTF(fps, flag, "//     is_bool: %d\n", mp->is_bool);
-			if (mp->is_vector)	 PRINTF(fps, flag, "//     is_vector: %d\n", mp->is_vector);
-			if (mp->is_array)	 PRINTF(fps, flag, "//     is_array: %d\n", mp->is_array);
-			if (mp->is_string)	 PRINTF(fps, flag, "//     is_string: %d\n", mp->is_string);
-			if (mp->is_struct)	 PRINTF(fps, flag, "//     is_struct: %d\n", mp->is_struct);
-			if (mp->is_pointer)	 PRINTF(fps, flag, "//     is_pointer: %d\n", mp->is_pointer);
-			if (mp->is_reference)    PRINTF(fps, flag, "//     is_reference: %d\n", mp->is_reference);
 		}
 	}
 #endif

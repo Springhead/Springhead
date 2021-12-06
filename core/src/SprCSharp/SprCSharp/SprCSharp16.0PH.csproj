@@ -24,6 +24,7 @@
     <NoWarn>
     </NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\16.0\bin\x64\Release\</OutputPath>
@@ -84,7 +85,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SprImport\SprImport16.0PH.csproj">
       <Project>{14187602-db2f-41ec-9291-5a4b9376dcc9}</Project>
-      <Name>SprImport16.0</Name>
+      <Name>SprImport16.0PH</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
