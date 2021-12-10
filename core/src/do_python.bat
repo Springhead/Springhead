@@ -29,7 +29,7 @@ set verbose=0
 ::  このスクリプトは "<SprTop>/core/src" に置く
 ::
 set CWD=%cd%
-cd /d %~dp0\..\..
+cd /d %~dp0\..\..\..
 set SprTop=%CD%
 cd %CWD%
 
