@@ -150,6 +150,7 @@ public:
 	virtual bool IsFrozen() { return false; }
 	///	動力学シミュレーションの対象かどうか
 	virtual bool IsDynamical() { return true; }
+	virtual bool InvalidateBbox() { bool rv = bboxReady; bboxReady = false; return rv; }
 
 	virtual bool CalcBBox()=0;						///< 剛体と各形状のローカルBBoxを計算
 	virtual void CalcAABB()=0;						///< 剛体と各形状のワールドBBoxを計算

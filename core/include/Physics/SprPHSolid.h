@@ -140,6 +140,9 @@ struct PHBodyIf : SceneObjectIf {
 	*/
 	void		GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world);
 
+	/** @brief Bounding Box キャッシュの無効化. Shapeのパラメータを変えた場合には呼び出しが必要。
+	*/
+	bool InvalidateBbox();
 };
 
 ///	剛体のステート
