@@ -472,13 +472,14 @@ public: /** 派生クラスが実装する関数 **/
 	virtual void OnAction(int menu, int id){
 		/// いつでも有効アクション
 		if(menu == MENU_ALWAYS){
-			if (id == ID_EXIT)
+			if (id == ID_EXIT) {
 				Cleanup();
 				EndMainLoop();
-			if(id == ID_RUN)
+			}
+			if (id == ID_RUN) {
 				ToggleAction(menu, id);
-			if (id == ID_STEP)
-			{
+			}
+			if (id == ID_STEP) {
 				OnStep();
 				PostRedisplay();
 			}
