@@ -39,6 +39,14 @@ public:
 		
 		GetSdk()->SetDebugMode(true);
 	}
+	virtual void Keyboard(int key, int x, int y) {
+		switch (key) {
+		case 27:
+		case 'q':
+			exit(0);
+			break;
+		}
+	}
 } app;
 
 #if _MSC_VER <= 1600
