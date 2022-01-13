@@ -19,7 +19,8 @@ namespace Spr{;
 
 // バネ・ダンパ係数を0と見なす閾値
 const double epsilon = 1e-10;
-const double inf     = 1e+10;
+//const double inf     = 1e+10;
+const double inf     = 1e+32;	//	2022.01.13 strong spring was needed. (hasevr)
 
 double JointFunctions::resistCalc(double d, double k_1, double k_2, double k_3, double k_4){
 	return exp(k_1 * (d - k_2)) - exp(k_3 * (k_4 - d));

@@ -64,6 +64,7 @@ inline void getAxisMap3D(int& x, int& y, int& z, int axis){
 		x = 2; y = 0; z = 1;
 		break;
 	default:
+		assert(0);
 		x = 0; y = 1; z = 2;
 		break;
 	}

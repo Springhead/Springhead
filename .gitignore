@@ -1,4 +1,6 @@
 /closed/
+16.0/
+15.0/
 *.tlog
 *.iobj
 *.ipdb
@@ -6,7 +8,7 @@
 *.obj
 *.ipch
 *.suo
-*.db
+*.db*
 *.dll
 *.recipe
 *.exp
@@ -16,4 +18,5 @@
 *.ilk
 *.sbr
 *.user
-
+*.opendb
+*.vcxproj.user
