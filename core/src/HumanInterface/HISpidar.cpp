@@ -431,6 +431,7 @@ void HISpidarGDesc::Init(const char* type) {
 		motors[7].voltPerNewton *= -1;
 	}
 	else if (stricmp(type, "SpidarG6X4L") == 0 || stricmp(type, "SpidarG6X4R") == 0) {
+		//	Binod's MDF version.
 		bool bLeft = stricmp(type, "SpidarG6X4L") == 0;
 		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
 		float PX = 0.138f / 2;		//	x方向の辺の長さ/2
@@ -443,24 +444,24 @@ void HISpidarGDesc::Init(const char* type) {
 		Matrix3f rot = Matrix3f();	//	Rot((float)Rad(bLeft ? -45 : 45), 'y');
 		Vec3f motorPos[2][8] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 			{
-				rot * Vec3f(-PX, -PY, -PZ),
 				rot * Vec3f( PX, -PY, -PZ),
 				rot * Vec3f( PX, -PY,  PZ),
 				rot * Vec3f(-PX, -PY,  PZ),
-				rot * Vec3f(-PX,  PY, -PZ),
+				rot * Vec3f(-PX, -PY, -PZ),
 				rot * Vec3f( PX,  PY, -PZ),
 				rot * Vec3f( PX,  PY,  PZ),
 				rot * Vec3f(-PX,  PY,  PZ),
+				rot * Vec3f(-PX,  PY, -PZ),
 			},
 			{
 				rot* Vec3f(  0, -GY, 0),
+				rot* Vec3f( GX,   0, 0),
+				rot* Vec3f(-GX,   0, 0),
 				rot* Vec3f(  0, -GY, 0),
-				rot* Vec3f( GX,   0, 0),
-				rot* Vec3f(-GX,   0, 0),
-				rot* Vec3f(  0,  GY, 0),
 				rot* Vec3f(  0,  GY, 0),
 				rot* Vec3f( GX,   0, 0),
 				rot* Vec3f(-GX,   0, 0),
+				rot* Vec3f(  0,  GY, 0),
 			}
 		};
 		Init(8, motorPos[0], motorPos[1], 0.08f, (float)(0.03485 / 1000.0), 0.2f, 20.0f);
@@ -477,6 +478,7 @@ void HISpidarGDesc::Init(const char* type) {
 		motors[5].voltPerNewton *= -1;
 
 	} else if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0 || stricmp(type, "SpidarG6X3F")==0 ){
+		//	Cyverse's alminum frame version.
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
 		bool bFinger = stricmp(type, "SpidarG6X3F")==0;
 
