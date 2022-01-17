@@ -21,6 +21,7 @@ namespace Spr{;
 
 // SwigStructTest を実施するための定義
 //
+// vector and array のテスト
 struct CSTestIntrinsic {
 	// vector of intrinsic data type
 	std::vector<int> vec_int;
@@ -59,6 +60,43 @@ struct CSTestStruct {
 	Vec3d ary_vec3d[3];
 	CSTestStructNested ary_nested[3];
 };
+//
+// 関数引数と関数戻り値のテスト
+class CSTestFunction {
+public:
+	CSTestFunction();
+	//
+	int i;
+	unsigned int u;
+	size_t s;
+	float f;
+	double d;
+	std::string str;
+	//
+	Vec3d vec3d;
+	//
+	std::vector<int> vec_int;
+	std::vector<Vec3d> vec_vec3d;
+	//
+	int ary_int[3];
+	Vec3d ary_vec3d[3];
+	//
+	int intrinsic_int(int arg=1);
+	unsigned int intrinsic_unsigned_int(unsigned int arg=2);
+	size_t intrinsic_size_t(size_t arg=3);
+	float intrinsic_float(float arg=4.4);
+	double intrinsic_double(double arg=5.5);
+	std::string intrinsic_string(std::string arg="xyz");
+	//
+	Vec3d struct_vec3d(Vec3d arg);
+	// std::vector
+	std::vector<int> vector_int(std::vector<int> arg);
+	std::vector<Vec3d> vector_vec3d(std::vector<Vec3d> arg);
+	// array
+	int* array_int(int arg[]);
+	Vec3d* array_vec3d(Vec3d arg[]);
+};
+// ここまで
 
 struct PHSolidIf;
 struct PHFemVibrationIf;
