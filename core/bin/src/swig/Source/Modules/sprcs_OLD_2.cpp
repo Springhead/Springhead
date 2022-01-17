@@ -47,10 +47,7 @@ int sprintf_s(char* s, size_t n, const char* f, ...) {
 #define	USE_SIGNATURE_FILE		0
 #define	ALLOW_INHERITANCE_ONLY_DESC_AND_IF	0
 
-#define	CAN_GET_RETURNED_ARRAY_SIZE	0
-//					関数が配列へのポインタを返す場合にその配列のサイズを得る手段がない
-//					現状では要素数 1 の配列 (T[1]) として返す
-//					関数呼び出しはでき正常に機能するが、戻り値の2番目以降の要素にアクセスすることはできない
+#define	CAN_FUNC_RETURN_ARRAY		0
 
 // for avoiding duplicated wrapper class generation
 #if (USE_SIGNATURE_FILE == 1)
@@ -243,9 +240,8 @@ const int FD_ALL	= FD_CPP | FD_CS | FD_CSP;
   #define TRY_begin(n,T,V)	Printf(CPP, "%s%s %s = (%s) NULL;\n%stry { %s = ", TC_I(n), T, #V, T, TC_I(n), #V)
   #define TRY_begin_new(n,T,V)	Printf(CPP, "\n%s%s %s = (%s) NULL;\n%stry { %s = ", TC_I(n), #T, #V, #T, TC_I(n), #V)
   #define TRY_begin_NEW(n,T,V)	TRY_begin(n,T,V)
-  #define TRY_begin_str(n,T,V)	Printf(CPP, "%s%s %s = \"\";\n%stry { %s = ", TC_I(n), T, #V, TC_I(n), #V)
   #define TRY_begin_void(n)	Printf(CPP, "%stry { ", TC_I(n))
-  #define TRY_cont(n)		Printf(CPP, " ")/*;*/
+  #define TRY_cont(n)		Printf(CPP, " ");
   #define TRY_end()		Printf(CPP, " }\n")
   #define TRY_end_new()		Printf(CPP, " }\n")
   #define TRY_end_NEW()		TRY_end_new()
@@ -255,14 +251,13 @@ const int FD_ALL	= FD_CPP | FD_CS | FD_CSP;
   #define RETURN_NEW(n,V)	RETURN(n,V)
 #else
   #define TRY_begin(n,T,V)	Printf(CPP, "%s%s %s = ", TC_I(n), T, #V)
-  #define TRY_begin_new(n,T,p)	Printf(CPP, " return ")/*;*/
-  #define TRY_begin_NEW(n,T,p)	Printf(CPP, "%sreturn ", TC_I(n))/*;*/
-  #define TRY_begin_str(n,T,V)	Printf(CPP, "%s%s %s = ", TC_I(n), T, #V)
+  #define TRY_begin_new(n,T,p)	Printf(CPP, " return ");
+  #define TRY_begin_NEW(n,T,p)	Printf(CPP, "%sreturn ", TC_I(n));
   #define TRY_begin_void(n)	Printf(CPP, "%s", TC_I(n))
-  #define TRY_cont(n)		Printf(CPP, "\n%s", TC_I(n))/*;*/
+  #define TRY_cont(n)		Printf(CPP, "\n%s", TC_I(n));
   #define TRY_end()		Printf(CPP, "\n")
   #define TRY_end_new()		Printf(CPP, " }\n")
-  #define TRY_end_NEW()		Printf(CPP, "\n")/*;*/
+  #define TRY_end_NEW()		Printf(CPP, "\n");
   #define CATCH(n)
   #define RETURN(n,V)		Printf(CPP, "%sreturn %s;\n", TC_I(n), #V)
   #define RETURN_new(n,V)
@@ -329,14 +324,12 @@ static int function_count = 0;
 #endif
 
 #if (SNAP == 1)
-  #define SNAP_AT_LINE(x,y)		snap_at_line(x,y,__LINE__)
   #define SNAP_ANA_PATH2(x,y,a,b)	snap_path_info(x,y,__LINE__,a,b)
   #define SNAP_ANA_PATH1(x,y,a)		snap_path_info(x,y,__LINE__,a)
   #define SNAP_ANA_PATH1L(x,y,L,a)	snap_path_info(x,y,L,a)
   #define SNAP_ANA_PATH2L(x,y,L,a,b)	snap_path_info(x,y,L,a,b)
   #define WRAPPER_NAME_PRINT(x,y,L,a,b)	wrapper_name_print(x,y,L,a,b)
 #else
-  #define SNAP_AT_LINE(x,y)
   #define SNAP_ANA_PATH2(x,y,a,b)
   #define SNAP_ANA_PATH1(x,y,a)
   #define SNAP_ANA_PATH1L(x,y,L,a)
@@ -1006,7 +999,6 @@ public:
 			if	(ni.is_void)		{ return_type = "void"; }
 			else if (ni.is_bool)		{ return_type = "char"; }
 			else if (ni.is_vector)		{ return_type = "HANDLE"; }
-			else if (ni.is_array)		{ return_type = "HANDLE"; }
 			else if (ni.is_string)		{ return_type = "BSTR"; }
 			else if (ni.is_void_ptr)	{ return_type = "HANDLE"; }
 			else if (ni.is_intrinsic && !ni.is_pointer)	{ return_type = ni.uq_type; }
@@ -1031,7 +1023,6 @@ public:
 				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
 				char* arg_type = (char*) ((ai.is_intrinsic && !ai.is_pointer) ? ai.cpp_type : ((ai.is_string) ? "BSTR" : "HANDLE"));
 				if (ai.is_vector)   arg_type = "HANDLE";
-				if (ai.is_array)    arg_type = "HANDLE";
 				if (ai.is_bool)	    arg_type = "char";		// bool（C++ bool <=> byte で受け渡し <=> C# bool）
 				if (is_enum_node_a) arg_type = "int";		// ai.cpp_type;
 				if (sep_needed) Printf(CPP, ", ");
@@ -1051,11 +1042,8 @@ public:
 					if (ai.is_vector) {
 						sprintf(argbuff, "*((vector<%s>*) %s)", ai.cpp_type, ai.name);
 					}
-					else if (EQ(ai.uq_type, "char")) {
-						sprintf(argbuff, "&(((%s*) %s)[0])", ai.cpp_type, ai.name);
-					}
 					else {
-						sprintf(argbuff, "(%s*) %s", ai.cpp_type, ai.name);
+						sprintf(argbuff, "&((%s*) %s)[0]", ai.cpp_type, ai.name);
 					}
 					argnames[j] = Char(NewString(argbuff));
 				}
@@ -1152,17 +1140,14 @@ public:
 				SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: vector");
 				try_case = TRY_CASE_RPTR;
 				sprintf_s(cpp_type, sizeof(cpp_type), "vector<%s>*", ni.cpp_type);
-				Printf(CPP, "        vector<%s>* _ptr = (vector<%s>*) NULL;\n", ni.cpp_type, ni.cpp_type);
-				Printf(CPP, "        try { _ptr = new vector<%s>;\n", ni.cpp_type, ni.cpp_type);
-				Printf(CPP, "              vector<%s> _vec = (", ni.cpp_type);
+				TRY_begin(8, cpp_type, _ptr);
+				Printf(CPP, "new vector<%s>(", ni.cpp_type);
 			}
 			else if (ni.is_array) {
 				SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: array");
 				try_case = TRY_CASE_RPTR;
 				sprintf_s(cpp_type, sizeof(cpp_type), "%s*", ni.cpp_type);
-				//TRY_begin(8, cpp_type, _ptr);
-				Printf(CPP, "        %s* _ptr = (%s*) NULL;\n", ni.cpp_type, ni.cpp_type);
-				Printf(CPP, "        try { %s* _ary = (", ni.cpp_type);
+				TRY_begin(8, cpp_type, _ptr);
 			}
 			else if (ni.is_struct) {
 				if (is_enum_node) {
@@ -1180,8 +1165,8 @@ public:
 					sprintf_s(cpp_type, sizeof(cpp_type), "%s", ni.cpp_type);
 					TRY_begin(8, cpp_type, _ptr);
 #endif
-				} else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
-				//} else if (ni.is_array) {
+#if (CAN_FUNC_RETURN_ARRAY == 1)
+				} else if (ni.is_array) {
 					SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: struct: array");
 					try_case = TRY_CASE_RPTR;
 #if (GENERATE_TRY_CATCH == 1)
@@ -1192,6 +1177,7 @@ public:
 					sprintf_s(cpp_type, sizeof(cpp_type), "%s", ni.cpp_type);
 					TRY_begin(8, cpp_type, _ptr);
 #endif
+#endif /*CAN_FUNC_RETURN_ARRAY*/
 				} else {
 					SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: struct");
 					try_case = TRY_CASE_RPTR;
@@ -1202,7 +1188,7 @@ public:
 					Printf(CPP, "(*_ptr) = ");
 				}
 			}
-			//else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
+#if (CAN_FUNC_RETURN_ARRAY == 1)
 			else if (ni.is_array) {
 				SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: array");
 				//int isptr = ni.is_pointer;
@@ -1215,15 +1201,11 @@ public:
 				//ni.is_pointer = isptr;
 				//ni.pointer_level = ptrlevel;
 			}
+#endif /*CAN_FUNC_RETURN_ARRAY*/
 			else if (ni.is_pointer) {
 				SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: pointer");
 				try_case = TRY_CASE_RPTR;
 				TRY_begin(8, ni.cpp_type, _ptr);
-			}
-			else if (ni.is_string) {
-				SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: string");
-				try_case = TRY_CASE_RCNV;
-				TRY_begin_str(8, ni.uq_type, _val);
 			}
 			else {
 				SNAP_ANA_PATH1(fps, FD_CPP, "try-catch: function_return: others");
@@ -1250,8 +1232,7 @@ public:
 				}
 				else if (ni.is_pointer) {
 					Printf(CPP, "((%s*) _this)->%s(", ci.uq_name, ni.uq_name);
-				}
-				else {
+				} else {
 					Printf(CPP, "((%s*) _this)->%s(", ci.uq_name, ni.uq_name);
 				}
 			}
@@ -1264,24 +1245,11 @@ public:
 				if (j < ni.num_args - 1) Printf(CPP, ", ");
 			}
 			if (ni.is_vector) {
-				Printf(CPP, "));\n");
-				Printf(CPP, "              for (int n = 0; n < (int) _vec.size(); n++) {\n");
-				Printf(CPP, "                  _ptr->push_back(_vec[n]);\n");
-				Printf(CPP, "              }\n");
-				Printf(CPP, "        }\n");
-			} else if (ni.is_array) {
-				Printf(CPP, "));\n");
-				Printf(CPP, "              int _size = %s;\n", ni.array_size);
-				Printf(CPP, "              _ptr = new %s[_size];\n", ni.cpp_type);
-				Printf(CPP, "              for (int n = 0; n < (int) _size; n++) {\n");
-				Printf(CPP, "                  *(_ptr+n) = _ary[n];\n");
-				Printf(CPP, "              }\n");
-				Printf(CPP, "        }\n");
-			} else {
-				Printf(CPP, ");");
-				TRY_end();
+				Printf(CPP, ")");
 			}
+			Printf(CPP, ");");
 
+			TRY_end();
 			CATCH(8);
 
 			// 関数値に関する処理
@@ -1342,7 +1310,7 @@ public:
 			Printf(CPP, "    }\n");
 #if (FREE_UNMANAGED_MEMORY == 1)
 			if (ni.is_string) {
-				Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_FreeString_%s%s(BSTR ptr) {\n", ci.uq_name, ni.uq_name, overname(ni));
+				Printf(CPP, "    __declspec(dllexport) void __cdecl Spr_%s_FreeString_%s(BSTR ptr) {\n", ci.uq_name, ni.uq_name);
 				Printf(CPP, "        try { ::SysFreeString(ptr); }\n");
 				Printf(CPP, "        %s\n", CATCH_code);
 				Printf(CPP, "    }\n");
@@ -1388,7 +1356,6 @@ public:
 			if (ni.is_vector || ni.is_array) {
 				char* wrapper_class = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return_type");
 				Printf(CS, "\tpublic %s%s", (ni.is_static ? "static" : ""), wrapper_class);
-
 				if (ni.is_struct || ni.is_array) {
 					if (wrapper_map.find(wrapper_class) == wrapper_map.end()) {
 						generate_wrapper_accessor_struct(topnode, members[i], ni, ci, "function_return_type", __LINE__);
@@ -1397,10 +1364,6 @@ public:
 				}
 			} else {
 				Printf(CS, "\tpublic %s%s", (ni.is_static ? "static " : ""), ni.cs_type);
-				if (ni.is_pointer && !ni.is_void_ptr && !EQ(ni.uq_type, "char") && !is_special_struct(ni.cs_type)) {
-					//DUMP_NODE_INFO(fps, FD_CS, "function definition: ni", ni);
-					Printf(CS, "[]");
-				}
 			}
 			Printf(CS,  " %s(", ni.cs_name);
 			// 引数並び
@@ -1415,23 +1378,15 @@ public:
 					// 関数
 					Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
 				}
-/**
 				else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
 					// struct
 					Printf(CS, "%s %s", cs_qualified_name(ai.uq_type), csname);
 				}
-**/
 				else if (ai.is_vector || ai.is_array) {
 					// vector or array
 					char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ai, ci, "function_args");
 					Printf(CS, "%s %s", wrapper_name, csname);
 				}
-		/**/
-				else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
-					// struct
-					Printf(CS, "%s %s", cs_qualified_name(ai.uq_type), csname);
-				}
-		/**/
 				else if (ai.is_void_ptr) {
 					Printf(CS, "CsObject %s", csname);
 				}
@@ -1444,7 +1399,6 @@ public:
 			Printf(CS, ") {\n");
 			// 引数に関する前処理
 			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
-			//DUMP_NODE_INFO(fps, FD_CS, "function_prep", ni);
 			for (int j = 0; j < ni.num_args; j++) {
 				NodeInfo& ai = ni.funcargs[j];
 				char tmpbuff[MAX_NAMELEN+6+1];
@@ -1478,16 +1432,7 @@ public:
 			else if (ni.is_string) {
 				Printf(CS, "\t    IntPtr ptr = ");
 			}
-			else if (ni.is_vector) {
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
-				// 組み込み型のポインタを返す関数は配列を返すものとして扱う
-				SNAP_AT_LINE(fps, FD_CS);
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_array) {
-				SNAP_AT_LINE(fps, FD_CS);
+			else if (ni.is_vector || ni.is_array) {
 				Printf(CS, "\t    IntPtr ptr = ");
 			}
 			else if (ni.is_struct) {
@@ -1501,11 +1446,7 @@ public:
 				Printf(CS, "\t    IntPtr ptr = ");
 			}
 			else if (ni.is_intrinsic && !ni.is_void) {
-				if (ni.is_pointer && !ni.is_void_ptr) {
-					Printf(CS, "\t    %s[] result = ", ni.cs_type, ni.cs_type);
-				} else {
-					Printf(CS, "\t    %s result = (%s) ", ni.cs_type, ni.cs_type);
-				}
+				Printf(CS, "\t    %s result = (%s) ", ni.cs_type, ni.cs_type);
 			}
 			else if (!ni.is_void) {
 				Printf(CS, "\t    %s result = (%s)(Object) ", ni.cs_type, ni.cs_type);
@@ -1530,15 +1471,12 @@ public:
 				}
 #endif
 				if (sep_needed) Printf(CS, ", ");
-				if (is_enum_node_a)			{ Printf(CS, "(int) "); }
+				if	(is_enum_node_a)		{ Printf(CS, "(int) "); }
 				else if (ai.is_struct)			{ Printf(CS, "(IntPtr) "); }
 				else if (ai.is_string)			{ Printf(CS, "(IntPtr) "); }
 				else if (ai.is_vector || ai.is_array)	{ Printf(CS, "(IntPtr) "); }
 				else					{ Printf(CS, "(%s) ", ai.cs_im_type); }
-				if (ai.is_vector || ai.is_array)
-					Printf(CS, "%s._this", argnames[j]);
-				else
-					Printf(CS, "%s", argnames[j]);
+				Printf(CS, "%s", argnames[j]);
 				sep_needed = 1;
 			}
 			Printf(CS, ");\n");
@@ -1561,33 +1499,15 @@ public:
 			else if (ni.is_string) {
 				SNAP_ANA_PATH1(fps, FD_CS, "function_return: string");
 	        		Printf(CS, "            string bstr = Marshal.PtrToStringBSTR(ptr);\n");
-	        		Printf(CS, "            if (bstr.Substring(bstr.Length - 1, 1) == \"\\0\") {\n"); 
-	        		Printf(CS, "                    bstr = bstr.Substring(0, bstr.Length - 1);\n");
-	        		Printf(CS, "            }\n");
 #if (FREE_UNMANAGED_MEMORY == 1)
 				Printf(CS, "            SprExport.Spr_%s_FreeString_%s(ptr);\n", ci.uq_name, ni.uq_name);
 #endif
 				Printf(CS, "            return bstr;\n");
 			}
-			else if (ni.is_vector) {
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: vector");
+			else if (ni.is_vector || ni.is_array) {
+				SNAP_ANA_PATH1(fps, FD_CS, "function_return: vector or array");
 				char* wrapper_name = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return");
 				Printf(CS, "            return new %s(ptr);\n", wrapper_name);
-			}
-			else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
-				// 組み込み型のポインタを返す関数は配列を返すものとして扱う
-				//	配列として扱うのでwrapper名に"_p"は付けない
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: array");
-				int pointer_level_save = ni.pointer_level;
-				ni.pointer_level = 0;
-				char* wrapper_name = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return");
-				ni.pointer_level = pointer_level_save;
-#if (CAN_GET_RETURNED_ARRAY_SIZE == 1)
-				Printf(CS, "            int size = 0;  //Set some appropreate code\n");
-#else
-				Printf(CS, "            int size = 1;   // no way to know array size!\n");
-#endif	/* CAN_GET_RETURNED_ARRAY_SIZE */
-				Printf(CS, "            return new %s(ptr, size);\n", wrapper_name);
 			}
 			else if (ni.is_struct) {
 				if (is_enum_node) {
@@ -1604,24 +1524,10 @@ public:
 				}
 				else if (ni.is_pointer) {
 					SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct pointer");
-					// 構造体変数のポインタなのか構造体配列へのポインタなのかは区別がつかない
-					//   →  要素数１の構造体配列へのポインタとして扱う
-					//	 構造体配列であった場合は２番目以降の要素にアクセスすることはできない
-					if (is_special_struct(ni.cs_type)) {
-						Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
-					} else {
-#if (CAN_GET_RETURNED_ARRAY_SIZE == 1)
-						Printf(CS, "            int size = 0;  //Set some appropreate code\n");
-#else
-						Printf(CS, "            int size = 1;    // no way to know array size\n");
-#endif	/* CAN_GET_RETURNED_ARRAY_SIZE */
-						Printf(CS, "            return new arraywrapper_%s(ptr, size);\n", ni.cs_type);
-					}
-					//Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
+					Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
 				}	
 				else {
 					SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct");
-					DUMP_NODE_INFO(fps, FD_CS, "function_return: struct", ni);
 					Printf(CS, "            return new %s(ptr, true);\n", ni.cs_type);
 				}
 			}
@@ -1641,10 +1547,12 @@ public:
 				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: vector");
 				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
 			}
-			else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
+#if (CAN_FUNC_RETURN_ARRAY == 1)
+			else if (ni.is_array) {
 				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: array");
 				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
 			}
+#endif /*CAN_FUNC_RETURN_ARRAY*/
 			else if (ni.is_string || (ni.is_pointer && EQ(ni.uq_type, "char"))) {
 				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: string");
 				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
@@ -1652,14 +1560,6 @@ public:
 			else if (is_enum_node) {
 				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: enum");
 				Printf(CSP, "\tpublic static extern int Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			}
-			else if (ni.is_pointer && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr) {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: pointer");
-				Printf(CSP, "\tpublic static extern %s[] Spr_%s_%s%s(", ni.cs_type, ci.uq_name, ni.uq_name, overname(ni));
-			}
-			else if (ni.is_pointer && !ni.is_void_ptr) {
-				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: pointer");
-				Printf(CSP, "\tpublic static extern IntPtr Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
 			}
 			else {
 				SNAP_ANA_PATH1(fps, FD_CSP, "function_return: ");
@@ -1688,7 +1588,7 @@ public:
 #if (FREE_UNMANAGED_MEMORY == 1)
 			if (ni.is_string) {
 				Printf(CSP, "\t%s\n", DLLIMPORT);
-				Printf(CSP, "\tpublic static extern void Spr_%s_FreeString_%s%s(IntPtr ptr);\n", ci.uq_name, ni.uq_name, overname(ni));
+				Printf(CSP, "\tpublic static extern void Spr_%s_FreeString_%s(IntPtr ptr);\n", ci.uq_name, ni.uq_name);
 			}
 #endif
 		}
@@ -1816,25 +1716,11 @@ public:
 			if (Cmp(nodeType(pn), "include") == 0) {
 				char* pname = Char(Getattr(pn, "name"));
 				if (strstr(pname, "\\include\\")) {
-					//PRINTF(fps, FD_CS, "// class [%s] is defined in \"%s\"\n", Char(Getattr(n, "sym:name")), pname);
+					PRINTF(fps, FD_CS, "// class [%s] is defined in \"%s\"\n", Char(Getattr(n, "sym:name")), pname);
 					return true;
 				}
 			}
 			pn = parentNode(pn);
-		}
-		return false;
-	}
-
-	bool is_special_struct(char* cs_type) {
-		string s(cs_type);
-		if (s.substr(s.size()-2, 2) == "If")
-			return true;
-		//
-		const char* names[] = { "IfInfo", "FWApp", "PHCollisionListener" };
-		int size = sizeof(names) / sizeof(const char*);
-		for (int n = 0; n < size; n++) {
-			if (EQ(cs_type, names[n]))
-				return true;
 		}
 		return false;
 	}
@@ -2838,12 +2724,10 @@ public:
 			Node* is_enum_node = FindNodeByAttrR(topnode, "enumtype", ni.type);
 			if (mp->is_struct && !(mp->is_array || mp->is_vector || is_enum_node)) {
 				Printf(CS, "\tpublic %sStruct %s;\n", mp->cs_type, mp->cs_name);
-			} else if (mp->is_vector) {
+			} else if (mp->is_vector || mp->is_array) {
+				const char* wrappername = mp->is_vector ? "vectorwrapper" : "arraywrapper";
 				std::string cpp_type = std::regex_replace(mp->cpp_type, std::regex(" "), "_");
-                        	Printf(CS, "\tpublic vectorwrapper_%s %s = new vectorwrapper_%s();\n", cpp_type.c_str(), mp->cs_name, cpp_type.c_str());
-			} else if (mp->is_array) {
-				std::string cpp_type = std::regex_replace(mp->cpp_type, std::regex(" "), "_");
-                        	Printf(CS, "\tpublic arraywrapper_%s %s = new arraywrapper_%s(%s);\n", cpp_type.c_str(), mp->cs_name, cpp_type.c_str(), ni.array_size);
+                        	Printf(CS, "\tpublic %s_%s %s = new %s_%s();\n", wrappername, cpp_type.c_str(), mp->cs_name, wrappername, cpp_type.c_str());
                 	} else {
                     		Printf(CS, "\tpublic %s %s;\n", mp->cs_type, mp->cs_name);
 			}
@@ -3929,10 +3813,7 @@ public:
 	}
 
 	char* make_wrapper_type(NodeInfo& ni) {
-		// 組み込み型のポインタを返す関数は配列を返すものとして扱う
-		bool is_array = ni.is_array || (ni.is_pointer && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr);
-		//return (char*) (ni.is_vector ? "vector" : (ni.is_array ? "array" : "struct"));
-		return (char*) (ni.is_vector ? "vector" : (is_array ? "array" : "struct"));
+		return (char*) (ni.is_vector ? "vector" : (ni.is_array ? "array" : "struct"));
 	}
 
 	char* make_wrapper_name(DOHFile* fps[], int flag, int line, NodeInfo& ni, NodeInfo& ci, char* label) {
@@ -4487,7 +4368,6 @@ public:
 		char* cs_type = cs_qualified_name(strip_type_modifier(ni.uq_type));
 
 		if (EQ(wrapper_type, "vector")) {
-			SNAP_AT_LINE(fps, FD_CS);
 			Printf(CS,  "    public class %s : vectorwrapper {\n", wrapper_name);
 			Printf(CS,  "        public %s() {\n", wrapper_name);
 			Printf(CS,  "            _this = SprExport.Spr_%s_new_%s();\n", wrapper_type, type_name);
@@ -4542,14 +4422,14 @@ public:
 			Printf(CS,  "        }\n");
 		}
 		else if (EQ(wrapper_type, "array")) {
-			SNAP_AT_LINE(fps, FD_CS);
 			Printf(CS,  "    public class %s : arraywrapper {\n", wrapper_name);
-			Printf(CS,  "        public %s(int nelm) : base(nelm) {\n", wrapper_name);
-			Printf(CS,  "            _this = SprExport.Spr_%s_new_%s(nelm);\n", wrapper_type, type_name);
+			Printf(CS,  "        public %s() {\n", wrapper_name);
+			Printf(CS,  "            _this = SprExport.Spr_%s_new_%s(%s);\n", wrapper_type, type_name, ni.array_size);
 			Printf(CS,  "            _flag = true;\n");
+			Printf(CS,  "            _nelm = %s;\n", ni.array_size);
 			Printf(CS,  "        }\n");
-			Printf(CS,  "        public %s(IntPtr ptr, int nelm) : base(ptr, nelm) {}\n", wrapper_name);
-			Printf(CS,  "        public %s(IntPtr ptr, int nelm, bool flag) : base(ptr, nelm, flag) {}\n", wrapper_name);
+			Printf(CS,  "        public %s(IntPtr ptr) : base(ptr) {}\n", wrapper_name);
+			Printf(CS,  "        public %s(IntPtr ptr, bool flag) : base(ptr, flag) {}\n", wrapper_name);
 			Printf(CS,  "        ~%s() {\n", wrapper_name);
 			Printf(CS,  "            if (_flag) { SprExport.Spr_%s_delete_%s(_this); _flag = false; }\n", wrapper_type, type_name);
 			Printf(CS,  "        }\n");
@@ -4568,10 +4448,9 @@ public:
 			Printf(CS,  "            return r;\n");
 			Printf(CS,  "        }\n");
 			Printf(CS,  "        public static implicit operator %s(List<%s> r) {\n", wrapper_name, type_name);
-			Printf(CS,  "            int size = r.Count;\n");
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s(size);\n", wrapper_type, type_name);
-			Printf(CS,  "            %s m = new %s(ptr, size, true);\n", wrapper_name, wrapper_name);
-			Printf(CS,  "            for (int i = 0; i < size; i++) {\n");
+			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s(r.Count);\n", wrapper_type, type_name);
+			Printf(CS,  "            %s m = new %s(ptr, true);\n", wrapper_name, wrapper_name);
+			Printf(CS,  "            for (int i = 0; i < (int) r.Count; i++) {\n");
 			Printf(CS,  "                SprExport.Spr_%s_set_%s(m._this, i, r[i]);\n", wrapper_type, type_name);
 			Printf(CS,  "            }\n");
 			Printf(CS,  "            return m;\n");
@@ -4585,25 +4464,16 @@ public:
 			Printf(CS,  "            }\n");
 			Printf(CS,  "            return r;\n");
 			Printf(CS,  "        }\n");
-			Printf(CS,  "        public static implicit operator %s(%s m) {\n", ni.cs_type, wrapper_name);
-			Printf(CS,  "            int size = (int) m._nelm;\n");
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_get_%s(m._this, 0);\n", wrapper_type, type_name);
-			Printf(CS,  "            %s r = new %s(ptr);\n", ni.cs_type, ni.cs_type);
-			Printf(CS,  "            return r;\n");
-			Printf(CS,  "        }\n");
-
 			Printf(CS,  "        public static implicit operator %s(%s[] r) {\n", wrapper_name, type_name);
-			Printf(CS,  "            int size = r.Length;\n");
-			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s(size);\n", wrapper_type, type_name);
-			Printf(CS,  "            %s m = new %s(ptr, size, true);\n", wrapper_name, wrapper_name);
-			Printf(CS,  "            for (int i = 0; i < size; i++) {\n");
+			Printf(CS,  "            IntPtr ptr = SprExport.Spr_%s_new_%s(r.Length);\n", wrapper_type, type_name);
+			Printf(CS,  "            %s m = new %s(ptr, true);\n", wrapper_name, wrapper_name);
+			Printf(CS,  "            for (int i = 0; i < r.Length; i++) {\n");
 			Printf(CS,  "                SprExport.Spr_%s_set_%s(m._this, i, r[i]);\n", wrapper_type, type_name);
 			Printf(CS,  "            }\n");
 			Printf(CS,  "            return m;\n");
 			Printf(CS,  "        }\n");
 		}
 		else if (is_enum_node) {
-			SNAP_AT_LINE(fps, FD_CS);
 			Printf(CS,  "    public class %s : wrapper {\n", wrapper_name);
 			Printf(CS,  "        private IntPtr _ptr;\n");
 			Printf(CS,  "        public %s(IntPtr ptr) { _ptr = ptr; }\n", wrapper_name);
@@ -4615,7 +4485,6 @@ public:
 			Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_ptr, index, (int) value); }\n", ci.uq_name, wrapper_type, type_name);
 			Printf(CS,  "        }\n");
 		} else {
-			SNAP_AT_LINE(fps, FD_CS);
 			Printf(CS,  "    public class %s : wrapper {\n", wrapper_name);
 			Printf(CS,  "        private IntPtr _ptr;\n");
 			Printf(CS,  "        public %s(IntPtr ptr) { _ptr = ptr; }\n", wrapper_name);
@@ -4789,7 +4658,8 @@ public:
 
 		// [cs]
 		Printf(CS,  "        public %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "            get { %s wapper = new %s(SprExport.Spr_%s_%s_addr_%s(_this), %s);\n", wrapper_name, wrapper_name, ci.uq_name, wrapper_type,ni.uq_name, ni.array_size);
+		Printf(CS,  "            get { %s wapper = new %s(SprExport.Spr_%s_%s_addr_%s(_this));\n", wrapper_name, wrapper_name, ci.uq_name, wrapper_type,ni.uq_name);
+		Printf(CS,  "                  wapper._nelm = %s;\n", ni.array_size);
 		Printf(CS,  "                  return wapper;\n");
 		Printf(CS,  "            }\n");
 		Printf(CS,  "            set { SprExport.Spr_%s_%s_set_%s(_this, value); }\n", ci.uq_name, wrapper_type, ni.uq_name);
@@ -4830,7 +4700,8 @@ public:
 
 		// [cs]
 		Printf(CS,  "\tpublic %s %s {\n", wrapper_name, ni.cs_name);
-		Printf(CS,  "\t    get { %s wrapper = new %s(SprExport.Spr_%s_%s_addr_%s(_this), %s);\n", wrapper_name, wrapper_name, ci.uq_name, wrapper_type, ni.uq_name, ni.array_size);
+		Printf(CS,  "\t    get { %s wrapper = new %s(SprExport.Spr_%s_%s_addr_%s(_this));\n", wrapper_name, wrapper_name, ci.uq_name, wrapper_type, ni.uq_name);
+		Printf(CS,  "\t          wrapper._nelm = %s;\n", ni.array_size);
 		Printf(CS,  "\t          return wrapper;\n");
 		Printf(CS,  "\t    }\n");
 		Printf(CS,  "\t    set { SprExport.Spr_%s_%s_set_%s(_this, value); }\n", ci.uq_name, wrapper_type, ni.uq_name);
@@ -4870,6 +4741,7 @@ public:
 
 	void generate_string_get(DOHFile* file, char* indent, char* result, char* c_name, char* v_name) {
 		if (c_name) {
+			////Printf(file, "%sstring str = ((%s*) _this)->%s.c_str();\n", indent, c_name, v_name);
 			Printf(file, "%sstring str = ((%s*) _this)->%s;\n", indent, c_name, v_name);
 			Printf(file, "%sconst char* cstr = str.c_str();\n", indent);
 		} else {
@@ -5685,10 +5557,6 @@ public:
 		Printf(stderr, "Error: %d: %s\n", line, buff);
 		errorFlag = true;
 		SWIG_exit(EXIT_FAILURE);
-	}
-
-	void snap_at_line(DOHFile* fps[], int flag, int line) {
-		PRINTF(fps, flag, "//_[line: %d]\n", line);
 	}
 
 	void snap_path_info(DOHFile* fps[], int flag, int line, char* msg, void* ptr = NULL) {

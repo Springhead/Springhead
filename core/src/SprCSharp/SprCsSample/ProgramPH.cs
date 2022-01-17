@@ -58,7 +58,7 @@ namespace SprCsSample {
 	    try {
                 CSlog.Print("Test End");
 	    } catch (System.Exception e) {
-		//Console.WriteLine(e.ToString());
+		    Console.WriteLine(e.ToString());
 	    }
             System.Console.WriteLine("----");
             System.Console.WriteLine("Passed: " + OK + ", Failed: " + NG);

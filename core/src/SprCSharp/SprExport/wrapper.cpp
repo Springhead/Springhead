@@ -60,6 +60,7 @@ extern "C" {
         try { (*vecptr).clear(); }
 	catch (SEH_Exception e) { e.raise_managed_exception("SprExport.dll"); }
     }
+
     //  unsigned int
     __declspec(dllexport) HANDLE __cdecl Spr_vector_new_unsigned_int() {
 	HANDLE _ptr = (HANDLE) NULL;
@@ -104,6 +105,7 @@ extern "C" {
         try { (*vecptr).clear(); }
 	catch (SEH_Exception e) { e.raise_managed_exception("SprExport.dll"); }
     }
+
     //  size_t
     __declspec(dllexport) HANDLE __cdecl Spr_vector_new_size_t() {
 	HANDLE _ptr = (HANDLE) NULL;
@@ -148,6 +150,7 @@ extern "C" {
         try { (*vecptr).clear(); }
 	catch (SEH_Exception e) { e.raise_managed_exception("SprExport.dll"); }
     }
+
     //  float
     __declspec(dllexport) HANDLE __cdecl Spr_vector_new_float() {
 	HANDLE _ptr = (HANDLE) NULL;
@@ -192,6 +195,7 @@ extern "C" {
 	try { (*vecptr).clear(); }
 	catch (SEH_Exception e) { e.raise_managed_exception("SprExport.dll"); }
     }
+
     //  double
     __declspec(dllexport) HANDLE __cdecl Spr_vector_new_double() {
 	HANDLE _ptr = (HANDLE) NULL;
@@ -236,6 +240,7 @@ extern "C" {
         try { (*vecptr).clear(); }
 	catch (SEH_Exception e) { e.raise_managed_exception("SprExport.dll"); }
     }
+
     //  string
     __declspec(dllexport) HANDLE __cdecl Spr_vector_new_string() {
 	HANDLE _ptr = (HANDLE) NULL;
@@ -323,6 +328,7 @@ extern "C" {
         int* aryptr = (int*) ptr;
         aryptr[index] = value;
     }
+
     //  unsigned int
     __declspec(dllexport) HANDLE __cdecl Spr_array_new_unsigned_int(unsigned int nelm) {
         return (HANDLE) new unsigned int[nelm];
@@ -339,6 +345,7 @@ extern "C" {
         unsigned int* aryptr = (unsigned int*) ptr;
         aryptr[index] = value;
     }
+
     //  size_t
     __declspec(dllexport) HANDLE __cdecl Spr_array_new_size_t(unsigned int nelm) {
         return (HANDLE) new size_t[nelm];
@@ -355,6 +362,7 @@ extern "C" {
         size_t* aryptr = (size_t*) ptr;
         aryptr[index] = value;
     }
+
     //  float
     __declspec(dllexport) HANDLE __cdecl Spr_array_new_float(unsigned int nelm) {
         return (HANDLE) new float[nelm];
@@ -371,6 +379,7 @@ extern "C" {
         float* aryptr = (float*) ptr;
         aryptr[index] = value;
     }
+
     //  double
     __declspec(dllexport) HANDLE __cdecl Spr_array_new_double(unsigned int nelm) {
         return (HANDLE) new double[nelm];
@@ -387,6 +396,7 @@ extern "C" {
         double* aryptr = (double*) ptr;
         aryptr[index] = value;
     }
+
     //  string
     __declspec(dllexport) HANDLE __cdecl Spr_array_new_string(unsigned int nelm) {
         return (HANDLE) new std::string[nelm];
@@ -423,6 +433,7 @@ extern "C" {
             SysFreeString((BSTR) addr);
         }
     }
+
     //  char*
     __declspec(dllexport) HANDLE __cdecl Spr_array_new_char_p(unsigned int nelm) {
         return (HANDLE) new char**[nelm];
