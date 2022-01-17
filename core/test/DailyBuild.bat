@@ -148,7 +148,7 @@ git clone --recurse-submodules %REMOTE_REPOSITORY% %TEST_REPOSITORY%
 
 :: ---------------------------------------------------------------------
 ::  Step 3
-::	Hook ファイルが存在したらそれを実行する.
+::	Hook ファイルが存在したらそれをコピーする.
 ::
 :apply_hook
 if "%HOOK%" neq "no" (

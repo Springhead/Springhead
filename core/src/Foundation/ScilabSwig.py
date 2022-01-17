@@ -10,8 +10,9 @@
 #
 #  ＊注意＊
 #	ScilabStub.hpp は, dll.cpp を移植しないと作成できない.
-#	Ver 1.0 では, makefile (ScilabStub.mak.txt) は作成するが, make は
-#	実行しない (make clean も実行しない).
+#	Ver 1.0 及び 2.0 では, makefile (ScilabStub.mak.txt) は作成するが, 
+#	make は実行しない (make clean も実行しない).
+#	Scilab.i 及び ScilabStub.hpp は作成済みのものがコミットされている.
 #
 # ==============================================================================
 #  Version:

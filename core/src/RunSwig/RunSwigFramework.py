@@ -71,7 +71,6 @@ bindir = '%s/core/bin' % sprtop
 incdir = '%s/core/include' % sprtop
 srcdir = '%s/core/src' % sprtop
 framework_dir = '%s/Framework' % srcdir
-tmpdir = '%s/core/swigtmp' % sprtop
 tmpdir = '%s/core/src/RunSwig/tmp' % sprtop
 
 # ----------------------------------------------------------------------

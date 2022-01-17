@@ -157,7 +157,6 @@ class CMake:
 		cmnd += ' -B %s' % blddir
 		cmnd += ' -G %s' % self.generator
 		cmnd += ' -D LIBTYPE=%s' % libtype
-		print('@@@ %s' % cmnd)
 		#
 		logobj = self.__open(self.logfile)
 		proc = Proc(verbose=0)	#self.verbose)
