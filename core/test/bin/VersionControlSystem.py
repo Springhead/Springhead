@@ -3,7 +3,7 @@
 # ======================================================================
 #  CLASS:
 #	VersionControlSystem:
-#	    Wrapper class to get some information like revision
+#	    Wrapper class to get some information such as revision
 #	    number from source code version control system.
 #	    Currently available systems are:
 #		'GitHub'	GitHub system

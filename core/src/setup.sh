@@ -3,6 +3,7 @@
 #  SYNOPSIS
 #	setup [-f (--force) ]
 #	  -f (--force)	セットアップファイルを無条件に再作成する。
+#	  -c (--check)	セットアップファイルの整合性を検査する。
 #
 #  DESCRIPTION
 #	setup.py を実行するためのアダプタ。

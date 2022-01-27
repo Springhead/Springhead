@@ -16,7 +16,7 @@
 #	    dry_run:	Show command but do not execute (bool).
 #
 #  METHODS:
-#	stat = build(dirpath, slnfile, platform, opts, outfile,
+#	stat = build(dirpath, slnfile, platform, config, outfile,
 #			logfile, errlogfile, force=False)
 #	    Change directory to 'dirpath' temporarily and build the
 #	    solution.  'Outfile'/'logfile' should be absolute path or
@@ -25,7 +25,7 @@
 #	        dirpath:    Directory path where 'slnfile' exists.
 #		slnfile:    Solution/make file name.
 #	        platform:   Target platform ('x86' or 'x64').
-#		opts:	    Compiler option.
+#		config:	    Compiler option.
 #			        Windows: 'Debug'/'Release/Trace' (config)
 #			        unix:	 '-g'/'-O2' (any option is OK)
 #		outfile:    Output binary file path.
@@ -64,6 +64,7 @@
 #     Ver 1.2	 2018/08/07 F.Kanehori	Execute binary directly (unix).
 #     Ver 1.3	 2019/08/07 F.Kanehori	Add parameter to initializer.
 #     Ver 1.3.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
+#     Ver 1.3.2	 2021/12/20 F.Kanehori	CMAKE_BLDDIR を反映
 # ======================================================================
 import sys
 import os
@@ -112,17 +113,17 @@ class BuildAndRun:
 
 	#  Compile the solution.
 	#
-	def build(self, dirpath, slnfile, platform, opts,
+	def build(self, dirpath, slnfile, platform, config,
 			outfile, logfile, errlogfile, force=False):
 		self.dirpath = dirpath
 		self.slnfile = slnfile
 		self.platform = platform	# used by run()
-		self.config = opts		# used by run()
+		self.config = config		# used by run()
 		if self.verbose:
 			print('build solution')
 			print('  dirpath: %s' % dirpath)
 			print('  slnfile: %s' % slnfile)
-			print('  opts:    %s' % opts)
+			print('  config:  %s' % config)
 			print('  outfile: %s' % outfile)
 			print('  force:   %s' % force)
 			print('  logfile: %s' % logfile)
@@ -141,7 +142,7 @@ class BuildAndRun:
 		errlogf = self.__open_log(errlogfile, 'a', RST.BLD)
 
 		# call compiler
-		args = [slnfile, platform, opts, outfile, force]
+		args = [slnfile, platform, config, outfile, force]
 		if Util.is_unix():
 			stat, loginfo = self.__build_u(args)
 		else:
@@ -307,9 +308,9 @@ class BuildAndRun:
 			'Trace':	'OPTS=-O2',
 			None:		''
 		}
-		[slnfile, platform, opts, outfile, force] = args
-		if opts not in opt_flags:
-			opts = None
+		[slnfile, platform, config, outfile, force] = args
+		if config not in opt_flags:
+			config = None
 		tmplogdir = 'log'
 		tmplog = '%s/%s_%s_%s_build.log' % \
 			(tmplogdir, self.clsname, self.platform, self.config)
@@ -317,18 +318,22 @@ class BuildAndRun:
 		FileOp().touch(tmplog)
 
 		if (self.use_cmake):
-			os.chdir('build')
+			cwd = os.getcwd()
+			build_dir = self.ctl.get(CFK.CMAKE_BLDDIR)
+			if not build_dir:
+				build_dir = 'build'
+			os.chdir(build_dir)
 			target = 'all'
 		else:
 			target = 'compile'
 		cmnd = 'make -f %s %s' % (slnfile, target)
-		args = opt_flags[opts]
+		args = opt_flags[config]
 		proc = Proc(verbose=self.verbose, dry_run=self.dry_run)
 		proc.execute('%s %s' % (cmnd, args), shell=True,
 				stdout=tmplog, stderr=Proc.STDOUT)
 		stat = proc.wait()
 		if (self.use_cmake):
-			os.chdir('..')
+			os.chdir(cwd)
 
 		cmnd = '%s %s' % (cmnd, args)
 		loginfo = [cmnd, tmplog]
@@ -339,7 +344,7 @@ class BuildAndRun:
 	def __build_w(self, args):
 		# arguments:
 		#   args:	Parameters to compiler (list).
-		[slnfile, platform, opts, outfile, force] = args
+		[slnfile, platform, config, outfile, force] = args
 
 		outdir = self.__dirpart(outfile).replace('x86', 'Win32')
 		tmplog = 'log/%s_%s_%s_%s_build.log' % \
@@ -349,7 +354,7 @@ class BuildAndRun:
 		if self.verbose > 1:
 			print('build solution (Windows)')
 			print('  slnfile: %s' % slnfile)
-			print('  opts:    %s' % opts)
+			print('  config:  %s' % config)
 			print('  outdir:  %s' % outdir)
 			print('  tmplog:  %s' % tmplog)
 			print('  force:   %s' % force)
@@ -361,7 +366,7 @@ class BuildAndRun:
 		vs.set(VisualStudio.DRYRUN, self.dry_run)
 		if vs.error():
 			Error(self.clsname).abort(vs.error())
-		stat = vs.build(platform, opts)
+		stat = vs.build(platform, config)
 
 		cmnd = vs.get(VisualStudio.COMMAND)
 		loginfo = [cmnd, tmplog]
