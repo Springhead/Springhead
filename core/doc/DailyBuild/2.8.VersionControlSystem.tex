@@ -1,0 +1,67 @@
+% 2.8.VersionContrilSystem.tex
+%	Last update: 2022/02/02 F.Kanehori
+
+%\newpage
+\subsection{VersionControlSystemクラス}
+\label{subsec:VersionControlSystem}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>/core/test/bin/VersionControlSystem.py}
+\end{Description}
+
+\medskip
+\begin{Description}{クラス生成}
+	\cmnd{VersionControlSystem(url, wrkdir, verbose)}
+	\begin{Args}
+	  \Item[t]{url}{サーバのurl}
+	  \Item[t]{wrkdir}{処理を行なうディレクトリ(Git管理化にあること)}
+	\end{Args}
+\end{Description}
+
+\medskip
+\begin{Description}{クラスの機能}
+	バージョンコントロールシステムから情報を取得するためのラッパクラス。
+	現在利用できるのはGitHubシステムのみ
+	(クラス名は以前処理対象としていたsubversionシステムに由来する)。
+\end{Description}
+
+\medskip
+メソッドの機能
+
+\skip{-0.5}
+\begin{enumerate}
+  \item	\Func{revision}\\
+	サーバに次のコマンドを送って最新の\tt{commit-id}を取得する。
+	\begin{narrow}
+		\cmnd{git log --abbrev-commit --oneline --max-count=1}
+	\end{narrow}
+	返された情報の最初のフィールドが \tt{commit-id(短形式)} なので、
+	その部分を切り出して返す。
+	
+  \item	\Func{revision\_info}\\
+	サーバに \cmnd{git log} コマンドを送る。
+	次の形式のログ情報が複数返されるので、以下の方法で必要な情報を収集する。
+	\begin{narrow}
+		\tt{commit \it{長形式commit-id}}\\
+		\tt{Merge: ……}\\
+		\tt{Author: ……}\\
+		\tt{Date: \it{日付}}\\
+		\tt{……}
+	\end{narrow}
+	\begin{enumerate}
+	  \item	\label{9.0.enum.1}%
+		commit行が現れたら新しいcommitの開始と認識して\tt{commit-id}を記録する。
+		次のcommit行が現れるまではすべてこのcommitに属するものとする。
+	  \item	Date行が現れたら日付・時刻を取り出し、
+		\tt{"YYYY-mmdd,hh:mm:ss"}形式で記録する。
+	  \item	(\ref{9.0.enum.1})で記録したcommit-idが
+		指定されたcommit-idまたは\tt{HEAD}であるならばこれで終了。
+		収集した情報を返す。
+		さもなければ以上を繰り返す。
+	\end{enumerate}
+	
+  \item	\Func{get\_file\_content}\\
+	サーバにgit \cmnd{show commit-d:path} を送ってファイルの内容を取得する。
+\end{enumerate}
+
+% end: 2.8.VersionControlSystem.tex

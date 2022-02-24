@@ -1,0 +1,72 @@
+% 5.4.awkscripts.tex
+%	Last update: 2022/02/21 F.Kanehori
+%\newpage
+\subsection{awkscripts}
+\label{subsec:awkscripts}
+
+awkで記述されたスクリプトについて述べる。
+いずれもWindowsバッチファイルから呼び出されるコマンドとして動作する。
+
+% -----------------------------------------------------------------------
+\subsubsection{exclude.awk}
+\label{subsubsec:awkscripts}
+% -----------------------------------------------------------------------
+\begin{Description}{起動方法}
+	\cmnd{awk -f exclude.awk \it{infile}}
+\end{Description}
+レポート作成に不要な行を削除するためのスクリプト。
+ただし現在は削除を行なっていない(すべての行を出力している)。
+
+% -----------------------------------------------------------------------
+\subsubsection{field.awk}
+\label{subsubsec:field}
+% -----------------------------------------------------------------------
+\begin{Description}{起動方法}
+	\cmnd{awk -f field.awk -v {\small \rm{変数}=\rm{値}} < \it{infile}}
+	\begin{Opts}
+	  \Item[t]{-v \rm{変数}=\rm{値}}{%
+		変数に値を割り当てて実行する。\\
+		変数には、位置を示す変数(\tt{block, field, start})と
+		区切り文字を示す変数(\tt{sep1, sep2})とがある。}
+	\end{Opts}
+\end{Description}
+区切り文字\tt{sep2}が指定されない場合
+\begin{narrow}
+	入力行を区切り文字\tt{sep1} (指定がなければ空白文字)で分割して、
+	その\tt{field}番目(指定がなければ1番目)の要素を返す。
+\end{narrow}
+区切り文字\tt{sep2}が指定された場合
+\begin{narrow}
+	入力行を区切り文字\tt{sep2}で分割し、
+	その\tt{block}番目(指定がなければ1番目)の要素をさらに
+	区切り文字\tt{sep1} (指定がなければ空白文字)で分割して、
+	その\tt{field}番目(指定がなければ1番目)の要素を返す。
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsubsection{grep.awk}
+\label{subsubsec:grep}
+% -----------------------------------------------------------------------
+\begin{Description}{起動方法}
+	\cmnd{awk -f field.awk -v {\small \rm{変数}=\rm{値}} < \it{infile}}
+	\begin{Opts}
+	  \Item[t]{-v \rm{変数}=\rm{値}}{%
+		変数に値を割り当てて実行する。\\
+		変数は\tt{pat}のみである。}
+	\end{Opts}
+\end{Description}
+変数\tt{pat}が\DQuote{\tt{rev}}の場合
+\begin{narrow}
+	行頭から、
+	\begin{narrow}[\WID]\begin{itemize}
+	  \item	文字\SQuote{\tt{r}}に続いて数字が並んでいる
+	  \item	英数字が並んでいる
+	\end{itemize}\end{narrow}
+	行のみを出力する。
+\end{narrow}
+変数\tt{pat}が\DQuote{\tt{head}}の場合
+\begin{narrow}
+	行頭が\tt{HEAD}となっている行のみを出力する。
+\end{narrow}
+
+% end: 5.4.awkscripts.tex

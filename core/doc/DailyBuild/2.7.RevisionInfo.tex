@@ -1,0 +1,67 @@
+% 2.7.RevisionInfo.tex
+%	Last update: 2022/02/02 F.Kanehori
+
+%\newpage
+\subsection{RevisionInfoスクリプト}
+\label{subsec:RevisionInfo}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>/core/test/bin/RevisionInfo.py}
+\end{Description}
+
+\medskip
+\begin{Description}{起動形式}
+	\cmnd{python RevisionInfo.py [options] revision}
+	\begin{Args}
+	  \Item[t]{revision}
+		{\tt{-f}オプション指定時には\tt{commit-id}\\
+		それ以外の場合は\tt{all}を指定してすべてのcommitを対象とする}
+	\end{Args}
+	\begin{Opts}
+	  \Item[t]{-s}{Github (GitHub.com) を使用する}
+	  \Item[t]{-R}{Gitlab (git.haselab.net) を使用する}
+	  \Item[t]{-f fname}{リポジトリから取り出すファイル名}
+	  \Item[t]{-u}{unixで使用する場合に指定}
+	\end{Opts}
+\end{Description}
+
+\def\HD#1{\hfill\bf{#1}\hfill}
+
+\medskip
+動作の概要
+\begin{enumerate}
+  \item	\tt{-f}オプション指定時\\
+	\Func{info}で\tt{commit-id}情報を収集したら、
+	\Func{contents}でそれらの情報を出力する。
+
+  \item	それ以外\\
+	\Func{info}で\tt{commi-id}情報を出力する。\\
+	出力形式:
+	\begin{narrow}
+		\tt{"commit-id(短形式),commit-id(長形式),日付"}
+	\end{narrow}
+\end{enumerate}
+
+\medskip
+関数の機能
+\begin{enumerate}
+  \item	\Func{info}\\
+	指定されたcommit-idに関して、
+	\Func{VersionControlSystem.revision\_info}を用いて情報
+	\begin{narrow}
+		\tt{"commit-id(短形式),commit-id(長形式),日付"}
+	\end{narrow}
+	を取得する。\\
+	引数\tt{out}が指定されていたら、これらの情報を出力する。
+
+  \item	\Func{contents}\\
+	\Func{VersionControlSystem.get\_file\_content}を用いて、
+	指定\tt{commit-id}版におけるファイル\tt{fname}
+	およびファイル\file{Springhead.commit.id}
+	(このファイルにはテストが実行された時の\tt{commit-id}
+	および日付の履歴が記録されている)の内容を読み出す。
+	不要な情報でなければ(いくつか紛れ込んでいるのでそれらは無視する必要がある)
+	\tt{commit-id}と日付とともにファイルの内容を出力する。
+\end{enumerate}
+
+% end: 2.7.RevisionInfo.tex

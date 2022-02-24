@@ -1,0 +1,53 @@
+% 5.3.4.baselib.tex
+%	Last update: 2022/02/14 F.Kanehori
+%\newpage
+\subsubsection{base\_lib.pm}
+\label{subsubsec:baselib}
+
+\medskip
+perlスクリプトで共通に使用するユーティリティサブルーチンのライブラリである
+(\DDagger を付したものは外部非公開)。
+
+\medskip
+\begin{Description}{関数の説明}
+  \Function{assert(\plVar{expr})}{%
+	アサーションルーチン。
+	条件が満たされなければスタックをトレースして終了する。}
+
+  \Function{verbose(\plVar{text} [,\plVar{stream}])\\
+	    verbose\_set(\plVar{value})}{%
+	バーバス表示ルーチン。
+	\tt{verbose\_set()}でon/offを切り替えできる。}
+
+  \Function{show\_usage(\plVar{cmnd} [,\plAryR{args} [,\plAryR{opts}]])\\
+	    add\_padding(\plVar{text}, \plVar{width}) \DDagger}{%
+	使用方法の表示ルーチン。
+	\tt{add\_padding()}は表示位置を合わせるための簡易ルーチン。}
+
+  \Function{warning(\plVar{prog}, \plAry{text})\\
+	    error(\plVar{prog}, \plAry{text})\\
+	    fatal(\plVar{prog}, \plAry{text})\\
+	    panic(\plVar{prog}, \plAry{text})}{%
+	エラーメッセージ表示ルーチン。
+	\tt{fatal()}と\tt{panic()}はプログラムを終了させる。}
+
+  \Function{\plVar{name} = dirname(\plVar{path})}{%
+	引数のパス名\plVar{path}からディレクトリ部分を取り出して返す。}
+
+  \Function{\plVar{name} = leafname(\plVar{path})}{%
+	引数のパス名\plVar{path}からリーフ名部分を取り出して返す。}
+
+  \Function{debug(\plVar{level}, \plAry{text})\\
+	    debug\_push(\plVar{value})\\
+	    debug\_pop()}{%
+	デバッグ表示を行なう
+	(現在のデバッグレベルより大きいレベルが指定された時のみ)。
+	デバッグレベルを変更するには\tt{debug\_push()}を使用する。
+	\tt{debug\_pop()}で一つ前のデバッグレベルに戻せる。}
+
+  \Function{object\_dump(\plVar{level}, \plVar{object} [,\plVar{text}])}{%
+	引数で指定したオブジェクトをダンプする。
+	表示には\tt{debug()}を使用するので、デバッグレベルの指定が可能(というか必須)。}
+\end{Description}
+
+% end: 5.3.4.baselib.tex

@@ -1,0 +1,182 @@
+% 3.1.Setup.tex
+%	Last update: 2022/02/07 F.Kanehori
+
+%\newpage
+\subsection{セットアップ機能}
+\label{subsec:Setup}
+
+セットアップの目的は、\cmnd{cmake}を使用してSpringehadライブラリをビルドする
+ための環境を整えることである。
+\begin{narrow}{\small
+	元々は、Visual Studioの新バージョンが出る度に\file{.sln}などを
+	提供するのを止めるために\cmnd{cmake}を導入するといった経緯があり、
+	そのための前処理ツールとして作成されたものである。
+	しかしその後、
+	Windowsでは\file{.sln}を用いる方法をメインとすることとなったために
+	\cmnd{cmake}を利用することはオプションとなった。
+	unixでは\cmnd{cmake}を使うことが前提としており、
+	\file{Makefile}のメンテは行なっていない。
+	
+}\end{narrow}
+
+\medskip
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>\BS core\BS src\BS setup.bat}　…　{\small Windows}\\
+	\Path{<topdir>/core/src/setup.sh}　…　{\small unix}
+\end{Description}
+
+\medskip
+\begin{Description}{起動方法}
+	\cmnd{setup.bat [options]} \Hskip{10pt}(Windows)\\
+	\cmnd{setup.sh [options]} \Hskip{10pt}(unix)
+
+	\begin{Opts}
+	  \Item[t]{-c (--check)}{\Hskip{20pt}setup fileの整合性チェックのみを実行}
+	  \Item[t]{-f (--force)}{\Hskip{20pt}無条件に再setupを実行}
+	\end{Opts}
+\end{Description}
+
+\medskip
+\begin{Description}{スクリプトの動作}
+    次のpythonを使用する
+    \begin{Table}[r][60pt]{ll}
+	\Item{Windows}{%
+		\Path{<topdir>\BS buildtool\BS win32\BS python.exe}があればそれを、
+		なければデフォルトの\script{python}を使用する。
+		どちらもなければメッセージを出して終了する。}
+	\Item{Unix}{%
+		デフォルトの\cmnd{python}を使用する。
+		なければメッセージを出して終了する。}
+    \end{Table}
+\end{Description}
+
+次の形式で実行スクリプトを起動する(optionsはそのまま引き継ぐ)。
+\begin{narrow}
+	\cmnd{python setup.py [options] python-path}
+\end{narrow}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>\BS core\BS src\BS setup.py}　…　{\small Windows}\\
+	\Path{<topdir>\BS core\BS src\BS setup\_helpers.py}　…　{\small Windows}\\
+	\Path{<topdir>/ core/src/setup.sh}　…　{\small Windows}\\
+	\Path{<topdir>/core/src/setup\_helpers.sh}　…　{\small unix}
+\end{Description}
+
+\medskip
+\begin{Description}{起動方法}
+	\cmnd{python setup.py [options] python-path}
+	\begin{Args}[r][60pt]
+	    \Item[t]{python-path}{%
+		pythonのパス(pythonがパスに入っていないことがあるから。)}
+	\end{Args}
+	\begin{Opts}
+	    \Item[t]{-c (--check)}{\Hskip{40pt}setup fileの整合性チェックのみを実行}
+	    \Item[t]{-f (--force)}{\Hskip{40pt}無条件に再setupを実行}
+	    \Item[t]{-F (--Force)}{\Hskip{40pt}\tt{-f}と同様(\tt{swig}をclean buildする)}
+	    \Item[t]{-s file}{\Hskip{40pt}setupファイル名(デフォルトは\file{setup.conf})}
+	    \Item[t]{-d num}{\Hskip{40pt}devenvの選択番号(ユーザ入力なし---デバッグ用)}
+	    \Item[t]{-R (--repository)}{\Hskip{40pt}local repositoryのディレクトリ名}
+	\end{Opts}
+\end{Description}
+
+\medskip
+\begin{Description}{必要なツール(変数\var{required}に設定)}
+	\begin{tabular}{l@{\Hskip{20pt}}l}
+		Windows	& \tt{python, devenv, nmake, swig, (cmake)}\\
+		unix	& \tt{python, gcc, swig, (cmake), gmake, nkf}\\
+	\end{tabular}
+\end{Description}
+
+\medskip
+スクリプトの動作
+
+\begin{Description}{Step 1. \tt{python}のバージョンチェック(現在はチェックしていない)}
+ 	\tt{python}はバージョン3以上でなければならない
+	(バージョン2.7にも一応対応している)。
+\end{Description}
+
+\begin{Description}{Step 2. setupファイルがあるならば整合性をチェック}
+ 	整合性チェックの内容
+ 	\begin{enumerate}
+	  \item 必須ツールが登録されているか
+	  \item 登録されているパスは有効か(\cmnd{prog --version}などで検査)\\
+		   \cmnd{devenv}の場合は\cmnd{vswhere}コマンドで調べる
+		   (複数見つかる場合にも対応)。\\
+		   OKならば、パスとバージョンを
+		   \var{prog\_registered, vers\_registered}に設定する。
+	  \item \file{CMakeLists.txt}が存在するならば
+		   \file{CMakeLists.txt.dist}のバージョンと比較する。
+	\end{enumerate}
+\end{Description}
+
+\begin{Description}{Step 3. 必要なツールのパスの現状の調査}
+	必要なツールについて、\cmnd{where, vswhere, which}などを用いて現在の環境を調べる
+	(実行できるものについては\var{prog\_scanned, vers\_scanned}に設定する)。\\
+	devenvの探し方
+	\begin{enumerate}
+	  \item	\Color{red}{\bf{
+		\Path{C:\BS Program Files (x86)\BS Microsoft Visual Studio}\Cont\\
+	  	\Hskip{160pt}\Path{\BS Installer\BS vswhere.exe}\\
+		を実行してインストール済みVisual Studioの情報を取得する。\\
+		今後リリースされるVisual Studioについては
+		この方法で取得できることを期待している。
+		だめならば、
+		\file{setup\_helpers.py}の中の\Func{try\_find\_devenv}を
+		修正する必要がある。}}
+	  \item	候補が複数見つかったらどれにするか選択させる(ユーザ入力)。
+	  \item	もし\DQuote{'0' to try another one}が選択されたならば、
+		\cmnd{devenv /?} を実行してみてバージョンを調べる
+		(PATHに入っていることが前提\,!)。
+	\end{enumerate}
+\end{Description}
+
+\begin{Description}{Step 4. 次のいずれかの場合以外はここで終了}
+	\begin{itemize}
+	  \item	Setupファイルがない
+	  \item	必要なプログラムが実行できない
+	  \item	Setupファイルの内容と現在の環境とに相違がある
+	  \item	\file{CMakeLists.txt}がない
+	  \item	\file{CMakeLists.txt}のバージョンが古い
+	  \item	\tt{-f}/\tt{-F}オプションが指定されている
+	  \item	必要なプログラムが揃っていない(setupファイルがない場合)
+	\end{itemize}
+\end{Description}
+
+\begin{Description}{Step 5. \tt{-f}オプション指定がないときは処理を継続するか確認する}
+\end{Description}
+
+\begin{Description}{Step 6. ビルドパラメータの設定}
+	\begin{tabular}{l@{\Hskip{10pt}}l}
+	    \tt{'plat'} & マシンアーキテクチャから\\
+	    \tt{'conf'} & Release\\
+	    \tt{'vers'} & \var{vers\_scanned['devenv']}から … (Windowsのみ）\\
+	\end{tabular}
+\end{Description}
+
+\begin{Description}{Step 7. パス情報の設定(実はこの情報は利用していない)}
+	\begin{tabular}{l@{\Hskip{10pt}}l}
+	    \tt{'sprtop'}  & Springheadツリーのトップディレクトリ\\
+	    \tt{'sprcore'} & coreディレクトリ\\
+	    \tt{'sprsrc'}  & srcディレクトリ\\
+	    \tt{'sprlib'}  & pythonローカルライブラリのディレクトリ\\
+	\end{tabular}
+\end{Description}
+
+\begin{Description}{Step 8. \cmnd{swig}のmake (unixのみ)}
+	\var{prog\_scanned['swig']}が\tt{'NOT FOUND'}であるか、
+	または\tt{-f}/\tt{-F}オプションが指定されたときに\cmnd{make}を実行する。
+\end{Description}
+
+\begin{Description}{Step 9. Setupファイルの作成}
+	Setupファイルは3つのセクションからなる。\\
+	\Hskip{10pt}\tt{[prog]} \Hskip{10pt} プログラムのパス情報\\
+	\Hskip{10pt}\tt{[path]} \Hskip{10pt} その他のパス情報\\
+	\Hskip{10pt}\tt{[data]} \Hskip{10pt} \tt{plat}(プラットフォーム),
+			\ \tt{conf}(ビルド構成), \tt{vers}(toolset ID)
+\end{Description}
+
+\begin{Description}{Step 10. \file{CMakeLists.txt}がなければ作成}
+	\file{CMakeLists.txt.dist}からコピーするだけ。
+\end{Description}
+
+% end: 3.1.Setup.tex

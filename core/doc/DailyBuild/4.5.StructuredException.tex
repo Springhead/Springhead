@@ -1,0 +1,49 @@
+% 4.5.StructuredException.tex
+%	Last update: 2022/02/09 F.Kanehori
+
+%\newpage
+\subsection{クラスSEH (StructuredException)}
+\label{subsec:StructuredException}
+
+\begin{Description}{概要}
+	Windowsの構造例外を取り扱うためのクラス。
+	\bf{このクラスのメソッドはすべてstaticである。}
+\end{Description}
+
+\begin{Description}{例外コード定義}
+    \skip{-.5}
+    \begin{longtable}{|c|c|p{15em}|}\hline
+	内部コード & システムコード  & \MC{1}{|c|}{表示文字列}	\\\hline
+	\tt{-9002} & \tt{0xC0000002} & Datatype Misalignment	\\\hline
+	\tt{-9005} & \tt{0xC0000005} & Access Violation		\\\hline
+	\tt{-9008} & \tt{0xC0000008} & Invalid Handle		\\\hline
+	\tt{-9140} & \tt{0xC000008C} & Array Bounds Exceeded	\\\hline
+	\tt{-9148} & \tt{0xC0000094} & Integer Divide by Zero	\\\hline
+	\tt{-9149} & \tt{0xC0000095} & Integer Overflow		\\\hline
+	\tt{-9253} & \tt{0xC00000FD} & Stack Overflow		\\\hline
+	\tt{-9404} & \tt{0xC0000194} & Possible Deadlock	\\\hline
+	\tt{-9903} & \tt{0x80000003} & Breakpoint		\\\hline
+	\tt{-9908} & \tt{0x40010008} & Debug Control Break	\\\hline
+    \end{longtable}	
+\end{Description}
+
+\begin{Description}{関数の機能}
+  \Function{is\_seh(code)}{%
+	引数で与えられたコード(内部コード)が、構造例外コードか否かを返す。
+	ここでは\,\tt{-9000}より小さいコードを構造例外コードとして扱う。
+	すなわち、これより大きいコードは
+	個別のプログラムが返すリターンコードとみなしている。}
+
+  \Function{seh\_str(code)}{%
+	引数で与えられたコード(内部コード)に対応する表示文字列を返す。}
+
+  \Function{seh\_code(code)}{%
+	引数で与えられたコード(内部コード)に対応するシステムコードを返す。}
+
+  \medskip
+  \LocalFunction{\_\_seh\_str\_sub(code)}{%
+	引数で与えられたコード(内部コード)に対応するシステムコード及び表示文字列を返す。
+	\tt{seh\_str()}及び\tt{seh\_code()}から呼ばれる。}
+\end{Description}
+
+% end: 4.5.StructuredException.tex

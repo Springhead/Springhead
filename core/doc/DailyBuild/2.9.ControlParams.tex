@@ -1,0 +1,166 @@
+% 3.2.ControlParams.tex
+%	Last update: 2022/02/07 F.Kanehori
+
+%\newpage
+\subsection{ControlParamsクラス}
+\label{subsec:ControlParams}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>/core/test/bin/ControlParams.py}
+\end{Description}
+
+\medskip
+\begin{Description}{関連ファイル}
+	\Path{<topdir>/core/test/bin/ConstDefs.py}\\
+	\Path{<topdir>/core/test/bin/dailybuild.control}\Hskip{5pt}
+		{\small (制御パラメータの雛形)}
+\end{Description}
+
+\medskip
+\begin{Description}{クラス生成}
+	\cmnd{ControlParams(fname, section, verbose)}
+	\begin{Args}
+	  \Item[t]{fname}{テスト制御ファイル名\\
+			(DailyBuildでは\Path{dailybuild.control})}
+	  \Item[t]{section}{テスト制御セクション名 (デフォルトは無名セクション)}
+	\end{Args}
+\end{Description}
+
+\medskip
+\begin{Description}{テスト制御ファイルの形式}
+	テスト制御ファイルは``キーワード''と``値''との組み合わせで構成されている。
+	また、このファイルには``無名セクション''および``名前付きセクション''という
+	概念があり、セクション名を指定してパラメータを読み出すことができる
+	(``無名セクション''はすべての名前付きセクションに共通して属すると解釈される)。
+	セクションが異なれば、同じキーワードが存在していても構わない。
+
+	``名前付きセクション''は、\tt{"[name]"}という行(\tt{name}が名前)で始まり、
+	次のセクションが開始されるまで継続する。
+	``無名セクション''はファイルの先頭から最初の``名前付きセクション''までである。
+
+	値の定義では、
+	既に定義済みの値を\tt{"\$(keyword)"}という形式で参照することができる。
+	これらの仕組を利用してWindowsとunixの定義を一つのファイルに納めている。
+	このファイルを読み出すには\Class{KvFile}
+	\Path{<topdir>/core/src/RunSwig/pythonlib/KvFile.py})を使用する。
+\end{Description}
+
+\medskip
+\begin{Description}{テストパラメータの継承}
+	あるディレクトリにあるテスト制御ファイルで定義されなかったキーワードの値は、
+	その上位ディレクトリにあるテスト制御ファイルで定義された値があればそれを継承する。
+	よって最上位ディレクトリ(\Path{<topdir>/core/src/Samples}など)に
+	テスト全体に共通するパラメータを定義しておき、
+	下位のディレクトリではそこに特化した値だけ定義すれば十分である
+	(実際そうしてある)。
+\end{Description}
+
+\medskip
+\begin{Description}{テストパラメータ}
+	テストパラメータについて説明する。
+	制御ファイルでのキーワードと、
+	処理プログラム中でこれらのパラメータを取得する場合に使用する名称
+	\Class{KvFile.get(\it{name})}との対応は
+	\begin{narrow}
+		\Class{CFK} (\Path{<topdir>/core/test/bin/ConstDefs.py})
+	\end{narrow}
+	で次のように定義されている。
+
+	\def\OneCol#1{\begin{tabular}{l}#1\end{tabular}}
+	\begin{longtable}[r]{|l|l|}\hline
+	    \MC{1}{|c|}{\bf{キーワード}} & \MC{1}{|c|}{\bf{説　明}}\\\hline
+	    \tt{SprTop} & \OneCol{%
+		Springheadツリーのトップディレクトリ(自動的に設定される)
+		}\\\hline
+	    \tt{SprTest} & \OneCol{%
+		\tt{\$(SrcTop)/core/test} (自動的に設定される)
+		}\\\hline
+	    \tt{Exclude} & \OneCol{%
+		このディレクトリを処理の対象から外すならば\tt{True}とする
+		}\\\hline
+	    \tt{Descend} & \OneCol{%
+		このディレクトリのすべてのサブディレクトリを処理の対象とする\\
+		ならば\tt{True}とする
+		}\\\hline
+	    \tt{SolutionAlias} & \OneCol{%
+		Solutionファイルの別名を指定する\\
+		(デフォルトはディレクトリ名と同じ名前)
+		}\\\hline
+	    \tt{Build} & \OneCol{%
+		ビルドするならば\tt{True}とする
+		}\\\hline
+	    \tt{UseClosedSrc} & \OneCol{%
+		Closed sourceを使用するなら\tt{True}とする
+		}\\\hline
+	    \tt{CppMacro} & \OneCol{%
+		ビルド時に定義するマクロを定義する
+		}\\\hline
+	    \tt{LibType} & \OneCol{%
+		Springhead Libraryの形式(\tt{STATIC}または\tt{SHARED})
+		}\\\hline
+	    \tt{BuildLog} & \OneCol{%
+		ビルドログファイル名
+		}\\\hline
+	    \tt{BuildErrLog} & \OneCol{%
+		ビルドエラーログファイル名
+		}\\\hline
+	    \tt{Run} & \OneCol{%
+		ビルドしたバイナリを実行するならば\tt{True}とする
+		}\\\hline
+	    \tt{OutputDir} & \OneCol{%
+		出力ディレクトリ名\\
+		ここでは次の置き換えルールが適用される(\file{Traverse.py})\\
+		{\small
+		\begin{tabular}{l@{ → }l}
+		    \tt{\$TOOLSET} & Visual Studio toolset ID (\tt{16.0}など)\\
+		    \tt{\$PLATFORM} & platform名称 (\tt{x86, x64})\\
+		    \tt{\$CONFIGURATION} & configuration名称 (\tt{Debug, Release, Trace})
+		\end{tabular}}
+		}\\\hline
+	    \tt{BinaryOut} & \OneCol{%
+		出力バイナリ名(デフォルトは\Path{<solution-name>[.exe]})
+		}\\\hline
+	    \tt{Timeout} & \OneCol{%
+		タイムアウト秒数(\tt{0}ならばタイムアウトなし)
+		}\\\hline
+	    \tt{Expected} & \OneCol{%
+		終了コードの期待値(実行の成否を判定するため)
+		}\\\hline
+	    \tt{AddPath} & \OneCol{%
+		実行時に必要となる追加パス
+		}\\\hline
+	    \tt{PipeProcess} & \OneCol{%
+		実行時にパイプ経由でデータを渡すプログラム名\\
+		\small{\OneCol{%
+			※ メニュー選択を意識していたがこれらはキーボードイベントを
+			必要と\\するので、パイプを使う必要はなかった。\\
+			現在はタイムディレイを用いたイベント生成をするプログラム\\
+			(\cmnd{GenKbEvent})を起動するだけ\\
+			\Path{<topdir>/core/test/bin/GenKbEvent/GenKbEvent.cpp}参照
+		}}
+		}\\\hline
+	    \tt{KillProcess} & \OneCol{%
+		PipeProcessで指定したプログラムでkillする必要があるものを指定
+		}\\\hline
+	    \tt{RunLog} & \OneCol{%
+		実行時ログファイル名
+		}\\\hline
+	    \tt{RunErrLog} & \OneCol{%
+		実行時エラーログファイル名
+		}\\\hline
+	    \tt{Intervention} & \OneCol{%
+		実行時にユーザ介入が必要なときは\tt{True}とする
+		}\\\hline
+	    \tt{UseCMake} & \OneCol{%
+		CMakeを使用するときは\tt{True}とする
+		}\\\hline
+	    \tt{CMakeBuildDir} & \OneCol{%
+		CMakeで使用する作業ディレクトリ名(通常は\Path{build})
+		}\\\hline
+	    \tt{CMakeTopDir} & \OneCol{%
+		Springheadソースツリーのトップディレクトリ(\tt{=\$(SprTop)})
+		}\\\hline
+	\end{longtable}
+\end{Description}
+
+% end: 3.2.ControlParams.tex

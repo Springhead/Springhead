@@ -1,0 +1,239 @@
+% 2.1.DailyBuildTask.tex
+%	Last update: 2022/02/10 F.Kanehori
+
+%\newpage
+\subsection{DailyBuildタスクの起動}
+\label{subsec:Task}
+
+DailyBuildは毎日Windows上及びunix上でタスクとして実行される。
+\begin{narrow}[10pt]
+    \Vskip{-.7\baselineskip}
+    \begin{Table}[r][7em]{ll}
+	\Item{実行マシン}{\tt{DESKTOP-KD3C7HS} (Windows)}
+	\Item{タスク名}{%
+		\begin{LocalScope}\tabcolsep=0pt\def\arraystretch{1.0}
+		\begin{tabular}[t]{l@{\Hskip{1em}}l}
+		    Task1: \tt{DailyBuild} & 毎日 02:02 に起動\\
+		    Task2: \tt{MakeReport} & 毎日 04:02 に起動
+		\end{tabular}
+		\end{LocalScope}}
+    \end{Table}
+
+    \begin{Table}[r][7em]{ll}
+	\Item{実行マシン}{\tt{kanehori-Workstation} (unix --- ubuntu)}
+	\Item{cron}{毎日 04:00 に起動}
+    \end{Table}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsubsection{タスク DailyBuild}
+\label{subsubsec:TaskDailyBuild}
+% -----------------------------------------------------------------------
+Springehadのビルド＆テストを実行するタスク。
+
+\begin{narrow}[10pt]
+Windows:
+    \begin{narrow}[10pt]
+    	\Vskip{-1.0\baselineskip}
+    	\begin{Table}[r][6em]{ll}
+		\Item{Script}{\Path{I:\BS DailyBuild\BS Springhead%
+					\BS core\BS test\BS DailyBuild.bat}}
+		\Item{起動引数}{\tt{--hook -t 15.0 -c Release -p x64} \Cont\\
+		 	\Hskip{40pt}\tt{Springhead DailyBuildResult/Result}}
+		\Item{ログ}{\Path{I:\BS DailyBuild\BS DailyBuild.log}}
+    	\end{Table}
+    \end{narrow}
+\end{narrow}
+
+\begin{narrow}[10pt]
+unix:
+    \begin{narrow}[10pt]
+    	\Vskip{-1.0\baselineskip}
+    	\begin{Table}[r][6em]{ll}
+		\Item{Script}{\Path{/home/demo/Project/DailyBuild.sh}}
+		\Item{起動引数}{\tt{-S Springhead DailyBuildResult/Result}}
+		\Item{ログ}{\Path{/home/demo/Project/DailyBuild.log}}
+    	\end{Table}
+    \end{narrow}
+\end{narrow}
+
+% -----------------------------------------------------------------------
+\subsubsection{タスク MakeReport}
+\label{subsubsec:TaskMakeReport}
+% -----------------------------------------------------------------------
+\KQuote{今朝のビルドについてまとめた報告}
+(今朝のビルドの状況の下にあるリンク)を作成するタスク。
+指定された特定コミットの実行結果と最新コミットの実行結果とを
+比較して差分情報を作成し、レポートファイルにまとめる。
+特定コミットは次のファイルで指定する。
+\begin{narrow}
+	\Path{<topdir>/core/test/Monitoring/etc/revision.old}
+\end{narrow}
+このタスクはWindows上でのみ実行する(%
+MakeReportの主たるスクリプトはperlで書かれているが、
+Windowsバッチファイルのpythonへの移植は行なっていない。
+perlスクリプトのunix上での動作確認も行なっていない)。
+
+また、本来ならば差分が出たか否かでライブラリ動作の異常を検出できる
+ように意図されていたのだが、次のような理由であまり役に立っていない。
+\skip{-.5}
+\begin{itemize}
+  \item	出力結果が一定とはならなテストプログラムがある。
+  \item	ライブラリの修正・変更によって実行結果が変化したら、
+	都度特定コミットファイルをコミットし直す必要がある。
+\end{itemize}
+
+スクリプトファイル
+\begin{narrow}
+	\Path{I:\BS DailyBuild\BS Springhead\BS core\BS test\BS MakeReportGit.bat}
+\end{narrow}
+詳細については\RefRef{sec}{MakeReportScript}
+
+% -----------------------------------------------------------------------
+\subsubsection{DailyBuildタスクの流れ}
+\label{subsubsec:AboutTaskDailyBuild}
+% -----------------------------------------------------------------------
+まず、関連するファイルの構成を示す。
+
+\def\Anno#1{\mc{\footnotesize{ \CDots\  #1}}}
+\def\AnnoRef#1#2{\Anno{#1} \footnotesize{(\ref{#2} 参照)}}
+\medskip
+\begin{narrow}[10pt]
+    \begin{narrow}\begin{minipage}{\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}<topdir>\BS DailyBuild\BS Springhead\BS core\BS .
+		.2 test\BS .
+		.3 \it{DailyBuild.bat or DailyBuild.sh}
+			\Anno{DailyBuild起動用スクリプト}.
+		.3 \it{TestMainGit.py}
+			\Anno{DailyBuild全体の制御}.
+		.3 bin\BS .
+		.4 \it{SpringheadTest.py}
+			\AnnoRef{テスト実行制御}{subsec:SpringheadTest}.
+		.4 \it{Traverse.py}
+			\AnnoRef{ファイルツリー走査}{subsec:Traverse}.
+		.4 \it{BuildAndRun.py}
+			\AnnoRef{ビルドと実行}{subsec:BuildAndRun}.
+		.4 \it{VisualStudio.py}
+			\AnnoRef{Visual Studioラッパ}{subsec:VisualStudio}.
+		.4 \it{RevisionInfo.py}
+			\AnnoRef{レポジトリバージョン管理}{subsec:VisualStudio}.
+		.4 \it{VersionControlSystem.py}
+			\AnnoRef{GutHubアダプタ}{subsec:VersionControlSystem}.
+		.4 \it{GenResultLog.py}
+			\Anno{テスト結果ファイル作成}.
+		.4 \it{VersionInfo.py}
+			\Anno{日付・履歴ファイル作成}.
+		.2 include\BS .
+		.3 SpringheadDoc.py \Anno{Springheadリファレンスマニュアル作成}.
+		.2 src\BS .
+		.3 SpringheadImpDoc.py \Anno{Springhead SDK開発者マニュアル作成}.
+		.2 doc\BS .
+		.3 SprManual\BS .
+		.4 MakeDoc.py \Anno{Springhead Users Manual作成}.
+		.4 :.
+	}
+  \end{minipage}\end{narrow}
+\end{narrow}
+
+\skip{1.0}
+このタスクは、次の手順で\script{TestMain}スクリプトを起動してDailyBuildを実行する。
+
+\begin{Description}[r]{Step 0. 引数の処理}
+	スクリプトに指定可能な引数は次のとおり
+	(\UDagger\relax はWindowsのみ、\UDDagger\relax はunixのみ)
+	\begin{Args}[r][85pt]
+	  \Item[t]{--do-not-clone}{%
+			クローンを実行せず既存のレポジトリを使用する}
+	  \Item[t]{--hook}{%
+			クローンの後でhook機構 (下記\tt{Step 3.}参照)を適用する}
+	  \Item[t]{-c conf\UDagger{}}{%
+			Configuration指定 (\tt{Debug} or \tt{Release})}
+	  \Item[t]{-p plat\UDagger{}}{%
+			Platform指定 (\tt{x86} or \tt{x64})}
+	  \Item[t]{-t tool\UDagger{}}{%
+			Visual Studio toolset ID (\tt{15.0}など)}
+	  \Item[t]{--hook-only\UDDagger{}}{%
+			\tt{--hook}を適用後終了する\\
+			\hspace{20pt}(hookファイルをソースツリーに反映するだけ)}
+	\end{Args}
+\end{Description}
+
+\begin{Description}[r]{Step 1. 必要なツールの確認}
+    	Windowsの場合
+	\begin{narrow}
+		DailyBuildで必要なツールは
+		\Path{I:\BS DailyBuild\BS DailyBuildTestTools}に配置しておく
+		(絶対パスで起動)。
+	\end{narrow}
+
+    	unixの場合
+	\begin{narrow}
+		デフォルトでpythonが動くことを確認する。
+		\skip{-1.0}
+		\Annotation{※}{%
+			バージョンのチェックはしていないがpythonは3.0以上が必要
+			(一応2.7対応はしてある)。}
+		\skip{-.5}
+		\Annotation{※}{%
+			その他\cmnd{nkf, sed, cmake}も必要。}
+	\end{narrow}
+	\skip{-.8}
+\end{Description}
+
+\begin{Description}[r]{Step 2. Springheadを最新の状態にする}
+	このステップは\tt{--do-not-clone}が指定されていない場合のみ実行する。
+
+	既存のツリーを削除し、GitHubから最新のコミットをcloneする。
+\end{Description}
+
+\begin{Description}[r]{Step 3. Hookファイルが存在したらそれをコピーする}
+	このステップは\tt{--hook}が指定された場合のみ実行する。
+
+	Hook機構の目的は、
+	Springheadツリーを最新の状態とした後でデバッグのための修正を適用することである。
+	この機構を利用すれば
+	GitHubにコミットすることなく修正を施したソースを用いたDailyBuildの確認ができる
+	(DailyBuildの実行環境は個別ユーザでログインした場合とは異なるので、
+	このような仕組みを用いてtaskとして実行することが必要となる)。
+
+	ディレクトリ構成のイメージ：
+	\begin{narrow}
+	 	\tt{<hookdir>/hook.{bat|sh}}\Hskip{10pt} コピーを実行するスクリプト\\
+		\begin{LocalScope}\def\arraystretch{.8}
+		\begin{tabular}{ll}
+                \tt{\phantom{<hookdir>}/core/...} & ここから\\
+                \tt{\phantom{<hookdir>/core/.}↓} &\\
+	 	\tt{\phantom{<}<topdir>/core/...} & clone後のここへコピーする\\
+		\end{tabular}\end{LocalScope}\\
+		\skip{.2}
+	\end{narrow}
+	この処理は\Path{<hookdir>/hook.\{bat|sh\}}が実行する。
+	なお、\Path{<hookdir>}に\Path{ignore}という名前のファイルあれば
+	このステップは実行されない。
+	\skip{.5}
+	\begin{narrow}[s]
+		Windows Taskでの起動引数に\tt{--hook}が加えてあるのは、
+		この仕組が必要な時にタスクスケジューラを書き換えるのが面倒だから。
+		逆に言うと、通常時には\Path{<hookdir>/core/}以下に
+		ファイルを残しておいてはいけない(ディレクトリだけならよい)ということ。
+		ファイル\file{ignore}を置いておくのでも構わない。
+		もちろん\tt{--hook}を止めればこの仕組は働かない。\\
+		unixでは、任意の時刻にタスクを実行するためにはcrontabの編集が
+		どのみち必要となる。
+		\tt{--hook}付きや\tt{--do-not-clone}付きのエントリーを
+		(コメント付きで)用意してあるので、適宜利用すればよい。
+	\end{narrow}
+\end{Description}
+
+\begin{Description}[r]{Step 4. TestMainスクリプトを起動する}
+	\begin{tabular}{@{\Hskip{20pt}}ll}
+		スクリプト & \Path{<topdir>/core/test/TestMainGit.py}\\
+		起動引数   & \tt{-t 15.0 -c Release -p x64}\\
+	\end{tabular}
+
+	このスクリプトについては\KQuote{\ref{subsec:TestMainGit} TestMainスクリプト}
+	で説明する。
+\end{Description}
+
+% end: 2.1.DailyBuildTask.tex

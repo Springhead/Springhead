@@ -1,0 +1,208 @@
+% 2.2.TestMainGit.tex
+%	Last update: 2022/01/31 F.Kanehori
+
+%\newpage
+\subsection{TestMainスクリプト}
+\label{subsec:TestMainGit}
+
+\begin{Description}{スクリプトファイル}
+    \Path{<topdir>/core/test/TestMainGit.py}
+\end{Description}
+
+\medskip
+\begin{Description}{起動形式}
+    \cmnd{python TestMainGit.py [options] test-repository result-repository}
+    \skip{-.7}
+    \begin{narrow}
+	\begin{Table}[r][10em]{ll}
+	  \Item{test-repository}{テストを実行するディレクトリ}
+	  \Item{result-repository}{テスト結果を置くディレクトリ}
+	\end{Table}
+    \end{narrow}
+
+    options:
+    \skip{-.7}
+    \begin{narrow}
+	\begin{Table}[r][6em]{ll}
+	  \Item{\tt{-c conf}}{テストするビルド構成(\tt{CONFS："ConstDefs.py"}で定義)}
+	  \Item{\tt{-p plat}}{テストするプラットフォーム
+			(\tt{PLATS："ConstDefs.py"}で定義)}
+	  \Item{\tt{-t tool}}{Visual Studio toolset ID
+			(デフォルトは\tt{15.0}、unixでは無視される)}
+	  \Item{\tt{-D}}{dry run(すべてのプロセス起動について)}
+	  \Item{\tt{-X}}{ビルド＆ランのみ実行
+			(以下のstep 5.以降は実行しない … デバッグ用)}
+	\end{Table}
+    \end{narrow}
+\end{Description}
+
+\def\Anno#1{\mc{\footnotesize{ \CDots\  #1}}}
+\def\AnnoRef#1#2{\Anno{#1} \footnotesize{(\ref{#2} 参照)}}
+
+\medskip
+TestMainスクリプトが生成するクラスの構成
+\begin{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}\it{ClosedSrcControl}
+			\AnnoRef{非公開ファイル制御}{class:ClosedSrcControl}.
+		.2 \it{ConstDefs}
+			\AnnoRef{共通定数定義}{subsec:ConstDefs}.
+	}
+    \end{minipage}\end{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}\it{Traverse}
+			\AnnoRef{ディレクトリの走査}{subsec:Traverse}.
+		.2 \it{ControlParams}
+			\AnnoRef{テスト制御ファイル管理}{subsec:ControlParams}.
+		.3 \it{ConstDefs}.
+		.2 \it{BuildAndRun}
+			\AnnoRef{ビルド＆実行}{subsec:BuildAndRun}.
+		.3 \it{VisualStudio}
+			\AnnoRef{Visual Studioラッパ}{subsec:VisualStudio}.
+		.3 \it{ConstDefs}.
+		.2 \it{KeyInterruption}
+			\AnnoRef{キーボード割込処理}{subsec:KeyInterruption}.
+		.2 \it{StructuredException}
+			\AnnoRef{構造例外ハンドラ}{subsec:StructuredException}.
+	}
+    \end{minipage}\end{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}\it{GenResultLog}
+			\AnnoRef{テスト結果生成}{subsec:GenResultLog}.
+		.2 \it{TestResult}
+			\AnnoRef{テスト結果維持}{subsec:TestResult}.
+		.3 \it{ConstDefs}.
+    	}
+    \end{minipage}\end{narrow}
+    \begin{narrow}\begin{minipage}{.8\textwidth}
+	\dirtree{%
+		.1 \hspace{-10mm}\it{RevisionInfo}
+			\AnnoRef{レビジョン情報取得}{subsec:RevisionInfo}.
+		.2 \it{VersionControlSystem}.
+    	}
+    \end{minipage}\end{narrow}
+    \medskip
+\end{narrow}
+
+\medskip
+\def\ECEV#1{{\small (実行制御環境変数 \tt{#1})}}
+
+\begin{Description}{スクリプトの動作}
+	ステップ4以降の各ステップは、環境変数によって実行を制御することができる。
+	該当する環境変数名は各ステップの記述で示する。
+	当該環境変数が文字列``skip''と設定されている場合に限って
+	そのステップは実行しない。
+	unixの場合にはこの他にも実行を制御する変数がある
+	(変数値がfalseなら他の条件に係わらず実行しない)。
+	これはunixにおいてはデフォルトでドキュメント作成を行なわないための措置である。
+	スクリプト内で設定される次の変数および\Func{check\_exec}を参照のこと。
+	\begin{narrow}[20pt]\tt{
+	    unix\_commit\_resultlog, unix\_gen\_history, unix\_copyto\_buildlog,
+	    unix\_execute\_makedoc, unix\_copyto\_webbase
+	}\end{narrow}
+\end{Description}
+
+\medskip
+各ステップの説明
+
+\begin{enumerate}
+  \item	pythonパスを決める。
+	Windowsでは\tt{BuildTools}にある\cmnd{python}を、
+	unixではデフォルトの\cmnd{python}を使う。
+
+  \item	Closed sourceを使うか否かを決めて
+	\Path{.../include/SprUseClosedSrcOrNot.h}を作成する。
+	この処理はSpringheadライブラリのbuild/make過程でも実行されるが、
+	実はこの後で起動する\tt{SpringhheadTest}スクリプト中で、
+	\tt{ClosedSrcControl}クラスオブジェクトを生成しようとする時に
+	このヘッダファイルが存在しないとエラーとなるため、
+	ここで作成しておく必要がある。
+
+  \item	ログファイルを初期化する。
+	具体的には、\Path{.../core/test/log}以下にあるログファイルを削除する。
+
+  \item	ライブラリをビルドしてテストを実行する。\\
+	実行制御環境変数
+	\begin{narrow}[10pt]{\small
+	    \begin{tabular}{ll}
+		\tt{DAILYBUILD\_EXECUTE\_STUBBUILD}
+			& ライブラリのビルド\\
+		\tt{DAILYBUILD\_EXECUTE\_EMBPYTHON}
+			& EmbPythonライブラリのビルド\\
+		\tt{DAILYBUILD\_EXECUTE\_BUILDRUN}
+			& \Path{.../src/tests}以下のビルド＆ラン\\
+		\tt{DAILYBUILD\_EXECUTE\_SAMPLEBUILD}
+			& \Path{src/Samples}以下のビルド＆ラン\\
+	    \end{tabular}
+	}\end{narrow}
+	\medskip
+	処理対象とするディレクトリ名は変数\var{test\_dirs}に設定する。
+	\var{test\_dirs}は基本的に1要素配列の配列であるが、
+	ライブラリのビルドだけ例外で2要素配列となっており、
+	第2要素に起動引数をもっている。\\
+	ビルド＆ランは、次のスクリプトを起動して実行する。
+	\begin{narrow}
+	    \cmnd{python SpringheadTest.py [options] res-file crl-file}\\
+	    \begin{Opts}
+		\Item[t]{-p plat}{起動時の引数を引き継ぐ}
+		\Item[t]{-c conf}{起動時の引数を引き継ぐ}
+		\Item[t]{-C csusege}{Closed Sourceを使用するか否か
+			(ここでは\tt{unuse}を指定)}
+	    \end{Opts}
+	    \begin{Args}
+		\Item[t]{res-file}{処理結果ファイルのパス}
+		\Item[t]{ctl-file}{処理制御ファイル名}
+	    \end{Args}
+	\end{narrow}
+	このスクリプトの詳細は\KQuote{\Ref{subsec}{SpringheadTest}スクリプト}で
+	説明する。
+
+  \item	commit--idファイルを作成する \ECEV{DAILYBUILD\_COMMIT\_RESULTLOG}\\
+	次のスクリプトを起動して実行する。
+	\begin{narrow}
+	    \cmnd{python RevisionInfo.py -S HEAD}
+	\end{narrow}
+	commit--idファイルには、
+	“\bf{短形式commit-id,長形式commit-id,日付,時刻}”が記録される。
+
+  \item	ログファイル、commit--idファイルを\tt{result-repository}にpushする
+	\ \ECEV{DAILYBUILD\_COMMIT\_RESULTLOG}
+
+  \item	Historyログを作成する \ECEV{DAILYBUILD\_GEN\_HISTORY}\\
+	次のスクリプトを起動して作成する。
+	\begin{narrow}
+	    \cmnd{python RevisionInfo.py -R [-u] -f result.log all}\\
+	    \hspace{100pt}(\tt{-u}はunixのみ)
+	\end{narrow}
+	このスクリプトの詳細は\KQuote{\Ref{subsec}{RevisionInfo}スクリプト}で
+	説明する。
+
+  \item	テスト日付ファイル\file{Test.date}を作成する
+	\ \ECEV{DAILYBUILD\_GEN\_HISTORY}\\
+	このファイルはWikiページの作成で使用する。
+
+  \item	ログファイルをサーバにコピーする \ECEV{DAILYBUILD\_COPYTO\_BUILDLOG}
+
+  \item	ドキュメントを作成する \ECEV{DAILYBUILD\_EXECUTE\_MAKEDOC}\\
+	次のスクリプトを起動して実行する
+	(各ディレクトリにあるMakefileの中から起動される)。\\
+	\skip{-0.5}
+	\begin{narrow}
+	    \Path{python <topdir>/core/include/SpringheadDoc.py}\\
+	    \Path{python <topdir>/core/src/SpringheadImpDoc.py}\\
+	    \Path{python <topdir>/core/doc/SprManual/MakeDoc,py.py}\\
+	    \Path{python <topdir>/core/doc/SprInstallGuide/Makedoc.py}\\
+	    \Path{python <topdir>/core/doc/BuildUsingCMake/MakeDoc.py}\\
+	    \Path{python <topdir>/core/doc/CMakeGitBook/MakeDoc.py}
+	\end{narrow}
+	\skip{0.5}
+
+  \item	作成したドキュメントをサーバにコピーする\\
+	\ECEV{DAILYBUILD\_COPYTO\_WEBBASE}
+
+\end{enumerate}
+
+% end: 2.2.TestMainGit.tex

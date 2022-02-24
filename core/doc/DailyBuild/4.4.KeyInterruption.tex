@@ -1,0 +1,32 @@
+% 4.4.KeyInterruption.tex
+%	Last update: 2022/02/09 F.Kanehori
+
+%\newpage
+\subsection{クラスKEYINTR (KeyIOnterrution)}
+\label{subsec:KeyInterruption}
+
+\begin{Description}{概要}
+	キーボード割込(\Ctrl{C}\,)を取り扱うための簡易クラス。
+	\bf{このクラスのメソッドはすべてstaticである。}
+\end{Description}
+
+\medskip
+\begin{Description}{関数の機能}
+  \Function{set\_interrupted(flag)}{%
+	interruptedフラグを引数で指定された値に設定する。
+	\tt{handler()}から呼ばれる。}
+
+  \Function{is\_interrupted()}{%
+	interruptedフラグが設定されているか否か(割込があったかどうか)を返す。}
+
+  \Function{what()}{%
+	割込が起きた理由を返す。ここでは固定文字列\DQuote{KEYINTR}を返す。}
+
+  \Function{handler(signum, frame)}{%
+	ここではシグナルの番号を標準出力に表示するとともに、
+	シグナルが発生したことを記録するだけ(\tt{set\_interrupted()})。
+	このハンドラは、\tt{Springhead}において、
+	\tt{traverse()}を呼び出す直前に設定される。}
+\end{Description}
+
+% end: 4.4.KeyInterruption.tex

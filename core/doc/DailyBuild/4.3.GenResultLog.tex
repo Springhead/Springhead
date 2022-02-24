@@ -1,0 +1,40 @@
+% 4.3.GenResultLog.tex
+%	Last update: 2022/02/03 F.Kanehori
+
+%\newpage
+\subsection{GenResultLog}
+\label{subsec:GenResultLog}
+
+\ScriptFile{<topdir>/core/test/bin/GenResultLog.py}
+
+\medskip
+\AboutScript{%
+	テスト結果をファイルに書き出すプログラム。
+	入力となるテスト結果は引数\file{res-file}で指定し、
+	\tt{TestResult}クラスのメソッド\Func{edit\_result\_log}または
+	\Func{dump}を用いて編集する(\RefRef{subsec}{TestResult})。
+}
+
+\medskip
+\begin{Description}{起動形式}
+	\cmnd{python GenResultLog.py [options] type res-file [plat conf]}
+	\begin{Opts}
+	  \Item[t]{-o FILE}{%
+		出力ファイル名\\
+		テストを起動するディレクトリからの相対パスで指定する。}
+	\end{Opts}
+	\begin{Args}
+	  \Item[t]{type}{%
+		ログ編集タイプ(次のいずれか)\\
+		\begin{tabular}{@{\Hskip{10pt}}l@{\Hskip{10pt}}l}
+			\tt{d} & ダンプ形式 (ファイル内容の確認用)\\
+			\tt{r} & \tt{result.log}形式
+		\end{tabular}}
+	  \Item[t]{res-file}{テスト結果累積ファイル名}
+	  \ItemMC{2}{l}{--- 以下\tt{type}が\tt{r}のときのみ指定 ---}\\[10pt]
+	  \Item[t]{plat}{プラットフォーム (\tt{x86, x64})}
+	  \Item[t]{conf}{ビルド構成 (\tt{Debug, Release, Trace})}
+	\end{Args}
+\end{Description}
+
+% end: 4.3.GenResultLog.tex

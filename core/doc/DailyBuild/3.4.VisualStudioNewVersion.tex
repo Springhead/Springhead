@@ -1,0 +1,46 @@
+% 3.4.VisualStudioNewVersion.tex
+%	Last update: 2022/02/07 F.Kanehori
+
+%\newpage
+\subsection{Visual Studio 新バージョンへの対応方法}
+\label{subsec:VisualStudioNewVersion}
+
+これまでの説明の中でも触れてきたが、
+Visual Studioの新しいバージョンに対応するためには
+いくつかの追加・修正が必要となる。
+ここで、それらをまとめておく。
+
+\medskip
+\begin{Description}[b]{Visual Studioのバージョン情報}
+	\Class{VisualStudio} (\Path{VisualStudio.py})にバージョン情報を追加する。
+	\skip{-1.0}
+	\begin{narrow}[40pt]
+	\begin{Table}[r][80pt]{l@{ … }l}
+	  \Item{\Func{\_\_get\_vsinfo}}{条件節を追加}
+	  \Item{\Func{\_\_get\_vs\_path}}{%
+		\cmnd{vswhere}でパスを見つけられないときは
+		ここで対処しないといけない。}
+	\end{Table}
+	\end{narrow}
+	\RefRef{subsec}{VisualStudio}
+\end{Description}
+
+\medskip
+\begin{Description}[b]{cmakeのgenerator}
+	\Class{CMake} (\Path{CMake.py})のクラス定数\var{GENERATOR}に追加する。\\
+	前項と重複しているが、こちらも追加する必要がある。\\
+	現在定義されているのは
+	\begin{narrow}[40pt]
+	\begin{tabular}{l@{\Hskip{5pt}$\Leftrightarrow$\Hskip{5pt}}l}\hline
+		2015 & \tt{"Visual Studio 14 2015" -A x64}\\
+		2017 & \tt{"Visual Studio 15 2017" -A x64}\\
+		2019 & \tt{"Visual Studio 16 2019" -A x64}\\\hline
+	\end{tabular}
+	\end{narrow}
+	である。\\
+	左側の数字は、内部メソッド\Func{\_\_find\_generator}で判定した
+	Visual Studioのバージョン数字。\\
+	\RefRef{subsec}{Traverse}
+\end{Description}
+
+% end: 3.4.VisualStudioNewVersion.tex
