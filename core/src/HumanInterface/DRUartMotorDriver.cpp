@@ -193,7 +193,7 @@ public:
 					//DPF("board->RetStart()[0] : %x\n", board->RetStart()[0]);
 					int retLen = board->RetLen();
 					if (retLen == 0) {
-						DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0. for cmd=" << std::setbase(16) << cmdHeader.header << std::endl;
+						DSTR << "Error at DRUARTMotorDriver: board->RetLen() returns 0. for cmd=" << std::setbase(16) << (int)cmdHeader.header << std::endl;
 						readPos = 0;
 						retLen = -1;
 					}

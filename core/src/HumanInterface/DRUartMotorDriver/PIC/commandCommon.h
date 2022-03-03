@@ -59,12 +59,22 @@ enum B3F_PARAM{
     B3F_NFORCE = 2,
     B3F_NTOUCH = 0,
 };
+enum B5M_PARAM{
+	B5M_MODEL_NUMBER = 7,
+    B5M_NTARGET = 12,
+    B5M_NMOTOR = 8,
+    B5M_NCURRENT = 0,
+    B5M_NFORCE = 4,
+    B5M_NTOUCH = 0,
+};
 
+//  DEFINE_Packets(BOARD, CURRENT, FORCE, TOUCH)
 DEFINE_Packets(B1M, CT_0, CT_0, CT_0)
 DEFINE_Packets(B1F, CT_0, CT_N, CT_0)
 DEFINE_Packets(B2M, CT_0, CT_0, CT_0)
 DEFINE_Packets(B2F, CT_0, CT_N, CT_0)
 DEFINE_Packets(B3M, CT_N, CT_0, CT_0)
 DEFINE_Packets(B3F, CT_N, CT_N, CT_0)
+DEFINE_Packets(B5M, CT_0, CT_N, CT_0)
 
 #endif

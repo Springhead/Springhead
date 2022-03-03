@@ -323,6 +323,7 @@ public:
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 
 	virtual void SetMaterial(int matname);
+	virtual void SetMaterial(int matname, float alpha);
 	Vec4f	GetReservedColor(int matname){ return matSample[matname].diffuse; }
 	
 	Vec2f GetPixelSize();

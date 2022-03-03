@@ -21,6 +21,7 @@
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
 #include <Graphics/GRDrawEllipsoid.h>
+
 #ifdef USE_HDRSTOP
 
 #pragma hdrstop
@@ -351,17 +352,17 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 
 		// 形状を描画
 		if(renderSolid){
-			int matSolid = GetSolidMaterial(solids[i]);
-			if(matSolid == -1)
+			Mat matSolid = GetSolidMaterial(solids[i]);
+			if(matSolid.mat == -1)
 				matSolid = GetAutoMaterial(i);
-			render->SetMaterial(matSolid);
+			render->SetMaterial(matSolid.mat, matSolid.alpha);
 			DrawSolid(render, solids[i], true);
 		}
 		if(renderWire){
-			int matWire  = GetWireMaterial(solids[i]);
-			if(matWire == -1)
+			Mat matWire  = GetWireMaterial(solids[i]);
+			if(matWire.mat == -1)
 				matWire = GetAutoMaterial(i);
-			render->SetMaterial(matWire);
+			render->SetMaterial(matWire.mat, matWire.alpha);
 			render->SetLighting(false);
 			DrawSolid(render, solids[i], false);
 			render->SetLighting(true);
@@ -1284,11 +1285,15 @@ void FWScene::SetRenderMode(bool solid, bool wire){
 void FWScene::EnableRender(ObjectIf* obj, bool enable){
 	renderObject[obj] = enable;
 }
-void FWScene::SetSolidMaterial(int mat, PHSolidIf* solid){
-	matSolid[solid] = mat;
+void FWScene::SetSolidMaterial(int mat, PHSolidIf* solid) {
+	matSolid[solid] = Mat(mat, 1);
 }
+void FWScene::SetSolidMaterial(int mat, float alpha, PHSolidIf* solid) {
+	matSolid[solid] = Mat(mat, alpha);
+}
+
 void FWScene::SetWireMaterial(int mat, PHSolidIf* solid){
-	matWire[solid] = mat;
+	matWire[solid] = Mat(mat, 1);
 }	
 void FWScene::EnableRenderAxis(bool world, bool solid, bool con){
 	renderAxisWorld = world;
@@ -1381,11 +1386,11 @@ bool FWScene::IsRenderEnabled(ObjectIf* obj){
 		return it->second;
 	return true;
 }
-int FWScene::GetSolidMaterial(PHSolidIf* solid){
+Mat FWScene::GetSolidMaterial(PHSolidIf* solid){
 	// 最初に特定のsolidにあてられたマテリアルがあるか調べ，
 	// なければ次に0 (全剛体)のマテリアルを調べ，
 	// どちらもなければ-1を返す
-	std::map<PHSolidIf*, int>::iterator it;
+	std::map<PHSolidIf*, Mat>::iterator it;
 	it = matSolid.find(solid);
 	if(it != matSolid.end())
 		return it->second;
@@ -1394,7 +1399,7 @@ int FWScene::GetSolidMaterial(PHSolidIf* solid){
 		return it->second;
 	return -1;
 }
-int FWScene::GetWireMaterial(PHSolidIf* solid){
+Mat FWScene::GetWireMaterial(PHSolidIf* solid){
 	std::map<PHSolidIf*, int>::iterator it;
 	it = matWire.find(solid);
 	if(it != matWire.end())
@@ -1404,7 +1409,7 @@ int FWScene::GetWireMaterial(PHSolidIf* solid){
 		return it->second;
 	return -1;
 }
-int FWScene::GetAutoMaterial(int i){
+Mat FWScene::GetAutoMaterial(int i){
 	/// iがひとつ増えるたびに色系統が変わるように色を選択する
 	const int colorGroups		= 8;  // 系統の数　　　白、灰色系は避けたので８系統
 	const int colorsPerGroup	= 5;  // 系統内の色数　オレンジ系が５色しかないのであわせる
@@ -1424,7 +1429,7 @@ int FWScene::GetAutoMaterial(int i){
 	int offset = cycle % colorsPerGroup;
 	int color  = groupTop[i] + offset;
 
-	return color;
+	return Mat(color, 1);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // HumanInterface系
