@@ -15,12 +15,13 @@ setlocal enabledelayedexpansion
 ::	ShiftJIS に変換する.
 ::
 ::  VERSION
-::	Ver 1.0  2013/01/16 F.Kanehori	Unix 版より移植
-::	Ver 2.0  2017/12/20 F.Kanehori	GitHub 版に改造
-::	Ver 2.1  2017/12/27 F.Kanehori	レポートファイル名を変更
-::	Ver 2.2  2018/01/02 F.Kanehori	NEWREV ログはテスト結果から直接得る
-::	Ver 2.3  2018/05/10 F.Kanehori	変更：VersionControlSystem 呼出し
-::	Ver 2.4  2018/12/25 F.Kanehori	変更：RevisionInfo 呼出し
+::     Ver 1.0	 2013/01/16 F.Kanehori	Unix 版より移植
+::     Ver 2.0	 2017/12/20 F.Kanehori	GitHub 版に改造
+::     Ver 2.1	 2017/12/27 F.Kanehori	レポートファイル名を変更
+::     Ver 2.2	 2018/01/02 F.Kanehori	NEWREV ログはテスト結果から直接得る
+::     Ver 2.3	 2018/05/10 F.Kanehori	変更：VersionControlSystem 呼出し
+::     Ver 2.4	 2018/12/25 F.Kanehori	変更：RevisionInfo 呼出し
+::     Ver 2.4.1 2022/03/03 F.Kanehori	bugfix：Path 設定の見直し
 :: ============================================================================
 set PROG=%~n0
 
@@ -109,12 +110,21 @@ set FILTER=perl %BINDIR%\filter.pl
 set NKF=%BINDIR%\nkf.exe
 set AWK=%BINDIR%\gawk.exe
 ::SENDMAIL=/usr/sbin/sendmail
+set PYTHON=%~dp0..\..\..\buildtool\win32\python.exe
 
-rem set VCS=python ..\bin\VersionControlSystem.py
-set VCS=python ..\bin\RevisionInfo.py
+rem set VCS=%PYTHON% ..\bin\VersionControlSystem.py
+set VCS=%PYTHON% ..\bin\RevisionInfo.py
 set GETFIELD=%AWK% -f %BINDIR%\field.awk
 set GREP=%AWK% -f %BINDIR%\grep.awk
 set EXCLUDE=%AWK% -f %BINDIR%\exclude.awk
+
+::----------------------------------------------
+::  nkfをPATHに入れておかないと
+::  %VCS%でdecodeエラーが起きてしまう
+::
+pushd %BINDIR%
+set PATH=%PATH%;%CD%
+popd
 
 ::----------------------------------------------
 ::  レビジョン範囲の決定
