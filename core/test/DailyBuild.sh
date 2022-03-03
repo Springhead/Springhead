@@ -6,7 +6,6 @@
 #
 #	OPTIONS:
 #	    --do-not-clone:	クローンを実行せず既存のレポジトリを使用する.
-#				--hook オプションより前に指定すること.
 #	    --hook:		クローン後, "DailyBuildHook/hook.sh" が適用
 #				される.
 #	    --hook-only:	--hook を適用後, 処理を終了する.
@@ -37,23 +36,35 @@
 #  VERSION
 #     Ver 1.0    2021/05/10 F.Kanehori	バッチファイルの再構築.
 #     Ver 1.1	 2021/09/08 F.Kanehori	Add -S option to DailyBuild.py.
+#     Ver 2.0	 2022/01/26 F.Kanehori	DailyBuild.py の機能を吸収.
 # =============================================================================
 PROG=`basename $0`
 CWD=`pwd`
 DEBUG=0
 
-CLONE=yes
-HOOK=no
+CLONE="yes"
+HOOK="no"
 HOOKONLY="no"
 ARGS[1]="Springhead"			# default test repository
 ARGS[2]="DailyBuildResult/Result"	# default result repository
 OPTS=""		# "-c Release -p x64"
+SETUP="no"
+SETUPFILE="setup.conf"
+DRYRUN="no"
+VERBOSE=""
+
+do_exec () {
+	echo $*
+	if [ "$DRYRUN" == "no" ]; then
+		$*
+	fi
+}
 
 function usage () {
 	echo "DailyBuild [options] [test-repository [result-repository]]"
 	echo
 	echo "  options:"
-	echo "    --do-not-clone: Do not clone source tree (must be a first option)."
+	echo "    --do-not-clone: Do not clone source tree."
 	echo "    --hook:         Apply hook script (\"DailyBuildHook/hook.sh\")."
 	echo "    --hook-only:    Apply hook script then exit."
 	echo "    -c conf:        Configurations (Debug | Release)."
@@ -70,7 +81,6 @@ function usage () {
 #	引数の解析
 #
 POS=1
-OPT=
 for opt in "$@"; do
     case "${opt}" in
 	'--do-not-clone')
@@ -83,8 +93,17 @@ for opt in "$@"; do
 		HOOK="yes"
 		HOOKONLY="yes" && shift
 		;;
+	'-s' )
+		SETUPFILE=$2 && shift && shift
+		;;
 	'-S' )
-		OPT="-S" && shift
+		SETUP="yes" && shift
+		;;
+	'-D' )
+		DRYRUN="yes" && shift
+		;;
+	'-v' )
+		VERBOSE="1" && shift
 		;;
 	'-h' | '--help' )
 		usage
@@ -103,19 +122,24 @@ for opt in "$@"; do
 		;;
     esac
 done
+START_DIRECTORY=`pwd`
 TEST_REPOSITORY=${ARGS[1]}
 RESULT_REPOSITORY=${ARGS[2]}
 
 REMOTE_REPOSITORY="https://github.com/sprphys/Springhead"
 HOOKFILE="DailyBuildHook/hook.sh"
 
+echo "start directory:   [$START_DIRECTORY]"
 echo "test repository:   [$TEST_REPOSITORY]"
 echo "result repository: [$RESULT_REPOSITORY]"
-echo "conf : [$CONF]"
-echo "plat : [$PLAT]"
-echo "clone: [$CLONE]"
-echo "hook:  [$HOOK]"
-echo "OPT:   [$OPT]"
+if [ "$SETUP" == "yes" ]; then
+	echo "setup file:        [$SETUPFILE]"
+fi
+echo "conf :  [$CONF]"
+echo "plat :  [$PLAT]"
+echo "clone:  [$CLONE]"
+echo "hook:   [$HOOK]"
+echo "dryrun: [$DRYRUN]"
 
 if [ "$HOOK" != "no" ] && [ ! -e $HOOKFILE ]; then
 	echo "--hook specified, but \"$HOOKFILE\" does not exist."
@@ -167,7 +191,7 @@ fi
 
 # ----------------------------------------------------------------------
 #  Step 3
-#	Hook ファイルが存在したらそれを実行する.
+#	Hook ファイルが存在したらそれをコピーする.
 #
 if [ "$HOOK" != "no" ]; then
 	abs_dir=$(cd "$TEST_REPOSITORY" && pwd)
@@ -180,12 +204,23 @@ fi
 
 # ----------------------------------------------------------------------
 #  Step 4
+#	セットアップを実行する (-S オプション指定時のみ)
+#
+if [ "$SETUP" == "yes" ]; then
+	echo "execute setup process (-S)"
+	abs_dir=$(cd "$START_DIRECTORY/$TEST_REPOSITORY/core/src" && pwd)
+	cd $abs_dir
+	args="-R $TEST_REPOSITORY -f -s $SETUPFILE $VERBOSE"
+	do_exec ./setup.sh $args
+fi
+
+# ----------------------------------------------------------------------
+#  Step 5
 #	テストを実行する
 #
-cd "$TEST_REPOSITORY/core/test"
-echo "$PROG: test directory: \"`pwd`\""
-echo "$PYTHON DailyBuild.py -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY"
-$PYTHON DailyBuild.py -S -A -f $OPT $TEST_REPOSITORY $RESULT_REPOSITORY
+cd "$START_DIRECTORY/$TEST_REPOSITORY/core/test"
+echo "test directory: \"`pwd`\""
+do_exec $PYTHON TestMainGit.py $VERBOSE $TEST_REPOSITORY $RESULT_REPOSITORY
 echo "rc: $?"
 echo "done"
 

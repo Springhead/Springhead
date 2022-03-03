@@ -28,7 +28,7 @@
 #
 #  DESCRIPTION:
 #	Test program for Splinghead library and its applications.
-#	This program was intended to run 'dailybuild' test promarily, but is
+#	This program was intended to run 'dailybuild' test primarily, but is
 #	extended to test all cases; i.e. all combination of platforms and
 #	configurations.
 #	Each test is controlled by control-file (e.g. "dailybuild.control")

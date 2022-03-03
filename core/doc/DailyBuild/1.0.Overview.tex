@@ -1,0 +1,224 @@
+% 1.0.Overview.tex
+%	Last update: 2022/02/10 F.Kanehori
+\newpage
+\section{概要}
+\label{sec:Overview}
+
+DailyBuildジョブは、以下のスクリプト/クラスを順次呼び出すことで実行される。
+
+\skip{0.7}
+\hspace{-0.2cm}
+\begin{small}
+\begin{tabular}{l@{　$\cdots$　}l}
+    \tt{DailyBuild.\{bat|sh\}}
+	& ソースツリーの更新、必要な前処理の後\file{TestMain.py}を起動\\
+    \tt{　↓} & \\
+    \tt{　TestMainGit.py}
+	& テスト全体の制御\\
+    \tt{　　↓} & \\
+    \tt{　　SpringheadTest.py}
+	& Libraryの生成、サンプルプログラムの実行\\
+    \tt{　　　↓} & \\
+    \tt{　　　Traverse.py}
+	& 指定されたソースツリーを走査して各ソリューションを実行\\
+    \tt{　　　　↓} & \\
+    \tt{　　　　BuildAndRun.py}
+	& 各ソリューションのビルド＆ラン\\
+    \tt{　　　　　↓} & \\
+    \tt{　　　　　VisualStudio.py}
+	& Windowsでdevenvを制御\\
+\end{tabular}
+\end{small}
+\skip{0.5}
+
+DailyBuildジョブに関連するファイルは、次のディレクトリ以下に配置されている。
+\begin{narrow}[10pt]
+    実行するスクリプト関連
+    \begin{narrow}[10pt]
+	\begin{tabular}{@{\hspace{30pt}}ll}
+		Windows:& \tt{DESKTOP-KD3C7HS (demo)}の\\
+			& \hspace{60pt}\Path{I:\BS DailyBuild\BS Springhead\BS}\\
+	  	unix:	& \tt{kanehori-Workstation (demo)}の\\
+			& \hspace{60pt}\Path{/home/demo/Project/Springhead/}\\
+	\end{tabular}\\
+	以降これらを\framebox{\tt{<topdir>}}と略記する。
+    \end{narrow}
+\end{narrow}
+\begin{narrow}[10pt]
+    Hook機構関連
+    \begin{narrow}[10pt]
+	\begin{tabular}{@{\hspace{30pt}}ll}
+		Windows:& \Path{I:\BS DailyBuildHook\BS}\\
+		unix:	&  \Path{/home/demo/Project/DailyBuildHook/}\\
+	\end{tabular}\\
+	以降これらを\framebox{\tt{<hookdir>}}と略記する。
+    \end{narrow}
+\end{narrow}
+上記に係わらず、
+上位パスが容易に推定される場合にはそれを\framebox{\Path{...}}と略記する。
+
+\skip{1.0}
+DailyBuildの具体的な説明に進む前に、いくつかのトピックについて説明をしておく。
+
+\skip{1.0}
+\begin{Description}[b]{DailyBuild ジョブを起動するスクリプト}
+	DailyBuildジョブでは、
+	冒頭でSpringheadソースツリーを最新の状態にする処理を実行する。
+	これは\tt{git pull}ではなく、
+	ソースツリーの削除と\cmnd{git clone}によって実現されている。
+	このため、このジョブを起動するためのスクリプトは
+	Springheadソースツリーの外に置く必要がある。\\
+	\Color{red}{\bf{%
+	DailyBuild を起動するためのスクリプトは
+	便宜上\Path{<topdir>/core/test}に置かれている(\cmnd{git}で管理するため)ので、
+	これらに変更があった場合には然るべき場所へ(手動で)コピーする必要がある。
+	注意すること。\\
+	対象となるのは次のファイルである。
+	\begin{narrow}
+		\Path{DailyBuild.bat}, \Path{DailyBuild.sh}
+	\end{narrow}
+	}}
+	コピー先は、
+	\begin{narrow}
+	    \begin{tabular}{l@{\Hskip{10pt}}l}
+  		Windows: & \Path{I:\BS DaulyBuild\BS}\\
+  		unix:	 & \Path{/home/demo/Project/}\\
+	    \end{tabular}
+	\end{narrow}
+	\Color{red}{\bf{%
+	詳細は別途述べるが、次のファイルも同様に扱うこと。
+	\begin{narrow}
+		\Path{hook.bat}, \Path{hook.sh}
+	\end{narrow}
+	}}
+	コピー先は、
+	\begin{narrow}
+	    \begin{tabular}{l@{\Hskip{10pt}}l}
+  		Windows: & \Path{I:\BS DaulyBuild\BS DailyBuildHook\BS}\\
+  		unix:	 & \Path{/home/demo/Project/DailyBuildHook}\\
+	    \end{tabular}
+	\end{narrow}
+	\skip{.3}
+\end{Description}
+
+\begin{Description}[b]{ソースコードの記述言語}
+	各処理のコードは基本的にpythonで書かれており、
+	Windowsとunixとで共通化されている。
+	もちろん、OSとの橋渡し部分はバッチファイル及び
+	\cmnd{sh} (\cmnd{bash})で書かれている。
+\end{Description}
+
+\begin{Description}[b]{ソースファイルの置き場所と\Path{<topdir>}の類推}
+	各スクリプトには「このスクリプトは\Path{...}に置く」という趣旨の
+	コメントが書かれている。
+	\Path{<topdir>}はこの記述が正しいという前提で類推しているので、
+	スクリプトファイルの置き場所を変更するときは
+	次の行を然るべく修正する必要がある。
+	\begin{narrow}
+		\tt{TopDir = '/'.join(ScriptFileDir.split(os.sep)[:-n])}
+	\end{narrow}
+	Windowsバッチファイルについても同様。
+\end{Description}
+	
+\begin{Description}[b]{Visual Studioと\cmnd{devenv}}
+	Springhead Libraryのビルドにあたっては、
+	\tt{cmake}を使用するか否かに係わらず、
+	Visual StudioをGUI から起動することになる。
+	しかしDailyBuildはWindows taskから起動されるため、
+	Visual Studioの本体である\cmnd{devenv}を
+	プロセスとして直接起動することで処理を行なっている。
+	これら二つの大きな違いは、GUIから起動した場合には
+	\cmnd{devenv}が起動される前にいくつかの前処理が行なわれることであり、
+	その中には必要なPATHの設定が含まれている。
+	この理由により、直接\cmnd{devenv}を起動してその中から\cmnd{nmake}を
+	起動しようとしても失敗してしまう。
+	RunSwigはmake projectであるため、
+	\cmnd{devenv}から起動するためには\cmnd{nmake}のパスを調べる必要があるが、
+	Visual Studioのdistribution毎にパスが異なるという面倒がある。
+\end{Description}
+	
+\begin{Description}[b]{セットアップ}
+	手動でソリューションファイルを起動する場合には問題とはならないが、
+	taskから\cmnd{Python, devenv, nmake}などを起動しようとした場合には、
+	バージョンにより起動すべきバイナリの場所が異なるなど、
+	パスを調べるのにオーバーヘッドを伴う。
+	セットアップは、これらを減らす目的で(1回だけ)実行するものである。\\
+	セットアップの実行で得たパス情報は\KQuote{セットアップ情報ファイル}に記録される。
+	この処理を実行するスクリプトは\Path{.../src/setup.py}であり、
+	これを起動するアダプタが\Path{.../src/setup.bat}
+	及び\Path{.../src/setup.sh}である。\\
+	セットアップファイルがあれば、各処理の中では
+	\begin{narrow}[10pt]
+	\begin{enumerate}
+	  \item	セットアップ情報ファイル(\Path{.../src/setup.conf})を読み、
+	  \item	パス情報を環境変数に設定する。
+	\end{enumerate}
+	\end{narrow}
+	という前処理を実行することで、
+	環境変数の参照だけでツールのパスが得られるようにする。
+	この処理を行なうコードは
+	\Path{.../src/RunSwig/pythonlib/SetupFile.py}に書かれている。\\
+	なお、セットアップ情報が利用できるか否かは
+	セットアップファイルが存在するか否かで判断され、
+	各処理の始めに\var{SetupExists}という変数に記録される。
+\end{Description}
+
+\begin{Description}[b]{ローカルpythonライブラリ}
+	DailyBuildを構成するスクリプトの中で使用しているpythonライブラリ
+	(\Class{Proc, Util, FileOp}など)は
+	\Path{.../src/RunSwig/pythonlib}で定義されている。\\
+	プロセス起動ライブラリ\Class{Proc}の基本的な使い方は次のとおり。
+	\begin{itemize}
+	  \item	プロセスを起動する
+		\begin{narrow}
+			\cmnd{proc = Proc(…)}\\
+			\cmnd{proc = proc.execute(command, shell=true)}\\
+			\cmnd{return\_code = proc.wait(timeout)}
+		\end{narrow}
+	  \item	プロセスを起動してその出力(stdout, stderr)を受け取る
+		\begin{narrow}
+			\cmnd{proc = Proc(…)}\\
+			\cmnd{proc = proc.execute(command, stdout=Proc.PIPE,} \Cont\\
+				\Hskip{160pt}\cmnd{stderr=Proc.STDOUT)}\\
+			\cmnd{out, err = proc.communicate(timeout)}
+		\end{narrow}
+	  \item	他のプロセスとやり取りする
+		\begin{narrow}
+			\Func{Proc.execute}の引数stdin, stdoutを
+			\const{Proc.PIPE}を介して結ぶ
+		\end{narrow}
+	\end{itemize}
+	\Class{KvFile}については
+	\KQuote{\ref{subsec:ControlParams} テスト制御パラメータ}で説明する。\\
+	その他のライブラリについては省略する。
+\end{Description}
+
+\begin{Description}[b]{パス表記}
+	スクリプトの中でパス表記をunix likeに変換している
+	(\Func{Util.upath})箇所が多数あるが、
+	これはメッセージ出力を見易くするためであり、実行上必要な訳ではない
+	(Windowsが直接解釈することになるコマンド部以外はほぼ変換している)。
+\end{Description}
+
+\begin{Description}[b]{トレース処理}
+	RunSwigを実行するスクリプトについては、(すべてではないが)
+	スクリプトの呼び出し情報(特にENTER/LEAVE情報)を出力できるようになっている
+	(\Path{.../src/RunSwig/Trace.py"}にファイル名と制御フラグを定義することで
+	一括管理している)。
+	この仕組みに大した意味はない。
+	ただ、都度該当スクリプトを変更するよりは良いのかと… という程度。
+\end{Description}
+
+\begin{Description}[b]{関連Wikiページ}
+	DailyBuildに関連するWikiページは、
+	\begin{narrow}
+	  \begin{tabular}{ll}
+		開発者向け情報	& \Path{http://springhead.info/wiki/devel}\\
+		ドキュメント	& \Path{http://springhead.info/wiki/document}\\
+	  \end{tabular}
+	\end{narrow}
+	である。\\
+	ドキュメントは\Path{<topdir>/generated/doc}以下に生成される(Windowsのみ)。
+\end{Description}
+
+% end: 1.0.Overview.tex

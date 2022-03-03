@@ -1,0 +1,113 @@
+% 2.3.SpringheadTest.tex
+%	Last update: 2022/02/02 F.Kanehori
+
+%\newpage
+\subsection{SpringheadTestスクリプト}
+\label{subsec:SpringheadTest}
+
+\ScriptFile{<topdir>/core/test/bin/SpringheadTest.py}
+
+\medskip
+\begin{Description}{起動形式}
+    \cmnd{python SpringheadTest.py [options]} \Cont\\
+    \hspace{120pt}\cmnd{test-dir res-file ctl-file [section]}
+    \begin{Opts}
+	\Item[t]{-c conf}{テストするビルド構成(\tt{CONFS："ConstDefs.py"}で定義)}
+	\Item[t]{-p plat}{テストするプラットフォーム
+			(\tt{PLATS："ConstDefs.py"}で定義)}
+	\Item[t]{-t tool}{Visual Studio toolset ID}
+	\Item[t]{-C usage}
+		{Closed Sourceを使用するか否か("\tt{use}"または"\tt{unused}")}
+	\Item[t]{-r}{強制的にリビルドする}
+	\Item[t]{-T sec}{タイムアウト秒数 (0ならタイムアウトなし)\\
+			テスト制御ファイルでの指定より優先する}
+	\Item[t]{-S}{以前のテスト結果を引き継がない}
+	\Item[t]{-s}{プログレスレポートをしない}
+	\Item[t]{-D}{dry run(すべてのプロセス起動について)}
+    \end{Opts}
+    \begin{Args}
+	\Item[t]{test-dir}{テストディレクトリ (\Path{<topdir>/core/src}からの相対)}
+	\Item[t]{res-file}{テスト結果ファイルのパス}
+	\Item[t]{ctl-file}{テスト制御ファイル名 (リーフ名)}
+	\Item[t]{section}{テスト制御ファイルの対象セクション名}
+    \end{Args}
+\end{Description}
+
+\def\HD#1{\MC{1}{c}{\bf{#1}}}
+
+\medskip
+\begin{Description}{スクリプトの動作}
+    このスクリプトは、\tt{conf}と\tt{plat}で指定したすべての組み合わせに対して
+    ビルド＆ランが実行できるように作成されている
+    (\Path{BatchTestAll.bat}から起動するとすべての組み合わせでのテストが実行され、
+    結果がExcel用のcsvに出力できる……ようになっていたのだが、
+    以降の修正に対応していないので今はおそらく動かないと思われる）。
+\end{Description}
+
+\begin{enumerate}
+  \item	\tt{test\_id}の設定\\
+	引数\tt{test\_dir}に従って、次のように\tt{test\_id}を設定する
+	(テスト対象の選択)。
+	\medskip
+	\begin{tabular}{lll}\hline
+		\HD{test\_dir} & \HD{test\_id} & \HD{テスト対象}\\\hline
+		'\tt{./}'
+			& \tt{TESTIS.STUB} & Springheadライブラリの作成\\
+		'\tt{EmbPython}'を含む
+			& \tt{TESTIS.EMBPYTHON} & EmbPythonライブラリの作成\\
+		'\tt{tests}'を含む
+			& \tt{TESTIS.TESTS} & "src/tests"以下のテスト実行\\
+		'\tt{Samples}'を含む
+			& \tt{TESTIS.SAMPLES} & "src/Samples"以下のテスト実行\\\hline
+	\end{tabular}
+	\medskip
+
+  \item	準備
+	\begin{enumerate}
+	  \item	テスト結果ファイルの初期化\\
+		\label{item.4.0.1}
+		\begin{tabular}{@{\hspace{10pt}}lll}
+		    ファイル名	& \file{res-file.r}
+				& テスト結果を格納するファイル\\
+		    ファイル名	& \file{res-file.v}
+				& テストプログラム名を格納するファイル\\
+		\end{tabular}\\
+		2番目のファイルは、このスクリプトを連続して実行したときに、
+		既にテスト済みのプログラムについて重複テストを避けるために使用する
+		(これらのファイルには、テスト結果がserializeされた形式で格納される)。
+		初期化処理の実体は、これらのファイルを読んで以前のテスト結果を
+		内部データ(\var{results, visited}) に格納することである。
+		ただし、引数\SQuote{\tt{-S}が}指定されたときは、
+		これらのファイルを削除し内部データは空とする。\\
+		テスト結果は\Class{class TestResult}が扱う。
+
+	  \item	Closed Sourceを使用するか否かを設定する\\
+		\label{item.4.0.2}
+		次のファイル(テンプレートファイル)を
+		\Path{<topdir>/core/test/bin/}から
+		\Path{<topdir>/core/include/}にコピーする
+		(必要なければコピーはしない)。\\
+		\begin{tabular}{@{\Hskip{20pt}}ll}
+			Closed Sourceを使用するとき
+				& \Path{UseClosedSrc.h.template}\\
+			Closed Sourceを使用しないとき
+				& \Path{UnuseClosedSrc.h.template}\\
+		\end{tabular}\\
+		この処理は\Class{CloseSrcControl}が扱う。
+
+	  \item	(\ref{item.4.0.1})で設定した\tt{test\_id}に従い
+		ソースツリーを走査しながら処理を実行する\\
+		この処理は\Class{class Traverse}
+		(\Path{<topdir>/core/bin/Traverse.py})が扱う。
+		詳細は\KQuote{\Ref{subsec}{Traverse}クラス}で説明する。
+
+	  \item	テスト結果を記録する\\
+		\Func{TestResult.finish}でテスト結果をserializeして書き出す。
+
+	  \item Closed Source使用状況の復元\\
+		(\ref{item.4.0.2})で変更したヘッダファイルを復元する
+		\Func{ClosedSrcControl.revive}。
+	\end{enumerate}
+\end{enumerate}
+
+% end: 2.3.SpringheadTest.tex

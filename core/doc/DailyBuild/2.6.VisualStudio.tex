@@ -1,0 +1,64 @@
+% 2.6.VisualStudio.tex
+%	Last update: 2022/02/02 F.Kanehori
+
+%\newpage
+\subsection{VisualStudioクラス}
+\label{subsec:VisualStudio}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>/core/test/bin/VisualStudio.py}
+\end{Description}
+
+\medskip
+\begin{Description}{クラス生成}
+	\cmnd{VisualStudio(toolset, verbose)}
+	\begin{Args}
+	  \Item[t]{toolset}{Visual Studio toolset ID}
+	\end{Args}
+\end{Description}
+
+\medskip
+\begin{Description}{クラスの機能}
+	コマンドラインからVisual Studioを起動するためのラッパクラス。
+\end{Description}
+
+\medskip
+メソッドの機能
+
+\begin{enumerate}
+  \item	\Func{solution}\\
+	Solution fileの名前とパスを記録する。
+	引数\tt{name}はVisual Studioのバージョンを含んでいること。
+	
+  \item	\Func{build}\\
+	前処理をした後、
+	内部メソッド\Func{\_\_build}(後述)を呼び出してビルドを実行する。
+	
+  \item	\Func{\_\_get\_vsinfo} ({\small 内部メソッド})\\
+	与えられた引数を手掛かりとして、Visual Studioのバージョン情報を確定する。
+	\begin{narrow}
+	\begin{tabular}{lll}
+	    \tt{pts} & platform toolset version	& e.g. v142\\
+	    \tt{vsv} & Visual Studio vereion	& e.g. 16.0\\
+	    \tt{vsn} & Visual Studio name	& e.g. Visual Studio 2019\\
+	\end{tabular}
+	\skip{.5}
+	\end{narrow}
+
+	\tt{vsv}が“バージョン情報”に相当する。\tt{pts}と\tt{vsn}はメッセージ用。\\
+	\Color{red}{%
+		\bf{新しいVisual Studioを導入する場合は、
+		このメソッドに情報を追加する必要がある。}
+	}
+
+  \item	\Func{\_\_get\_vs\_path} ({\small 内部メソッド})\\
+	\cmnd{devenv}のパスを求める。
+	現在DESKTOP-KD3C7HS (demo)マシンにはVisual Studio version 15.0以外は
+	インストールされていない(16.0に対応しているのはkanehori-PCだけ）。\\
+	\Color{red}{\bf{%
+	新しいVisual Studioを導入する場合は、
+	このメソッドにも情報を追加する必要がある。}}
+
+\end{enumerate}
+
+% end: 2.6.VisualStudio.tex

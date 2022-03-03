@@ -46,9 +46,10 @@
 #     Ver 1.2    2021/04/01 F.Kanehori	Windows では swig 生成を中止.
 #     Ver 1.2.1  2021/05/13 F.Kanehori	Bug fix.
 #     Ver 1.2.2  2021/05/20 F.Kanehori	Bug fix.
+#     Ver 1.2.3  2021/12/09 F.Kanehori	-o オプション廃止.
 # ======================================================================
 from __future__ import print_function
-version = "1.2.2"
+version = "1.2.3"
 
 import sys
 import os
@@ -246,9 +247,9 @@ parser.add_option('-f', '--force', dest='force',
 parser.add_option('-F', '--Force', dest='Force',
 			action='store_true', default=False,
 			help='force rewrite setup-file')
-parser.add_option('-o', '--old-version', dest='old_version',
-			action='store_true', default=False,
-			help='invoke python version 2.7')
+#parser.add_option('-o', '--old-version', dest='old_version',
+#			action='store_true', default=False,
+#			help='invoke python version 2.7')
 parser.add_option('-R', '--repository', dest='repository',
 			action='store', default=None,
 			help='repository name')
@@ -642,7 +643,7 @@ if not force and not setup_needed and not setup_recommended:
 	print()
 	print('done (python %s.%s.%s)' % (major, minor, micro))
 	sys.exit(0)
-if not force and is_unix or os.path.exists(setup_file):
+if not force and (is_unix or os.path.exists(setup_file)):
 	print()
 	if sys.version_info[0] >= 3:
 		yn = input('continue? [y/n]: ')
@@ -699,22 +700,28 @@ print('-- Springhead top directory: %s' % sprtop)
 #	swigをmakeする。
 #
 print()
-cmake_path = Util.upath(prog_scanned['cmake'])
-if cmake_path != 'NOT FOUND':
-	print('-- using swig ... "%s"' % cmake_path)
+swig_path = Util.upath(prog_scanned['swig'])
+need_make_swig = False
+if swig_path != 'NOT FOUND':
+	if force:
+		print('-- making swig')
+		need_make_swig = True
+	else:
+		swig_version = vers_scanned['swig']
+		print('-- using swig ... version %s' % swig_version)
 else:
 	print('-- making swig')
-
-#  make 環境を設定する
-env_set = False
+	need_make_swig = True
 
 #  make する
 cwd = os.getcwd()
+stat = 0
 if is_unix:
-	os.chdir('../bin/src/swig')
-	stat = make_swig_unix(Force)
-	if stat == 0:
-		shutil.copy('./swig', '../../swig')
+	if need_make_swig:
+		os.chdir('../bin/src/swig')
+		stat = make_swig_unix(Force)
+		if stat == 0:
+			shutil.copy('./swig', '../../swig')
 else:
 	'''
 	env = os.environ['PATH']
@@ -728,8 +735,8 @@ else:
 	print('no need to build swig')
 	stat = 0
 	stat = make_swig_windows(cmake, devenv, plat, conf, vers, Force)
-	'''
 	stat = 0
+	'''
 os.chdir(cwd)
 if stat == 0:
 	print('OK')

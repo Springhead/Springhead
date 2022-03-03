@@ -96,10 +96,10 @@ def contents(url, wrkdir, fname, platform, rev, prev_id):
 			#print('---->: spr_id_info: [%s]' % spr_id_info)
 		elif tmp[0].startswith('try'):
 			#print('---->  DROP <----')
-			return
+			return prev_id
 		elif tmp[1].startswith('Traceback'):
 			#print('---->  DROP <----')
-			return
+			return prev_id
 	#
 	if spr_id_info is None:
 		#print('RevisionInfo: can not id_info: %s id:%s' % (fname, rev[0]))
@@ -108,9 +108,9 @@ def contents(url, wrkdir, fname, platform, rev, prev_id):
 	   spr_id_info[0:6] == 'python' or \
 	   spr_id_info[0:5] == 'fatal':
 		# Kludge -- caused by bug!
-		return
+		return prev_id
 	if content is None:
-		return
+		return prev_id
 	if isinstance(content, str):
 		# commit-id:
 		#	The current commit id of sprphys/Springhead.

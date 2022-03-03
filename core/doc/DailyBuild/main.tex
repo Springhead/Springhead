@@ -6,6 +6,8 @@
 \usepackage{setspace}
 \usepackage{longtable}
 \usepackage{comment}
+\usepackage{color}
+%\usepackage{array}
 
 \setlength{\textheight}{\paperheight}   % 紙面縦幅を本文領域にする（BOTTOM=-TOP）
 \setlength{\topmargin}{4.6truemm}       % 上の余白を30mm（=1inch+4.6mm）に
@@ -27,14 +29,15 @@
 \end{center}
 
 \bigskip
-本ドキュメントでは、Springheadの日々のメンテナンス作業(dailybuildの結果の確認、
-Wikiページのメンテナンス等)およびそれらに関わるスクリプトについて説明する。
+本ドキュメントでは、DailyBuildの流れおよび関連するスクリプト(プログラム/クラス)に
+ついて説明する。
 
 \vfill
 \begin{center}\small{%
   改 訂 履 歴\\
   \medskip
   \begin{tabular}{ll}
+    第3.0版 & 全面改訂 \\
     第2.1版 & Visual Studio新バージョンへの対応方法追加 \\
     第2.0版 & スクリプトのpython化に伴う変更 \\
     第1.0版 & 初版 \\
@@ -46,20 +49,45 @@ Wikiページのメンテナンス等)およびそれらに関わるスクリプトについて説明する。
 \setcounter{tocdepth}{3}
 \tableofcontents
 %-------------------------------
-\input{1.0.WhatIsDailyBuild}
-\input{2.0.RoutineWork}
-\input{3.0.WikiMaintenance}
-\input{4.0.Task}
-\input{5.0.DailyBuildScript}
-\input{5.1.DailyBuildScriptTree}
-\input{5.2.DailyBuildEnvironmentVariable}
-\input{5.3.DailyBuildDirectoryStructure}
-\input{5.4.0.DailyBuildScriptSpec}
-\input{5.5.DailyBuildScriptMaintenance}
-\input{6.0.MakeReportScript}
-\input{6.1.MakeReportScriptTree}
-\input{6.2.MakeReportDirectoryStructure}
-\input{6.3.0.MakeReportScriptSpec}
+\parindent=0pt
+\input{1.0.Overview}
+
+\input{2.0.AboutMainScriptsAndClasses}
+\input{2.1.DailyBuildTask}
+\input{2.2.TestMainGit}
+\input{2.3.SpringheadTest}
+\input{2.4.Traverse}
+\input{2.5.BuildAndRun}
+\input{2.6.VisualStudio}
+\input{2.7.RevisionInfo}
+\input{2.8.VersionControlSystem}
+\input{2.9.ControlParams}
+
+\input{3.0.AdditionalInfo}
+\input{3.1.Setup}
+\input{3.2.AboutBuildingLibrary}
+\input{3.3.MakingSolutionFileByCMake}
+\input{3.4.VisualStudioNewVersion}
+
+\input{4.0.OtherScripts}
+\input{4.1.ConstDefs}
+\input{4.2.TestResult}
+\input{4.3.GenResultLog}
+\input{4.4.KeyInterruption}
+\input{4.5.StructuredException}
+
+\input{5.0.MakeReportScript}
+\input{5.1.MakeReportScriptTree}
+\input{5.2.0.InvokeMakeReport}
+\input{5.2.1.MakeReportGit}
+\input{5.2.2.buildmonitorGit}
+\input{5.3.0.perlScript}
+\input{5.3.1.order}
+\input{5.3.2.mydiff}
+\input{5.3.3.filter}
+\input{5.3.4.baselib}
+\input{5.3.5.dailybuildlib}
+\input{5.4.awkscripts}
 % ---------------------------
 
 \end{document}

@@ -1,0 +1,126 @@
+% 4.2.TestResult.tex
+%	Last update: 2022/02/09 F.Kanehori
+
+%\newpage
+\subsection{クラス TestResult}
+\label{subsec:TestResult}
+
+\def\HS{\Hskip{15pt}}
+\begin{Description}{概要}
+	テスト結果を管理するクラス。
+	2つの配列\var{results}及び\var{visited}を用いて管理する。
+	\def\Row#1#2{\tt{#1} & \FCol{165pt}{#2}\\}
+	\def\RowSp#1#2{\tt{#1} & \FCol[.85]{165pt}{#2}\\}
+	\Vskip{-.8\baselineskip}
+	\begin{longtable}[c]{|p{15em}|l|}\hline
+    	    \Row{results}{テスト結果情報を累積する配列}
+	    \RowSp{%
+		{\def\arraystretch{.9}%
+		\begin{tabular}{@{\Hskip{15pt}}l}
+    	    		results[\it{name}][RST.ERR]\\
+    	    		results[\it{name}][RST.SKP]\\
+    	    		results[\it{name}][RST.BLD]\\
+    	    		results[\it{name}][RST.RUN]\\
+    	    		results[\it{name}][RST.RUN]
+		\end{tabular}}}{%
+		\begin{tabular}{@{\Hskip{10pt}}l}
+			{\small コンパイル・実行以外でのエラーコード}\\
+			{\small このテストがスキップされたことを示す}\\
+			{\small コンパイルの結果コード}\\
+			{\small テスト実行の結果コード}\\
+			{\small テスト実行の結果コードの予測値}
+		\end{tabular}}\hline
+    	    \Row{visited}{上記の\tt{\it{name}}の一覧}\hline
+	\end{longtable}
+	ここで\it{name}はテストが終了したディレクトリの名称(テスト名称)、
+	\it{p}と\it{c}\,はそれぞれplatformとconfigurationの名前。
+	\tt{RST.xxx}については\Ref{subsec}{ConstDefs}を参照。
+\end{Description}
+
+\medskip
+\begin{Description}{イニシャライザ}
+	\cmnd{\_\_init\_\_(fname, scratch, verbose)}
+	\begin{Args}
+	  \Item[t]{fname}{%
+		テスト結果累積ファイルのベースとなる名前\\
+		\Hskip{20pt}\tt{results}\RArrowSp{5pt}\Path{\it{fname}.r}\\
+		\Hskip{20pt}\tt{visited}\RArrowSp{5pt}\Path{\it{fname}.v}}
+	  \Item[t]{scratch}{%
+		テスト結果の登録をスクラッチ状態から始めるか否か。
+		Trueが指定されたら、
+		指定された名前のテスト結果累積ファイルを消去して
+		スクラッチ状態から始める。
+		Falseが指定されたら、
+		指定された名前のテスト結果累積ファイルから
+		以前のデータを読み出してテスト結果データの初期データとする。}
+	\end{Args}
+\end{Description}
+
+\medskip
+\begin{Description}{関数の機能}
+  \Function{set\_info(name, category, info)}{%
+	引数\tt{name}で指定されたテストに対して、
+	テスト結果以外の情報(\tt{RST.ERR, RST.SKP, RST.EXP})を登録する。\\
+	\Hskip{20pt}\tt{results[\it{name}][RST.ERR] = \it{info}}\\
+	\Hskip{20pt}\tt{results[\it{name}][RST.SKP] = \it{info}}\\
+	\Hskip{20pt}\tt{results[\it{name}][RST.RUN][RST.EXP] = \it{info}}\\
+	\tt{name}が初出の場合には、テスト結果の登録(\Func{set\_result})に先立ち、
+	このメソッドを呼んで\var{results[\it{name}]}を初期化する必要がある。}
+
+  \Function{set\_result(name, category, platform, config, result)}{%
+	引数\tt{name}で指定されたテストに対して、
+	\tt{category, platform, config}の組合せの結果を登録する。
+	ここで\tt{category}は\tt{RST.BLD, RST.RUN}の何れかである。\\
+	\HS\tt{results[\it{name}][RST.RUN][\it{platform}][\it{config}] = \it{result}}}
+
+  \Function{finish()}{%
+	テスト結果データをテスト結果累積ファイルにシリアライズする。
+	テスト結果はメモリ上にしかないので、
+	テスト終了時に必ずこのメソッドを呼ぶこと。}
+
+  \Function{erase()}{%
+	テスト結果累積ファイルを消去する。
+	インスタンス生成時に\tt{scratch}が指定されたならば、
+	イニシャライザから呼び出される。}
+
+  \Function{edit\_result\_log(platform, config)}{%
+	テスト結果全体を、テスト結果ファイル(\Path{result.log})形式に編集する。\\
+	\tt{visited}にリストされているすべてのテストデータを取り出して、
+	成功モジュール名を\tt{succs[RST.BLD]}と\tt{succs[RST.RUN]}に、
+	失敗モジュール名を\tt{fails[RST.BLD]}と\tt{fails[RST.RUN]}に格納する。
+	これらを\Func{\_\_edit\_log\_data}で編集データ\tt{lines}にまとめる。\\
+	{\small (例)}\\
+        \def\COLWID{\linewidth}
+        \addtolength{\COLWID}{-13pt}
+	\skip{-1.2}
+	%\begin{longtable}[r]{|l|}\hline
+	\begin{tabular}{|l|}\hline
+	    \begin{minipage}[r]{\COLWID}\footnotesize{\tt{%
+		\vrule width 0pt height 1ex\\
+tests\\
+ビルド成功 (Base:Quaternion,Collision:CDContGJK, \CDots )\\
+ビルド失敗 (Framework:FWAppDXTest,Framework:FWAppMultiWinTest, \CDots )\\
+実行成功 (Base:Quaternion,Collision:CDContGJK, \CDots )\\
+実行失敗 (Foundation:Timer)\\
+\\ 
+Samples\\
+ビルド成功 (Creature:ShoulderJointLimit,Creature:VirtualHuman, \CDots )\\
+ビルド失敗 (Framework:FWOptimizer, \CDots )\\
+実行成功 ()\\
+実行失敗 ()\\
+	    }}\end{minipage}\\\hline
+	\end{tabular}}
+
+  \skip{1.0}
+  \LocalFunction{\_\_serialize(obj, fname)}{%
+	引数\tt{obj}で与えられたオブジェクトをシリアライズしてファイル
+	\tt{fname}に書き込む。}
+
+  \LocalFunction{\_\_deserialize(fname)}{%
+	\Func{\_\_serialize}で書いたデシリアライズデータを読み込んで返す。}
+
+  \LocalFunction{\_\_edit\_log\_data(lines, name, succs, fails)}{%
+	引数で与えられたデータを編集して\tt{lines}に追記する。}
+\end{Description}
+
+% end: 4.2.TestResult.tex

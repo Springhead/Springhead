@@ -1,0 +1,138 @@
+% 2.4.Traverse.tex
+%	Last update: 2022/02/02 F.Kanehori
+
+%\newpage
+\subsection{Traverseクラス}
+\label{subsec:Traverse}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>/core/test/bin/Traverse.py}
+\end{Description}
+
+\medskip
+\begin{Description}{クラス生成}
+	\cmnd{Traverse(testid, result, csc. control, section,} \Cont\\
+	\Hskip{120pt}\cmnd{toolset, platforms, configs,} \Cont\\
+	\Hskip{120pt}\cmnd{csusage, rebuild, timeout,} \Cont\\
+	\Hskip{120pt}\cmnd{report, audit, dry\_run, verbose)}\\
+	\begin{Args}
+	  \Item[t]{testid}
+		{テスト種別 (\tt{TESTID.STUB, TESTID.EMBPYTHON,}\\
+			     \tt{TESTID.TESTS, TESTID.SAMPLES}のいずれか)}
+	  \Item[t]{result}{\Class{TestResult}クラスのインスタンス}
+	  \Item[t]{csc}{\Class{ClosedSrcControl}クラスのインスタンス}
+	  \Item[t]{control}{テスト制御ファイル名}
+	  \Item[t]{section}{テスト制御セクション名}
+	  \Item[t]{toolset}{Visual Studio toolset ID (unixでは無視される)}
+	  \Item[t]{platforms}{テストするプラットフォーム(\tt{ConstDefs.PLATS}で定義)}
+	  \Item[t]{configs}{テストするビルド構成(\tt{ConstDefs.CONFS}で定義)}
+	  \Item[t]{csusage}{Closed Sourceを使用するか否か
+			(\tt{AUTO, USE, UNUSE}のいずれか)}
+	  \Item[t]{rebuild}{強制的にrebuildするか否か}
+	  \Item[t]{timeout}{タイムアウト秒数 (0ならタイムアウトなし)}
+	  \Item[t]{report}{プログレスレポートを有効にするか否か}
+	  \Item[t]{audit}{ディレクトリ走査の状況報告
+			(ENTER, LEAVE, skip理由)を出力するか否か}
+	  \Item[t]{dry\_run}{Dry-runモード}
+	\end{Args}
+\end{Description}
+
+\medskip
+\begin{Description}{クラスの機能}
+このクラスの機能は、大きく分けて次の2つである。
+\begin{enumerate}
+  \item	指定されたディレクトリがテスト対象となっているかどうかを判定し、
+	対象となっているならばテストを実施すること。
+	またそのサブディレクトリを再帰的にTraverseすること。
+
+  \item	テスト条件を適切に設定すること。\\
+	テスト条件はテストツリーの然るべき場所に置かれているテスト制御ファイル
+	(引数\tt{control}で指定)に設定されている。
+	これを\Func{ControlParams.get}を使用して読み出す
+	(\Path{<topdir>/core/test/bin/ControlParams.py})。
+	テスト制御ファイルの詳細は
+	\KQuote{\Ref{subsec}{ControlParams} テスト制御パラメータ}で説明する。
+\end{enumerate}
+\end{Description}
+
+\medskip
+\begin{Description}{メソッドの機能}
+\begin{enumerate}
+  \item	\Func{traverse}\\
+	special trap
+	\begin{narrow}[20pt]
+		これは、環境変数\tt{SPR\_SKIP}に設定されたディレクトリを
+		スキップさせるための仕組み(デバッグ用)
+	\end{narrow}
+	テスト対象ディレクトリへ移動して以下の処理を実行する(再帰あり)。
+	\begin{enumerate}
+	  \item	テスト制御ファイルを読み込む(\Class{ControlParams})\\
+		最初の1回は、ログファイルの設定およびライブラリタイプ
+		(\tt{STATIC} or \tt{SHARED})の設定をする。
+
+	  \item	テスト条件を調べ、次のいずれかならば処理の対象から外す(returnする)
+		\begin{itemize}
+		  \item	ディレクトリ名が\SQuote{.}, \SQuote{Template},
+			\SQuote{log}, toolset IDと同じ
+			(\tt{\SQuote{15.0}}など)のいずれか
+		  \item	\tt{toolset ID}に対応するsolution fileがない
+		\end{itemize}
+
+	  \item	このディレクトリにあるsolution file/Makefileの処理を行なう
+		(\Func{self.process}後述)。
+
+	  \item	すべてのサブディレクトリについて処理の対象となっているかどうかを調べ、
+		対象となっているサブディレクトリに対して
+		\Func{self.traverse}を再帰呼び出しする。
+	\end{enumerate}
+
+  \item	\Func{process}\\
+	現在のディレクトリにあるsolution file/Makefileについて次の処理を実行する。
+	\begin{enumerate}
+	  \item	処理の対象となるsolution ファイル名を確定する。
+		ファイル名は原則として
+		\UpDQs <\it{directory name}><\it{VS version}>\tt{.sln}\UpDQe だが、
+		テスト制御ファイルの\tt{SolutionAlias}で変更することができる。
+		unixの場合はこの仕組を用いて\tt{Makefile}にすげ替えている。
+
+	  \item	前準備
+		\begin{itemize}
+		  \item	Closed sourceを使うか否かの設定
+			(\Func{ClosedSrcControl.set\_usage})
+		  \item	\Class{BuildAndRun}
+			(\Path{<topdir>/core/test/bin/BuildAndRun.py})
+			インスタンスの生成 (このクラスの詳細は
+			\KQuote{\Ref{subsec}{BuildAndRun} クラス}で説明する)。
+		  \item	テスト結果期待値の設定 (\Func{TestResult.set\_info})
+		\end{itemize}
+
+	  \item	以下、指定されたすべてのplatform、configurationについての二重ループ\\
+		テスト制御ファイルでビルド(\tt{Build})が指定されていなかったり
+		テスト実行(\tt{Run})指定されていなかったりした場合には
+		適宜次のループ処理へ進む。
+
+	  \item	\tt{UseCMake}が指定されていたら\cmnd{cmake}を実行して
+		solutionファイルを生成する
+		(\Func{CMake.config\_and\_generate})。
+		これ以降は、ここで生成したsolutionファイルを使用する。
+		\Annotation{(注)}{%
+			CMakeにgeneratorを指定するパラメータは
+			\Class{CMake.GENERATOR}で定義されている。
+			現在はVisual Studio 16 2019までが定義済みである。
+			\Color{red}{\bf{%
+			新しいVisual Studioを追加したならば、
+			ここにgenerator名を追加する必要がある。}}}
+		\skip{-.1}
+
+	  \item	ビルドを実行し(\Func{BuildAndRun.build})、
+		その結果を\Func{TestResult.set\_result}で記録する。
+
+	  \item	テスト実行に必要なパスを追加する (\Func{self.\_\_runtime\_addpath})。
+
+	  \item	テストを実行し、その結果を記録する。\\
+		(\Func{BuildAndRun.run}, \Func{TestResult.set\_result})。
+	\end{enumerate}
+\end{enumerate}
+\end{Description}
+
+% end: 2.4.Traverse.tex

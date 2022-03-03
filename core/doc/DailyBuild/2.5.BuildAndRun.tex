@@ -1,0 +1,85 @@
+% 2.5.BuildAndRun.tex
+%	Last update: 2022/02/02 F.Kanehori
+
+%\newpage
+\subsection{BuildAndRunクラス}
+\label{subsec:BuildAndRun}
+
+\begin{Description}{スクリプトファイル}
+	\Path{<topdir>/core/test/bin/BuildAndRun.py}
+\end{Description}
+
+\medskip
+\begin{Description}{クラス生成}
+	\cmnd{BuildAndRun(ctl, ccver, verbose, dry\_run)}
+	\begin{Args}
+	  \Item[t]{ctl}{\Class{ControlParams}のインスタンス}
+	  \Item[t]{ccver}{Visual Studio toolset ID (unixでは無視される)}
+	  \Item[t]{dry\_run}{Dry-runモード}
+	\end{Args}
+\end{Description}
+
+\begin{Description}{クラスの機能}
+	このクラスの機能は、大きく分けて2つある。
+	\begin{enumerate}
+	  \item	指定されたソリューションのビルド
+	  \item	テスト条件を適切に設定すること
+	\end{enumerate}
+\end{Description}
+
+メソッドの機能
+
+\begin{enumerate}
+  \item	\Func{build}
+	\begin{Args}
+	  \Item[t]{dirpath}{ソリューションファイルがあるディレクトリ}
+	  \Item[t]{slnfile}{ソリューションファイル名}
+	  \Item[t]{platform}{プラットフォーム}
+	  \Item[t]{config}{ビルド構成}
+	  \Item[t]{outfile}{出力ファイルパス\\
+			Windowsではディレクトリ部のみ有効、
+			unixでは無視(Makefileが優先)}
+	  \Item[t]{logfile}{ログファイルパス}
+	  \Item[t]{errlogfile}{エラーログファイルパス}
+	  \Item[t]{force}{リビルド強制フラグ(unixでは無効)}
+	\end{Args}
+	実際のビルド処理は、Windowsでは\Func{self.\_\_build\_w}が、
+	unixでは\Func{self.\_\_build\_u}が実行する。
+
+  \item	\Func{run}
+	\begin{Args}
+	  \Item[t]{dirpath}{ソリューションファイルがあるディレクトリ}
+	  \Item[t]{exefile}{実行バイナリファイル名}
+	  \Item[t]{args}{実行時パラメータ}
+	  \Item[t]{logfile}{ログファイルパス}
+	  \Item[t]{errlogfile}{エラーログファイルパス}
+	  \Item[t]{addpath}{実行に必要となる追加パス}
+	  \Item[t]{timeout}{タイムアウト秒数(\tt{0}ならタイムアウトなし)}
+	  \Item[t]{pipeprocess}{パイププロセスコマンド\\
+		指定されたら、
+		このコマンドの実行結果がパイプ経由でテストプログラムに渡される。}
+	\end{Args}
+	処理
+	\begin{enumerate}
+	  \item	作業用ログファイル、ログファイルを準備する。
+	  \item	パイププロセスが指定されていたら、
+		パイププロセスの出力がテストプログラムの入力となるように
+		パイプでつないで双方のプロセスを起動する。\\
+		さもなければ、テストプログラムを起動する。
+	  \item	作業用ログファイルの情報を、
+		ログファイルおよびエラーログファイルに振り分けて書き出す。
+	\end{enumerate}
+
+  \item	\Func{\_\_build\_u} {\small (内部メソッド)}\\
+	引数\tt{slnfile}で指定されたmakefileの\KQuote{compile}ターゲットをmakeする。
+	コンパイルフラグは、引数\tt{config}に従って``\tt{-g}'', ``\tt{-O2}'' のいずれか。
+
+  \item	\Func{\_\_build\_w} {\small (内部メソッド)}\\
+	\Class{VisualStudio}(\Path{.../core/test/bin/VisualStudio.py})の
+	インスタンスを用意し、
+	必要な設定を行なった後に\Func{VisualStudio.build}でビルドする。
+	詳細は\KQuote{\Ref{subsec}{VisualStudio} クラス}で説明する。
+
+\end{enumerate}
+
+% end: 2.5.BuildAndRun.tex

@@ -28,7 +28,7 @@
 #Intervention	False
 
 #UseCMake	False
-#CMakeBuildDir	# CMake work directoru name
+#CMakeBuildDir	# CMake work directory name
 #CMakeTopDir	$(SprTop)
 #CMakeConfFile	$(SprTop)/core/src/dailybuild.CMakeConf.txt
 #CMakeOptsFile	$(SprTop)/core/src/dailybuild.CMakeOpts.txt

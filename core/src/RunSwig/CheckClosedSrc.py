@@ -109,7 +109,7 @@ if verbose:
 #
 if os.path.exists(header_file):
 	if verbose:
-		print('%s: file exists. bothing to do.' % prog)
+		print('%s: file exists. nothing to do.' % prog)
 	#  処理終了
 	os.chdir(cwd)
 	if trace:

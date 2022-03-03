@@ -1,0 +1,168 @@
+% 3.4.MakingSolutionFileByCMake.tex
+%	Last update: 2022/02/07 F.Kanehori
+
+%\newpage
+\subsection{Cmakeを使ってソリューションファイルを作成する}
+\label{subsec:MakingSolutionFileByCMake}
+
+\begin{Description}{配布ファイル構成}
+	\begin{minipage}{\textwidth}
+	  \dirtree{%
+		.1 src/.
+		.2 CMakeLists.txt.dist.
+		.2 CMakeSettings.txt.dist.
+		.2 CMakeConf.txt.dist.
+		.2 CMakeOpts.txt.dist.
+		.2 :.
+		.2 Base.
+		.3 CMakeLists.txt.
+		.2 Collision.
+		.3 CMakeLists.txt.
+		.2 :.
+		.2 Physics.
+		.3 CMakeLists.txt.
+		.2 RunSwig.
+		.3 CMakeLists.txt.
+	  }
+	\end{minipage}
+\end{Description}
+
+\medskip
+\begin{Description}{トップレベル}
+	\file{CMakeLists.txt}は\file{CMakeLists.txt.dist}からコピーして作成する。\\
+	\file{CMakeLists.txt}の中からは次のファイルを参照する。
+	参照するファイルの探索は、\tt{".dist"}の付かないファイル(カスタマイズされたもの)、
+	\tt{".dist"}のつくファイル(オリジナル)の順でである。つまり、\\
+	\Color{red}{\bf{%
+	 配布されたファイルの内容に変更が必要な場合には、
+	\tt{".dist"}ファイルを直接変更するのではなく、
+	\tt{".dist"}の付かないファイルにコピーして
+	そちらを変更するようにすることを前提としている。}}
+	これは配布しているファイルが
+	不注意によって変更コミットされるのを防止するための措置である。 
+
+	\begin{enumerate}
+	  \item	\file{CMakeSettings.txt}\\
+		基本的なパラメータ。 特に、\\
+		\def\wid{250pt}
+		\begin{tabular}{ll}
+		  \tt{OOS\_BLD\_DIR} &
+			バイナリディレクトリの名前 (\file{build})\\
+		  \tt{CMAKE\_CONFIGURATION\_TYPES} &
+			構成 (\tt{Debug, Release, Trace})\\
+		  \tt{LIBTYPE} &
+			ライブラリタイプ (\tt{STATIC, SHARED})\\
+		  \tt{VS\_VERSION} & \FCol{\wid}{%
+			Visual Studio のバージョン番号(セットア\\ップファイルなしで
+			\cmnd{cmake}したとき、ライ\\ブラリファイル名の一部として
+			使用される。\\現在は\tt{16.0})。}
+		\end{tabular}
+
+	  \item	\file{CMakeConf.txt}\\
+		外部パッケージを\Func{find\_package}で探索するときのprefix path、
+		及びSpringhead Library インストール先のinstall prefix。
+		デフォルトは共に``設定なし''。
+
+	  \item	\file{CMakeOpts.txt}\\
+		ビルドパラメータの定義。変更する必要はあまりないと思われる。
+	\end{enumerate}
+
+	Base, Collision, .. などのプロジェクトは、\Func{add\_subdirectory}で取り込む。
+	また、プロジェクト間の依存関係は\Func{add\_dependecies}で指定する
+
+	\medskip
+	\Color{red}{\bf{
+	Springhead Librayはcompile and linkで作成されるライブラリファイルではなく、
+	各プロジェクトで作成したライブラリファイルを統合して
+	(外部コマンドにより)作成されるものであることが原因で、
+	以下のような小細工が必要になる}}
+	(ひょっとしたら誤解しているのかも…)。
+
+	単にライブラリファイルを統合するスクリプト(\cmnd{lib}コマンドを呼ぶ)を実行させる
+	だけならば\Func{add\_custom\_target}で\tt{COMMAND}を使用すれば事足りる
+	(\Func{add\_librray}/\Func{add\_executable}がなくても問題は起きない)。
+	しかし\tt{INSTALL}ターゲットを作成しようとすると困難が発生する。
+	\tt{install(TARGETS ... EXPORT ... ...)}は、
+	\Func{add\_library}/\Func{add\_excutable}で定義されたターゲットに対してでないと
+	機能しないようである(configure エラー)。
+
+	\medskip
+	\Color{red}{\bf{このため、次のような小細工を弄している。}}
+	\medskip
+
+	\begin{enumerate}
+	  \item	仮のライブラリを作成するターゲット\tt{"Springhead"}を新たに作成する。
+		\begin{narrow}
+			\tt{set(Target \$\{ProjectName\})}
+		\end{narrow}
+		このターゲットでは、
+		ダミーソースファイルを作成してダミーライブラリをビルドし、
+		仮の置き場所\Path{\$\{CMAKE\_BINARY\_DIR\}/tmp}に置く。\\
+		ただし生成するライブラリファイルの名前は、
+		インストールすべきライブラリファイルの名前と一致させておく
+		(インストールされるライブラリはこのターゲットで作成するものなので、
+		こうしておかないといけない)。
+
+	  \item	各プロジェクトで作成したライブラリファイルを統合して
+		\file{"Springhead*.lib"}を作成するためのターゲット
+		\tt{integrate}を作成する。
+		\begin{narrow}
+			\tt{set(RealTarget integrate)}
+		\end{narrow}
+		ターゲット\tt{INSTALL}をビルドしたときに誤って上で作成した
+		ダミーライブラリがインストールされてしまうのを防ぐため、
+		ダミーライブラリを正しいライブラリファイルで上書きしておく
+		(cmakeのinstall対象は、本来は上で作成したダミーライブラリである)。
+
+	  \item	仮のターゲットをexportする。
+		インストール先はinstall directiveの属性として指定するだけで十分である。\\
+		ヘッダファイル及びライブラリファイルのインストールは別途
+		\begin{narrow}
+			\tt{install(FILES ...) }
+		\end{narrow}
+		で指定する。
+		\begin{narrow}
+			\tt{install(TARGETS \$\{ProjectName\} EXPORT ... ...)}\\
+			\tt{install(FILES \$\{HEADRES\} ...)}\\
+			\tt{install(DIRECTORY \$\{SPR\_INC\_DIR\}/\$\{\_proj\} ...)}
+		\end{narrow}
+	\end{enumerate}
+\end{Description}
+
+\begin{Description}{各プロジェクト}
+	各プロジェクトのディレクトリには\Path{RunSwig\_gen\_files.txt}という
+	ファイルがあり、この中にswigが生成するファイル名が記述されている。\\
+	これらのファイルに対して、
+	\begin{narrow}
+  		\tt{set\_source\_files\_properties(\$\{.\_file\}}\\
+		\Hskip{20pt}\tt{PROPERTIES GENERATED TRUE}\\
+		\Hskip{20pt}\tt{...}\\
+		\tt{)}
+	\end{narrow}
+	と設定しておくことが重要である。
+	これを忘れると、
+	\begin{itemize}
+	  \item	cmake 時にはファイルが存在しない場合がある(RunSwigを実行することで
+		作成される)ので、cmake generation error となる。
+
+	  \item	Clean ビルドしてもファイルが削除されない。
+	\end{itemize}
+	というトラブルが起きる。
+\end{Description}
+	
+\begin{Description}{RunSwig}
+	RunSwig が作成するファイル(generated\_filesで指定される)を媒介
+	(\tt{OUTPUT}と\tt{DEPENDS})として
+	\Func{add\_custom\_target}と\Func{add\_custom\_command}を組み合わせることで
+	\begin{narrow}
+		\cmnd{nmake -f Makefile.win}
+	\end{narrow}
+	を実行する。
+	このターゲットには\Func{add\_library}はない
+	(つまりソースファイルと認識されるものはない)ので、
+	cmake時に\var{generated\_files}が存在しなくてもgeneration errorは起きない。
+	また\Func{add\_custom\_command}の\tt{OUTPUT}に\var{generated\_file}を
+	指定しているので、これらはcleanビルドを実行すれば削除される。
+\end{Description}
+
+% end: 3.4.MakingSolutionFileByCMake.tex

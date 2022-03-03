@@ -12,6 +12,7 @@
 #	    -v:		    Set verbose level (0: silent).
 #	    -D:		    Show command but do not execute it.
 #	    -V:		    Show version.
+#	    -X:		    Build and Run only (do not commit/copy).
 #
 #	test-repository, result-repository:
 #	    Relative to the directory where Springhead directory exists.
@@ -42,8 +43,9 @@
 #     Ver 1.11   2021/05/20 F.Kanehori	Rename 'CMake' to 'BuildUsingCMake'.
 #     Ver 1.12   2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
 #     Ver 1.13   2021/08/04 F.Kanehori	Add nkf path for web report.
+#     Ver 1.14   2022/01/19 F.Kanehori	Add option -X for debug.
 # ======================================================================
-version = '1.13'
+version = '1.14'
 
 import sys
 import os
@@ -195,6 +197,9 @@ parser.add_option('-D', '--dry-run', dest='dry_run',
 parser.add_option('-V', '--version', dest='version',
 			action='store_true', default=False,
 			help='show version')
+parser.add_option('-X', '--build-and-run-only', dest='X',
+			action='store_true', default=False,
+			help='build and run only')
 
 # ----------------------------------------------------------------------
 #  Process for command line
@@ -331,6 +336,9 @@ if check_exec('DAILYBUILD_EXECUTE_TESTALL'):
 		flush()
 	#
 	os.chdir(repository)
+
+if options.X:		# for debug only
+	sys.exit(0)
 
 # ----------------------------------------------------------------------
 #  Build and run test has been done at this point.

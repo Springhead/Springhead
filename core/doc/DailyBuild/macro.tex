@@ -20,6 +20,7 @@
 \def\RSB{\ifmmode$[$\else\tt{]}\fi}
 \def\Ctrl#1{\tt{\,\textasciicircum#1}}
 \def\BS{\tt{\symbol{'134}}}
+%\let\BS\textbackslash
 
 %% alias for fonts
 \let\it@\it
@@ -57,6 +58,9 @@
 %
 \def\Vskip#1{\begin{Vmode}\vspace{#1}\end{Vmode}}
 \let\Hskip\hspace
+\def\skip#1{\Vskip{#1\baselineskip}}
+\def\medskip{\skip{0.5}}
+\def\bigskip{\skip{2.0}}
 
 %% force vertical mode
 %  \begin{Vmode} ... \end{Vmode}
@@ -112,7 +116,7 @@
 \def\Note{{\small $^\dagger$}}
 \def\DNote{{\small $^\ddagger$}}
 
-%% some specific ones
+%% some special ones
 %
 \def\RArrowSp#1{\hspace{#1}\RArrow\hspace{#1}}	% sp → sp
 \def\LArrowSp#1{\hspace{#1}\LArrow\hspace{#1}}	% sp ← sp
@@ -121,6 +125,14 @@
 \def\PathBgn#1{\hbox{\,\raise.4ex\hbox{{\tt "}}\tt{#1}}}
 \def\PathEnd#1{\hbox{\tt{#1}\raise.4ex\hbox{{\tt "}}\,}}
 \def\EnvVar#1{\tt{\$#1}}	% for environment variable name (preceded by '$')
+\def\Class#1{\tt{class #1}}
+\def\Func#1{\tt{#1()}}
+% abbreviations
+\def\file#1{\tt{#1}}
+\def\cmnd#1{\tt{#1}}
+\def\var#1{\tt{#1}}
+\def\const#1{\tt{#1}}
+\def\script#1{\tt{#1}}
 
 \def\Ref#1#2{\ref{#1:#2} #2}
 \def\RefRef#1#2{\KQuote{\ref{#1:#2} #2}参照}
@@ -176,6 +188,38 @@
 	\tt{\begin{tabular}[t]{l}#1\end{tabular}}}
 	\vskip -.3\baselineskip\begin{narrow}[\WID]}
 \def\endMethod{\vskip .25\baselineskip \end{narrow}}
+
+%% description environment (title line + narrowed body)
+%  \begin{Description}[font][indent]{title}
+%  \end{Description}
+%
+\def\Description{\@ifnextchar[{\Description@}{\Description@@[r][20pt]}}
+\def\Description@[#1]{\@ifnextchar[{\Description@@[#1]}{\Description@@[#1][20pt]}}
+\def\Description@@[#1][#2]#3{\begin{GeneralBox}[#1][#2]{#3}}
+\def\endDescription{\end{GeneralBox}}
+
+\def\ScriptFile#1{\begin{Description}{スクリプトファイル}{#1}\end{Description}}
+\def\AboutScript#1{\begin{Description}{スクリプトの動作}{#1}\end{Description}}
+
+\def\Function#1#2{\begin{Description}{\cmnd{#1}}{#2}\end{Description}}
+\def\LocalFunction#1#2{%
+	\begin{Description}
+		{\cmnd{#1}\Hskip{10pt}{\small (内部関数)}}{#2}
+	\end{Description}}
+
+%% annotation
+%  \Annotation{(注)}{説明}
+%
+\def\Annotation#1#2{%
+	\setbox0=\hbox{\phantom{#1 }}
+	\dimen0=\the\wd0
+	\begin{Table}[r][\dimen0]{ll}\Item{#1}{#2}\end{Table}}
+	
+%% color
+%  \color{color}{...}
+%	color:  red, blue, green, yellow, magenta, white
+%
+\def\Color#1#2{\color{#1}#2\color{black}}
 
 %% command synopsis, options and arguments
 %  \Invoke[t]{body}			% 起動方法   (default: [r])
@@ -269,6 +313,7 @@
 	\if\font@def Y \narrow@same{#2} \else \narrow@repl{#2} \fi
 	\begin{Vmode}%
 	%\vspace{.25\baselineskip}%
+\def\arraystretch{1.0}
 	\list{}{\topsep 0pt \partopsep 0pt \parsep 0pt \itemsep 0pt
 		\rightmargin 0pt \leftmargin \@lmgn \relax}\item[]
 	\begingroup\font@size\@text}
@@ -311,7 +356,7 @@
 	\addtolength{\Table@last@wid}{-\Table@cols@wid}%
 	\addtolength{\Table@last@wid}{-\TableItemIndent}%
 	\tabcolsep=0pt
-	\def\arraystretch{-1}%
+	\def\arraystretch{.8}%
 	\begin{longtable}[#1]{l#4}}
 \def\endTable{\end{longtable}\end{LocalScope}\vskip -1.18\baselineskip}
 

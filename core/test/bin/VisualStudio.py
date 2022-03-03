@@ -69,6 +69,7 @@
 #     Ver 2.1    2018/12/25 F.Kanehori	Visual Studio 2017 に対応.
 #     Ver 2.2    2021/03/24 F.Kanehori	Visual Studio 2019 に対応.
 #     Ver 2.2.1	 2021/07/15 F.Kanehori	libdir 取得方式変更.
+#     Ver 2.2.2	 2022/01/27 F.Kanehori	VS 2019 以上に仮対応.
 # ======================================================================
 import sys
 import os
@@ -105,7 +106,7 @@ class VisualStudio:
 	#
 	def __init__(self, toolset, verbose=0):
 		self.clsname = self.__class__.__name__
-		self.version = '2.2.1'
+		self.version = '2.2.2'
 		#
 		self.verbose = verbose
 		pts, vsv, vsn = self.__get_vsinfo(toolset)
@@ -279,10 +280,16 @@ class VisualStudio:
 			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio '
 			devenvpath += version
 			devenvpath += '/Common7/IDE'
-		else:
+		elif self.vs_version == '15.0':
 			devenvpath = 'C:/Program Files (x86)/Microsoft Visual Studio/'
 			devenvpath += '2017/Community/'
 			devenvpath += 'Common7/IDE'
+		elif self.vs_version >= '16.0':
+			devenvpath = 'C:/Users/kanehori/Application/'
+			devenvpath += 'Common7/IDE'
+		else:
+			# not installed
+			return None
 		if self.verbose:
 			print('  devenv path: %s' % devenvpath)
 		if not os.path.exists(Util.pathconv('%s/devenv.exe' % devenvpath)):

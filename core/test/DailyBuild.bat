@@ -6,7 +6,6 @@ setlocal enabledelayedexpansion
 ::
 ::	OPTIONS:
 ::	    --do-not-clone:	クローンを実行せず既存のレポジトリを使用する.
-::				--hook オプションより前に指定すること.
 ::	    --hook:		クローン後, "DailyBuildHook\hook.bat" が適用
 ::				される.
 ::	    -c conf:		Configurations (Debug | Release).
@@ -55,10 +54,12 @@ setlocal enabledelayedexpansion
 ::  VERSION
 ::     Ver 1.0   2021/05/10 F.Kanehori	バッチファイルの再構築.
 ::     Ver 1.1   2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
+::     Ver 2.0   2022/01/26 F.Kanehori	DailyBuild.py の機能を吸収.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%CD%
 set DEBUG=0
+set START_AT_TESTDIR=0
 
 set CLONE=yes
 set HOOK=no
@@ -68,6 +69,7 @@ set HOOK=no
 ::	引数の解析
 ::
 set OPTS=
+set SETUPFILE=setup.conf
 :loop1
 	if "%1" == "-h"		(call :usage & exit /b)
 	if "%1" == "--help"	(call :usage & exit /b)
@@ -76,6 +78,10 @@ set OPTS=
 	if "%1" == "-c"	 (set OPTS=!OPTS! %1 %2 & shift & shift & goto :loop1)
 	if "%1" == "-p"	 (set OPTS=!OPTS! %1 %2 & shift & shift & goto :loop1)
 	if "%1" == "-t"	 (set OPTS=!OPTS! %1 %2 & shift & shift & goto :loop1)
+	if "%1" == "-s"	 (set SETUPFILE=%1& shift & goto :loop1)
+	if "%1" == "-S"	 (set FLAG[S]=true& shift & goto :loop1)
+	if "%1" == "-D"	 (set FLAG[D]=true& shift & goto :loop1)
+	if "%1" == "-v"	 (set FLAG[v]=true& shift & goto :loop1)
 
 if not "%2" == "" (set RESULT_REPOSITORY=%2)
 if not "%1" == "" (set TEST_REPOSITORY=%1)
@@ -92,9 +98,10 @@ set CLONE=%CLONE: =%
 set HOOK=%HOOK: =%
 echo test repository:   [%TEST_REPOSITORY%]
 echo result repository: [%RESULT_REPOSITORY%]
-echo opts:  [%OPTS%]
-echo clone: [%CLONE%]
-echo hook:  [%HOOK%]
+echo opts:   [%OPTS%]
+echo clone:  [%CLONE%]
+echo hook:   [%HOOK%]
+echo dryrun: [%FLAG[D]%]
 if "%HOOK%" neq "no" (
 	if not exist %HOOKFILE% (
 		echo --hook specified, but "%HOOKFILE%" does not exist.
@@ -111,7 +118,11 @@ if %DEBUG% neq 0 (
 ::  Step 1
 ::	必要なツールの確認
 ::
-call :abspath DailyBuildTestTools
+set PREFIX=
+if %START_AT_TESTDIR% == 1 (
+	set PREFIX=..\..\..\
+)
+call :abspath %PREFIX%DailyBuildTestTools
 set TOOLSBASE=%$result%
 set PYTHON=%TOOLSBASE%\Python\python.exe
 set NKF=%TOOLSBASE%\bin\nkf.exe
@@ -148,7 +159,7 @@ git clone --recurse-submodules %REMOTE_REPOSITORY% %TEST_REPOSITORY%
 
 :: ---------------------------------------------------------------------
 ::  Step 3
-::	Hook ファイルが存在したらそれを実行する.
+::	Hook ファイルが存在したらそれをコピーする.
 ::
 :apply_hook
 if "%HOOK%" neq "no" (
@@ -158,17 +169,42 @@ if "%HOOK%" neq "no" (
 
 :: ---------------------------------------------------------------------
 ::  Step 4
+::	セットアップを実行する (-S オプション指定時のみ)
+::
+if "%FLAG[S]%" == "true" (
+	echo execute setup process ^(-S^)
+	call :abspath %PREFIX%%TEST_REPOSITORY%\core\src
+	cd !$result!
+	set ARGS=-R %TEST_REPOSITORY% -f -d 1 -s %SETUPFILE% %FLAG[-v]%
+	call :exec setup !ARGS!
+	if not !ERRORLEVEL! equ 0 (
+		echo setup failed ^(!ERRORLEVEL!^)
+		exit /b
+	)
+)
+
+:: ---------------------------------------------------------------------
+::  Step 5
 ::	テストを実行する
 ::
-cd %TEST_REPOSITORY%\core\test
-echo %PROG%: test directory: "%CD%"
-echo %PYTHON% DailyBuild.py -A -f %OPTS% %TEST_REPOSITORY% %RESULT_REPOSITORY%
-%PYTHON% DailyBuild.py -A -f %OPTS% %TEST_REPOSITORY% %RESULT_REPOSITORY%
+call :abspath %PREFIX%%TEST_REPOSITORY%\core\test
+cd !%$result%!
+echo test directory: "%CD%"
+set ARGS=%OPTS% %FLAG[v]% %TEST_REPOSITORY% %RESULT_REPOSITORY%
+if %DEBUG% equ 1 (
+	set ARGS=%ARGS% -X
+)
+call :exec %PYTHON% TestMainGit.py %ARGS%
 
 endlocal
 exit /b
 
 :: ---------------------------------------------------------------------
+:exec
+	echo %*
+	if not "%FLAG[D]%" == "true" (%*)
+	exit /b
+
 :abspath
 	set $result=%~f1
 	exit /b
@@ -177,8 +213,12 @@ exit /b
 	echo DailyBuild [options] [test-repository [result-repository]]
 	echo+
 	echo options:
-	echo     --do-not-clone: do not clone source tree (must be first option).
+	echo     --do-not-clone: do not clone source tree.
 	echo     --hook file:    apply hook script.
+	echo     -c conf:        Configurations (Debug ^| Release).
+	echo     -p plat:        Platform (x86 ^| x64).
+	echo     -s file:        Setup file name (default: setup.conf).
+	echo     -t tool:        Visual Studio toolset ID. (Windows only)
 	echo+
 	echo arguments:
 	echo     test_repository:   test repository (default: Springhead)

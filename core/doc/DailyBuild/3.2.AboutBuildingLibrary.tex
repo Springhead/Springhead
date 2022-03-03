@@ -1,0 +1,166 @@
+% 3.3.AboutBuildingLibrary.tex
+%	Last update: 2022/02/10 F.Kanehori
+
+%\newpage
+\subsection{Springheadライブラリビルドの流れ}
+\label{subsec:AboutBuildingLibrary}
+
+% -----------------------------------------------------------------------
+\subsubsection{RunSwig}
+\label{subsubsec:RunSwig}
+% -----------------------------------------------------------------------
+\begin{narrow}[s]
+	Visual Studio でのビルドにあたっては、
+	セットアップの実行は不要である
+	(Visual Studio は nmake などのパスを自前で組み込んでくれるので
+	セットアップ情報は必要ない)。
+	しかし、各スクリプトをcmake版でも使えるようにする必要から、
+	各スクリプトの中でセットアップファイルの有無を確認するコードが
+	組み込まれている(\tt{if SetupExists}など)。
+	これらは無視すること。
+\end{narrow}
+\medskip
+ディレクトリは\Path{<topdir>/core/src/RunSwig}。\\
+RunSwigはmakeプロジェクトで、実行されるコマンドは次のとおり。
+\begin{narrow}
+	build　→　\cmnd{nmake /NOLOGO -f Makefile.win}\\
+  	clean　→　\cmnd{..\do\_python.bat RunSwig\_clean.py --RunSwig}
+\end{narrow}
+			
+\medskip
+処理の概要
+
+\begin{enumerate}
+  \item	build (\Path{Makefile.win})\\
+	ターゲット設定
+	\skip{-0.3}
+	\begin{narrow}
+	\begin{tabular}{l@{\Hskip{10pt}}l}
+	    \tt{all}:	  & \tt{PreWork RunSwig}\\
+	    \tt{PreWork}: & \tt{ClosedSrcCtl \$(SCILABSTUBHDR) \$(FWOLDSPRSTUB)}
+	\end{tabular}
+	\end{narrow}
+	\begin{Description}{ターゲット \tt{ClosedSrcCtl}}
+		スクリプト\Path{.\BS CheckClosedSrc.py}を実行して、
+		closed sourceを使用してビルドするか否かを制御する。\\
+		\Path{<topdir>\BS core\BS include}に
+		\Path{SprUseClosedSrcOrNot.h}が存在しないときに限り、
+		次の内容を
+		\begin{narrow}
+			\Path{<topdir>\BS core\BS include\BS SprUseClosedSrcOrNot.h}
+		\end{narrow}
+		として書き出す
+		(\Path{<topdir>/core/test/bin}にテンプレートファイルが
+		あるのでそれをコピーする)。
+		\begin{narrow}{\small{%
+			\begin{tabular}{l@{ → }l}
+			    \Path{<topdir>\BS closed}が存在する
+				& \tt{"\#define USE\_CLOSED\_SRC"}\\
+  			    \Path{<topdir>\BS closed}が存在しない
+				& \tt{"\#undef USE\_CLOSED\_SRC"}
+			\end{tabular}
+		}}\end{narrow}
+		\skip{.5}
+		\Path{SprUseClosedSrcOrNot.h}は、
+		\Path{SprDefs.h}から\tt{\#include}される。
+	\end{Description}
+	\begin{Description}{ターゲット \tt{\$(SCILABSTUBHDR)}}
+		スクリプト\Path{..\BS Foundation\BS ScilabSwig.py}を実行する。\\
+		Scilabモジュールについて、
+		\cmnd{swig}を実行するためのmakefileを作成し、
+		\cmnd{make}を実行する\\
+		(\Path{Scilab.i} → 
+		\Path{..\BS ..\BS include\BS Scilab\BS ScilabStub.hpp})。\\
+		ただし、\Path{ScilabStub.hpp}は、\Path{dll.cpp}を
+		移植しないと作成できないので、
+		\cmnd{make}は実行できない(\cmnd{make clean}も実行できない)。\\
+		実際には、\Path{Scilab.i}及び\Path{ScilabStub.hpp}は
+		作成済みのものがコミットされているので、
+		このターゲット自体が実行されない。
+	\end{Description}
+	\begin{Description}{ターゲット \tt{\$(FWOLDSPRSTUB)}}
+		スクリプト\Path{RunSwigFramework.py}を実行する。\\
+		作業領域として\Path{.\BS tmp\BS}を使用する。\\
+		このターゲットは次のファイルを作成する。\\
+		\begin{tabular}{@{\Hskip{10pt}}ll}
+		    \Path{FWOldSpringhead.i} & {\small (作業領域のみ)}\\
+		    \Path{FWOldSpringheadStub.makefile}
+					& {\small (作業領域のみ)}\\
+		    \Path{...\BS include\BS SprFWOldSpringheadDecl.hpp}
+					& {\small (作業領域からコピー)}\\
+		    \Path{...\BS src\BS FWOldSpringheadDecl.hpp}
+					& {\small (作業領域からコピー)}\\
+		    \Path{...\BS src\BS FWOldSpringheadStub.cpp}
+					& {\small (作業領域からコピー)}\\
+		\end{tabular}
+	\end{Description}
+	\begin{Description}{ターゲット \tt{RunSwig}}
+		スクリプト\Path{do\_swigall.py}を実行する。\\
+		この中で\Path{.\BS RunSwig\_method.py}がインクルードされる。\\
+		処理対象とするプロジェクト(Collision, Creature, ...)の
+		各々について、次の処理を行なう(Baseは除外)。
+		\begin{narrow}[20pt]
+		    処理対象プロジェクト\tt{<proj>}のディレクトリに移動して
+		    \Func{RunSwig}を呼び出す。これにより
+		    \begin{itemize}
+			\item \tt{"<proj>.i"}の生成
+				(この時点でのヘッダファイル情報を収集する)
+			\item \tt{"<proj>Stub.makefile"}の生成
+			\item \cmnd{make "<proj>Stub.makefile"}の実行
+		    \end{itemize}
+  		    が行なわれ、条件が満たされれば\cmnd{swig}が実行される。
+		\end{narrow}
+	\end{Description}
+
+  \item	clean (\Path{..\BS do\_python.bat RunSwig\_clean.py})\\
+	Visual Studioでソリューションのクリーンを実行しても、
+	RunSwigが作成したファイルは削除されずに残ってしまう。
+	このため、これらのファイルを削除するためのスクリプトを用意して
+	RunSwigのクリーンから呼び出している。
+
+	\Path{RunSwig\_clean.py}には2つのオプションがある。\\
+	\def\wid{240pt}
+	\begin{tabular}{@{\Hskip{10pt}}ll}
+	    \tt{-C, --cmake} & \FCol{\wid}{%
+		\tt{cmake}が作成したファイル
+			(サイズ0のダミーファイル)を削除する。}\\
+	    \tt{-R, --RunSwig} & \FCol{\wid}{%
+		RunSwigが作成したファイル(次のもの)を削除する。\\
+		{\small
+	  	\tt{<proj>Stub.makefile, <proj>.i, <proj>Stub.cpp,}\\
+	  	\tt{<proj>Decl.hpp, swig\_spr.log,}\\
+	  	\tt{.../include/FWOldSpringhead,}\\
+	  	\tt{.../src/Framework/FWOldSpringheadStub.cpp,}\\
+	  	\tt{.../src/Framework/FWOldSpringheadDecl.hpp,}}}
+	\end{tabular}\\
+	\skip{.2}
+	ただし、\tt{-C}オプションは現在は使用していない
+	(\file{CMakeLists.txt}で解決済み)。
+\end{enumerate}
+
+% -----------------------------------------------------------------------
+\subsubsection{Springhead}
+\label{subsubsec:Springhead}
+% -----------------------------------------------------------------------
+ディレクトリは\Path{<topdir>\BS core\BS src"}。\\
+Springheadはmakeプロジェクトで、実行されるコマンドは
+\begin{narrow}
+	build　→　\cmnd{SpringheadLib.bat x64 16.0x64} など\\
+  	clean　→　\cmnd{del ..\BS ..\BS generated\BS lib\BS win64\BS 
+			pringhead16.0x64.lib} など
+\end{narrow}
+である。
+	
+\begin{Description}{build}
+	スクリプト\Path{.\BS Springhead.bat}を実行する。\\
+	\begin{tabular}{@{\Hskip{10pt}}ll}
+	    第1引数 & platform (\tt{x86}/\tt{win32}または\tt{x64}/\tt{win64})\\
+	    第2引数 & 構成等識別情報 (\tt{[VS-version]+[configuration]+[platform]})
+	\end{tabular}
+
+	各プロジェクトのディレクトリにある\Path{.lib}を集めて
+	\Path{Springhead<ext>.lib}を作成する。
+	ここで\tt{<ext>}は構成等識別情報 (第2引数)。
+\end{Description}
+
+% end: 3.3.AboutBuildingLibrary.tex
