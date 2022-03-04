@@ -351,12 +351,19 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 
 		// 形状を描画
-		if(renderSolid){
+		if (renderSolid) {
 			Mat matSolid = GetSolidMaterial(solids[i]);
-			if(matSolid.mat == -1)
+			if (matSolid.mat == -1)
 				matSolid = GetAutoMaterial(i);
 			render->SetMaterial(matSolid.mat, matSolid.alpha);
+			if (matSolid.alpha < 1.0f) {
+				render->SetAlphaTest(true);
+				render->SetAlphaMode(GRRenderBaseIf::BF_SRCALPHA, GRRenderBaseIf::BF_INVSRCALPHA);
+			}
 			DrawSolid(render, solids[i], true);
+			if (matSolid.alpha < 1.0f) {
+				render->SetAlphaTest(false);
+			}
 		}
 		if(renderWire){
 			Mat matWire  = GetWireMaterial(solids[i]);
@@ -1292,9 +1299,12 @@ void FWScene::SetSolidMaterial(int mat, float alpha, PHSolidIf* solid) {
 	matSolid[solid] = Mat(mat, alpha);
 }
 
-void FWScene::SetWireMaterial(int mat, PHSolidIf* solid){
+void FWScene::SetWireMaterial(int mat, PHSolidIf* solid) {
 	matWire[solid] = Mat(mat, 1);
-}	
+}
+void FWScene::SetWireMaterial(int mat, float alpha, PHSolidIf* solid) {
+	matWire[solid] = Mat(mat, alpha);
+}
 void FWScene::EnableRenderAxis(bool world, bool solid, bool con){
 	renderAxisWorld = world;
 	renderAxisSolid = solid;
@@ -1386,7 +1396,7 @@ bool FWScene::IsRenderEnabled(ObjectIf* obj){
 		return it->second;
 	return true;
 }
-Mat FWScene::GetSolidMaterial(PHSolidIf* solid){
+FWScene::Mat FWScene::GetSolidMaterial(PHSolidIf* solid){
 	// 最初に特定のsolidにあてられたマテリアルがあるか調べ，
 	// なければ次に0 (全剛体)のマテリアルを調べ，
 	// どちらもなければ-1を返す
@@ -1397,19 +1407,19 @@ Mat FWScene::GetSolidMaterial(PHSolidIf* solid){
 	it = matSolid.find(0);
 	if(it != matSolid.end())
 		return it->second;
-	return -1;
+	return Mat(-1, 1);
 }
-Mat FWScene::GetWireMaterial(PHSolidIf* solid){
-	std::map<PHSolidIf*, int>::iterator it;
+FWScene::Mat FWScene::GetWireMaterial(PHSolidIf* solid){
+	std::map<PHSolidIf*, FWScene::Mat>::iterator it;
 	it = matWire.find(solid);
 	if(it != matWire.end())
 		return it->second;
 	it = matWire.find(0);
 	if(it != matWire.end())
 		return it->second;
-	return -1;
+	return Mat(-1, 1);
 }
-Mat FWScene::GetAutoMaterial(int i){
+FWScene::Mat FWScene::GetAutoMaterial(int i){
 	/// iがひとつ増えるたびに色系統が変わるように色を選択する
 	const int colorGroups		= 8;  // 系統の数　　　白、灰色系は避けたので８系統
 	const int colorsPerGroup	= 5;  // 系統内の色数　オレンジ系が５色しかないのであわせる

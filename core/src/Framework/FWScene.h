@@ -46,7 +46,7 @@ public:
 class FWScene : public Scene, public FWSceneDesc {
 public:
 	struct Mat {
-		Mat(int m, double a):mat(m), alpha(a){}
+		Mat(int m=-1, float a=1):mat(m), alpha(a){}
 		int mat;
 		float alpha;
 	};
@@ -161,7 +161,8 @@ public:
 	void	EnableRender		(ObjectIf* obj, bool enable);
 	void	SetSolidMaterial(int mat, PHSolidIf* solid);
 	void	SetSolidMaterial(int mat, float alpha, PHSolidIf* solid);
-	void	SetWireMaterial		(int mat, PHSolidIf* solid);
+	void	SetWireMaterial(int mat, PHSolidIf* solid);
+	void	SetWireMaterial(int mat, float alpha, PHSolidIf* solid);
 
 	void	EnableRenderAxis	(bool world, bool solid, bool con);
 	void	SetAxisMaterial		(int matX, int matY, int matZ);

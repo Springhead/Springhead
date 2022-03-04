@@ -260,7 +260,10 @@ void GRRender::SetMaterial(int matname) {
 void GRRender::SetMaterial(int matname, float alpha) {
 	if (0 <= matname && matname < GRRenderIf::MATERIAL_SAMPLE_END){
 		GRMaterialDesc mat = matSample[matname];
+		mat.ambient[3] = alpha;
 		mat.diffuse[3] = alpha;
+		mat.emissive[3] = alpha;
+		mat.specular[3] = alpha;
 		SetMaterial(mat);
 	}
 }
