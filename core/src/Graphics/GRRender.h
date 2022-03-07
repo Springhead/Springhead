@@ -168,7 +168,8 @@ public:
 	virtual void DrawFont(Vec3f pos, const std::string str){}
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){}
-	virtual void SetMaterial(int matname){}
+	virtual void SetMaterial(int matname) {}
+	virtual void SetMaterial(int matname, float alpha) {}
 	virtual void SetPointSize(float sz, bool smooth = false){}
 	virtual void SetLineWidth(float w, bool smooth = false){}
 	virtual void PushLight(const GRLightDesc& light){}
@@ -323,6 +324,7 @@ public:
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 
 	virtual void SetMaterial(int matname);
+	virtual void SetMaterial(int matname, float alpha);
 	Vec4f	GetReservedColor(int matname){ return matSample[matname].diffuse; }
 	
 	Vec2f GetPixelSize();

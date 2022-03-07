@@ -180,7 +180,9 @@ public:
 		solidにNULLを指定すると全ての剛体が対象となる．
 	 */
 	void SetSolidMaterial(int mat, PHSolidIf* solid = 0);
-	void SetWireMaterial (int mat, PHSolidIf* solid = 0);
+	void SetSolidMaterial(int mat, float alha, PHSolidIf* solid = 0);
+	void SetWireMaterial(int mat, PHSolidIf* solid = 0);
+	void SetWireMaterial(int mat, float alha, PHSolidIf* solid = 0);
 
 	/// 座標軸の描画切り替え
 	void EnableRenderAxis(bool world = true, bool solid = true, bool con = true);

@@ -253,9 +253,19 @@ void GRRender::Reshape(Vec2f pos, Vec2f screen){
 	if (yIsZero) { camera.size.y = 0; }
 	if (xIsZero) { camera.size.x = 0; }
 }
-void GRRender::SetMaterial(int matname){
-	if(0 <= matname && matname < GRRenderIf::MATERIAL_SAMPLE_END)
+void GRRender::SetMaterial(int matname) {
+	if (0 <= matname && matname < GRRenderIf::MATERIAL_SAMPLE_END)
 		SetMaterial(matSample[matname]);
+}
+void GRRender::SetMaterial(int matname, float alpha) {
+	if (0 <= matname && matname < GRRenderIf::MATERIAL_SAMPLE_END){
+		GRMaterialDesc mat = matSample[matname];
+		mat.ambient[3] = alpha;
+		mat.diffuse[3] = alpha;
+		mat.emissive[3] = alpha;
+		mat.specular[3] = alpha;
+		SetMaterial(mat);
+	}
 }
 void GRRender::SetCamera(const GRCameraDesc& c){
 	Vec2f vpsize = GetViewportSize();

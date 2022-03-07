@@ -45,6 +45,12 @@ public:
 ///	GraphicsとPhysicsのSceneをまとめたシーングラフ全体
 class FWScene : public Scene, public FWSceneDesc {
 public:
+	struct Mat {
+		Mat(int m=-1, float a=1):mat(m), alpha(a){}
+		int mat;
+		float alpha;
+	};
+
 	SPR_OBJECTDEF(FWScene);
 	ACCESS_DESC(FWScene);
 
@@ -82,7 +88,7 @@ public:
 	float		scaleIK;
 
 	/// 描画マテリアル
-	std::map<PHSolidIf*, int>	matSolid, matWire;
+	std::map<PHSolidIf*, Mat>	matSolid, matWire;
 	Vec3i		matAxis;
 	int			matForce, matMoment;
 	int			matContact;
@@ -153,8 +159,10 @@ public:
 
 	void	SetRenderMode		(bool solid, bool wire);
 	void	EnableRender		(ObjectIf* obj, bool enable);
-	void	SetSolidMaterial	(int mat, PHSolidIf* solid);
-	void	SetWireMaterial		(int mat, PHSolidIf* solid);
+	void	SetSolidMaterial(int mat, PHSolidIf* solid);
+	void	SetSolidMaterial(int mat, float alpha, PHSolidIf* solid);
+	void	SetWireMaterial(int mat, PHSolidIf* solid);
+	void	SetWireMaterial(int mat, float alpha, PHSolidIf* solid);
 
 	void	EnableRenderAxis	(bool world, bool solid, bool con);
 	void	SetAxisMaterial		(int matX, int matY, int matZ);
@@ -197,9 +205,9 @@ public:
 	void	DrawFaceWire		(GRRenderIf* render, CDFaceIf* face, Vec3f * base);
 	void	DrawForce			(GRRenderIf* render, const Vec3d& f, const Vec3d& t);
 	bool	IsRenderEnabled		(ObjectIf* obj);
-	int		GetSolidMaterial	(PHSolidIf* solid);
-	int		GetWireMaterial		(PHSolidIf* solid);
-	int		GetAutoMaterial		(int i);
+	Mat		GetSolidMaterial	(PHSolidIf* solid);
+	Mat		GetWireMaterial		(PHSolidIf* solid);
+	Mat		GetAutoMaterial		(int i);
 	
 	/** HumanInterface系関数
 	 */

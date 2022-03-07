@@ -432,6 +432,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetMaterial(const GRMaterialIf* mat);
 	/// 描画マテリアルの設定（予約マテリアルの名前で指定）
 	void SetMaterial(int matname);
+	/// 描画マテリアルの設定（予約マテリアルの名前とアルファ値で指定）
+	void SetMaterial(int matname, float alpha);
 	/** @brief 描画する点の大きさの設定
 		@param sz		大きさ
 		@param smooth	アンチエイリアシングするか
