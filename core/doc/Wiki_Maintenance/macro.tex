@@ -1,5 +1,5 @@
 % macro.tex
-%	Last update: 2017/03/06 F.Kanehori
+%	Last update: 2022/03/07 F.Kanehori
 
 \makeatletter
 
@@ -32,8 +32,22 @@
 % other alias
 \let\URL\tt
 
-% dimensions
-\def\HSKIP{\hspace{2ZW}}
+%% force vertical mode
+%  \begin{Vmode} ... \end{Vmode}
+%
+\def\Vmode{\ifvmode\relax\else\par\hrule width 0pt height .5\baselineskip\fi}
+\def\endVmode{\relax\par}
+
+%% spaces
+%  \Vskip{amount}
+%  \Hskip{amount}
+%	amount		amount of skip (dimen)
+%
+\def\Vskip#1{\begin{Vmode}\vspace{#1}\end{Vmode}}
+\let\Hskip\hspace
+\def\skip#1{\Vskip{#1\baselineskip}}
+\def\medskip{\skip{0.5}}
+\def\bigskip{\skip{2.0}}
 
 % abbreviations
 \def\RARROW{$\rightarrow$}
@@ -76,19 +90,44 @@
 
 % styles for function description
 %
-\def\FuncDesc{\medskip\begingroup\begin{narrow}[10pt]}
-\def\endFuncDesc{\end{narrow}\endgroup}
+\def\FuncDesc{\medskip\begingroup\begin{narrow}[10pt]
+	äTóv
+	\begin{narrow}[10pt]
+	\setlength\itemsep{.5em}}
+\def\endFuncDesc{\end{narrow}\end{narrow}\endgroup}
 
 \def\FuncArgs{\medskip\begingroup\begin{narrow}[10pt]
-	\bf{à¯êî}\\
+	à¯êî\\
 	\begin{tabular}{@{\hspace{15pt}}ll}}
 \def\endFuncArgs{\end{tabular}\end{narrow}\endgroup}
 
 \def\FuncProc{\medskip\begingroup\begin{narrow}[10pt]
-	\bf{èàóù}
-	\begin{narrow}[8pt]\begin{enumerate}
+	èàóù
+	\begin{narrow}[10pt]\begin{enumerate}
 	\setlength\itemsep{.5em}}
 \def\endFuncProc{\end{enumerate}\end{narrow}\end{narrow}\endgroup}
+
+%% description environment (title line + narrowed body)
+%  \begin{Description}[font][indent]{title}
+%  \end{Description}
+%
+\def\Description{\@ifnextchar[{\Description@}{\Description@@[r][20pt]}}
+\def\Description@[#1]{\@ifnextchar[{\Description@@[#1]}{\Description@@[#1][20pt]}}
+\def\Description@@[#1][#2]#3{\begin{GeneralBox}[#1][#2]{#3}}
+\def\endDescription{\end{GeneralBox}}
+
+%% general purpose vertical box
+%  \begin{GeneralBox}[font][indent]{title}
+%	font		t(t), i(t), b(f), r(m), g(t), m(c)
+%	indent		indent width (default: \WID)
+%  \end{GeneralBox}
+%
+\def\GeneralBox{\@ifnextchar[{\GeneralBox@check}{\GeneralBox@@[r][\WID]}}
+\def\GeneralBox@check[#1]{%
+	\@ifnextchar[{\GeneralBox@@[#1]}{\GeneralBox@@[#1][\WID]}}
+\def\GeneralBox@@[#1][#2]#3{%
+	\vskip 0.2\baselineskip\noindent\Use@font{#1}{#3}\begin{narrow}[#2]}
+\def\endGeneralBox{\end{narrow}\relax}
 
 % narrower[size][margin]{body}
 %	charsize:	t, f, s, [n]

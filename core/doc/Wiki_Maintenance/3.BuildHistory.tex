@@ -1,7 +1,7 @@
 % BuildHistory.tex
-%	Last update: 2017/03/06 F.Kanehori
+%	Last update: 2022/03/07 F.Kanehori
 \newpage
-\section{build_history.inc.php}
+\section{build\_history.inc.php}
 \label{sec:BuildHistory}
 
 % -----------------------------------------------------------------------
@@ -11,25 +11,25 @@
 	過去のビルドの履歴ページの内容の作成
 	\begin{narrow}[20pt]\begin{minipage}{.9\textwidth}
 	\dirtree{%
-		.1 {\hspace{-10mm}\FUNC{\#build_history(http GET method) in Wiki page}}.
-		.2 plugin_build_history_action().
-		.3 build_history_get_options().
-		.3 build_history_make_link().
-		.4 build_history_make_uri().
-		.5 build_history_get_options().
-		.4 build_history_display_unit().
-		.3 build_history_make_link2().
-		.4 build_history_make_uri().
-		.5 build_history_get_options().
-		.3 build_history_make_table().
-		.4 build_history_display_unit().
-		.4 build_history_get_head_info().
-		.5 build_history_get_repository_url().
-		.4 build_history_get_one().
-		.5 build_history_get_repository_url().
-		.4 build_history_make_array().
-		.4 build_history_edit_one().
-		.4 build_history_make_inner_table().
+		.1 {\hspace{-10mm}\FUNC{\#build\_history(http GET method) in Wiki page}}.
+		.2 plugin\_build\_history\_action().
+		.3 build\_history\_get\_options().
+		.3 build\_history\_make\_link().
+		.4 build\_history\_make\_uri().
+		.5 build\_history\_get\_options().
+		.4 build\_history\_display\_unit().
+		.3 build\_history\_make\_link2().
+		.4 build\_history\_make\_uri().
+		.5 build\_history\_get\_options().
+		.3 build\_history\_make\_table().
+		.4 build\_history\_display\_unit().
+		.4 build\_history\_get\_head\_info() // comment out.
+		.5 build\_history\_get\_repository\_url().
+		.4 build\_history\_get\_one().
+		.5 build\_history\_get\_repository\_url() // comment out.
+		.4 build\_history\_make\_array().
+		.4 build\_history\_edit\_one().
+		.5 build\_history\_make\_inner\_table().
 	}
 	\end{minipage}\end{narrow}
 
@@ -39,12 +39,12 @@
 	\dirtree{%
 		.1 {\hspace{-10mm}\tt{%
 		[[過去のビルドの履歴\orgRA \{今朝|Samples\}のビルドの履歴]] in Wiki page}}.
-		.2 plugin_build_history_convert().
-		.3 build_history_get_options().
-		.3 build_history_urlencode().
-		.4 build_history_urlencode_1().
-		.5 build_history_urlencode_1() // recurse.
-		.3 build_history_query_to_array().
+		.2 plugin\_build\_history\_convert().
+		.3 build\_history\_get\_options().
+		.3 build\_history\_urlencode() // comment out.
+		.4 build\_history\_urlencode\_1() // comment out.
+		.5 build\_history\_urlencode\_1() // recurse.
+		.3 build\_history\_query\_to\_array().
 	}
 	\end{minipage}\end{narrow}
 \end{narrow}
@@ -52,19 +52,19 @@
 % -----------------------------------------------------------------------
 \subsection{関数の説明}
 % -----------------------------------------------------------------------
-\subsubsection{build_history_get_options()}
+\subsubsection{build\_history\_get\_options()}
 
 \begin{FuncDesc}
-build_historyで共通に使用するパラメータの初期値を決める。
+次の共通パラメータの初期値を決める。
 
-\tt{cookie_usage}:
+\tt{cookie\_usage}:
 \begin{narrow}
-       	\FUNC{plugin_build_action()}にパラメータをcookieで渡すなら
-	\TT{1}とする。\TT{0}ならばパラメータはqueryで渡されるものとする。
+       	\FUNC{plugin\_build\_action()}にパラメータを渡す方式をcookieと
+	するなら\TT{1}、queryとするなら\TT{0}とする。
        	ただし\Tt{"base"}, \tt{"file"}, \tT{"referer"}以外のパラメータは
 	動的に設定するため、常にqueryで渡されるものとする。
 \end{narrow}
-\tt{delayed_jump}:
+\tt{delayed\_jump}:
 \begin{narrow}
        	「今朝のビルドの履歴」及び「Samplesのビルドの履歴」のページを
 	表示するためのパラメータ。
@@ -72,24 +72,24 @@ build_historyで共通に使用するパラメータの初期値を決める。
 	表示する。
 	\VAR{msec}の設定値は5000 (5秒)。
 	(\ref{func:history:convert}
-	\FUNC{plugin_build_history_convert()}参照)
+	\FUNC{plugin\_build\_history\_convert()}参照)
 \end{narrow}
 \end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{plugin_build_history_action()}
+\subsubsection{plugin\_build\_history\_action()}
 \label{func:history:action}
 
 \begin{FuncDesc}
-Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
-エントリーポイント。
-ページとして表示するhtmlを生成する。
+Wikiからこのpluginが\Tt{GET} methodで呼び出されたときのエントリーポイント。
+表示するページのhtmlを生成する。
 \end{FuncDesc}
 
 \begin{FuncProc}
-  \item	共通パラメータ\TT{cookie_usage}の値に従ってcookie又はqueryから
-	パラメータを取り出す。\\
-	\begin{tabular}{ll}
+  \item	共通パラメータ\TT{cookie\_usage}の値に従ってcookie又はqueryから
+	パラメータを取り出す。
+	\begin{spacing}{0.9}\skip{-0.3}
+	\begin{longtable}{ll}
 	    \VAR{base} & \VAR{file}があるディレクトリ名 \\
 	    \VAR{file} & 履歴ファイル名(\FILE{History.log}) \\
 	    \VAR{type} & ページ種別(1: 今朝のビルド、2: Samplesのビルド) \\
@@ -99,26 +99,23 @@ Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
 	    \VAR{sort} & 表示のソート順序
 			 (\tt{"succ"} or \tt{"revision"}) \\
 	    \VAR{referer} & 呼出し元URL (サーバが設定する)
-	\end{tabular}
+	\end{longtable}
+	\end{spacing}\skip{-0.7}
 	\label{func:action:getparam}
 
-  \item	ページタイトル\VAR{pagetitle}の設定
+  \item	ページのタイトル\VAR{pagetitle}と見出し\VAR{text}を設定する。
 	\label{func:action:pagetitle}
 
-  \item	ページ本体\VAR{text}の初期化(style id には\TT{"content_1_0"}を使用)
-
-  \item	表示切り替え指定リンク\VAR{links}の作成(table tag)\\
-	\begin{tabular}{ll}
-	    表示範囲指定 & \FUNC{build_history_make_link()} で作成する。 \\
-	    表示順序指定 & \FUNC{build_history_make_link2()} で作成する。
+  \item	表示切り替え指定リンク\VAR{links}を作成する(\TAG{table}\CDOTS \TAG{/table})。\\
+	\begin{tabular}{l@{ → }l}
+	    表示範囲指定 & \FUNC{build\_history\_make\_link()} で作成 \\
+	    表示順序指定 & \FUNC{build\_history\_make\_link2()} で作成
 	\end{tabular}
 
-  \item	履歴テーブル\VAR{table}の作成(\TAG{table}\CDOTS \TAG{/table})	\\
-	\begin{tabular}{l}
-	    \FUNC{build_history_make_table()}で作成する。
-	\end{tabular}
+  \item	履歴テーブル\VAR{table}を\FUNC{build\_history\_make\_table()}で作成する
+	(\TAG{table}\\\CDOTS \TAG{/table})。
 
-  \item	関連ページリンク\VAR{trailer}の作成
+  \item	関連ページリンク\VAR{trailer}を作成する。
 	\label{func:action:pagelink}
 
   \item	\VAR{msg}にページタイトルを、\VAR{body}に上記
@@ -127,134 +124,129 @@ Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
 \end{FuncProc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_make_uri(\$base, \$file, \$type, \$span, \$unit, \$sort, \$referer)}
+\subsubsection{build\_history\_make\_uri(\$base, \$file, \$type, \$span, \$unit, \$sort, \$referer)}
 
-\begin{FuncArgs}
-	\multicolumn{2}{l}{\hspace{11pt}%
-	    \ref{func:history:action} \FUNC{plugin_build_history_action()}
-	    の\ref{func:action:getparam}.項参照}
-\end{FuncArgs}
-
-\begin{FuncProc}
-  \item	与えられた引数に従ってURIを作成する(\tt{GET} method)。
-	\tT{cookie_usage}の値によりqueryが異なる。
-\end{FuncProc}
+\begin{FuncDesc}
+	与えられた引数に従ってURIを作成する(\tt{GET} method)。
+	\tT{cookie\_usage}の値によりqueryが異なる。
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_make_link(\$base, \$file, \$type, \$span, \$unit, \$sort, \$referer, \$curr_span)}
+\subsubsection{build\_history\_make\_link(\$base, \$file, \$type, \$span, \$unit, \$sort, \$referer, \$curr\_span)}
 
 \begin{FuncArgs}
-	\multicolumn{2}{l}{\hspace{11pt}%
-	    \ref{func:history:action} \FUNC{plugin_build_history_action()}
-	    の\ref{func:action:getparam}.項参照} \\
-	\VAR{curr_span} & 現在表示中の表示範囲
+	\VAR{curr\_span} & 現在表示中の表示範囲
 \end{FuncArgs}
 
-\begin{FuncProc}
-  \item	与えられた引数に従って表示範囲指定リンクを作成する(\TAG{p}\CDOTS \TAG{/p})
-\end{FuncProc}
+\begin{FuncDesc}
+	過去何ヶ月分を表示するかを指定するリンクを作成する(\TAG{p}\CDOTS \TAG{/p})。
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_make_link2(\$base, \$file, \$type, \$span, \$unit, \$sort, \$referer, \$curr_sort)}
+\subsubsection{build\_history\_make\_link2(\$base, \$file, \$type, \$span, \$unit, \$sort, \$referer, \$curr\_sort)}
 
 \begin{FuncArgs}
-	\multicolumn{2}{l}{\hspace{11pt}%
-	    \ref{func:history:action} \FUNC{plugin_build_history_action()}
-	    の\ref{func:action:getparam}.項参照} \\
-        \VAR{curr_sort} & 現在表示中の表示順序
+        \VAR{curr\_sort} & 現在表示中の表示順序
 \end{FuncArgs}
 
-\begin{FuncProc}
-  \item	与えられた引数に従って表示順序指定リンクを作成する(\TAG{p} \CDOTS \TAG{/p})
-\end{FuncProc}
+\begin{FuncDesc}
+	コミット順で表示するか成功モジュール数順で表示するかを指定する
+	リンクを作成する(\TAG{p} \CDOTS \TAG{/p})。
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_display_unit(\$unit)}
+\subsubsection{build\_history\_display\_unit(\$unit)}
 
 \begin{FuncArgs}
 	\VAR{unit} & 表示範囲の単位(\tt{"month"}, \tt{"week"} or \tt{"day"}）
 \end{FuncArgs}
 
-\begin{FuncProc}
-  \item	表示範囲の単位を表す文字列を返す。
+\begin{FuncDesc}
+	表示範囲の単位を表す文字列を返す。
 	引数が予期せぬ値のときは\TT{"month"}が指定されたものとして扱う。
-\end{FuncProc}
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_make_table(\$base, \$file, \$type, \$span, \$unit, \$sort)}
-
-\begin{FuncArgs}
-	\multicolumn{2}{l}{\hspace{11pt}%
-	    \ref{func:history:action} \FUNC{plugin_build_history_action()}
-	    の\ref{func:action:getparam}.項参照} \\
-\end{FuncArgs}
+\subsubsection{build\_history\_make\_table(\$base, \$file, \$type, \$span, \$unit, \$sort)}
 
 \begin{FuncProc}
-  \item	表示範囲の設定 \\
+  \item	表示範囲を設定する。\\
 	\begin{tabular}{ll}
 	    \VAR{epoch} & レビジョン6364以前にはSamplesの記録がない \\
 	    \VAR{limit} & \VAR{span}で指定された範囲で一番古い日付
 	\end{tabular}
 
-  \item	テーブル見出し\VAR{caption}の作成 \\
-        ※ 最後のtable要素は行間をあけるためのもの
+  \item	テーブル見出し\VAR{caption}を作成する。
 
-  \item	履歴情報の取得 \\
-	\begin{tabular}{ll}
-	    \VAR{head}	    & 最新レビジョンの情報
-			      (\FUNC{build_history_get_head_info()}) \\
-	    \VAR{histories} & 過去レビジョンの情報(履歴ファイルを読む) \\
-	    \VAR{lines}	    & \VAR{head}と\VAR{histories}をまとめたもの
-	\end{tabular}
+  \item	履歴ファイルを読んで過去のコミット情報を\VAR{histories}に取得する。
 
-  \item	履歴情報の解析 \\
-        履歴情報は次のような構造の繰り返しと仮定している
+  \item	\VAR{histories}を解析する。\\
+        コミット情報は次のような構造の繰り返しと仮定している
 	\BEGINQUOTE
-	%\verb/------------------------------------------------------------------------/\\
-	\verb/----------------------------------------------------------------/\\
-	\verb/r<nnnn> | <name> | yyyy-mm-dd hh:mm:ss +0900 .../\\
-	(empty line)\\
-	\verb/Autobuild done./\\
+	\skip{-1.0}
+	\begin{spacing}{0.85}{\small
+	\tt{--[\it{commit-id},\it{long-commit-id},yyyy-mmdd,hh:mm:ss]--}\\
+	\tt{tests}\\
+	ビルド成功 (\it{modules}, \CDOTS)\\
+	ビルド失敗 (\it{modules}, \CDOTS)\\
+	実行成功 (\it{modules}, \CDOTS)\\
+	実行失敗 (\it{modules}, \CDOTS)\\
+	\it{empty line}\\
+	\tt{Samples}\\
+	ビルド成功 (\it{modules}, \CDOTS)\\
+	ビルド失敗 (\it{modules}, \CDOTS)\\
+	実行成功 (\it{modules}, \CDOTS)\\
+	実行失敗 (\it{modules}, \CDOTS)\\
+	}\end{spacing}
+	\skip{-1.0}
 	\ENDQUOTE
-        これらよりレビジョン番号nnnnと日付yyyy--mm--ddを取り出し、
-	配列\VAR{history}にレビジョン番号をキーとして格納する。
+        これらより、
+	コミットID(\it{commit-id})と日付(\tt{yyyy--mmdd})をキーとし、
+	2行目からのモジュール情報(12行分)を値とした配列\VAR{history}を作成する。
+	ただし、同一日付のものは2個目以降を破棄、直前のモジュール情報と
+	同一の場合は``\tt{-*-}''で置き換える。
 
   \item	上で設定した\VAR{history}の各\VAR{revision}, \VAR{date}ペアについて、
 	\begin{enumerate}
-	  \item	\VAR{revision}の\FILE{history.log}の読み出し
+	  \item	\FILE{history.log}から\VAR{revision}の情報を読み出し、
 		\begin{narrow}
-			\VAR{tmp}\LARROW \FUNC{build_history_get_one()} \\
-			\VAR{tmp}のフォーマットは次のとおり \\
+			\VAR{tmp}\LARROW \FUNC{build\_history\_get\_one()}\\
+			\VAR{tmp}のフォーマットは次のとおり\\
+			\skip{-1.0}
+			\begin{spacing}{0.85}{\small
 			\begin{tabular}{lll}
-			    column & 0～3   & レビジョン番号(4桁) \\
-				   & 4～13  & ビルド日付("yyyy-mm-dd") \\
-				   & 14～16 & 成功モジュール数 \\
-				   & 17～19 & エラーモジュール数 \\
-				   & 20～   & 成功モジュール名
+			    column & 0～6   & コミットID (7桁) \\
+				   & 7～15  & ビルド日付("yyyy-mm-dd") \\
+				   & 16～18 & 成功モジュール数 \\
+				   & 19～21 & エラーモジュール数 \\
+				   & 22～   & 成功モジュール名
 			\end{tabular}
+			}\end{spacing}
 		\end{narrow}
-	  \item	ソートキーの作成。ソートキーは、\\
-		\begin{tabular}{ll}
-		    \VAR{sort}が\TT{"revision"}なら & \VAR{tmp}の0～3カラム \\
-		    \VAR{sort}が\TT{"succ"}なら     & \VAR{tmp}の14～16＋0～3カラム
-		\end{tabular}
+		\skip{-.7}
+	  \item	ソートキー
+		\begin{narrow}
+		    \VAR{sort}が\TT{"revision"}なら\VAR{revision}の7～23カラム\\
+		    \VAR{sort}が\TT{"succ"}なら\VAR{tmp}の16～18＋
+		    \VAR{revision}の7～23カラム
+		\end{narrow}
+		を作成し、
 
-	  \item	ソートキーをキーとして\VAR{module}に\VAR{tmp}を格納
+	  \item	ソートキーをキーとして\VAR{moduleis}に\VAR{tmp}を格納する。
 	\end{enumerate}
 
-  \item	\VAR{module}のソート(キーの逆順)
+  \item	\VAR{moduleis}をキーの逆順にソートする。
 
-  \item	テーブルの見出し\VAR{table}の作成
-
-  \item	\VAR{module}の各(\VAR{key}, \VAR{val})ペアについて、
+  \item	\VAR{modules}よりテーブル\VAR{table}を次のようにして作成する。\\
+  	\VAR{modules}の各(\VAR{key}, \VAR{val})ペアについて、
 	\begin{enumerate}
-	  \item	\VAR{val}の20カラム以降(成功モジュール名)の編集
+	  \item	\VAR{val}の23カラム以降(成功モジュール名)を編集
 		\begin{narrow}
-			\VAR{mod_names} \LARROW \ \FUNC{build_history_make_array()}
+			\VAR{mod\_names} \LARROW \ \FUNC{build\_history\_make\_array()}
 		\end{narrow}
-	  \item	\VAR{val}と組み合わせて表示1行分の編集
+	  \item	\VAR{val}と組み合わせて表示1行分を編集
 		\begin{narrow}
-			\VAR{table} \LARROW \ \FUNC{build_history_edit_one()}
+			\VAR{table} \LARROW \ \FUNC{build\_history\_edit\_one()}
 		\end{narrow}
 	\end{enumerate}
 
@@ -262,17 +254,10 @@ Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
 \end{FuncProc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_get_head_info()}
-
-\begin{FuncProc}
-  \item	HEADレビジョンの情報をlogコマンドで取得して返す
-\end{FuncProc}
-
-% -----------------------------------------------------------------------
-\subsubsection{build_history_get_one(\$revision, \$date, \$type)}
+\subsubsection{build\_history\_get\_one(\$revision, \$date, \$type)}
 
 \begin{FuncArgs}
-	\VAR{revision} & 取得するデータのレビジョン番号 \\
+	\VAR{revision} & 取得するデータのコミットID \\
 	\VAR{date}     & 取得するデータの日付 \\
 	\VAR{type}     & ページ種別(1: 今朝のビルド、2: Samplesのビルド)
 \end{FuncArgs}
@@ -280,21 +265,25 @@ Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
 \begin{FuncProc}
   \item	\VAR{output} \LARROW 指定されたレビジョンの\FILE{result.log}の内容
 
-  \item	ビルドの成功・失敗、実行の成功・失敗が記録されている行を設定する。 \\
-	\begin{tabular}{ll}
-	    \VAR{b_succ_1} & testsビルド成功 \UDAGGER{} \\
-	    \VAR{b_fail_1} & testsビルド失敗 \UDAGGER{} \\
-	    \VAR{r_succ_1} & tests実行成功 \\
-	    \VAR{r_fail_1} & tests実行失敗 \\
-	    \VAR{b_succ_2} & Samplesビルド成功 \UDAGGER{} \\
-	    \VAR{b_fail_2} & Samplesビルド失敗 \UDAGGER{} \\
-	    \VAR{r_succ_2} & Samples実行成功 \\
-	    \VAR{r_fail_2} & Samples実行失敗
-	\end{tabular} \\
+  \item	ビルドの成功・失敗、実行の成功・失敗が記録されている行を設定する。
+	\begin{spacing}{0.9}\skip{-0.6}
+	\begin{longtable}[l]{@{\Hskip{45pt}}ll}
+	    \VAR{b\_succ\_1} & testsビルド成功 \UDAGGER{} \\
+	    \VAR{b\_fail\_1} & testsビルド失敗 \UDAGGER{} \\
+	    \VAR{r\_succ\_1} & tests実行成功 \\
+	    \VAR{r\_fail\_1} & tests実行失敗 \\
+	    \VAR{b\_succ\_2} & Samplesビルド成功 \UDAGGER{} \\
+	    \VAR{b\_fail\_2} & Samplesビルド失敗 \UDAGGER{} \\
+	    \VAR{r\_succ\_2} & Samples実行成功 \\
+	    \VAR{r\_fail\_2} & Samples実行失敗
+	\end{longtable}
+	\skip{-0.8}
 	\begin{narrow}[s]
         	\DAGGER \small{レビジョン7031の前後で、result.logに記録されて
 		いる「ビルド失敗」と「実行成功」の順序が入れ替わっている。}
 	\end{narrow}
+	\end{spacing}
+	\skip{-0.1}
 
   \item	ビルドの成功モジュール数、失敗モジュール数を数える。
 	testsを対象とするかSamplesを対象とするかは引数\VAR{type}に従う。
@@ -306,70 +295,62 @@ Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
 	    Samplesの場合 & ビルド成功モジュール名リストを作成
 	\end{tabular}
 
-  \item	次の形式で結果を返す。 \\
-	\begin{tabular}{lll}
-	    column & 0～3   & レビジョン番号(4桁) \\
-		   & 4～13  & ビルド日付("yyyy-mm-dd") \\
-		   & 14～16 & 成功モジュール数 \\
-		   & 17～19 & エラーモジュール数 \\
-		   & 20～   & 成功モジュール名
-	\end{tabular}
+  \item	次の形式で結果を返す。\\
+	\skip{-1.0}
+	\begin{spacing}{0.9}\skip{-0.7}
+	\begin{longtable}[l]{@{\Hskip{45pt}}lll}
+	    column & 0～6   & レビジョン番号(4桁) \\
+		   & 7～15  & ビルド日付("yyyy-mm-dd") \\
+		   & 16～18 & 成功モジュール数 \\
+		   & 19～21 & エラーモジュール数 \\
+		   & 22～   & 成功モジュール名
+	\end{longtable}
+	\end{spacing}
+	\skip{-0.4}
 \end{FuncProc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_get_repository_url()}
-
-\begin{FuncProc}
-  \item	svn repositoryのURL(固定値)を返す。 \\
-        \tt{URL} \LARROW \URL{http://springhead.info/spr2/Springhead2/trunk/test}
-\end{FuncProc}
-
-% -----------------------------------------------------------------------
-\subsubsection{build_history_edit_one(\$data, \$style)}
+\subsubsection{build\_history\_edit\_one(\$data, \$style)}
 \label{func:history:edit:one}
 
-\begin{FuncProc}
-  \item	\ref{func:history:make:array} で作成したデータを分解し、
+\begin{FuncDesc}
+	\ref{func:history:make:array} で作成したデータを分解し、
 	htmlのテーブル要素1行分を作成する。
-        成功モジュール名の部分は\FUNC{build_history_make_inner_table()}により、
+        成功モジュール名の部分は\FUNC{build\_history\_make\_inner\_table()}により、
         内部テーブル(\TAG{td}\TAG{table} \CDOTS \TAG{/table}\TAG{/td})として
 	作成する。
-\end{FuncProc}
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_make_array(\$data)}
+\subsubsection{build\_history\_make\_array(\$data)}
 \label{func:history:make:array}
 
-\begin{FuncArgs}
-	\VAR{data} & モジュール名並び
-\end{FuncArgs}
-
-\begin{FuncProc}
+\begin{FuncDesc}
   \item	引数で与えられたモジュール名並びの文字列(\VAR{data})を分解し、
-	lib名毎にまとめた配列(\VAR{o_ary})として返す。 \\
+	lib名毎にまとめた配列(\VAR{o\_ary})として返す。\\
 	\begin{tabular}{lcl}
 	    \VAR{data}  & $=$ &
-		\tt{"Lib1:Mod11,Lib1:Mod12,\LDOTS,LibN:ModN1,\LDOTS"} \\
-	    \multicolumn{3}{l}{\hspace{15pt}\DARROW} \\
-	    \VAR{o_ary} & $=$ &
-		\tt{array("Lib1:Mod11,Mod12,\LDOTS", \LDOTS,} \\
+		\tt{"Lib1:Mod11,Lib1:Mod12,\LDOTS,LibN:ModN1,\LDOTS"}\\
+	    \multicolumn{3}{l}{\hspace{15pt}\DARROW}\\
+	    \VAR{o\_ary} & $=$ &
+		\tt{array("Lib1:Mod11,Mod12,\LDOTS", \LDOTS,}\\
 			& \phantom{$=$} & \phantom{\tt{array(}}\tt{%
 			  "LibN:ModN1,ModN2,\LDOTS", \LDOTS)}
 	\end{tabular}
-\end{FuncProc}
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_make_inner_table(\$data)}
+\subsubsection{build\_history\_make\_inner\_table(\$data)}
 
 \begin{FuncArgs}
 	\VAR{data} & 成功モジュール名リスト \\
-	& \tt{"Lib1:Mod11,Mod12,\LDOTS;\LDOTS;LibN:ModN1,ModN2,\LDOTS"} \\
+	& \tt{"Lib1:Mod11,Mod12,\LDOTS;\LDOTS;LibN:ModN1,ModN2,\LDOTS"}\\
 	& \ref{func:history:make:array} で作成した配列要素を\TT{`;'}で結合した形式
 \end{FuncArgs}
 
-\begin{FuncProc}
-  \item	\VAR{data}を\TT{`;'}で分解した各要素は
-	\TT{"Lib1:Mod11,Mod12,\LDOTS"}という形式になっている。 \\
+\begin{FuncDesc}
+	\VAR{data}を\TT{`;'}で分解した各要素は
+	\TT{"Lib1:Mod11,Mod12,\LDOTS"}という形式になっている。
         これを、
 	\medskip
 	\begin{narrow}
@@ -379,24 +360,27 @@ Wikiからこのpluginが\Tt{GET} methodで呼び出されたときに呼び出されたときの
 		\end{tabular} \\
 	\end{narrow}
         というテーブルのコードにする。罫線は書かない。
-\end{FuncProc}
+\end{FuncDesc}
 
 % -----------------------------------------------------------------------
-\subsubsection{plugin_build_history_convert()}
+\subsubsection{plugin\_build\_history\_convert()}
 \label{func:history:convert}
 
 \begin{FuncDesc}
-Wikiから\FUNC{\#build_history()}で呼び出されたときのエントリーポイント。
+Wikiから\FUNC{\#build\_history()}で呼び出されたときのエントリーポイント。
 \end{FuncDesc}
 
 \begin{FuncProc}
-  \item	リダイレクトコード\VAR{redirect_to}に次のものを設定する。
-	\begin{enumerate}
-	  \item	共通パラメータ\TT{cookie_usage}が\TT{0}のとき： \\
-                引数を取り出し(\FUNC{func_get_args()}) 、refererを追加する。
-	  \item	共通パラメータ\TT{cookie_usage}が\TT{1}のとき： \\
-                引数を取り出し(\FUNC{func_get_args()}) 、queryを再構成する。 \\
+  \item	リダイレクトコード\VAR{redirect\_to}に次のものを設定する。\\
+	共通パラメータ\TT{cookie\_usage}が\TT{0}のとき：
+	\begin{narrow}
+                引数を取り出し、refererを追加する。
+	\end{narrow}
+	共通パラメータ\TT{cookie\_usage}が\TT{1}のとき：
+	\begin{narrow}
+                引数を取り出し、queryを再構成する。 \\
                 次のキーについては、指定がなければデフォルト値を設定する。
+		\begin{spacing}{.9}
 		\begin{narrow}
 			\begin{tabular}{lcl}
 			    type & \RARROW & \tt{1} \\
@@ -405,90 +389,41 @@ Wikiから\FUNC{\#build_history()}で呼び出されたときのエントリーポイント。
 			    sort & \RARROW & \tt{"succ"}
 			\end{tabular}
 		\end{narrow}
+		\end{spacing}
+		\skip{.5}
 		キー\TT{referer}を追加する。 \\
 		次のキーについては、\TT{cookie}に値を設定する。
 		\begin{narrow}
 			\tt{"base"}, \tt{"file"}, \tt{"referer"}
 		\end{narrow}
-	\end{enumerate}
+	\end{narrow}
 
   \item	遅延ジャンプ実現のためのフック \\
-        共通パラメータ\TT{delayed_jump}が設定されていたならば、
+        共通パラメータ\TT{delayed\_jump}が設定されていたならば、
 	\VAR{msec}に指定した時間だけ遅延するコードを生成する
 	(JavaScriptのタイマ機構を使用する)。
 
-  \item	\VAR{redirect_to}で指定したロケーションへジャンプする。 \\
+  \item	\VAR{redirect\_to}で指定したロケーションへジャンプする。 \\
         これにより\ref{func:history:action}
-	\FUNC{plugin_build_history_action()} が呼び出される。
+	\FUNC{plugin\_build\_history\_action()} が呼び出される。
 
 \end{FuncProc}
 
 % -----------------------------------------------------------------------
-\subsubsection{build_history_urlencode(\$uri)}
-
-\begin{FuncArgs}
-	\VAR{uri} & 変換するuri
-\end{FuncArgs}
-
-\begin{FuncProc}
-  \item	uriをscheme, path, queryに分解する。
-
-  \item	scheme 部分：
-	\begin{narrow}
-		\begin{tabular}{ll}
-		    \FUNC{htmlspecialchars()} & 特殊文字のサニタイズ \\
-		    \FUNC{urlencode()}	      & urlエンコード
-		\end{tabular}
-	\end{narrow}
-
-  \item	path, queryの部分もscheme部分と同様であるが、各々セパレータ文字で
-        区切られた各部分について処理をするため、
-	\FUNC{build_history_urlencode_1()}を呼び出す。
-	\begin{narrow}
-		\begin{tabular}{ll}
-		    path部分	& セパレータは\TT{`/'} \\
-		    query部分	& 主セパレータは\TT{`\&'}、
-				  副セパレータは\TT{`='}
-		\end{tabular}
-	\end{narrow}
-\end{FuncProc}
-
-% -----------------------------------------------------------------------
-\subsubsection{build_history_urlencode_1(\$str, \$sep1, \$sep2)}
-
-\begin{FuncArgs}
-	\VAR{str}  & 変換する文字列 \\
-	\VAR{sep1} & 主セパレータ文字 \\
-	\VAR{sep2} & 副セパレータ文字
-\end{FuncArgs}
-
-\begin{FuncProc}
-  \item	変換する文字列を主セパレータ文字で分割した各々について、
-	\begin{enumerate}
-	  \item	副セパレータが空ならば、\FUNC{htmlspecialchars()}でサニタイズを
-		した後、phpの\FUNC{urlencode()}でurlエンコードする。
-	  \item	副セパレータが空でなければ、それを主セパレータとして自分自身を
-		再帰呼出しする(副セパレータは空に指定する)。
-	\end{enumerate}
-
-  \item	エンコードされた各部分を主セパレータ文字で結合して返す。
-\end{FuncProc}
-
-% -----------------------------------------------------------------------
-\subsubsection{build_history_query_to_array(\$query)}
+\subsubsection{build\_history\_query\_to\_array(\$query)}
 
 \begin{FuncArgs}
 	\VAR{query} & クエリ文字列
 \end{FuncArgs}
 
-\begin{FuncProc}
-  \item	クエリ文字列は\TT{"key1=val1\&\LDOTS\&keyN=valN"}という形式をしている。
+\begin{FuncDesc}
+	クエリ文字列は\TT{"key1=val1\&\LDOTS\&keyN=valN"}という形式をしている。
 	これを、配列\VAR{queries}に次のように設定して返す。
 	\begin{narrow}
 		\verb|$queries[key1] = val1| \\
 		\hspace{30pt}\VDOTS \\
 		\verb|$queries[keyN] = valN|
 	\end{narrow}
-\end{FuncProc}
+\end{FuncDesc}
 
 % end: BuildHistory.tex

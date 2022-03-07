@@ -5,9 +5,6 @@
 //	and revision number by discending order.
 //
 //  History:
-//	2022/03/03 F.Kanehori	Change to new style dedcription.
-//	2018/04/16 F.Kanehori	Correspond to new php version.
-//	2018/01/22 F.Kanehori	Git version.
 //	2014/02/19 F.Kanehori	Line order of 'result.log' file has changed.
 //	2013/10/28 F.Kanehori	Include today's (current version) information.
 //	2013/06/26 F.Kanehori	Change default sort order to by revision.
@@ -19,7 +16,7 @@
 function build_history_get_options()
 {
 	static $options = array(
-		'cookie_usage'	=> 0,	// set 1 if cookies are available
+		'cookie_usage'	=> 1,	// set 1 if cookies are available
 		'delayed_jump'	=> 0,	// set 1 to debug page befor redirect
 	);
 	return $options;
@@ -72,25 +69,34 @@ function plugin_build_history_action()
 
 	// <body>
 	//
-	$text = "<div id='preview'><h2>過去のビルドの履歴</h2></div>";
+	$text = "<div id='preview'><h2 id='content_1_0'>過去のビルドの履歴</h2></div>";
 
 	// (1) display range selection link
 	//
-	$links = "<table style='border: 0;'>"
-		. "<tr>"
-		.   "<td>".build_history_make_link($base, $file, $type, 1, "month", $sort, $referer, $span)."</td>"
-		.   "<td style='width: 50px;'></td>"
-		.   "<td>".build_history_make_link2($base, $file, $type, $span, $unit, "revision", $referer, $sort)."</td>"
+	$ot= "<tr><td>";
+	$ct = "</td></tr>";
+	$links = "<table border='0' cellspacing='4'>"
+		. "<tr><td>"
+		.	build_history_make_link($base, $file, $type, 1, "month", $sort, $referer, $span)
+		.     "</td>"
+		.     "<td width='50'>&nbsp;</td>"
+		.     "<td>"
+		.	build_history_make_link2($base, $file, $type, $span, $unit, "revision", $referer, $sort)
+		.     "</td>"
 		. "</tr>"
-		. "<tr>"
-		.    "<td>".build_history_make_link($base, $file, $type, 3, "month", $sort, $referer, $span)."</td>"
-		.    "<td></td>"
-		.    "<td>".build_history_make_link2($base, $file, $type, $span, $unit, "succ", $referer, $sort)."</td>"
+		. "<tr><td>"
+		.	build_history_make_link($base, $file, $type, 3, "month", $sort, $referer, $span)
+		.     "</td>"
+		.     "<td></td>"
+		.     "<td>"
+		.	build_history_make_link2($base, $file, $type, $span, $unit, "succ", $referer, $sort)
+		.     "</td>"
 		. "</tr>"
-		. "<tr>"
-		.    "<td>".build_history_make_link($base, $file, $type, 6, "month", $sort, $referer, $span)."</td>"
-		.    "<td></td>"
-		.    "<td></td>"
+		. "<tr><td>"
+		.	build_history_make_link($base, $file, $type, 6, "month", $sort, $referer, $span)
+		.     "</td>"
+		.     "<td></td>"
+		.     "<td></td>"
 		. "</table>";
 
 	// (2) history table
@@ -101,7 +107,7 @@ function plugin_build_history_action()
 	// (3) reference link
 	//
 	$enc_referer = urlencode(htmlspecialchars($referer));
-	$disp_referer = explode("\?", $referer);
+	$disp_referer = split("\?", $referer);
 	$trailer = "<br>"
 		. "<font size='-1'>関連ページ</font><br>&nbsp;&nbsp;"
 		. "<a href='$referer'>$disp_referer[1]</a>";
@@ -160,7 +166,7 @@ function build_history_make_link2($base, $file, $type, $span, $unit, $sort, $ref
 	$referer = urlencode(htmlspecialchars($referer));
 	$uri = build_history_make_uri($base, $file, $type, $span, $unit, $sort, $referer);
 
-	$str = (!strcmp($sort, "succ")) ? "成功モジュール数" : "コミット";
+	$str = (!strcmp($sort, "succ")) ? "成功モジュール数" : "レビジョン";
 	if (!strcmp($sort, $curr_sort)) {
 		$link =  "<p><font color='gray'>" . $str . "順</font></p>";
 	}
@@ -194,11 +200,10 @@ function build_history_make_table($base, $file, $type, $span, $unit, $sort)
 
 	// Set display date range.
 	//
-	////$epoch = 6364;		// Epoch: when 'Samples' is added.
-	$epoch = "633748b";		// Epoch: when moved to GitHub
+	$epoch = 6364;		// Epoch: when samples are added.
 	$span_str = "-$span $unit";
-	$limit = date("Y-md", strtotime($span_str));
-					// Check until this date.
+	$limit = date("Y-m-d", strtotime($span_str));
+				// Check until this date.
 
 	// Generate table caption.
 	//
@@ -210,85 +215,68 @@ function build_history_make_table($base, $file, $type, $span, $unit, $sort)
 		     . $last . build_history_display_unit($unit)
 		     . "分）";
 
-	$tag_1 = "<ul style='padding-left:16px; margin-left:16px;'><li>";
+	$tag_1 = "<ul class='list1' style='padding-left:16px;margin-left:16px'><li>";
 	$tag_2 = "</li></ul>";
 	$caption = $tag_1 . $disp_name_1 . $disp_name_2 . $targ_2;
+	$caption .= "<table height='5' border='0'><tr></tr></table>";
+
+	// Read currunt version information.
+	//
+	$head = build_history_get_head_info();
 
 	// Read content of history file.
 	//
 	$cmnd = "cat $base/$file | nkf -w";
 	exec($cmnd, $histories);
 
-	// Analyze the content.
-	//   key format:
-	//	 0- 6:	commit id
-	//	 7-15:	date [yyyy-mmdd]
-	//	16-23:	time [hh:mm:dd]
-	//   data format:
-	//	same that "History.log"
-
-	$e_patt = '/^\s*$/';
-	$c_patt = '/^--\[([0-9a-f]+),([0-9a-f]+),([0-9-]+),([0-9:]+)\]--$/';
-	$s_mark = '-*-';
-	$prev = '';
-	$date = '';
+	// Merge above two infomations.
+	//
+	for ($i = 0; $i < 4; $i++) {
+		$lines[$i] = $head[$i];
+	}
 	for ($i = 0; $i < count($histories); $i++) {
-		$line = $histories[$i];
-		if (preg_match($e_patt, $line, $matches)) continue;	// empty line
-		if (preg_match($c_patt, $line, $matches)) {		// new commit starts
-			if ($matches[3] == $date) {
-				// eliminate data belongs to the same date
-				$i += 11;
-				continue;
-			}
-			$commit_id = $matches[1];
-			$date = $matches[3];
-			$time = $matches[4];
-			if (strcmp($date, $limit) <= 0) {
-				// no more data needed for this time span
-				break;
-			}
-			for ($n = 0; $n < 11; $n++) {
-				$result[$n] = $histories[++$i];
-			}
-			$curr = join("\n", $result);
-			if ($curr == $prev) {
-				$curr = $s_mark;
-			} else {
-				$prev = $curr;
-			}
-			$key = $commit_id . $date . $time;
-			$history[$key] = $curr;
-			if (strcmp($commit_id, $epoch) == 0) {
-				// epoch found!
-				break;
-			}
-			continue;
+		$lines[$i+4] = $histories[$i];
+	}
+
+	// Analyze the content.
+	//
+	$state = 0;
+	for ($i = 0; $i < count($lines); $i++) {
+		$line = $lines[$i];
+		if (preg_match('/^--------/', $line)) {
+			$state = 1;
 		}
-		return $caption . "bad log data [$line]";
+		else if ($state == 1 && preg_match('/^r[0-9]{4}/', $line)) {
+			$pattern = '/^r([0-9]{4}).+\| ([0-9]{4}-[0-9]{2}-[0-9]{2}) /';
+			preg_match($pattern, $line, $matches);
+			$revision = $matches[1];
+			$date = $matches[2];
+			if (strcmp($date, $limit) <= 0 || $revision < $epoch) {
+				break;
+			}
+			$state = 2;
+		}
+		else if ($state == 2 && preg_match('/^Autobuild done\./', $line)) {
+			$history[$revision] = $date;
+			$state = 0;
+		}
 	}
 
 	// Get information of each revision.
-	//   temporary data format (returned from build_history_get_one()):
-	//	 0- 6	revision number
-	//	 7-15	date of build [yyyy-mm-dd]
-	//	16-18	number of modules successfully built
-	//	19-21	number of modules having build error
-	//	22-	success-module-names
+	//   temporary data format:
+	//	 0- 3	revision number
+	//	 4-13	date of build [yyyy-mm-dd]
+	//	14-16	number of modules successfully built
+	//	17-19	number of modules having build error
+	//	20-	success-module-names
 	//
-	$prev = '';
-	foreach ($history as $revision => $data) {
-		if ($history[$revision] == $s_mark) {
-			$history[$revision] = $prev;
-		} else {
-			$prev = $history[$revision];
-		}
-		$tmp = build_history_get_one($history, $revision, $date, $type);
+	foreach ($history as $revision => $date) {
+		$tmp = build_history_get_one($revision, $date, $type);
 		if (!strcmp($sort, "revision")) {
-			$key = substr($revision, 7, 17);
+			$key = substr($tmp, 0, 4);
 		}
 		else {
-			$key = substr($tmp, 16, 3) . substr($revision, 7, 17);
+			$key = substr($tmp, 14, 3) . substr($tmp, 0, 4);
 		}
 		$modules[$key] = $tmp;
 	}
@@ -296,102 +284,100 @@ function build_history_make_table($base, $file, $type, $span, $unit, $sort)
 
 	// Some table attributes.
 	//
-	// width
-	$width_95 = "width: 95%;";		// for whole table
-	$w_commit = "width: 10%;";		// for "コミット" column
-	$w_date	  = "width: 12%;";		// for "日付" column
-	$w_build  = "width: 10%;";		// for "ビルド" column
-	$w_run    = "width: 10%;";		// for "実行" column
-	$w_module = "width: 57%;";		// for "成功モジュール" column
+	$db_t = "border-style: none none dashed none;";
+	$bd_m = "border-style: none none none none";
+	$wd_e = "width: 1.6em;";		// left margin
+	$wd_r = "width: 10%;";			// width: revision
+	$wd_d = "width: 12%;";			// width: date
+	$wd_s = "width: 10%;";			// width: #success
+	$wd_f = "width: 10%;";			// width: #failure
+	$wd_x = "width: 57%;";			// width: success module names
+	$lo_f = "table-layout: fixed;";
+	$ta_c = "text-align: center;";
+	$ta_l = "text-align: left;";
+	$ta_m = "vertical-align: middle;";
+	$bc_h = "background: #98fb98;";		// for header row
+	$bc_e = "background: #afeeee;";		// for even row
+	$bc_o = "background: #f5f5dc;";		// for odd row
+	$bold = "font-weight: bold;";
 
-	// color
-	$bgc_head = "background-color: #98fb98;";	// for header row
-	$bgc_odd  = "background-color: #ffffff;";	// for odd row
-	$bgc_even = "background-color: #e8e8e8;";	// for even row
+	$bc_e = "background: #e8e8e8;";		// for even row
+	$bc_o = "background: #ffffff;";		// for odd row
 
-	// alignment
-	$halign_c = "text-align: center;";	// horizontal center
-	$halign_l = "text-align: left;";	// horizontal left
-	$valign_m = "vertical-align: middle;";	// vertical middle
-
-	// font
-	$font_bold = "font-weight: bold;";
-
-	// border, margin, etc.
-	$border_1 = "border: solid 1px;";
-	$margin_0 = "margin: 0;";
-	$margin_5 = "margin: 5px 0 0 0;";	// make room above table
-	$collapse = "border-collapse: collapse;";
-	$padding_5 = "padding: 5px;";
-
-	$style = array(
-		array(		// for even row
-			"c" => "$halign_c $valign_m $bgc_even",
-			"l" => "$halign_l $valign_m $bgc_even"),
-		array(		// for odd row
-			"c" => "$halign_c $valign_m $bgc_odd",
-			"l" => "$halign_l $valign_m $bgc_odd")
+	$style[0] = array(			// for even row
+		"c" => "$ta_c $ta_m $bc_e",
+		"l" => "$ta_l $ta_m $bc_e"
+	);
+	$style[1] = array(			// for odd row
+		"c" => "$ta_c $ta_m $bc_o",
+		"l" => "$ta_l $ta_m $bc_o"
 	);
 
-	// Generate table code.
+	// Generate table source code.
 	//
 	$kind = ($type == 1) ? "実行" : "ビルド";
-	$result_bld = "ビルド<br>成功 / 失敗";
-	$result_run = "実行<br>成功 / 失敗";
-	$table = "<table style='$width_95 $margin_5 $padding_5 $collapse $border_1'>"
-		.   "<tr style='$halign_c $valign_m $bgc_head $font_bold'>"
-		.        "<td style='$w_commit $border_1'>コミット</td>"
-		.        "<td style='$w_date   $border_1'>日付</td>"
-		.        "<td style='$w_build  $border_1'>$result_bld</td>"
-		.        "<td style='$w_run    $border_1'>$result_run</td>"
-		.        "<td style='$w_module $border_1'>".$kind."<br>成功モジュール</td>"
-		.   "</tr>";
+	$table .= "<table width='90%' border='0' cellpadding='3' cellspacing='0'>"
+		."<tr>"
+		.  "<td style='$bd_t $wd_e'></td>"
+		.  "<td>"
+		.    "<table width='100%' border='1' rules='hidden' cellpadding='3' cellspacing='0'>"
+		.      "<tr>"
+		.        "<td style='$bd_m $lo_f $wd_r $ta_c $ta_m $bc_h $bold'>レビジョン</td>"
+		.        "<td style='$bd_m $lo_f $wd_d $ta_c $ta_m $bc_h $bold'>日付</td>"
+		.        "<td style='$bd_m $lo_f $wd_s $ta_c $ta_m $bc_h $bold'>ビルド<br>成功数</td>"
+		.        "<td style='$bd_m $lo_f $wd_f $ta_c $ta_m $bc_h $bold'>ビルド<br>失敗数</td>"
+		.        "<td style='$bd_m $lo_f $wd_x $ta_c $ta_m $bc_h $bold'>"
+		.	   $kind . "<br>成功モジュール</td>"
+		.      "</tr>";
 
 	$sw = 1;
-	$mod_names_prev = '';
 	foreach ($modules as $key => $val) {
-		$mod_names = join("; ", build_history_make_array(substr($val, 28)));
+		$mod_names = join("; ", build_history_make_array(substr($val, 20)));
 		if (strcmp($mod_names, $mod_names_prev)) {
 			$mod_names_prev = $mod_names;
-			$val = substr($val, 0, 28) . $mod_names;
+			$val = substr($val, 0, 20) . $mod_names;
 		}
 		else {
-			$val = substr($val, 0, 28) . "ditto";
+			$val = substr($val, 0, 20) . "ditto";
 		}
 		$table .= build_history_edit_one($val, $style[$sw]);
 		$sw = 1 - $sw;
 	}
 
-	$table .= "</table>";
+	$table .=    "</table>"
+		.  "</td>"
+		."</tr>"
+		."</table>";
 
 	return $caption . $table;
 }
 
-/// function build_history_get_head_info()
-/// {
-/// 	$url = build_history_get_repository_url();
-/// 	$cmnd = "svn -r HEAD log $url | nkf -w";
-/// 	exec($cmnd, $output);
-/// 
-/// 	return $output;
-/// }
+function build_history_get_head_info()
+{
+	$url = build_history_get_repository_url();
+	$cmnd = "svn -r HEAD log $url | nkf -w";
+	exec($cmnd, $output);
 
-function build_history_get_one($history, $revision, $date, $type)
+	return $output;
+}
+
+function build_history_get_one($revision, $date, $type)
 {
 	// Get the log of specified revision from svn.
 	//
-	$output = $history[$revision];
-	$output = explode("\n", mb_convert_encoding($output, "UTF-8", "SJIS"));
+	$url = build_history_get_repository_url() . "/log/result.log";
+	$cmnd = "svn cat -r $revision $url | nkf -w";
+	exec($cmnd, $output);
 
 	// Build result is ..
 	//
 	$b_succ_1 = 1;					// src/tests
-	$b_fail_1 = 2;
-	$r_succ_1 = 3;
+	$b_fail_1 = ($revision <= 7031) ? 3 : 2;
+	$r_succ_1 = ($revision <= 7031) ? 2 : 3;
 	$r_fail_1 = 4;
 	$b_succ_2 = 7;					// src/Samples
-	$b_fail_2 = 8;
-	$r_succ_2 = 9;
+	$b_fail_2 = ($revision <= 7031) ? 9 : 8;
+	$r_succ_2 = ($revision <= 7031) ? 8 : 9;
 	$r_fail_2 = 10;
 
 	// count
@@ -399,79 +385,50 @@ function build_history_get_one($history, $revision, $date, $type)
 	$line_f = ($type == 1) ? $output[$b_fail_1] : $output[$b_fail_2];
 	preg_match('/.+\((.+)\)/', $line_s, $matches_s);
 	preg_match('/.+\((.+)\)/', $line_f, $matches_f);
-	$mods_s = explode(",", $matches_s[1]);
-	$mods_f = explode(",", $matches_f[1]);
+	$mods_s = split(",", $matches_s[1]);
+	$mods_f = split(",", $matches_f[1]);
 	$count_s = ($matches_s[0] == "") ? 0 : count($mods_s);
 	$count_f = ($matches_f[0] == "") ? 0 : count($mods_f);
-
-	$line_r_s = ($type == 1) ? $output[$r_succ_1] : $output[$r_succ_2];
-	$line_r_f = ($type == 1) ? $output[$r_fail_1] : $output[$r_fail_2];
-	preg_match('/.+\((.+)\)/', $line_r_s, $matches_r_s);
-	preg_match('/.+\((.+)\)/', $line_r_f, $matches_r_f);
-	$mods_r_s = explode(",", $matches_r_s[1]);
-	$mods_r_f = explode(",", $matches_r_f[1]);
-	$count_r_s = ($matches_r_s[0] == "") ? 0 : count($mods_r_s);
-	$count_r_f = ($matches_r_f[0] == "") ? 0 : count($mods_r_f);
-
 	// names
 	$line_s = ($type == 1) ? $output[$r_succ_1] : $output[$b_succ_2];
 	preg_match('/.+\((.+)\)/', $line_s, $matches_s);
-	$mods_s = explode(",", $matches_s[1]);
+	$mods_s = split(",", $matches_s[1]);
 	$mod_names = implode(", ", $mods_s);
 
-	//	 0- 6	revision number
-	//	 7-15	date of build [yyyy-mm-dd]
-	//	16-18	number of modules successfully built
-	//	19-21	number of modules having build error
-	//	22-	success-module-names
-
-	$text = sprintf("%16s%3s%3s%3s%3s%s",
-				substr($revision, 0, 16),
-				$count_s, $count_f, $count_r_s, $count_r_f,
-				$mod_names);
+	//	 0- 3	revision number
+	//	 4-13	date of build [yyyy-mm-dd]
+	//	14-16	number of modules successfully built
+	//	17-19	number of modules having build error
+	//	20-	success-module-names
+	
+	$text = sprintf("%4s%10s%3s%3s%s",
+			$revision, $date, $count_s, $count_f, $mod_names);
 	return $text;
 }
 
-/// function build_history_get_repository_url()
-/// {
-/// 	//return "http://springhead.info/spr2/Springhead/trunk/core/test";
-/// 	return "https://github.com/sprphys/Springhead/core/test";
-/// }
-
-/// function build_history_get_repository_url_raw($commit_id)
-/// {
-/// 	return "http://raw.github.com/sprphys/Springhead/".$commit_id."/core/test";
-/// }
+function build_history_get_repository_url()
+{
+	return "http://springhead.info/spr2/Springhead/trunk/core/test";
+}
 
 function build_history_edit_one($data, $style)
 {
 	// Log editor for one revision.
 	//
-	$revision  = substr($data, 0, 7);
-	$date      = substr($data, 7, 7) . "-" . substr($data, 14, 2);
-	$count_s   = substr($data, 16, 3);
-	$count_f   = substr($data, 19, 3);
-	$count_r_s = substr($data, 22, 3);
-	$count_r_f = substr($data, 25, 3);
-	$mod_names = substr($data, 28);
-
-	if ($count_r_s == 0 && $count_r_f == 0) {
-		$count_r_s = "-";
-		$count_r_f = "-";
-	}
+	$revision  = substr($data, 0, 4);
+	$date      = substr($data, 4, 10);
+	$count_s   = substr($data, 14, 3);
+	$count_f   = substr($data, 17, 3);
+	$mod_names = substr($data, 20);
 
 	$style_c = $style["c"];
 	$style_l = $style["l"];
-
-	$border_1 = "border: solid 1px;";
-	$l_height = "line-height: 100%;";
-
-	$row = "<tr style='$l_height'>"
-	     .   "<td style='$style_c $border_1'>$revision</td>"
-	     .   "<td style='$style_c $border_1'>$date</td>"
-	     .   "<td style='$style_c $border_1'>$count_s / $count_f</td>"
-	     .   "<td style='$style_c $border_1'>$count_r_s / $count_r_f</td>"
-	     .   "<td style='$style_l font-size: 80%; $border_1'>"
+	$row = "<tr>"
+	     .   "<td style='$style_c'>$revision</td>"
+	     .   "<td style='$style_c'>$date</td>"
+	     .   "<td style='$style_c'>$count_s</td>"
+	     .   "<td style='$style_c'>$count_f</td>"
+	     .   "<td style='$style_l font-size: 80%'>"
 	     .     build_history_make_inner_table($mod_names)
 	     .   "</td>"
 	     . "</tr>";
@@ -485,10 +442,13 @@ function build_history_make_array($data)
 	//	"lib1:mod1,lib2:mod2,…,libN:modN,…"
 	//	==> array("lib1:mod11,mod12,…", …, "libN:modN1,modN2,…", …)
 	//
-	$i_ary = explode(",", $data);
+	if ($data == "") {
+		return array();
+	}
+	$i_ary = split(",", $data);
 	$once = 1;
 	for ($i = 0; $i < count($i_ary); $i++) {
-		$t_ary = explode(":", $i_ary[$i]);
+		$t_ary = split(":", $i_ary[$i]);
 		$t_libname = trim($t_ary[0]);
 		$t_modname = trim($t_ary[1]);
 		if (strcmp($t_libname, $libname)) {
@@ -512,32 +472,33 @@ function build_history_make_inner_table($data)
 {
 	// Make inner table for 'build success modules'.
 	//
-	$border_0 = "border: 0;";	// no border line
-	$width_i  = "width: 2%;";	// indent
-	$width_b  = "width: 55%;";	// body
+	$style_t = "table-layout: fixed;";
+	$style_i = "width: 2%";		// indent
+	$style_b = "width: 55%";	// body
 
-	$table = "<table style='margin: 0; padding: 0;'>";
+	$table = "<table border='0' style='$style_t' cellpadding='0' cellspacing='0'>";
 
-	$items = explode(";", $data);
+	$items = split(";", $data);
 	for ($i = 0; $i < count($items); $i++) {
-		$item = explode(":", $items[$i]);
+		$item = split(":", $items[$i]);
 		if (!strcmp($item[0], "ditto")) {
 			$table .= "<tr>"
-				.   "<td style='$width_i $border_0' colspan='2'>$item[0]</td>"
+				.   "<td style='$style_i' colspan='2'>$item[0]</td>"
 				. "</tr>";
 		}
 		else {
 			$table .= "<tr>"
-				.   "<td style='$width_i $border_0' colspan='2'>$item[0]:</td>"
+				.   "<td style='$style_i' colspan='2'>$item[0]:</td>"
 				. "</tr>"
 				. "<tr>"
-				.   "<td style='$width_i $border_0'>&nbsp;</td>"
-				.   "<td style='$width_b $border_0'>$item[1]</td>"
+				.   "<td style='$style_i'>&nbsp;</td>"
+				.   "<td style='$style_b'>$item[1]</td>"
 				. "</tr>";
 		}
 	}
 
 	$table .= "</table>";
+
 	return $table;
 }
 
@@ -550,15 +511,15 @@ function plugin_build_history_convert()
 		// Set referer to the query, then redirect to the url given by the argument.
 		//
 		list($redirect_to) = func_get_args();
-		//$redirect_to = build_history_urlencode($redirect_to);
-		$redirect_to .= "&amp;Breferer=" . urlencode($_SERVER['HTTP_REFERER']);
+		$redirect_to = build_history_urlencode($redirect_to);
+		$redirect_to .= "&referer=" . urlencode($_SERVER['HTTP_REFERER']);
 	}
 	else {
 		// Set 'span' and 'unit' to the query and rest to the cookie,
 		// then redirect to the url given by 'cmd'.
 		//
 		list($arg) = func_get_args();
-		$args = explode("\?", $arg);
+		$args = split("\?", $arg);
 
 		$queries = build_history_query_to_array($args[1]);
 		$cmd  = isset($queries["cmd"]) ? $queries["cmd"] : "devel";
@@ -601,7 +562,6 @@ EOD;
 	return $result;
 }
 
-/*******
 function build_history_urlencode($uri)
 {
 	// Urlencode the uri given by the argument.
@@ -609,14 +569,14 @@ function build_history_urlencode($uri)
 	$result = "";
 
 	// -- scheme --
- 	$part1 = explode(":", $uri);
+ 	$part1 = split(":", $uri);
 	if (count($part1) > 1) {
 		$result = urlencode(htmlspecialchars($part1[0])) . ":";
 		$part1[0] = $part1[1];
 	}
 
 	// -- path --
- 	$part2 = explode("\?", $part1[0]);
+ 	$part2 = split("\?", $part1[0]);
 	$result .= build_history_urlencode_1($part2[0], "/", "");
 
 	// -- query --
@@ -629,7 +589,7 @@ function build_history_urlencode($uri)
 
 function build_history_urlencode_1($str, $sep1, $sep2)
 {
-	$parts = explode($sep1, $str);
+	$parts = split($sep1, $str);
 
 	for ($i = 0; $i < count($parts); $i++) {
 		if (strcmp($sep2, "") == 0) {
@@ -642,13 +602,12 @@ function build_history_urlencode_1($str, $sep1, $sep2)
 
 	return implode($sep1, $parts);
 }
-*******/
 
 function build_history_query_to_array($query)
 {
-	$ary1 = explode("&", $query);
+	$ary1 = split("&", $query);
 	for ($i = 0; $i < count($ary1); $i++) {
-		$ary2 = explode("=", $ary1[$i]);
+		$ary2 = split("=", $ary1[$i]);
 		if (isset($ary2[0]) && isset($ary2[1])) {
 			$queries[$ary2[0]] = $ary2[1];
 		}
