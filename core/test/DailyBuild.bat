@@ -12,6 +12,7 @@ setlocal enabledelayedexpansion
 ::	    -p plat:		Platform (x86 | x64).
 ::	    -s file:		Setup file name (default: setup.conf).
 ::	    -t tool:		Visual Studio toolset ID. (Windows only)
+::	    -X:			Build and Run only (do not commit/copy).
 ::
 ::	ARGUMENTS:
 ::	    test-repository:	テストを実行するディレクトリ.
@@ -55,6 +56,7 @@ setlocal enabledelayedexpansion
 ::     Ver 1.0   2021/05/10 F.Kanehori	バッチファイルの再構築.
 ::     Ver 1.1   2021/07/05 F.Kanehori	DailyBuildTestTools の導入.
 ::     Ver 2.0   2022/01/26 F.Kanehori	DailyBuild.py の機能を吸収.
+::     Ver 2.1   2022/03/10 F.Kanehori	Add option -X for debug.
 :: ============================================================================
 set PROG=%~n0
 set CWD=%CD%
@@ -81,6 +83,7 @@ set SETUPFILE=setup.conf
 	if "%1" == "-s"	 (set SETUPFILE=%1& shift & goto :loop1)
 	if "%1" == "-S"	 (set FLAG[S]=true& shift & goto :loop1)
 	if "%1" == "-D"	 (set FLAG[D]=true& shift & goto :loop1)
+	if "%1" == "-X"	 (set FLAG[X]=true& shift & goto :loop1)
 	if "%1" == "-v"	 (set FLAG[v]=true& shift & goto :loop1)
 
 if not "%2" == "" (set RESULT_REPOSITORY=%2)
@@ -191,7 +194,7 @@ call :abspath %PREFIX%%TEST_REPOSITORY%\core\test
 cd !%$result%!
 echo test directory: "%CD%"
 set ARGS=%OPTS% %FLAG[v]% %TEST_REPOSITORY% %RESULT_REPOSITORY%
-if %DEBUG% equ 1 (
+if "%FLAG[X]%" equ "true" (
 	set ARGS=%ARGS% -X
 )
 call :exec %PYTHON% TestMainGit.py %ARGS%
@@ -202,7 +205,7 @@ exit /b
 :: ---------------------------------------------------------------------
 :exec
 	echo %*
-	if not "%FLAG[D]%" == "true" (%*)
+	rem if not "%FLAG[D]%" == "true" (%*)
 	exit /b
 
 :abspath
@@ -218,7 +221,8 @@ exit /b
 	echo     -c conf:        Configurations (Debug ^| Release).
 	echo     -p plat:        Platform (x86 ^| x64).
 	echo     -s file:        Setup file name (default: setup.conf).
-	echo     -t tool:        Visual Studio toolset ID. (Windows only)
+	echo     -t tool:        Visual Studio toolset ID. (Windows only).
+	echo     -X:             build and run only (do not commit nor copy).
 	echo+
 	echo arguments:
 	echo     test_repository:   test repository (default: Springhead)

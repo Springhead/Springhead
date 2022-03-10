@@ -94,6 +94,7 @@ endif()
 # ------------------------------------------------------------------------------
 if(Windows)
 #    set(CMAKE_INSTALL_PREFIX	"C:/Program Files")
+#    set(CMAKE_INSTALL_PREFIX	"$ENV{HOME}/EXPORT")
 elseif(unix)
 #    set(CMAKE_INSTALL_PREFIX	"/usr/local")
 endif()

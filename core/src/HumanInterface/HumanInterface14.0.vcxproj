@@ -473,6 +473,11 @@
     <ClInclude Include="..\..\include\HumanInterface\SprHISpidar.h" />
     <ClInclude Include="..\..\include\SprHumanInterface.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation\Foundation14.0.vcxproj">
+      <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
