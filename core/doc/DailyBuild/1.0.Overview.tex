@@ -1,5 +1,5 @@
 % 1.0.Overview.tex
-%	Last update: 2022/03/10 F.Kanehori
+%	Last update: 2022/03/23 F.Kanehori
 \newpage
 \section{概要}
 \label{sec:Overview}
@@ -32,9 +32,9 @@ DailyBuildジョブは、以下のスクリプト/クラスを順次呼び出すことで実行される。
 \skip{0.5}
 
 DailyBuildジョブに関連するファイルは、次のディレクトリ以下に配置されている。
-\begin{narrow}[10pt]
-    実行するスクリプト関連
-    \begin{narrow}[10pt]
+\skip{0.25}
+○\,実行するスクリプト関連
+\begin{narrow}
 	\begin{tabular}{@{\hspace{30pt}}ll}
 		Windows:& \tt{DESKTOP-KD3C7HS (demo)}の\\
 			& \hspace{60pt}\Path{I:\BS DailyBuild\BS Springhead\BS}\\
@@ -42,20 +42,27 @@ DailyBuildジョブに関連するファイルは、次のディレクトリ以下に配置されている。
 			& \hspace{60pt}\Path{/home/demo/Project/Springhead/}\\
 	\end{tabular}\\
 	以降これらを\framebox{\tt{<topdir>}}と略記する。
-    \end{narrow}
 \end{narrow}
-\begin{narrow}[10pt]
-    Hook機構関連
-    \begin{narrow}[10pt]
+\skip{0.25}
+○Hook機構関連
+\begin{narrow}
 	\begin{tabular}{@{\hspace{30pt}}ll}
 		Windows:& \Path{I:\BS DailyBuildHook\BS}\\
 		unix:	&  \Path{/home/demo/Project/DailyBuildHook/}\\
 	\end{tabular}\\
 	以降これらを\framebox{\tt{<hookdir>}}と略記する。
-    \end{narrow}
 \end{narrow}
+\skip{0.25}
 上記に係わらず、
 上位パスが容易に推定される場合にはそれを\framebox{\Path{...}}と略記する。
+
+\skip{0.75}
+また、DailyBuildで使用するツールを置くために次のディレクトリを使用する。
+このディレクトリはDailyBuilの実行パスに組み込まれる。
+\begin{narrow}
+	\tt{DESKTOP-KD3C7HS (demo)}の
+	\hspace{5pt}\Path{I:\BS DailyBuild\BS DailyBuildTestTools\BS}
+\end{narrow}
 
 \skip{1.0}
 DailyBuildの具体的な説明に進む前に、いくつかのトピックについて説明をしておく。

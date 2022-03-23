@@ -1,5 +1,5 @@
 % CSInterface.tex
-%	Last update: 2017/03/13 F.Kanehori
+%	Last update: 2022/03/14 F.Kanehori
 \newpage
 \section{概要}
 \label{sec:Overview}
@@ -8,14 +8,14 @@
 \noindent
 \bf{ソースファイル}
 \begin{narrow}
-	\verb|"Springhead2\bin\src\swig\Source\Modules\sprcs.cpp"|
+	\verb|"Springhead\bin\src\swig\Source\Modules\sprcs.cpp"|
 \end{narrow}
 
 \bigskip
 \noindent
 \bf{ビルドについて}
 \begin{enumerate}
-  \item	使用するVisual Studioのバージョンは、2010, 2013のいずれでもよい。
+  \item	使用するVisual Studioの現在のバージョンは2019である。
   \item	Debug構成でビルドすると\tt{SNAP}, \tt{DUMP}などが有効となり、
 	出力されるソース中に各種情報がコメントとして埋め込まれる。
 	\begin{itemize}
@@ -34,7 +34,7 @@
 
 	  \item	\CPP 側で\FUNC{::SysAllocStringLen()}により割り当てたメモリを解放する
 		コードは\\
-		\hspace{20pt}\verb|#ifdef FREE\_UNMANAGED\_MEMORY| ～ \verb|#endif|\\
+		\hspace{20pt}\verb|#ifdef FREE_UNMANAGED_MEMORY| ～ \verb|#endif|\\
 		で囲まれている。現在のままで特にメモリ関連の不都合が起きないのであれば、
 		適当なタイミングでこれを外した方がよいと思われる。
 	\end{itemize}
@@ -47,20 +47,17 @@
   \item	現状ではビルドをするとビルド構成に応じて、
 	\begin{narrow}[\WID]
 	\small{%
-	\verb+$(Solutiondir)/{Win32|x64}/{Debug|Release}{10|12.0}/swig{10|12.0}.exe+}
+	\verb+$(Solutiondir)/{Win32|x64}/{Debug|Release}16.0/swig16.0.exe+}
 	\end{narrow}
         が生成される。
 
-  \item	\FILE{cp.bat}を実行すると、これを\FILE{Springhead2/bin/swig/}にコピーする。
-        このとき、ファイル名を\FILE{swig\_sprcs.exe}とリネームする。
-	\begin{itemize}
-	  \item	\FILE{cp.bat}の引数については\tt{cp.bat -h}を実行のこと。
-	  \item	リネームする名前(\FILE{swig\_sprcs.exe})は\FILE{cp.bat}に
-		ハードコードされている。
-	\end{itemize}
+  \item	また、ビルド後のイベントとして上記で生成された\FILE{.exe}ファイルが\\
+	\hspace{20pt}\verb+Springhead\bin\swig\swig.exe+\\
+	\hspace{20pt}\verb+Springhead\bin\swig\swig_sprcs.exe+\\
+	という名前でコピーされる。
 
-  \item	\FILE{sprcs.cpp}は、swigの引数に\,\tt{-sprcs}を付けて実行したときにのみ
-	有効となるもの(?)なので、上記のようなリネームは必要ないかも知れない(??)。
+  \item	\FILE{sprcs.cpp}は互換のためにコピーされるものであり、
+	C\#側での対応ができたならコピーは不要となる。
 \end{enumerate}
           
 \medskip
@@ -86,6 +83,9 @@
   \item	識別子名の置き換え処理\\
 	\begin{tabular}{l@{\hspace{5pt}\RARROW\hspace{5pt}}l@{\hspace{20pt}}l}
 	    \tt{"checked"} & \tt{"checked\_"} & \small{\CS のリザーブドワード}\\
+	    \tt{"base"}	   & \tt{"base\_"}    & \small{\CS のリザーブドワード}\\
+	    \tt{"is"}	   & \tt{"is\_"}      & \small{\CS のリザーブドワード}\\
+	    \tt{"ptr"}	   & \tt{"ptr\_"}     & \\
 	\end{tabular}
 	\medskip
 
@@ -132,43 +132,22 @@
   \item	\FILE{cs\_object.cs}, \FILE{wrappers.cs}\\
 	wrapperクラス(\FILE{wrappers.cs})は
 	\tt{CsObject}クラス(\FILE{cs\_object.cs})を継承する。
+	基本データ型のwrapperクラスを格納。
+
+  \item	\FILE{module.wrapper.cs}\\
+	構造体、vector、配列のwrapperクラスを格納。
+
+	\tt{wrapper}クラスの命名規則は次のとおり。
+	\begin{narrow}
+		\tt{structwrapper\_<構造体名>}\\
+		\tt{vectorwrapper\_<構造体名>}\\
+		\tt{arraywrapper\_<構造体名>}
+	\end{narrow}
 
   \item	\FILE{CSxxxx.wrapper.cs}\\
-	\tt{xxxx} (Collision, Graphics, HumanInterface, Physics)の各々について、
-	構造体をメンバとする\tt{vector}のwrapperクラスを格納。
+	\tt{xxxx} (Collision, Graphics, HumanInterface, Physics)の各々で
+	定義されているクラスをC\#に変換したものを格納。
 
-	\tt{wrapper}クラスの命名規則は、
-	\begin{narrow}
-		\tt{vectorwrapper\_<\it{CLASS}>\_<\it{MEMBER}>}\\
-		\tt{arraywrapper\_<\it{CLASS}>\_<\it{MEMBER}>}
-	\end{narrow}
-	ここで <\it{CLASS}> はこのメンバが属するクラス名、
-	<\it{MEMEBER}> はメンバ名である( ラス名を含めているのは、
-	異なるクラスで同一のメンバ名があり得るから)。
-
-	これらのwrapperクラスを一つのソースファイルに纏められないのは、
-	\begin{narrow}[10pt]\begin{enumerate}
-	  \item	swig処理が\tt{xxxx} (Collision, ..)毎に別々に実行されるために、
-		異なる\tt{xxxx}で同一の\tt{.i}ファイルを読み込むことがある。
-	  \item	よって単純に同じファイルに出力すると重複定義となってしまう
-	\end{enumerate}\end{narrow}
-	ためである。
-
-	解決策としては、
-	\begin{narrow}[10pt]\begin{enumerate}
-	  \item	重複定義を避けるための情報を異なるswigジョブ間で渡すために
-		外部ファイルなどを用いる。
-	  \item	各wrapper毎にソースを別ファイルに出力する。
-	\end{enumerate}\end{narrow}
-	などが考えられるが、未着手のままである。
-\end{enumerate}
-
-\medskip
-\noindent
-\bf{積み残し事項}
-\begin{enumerate}
-  \item	クラスメンバが配列のときのsetter\\
-	配列要素数の確認をとるコードが未実装(今は無条件にコピーしている)
 \end{enumerate}
 
 % end: CSInterface.tex

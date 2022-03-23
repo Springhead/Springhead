@@ -1,5 +1,5 @@
 % macro.tex
-%	Last update: 2017/03/30 F.Kanehori
+%	Last update: 2022/03/23 F.Kanehori
 
 \makeatletter
 
@@ -37,6 +37,21 @@
 % dimensions
 \def\HSKIP{\hspace{2ZW}}
 
+%%% spaces
+%%  \Vskip{amount}
+%%  \Hskip{amount}
+%%	amount		amount of skip (dimen)
+%%
+%\def\Vskip#1{\begin{Vmode}\vspace{#1}\end{Vmode}}
+%\let\Hskip\hspace
+%\def\skip#1{\Vskip{#1\baselineskip}}
+%
+%%% force vertical mode
+%%  \begin{Vmode} ... \end{Vmode}
+%%
+%\def\Vmode{\ifvmode\relax\else\par\hrule width 0pt height .5\baselineskip\fi}
+%\def\endVmode{\relax\par}
+
 % abbreviations
 \def\RARROW{$\rightarrow$}
 \def\LARROW{$\leftarrow$}
@@ -55,6 +70,7 @@
 \def\CONT{\ \ {\footnotesize{(次の行に続く)}}}
 \def\RECURSE{\mc{{\footnotesize{\ \CDOTS\ \ (再帰)}}}}
 \def\DESCRIBED{\mc{{\footnotesize{\ \CDOTS\ \ (既出)}}}}
+\def\LATER{\mc{{\footnotesize{\ \CDOTS\ \ (後出)}}}}
 
 \def\CS{C\#}			% C#
 \def\CPP{C++}			% C++
@@ -62,6 +78,7 @@
 \def\VUP{\vspace{-12pt}\\}	% adjustment for virtical spacing
 
 % typewriter font
+\def\Var#1{\tt{\,\#1\,}}	% for variable name
 \def\VAR#1{\tt{\,\$#1\,}}	% for variable name (preceded by '$')
 \def\STR#1{\tt{\,"#1"\,}}	% for double quoted string
 \def\FUNC#1{\tt{\,#1\,}}	% for function name
@@ -78,9 +95,9 @@
 	{\scriptsize{\UARROW \UARROW ここまで \UARROW \UARROW}}\\
 	\rule{0pt}{1.9em}}
 
-%% quoted word
-%\def\SQuote#1{\hbox{\,\raise.4ex\hbox{{\tt `}}#1\tt{\raise.4ex\hbox{{\tt '}}}\,}}
-%\def\DQuote#1{\hbox{\,\raise.4ex\hbox{{\tt "}}#1\tt{\raise.4ex\hbox{{\tt "}}}\,}}
+% quoted word
+\def\SQuote#1{\hbox{\,\raise.4ex\hbox{{\tt `}}#1\tt{\raise.4ex\hbox{{\tt '}}}\,}}
+\def\DQuote#1{\hbox{\,\raise.4ex\hbox{{\tt "}}#1\tt{\raise.4ex\hbox{{\tt "}}}\,}}
 
 % rule
 \def\rrule#1{\vbox{%
@@ -106,14 +123,14 @@
 	\setlength\itemsep{.5em}}
 \def\endFuncProc{\end{enumerate}\end{narrow}\end{narrow}\endgroup}
 
-% narrower[size][margin]{body}
+% narrow[size][margin]{body}
 %	charsize:	t, f, s, [n]
 %	margin:		[\the\leftmargin]
 %
 \def\narrow{\@ifnextchar[{\narrow@}{\narrow@def[Z][\the\leftmargin]}}
 \def\narrow@[#1]{%
 	\@ifnextchar[{\narrow@def[#1]}{\narrow@@[#1]}}
-\def\narrow@@[#1]{%
+\def\narrow@@[#1]{%}
 	\ifx#1t \def\@size{t} \def\@mgn{\the\leftmargin} \else
 	\ifx#1f \def\@size{f} \def\@mgn{\the\leftmargin} \else
 	\ifx#1s \def\@size{s} \def\@mgn{\the\leftmargin} \else
@@ -138,5 +155,9 @@
 \def\end@narrow{\endgroup\endlist}
 \let\endnarrow\end@narrow
 
+% alias
+%
+\let\MC\multicolumn
+
 \makeatother
-% end: marco.tex
+% end: marco.textabular
