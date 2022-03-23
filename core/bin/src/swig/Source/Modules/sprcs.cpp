@@ -617,6 +617,7 @@ public:
 	}
 
 #ifdef	ORIGINAL_CODE
+	/***
 	//	構造体ごとの処理(TypeDescの作成など)
 	void TypeDesc(DOHFile* cpp, DOHFile* csp, Node* n){		
 		DOHString* fullname = Getattr(n, "name");
@@ -816,6 +817,7 @@ public:
 			Printf(hpp, "\n");
 		}
 	}
+	***/
 #endif	// ORIGINAL_CODE
 
 	void TypeMapImp(DOHFile* cs, Node* topnode, Node* n){
@@ -2599,17 +2601,6 @@ public:
 		return (char*) fname->c_str();
 	}
 
-	bool is_file_empty(char* file) {
-		bool ret = false;
-		std::ifstream ifs;
-		char inbuff[1024];
-		ifs.open(file);
-		ifs.getline(inbuff, sizeof(inbuff));
-		if (ifs.eof()) ret = true;
-		ifs.close();
-		return ret; 
-	}
-
 	void mark_function_generation(Node* pn, Node* cn) {
 		char* pname = Char(Getattr(pn, "sym:name"));
 		char* cname = Char(Getattr(cn, "sym:name"));
@@ -2621,7 +2612,7 @@ public:
 		ctype = ctype ? ctype : (char*) "";
 		if (ENDWITH(pname, "If"))	return;
 		if (ENDWITH(pname, "Dedc"))	return;
-		if (GetFlagAttr(pn, "deature:struct"))	return;
+		if (GetFlagAttr(pn, "feature:struct"))	return;
 		if (EQc(ctype, "constructor"))	return;
 		if (!EQc(ckind, "function"))	return;
 		//
@@ -2629,7 +2620,6 @@ public:
 			function_generation_map[*psname] = 1;
 		}
 #if (GATHER_INFO == 1)
-		char* caccess = Char(Getattr(cn, "access"));
 		if (function_generation_map.find(*psname) != function_generation_map.end()) {
 			PRINTinfo(gip, "Has nonIF function: %s, %s %s, %s, %s\n", pname, cname, oname, ctype, ckind);
 		}
@@ -2880,9 +2870,11 @@ public:
 		Printf(CS,  "    }\n");
 	}
 
+	/*******
 	void generate_size_and_pushback(DOHFile* fps[], Node* node, char* name, char* uq_name, char* cpp_name) {
 		Printf(CS, "// @@ name: %s, uq_name: %s, cpp_name: %s\n", name, uq_name, cpp_name);
 	}
+	*******/
 
 	void generate_type_conversion_operator(DOHFile* fps[], Node* topnode, char* complete_name, char* name, char from_type, char* suffix = "") {
 		StructInfo* struct_info = get_struct_info(fps, topnode, complete_name);
@@ -3129,7 +3121,7 @@ public:
 					bool binary_op = (strlen(type) == 3);
 					unsigned int count = count_extra_fields_in_operator_def(type);
 					if (num_fields != count + 3) {
-						abort(__LINE__, "filed count does not match with type 'E/S': %s", specs[j].c_str());
+						abort(__LINE__, "field count does not match with type 'E/S': %s", specs[j].c_str());
 					}
 					string rtrn_str = operator_type_analyzer(type[0], uq_name);
 					string opr1_str = operator_type_analyzer(type[1], uq_name);
@@ -3902,6 +3894,8 @@ public:
 		Printf(file, "\n%s}\n", indent);
 	}
 
+
+	/******* DO NOT GENERATE !! ********
 	void generate_accessors_for_parents(DOHFile* fps[], Node* topnode, Node* node, map<string, int>& dupe_map) {
 		NodeInfo& ci = get_node_info(fps, node);
 		PRINTF(fps, FD_ALL, "// accessors to %s: %d\n", ci.sym_name, __LINE__);
@@ -3927,6 +3921,7 @@ public:
 #endif
 		}
 	}
+	*******/
 
 	char* make_wrapper_type(NodeInfo& ni) {
 		// 組み込み型のポインタを返す関数は配列を返すものとして扱う
