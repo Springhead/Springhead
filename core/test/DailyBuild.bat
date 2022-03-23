@@ -205,7 +205,7 @@ exit /b
 :: ---------------------------------------------------------------------
 :exec
 	echo %*
-	rem if not "%FLAG[D]%" == "true" (%*)
+	if not "%FLAG[D]%" == "true" (%*)
 	exit /b
 
 :abspath
