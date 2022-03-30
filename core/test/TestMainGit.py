@@ -44,6 +44,7 @@
 #     Ver 1.12   2021/07/06 F.Kanehori	DailyBuildTestTools の導入.
 #     Ver 1.13   2021/08/04 F.Kanehori	Add nkf path for web report.
 #     Ver 1.14   2022/01/19 F.Kanehori	Add option -X for debug.
+#     Ver 1.14.1 2022/03/30 F.Kanehori	Change log server host name.
 # ======================================================================
 version = '1.14'
 
@@ -479,7 +480,7 @@ if check_exec('DAILYBUILD_COPYTO_BUILDLOG', unix_copyto_buildlog):
 			print('cp %s failed' % fmdir)
 	else:
 		dirname = 'log'
-		docroot = '//haselab/HomeDirs/WWW/docroots'
+		docroot = '//haselab.net/HomeDirs/WWW/docroots'
 		webbase = '%s/springhead/dailybuild/%s' % (docroot, dirname)
 		logdir = '%s/log' % TestDir
 		#
@@ -537,7 +538,7 @@ if check_exec('DAILYBUILD_EXECUTE_MAKEDOC', unix_execute_makedoc):
 if check_exec('DAILYBUILD_COPYTO_WEBBASE', unix_copyto_webbase):
 	Print('copying generated files to web')
 	#
-	docroot = '//haselab/HomeDirs/WWW/docroots'
+	docroot = '//haselab.net/HomeDirs/WWW/docroots'
 	webbase = '%s/springhead/dailybuild/generated' % docroot
 	#
 	copy_all('generated', webbase, True, dry_run)
