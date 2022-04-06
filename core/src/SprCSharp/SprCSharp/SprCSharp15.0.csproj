@@ -83,6 +83,7 @@
     <Compile Include="CSGraphics.cs" />
     <Compile Include="CSHumanInterface.cs" />
     <Compile Include="CSManualFoundation.cs" />
+    <Compile Include="CSManualFramework.cs" />
     <Compile Include="CSManualPhysics.cs" />
     <Compile Include="CSPhysics.cs" />
     <Compile Include="CSUtility.cs" />

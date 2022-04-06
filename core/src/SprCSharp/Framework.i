@@ -12,6 +12,9 @@
 %ignore Spr::FWAppBase::Timers;
 // %ignore Spr::FWApp;
 %module Framework
+
+%feature("only_cs_ignore") Spr::FWSceneIf::GetPHScene;
+
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"

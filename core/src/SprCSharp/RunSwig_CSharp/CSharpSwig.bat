@@ -69,6 +69,7 @@ if exist %MODULE%.i (
     if %DUMPTREE% == 1 (
         cmd /c %SWIG% -debug-module 4 %MODULE%.i > CS%MODULE%.tree
     ) else (
+	echo %SWIG%
 	cmd /c %SWIG% %ARGS% -DSWIG_%MODULE% %MACRO% %MODULE%.i
 	move /Y %MODULE%Cs.cs  %CS_SRC%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y %MODULE%CsP.cs %CS_IMP%\CS%MODULE%.cs  > NUL 2>&1

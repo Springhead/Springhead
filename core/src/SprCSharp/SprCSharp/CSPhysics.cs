@@ -33173,7 +33173,6 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 		if (phSceneIf.multiThreadMode) {;
 			var currentThread = Thread.CurrentThread;
 			if (currentThread == phSceneIf.stepThread) {
-                    Console.WriteLine("CS CreateRootNode phSceneIf.stepThread");
 // IfClass
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
 				phSceneIf.AddCallbackForStepThread(
@@ -33194,7 +33193,6 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 					}
 					phSceneIf.callObjectStatesIf_Create = true;
 					if (phSceneIf.isStepThreadExecuting) {
-                    Console.WriteLine("CS CreateRootNode phSceneIf.isStepThreadExecuting");
 // IfClass
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
@@ -33202,7 +33200,6 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
             PHRootNodeIf obj = new PHRootNodeIf(ptrGet ,ptrBuffer ,phSceneIf.sceneForGet ,phSceneIf.sceneForBuffer);
             return obj;
 					} else {
-                    Console.WriteLine("CS CreateRootNode !phSceneIf.isStepThreadExecuting");
 	    IntPtr ptrStep = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForStep], (IntPtr) root._thisArray[phSceneIf.sceneForStep]);
 	    IntPtr ptrBuffer = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForBuffer], (IntPtr) root._thisArray[phSceneIf.sceneForBuffer]);
 	    IntPtr ptrGet = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[phSceneIf.sceneForGet], (IntPtr) root._thisArray[phSceneIf.sceneForGet]);
@@ -33213,11 +33210,8 @@ PHRootNodeDesc new_desc = new PHRootNodeDesc(desc);
 				}
 			}
 		} else {
-                    Console.WriteLine("CS CreateRootNode !phSceneIf.multiThreadMode");
 	    IntPtr ptr = SprExport.Spr_PHSceneIf_CreateRootNode_1((IntPtr) _thisArray[0], (IntPtr) root._thisArray[0]);
-            if (ptr == IntPtr.Zero) {
-                    Console.WriteLine("CS CreateRootNode !phSceneIf.multiThreadMode IntPtr.Zero");
-                    return null; } 
+            if (ptr == IntPtr.Zero) { return null; } 
             PHRootNodeIf obj = new PHRootNodeIf(ptr, 0);
             return obj;
 		}
