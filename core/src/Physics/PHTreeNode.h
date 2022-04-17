@@ -56,6 +56,8 @@ public:
 	int             NChildren    ()     { return (int)Children().size(); }
 	PHTreeNodeIf*   GetParentNode()     { return parent->Cast(); }
 	PHTreeNodeIf*   GetChildNode (int i){ return Children()[i]->Cast(); }
+	SpatialMatrix   GetI         ()     { return I; }
+	SpatialVector   GetZ         ()     { return Z; }
 	PHSolidIf*      GetSolid     ()     { return solid->Cast(); }
 	PHRootNodeIf*	GetRootNode  ();
 		

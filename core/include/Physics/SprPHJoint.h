@@ -18,6 +18,8 @@
 
 #include <float.h>  // FLT_MAX
 
+#include <Base/Spatial.h>
+
 namespace Spr{;
 
 struct PHSolidIf;
@@ -980,6 +982,17 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	PHSolidIf* GetSolid();
 
+	/** @brief Articulated Inertiaを取得する
+	 */
+	Spr::SpatialMatrix GetI();
+
+	/** @brief Articulated Bias Forceを取得する
+	 */
+	Spr::SpatialVector GetZ();
+
+	/** @brief SetUpを実行する
+	 */
+	void Setup();
 };
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
