@@ -65,9 +65,9 @@ public:
 				Vec3d p(0, 0.1, 0);
 				Quaterniond q(1, 0, 0, 0);
 				dynamicalOffSolidForCalc->SetMass(1);
+				dynamicalOffSolidForCalc->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 				dynamicalOffSolidForCalc->SetFramePosition(p);
 				dynamicalOffSolidForCalc->SetOrientation(q);
-				dynamicalOffSolidForCalc->CompInertia(); // SetInertia
 				//dynamicalOffSolidForCalc->SetInertia();
 			}
 			solid1ForCalc = phScene->CreateSolid();
@@ -75,20 +75,21 @@ public:
 				solid1ForCalc->SetName("DynamicalOffSolid");
 				solid1ForCalc->SetDynamical(true);
 				solid1ForCalc->AddShape(boxShape);
-				Vec3d p(0.1, 0.1, 0);
+				Vec3d p(0.05, 0.1, 0);
 				Quaterniond q(1, 0, 0, 0);
 				solid1ForCalc->SetMass(1);
+				solid1ForCalc->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 				solid1ForCalc->SetFramePosition(p);
 				solid1ForCalc->SetOrientation(q);
-				solid1ForCalc->CompInertia();
+				//solid1ForCalc->CompInertia();
 			}
 			PHBallJointDesc jdesc;
 			Vec3d dynamicalOffSolidPosition = dynamicalOffSolidForCalc->GetFramePosition();
 			Vec3d solid1Position = solid1ForCalc->GetFramePosition();
-			Vec3d jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
+			Vec3d jointPosition = Vec3d(0.05, 0.1, 0);
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
-			jdesc.spring = 1;
+			jdesc.spring = 100;
 			jdesc.damper = 0;
 			PHBallJointIf* ballJointForCalc = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForCalc, solid1ForCalc, jdesc);
 			phRootNodeIfForCalc = phScene->CreateRootNode(dynamicalOffSolidForCalc);
@@ -113,41 +114,43 @@ public:
 				Vec3d p(0, 0.1, 0.1);
 				Quaterniond q(1, 0, 0, 0);
 				dynamicalOffSolidForTest->SetMass(1);
+				dynamicalOffSolidForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 				dynamicalOffSolidForTest->SetFramePosition(p);
 				dynamicalOffSolidForTest->SetOrientation(q);
-				dynamicalOffSolidForTest->CompInertia();
 			}
 			solid1ForTest = phScene->CreateSolid();
 			{
 				solid1ForTest->SetName("DynamicalOffSolid");
 				solid1ForTest->SetDynamical(true);
 				solid1ForTest->AddShape(boxShape);
-				Vec3d p(0.1, 0.1, 0.1);
+				Vec3d p(0.05, 0.1, 0.1);
 				Quaterniond q(1, 0, 0, 0);
 				solid1ForTest->SetMass(1);
+				solid1ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 				solid1ForTest->SetFramePosition(p);
 				solid1ForTest->SetOrientation(q);
-				solid1ForTest->CompInertia();
 			}
 			PHBallJointDesc jdesc;
 			Vec3d dynamicalOffSolidPosition = dynamicalOffSolidForTest->GetFramePosition();
 			solid1Position = solid1ForTest->GetFramePosition();
-			jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
+			jointPosition = Vec3d(0.05, 0.1, 0.1);
+			//jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
-			jdesc.spring = 1;
+			jdesc.spring = 100;
 			jdesc.damper = 0;
 			ballJointForTest = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForTest, solid1ForTest, jdesc);
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
 			phTreeNodeIfForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
 			//Quaterniond qd; qd.RotationArc();
 			Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
-			//ballJointForCalc->SetTargetPosition(q_z90);
+			ballJointForTest->SetTargetPosition(q_z90);
 			phRootNodeIfForTest->Setup();
 
 			Vec3d diff = q_z90.RotationHalf();
 			wdot = diff / (timeStep * timeStep);
-			cout << diff << endl;
+			cout << "diff " << diff << endl;
+			cout << "wdot " << wdot << endl;
 		}
 
 		SpatialMatrix I = phTreeNodeIfForTest->GetI();
@@ -160,12 +163,11 @@ public:
 		cout << "a2 " << a2 << endl;
 		f = I * a2 + Z;
 		Vec3d t = f.w(); // トルク
-		ballJointForTest->SetTargetPosition(Quaterniond::Rot(Rad(90), 'z'));
 		//ballJointForTest->SetOffsetForce(t);
 		
 		Vec3d t_f = (solid1Position - jointPosition) % f.v(); // 力をJoint周りのトルクに変換 ^ % どちらも外積優先順位が
 
-		ballJointForTest->SetOffsetForce(t_f + f.w());
+		ballJointForTest->SetOffsetForce((t_f + f.w())*15);
 		//solid1ForTest->AddForce(t_f + f.v()); //力を引数に トルクは原点関係ない
 		cout << "I " << I << endl;
 		cout << "Z " << Z << endl;
@@ -176,6 +178,7 @@ public:
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderAxis();
 	}
+
 	bool bRun = false;
 	void Keyboard(int key, int x, int y) {
 		switch (key) {
