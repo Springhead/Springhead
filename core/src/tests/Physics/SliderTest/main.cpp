@@ -44,6 +44,7 @@ public:
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
 		PHSceneIf* phScene = GetSdk()->GetScene()->GetPHScene();
 		double timeStep = (1.0 / 60);
+		phScene->SetTimeStep(timeStep);
 		phScene->SetGravity(Vec3d(0, 0, 0));
 
 		//soFloor = CreateFloor(true);
@@ -89,8 +90,8 @@ public:
 			Vec3d jointPosition = Vec3d(0.05, 0.1, 0);
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
-			jdesc.spring = 100;
-			jdesc.damper = 0;
+			jdesc.spring = 1;
+			jdesc.damper = 1;
 			PHBallJointIf* ballJointForCalc = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForCalc, solid1ForCalc, jdesc);
 			phRootNodeIfForCalc = phScene->CreateRootNode(dynamicalOffSolidForCalc);
 			phTreeNodeIfForCalc = phScene->CreateTreeNode(phRootNodeIfForCalc, solid1ForCalc);
@@ -137,8 +138,8 @@ public:
 			//jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
-			jdesc.spring = 100;
-			jdesc.damper = 0;
+			jdesc.spring = 1;
+			jdesc.damper = 1;
 			ballJointForTest = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForTest, solid1ForTest, jdesc);
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
 			phTreeNodeIfForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
@@ -146,7 +147,8 @@ public:
 			Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
 			ballJointForTest->SetTargetPosition(q_z90);
 			phRootNodeIfForTest->Setup();
-
+			cout << "spring " << ballJointForTest->GetSpring() << endl;
+			cout << "damper  " << ballJointForTest->GetDamper() << endl;
 			Vec3d diff = q_z90.RotationHalf();
 			wdot = diff / (timeStep * timeStep);
 			cout << "diff " << diff << endl;
@@ -167,7 +169,7 @@ public:
 		
 		Vec3d t_f = (solid1Position - jointPosition) % f.v(); // 力をJoint周りのトルクに変換 ^ % どちらも外積優先順位が
 
-		ballJointForTest->SetOffsetForce((t_f + f.w())*15);
+		ballJointForTest->SetOffsetForce((t_f + f.w()));
 		//solid1ForTest->AddForce(t_f + f.v()); //力を引数に トルクは原点関係ない
 		cout << "I " << I << endl;
 		cout << "Z " << Z << endl;
