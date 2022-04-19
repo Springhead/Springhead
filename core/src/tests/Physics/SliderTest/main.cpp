@@ -84,8 +84,8 @@ public:
 			}
 			PHBallJointDesc jdesc;
 			Vec3d dynamicalOffSolidPosition = dynamicalOffSolidForCalc->GetFramePosition();
-			solid1Position = solid1ForCalc->GetFramePosition();
-			jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
+			Vec3d solid1Position = solid1ForCalc->GetFramePosition();
+			Vec3d jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
 			jdesc.spring = 1;
@@ -96,12 +96,9 @@ public:
 			Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
 			ballJointForCalc->SetTargetPosition(q_z90);
 
-			Vec3d p1 = dynamicalOffSolidPosition + q_z90 * (solid1Position - jointPosition);
+			//Vec3d p1 = dynamicalOffSolidPosition + q_z90 * (solid1Position - jointPosition);
 			//a = (p1 - solid1Position) / (timeStep * timeStep);
 
-			Vec3d diff = q_z90.RotationHalf();
-			wdot = diff / (timeStep * timeStep);
-			cout << diff << endl;
 			phRootNodeIfForCalc->Setup();
 		}
 
@@ -134,8 +131,8 @@ public:
 			}
 			PHBallJointDesc jdesc;
 			Vec3d dynamicalOffSolidPosition = dynamicalOffSolidForTest->GetFramePosition();
-			Vec3d solid1Position = solid1ForTest->GetFramePosition();
-			Vec3d jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
+			solid1Position = solid1ForTest->GetFramePosition();
+			jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
 			jdesc.spring = 1;
@@ -144,10 +141,17 @@ public:
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
 			phTreeNodeIfForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
 			//Quaterniond qd; qd.RotationArc();
+			Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
+			//ballJointForCalc->SetTargetPosition(q_z90);
+			phRootNodeIfForTest->Setup();
+
+			Vec3d diff = q_z90.RotationHalf();
+			wdot = diff / (timeStep * timeStep);
+			cout << diff << endl;
 		}
 
-		SpatialMatrix I = phTreeNodeIfForCalc->GetI();
-		SpatialVector Z = phTreeNodeIfForCalc->GetZ() / timeStep; // Zが力積だからtimeStepで割る
+		SpatialMatrix I = phTreeNodeIfForTest->GetI();
+		SpatialVector Z = phTreeNodeIfForTest->GetZ() / timeStep; // Zが力積だからtimeStepで割る
 		SpatialVector f;
 		
 		a = wdot % (solid1Position - jointPosition);
@@ -163,8 +167,8 @@ public:
 
 		ballJointForTest->SetOffsetForce(t_f + f.w());
 		//solid1ForTest->AddForce(t_f + f.v()); //力を引数に トルクは原点関係ない
-		cout << "I " << phTreeNodeIfForCalc->GetI() << endl;
-		cout << "Z " << phTreeNodeIfForCalc->GetZ() << endl;
+		cout << "I " << I << endl;
+		cout << "Z " << Z << endl;
 		cout << "f " << f << endl;
 		cout << "SetOffsetForce " << t_f + f.w() << endl;
 
