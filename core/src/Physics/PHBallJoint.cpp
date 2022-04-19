@@ -31,8 +31,9 @@ void PHBallJointNode::CompJointCoriolisAccel(){
 
 void PHBallJointNode::UpdateJointPosition(double dt){
 	PHBallJoint* j = GetJoint();
-	j->Xjrel.q += j->Xjrel.q.Derivative(j->vjrel.w()) * dt;
-	j->Xjrel.q.unitize();
+	//	j->Xjrel.q += j->Xjrel.q.Derivative(j->vjrel.w()) * dt;
+	//	j->Xjrel.q.unitize();
+	j->Xjrel.q = Quaterniond::Rot(j->vjrel.w() * dt) * j->Xjrel.q;
 }
 
 void PHBallJointNode::CompRelativePosition(){

@@ -138,8 +138,8 @@ public:
 			//jointPosition = (dynamicalOffSolidPosition + solid1Position) / 2;
 			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
 			jdesc.posePlug.Pos() = jointPosition - solid1Position;
-			jdesc.spring = 1;
-			jdesc.damper = 1;
+			jdesc.spring = 0;
+			jdesc.damper = 0;
 			ballJointForTest = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForTest, solid1ForTest, jdesc);
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
 			phTreeNodeIfForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
