@@ -56,53 +56,52 @@ public:
 		boxShape->SetDensity(density);
 		Vec3d solid1Position;
 		Vec3d jointPosition;
-		// トルク求めるためのもの
-		{
-			dynamicalOffSolidForCalc = phScene->CreateSolid();
-			{
-				dynamicalOffSolidForCalc->SetName("DynamicalOffSolid");
-				dynamicalOffSolidForCalc->SetDynamical(false);
-				dynamicalOffSolidForCalc->AddShape(boxShape);
-				Vec3d p(0, 0.1, 0);
-				Quaterniond q(1, 0, 0, 0);
-				dynamicalOffSolidForCalc->SetMass(1);
-				dynamicalOffSolidForCalc->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
-				dynamicalOffSolidForCalc->SetFramePosition(p);
-				dynamicalOffSolidForCalc->SetOrientation(q);
-				//dynamicalOffSolidForCalc->SetInertia();
-			}
-			solid1ForCalc = phScene->CreateSolid();
-			{
-				solid1ForCalc->SetName("DynamicalOffSolid");
-				solid1ForCalc->SetDynamical(true);
-				solid1ForCalc->AddShape(boxShape);
-				Vec3d p(0.05, 0.1, 0);
-				Quaterniond q(1, 0, 0, 0);
-				solid1ForCalc->SetMass(1);
-				solid1ForCalc->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
-				solid1ForCalc->SetFramePosition(p);
-				solid1ForCalc->SetOrientation(q);
-				//solid1ForCalc->CompInertia();
-			}
-			PHBallJointDesc jdesc;
-			Vec3d dynamicalOffSolidPosition = dynamicalOffSolidForCalc->GetFramePosition();
-			Vec3d solid1Position = solid1ForCalc->GetFramePosition();
-			Vec3d jointPosition = Vec3d(0.05, 0.1, 0);
-			jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
-			jdesc.posePlug.Pos() = jointPosition - solid1Position;
-			jdesc.spring = 1;
-			jdesc.damper = 1;
-			PHBallJointIf* ballJointForCalc = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForCalc, solid1ForCalc, jdesc);
-			phRootNodeIfForCalc = phScene->CreateRootNode(dynamicalOffSolidForCalc);
-			phTreeNodeIfForCalc = phScene->CreateTreeNode(phRootNodeIfForCalc, solid1ForCalc);
-			Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
-			ballJointForCalc->SetTargetPosition(q_z90);
+		//{
+		//	dynamicalOffSolidForCalc = phScene->CreateSolid();
+		//	{
+		//		dynamicalOffSolidForCalc->SetName("DynamicalOffSolid");
+		//		dynamicalOffSolidForCalc->SetDynamical(false);
+		//		dynamicalOffSolidForCalc->AddShape(boxShape);
+		//		Vec3d p(0, 0.1, 0);
+		//		Quaterniond q(1, 0, 0, 0);
+		//		dynamicalOffSolidForCalc->SetMass(1);
+		//		dynamicalOffSolidForCalc->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
+		//		dynamicalOffSolidForCalc->SetFramePosition(p);
+		//		dynamicalOffSolidForCalc->SetOrientation(q);
+		//		//dynamicalOffSolidForCalc->SetInertia();
+		//	}
+		//	solid1ForCalc = phScene->CreateSolid();
+		//	{
+		//		solid1ForCalc->SetName("DynamicalOffSolid");
+		//		solid1ForCalc->SetDynamical(true);
+		//		solid1ForCalc->AddShape(boxShape);
+		//		Vec3d p(0.1, 0.1, 0);
+		//		Quaterniond q(1, 0, 0, 0);
+		//		solid1ForCalc->SetMass(1);
+		//		solid1ForCalc->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
+		//		solid1ForCalc->SetFramePosition(p);
+		//		solid1ForCalc->SetOrientation(q);
+		//		//solid1ForCalc->CompInertia();
+		//	}
+		//	PHBallJointDesc jdesc;
+		//	Vec3d dynamicalOffSolidPosition = dynamicalOffSolidForCalc->GetFramePosition();
+		//	Vec3d solid1Position = solid1ForCalc->GetFramePosition();
+		//	Vec3d jointPosition = Vec3d(0.05, 0.1, 0);
+		//	jdesc.poseSocket.Pos() = jointPosition - dynamicalOffSolidPosition;
+		//	jdesc.posePlug.Pos() = jointPosition - solid1Position;
+		//	jdesc.spring = 1;
+		//	jdesc.damper = 1;
+		//	PHBallJointIf* ballJointForCalc = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForCalc, solid1ForCalc, jdesc);
+		//	phRootNodeIfForCalc = phScene->CreateRootNode(dynamicalOffSolidForCalc);
+		//	phTreeNodeIfForCalc = phScene->CreateTreeNode(phRootNodeIfForCalc, solid1ForCalc);
+		//	Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
+		//	ballJointForCalc->SetTargetPosition(q_z90);
 
-			//Vec3d p1 = dynamicalOffSolidPosition + q_z90 * (solid1Position - jointPosition);
-			//a = (p1 - solid1Position) / (timeStep * timeStep);
+		//	//Vec3d p1 = dynamicalOffSolidPosition + q_z90 * (solid1Position - jointPosition);
+		//	//a = (p1 - solid1Position) / (timeStep * timeStep);
 
-			phRootNodeIfForCalc->Setup();
-		}
+		//	phRootNodeIfForCalc->Setup();
+		//}
 
 
 		// 適用する方
@@ -124,7 +123,7 @@ public:
 				solid1ForTest->SetName("DynamicalOffSolid");
 				solid1ForTest->SetDynamical(true);
 				solid1ForTest->AddShape(boxShape);
-				Vec3d p(0.05, 0.1, 0.1);
+				Vec3d p(0.1, 0.1, 0.1);
 				Quaterniond q(1, 0, 0, 0);
 				solid1ForTest->SetMass(1);
 				solid1ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
@@ -215,6 +214,10 @@ public:
 			GetCurrentWin()->GetScene()->Step();
 		}
 		PostRedisplay();
+
+		Posed p = solid1ForTest->GetPose();
+		cout << "p " << p << endl;
+		cout << "rotationhalf " << p.Ori().RotationHalf() << endl;
 		ballJointForTest->SetOffsetForce(Vec3d(0, 0, 0));
 	}
 
