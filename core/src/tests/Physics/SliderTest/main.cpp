@@ -206,7 +206,7 @@ public:
 		//Vec3d a2 = wdot1 % (solid2PositionForTest - ballJoint2PositionForTest);
 
 		//Vec3d tx = Vec3d(0.05,0,0) % (1*a1+10000000000000000000*a2);
-		//Vec3d ty = Vec3d(0.05,0,0) % (10000000000000000000 * a2);
+		//Vec3d ty = Vec3d(0.05,0,0) % (10000000000000000000 * a2+ 1*a1/2);
 		//cout << "tx " << tx << endl;
 		//cout << "ty " << ty << endl;
 		ballJoint1ForTest->SetOffsetForce(t1 + t2);
