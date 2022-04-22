@@ -147,7 +147,7 @@ public:
 			solid2ForTest->SetName("solid2ForTest");
 			solid2ForTest->SetDynamical(true);
 			solid2ForTest->AddShape(boxShape);
-			solid2PositionForTest = Vec3d(0.15, 0.1, 0.1);
+			solid2PositionForTest = Vec3d(0.2, 0.1, 0.1);
 			solid2ForTest->SetMass(10000000000000000000);
 			solid2ForTest->SetInertia(Matrix3d(10000000000000000000, 0, 0, 0, 10000000000000000000, 0, 0, 0, 10000000000000000000));
 			solid2ForTest->SetFramePosition(solid2PositionForTest);
@@ -179,21 +179,21 @@ public:
 			ballJoint2TreeNodeForTest = phScene->CreateTreeNode(ballJoint1TreeNodeForTest, solid2ForTest);
 
 			// targetPositionを設定
-			Quaterniond q_z90 = Quaterniond::Rot(Rad(90), 'z');
-			Quaterniond q_z180 = Quaterniond::Rot(Rad(180), 'z');
-			ballJoint1ForTest->SetTargetPosition(q_z90);
-			ballJoint2ForTest->SetTargetPosition(q_z180);
+			Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
+			Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'z');
+			ballJoint1ForTest->SetTargetPosition(targetRotationBallJoint1);
+			ballJoint2ForTest->SetTargetPosition(targetRotationBallJoint2);
 
 			ballJoint1ForTest->UpdateState();
 			ballJoint2ForTest->UpdateState();
 			phRootNodeIfForTest->Setup();
 			cout << "spring " << ballJoint1ForTest->GetSpring() << endl;
 			cout << "damper  " << ballJoint1ForTest->GetDamper() << endl;
-			Vec3d diff1 = q_z90.RotationHalf();
+			Vec3d diff1 = targetRotationBallJoint1.RotationHalf();
 			wdot1 = diff1 / (timeStep * timeStep);
 			cout << "diff1 " << diff1 << endl;
 			cout << "wdot1 " << wdot1 << endl;
-			Vec3d diff2 = q_z180.RotationHalf();
+			Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
 			wdot2 = diff2 / (timeStep * timeStep);
 			cout << "diff2 " << diff2 << endl;
 			cout << "wdot2 " << wdot2 << endl;
@@ -202,6 +202,13 @@ public:
 		Vec3d t1 = CalcOffsetForceForTracking(ballJoint1ForTest, ballJoint1TreeNodeForTest, ballJoint1PositionForTest, solid1PositionForTest, wdot1);
 		Vec3d t2 = CalcOffsetForceForTracking(ballJoint2ForTest, ballJoint2TreeNodeForTest, ballJoint2PositionForTest, solid2PositionForTest, wdot2);
 
+		//Vec3d a1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
+		//Vec3d a2 = wdot1 % (solid2PositionForTest - ballJoint2PositionForTest);
+
+		//Vec3d tx = Vec3d(0.05,0,0) % (1*a1+10000000000000000000*a2);
+		//Vec3d ty = Vec3d(0.05,0,0) % (10000000000000000000 * a2);
+		//cout << "tx " << tx << endl;
+		//cout << "ty " << ty << endl;
 		ballJoint1ForTest->SetOffsetForce(t1 + t2);
 		ballJoint2ForTest->SetOffsetForce(t2);
 
