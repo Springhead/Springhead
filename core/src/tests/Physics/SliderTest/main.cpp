@@ -42,8 +42,8 @@ public:
 	PHBallJointIf* ballJoint2ForTest;
 	Vec3d ballJoint2PositionForTest;
 
-	Vec3d wdot1, a1;
-	Vec3d wdot2, a2;
+	Vec3d wdot1;
+	Vec3d wdot2;
 	PHRootNodeIf* phRootNodeIfForCalc;
 	PHTreeNodeIf* phTreeNodeIfForCalc;
 	PHRootNodeIf* phRootNodeIfForTest;
@@ -161,6 +161,7 @@ public:
 			jdesc1.spring = 0;
 			jdesc1.damper = 0;
 			ballJoint1ForTest = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForTest, solid1ForTest, jdesc1);
+			ballJoint1ForTest->SetName("ballJoint1ForTest");
 
 			// solid1とsolid2を繋ぐボールジョイント2を作成
 			PHBallJointDesc jdesc2;
@@ -170,6 +171,7 @@ public:
 			jdesc2.spring = 0;
 			jdesc2.damper = 0;
 			ballJoint2ForTest = (PHBallJointIf*)phScene->CreateJoint(solid1ForTest, solid2ForTest, jdesc2);
+			ballJoint2ForTest->SetName("ballJoint2ForTest");
 
 			// ABAを使用するためにNodeを構築
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
@@ -201,11 +203,15 @@ public:
 		ballJoint1ForTest->SetOffsetForce(t1 + t2);
 		ballJoint2ForTest->SetOffsetForce(t2);
 
+		cout << endl;
+
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderAxis();
 	}
 
 	Vec3d CalcOffsetForceForTracking(PHBallJointIf* ballJoint, PHTreeNodeIf* phTreeNode, Vec3d ballJointPosition, Vec3d solidPosition, Vec3d wdot) {
+		cout << endl;
+		cout << "---------" << ballJoint->GetName() << "---------" << endl;
 		SpatialMatrix I = phTreeNode->GetI();
 		SpatialVector Z = phTreeNode->GetZ() / timeStep; // Zが力積だからtimeStepで割る
 		SpatialVector f;
@@ -222,7 +228,7 @@ public:
 		Vec3d offsetForce = t_f + f.w();
 		//ballJoint->SetOffsetForce(offsetForce);
 		//solid1ForTest->AddForce(t_f + f.v()); //力を引数に トルクは原点関係ない
-		cout << "I " << I << endl;
+		cout << "I " << I;
 		cout << "Z " << Z << endl;
 		cout << "f " << f << endl;
 		cout << "SetOffsetForce " << offsetForce << endl;
