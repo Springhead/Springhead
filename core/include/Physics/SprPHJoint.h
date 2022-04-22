@@ -120,6 +120,10 @@ struct PHConstraintIf : public SceneObjectIf{
 	/**
 	 */
 	bool IsYielded();
+
+	/** @biref 状態の更新
+	*/
+	void UpdateState();
 };
 
 /// 拘束の集合のインタフェース
@@ -990,7 +994,7 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	Spr::SpatialVector GetZ();
 
-	/** @brief SetUpを実行する
+	/** @brief Setupを実行する
 	 */
 	void Setup();
 };

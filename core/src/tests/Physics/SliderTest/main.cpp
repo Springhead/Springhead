@@ -184,6 +184,8 @@ public:
 			ballJoint1ForTest->SetTargetPosition(q_z90);
 			ballJoint2ForTest->SetTargetPosition(q_z180);
 
+			ballJoint1ForTest->UpdateState();
+			ballJoint2ForTest->UpdateState();
 			phRootNodeIfForTest->Setup();
 			cout << "spring " << ballJoint1ForTest->GetSpring() << endl;
 			cout << "damper  " << ballJoint1ForTest->GetDamper() << endl;
