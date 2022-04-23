@@ -55,6 +55,7 @@ public:
 	void BuildScene() {
 		FWSceneIf* fwScene = GetCurrentWin()->GetScene();
 	    fwScene->EnableRenderAxis(true, true, true);		///< 座標軸
+		fwScene->EnableRenderForce();
 		fwScene->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< 座標軸のスタイル
 		fwScene->SetAxisScale(0.015, 0.015, 0.015);
 
@@ -63,7 +64,7 @@ public:
 		timeStep = (1.0 / 60);
 		phScene->SetTimeStep(timeStep);
 		phScene->SetGravity(Vec3d(0, 0, 0));
-		phScene->SetNumIteration(50);
+		//phScene->SetNumIteration(50);
 		//soFloor = CreateFloor(true);
 		CDBoxDesc bd;
 		bd.boxsize = Vec3d(0.02, 0.02, 0.02);
@@ -92,8 +93,7 @@ public:
 			solid1ForTest->SetDynamical(true);
 			solid1ForTest->AddShape(boxShape);
 			solid1PositionForTest = Vec3d(0.1, 0.1, 0);
-			mSolid1ForTest = 1;
-			solid1ForTest->SetMass(mSolid1ForTest);
+			solid1ForTest->SetMass(100);
 			solid1ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid1ForTest->SetFramePosition(solid1PositionForTest);
 			solid1ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
@@ -130,14 +130,14 @@ public:
 			//ballJoint2ForTest->SetName("ballJoint2ForTest");
 
 			// ABAを使用するためにNodeを構築
-			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
-			ballJoint1TreeNodeForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
+			//phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
+			//ballJoint1TreeNodeForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
 			//ballJoint2TreeNodeForTest = phScene->CreateTreeNode(ballJoint1TreeNodeForTest, solid2ForTest);
 
 			// targetPositionを設定
 			Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
 			//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'z');
-			ballJoint1ForTest->SetTargetPosition(targetRotationBallJoint1);
+			//ballJoint1ForTest->SetTargetPosition(targetRotationBallJoint1);
 			//ballJoint2ForTest->SetTargetPosition(targetRotationBallJoint2);
 
 			// 剛体のグローバルの加速度と角加速度を求める
