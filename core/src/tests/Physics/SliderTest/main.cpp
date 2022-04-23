@@ -203,13 +203,18 @@ public:
 		Vec3d t2 = CalcOffsetForceForTracking(ballJoint2ForTest, ballJoint2TreeNodeForTest, ballJoint2PositionForTest, solid2PositionForTest, wdot2);
 
 		//Vec3d a1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
-		//Vec3d a2 = wdot1 % (solid2PositionForTest - ballJoint2PositionForTest);
+		Vec3d a2_local = wdot1 % (solid2PositionForTest - ballJoint2PositionForTest);
+		Vec3d a2_global = wdot2 % (solid2PositionForTest - ballJoint2PositionForTest);
 
 		//Vec3d tx = Vec3d(0.05,0,0) % (1*a1+10000000000000000000*a2);
 		//Vec3d ty = Vec3d(0.05,0,0) % (10000000000000000000 * a2+ 1*a1/2);
 		//cout << "tx " << tx << endl;
 		//cout << "ty " << ty << endl;
-		ballJoint1ForTest->SetOffsetForce(t1 + t2);
+		Vec3d f_global = 10000000000000000000 * a2_global;
+		Vec3d f_local = 10000000000000000000 * a2_local;
+		Vec3d t3 = (solid2PositionForTest - ballJoint2PositionForTest) % f_global; // 2つ目のボールジョイントに加わるトルク
+		Vec3d t4 = (ballJoint2PositionForTest - ballJoint1PositionForTest) % f_local; // 2つ目のボールジョイントに加わった力に拮抗するトルク
+		ballJoint1ForTest->SetOffsetForce(t1 + t2/* + t3 + t4*/);
 		ballJoint2ForTest->SetOffsetForce(t2);
 
 		cout << endl;
