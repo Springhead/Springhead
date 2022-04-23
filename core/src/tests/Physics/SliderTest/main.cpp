@@ -44,7 +44,7 @@ public:
 	Vec3d ballJoint2PositionForTest;
 
 	Vec3d wdot1;
-	Vec3d wdot2;
+	Vec3d wdot2_old;
 	PHRootNodeIf* phRootNodeIfForCalc;
 	PHTreeNodeIf* phTreeNodeIfForCalc;
 	PHRootNodeIf* phRootNodeIfForTest;
@@ -99,15 +99,15 @@ public:
 			solid1ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
 
 			// 剛体2を作成
-			//solid2ForTest = phScene->CreateSolid();
-			//solid2ForTest->SetName("solid2ForTest");
-			//solid2ForTest->SetDynamical(true);
-			//solid2ForTest->AddShape(boxShape);
-			//solid2PositionForTest = Vec3d(0.2, 0.1, 0);
-			//solid2ForTest->SetMass(10000000000000000000);
-			//solid2ForTest->SetInertia(Matrix3d(10000000000000000000, 0, 0, 0, 10000000000000000000, 0, 0, 0, 10000000000000000000));
-			//solid2ForTest->SetFramePosition(solid2PositionForTest);
-			//solid2ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
+			solid2ForTest = phScene->CreateSolid();
+			solid2ForTest->SetName("solid2ForTest");
+			solid2ForTest->SetDynamical(true);
+			solid2ForTest->AddShape(boxShape);
+			solid2PositionForTest = Vec3d(0.2, 0.1, 0);
+			solid2ForTest->SetMass(100);
+			solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
+			solid2ForTest->SetFramePosition(solid2PositionForTest);
+			solid2ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
 
 			// 固定の剛体とsolid1を繋ぐボールジョイント1を作成
 			PHBallJointDesc jdesc1;
@@ -120,23 +120,23 @@ public:
 			ballJoint1ForTest->SetName("ballJoint1ForTest");
 
 			// solid1とsolid2を繋ぐボールジョイント2を作成
-			//PHBallJointDesc jdesc2;
-			//ballJoint2PositionForTest = Vec3d(0.15, 0.1, 0.1);
-			//jdesc2.poseSocket.Pos() = ballJoint2PositionForTest - solid1PositionForTest;
-			//jdesc2.posePlug.Pos() = ballJoint2PositionForTest - solid2PositionForTest;
-			//jdesc2.spring = 0;
-			//jdesc2.damper = 0;
-			//ballJoint2ForTest = (PHBallJointIf*)phScene->CreateJoint(solid1ForTest, solid2ForTest, jdesc2);
-			//ballJoint2ForTest->SetName("ballJoint2ForTest");
+			PHBallJointDesc jdesc2;
+			ballJoint2PositionForTest = Vec3d(0.15, 0.1, 0);
+			jdesc2.poseSocket.Pos() = ballJoint2PositionForTest - solid1PositionForTest;
+			jdesc2.posePlug.Pos() = ballJoint2PositionForTest - solid2PositionForTest;
+			jdesc2.spring = 0;
+			jdesc2.damper = 0;
+			ballJoint2ForTest = (PHBallJointIf*)phScene->CreateJoint(solid1ForTest, solid2ForTest, jdesc2);
+			ballJoint2ForTest->SetName("ballJoint2ForTest");
 
 			// ABAを使用するためにNodeを構築
-			//phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
-			//ballJoint1TreeNodeForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
-			//ballJoint2TreeNodeForTest = phScene->CreateTreeNode(ballJoint1TreeNodeForTest, solid2ForTest);
+			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
+			ballJoint1TreeNodeForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
+			ballJoint2TreeNodeForTest = phScene->CreateTreeNode(ballJoint1TreeNodeForTest, solid2ForTest);
 
 			// targetPositionを設定
 			Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
-			//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'z');
+			Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'z');
 			//ballJoint1ForTest->SetTargetPosition(targetRotationBallJoint1);
 			//ballJoint2ForTest->SetTargetPosition(targetRotationBallJoint2);
 
@@ -148,17 +148,40 @@ public:
 			cout << "diff1 " << diff1 << endl;
 			cout << "wdot1 " << wdot1 << endl;
 
-			Vec3d targetPositionSolid1 = ballJoint1PositionForTest + targetRotationBallJoint1 * (solid1PositionForTest - ballJoint1PositionForTest);
-			Vec3d aSolid1 = (targetPositionSolid1 - solid1PositionForTest) / (timeStep * timeStep);
+			Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
+			Vec3d wdot2Global = diff2 / (timeStep * timeStep);
+			Vec3d wdot2Local = targetRotationBallJoint2.RotationHalf() / (timeStep * timeStep);
+			cout << "diff2 " << diff2 << endl;
+			cout << "wdot2Global " << wdot2Global << endl;
+			cout << "wdot2Local " << wdot2Local << endl;
+
+
+			// Solid1について
+			//Vec3d targetPositionSolid1 = ballJoint1PositionForTest + targetRotationBallJoint1 * (solid1PositionForTest - ballJoint1PositionForTest);
+			//Vec3d aSolid1 = (targetPositionSolid1 - solid1PositionForTest) / (timeStep * timeStep); // これはグローバル系の加速度だがABAならこれはダメ
+			Vec3d aSolid1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest); // 円運動する座標系の加速度ABAで使える
 			Vec3d fSolid1 = solid1ForTest->GetMass() * aSolid1;
+
 			Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1;
 
-			cout << "targetPositionSolid1 " << targetPositionSolid1 << endl;
+			// Solid2について
+			Vec3d aSolid2 = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest) + wdot1 % (solid2PositionForTest - ballJoint1PositionForTest); // 円運動する座標系の加速度ABAで使える
+			Vec3d fSolid2 = solid2ForTest->GetMass() * aSolid2;
+
+			Vec3d tSolid2 = solid2ForTest->GetInertia() * wdot2Global;
+
+
+			//cout << "targetPositionSolid1 " << targetPositionSolid1 << endl;
 			cout << "aSolid1 " << aSolid1 << endl;
 			cout << "fSolid1 " << fSolid1 << endl;
 			cout << "tSolid1 " << tSolid1 << endl;
+			cout << "aSolid2 " << aSolid2 << endl;
+			cout << "fSolid2 " << fSolid2 << endl;
+			cout << "tSolid2 " << tSolid2 << endl;
 			solid1ForTest->AddForce(fSolid1);
 			solid1ForTest->AddTorque(tSolid1);
+			solid2ForTest->AddForce(fSolid2);
+			solid2ForTest->AddTorque(tSolid2);
 			//Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
 			//wdot2 = diff2 / (timeStep * timeStep);
 			//cout << "diff2 " << diff2 << endl;
@@ -217,9 +240,9 @@ public:
 		Posed solid1ForTestPose = solid1ForTest->GetPose();
 		cout << "Solid1ForTest Position " << solid1ForTestPose.Pos() << endl;
 		cout << "Solid1ForTest Rotation  rotationhalf " << solid1ForTestPose.Ori().RotationHalf() << endl;
-		//Posed solid2ForTestPose = solid2ForTest->GetPose();
-		//cout << "solid2ForTest Position " << solid2ForTestPose << endl;
-		//cout << "solid2ForTest Rotation  rotationhalf " << solid2ForTestPose.Ori().RotationHalf() << endl;
+		Posed solid2ForTestPose = solid2ForTest->GetPose();
+		cout << "solid2ForTest Position " << solid2ForTestPose << endl;
+		cout << "solid2ForTest Rotation  rotationhalf " << solid2ForTestPose.Ori().RotationHalf() << endl;
 		//ballJoint1ForTest->SetOffsetForce(Vec3d(0, 0, 0));
 		//ballJoint2ForTest->SetOffsetForce(Vec3d(0, 0, 0));
 	}
@@ -373,17 +396,17 @@ public:
 			cout << "diff1 " << diff1 << endl;
 			cout << "wdot1 " << wdot1 << endl;
 			Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
-			wdot2 = diff2 / (timeStep * timeStep);
+			wdot2_old = diff2 / (timeStep * timeStep);
 			cout << "diff2 " << diff2 << endl;
-			cout << "wdot2 " << wdot2 << endl;
+			cout << "wdot2 " << wdot2_old << endl;
 		}
 
 		Vec3d t1 = CalcOffsetForceForTracking(ballJoint1ForTest, ballJoint1TreeNodeForTest, ballJoint1PositionForTest, solid1PositionForTest, wdot1);
-		Vec3d t2 = CalcOffsetForceForTracking(ballJoint2ForTest, ballJoint2TreeNodeForTest, ballJoint2PositionForTest, solid2PositionForTest, wdot2);
+		Vec3d t2 = CalcOffsetForceForTracking(ballJoint2ForTest, ballJoint2TreeNodeForTest, ballJoint2PositionForTest, solid2PositionForTest, wdot2_old);
 
 		//Vec3d a1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
 		Vec3d a2_local = wdot1 % (solid2PositionForTest - ballJoint2PositionForTest);
-		Vec3d a2_global = wdot2 % (solid2PositionForTest - ballJoint2PositionForTest);
+		Vec3d a2_global = wdot2_old % (solid2PositionForTest - ballJoint2PositionForTest);
 
 		//Vec3d tx = Vec3d(0.05,0,0) % (1*a1+10000000000000000000*a2);
 		//Vec3d ty = Vec3d(0.05,0,0) % (10000000000000000000 * a2+ 1*a1/2);
