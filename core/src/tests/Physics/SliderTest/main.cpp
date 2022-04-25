@@ -136,7 +136,7 @@ public:
 
 			// targetPositionを設定
 			Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
-			Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'z');
+			Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
 			//Quaterniond targetRotationBallJoint2 = Quaterniond(1,0,0,0);
 			//ballJoint1ForTest->SetTargetPosition(targetRotationBallJoint1);
 			//ballJoint2ForTest->SetTargetPosition(targetRotationBallJoint2);
@@ -161,61 +161,60 @@ public:
 			cout << "wdot2Local " << wdot2Local << endl;
 
 			//// Solid1について
-			Vec3d aSolid1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
-			SpatialVector fSolid1 = CalcForceAndTorqueForTracking(ballJoint1ForTest, ballJoint1TreeNodeForTest, wdot1, aSolid1);
+			//Vec3d aSolid1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
+			//SpatialVector fSolid1 = CalcForceAndTorqueForTracking(ballJoint1ForTest, ballJoint1TreeNodeForTest, wdot1, aSolid1);
 
-			cout << "aSolid1 " << aSolid1 << endl;
-			cout << "fSolid1 " << fSolid1 << endl;
-			//Solid2について
-			Vec3d ballJoint2Acc = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest);
-			Vec3d ballJoint1Acc = wdot1 % (solid2PositionForTest - ballJoint1PositionForTest);
-			cout << "ballJoint2Acc " << ballJoint2Acc << endl;
-			cout << "ballJoint1Acc " << ballJoint1Acc << endl;
-			cout << "ballJoint1Acc + ballJoint2Acc" << ballJoint1Acc + ballJoint2Acc << endl;
-			cout << "wdot2Global % (solid2PositionForTest - ballJoint2PositionForTest) " << wdot2Global % (solid2PositionForTest - ballJoint2PositionForTest) << endl;
+			//cout << "aSolid1 " << aSolid1 << endl;
+			//cout << "fSolid1 " << fSolid1 << endl;
+			////Solid2について
+			//Vec3d ballJoint2Acc = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest);
+			//Vec3d ballJoint1Acc = wdot1 % (solid2PositionForTest - ballJoint1PositionForTest);
+			//cout << "ballJoint2Acc " << ballJoint2Acc << endl;
+			//cout << "ballJoint1Acc " << ballJoint1Acc << endl;
+			//cout << "ballJoint1Acc + ballJoint2Acc" << ballJoint1Acc + ballJoint2Acc << endl;
+			//cout << "wdot2Global % (solid2PositionForTest - ballJoint2PositionForTest) " << wdot2Global % (solid2PositionForTest - ballJoint2PositionForTest) << endl;
 
-			Vec3d aSolid2 = ballJoint2Acc + ballJoint1Acc;
-			//Vec3d aSolid2 = wdot2Global % (solid2PositionForTest - ballJoint2PositionForTest);
-			SpatialVector fSolid2 = CalcForceAndTorqueForTracking(ballJoint2ForTest, ballJoint2TreeNodeForTest, wdot2Global, aSolid2);
-			cout << "aSolid2 " << aSolid2 << endl;
-			cout << "fSolid2 " << fSolid2 << endl;
-			
-			solid2ForTest->AddForce(fSolid2.v());
-			solid2ForTest->AddTorque(fSolid2.w());
+			//Vec3d aSolid2 = ballJoint2Acc + ballJoint1Acc;
+			////Vec3d aSolid2 = wdot2Global % (solid2PositionForTest - ballJoint2PositionForTest);
+			//SpatialVector fSolid2 = CalcForceAndTorqueForTracking(ballJoint2ForTest, ballJoint2TreeNodeForTest, wdot2Global, aSolid2);
+			//cout << "aSolid2 " << aSolid2 << endl;
+			//cout << "fSolid2 " << fSolid2 << endl;
+			//
+			//solid2ForTest->AddForce(fSolid2.v());
+			//solid2ForTest->AddTorque(fSolid2.w());
 
-			solid1ForTest->AddForce(fSolid1.v());
-			solid1ForTest->AddTorque(fSolid1.w() - fSolid2.w());
-			//Vec3d aSolid2 = 
+			//solid1ForTest->AddForce(fSolid1.v());
+			//solid1ForTest->AddTorque(fSolid1.w() - fSolid2.w());
 			{
 				// 手動で力とトルクを求める方法(2つ目のボールジョイントが上手くいかない)
 				// Solid1について
-				//Vec3d aSolid1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest); // 円運動する座標系の加速度ABAで使える
-				//Vec3d fSolid1 = solid1ForTest->GetMass() * aSolid1;
+				Vec3d aSolid1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest); // 円運動する座標系の加速度ABAで使える
+				Vec3d fSolid1 = solid1ForTest->GetMass() * aSolid1;
 
-				//Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1;
+				Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1;
 
-				//// Solid2について
-				//Vec3d ballJoint2Acc = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest);
-				//Vec3d ballJoint1Acc = wdot1 % (solid2PositionForTest - ballJoint1PositionForTest);
+				// Solid2について
+				Vec3d ballJoint2Acc = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest);
+				Vec3d ballJoint1Acc = wdot1 % (solid2PositionForTest - ballJoint1PositionForTest);
 
-				//cout << "ballJoint2Acc " << ballJoint2Acc << endl;
-				//cout << "ballJoint1Acc " << ballJoint1Acc << endl;
-				//Vec3d aSolid2 = ballJoint2Acc + ballJoint1Acc; // 円運動する座標系の加速度ABAで使える
-				//Vec3d fSolid2 = solid2ForTest->GetMass() * aSolid2;
+				cout << "ballJoint2Acc " << ballJoint2Acc << endl;
+				cout << "ballJoint1Acc " << ballJoint1Acc << endl;
+				Vec3d aSolid2 = ballJoint2Acc + ballJoint1Acc; // 円運動する座標系の加速度ABAで使える
+				Vec3d fSolid2 = solid2ForTest->GetMass() * aSolid2;
 
-				//Vec3d tSolid2 = solid2ForTest->GetInertia() * wdot2Global;
+				Vec3d tSolid2 = solid2ForTest->GetInertia() * wdot2Global;
 
 
-				//cout << "aSolid1 " << aSolid1 << endl;
-				//cout << "fSolid1 " << fSolid1 << endl;
-				//cout << "tSolid1 " << tSolid1 << endl;
-				//cout << "aSolid2 " << aSolid2 << endl;
-				//cout << "fSolid2 " << fSolid2 << endl;
-				//cout << "tSolid2 " << tSolid2 << endl;
-				//solid1ForTest->AddForce(fSolid1);
-				//solid1ForTest->AddTorque(tSolid1);
-				//solid2ForTest->AddForce(fSolid2);
-				//solid2ForTest->AddTorque(tSolid2);
+				cout << "aSolid1 " << aSolid1 << endl;
+				cout << "fSolid1 " << fSolid1 << endl;
+				cout << "tSolid1 " << tSolid1 << endl;
+				cout << "aSolid2 " << aSolid2 << endl;
+				cout << "fSolid2 " << fSolid2 << endl;
+				cout << "tSolid2 " << tSolid2 << endl;
+				solid1ForTest->AddForce(fSolid1);
+				solid1ForTest->AddTorque(tSolid1);
+				solid2ForTest->AddForce(fSolid2);
+				solid2ForTest->AddTorque(tSolid2);
 			}
 			//Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
 			//wdot2 = diff2 / (timeStep * timeStep);
