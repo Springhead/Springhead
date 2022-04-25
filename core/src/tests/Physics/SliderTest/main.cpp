@@ -104,7 +104,7 @@ public:
 			solid2ForTest->SetDynamical(true);
 			solid2ForTest->AddShape(boxShape);
 			solid2PositionForTest = Vec3d(0.2, 0.1, 0);
-			solid2ForTest->SetMass(100);
+			solid2ForTest->SetMass(10000000000);
 			solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid2ForTest->SetFramePosition(solid2PositionForTest);
 			solid2ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
@@ -153,13 +153,16 @@ public:
 			cout << "diff1 " << diff1 << endl;
 			cout << "wdot1 " << wdot1 << endl;
 
-			Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
+			Vec3d diff2Local = targetRotationBallJoint2.RotationHalf();
+			//Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
+			Vec3d diff2 = diff1 + diff2Local;
 			Vec3d wdot2Global = diff2 / (timeStep * timeStep);
 			Vec3d wdot2Local = targetRotationBallJoint2.RotationHalf() / (timeStep * timeStep);
 			cout << "diff2 " << diff2 << endl;
 			cout << "wdot2Global " << wdot2Global << endl;
 			cout << "wdot2Local " << wdot2Local << endl;
 
+			cout << " " << (targetRotationBallJoint1* targetRotationBallJoint2).RotationHalf() << endl;
 			//// Solid1について
 			//Vec3d aSolid1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
 			//SpatialVector fSolid1 = CalcForceAndTorqueForTracking(ballJoint1ForTest, ballJoint1TreeNodeForTest, wdot1, aSolid1);
@@ -318,7 +321,7 @@ public:
 		cout << "Solid1ForTest Position " << solid1ForTestPose.Pos() << endl;
 		cout << "Solid1ForTest Rotation  rotationhalf " << solid1ForTestPose.Ori().RotationHalf() << endl;
 		Posed solid2ForTestPose = solid2ForTest->GetPose();
-		cout << "solid2ForTest Position " << solid2ForTestPose << endl;
+		cout << "solid2ForTest Position " << solid2ForTestPose.Pos() << endl;
 		cout << "solid2ForTest Rotation  rotationhalf " << solid2ForTestPose.Ori().RotationHalf() << endl;
 		//ballJoint1ForTest->SetOffsetForce(Vec3d(0, 0, 0));
 		//ballJoint2ForTest->SetOffsetForce(Vec3d(0, 0, 0));
