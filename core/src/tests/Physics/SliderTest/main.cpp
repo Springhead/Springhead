@@ -103,7 +103,7 @@ public:
 			solid2ForTest->SetName("solid2ForTest");
 			solid2ForTest->SetDynamical(true);
 			solid2ForTest->AddShape(boxShape);
-			solid2PositionForTest = Vec3d(0.2, 0.1, 0);
+			solid2PositionForTest = Vec3d(0.15, 0.1, -0.05);
 			solid2ForTest->SetMass(100);
 			solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid2ForTest->SetFramePosition(solid2PositionForTest);
@@ -136,7 +136,7 @@ public:
 
 			// targetPositionを設定
 			Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
-			Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'z');
+			Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
 			//ballJoint1ForTest->SetTargetPosition(targetRotationBallJoint1);
 			//ballJoint2ForTest->SetTargetPosition(targetRotationBallJoint2);
 
@@ -165,7 +165,12 @@ public:
 			Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1;
 
 			// Solid2について
-			Vec3d aSolid2 = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest) + wdot1 % (solid2PositionForTest - ballJoint1PositionForTest); // 円運動する座標系の加速度ABAで使える
+			Vec3d ballJoint2Acc = wdot2Local % (solid2PositionForTest - ballJoint2PositionForTest);
+			Vec3d ballJoint1Acc = wdot1 % (solid2PositionForTest - ballJoint1PositionForTest);
+
+			cout << "ballJoint2Acc " << ballJoint2Acc << endl;
+			cout << "ballJoint1Acc " << ballJoint1Acc << endl;
+			Vec3d aSolid2 = ballJoint2Acc + ballJoint1Acc; // 円運動する座標系の加速度ABAで使える
 			Vec3d fSolid2 = solid2ForTest->GetMass() * aSolid2;
 
 			Vec3d tSolid2 = solid2ForTest->GetInertia() * wdot2Global;
@@ -180,8 +185,8 @@ public:
 			cout << "tSolid2 " << tSolid2 << endl;
 			solid1ForTest->AddForce(fSolid1);
 			solid1ForTest->AddTorque(tSolid1);
-			solid2ForTest->AddForce(fSolid2);
-			solid2ForTest->AddTorque(tSolid2);
+			//solid2ForTest->AddForce(fSolid2);
+			//solid2ForTest->AddTorque(tSolid2);
 			//Vec3d diff2 = (targetRotationBallJoint1 * targetRotationBallJoint2).RotationHalf();
 			//wdot2 = diff2 / (timeStep * timeStep);
 			//cout << "diff2 " << diff2 << endl;
@@ -199,6 +204,31 @@ public:
 
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderAxis();
+	}
+	Vec3d CalcOffsetForceForTracking(PHBallJointIf* ballJoint, PHTreeNodeIf* phTreeNode, Vec3d ballJointPosition, Vec3d solidPosition, Vec3d wdot) {
+		cout << endl;
+		cout << "---------" << ballJoint->GetName() << "---------" << endl;
+		SpatialMatrix I = phTreeNode->GetI();
+		SpatialVector Z = phTreeNode->GetZ() / timeStep; // Zが力積だからtimeStepで割る
+		SpatialVector f;
+
+		Vec3d a = wdot % (solidPosition - ballJointPosition);
+		SpatialVector a2(a, wdot); // ballJoint想定のため遠心力の加速度は無視
+
+		cout << "a2 " << a2 << endl;
+		f = I * a2 + Z;
+		Vec3d t = f.w(); // トルク
+
+		Vec3d t_f = (solidPosition - ballJointPosition) % f.v(); // 力をJoint周りのトルクに変換 ^ % どちらも外積優先順位が
+
+		Vec3d offsetForce = t_f + f.w();
+		//ballJoint->SetOffsetForce(offsetForce);
+		//solid1ForTest->AddForce(t_f + f.v()); //力を引数に トルクは原点関係ない
+		cout << "I " << I;
+		cout << "Z " << Z << endl;
+		cout << "f " << f << endl;
+		cout << "SetOffsetForce " << offsetForce << endl;
+		return offsetForce;
 	}
 
 
@@ -423,31 +453,6 @@ public:
 
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderAxis();
-	}
-	Vec3d CalcOffsetForceForTracking(PHBallJointIf* ballJoint, PHTreeNodeIf* phTreeNode, Vec3d ballJointPosition, Vec3d solidPosition, Vec3d wdot) {
-		cout << endl;
-		cout << "---------" << ballJoint->GetName() << "---------" << endl;
-		SpatialMatrix I = phTreeNode->GetI();
-		SpatialVector Z = phTreeNode->GetZ() / timeStep; // Zが力積だからtimeStepで割る
-		SpatialVector f;
-
-		Vec3d a = wdot % (solidPosition - ballJointPosition);
-		SpatialVector a2(a, wdot); // ballJoint想定のため遠心力の加速度は無視
-
-		cout << "a2 " << a2 << endl;
-		f = I * a2 + Z;
-		Vec3d t = f.w(); // トルク
-
-		Vec3d t_f = (solidPosition - ballJointPosition) % f.v(); // 力をJoint周りのトルクに変換 ^ % どちらも外積優先順位が
-
-		Vec3d offsetForce = t_f + f.w();
-		//ballJoint->SetOffsetForce(offsetForce);
-		//solid1ForTest->AddForce(t_f + f.v()); //力を引数に トルクは原点関係ない
-		cout << "I " << I;
-		cout << "Z " << Z << endl;
-		cout << "f " << f << endl;
-		cout << "SetOffsetForce " << offsetForce << endl;
-		return offsetForce;
 	}
 
 } app;
