@@ -23,6 +23,9 @@
 %feature("returns_array") Spr::PHRayIf::GetDynamicalNearest;
 %feature("returns_array") Spr::PHRayIf::GetHits;
 %feature("returns_array") Spr::PHRayIf::GetNearest;
+%feature("only_cs_ignore") Spr::PHSdkIf::CreateScene;
+%feature("only_cs_ignore") Spr::PHSdkIf::CreateSdk;
+%feature("only_cs_ignore") Spr::PHSceneIf::GetSdk;
 
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

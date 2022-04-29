@@ -1356,283 +1356,291 @@ public:
 
 			// [cs]
 			//
-			SNAP_ANA_PATH1(fps, FD_CS, "function: cdecl");
-			argnames = NULL;
-			cleanup1 = NULL;
-			cleanup2 = NULL;
-			if (ni.num_args > 0) {
-				argnames = new char*[ni.num_args];
-				cleanup1 = new void*[ni.num_args];	// clean up code for argument type string
-				cleanup2 = new void*[ni.num_args];	// clean up code for argument type structure
-				memset(cleanup1, 0, sizeof(void*) * ni.num_args);
-				memset(cleanup2, 0, sizeof(void*) * ni.num_args);
+			if (GetFlagAttr(members[i], "feature:only_cs_ignore")) {
+				Printf(CS, "// feature:only_cs_ignore %s %s \n", ni.cs_name, ni.cs_type);
 			}
-			// 関数が引数になっているときは前処理が必要
-			for (int j = 0; j < ni.num_args; j++) {
-				NodeInfo& ai = ni.funcargs[j];
-				// 引数が関数でなければ前処理は不要
-				if (!ai.is_function) {
-					continue;
+			if (GetFlagAttr(members[i], "feature:only_cs_ignore") == NULL) {
+				SNAP_ANA_PATH1(fps, FD_CS, "function: cdecl");
+				argnames = NULL;
+				cleanup1 = NULL;
+				cleanup2 = NULL;
+				if (ni.num_args > 0) {
+					argnames = new char*[ni.num_args];
+					cleanup1 = new void*[ni.num_args];	// clean up code for argument type string
+					cleanup2 = new void*[ni.num_args];	// clean up code for argument type structure
+					memset(cleanup1, 0, sizeof(void*) * ni.num_args);
+					memset(cleanup2, 0, sizeof(void*) * ni.num_args);
 				}
-				string key(ci.uq_name);
-				key.append(".");
-				key.append(argname(ai.uq_name, j));
-				if (delegate_key_map.find(key) != delegate_key_map.end()) {
-					const char* type = delegate_type_map[key].c_str();
-					const char* func = delegate_func_map[key].c_str();
-					const char* args = delegate_args_map[key].c_str();
-					Printf(CS, "\tpublic delegate %s delegate_func_%d_%d%s\n", type, function_count, j+1, args);
-					Printf(CS, "\tdelegate_func_%d_%d %s_%d_%d = %s;\n", function_count, j+1, argname(ai.uq_name, j), function_count, j+1, func);
-				}
-			}
-			
-			// 関数定義
-			if (ni.is_vector || ni.is_array) {
-				char* wrapper_class = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return_type");
-				Printf(CS, "\tpublic %s%s", (ni.is_static ? "static" : ""), wrapper_class);
-
-				if (ni.is_struct || ni.is_array) {
-					if (wrapper_map.find(wrapper_class) == wrapper_map.end()) {
-						generate_wrapper_accessor_struct(topnode, members[i], ni, ci, "function_return_type", __LINE__);
-						wrapper_map[wrapper_class] = 1;
+				// 関数が引数になっているときは前処理が必要
+				for (int j = 0; j < ni.num_args; j++) {
+					NodeInfo& ai = ni.funcargs[j];
+					// 引数が関数でなければ前処理は不要
+					if (!ai.is_function) {
+						continue;
+					}
+					string key(ci.uq_name);
+					key.append(".");
+					key.append(argname(ai.uq_name, j));
+					if (delegate_key_map.find(key) != delegate_key_map.end()) {
+						const char* type = delegate_type_map[key].c_str();
+						const char* func = delegate_func_map[key].c_str();
+						const char* args = delegate_args_map[key].c_str();
+						Printf(CS, "\tpublic delegate %s delegate_func_%d_%d%s\n", type, function_count, j + 1, args);
+						Printf(CS, "\tdelegate_func_%d_%d %s_%d_%d = %s;\n", function_count, j + 1, argname(ai.uq_name, j), function_count, j + 1, func);
 					}
 				}
-			} else {
-				Printf(CS, "\tpublic %s%s", (ni.is_static ? "static " : ""), ni.cs_type);
-				if (ni.is_pointer && !ni.is_void_ptr && !EQ(ni.uq_type, "char") && !is_special_struct(ni.cs_type)) {
-					//DUMP_NODE_INFO(fps, FD_CS, "function definition: ni", ni);
-					Printf(CS, "[]");
-				}
-			}
-			Printf(CS,  " %s(", ni.cs_name);
-			// 引数並び
-			for (int j = 0; j < ni.num_args; j++) {
-				NodeInfo& ai = ni.funcargs[j];
-				char* uqname = argname(ai.uq_name, j);
-				char* csname = argname(ai.cs_name, j);
-				string key(ci.uq_name);
-				key.append(".");
-				key.append(uqname);
-				if (ai.is_function && (delegate_func_map.find(key) != delegate_func_map.end())) {
-					// 関数
-					Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j+1, uqname, function_count, j+1);
-				}
-/**
-				else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
-					// struct
-					Printf(CS, "%s %s", cs_qualified_name(ai.uq_type), csname);
-				}
-**/
-				else if (ai.is_vector || ai.is_array) {
-					// vector or array
-					char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ai, ci, "function_args");
-					Printf(CS, "%s %s", wrapper_name, csname);
-				}
-		/**/
-				else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
-					// struct
-					Printf(CS, "%s %s", cs_qualified_name(ai.uq_type), csname);
-				}
-		/**/
-				else if (ai.is_void_ptr) {
-					Printf(CS, "CsObject %s", csname);
+
+				// 関数定義
+				if (ni.is_vector || ni.is_array) {
+					char* wrapper_class = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return_type");
+					Printf(CS, "\tpublic %s%s", (ni.is_static ? "static" : ""), wrapper_class);
+
+					if (ni.is_struct || ni.is_array) {
+						if (wrapper_map.find(wrapper_class) == wrapper_map.end()) {
+							generate_wrapper_accessor_struct(topnode, members[i], ni, ci, "function_return_type", __LINE__);
+							wrapper_map[wrapper_class] = 1;
+						}
+					}
 				}
 				else {
-					Printf(CS, "%s %s", ai.cs_type, csname);
+					Printf(CS, "\tpublic %s%s", (ni.is_static ? "static " : ""), ni.cs_type);
+					if (ni.is_pointer && !ni.is_void_ptr && !EQ(ni.uq_type, "char") && !is_special_struct(ni.cs_type)) {
+						//DUMP_NODE_INFO(fps, FD_CS, "function definition: ni", ni);
+						Printf(CS, "[]");
+					}
 				}
-				if (j < ni.num_args - 1) Printf(CS, ", ");
-				argnames[j] = csname;
-			}
-			Printf(CS, ") {\n");
-			// 引数に関する前処理
-			SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
-			//DUMP_NODE_INFO(fps, FD_CS, "function_prep", ni);
-			for (int j = 0; j < ni.num_args; j++) {
-				NodeInfo& ai = ni.funcargs[j];
-				char tmpbuff[MAX_NAMELEN+6+1];
-				if (ai.is_string) {
-					SNAP_ANA_PATH1(fps, FD_CS, "function_args: string");
-					sprintf(tmpbuff, "remote%d", j+1);
-					Printf(CS, "            IntPtr %s = Marshal.StringToBSTR(%s);\n", tmpbuff, argname(ai.uq_name, j));
-					argnames[j] = Char(NewString(tmpbuff));
-					cleanup1[j] = argnames[j];
+				Printf(CS, " %s(", ni.cs_name);
+				// 引数並び
+				for (int j = 0; j < ni.num_args; j++) {
+					NodeInfo& ai = ni.funcargs[j];
+					char* uqname = argname(ai.uq_name, j);
+					char* csname = argname(ai.cs_name, j);
+					string key(ci.uq_name);
+					key.append(".");
+					key.append(uqname);
+					if (ai.is_function && (delegate_func_map.find(key) != delegate_func_map.end())) {
+						// 関数
+						Printf(CS, "delegate_func_%d_%d %s_%d_%d", function_count, j + 1, uqname, function_count, j + 1);
+					}
+					/**
+									else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
+										// struct
+										Printf(CS, "%s %s", cs_qualified_name(ai.uq_type), csname);
+									}
+					**/
+					else if (ai.is_vector || ai.is_array) {
+						// vector or array
+						char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ai, ci, "function_args");
+						Printf(CS, "%s %s", wrapper_name, csname);
+					}
+					/**/
+					else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
+						// struct
+						Printf(CS, "%s %s", cs_qualified_name(ai.uq_type), csname);
+					}
+					/**/
+					else if (ai.is_void_ptr) {
+						Printf(CS, "CsObject %s", csname);
+					}
+					else {
+						Printf(CS, "%s %s", ai.cs_type, csname);
+					}
+					if (j < ni.num_args - 1) Printf(CS, ", ");
+					argnames[j] = csname;
 				}
-				else if (delegate_func_map.find(cs_qualified_name(ai.uq_type)) != delegate_func_map.end()) {
-					SNAP_ANA_PATH1(fps, FD_CS, "function_args: function");
+				Printf(CS, ") {\n");
+				// 引数に関する前処理
+				SNAP_ANA_PATH1(fps, FD_CS, "function_prep");
+				//DUMP_NODE_INFO(fps, FD_CS, "function_prep", ni);
+				for (int j = 0; j < ni.num_args; j++) {
+					NodeInfo& ai = ni.funcargs[j];
+					char tmpbuff[MAX_NAMELEN + 6 + 1];
+					if (ai.is_string) {
+						SNAP_ANA_PATH1(fps, FD_CS, "function_args: string");
+						sprintf(tmpbuff, "remote%d", j + 1);
+						Printf(CS, "            IntPtr %s = Marshal.StringToBSTR(%s);\n", tmpbuff, argname(ai.uq_name, j));
+						argnames[j] = Char(NewString(tmpbuff));
+						cleanup1[j] = argnames[j];
+					}
+					else if (delegate_func_map.find(cs_qualified_name(ai.uq_type)) != delegate_func_map.end()) {
+						SNAP_ANA_PATH1(fps, FD_CS, "function_args: function");
+					}
+					/*
+					else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
+						SNAP_ANA_PATH1(fps, FD_CS, "function_args: struct");
+						sprintf(tmpbuff, "remote%d", j+1);
+						Printf(CS, "            IntPtr %s = Marshal.AllocHGlobal(Marshal.SizeOf(%s));\n", tmpbuff, argname(ai.uq_name, j));
+						Printf(CS, "            Marshal.StructureToPtr(%s, %s, false);\n", argname(ai.uq_name, j), tmpbuff);
+						argnames[j] = Char(NewString(tmpbuff));
+						cleanup2[j] = argnames[j];
+					}
+					*/
 				}
-				/*
-				else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {
-					SNAP_ANA_PATH1(fps, FD_CS, "function_args: struct");
-					sprintf(tmpbuff, "remote%d", j+1);
-					Printf(CS, "            IntPtr %s = Marshal.AllocHGlobal(Marshal.SizeOf(%s));\n", tmpbuff, argname(ai.uq_name, j));
-					Printf(CS, "            Marshal.StructureToPtr(%s, %s, false);\n", argname(ai.uq_name, j), tmpbuff); 
-					argnames[j] = Char(NewString(tmpbuff));
-					cleanup2[j] = argnames[j];
+				// 関数本体
+				SNAP_ANA_PATH1(fps, FD_CS, "function_body");
+				is_enum_node = (ni.is_struct) ? FindNodeByAttrR(topnode, "enumtype", ni.type) : NULL;
+				if (ni.is_bool) {
+					Printf(CS, "\t    char ret = ");
 				}
-				*/
-			}
-			// 関数本体
-			SNAP_ANA_PATH1(fps, FD_CS, "function_body");
-			is_enum_node = (ni.is_struct) ? FindNodeByAttrR(topnode, "enumtype", ni.type) : NULL;
-			if (ni.is_bool) {
-				Printf(CS, "\t    char ret = ");
-			}
-			else if (ni.is_string) {
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_vector) {
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
-				// 組み込み型のポインタを返す関数は配列を返すものとして扱う
-				SNAP_AT_LINE(fps, FD_CS);
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_array) {
-				SNAP_AT_LINE(fps, FD_CS);
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_struct) {
-				if (is_enum_node) {
-					Printf(CS, "\t    int result = ");
-				} else {
+				else if (ni.is_string) {
 					Printf(CS, "\t    IntPtr ptr = ");
 				}
-			}
-			else if (ni.is_pointer && EQ(ni.uq_type, "char")) {
-				Printf(CS, "\t    IntPtr ptr = ");
-			}
-			else if (ni.is_intrinsic && !ni.is_void) {
-				if (ni.is_pointer && !ni.is_void_ptr) {
-					Printf(CS, "\t    %s[] result = ", ni.cs_type, ni.cs_type);
-				} else {
-					Printf(CS, "\t    %s result = (%s) ", ni.cs_type, ni.cs_type);
+				else if (ni.is_vector) {
+					Printf(CS, "\t    IntPtr ptr = ");
 				}
-			}
-			else if (!ni.is_void) {
-				Printf(CS, "\t    %s result = (%s)(Object) ", ni.cs_type, ni.cs_type);
-			}
-			else {
-				Printf(CS, "\t    ");
-			}
-			Printf(CS, "SprExport.Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
-			// 引数並び
-			sep_needed = 0;
-			if (!ni.is_static) {
-				Printf(CS, "(IntPtr) _this");
-				sep_needed = 1;
-			}
-			for (int j = 0; j < ni.num_args; j++) {
-				NodeInfo& ai = ni.funcargs[j];
-				Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
-#if (DUMP == 1)
-				if (is_enum_node_a) {
-					//NodeInfo& ei = get_node_info(fps, is_enum_node);
-					//DUMP_NODE_INFO(fps, FD_CS, "argtype is enum", ei);
+				else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
+					// 組み込み型のポインタを返す関数は配列を返すものとして扱う
+					SNAP_AT_LINE(fps, FD_CS);
+					Printf(CS, "\t    IntPtr ptr = ");
 				}
-#endif
-				if (sep_needed) Printf(CS, ", ");
-				if (is_enum_node_a)			{ Printf(CS, "(int) "); }
-				else if (ai.is_struct)			{ Printf(CS, "(IntPtr) "); }
-				else if (ai.is_string)			{ Printf(CS, "(IntPtr) "); }
-				else if (ai.is_vector || ai.is_array)	{ Printf(CS, "(IntPtr) "); }
-				else					{ Printf(CS, "(%s) ", ai.cs_im_type); }
-				if (ai.is_vector || ai.is_array)
-					Printf(CS, "%s._this", argnames[j]);
-				else
-					Printf(CS, "%s", argnames[j]);
-				sep_needed = 1;
-			}
-			Printf(CS, ");\n");
-			// 作業変数の解放
-			if (argnames) delete argnames;
-			for (int j = 0; j < ni.num_args; j++) {
-				if (cleanup1[j]) Printf(CS, "            Marshal.FreeBSTR(%s);\n", cleanup1[j]);
-				if (cleanup2[j]) Printf(CS, "            Marshal.FreeHGlobal(%s);\n", cleanup2[j]);
-			}
-			if (cleanup1) delete cleanup1;
-			if (cleanup2) delete cleanup2;
-			// 関数戻り値のための後処理
-			if (ni.is_bool) {
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: intrinsic: bool");
-				Printf(CS, "\t    return (ret == 0) ? false : true;\n");
-			}
-			else if (ni.is_pointer && EQ(ni.uq_type, "char")) {
-				Printf(CS, "\t    return Marshal.PtrToStringAnsi(ptr);\n");
-			}
-			else if (ni.is_string) {
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: string");
-	        		Printf(CS, "            string bstr = Marshal.PtrToStringBSTR(ptr);\n");
-	        		Printf(CS, "            if (bstr.Substring(bstr.Length - 1, 1) == \"\\0\") {\n"); 
-	        		Printf(CS, "                    bstr = bstr.Substring(0, bstr.Length - 1);\n");
-	        		Printf(CS, "            }\n");
-#if (FREE_UNMANAGED_MEMORY == 1)
-				Printf(CS, "            SprExport.Spr_%s_FreeString_%s(ptr);\n", ci.uq_name, ni.uq_name);
-#endif
-				Printf(CS, "            return bstr;\n");
-			}
-			else if (ni.is_vector) {
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: vector");
-				char* wrapper_name = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return");
-				Printf(CS, "            return new %s(ptr);\n", wrapper_name);
-			}
-			else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
-				// 組み込み型のポインタを返す関数は配列を返すものとして扱う
-				//	配列として扱うのでwrapper名に"_p"は付けない
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: array");
-				int pointer_level_save = ni.pointer_level;
-				ni.pointer_level = 0;
-				char* wrapper_name = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return");
-				ni.pointer_level = pointer_level_save;
-#if (CAN_GET_RETURNED_ARRAY_SIZE == 1)
-				Printf(CS, "            int size = 0;  //Set some appropreate code\n");
-#else
-				Printf(CS, "            int size = 1;   // no way to know array size!\n");
-#endif	/* CAN_GET_RETURNED_ARRAY_SIZE */
-				Printf(CS, "            return new %s(ptr, size);\n", wrapper_name);
-			}
-			else if (ni.is_struct) {
-				if (is_enum_node) {
-					SNAP_ANA_PATH1(fps, FD_CS, "function_return: enum");
-					Printf(CS, "            return (%s) result;\n", cs_qualified_name(unqualified_name(ni.type)));
+				else if (ni.is_array) {
+					SNAP_AT_LINE(fps, FD_CS);
+					Printf(CS, "\t    IntPtr ptr = ");
 				}
-				else if (ENDWITH(ni.cs_type, "If")) {
-					Printf(CS, "            if (ptr == IntPtr.Zero) { return null; } \n", ni.cs_type, ni.cs_type);
-					Printf(CS, "            %s obj = new %s(ptr);\n", ni.cs_type, ni.cs_type);
-					for (int j = 0; j < (int) childClassMap[ni.cs_type].size(); j++) {
-						Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) { return new %s(ptr); }\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
+				else if (ni.is_struct) {
+					if (is_enum_node) {
+						Printf(CS, "\t    int result = ");
 					}
-					Printf(CS, "            return obj;\n");
-				}
-				else if (ni.is_pointer) {
-					SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct pointer");
-					// 構造体変数のポインタなのか構造体配列へのポインタなのかは区別がつかない
-					//   →  要素数１の構造体配列へのポインタとして扱う
-					//	 構造体配列であった場合は２番目以降の要素にアクセスすることはできない
-					if (is_special_struct(ni.cs_type)) {
-						Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
-					} else {
-#if (CAN_GET_RETURNED_ARRAY_SIZE == 1)
-						Printf(CS, "            int size = 0;  //Set some appropreate code\n");
-#else
-						Printf(CS, "            int size = 1;    // no way to know array size\n");
-#endif	/* CAN_GET_RETURNED_ARRAY_SIZE */
-						Printf(CS, "            return new arraywrapper_%s(ptr, size);\n", ni.cs_type);
+					else {
+						Printf(CS, "\t    IntPtr ptr = ");
 					}
-					//Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
-				}	
+				}
+				else if (ni.is_pointer && EQ(ni.uq_type, "char")) {
+					Printf(CS, "\t    IntPtr ptr = ");
+				}
+				else if (ni.is_intrinsic && !ni.is_void) {
+					if (ni.is_pointer && !ni.is_void_ptr) {
+						Printf(CS, "\t    %s[] result = ", ni.cs_type, ni.cs_type);
+					}
+					else {
+						Printf(CS, "\t    %s result = (%s) ", ni.cs_type, ni.cs_type);
+					}
+				}
+				else if (!ni.is_void) {
+					Printf(CS, "\t    %s result = (%s)(Object) ", ni.cs_type, ni.cs_type);
+				}
 				else {
-					SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct");
-					DUMP_NODE_INFO(fps, FD_CS, "function_return: struct", ni);
-					Printf(CS, "            return new %s(ptr, true);\n", ni.cs_type);
+					Printf(CS, "\t    ");
 				}
+				Printf(CS, "SprExport.Spr_%s_%s%s(", ci.uq_name, ni.uq_name, overname(ni));
+				// 引数並び
+				sep_needed = 0;
+				if (!ni.is_static) {
+					Printf(CS, "(IntPtr) _this");
+					sep_needed = 1;
+				}
+				for (int j = 0; j < ni.num_args; j++) {
+					NodeInfo& ai = ni.funcargs[j];
+					Node* is_enum_node_a = FindNodeByAttrR(topnode, "enumtype", ai.type);
+#if (DUMP == 1)
+					if (is_enum_node_a) {
+						//NodeInfo& ei = get_node_info(fps, is_enum_node);
+						//DUMP_NODE_INFO(fps, FD_CS, "argtype is enum", ei);
+					}
+#endif
+					if (sep_needed) Printf(CS, ", ");
+					if (is_enum_node_a) { Printf(CS, "(int) "); }
+					else if (ai.is_struct) { Printf(CS, "(IntPtr) "); }
+					else if (ai.is_string) { Printf(CS, "(IntPtr) "); }
+					else if (ai.is_vector || ai.is_array) { Printf(CS, "(IntPtr) "); }
+					else { Printf(CS, "(%s) ", ai.cs_im_type); }
+					if (ai.is_vector || ai.is_array)
+						Printf(CS, "%s._this", argnames[j]);
+					else
+						Printf(CS, "%s", argnames[j]);
+					sep_needed = 1;
+				}
+				Printf(CS, ");\n");
+				// 作業変数の解放
+				if (argnames) delete argnames;
+				for (int j = 0; j < ni.num_args; j++) {
+					if (cleanup1[j]) Printf(CS, "            Marshal.FreeBSTR(%s);\n", cleanup1[j]);
+					if (cleanup2[j]) Printf(CS, "            Marshal.FreeHGlobal(%s);\n", cleanup2[j]);
+				}
+				if (cleanup1) delete cleanup1;
+				if (cleanup2) delete cleanup2;
+				// 関数戻り値のための後処理
+				if (ni.is_bool) {
+					SNAP_ANA_PATH1(fps, FD_CS, "function_return: intrinsic: bool");
+					Printf(CS, "\t    return (ret == 0) ? false : true;\n");
+				}
+				else if (ni.is_pointer && EQ(ni.uq_type, "char")) {
+					Printf(CS, "\t    return Marshal.PtrToStringAnsi(ptr);\n");
+				}
+				else if (ni.is_string) {
+					SNAP_ANA_PATH1(fps, FD_CS, "function_return: string");
+					Printf(CS, "            string bstr = Marshal.PtrToStringBSTR(ptr);\n");
+					Printf(CS, "            if (bstr.Substring(bstr.Length - 1, 1) == \"\\0\") {\n");
+					Printf(CS, "                    bstr = bstr.Substring(0, bstr.Length - 1);\n");
+					Printf(CS, "            }\n");
+#if (FREE_UNMANAGED_MEMORY == 1)
+					Printf(CS, "            SprExport.Spr_%s_FreeString_%s(ptr);\n", ci.uq_name, ni.uq_name);
+#endif
+					Printf(CS, "            return bstr;\n");
+				}
+				else if (ni.is_vector) {
+					SNAP_ANA_PATH1(fps, FD_CS, "function_return: vector");
+					char* wrapper_name = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return");
+					Printf(CS, "            return new %s(ptr);\n", wrapper_name);
+				}
+				else if (ni.is_array || (ni.is_pointer == 1 && ni.is_intrinsic && ni.is_variable && !ni.is_void_ptr)) {
+					// 組み込み型のポインタを返す関数は配列を返すものとして扱う
+					//	配列として扱うのでwrapper名に"_p"は付けない
+					SNAP_ANA_PATH1(fps, FD_CS, "function_return: array");
+					int pointer_level_save = ni.pointer_level;
+					ni.pointer_level = 0;
+					char* wrapper_name = make_wrapper_name(fps, FD_CS, __LINE__, ni, ci, "function_return");
+					ni.pointer_level = pointer_level_save;
+#if (CAN_GET_RETURNED_ARRAY_SIZE == 1)
+					Printf(CS, "            int size = 0;  //Set some appropreate code\n");
+#else
+					Printf(CS, "            int size = 1;   // no way to know array size!\n");
+#endif	/* CAN_GET_RETURNED_ARRAY_SIZE */
+					Printf(CS, "            return new %s(ptr, size);\n", wrapper_name);
+				}
+				else if (ni.is_struct) {
+					if (is_enum_node) {
+						SNAP_ANA_PATH1(fps, FD_CS, "function_return: enum");
+						Printf(CS, "            return (%s) result;\n", cs_qualified_name(unqualified_name(ni.type)));
+					}
+					else if (ENDWITH(ni.cs_type, "If")) {
+						Printf(CS, "            if (ptr == IntPtr.Zero) { return null; } \n", ni.cs_type, ni.cs_type);
+						Printf(CS, "            %s obj = new %s(ptr);\n", ni.cs_type, ni.cs_type);
+						for (int j = 0; j < (int)childClassMap[ni.cs_type].size(); j++) {
+							Printf(CS, "            if (obj.GetIfInfo() == %s.GetIfInfoStatic()) { return new %s(ptr); }\n", childClassMap[ni.cs_type][j].c_str(), childClassMap[ni.cs_type][j].c_str());
+						}
+						Printf(CS, "            return obj;\n");
+					}
+					else if (ni.is_pointer) {
+						SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct pointer");
+						// 構造体変数のポインタなのか構造体配列へのポインタなのかは区別がつかない
+						//   →  要素数１の構造体配列へのポインタとして扱う
+						//	 構造体配列であった場合は２番目以降の要素にアクセスすることはできない
+						if (is_special_struct(ni.cs_type)) {
+							Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
+						}
+						else {
+#if (CAN_GET_RETURNED_ARRAY_SIZE == 1)
+							Printf(CS, "            int size = 0;  //Set some appropreate code\n");
+#else
+							Printf(CS, "            int size = 1;    // no way to know array size\n");
+#endif	/* CAN_GET_RETURNED_ARRAY_SIZE */
+							Printf(CS, "            return new arraywrapper_%s(ptr, size);\n", ni.cs_type);
+						}
+						//Printf(CS, "            return new %s(ptr);\n", ni.cs_type);
+					}
+					else {
+						SNAP_ANA_PATH1(fps, FD_CS, "function_return: struct");
+						DUMP_NODE_INFO(fps, FD_CS, "function_return: struct", ni);
+						Printf(CS, "            return new %s(ptr, true);\n", ni.cs_type);
+					}
+				}
+				else if (!ni.is_void) {
+					SNAP_ANA_PATH1(fps, FD_CS, "function_return: non-void");
+					Printf(CS, "\t    return result;\n");
+				}
+				Printf(CS, "\t}\n");
 			}
-			else if (!ni.is_void) {
-				SNAP_ANA_PATH1(fps, FD_CS, "function_return: non-void");
-				Printf(CS, "\t    return result;\n");
-			}
-			Printf(CS, "\t}\n");
-
 			// [csp]
 			//
 			// 関数宣言
