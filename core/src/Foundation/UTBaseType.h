@@ -156,6 +156,51 @@ struct SpatialVector{
 		Vec3d& v(); Vec3d& w();
 		const Vec3d& v() const; const Vec3d& w() const;
 };
+
+struct SpatialTransformTranspose{
+	Vec3d		r;
+	Quaterniond	q;
+
+	SpatialTransformTranspose();
+	SpatialTransformTranspose(const Vec3d& _r, const Quaterniond& _q) :r(_r), q(_q);
+
+	SpatialTransformTranspose inv()const;
+	const SpatialTransform& trans()const;
+};
+struct SpatialTransform{
+	Vec3d		r;
+	Quaterniond	q;
+
+	SpatialTransform();
+	SpatialTransform(const Vec3d& _r, const Quaterniond& _q) :r(_r), q(_q);
+
+	SpatialTransform inv()const;
+	const SpatialTransformTranspose& trans()const;
+};
+struct SpatialMatrix/* : public PTM::TMatrixRow<6, 6, double>*/{
+	//typedef PTM::TSubMatrixRow<3, 3, PTM::TMatrixRow<6, 6, double>::desc> SubMatrix;
+	//SubMatrix&	vv();
+	//SubMatrix&	vw();
+	//SubMatrix&	wv();
+	//SubMatrix&	ww();
+
+	//SpatialMatrix& operator=(const SpatialTransform& X);
+	//SpatialMatrix& operator=(const SpatialTransformTranspose& Xtr);
+	//SpatialMatrix();
+	//SpatialMatrix(const SpatialMatrix& X);
+	//SpatialMatrix(const SpatialTransform& X);
+
+	Matrix3d&	vv();
+	Matrix3d&	vw();
+	Matrix3d&	wv();
+	Matrix3d&	ww();
+
+	SpatialMatrix& operator=(const SpatialTransform& X);
+	SpatialMatrix& operator=(const SpatialTransformTranspose& Xtr);
+	SpatialMatrix();
+	SpatialMatrix(const SpatialMatrix& X);
+	SpatialMatrix(const SpatialTransform& X);
+};
 struct IfInfo{ bool Inherit(const IfInfo* info); const char* ClassName(); };
 
 #else
