@@ -140,6 +140,7 @@ struct SpatialMatrix : public PTM::TMatrixRow<6, 6, double>{
 		*this = X;
 	}
 };
+typedef SpatialMatrix::SubMatrix SubMatrx3of6d;
 
 inline double QuadForm(const SpatialVector& v1, const SpatialMatrix& M, const SpatialVector& v2){
 	double y = 0.0;
