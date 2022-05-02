@@ -190,6 +190,17 @@ inline SpatialMatrix operator*(const SpatialMatrix& lhs, const SpatialMatrix& rh
 	(Matrix6d&)Y = (const Matrix6d&)lhs * (const Matrix6d&)rhs;
 	return Y;
 }
+inline SpatialMatrix operator*(double lhs, const SpatialMatrix& rhs) {
+	SpatialMatrix Y;
+	(Matrix6d&)Y = lhs * (const Matrix6d&)rhs;
+	return Y;
+}
+inline SpatialMatrix operator*(SpatialMatrix& lhs, double rhs) {
+	return rhs * lhs;
+}
+inline SpatialMatrix operator-(SpatialMatrix& X) {
+	return -1 * X;
+}
 inline SpatialVector operator*(const SpatialMatrix& M, const SpatialVector& V){
 	SpatialVector Y;
 	(Vec6d&)Y = (const Matrix6d&)M * (const Vec6d&)V;

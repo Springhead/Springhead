@@ -3137,6 +3137,13 @@ public:
 					int list_ix = 3;
 					if (rtrn_str == "*type-list*") rtrn_str = fields[list_ix++];
 					if (opr1_str == "*type-list*") opr1_str = fields[list_ix++];
+					//	hasevr	Only for SpatialMatrix
+					if (strcmp(symb, "[]") == 0) {	//	In the case Spatial Matrix returns Vec6d
+						if (strcmp(name, "SpatialMatrix") == 0) {
+							rtrn_str = "Vec6d";
+						}
+					}
+					
 					char* rtrn = (char*) rtrn_str.c_str();
 					char* opr1 = (char*) opr1_str.c_str();
 					char* opr2 = "dummy";
@@ -3377,6 +3384,7 @@ public:
 			"Posef", "Posed",
 			"Matrix3f", "Matrix3d", "Matrix6d",
 			"Vec2i", "Vec3i", "Vec6d",
+			"SpatialVector", "SpatialMatrix",
 			"Curve3f",
 			NULL
 		};
@@ -3605,9 +3613,13 @@ public:
 			return string(element_type(my_class));
 			break;
 		case 'v':	// Vec**
+			if (strcmp(my_class, "SpatialVector")==0) return string("SpatialVector");
+			if (strcmp(my_class, "SpatialMatrix")==0) return string("SpatialVector");
 			return string("Vec") + dimension_and_type(my_class);
 			break;
 		case 'm':	// Matrix**
+			if (strcmp(my_class, "SpatialMatrix")==0) return string("SpatialMatrix");
+			if (strcmp(my_class, "SpatialVector")==0) return string("SpatialMatrix");
 			return string("Matrix") + dimension_and_type(my_class);
 			break;
 		case 'q':	// Quaternion*
@@ -5552,6 +5564,8 @@ public:
 	}
 
 	char* element_type(const char* cname) {
+		if (strcmp("SpatialVector", cname) == 0) return "double";
+		if (strcmp("SpatialMatrix", cname) == 0) return "double";
 		char ch = cname[strlen(cname)-1];
 		if (ch == 'i') return "int";
 		if (ch == 'f') return "float";

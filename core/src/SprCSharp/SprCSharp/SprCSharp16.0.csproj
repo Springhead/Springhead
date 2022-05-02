@@ -97,15 +97,6 @@
       <Name>SprImport16.0</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Collision.i" />
-    <Content Include="Creature.i" />
-    <Content Include="FileIO.i" />
-    <Content Include="Foundation.i" />
-    <Content Include="Framework.i" />
-    <Content Include="Graphics.i" />
-    <Content Include="HumanInterface.i" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

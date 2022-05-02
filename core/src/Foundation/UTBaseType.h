@@ -145,7 +145,6 @@ struct Matrix3d{ double xx, xy, xz, yx, yy, yz, zx, zy, zz;
 		 size_t stride(); void clear();
 };
 struct Matrix6d {
-	double data[6][6];
 	size_t height(); size_t width();
 	void resize(size_t h, size_t w);
 	size_t stride(); void clear();
@@ -185,19 +184,12 @@ struct SpatialTransform{
 };
 
 
-struct SubMatrx3of6d {
-	size_t height(); size_t width();
-	void resize(size_t h, size_t w);
-	size_t stride(); void clear();
-	double item(size_t n, size_t m);
-};
-
 struct SpatialMatrix/* : public PTM::TMatrixRow<6, 6, double>*/{
 	//typedef PTM::TSubMatrixRow<3, 3, PTM::TMatrixRow<6, 6, double>::desc> SubMatrix;
-	SubMatrx3of6d&	vv();
-	SubMatrx3of6d&	vw();
-	SubMatrx3of6d&	wv();
-	SubMatrx3of6d&	ww();
+	Matrix3d&	vv();
+	Matrix3d&	vw();
+	Matrix3d&	wv();
+	Matrix3d&	ww();
 
 	//SpatialMatrix& operator=(const SpatialTransform& X);
 	//SpatialMatrix& operator=(const SpatialTransformTranspose& Xtr);
@@ -217,6 +209,7 @@ struct IfInfo{ bool Inherit(const IfInfo* info); const char* ClassName(); };
 struct Matrix3f{ float data[9]; };
 struct Matrix3d { double data[9]; };
 struct Matrix6d { double data[36]; };
+struct SpatialMatrix { double data[36]; };
 struct Affinef{ float data[16]; };
 struct Affined{ double data[16]; };
 #endif
