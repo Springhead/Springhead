@@ -3375,7 +3375,7 @@ public:
 			"Vec2f", "Vec2d", "Vec3f", "Vec3d", "Vec4f", "Vec4d",
 			"Quaternionf", "Quaterniond",
 			"Posef", "Posed",
-			"Matrix3f", "Matrix3d",
+			"Matrix3f", "Matrix3d", "Matrix6d",
 			"Vec2i", "Vec3i", "Vec6d",
 			"Curve3f",
 			NULL

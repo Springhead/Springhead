@@ -102,6 +102,7 @@
 %feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6d;
 %feature("operator", def="MATRIX_OPERATOR") Spr::Matrix3f;
 %feature("operator", def="MATRIX_OPERATOR") Spr::Matrix3d;
+%feature("operator", def="MATRIX_OPERATOR") Spr::Matrix6d;
 
 //%feature("withfunc") Spr::Posed;
 //%feature("withfunc") Spr::Vec3d;

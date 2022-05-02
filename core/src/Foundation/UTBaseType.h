@@ -144,6 +144,12 @@ struct Matrix3d{ double xx, xy, xz, yx, yy, yz, zx, zy, zz;
 		 void resize(size_t h, size_t w);
 		 size_t stride(); void clear();
 };
+struct Matrix6d {
+	double data[6][6];
+	size_t height(); size_t width();
+	void resize(size_t h, size_t w);
+	size_t stride(); void clear();
+};
 struct Affinef{ float xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw;
 		Affinef(Affinef a);
 };
