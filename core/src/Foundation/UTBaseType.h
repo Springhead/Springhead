@@ -157,7 +157,7 @@ struct Affined{ double xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw;
 };
 struct SpatialVector{
 		SpatialVector();
-		SpatialVector(const Vec3d& _v, const Vec3d& _w);
+		SpatialVector(Vec3d _v, Vec3d _w);
 		Vec3d& v(); Vec3d& w();
 		const Vec3d& v() const; const Vec3d& w() const;
 };
