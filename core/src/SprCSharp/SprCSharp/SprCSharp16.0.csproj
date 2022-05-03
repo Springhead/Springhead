@@ -81,6 +81,7 @@
     <Compile Include="CSFramework.cs" />
     <Compile Include="CSGraphics.cs" />
     <Compile Include="CSHumanInterface.cs" />
+    <Compile Include="CSManualPhysics.cs" />
     <Compile Include="CSPhysics.cs" />
     <Compile Include="CSUtility.cs" />
     <Compile Include="cs_object.cs" />
