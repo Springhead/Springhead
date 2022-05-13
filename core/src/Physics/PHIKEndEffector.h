@@ -39,6 +39,9 @@ public:
 	/// 制御点のある剛体
 	PHSolidIf* solid;
 
+	///ベースとなる剛体
+	PHSolidIf* baseSolid;
+
 	//直近Actuator
 	//SprPHIK.h、PHIKActuator.cppの23行目、およびこの下にも変更がありますので不要なら関係部削除を
 	PHIKActuatorIf* ika;
@@ -54,6 +57,7 @@ public:
 	*/
 	void Init() {
 		solid = NULL;
+		//baseSolid = NULL;
 		ika = NULL;
 		ndof = 3;
 		bNDOFChanged = true;
@@ -86,6 +90,11 @@ public:
 	/** @brief 動作対象として設定された剛体を取得する
 	*/
 	PHSolidIf* GetSolid() { return this->solid; }
+	/** @brief ベースとなる剛体を取得する
+    */
+	void SetBaseSolid(PHSolidIf* bsolid);
+
+	PHSolidIf* GetBaseSolid() { return this->baseSolid; }
 
 	//取り合えず直近のActuatorを親認定しときます
 	void SetParentActuator(PHIKActuatorIf* ika){ this->ika = ika; }

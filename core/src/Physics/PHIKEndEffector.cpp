@@ -77,8 +77,17 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 
 	if (bPosition) {
 		Vec3d currPos = solidTempPose*targetLocalPosition;
-		Vec3d dir     = (targetPosition - currPos);
-
+		//Vec3d dir     = (targetPosition - currPos);//HERE!! 
+		
+		Vec3d dir;
+		if (baseSolid != NULL) {
+			Vec3d dir = (targetPosition - baseSolid->GetPose().Inv() * currPos);
+		}
+		else
+		{
+			Vec3d dir = (targetPosition - currPos);
+		}
+		
 		double maxmove = engine->GetMaxVelocity() * phScene->GetTimeStep();
 		if (dir.norm() > maxmove) {
 			dir = dir.unit() * maxmove;
@@ -172,5 +181,10 @@ void PHIKEndEffector::GetTempVelocity(PTM::VVector<double> &v){
 		for (int i=0; i<3; ++i) { v[i+stride] = v_o[i]; }
 	}
 }
+void PHIKEndEffector::SetBaseSolid(PHSolidIf* bsolid){
+	baseSolid = bsolid;
+	DSTR << baseSolid << std::endl;
+}
+
 }
 
