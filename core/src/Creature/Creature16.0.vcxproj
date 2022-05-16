@@ -30,7 +30,7 @@
     <ProjectGuid>{F674A4D7-A183-4C53-815D-12E17B71C6A0}</ProjectGuid>
     <RootNamespace>Creature</RootNamespace>
     <ProjectName>Creature</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
