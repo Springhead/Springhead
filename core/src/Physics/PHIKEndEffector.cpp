@@ -81,11 +81,11 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		
 		Vec3d dir;
 		if (baseSolid != NULL) {
-			Vec3d dir = (targetPosition - baseSolid->GetPose().Inv() * currPos);
+			dir = (targetPosition - baseSolid->GetPose().Inv() * currPos);
 		}
 		else
 		{
-			Vec3d dir = (targetPosition - currPos);
+			dir = (targetPosition - currPos);
 		}
 		
 		double maxmove = engine->GetMaxVelocity() * phScene->GetTimeStep();
