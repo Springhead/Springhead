@@ -97,17 +97,22 @@ public:
 			solid1ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid1ForTest->SetFramePosition(solid1PositionForTest);
 			solid1ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
+			solid1ForTest->SetAngularVelocity(preLocalW1);
 
+			cout << "preLocalW1 " << preLocalW1 << endl;
+			cout << "solid1ForTest->GetAngularVelocity() " << solid1ForTest->GetAngularVelocity() << endl;
 			// 剛体2を作成
-			solid2ForTest = phScene->CreateSolid();
-			solid2ForTest->SetName("solid2ForTest");
-			solid2ForTest->SetDynamical(true);
-			solid2ForTest->AddShape(boxShape);
-			solid2PositionForTest = Vec3d(0.2, 0.1, 0);
-			solid2ForTest->SetMass(10000000000);
-			solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
-			solid2ForTest->SetFramePosition(solid2PositionForTest);
-			solid2ForTest->SetOrientation(Quaterniond(1,0,0,0));
+			//solid2ForTest = phScene->CreateSolid();
+			//solid2ForTest->SetName("solid2ForTest");
+			//solid2ForTest->SetDynamical(true);
+			//solid2ForTest->AddShape(boxShape);
+			//solid2PositionForTest = Vec3d(0.2, 0.1, 0);
+			//solid2ForTest->SetMass(10000000000);
+			//solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
+			//solid2ForTest->SetFramePosition(solid2PositionForTest);
+			//solid2ForTest->SetOrientation(Quaterniond(1,0,0,0));
+			////solid2ForTest->SetVelocity(Vec3d(0, 1, 0));
+			//solid2ForTest->SetAngularVelocity(preGlobalW2);
 
 			// 固定の剛体とsolid1を繋ぐボールジョイント1を作成
 			PHBallJointDesc jdesc1;
@@ -120,23 +125,22 @@ public:
 			ballJoint1ForTest->SetName("ballJoint1ForTest");
 
 			// solid1とsolid2を繋ぐボールジョイント2を作成
-			PHBallJointDesc jdesc2;
-			ballJoint2PositionForTest = Vec3d(0.15, 0.1, 0);
-			jdesc2.poseSocket.Pos() = ballJoint2PositionForTest - solid1PositionForTest;
-			jdesc2.posePlug.Ori() = solid2ForTest->GetPose().Ori().Inv() * Quaterniond(1, 0, 0, 0);
-			jdesc2.posePlug.Pos() = solid2ForTest->GetPose().Ori().Inv() * (ballJoint2PositionForTest - solid2PositionForTest);
-			//cout << "solid2ForTest->GetPose().Ori() " << solid2ForTest->GetPose().Ori() << endl;
-			jdesc2.spring = 0;
-			jdesc2.damper = 0;
-			ballJoint2ForTest = (PHBallJointIf*)phScene->CreateJoint(solid1ForTest, solid2ForTest, jdesc2);
-			ballJoint2ForTest->SetName("ballJoint2ForTest");
+			//PHBallJointDesc jdesc2;
+			//ballJoint2PositionForTest = Vec3d(0.15, 0.1, 0);
+			//jdesc2.poseSocket.Pos() = ballJoint2PositionForTest - solid1PositionForTest;
+			//jdesc2.posePlug.Ori() = solid2ForTest->GetPose().Ori().Inv() * Quaterniond(1, 0, 0, 0);
+			//jdesc2.posePlug.Pos() = solid2ForTest->GetPose().Ori().Inv() * (ballJoint2PositionForTest - solid2PositionForTest);
+			////cout << "solid2ForTest->GetPose().Ori() " << solid2ForTest->GetPose().Ori() << endl;
+			//jdesc2.spring = 0;
+			//jdesc2.damper = 0;
+			//ballJoint2ForTest = (PHBallJointIf*)phScene->CreateJoint(solid1ForTest, solid2ForTest, jdesc2);
+			//ballJoint2ForTest->SetName("ballJoint2ForTest");
 
 			// ABAを使用するためにNodeを構築
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
 			ballJoint1TreeNodeForTest = phScene->CreateTreeNode(phRootNodeIfForTest, solid1ForTest);
-			ballJoint2TreeNodeForTest = phScene->CreateTreeNode(ballJoint1TreeNodeForTest, solid2ForTest);
+			//ballJoint2TreeNodeForTest = phScene->CreateTreeNode(ballJoint1TreeNodeForTest, solid2ForTest);
 
-			CalcForce(Quaterniond::Rot(Rad(90), 'z'), Quaterniond::Rot(Rad(90), 'y'));
 		}
 
 		//Vec3d a1 = wdot1 % (solid1PositionForTest - ballJoint1PositionForTest);
@@ -152,6 +156,7 @@ public:
 		GetSdk()->GetScene()->EnableRenderAxis();
 	}
 	void Step() {
+		CalcForce(targetRotationBallJoint1, preTargetRotationBallJoint2);
 		UserFunc();
 		if (GetCurrentWin() && GetCurrentWin()->GetScene()) {
 			GetCurrentWin()->GetScene()->Step();
@@ -161,13 +166,12 @@ public:
 		Posed solid1ForTestPose = solid1ForTest->GetPose();
 		cout << "Solid1ForTest Position " << solid1ForTestPose.Pos() << endl;
 		cout << "Solid1ForTest Rotation  rotationhalf " << solid1ForTestPose.Ori().RotationHalf() << endl;
-		Posed solid2ForTestPose = solid2ForTest->GetPose();
-		cout << "solid2ForTest Position " << solid2ForTestPose.Pos() << endl;
-		cout << "solid2ForTest Rotation  rotationhalf " << solid2ForTestPose.Ori().RotationHalf() << endl;
+		//Posed solid2ForTestPose = solid2ForTest->GetPose();
+		//cout << "solid2ForTest Position " << solid2ForTestPose.Pos() << endl;
+		//cout << "solid2ForTest Rotation  rotationhalf " << solid2ForTestPose.Ori().RotationHalf() << endl;
 		//ballJoint1ForTest->SetOffsetForce(Vec3d(0, 0, 0));
 		//ballJoint2ForTest->SetOffsetForce(Vec3d(0, 0, 0));
 
-		CalcForce(Quaterniond::Rot(Rad(90), 'z'), Quaterniond::Rot(Rad(90), 'y'));
 
 		//Posed plugPose;
 		//ballJoint2ForTest->GetPlugPose(plugPose);
@@ -177,11 +181,14 @@ public:
 		//cout << "ballJoint1Pose " << ballJoint1Pose << endl;
 		//cout << "ballJoint1Position " << ballJoint1Pose.Pos() << endl;
 	}
+
+	Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
+	Quaterniond targetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 	Quaterniond preTargetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 	Quaterniond preTargetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
-	Vec3d preLocalW1 = Vec3d(0, 0, 0);
-	Vec3d preLocalW2 = Vec3d(0, 0, 0);
-	Vec3d preGlobalW2 = Vec3d(0, 0, 0);
+	Vec3d preLocalW1 = Vec3d(1, 1, 1).unit()*50;
+	Vec3d preLocalW2 = Vec3d(0, 100, 0);
+	Vec3d preGlobalW2 = Vec3d(0, 100, 0);
 	void CalcForce(Quaterniond targetRotationBallJoint1, Quaterniond targetRotationBallJoint2) {
 		// targetPositionを設定
 		//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
@@ -194,22 +201,31 @@ public:
 		// 剛体のグローバルの加速度と角加速度を求める
 		cout << "spring " << ballJoint1ForTest->GetSpring() << endl;
 		cout << "damper  " << ballJoint1ForTest->GetDamper() << endl;
+		
+		PHSolidIf* socket1 = ballJoint1ForTest->GetSocketSolid();
+		Posed socketPose1;
+		ballJoint1ForTest->GetSocketPose(socketPose1);
+
 		Vec3d diff1 = (targetRotationBallJoint1 * preTargetRotationBallJoint1.Inv()).RotationHalf();
-		Vec3d localW1 = diff1 / timeStep;
-		cout << "solid2ForTest->GetAngularVelocity() " << solid1ForTest->GetAngularVelocity() << endl;
+		Vec3d localW1 = diff1 / timeStep;//ここ編
+		cout << "solid1ForTest->GetAngularVelocity() " << solid1ForTest->GetAngularVelocity() << endl;
 		cout << "preLocalW1 " << preLocalW1 << endl;
-		wdot1 = (localW1 - preLocalW1) / timeStep;
+		wdot1 = socket1->GetPose().Ori() * socketPose1.Ori() * (localW1 - preLocalW1) / timeStep;
 		cout << "localW1 " << localW1 << endl;
 		cout << "preLocalW1" << preLocalW1 << endl;
 		cout << "diff1 " << diff1 << endl;
 		cout << "wdot1 " << wdot1 << endl;
 
-		Vec3d diff2Local = (targetRotationBallJoint2 * preTargetRotationBallJoint2.Inv()).RotationHalf();
+
+		//PHSolidIf* socket2 = ballJoint2ForTest->GetSocketSolid();
+		//Posed socketPose2;
+		/*
+		preLocalW2 = Vec3d(0, 40, 0);
+		//Vec3d diff2Local = (targetRotationBallJoint2 * ((socket2->GetPose().Ori() * socketPose2.Ori()).Inv() * Quaterniond::Rot((solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity()) * timeStep) * preTargetRotationBallJoint2).Inv()).RotationHalf();
+		//cout << "(socket2->GetPose().Ori() * socketPose2.Ori()).Inv() * Quaterniond::Rot((solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity()) " << (socket2->GetPose().Ori() * socketPose2.Ori()).Inv() * Quaterniond::Rot((solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity())).RotationHalf() << endl;
+		Vec3d diff2Local = (targetRotationBallJoint2 * (Quaterniond::Rot(preLocalW2 * timeStep) * preTargetRotationBallJoint2).Inv()).RotationHalf();
+		cout << "(socket2->GetPose().Ori() * socketPose2.Ori()).Inv() * Quaterniond::Rot((solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity()) " << (socket2->GetPose().Ori() * socketPose2.Ori()).Inv() * Quaterniond::Rot((solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity())).RotationHalf() << endl;
 		Vec3d localW2 = diff2Local / timeStep;
-		PHSolidIf* socket1 = ballJoint1ForTest->GetSocketSolid();
-		PHSolidIf* socket2 = ballJoint2ForTest->GetSocketSolid();
-		Posed socketPose1;
-		Posed socketPose2;
 		ballJoint1ForTest->GetSocketPose(socketPose1);
 		ballJoint2ForTest->GetSocketPose(socketPose2);
 
@@ -240,6 +256,7 @@ public:
 		ballJoint2ForTest->GetPlugPose(plugPose2);
 		PHSolidIf* plug2 = ballJoint2ForTest->GetPlugSolid();
 		ballJoint2PositionForTest = (plug2->GetPose() * plugPose2).Pos();
+		*/
 		{
 			// 手動で力とトルクを求める方法(2つ目のボールジョイントが上手くいかない)
 			// Solid1について
@@ -248,6 +265,7 @@ public:
 
 			Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1;
 
+			/*
 			// Solid2について
 			Vec3d ballJoint2Acc = (socket2->GetPose().Ori() * socketPose2.Ori() * wdot2Local) % (solid2ForTest->GetPose().Pos() - ballJoint2PositionForTest);
 			Vec3d ballJoint1Acc = wdot1 % (solid2ForTest->GetPose().Pos() - ballJoint1PositionForTest);
@@ -259,23 +277,24 @@ public:
 
 			Vec3d tSolid2 = solid2ForTest->GetInertia() * wdot2Global;
 
-
+			*/
 			cout << "aSolid1 " << aSolid1 << endl;
 			cout << "fSolid1 " << fSolid1 << endl;
 			cout << "tSolid1 " << tSolid1 << endl;
-			cout << "aSolid2 " << aSolid2 << endl;
-			cout << "fSolid2 " << fSolid2 << endl;
-			cout << "tSolid2 " << tSolid2 << endl;
 			solid1ForTest->AddForce(fSolid1);
 			solid1ForTest->AddTorque(tSolid1);
-			solid2ForTest->AddForce(fSolid2);
-			solid2ForTest->AddTorque(tSolid2);
+			//cout << "aSolid2 " << aSolid2 << endl;
+			//cout << "fSolid2 " << fSolid2 << endl;
+			//cout << "tSolid2 " << tSolid2 << endl;
+			//solid2ForTest->AddForce(fSolid2);
+			//solid2ForTest->AddTorque(tSolid2);
 		}
+		preLocalW1 = localW1;
 		preTargetRotationBallJoint1 = targetRotationBallJoint1;
 		preTargetRotationBallJoint2 = targetRotationBallJoint2;
-		preLocalW1 = localW1;
-		preLocalW2 = localW2;
-		preGlobalW2 = globalW2;
+		//preLocalW1 = localW1;
+		//preLocalW2 = localW2;
+		//preGlobalW2 = globalW2;
 	}
 	SpatialVector CalcForceAndTorqueForTracking(PHBallJointIf* ballJoint, PHTreeNodeIf* phTreeNode, Vec3d wdot, Vec3d a) {
 		cout << endl;
