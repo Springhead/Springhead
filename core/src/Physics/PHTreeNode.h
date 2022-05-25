@@ -42,6 +42,7 @@ public:
 	PHSolid*                     solid;			///< このノードに関連づけられている剛体
 	PHRootNode*                  root;
 
+
 public:
 	PHTreeNode();
 	
@@ -57,6 +58,8 @@ public:
 	PHTreeNodeIf*   GetParentNode()     { return parent->Cast(); }
 	PHTreeNodeIf*   GetChildNode (int i){ return Children()[i]->Cast(); }
 	SpatialMatrix   GetI         ()     { return I; }
+	SpatialVector   GetIc        ()     { return Ic; }
+
 	SpatialVector   GetZ         ()     { return Z; }
 	PHSolidIf*      GetSolid     ()     { return solid->Cast(); }
 	PHRootNodeIf*	GetRootNode  ();
@@ -102,6 +105,7 @@ public:
 	virtual void CompJointCoriolisAccel  (){}			///< コリオリの加速度を計算	
 	virtual void CompRelativeVelocity    (){}			///< 関節速度から剛体間相対速度を計算
 	virtual void CompRelativePosition    (){}			///< 関節位置から剛体間相対位置を計算
+
 };
 
 class PHRootNode : public PHTreeNode{
@@ -114,6 +118,9 @@ public:
 	PHConstraintEngine*					engine;
 	std::vector<PHTreeNode*>			nodes;				///< IDによるアクセス用ノード配列
 	SpatialMatrix						Iinv;				///< Iの逆行列
+
+	PHRootNodeIf::CompControlForce compControlForce;
+	void* arg;
 
 public:
 	void Setup();
@@ -133,6 +140,8 @@ public:
 	virtual void UpdatePosition          (double dt);
 	
 	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc());
+
+	void SetCompControlForceCallback(PHRootNodeIf::CompControlForce f, void* a);
 };
 
 ///	N自由度の関節の基本クラス

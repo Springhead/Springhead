@@ -990,6 +990,10 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	Spr::SpatialMatrix GetI();
 
+	/** @brief コリオリ力を取得する
+	 */
+	Spr::SpatialVector GetIc();
+
 	/** @brief Articulated Bias Forceを取得する
 	 */
 	Spr::SpatialVector GetZ();
@@ -997,10 +1001,19 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	/** @brief Setupを実行する
 	 */
 	void Setup();
+
 };
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHRootNode);
+
+	/** @brief コールバック関数の型
+	 */
+	typedef void (* CompControlForce)(PHRootNodeIf*, void*);
+
+	/** @brief コールバックを追加する
+	 */
+	void SetCompControlForceCallback(CompControlForce f, void* a);
 };
 /// １軸関節ノードのインタフェース
 struct PHTreeNode1DIf : public PHTreeNodeIf{

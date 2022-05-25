@@ -436,6 +436,18 @@ void PHRootNode::Setup(){
 	// articulated inertiaを計算
 	InitArticulatedInertia();
 	CompArticulatedInertia();
+
+	// コールバック
+	if (compControlForce != NULL) {
+		compControlForce(this->GetObjectIf()->Cast(), arg);
+	}
+	// addforceやaddtorqueした力をfに書き込む<!!>実行順があっているか不明
+	double dt = engine->GetScene()->GetTimeStep();
+	solid->UpdateCacheLCP(dt);
+	for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
+		(*it)->solid->UpdateCacheLCP(dt);
+	}
+
 	// articulated bias forceを計算
 	InitArticulatedBiasForce();
 	CompArticulatedBiasForce();
@@ -520,6 +532,10 @@ void PHRootNode::UpdatePosition(double dt){
 		(*it)->UpdatePosition(dt);
 }
 
+void PHRootNode::SetCompControlForceCallback(PHRootNodeIf::CompControlForce f, void* a) {
+	compControlForce = f;
+	arg = a;
+}
 //-----------------------------------------------------------------------------
 
 template<int NDOF>
