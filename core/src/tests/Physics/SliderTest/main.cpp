@@ -39,7 +39,8 @@ Vec3d ballJoint1PositionForTest;
 PHBallJointIf* ballJoint2ForTest;
 Vec3d ballJoint2PositionForTest;
 
-Vec3d wdot1;
+Vec3d wdot1Global;
+Vec3d wdot1Local;
 Vec3d wdot2_old;
 PHRootNodeIf* phRootNodeIfForCalc;
 PHTreeNodeIf* phTreeNodeIfForCalc;
@@ -48,40 +49,51 @@ PHTreeNodeIf* ballJoint1TreeNodeForTest;
 PHTreeNodeIf* ballJoint2TreeNodeForTest;
 double timeStep;
 
-Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
+Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
+//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'y');
 Quaterniond targetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 Vec3d preLocalW1 = Vec3d(1, 1, 1).unit() * 50;
+//Vec3d preLocalW1 = Vec3d(0, 100, 0);
 Vec3d preLocalW2 = Vec3d(0, 100, 0);
 Vec3d preGlobalW2 = Vec3d(0, 100, 0);
+bool first = true;
 void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 	std::cout << "CalcForceWithCoriolis is called" << endl;
-		// targetPositionを設定
-		//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
-		//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
+	// targetPositionを設定
+	//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
+	//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
 
-		//ballJoint1ForTest->UpdateState();
-		//ballJoint2ForTest->UpdateState();
-		//phRootNodeIfForTest->Setup();
+	//ballJoint1ForTest->UpdateState();
+	//ballJoint2ForTest->UpdateState();
+	//phRootNodeIfForTest->Setup();
 
-		// 剛体のグローバルの加速度と角加速度を求める
+	// 剛体のグローバルの加速度と角加速度を求める
 	cout << "spring " << ballJoint1ForTest->GetSpring() << endl;
 	cout << "damper  " << ballJoint1ForTest->GetDamper() << endl;
 
 	PHSolidIf* socket1 = ballJoint1ForTest->GetSocketSolid();
+	cout << " socket1->GetName()" << socket1->GetName() << endl;
 	Posed socketPose1;
 	ballJoint1ForTest->GetSocketPose(socketPose1);
 
-	Vec3d diff1 = (targetRotationBallJoint1 * preTargetRotationBallJoint1.Inv()).RotationHalf();
-	Vec3d localW1 = diff1 / timeStep;//ここ編
+	Vec3d diff1Local = (targetRotationBallJoint1 * preTargetRotationBallJoint1.Inv()).RotationHalf();
+	Vec3d localW1 = diff1Local / timeStep;
 	cout << "solid1ForTest->GetAngularVelocity() " << solid1ForTest->GetAngularVelocity() << endl;
 	cout << "preLocalW1 " << preLocalW1 << endl;
-	wdot1 = socket1->GetPose().Ori() * socketPose1.Ori() * (localW1 - preLocalW1) / timeStep;
+	Vec3d solid1Velocity = solid1ForTest->GetAngularVelocity();
+	if (solid1Velocity.x != preLocalW1.x || solid1Velocity.y != preLocalW1.y || solid1Velocity.z != preLocalW1.z) {
+		cout << "preLocalW1とSolidの速度が違う" << endl;
+		cout << fixed << setprecision(15) << solid1Velocity.y << " " << preLocalW1.y << endl;
+	}
+	wdot1Global = socket1->GetPose().Ori() * socketPose1.Ori() * (localW1 - preLocalW1) / timeStep;
+	wdot1Local = (localW1 - preLocalW1) / timeStep; // ジョイントの座標系(ジョイントポーズは含まない)
+	cout << "socket1->GetPose().Ori() * socketPose1.Ori() " << socket1->GetPose().Ori() * socketPose1.Ori() << endl;
 	cout << "localW1 " << localW1 << endl;
 	cout << "preLocalW1" << preLocalW1 << endl;
-	cout << "diff1 " << diff1 << endl;
-	cout << "wdot1 " << wdot1 << endl;
+	cout << "diff1Local " << diff1Local << endl;
+	cout << "wdot1Global " << wdot1Global << endl;
 
 
 	//PHSolidIf* socket2 = ballJoint2ForTest->GetSocketSolid();
@@ -127,17 +139,18 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 	{
 		// 手動で力とトルクを求める方法(2つ目のボールジョイントが上手くいかない)
 		// Solid1について
-		Vec3d aSolid1 = wdot1 % (solid1ForTest->GetPose().Pos() - ballJoint1PositionForTest); // 円運動する座標系の加速度ABAで使える
+		Vec3d aSolid1 = socket1->GetPose().Ori() * socketPose1.Ori() * (wdot1Local % (solid1ForTest->GetPose().Pos() - ballJoint1PositionForTest)); // 円運動する座標系の加速度ABAで使える
 		Vec3d fSolid1 = solid1ForTest->GetMass() * aSolid1;
 
-		Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1;
+		Vec3d tSolid1 = solid1ForTest->GetInertia() * wdot1Global;
 
 		// コリオリ力を減算
 		SpatialVector Ic = ballJoint1TreeNodeForTest->GetIc() / timeStep;
 		std::cout << "Ic " << Ic << endl;
-		fSolid1 += Ic.v();
+		//if (first) {
+		fSolid1 += solid1ForTest->GetOrientation() * Ic.v();
 		tSolid1 += Ic.w();
-
+		//}
 		/*
 		// Solid2について
 		Vec3d ballJoint2Acc = (socket2->GetPose().Ori() * socketPose2.Ori() * wdot2Local) % (solid2ForTest->GetPose().Pos() - ballJoint2PositionForTest);
