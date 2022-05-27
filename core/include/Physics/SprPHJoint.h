@@ -994,6 +994,10 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	Spr::SpatialVector GetIc();
 
+	/** @brief コリオリ加速度を取得する
+	 */
+	Spr::SpatialVector GetC();
+
 	/** @brief Articulated Bias Forceを取得する
 	 */
 	Spr::SpatialVector GetZ();
