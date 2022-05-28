@@ -50,15 +50,15 @@ PHTreeNodeIf* ballJoint2TreeNodeForTest;
 double timeStep;
 
 //Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
-Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
-//Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
+//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
+Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 //Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
 //Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
 Quaterniond targetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 //Vec3d preLocalW1 = Vec3d(1, 1, 1).unit() * 50;
-Vec3d preLocalW1 = Vec3d(0, 0, 0);
+Vec3d preLocalW1 = Vec3d(0, 0, 50);
 Vec3d preLocalW2 = Vec3d(0, 0, 0);
 //Vec3d preLocalW2 = Vec3d(1, 1, 1).unit() * 50;
 Vec3d preGlobalW2;
@@ -259,11 +259,12 @@ public:
 			solid1ForTest->SetName("solid1ForTest");
 			solid1ForTest->SetDynamical(true);
 			solid1ForTest->AddShape(boxShape);
-			solid1PositionForTest = Vec3d(0.1, 0.1, 0);
+			solid1PositionForTest = Vec3d(0.05, 0.15, 0);
 			solid1ForTest->SetMass(100);
 			solid1ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid1ForTest->SetFramePosition(solid1PositionForTest);
-			solid1ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
+			Quaterniond solid1RotationFortest = Quaterniond::Rot(Rad(90), 'z');
+			solid1ForTest->SetOrientation(solid1RotationFortest);
 			solid1ForTest->SetAngularVelocity(preLocalW1);
 			//solid1ForTest->SetVelocity(Vec3d(100,100,100));
 
@@ -274,11 +275,11 @@ public:
 			solid2ForTest->SetName("solid2ForTest");
 			solid2ForTest->SetDynamical(true);
 			solid2ForTest->AddShape(boxShape);
-			solid2PositionForTest = Vec3d(0.2, 0.1, 0);
+			solid2PositionForTest = Vec3d(0.05, 0.25, 0);
 			solid2ForTest->SetMass(10000000);
 			solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid2ForTest->SetFramePosition(solid2PositionForTest);
-			solid2ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
+			solid2ForTest->SetOrientation(solid1RotationFortest);
 			//solid2ForTest->SetVelocity(Vec3d(0, 1, 0));
 			
 			// preGlobalW2の計算
@@ -297,23 +298,26 @@ public:
 			PHBallJointDesc jdesc1;
 			ballJoint1PositionForTest = Vec3d(0.05, 0.1, 0);
 			jdesc1.poseSocket.Pos() = ballJoint1PositionForTest - dynamicalOffSolidPosition;
-			jdesc1.posePlug.Pos() = ballJoint1PositionForTest - solid1PositionForTest;
+			jdesc1.posePlug.Pos() = solid1RotationFortest.Inv() * (ballJoint1PositionForTest - solid1PositionForTest);
 			jdesc1.spring = 0;
 			jdesc1.damper = 0;
 			ballJoint1ForTest = (PHBallJointIf*)phScene->CreateJoint(dynamicalOffSolidForTest, solid1ForTest, jdesc1);
 			ballJoint1ForTest->SetName("ballJoint1ForTest");
+			cout << "ballJoint1ForTest->GetAngle() "  << ballJoint1ForTest->GetAngle() << endl;
+			ballJoint1ForTest->UpdateState();
 
 			// solid1とsolid2を繋ぐボールジョイント2を作成
 			PHBallJointDesc jdesc2;
-			ballJoint2PositionForTest = Vec3d(0.15, 0.1, 0);
-			jdesc2.poseSocket.Pos() = ballJoint2PositionForTest - solid1PositionForTest;
-			jdesc2.posePlug.Ori() = solid2ForTest->GetPose().Ori().Inv() * Quaterniond(1, 0, 0, 0);
+			ballJoint2PositionForTest = Vec3d(0.05, 0.2, 0);
+			jdesc2.poseSocket.Pos() = solid1RotationFortest.Inv() * (ballJoint2PositionForTest - solid1PositionForTest); 
+			//jdesc2.posePlug.Ori() = solid2ForTest->GetPose().Ori().Inv() * Quaterniond(1, 0, 0, 0);
 			jdesc2.posePlug.Pos() = solid2ForTest->GetPose().Ori().Inv() * (ballJoint2PositionForTest - solid2PositionForTest);
 			//cout << "solid2ForTest->GetPose().Ori() " << solid2ForTest->GetPose().Ori() << endl;
 			jdesc2.spring = 0;
 			jdesc2.damper = 0;
 			ballJoint2ForTest = (PHBallJointIf*)phScene->CreateJoint(solid1ForTest, solid2ForTest, jdesc2);
 			ballJoint2ForTest->SetName("ballJoint2ForTest");
+			ballJoint2ForTest->UpdateState();
 
 			// ABAを使用するためにNodeを構築
 			phRootNodeIfForTest = phScene->CreateRootNode(dynamicalOffSolidForTest);
