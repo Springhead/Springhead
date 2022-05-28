@@ -50,14 +50,15 @@ PHTreeNodeIf* ballJoint2TreeNodeForTest;
 double timeStep;
 
 //Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
-//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
-Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
+Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
+//Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 //Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
+//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
 Quaterniond targetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
-Vec3d preLocalW1 = Vec3d(1, 1, 0).unit() * 50;
-//Vec3d preLocalW1 = Vec3d(0, 0, 0);
+//Vec3d preLocalW1 = Vec3d(1, 1, 1).unit() * 50;
+Vec3d preLocalW1 = Vec3d(0, 0, 0);
 Vec3d preLocalW2 = Vec3d(0, 0, 0);
 //Vec3d preLocalW2 = Vec3d(1, 1, 1).unit() * 50;
 Vec3d preGlobalW2;
@@ -87,6 +88,7 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 	Vec3d diff1Local = (targetRotationBallJoint1 * preTargetRotationBallJoint1.Inv()).RotationHalf();
 	Vec3d localW1 = diff1Local / timeStep;
 	cout << "solid1ForTest->GetAngularVelocity() " << solid1ForTest->GetAngularVelocity() << endl;
+	cout << "solid1ForTest->GetVelocity() " << solid1ForTest->GetVelocity() << endl;
 	cout << "preLocalW1 " << preLocalW1 << endl;
 	Vec3d solid1Velocity = solid1ForTest->GetAngularVelocity();
 	if (solid1Velocity.x != preLocalW1.x || solid1Velocity.y != preLocalW1.y || solid1Velocity.z != preLocalW1.z) {
@@ -118,10 +120,13 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 	//cout << "ballJoint2ForTest->GetAbsolutePoseQ() " << ballJoint2ForTest->GetAbsolutePoseQ();
 	//Vec3d globalW2 = ballJoint2ForTest->GetAbsolutePoseQ() * localW2 + ballJoint1ForTest->GetAbsolutePoseQ() *localW1;
 	Vec3d globalW2 = socket2->GetPose().Ori() * socketPose2.Ori() * localW2 + socket1->GetPose().Ori() * socketPose1.Ori() * localW1;
-
+	Vec3d preGlobalW2FromLocalW = socket2->GetPose().Ori() * socketPose2.Ori() * preLocalW2 + socket1->GetPose().Ori() * socketPose1.Ori() * preLocalW1;
 	cout << "solid2ForTest->GetAngularVelocity() " << solid2ForTest->GetAngularVelocity() << endl;
+	cout << "solid2ForTest->GetVelocity() " << solid2ForTest->GetVelocity() << endl;
 	cout << "preGlobalW2 " << preGlobalW2 << endl;
-	Vec3d wdot2Global = (globalW2 - preGlobalW2) / timeStep;
+	cout << "preGlobalW2FromLocalW " << preGlobalW2FromLocalW << endl;
+	Vec3d wdot2Global = (globalW2 - preGlobalW2FromLocalW) / timeStep;
+	//Vec3d wdot2Global = (globalW2 - solid2ForTest->GetAngularVelocity()) / timeStep;
 	cout << "preLocalW2 " << preLocalW2 << endl;
 	cout << "solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity() " << solid2ForTest->GetAngularVelocity() - solid1ForTest->GetAngularVelocity() << endl;
 	cout << "localW2 " << localW2 << endl;
@@ -163,8 +168,8 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 		SpatialVector Ic = ballJoint1TreeNodeForTest->GetIc() / timeStep;
 		std::cout << "Ic " << Ic << endl;
 
-		fSolid1 += solid1ForTest->GetOrientation() * Ic.v();
-		tSolid1 += solid1ForTest->GetOrientation() * Ic.w();
+		//fSolid1 += solid1ForTest->GetOrientation() * Ic.v();
+		//tSolid1 += solid1ForTest->GetOrientation() * Ic.w();
 
 		// Solid2について
 		Vec3d ballJoint2Acc = (socket2->GetPose().Ori() * socketPose2.Ori() * wdot2Local) % (solid2ForTest->GetPose().Pos() - ballJoint2PositionForTest);
@@ -180,8 +185,8 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 		// コリオリ力を減算
 		SpatialVector IcBallJoint2 = ballJoint2TreeNodeForTest->GetIc() / timeStep;
 		std::cout << "IcBallJoint2 " << IcBallJoint2 << endl;
-		fSolid2 += solid2ForTest->GetOrientation() * IcBallJoint2.v();
-		tSolid2 += solid2ForTest->GetOrientation() * IcBallJoint2.w();
+		//fSolid2 += solid2ForTest->GetOrientation() * IcBallJoint2.v();
+		//tSolid2 += solid2ForTest->GetOrientation() * IcBallJoint2.w();
 
 		cout << "aSolid1 " << aSolid1 << endl;
 		cout << "fSolid1 " << fSolid1 << endl;
@@ -260,6 +265,7 @@ public:
 			solid1ForTest->SetFramePosition(solid1PositionForTest);
 			solid1ForTest->SetOrientation(Quaterniond(1, 0, 0, 0));
 			solid1ForTest->SetAngularVelocity(preLocalW1);
+			//solid1ForTest->SetVelocity(Vec3d(100,100,100));
 
 			cout << "preLocalW1 " << preLocalW1 << endl;
 			cout << "solid1ForTest->GetAngularVelocity() " << solid1ForTest->GetAngularVelocity() << endl;

@@ -302,7 +302,7 @@ void PHTreeNode::CompArticulatedBiasForce(){
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
 		(*it)->CompArticulatedBiasForce();
 
-	ZplusIc = Z + Ic;
+	ZplusIc = Z/* + Ic*/;
 	cout << "ZplusIc " << solid->GetName() << " " << ZplusIc << endl;
 	//親ノードにZaを積む
 	AccumulateBiasForce();
@@ -477,19 +477,15 @@ void PHRootNode::Setup(){
 		PHTreeNode* treeNode = (*it);
 		PHBallJointNode* ballJointNode = (PHBallJointNode*)(treeNode);
 		SpatialVector cForce = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-		cForce += ballJointNode->Ic / dt;
-		//ballJointNode->solid->AddForce(-cForce.v());
-		//ballJointNode->solid->AddForce(-cForce.w());
 
 		for (container_t::reverse_iterator it2 = ballJointNode->Children().rbegin(); it2 != ballJointNode->Children().rend(); it2++) {
 			PHTreeNode* treeNode2 = (*it2);
 			PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
 			//cForce2 += ballJointNode2->Ic /dt;
 			cout << "ballJointNode2->I * ballJointNode2->Xcp * ballJointNode->c " << ballJointNode2->I * ballJointNode2->Xcp * ballJointNode->c << endl;
-			cForce2 += ballJointNode2->I* ballJointNode2->Xcp* ballJointNode->c / dt;
-			//ballJointNode2->J.trans().inv() * ballJointNode2->XtrIJ.trans() * ballJointNode->c;
-			ballJointNode2->solid->AddForce(cForce2.v());
-			ballJointNode2->solid->AddTorque(cForce2.w());
+			cForce2 += ballJointNode2->I * ballJointNode2->Xcp* ballJointNode->c / dt;
+			//ballJointNode2->solid->AddForce(ballJointNode2->solid->GetOrientation() * cForce2.v());
+			//ballJointNode2->solid->AddTorque(ballJointNode2->solid->GetOrientation() * cForce2.w());
 		}
 	}
 
@@ -507,10 +503,11 @@ void PHRootNode::Setup(){
 			PHTreeNode* treeNode2 = (*it2);
 			PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
 			SpatialVector PlusedChildIc2 = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-			PlusedChildIc2 += (ballJointNode2->Xcp_mat.trans() * (cForce2) + ballJointNode2->XtrIJ_JIJinv * (-ballJointNode2->J.trans() * (cForce2)));
+			PlusedChildIc2 += -(ballJointNode2->Xcp_mat.trans() * (cForce2) + ballJointNode2->XtrIJ_JIJinv * (-ballJointNode2->J.trans() * (cForce2))); //ここ違う気がする
 			cout << ballJointNode2->solid->GetName() << " PlusedChildIc2 " << PlusedChildIc2 << endl;
-			ballJointNode2->GetParent()->solid->AddForce(-PlusedChildIc2.v());
-			ballJointNode2->GetParent()->solid->AddTorque(-PlusedChildIc2.w());
+			PHSolid* parentSolid = ballJointNode2->GetParent()->solid;
+			//parentSolid->AddForce(PlusedChildIc2.v());
+			//parentSolid->AddTorque(PlusedChildIc2.w());
 		}
 	}
 
@@ -849,8 +846,8 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
 	}
 	else{
-		dvel              = - JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
-		//dvel              = - JIJinv * ((XtrIJ.trans() * (parent->solid->dv - parent->c)) + JtrZplusIc);
+		//dvel              = - JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
+		dvel              = - JIJinv * ((XtrIJ.trans() * (parent->solid->dv - parent->c)) + JtrZplusIc);
 		//dvel              = - JIJinv * (J.trans() * (I * Xcp * (parent->solid->dv - parent->c) + ZplusIc));
 		//dvel              = - JIJinv * (J.trans() * (I * Xcp * (parent->solid->dv) + ZplusIc - I * Xcp * parent->c));
 		//cout << "I * Xcp * parent->c " << I * Xcp * parent->c << endl;
