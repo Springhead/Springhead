@@ -291,7 +291,8 @@ public:
 			solid2ForTest->SetInertia(Matrix3d(1, 0, 0, 0, 1, 0, 0, 0, 1));
 			solid2ForTest->SetFramePosition(solid2PositionForTest);
 			solid2ForTest->SetOrientation(solid1RotationFortest);
-			solid2ForTest->SetVelocity(Vec3d(0, 14.137166941154076, 0));
+			//solid2ForTest->SetVelocity(Vec3d(0, 14.137166941154076, 0));
+			solid2ForTest->SetVelocity(Vec3d(0, 7.2, 0));// 7.19まで動かないが7.2になるとダメになる
 			
 			// preGlobalW2の計算
 			//PHSolidIf* socket1 = ballJoint1ForTest->GetSocketSolid();
