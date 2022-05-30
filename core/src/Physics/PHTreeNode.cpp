@@ -254,6 +254,7 @@ void PHTreeNode::CompCoriolisAccel(){
 		        - SpatialTransform(Vec3d(), Xj1  .q) * ccj);
 	c += Xcj * cj;
 	c *= GetPHScene()->GetTimeStep();
+	c.clear();
 }
 
 void PHTreeNode::InitArticulatedInertia(){
@@ -449,71 +450,45 @@ void PHRootNode::Setup(){
 
 
 	double dt = engine->GetScene()->GetTimeStep();
-	// Icの親への積み重ねを計算 必要なさそう
-	/*
-	for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
-		PHTreeNode* treeNode = (*it);
-		PHBallJointNode* ballJointNode = (PHBallJointNode*)(treeNode);
-
-		SpatialVector PlusedChildIc = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-		PlusedChildIc += (ballJointNode->Xcp_mat.trans() * ballJointNode->Ic + ballJointNode->XtrIJ_JIJinv * (-ballJointNode->J.trans() * ballJointNode->Ic))/dt;
-		cout << ballJointNode->solid->GetName() << " PlusedChildIc " << PlusedChildIc << endl;
-		//ballJointNode->GetParent()->solid->AddForce(PlusedChildIc.v());
-		//ballJointNode->GetParent()->solid->AddTorque(PlusedChildIc.w());
-
-		for (container_t::reverse_iterator it2 = ballJointNode->Children().rbegin(); it2 != ballJointNode->Children().rend(); it2++) {
-			PHTreeNode* treeNode2 = (*it2);
-			PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
-			SpatialVector PlusedChildIc2 = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-			PlusedChildIc2 += (ballJointNode2->Xcp_mat.trans() * ballJointNode2->Ic + ballJointNode2->XtrIJ_JIJinv * (-ballJointNode2->J.trans() * ballJointNode2->Ic))/dt;
-			cout << ballJointNode2->solid->GetName() << " PlusedChildIc2 " << PlusedChildIc2 << endl;
-			//ballJointNode2->GetParent()->solid->AddForce(PlusedChildIc2.v());
-			//ballJointNode2->GetParent()->solid->AddTorque(PlusedChildIc2.w());
-			//ballJointNode2->solid->AddForce(PlusedChildIc2.v());
-			//ballJointNode2->solid->AddTorque(PlusedChildIc2.w());
-		}
-	}
-	*/
 
 	// 親のコリオリ加速度をsolid->dv経由で子に入れてる部分を
-	SpatialVector cForce2 = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-	for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
-		PHTreeNode* treeNode = (*it);
-		PHBallJointNode* ballJointNode = (PHBallJointNode*)(treeNode);
-		SpatialVector cForce = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
+	//SpatialVector cForce2 = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
+	//for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
+	//	PHTreeNode* treeNode = (*it);
+	//	PHBallJointNode* ballJointNode = (PHBallJointNode*)(treeNode);
+	//	SpatialVector cForce = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
 
-		for (container_t::reverse_iterator it2 = ballJointNode->Children().rbegin(); it2 != ballJointNode->Children().rend(); it2++) {
-			PHTreeNode* treeNode2 = (*it2);
-			PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
-			//cForce2 += ballJointNode2->Ic /dt;
-			cout << "ballJointNode2->I * ballJointNode2->Xcp * ballJointNode->c " << ballJointNode2->I * ballJointNode2->Xcp * ballJointNode->c << endl;
-			cForce2 += ballJointNode2->I * ballJointNode2->Xcp* ballJointNode->c / dt;
-			ballJointNode2->solid->AddForce(ballJointNode2->solid->GetOrientation() * cForce2.v());
-			ballJointNode2->solid->AddTorque(ballJointNode2->solid->GetOrientation() * cForce2.w());
-		}
-	}
+	//	for (container_t::reverse_iterator it2 = ballJointNode->Children().rbegin(); it2 != ballJointNode->Children().rend(); it2++) {
+	//		PHTreeNode* treeNode2 = (*it2);
+	//		PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
+	//		cout << "ballJointNode2->I * ballJointNode2->Xcp * ballJointNode->c " << ballJointNode2->I * ballJointNode2->Xcp * ballJointNode->c << endl;
+	//		cForce2 += ballJointNode2->I * ballJointNode2->Xcp* ballJointNode->c / dt;
+	//		ballJointNode2->solid->AddForce(ballJointNode2->solid->GetOrientation() * cForce2.v());
+	//		ballJointNode2->solid->AddTorque(ballJointNode2->solid->GetOrientation() * cForce2.w());
+	//	}
+	//}
 
-	for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
-		PHTreeNode* treeNode = (*it);
-		PHBallJointNode* ballJointNode = (PHBallJointNode*)(treeNode);
+	//for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
+	//	PHTreeNode* treeNode = (*it);
+	//	PHBallJointNode* ballJointNode = (PHBallJointNode*)(treeNode);
 
-		SpatialVector PlusedChildIc = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-		PlusedChildIc += (ballJointNode->Xcp_mat.trans() * ballJointNode->Ic + ballJointNode->XtrIJ_JIJinv * (-ballJointNode->J.trans() * ballJointNode->Ic))/dt;
-		cout << ballJointNode->solid->GetName() << " PlusedChildIc " << PlusedChildIc << endl;
-		ballJointNode->GetParent()->solid->AddForce(PlusedChildIc.v());
-		ballJointNode->GetParent()->solid->AddTorque(PlusedChildIc.w());
+	//	SpatialVector PlusedChildIc = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
+	//	PlusedChildIc += (ballJointNode->Xcp_mat.trans() * ballJointNode->Ic + ballJointNode->XtrIJ_JIJinv * (-ballJointNode->J.trans() * ballJointNode->Ic))/dt;
+	//	cout << ballJointNode->solid->GetName() << " PlusedChildIc " << PlusedChildIc << endl;
+	//	ballJointNode->GetParent()->solid->AddForce(PlusedChildIc.v());
+	//	ballJointNode->GetParent()->solid->AddTorque(PlusedChildIc.w());
 
-		for (container_t::reverse_iterator it2 = ballJointNode->Children().rbegin(); it2 != ballJointNode->Children().rend(); it2++) {
-			PHTreeNode* treeNode2 = (*it2);
-			PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
-			SpatialVector PlusedChildIc2 = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
-			PlusedChildIc2 += -(ballJointNode2->Xcp_mat.trans() * (cForce2) + ballJointNode2->XtrIJ_JIJinv * (-ballJointNode2->J.trans() * (cForce2))); //ここ違う気がする
-			cout << ballJointNode2->solid->GetName() << " PlusedChildIc2 " << PlusedChildIc2 << endl;
-			PHSolid* parentSolid = ballJointNode2->GetParent()->solid;
-			parentSolid->AddForce(parentSolid->GetOrientation() * PlusedChildIc2.v());
-			parentSolid->AddTorque(parentSolid->GetOrientation() * PlusedChildIc2.w());
-		}
-	}
+	//	for (container_t::reverse_iterator it2 = ballJointNode->Children().rbegin(); it2 != ballJointNode->Children().rend(); it2++) {
+	//		PHTreeNode* treeNode2 = (*it2);
+	//		PHBallJointNode* ballJointNode2 = (PHBallJointNode*)(treeNode2);
+	//		SpatialVector PlusedChildIc2 = SpatialVector(Vec3d(0,0,0),Vec3d(0,0,0));
+	//		PlusedChildIc2 += -(ballJointNode2->Xcp_mat.trans() * (cForce2) + ballJointNode2->XtrIJ_JIJinv * (-ballJointNode2->J.trans() * (cForce2))); //ここ違う気がする
+	//		cout << ballJointNode2->solid->GetName() << " PlusedChildIc2 " << PlusedChildIc2 << endl;
+	//		PHSolid* parentSolid = ballJointNode2->GetParent()->solid;
+	//		parentSolid->AddForce(parentSolid->GetOrientation() * PlusedChildIc2.v());
+	//		parentSolid->AddTorque(parentSolid->GetOrientation() * PlusedChildIc2.w());
+	//	}
+	//}
 
 
 	// addforceやaddtorqueした力をfに書き込む<!!>実行順があっているか不明
