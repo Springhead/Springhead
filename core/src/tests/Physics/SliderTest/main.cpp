@@ -51,10 +51,10 @@ double timeStep;
 
 //Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(20), 'z');
 //Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(20), 'y');
-//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
-//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
-Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.1, 0.1, -0.1));
-Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.1, 0.1, -0.1));
+Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
+Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
+//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.1, 0.1, -0.1));
+//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.1, 0.1, -0.1));
 //Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
 //Quaterniond targetRotationBallJoint2 = Quaterniond(1, 0, 0, 0);
 Quaterniond preTargetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
