@@ -1006,6 +1006,14 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	void Setup();
 
+	/** @brief ABA用の慣性テンソルを初期化
+	 */
+	void InitArticulatedInertia();
+
+	/** @brief ABA用の慣性テンソルを計算
+	 */
+	void CompArticulatedInertia();
+
 };
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
@@ -1037,6 +1045,14 @@ struct PHGenericJointNodeIf : public PHTreeNode1DIf{
 };
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHBallJointNode);
+
+	/** @brief 
+	 */
+	Spr::SpatialVector ConvertParentC(SpatialVector parentC);
+
+	/** @brief 
+	 */
+	Spr::SpatialVector ConvertChild2Parent(SpatialVector cf);
 };
 struct PHFixJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHFixJointNode);

@@ -311,6 +311,10 @@ struct PHSolidIf : public PHBodyIf{
 	 */
 	PHTreeNodeIf* GetTreeNode();
 
+	/** @brief LCP関連補助変数の初期化する
+	 */
+	void UpdateCacheLCP(double dt);
+
 	/** @brief 剛体の形状を描画するかどうかを指定する
 		@param bOn true: 形状を描画 bOn false: 形状を描画しない
 	*/

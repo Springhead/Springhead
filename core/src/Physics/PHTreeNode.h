@@ -59,8 +59,7 @@ public:
 	PHTreeNodeIf*   GetChildNode (int i){ return Children()[i]->Cast(); }
 	SpatialMatrix   GetI         ()     { return I; }
 	SpatialVector   GetIc        ()     { return Ic; }
-	SpatialVector   GetC        ()     { return c; }
-
+	SpatialVector   GetC         ()     { return c; }
 	SpatialVector   GetZ         ()     { return Z; }
 	PHSolidIf*      GetSolid     ()     { return solid->Cast(); }
 	PHRootNodeIf*	GetRootNode  ();
@@ -179,6 +178,8 @@ public:
 
 	std::vector<MatrixN6d>	dZdvel_map;		///< ツリー上の任意の他ノードのdZからこのノードのdvelを与える行列
 
+	SpatialVector    ConvertParentC     (SpatialVector parentC)     { return I * Xcp * parentC / GetPHScene()->GetTimeStep(); }
+	SpatialVector    ConvertChild2Parent(SpatialVector cf);
 	PHNDJoint<NDOF>* GetJoint(){ return (PHNDJoint<NDOF>*)joint; }
 
 	virtual void        ResetGear           ();

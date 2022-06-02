@@ -7,6 +7,8 @@
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
 %ignore Spr::PHSceneIf::GetPerformanceMeasure;
+%ignore Spr::PHRootNodeIf::SetCompControlForceCallback;
+%ignore Spr::PHRootNodeIf::CompControlForce;
 
 #ifdef  Physics_ONLY
 %ignore Spr::PHOpEngineIf::InitialHapticRenderer;
