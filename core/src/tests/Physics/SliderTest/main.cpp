@@ -49,10 +49,10 @@ PHTreeNodeIf* ballJoint1TreeNodeForTest;
 PHTreeNodeIf* ballJoint2TreeNodeForTest;
 double timeStep;
 
-//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(20), 'z');
-//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(20), 'y');
-Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
-Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
+Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Rad(90), 'z');
+Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Rad(90), 'y');
+//Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
+//Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.5, 0.5, -0.5));
 //Quaterniond targetRotationBallJoint1 = Quaterniond::Rot(Vec3d(-0.1, 0.1, -0.1));
 //Quaterniond targetRotationBallJoint2 = Quaterniond::Rot(Vec3d(-0.1, 0.1, -0.1));
 //Quaterniond targetRotationBallJoint1 = Quaterniond(1, 0, 0, 0);
@@ -147,10 +147,6 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 		inertiaGlobal += R * solid1ForTest->GetInertia() * R.trans();
 		Vec3d tSolid1 = inertiaGlobal * wdot1Global;
 
-		Vec3d angVelLocal1 = solid1ForTest->GetOrientation().Inv() * solid1ForTest->GetAngularVelocity();
-		cout << "angVelLocal1 % (solid1ForTest->GetInertia() * angVelLocal1) " << angVelLocal1 % (solid1ForTest->GetInertia() * angVelLocal1) << endl;
-		tSolid1 += solid1ForTest->GetOrientation() * (angVelLocal1 % (solid1ForTest->GetInertia() * angVelLocal1));
-
 		// Solid2について
 		Vec3d ballJoint2Acc = (socket2->GetPose().Ori() * socketPose2.Ori() * wdot2Local) % (solid2ForTest->GetPose().Pos() - ballJoint2PositionForTest);
 		Vec3d ballJoint1Acc = (socket1->GetPose().Ori() * socketPose1.Ori() * wdot1Local) % (solid2ForTest->GetPose().Pos() - ballJoint1PositionForTest);
@@ -166,9 +162,6 @@ void CalcForceWithCoriolis(Spr::PHRootNodeIf* r, void* a) {
 		inertiaGlobal2 += R2 * solid2ForTest->GetInertia() * R2.trans();
 		Vec3d tSolid2 = inertiaGlobal2 * wdot2Global;
 
-		Vec3d angVelLocal2 = solid2ForTest->GetOrientation().Inv() * solid2ForTest->GetAngularVelocity();
-		cout << "angVelLocal2 % (solid2ForTest->GetInertia() * angVelLocal2) " << angVelLocal2 % (solid2ForTest->GetInertia() * angVelLocal2) << endl;
-		tSolid2 += solid2ForTest->GetOrientation() * (angVelLocal2 % (solid2ForTest->GetInertia() * angVelLocal2));
 		// コリオリ力を減算
 		SpatialVector Ic = ballJoint1TreeNodeForTest->GetIc() / timeStep;
 		std::cout << "Ic " << Ic << endl;

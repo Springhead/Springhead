@@ -118,6 +118,7 @@ public:
 	void		SetCenterOfMass(const Vec3d& c){center = c;}	///< ローカルフレームから見た，剛体の質量中心位置の取得
 	Matrix3d	GetInertia   (){return inertia;}				///< 慣性テンソル
 	Matrix3d	GetInertiaInv(){return Iinv;}					///< 慣性テンソルの逆数
+	Matrix3d	GetGlobalInertia();              				///< グローバル回転の慣性テンソル
 	void		SetInertia   (const Matrix3d& I){ inertia = I; Iinv = I.inv(); }				///< 慣性テンソルの設定
 	void		SetInertiaInv(const Matrix3d& _Iinv){ Iinv = _Iinv; inertia = Iinv.inv(); }		///< 慣性テンソルを逆数で設定
 	void		CompInertia();

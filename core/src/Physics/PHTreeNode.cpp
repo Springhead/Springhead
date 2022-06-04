@@ -833,11 +833,7 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
 	}
 	else{
-		dvel              = - JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
-		//dvel              = - JIJinv * ((XtrIJ.trans() * (parent->solid->dv - parent->c)) + JtrZplusIc);
-		//dvel              = - JIJinv * (J.trans() * (I * Xcp * (parent->solid->dv - parent->c) + ZplusIc));
-		//dvel              = - JIJinv * (J.trans() * (I * Xcp * (parent->solid->dv) + ZplusIc - I * Xcp * parent->c));
-		//cout << "I * Xcp * parent->c " << I * Xcp * parent->c << endl;
+		dvel              = -JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
 	}
 

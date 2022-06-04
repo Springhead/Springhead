@@ -222,6 +222,11 @@ struct PHSolidIf : public PHBodyIf{
 	 */
 	Matrix3d	GetInertiaInv();
 	
+	/** @brief グローバル回転の慣性テンソルを取得する
+		@return 慣性テンソル
+	 */
+	Matrix3d	GetGlobalInertia();
+
 	/** @brief 慣性テンソルを設定する
 		@param I 慣性テンソル
 	 */

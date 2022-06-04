@@ -61,6 +61,7 @@ public:
 	SpatialVector   GetIc        ()     { return Ic; }
 	SpatialVector   GetC         ()     { return c; }
 	SpatialVector   GetZ         ()     { return Z; }
+	SpatialMatrix   GetXcp_mat	 ()     { return Xcp_mat; }
 	PHSolidIf*      GetSolid     ()     { return solid->Cast(); }
 	PHRootNodeIf*	GetRootNode  ();
 		

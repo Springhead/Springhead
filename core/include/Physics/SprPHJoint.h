@@ -1002,6 +1002,10 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	Spr::SpatialVector GetZ();
 
+	/** @brief 子ノードから親ノードへの座標変換Xcpを取得する
+	 */
+	Spr::SpatialMatrix GetXcp_mat();
+
 	/** @brief Setupを実行する
 	 */
 	void Setup();
