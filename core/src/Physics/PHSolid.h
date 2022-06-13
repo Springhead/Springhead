@@ -141,6 +141,7 @@ public:
 	void		SetCenterPosition   (const Vec3d& p)      { pose.Pos() = p - pose.Ori()*center; aabbReady = false; }	///< 重心位置の設定(World)
 	void		SetRotation         (const Matrix3d& r)   { pose.Ori().FromMatrix(r);           aabbReady = false; }	///	向きの設定
 	void		SetOrientation      (const Quaterniond& q){ pose.Ori() = q;                     aabbReady = false; }	///	向きの設定
+	void        SetDv               (const SpatialVector& a){ dv = a; }   /// 速度の変化量を設定する <!!>aabbReadyが必要なのかが分からない
 
 	///	質量中心の速度の取得
 	Vec3d		GetVelocity() {return velocity;}

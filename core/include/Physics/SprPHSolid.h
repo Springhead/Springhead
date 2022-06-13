@@ -278,6 +278,11 @@ struct PHSolidIf : public PHBodyIf{
 	 */
 	void		SetAngularVelocity(const Vec3d& av);
 
+    /** @brief 剛体の速度の変化量を設定する
+		@param a シーンに対する剛体の速度の変化量
+	 */
+	void		SetDv(const SpatialVector& a);
+
 	/** @brief 最後のステップで、拘束力以外に剛体に加わった外力を取得する。
 		拘束力は PHConstraint とその派生クラスから取得しなければならない。
 		@return 剛体に加えられた力(World系)

@@ -447,20 +447,6 @@ void PHRootNode::Setup(){
 		compControlForce(this->GetObjectIf()->Cast(), arg);
 	}
 
-
-	double dt = engine->GetScene()->GetTimeStep();
-
-	// addforceやaddtorqueした力をfに書き込む<!!>実行順があっているか不明
-	solid->UpdateCacheLCP(dt);
-	for (container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++) {
-		(*it)->solid->UpdateCacheLCP(dt);
-		std::cout << "UpdateCacheLCP " << (*it)->solid->GetName() << endl;
-		for (container_t::reverse_iterator it2 = (*it)->Children().rbegin(); it2 != (*it)->Children().rend(); it2++) {
-			(*it2)->solid->UpdateCacheLCP(dt);
-			std::cout << "UpdateCacheLCP " << (*it2)->solid->GetName() << endl;
-		}
-	}
-
 	// articulated bias forceを計算
 	InitArticulatedBiasForce();
 	CompArticulatedBiasForce();
@@ -523,9 +509,7 @@ void PHRootNode::CompAccel(){
 	if(solid->IsDynamical()){
 		(Vec6d&)solid->dv = - (Iinv * Z);
 	}
-	else{
-		solid->dv.clear();
-	}
+
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->CompAccel();
 }
@@ -533,7 +517,23 @@ void PHRootNode::CompAccel(){
 void PHRootNode::UpdateVelocity(double* dt){
 	if(!bEnabled)
 		return;
-	solid->UpdateVelocity(dt);
+
+	if (!solid->IsDynamical()) {
+		solid->v += solid->dv;
+
+		// 速度更新
+		solid->SetVelocity(solid->GetOrientation() * solid->v.v());
+		solid->SetAngularVelocity(solid->GetOrientation() * solid->v.w());
+
+		// ステートの加速度を更新
+		PHSceneIf* scene = GetScene()->Cast();
+		solid->accel = solid->dv.v() * scene->GetTimeStepInv();
+		solid->angAccel = solid->dv.w() * scene->GetTimeStepInv();
+	}
+	else {
+		solid->UpdateVelocity(dt);
+	}
+
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdateVelocity(dt);
 }
@@ -702,9 +702,6 @@ void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 			parent->Z += sumXtrZplusIc + sumXtrIJ_sumJIJinv * (- sumJtrZplusIc);
 	}
 	else {
-		//SpatialVector test = SpatialVector(Vec3d(0, 0, 0), Vec3d(0, 0, 0));
-		//test += XtrZplusIc + XtrIJ_JIJinv * (-JtrZplusIc);
-		//cout << solid->GetName() << " ZplusIc " << test << endl;
 		parent->Z += XtrZplusIc + XtrIJ_JIJinv * (-JtrZplusIc); 
 	}
 }
