@@ -174,7 +174,11 @@ public:
 
 	/** @brief 位置の目標値を設定する
 	*/
-	void SetTargetPosition(Vec3d position) { targetPosition = position; }
+	void SetTargetPosition(Vec3d position) {
+		DSTR << this->GetName() << ",SSSPosition:" << position << std::endl;
+		targetPosition = position;
+		DSTR << this->GetName() << ",SSSettargetPosition:" << targetPosition << std::endl;
+	}
 
 	/** @brief 設定された位置の目標値を取得する
 	*/

@@ -270,7 +270,8 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 
 		// 外積ベクトルからヤコビアンを求める
 		for (int i = 0; i < ndof; ++i) {
-			Vec3d v = PTM::cross(e[i],(Pe-Pj)); //Change here		
+			Vec3d v = PTM::cross(e[i],(Pe-Pj)); //Change here
+			/*
 			if (endeffector->GetBaseSolid() != NULL)
 			{
 				PHSolidIf* bSolid = endeffector->GetBaseSolid();
@@ -285,6 +286,8 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 				Vec3d v = PTM::cross(e[i], (Pe - Pj));
 				Mj[n][0][i] = v[0];  Mj[n][1][i] = v[1];  Mj[n][2][i] = v[2];
 			}
+			*/
+			Mj[n][0][i] = v[0];  Mj[n][1][i] = v[1];  Mj[n][2][i] = v[2];
 		}
 	}
 

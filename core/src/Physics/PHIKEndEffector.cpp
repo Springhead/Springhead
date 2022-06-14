@@ -69,6 +69,8 @@ void PHIKEndEffector::Enable(bool enable){
 }
 
 void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
+	DSTR <<"***name:"<< this->GetName() <<"baseSolid:"<<baseSolid<< std::endl;
+
 	v.resize(ndof);
 
 	PHSceneIf*    phScene = DCAST(PHSceneIf,GetScene());
@@ -81,7 +83,13 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		
 		Vec3d dir;
 		if (baseSolid != NULL) {
-			dir = (targetPosition - baseSolid->GetPose().Inv() * currPos);
+			//dir = (targetPosition - baseSolid->GetPose().Inv() * currPos);
+			dir = (baseSolid->GetPose()*targetPosition) - currPos;
+			
+			DSTR<<this->GetName()<<",dir&&&:"<< dir<<std::endl;
+			DSTR << this->GetName() <<",targetPosition:"<< targetPosition << std::endl;
+			DSTR << this->GetName() << ",baseSolid->GetPose()*targetPosition:" << baseSolid->GetPose()*targetPosition << std::endl;
+			DSTR << this->GetName() << ",currPose:" << currPos << std::endl;
 		}
 		else
 		{
