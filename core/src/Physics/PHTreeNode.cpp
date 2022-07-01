@@ -342,10 +342,11 @@ void PHTreeNode::UpdateVelocity(double* dt){
 	PHSolid* s  = solid;
 	UpdateJointVelocity ();
 	CompRelativeVelocity();
-	s->v = Xcp * sp->v + Xcj * joint->vjrel;
-	s->SetVelocity       (s->GetOrientation() * s->v.v());
-	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
 	
+	//s->v = Xcp * sp->v + Xcj * joint->vjrel;
+	//s->SetVelocity       (s->GetOrientation() * s->v.v());
+	//s->SetAngularVelocity(s->GetOrientation() * s->v.w());
+
 	// 位置更新のステップ幅を計算
 	double dpmax = GetPHScene()->GetMaxDeltaPosition();
 	double dqmax = GetPHScene()->GetMaxDeltaOrientation();
@@ -357,6 +358,15 @@ void PHTreeNode::UpdateVelocity(double* dt){
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdateVelocity(dt);
+}
+void PHTreeNode::UpdateVelocitySolid(double* dt) {
+	PHSolid* sp = parent->solid;
+	PHSolid* s  = solid;
+	s->v = Xcp * sp->v + Xcj * joint->vjrel;
+	s->SetVelocity       (s->GetOrientation() * s->v.v());
+	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->UpdateVelocitySolid(dt);
 }
 
 void PHTreeNode::UpdatePosition(double dt){
@@ -372,8 +382,8 @@ void PHTreeNode::UpdatePosition(double dt){
 	s->SetOrientation(Xc.q);
 	s->SetCenterPosition(Xc.r);
 
-	s->SetVelocity       (s->GetOrientation() * s->v.v());
-	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
+	//s->SetVelocity       (s->GetOrientation() * s->v.v());
+	//s->SetAngularVelocity(s->GetOrientation() * s->v.w());
 
 	s->SetUpdated(true);
 	
@@ -538,6 +548,13 @@ void PHRootNode::UpdateVelocity(double* dt){
 		(*it)->UpdateVelocity(dt);
 }
 
+void PHRootNode::UpdateVelocitySolid(double* dt){
+	if(!bEnabled)
+		return;
+
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->UpdateVelocitySolid(dt);
+}
 void PHRootNode::UpdatePosition(double dt){
 	if(!bEnabled)
 		return;
@@ -557,6 +574,7 @@ template<int NDOF>
 PHTreeNodeND<NDOF>::PHTreeNodeND(){
 	dvel.clear();
 	vel .clear();
+	ResetGear();
 }
 
 template<int NDOF>
@@ -783,6 +801,7 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 	else{
 		dvel              = -JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
+		cout << "solid->dv " << solid->GetName() << " " << solid->dv << endl;
 	}
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)

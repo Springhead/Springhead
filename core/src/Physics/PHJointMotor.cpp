@@ -197,12 +197,21 @@ void PHNDJointMotor<NDOF>::Setup(){
 template<int NDOF>
 bool PHNDJointMotor<NDOF>::Iterate(){
 	bool updated = false;
+	SpatialVector test0, test1;
+	test0.clear();
+	test1.clear();
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		int j = joint->movableAxes[i];
 
 		joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
 			         + joint->J[1].row(j) * joint->solid[1]->dv;
+		test0[j] = joint->J[0].row(j) * joint->solid[0]->dv;
+		test1[j] = joint->J[1].row(j) * joint->solid[1]->dv;
+		cout << "joint->solid[0]->dv " << joint->solid[0]->dv << endl;
+		cout << "joint->solid[1]->dv " << joint->solid[1]->dv << endl;
+		cout << "joint->J[0].row(" << j << ") * joint->solid[0]->dv " << joint->J[0].row(j) * joint->solid[0]->dv << endl;
+		cout << "joint->J[1].row(" << j << ") * joint->solid[1]->dv " << joint->J[1].row(j) * joint->solid[1]->dv << endl;
 		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
@@ -217,6 +226,16 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 			CompResponse(df[i], i);
 		}
 	}
+	PHNDJointMotorParam<NDOF> p; GetParams(p);
+	double dt = joint->GetScene()->GetTimeStep();
+	cout << "joint->vjrel" << joint->vjrel << endl;
+	cout << joint->GetName() << "joint->dv w[t+1]" << joint->dv << endl;
+	cout << joint->GetName() << "joint->dv w[t+1].w()" << joint->dv.w() << endl;
+	cout << "p.targetVelocity " << p.targetVelocity << endl;
+	cout << "p.targetVelocity - joint->dv w[t+1].w() " << p.targetVelocity - joint->dv.w()<< endl;
+	cout << "(p.targetVelocity - joint->dv w[t+1].w())*dt " << (p.targetVelocity - joint->dv.w())*dt<< endl;
+
+	//cout << "ws[t+1] = p->targetVelocity() - w[t+1] " << joint->dv - p.targetVelocity<< endl;
 	return updated;
 }
 
@@ -233,6 +252,7 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 	double dt = joint->GetScene()->GetTimeStep();
 	VecNd propV = GetPropV();
 	
+	cout << "qs[t] propV " << propV << endl;
 	for(int n = 0; n < axes.size(); ++n) {
 		int j = axes[n];
 		
@@ -245,7 +265,8 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 		else{
 			double tmp = 1.0 / (D + K*dt);
 			dA[j] = tmp * (1.0/dt);
-			db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]); 
+			db[j] = tmp * (-K*propV[j] - p.offsetForce[j])- p.targetVelocity[j] ; 
+			cout << db[j] << endl;
 		}
 	}
 

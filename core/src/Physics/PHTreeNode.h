@@ -97,6 +97,7 @@ public:
 	virtual void   CompResponseMatrix      ();
 	virtual void   CompResponseMap         (){}
 	virtual void   UpdateVelocity          (double* dt);	///< 剛体の速度の更新
+	virtual void   UpdateVelocitySolid          (double* dt);	///< 剛体の速度の更新
 	virtual void   UpdatePosition          (double dt);		///< 剛体の位置の更新
 	virtual void   UpdateJointVelocity     (){}	            ///< 関節速度の更新
 	virtual void   UpdateJointPosition     (double dt){}	///< 関節位置の更新
@@ -120,7 +121,7 @@ public:
 	std::vector<PHTreeNode*>			nodes;				///< IDによるアクセス用ノード配列
 	SpatialMatrix						Iinv;				///< Iの逆行列
 
-	PHRootNodeIf::CompControlForce compControlForce;
+	PHRootNodeIf::CompControlForce compControlForce = NULL;
 	void* arg;
 
 public:
@@ -138,6 +139,7 @@ public:
 	virtual void CompAccel               ();
 	virtual void CompResponseMap         ();
 	virtual void UpdateVelocity          (double* dt);
+	virtual void UpdateVelocitySolid     (double* dt);	///< 剛体の速度の更新
 	virtual void UpdatePosition          (double dt);
 	
 	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc());
