@@ -9,6 +9,7 @@
 #include <Foundation/UTOptimizer.h>
 #include <Springhead.h>
 #include <limits>
+#include <assert.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -78,6 +79,9 @@ namespace Spr {;
 		cmaes = new CMAES<double>();
 		parameters = new Parameters<double>();
 #endif
+	}
+	int UTCMAESOptimizer::GetPopulationSize() {
+		return cmaes->get(CMAES<double>::Lambda);
 	}
 
 	void UTCMAESOptimizer::Initialize() {
@@ -152,4 +156,30 @@ namespace Spr {;
 #endif
 	}
 
+	bool UTCMAESOptimizer::NextGeneration() {
+#ifdef USE_CLOSED_SRC
+		// update the search distribution used for sampleDistribution()
+		cmaes->updateDistribution(objectiveFunctionValues);
+
+		// check that the optimization is finished or not
+		optimizationFinished = cmaes->testForTermination();
+
+		if (optimizationFinished) {
+			// Get Final Result
+			finalValue = cmaes->getNew(CMAES<double>::XMean);
+			return false;
+		}
+		else {
+			// Get Current Fitness
+			currentFitness = cmaes->get(CMAES<double>::Fitness);
+
+			// Generate lambda new search points, sample population
+			population = cmaes->samplePopulation();
+
+			currPopulationNum = 0;
+			currGenerationNum++;
+			return true;
+		}
+#endif
+	}
 }
