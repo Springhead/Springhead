@@ -43,7 +43,7 @@ namespace Spr {
 		/// Get Parameter Value to Compute Objective Function
 		virtual double* GetPopulation() { return NULL; }
 		virtual double* GetPopulation(int index) { return NULL; }
-		virtual int GetPopulationSize() = 0;
+		virtual int GetPopulationSize() { return 0; }
 
 		/// Set Objective Function Value Computation Result
 		virtual void SetObjectiveFunctionValue(double value) {}
