@@ -1057,6 +1057,10 @@ struct PHBallJointNodeIf : public PHTreeNodeIf{
 	/** @brief 
 	 */
 	Spr::SpatialVector ConvertChild2Parent(SpatialVector cf);
+
+	/** @brief 
+	 */
+	PTM::TMatrixCol<6, 3, double> GetJ();
 };
 struct PHFixJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHFixJointNode);

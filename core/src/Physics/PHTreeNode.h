@@ -180,7 +180,7 @@ public:
 	Matrix6Nd		sumXtrIJ, sumXtrIJ_sumJIJinv;
 
 	std::vector<MatrixN6d>	dZdvel_map;		///< ツリー上の任意の他ノードのdZからこのノードのdvelを与える行列
-
+	Matrix6Nd        GetJ() { return J; }
 	SpatialVector    ConvertParentC     (SpatialVector parentC)     { return I * Xcp * parentC / GetPHScene()->GetTimeStep(); }
 	SpatialVector    ConvertChild2Parent(SpatialVector cf);
 	PHNDJoint<NDOF>* GetJoint(){ return (PHNDJoint<NDOF>*)joint; }

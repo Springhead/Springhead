@@ -303,7 +303,6 @@ void PHTreeNode::CompArticulatedBiasForce(){
 		(*it)->CompArticulatedBiasForce();
 
 	ZplusIc = Z + Ic;
-	cout << "ZplusIc " << solid->GetName() << " " << ZplusIc << endl;
 	//親ノードにZaを積む
 	AccumulateBiasForce();
 }
@@ -801,7 +800,6 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 	else{
 		dvel              = -JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
-		cout << "solid->dv " << solid->GetName() << " " << solid->dv << endl;
 	}
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
