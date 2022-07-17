@@ -114,6 +114,8 @@ void PHIKEngine::Prepare(bool second) {
 		V.resize(m);    V.clear();
 		Wp.resize(n);   Wp.clear();
 		l.resize(m);    l.clear();
+		F.resize(m);    F.clear();
+		T.resize(n);    T.clear();
 
 		lastM = m;
 		lastN = n;
@@ -187,10 +189,13 @@ void PHIKEngine::IK(bool nopullback) {
 			// V
 			PHIKEndEffector* eff = endeffectors[j];
 			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
+			Vec3d force;
 			eff->GetTempTarget(Vpart);
+			force = eff->GetTargetForce();//add here
 			for (size_t y=0; y<(size_t)eff->ndof; ++y) {
 				size_t Y = strideEff[j] + y;
 				V[Y] = Vpart[y];
+				F[Y] = force[y];// add here
 			}
 		}
 	}
@@ -240,6 +245,10 @@ void PHIKEngine::IK(bool nopullback) {
 	vector_type    DiUtV = ublas::prod(Di               , UtV  );
 	W                    = ublas::prod(ublas::trans(Vt) , DiUtV);
 
+	//--- 力 //add here
+	T = ublas::prod(ublas::trans(J), F);
+
+
 	// <!!>Wに標準姿勢復帰速度を加える
 	if (!nopullback) {
 		vector_type       JWp = ublas::prod(J, Wp);
@@ -256,14 +265,20 @@ void PHIKEngine::IK(bool nopullback) {
 		if (W[i]  >  limitW) { W[i]  =  limitW; }
 		if (W[i]  < -limitW) { W[i]  = -limitW; }
 	}
+	
+	for (size_t i = 0; i < T.size(); ++i) { //add here
+		if (T[i] > limitW) { T[i] = limitW; }
+		if (T[i] < -limitW) { T[i] = -limitW; }
+	}
 
-	// <!!>各Actuatorのωに擬似逆解を代入
+	// <!!>各Actuatorのωに擬似逆解を代入 //here
 	for (size_t i=0; i<actuators.size(); ++i) {
 		if (actuators[i]->IsEnabled()) {
 			PHIKActuator* act = actuators[i];
 			for (size_t x=0; x<(size_t)act->ndof; ++x) {
 				size_t X = strideAct[i] + x;
 				act->omega[x] = W[X];
+				act->tau[x] = T[X]; //add here
 			}
 		}
 	}
@@ -289,7 +304,7 @@ void PHIKEngine::LQIK(bool nopullback) {
 		actuators[i]->PrepareSolve();
 	}
 
-	// <!!>Vの作成
+	// <!!>Vの作成//here
 	for (size_t j = 0; j<endeffectors.size(); ++j) {
 		if (endeffectors[j]->IsEnabled() && (endeffectors[j]->bPosition || endeffectors[j]->bOrientation)) {
 			// V

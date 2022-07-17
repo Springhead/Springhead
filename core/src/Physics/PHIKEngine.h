@@ -53,11 +53,17 @@ public:
 	// 全エンドエフェクタ目標変位
 	vector_type V;
 
+	// 全エンドエフェクタ目標力
+	vector_type F; //add here
+
 	// 全関節角引き戻し変位
 	vector_type Wp;
 
 	// 全関節角変位（IK計算結果）
 	vector_type W;
+	
+	// 全関節角トルク（IK計算結果）
+	vector_type T; //add here
 
 	// ラグランジェ乗数
 	vector_type l;

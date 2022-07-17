@@ -93,6 +93,10 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	*/
 	void SetBaseSolid(PHSolidIf* bsolid);
 	
+	/** @brief 力の目標値を設定する //add this
+	*/
+	void SetTargetForce(Vec3d force, Vec3d workingPoint);
+
 	void SetParentActuator(PHIKActuatorIf* ika);
 	PHIKActuatorIf* GetParentActuator();
 
@@ -336,6 +340,8 @@ struct PHIKActuatorIf : SceneObjectIf{
 struct PHIKActuatorState{
 	Posed       solidTempPose;    ///< IK-FK計算用の一時変数：プラグ剛体姿勢	
 	Quaterniond jointTempOri;     ///< IK-FK計算用の一時変数：関節角度
+	Vec3d jointTempTorque;			  ///< IK-FK計算用の一時変数：関節トルク　//add here
+
 	/// 補間後の関節角度（in 回転ベクトル）（IK条件の変更等によるTargetPositionの急激な変化を避けるため）
 	Vec3d jointTempOriIntp;
 
@@ -357,6 +363,7 @@ struct PHIKActuatorState{
 		jointTempAngleIntp = 0;
 		solidPullbackPose = Posed();
 		jointTempPose = Posed();
+		jointTempTorque = Vec3d();
 	}
 };
 

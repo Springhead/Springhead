@@ -345,7 +345,7 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 	solidPullbackPose = soParentPullbackPose * socketPose * jpt * plugPose.Inv();
 }
 
-void PHIKBallActuator::Move(){
+void PHIKBallActuator::Move(){  //here
 	if (!bEnabled) { return; }
 	
 	/*
@@ -367,7 +367,7 @@ void PHIKBallActuator::Move(){
 
 	DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
-
+	//DCAST(PHBallJoint, joint)->SetOffsetForce(jointTempTorque);//add here
 	return;
 }
 
