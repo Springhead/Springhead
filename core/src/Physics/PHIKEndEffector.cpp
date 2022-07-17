@@ -90,6 +90,7 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 			DSTR << this->GetName() <<",targetPosition:"<< targetPosition << std::endl;
 			DSTR << this->GetName() << ",baseSolid->GetPose()*targetPosition:" << baseSolid->GetPose()*targetPosition << std::endl;
 			DSTR << this->GetName() << ",currPose:" << currPos << std::endl;
+			DSTR << this->GetName() << "0717bodyPose:" << baseSolid->GetPose() << std::endl;
 		}
 		else
 		{
@@ -110,14 +111,15 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		if (oriCtlMode == PHIKEndEffectorDesc::MODE_QUATERNION) {
 			Quaterniond qS = solidTempPose.Ori();
 			if (baseSolid != NULL) {
-				qS = baseSolid->GetOrientation().Inv()*qS;//To relative orientation
+				qS = qS*baseSolid->GetOrientation().Inv();//To relative orientation
 			}
 
 			qG = (targetOrientation * qS.Inv());
 
+			DSTR << this->GetName() << "0717,qG:" << qS.ToEuler() << std::endl;
+
 		} else if (oriCtlMode == PHIKEndEffectorDesc::MODE_DIRECTION || oriCtlMode == PHIKEndEffectorDesc::MODE_LOOKAT)  {
 			Vec3d dirS = solidTempPose.Ori() * targetLocalDirection;
-
 			Vec3d dirG;
 			if (oriCtlMode == PHIKEndEffectorDesc::MODE_DIRECTION) {
 				dirG = targetDirection;

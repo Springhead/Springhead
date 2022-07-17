@@ -93,10 +93,6 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	*/
 	void SetBaseSolid(PHSolidIf* bsolid);
 	
-	/** @brief 力の目標値を設定する //add this
-	*/
-	void SetTargetForce(Vec3d force, Vec3d workingPoint);
-
 	void SetParentActuator(PHIKActuatorIf* ika);
 	PHIKActuatorIf* GetParentActuator();
 
