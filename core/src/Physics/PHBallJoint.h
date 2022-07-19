@@ -13,6 +13,9 @@
 #include <Physics/PHJointLimit.h>
 #include <Physics/PHJointMotor.h>
 
+#ifdef USE_CLOSED_SRC
+#include "../../closed/include/PliantMotion/PliantMotion.h"
+#endif
 namespace Spr{;
 
 class PHBallJoint;
@@ -33,6 +36,7 @@ public:
 	virtual void		UpdateJointPosition(double dt);
 	virtual void		CompRelativePosition();
 	virtual void		CompRelativeVelocity();
+	SpatialVector       AddTrackingForce(double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration);
 	PHBallJointNode(const PHBallJointNodeDesc& desc = PHBallJointNodeDesc()){}	
 };
 
