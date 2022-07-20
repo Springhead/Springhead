@@ -1060,10 +1060,6 @@ struct PHBallJointNodeIf : public PHTreeNodeIf{
 
 	/** @brief 
 	 */
-	PTM::TMatrixCol<6, 3, double> GetJ();
-
-	/** @brief 
-	 */
 	SpatialVector AddTrackingForce(double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration);
 };
 struct PHFixJointNodeIf : public PHTreeNodeIf{

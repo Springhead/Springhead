@@ -13,9 +13,6 @@
 #include <Physics/PHJointLimit.h>
 #include <Physics/PHJointMotor.h>
 
-#ifdef USE_CLOSED_SRC
-#include "../../closed/include/PliantMotion/PliantMotion.h"
-#endif
 namespace Spr{;
 
 class PHBallJoint;

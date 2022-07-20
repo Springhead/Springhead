@@ -11,6 +11,9 @@
 #include <Physics/PHBallJoint.h>
 #include <Physics/PHConstraintEngine.h>
 
+#ifdef USE_CLOSED_SRC
+#include "../../closed/include/PliantMotion/PliantMotion.h"
+#endif
 using namespace PTM;
 using namespace std;
 
@@ -52,7 +55,7 @@ SpatialVector PHBallJointNode::AddTrackingForce(double timeStep, Vec3d targetAng
 	a.clear();
 #ifdef USE_CLOSED_SRC
 	PliantMotion *pliantMotion = new PliantMotion();
-	a = pliantMotion->AddTrackingForce(DCAST(PHBallJointNodeIf ,this), timeStep, targetAngularAcceleration, parentTargetAcceleration);
+	a = pliantMotion->AddTrackingForce(this, timeStep, targetAngularAcceleration, parentTargetAcceleration);
 #endif
 	return a;
 }
