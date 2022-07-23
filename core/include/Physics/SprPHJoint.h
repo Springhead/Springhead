@@ -1060,7 +1060,7 @@ struct PHBallJointNodeIf : public PHTreeNodeIf{
 
 	/** @brief 
 	 */
-	SpatialVector AddTrackingForce(double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration);
+	SpatialVector AddTrackingForce(PHBallJointNodeIf* ballJointNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration);
 };
 struct PHFixJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHFixJointNode);

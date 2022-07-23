@@ -50,12 +50,12 @@ void PHBallJointNode::CompRelativeVelocity(){
 	j->vjrel.w() = Vec3d(j->velocity[0], j->velocity[1], j->velocity[2]);
 }
 
-SpatialVector PHBallJointNode::AddTrackingForce(double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration) {
+SpatialVector PHBallJointNode::AddTrackingForce(PHBallJointNodeIf* ballJointNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration) {
 	SpatialVector a;
 	a.clear();
 #ifdef USE_CLOSED_SRC
 	PliantMotion *pliantMotion = new PliantMotion();
-	a = pliantMotion->AddTrackingForce(this, timeStep, targetAngularAcceleration, parentTargetAcceleration);
+	a = pliantMotion->AddTrackingForce(this, ballJointNode,timeStep, targetAngularAcceleration, parentTargetAcceleration);
 #endif
 	return a;
 }
