@@ -367,7 +367,7 @@ void PHIKBallActuator::Move(){  //here
 
 	DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
-	//DCAST(PHBallJoint, joint)->SetOffsetForce(jointTempTorque);//add here
+	DCAST(PHBallJoint, joint)->SetOffsetForce(jointTempTorque);//add here
 	return;
 }
 
