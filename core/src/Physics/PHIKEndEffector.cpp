@@ -197,6 +197,9 @@ void PHIKEndEffector::SetBaseSolid(PHSolidIf* bsolid){
 	baseSolid = bsolid;
 	DSTR << baseSolid << std::endl;
 }
-
+void PHIKEndEffector::GetTempTargetForce(PTM::VVector<double> &f) {  //add here
+	f.resize(ndof);
+	for (int i = 0; i < 3; ++i) { f[i] = targetForce[i]; }
+}
 }
 

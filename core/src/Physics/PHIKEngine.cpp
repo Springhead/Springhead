@@ -189,9 +189,9 @@ void PHIKEngine::IK(bool nopullback) {
 			// V
 			PHIKEndEffector* eff = endeffectors[j];
 			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
-			Vec3d force;
+			PTM::VVector<double> force; force.resize(eff->ndof);
 			eff->GetTempTarget(Vpart);
-			force = eff->GetTargetForce();//add here
+			eff->GetTempTargetForce(force);//add here
 			for (size_t y=0; y<(size_t)eff->ndof; ++y) {
 				size_t Y = strideEff[j] + y;
 				V[Y] = Vpart[y];

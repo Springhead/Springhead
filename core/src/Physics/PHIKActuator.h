@@ -106,6 +106,8 @@ public:
 	/// 剛体に実現されるべき角速度
 	Vec3d solidAngularVelocity;
 
+	/// 関節で実現すべきトルク
+	Vec3d jointTorque;
 	// --- --- --- --- --- --- --- --- --- ---
 
 	/** @brief 初期化

@@ -308,6 +308,10 @@ public:
 	void GetTempTarget(PTM::VVector<double> &v);
 	void GetTempTarget(PTM::VVector<double> &v, PTM::VVector<double> &w);
 	void UpdateLagrangeMultiplier(PTM::VVector<double> &l);
+	
+	/** @brief 暫定目標力を取得する
+	*/
+	void GetTempTargetForce(PTM::VVector<double> &f);//add here
 
 	/** @brief 暫定目標速度を取得する
 	*/

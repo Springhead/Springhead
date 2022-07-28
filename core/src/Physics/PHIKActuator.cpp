@@ -367,7 +367,7 @@ void PHIKBallActuator::Move(){  //here
 
 	DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
-	DCAST(PHBallJoint, joint)->SetOffsetForce(jointTempTorque);//add here
+	DCAST(PHBallJoint, joint)->SetOffsetForce(jointTorque);//add here
 	return;
 }
 
@@ -434,17 +434,23 @@ void PHIKBallActuator::MoveTempJoint() {
 	// ----- 位置 -----
 	// 回転軸ベクトルにする
 	Vec3d  w = Vec3d();
-	for (int i=0; i<ndof; ++i) { w += ( omega[i]*sqsaib ) * e[i]; }
+	Vec3d  t = Vec3d();//add here
+	for (int i=0; i<ndof; ++i) { 
+		w += ( omega[i]*sqsaib ) * e[i];
+		t += omega[i] * e[i];//add here
+	}
 
 	// 関節座標系にする
 	Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();
 	Posed socketPose; joint->GetSocketPose(socketPose);
 	w = (soParentPose * socketPose).Inv().Ori() * w;
-
+	t= (soParentPose * socketPose).Inv().Ori() * t;
 	jointTempOri  = Quaterniond::Rot(w) * jointTempOri;
 
 	// ----- 速度 -----
 	jointVelocity = w  * (1/DCAST(PHSceneIf,GetScene())->GetTimeStep());
+	
+	jointTorque = t;
 }
 
 // --- --- --- --- ---
@@ -548,6 +554,7 @@ void PHIKHingeActuator::Move(){
 	
 	hj->SetTargetPosition(jointTempAngleIntp);
 	hj->SetTargetVelocity(jointVelocity);
+	hj->SetOffsetForce(tau[0]);
 	/*/
 
 	int intpRate = DCAST(PHSceneIf, GetScene())->GetIKEngine()->GetIntpRate();
