@@ -81,7 +81,11 @@ namespace Spr {;
 #endif
 	}
 	int UTCMAESOptimizer::GetPopulationSize() {
+#ifdef USE_CLOSED_SRC
 		return cmaes->get(CMAES<double>::Lambda);
+#else
+		return 0;
+#endif
 	}
 
 	void UTCMAESOptimizer::Initialize() {
@@ -180,6 +184,8 @@ namespace Spr {;
 			currGenerationNum++;
 			return true;
 		}
+#else
+		return false;
 #endif
 	}
 }
