@@ -757,7 +757,7 @@ void PHIKSpringActuator::Move() {
 	DSTR << jointTempPose.Pos() << std::endl;
 	DCAST(PHSpring, joint)->SetTargetPosition(jointTempPose.Pos());
 	DCAST(PHSpring, joint)->SetTargetOrientation(jointTempPose.Ori());
-	DCAST(PHSpring, joint)->SetTargetVelocity(jointVelocity);
+	//DCAST(PHSpring, joint)->SetTargetVelocity(jointVelocity);
 
 	return;
 }

@@ -125,6 +125,7 @@
     <TargetName>$(ProjectName)$(VisualStudioVersion)$(LibConfRelease)$(Platform)</TargetName>
     <TargetExt>.lib</TargetExt>
     <OutDir>$(ProjectDir)</OutDir>
+    <ExecutablePath>B:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\Hostx64\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
     <OutDir>$(ProjectDir)</OutDir>

@@ -99,6 +99,7 @@
     <OutDir>$(SolutionDir)$(VisualStudioVersion)\bin\$(PlatformShortName)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>SprExport</TargetName>
+    <ExecutablePath>B:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\Hostx64\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

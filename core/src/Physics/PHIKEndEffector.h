@@ -257,10 +257,7 @@ public:
 
 	/** @brief 力の目標値を設定する
 	*/
-	void SetTargetForce(Vec3d force, Vec3d workingPoint) {
-		targetForce				= force;
-		targetForceWorkingPoint	= workingPoint;
-	}
+	void SetTargetForce(Vec3d force) {targetForce = force;}
 
 	/** @brief 設定された力の目標値を取得する
 	*/
