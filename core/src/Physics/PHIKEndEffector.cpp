@@ -110,7 +110,7 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		if (oriCtlMode == PHIKEndEffectorDesc::MODE_QUATERNION) {
 			Quaterniond qS = solidTempPose.Ori();
 			if (baseSolid != NULL) {
-				qS = baseSolid->GetOrientation().Inv()*qS;//To relative orientation
+				qS = qS * baseSolid->GetOrientation().Inv();//To relative orientation
 			}
 
 			qG = (targetOrientation * qS.Inv());
