@@ -45,7 +45,6 @@ namespace Spr {;
  **/
 class HISpidar: public HIHaptic{
 protected:
-	bool bGood;
 	std::string type;						///<	type of SPIDAR
 	std::vector<HISpidarMotor>	motors;		///<	モータ
 
@@ -72,7 +71,7 @@ public:
 		return true;
 	}
 	
-	HISpidar(){ bGood = false; }
+	HISpidar(){ isGood = false; }
 	HISpidar(const HISpidarDesc& desc) {}
 	virtual ~HISpidar(){ SetMinForce(); }
 };
@@ -133,7 +132,7 @@ public:
 	virtual bool Calibration();
 	virtual void Update(float dt);
 
-	void	SetForce(const Vec3f& f);
+	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f());
 	Vec3f	GetForce();
 	Vec3f	GetPosition(){ return pos; }
 

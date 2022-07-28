@@ -233,7 +233,7 @@ bool HISpidar4::Init(const void* pDesc){
 	BeforeCalibration();
 	Calibration();
 	AfterCalibration();
-	bGood = true;
+	isGood = true;
 	return true;
 }
 
@@ -315,7 +315,7 @@ Vec3f HISpidar4D::GetForce(){
 	return f;
 }
 
-void HISpidar4D::SetForce(const Vec3f& v3force){
+void HISpidar4D::SetForce(const Vec3f& v3force, const Vec3f&){
 	/*	2次計画法による張力計算	*/
 	//	糸の方向ベクトルを求める。
 	for (int i = 0; i < 4; i++){
@@ -615,7 +615,7 @@ bool HISpidarG::Init(const void* pDesc){
 	if (i < buttons.size()) {
 		buttons.resize(i);
 	}
-	bGood = true;
+	isGood = true;
 	SetMinForce();
 	BeforeCalibration();
 	Calibration();
@@ -624,7 +624,7 @@ bool HISpidarG::Init(const void* pDesc){
 }
 
 bool HISpidarG::Calibration(){
-	if (!bGood) return false;
+	if (!isGood) return false;
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
 	for(unsigned i = 0; i < motors.size(); i++)
 		motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
@@ -636,7 +636,7 @@ bool HISpidarG::Calibration(){
 }
 
 void HISpidarG::Update(float dt){
-	if (!bGood) return;
+	if (!isGood) return;
 	HIHaptic::Update(dt);
 	HISpidarCalc6Dof::Update();
 	for(unsigned int i=0; i<motors.size(); ++i){
@@ -645,7 +645,7 @@ void HISpidarG::Update(float dt){
 }
 
 void HISpidarG::MakeWireVec(){
-	if (!bGood) return;
+	if (!isGood) return;
 	for(unsigned int i=0; i<motors.size(); ++i){
 		wireDirection[i] = motors[i].pos - (ori*motors[i].jointPos + pos);
 		calculatedLength[i] = wireDirection[i].norm();
@@ -658,7 +658,7 @@ void HISpidarG::UpdatePos(){
 }
 
 void HISpidarG::MeasureWire(){
-	if (!bGood) return;
+	if (!isGood) return;
 	for(unsigned int i=0; i<motors.size(); ++i){
 		measuredLength[i] = motors[i].GetLength();
 	}	
