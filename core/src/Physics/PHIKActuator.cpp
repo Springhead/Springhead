@@ -312,6 +312,21 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 			Mj[n][i][j] *= sqsaib;
 		}
 	}
+	if (endeffector->bForce) {
+		isbForce = true;
+			if (DCAST(PHBallJoint,this) != NULL) {
+				DCAST(PHBallJoint, this)->SetSpring(0.0);
+				DCAST(PHBallJoint, this)->SetDamper(0.0);
+				DSTR << this->GetName() << "009,SP:" << DCAST(PHBallJoint, this)->GetSpring() << std::endl;
+				DSTR << this->GetName() << "009,DP:" << DCAST(PHBallJoint, this)->GetDamper() << std::endl;
+			}
+			if (DCAST(PHHingeJoint, this) != NULL) {
+				DCAST(PHHingeJoint, this)->SetSpring(0.0);
+				DCAST(PHHingeJoint, this)->SetDamper(0.0);
+				DSTR << this->GetName() << "009,SP:" << DCAST(PHHingeJoint, this)->GetSpring() << std::endl;
+				DSTR << this->GetName() << "009,DP:" << DCAST(PHHingeJoint, this)->GetDamper() << std::endl;
+			}	
+	}
 }
 
 void PHIKBallActuator::CalcPullbackVelocity() {
@@ -364,12 +379,10 @@ void PHIKBallActuator::Move(){  //here
 		jointTempOri = Quaterniond::Rot(s * jointTempOriIntp + (1 - s) * jointTempOri.RotationHalf());
 	}
 	*/
-	/*
+	
 	DSTR << this->GetName() << "008,jointTorque:" << jointTorque << std::endl;
-	if (DCAST(PHIKEndEffector, joint)->bForce == true)
+	if (isbForce)
 	{
-		DCAST(PHBallJoint, joint)->SetSpring(0.0);
-		DCAST(PHBallJoint, joint)->SetDamper(0.0);
 		DCAST(PHBallJoint, joint)->SetOffsetForce(jointTorque);//add here
 	}
 	
@@ -377,8 +390,6 @@ void PHIKBallActuator::Move(){  //here
 		DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
 	    DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
 	}
-	*/
-	DCAST(PHBallJoint, joint)->SetOffsetForce(jointTorque);//add here
 	return;
 }
 
@@ -527,6 +538,9 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 			Mj[n][i][j] *= sqsaib;
 		}
 	}
+	if (endeffector->bForce) {
+		isbForce = true;
+	}
 }
 
 void PHIKHingeActuator::CalcPullbackVelocity() {
@@ -563,10 +577,16 @@ void PHIKHingeActuator::Move(){
 	jointTempAngleIntp += diff;
 	jointVelocity = std::max(-limit, std::min(jointVelocity, limit));
 	
-	//hj->SetTargetPosition(jointTempAngleIntp);
-	//hj->SetTargetVelocity(jointVelocity);
-	hj->SetOffsetForce(tau[0]);//add here
-	/*/
+	if (isbForce) {
+		hj->SetOffsetForce(tau[0]);//add here
+	}
+	else {
+		hj->SetTargetPosition(jointTempAngleIntp);
+		hj->SetTargetVelocity(jointVelocity);
+	}
+
+	
+	/*
 
 	int intpRate = DCAST(PHSceneIf, GetScene())->GetIKEngine()->GetIntpRate();
 	if (intpRate > 0) {

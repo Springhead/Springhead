@@ -8,7 +8,8 @@
 #include <Physics/PHIKEngine.h>
 #include <Physics/PHIKActuator.h>
 #include <Physics/PHIKEndEffector.h>
-
+#include <Physics/PHBalljoint.h>//add here
+#include <Physics/PHHingejoint.h>//add here
 #include <chrono>
 
 using namespace std;
@@ -260,6 +261,7 @@ void PHIKEngine::IK(bool nopullback) {
 	DSTR << this->GetName() << "008,Jt:" << ublas::trans(J) << std::endl;
 	T = ublas::prod(ublas::trans(J), F);
 	DSTR << this->GetName() << "008,T:" << T << std::endl;
+	
 
 	// <!!>Wに標準姿勢復帰速度を加える
 	if (!nopullback) {

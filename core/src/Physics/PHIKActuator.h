@@ -66,6 +66,9 @@ public:
 
 	/// アクチュエータ追加フラグ
 	bool bActuatorAdded;
+	
+	///力の制御があるか
+	bool isbForce;//add here
 
 	// --- --- --- --- ---
 
