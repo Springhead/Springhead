@@ -191,12 +191,22 @@ void PHIKEngine::IK(bool nopullback) {
 			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
 			PTM::VVector<double> force; force.resize(eff->ndof);
 			eff->GetTempTarget(Vpart);
-			eff->GetTempTargetForce(force);//add here
+			force = eff->GetTargetForce();
+			DSTR << this->GetName() << "008,force:" << force << std::endl;
+			//eff->GetTempTargetForce(force);//add here
+			DSTR << this->GetName() << ",ndof" << (size_t)eff->ndof << "strideEff[j]" << strideEff[j] << std::endl;
 			for (size_t y=0; y<(size_t)eff->ndof; ++y) {
 				size_t Y = strideEff[j] + y;
-				V[Y] = Vpart[y];
-				F[Y] = force[y];// add here
+				V[Y] = Vpart[y];											
 			}
+			if (endeffectors[j]->bForce == true) {				
+				for (size_t y = 0; y < 3; ++y) {
+					size_t Y = strideEff[j] + y;
+					F[Y] = force[y];// add here
+					DSTR << this->GetName() << ",j" << j << "<<008,F[Y]" << F[Y] << std::endl;
+				}
+			}		
+			
 		}
 	}
 	// std::cout << "V : " << V << std::endl;
@@ -246,8 +256,10 @@ void PHIKEngine::IK(bool nopullback) {
 	W                    = ublas::prod(ublas::trans(Vt) , DiUtV);
 
 	//--- 力 //add here
+	DSTR << this->GetName() << "008,J:" << J << std::endl;
+	DSTR << this->GetName() << "008,Jt:" << ublas::trans(J) << std::endl;
 	T = ublas::prod(ublas::trans(J), F);
-
+	DSTR << this->GetName() << "008,T:" << T << std::endl;
 
 	// <!!>Wに標準姿勢復帰速度を加える
 	if (!nopullback) {
@@ -273,13 +285,23 @@ void PHIKEngine::IK(bool nopullback) {
 
 	// <!!>各Actuatorのωに擬似逆解を代入 //here
 	for (size_t i=0; i<actuators.size(); ++i) {
+		DSTR << this->GetName() << "008,i:" << i << std::endl;
 		if (actuators[i]->IsEnabled()) {
 			PHIKActuator* act = actuators[i];
 			for (size_t x=0; x<(size_t)act->ndof; ++x) {
+				DSTR << this->GetName() << "008,ndof:" << (size_t)act->ndof << std::endl;
+				DSTR << this->GetName() << "008,strideAct[i]:" << strideAct[i] << std::endl;
+				DSTR << this->GetName() << "008,x:" << x << std::endl;
 				size_t X = strideAct[i] + x;
 				act->omega[x] = W[X];
 				act->tau[x] = T[X]; //add here
+			//	DSTR << this->GetName() << "008,tau[x]:" << act->tau[x] << std::endl;
 			}
+			/*
+			for (size_t x = 0; x < 3; ++x) {
+				act->tau[x] = T[x]; //add here
+			}	
+			*/
 		}
 	}
 

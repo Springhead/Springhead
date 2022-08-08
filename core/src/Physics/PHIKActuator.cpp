@@ -364,9 +364,20 @@ void PHIKBallActuator::Move(){  //here
 		jointTempOri = Quaterniond::Rot(s * jointTempOriIntp + (1 - s) * jointTempOri.RotationHalf());
 	}
 	*/
-
-	DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
-	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
+	/*
+	DSTR << this->GetName() << "008,jointTorque:" << jointTorque << std::endl;
+	if (DCAST(PHIKEndEffector, joint)->bForce == true)
+	{
+		DCAST(PHBallJoint, joint)->SetSpring(0.0);
+		DCAST(PHBallJoint, joint)->SetDamper(0.0);
+		DCAST(PHBallJoint, joint)->SetOffsetForce(jointTorque);//add here
+	}
+	
+	else {
+		DCAST(PHBallJoint, joint)->SetTargetPosition(jointTempOri);
+	    DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
+	}
+	*/
 	DCAST(PHBallJoint, joint)->SetOffsetForce(jointTorque);//add here
 	return;
 }
@@ -437,7 +448,7 @@ void PHIKBallActuator::MoveTempJoint() {
 	Vec3d  t = Vec3d();//add here
 	for (int i=0; i<ndof; ++i) { 
 		w += ( omega[i]*sqsaib ) * e[i];
-		t += omega[i] * e[i];//add here
+		t += tau[i] * e[i];//add here
 	}
 
 	// 関節座標系にする
@@ -552,9 +563,9 @@ void PHIKHingeActuator::Move(){
 	jointTempAngleIntp += diff;
 	jointVelocity = std::max(-limit, std::min(jointVelocity, limit));
 	
-	hj->SetTargetPosition(jointTempAngleIntp);
-	hj->SetTargetVelocity(jointVelocity);
-	hj->SetOffsetForce(tau[0]);
+	//hj->SetTargetPosition(jointTempAngleIntp);
+	//hj->SetTargetVelocity(jointVelocity);
+	hj->SetOffsetForce(tau[0]);//add here
 	/*/
 
 	int intpRate = DCAST(PHSceneIf, GetScene())->GetIKEngine()->GetIntpRate();
