@@ -39,7 +39,6 @@ public:
 	std::vector< int >        strideEff;
 
 	// --- --- --- --- ---
-
 	// uBLAS行列型
 	typedef double element_type;
 	typedef ublas::vector< element_type >                               vector_type;
