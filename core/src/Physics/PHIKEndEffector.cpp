@@ -110,11 +110,21 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		if (oriCtlMode == PHIKEndEffectorDesc::MODE_QUATERNION) {
 			Quaterniond qS = solidTempPose.Ori();
 			if (baseSolid != NULL) {
-				qS = qS * baseSolid->GetOrientation().Inv();//To relative orientation
+				//qS = qS * baseSolid->GetOrientation().Inv();//To relative orientation
+				//qS = baseSolid->GetOrientation().Inv()*qS;
+				//Quaterniond goalWorld = baseSolid->GetOrientation() * targetOrientation;
+				//goalWorld = R * qS(R=qG)
+				//	R=goalWorld * qS.Inv() 
+				qG = baseSolid->GetOrientation() * targetOrientation * qS.Inv();
+					
+			}
+			else
+			{
+				qG = (targetOrientation * qS.Inv());
 			}
 
-			qG = (targetOrientation * qS.Inv());
-
+			
+			
 		} else if (oriCtlMode == PHIKEndEffectorDesc::MODE_DIRECTION || oriCtlMode == PHIKEndEffectorDesc::MODE_LOOKAT)  {
 			Vec3d dirS = solidTempPose.Ori() * targetLocalDirection;
 
