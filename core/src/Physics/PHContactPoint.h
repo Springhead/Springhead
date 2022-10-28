@@ -43,6 +43,7 @@ public:
 	virtual void CompError();
 	virtual bool Projection(double& f_, int i);
 	virtual bool ProjectionCorrection(double& F, int k);
+	virtual Posed GetPose() { return pose; }
 };
 
 }

@@ -144,6 +144,7 @@ struct PHConstraintsIf : public SceneObjectIf{
 /// 接触点拘束のインタフェース
 struct PHContactPointIf : public PHConstraintIf{
 	SPR_IFDEF(PHContactPoint);
+	Posed GetPose();
 };
 
 // -----  -----  -----  -----  -----
