@@ -557,8 +557,21 @@ void PHRootNode::UpdateVelocitySolid(double* dt){
 void PHRootNode::UpdatePosition(double dt){
 	if(!bEnabled)
 		return;
-	solid->UpdatePosition(dt);
+	if (useNextPose) {
+		solid->pose = nextPose;
+		// 形状の位置と向きを更新
+		Posed pose_prev;
+		for(int i = 0; i < (int)solid->frames.size(); i++){
+			pose_prev = solid->frames[i]->pose_abs;
+			solid->frames[i]->pose_abs = solid->pose * solid->frames[i]->pose;
+			solid->frames[i]->delta    = solid->frames[i]->pose_abs.Pos() - pose_prev.Pos();
+		}
+		solid->aabbReady = false;
+	}else{
+		solid->UpdatePosition(dt);
+	}
 	solid->SetUpdated(true);
+
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdatePosition(dt);
 }
@@ -779,6 +792,7 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompResponse(PHTreeNode* src, const SpatialVector& df){
 	solid->dv += dZdv_map  [src->id] * (-df);
 	dvel      += dZdvel_map[src->id] * (-df);
+	//cout << "PHTreeNodeND<NDOF>::CompResponse" << solid->GetName()<< "solid->dv " << solid->dv << " dvel " << dvel  << " df " << df << endl;
 }
 
 template<int NDOF>
@@ -800,6 +814,7 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 	else{
 		dvel              = -JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
+		//cout  << "CompAccel " << solid->GetName() << " solid->dv " << solid->dv << endl;
 	}
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)

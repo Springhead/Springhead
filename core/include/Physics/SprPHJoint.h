@@ -941,7 +941,16 @@ struct PHTreeNodeDesc{
 		bEnabled = true;
 	}
 };
-struct PHRootNodeDesc : public PHTreeNodeDesc{
+
+struct PHRootNodeState {
+	Posed nextPose;
+	bool useNextPose;
+	PHRootNodeState() {
+		nextPose = Posed();
+		useNextPose = false;
+	}
+};
+struct PHRootNodeDesc : public PHTreeNodeDesc, PHRootNodeState{
 	PHRootNodeDesc(){}
 };
 struct PHTreeNode1DDesc      : public PHTreeNodeDesc{};
@@ -1030,6 +1039,21 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 	/** @brief コールバックを追加する
 	 */
 	void SetCompControlForceCallback(CompControlForce f, void* a);
+
+	/** @brief 剛体の位置と向きを上書きするか取得する
+		@return trueならば剛体の位置と向きは上書きされる
+	 */
+	bool IsUseNextPose();
+
+	/** @brief 剛体の位置と向きを上書きするか設定する
+		@param bOn trueならば剛体の位置と向きは上書きされる
+	 */
+	void SetUseNextPose(bool bOn);
+
+	/** @brief 剛体の位置と向きを上書きするための設定する
+		@param p シーンに対する剛体の位置と向き
+	 */
+	void SetNextPose(const Posed& p);
 };
 /// １軸関節ノードのインタフェース
 struct PHTreeNode1DIf : public PHTreeNodeIf{

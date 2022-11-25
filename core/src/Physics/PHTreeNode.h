@@ -114,6 +114,7 @@ class PHRootNode : public PHTreeNode{
 public:
 	SPR_OBJECTDEF(PHRootNode);
 	SPR_DECLMEMBEROF_PHRootNodeDesc;
+	SPR_DECLMEMBEROF_PHRootNodeState;
 
 	int									treeId;
 	bool								bReady;
@@ -127,6 +128,9 @@ public:
 public:
 	void Setup();
 	void SetupCorrection();
+	bool IsUseNextPose() { return useNextPose; }
+	void SetUseNextPose(bool bOn) { useNextPose = bOn; }
+	void SetNextPose(const Posed& p) { nextPose = p; } ///< 剛体の姿勢を上書き
 
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);

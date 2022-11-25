@@ -554,6 +554,10 @@ void PHConstraintEngine::Setup(){
 		}
 		// 関節
 		for(int i = 0; i < (int)joints.size(); i++){
+			PHFixJoint* fixJoint = joints[i]->Cast();
+			if (fixJoint != NULL) {
+				continue;
+			}
 			if(joints[i]->IsEnabled() && joints[i]->IsFeasible()){
 				cons     .push_back(joints[i]);
 				cons_base.push_back(joints[i]);
@@ -603,6 +607,15 @@ void PHConstraintEngine::Setup(){
 		for(int i = 0; i < (int)gears.size(); i++){
 			if(gears[i]->IsEnabled() && gears[i]->IsFeasible() && !gears[i]->IsArticulated())
 				cons_base.push_back(gears[i]);
+		}
+
+		// FixJoint 
+		for(int i = 0; i < (int)joints.size(); i++){
+			PHFixJoint* fixJoint = joints[i]->Cast();
+			if (fixJoint != NULL && joints[i]->IsEnabled() && joints[i]->IsFeasible()) {
+				cons     .push_back(joints[i]);
+				cons_base.push_back(joints[i]);
+			}
 		}
 		
 		// 拘束自由度の決定
