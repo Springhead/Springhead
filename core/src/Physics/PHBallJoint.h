@@ -33,7 +33,7 @@ public:
 	virtual void		UpdateJointPosition(double dt);
 	virtual void		CompRelativePosition();
 	virtual void		CompRelativeVelocity();
-	SpatialVector       AddTrackingForce(PHBallJointNodeIf* ballJointNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration);
+	void						AddTrackingForce(PHBallJointNodeIf* ballJointNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
 	PHBallJointNode(const PHBallJointNodeDesc& desc = PHBallJointNodeDesc()){}	
 };
 
