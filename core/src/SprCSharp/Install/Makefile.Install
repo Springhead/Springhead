@@ -55,28 +55,28 @@ PINDIR	= $(UNITYPLUGINS)
 BLDEXPd	= $(BLDDIR)\SprExport.dll
 BLDIMPd	= $(BLDDIR)\SprImport.dll
 BLDCSPd	= $(BLDDIR)\SprCSharp.dll
-#BLDEXPp	= $(BLDDIR)\SprExport.pdb
-#BLDIMPp	= $(BLDDIR)\SprImport.pdb
-#BLDCSPp	= $(BLDDIR)\SprCSharp.pdb
+BLDEXPp	= $(BLDDIR)\SprExport.pdb
+BLDIMPp	= $(BLDDIR)\SprImport.pdb
+BLDCSPp	= $(BLDDIR)\SprCSharp.pdb
 
 INSEXPd	= $(INSDIR)\SprExport.dll
 INSIMPd	= $(INSDIR)\SprImport.dll
 INSCSPd	= $(INSDIR)\SprCSharp.dll
-#INSEXPp	= $(INSDIR)\SprExport.pdb
-#INSIMPp	= $(INSDIR)\SprImport.pdb
-#INSCSPp	= $(INSDIR)\SprCSharp.pdb
+INSEXPp	= $(INSDIR)\SprExport.pdb
+INSIMPp	= $(INSDIR)\SprImport.pdb
+INSCSPp	= $(INSDIR)\SprCSharp.pdb
 
 PINEXPd	= $(PINDIR)\SprExport.dll
 PINIMPd	= $(PINDIR)\SprImport.dll
 PINCSPd	= $(PINDIR)\SprCSharp.dll
-#PINEXPp	= $(PINDIR)\SprExport.pdb
-#PINIMPp	= $(PINDIR)\SprImport.pdb
-#PINCSPp	= $(PINDIR)\SprCSharp.pdb
+PINEXPp	= $(PINDIR)\SprExport.pdb
+PINIMPp	= $(PINDIR)\SprImport.pdb
+PINCSPp	= $(PINDIR)\SprCSharp.pdb
 
-all:	$(INSEXPd) $(INSIMPd) $(INSCSPd)\
-	$(PINEXPd) $(PINIMPd) $(PINCSPd)
-#all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)\
-#	$(PINEXPd) $(PINEXPp) $(PINIMPd) $(PINIMPp) $(PINCSPd) $(PINCSPp)
+#all:	$(INSEXPd) $(INSIMPd) $(INSCSPd)\
+#	$(PINEXPd) $(PINIMPd) $(PINCSPd)
+all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)\
+	$(PINEXPd) $(PINEXPp) $(PINIMPd) $(PINIMPp) $(PINCSPd) $(PINCSPp)
 
 $(INSEXPd):	$(BLDEXPd)
 		@Install.bat $** $@
@@ -87,14 +87,14 @@ $(INSIMPd):	$(BLDIMPd)
 $(INSCSPd):	$(BLDCSPd)
 		@Install.bat $** $@
 
-#$(INSEXPp):	$(BLDEXPp)
-#		@Install.bat $** $@
+$(INSEXPp):	$(BLDEXPp)
+		@Install.bat $** $@
 
-#$(INSIMPp):	$(BLDIMPp)
-#		@Install.bat $** $@
+$(INSIMPp):	$(BLDIMPp)
+		@Install.bat $** $@
 
-#$(INSCSPp):	$(BLDCSPp)
-#		@Install.bat $** $@
+$(INSCSPp):	$(BLDCSPp)
+		@Install.bat $** $@
 
 $(PINEXPd):	$(BLDEXPd)
 		@Install.bat $** $@ $(COPYCONTROL)
@@ -105,12 +105,12 @@ $(PINIMPd):	$(BLDIMPd)
 $(PINCSPd):	$(BLDCSPd)
 		@Install.bat $** $@ $(COPYCONTROL)
 
-#$(PINEXPp):	$(BLDEXPp)
-#		@Install.bat $** $@
+$(PINEXPp):	$(BLDEXPp)
+		@Install.bat $** $@
 
-#$(PINIMPp):	$(BLDIMPp)
-#		@Install.bat $** $@
+$(PINIMPp):	$(BLDIMPp)
+		@Install.bat $** $@
 
-#$(PINCSPp):	$(BLDCSPp)
-#		@Install.bat $** $@
+$(PINCSPp):	$(BLDCSPp)
+		@Install.bat $** $@
 

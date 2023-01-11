@@ -32,6 +32,8 @@ public:
 	void BuildScene() {
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+		phscene->SetNumIteration(1000);
+		phscene->SetTimeStep(0.001);
 		CDBoxDesc bd;
 
 		PHSolidIf* soLeft = phscene->CreateSolid();
@@ -45,6 +47,7 @@ public:
 		soLeft->CompInertia();
 		soLeft->SetFramePosition(Vec3d(0, 0, 0));
 		soLeft->SetInertia(Matrix3d::Unit() * 100000);
+		soLeft->SetDynamical(false);
 
 
 		soRight = phscene->CreateSolid();
@@ -56,7 +59,7 @@ public:
 		soRight->AddShape(shape);
 		soRight->CompInertia();
 		soRight->SetFramePosition(Vec3d(0.3, 0.2, 0));
-		//	PHBallJointDesc sjd;
+		//	PHSliderJointDesc sjd;
 		PHSliderJointDesc sjd;
 		//sjd.spring = 100;
 		//sjd.damper = sjd.spring * 0.1;
@@ -64,16 +67,15 @@ public:
 		sjd.posePlug.Ori().RotationArc(Vec3d(0, 0, 1), Vec3d(1, 0, 0));
 		PHJointIf* slider = phscene->CreateJoint(soLeft, soRight, sjd)->Cast();
 
-		/*	//	add reversed joint
+		//	add reversed joint
 		//		PHSliderJointDesc sjd2 = sjd;
 		PHSliderJointDesc sjd2 = sjd;
 		PHJointIf* slider2 = phscene->CreateJoint(soRight, soLeft, sjd2)->Cast();
-		*/
 
-		//	add shifted joint
+		/* //	add shifted joint
 		PHSliderJointDesc sjd3 = sjd;
 		sjd3.poseSocket.Pos() = Vec3d(0.4, 0, 0);
-		PHJointIf* slider3 = phscene->CreateJoint(soLeft, soRight, sjd3)->Cast();
+		PHJointIf* slider3 = phscene->CreateJoint(soLeft, soRight, sjd3)->Cast();	*/
 
 
 		GetSdk()->SetDebugMode(true);
@@ -100,9 +102,14 @@ public:
 				}
 
 				break;
-			case '\r':
-				bRun = true;
+			case '\r': {
+				PHSdkIf* phSdk = GetSdk()->GetPHSdk();
+				PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+				std::cout << "dt=" << phscene->GetTimeStep() << std::endl;
+
+					bRun = true;
 				std::cout << "Run" << std::endl;
+			}
 		}
 
 	}
@@ -110,6 +117,7 @@ public:
 		UserFunc();
 		if (GetCurrentWin() && GetCurrentWin()->GetScene()) {
 			GetCurrentWin()->GetScene()->Step();
+			std::cout << "omega:" << soRight->GetAngularVelocity().z << " y:" << soRight->GetFramePosition().y << std::endl;
 		}
 		PostRedisplay();
 	}

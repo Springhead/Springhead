@@ -98,6 +98,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Install.bat" />
+    <None Include="Makefile.Install" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
