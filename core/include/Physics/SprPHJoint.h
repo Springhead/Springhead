@@ -145,6 +145,7 @@ struct PHConstraintsIf : public SceneObjectIf{
 struct PHContactPointIf : public PHConstraintIf{
 	SPR_IFDEF(PHContactPoint);
 	Posed GetPose();
+	bool IsStaticFriction();
 };
 
 // -----  -----  -----  -----  -----
