@@ -526,6 +526,13 @@ void PHRootNode::CompAccel(){
 void PHRootNode::UpdateVelocity(double* dt){
 	if(!bEnabled)
 		return;
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->UpdateVelocity(dt);
+}
+
+void PHRootNode::UpdateVelocitySolid(double* dt){
+	if(!bEnabled)
+		return;
 
 	if (!solid->IsDynamical()) {
 		solid->v += solid->dv;
@@ -540,16 +547,8 @@ void PHRootNode::UpdateVelocity(double* dt){
 		solid->angAccel = solid->dv.w() * scene->GetTimeStepInv();
 	}
 	else {
-		solid->UpdateVelocity(dt);
+		solid->UpdateVelocity(dt); 
 	}
-
-	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocity(dt);
-}
-
-void PHRootNode::UpdateVelocitySolid(double* dt){
-	if(!bEnabled)
-		return;
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdateVelocitySolid(dt);
@@ -558,6 +557,12 @@ void PHRootNode::UpdatePosition(double dt){
 	if(!bEnabled)
 		return;
 	if (useNextPose) {
+		// v,dvの座標系を次のポーズに変更
+		Quaterniond convToNextPose = nextPose.Ori().Inv() * solid->pose.Ori();
+		solid->dv.v() = convToNextPose * solid->dv.v();
+		solid->dv.w() = convToNextPose * solid->dv.w();
+		solid->v.v() = convToNextPose * solid->v.v();
+		solid->v.w() = convToNextPose * solid->v.w();
 		solid->pose = nextPose;
 		// 形状の位置と向きを更新
 		Posed pose_prev;
