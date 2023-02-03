@@ -54,8 +54,8 @@ void PHBallJointNode::AddTrackingForce(PHBallJointNodeIf* ballJointNode, double 
 	SpatialVector a;
 	a.clear();
 #ifdef USE_CLOSED_SRC
-	PliantMotion *pliantMotion = new PliantMotion();
-	pliantMotion->AddTrackingForce(this, ballJointNode,timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque);
+	PliantMotion *p = new PliantMotion();
+	p->AddTrackingForce(this, ballJointNode,timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque);
 #endif
 }
 

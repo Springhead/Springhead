@@ -125,12 +125,18 @@ public:
 	PHRootNodeIf::CompControlForce compControlForce = NULL;
 	void* arg;
 
+	// 一時的に
+	std::vector<TrackingNode> trackingNodes;
+
 public:
 	void Setup();
 	void SetupCorrection();
 	bool IsUseNextPose() { return useNextPose; }
 	void SetUseNextPose(bool bOn) { useNextPose = bOn; }
 	void SetNextPose(const Posed& p) { nextPose = p; } ///< 剛体の姿勢を上書き
+	void SetTrackingInputs(std::vector<Quaterniond> inputs); ///<追従させる際の目標となる入力角度を設定する
+	void AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+	void TrackWithForce();
 
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);

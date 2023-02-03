@@ -942,14 +942,38 @@ struct PHTreeNodeDesc{
 	}
 };
 
+//struct PHSolidIf;
+struct TrackingNode {
+public:
+	TrackingNode* parent;
+	PHJointIf* reactJoint;
+	PHJointIf* calcJoint;
+	PHSolidIf* reactRootSolid;
+	PHSolidIf* calcRootSolid;
+	bool		 isRoot;
+	Quaterniond socketInput;
+	Quaterniond plugInput;
+	Quaterniond preLocalTargetRotation;
+	Quaterniond jointTargetRotation;
+	Vec3d localAngularVelocity;
+	Vec3d localAngularVelocityDot;
+	Vec3d globalAngularVelocity;
+	Vec3d globalAngularVelocityDot;
+	Vec3d globalAcceleration;
+};
+
 struct PHRootNodeState {
 	Posed nextPose;
 	bool useNextPose;
+
+	std::vector<Quaterniond> trackingInputs;
 	PHRootNodeState() {
 		nextPose = Posed();
 		useNextPose = false;
 	}
 };
+
+
 struct PHRootNodeDesc : public PHTreeNodeDesc, PHRootNodeState{
 	PHRootNodeDesc(){}
 };
@@ -1054,7 +1078,25 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 		@param p シーンに対する剛体の位置と向き
 	 */
 	void SetNextPose(const Posed& p);
+
+	/** @brief 追従させる際の目標となる入力角度を設定する
+		@param input 入力角度列
+	 */
+	void SetTrackingInputs(std::vector<Quaterniond> inputs);
+
+	void AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+	void TrackWithForce();
 };
+
+//struct PliantMotionIf : NamedObjectIf{
+//	SPR_IFDEF(PliantMotion);
+//	//public:
+//	//	/** @brief 追従させる際の目標となる入力角度を設定する
+//	//		@param input 入力角度列
+//	//	*/
+//	//	void SetTrackingInput(std::vector<Quaterniond> inputs);
+//};
+
 /// １軸関節ノードのインタフェース
 struct PHTreeNode1DIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHTreeNode1D);
