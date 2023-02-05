@@ -1085,6 +1085,7 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 	void SetTrackingInputs(std::vector<Quaterniond> inputs);
 
 	void AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+	void AddTrackingNode(TrackingNode* trackingNode);
 	void TrackWithForce();
 };
 

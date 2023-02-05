@@ -606,18 +606,36 @@ void PHRootNode::AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PH
 	newTrackingNode.calcRootSolid = calcRootSolid;
 	newTrackingNode.isRoot = isRoot;
 	newTrackingNode.parent = NULL;
-	for (TrackingNode& trackingNode : trackingNodes) {
-		if (trackingNode.isRoot && trackingNode.reactRootSolid == reactJoint->GetSocketSolid()) {
-			newTrackingNode.parent = &trackingNode;
+	for (int i = 0; i < trackingNodes.size(); i++) {
+		if (trackingNodes[i].isRoot && trackingNodes[i].reactRootSolid == reactJoint->GetSocketSolid()) {
+			newTrackingNode.parent = &trackingNodes[i];
 			break;
-		}else if (!trackingNode.isRoot && trackingNode.reactJoint->GetPlugSolid() == reactJoint->GetSocketSolid()) {
-			newTrackingNode.parent = &trackingNode;
+		}else if (!trackingNodes[i].isRoot && trackingNodes[i].reactJoint->GetPlugSolid() == reactJoint->GetSocketSolid()) {
+			newTrackingNode.parent = &trackingNodes[i];
 			break;
 		}
 	}
+
 	trackingNodes.push_back(newTrackingNode);
+
+	// vector型は追加するたびにアドレスが変更されるためparentについては毎回更新が必要
+	for (TrackingNode& trackingNode : trackingNodes) {
+		if (trackingNode.isRoot) continue;
+		for (TrackingNode& parent : trackingNodes) {
+			if (parent.isRoot && parent.reactRootSolid == trackingNode.reactJoint->GetSocketSolid()) {
+				trackingNode.parent = &parent;
+			}
+			else if (!parent.isRoot && parent.reactJoint->GetPlugSolid() == trackingNode.reactJoint->GetSocketSolid()) {
+				trackingNode.parent = &parent;
+			}
+		}
+	}
 	//PliantMotion *p = new PliantMotion();
 	//p->SetTrackingInput();
+}
+
+void PHRootNode::AddTrackingNode(TrackingNode* trackingNode) {
+	trackingNodes.push_back(*trackingNode);
 }
 
 void PHRootNode::TrackWithForce() {
@@ -625,35 +643,29 @@ void PHRootNode::TrackWithForce() {
 	// 入力をtrackingNodeに書き込み
 	for (int i = 0; i < trackingNodes.size(); i++) {
 		trackingNodes[i].plugInput = trackingInputs[i];
-		//if (trackingNodes[i].parent != NULL) {
-		//	trackingNodes[i].parent.
-		//}
 	}
 	for (TrackingNode& trackingNode : trackingNodes) {
 		if (trackingNode.parent != NULL) {
 			if (trackingNode.parent->isRoot) {
-				DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactRootSolid->GetName() << endl;
+				if (trackingNode.parent->reactRootSolid == NULL) {
+					DSTR << trackingNode.reactJoint->GetName() << " null" << endl;
+				}
+				else {
+					DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactRootSolid->GetName() << endl;
+				}
 			}
 			else {
-				DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactJoint->GetName() << endl;
+				if (trackingNode.parent->reactJoint == NULL) {
+					DSTR << trackingNode.reactJoint->GetName() << " null" << endl;
+				}
+				else {
+					DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactJoint->GetName() << endl;
+				}
 			}
 			trackingNode.socketInput = trackingNode.parent->plugInput;
 		}
 	}
-	//for (int i = 1; i < trackingNodes.size(); i++) {
-
-	//	trackingNodes[i].socketInput = trackingInputs[i-1];
-	//}
-	//for (std::vector<TrackingNode>::const_iterator trackingNode = trackingNodes.begin(), e = trackingNodes.end(); trackingNode != e; ++trackingNode) {
-	//	if (trackingNode->isRoot) {
-	//		DSTR << "calcRootSolid:" << trackingNode->calcRootSolid->GetName() << " reactRootSolid:" << trackingNode->reactRootSolid->GetName() << " globalTargetRotaiton " << trackingNode->globalTargetRotation << endl;
-	//	}
-	//	else {
-	//		DSTR << "calcJoint:" << trackingNode->calcJoint->GetName() << " reactJoint:" << trackingNode->reactJoint->GetName() << " globalTargetRotaiton " << trackingNode->globalTargetRotation << endl;
-	//	}
-	//}
 	// local座標系の角速度を計算
-	//for (std::vector<TrackingNode>::const_iterator trackingNode = trackingNodes.begin(), e = trackingNodes.end(); trackingNode != e; ++trackingNode) {
 	for(TrackingNode& trackingNode : trackingNodes){
 		if (trackingNode.isRoot) {
 		}
