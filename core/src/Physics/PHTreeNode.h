@@ -135,9 +135,10 @@ public:
 	void SetUseNextPose(bool bOn) { useNextPose = bOn; }
 	void SetNextPose(const Posed& p) { nextPose = p; } ///< 剛体の姿勢を上書き
 	void SetTrackingInputs(std::vector<Quaterniond> inputs); ///<追従させる際の目標となる入力角度を設定する
-	void AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+	void SetTrackingRootPosition(Vec3d input);
+	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
 	void AddTrackingNode(TrackingNode* trackingNode);
-	void TrackWithForce();
+	void TrackWithForce(PHRootNodeIf* calcRootNode);
 
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);

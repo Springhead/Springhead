@@ -591,14 +591,18 @@ void PHRootNode::SetCompControlForceCallback(PHRootNodeIf::CompControlForce f, v
 void PHRootNode::SetTrackingInputs(std::vector<Quaterniond> inputs) {
 	trackingInputs.clear();
 	trackingInputs = inputs;
-	int index = 0;
-	for (std::vector<Quaterniond>::const_iterator input = inputs.begin(), e = inputs.end(); input != e; ++input) {
-		DSTR << index <<  *input << endl;
-		index++;
-	}
+	//int index = 0;
+	//for (std::vector<Quaterniond>::const_iterator input = inputs.begin(), e = inputs.end(); input != e; ++input) {
+	//	DSTR << index <<  *input << endl;
+	//	index++;
+	//}
 }
 
-void PHRootNode::AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid,bool isRoot) {
+void PHRootNode::SetTrackingRootPosition(Vec3d input) {
+	trackingRootPosition = input;
+}
+
+void PHRootNode::AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid,bool isRoot) {
 	TrackingNode newTrackingNode;
 	newTrackingNode.reactJoint = reactJoint;
 	newTrackingNode.calcJoint = calcJoint;
@@ -638,36 +642,45 @@ void PHRootNode::AddTrackingNode(TrackingNode* trackingNode) {
 	trackingNodes.push_back(*trackingNode);
 }
 
-void PHRootNode::TrackWithForce() {
+void PHRootNode::TrackWithForce(PHRootNodeIf* calcRootNode) {
 	double timeStep = GetPHScene()->timeStep;
 	// 入力をtrackingNodeに書き込み
 	for (int i = 0; i < trackingNodes.size(); i++) {
 		trackingNodes[i].plugInput = trackingInputs[i];
 	}
 	for (TrackingNode& trackingNode : trackingNodes) {
+		if (trackingNode.isRoot) {
+			trackingNode.rootPositionInput = trackingRootPosition;
+		}
+	}
+	for (TrackingNode& trackingNode : trackingNodes) {
 		if (trackingNode.parent != NULL) {
-			if (trackingNode.parent->isRoot) {
-				if (trackingNode.parent->reactRootSolid == NULL) {
-					DSTR << trackingNode.reactJoint->GetName() << " null" << endl;
-				}
-				else {
-					DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactRootSolid->GetName() << endl;
-				}
-			}
-			else {
-				if (trackingNode.parent->reactJoint == NULL) {
-					DSTR << trackingNode.reactJoint->GetName() << " null" << endl;
-				}
-				else {
-					DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactJoint->GetName() << endl;
-				}
-			}
+			//if (trackingNode.parent->isRoot) {
+			//	if (trackingNode.parent->reactRootSolid == NULL) {
+			//		DSTR << trackingNode.reactJoint->GetName() << " null" << endl;
+			//	}
+			//	else {
+			//		DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactRootSolid->GetName() << endl;
+			//	}
+			//}
+			//else {
+			//	if (trackingNode.parent->reactJoint == NULL) {
+			//		DSTR << trackingNode.reactJoint->GetName() << " null" << endl;
+			//	}
+			//	else {
+			//		DSTR << trackingNode.reactJoint->GetName() << "'s parent " << trackingNode.parent->reactJoint->GetName() << endl;
+			//	}
+			//}
 			trackingNode.socketInput = trackingNode.parent->plugInput;
 		}
 	}
 	// local座標系の角速度を計算
 	for(TrackingNode& trackingNode : trackingNodes){
 		if (trackingNode.isRoot) {
+			Vec3d diff = (trackingNode.plugInput * trackingNode.calcRootSolid->GetOrientation().Inv()).RotationHalf();
+			trackingNode.localAngularVelocity = diff / timeStep;
+			trackingNode.localAngularVelocityDot = (trackingNode.localAngularVelocity - trackingNode.calcRootSolid->GetAngularVelocity()) / timeStep;
+			//DSTR << "localAngularVelocity:" << trackingNode.calcRootSolid->GetName() << " localAngularVelocity " << trackingNode.localAngularVelocity << " localAngularVelocityDot " << trackingNode.localAngularVelocityDot << endl;
 		}
 		else {
 			PHSolidIf* calcSocketSolid = trackingNode.calcJoint->GetSocketSolid();
@@ -676,11 +689,17 @@ void PHRootNode::TrackWithForce() {
 			trackingNode.calcJoint->GetSocketPose(socketPose);
 			Posed plugPose;
 			trackingNode.calcJoint->GetPlugPose(plugPose);
-			Vec3d preLocalAngularVelocity = (calcSocketSolid->GetOrientation() * socketPose.Ori()).Inv() * calcSocketSolid->GetAngularVelocity();
+			Vec3d preLocalAngularVelocity = (calcSocketSolid->GetOrientation() * socketPose.Ori()).Inv() * (calcPlugSolid->GetAngularVelocity() - calcSocketSolid->GetAngularVelocity());
+			//if (trackingNode.parent->isRoot) {
+			//	preLocalAngularVelocity = (calcSocketSolid->GetOrientation() * socketPose.Ori()).Inv() * (calcSocketSolid->GetAngularVelocity() - trackingNode.parent->calcRootSolid->GetAngularVelocity());
+			//}
+			//else {
+			//	preLocalAngularVelocity = (calcSocketSolid->GetOrientation() * socketPose.Ori()).Inv() * (calcSocketSolid->GetAngularVelocity() - trackingNode.parent->calcJoint->GetPlugSolid()->GetAngularVelocity());
+			//}
 
 			Quaterniond jointRotationSocketInput = trackingNode.socketInput * socketPose.Ori();
 			Quaterniond jointRotationPlugInput = trackingNode.plugInput * plugPose.Ori();
-			DSTR << "trackingNode.socketInput" << trackingNode.socketInput << " " << socketPose.Ori() << "jointRotationSocketInput " << jointRotationSocketInput << " " << jointRotationPlugInput << endl;
+			//DSTR << "trackingNode.socketInput" << trackingNode.socketInput << " " << socketPose.Ori() << "jointRotationSocketInput " << jointRotationSocketInput << " " << jointRotationPlugInput << endl;
 			trackingNode.jointTargetRotation = jointRotationSocketInput.Inv() * jointRotationPlugInput;
 
 			Quaterniond jointRotationPlugSolid = calcPlugSolid->GetOrientation() * plugPose.Ori();
@@ -688,8 +707,140 @@ void PHRootNode::TrackWithForce() {
 			Vec3d diff = (trackingNode.jointTargetRotation * (jointRotationSocketSolid.Inv() * jointRotationPlugSolid).Inv()).RotationHalf();
 			trackingNode.localAngularVelocity = diff / timeStep;
 			trackingNode.localAngularVelocityDot = (trackingNode.localAngularVelocity - preLocalAngularVelocity) / timeStep;
-			DSTR << "reactJoint:" << trackingNode.reactJoint->GetName() << " localAngularVelocity " << trackingNode.localAngularVelocity << " localAngularVelocityDot " << trackingNode.localAngularVelocityDot << endl;
+			//DSTR << "preLocalAngularVelocity " << preLocalAngularVelocity << endl;
+			//DSTR << "localAngularVelocityDot reactJoint:" << trackingNode.reactJoint->GetName() << " localAngularVelocity " << trackingNode.localAngularVelocity << " localAngularVelocityDot " << trackingNode.localAngularVelocityDot << endl;
 		}
+	}
+
+	// Global座標系の角速度を計算
+	for (TrackingNode& trackingNode : trackingNodes) {
+		TrackingNode* node = &trackingNode;
+		Vec3d globalAngularVelocity(0,0,0);
+		while (true) {
+			if (node->isRoot) {
+				globalAngularVelocity += node->localAngularVelocity;
+				break;
+			}
+			Posed socketPose;
+			node->calcJoint->GetSocketPose(socketPose);
+			Quaterniond convertLocal2Global = node->calcJoint->GetSocketSolid()->GetOrientation() * socketPose.Ori();
+			globalAngularVelocity += convertLocal2Global * node->localAngularVelocity;
+			node = node->parent;
+		}
+		trackingNode.globalAngularVelocity = globalAngularVelocity;
+		//if (trackingNode.isRoot) {
+		//	DSTR << "root :" << trackingNode.calcRootSolid->GetName() << " globalAngularVelocity " << trackingNode.globalAngularVelocity << endl;
+		//}
+		//else {
+		//	DSTR << "calcJoint:" << trackingNode.calcJoint->GetName() << " globalAngularVelocity " << trackingNode.globalAngularVelocity << endl;
+		//}
+	}
+
+	// Global座標系の角加速度を計算
+	for (TrackingNode& trackingNode : trackingNodes) {
+		if (trackingNode.isRoot) {
+			trackingNode.globalAngularVelocityDot = (trackingNode.globalAngularVelocity - trackingNode.calcRootSolid->GetAngularVelocity()) / timeStep;
+		}
+		else {
+			trackingNode.globalAngularVelocityDot = (trackingNode.globalAngularVelocity - trackingNode.calcJoint->GetPlugSolid()->GetAngularVelocity()) / timeStep;
+		}
+		//if (trackingNode.isRoot) {
+		//	DSTR << "globalAngularVelocityDot " << "root :" << trackingNode.calcRootSolid->GetName() << trackingNode.globalAngularVelocityDot << endl;
+		//}
+		//else {
+		//	DSTR << "globalAngularVelocityDot " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.globalAngularVelocityDot << endl;
+		//}
+	}
+
+	// RootのDynamicalOffの剛体の加速度を計算
+	for (TrackingNode& trackingNode : trackingNodes) {
+		if (trackingNode.isRoot) {
+			trackingNode.rootAccelerration = Vec3d(0, 0, 0);
+			Vec3d diffPos = trackingNode.rootPositionInput + trackingNode.plugInput * trackingNode.calcRootSolid->GetCenterOfMass() - trackingNode.calcRootSolid->GetCenterPosition();
+			trackingNode.globalVelocity = diffPos / timeStep;
+			trackingNode.rootAccelerration = (trackingNode.globalVelocity - trackingNode.calcRootSolid->GetVelocity()) / timeStep;
+			//DSTR << "root :" << trackingNode.calcRootSolid->GetName() << " rootAcceleration  " << trackingNode.rootAccelerration << endl;
+			break;
+		}
+	}
+
+	// 加速度を計算
+	for (TrackingNode& trackingNode : trackingNodes) {
+		//trackingNode.globalA
+		TrackingNode* node = &trackingNode;
+		Vec3d tipPos;
+		if (trackingNode.isRoot) {
+			tipPos = trackingNode.calcRootSolid->GetCenterPosition();
+		}
+		else {
+			tipPos = trackingNode.calcJoint->GetPlugSolid()->GetCenterPosition();
+		}
+		Vec3d globalAcceleration(0,0,0);
+		while (true) {
+			if (node->isRoot) {
+				globalAcceleration += node->rootAccelerration + node->localAngularVelocityDot % (tipPos - node->calcRootSolid->GetCenterPosition());
+				break;
+			}
+			Posed plugPose;
+			node->calcJoint->GetPlugPose(plugPose);
+			Vec3d jointPosition = (node->calcJoint->GetPlugSolid()->GetPose() * plugPose).Pos();
+			Posed socketPose;
+			node->calcJoint->GetSocketPose(socketPose);
+			Quaterniond convertLocal2Global = node->calcJoint->GetSocketSolid()->GetOrientation() * socketPose.Ori();
+			globalAcceleration += (convertLocal2Global * node->localAngularVelocityDot) % (tipPos - jointPosition);
+			node = node->parent;
+		}
+		trackingNode.globalAcceleration = globalAcceleration;
+		//if (trackingNode.isRoot) {
+		//	DSTR << "globalAcceleration " << "root :" << trackingNode.calcRootSolid->GetName() << trackingNode.globalAcceleration << endl;
+		//}
+		//else {
+		//	DSTR << "globalAcceleration " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.globalAcceleration << endl;
+		//}
+	}
+
+	// 目標角度を設定、DynamicalOffだけ加速度を反映
+	for (TrackingNode& trackingNode : trackingNodes) {
+		if (trackingNode.isRoot) {
+			SpatialVector dv = SpatialVector(trackingNode.calcRootSolid->GetOrientation().Inv() * trackingNode.rootAccelerration * timeStep,
+				trackingNode.calcRootSolid->GetOrientation().Inv() * trackingNode.globalAngularVelocityDot * timeStep);
+			trackingNode.calcRootSolid->SetDv(dv);
+			trackingNode.reactRootSolid->SetDv(dv);
+
+			//Posed posed = Posed(trackingNode.rootPositionInput, trackingNode.plugInput);
+			Posed posed = Posed(trackingRootPosition, trackingNode.plugInput);
+			SetUseNextPose(true);
+			calcRootNode->SetUseNextPose(true);
+			SetNextPose(posed);
+			calcRootNode->SetNextPose(posed);
+			//DSTR << "dv " << dv << endl;
+		} else {
+			trackingNode.calcJoint->SetTargetPosition(trackingNode.preLocalTargetRotation);
+			trackingNode.reactJoint->SetTargetPosition(trackingNode.preLocalTargetRotation);
+			trackingNode.calcJoint->SetTargetVelocity(trackingNode.localAngularVelocity);
+			trackingNode.reactJoint->SetTargetVelocity(trackingNode.localAngularVelocity);
+			//DSTR << "preLocalTargetRotation " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.preLocalTargetRotation << endl;
+			//DSTR << "localAngularVelocity " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.localAngularVelocity << endl;
+		}
+	}
+
+	// 力とトルクを求めて追加
+	for (TrackingNode& trackingNode : trackingNodes) {
+		if (trackingNode.isRoot) {
+			trackingNode.targetAcceleration = SpatialVector(trackingNode.calcRootSolid->GetOrientation().Inv() * trackingNode.rootAccelerration,
+				trackingNode.calcRootSolid->GetOrientation().Inv() * trackingNode.globalAngularVelocityDot);
+			//DSTR << "root tragetAcceleration" << trackingNode.targetAcceleration << trackingNode.calcRootSolid->GetOrientation() << trackingNode.rootAccelerration << trackingNode.globalAngularVelocityDot<<  endl;
+		} else {
+			PHBallJointNodeIf* calcTreeNode = trackingNode.calcJoint->GetPlugSolid()->GetTreeNode()->Cast();
+			PHBallJointNodeIf* reactTreeNode = trackingNode.reactJoint->GetPlugSolid()->GetTreeNode()->Cast();
+			calcTreeNode->AddTrackingForce(reactTreeNode, timeStep, trackingNode.localAngularVelocityDot, trackingNode.parent->targetAcceleration, trackingNode.targetAcceleration, trackingNode.trackingForce, trackingNode.trackingTorque);
+			//DSTR << "trackingNode.targetAcceleration " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.targetAcceleration << endl;
+		}
+	}
+
+	// pre系を更新
+	for (TrackingNode& trackingNode : trackingNodes) {
+		trackingNode.preLocalTargetRotation = trackingNode.jointTargetRotation;
 	}
 }
 

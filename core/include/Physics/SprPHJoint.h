@@ -946,8 +946,8 @@ struct PHTreeNodeDesc{
 struct TrackingNode {
 public:
 	TrackingNode* parent;
-	PHJointIf* reactJoint;
-	PHJointIf* calcJoint;
+	PHBallJointIf* reactJoint;
+	PHBallJointIf* calcJoint;
 	PHSolidIf* reactRootSolid;
 	PHSolidIf* calcRootSolid;
 	bool		 isRoot;
@@ -955,11 +955,17 @@ public:
 	Quaterniond plugInput;
 	Quaterniond preLocalTargetRotation;
 	Quaterniond jointTargetRotation;
+	SpatialVector targetAcceleration;
 	Vec3d localAngularVelocity;
 	Vec3d localAngularVelocityDot;
 	Vec3d globalAngularVelocity;
 	Vec3d globalAngularVelocityDot;
 	Vec3d globalAcceleration;
+	Vec3d globalVelocity;
+	Vec3d rootAccelerration;
+	Vec3d rootPositionInput;
+	Vec3d trackingForce;
+	Vec3d trackingTorque;
 };
 
 struct PHRootNodeState {
@@ -967,6 +973,7 @@ struct PHRootNodeState {
 	bool useNextPose;
 
 	std::vector<Quaterniond> trackingInputs;
+	Vec3d trackingRootPosition;
 	PHRootNodeState() {
 		nextPose = Posed();
 		useNextPose = false;
@@ -1083,10 +1090,10 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 		@param input 入力角度列
 	 */
 	void SetTrackingInputs(std::vector<Quaterniond> inputs);
-
-	void AddTrackingNode(PHJointIf* reactJoint, PHJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+	void SetTrackingRootPosition(Vec3d input);
+	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
 	void AddTrackingNode(TrackingNode* trackingNode);
-	void TrackWithForce();
+	void TrackWithForce(PHRootNodeIf* calcRootNode);
 };
 
 //struct PliantMotionIf : NamedObjectIf{
