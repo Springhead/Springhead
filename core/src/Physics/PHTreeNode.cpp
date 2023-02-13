@@ -638,6 +638,10 @@ void PHRootNode::AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJ
 	//p->SetTrackingInput();
 }
 
+SpatialVector PHRootNode::GetTipAcceleration(int i) {
+	return trackingNodes[i].targetAcceleration;
+}
+
 void PHRootNode::AddTrackingNode(TrackingNode* trackingNode) {
 	trackingNodes.push_back(*trackingNode);
 }

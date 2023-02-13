@@ -972,8 +972,6 @@ struct PHRootNodeState {
 	Posed nextPose;
 	bool useNextPose;
 
-	std::vector<Quaterniond> trackingInputs;
-	Vec3d trackingRootPosition;
 	PHRootNodeState() {
 		nextPose = Posed();
 		useNextPose = false;
@@ -1094,6 +1092,7 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
 	void AddTrackingNode(TrackingNode* trackingNode);
 	void TrackWithForce(PHRootNodeIf* calcRootNode);
+	SpatialVector GetTipAcceleration(int i);
 };
 
 //struct PliantMotionIf : NamedObjectIf{

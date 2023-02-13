@@ -126,7 +126,9 @@ public:
 	void* arg;
 
 	// 一時的に
+	std::vector<Quaterniond> trackingInputs;
 	std::vector<TrackingNode> trackingNodes;
+	Vec3d trackingRootPosition;
 
 public:
 	void Setup();
@@ -139,6 +141,7 @@ public:
 	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
 	void AddTrackingNode(TrackingNode* trackingNode);
 	void TrackWithForce(PHRootNodeIf* calcRootNode);
+	SpatialVector GetTipAcceleration(int i);
 
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);
