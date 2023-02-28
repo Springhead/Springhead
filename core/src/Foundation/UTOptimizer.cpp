@@ -102,7 +102,7 @@ namespace Spr {;
 		parameters->mu = mu;
 		parameters->mucov = mucov;
 		parameters->mueff = mueff;
-		parameters->weights = weights;
+		parameters->weights = &*weights.begin();
 		parameters->damps = damps;
 		parameters->cs = cs;
 		parameters->ccumcov = ccumcov;

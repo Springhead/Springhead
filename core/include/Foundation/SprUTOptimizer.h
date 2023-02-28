@@ -110,7 +110,7 @@ struct UTCMAESOptimizerDesc {
 	/**
 	* Weights used to recombinate the mean sum up to one.
 	*/
-	double* weights;
+	std::vector<double> weights;
 	/**
 	* Damping parameter for step-size adaption, d = inifinity or 0 means adaption
 	* is turned off, usually close to one.
