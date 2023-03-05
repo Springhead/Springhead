@@ -942,32 +942,6 @@ struct PHTreeNodeDesc{
 	}
 };
 
-//struct PHSolidIf;
-struct TrackingNode {
-public:
-	TrackingNode* parent;
-	PHBallJointIf* reactJoint;
-	PHBallJointIf* calcJoint;
-	PHSolidIf* reactRootSolid;
-	PHSolidIf* calcRootSolid;
-	bool		 isRoot;
-	Quaterniond socketInput;
-	Quaterniond plugInput;
-	Quaterniond preLocalTargetRotation;
-	Quaterniond jointTargetRotation;
-	SpatialVector targetAcceleration;
-	Vec3d localAngularVelocity;
-	Vec3d localAngularVelocityDot;
-	Vec3d globalAngularVelocity;
-	Vec3d globalAngularVelocityDot;
-	Vec3d globalAcceleration;
-	Vec3d globalVelocity;
-	Vec3d rootAccelerration;
-	Vec3d rootPositionInput;
-	Vec3d trackingForce;
-	Vec3d trackingTorque;
-};
-
 struct PHRootNodeState {
 	Posed nextPose;
 	bool useNextPose;
@@ -1084,25 +1058,7 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 	 */
 	void SetNextPose(const Posed& p);
 
-	/** @brief 追従させる際の目標となる入力角度を設定する
-		@param input 入力角度列
-	 */
-	void SetTrackingInputs(std::vector<Quaterniond> inputs);
-	void SetTrackingRootPosition(Vec3d input);
-	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
-	void AddTrackingNode(TrackingNode* trackingNode);
-	void TrackWithForce(PHRootNodeIf* calcRootNode);
-	SpatialVector GetTipAcceleration(int i);
 };
-
-//struct PliantMotionIf : NamedObjectIf{
-//	SPR_IFDEF(PliantMotion);
-//	//public:
-//	//	/** @brief 追従させる際の目標となる入力角度を設定する
-//	//		@param input 入力角度列
-//	//	*/
-//	//	void SetTrackingInput(std::vector<Quaterniond> inputs);
-//};
 
 /// １軸関節ノードのインタフェース
 struct PHTreeNode1DIf : public PHTreeNodeIf{
@@ -1122,18 +1078,6 @@ struct PHGenericJointNodeIf : public PHTreeNode1DIf{
 };
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHBallJointNode);
-
-	/** @brief 
-	 */
-	Spr::SpatialVector ConvertParentC(SpatialVector parentC);
-
-	/** @brief 
-	 */
-	Spr::SpatialVector ConvertChild2Parent(SpatialVector cf);
-
-	/** @brief 
-	 */
-	void AddTrackingForce(PHBallJointNodeIf* ballJointNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
 };
 struct PHFixJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHFixJointNode);

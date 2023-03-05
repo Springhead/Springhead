@@ -222,6 +222,7 @@ public:
 struct PHBallJointIf;
 struct PHSolidIf;
 struct SpatialVector;
+struct PHBallJointNodeIf;
 struct PHTrackingEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHTrackingEngine);
@@ -241,6 +242,14 @@ public:
 	/** @brief 加速度・角加速度を取得する
 	*/
 	SpatialVector GetTipAcceleration(int i);
+
+	/** @brief 追従の力とトルクを計算する
+	*/
+	void TrackWithForce();
+
+	/** @brief Nodeごとの追従の力とトルクを計算し、追加する
+	*/
+	void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
 };
 
 struct PHFemMeshIf;

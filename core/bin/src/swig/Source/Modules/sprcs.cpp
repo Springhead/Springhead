@@ -1432,6 +1432,12 @@ public:
 						// vector or array
 						char* wrapper_name = make_wrapper_name(fps, FD_NULL, __LINE__, ai, ci, "function_args");
 						Printf(CS, "%s %s", wrapper_name, csname);
+						if (ai.is_struct/* || ai.is_array*/) {
+							if (wrapper_map.find(wrapper_name) == wrapper_map.end()) {
+								generate_wrapper_accessor_struct(topnode, members[i], ai, ci, "function_args", __LINE__);
+								wrapper_map[wrapper_name] = 1;
+							}
+						}
 					}
 					/**/
 					else if (ai.is_struct && !ai.is_pointer && !ai.is_reference) {

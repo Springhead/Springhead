@@ -5,9 +5,10 @@
  *  software. Please deal with this software under one of the following licenses:
  *  This license itself, Boost Software License, The MIT License, The BSD License.
  */
-
-
 #include <Physics/PHTrackingEngine.h>
+#ifdef USE_CLOSED_SRC
+#include "../../closed/include/PliantMotion/PliantMotion.h"
+#endif
 
 using namespace std;
 namespace Spr {
@@ -269,7 +270,7 @@ namespace Spr {
 			} else {
 				PHBallJointNodeIf* calcTreeNode = trackingNode.calcJoint->GetPlugSolid()->GetTreeNode()->Cast();
 				PHBallJointNodeIf* reactTreeNode = trackingNode.reactJoint->GetPlugSolid()->GetTreeNode()->Cast();
-				calcTreeNode->AddTrackingForce(reactTreeNode, timeStep, trackingNode.localAngularVelocityDot, trackingNode.parent->targetAcceleration, trackingNode.targetAcceleration, trackingNode.trackingForce, trackingNode.trackingTorque);
+				AddTrackingForce(calcTreeNode, reactTreeNode, timeStep, trackingNode.localAngularVelocityDot, trackingNode.parent->targetAcceleration, trackingNode.targetAcceleration, trackingNode.trackingForce, trackingNode.trackingTorque);
 				//DSTR << "trackingNode.targetAcceleration " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.targetAcceleration << endl;
 			}
 		}
@@ -278,5 +279,11 @@ namespace Spr {
 		for (TrackingNode& trackingNode : trackingNodes) {
 			trackingNode.preLocalTargetRotation = trackingNode.jointTargetRotation;
 		}
+	}
+	void PHTrackingEngine::AddTrackingForce(PHBallJointNodeIf* calcNode,PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque) {
+#ifdef USE_CLOSED_SRC
+		PliantMotion* p = new PliantMotion();
+		p->AddTrackingForce(calcNode->Cast(), reactNode, timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque);
+#endif
 	}
 }

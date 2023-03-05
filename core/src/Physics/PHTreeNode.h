@@ -125,23 +125,12 @@ public:
 	PHRootNodeIf::CompControlForce compControlForce = NULL;
 	void* arg;
 
-	// 一時的に
-	std::vector<Quaterniond> trackingInputs;
-	std::vector<TrackingNode> trackingNodes;
-	Vec3d trackingRootPosition;
-
 public:
 	void Setup();
 	void SetupCorrection();
 	bool IsUseNextPose() { return useNextPose; }
 	void SetUseNextPose(bool bOn) { useNextPose = bOn; }
 	void SetNextPose(const Posed& p) { nextPose = p; } ///< 剛体の姿勢を上書き
-	void SetTrackingInputs(std::vector<Quaterniond> inputs); ///<追従させる際の目標となる入力角度を設定する
-	void SetTrackingRootPosition(Vec3d input);
-	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
-	void AddTrackingNode(TrackingNode* trackingNode);
-	void TrackWithForce(PHRootNodeIf* calcRootNode);
-	SpatialVector GetTipAcceleration(int i);
 
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);
@@ -195,8 +184,6 @@ public:
 	Matrix6Nd		sumXtrIJ, sumXtrIJ_sumJIJinv;
 
 	std::vector<MatrixN6d>	dZdvel_map;		///< ツリー上の任意の他ノードのdZからこのノードのdvelを与える行列
-	SpatialVector    ConvertParentC     (SpatialVector parentC)     { return I * Xcp * parentC / GetPHScene()->GetTimeStep(); }
-	SpatialVector    ConvertChild2Parent(SpatialVector cf);
 	PHNDJoint<NDOF>* GetJoint(){ return (PHNDJoint<NDOF>*)joint; }
 
 	virtual void        ResetGear           ();
