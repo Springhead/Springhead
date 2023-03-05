@@ -219,6 +219,30 @@ public:
 	SPR_IFDEF(PHIKEngine);
 };
 
+struct PHBallJointIf;
+struct PHSolidIf;
+struct SpatialVector;
+struct PHTrackingEngineIf : PHEngineIf{
+public:
+	SPR_IFDEF(PHTrackingEngine);
+
+	/** @brief 追従させる際の目標となる入力角度を設定する
+	*/
+	void SetTrackingInputs(std::vector<Quaterniond> inputs); ///<追従させる際の目標となる入力角度を設定する
+
+	/** @brief Rootの目標位置を設定する
+	*/
+	void SetTrackingRootPosition(Vec3d input);
+
+	/** @brief 追従のペアを設定するノードを追加
+	*/
+	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+
+	/** @brief 加速度・角加速度を取得する
+	*/
+	SpatialVector GetTipAcceleration(int i);
+};
+
 struct PHFemMeshIf;
 struct PHFemMeshNewIf;
 /**

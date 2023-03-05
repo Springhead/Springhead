@@ -28,6 +28,7 @@ class PHConstraintEngine;
 class PHGravityEngine;
 class PHFemEngine;
 class PHHapticEngine;
+class PHTrackingEngine;
 struct PHConstraintDesc;
 struct PHJointDesc;
 class PHScene;
@@ -64,6 +65,7 @@ protected:
 	PHFemEngine*			femEngine;
 	PHHapticEngine*			hapticEngine;
 	PHOpEngine*				opEngine;
+	PHTrackingEngine*				trackingEngine;
 	
 	UTRef<PHOpSpHashColliAgent>	opSpAgent;
 
@@ -242,6 +244,7 @@ public:
 	PHHapticEngineIf*		GetHapticEngine();
 	PHOpEngineIf*			GetOpEngine();
 	PHOpSpHashColliAgentIf* GetOpColliAgent();
+	PHTrackingEngineIf*		GetTrackingEngine();
 	PHHapticPointerIf*		CreateHapticPointer();
 	void					SetStateMode(bool bConstraints);
 	

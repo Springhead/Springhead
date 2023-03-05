@@ -256,6 +256,7 @@ void PHTreeNode::CompCoriolisAccel(){
 		        - SpatialTransform(Vec3d(), Xj1  .q) * ccj);
 	c += Xcj * cj;
 	c *= GetPHScene()->GetTimeStep();
+	//c.clear();
 }
 
 void PHTreeNode::InitArticulatedInertia(){
@@ -712,7 +713,7 @@ void PHRootNode::TrackWithForce(PHRootNodeIf* calcRootNode) {
 			trackingNode.localAngularVelocity = diff / timeStep;
 			trackingNode.localAngularVelocityDot = (trackingNode.localAngularVelocity - preLocalAngularVelocity) / timeStep;
 			//DSTR << "preLocalAngularVelocity " << preLocalAngularVelocity << endl;
-			//DSTR << "localAngularVelocityDot reactJoint:" << trackingNode.reactJoint->GetName() << " localAngularVelocity " << trackingNode.localAngularVelocity << " localAngularVelocityDot " << trackingNode.localAngularVelocityDot << endl;
+			//DSTR << "localAngularVelocityDot reactJoint:" << trackingNode.reactJoint->GetName() << " localAngularVelocity " << trackingNode.localAngularVelocity << " preLocalAngularVelocity " << preLocalAngularVelocity << " localAngularVelocityDot " << trackingNode.localAngularVelocityDot << endl;
 		}
 	}
 
@@ -1060,7 +1061,7 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompResponse(PHTreeNode* src, const SpatialVector& df){
 	solid->dv += dZdv_map  [src->id] * (-df);
 	dvel      += dZdvel_map[src->id] * (-df);
-	//cout << "PHTreeNodeND<NDOF>::CompResponse" << solid->GetName()<< "solid->dv " << solid->dv << " dvel " << dvel  << " df " << df << endl;
+	//DSTR << "PHTreeNodeND<NDOF>::CompResponse" << joint->GetName()<< " dvel " << dvel  << "solid->dv " << solid->dv << " df " << df << endl;
 }
 
 template<int NDOF>
@@ -1082,7 +1083,7 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 	else{
 		dvel              = -JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
-		//cout  << "CompAccel " << solid->GetName() << " solid->dv " << solid->dv << endl;
+		//DSTR  << "CompAccel " << joint->GetName() << "dvel " << dvel << " solid->dv " << solid->dv << endl;
 	}
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)

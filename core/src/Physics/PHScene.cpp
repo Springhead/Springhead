@@ -16,6 +16,7 @@
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHFemEngine.h>
 #include <Physics/PHOpEngine.h>
+#include <Physics/PHTrackingEngine.h>
 #include <sstream>
 
 #include <Foundation/UTQPTimer.h>
@@ -94,6 +95,10 @@ void PHScene::Init(){
 	PHHapticEngine::PHHapticEngineCallStep2* hpe = DBG_NEW PHHapticEngine::PHHapticEngineCallStep2;
 	hpe->engine = hapticEngine;
 	engines.Add(hpe);
+
+	trackingEngine = DBG_NEW PHTrackingEngine;
+	engines.Add(trackingEngine);
+
 	AfterSetDesc();
 }
 void PHScene::AfterSetDesc(){
@@ -688,6 +693,10 @@ PHFemEngineIf* PHScene::GetFemEngine(){
 
 PHOpEngineIf* PHScene::GetOpEngine(){
 	return XCAST(opEngine);
+}
+
+PHTrackingEngineIf* PHScene::GetTrackingEngine(){
+	return XCAST(trackingEngine);
 }
 
 PHOpSpHashColliAgentIf* PHScene:: GetOpColliAgent(){
