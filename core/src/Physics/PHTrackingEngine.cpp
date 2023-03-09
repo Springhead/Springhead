@@ -15,7 +15,7 @@ namespace Spr {
 
 	void PHTrackingEngine::Step() {
 		DSTR << "PHTrackingEngine Called" << endl;
-		TrackWithForce();
+		//TrackWithForce();
 	}
 
 	void PHTrackingEngine::Clear() {
@@ -29,21 +29,28 @@ namespace Spr {
 		return false;
 	}
 
-	void PHTrackingEngine::SetTrackingInputs(std::vector<Quaterniond> inputs) {
-		trackingInputs.clear();
-		trackingInputs = inputs;
-		//int index = 0;
-		//for (std::vector<Quaterniond>::const_iterator input = inputs.begin(), e = inputs.end(); input != e; ++input) {
-		//	DSTR << index <<  *input << endl;
-		//	index++;
-		//}
+	void PHTrackingEngine::SetTrackingInputs(PHRootNodeIf* root, Vec3d rootPosition ,std::vector<Quaterniond> inputs) {
+		ABATrackingInput* abaTrackingInput = SearchABATrackingInput(root);
+		if (abaTrackingInput == NULL) {
+			ABATrackingInput newABATrackingInput;
+			newABATrackingInput.root = root;
+			abaTrackingInputs.push_back(newABATrackingInput);
+		}
+		abaTrackingInput = SearchABATrackingInput(root);
+		abaTrackingInput->trackingRootPosition = rootPosition;
+		abaTrackingInput->inputs.clear();
+		abaTrackingInput->inputs = inputs;
 	}
 
-	void PHTrackingEngine::SetTrackingRootPosition(Vec3d input) {
-		trackingRootPosition = input;
+	void PHTrackingEngine::SetTrackingRootPosition(PHRootNodeIf* root, Vec3d input) {
+		ABATrackingInput newABATrackingInput;
+		newABATrackingInput.root = root;
+		newABATrackingInput.trackingRootPosition = input;
+		abaTrackingInputs.push_back(newABATrackingInput);
+		//trackingRootPosition = input;
 	}
 
-	void PHTrackingEngine::AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot) {
+	void PHTrackingEngine::AddTrackingNode(PHRootNodeIf* root,PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot) {
 		TrackingNode newTrackingNode;
 		newTrackingNode.reactJoint = reactJoint;
 		newTrackingNode.calcJoint = calcJoint;
@@ -51,17 +58,28 @@ namespace Spr {
 		newTrackingNode.calcRootSolid = calcRootSolid;
 		newTrackingNode.isRoot = isRoot;
 		newTrackingNode.parent = NULL;
-		for (int i = 0; i < trackingNodes.size(); i++) {
-			if (trackingNodes[i].isRoot && trackingNodes[i].reactRootSolid == reactJoint->GetSocketSolid()) {
-				newTrackingNode.parent = &trackingNodes[i];
-				break;
-			} else if (!trackingNodes[i].isRoot && trackingNodes[i].reactJoint->GetPlugSolid() == reactJoint->GetSocketSolid()) {
-				newTrackingNode.parent = &trackingNodes[i];
-				break;
+
+		ABATrackingNode* abaTrackingNode = SearhABATrackingNode(root);
+		if (abaTrackingNode == NULL) {
+			ABATrackingNode newABATrackingNode;
+			newABATrackingNode.root = root;
+			abaTrackingNodes.push_back(newABATrackingNode);
+			abaTrackingNode = SearhABATrackingNode(root);
+		}
+		std::vector<TrackingNode>& trackingNodes = abaTrackingNode->trackingNodes;
+		trackingNodes.push_back(newTrackingNode);
+
+		if (!isRoot) {
+			for (int i = 0; i < trackingNodes.size(); i++) {
+				if (trackingNodes[i].isRoot && trackingNodes[i].reactRootSolid == reactJoint->GetSocketSolid()) {
+					newTrackingNode.parent = &trackingNodes[i];
+					break;
+				} else if (!trackingNodes[i].isRoot && trackingNodes[i].reactJoint->GetPlugSolid() == reactJoint->GetSocketSolid()) {
+					newTrackingNode.parent = &trackingNodes[i];
+					break;
+				}
 			}
 		}
-
-		trackingNodes.push_back(newTrackingNode);
 
 		// vector型は追加するたびにアドレスが変更されるためparentについては毎回更新が必要
 		for (TrackingNode& trackingNode : trackingNodes) {
@@ -78,19 +96,24 @@ namespace Spr {
 		//p->SetTrackingInput();
 	}
 
-	SpatialVector PHTrackingEngine::GetTipAcceleration(int i) {
-		return trackingNodes[i].targetAcceleration;
+	SpatialVector PHTrackingEngine::GetTipAcceleration(PHRootNodeIf* root, int i) {
+		ABATrackingNode* abaTrackingNode = SearhABATrackingNode(root);
+		return abaTrackingNode->trackingNodes[i].targetAcceleration;
 	}
 
-	void PHTrackingEngine::TrackWithForce() {
+	void PHTrackingEngine::TrackWithForce(PHRootNodeIf* root) {
 		double timeStep = DCAST(PHScene, GetScene())->timeStep;
+		ABATrackingNode* abaTrackingNode = SearhABATrackingNode(root);
+		std::vector<TrackingNode>& trackingNodes = abaTrackingNode->trackingNodes;
+		ABATrackingInput* abaTrackingInput = SearchABATrackingInput(root);
+		std::vector<Quaterniond>& trackingInputs = abaTrackingInput->inputs;
 		// 入力をtrackingNodeに書き込み
 		for (int i = 0; i < trackingNodes.size(); i++) {
 			trackingNodes[i].plugInput = trackingInputs[i];
 		}
 		for (TrackingNode& trackingNode : trackingNodes) {
 			if (trackingNode.isRoot) {
-				trackingNode.rootPositionInput = trackingRootPosition;
+				trackingNode.rootPositionInput = abaTrackingInput->trackingRootPosition;
 			}
 		}
 		for (TrackingNode& trackingNode : trackingNodes) {
@@ -245,7 +268,7 @@ namespace Spr {
 				trackingNode.reactRootSolid->SetDv(dv);
 				PHRootNodeIf* calcRootNode = trackingNode.calcRootSolid->GetTreeNode()->Cast();
 				PHRootNodeIf* reactRootNode = trackingNode.reactRootSolid->GetTreeNode()->Cast();
-				Posed posed = Posed(trackingRootPosition, trackingNode.plugInput);
+				Posed posed = Posed(abaTrackingInput->trackingRootPosition, trackingNode.plugInput);
 				reactRootNode->SetUseNextPose(true);
 				calcRootNode->SetUseNextPose(true);
 				reactRootNode->SetNextPose(posed);

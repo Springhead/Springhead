@@ -223,29 +223,30 @@ struct PHBallJointIf;
 struct PHSolidIf;
 struct SpatialVector;
 struct PHBallJointNodeIf;
+struct PHRootNodeIf;
 struct PHTrackingEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHTrackingEngine);
 
 	/** @brief 追従させる際の目標となる入力角度を設定する
 	*/
-	void SetTrackingInputs(std::vector<Quaterniond> inputs); ///<追従させる際の目標となる入力角度を設定する
+	void SetTrackingInputs(PHRootNodeIf* root, Vec3d rootPosition, std::vector<Quaterniond> inputs);
 
 	/** @brief Rootの目標位置を設定する
 	*/
-	void SetTrackingRootPosition(Vec3d input);
+	void SetTrackingRootPosition(PHRootNodeIf* root, Vec3d input);
 
 	/** @brief 追従のペアを設定するノードを追加
 	*/
-	void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+	void AddTrackingNode(PHRootNodeIf* root, PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
 
 	/** @brief 加速度・角加速度を取得する
 	*/
-	SpatialVector GetTipAcceleration(int i);
+	SpatialVector GetTipAcceleration(PHRootNodeIf* root, int i);
 
 	/** @brief 追従の力とトルクを計算する
 	*/
-	void TrackWithForce();
+	void TrackWithForce(PHRootNodeIf* root);
 
 	/** @brief Nodeごとの追従の力とトルクを計算し、追加する
 	*/

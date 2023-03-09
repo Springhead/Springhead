@@ -38,10 +38,19 @@ namespace Spr {;
 			Vec3d trackingForce;
 			Vec3d trackingTorque;
 		};
-
-		std::vector<Quaterniond> trackingInputs;
-		std::vector<TrackingNode> trackingNodes;
-		Vec3d trackingRootPosition;
+		struct ABATrackingInput {
+		public:
+			PHRootNodeIf* root;
+			Vec3d trackingRootPosition;
+			std::vector<Quaterniond> inputs;
+		};
+		struct ABATrackingNode {
+		public:
+			PHRootNodeIf* root;
+			std::vector<TrackingNode> trackingNodes;
+		};
+		std::vector<ABATrackingInput> abaTrackingInputs;
+		std::vector<ABATrackingNode> abaTrackingNodes;
 	public:
 		int GetPriority() const { return SGBP_NONE; }
 		void Step();
@@ -49,12 +58,28 @@ namespace Spr {;
 		virtual void Clear();
 		virtual bool AddChildObject(ObjectIf* o);
 		virtual bool DelChildObject(ObjectIf* o);
-		void SetTrackingInputs(std::vector<Quaterniond> inputs); ///<’Ç]‚³‚¹‚éÛ‚Ì–Ú•W‚Æ‚È‚é“ü—ÍŠp“x‚ðÝ’è‚·‚é
-		void SetTrackingRootPosition(Vec3d input);
-		void AddTrackingNode(PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
-		SpatialVector GetTipAcceleration(int i);
-		void TrackWithForce();
+		void SetTrackingInputs(PHRootNodeIf* root, Vec3d rootPosition, std::vector<Quaterniond> inputs);
+		void SetTrackingRootPosition(PHRootNodeIf* root, Vec3d input);
+		void AddTrackingNode(PHRootNodeIf* root, PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+		SpatialVector GetTipAcceleration(PHRootNodeIf* root, int i);
+		void TrackWithForce(PHRootNodeIf* root);
 		void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
+		ABATrackingNode* SearhABATrackingNode(PHRootNodeIf* root) {
+			for (ABATrackingNode& a : abaTrackingNodes) {
+				if (a.root == root) {
+					return &a;
+				}
+			}
+			return NULL;
+		}
+		ABATrackingInput* SearchABATrackingInput(PHRootNodeIf* root) {
+			for (ABATrackingInput& a : abaTrackingInputs) {
+				if (a.root == root) {
+					return &a;
+				}
+			}
+			return NULL;
+		}
 	};
 
 }
