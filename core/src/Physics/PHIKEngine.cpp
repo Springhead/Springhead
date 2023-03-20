@@ -727,7 +727,7 @@ void PHIKEngine::Step() {
 				break;
 			}
 		}
-		Limit();
+		Limit(); //here
 		FK();
 		SaveFKResult();
 
