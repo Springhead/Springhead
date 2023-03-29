@@ -322,7 +322,7 @@ namespace Spr {
 	void PHTrackingEngine::AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque) {
 #ifdef USE_CLOSED_SRC
 		PliantMotion* p = new PliantMotion();
-		p->AddTrackingForce(calcNode->Cast(), reactNode, timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque, maxForce);
+		p->AddTrackingForce(calcNode->Cast(), reactNode, timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque);
 #endif
 	}
 }

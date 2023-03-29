@@ -256,10 +256,6 @@ public:
 	*/
 	void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
 
-	/** @brief maxForceを設定する
-	*/
-	void SetMaxForce(double max);
-
 	/** @brief MaxRootVelocityを設定する
 	*/
 	void SetMaxRootVelocity(double max);
