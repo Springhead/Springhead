@@ -51,6 +51,9 @@ namespace Spr {;
 		};
 		std::vector<ABATrackingInput> abaTrackingInputs;
 		std::vector<ABATrackingNode> abaTrackingNodes;
+		double maxForce = FLT_MAX;
+		double maxRootVelocity = FLT_MAX;
+		double maxAngularVelocity = FLT_MAX;
 	public:
 		int GetPriority() const { return SGBP_NONE; }
 		void Step();
@@ -61,9 +64,13 @@ namespace Spr {;
 		void SetTrackingInputs(PHRootNodeIf* root, Vec3d rootPosition, std::vector<Quaterniond> inputs);
 		void SetTrackingRootPosition(PHRootNodeIf* root, Vec3d input);
 		void AddTrackingNode(PHRootNodeIf* root, PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+		void DeleteTrackingNodes(PHRootNodeIf* root);
 		SpatialVector GetTipAcceleration(PHRootNodeIf* root, int i);
 		void TrackWithForce(PHRootNodeIf* root);
 		void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
+		void SetMaxForce(double max) { maxForce = max; }
+		void SetMaxRootVelocity(double max) { maxRootVelocity = max; }
+		void SetMaxAngularVelocity(double max) { maxAngularVelocity = max; }
 		ABATrackingNode* SearhABATrackingNode(PHRootNodeIf* root) {
 			for (ABATrackingNode& a : abaTrackingNodes) {
 				if (a.root == root) {

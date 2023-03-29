@@ -240,6 +240,10 @@ public:
 	*/
 	void AddTrackingNode(PHRootNodeIf* root, PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
 
+	/** @brief 追従ためのノードを削除
+	*/
+	void DeleteTrackingNodes(PHRootNodeIf* root);
+
 	/** @brief 加速度・角加速度を取得する
 	*/
 	SpatialVector GetTipAcceleration(PHRootNodeIf* root, int i);
@@ -251,6 +255,19 @@ public:
 	/** @brief Nodeごとの追従の力とトルクを計算し、追加する
 	*/
 	void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
+
+	/** @brief maxForceを設定する
+	*/
+	void SetMaxForce(double max);
+
+	/** @brief MaxRootVelocityを設定する
+	*/
+	void SetMaxRootVelocity(double max);
+
+	/** @brief MaxRootVelocityを設定する
+	*/
+	void SetMaxAngularVelocity(double max);
+
 };
 
 struct PHFemMeshIf;
