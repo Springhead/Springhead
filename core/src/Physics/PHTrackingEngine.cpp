@@ -325,4 +325,48 @@ namespace Spr {
 		p->AddTrackingForce(calcNode->Cast(), reactNode, timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque);
 #endif
 	}
+	Vec3d PHTrackingEngine::CalcEigenvalue(Matrix3d a) {
+		Matrix3d b, v;
+		Vec3d e;
+		b.clear();
+		v.clear();
+		e.clear();
+		b[0][0] = 1.0;
+		b[1][1] = 1.0;
+		b[2][2] = 1.0;
+		int result = sprsygv(a, b, e, v);
+		if (result == 0) { // ¬Œ÷
+			return e;
+		}
+		return NULL;
+	}
+	// Plug‘¤‚ð’H‚Á‚ÄInertia‚ð‘«‚·
+	Matrix3d PHTrackingEngine::CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint) {
+		Matrix3d inertiaSum;
+		inertiaSum.clear();
+		PHSolidIf* socket = joint->GetSocketSolid();
+		Posed socketPose;
+		joint->GetSocketPose(socketPose);
+		Posed jointPose = socket->GetPose() * socketPose;
+		Matrix3d R,inertia;
+		jointPose.Ori().ToMatrix(R);
+		Matrix3f cross;
+		inertia.clear();
+		//‚±‚±‚És‚Ü‚¸‚¢
+		cross = Matrix3f::Cross(jointPose.Pos() - /*jointPose.Ori().Inv() * */solid->GetCenterPosition());
+		inertiaSum +=/* R * solid->GetInertia() * R.trans()*/ - (float)solid->GetMass() * (cross * cross);
+
+		PHSolidIf* plug = joint->GetPlugSolid();
+		PHSceneIf* scene = GetScene();
+		//Vec3d solid
+		for (int i = 0; i < scene->NJoints(); i++) {
+			PHJointIf* sceneJoint = scene->GetJoint(i);
+			if (solid == sceneJoint->GetSocketSolid()) {
+				//DSTR << joint->GetName() << " " <<  << "cross " << cross << endl;
+				//DSTR << joint->GetName() << ", socket  " <<  joint->GetSocketSolid()->GetName() << ", plug " << joint->GetPlugSolid()->GetName() << endl;
+				inertiaSum += CalcLeavesInertia(sceneJoint->GetPlugSolid(), joint);
+			}
+		}
+		return inertiaSum;
+	}
 }

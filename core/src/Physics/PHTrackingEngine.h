@@ -69,6 +69,8 @@ namespace Spr {;
 		void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
 		void SetMaxRootVelocity(double max) { maxRootVelocity = max; }
 		void SetMaxAngularVelocity(double max) { maxAngularVelocity = max; }
+		Vec3d CalcEigenvalue(Matrix3d a);
+		Matrix3d PHTrackingEngine::CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint);
 		ABATrackingNode* SearhABATrackingNode(PHRootNodeIf* root) {
 			for (ABATrackingNode& a : abaTrackingNodes) {
 				if (a.root == root) {

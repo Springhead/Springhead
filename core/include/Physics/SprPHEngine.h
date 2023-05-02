@@ -224,6 +224,7 @@ struct PHSolidIf;
 struct SpatialVector;
 struct PHBallJointNodeIf;
 struct PHRootNodeIf;
+struct PHJointIf;
 struct PHTrackingEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHTrackingEngine);
@@ -264,6 +265,9 @@ public:
 	*/
 	void SetMaxAngularVelocity(double max);
 
+	Vec3d CalcEigenvalue(Matrix3d a);
+
+	Matrix3d CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint);
 };
 
 struct PHFemMeshIf;
