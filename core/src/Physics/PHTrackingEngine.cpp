@@ -349,16 +349,15 @@ namespace Spr {
 		joint->GetSocketPose(socketPose);
 		Posed jointPose = socket->GetPose() * socketPose;
 		Matrix3d R,inertia;
-		jointPose.Ori().ToMatrix(R);
-		Matrix3f cross;
+		solid->GetPose().Ori().ToMatrix(R);
+		Matrix3d cross;
 		inertia.clear();
-		//‚±‚±‚És‚Ü‚¸‚¢
-		cross = Matrix3f::Cross(jointPose.Pos() - /*jointPose.Ori().Inv() * */solid->GetCenterPosition());
-		inertiaSum +=/* R * solid->GetInertia() * R.trans()*/ - (float)solid->GetMass() * (cross * cross);
+		cross = Matrix3d::Cross(jointPose.Pos() - solid->GetCenterPosition());
+		inertiaSum += R * solid->GetInertia() * R.trans() - (float)solid->GetMass() * (cross * cross);
 
 		PHSolidIf* plug = joint->GetPlugSolid();
 		PHSceneIf* scene = GetScene();
-		//Vec3d solid
+
 		for (int i = 0; i < scene->NJoints(); i++) {
 			PHJointIf* sceneJoint = scene->GetJoint(i);
 			if (solid == sceneJoint->GetSocketSolid()) {
