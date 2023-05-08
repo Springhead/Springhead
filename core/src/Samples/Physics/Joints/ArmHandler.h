@@ -40,7 +40,7 @@ public:
 		handDamper  =  20;
 
 		useExternal	= false;
-		useABA		= false;
+		useABA		= true;
 
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_0, "move ball");
 		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_0, 's');
@@ -113,6 +113,7 @@ public:
 		links.front()->SetDynamical(false);
 
 		phScene->SetContactMode(PHSceneDesc::MODE_NONE);		// 接触を切る
+		phScene->SetNumIteration(1);
 	}
 
 	virtual void OnAction(int id){
