@@ -268,6 +268,10 @@ public:
 	Vec3d CalcEigenvalue(Matrix3d a);
 
 	Matrix3d CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint);
+
+	/** @brief Joint位置からみた慣性テンソルを求める
+	*/
+	Matrix3d CalcInertiaFromJoint(PHSolidIf* solid, PHJointIf* joint);
 };
 
 struct PHFemMeshIf;

@@ -176,7 +176,8 @@ void PHConstraint::Setup() {
 	b  = J[0] * (solid[0]->v + solid[0]->dv0)
 	   + J[1] * (solid[1]->v + solid[1]->dv0);
     b  += db;
-	
+	//cout << "b " << solid[0]->GetName() << " " << solid[1]->GetName() << "  b " << b << "db" << db << endl;
+	//cout << "j[0] " << J[0] << " j[1] " << J[1] <<endl;
 	for(int n = 0; n < axes.size(); ++n) {
 		int j = axes[n];
 
@@ -190,18 +191,29 @@ void PHConstraint::Setup() {
 		//   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
 		f[j] *= engine->shrinkRate;
 	}
+	//cout << "b " << b << endl;
+	//cout << "db " << db << endl;
 }
 
 bool PHConstraint::Iterate() {
 	bool updated = false;
+	//cout << "Before " << solid[0]->GetName()<<"->dv " << solid[0]->dv << endl;
+	//cout << "Before " << solid[1]->GetName()<<"->dv " << solid[1]->dv << endl;
+	//cout << "dA " << dA << endl;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
-		
 		// Gauss-Seidel Update
 		dv[i] = Dot6((const double*)J[0].row(i), (const double*)solid[0]->dv)
 			  + Dot6((const double*)J[1].row(i), (const double*)solid[1]->dv);
+		//cout << "dv[" << i << "] " << dv[i] << endl;
+		//cout << "b[" << i << "] " << b[i] << endl;
 		res [i] = b[i] + dA[i]*f[i] + dv[i];
+		//cout << "dA[" << i << "] " << dA[i] << endl;
+		//cout << "res[" << i << "] " << res[i] << endl;
 		fnew[i] = f[i] - Ainv[i] * res[i];
+		//cout << "Ainv[" << i << "] " << Ainv[i] << endl;
+		//cout << "f[" << i << "] " << f[i] << endl;
+		//cout << "fnew[" << i << "] " << fnew[i] << endl;
 
 		// Projection
 		Projection(fnew[i], i);
@@ -209,12 +221,14 @@ bool PHConstraint::Iterate() {
 		// Comp Response & Update f
 		df[i] = fnew[i] - f[i];
 		f [i] = fnew[i];
-
 		if(std::abs(df[i]) > engine->dfEps){
 			updated = true;
 			CompResponse(df[i], i);
 		}
 	}
+		//cout << "After "  << solid[0]->GetName() << "->dv " << solid[0]->dv << endl;
+		//cout << "After " << solid[1]->GetName() << "->dv " << solid[1]->dv << endl;
+		//cout << "PHConstraint Iterate f " << f << endl;
 	return updated;
 }
 
@@ -281,9 +295,11 @@ void PHConstraint::CompResponse(double df, int i) {
 	for(int k = 0; k < 2; k++){
 		switch(solidState[k]){
 		case 0:
+			//cout << name << " Compresponse 0" << endl;
 			break;
 		case 1:
 			(Vec6d&)Jrow = J[k].row(i);
+			//cout << "Compresponse " << solid[k]->GetName() << " k "  << k << " i " << i << " df " << df << endl;
 			solid[k]->treeNode->CompResponse(Jrow * df);
 			break;
 		case 2:

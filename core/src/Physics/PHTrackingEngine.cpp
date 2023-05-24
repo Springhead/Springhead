@@ -368,4 +368,17 @@ namespace Spr {
 		}
 		return inertiaSum;
 	}
+
+	// JointˆÊ’u‚©‚ç‚Ý‚½Šµ«ƒeƒ“ƒ\ƒ‹‚ð‹‚ß‚é
+	Matrix3d PHTrackingEngine::CalcInertiaFromJoint(PHSolidIf* solid, PHJointIf* joint) {
+		PHSolidIf* socket = joint->GetSocketSolid();
+		Posed socketPose;
+		joint->GetSocketPose(socketPose);
+		Posed jointPose = socket->GetPose() * socketPose;
+		Matrix3d R;
+		solid->GetPose().Ori().ToMatrix(R);
+		Matrix3d cross;
+		cross = Matrix3d::Cross(jointPose.Pos() - solid->GetCenterPosition());
+		return R * solid->GetInertia() * R.trans() - (float)solid->GetMass() * (cross * cross);
+	}
 }

@@ -70,7 +70,8 @@ namespace Spr {;
 		void SetMaxRootVelocity(double max) { maxRootVelocity = max; }
 		void SetMaxAngularVelocity(double max) { maxAngularVelocity = max; }
 		Vec3d CalcEigenvalue(Matrix3d a);
-		Matrix3d PHTrackingEngine::CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint);
+		Matrix3d CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint);
+		Matrix3d CalcInertiaFromJoint(PHSolidIf* solid, PHJointIf* joint);
 		ABATrackingNode* SearhABATrackingNode(PHRootNodeIf* root) {
 			for (ABATrackingNode& a : abaTrackingNodes) {
 				if (a.root == root) {
