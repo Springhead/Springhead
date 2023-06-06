@@ -268,6 +268,9 @@ bool PHConstraint::IterateCorrection() {
 // ----- このクラスで実装する機能
 
 void PHConstraint::CompJacobian(){ 
+	// 一ステップ前のヤコビアンを更新 <!!> SaveStateLoadState周りが上手くいかなくなると思われる
+	preJ[0] = J[0];
+	preJ[1] = J[1];
 	// 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
 	// Xj[i] : 剛体の質量中心からソケット/プラグへの変換
 

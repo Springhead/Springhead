@@ -197,6 +197,16 @@ void PHNDJointMotor<NDOF>::Setup(){
 template<int NDOF>
 bool PHNDJointMotor<NDOF>::Iterate(){
 	bool updated = false;
+	SpatialMatrix Jdot[2];
+	double dt = joint->GetScene()->GetTimeStep();
+	Jdot[0] = (joint->J[0] - joint->preJ[0])/*/ dt*/;
+	Jdot[1] = (joint->J[1] - joint->preJ[1])/*/ dt*/;
+	//cout << "Jdot[0] = " << Jdot[0] << endl;
+	//cout << "Jdot[1] = " << Jdot[1] << endl;
+	cout << "joint->J[0] = " << joint->J[0] << endl;
+	cout << "joint->preJ[0] = " << joint->preJ[0] << endl;
+	cout << "joint->J[1] = " << joint->J[1] << endl;
+	cout << "joint->preJ[1] = " << joint->preJ[1] << endl;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		int j = joint->movableAxes[i];
@@ -222,8 +232,6 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 			CompResponse(df[i], i);
 		}
 	}
-	PHNDJointMotorParam<NDOF> p; GetParams(p);
-	double dt = joint->GetScene()->GetTimeStep();
 
 	return updated;
 }
