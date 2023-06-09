@@ -122,6 +122,9 @@ public:
 	///   [0]：親剛体の質量中心からSocket座標系へのヤコビアン
 	///   [1]：子剛体の質量中心からPlug座標系経由でSocket座標系へのヤコビアン
 	SpatialMatrix preJ[2];
+	SpatialMatrix Jdot[2];
+	SpatialMatrix preJdot[2];
+	SpatialMatrix Jdotdot[2];
 
 	SpatialVector fAvg;					///< 拘束力にローパスをかけたもの
 	SpatialVector xs;					///< ばね部の距離（三要素モデル用）
