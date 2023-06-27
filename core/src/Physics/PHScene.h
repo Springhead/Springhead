@@ -79,7 +79,7 @@ public:
 	friend class PHFrame;
 	friend class Object;
 	friend class PHConstraint;
-	std::fstream simulationTimeFile;
+
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	///	コンストラクタ
 	PHScene(const PHSceneDesc& desc = PHSceneDesc());

@@ -50,7 +50,6 @@ void PHSceneDesc::Init(){
 //	PHScene
 PHScene::~PHScene() {
 	if (hapticEngine) hapticEngine->ReleaseState();
-	simulationTimeFile.close();
 }
 PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
@@ -101,7 +100,6 @@ void PHScene::Init(){
 	engines.Add(trackingEngine);
 
 	AfterSetDesc();
-
 }
 void PHScene::AfterSetDesc(){
 	gravityEngine->accel = gravity;
@@ -362,14 +360,6 @@ void PHScene::SetTimeStep(double dt){
 static UTQPTimer ptimerSce;
 
 void PHScene::Step(){
-	if (!simulationTimeFile.is_open()) {
-		std::time_t t = std::time(nullptr);
-		std::tm* now = std::localtime(&t);
-		std::stringstream fileName;
-		fileName << "simulationTime_" << name << "_" << GetSdk()->NScene() << "_" << now->tm_year+1900 << "-" << now->tm_mon + 1 << "-" << now->tm_mday << "-" << now->tm_hour+1 << "-" << now->tm_min << "-" << now->tm_sec << ".csv";
-		simulationTimeFile.open(fileName.str(), std::ios::out);
-		simulationTimeFile << "count,ClearForce,GenerateForce,Integrate,all" << std::endl;
-	}
 	int t0, t1, t2;
 	ptimerSce.CountUS();
 	ClearForce();
@@ -380,7 +370,6 @@ void PHScene::Step(){
 	ptimerSce.CountUS();
 	Integrate();
 	t2 = ptimerSce.CountUS();
-	simulationTimeFile << count << "," << t0 << "," << t1 << "," << t2 << "," << t0+t1+t2 << std::endl;
 	//DSTR << "clear: " << t0 << " gen: " << t1 << " int: " << t2 << std::endl;
 }
 void PHScene::ClearForce(){
