@@ -14,6 +14,7 @@
 #include <HumanInterface/SprHISdk.h>
 #include <HumanInterface/SprHIBase.h>
 #include <HumanInterface/SprHISpidar.h>
+#include <HumanInterface/SprHIKorokoro.h>
 #include <HumanInterface/SprHINovint.h>
 #include <HumanInterface/SprHIDevice.h>
 #include <HumanInterface/SprHIKeyMouse.h>

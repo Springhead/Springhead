@@ -63,7 +63,7 @@ enum B5M_PARAM{
 	B5M_MODEL_NUMBER = 7,
     B5M_NTARGET = 12,
     B5M_NMOTOR = 8,
-    B5M_NCURRENT = 0,
+    B5M_NCURRENT = 8,
     B5M_NFORCE = 4,
     B5M_NTOUCH = 0,
 };

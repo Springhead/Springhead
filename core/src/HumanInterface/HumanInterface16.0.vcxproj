@@ -411,6 +411,8 @@
     <ClCompile Include="DRWinDriver.cpp" />
     <ClCompile Include="HIBase.cpp" />
     <ClCompile Include="HIDevice.cpp" />
+    <ClCompile Include="HIKorokoro.cpp" />
+    <ClCompile Include="HIKorokoroMotor.cpp" />
     <ClCompile Include="HILeap.cpp" />
     <ClCompile Include="HINovintFalcon.cpp" />
     <ClCompile Include="HIRegisterTypeDesc.cpp" />
@@ -425,6 +427,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\HumanInterface\SprHIDRUart.h" />
+    <ClInclude Include="..\..\include\HumanInterface\SprHIKorokoro.h" />
     <ClInclude Include="..\..\include\HumanInterface\SprHILeap.h" />
     <ClInclude Include="..\..\include\HumanInterface\SprHISkeletonSensor.h" />
     <ClInclude Include="Device.h" />
@@ -454,6 +457,8 @@
     <ClInclude Include="DRWinDriver.h" />
     <ClInclude Include="HIBase.h" />
     <ClInclude Include="HIDevice.h" />
+    <ClInclude Include="HIKorokoro.h" />
+    <ClInclude Include="HIKorokoroMotor.h" />
     <ClInclude Include="HILeap.h" />
     <ClInclude Include="HINovintFalcon.h" />
     <ClInclude Include="HISdk.h" />

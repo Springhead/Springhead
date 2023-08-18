@@ -14,6 +14,7 @@
 #include <HumanInterface/DRCyUsb20Sh4.h>
 #include <HumanInterface/DRUartMotorDriver.h>
 #include <HumanInterface/HISpidar.h>
+#include <HumanInterface/HIKorokoro.h>
 #include <HumanInterface/HINovintFalcon.h>
 #include <HumanInterface/HISpaceNavigator.h>
 #include <HumanInterface/HITrackball.h>
@@ -47,6 +48,7 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidarG));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIKorokoro));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HINovintFalcon));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpaceNavigator));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HITrackball));
