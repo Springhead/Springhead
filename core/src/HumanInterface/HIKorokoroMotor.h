@@ -16,6 +16,8 @@ public:
 	//@{	デバイスアクセス
 	///	使用するD/A.
 	DVDaIf* da;
+	///	使用するエンコーダのカウンタ.
+	DVCounterIf* counter;
 	///	出力した力
 	float force;
 
@@ -34,6 +36,9 @@ public:
 		if (f > maxForce) f = maxForce;
 		if(da) da->Voltage(f * voltPerNewton);
 		force = f;
+		//モーター側に送る値のLog
+		std::fstream log("log_motorForce.txt", std::ios::app);
+		log << "motorForce" << f * voltPerNewton << " called." << std::endl;
 	}
 	///	実際に出力した力の取得
 	/*float GetForce(){
@@ -57,7 +62,13 @@ public:
 	float GetCurrent(){
 		return force * voltPerNewton * currentPerVolt;
 	}
-	
+
+	/// エンコーダのカウンタ値の読みだし
+	int GetCount() {
+		if (counter) return counter->Count();
+		else return 0;
+	}
+
 
 };
 

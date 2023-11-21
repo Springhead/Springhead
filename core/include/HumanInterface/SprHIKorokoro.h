@@ -19,6 +19,8 @@ struct HIKorokoroMotorIf: public HIBaseIf{
 	void SetLimitMaxForce(float f);
 	///	電流値の取得
 	float GetCurrent();
+	///	 エンコーダのカウント値を返す
+	int GetCount();
 	
 };
 ///	@name	モータについての定数
@@ -46,13 +48,12 @@ struct HIKorokoroMotorDesc{
 		maxForce		= 512.0f;
 		minForce		= -512.0f;
 		voltPerNewton	= 300.0f;
+		
 		currentPerVolt	= 1.0f;
-		//lengthPerPulse	= 2.924062107079e-5f;
 	}
 };
 struct HIKorokoroIf : public HIHapticIf{
 	SPR_VIFDEF(HIKorokoro);
-	///	Spidar's type (string to identify type of the SPIDAR
 	//const char* GetKorokoroType();
 	/// 最小出力の設定
 	void SetLimitMinForce(float f);
@@ -62,8 +63,14 @@ struct HIKorokoroIf : public HIHapticIf{
 	HIKorokoroMotorIf* GetMotor(size_t i);
 	///	モータの数
 	size_t NMotor() const;
-	//コロコロに送る力
-	Vec3d handForce = Vec3d(1, 1, 1);
+	///SetPose用
+	void SetPose(Posed pose);
+	//GetPose用
+	//Posef		GetPose() { return Posef(); };
+	
+	//タイヤに送る値
+	Vec3d SendForce;
+
 
 };
 struct HIKorokoroDesc{

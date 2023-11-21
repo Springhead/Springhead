@@ -76,6 +76,8 @@ SpatialVector PHHapticPointer::GetHapticForce() {
 	SpatialVector rv = hapticForce;
 	rv.v() = GetDefaultPose().Ori().Inv() * rv.v();
 	if (bRotation) rv.w() = GetDefaultPose().Ori().Inv() * rv.w();
+	std::fstream log("log_GethapticForce.txt", std::ios::app);
+	log << "GethapticForce" << rv << ") called." << std::endl;
 	return rv;
 }
 

@@ -46,6 +46,20 @@ void HIBase::Update(float dt){
 		updateStep = deviceUpdateStep;
 	}
 }
+//コロコロ用
+//void HIBase::Update(float dt,Vec3d Pos) {
+//	updateStep++;
+//	if (updateStep > deviceUpdateStep) {
+//		UTRef<HIBase::RealDevices> rd = GetRealDevices();
+//		for (std::set<HIRealDevice*>::iterator it = rd->begin(); it != rd->end(); ++it) {
+//			(*it)->Update();
+//		}
+//		deviceUpdateStep = updateStep;
+//	}
+//	else {
+//		updateStep = deviceUpdateStep;
+//	}
+//}
 /*
 //-----------------------------------------------------------------
 //	HIPosition

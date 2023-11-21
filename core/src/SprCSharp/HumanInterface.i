@@ -14,6 +14,7 @@
 %include "../../include/HumanInterface/SprHIBase.h"
 %include "../../include/HumanInterface/SprHIDevice.h"
 %include "../../include/HumanInterface/SprHIDRUsb.h"
+%include "../../include/HumanInterface/SprHIDRUart.h"
 %include "../../include/HumanInterface/SprHIJoyStick.h"
 %include "../../include/HumanInterface/SprHIKeyMouse.h"
 %include "../../include/HumanInterface/SprHISkeletonSensor.h"

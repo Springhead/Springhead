@@ -186,6 +186,7 @@ public:
 				}
 			}
 			bool bBoardFound = false;
+			
 			for (auto board : boards) {
 				if (board->GetBoardId() == cmdHeader.boardId) {
 					bBoardFound = true;

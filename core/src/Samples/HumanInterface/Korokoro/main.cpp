@@ -19,7 +19,10 @@
 #include <iomanip>
 #include<HumanInterface/SprHIKorokoro.h>
 #include<HumanInterface/HIKorokoro.h>
+#include <fstream>
+#include<iostream>
 using namespace Spr;
+using namespace std;
 
 #ifdef _WIN32
 #include <windows.h>
@@ -59,6 +62,23 @@ int __cdecl main(){
 	
 	hiSdk->Print(DSTR);
 	hiSdk->Print(std::cout);
+
+
+
+
+	/*if (uidlFile.is_open())
+	{
+		uidlFile << filename << "\n---\n";
+		
+		uidlFile.close();
+	}
+	else
+	{
+		cout << "Cannot open file";
+	}*/
+
+
+	
 
 	enum class Mode {
 		NONE,
@@ -109,41 +129,40 @@ int __cdecl main(){
 		}
 		
 		//DPF("t=%d", t);
-		korokoro->Update(0.001f);
-		Vec3f korokoroForce=korokoro->handForce;
-		//手にかかる力のほうのSetForce?
-		//Vec3f handForce(10.0, 10.0, 10.0);
-		//korokoro->SetForce(handForce, Vec3f());
-		if (mode == Mode::RIGHT) {			
-			if (_kbhit()) {
-				if (_getch() == 'w') {
-					korokoroForce.x += 10.0f;
-				}
-				if (_getch() == 's') {
-					korokoroForce.x -= 10.0f;
-				}
-			}
-		}
-		else if (mode == Mode::LEFT) {
-			if (_kbhit()) {
-				if (_getch() == 'w') {
-					korokoroForce.y += 10.0f;
-				}
-				if (_getch() == 's') {
-					korokoroForce.y -= 10.0f;
-				}
-			}
-		}
-		else if (mode == Mode::GRIP) {
-			if (_kbhit()) {
-				if (_getch() == 'w') {
-					korokoroForce.z += 10.0f;
-				}
-				if (_getch() == 's') {
-					korokoroForce.z -= 10.0f;
-				}
-			}
-		}
+		//korokoro->Update(0.001f);
+		//Vec3f korokoroForce=korokoro->handForce;
+		////Vec3f handForce(10.0, 10.0, 10.0);
+		////korokoro->SetForce(handForce, Vec3f());
+		//if (mode == Mode::RIGHT) {			
+		//	if (_kbhit()) {
+		//		if (_getch() == 'w') {
+		//			korokoroForce.x += 10.0f;
+		//		}
+		//		if (_getch() == 's') {
+		//			korokoroForce.x -= 10.0f;
+		//		}
+		//	}
+		//}
+		//else if (mode == Mode::LEFT) {
+		//	if (_kbhit()) {
+		//		if (_getch() == 'w') {
+		//			korokoroForce.y += 10.0f;
+		//		}
+		//		if (_getch() == 's') {
+		//			korokoroForce.y -= 10.0f;
+		//		}
+		//	}
+		//}
+		//else if (mode == Mode::GRIP) {
+		//	if (_kbhit()) {
+		//		if (_getch() == 'w') {
+		//			korokoroForce.z += 10.0f;
+		//		}
+		//		if (_getch() == 's') {
+		//			korokoroForce.z -= 10.0f;
+		//		}
+		//	}
+		//}
 		/*else if (mode == Mode::DEBUG) {
 			korokoro->SetForce(Vec3d(10000, 0, 0), Vec3d(10000, 0, 0));
 		}*/
