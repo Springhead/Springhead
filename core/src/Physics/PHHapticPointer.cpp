@@ -17,9 +17,9 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	bVibration = false;
 	posScale = 1.0;
 	localRange = 1.0;
-	frictionSpring = 400.0f;
-	reflexSpring = 1000.0f;
-	reflexDamper = 0.0f;
+	frictionSpring = 5.0f;
+	reflexSpring = 10.0f;
+	reflexDamper = 1.0f;
 	rotationReflexSpring = 10.0f;
 	rotationReflexDamper = 0.0f;
 	rotaionalWeight = 1e5;

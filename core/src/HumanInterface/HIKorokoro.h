@@ -4,6 +4,8 @@
 
 #include <HumanInterface/HIKorokoroMotor.h>
 #include <vector>
+#include <Base/TMatrixUtility.h>
+#include <Base/TMatrix.h>
 #include<fstream>
 #include<iostream>
 
@@ -41,6 +43,15 @@ public:
 	int counterR;
 	int counterL;
 	int counterT;
+	double beforeR;
+	double beforeL;
+	double beforeT;
+	double difR;
+	double difL;
+	double difT;
+	Quaterniond difOri;
+
+	float time;
 
 	
 	virtual bool Init(const void* desc);
@@ -82,19 +93,44 @@ public:
 	float pitchOffset = -0.119f;
 
 	//バーチャルカップリングをコロコロ用に直した力
-	Vec3d korokoroForce;
+	Vec3f korokoroForce;
+	Vec3d springForce;
 	//コロコロSetPose用
-	Vec3d		setPosition;
+	Vec3f		setPosition;
+	Vec3f setPositionInit=Vec3d(0,0,0);
+	Vec3f beforeSetPosition;
     Quaterniond setOrientation;
 	void SetPose(Posed pose);
 	//コロコロ	GetPose用
 	Vec3f		GetPosition() { return setPosition; }
 	Quaternionf GetOrientation() { return setOrientation; }
+	//カルマンフィルタの配列
+	//エンコーダの重み
+	float kwheel = 1;
+	float ktorque = 1;
+	//PTM::TMatrixRow<3, 4, float> matH1;
+	//typedef PTM::TMatrixRow<4, 4, float> Matrix4f;
+	//Matrix4f I;
+    //Matrix4f Q;
+	Vec3f mixPos;
+	Vec3f sensorPos;
+	Vec3f counterPos;
+	Vec3f temp;
+	Quaterniond tempOri;
+	Quaterniond beforeOri;
+	Quaterniond mixOri;
+	Quaterniond sensorOri;
+	Quaterniond counterOri;
+
+	
+	
+		
+	
 
 
 
 	 
-};
+ };
 
 
 

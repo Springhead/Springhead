@@ -45,9 +45,10 @@ struct HIKorokoroMotorDesc{
 
 	HIKorokoroMotorDesc(){
 		ch				= -1;
-		maxForce		= 512.0f;
-		minForce		= -512.0f;
-		voltPerNewton	= 300.0f;
+		maxForce		= 2.0f;
+		minForce		= -2.0f;
+		//voltPerNewton	= 0.25f;
+		voltPerNewton	= 25.0;
 		
 		currentPerVolt	= 1.0f;
 	}
