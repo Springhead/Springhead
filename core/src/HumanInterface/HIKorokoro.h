@@ -51,7 +51,7 @@ public:
 	double difT;
 	Quaterniond difOri;
 
-	float time;
+	float korokoroTimer;
 
 	
 	virtual bool Init(const void* desc);
@@ -75,16 +75,18 @@ public:
 	Vec3d right = Vec3d(1, 0, 0);
 	//棒の長さ
 	float l1 = 1.36f;
-	float l2 = 0.17f;
+	float l2 = 0.07f;
+	float lh = 0.1f;
 	float l3 = 0.63f;
 	//モーターにかかる値
 	float f1;
 	float f2;
 	float T;
+	float vertical;
 	//送る値
 	Vec3d SendForce;
 	//持ち手の重みに反比例する
-	float kForMass = 0.001f;
+	float kForMass = 30;
 
 	float maxCommand = 512;
 
@@ -102,8 +104,8 @@ public:
     Quaterniond setOrientation;
 	void SetPose(Posed pose);
 	//コロコロ	GetPose用
-	Vec3f		GetPosition() { return setPosition; }
-	Quaternionf GetOrientation() { return setOrientation; }
+	virtual Vec3f		GetPosition() { return setPosition; }
+	virtual Quaternionf GetOrientation() { return setOrientation; }
 	//カルマンフィルタの配列
 	//エンコーダの重み
 	float kwheel = 1;
