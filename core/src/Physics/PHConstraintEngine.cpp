@@ -700,11 +700,15 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 		s->UpdatePosition(dt);
 	}
 	//# pragma omp for
-	for(int i = 0; i < (int)trees.size(); i++)
+
+	for (PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		(*it)->UpdateVelocitySolid(&dt);
+
+	for (int i = 0; i < (int)trees.size(); i++)
 		trees[i]->UpdatePosition(dt);
 
-	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->UpdateVelocitySolid(&dt);
+
+
 }
 
 void PHConstraintEngine::StepPart1(){

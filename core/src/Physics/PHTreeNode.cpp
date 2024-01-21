@@ -576,6 +576,7 @@ void PHRootNode::UpdatePosition(double dt){
 		}
 		solid->aabbReady = false;
 	}else{
+		//solid->Step();
 		solid->UpdatePosition(dt);
 	}
 	solid->SetUpdated(true);
