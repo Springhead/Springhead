@@ -86,7 +86,7 @@ public:
 	//送る値
 	Vec3d SendForce;
 	//持ち手の重みに反比例する
-	float kForMass = 30;
+	float kForMass = 10;
 
 	float maxCommand = 512;
 

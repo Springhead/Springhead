@@ -64,8 +64,8 @@ namespace Spr {
 		setPosition = pose.Pos();
 		setOrientation = pose.Ori();
 		//if (beforeSetPosition == Vec3d(0, 0, 0)) { beforeSetPosition = setPosition; }
-		std::fstream log("log_SetPose.txt", std::ios::app);
-		log << "SetPose" << setPosition << " called." << "\n";
+		/*std::fstream log("log_SetPose.txt", std::ios::app);
+		log << "SetPose" << setPosition << " called." << std::endl;*/
 	}
 
 
@@ -77,7 +77,8 @@ namespace Spr {
 		springForce = Force;
 		// 重さ分係数をかける
 		springForce *= kForMass;
-		Posed solidPose = GetPose();
+		
+		
 		
 	}
 
@@ -90,8 +91,8 @@ namespace Spr {
 		difR = (counterR - beforeR) * 3.06e-5f;
 		difL = (counterL - beforeL) * 3.06e-5f;
 		difT = (counterT - beforeT) * 1.2e-5f;
-		std::fstream log1("log_counter.txt", std::ios::app);
-		log1 << difR << "\t" << difL << "\t" << difT << "\t" << std::endl;
+		/*std::fstream log1("log_counter.txt", std::ios::app);
+		log1 << difR << "\t" << difL << "\t" << difT << "\t" << std::endl;*/
 		//エンコーダによる現在位置の差分
 		counterPos.z = (difR + difL) * 0.5;
 		counterPos.x = (difR - difL) * 0.5;
@@ -138,11 +139,11 @@ namespace Spr {
 		f1 = (fItem1 + fItem2);
 		f2 = (fItem1 - fItem2);
 		//T = (korokoroForce.y * cosTheta + korokoroForce.z * sinTheta) * l1;
-		T = korokoroForce.y * lh + l2 * korokoroForce.z * tanTheta ;
+		T = korokoroForce.y * lh + (l2+lh) * korokoroForce.z * tanTheta ;
 		vertical = T;
 		/*T = korokoroForce.y * lh + l2 * korokoroForce.z * tanTheta * 0.8;
 		vertical = T*3;*/
-		if (vertical<0.1 && vertical>-0.1) { vertical = 0; }
+		if (vertical<0.01 && vertical>-0.01) { vertical = 0; }
 
 		//エンコーダの一個前の値を保存
 		beforeR = counterR;
@@ -165,9 +166,19 @@ namespace Spr {
 		SendForce = Vec3d(f1, f2, vertical);
 		std::fstream log5("log_sendforce.txt", std::ios::app);
 		log5 <<   f1 << "\t" << f2 << "\t" << T << std::endl;
+		std::fstream log8("log_f1.txt", std::ios::app);
+		log8 << f1 << std::endl;
+		std::fstream log10("log_f2.txt", std::ios::app);
+		log10 <<f2 <<  std::endl;
+		std::fstream log11("log_T.txt", std::ios::app);
+		log11 << T << std::endl;
+		std::fstream log9("log_finalPos.txt", std::ios::app);
+		log9 << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z <<  std::endl;
+		std::fstream log7("log_finalPosZ.txt", std::ios::app);
+		log7 <<  mixPos.z <<  std::endl;
 		korokoroTimer += 0.001f;
 		std::fstream log("log.txt", std::ios::app);
-		log << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z << "\t" << setPosition.x << "\t" << setPosition.y << "\t" << setPosition.z << "\t"  <<korokoroTimer<<"\t" << f1 << "\t" << f2 << "\t" << T << "\t" << springForce.x << "\t" << springForce.y << "\t" << springForce.z << "\t" << difR << std::endl;
+		log << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z  << "\t"  << f1 << "\t" << f2 << "\t" << T <<  std::endl;
 		//モーターに送る
 		motors[0].SetForce(SendForce.x);
 		motors[1].SetForce(SendForce.y);
