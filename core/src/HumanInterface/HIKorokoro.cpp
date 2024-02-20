@@ -83,26 +83,31 @@ namespace Spr {
 	}
 
 	void HIKorokoro::Update(float dt) {
+		// thetaとphiのsinとcosを求める（詳細はScrapBoxに載せる）
+		float sinPhi = 0;
+		float cosPhi = sqrt(1 - (sinPhi * sinPhi));
+		float sinTheta = (mixPos.y - (l2 * sinPhi)) / l1;
+		float cosTheta = sqrt(1 - (sinTheta * sinTheta));
+		float tanTheta = sinTheta / cosTheta;
+
 		//エンコーダーの値取得
 		counterR = motors[0].GetCount();
 		counterL = motors[1].GetCount();
 		counterT = motors[2].GetCount();
 		//エンコーダの値の増減　スケール合わせた
-		difR = (counterR - beforeR) * 3.06e-5f;
-		difL = (counterL - beforeL) * 3.06e-5f;
-		difT = (counterT - beforeT) * 1.2e-5f;
-		/*std::fstream log1("log_counter.txt", std::ios::app);
-		log1 << difR << "\t" << difL << "\t" << difT << "\t" << std::endl;*/
+		difR = (counterR - beforeR) * 6.13e-5f;
+		difL = (counterL - beforeL) * 6.13e-5f;
+		difT = (counterT - beforeT) * 2.95e-5f;
+		
 		//エンコーダによる現在位置の差分
 		counterPos.z = (difR + difL) * 0.5;
-		counterPos.x = (difR - difL) * 0.5;
+		counterPos.x = l1*cosTheta*(difR - difL) /l3;
 		counterPos.y = difT;
-		//新しいsetPose入ってきたら1%ずつ反映させる
-		sensorPos += (setPosition - beforeSetPosition) * 0.1;
-		sensorOri += (setOrientation - beforeOri) * 0.1;
+		////新しいsetPose入ってきたら1%ずつ反映させる
+		//sensorPos += (setPosition - beforeSetPosition) * 0.1;
 		//エンコーダによる現在値と新しいsetPositionに近づけた値をmix
 		mixPos = setPosition+ counterPos;
-		mixOri = sensorOri;
+		
 		//速度計算のためにgetpose渡してる　モータードライバーとの通信もこの中
 		HIHaptic::Update(dt);
 
@@ -124,25 +129,13 @@ namespace Spr {
 		korokoroForce.x = normalizedR.x * springForce.x + normalizedR.y * springForce.y + normalizedR.z * springForce.z;
 		// 前後方向の力
 		korokoroForce.z = normalizedF.x * springForce.x + normalizedF.y * springForce.y + normalizedF.z * springForce.z;
-
-		// thetaとphiのsinとcosを求める（詳細はScrapBoxに載せる）
-		//float sinPhi = (setOrientation * forward).y;
-		float sinPhi = 0;
-		float cosPhi = sqrt(1 - (sinPhi * sinPhi));
-		float sinTheta = (mixPos.y - (l2 * sinPhi)) / l1;
-		float cosTheta = sqrt(1 - (sinTheta * sinTheta));
-		float tanTheta = sinTheta / cosTheta;
-
 		// f_1, f_2, T に合うようにそれぞれの力を求める
 		float fItem1 = korokoroForce.z / 2.0f;
 		float fItem2 = korokoroForce.x * (l1 * cosTheta + l2 * cosPhi) / l3;
 		f1 = (fItem1 + fItem2);
 		f2 = (fItem1 - fItem2);
-		//T = (korokoroForce.y * cosTheta + korokoroForce.z * sinTheta) * l1;
 		T = korokoroForce.y * lh + (l2+lh) * korokoroForce.z * tanTheta ;
 		vertical = T;
-		/*T = korokoroForce.y * lh + l2 * korokoroForce.z * tanTheta * 0.8;
-		vertical = T*3;*/
 		if (vertical<0.01 && vertical>-0.01) { vertical = 0; }
 
 		//エンコーダの一個前の値を保存
@@ -164,19 +157,7 @@ namespace Spr {
 		tempOri = setOrientation;
 
 		SendForce = Vec3d(f1, f2, vertical);
-		std::fstream log5("log_sendforce.txt", std::ios::app);
-		log5 <<   f1 << "\t" << f2 << "\t" << T << std::endl;
-		std::fstream log8("log_f1.txt", std::ios::app);
-		log8 << f1 << std::endl;
-		std::fstream log10("log_f2.txt", std::ios::app);
-		log10 <<f2 <<  std::endl;
-		std::fstream log11("log_T.txt", std::ios::app);
-		log11 << T << std::endl;
-		std::fstream log9("log_finalPos.txt", std::ios::app);
-		log9 << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z <<  std::endl;
-		std::fstream log7("log_finalPosZ.txt", std::ios::app);
-		log7 <<  mixPos.z <<  std::endl;
-		korokoroTimer += 0.001f;
+
 		std::fstream log("log.txt", std::ios::app);
 		log << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z  << "\t"  << f1 << "\t" << f2 << "\t" << T <<  std::endl;
 		//モーターに送る
@@ -191,7 +172,6 @@ namespace Spr {
 		type = "Korokoro";
 		int nMotor = 3;
 		float vpn = 0.25f;
-		//float vpn = 25.0;
 		float minF = -2.0;
 		float maxF = 2.0;
 
@@ -205,58 +185,7 @@ namespace Spr {
 	}
 	
 	
-	//後で戻す
-	//void HIKorokoro::SetForce(const Vec3f& Force, const Vec3f&) {
-	//	// thetaとphiのsinとcosを求める（詳細はScrapBoxに載せる）
-	//	//float sinPhi = (handRotation * forward).y;
-	//	float sinPhi = 0;
-	//	float cosPhi = sqrt(1 - (sinPhi * sinPhi));
-	//	float sinTheta = (setPosition.y - (l2 * sinPhi)) / l1;
-	//	float cosTheta = sqrt(1 - (sinTheta * sinTheta));
 
-	//	// f_1, f_2, T に合うようにそれぞれの力を求める
-	//	float fItem1 = Force.z / 2.0f;
-	//	float fItem2 = Force.x * (l1 * cosTheta + l2 * cosPhi) / l3;
-	//	float f1 = fItem1 + fItem2;
-	//	float f2 = fItem1 - fItem2;
-	//	float T = (Force.y * cosTheta + Force.z * sinTheta) * l1;
-		//カルマンフィルタの実装
-		///４＊４単位行列
-		//I = Matrix4f(); for (int i = 0; i < 4; ++i) { I[i][i] = 1.0f; };
-		//時間経過で増えるエンコーダの分散
-		//Q = Matrix4f(); Q[0][0] = 0; Q[1][1] = 0; Q[2][2] = 0;
-		/*///エンコーダの重みの値代入
-		matH1[1][0] =  0.5f * kwheel;  matH1[1][1] = 0.5f * kwheel;  matH1[1][2] = 0;          matH1[1][3] = 0;
-		matH1[1][0] = -0.5f * kwheel;  matH1[1][1] = 0.5f * kwheel;  matH1[1][2] = 0;          matH1[1][3] = 0;
-		matH1[2][0] = 0;               matH1[2][1] = 0;              matH1[1][2] = 1*ktorque;  matH1[1][3] = 0;
-		matH1[3][0] = 0;               matH1[3][1] = 0;              matH1[3][2] = 1;          matH1[3][3] = 0;*/
-
-	//	
-	//}
-
-	//void HIKorokoro::SetForce(Vec3d Force, Vec3d Pos) {
-	//	// thetaとphiのsinとcosを求める（詳細はScrapBoxに載せる）
-	//	//float sinPhi = (handRotation * forward).y;
-	//	float sinPhi = 0;
-	//	float cosPhi = sqrt(1 - (sinPhi * sinPhi));
-	//	float sinTheta = (handPos.y - (l2 * sinPhi)) / l1;
-	//	float cosTheta = sqrt(1 - (sinTheta * sinTheta));
-
-	//	// f_1, f_2, T に合うようにそれぞれの力を求める
-	//	float fItem1 = Force.z / 2.0f;
-	//	float fItem2 = Force.x * (l1 * cosTheta + l2 * cosPhi) / l3;
-	//	f1 = fItem1 + fItem2;
-	//	f2 = fItem1 - fItem2;
-	//	float T = (Force.y * cosTheta + Force.z * sinTheta) * l1;
-
-
-	//	//SendForce = Vec3d(f1, f2, T);
-
-	//	std::fstream log("SendForce.txt", std::ios::app);
-	//	log << "SetForce(" << SendForce << ") called." << std::endl;
-
-
-	//}
 	
 	
 
