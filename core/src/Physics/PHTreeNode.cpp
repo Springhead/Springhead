@@ -256,7 +256,6 @@ void PHTreeNode::CompCoriolisAccel(){
 		        - SpatialTransform(Vec3d(), Xj1  .q) * ccj);
 	c += Xcj * cj;
 	c *= GetPHScene()->GetTimeStep();
-	//c.clear();
 }
 
 void PHTreeNode::InitArticulatedInertia(){
@@ -306,6 +305,7 @@ void PHTreeNode::CompArticulatedBiasForce(){
 		(*it)->CompArticulatedBiasForce();
 
 	ZplusIc = Z + Ic;
+
 	//親ノードにZaを積む
 	AccumulateBiasForce();
 }
@@ -361,6 +361,7 @@ void PHTreeNode::UpdateVelocity(double* dt){
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdateVelocity(dt);
 }
+
 void PHTreeNode::UpdateVelocitySolid(double* dt) {
 	PHSolid* sp = parent->solid;
 	PHSolid* s  = solid;
@@ -383,10 +384,6 @@ void PHTreeNode::UpdatePosition(double dt){
 	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
 	s->SetOrientation(Xc.q);
 	s->SetCenterPosition(Xc.r);
-
-	//s->SetVelocity       (s->GetOrientation() * s->v.v());
-	//s->SetAngularVelocity(s->GetOrientation() * s->v.w());
-
 	s->SetUpdated(true);
 	
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
@@ -453,17 +450,9 @@ void PHRootNode::Setup(){
 	// articulated inertiaを計算
 	InitArticulatedInertia();
 	CompArticulatedInertia();
-
-	// コールバック
-	if (compControlForce != NULL) {
-		compControlForce(this->GetObjectIf()->Cast(), arg);
-	}
-
 	// articulated bias forceを計算
 	InitArticulatedBiasForce();
 	CompArticulatedBiasForce();
-
-
 	// 慣性力と外力による加速度を計算
 	CompAccel();
 	// 拘束力変化に対する加速度変化のマップを作成
@@ -556,6 +545,7 @@ void PHRootNode::UpdateVelocitySolid(double* dt){
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdateVelocitySolid(dt);
 }
+
 void PHRootNode::UpdatePosition(double dt){
 	if(!bEnabled)
 		return;
@@ -579,14 +569,8 @@ void PHRootNode::UpdatePosition(double dt){
 		solid->UpdatePosition(dt);
 	}
 	solid->SetUpdated(true);
-
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdatePosition(dt);
-}
-
-void PHRootNode::SetCompControlForceCallback(PHRootNodeIf::CompControlForce f, void* a) {
-	compControlForce = f;
-	arg = a;
 }
 
 //-----------------------------------------------------------------------------
@@ -740,9 +724,7 @@ void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 		if(gearRoot == this)
 			parent->Z += sumXtrZplusIc + sumXtrIJ_sumJIJinv * (- sumJtrZplusIc);
 	}
-	else {
-		parent->Z += XtrZplusIc + XtrIJ_JIJinv * (-JtrZplusIc); 
-	}
+	else parent->Z += XtrZplusIc + XtrIJ_JIJinv * (- JtrZplusIc);
 }
 
 template<int NDOF>
@@ -801,7 +783,6 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompResponse(PHTreeNode* src, const SpatialVector& df){
 	solid->dv += dZdv_map  [src->id] * (-df);
 	dvel      += dZdvel_map[src->id] * (-df);
-	//DSTR << "PHTreeNodeND<NDOF>::CompResponse" << joint->GetName()<< " dvel " << dvel  << "solid->dv " << solid->dv << " df " << df << endl;
 }
 
 template<int NDOF>
@@ -821,9 +802,8 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
 	}
 	else{
-		dvel              = -JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
+		dvel              = - JIJinv * ((XtrIJ.trans() * parent->solid->dv) + JtrZplusIc);
 		(Vec6d&)solid->dv = Xcp_mat * parent->solid->dv + c + J * dvel;
-		//DSTR  << "CompAccel " << joint->GetName() << "dvel " << dvel << " solid->dv " << solid->dv << endl;
 	}
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)

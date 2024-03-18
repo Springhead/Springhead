@@ -45,7 +45,6 @@ namespace Spr {
 		newABATrackingInput.root = root;
 		newABATrackingInput.trackingRootPosition = input;
 		abaTrackingInputs.push_back(newABATrackingInput);
-		//trackingRootPosition = input;
 	}
 
 	void PHTrackingEngine::AddTrackingNode(PHRootNodeIf* root, PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot) {
@@ -90,8 +89,6 @@ namespace Spr {
 				}
 			}
 		}
-		//PliantMotion *p = new PliantMotion();
-		//p->SetTrackingInput();
 	}
 
 	void PHTrackingEngine::DeleteTrackingNodes(PHRootNodeIf* root) {
@@ -140,7 +137,6 @@ namespace Spr {
 					trackingNode.localAngularVelocity = trackingNode.localAngularVelocity * (maxAngularVelocity / trackingNode.localAngularVelocity.norm());
 					trackingNode.plugInput = Quaterniond::Rot(trackingNode.localAngularVelocity * timeStep) * trackingNode.calcRootSolid->GetOrientation();
 				}
-				//DSTR << "localAngularVelocity:" << trackingNode.calcRootSolid->GetName() << " localAngularVelocity " << trackingNode.localAngularVelocity << " localAngularVelocityDot " << trackingNode.localAngularVelocityDot << endl;
 			} else {
 				PHSolidIf* calcSocketSolid = trackingNode.calcJoint->GetSocketSolid();
 				PHSolidIf* calcPlugSolid = trackingNode.calcJoint->GetPlugSolid();
@@ -151,7 +147,6 @@ namespace Spr {
 
 				Quaterniond jointRotationSocketInput = trackingNode.socketInput * socketPose.Ori();
 				Quaterniond jointRotationPlugInput = trackingNode.plugInput * plugPose.Ori();
-				//DSTR << "trackingNode.socketInput" << trackingNode.socketInput << " " << socketPose.Ori() << "jointRotationSocketInput " << jointRotationSocketInput << " " << jointRotationPlugInput << endl;
 				trackingNode.jointTargetRotation = jointRotationSocketInput.Inv() * jointRotationPlugInput;
 
 				Quaterniond jointRotationPlugSolid = calcPlugSolid->GetOrientation() * plugPose.Ori();
@@ -209,12 +204,6 @@ namespace Spr {
 				node = node->parent;
 			}
 			trackingNode.globalAngularVelocity = globalAngularVelocity;
-			//if (trackingNode.isRoot) {
-			//	DSTR << "root :" << trackingNode.calcRootSolid->GetName() << " globalAngularVelocity " << trackingNode.globalAngularVelocity << endl;
-			//}
-			//else {
-			//	DSTR << "calcJoint:" << trackingNode.calcJoint->GetName() << " globalAngularVelocity " << trackingNode.globalAngularVelocity << endl;
-			//}
 		}
 
 		// Globalç¿ïWånÇÃäpâ¡ë¨ìxÇåvéZ
@@ -224,26 +213,18 @@ namespace Spr {
 			} else {
 				trackingNode.globalAngularVelocityDot = (trackingNode.globalAngularVelocity - trackingNode.calcJoint->GetPlugSolid()->GetAngularVelocity()) / timeStep;
 			}
-			//if (trackingNode.isRoot) {
-			//	DSTR << "globalAngularVelocityDot " << "root :" << trackingNode.calcRootSolid->GetName() << trackingNode.globalAngularVelocityDot << endl;
-			//}
-			//else {
-			//	DSTR << "globalAngularVelocityDot " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.globalAngularVelocityDot << endl;
-			//}
 		}
 
 		// RootÇÃDynamicalOffÇÃçÑëÃÇÃâ¡ë¨ìxÇåvéZ
 		for (TrackingNode& trackingNode : trackingNodes) {
 			if (trackingNode.isRoot) {
 				trackingNode.rootAccelerration = (trackingNode.globalVelocity - trackingNode.calcRootSolid->GetVelocity()) / timeStep;
-				//DSTR << "root :" << trackingNode.calcRootSolid->GetName() << " rootAcceleration  " << trackingNode.rootAccelerration << endl;
 				break;
 			}
 		}
 
 		// â¡ë¨ìxÇåvéZ
 		for (TrackingNode& trackingNode : trackingNodes) {
-			//trackingNode.globalA
 			TrackingNode* node = &trackingNode;
 			Vec3d tipPos;
 			if (trackingNode.isRoot) {
@@ -267,12 +248,6 @@ namespace Spr {
 				node = node->parent;
 			}
 			trackingNode.globalAcceleration = globalAcceleration;
-			//if (trackingNode.isRoot) {
-			//	DSTR << "globalAcceleration " << "root :" << trackingNode.calcRootSolid->GetName() << trackingNode.globalAcceleration << endl;
-			//}
-			//else {
-			//	DSTR << "globalAcceleration " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.globalAcceleration << endl;
-			//}
 		}
 
 		// ñ⁄ïWäpìxÇê›íËÅADynamicalOffÇæÇØâ¡ë¨ìxÇîΩâf
@@ -289,14 +264,11 @@ namespace Spr {
 				calcRootNode->SetUseNextPose(true);
 				reactRootNode->SetNextPose(posed);
 				calcRootNode->SetNextPose(posed);
-				//DSTR << "dv " << dv << endl;
 			} else {
 				trackingNode.calcJoint->SetTargetPosition(trackingNode.preLocalTargetRotation);
 				trackingNode.reactJoint->SetTargetPosition(trackingNode.preLocalTargetRotation);
 				trackingNode.calcJoint->SetTargetVelocity(trackingNode.localAngularVelocity);
 				trackingNode.reactJoint->SetTargetVelocity(trackingNode.localAngularVelocity);
-				//DSTR << "preLocalTargetRotation " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.preLocalTargetRotation << endl;
-				//DSTR << "localAngularVelocity " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.localAngularVelocity << endl;
 			}
 		}
 
@@ -305,12 +277,10 @@ namespace Spr {
 			if (trackingNode.isRoot) {
 				trackingNode.targetAcceleration = SpatialVector(trackingNode.calcRootSolid->GetOrientation().Inv() * trackingNode.rootAccelerration,
 					trackingNode.calcRootSolid->GetOrientation().Inv() * trackingNode.globalAngularVelocityDot);
-				//DSTR << "root tragetAcceleration" << trackingNode.targetAcceleration << trackingNode.calcRootSolid->GetOrientation() << trackingNode.rootAccelerration << trackingNode.globalAngularVelocityDot<<  endl;
 			} else {
 				PHBallJointNodeIf* calcTreeNode = trackingNode.calcJoint->GetPlugSolid()->GetTreeNode()->Cast();
 				PHBallJointNodeIf* reactTreeNode = trackingNode.reactJoint->GetPlugSolid()->GetTreeNode()->Cast();
 				AddTrackingForce(calcTreeNode, reactTreeNode, timeStep, trackingNode.localAngularVelocityDot, trackingNode.parent->targetAcceleration, trackingNode.targetAcceleration, trackingNode.trackingForce, trackingNode.trackingTorque);
-				//DSTR << "trackingNode.targetAcceleration " << "calcJoint:" << trackingNode.calcJoint->GetName() << trackingNode.targetAcceleration << endl;
 			}
 		}
 
@@ -319,12 +289,14 @@ namespace Spr {
 			trackingNode.preLocalTargetRotation = trackingNode.jointTargetRotation;
 		}
 	}
+
 	void PHTrackingEngine::AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque) {
 #ifdef USE_CLOSED_SRC
 		PliantMotion* p = new PliantMotion();
 		p->AddTrackingForce(calcNode->Cast(), reactNode, timeStep, targetAngularAcceleration, parentTargetAcceleration, targetAcceleration, force, torque);
 #endif
 	}
+
 	Vec3d PHTrackingEngine::CalcEigenvalue(Matrix3d a) {
 		Matrix3d b, v;
 		Vec3d e;
@@ -340,7 +312,8 @@ namespace Spr {
 		}
 		return NULL;
 	}
-	// Plugë§ÇíHÇ¡ÇƒInertiaÇë´Ç∑
+
+	// Plugë§ÇíHÇ¡ÇƒInertiaÇÃçáåvÇãÅÇﬂÇÈ
 	Matrix3d PHTrackingEngine::CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint) {
 		Matrix3d inertiaSum;
 		inertiaSum.clear();
@@ -361,8 +334,6 @@ namespace Spr {
 		for (int i = 0; i < scene->NJoints(); i++) {
 			PHJointIf* sceneJoint = scene->GetJoint(i);
 			if (solid == sceneJoint->GetSocketSolid()) {
-				//DSTR << joint->GetName() << " " <<  << "cross " << cross << endl;
-				//DSTR << joint->GetName() << ", socket  " <<  joint->GetSocketSolid()->GetName() << ", plug " << joint->GetPlugSolid()->GetName() << endl;
 				inertiaSum += CalcLeavesInertia(sceneJoint->GetPlugSolid(), joint);
 			}
 		}

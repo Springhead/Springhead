@@ -1039,10 +1039,6 @@ struct PHRootNodeIf : public PHTreeNodeIf{
 	 */
 	typedef void (* CompControlForce)(PHRootNodeIf*, void*);
 
-	/** @brief コールバックを追加する
-	 */
-	void SetCompControlForceCallback(CompControlForce f, void* a);
-
 	/** @brief 剛体の位置と向きを上書きするか取得する
 		@return trueならば剛体の位置と向きは上書きされる
 	 */

@@ -122,9 +122,6 @@ public:
 	std::vector<PHTreeNode*>			nodes;				///< IDによるアクセス用ノード配列
 	SpatialMatrix						Iinv;				///< Iの逆行列
 
-	PHRootNodeIf::CompControlForce compControlForce = NULL;
-	void* arg;
-
 public:
 	void Setup();
 	void SetupCorrection();
@@ -148,7 +145,6 @@ public:
 	
 	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc());
 
-	void SetCompControlForceCallback(PHRootNodeIf::CompControlForce f, void* a);
 };
 
 ///	N自由度の関節の基本クラス
