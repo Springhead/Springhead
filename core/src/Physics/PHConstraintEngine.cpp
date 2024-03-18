@@ -763,23 +763,6 @@ void PHConstraintEngine::StepPart2(){
 	for(int i = 0; i < (int)joints.size(); i++)
 		joints[i]->UpdateState();
 
-	//if (GetScene()->GetCount() == 0) {
-	//	for (int i = 0; i < (int)joints.size(); i++) {
-	//		joints[i]->preJ[0] = joints[i]->J[0];
-	//		joints[i]->preJ[1] = joints[i]->J[1];
-	//		joints[i]->preJdot[0] = joints[i]->J[0] - joints[i]->preJ[0];
-	//		joints[i]->preJdot[1] = joints[i]->J[1] - joints[i]->preJ[1];
-	//	}
-	//}
-	//for(int i = 0; i < (int)joints.size(); i++){
-	//	joints[i]->Jdot[0] = joints[i]->J[0] - joints[i]->preJ[0];
-	//	joints[i]->Jdot[1] = joints[i]->J[1] - joints[i]->preJ[1];
-	//	joints[i]->Jdotdot[0] = (joints[i]->Jdot[0] - joints[i]->preJdot[0]);
-	//	joints[i]->Jdotdot[0] = joints[i]->Jdotdot[0] * GetScene()->GetTimeStepInv();
-	//	joints[i]->Jdotdot[1] = (joints[i]->Jdot[1] - joints[i]->preJdot[1]);
-	//	joints[i]->Jdotdot[1] = joints[i]->Jdotdot[1] * GetScene()->GetTimeStepInv();
-	//}
-
 	// 速度LCP
 	Setup();
 
@@ -828,14 +811,6 @@ void PHConstraintEngine::StepPart2(){
 	{
 		UpdateSolids(!bUpdateAllState);
 	}
-	// 一ステップ前のヤコビアンを更新 <!!> SaveStateLoadState周りが上手くいかなくなると思われる
-	//for(int i = 0; i < (int)joints.size(); i++){
-	//	joints[i]->preJ[0] = joints[i]->J[0];
-	//	joints[i]->preJ[1] = joints[i]->J[1];
-	//	joints[i]->preJdot[0] = joints[i]->Jdot[0];
-	//	joints[i]->preJdot[1] = joints[i]->Jdot[1];
-	//}
-
 }
 	
 void PHConstraintEngine::Step(){

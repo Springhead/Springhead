@@ -522,6 +522,7 @@ Matrix3d PHSolid::GetGlobalInertia() {
 	inertialGlobal = R * GetInertia() * R.trans();
 	return inertialGlobal;
 }
+
 PHTreeNodeIf* PHSolid::GetTreeNode(){
 	if(treeNode)
 		return treeNode->Cast();

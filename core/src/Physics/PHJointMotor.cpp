@@ -197,55 +197,12 @@ void PHNDJointMotor<NDOF>::Setup(){
 template<int NDOF>
 bool PHNDJointMotor<NDOF>::Iterate(){
 	bool updated = false;
-	SpatialMatrix Jdot[2];
-
-	//Jdot[0] =(joint->J[0] - joint->preJ[0]) /** timeStepInv*/;
-	//Jdot[1] = (joint->J[1] - joint->preJ[1]) /** timeStepInv*/;
-	//cout << "Jdot[0] = " << joint->Jdot[0] << endl;
-	//cout << "Jdot[1] = " << joint->Jdot[1] << endl;
-	//cout << "preJdot[0] = " << joint->preJdot[0] << endl;
-	//cout << "preJdot[1] = " << joint->preJdot[1] << endl;
-	//cout << "Jdotdot[0] = " << joint->Jdotdot[0] << endl;
-	//cout << "Jdotdot[1] = " << joint->Jdotdot[1] << endl;
-	//Jdot[0] = Jdot[0]* timeStepInv;
-	//Jdot[1] = Jdot[1]* timeStepInv;
-	//cout << "Jdot[0] = " << Jdot[0] << endl;
-	//cout << "Jdot[1] = " << Jdot[1] << endl;
-	//cout << "joint->J[0] = " << joint->J[0] << endl;
-	//cout << "joint->preJ[0] = " << joint->preJ[0] << endl;
-	//cout << "joint->J[1] = " << joint->J[1] << endl;
-	//cout << "joint->preJ[1] = " << joint->preJ[1] << endl;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		int j = joint->movableAxes[i];
 		if (joint->solid[1]->treeNode != NULL) {
 			joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
 				+ joint->J[1].row(j) * (joint->solid[1]->dv - joint->solid[1]->treeNode->c);
-			//if (joint->GetScene()->GetCount() == 0) {
-			//	joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
-			//		+ joint->J[1].row(j) * joint->solid[1]->dv;
-			//} else {
-			//	joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
-			//		+ joint->J[1].row(j) * joint->solid[1]->dv + Jdot[1].row(j) * joint->solid[1]->v;
-			//}
-			
-			//cout << j << "J[1] * c    " << joint->J[1].row(j) * (-joint->solid[1]->treeNode->c) << endl;
-			//cout << j << "Jdot[1] * v " << joint->Jdot[1].row(j) * joint->solid[1]->v << endl;
-			//cout << j << "Jdot[0] * v " << joint->solid[0]->v << endl;
-			//cout << "joint->J[1].row(j) " << joint->J[1].row(j) << "c " << -joint->solid[1]->treeNode->c << endl;
-			//cout << "Jdot[1].row(j) " << joint->Jdot[1].row(j) << "v " << joint->solid[1]->v << endl;
-/*			Posed posePlug;
-			joint->GetPlugPose(posePlug);
-			Matrix3d matPosePlug;
-			posePlug.Ori().ToMatrix(matPosePlug);
-			Matrix3d matXjrel;
-			joint->Xjrel.q.Conjugated().ToMatrix(matXjrel);
-			cout << "Matrix3d::Cross(joint->vjrel.w()) * matXjrel " << Matrix3d::Cross(joint->vjrel.w()) * matXjrel << endl;
-			if (joint->GetScene()->GetCount() != 0) {
-				cout << "(Matrix3d::Cross(joint->vjrel.w()) * matXjrel).inv() " << (Matrix3d::Cross(joint->vjrel.w()) * matXjrel).inv() << endl;
-				cout << "(Matrix3d::Cross(joint->vjrel.w()) * matXjrel).inv() * matPosePlug * joint->solid[1]->v " << (Matrix3d::Cross(joint->vjrel.w()) * matXjrel).inv() * matPosePlug * joint->solid[1]->v.w() << endl;
-		}*/	
-
 		}
 		else {
 			joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
