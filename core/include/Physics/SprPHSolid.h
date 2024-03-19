@@ -222,6 +222,11 @@ struct PHSolidIf : public PHBodyIf{
 	 */
 	Matrix3d	GetInertiaInv();
 	
+	/** @brief グローバル回転の慣性テンソルを取得する
+		@return 慣性テンソル
+	 */
+	Matrix3d	GetGlobalInertia();
+
 	/** @brief 慣性テンソルを設定する
 		@param I 慣性テンソル
 	 */
@@ -273,6 +278,11 @@ struct PHSolidIf : public PHBodyIf{
 	 */
 	void		SetAngularVelocity(const Vec3d& av);
 
+    /** @brief 剛体の速度の変化量を設定する
+		@param a シーンに対する剛体の速度の変化量
+	 */
+	void		SetDv(const SpatialVector& a);
+
 	/** @brief 最後のステップで、拘束力以外に剛体に加わった外力を取得する。
 		拘束力は PHConstraint とその派生クラスから取得しなければならない。
 		@return 剛体に加えられた力(World系)
@@ -310,6 +320,10 @@ struct PHSolidIf : public PHBodyIf{
 		そのノードを返す．それ以外の場合はNULLを返す．
 	 */
 	PHTreeNodeIf* GetTreeNode();
+
+	/** @brief LCP関連補助変数の初期化する
+	 */
+	void UpdateCacheLCP(double dt);
 
 	/** @brief 剛体の形状を描画するかどうかを指定する
 		@param bOn true: 形状を描画 bOn false: 形状を描画しない

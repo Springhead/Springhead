@@ -587,6 +587,11 @@ public:
 	*/
 	PHOpEngineIf* GetOpEngine();
 
+	/** @brief TrackingEngineを取得する
+	@return TrackingEngineへのポインタ
+	*/
+	PHTrackingEngineIf* GetTrackingEngine();
+
 	/** @brief Op衝突判定のagentを取得する
 	@return agentへのポインタ
 	*/

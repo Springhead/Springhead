@@ -219,6 +219,61 @@ public:
 	SPR_IFDEF(PHIKEngine);
 };
 
+struct PHBallJointIf;
+struct PHSolidIf;
+struct SpatialVector;
+struct PHBallJointNodeIf;
+struct PHRootNodeIf;
+struct PHJointIf;
+struct PHTrackingEngineIf : PHEngineIf{
+public:
+	SPR_IFDEF(PHTrackingEngine);
+
+	/** @brief 追従させる際の目標となる入力角度を設定する
+	*/
+	void SetTrackingInputs(PHRootNodeIf* root, Vec3d rootPosition, std::vector<Quaterniond> inputs);
+
+	/** @brief Rootの目標位置を設定する
+	*/
+	void SetTrackingRootPosition(PHRootNodeIf* root, Vec3d input);
+
+	/** @brief 追従のペアを設定するノードを追加
+	*/
+	void AddTrackingNode(PHRootNodeIf* root, PHBallJointIf* reactJoint, PHBallJointIf* calcJoint, PHSolidIf* reactRootSolid, PHSolidIf* calcRootSolid, bool isRoot);
+
+	/** @brief 追従ためのノードを削除
+	*/
+	void DeleteTrackingNodes(PHRootNodeIf* root);
+
+	/** @brief 加速度・角加速度を取得する
+	*/
+	SpatialVector GetTipAcceleration(PHRootNodeIf* root, int i);
+
+	/** @brief 追従の力とトルクを計算する
+	*/
+	void TrackWithForce(PHRootNodeIf* root);
+
+	/** @brief Nodeごとの追従の力とトルクを計算し、追加する
+	*/
+	void AddTrackingForce(PHBallJointNodeIf* calcNode, PHBallJointNodeIf* reactNode, double timeStep, Vec3d targetAngularAcceleration, SpatialVector parentTargetAcceleration, SpatialVector& targetAcceleration, Vec3d& force, Vec3d& torque);
+
+	/** @brief MaxRootVelocityを設定する
+	*/
+	void SetMaxRootVelocity(double max);
+
+	/** @brief MaxRootVelocityを設定する
+	*/
+	void SetMaxAngularVelocity(double max);
+
+	Vec3d CalcEigenvalue(Matrix3d a);
+
+	Matrix3d CalcLeavesInertia(PHSolidIf* solid, PHJointIf* joint);
+
+	/** @brief Joint位置からみた慣性テンソルを求める
+	*/
+	Matrix3d CalcInertiaFromJoint(PHSolidIf* solid, PHJointIf* joint);
+};
+
 struct PHFemMeshIf;
 struct PHFemMeshNewIf;
 /**
