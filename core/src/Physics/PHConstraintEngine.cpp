@@ -609,7 +609,7 @@ void PHConstraintEngine::Setup(){
 				cons_base.push_back(gears[i]);
 		}
 
-		// FixJoint 
+		// FixJointによる固定を正確にするためにガウス・ザイデル法での計算順が最後に来るようにする
 		for(int i = 0; i < (int)joints.size(); i++){
 			PHFixJoint* fixJoint = joints[i]->Cast();
 			if (fixJoint != NULL && joints[i]->IsEnabled() && joints[i]->IsFeasible()) {
