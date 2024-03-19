@@ -114,8 +114,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Install", "Install\Install1
 		{C362AE9A-0FC9-40E4-A7FE-9C2322707E9C} = {C362AE9A-0FC9-40E4-A7FE-9C2322707E9C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Container", "Container.vcxproj", "{E838C86B-DF48-40B7-B836-B3BA9358160C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -342,18 +340,6 @@ Global
 		{DD830D7B-0957-4CBE-89FA-96F888D0C31C}.Trace|Win32.Build.0 = Release|Win32
 		{DD830D7B-0957-4CBE-89FA-96F888D0C31C}.Trace|x64.ActiveCfg = Release|x64
 		{DD830D7B-0957-4CBE-89FA-96F888D0C31C}.Trace|x64.Build.0 = Release|x64
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Debug|Win32.Build.0 = Debug|Win32
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Debug|x64.ActiveCfg = Debug|x64
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Debug|x64.Build.0 = Debug|x64
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Release|Win32.ActiveCfg = Release|Win32
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Release|Win32.Build.0 = Release|Win32
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Release|x64.ActiveCfg = Release|x64
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Release|x64.Build.0 = Release|x64
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Trace|Win32.ActiveCfg = Debug|Win32
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Trace|Win32.Build.0 = Debug|Win32
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Trace|x64.ActiveCfg = Debug|x64
-		{E838C86B-DF48-40B7-B836-B3BA9358160C}.Trace|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
