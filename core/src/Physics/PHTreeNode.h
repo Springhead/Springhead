@@ -96,8 +96,8 @@ public:
 	virtual void   CompResponseCorrection  (PHTreeNode* src, const SpatialVector& dF);
 	virtual void   CompResponseMatrix      ();
 	virtual void   CompResponseMap         (){}
-	virtual void   UpdateVelocity          (double* dt);	///< 剛体の速度の更新
-	virtual void   UpdateVelocitySolid          (double* dt);	///< 剛体の速度の更新
+	virtual void   UpdateJointVelocities          (double* dt);	///< 関節の速度と関節の相対速度の更新
+	virtual void   UpdateSolidVelocity          (double* dt);	///< 剛体の速度の更新
 	virtual void   UpdatePosition          (double dt);		///< 剛体の位置の更新
 	virtual void   UpdateJointVelocity     (){}	            ///< 関節速度の更新
 	virtual void   UpdateJointPosition     (double dt){}	///< 関節位置の更新
@@ -139,8 +139,8 @@ public:
 	virtual void CompArticulatedBiasForce();
 	virtual void CompAccel               ();
 	virtual void CompResponseMap         ();
-	virtual void UpdateVelocity          (double* dt);
-	virtual void UpdateVelocitySolid     (double* dt);	///< 剛体の速度の更新
+	virtual void UpdateJointVelocities          (double* dt);
+	virtual void UpdateSolidVelocity     (double* dt);	///< 剛体の速度の更新
 	virtual void UpdatePosition          (double dt);
 	
 	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc());

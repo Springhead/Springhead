@@ -686,7 +686,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 		s->UpdateVelocity(&dt);
 	}
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->UpdateVelocity(&dt);
+		(*it)->UpdateJointVelocities(&dt);
 
 	if(bVelOnly)
 		return;
@@ -704,7 +704,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 		trees[i]->UpdatePosition(dt);
 
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->UpdateVelocitySolid(&dt);
+		(*it)->UpdateSolidVelocity(&dt);
 }
 
 void PHConstraintEngine::StepPart1(){

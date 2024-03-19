@@ -339,7 +339,7 @@ void PHTreeNode::CompResponseCorrection(PHTreeNode* src, const SpatialVector& dF
 		solid->dV += dZdv_map[src->id] * (-dF);
 }
 
-void PHTreeNode::UpdateVelocity(double* dt){
+void PHTreeNode::UpdateJointVelocities(double* dt){
 	PHSolid* sp = parent->solid;
 	PHSolid* s  = solid;
 	UpdateJointVelocity ();
@@ -359,17 +359,17 @@ void PHTreeNode::UpdateVelocity(double* dt){
 
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocity(dt);
+		(*it)->UpdateJointVelocities(dt);
 }
 
-void PHTreeNode::UpdateVelocitySolid(double* dt) {
+void PHTreeNode::UpdateSolidVelocity(double* dt) {
 	PHSolid* sp = parent->solid;
 	PHSolid* s  = solid;
 	s->v = Xcp * sp->v + Xcj * joint->vjrel;
 	s->SetVelocity       (s->GetOrientation() * s->v.v());
 	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocitySolid(dt);
+		(*it)->UpdateSolidVelocity(dt);
 }
 
 void PHTreeNode::UpdatePosition(double dt){
@@ -515,14 +515,14 @@ void PHRootNode::CompAccel(){
 		(*it)->CompAccel();
 }
 
-void PHRootNode::UpdateVelocity(double* dt){
+void PHRootNode::UpdateJointVelocities(double* dt){
 	if(!bEnabled)
 		return;
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocity(dt);
+		(*it)->UpdateJointVelocities(dt);
 }
 
-void PHRootNode::UpdateVelocitySolid(double* dt){
+void PHRootNode::UpdateSolidVelocity(double* dt){
 	if(!bEnabled)
 		return;
 
@@ -543,7 +543,7 @@ void PHRootNode::UpdateVelocitySolid(double* dt){
 	}
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocitySolid(dt);
+		(*it)->UpdateSolidVelocity(dt);
 }
 
 void PHRootNode::UpdatePosition(double dt){
