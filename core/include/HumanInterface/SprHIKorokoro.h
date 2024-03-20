@@ -12,7 +12,6 @@ struct HIKorokoroMotorIf: public HIBaseIf{
 
 	/// 出力の設定
 	void SetForce(float f);
-
 	/// 最小出力の設定
 	void SetLimitMinForce(float f);
 	/// 最小出力の設定
@@ -36,19 +35,13 @@ struct HIKorokoroMotorDesc{
 	float voltPerNewton;
 	///	モータに流れる電流 / D/Aの出力電圧
 	float currentPerVolt;
-	///	タイヤの距離 / パルス数
-	//float lengthPerPulse;
-	///	モータが取り付けられている位置(糸の出口)の座標
-	//Vec3f pos;
-	///	糸がグリップに取り付けられている位置
-	//Vec3f jointPos;
+
 
 	HIKorokoroMotorDesc(){
 		ch				= -1;
 		maxForce		= 2.0f;
 		minForce		= -2.0f;
 		voltPerNewton	= 0.25f;
-		//lengthPerPulse = 2.924062107079e-5f;
 		currentPerVolt	= 1.0f;
 	}
 };

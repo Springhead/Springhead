@@ -82,7 +82,6 @@ public:
 	float f1;
 	float f2;
 	float T;
-	float vertical;
 	//送る値
 	Vec3d SendForce;
 	//持ち手の重みに反比例する
@@ -99,30 +98,24 @@ public:
 	Vec3d springForce;
 	//コロコロSetPose用
 	Vec3f		setPosition;
-	Vec3f setPositionInit=Vec3d(0,0,0);
 	Vec3f beforeSetPosition;
     Quaterniond setOrientation;
 	void SetPose(Posed pose);
 	//コロコロ	GetPose用
 	virtual Vec3f		GetPosition() { return setPosition; }
 	virtual Quaternionf GetOrientation() { return setOrientation; }
-	//カルマンフィルタの配列
-	//エンコーダの重み
-	float kwheel = 1;
-	float ktorque = 1;
-	//PTM::TMatrixRow<3, 4, float> matH1;
-	//typedef PTM::TMatrixRow<4, 4, float> Matrix4f;
-	//Matrix4f I;
-    //Matrix4f Q;
+
 	Vec3f mixPos;
-	Vec3f sensorPos;
 	Vec3f counterPos;
 	Vec3f temp;
-	Quaterniond tempOri;
-	Quaterniond beforeOri;
-	Quaterniond mixOri;
-	Quaterniond sensorOri;
-	Quaterniond counterOri;
+
+
+	//角度を求める
+	float sinPhi;
+	float cosPhi;
+	float sinTheta;
+	float cosTheta;
+	float tanTheta;
 
 	
 	

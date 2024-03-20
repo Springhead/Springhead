@@ -32,7 +32,7 @@ namespace Spr {
 		size_t i;
 		for (i = 0; i < motors.size(); ++i) {
 			motors[i].SetDesc(&desc.motors[i]);
-			//DAだけ使う
+			//DAとカウンタを使う
 			motors[i].da = DCAST(DVDaIf, sdk->RentVirtualDevice(DVDaIf::GetIfInfoStatic(), "", motors[i].ch));
 			motors[i].counter = DCAST(DVCounterIf, sdk->RentVirtualDevice(DVCounterIf::GetIfInfoStatic(), "", motors[i].ch));
 			if (!motors[i].da || !motors[i].counter)
@@ -58,37 +58,20 @@ namespace Spr {
 		for (int i = 0; i < (int)motors.size(); i++)
 			motors[i].SetLimitMaxForce(f);
 	}
-
 	
 	void HIKorokoro::SetPose(Posed pose) {
 		setPosition = pose.Pos();
 		setOrientation = pose.Ori();
-		//if (beforeSetPosition == Vec3d(0, 0, 0)) { beforeSetPosition = setPosition; }
-		/*std::fstream log("log_SetPose.txt", std::ios::app);
-		log << "SetPose" << setPosition << " called." << std::endl;*/
 	}
-
 
 	void HIKorokoro::SetForce(const Vec3f& Force, const Vec3f&)
 	{
-		
-
-		// 引っ張られるのと逆方向に力を出す
 		springForce = Force;
-		// 重さ分係数をかける
-		springForce *= kForMass;
-		
-		
-		
+		// 係数をかける
+		springForce *= kForMass;		
 	}
 
 	void HIKorokoro::Update(float dt) {
-		// thetaとphiのsinとcosを求める（詳細はScrapBoxに載せる）
-		float sinPhi = 0;
-		float cosPhi = sqrt(1 - (sinPhi * sinPhi));
-		float sinTheta = (mixPos.y - (l2 * sinPhi)) / l1;
-		float cosTheta = sqrt(1 - (sinTheta * sinTheta));
-		float tanTheta = sinTheta / cosTheta;
 
 		//エンコーダーの値取得
 		counterR = motors[0].GetCount();
@@ -98,15 +81,19 @@ namespace Spr {
 		difR = (counterR - beforeR) * 6.13e-5f;
 		difL = (counterL - beforeL) * 6.13e-5f;
 		difT = (counterT - beforeT) * 2.95e-5f;
-		
+
 		//エンコーダによる現在位置の差分
 		counterPos.z = (difR + difL) * 0.5;
 		counterPos.x = l1*cosTheta*(difR - difL) /l3;
 		counterPos.y = difT;
-		////新しいsetPose入ってきたら1%ずつ反映させる
-		//sensorPos += (setPosition - beforeSetPosition) * 0.1;
 		//エンコーダによる現在値と新しいsetPositionに近づけた値をmix
 		mixPos = setPosition+ counterPos;
+		//新しい値が入ってきたのを判別
+		if (temp != setPosition) {
+			//新しい位置入力が来たらその位置を使う
+			mixPos = setPosition;
+		}
+		temp = setPosition;
 		
 		//速度計算のためにgetpose渡してる　モータードライバーとの通信もこの中
 		HIHaptic::Update(dt);
@@ -129,37 +116,34 @@ namespace Spr {
 		korokoroForce.x = normalizedR.x * springForce.x + normalizedR.y * springForce.y + normalizedR.z * springForce.z;
 		// 前後方向の力
 		korokoroForce.z = normalizedF.x * springForce.x + normalizedF.y * springForce.y + normalizedF.z * springForce.z;
+
+		// thetaとphiのsinとcosを求める（詳細はScrapBoxに載せる）
+		sinPhi = 0;
+		cosPhi = sqrt(1 - (sinPhi * sinPhi));
+		sinTheta = (mixPos.y - (l2 * sinPhi)) / l1;
+		cosTheta = sqrt(1 - (sinTheta * sinTheta));
+		tanTheta = sinTheta / cosTheta;
+
 		// f_1, f_2, T に合うようにそれぞれの力を求める
 		float fItem1 = korokoroForce.z / 2.0f;
 		float fItem2 = korokoroForce.x * (l1 * cosTheta + l2 * cosPhi) / l3;
 		f1 = (fItem1 + fItem2);
 		f2 = (fItem1 - fItem2);
 		T = korokoroForce.y * lh + (l2+lh) * korokoroForce.z * tanTheta ;
-		vertical = T;
-		if (vertical<0.01 && vertical>-0.01) { vertical = 0; }
+		if (T<0.01 && T>-0.01) { T = 0; }
 
 		//エンコーダの一個前の値を保存
 		beforeR = counterR;
 		beforeL = counterL;
 		beforeT = counterT;
 
-		//位置の一つ前を保存
-		if (temp != setPosition) {
-			beforeSetPosition = temp;
-			sensorPos = beforeSetPosition;
-			mixPos = setPosition;
-		}
-		if (tempOri != setOrientation) { 
-			beforeOri = tempOri; 
-			mixOri = setOrientation;
-		}
-		temp = setPosition;
-		tempOri = setOrientation;
-
-		SendForce = Vec3d(f1, f2, vertical);
-
-		std::fstream log("log.txt", std::ios::app);
-		log << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z  << "\t"  << f1 << "\t" << f2 << "\t" << T <<  std::endl;
+		
+		//DRUart側に送る値
+		SendForce = Vec3d(f1, f2, T);
+		//測定値のログ
+		//std::fstream log("log.txt", std::ios::app);
+		//log << mixPos.x << "\t" << mixPos.y << "\t" << mixPos.z  << "\t"  << f1 << "\t" << f2 << "\t" << T <<  std::endl;
+		
 		//モーターに送る
 		motors[0].SetForce(SendForce.x);
 		motors[1].SetForce(SendForce.y);

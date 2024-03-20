@@ -74,8 +74,6 @@ public:
 		Posef rv;
 		rv.Ori() = GetOrientation();
 		rv.Pos() = GetPosition();
-		std::fstream log("log_GetPose.txt", std::ios::app);
-		log << "GetPose" << rv << " called." << "\n";
 		return rv;
 	}
 	virtual Affinef		GetAffine(){

@@ -36,14 +36,9 @@ public:
 		if (f > maxForce) f = maxForce;
 		if(da) da->Voltage(f * voltPerNewton);
 		force = f;
-		//モーター側に送る値のLog
-		std::fstream log("log_motorForce.txt", std::ios::app);
-		log << "motorForce" << f * voltPerNewton << " called." << std::endl;
+	
 	}
-	///	実際に出力した力の取得
-	/*float GetForce(){
-		return force;
-	}*/
+
 	/// 最小出力の設定
 	void SetLimitMinForce(float f){
 		minForce = f;
