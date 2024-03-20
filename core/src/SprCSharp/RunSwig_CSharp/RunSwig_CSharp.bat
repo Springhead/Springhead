@@ -190,11 +190,7 @@ for %%p in (%PROJECTS%) do (
     call :make_makefile %%p !MKFILE! "!INCHDRS!" "!SRCHDRS!" "%IFILES%"
     rem cd %CspDir%
     rem echo cmd /c %MAKE% -f !MKFILE!
-    if %DEBUG% gtr 1 (
 	cmd /c %MAKE% -f !MKFILE!
-    ) else (
-	cmd /c %MAKE% -f !MKFILE! > NUL 2>&1
-    )
     rem cd %CWD%
 )
 cd %CS_SRC%

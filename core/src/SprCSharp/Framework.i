@@ -3,7 +3,7 @@
 %ignore Spr::FWObjectIf::LoadMesh;
 %ignore Spr::FWSceneIf::AddHumanInterface;
 %ignore Spr::FWSdkIf::LoadScene;
-%ignore Spr::FWSdkIf::SaveScene;
+//%ignore Spr::FWSdkIf::SaveScene;
 %ignore Spr::FWApp::timers;
 %ignore Spr::FWApp::Timers;
 %ignore Spr::FWApp::Init(int argc, char* argv[]);

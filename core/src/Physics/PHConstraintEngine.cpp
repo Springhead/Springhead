@@ -554,6 +554,10 @@ void PHConstraintEngine::Setup(){
 		}
 		// 関節
 		for(int i = 0; i < (int)joints.size(); i++){
+			PHFixJoint* fixJoint = joints[i]->Cast();
+			if (fixJoint != NULL) {
+				continue;
+			}
 			if(joints[i]->IsEnabled() && joints[i]->IsFeasible()){
 				cons     .push_back(joints[i]);
 				cons_base.push_back(joints[i]);
@@ -603,6 +607,15 @@ void PHConstraintEngine::Setup(){
 		for(int i = 0; i < (int)gears.size(); i++){
 			if(gears[i]->IsEnabled() && gears[i]->IsFeasible() && !gears[i]->IsArticulated())
 				cons_base.push_back(gears[i]);
+		}
+
+		// FixJointによる固定を正確にするためにガウス・ザイデル法での計算順が最後に来るようにする
+		for(int i = 0; i < (int)joints.size(); i++){
+			PHFixJoint* fixJoint = joints[i]->Cast();
+			if (fixJoint != NULL && joints[i]->IsEnabled() && joints[i]->IsFeasible()) {
+				cons     .push_back(joints[i]);
+				cons_base.push_back(joints[i]);
+			}
 		}
 		
 		// 拘束自由度の決定
@@ -673,7 +686,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 		s->UpdateVelocity(&dt);
 	}
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->UpdateVelocity(&dt);
+		(*it)->UpdateJointVelocities(&dt);
 
 	if(bVelOnly)
 		return;
@@ -689,6 +702,9 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	//# pragma omp for
 	for(int i = 0; i < (int)trees.size(); i++)
 		trees[i]->UpdatePosition(dt);
+
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		(*it)->UpdateSolidVelocity(&dt);
 }
 
 void PHConstraintEngine::StepPart1(){

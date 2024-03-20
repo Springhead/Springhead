@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include <Physics/SprPHEngine.h>
+#include <iomanip>
 
 namespace Spr{;
 
@@ -336,7 +337,7 @@ void FIFileSpr::Init(){
 					if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ].else_p[
 					if_p(&IsFieldStr)[ str | ExpP("string") ].else_p[ nothing_p ]]]];
 
-	id			=	lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-'|'.') ];
+	id			=	lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-'|'.'|':')];
 	boolVal		=	(str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
 	iNum		=	id[&EnumSet] | int_p[&NumSet];
 	rNum		=	real_p[&NumSet];
@@ -476,7 +477,8 @@ void FIFileSpr::OnSaveInt(FISaveContext* sc, int val){
 }
 ///	real値の保存
 void FIFileSpr::OnSaveReal(FISaveContext* sc, double val){
-	sc->Stream() << val;
+	//sc->Stream() << val;
+	sc->Stream() << std::setprecision(17) << val;
 }
 ///	string値の保存
 void FIFileSpr::OnSaveString(FISaveContext* sc, UTString val){

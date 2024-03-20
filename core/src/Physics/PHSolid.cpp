@@ -516,6 +516,13 @@ void PHSolid::CompInertia(){
 	SetInertia(inertia);
 }
 
+Matrix3d PHSolid::GetGlobalInertia() {
+	Matrix3d R, inertialGlobal;
+	GetOrientation().ToMatrix(R);
+	inertialGlobal = R * GetInertia() * R.trans();
+	return inertialGlobal;
+}
+
 PHTreeNodeIf* PHSolid::GetTreeNode(){
 	if(treeNode)
 		return treeNode->Cast();

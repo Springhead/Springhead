@@ -978,6 +978,7 @@ template <size_t H, size_t W, class T, class Z=T, class U=Z> class TMatrixCol;
 	@param	H	行数．
 	@param	W	列数．
 	@param	T	要素の型.	*/
+
 template <size_t H, size_t W, class T, class Z=T, class U=Z>
 class TMatrixRow:public TMatrixBase<H, W, TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> >{
 public:
@@ -991,7 +992,7 @@ public:
 	///	要素のアクセス
 	element_type& item_impl(size_t i, size_t j){ return data[i][j]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[i][j]; }
-private:
+//private:
 	element_type data[H][W];										///<	データ
 };
 

@@ -200,9 +200,14 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		int j = joint->movableAxes[i];
-
-		joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
-			         + joint->J[1].row(j) * joint->solid[1]->dv;
+		if (joint->solid[1]->treeNode != NULL) {
+			joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
+				+ joint->J[1].row(j) * (joint->solid[1]->dv - joint->solid[1]->treeNode->c);
+		}
+		else {
+			joint->dv[j] = joint->J[0].row(j) * joint->solid[0]->dv
+				+ joint->J[1].row(j) * joint->solid[1]->dv;
+		}
 		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
@@ -217,6 +222,7 @@ bool PHNDJointMotor<NDOF>::Iterate(){
 			CompResponse(df[i], i);
 		}
 	}
+
 	return updated;
 }
 
@@ -245,7 +251,7 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 		else{
 			double tmp = 1.0 / (D + K*dt);
 			dA[j] = tmp * (1.0/dt);
-			db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]); 
+			db[j] = tmp * (-K*propV[j] - p.offsetForce[j])- p.targetVelocity[j] ; 
 		}
 	}
 

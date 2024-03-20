@@ -118,6 +118,14 @@ public:
 	///   [1]：子剛体の質量中心からPlug座標系経由でSocket座標系へのヤコビアン
 	SpatialMatrix J[2];
 
+	/// 一ステップ前の拘束ヤコビアン 行列形式                              #[n_c x 6] Jsから計算。行列型が必要
+	///   [0]：親剛体の質量中心からSocket座標系へのヤコビアン
+	///   [1]：子剛体の質量中心からPlug座標系経由でSocket座標系へのヤコビアン
+	SpatialMatrix preJ[2];
+	SpatialMatrix Jdot[2];
+	SpatialMatrix preJdot[2];
+	SpatialMatrix Jdotdot[2];
+
 	SpatialVector fAvg;					///< 拘束力にローパスをかけたもの
 	SpatialVector xs;					///< ばね部の距離（三要素モデル用）
 	bool   bYielded;					///< 降伏したかどうか

@@ -18,6 +18,8 @@
 
 #include <float.h>  // FLT_MAX
 
+#include <Base/Spatial.h>
+
 namespace Spr{;
 
 struct PHSolidIf;
@@ -118,6 +120,10 @@ struct PHConstraintIf : public SceneObjectIf{
 	/**
 	 */
 	bool IsYielded();
+
+	/** @biref 状態の更新
+	*/
+	void UpdateState();
 };
 
 /// 拘束の集合のインタフェース
@@ -937,7 +943,19 @@ struct PHTreeNodeDesc{
 		bEnabled = true;
 	}
 };
-struct PHRootNodeDesc : public PHTreeNodeDesc{
+
+struct PHRootNodeState {
+	Posed nextPose;
+	bool useNextPose;
+
+	PHRootNodeState() {
+		nextPose = Posed();
+		useNextPose = false;
+	}
+};
+
+
+struct PHRootNodeDesc : public PHTreeNodeDesc, PHRootNodeState{
 	PHRootNodeDesc(){}
 };
 struct PHTreeNode1DDesc      : public PHTreeNodeDesc{};
@@ -982,11 +1000,64 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	PHSolidIf* GetSolid();
 
+	/** @brief Articulated Inertiaを取得する
+	 */
+	Spr::SpatialMatrix GetI();
+
+	/** @brief コリオリ力を取得する
+	 */
+	Spr::SpatialVector GetIc();
+
+	/** @brief コリオリ加速度を取得する
+	 */
+	Spr::SpatialVector GetC();
+
+	/** @brief Articulated Bias Forceを取得する
+	 */
+	Spr::SpatialVector GetZ();
+
+	/** @brief 子ノードから親ノードへの座標変換Xcpを取得する
+	 */
+	Spr::SpatialMatrix GetXcp_mat();
+
+	/** @brief Setupを実行する
+	 */
+	void Setup();
+
+	/** @brief ABA用の慣性テンソルを初期化
+	 */
+	void InitArticulatedInertia();
+
+	/** @brief ABA用の慣性テンソルを計算
+	 */
+	void CompArticulatedInertia();
+
 };
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHRootNode);
+
+	/** @brief コールバック関数の型
+	 */
+	typedef void (* CompControlForce)(PHRootNodeIf*, void*);
+
+	/** @brief 剛体の位置と向きを上書きするか取得する
+		@return trueならば剛体の位置と向きは上書きされる
+	 */
+	bool IsUseNextPose();
+
+	/** @brief 剛体の位置と向きを上書きするか設定する
+		@param bOn trueならば剛体の位置と向きは上書きされる
+	 */
+	void SetUseNextPose(bool bOn);
+
+	/** @brief 剛体の位置と向きを上書きするための設定する
+		@param p シーンに対する剛体の位置と向き
+	 */
+	void SetNextPose(const Posed& p);
+
 };
+
 /// １軸関節ノードのインタフェース
 struct PHTreeNode1DIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHTreeNode1D);

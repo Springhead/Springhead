@@ -42,6 +42,7 @@ public:
 	PHSolid*                     solid;			///< このノードに関連づけられている剛体
 	PHRootNode*                  root;
 
+
 public:
 	PHTreeNode();
 	
@@ -56,6 +57,11 @@ public:
 	int             NChildren    ()     { return (int)Children().size(); }
 	PHTreeNodeIf*   GetParentNode()     { return parent->Cast(); }
 	PHTreeNodeIf*   GetChildNode (int i){ return Children()[i]->Cast(); }
+	SpatialMatrix   GetI         ()     { return I; }
+	SpatialVector   GetIc        ()     { return Ic; }
+	SpatialVector   GetC         ()     { return c; }
+	SpatialVector   GetZ         ()     { return Z; }
+	SpatialMatrix   GetXcp_mat	 ()     { return Xcp_mat; }
 	PHSolidIf*      GetSolid     ()     { return solid->Cast(); }
 	PHRootNodeIf*	GetRootNode  ();
 		
@@ -90,7 +96,8 @@ public:
 	virtual void   CompResponseCorrection  (PHTreeNode* src, const SpatialVector& dF);
 	virtual void   CompResponseMatrix      ();
 	virtual void   CompResponseMap         (){}
-	virtual void   UpdateVelocity          (double* dt);	///< 剛体の速度の更新
+	virtual void   UpdateJointVelocities          (double* dt);	///< 関節の速度と関節の相対速度の更新
+	virtual void   UpdateSolidVelocity          (double* dt);	///< 剛体の速度の更新
 	virtual void   UpdatePosition          (double dt);		///< 剛体の位置の更新
 	virtual void   UpdateJointVelocity     (){}	            ///< 関節速度の更新
 	virtual void   UpdateJointPosition     (double dt){}	///< 関節位置の更新
@@ -100,12 +107,14 @@ public:
 	virtual void CompJointCoriolisAccel  (){}			///< コリオリの加速度を計算	
 	virtual void CompRelativeVelocity    (){}			///< 関節速度から剛体間相対速度を計算
 	virtual void CompRelativePosition    (){}			///< 関節位置から剛体間相対位置を計算
+
 };
 
 class PHRootNode : public PHTreeNode{
 public:
 	SPR_OBJECTDEF(PHRootNode);
 	SPR_DECLMEMBEROF_PHRootNodeDesc;
+	SPR_DECLMEMBEROF_PHRootNodeState;
 
 	int									treeId;
 	bool								bReady;
@@ -116,6 +125,9 @@ public:
 public:
 	void Setup();
 	void SetupCorrection();
+	bool IsUseNextPose() { return useNextPose; }
+	void SetUseNextPose(bool bOn) { useNextPose = bOn; }
+	void SetNextPose(const Posed& p) { nextPose = p; } ///< 剛体の姿勢を上書き
 
 	/// Objectの仮想関数
 	virtual bool      AddChildObject(ObjectIf* o);
@@ -127,10 +139,12 @@ public:
 	virtual void CompArticulatedBiasForce();
 	virtual void CompAccel               ();
 	virtual void CompResponseMap         ();
-	virtual void UpdateVelocity          (double* dt);
+	virtual void UpdateJointVelocities          (double* dt);
+	virtual void UpdateSolidVelocity     (double* dt);	///< 剛体の速度の更新
 	virtual void UpdatePosition          (double dt);
 	
 	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc());
+
 };
 
 ///	N自由度の関節の基本クラス
@@ -166,7 +180,6 @@ public:
 	Matrix6Nd		sumXtrIJ, sumXtrIJ_sumJIJinv;
 
 	std::vector<MatrixN6d>	dZdvel_map;		///< ツリー上の任意の他ノードのdZからこのノードのdvelを与える行列
-
 	PHNDJoint<NDOF>* GetJoint(){ return (PHNDJoint<NDOF>*)joint; }
 
 	virtual void        ResetGear           ();

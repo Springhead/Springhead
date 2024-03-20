@@ -462,6 +462,7 @@
     <ClCompile Include="PHSliderJoint.cpp" />
     <ClCompile Include="PHSolid.cpp" />
     <ClCompile Include="PHSpring.cpp" />
+    <ClCompile Include="PHTrackingEngine.cpp" />
     <ClCompile Include="PHTreeNode.cpp" />
     <ClCompile Include="PhysicsStub.cpp" />
   </ItemGroup>
@@ -523,6 +524,7 @@
     <ClInclude Include="PHSliderJoint.h" />
     <ClInclude Include="PHSolid.h" />
     <ClInclude Include="PHSpring.h" />
+    <ClInclude Include="PHTrackingEngine.h" />
     <ClInclude Include="PHTreeNode.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="..\..\include\Physics\SprPHEngine.h" />
