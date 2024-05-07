@@ -41,6 +41,8 @@ public:
 	bool IsGood(){ return isGood; }
 	///	Update state of the interface; read from/write to real device.
 	virtual void Update(float dt);
+	//コロコロ用に手の位置を送る用
+	//virtual void Update(float dt,Vec3d pos);
 	/**	Add an real device to the dependency list of real devices. 
 		Update() will call real device's Update() function.	*/
 	void AddDeviceDependency(HIRealDeviceIf* rd);

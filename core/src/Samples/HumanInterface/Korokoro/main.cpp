@@ -19,7 +19,10 @@
 #include <iomanip>
 #include<HumanInterface/SprHIKorokoro.h>
 #include<HumanInterface/HIKorokoro.h>
+#include <fstream>
+#include<iostream>
 using namespace Spr;
+using namespace std;
 
 #ifdef _WIN32
 #include <windows.h>
@@ -60,117 +63,118 @@ int __cdecl main(){
 	hiSdk->Print(DSTR);
 	hiSdk->Print(std::cout);
 
-	enum class Mode {
-		NONE,
-		FORCE_UP,
-		FORCE_DOWN,
-		RIGHT,
-		LEFT,
-		GRIP,
-		DEBUG
-	} mode = Mode::NONE;
+	
+
+	//enum class Mode {
+	//	NONE,
+	//	FORCE_UP,
+	//	FORCE_DOWN,
+	//	RIGHT,
+	//	LEFT,
+	//	GRIP,
+	//	DEBUG
+	//} mode = Mode::NONE;
 	
 
 	std::string help = "ESC/Q: Quit,  R: Right wheel,  L: Left wheel,  W:force up,  S:force down.";
 	std::cout << std::endl << help << std::endl;
-	while(1){
-		if (_kbhit()) {
-			switch (_getch()) {
-			case '0x1b':
-			case 'q':
-			case 'Q':
-				std::cout << "Quit." << std::endl;
-				goto next;
-			case 'r':
-			case 'R':
-				mode = Mode::RIGHT;
-				std::cout << "right wheel" << std::endl;
-				break;
-			case 'l':
-			case 'L':
-				mode = Mode::LEFT;
-				std::cout << "left wheel" << std::endl;
-				break;
-			case 'g':
-			case 'G':
-				mode = Mode::GRIP;
-				std::cout << "Grip" << std::endl;
-				break;
-			case 'd':
-			case 'D':
-				mode = Mode::DEBUG;
-				std::cout << "Debug mode." << std::endl;
-				break;
-			default:
-				mode = Mode::NONE;
-				std::cout << help << std::endl;
-				break;
-			}
-		}
-		
-		//DPF("t=%d", t);
-		korokoro->Update(0.001f);
-		Vec3f korokoroForce=korokoro->handForce;
-		//手にかかる力のほうのSetForce?
-		//Vec3f handForce(10.0, 10.0, 10.0);
-		//korokoro->SetForce(handForce, Vec3f());
-		if (mode == Mode::RIGHT) {			
-			if (_kbhit()) {
-				if (_getch() == 'w') {
-					korokoroForce.x += 10.0f;
-				}
-				if (_getch() == 's') {
-					korokoroForce.x -= 10.0f;
-				}
-			}
-		}
-		else if (mode == Mode::LEFT) {
-			if (_kbhit()) {
-				if (_getch() == 'w') {
-					korokoroForce.y += 10.0f;
-				}
-				if (_getch() == 's') {
-					korokoroForce.y -= 10.0f;
-				}
-			}
-		}
-		else if (mode == Mode::GRIP) {
-			if (_kbhit()) {
-				if (_getch() == 'w') {
-					korokoroForce.z += 10.0f;
-				}
-				if (_getch() == 's') {
-					korokoroForce.z -= 10.0f;
-				}
-			}
-		}
-		/*else if (mode == Mode::DEBUG) {
-			korokoro->SetForce(Vec3d(10000, 0, 0), Vec3d(10000, 0, 0));
-		}*/
-
-			
-			//Vec3f handForce(10.0, 10.0, 10.0);
-			
-			
-			//手にかかる力のほうのSetForce
-			//korokoro->SetForce(handForce, Vec3f());
-			
-			
-		
-		
-	}
-next:;
-#if 0	//	test for KeyMouseWin32
-	DRKeyMouseWin32If* wif = hiSdk->FindRealDevice("KeyMouseWin32")->Cast();
-	wif->Update();	
-	DVKeyMouseIf* keyMouse = wif->Rent(DVKeyMouseIf::GetIfInfoStatic(), NULL, 0)->Cast();
-	while(1){
-		if (keyMouse->GetKeyState('Q') & DVKeySt::PRESSED) return 0;
-		for(int i=0; i<200; ++i){
-			if (keyMouse->GetKeyState(i) & DVKeySt::PRESSED){
-				std::cout << i << " '"<< (char)i << "' " << std::endl;
-			}
-		}
-	}
-#endif
-}
+//	while(1){
+//		if (_kbhit()) {
+//			switch (_getch()) {
+//			case '0x1b':
+//			case 'q':
+//			case 'Q':
+//				std::cout << "Quit." << std::endl;
+//				goto next;
+//			case 'r':
+//			case 'R':
+//				mode = Mode::RIGHT;
+//				std::cout << "right wheel" << std::endl;
+//				break;
+//			case 'l':
+//			case 'L':
+//				mode = Mode::LEFT;
+//				std::cout << "left wheel" << std::endl;
+//				break;
+//			case 'g':
+//			case 'G':
+//				mode = Mode::GRIP;
+//				std::cout << "Grip" << std::endl;
+//				break;
+//			case 'd':
+//			case 'D':
+//				mode = Mode::DEBUG;
+//				std::cout << "Debug mode." << std::endl;
+//				break;
+//			default:
+//				mode = Mode::NONE;
+//				std::cout << help << std::endl;
+//				break;
+//			}
+//		}
+//		
+//		//DPF("t=%d", t);
+//		//korokoro->Update(0.001f);
+//		//Vec3f korokoroForce=korokoro->handForce;
+//		////Vec3f handForce(10.0, 10.0, 10.0);
+//		////korokoro->SetForce(handForce, Vec3f());
+//		//if (mode == Mode::RIGHT) {			
+//		//	if (_kbhit()) {
+//		//		if (_getch() == 'w') {
+//		//			korokoroForce.x += 10.0f;
+//		//		}
+//		//		if (_getch() == 's') {
+//		//			korokoroForce.x -= 10.0f;
+//		//		}
+//		//	}
+//		//}
+//		//else if (mode == Mode::LEFT) {
+//		//	if (_kbhit()) {
+//		//		if (_getch() == 'w') {
+//		//			korokoroForce.y += 10.0f;
+//		//		}
+//		//		if (_getch() == 's') {
+//		//			korokoroForce.y -= 10.0f;
+//		//		}
+//		//	}
+//		//}
+//		//else if (mode == Mode::GRIP) {
+//		//	if (_kbhit()) {
+//		//		if (_getch() == 'w') {
+//		//			korokoroForce.z += 10.0f;
+//		//		}
+//		//		if (_getch() == 's') {
+//		//			korokoroForce.z -= 10.0f;
+//		//		}
+//		//	}
+//		//}
+//		/*else if (mode == Mode::DEBUG) {
+//			korokoro->SetForce(Vec3d(10000, 0, 0), Vec3d(10000, 0, 0));
+//		}*/
+//
+//			
+//			//Vec3f handForce(10.0, 10.0, 10.0);
+//			
+//			
+//			//手にかかる力のほうのSetForce
+//			//korokoro->SetForce(handForce, Vec3f());
+//			
+//			
+//		
+//		
+//	}
+//next:;
+//#if 0	//	test for KeyMouseWin32
+//	DRKeyMouseWin32If* wif = hiSdk->FindRealDevice("KeyMouseWin32")->Cast();
+//	wif->Update();	
+//	DVKeyMouseIf* keyMouse = wif->Rent(DVKeyMouseIf::GetIfInfoStatic(), NULL, 0)->Cast();
+//	while(1){
+//		if (keyMouse->GetKeyState('Q') & DVKeySt::PRESSED) return 0;
+//		for(int i=0; i<200; ++i){
+//			if (keyMouse->GetKeyState(i) & DVKeySt::PRESSED){
+//				std::cout << i << " '"<< (char)i << "' " << std::endl;
+//			}
+//		}
+//	}
+//#endif
+//}

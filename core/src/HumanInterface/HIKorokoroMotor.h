@@ -16,6 +16,8 @@ public:
 	//@{	デバイスアクセス
 	///	使用するD/A.
 	DVDaIf* da;
+	///	使用するエンコーダのカウンタ.
+	DVCounterIf* counter;
 	///	出力した力
 	float force;
 
@@ -34,11 +36,9 @@ public:
 		if (f > maxForce) f = maxForce;
 		if(da) da->Voltage(f * voltPerNewton);
 		force = f;
+	
 	}
-	///	実際に出力した力の取得
-	/*float GetForce(){
-		return force;
-	}*/
+
 	/// 最小出力の設定
 	void SetLimitMinForce(float f){
 		minForce = f;
@@ -57,7 +57,13 @@ public:
 	float GetCurrent(){
 		return force * voltPerNewton * currentPerVolt;
 	}
-	
+
+	/// エンコーダのカウンタ値の読みだし
+	int GetCount() {
+		if (counter) return counter->Count();
+		else return 0;
+	}
+
 
 };
 

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 16
+# Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprCSharp16.0", "SprCSharp\SprCSharp16.0.csproj", "{C362AE9A-0FC9-40E4-A7FE-9C2322707E9C}"
@@ -95,9 +95,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "..\Physics\Physi
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunSwig", "..\RunSwig\RunSwig16.0.vcxproj", "{4AC6C708-19C9-4CC1-A25B-D9682470411E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6BB5883E-1D19-4551-AF42-E80583A47872} = {6BB5883E-1D19-4551-AF42-E80583A47872}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SprCsSample16.0", "SprCsSample\SprCsSample16.0.csproj", "{3B197562-2F42-48AA-9A45-5ADCFF193008}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -343,18 +340,6 @@ Global
 		{DD830D7B-0957-4CBE-89FA-96F888D0C31C}.Trace|Win32.Build.0 = Release|Win32
 		{DD830D7B-0957-4CBE-89FA-96F888D0C31C}.Trace|x64.ActiveCfg = Release|x64
 		{DD830D7B-0957-4CBE-89FA-96F888D0C31C}.Trace|x64.Build.0 = Release|x64
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|Win32.Build.0 = Debug|Win32
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|x64.ActiveCfg = Debug|x64
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Debug|x64.Build.0 = Debug|x64
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|Win32.ActiveCfg = Release|Win32
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|Win32.Build.0 = Release|Win32
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|x64.ActiveCfg = Release|x64
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Release|x64.Build.0 = Release|x64
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|Win32.ActiveCfg = Release|Win32
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|Win32.Build.0 = Release|Win32
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|x64.ActiveCfg = Release|x64
-		{6BB5883E-1D19-4551-AF42-E80583A47872}.Trace|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

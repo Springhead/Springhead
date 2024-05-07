@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-// DRUARTMotorDriver.cpp: DRUARTMotorDriver ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// DRUARTMotorDriver.cpp: DRUARTMotorDriver ï¿½Nï¿½ï¿½ï¿½Xï¿½ÌƒCï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -186,6 +186,7 @@ public:
 				}
 			}
 			bool bBoardFound = false;
+			
 			for (auto board : boards) {
 				if (board->GetBoardId() == cmdHeader.boardId) {
 					bBoardFound = true;
@@ -376,34 +377,34 @@ bool DRUARTMotorDriver::InitCom() {
 	DWORD comError;
 	COMSTAT comStat;
 	ClearCommError(hUART, &comError, &comStat);
-	DCB dcb;//\¬î•ñ‚ð‹L˜^‚·‚é\‘¢‘Ì‚Ì¶¬
-	GetCommState(hUART, &dcb);//Œ»Ý‚ÌÝ’è’l‚ð“Ç‚Ýž‚Ý
-	dcb.DCBlength = sizeof(DCB);//DCB‚ÌƒTƒCƒY
+	DCB dcb;//ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½Ì‚Ìï¿½ï¿½ï¿½
+	GetCommState(hUART, &dcb);//ï¿½ï¿½ï¿½Ý‚ÌÝ’ï¿½lï¿½ï¿½Ç‚Ýï¿½ï¿½ï¿½
+	dcb.DCBlength = sizeof(DCB);//DCBï¿½ÌƒTï¿½Cï¿½Y
 	dcb.BaudRate = 2000*1000;	//	baudrate 2Mbps
 	dcb.ByteSize = 8;			//	8bit
 	dcb.fBinary = TRUE;			//	binaly = TRUE
 	dcb.fParity = NOPARITY;		//	no paritiy
 	dcb.StopBits = ONESTOPBIT;	//	1 stop bit
-	dcb.fOutxCtsFlow = FALSE;	//CTSƒtƒ[§Œä:ƒtƒ[§Œä‚È‚µ
-	dcb.fOutxDsrFlow = FALSE;	//DSRƒn[ƒhƒEƒFƒAƒtƒ[§ŒäFŽg—p‚µ‚È‚¢
-	dcb.fDtrControl = DTR_CONTROL_DISABLE;//DTR—LŒø/–³Œø:DTR–³Œø
-	dcb.fRtsControl = RTS_CONTROL_DISABLE;//RTSƒtƒ[§Œä:RTS§Œä‚È‚µ
-	dcb.fOutX = FALSE;//‘—MŽžXON/XOFF§Œä‚Ì—L–³:‚È‚µ
-	dcb.fInX = FALSE;//ŽóMŽžXON/XOFF§Œä‚Ì—L–³:‚È‚µ
-	dcb.fTXContinueOnXoff = TRUE;// ŽóMƒoƒbƒtƒ@[–ž”t•XOFFŽóMŒã‚ÌŒp‘±‘—M‰Â”Û:‘—M‰Â
-	dcb.XonLim = 512;//XON‚ª‘—‚ç‚ê‚é‚Ü‚Å‚ÉŠi”[‚Å‚«‚éÅ¬ƒoƒCƒg”:512
-	dcb.XoffLim = 512;//XOFF‚ª‘—‚ç‚ê‚é‚Ü‚Å‚ÉŠi”[‚Å‚«‚éÅ¬ƒoƒCƒg”:512
-	dcb.XonChar = 0x11;//‘—MŽžXON•¶Žš ( ‘—M‰ÂFƒrƒWƒB‰ðœ ) ‚ÌŽw’è:XON•¶Žš‚Æ‚µ‚Ä11H ( ƒfƒoƒCƒX§Œä‚PFDC1 )
-	dcb.XoffChar = 0x13;//XOFF•¶Žši‘—M•s‰ÂFƒrƒW[’Êj‚ÌŽw’è:XOFF•¶Žš‚Æ‚µ‚Ä13H ( ƒfƒoƒCƒX§Œä3FDC3 )
+	dcb.fOutxCtsFlow = FALSE;	//CTSï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½:ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½È‚ï¿½
+	dcb.fOutxDsrFlow = FALSE;	//DSRï¿½nï¿½[ï¿½hï¿½Eï¿½Fï¿½Aï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½Fï¿½gï¿½pï¿½ï¿½ï¿½È‚ï¿½
+	dcb.fDtrControl = DTR_CONTROL_DISABLE;//DTRï¿½Lï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½:DTRï¿½ï¿½ï¿½ï¿½
+	dcb.fRtsControl = RTS_CONTROL_DISABLE;//RTSï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½:RTSï¿½ï¿½ï¿½ï¿½È‚ï¿½
+	dcb.fOutX = FALSE;//ï¿½ï¿½ï¿½Mï¿½ï¿½XON/XOFFï¿½ï¿½ï¿½ï¿½Ì—Lï¿½ï¿½:ï¿½È‚ï¿½
+	dcb.fInX = FALSE;//ï¿½ï¿½Mï¿½ï¿½XON/XOFFï¿½ï¿½ï¿½ï¿½Ì—Lï¿½ï¿½:ï¿½È‚ï¿½
+	dcb.fTXContinueOnXoff = TRUE;// ï¿½ï¿½Mï¿½oï¿½bï¿½tï¿½@ï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½XOFFï¿½ï¿½Mï¿½ï¿½ÌŒpï¿½ï¿½ï¿½ï¿½ï¿½Mï¿½Â”ï¿½:ï¿½ï¿½ï¿½Mï¿½ï¿½
+	dcb.XonLim = 512;//XONï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚Å‚ÉŠiï¿½[ï¿½Å‚ï¿½ï¿½ï¿½Åï¿½ï¿½oï¿½Cï¿½gï¿½ï¿½:512
+	dcb.XoffLim = 512;//XOFFï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚Å‚ÉŠiï¿½[ï¿½Å‚ï¿½ï¿½ï¿½Åï¿½ï¿½oï¿½Cï¿½gï¿½ï¿½:512
+	dcb.XonChar = 0x11;//ï¿½ï¿½ï¿½Mï¿½ï¿½XONï¿½ï¿½ï¿½ï¿½ ( ï¿½ï¿½ï¿½Mï¿½ÂFï¿½rï¿½Wï¿½Bï¿½ï¿½ï¿½ ) ï¿½ÌŽwï¿½ï¿½:XONï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½11H ( ï¿½fï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½ï¿½Pï¿½FDC1 )
+	dcb.XoffChar = 0x13;//XOFFï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½Mï¿½sï¿½ÂFï¿½rï¿½Wï¿½[ï¿½Êï¿½ï¿½jï¿½ÌŽwï¿½ï¿½:XOFFï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½13H ( ï¿½fï¿½oï¿½Cï¿½Xï¿½ï¿½ï¿½ï¿½3ï¿½FDC3 )
 
-	dcb.fNull = FALSE;// NULLƒoƒCƒg‚Ì”jŠü:”jŠü‚·‚é
-//	dcb.fAbortOnError = TRUE;//ƒGƒ‰[Žž‚Ì“Ç‚Ý‘‚«‘€ìI—¹:I—¹‚·‚é
+	dcb.fNull = FALSE;// NULLï¿½oï¿½Cï¿½gï¿½Ì”jï¿½ï¿½:ï¿½jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	dcb.fAbortOnError = TRUE;//ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ì“Ç‚Ýï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½:ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	dcb.fAbortOnError = FALSE;
-	dcb.fErrorChar = FALSE;// ƒpƒŠƒeƒBƒGƒ‰[”­¶Žž‚ÌƒLƒƒƒ‰ƒNƒ^iErrorCharj’uŠ·:‚È‚µ
-	dcb.ErrorChar = -1;// ƒpƒŠƒeƒBƒGƒ‰[”­¶Žž‚Ì’uŠ·ƒLƒƒƒ‰ƒNƒ^
-	dcb.EofChar = 0x03;// ƒf[ƒ^I—¹’Ê’mƒLƒƒƒ‰ƒNƒ^:ˆê”Ê‚É0x03(ETX)‚ª‚æ‚­Žg‚í‚ê‚Ü‚·B
+	dcb.fErrorChar = FALSE;// ï¿½pï¿½ï¿½ï¿½eï¿½Bï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒLï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½iErrorCharï¿½jï¿½uï¿½ï¿½:ï¿½È‚ï¿½
+	dcb.ErrorChar = -1;// ï¿½pï¿½ï¿½ï¿½eï¿½Bï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì’uï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^
+	dcb.EofChar = 0x03;// ï¿½fï¿½[ï¿½^ï¿½Iï¿½ï¿½ï¿½Ê’mï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^:ï¿½ï¿½Ê‚ï¿½0x03(ETX)ï¿½ï¿½ï¿½æ‚­ï¿½gï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 	dcb.EvtChar = 0x00;// Event notification character is used to start transfer from driver to application.
-	if (SetCommState(hUART, &dcb) != TRUE) return false;  //Ý’è’l‚Ì‘‚«ž‚Ý
+	if (SetCommState(hUART, &dcb) != TRUE) return false;  //ï¿½Ý’ï¿½lï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	SetCommMask(hUART, EV_RXFLAG);	//	Enable event notificaiton character
 
@@ -445,10 +446,10 @@ bool DRUARTMotorDriver::Init(){
 		path.append(comPort);
 		hUART = CreateFile(path.c_str(),
 			GENERIC_READ | GENERIC_WRITE,
-			0,				//ƒ|[ƒg‚Ì‹¤—L•û–@‚ðŽw’è:ƒIƒuƒWƒFƒNƒg‚Í‹¤—L‚µ‚È‚¢
-			NULL,			//ƒZƒLƒ…ƒŠƒeƒB‘®«:ƒnƒ“ƒhƒ‹‚ðŽqƒvƒƒZƒX‚ÖŒp³‚µ‚È‚¢
+			0,				//ï¿½|ï¿½[ï¿½gï¿½Ì‹ï¿½ï¿½Lï¿½ï¿½ï¿½@ï¿½ï¿½wï¿½ï¿½:ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Í‹ï¿½ï¿½Lï¿½ï¿½ï¿½È‚ï¿½
+			NULL,			//ï¿½Zï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Bï¿½ï¿½ï¿½ï¿½:ï¿½nï¿½ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½qï¿½vï¿½ï¿½ï¿½Zï¿½Xï¿½ÖŒpï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
 			OPEN_EXISTING,
-			0,				//ƒ|[ƒg‚Ì‘®«‚ðŽw’è:“¯Šú@”ñ“¯Šú‚É‚µ‚½‚¢‚Æ‚«‚ÍFILE_FLAG_OVERLAPPED
+			0,				//ï¿½|ï¿½[ï¿½gï¿½Ì‘ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½:ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½ñ“¯Šï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½FILE_FLAG_OVERLAPPED
 			NULL);
 		if (hUART == INVALID_HANDLE_VALUE) {
 			DSTR << "CreateFile failed " << GetLastError() << std::endl;
@@ -462,7 +463,7 @@ bool DRUARTMotorDriver::Init(){
 		}
 		CloseHandle(hUART);
 	}
-	//	ƒfƒoƒCƒX‚Ì“o˜^
+	//	ï¿½fï¿½oï¿½Cï¿½Xï¿½Ì“oï¿½^
 	for (int i = 0; i < (int) impl->currentMap.size(); ++i) {
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 	}

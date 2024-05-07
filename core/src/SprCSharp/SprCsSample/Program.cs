@@ -127,17 +127,17 @@ namespace SprCsSample {
             put("ToString", "(   0.1    0.2    0.3)", v3d.ToString());
             System.Console.WriteLine("            ToString: implicit ToString call           : " + v3d);
 
-            PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
-            PHSdkIf phSdk = PHSdkIf.CreateSdk();
-            PHSceneIf phScene = phSdk.CreateScene(descScene);
+            FWSdkIf fwSdk = FWSdkIf.CreateSdk();
+            PHSdkIf phSdk = fwSdk.GetPHSdk();
+            FWSceneIf fwScene = fwSdk.CreateScene();
+            PHSceneIf phScene = fwScene.GetPHScene();
             PHSolidIf phSolid = phScene.CreateSolid(descSolid);
             phSolid.SetPose(new Posed(1, 0, 0, 0, 0, 2, 0));
             put_title("ToString: phSolid");
             put_indent(2, phSolid.ToString());
 
             FWWinBaseDesc descWinBase = new FWWinBaseDesc();
-            FWSdkIf fwSdk = FWSdkIf.CreateSdk();
             put_title("ToString: fwSdk.ToString");
             put_indent(2, fwSdk.ToString());
         }

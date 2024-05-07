@@ -7,7 +7,10 @@
  */
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHConstraintEngine.h>
-
+#include <Physics/PHBallJoint.h>
+#ifdef USE_CLOSED_SRC
+#include "../../closed/include/PliantMotion/PliantMotion.h"
+#endif
 using namespace std;
 using namespace PTM;
 namespace Spr{;
@@ -336,15 +339,16 @@ void PHTreeNode::CompResponseCorrection(PHTreeNode* src, const SpatialVector& dF
 		solid->dV += dZdv_map[src->id] * (-dF);
 }
 
-void PHTreeNode::UpdateVelocity(double* dt){
+void PHTreeNode::UpdateJointVelocities(double* dt){
 	PHSolid* sp = parent->solid;
 	PHSolid* s  = solid;
 	UpdateJointVelocity ();
 	CompRelativeVelocity();
-	s->v = Xcp * sp->v + Xcj * joint->vjrel;
-	s->SetVelocity       (s->GetOrientation() * s->v.v());
-	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
 	
+	//s->v = Xcp * sp->v + Xcj * joint->vjrel;
+	//s->SetVelocity       (s->GetOrientation() * s->v.v());
+	//s->SetAngularVelocity(s->GetOrientation() * s->v.w());
+
 	// 位置更新のステップ幅を計算
 	double dpmax = GetPHScene()->GetMaxDeltaPosition();
 	double dqmax = GetPHScene()->GetMaxDeltaOrientation();
@@ -355,7 +359,17 @@ void PHTreeNode::UpdateVelocity(double* dt){
 
 
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocity(dt);
+		(*it)->UpdateJointVelocities(dt);
+}
+
+void PHTreeNode::UpdateSolidVelocity(double* dt) {
+	PHSolid* sp = parent->solid;
+	PHSolid* s  = solid;
+	s->v = Xcp * sp->v + Xcj * joint->vjrel;
+	s->SetVelocity       (s->GetOrientation() * s->v.v());
+	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->UpdateSolidVelocity(dt);
 }
 
 void PHTreeNode::UpdatePosition(double dt){
@@ -496,25 +510,64 @@ void PHRootNode::CompAccel(){
 	if(solid->IsDynamical()){
 		(Vec6d&)solid->dv = - (Iinv * Z);
 	}
-	else{
-		solid->dv.clear();
-	}
+
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->CompAccel();
 }
 
-void PHRootNode::UpdateVelocity(double* dt){
+void PHRootNode::UpdateJointVelocities(double* dt){
 	if(!bEnabled)
 		return;
-	solid->UpdateVelocity(dt);
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->UpdateVelocity(dt);
+		(*it)->UpdateJointVelocities(dt);
+}
+
+void PHRootNode::UpdateSolidVelocity(double* dt){
+	if(!bEnabled)
+		return;
+
+	if (!solid->IsDynamical()) {
+		solid->v += solid->dv;
+
+		// 速度更新
+		solid->SetVelocity(solid->GetOrientation() * solid->v.v());
+		solid->SetAngularVelocity(solid->GetOrientation() * solid->v.w());
+
+		// ステートの加速度を更新
+		PHSceneIf* scene = GetScene()->Cast();
+		solid->accel = solid->dv.v() * scene->GetTimeStepInv();
+		solid->angAccel = solid->dv.w() * scene->GetTimeStepInv();
+	}
+	else {
+		solid->UpdateVelocity(dt); 
+	}
+
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->UpdateSolidVelocity(dt);
 }
 
 void PHRootNode::UpdatePosition(double dt){
 	if(!bEnabled)
 		return;
-	solid->UpdatePosition(dt);
+	if (useNextPose) {
+		// v,dvの座標系を次のポーズに変更
+		Quaterniond convToNextPose = nextPose.Ori().Inv() * solid->pose.Ori();
+		solid->dv.v() = convToNextPose * solid->dv.v();
+		solid->dv.w() = convToNextPose * solid->dv.w();
+		solid->v.v() = convToNextPose * solid->v.v();
+		solid->v.w() = convToNextPose * solid->v.w();
+		solid->pose = nextPose;
+		// 形状の位置と向きを更新
+		Posed pose_prev;
+		for(int i = 0; i < (int)solid->frames.size(); i++){
+			pose_prev = solid->frames[i]->pose_abs;
+			solid->frames[i]->pose_abs = solid->pose * solid->frames[i]->pose;
+			solid->frames[i]->delta    = solid->frames[i]->pose_abs.Pos() - pose_prev.Pos();
+		}
+		solid->aabbReady = false;
+	}else{
+		solid->UpdatePosition(dt);
+	}
 	solid->SetUpdated(true);
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdatePosition(dt);
@@ -526,6 +579,7 @@ template<int NDOF>
 PHTreeNodeND<NDOF>::PHTreeNodeND(){
 	dvel.clear();
 	vel .clear();
+	ResetGear();
 }
 
 template<int NDOF>

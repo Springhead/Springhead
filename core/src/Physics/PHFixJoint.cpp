@@ -93,7 +93,7 @@ PHFixJoint::PHFixJoint(const PHFixJointDesc& desc) {
 
 void PHFixJoint::CompBias(){
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
-	db.v() = Xjrel.r * dtinv + vjrel.v();
+	db.v() = Xjrel.r * dtinv;
 	db.w() = Xjrel.q.RotationHalf() * dtinv;
 	db *= engine->velCorrectionRate;
 }
