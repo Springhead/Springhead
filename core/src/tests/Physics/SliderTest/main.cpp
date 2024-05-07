@@ -59,7 +59,6 @@ public:
 		soRight->AddShape(shape);
 		soRight->CompInertia();
 		soRight->SetFramePosition(Vec3d(0.3, 0.2, 0));
-		//	PHSliderJointDesc sjd;
 		PHSliderJointDesc sjd;
 		//sjd.spring = 100;
 		//sjd.damper = sjd.spring * 0.1;
@@ -70,12 +69,12 @@ public:
 		//	add reversed joint
 		//		PHSliderJointDesc sjd2 = sjd;
 		PHSliderJointDesc sjd2 = sjd;
-		PHJointIf* slider2 = phscene->CreateJoint(soRight, soLeft, sjd2)->Cast();
+//		PHJointIf* slider2 = phscene->CreateJoint(soRight, soLeft, sjd2)->Cast();
 
 		/* //	add shifted joint
 		PHSliderJointDesc sjd3 = sjd;
 		sjd3.poseSocket.Pos() = Vec3d(0.4, 0, 0);
-		PHJointIf* slider3 = phscene->CreateJoint(soLeft, soRight, sjd3)->Cast();	*/
+		PHJointIf* slider3 = phscene->CreateJoint(soLeft, soRight, sjd3)->Cast();	//*/
 
 
 		GetSdk()->SetDebugMode(true);
