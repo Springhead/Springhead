@@ -56,7 +56,7 @@ public:
 	
 	virtual bool Init(const void* desc);
 	
-    void HIKorokoro::SetForce(const Vec3f& Force, const Vec3f&);
+    void SetForce(const Vec3f& Force, const Vec3f&);
 	
 	//void HIKorokoro::SetForce(Vec3d Force, Vec3d Pos);
 
