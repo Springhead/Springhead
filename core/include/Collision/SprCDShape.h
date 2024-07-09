@@ -347,6 +347,27 @@ struct CDBoxDesc: public CDShapeDesc{
 	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
 };	
 
+/** Cylinder */
+struct CDCylinderIf : public CDConvexIf {
+	SPR_IFDEF(CDCylinder);
+	float   GetRadius();
+	void    SetRadius(float r);
+	float   GetLength();
+	void    SetLength(float h);
+
+};
+
+/** Cylinder descriptor */
+struct CDCylinderDesc : public CDShapeDesc {
+	SPR_DESCDEF(CDCylinder);
+	CDCylinderDesc() : CDShapeDesc() {
+		radius = 1.0f;
+		length = 1.0f;
+	}
+	float radius;    // Cylinder radius
+	float length;    // Cylinder height
+};
+
 
 //@}
 

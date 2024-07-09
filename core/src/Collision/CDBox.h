@@ -44,7 +44,8 @@ public:
 	static std::vector<int> neighbor[8];	///< 頂点の隣の点
 	
 	CDBox();
-	CDBox(const CDBoxDesc& desc);
+	CDBox(const CDBoxDesc& desc
+	);
 	
 	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();

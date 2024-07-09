@@ -399,6 +399,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Experiments\temp\FWAppSample\main.cpp" />
+    <ClCompile Include="..\..\..\..\Kim san back up\CDCylinder.cpp" />
+    <ClCompile Include="..\..\include\Collision\SprCDShape.cpp" />
     <ClCompile Include="CDBox.cpp" />
     <ClCompile Include="CDCapsule.cpp" />
     <ClCompile Include="CDConvex.cpp" />
@@ -416,6 +419,7 @@
     <ClCompile Include="CollisionStub.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Kim san back up\CDCylinder.h" />
     <ClInclude Include="..\..\include\Collision\SprCDDetector.h" />
     <ClInclude Include="..\..\include\Collision\SprCDSpHash.h" />
     <ClInclude Include="CDBox.h" />
