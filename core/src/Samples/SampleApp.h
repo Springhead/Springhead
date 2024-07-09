@@ -83,6 +83,7 @@ public:
 		SHAPE_ROUNDCONE,
 		SHAPE_SPHERE,
 		SHAPE_ELLIPSOID,
+		SHAPE_CYLINDER,
 		SHAPE_ROCK,
 		SHAPE_BLOCK,
 		SHAPE_COIN,
@@ -129,6 +130,7 @@ public:
 	CDBoxIf*				shapeBox;
 	CDSphereIf*				shapeSphere;
 	CDEllipsoidIf*			shapeEllipsoid;
+	CDCylinderIf*			shapeCylinder;
 	CDCapsuleIf*			shapeCapsule;
 	CDRoundConeIf*			shapeRoundCone;
 	CDConvexMeshIf*			shapeCoin;
@@ -241,6 +243,8 @@ public:
 			solid->AddShape(shapeSphere);
 		if (shape == SHAPE_ELLIPSOID)
 			solid->AddShape(shapeEllipsoid);
+		if (shape == SHAPE_CYLINDER)
+			solid->AddShape(shapeCylinder);
 		if(shape == SHAPE_ROCK){
 			CDConvexMeshDesc md;
 			int nv = rand()%100 + 50;
@@ -663,6 +667,11 @@ public: /** FWAppの実装 **/
 		CDEllipsoidDesc ed;
 		ed.radius *= ShapeScale();
 		shapeEllipsoid = GetSdk()->GetPHSdk()->CreateShape(ed)->Cast();
+
+		CDCylinderDesc cyd;
+		cyd.radius *= ShapeScale();
+		cyd.length *= ShapeScale();
+		shapeCylinder = GetSdk()->GetPHSdk()->CreateShape(cyd)->Cast();
 
 		CDCapsuleDesc cd;
 		cd.radius = ShapeScale() * 1;

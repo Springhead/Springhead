@@ -19,7 +19,6 @@ namespace Spr {
 		material = desc.material;
 		radius = desc.radius;
 		length = desc.length;
-		maxSurfArea = length*(2 * radius*M_PI);
 	}
 
 	// CDCylinder‚ÌVolumeŒvZ

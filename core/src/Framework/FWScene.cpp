@@ -499,7 +499,8 @@ void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire
 	CDSphereIf*		sphere	= DCAST(CDSphereIf, shape);
 	CDEllipsoidIf*	ell = shape->Cast();
 	CDCapsuleIf*	cap = DCAST(CDCapsuleIf, shape);
-	CDRoundConeIf*	rc		= DCAST(CDRoundConeIf, shape);
+	CDRoundConeIf* rc = DCAST(CDRoundConeIf, shape);
+	CDCylinderIf * cy = DCAST(CDCylinderIf, shape);
 	CDConvexMeshIf* mesh	= DCAST(CDConvexMeshIf, shape);
 
 	// solid, wireframeの順に描画
@@ -511,9 +512,12 @@ void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire
 	if(sphere)	render->DrawSphere(sphere->GetRadius(), slice, slice, solid_or_wire);
 	if (ell)	render->DrawEllipsoid(ell->GetRadius(), slice, slice, solid_or_wire);
 	if(cap)		render->DrawCapsule(cap->GetRadius(), cap->GetLength(), slice, solid_or_wire);
-	if(rc){
+	if (rc) {
 		Vec2f r = rc->GetRadius();
 		render->DrawRoundCone(r[0], r[1], rc->GetLength(), slice, solid_or_wire);
+	}
+	if (cy) {
+		render->DrawCylinder(cy->GetRadius(), cy->GetLength(), slice, solid_or_wire);
 	}
 	if(mesh)	DrawMesh(render, mesh, solid_or_wire);
 }

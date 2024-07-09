@@ -36,40 +36,40 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -399,15 +399,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Experiments\temp\FWAppSample\main.cpp" />
-    <ClCompile Include="..\..\..\..\Kim san back up\CDCylinder.cpp" />
-    <ClCompile Include="..\..\include\Collision\SprCDShape.cpp" />
     <ClCompile Include="CDBox.cpp" />
     <ClCompile Include="CDCapsule.cpp" />
     <ClCompile Include="CDConvex.cpp" />
     <ClCompile Include="CDConvexMesh.cpp" />
     <ClCompile Include="CDConvexMeshInterpolate.cpp" />
     <ClCompile Include="CDCutRing.cpp" />
+    <ClCompile Include="CDCylinder.cpp" />
     <ClCompile Include="CDDetectorImp.cpp" />
     <ClCompile Include="CDEllipsoid.cpp" />
     <ClCompile Include="CDGJK.cpp" />
@@ -419,7 +417,6 @@
     <ClCompile Include="CollisionStub.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Kim san back up\CDCylinder.h" />
     <ClInclude Include="..\..\include\Collision\SprCDDetector.h" />
     <ClInclude Include="..\..\include\Collision\SprCDSpHash.h" />
     <ClInclude Include="CDBox.h" />
@@ -429,6 +426,7 @@
     <ClInclude Include="CDConvexMesh.h" />
     <ClInclude Include="CDConvexMeshInterpolate.h" />
     <ClInclude Include="CDCutRing.h" />
+    <ClInclude Include="CDCylinder.h" />
     <ClInclude Include="CDDetectorImp.h" />
     <ClInclude Include="CDEllipsoid.h" />
     <ClInclude Include="CDQuickHull2D.h" />

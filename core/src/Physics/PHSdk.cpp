@@ -27,6 +27,7 @@
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 #include <Collision/CDEllipsoid.h>
+#include <Collision/CDCylinder.h>
 #include <Collision/CDCapsule.h>
 #include <Collision/CDRoundCone.h>
 #include <Collision/CDConvexMesh.h>
@@ -166,10 +167,13 @@ CDShapeIf* PHSdk::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 	else if (ii == CDEllipsoidIf::GetIfInfoStatic()) {
 		s = DBG_NEW CDEllipsoid((const CDEllipsoidDesc&)desc);
 	}
+	else if (ii == CDCylinderIf::GetIfInfoStatic()) {
+		s = DBG_NEW CDCylinder((const CDCylinderDesc&)desc);
+	}
 	else if (ii == CDCapsuleIf::GetIfInfoStatic()){
 		s = DBG_NEW CDCapsule((const CDCapsuleDesc&)desc);
 	}
-	else if (ii == CDRoundConeIf::GetIfInfoStatic()){
+	else if (ii == CDRoundConeIf::GetIfInfoStatic()) {
 		s = DBG_NEW CDRoundCone((const CDRoundConeDesc&)desc);
 	}
 	else if (ii == CDBoxIf::GetIfInfoStatic()){
