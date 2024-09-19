@@ -114,6 +114,7 @@ public:
 		GetPHScene()->GetConstraintEngine()->GetDesc(&ed);
 		ed.freezeThreshold = 0;
 		ed.contactCorrectionRate = 0.5;
+		ed.bUseContactSurface = true;
 		GetPHScene()->GetConstraintEngine()->SetDesc(&ed);
 	}
 

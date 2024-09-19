@@ -55,7 +55,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -410,6 +410,7 @@
     <ClCompile Include="PHConstraint.cpp" />
     <ClCompile Include="PHConstraintEngine.cpp" />
     <ClCompile Include="PHContactDetector.cpp" />
+    <ClCompile Include="PHContactEngine.cpp" />
     <ClCompile Include="PHContactPoint.cpp" />
     <ClCompile Include="PHContactSurface.cpp" />
     <ClCompile Include="PHFemEngine.cpp" />
@@ -475,6 +476,7 @@
     <ClInclude Include="PHConstraint.h" />
     <ClInclude Include="PHConstraintEngine.h" />
     <ClInclude Include="PHContactDetector.h" />
+    <ClInclude Include="PHContactEngine.h" />
     <ClInclude Include="PHContactPoint.h" />
     <ClInclude Include="PHContactSurface.h" />
     <ClInclude Include="PHForceField.h" />

@@ -56,6 +56,43 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 
 	movableAxes.Clear();
 }
+void PHContactSurface::CompError() {
+	 PHSceneIf* scene = GetScene();
+	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
+	//誤差をepsだけ小さく見せる
+	double tol = scene->GetContactTolerance();
+	double diff = std::max(shapePair->depth - tol, 0.0);
+	B[0] = -diff;
+	
+	//B[3 - 5] = angle; ++change line 67 - 95
+	// 剛体の法線ベクトル (normal0)
+    Vec3d normal0 = solid[0]->GetOrientation() * Vec3d(0, 1, 0); // 剛体の上面がy方向を向いていると仮定
+    // 床の法線ベクトル   (normal1)
+    Vec3d normal1 = solid[1]->GetOrientation() * Vec3d(0, 1, 0); // 床の上面がy方向を向いていると仮定
+
+    // 法線ベクトルを正規化
+    normal0.unitize();
+    normal1.unitize();
+
+    // 2つの法線ベクトル間の角度を計算
+    double cosAngle = normal0 * normal1; // 内積
+    double angle = acos(cosAngle); // 角度を求める
+
+    // 回転軸の計算（外積）CC  qqQ  
+    Vec3d rotationAxis = normal0 % normal1;
+    if (rotationAxis.norm() > 1e-10) { // 回転軸がほぼゼロベクトルでない場合
+        rotationAxis.unitize();
+    } else {
+        rotationAxis = Vec3d(1, 0, 0); // デフォルトの回転軸（ゼロに近い場合の処理）DIIbbbbbb
+    }
+
+
+    // 回転角をB[3], B[4], B[5]に設定
+    B[3] = angle * rotationAxis.x;
+    B[4] = angle * rotationAxis.y;
+    B[5] = angle * rotationAxis.z;
+
+}
 
 bool PHContactSurface::Iterate() {
 	bool updated = false;

@@ -37,6 +37,11 @@ void CDConvex::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){
 	}
 }
 
+// ++change
+int CDConvex::SupportTag(const Vec3f& v, std::vector<Vec3d>& c_vec) const {
+	return 0;
+}
+
 //----------------------------------------------------------------------------
 #ifdef USE_METRICS_BY_BOXEL
 void CDConvex::CalcMetricByBoxel(float& volume, Vec3f& center, Matrix3f& inertia){

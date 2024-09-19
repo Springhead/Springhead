@@ -62,6 +62,8 @@ public:
 		戻り値には、頂点番号があれば返す。無ければ-1。頂点番号はメッシュの頂点の場合
 		のほか、RoundConeなどの球の中心の番号のこともある	*/
 	virtual int Support(Vec3f&w, const Vec3f& v) const =0;
+	// ++change
+	virtual int SupportTag(const Vec3f& v, std::vector<Vec3d>& c_vec) const;
 	///	切り口を求める．接触解析に使う．
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
 	///	頂点vtx のとなりの頂点を列挙する。

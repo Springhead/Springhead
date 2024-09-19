@@ -10,6 +10,7 @@
 
 #include <Physics/PHContactPoint.h>
 
+
 namespace Spr{;
 
 class PHShapePairForLCP;
@@ -35,6 +36,7 @@ public:
 	virtual bool Iterate();
 
 	// ----- このクラスで実装する機能
+	void    CompError();
 	void    ProjectNormalForce  (SpatialVector& fnew);
 	void    ProjectFrictionForce(SpatialVector& fnew);
 	void    ProjectLateralMoment(SpatialVector& fnew);
