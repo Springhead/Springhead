@@ -15,6 +15,12 @@
 
 namespace Spr{;
 
+enum IntersectionType{
+	SEC_POINT,		//	Sphere
+	SEC_POLYGON,	//	Convex polygon
+	SEC_CURVETURE,	//	
+};
+
 class CDConvex : public CDShape{
 public:
 	SPR_OBJECTDEF_ABST(CDConvex);
@@ -65,7 +71,7 @@ public:
 	// ++change
 	virtual int SupportTag(const Vec3f& v, std::vector<Vec3d>& c_vec) const;
 	///	切り口を求める．接触解析に使う．
-	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
+	virtual IntersectionType FindCutRing(CDCutRing& r, const Posed& toW) =0;
 	///	頂点vtx のとなりの頂点を列挙する。
 	virtual std::vector<int>& FindNeighbors(int vtx);
 	///	頂点バッファを返す。

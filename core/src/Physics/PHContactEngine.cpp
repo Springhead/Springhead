@@ -1358,10 +1358,6 @@ namespace Spr{
 
 
 	// ”CˆÓ‚Ì2ŽŸŒ³‚ÌConvexŠÔ‚Ì‹¤’Ê‹óŠÔ‚É‘Î‚µ‚Ä‚ ‚é“_‚©‚çˆê”Ô‹ß‚¢“_‚ð’T‚·
-	void PHContactEngine::DykstraProjection(const Vec3d& pt, CDConvex* cdc0, PHSolid* phs0, CDConvex* cdc1, PHSolid* phs1) {
-		return;
-	}
-	// ”CˆÓ‚Ì2ŽŸŒ³‚ÌConvexŠÔ‚Ì‹¤’Ê‹óŠÔ‚É‘Î‚µ‚Ä‚ ‚é“_‚©‚çˆê”Ô‹ß‚¢“_‚ð’T‚·
 	/// Wikipedia
 	void PHContactEngine::DykstraProjection(Vec3f& v, const Vec3d& pt) {
 		

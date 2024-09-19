@@ -103,8 +103,6 @@ namespace Spr {
 		/// ある物体情報とその物体上の点から(cdc0, phs0, pt0)別の物体(cdc1, phs1)に対して一番近い点を算出しpt1にセーブする
 		bool	GJK3D(CDConvex* cdc0, PHSolid* phs0, Vec3d& pt0, CDConvex* cdc1, PHSolid* phs1, Vec3d& pt1);
 		// 任意の2次元のConvex間の共通空間に対してある点から一番近い点を探す
-		void	DykstraProjection(const Vec3d& pt, CDConvex* cdc0, PHSolid* phs0, CDConvex* cdc1, PHSolid* phs1);
-		// 任意の2次元のConvex間の共通空間に対してある点から一番近い点を探す
 		void	DykstraProjection(Vec3f& v, const Vec3d& pt);
 
 	};

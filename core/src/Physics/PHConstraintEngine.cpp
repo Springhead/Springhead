@@ -123,6 +123,8 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 		assert(0);
 	}
 
+
+	/*	未完成部分
 	// For 6DoF cases, replace FindCutRing with CreateSingleContactPoint
 	if (ct == 6) {
 		// Create a single contact point
@@ -134,88 +136,77 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 		if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 		engine->points.push_back(point);
 	}
-	else {
-		//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
-		//	切り口を求める。まず、それぞれの形状の切り口を列挙
-		CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
-		int nPoint = (int)engine->points.size();
-		//	両方に切り口がある場合．(球などないものもある)
-		bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
-		int nLine0 = (int)cutRing.lines.size();
-		if (found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
-		int nLine1 = (int)cutRing.lines.size() - nLine0;
-		if (found) {
-			//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
-			cutRing.MakeRing();
-			section.clear();
-			std::vector<Vec3d>	local_section;	//接触座標系での接触面の頂点(面接触用)
-			local_section.clear();
-			if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end - 1)->deleted) {
-				CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end - 1;
-				do {
-					assert(finite(vtx->dist));
+	*/
+
+
+
+	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
+	//	切り口を求める。まず、それぞれの形状の切り口を列挙
+	CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
+	int nPoint = (int)engine->points.size();
+	//	両方に切り口がある場合．(球などないものもある)
+	IntersectionType is0, is1;
+	is0 = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+	int nLine0 = (int)cutRing.lines.size();
+	if (is0 != SEC_POINT) is1 = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+	int nLine1 = (int)cutRing.lines.size() - nLine0;
+	if (is0 == SEC_POINT || is1 == SEC_POINT) {		//	1点で接触している．
+		PHContactPoint* point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+		point->SetScene(engine->GetScene());
+		point->engine = engine;
+
+		if (engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
+		if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
+
+		engine->points.push_back(point);
+	}else if (is0 == SEC_POLYGON && is1 == SEC_POLYGON) {	//	凸多角形で接触している
+		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
+		cutRing.MakeRing();
+		section.clear();
+		std::vector<Vec3d>	local_section;	//接触座標系での接触面の頂点(面接触用)
+		local_section.clear();
+		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end - 1)->deleted) {
+			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end - 1;
+			do {
+				assert(finite(vtx->dist));
 #ifdef _DEBUG
-					if (vtx->dist < 1e-200) {
-						DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
-						DSTR << vtx->dist << vtx->normal << std::endl;
-						DSTR << cutRing.local << std::endl;
+				if (vtx->dist < 1e-200) {
+					DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
+					DSTR << vtx->dist << vtx->normal << std::endl;
+					DSTR << cutRing.local << std::endl;
 
-						DSTR << "Lines:(" << nLine0 << "+" << nLine1 << ")" << std::endl;
-						for (unsigned i = 0; i < cutRing.lines.size(); ++i) {
-							DSTR << cutRing.lines[i].dist << "\t" << cutRing.lines[i].normal << "\t";
-							Vec2d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
-							DSTR << pos.X() << "\t" << pos.Y() << std::endl;
-						}
-
-						DSTR << "Vertices in dual space:" << std::endl;
-						for (CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx != cutRing.vtxs.end; ++vtx) {
-							if (vtx->deleted) continue;
-							DSTR << vtx->dist << "\t" << vtx->normal << "\t";
-							double d = vtx->dist;
-							if (d == 0) d = 1e-100;
-							Vec2d pos = vtx->normal * d;
-							DSTR << pos.X() << "\t" << pos.Y() << std::endl;
-						}
-						cutRing.lines.clear();
-						shape[0]->FindCutRing(cutRing, shapePoseW[0]);
-						shape[1]->FindCutRing(cutRing, shapePoseW[1]);
-						continue;
+					DSTR << "Lines:(" << nLine0 << "+" << nLine1 << ")" << std::endl;
+					for (unsigned i = 0; i < cutRing.lines.size(); ++i) {
+						DSTR << cutRing.lines[i].dist << "\t" << cutRing.lines[i].normal << "\t";
+						Vec2d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
+						DSTR << pos.X() << "\t" << pos.Y() << std::endl;
 					}
+
+					DSTR << "Vertices in dual space:" << std::endl;
+					for (CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx != cutRing.vtxs.end; ++vtx) {
+						if (vtx->deleted) continue;
+						DSTR << vtx->dist << "\t" << vtx->normal << "\t";
+						double d = vtx->dist;
+						if (d == 0) d = 1e-100;
+						Vec2d pos = vtx->normal * d;
+						DSTR << pos.X() << "\t" << pos.Y() << std::endl;
+					}
+					cutRing.lines.clear();
+					shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+					shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+					continue;
+				}
 #endif
-					Vec3d pos;
-					pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
-					if (engine->bUseContactSurface == true) {
-						local_section.push_back(pos);
-					}
-					pos = cutRing.local * pos;
-					section.push_back(pos);
-
-					if (engine->bUseContactSurface == false) {
-						PHContactPoint* point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
-						point->SetScene(engine->GetScene());
-						point->engine = engine;
-
-						if (engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
-						if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
-						engine->points.push_back(point);
-					}
-					vtx = vtx->neighbor[0];
-				} while (vtx != cutRing.vtxs.end - 1);
-
+				Vec3d pos;
+				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
 				if (engine->bUseContactSurface == true) {
-					Vec3d pos(0.0, 0.0, 0.0);
-					//// 拘束点は接触座標系の原点とする
-					//拘束点は断面の中心とする
-					for (int i = 0; i < (int)local_section.size(); i++)
-						pos += local_section[i];
-					pos /= local_section.size();
+					local_section.push_back(pos);
+				}
+				pos = cutRing.local * pos;
+				section.push_back(pos);
 
-					//断面も中心基準にする
-					for (int i = 0; i < (int)local_section.size(); i++)
-						local_section[i] -= pos;
-
-					pos = cutRing.local * pos;
-					PHContactSurface* point = DBG_NEW PHContactSurface(local, this, pos, solid0, solid1, local_section);
+				if (engine->bUseContactSurface == false) {
+					PHContactPoint* point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
 					point->SetScene(engine->GetScene());
 					point->engine = engine;
 
@@ -223,19 +214,34 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 					if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 					engine->points.push_back(point);
 				}
+				vtx = vtx->neighbor[0];
+			} while (vtx != cutRing.vtxs.end - 1);
+
+			if (engine->bUseContactSurface == true) {
+				Vec3d pos(0.0, 0.0, 0.0);
+				//// 拘束点は接触座標系の原点とする
+				//拘束点は断面の中心とする
+				for (int i = 0; i < (int)local_section.size(); i++)
+					pos += local_section[i];
+				pos /= local_section.size();
+
+				//断面も中心基準にする
+				for (int i = 0; i < (int)local_section.size(); i++)
+					local_section[i] -= pos;
+
+				pos = cutRing.local * pos;
+				PHContactSurface* point = DBG_NEW PHContactSurface(local, this, pos, solid0, solid1, local_section);
+				point->SetScene(engine->GetScene());
+				point->engine = engine;
+
+				if (engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
+				if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
+				engine->points.push_back(point);
 			}
 		}
-		if (nPoint == (int)engine->points.size()) {	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
-			//	きっと1点で接触している．
-			PHContactPoint* point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
-			point->SetScene(engine->GetScene());
-			point->engine = engine;
-
-			if (engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
-			if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
-
-			engine->points.push_back(point);
-		}
+	}
+	else if (is0 == SEC_CURVETURE || is1 == SEC_CURVETURE){
+		//	TODO ContactEngineを使う
 	}
 }
 //----------------------------------------------------------------------------
