@@ -90,7 +90,7 @@ int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 }
 
 // 切り口を求める. 接触解析を行う.
-bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
+IntersectionType CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	Vec3f center = ring.localInv * toW.Pos();
@@ -100,7 +100,7 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	sinB : Cutring面と円筒面の線とのなす角が B
 	//	sinA+B = dir.X() になる。
 	float sinA = (radius[1]-radius[0]) / length;
-	if (-1 > (-sinA) || (-sinA) > 1) { return false; } // 球体になっている
+	if (-1 > (-sinA) || (-sinA) > 1) { return SEC_POINT; } // 球体になっている
 	float sinB = dir.X()*sign * sqrt(1-sinA*sinA)  -  sqrt(1-dir.X()*dir.X()) * sinA;
 
 	float r = radius[0];
@@ -124,7 +124,7 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 			if (end+length/20 < start){//0.001 < start){
 				DSTR << "CDRoundCone::FindCutRing() may have a problem" << std::endl;
 			}
-			if (end <= start) return false;
+			if (end <= start) return SEC_POINT;
 		}
 		//	ringに線分を追加
 		float lenInv = 1/sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
@@ -132,9 +132,9 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
 		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y())*lenInv, 0));
 		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));
-		return true;
+		return SEC_POLYGON;
 	}
-	return false;
+	return SEC_POINT;
 }
 
 Vec3d CDRoundCone::Normal(Vec3d p){

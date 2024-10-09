@@ -136,7 +136,7 @@ namespace Spr {
 	}
 
 	// Ø‚èŒû‚ğ‹‚ß‚é. ÚG‰ğÍ‚ğs‚¤.
-	bool CDCylinder::FindCutRing(CDCutRing& ring, const Posed& toW) {
+	IntersectionType CDCylinder::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		//	Ø‚èŒû(ring.local)Œn‚Å‚Ì‰~“›‚ÌŒü‚«
 		Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0, 0, 1); // ‰~”Õ‚ªz²‚Æ‚µ‚Ä’è‹`‚³‚ê‚Ä‚¢‚é‚½‚ß
 		Vec3f center = ring.localInv * toW.Pos();
@@ -151,7 +151,7 @@ namespace Spr {
 			if (dir.X()*sign > 1e-4) {	//	Š®‘S‚É•½s‚Å‚È‚¢ê‡
 				float is = (radius / shrink - sign*center.X()) / (sign*dir.X()) * shrink;	//	ÚG–Ê‚Æ’†Sü‚ğ”¼Œa‚¸‚ç‚µ‚½ü‚Æ‚ÌŒğ“_
 				if (start <= is && is <= end) end = is;
-				else return false;
+				else return SEC_POINT;
 			}
 			//	ring‚Éü•ª‚ğ’Ç‰Á
 			float lenInv = 1 / sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
@@ -159,10 +159,10 @@ namespace Spr {
 			ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
 			ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y())*lenInv, 0));
 			ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));
-			return true;
+			return SEC_CURVETURE;
 		}
 		else {
-			return false;
+			return SEC_POINT;
 		}
 	}
 

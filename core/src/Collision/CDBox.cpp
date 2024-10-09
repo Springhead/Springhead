@@ -129,7 +129,7 @@ std::vector<int>& CDBox::FindNeighbors(int vtx){
 }
 
 // 切り口を求める. 接触解析を行う.
-bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
+IntersectionType CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	const int qfaces_size = 6;	// qfaces.size()=6面 
 	const int base_size = 8;
 
@@ -190,7 +190,7 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		} 
 	}
 	//bool 衝突の有無
-	return rv;
+	return SEC_POLYGON;
 }
 
 // 直方体のサイズを取得

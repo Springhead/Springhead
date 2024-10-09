@@ -58,7 +58,7 @@ bool CDConvexMesh::GetDesc(void *ptr) const {
 	return CDShape::GetDesc(ptr);
 }
 
-bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
+IntersectionType CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();
 	//	頂点がどっち側にあるか調べる．
 	Vec3d planePosL = toL * ring.local.Pos();
@@ -116,7 +116,7 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 			}
 		}
 	}
-	return rv;
+	return SEC_POLYGON;
 }
 
 

@@ -64,7 +64,7 @@ void PHContactSurface::CompError() {
 	double diff = std::max(shapePair->depth - tol, 0.0);
 	B[0] = -diff;
 	
-	//B[3 - 5] = angle; ++change line 67 - 95
+	//B[3 - 5]  ++change line 67 - 95
 	// 剛体の法線ベクトル (normal0)
     Vec3d normal0 = solid[0]->GetOrientation() * Vec3d(0, 1, 0); // 剛体の上面がy方向を向いていると仮定
     // 床の法線ベクトル   (normal1)

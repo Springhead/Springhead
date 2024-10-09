@@ -72,7 +72,7 @@ public:
 	virtual int      LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 	
 	virtual int               Support(Vec3f& w, const Vec3f& v) const;
-	virtual bool              FindCutRing(CDCutRing& r, const Posed& toW);
+	virtual IntersectionType              FindCutRing(CDCutRing& r, const Posed& toW);
 	virtual std::vector<int>& FindNeighbors(int vtx);
 	virtual Vec3f*            GetBase() { return &*base.begin(); };
 

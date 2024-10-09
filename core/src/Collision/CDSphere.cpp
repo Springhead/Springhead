@@ -33,8 +33,8 @@ int CDSphere::Support(Vec3f&w, const Vec3f& v) const{
 }
 
 // 切り口を求める. 接触解析を行う.
-bool CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
-	return false;
+IntersectionType CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
+	return SEC_POINT;
 }
 
 bool CDSphere::IsInside(const Vec3f& p){

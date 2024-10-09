@@ -38,8 +38,8 @@ int CDEllipsoid::Support(Vec3f&w, const Vec3f& v) const {
 }
 
 // 切り口を求める. 接触解析を行う.
-bool CDEllipsoid::FindCutRing(CDCutRing& r, const Posed& toW) {
-	return false;
+IntersectionType CDEllipsoid::FindCutRing(CDCutRing& r, const Posed& toW) {
+	return SEC_POINT;
 }
 
 bool CDEllipsoid::IsInside(const Vec3f& p) {

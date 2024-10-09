@@ -75,7 +75,7 @@ int CDCapsule::Support(Vec3f& w, const Vec3f& v) const {
 
 
 // 切り口を求める. 接触解析を行う.
-bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
+IntersectionType CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	Vec3f center = ring.localInv * toW.Pos();
@@ -90,7 +90,7 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		if (dir.X()*sign > 1e-4){	//	完全に平行でない場合
 			float is = (radius/shrink-sign*center.X()) / (sign*dir.X()) * shrink;	//	接触面と中心線を半径ずらした線との交点
 			if (start<= is && is <= end) end = is;
-			else return false;
+			else return SEC_POINT;
 		}
 		//	ringに線分を追加
 		float lenInv = 1/sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
@@ -98,9 +98,9 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
 		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y())*lenInv, 0));
 		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));
-		return true;
+		return SEC_POLYGON;
 	}else{
-		return false;
+		return SEC_POINT;
 	}
 }
 
