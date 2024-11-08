@@ -1,5 +1,6 @@
 ﻿#include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticEngine.h>
+#include <Physics/PHFrictionType.hpp>
 
 namespace Spr{;
 PHHapticPointerDesc::PHHapticPointerDesc() {
@@ -12,7 +13,6 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	bRotation = true;
 	bForce = false;
 	bFriction = true;
-	bTimeVaryFriction = false;
 	bMultiPoints = false;
 	bVibration = false;
 	posScale = 1.0;
@@ -23,6 +23,10 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	rotationReflexSpring = 10.0f;
 	rotationReflexDamper = 0.0f;
 	rotaionalWeight = 1e5;
+
+	//摩擦の種類に関するところ
+	frictionType = PHFrictionType::Coulomb;
+	bTimeVaryFriction = bTimeVaryFrictionProxy(this);
 
 	//GMS用
 	bSimulation = false;

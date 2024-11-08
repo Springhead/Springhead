@@ -3,6 +3,7 @@
 
 //#include <Springhead.h>
 #include <Physics/PHSolid.h>
+#include <Physics/PHFrictionType.hpp>
 
 namespace Spr{;
 
@@ -23,7 +24,6 @@ struct PHHapticPointerPhysicsSt {
 	bool bRotation;
 	bool bForce;
 	bool bFriction;
-	bool bTimeVaryFriction;
 	bool bVibration;
 	bool bMultiPoints;
 	double posScale;
@@ -38,12 +38,31 @@ struct PHHapticPointerPhysicsSt {
 	double rotaionalWeight;
 	PHHapticPointerPhysicsSt();
 
+	//摩擦の種類に関するところ
+	PHFrictionType frictionType;
+	//プロキシを作成してbTimeVaryFrictionでもアクセスできるようにしておく
+	class bTimeVaryFrictionProxy {
+	private:
+		PHHapticPointerPhysicsSt* data;
+	public:
+		bTimeVaryFrictionProxy() { this->data = nullptr; }//デフォルトコンストラクタ（このコンストラクタでは中身を初期化しないので別途初期化の必要あり）
+		bTimeVaryFrictionProxy(PHHapticPointerPhysicsSt* data) { this->data = data; }//コンストラクタ
+		operator bool() { return data->frictionType == PHFrictionType::TimeVaryFriction; }//ゲッター
+		//セッター
+		bTimeVaryFrictionProxy& operator =(bool b) { 
+			data->frictionType = b ? PHFrictionType::TimeVaryFriction : PHFrictionType::Coulomb;//引数がfalseのときクーロン摩擦になることに注意
+			return *this;
+		}
+	};
+	bTimeVaryFrictionProxy bTimeVaryFriction;
+
 	//GMS用
 	bool bSimulation;
 	bool bMultiproxy;
 	int proxyN;
 	int totalSlipState;
 	std::vector<int> slipState;
+
 };
 
 class PHHapticPointer : public PHHapticEngineDesc, public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{

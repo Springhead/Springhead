@@ -479,6 +479,7 @@
     <ClInclude Include="PHContactPoint.h" />
     <ClInclude Include="PHContactSurface.h" />
     <ClInclude Include="PHForceField.h" />
+    <ClInclude Include="PHFrictionType.hpp" />
     <ClInclude Include="PHGear.h" />
     <ClInclude Include="PHGenericJoint.h" />
     <ClInclude Include="PHHapticEngine.h" />
