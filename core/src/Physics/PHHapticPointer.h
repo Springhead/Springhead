@@ -119,6 +119,9 @@ public:
 		defaultPose = p; 
 	}
 	Posed	GetDefaultPose(){ return defaultPose; }
+	//摩擦の種類に関するAPI
+	void SetFrictionType(PHFrictionType type) { frictionType = type; }
+	PHFrictionType GetFrictionType() { return frictionType; }
 
 	//GMS用
 	void	EnableMultiProxy(bool b) { bMultiproxy = b; }
