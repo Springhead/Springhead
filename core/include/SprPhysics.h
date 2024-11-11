@@ -27,4 +27,5 @@
 #include "Physics/SprPHSkeleton.h"
 #include "Physics/SprPHOpObj.h"
 #include "Physics/SprPHOpSpHashAgent.h"
+#include "Physics/SprPHFrictionType.hpp"
 #endif

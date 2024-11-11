@@ -1,9 +1,9 @@
 ﻿#ifndef PH_HAPTICPOINTER_H
 #define PH_HAPTICPOINTER_H
 
-//#include <Springhead.h>
+#include <Springhead.h>
 #include <Physics/PHSolid.h>
-#include <Physics/PHFrictionType.hpp>
+
 
 namespace Spr{;
 

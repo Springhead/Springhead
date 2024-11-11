@@ -1,6 +1,6 @@
-﻿#include <Physics/PHHapticPointer.h>
+﻿#include <Springhead.h>
+#include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticEngine.h>
-#include <Physics/PHFrictionType.hpp>
 
 namespace Spr{;
 PHHapticPointerDesc::PHHapticPointerDesc() {

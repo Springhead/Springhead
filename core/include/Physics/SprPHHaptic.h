@@ -13,6 +13,7 @@
 #include <Collision/SprCDDetector.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHEngine.h>
+#include <Physics/SprPHFrictionType.hpp>
 
 namespace Spr {
 /** \addtogroup gpPhysics */
@@ -71,6 +72,8 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	double	GetRotationalWeight();					///<	Proxyの回転による破綻を減らすための、倍率
 	void	SetDefaultPose(Posed p);				///<	インタフェースに対するポインタの向き
 	Posed	GetDefaultPose();						///<	インタフェースに対するポインタの向き
+	void SetFrictionType(PHFrictionType type);		///<	摩擦の種類を設定する
+	PHFrictionType GetFrictionType();				///<	摩擦の種類を取得する
 
 	int     NNeighborSolids();						///<	ポインタ近傍の剛体数
 	int		GetNeighborSolidId(int i);				///<	ポインタ近傍の剛体のIDを取得
