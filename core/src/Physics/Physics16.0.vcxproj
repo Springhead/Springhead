@@ -405,6 +405,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LuGre\coordinateConverter.cpp" />
     <ClCompile Include="PHBallJoint.cpp" />
     <ClCompile Include="PHBody.cpp" />
     <ClCompile Include="PHConstraint.cpp" />
@@ -471,6 +472,7 @@
     <ClInclude Include="..\..\include\Physics\SprPHOpObj.h" />
     <ClInclude Include="..\..\include\Physics\SprPHOpSpHashAgent.h" />
     <ClInclude Include="..\..\include\Physics\SprPHSkeleton.h" />
+    <ClInclude Include="LuGre\coordinateConverter.h" />
     <ClInclude Include="PHAxisIndex.h" />
     <ClInclude Include="PHBallJoint.h" />
     <ClInclude Include="PHBody.h" />

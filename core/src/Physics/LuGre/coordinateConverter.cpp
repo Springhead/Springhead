@@ -1,0 +1,128 @@
+
+/*
+	3次元のWorld座標系と、摩擦が生じる接触平面上の座標系の変換を行う
+	ここでは、接触平面上の座標系を表すPose型の変数を生成しているが、これは、
+	1 位置は、接触平面状の座標系の原点のWorld座標系上での表現
+	2 向きを表すクォータニオンは、World座標系から接触面上の座標系への回転の変換を行うためのクォータニオン
+	の位置・向きの情報をもつ変数となっている
+*/
+
+#include <Springhead.h>
+#include <cmath>
+#include "coordinateConverter.h"
+
+namespace Spr{
+
+	//接触面の法線を与えると、World座標系から接触面上の座標系への変換を行うためのPoseを返す
+	//引数:
+	//    normal: 接触面の法線方向をWorld座標系で表したもの
+	//    origin: 平面上の座標系の原点の座標のWorld座標系での表現
+	//戻り値:
+	//    接触平面上の座標系を表すPose型の変数
+	Posed getWorldToPlanePose(Vec3d normal, Vec3d origin) {
+
+		//戻り値のための変数を用意
+		Posed p;
+
+		//原点座標の設定
+		p.Pos() = origin;
+
+		//以下は、World座標系から接触面上の座標系への回転の変換を行うためのクォータニオンを求めてる
+		//念のため、normの長さを1に補正しておく
+		normal = normal.unit();
+
+		//接触面上のx軸方向の単位ベクトルexと、接触面上のy軸方向の単位ベクトルeyを求める
+		Vec3d ex, ey;
+		if (normal[1] == 0 && normal[2] == 0) {
+			ey = Vec3d(0, 1, 0);
+			if (normal[0] < 0) {
+				ex = Vec3d(0, 0, 1);
+			}
+			else {
+				ex = Vec3d(0, 0, -1);
+			}
+
+		} else {
+			//eyを計算する ey = (0, eyy, eyz)とする
+			double denominator = std::sqrt(normal[1] * normal[1] + normal[2] * normal[2]);
+			double eyy = normal[2] / denominator;
+			double eyz = -normal[1] / denominator;
+			ey = Vec3d(0, eyy, eyz);
+			
+			//exを計算する
+			ex = ey % normal;//%は外積
+		}
+
+		//ex, ey, normalを用いて、接触面上の座標系からWorld座標系への変換を行う座標変換行列を求める
+		Matrix3d matrix = Matrix3d(ex, ey, normal);
+
+		//座標変換行列からクォータニオンに変換
+		Quaterniond q;
+		q.FromMatrix(matrix);//接触面上の座標系からWorld座標系への変換を行うクォータニオン
+
+		//World座標系から接触面上の座標系への変換を行うためのクォータニオンを設定
+		p.Ori() = q.Inv();
+
+		return p;
+	}
+
+	//接触面の法線の方向が変化したときに、
+	//それに応じてWorld座標系から接触面上の座標系への変換を行うためのクォータニオンを更新する関数
+	//引数:
+	//    oldPose: 以前の状態での接触平面上の座標系を表すPose型変数
+	//    newNormal: 現在の接触面のWorld座標系おける法線方向
+	//    newOrigin: 現在の接触面での平面上の座標系の原点を表すWorld座標系での座標
+	//戻り値:
+	//    接触平面上の座標系を表すPose型変数
+	Posed updateWorldToPlanePose(Posed oldPose, Vec3d newNormal, Vec3d newOrigin) {
+
+		//戻り値のためのPose型変数の用意
+		Posed newPose;
+
+		//新しい平面上の座標系での原点の設定
+		newPose.Pos() = newOrigin;
+
+		//以下は、World座標系から接触面上の座標系への回転の変換を行うためのクォータニオンを求めてる
+		//念のため、newNormalの長さを1に補正しておく
+		newNormal = newNormal.unit();
+
+		//以前の状態でのWorld座標系での法線方向
+		Vec3d oldNormal = convertPlaneToWorld(Vec3d(0, 0, 1), oldPose);
+
+		//以前の状態での法線方向から現在の状態での法線方向に変換するためのクォータニオン
+		Quaterniond transformQuaternion;
+		transformQuaternion.RotationArc(oldNormal, newNormal);
+
+		//以前の接触面上の座標系への回転を表すクォータニオンを、法線方向の回転と同様に回転させて、
+		//新しい接触面上の座標系への回転を表すクォータニオンを計算し、Pose型変数に設定
+		Quaterniond newQuaternion = transformQuaternion * oldPose.Ori();
+		newPose.Ori() = newQuaternion;
+
+		return newPose;
+	}
+
+	//World座標系の座標から、接触平面上の座標に変換する関数
+	//引数:
+	//    r: World座標系における座標 
+	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
+	//戻り値:
+	//    接触平面上における座標 (z成分は法線方向成分)
+	Vec3d convertWorldToPlane(Vec3d r, Posed p) {
+		Vec3d s = p.Ori() * (r - p.Pos());//接触平面上における座標(z成分は、法線方向成分を表す)
+		return s;
+	}
+
+	//接触平面上の座標から、World座標系の座標に変換する関数
+	//引数:
+	//    s: 接触平面上における座標
+	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
+	//戻り値:
+	//    World座標系における座標
+	Vec3d convertPlaneToWorld(Vec3d s, Posed p) {
+		//p.Ori()はWorld座標系から接触面上の座標系への変換をするクォータニオンなので、
+		//接触面上の座標系からWorld座標系への変換を行うためには逆にしなくてはならないことに注意
+		return p.Ori() * s + p.Pos();
+	}
+}
+
+
