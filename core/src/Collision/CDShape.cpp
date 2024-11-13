@@ -39,6 +39,11 @@ PHMaterial::PHMaterial(){
 	stribeckVelocity = 0.1f;
 	stribeckmu = 0.1f;
 
+	///LuGre Modelのための係数
+	bristlesSpringK = 100000.0;			///< LuGreモデルにおける剛毛のバネ係数
+	bristlesDamperD = sqrt(100000.0);	///< LuGreモデルにおける剛毛のダンパ係数
+	bristlesViscosityV = 0.4f;			///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+
 
 //GMS用
 	timeVaryFrictionAs = { 0.0001f,0.0003f,0.005f };

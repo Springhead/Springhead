@@ -199,6 +199,11 @@ struct PHMaterial{
 	float stribeckVelocity;
 	float stribeckmu;
 
+	///LuGre Modelのための係数
+	float bristlesSpringK;		///< LuGreモデルにおける剛毛のバネ係数
+	float bristlesDamperD;		///< LuGreモデルにおける剛毛のダンパ係数
+	float bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+
 	//GMSモデルのためのパラメータ
 	std::vector<float> mus;					///< 動摩擦係数
 	std::vector<float> mu0s;					///< 最大静止摩擦係数	

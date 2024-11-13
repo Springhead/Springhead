@@ -48,6 +48,10 @@ namespace Spr {
 		stribeckVelocitys = { 0,0,0,0,0 };
 		stribeckmus = { 0,0,0,0,0 };
 		timeVaryFrictionDs = { 0,0,0,0,0 };
+
+		bristlesSpringK = 0;
+		bristlesDamperD = 0;
+		bristlesViscosityV = 0;
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);
@@ -64,6 +68,9 @@ namespace Spr {
 		frictionViscosity = (shape[0]->GetMaterial().frictionViscosity + shape[1]->GetMaterial().frictionViscosity) * 0.5;
 		stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocity + shape[1]->GetMaterial().stribeckVelocity) * 0.5;
 		stribeckmu = (shape[0]->GetMaterial().stribeckmu + shape[1]->GetMaterial().stribeckmu) * 0.5;
+		bristlesSpringK = (shape[0]->GetMaterial().bristlesSpringK + shape[1]->GetMaterial().bristlesSpringK) * 0.5;			///< LuGreモデルにおける剛毛のバネ係数
+		bristlesDamperD = (shape[0]->GetMaterial().bristlesDamperD + shape[1]->GetMaterial().bristlesDamperD) * 0.5;			///< LuGreモデルにおける剛毛のダンパ係数
+		bristlesViscosityV = (shape[0]->GetMaterial().bristlesViscosityV + shape[1]->GetMaterial().bristlesViscosityV) * 0.5;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
 		for (int i = 0; i < (int)shape[0]->GetMaterial().timeVaryFrictionAs.size(); i++) {
 			mus[i] = (shape[0]->GetMaterial().mus[i] + shape[1]->GetMaterial().mus[i]) * 0.5;
