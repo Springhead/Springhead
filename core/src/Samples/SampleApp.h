@@ -657,7 +657,7 @@ public: /** FWAppの実装 **/
 		shapeWallX = GetSdk()->GetPHSdk()->CreateShape(wd)->Cast();
 
 		// 形状の作成
-		bd.boxsize = ShapeScale() * Vec3f(2, 2, 2);
+		bd.boxsize = ShapeScale() * Vec3f(2, 2, 2)*2;
 		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		
 		CDSphereDesc sd;
@@ -669,8 +669,8 @@ public: /** FWAppの実装 **/
 		shapeEllipsoid = GetSdk()->GetPHSdk()->CreateShape(ed)->Cast();
 
 		CDCylinderDesc cyd;
-		cyd.radius *= ShapeScale();
-		cyd.length *= ShapeScale();
+		cyd.radius *= ShapeScale()*2;
+		cyd.length *= ShapeScale()*2;
 		shapeCylinder = GetSdk()->GetPHSdk()->CreateShape(cyd)->Cast();
 
 		CDCapsuleDesc cd;
