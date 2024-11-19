@@ -229,7 +229,34 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 	sh->nIrsNormal = (int)sh->irs.size();
 	return true;
 }
+
+bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
+	
+	int Nirs = (int)sh->NIrs();//接触の数
+
+	if (Nirs > 1) return false;//1つのShapePairについて複数の接触があることはないはず
+
+	//接触していない場合
+	if (Nirs == 0)
+	{
+		sh->avgBristlesDeflection = Vec2d();//接触していないので、剛毛の平均変位を0に戻しておく
+		return false;
+	}
+	
+
+	PHIr* ir = sh->irs[0];//考えるべき接触の拘束条件
+
+
+
+}
+
 bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
+	
+	//LuGreモデルの場合の分岐
+	if (pointer->frictionType == PHFrictionType::LuGre) {
+		return CompLuGreFrictionIntermediateRepresentation(he, pointer, sp, sh);
+	}
+
 	int Nirs = (int)sh->irs.size();
 	if (Nirs == 0) return false;
 	bool bStatic = false;

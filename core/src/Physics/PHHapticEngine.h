@@ -224,6 +224,10 @@ public:
 	/// シミュレーションを実行した直後に実行されるコールバックを登録する
 	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
 
+private:
+	///	LuGreモデルによる摩擦の拘束条件を生成する
+	bool CompLuGreFrictionIntermediateRepresentation(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+
 protected:
 	///<	TO avoid to get force from other object to the haptic pointer, contact mode for PHScene must be set NONE.
 	virtual void DisablePointerContactDetectionInPhysics();
