@@ -3,6 +3,7 @@
 #include <Physics/PHHapticStepImpulse.h>
 #include <Physics/PHHapticStepSingle.h>
 #include <Physics/PHHapticStepLocalDynamics.h>
+#include <Physics/LuGre/coordinateConverter.h>
 
 namespace Spr {
 	;
@@ -52,6 +53,8 @@ namespace Spr {
 		bristlesSpringK = 0;
 		bristlesDamperD = 0;
 		bristlesViscosityV = 0;
+		avgBristlesDeflection = Vec2d();
+		contactSurfacePose = Posed();
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);

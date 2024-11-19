@@ -103,9 +103,13 @@ public:
 	float stribeckVelocity;		///< ストライベク効果の速度の影響の強さ	: 動摩擦 =　mu + (mu - stribeckmu) * (exp(-v / stribeckVelocity) - 1.0)
 	float stribeckmu;			///< 速度∞のときの摩擦係数
 	float muCur;				///< 計算された時変摩擦係数
+
+	//LuGreモデルに必要なもの
 	float bristlesSpringK;		///< LuGreモデルにおける剛毛のバネ係数
 	float bristlesDamperD;		///< LuGreモデルにおける剛毛のダンパ係数
 	float bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位
+	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
 
 	std::vector<float> mus;					///< 動摩擦係数
 	std::vector<float> mu0s;					///< 最大静止摩擦係数	
@@ -152,10 +156,6 @@ struct PHSolidPairForHapticSt{
 
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
-
-	//LuGre Model用の変数
-	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位
-	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
 
 	//GMS用
 	std::vector<unsigned> fricCounts;
