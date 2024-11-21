@@ -124,7 +124,7 @@ public:
 
 //----------------------------------------------------------------------------
 
-struct PHSolidPairForHapticSt{
+struct PHSolidPairForHapticVars{
 	Vec3d force;			///< 力覚ポインタがこの剛体に加える力
 	Vec3d torque;			///< 力覚ポインタがこの剛体に加えるトルク
 
@@ -139,18 +139,17 @@ struct PHSolidPairForHapticSt{
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
 	PHSolidPairForHapticIf::FrictionState  frictionState;
-};
 
-class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
-public:
-	SPR_OBJECTDEF(PHSolidPairForHaptic);
 	int solidID[2];
-	
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
 	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
-	//TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dで使うアクセレランス
-	SpatialMatrix A6D;
-	
+	SpatialMatrix A6D;				// LocalDynamics6Dで使うアクセレランス
+};
+
+class PHSolidPairForHaptic : public PHSolidPairForHapticVars, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
+public:
+	SPR_OBJECTDEF(PHSolidPairForHaptic);
+
 	PHSolidPairForHaptic();
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
 

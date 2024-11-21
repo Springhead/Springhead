@@ -319,9 +319,9 @@ void PHHapticStepLocalDynamicsDev::SyncHaptic2Physic(){
 			int solidID = hpointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, hpointerID);
 			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, hpointerID);
-			PHSolidPairForHapticSt* hst = (PHSolidPairForHapticSt*)hpair;
-			PHSolidPairForHapticSt* pst = (PHSolidPairForHapticSt*)ppair;
-			*pst = *hst;	// haptic側で保持しておくべき情報を同期
+			PHSolidPairForHapticVars* hVars = (PHSolidPairForHapticVars*)hpair;
+			PHSolidPairForHapticVars* pVars = (PHSolidPairForHapticVars*)ppair;
+			*pVars = *hVars;	// haptic側で保持しておくべき情報を同期
 		}
 	}
 	// LocalDynamicsSimulationの結果をシーンに反映
