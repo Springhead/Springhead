@@ -97,8 +97,8 @@ void PHHapticStepImpulse::SyncPhysic2Haptic(){
 		for(size_t j = 0; j < ppointer->neighborSolidIDs.size(); j++){
 			const int solidID = ppointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, ppointerID);
-			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, ppointerID);
-			*hpair = PHSolidPairForHaptic(*ppair);
+			PHSolidPairForHaptic* ppair = engine->GetSolidPair(solidID, ppointerID)->Cast();
+			*hpair = *ppair;
 		}
 	}
 }

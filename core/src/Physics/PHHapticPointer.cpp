@@ -23,12 +23,6 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	rotationReflexSpring = 10.0f;
 	rotationReflexDamper = 0.0f;
 	rotaionalWeight = 1e5;
-
-	//GMS用
-	bSimulation = false;
-	bMultiproxy = false;
-	proxyN = 3;
-	totalSlipState = 0;
 }
 
 //----------------------------------------------------------------------------

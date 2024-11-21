@@ -104,16 +104,6 @@ public:
 	float stribeckmu;			///< 速度∞のときの摩擦係数
 	float muCur;				///< 計算された時変摩擦係数
 
-	std::vector<float> mus;					///< 動摩擦係数
-	std::vector<float> mu0s;					///< 最大静止摩擦係数	
-	std::vector<float> timeVaryFrictionAs;	///< 時変摩擦定数A
-	std::vector<float> timeVaryFrictionBs;	///< 時変摩擦定数B
-	std::vector<float> timeVaryFrictionDs;	///< 時変摩擦定数D
-	std::vector<float> timeVaryFrictionCs;	///< 時変摩擦定数C
-	std::vector<float> muCurs;				///< 計算された時変摩擦係数
-	std::vector<float> stribeckVelocitys;
-	std::vector<float> stribeckmus;
-
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
 	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
@@ -125,15 +115,11 @@ public:
 	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触時の判定
 	int OnDetect(unsigned ct, const Vec3d& center0);
-	bool AnalyzeContactRegion();
 	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
 	int NIrs() { return (int)irs.size();  }
 	int NIrsNormal() { return nIrsNormal;  }
 	Vec3d GetIrForce(int i) { return irs[i]->force;  }
 	double GetMu() { return muCur;  }
-
-	// GMS用
-	double GetMus(int id) { return id < (int) muCurs.size() ? muCurs[id] : muCur; }
 };
 
 //----------------------------------------------------------------------------
@@ -149,12 +135,6 @@ struct PHSolidPairForHapticSt{
 
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
-
-	//GMS用
-	std::vector<unsigned> fricCounts;
-	std::vector<unsigned> contactCounts;
-	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
-	std::vector<int> slipState;
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
@@ -180,34 +160,6 @@ public:
 	PHSolidPairForHapticIf::FrictionState GetFrictionState() { return frictionState; }
 	unsigned GetContactCount() { return contactCount;  }
 	unsigned GetFrictionCount() { return fricCount; }
-
-	//GMS用
-	void InitFrictionState(int n) {
-		frictionStates.clear();
-		for (int i = 0; i < n; i++) {
-			frictionStates.push_back(PHSolidPairForHapticIf::FREE);
-		}
-	}
-	void InitFrictionCount(int n) {
-		fricCounts.clear();
-		for (int i = 0; i < n; i++) {
-			fricCounts.push_back(0);
-		}
-	}
-	void InitContactCount(int n) {
-		contactCounts.clear();
-		for (int i = 0; i < n; i++) {
-			contactCounts.push_back(0);
-		}
-	}
-	void InitSlipState(int n) {
-		slipState.clear();
-		for (int i = 0; i < n; i++) {
-			slipState.push_back(0);
-		}
-	}
-	PHSolidPairForHapticIf::FrictionState GetFrictionStates(int i) { return frictionStates[i]; }
-	int GetSlipState(int i) { return slipState[i]; }
 
 	Vec3d GetForce(){ return force; }
 	Vec3d GetTorque(){ return torque; }

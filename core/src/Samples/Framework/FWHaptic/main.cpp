@@ -153,7 +153,7 @@ public:
 		DRUARTMotorDriverIf* ud = (DRUARTMotorDriverIf*) hiSdk->FindRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic());
 		if (ud->NMotor() >= 8 && device->Init(&HISpidarGDesc("SpidarG6X4R"))) {
 			device->Calibration();
-			((UTRef<HISpidarGIf>)device)->SetWeight(0.3, 1.0, 6.0 * 0);
+			((UTRef<HISpidarGIf>)device)->SetWeight(0.3f, 1.0f, 6.0f * 0);
 		}
 		else if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
 			device->Calibration();

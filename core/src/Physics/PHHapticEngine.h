@@ -235,16 +235,12 @@ public:
 	virtual void HapticRendering(PHHapticStepBase* hs);
 	///	Compute all constraints.
 	void CompIntermediateRepresentationForDynamicProxy(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
-	///	Compute all constraints(Multi proxy).
-	void CompIntermediateRepresentationForDynamicMultiProxy(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
 
 	///	Genreate constraints for surface normal
 	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
 	///	Generate constrants for static friction
 	bool CompFrictionIntermediateRepresentation(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
-	///	Generate constrants for static friction(Multi proxy)
-	bool CompFrictionIntermediateRepresentationMulti(PHHapticStepBase* hs, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
 
 	///	PENALTY based haptic rendering
 	void PenaltyBasedRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
@@ -253,8 +249,6 @@ public:
 
 	///	Add vibration to collision and state transition of friction (static to dynamic) events
 	void VibrationRendering(PHHapticStepBase* hs, PHHapticPointer* pointer);
-	///	Add vibration to collision and state transition of friction (static to dynamic) events(Multi)
-	void VibrationRenderingMulti(PHHapticStepBase* hs, PHHapticPointer* pointer);
 	///	Compute proxy's position which satisfy constrants of all intermediate representations.
 	void SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, PHHapticPointer* pointer, const PHIrs& irs);
 };

@@ -37,13 +37,6 @@ struct PHHapticPointerPhysicsSt {
 	Posed defaultPose;
 	double rotaionalWeight;
 	PHHapticPointerPhysicsSt();
-
-	//GMS用
-	bool bSimulation;
-	bool bMultiproxy;
-	int proxyN;
-	int totalSlipState;
-	std::vector<int> slipState;
 };
 
 class PHHapticPointer : public PHHapticEngineDesc, public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
@@ -100,16 +93,6 @@ public:
 		defaultPose = p; 
 	}
 	Posed	GetDefaultPose(){ return defaultPose; }
-
-	//GMS用
-	void	EnableMultiProxy(bool b) { bMultiproxy = b; }
-	bool	IsMultiProxy() { return bMultiproxy; }
-	void	EnableSimulation(bool b) { bSimulation = b; }
-	bool	IsSimulation() { return bSimulation; }
-	void	SetProxyN(int n) { proxyN = n; }
-	int		GetProxyN() { return proxyN; }
-	int GetTotalSlipState() { return totalSlipState; }
-	int GetSlipState(int i) { return slipState[i]; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {
