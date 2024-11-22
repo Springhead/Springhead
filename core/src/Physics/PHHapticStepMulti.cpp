@@ -59,7 +59,6 @@ void PHHapticStepMulti::SyncHapticPointers(){
 	}
 }
 
-//	TODO hase:	ここも大量のSolidのコピーがあり重そう。
 void PHHapticStepMulti::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー

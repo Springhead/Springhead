@@ -28,11 +28,6 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	frictionType = PHFrictionType::Coulomb;
 	bTimeVaryFriction = bTimeVaryFrictionProxy(this);
 
-	//GMS用
-	bSimulation = false;
-	bMultiproxy = false;
-	proxyN = 3;
-	totalSlipState = 0;
 }
 
 //----------------------------------------------------------------------------

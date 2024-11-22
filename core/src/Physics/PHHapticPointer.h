@@ -56,13 +56,6 @@ struct PHHapticPointerPhysicsSt {
 	};
 	bTimeVaryFrictionProxy bTimeVaryFriction;
 
-	//GMS用
-	bool bSimulation;
-	bool bMultiproxy;
-	int proxyN;
-	int totalSlipState;
-	std::vector<int> slipState;
-
 };
 
 class PHHapticPointer : public PHHapticEngineDesc, public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
@@ -122,16 +115,6 @@ public:
 	//摩擦の種類に関するAPI
 	void SetFrictionType(PHFrictionType type) { frictionType = type; }
 	PHFrictionType GetFrictionType() { return frictionType; }
-
-	//GMS用
-	void	EnableMultiProxy(bool b) { bMultiproxy = b; }
-	bool	IsMultiProxy() { return bMultiproxy; }
-	void	EnableSimulation(bool b) { bSimulation = b; }
-	bool	IsSimulation() { return bSimulation; }
-	void	SetProxyN(int n) { proxyN = n; }
-	int		GetProxyN() { return proxyN; }
-	int GetTotalSlipState() { return totalSlipState; }
-	int GetSlipState(int i) { return slipState[i]; }
 
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {

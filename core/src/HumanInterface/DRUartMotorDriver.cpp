@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-// DRUARTMotorDriver.cpp: DRUARTMotorDriver �N���X�̃C���v�������e�[�V����
+// DRUARTMotorDriver.cpp: implementation of DRUARTMotorDriver class
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -377,34 +377,32 @@ bool DRUARTMotorDriver::InitCom() {
 	DWORD comError;
 	COMSTAT comStat;
 	ClearCommError(hUART, &comError, &comStat);
-	DCB dcb;//�\������L�^����\���̂̐���
-	GetCommState(hUART, &dcb);//���݂̐ݒ�l��ǂݍ���
-	dcb.DCBlength = sizeof(DCB);//DCB�̃T�C�Y
+	DCB dcb;
+	GetCommState(hUART, &dcb);	//	Get current values
+	dcb.DCBlength = sizeof(DCB);//	set size of DCB
 	dcb.BaudRate = 2000*1000;	//	baudrate 2Mbps
 	dcb.ByteSize = 8;			//	8bit
 	dcb.fBinary = TRUE;			//	binaly = TRUE
 	dcb.fParity = NOPARITY;		//	no paritiy
 	dcb.StopBits = ONESTOPBIT;	//	1 stop bit
-	dcb.fOutxCtsFlow = FALSE;	//CTS�t���[����:�t���[����Ȃ�
-	dcb.fOutxDsrFlow = FALSE;	//DSR�n�[�h�E�F�A�t���[����F�g�p���Ȃ�
-	dcb.fDtrControl = DTR_CONTROL_DISABLE;//DTR�L��/����:DTR����
-	dcb.fRtsControl = RTS_CONTROL_DISABLE;//RTS�t���[����:RTS����Ȃ�
-	dcb.fOutX = FALSE;//���M��XON/XOFF����̗L��:�Ȃ�
-	dcb.fInX = FALSE;//��M��XON/XOFF����̗L��:�Ȃ�
-	dcb.fTXContinueOnXoff = TRUE;// ��M�o�b�t�@�[���t��XOFF��M��̌p�����M��:���M��
-	dcb.XonLim = 512;//XON��������܂łɊi�[�ł���ŏ��o�C�g��:512
-	dcb.XoffLim = 512;//XOFF��������܂łɊi�[�ł���ŏ��o�C�g��:512
-	dcb.XonChar = 0x11;//���M��XON���� ( ���M�F�r�W�B��� ) �̎w��:XON�����Ƃ���11H ( �f�o�C�X����P�FDC1 )
-	dcb.XoffChar = 0x13;//XOFF�����i���M�s�F�r�W�[�ʍ��j�̎w��:XOFF�����Ƃ���13H ( �f�o�C�X����3�FDC3 )
-
-	dcb.fNull = FALSE;// NULL�o�C�g�̔j��:�j������
-//	dcb.fAbortOnError = TRUE;//�G���[���̓ǂݏ�������I��:�I������
-	dcb.fAbortOnError = FALSE;
-	dcb.fErrorChar = FALSE;// �p���e�B�G���[�������̃L�����N�^�iErrorChar�j�u��:�Ȃ�
-	dcb.ErrorChar = -1;// �p���e�B�G���[�������̒u���L�����N�^
-	dcb.EofChar = 0x03;// �f�[�^�I���ʒm�L�����N�^:��ʂ�0x03(ETX)���悭�g���܂��B
-	dcb.EvtChar = 0x00;// Event notification character is used to start transfer from driver to application.
-	if (SetCommState(hUART, &dcb) != TRUE) return false;  //�ݒ�l�̏�������
+	dcb.fOutxCtsFlow = FALSE;	//	CTS = flow control: no flow control
+	dcb.fOutxDsrFlow = FALSE;	//	DSR = hardware flow contorl: do not use.
+	dcb.fDtrControl = DTR_CONTROL_DISABLE;//DTR: DTR is not used
+	dcb.fRtsControl = RTS_CONTROL_DISABLE;//RTS: RTS is not used
+	dcb.fOutX = FALSE;			//	Use XON/XOFF when send: NO
+	dcb.fInX = FALSE;			//	Use XON/XOFF when receive: NO
+	dcb.fTXContinueOnXoff = TRUE;// Continue sending after receiving XOFF or when the receiving buffer is full: Yes
+	dcb.XonLim = 512;			//	min length before XON:512
+	dcb.XoffLim = 512;			//	min length before XOFF:512
+	dcb.XonChar = 0x11;			//
+	dcb.XoffChar = 0x13;		//
+	dcb.fNull = FALSE;			//	Discard NULL bytes: Discard
+	dcb.fAbortOnError = FALSE;	//	Read/write operation termination on error: Ignore error
+	dcb.fErrorChar = FALSE;		//	Character replacement when a parity error occurs:None
+	dcb.ErrorChar = -1;			//	the error char to replcace
+	dcb.EofChar = 0x03;			//	EOF character: usually 0x03(ETX) is used
+	dcb.EvtChar = 0x00;			//	Event notification character is used to start transfer from driver to application.
+	if (SetCommState(hUART, &dcb) != TRUE) return false;  //	Set the settings above.
 
 	SetCommMask(hUART, EV_RXFLAG);	//	Enable event notificaiton character
 
@@ -422,7 +420,7 @@ bool DRUARTMotorDriver::InitCom() {
 bool DRUARTMotorDriver::Init(){
 	std::vector<string> comPorts;
 	if (port = -1) {
-		char nameBuffer[128 * 1000];
+		char nameBuffer[128 * 100];
 		if (QueryDosDevice(NULL, nameBuffer, sizeof(nameBuffer)) != 0) {
 			char* p = nameBuffer;
 			while (*p != '\0') {
@@ -446,10 +444,10 @@ bool DRUARTMotorDriver::Init(){
 		path.append(comPort);
 		hUART = CreateFile(path.c_str(),
 			GENERIC_READ | GENERIC_WRITE,
-			0,				//�|�[�g�̋��L���@��w��:�I�u�W�F�N�g�͋��L���Ȃ�
-			NULL,			//�Z�L�����e�B����:�n���h����q�v���Z�X�֌p�����Ȃ�
+			0,				//	Way to share the port: do not share
+			NULL,			//	Security attributes: do not permit child processes to inherit the handle.
 			OPEN_EXISTING,
-			0,				//�|�[�g�̑�����w��:�����@�񓯊��ɂ������Ƃ���FILE_FLAG_OVERLAPPED
+			0,				//	port's attribute: syncronize. For async, use FILE_FLAG_OVERLAPPED
 			NULL);
 		if (hUART == INVALID_HANDLE_VALUE) {
 			DSTR << "CreateFile failed " << GetLastError() << std::endl;
@@ -463,7 +461,7 @@ bool DRUARTMotorDriver::Init(){
 		}
 		CloseHandle(hUART);
 	}
-	//	�f�o�C�X�̓o�^
+	//	Register device
 	for (int i = 0; i < (int) impl->currentMap.size(); ++i) {
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 	}
@@ -526,4 +524,3 @@ void DRUARTMotorDriver::Reset() {
 
 
 } //namespace Spr
-

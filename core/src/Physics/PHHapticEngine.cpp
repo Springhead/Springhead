@@ -40,21 +40,12 @@ namespace Spr {
 		muCur = 0;
 		nIrsNormal = 0;
 
-		mus = {0,0,0,0,0};
-		mu0s = { 0,0,0,0,0};
-	
-		timeVaryFrictionAs = { 0,0,0,0,0 };
-		timeVaryFrictionBs = { 0,0,0,0,0 };
-		timeVaryFrictionCs = { 0,0,0,0,0,0 };
-		stribeckVelocitys = { 0,0,0,0,0 };
-		stribeckmus = { 0,0,0,0,0 };
-		timeVaryFrictionDs = { 0,0,0,0,0 };
-
 		bristlesSpringK = 0;
 		bristlesDamperD = 0;
 		bristlesViscosityV = 0;
 		avgBristlesDeflection = Vec2d();
 		contactSurfacePose = Posed();
+
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);
@@ -71,19 +62,10 @@ namespace Spr {
 		frictionViscosity = (shape[0]->GetMaterial().frictionViscosity + shape[1]->GetMaterial().frictionViscosity) * 0.5;
 		stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocity + shape[1]->GetMaterial().stribeckVelocity) * 0.5;
 		stribeckmu = (shape[0]->GetMaterial().stribeckmu + shape[1]->GetMaterial().stribeckmu) * 0.5;
+
 		bristlesSpringK = (shape[0]->GetMaterial().bristlesSpringK + shape[1]->GetMaterial().bristlesSpringK) * 0.5;			///< LuGreモデルにおける剛毛のバネ係数
 		bristlesDamperD = (shape[0]->GetMaterial().bristlesDamperD + shape[1]->GetMaterial().bristlesDamperD) * 0.5;			///< LuGreモデルにおける剛毛のダンパ係数
 		bristlesViscosityV = (shape[0]->GetMaterial().bristlesViscosityV + shape[1]->GetMaterial().bristlesViscosityV) * 0.5;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
-
-		for (int i = 0; i < (int)shape[0]->GetMaterial().timeVaryFrictionAs.size(); i++) {
-			mus[i] = (shape[0]->GetMaterial().mus[i] + shape[1]->GetMaterial().mus[i]) * 0.5;
-			mu0s[i] = (shape[0]->GetMaterial().mu0s[i] + shape[1]->GetMaterial().mu0s[i]) * 0.5;
-			timeVaryFrictionAs[i] = (shape[0]->GetMaterial().timeVaryFrictionAs[i] + shape[1]->GetMaterial().timeVaryFrictionAs[i]) * 0.5;
-			timeVaryFrictionBs[i] = (shape[0]->GetMaterial().timeVaryFrictionBs[i] + shape[1]->GetMaterial().timeVaryFrictionBs[i]) * 0.5;
-			stribeckVelocitys[i] = (shape[0]->GetMaterial().stribeckVelocitys[i] + shape[1]->GetMaterial().stribeckVelocitys[i]) * 0.5;
-			stribeckmus[i] = (shape[0]->GetMaterial().stribeckmus[i] + shape[1]->GetMaterial().stribeckmus[i]) * 0.5;
-		}
-
 
 }
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
@@ -150,36 +132,6 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 	return cp;
 }
 
-#define SELECTION 1 // 中間表現の面に載っている点は接触点としない
-extern bool bUseContactVolume;
-bool PHShapePairForHaptic::AnalyzeContactRegion(){
-	bUseContactVolume = true;
-	static CDContactAnalysis analyzer;
-	analyzer.FindIntersection(this->Cast());
-	bUseContactVolume = false;
-
-	// 侵入領域の頂点の取得
-	for(CDQHPlane< CDContactAnalysisFace >* it = analyzer.planes.begin; it != analyzer.planes.end; ++it){
-		if(it->deleted) continue;
-		Vec3d point = it->normal/it->dist + commonPoint;	// 双対変換（面から点へ）	
-
-		// 0:剛体, 1:力覚ポインタ
-		if(SELECTION){
-			Vec3d w0 = shapePoseW[0] * closestPoint[0];	// 中間表現面上の点（剛体の近傍点）
-			double dot = (point - w0) * normal;
-			if(dot < -5e-008)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
-		}else{
-			intersectionVertices.push_back(shapePoseW[1].Inv() * point);
-		} 
-	}
-	// 面が見つからなかった、shapeがconvex or boxではなかった場合
-	if(intersectionVertices.size() == 0){
-		intersectionVertices.push_back(closestPoint[1]);
-		return false;
-	}
-	return true;
-}
-
 bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints){
 	irs.clear();
 	nIrsNormal = 0;
@@ -237,11 +189,22 @@ PHSolidPairForHaptic::PHSolidPairForHaptic(){
 	solidID[1] = -1;
 }
 PHSolidPairForHaptic::PHSolidPairForHaptic(const PHSolidPairForHaptic& s){
-	*this = s;
+	//	Copy except shapePairs and listeners.
+	const PHSolidPairForHaptic* src = &s;
+	*(PHSolidPairForHapticVars*)this = *(PHSolidPairForHapticVars*)src;
+	*(PHSolidPairVars*)this = *(PHSolidPairVars*)src;
+	
+	//	Update shapePairs
+	this->shapePairs.resize(src->shapePairs.height(), src->shapePairs.width());
 	for(int i = 0; i < s.shapePairs.height(); i++){
 		for(int j = 0; j < s.shapePairs.width(); j++){
-			const PHShapePairForHaptic* src = s.GetShapePair(i, j)->Cast();
-			if (src) shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*src);
+			const PHShapePairForHaptic* srcPair = s.GetShapePair(i, j)->Cast();
+			if (shapePairs.item(i, j)) {
+				*shapePairs.item(i, j) = *srcPair;	//	必要な部分だけコピーしたい
+			}
+			else {
+				shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*srcPair);
+			}
 		}
 	}
 }
@@ -256,11 +219,7 @@ void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	
 	if(sp->state == CDShapePair::NEW || sp->state == CDShapePair::CONTINUE){
 		sp->OnDetect(ct, body[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
-		if(pointer->IsMultiPoints()){
-			sp->AnalyzeContactRegion();		// 侵入領域の頂点を取得
-		}else{
-			sp->intersectionVertices.push_back(sp->closestPoint[1]);
-		}
+		sp->intersectionVertices.push_back(sp->closestPoint[1]);
 	}else{
 		// 接触していない場合、近傍点を侵入領域の頂点とする
 		sp->intersectionVertices.push_back(sp->closestPoint[1]);
