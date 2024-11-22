@@ -216,6 +216,7 @@ public:
 	void EnableContact(PHSolidIf* solid, bool bEnable);
 	void EnableContact(bool bEnable);
 
+
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）
 	virtual void StepPhysicsSimulation();

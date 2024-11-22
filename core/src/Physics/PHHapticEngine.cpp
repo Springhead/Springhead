@@ -45,7 +45,7 @@ namespace Spr {
 		bristlesViscosityV = 0;
 		avgBristlesDeflection = Vec2d();
 		contactSurfacePose = Posed();
-
+		hasContact = false;
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);

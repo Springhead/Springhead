@@ -110,6 +110,7 @@ public:
 	float bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位
 	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
+	bool hasContact;				///< 前回の更新時に2つのShapeが接触していたかどうか
 
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)

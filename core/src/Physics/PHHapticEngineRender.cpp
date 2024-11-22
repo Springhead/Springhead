@@ -235,15 +235,23 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 
 	if (Nirs > 1) return false;//1つのShapePairについて複数の接触があることはないはず
 
-	//接触していない場合
-	if (Nirs == 0)
-	{
-		sh->avgBristlesDeflection = Vec2d();//接触していないので、剛毛の平均変位を0に戻しておく
+	//現在接触していない場合
+	if (Nirs == 0) {
+		sh->hasContact = false;
 		return false;
 	}
 	
-
+	//現在接触している場合
+	
+	//接触を開始したときの処理
+	if (!sh->hasContact) {
+		sh->hasContact = true;
+		sh->avgBristlesDeflection = Vec2d();//剛毛の平均変位を初期化
+	}
+	
 	PHIr* ir = sh->irs[0];//考えるべき接触の拘束条件
+	
+
 
 
 
