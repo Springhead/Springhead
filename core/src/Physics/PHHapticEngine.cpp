@@ -46,6 +46,9 @@ namespace Spr {
 		avgBristlesDeflection = Vec2d();
 		contactSurfacePose = Posed();
 		hasContact = false;
+		pointerPos = Vec3d();
+		objectVelocity = Vec3d();
+		relativeVelocityOnSurface = Vec3d();
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);

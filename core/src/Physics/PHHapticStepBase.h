@@ -111,7 +111,10 @@ public:
 	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位
 	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
 	bool hasContact;				///< 前回の更新時に2つのShapeが接触していたかどうか
-
+	Vec3d pointerPos;				///< ハプティックポインタの位置(World座標)
+	Vec3d proxyPos;					///< プロキシの位置(World座標)
+	Vec3d objectVelocity;			///< 接触している相手の物体の速度(World座標)
+	Vec3d relativeVelocityOnSurface;///< プロキシと接触している物体の相対速度(接触面上の座標)
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される

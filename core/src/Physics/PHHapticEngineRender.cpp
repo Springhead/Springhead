@@ -1,5 +1,6 @@
 ﻿#include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticStepMulti.h>
+#include <Physics/LuGre/coordinateConverter.h>
 #include <Foundation/QuadProg++.hh>
 
 #if 1
@@ -241,19 +242,51 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		return false;
 	}
 	
-	//現在接触している場合
-	
-	//接触を開始したときの処理
+	//以下は現在接触している場合
+	PHIr* ir = sh->irs[0];//考えるべき接触の拘束条件
+
+	//ちょうど今接触し始めたとき
 	if (!sh->hasContact) {
 		sh->hasContact = true;
 		sh->avgBristlesDeflection = Vec2d();//剛毛の平均変位を初期化
+		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW);//接触面の座標系を用意(ポインタの侵入位置を接触面上の座標系の原点とする)
+		sh->proxyPos = Vec3d();//プロキシの位置は接触開始場所=接触面の原点にしておく
 	}
 	
-	PHIr* ir = sh->irs[0];//考えるべき接触の拘束条件
 	
 
+	//必要な変数などの用意
+	double spring = pointer->GetFrictionSpring();												//ハプティックポインタとプロキシの間のバネ係数
+	double damper = pointer->GetFrictionDamper();												//ハプティックポインタとプロキシの間のダンパ係数
+	sh->contactSurfacePose = updateWorldToPlanePose(sh->contactSurfacePose, ir->normal, ir->pointerPointW);	//接触面上の座標系の更新(ポインタの侵入位置を接触面上の座標系の原点とする)
+	double hdt = he->GetHapticTimeStep();														//摩擦計算の時間間隔
+	Vec3d lastPointerPos = sh->pointerPos;														//ハプティックポインタの前回の位置(World座標)
+	Vec3d lastPointerPosOnSurface = convertPlaneToWorld(lastPointerPos, sh->contactSurfacePose);//ハプティックポインタの前回の位置(接触面上の座標)
+	Vec3d pointerPos = sp->relativePose * ir->pointerPointW;									//ハプティックポインタの現在の位置(World座標)
+	Vec3d pointerPosOnSurface = convertWorldToPlane(pointerPos, sh->contactSurfacePose);		//ハプティックポインタの現在の位置(接触面上の座標)
+	Vec3d lastProxyPos = sh->proxyPos;															//プロキシの前回の位置(World座標)
+	Vec3d lastProxyPosOnSurface = convertWorldToPlane(lastProxyPos, sh->contactSurfacePose);	//プロキシの前回の位置(接触面上の座標)
+	Vec3d objectVelocity = sp->GetSolid(0)->GetVelocity();										//接触している相手の物体の現在の速度(World座標)
+	Vec3d objectVelocityOnSurface = convertWorldToPlane(objectVelocity, sh->contactSurfacePose);//接触している相手の物体の現在の速度(接触面上の座標)
+	Vec3d lastObjectVelocity = sh->objectVelocity;												//接触している相手の物体の前回の速度(World座標)
+	Vec3d lastObjectVelocityOnSurface = convertWorldToPlane(lastObjectVelocity, sh->contactSurfacePose);	//接触している相手の物体の前回の速度(接触面上の座標)
+	Vec3d lastRelativeVelocityOnSurface = sh->relativeVelocityOnSurface;						//前回の時点のプロキシと接触している物体の相対速度(接触面上の座標)
+	Vec2d lastAvgBristlesDeflection = sh->avgBristlesDeflection;								//剛毛の平均変位 (接触面上の座標)
+
+	//連立方程式の用意
+	double A = spring * (-pointerPosOnSurface.z) + damper * (-pointerPosOnSurface.z + lastPointerPosOnSurface.z) / hdt;
+	Vec3d B = spring * (pointerPosOnSurface - lastProxyPosOnSurface)
+				+ damper * (pointerPosOnSurface - lastPointerPosOnSurface) / hdt
+				- pointer->GetMass() *  (objectVelocityOnSurface - lastObjectVelocityOnSurface) / hdt
+				+ pointer->GetMass() * lastRelativeVelocityOnSurface / hdt;
 
 
+	//計算結果などの格納
+	sh->pointerPos = pointerPos;		//ハプティックポインタの位置(World座標)
+	//sh->proxyPos = 
+	sh->objectVelocity = objectVelocity;//接触している相手の物体の速度(World座標)
+	//sh->relativeVelocityOnSurface = 
+	//sh->avgBristlesDeflection = //剛毛の平均変位(接触面上の座標)
 
 }
 
