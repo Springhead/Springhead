@@ -307,7 +307,7 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 		}
 	}*/
 
-	else if (is0 == SEC_CURVETURE || is1 == SEC_CURVETURE) {
+ 	else if (is0 == SEC_CURVETURE || is1 == SEC_CURVETURE) {
 
 		//	TODO ContactEngineを使う
 

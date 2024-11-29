@@ -1274,7 +1274,7 @@ void FWScene::DrawForce(GRRenderIf* render, const Vec3d& f, const Vec3d& t){
 	// constraint force
 	render->SetMaterial(matForce);
 	render->DrawLine(Vec3f(), scaleForce * f);
-			
+	std::cout << f << std::endl;
 	// constraint moment
 	render->SetMaterial(matMoment);
 	render->DrawLine(Vec3f(), scaleMoment * t);
