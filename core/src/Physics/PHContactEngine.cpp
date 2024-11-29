@@ -325,40 +325,48 @@ namespace Spr{
 	}
 
 	void PHContactEngine::CompBias() {
-		PHSceneIf* scene = GetScene(); // Get scene information
-		double dt = scene->GetTimeStep(); // Time step
-		double dtinv = scene->GetTimeStepInv(); // 1 / Time step
-		double tol = scene->GetContactTolerance(); // Contact tolerance
-		int maxIterations = scene->GetNumIteration(); // Max allowed iterations
-		// Correct penetration depth 
-		double diff = std::max(shapePair->depth - tol, 0.0); // Depth difference
-		db[0] = -engine->contactCorrectionRate * diff * dtinv; // Apply depth correction
+		PHSceneIf* scene = GetScene();
+		double dt = scene->GetTimeStep();
+		double dtinv = scene->GetTimeStepInv();
+		double tol = scene->GetContactTolerance();
+		double vth = scene->GetImpactThreshold();
+		double fth = scene->GetFrictionThreshold();
 
-		int iteration = 0;
-		Vec3d CoP; // Center of Pressure placeholder
-
-		while (true) {
-			if (++iteration < maxIterations) {
-				// Calculate forces and torques assuming fixed joint behavior
-				Vec3d normal0 = phceInfo.necessaryInfo.ContLocal.Ex(); // Normal of surface 1
-				Vec3d normal1 = phceInfo.necessaryInfo.ContLocal.Ex() * -1.0; // Normal of surface 2
-
-				double angleDiff = acos(normal0.dot(normal1)); // Angular misalignment
-				if (angleDiff > tol) {
-					Vec3d correctionAxis = normal0 ^ normal1; // Use ^ for cross product
-					correctionAxis.unitize(); // Ensure the correction axis is normalized
-					db[4] += engine->contactCorrectionRate * correctionAxis.Y() * dtinv; // Torque about Y
-					db[5] += engine->contactCorrectionRate * correctionAxis.Z() * dtinv; // Torque about Z
-				}
+		// Positional correction for penetration depth
+		double diff = std::max(shapePair->depth - tol, 0.0); // Penetration depth to correct
+		if (vjrel[0] > -vth) {
+			if (spring == 0.0 && damper == 0.0) {
+				db[0] = -engine->contactCorrectionRate * diff * dtinv;
 			}
 			else {
-				// Find CoP point and apply projection
-				CoP = FindCoP();
-				ProjectionForStability(CoP);
-				break; // Exit the loop
+				double tmp = (shapePair->depth > tol) ? (1.0 / (damper + spring * dt)) : (1.0 / damper);
+				dA[0] = tmp * dtinv;
+				db[0] = -tmp * spring * diff;
 			}
 		}
+		else {
+			// If the relative velocity is above threshold, no correction
+			db[0] = e * vjrel[0];
+		}
+
+		// Tangential corrections
+		db[1] = velField[1];
+		db[2] = velField[2];
+
+		// Rotational corrections for 6DoF (axes 4 and 5)
+		Vec3d n0 = poseSocket.Ori() * Vec3d(1.0, 0.0, 0.0); // Normal vector for socket
+		Vec3d n1 = posePlug.Ori() * Vec3d(1.0, 0.0, 0.0);   // Normal vector for plug
+
+		// Calculate angular error using cross product
+		Vec3d angularError = n0 % n1; // Cross product gives the rotation axis and magnitude
+		db[4] = angularError[1] * engine->contactCorrectionRate * dtinv; // Rotation around Y-axis
+		db[5] = angularError[2] * engine->contactCorrectionRate * dtinv; // Rotation around Z-axis
+
+		// Adjust static/dynamic friction state based on tangential relative velocity
+		double vt = vjrel[1] + velField[1];
+		isStatic = (-fth < vt&& vt < fth);
 	}
+
 
 	inline void PHContactEngine::updateWithProjection(unsigned s, unsigned e, bool& updated) {
 		

@@ -105,8 +105,6 @@ namespace Spr {
 		// ”CˆÓ‚Ì2ŽŸŒ³‚ÌConvexŠÔ‚Ì‹¤’Ê‹óŠÔ‚É‘Î‚µ‚Ä‚ ‚é“_‚©‚çˆê”Ô‹ß‚¢“_‚ð’T‚·
 		void	DykstraProjection(Vec3f& v, const Vec3d& pt);
 		virtual void CompBias();
-		void  ProjectionForStability(const Vec3d& CoP);;
-		Vec3d FindCop(); 
 			
 	};
 
