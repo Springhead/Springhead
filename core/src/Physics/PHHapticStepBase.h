@@ -113,8 +113,13 @@ public:
 	bool hasContact;				///< 前回の更新時に2つのShapeが接触していたかどうか
 	Vec3d pointerPos;				///< ハプティックポインタの位置(World座標)
 	Vec3d proxyPos;					///< プロキシの位置(World座標)
-	Vec3d objectVelocity;			///< 接触している相手の物体の速度(World座標)
-	Vec3d relativeVelocityOnSurface;///< プロキシと接触している物体の相対速度(接触面上の座標)
+	Vec3d objectVel;			///< 接触している相手の物体の速度(World座標)
+	Vec2d relativeVelOnSurface;///< プロキシと接触している物体の相対速度(接触面上の座標)
+	Vec2d avgStickingTime;			///< 平均固着継続時間
+	double LuGreParameterA;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータA
+	double LuGreParameterB;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータB
+	double LuGreParameterC;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータC
+	Vec2d LuGreFunctionG;			///< LuGreモデルにおける関数g(T) = A + B log(C * avgStickingTime + 1)の値
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される

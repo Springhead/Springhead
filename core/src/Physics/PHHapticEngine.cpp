@@ -47,8 +47,13 @@ namespace Spr {
 		contactSurfacePose = Posed();
 		hasContact = false;
 		pointerPos = Vec3d();
-		objectVelocity = Vec3d();
-		relativeVelocityOnSurface = Vec3d();
+		objectVel = Vec3d();
+		relativeVelOnSurface = Vec2d();
+		avgStickingTime = Vec2d();
+		LuGreParameterA = 0.5;
+		LuGreParameterB = 2.0;
+		LuGreParameterC = 10.0;
+		LuGreFunctionG = Vec2d(LuGreParameterA, LuGreParameterA);
 	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);
