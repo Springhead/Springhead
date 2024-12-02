@@ -108,14 +108,16 @@ public:
 	float bristlesSpringK;		///< LuGreモデルにおける剛毛のバネ係数
 	float bristlesDamperD;		///< LuGreモデルにおける剛毛のダンパ係数
 	float bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
-	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位
+	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位(接触面上の座標)
+	Vec2d avgBristlesDeflectionVel;	///< 剛毛の平均変位(接触面上の座標)を微分したもの　平均変位の変化の速さを表す
 	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
 	bool hasContact;				///< 前回の更新時に2つのShapeが接触していたかどうか
 	Vec3d pointerPos;				///< ハプティックポインタの位置(World座標)
 	Vec3d proxyPos;					///< プロキシの位置(World座標)
-	Vec3d objectVel;			///< 接触している相手の物体の速度(World座標)
-	Vec2d relativeVelOnSurface;///< プロキシと接触している物体の相対速度(接触面上の座標)
+	Vec3d objectVel;				///< 接触している相手の物体の速度(World座標)
+	Vec2d relativeVelOnSurface;		///< プロキシと接触している物体の相対速度(接触面上の座標)
 	Vec2d avgStickingTime;			///< 平均固着継続時間
+	Vec2d frictionForce;			///< 摩擦力 (接触絵面上の座標)
 	double LuGreParameterA;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータA
 	double LuGreParameterB;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータB
 	double LuGreParameterC;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータC

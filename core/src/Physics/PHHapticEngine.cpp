@@ -44,12 +44,14 @@ namespace Spr {
 		bristlesDamperD = 0;
 		bristlesViscosityV = 0;
 		avgBristlesDeflection = Vec2d();
+		avgBristlesDeflectionVel = Vec2d();
 		contactSurfacePose = Posed();
 		hasContact = false;
 		pointerPos = Vec3d();
 		objectVel = Vec3d();
 		relativeVelOnSurface = Vec2d();
 		avgStickingTime = Vec2d();
+		frictionForce = Vec2d();
 		LuGreParameterA = 0.5;
 		LuGreParameterB = 2.0;
 		LuGreParameterC = 10.0;

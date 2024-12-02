@@ -248,11 +248,13 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	//ちょうど今接触し始めたとき
 	if (!sh->hasContact) {
 		sh->hasContact = true;
-		sh->avgBristlesDeflection = Vec2d();//剛毛の平均変位を初期化
-		sh->avgStickingTime = Vec2d();//平均固着時間を初期化
-		sh->LuGreFunctionG = Vec2d(sh->LuGreParameterA, sh->LuGreParameterA);//関数g(T)を初期化
+		sh->avgBristlesDeflection = Vec2d();										//剛毛の平均変位を初期化
+		sh->avgBristlesDeflectionVel = Vec2d();										//剛毛の平均変位の微分値を初期化
+		sh->avgStickingTime = Vec2d();												//平均固着時間を初期化
+		sh->LuGreFunctionG = Vec2d(sh->LuGreParameterA, sh->LuGreParameterA);		//関数g(T)を初期化
 		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW);//接触面の座標系を用意(ポインタの侵入位置を接触面上の座標系の原点とする)
-		sh->proxyPos = Vec3d();//プロキシの位置は接触開始場所=接触面の原点にしておく
+		sh->proxyPos = Vec3d();														//プロキシの位置は接触開始場所=接触面の原点にしておく
+		sh->frictionForce = Vec2d();												//摩擦力の初期化
 	}
 	
 	
@@ -322,15 +324,43 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		w[2] = 0;
 
 		//連立方程式の解を入れるベクトルを用意
-		Vec3d x;
+		Vec3d x[2];//x[0]がプロキシの相対速度正の場合の結果、x[1]は相対速度負の場合の結果
 
 		//連立方程式を解く
+		for (int j = 0; j < 2; j++) {//j = 0はプロキシの相対速度が正の場合の計算、j = 1は相対速度が負の場合の計算
+
+			//前回の値で初期化
+			x[i] = Vec3d(sh->avgBristlesDeflectionVel[i], lastRelativeVelOnSurface[i], sh->frictionForce[i]);
+
+			//連立方程式を解く
+			GaussSeidelEquation(W[j], x[i], w);
+		}
+
+		//連立方程式を解いた結果、x[0]とx[1]のどちらを採用するか決める
+		bool conditionStisfied[2];//プロキシの相対速度が正の場合と、負の場合について、それぞれ条件が満たされているかを表す
+		conditionStisfied[0] = ( x[0][1] >= 0 );
+		conditionStisfied[1] = (x[1][1] <= 0 );
+
+		int selectedIndex = 0;//x[0]とx[1]のどちらを採用するか
+		if (conditionStisfied[0]) {
+			if (conditionStisfied[1]) {
+				//どちらも条件を満たしている場合
+				printf("プロキシの相対速度が正の場合も負の場合も条件を満たしています\n");
+			}
+			//プロキシの相対速度が正の場合のみ条件を満たしているというケース
+		} else if (conditionStisfied[1]) {
+			//プロキシの相対速度が負の場合のみ条件を満たしているというケース
+			selectedIndex = 1;
+		} else {
+			//どちらも条件を満たしていない場合
+			printf("プロキシの相対速度が正の場合も負の場合も条件を満たしていません\n");
+		}
 		
-
-
 		//計算結果を保存
-		sh->relativeVelOnSurface[i] = x[1];
-		sh->avgBristlesDeflection[i] = lastAvgBristlesDeflection[i] + x[0] * hdt;
+		sh->relativeVelOnSurface[i] = x[selectedIndex][1];											//プロキシの相対速度(接触面上の座標)
+		sh->avgBristlesDeflection[i] = lastAvgBristlesDeflection[i] + x[selectedIndex][0] * hdt;	//剛毛の平均変位(接触面上の座標)
+		sh->avgBristlesDeflectionVel[i] = x[selectedIndex][0];										//剛毛の平均変位(接触面上の座標)の微分
+		sh->frictionForce[i] = x[selectedIndex][2];													//摩擦力(接触面上の座標)					
 	}
 
 
