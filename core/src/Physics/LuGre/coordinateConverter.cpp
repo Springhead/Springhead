@@ -87,17 +87,24 @@ namespace Spr{
 		newNormal = newNormal.unit();
 
 		//以前の状態でのWorld座標系での法線方向
-		Vec3d oldNormal = convertPlaneToWorld(Vec3d(0, 0, 1), oldPose);
-
+		Vec3d oldNormal = convertPlaneToWorldVec(Vec3d(0, 0, 1), oldPose);
+		
 		//以前の状態での法線方向から現在の状態での法線方向に変換するためのクォータニオン
 		Quaterniond transformQuaternion;
 		transformQuaternion.RotationArc(oldNormal, newNormal);
+		
+		//以前の「接触面上の座標系への回転を表すクォータニオン」から、
+		//新しい「接触面上の座標系への回転を表すクォータニオン」( = newQuaternion)を求める。
+		//計算の仕組み:
+		//transformQuaternion * oldNormal = newNormal   <- transformQuaternionの定義
+		//oldPose.Ori().Inv() * Vector3(0, 0, 1) = oldNormal   <- World座標でのoldNormalが以前の接触面上の座標系での(0, 0, 1)にあたる
+		//newQuaternion.Inv() * Vector3(0, 0, 1) = newNormal   <- World座標でのnewNormalが以前の接触面上の座標系での(0, 0, 1)にあたる
+		//この３つの式から、newQuaternion = oldPose.Ori() * transformQuaternion.Inv()が導かれる。
+		Quaterniond newQuaternion = oldPose.Ori() * transformQuaternion.Inv();
 
-		//以前の接触面上の座標系への回転を表すクォータニオンを、法線方向の回転と同様に回転させて、
-		//新しい接触面上の座標系への回転を表すクォータニオンを計算し、Pose型変数に設定
-		Quaterniond newQuaternion = transformQuaternion * oldPose.Ori();
+		//新しい接触面上の座標系への回転を表すクォータニオンをPose型変数に設定
 		newPose.Ori() = newQuaternion;
-
+		
 		return newPose;
 	}
 
@@ -107,8 +114,20 @@ namespace Spr{
 	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
 	//戻り値:
 	//    接触平面上における座標 (z成分は法線方向成分)
-	Vec3d convertWorldToPlane(Vec3d r, Posed p) {
+	Vec3d convertWorldToPlanePos(Vec3d r, Posed p) {
 		Vec3d s = p.Ori() * (r - p.Pos());//接触平面上における座標(z成分は、法線方向成分を表す)
+		return s;
+	}
+
+	//World座標系のベクトルから、接触平面上のベクトルに変換する関数
+	//速度など原点の位置を考慮しない変換をする場合に用いる
+	//引数:
+	//    r: World座標系でのベクトル 
+	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
+	//戻り値:
+	//    接触平面上でのベクトル (z成分は法線方向成分)
+	Vec3d convertWorldToPlaneVec(Vec3d r, Posed p) {
+		Vec3d s = p.Ori() * r;//接触平面上でのベクトル(z成分は、法線方向成分を表す)
 		return s;
 	}
 
@@ -118,10 +137,23 @@ namespace Spr{
 	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
 	//戻り値:
 	//    World座標系における座標
-	Vec3d convertPlaneToWorld(Vec3d s, Posed p) {
+	Vec3d convertPlaneToWorldPos(Vec3d s, Posed p) {
 		//p.Ori()はWorld座標系から接触面上の座標系への変換をするクォータニオンなので、
 		//接触面上の座標系からWorld座標系への変換を行うためには逆にしなくてはならないことに注意
-		return p.Ori() * s + p.Pos();
+		return p.Ori().Inv() * s + p.Pos();
+	}
+
+	//接触平面上のベクトルから、World座標系のベクトルに変換する関数
+	//速度など原点の位置を考慮しない変換をする場合に用いる
+	//引数:
+	//    s: 接触平面上でのベクトル
+	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
+	//戻り値:
+	//    World座標系でのベクトル
+	Vec3d convertPlaneToWorldVec(Vec3d s, Posed p) {
+		//p.Ori()はWorld座標系から接触面上の座標系への変換をするクォータニオンなので、
+		//接触面上の座標系からWorld座標系への変換を行うためには逆にしなくてはならないことに注意
+		return p.Ori().Inv() * s;
 	}
 }
 

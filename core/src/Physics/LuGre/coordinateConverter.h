@@ -31,7 +31,16 @@ namespace Spr {
 	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
 	//戻り値:
 	//    接触平面上における座標 (z成分は法線方向成分)
-	Vec3d convertWorldToPlane(Vec3d r, Posed p);
+	Vec3d convertWorldToPlanePos(Vec3d r, Posed p);
+
+	//World座標系のベクトルから、接触平面上のベクトルに変換する関数
+	//速度など原点の位置を考慮しない変換をする場合に用いる
+	//引数:
+	//    r: World座標系でのベクトル 
+	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
+	//戻り値:
+	//    接触平面上でのベクトル (z成分は法線方向成分)
+	Vec3d convertWorldToPlaneVec(Vec3d r, Posed p);
 
 	//接触平面上の座標から、World座標系の座標に変換する関数
 	//引数:
@@ -39,5 +48,14 @@ namespace Spr {
 	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
 	//戻り値:
 	//    World座標系における座標
-	Vec3d convertPlaneToWorld(Vec3d s, Posed p);
+	Vec3d convertPlaneToWorldPos(Vec3d s, Posed p);
+
+	//接触平面上のベクトルから、World座標系のベクトルに変換する関数
+	//速度など原点の位置を考慮しない変換をする場合に用いる
+	//引数:
+	//    s: 接触平面上でのベクトル
+	//    p: 平面上の座標系を表すPose型変数(関数GetWorldToPlanePose()で生成する)
+	//戻り値:
+	//    World座標系でのベクトル
+	Vec3d convertPlaneToWorldVec(Vec3d s, Posed p);
 }
