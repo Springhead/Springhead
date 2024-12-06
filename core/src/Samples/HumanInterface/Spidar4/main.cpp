@@ -11,23 +11,32 @@ int __cdecl main(){
 	SEH_HANDLER_DEF
 	SEH_HANDLER_TRY
 
-	// HumanInterface SDKを作成
-	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
+		// HumanInterface SDKを作成
+		UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
 
-	// Spidar制御用ハードウェアの初期化
+	// win32
 	DRUsb20SimpleDesc usbSimpleDesc;
-	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
-	for(int i=0; i<10; ++i){
+	for (int i = 0; i < 10; ++i) {
 		usb20Sh4Desc.channel = i;
-		sdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
-	sdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-
-	sdk->Print(DSTR);
+	// win64
+	DRCyUsb20Sh4Desc cyDesc;
+	for (int i = 0; i < 10; ++i) {
+		cyDesc.channel = i;
+		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+	}
+	//	UART Motor Driver
+	DRUARTMotorDriverDesc umDesc;
+	DRUARTMotorDriverIf* uartMotorDriver = hiSdk->AddRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic(), &umDesc)->Cast();
+	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+	hiSdk->Print(DSTR);
+	hiSdk->Print(std::cout);
 
 	// Spidarインタフェース作成
-	UTRef<HISpidar4If> spg = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidar4Desc("SpidarG6X3R"));
 
 	int t = 0;
