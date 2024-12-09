@@ -231,7 +231,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 }
 
 bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
-	
+
 	int Nirs = (int)sh->NIrs();//接触の数
 
 	if (Nirs > 1) return false;//1つのShapePairについて複数の接触があることはないはず
@@ -271,7 +271,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	Vec3d lastObjectVel = sh->objectVel;														//接触している相手の物体の前回の速度(World座標)
 	Vec3d lastObjectVelOnSurface = convertWorldToPlaneVec(lastObjectVel, sh->contactSurfacePose);	//接触している相手の物体の前回の速度(接触面上の座標)
 	Vec3d lastPointerRelativePos = sh->pointerPos - objectPos;									//ハプティックポインタの前回の相対位置(World座標)
-	Vec3d lastPointerRelativePosOnSurface = convertPlaneToWorldPos(lastPointerRelativePos, sh->contactSurfacePose);	//ハプティックポインタの前回の相対位置(接触面上の座標)
+	Vec3d lastPointerRelativePosOnSurface = convertWorldToPlanePos(lastPointerRelativePos, sh->contactSurfacePose);	//ハプティックポインタの前回の相対位置(接触面上の座標)
 	Vec3d pointerRelativePos = sp->relativePose * ir->pointerPointW - objectPos;									//ハプティックポインタの現在の相対位置(World座標)
 	Vec3d pointerRelativePosOnSurface = convertWorldToPlanePos(pointerRelativePos, sh->contactSurfacePose);			//ハプティックポインタの現在の相対位置(接触面上の座標)
 	Vec3d lastProxyPos = sh->proxyPos;																				//プロキシの前回の絶対位置(World座標)
@@ -286,7 +286,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		//接触面上のx方向について
 
 		//平均固着時間、g(T)の更新
-		sh->avgStickingTime[i] = std::min(sh->avgStickingTime[i], sh->LuGreFunctionG[i] / (sh->bristlesSpringK * std::abs(lastRelativeVelOnSurface[i])));
+		sh->avgStickingTime[i] = std::min(sh->avgStickingTime[i] + hdt, sh->LuGreFunctionG[i] / (sh->bristlesSpringK * std::abs(lastRelativeVelOnSurface[i])));
 		sh->LuGreFunctionG[i] = sh->LuGreParameterA + sh->LuGreParameterB * std::log(sh->LuGreParameterC * sh->avgStickingTime[i] + 1);
 
 		//連立方程式の用意(連立方程式はWx = wとする)
@@ -300,7 +300,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		//連立方程式の左辺の行列を作成
 		Matrix3d W[2];//W[0]はプロキシと物体の相対速度が正になる場合、W[1]は相対速度が負になる場合の行列を表す
 		//まずは相対速度が正になる場合を埋める
-		W[0][0][0] = A * (sh->bristlesSpringK + hdt + sh->bristlesDamperD);
+		W[0][0][0] = A * (sh->bristlesSpringK * hdt + sh->bristlesDamperD);
 		W[0][0][1] = sh->bristlesViscosityV * A;
 		W[0][0][2] = -1;
 		W[0][1][0] = 0;
@@ -324,7 +324,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		w[0] = -A * sh->bristlesSpringK * lastAvgBristlesDeflection[i];
 		w[1] = -B;
 		w[2] = 0;
-
+		//printf("左辺([%f, %f], [%f], [%f, %f])\n", W[0][0][0], W[0][0][1], W[0][1][1], W[0][2][0], W[0][2][1]);
 		//連立方程式の解を入れるベクトルを用意
 		Vec3d x[2];//x[0]がプロキシの相対速度正の場合の結果、x[1]は相対速度負の場合の結果
 
@@ -332,25 +332,31 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		for (int j = 0; j < 2; j++) {//j = 0はプロキシの相対速度が正の場合の計算、j = 1は相対速度が負の場合の計算
 
 			//前回の値で初期化
-			x[i] = Vec3d(sh->avgBristlesDeflectionVel[i], lastRelativeVelOnSurface[i], sh->frictionForce[i]);
+			x[j] = Vec3d(sh->avgBristlesDeflectionVel[i], lastRelativeVelOnSurface[i], sh->frictionForce[i]);
 
 			//連立方程式を解く
-			GaussSeidelEquation(W[j], x[i], w);
+			int ip[3];
+			gauss(W[j], x[j], w, ip);
+			
 		}
-
+		
 		//連立方程式を解いた結果、x[0]とx[1]のどちらを採用するか決める
-		bool conditionStisfied[2];//プロキシの相対速度が正の場合と、負の場合について、それぞれ条件が満たされているかを表す
-		conditionStisfied[0] = ( x[0][1] >= 0 );
-		conditionStisfied[1] = ( x[1][1] <= 0 );
+		bool conditionSatisfied[2];//プロキシの相対速度が正の場合と、負の場合について、それぞれ条件が満たされているかを表す
+		conditionSatisfied[0] = ( x[0][1] >= 0 );
+		conditionSatisfied[1] = ( x[1][1] <= 0 );
+		
+		printf("(%f, %f, %f) (%f, %f, %f)\n", x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2]);
 
 		int selectedIndex = 0;//x[0]とx[1]のどちらを採用するか
-		if (conditionStisfied[0]) {
-			if (conditionStisfied[1]) {
+		if (conditionSatisfied[0]) {
+			if (conditionSatisfied[1]) {
 				//どちらも条件を満たしている場合
 				printf("プロキシの相対速度が正の場合も負の場合も条件を満たしています\n");
+				
+				//printf("(%f, %f, %f) (%f, %f, %f)       (lastZ: %f), det(%f, %f)\n", x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2], lastAvgBristlesDeflection[i], det(W[0]), det(W[1]));
 			}
 			//プロキシの相対速度が正の場合のみ条件を満たしているというケース
-		} else if (conditionStisfied[1]) {
+		} else if (conditionSatisfied[1]) {
 			//プロキシの相対速度が負の場合のみ条件を満たしているというケース
 			selectedIndex = 1;
 		} else {
@@ -362,7 +368,8 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		sh->relativeVelOnSurface[i] = x[selectedIndex][1];											//プロキシの相対速度(接触面上の座標)
 		sh->avgBristlesDeflection[i] = lastAvgBristlesDeflection[i] + x[selectedIndex][0] * hdt;	//剛毛の平均変位(接触面上の座標)
 		sh->avgBristlesDeflectionVel[i] = x[selectedIndex][0];										//剛毛の平均変位(接触面上の座標)の微分
-		sh->frictionForce[i] = x[selectedIndex][2];													//摩擦力(接触面上の座標)					
+		sh->frictionForce[i] = x[selectedIndex][2];													//摩擦力(接触面上の座標)
+
 	}
 
 	//計算結果の保存
@@ -375,20 +382,22 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	Vec3d proxyRelativePos = convertPlaneToWorldPos(proxyRelativePosOnSurface, sh->contactSurfacePose);	//プロキシの現在の相対位置(World座標)
 	sh->proxyPos = proxyRelativePos + objectPos;														//プロキシの現在の絶対位置(World座標)
 
+	
 	return true;
 	
 	//拘束条件の生成
+	/*
 	PHIr* fricIr = DBG_NEW PHIr();
 	*fricIr = *ir;
 	Vec3d proxyPosDelta = sh->proxyPos - lastProxyPos;	//プロキシの位置の移動量(World座標)
 	fricIr->normal = proxyPosDelta.unit();
 	fricIr->depth = proxyPosDelta.norm();
-	//sh->irs.push_back(fricIr);
-
+	sh->irs.push_back(fricIr);
+	*/
 	//デバッグ用
-	printf("(%f, %f, %f,   %f, %f, %f)\n", sh->contactSurfacePose.PosX(), sh->contactSurfacePose.PosY(), sh->contactSurfacePose.PosZ(), sh->contactSurfacePose.OriX(), sh->contactSurfacePose.OriY(), sh->contactSurfacePose.OriZ());
-	printf("摩擦力: (%f, %f) => %f\n", sh->frictionForce[0], sh->frictionForce[1], sh->frictionForce.norm());
-	printf("normal: (%f, %f, %f),  depth: %f\n\n", fricIr->normal.x, fricIr->normal.y, fricIr->normal.z, fricIr->depth);
+	//printf("(%f, %f, %f,   %f, %f, %f)\n", sh->contactSurfacePose.PosX(), sh->contactSurfacePose.PosY(), sh->contactSurfacePose.PosZ(), sh->contactSurfacePose.OriX(), sh->contactSurfacePose.OriY(), sh->contactSurfacePose.OriZ());
+	//printf("摩擦力: (%f, %f) => %f\n", sh->frictionForce[0], sh->frictionForce[1], sh->frictionForce.norm());
+	//printf("normal: (%f, %f, %f),  depth: %f\n\n", fricIr->normal.x, fricIr->normal.y, fricIr->normal.z, fricIr->depth);
 	
 	return true;
 }

@@ -105,9 +105,9 @@ public:
 	float muCur;				///< 計算された時変摩擦係数
 
 	//LuGreモデルに必要なもの
-	float bristlesSpringK;		///< LuGreモデルにおける剛毛のバネ係数
-	float bristlesDamperD;		///< LuGreモデルにおける剛毛のダンパ係数
-	float bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	double bristlesSpringK;		///< LuGreモデルにおける剛毛のバネ係数
+	double bristlesDamperD;		///< LuGreモデルにおける剛毛のダンパ係数
+	double bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位(接触面上の座標)
 	Vec2d avgBristlesDeflectionVel;	///< 剛毛の平均変位(接触面上の座標)を微分したもの　平均変位の変化の速さを表す
 	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢

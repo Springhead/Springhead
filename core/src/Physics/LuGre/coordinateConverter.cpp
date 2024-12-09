@@ -99,7 +99,7 @@ namespace Spr{
 		//transformQuaternion * oldNormal = newNormal   <- transformQuaternion‚Ì’è‹`
 		//oldPose.Ori().Inv() * Vector3(0, 0, 1) = oldNormal   <- WorldÀ•W‚Å‚ÌoldNormal‚ªˆÈ‘O‚ÌÚG–Êã‚ÌÀ•WŒn‚Å‚Ì(0, 0, 1)‚É‚ ‚½‚é
 		//newQuaternion.Inv() * Vector3(0, 0, 1) = newNormal   <- WorldÀ•W‚Å‚ÌnewNormal‚ªˆÈ‘O‚ÌÚG–Êã‚ÌÀ•WŒn‚Å‚Ì(0, 0, 1)‚É‚ ‚½‚é
-		//‚±‚Ì‚R‚Â‚ÌŽ®‚©‚çAnewQuaternion = oldPose.Ori() * transformQuaternion.Inv()‚ª“±‚©‚ê‚éB
+		//‚±‚Ì‚R‚Â‚ÌŽ®‚ð–ž‚½‚·newQuaternion‚Ì1‚Â‚Æ‚µ‚ÄAnewQuaternion = oldPose.Ori() * transformQuaternion.Inv()‚ª“±‚©‚ê‚éB
 		Quaterniond newQuaternion = oldPose.Ori() * transformQuaternion.Inv();
 
 		//V‚µ‚¢ÚG–Êã‚ÌÀ•WŒn‚Ö‚Ì‰ñ“]‚ð•\‚·ƒNƒH[ƒ^ƒjƒIƒ“‚ðPoseŒ^•Ï”‚ÉÝ’è
