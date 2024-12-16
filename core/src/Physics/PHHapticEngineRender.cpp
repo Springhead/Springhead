@@ -252,10 +252,10 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		sh->avgBristlesDeflectionVel = Vec2d();										//剛毛の平均変位の微分値を初期化
 		sh->avgStickingTime = Vec2d();												//平均固着時間を初期化
 		sh->LuGreFunctionG = Vec2d(sh->LuGreParameterA, sh->LuGreParameterA);		//関数g(T)を初期化
-		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW - ir->r);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
-		sh->proxyPos = ir->pointerPointW - ir->depth * ir->normal;					//プロキシの位置はポインタの真上の接触面に接している位置
+		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
+		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの位置はプロキシの重心の位置とする
 		sh->frictionForce = Vec2d();												//摩擦力の初期化
-
+		printf("初期化です\n");
 		return true;
 	}
 	
@@ -263,7 +263,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	double spring = pointer->GetFrictionSpring();												//ハプティックポインタとプロキシの間のバネ係数
 	double damper = pointer->GetFrictionDamper();												//ハプティックポインタとプロキシの間のダンパ係数
 	double mass = pointer->GetMass();															//プロキシの質量
-	sh->contactSurfacePose = updateWorldToPlanePose(sh->contactSurfacePose, ir->normal, ir->pointerPointW - ir->depth * ir->normal);	//接触面上の座標系の更新(ポインタの位置の真上を接触面上の座標系の原点とする)
+	sh->contactSurfacePose = updateWorldToPlanePose(sh->contactSurfacePose, ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面上の座標系の更新(ポインタの位置の真上を接触面上の座標系の原点とする)
 	double hdt = he->GetHapticTimeStep();														//摩擦計算の時間間隔
 	Vec3d objectPos = sp->GetSolid(0)->GetCenterOfMass();										//接触している相手の物体の現在の重心の位置(World座標)
 	Vec3d objectVel = sp->GetSolid(0)->GetVelocity();											//接触している相手の物体の現在の速度(World座標)
@@ -330,14 +330,8 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 
 		//連立方程式を解く
 		for (int j = 0; j < 2; j++) {//j = 0はプロキシの相対速度が正の場合の計算、j = 1は相対速度が負の場合の計算
-
-			//前回の値で初期化
-			x[j] = Vec3d(sh->avgBristlesDeflectionVel[i], lastRelativeVelOnSurface[i], sh->frictionForce[i]);
-
-			//連立方程式を解く
 			int ip[3];
 			gauss(W[j], x[j], w, ip);
-			
 		}
 		
 		//連立方程式を解いた結果、x[0]とx[1]のどちらを採用するか決める
@@ -387,7 +381,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	//拘束条件の生成(ここで生成する拘束条件は、接触面に対して平行にはたらく条件)
 	PHIr* fricIr = DBG_NEW PHIr();
 	*fricIr = *ir;
-	Vec3d proxyPosDelta = sh->proxyPos - (ir->pointerPointW - ir->depth * ir->normal);	//ハプティックポインタの真上にプロキシがいたときから現在のプロキシの位置への移動量(World座標)
+	Vec3d proxyPosDelta = sh->proxyPos - (ir->pointerPointW + ir->depth * ir->normal - ir->r);	//ハプティックポインタの真上にプロキシがいたときから現在のプロキシの位置への移動量(World座標)
 	fricIr->normal = proxyPosDelta.unit();
 	fricIr->depth = proxyPosDelta.norm();
 	sh->irs.push_back(fricIr);
@@ -396,8 +390,8 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	//printf("(%f, %f, %f,   %f, %f, %f)\n", sh->contactSurfacePose.PosX(), sh->contactSurfacePose.PosY(), sh->contactSurfacePose.PosZ(), sh->contactSurfacePose.OriX(), sh->contactSurfacePose.OriY(), sh->contactSurfacePose.OriZ());
 	//printf("摩擦力: (%f, %f) => %f\n", sh->frictionForce[0], sh->frictionForce[1], sh->frictionForce.norm());
 	//printf("normal: (%f, %f, %f),  depth: %f\n\n", fricIr->normal.x, fricIr->normal.y, fricIr->normal.z, fricIr->depth);
-	Vec3d testVec = convertWorldToPlanePos(sh->proxyPos, sh->contactSurfacePose);
-	printf("(%f, %f, %f) : %f\n", testVec.x, testVec.y, testVec.z, fricIr->depth);
+	//Vec3d testVec = sh->proxyPos;
+	//printf("(%f, %f, %f) : %f\n", testVec.x, testVec.y, testVec.z);
 
 	return true;
 }
