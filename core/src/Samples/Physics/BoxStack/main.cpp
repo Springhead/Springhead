@@ -109,6 +109,7 @@ public:
 		pd.timeStep = 1.0 / 60;
 		pd.contactTolerance = 0.001 * 0.4;
 		pd.airResistanceRateForAngularVelocity = 0.98;
+		pd.gravity.y = -0.1;
 		GetPHScene()->SetDesc(&pd);
 		PHConstraintEngineDesc ed;
 		GetPHScene()->GetConstraintEngine()->GetDesc(&ed);
@@ -145,7 +146,7 @@ public:
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p = ShapeScale() * Vec3f(0.5, 20.0, 0.0);
-			static Quaterniond q = Quaterniond::Rot(Rad(0.0), 'y');
+			static Quaterniond q = Quaterniond::Rot(Rad(60.0), 'x');
 			q = Quaterniond::Rot(Rad(90), 'y') * q;
 
 			if(id == ID_BOX){

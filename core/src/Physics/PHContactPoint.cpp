@@ -145,6 +145,7 @@ void PHContactPoint::CompBias(){
 	double vt = vjrel[1] + velField[1];
 	//isStatic = (-vth < vt && vt < vth);
 	isStatic = (-fth < vt && vt < fth);
+	DSTR << db << std::endl;
 }
 
 bool PHContactPoint::Projection(double& f_, int i) {

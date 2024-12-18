@@ -27,7 +27,8 @@ namespace Spr {
 	class PHShapePairForLCP;
 	enum CONTACT { UNKNOWN = -1, POINT = 1, LINE, FACE };
 	class PHContactEngine : public PHContactPoint {
-	private:
+	public:
+		SPR_OBJECTDEF(PHContactEngine);
 
 		struct ContactPartInfo {
 			/// サポートタグによる点の候補
@@ -86,7 +87,7 @@ namespace Spr {
 	public:
 
 		/// コンストラクタ
-		PHContactEngine() {}
+		PHContactEngine();
 		PHContactEngine(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 
 		// ----- PHConstraintの機能をオーバーライド

@@ -669,10 +669,10 @@ public: /** FWAppの実装 **/
 		shapeEllipsoid = GetSdk()->GetPHSdk()->CreateShape(ed)->Cast();
 
 		CDCylinderDesc cyd;
-		cyd.radius *= ShapeScale()*2;
-		cyd.length *= ShapeScale()*2;
+		cyd.radius *= ShapeScale()*4;
+		cyd.length *= ShapeScale()*4;
 		shapeCylinder = GetSdk()->GetPHSdk()->CreateShape(cyd)->Cast();
-
+	
 		CDCapsuleDesc cd;
 		cd.radius = ShapeScale() * 1;
 		cd.length = ShapeScale() * 4;

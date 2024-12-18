@@ -144,7 +144,7 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 		if (engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 
 		engine->points.push_back(point);*/
-	if (is0 == SEC_POLYGON && is1 == SEC_POLYGON) {		//	多角形で接触している．
+   	if (is0 == SEC_POLYGON && is1 == SEC_POLYGON) {		//	多角形で接触している．
 
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 		cutRing.MakeRing();
@@ -214,7 +214,6 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 				//断面も中心基準にする
 				for (int i = 0; i < (int)local_section.size(); i++)
 					local_section[i] -= pos;
-
 				pos = cutRing.local * pos;
 				PHContactSurface* point = DBG_NEW PHContactSurface(local, this, pos, solid0, solid1, local_section);
 				point->SetScene(engine->GetScene());
@@ -312,7 +311,7 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 		//	TODO ContactEngineを使う
 
 		// PHContactEngine for handling curvature
-		PHContactEngine* contactEngine = DBG_NEW PHContactEngine(local, this, commonPoint, solid0, solid1);
+ 		PHContactEngine* contactEngine = DBG_NEW PHContactEngine(local, this, commonPoint, solid0, solid1);
 
 		// Set the scene and engine for the contact engine
 		contactEngine->SetScene(engine->GetScene());

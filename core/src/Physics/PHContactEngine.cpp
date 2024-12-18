@@ -11,9 +11,9 @@ made by KIM
 using namespace PTM;
 using namespace std;
 
-namespace Spr{
+namespace Spr {
 	;
-	
+
 	const double EPSILON_2 = 1.0e-2;
 	const double EPSILON_4 = EPSILON_2 * EPSILON_2;
 	const double EPSILON_8 = 1.0e-8;
@@ -100,7 +100,7 @@ namespace Spr{
 		float d4 = tmp3_tmp1 * tmp2_zmp;
 		if (d3 >= 0.0f && d4 <= d3) return tmp_2;
 
-		float vc = d1*d4 - d3*d2;
+		float vc = d1 * d4 - d3 * d2;
 		if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
 			float v = d1 / (d1 - d3);
 			return tmp_1 + v * tmp2_tmp1;
@@ -111,13 +111,13 @@ namespace Spr{
 		float d6 = tmp3_tmp1 * tmp3_zmp;
 		if (d6 >= 0.0f && d5 <= d6) return tmp_3;
 
-		float vb = d5*d2 - d1*d6;
+		float vb = d5 * d2 - d1 * d6;
 		if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
 			float w = d2 / (d2 - d6);
 			return tmp_1 + w * tmp3_tmp1;
 		}
 
-		float va = d3*d6 - d5*d4;
+		float va = d3 * d6 - d5 * d4;
 		if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
 			float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
 			return tmp_2 + w * (tmp_3 - tmp_2);
@@ -131,7 +131,7 @@ namespace Spr{
 	}
 
 	// 二点(tmp_1, tmp_2)に対してある点(old_ZMP)から一番近い点を見つけ出し、その点からold_ZMPまでのベクトルを返す
-	Vec3d NormalPt2ClosestPt(const Vec3d & old_ZMP, const Vec3d & tmp_1, const Vec3d & tmp_2)
+	Vec3d NormalPt2ClosestPt(const Vec3d& old_ZMP, const Vec3d& tmp_1, const Vec3d& tmp_2)
 	{
 		Vec3d tmp_12 = tmp_2 - tmp_1;
 		double t = (old_ZMP - tmp_1).dot(tmp_12);
@@ -190,7 +190,7 @@ namespace Spr{
 	// Preprocess for InOut2D
 	Vec3d calculateMid3D(const std::vector<Vec3d>& vec_Group) {
 		Vec3d result = Vec3d(0, 0, 0);
-		
+
 		// サイズが０ならば脱出
 		assert(!vec_Group.empty());
 
@@ -236,18 +236,18 @@ namespace Spr{
 		Vec2d MID = calculateMid2D(vec_group);
 
 		size_t n = vec_group.size();
-		int l = 0, r = n-1, m;
+		int l = 0, r = n - 1, m;
 
 		while (r - l > 1) {
 			m = (r + l) / 2;
 			if (area2D(vec_group[l].YZ(), MID, vec_group[m].YZ()) <= 0.0) {
-				if (area2D(vec_group[l].YZ(), MID, pt.YZ()) <= 0.0 && 
+				if (area2D(vec_group[l].YZ(), MID, pt.YZ()) <= 0.0 &&
 					area2D(pt.YZ(), MID, vec_group[m].YZ()) <= 0.0) r = m;
 				else l = m;
 			}
 			else
 			{
-				if (area2D(vec_group[l].YZ(), MID, pt.YZ()) >= 0.0 && 
+				if (area2D(vec_group[l].YZ(), MID, pt.YZ()) >= 0.0 &&
 					area2D(pt.YZ(), MID, vec_group[m].YZ()) >= 0.0) l = m;
 				else r = m;
 			}
@@ -263,7 +263,7 @@ namespace Spr{
 		double t = 0.0;
 		Vec3d pp;
 		for (ui i = 0; i < size; i++) {
-			Vec3d tmp = ClosestPtPointLine(old_ZMP, vec_group[i%size], vec_group[(i + 1) % size], t);
+			Vec3d tmp = ClosestPtPointLine(old_ZMP, vec_group[i % size], vec_group[(i + 1) % size], t);
 			d1 = (old_ZMP - tmp).norm();
 			if (d2 > d1) {
 				d2 = d1;
@@ -277,6 +277,8 @@ namespace Spr{
 	// PHContactEngine
 
 	// Contactpointに調整が必要となる場合がある
+	PHContactEngine::PHContactEngine() {
+	}
 	PHContactEngine::PHContactEngine(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1) :
 		PHContactPoint(local, sp, p, s0, s1)
 		{
@@ -332,24 +334,27 @@ namespace Spr{
 		double vth = scene->GetImpactThreshold();
 		double fth = scene->GetFrictionThreshold();
 
-		// Positional correction for penetration depth
-		double diff = std::max(shapePair->depth - tol, 0.0); // Penetration depth to correct
-		if (vjrel[0] > -vth) {
+		// 位置（深さ）補正の計算, Positional correction for penetration depth
+		double diff = std::max(shapePair->depth - tol, 0.0); // 補正が必要な貫通深さ, Penetration depth to correct
+		if (vjrel[0] > -vth) { // 相対速度が閾値以下の場合
+
 			if (spring == 0.0 && damper == 0.0) {
+				// 粘弾性がない場合の補正
 				db[0] = -engine->contactCorrectionRate * diff * dtinv;
 			}
 			else {
+				// 粘弾性がある場合の補正
 				double tmp = (shapePair->depth > tol) ? (1.0 / (damper + spring * dt)) : (1.0 / damper);
 				dA[0] = tmp * dtinv;
 				db[0] = -tmp * spring * diff;
 			}
 		}
 		else {
-			// If the relative velocity is above threshold, no correction
+			// 相対速度が閾値を超える場合、補正なし, If the relative velocity is above threshold, no correction
 			db[0] = e * vjrel[0];
 		}
 
-		// Tangential corrections
+		// 接線方向の補正, Tangential corrections
 		db[1] = velField[1];
 		db[2] = velField[2];
 
@@ -357,7 +362,7 @@ namespace Spr{
 		Vec3d n0 = poseSocket.Ori() * Vec3d(1.0, 0.0, 0.0); // Normal vector for socket
 		Vec3d n1 = posePlug.Ori() * Vec3d(1.0, 0.0, 0.0);   // Normal vector for plug
 
-		// Calculate angular error using cross product
+		// 外積を使用して角度の誤差を計算, Calculate angular error using cross product
 		Vec3d angularError = n0 % n1; // Cross product gives the rotation axis and magnitude
 		db[4] = angularError[1] * engine->contactCorrectionRate * dtinv; // Rotation around Y-axis
 		db[5] = angularError[2] * engine->contactCorrectionRate * dtinv; // Rotation around Z-axis
@@ -365,8 +370,8 @@ namespace Spr{
 		// Adjust static/dynamic friction state based on tangential relative velocity
 		double vt = vjrel[1] + velField[1];
 		isStatic = (-fth < vt&& vt < fth);
-	}
-
+		DSTR << db << std::endl;
+	}	
 
 	inline void PHContactEngine::updateWithProjection(unsigned s, unsigned e, bool& updated) {
 		

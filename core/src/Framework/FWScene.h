@@ -204,6 +204,7 @@ public:
 	void	DrawFaceSolid		(GRRenderIf* render, CDFaceIf* face, Vec3f * base);
 	void	DrawFaceWire		(GRRenderIf* render, CDFaceIf* face, Vec3f * base);
 	void	DrawForce			(GRRenderIf* render, const Vec3d& f, const Vec3d& t);
+	void 	DrawContactEngine	(GRRenderIf* render, PHContactEngineIf* ce);
 	bool	IsRenderEnabled		(ObjectIf* obj);
 	Mat		GetSolidMaterial	(PHSolidIf* solid);
 	Mat		GetWireMaterial		(PHSolidIf* solid);

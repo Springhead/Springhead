@@ -12,6 +12,7 @@
 #include <Physics/PHScene.h>
 #include <Physics/PHSdk.h>
 #include <Physics/PHContactPoint.h>
+#include <Physics/PHContactEngine.h>
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHFemEngine.h>
@@ -549,6 +550,10 @@ void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
 		if(renderForceConst){
 			con->GetConstraintForce(f, t);
 			DrawForce(render, f, t);
+			PHContactEngineIf* ce =  DCAST(PHContactEngineIf, con);
+			if (ce){
+				DrawContactEngine(render, ce);
+			}
 		}
 		render->PopModelMatrix();
 	}
@@ -1278,6 +1283,20 @@ void FWScene::DrawForce(GRRenderIf* render, const Vec3d& f, const Vec3d& t){
 	// constraint moment
 	render->SetMaterial(matMoment);
 	render->DrawLine(Vec3f(), scaleMoment * t);
+			
+	render->SetDepthTest(true);
+	render->SetLighting(true);
+}
+void FWScene::DrawContactEngine(GRRenderIf* render, PHContactEngineIf* ceIf){
+	PHContactEngine* ce = ceIf->Cast();
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+
+	Vec3f newCop = ce->pose * ce->phceInfo.necessaryInfo.NewCoP;
+	Vec3f oldCop = ce->pose * ce->phceInfo.necessaryInfo.OldCoP;
+	// constraint force
+	render->SetMaterial(matForce);
+	render->DrawLine(newCop, oldCop);
 			
 	render->SetDepthTest(true);
 	render->SetLighting(true);

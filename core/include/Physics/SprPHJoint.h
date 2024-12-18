@@ -148,6 +148,11 @@ struct PHContactPointIf : public PHConstraintIf{
 	bool IsStaticFriction();
 };
 
+/// 接触点拘束のインタフェース
+struct PHContactEngineIf : public PHContactPointIf {
+	SPR_IFDEF(PHContactEngine);
+};
+
 // -----  -----  -----  -----  -----
 
 /// 関節のデスクリプタ
