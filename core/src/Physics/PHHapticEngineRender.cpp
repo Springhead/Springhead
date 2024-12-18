@@ -231,10 +231,15 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 }
 
 bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
-
+	
 	int Nirs = (int)sh->NIrs();//接触の数
-
-	if (Nirs > 1) return false;//1つのShapePairについて複数の接触があることはないはず
+	DSTR << "Nirs:" << Nirs << "sh:" << (int)sh << std::endl;
+	
+	//1つのShapePairについて複数の接触があることはないはず
+	if (Nirs > 1) {
+		sh->hasContact = false;
+		return false;
+	}
 
 	//現在接触していない場合
 	if (Nirs == 0) {
@@ -255,10 +260,10 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
 		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの位置はプロキシの重心の位置とする
 		sh->frictionForce = Vec2d();												//摩擦力の初期化
-		printf("初期化です\n");
+		DSTR << "初期化" << std::endl;
 		return true;
 	}
-	
+	return false;
 	//必要な変数などの用意
 	double spring = pointer->GetFrictionSpring();												//ハプティックポインタとプロキシの間のバネ係数
 	double damper = pointer->GetFrictionDamper();												//ハプティックポインタとプロキシの間のダンパ係数
@@ -387,11 +392,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	sh->irs.push_back(fricIr);
 	
 	//デバッグ用
-	//printf("(%f, %f, %f,   %f, %f, %f)\n", sh->contactSurfacePose.PosX(), sh->contactSurfacePose.PosY(), sh->contactSurfacePose.PosZ(), sh->contactSurfacePose.OriX(), sh->contactSurfacePose.OriY(), sh->contactSurfacePose.OriZ());
-	//printf("摩擦力: (%f, %f) => %f\n", sh->frictionForce[0], sh->frictionForce[1], sh->frictionForce.norm());
-	//printf("normal: (%f, %f, %f),  depth: %f\n\n", fricIr->normal.x, fricIr->normal.y, fricIr->normal.z, fricIr->depth);
-	//Vec3d testVec = sh->proxyPos;
-	//printf("(%f, %f, %f) : %f\n", testVec.x, testVec.y, testVec.z);
+	printf("z : (%f, %f)\n", sh->avgBristlesDeflection.x, sh->avgBristlesDeflection.y);
 
 	return true;
 }
