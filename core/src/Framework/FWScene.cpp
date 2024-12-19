@@ -1287,17 +1287,20 @@ void FWScene::DrawForce(GRRenderIf* render, const Vec3d& f, const Vec3d& t){
 	render->SetDepthTest(true);
 	render->SetLighting(true);
 }
-void FWScene::DrawContactEngine(GRRenderIf* render, PHContactEngineIf* ceIf){
+void FWScene::DrawContactEngine(GRRenderIf* render, PHContactEngineIf* ceIf) {
 	PHContactEngine* ce = ceIf->Cast();
 	render->SetLighting(false);
 	render->SetDepthTest(false);
 
-	Vec3f newCop = ce->pose * ce->phceInfo.necessaryInfo.NewCoP;
-	Vec3f oldCop = ce->pose * ce->phceInfo.necessaryInfo.OldCoP;
+	Vec3f newCop = ce->pose.Inv() * ce->phceInfo.necessaryInfo.NewCoP;
+	Vec3f oldCop = ce->pose.Inv() * ce->phceInfo.necessaryInfo.OldCoP;
 	// constraint force
 	render->SetMaterial(matForce);
 	render->DrawLine(newCop, oldCop);
-			
+	render->SetMaterial(matMoment);
+	render->DrawPoint(oldCop);
+	render->DrawPoint(oldCop);
+
 	render->SetDepthTest(true);
 	render->SetLighting(true);
 }

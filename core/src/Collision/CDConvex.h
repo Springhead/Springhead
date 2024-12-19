@@ -15,7 +15,8 @@
 
 namespace Spr{;
 
-enum IntersectionType{
+enum 
+	IntersectionType{
 	SEC_POINT,		//	Sphere
 	SEC_POLYGON,	//	Convex polygon
 	SEC_CURVETURE,	//	
