@@ -233,7 +233,7 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
 	
 	int Nirs = (int)sh->NIrs();//接触の数
-	DSTR << "Nirs:" << Nirs << "sh:" << (int)sh << std::endl;
+	//DSTR << "Nirs:" << Nirs << "sh:" << (int)sh << std::endl;
 	
 	//1つのShapePairについて複数の接触があることはないはず
 	if (Nirs > 1) {
@@ -252,18 +252,21 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 
 	//ちょうど今接触し始めたとき
 	if (!sh->hasContact) {
-		sh->hasContact = true;
+		sh->hasContact = true;														//接触していることを記録
 		sh->avgBristlesDeflection = Vec2d();										//剛毛の平均変位を初期化
 		sh->avgBristlesDeflectionVel = Vec2d();										//剛毛の平均変位の微分値を初期化
-		sh->avgStickingTime = Vec2d();												//平均固着時間を初期化
-		sh->LuGreFunctionG = Vec2d(sh->LuGreParameterA, sh->LuGreParameterA);		//関数g(T)を初期化
 		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
+		sh->pointerPos = ir->pointerPointW - ir->r;									//現在のハプティックポインタの位置(World座標)
 		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの位置はプロキシの重心の位置とする
+		sh->objectVel = sp->GetSolid(0)->GetVelocity();								//接触している相手の物体の現在の速度(World座標)
+		sh->relativeVelOnSurface = Vec2d();											//プロキシと接触している物体の相対速度(接触面上の座標)は接触時は0にしておく
+		sh->avgStickingTime = Vec2d();												//平均固着時間を初期化
 		sh->frictionForce = Vec2d();												//摩擦力の初期化
+		sh->LuGreFunctionG = Vec2d(sh->LuGreParameterA, sh->LuGreParameterA);		//関数g(T)を初期化
 		DSTR << "初期化" << std::endl;
 		return true;
 	}
-	return false;
+
 	//必要な変数などの用意
 	double spring = pointer->GetFrictionSpring();												//ハプティックポインタとプロキシの間のバネ係数
 	double damper = pointer->GetFrictionDamper();												//ハプティックポインタとプロキシの間のダンパ係数
@@ -277,7 +280,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	Vec3d lastObjectVelOnSurface = convertWorldToPlaneVec(lastObjectVel, sh->contactSurfacePose);	//接触している相手の物体の前回の速度(接触面上の座標)
 	Vec3d lastPointerRelativePos = sh->pointerPos - objectPos;									//ハプティックポインタの前回の相対位置(World座標)
 	Vec3d lastPointerRelativePosOnSurface = convertWorldToPlaneVec(lastPointerRelativePos, sh->contactSurfacePose);	//ハプティックポインタの前回の相対位置(接触面上の座標)
-	Vec3d pointerRelativePos = ir->pointerPointW - objectPos;									//ハプティックポインタの現在の相対位置(World座標)
+	Vec3d pointerRelativePos = ir->pointerPointW - ir->r - objectPos;									//ハプティックポインタの現在の相対位置(World座標)
 	Vec3d pointerRelativePosOnSurface = convertWorldToPlaneVec(pointerRelativePos, sh->contactSurfacePose);			//ハプティックポインタの現在の相対位置(接触面上の座標)
 	Vec3d lastProxyPos = sh->proxyPos;																				//プロキシの前回の絶対位置(World座標)
 	Vec3d lastProxyRelativePos = lastProxyPos - objectPos;															//プロキシの前回の相対位置(World座標)
@@ -350,19 +353,19 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		if (conditionSatisfied[0]) {
 			if (conditionSatisfied[1]) {
 				//どちらも条件を満たしている場合
-				//if (i == 0) printf("プロキシの相対速度が正の場合も負の場合も条件を満たしています\n");
+				if (i == 0) DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしています: " << x[0][1] << ", " << x[1][1] << std::endl;
 				
 				//printf("(%f, %f, %f) (%f, %f, %f)       (lastZ: %f), det(%f, %f)\n", x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2], lastAvgBristlesDeflection[i], det(W[0]), det(W[1]));
 			}
 			//プロキシの相対速度が正の場合のみ条件を満たしているというケース
-			//if (i == 0) printf("正の場合のみ\n");
+			if (i == 0) DSTR << "正の場合のみ" << std::endl;
 		} else if (conditionSatisfied[1]) {
 			//プロキシの相対速度が負の場合のみ条件を満たしているというケース
-			//if (i == 0) printf("負の場合のみ\n");
+			if (i == 0) DSTR << "負の場合のみ" << std::endl;
 			selectedIndex = 1;
 		} else {
 			//どちらも条件を満たしていない場合
-			//if (i == 0) printf("プロキシの相対速度が正の場合も負の場合も条件を満たしていません\n");
+			if (i == 0) DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしていません" << std::endl;
 		}
 		
 		//計算結果を保存
@@ -392,7 +395,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	sh->irs.push_back(fricIr);
 	
 	//デバッグ用
-	printf("z : (%f, %f)\n", sh->avgBristlesDeflection.x, sh->avgBristlesDeflection.y);
+	//DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y  << ")" << std::endl;
 
 	return true;
 }

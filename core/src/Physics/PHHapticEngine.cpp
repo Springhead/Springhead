@@ -40,14 +40,15 @@ namespace Spr {
 		muCur = 0;
 		nIrsNormal = 0;
 
+		hasContact = false;
 		bristlesSpringK = 0;
 		bristlesDamperD = 0;
 		bristlesViscosityV = 0;
 		avgBristlesDeflection = Vec2d();
 		avgBristlesDeflectionVel = Vec2d();
 		contactSurfacePose = Posed();
-		hasContact = false;
 		pointerPos = Vec3d();
+		proxyPos = Vec3d();
 		objectVel = Vec3d();
 		relativeVelOnSurface = Vec2d();
 		avgStickingTime = Vec2d();
@@ -73,9 +74,9 @@ namespace Spr {
 		stribeckVelocity = (shape[0]->GetMaterial().stribeckVelocity + shape[1]->GetMaterial().stribeckVelocity) * 0.5;
 		stribeckmu = (shape[0]->GetMaterial().stribeckmu + shape[1]->GetMaterial().stribeckmu) * 0.5;
 
-		bristlesSpringK = (shape[0]->GetMaterial().bristlesSpringK + shape[1]->GetMaterial().bristlesSpringK) * 0.5;			///< LuGreモデルにおける剛毛のバネ係数
-		bristlesDamperD = (shape[0]->GetMaterial().bristlesDamperD + shape[1]->GetMaterial().bristlesDamperD) * 0.5;			///< LuGreモデルにおける剛毛のダンパ係数
-		bristlesViscosityV = (shape[0]->GetMaterial().bristlesViscosityV + shape[1]->GetMaterial().bristlesViscosityV) * 0.5;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+		bristlesSpringK = ((double)(shape[0]->GetMaterial().bristlesSpringK) + (double)(shape[1]->GetMaterial().bristlesSpringK)) * 0.5;			///< LuGreモデルにおける剛毛のバネ係数
+		bristlesDamperD = ((double)(shape[0]->GetMaterial().bristlesDamperD) + (double)(shape[1]->GetMaterial().bristlesDamperD)) * 0.5;			///< LuGreモデルにおける剛毛のダンパ係数
+		bristlesViscosityV = ((double)(shape[0]->GetMaterial().bristlesViscosityV) + (double)(shape[1]->GetMaterial().bristlesViscosityV)) * 0.5;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
 }
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
