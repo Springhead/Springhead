@@ -149,15 +149,18 @@ public:
 	};
 
 protected:
-	std::vector< UTRef<PHHapticStepBase> > hapticSteps;
 	HapticStepMode hapticStepMode;
 public:
 	bool bPhysicStep;
 	PHHapticEngine();
 	//-------------------------------------------------------------------
 	// APIの実装
-	/// エンジンモードの選択	(Single, Multi or Local Dynamics)
+	///<	Set engine mode: Single, Multi or Local Dynamics.
 	void SetHapticStepMode(HapticStepMode mode);
+	///<	Time stepping mode for haptic rendering and physics.
+	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
+	///<	Time stepping
+	PHHapticStepBaseIf* GetHapticStep() { return hapticStep->Cast(); }
 	/// 力覚ポインタの数を返す
 	int NPointers() { return (int)hapticPointers.size(); }
 	/// hapticSolidsの数を返す
@@ -207,8 +210,6 @@ public:
 	bool DelChildObject(ObjectIf* o);
 	///< ShapePairの更新
 	void UpdateShapePairs(PHBody* body);
-	///<	Time stepping for haptic rendering and physics
-	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
 
 	///<	接触判定の有効化・無効化
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable);
@@ -232,7 +233,7 @@ protected:
 public:
 	// Implementation for haptic rendering. The definisions are in PHHapticEngineRender.cpp
 	///	start point of haptic rendering
-	virtual void HapticRendering(PHHapticStepBase* hs);
+	virtual void HapticRendering(PHHapticStepBaseIf* hs);
 	///	Compute all constraints.
 	void CompIntermediateRepresentationForDynamicProxy(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
 

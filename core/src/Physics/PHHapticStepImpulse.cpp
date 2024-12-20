@@ -33,14 +33,14 @@ PHHapticStepImpulse::PHHapticStepImpulse(){
 void PHHapticStepImpulse::Step1(){};
 void PHHapticStepImpulse::Step2(){
 	for(int i = 0; i < NHapticSolids(); i++){
-		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
+		PHSolidIf* solid = GetHapticSolid(i)->GetSceneSolid();
 		//if(i == 1) //CSVOUT << solid->GetVelocity().y << "," << solid->GetFramePosition().y  << std::endl;
 	}
 	engine->StartDetection();
 }
 void PHHapticStepImpulse::StepHapticLoop() {
 	UpdateHapticPointer();
-	engine->HapticRendering(this);
+	engine->HapticRendering(this->Cast());
 }
 
 void PHHapticStepImpulse::SyncHaptic2Physic(){
@@ -94,15 +94,15 @@ void PHHapticStepImpulse::SyncPhysic2Haptic(){
 	// haptic <------ physics
 	// PHSolidForHapticの同期
 	for(int i = 0; i < NHapticSolids(); i++){
-		PHSolidForHaptic* psolid = GetHapticSolid(i);
+		PHSolidForHaptic* psolid = (PHSolidForHaptic*)GetHapticSolid(i);
 		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
-		*psolid->GetLocalSolid() = *psolid->sceneSolid;	//	impulseの場合は常時sceneで管理されているsolidと同期				
+		*psolid->GetLocalSolid() = *psolid->GetSceneSolid();	//	impulseの場合は常時sceneで管理されているsolidと同期				
 		*hsolid = PHSolidForHaptic(*psolid);			// LocalDynamicsの場合はdosimによって同期情報をかえる必要がある
 	}
 	// solidpair, shapepairの同期
 	// 近傍物体のみ同期させる
 	for(int i = 0; i < NHapticPointers(); i++){
-		PHHapticPointer* ppointer = GetHapticPointer(i);
+		PHHapticPointer* ppointer = (PHHapticPointer*)GetHapticPointer(i);
 		const int ppointerID = ppointer->GetPointerID();
 		for(size_t j = 0; j < ppointer->neighborSolidIDs.size(); j++){
 			const int solidID = ppointer->neighborSolidIDs[j];

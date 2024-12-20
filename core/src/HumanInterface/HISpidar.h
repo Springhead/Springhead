@@ -87,6 +87,13 @@ public:
 	HISpidar4(const HISpidar4Desc& desc = HISpidar4Desc());
 	virtual ~HISpidar4();
 	Vec3f	GetPosition(){ return HISpidarCalc3Dof::GetPosition(); }
+	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()) {
+		HISpidarCalc3Dof::SetForce(f);
+		for (int i = 0; i < motors.size(); ++i) {
+			motors[i].SetForce(quadpr.vecX[i]);
+		}
+		DSTR << motors[0].GetForce() << std::endl;
+	}
 
 protected:
 	/**	出力可能な力を計算し、その出力の得点を計算する.

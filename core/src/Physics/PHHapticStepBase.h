@@ -9,8 +9,6 @@
 #define PH_HAPTIC_STEP_BASE_H
 
 #include <Physics/PHContactDetector.h>
-//#include <Physics/PHHapticEngine.h>
-//#include <Physics/PHHapticRender.h>
 
 namespace Spr{;
 
@@ -67,15 +65,17 @@ public:
 	SpatialVector bimpact;
 };
 
-class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public UTRefCount{  
+class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public Object{  
 public:
+	SPR_OBJECTDEF_ABST(PHSolidForHaptic);
 	PHSolid localSolid;		// sceneSolidのクローン
 
 	// 衝突判定用の一時変数
 	int NLocalFirst;		// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
 	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
 	PHSolidForHaptic();
-	PHSolid* GetLocalSolid(){ return &localSolid; }
+	PHSolidIf* GetLocalSolid() { return localSolid.Cast(); }
+	PHSolidIf* GetSceneSolid() { return sceneSolid->Cast(); }
 	void AddForce(Vec3d f);
 	void AddForce(Vec3d f, Vec3d r);
 };
@@ -172,7 +172,7 @@ public:
 // PHHapticStepBase
 class PHHapticStepBase : public SceneObject{
 public:
-	SPR_OBJECTDEF_ABST_NOIF(PHHapticStepBase);
+	SPR_OBJECTDEF_ABST(PHHapticStepBase);
 	PHHapticEngine* engine;
 	PHHapticStepBase(){}
 	///	物理シミュレーションのdt
@@ -190,15 +190,15 @@ public:
 
 	int NHapticPointers();
 	int NHapticSolids();
-	PHHapticPointer*       GetHapticPointer(int i);
-	PHSolidForHaptic*      GetHapticSolid(int i);
+	PHHapticPointerIf*       GetHapticPointer(int i);
+	PHSolidForHapticIf*      GetHapticSolid(int i);
 
 	virtual int NPointersInHaptic()=0;
 	virtual int NSolidsInHaptic()=0;
-	virtual PHHapticPointer* GetPointerInHaptic(int i)=0;
-	virtual PHSolidForHaptic* GetSolidInHaptic(int i)=0;
+	virtual PHHapticPointerIf* GetPointerInHaptic(int i)=0;
+	virtual PHSolidForHapticIf* GetSolidInHaptic(int i)=0;
 	///	剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）iには力覚ポインタも含まれる。
-	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j)=0;
+	virtual PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j)=0;
 	virtual void ReleaseState(PHSceneIf* scene) {}
 
 

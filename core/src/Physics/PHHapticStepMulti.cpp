@@ -37,7 +37,7 @@ void PHHapticStepMulti::StepHapticSync() {
 
 void PHHapticStepMulti::SyncHapticPointers(){
 	for (int i = 0; i < (int)hapticModel.hapticPointers.size(); i++) {
-		PHHapticPointer* pPointer = GetHapticPointer(i);
+		PHHapticPointer* pPointer = (PHHapticPointer*)GetHapticPointer(i);
 		PHHapticPointer* hPointer = hapticModel.hapticPointers[i];
 		// haptic側のポインタの状態をphysics側のポインタへ反映
 		// physics <-------- haptic
@@ -66,7 +66,7 @@ void PHHapticStepMulti::SyncArrays(){
 	int hNpointers = (int)hapticModel.hapticPointers.size();	// haptic側のポインタ数
 	int pNpointers = NHapticPointers();				// physics側のポインタ数
 	for(int i = hNpointers; i < pNpointers; i++){
-		hapticModel.hapticPointers.push_back(DBG_NEW PHHapticPointer(*GetHapticPointer(i)));
+		hapticModel.hapticPointers.push_back(DBG_NEW PHHapticPointer(*(PHHapticPointer*)GetHapticPointer(i)));
 	}
 	//DSTR << "------------" << std::endl;
 	//DSTR << pNpointers << hNpointers << std::endl;
@@ -77,7 +77,7 @@ void PHHapticStepMulti::SyncArrays(){
 	const int pNsolids = NHapticSolids();
 	if(hNsolids == pNsolids) return;
 	for(int i = hNsolids; i < (int)pNsolids; i++){
-		hapticModel.hapticSolids.push_back(DBG_NEW PHSolidForHaptic(*GetHapticSolid(i)));
+		hapticModel.hapticSolids.push_back(DBG_NEW PHSolidForHaptic(*(PHSolidForHaptic*)GetHapticSolid(i)));
 	}
 
 	// 3. solidPair, shapePairの増加分
@@ -125,8 +125,9 @@ void PHHapticStepMulti::StepPhysicsSimulation(){
 	}
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
-	if (hapticCount < pdt / hdt) return;
-	hapticCount -= (int)(pdt/hdt);
+	int hapticMax = (int)(pdt / hdt);
+	if (hapticCount < hapticMax) return;
+	hapticCount -= hapticMax;
 	bSync = true;
 	bCalcPhys = true;	
 }

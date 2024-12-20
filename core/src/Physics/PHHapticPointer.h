@@ -41,7 +41,6 @@ struct PHHapticPointerPhysicsSt {
 
 class PHHapticPointer : public PHHapticEngineDesc, public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
 	friend class PHSolidPairForHaptic;
-	friend class PHHapticRender;
 	friend class FWHapticPointer;
 public:
 	SPR_OBJECTDEF(PHHapticPointer);

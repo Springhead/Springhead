@@ -20,11 +20,11 @@ int PHHapticStepBase::NHapticPointers(){
 int PHHapticStepBase::NHapticSolids(){
 	return (int)engine->hapticSolids.size();
 }
-PHHapticPointer* PHHapticStepBase::GetHapticPointer(int i){
-	return engine->hapticPointers[i];
+PHHapticPointerIf* PHHapticStepBase::GetHapticPointer(int i){
+	return engine->hapticPointers[i]->Cast();
 }
-PHSolidForHaptic* PHHapticStepBase::GetHapticSolid(int i){
-	return engine->hapticSolids[i];
+PHSolidForHapticIf* PHHapticStepBase::GetHapticSolid(int i){
+	return engine->hapticSolids[i]->Cast();
 }
 void PHHapticStepBase::StepPhysicsSimulation(){
 	engine->GetScene()->Step();

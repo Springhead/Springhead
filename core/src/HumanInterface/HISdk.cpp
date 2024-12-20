@@ -44,7 +44,6 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUsb20Sh4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRCyUsb20Sh4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUARTMotorDriver));
-	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidarG));

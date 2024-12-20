@@ -6,14 +6,14 @@ namespace Spr{;
 // PHHapticStepLocalDynamics
 void PHHapticStepLocalDynamics::StepHapticLoop() {
 	UpdateHapticPointer();
-	engine->HapticRendering(this);
+	engine->HapticRendering(this->Cast());
 	LocalDynamics();
 }
 void PHHapticStepLocalDynamics::LocalDynamics() {
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
 	for (int i = 0; i < NSolidsInHaptic(); i++) {
-		PHSolidForHaptic* hsolid = GetSolidInHaptic(i);
+		PHSolidForHaptic* hsolid = (PHSolidForHaptic*)GetSolidInHaptic(i);
 		if (hsolid->doSim == 0) continue;
 		if (hsolid->GetLocalSolid()->IsDynamical() == false) continue;
 		PHSolid* localSolid = &hsolid->localSolid;
@@ -27,8 +27,8 @@ void PHHapticStepLocalDynamics::LocalDynamics() {
 			vel_w += diff.w() * pdt;
 		}
 		for (int j = 0; j < NHapticPointers(); j++) {
-			PHHapticPointer* pointer = GetPointerInHaptic(j);
-			PHSolidPairForHaptic* sp = GetSolidPairInHaptic(i, pointer->GetPointerID());
+			PHHapticPointer* pointer = (PHHapticPointer*)GetPointerInHaptic(j);
+			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)GetSolidPairInHaptic(i, pointer->GetPointerID());
 			if (sp->inLocal == 0) continue;
 			// 力覚ポインタからの力による速度変化
 			vel_v += (sp->A.SUBMAT(0, 0, 3, 3) * sp->force) * hdt;
@@ -61,8 +61,8 @@ void PHHapticStepLocalDynamics::Step1(){
 	lastvels.clear();
 	for(int i = 0; i < NHapticSolids(); i++){
 		SpatialVector vel;
-		vel.v() = GetHapticSolid(i)->sceneSolid->GetVelocity();
-		vel.w() = GetHapticSolid(i)->sceneSolid->GetAngularVelocity();
+		vel.v() = GetHapticSolid(i)->GetSceneSolid()->GetVelocity();
+		vel.w() = GetHapticSolid(i)->GetSceneSolid()->GetAngularVelocity();
 		lastvels.push_back(vel);
 	}
 }
@@ -70,12 +70,12 @@ void PHHapticStepLocalDynamics::Step2(){
 	// 更新後の速度、前回の速度差から定数項を計算
 	for(int i = 0; i < NHapticSolids(); i++){
 		// 近傍の剛体のみ
-		if(GetHapticSolid(i)->doSim == 0) continue;
-		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
+		if(engine->hapticSolids[i]->doSim == 0) continue;
+		PHSolidIf* solid = GetHapticSolid(i)->GetSceneSolid();
 		SpatialVector dvel;
 		dvel.v() = solid->GetVelocity();
 		dvel.w() = solid->GetAngularVelocity();
-		GetHapticSolid(i)->curb = (dvel - lastvels[i]) / GetPhysicsTimeStep();
+		((PHSolidForHaptic*)GetHapticSolid(i))->curb = (dvel - lastvels[i]) / GetPhysicsTimeStep();
 	}
 
 	engine->StartDetection();
@@ -105,8 +105,8 @@ void PHHapticStepLocalDynamics::PredictSimulation3D(){
 	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
 	states->SaveState(phScene);
 	for(int i = 0; i < NHapticSolids(); i++){
-		if(GetHapticSolid(i)->doSim == 0) continue;
-		PHSolidForHaptic* hsolid = GetHapticSolid(i);
+		if(((PHSolidForHaptic*)GetHapticSolid(i))->doSim == 0) continue;
+		PHSolidForHaptic* hsolid = GetHapticSolid(i)->Cast();
 		PHSolid* phSolid = hsolid->sceneSolid;
 		/// 現在の速度を保存
 		SpatialVector curvel, nextvel; 
@@ -132,7 +132,7 @@ void PHHapticStepLocalDynamics::PredictSimulation3D(){
 
 		/// HapticPointerの数だけ力を加える予測シミュレーション
 		for(int j = 0; j < NHapticPointers(); j++){
-			PHHapticPointer* pointer = GetHapticPointer(j);
+			PHHapticPointer* pointer = GetHapticPointer(j)->Cast();
 			PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
 			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0)->Cast();	// 1形状のみ対応
@@ -255,8 +255,8 @@ void PHHapticStepLocalDynamics::SyncHaptic2Physic(){
 
 		//アクセレランス定数項で反映速度を作る
 		double pdt = GetPhysicsTimeStep();
-		PHSolid* localSolid = hsolid->GetLocalSolid();
-		PHSolidForHaptic* psolid = GetHapticSolid(i);
+		PHSolid* localSolid = hsolid->GetLocalSolid()->Cast();
+		PHSolidForHaptic* psolid = GetHapticSolid(i)->Cast();
 		SpatialVector b = (psolid->b + (psolid->curb - psolid->lastb)) * pdt;	// モビリティ定数項
 		Vec3d v = localSolid->GetVelocity()        + b.v();			// 反映速度
 		Vec3d w = localSolid->GetAngularVelocity() + b.w();		// 反映角速度
@@ -280,7 +280,7 @@ void PHHapticStepLocalDynamics::SyncPhysic2Haptic(){
 	// haptic <------ physics
 	// PHSolidForHapticの同期
 	for(int i = 0; i < NHapticSolids(); i++){
-		PHSolidForHaptic* psolid = GetHapticSolid(i);
+		PHSolidForHaptic* psolid = GetHapticSolid(i)->Cast();
 		if(psolid->bPointer) continue;
 		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
 		PHSolidForHapticSt2* pst2 = (PHSolidForHapticSt2*)psolid;
@@ -291,7 +291,7 @@ void PHHapticStepLocalDynamics::SyncPhysic2Haptic(){
 	// solidpair, shapepairの同期
 	// 近傍物体のみ同期させる
 	for(int i = 0; i < NHapticPointers(); i++){
-		PHHapticPointer* ppointer = GetHapticPointer(i);
+		PHHapticPointer* ppointer = GetHapticPointer(i)->Cast();
 		const int ppointerID = ppointer->GetPointerID();
 		const int nNeighbors = (int)ppointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){

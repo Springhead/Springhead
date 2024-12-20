@@ -236,7 +236,6 @@ PHHapticEngine::PHHapticEngine(){
 	hapticStep = DBG_NEW PHHapticStepImpulse();
 	hapticStep->engine = this;
 	hapticStepMode = MULTI_THREAD;
-	hapticSteps.push_back(hapticStep);
 }
 void PHHapticEngine::Step() { if (bEnabled && bPhysicStep) hapticStep->Step1(); }
 void PHHapticEngine::Step2() { if (bEnabled && bPhysicStep) hapticStep->Step2(); }
@@ -268,30 +267,12 @@ void PHHapticEngine::SetHapticStepMode(HapticStepMode mode){
 	hapticStepMode = mode;
 	switch(hapticStepMode){
 		case SINGLE_THREAD:		
-			for(int i = 0; i < (int)hapticSteps.size(); i++){
-				if(DCAST(PHHapticStepSingle, hapticSteps[i])){
-					hapticStep = hapticSteps[i];
-					return;
-				}
-			}
 			hapticStep = DBG_NEW PHHapticStepSingle();
 			break;		
 		case MULTI_THREAD:		
-			for(int i = 0; i < (int)hapticSteps.size(); i++){
-				if(DCAST(PHHapticStepImpulse, hapticSteps[i])){
-					hapticStep = hapticSteps[i];
-					return;
-				}
-			}
 			hapticStep = DBG_NEW PHHapticStepImpulse();
 			break;
 		case LOCAL_DYNAMICS:
-			for(int i = 0; i < (int)hapticSteps.size(); i++){
-				if(DCAST(PHHapticStepLocalDynamics, hapticSteps[i])){
-					hapticStep = hapticSteps[i];
-					return;
-				}
-			}
 			hapticStep = DBG_NEW PHHapticStepLocalDynamics();
 			break;
 		default:
@@ -299,7 +280,6 @@ void PHHapticEngine::SetHapticStepMode(HapticStepMode mode){
 			return;
 	}
 	hapticStep->engine = this;
-	hapticSteps.push_back(hapticStep);
 }
 
 void PHHapticEngine::StartDetection(){
@@ -395,7 +375,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 			}
 			pointer->neighborSolidIDs.push_back(i);
 			PHSolidForHaptic* h = hapticSolids[i];
-			*h->GetLocalSolid() = *h->sceneSolid;	// 近傍と判定されたのでコピー
+			h->localSolid = *h->sceneSolid;	// 近傍と判定されたのでコピー
 			if(solidPair->inLocal == 0){
 				// 初めて近傍になった
 				solidPair->inLocal = 1;	
@@ -422,7 +402,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 		bodies.push_back(s);				
 		PHSolidForHaptic* h = DBG_NEW PHSolidForHaptic();
 		h->sceneSolid = s;
-		*h->GetLocalSolid() = *s;
+		h->localSolid = *s;
 		hapticSolids.push_back(h);
 
 		int NSolids = (int)bodies.size();

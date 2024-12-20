@@ -37,9 +37,10 @@ PHHapticRenderInfo::PHHapticRenderInfo() {
 }
 #endif
 
-void PHHapticEngine::HapticRendering(PHHapticStepBase* he){
+void PHHapticEngine::HapticRendering(PHHapticStepBaseIf* heIf){
+	PHHapticStepBase* he = (PHHapticStepBase*)heIf;
 	for(int i = 0; i < he->NPointersInHaptic(); i++){
-		PHHapticPointer* pointer = he->GetPointerInHaptic(i);
+		PHHapticPointer* pointer = (PHHapticPointer*)he->GetPointerInHaptic(i);
 		pointer->hapticForce.clear();
 		if (pointer->renderMode == PHHapticPointerDesc::PENALTY) {
 			PenaltyBasedRendering(he, pointer);
@@ -100,7 +101,7 @@ void PHHapticEngine::PenaltyBasedRendering(PHHapticStepBase* he, PHHapticPointer
 			
 			irs[i]->force = -1 * addforce;
 			he->GetSolidInHaptic(irs[i]->solidID)->AddForce(irs[i]->force, irs[i]->contactPointW);
-			PHSolid* localSolid = &he->GetSolidInHaptic(irs[i]->solidID)->localSolid;
+			PHSolidIf* localSolid = he->GetSolidInHaptic(irs[i]->solidID)->GetLocalSolid();
 			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(irs[i]->solidID, pointer->GetPointerID());
 			sp->force += irs[i]->force;	// あるポインタが剛体に加える力
 			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ irs[i]->force;
@@ -344,7 +345,7 @@ void PHHapticEngine::CompIntermediateRepresentationForDynamicProxy(PHHapticStepB
 		// LocalDynamicsの場合は法線の補間のみでよい。
 		// 法線の補間はPHShapePairForHapticでやる。h
 		*/
-		PHSolid* solid0 = he->GetSolidInHaptic(solidID)->GetLocalSolid();
+		PHSolid* solid0 = (PHSolid*)he->GetSolidInHaptic(solidID)->GetLocalSolid();
 		
 		const double syncCount = he->GetPhysicsTimeStep() / he->GetHapticTimeStep();
 		double t = he->GetLoopCount() / syncCount;
@@ -417,6 +418,12 @@ void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer
 		// 中間表現を求める。摩擦状態を更新
 	PHIrs irsNormal, irsFric, irsAll;
 
+	/*	
+	static int count = 0;
+	count++;
+	DSTR << "DynamicProxyRendering count = " << count << std::endl;
+	//	*/
+
 	CompIntermediateRepresentationForDynamicProxy(he, irsNormal, irsFric, pointer);
 
 	irsAll = irsNormal;
@@ -478,8 +485,8 @@ void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer
 		//	中間表現から、剛体に力を加える
 		for (size_t i = 0; i < irsAll.size(); i++) {
 			he->GetSolidInHaptic(irsAll[i]->solidID)->AddForce(irsAll[i]->force, irsAll[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
-			PHSolid* localSolid = &he->GetSolidInHaptic(irsAll[i]->solidID)->localSolid;
-			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(irsAll[i]->solidID, pointer->GetPointerID());
+			PHSolidIf* localSolid = he->GetSolidInHaptic(irsAll[i]->solidID)->GetLocalSolid();
+			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)he->GetSolidPairInHaptic(irsAll[i]->solidID, pointer->GetPointerID());
 			assert(sp == irsAll[i]->solidPair);
 			sp = irsAll[i]->solidPair;
 			sp->force += irsAll[i]->force;	// あるポインタが剛体に加える力
@@ -513,7 +520,7 @@ void PHHapticEngine::VibrationRendering(PHHapticStepBase* he, PHHapticPointer* p
 	for (int j = 0; j < (int)Nneigbors; j++) {
 		int solidID = pointer->neighborSolidIDs[j];
 		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(solidID, pointer->GetPointerID());
-		PHSolid* solid = he->GetSolidInHaptic(solidID)->GetLocalSolid();
+		PHSolid* solid = he->GetSolidInHaptic(solidID)->GetLocalSolid()->Cast();
 		if (sp->frictionState == PHSolidPairForHapticIf::FREE) continue;
 		if (sp->contactCount == 0) {
 			sp->contactVibrationVel = pointer->GetVelocity() - solid->GetVelocity();
