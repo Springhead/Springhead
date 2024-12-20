@@ -39,6 +39,9 @@ public:
 	Vec3d	center;					///< 2つの最侵入点の中間の点
 	Vec3d   iNormal;				///< 積分による法線
 
+private:
+//	CDShapePair(const CDShapePair& src) { assert(0);  }
+//	void operator = (const CDShapePair& src) { assert(0); }
 public:
 	CDShapePair():state(NONE){}
 	void SetState(const CDShapePairState& s){

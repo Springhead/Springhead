@@ -60,6 +60,7 @@ void PHHapticStepImpulse::SyncHaptic2Physic(){
 			PHSolidPairForHapticVars* pVars = (PHSolidPairForHapticVars*)ppair;
 			*pVars = *hVars;	// haptic側で保持しておくべき情報を同期
 			//	ShapePairの情報のコピー
+#if 0
 			for (int h = 0; h < hpair->shapePairs.height(); ++h) {
 				for (int w = 0; w < hpair->shapePairs.width(); ++w) {
 					if (h < ppair->shapePairs.height() && w < ppair->shapePairs.width()) {
@@ -69,6 +70,7 @@ void PHHapticStepImpulse::SyncHaptic2Physic(){
 					}
 				}
 			}
+#endif
 		}
 	}
 	// レンダリングした力をシーンに反映
@@ -94,7 +96,7 @@ void PHHapticStepImpulse::SyncPhysic2Haptic(){
 	// haptic <------ physics
 	// PHSolidForHapticの同期
 	for(int i = 0; i < NHapticSolids(); i++){
-		PHSolidForHaptic* psolid = (PHSolidForHaptic*)GetHapticSolid(i);
+		PHSolidForHaptic* psolid = GetHapticSolid(i)->Cast();
 		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
 		*psolid->GetLocalSolid() = *psolid->GetSceneSolid();	//	impulseの場合は常時sceneで管理されているsolidと同期				
 		*hsolid = PHSolidForHaptic(*psolid);			// LocalDynamicsの場合はdosimによって同期情報をかえる必要がある
@@ -102,7 +104,7 @@ void PHHapticStepImpulse::SyncPhysic2Haptic(){
 	// solidpair, shapepairの同期
 	// 近傍物体のみ同期させる
 	for(int i = 0; i < NHapticPointers(); i++){
-		PHHapticPointer* ppointer = (PHHapticPointer*)GetHapticPointer(i);
+		PHHapticPointer* ppointer = GetHapticPointer(i)->Cast();
 		const int ppointerID = ppointer->GetPointerID();
 		for(size_t j = 0; j < ppointer->neighborSolidIDs.size(); j++){
 			const int solidID = ppointer->neighborSolidIDs[j];

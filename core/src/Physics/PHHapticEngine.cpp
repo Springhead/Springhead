@@ -176,25 +176,31 @@ PHSolidPairForHaptic::PHSolidPairForHaptic(){
 	solidID[1] = -1;
 }
 PHSolidPairForHaptic::PHSolidPairForHaptic(const PHSolidPairForHaptic& s){
+	*this = s;
+}
+PHSolidPairForHaptic& PHSolidPairForHaptic::operator = (const PHSolidPairForHaptic& s) {
 	//	Copy except shapePairs and listeners.
 	const PHSolidPairForHaptic* src = &s;
 	*(PHSolidPairForHapticVars*)this = *(PHSolidPairForHapticVars*)src;
 	*(PHSolidPairVars*)this = *(PHSolidPairVars*)src;
-	
+
 	//	Update shapePairs
 	this->shapePairs.resize(src->shapePairs.height(), src->shapePairs.width());
-	for(int i = 0; i < s.shapePairs.height(); i++){
-		for(int j = 0; j < s.shapePairs.width(); j++){
-			const PHShapePairForHaptic* srcPair = s.GetShapePair(i, j)->Cast();
-			if (shapePairs.item(i, j)) {
-				*shapePairs.item(i, j) = *srcPair;	//	必要な部分だけコピーしたい
+	for (int i = 0; i < s.shapePairs.height(); i++) {
+		for (int j = 0; j < s.shapePairs.width(); j++) {
+			const PHShapePairForHaptic* srcPair = src->GetShapePair(i, j)->Cast();
+			PHShapePairForHaptic* destPair = GetShapePair(i, j)->Cast();
+			if (destPair) {
+				*destPair = *srcPair;	//	必要な部分だけコピーしたい
 			}
 			else {
 				shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*srcPair);
 			}
 		}
 	}
+	return *this;
 }
+
 void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	if(_sp == NULL) assert(0);
 	PHSolidPair::OnDetect(_sp, ct, dt);

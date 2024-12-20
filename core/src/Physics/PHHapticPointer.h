@@ -105,6 +105,8 @@ public:
 	float   GetContactForce(int i);
 	SpatialVector GetProxyVelocity() { return lastProxyVelocity; }
 	void	SetProxyVelocity(SpatialVector lpv) { lastProxyVelocity = lpv; }
+	Posed GetProxyPose() { return proxyPose; }
+	Posed GetLastProxyPose() { return lastProxyPose; }
 	// Implementation
 	void	SetPointerID(int id){ pointerID = id; }
 	int		GetPointerID(){ return pointerID; }

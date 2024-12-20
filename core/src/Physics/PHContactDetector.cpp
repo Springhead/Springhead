@@ -33,6 +33,11 @@ void PHShapePair::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1){
 	shape[0] = fr0->shape->Cast();
 	shape[1] = fr1->shape->Cast();
 }
+PHShapePair& PHShapePair::operator = (const PHShapePair& src) {
+	CDShapePair::operator=(src);
+	return *this;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // PHSolidPair

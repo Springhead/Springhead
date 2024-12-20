@@ -152,6 +152,7 @@ public:
 
 	PHSolidPairForHaptic();
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
+	PHSolidPairForHaptic& operator = (const PHSolidPairForHaptic& s);
 
 	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
 	PHShapePairForHapticIf*       GetShapePair(int i, int j){ return (PHShapePairForHapticIf*)&*shapePairs.item(i,j); }

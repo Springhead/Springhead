@@ -20,7 +20,7 @@ public:
 class PHHapticStepMulti : public PHHapticStepBase{
 	SPR_OBJECTDEF_ABST(PHHapticStepMulti);
 protected:
-	PHHapticScene hapticModel;	//	力覚レンダリングが使うモデル
+	PHHapticScene hapticModel;			//	力覚レンダリングが使うモデル
 	volatile int	hapticCount;		//	hapticCount - physicsCount*倍率、同期の要求を出すために使う
 	volatile int	loopCount;			//	現在の物理ステップに対して何回目の力覚レンダリングか
 	volatile bool	bSync;				//	同期の要求

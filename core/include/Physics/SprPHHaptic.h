@@ -80,6 +80,8 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	float   GetContactForce(int i);					///<	近傍物体iからの接触力
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
 	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
+	Posed GetProxyPose();
+	Posed GetLastProxyPose();
 
 	void SetProxyVelocity(SpatialVector spv);
 
