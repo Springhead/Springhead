@@ -180,10 +180,7 @@ Vec3d GetOrthogonalVector(Vec3d n) {
 bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer, 
 	PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints) {
 	Vec3d sPoint = curShapePoseW[0] * sh->closestPoint[0];	// 今回のsolidの近傍点（World)
-//	DSTR << "pPoint = " << curShapePoseW[1] << " * " << sh->closestPoint[1] << " = ";
-//	DSTR << "Before cp = " << sh->closestPoint[1];
 	Vec3d pPoint = curShapePoseW[1] * sh->closestPoint[1];	// 今回のpointerの近傍点（World)
-//	DSTR << "  pp:" << pPoint << std::endl;
 	Vec3d last_sPoint = sh->lastShapePoseW[0] * sh->lastClosestPoint[0]; // 前回の剛体近傍点（World)
 	Vec3d interpolation_normal = sh->normal;				// 補間法線
 	Vec3d interpolation_sPoint = sPoint;					// 補間剛体近傍点
@@ -191,18 +188,6 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 	interpolation_normal = interpolate(t, sh->lastNormal, sh->normal);
 	Vec3d dir = pPoint - interpolation_sPoint;
 	double dot = dir * interpolation_normal;
-
-	static bool bPointerIn = false;
-	if (dot >= 0.0) {
-		if (bPointerIn) {
-			DSTR << "!!";
-		}
-	}
-	else {
-		bPointerIn = true;
-	}
-	//DSTR << "dot = " << dot << " p:" << pPoint << " cp:" << sh->closestPoint[1] << " w:" << curShapePoseW[1] << std::endl;
-	//DSTR << " cp:" << sh->closestPoint[1] << " dot = " << dot << " pp:" << pPoint << std::endl;
 
 	sh->irs.clear();
 	sh->nIrsNormal = (int)sh->irs.size();
@@ -252,8 +237,6 @@ bool PHHapticEngine::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 	//double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->frictionSpring;
-
-	//DSTR << "fricCount:" << sph->fricCount << std::endl;
 
 	//	摩擦係数の計算
 	if (pointer->bTimeVaryFriction) {
@@ -430,20 +413,10 @@ void PHHapticEngine::DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer
 	double hdt = he->GetHapticTimeStep();
 
 	NANCHECKLP
-	//DSTR << "lastProxyPose=" << pointer->lastProxyPose.Pos() << " cur:"  << pointer->proxyPose.Pos() << std::endl;
 	pointer->lastProxyPose = pointer->proxyPose;
-/*	if (pointer->proxyPose.PosY() < -0.006) {
-		DSTR << "Proxy Through" << std::endl;
-	}*/
 	NANCHECKLP
 		// 中間表現を求める。摩擦状態を更新
 	PHIrs irsNormal, irsFric, irsAll;
-
-	/*	
-	static int count = 0;
-	count++;
-	DSTR << "DynamicProxyRendering count = " << count << std::endl;
-	//	*/
 
 	CompIntermediateRepresentationForDynamicProxy(he, irsNormal, irsFric, pointer);
 

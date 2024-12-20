@@ -56,21 +56,7 @@ void PHHapticStepImpulse::SyncHaptic2Physic(){
 			int solidID = hpointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, hpointerID);
 			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, hpointerID);
-			PHSolidPairForHapticVars* hVars = (PHSolidPairForHapticVars*)hpair;
-			PHSolidPairForHapticVars* pVars = (PHSolidPairForHapticVars*)ppair;
-			*pVars = *hVars;	// haptic側で保持しておくべき情報を同期
-			//	ShapePairの情報のコピー
-#if 0
-			for (int h = 0; h < hpair->shapePairs.height(); ++h) {
-				for (int w = 0; w < hpair->shapePairs.width(); ++w) {
-					if (h < ppair->shapePairs.height() && w < ppair->shapePairs.width()) {
-						PHShapePairForHaptic* psp = ppair->GetShapePair(h, w)->Cast();
-						PHShapePairForHaptic* hsp = hpair->GetShapePair(h, w)->Cast();
-						*psp = *hsp;
-					}
-				}
-			}
-#endif
+			ppair->CopyFromHaptics(hpair);
 		}
 	}
 	// レンダリングした力をシーンに反映
@@ -110,7 +96,7 @@ void PHHapticStepImpulse::SyncPhysic2Haptic(){
 			const int solidID = ppointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, ppointerID);
 			PHSolidPairForHaptic* ppair = engine->GetSolidPair(solidID, ppointerID)->Cast();
-			*hpair = *ppair;
+			hpair->CopyFromPhysics(ppair);
 		}
 	}
 }

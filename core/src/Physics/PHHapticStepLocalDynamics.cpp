@@ -298,7 +298,7 @@ void PHHapticStepLocalDynamics::SyncPhysic2Haptic(){
 			const int solidID = ppointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, ppointerID);
 			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, ppointerID);
-			*hpair = PHSolidPairForHaptic(*ppair);
+			hpair->CopyFromPhysics(ppair);
 		}
 	}
 }

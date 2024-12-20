@@ -39,6 +39,22 @@ namespace Spr {
 		muCur = 0;
 		nIrsNormal = 0;
 	}
+	void PHShapePairForHaptic::CopyFromPhysics(const PHShapePairForHaptic* src) {
+		*(CDShapePairState*)this = *src;
+		state = src->state;
+		for (int i = 0; i < 2; ++i) {
+			closestPoint[i] = src->closestPoint[i];
+			shape[i] = src->shape[i];
+			shapePoseW[i] = src->shapePoseW[i];
+		}
+		commonPoint = src->commonPoint;
+		center = src->center;
+		iNormal = src->iNormal;
+
+		lastNormal = src->lastNormal;			///< 前回の近傍物体の提示面の法線
+	}
+	void PHShapePairForHaptic::CopyFromHaptics(const PHShapePairForHaptic* src) {
+	}
 	void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 		PHShapePair::Init(sp, fr0, fr1);
 		UpdateCache();
@@ -175,30 +191,47 @@ PHSolidPairForHaptic::PHSolidPairForHaptic(){
 	solidID[0] = -1;
 	solidID[1] = -1;
 }
-PHSolidPairForHaptic::PHSolidPairForHaptic(const PHSolidPairForHaptic& s){
-	*this = s;
+void PHSolidPairForHaptic::CopyForDisplay(const PHSolidPairForHaptic* src) {
+	CopyFromPhysics(src);
 }
-PHSolidPairForHaptic& PHSolidPairForHaptic::operator = (const PHSolidPairForHaptic& s) {
+
+void PHSolidPairForHaptic::CopyFromPhysics(const PHSolidPairForHaptic* phys) {
 	//	Copy except shapePairs and listeners.
-	const PHSolidPairForHaptic* src = &s;
+	const PHSolidPairForHaptic* src = phys;
 	*(PHSolidPairForHapticVars*)this = *(PHSolidPairForHapticVars*)src;
 	*(PHSolidPairVars*)this = *(PHSolidPairVars*)src;
 
 	//	Update shapePairs
 	this->shapePairs.resize(src->shapePairs.height(), src->shapePairs.width());
-	for (int i = 0; i < s.shapePairs.height(); i++) {
-		for (int j = 0; j < s.shapePairs.width(); j++) {
+	for (int i = 0; i < src->shapePairs.height(); i++) {
+		for (int j = 0; j < src->shapePairs.width(); j++) {
 			const PHShapePairForHaptic* srcPair = src->GetShapePair(i, j)->Cast();
 			PHShapePairForHaptic* destPair = GetShapePair(i, j)->Cast();
 			if (destPair) {
-				*destPair = *srcPair;	//	必要な部分だけコピーしたい
+				destPair->CopyFromPhysics(srcPair);
 			}
 			else {
-				shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*srcPair);
+				PHShapePairForHaptic* destPair = DBG_NEW PHShapePairForHaptic(); 
+				destPair->Init(srcPair->solidPair, srcPair->frame[0], srcPair->frame[1]);
+				destPair->CopyFromPhysics(srcPair);
+				shapePairs.item(i, j) = destPair;
 			}
 		}
 	}
-	return *this;
+}
+void PHSolidPairForHaptic::CopyFromHaptics(const PHSolidPairForHaptic* hpair) {
+	PHSolidPairForHapticVars* hVars = (PHSolidPairForHapticVars*)hpair;
+	PHSolidPairForHaptic* ppair = this;
+	PHSolidPairForHapticVars* pVars = (PHSolidPairForHapticVars*)ppair;
+	*pVars = *hVars;	// haptic側で保持しておくべき情報を同期
+	//	ShapePairの情報のコピー
+	for (int h = 0; h < hpair->shapePairs.height(); ++h) {
+		for (int w = 0; w < hpair->shapePairs.width(); ++w) {
+			if (h < ppair->shapePairs.height() && w < ppair->shapePairs.width()) {
+				((PHShapePairForHaptic*)ppair->GetShapePair(h, w))->CopyFromHaptics((PHShapePairForHaptic*)hpair->GetShapePair(h, w));
+			}
+		}
+	}
 }
 
 void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
@@ -435,7 +468,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 				solidPairs.item(i, pointerID) = solidPair;
 				// fwSceneで描画するための一時領域を確保
 				PHSolidPairForHaptic* solidPairTemp = (PHSolidPairForHaptic*)CreateSolidPair();
-				*solidPairTemp = *solidPair;
+				solidPairTemp->CopyForDisplay(solidPair);
 				solidPairsTemp.item(i, pointerID) = solidPairTemp;
 			}
 			if(s->NShape())	UpdateShapePairs(s);
@@ -452,7 +485,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			solidPair->solidID[1] = hapticPointers[i]->GetSolidID();
 			solidPairs.item(NSolids - 1, i) = solidPair;
 			PHSolidPairForHaptic* solidPairTemp = (PHSolidPairForHaptic*)CreateSolidPair();
-			*solidPairTemp = *solidPair;
+			solidPairTemp->CopyForDisplay(solidPair);
 			solidPairsTemp.item(NSolids - 1, i) = solidPairTemp;
 		}
 		if(s->NShape())	UpdateShapePairs(s);

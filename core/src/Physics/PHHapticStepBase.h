@@ -87,11 +87,17 @@ class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public PHShapePair{
 public:	
 	SPR_OBJECTDEF(PHShapePairForHaptic);
+	//	variables for haptic rendering in haptic thread.
 	// 0:solid、1:pointer
 	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
 	Posed lastShapePoseW[2];	///< 前回の形状姿勢
 	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
+	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
+	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
+	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
+
+	//	variables updated by UpdateCache()
 	float springK;				///< バネ係数
 	float damperD;				///< ダンパ係数
 	float mu;					///< 動摩擦係数
@@ -102,13 +108,13 @@ public:
 	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	float stribeckVelocity;		///< ストライベク効果の速度の影響の強さ	: 動摩擦 =　mu + (mu - stribeckmu) * (exp(-v / stribeckVelocity) - 1.0)
 	float stribeckmu;			///< 速度∞のときの摩擦係数
+
+	//	
 	float muCur;				///< 計算された時変摩擦係数
 
-	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
-	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
-	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
-
 	PHShapePairForHaptic();
+	void CopyFromPhysics(const PHShapePairForHaptic* src);
+	void CopyFromHaptics(const PHShapePairForHaptic* src);
 	void Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
 	void UpdateCache();
 	/// 接触判定．近傍点対を常時更新
@@ -147,12 +153,14 @@ struct PHSolidPairForHapticVars{
 };
 
 class PHSolidPairForHaptic : public PHSolidPairForHapticVars, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
+private:
+	//	copy or assign are not permitted.
+	PHSolidPairForHaptic(const PHSolidPairForHaptic& s) { assert(0);  }
+	void operator = (const PHSolidPairForHaptic& s){ assert(0); }
 public:
 	SPR_OBJECTDEF(PHSolidPairForHaptic);
 
 	PHSolidPairForHaptic();
-	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
-	PHSolidPairForHaptic& operator = (const PHSolidPairForHaptic& s);
 
 	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
 	PHShapePairForHapticIf*       GetShapePair(int i, int j){ return (PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
@@ -166,6 +174,10 @@ public:
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
+
+	void CopyFromPhysics(const PHSolidPairForHaptic* phys);
+	void CopyFromHaptics(const PHSolidPairForHaptic* haptics);
+	void CopyForDisplay(const PHSolidPairForHaptic* phys);
 };
 
 

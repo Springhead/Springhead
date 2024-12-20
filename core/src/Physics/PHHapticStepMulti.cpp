@@ -59,6 +59,13 @@ void PHHapticStepMulti::SyncHapticPointers(){
 	}
 }
 
+inline PHSolidPairForHaptic*  createSolidPairForHaptic(PHSolidPairForHaptic* src, PHHapticEngine* he) {
+	PHSolidPairForHaptic* hSolidPair = (PHSolidPairForHaptic*)he->CreateSolidPair();
+	//	hSolidPair->Init(src->detector, src->body[0], src->body[1]);	//	It seems Init() is not needed.
+	hSolidPair->CopyFromPhysics(src);
+	return hSolidPair;
+}
+
 void PHHapticStepMulti::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー
@@ -85,15 +92,13 @@ void PHHapticStepMulti::SyncArrays(){
 	hapticModel.solidPairs.resize(pNsolids, pNpointers);
 	for(int i = 0; i < pNsolids; i++){
 		for(int j = hNpointers; j < pNpointers; j++){
-			PHSolidPairForHaptic* psolidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, j);
-			hapticModel.solidPairs.item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
+			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic((PHSolidPairForHaptic*)engine->GetSolidPair(i, j), engine);
 		}
 	}
 	// 3.2 solidの増加分
 	for(int i = hNsolids; i < pNsolids; i++){
 		for(int j = 0; j < pNpointers; j++){
-			PHSolidPairForHaptic* psolidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, j);
-			hapticModel.solidPairs.item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
+			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic((PHSolidPairForHaptic*)engine->GetSolidPair(i, j), engine);
 		}
 	}
 	//DSTR << "--------------" << std::endl;

@@ -32,7 +32,6 @@ public:
 	void SetSt(const CDShapePairState& s){ *((CDShapePairState*)this) = s; }
 	void GetSt(      CDShapePairState& s){ s = *this; }
 	PHFrameIf* GetFrame(int i) { return (PHFrameIf*)frame[i]; }
-	PHShapePair& operator = (const PHShapePair& src);
 };
 
 

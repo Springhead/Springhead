@@ -186,8 +186,8 @@ public:
 	PHSolidPairForHapticIf* GetSolidPairTemp(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairsTemp.item(i, j); }
 
 	/// Implementaion for base class (PHContactDetector)
-	PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForHaptic(); }
-	
+	PHSolidPair* CreateSolidPair() { return DBG_NEW PHSolidPairForHaptic(); }
+
 	// PHHapticEngineの実装
 	///< Update simulation loop (called from PHScene::Integrate()) シミュレーションループの更新（PHScene::Integrate()からコール）
 	virtual void Step();
