@@ -102,9 +102,13 @@ public:
 		// Multi thread mode
 		he->SetHapticStepMode(PHHapticEngineDesc::MULTI_THREAD);
 		phscene->SetTimeStep(pdt);
-#else
-		// Multi thread and local dynamics mode
+#elif 0
+		// Local dynamics mode (multi thread)
 		he->SetHapticStepMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
+		phscene->SetTimeStep(pdt);
+#elif 1
+		// Local dynamics 6DOF mode (multi thread)
+		he->SetHapticStepMode(PHHapticEngineDesc::LOCAL_DYNAMICS6DOF);
 		phscene->SetTimeStep(pdt);
 #endif
 		timer->SetMode(UTTimerIf::IDLE);

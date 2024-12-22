@@ -3,6 +3,7 @@
 #include <Physics/PHHapticStepImpulse.h>
 #include <Physics/PHHapticStepSingle.h>
 #include <Physics/PHHapticStepLocalDynamics.h>
+#include <Physics/PHHapticStepLocalDynamicsDev.h>
 
 namespace Spr {;
 
@@ -325,6 +326,9 @@ void PHHapticEngine::SetHapticStepMode(HapticStepMode mode){
 			break;
 		case LOCAL_DYNAMICS:
 			hapticStep = DBG_NEW PHHapticStepLocalDynamics();
+			break;
+		case LOCAL_DYNAMICS6DOF:
+			hapticStep = DBG_NEW PHHapticStepLocalDynamicsDev();
 			break;
 		default:
 			assert(0);

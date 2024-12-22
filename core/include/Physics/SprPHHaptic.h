@@ -33,7 +33,8 @@ struct PHHapticEngineDesc {
 	enum HapticStepMode {
 		SINGLE_THREAD = 0,
 		MULTI_THREAD,
-		LOCAL_DYNAMICS
+		LOCAL_DYNAMICS,
+		LOCAL_DYNAMICS6DOF,
 	};
 	PHHapticEngineDesc();
 };
