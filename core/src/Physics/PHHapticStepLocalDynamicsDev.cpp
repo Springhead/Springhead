@@ -139,7 +139,7 @@ void PHHapticStepLocalDynamicsDev::PredictSimulation6D(){
 		/// HapticPointerの数だけ力を加える予測シミュレーション
 		for(int j = 0; j < NHapticPointers(); j++){
 			PHHapticPointer* pointer = engine->hapticPointers[j];
-			PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, pointer->GetPointerID());
+			PHSolidPairForHaptic* solidPair = engine->GetSolidPairImp(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
 			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0)->Cast();	// 1形状のみ対応
 			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
@@ -318,7 +318,7 @@ void PHHapticStepLocalDynamicsDev::SyncHaptic2Physic(){
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, hpointerID);
-			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, hpointerID);
+			PHSolidPairForHaptic* ppair = engine->GetSolidPairImp(solidID, hpointerID);
 			PHSolidPairForHapticVars* hVars = (PHSolidPairForHapticVars*)hpair;
 			PHSolidPairForHapticVars* pVars = (PHSolidPairForHapticVars*)ppair;
 			*pVars = *hVars;	// haptic側で保持しておくべき情報を同期
@@ -384,7 +384,7 @@ void PHHapticStepLocalDynamicsDev::SyncPhysic2Haptic(){
 		for(int j = 0; j < nNeighbors; j++){
 			const int solidID = ppointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, ppointerID);
-			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, ppointerID);
+			PHSolidPairForHaptic* ppair = engine->GetSolidPairImp(solidID, ppointerID);
 
 			hpair->CopyFromPhysics(ppair);
 			//DSTR << hpair->A << std::endl;

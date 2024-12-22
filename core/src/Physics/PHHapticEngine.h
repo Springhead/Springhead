@@ -168,7 +168,8 @@ public:
 	/// Get haptic pointer in haptic engine (physics thread)
 	PHHapticPointerIf* GetPointer(int i){ return hapticPointers[i]->Cast(); }
 	///	Get solid pair in haptic engine (physics thread);
-	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairs.item(i, j); }
+	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)GetSolidPairImp(i, j); }
+	PHSolidPairForHaptic* GetSolidPairImp(int i, int j) { return (PHSolidPairForHaptic*)&*solidPairs.item(i, j); }
 
 	//--------------------------------------
 	//	Functions to get objects in haptic thead = PHHapticStepXXX.
@@ -179,6 +180,7 @@ public:
 	/// hapticSolidsの数を返す。
 	int NSolidsInHaptic();
 	/// returns solid pair in haptic thead.
+	PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j);
 	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
 	/// state保存のために確保した領域を開放する
 	void ReleaseState();

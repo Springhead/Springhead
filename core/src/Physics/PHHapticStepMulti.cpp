@@ -84,7 +84,8 @@ void PHHapticStepMulti::SyncArrays(){
 	const int pNsolids = NHapticSolids();
 	if(hNsolids == pNsolids) return;
 	for(int i = hNsolids; i < (int)pNsolids; i++){
-		hapticModel.hapticSolids.push_back(DBG_NEW PHSolidForHaptic(*(PHSolidForHaptic*)GetHapticSolid(i)));
+		hapticModel.hapticSolids.push_back(DBG_NEW PHSolidForHaptic());
+		hapticModel.hapticSolids.back()->CopyFromPhysics(GetHapticSolidImp(i));
 	}
 
 	// 3. solidPair, shapePairの増加分
@@ -92,13 +93,13 @@ void PHHapticStepMulti::SyncArrays(){
 	hapticModel.solidPairs.resize(pNsolids, pNpointers);
 	for(int i = 0; i < pNsolids; i++){
 		for(int j = hNpointers; j < pNpointers; j++){
-			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic((PHSolidPairForHaptic*)engine->GetSolidPair(i, j), engine);
+			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic(engine->GetSolidPairImp(i, j), engine);
 		}
 	}
 	// 3.2 solidの増加分
 	for(int i = hNsolids; i < pNsolids; i++){
 		for(int j = 0; j < pNpointers; j++){
-			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic((PHSolidPairForHaptic*)engine->GetSolidPair(i, j), engine);
+			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic(engine->GetSolidPairImp(i, j), engine);
 		}
 	}
 	//DSTR << "--------------" << std::endl;

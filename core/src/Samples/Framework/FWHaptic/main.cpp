@@ -52,7 +52,8 @@ public:
 	};
 
 private:
-	double ShapeScale(){ return 0.006; }
+	//double ShapeScale() { return 0.006; }
+	double ShapeScale() { return 0.02; }
 public:
 	MyApp(){
 		appName = "FWHaptic";
@@ -97,7 +98,7 @@ public:
 #if 0	// Single thread mode
 		he->SetHapticStepMode(PHHapticEngineDesc::SINGLE_THREAD);
 		phscene->SetTimeStep(hdt);
-#elif 1
+#elif 0
 		// Multi thread mode
 		he->SetHapticStepMode(PHHapticEngineDesc::MULTI_THREAD);
 		phscene->SetTimeStep(pdt);
@@ -118,10 +119,10 @@ public:
 		hapticTimer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
 		hapticTimer->Start();						// タイマスタート
 #else	//		or thread
-		hapticTimer = CreateTimer(UTTimerIf::THREAD);			// 力覚スレッド用のマルチメディアタイマを作成
+		hapticTimer = CreateTimer(UTTimerIf::THREAD);			// 力覚スレッド用のマルチメディアタイマを作成 自動的にStart()する。
 		hapticTimer->SetResolution(1);							// 分解能(ms)
 		hapticTimer->SetInterval((unsigned int)(hdt * 1000));	// 刻み(ms)h
-		hapticTimer->Start();						// タイマスタート
+		//	hapticTimer->Stop();
 #endif
 	}
 
@@ -191,8 +192,10 @@ public:
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
 		PHSceneIf* phscene = GetPHScene();
 		phscene->SetGravity(Vec3d(0, -9.8*0.1, 0));
+#if 1	//	Floor
 		soFloor = CreateFloor(false);
 		soFloor->SetFramePosition(Vec3d(0, -0.03, 0));
+#endif
 
 		// Make the haptic pointer
 		pointer = phscene->CreateHapticPointer();
@@ -391,7 +394,23 @@ public:
 				dummyDevice->SetPose(p);
 			}
 			break;
+		case DVKeyCode::PAGE_UP:
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosZ() -= dr;
+				dummyDevice->SetPose(p);
+			}
+			break;
+		case DVKeyCode::PAGE_DOWN:
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosZ() += dr;
+				dummyDevice->SetPose(p);
+			}
+			break;
 		default:
+			PHHapticEngineIf* he = GetPHScene()->GetHapticEngine();
+			he->ReleaseState();
 			SampleApp::Keyboard(key, x, y);
 			break;
 		}

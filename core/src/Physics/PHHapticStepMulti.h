@@ -48,9 +48,9 @@ public:
 	virtual void UpdateHapticPointer();
 	virtual int NSolidsInHaptic() { return (int)hapticModel.hapticSolids.size(); }
 	virtual int NPointersInHaptic() { return (int)hapticModel.hapticPointers.size(); }
-	virtual PHHapticPointerIf* GetPointerInHaptic(int i) { return hapticModel.hapticPointers[i]->Cast(); }
-	virtual PHSolidForHapticIf* GetSolidInHaptic(int i) { return hapticModel.hapticSolids[i]->Cast(); }
-	virtual PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j) { return (PHSolidPairForHapticIf*)&*hapticModel.solidPairs.item(i, j); }
+	virtual PHHapticPointer* GetPointerInHapticImp(int i) { return hapticModel.hapticPointers[i]; }
+	virtual PHSolidForHaptic* GetSolidInHapticImp(int i) { return hapticModel.hapticSolids[i]; }
+	virtual PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j) { return (PHSolidPairForHaptic*) &*hapticModel.solidPairs.item(i, j); }
 	//デバック用コード
 	virtual void StepPhysicsSimulation();
 

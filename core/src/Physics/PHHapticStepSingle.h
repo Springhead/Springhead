@@ -24,9 +24,9 @@ public:
 	virtual void StepHapticSync() {}
 	virtual int NSolidsInHaptic() { return NHapticSolids(); }
 	virtual int NPointersInHaptic() { return NHapticPointers(); }
-	virtual PHHapticPointerIf* GetPointerInHaptic(int i) { return GetHapticPointer(i); }
-	virtual PHSolidForHapticIf* GetSolidInHaptic(int i) { return GetHapticSolid(i); }
-	virtual PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
+	virtual PHHapticPointer* GetPointerInHapticImp(int i) { return GetHapticPointerImp(i); }
+	virtual PHSolidForHaptic* GetSolidInHapticImp(int i) { return GetHapticSolidImp(i); }
+	virtual PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j);
 
 	//デバック用コード
 	virtual void StepSimulation();

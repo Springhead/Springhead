@@ -7,8 +7,8 @@ namespace Spr{;
 // PHHapticStepSingle
 PHHapticStepSingle::PHHapticStepSingle(){}
 
-PHSolidPairForHapticIf* PHHapticStepSingle::GetSolidPairInHaptic(int i, int j){
-	return (PHSolidPairForHapticIf*)engine->GetSolidPair(i, j);
+PHSolidPairForHaptic* PHHapticStepSingle::GetSolidPairInHapticImp(int i, int j){
+	return engine->GetSolidPairImp(i, j);
 }
 	
 void PHHapticStepSingle::Step1(){

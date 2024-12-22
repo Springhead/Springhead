@@ -66,6 +66,9 @@ public:
 };
 
 class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public Object{  
+private:
+	PHSolidForHaptic(const PHSolidForHaptic&) { assert(0); }
+	void operator = (const PHSolidForHaptic&) { assert(0); }
 public:
 	SPR_OBJECTDEF_ABST(PHSolidForHaptic);
 	PHSolid localSolid;		// sceneSolidのクローン
@@ -74,10 +77,14 @@ public:
 	int NLocalFirst;		// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
 	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
 	PHSolidForHaptic();
-	PHSolidIf* GetLocalSolid() { return localSolid.Cast(); }
-	PHSolidIf* GetSceneSolid() { return sceneSolid->Cast(); }
+	PHSolidIf* GetLocalSolid() { return (PHSolidIf*)GetLocalSolidImp(); }
+	PHSolidIf* GetSceneSolid() { return (PHSolidIf*)GetSceneSolidImp(); }
+	PHSolid* GetLocalSolidImp() { return &localSolid; }
+	PHSolid* GetSceneSolidImp() { return sceneSolid; }
 	void AddForce(Vec3d f);
 	void AddForce(Vec3d f, Vec3d r);
+	void CopyFromPhysics(PHSolidForHaptic* src);
+	void CopyFromHaptics(PHSolidForHaptic* src);
 };
 class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 
@@ -130,7 +137,7 @@ public:
 
 //----------------------------------------------------------------------------
 
-struct PHSolidPairForHapticVars{
+struct PHSolidPairForHapticVarsBase{
 	Vec3d force;			///< 力覚ポインタがこの剛体に加える力
 	Vec3d torque;			///< 力覚ポインタがこの剛体に加えるトルク
 
@@ -147,10 +154,26 @@ struct PHSolidPairForHapticVars{
 	PHSolidPairForHapticIf::FrictionState  frictionState;
 
 	int solidID[2];
+	PHSolidPairForHapticVarsBase() :contactCount(0), fricCount(0),
+		frictionState(PHSolidPairForHapticIf::FREE)
+	{
+		solidID[0] = solidID[1] = -1;
+	}
+};
+struct PHSolidPairForHapticVarsLocalDynamics {
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
 	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
 	SpatialMatrix A6D;				// LocalDynamics6Dで使うアクセレランス
+	PHSolidPairForHapticVarsLocalDynamics() :
+		inLocal(0)
+	{
+		A.clear();
+		A6D.clear();
+	}
 };
+struct PHSolidPairForHapticVars : public PHSolidPairForHapticVarsBase, public PHSolidPairForHapticVarsLocalDynamics {
+};
+
 
 class PHSolidPairForHaptic : public PHSolidPairForHapticVars, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
 private:
@@ -203,15 +226,20 @@ public:
 
 	int NHapticPointers();
 	int NHapticSolids();
-	PHHapticPointerIf*       GetHapticPointer(int i);
-	PHSolidForHapticIf*      GetHapticSolid(int i);
+	PHHapticPointerIf* GetHapticPointer(int i) { return (PHHapticPointerIf*) GetHapticPointerImp(i); }
+	PHSolidForHapticIf* GetHapticSolid(int i) { return (PHSolidForHapticIf*) GetHapticSolidImp(i); }
+	PHHapticPointer* GetHapticPointerImp(int i);
+	PHSolidForHaptic* GetHapticSolidImp(int i);
 
 	virtual int NPointersInHaptic()=0;
 	virtual int NSolidsInHaptic()=0;
-	virtual PHHapticPointerIf* GetPointerInHaptic(int i)=0;
-	virtual PHSolidForHapticIf* GetSolidInHaptic(int i)=0;
+	PHHapticPointerIf* GetPointerInHaptic(int i) { return (PHHapticPointerIf*)GetPointerInHapticImp(i); }
+	virtual PHHapticPointer* GetPointerInHapticImp(int i) = 0;
+	PHSolidForHapticIf* GetSolidInHaptic(int i) { return (PHSolidForHapticIf*)GetSolidInHapticImp(i); }
+	virtual PHSolidForHaptic* GetSolidInHapticImp(int i) = 0;
 	///	剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）iには力覚ポインタも含まれる。
-	virtual PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j)=0;
+	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j) { return (PHSolidPairForHapticIf*)GetSolidPairInHapticImp(i, j); }
+	virtual PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j) = 0;
 	virtual void ReleaseState(PHSceneIf* scene) {}
 
 
