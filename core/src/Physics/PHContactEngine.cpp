@@ -644,6 +644,7 @@ namespace Spr {
 			}
 
 			Vec3d CopFromContPoint = Vec3d(0.0, -fnew[5] / fnew[0], fnew[4] / fnew[0]);
+			DSTR << "CopFromContPoint:" << CopFromContPoint << std::endl;
 
 			CONTACT htc = HowToContact();
 
@@ -969,9 +970,7 @@ namespace Spr {
 				}
 			}
 		}
-		// –Ê‚Æ–Ê‚ÌÚG‚Å‚ ‚ê‚Î
-		else {
-
+		else if (cts == CONTACT::FACE){		// –Ê‚Æ–Ê‚ÌÚG‚Å‚ ‚ê‚Î
 			if (!copOnObject0 && copOnObject1) {
 				GJK2D(phceInfo.contactpartInfo[0].vectorGroup,
 					phceInfo.objectInfo[0].CDCptr,
@@ -988,6 +987,9 @@ namespace Spr {
 				DykstraProjection(cp, OldCoP);
 				return true;
 			}
+		}
+		else {
+			DSTR << "PHContactEngine::FindClosestPoint() cts = " << cts << std::endl;
 		}
 
 		// Ž¸”s‚µ‚½‚çfalse
@@ -1155,6 +1157,8 @@ namespace Spr {
 
 		// –Ê‚Æ–Ê‚ÌÚG‚¾‚¯
 		else if (phceInfo.contactpartInfo[0].supportTag == CONTACT::FACE && phceInfo.contactpartInfo[1].supportTag == CONTACT::FACE) {
+			assert(phceInfo.contactpartInfo[0].vectorGroup.size() > 0);
+			assert(phceInfo.contactpartInfo[1].vectorGroup.size() > 0);
 			return CONTACT::FACE;
 		}
 

@@ -95,7 +95,7 @@ namespace Spr {
 		float sign = 0.0f;
 		sign = v.Z() > 0.0f ? 1.0f : -1.0f;
 
-		if (n < 1.0e-4f) {
+		if (n < 1.0e-2f) {
 			if (p <= -1.0e-10f) {
 				w = Vec3d(0.0f, 0.0f, 0.0f);
 				w.Z() = -length * 0.5f;
