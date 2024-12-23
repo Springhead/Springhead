@@ -109,7 +109,7 @@ public:
 		pd.timeStep = 1.0 / 60;
 		pd.contactTolerance = 0.001 * 0.4;
 		pd.airResistanceRateForAngularVelocity = 0.98;
-		pd.gravity.y = -0.1;
+		pd.gravity *= 0.1;
 		GetPHScene()->SetDesc(&pd);
 		PHConstraintEngineDesc ed;
 		GetPHScene()->GetConstraintEngine()->GetDesc(&ed);
