@@ -23,14 +23,19 @@ namespace Spr{;
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
 
-PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
-	integrationMode = PHINT_SIMPLETIC;
-	Iinv            = inertia.inv();
-	treeNode        = NULL;
+PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc),
+	integrationMode(PHINT_SIMPLETIC),
+	treeNode(NULL),
+	engine(NULL){
+	minv = 1.0;
+	Iinv = GetInertiaInv();
+	Minv.clear();
 	bFrozen         = false;
 	bboxReady       = false;
 	aabbReady       = false;
-
+	velocityNorm = 0;
+	angVelocityNorm = 0;
+	femIndex = 0;
 	if (s){ SetScene(s); }
 }
 

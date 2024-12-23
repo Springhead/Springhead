@@ -198,15 +198,18 @@ public:
 	};
 
 protected:
-	std::vector< UTRef<PHHapticStepBase> > hapticSteps;
 	HapticStepMode hapticStepMode;
 public:
 	bool bPhysicStep;
 	PHHapticEngine();
 	//-------------------------------------------------------------------
 	// APIの実装
-	/// エンジンモードの選択	(Single, Multi or Local Dynamics)
+	///<	Set engine mode: Single, Multi or Local Dynamics.
 	void SetHapticStepMode(HapticStepMode mode);
+	///<	Time stepping mode for haptic rendering and physics.
+	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
+	///<	Time stepping
+	PHHapticStepBaseIf* GetHapticStep() { return hapticStep->Cast(); }
 	/// 力覚ポインタの数を返す
 	int NPointers() { return (int)hapticPointers.size(); }
 	/// hapticSolidsの数を返す
@@ -214,7 +217,8 @@ public:
 	/// Get haptic pointer in haptic engine (physics thread)
 	PHHapticPointerIf* GetPointer(int i){ return hapticPointers[i]->Cast(); }
 	///	Get solid pair in haptic engine (physics thread);
-	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairs.item(i, j); }
+	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)GetSolidPairImp(i, j); }
+	PHSolidPairForHaptic* GetSolidPairImp(int i, int j) { return (PHSolidPairForHaptic*)&*solidPairs.item(i, j); }
 
 	//--------------------------------------
 	//	Functions to get objects in haptic thead = PHHapticStepXXX.
@@ -225,6 +229,7 @@ public:
 	/// hapticSolidsの数を返す。
 	int NSolidsInHaptic();
 	/// returns solid pair in haptic thead.
+	PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j);
 	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
 	/// state保存のために確保した領域を開放する
 	void ReleaseState();
@@ -232,8 +237,8 @@ public:
 	PHSolidPairForHapticIf* GetSolidPairTemp(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairsTemp.item(i, j); }
 
 	/// Implementaion for base class (PHContactDetector)
-	PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForHaptic(); }
-	
+	PHSolidPair* CreateSolidPair() { return DBG_NEW PHSolidPairForHaptic(); }
+
 	// PHHapticEngineの実装
 	///< Update simulation loop (called from PHScene::Integrate()) シミュレーションループの更新（PHScene::Integrate()からコール）
 	virtual void Step();
@@ -256,8 +261,6 @@ public:
 	bool DelChildObject(ObjectIf* o);
 	///< ShapePairの更新
 	void UpdateShapePairs(PHBody* body);
-	///<	Time stepping for haptic rendering and physics
-	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
 
 	///<	接触判定の有効化・無効化
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable);
@@ -286,7 +289,7 @@ protected:
 public:
 	// Implementation for haptic rendering. The definisions are in PHHapticEngineRender.cpp
 	///	start point of haptic rendering
-	virtual void HapticRendering(PHHapticStepBase* hs);
+	virtual void HapticRendering(PHHapticStepBaseIf* hs);
 	///	Compute all constraints.
 	void CompIntermediateRepresentationForDynamicProxy(PHHapticStepBase* hs, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
 

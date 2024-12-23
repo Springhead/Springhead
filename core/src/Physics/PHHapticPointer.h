@@ -60,7 +60,6 @@ struct PHHapticPointerPhysicsSt {
 
 class PHHapticPointer : public PHHapticEngineDesc, public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
 	friend class PHSolidPairForHaptic;
-	friend class PHHapticRender;
 	friend class FWHapticPointer;
 public:
 	SPR_OBJECTDEF(PHHapticPointer);
@@ -128,6 +127,8 @@ public:
 	float   GetContactForce(int i);
 	SpatialVector GetProxyVelocity() { return lastProxyVelocity; }
 	void	SetProxyVelocity(SpatialVector lpv) { lastProxyVelocity = lpv; }
+	Posed GetProxyPose() { return proxyPose; }
+	Posed GetLastProxyPose() { return lastProxyPose; }
 	// Implementation
 	void	SetPointerID(int id){ pointerID = id; }
 	int		GetPointerID(){ return pointerID; }

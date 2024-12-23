@@ -7,18 +7,18 @@ namespace Spr{;
 // PHHapticStepSingle
 PHHapticStepSingle::PHHapticStepSingle(){}
 
-PHSolidPairForHaptic* PHHapticStepSingle::GetSolidPairInHaptic(int i, int j){
-	return (PHSolidPairForHaptic*)engine->GetSolidPair(i, j);
+PHSolidPairForHaptic* PHHapticStepSingle::GetSolidPairInHapticImp(int i, int j){
+	return engine->GetSolidPairImp(i, j);
 }
 	
 void PHHapticStepSingle::Step1(){
 	////DSTR << "step" << std::endl;
 	engine->StartDetection();
 	UpdateHapticPointer();
-	engine->HapticRendering(this);
+	engine->HapticRendering(this->Cast());
 	//レンダリングした力をシーンに反映
 	for(int i = 0; i < (int)NHapticSolids(); i++){
-		PHSolidForHaptic* hsolid = GetHapticSolid(i);
+		PHSolidForHaptic* hsolid = (PHSolidForHaptic*)GetHapticSolid(i);
 		if(hsolid->bPointer) continue;
 		PHSolid* sceneSolid = hsolid->sceneSolid;
 		sceneSolid->AddForce(hsolid->force);
@@ -33,7 +33,7 @@ void PHHapticStepSingle::Step2(){
 
 void PHHapticStepSingle::UpdateHapticPointer(){
 	for(int i = 0; i < NHapticPointers(); i++){
-		GetHapticPointer(i)->UpdatePointer();
+		((PHHapticPointer* )GetHapticPointer(i))->UpdatePointer();
 	}
 }
 
