@@ -161,7 +161,7 @@ namespace Spr {
 			ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));
 			return SEC_POLYGON;
 		}
-		else if (dir.X() * sign > 0.7f) {		//	‰~“›‚ªÚG–Ê‚É‘å‘Ì‚’¼‚Èê‡
+		else if (dir.X() * sign > 0.8f) {		//	‰~“›‚ªÚG–Ê‚É‘å‘Ì‚’¼‚Èê‡
 			return SEC_CURVETURE;
 		}
 		else {

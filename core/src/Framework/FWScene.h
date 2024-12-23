@@ -92,6 +92,7 @@ public:
 	Vec3i		matAxis;
 	int			matForce, matMoment;
 	int			matContact;
+	int			matCoP[3];
 	int			matBBoxLocal;
 	int			matBBoxWorld;
 	Vec3i		matGrid;

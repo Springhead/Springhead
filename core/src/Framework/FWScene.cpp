@@ -62,6 +62,9 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	matBBoxWorld = GRRenderIf::WHITE;
 	matForce	= GRRenderIf::ORANGE;
 	matMoment	= GRRenderIf::CYAN;
+	matCoP[0] = GRRenderIf::BLUE;
+	matCoP[1] = GRRenderIf::GREEN;
+	matCoP[2] = GRRenderIf::RED;
 	matGrid.x = matGrid.y = matGrid.z = GRRenderIf::GRAY;
 	// 座標軸
 	axisStyle = FWSceneIf::AXIS_LINES;
@@ -1279,7 +1282,6 @@ void FWScene::DrawForce(GRRenderIf* render, const Vec3d& f, const Vec3d& t){
 	// constraint force
 	render->SetMaterial(matForce);
 	render->DrawLine(Vec3f(), scaleForce * f);
-	std::cout << f << std::endl;
 	// constraint moment
 	render->SetMaterial(matMoment);
 	render->DrawLine(Vec3f(), scaleMoment * t);
@@ -1292,14 +1294,19 @@ void FWScene::DrawContactEngine(GRRenderIf* render, PHContactEngineIf* ceIf) {
 	render->SetLighting(false);
 	render->SetDepthTest(false);
 
-	Vec3f newCop = ce->pose.Inv() * ce->phceInfo.necessaryInfo.NewCoP;
-	Vec3f oldCop = ce->pose.Inv() * ce->phceInfo.necessaryInfo.OldCoP;
-	// constraint force
-	render->SetMaterial(matForce);
+//	Vec3f newCop = ce->pose.Inv() * ce->phceInfo.necessaryInfo.NewCoP;
+//	Vec3f oldCop = ce->pose.Inv() * ce->phceInfo.necessaryInfo.OldCoP;
+	Vec3f newCop = ce->phceInfo.necessaryInfo.NewCoP;
+	Vec3f oldCop = ce->phceInfo.necessaryInfo.OldCoP;
+	// CoP
+	render->SetMaterial(matCoP[1]);
 	render->DrawLine(newCop, oldCop);
-	render->SetMaterial(matMoment);
+	render->SetMaterial(matCoP[0]);
+	render->SetPointSize(5);
 	render->DrawPoint(oldCop);
-	render->DrawPoint(oldCop);
+	render->SetMaterial(matCoP[2]);
+	render->DrawPoint(newCop);
+	render->SetPointSize(1);
 
 	render->SetDepthTest(true);
 	render->SetLighting(true);

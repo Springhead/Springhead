@@ -370,7 +370,7 @@ namespace Spr {
 		// Adjust static/dynamic friction state based on tangential relative velocity
 		double vt = vjrel[1] + velField[1];
 		isStatic = (-fth < vt&& vt < fth);
-		DSTR << db << std::endl;
+		DSTR << "CEngine::db:" << db << std::endl;
 	}	
 
 	inline void PHContactEngine::updateWithProjection(unsigned s, unsigned e, bool& updated) {
