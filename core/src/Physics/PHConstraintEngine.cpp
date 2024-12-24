@@ -847,6 +847,35 @@ void PHConstraintEngine::DestructState(void* m) const {
 		((PHConstraintsSt*)p)->~PHConstraintsSt();
 	}
 }
+inline int nDescendantNode(PHTreeNode* node) {
+	int rv = 1;
+	for (int i = 0; i < node->NChildren(); ++i) {
+		rv += nDescendantNode((PHTreeNode*)node->GetChildNode(i));
+	}
+	return rv;
+}
+int nTreeNodes(const PHConstraintEngine::PHRootNodes& trees) {
+	int rv = 0;
+	for (int i = 0; i < trees.size(); ++i) {
+		rv += nDescendantNode(trees[i]);
+	}
+	return rv;
+}
+void getDescendantNodeState(PHTreeNodeSt*& st, PHTreeNode* node) {
+	node->GetSt(st);
+	st += 1;
+	for (int i = 0; i < node->NChildren(); ++i) {
+		getDescendantNodeState(st, (PHTreeNode*)node->GetChildNode(i));
+	}
+}
+void setDescendantNodeState(PHTreeNodeSt*& st, PHTreeNode* node) {
+	node->SetSt(st);
+	st += 1;
+	for (int i = 0; i < node->NChildren(); ++i) {
+		setDescendantNodeState(st, (PHTreeNode*)node->GetChildNode(i));
+	}
+}
+
 bool PHConstraintEngine::GetState(void* s) const {
 	PHContactDetector::GetState(s);
 	char* p = (char*)s;
@@ -859,6 +888,12 @@ bool PHConstraintEngine::GetState(void* s) const {
 		st->gears.resize(gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
+		}
+		int nTreeNode = nTreeNodes(trees);
+		st->trees.resize(nTreeNode);
+		PHTreeNodeSt* stTree = &(st->trees[0]);
+		for (size_t i = 0; i < trees.size(); ++i) {
+			getDescendantNodeState(stTree, trees[i]);
 		}
 	}
 	return true;
@@ -875,6 +910,10 @@ void PHConstraintEngine::SetState(const void* s){
 		gears.resize(st->gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
+		}
+		PHTreeNodeSt* treeSt = &st->trees[0];
+		for (size_t i = 0; i < trees.size(); ++i) {
+			setDescendantNodeState(treeSt, trees[i]);
 		}
 	}
 }

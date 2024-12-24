@@ -11,6 +11,7 @@
 #include <Collision/CDDetectorImp.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHGear.h>
+#include <Physics/PHTreeNode.h>
 #include <Physics/PHContactDetector.h>
 #include <Foundation/UTQPTimer.h>
 
@@ -88,6 +89,7 @@ public:
 struct PHConstraintsSt{
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
+	std::vector<PHTreeNodeSt> trees;
 };
 
 

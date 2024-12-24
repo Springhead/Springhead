@@ -43,17 +43,17 @@ public:
 		useABA		= true;
 
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_0, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_0, 's');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_0, 'z');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_1, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_1, 'd');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_1, 'x');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_2, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_2, 'f');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_2, 'c');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_3, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_3, 'g');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_3, 'v');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_4, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_4, 'h');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_4, 'b');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_5, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_5, 'j');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_5, 'n');
 	}
 
 	virtual void BuildScene(){
