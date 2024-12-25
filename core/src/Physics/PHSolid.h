@@ -157,6 +157,9 @@ public:
 	///	質量中心の速度と角速度をまとめて取得
 	//SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity, angVelocity); }
 
+	//Reset Force and Torque
+	void		ResetForceTorque();
+
 	///	（最後のStep()での）剛体の質量中心の加速度
 	//SpatialVector GetAcceleration() const;
 

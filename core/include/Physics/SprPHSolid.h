@@ -192,6 +192,8 @@ struct PHSolidIf : public PHBodyIf{
 	 */
 	void AddForce(Vec3d f, Vec3d r);
 
+	void ResetForceTorque();
+
 	/**	@brief 質量を取得する
 		@return 質量
 	 */

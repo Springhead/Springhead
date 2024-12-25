@@ -483,6 +483,16 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 	nextForce  += f;
 }
 
+void PHSolid::ResetForceTorque() {
+	nextTorque.clear();
+	nextForce.clear();
+	force.clear();
+	torque.clear();
+	dv0.clear();
+	dv.clear();
+	dV.clear();
+}
+
 void PHSolid::AfterSetDesc(){
 	SetInertia(inertia);
 	SceneObject::AfterSetDesc();

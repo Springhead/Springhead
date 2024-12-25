@@ -447,13 +447,13 @@ void PHRootNode::Setup(){
 		bReady = true;
 	}
 
-	// articulated inertiaを計算
+	// articulated inertiaを計算 Iinv
 	InitArticulatedInertia();
 	CompArticulatedInertia();
-	// articulated bias forceを計算
+	// articulated bias forceを計算 Z
 	InitArticulatedBiasForce();
 	CompArticulatedBiasForce();
-	// 慣性力と外力による加速度を計算
+	// 慣性力と外力による加速度を計算 
 	CompAccel();
 	// 拘束力変化に対する加速度変化のマップを作成
 	CompResponseMatrix();
