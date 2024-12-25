@@ -29,7 +29,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5C2EA687-6692-4B73-A911-DB9155685066}</ProjectGuid>
     <RootNamespace>Joints141</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Joints</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -129,6 +129,7 @@
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
+    <AllProjectBMIsArePublic>true</AllProjectBMIsArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>

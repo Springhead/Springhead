@@ -53,6 +53,8 @@ void defDebugOutFunc(const char* str){
 }
 #endif
 
+
+
 DebugPrintf* DebugPrintf::GetInstance(){
 	static DebugPrintf dpf;
 	if (!debugOutFunc) dpf.Set(defDebugOutFunc);

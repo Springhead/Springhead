@@ -17,6 +17,10 @@ namespace Spr{;
 
 class PHGear;
 
+struct PHTreeNodeSt {
+	Vec6d vel;
+};
+
 ///	ツリーノードの基本クラス
 class PHRootNode;
 class PHTreeNode : public SceneObject, public UTTreeNode<PHTreeNode>, public PHTreeNodeDesc{
@@ -108,6 +112,10 @@ public:
 	virtual void CompRelativeVelocity    (){}			///< 関節速度から剛体間相対速度を計算
 	virtual void CompRelativePosition    (){}			///< 関節位置から剛体間相対位置を計算
 
+
+	//	Save State / Load State
+	virtual void SetSt(PHTreeNodeSt* st) {}
+	virtual void GetSt(PHTreeNodeSt* st) {}
 };
 
 class PHRootNode : public PHTreeNode{
@@ -205,6 +213,13 @@ public:
 	virtual void ClearCorrection() { vel.clear(); }
 
 	PHTreeNodeND();
+
+	virtual void SetSt(PHTreeNodeSt* st) {
+		vel = st->vel.sub_vector(TSubVectorDim<0, NDOF>());
+	}
+	virtual void GetSt(PHTreeNodeSt* st) {
+		st->vel.sub_vector(TSubVectorDim<0, NDOF>()) = vel;
+	}
 };
 
 ///	1自由度の関節

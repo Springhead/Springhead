@@ -68,6 +68,8 @@ public:
 	bool tex3d;		///< 3次元テクスチャの場合 true
 	bool alwaysCreateBuffer;
 
+	bool two_sided=false; //	for op
+
 	/// 子オブジェクト
 	std::vector< UTRef<GRMaterial> >	material;			///< マテリアル
 	std::vector< UTRef<GRSkinWeight> >	skinWeights;		///< スキンMeshの場合のskinWeights

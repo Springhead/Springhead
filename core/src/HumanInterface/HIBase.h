@@ -41,6 +41,8 @@ public:
 	bool IsGood(){ return isGood; }
 	///	Update state of the interface; read from/write to real device.
 	virtual void Update(float dt);
+	//コロコロ用に手の位置を送る用
+	//virtual void Update(float dt,Vec3d pos);
 	/**	Add an real device to the dependency list of real devices. 
 		Update() will call real device's Update() function.	*/
 	void AddDeviceDependency(HIRealDeviceIf* rd);
@@ -105,7 +107,7 @@ public:
 	///	デバイスの実際の提示力を返す
 	virtual Vec3f GetForce(){ return Vec3f(); }
 	///	デバイスの目標出力とトルク出力を設定する
-	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()){}
+	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f())=0;
 	///	デバイスの速度を返す
 	virtual Vec3f GetVelocity(){ return vel; }
 	///	デバイスの角速度を返す
@@ -122,6 +124,7 @@ public:
 	///
 	virtual ~HIHapticDummy() {}
 	void SetPose(Posed p) { pose = p; }
+	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()) {}
 	void SetVelocity(Vec3d v) { vel = v; }
 	void SetAngularVelocity(Vec3d v) { angVel = v; }
 	virtual Vec3f		GetPosition() { return pose.Pos(); }

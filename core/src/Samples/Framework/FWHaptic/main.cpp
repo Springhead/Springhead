@@ -52,7 +52,8 @@ public:
 	};
 
 private:
-	double ShapeScale(){ return 0.006; }
+	//double ShapeScale() { return 0.006; }
+	double ShapeScale() { return 0.02; }
 public:
 	MyApp(){
 		appName = "FWHaptic";
@@ -97,13 +98,17 @@ public:
 #if 0	// Single thread mode
 		he->SetHapticStepMode(PHHapticEngineDesc::SINGLE_THREAD);
 		phscene->SetTimeStep(hdt);
-#elif 1
+#elif 0
 		// Multi thread mode
 		he->SetHapticStepMode(PHHapticEngineDesc::MULTI_THREAD);
 		phscene->SetTimeStep(pdt);
-#else
-		// Multi thread and local dynamics mode
+#elif 0
+		// Local dynamics mode (multi thread)
 		he->SetHapticStepMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
+		phscene->SetTimeStep(pdt);
+#elif 1
+		// Local dynamics 6DOF mode (multi thread)
+		he->SetHapticStepMode(PHHapticEngineDesc::LOCAL_DYNAMICS6DOF);
 		phscene->SetTimeStep(pdt);
 #endif
 		timer->SetMode(UTTimerIf::IDLE);
@@ -118,10 +123,10 @@ public:
 		hapticTimer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
 		hapticTimer->Start();						// タイマスタート
 #else	//		or thread
-		hapticTimer = CreateTimer(UTTimerIf::THREAD);			// 力覚スレッド用のマルチメディアタイマを作成
+		hapticTimer = CreateTimer(UTTimerIf::THREAD);			// 力覚スレッド用のマルチメディアタイマを作成 自動的にStart()する。
 		hapticTimer->SetResolution(1);							// 分解能(ms)
 		hapticTimer->SetInterval((unsigned int)(hdt * 1000));	// 刻み(ms)h
-		hapticTimer->Start();						// タイマスタート
+		//	hapticTimer->Stop();
 #endif
 	}
 
@@ -153,7 +158,7 @@ public:
 		DRUARTMotorDriverIf* ud = (DRUARTMotorDriverIf*) hiSdk->FindRealDevice(DRUARTMotorDriverIf::GetIfInfoStatic());
 		if (ud->NMotor() >= 8 && device->Init(&HISpidarGDesc("SpidarG6X4R"))) {
 			device->Calibration();
-			((UTRef<HISpidarGIf>)device)->SetWeight(0.3, 1.0, 6.0 * 0);
+			((UTRef<HISpidarGIf>)device)->SetWeight(0.3f, 1.0f, 6.0f * 0);
 		}
 		else if (device->Init(&HISpidarGDesc("SpidarG6X3F"))) {
 			device->Calibration();
@@ -191,8 +196,10 @@ public:
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
 		PHSceneIf* phscene = GetPHScene();
 		phscene->SetGravity(Vec3d(0, -9.8*0.1, 0));
+#if 1	//	Floor
 		soFloor = CreateFloor(false);
 		soFloor->SetFramePosition(Vec3d(0, -0.03, 0));
+#endif
 
 		// Make the haptic pointer
 		pointer = phscene->CreateHapticPointer();
@@ -391,7 +398,23 @@ public:
 				dummyDevice->SetPose(p);
 			}
 			break;
+		case DVKeyCode::PAGE_UP:
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosZ() -= dr;
+				dummyDevice->SetPose(p);
+			}
+			break;
+		case DVKeyCode::PAGE_DOWN:
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosZ() += dr;
+				dummyDevice->SetPose(p);
+			}
+			break;
 		default:
+			PHHapticEngineIf* he = GetPHScene()->GetHapticEngine();
+			he->ReleaseState();
 			SampleApp::Keyboard(key, x, y);
 			break;
 		}

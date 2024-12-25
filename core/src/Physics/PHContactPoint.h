@@ -37,12 +37,14 @@ public:
 	/// コンストラクタ
 	PHContactPoint(){}
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
+	bool IsStaticFriction() { return isStatic;  }
 
 	// ----- PHConstraintの派生クラスで実装する機能
 	virtual void CompBias();
 	virtual void CompError();
 	virtual bool Projection(double& f_, int i);
 	virtual bool ProjectionCorrection(double& F, int k);
+	virtual Posed GetPose() { return pose; }
 };
 
 }

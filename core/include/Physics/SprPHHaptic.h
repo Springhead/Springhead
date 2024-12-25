@@ -29,10 +29,20 @@ struct PHHapticPointerDesc {
 	PHHapticPointerDesc();
 };
 
+struct PHHapticEngineDesc {
+	enum HapticStepMode {
+		SINGLE_THREAD = 0,
+		MULTI_THREAD,
+		LOCAL_DYNAMICS,
+		LOCAL_DYNAMICS6DOF,
+	};
+	PHHapticEngineDesc();
+};
 struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	SPR_IFDEF(PHHapticPointer);
 	void	SetHapticRenderMode(PHHapticPointerDesc::HapticRenderMode m);
 	PHHapticPointerDesc::HapticRenderMode GetHapticRenderMode();
+
 	void	EnableRotation(bool b);
 	bool	IsRotation();
 	void	EnableForce(bool b);
@@ -43,13 +53,6 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	bool	IsTimeVaryFriction();
 	void	EnableVibration(bool b);
 	bool	IsVibration();
-	void	EnableMultiPoints(bool b);
-	bool	IsMultiPoints();
-
-	void	EnableMultiProxy(bool b);
-	bool	IsMultiProxy();
-	void	EnableSimulation(bool b);
-	bool	IsSimulation();
 
 	void	SetFrictionSpring(float s);				///<	摩擦で動的Proxyを使う場合のバネ係数
 	float	GetFrictionSpring();					///<	摩擦で動的Proxyを使う場合のバネ係数
@@ -78,12 +81,8 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	float   GetContactForce(int i);					///<	近傍物体iからの接触力
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
 	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
-
-	//GMS用
-	void	SetProxyN(int n);						///<	proxyの数を設定
-	int		GetProxyN();							///<    proxyの数を取得
-	int GetTotalSlipState();
-	int GetSlipState(int i);
+	Posed GetProxyPose();
+	Posed GetLastProxyPose();
 
 	void SetProxyVelocity(SpatialVector spv);
 
@@ -91,6 +90,13 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	ClearHapticForce();
 	void	UpdateHumanInterface(const Posed& pose, const SpatialVector& vel);
 													///<	HumanInterfaceの位置の変化をHapticPointerに伝える。普通はFWSceeneが呼び出すので、呼び出し不要。
+};
+struct PHSolidForHapticIf : public ObjectIf {
+	SPR_IFDEF(PHSolidForHaptic);
+	PHSolidIf* GetLocalSolid();
+	PHSolidIf* GetSceneSolid();
+	void AddForce(Vec3d f);
+	void AddForce(Vec3d f, Vec3d r);
 };
 
 struct PHShapePairForHapticIf : public CDShapePairIf {
@@ -101,9 +107,6 @@ struct PHShapePairForHapticIf : public CDShapePairIf {
 	double GetMu();
 	PHFrameIf* GetFrame(int i);
 	void UpdateCache();
-
-	//GMS用
-	double GetMus(int id);
 };
 struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	SPR_IFDEF(PHSolidPairForHaptic);
@@ -116,24 +119,36 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	FrictionState GetFrictionState();
 	unsigned GetContactCount();
 	unsigned GetFrictionCount();
-	//GMS
-	void InitFrictionState(int n);
-	void InitFrictionCount(int n);
-	void InitContactCount(int n);
-	void InitSlipState(int n);
-	int GetSlipState(int i);
 	Vec3d GetForce();
 	Vec3d GetTorque();
-	FrictionState GetFrictionStates(int i);
 };
 
-struct PHHapticEngineDesc {
-	enum HapticStepMode {
-		SINGLE_THREAD = 0,
-		MULTI_THREAD,
-		LOCAL_DYNAMICS
-	};
-	PHHapticEngineDesc();
+struct PHHapticStepBaseIf: public ObjectIf {
+	SPR_IFDEF(PHHapticStepBase);
+	double GetHapticTimeStep();
+	void SetHapticTimeStep(double dt);
+	int NHapticPointers();
+	int NHapticSolids();
+	PHHapticPointerIf* GetHapticPointer(int i);
+	PHSolidForHapticIf* GetHapticSolid(int i);
+
+	int NPointersInHaptic();
+	int NSolidsInHaptic();
+	PHHapticPointerIf* GetPointerInHaptic(int i);
+	PHSolidForHapticIf* GetSolidInHaptic(int i);
+	///	剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）iには力覚ポインタも含まれる。
+	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
+	void ReleaseState(PHSceneIf* scene);
+};
+struct PHHapticStepSingleIf :public PHHapticStepBaseIf {
+	SPR_IFDEF(PHHapticStepSingle);
+};
+struct PHHapticStepMultiIf :public PHHapticStepBaseIf {
+	SPR_IFDEF(PHHapticStepMulti);
+	int GetHapticCount();
+	int GetLoopCount();
+	bool GetSyncRequired();
+	bool GetPhysicsRequired();
 };
 
 struct PHHapticEngineIf : public PHEngineIf {
@@ -145,6 +160,7 @@ public:
 	*/
 	void SetHapticStepMode(PHHapticEngineDesc::HapticStepMode mode);
 	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
+	PHHapticStepBaseIf* GetHapticStep();
 
 	///	Physics側の剛体数
 	int NSolids();
@@ -193,6 +209,9 @@ public:
 	*/
 	bool SetCallbackAfterStep(Callback f, void* arg);
 	//@}
+
+	//	Function for debug
+	void HapticRendering(PHHapticStepBaseIf* hs);
 };
 
 }

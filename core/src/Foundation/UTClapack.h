@@ -46,7 +46,7 @@ int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vecto
 #ifdef USE_LAPACK
 	e.clear();
 	v.clear();
-	int size = a.height();
+	size_t size = a.height();
 	assert(a.width() == size);
 	assert(b.height() == size || b.width() == size);
 	assert(e.size() == size);
@@ -71,7 +71,7 @@ int sprsygv(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vecto
 	ublas::symmetric_adaptor< matrix_type, ublas::lower> lb_uplo( lb ) ;
 	int info = lapack::sygv(1,'V',la_uplo, lb_uplo, evec);
 
-	int esize = e.size();
+	size_t esize = e.size();
 	for(int i = 0; i < esize; i++)
 		e.item(i) = evec[i];
 

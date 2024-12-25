@@ -119,6 +119,7 @@
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"
 %include "../../include/Foundation/SprUTTimer.h"
+%include "../../include/Foundation/SprUTOptimizer.h"
 %include "../Foundation/UTBaseType.h"
 
 //%include "../../include/Base/TVector.h"

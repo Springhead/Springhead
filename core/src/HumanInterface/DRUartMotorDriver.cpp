@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-// DRUARTMotorDriver.cpp: DRUARTMotorDriver クラスのインプリメンテーション
+// DRUARTMotorDriver.cpp: implementation of DRUARTMotorDriver class
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -186,6 +186,7 @@ public:
 				}
 			}
 			bool bBoardFound = false;
+			
 			for (auto board : boards) {
 				if (board->GetBoardId() == cmdHeader.boardId) {
 					bBoardFound = true;
@@ -376,34 +377,32 @@ bool DRUARTMotorDriver::InitCom() {
 	DWORD comError;
 	COMSTAT comStat;
 	ClearCommError(hUART, &comError, &comStat);
-	DCB dcb;//構成情報を記録する構造体の生成
-	GetCommState(hUART, &dcb);//現在の設定値を読み込み
-	dcb.DCBlength = sizeof(DCB);//DCBのサイズ
+	DCB dcb;
+	GetCommState(hUART, &dcb);	//	Get current values
+	dcb.DCBlength = sizeof(DCB);//	set size of DCB
 	dcb.BaudRate = 2000*1000;	//	baudrate 2Mbps
 	dcb.ByteSize = 8;			//	8bit
 	dcb.fBinary = TRUE;			//	binaly = TRUE
 	dcb.fParity = NOPARITY;		//	no paritiy
 	dcb.StopBits = ONESTOPBIT;	//	1 stop bit
-	dcb.fOutxCtsFlow = FALSE;	//CTSフロー制御:フロー制御なし
-	dcb.fOutxDsrFlow = FALSE;	//DSRハードウェアフロー制御：使用しない
-	dcb.fDtrControl = DTR_CONTROL_DISABLE;//DTR有効/無効:DTR無効
-	dcb.fRtsControl = RTS_CONTROL_DISABLE;//RTSフロー制御:RTS制御なし
-	dcb.fOutX = FALSE;//送信時XON/XOFF制御の有無:なし
-	dcb.fInX = FALSE;//受信時XON/XOFF制御の有無:なし
-	dcb.fTXContinueOnXoff = TRUE;// 受信バッファー満杯＆XOFF受信後の継続送信可否:送信可
-	dcb.XonLim = 512;//XONが送られるまでに格納できる最小バイト数:512
-	dcb.XoffLim = 512;//XOFFが送られるまでに格納できる最小バイト数:512
-	dcb.XonChar = 0x11;//送信時XON文字 ( 送信可：ビジィ解除 ) の指定:XON文字として11H ( デバイス制御１：DC1 )
-	dcb.XoffChar = 0x13;//XOFF文字（送信不可：ビジー通告）の指定:XOFF文字として13H ( デバイス制御3：DC3 )
-
-	dcb.fNull = FALSE;// NULLバイトの破棄:破棄する
-//	dcb.fAbortOnError = TRUE;//エラー時の読み書き操作終了:終了する
-	dcb.fAbortOnError = FALSE;
-	dcb.fErrorChar = FALSE;// パリティエラー発生時のキャラクタ（ErrorChar）置換:なし
-	dcb.ErrorChar = -1;// パリティエラー発生時の置換キャラクタ
-	dcb.EofChar = 0x03;// データ終了通知キャラクタ:一般に0x03(ETX)がよく使われます。
-	dcb.EvtChar = 0x00;// Event notification character is used to start transfer from driver to application.
-	if (SetCommState(hUART, &dcb) != TRUE) return false;  //設定値の書き込み
+	dcb.fOutxCtsFlow = FALSE;	//	CTS = flow control: no flow control
+	dcb.fOutxDsrFlow = FALSE;	//	DSR = hardware flow contorl: do not use.
+	dcb.fDtrControl = DTR_CONTROL_DISABLE;//DTR: DTR is not used
+	dcb.fRtsControl = RTS_CONTROL_DISABLE;//RTS: RTS is not used
+	dcb.fOutX = FALSE;			//	Use XON/XOFF when send: NO
+	dcb.fInX = FALSE;			//	Use XON/XOFF when receive: NO
+	dcb.fTXContinueOnXoff = TRUE;// Continue sending after receiving XOFF or when the receiving buffer is full: Yes
+	dcb.XonLim = 512;			//	min length before XON:512
+	dcb.XoffLim = 512;			//	min length before XOFF:512
+	dcb.XonChar = 0x11;			//
+	dcb.XoffChar = 0x13;		//
+	dcb.fNull = FALSE;			//	Discard NULL bytes: Discard
+	dcb.fAbortOnError = FALSE;	//	Read/write operation termination on error: Ignore error
+	dcb.fErrorChar = FALSE;		//	Character replacement when a parity error occurs:None
+	dcb.ErrorChar = -1;			//	the error char to replcace
+	dcb.EofChar = 0x03;			//	EOF character: usually 0x03(ETX) is used
+	dcb.EvtChar = 0x00;			//	Event notification character is used to start transfer from driver to application.
+	if (SetCommState(hUART, &dcb) != TRUE) return false;  //	Set the settings above.
 
 	SetCommMask(hUART, EV_RXFLAG);	//	Enable event notificaiton character
 
@@ -421,7 +420,7 @@ bool DRUARTMotorDriver::InitCom() {
 bool DRUARTMotorDriver::Init(){
 	std::vector<string> comPorts;
 	if (port = -1) {
-		char nameBuffer[128 * 1000];
+		char nameBuffer[128 * 100];
 		if (QueryDosDevice(NULL, nameBuffer, sizeof(nameBuffer)) != 0) {
 			char* p = nameBuffer;
 			while (*p != '\0') {
@@ -445,10 +444,10 @@ bool DRUARTMotorDriver::Init(){
 		path.append(comPort);
 		hUART = CreateFile(path.c_str(),
 			GENERIC_READ | GENERIC_WRITE,
-			0,				//ポートの共有方法を指定:オブジェクトは共有しない
-			NULL,			//セキュリティ属性:ハンドルを子プロセスへ継承しない
+			0,				//	Way to share the port: do not share
+			NULL,			//	Security attributes: do not permit child processes to inherit the handle.
 			OPEN_EXISTING,
-			0,				//ポートの属性を指定:同期　非同期にしたいときはFILE_FLAG_OVERLAPPED
+			0,				//	port's attribute: syncronize. For async, use FILE_FLAG_OVERLAPPED
 			NULL);
 		if (hUART == INVALID_HANDLE_VALUE) {
 			DSTR << "CreateFile failed " << GetLastError() << std::endl;
@@ -462,7 +461,7 @@ bool DRUARTMotorDriver::Init(){
 		}
 		CloseHandle(hUART);
 	}
-	//	デバイスの登録
+	//	Register device
 	for (int i = 0; i < (int) impl->currentMap.size(); ++i) {
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 	}
@@ -525,4 +524,3 @@ void DRUARTMotorDriver::Reset() {
 
 
 } //namespace Spr
-

@@ -18,21 +18,25 @@ public:
 //----------------------------------------------------------------------------
 /// PHHapticStepMulti
 class PHHapticStepMulti : public PHHapticStepBase{
-	SPR_OBJECTDEF_ABST_NOIF(PHHapticStepMulti);
+	SPR_OBJECTDEF_ABST(PHHapticStepMulti);
 protected:
-	PHHapticScene hapticModel;	//	力覚レンダリングが使うモデル
+	PHHapticScene hapticModel;			//	力覚レンダリングが使うモデル
 	volatile int	hapticCount;		//	hapticCount - physicsCount*倍率、同期の要求を出すために使う
 	volatile int	loopCount;			//	現在の物理ステップに対して何回目の力覚レンダリングか
 	volatile bool	bSync;				//	同期の要求
-	bool			bCalcPhys;
+	bool			bCalcPhys;			//	同期が終わったか＝物理計算できるかどうか
 
 	PHHapticEngineIf::Callback cbBeforeStep;
 	PHHapticEngineIf::Callback cbAfterStep;
 	void *callbackArg;
-	virtual int GetLoopCount() { return loopCount; }
 
 public:
 	PHHapticStepMulti();
+	int GetHapticCount() { return hapticCount; }
+	virtual int GetLoopCount() { return loopCount; }
+	bool GetSyncRequired() { return bSync; }
+	bool GetPhysicsRequired() { return bCalcPhys; }
+
 	virtual void StepHapticLoop()=0;	// hapticloop
 	virtual void StepHapticSync();		// hapticloop
 	virtual void Step1(){}
@@ -44,9 +48,9 @@ public:
 	virtual void UpdateHapticPointer();
 	virtual int NSolidsInHaptic() { return (int)hapticModel.hapticSolids.size(); }
 	virtual int NPointersInHaptic() { return (int)hapticModel.hapticPointers.size(); }
-	virtual PHHapticPointer* GetPointerInHaptic(int i) { return hapticModel.hapticPointers[i]; }
-	virtual PHSolidForHaptic* GetSolidInHaptic(int i) { return hapticModel.hapticSolids[i]; }
-	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j) { return (PHSolidPairForHaptic*)&*hapticModel.solidPairs.item(i, j); }
+	virtual PHHapticPointer* GetPointerInHapticImp(int i) { return hapticModel.hapticPointers[i]; }
+	virtual PHSolidForHaptic* GetSolidInHapticImp(int i) { return hapticModel.hapticSolids[i]; }
+	virtual PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j) { return (PHSolidPairForHaptic*) &*hapticModel.solidPairs.item(i, j); }
 	//デバック用コード
 	virtual void StepPhysicsSimulation();
 

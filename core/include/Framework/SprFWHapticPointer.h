@@ -44,6 +44,8 @@ struct FWHapticPointerIf : SceneObjectIf {
 	///** @breif 計算提示トルクを取得する
 	//*/
 	//Vec3f GetHapticTorque();
+	
+
 };
 
 //@}

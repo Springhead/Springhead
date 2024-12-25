@@ -46,7 +46,7 @@ namespace Spr {
 			while ((word = strtok_s(NULL, " \t", &context))) {
 				args.push_back(std::string(word));
 			}
-			delete buf;
+			delete [] buf;
 			ExecCommand(cmd, arg, args);
 			std::cout << ">";
 			if (line.length()) {
@@ -170,7 +170,6 @@ namespace Spr {
 					if (data) data = td->GetFieldAddress(i, data, 0);
 					td = td->GetFieldType(i);
 					cur = pp + 1;
-					field.substr(cur);
 					bFound = true;
 					break;
 				}

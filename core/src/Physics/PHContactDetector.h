@@ -41,16 +41,17 @@ struct PHSolidPairSt{
 	PHSolidPairSt():bEnabled(false){}
 };
 
+struct PHSolidPairVars: PHSolidPairSt {
+	PHContactDetector* detector;
+	PHBody* body[2];
+};
+
 /// 剛体の組
-class PHSolidPair : public PHSolidPairSt, public Object{
+class PHSolidPair : public PHSolidPairVars, public Object{
 public:
 	SPR_OBJECTDEF_ABST_NOIF(PHSolidPair);
-
 	typedef UTCombination< UTRef<PHShapePair> > PHShapePairs;
-
-	PHContactDetector* detector;
-	PHBody*            body[2];
-	PHShapePairs       shapePairs;
+	PHShapePairs shapePairs;
 	typedef std::vector<PHCollisionListener*> Listeners;
 	Listeners listeners;
 

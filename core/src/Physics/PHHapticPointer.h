@@ -37,18 +37,10 @@ struct PHHapticPointerPhysicsSt {
 	Posed defaultPose;
 	double rotaionalWeight;
 	PHHapticPointerPhysicsSt();
-
-	//GMS用
-	bool bSimulation;
-	bool bMultiproxy;
-	int proxyN;
-	int totalSlipState;
-	std::vector<int> slipState;
 };
 
 class PHHapticPointer : public PHHapticEngineDesc, public PHHapticPointerHapticSt, public PHHapticPointerPhysicsSt, public PHHapticPointerDesc, public PHSolid{
 	friend class PHSolidPairForHaptic;
-	friend class PHHapticRender;
 	friend class FWHapticPointer;
 public:
 	SPR_OBJECTDEF(PHHapticPointer);
@@ -101,16 +93,6 @@ public:
 	}
 	Posed	GetDefaultPose(){ return defaultPose; }
 
-	//GMS用
-	void	EnableMultiProxy(bool b) { bMultiproxy = b; }
-	bool	IsMultiProxy() { return bMultiproxy; }
-	void	EnableSimulation(bool b) { bSimulation = b; }
-	bool	IsSimulation() { return bSimulation; }
-	void	SetProxyN(int n) { proxyN = n; }
-	int		GetProxyN() { return proxyN; }
-	int GetTotalSlipState() { return totalSlipState; }
-	int GetSlipState(int i) { return slipState[i]; }
-
 	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
 	int		GetNeighborSolidId(int i) {
 		int j = neighborSolidIDs[i];
@@ -123,6 +105,8 @@ public:
 	float   GetContactForce(int i);
 	SpatialVector GetProxyVelocity() { return lastProxyVelocity; }
 	void	SetProxyVelocity(SpatialVector lpv) { lastProxyVelocity = lpv; }
+	Posed GetProxyPose() { return proxyPose; }
+	Posed GetLastProxyPose() { return lastProxyPose; }
 	// Implementation
 	void	SetPointerID(int id){ pointerID = id; }
 	int		GetPointerID(){ return pointerID; }

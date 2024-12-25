@@ -37,7 +37,7 @@ void PHHapticStepMulti::StepHapticSync() {
 
 void PHHapticStepMulti::SyncHapticPointers(){
 	for (int i = 0; i < (int)hapticModel.hapticPointers.size(); i++) {
-		PHHapticPointer* pPointer = GetHapticPointer(i);
+		PHHapticPointer* pPointer = (PHHapticPointer*)GetHapticPointer(i);
 		PHHapticPointer* hPointer = hapticModel.hapticPointers[i];
 		// haptic側のポインタの状態をphysics側のポインタへ反映
 		// physics <-------- haptic
@@ -59,7 +59,13 @@ void PHHapticStepMulti::SyncHapticPointers(){
 	}
 }
 
-//	TODO hase:	ここも大量のSolidのコピーがあり重そう。
+inline PHSolidPairForHaptic*  createSolidPairForHaptic(PHSolidPairForHaptic* src, PHHapticEngine* he) {
+	PHSolidPairForHaptic* hSolidPair = (PHSolidPairForHaptic*)he->CreateSolidPair();
+	//	hSolidPair->Init(src->detector, src->body[0], src->body[1]);	//	It seems Init() is not needed.
+	hSolidPair->CopyFromPhysics(src);
+	return hSolidPair;
+}
+
 void PHHapticStepMulti::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー
@@ -67,7 +73,7 @@ void PHHapticStepMulti::SyncArrays(){
 	int hNpointers = (int)hapticModel.hapticPointers.size();	// haptic側のポインタ数
 	int pNpointers = NHapticPointers();				// physics側のポインタ数
 	for(int i = hNpointers; i < pNpointers; i++){
-		hapticModel.hapticPointers.push_back(DBG_NEW PHHapticPointer(*GetHapticPointer(i)));
+		hapticModel.hapticPointers.push_back(DBG_NEW PHHapticPointer(*(PHHapticPointer*)GetHapticPointer(i)));
 	}
 	//DSTR << "------------" << std::endl;
 	//DSTR << pNpointers << hNpointers << std::endl;
@@ -78,7 +84,8 @@ void PHHapticStepMulti::SyncArrays(){
 	const int pNsolids = NHapticSolids();
 	if(hNsolids == pNsolids) return;
 	for(int i = hNsolids; i < (int)pNsolids; i++){
-		hapticModel.hapticSolids.push_back(DBG_NEW PHSolidForHaptic(*GetHapticSolid(i)));
+		hapticModel.hapticSolids.push_back(DBG_NEW PHSolidForHaptic());
+		hapticModel.hapticSolids.back()->CopyFromPhysics(GetHapticSolidImp(i));
 	}
 
 	// 3. solidPair, shapePairの増加分
@@ -86,15 +93,13 @@ void PHHapticStepMulti::SyncArrays(){
 	hapticModel.solidPairs.resize(pNsolids, pNpointers);
 	for(int i = 0; i < pNsolids; i++){
 		for(int j = hNpointers; j < pNpointers; j++){
-			PHSolidPairForHaptic* psolidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, j);
-			hapticModel.solidPairs.item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
+			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic(engine->GetSolidPairImp(i, j), engine);
 		}
 	}
 	// 3.2 solidの増加分
 	for(int i = hNsolids; i < pNsolids; i++){
 		for(int j = 0; j < pNpointers; j++){
-			PHSolidPairForHaptic* psolidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, j);
-			hapticModel.solidPairs.item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
+			hapticModel.solidPairs.item(i, j) = createSolidPairForHaptic(engine->GetSolidPairImp(i, j), engine);
 		}
 	}
 	//DSTR << "--------------" << std::endl;
@@ -126,8 +131,9 @@ void PHHapticStepMulti::StepPhysicsSimulation(){
 	}
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
-	if (hapticCount < pdt / hdt) return;
-	hapticCount -= (int)(pdt/hdt);
+	int hapticMax = (int)(pdt / hdt);
+	if (hapticCount < hapticMax) return;
+	hapticCount -= hapticMax;
 	bSync = true;
 	bCalcPhys = true;	
 }

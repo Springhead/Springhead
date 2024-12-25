@@ -7,6 +7,7 @@ DEFINE_PacketLens(B2M);
 DEFINE_PacketLens(B2F);
 DEFINE_PacketLens(B3M);
 DEFINE_PacketLens(B3F);
+DEFINE_PacketLens(B5M);
 
 
 BoardRetBase::~BoardRetBase(){}
@@ -51,4 +52,5 @@ BoardFactories::BoardFactories() {
 	push_back(new BOARD_FACTORY(B2F));
 	push_back(new BOARD_FACTORY(B3M));
 	push_back(new BOARD_FACTORY(B3F));
+	push_back(new BOARD_FACTORY(B5M));
 }

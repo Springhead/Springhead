@@ -9,8 +9,6 @@
 #define PH_HAPTIC_STEP_BASE_H
 
 #include <Physics/PHContactDetector.h>
-//#include <Physics/PHHapticEngine.h>
-//#include <Physics/PHHapticRender.h>
 
 namespace Spr{;
 
@@ -67,17 +65,26 @@ public:
 	SpatialVector bimpact;
 };
 
-class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public UTRefCount{  
+class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public Object{  
+private:
+	PHSolidForHaptic(const PHSolidForHaptic&) { assert(0); }
+	void operator = (const PHSolidForHaptic&) { assert(0); }
 public:
+	SPR_OBJECTDEF_ABST(PHSolidForHaptic);
 	PHSolid localSolid;		// sceneSolidのクローン
 
 	// 衝突判定用の一時変数
 	int NLocalFirst;		// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
 	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
 	PHSolidForHaptic();
-	PHSolid* GetLocalSolid(){ return &localSolid; }
+	PHSolidIf* GetLocalSolid() { return (PHSolidIf*)GetLocalSolidImp(); }
+	PHSolidIf* GetSceneSolid() { return (PHSolidIf*)GetSceneSolidImp(); }
+	PHSolid* GetLocalSolidImp() { return &localSolid; }
+	PHSolid* GetSceneSolidImp() { return sceneSolid; }
 	void AddForce(Vec3d f);
 	void AddForce(Vec3d f, Vec3d r);
+	void CopyFromPhysics(PHSolidForHaptic* src);
+	void CopyFromHaptics(PHSolidForHaptic* src);
 };
 class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 
@@ -87,11 +94,17 @@ class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public PHShapePair{
 public:	
 	SPR_OBJECTDEF(PHShapePairForHaptic);
+	//	variables for haptic rendering in haptic thread.
 	// 0:solid、1:pointer
 	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
 	Posed lastShapePoseW[2];	///< 前回の形状姿勢
 	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
+	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
+	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
+	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
+
+	//	variables updated by UpdateCache()
 	float springK;				///< バネ係数
 	float damperD;				///< ダンパ係数
 	float mu;					///< 動摩擦係数
@@ -102,43 +115,29 @@ public:
 	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	float stribeckVelocity;		///< ストライベク効果の速度の影響の強さ	: 動摩擦 =　mu + (mu - stribeckmu) * (exp(-v / stribeckVelocity) - 1.0)
 	float stribeckmu;			///< 速度∞のときの摩擦係数
+
+	//	
 	float muCur;				///< 計算された時変摩擦係数
 
-	std::vector<float> mus;					///< 動摩擦係数
-	std::vector<float> mu0s;					///< 最大静止摩擦係数	
-	std::vector<float> timeVaryFrictionAs;	///< 時変摩擦定数A
-	std::vector<float> timeVaryFrictionBs;	///< 時変摩擦定数B
-	std::vector<float> timeVaryFrictionDs;	///< 時変摩擦定数D
-	std::vector<float> timeVaryFrictionCs;	///< 時変摩擦定数C
-	std::vector<float> muCurs;				///< 計算された時変摩擦係数
-	std::vector<float> stribeckVelocitys;
-	std::vector<float> stribeckmus;
-
-	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
-	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
-	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
-
 	PHShapePairForHaptic();
+	void CopyFromPhysics(const PHShapePairForHaptic* src);
+	void CopyFromHaptics(const PHShapePairForHaptic* src);
 	void Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
 	void UpdateCache();
 	/// 接触判定．近傍点対を常時更新
 	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触時の判定
 	int OnDetect(unsigned ct, const Vec3d& center0);
-	bool AnalyzeContactRegion();
 	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
 	int NIrs() { return (int)irs.size();  }
 	int NIrsNormal() { return nIrsNormal;  }
 	Vec3d GetIrForce(int i) { return irs[i]->force;  }
 	double GetMu() { return muCur;  }
-
-	// GMS用
-	double GetMus(int id) { return id < (int) muCurs.size() ? muCurs[id] : muCur; }
 };
 
 //----------------------------------------------------------------------------
 
-struct PHSolidPairForHapticSt{
+struct PHSolidPairForHapticVarsBase{
 	Vec3d force;			///< 力覚ポインタがこの剛体に加える力
 	Vec3d torque;			///< 力覚ポインタがこの剛体に加えるトルク
 
@@ -150,29 +149,41 @@ struct PHSolidPairForHapticSt{
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
 
-	//GMS用
-	std::vector<unsigned> fricCounts;
-	std::vector<unsigned> contactCounts;
-	std::vector<PHSolidPairForHapticIf::FrictionState>  frictionStates;
-	std::vector<int> slipState;
-
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
 	PHSolidPairForHapticIf::FrictionState  frictionState;
-};
 
-class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
-public:
-	SPR_OBJECTDEF(PHSolidPairForHaptic);
 	int solidID[2];
-	
+	PHSolidPairForHapticVarsBase() :contactCount(0), fricCount(0),
+		frictionState(PHSolidPairForHapticIf::FREE)
+	{
+		solidID[0] = solidID[1] = -1;
+	}
+};
+struct PHSolidPairForHapticVarsLocalDynamics {
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
 	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
-	//TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dで使うアクセレランス
-	SpatialMatrix A6D;
-	
+	SpatialMatrix A6D;				// LocalDynamics6Dで使うアクセレランス
+	PHSolidPairForHapticVarsLocalDynamics() :
+		inLocal(0)
+	{
+		A.clear();
+		A6D.clear();
+	}
+};
+struct PHSolidPairForHapticVars : public PHSolidPairForHapticVarsBase, public PHSolidPairForHapticVarsLocalDynamics {
+};
+
+
+class PHSolidPairForHaptic : public PHSolidPairForHapticVars, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
+private:
+	//	copy or assign are not permitted.
+	PHSolidPairForHaptic(const PHSolidPairForHaptic& s) { assert(0);  }
+	void operator = (const PHSolidPairForHaptic& s){ assert(0); }
+public:
+	SPR_OBJECTDEF(PHSolidPairForHaptic);
+
 	PHSolidPairForHaptic();
-	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
 
 	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
 	PHShapePairForHapticIf*       GetShapePair(int i, int j){ return (PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
@@ -181,39 +192,15 @@ public:
 	unsigned GetContactCount() { return contactCount;  }
 	unsigned GetFrictionCount() { return fricCount; }
 
-	//GMS用
-	void InitFrictionState(int n) {
-		frictionStates.clear();
-		for (int i = 0; i < n; i++) {
-			frictionStates.push_back(PHSolidPairForHapticIf::FREE);
-		}
-	}
-	void InitFrictionCount(int n) {
-		fricCounts.clear();
-		for (int i = 0; i < n; i++) {
-			fricCounts.push_back(0);
-		}
-	}
-	void InitContactCount(int n) {
-		contactCounts.clear();
-		for (int i = 0; i < n; i++) {
-			contactCounts.push_back(0);
-		}
-	}
-	void InitSlipState(int n) {
-		slipState.clear();
-		for (int i = 0; i < n; i++) {
-			slipState.push_back(0);
-		}
-	}
-	PHSolidPairForHapticIf::FrictionState GetFrictionStates(int i) { return frictionStates[i]; }
-	int GetSlipState(int i) { return slipState[i]; }
-
 	Vec3d GetForce(){ return force; }
 	Vec3d GetTorque(){ return torque; }
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
+
+	void CopyFromPhysics(const PHSolidPairForHaptic* phys);
+	void CopyFromHaptics(const PHSolidPairForHaptic* haptics);
+	void CopyForDisplay(const PHSolidPairForHaptic* phys);
 };
 
 
@@ -221,7 +208,7 @@ public:
 // PHHapticStepBase
 class PHHapticStepBase : public SceneObject{
 public:
-	SPR_OBJECTDEF_ABST_NOIF(PHHapticStepBase);
+	SPR_OBJECTDEF_ABST(PHHapticStepBase);
 	PHHapticEngine* engine;
 	PHHapticStepBase(){}
 	///	物理シミュレーションのdt
@@ -239,15 +226,20 @@ public:
 
 	int NHapticPointers();
 	int NHapticSolids();
-	PHHapticPointer*       GetHapticPointer(int i);
-	PHSolidForHaptic*      GetHapticSolid(int i);
+	PHHapticPointerIf* GetHapticPointer(int i) { return (PHHapticPointerIf*) GetHapticPointerImp(i); }
+	PHSolidForHapticIf* GetHapticSolid(int i) { return (PHSolidForHapticIf*) GetHapticSolidImp(i); }
+	PHHapticPointer* GetHapticPointerImp(int i);
+	PHSolidForHaptic* GetHapticSolidImp(int i);
 
 	virtual int NPointersInHaptic()=0;
 	virtual int NSolidsInHaptic()=0;
-	virtual PHHapticPointer* GetPointerInHaptic(int i)=0;
-	virtual PHSolidForHaptic* GetSolidInHaptic(int i)=0;
+	PHHapticPointerIf* GetPointerInHaptic(int i) { return (PHHapticPointerIf*)GetPointerInHapticImp(i); }
+	virtual PHHapticPointer* GetPointerInHapticImp(int i) = 0;
+	PHSolidForHapticIf* GetSolidInHaptic(int i) { return (PHSolidForHapticIf*)GetSolidInHapticImp(i); }
+	virtual PHSolidForHaptic* GetSolidInHapticImp(int i) = 0;
 	///	剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）iには力覚ポインタも含まれる。
-	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j)=0;
+	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j) { return (PHSolidPairForHapticIf*)GetSolidPairInHapticImp(i, j); }
+	virtual PHSolidPairForHaptic* GetSolidPairInHapticImp(int i, int j) = 0;
 	virtual void ReleaseState(PHSceneIf* scene) {}
 
 

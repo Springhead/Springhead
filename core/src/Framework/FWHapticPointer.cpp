@@ -12,6 +12,8 @@ void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
 		hapticForce  = hpLocal->GetHapticForce();
 		if(hpLocal->bForce){
 			hiHaptic->SetForce(hapticForce.v(), hapticForce.w());
+			std::fstream log("log_hapticForce.txt", std::ios::app);
+			log << "hapticForce(" << hapticForce << ") called." << std::endl;
 		}
 		else{
 			hiHaptic->SetForce(Vec3f(), Vec3f());

@@ -9,6 +9,7 @@
 #include <Foundation/UTOptimizer.h>
 #include <Springhead.h>
 #include <limits>
+#include <assert.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -79,6 +80,13 @@ namespace Spr {;
 		parameters = new Parameters<double>();
 #endif
 	}
+	int UTCMAESOptimizer::GetPopulationSize() {
+#ifdef USE_CLOSED_SRC
+		return cmaes->get(CMAES<double>::Lambda);
+#else
+		return 0;
+#endif
+	}
 
 	void UTCMAESOptimizer::Initialize() {
 #ifdef USE_CLOSED_SRC
@@ -94,7 +102,7 @@ namespace Spr {;
 		parameters->mu = mu;
 		parameters->mucov = mucov;
 		parameters->mueff = mueff;
-		parameters->weights = weights;
+		parameters->weights = &*weights.begin();
 		parameters->damps = damps;
 		parameters->cs = cs;
 		parameters->ccumcov = ccumcov;
@@ -152,4 +160,32 @@ namespace Spr {;
 #endif
 	}
 
+	bool UTCMAESOptimizer::NextGeneration() {
+#ifdef USE_CLOSED_SRC
+		// update the search distribution used for sampleDistribution()
+		cmaes->updateDistribution(objectiveFunctionValues);
+
+		// check that the optimization is finished or not
+		optimizationFinished = cmaes->testForTermination();
+
+		if (optimizationFinished) {
+			// Get Final Result
+			finalValue = cmaes->getNew(CMAES<double>::XMean);
+			return false;
+		}
+		else {
+			// Get Current Fitness
+			currentFitness = cmaes->get(CMAES<double>::Fitness);
+
+			// Generate lambda new search points, sample population
+			population = cmaes->samplePopulation();
+
+			currPopulationNum = 0;
+			currGenerationNum++;
+			return true;
+		}
+#else
+		return false;
+#endif
+	}
 }

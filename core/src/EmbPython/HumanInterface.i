@@ -13,11 +13,11 @@
 #undef SPR_DLL						
 #define SPR_DLL					
 //---
-%ignore Spr::DVKeyMouseIf::GetMousePosition; //QÆ“n‚µ‚µ‚Ä’l‚ğ“ü‚ê‚Ä‚à‚ç‚¤‚æ‚¤‚ÈŠÖ”‚ğ‚Ç‚¤‚É‚©‚·‚é
-%ignore Spr::HITrackballIf::GetAngle; //“¯ã
-%ignore Spr::HITrackballIf::GetDistanceRange; //“¯ã
-%ignore Spr::HITrackballIf::GetLatitudeRange; //“¯ã
-%ignore Spr::HITrackballIf::GetLongitudeRange; //“¯ã
+%ignore Spr::DVKeyMouseIf::GetMousePosition; //ï¿½Qï¿½Æ“nï¿½ï¿½ï¿½ï¿½ï¿½Ä’lï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ç‚¤ï¿½æ‚¤ï¿½ÈŠÖï¿½ï¿½ï¿½Ç‚ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½
+%ignore Spr::HITrackballIf::GetAngle; //ï¿½ï¿½ï¿½ï¿½
+%ignore Spr::HITrackballIf::GetDistanceRange; //ï¿½ï¿½ï¿½ï¿½
+%ignore Spr::HITrackballIf::GetLatitudeRange; //ï¿½ï¿½ï¿½ï¿½
+%ignore Spr::HITrackballIf::GetLongitudeRange; //ï¿½ï¿½ï¿½ï¿½
 //---
 %include "Utility/EPObject.i"
 EXTEND_NEW(HISpidarMotorDesc)

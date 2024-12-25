@@ -105,11 +105,7 @@ public:
 	/// 回転軸
 	TVec3<ET> Axis()const{
 		TVec3<ET> r;
-#ifdef	_MSC_VER
-		r = sub_vector(1, vector_type());
-#else
 		r = this->sub_vector(1, vector_type());
-#endif
 		ET len = r.norm();
 		if (len > 1e-20){
 			r = r/len;

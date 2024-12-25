@@ -17,5 +17,6 @@
 #include "Foundation/SprUTTimer.h"
 #include "Foundation/SprUTCriticalSection.h"
 #include "Foundation/SprUTQPTimer.h"
+#include "Foundation/SprUTOptimizer.h"
 
 #endif

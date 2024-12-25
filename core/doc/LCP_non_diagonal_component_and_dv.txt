@@ -1,0 +1,16 @@
+
+LCP‚Ædv at https://scrapbox.io/springhead/LCP%E3%81%A8dv
+
+LCP‚Ædv
+See also core/doc/LCP_springdamper.pdf 
+
+From eq11,  [$ w[t+1] = A \lambda + b, b=J(v[t]+M^{-1} f h)= w[t] + JM^{-1} f h ] .
+For [$ b' \equiv JM^{-1}fh ] and [$ dv = w[t+1] - w[t] ]
+[$ w[t+1] = A \lambda + w[t] + b' ]
+[$ dv = A\lambda + b' = (U+L+D)\lambda + b' ]
+[$ dv_i = \sum_{j=0}^{i-1}L_{ij}\lambda^{k+1}_j + \sum_{j=i+1}^{n-1}U_{ij}\lambda^{k}_j + D_{ii}\lambda^{k+1} + b'_i]
+[$ \sum_{j=0}^{i-1}L_{ij}\lambda^{k+1}_j + \sum_{j=i+1}^{n-1}U_{ij}\lambda^{k}_j = dv_i - D_{ii}\lambda^{k} - b'_i]
+
+From eq27, [$ \lambda^{k+1}_i = -(\sum_{j=0}^{i-1}L_{ij}\lambda^{k+1}_j + \sum_{j=i+1}^{n-1}U_{ij}\lambda^{k}_j + b_i)/D_{ii} ] for [$ b \equiv w[t]+ JM^{-1} fh ] 
+[$ \lambda^{k+1}_i = -(dv_i - D_{ii}\lambda^{k} - b'_i + b_i)/D_{ii}=\lambda^{k} - (dv_i/D_{ii} - b'_i + b_i)= \lambda^{k} - dv_i/D_{ii} - w[t] ]  
+[$ = \lambda^k - (w_i[t+1] + (D_{ii}-1)w_i[t])/D_{ii} ]

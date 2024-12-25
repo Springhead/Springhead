@@ -61,7 +61,8 @@ public:
 	virtual Vec3f GetVelocity();
 	virtual Vec3f GetAngularVelocity();
 	virtual void SetVibration(Vec2f lr);
-	
+	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()) {}
+
 	bool UP(){ return key[0]; }
 	bool DOWN(){ return key[1]; }
 	bool LEFT(){ return key[2]; }
