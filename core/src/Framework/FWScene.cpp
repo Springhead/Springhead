@@ -1294,15 +1294,15 @@ void FWScene::DrawContactEngine(GRRenderIf* render, PHContactEngineIf* ceIf) {
 	render->SetLighting(false);
 	render->SetDepthTest(false);
 
-	Vec3f newCop = ce->phceInfo.necessaryInfo.NewCoP;
-	Vec3f oldCop = ce->phceInfo.necessaryInfo.ContLocal.inv() * (ce->phceInfo.necessaryInfo.OldCoP - ce->phceInfo.necessaryInfo.ContPoint);
+	Vec3f newCop = ce->phceInfo.necessaryInfo.NewCoP;	//	local (contLocal) coordinate.
+	Vec3f oldCop = ce->phceInfo.necessaryInfo.ContLocal.inv() * (ce->phceInfo.necessaryInfo.OldCoP - ce->phceInfo.necessaryInfo.ContPoint);	//	local
 	// CoP
 	render->SetMaterial(matCoP[1]);
-	render->DrawLine(newCop, oldCop);
+	render->DrawLine(newCop, oldCop);	//	blue
 	render->SetMaterial(matCoP[0]);
 	render->SetPointSize(5);
 	render->DrawPoint(oldCop);
-	render->SetMaterial(matCoP[2]);
+	render->SetMaterial(matCoP[2]);		//	red
 	render->DrawPoint(newCop);
 	render->SetPointSize(1);
 

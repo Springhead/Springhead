@@ -600,7 +600,7 @@ namespace Spr {
 			}
 			else {
 
-				phceInfo.necessaryInfo.OldCoP = phceInfo.necessaryInfo.ContPoint + phceInfo.necessaryInfo.ContLocal * CopFromContPoint;
+				phceInfo.necessaryInfo.OldCoP = phceInfo.necessaryInfo.ContPoint + phceInfo.necessaryInfo.ContLocal * CopFromContPoint;	//	in world coordinate.
 
 				// ì_Ç™íÜÇ…Ç†ÇÍÇŒèàóùÇ™ïKóvÇ»Ç¢
 				bool isCopOnObject0 = isCoPInObject0(), isCopOnObject1 = isCoPInObject1();
@@ -608,7 +608,8 @@ namespace Spr {
 				if (isCopOnObject0 && isCopOnObject1) {
 
 					phceInfo.necessaryInfo.copMargin = 0.0;
-
+					//	for visualization only
+					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint);	//	in ContLocal coordinate.
 				}
 
 				else {
@@ -617,7 +618,7 @@ namespace Spr {
 
 					FindClosestPoint(w, phceInfo.necessaryInfo.OldCoP, htc, isCopOnObject0, isCopOnObject1);
 
-					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (w - phceInfo.necessaryInfo.ContPoint);
+					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (w - phceInfo.necessaryInfo.ContPoint);	//	in ContLocal coordinate.
 					phceInfo.necessaryInfo.copMargin = 0.0;
 
 					fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
@@ -667,6 +668,8 @@ namespace Spr {
 				if (isCopOnObject0 && isCopOnObject1) {
 
 					phceInfo.necessaryInfo.copMargin = 0.0;
+					//	for visualization only
+					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint);	//	in ContLocal coordinate.
 
 				}
 
