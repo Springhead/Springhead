@@ -172,8 +172,8 @@ public:
 	double      GetYieldStress() { return yieldStress; }
 	void        SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	double      GetHardnessRate() { return hardnessRate; }
-	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
-	Vec3d       GetSecondMoment() { return secondMoment; }
+	//void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
+	//Vec3d       GetSecondMoment() { return secondMoment; }
 	int         NMotors();
 	PHBallJointMotorIf** GetMotors(){
 		return motors.empty() ? NULL : (PHBallJointMotorIf**)&*motors.begin();

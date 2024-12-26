@@ -485,8 +485,11 @@ public: /** 派生クラスが実装する関数 **/
 			}
 		}
 		if(menu == MENU_STATE){
-			if(id == ID_LOAD_STATE)
+			if (id == ID_LOAD_STATE) {
 				states->LoadState(GetPHScene());
+				UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
+				GetSdk()->SaveScene("save.spr", import);		// ファイルのセーブテスト
+			}
 			if(id == ID_SAVE_STATE)
 				states->SaveState(GetPHScene());
 			if(id == ID_RELEASE_STATE)

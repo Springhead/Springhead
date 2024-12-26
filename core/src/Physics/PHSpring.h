@@ -72,8 +72,8 @@ public:
 	virtual double GetYieldStress() { return yieldStress; }
 	virtual void SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	virtual double GetHardnessRate() { return hardnessRate; }
-	virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
-	virtual Vec3d GetSecondMoment() { return secondMoment; }
+	//virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
+	//virtual Vec3d GetSecondMoment() { return secondMoment; }
 
 	// <!!>
 	virtual Vec6d GetMotorForce() {

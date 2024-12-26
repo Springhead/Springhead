@@ -91,11 +91,13 @@ public:
 			joints[i]->SetSpring(jointSpring);
 			joints[i]->SetDamper(jointDamper);
 		}
+#if 0
 		if(useABA){
 			PHTreeNodeIf* node = phScene->CreateRootNode(links[0], PHRootNodeDesc());
 			for(int i = 1; i < nLinks; i++)
 				node = phScene->CreateTreeNode(node, links[i], PHTreeNodeDesc());
 		}
+#endif
 
 		// ボール（目標物体)
 		ball = phScene->CreateSolid();

@@ -191,7 +191,7 @@ struct PH1DJointDesc : public PHJointDesc {
 	double offsetForce;
 	double yieldStress;
 	double hardnessRate;
-	double secondMoment;
+//	double secondMoment;
 
 	PH1DJointDesc() {
 		cyclic          = false;
@@ -349,12 +349,12 @@ struct PH1DJointIf : public PHJointIf{
 	/** @brief 断面二次モーメントを設定する
 		@param secondMoment 断面二次モーメント
 	 */
-	void SetSecondMoment(const double& sM);
+	//void SetSecondMoment(const double& sM);
 
 	/** @brief 断面二次モーメントを取得する
 		@return 断面二次モーメント
 	 */
-	double GetSecondMoment();
+	//double GetSecondMoment();
 
 	/** @brief モータ数を返す
 	@return モータ数
@@ -630,12 +630,12 @@ struct PHBallJointIf : public PHJointIf{
 	/** @brief 断面2次モーメントを設定する
 		@param input 断面2次モーメントVec3d(x,y,z)
 	 */
-	void	SetSecondMoment(const Vec3d m);
+	//void	SetSecondMoment(const Vec3d m);
 
 	/** @brief 断面2次モーメントを設定する
 		@return 断面2次モーメントVec3d(x,y,z)
 	 */
-	Vec3d	GetSecondMoment();	
+	//Vec3d	GetSecondMoment();	
 
 	/** @brief モータ数を返す
 	    @return モータ数
@@ -674,7 +674,7 @@ struct PHBallJointDesc : public PHJointDesc {
 	Vec3d  offsetForce;
 	double yieldStress;
 	double hardnessRate;
-	Vec3d  secondMoment;
+//	Vec3d  secondMoment;
 
 	PHBallJointDesc() {
 		spring          = 0;
@@ -809,12 +809,12 @@ struct PHSpringIf : public PHJointIf{
 	/** @brief 断面二次モーメントを設定する
 		@param secondMoment 断面二次モーメント
 	 */
-	void SetSecondMoment(const Vec3d& secondMoment);
+	//void SetSecondMoment(const Vec3d& secondMoment);
 
 	/** @brief 断面二次モーメントを取得する
 		@return 断面二次モーメント
 	 */
-	Vec3d GetSecondMoment();
+	//Vec3d GetSecondMoment();
 
 	/** @brief バネの発揮している力を取得する
 	 */
@@ -846,7 +846,7 @@ struct PHSpringDesc : public PHJointDesc {
 	double secondDamperOri;
 	double yieldStress;
 	double hardnessRate;
-	Vec3d  secondMoment;
+//	Vec3d  secondMoment;
 	Vec6d  targetVelocity;
 	Vec6d  offsetForce;
 

@@ -89,16 +89,16 @@ public:
 		jntLink[3] = phScene->CreateJoint(soBox[1], soBox[2], jd);
 
 		// 以下を有効化するとABAが機能し、閉リンクを構成するための1関節のみLCPで解かれる
+#if 1
 		nodeTree.push_back(phScene->CreateRootNode(soFloor, PHRootNodeDesc()));
 		nodeTree.push_back(phScene->CreateTreeNode(nodeTree[0], soBox[0], PHTreeNodeDesc()));
 		nodeTree.push_back(phScene->CreateTreeNode(nodeTree[1], soBox[2], PHTreeNodeDesc()));
 		nodeTree.push_back(phScene->CreateTreeNode(nodeTree[0], soBox[1], PHTreeNodeDesc()));
-
-		phScene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
-		//phScene->SetContactMode(PHSceneDesc::MODE_NONE);
-		
 		//	最初はABAを無効化	
 		app->OnAction(SampleApp::MENU_CONFIG, SampleApp::ID_TOGGLE_ABA);
+#endif
+		phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+		
 	}
 
 	virtual void OnAction(int id){

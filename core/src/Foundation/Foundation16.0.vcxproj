@@ -421,6 +421,7 @@
     <ClInclude Include="..\..\include\Foundation\SprUTOptimizer.h" />
     <ClInclude Include="..\..\include\Foundation\SprUTQPTimer.h" />
     <ClInclude Include="ClapackLibsDef.h" />
+    <ClInclude Include="Foundation.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="QuadProg++.hh" />
     <ClInclude Include="Scene.h" />

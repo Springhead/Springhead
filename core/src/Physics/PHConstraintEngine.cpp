@@ -890,10 +890,12 @@ bool PHConstraintEngine::GetState(void* s) const {
 			gears[i]->GetState(&st->gears[i]);
 		}
 		int nTreeNode = nTreeNodes(trees);
-		st->trees.resize(nTreeNode);
-		PHTreeNodeSt* stTree = &(st->trees[0]);
-		for (size_t i = 0; i < trees.size(); ++i) {
-			getDescendantNodeState(stTree, trees[i]);
+		if (nTreeNode) {
+			st->trees.resize(nTreeNode);
+			PHTreeNodeSt* stTree = &(st->trees[0]);
+			for (size_t i = 0; i < trees.size(); ++i) {
+				getDescendantNodeState(stTree, trees[i]);
+			}
 		}
 	}
 	return true;
@@ -911,9 +913,11 @@ void PHConstraintEngine::SetState(const void* s){
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
 		}
-		PHTreeNodeSt* treeSt = &st->trees[0];
-		for (size_t i = 0; i < trees.size(); ++i) {
-			setDescendantNodeState(treeSt, trees[i]);
+		if (st->trees.size()) {
+			PHTreeNodeSt* treeSt = &st->trees[0];
+			for (size_t i = 0; i < trees.size(); ++i) {
+				setDescendantNodeState(treeSt, trees[i]);
+			}
 		}
 	}
 }

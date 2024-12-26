@@ -131,8 +131,8 @@ public:
 	double GetYieldStress   () { return yieldStress; }
 	void   SetHardnessRate  (const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	double GetHardnessRate  () { return hardnessRate; }
-	void   SetSecondMoment  (double sM) { secondMoment = sM; }
-	double GetSecondMoment  () { return secondMoment; }
+	//void   SetSecondMoment  (double sM) { secondMoment = sM; }
+	//double GetSecondMoment  () { return secondMoment; }
 	int         NMotors(){ return (int) motors.size(); }
 	PH1DJointMotorIf** GetMotors(){
 		return motors.empty() ? NULL : (PH1DJointMotorIf**)&*motors.begin();
