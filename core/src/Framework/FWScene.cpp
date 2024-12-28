@@ -553,9 +553,13 @@ void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
 		if(renderForceConst){
 			con->GetConstraintForce(f, t);
 			DrawForce(render, f, t);
-			PHContactEngineIf* ce =  DCAST(PHContactEngineIf, con);
-			if (ce){
-				DrawContactEngine(render, ce);
+			PHContactEngineIf* cei =  DCAST(PHContactEngineIf, con);
+			if (cei){
+				DrawContactEngine(render, cei);
+
+				PHContactEngine* ce = (PHContactEngine*)cei;
+				DSTR << "PHContactEngine cs4:" << ce->phceInfo.contactState4 << " cs5:" << ce->phceInfo.contactState5 << std::endl;
+
 			}
 		}
 		render->PopModelMatrix();

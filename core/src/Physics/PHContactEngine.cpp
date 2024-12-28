@@ -370,7 +370,7 @@ namespace Spr {
 		// Adjust static/dynamic friction state based on tangential relative velocity
 		double vt = vjrel[1] + velField[1];
 		isStatic = (-fth < vt&& vt < fth);
-		DSTR << "CEngine::db:" << db << std::endl;
+		//DSTR << "CEngine::db:" << db << std::endl;
 	}	
 
 	inline void PHContactEngine::updateWithProjection(unsigned s, unsigned e, bool& updated) {
@@ -380,10 +380,13 @@ namespace Spr {
 				+ Dot6((const double*)J[1].row(i), (const double*)solid[1]->dv);
 			res[i] = b[i] + dA[i] * f[i] + dv[i];
 			fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
+			bool temp = false;
+			Projection(fnew, i, temp);
+			updated |= temp;
 		}
 
-		bool temp = false;
-		Projection(fnew, s, temp);
+//		bool temp = false;
+//		Projection(fnew, s, temp);
 
 		for (unsigned i = s; i <= e; ++i) {
 			df[i] = fnew[i] - f[i];
@@ -393,8 +396,6 @@ namespace Spr {
 				CompResponse(df[i], i);
 			}
 		}
-
-		updated |= temp;
 	}
 
 	// hit count 10 X 9 O
@@ -579,7 +580,7 @@ namespace Spr {
 		{
 
 			phceInfo.necessaryInfo.copMargin = EPSILON_10;
-
+			phceInfo.contactState4 = -2;
 			if (fnew[0] < EPSILON_10) {
 				fnew[4] = fnew[5] = 0;
 				return;
@@ -588,6 +589,7 @@ namespace Spr {
 			Vec3d CopFromContPoint = Vec3d(0.0, -fnew[5] / fnew[0], fnew[4] / fnew[0]);
 
 			CONTACT htc = HowToContact();
+			phceInfo.contactState4 = htc;
 
 			if (htc == CONTACT::POINT) {
 
@@ -606,6 +608,7 @@ namespace Spr {
 				bool isCopOnObject0 = isCoPInObject0(), isCopOnObject1 = isCoPInObject1();
 
 				if (isCopOnObject0 && isCopOnObject1) {
+					phceInfo.contactState4 = 10;
 
 					phceInfo.necessaryInfo.copMargin = 0.0;
 					//	for visualization only
@@ -637,6 +640,7 @@ namespace Spr {
 		{
 
 			phceInfo.necessaryInfo.copMargin = EPSILON_10;
+			phceInfo.contactState5 = -2;
 
 			if (fnew[0] < EPSILON_10) {
 
@@ -648,6 +652,7 @@ namespace Spr {
 			DSTR << "CopFromContPoint:" << CopFromContPoint << std::endl;
 
 			CONTACT htc = HowToContact();
+			phceInfo.contactState5 = htc;
 
 			if (htc == CONTACT::POINT) {
 
@@ -666,6 +671,7 @@ namespace Spr {
 				bool isCopOnObject0 = isCoPInObject0(), isCopOnObject1 = isCoPInObject1();
 
 				if (isCopOnObject0 && isCopOnObject1) {
+					phceInfo.contactState5 = 10;
 
 					phceInfo.necessaryInfo.copMargin = 0.0;
 					//	for visualization only

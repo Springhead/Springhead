@@ -63,6 +63,10 @@ namespace Spr {
 			NecessaryInfo necessaryInfo;
 			ContactPartInfo contactpartInfo[2];
 			ObjectInfo objectInfo[2];
+		
+			//	for debug
+			int contactState4 = 0;
+			int contactState5 = 0;
 		};
 
 		Info phceInfo;
@@ -95,6 +99,7 @@ namespace Spr {
 
 		// Projection and Update
 		void			updateWithProjection(unsigned s, unsigned e, bool& updated);
+
 
 		// ----- このクラスで実装する機能
 		/// 接触状態(cts)を判断し、ある点（old_cop）から一番近い点（cp）を登録し、更新されたらtrueで返す
