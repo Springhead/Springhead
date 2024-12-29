@@ -89,6 +89,7 @@ public:
 struct PHConstraintsSt{
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
+	std::vector<PHRootNodeState> roots;
 	std::vector<PHTreeNodeSt> trees;
 };
 
@@ -103,10 +104,11 @@ public:
 	typedef std::vector< UTRef<PHRootNode> >	PHRootNodes;
 	typedef std::vector< UTRef<PHPath> >		PHPaths;
 	typedef std::vector< PHConstraintBase* >	PHConstraintBases;
-	
+	DUMPLABEL(points)
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
 	
+	DUMPLABEL(trees)
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;			///< ギアの配列
 	PHPaths			paths;			///< パスの配列
@@ -116,12 +118,14 @@ public:
 
 	int count;
 
+	DUMPLABEL(ptimers)
 	/// Peformance counter
 	UTQPTimer ptimer;
 	UTLongLong& timeCollision;
 	UTLongLong& timeSetup;
 	UTLongLong& timeIterate;
-
+	DUMPLABEL(ptimersEnd)
+		
 public:
 	PHConstraintEngine(UTPerformanceMeasureIf* pm = UTPerformanceMeasureIf::GetInstance("global"));
 	~PHConstraintEngine();
@@ -158,6 +162,7 @@ public:
 	void Iterate();					///< 速度更新LCPの一度の反復
 	void IterateCorrection();		///< 誤差修正LCPの一度の反復
 
+	void UpdateForStateDebug();
 	// インタフェースの実装
 	PHConstraintsIf* GetContactPoints();
 	void	SetVelCorrectionRate     (double value){velCorrectionRate = value;}
@@ -186,6 +191,7 @@ public:
 		std::vector< std::vector<Vec3f> > sections;
 		void Clear();
 	};
+	DUMPLABEL(contactInfoQueue)
 	struct ContactInfoQueue{
 		ContactInfo queue[3];
 		volatile int reading;	//	読出中のindex(0..2) 0を読んでいる間、2に書き込む、1に読み進んでも大丈夫。
@@ -193,6 +199,7 @@ public:
 		ContactInfoQueue();
 	} contactInfoQueue;
 	void UpdateContactInfoQueue();
+	DUMPLABEL(contactInfoQueueEnd)
 };
 
 }	//	namespace Spr

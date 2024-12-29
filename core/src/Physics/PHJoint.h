@@ -19,7 +19,9 @@ namespace Spr{;
 class PHJoint : public PHConstraint {
 public:
 	SPR_OBJECTDEF_ABST(PHJoint);
+	DUMPLABEL(PHJointDescBegin)
 	SPR_DECLMEMBEROF_PHJointDesc;
+	DUMPLABEL(PHJointDescEnd)
 
 public:
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
@@ -41,7 +43,9 @@ protected:
 public:
 	typedef PTM::TVector<NDOF, double> VecNd;
 
+	DUMPLABEL(PHNDJointBegin);
 	VecNd position, velocity;
+	DUMPLABEL(PHNDJointEnd);
 
 	/// コンストラクタ
 	PHNDJoint(){
@@ -59,7 +63,9 @@ protected:
 
 public:
 	SPR_OBJECTDEF_ABST1(PH1DJoint, PHJoint);
+	DUMPLABEL(PH1DJointDescMemBegin)
 	SPR_DECLMEMBEROF_PH1DJointDesc;
+	DUMPLABEL(PH1DJointDescMemEnd)
 
 	UTRef<PH1DJointLimit> limit;			///< 可動範囲拘束
 	UTRefArray<PH1DJointMotor> motors;      ///< モータ

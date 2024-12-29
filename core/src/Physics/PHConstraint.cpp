@@ -19,6 +19,12 @@ namespace Spr{
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHConstraint
 
+void PHConstraintBaseVars::ClearVars() {
+	char* start = (char*)&b;
+	char* end = (char*)&dumpLabelPHConstraintBaseVarsEnd;
+	memset(start, 0, end-start);
+}
+
 // コンストラクタ
 PHConstraint::PHConstraint() {
 	solid[0] = solid[1] = NULL;

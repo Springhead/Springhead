@@ -359,6 +359,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="dailybuild.control" />
+    <None Include="save.spr" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

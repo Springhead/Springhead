@@ -46,9 +46,8 @@ struct PHConstraintState {
 	}
 };
 
-/// 拘束の基本クラス．PHConstraint, PHJointLimit, PHJointMotor, PHGearが派生
-class PHConstraintBase{
-public:
+struct PHConstraintBaseVars {
+	DUMPLABEL(PHConstraintBaseVarsBegin)
 	SpatialVector b, db, B;
 	SpatialVector A, dA, Ainv;
 	SpatialVector f;
@@ -60,10 +59,18 @@ public:
 	SpatialVector dF;
 	SpatialVector dV;
 	SpatialVector res;  //response
-	
-	AxisIndex<6> axes;		///< 拘束軸管理クラス
 	bool         dv_changed[6];
 	bool         dv_changed_next[6];
+	DUMPLABEL(PHConstraintBaseVarsEnd)
+	void ClearVars();
+	PHConstraintBaseVars() { ClearVars(); }
+};
+/// 拘束の基本クラス．PHConstraint, PHJointLimit, PHJointMotor, PHGearが派生
+class PHConstraintBase:public PHConstraintBaseVars{
+public:
+	DUMPLABEL(PHConstraintBaseBegin)	
+	AxisIndex<6> axes;		///< 拘束軸管理クラス
+	DUMPLABEL(PHConstraintBaseEnd)
 
 	virtual void SetupAxisIndex    (){}
 	virtual void Setup             (){}	///< 速度LCPの前処理
@@ -95,6 +102,7 @@ public:
 	int solidState[2];	//	0:non-dynamical, 1:Articulated, 2:Free body
 
 	// ----- 計算用変数
+	DUMPLABEL(PHConstrantCalc);
 
 	/// ワールド座標系の中心に対する親(子)剛体の位置と向き   #* 剛体から毎回取ってくる値
 	SpatialTransform X[2];
@@ -125,6 +133,7 @@ public:
 	SpatialMatrix Jdot[2];
 	SpatialMatrix preJdot[2];
 	SpatialMatrix Jdotdot[2];
+	DUMPLABEL(PHConstrantCalcEnd);
 
 	SpatialVector fAvg;					///< 拘束力にローパスをかけたもの
 	SpatialVector xs;					///< ばね部の距離（三要素モデル用）

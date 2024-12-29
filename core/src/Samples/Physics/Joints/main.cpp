@@ -130,6 +130,7 @@ public:
 #include <GL/glut.h>
 #endif
 int SPR_CDECL main(int argc, char* argv[]){
+	//_CrtSetBreakAlloc(176373);
 	app.Init(argc, argv);
 	app.StartMainLoop();
 }

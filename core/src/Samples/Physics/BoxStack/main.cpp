@@ -55,6 +55,7 @@ public:
 		ID_BLOCK,
 		//ID_TOWER,
 		ID_SHAKE,
+		ID_STATE_TEST,
 	};
 
 	PHSolidIf*				soFloor;
@@ -85,6 +86,10 @@ public:
 		//AddHotKey(MENU_MAIN, ID_TOWER, 't');
 		AddAction(MENU_MAIN, ID_SHAKE, "shake floor");
 		AddHotKey(MENU_MAIN, ID_SHAKE, 'f');
+
+		AddAction(MENU_MAIN, ID_STATE_TEST, "l State test");
+		AddHotKey(MENU_MAIN, ID_STATE_TEST, 'l');
+
 	}
 	~MyApp(){}
 
@@ -198,6 +203,21 @@ public:
 					soFloor->SetVelocity(Vec3d(0, 0, 0));
 					message = "floor stopped.";
 				}
+			}
+			if (id == ID_STATE_TEST) {
+				if (soBox.size() == 0) {
+					PHSolidDesc sd;
+					sd.pose.py = 1;
+					soBox.push_back(GetPHScene()->CreateSolid(sd));
+					soBox.back()->AddShape(shapeBox);
+				}
+				states->SaveState(GetPHScene());
+				UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
+				GetSdk()->SaveScene("before.spr", import);	
+				soBox.back()->AddForce(Vec3f(1e10, 0, 0));
+				GetPHScene()->Step();
+				states->LoadState(GetPHScene());
+				GetSdk()->SaveScene("after.spr", import);
 			}
 		}
 		SampleApp::OnAction(menu, id);

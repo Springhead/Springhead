@@ -32,9 +32,11 @@ struct PHSolidIf;
 
 /// 拘束のデスクリプタ
 struct PHConstraintDesc{
+	DUMPLABEL(PHConstrantDescBegin);
 	bool bEnabled;      ///< 有効/無効フラグ
 	Posed poseSocket;   ///< 剛体から見た関節の位置と傾き
 	Posed posePlug;
+	DUMPLABEL(PHConstrantDescEnd);
 
 	PHConstraintDesc():bEnabled(true){}
 };
@@ -954,10 +956,10 @@ struct PHRootNodeState {
 	}
 };
 
-
 struct PHRootNodeDesc : public PHTreeNodeDesc, PHRootNodeState{
 	PHRootNodeDesc(){}
 };
+
 struct PHTreeNode1DDesc      : public PHTreeNodeDesc{};
 struct PHHingeJointNodeDesc  : public PHTreeNode1DDesc{};
 struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{};

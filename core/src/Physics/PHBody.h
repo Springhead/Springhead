@@ -70,8 +70,20 @@ enum PHIntegrationMode{
 
 class PHBody;
 class CDShape;
+
+struct PHFrameState {
+	Posed			pose_abs;	///< ワールドに対する形状フレームの位置と向き
+	Vec3d			delta;		///< 形状フレームの移動量
+	DUMPLABEL(PHFrame_bboxReady)
+	bool            bboxReady;
+	PHBBox			bbShape;		///< 形状座標のBBox
+	PHBBox			bbBody;			///< 物体座標のBBox
+	DUMPLABEL(PHFrame_bbWorld)
+	PHBBox			bbWorld[2];		///< ワールド座標のBBox(0:非CCD 1:CCD)
+};
+
 /// Bodyに取り付けられた形状の座標系
-class PHFrame : public SceneObject, public PHFrameDesc {
+class PHFrame : public SceneObject, public PHFrameDesc, public PHFrameState {
 public:
 	PHBody*			body;
 	CDShape*		shape;
@@ -79,18 +91,9 @@ public:
 	double			mass;
 	Vec3d			center;
 	Matrix3d		inertia;
-
-	Posed			pose_abs;	///< ワールドに対する形状フレームの位置と向き
-	Vec3d			delta;		///< 形状フレームの移動量
-
-	bool            bboxReady;
-	PHBBox			bbShape;		///< 形状座標のBBox
-	PHBBox			bbBody;			///< 物体座標のBBox
-	PHBBox			bbWorld[2];		///< ワールド座標のBBox(0:非CCD 1:CCD)
-
 public:
 	SPR_OBJECTDEF(PHFrame);
-	ACCESS_DESC(PHFrame);
+	ACCESS_DESC_STATE(PHFrame);
 
 	PHFrame();
 	PHFrame(PHBody* so, CDShape* sh);
@@ -115,15 +118,21 @@ public:
 
 typedef std::vector< PHBody* >			PHBodies;
 
-///	物体
-class PHBody : public SceneObject {
-public:
-	SPR_OBJECTDEF_ABST(PHBody);
-	int                 id;
+
+struct PHBodyState {
+	DUMPLABEL(PHBodyBegin);
+	//	int                 id;		//< なぞ、たぶん不要。誰が足したの？
 	bool				bboxReady;			///< bboxの再計算用フラグ
 	bool                aabbReady;			///< aabbの再計算用フラグ
 	PHBBox              bbLocal;			///< ローカル座標のBBox
 	PHBBox              bbWorld;			///< ワールド座標のBBox
+	DUMPLABEL(PHBodyEnd);
+};
+///	物体
+class PHBody : public SceneObject, public PHBodyState {
+public:
+	SPR_OBJECTDEF_ABST(PHBody);
+	ACCESS_STATE(PHBody);
 	std::vector< UTRef<PHFrame> > frames;	///< Collision形状
 
 

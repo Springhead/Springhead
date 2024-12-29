@@ -54,6 +54,7 @@ public:
 		ID_READ_STATE,
 		ID_WRITE_STATE,
 		ID_DUMP,
+		ID_TEST_STATE
 	};
 	/// 物理シミュレーションの設定
 	enum ActionConfig{
@@ -395,6 +396,8 @@ public:
 		AddHotKey(MENU_STATE, ID_READ_STATE, 'R');
 		AddAction(MENU_STATE, ID_WRITE_STATE, "write state", "state written to state.bin.");
 		AddHotKey(MENU_STATE, ID_WRITE_STATE, 'W');
+		AddAction(MENU_STATE, ID_TEST_STATE, "test", "test state.");
+		AddHotKey(MENU_STATE, ID_TEST_STATE, 'T');
 		AddAction(MENU_STATE, ID_DUMP, "dump", "object data dumped to dump.bin.");
 		AddHotKey(MENU_STATE, ID_DUMP, 'D');
 		/// シミュレーション設定
@@ -485,11 +488,8 @@ public: /** 派生クラスが実装する関数 **/
 			}
 		}
 		if(menu == MENU_STATE){
-			if (id == ID_LOAD_STATE) {
+			if (id == ID_LOAD_STATE)
 				states->LoadState(GetPHScene());
-				UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-				GetSdk()->SaveScene("save.spr", import);		// ファイルのセーブテスト
-			}
 			if(id == ID_SAVE_STATE)
 				states->SaveState(GetPHScene());
 			if(id == ID_RELEASE_STATE)
@@ -503,6 +503,24 @@ public: /** 派生クラスが実装する関数 **/
 			if(id == ID_DUMP){
 				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
 				GetPHScene()->DumpObjectR(f);
+			}
+			if (id == ID_TEST_STATE) {
+				std::ofstream fBefore("before.bin", std::ios::binary | std::ios::out);
+				std::ofstream fAfter("after.bin", std::ios::binary | std::ios::out);
+				ObjectIfs objs;
+				objs.Push(GetPHScene());
+				GetSdk()->SaveObjects("before.spr", &objs);		// ファイルのセーブテスト
+				states->SaveState(GetPHScene());
+				GetPHScene()->Step();
+				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
+				GetPHScene()->DumpObjectR(fBefore);
+				GetPHScene()->Step();
+				GetPHScene()->Step();
+				states->LoadState(GetPHScene());
+				GetPHScene()->Step();
+				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
+				GetPHScene()->DumpObjectR(fAfter);
+				GetSdk()->SaveObjects("after.spr", &objs);		// ファイルのセーブテスト
 			}
 		}
 		if(menu == MENU_CONFIG){
@@ -790,7 +808,8 @@ public: /** FWAppの実装 **/
 			return;
 		}
 		// TAB : メニュー切り替え
-		if(showHelp && key == '\t'){
+		if(key == '\t'){
+			showHelp = true;
 			if(++curMenu == MENU_COMMON_LAST)
 				curMenu = MENU_COMMON;
 		}

@@ -234,15 +234,17 @@ PHConstraintEngineDesc::PHConstraintEngineDesc() {
 	velCorrectionRate = 0.3;
 	posCorrectionRate = 0.3;
 	contactCorrectionRate = 0.1;
-	shrinkRate = 0.7;
-	shrinkRateCorrection = 0.7;
+	//	shrinkRate = 0.7;
+	//	shrinkRateCorrection = 0.7;
+	shrinkRate = 0.0;
+	shrinkRateCorrection = 0.0;
 	freezeThreshold = 0.0;
 	accelSOR = 1.0;
 	dfEps = 0.0;
 	//	拘束力計算を安定化させる係数、大きくすると拘束力が弱くなり、すり抜けるなどの問題が起きる。
 	//	A coefficient to stabilize the constraint force calculation; The larger regularization makes constraint forces weaker and problems such as tunneling could occur.
 	regularization = 1e-6;
-	bSaveConstraints = false;
+	bSaveConstraints = true;
 	bUpdateAllState = true;
 	bUseContactSurface = false;
 	bReport = false;
@@ -728,6 +730,28 @@ void PHConstraintEngine::StepPart1(){
 		}
 	}
 }
+void PHConstraintEngine::UpdateForStateDebug() {
+	double dt = GetScene()->GetTimeStep();
+	for (int i = 0; i < GetScene()->NSolids(); ++i) {
+		PHSolid* solid = (PHSolid*)GetScene()->GetSolid(i);
+		solid->UpdateCacheLCP(dt);
+		if (solid->IsDynamical() && !solid->IsStationary() && !solid->IsFrozen()) {
+			solid->dv0.v() = solid->minv * solid->f.v() * dt;
+			solid->dv0.w() = solid->Iinv * (solid->f.w() - solid->v.w() % (solid->GetInertia() * solid->v.w())) * dt;
+		}
+		else {
+			solid->dv0.clear();
+		}
+		solid->dv.clear();
+		solid->dV.clear();
+	}
+	for (int i = 0; i < (int)points.size(); i++) points[i]->UpdateState();
+	for (int i = 0; i < (int)joints.size(); i++) joints[i]->UpdateState();
+	for (int i = 0; i < (int)cons_base.size(); i++) {
+		cons_base[i]->ClearVars();
+	}
+	Setup();
+}
 
 void PHConstraintEngine::StepPart2(){
     #ifdef USE_OPENMP_PHYSICS
@@ -760,8 +784,9 @@ void PHConstraintEngine::StepPart2(){
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp for
     #endif
-	for(int i = 0; i < (int)joints.size(); i++)
+	for (int i = 0; i < (int)joints.size(); i++) {
 		joints[i]->UpdateState();
+	}
 
 	// 速度LCP
 	Setup();
@@ -889,6 +914,11 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
 		}
+		st->roots.resize(trees.size());
+		for (size_t i = 0; i < trees.size(); ++i) {
+			trees[i]->GetState(&st->roots[i]);
+		}
+
 		int nTreeNode = nTreeNodes(trees);
 		if (nTreeNode) {
 			st->trees.resize(nTreeNode);
@@ -913,6 +943,11 @@ void PHConstraintEngine::SetState(const void* s){
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
 		}
+		trees.resize(st->roots.size());
+		for (size_t i = 0; i < trees.size(); ++i) {
+			trees[i]->SetState(&st->roots[i]);
+		}
+
 		if (st->trees.size()) {
 			PHTreeNodeSt* treeSt = &st->trees[0];
 			for (size_t i = 0; i < trees.size(); ++i) {
