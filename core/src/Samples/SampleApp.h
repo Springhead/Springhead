@@ -507,10 +507,15 @@ public: /** 派生クラスが実装する関数 **/
 			if (id == ID_TEST_STATE) {
 				std::ofstream fBefore("before.bin", std::ios::binary | std::ios::out);
 				std::ofstream fAfter("after.bin", std::ios::binary | std::ios::out);
+				std::ofstream fState("state.bin", std::ios::binary | std::ios::out);
 				//ObjectIfs objs;
 				//objs.Push(GetPHScene());
 				//GetSdk()->SaveObjects("before.spr", &objs);
 				states->SaveState(GetPHScene());
+				char* buf = states->GetStateBuffer();
+				if (buf) {
+					fState.write(buf, states->GetStateBufferLen());
+				}
 				GetPHScene()->Step();
 				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
 				GetPHScene()->DumpObjectR(fBefore);	// Binarly dump of scene before the load state.
@@ -738,7 +743,9 @@ public: /** FWAppの実装 **/
 		timer->SetInterval(25);
 		EnableIdleFunc(false);
 	}
-	virtual void Cleanup() {}
+	virtual void Cleanup() {
+		states->ReleaseState(GetPHScene());
+	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void TimerFunc(int id) {

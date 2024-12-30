@@ -264,12 +264,8 @@ public:
 	virtual bool GetState(void* state) const { return false; }
 	///	状態の読み出し(参照版)
 	virtual const void* GetStateAddress() const { return NULL; }
-	///	状態の再帰的な読み出し
-	virtual void GetStateR(char*& state);
 	///	状態の設定
 	virtual void SetState(const void* state){}
-	///	状態の再帰的な設定
-	virtual void SetStateR(const char*& state);
 	/// 状態のファイルへの書き出し
 	virtual bool WriteStateR(std::ostream& fout);
 	virtual bool WriteState(std::string fileName);
@@ -282,6 +278,29 @@ public:
 	virtual void ConstructState(void* m) const {}
 	///	状態型をメモリブロックに戻す
 	virtual void DestructState(void* m) const {}
+
+	//	再帰処理
+	///	状態のサイズ
+	virtual size_t GetStateSizeR() const;
+	///	
+	virtual void ConstructStateR(char*& s) const;
+	///	
+	virtual void DestructStateR(char*& s) const;
+	///	状態の再帰的な読み出し
+	virtual void GetStateR(char*& state) const;
+	///	状態の再帰的な設定
+	virtual void SetStateR(const char*& state);
+	virtual size_t NChildObjectForState() const {
+		return NChildObject();
+	}
+	const ObjectIf* GetChildObjectForState(size_t i) const {
+		return ((ObjectIf*)this)->GetChildObjectForState(i);
+	}
+	virtual ObjectIf* GetChildObjectForState(size_t i) {
+		return GetChildObject(i);
+	}
+
+
 	///	メモリデバッグ用。単純にツリーのオブジェクトをファイルにダンプする。
 	virtual void DumpObjectR(std::ostream& os, ObjectIf::object_set_t& dumped=ObjectIf::object_set_t(), int level = 0) const;
 
@@ -297,11 +316,6 @@ protected:
 	virtual void BeforeGetDesc() const {}
 	///	SetDesc()のあとに呼ばれる
 	virtual void AfterSetDesc(){}
-
-	///	sをoのStateとして初期化する．
-	static void ConstructState(ObjectIf* o, char*& s);
-	///	sをoのStateからメモリブロックに戻す．
-	static void DestructState(ObjectIf* o, char*& s);
 };
 ///	coutなどのストリームにObjectを出力する演算子．ObjectのPrintを呼び出す．
 inline std::ostream& operator << (std::ostream& os, const Object& o){
@@ -451,21 +465,27 @@ public:
 	ObjectStates():state(NULL), size(0){}
 	~ObjectStates(){ delete state; }
 	///	oとその子孫をセーブするために必要なメモリを確保する．
-	void AllocateState(ObjectIf* o);
+	void AllocateState(const ObjectIf* o);
 	///	状態をセーブする．
-	void SaveState(ObjectIf* o);
+	void SaveState(const ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
 	///	状態のメモリを解放する
-	void ReleaseState(ObjectIf* o);
+	void ReleaseState(const ObjectIf* o);
 	///	状態のサイズを求める
-	size_t CalcStateSize(ObjectIf* o);
+	size_t CalcStateSize(const ObjectIf* o);
 	/// SprBlender用再帰的ではないセーブ
-	void SingleSave(ObjectIf* o);
+	void SingleSave(const ObjectIf* o);
 	/// SprBlender用再帰的ではないロード
 	void SingleLoad(ObjectIf* o);
 	///	アロケート済みかどうか
 	bool IsAllocated() { return state != NULL; }
+
+
+	//	For debug
+	///
+	char* GetStateBuffer() { return state;  }
+	size_t GetStateBufferLen() { return size; }
 };
 
 

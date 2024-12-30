@@ -946,7 +946,7 @@ void PHConstraintEngine::SetState(const void* s){
 		PHConstraintsSt* st = (PHConstraintsSt*)(p + PHContactDetector::GetStateSize());
 		joints.resize(st->joints.size());
 		for(size_t i=0; i<joints.size(); ++i){
-			joints[i]->SetState(&st->joints[i]);
+//			joints[i]->SetState(&st->joints[i]);
 		}
 		cons_base.resize(st->cons.size());
 		for (size_t i = 0; i < cons_base.size(); ++i) {
@@ -961,12 +961,14 @@ void PHConstraintEngine::SetState(const void* s){
 		for (size_t i = 0; i < trees.size(); ++i) {
 			trees[i]->SetState(&st->roots[i]);
 		}*/
+		/*
 		if (st->trees.size()) {
 			PHTreeNodeSt* treeSt = &st->trees[0];
 			for (size_t i = 0; i < trees.size(); ++i) {
 				setDescendantNodeState(treeSt, trees[i]);
 			}
 		}
+		*/
 	}
 }
 

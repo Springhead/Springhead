@@ -87,11 +87,13 @@ public:
 };
 
 struct PHConstraintsSt{
+	DUMPLABEL(PHConstraintsStBegin)
 	std::vector<PHConstraintBaseState> cons;
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
 	std::vector<PHRootNodeState> roots;
 	std::vector<PHTreeNodeSt> trees;
+	DUMPLABEL(PHConstraintsStEnd)
 };
 
 

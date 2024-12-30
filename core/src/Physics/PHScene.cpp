@@ -520,6 +520,25 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	pos -= 1;
 	return NULL;
 }
+size_t PHScene::NChildObjectForState() const {
+	return NSolids() + NPaths() + NIKActuators() + NIKEndEffectors()
+		+ 1; // for PHIKEngine
+}
+ObjectIf* PHScene::GetChildObjectForState(size_t pos) {
+	//return engines[pos]->Cast();
+	if (pos < (size_t)NSolids()) return GetSolids()[pos];
+	pos -= NSolids();
+	if (pos < (size_t)NPaths()) return GetPath((int)pos);
+	pos -= NPaths();
+	if (pos < (size_t)NIKActuators()) return GetIKActuator((int)pos);
+	pos -= NIKActuators();
+	if (pos < (size_t)NIKEndEffectors()) return GetIKEndEffector((int)pos);
+	pos -= NIKEndEffectors();
+	if (pos < 1) return GetIKEngine();
+	pos -= 1;
+	return NULL;
+}
+
 bool PHScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
 	PHSolid* solid = DCAST(PHSolid, o);
@@ -756,20 +775,55 @@ void PHScene::SetState(const void* s){
 		constraintEngine->SetState(p);
 	}
 }
-
-void PHScene::GetStateR(char*& s){
+/*
+size_t PHScene::GetStateSizeR() const {
+	size_t rv = GetStateSize();
+	size_t n = NChildObject();
+	for (int i = 0; i < n; ++i) {
+		const ObjectIf* child = GetChildObject(i);
+		if (!DCAST(PHConstraintBaseIf, child)) {	// childとしてConstraintBaseは除外
+			rv += child->GetStateSizeR();
+		}
+	}
+	return rv;
+}
+void PHScene::ConstructStateR(char*& s) const {
+	ConstructState(s);
+	size_t sz = GetStateSize();
+	s += sz;
+	size_t n = NChildObject();
+	for (size_t i = 0; i < n; ++i) {
+		const ObjectIf* child = GetChildObject(i);
+		if (!DCAST(PHConstraintBaseIf, child)) {		// childとしてConstraintBaseは除外
+			//	Constraintをセーブしたい時は PHConstrainEngine::SetBSaveConstraintsをtrueに
+			child->ConstructStateR(s);
+		}
+	}
+}
+void PHScene::DestructStateR(char*& s) const {
+	DestructState(s);
+	size_t sz = GetStateSize();
+	s += sz;
+	size_t n = NChildObject();
+	for (size_t i = 0; i < n; ++i) {
+		const ObjectIf* child = GetChildObject(i);
+		if (!DCAST(PHConstraintBaseIf, child)) {		// childとしてConstraintBaseは除外
+			//	Constraintをセーブしたい時は PHConstrainEngine::SetBSaveConstraintsをtrueに
+			child->DestructStateR(s);
+		}
+	}
+}
+void PHScene::GetStateR(char*& s) const {
 	bool rv = GetState(s);
 	size_t sz = GetStateSize();
 	s += sz;
 	assert(rv || sz==0);
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// childとしてConstraintは除外
-		/*→Constraintをセーブしたい時は
-		PHConstrainEngine::SetBSaveConstraintsをtrueに
-		*/
-		if(! DCAST(PHConstraintBaseIf, GetChildObject(i))){
-			GetChildObject(i)->GetStateR(s);
+		const ObjectIf* child = GetChildObject(i);
+		if(! DCAST(PHConstraintBaseIf, child)){		// childとしてConstraintBaseは除外
+			//	Constraintをセーブしたい時は PHConstrainEngine::SetBSaveConstraintsをtrueに
+			child->GetStateR(s);
 		}
 	}
 }
@@ -778,12 +832,10 @@ void PHScene::SetStateR(const char*& s){
 	s += GetStateSize();
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// childとしてConstraintは除外
-		/*→Constraintをセーブしたい時は
-		PHConstrainEngine::SetBSaveConstraintsをtrueに
-		*/
-		if(! DCAST(PHConstraintBaseIf, GetChildObject(i))){
-			GetChildObject(i)->SetStateR(s);
+		ObjectIf* child = GetChildObject(i);
+		if(! DCAST(PHConstraintBaseIf, child)){		// childとしてConstraintは除外
+			//	Constraintをセーブしたい時は PHConstrainEngine::SetBSaveConstraintsをtrueに
+			child->SetStateR(s);
 		}
 	}
 }
@@ -840,6 +892,7 @@ bool PHScene::ReadStateR(std::istream& fin){
 	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadStateR(fin);
 	return true;
 }
+*/
 
 void PHScene::SetStateMode(bool bConstraints){
 	constraintEngine->bSaveConstraints = bConstraints;

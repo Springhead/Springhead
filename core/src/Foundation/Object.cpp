@@ -177,6 +177,54 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	}
 	return NULL;
 }
+
+
+size_t Object::GetStateSizeR() const {
+	size_t rv = GetStateSize();
+	size_t n = NChildObjectForState();
+	for (size_t i = 0; i < n; ++i) {
+		rv += GetChildObjectForState(i)->GetStateSizeR();
+	}
+	return rv;
+}
+void Object::ConstructStateR(char*& s) const {
+	ConstructState(s);
+	s += GetStateSize();
+	size_t n = NChildObjectForState();
+	for (size_t i = 0; i < n; ++i) {
+		GetChildObjectForState(i)->ConstructState(s);
+	}
+}
+void Object::DestructStateR(char*& s) const {
+	DestructState(s);
+	s += GetStateSize();
+	size_t n = NChildObjectForState();
+	for (size_t i = 0; i < n; ++i) {
+		GetChildObjectForState(i)->DestructState(s);
+	}
+}
+void Object::GetStateR(char*& s) const {
+	bool rv = GetState(s);
+	size_t sz = GetStateSize();
+	s += sz;
+	assert(rv || sz == 0);
+	size_t n = NChildObjectForState();
+	for (size_t i = 0; i < n; ++i) {
+		GetChildObjectForState(i)->GetStateR(s);
+	}
+}
+void Object::SetStateR(const char*& s) {
+	//	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
+	//	DSTR << o->GetIfInfo()->ClassName() << std::endl;
+	SetState(s);
+	s += GetStateSize();
+	size_t n = NChildObjectForState();
+	for (size_t i = 0; i < n; ++i) {
+		GetChildObjectForState(i)->SetStateR(s);
+	}
+}
+
+
 bool Object::WriteState(std::string fileName){
 	std::ofstream fout(fileName.c_str(), std::ios::binary | std::ios::out);
 	if(!fout) return false;
@@ -314,74 +362,34 @@ SceneObjectIf* SceneObject::CloneObject(){
 //----------------------------------------------------------------------------
 //	ObjectStates
 
-size_t ObjectStates::CalcStateSize(ObjectIf* o){
-	size_t sz = o->GetStateSize();
-	size_t n = o->NChildObject();
-	for(size_t i=0; i<n; ++i){
-		sz += CalcStateSize(o->GetChildObject(i));
-	}
+size_t ObjectStates::CalcStateSize(const ObjectIf* o){
+	size_t sz = o->GetStateSizeR();
 	return sz;
 }
-void ObjectStates::ReleaseState(ObjectIf* o){
+void ObjectStates::ReleaseState(const ObjectIf* o){
 	if (!state) return;
 	char* s = state;
-	DestructState(o, s);
+	o->DestructStateR(s);
 	delete state;
 	state = NULL;
 	size=0;
 }
-void Object::DestructState(ObjectIf* o, char*& s){
-	o->DestructState(s);
-	s += o->GetStateSize();
-	size_t n = o->NChildObject();
-	for(size_t i=0; i<n; ++i){
-		DestructState(o->GetChildObject(i), s);
-	}
-}
-void Object::ConstructState(ObjectIf* o, char*& s){
-	o->ConstructState(s);
-	s += o->GetStateSize();
-	size_t n = o->NChildObject();
-	for(size_t i=0; i<n; ++i){
-		ConstructState(o->GetChildObject(i), s);
-	}
-}
-void Object::GetStateR(char*& s){
-	bool rv = GetState(s);
-	size_t sz = GetStateSize();
-	s += sz;
-	assert(rv || sz==0);
-	size_t n = NChildObject();
-	for(size_t i=0; i<n; ++i){
-		((Object*)GetChildObject(i))->GetStateR(s);
-	}
-}
-void Object::SetStateR(const char*& s){
-//	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
-//	DSTR << o->GetIfInfo()->ClassName() << std::endl;
-	SetState(s);
-	s += GetStateSize();
-	size_t n = NChildObject();
-	for(size_t i=0; i<n; ++i){
-		((Object*)GetChildObject(i))->SetStateR(s);
-	}
-}
 
-void ObjectStates::AllocateState(ObjectIf* o){
+void ObjectStates::AllocateState(const ObjectIf* o){
 	if (state) ReleaseState(o);
 	size = CalcStateSize(o);
 	state = new char[size];
 	char* s = state;
-	ConstructState(o, s);
+	o->ConstructStateR(s);
 }
-void ObjectStates::SaveState(ObjectIf* o){
+void ObjectStates::SaveState(const ObjectIf* o){
 	if (!state) AllocateState(o);
 	char* s = state;
 //	DSTR << "Save:" << std::endl;
-	((Object*)o)->GetStateR(s);
+	o->GetStateR(s);
 }
 
-void ObjectStates::SingleSave(ObjectIf* o){
+void ObjectStates::SingleSave(const ObjectIf* o){
 	if (!state) ReleaseState(o);
 	size_t size = o->GetStateSize();
 	state = new char[size];

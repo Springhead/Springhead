@@ -227,9 +227,15 @@ struct ObjectIf{
 	//@{
 	///	子オブジェクトの数
 	size_t NChildObject() const;
-	///	子オブジェクトの取得
+	///	子オブジェクトの取得	.sprファイルのセーブ用
 	ObjectIf* GetChildObject(size_t pos);
 	const ObjectIf* GetChildObject(size_t pos) const;
+	///	Stateの読み書きの際の子オブジェクトの数
+	size_t NChildObjectForState() const;
+	///	Stateの読み書きの際の子オブジェクト
+	const ObjectIf* GetChildObjectForState(size_t i) const;
+	ObjectIf* GetChildObjectForState(size_t i);
+
 	/**	子オブジェクトの追加．複数のオブジェクトの子オブジェクトとして追加してよい．
 		例えば，GRFrameはツリーを作るが，全ノードがGRSceneの子でもある．*/
 	bool AddChildObject(ObjectIf* o);
@@ -268,10 +274,16 @@ struct ObjectIf{
 	
 	typedef char* PCHAR;		//<	work around for SWIG
 	typedef const char* CPCHAR;	//<	work around for SWIG
+	/**	再帰的に保存した場合の状態のサイズ	*/
+	size_t GetStateSizeR() const;
 	///
-	void GetStateR(PCHAR& state);
+	void GetStateR(PCHAR& state) const;
 	///
 	void SetStateR(CPCHAR& s);
+	///	
+	void ConstructStateR(PCHAR& s) const;
+	///	
+	void DestructStateR(PCHAR& s) const;
 
 
 	/** 状態の書き出し */
@@ -358,24 +370,28 @@ struct ObjectStatesIf: public ObjectIf{
 	SPR_IFDEF(ObjectStates);
 
 	///	oとその子孫をセーブするために必要なメモリを確保する．
-	void AllocateState(ObjectIf* o);
+	void AllocateState(const ObjectIf* o);
 	///	状態のメモリを解放する
-	void ReleaseState(ObjectIf* o);
+	void ReleaseState(const ObjectIf* o);
 	///	状態のサイズを求める
-	size_t CalcStateSize(ObjectIf* o);
+	size_t CalcStateSize(const ObjectIf* o);
 
 	///	状態をセーブする．
-	void SaveState(ObjectIf* o);
+	void SaveState(const ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
 	/// シングルセーブ
-	void SingleSave(ObjectIf* o);
+	void SingleSave(const ObjectIf* o);
 	/// シングルロード
 	void SingleLoad(ObjectIf* o);
 	///	アロケート済みかどうか
 	bool IsAllocated();
 	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
+	
+	//	For Debug
+	char* GetStateBuffer();
+	size_t GetStateBufferLen();
 };
 
 

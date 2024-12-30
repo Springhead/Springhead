@@ -67,11 +67,13 @@ public:
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
+	DUMPLABEL(PHSceneStateBegin)
 	/// 積分ステップ[s]
 	double timeStep;
 	double haptictimeStep;
 	/// 積分した回数
 	unsigned count;
+	DUMPLABEL(PHSceneStateEnd)
 
 	PHSceneState(){Init();}
 	void Init(){
@@ -133,6 +135,7 @@ struct PHSceneDesc: public PHSceneState{
 	bool	bCCDEnabled;				///< Continuous Collision Detectionの有効化
 	int     broadPhaseMode;
 	int     blendMode;
+	DUMPLABEL(PHSceneDescEnd)
 	
 	PHSceneDesc(){Init();}
 	void Init();	
