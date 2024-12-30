@@ -283,7 +283,7 @@ public:
 	///	状態型をメモリブロックに戻す
 	virtual void DestructState(void* m) const {}
 	///	メモリデバッグ用。単純にツリーのオブジェクトをファイルにダンプする。
-	virtual void DumpObjectR(std::ostream& os, int level=0) const;
+	virtual void DumpObjectR(std::ostream& os, ObjectIf::object_set_t& dumped=ObjectIf::object_set_t(), int level = 0) const;
 
 protected:
 	/// 開き括弧

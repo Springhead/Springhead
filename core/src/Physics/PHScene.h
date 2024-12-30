@@ -266,7 +266,7 @@ public:
 	virtual void        SetStateR      (const char*& state);
 	virtual bool        WriteStateR    (std::ostream& fout);
 	virtual bool        ReadStateR     (std::istream& fin);
-	virtual void        DumpObjectR    (std::ostream& os, int level=0) const;
+	virtual void        DumpObjectR    (std::ostream& os, ObjectIf::object_set_t dumped =ObjectIf::object_set_t(), int level=0) const;
 	virtual UTPerformanceMeasureIf* GetPerformanceMeasure() {
 		return performanceMeasure;
 	}

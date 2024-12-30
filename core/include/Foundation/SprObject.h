@@ -14,6 +14,7 @@
 #include <iosfwd>
 #include <iostream>
 #include <fstream>
+#include <set>
 
 namespace Spr{;
 
@@ -286,8 +287,9 @@ struct ObjectIf{
 	/**	状態型をメモリブロックに戻す	*/
 	void DestructState(void* m) const;
 	//@}
+	typedef std::set<const ObjectIf*> object_set_t;
 	///	オブジェクトツリーのメモリイメージをダンプ
-	void DumpObjectR(std::ostream& os, int level=0) const;
+	void DumpObjectR(std::ostream& os, object_set_t& dumped=object_set_t(), int level=0) const;
 };
 
 ///	インタフェースクラスへのポインタの配列
@@ -296,16 +298,17 @@ struct ObjectIfs
 	: public UTStack<ObjectIf*>
 #endif
 {
-	/*void PrintShort(std::ostream& os) const{
+	typedef std::ostream std_ostream_t;
+	void PrintShort(std_ostream_t& os) const{
 		for(const_iterator it = begin(); it!=end(); ++it){
 			(*it)->PrintShort(os);
 		}
 	}
-	void Print(std::ostream& os) const{
+	void Print(std_ostream_t& os) const{
 		for(const_iterator it = begin(); it!=end(); ++it){
 			(*it)->Print(os);
 		}
-	}*/
+	}
 	typedef UTStack<ObjectIf*> container_t;
 	void Push(ObjectIf* obj){container_t::Push(obj);}
 	void Pop(){container_t::Pop();}

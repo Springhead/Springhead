@@ -232,13 +232,17 @@ bool Object::ReadStateR(std::istream& fin){
 	return true;
 }
 
-void Object::DumpObjectR(std::ostream& os, int level) const {
+void Object::DumpObjectR(std::ostream & os, ObjectIf::object_set_t& dumped, int level) const {
 	os << level << " " << GetTypeInfo()->ClassName() << std::endl;
 	DumpObject(os);
 	size_t n = NChildObject();
 	os << std::endl;
+	dumped.insert((ObjectIf*)this);
 	for(size_t i=0; i<n; ++i){
-		((Object*)GetChildObject(i))->DumpObjectR(os, level+1);
+		const ObjectIf* child = GetChildObject(i);
+		if (dumped.find(child) == dumped.end()) {
+			child->DumpObjectR(os, dumped, level + 1);
+		}
 	}
 }
 

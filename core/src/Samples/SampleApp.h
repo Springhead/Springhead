@@ -507,20 +507,20 @@ public: /** 派生クラスが実装する関数 **/
 			if (id == ID_TEST_STATE) {
 				std::ofstream fBefore("before.bin", std::ios::binary | std::ios::out);
 				std::ofstream fAfter("after.bin", std::ios::binary | std::ios::out);
-				ObjectIfs objs;
-				objs.Push(GetPHScene());
-				GetSdk()->SaveObjects("before.spr", &objs);		// ファイルのセーブテスト
+				//ObjectIfs objs;
+				//objs.Push(GetPHScene());
+				//GetSdk()->SaveObjects("before.spr", &objs);
 				states->SaveState(GetPHScene());
 				GetPHScene()->Step();
 				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
-				GetPHScene()->DumpObjectR(fBefore);
+				GetPHScene()->DumpObjectR(fBefore);	// Binarly dump of scene before the load state.
 				GetPHScene()->Step();
 				GetPHScene()->Step();
 				states->LoadState(GetPHScene());
 				GetPHScene()->Step();
 				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
-				GetPHScene()->DumpObjectR(fAfter);
-				GetSdk()->SaveObjects("after.spr", &objs);		// ファイルのセーブテスト
+				GetPHScene()->DumpObjectR(fAfter);	// Binarly dump of scene after the load state.
+				//GetSdk()->SaveObjects("after.spr", &objs);		// ファイルのセーブテスト
 			}
 		}
 		if(menu == MENU_CONFIG){

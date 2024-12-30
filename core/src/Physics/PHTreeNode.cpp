@@ -54,16 +54,15 @@ bool PHTreeNode::AddChildObject(ObjectIf* o){
 }
 
 size_t PHTreeNode::NChildObject() const{
-	//	return (joint ? 1 : 0) + Children().size();
-	return Children().size();
+	return (joint ? 1 : 0) + Children().size();
 }
 
 ObjectIf* PHTreeNode::GetChildObject(size_t i){
-/*	if (joint) {
+	if (joint) {
 		if(i == 0)
 			return joint->Cast();
 		i--;
-	}	*/
+	}
 	return Children()[i]->Cast();
 }
 
@@ -414,16 +413,15 @@ bool PHRootNode::AddChildObject(ObjectIf* o){
 }
 
 size_t PHRootNode::NChildObject() const{
-//	return (solid ? 1 : 0) + Children().size();
-	return Children().size();
+	return (solid ? 1 : 0) + Children().size();
 }
 
 ObjectIf* PHRootNode::GetChildObject(size_t i){
-/*	if (solid) {
+	if (solid) {
 		if(i == 0)
 			return solid->Cast();
 		i--;
-	}	*/
+	}
 	return Children()[i]->Cast();
 }
 

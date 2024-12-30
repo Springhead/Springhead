@@ -858,13 +858,13 @@ int PHScene::GetMaterialBlending() {
 	return blendMode;
 }
 
-void PHScene::DumpObjectR(std::ostream& os, int level) const{
-	Object::DumpObjectR(os, level);
+void PHScene::DumpObjectR(std::ostream& os, ObjectIf::object_set_t dumped, int level) const{
+	Object::DumpObjectR(os, dumped, level);
 	size_t n = engines.size();
 	os << std::endl;
 	os << level << " PHScene::engines" << std::endl;
 	for(size_t i=0; i<n; ++i){
-		engines[(int)i]->DumpObjectR(os, level+1);
+		engines[(int)i]->DumpObjectR(os, dumped, level+1);
 	}
 }
 
