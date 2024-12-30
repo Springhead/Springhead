@@ -86,16 +86,6 @@ public:
 	PHShapePairForLCPIf* GetShapePair(int i, int j){return shapePairs.item(i, j)->Cast();}
 };
 
-struct PHConstraintsSt{
-	DUMPLABEL(PHConstraintsStBegin)
-	std::vector<PHConstraintBaseState> cons;
-	std::vector<PHConstraintState> joints;
-	std::vector<PHConstraintState> gears;
-	std::vector<PHRootNodeState> roots;
-	std::vector<PHTreeNodeSt> trees;
-	DUMPLABEL(PHConstraintsStEnd)
-};
-
 
 class PHConstraintEngine : public PHConstraintEngineDesc, public PHContactDetector{
 	friend class PHConstraint;
@@ -143,11 +133,6 @@ public:
 	virtual bool	AddChildObject(ObjectIf* o);
 	virtual bool	DelChildObject(ObjectIf* o);
 	virtual void	Clear         ();
-	virtual size_t	GetStateSize  () const;
-	virtual void	ConstructState(void* m) const;
-	virtual void	DestructState (void* m) const;
-	virtual bool	GetState      (void* s) const;
-	virtual void	SetState      (const void* s);
 
 	// PHEngineの仮想関数
 	virtual int  GetPriority() const {return SGBP_CONSTRAINTENGINE;}
@@ -174,7 +159,6 @@ public:
 	double	GetPosCorrectionRate     (){return posCorrectionRate;}
 	void	SetContactCorrectionRate (double value){contactCorrectionRate = value;}
 	double	GetContactCorrectionRate (){return contactCorrectionRate;}
-	void	SetBSaveConstraints      (bool value){bSaveConstraints = value;}
 	void	SetUpdateAllSolidState   (bool flag){bUpdateAllState = flag;}
 	void	SetUseContactSurface     (bool flag){bUseContactSurface = flag;}
 	void	SetShrinkRate            (double data){shrinkRate = data;}

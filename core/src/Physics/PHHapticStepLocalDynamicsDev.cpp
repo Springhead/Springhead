@@ -95,7 +95,6 @@ void PHHapticStepLocalDynamicsDev::PredictSimulation6D(){
 	phScene->IntegratePart1();
 	#endif
 	/// 予測シミュレーションのために現在の剛体の状態を保存する
-	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
 	states->Clear();
 	states->SaveState(phScene);	
 

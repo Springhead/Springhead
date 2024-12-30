@@ -91,6 +91,9 @@ public:
 	virtual bool      AddChildObject(ObjectIf* o);
 	virtual size_t    NChildObject  () const;
 	virtual ObjectIf* GetChildObject(size_t i);
+	size_t NChildObjectForState() const;
+	virtual ObjectIf* GetChildObjectForState(size_t i);
+
 	PH1DJointLimitIf* CreateLimit   (const PH1DJointLimitDesc& desc);
 	PH1DJointMotorIf* CreateMotor(const IfInfo* ii, const PH1DJointMotorDesc& desc);
 	bool              AddMotor      (PH1DJointMotorIf* m);

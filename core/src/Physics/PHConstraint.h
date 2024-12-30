@@ -88,8 +88,8 @@ struct PHConstraintState {
 class PHConstraint : public PHConstraintBase, public PHConstraintState, public PHConstraintDesc{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
-	ACCESS_DESC_STATE(PHConstraint);
-	DUMPLABEL(PHConstraintBegin);
+	ACCESS_DESC(PHConstraint);
+	DUMPLABEL(PHConstraintBegin)
 
 	/// 拘束を管理するエンジン
 	PHConstraintEngine* engine;
@@ -106,7 +106,7 @@ public:
 	int solidState[2];	//	0:non-dynamical, 1:Articulated, 2:Free body
 
 	// ----- 計算用変数
-	DUMPLABEL(PHConstraintCalc);
+	DUMPLABEL(PHConstraintCalc)
 
 	/// ワールド座標系の中心に対する親(子)剛体の位置と向き   #* 剛体から毎回取ってくる値
 	SpatialTransform X[2];
@@ -159,6 +159,10 @@ public:
 	/// コンストラクタ
 	PHConstraint();
 	virtual ~PHConstraint();
+
+	size_t GetStateSize();
+	void SetState(void* state);
+	bool GetState(void* state) const;
 
 	// ----- エンジンから呼び出される関数
 	/// ツリーノードを構成しているか
@@ -231,6 +235,7 @@ public:
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject() const;
 	virtual ObjectIf*	 GetChildObject(size_t i);
+	virtual size_t		 NChildObjectForState() const { return 0; }
 };
 
 /// 拘束コンテナ

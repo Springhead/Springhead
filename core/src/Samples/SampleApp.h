@@ -728,7 +728,6 @@ public: /** FWAppの実装 **/
 			//GetPHScene()->SetNumIteration(10, 1);	// correction iteration
 			//GetPHScene()->SetNumIteration(10, 2);	// contact iteration
 		
-			GetPHScene()->SetStateMode(true);
 			//scene->GetConstraintEngine()->SetUseContactSurface(true); //面接触での力計算を有効化
 			
 			// シーン構築

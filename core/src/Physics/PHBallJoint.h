@@ -90,6 +90,12 @@ public:
 		}
 		return PHConstraint::AddChildObject(o);
 	}
+	virtual size_t NChildObjectForState() const {
+		return (limit ? 1 : 0) + motors.size();
+	}
+	virtual ObjectIf* GetChildObjectForState(size_t i) {
+		return GetChildObject(i);
+	}
 	virtual size_t NChildObject() const {
 		return((limit?1:0) + motors.size() + PHConstraint::NChildObject());
 	}

@@ -501,11 +501,6 @@ public:
 	///	@brief LCPソルバの計算回数の設定．
 	void SetNumIteration(int n);
 	
-	/** @brief 状態の保存 (ObjectStates の保存）に，
-		Constraints が持つ拘束力を含めるかどうか設定する．
-	*/
-	void SetStateMode(bool bConstraints);
-
 	/** @brief 接触判定エンジンの有効・無効を設定する．SetContactModeより優先する．
 	*/
 	void EnableContactDetection(bool enable);
