@@ -13,6 +13,7 @@
 #define SPR_PHJOINTLIMITIf_H
 
 #include <Foundation/SprObject.h>
+#include <Physics/SprPHConstraintBase.h>
 
 #include <float.h>  // FLT_MAX
 
@@ -21,8 +22,9 @@ namespace Spr{;
 /** \addtogroup gpJoint */
 //@{
 
+
 /// 1自由度関節可動域拘束のインタフェース
-struct PH1DJointLimitIf : public SceneObjectIf{
+struct PH1DJointLimitIf : public PHConstraintBaseIf {
 	SPR_IFDEF(PH1DJointLimit);
 
 	/** @brief 可動範囲を設定する
@@ -87,7 +89,7 @@ struct PH1DJointLimitDesc{
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 /// ボールジョイント可動域制限のインタフェース
-struct PHBallJointLimitIf : public SceneObjectIf {
+struct PHBallJointLimitIf : public PHConstraintBaseIf {
 	SPR_IFDEF(PHBallJointLimit);
 
 	/** @brief 可動域制限のためのバネ係数を設定する

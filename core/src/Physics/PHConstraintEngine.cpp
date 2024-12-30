@@ -234,10 +234,8 @@ PHConstraintEngineDesc::PHConstraintEngineDesc() {
 	velCorrectionRate = 0.3;
 	posCorrectionRate = 0.3;
 	contactCorrectionRate = 0.1;
-	//	shrinkRate = 0.7;
-	//	shrinkRateCorrection = 0.7;
-	shrinkRate = 0.0;
-	shrinkRateCorrection = 0.0;
+	shrinkRate = 0.7;
+	shrinkRateCorrection = 0.7;
 	freezeThreshold = 0.0;
 	accelSOR = 1.0;
 	dfEps = 0.0;
@@ -901,6 +899,10 @@ void setDescendantNodeState(PHTreeNodeSt*& st, PHTreeNode* node) {
 	}
 }
 
+/**
+	PHScene::GetStateR() ignores children inheriting PHConstraintBase.
+	If bSaveConstraints is enabled, all constraints should be saved here.
+*/
 bool PHConstraintEngine::GetState(void* s) const {
 	PHContactDetector::GetState(s);
 	char* p = (char*)s;
@@ -910,6 +912,12 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for(size_t i=0; i<joints.size(); ++i){
 			joints[i]->GetState(&st->joints[i]);
 		}
+		st->cons.resize(cons_base.size());
+		for (size_t i = 0; i < cons_base.size(); ++i) {
+			cons_base[i]->PHConstraintBase::GetState(&st->cons[i]);
+		}
+
+		/*	will be done by PHScene
 		st->gears.resize(gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
@@ -918,6 +926,7 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for (size_t i = 0; i < trees.size(); ++i) {
 			trees[i]->GetState(&st->roots[i]);
 		}
+		*/
 
 		int nTreeNode = nTreeNodes(trees);
 		if (nTreeNode) {
@@ -939,6 +948,11 @@ void PHConstraintEngine::SetState(const void* s){
 		for(size_t i=0; i<joints.size(); ++i){
 			joints[i]->SetState(&st->joints[i]);
 		}
+		cons_base.resize(st->cons.size());
+		for (size_t i = 0; i < cons_base.size(); ++i) {
+			cons_base[i]->PHConstraintBase::SetState(&st->cons[i]);
+		}
+		/*	will be done by PHScene
 		gears.resize(st->gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
@@ -946,8 +960,7 @@ void PHConstraintEngine::SetState(const void* s){
 		trees.resize(st->roots.size());
 		for (size_t i = 0; i < trees.size(); ++i) {
 			trees[i]->SetState(&st->roots[i]);
-		}
-
+		}*/
 		if (st->trees.size()) {
 			PHTreeNodeSt* treeSt = &st->trees[0];
 			for (size_t i = 0; i < trees.size(); ++i) {

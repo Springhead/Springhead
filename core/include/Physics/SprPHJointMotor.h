@@ -14,16 +14,19 @@
 
 #include <Foundation/SprObject.h>
 #include <functional>
-
+#include <Physics/SprPHConstraintBase.h>
+#include <Physics/SprPHJointLimit.h>
 namespace Spr{;
 
 /** \addtogroup gpJoint */
 //@{
 
 /// 1自由度関節モータのインタフェース
-struct PH1DJointMotorIf : public SceneObjectIf{
+struct PH1DJointMotorIf : PHConstraintBaseIf{
 	SPR_IFDEF(PH1DJointMotor);
 };
+
+
 ///	1自由度関節モータのデスクリプタ
 struct PH1DJointMotorDesc{
 	SPR_DESCDEF(PH1DJointMotor);

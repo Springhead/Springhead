@@ -264,6 +264,15 @@ struct ObjectIf{
 	bool GetState(void* state) const;
 	/**	状態の設定	*/
 	void SetState(const void* state);
+	
+	typedef char* PCHAR;		//<	work around for SWIG
+	typedef const char* CPCHAR;	//<	work around for SWIG
+	///
+	void GetStateR(PCHAR& state);
+	///
+	void SetStateR(CPCHAR& s);
+
+
 	/** 状態の書き出し */
 	bool WriteStateR(std::ostream& fout);
 	bool WriteState(std::string fileName);

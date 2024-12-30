@@ -87,6 +87,7 @@ public:
 };
 
 struct PHConstraintsSt{
+	std::vector<PHConstraintBaseState> cons;
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
 	std::vector<PHRootNodeState> roots;
@@ -114,7 +115,7 @@ public:
 	PHPaths			paths;			///< パスの配列
 
 	PHConstraints		cons;		///< 有効な拘束の配列
-	PHConstraintBases	cons_base;
+	PHConstraintBases	cons_base;	///< Valid PHConstraintBase objects.
 
 	int count;
 

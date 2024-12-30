@@ -13,6 +13,7 @@
 #define SPR_PHJOINTIf_H
 
 #include <Foundation/SprObject.h>
+#include <Physics/SprPHConstraintBase.h>
 #include <Physics/SprPHJointLimit.h>
 #include <Physics/SprPHJointMotor.h>
 
@@ -43,7 +44,7 @@ struct PHConstraintDesc{
 
 struct PHSceneIf;
 /// 拘束のインタフェース
-struct PHConstraintIf : public SceneObjectIf{
+struct PHConstraintIf : public PHConstraintBaseIf{
 	SPR_IFDEF(PHConstraint);
 
 	/** @brief ソケット側の剛体を取得する

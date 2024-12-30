@@ -768,8 +768,8 @@ void PHScene::GetStateR(char*& s){
 		/*→Constraintをセーブしたい時は
 		PHConstrainEngine::SetBSaveConstraintsをtrueに
 		*/
-		if(! DCAST(PHConstraintIf, GetChildObject(i))){
-			((PHSolid*)GetChildObject(i))->GetStateR(s);
+		if(! DCAST(PHConstraintBaseIf, GetChildObject(i))){
+			GetChildObject(i)->GetStateR(s);
 		}
 	}
 }
@@ -782,8 +782,8 @@ void PHScene::SetStateR(const char*& s){
 		/*→Constraintをセーブしたい時は
 		PHConstrainEngine::SetBSaveConstraintsをtrueに
 		*/
-		if(! DCAST(PHConstraintIf, GetChildObject(i))){
-			((PHSolid*)GetChildObject(i))->SetStateR(s);
+		if(! DCAST(PHConstraintBaseIf, GetChildObject(i))){
+			GetChildObject(i)->SetStateR(s);
 		}
 	}
 }

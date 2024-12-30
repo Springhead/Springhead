@@ -366,24 +366,4 @@ ObjectIf* PHConstraint::GetChildObject(size_t i) {
 	return( (i<2) ? (solid[i]->Cast()) : ((ObjectIf*)(NULL)) );
 }
 
-bool PHConstraint::GetState(void* s) const {
-	PHConstraintState* st = (PHConstraintState*)s;
-	st->f        = f;
-	st->F        = F;
-	st->xs       = xs;
-	st->fAvg     = fAvg;
-	st->bYielded = bYielded;
-	return true;
-}
-
-void PHConstraint::SetState(const void* s){
-	const PHConstraintState* st = (const PHConstraintState*)s;
-	(Vec6d&)f    = st->f       ;
-	(Vec6d&)F    = st->F       ;
-	(Vec6d&)xs   = st->xs      ;
-	(Vec6d&)fAvg = st->fAvg    ;
-	bYielded     = st->bYielded;
-
-}
-
 }
