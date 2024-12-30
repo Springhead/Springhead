@@ -74,7 +74,6 @@ public:
 #define DUMPLABEL(id)	char dumpLabel##id[sizeof(#id)] = #id;
 #else
 #define DUMPLABEL(id)
-#define 
 #endif
 
 

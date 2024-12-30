@@ -21,7 +21,7 @@ namespace Spr{
 
 void PHConstraintBaseVars::ClearVars() {
 	char* start = (char*)&b;
-	char* end = (char*)&dumpLabelPHConstraintBaseVarsEnd;
+	char* end = (char*)&dv_changed_next + sizeof(dv_changed_next);
 	memset(start, 0, end-start);
 }
 
