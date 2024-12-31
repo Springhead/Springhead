@@ -188,22 +188,41 @@ size_t Object::GetStateSizeR() const {
 	return rv;
 }
 void Object::ConstructStateR(char*& s) const {
+#ifdef _DEBUG
+	int ConAdr = (size_t)s & 0xFFFF;
+	NamedObjectIf* no = DCAST(NamedObjectIf, this);
+	DSTR << "ConstrucctStateR(C=" << std::setbase(16) << ConAdr;
+	DSTR << ") of " << (no ? no->GetName() : "") << ": " << GetIfInfo()->ClassName() << std::endl;
+
+	stateConstruct = s;
+#endif
 	ConstructState(s);
 	s += GetStateSize();
 	size_t n = NChildObjectForState();
 	for (size_t i = 0; i < n; ++i) {
-		GetChildObjectForState(i)->ConstructState(s);
+		GetChildObjectForState(i)->ConstructStateR(s);
 	}
 }
 void Object::DestructStateR(char*& s) const {
+#ifdef _DEBUG
+	assert(stateConstruct == s);
+#endif
 	DestructState(s);
 	s += GetStateSize();
 	size_t n = NChildObjectForState();
 	for (size_t i = 0; i < n; ++i) {
-		GetChildObjectForState(i)->DestructState(s);
+		GetChildObjectForState(i)->DestructStateR(s);
 	}
 }
 void Object::GetStateR(char*& s) const {
+#ifdef _DEBUG
+	int GetAdr = (size_t)s & 0xFFFF;
+	int ConAdr = (size_t)stateConstruct & 0xFFFF;
+	NamedObjectIf* no = DCAST(NamedObjectIf, this);
+	DSTR << "GetStateR(G=" << std::setbase(16) << GetAdr << " C=" << ConAdr;
+	DSTR << ") of " << (no ? no->GetName() : "") << ": " << GetIfInfo()->ClassName() << std::endl;
+	if(stateConstruct != s) _CrtDbgBreak();
+#endif
 	bool rv = GetState(s);
 	size_t sz = GetStateSize();
 	s += sz;

@@ -52,6 +52,7 @@ typedef std::vector< UTRef<PHRay> > PHRays;
 
 class SPR_DLL PHScene : public Scene, public PHSceneDesc{
 	SPR_OBJECTDEF(PHScene);
+	ACCESS_DESC_STATE(PHScene);
 public:
 	PHEngines				engines;
 protected:
@@ -254,16 +255,7 @@ public:
 	virtual const ObjectIf* GetChildObject(size_t pos) const { return ((PHScene*)this)->GetChildObject(pos); }
 	virtual bool			AddChildObject(ObjectIf* o);
 	virtual bool			DelChildObject(ObjectIf* o);	
-	ACCESS_DESC_STATE(PHScene);
 
-/*
-	virtual size_t		GetStateSizeR() const;
-	virtual void		ConstructStateR(char*& s) const;
-	virtual void		DestructStateR(char*& s) const;
-	virtual void        GetStateR      (char*& s) const;
-	virtual void        SetStateR      (const char*& state);
-	virtual bool        WriteStateR    (std::ostream& fout);
-	virtual bool        ReadStateR     (std::istream& fin);	*/
 	virtual size_t		NChildObjectForState() const;
 	virtual ObjectIf* GetChildObjectForState(size_t pos);
 

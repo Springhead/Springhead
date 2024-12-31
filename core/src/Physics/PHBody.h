@@ -109,17 +109,19 @@ public:
 	CDShapeIf* GetShape() { return (CDShapeIf*)shape; }
 
 	// Objectの仮想関数
+	virtual size_t    NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool      AddChildObject(ObjectIf* o);
 	virtual bool      DelChildObject(ObjectIf* o);
-	virtual size_t    NChildObject() const;
+
+	virtual size_t    NChildObjectForState() const { return 0; }
+	virtual ObjectIf* GetChildObjectForState(size_t pos) { return NULL; }
 };
 
 
 typedef std::vector< PHBody* >			PHBodies;
 
-
-struct PHBodyState {
+struct PHBodyStatePrivate {
 	DUMPLABEL(PHBodyBegin);
 	//	int                 id;		//< なぞ、たぶん不要。誰が足したの？
 	bool				bboxReady;			///< bboxの再計算用フラグ
@@ -129,10 +131,10 @@ struct PHBodyState {
 	DUMPLABEL(PHBodyEnd);
 };
 ///	物体
-class PHBody : public SceneObject, public PHBodyState {
+class PHBody : public SceneObject, public PHBodyStatePrivate {
 public:
 	SPR_OBJECTDEF_ABST(PHBody);
-	ACCESS_STATE(PHBody);
+	ACCESS_PRIVATE(PHBody);
 	std::vector< UTRef<PHFrame> > frames;	///< Collision形状
 
 

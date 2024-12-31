@@ -152,13 +152,13 @@ public:																	\
 #ifndef SWIG
 #define SPR_DESCDEF(cls)												\
 public:																	\
-	const static IfInfo* GetIfInfo(){									\
+	const static IfInfo* GetIfInfo() {									\
 		return cls##If::GetIfInfoStatic();								\
 	}																	\
 
 #define SPR_DESCDEF_VIRTUAL(cls)										\
 public:																	\
-	const static IfInfo* GetIfInfo(){									\
+	const static IfInfo* GetIfInfo() const {							\
 		return cls##If::GetIfInfoStatic();								\
 	}																	\
 	virtual const IfInfo* GetIfInfoVirtual(){							\

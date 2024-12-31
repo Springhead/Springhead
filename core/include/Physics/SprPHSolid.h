@@ -145,6 +145,7 @@ struct PHBodyIf : SceneObjectIf {
 	bool InvalidateBbox();
 };
 
+
 ///	剛体のステート
 struct PHSolidState{
 	DUMPLABEL(PHSolidState)

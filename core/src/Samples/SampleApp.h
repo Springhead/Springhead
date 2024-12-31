@@ -517,13 +517,13 @@ public: /** 派生クラスが実装する関数 **/
 					fState.write(buf, states->GetStateBufferLen());
 				}
 				GetPHScene()->Step();
-				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
+//				GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
 				GetPHScene()->DumpObjectR(fBefore);	// Binarly dump of scene before the load state.
 				GetPHScene()->Step();
 				GetPHScene()->Step();
 				states->LoadState(GetPHScene());
 				GetPHScene()->Step();
-				//GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
+//				GetPHScene()->GetConstraintEngine()->UpdateForStateDebug();
 				GetPHScene()->DumpObjectR(fAfter);	// Binarly dump of scene after the load state.
 				//GetSdk()->SaveObjects("after.spr", &objs);		// ファイルのセーブテスト
 			}

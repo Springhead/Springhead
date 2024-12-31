@@ -41,24 +41,6 @@ PHConstraint::PHConstraint() {
 PHConstraint::~PHConstraint(){
 }
 
-size_t PHConstraint::GetStateSize() {
-	return sizeof(PHConstraintBaseState) + sizeof(PHConstraintState);
-}
-
-void PHConstraint::SetState(void* adr) {
-	PHConstraintBaseState* base = (PHConstraintBaseState*)adr;
-	PHConstraintState* state = (PHConstraintState*)(base + 1);
-	PHConstraintBase::SetState(base);
-	*(PHConstraintState*)this = *state;
-}
-bool PHConstraint::GetState(void* adr) const {
-	PHConstraintBaseState* base = (PHConstraintBaseState*)adr;
-	PHConstraintState* state = (PHConstraintState*)(base + 1);
-	PHConstraintBase::GetState(base);
-	*state = *(PHConstraintState*)this;
-	return true;
-}
-
 // ----- エンジンから呼び出される関数
 bool PHConstraint::IsArticulated(){
 	return (treeNode && treeNode->IsEnabled());

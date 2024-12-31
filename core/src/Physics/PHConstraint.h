@@ -42,10 +42,12 @@ struct PHConstraintBaseVars {
 	PHConstraintBaseVars() { ClearVars(); }
 };
 struct PHConstraintBaseState {
+	DUMPLABEL(PHConstraintBaseStateBegin);
 	/// 拘束力の力積
 	SpatialVector f;
 	/// 拘束誤差を位置のLCPで補正する場合の補正量*質量
 	SpatialVector F;
+	DUMPLABEL(PHConstraintBaseStateEnd);
 };
 
 /// 拘束の基本クラス．PHConstraint, PHJointLimit, PHJointMotor, PHGearが派生
@@ -89,6 +91,7 @@ class PHConstraint : public PHConstraintBase, public PHConstraintState, public P
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
+	ACCESS_STATE1(PHConstraint, PHConstraintBase);
 	DUMPLABEL(PHConstraintBegin)
 
 	/// 拘束を管理するエンジン
@@ -159,10 +162,6 @@ public:
 	/// コンストラクタ
 	PHConstraint();
 	virtual ~PHConstraint();
-
-	size_t GetStateSize();
-	void SetState(void* state);
-	bool GetState(void* state) const;
 
 	// ----- エンジンから呼び出される関数
 	/// ツリーノードを構成しているか

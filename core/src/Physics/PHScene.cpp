@@ -521,8 +521,9 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	return NULL;
 }
 size_t PHScene::NChildObjectForState() const {
-	return NSolids() + NJoints() + NPaths() + NIKActuators() + NIKEndEffectors()
-		+ 2; // for PHConstraintEngine and PHIKEngine
+	return size_t(NSolids() + NJoints() + NPaths() + NIKActuators() + NIKEndEffectors()
+		+ 2)
+		; // for PHConstraintEngine and PHIKEngine
 }
 ObjectIf* PHScene::GetChildObjectForState(size_t pos) {
 	//return engines[pos]->Cast();
@@ -530,6 +531,7 @@ ObjectIf* PHScene::GetChildObjectForState(size_t pos) {
 	pos -= NSolids();
 	if (pos < (size_t)NJoints()) return GetJoint((int)pos);
 	pos -= NJoints();
+	
 	if (pos < (size_t)NPaths()) return GetPath((int)pos);
 	pos -= NPaths();
 	if (pos < (size_t)NIKActuators()) return GetIKActuator((int)pos);

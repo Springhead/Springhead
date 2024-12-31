@@ -85,6 +85,11 @@ public:
 	virtual void SetOffsetForce(const Vec6d& offsetForce) { this->offsetForce = offsetForce; }
 	virtual void SetTargetVelocity(const Vec6d& targetVelocity) { this->targetVelocity = targetVelocity; }
 	virtual Vec6d GetTargetVelocity() { return this->targetVelocity; }
+
+	size_t NChildObjectForState() const { return 1; }
+	virtual ObjectIf* GetChildObjectForState(size_t i) {
+		return motor->Cast();
+	}
 };
 
 }

@@ -10,6 +10,7 @@
 
 #include "PHBody.h"
 #include "PHEngine.h"
+#include "SprPhysicsDecl.hpp"
 
 namespace Spr{;
 
@@ -87,7 +88,8 @@ public:
 		
 public:
 	SPR_OBJECTDEF(PHSolid);
-	ACCESS_DESC_STATE_PRIVATE(PHSolid);
+	ACCESS_DESC(PHSolid);
+	ACCESS_STATE_PRIVATE1(PHSolid, PHBody);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	virtual SceneObjectIf* CloneObject();
