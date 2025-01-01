@@ -14,7 +14,7 @@ namespace Spr{;
 
 class PHShapePairForLCP;
 
-struct PHContactPointState:public PHConstraintState{
+struct PHContactPointState{
 	int shapePair;
 	Vec3d pos;
 };

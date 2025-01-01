@@ -117,13 +117,6 @@ struct PHConstraintIf : public PHConstraintBaseIf{
 	 */
 	//Vec3d GetForce();
 
-	/** @brief 拘束トルクを取得
-	 */
-	//Vec3d GetTorque();
-	/**
-	 */
-	bool IsYielded();
-
 	/** @biref 状態の更新
 	*/
 	void UpdateState();
@@ -1120,6 +1113,17 @@ struct PHGearIf : public SceneObjectIf{
 
 	void   SetMode(int mode);
 	int    GetMode();
+};
+
+struct PHJointMotorIf :public PHConstraintBaseIf {
+	SPR_IFDEF(PHJointMotor);
+	/** @brief 拘束トルクを取得
+	 */
+	 //Vec3d GetTorque();
+	 /**
+	  */
+	bool IsYielded();
+
 };
 	
 //@}

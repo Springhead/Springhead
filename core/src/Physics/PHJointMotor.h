@@ -52,9 +52,36 @@ public:
 	double          hardnessRate;
 };
 
+struct PHJointMotorState {
+	DUMPLABEL(PHConstraintStateBegin);
+	// ----- PHJointに関連する変数
+	/// ばね部の距離（三要素モデル用）
+	SpatialVector xs;
+
+	/// 拘束力にローパスをかけたもの
+	SpatialVector fAvg;
+
+	/// 降伏したかどうか
+	bool   bYielded;
+	DUMPLABEL(PHConstraintStateEnd);
+
+	PHJointMotorState() {
+		bYielded = false;
+	}
+};
+
+class PHJointMotor : public PHConstraintBase, public PHJointMotorState {
+public:
+	SPR_OBJECTDEF1(PHJointMotor, PHConstraintBase);
+	ACCESS_STATE1(PHJointMotor, PHConstraintBase);
+	bool IsYielded() {
+		return bYielded;
+	}
+};
+
 ///	N自由度関節の関節コントローラ
 template<int NDOF>
-class PHNDJointMotor : public PHConstraintBase{
+class PHNDJointMotor : public PHJointMotor {
 public:
 	typedef PTM::TVector<NDOF,double> VecNd;
 
@@ -96,6 +123,9 @@ public:
 
 	/// パラメータを反映する
 	virtual void SetParams(PHNDJointMotorParam<NDOF>& p) {}
+
+	bool         IsYielded() { return this->bYielded; }
+
 };
 
 ///	1自由度関節の関節コントローラ

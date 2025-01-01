@@ -69,29 +69,11 @@ public:
 	virtual void CompResponse      (double df, int i){}
 };
 
-struct PHConstraintState {
-	DUMPLABEL(PHConstraintStateBegin);
-	// ----- PHJointに関連する変数
-	/// ばね部の距離（三要素モデル用）
-	SpatialVector xs;
-
-	/// 拘束力にローパスをかけたもの
-	SpatialVector fAvg;
-
-	/// 降伏したかどうか
-	bool   bYielded;
-	DUMPLABEL(PHConstraintStateEnd);
-
-	PHConstraintState() {
-		bYielded = false;
-	}
-};
 /// 拘束
-class PHConstraint : public PHConstraintBase, public PHConstraintState, public PHConstraintDesc{
+class PHConstraint : public PHConstraintBase, public PHConstraintDesc{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
-	ACCESS_STATE1(PHConstraint, PHConstraintBase);
 	DUMPLABEL(PHConstraintBegin)
 
 	/// 拘束を管理するエンジン
@@ -227,8 +209,6 @@ public:
 
 	void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
 	void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
-
-	bool         IsYielded(){ return this->bYielded; }
 
 	/// Objectの仮想関数
 	virtual bool		 AddChildObject(ObjectIf* o);
