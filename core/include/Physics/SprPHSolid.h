@@ -145,8 +145,10 @@ struct PHBodyIf : SceneObjectIf {
 	bool InvalidateBbox();
 };
 
+
 ///	剛体のステート
 struct PHSolidState{
+	DUMPLABEL(PHSolidState)
 	Vec3d		velocity;		///<	質量中心の速度		(World系)
 	Vec3d		angVelocity;	///<	角速度				(World系)
 	Posed		pose;			///<	座標原点の位置と向き	(World系)
@@ -154,11 +156,13 @@ struct PHSolidState{
 
 ///	剛体のディスクリプタ
 struct PHSolidDesc: public PHSolidState{
+	DUMPLABEL(PHSolidDesc)
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
 	Vec3d		center;			///<	質量中心の位置	(Local系)
 	bool		dynamical;		///<	物理法則に従うか(速度は積分される)
 	bool        stationary;
+	DUMPLABEL(PHSolidDescEnd)
 
 	PHSolidDesc(){ Init(); }
 	void Init(){

@@ -1,4 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
 %module Physics
 // %ignore Spr::PHBallJointIf::CreateLimit;
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
@@ -25,15 +24,17 @@
 %feature("returns_array") Spr::PHRayIf::GetDynamicalNearest;
 %feature("returns_array") Spr::PHRayIf::GetHits;
 %feature("returns_array") Spr::PHRayIf::GetNearest;
-%feature("only_cs_ignore") Spr::PHSdkIf::CreateScene;
-%feature("only_cs_ignore") Spr::PHSdkIf::CreateSdk;
+//%feature("only_cs_ignore") Spr::PHSdkIf::CreateScene;
+//%feature("only_cs_ignore") Spr::PHSdkIf::CreateSdk;
 %feature("only_cs_ignore") Spr::PHSceneIf::GetSdk;
 
 %include "../../include/SprBase.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"
 %include "../../include/Collision/SprCDShape.h"
+%include "../../include/Physics/SprPHConstraintBase.h"
 %include "../../include/Physics/SprPHDef.h"
 %include "../../include/Physics/SprPHEngine.h"
 %include "../../include/Physics/SprPHFemMesh.h"
@@ -50,6 +51,7 @@
 %include "../../include/Physics/SprPHScene.h"
 %include "../../include/Physics/SprPHSdk.h"
 %include "../../include/Physics/SprPHSkeleton.h"
+
 /*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"

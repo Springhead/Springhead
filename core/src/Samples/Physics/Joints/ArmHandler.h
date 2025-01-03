@@ -27,7 +27,6 @@ public:
 	double						handSpring;		///< 手先のバネ係数
 	double						handDamper;		///< 手先のダンパ係数
 	bool						useExternal;	///< 外部コントローラで手先制御を行うかどうか
-	bool						useABA;			///< ABAを使うかどうか
 
 public:
 	ArmHandler(SampleApp* a):Handler(a){
@@ -40,20 +39,19 @@ public:
 		handDamper  =  20;
 
 		useExternal	= false;
-		useABA		= true;
 
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_0, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_0, 'z');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_0, 'a');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_1, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_1, 'x');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_1, 's');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_2, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_2, 'c');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_2, 'd');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_3, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_3, 'v');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_3, 'f');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_4, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_4, 'b');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_4, 'g');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_5, "move ball");
-		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_5, 'n');
+		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_5, 'j');
 	}
 
 	virtual void BuildScene(){
@@ -91,11 +89,11 @@ public:
 			joints[i]->SetSpring(jointSpring);
 			joints[i]->SetDamper(jointDamper);
 		}
-		if(useABA){
-			PHTreeNodeIf* node = phScene->CreateRootNode(links[0], PHRootNodeDesc());
-			for(int i = 1; i < nLinks; i++)
-				node = phScene->CreateTreeNode(node, links[i], PHTreeNodeDesc());
-		}
+#if 1	//	Use ABA.
+		PHTreeNodeIf* node = phScene->CreateRootNode(links[0], PHRootNodeDesc());
+		for(int i = 1; i < nLinks; i++)
+			node = phScene->CreateTreeNode(node, links[i], PHTreeNodeDesc());
+#endif
 
 		// ボール（目標物体)
 		ball = phScene->CreateSolid();

@@ -70,6 +70,12 @@ public:
  #define DEBUG_EVAL(x)
 #endif
 
+#ifdef _DEBUG
+#define DUMPLABEL(id)	char dumpLabel##id[sizeof(#id)] = #id;
+#else
+#define DUMPLABEL(id)
+#endif
+
 
 /**	デバッグ用 CSV出力ストリーム.
 	@verbatim

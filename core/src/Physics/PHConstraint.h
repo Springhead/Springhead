@@ -23,36 +23,11 @@ namespace Spr{;
 class PHTreeNode;
 
 /** 拘束のステート */
-struct PHConstraintState {
-	/// 拘束力の力積
-	Vec6d f;
 
-	/// 拘束誤差を位置のLCPで補正する場合の補正量*質量
-	Vec6d F;
-
-	// ----- PHJointに関連する変数
-
-	/// ばね部の距離（三要素モデル用）
-	Vec6d xs;
-
-	/// 拘束力にローパスをかけたもの
-	Vec6d fAvg;
-
-	/// 降伏したかどうか
-	bool   bYielded;
-
-	PHConstraintState() {
-		bYielded = false;
-	}
-};
-
-/// 拘束の基本クラス．PHConstraint, PHJointLimit, PHJointMotor, PHGearが派生
-class PHConstraintBase{
-public:
+struct PHConstraintBaseVars {
+	DUMPLABEL(PHConstraintBaseVarsBegin)
 	SpatialVector b, db, B;
 	SpatialVector A, dA, Ainv;
-	SpatialVector f;
-	SpatialVector F;
 	SpatialVector fnew;
 	SpatialVector Fnew;
 	SpatialVector df;
@@ -60,10 +35,30 @@ public:
 	SpatialVector dF;
 	SpatialVector dV;
 	SpatialVector res;  //response
-	
-	AxisIndex<6> axes;		///< 拘束軸管理クラス
 	bool         dv_changed[6];
 	bool         dv_changed_next[6];
+	DUMPLABEL(PHConstraintBaseVarsEnd)
+	void ClearVars();
+	PHConstraintBaseVars() { ClearVars(); }
+};
+struct PHConstraintBaseState {
+	DUMPLABEL(PHConstraintBaseStateBegin);
+	/// 拘束力の力積
+	SpatialVector f;
+	/// 拘束誤差を位置のLCPで補正する場合の補正量*質量
+	SpatialVector F;
+	DUMPLABEL(PHConstraintBaseStateEnd);
+};
+
+/// 拘束の基本クラス．PHConstraint, PHJointLimit, PHJointMotor, PHGearが派生
+class PHConstraintBase:public SceneObject, public PHConstraintBaseState, public PHConstraintBaseVars{
+public:
+	SPR_OBJECTDEF_ABST(PHConstraintBase);
+	ACCESS_STATE(PHConstraintBase);
+
+	DUMPLABEL(PHConstraintBaseBegin)	
+	AxisIndex<6> axes;		///< 拘束軸管理クラス
+	DUMPLABEL(PHConstraintBaseEnd)
 
 	virtual void SetupAxisIndex    (){}
 	virtual void Setup             (){}	///< 速度LCPの前処理
@@ -75,10 +70,11 @@ public:
 };
 
 /// 拘束
-class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintBase{
+class PHConstraint : public PHConstraintBase, public PHConstraintDesc{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
+	DUMPLABEL(PHConstraintBegin)
 
 	/// 拘束を管理するエンジン
 	PHConstraintEngine* engine;
@@ -95,6 +91,7 @@ public:
 	int solidState[2];	//	0:non-dynamical, 1:Articulated, 2:Free body
 
 	// ----- 計算用変数
+	DUMPLABEL(PHConstraintCalc)
 
 	/// ワールド座標系の中心に対する親(子)剛体の位置と向き   #* 剛体から毎回取ってくる値
 	SpatialTransform X[2];
@@ -125,10 +122,7 @@ public:
 	SpatialMatrix Jdot[2];
 	SpatialMatrix preJdot[2];
 	SpatialMatrix Jdotdot[2];
-
-	SpatialVector fAvg;					///< 拘束力にローパスをかけたもの
-	SpatialVector xs;					///< ばね部の距離（三要素モデル用）
-	bool   bYielded;					///< 降伏したかどうか
+	DUMPLABEL(PHConstrantCalcEnd);
 		
 	double fMaxDt[6], fMinDt[6];	///< Projection用の各軸のMin/Max
 
@@ -216,16 +210,11 @@ public:
 	void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
 	void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
 
-	bool         IsYielded(){ return this->bYielded; }
-
 	/// Objectの仮想関数
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject() const;
 	virtual ObjectIf*	 GetChildObject(size_t i);
-
-	virtual size_t       GetStateSize() const { return sizeof(PHConstraintState); }
-	virtual bool         GetState(void* s) const;
-	virtual void         SetState(const void* s);
+	virtual size_t		 NChildObjectForState() const { return 0; }
 };
 
 /// 拘束コンテナ

@@ -520,6 +520,31 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	pos -= 1;
 	return NULL;
 }
+size_t PHScene::NChildObjectForState() const {
+	return size_t(NSolids() + NJoints() + NPaths() + NIKActuators() + NIKEndEffectors()
+		+ 2)
+		; // for PHConstraintEngine and PHIKEngine
+}
+ObjectIf* PHScene::GetChildObjectForState(size_t pos) {
+	//return engines[pos]->Cast();
+	if (pos < (size_t)NSolids()) return GetSolids()[pos];
+	pos -= NSolids();
+	if (pos < (size_t)NJoints()) return GetJoint((int)pos);
+	pos -= NJoints();
+	
+	if (pos < (size_t)NPaths()) return GetPath((int)pos);
+	pos -= NPaths();
+	if (pos < (size_t)NIKActuators()) return GetIKActuator((int)pos);
+	pos -= NIKActuators();
+	if (pos < (size_t)NIKEndEffectors()) return GetIKEndEffector((int)pos);
+	pos -= NIKEndEffectors();
+	if (pos < 1) return GetConstraintEngine();
+	pos--;
+	if (pos < 1) return GetIKEngine();
+	pos -= 1;
+	return NULL;
+}
+
 bool PHScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
 	PHSolid* solid = DCAST(PHSolid, o);
@@ -720,131 +745,6 @@ void PHScene::StepHapticSync() {
 	if (hapticEngine) hapticEngine->StepHapticSync();
 }
 
-size_t PHScene::GetStateSize() const{
-	return sizeof(PHSceneState) + (constraintEngine ? constraintEngine->GetStateSize() : 0);
-}
-void PHScene::ConstructState(void* m) const{
-	new (m) PHSceneState();
-	char* p = (char*)m;
-	p += sizeof(PHSceneState);
-	if (constraintEngine){
-		constraintEngine->ConstructState(p);
-	}
-}
-void PHScene::DestructState(void* m) const{
-	char* p = (char*)m;
-	((PHSceneState*)p)->~PHSceneState();
-	p += sizeof(PHSceneState);
-	if (constraintEngine){
-		constraintEngine->DestructState(p);
-	}
-}
-bool PHScene::GetState(void* s) const{
-	char* p = (char*) s;
-	*(PHSceneState*)p = *this;
-	p += sizeof(PHSceneState);
-	if (constraintEngine){
-		constraintEngine->GetState(p);
-	}
-	return true;
-}
-void PHScene::SetState(const void* s){
-	const char* p = (char*) s;
-	*(PHSceneState*)this = *(const PHSceneState*)p;
-	p += sizeof(PHSceneState);
-	if (constraintEngine){
-		constraintEngine->SetState(p);
-	}
-}
-
-void PHScene::GetStateR(char*& s){
-	bool rv = GetState(s);
-	size_t sz = GetStateSize();
-	s += sz;
-	assert(rv || sz==0);
-	size_t n = NChildObject();
-	for(size_t i=0; i<n; ++i){
-		// childとしてConstraintは除外
-		/*→Constraintをセーブしたい時は
-		PHConstrainEngine::SetBSaveConstraintsをtrueに
-		*/
-		if(! DCAST(PHConstraintIf, GetChildObject(i))){
-			((PHSolid*)GetChildObject(i))->GetStateR(s);
-		}
-	}
-}
-void PHScene::SetStateR(const char*& s){
-	SetState(s);
-	s += GetStateSize();
-	size_t n = NChildObject();
-	for(size_t i=0; i<n; ++i){
-		// childとしてConstraintは除外
-		/*→Constraintをセーブしたい時は
-		PHConstrainEngine::SetBSaveConstraintsをtrueに
-		*/
-		if(! DCAST(PHConstraintIf, GetChildObject(i))){
-			((PHSolid*)GetChildObject(i))->SetStateR(s);
-		}
-	}
-}
-bool PHScene::WriteStateR(std::ostream& fout){
-	fout << '\n';
-	fout.write(GetTypeInfo()->ClassName(), strlen(GetTypeInfo()->ClassName()));
-	fout << '\t';
-	size_t ss = GetStateSize();
-	char* state = new char[ss];
-	ConstructState(state);
-	GetState(state);
-	fout.write((char*)&ss, sizeof(ss));
-	fout.write(state, ss);
-	if (constraintEngine->bSaveConstraints){
-		int off = (int)(ss - sizeof(PHConstraintsSt));
-		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
-		if (cst->gears.size()) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintState)*cst->gears.size());
-		if (cst->joints.size()) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*cst->joints.size());
-	}
-	DestructState(state);
-	delete[] state;
-	size_t n = NSolids();
-	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteStateR(fout);
-	return true;
-}
-bool PHScene::ReadStateR(std::istream& fin){
-	char buf[1024];
-	memset(buf, 0, sizeof(buf));
-	if (fin.get() != '\n') assert(0);
-	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
-	assert(strcmp(buf, GetTypeInfo()->ClassName()) == 0);
-	if (fin.get() != '\t') assert(0);
-	size_t ss;
-	fin.read((char*)&ss, sizeof(ss));
-	char* state = new char[ss];
-	fin.read(state, ss);
-
-	PHConstraintsSt* cst = NULL;
-	if (constraintEngine->bSaveConstraints){
-		int off = int(ss - sizeof(PHConstraintsSt));
-		cst = (PHConstraintsSt*)(state + off);
-		size_t gsz = cst->gears.size();
-		size_t jsz = cst->joints.size();
-		new (cst) PHConstraintsSt;
-		cst->gears.resize(gsz);
-		if (gsz) fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintState)*gsz);
-		cst->joints.resize(jsz);
-		if (jsz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*jsz);
-	}
-	SetState(state);
-	if (cst) cst->~PHConstraintsSt();
-	delete[] state;
-	size_t n = NSolids();
-	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadStateR(fin);
-	return true;
-}
-
-void PHScene::SetStateMode(bool bConstraints){
-	constraintEngine->bSaveConstraints = bConstraints;
-}
-
 void PHScene::SetContactDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz){
 	constraintEngine->SetDetectionRange(center, extent, nx, ny, nz);
 	penaltyEngine   ->SetDetectionRange(center, extent, nx, ny, nz);
@@ -858,13 +758,13 @@ int PHScene::GetMaterialBlending() {
 	return blendMode;
 }
 
-void PHScene::DumpObjectR(std::ostream& os, int level) const{
-	Object::DumpObjectR(os, level);
+void PHScene::DumpObjectR(std::ostream& os, ObjectIf::object_set_t dumped, int level) const{
+	Object::DumpObjectR(os, dumped, level);
 	size_t n = engines.size();
 	os << std::endl;
 	os << level << " PHScene::engines" << std::endl;
 	for(size_t i=0; i<n; ++i){
-		engines[(int)i]->DumpObjectR(os, level+1);
+		engines[(int)i]->DumpObjectR(os, dumped, level+1);
 	}
 }
 

@@ -1,8 +1,10 @@
-#	Do not edit. RunSwig.bat will update this file.
+#define DUMPLABEL(id)
+
 %ignore Spr::FISdkIf::CreateFile;
 %ignore Spr::FISdkIf::CreateSdk;
 %module FileIO
 %include "../../include/SprBase.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"

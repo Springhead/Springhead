@@ -10,6 +10,7 @@
 
 #include "PHBody.h"
 #include "PHEngine.h"
+#include "SprPhysicsDecl.hpp"
 
 namespace Spr{;
 
@@ -22,6 +23,7 @@ class PHScene;
 class PHConstraintEngine;
 
 struct PHSolidStatePrivate{
+	DUMPLABEL(PHSolidStatePrivate)
 	bool		bFrozen;		///<	フリーズ状態か
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	//	剛体に加えられた力
@@ -52,20 +54,28 @@ protected:
 public:
 	///@name LCP関連補助変数
 	//@{
+	DUMPLABEL(LCPRelated)
 	PHConstraintEngine* engine;
 	PHTreeNode*	        treeNode;	  ///< 関節系を構成している場合の対応するノード
-	
+	///@name LCP関連補助変数
+	//@{
+	DUMPLABEL(minv)
 	double		        minv;		  ///< 質量の逆数
 	Matrix3d	        Iinv;		  ///< 慣性行列の逆行列
 	SpatialMatrix		Minv;
+	DUMPLABEL(fv)
 	SpatialVector       f;			  ///< ローカル座標での外力
 	SpatialVector       v;			  ///< ローカル座標での現在の速度
 	SpatialVector       dv0;		  ///< 外力のみによる速度変化
+	DUMPLABEL(dv)
 	SpatialVector		dv;			  ///< 外力と拘束力による速度変化
+	DUMPLABEL(DV)
 	SpatialVector       dV;			  ///< Correctionによる移動量，回転量
 	double				velocityNorm;
 	double				angVelocityNorm;
-	
+	DUMPLABEL(LCPRelatedEnd)
+	//@}
+
 	///	LCP関連補助変数の初期化。毎ステップLCPの前に呼ばれる。
 	void UpdateCacheLCP(double dt);
 	///	dvを速度に足し込む 
@@ -78,7 +88,8 @@ public:
 		
 public:
 	SPR_OBJECTDEF(PHSolid);
-	ACCESS_DESC_STATE_PRIVATE(PHSolid);
+	ACCESS_DESC(PHSolid);
+	ACCESS_STATE_PRIVATE1(PHSolid, PHBody);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	virtual SceneObjectIf* CloneObject();

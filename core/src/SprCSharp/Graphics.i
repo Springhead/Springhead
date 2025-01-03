@@ -1,4 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::GRDeviceIf::Print;
 %ignore Spr::GRFrameIf::CalcBBox;
 %ignore Spr::GRFrameIf::GetTransform;
@@ -45,6 +44,7 @@
 /*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"

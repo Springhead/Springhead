@@ -52,6 +52,7 @@ typedef std::vector< UTRef<PHRay> > PHRays;
 
 class SPR_DLL PHScene : public Scene, public PHSceneDesc{
 	SPR_OBJECTDEF(PHScene);
+	ACCESS_DESC_STATE(PHScene);
 public:
 	PHEngines				engines;
 protected:
@@ -246,27 +247,20 @@ public:
 	PHOpSpHashColliAgentIf* GetOpColliAgent();
 	PHTrackingEngineIf*		GetTrackingEngine();
 	PHHapticPointerIf*		CreateHapticPointer();
-	void					SetStateMode(bool bConstraints);
 	
 	virtual void			Clear();
 	virtual ObjectIf*		CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t			NChildObject() const;
-	virtual ObjectIf*		GetChildObject(size_t pos);
+	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual const ObjectIf* GetChildObject(size_t pos) const { return ((PHScene*)this)->GetChildObject(pos); }
 	virtual bool			AddChildObject(ObjectIf* o);
 	virtual bool			DelChildObject(ObjectIf* o);	
-	
-	ACCESS_DESC(PHScene);
-	virtual size_t      GetStateSize   () const;
-	virtual void        ConstructState (void* m) const;
-	virtual void        DestructState  (void* m) const;
-	virtual const void* GetStateAddress() const { return NULL; } // not supported.
-	virtual bool        GetState       (void* s) const;
-	virtual void        SetState       (const void* s);
-	virtual void        GetStateR      (char*& s);
-	virtual void        SetStateR      (const char*& state);
-	virtual bool        WriteStateR    (std::ostream& fout);
-	virtual bool        ReadStateR     (std::istream& fin);
-	virtual void        DumpObjectR    (std::ostream& os, int level=0) const;
+
+	virtual size_t		NChildObjectForState() const;
+	virtual ObjectIf* GetChildObjectForState(size_t pos);
+
+
+	virtual void        DumpObjectR    (std::ostream& os, ObjectIf::object_set_t dumped =ObjectIf::object_set_t(), int level=0) const;
 	virtual UTPerformanceMeasureIf* GetPerformanceMeasure() {
 		return performanceMeasure;
 	}

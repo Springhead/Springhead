@@ -109,7 +109,6 @@ void PHHapticStepLocalDynamics::PredictSimulation3D(){
 #if 1	//TEST sim
 	/// テストシミュレーション実行
 	/// 予測シミュレーションのために現在の剛体の状態を保存する
-	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
 	states->SaveState(phScene);
 	for(int i = 0; i < NHapticSolids(); i++){
 		if(((PHSolidForHaptic*)GetHapticSolid(i))->doSim == 0) continue;

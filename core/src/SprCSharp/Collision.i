@@ -1,5 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
-
 %module Collision
 
 // %feature ‚Í %include ‚æ‚è‚à‘O‚ÉŽw’è‚·‚é‚±‚Æ.
@@ -8,6 +6,7 @@
 %feature("returns_array") Spr::CDBoxIf::GetVertices;
 
 %include "../../include/SprBase.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Collision/SprCDShape.h"

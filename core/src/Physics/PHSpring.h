@@ -72,8 +72,8 @@ public:
 	virtual double GetYieldStress() { return yieldStress; }
 	virtual void SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	virtual double GetHardnessRate() { return hardnessRate; }
-	virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
-	virtual Vec3d GetSecondMoment() { return secondMoment; }
+	//virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
+	//virtual Vec3d GetSecondMoment() { return secondMoment; }
 
 	// <!!>
 	virtual Vec6d GetMotorForce() {
@@ -85,6 +85,11 @@ public:
 	virtual void SetOffsetForce(const Vec6d& offsetForce) { this->offsetForce = offsetForce; }
 	virtual void SetTargetVelocity(const Vec6d& targetVelocity) { this->targetVelocity = targetVelocity; }
 	virtual Vec6d GetTargetVelocity() { return this->targetVelocity; }
+
+	size_t NChildObjectForState() const { return 1; }
+	virtual ObjectIf* GetChildObjectForState(size_t i) {
+		return motor->Cast();
+	}
 };
 
 }

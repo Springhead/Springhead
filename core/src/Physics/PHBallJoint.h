@@ -90,6 +90,12 @@ public:
 		}
 		return PHConstraint::AddChildObject(o);
 	}
+	virtual size_t NChildObjectForState() const {
+		return (limit ? 1 : 0) + motors.size();
+	}
+	virtual ObjectIf* GetChildObjectForState(size_t i) {
+		return GetChildObject(i);
+	}
 	virtual size_t NChildObject() const {
 		return((limit?1:0) + motors.size() + PHConstraint::NChildObject());
 	}
@@ -172,8 +178,8 @@ public:
 	double      GetYieldStress() { return yieldStress; }
 	void        SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
 	double      GetHardnessRate() { return hardnessRate; }
-	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
-	Vec3d       GetSecondMoment() { return secondMoment; }
+	//void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
+	//Vec3d       GetSecondMoment() { return secondMoment; }
 	int         NMotors();
 	PHBallJointMotorIf** GetMotors(){
 		return motors.empty() ? NULL : (PHBallJointMotorIf**)&*motors.begin();

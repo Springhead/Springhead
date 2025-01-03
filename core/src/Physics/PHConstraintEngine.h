@@ -86,12 +86,6 @@ public:
 	PHShapePairForLCPIf* GetShapePair(int i, int j){return shapePairs.item(i, j)->Cast();}
 };
 
-struct PHConstraintsSt{
-	std::vector<PHConstraintState> joints;
-	std::vector<PHConstraintState> gears;
-	std::vector<PHTreeNodeSt> trees;
-};
-
 
 class PHConstraintEngine : public PHConstraintEngineDesc, public PHContactDetector{
 	friend class PHConstraint;
@@ -103,25 +97,28 @@ public:
 	typedef std::vector< UTRef<PHRootNode> >	PHRootNodes;
 	typedef std::vector< UTRef<PHPath> >		PHPaths;
 	typedef std::vector< PHConstraintBase* >	PHConstraintBases;
-	
+	DUMPLABEL(points)
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
 	
+	DUMPLABEL(trees)
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;			///< ギアの配列
 	PHPaths			paths;			///< パスの配列
 
 	PHConstraints		cons;		///< 有効な拘束の配列
-	PHConstraintBases	cons_base;
+	PHConstraintBases	cons_base;	///< Valid PHConstraintBase objects.
 
 	int count;
 
+	DUMPLABEL(ptimers)
 	/// Peformance counter
 	UTQPTimer ptimer;
 	UTLongLong& timeCollision;
 	UTLongLong& timeSetup;
 	UTLongLong& timeIterate;
-
+	DUMPLABEL(ptimersEnd)
+		
 public:
 	PHConstraintEngine(UTPerformanceMeasureIf* pm = UTPerformanceMeasureIf::GetInstance("global"));
 	~PHConstraintEngine();
@@ -136,11 +133,6 @@ public:
 	virtual bool	AddChildObject(ObjectIf* o);
 	virtual bool	DelChildObject(ObjectIf* o);
 	virtual void	Clear         ();
-	virtual size_t	GetStateSize  () const;
-	virtual void	ConstructState(void* m) const;
-	virtual void	DestructState (void* m) const;
-	virtual bool	GetState      (void* s) const;
-	virtual void	SetState      (const void* s);
 
 	// PHEngineの仮想関数
 	virtual int  GetPriority() const {return SGBP_CONSTRAINTENGINE;}
@@ -158,6 +150,7 @@ public:
 	void Iterate();					///< 速度更新LCPの一度の反復
 	void IterateCorrection();		///< 誤差修正LCPの一度の反復
 
+	void UpdateForStateDebug();
 	// インタフェースの実装
 	PHConstraintsIf* GetContactPoints();
 	void	SetVelCorrectionRate     (double value){velCorrectionRate = value;}
@@ -166,7 +159,6 @@ public:
 	double	GetPosCorrectionRate     (){return posCorrectionRate;}
 	void	SetContactCorrectionRate (double value){contactCorrectionRate = value;}
 	double	GetContactCorrectionRate (){return contactCorrectionRate;}
-	void	SetBSaveConstraints      (bool value){bSaveConstraints = value;}
 	void	SetUpdateAllSolidState   (bool flag){bUpdateAllState = flag;}
 	void	SetUseContactSurface     (bool flag){bUseContactSurface = flag;}
 	void	SetShrinkRate            (double data){shrinkRate = data;}
@@ -186,6 +178,7 @@ public:
 		std::vector< std::vector<Vec3f> > sections;
 		void Clear();
 	};
+	DUMPLABEL(contactInfoQueue)
 	struct ContactInfoQueue{
 		ContactInfo queue[3];
 		volatile int reading;	//	読出中のindex(0..2) 0を読んでいる間、2に書き込む、1に読み進んでも大丈夫。
@@ -193,6 +186,7 @@ public:
 		ContactInfoQueue();
 	} contactInfoQueue;
 	void UpdateContactInfoQueue();
+	DUMPLABEL(contactInfoQueueEnd)
 };
 
 }	//	namespace Spr

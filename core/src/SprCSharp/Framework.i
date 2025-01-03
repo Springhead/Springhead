@@ -1,4 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::FWDialogIf::CreateControl;
 %ignore Spr::FWObjectIf::LoadMesh;
 %ignore Spr::FWSceneIf::AddHumanInterface;
@@ -11,8 +10,10 @@
 %ignore Spr::FWAppBase::timers;
 %ignore Spr::FWAppBase::Timers;
 // %ignore Spr::FWApp;
+
 %module Framework
 %include "../../include/SprBase.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"

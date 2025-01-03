@@ -58,7 +58,7 @@ size_t PHTreeNode::NChildObject() const{
 }
 
 ObjectIf* PHTreeNode::GetChildObject(size_t i){
-	if(joint){
+	if (joint) {
 		if(i == 0)
 			return joint->Cast();
 		i--;
@@ -390,9 +390,12 @@ void PHTreeNode::UpdatePosition(double dt){
 		(*it)->UpdatePosition(dt);
 }
 
+
+
 //-----------------------------------------------------------------------------
 
 PHRootNode::PHRootNode(const PHRootNodeDesc& desc){
+	SetDesc(&desc);
 	root   = this;
 	bReady = false;
 }
@@ -414,7 +417,7 @@ size_t PHRootNode::NChildObject() const{
 }
 
 ObjectIf* PHRootNode::GetChildObject(size_t i){
-	if(solid){
+	if (solid) {
 		if(i == 0)
 			return solid->Cast();
 		i--;

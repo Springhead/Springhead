@@ -193,6 +193,9 @@ bool PHSolid::IsArticulated(){
 }
 
 void PHSolid::UpdateCacheLCP(double dt){
+	velocityNorm = velocity.norm();
+	angVelocityNorm = angVelocity.norm();
+
 	if(mass != 0)
 		minv = GetMassInv();
 	Iinv = GetInertiaInv();

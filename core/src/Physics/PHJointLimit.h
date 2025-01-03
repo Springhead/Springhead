@@ -24,7 +24,7 @@ class PH1DJoint;
 class PHBallJoint;
 
 ///	1自由度関節の可動域拘束
-class PH1DJointLimit : public SceneObject, public PHConstraintBase {
+class PH1DJointLimit : public PHConstraintBase {
 public:
 	SPR_OBJECTDEF(PH1DJointLimit);
 	SPR_DECLMEMBEROF_PH1DJointLimitDesc;
@@ -63,7 +63,7 @@ public:
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 ///	球関節の可動域拘束（ベースクラス）
-class PHBallJointLimit : public SceneObject, public PHConstraintBase{
+class PHBallJointLimit : public PHConstraintBase{
 public:
 	SPR_OBJECTDEF(PHBallJointLimit);
 	//SPR_DECLMEMBEROF_PHBallJointLimitState;

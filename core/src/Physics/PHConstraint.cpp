@@ -19,6 +19,12 @@ namespace Spr{
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHConstraint
 
+void PHConstraintBaseVars::ClearVars() {
+	char* start = (char*)&b;
+	char* end = (char*)&dv_changed_next + sizeof(dv_changed_next);
+	memset(start, 0, end-start);
+}
+
 // コンストラクタ
 PHConstraint::PHConstraint() {
 	solid[0] = solid[1] = NULL;
@@ -360,24 +366,6 @@ ObjectIf* PHConstraint::GetChildObject(size_t i) {
 	return( (i<2) ? (solid[i]->Cast()) : ((ObjectIf*)(NULL)) );
 }
 
-bool PHConstraint::GetState(void* s) const {
-	PHConstraintState* st = (PHConstraintState*)s;
-	st->f        = f;
-	st->F        = F;
-	st->xs       = xs;
-	st->fAvg     = fAvg;
-	st->bYielded = bYielded;
-	return true;
-}
 
-void PHConstraint::SetState(const void* s){
-	const PHConstraintState* st = (const PHConstraintState*)s;
-	(Vec6d&)f    = st->f       ;
-	(Vec6d&)F    = st->F       ;
-	(Vec6d&)xs   = st->xs      ;
-	(Vec6d&)fAvg = st->fAvg    ;
-	bYielded     = st->bYielded;
-
-}
 
 }
