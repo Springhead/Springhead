@@ -19,6 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Base.i" />
+    <None Include="..\Collision.i" />
+    <None Include="..\Creature.i" />
+    <None Include="..\FileIO.i" />
+    <None Include="..\Foundation.i" />
+    <None Include="..\Framework.i" />
+    <None Include="..\Graphics.i" />
+    <None Include="..\HumanInterface.i" />
+    <None Include="..\Physics.i" />
     <None Include="CSharpSwig.bat" />
     <None Include="Makefile.RunSwig_CSharp" />
     <None Include="ReplaceInclude.py" />

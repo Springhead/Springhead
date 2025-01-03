@@ -1,4 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::HIRealDeviceIf::Rent;
 // %ignore Spr::HISdkIf::AddRealDevice;
 %ignore Spr::HISdkIf::FindRealDevice;
@@ -9,6 +8,7 @@
 %module HumanInterface
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"
 %include "../../include/HumanInterface/SprHIBase.h"
