@@ -11,6 +11,7 @@ namespace Spr{;
 const double sqEpsilon = 1e-4;
 const double epsilon = 1e-8;
 const double epsilon2 = epsilon*epsilon;
+const double support_epsilon = 1.0e-4;
 
 //----------------------------------------------------------------------------
 //	CDBox
@@ -124,6 +125,49 @@ int CDBox::Support(Vec3f& w, const Vec3f& v) const {
 	w = base[curPos];
 	return curPos;
 }
+// どこにサポートポイントがあるかをint値で返す
+// Vertex = 0, Edge = 1, Face = 2
+// v は　local.Ex()が入ってくる
+int CDBox::SupportTag(const Vec3f& v, std::vector<Vec3d>& c_vec) const {
+
+	// 最大内積値中に同じサポートポイントはいくつあるか数える
+	int count = 0;
+
+	float d1 = 0.0, d2 = 0.0;
+	for (unsigned int i = 0; i < 8; ++i) {		// 8頂点
+		d1 = base[i] * v;
+		if (d1 > d2) {
+			d2 = d1;
+		}
+	}
+
+	for (unsigned int i = 0; i < 4; i++) {
+		d1 = base[i] * v;
+		if (std::abs(d1 - d2) < support_epsilon) {
+			count++;
+			c_vec.push_back(base[i]);
+		}
+	}
+	for (unsigned int i = 7; i > 3; i--) {
+		d1 = base[i] * v;
+		if (std::abs(d1 - d2) < support_epsilon) {
+			count++;
+			c_vec.push_back(base[i]);
+		}
+	}
+
+	switch (count) {
+	case 1:
+		return 1; // box : VERTEX
+	case 2:
+		return 2; // box : EDGE
+	default:
+		return 3; // box : FACE
+	}
+
+}
+
+
 std::vector<int>& CDBox::FindNeighbors(int vtx){
 	return neighbor[vtx];
 }

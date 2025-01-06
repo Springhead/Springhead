@@ -499,6 +499,7 @@ namespace Spr {
 				fnew[2] *= k;
 				phceInfo.necessaryInfo.frictionMargin = 0.0;
 			}
+			fnew[1] = fnew[2] = 0;
 			return;
 			/*
 			if (vmax2cont < vmax2ideal) {

@@ -53,6 +53,9 @@ public:
 
 	///	サポートポイントを求める．
 	int Support(Vec3f& w, const Vec3f& v) const ;
+	/// サポートポイントがどのように当たっているかを求める．
+	int SupportTag(const Vec3f& v, std::vector<Vec3d>& c_vec) const;
+
 	///	切り口を求める．接触解析に使う．
 	/// ただし、球体に関しては、切り口は求めない。接触解析時には最近傍の１点さえあればいい。
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
