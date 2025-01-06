@@ -454,7 +454,8 @@ namespace Spr {
 
 		case 0: // ‚’¼•ûŒüiÚG–@ü•ûŒüj
 		{
-			if (shapePair->depth < GetScene()->GetContactTolerance() && vjrel[0] * GetScene()->GetTimeStep() < GetScene()->GetContactTolerance()) {
+			if (shapePair->depth < GetScene()->GetContactTolerance() 
+				&& vjrel[0] * GetScene()->GetTimeStep() < GetScene()->GetContactTolerance()) {
 				fnew[0] = 0.0;
 			}
 			if (fnew[0] < EPSILON_10) {
