@@ -152,6 +152,7 @@
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <OpenMPSupport>true</OpenMPSupport>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(DependencyLib)/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -179,6 +180,7 @@
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <OpenMPSupport>true</OpenMPSupport>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(DependencyLib)/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -206,6 +208,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>
@@ -236,6 +239,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>
@@ -266,6 +270,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>
@@ -296,6 +301,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>

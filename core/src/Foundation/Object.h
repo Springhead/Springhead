@@ -392,7 +392,7 @@ public:
 
 
 	///	メモリデバッグ用。単純にツリーのオブジェクトをファイルにダンプする。
-	virtual void DumpObjectR(std::ostream& os, ObjectIf::object_set_t& dumped=ObjectIf::object_set_t(), int level = 0) const;
+	virtual void DumpObjectR(std::ostream& os, ObjectIf::object_set_t& dumped, int level = 0) const;
 
 protected:
 	/// 開き括弧
