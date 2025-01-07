@@ -126,6 +126,7 @@ public:
 	Vec2d avgBristlesDeflectionVel;	///< 剛毛の平均変位(接触面上の座標)を微分したもの　平均変位の変化の速さを表す
 	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
 	Vec3d pointerPos;				///< ハプティックポインタの位置(World座標)
+	double pointerDepth;			///< ハプティックポインタの最も沈み込んでいる部分の深さ(侵入量)
 	Vec3d proxyPos;					///< プロキシの位置(World座標)
 	Vec3d objectVel;				///< 接触している相手の物体の速度(World座標)
 	Vec2d relativeVelOnSurface;		///< プロキシと接触している物体の相対速度(接触面上の座標)

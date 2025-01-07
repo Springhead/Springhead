@@ -61,6 +61,7 @@ PHShapePairForHaptic::PHShapePairForHaptic() {
 	avgBristlesDeflectionVel = Vec2d();
 	contactSurfacePose = Posed();
 	pointerPos = Vec3d();
+	pointerDepth = 0;
 	proxyPos = Vec3d();
 	objectVel = Vec3d();
 	relativeVelOnSurface = Vec2d();
