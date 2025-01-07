@@ -17,8 +17,8 @@ PHMaterial::PHMaterial(){
 
 	reflexSpring = 5.0f;
 	reflexDamper = 0.1f;
-	frictionSpring = 5.0;
-	frictionDamper = 0.1f;
+	frictionSpring = 1500.0f;// 5.0;
+	frictionDamper = 0.0f;//0.1f;
 	vibA = -20;
 	vibB = 90;
 	vibW = 200;
@@ -40,9 +40,9 @@ PHMaterial::PHMaterial(){
 	stribeckmu = 0.1f;
 
 	///LuGre Modelのための係数
-	bristlesSpringK = 100000.0;			///< LuGreモデルにおける剛毛のバネ係数
-	bristlesDamperD = sqrt(100000.0);	///< LuGreモデルにおける剛毛のダンパ係数
-	bristlesViscosityV = 0.4f;			///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	bristlesSpringK = 4000.0;//100000.0;			///< LuGreモデルにおける剛毛のバネ係数
+	bristlesDamperD = 4.0;//sqrt(100000.0);	///< LuGreモデルにおける剛毛のダンパ係数
+	bristlesViscosityV = 0.4;//0.4f;			///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
 
 //GMS用

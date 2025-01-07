@@ -66,9 +66,9 @@ PHShapePairForHaptic::PHShapePairForHaptic() {
 	relativeVelOnSurface = Vec2d();
 	avgStickingTime = Vec2d();
 	frictionForce = Vec2d();
-	LuGreParameterA = 0.5;
-	LuGreParameterB = 2.0;
-	LuGreParameterC = 10.0;
+	LuGreParameterA = 1.0;//0.1;//1.0;//0.5
+	LuGreParameterB = 1.6;// 3.0;// 1.6;//2.0
+	LuGreParameterC = 40.0;//10.0
 	LuGreFunctionG = Vec2d(LuGreParameterA, LuGreParameterA);
 }
 

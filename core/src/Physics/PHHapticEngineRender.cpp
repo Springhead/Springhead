@@ -347,7 +347,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		//連立方程式を解いた結果、x[0]とx[1]のどちらを採用するか決める
 		bool conditionSatisfied[2];//プロキシの相対速度が正の場合と、負の場合について、それぞれ条件が満たされているかを表す
 		conditionSatisfied[0] = ( x[0][1] >= 0 );
-		conditionSatisfied[1] = ( x[1][1] <= 0 );
+		conditionSatisfied[1] = ( x[1][1] < 0 );
 		
 		//printf("(%f, %f, %f) (%f, %f, %f)\n", x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2]);
 
@@ -355,19 +355,20 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		if (conditionSatisfied[0]) {
 			if (conditionSatisfied[1]) {
 				//どちらも条件を満たしている場合
-				if (i == 0) DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしています: " << x[0][1] << ", " << x[1][1] << std::endl;
+				//if (i == 0) DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしています: " << x[0][1] << ", " << x[1][1] << std::endl;
 				
 				//printf("(%f, %f, %f) (%f, %f, %f)       (lastZ: %f), det(%f, %f)\n", x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2], lastAvgBristlesDeflection[i], det(W[0]), det(W[1]));
 			}
 			//プロキシの相対速度が正の場合のみ条件を満たしているというケース
-			if (i == 0) DSTR << "正の場合のみ" << std::endl;
+			//if (i == 0) DSTR << "正の場合のみ" << std::endl;
 		} else if (conditionSatisfied[1]) {
 			//プロキシの相対速度が負の場合のみ条件を満たしているというケース
-			if (i == 0) DSTR << "負の場合のみ" << std::endl;
+			//if (i == 0) DSTR << "負の場合のみ" << std::endl;
 			selectedIndex = 1;
 		} else {
 			//どちらも条件を満たしていない場合
 			if (i == 0) DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしていません" << std::endl;
+			selectedIndex = 1;
 		}
 		
 		//計算結果を保存
@@ -376,6 +377,9 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		sh->avgBristlesDeflectionVel[i] = x[selectedIndex][0];										//剛毛の平均変位(接触面上の座標)の微分
 		sh->frictionForce[i] = x[selectedIndex][2];													//摩擦力(接触面上の座標)
 
+		/*if (i == 0) {
+			DSTR << sh->avgStickingTime << sh->LuGreFunctionG << S << "," << T << std::endl;
+		}*/
 	}
 
 	//計算結果の保存
@@ -397,8 +401,8 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	sh->irs.push_back(fricIr);
 	
 	//デバッグ用
-	DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y  << ")" << std::endl;
-
+	//DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y  << ")" << std::endl;
+	//DSTR << "T : " << sh->avgStickingTime[0] << std::endl;
 	return true;
 }
 
