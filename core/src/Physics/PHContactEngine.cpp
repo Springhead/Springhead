@@ -448,475 +448,143 @@ namespace Spr {
 
 
 	// hemi 80
-	void PHContactEngine::Projection(SpatialVector & fnew, const int i, bool& updat)
-	{
-		switch (i) {
+	//法線方向（垂直方向）の力を計算する処理 (Case0)
+	void PHContactEngine::ProjectionNormal(SpatialVector& fnew) {
+		if (shapePair->depth < GetScene()->GetContactTolerance() &&
+			vjrel[0] * GetScene()->GetTimeStep() < GetScene()->GetContactTolerance()) {
+			fnew[0] = 0.0;
+		}
+		if (fnew[0] < EPSILON_10) {
+			fnew[0] = 0.0;
+		}
+	}
 
-		case 0: // 垂直方向（接触法線方向）
-		{
-			if (shapePair->depth < GetScene()->GetContactTolerance() 
-				&& vjrel[0] * GetScene()->GetTimeStep() < GetScene()->GetContactTolerance()) {
-				fnew[0] = 0.0;
-			}
-			if (fnew[0] < EPSILON_10) {
-				fnew[0] = 0.0;
-			}
+	//接線方向（水平方向）の力や摩擦を計算する処理 (Case1, Case2)
+	void PHContactEngine::ProjectionTangential(SpatialVector& fnew) {
+		if (fnew[0] < EPSILON_10) {
+			fnew[1] = 0.0;
+			fnew[2] = 0.0;
 			return;
 		}
-		/*
-			// 接触断面内での最大横速度
-			double vmax = sqrt(vjrel[1]*vjrel[1] + vjrel[2]*vjrel[2]) + contactRadius*std::abs(vjrel[3]);
-			double vth  = GetScene()->GetFrictionThreshold();
-	
-			double ftmax = (vmax < vth ? mu0 : mu) * fnew[0];
-			double ft    = sqrt(fnew[1]*fnew[1] + fnew[2]*fnew[2]);
 
-			frictionMargin = ftmax - ft;
+		double vmax2cont = sqrt(vjrel[1] * vjrel[1] + vjrel[2] * vjrel[2]);
+		double vmax2ideal = GetScene()->GetFrictionThreshold();
 
-			if(frictionMargin < 0.0){
+		double ftmax = (vmax2cont < vmax2ideal ? mu0 : mu) * fnew[0];
+		double ft = sqrt(fnew[1] * fnew[1] + fnew[2] * fnew[2]);
+
+		phceInfo.necessaryInfo.frictionMargin = ftmax - ft;
+
+		if (phceInfo.necessaryInfo.frictionMargin < 0.0) {
 			double k = ftmax / ft;
 			fnew[1] *= k;
 			fnew[2] *= k;
-			frictionMargin = 0.0;
-			}
-		*/
-		case 1: // 接触面方向（normalと垂直)
-		{
-
-			Vec3d vrelA = phceInfo.necessaryInfo.ContLocal.inv() * (phceInfo.objectInfo[0].PHSptr->GetAngularVelocity() ^ (phceInfo.necessaryInfo.ContPoint - phceInfo.objectInfo[0].PHSptr->GetCenterPosition()));
-					- phceInfo.necessaryInfo.ContLocal.inv() * phceInfo.objectInfo[1].PHSptr->GetAngularVelocity() ^ (phceInfo.necessaryInfo.ContPoint - phceInfo.objectInfo[1].PHSptr->GetCenterPosition());
-			double vmax2cont = sqrt(vjrel[1] * vjrel[1] + vjrel[2] * vjrel[2]) + sqrt(vrelA[1]*vrelA[1] + vrelA[2]*vrelA[2]);
-			double vmax2ideal = GetScene()->GetFrictionThreshold();
-
-			double ftmax = (vmax2cont < vmax2ideal ? mu0 : mu) * fnew[0];
-			double ft = sqrt(fnew[1] * fnew[1] + fnew[2] * fnew[2]);
-
-			phceInfo.necessaryInfo.frictionMargin = ftmax - ft;
-
-			if (phceInfo.necessaryInfo.frictionMargin < 0.0) {
-				double k = ftmax / ft;
-				fnew[1] *= k;
-				fnew[2] *= k;
-				phceInfo.necessaryInfo.frictionMargin = 0.0;
-			}
-			fnew[1] = fnew[2] = 0;
-			return;
-			/*
-			if (vmax2cont < vmax2ideal) {
-				if (ft > ftmax) {
-					ft = ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-				else if (ft < -ftmax) {
-					ft = -ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-			}
-			else {
-				if (ft > ftmax) {
-					ft = ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-				else if (ft < -ftmax) {
-					ft = -ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-			}
-			*/
+			phceInfo.necessaryInfo.frictionMargin = 0.0;
 		}
-		case 2: // 接触面方向（normalと垂直)
-		{
-			double vmax2cont = sqrt(vjrel[1] * vjrel[1] + vjrel[2] * vjrel[2]);
-			double vmax2ideal = GetScene()->GetFrictionThreshold();
-
-			double ftmax = (vmax2cont < vmax2ideal ? mu0 : mu) * fnew[0];
-			double ft = sqrt(fnew[1] * fnew[1] + fnew[2] * fnew[2]);
-
-			phceInfo.necessaryInfo.frictionMargin = ftmax - ft;
-
-			if (vmax2cont < vmax2ideal) {
-				if (ft > ftmax) {
-					ft = ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-				else if (ft < -ftmax) {
-					ft = -ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-			}
-			else {
-				if (ft > ftmax) {
-					ft = ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-				else if (ft < -ftmax) {
-					ft = -ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-			}
-			return;
-		}
-		case 3:	//接触法線と垂直な方向のトルク
-		{
-			if (fnew[0] < EPSILON_10) {
-				fnew[3] = 0.0;
-				return;
-			}
-
-			// 接触法線垂直向きのfnew1, fnew2から生じるモーメント
-			// 接触法線垂直向きから生まれる力静止摩擦力のように扱う
-			// 拘束している力であると考えている
-
-			double ncop = phceInfo.necessaryInfo.NewCoP.y*fnew[2] - phceInfo.necessaryInfo.NewCoP.z*fnew[1];
-
-			// ここの2/3の意味とあとMarginらが必要な理由というのがまだ理解できない
-			double margin = (2.0 / 3.0)*phceInfo.necessaryInfo.copMargin*phceInfo.necessaryInfo.frictionMargin;
-			//double margin = (2.0/3.0)*contactRadius*frictionMargin;
-
-			if (fnew[3] - ncop > margin) fnew[3] = ncop + margin;
-			if (fnew[3] - ncop < -margin) fnew[3] = ncop - margin;
-
-			return;
-		}
-		case 4:
-		{
-
-			phceInfo.necessaryInfo.copMargin = EPSILON_10;
-			phceInfo.contactState4 = -2;
-			if (fnew[0] < EPSILON_10) {
-				fnew[4] = fnew[5] = 0;
-				return;
-			}
-
-			Vec3d CopFromContPoint = Vec3d(0.0, -fnew[5] / fnew[0], fnew[4] / fnew[0]);
-
-			CONTACT htc = HowToContact();
-			phceInfo.contactState4 = htc;
-
-			if (htc == CONTACT::POINT) {
-
-				phceInfo.necessaryInfo.NewCoP = Vec3d();
-				phceInfo.necessaryInfo.copMargin = 0.0;
-
-				fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
-				fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
-
-			}
-			else {
-
-				phceInfo.necessaryInfo.OldCoP = phceInfo.necessaryInfo.ContPoint + phceInfo.necessaryInfo.ContLocal * CopFromContPoint;	//	in world coordinate.
-
-				// 点が中にあれば処理が必要ない
-				bool isCopOnObject0 = isCoPInObject0(), isCopOnObject1 = isCoPInObject1();
-
-				if (isCopOnObject0 && isCopOnObject1) {
-					phceInfo.contactState4 = 10;
-
-					phceInfo.necessaryInfo.copMargin = 0.0;
-					//	for visualization only
-					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint);	//	in ContLocal coordinate.
-				}
-
-				else {
-
-					Vec3f w = Vec3f();
-
-					FindClosestPoint(w, phceInfo.necessaryInfo.OldCoP, htc, isCopOnObject0, isCopOnObject1);
-
-					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (w - phceInfo.necessaryInfo.ContPoint);	//	in ContLocal coordinate.
-					phceInfo.necessaryInfo.copMargin = 0.0;
-
-					fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
-					fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
-
-				}
-			}
-
-			if (phceInfo.necessaryInfo.copMargin != 0.0) {
-				Vec3d c = phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint;
-				phceInfo.necessaryInfo.copMargin = std::min(phceInfo.necessaryInfo.copMargin, -c * phceInfo.necessaryInfo.ContLocal.Ex());
-			}
-			return;
-		}
-		case 5://接触法線垂直方向に作用するトルク
-		{
-
-			phceInfo.necessaryInfo.copMargin = EPSILON_10;
-			phceInfo.contactState5 = -2;
-
-			if (fnew[0] < EPSILON_10) {
-
-				fnew[4] = 0, fnew[5] = 0;
-				return;
-			}
-
-			Vec3d CopFromContPoint = Vec3d(0.0, -fnew[5] / fnew[0], fnew[4] / fnew[0]);
-			DSTR << "CopFromContPoint:" << CopFromContPoint << std::endl;
-
-			CONTACT htc = HowToContact();
-			phceInfo.contactState5 = htc;
-
-			if (htc == CONTACT::POINT) {
-
-				phceInfo.necessaryInfo.NewCoP = Vec3d();
-				phceInfo.necessaryInfo.copMargin = 0.0;
-
-				fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
-				fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
-
-			}
-			else {
-
-				phceInfo.necessaryInfo.OldCoP = phceInfo.necessaryInfo.ContPoint + phceInfo.necessaryInfo.ContLocal * CopFromContPoint;
-
-				// 点が中にあれば処理が必要ない
-				bool isCopOnObject0 = isCoPInObject0(), isCopOnObject1 = isCoPInObject1();
-
-				if (isCopOnObject0 && isCopOnObject1) {
-					phceInfo.contactState5 = 10;
-
-					phceInfo.necessaryInfo.copMargin = 0.0;
-					//	for visualization only
-					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint);	//	in ContLocal coordinate.
-
-				}
-
-				else {
-
-					Vec3f w = Vec3f();
-
-					FindClosestPoint(w, phceInfo.necessaryInfo.OldCoP, htc, isCopOnObject0, isCopOnObject1);
-
-					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal * (w - phceInfo.necessaryInfo.ContPoint);
-					phceInfo.necessaryInfo.copMargin = 0.0;
-
-					fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
-					fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
-
-				}
-			}
-
-			if (phceInfo.necessaryInfo.copMargin != 0.0) {
-				Vec3d c = phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint;
-				phceInfo.necessaryInfo.copMargin = std::min(phceInfo.necessaryInfo.copMargin, -c * phceInfo.necessaryInfo.ContLocal.Ex());
-			}
-			return;
-		}
-
-		default:
-		{
-			return;
-		}
-		}
-		/*
-		switch (i) {
-
-		case 0: // 垂直方向（接触法線方向）
-		{
-			if (fnew[0] < EPSILON_10) {
-				fnew[0] = 0.0;
-			}
-
-			df[i] = fnew[i] - f[i];
-			f[i] = fnew[i];
-
-			if (std::abs(df[i]) > engine->dfEps) {
-				updat = true;
-				CompResponse(df[i], i);
-			}
-
-			break;
-
-		}
-
-		case 1: // 接触面方向（normalと垂直)
-		{
-			double vmax2cont = sqrt(vjrel[1] * vjrel[1] + vjrel[2] * vjrel[2]);
-			double vmax2ideal = GetScene()->GetFrictionThreshold();
-
-			double ftmax = (vmax2cont < vmax2ideal ? mu0 : mu) * fnew[0];
-			double ft = sqrt(fnew[1] * fnew[1] + fnew[2] * fnew[2]);
-
-			phceInfo.necessaryInfo.frictionMargin = ftmax - ft;
-
-			if (vmax2cont < vmax2ideal) {
-				if (ft > ftmax) {
-					ft = ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-				else if (ft < -ftmax) {
-					ft = -ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-			}
-			else {
-				if (ft > ftmax) {
-					ft = ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-				else if (ft < -ftmax) {
-					ft = -ftmax;
-					phceInfo.necessaryInfo.frictionMargin = 0.0;
-				}
-			}
-
-			
-			//if (frictionMargin < 0.0) {
-			//double k = ftmax / ft;
-			//fnew[1] *= k;
-			//fnew[2] *= k;
-			//frictionMargin = 0.0;
-			//}
-			
-
-			df[i] = fnew[i] - f[i];
-			f[i] = fnew[i];
-
-			if (std::abs(df[i]) > engine->dfEps) {
-				updat = true;
-				CompResponse(df[i], i);
-			}
-
-			break;
-		}
-		case 4://接触法線垂直方向に作用するトルク
-		{
-
-			phceInfo.necessaryInfo.copMargin = EPSILON_10;
-
-			if (fnew[0] < EPSILON_10) {
-
-				fnew[4] = 0, fnew[5] = 0;
-
-				df[4] = fnew[4] - f[4];
-				f[4] = fnew[4];
-
-				if (std::abs(df[4]) > engine->dfEps) {
-					updat = true;
-					CompResponse(df[4], 4);
-				}
-
-				break;
-			}
-
-			Vec3d CopFromContPoint = Vec3d(0.0, -fnew[5] / fnew[0], fnew[4] / fnew[0]);
-			
-			CONTACT htc = HowToContact();
-
-			// the first contact is occurred
-			//if (Norm3D(phceInfo.necessaryInfo.OldCoP, phceInfo.necessaryInfo.ContPoint) < EPSILON_16){
-				
-			//}
-			
-			if (htc == CONTACT::POINT) {
-
-				phceInfo.necessaryInfo.NewCoP = Vec3d();
-				phceInfo.necessaryInfo.copMargin = 0.0;
-
-				fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
-				fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
-
-			}
-			else {
-
-				phceInfo.necessaryInfo.OldCoP = phceInfo.necessaryInfo.ContPoint + phceInfo.necessaryInfo.ContLocal * CopFromContPoint;
-
-				// 点が中にあれば処理が必要ない
-				bool isCopOnObject0 = isCoPInObject0(), isCopOnObject1 = isCoPInObject1();
-
-				if (isCopOnObject0 && isCopOnObject1) {
-
-					phceInfo.necessaryInfo.copMargin = 0.0;
-
-				}
-
-				else {
-
-					Vec3f w = Vec3f();
-
-					FindClosestPoint(w, phceInfo.necessaryInfo.OldCoP, htc, isCopOnObject0, isCopOnObject1);
-
-					phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal * (w - phceInfo.necessaryInfo.ContPoint);
-					phceInfo.necessaryInfo.copMargin = 0.0;
-
-					fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
-					fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
-
-				}
-			}
-
-			if (phceInfo.necessaryInfo.copMargin != 0.0) {
-				Vec3d c = phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint;
-				phceInfo.necessaryInfo.copMargin = std::min(phceInfo.necessaryInfo.copMargin, -c * phceInfo.necessaryInfo.ContLocal.Ex());
-			}
-
-			df[i] = fnew[i] - f[i];
-			f[i] = fnew[i];
-
-			if (std::abs(df[i]) > engine->dfEps) {
-				updat = true;
-				CompResponse(df[i], i);
-			}
-
-			break;
-		}
-
-		case 3:	//接触法線と垂直な方向のトルク
-		{
-			if (fnew[0] < EPSILON_10) {
-				fnew[3] = 0.0;
-
-				df[i] = fnew[i] - f[i];
-				f[i] = fnew[i];
-
-				if (std::abs(df[i]) > engine->dfEps) {
-					updat = true;
-					CompResponse(df[i], i);
-				}
-
-				break;
-			}
-
-			// 接触法線垂直向きのfnew1, fnew2から生じるモーメント
-			// 接触法線垂直向きから生まれる力静止摩擦力のように扱う
-			// 拘束している力であると考えている
-
-			double ncop = phceInfo.necessaryInfo.NewCoP.y*fnew[2] - phceInfo.necessaryInfo.NewCoP.z*fnew[1];
-
-			// ここの2/3の意味とあとMarginらが必要な理由というのがまだ理解できない
-			double margin = (2.0 / 3.0)*phceInfo.necessaryInfo.copMargin*phceInfo.necessaryInfo.frictionMargin;
-			//double margin = (2.0/3.0)*contactRadius*frictionMargin;
-
-			if (fnew[3] - ncop > margin) fnew[3] = ncop + margin;
-			else if (fnew[3] - ncop < -margin) fnew[3] = ncop - margin;
-
-			df[i] = fnew[i] - f[i];
-			f[i] = fnew[i];
-
-			if (std::abs(df[i]) > engine->dfEps) {
-				updat = true;
-				CompResponse(df[i], i);
-			}
-
-			break;
-		}
-
-		default:
-		{
-			df[i] = fnew[i] - f[i];
-			f[i] = fnew[i];
-
-			if (std::abs(df[i]) > engine->dfEps) {
-				updat = true;
-				CompResponse(df[i], i);
-			}
-
-			break;
-		}
-		}
-		*/
-
 	}
+
+	void PHContactEngine::ProjectionTorque(SpatialVector& fnew) {
+		if (fnew[0] < EPSILON_10) {
+			fnew[3] = 0.0;
+			return;
+		}
+
+		double ncop = phceInfo.necessaryInfo.NewCoP.y * fnew[2] - phceInfo.necessaryInfo.NewCoP.z * fnew[1];
+		double margin = (2.0 / 3.0) * phceInfo.necessaryInfo.copMargin * phceInfo.necessaryInfo.frictionMargin;
+
+		if (fnew[3] - ncop > margin) fnew[3] = ncop + margin;
+		if (fnew[3] - ncop < -margin) fnew[3] = ncop - margin;
+	}
+
+	//	圧力中心（CoP）の処理を行う部分 (Case4, Case5)
+	void PHContactEngine::ProjectionCoP(SpatialVector& fnew, int caseNumber) {
+		//初期のCoPマージンを設定
+		phceInfo.necessaryInfo.copMargin = EPSILON_10;
+
+		if (fnew[0] < EPSILON_10) {
+			fnew[4] = 0.0;
+			fnew[5] = 0.0;
+			return;
+		}
+
+		// 接触点を基準にCoPを計算, Calculate CoP relative to the contact point
+		Vec3d CopFromContPoint = Vec3d(0.0, -fnew[5] / fnew[0], fnew[4] / fnew[0]);
+
+		// 接触の種類を判定, Determine contact type
+		CONTACT htc = HowToContact();
+
+		if (htc == CONTACT::POINT) {
+			// 点接触の場合、CoPをリセット, For point contact: Reset CoP
+			phceInfo.necessaryInfo.NewCoP = Vec3d();
+			fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
+			fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
+		}
+		else {
+			// 線または面接触の場合、CoPを調整, For line or face contact: Adjust CoP
+			phceInfo.necessaryInfo.OldCoP = phceInfo.necessaryInfo.ContPoint + phceInfo.necessaryInfo.ContLocal * CopFromContPoint;
+
+			// CoPがオブジェクト内にあるかを確認, Check if CoP is valid on objects
+			bool isCopOnObject0 = isCoPInObject0();
+			bool isCopOnObject1 = isCoPInObject1();
+
+			if (isCopOnObject0 && isCopOnObject1) {
+				// 両方のオブジェクト内にCoPがある場合、マージンを0に設定; CoP is valid for both objects
+				phceInfo.necessaryInfo.copMargin = 0.0;
+				phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() *
+					(phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint);
+			}
+			else {
+				// 最近傍点を使用してCoPを調整; Adjust CoP using closest point projection
+				Vec3f w;
+				FindClosestPoint(w, phceInfo.necessaryInfo.OldCoP, htc, isCopOnObject0, isCopOnObject1);
+				phceInfo.necessaryInfo.NewCoP = phceInfo.necessaryInfo.ContLocal.inv() * (w - phceInfo.necessaryInfo.ContPoint);
+				phceInfo.necessaryInfo.copMargin = 0.0;
+			}
+
+			// CoPの修正値を適用; Apply corrections to CoP
+			fnew[4] = phceInfo.necessaryInfo.NewCoP.Z() * fnew[0];
+			fnew[5] = -phceInfo.necessaryInfo.NewCoP.Y() * fnew[0];
+		}
+
+		// トルク関連の追加調整 (Case5のみ適用); Additional torque-specific adjustments (only for Case 5)
+		if (caseNumber == 5) {
+			double torqueAdjustment = (2.0 / 3.0) * phceInfo.necessaryInfo.copMargin * phceInfo.necessaryInfo.frictionMargin;
+			Vec3d centerError = phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint;
+
+			// トルク制約を適用; Apply torque constraints
+			if (fnew[4] > torqueAdjustment) fnew[4] = torqueAdjustment;
+			if (fnew[4] < -torqueAdjustment) fnew[4] = -torqueAdjustment;
+		}
+
+		// CoPマージンの整合性を確保; Ensure CoP margin consistency
+		if (phceInfo.necessaryInfo.copMargin != 0.0) {
+			Vec3d c = phceInfo.necessaryInfo.OldCoP - phceInfo.necessaryInfo.ContPoint;
+			phceInfo.necessaryInfo.copMargin = std::min(phceInfo.necessaryInfo.copMargin, -c * phceInfo.necessaryInfo.ContLocal.Ex());
+		}
+	}
+
+	//
+	void PHContactEngine::Projection(SpatialVector& fnew, const int i, bool& updat) {
+		switch (i) {
+		case 0:
+ 			ProjectionNormal(fnew);
+			break;
+		case 1:
+		case 2:
+			ProjectionTangential(fnew);
+			break;
+		case 3:
+			ProjectionTorque(fnew);
+			break;
+		case 4:
+		case 5:
+			ProjectionCoP(fnew, i);
+			break;
+		default:
+			break;
+		}
+	}
+
 
 	// OldCoPが外に出ているときに呼ばれる関数
 
@@ -1225,201 +893,6 @@ namespace Spr {
 			return (((pose_.Ori() * pt).YZ()).norm() - ((pose_.Ori() * w).YZ()).norm() >= 0) ? false : true;
 		}
 	}
-
-	/*
-	bool PHContactEngine::GJKIteration(int SupportTag0, int SupportTag1, const Vec3f& z_0, const Vec3f& z_1, Vec3f& tmp) {
-
-		Vec3d pt = OldCoP;
-		Vec3d tmp_0 = z_0;
-		Vec3d tmp_1 = z_1;
-		Vec3f tmp_tmp, tmp_tmp_0, tmp_tmp_1;
-
-		// 切り替えながら判定するための変数
-		int cross = 0;
-		double t = 0.0;
-
-		double stop = Norm2D(Pose0, tmp_0, Pose1, tmp_1);
-		if (SupportTag0 == 2 && SupportTag1 == 2) {
-
-			tmp_tmp_0 = z_0;
-			tmp_tmp_1 = z_1;
-
-			while (stop > EPSILON_2) {
-				tmp_tmp_0 = ClosestPtPointLine(tmp_1, VecGroup0[0], VecGroup0[1], t);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_0 = tmp_tmp_0;
-					break;
-				}
-				tmp_tmp_1 = ClosestPtPointLine(tmp_0, VecGroup1[0], VecGroup1[1], t);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_1 = tmp_tmp_1;
-					break;
-				}
-				tmp_0 = tmp_tmp_0;
-				tmp_1 = tmp_tmp_1;
-				stop = Norm2D(Pose0, tmp_0, Pose1, tmp_1);
-			}
-
-			tmp = (tmp_0 + tmp_1) / 2;
-			return true;
-
-		}
-		else if (SupportTag0 == 3 && SupportTag1 == 2) {
-			while (stop > EPSILON_2) {
-
-				GJK2D(VecGroup0, CDC0, PHS0, tmp_tmp_0, tmp_1);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_0 = tmp_tmp_0;
-					break;
-				}
-				tmp_tmp_1 = ClosestPtPointLine(tmp_0, VecGroup1[0], VecGroup1[1], t);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_1 = tmp_tmp_1;
-					break;
-				}
-				tmp_0 = tmp_tmp_0;
-				tmp_1 = tmp_tmp_1;
-				stop = Norm2D(Pose0, tmp_0, Pose1, tmp_1);
-			}
-
-			tmp = (tmp_0 + tmp_1) / 2;
-			return true;
-		}
-		else if (SupportTag0 == 2 && SupportTag1 == 3) {
-			while (stop > EPSILON_2) {
-
-				GJK2D(VecGroup1, CDC1, PHS1, tmp_tmp_1, tmp_0);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_1 = tmp_tmp_1;
-					break;
-				}
-				tmp_tmp_0 = ClosestPtPointLine(tmp_1, VecGroup0[0], VecGroup0[1], t);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_0 = tmp_tmp_0;
-					break;
-				}
-				tmp_0 = tmp_tmp_0;
-				tmp_1 = tmp_tmp_1;
-				stop = Norm2D(Pose0, tmp_0, Pose1, tmp_1);
-			}
-
-			tmp = (tmp_0 + tmp_1) / 2;
-			return true;
-
-		}
-		else {
-			while (stop > EPSILON_2) {
-
-				GJK2D(VecGroup0, CDC0, PHS0, tmp_tmp_0, tmp_1);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_0 = tmp_tmp_0;
-					break;
-				}
-				GJK2D(VecGroup1, CDC1, PHS1, tmp_tmp_1, tmp_0);
-				if (Norm2D(Pose0, tmp_tmp_0, Pose1, tmp_tmp_1) > EPSILON_2) {
-					tmp_1 = tmp_tmp_1;
-					break;
-				}
-				tmp_0 = tmp_tmp_0;
-				tmp_1 = tmp_tmp_1;
-				stop = Norm2D(Pose0, tmp_0, Pose1, tmp_1);
-			}
-
-			tmp = (tmp_0 + tmp_1) / 2;
-			return true;
-		}
-	}
-
-	// Euclidean Projection
-	void PHContactEngine::EuclideanProjection(CONTACT SupportTag0, CONTACT SupportTag1, const Vec3f& z_0, Vec3f& tmp) {
-
-		// 移動前の点
-		Vec3d prev_point = OldCoP;
-		// 移動後の点
-		Vec3d current_point = z_0;
-
-		// 切り替えながら判定するための変数
-		int point_on_where = 0;
-		double t = 0.0;
-
-		// 停止条件
-		double stop = Norm3D(prev_point, current_point);
-
-		if (SupportTag0 == CONTACT::LINE && SupportTag1 == CONTACT::LINE) {
-
-			while (stop > EPSILON_2) {
-				prev_point = current_point;
-				current_point = point_on_where == 0 ? ClosestPtPointLine(current_point, VecGroup1[0], VecGroup1[1], t) :
-					ClosestPtPointLine(current_point, VecGroup0[0], VecGroup0[1], t);
-				// current_pointがどこの物体に対して引かれたをずっとビットを反対させるため
-				point_on_where = point_on_where ^ 1;
-				stop = Norm3D(prev_point, current_point);
-			}
-
-			tmp = current_point;
-
-		}
-		else if (SupportTag0 == CONTACT::FACE && SupportTag1 == CONTACT::LINE) {
-
-			Vec3d tmp_current_point;
-
-			while (stop > EPSILON_2) {
-				prev_point = current_point;
-				if (point_on_where == 0) current_point = ClosestPtPointLine(current_point, VecGroup1[0], VecGroup1[1], t);
-				else {
-					GJK2D(VecGroup0, CDC0, PHS0, (Vec3f)tmp_current_point, current_point);
-					current_point = tmp_current_point;
-				}
-				point_on_where = point_on_where ^ 1;
-				stop = Norm3D(prev_point, current_point);
-			}
-
-			tmp = current_point;
-		}
-		else if (SupportTag0 == CONTACT::LINE && SupportTag1 == CONTACT::FACE) {
-
-			Vec3d tmp_current_point;
-
-			while (stop > EPSILON_2) {
-				prev_point = current_point;
-				if (point_on_where == 1) current_point = ClosestPtPointLine(current_point, VecGroup0[0], VecGroup0[1], t);
-				else {
-					GJK2D(VecGroup1, CDC1, PHS1, (Vec3f)tmp_current_point, current_point);
-					current_point = tmp_current_point;
-				}
-				point_on_where = point_on_where ^ 1;
-				stop = Norm3D(prev_point, current_point);
-			}
-
-			tmp = current_point;
-
-		}
-		else
-		{
-			while (stop > EPSILON_2) {
-
-				Vec3d tmp_current_point;
-
-				while (stop > EPSILON_2) {
-					prev_point = current_point;
-					if (point_on_where == 1) {
-						GJK2D(VecGroup0, CDC0, PHS0, (Vec3f)tmp_current_point, current_point);
-						current_point = tmp_current_point;
-					}
-					else {
-						GJK2D(VecGroup1, CDC1, PHS1, (Vec3f)tmp_current_point, current_point);
-						current_point = tmp_current_point;
-					}
-					point_on_where = point_on_where ^ 1;
-					stop = Norm3D(prev_point, current_point);
-				}
-
-				tmp = current_point;
-			}
-		}
-	}
-	*/
-
 
 	// 任意の2次元のConvex間の共通空間に対してある点から一番近い点を探す
 	/// Wikipedia

@@ -61,6 +61,10 @@ public:
 	PHSolidIf*				soFloor;
 	std::vector<PHSolidIf*> soBox;
 
+	// 後で消すかも　ダギー line 64-65
+	PHSolidIf*              soCylinder;
+	
+
 	double					floorShakeAmplitude;
 
 public:
@@ -99,6 +103,14 @@ public:
 		win->GetTrackball()->SetTarget(ShapeScale() * Vec3d(0, 6, 0));		//	gaze taget	
 		win->GetTrackball()->SetPosition(ShapeScale() * Vec3f(0, 25, 50));	//	view point
 		soFloor = CreateFloor(true);
+
+		//後で消すかもダギー　line107-112
+		// シリンダを作成し、床の上に配置
+		double cylinderRadius = 0.1/2; // シリンダの半径
+		double cylinderHeight = 0.1/2; // シリンダの高さ
+		Vec3d cylinderPosition = Vec3d(0.0, cylinderHeight / 2, 0.0); // 床の上に配置
+		soCylinder = CreateCylinder(cylinderPosition, cylinderRadius, cylinderHeight);
+
 		
 		GetFWScene()->SetAxisScale(ShapeScale(), ShapeScale(), ShapeScale());
 		GetFWScene()->SetAxisStyle(FWSceneIf::AXIS_ARROWS);
@@ -117,6 +129,11 @@ public:
 		ed.contactCorrectionRate = 0.5;
 		ed.bUseContactSurface = true;
 		GetPHScene()->GetConstraintEngine()->SetDesc(&ed);
+
+		//Vec3d v, w(0.0, 0.0, 0.2), p = ShapeScale() * Vec3f(0.5, 20.0, 0.0);
+		//static Quaterniond q = Quaterniond::Rot(Rad(60.0), 'x');
+		//q = Quaterniond::Rot(Rad(90), 'y') * q;
+		//Drop(SHAPE_CYLINDER, GRRenderIf::ALICEBLUE, v, w, p, q);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる

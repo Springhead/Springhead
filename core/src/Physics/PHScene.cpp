@@ -26,7 +26,7 @@ namespace Spr{;
 //	PHSceneDesc
 void PHSceneDesc::Init(){
 	PHSceneState::Init();
-	gravity				     = Vec3d(0.0, 0, 0.0);
+	gravity				     = Vec3d(0.0, 9.8, 0.0);
 	airResistanceRateForVelocity	 = 1.0;
 	airResistanceRateForAngularVelocity	 = 1.0;
 	contactTolerance         = 0.002;

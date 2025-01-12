@@ -155,7 +155,7 @@ namespace Spr {
 			}
 			//	ring‚Éü•ª‚ğ’Ç‰Á
 			float lenInv = 1 / sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
-			ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z())*lenInv, -start));
+			ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(),-dir.Z())*lenInv, -start));
 			ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
 			ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y())*lenInv, 0));
 			ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));

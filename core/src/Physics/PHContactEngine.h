@@ -111,7 +111,11 @@ namespace Spr {
 		// ”CˆÓ‚Ì2ŽŸŒ³‚ÌConvexŠÔ‚Ì‹¤’Ê‹óŠÔ‚É‘Î‚µ‚Ä‚ ‚é“_‚©‚çˆê”Ô‹ß‚¢“_‚ð’T‚·
 		void	DykstraProjection(Vec3f& v, const Vec3d& pt);
 		virtual void CompBias();
-			
+		
+		void    ProjectionNormal(SpatialVector& fnew);              // Case 0
+		void    ProjectionTangential(SpatialVector& fnew);          // Case 1 and 2
+		void    ProjectionTorque(SpatialVector& fnew);              // Case 3
+		void    ProjectionCoP(SpatialVector& fnew, int caseNumber); // Case 4 and 5
 	};
 
 	// Preprocess for InOut2D
