@@ -7,13 +7,22 @@
 
 namespace Spr {
 
-	//接触面の法線を与えると、World座標系から接触面上の座標系への変換を行うためのPoseを返す
+	//接触面の法線と原点座標を与えると、World座標系から接触面上の座標系への変換を行うためのPoseを返す
 	//引数:
 	//    normal: 接触面の法線方向をWorld座標系で表したもの
 	//    origin: 平面上の座標系の原点の座標のWorld座標系での表現
 	//戻り値:
 	//    接触平面上の座標系を表すPose型の変数
 	Posed getWorldToPlanePose(Vec3d normal, Vec3d origin);
+
+	//接触面の法線とx軸方向、原点座標を与えると、World座標系から接触面上の座標系への変換を行うためのPoseを返す
+	//引数:
+	//    normal: World座標系における現在の接触面の法線方向
+	//	  xAxis: World座標系における現在の接触面のx軸方向
+	//    origin: 現在の接触面での平面上の座標系の原点を表すWorld座標系での座標
+	//戻り値:
+	//    接触平面上の座標系を表すPose型変数
+	Posed getWorldToPlanePose(Vec3d normal, Vec3d xAxis, Vec3d origin);
 
 	//接触面の法線の方向が変化したときに、
 	//それに応じてWorld座標系から接触面上の座標系への変換を行うためのクォータニオンを更新する関数

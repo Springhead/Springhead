@@ -130,12 +130,12 @@ public:
 	Vec3d proxyPos;					///< プロキシの位置(World座標)
 	Vec3d objectVel;				///< 接触している相手の物体の速度(World座標)
 	Vec2d relativeVelOnSurface;		///< プロキシと接触している物体の相対速度(接触面上の座標)
-	Vec2d avgStickingTime;			///< 平均固着継続時間
+	double avgStickingTime;			///< 平均固着継続時間
 	Vec2d frictionForce;			///< 摩擦力 (接触絵面上の座標)
 	double LuGreParameterA;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータA
 	double LuGreParameterB;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータB
 	double LuGreParameterC;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータC
-	Vec2d LuGreFunctionG;			///< LuGreモデルにおける関数g(T) = A + B log(C * avgStickingTime + 1)の値
+	double LuGreFunctionG;			///< LuGreモデルにおける関数g(T) = A + B log(C * avgStickingTime + 1)の値
 
 
 	PHShapePairForHaptic();

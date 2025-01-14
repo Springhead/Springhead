@@ -65,12 +65,12 @@ PHShapePairForHaptic::PHShapePairForHaptic() {
 	proxyPos = Vec3d();
 	objectVel = Vec3d();
 	relativeVelOnSurface = Vec2d();
-	avgStickingTime = Vec2d();
+	avgStickingTime = 0;
 	frictionForce = Vec2d();
-	LuGreParameterA = 1.0;//0.1;//1.0;//0.5
-	LuGreParameterB = 1.6;// 3.0;// 1.6;//2.0
-	LuGreParameterC = 40.0;//10.0
-	LuGreFunctionG = Vec2d(LuGreParameterA, LuGreParameterA);
+	LuGreParameterA = 0.3;//0.1;//1.0;//0.5
+	LuGreParameterB = 1.0;// 3.0;// 1.6;//2.0
+	LuGreParameterC = 60.0;//10.0
+	LuGreFunctionG = LuGreParameterA;
 }
 
 void PHShapePairForHaptic::CopyFromPhysics(const PHShapePairForHaptic* src) {

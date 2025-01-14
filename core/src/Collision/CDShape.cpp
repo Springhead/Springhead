@@ -40,9 +40,9 @@ PHMaterial::PHMaterial(){
 	stribeckmu = 0.1f;
 
 	///LuGre Modelのための係数
-	bristlesSpringK = 4000.0;//100000.0;			///< LuGreモデルにおける剛毛のバネ係数
-	bristlesDamperD = 4.0;//sqrt(100000.0);	///< LuGreモデルにおける剛毛のダンパ係数
-	bristlesViscosityV = 0.4;//0.4f;			///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	bristlesSpringK = 3000.0;//100000.0;			///< LuGreモデルにおける剛毛のバネ係数
+	bristlesDamperD = 7.0;//sqrt(100000.0);	///< LuGreモデルにおける剛毛のダンパ係数
+	bristlesViscosityV = 0.6;//0.4f;			///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
 
 //GMS用

@@ -233,10 +233,10 @@ bool PHHapticEngine::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 
 
 bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
-	
+
 	int Nirs = (int)sh->NIrs();//接触の数
 	//DSTR << "Nirs:" << Nirs << "sh:" << (int)sh << std::endl;
-	
+
 	//1つのShapePairについて複数の接触があることはないはず
 	if (Nirs > 1) {
 		sh->hasContact = false;
@@ -248,7 +248,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		sh->hasContact = false;
 		return false;
 	}
-	
+
 	//以下は現在接触している場合
 	PHIr* ir = sh->irs[0];//考えるべき接触の拘束条件
 
@@ -257,24 +257,46 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		sh->hasContact = true;														//接触していることを記録
 		sh->avgBristlesDeflection = Vec2d();										//剛毛の平均変位を初期化
 		sh->avgBristlesDeflectionVel = Vec2d();										//剛毛の平均変位の微分値を初期化
-		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
+		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, Vec3d(1.0, 0.0, 0.0), ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
 		sh->pointerDepth = ir->depth;												//現在のハプティックポインタの深さ(侵入量)
 		sh->pointerPos = ir->pointerPointW - ir->r;									//現在のハプティックポインタの位置(World座標)
 		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの位置はプロキシの重心の位置とする
 		sh->objectVel = sp->GetSolid(0)->GetVelocity();								//接触している相手の物体の現在の速度(World座標)
 		sh->relativeVelOnSurface = Vec2d();											//プロキシと接触している物体の相対速度(接触面上の座標)は接触時は0にしておく
-		sh->avgStickingTime = Vec2d();												//平均固着時間を初期化
+		sh->avgStickingTime = 0;													//平均固着時間を初期化
 		sh->frictionForce = Vec2d();												//摩擦力の初期化
-		sh->LuGreFunctionG = Vec2d(sh->LuGreParameterA, sh->LuGreParameterA);		//関数g(T)を初期化
+		sh->LuGreFunctionG = sh->LuGreParameterA;									//関数g(T)を初期化
+		sp->frictionState = PHSolidPairForHapticIf::STATIC;							//接触したときは静止しているものとする
+		sp->fricCount = 0;															//静止状態 or 動いている状態が継続しているステップ数(fricCount)を0にする
 		DSTR << "接触開始" << std::endl;
 		return true;
 	}
 
+	//新しいx軸の方向(前回の速度の方向)をWorld座標で取得する
+	//法線方向と原点座標の変化だけを考慮して作成した新しいPoseを作成(速度方向の変化を考慮していない)
+	Posed normalAdjustedSurfacePose = updateWorldToPlanePose(sh->contactSurfacePose, ir->normal, ir->pointerPointW + ir->depth * ir->normal);
+	Vec3d newXAxis;//新しいx軸の方向(World座標)
+	bool relativeVelIsZero = (sh->relativeVelOnSurface.norm() < 1e-20);//速度が0とみなせる場合かどうか
+	if (relativeVelIsZero) {
+		newXAxis = convertPlaneToWorldVec(Vec3d(1.0, 0.0, 0.0), normalAdjustedSurfacePose);//速度が0の場合は、新しいx座標の方向は現在と同じ向きにする
+	} else {
+		//速度が0でない場合は、normalAdjustedSurfacePoseの座標系上で、(sh->relativeVelOnSurface.x, sh->relativeVelOnSurface.y, 0.0)で表される方向が、新しいx座標の方向となる
+		newXAxis = convertPlaneToWorldVec(Vec3d(sh->relativeVelOnSurface.x, sh->relativeVelOnSurface.y, 0.0).unit(), normalAdjustedSurfacePose);
+	}
+	
+	//剛毛の平均変位zと相対速度vをvの向きがx軸正方向になるように接触平面上で回転させる
+	double theta = relativeVelIsZero ? 0.0 : -atan2(sh->relativeVelOnSurface.y, sh->relativeVelOnSurface.x);//平面上の回転量を取得
+	Matrix2d rotationMatrix = Matrix2d::Rot(theta);
+	sh->relativeVelOnSurface = rotationMatrix * sh->relativeVelOnSurface;
+	sh->avgBristlesDeflection = rotationMatrix * sh->avgBristlesDeflection;
+
+
 	//必要な変数などの用意
+	//定数
 	double spring = pointer->GetFrictionSpring();													//ハプティックポインタとプロキシの間のバネ係数
 	double damper = pointer->GetFrictionDamper();													//ハプティックポインタとプロキシの間のダンパ係数
 	double mass = pointer->GetMass();																//プロキシの質量
-	sh->contactSurfacePose = updateWorldToPlanePose(sh->contactSurfacePose, ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面上の座標系の更新(ポインタの位置の真上を接触面上の座標系の原点とする)
+	sh->contactSurfacePose = getWorldToPlanePose(ir->normal, newXAxis,ir->pointerPointW + ir->depth * ir->normal);//接触面上の座標系の更新(ポインタの位置の真上を接触面上の座標系の原点とする)
 	double hdt = he->GetHapticTimeStep();															//摩擦計算の時間間隔
 	//Vec3d objectPos = sp->GetSolid(0)->GetCenterOfMass();											//接触している相手の物体の現在の重心の位置(World座標)
 	Vec3d objectVel = sp->GetSolid(0)->GetVelocity();												//接触している相手の物体の現在の速度(World座標)
@@ -292,22 +314,36 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	Vec2d lastRelativeVelOnSurface = sh->relativeVelOnSurface;										//前回の時点のプロキシと接触している物体の相対速度(接触面上の座標)
 	Vec2d lastAvgBristlesDeflection = sh->avgBristlesDeflection;									//剛毛の平均変位 (接触面上の座標)
 	
+
+	//平均固着時間、g(T)の更新
+	double avgStickingTimeIfNotMoving = sh->avgStickingTime + hdt;
+	double avgStickingTimeIfMoving = sh->LuGreFunctionG / (sh->bristlesSpringK * lastRelativeVelOnSurface.norm());
+	sh->avgStickingTime = std::min(avgStickingTimeIfNotMoving, avgStickingTimeIfMoving);
+	sh->LuGreFunctionG = sh->LuGreParameterA + sh->LuGreParameterB * std::log(sh->LuGreParameterC * sh->avgStickingTime + 1);
+
+	//静止状態 or 動いている状態が継続しているステップ数(fricCount)の更新
+	PHSolidPairForHapticIf::FrictionState newFrictionState;//現在 静止 or 動いている のどちらとみなせる状態か
+	newFrictionState = (avgStickingTimeIfNotMoving <= avgStickingTimeIfMoving) ? PHSolidPairForHapticIf::STATIC : PHSolidPairForHapticIf::DYNAMIC;
+	if (sp->frictionState != newFrictionState) {
+		sp->fricCount = 0;
+	}
+	else {
+		sp->fricCount++;
+	}
+	sp->frictionState = newFrictionState;
+
 	//接触面上の座標系のx軸方向, y軸方向のそれぞれについて連立方程式を立てて解いていく
 	double A = spring * pointerDepth + damper * (pointerDepth - lastPointerDepth) / hdt;
 	for (int i = 0; i < 2; i++) {
 		//接触面上のx方向について
-
-		//平均固着時間、g(T)の更新
-		sh->avgStickingTime[i] = std::min(sh->avgStickingTime[i] + hdt, sh->LuGreFunctionG[i] / (sh->bristlesSpringK * std::abs(lastRelativeVelOnSurface[i])));
-		sh->LuGreFunctionG[i] = sh->LuGreParameterA + sh->LuGreParameterB * std::log(sh->LuGreParameterC * sh->avgStickingTime[i] + 1);
 
 		//連立方程式の用意(連立方程式はWx = wとする)
 		double B = spring * (pointerPosOnSurface[i] - lastProxyPosOnSurface[i])
 			+ damper * (pointerPosOnSurface[i] - lastPointerPosOnSurface[i]) / hdt
 			- mass * (objectVelOnSurface[i] - lastObjectVelOnSurface[i]) / hdt
 			+ mass * lastRelativeVelOnSurface[i] / hdt;
-		double S = sh->bristlesSpringK * lastRelativeVelOnSurface[i] * hdt / sh->LuGreFunctionG[i];
-		double T = sh->bristlesSpringK * lastAvgBristlesDeflection[i] / sh->LuGreFunctionG[i];
+		double S = sh->bristlesSpringK * lastRelativeVelOnSurface[i] * hdt / sh->LuGreFunctionG;
+		double T = sh->bristlesSpringK * lastAvgBristlesDeflection[i] / sh->LuGreFunctionG;
 
 		//連立方程式の左辺の行列を作成
 		Matrix3d W[2];//W[0]はプロキシと物体の相対速度が正になる場合、W[1]は相対速度が負になる場合の行列を表す
@@ -406,6 +442,8 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	//デバッグ用
 	//DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y  << ")" << std::endl;
 	//DSTR << "T : " << sh->avgStickingTime[0] << std::endl;
+	//DSTR << sh->pointerPos.x << "," << sh->pointerPos.z << "," << sh->pointerDepth << std::endl;
+
 	return true;
 }
 

@@ -66,6 +66,56 @@ namespace Spr{
 		return p;
 	}
 
+	//接触面の法線とx軸方向、原点座標を与えると、World座標系から接触面上の座標系への変換を行うためのPoseを返す
+	//引数:
+	//    normal: World座標系における現在の接触面の法線方向
+	//	  xAxis: World座標系における現在の接触面のx軸方向
+	//    origin: 現在の接触面での平面上の座標系の原点を表すWorld座標系での座標
+	//戻り値:
+	//    接触平面上の座標系を表すPose型変数
+	Posed getWorldToPlanePose(Vec3d normal, Vec3d xAxis, Vec3d origin) {
+
+		//戻り値のためのPose型変数の用意
+		Posed newPose;
+
+		//新しい平面上の座標系での原点の設定
+		newPose.Pos() = origin;
+
+		//newNormal, newXAxisの長さを1に補正しておく
+		normal = normal.unit();
+		xAxis = xAxis.unit();
+
+		//normalとxAxisが直交するように、xAxisを補正
+		//(基本的に直交しているものだが、数値計算の誤差の積み重ねでずれている可能性があるため一応補正計算をしておく)
+		//補正方法について
+		//直交する <=> dot(normal, xAxis) = 0    (dotは内積とする)
+		//そこで、ある定数aを用いて、
+		//xAxis <- xAxis - a * normal
+		//とすることで、直交する状態にすることを考える
+		//ここで、normalが単位ベクトルなので、dot(normal, normal) = 1であることに注意すると
+		//dot(normal, xAxis - a * normal) = dot(normal, xAxis) - a * dot(normal, normal) = dot(normal, xAxis) - a
+		//となるので、これを0にするためには、a = dot(normal, xAxis)
+		//そのため、
+		//xAxis <- xAxis - dot(normal, xAxis) * normal
+		//により補正することとする
+		xAxis = xAxis - dot(normal, xAxis) * normal;
+
+		//新しいy軸方向を計算
+		Vec3d yAxis = normal % xAxis;//%は外積
+
+		//接触面上の座標系からWorld座標系に変換する回転行列を用意
+		Matrix3d matrix = Matrix3d(xAxis, yAxis, normal);
+
+		//座標変換行列からクォータニオンに変換
+		Quaterniond q;
+		q.FromMatrix(matrix);//接触面上の座標系からWorld座標系への変換を行うクォータニオン
+
+		//World座標系から接触面上の座標系への変換を行うためのクォータニオンを設定
+		newPose.Ori() = q.Inv();
+
+		return newPose;
+	}
+
 	//接触面の法線の方向が変化したときに、
 	//それに応じてWorld座標系から接触面上の座標系への変換を行うためのクォータニオンを更新する関数
 	//引数:
