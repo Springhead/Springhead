@@ -5,6 +5,7 @@
 #include <Physics/PHHapticStepLocalDynamics.h>
 #include <Physics/LuGre/coordinateConverter.h>
 #include <Physics/PHHapticStepLocalDynamicsDev.h>
+#include <Physics/SprPHLuGreParametersData.h>
 
 namespace Spr {;
 
@@ -67,9 +68,9 @@ PHShapePairForHaptic::PHShapePairForHaptic() {
 	relativeVelOnSurface = Vec2d();
 	avgStickingTime = 0;
 	frictionForce = Vec2d();
-	LuGreParameterA = 0.3;//0.1;//1.0;//0.5
-	LuGreParameterB = 1.0;// 3.0;// 1.6;//2.0
-	LuGreParameterC = 60.0;//10.0
+	LuGreParameterA = PHLuGreParametersData::getCurrentA();
+	LuGreParameterB = PHLuGreParametersData::getCurrentB();
+	LuGreParameterC = PHLuGreParametersData::getCurrentC();
 	LuGreFunctionG = LuGreParameterA;
 }
 
@@ -112,6 +113,9 @@ void PHShapePairForHaptic::UpdateCache() {
 	bristlesSpringK = ((double)(shape[0]->GetMaterial().bristlesSpringK) + (double)(shape[1]->GetMaterial().bristlesSpringK)) * 0.5;			///< LuGreモデルにおける剛毛のバネ係数
 	bristlesDamperD = ((double)(shape[0]->GetMaterial().bristlesDamperD) + (double)(shape[1]->GetMaterial().bristlesDamperD)) * 0.5;			///< LuGreモデルにおける剛毛のダンパ係数
 	bristlesViscosityV = ((double)(shape[0]->GetMaterial().bristlesViscosityV) + (double)(shape[1]->GetMaterial().bristlesViscosityV)) * 0.5;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	LuGreParameterA = PHLuGreParametersData::getCurrentA();	///< g(T) = A + B log( CT + 1)のAの更新
+	LuGreParameterB = PHLuGreParametersData::getCurrentB(); ///< g(T) = A + B log( CT + 1)のBの更新
+	LuGreParameterC = PHLuGreParametersData::getCurrentC(); ///< g(T) = A + B log( CT + 1)のCの更新
 }
 
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){

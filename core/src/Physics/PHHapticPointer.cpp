@@ -1,6 +1,7 @@
 ﻿#include <Springhead.h>
 #include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticEngine.h>
+#include <Physics/SprPHLuGreParametersData.h>
 
 namespace Spr{;
 PHHapticPointerDesc::PHHapticPointerDesc() {
@@ -17,8 +18,8 @@ PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	bVibration = false;
 	posScale = 1.0;
 	localRange = 1.0;
-	frictionSpring = 5000.0f;// 5.0f;
-	frictionDamper = 10.0f;//80.0f;// 0.0f;
+	frictionSpring = PHLuGreParametersData::getCurrentFrictionSpring();
+	frictionDamper = PHLuGreParametersData::getCurrentFrictionDamper();
 	reflexSpring = 10.0f;
 	reflexDamper = 1.0f;
 	rotationReflexSpring = 10.0f;

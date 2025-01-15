@@ -406,6 +406,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LuGre\coordinateConverter.cpp" />
+    <ClCompile Include="LuGre\PHLuGreParametersData.cpp" />
     <ClCompile Include="PHBallJoint.cpp" />
     <ClCompile Include="PHBody.cpp" />
     <ClCompile Include="PHConstraint.cpp" />
@@ -469,6 +470,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Physics\SprPHFrictionType.hpp" />
+    <ClInclude Include="..\..\include\Physics\SprPHLuGreParametersData.h" />
     <ClInclude Include="..\..\include\Physics\SprPHOpObj.h" />
     <ClInclude Include="..\..\include\Physics\SprPHOpSpHashAgent.h" />
     <ClInclude Include="..\..\include\Physics\SprPHSkeleton.h" />
@@ -545,6 +547,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="lcpnote.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LuGre\PHLuGreParametersData.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

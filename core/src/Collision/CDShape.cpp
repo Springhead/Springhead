@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Collision/CDShape.h>
+#include <Physics/SprPHLuGreParametersData.h>
 
 namespace Spr{;
 
@@ -40,9 +41,9 @@ PHMaterial::PHMaterial(){
 	stribeckmu = 0.1f;
 
 	///LuGre Modelのための係数
-	bristlesSpringK = 3000.0;//100000.0;			///< LuGreモデルにおける剛毛のバネ係数
-	bristlesDamperD = 7.0;//sqrt(100000.0);	///< LuGreモデルにおける剛毛のダンパ係数
-	bristlesViscosityV = 0.6;//0.4f;			///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	bristlesSpringK = PHLuGreParametersData::getCurrentBristlesSpringK();			///< LuGreモデルにおける剛毛のバネ係数
+	bristlesDamperD = PHLuGreParametersData::getCurrentBristlesDamperD();			///< LuGreモデルにおける剛毛のダンパ係数
+	bristlesViscosityV = PHLuGreParametersData::getCurrentBristlesViscosityV();	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
 
 //GMS用

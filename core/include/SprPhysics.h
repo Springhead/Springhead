@@ -28,4 +28,5 @@
 #include "Physics/SprPHOpObj.h"
 #include "Physics/SprPHOpSpHashAgent.h"
 #include "Physics/SprPHFrictionType.hpp"
+#include "Physics/SprPHLuGreParametersData.h"
 #endif
