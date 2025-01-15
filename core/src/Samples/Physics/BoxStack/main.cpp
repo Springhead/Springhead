@@ -98,7 +98,40 @@ public:
 	virtual double ShapeScale() {		//	scale all shapes and positions.
 		return 0.01;
 	}
+	// 円錐の作成　後で消すかもダギー
+	PHSolidIf* CreateCylinder(Vec3d position, double radius, double height) {
+		// PHSceneにシリンダ用の剛体を作成
+		PHSolidIf* soCylinder = GetPHScene()->CreateSolid();
+		soCylinder->SetName("soCylinder");
+		soCylinder->SetDynamical(true); // 動的な剛体（重力や衝突の影響を受ける）
+
+		// シリンダ形状の設定
+		CDCylinderDesc cylDesc;
+		cylDesc.radius = radius; // シリンダの半径
+		cylDesc.length = height; // シリンダの高さ
+
+		CDShapeIf* shapeCylinder = GetSdk()->GetPHSdk()->CreateShape(cylDesc);
+		soCylinder->AddShape(shapeCylinder);
+
+		// シリンダの初期位置を設定
+		soCylinder->SetFramePosition(position);
+
+		// シリンダの向きを縦に設定（Z軸をY軸に変更する）
+		Quaterniond orientation = Quaterniond::Rot(Rad(90.0), 'x'); // X軸に90度回転
+		soCylinder->SetOrientation(orientation);
+
+		// シリンダの外観を設定（色など）
+		GetFWScene()->SetSolidMaterial(GRRenderIf::WHITE, soCylinder);
+
+		// 慣性テンソルを計算
+		soCylinder->CompInertia();
+
+		return soCylinder;
+	}
 	virtual void BuildScene(){
+		ToggleAction(MENU_ALWAYS, ID_RUN);
+
+
 		FWWinIf* win = GetCurrentWin();
 		win->GetTrackball()->SetTarget(ShapeScale() * Vec3d(0, 6, 0));		//	gaze taget	
 		win->GetTrackball()->SetPosition(ShapeScale() * Vec3f(0, 25, 50));	//	view point
@@ -141,6 +174,17 @@ public:
 		// GetSdk()->SaveScene("test.spr", NULL, FIFileSprIf::GetIfInfoStatic());
 
 		SampleApp::OnStep();
+		bool bSwap = false;
+		PHSolidPairForLCPIf* sop = GetPHScene()->GetSolidPair(soCylinder, soFloor, bSwap);
+		PHShapePairForLCPIf* shp = sop->GetShapePair(0, 0);
+		CDShapePairState sps;
+		shp->GetState(&sps);
+		Vec3d cp0 = shp->GetClosestPointOnWorld(0);
+		Vec3d cp1 = shp->GetClosestPointOnWorld(1);
+		DSTR << "Cylinder center.y = " << soCylinder->GetCenterPosition().y
+			<< " depth:" << cp1.y << std::endl;
+			//<< sps.depth  << cp0 << cp1 << std::endl;
+
 
 		// 床を揺らす
 		if (soFloor && floorShakeAmplitude){

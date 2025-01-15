@@ -210,37 +210,6 @@ public:
 		return soFloor;
 	}
 
-	// 円錐の作成　後で消すかもダギー
-	PHSolidIf* CreateCylinder(Vec3d position, double radius, double height) {
-		// PHSceneにシリンダ用の剛体を作成
-		PHSolidIf* soCylinder = GetPHScene()->CreateSolid();
-		soCylinder->SetName("soCylinder");
-		soCylinder->SetDynamical(true); // 動的な剛体（重力や衝突の影響を受ける）
-
-		// シリンダ形状の設定
-		CDCylinderDesc cylDesc;
-		cylDesc.radius = radius; // シリンダの半径
-		cylDesc.length = height; // シリンダの高さ
-
-		CDShapeIf* shapeCylinder = GetSdk()->GetPHSdk()->CreateShape(cylDesc);
-		soCylinder->AddShape(shapeCylinder);
-
-		// シリンダの初期位置を設定
-		soCylinder->SetFramePosition(position);
-
-		// シリンダの向きを縦に設定（Z軸をY軸に変更する）
-		Quaterniond orientation = Quaterniond::Rot(Rad(90.0), 'x'); // X軸に90度回転
-		soCylinder->SetOrientation(orientation);
-
-		// シリンダの外観を設定（色など）
-		GetFWScene()->SetSolidMaterial(GRRenderIf::GRAY, soCylinder);
-
-		// 慣性テンソルを計算
-		soCylinder->CompInertia();
-
-		return soCylinder;
-	}
-
 	void SwitchScene(int id){
 		if(id < 0 || numScenes <= id)
 			return;
