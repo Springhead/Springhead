@@ -13,10 +13,10 @@ namespace Spr {
 	//引数:
 	//    material (std::string): パラメータが表す材質の名称
 	void PHLuGreParametersData::changeCurrentParameters(std::string material) {
-		std::map<std::string, PHLuGreParameters> data = getInstance()->lugreParametersMap;
-		if (data.find(material) != data.end()) {
+		std::map<std::string, PHLuGreParameters>* data = &(getInstance()->lugreParametersMap);
+		if (data->find(material) != data->end()) {
 			//指定された材質のパラメータが存在するとき
-			getInstance()->currentParameters = data[material];
+			getInstance()->currentParameters = data->at(material);
 		}
 	}
 
@@ -104,6 +104,13 @@ namespace Spr {
 	double PHLuGreParametersData::getCurrentFrictionSpring() { return getInstance()->currentParameters.frictionSpring; };
 	double PHLuGreParametersData::getCurrentFrictionDamper() { return getInstance()->currentParameters.frictionDamper; };
 
+	//メモリを解放する
+	void PHLuGreParametersData::release() {
+		if (instance) {
+			delete instance;
+			instance = nullptr;
+		}
+	}
 
 	//このクラスのインスタンスを返す
 	//ない場合には生成する
@@ -113,7 +120,8 @@ namespace Spr {
 			instance = new PHLuGreParametersData();
 			addParametersFromFile("PHLuGreParametersData.csv");//ファイルのデータを読み込み
 			//ちゃんとファイルが読み込めていたら最初はベークライトのパラメータにしておく
-			instance->changeCurrentParameters("Bakelite");
+			//instance->changeCurrentParameters("Bakelite");
+			instance->changeCurrentParameters("NewMaterial");
 		}
 
 		return instance;

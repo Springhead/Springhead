@@ -53,6 +53,9 @@ namespace Spr {
 		static double getCurrentFrictionSpring();		///< 力覚レンダリングのバネ係数(プロキシのハプティックポインタの間のバネの係数)
 		static double getCurrentFrictionDamper();		///< 力覚レンダリングのダンパ係数(プロキシのハプティックポインタの間のダンパの係数)
 
+		//メモリを解放する
+		static void release();
+
 	private:
 		static PHLuGreParametersData* instance;//このクラスの唯一のインスタンス
 

@@ -251,6 +251,9 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 
 	//以下は現在接触している場合
 	PHIr* ir = sh->irs[0];//考えるべき接触の拘束条件
+	
+	//LuGreのパラメータの更新(注意: 毎フレーム更新することになってしまうので、この部分はやり方を変えたほうがよい)
+	sh->UpdateCache();
 
 	//ちょうど今接触し始めたとき
 	if (!sh->hasContact) {
