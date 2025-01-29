@@ -122,21 +122,20 @@ public:
 	double bristlesSpringK;			///< LuGreモデルにおける剛毛のバネ係数
 	double bristlesDamperD;			///< LuGreモデルにおける剛毛のダンパ係数
 	double bristlesViscosityV;		///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
-	Vec2d avgBristlesDeflection;	///< 剛毛の平均変位(接触面上の座標)
-	Vec2d avgBristlesDeflectionVel;	///< 剛毛の平均変位(接触面上の座標)を微分したもの　平均変位の変化の速さを表す
-	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
-	Vec3d pointerPos;				///< ハプティックポインタの位置(World座標)
-	double pointerDepth;			///< ハプティックポインタの最も沈み込んでいる部分の深さ(侵入量)
-	Vec3d proxyPos;					///< プロキシの位置(World座標)
-	Vec3d objectVel;				///< 接触している相手の物体の速度(World座標)
-	Vec2d relativeVelOnSurface;		///< プロキシと接触している物体の相対速度(接触面上の座標)
-	double avgStickingTime;			///< 平均固着継続時間
-	Vec2d frictionForce;			///< 摩擦力 (接触絵面上の座標)
 	double LuGreParameterA;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータA
 	double LuGreParameterB;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータB
 	double LuGreParameterC;			///< LuGreモデルの関数g(T)を計算するときに使用されるパラメータC
+	Posed contactSurfacePose;		///< World座標系から見た接触面上の座標系の相対位置姿勢
+	double avgStickingTime;			///< 平均固着継続時間
 	double LuGreFunctionG;			///< LuGreモデルにおける関数g(T) = A + B log(C * avgStickingTime + 1)の値
-
+	Vec3d avgBristlesDeflection;	///< 剛毛の平均変位(World座標)
+	Vec3d pointerPos;				///< ハプティックポインタの位置(World座標)
+	double pointerDepth;			///< ハプティックポインタの深さ(侵入量)
+	Vec3d proxyPos;					///< プロキシの位置(World座標)
+	Vec3d lastProxyPos;				///< プロキシの前回の位置(World座標)
+	Vec3d objectPos;				///< 接触している相手の物体の現在の位置(World座標)
+	Vec3d lastObjectPos;			///< 接触している相手の物体の前回の位置(World座標)
+	Vec3d frictionForce;			///< 摩擦力 (World座標)
 
 	PHShapePairForHaptic();
 	void CopyFromPhysics(const PHShapePairForHaptic* src);
