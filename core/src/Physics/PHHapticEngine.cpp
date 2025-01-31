@@ -58,13 +58,13 @@ PHShapePairForHaptic::PHShapePairForHaptic() {
 	bristlesSpringK = 0;
 	bristlesDamperD = 0;
 	bristlesViscosityV = 0;
-	avgBristlesDeflection = Vec2d();
+	avgBristlesDeflection = Vec3d();
 	contactSurfacePose = Posed();
 	pointerPos = Vec3d();
 	pointerDepth = 0;
 	proxyPos = Vec3d();
 	objectVel = Vec3d();
-	relativeVelOnSurface = Vec2d();
+	relativeVel = Vec3d();
 	avgStickingTime = 0;
 	frictionForce = Vec3d();
 	LuGreParameterA = PHLuGreParametersData::getCurrentA();
