@@ -58,20 +58,20 @@ PHShapePairForHaptic::PHShapePairForHaptic() {
 	bristlesSpringK = 0;
 	bristlesDamperD = 0;
 	bristlesViscosityV = 0;
-	LuGreParameterA = PHLuGreParametersData::getCurrentA();
-	LuGreParameterB = PHLuGreParametersData::getCurrentB();
-	LuGreParameterC = PHLuGreParametersData::getCurrentC();
+	avgBristlesDeflection = Vec2d();
+	avgBristlesDeflectionVel = Vec2d();
 	contactSurfacePose = Posed();
-	avgStickingTime = 0;
-	LuGreFunctionG = LuGreParameterA;
-	avgBristlesDeflection = Vec3d();
 	pointerPos = Vec3d();
 	pointerDepth = 0;
 	proxyPos = Vec3d();
-	lastProxyPos = Vec3d();
-	objectPos = Vec3d();
-	lastObjectPos = Vec3d();
-	frictionForce = Vec3d();
+	objectVel = Vec3d();
+	relativeVelOnSurface = Vec2d();
+	avgStickingTime = 0;
+	frictionForce = Vec2d();
+	LuGreParameterA = PHLuGreParametersData::getCurrentA();
+	LuGreParameterB = PHLuGreParametersData::getCurrentB();
+	LuGreParameterC = PHLuGreParametersData::getCurrentC();
+	LuGreFunctionG = LuGreParameterA;
 }
 
 void PHShapePairForHaptic::CopyFromPhysics(const PHShapePairForHaptic* src) {

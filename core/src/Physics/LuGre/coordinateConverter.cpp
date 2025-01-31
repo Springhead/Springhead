@@ -69,10 +69,7 @@ namespace Spr{
 	//接触面の法線とx軸方向、原点座標を与えると、World座標系から接触面上の座標系への変換を行うためのPoseを返す
 	//引数:
 	//    normal: World座標系における現在の接触面の法線方向
-	//	  xAxis: World座標系における現在の接触面のx軸方向(またはx軸の向きにしたい方向)
-	//           normalと直交しない場合には、normalに直交するように射影ベクトルをとって使用することとなる
-	//           また、xAxisにゼロベクトルが代入された場合や、xAxisがnormalと全く同じ方向の場合にはxAxisの値は無視され、
-	//           getWorldToPlanePose(Vec3d normal, Vec3d origin)と同じ結果を返す
+	//	  xAxis: World座標系における現在の接触面のx軸方向
 	//    origin: 現在の接触面での平面上の座標系の原点を表すWorld座標系での座標
 	//戻り値:
 	//    接触平面上の座標系を表すPose型変数
@@ -84,16 +81,12 @@ namespace Spr{
 		//新しい平面上の座標系での原点の設定
 		newPose.Pos() = origin;
 
-		//xAxisがゼロベクトルの場合を考慮する
-		if (xAxis == Vec3d()) {
-			return getWorldToPlanePose(normal, origin);
-		}
-
 		//newNormal, newXAxisの長さを1に補正しておく
 		normal = normal.unit();
 		xAxis = xAxis.unit();
 
 		//normalとxAxisが直交するように、xAxisを補正
+		//(基本的に直交しているものだが、数値計算の誤差の積み重ねでずれている可能性があるため一応補正計算をしておく)
 		//補正方法について
 		//直交する <=> dot(normal, xAxis) = 0    (dotは内積とする)
 		//そこで、ある定数aを用いて、
@@ -106,11 +99,6 @@ namespace Spr{
 		//xAxis <- xAxis - dot(normal, xAxis) * normal
 		//により補正することとする
 		xAxis = xAxis - dot(normal, xAxis) * normal;
-
-		//xAxisがnormalと同じ方向の場合(この時点でxAxisがゼロベクトルとなっている場合)を考慮する
-		if (xAxis == Vec3d()) {
-			return getWorldToPlanePose(normal, origin);
-		}
 
 		//新しいy軸方向を計算
 		Vec3d yAxis = normal % xAxis;//%は外積

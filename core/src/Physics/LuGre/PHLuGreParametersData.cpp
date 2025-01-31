@@ -121,8 +121,7 @@ namespace Spr {
 			addParametersFromFile("PHLuGreParametersData.csv");//ファイルのデータを読み込み
 			//ちゃんとファイルが読み込めていたら最初はベークライトのパラメータにしておく
 			//instance->changeCurrentParameters("Bakelite");
-			//instance->changeCurrentParameters("NewMaterial");
-			instance->changeCurrentParameters("Default");
+			instance->changeCurrentParameters("NewMaterial");
 		}
 
 		return instance;

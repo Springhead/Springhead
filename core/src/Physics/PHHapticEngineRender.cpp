@@ -258,50 +258,69 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	//ちょうど今接触し始めたとき
 	if (!sh->hasContact) {
 		sh->hasContact = true;														//接触していることを記録
-		sh->avgStickingTime = 0;													//平均固着時間を初期化
-		sh->LuGreFunctionG = sh->LuGreParameterA;									//関数g(T)を初期化
-		sh->avgBristlesDeflection = Vec3d();										//剛毛の平均変位を初期化
+		sh->avgBristlesDeflection = Vec2d();										//剛毛の平均変位を初期化
+		sh->avgBristlesDeflectionVel = Vec2d();										//剛毛の平均変位の微分値を初期化
+		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, Vec3d(1.0, 0.0, 0.0), ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(ポインタの位置の真上を接触面上の座標系の原点とする)
+		sh->pointerDepth = ir->depth;												//現在のハプティックポインタの深さ(侵入量)
 		sh->pointerPos = ir->pointerPointW - ir->r;									//現在のハプティックポインタの位置(World座標)
-		sh->pointerDepth = 0;														//現在のハプティックポインタの深さ(侵入量)
-		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの現在の位置はハプティックポインタの上部(かつ他の物体に侵入しない位置)で、プロキシの重心の位置にとる
-		sh->lastProxyPos = sh->proxyPos;											//プロキシの前回の位置もプロキシの現在の位置と同じ位置とする
-		sh->objectPos = sp->GetSolid(0)->GetCenterOfMass();							//接触している相手の物体の現在の位置(World座標)
-		sh->lastObjectPos = sh->objectPos;											//接触している相手の物体の前回の位置(World座標)は、現在の位置と同じとしておく
-		sh->frictionForce = Vec3d();												//摩擦力の初期化
+		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの位置はプロキシの重心の位置とする
+		sh->objectVel = sp->GetSolid(0)->GetVelocity();								//接触している相手の物体の現在の速度(World座標)
+		sh->relativeVelOnSurface = Vec2d();											//プロキシと接触している物体の相対速度(接触面上の座標)は接触時は0にしておく
+		sh->avgStickingTime = 0;													//平均固着時間を初期化
+		sh->frictionForce = Vec2d();												//摩擦力の初期化
+		sh->LuGreFunctionG = sh->LuGreParameterA;									//関数g(T)を初期化
 		sp->frictionState = PHSolidPairForHapticIf::STATIC;							//接触したときは静止しているものとする
 		sp->fricCount = 0;															//静止状態 or 動いている状態が継続しているステップ数(fricCount)を0にする
-		//sh->contactSurfacePose = getWorldToPlanePose(ir->normal, sh->lastProxyPos);	//接触面の座標系を用意(前回のプロキシの位置を接触面上の座標系の原点とする)
-		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, Vec3d(1.0, 0.0, 0.0), sh->lastProxyPos);
 		DSTR << "接触開始" << std::endl;
 		return true;
 	}
 
-	//接触面上の座標系(ローカル座標系)を更新する
-	//ただし、z軸方向が新しい接触面の法線方向に、x軸が前回の速度方向に近い方向になるようにする
-	Vec3d lastRelativeVel = (sh->proxyPos - sh->lastProxyPos - sh->objectPos + sh->lastObjectPos) / he->GetHapticTimeStep();	//前回の速度方向(World座標)
-	//Posed contactSurfacePose = getWorldToPlanePose(ir->normal, lastRelativeVel, sh->proxyPos);									//接触面上の座標系の更新(前回のプロキシの位置を座標系の原点とする)
-	Posed contactSurfacePose = sh->contactSurfacePose;
+	//新しいx軸の方向(前回の速度の方向)をWorld座標で取得する
+	//法線方向と原点座標の変化だけを考慮して作成した新しいPoseを作成(速度方向の変化を考慮していない)
+	Posed normalAdjustedSurfacePose = updateWorldToPlanePose(sh->contactSurfacePose, ir->normal, ir->pointerPointW + ir->depth * ir->normal);
+	Vec3d newXAxis;//新しいx軸の方向(World座標)
+	bool relativeVelIsZero = (sh->relativeVelOnSurface.norm() < 1e-20);//速度が0とみなせる場合かどうか
+	if (relativeVelIsZero) {
+		newXAxis = convertPlaneToWorldVec(Vec3d(1.0, 0.0, 0.0), normalAdjustedSurfacePose);//速度が0の場合は、新しいx座標の方向は現在と同じ向きにする
+	} else {
+		//速度が0でない場合は、normalAdjustedSurfacePoseの座標系上で、(sh->relativeVelOnSurface.x, sh->relativeVelOnSurface.y, 0.0)で表される方向が、新しいx座標の方向となる
+		newXAxis = convertPlaneToWorldVec(Vec3d(sh->relativeVelOnSurface.x, sh->relativeVelOnSurface.y, 0.0).unit(), normalAdjustedSurfacePose);
+	}
+	
+	//剛毛の平均変位zと相対速度vをvの向きがx軸正方向になるように接触平面上で回転させる
+	double theta = relativeVelIsZero ? 0.0 : -atan2(sh->relativeVelOnSurface.y, sh->relativeVelOnSurface.x);//平面上の回転量を取得
+	Matrix2d rotationMatrix = Matrix2d::Rot(theta);
+	sh->relativeVelOnSurface = rotationMatrix * sh->relativeVelOnSurface;
+	sh->avgBristlesDeflection = rotationMatrix * sh->avgBristlesDeflection;
 
-	//必要な変数などの用意(おもに現在の接触面上の座標系での座標などを用意する)
+
+	//必要な変数などの用意
+	//定数
 	double spring = pointer->GetFrictionSpring();													//ハプティックポインタとプロキシの間のバネ係数
 	double damper = pointer->GetFrictionDamper();													//ハプティックポインタとプロキシの間のダンパ係数
 	double mass = pointer->GetMass();																//プロキシの質量
+	sh->contactSurfacePose = getWorldToPlanePose(ir->normal, newXAxis,ir->pointerPointW + ir->depth * ir->normal);//接触面上の座標系の更新(ポインタの位置の真上を接触面上の座標系の原点とする)
 	double hdt = he->GetHapticTimeStep();															//摩擦計算の時間間隔
-	Vec3d lastAvgBristlesDeflectionOnSurface = convertWorldToPlaneVec(sh->avgBristlesDeflection, contactSurfacePose);	//前回のzの値(接触面上の座標)
+	//Vec3d objectPos = sp->GetSolid(0)->GetCenterOfMass();											//接触している相手の物体の現在の重心の位置(World座標)
+	Vec3d objectVel = sp->GetSolid(0)->GetVelocity();												//接触している相手の物体の現在の速度(World座標)
+	Vec3d objectVelOnSurface = convertWorldToPlaneVec(objectVel, sh->contactSurfacePose);			//接触している相手の物体の現在の速度(接触面上の座標)
+	Vec3d lastObjectVel = sh->objectVel;															//接触している相手の物体の前回の速度(World座標)
+	Vec3d lastObjectVelOnSurface = convertWorldToPlaneVec(lastObjectVel, sh->contactSurfacePose);	//接触している相手の物体の前回の速度(接触面上の座標)
+	Vec3d lastPointerPos = sh->pointerPos;															//ハプティックポインタの前回の位置(World座標)
+	Vec3d lastPointerPosOnSurface = convertWorldToPlanePos(lastPointerPos, sh->contactSurfacePose);	//ハプティックポインタの前回の位置(接触面上の座標)
 	Vec3d pointerPos = ir->pointerPointW - ir->r;													//ハプティックポインタの現在の位置(World座標)
-	Vec3d pointerPosOnSurface = convertWorldToPlanePos(pointerPos, contactSurfacePose);				//ハプティックポインタの現在の位置(接触面上の座標)
-	Vec3d lastPointerPosOnSurface = convertWorldToPlanePos(sh->pointerPos, contactSurfacePose);		//ハプティックポインタの前回の位置(接触面上の座標)
-	double pointerDepth = ir->depth;																//ハプティックポインタの現在の深さ(侵入量)
+	Vec3d pointerPosOnSurface = convertWorldToPlanePos(pointerPos, sh->contactSurfacePose);			//ハプティックポインタの現在の位置(接触面上の座標)
 	double lastPointerDepth = sh->pointerDepth;														//ハプティックポインタの前回の深さ(侵入量)
-	Vec3d lastProxyPosOnSurface = convertWorldToPlanePos(sh->proxyPos, contactSurfacePose);			//プロキシの前回の位置(接触面上の座標)
-	Vec3d secondLastProxyPosOnSurface = convertWorldToPlanePos(sh->lastProxyPos, contactSurfacePose);	//プロキシの前々回の位置(接触面上の座標)
-	Vec3d objectPos = sp->GetSolid(0)->GetCenterOfMass();											//接触相手の物体の現在の位置(World座標)
-	Vec3d objectPosOnSurface = convertWorldToPlanePos(objectPos, contactSurfacePose);				//接触相手の物体の現在の位置(接触面上の座標)
-	Vec3d lastObjectPosOnSurface = convertWorldToPlanePos(sh->objectPos, contactSurfacePose);		//接触相手の物体の前回の位置(接触面上の座標)
+	double pointerDepth = ir->depth;																//ハプティックポインタの現在の深さ(侵入量)
+	Vec3d lastProxyPos = sh->proxyPos;																//プロキシの前回の位置(World座標)
+	Vec3d lastProxyPosOnSurface = convertWorldToPlanePos(lastProxyPos, sh->contactSurfacePose);		//プロキシの前回の位置(接触面上の座標)
+	Vec2d lastRelativeVelOnSurface = sh->relativeVelOnSurface;										//前回の時点のプロキシと接触している物体の相対速度(接触面上の座標)
+	Vec2d lastAvgBristlesDeflection = sh->avgBristlesDeflection;									//剛毛の平均変位 (接触面上の座標)
+	
 
 	//平均固着時間、g(T)の更新
 	double avgStickingTimeIfNotMoving = sh->avgStickingTime + hdt;
-	double avgStickingTimeIfMoving = sh->LuGreFunctionG / (sh->bristlesSpringK * lastRelativeVel.norm());
+	double avgStickingTimeIfMoving = sh->LuGreFunctionG / (sh->bristlesSpringK * lastRelativeVelOnSurface.norm());
 	sh->avgStickingTime = std::min(avgStickingTimeIfNotMoving, avgStickingTimeIfMoving);
 	sh->LuGreFunctionG = sh->LuGreParameterA + sh->LuGreParameterB * std::log(sh->LuGreParameterC * sh->avgStickingTime + 1);
 
@@ -316,40 +335,31 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	}
 	sp->frictionState = newFrictionState;
 
-
 	//接触面上の座標系のx軸方向, y軸方向のそれぞれについて連立方程式を立てて解いていく
-	//連立方程式を解いた結果を入れるための場所を用意
-	Vec3d proxyPosOnSurface = Vec3d();				//現在のプロキシの位置(接触面上の座標)
-	Vec3d avgBristlesDeflectionOnSurface = Vec3d();	//現在のzの値(接触面上の座標系での値)
-	Vec3d frictionForceOnSurface = Vec3d();			//現在の摩擦力(接触面上の座標系での値)
-	//連立方程式を解くための準備
-	double fPerp = spring * pointerDepth + (damper / hdt) * (pointerDepth - lastPointerDepth);	//垂直抗力
+	double A = spring * pointerDepth + damper * (pointerDepth - lastPointerDepth) / hdt;
 	for (int i = 0; i < 2; i++) {
 		//接触面上のx方向について
 
 		//連立方程式の用意(連立方程式はWx = wとする)
-		double P = sh->bristlesSpringK * lastAvgBristlesDeflectionOnSurface[i] / sh->LuGreFunctionG;
-		double Q = sh->bristlesSpringK * (objectPosOnSurface[i] - lastObjectPosOnSurface[i]) / sh->LuGreFunctionG;
-		double R = -lastAvgBristlesDeflectionOnSurface[i] + lastProxyPosOnSurface[i] + objectPosOnSurface[i] - lastObjectPosOnSurface[i];
-		double S = sh->bristlesSpringK * lastAvgBristlesDeflectionOnSurface[i] * lastProxyPosOnSurface[i] / sh->LuGreFunctionG;
-		double U = sh->bristlesDamperD * lastAvgBristlesDeflectionOnSurface[i]
-			+ sh->bristlesViscosityV * (lastProxyPosOnSurface[i] + objectPosOnSurface[i] - lastObjectPosOnSurface[i]);
-		double V = mass * (2 * lastProxyPosOnSurface[i] - secondLastProxyPosOnSurface[i]) / (hdt * hdt)
-			+ spring * pointerPosOnSurface[i]
-			+ damper * (pointerPosOnSurface[i] - lastPointerPosOnSurface[i] + lastProxyPosOnSurface[i]) / hdt;
+		double B = spring * (pointerPosOnSurface[i] - lastProxyPosOnSurface[i])
+			+ damper * (pointerPosOnSurface[i] - lastPointerPosOnSurface[i]) / hdt
+			- mass * (objectVelOnSurface[i] - lastObjectVelOnSurface[i]) / hdt
+			+ mass * lastRelativeVelOnSurface[i] / hdt;
+		double S = sh->bristlesSpringK * lastRelativeVelOnSurface[i] * hdt / sh->LuGreFunctionG;
+		double T = sh->bristlesSpringK * lastAvgBristlesDeflection[i] / sh->LuGreFunctionG;
 
 		//連立方程式の左辺の行列を作成
 		Matrix3d W[2];//W[0]はプロキシと物体の相対速度が正になる場合、W[1]は相対速度が負になる場合の行列を表す
 		//まずは相対速度が正になる場合を埋める
-		W[0][0][0] = 1 - P;
-		W[0][0][1] = -1 + Q;
-		W[0][0][2] = 0;
-		W[0][1][0] = sh->bristlesViscosityV * fPerp;
-		W[0][1][1] = fPerp * (sh->bristlesSpringK * hdt + sh->bristlesDamperD);
-		W[0][1][2] = hdt;
-		W[0][2][0] = mass / (hdt * hdt) + spring + damper / hdt;
-		W[0][2][1] = 0;
-		W[0][2][2] = -1;
+		W[0][0][0] = A * sh->bristlesSpringK * hdt + sh->bristlesDamperD;
+		W[0][0][1] = A * sh->bristlesViscosityV;
+		W[0][0][2] = -1;
+		W[0][1][0] = 0;
+		W[0][1][1] = -spring * hdt - damper - mass / hdt;
+		W[0][1][2] = -1;
+		W[0][2][0] = -S - 1;
+		W[0][2][1] = 1 - T;
+		W[0][2][2] = 0;
 		//相対速度が負になる場合
 		//(ほとんどが相対速度正の場合と同じなので、コピーしてから違う部分だけ書き換える)
 		for (int j = 0; j < 3; j++) {
@@ -357,39 +367,32 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 				W[1][j][k] = W[0][j][k];
 			}
 		}
-		W[1][0][0] = 1 + P;
-		W[1][0][1] = -1 - Q;
+		W[1][2][0] = S - 1;
+		W[1][2][1] = 1 + T;
 
 		//連立方程式の右辺のベクトルを作成
-		Vec3d w[2];//w[0]はプロキシと物体の相対速度が正になる場合、w[1]は相対速度が負になる場合の行列を表す
-		w[0][0] = R - S;
-		w[0][1] = fPerp * U;
-		w[0][2] = V;
-		w[1][0] = R + S;
-		w[1][1] = fPerp * U;
-		w[1][2] = V;
-		
+		Vec3d w;
+		w[0] = -A * sh->bristlesSpringK * lastAvgBristlesDeflection[i];
+		w[1] = -B;
+		w[2] = 0;
+		//printf("左辺([%f, %f], [%f], [%f, %f])\n", W[0][0][0], W[0][0][1], W[0][1][1], W[0][2][0], W[0][2][1]);
 		//連立方程式の解を入れるベクトルを用意
 		Vec3d x[2];//x[0]がプロキシの相対速度正の場合の結果、x[1]は相対速度負の場合の結果
 
 		//連立方程式を解く
 		for (int j = 0; j < 2; j++) {//j = 0はプロキシの相対速度が正の場合の計算、j = 1は相対速度が負の場合の計算
 			int ip[3];
-			gauss(W[j], x[j], w[j], ip);
+			gauss(W[j], x[j], w, ip);
 		}
 		
-		//連立方程式を解いた結果得られる相対速度を求める
-		double relativeVelOnSurface[2];//1つ目の値が相対速度が正の場合の計算結果で、2つ目の値が相対速度が負の場合の計算結果
-		for (int j = 0; j < 2; j++) {
-			relativeVelOnSurface[j] = (w[j][0] - lastProxyPosOnSurface[i] - objectPosOnSurface[i] + lastObjectPosOnSurface[i]) / hdt;//w[j][0]は現在のプロキシの位置(接触面上の座標)
-		}
-
 		//連立方程式を解いた結果、x[0]とx[1]のどちらを採用するか決める
 		bool conditionSatisfied[2];//プロキシの相対速度が正の場合と、負の場合について、それぞれ条件が満たされているかを表す
-		conditionSatisfied[0] = ( relativeVelOnSurface[0] >= 0 );
-		conditionSatisfied[1] = ( relativeVelOnSurface[1] < 0 );
+		conditionSatisfied[0] = ( x[0][1] >= 0 );
+		conditionSatisfied[1] = ( x[1][1] < 0 );
+		
+		//printf("(%f, %f, %f) (%f, %f, %f)\n", x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2]);
 
-		int selectedIndex = 0;//相対速度が正の場合(0)と負の場合(1)のどちらを採用するか
+		int selectedIndex = 0;//x[0]とx[1]のどちらを採用するか
 		if (conditionSatisfied[0]) {
 			if (conditionSatisfied[1]) {
 				//どちらも条件を満たしている場合
@@ -405,41 +408,45 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 			selectedIndex = 1;
 		} else {
 			//どちらも条件を満たしていない場合
-			//DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしていません" << std::endl;
+			if (i == 0) DSTR << "プロキシの相対速度が正の場合も負の場合も条件を満たしていません" << std::endl;
+			selectedIndex = 1;
 		}
 		
-		//連立方程式を解いた結果を保存
-		proxyPosOnSurface[i] = x[selectedIndex][0];
-		avgBristlesDeflectionOnSurface[i] = x[selectedIndex][1];
-		frictionForceOnSurface[i] = x[selectedIndex][2];
+		//計算結果を保存
+		sh->relativeVelOnSurface[i] = x[selectedIndex][1];											//プロキシの相対速度(接触面上の座標)
+		sh->avgBristlesDeflection[i] = lastAvgBristlesDeflection[i] + x[selectedIndex][0] * hdt;	//剛毛の平均変位(接触面上の座標)
+		sh->avgBristlesDeflectionVel[i] = x[selectedIndex][0];										//剛毛の平均変位(接触面上の座標)の微分
+		sh->frictionForce[i] = x[selectedIndex][2];													//摩擦力(接触面上の座標)
+
+		/*if (i == 0) {
+			DSTR << sh->avgStickingTime << sh->LuGreFunctionG << S << "," << T << std::endl;
+		}*/
 	}
 
 	//計算結果の保存
-	sh->hasContact = true;																					//接触していることを記録
-	sh->contactSurfacePose = contactSurfacePose;															//接触面上の座標系を表すPosed
-	sh->avgBristlesDeflection = convertPlaneToWorldVec(avgBristlesDeflectionOnSurface, contactSurfacePose);	//現在のzの値(World座標)
-	sh->pointerPos = pointerPos;																			//現在のハプティックポインタの位置(World座標)
-	sh->pointerDepth = pointerDepth;																		//現在のハプティックポインタの深さ(侵入量)
-	sh->lastProxyPos = sh->proxyPos;																		//前回のプロキシの位置(World座標)
-	sh->proxyPos = convertPlaneToWorldPos(proxyPosOnSurface, contactSurfacePose);							//現在のプロキシの位置(World座標)
-	sh->lastObjectPos = sh->objectPos;																		//前回の接触相手の物体の位置(World座標)
-	sh->objectPos = objectPos;																				//現在の接触相手の物体の位置(World座標)
-	sh->frictionForce = convertPlaneToWorldVec(frictionForceOnSurface, contactSurfacePose);					//現在の摩擦力(World座標)
+	sh->hasContact = true;			//接触していることを記録
+	sh->pointerPos = pointerPos;	//ハプティックポインタの位置(World座標)
+	sh->pointerDepth = pointerDepth;//ハプティックポインタの深さ(侵入量)
+	sh->objectVel = objectVel;		//接触している相手の物体の速度(World座標)
+	//プロキシの位置の保存
+	Vec3d relativeVelOnSurface3d = Vec3d(sh->relativeVelOnSurface.x, sh->relativeVelOnSurface.y, 0);
+	Vec3d proxyPosOnSurface = lastProxyPosOnSurface + (relativeVelOnSurface3d + objectVelOnSurface) * hdt;	//プロキシの現在の位置(接触面上の座標)
+	Vec3d proxyPos = convertPlaneToWorldPos(proxyPosOnSurface, sh->contactSurfacePose);						//プロキシの現在の位置(World座標)
+	sh->proxyPos = proxyPos;
 	
-	//拘束条件の生成(ここで生成する拘束条件は、接触面に対して平行にはたらく位置の拘束条件)
+	//拘束条件の生成(ここで生成する拘束条件は、接触面に対して平行にはたらく条件)
 	PHIr* fricIr = DBG_NEW PHIr();
 	*fricIr = *ir;
-	Vec3d offsetVector = sh->proxyPos - pointerPos;										//現在のハプティックポインタの位置から現在のプロキシの位置への移動量(World座標)
-	Vec3d tangentialVector = offsetVector - dot(offsetVector, ir->normal) * ir->normal;	//offsetVectorのうち、平面に対して平行な成分のみを抽出したもの
-	fricIr->normal = tangentialVector.unit();
-	fricIr->depth = tangentialVector.norm();
+	Vec3d proxyPosDelta = sh->proxyPos - (ir->pointerPointW + ir->depth * ir->normal - ir->r);	//ハプティックポインタの真上にプロキシがいたときから現在のプロキシの位置への移動量(World座標)
+	fricIr->normal = proxyPosDelta.unit();
+	fricIr->depth = proxyPosDelta.norm();
 	sh->irs.push_back(fricIr);
 	
 	//デバッグ用
 	//DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y  << ")" << std::endl;
 	//DSTR << "T : " << sh->avgStickingTime[0] << std::endl;
 	//DSTR << sh->pointerPos.x << "," << sh->pointerPos.z << "," << sh->pointerDepth << std::endl;
-	DSTR << sh->pointerPos.x << "," << sh->pointerDepth << "," << sh->avgStickingTime << ", " << avgStickingTimeIfMoving  << "," << sh->LuGreFunctionG << "," << sh->avgBristlesDeflection.x << "," << sh->proxyPos.x << std::endl;
+
 	return true;
 }
 
