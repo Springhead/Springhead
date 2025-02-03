@@ -110,6 +110,13 @@ struct PHShapePairForHapticIf : public CDShapePairIf {
 	double GetMu();
 	PHFrameIf* GetFrame(int i);
 	void UpdateCache();
+	Vec3d GetAvgBristlesDeflection();
+	Vec3d GetPointerPos();
+	Vec3d GetProxyPos();
+	Vec3d GetRelativeVel();
+	double GetAvgStickingTime();
+	Vec3d GetFrictionForce();
+	double GetLuGreFunctionG();
 };
 struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	SPR_IFDEF(PHSolidPairForHaptic);

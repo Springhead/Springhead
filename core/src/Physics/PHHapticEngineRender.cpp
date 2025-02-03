@@ -259,7 +259,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	if (!sh->hasContact) {
 		sh->hasContact = true;														//接触していることを記録
 		sh->avgBristlesDeflection = Vec3d();										//剛毛の平均変位を初期化
-		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, Vec3d(1.0, 0.0, 0.0), ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(プロキシの位置の真上を接触面上の座標系の原点とする)
+		sh->contactSurfacePose = getWorldToPlanePose(ir->normal, ir->pointerPointW + ir->depth * ir->normal);	//接触面の座標系を用意(プロキシの位置の真上を接触面上の座標系の原点とする)
 		sh->pointerDepth = ir->depth;												//現在のハプティックポインタの深さ(侵入量)
 		sh->pointerPos = ir->pointerPointW - ir->r;									//現在のハプティックポインタの位置(World座標)
 		sh->proxyPos = ir->pointerPointW + ir->depth * ir->normal - ir->r;			//プロキシの位置はプロキシの重心の位置とする
@@ -327,9 +327,9 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 		//連立方程式の用意(連立方程式はWx = wとする)
 		double P = sh->bristlesSpringK * lastAvgBristlesDeflectionOnSurface[i] / sh->LuGreFunctionG;
 		double Q = sh->bristlesSpringK * lastRelativeVelOnSurface[i] * hdt / sh->LuGreFunctionG;
-		double U = mass * (lastRelativeVelOnSurface[i] + objectVelOnSurface[i] - lastObjectVelOnSurface[i]) / hdt
+		double U = mass * (lastRelativeVelOnSurface[i] - objectVelOnSurface[i] + lastObjectVelOnSurface[i]) / hdt
 			+ spring * (pointerPosOnSurface[i] - objectVelOnSurface[i] * hdt)
-			+ damper * (pointerPosOnSurface[i] - lastPointerPosOnSurface[i] - objectVelOnSurface[i]);
+			+ damper * ((pointerPosOnSurface[i] - lastPointerPosOnSurface[i]) / hdt - objectVelOnSurface[i]);
 
 		//連立方程式の左辺の行列を作成
 		Matrix3d W[2];//W[0]はプロキシと物体の相対速度が正になる場合、W[1]は相対速度が負になる場合の行列を表す
@@ -424,7 +424,7 @@ bool PHHapticEngine::CompLuGreFrictionIntermediateRepresentation(PHHapticStepBas
 	sh->irs.push_back(fricIr);
 	
 	//デバッグ用
-	// DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y << ")" << std::endl;
+	//DSTR << "z : (" << sh->avgBristlesDeflection.x << ", " << sh->avgBristlesDeflection.y << ")" << "," << sh->proxyPos.x << std::endl;
 	//DSTR << "T : " << sh->avgStickingTime[0] << std::endl;
 	//DSTR << sh->pointerPos.x << "," << sh->pointerPos.z << "," << sh->pointerDepth << std::endl;
 

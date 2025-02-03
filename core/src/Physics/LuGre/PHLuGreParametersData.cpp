@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <springhead.h>
 
 namespace Spr {
 
@@ -17,6 +18,10 @@ namespace Spr {
 		if (data->find(material) != data->end()) {
 			//指定された材質のパラメータが存在するとき
 			getInstance()->currentParameters = data->at(material);
+		}
+		else {
+			//指定された材質のパラメータが存在しないとき
+			DSTR << "指定された材質が存在しません!!!" << std::endl;
 		}
 	}
 
@@ -121,7 +126,8 @@ namespace Spr {
 			addParametersFromFile("PHLuGreParametersData.csv");//ファイルのデータを読み込み
 			//ちゃんとファイルが読み込めていたら最初はベークライトのパラメータにしておく
 			//instance->changeCurrentParameters("Bakelite");
-			instance->changeCurrentParameters("NewMaterial");
+			//instance->changeCurrentParameters("NewMaterial");
+			instance->changeCurrentParameters("Default");
 		}
 
 		return instance;

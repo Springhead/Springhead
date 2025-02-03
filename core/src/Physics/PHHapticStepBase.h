@@ -151,6 +151,15 @@ public:
 	int NIrsNormal() { return nIrsNormal;  }
 	Vec3d GetIrForce(int i) { return irs[i]->force;  }
 	double GetMu() { return muCur;  }
+
+	//LuGreモデルに関する値の出力
+	Vec3d GetAvgBristlesDeflection() { return avgBristlesDeflection; }
+	Vec3d GetPointerPos() { return pointerPos; }
+	Vec3d GetProxyPos() { return proxyPos; }
+	Vec3d GetRelativeVel() { return relativeVel; }
+	double GetAvgStickingTime() { return avgStickingTime; }
+	Vec3d GetFrictionForce() { return frictionForce; }
+	double GetLuGreFunctionG() { return LuGreFunctionG; }
 };
 
 //----------------------------------------------------------------------------
