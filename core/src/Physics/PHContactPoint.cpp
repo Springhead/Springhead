@@ -72,23 +72,23 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			 damper = mat[0]->damper;
 		else damper = (mat[0]->damper * mat[1]->damper) / (mat[0]->damper + mat[1]->damper);
 	}
-
+	printf("contact point constructor\n");
 	Posed  poseSolid[2];
-	Posed  poseRel  [2];
-	Vec3d  vc   [2];
+	Posed  poseRel[2];
+	Vec3d  vc[2];
 	Vec3d  vcabs[2];
-	
+
 	pose.Pos() = p;
 	pose.Ori().FromMatrix(local);
-	
+
 	solid[0] = s0;
 	solid[1] = s1;
 
-	for(int i = 0; i < 2; i++){
+	for (int i = 0; i < 2; i++) {
 		// 接触点での速度場
 		poseRel[i] = sp->frame[i]->pose_abs.Inv() * pose;
 		Vec3d normal = (i == 0 ? 1.0 : -1.0) * poseRel[i].Ori() * Vec3d(1.0, 0.0, 0.0);
-		vc   [i] = mat[i]->CalcVelocity(poseRel[i].Pos(), normal);
+		vc[i] = mat[i]->CalcVelocity(poseRel[i].Pos(), normal);
 		vcabs[i] = poseRel[i].Ori().Conjugated() * vc[i];
 
 		poseSolid[i].Pos() = solid[i]->GetFramePosition();
@@ -100,13 +100,33 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 	// relative velocity of contact motor in local coord
 	velField = vcabs[1] - vcabs[0];
-	
+
 	if (rotationFriction == 0.0f) {
 		movableAxes.Enable(3);
 	}
 	movableAxes.Enable(4);
 	movableAxes.Enable(5);
+
+	// For LuGre Model
+	double hdt = 0.001;
+
+	//
+	PHLuGreState lgs = sp->GetLuGreState();
+	unsigned long count = s->GetCount();
+	CDShapePairState st;
+	sp->GetSt(st);
+
+	unsigned int contactDuration = st.contactDuration;
+	printf("contactDuration:%d\n", contactDuration);
+	// Update g(T) and T
+	//double avgStickingTimeIfNotMoving = T + hdt;
+	//double avgStickingTimeIfMoving = g / (mat[0]->bristlesSpringK * velField.norm()); 
+	//sp->T = std::min(avgStickingTimeIfNotMoving, avgStickingTimeIfMoving);
+	//T = avgStickingTimeIfNotMoving;
+	//g = sp->timeVaryFrictionA + sp->timeVaryFrictionB * std::log(sp->timeVaryFrictionC * sp->T + 1);
+	
 }
+
 
 void PHContactPoint::CompBias(){
 	PHSceneIf* scene = GetScene();

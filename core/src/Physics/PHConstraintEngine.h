@@ -23,6 +23,11 @@ class PHRootNode;
 class PHConstraintEngine;
 class PHPath;
 
+struct PHLuGreState {
+	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
+	double T;		// Average sticking time
+};
+
 ///	形状の組
 class PHShapePairForLCP: public PHShapePair{
 public:
@@ -65,6 +70,9 @@ public:
 		pa = shapePoseW[0] * closestPoint[0];
 		pb = shapePoseW[1] * closestPoint[1];
 	}
+
+	PHLuGreState GetLuGreState() { return LuGreState; }
+	PHLuGreState LuGreState;
 };
 
 /// Solidの組

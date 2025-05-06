@@ -71,6 +71,7 @@ bool CDShapePair::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 			 state = CONTINUE;
 		else state = NEW;
 		lastContactCount = ct;
+		contactDuration = 0; // Reset contact duration
 	}else{
 		state = NONE;
 	}
@@ -105,6 +106,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;	
 	if (lastContactCount == unsigned(ct-1) ){	//	継続した接触の場合
+		contactDuration++;
 		//	法線向きに判定するとどれだけ戻ると離れるか調べる．
 		//　end = -epsilonとすることで、侵入していない状態(dist == 0)も接触に含むようにした(2012/5/22susa)
 		double dist;
@@ -117,6 +119,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 		goto found;
 	}else{										//	初めての接触の場合
+		contactDuration = 0;	
 		//	並進の移動分を戻す
 		Vec3d delta = delta1-delta0;
 		double end = delta.norm();
