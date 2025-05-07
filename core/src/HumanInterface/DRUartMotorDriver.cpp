@@ -420,7 +420,7 @@ bool DRUARTMotorDriver::InitCom() {
 bool DRUARTMotorDriver::Init(){
 	std::vector<string> comPorts;
 	if (port = -1) {
-		char nameBuffer[128 * 100];
+		char nameBuffer[128 * 1000];
 		if (QueryDosDevice(NULL, nameBuffer, sizeof(nameBuffer)) != 0) {
 			char* p = nameBuffer;
 			while (*p != '\0') {
