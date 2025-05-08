@@ -31,8 +31,6 @@ public:
 	double fx, flim0, flim;
 	bool   isStatic;
 
-	Vec3d  velField;  ///< contact motor velocity (in local coord)
-
 public:
 	/// コンストラクタ
 	PHContactPoint(){}

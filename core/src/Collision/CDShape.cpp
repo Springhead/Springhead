@@ -9,7 +9,7 @@
 
 namespace Spr{;
 
-PHMaterial::PHMaterial(){
+PHMaterial::PHMaterial() {
 	e = 0.4f;
 	density = 1000.0f;	//	Water's density in MKS
 	spring = 0.0f;
@@ -38,47 +38,8 @@ PHMaterial::PHMaterial(){
 	frictionViscosity = 0.0f;
 	stribeckVelocity = 0.1f;
 	stribeckmu = 0.1f;
-
-
-//GMS用
-	timeVaryFrictionAs = { 0.0001f,0.0003f,0.005f };
-	timeVaryFrictionBs = { 1800,1500,2500 };
-	timeVaryFrictionCs = { 0.0f,0.0f,0.0f };
-	timeVaryFrictionDs = { 0.0f,0.0f,0.0f };
-	mus = { 0.02f,0.07f,0.03f };
-	mu0s = { 0.5f,0.5f,0.50f };
-	stribeckmus = { 0.005f,0.007f,0.009f };
-	stribeckVelocitys = { 0.4f,0.5f,0.2f };
-	c = { 0.01f,0.03f,0.05f };
-	bristleK = { 1000.0f,700.0f,800.0f };
-
-	
-
-	velocityFieldMode      = VelocityField::NONE;
-	velocityFieldAxis      = Vec3d();
-	velocityFieldMagnitude = 0.0;
 }
 
-Vec3d PHMaterial::CalcVelocity(const Vec3d& pos, const Vec3d& normal) const{
-	if(velocityFieldMode == VelocityField::NONE){
-		return Vec3d();
-	}
-	if(velocityFieldMode == VelocityField::LINEAR){
-		return velocityFieldAxis * velocityFieldMagnitude;
-	}
-	if(velocityFieldMode == VelocityField::CYLINDER){
-		Vec3d  v  = velocityFieldAxis % pos;
-		double vn = v * normal;
-		Vec3d  vt = v - vn * normal;
-		const double eps = 1.0e-10;
-		double vtnorm = vt.norm();
-		if(vtnorm < eps)
-			return Vec3d();
-		vt *= (velocityFieldMagnitude/vtnorm);
-		return vt;
-	}
-	return Vec3d();
-}
 
 //-------------------------------------------------------------------------------------------------
 

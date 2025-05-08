@@ -76,7 +76,6 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	Posed  poseSolid[2];
 	Posed  poseRel  [2];
 	Vec3d  vc   [2];
-	Vec3d  vcabs[2];
 	
 	pose.Pos() = p;
 	pose.Ori().FromMatrix(local);
@@ -85,12 +84,6 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	solid[1] = s1;
 
 	for(int i = 0; i < 2; i++){
-		// 接触点での速度場
-		poseRel[i] = sp->frame[i]->pose_abs.Inv() * pose;
-		Vec3d normal = (i == 0 ? 1.0 : -1.0) * poseRel[i].Ori() * Vec3d(1.0, 0.0, 0.0);
-		vc   [i] = mat[i]->CalcVelocity(poseRel[i].Pos(), normal);
-		vcabs[i] = poseRel[i].Ori().Conjugated() * vc[i];
-
 		poseSolid[i].Pos() = solid[i]->GetFramePosition();
 		poseSolid[i].Ori() = solid[i]->GetOrientation();
 		// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
@@ -98,9 +91,6 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
 	}
 
-	// relative velocity of contact motor in local coord
-	velField = vcabs[1] - vcabs[0];
-	
 	if (rotationFriction == 0.0f) {
 		movableAxes.Enable(3);
 	}
@@ -138,11 +128,8 @@ void PHContactPoint::CompBias(){
 		db[0] = e * vjrel[0];
 	}
 
-	db[1] = velField[1];
-	db[2] = velField[2];
-
 	// determine static/dynamic friction based on tangential relative velocity
-	double vt = vjrel[1] + velField[1];
+	double vt = vjrel[1];
 	//isStatic = (-vth < vt && vt < vth);
 	isStatic = (-fth < vt && vt < fth);
 }
