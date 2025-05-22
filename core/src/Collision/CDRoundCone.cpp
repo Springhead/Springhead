@@ -78,7 +78,6 @@ int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 			return 0;
 		}
 	} else {
-		assert(0);
 		// どちらかの球に包含されている
 		if (radius[0] < radius[1]) {
 			w = dir*radius[1] + Vec3f(0,0, length/2.0);
