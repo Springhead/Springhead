@@ -80,8 +80,8 @@ struct PH1DJointLimitDesc{
 
 	PH1DJointLimitDesc() {
 		bEnabled = true;
-		spring   = 10000.0;
-		damper   =   100.0;
+		spring   = 100.0;
+		damper   =   10.0;
 		range    = Vec2d(1, -1); /// デフォルトでは拘束無効
 	}
 };
@@ -151,8 +151,8 @@ struct PHBallJointLimitDesc{
 
 	PHBallJointLimitDesc() {
 		bEnabled  = false;
-		spring    = 10000.0;
-		damper    =   100.0;
+		spring    = 100.0;
+		damper    =   10.0;
 		limitDir  = Vec3d(0,0,1);
 	}
 };
