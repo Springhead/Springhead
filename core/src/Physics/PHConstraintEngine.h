@@ -23,9 +23,10 @@ class PHRootNode;
 class PHConstraintEngine;
 class PHPath;
 
-struct PHLuGreState {
+struct PHLuGreSt {
 	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
 	double T;		// Average sticking time
+	double v;		// Average velocity of bristles
 };
 
 ///	形状の組
@@ -71,8 +72,8 @@ public:
 		pb = shapePoseW[1] * closestPoint[1];
 	}
 
-	PHLuGreState GetLuGreState() { return LuGreState; }
-	PHLuGreState LuGreState;
+	PHLuGreSt GetLuGreState() { return LuGreState; }
+	PHLuGreSt LuGreState;
 };
 
 /// Solidの組

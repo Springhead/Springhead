@@ -72,7 +72,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			 damper = mat[0]->damper;
 		else damper = (mat[0]->damper * mat[1]->damper) / (mat[0]->damper + mat[1]->damper);
 	}
-	printf("contact point constructor\n");
+	//printf("contact point constructor\n");
 	Posed  poseSolid[2];
 	Posed  poseRel[2];
 	Vec3d  vc[2];
@@ -83,24 +83,15 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 	solid[0] = s0;
 	solid[1] = s1;
-
+	
 	for (int i = 0; i < 2; i++) {
-		// 接触点での速度場
-		poseRel[i] = sp->frame[i]->pose_abs.Inv() * pose;
-		Vec3d normal = (i == 0 ? 1.0 : -1.0) * poseRel[i].Ori() * Vec3d(1.0, 0.0, 0.0);
-		vc[i] = mat[i]->CalcVelocity(poseRel[i].Pos(), normal);
-		vcabs[i] = poseRel[i].Ori().Conjugated() * vc[i];
-
 		poseSolid[i].Pos() = solid[i]->GetFramePosition();
 		poseSolid[i].Ori() = solid[i]->GetOrientation();
 		// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = poseSolid[i].Ori().Conjugated() * pose.Ori();
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
 	}
-
-	// relative velocity of contact motor in local coord
-	velField = vcabs[1] - vcabs[0];
-
+	
 	if (rotationFriction == 0.0f) {
 		movableAxes.Enable(3);
 	}
@@ -108,27 +99,32 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	movableAxes.Enable(5);
 
 	// For LuGre Model
-	double hdt = 0.001;
-
-	//
-	PHLuGreState lgs = sp->GetLuGreState();
-	unsigned long count = s->GetCount();
+	PHLuGreSt lgs = sp->GetLuGreState();
+	double dt = s->GetTimeStep();
 	CDShapePairState st;
 	sp->GetSt(st);
-
 	unsigned int contactDuration = st.contactDuration;
-	printf("contactDuration:%d\n", contactDuration);
-	// Update g(T) and T
-	//double avgStickingTimeIfNotMoving = T + hdt;
-	//double avgStickingTimeIfMoving = g / (mat[0]->bristlesSpringK * velField.norm()); 
-	//sp->T = std::min(avgStickingTimeIfNotMoving, avgStickingTimeIfMoving);
-	//T = avgStickingTimeIfNotMoving;
-	//g = sp->timeVaryFrictionA + sp->timeVaryFrictionB * std::log(sp->timeVaryFrictionC * sp->T + 1);
-	
+
+	// LuGre model parameters
+	sigma0 = 4000.0;
+	sigma1 = 5.0;
+	sigma2 = 0.6;
+	timeVaryA = 0.2;
+	timeVaryB = 0.6;
+	timeVaryC = 400.0;
+	if (contactDuration == 0) {
+		// Initialize LuGre state
+		//printf("initialize lugre state\n");
+		lgs.T = 0.0;
+		lgs.z[0] = 0.0;
+		lgs.z[1] = 0.0;
+	}
+	sp->LuGreState = lgs;
 }
 
 
 void PHContactPoint::CompBias(){
+	//printf("CompBias\n");
 	PHSceneIf* scene = GetScene();
 	double dt    = scene->GetTimeStep();
 	double dtinv = scene->GetTimeStepInv();
@@ -136,6 +132,34 @@ void PHContactPoint::CompBias(){
 	double vth   = scene->GetImpactThreshold();
 	double fth	 = scene->GetFrictionThreshold();
 
+	// LuGre model
+	PHLuGreSt lgs = shapePair->LuGreState;
+	// Get relative velocity
+	//v = Vec2d(b.vy + dv.vy, b.vz + dv.vz); 
+	v = Vec2d(vjrel[1], vjrel[2]);
+	double g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1);
+	// T
+	double T = lgs.T + dt;	// T <= T + dt
+	//double T_ = lgs.z.norm() / (v.norm() + 1.0e-12);	// z_ss / v = g(T)/(σ_0|v|)
+	double T_ = g / (sigma0 * v.norm() + 1.0e-12);	
+	lgs.T = std::min(T, T_);	// T <= min(T, T_)
+
+	// g(T)
+	g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1);
+
+	// z
+	//dz = v - (sigma0 * v.norm()) / g * lgs.z;
+	dz = Vec2d(v.x - (sigma0 * v.x) / g * lgs.z.x, v.y - (sigma0 * v.y) / g * lgs.z.y);
+
+	lgs.z = lgs.z + dz * dt;
+	z = lgs.z.norm();
+	shapePair->LuGreState = lgs;
+
+	Vec2d f_ = sigma0 * lgs.z + sigma1 * dz + sigma2 * v;
+	//printf("z:(%f, %f), g(T):%f, T:%f, T_:%f, F:(%f, %f), v:(%f, %f), \n", lgs.z.x, lgs.z.y, g, T, T_, f_[0], f_[1], vjrel[1], vjrel[2]);
+	Vec3d rot3 = poseSocket.Ori().RotationHalf();
+	printf("(%f, %f, %f)\n", Deg(rot3.x), Deg(rot3.y), Deg(rot3.z));
+	// Normal direction
 	//	速度が小さい場合は、跳ね返りなし。
 	if(vjrel[0] > - vth){
 		double diff = std::max(shapePair->depth - tol, 0.0);
@@ -158,17 +182,18 @@ void PHContactPoint::CompBias(){
 		db[0] = e * vjrel[0];
 	}
 
-	db[1] = velField[1];
-	db[2] = velField[2];
-
 	// determine static/dynamic friction based on tangential relative velocity
-	double vt = vjrel[1] + velField[1];
+	double vt = Vec2d(vjrel[1], vjrel[2]).norm();
 	//isStatic = (-vth < vt && vt < vth);
 	isStatic = (-fth < vt && vt < fth);
 }
 
 bool PHContactPoint::Projection(double& f_, int i) {
+	//printf("Projection i:%d\n", i);
+	PHSceneIf* scene = GetScene();
+	double dt = scene->GetTimeStep();
 	PHConstraint::Projection(f_, i);
+
 	if(i == 0){	
 		//垂直抗力 >= 0の制約
 		if(f_ < 0.0){
@@ -183,11 +208,20 @@ bool PHContactPoint::Projection(double& f_, int i) {
 
 		return false;
 	}
+
+	// Tangential direction
+	else if (i == 1 || i == 2) {
+		PHLuGreSt lgs = shapePair->LuGreState;
+		f_ = 0.0;// -fx * (sigma0 * lgs.z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
+		return true;
+	}
+	
 	else{
 		float lim = isStatic ? flim0 : flim;
 		if (i == 3 && rotationFriction != 0.0f) {
 			lim *= rotationFriction;
 		}
+		/*
 		// 静止摩擦
 		if (f_ > lim){
 			f_ = lim;
@@ -197,6 +231,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 			f_ = -lim;
 			return true;
 		}
+		*/
 		return false;
 	}
 }
