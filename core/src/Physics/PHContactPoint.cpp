@@ -212,7 +212,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	// Tangential direction
 	else if (i == 1 || i == 2) {
 		PHLuGreSt lgs = shapePair->LuGreState;
-		f_ = 0.0;// -fx * (sigma0 * lgs.z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
+		f_ =  -fx * (sigma0 * lgs.z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
 		return true;
 	}
 	
