@@ -24,9 +24,8 @@ class PHConstraintEngine;
 class PHPath;
 
 struct PHLuGreSt {
-	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
+	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axiss
 	double T;		// Average sticking time
-	double v;		// Average velocity of bristles
 };
 
 ///	形状の組

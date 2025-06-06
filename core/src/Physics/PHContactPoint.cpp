@@ -17,59 +17,59 @@ namespace Spr{;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHContactPoint
 
-PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
+PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1) {
 	shapePair = sp;
 	const PHMaterial* mat[2];
 	mat[0] = &sp->shape[0]->GetMaterial();
 	mat[1] = &sp->shape[1]->GetMaterial();
-	
+
 	PHScene* s = DCAST(PHScene, s0->GetScene());
-	switch(s->blendMode){
+	switch (s->blendMode) {
 	case PHSceneDesc::BLEND_MIN:
 		mu0 = std::min(mat[0]->mu0, mat[1]->mu0);
-		mu  = std::min(mat[0]->mu , mat[1]->mu );
-		e   = std::min(mat[0]->e  , mat[1]->e  );
+		mu = std::min(mat[0]->mu, mat[1]->mu);
+		e = std::min(mat[0]->e, mat[1]->e);
 		rotationFriction = std::min(mat[0]->rotationFriction, mat[1]->rotationFriction);
 		break;
 	case PHSceneDesc::BLEND_MAX:
 		mu0 = std::max(mat[0]->mu0, mat[1]->mu0);
-		mu  = std::max(mat[0]->mu , mat[1]->mu );
-		e   = std::max(mat[0]->e  , mat[1]->e  );
+		mu = std::max(mat[0]->mu, mat[1]->mu);
+		e = std::max(mat[0]->e, mat[1]->e);
 		rotationFriction = std::max(mat[0]->rotationFriction, mat[1]->rotationFriction);
 		break;
 	case PHSceneDesc::BLEND_AVE_ADD:
 		mu0 = 0.5 * (mat[0]->mu0 + mat[1]->mu0);
-		mu  = 0.5 * (mat[0]->mu  + mat[1]->mu );
-		e   = 0.5 * (mat[0]->e   + mat[1]->e  );
+		mu = 0.5 * (mat[0]->mu + mat[1]->mu);
+		e = 0.5 * (mat[0]->e + mat[1]->e);
 		rotationFriction = 0.5 * (mat[0]->rotationFriction + mat[1]->rotationFriction);
 		break;
 	case PHSceneDesc::BLEND_AVE_MUL:
 		mu0 = sqrt(mat[0]->mu0 * mat[1]->mu0);
-		mu  = sqrt(mat[0]->mu  * mat[1]->mu );
-		e   = sqrt(mat[0]->e   * mat[1]->e  );
+		mu = sqrt(mat[0]->mu * mat[1]->mu);
+		e = sqrt(mat[0]->e * mat[1]->e);
 		rotationFriction = sqrt(mat[0]->rotationFriction * mat[1]->rotationFriction);
 		break;
 	}
-	
-	if(mat[0]->spring == 0.0f){
-		if(mat[1]->spring == 0.0f)
-			 spring = 0.0;
+
+	if (mat[0]->spring == 0.0f) {
+		if (mat[1]->spring == 0.0f)
+			spring = 0.0;
 		else spring = mat[1]->spring;
 	}
-	else{
-		if(mat[1]->spring == 0.0f)
-			 spring = mat[0]->spring;
+	else {
+		if (mat[1]->spring == 0.0f)
+			spring = mat[0]->spring;
 		else spring = (mat[0]->spring * mat[1]->spring) / (mat[0]->spring + mat[1]->spring);
 	}
-	
-	if(mat[0]->damper == 0.0f){
-		if(mat[1]->damper == 0.0f)
-			 damper = 0.0;
+
+	if (mat[0]->damper == 0.0f) {
+		if (mat[1]->damper == 0.0f)
+			damper = 0.0;
 		else damper = mat[1]->damper;
 	}
-	else{
-		if(mat[1]->damper == 0.0f)
-			 damper = mat[0]->damper;
+	else {
+		if (mat[1]->damper == 0.0f)
+			damper = mat[0]->damper;
 		else damper = (mat[0]->damper * mat[1]->damper) / (mat[0]->damper + mat[1]->damper);
 	}
 	//printf("contact point constructor\n");
@@ -83,7 +83,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 	solid[0] = s0;
 	solid[1] = s1;
-	
+
 	for (int i = 0; i < 2; i++) {
 		poseSolid[i].Pos() = solid[i]->GetFramePosition();
 		poseSolid[i].Ori() = solid[i]->GetOrientation();
@@ -91,7 +91,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = poseSolid[i].Ori().Conjugated() * pose.Ori();
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
 	}
-	
+
 	if (rotationFriction == 0.0f) {
 		movableAxes.Enable(3);
 	}
@@ -105,6 +105,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	sp->GetSt(st);
 	unsigned int contactDuration = st.contactDuration;
 
+	//std::cout << std::fixed << std::setprecision(2) << local << std::endl;
+	//printf("(%3.0f, %3.0f, %3.0f)\n", Deg(rot3.x), Deg(rot3.y), Deg(rot3.z));
 	// LuGre model parameters
 	sigma0 = 4000.0;
 	sigma1 = 5.0;
@@ -148,17 +150,24 @@ void PHContactPoint::CompBias(){
 	g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1);
 
 	// z
+#if 0
 	//dz = v - (sigma0 * v.norm()) / g * lgs.z;
-	dz = Vec2d(v.x - (sigma0 * v.x) / g * lgs.z.x, v.y - (sigma0 * v.y) / g * lgs.z.y);
+	dz = Vec2d(v.x - (sigma0 * fabs(v.x)) / g * lgs.z.x, v.y - (sigma0 *fabs( v.y)) / g * lgs.z.y);
 
 	lgs.z = lgs.z + dz * dt;
+#else
+	// Implicit Euler method
+	Vec2d z_p = lgs.z;
+	lgs.z = Vec2d((lgs.z[0] + dt * v.x) / (1 + dt * sigma0 * fabs(v.x) / g),
+		(lgs.z[1] + dt * v.y) / (1 + dt * sigma0 * fabs(v.y) / g));
+	dz = (lgs.z - z_p) / dt;
+#endif
 	z = lgs.z.norm();
 	shapePair->LuGreState = lgs;
 
 	Vec2d f_ = sigma0 * lgs.z + sigma1 * dz + sigma2 * v;
 	//printf("z:(%f, %f), g(T):%f, T:%f, T_:%f, F:(%f, %f), v:(%f, %f), \n", lgs.z.x, lgs.z.y, g, T, T_, f_[0], f_[1], vjrel[1], vjrel[2]);
-	Vec3d rot3 = poseSocket.Ori().RotationHalf();
-	printf("(%f, %f, %f)\n", Deg(rot3.x), Deg(rot3.y), Deg(rot3.z));
+
 	// Normal direction
 	//	速度が小さい場合は、跳ね返りなし。
 	if(vjrel[0] > - vth){
@@ -212,7 +221,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	// Tangential direction
 	else if (i == 1 || i == 2) {
 		PHLuGreSt lgs = shapePair->LuGreState;
-		f_ =  -fx * (sigma0 * lgs.z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
+		f_ = -fx * (sigma0 * lgs.z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
 		return true;
 	}
 	
