@@ -118,9 +118,18 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		// Initialize LuGre state
 		//printf("initialize lugre state\n");
 		lgs.T = 0.0;
-		lgs.z[0] = 0.0;
-		lgs.z[1] = 0.0;
+		lgs.z = Vec2d::Zero();
 	}
+	else {
+		// Align z-vector with relative velocity rotation in local plane
+		TMatrixCol<3, 2, double> Q; // Q = (u, v) (3x2 matrix)    L = (n, u, v)
+		Q.col(0) = local.Ey().unit(); // u
+		Q.col(1) = local.Ez().unit(); // v
+		// 2D rotation matrix R = Q^T * L_n * L_{n-1}^T * Q
+		Matrix2d r2d = Q.trans() * local * lgs.local_p.trans() * Q;
+		lgs.z = r2d * lgs.z;  // Rotate z
+	}
+	lgs.local_p = local;
 	sp->LuGreState = lgs;
 }
 
@@ -166,7 +175,7 @@ void PHContactPoint::CompBias(){
 	shapePair->LuGreState = lgs;
 
 	Vec2d f_ = sigma0 * lgs.z + sigma1 * dz + sigma2 * v;
-	//printf("z:(%f, %f), g(T):%f, T:%f, T_:%f, F:(%f, %f), v:(%f, %f), \n", lgs.z.x, lgs.z.y, g, T, T_, f_[0], f_[1], vjrel[1], vjrel[2]);
+	printf("z:(%f, %f), g(T):%f, T:%f, T_:%f, F:(%f, %f), v:(%f, %f), \n", lgs.z.x, lgs.z.y, g, T, T_, f_[0], f_[1], vjrel[1], vjrel[2]);
 
 	// Normal direction
 	//	速度が小さい場合は、跳ね返りなし。
