@@ -24,9 +24,11 @@ class PHConstraintEngine;
 class PHPath;
 
 struct PHLuGreSt {
-	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axiss
+	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
 	double T;		// Average sticking time
 	Matrix3d local_p; // Previous local matrix of the contact point
+	Matrix2d rot;	// Rotation matrix of the contact point in local coordinate
+	Vec2d v;		// Relative velocity of the contact point. v[0]:x-axis, v[1]:y-axis
 };
 
 ///	形状の組
@@ -72,7 +74,10 @@ public:
 		pb = shapePoseW[1] * closestPoint[1];
 	}
 
-	PHLuGreSt GetLuGreState() { return LuGreState; }
+	Vec2d GetLuGreZ() { return LuGreState.z; }
+
+	Vec2d GetLuGreV() { return LuGreState.v; }
+
 	PHLuGreSt LuGreState;
 };
 

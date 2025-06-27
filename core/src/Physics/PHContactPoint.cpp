@@ -99,7 +99,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	movableAxes.Enable(5);
 
 	// For LuGre Model
-	PHLuGreSt lgs = sp->GetLuGreState();
+	PHLuGreSt lgs = sp->LuGreState;
 	double dt = s->GetTimeStep();
 	CDShapePairState st;
 	sp->GetSt(st);
@@ -119,6 +119,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		//printf("initialize lugre state\n");
 		lgs.T = 0.0;
 		lgs.z = Vec2d::Zero();
+		lgs.rot = Matrix2d::Unit();
 	}
 	else {
 		// Align z-vector with relative velocity rotation in local plane
@@ -127,7 +128,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		Q.col(1) = local.Ez().unit(); // v
 		// 2D rotation matrix R = Q^T * L_n * L_{n-1}^T * Q
 		Matrix2d r2d = Q.trans() * local * lgs.local_p.trans() * Q;
-		lgs.z = r2d * lgs.z;  // Rotate z
+		//lgs.z = r2d.trans() * lgs.z;  // Rotate z
+		lgs.rot = r2d * lgs.rot;  // Rotate local coordinate
 	}
 	lgs.local_p = local;
 	sp->LuGreState = lgs;
@@ -135,7 +137,6 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 
 void PHContactPoint::CompBias(){
-	//printf("CompBias\n");
 	PHSceneIf* scene = GetScene();
 	double dt    = scene->GetTimeStep();
 	double dtinv = scene->GetTimeStepInv();
@@ -146,8 +147,8 @@ void PHContactPoint::CompBias(){
 	// LuGre model
 	PHLuGreSt lgs = shapePair->LuGreState;
 	// Get relative velocity
-	//v = Vec2d(b.vy + dv.vy, b.vz + dv.vz); 
-	v = Vec2d(vjrel[1], vjrel[2]);
+	v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
+	lgs.v = v;
 	double g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1);
 	// T
 	double T = lgs.T + dt;	// T <= T + dt
@@ -167,15 +168,18 @@ void PHContactPoint::CompBias(){
 #else
 	// Implicit Euler method
 	Vec2d z_p = lgs.z;
-	lgs.z = Vec2d((lgs.z[0] + dt * v.x) / (1 + dt * sigma0 * fabs(v.x) / g),
-		(lgs.z[1] + dt * v.y) / (1 + dt * sigma0 * fabs(v.y) / g));
+	lgs.z = Vec2d((lgs.z[0] + dt * lgs.v.x) / (1 + dt * sigma0 * fabs(lgs.v.x) / g),
+		(lgs.z[1] + dt * lgs.v.y) / (1 + dt * sigma0 * fabs(lgs.v.y) / g));
 	dz = (lgs.z - z_p) / dt;
 #endif
 	z = lgs.z.norm();
 	shapePair->LuGreState = lgs;
 
-	Vec2d f_ = sigma0 * lgs.z + sigma1 * dz + sigma2 * v;
-	printf("z:(%f, %f), g(T):%f, T:%f, T_:%f, F:(%f, %f), v:(%f, %f), \n", lgs.z.x, lgs.z.y, g, T, T_, f_[0], f_[1], vjrel[1], vjrel[2]);
+	Vec2d frictionForce = sigma0 * lgs.z +sigma1 * dz + sigma2 * v;
+	//frictionForce *= J[0] * frictionForce;
+	//printf("f_: (%f, %f)\n", f_[0], f_[1]);
+	//std::cout << std::fixed << std::setprecision(3) << Deg(atan2(lgs.z.x, lgs.z.y)) << ", " << Deg(atan2(dz.x, dz.y)) << ", " <<  Deg(atan2(v.x, v.y)) << std::endl;
+	//printf("z:(%f, %f), g(T):%f, T:%f, T_:%f, F:(%f, %f), v:(%f, %f), \n", lgs.z.x, lgs.z.y, g, T, T_, f_[0], f_[1], vjrel[1], vjrel[2]);
 
 	// Normal direction
 	//	速度が小さい場合は、跳ね返りなし。
@@ -230,10 +234,10 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	// Tangential direction
 	else if (i == 1 || i == 2) {
 		PHLuGreSt lgs = shapePair->LuGreState;
-		f_ = -fx * (sigma0 * lgs.z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
+		f_ = -fx * (lgs.rot.trans()*(sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
 		return true;
 	}
-	
+
 	else{
 		float lim = isStatic ? flim0 : flim;
 		if (i == 3 && rotationFriction != 0.0f) {

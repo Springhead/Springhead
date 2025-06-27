@@ -34,6 +34,7 @@ public:
 	Vec2d v;	// Relative velocity
 	Vec2d dz;	// Bristles displacement
 	double z;
+	Vec2d frictionForce;
 
 	double fx, flim0, flim;
 	bool   isStatic;

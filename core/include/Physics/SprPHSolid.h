@@ -362,6 +362,14 @@ struct PHShapePairForLCPIf : public CDShapePairIf{
 
 	/// 形状を取得する
 	CDShapeIf* GetShape(int i);
+
+	/** @brief 形状ペア間のLuGreモデルのzを取得する
+	*/
+	Vec2d GetLuGreZ();
+
+	/** @brief 形状ペア間の相対速度を取得する
+	*/
+	Vec2d GetLuGreV();
 };
 
 struct PHSolidPairIf;
