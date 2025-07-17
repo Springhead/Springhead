@@ -245,6 +245,7 @@ bool HISpidar4::Calibration(){
 	lengthDiffAve.clear();
 
 	// 姿勢を更新
+	HISpidarCalc3Dof::pos = Vec3f(0, 0, 0);
 	for(size_t i=0; i<motors.size(); ++i)
 		HISpidarCalc3Dof::Update();	
 
