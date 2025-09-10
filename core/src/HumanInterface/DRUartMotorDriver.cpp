@@ -82,6 +82,7 @@ public:
 			FlushFileBuffers(hUART);
 			DWORD rxLen = 0;
 			memset(&ret.boardInfo, 0, sizeof(ret.boardInfo));
+			Sleep(10);
 			ReadFile(hUART, ret.bytes, BD0_RLEN_BOARD_INFO, &rxLen, NULL);
 			if (rxLen >= BD0_RLEN_BOARD_INFO){
 				//	found a borad
@@ -383,7 +384,8 @@ bool DRUARTMotorDriver::InitCom() {
 	dcb.BaudRate = 2000*1000;	//	baudrate 2Mbps
 	dcb.ByteSize = 8;			//	8bit
 	dcb.fBinary = TRUE;			//	binaly = TRUE
-	dcb.fParity = NOPARITY;		//	no paritiy
+	dcb.fParity = false;		//	disable parity
+	dcb.Parity = NOPARITY;		//	no parity
 	dcb.StopBits = ONESTOPBIT;	//	1 stop bit
 	dcb.fOutxCtsFlow = FALSE;	//	CTS = flow control: no flow control
 	dcb.fOutxDsrFlow = FALSE;	//	DSR = hardware flow contorl: do not use.
@@ -399,9 +401,10 @@ bool DRUARTMotorDriver::InitCom() {
 	dcb.fNull = FALSE;			//	Discard NULL bytes: Discard
 	dcb.fAbortOnError = FALSE;	//	Read/write operation termination on error: Ignore error
 	dcb.fErrorChar = FALSE;		//	Character replacement when a parity error occurs:None
-	dcb.ErrorChar = -1;			//	the error char to replcace
-	dcb.EofChar = 0x03;			//	EOF character: usually 0x03(ETX) is used
-	dcb.EvtChar = 0x00;			//	Event notification character is used to start transfer from driver to application.
+	dcb.ErrorChar = 0;			//	the error char to replcace
+	dcb.EofChar = 0x1A;			//	EOF character: usually 0x03(ETX) is used
+	dcb.EvtChar = 0x1A;			//	Event notification character is used to start transfer from driver to application.
+	DSTR << "Parity Set:" << (int)dcb.Parity << std::endl;
 	if (SetCommState(hUART, &dcb) != TRUE) return false;  //	Set the settings above.
 
 	SetCommMask(hUART, EV_RXFLAG);	//	Enable event notificaiton character
