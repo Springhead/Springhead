@@ -25,6 +25,7 @@ class PHPath;
 
 struct PHLuGreSt {
 	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
+	Vec2d dz;		// Time derivative of z
 	double T;		// Average sticking time
 	Matrix3d local_p; // Previous local matrix of the contact point
 	Matrix2d rot;	// Rotation matrix of the contact point in local coordinate
@@ -77,6 +78,8 @@ public:
 	Vec2d GetLuGreZ() { return LuGreState.z; }
 
 	Vec2d GetLuGreV() { return LuGreState.v; }
+
+	Vec2d GetLuGreDZ() { return LuGreState.dz;  }
 
 	PHLuGreSt LuGreState;
 };

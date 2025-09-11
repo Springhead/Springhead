@@ -32,8 +32,8 @@ PHMaterial::PHMaterial(){
 
 	/**	時変摩擦係数のための係数	ms = mu+ A log(1+Bt),  md = mu+ A log (1+B C/v)  [Dieterich 1979]
 		Cは動摩擦時のスリップ距離を意味する C/v < dt(時間刻み) のときは、v=C/dt を使う */
-	timeVaryFrictionA = 0.1f;
-	timeVaryFrictionB = 1800;
+	timeVaryFrictionA = 0.0f;
+	timeVaryFrictionB = 0.0f;
 	timeVaryFrictionC = 0.0f;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	frictionViscosity = 0.0f;
@@ -41,9 +41,9 @@ PHMaterial::PHMaterial(){
 	stribeckmu = 0.1f;
 
 	///LuGre Modelのための係数
-	bristlesSpringK = PHLuGreParametersData::getCurrentBristlesSpringK();			///< LuGreモデルにおける剛毛のバネ係数
-	bristlesDamperD = PHLuGreParametersData::getCurrentBristlesDamperD();			///< LuGreモデルにおける剛毛のダンパ係数
-	bristlesViscosityV = PHLuGreParametersData::getCurrentBristlesViscosityV();	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
+	bristlesSpringK = 0.0f;// PHLuGreParametersData::getCurrentBristlesSpringK();			///< LuGreモデルにおける剛毛のバネ係数
+	bristlesDamperD = 0.0f; // PHLuGreParametersData::getCurrentBristlesDamperD();			///< LuGreモデルにおける剛毛のダンパ係数
+	bristlesViscosityV = 0.0f;// PHLuGreParametersData::getCurrentBristlesViscosityV();	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
 
 //GMS用

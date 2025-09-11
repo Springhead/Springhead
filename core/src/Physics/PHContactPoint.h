@@ -25,6 +25,10 @@ public:
 
 	PHShapePairForLCP* shapePair;
 	Posed  pose;
+	
+	int frictionModel;
+
+	// Coulomb model friction parameter
 	double mu0, mu, rotationFriction, e;
 	double spring, damper;
 

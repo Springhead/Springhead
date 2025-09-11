@@ -151,12 +151,26 @@ struct CDQuadFaceIf: public ObjectIf{
 	int* GetIndices();
 };
 
+///  摩擦モデル
+/*
+enum FrictionModel {
+	COULOMB,		///< Coulomb Model
+	LUGRE,			///< LuGre Model
+};
+*/
+
+#define COULOMB  0;
+#define LUGRE = 1;
 
 ///	物理シミュレーションに関係する材質
 struct PHMaterial{
 	PHMaterial();
 	//	質量・慣性テンソルの計算用
 	float density;			///< 密度
+
+	// 摩擦モデル
+	int frictionModel;
+
 	//	LCP(PHConstarintEngine)による拘束力計算用
 	float mu;				///< 動摩擦摩擦係数
 	float mu0;				///< 静止摩擦係数	
