@@ -524,6 +524,11 @@ void DRUARTMotorDriver::Reset() {
 	//	TBW by hase
 }
 
-
+int DRUARTMotorDriver::NBoard() const {
+	return (int)impl->boards.size();
+}
+int DRUARTMotorDriver::GetBoardType(int pos) const {
+	return (int)impl->boards[pos]->GetModelNumber();
+}
 
 } //namespace Spr

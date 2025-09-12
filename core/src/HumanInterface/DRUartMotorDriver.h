@@ -94,6 +94,10 @@ public:
 	/// リセット
 	virtual void Reset();
 
+	virtual int NBoard() const;
+
+	virtual int GetBoardType(int pos) const;
+
 	///	UARTのファイルハンドル
 	void* GetHandle() { return hUART; };
 protected:
