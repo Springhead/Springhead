@@ -586,6 +586,47 @@ void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
 	}
 }
 
+void FWScene::DrawLuGre(GRRenderIf* render, PHContactPointIf* con) {
+	Affinef aff;
+	Vec3d f, t;
+	
+	Posed sock, plug;
+	con->GetSocketPose(sock);
+	con->GetPlugPose(plug);
+	(con->GetSocketSolid()->GetPose() * sock).ToAffine(aff);
+	render->PushModelMatrix();
+	render->MultModelMatrix(aff);
+	t = Vec3d::Zero();
+	Vec2d z = con->GetLuGreZ();
+	Vec2d v = con->GetLuGreV();
+	Vec2d dz = con->GetLuGreDZ();
+		
+	Vec3d v_raw, w_raw;
+	con->GetRelativeVelocity(v_raw, w_raw);
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+	// v
+	render->SetMaterial(GRRenderIf::AQUA);
+	render->DrawLine(Vec3f(), 10.0f*v_raw);
+	//render->DrawLine(Vec3f(), Vec3f(0.0f, v.x, v.y));
+
+	// axis
+#if 1
+	float a = 0.1f;
+	render->SetMaterial(GRRenderIf::RED);
+	render->DrawLine(Vec3f(), Vec3f(a, 0.0f, 0.0f));
+	render->SetMaterial(GRRenderIf::GREEN);
+	render->DrawLine(Vec3f(), Vec3f(0.0f, a, 0.0f));
+	render->SetMaterial(GRRenderIf::BLUE);
+	render->DrawLine(Vec3f(), Vec3f(0.0f, 0.0f, a));
+#endif
+	render->SetDepthTest(true);
+	render->SetLighting(true);
+	
+	render->PopModelMatrix();
+	
+}
+
 void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 	Affinef aff;
 
@@ -723,7 +764,10 @@ void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
 
 	for(unsigned i=0; i<infos.points.size(); ++i){
 		PHContactPointIf* con = (PHContactPointIf*)&*infos.points[i];
-		if(IsRenderEnabled(con)) DrawConstraint(render, con);
+		if (IsRenderEnabled(con)) {
+			DrawConstraint(render, con);
+			if (renderLuGre || con->GetFrictionModel() == 1) DrawLuGre(render, con);
+		}
 	}
 
 	render->SetMaterial(matContact);
@@ -1324,6 +1368,9 @@ void FWScene::SetAxisStyle(int style){
 void FWScene::EnableRenderForce(bool solid, bool con){
 	renderForceSolid = solid;
 	renderForceConst = con;
+}
+void FWScene::EnableRenderLuGre(bool enable) {
+	renderLuGre = enable;
 }
 void FWScene::SetForceMaterial(int matf, int matm){
 	matForce	= matf;

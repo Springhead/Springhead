@@ -72,6 +72,7 @@ public:
 	bool		renderSolid, renderWire;
 	bool		renderAxisWorld, renderAxisSolid, renderAxisConst;
 	bool		renderForceSolid, renderForceConst;
+	bool		renderLuGre;
 	bool		renderContact;
 	bool		renderBBox;
 	bool		renderGridX, renderGridY, renderGridZ;
@@ -144,6 +145,7 @@ public:
 	void    DrawBBox        (GRRenderIf* render, Posed pose, PHBBox* bbox);
 	void	DrawShape		(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire);
 	void	DrawConstraint	(GRRenderIf* render, PHConstraintIf* con);
+	void	DrawLuGre		(GRRenderIf* render, PHContactPointIf* con);	
 	void	DrawContact		(GRRenderIf* render, PHContactPointIf* con);
 	void	DrawContactSafe	(GRRenderIf* render, PHConstraintEngineIf* ce);
 	void	DrawIK			(GRRenderIf* render, PHIKEngineIf* ikEngine);
@@ -175,6 +177,8 @@ public:
 
 	void	EnableRenderContact	(bool enable);
 	void	SetContactMaterial	(int mat);
+
+	void	EnableRenderLuGre(bool enable);
 
 	void    EnableRenderBBox    (bool enable);
 	void    SetLocalBBoxMaterial(int mat);

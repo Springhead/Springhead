@@ -205,6 +205,9 @@ public:
 	void EnableRenderContact(bool enable = true);
 	void SetContactMaterial(int mat);
 
+	/*	@brief LuGreモデルの状態描画 */
+	void EnableRenderLuGre(bool enable = true);
+
 	/** @brief bboxの描画 */
 	void EnableRenderBBox(bool enable = true);
 	void SetLocalBBoxMaterial(int mat);
