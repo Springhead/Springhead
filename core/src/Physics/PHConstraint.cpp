@@ -194,6 +194,8 @@ void PHConstraint::Setup() {
 
 bool PHConstraint::Iterate() {
 	bool updated = false;
+
+	// --- 順方向パス (i = 0, 1, ..., dof-1) ---
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		
@@ -215,6 +217,31 @@ bool PHConstraint::Iterate() {
 			CompResponse(df[i], i);
 		}
 	}
+
+	// --- 逆方向パス (i = dof-1, ..., 1, 0) ---
+	for (int n=axes.size()-1; n>=0; --n) {
+		int i = axes[n];
+		
+		// Gauss-Seidel Update
+		// dvの再計算：順方向パスのCompResponseの影響を反映させる
+		dv[i] = Dot6((const double*)J[0].row(i), (const double*)solid[0]->dv)
+			  + Dot6((const double*)J[1].row(i), (const double*)solid[1]->dv);
+		res [i] = b[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - Ainv[i] * res[i];
+
+		// Projection
+		Projection(fnew[i], i);
+		
+		// Comp Response & Update f
+		df[i] = fnew[i] - f[i];
+		f [i] = fnew[i];
+
+		if(std::abs(df[i]) > engine->dfEps){
+			updated = true;
+			CompResponse(df[i], i);
+		}
+	}
+
 	return updated;
 }
 

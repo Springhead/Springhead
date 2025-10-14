@@ -25,6 +25,7 @@ class PHPath;
 
 struct PHLuGreSt {
 	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
+	Vec2d z_p;
 	Vec2d dz;		// Time derivative of z
 	double T;		// Average sticking time
 	Matrix3d local_p; // Previous local matrix of the contact point

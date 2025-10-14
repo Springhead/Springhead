@@ -26,9 +26,6 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	PHScene* s = DCAST(PHScene, s0->GetScene());
 
 	Posed  poseSolid[2];
-	Posed  poseRel[2];
-	Vec3d  vc[2];
-	Vec3d  vcabs[2];
 
 	pose.Pos() = p;
 	pose.Ori().FromMatrix(local);
@@ -142,15 +139,9 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 }
 
-
-void PHContactPoint::CompBias(){
+void PHContactPoint::CompLuGreState() {
 	PHSceneIf* scene = GetScene();
-	double dt    = scene->GetTimeStep();
-	double dtinv = scene->GetTimeStepInv();
-	double tol   = scene->GetContactTolerance();
-	double vth   = scene->GetImpactThreshold();
-	double fth	 = scene->GetFrictionThreshold();
-
+	double dt = scene->GetTimeStep();
 	if (frictionModel == 1) {
 		PHLuGreSt lgs = shapePair->LuGreState;
 		// Get relative velocity
@@ -166,7 +157,7 @@ void PHContactPoint::CompBias(){
 		lgs.T = std::min(T, T_);	// T <= min(T, T_)
 
 		// g(T)
-		g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1);
+		g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1) + 1.0e-12;
 
 		// z
 #if 0
@@ -177,16 +168,26 @@ void PHContactPoint::CompBias(){
 #else
 	// Implicit Euler method
 		Vec2d z_p = lgs.z;
-		lgs.z = Vec2d((lgs.z[0] + dt * lgs.v.x) / (1 + dt * sigma0 * fabs(lgs.v.x) / g),
+		z = Vec2d((lgs.z[0] + dt * lgs.v.x) / (1 + dt * sigma0 * fabs(lgs.v.x) / g),
 			(lgs.z[1] + dt * lgs.v.y) / (1 + dt * sigma0 * fabs(lgs.v.y) / g));
 		dz = (lgs.z - z_p) / dt;
 #endif
-		z = lgs.z.norm();
+		lgs.z = z;
 		lgs.dz = dz;
 		shapePair->LuGreState = lgs;
 
-		Vec2d frictionForce = sigma0 * lgs.z + sigma1 * dz + sigma2 * v;
 	}
+}
+
+void PHContactPoint::CompBias(){
+	PHSceneIf* scene = GetScene();
+	double dt    = scene->GetTimeStep();
+	double dtinv = scene->GetTimeStepInv();
+	double tol   = scene->GetContactTolerance();
+	double vth   = scene->GetImpactThreshold();
+	double fth	 = scene->GetFrictionThreshold();
+
+	CompLuGreState();
 
 	// Normal direction
 	//	速度が小さい場合は、跳ね返りなし。
@@ -237,13 +238,18 @@ bool PHContactPoint::Projection(double& f_, int i) {
 		return false;
 	}
 	else{
-
-		if(frictionModel == 1 && (i == 1 || i == 2)) {
-			PHLuGreSt lgs = shapePair->LuGreState;
-			f_ = -fx * (lgs.rot.trans() * (sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
-			return true;
+		
+		if(frictionModel == 1) {
+			if (i == 1) {
+				PHLuGreSt lgs = shapePair->LuGreState;
+				f_ = -fx * (lgs.rot.trans() * (sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
+				return true;
+			}
+			else if(i == 2) {
+				return false;
+			}
 		}
-
+		
 		float lim = isStatic ? flim0 : flim;
 		if (i == 3 && rotationFriction != 0.0f) {
 			lim *= rotationFriction;

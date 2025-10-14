@@ -152,6 +152,11 @@ struct PHContactPointIf : public PHConstraintIf{
 	SPR_IFDEF(PHContactPoint);
 	Posed GetPose();
 	bool IsStaticFriction();
+
+	Vec2d GetLuGreV();
+	Vec2d GetLuGreZ();
+	Vec2d GetLuGreDZ();
+	int GetFrictionModel();
 };
 
 // -----  -----  -----  -----  -----

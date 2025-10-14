@@ -36,8 +36,8 @@ public:
 	double sigma0, sigma1, sigma2;				// F = sigma0*z + sigma0*dz/dt + sigma2*v
 	double timeVaryA, timeVaryB, timeVaryC;		// g(T) = A + B log(1+ C * T)
 	Vec2d v;	// Relative velocity
+	Vec2d z;
 	Vec2d dz;	// Bristles displacement
-	double z;
 	Vec2d frictionForce;
 
 	double fx, flim0, flim;
@@ -50,7 +50,13 @@ public:
 	PHContactPoint(){}
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 	bool IsStaticFriction() { return isStatic;  }
-	double GetLuGreZ() { return z; }
+	Vec2d GetLuGreV() { return v; }
+	Vec2d GetLuGreZ() { return z; }
+	Vec2d GetLuGreDZ() { return dz; }
+	int GetFrictionModel() { return frictionModel; }
+
+
+	void CompLuGreState();
 
 	// ----- PHConstraintの派生クラスで実装する機能
 	virtual void CompBias();
