@@ -125,11 +125,6 @@ public:
 	virtual void* CreateInstance() const{ return 0;}
 	static const UTTypeInfo* SPR_CDECL GetTypeInfo();
 };
-template<class T>
-inline const UTTypeInfo* SPR_CDECL Spr::IfInfoImp<T>::GetTypeInfo()
-{
-	return UTTypeInfo * SPR_CDECL();
-}
 
 ///	インタフェースが持つべきメンバの宣言部．
 #define SPR_IFDEF_BASE(cls)												\
@@ -306,7 +301,8 @@ struct ObjectIf{
 	//@}
 	typedef std::set<const ObjectIf*> object_set_t;
 	///	オブジェクトツリーのメモリイメージをダンプ
-	void DumpObjectR(std::ostream& os, object_set_t& dumped=object_set_t(), int level=0) const;
+	static object_set_t globalDumped;
+	void DumpObjectR(std::ostream& os, object_set_t& dumped=globalDumped, int level=0) const;
 };
 
 ///	インタフェースクラスへのポインタの配列

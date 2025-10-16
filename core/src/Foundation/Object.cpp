@@ -14,6 +14,7 @@
 #include <string.h>  // strcmp
 
 namespace Spr {;
+Spr::ObjectIf::object_set_t Spr::ObjectIf::globalDumped;
 
 struct MemCheck{
 	MemCheck(){
@@ -300,6 +301,7 @@ bool Object::ReadStateR(std::istream& fin){
 }
 
 void Object::DumpObjectR(std::ostream & os, ObjectIf::object_set_t& dumped, int level) const {
+	if (level == 0 && dumped == ObjectIf::globalDumped) dumped.clear();
 	os << level << " " << GetTypeInfo()->ClassName() << std::endl;
 	DumpObject(os);
 	size_t n = NChildObject();
