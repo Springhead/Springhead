@@ -446,7 +446,7 @@ void HISpidarGDesc::Init(const char* type) {
 				kp[i] = motorPos[0][i][1];
 			}
 		}
-		Init(8, mp, kp, 0.091f, 0.225e-4f, 0.3f, 20.0f);
+		Init(8, mp, kp, 0.091f, 0.225e-4f, 0.3f, 6.0f);
 		if (bLeft) {
 		}
 		else {

@@ -178,7 +178,7 @@ public:
 		((cls##State*)((char*)m + (sizeof(#cls) + 1)))->~cls##State();										\
 		((cls##StatePrivate*)((char*)m + (sizeof(#cls) + 1 + sizeof(cls##State))))->~cls##StatePrivate(); }	\
 	virtual bool GetState(void* s) const {																	\
-		*(char*)s = '+'; strcpy((char*)s+1, #cls);															\
+		*(char*)s = '+'; strcpy_s((char*)s+1, RSIZE_MAX , #cls);															\
 		*(cls##State*) ((char*)s + (sizeof(#cls) + 1)) = *this;												\
 		*(cls##StatePrivate*)((char*)s + (sizeof(#cls) + 1 + sizeof(cls##State))) = *this;	return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)((char*)s + (sizeof(#cls) + 1));\
@@ -236,7 +236,7 @@ public:
 	virtual void DestructState(void* m) const { ((cls##State*)((char*)m + (sizeof(#cls) + 1)))->~cls##State(); }	\
 	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
 	virtual bool GetState(void* s) const { *(cls##State*)((char*)s + (sizeof(#cls) + 1))=*this; \
-		*(char*)s = '+'; strcpy((char*)s+1, #cls); return true; }	\
+		*(char*)s = '+'; strcpy_s((char*)s+1, RSIZE_MAX,#cls); return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)((char*)s+ (sizeof(#cls) + 1));}	\
 
 #else
@@ -307,6 +307,7 @@ class UTLoadContext;
 /**	全Objectの基本型	*/
 class Object: public UTTypeInfoObjectBase, public UTRefCount{
 #ifdef _DEBUG
+	__pragma(warning(suppress : 26495))
 	mutable char* stateConstruct;
 #endif
 public:

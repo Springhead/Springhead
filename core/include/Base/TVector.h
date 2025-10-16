@@ -534,6 +534,7 @@ public:
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVector);
 private:
+	__pragma(warning(suppress : 26495))
 	element_type data[N];										///<	データ
 public:	
 	///	要素のアクセス
@@ -584,6 +585,7 @@ public:
 	///	ストライド
 	size_t stride_impl() const { return STRIDE; }
 protected:
+	__pragma(warning(suppress : 26495))
 	element_type data[SIZE][STRIDE];
 };
 

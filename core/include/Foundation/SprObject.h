@@ -125,6 +125,11 @@ public:
 	virtual void* CreateInstance() const{ return 0;}
 	static const UTTypeInfo* SPR_CDECL GetTypeInfo();
 };
+template<class T>
+inline const UTTypeInfo* SPR_CDECL Spr::IfInfoImp<T>::GetTypeInfo()
+{
+	return UTTypeInfo * SPR_CDECL();
+}
 
 ///	インタフェースが持つべきメンバの宣言部．
 #define SPR_IFDEF_BASE(cls)												\

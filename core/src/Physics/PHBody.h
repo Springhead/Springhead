@@ -13,6 +13,7 @@
 
 namespace Spr{;
 
+
 ///	バウンディングボックスの実装
 class PHBBox{
 	Vec3f bboxCenter;	///<	BBoxの中心(ローカル系)

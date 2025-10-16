@@ -20,6 +20,7 @@
 
 //@{
 namespace Spr{;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /// 軌道運動コントローラ
 class CRReachController : public CRController, public CRReachControllerDesc {
