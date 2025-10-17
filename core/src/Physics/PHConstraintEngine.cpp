@@ -229,8 +229,8 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 PHConstraintEngineDesc::PHConstraintEngineDesc() {
 	method = PHSceneDesc::SOLVER_GS;	//	This initial value will override by PHSceneDesc::method
 	numIter = 15;
-	numIterCorrection = 0;
-	numIterContactCorrection = 0;
+	numIterCorrection = 10;
+	numIterContactCorrection = numIterCorrection;
 	velCorrectionRate = 0.3;
 	posCorrectionRate = 0.3;
 	contactCorrectionRate = 0.1;

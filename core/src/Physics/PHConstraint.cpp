@@ -176,7 +176,7 @@ void PHConstraint::Setup() {
 	// LCPの係数A, bの補正値dA, dbを計算
 	dA.clear();
 	db.clear();
-	CompBias();
+//	CompBias();
 
 	// LCPのbベクトル == 論文中のw[t]を計算
 	b  = J[0] * (solid[0]->v + solid[0]->dv0)
