@@ -986,6 +986,7 @@ public:
 	typedef TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> desc;
 	typedef TMatrixBase<H,W,desc> base_type;		///<	基本クラス型
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
+	__pragma(warning(suppress : 26495))
 	DEF_MATRIX_BASIC_MEMBER(TMatrixRow);
 
 public:

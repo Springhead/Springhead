@@ -301,7 +301,8 @@ struct ObjectIf{
 	//@}
 	typedef std::set<const ObjectIf*> object_set_t;
 	///	オブジェクトツリーのメモリイメージをダンプ
-	void DumpObjectR(std::ostream& os, object_set_t& dumped=object_set_t(), int level=0) const;
+	static object_set_t globalDumped;
+	void DumpObjectR(std::ostream& os, object_set_t& dumped=globalDumped, int level=0) const;
 };
 
 ///	インタフェースクラスへのポインタの配列

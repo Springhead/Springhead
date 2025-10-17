@@ -395,7 +395,72 @@ void HISpidarGDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 }
 
 void HISpidarGDesc::Init(const char* type) {
-	if (stricmp(type, "SpidarG6T1") == 0) {
+	if (stricmp(type, "SpidarG6X5L") == 0 || stricmp(type, "SpidarG6X5R") == 0) {
+		//	3D printer version.
+		bool bLeft = stricmp(type, "SpidarG6X5L") == 0;
+		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
+		float PX = 0.155f / 2;		//	x方向の辺の長さ/2
+		float PY = 0.147f / 2;//0.14f/2;		//	y方向の辺の長さ/2
+		float PZ = 0.155f / 2;		//	z方向の辺の長さ/2
+		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
+		float GX = 0.03f / 2;		//	x方向の辺の長さ/2
+		float GY = 0.03f / 2;		//	y方向の辺の長さ/2
+		float GZ = 0.0;              //Used only for Spidar Finger grip configuration
+
+		Matrix3f rotR = Matrix3f::Rot((float)Rad(0), 'y');
+		Matrix3f rotL = Matrix3f::Rot((float)Rad(0), 'y');
+
+		Vec3f motorPos[2][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
+			{
+				{rotR * Vec3f(-PX,-PY, PZ), rotR * Vec3f(-GX, 0.0f, 0.0f)},
+				{rotR * Vec3f(PX,-PY, PZ), rotR * Vec3f(GX, 0.0f, 0.0f)},
+				{rotR * Vec3f(PX,-PY,-PZ), rotR * Vec3f(0.0f,  -GY, 0.0f)},
+				{rotR * Vec3f(-PX,-PY,-PZ), rotR * Vec3f(0.0f,  -GY, 0.0f)},
+				{rotR * Vec3f(-PX, PY, PZ), rotR * Vec3f(-GX, 0.0f, 0.0f)},
+				{rotR * Vec3f(PX, PY, PZ), rotR * Vec3f(GX, 0.0f, 0.0f)},
+				{rotR * Vec3f(PX, PY,-PZ), rotR * Vec3f(0.0f,   GY, 0.0f)},
+				{rotR * Vec3f(-PX, PY,-PZ), rotR * Vec3f(0.0f,   GY, 0.0f)}
+			},
+			{
+				{rotL * Vec3f(PX, PY,-PZ), rotL * Vec3f(0, 0.0f,  -GX)},
+				{rotL * Vec3f(PX, PY, PZ), rotL * Vec3f(0, 0.0f,   GX)},
+				{rotL * Vec3f(-PX, PY, PZ), rotL * Vec3f(0,   GY, 0.0f)},
+				{rotL * Vec3f(-PX, PY,-PZ), rotL * Vec3f(0,   GY, 0.0f)},
+				{rotL * Vec3f(PX,-PY,-PZ), rotL * Vec3f(0, 0.0f,  -GX)},
+				{rotL * Vec3f(PX,-PY, PZ), rotL * Vec3f(0, 0.0f,   GX)},
+				{rotL * Vec3f(-PX,-PY, PZ), rotL * Vec3f(0,  -GY, 0.0f)},
+				{rotL * Vec3f(-PX,-PY,-PZ), rotL * Vec3f(0,  -GY, 0.0f)}
+			} 
+		};
+		Vec3f mp[8];
+		Vec3f kp[8];
+		if (bLeft) {
+			for (int i = 0; i < 8; ++i) {
+				mp[i] = motorPos[1][i][0];
+				kp[i] = motorPos[1][i][1];
+			}
+		}
+		else {
+			for (int i = 0; i < 8; ++i) {
+				mp[i] = motorPos[0][i][0];
+				kp[i] = motorPos[0][i][1];
+			}
+		}
+		Init(8, mp, kp, 0.091f, 0.225e-4f, 0.3f, 6.0f);
+		if (bLeft) {
+		}
+		else {
+			motors[0].lengthPerPulse *= -1;
+			motors[1].voltPerNewton *= -1;
+			motors[2].lengthPerPulse *= -1;
+			motors[3].voltPerNewton *= -1;
+
+			motors[4].lengthPerPulse *= -1;
+			motors[5].voltPerNewton *= -1;
+			motors[6].lengthPerPulse *= -1;
+			motors[7].voltPerNewton *= -1;
+		}
+	}else if (stricmp(type, "SpidarG6T1") == 0) {
 		const double XINLEN = 155 / 1000.0;
 		const double XOUTLEN = (XINLEN + 37 * 2) / 1000.0;
 		const double ZINLEN = 102 / 1000.0;

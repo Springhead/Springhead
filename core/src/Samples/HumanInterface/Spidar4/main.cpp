@@ -3,16 +3,11 @@
 #include <HumanInterface/SprHIDRUsb.h>
 #include <iomanip>
 
-#include "dailybuild_SEH_Handler.h"
-
 using namespace Spr;
 
 int __cdecl main(){
-	SEH_HANDLER_DEF
-	SEH_HANDLER_TRY
-
-		// HumanInterface SDKを作成
-		UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
+	// HumanInterface SDKを作成
+	UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
 
 	// win32
 	DRUsb20SimpleDesc usbSimpleDesc;
@@ -37,7 +32,10 @@ int __cdecl main(){
 
 	// Spidarインタフェース作成
 	UTRef<HISpidar4If> spg = hiSdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidar4Desc("SpidarG6X3R"));
+	if (!spg->Init(&HISpidar4Desc("SpidarG6X3R"))) {
+		DSTR << "HISpidar4 の初期化に失敗しました。" << std::endl;
+		exit(-1);
+	}
 
 	int t = 0;
 	while(!_kbhit()){
@@ -75,6 +73,4 @@ int __cdecl main(){
 		}
 	}
 */
-
-	SEH_HANDLER_CATCH
 }
