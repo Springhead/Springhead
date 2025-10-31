@@ -38,6 +38,9 @@ public:
 	Vec2d v;	// Relative velocity
 	Vec2d z;
 	Vec2d dz;	// Bristles displacement
+	Vec3d vs;	// Slip velocity
+	double stickT;	// Stick time
+	bool isSticking; // T_ > T
 	Vec2d frictionForce;
 
 	double fx, flim0, flim;
@@ -53,6 +56,9 @@ public:
 	Vec2d GetLuGreV() { return v; }
 	Vec2d GetLuGreZ() { return z; }
 	Vec2d GetLuGreDZ() { return dz; }
+	Vec3d GetLuGreVS() { return vs; }
+	double GetLuGreT() { return stickT; }
+	bool GetLuGreIsSticking() { return isSticking; }
 	int GetFrictionModel() { return frictionModel; }
 
 

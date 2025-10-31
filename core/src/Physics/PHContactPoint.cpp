@@ -155,6 +155,16 @@ void PHContactPoint::CompLuGreState() {
 		//double T_ = lgs.z.norm() / (v.norm() + 1.0e-12);	// z_ss / v = g(T)/(σ_0|v|)
 		double T_ = g / (sigma0 * v.norm() + 1.0e-12);
 		lgs.T = std::min(T, T_);	// T <= min(T, T_)
+		if (T < T_) {
+			lgs.T = T;
+			isSticking = false;
+		}
+		else {
+			lgs.T = T_;
+			isSticking = true;
+		}
+		stickT = lgs.T;
+
 
 		// g(T)
 		g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1) + 1.0e-12;
@@ -171,6 +181,8 @@ void PHContactPoint::CompLuGreState() {
 		z = Vec2d((lgs.z[0] + dt * lgs.v.x) / (1 + dt * sigma0 * fabs(lgs.v.x) / g),
 			(lgs.z[1] + dt * lgs.v.y) / (1 + dt * sigma0 * fabs(lgs.v.y) / g));
 		dz = (lgs.z - z_p) / dt;
+		Vec2d vs2d = v - dz;
+		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
 #endif
 		lgs.z = z;
 		lgs.dz = dz;
