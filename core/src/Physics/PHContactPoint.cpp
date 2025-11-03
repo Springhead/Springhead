@@ -154,7 +154,7 @@ void PHContactPoint::CompLuGreState() {
 		double T = lgs.T + dt;	// T <= T + dt
 		//double T_ = lgs.z.norm() / (v.norm() + 1.0e-12);	// z_ss / v = g(T)/(σ_0|v|)
 		double T_ = g / (sigma0 * v.norm() + 1.0e-12);
-		lgs.T = std::min(T, T_);	// T <= min(T, T_)
+		//lgs.T = std::min(T, T_);	// T <= min(T, T_)
 		if (T < T_) {
 			lgs.T = T;
 			isSticking = false;
@@ -164,10 +164,6 @@ void PHContactPoint::CompLuGreState() {
 			isSticking = true;
 		}
 		stickT = lgs.T;
-
-
-		// g(T)
-		g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1) + 1.0e-12;
 
 		// z
 #if 0
@@ -252,12 +248,16 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	else{
 		
 		if(frictionModel == 1) {
-			if (i == 1) {
+			if (i == 1 ) {
 				PHLuGreSt lgs = shapePair->LuGreState;
 				f_ = -fx * (lgs.rot.trans() * (sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
 				return true;
 			}
-			else if(i == 2) {
+			else if (i == 2) {
+				if (v.square() <= 1.0e-6) { // cf) PHConstraintEngine::EnumVertex   if(local.Ey().square() > 1e-6)
+					f_ = 0.0f;
+					return true;
+				}
 				return false;
 			}
 		}
