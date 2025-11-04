@@ -247,22 +247,23 @@ bool PHContactPoint::Projection(double& f_, int i) {
 		return false;
 	}
 	else{
-		
+
 		if(frictionModel == 1) {
-			if (i == 1 ) {
-				PHLuGreSt lgs = shapePair->LuGreState;
+			PHLuGreSt lgs = shapePair->LuGreState;
+#if 0
+			if (i == 1 || (i == 2 && v.square() <= 1.0e-6)) { 
+				// cf) PHConstraintEngine::EnumVertex   if(local.Ey().square() > 1e-6)
+				// If the relative velocity is zero, apply the friction force in the x and y directions (constraint coordinate).
 				f_ = -fx * (lgs.rot.trans() * (sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
 				return true;
 			}
-			else if (i == 2) {
-				if (v.square() <= 1.0e-6) { // cf) PHConstraintEngine::EnumVertex   if(local.Ey().square() > 1e-6)
-					f_ = 0.0f;
-					return true;
-				}
-				return false;
+#else
+			if (i == 1 || i == 2) {
+				f_ = -fx * (lgs.rot.trans() * (sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
+				return true;
 			}
+#endif
 		}
-		
 		float lim = isStatic ? flim0 : flim;
 		if (i == 3 && rotationFriction != 0.0f) {
 			lim *= rotationFriction;
