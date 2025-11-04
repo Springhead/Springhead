@@ -81,6 +81,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			Matrix2d r2d = Q.trans() * local * lgs.local_p.trans() * Q;
 			//lgs.z = r2d.trans() * lgs.z;  // Rotate z
 			lgs.rot = r2d * lgs.rot;  // Rotate local coordinate
+			lugreDirection = lgs.rot.angle();
 		}
 		lgs.local_p = local;
 		sp->LuGreState = lgs;

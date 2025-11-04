@@ -157,6 +157,7 @@ struct PHContactPointIf : public PHConstraintIf{
 	Vec2d GetLuGreZ();
 	Vec2d GetLuGreDZ();
 	Vec3d GetLuGreVS();
+	double GetLuGreDirection();
 	double GetLuGreT();
 	bool GetLuGreIsSticking();
 	int GetFrictionModel();
