@@ -67,11 +67,13 @@ public:
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
+	DUMPLABEL(PHSceneStateBegin)
 	/// 積分ステップ[s]
 	double timeStep;
 	double haptictimeStep;
 	/// 積分した回数
 	unsigned count;
+	DUMPLABEL(PHSceneStateEnd)
 
 	PHSceneState(){Init();}
 	void Init(){
@@ -133,6 +135,7 @@ struct PHSceneDesc: public PHSceneState{
 	bool	bCCDEnabled;				///< Continuous Collision Detectionの有効化
 	int     broadPhaseMode;
 	int     blendMode;
+	DUMPLABEL(PHSceneDescEnd)
 	
 	PHSceneDesc(){Init();}
 	void Init();	
@@ -498,11 +501,6 @@ public:
 	///	@brief LCPソルバの計算回数の設定．
 	void SetNumIteration(int n);
 	
-	/** @brief 状態の保存 (ObjectStates の保存）に，
-		Constraints が持つ拘束力を含めるかどうか設定する．
-	*/
-	void SetStateMode(bool bConstraints);
-
 	/** @brief 接触判定エンジンの有効・無効を設定する．SetContactModeより優先する．
 	*/
 	void EnableContactDetection(bool enable);

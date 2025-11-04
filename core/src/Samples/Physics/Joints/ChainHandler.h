@@ -15,6 +15,8 @@ public:
 		ID_INC_DAMPER,
 		ID_DEC_DAMPER,
 		ID_GEAR,
+		ID_FORCE,
+		ID_FORCE2,
 	};
 
 	vector<PHSolidIf*>		links;
@@ -36,7 +38,7 @@ public:
 		iniPos		= Vec3d(10, 10, 0);
 
 		posLevel	= 0;
-		rangeLevel	= 0;
+		rangeLevel	= 1;
 		springLevel = 0;
 		damperLevel = 0;
 
@@ -48,6 +50,10 @@ public:
 		app->AddHotKey(MENU_CHAIN, ID_BALL, 'b');
 		app->AddAction(MENU_CHAIN, ID_GEAR, "create gear (not implemented)");
 		app->AddHotKey(MENU_CHAIN, ID_GEAR, 'g');
+		app->AddAction(MENU_CHAIN, ID_FORCE, "add force");
+		app->AddHotKey(MENU_CHAIN, ID_FORCE, 'a');
+		app->AddAction(MENU_CHAIN, ID_FORCE2, "add force reverse");
+		app->AddHotKey(MENU_CHAIN, ID_FORCE2, 'A');
 	}
 	~ChainHandler(){}
 
@@ -107,6 +113,12 @@ public:
 	virtual void OnAction(int id){
 		PHSceneIf* phScene = GetPHScene();
 
+		if (id == ID_FORCE || id == ID_FORCE2) {
+			if (joints.size()) {
+				joints.back()->GetPlugSolid()->AddForce(Vec3f(id==ID_FORCE ? 10 : -10 ,0,0));
+			}
+		}
+
 		PHSolidIf* so = NULL;
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){
 			so = phScene->CreateSolid();
@@ -120,8 +132,7 @@ public:
 			jdesc.damper = damper;
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
 			PH1DJointLimitDesc ldesc;
-			ldesc.range = Vec2d(Rad(20.0), Rad(30.0));
-			DCAST(PH1DJointIf,joints.back())->CreateLimit(ldesc);
+			PH1DJointLimitIf* lim = DCAST(PH1DJointIf,joints.back())->CreateLimit(ldesc);
 		}
 		if(id == ID_SLIDER){
 			PHSliderJointDesc jdesc;
@@ -135,17 +146,10 @@ public:
 		}
 		if(id == ID_BALL){
 			PHBallJointDesc jdesc;
-			//jdesc.limit[1].upper =  0.2;	// 最大スイング角
-			//jdesc.limit[2].lower= -0.2;	// ツイスト角範囲
-			//jdesc.limit[2].upper =  0.2;
 			jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 			jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
 			PHBallJointConeLimitDesc ldesc;
-			ldesc.limitSwing    = Vec2d(-Rad(30.0), Rad(30.0));
-			ldesc.limitTwist    = Vec2d(-Rad(30.0), Rad(30.0));
-			ldesc.spring = 10000;
-			ldesc.damper = 100;
 			DCAST(PHBallJointIf,joints.back())->CreateLimit(ldesc);
 		}
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){

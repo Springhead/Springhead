@@ -27,9 +27,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{916BF063-5A94-4652-B355-62220EF17768}</ProjectGuid>
-    <RootNamespace>Foundation</RootNamespace>
-    <ProjectName>Foundation</ProjectName>
+    <ProjectGuid>{F674A4D7-A183-4C53-815D-12E17B71C6A0}</ProjectGuid>
+    <RootNamespace>Creature</RootNamespace>
+    <ProjectName>Creature</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -55,7 +55,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -141,35 +141,33 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointExceptions>true</FloatingPointExceptions>
-      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <MinimalRebuild>false</MinimalRebuild>
+      <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib />
     <Xdcmake>
       <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
     </Xdcmake>
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
-    <Lib />
-    <Lib />
     <Lib />
     <Lib />
     <PostBuildEvent>
@@ -182,36 +180,36 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointExceptions>true</FloatingPointExceptions>
-      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <OmitFramePointers>false</OmitFramePointers>
-      <MinimalRebuild>false</MinimalRebuild>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib />
     <Xdcmake>
       <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
     </Xdcmake>
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
+    <Lib />
     <Lib />
     <PostBuildEvent>
       <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
@@ -227,46 +225,41 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>false</MinimalRebuild>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CallingConvention>FastCall</CallingConvention>
-      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
-      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib />
     <Xdcmake>
       <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
     </Xdcmake>
     <Bscmake>
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
-      <PreserveSbr>false</PreserveSbr>
     </Bscmake>
-    <Lib />
-    <PostBuildEvent>
-      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
-    </PostBuildEvent>
     <Lib />
     <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -274,28 +267,27 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CallingConvention>FastCall</CallingConvention>
-      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib />
     <Xdcmake>
       <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
     </Xdcmake>
@@ -303,13 +295,13 @@
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
     <Lib />
-    <PostBuildEvent>
-      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
-    </PostBuildEvent>
     <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'">
     <ClCompile>
@@ -317,29 +309,27 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>false</MinimalRebuild>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CallingConvention>FastCall</CallingConvention>
-      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib />
     <Xdcmake>
       <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
     </Xdcmake>
@@ -347,13 +337,13 @@
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
     <Lib />
-    <PostBuildEvent>
-      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
-    </PostBuildEvent>
     <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
     <ClCompile>
@@ -361,28 +351,27 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../include;../../src;$(DependencySrc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>_LIB;TRACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CallingConvention>FastCall</CallingConvention>
-      <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>false</StringPooling>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib />
     <Xdcmake>
       <OutputFile>$(IntDir)$(TargetName).xml</OutputFile>
     </Xdcmake>
@@ -390,60 +379,58 @@
       <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
     <Lib />
-    <PostBuildEvent>
-      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
-    </PostBuildEvent>
     <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>echo   $(TargetFileName) done 1&gt;&amp;2</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FoundationStub.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="QuadProg++.cc" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="ScilabStub.cpp" />
-    <ClCompile Include="UTCriticalSection.cpp" />
-    <ClCompile Include="UTDllLoader.cpp" />
-    <ClCompile Include="UTLoadContext.cpp" />
-    <ClCompile Include="UTLoadHandler.cpp" />
-    <ClCompile Include="UTOptimizer.cpp" />
-    <ClCompile Include="UTPath.cpp" />
-    <ClCompile Include="UTQPTimer.cpp" />
-    <ClCompile Include="UTRegisterTypeDesc.cpp" />
-    <ClCompile Include="UTSocket.cpp" />
-    <ClCompile Include="UTTimer.cpp" />
-    <ClCompile Include="UTTypeDesc.cpp" />
+    <ClCompile Include="CRBody.cpp" />
+    <ClCompile Include="CRBone.cpp" />
+    <ClCompile Include="CRCreature.cpp" />
+    <ClCompile Include="CREngine.cpp" />
+    <ClCompile Include="CRGazeController.cpp" />
+    <ClCompile Include="CRGrabController.cpp" />
+    <ClCompile Include="CRMinimumJerkTrajectory.cpp" />
+    <ClCompile Include="CRReachController.cpp" />
+    <ClCompile Include="CRRegisterTypeDesc.cpp" />
+    <ClCompile Include="CRSdk.cpp" />
+    <ClCompile Include="CRTouchSensor.cpp" />
+    <ClCompile Include="CRTrajectoryPlanner.cpp" />
+    <ClCompile Include="CRVisualSensor.cpp" />
+    <ClCompile Include="CRBodyGenerator\CRBallHumanBodyGen.cpp" />
+    <ClCompile Include="CRBodyGenerator\CRBodyGen.cpp" />
+    <ClCompile Include="CreatureStub.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Foundation\SprUTCriticalSection.h" />
-    <ClInclude Include="..\..\include\Foundation\SprUTOptimizer.h" />
-    <ClInclude Include="..\..\include\Foundation\SprUTQPTimer.h" />
-    <ClInclude Include="ClapackLibsDef.h" />
-    <ClInclude Include="Foundation.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="QuadProg++.hh" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="UTBaseType.h" />
-    <ClInclude Include="UTClapack.h" />
-    <ClInclude Include="UTDllLoader.h" />
-    <ClInclude Include="UTDllLoaderImpl.h" />
-    <ClInclude Include="UTLoadContext.h" />
-    <ClInclude Include="UTLoadHandler.h" />
-    <ClInclude Include="UTOptimizer.h" />
-    <ClInclude Include="UTPath.h" />
-    <ClInclude Include="UTQPTimer.h" />
-    <ClInclude Include="UTSocket.h" />
-    <ClInclude Include="UTTimer.h" />
-    <ClInclude Include="UTTypeDesc.h" />
-    <ClInclude Include="..\..\include\Foundation\SprObject.h" />
-    <ClInclude Include="..\..\include\Foundation\SprScene.h" />
-    <ClInclude Include="..\..\include\Foundation\SprUTTimer.h" />
-    <ClInclude Include="..\..\include\SprFoundation.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scilab.i" />
+    <ClInclude Include="..\..\include\Creature\SprCRReachController.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRTrajectoryPlanner.h" />
+    <ClInclude Include="CRBody.h" />
+    <ClInclude Include="CRBone.h" />
+    <ClInclude Include="CRCreature.h" />
+    <ClInclude Include="CREngine.h" />
+    <ClInclude Include="CRGazeController.h" />
+    <ClInclude Include="CRGrabController.h" />
+    <ClInclude Include="CRMinimumJerkTrajectory.h" />
+    <ClInclude Include="CRReachController.h" />
+    <ClInclude Include="CRSdk.h" />
+    <ClInclude Include="CRTouchSensor.h" />
+    <ClInclude Include="CRTrajectoryPlanner.h" />
+    <ClInclude Include="CRVisualSensor.h" />
+    <ClInclude Include="CRBodyGenerator\CRBallHumanBodyGen.h" />
+    <ClInclude Include="CRBodyGenerator\CRBodyGen.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRBone.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRController.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRBody.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRCreature.h" />
+    <ClInclude Include="..\..\include\SprCreature.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRSdk.h" />
+    <ClInclude Include="..\..\include\Creature\SprCREngine.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRTouchSensor.h" />
+    <ClInclude Include="..\..\include\Creature\SprCRVisualSensor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

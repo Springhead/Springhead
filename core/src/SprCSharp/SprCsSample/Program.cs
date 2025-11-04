@@ -229,67 +229,6 @@ namespace SprCsSample {
             put("vec to List<size_t>", "2  ", csList_s.Count);
             put("vec to List<size_t>", "301", csList_s[0]);
             put("vec to List<size_t>", "302", csList_s[1]);
-	/* float - by member access */
-	    phMaterial.mus.clear();
-	    phMaterial.mus.push_back(0.1F);
-	    phMaterial.mus.push_back(0.2F);
-            put("vec<float>", "2  ", phMaterial.mus.size());
-            put("vec<float>", "0.1", phMaterial.mus[0]);
-            put("vec<float>", "0.2", phMaterial.mus[1]);
-            //phMaterial.mus.clear();
-	    phMaterial.mus[0] = 0.3F;
-	    phMaterial.mus[1] = 0.4F;
-            put("vec<float>", "2  ", phMaterial.mus.size());
-            put("vec<float>", "0.3", phMaterial.mus[0]);
-            put("vec<float>", "0.4", phMaterial.mus[1]);
-	/* float - by List */
-	    var csList_f = new List<float>();
-	    csList_f.Add(0.1F);
-	    csList_f.Add(0.2F);
-	    phMaterial.mus.clear();
-	    phMaterial.mus = csList_f;
-            put("List to vec<float>", "2  ", phMaterial.mus.size());
-            put("List to vec<float>", "0.1", phMaterial.mus[0]);
-            put("List to vec<float>", "0.2", phMaterial.mus[1]);
-	    csList_f = phMaterial.mus;
-            put("vec to List<float>", "2  ", csList_f.Count);
-            put("vec to List<float>", "0.1", csList_f[0]);
-            put("vec to List<float>", "0.2", csList_f[1]);
-	/* double - by member access */
-	    phMaterial.c.clear();
-	    phMaterial.c.push_back(0.1D);
-	    phMaterial.c.push_back(0.2D);
-            put("vec<double>", "2  ", phMaterial.c.size());
-            put("vec<double>", "0.1", phMaterial.c[0]);
-            put("vec<double>", "0.2", phMaterial.c[1]);
-	    phMaterial.c[0] = 0.3D;
-	    phMaterial.c[1] = 0.4D;
-            put("vec<double>", "2  ", phMaterial.c.size());
-            put("vec<double>", "0.3", phMaterial.c[0]);
-            put("vec<double>", "0.4", phMaterial.c[1]);
-	/* double - by List */
-	    var csList_d = new List<double>();
-	    csList_d.Add(0.1D);
-	    csList_d.Add(0.2D);
-	    phMaterial.c.clear();
-	    phMaterial.c = csList_d;
-            put("List to vec<double>", "2  ", phMaterial.c.size());
-            put("List to vec<double>", "0.1", phMaterial.c[0]);
-            put("List to vec<double>", "0.2", phMaterial.c[1]);
-	    csList_d = phMaterial.c;
-            put("vec to List<double>", "2  ", csList_d.Count);
-            put("vec to List<double>", "0.1", csList_d[0]);
-            put("vec to List<double>", "0.2", csList_d[1]);
-
-            // structure element
-            vectorwrapper_Vec3d vertices = descFemMeshNew.vertices;
-            vertices.push_back(new Vec3d(0.1, 0.2, 0.3));
-            vertices.push_back(new Vec3d(0.4, 0.5, 0.6));
-            put("vec<Vec3d>", "2  ", vertices.size());
-            put("vec<Vec3d>", "0.1", vertices[0].x);
-            put("vec<Vec3d>", "0.2", vertices[0].y);
-            put("vec<Vec3d>", "0.3", vertices[0].z);
-            put("vec<Vec3d>", "(0.4, 0.5, 0.6)", edit_vector(vertices[1]));
         }
 
         static void test_array() {

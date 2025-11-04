@@ -17,21 +17,28 @@ namespace Spr{;
 
 class PHGear;
 
+struct PHTreeNodeSt {
+	Vec6d vel;
+};
+
 ///	ツリーノードの基本クラス
 class PHRootNode;
 class PHTreeNode : public SceneObject, public UTTreeNode<PHTreeNode>, public PHTreeNodeDesc{
 public:
 	SPR_OBJECTDEF_ABST(PHTreeNode);
+	DUMPLABEL(PHTreeNodeBegin)
 
 	SpatialMatrix                I;				///< Articulated Inertia
 	SpatialVector                Z;				///< Articulated Bias Force
 	SpatialVector                c;				///< コリオリ加速度
 	SpatialVector                cj;			///< 関節速度によるコリオリ加速度
 
+	DUMPLABEL(PHTreeNodeXcp)
 	SpatialTransform             Xcp, Xcj;
 	SpatialMatrix                Xcp_mat, Xcj_mat;
 	SpatialMatrix                XIX, XtrIJ_JIJinv_Jtr, XtrIJ_JIJinv_JtrIX, J_JIJinv_Jtr;
 	SpatialVector                Ic, ZplusIc, XtrZplusIc;
+	DUMPLABEL(PHTreeNodeTcp)
 
 	SpatialMatrix                Tcp;			///< 親ノードのdvからこのノードのdvを与える行列．転置は子ノードのdZから親ノードのdZを与える
 	std::vector<SpatialMatrix>   dZdv_map;		///< 他のノードのdZからノードのdvを与える行列
@@ -41,6 +48,7 @@ public:
 	PHJoint*                     joint;			///< 親ノードとこのノードとをつなぐ関節
 	PHSolid*                     solid;			///< このノードに関連づけられている剛体
 	PHRootNode*                  root;
+	DUMPLABEL(PHTreeNodeEnd)
 
 
 public:
@@ -108,19 +116,29 @@ public:
 	virtual void CompRelativeVelocity    (){}			///< 関節速度から剛体間相対速度を計算
 	virtual void CompRelativePosition    (){}			///< 関節位置から剛体間相対位置を計算
 
+
+	//	Save State / Load State
+	virtual void SetSt(const PHTreeNodeSt* st) = 0;
+	virtual void GetSt(PHTreeNodeSt* st) = 0;
 };
 
 class PHRootNode : public PHTreeNode{
+	virtual void SetSt(const PHTreeNodeSt* st) {}
+	virtual void GetSt(PHTreeNodeSt* st) {}
 public:
 	SPR_OBJECTDEF(PHRootNode);
+	DUMPLABEL(PHRootNodeDescBegin)
 	SPR_DECLMEMBEROF_PHRootNodeDesc;
+	DUMPLABEL(PHRootNodeStateBegin)
 	SPR_DECLMEMBEROF_PHRootNodeState;
+	DUMPLABEL(PHRootNodeBegin)
 
 	int									treeId;
 	bool								bReady;
 	PHConstraintEngine*					engine;
 	std::vector<PHTreeNode*>			nodes;				///< IDによるアクセス用ノード配列
 	SpatialMatrix						Iinv;				///< Iの逆行列
+	DUMPLABEL(PHRootNodeEnd)
 
 public:
 	void Setup();
@@ -205,6 +223,13 @@ public:
 	virtual void ClearCorrection() { vel.clear(); }
 
 	PHTreeNodeND();
+
+	virtual void SetSt(const PHTreeNodeSt* st) {
+		vel = st->vel.sub_vector(TSubVectorDim<0, NDOF>());
+	}
+	virtual void GetSt(PHTreeNodeSt* st) {
+		st->vel.sub_vector(TSubVectorDim<0, NDOF>()) = vel;
+	}
 };
 
 ///	1自由度の関節

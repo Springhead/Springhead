@@ -193,6 +193,9 @@ bool PHSolid::IsArticulated(){
 }
 
 void PHSolid::UpdateCacheLCP(double dt){
+	velocityNorm = velocity.norm();
+	angVelocityNorm = angVelocity.norm();
+
 	if(mass != 0)
 		minv = GetMassInv();
 	Iinv = GetInertiaInv();
@@ -486,6 +489,16 @@ void PHSolid::AddForce(Vec3d f){
 void PHSolid::AddForce(Vec3d f, Vec3d r){
 	nextTorque += (r - pose*center) ^ f;
 	nextForce  += f;
+}
+
+void PHSolid::ResetForceTorque() {
+	nextTorque.clear();
+	nextForce.clear();
+	force.clear();
+	torque.clear();
+	dv0.clear();
+	dv.clear();
+	dV.clear();
 }
 
 void PHSolid::AfterSetDesc(){

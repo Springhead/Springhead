@@ -1,4 +1,4 @@
-#	Do not edit. RunSwig.bat will update this file.
+
 %ignore Spr::UTTimerIf::GetCallback;
 %ignore Spr::UTTimerIf::SetCallback;
 %ignore Spr::UTTypeDescIf::PrintPool;
@@ -12,9 +12,21 @@
 %ignore Spr::ObjectIf::WriteStateR;
 %ignore Spr::ObjectIf::ReadStateR;
 %ignore Spr::ObjectIf::DumpObjectR;
+%ignore Spr::ObjectIf::NChildObjectForState;
+%ignore Spr::ObjectIf::GetChildObjectForState;
+%ignore Spr::ObjectIf::GetStateSizeR;
+%ignore Spr::ObjectIf::GetStateR;
+%ignore Spr::ObjectIf::SetStateR;
+%ignore Spr::ObjectIf::ConstructStateR;
+%ignore Spr::ObjectIf::DestructStateR;
+%ignore Spr::ObjectIf::GetStateBuffer;
+%ignore Spr::ObjectIf::GetStateBufferLen;
+%ignore Spr::ObjectIf::object_set_t;
+%ignore Spr::ObjectIfs::std_ostream_t;
+%ignore Spr::ObjectIfs::Print;
+%ignore Spr::ObjectIfs::PrintShort;
 %ignore Spr::SdkIf::CreateSdk;
 %ignore Spr::UTPerformanceMeasureIf;
-
 %ignore Spr::UTTypeDescDbIf::PrintPool;
 
 %feature("struct") Spr::IfInfo;
@@ -115,6 +127,7 @@
 
 %module Foundation
 %include "../../include/SprBase.h"
+%include "../../include/Base/BaseDebug.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"
 %include "../../include/Foundation/SprScene.h"

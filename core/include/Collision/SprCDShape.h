@@ -213,36 +213,11 @@ struct PHMaterial{
 	float stribeckVelocity;
 	float stribeckmu;
 
-	///LuGre Modelのための係数
+		///LuGre Modelのための係数
 	float bristlesSpringK;		///< LuGreモデルにおける剛毛のバネ係数
 	float bristlesDamperD;		///< LuGreモデルにおける剛毛のダンパ係数
 	float bristlesViscosityV;	///< LuGreモデルにおける剛毛にはたらく粘性抵抗の係数
 
-	//GMSモデルのためのパラメータ
-	std::vector<float> mus;					///< 動摩擦係数
-	std::vector<float> mu0s;					///< 最大静止摩擦係数	
-	std::vector<float> timeVaryFrictionAs;	///< 時変摩擦定数A
-	std::vector<float> timeVaryFrictionBs;	///< 時変摩擦定数B
-	std::vector<float> timeVaryFrictionDs;	///< 時変摩擦定数D
-	std::vector<float> timeVaryFrictionCs;	///< 時変摩擦定数C
-	std::vector<float> stribeckVelocitys;
-	std::vector<float> stribeckmus;
-	std::vector<double> c;
-	std::vector<float> bristleK;
-
-	struct VelocityField{
-		enum{
-			NONE,
-			LINEAR,
-			CYLINDER,
-		};
-	};
-	int    velocityFieldMode;
-	Vec3d  velocityFieldAxis;
-	double velocityFieldMagnitude;
-
-	Vec3d  CalcVelocity(const Vec3d& pos, const Vec3d& normal) const;
-	
 };
 
 ///	形状のディスクリプタ(基本クラス)

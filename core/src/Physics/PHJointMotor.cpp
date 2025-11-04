@@ -346,9 +346,9 @@ PTM::TVector<1,double> PH1DJointMotor::GetPropV() {
 /// パラメータを取得する
 void PH1DJointMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	PH1DJoint* j = joint->Cast();
-	p.fAvg[0]           = j->fAvg[0];
-	p.xs                = j->xs;
-	p.bYielded          = j->bYielded;
+	p.fAvg[0]           = fAvg[0];
+	p.xs                = xs;
+	p.bYielded          = bYielded;
 	p.spring[0]         = j->spring;
 	p.damper[0]         = j->damper;
 	p.secondDamper[0]   = j->secondDamper;
@@ -360,10 +360,9 @@ void PH1DJointMotor::GetParams(PHNDJointMotorParam<1>& p) {
 
 /// パラメータを反映する
 void PH1DJointMotor::SetParams(PHNDJointMotorParam<1>& p) {
-	PH1DJoint* j = joint->Cast();
-	j->fAvg[0]  = p.fAvg[0];
-	j->xs       = p.xs;
-	j->bYielded = p.bYielded;
+	fAvg[0]  = p.fAvg[0];
+	xs       = p.xs;
+	bYielded = p.bYielded;
 	// 上記以外の変数は特に反映する必要はない．
 }
 
@@ -402,9 +401,9 @@ PTM::TVector<1, double> PH1DJointNonLinearMotor::GetPropV() {
 /// パラメータを取得する
 void PH1DJointNonLinearMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	PH1DJoint* j = joint->Cast();
-	p.fAvg[0] = j->fAvg[0];
-	p.xs = j->xs;
-	p.bYielded = j->bYielded;
+	p.fAvg[0] = fAvg[0];
+	p.xs = xs;
+	p.bYielded = bYielded;
 	p.secondDamper[0] = j->secondDamper;
 	p.offsetForce[0] = offset;
 	p.yieldStress = j->yieldStress;
@@ -441,9 +440,9 @@ PTM::TVector<3,double> PHBallJointMotor::GetPropV() {
 /// パラメータを取得する
 void PHBallJointMotor::GetParams(PHNDJointMotorParam<3>& p) {
 	PHBallJoint* j = joint->Cast();
-	p.fAvg           = j->fAvg.w();
-	p.xs             = j->xs;
-	p.bYielded       = j->bYielded;
+	p.fAvg           = fAvg.w();
+	p.xs             = xs;
+	p.bYielded       = bYielded;
 	p.spring         = PTM::TVector<3,double>(Vec3d(1,1,1) * j->spring);
 	p.damper         = PTM::TVector<3,double>(Vec3d(1,1,1) * j->damper);
 	p.secondDamper   = PTM::TVector<3,double>(j->secondDamper);
@@ -455,10 +454,9 @@ void PHBallJointMotor::GetParams(PHNDJointMotorParam<3>& p) {
 
 /// パラメータを反映する
 void PHBallJointMotor::SetParams(PHNDJointMotorParam<3>& p) {
-	PHBallJoint* j = joint->Cast();
-	j->fAvg.w() = p.fAvg;
-	j->xs       = p.xs;
-	j->bYielded = p.bYielded;
+	fAvg.w() = p.fAvg;
+	xs       = p.xs;
+	bYielded = p.bYielded;
 	// 上記以外の変数は特に反映する必要はない．
 }
 
@@ -496,9 +494,9 @@ PTM::TVector<3, double> PHBallJointNonLinearMotor::GetPropV() {
 /// パラメータを取得する
 void PHBallJointNonLinearMotor::GetParams(PHNDJointMotorParam<3>& p) {
 	PHBallJoint* j = joint->Cast();
-	p.fAvg = j->fAvg.w();
-	p.xs = j->xs;
-	p.bYielded = j->bYielded;
+	p.fAvg = fAvg.w();
+	p.xs = xs;
+	p.bYielded = bYielded;
 	PTM::TVector<3, double> sp;
 	PTM::TVector<3, double> da;
 	PTM::TVector<3, double> tarVel;
@@ -551,10 +549,10 @@ PTM::TVector<6,double> PHSpringMotor::GetPropV() {
 /// パラメータを取得する
 void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	PHSpring* j = joint->Cast();
-	p.fAvg.SUBVEC(0,3)                        = j->fAvg.v();
-	p.fAvg.SUBVEC(3,3)                        = j->fAvg.w();
-	p.xs                                      = j->xs;
-	p.bYielded                                = j->bYielded;
+	p.fAvg.SUBVEC(0,3)                        = fAvg.v();
+	p.fAvg.SUBVEC(3,3)                        = fAvg.w();
+	p.xs                                      = xs;
+	p.bYielded                                = bYielded;
 	for(int i=0;i<3;++i){ p.spring[i]         = j->spring[i]; }
 	for(int i=0;i<3;++i){ p.spring[i+3]       = j->springOri; }
 	for(int i=0;i<3;++i){ p.damper[i]         = j->damper[i]; }
@@ -569,10 +567,9 @@ void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 
 /// パラメータを反映する
 void PHSpringMotor::SetParams(PHNDJointMotorParam<6>& p) {
-	PHSpring* j = joint->Cast();
-	for (int i=0; i<6; ++i) { j->fAvg[i]=p.fAvg[i]; }
-	j->xs       = p.xs;
-	j->bYielded = p.bYielded;
+	for (int i=0; i<6; ++i) { fAvg[i]=p.fAvg[i]; }
+	xs       = p.xs;
+	bYielded = p.bYielded;
 	// 上記以外の変数は特に反映する必要はない．
 }
 

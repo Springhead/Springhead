@@ -12,7 +12,8 @@
 #include "../Base/Base.h"
 #include <iostream>
 #include <fstream>
-/*	hase memo
+#include <string>
+ /*	hase memo
 	1. ObjectはObjectIfを継承しない．
 	2. ObjectIfはバーチャル関数を持たない．
 	3. ObjectIfのアドレス = Objectのアドレス
@@ -131,13 +132,13 @@ public:
 
 #define	SPR_OBJECTDEF_NOIF(cls)	DEF_UTTYPEINFODEF(cls) OBJECTDEF_COMMON(cls)
 #define	SPR_OBJECTDEF(cls)	SPR_OBJECTDEF_NOIF(cls)									\
-	virtual const IfInfo* GetIfInfo() {												\
+	virtual const IfInfo* GetIfInfo() const {										\
 		return cls##If::GetIfInfoStatic();											\
 	}																				\
 
 #define	SPR_OBJECTDEF_ABST_NOIF(cls)	DEF_UTTYPEINFOABSTDEF(cls) OBJECTDEF_COMMON(cls)
 #define	SPR_OBJECTDEF_ABST(cls)	SPR_OBJECTDEF_ABST_NOIF(cls)						\
-	virtual const IfInfo* GetIfInfo() {												\
+	virtual const IfInfo* GetIfInfo() const {										\
 		return cls##If::GetIfInfoStatic();											\
 	}																				\
 
@@ -166,6 +167,25 @@ public:
 
 
 ///	ステートのアクセス用関数の定義
+#ifdef _DEBUG
+#define ACCESS_STATE_PRIVATE(cls)													\
+	virtual size_t GetStateSize() const {											\
+		return sizeof(cls##State) + sizeof(cls##StatePrivate) + sizeof(#cls) + 1; }	\
+	virtual void ConstructState(void* m) const {									\
+		new ((char*)m + (sizeof(#cls) + 1)) cls##State;								\
+		new ((char*)m + (sizeof(#cls) + 1 + sizeof(cls##State))) cls##StatePrivate; }	\
+	virtual void DestructState(void* m) const {										\
+		((cls##State*)((char*)m + (sizeof(#cls) + 1)))->~cls##State();										\
+		((cls##StatePrivate*)((char*)m + (sizeof(#cls) + 1 + sizeof(cls##State))))->~cls##StatePrivate(); }	\
+	virtual bool GetState(void* s) const {																	\
+		*(char*)s = '+'; strcpy_s((char*)s+1, RSIZE_MAX , #cls);															\
+		*(cls##State*) ((char*)s + (sizeof(#cls) + 1)) = *this;												\
+		*(cls##StatePrivate*)((char*)s + (sizeof(#cls) + 1 + sizeof(cls##State))) = *this;	return true; }	\
+	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)((char*)s + (sizeof(#cls) + 1));\
+		*(cls##StatePrivate*)this =																			\
+			*(cls##StatePrivate*) ((char*)s + (sizeof(#cls) + 1 + sizeof(cls##State)) ); }					\
+
+#else
 #define ACCESS_STATE_PRIVATE(cls)													\
 	virtual size_t GetStateSize() const {											\
 		return sizeof(cls##State) + sizeof(cls##StatePrivate); }					\
@@ -180,13 +200,80 @@ public:
 		*(cls##StatePrivate*)this =													\
 			*(cls##StatePrivate*) ((char*)s + sizeof(cls##State) ); }				\
 
-#define ACCESS_STATE(cls)															\
+#endif
+
+//	State and StatePrivate accesser for a class with base class with a state and/or private state.
+//	base class's State should not be inhertied by State or PrivateState.
+#define ACCESS_STATE_PRIVATE1(cls, base)											\
+	virtual size_t GetStateSize() const {											\
+		return base::GetStateSize() + sizeof(cls##State)							\
+			+ sizeof(cls##StatePrivate) ; }											\
+	virtual void ConstructState(void* m) const {									\
+		base::ConstructState(m);													\
+		m = (char*)m + base::GetStateSize();										\
+		new(m) cls##State; new ((char*)m + sizeof(cls##State)) cls##StatePrivate; }	\
+	virtual void DestructState(void* m) const {										\
+		base::DestructState(m);														\
+		m = (char*)m + base::GetStateSize();										\
+		((cls##State*)m)->~cls##State();											\
+		((cls##StatePrivate*)((char*)m+sizeof(cls##State)))->~cls##StatePrivate(); }\
+	virtual bool GetState(void* s) const {											\
+		base::GetState(s);															\
+		s = (char*)s + base::GetStateSize();										\
+		*(cls##State*) s = *this;													\
+		*(cls##StatePrivate*)((char*)s+sizeof(cls##State)) = *this;	return true; }	\
+	virtual void SetState(const void* s){											\
+		base::SetState(s);															\
+		s = (char*)s + base::GetStateSize();										\
+		*(cls##State*)this = *(cls##State*)s;										\
+		*(cls##StatePrivate*)this =													\
+			*(cls##StatePrivate*) ((char*)s + sizeof(cls##State) ); }				\
+
+#ifdef _DEBUG
+	#define ACCESS_STATE(cls)															\
+	virtual size_t GetStateSize() const { return sizeof(cls##State) + sizeof(#cls) + 1; }				\
+	virtual void ConstructState(void* m) const { new((char*)m + (sizeof(#cls) + 1)) cls##State;}				\
+	virtual void DestructState(void* m) const { ((cls##State*)((char*)m + (sizeof(#cls) + 1)))->~cls##State(); }	\
+	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
+	virtual bool GetState(void* s) const { *(cls##State*)((char*)s + (sizeof(#cls) + 1))=*this; \
+		*(char*)s = '+'; strcpy_s((char*)s+1, RSIZE_MAX,#cls); return true; }	\
+	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)((char*)s+ (sizeof(#cls) + 1));}	\
+
+#else
+	#define ACCESS_STATE(cls)														\
 	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
-	virtual void ConstructState(void* m) const { new(m) cls##State;}				\
+	virtual void ConstructState(void* m) const { new(m) cls##State; }				\
 	virtual void DestructState(void* m) const { ((cls##State*)m)->~cls##State(); }	\
 	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
-	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
-	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
+	virtual bool GetState(void* s) const { *(cls##State*)s = *this; return true; }	\
+	virtual void SetState(const void* s) { *(cls##State*)this = *(cls##State*)s; }	\
+
+#endif
+#define ACCESS_STATE1(cls, base)													\
+	virtual size_t GetStateSize() const { return base::GetStateSize()				\
+		 +	sizeof(cls##State); }													\
+	virtual void ConstructState(void* m) const {									\
+		base::ConstructState(m);													\
+		m = (char*)m + base::GetStateSize();										\
+		new(m) cls##State;															\
+	}																				\
+	virtual void DestructState(void* m) const {										\
+		base::DestructState(m);														\
+		m = (char*)m + base::GetStateSize();										\
+		((cls##State*)m)->~cls##State();											\
+	}																				\
+	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
+	virtual bool GetState(void* s) const {											\
+		base::GetState(s);															\
+		s = (char*)s + base::GetStateSize();										\
+		*(cls##State*)s = *this;													\
+		return true;																\
+	}																				\
+	virtual void SetState(const void* s) {											\
+		base::SetState(s);															\
+		s = (char*)s + base::GetStateSize();										\
+		*(cls##State*)this = *(cls##State*)s;										\
+	}																				\
 
 #define ACCESS_PRIVATE(cls)																			\
 	virtual size_t GetStateSize() const { return sizeof(cls##StatePrivate); }						\
@@ -219,6 +306,10 @@ class UTLoadContext;
 
 /**	全Objectの基本型	*/
 class Object: public UTTypeInfoObjectBase, public UTRefCount{
+#ifdef _DEBUG
+	__pragma(warning(suppress : 26495))
+	mutable char* stateConstruct;
+#endif
 public:
 	SPR_OBJECTDEF(Object);		///<	クラス名の取得などの基本機能の実装
 	ObjectIf* GetObjectIf(){
@@ -264,12 +355,8 @@ public:
 	virtual bool GetState(void* state) const { return false; }
 	///	状態の読み出し(参照版)
 	virtual const void* GetStateAddress() const { return NULL; }
-	///	状態の再帰的な読み出し
-	virtual void GetStateR(char*& state);
 	///	状態の設定
 	virtual void SetState(const void* state){}
-	///	状態の再帰的な設定
-	virtual void SetStateR(const char*& state);
 	/// 状態のファイルへの書き出し
 	virtual bool WriteStateR(std::ostream& fout);
 	virtual bool WriteState(std::string fileName);
@@ -282,8 +369,31 @@ public:
 	virtual void ConstructState(void* m) const {}
 	///	状態型をメモリブロックに戻す
 	virtual void DestructState(void* m) const {}
+
+	//	再帰処理
+	///	状態のサイズ
+	virtual size_t GetStateSizeR() const;
+	///	
+	virtual void ConstructStateR(char*& s) const;
+	///	
+	virtual void DestructStateR(char*& s) const;
+	///	状態の再帰的な読み出し
+	virtual void GetStateR(char*& state) const;
+	///	状態の再帰的な設定
+	virtual void SetStateR(const char*& state);
+	virtual size_t NChildObjectForState() const {
+		return NChildObject();
+	}
+	const ObjectIf* GetChildObjectForState(size_t i) const {
+		return ((ObjectIf*)this)->GetChildObjectForState(i);
+	}
+	virtual ObjectIf* GetChildObjectForState(size_t i) {
+		return GetChildObject(i);
+	}
+
+
 	///	メモリデバッグ用。単純にツリーのオブジェクトをファイルにダンプする。
-	virtual void DumpObjectR(std::ostream& os, int level=0) const;
+	virtual void DumpObjectR(std::ostream& os, ObjectIf::object_set_t& dumped=ObjectIf::object_set_t(), int level = 0) const;
 
 protected:
 	/// 開き括弧
@@ -297,11 +407,6 @@ protected:
 	virtual void BeforeGetDesc() const {}
 	///	SetDesc()のあとに呼ばれる
 	virtual void AfterSetDesc(){}
-
-	///	sをoのStateとして初期化する．
-	static void ConstructState(ObjectIf* o, char*& s);
-	///	sをoのStateからメモリブロックに戻す．
-	static void DestructState(ObjectIf* o, char*& s);
 };
 ///	coutなどのストリームにObjectを出力する演算子．ObjectのPrintを呼び出す．
 inline std::ostream& operator << (std::ostream& os, const Object& o){
@@ -451,21 +556,27 @@ public:
 	ObjectStates():state(NULL), size(0){}
 	~ObjectStates(){ delete state; }
 	///	oとその子孫をセーブするために必要なメモリを確保する．
-	void AllocateState(ObjectIf* o);
+	void AllocateState(const ObjectIf* o);
 	///	状態をセーブする．
-	void SaveState(ObjectIf* o);
+	void SaveState(const ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
 	///	状態のメモリを解放する
-	void ReleaseState(ObjectIf* o);
+	void ReleaseState(const ObjectIf* o);
 	///	状態のサイズを求める
-	size_t CalcStateSize(ObjectIf* o);
+	size_t CalcStateSize(const ObjectIf* o);
 	/// SprBlender用再帰的ではないセーブ
-	void SingleSave(ObjectIf* o);
+	void SingleSave(const ObjectIf* o);
 	/// SprBlender用再帰的ではないロード
 	void SingleLoad(ObjectIf* o);
 	///	アロケート済みかどうか
 	bool IsAllocated() { return state != NULL; }
+
+
+	//	For debug
+	///
+	char* GetStateBuffer() { return state;  }
+	size_t GetStateBufferLen() { return size; }
 };
 
 

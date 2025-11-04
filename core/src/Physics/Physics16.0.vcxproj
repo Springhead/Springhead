@@ -469,6 +469,8 @@
     <ClCompile Include="PhysicsStub.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\Physics\SprPHConstraintBase.h" />
+    <ClInclude Include="..\..\include\Physics\SprPHJointMotor.h" />
     <ClInclude Include="..\..\include\Physics\SprPHFrictionType.hpp" />
     <ClInclude Include="..\..\include\Physics\SprPHLuGreParametersData.h" />
     <ClInclude Include="..\..\include\Physics\SprPHOpObj.h" />

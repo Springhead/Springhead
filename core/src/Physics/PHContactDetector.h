@@ -96,8 +96,10 @@ public:
 
 ///	PHContactDetectorの状態
 struct PHContactDetectorSt{
+	DUMPLABEL(PHContactDetectorStBegin)
 	size_t nSolidPair;	///<	SolidPairの数
 	size_t nShapePair;	///<	ShapePairの数
+	DUMPLABEL(PHContactDetectorStHeadEnd)
 
 	PHSolidPairSt* SolidStates(){
 		char* ptr = ((char*)this) + sizeof(*this);

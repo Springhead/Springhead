@@ -21,6 +21,8 @@ struct DRUARTMotorDriverIf : public HIRealDeviceIf{
 	SPR_IFDEF(DRUARTMotorDriver);
 	int NMotor();
 	int NForce();
+	int NBoard();
+	int GetBoardType(int boardPos);
 	long ReadForce(int ch);
 };
 struct DRUARTMotorDriverDesc{

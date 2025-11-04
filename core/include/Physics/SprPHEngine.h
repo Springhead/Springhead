@@ -76,11 +76,6 @@ public:
 	*/
 	double GetContactCorrectionRate();
 
-	/** @brief bSaveConstraintsを書き換える
-		@return value SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
-	*/
-	void SetBSaveConstraints(bool value);
-
 	/** @brief 剛体の速度だけ更新するフラグを設定する
 	*/
 	void SetUpdateAllSolidState(bool flag);
@@ -119,6 +114,9 @@ public:
 	/** @brief 接触領域を表示するための情報を更新するかどうか。FWScene::EnableRenderContact()が呼び出す。
 	*/
 	void EnableRenderContact(bool enable);
+
+	///
+	void UpdateForStateDebug();
 };
 
 struct PHConstraintEngineDesc{
@@ -135,7 +133,6 @@ struct PHConstraintEngineDesc{
 	double	accelSOR;					///< SOR法の加速係数
 	double  dfEps;
 	double  regularization;
-	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
 	bool	bUseContactSurface;			///< 面接触を使う
 	bool    bReport;                    ///< 計算時間などのレポートをデバッグ出力およびファイルへ出力する

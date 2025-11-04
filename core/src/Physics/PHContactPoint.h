@@ -14,7 +14,7 @@ namespace Spr{;
 
 class PHShapePairForLCP;
 
-struct PHContactPointState:public PHConstraintState{
+struct PHContactPointState{
 	int shapePair;
 	Vec3d pos;
 };
@@ -46,8 +46,6 @@ public:
 
 	double fx, flim0, flim;
 	bool   isStatic;
-
-	Vec3d  velField;  ///< contact motor velocity (in local coord)
 
 public:
 	/// コンストラクタ

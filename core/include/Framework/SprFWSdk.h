@@ -76,6 +76,7 @@ struct FWSdkIf : SdkIf {
 		exがNULLの場合は全てが1つのファイルに保存される．
 	 */
 	bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	bool SaveObjects(UTString filename, ObjectIfs* objs, ImportIf* ex = NULL, const IfInfo* ii = NULL);
 
 	/// シーンの個数を取得する
 	int NScene() const;

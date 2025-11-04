@@ -37,8 +37,16 @@ struct Vec4d{ double x; double y; double z; double w;
 	      Vec4d(double x, double y, double z, double w);
 	      double square(); double norm(); void unitize();
 };
-//struct Quaternionf{ float x; float y; float z; float w; };
-//struct Quaterniond{ double x; double y; double z; double w; };
+struct Vec6f {
+	float vx; float vy; float vz; float wx; float wy; float wz;
+	Vec6f(float vx, float vy, float vz, float wx, float wy, float wz);
+	float square(); float norm(); void unitize();
+};
+struct Vec6d {
+	double vx; double vy; double vz; double wx; double wy; double wz;
+	Vec6d(double vx, double vy, double vz, double wx, double wy, double wz);
+	double square(); double norm(); void unitize();
+};
 struct Quaternionf{ float x; float y; float z; float w;
 	        Quaternionf(float w, float x, float y, float z);
 		    float W(); float X(); float Y(); float Z(); Vec3f V();
@@ -63,8 +71,6 @@ struct Quaterniond{ double x; double y; double z; double w;
 		    void RotationArc(Vec3d& lhs, Vec3d& rhs);
 		    void Euler(double heading, double attitude, double bank);
 };
-//struct Posef{ float w; float x; float y; float z; float px; float py; float pz; };
-//struct Posed{ double w; double x; double y; double z; double px; double py; double pz; };
 struct Posef{ float w; float x; float y; float z; float px; float py; float pz;
 	      Posef(const Vec3f p, const Quaternionf q);
 		  Posef(float w, float x, float y, float z, float px, float py, float pz);
@@ -100,7 +106,7 @@ struct Posed{ double w; double x; double y; double z; double px; double py; doub
 	      static Posed Rot(Quaterniond& q);
 };
 
-#ifdef SWIG_CS_SPR
+
 // for C#
 //struct Vec2i{ int x; int y; };
 //struct Vec3i{ int x; int y; int z; };
@@ -118,14 +124,6 @@ struct Vec3i{ int x; int y; int z;
 struct Vec4i{ int x; int y; int z; int w;
 	      Vec4i(int x, int y, int z, int w);
 	      int square(); int norm(); void unitize();
-};
-struct Vec6f{ float vx; float vy; float vz; float wx; float wy; float wz;
-	      Vec6f(float vx, float vy, float vz, float wx, float wy, float wz);
-	      float square(); float norm(); void unitize();
-};
-struct Vec6d{ double vx; double vy; double vz; double wx; double wy; double wz;
-	      Vec6d(double vx, double vy, double vz, double wx, double wy, double wz);
-	      double square(); double norm(); void unitize();
 };
 struct Curve3f{};
 //struct Matrix3f{ float xx,xy,xz, yx,yy,yz, zx,zy,zz; };
@@ -203,15 +201,9 @@ struct SpatialMatrix/* : public PTM::TMatrixRow<6, 6, double>*/{
 	SpatialMatrix(const SpatialMatrix& X);
 	SpatialMatrix(const SpatialTransform& X);
 };
+#ifdef SWIG_CS_SPR
 struct IfInfo{ bool Inherit(const IfInfo* info); const char* ClassName(); };
-
-#else
-struct Matrix3f{ float data[9]; };
-struct Matrix3d { double data[9]; };
-struct Matrix6d { double data[36]; };
-struct SpatialMatrix { double data[36]; };
-struct Affinef{ float data[16]; };
-struct Affined{ double data[16]; };
 #endif
+
 }
 #endif

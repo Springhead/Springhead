@@ -22,7 +22,7 @@ class PH1DJoint;
 /**
 	ギア：１自由度関節を連動させる拘束
  */
-class PHGear : public SceneObject, public PHConstraintBase{
+class PHGear : public PHConstraintBase{
 public:
 	SPR_OBJECTDEF(PHGear);
 	SPR_DECLMEMBEROF_PHGearDesc;

@@ -52,6 +52,13 @@ ObjectIf* PH1DJoint::GetChildObject(size_t i) {
 	return PHConstraint::GetChildObject(i);
 }
 
+size_t PH1DJoint::NChildObjectForState() const {
+	return (limit ? 1 : 0) + motors.size();
+}
+ObjectIf* PH1DJoint::GetChildObjectForState(size_t i) {
+	return GetChildObject(i);
+}
+
 PH1DJointLimitIf* PH1DJoint::CreateLimit(const PH1DJointLimitDesc& desc) {
 	PH1DJointLimitIf* l = GetScene()->CreateObject(PH1DJointLimitIf::GetIfInfoStatic(), &desc)->Cast();
 	if(l)

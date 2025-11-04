@@ -66,6 +66,9 @@ public:
 	FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
 	bool LoadScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 	bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	bool SaveObjects(UTString filename, ObjectIfs* objs, ImportIf* ex = NULL, const IfInfo* ii = NULL) {
+		return SaveScene(filename, ex, ii, objs);
+	}
 	int NScene() const{	return (int)scenes.size(); }
 	//void SwitchScene(FWSceneIf* scene){ curScene = scene; }
 	FWSceneIf* GetScene(int i = -1);

@@ -27,49 +27,49 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5C2EA687-6692-4B73-A911-DB9155685066}</ProjectGuid>
-    <RootNamespace>Joints141</RootNamespace>
+    <ProjectGuid>{010EB7AB-7F4B-4A2F-B25F-E85A98CB3643}</ProjectGuid>
+    <RootNamespace>Spidar4_141</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Joints</ProjectName>
+    <ProjectName>Spidar4</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -129,7 +129,6 @@
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
-    <AllProjectBMIsArePublic>true</AllProjectBMIsArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Trace|x64'">
     <OutDir>$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
@@ -152,6 +151,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <OpenMPSupport>true</OpenMPSupport>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -179,6 +180,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <OpenMPSupport>true</OpenMPSupport>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -206,6 +209,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -236,6 +241,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -266,6 +273,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -296,6 +305,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
       <CallingConvention>FastCall</CallingConvention>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -313,53 +324,21 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Base\Base16.0.vcxproj">
+    <ClInclude Include="..\..\..\..\include\dailybuild_SEH_Handler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Base\Base17.0.vcxproj">
       <Project>{90010cd8-7c45-481e-8697-aab9b3fb9e4f}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Collision\Collision16.0.vcxproj">
-      <Project>{8c62959e-9e67-4439-836e-25be57501463}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\FileIO\FileIO16.0.vcxproj">
-      <Project>{3ca4689d-77da-4b2e-a718-cbb6a8ff04d7}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Foundation\Foundation16.0.vcxproj">
+    <ProjectReference Include="..\..\..\Foundation\Foundation17.0.vcxproj">
       <Project>{916bf063-5a94-4652-b355-62220ef17768}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Framework16.0.vcxproj">
-      <Project>{755660be-3b1e-416b-b795-4f653c83a43a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Graphics\Graphics16.0.vcxproj">
-      <Project>{a339c0ca-d5fb-4dfa-9bcf-826739790653}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\HumanInterface\HumanInterface16.0.vcxproj">
+    <ProjectReference Include="..\..\..\HumanInterface\HumanInterface17.0.vcxproj">
       <Project>{05138f41-5673-4e19-a5c7-2a684488b23a}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Physics\Physics16.0.vcxproj">
-      <Project>{a2b91f83-df0a-473d-9c3b-059673cd2046}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\RunSwig\RunSwig16.0.vcxproj">
-      <Private>false</Private>
+    <ProjectReference Include="..\..\..\RunSwig\RunSwig17.0.vcxproj">
       <Project>{4ac6c708-19c9-4cc1-a25b-d9682470411e}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ArmHandler.h" />
-    <ClInclude Include="BallJointHandler.h" />
-    <ClInclude Include="ChainHandler.h" />
-    <ClInclude Include="GearHandler.h" />
-    <ClInclude Include="Handler.h" />
-    <ClInclude Include="HingeJointHandler.h" />
-    <ClInclude Include="LinkHandler.h" />
-    <ClInclude Include="PathHandler.h" />
-    <ClInclude Include="SpringHandler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
-    <Text Include="CMakeSettings.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="dailybuild.control" />
-    <None Include="save.spr" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

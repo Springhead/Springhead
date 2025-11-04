@@ -28,7 +28,9 @@ public:
 	virtual void AccumulateInertia     ();
 	virtual void AccumulateBiasForce   ();
 	virtual void CompAccel             ();
-	
+	virtual void GetSt(PHTreeNodeSt* st) {}
+	virtual void SetSt(const PHTreeNodeSt* st) {}
+
 	PHFixJointNode(const PHFixJointNodeDesc& desc = PHFixJointNodeDesc()){}
 };
 

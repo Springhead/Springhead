@@ -242,7 +242,6 @@ PHConstraintEngineDesc::PHConstraintEngineDesc() {
 	//	拘束力計算を安定化させる係数、大きくすると拘束力が弱くなり、すり抜けるなどの問題が起きる。
 	//	A coefficient to stabilize the constraint force calculation; The larger regularization makes constraint forces weaker and problems such as tunneling could occur.
 	regularization = 1e-6;
-	bSaveConstraints = false;
 	bUpdateAllState = true;
 	bUseContactSurface = false;
 	bReport = false;
@@ -728,6 +727,28 @@ void PHConstraintEngine::StepPart1(){
 		}
 	}
 }
+void PHConstraintEngine::UpdateForStateDebug() {
+	double dt = GetScene()->GetTimeStep();
+	for (int i = 0; i < GetScene()->NSolids(); ++i) {
+		PHSolid* solid = (PHSolid*)GetScene()->GetSolid(i);
+		solid->UpdateCacheLCP(dt);
+		if (solid->IsDynamical() && !solid->IsStationary() && !solid->IsFrozen()) {
+			solid->dv0.v() = solid->minv * solid->f.v() * dt;
+			solid->dv0.w() = solid->Iinv * (solid->f.w() - solid->v.w() % (solid->GetInertia() * solid->v.w())) * dt;
+		}
+		else {
+			solid->dv0.clear();
+		}
+		solid->dv.clear();
+		solid->dV.clear();
+	}
+	for (int i = 0; i < (int)points.size(); i++) points[i]->UpdateState();
+	for (int i = 0; i < (int)joints.size(); i++) joints[i]->UpdateState();
+	for (int i = 0; i < (int)cons_base.size(); i++) {
+		cons_base[i]->ClearVars();
+	}
+	Setup();
+}
 
 void PHConstraintEngine::StepPart2(){
     #ifdef USE_OPENMP_PHYSICS
@@ -760,8 +781,9 @@ void PHConstraintEngine::StepPart2(){
     #ifdef USE_OPENMP_PHYSICS
     # pragma omp for
     #endif
-	for(int i = 0; i < (int)joints.size(); i++)
+	for (int i = 0; i < (int)joints.size(); i++) {
 		joints[i]->UpdateState();
+	}
 
 	// 速度LCP
 	Setup();
@@ -825,58 +847,6 @@ void PHConstraintEngine::Step(){
 
 PHConstraintsIf* PHConstraintEngine::GetContactPoints(){
 	return DCAST(PHConstraintsIf, &points);
-}
-
-//	state関係の実装
-size_t PHConstraintEngine::GetStateSize() const{
-	return PHContactDetector::GetStateSize() + (bSaveConstraints ? sizeof(PHConstraintsSt) : 0);
-}
-void PHConstraintEngine::ConstructState(void* m) const{
-	PHContactDetector::ConstructState(m);
-	if (bSaveConstraints){
-		char* p = (char*)m;
-		p += PHContactDetector::GetStateSize();
-		new (p) PHConstraintsSt;
-	}
-}
-void PHConstraintEngine::DestructState(void* m) const {
-	PHContactDetector::DestructState(m);
-	char* p = (char*)m;
-	if (bSaveConstraints){
-		p += PHContactDetector::GetStateSize();
-		((PHConstraintsSt*)p)->~PHConstraintsSt();
-	}
-}
-bool PHConstraintEngine::GetState(void* s) const {
-	PHContactDetector::GetState(s);
-	char* p = (char*)s;
-	if (bSaveConstraints){
-		PHConstraintsSt* st = (PHConstraintsSt*)(p + PHContactDetector::GetStateSize());
-		st->joints.resize(joints.size());
-		for(size_t i=0; i<joints.size(); ++i){
-			joints[i]->GetState(&st->joints[i]);
-		}
-		st->gears.resize(gears.size());
-		for(size_t i=0; i<gears.size(); ++i){
-			gears[i]->GetState(&st->gears[i]);
-		}
-	}
-	return true;
-}
-void PHConstraintEngine::SetState(const void* s){
-	PHContactDetector::SetState(s);
-	char* p = (char*)s;
-	if (bSaveConstraints){
-		PHConstraintsSt* st = (PHConstraintsSt*)(p + PHContactDetector::GetStateSize());
-		joints.resize(st->joints.size());
-		for(size_t i=0; i<joints.size(); ++i){
-			joints[i]->SetState(&st->joints[i]);
-		}
-		gears.resize(st->gears.size());
-		for(size_t i=0; i<gears.size(); ++i){
-			gears[i]->SetState(&st->gears[i]);
-		}
-	}
 }
 
 void PHConstraintEngine::EnableRenderContact(bool enable){
