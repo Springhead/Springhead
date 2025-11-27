@@ -85,6 +85,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		}
 		lgs.local_p = local;
 		sp->LuGreState = lgs;
+		z_p = lgs.z;
+		T_p = lgs.T;
 	}
 	else {
 		frictionModel = COULOMB;
@@ -140,7 +142,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 }
 
-void PHContactPoint::CompLuGreState() {
+void PHContactPoint::CompLuGreState(double normalForce) {
 	PHSceneIf* scene = GetScene();
 	double dt = scene->GetTimeStep();
 	if (frictionModel == 1) {
@@ -150,9 +152,20 @@ void PHContactPoint::CompLuGreState() {
 		//v.x = (fabs(v.x) < fth) ? 0.0f : v.x;
 		//v.y = (fabs(v.y) < fth) ? 0.0f : v.y;
 		lgs.v = v;
-		double g = timeVaryA + timeVaryB * log(timeVaryC * lgs.T + 1);
+
+		if (normalForce <= 0.0f) {
+			// No contact
+			lgs.dz = Vec2d::Zero();
+			lgs.z = Vec2d::Zero();
+			lgs.T = 0.0;
+			shapePair->LuGreState = lgs;
+			//std::cout << "normalForce <= 0.0f in CompLuGreState()" << std::endl;
+			return;
+		}
+		// g(T)
+		double g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
 		// T
-		double T = lgs.T + dt;	// T <= T + dt
+		double T = T_p + dt;	// T <= T + dt
 		//double T_ = lgs.z.norm() / (v.norm() + 1.0e-12);	// z_ss / v = g(T)/(σ_0|v|)
 		double T_ = g / (sigma0 * v.norm() + 1.0e-12);
 		//lgs.T = std::min(T, T_);	// T <= min(T, T_)
@@ -174,12 +187,13 @@ void PHContactPoint::CompLuGreState() {
 		lgs.z = lgs.z + dz * dt;
 #else
 	// Implicit Euler method
-		Vec2d z_p = lgs.z;
-		z = Vec2d((lgs.z[0] + dt * lgs.v.x) / (1 + dt * sigma0 * fabs(lgs.v.x) / g),
-			(lgs.z[1] + dt * lgs.v.y) / (1 + dt * sigma0 * fabs(lgs.v.y) / g));
-		dz = (lgs.z - z_p) / dt;
+		//Vec2d z_p = lgs.z;
+		z = Vec2d((z_p.x + dt * v.x) / (1 + dt * sigma0 * fabs(v.x) / g),
+			(z_p.y + dt * v.y) / (1 + dt * sigma0 * fabs(v.y) / g));
+		dz = (z - z_p) / dt;
 		Vec2d vs2d = v - dz;
 		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
+		//std::cout << z << dz << normalForce << g <<  std::endl;
 #endif
 		lgs.z = z;
 		lgs.dz = dz;
@@ -196,7 +210,7 @@ void PHContactPoint::CompBias(){
 	double vth   = scene->GetImpactThreshold();
 	double fth	 = scene->GetFrictionThreshold();
 
-	CompLuGreState();
+	//CompLuGreState(1.0);
 
 	// Normal direction
 	//	速度が小さい場合は、跳ね返りなし。
@@ -233,6 +247,10 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
 
 	if(i == 0){	
+		if (frictionModel == 1) {
+			// LuGre model friction state update
+			CompLuGreState(f_);
+		}
 		//垂直抗力 >= 0の制約
 		if(f_ < 0.0){
 			f_ = fx = flim0 = flim = 0.0;

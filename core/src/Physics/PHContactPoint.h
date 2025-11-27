@@ -37,6 +37,8 @@ public:
 	double timeVaryA, timeVaryB, timeVaryC;		// g(T) = A + B log(1+ C * T)
 	Vec2d v;	// Relative velocity
 	Vec2d z;
+	Vec2d z_p;
+	double T_p;
 	Vec2d dz;	// Bristles displacement
 	Vec3d vs;	// Slip velocity
 	double lugreDirection; // [rad]
@@ -62,7 +64,7 @@ public:
 	int GetFrictionModel() { return frictionModel; }
 
 
-	void CompLuGreState();
+	void CompLuGreState(double normalForce);
 
 	// ----- PHConstraintの派生クラスで実装する機能
 	virtual void CompBias();
