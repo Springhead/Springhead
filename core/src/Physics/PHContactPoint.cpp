@@ -164,37 +164,23 @@ void PHContactPoint::CompLuGreState(double normalForce) {
 		}
 		// g(T)
 		double g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
+
 		// T
-		double T = T_p + dt;	// T <= T + dt
-		//double T_ = lgs.z.norm() / (v.norm() + 1.0e-12);	// z_ss / v = g(T)/(σ_0|v|)
-		double T_ = g / (sigma0 * v.norm() + 1.0e-12);
-		//lgs.T = std::min(T, T_);	// T <= min(T, T_)
-		if (T < T_) {
-			lgs.T = T;
-			isSticking = false;
-		}
-		else {
-			lgs.T = T_;
-			isSticking = true;
-		}
+		// dT/dt = 1 - (sigma0 * |v|) / g(T) * T
+		double T = (T_p + dt) / (1.0 + sigma0 / g * v.norm() * dt);
+		lgs.T = T;
 		stickT = lgs.T;
+		isSticking = (lgs.T >= T_p);
 
 		// z
-#if 0
-	//dz = v - (sigma0 * v.norm()) / g * lgs.z;
-		dz = Vec2d(v.x - (sigma0 * fabs(v.x)) / g * lgs.z.x, v.y - (sigma0 * fabs(v.y)) / g * lgs.z.y);
-
-		lgs.z = lgs.z + dz * dt;
-#else
-	// Implicit Euler method
-		//Vec2d z_p = lgs.z;
+		// dz/dt = v - (sigma0 * |v|) / g(T) * z
 		z = Vec2d((z_p.x + dt * v.x) / (1 + dt * sigma0 * fabs(v.x) / g),
 			(z_p.y + dt * v.y) / (1 + dt * sigma0 * fabs(v.y) / g));
 		dz = (z - z_p) / dt;
 		Vec2d vs2d = v - dz;
 		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
 		//std::cout << z << dz << normalForce << g <<  std::endl;
-#endif
+
 		lgs.z = z;
 		lgs.dz = dz;
 		shapePair->LuGreState = lgs;
