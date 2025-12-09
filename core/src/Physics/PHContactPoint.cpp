@@ -52,9 +52,10 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	sp->GetSt(st);
 	unsigned int contactDuration = st.contactDuration;
 
-	if (mat[0]->frictionModel == 1 || mat[1]->frictionModel == 1) {
-		frictionModel = 1;
-
+	int fmodel0 = mat[0]->frictionModel;
+	int fmodel1 = mat[1]->frictionModel;
+	frictionModel = max(fmodel0, fmodel1);
+	if ( frictionModel >= FrictionModel::LUGRE) {
 		PHLuGreSt lgs = sp->LuGreState;
 
 		// LuGre model parameters
@@ -163,7 +164,21 @@ void PHContactPoint::CompLuGreState(double normalForce) {
 			return;
 		}
 		// g(T)
-		double g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
+		double g = 1.0f;
+		switch (frictionModel) {
+		case FrictionModel::LUGRE:
+			g = timeVaryA + timeVaryB * exp(- pow(v.norm() / timeVaryC, 2));
+			break;
+
+		case FrictionModel::LUGRE_TV:
+			g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
+			break;
+
+		case FrictionModel::LUGRE_OC:
+			// TODO
+
+			break;
+		}
 
 		// T
 		// dT/dt = 1 - (sigma0 * |v|) / g(T) * T
