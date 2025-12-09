@@ -31,6 +31,8 @@ struct CDShapePairIf : public ObjectIf {
 	Vec3d GetClosestPointOnWorld(int i);
 	///	接触法線の取得
 	Vec3d GetNormal();
+	// 接触継続時間の取得
+	unsigned long GetContactDuration();
 };
 /** 直方体のディスクリプタ */
 struct CDShapePairState{
