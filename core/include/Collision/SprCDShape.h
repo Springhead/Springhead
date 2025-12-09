@@ -152,15 +152,13 @@ struct CDQuadFaceIf: public ObjectIf{
 };
 
 ///  摩擦モデル
-/*
+
 enum FrictionModel {
 	COULOMB,		///< Coulomb Model
-	LUGRE,			///< LuGre Model
+	LUGRE,			///< LuGre Model : g(v) = A + B exp( -(|v|/C)^2 )  stribeck only
+	LUGRE_TV,		///< LuGre Model with Time Varying Static Friction : g(T) = A + B log( CT + 1)
+	LUGRE_OC,		///< LuGre Model with Occlution : g(T) = A + B ( 1 - exp( -T / C ) )   [NOT IMPLEMENTED]
 };
-*/
-
-#define COULOMB  0;
-#define LUGRE = 1;
 
 ///	物理シミュレーションに関係する材質
 struct PHMaterial{
