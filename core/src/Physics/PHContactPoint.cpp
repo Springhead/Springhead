@@ -33,31 +33,10 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	solid[0] = s0;
 	solid[1] = s1;
 
-	for (int i = 0; i < 2; i++) {
-		poseSolid[i].Pos() = solid[i]->GetFramePosition();
-		poseSolid[i].Ori() = solid[i]->GetOrientation();
-		// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
-		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = poseSolid[i].Ori().Conjugated() * pose.Ori();
-		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
-	}
-
-	if (rotationFriction == 0.0f) {
-		movableAxes.Enable(3);
-	}
-	movableAxes.Enable(4);
-	movableAxes.Enable(5);
-
-	double dt = s->GetTimeStep();
-	CDShapePairState st;
-	sp->GetSt(st);
-	unsigned int contactDuration = st.contactDuration;
-
 	int fmodel0 = mat[0]->frictionModel;
 	int fmodel1 = mat[1]->frictionModel;
 	frictionModel = max(fmodel0, fmodel1);
 	if ( frictionModel >= FrictionModel::LUGRE) {
-		PHLuGreSt lgs = sp->LuGreState;
-
 		// LuGre model parameters
 		sigma0 = std::max(mat[0]->bristlesSpringK, mat[1]->bristlesSpringK);
 		sigma1 = std::max(mat[0]->bristlesDamperD, mat[1]->bristlesDamperD);
@@ -65,6 +44,13 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		timeVaryA = std::max(mat[0]->timeVaryFrictionA, mat[1]->timeVaryFrictionA);
 		timeVaryB = std::max(mat[0]->timeVaryFrictionB, mat[1]->timeVaryFrictionB);
 		timeVaryC = std::max(mat[0]->timeVaryFrictionC, mat[1]->timeVaryFrictionC);
+
+		double dt = s->GetTimeStep();
+		CDShapePairState st;
+		sp->GetSt(st);
+		unsigned int contactDuration = st.contactDuration;
+
+		PHLuGreSt lgs = sp->LuGreState;
 
 		if (contactDuration == 0) {
 			// Initialize LuGre state
@@ -82,6 +68,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			Matrix2d r2d = Q.trans() * local * lgs.local_p.trans() * Q;
 			//lgs.z = r2d.trans() * lgs.z;  // Rotate z
 			lgs.rot = r2d * lgs.rot;  // Rotate local coordinate
+			// Apply rotation to constraint coordinate
+			pose.Ori() = pose.Ori() * Quaterniond::Rot(-lgs.rot.angle(), 'x');// *pose.Ori();
 			lugreDirection = lgs.rot.angle();
 		}
 		lgs.local_p = local;
@@ -141,28 +129,44 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		else damper = (mat[0]->damper * mat[1]->damper) / (mat[0]->damper + mat[1]->damper);
 	}
 
+	for (int i = 0; i < 2; i++) {
+		poseSolid[i].Pos() = solid[i]->GetFramePosition();
+		poseSolid[i].Ori() = solid[i]->GetOrientation();
+		// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
+		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = poseSolid[i].Ori().Conjugated() * pose.Ori();
+		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = poseSolid[i].Ori().Conjugated() * (pose.Pos() - poseSolid[i].Pos());
+	}
+
+	if (rotationFriction == 0.0f) {
+		movableAxes.Enable(3);
+	}
+	movableAxes.Enable(4);
+	movableAxes.Enable(5);
+
 }
 
 void PHContactPoint::CompLuGreState(double normalForce) {
 	PHSceneIf* scene = GetScene();
 	double dt = scene->GetTimeStep();
-	if (frictionModel == 1) {
+	if (frictionModel >= FrictionModel::LUGRE) {
 		PHLuGreSt lgs = shapePair->LuGreState;
 		// Get relative velocity
-		v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
-		//v.x = (fabs(v.x) < fth) ? 0.0f : v.x;
-		//v.y = (fabs(v.y) < fth) ? 0.0f : v.y;
+		//v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
+		v = Vec2d(vjrel[1], vjrel[2]);
+
+		// Plast Elastic Model
+#if 0
+		const double z_ba = 0.8*normalForce / sigma0;
+		double alpha = 0.0f;
+		if (z_ba < z.norm()) {
+			alpha = 1.0f;
+		}
+#endif
+		if (v.norm() < 1.0e-4){
+			//v = Vec2d::Zero();
+		}
 		lgs.v = v;
 
-		if (normalForce <= 0.0f) {
-			// No contact
-			lgs.dz = Vec2d::Zero();
-			lgs.z = Vec2d::Zero();
-			lgs.T = 0.0;
-			shapePair->LuGreState = lgs;
-			//std::cout << "normalForce <= 0.0f in CompLuGreState()" << std::endl;
-			return;
-		}
 		// g(T)
 		double g = 1.0f;
 		switch (frictionModel) {
@@ -189,12 +193,15 @@ void PHContactPoint::CompLuGreState(double normalForce) {
 
 		// z
 		// dz/dt = v - (sigma0 * |v|) / g(T) * z
-		z = Vec2d((z_p.x + dt * v.x) / (1 + dt * sigma0 * fabs(v.x) / g),
-			(z_p.y + dt * v.y) / (1 + dt * sigma0 * fabs(v.y) / g));
-		dz = (z - z_p) / dt;
+		z = Vec2d((z_p.x + dt * v.x) / (1 + dt * sigma0 * v.norm() / g),
+					(z_p.y + dt * v.y) / (1 + dt * sigma0 * v.norm() / g));
+		dz =  (z - z_p) / dt;
+		//dz = v - (sigma0 * v.norm() / g) * z_pn;
+
 		Vec2d vs2d = v - dz;
 		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
 		//std::cout << z << dz << normalForce << g <<  std::endl;
+
 
 		lgs.z = z;
 		lgs.dz = dz;
@@ -248,7 +255,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
 
 	if(i == 0){	
-		if (frictionModel == 1) {
+		if (frictionModel >= FrictionModel::LUGRE) {
 			// LuGre model friction state update
 			CompLuGreState(f_);
 		}
@@ -267,7 +274,8 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	}
 	else{
 
-		if(frictionModel == 1) {
+		float lim = isStatic ? flim0 : flim;
+		if(frictionModel >= FrictionModel::LUGRE) {
 			PHLuGreSt lgs = shapePair->LuGreState;
 #if 0
 			if (i == 1 || (i == 2 && v.square() <= 1.0e-6)) { 
@@ -278,12 +286,11 @@ bool PHContactPoint::Projection(double& f_, int i) {
 			}
 #else
 			if (i == 1 || i == 2) {
-				f_ = -fx * (lgs.rot.trans() * (sigma0 * lgs.z + sigma1 * dz + sigma2 * v))[i - 1];
+				f_ = -fx * (sigma0 * z[i - 1] + sigma1 * dz[i - 1] + sigma2 * v[i - 1]);
 				return true;
 			}
 #endif
 		}
-		float lim = isStatic ? flim0 : flim;
 		if (i == 3 && rotationFriction != 0.0f) {
 			lim *= rotationFriction;
 		}
