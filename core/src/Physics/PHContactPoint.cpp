@@ -76,6 +76,11 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		sp->LuGreState = lgs;
 		z_p = lgs.z;
 		T_p = lgs.T;
+
+		g = 1.0f;
+		D = 1.0f;
+		dgdv.col(0) = Vec2d::Zero();
+
 	}
 	else {
 		frictionModel = COULOMB;
@@ -145,7 +150,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 }
 
-void PHContactPoint::CompLuGreState(double normalForce) {
+void PHContactPoint::CompLuGreState() {
 	PHSceneIf* scene = GetScene();
 	double dt = scene->GetTimeStep();
 	if (frictionModel >= FrictionModel::LUGRE) {
@@ -168,14 +173,16 @@ void PHContactPoint::CompLuGreState(double normalForce) {
 		lgs.v = v;
 
 		// g(T)
-		double g = 1.0f;
+		g = 1.0f;
 		switch (frictionModel) {
 		case FrictionModel::LUGRE:
 			g = timeVaryA + timeVaryB * exp(- pow(v.norm() / timeVaryC, 2));
+			dgdv.col(0) = -2.0f * timeVaryB * exp(-pow(v.norm() / timeVaryC, 2)) * (v / (timeVaryC * timeVaryC));
 			break;
 
 		case FrictionModel::LUGRE_TV:
 			g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
+			dgdv.col(0) = Vec2d(1.0f, 1.0f); // TODO
 			break;
 
 		case FrictionModel::LUGRE_OC:
@@ -191,10 +198,12 @@ void PHContactPoint::CompLuGreState(double normalForce) {
 		stickT = lgs.T;
 		isSticking = (lgs.T >= T_p);
 
+		// Calculate the denominator of implicit LuGre equation
+		D = 1.0f + dt * sigma0 * v.norm() / g;
+
 		// z
 		// dz/dt = v - (sigma0 * |v|) / g(T) * z
-		z = Vec2d((z_p.x + dt * v.x) / (1 + dt * sigma0 * v.norm() / g),
-					(z_p.y + dt * v.y) / (1 + dt * sigma0 * v.norm() / g));
+		z = (z_p + dt * v) / D;
 		dz =  (z - z_p) / dt;
 		//dz = v - (sigma0 * v.norm() / g) * z_pn;
 
@@ -202,6 +211,8 @@ void PHContactPoint::CompLuGreState(double normalForce) {
 		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
 		//std::cout << z << dz << normalForce << g <<  std::endl;
 
+		frictionForce = -Vec2d(sigma0 * z.x + sigma1 * dz.x + sigma2 * v.x,
+			sigma0 * z.y + sigma1 * dz.y + sigma2 * v.y);
 
 		lgs.z = z;
 		lgs.dz = dz;
@@ -247,6 +258,73 @@ void PHContactPoint::CompBias(){
 	double vt = vjrel[1];
 	//isStatic = (-vth < vt && vt < vth);
 	isStatic = (-fth < vt && vt < fth);
+
+	if (frictionModel >= LUGRE) {
+		// LuGre initial Bias
+		CompLuGreState();
+		Matrix2d dfdvInv = CompLuGreDfDvInv();
+		Vec2d db2 = -dfdvInv * frictionForce ;
+		db[1] = db2.x;
+		db[2] = db2.y;
+		//db[1] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
+		//db[2] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
+	}
+}
+
+Matrix2d PHContactPoint::CompLuGreDfDvInv() {
+	PHSceneIf* scene = GetScene();
+	double dt = scene->GetTimeStep();
+
+	TMatrixCol<2, 1, double> z_p_;
+	z_p_.col(0) = z_p;
+	TMatrixCol<2, 1, double> v_;
+	v_.col(0) = v;
+	
+	Matrix2d dfdvInv = -(
+		(sigma0 * Dinv2 * (D * dt * Matrix2d::Unit() - (z_p_ + dt * v_) * dgdv.trans())) +
+		(sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f/dt*z_p_ + v_) * dgdv.trans())) +
+		(sigma2 * Matrix2d::Unit())
+		).inv();
+	return dfdvInv;
+}
+
+bool PHContactPoint::Iterate() {
+	if (frictionModel < LUGRE) {
+		return PHConstraint::Iterate();
+	}
+	bool updated = false;
+	for (int n = 0; n < axes.size(); ++n) {
+		int i = axes[n];
+
+		dA[i] += engine->regularization;
+		Ainv[i] = engine->accelSOR / (A[i] + dA[i]);
+
+		// Gauss-Seidel Update
+		dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;
+		res[i] = b[i] + dA[i] * f[i] + dv[i];
+		fnew[i] = f[i] - Ainv[i] * res[i];
+
+		// Projection
+		Projection(fnew[i], i);
+
+		// Comp Response & Update f
+		df[i] = fnew[i] - f[i];
+		f[i] = fnew[i];
+
+		if (std::abs(df[i]) > engine->dfEps) {
+			updated = true;
+			CompResponse(df[i], i);
+		}
+	}
+	PHSceneIf* scene = GetScene();
+	double dt = scene->GetTimeStep();
+	if (fx/dt > 1.0e-5) {
+		Vec2d dfdvInv = 1.0f/(fx/dt) * CompLuGreDfDvInv() * Vec2d(1.0f, 1.0f);
+		dA[1] = dfdvInv.x;
+		dA[2] = dfdvInv.y;
+		//CompLuGreState();
+	}
+	return updated;
 }
 
 bool PHContactPoint::Projection(double& f_, int i) {
@@ -255,10 +333,6 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
 
 	if(i == 0){	
-		if (frictionModel >= FrictionModel::LUGRE) {
-			// LuGre model friction state update
-			CompLuGreState(f_);
-		}
 		//垂直抗力 >= 0の制約
 		if(f_ < 0.0){
 			f_ = fx = flim0 = flim = 0.0;
@@ -275,7 +349,8 @@ bool PHContactPoint::Projection(double& f_, int i) {
 	else{
 
 		float lim = isStatic ? flim0 : flim;
-		if(frictionModel >= FrictionModel::LUGRE) {
+		if(frictionModel >= FrictionModel::LUGRE ) {
+			return false;
 			PHLuGreSt lgs = shapePair->LuGreState;
 #if 0
 			if (i == 1 || (i == 2 && v.square() <= 1.0e-6)) { 

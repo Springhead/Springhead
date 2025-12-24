@@ -46,6 +46,13 @@ public:
 	bool isSticking; // T_ > T
 	Vec2d frictionForce;
 
+	// For LuGre LCP
+	double D;
+	double Dinv2;
+	double g;
+	TMatrixCol<2, 1, double> dgdv;
+
+
 	double fx, flim0, flim;
 	bool   isStatic;
 
@@ -64,13 +71,15 @@ public:
 	int GetFrictionModel() { return frictionModel; }
 
 
-	void CompLuGreState(double normalForce);
+	void CompLuGreState();
+	Matrix2d CompLuGreDfDvInv();
 
 	// ----- PHConstraintの派生クラスで実装する機能
 	virtual void CompBias();
 	virtual void CompError();
 	virtual bool Projection(double& f_, int i);
 	virtual bool ProjectionCorrection(double& F, int k);
+	virtual bool Iterate();
 	virtual Posed GetPose() { return pose; }
 };
 
