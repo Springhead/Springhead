@@ -50,7 +50,7 @@ public:
 	double D;
 	double Dinv2;
 	double g;
-	TMatrixCol<2, 1, double> dgdv;
+	TMatrixCol<2, 1, double> dDdv;
 
 
 	double fx, flim0, flim;

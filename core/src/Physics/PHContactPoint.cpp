@@ -79,7 +79,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 		g = 1.0f;
 		D = 1.0f;
-		dgdv.col(0) = Vec2d::Zero();
+		Dinv2 = 1.0f;
+		dDdv.col(0) = Vec2d::Zero();
 
 	}
 	else {
@@ -157,7 +158,7 @@ void PHContactPoint::CompLuGreState() {
 		PHLuGreSt lgs = shapePair->LuGreState;
 		// Get relative velocity
 		//v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
-		v = Vec2d(vjrel[1], vjrel[2]);
+		v = Vec2d(vjrel[1] + dv[1], vjrel[2] + dv[2]);
 
 		// Plast Elastic Model
 #if 0
@@ -174,15 +175,17 @@ void PHContactPoint::CompLuGreState() {
 
 		// g(T)
 		g = 1.0f;
+		// D = 1 + dt * sigma0 * |v| / g(v)
+		Vec2d dgdv = Vec2d::Zero();
 		switch (frictionModel) {
 		case FrictionModel::LUGRE:
 			g = timeVaryA + timeVaryB * exp(- pow(v.norm() / timeVaryC, 2));
-			dgdv.col(0) = -2.0f * timeVaryB * exp(-pow(v.norm() / timeVaryC, 2)) * (v / (timeVaryC * timeVaryC));
+			dgdv = -2.0f * timeVaryB * exp(-pow(v.norm() / timeVaryC, 2)) * (v / (timeVaryC * timeVaryC));
 			break;
 
 		case FrictionModel::LUGRE_TV:
 			g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
-			dgdv.col(0) = Vec2d(1.0f, 1.0f); // TODO
+			// TODO dgdv
 			break;
 
 		case FrictionModel::LUGRE_OC:
@@ -190,6 +193,7 @@ void PHContactPoint::CompLuGreState() {
 
 			break;
 		}
+		dDdv.col(0) = dt * sigma0 * (v * v.norm() * g - v.norm() * dgdv) / (g * g);
 
 		// T
 		// dT/dt = 1 - (sigma0 * |v|) / g(T) * T
@@ -200,6 +204,7 @@ void PHContactPoint::CompLuGreState() {
 
 		// Calculate the denominator of implicit LuGre equation
 		D = 1.0f + dt * sigma0 * v.norm() / g;
+		Dinv2 = 1.0f / (D * D);
 
 		// z
 		// dz/dt = v - (sigma0 * |v|) / g(T) * z
@@ -211,8 +216,7 @@ void PHContactPoint::CompLuGreState() {
 		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
 		//std::cout << z << dz << normalForce << g <<  std::endl;
 
-		frictionForce = -Vec2d(sigma0 * z.x + sigma1 * dz.x + sigma2 * v.x,
-			sigma0 * z.y + sigma1 * dz.y + sigma2 * v.y);
+		frictionForce = -(sigma0 * z + sigma1 * dz + sigma2 * v);
 
 		lgs.z = z;
 		lgs.dz = dz;
@@ -268,6 +272,15 @@ void PHContactPoint::CompBias(){
 		db[2] = db2.y;
 		//db[1] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
 		//db[2] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
+		PHSceneIf* scene = GetScene();
+		double dt = scene->GetTimeStep();
+		if (true) {
+			Matrix2d dfdvInv = CompLuGreDfDvInv();
+			//Vec2d dfdvInv = 1.0f * CompLuGreDfDvInv() * Vec2d(1.0f, 1.0f);
+			dA[1] = dfdvInv[0][0];
+			dA[2] = dfdvInv[1][1];
+			//CompLuGreState();
+		}
 	}
 }
 
@@ -279,11 +292,13 @@ Matrix2d PHContactPoint::CompLuGreDfDvInv() {
 	z_p_.col(0) = z_p;
 	TMatrixCol<2, 1, double> v_;
 	v_.col(0) = v;
+
+	//dgdv.col(0) = Vec2d(1.0f, 1.0f);
 	
-	Matrix2d dfdvInv = -(
-		(sigma0 * Dinv2 * (D * dt * Matrix2d::Unit() - (z_p_ + dt * v_) * dgdv.trans())) +
-		(sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f/dt*z_p_ + v_) * dgdv.trans())) +
-		(sigma2 * Matrix2d::Unit())
+	Matrix2d dfdvInv = (
+		-(sigma0 * Dinv2 * (D * dt * Matrix2d::Unit() - (z_p_ + dt * v_) * dDdv.trans()))
+		-(sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f/dt*z_p_ + v_) * dDdv.trans()))
+		-(sigma2 * Matrix2d::Unit())
 		).inv();
 	return dfdvInv;
 }
@@ -316,14 +331,7 @@ bool PHContactPoint::Iterate() {
 			CompResponse(df[i], i);
 		}
 	}
-	PHSceneIf* scene = GetScene();
-	double dt = scene->GetTimeStep();
-	if (fx/dt > 1.0e-5) {
-		Vec2d dfdvInv = 1.0f/(fx/dt) * CompLuGreDfDvInv() * Vec2d(1.0f, 1.0f);
-		dA[1] = dfdvInv.x;
-		dA[2] = dfdvInv.y;
-		//CompLuGreState();
-	}
+	CompLuGreState();
 	return updated;
 }
 
