@@ -169,7 +169,7 @@ void PHContactPoint::CompLuGreState() {
 		}
 #endif
 		if (v.norm() < 1.0e-4){
-			//v = Vec2d::Zero();
+			v = Vec2d::Zero();
 		}
 		lgs.v = v;
 
@@ -193,7 +193,12 @@ void PHContactPoint::CompLuGreState() {
 
 			break;
 		}
-		dDdv.col(0) = dt * sigma0 * (v * v.norm() * g - v.norm() * dgdv) / (g * g);
+
+		if (v.norm() < 1.0e-4) {
+			dgdv = Vec2d::Zero();
+		}
+		else
+			dDdv.col(0) = dt* sigma0* (v.unit() * g - v.norm() * dgdv) / (g * g);
 
 		// T
 		// dT/dt = 1 - (sigma0 * |v|) / g(T) * T
@@ -267,7 +272,7 @@ void PHContactPoint::CompBias(){
 		// LuGre initial Bias
 		CompLuGreState();
 		Matrix2d dfdvInv = CompLuGreDfDvInv();
-		Vec2d db2 = -dfdvInv * frictionForce ;
+		Vec2d db2 = dfdvInv * frictionForce - v;
 		db[1] = db2.x;
 		db[2] = db2.y;
 		//db[1] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
@@ -275,10 +280,10 @@ void PHContactPoint::CompBias(){
 		PHSceneIf* scene = GetScene();
 		double dt = scene->GetTimeStep();
 		if (true) {
-			Matrix2d dfdvInv = CompLuGreDfDvInv();
+			//Matrix2d dfdvInv = CompLuGreDfDvInv();
 			//Vec2d dfdvInv = 1.0f * CompLuGreDfDvInv() * Vec2d(1.0f, 1.0f);
-			dA[1] = dfdvInv[0][0];
-			dA[2] = dfdvInv[1][1];
+			dA[1] = -dfdvInv[0][0] / dt;
+			dA[2] = -dfdvInv[1][1] / dt;
 			//CompLuGreState();
 		}
 	}
@@ -294,12 +299,13 @@ Matrix2d PHContactPoint::CompLuGreDfDvInv() {
 	v_.col(0) = v;
 
 	//dgdv.col(0) = Vec2d(1.0f, 1.0f);
-	
-	Matrix2d dfdvInv = (
+	Matrix2d dfdv = (
 		-(sigma0 * Dinv2 * (D * dt * Matrix2d::Unit() - (z_p_ + dt * v_) * dDdv.trans()))
-		-(sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f/dt*z_p_ + v_) * dDdv.trans()))
-		-(sigma2 * Matrix2d::Unit())
-		).inv();
+		- (sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f / dt * z_p_ + v_) * dDdv.trans()))
+		- (sigma2 * Matrix2d::Unit())
+		);
+	Matrix2d dfdvInv =dfdv.inv();
+	//std::cout << "dfdv" << dfdv << "D:" << D << "f: " << frictionForce <<  std::endl;
 	return dfdvInv;
 }
 
@@ -313,6 +319,8 @@ bool PHContactPoint::Iterate() {
 
 		dA[i] += engine->regularization;
 		Ainv[i] = engine->accelSOR / (A[i] + dA[i]);
+
+		//std::cout << "Axis[" << i << "] f: " << f[i] << " Ainv: " << Ainv[i] << " b: " << b[i] << " dA: " << dA[i] << std::endl;
 
 		// Gauss-Seidel Update
 		dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;

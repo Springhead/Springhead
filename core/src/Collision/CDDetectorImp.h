@@ -69,6 +69,8 @@ public:
 	Posed GetShapePose(int i) { return shapePoseW[i]; }
 	///	接触法線の取得
 	Vec3d GetNormal() { return normal; }
+	// 接触継続時間の取得
+	double GetContactDuration() { return contactDuration; }
 };
 
 ///	BBox同士の交差判定．交差していれば true．
