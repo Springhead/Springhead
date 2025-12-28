@@ -185,7 +185,7 @@ void PHContactPoint::CompLuGreState() {
 
 		case FrictionModel::LUGRE_TV:
 			g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
-			// TODO dgdv
+			dgdv = -(dt * sigma0 * T_p) / g * timeVaryC * timeVaryB / (timeVaryC * T_p + 1) * (v.unit());
 			break;
 
 		case FrictionModel::LUGRE_OC:
@@ -313,18 +313,42 @@ bool PHContactPoint::Iterate() {
 	if (frictionModel < LUGRE) {
 		return PHConstraint::Iterate();
 	}
+	PHSceneIf* scene = GetScene();
+	double dt = scene->GetTimeStep();
 	bool updated = false;
-	for (int n = 0; n < axes.size(); ++n) {
-		int i = axes[n];
+	int i = 0;
+	// x-axis (normal)
+	dA[i] += engine->regularization;
+	// Gauss-Seidel Update
+	dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;
+	res[i] = b[i] + dA[i] * f[i] + dv[i];
+	fnew[i] = f[i] - Ainv[i] * res[i];
+	// Projection
+	Projection(fnew[i], i);
+	// Comp Response & Update f
+	df[i] = fnew[i] - f[i];
+	f[i] = fnew[i];
+
+	if (std::abs(df[i]) > engine->dfEps) {
+		updated = true;
+		CompResponse(df[i], i);
+	}
+	fx = f[i];
+	if(fx <= 1.0e-6)
+		fx = 1.0e-6;
+
+	// y, z-axis (tangential)
+	for (int n = 1; n < axes.size(); ++n) {
+		i = n;
 
 		dA[i] += engine->regularization;
-		Ainv[i] = engine->accelSOR / (A[i] + dA[i]);
+		Ainv[i] = engine->accelSOR / (A[i] + dA[i] / (fx / dt));
 
 		//std::cout << "Axis[" << i << "] f: " << f[i] << " Ainv: " << Ainv[i] << " b: " << b[i] << " dA: " << dA[i] << std::endl;
 
 		// Gauss-Seidel Update
 		dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;
-		res[i] = b[i] + dA[i] * f[i] + dv[i];
+		res[i] = b[i] + dA[i] / (fx / dt) * f[i] + dv[i];
 		fnew[i] = f[i] - Ainv[i] * res[i];
 
 		// Projection
