@@ -66,10 +66,12 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			Q.col(1) = local.Ez().unit(); // v
 			// 2D rotation matrix R = Q^T * L_n * L_{n-1}^T * Q
 			Matrix2d r2d = Q.trans() * local * lgs.local_p.trans() * Q;
-			//lgs.z = r2d.trans() * lgs.z;  // Rotate z
+			Vec2d z_rot = r2d.trans() * lgs.z.sub_vector(0, Vec2d());  // Rotate z
+			lgs.z.x = z_rot.x;
+			lgs.z.y = z_rot.y;
 			lgs.rot = r2d * lgs.rot;  // Rotate local coordinate
 			// Apply rotation to constraint coordinate
-			pose.Ori() = pose.Ori() * Quaterniond::Rot(-lgs.rot.angle(), 'x');// *pose.Ori();
+			//pose.Ori() = pose.Ori() * Quaterniond::Rot(-lgs.rot.angle(), 'x');// *pose.Ori();
 			lugreDirection = lgs.rot.angle();
 		}
 		lgs.local_p = local;
