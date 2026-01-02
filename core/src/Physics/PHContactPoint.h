@@ -51,7 +51,7 @@ public:
 	double Dinv2;
 	double g;
 	TMatrixCol<2, 1, double> dDdv;
-
+	Matrix2d dfdvInv;
 
 	double fx, flim0, flim;
 	bool   isStatic;

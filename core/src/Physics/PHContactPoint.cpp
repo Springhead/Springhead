@@ -304,7 +304,7 @@ Matrix2d PHContactPoint::CompLuGreDfDvInv() {
 		- (sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f / dt * z_p_ + v_) * dDdv.trans()))
 		- (sigma2 * Matrix2d::Unit())
 		);
-	Matrix2d dfdvInv =dfdv.inv();
+	dfdvInv = dfdv.inv();
 	//std::cout << "dfdv" << dfdv << "D:" << D << "f: " << frictionForce <<  std::endl;
 	return dfdvInv;
 }
@@ -338,7 +338,7 @@ bool PHContactPoint::Iterate() {
 		fx = 1.0e-6;
 
 	// y, z-axis (tangential)
-	for (int n = 1; n < axes.size(); ++n) {
+	for (int n = 1; n < 3; ++n) {
 		i = n;
 
 		dA[i] += engine->regularization;
@@ -349,6 +349,30 @@ bool PHContactPoint::Iterate() {
 		// Gauss-Seidel Update
 		dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;
 		res[i] = b[i] + dA[i] / (fx / dt) * f[i] + dv[i];
+		res[i] -= dfdvInv[i-1][i%2] / fx * f[1+i%2];
+		fnew[i] = f[i] - Ainv[i] * res[i];
+
+		// Projection
+		Projection(fnew[i], i);
+
+		// Comp Response & Update f
+		df[i] = fnew[i] - f[i];
+		f[i] = fnew[i];
+
+		if (std::abs(df[i]) > engine->dfEps) {
+			updated = true;
+			CompResponse(df[i], i);
+		}
+	}	
+	for (int n = 3; n < axes.size(); ++n) {
+		i = n;
+
+		dA[i] += engine->regularization;
+		Ainv[i] = engine->accelSOR / (A[i] + dA[i]);
+
+		// Gauss-Seidel Update
+		dv[i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
+		res[i] = b[i] + dA[i] * f[i] + dv[i];
 		fnew[i] = f[i] - Ainv[i] * res[i];
 
 		// Projection
