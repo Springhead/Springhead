@@ -25,13 +25,13 @@ class PHConstraintEngine;
 class PHPath;
 
 struct PHLuGreSt {
-	Vec2d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
-	Vec2d z_p;
-	Vec2d dz;		// Time derivative of z
+	Vec3d z;		// Average displacement of bristles. z[0]:x-axis, z[1]:y-axis
+	Vec3d z_p;
+	Vec3d dz;		// Time derivative of z
 	double T;		// Average sticking time
 	Matrix3d local_p; // Previous local matrix of the contact point
 	Matrix2d rot;	// Rotation matrix of the contact point in local coordinate
-	Vec2d v;		// Relative velocity of the contact point. v[0]:x-axis, v[1]:y-axis
+	Vec3d v;		// Relative velocity of the contact point. v[0]:x-axis, v[1]:y-axis
 };
 
 ///	形状の組

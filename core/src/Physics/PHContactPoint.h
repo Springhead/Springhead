@@ -35,23 +35,24 @@ public:
 	// LuGre model friction parameter
 	double sigma0, sigma1, sigma2;				// F = sigma0*z + sigma0*dz/dt + sigma2*v
 	double timeVaryA, timeVaryB, timeVaryC;		// g(T) = A + B log(1+ C * T)
-	Vec2d v;	// Relative velocity
-	Vec2d z;
-	Vec2d z_p;
+	Vec3d v;	// Relative velocity
+	Vec3d z;
+	Vec3d z_p;
+	double req; // Equivalent radius of contact area
 	double T_p;
-	Vec2d dz;	// Bristles displacement
+	Vec3d dz;	// Bristles displacement
 	Vec3d vs;	// Slip velocity
 	double lugreDirection; // [rad]
 	double stickT;	// Stick time
 	bool isSticking; // T_ > T
-	Vec2d frictionForce;
+	Vec3d frictionForce;
 
 	// For LuGre LCP
 	double D;
 	double Dinv2;
 	double g;
-	TMatrixCol<2, 1, double> dDdv;
-	Matrix2d dfdvInv;
+	TMatrixCol<3, 1, double> dDdv;
+	Matrix3d dfdvInv;
 
 	double fx, flim0, flim;
 	bool   isStatic;
@@ -61,9 +62,9 @@ public:
 	PHContactPoint(){}
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 	bool IsStaticFriction() { return isStatic;  }
-	Vec2d GetLuGreV() { return v; }
-	Vec2d GetLuGreZ() { return z; }
-	Vec2d GetLuGreDZ() { return dz; }
+	Vec2d GetLuGreV() { return v.sub_vector(0, Vec2d()); }
+	Vec2d GetLuGreZ() { return z.sub_vector(0, Vec2d()); }
+	Vec2d GetLuGreDZ() { return dz.sub_vector(0, Vec2d()); }
 	Vec3d GetLuGreVS() { return vs; }
 	double GetLuGreDirection() { return lugreDirection; }
 	double GetLuGreT() { return stickT; }
@@ -72,7 +73,7 @@ public:
 
 
 	void CompLuGreState();
-	Matrix2d CompLuGreDfDvInv();
+	Matrix3d CompLuGreDfDvInv();
 
 	// ----- PHConstraintの派生クラスで実装する機能
 	virtual void CompBias();

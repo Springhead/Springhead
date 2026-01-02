@@ -56,7 +56,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			// Initialize LuGre state
 			//printf("initialize lugre state\n");
 			lgs.T = 0.0;
-			lgs.z = Vec2d::Zero();
+			lgs.z = Vec3d::Zero();
 			lgs.rot = Matrix2d::Unit();
 		}
 		else {
@@ -80,7 +80,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		g = 1.0f;
 		D = 1.0f;
 		Dinv2 = 1.0f;
-		dDdv.col(0) = Vec2d::Zero();
+		dDdv.col(0) = Vec3d::Zero();
+		req = 0.0001;
 
 	}
 	else {
@@ -144,7 +145,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	}
 
 	if (rotationFriction == 0.0f) {
-		movableAxes.Enable(3);
+		//movableAxes.Enable(3);
 	}
 	movableAxes.Enable(4);
 	movableAxes.Enable(5);
@@ -158,7 +159,7 @@ void PHContactPoint::CompLuGreState() {
 		PHLuGreSt lgs = shapePair->LuGreState;
 		// Get relative velocity
 		//v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
-		v = Vec2d(vjrel[1] + dv[1], vjrel[2] + dv[2]);
+		v = Vec3d(vjrel[1] + dv[1], vjrel[2] + dv[2], req*(vjrel[3] + dv[3]));
 
 		// Plast Elastic Model
 #if 0
@@ -169,14 +170,14 @@ void PHContactPoint::CompLuGreState() {
 		}
 #endif
 		if (v.norm() < 1.0e-4){
-			v = Vec2d::Zero();
+			v = Vec3d::Zero();
 		}
 		lgs.v = v;
 
 		// g(T)
 		g = 1.0f;
 		// D = 1 + dt * sigma0 * |v| / g(v)
-		Vec2d dgdv = Vec2d::Zero();
+		Vec3d dgdv = Vec3d::Zero();
 		switch (frictionModel) {
 		case FrictionModel::LUGRE:
 			g = timeVaryA + timeVaryB * exp(- pow(v.norm() / timeVaryC, 2));
@@ -195,7 +196,7 @@ void PHContactPoint::CompLuGreState() {
 		}
 
 		if (v.norm() < 1.0e-4) {
-			dgdv = Vec2d::Zero();
+			dgdv = Vec3d::Zero();
 		}
 		else
 			dDdv.col(0) = dt* sigma0* (v.unit() * g - v.norm() * dgdv) / (g * g);
@@ -217,7 +218,7 @@ void PHContactPoint::CompLuGreState() {
 		dz =  (z - z_p) / dt;
 		//dz = v - (sigma0 * v.norm() / g) * z_pn;
 
-		Vec2d vs2d = v - dz;
+		Vec3d vs2d = v - dz;
 		vs = Vec3d(vs2d.x, vs2d.y, 0.0f);
 		//std::cout << z << dz << normalForce << g <<  std::endl;
 
@@ -271,10 +272,11 @@ void PHContactPoint::CompBias(){
 	if (frictionModel >= LUGRE) {
 		// LuGre initial Bias
 		CompLuGreState();
-		Matrix2d dfdvInv = CompLuGreDfDvInv();
-		Vec2d db2 = dfdvInv * frictionForce - v;
+		CompLuGreDfDvInv();
+		Vec3d db2 = dfdvInv * frictionForce - v;
 		db[1] = db2.x;
 		db[2] = db2.y;
+		db[3] = db2.z / req;
 		//db[1] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
 		//db[2] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
 		PHSceneIf* scene = GetScene();
@@ -284,25 +286,26 @@ void PHContactPoint::CompBias(){
 			//Vec2d dfdvInv = 1.0f * CompLuGreDfDvInv() * Vec2d(1.0f, 1.0f);
 			dA[1] = -dfdvInv[0][0] / dt;
 			dA[2] = -dfdvInv[1][1] / dt;
+			dA[3] = -dfdvInv[2][2] / dt / (req*req);
 			//CompLuGreState();
 		}
 	}
 }
 
-Matrix2d PHContactPoint::CompLuGreDfDvInv() {
+Matrix3d PHContactPoint::CompLuGreDfDvInv() {
 	PHSceneIf* scene = GetScene();
 	double dt = scene->GetTimeStep();
 
-	TMatrixCol<2, 1, double> z_p_;
+	TMatrixCol<3, 1, double> z_p_;
 	z_p_.col(0) = z_p;
-	TMatrixCol<2, 1, double> v_;
+	TMatrixCol<3, 1, double> v_;
 	v_.col(0) = v;
 
 	//dgdv.col(0) = Vec2d(1.0f, 1.0f);
-	Matrix2d dfdv = (
-		-(sigma0 * Dinv2 * (D * dt * Matrix2d::Unit() - (z_p_ + dt * v_) * dDdv.trans()))
-		- (sigma1 * Dinv2 * (D * Matrix2d::Unit() - (1.0f / dt * z_p_ + v_) * dDdv.trans()))
-		- (sigma2 * Matrix2d::Unit())
+	Matrix3d dfdv = (
+		-(sigma0 * Dinv2 * (D * dt * Matrix3d::Unit() - (z_p_ + dt * v_) * dDdv.trans()))
+		- (sigma1 * Dinv2 * (D * Matrix3d::Unit() - (1.0f / dt * z_p_ + v_) * dDdv.trans()))
+		- (sigma2 * Matrix3d::Unit())
 		);
 	dfdvInv = dfdv.inv();
 	//std::cout << "dfdv" << dfdv << "D:" << D << "f: " << frictionForce <<  std::endl;
@@ -337,8 +340,8 @@ bool PHContactPoint::Iterate() {
 	if(fx <= 1.0e-6)
 		fx = 1.0e-6;
 
-	// y, z-axis (tangential)
-	for (int n = 1; n < 3; ++n) {
+	// y, z, rotation friction
+	for (int n = 1; n < 4; ++n) {
 		i = n;
 
 		dA[i] += engine->regularization;
@@ -348,8 +351,10 @@ bool PHContactPoint::Iterate() {
 
 		// Gauss-Seidel Update
 		dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;
-		res[i] = b[i] + dA[i] / (fx / dt) * f[i] + dv[i];
-		res[i] -= dfdvInv[i-1][i%2] / fx * f[1+i%2];
+		res[i] = b[i] + dv[i];
+		res[i] -= dfdvInv.row(i-1) * Matrix3d::Diag(1.0f, 1.0f, 1.0f/(req)) * f.sub_vector(1, Vec3d())  / fx;
+		if (i == 3)
+			res[i] /= req;
 		fnew[i] = f[i] - Ainv[i] * res[i];
 
 		// Projection
@@ -364,7 +369,7 @@ bool PHContactPoint::Iterate() {
 			CompResponse(df[i], i);
 		}
 	}	
-	for (int n = 3; n < axes.size(); ++n) {
+	for (int n = 4; n < axes.size(); ++n) {
 		i = n;
 
 		dA[i] += engine->regularization;
@@ -374,7 +379,7 @@ bool PHContactPoint::Iterate() {
 		dv[i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
 		res[i] = b[i] + dA[i] * f[i] + dv[i];
 		fnew[i] = f[i] - Ainv[i] * res[i];
-
+		
 		// Projection
 		Projection(fnew[i], i);
 
