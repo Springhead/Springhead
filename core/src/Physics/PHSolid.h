@@ -68,7 +68,7 @@ public:
 	SpatialVector       v;			  ///< ローカル座標での現在の速度
 	SpatialVector       dv0;		  ///< 外力のみによる速度変化
 	DUMPLABEL(dv)
-	SpatialVector		dv;			  ///< 外力と拘束力による速度変化
+	SpatialVector		dv;			  ///< 拘束力による速度変化
 	DUMPLABEL(DV)
 	SpatialVector       dV;			  ///< Correctionによる移動量，回転量
 	double				velocityNorm;
