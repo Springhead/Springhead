@@ -64,6 +64,7 @@ public:
 	bool IsStaticFriction() { return isStatic;  }
 	Vec2d GetLuGreV() { return v.sub_vector(0, Vec2d()); }
 	Vec2d GetLuGreZ() { return z.sub_vector(0, Vec2d()); }
+	double GetLuGreZr() { return z.z; }
 	Vec2d GetLuGreDZ() { return dz.sub_vector(0, Vec2d()); }
 	Vec3d GetLuGreVS() { return vs; }
 	double GetLuGreDirection() { return lugreDirection; }
@@ -72,7 +73,7 @@ public:
 	int GetFrictionModel() { return frictionModel; }
 
 
-	void CompLuGreState();
+	void CompLuGreState(bool calc_g);
 	Matrix3d CompLuGreDfDvInv();
 
 	// ----- PHConstraintの派生クラスで実装する機能

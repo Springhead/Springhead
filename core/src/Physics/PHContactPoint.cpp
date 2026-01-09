@@ -66,12 +66,13 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 			Q.col(1) = local.Ez().unit(); // v
 			// 2D rotation matrix R = Q^T * L_n * L_{n-1}^T * Q
 			Matrix2d r2d = Q.trans() * local * lgs.local_p.trans() * Q;
-			Vec2d z_rot = r2d.trans() * lgs.z.sub_vector(0, Vec2d());  // Rotate z
+			// Rotate z
+			Vec2d z_rot = r2d.trans() * lgs.z.sub_vector(0, Vec2d());  
 			lgs.z.x = z_rot.x;
 			lgs.z.y = z_rot.y;
 			lgs.rot = r2d * lgs.rot;  // Rotate local coordinate
 			// Apply rotation to constraint coordinate
-			//pose.Ori() = pose.Ori() * Quaterniond::Rot(-lgs.rot.angle(), 'x');// *pose.Ori();
+			// pose.Ori() = pose.Ori() * Quaterniond::Rot(-lgs.rot.angle(), 'x');// *pose.Ori();
 			lugreDirection = lgs.rot.angle();
 		}
 		lgs.local_p = local;
@@ -83,7 +84,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		D = 1.0f;
 		Dinv2 = 1.0f;
 		dDdv.col(0) = Vec3d::Zero();
-		req = 0.0001;
+		req = 2.0/3.0 * 0.01;
 
 	}
 	else {
@@ -154,7 +155,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 }
 
-void PHContactPoint::CompLuGreState() {
+void PHContactPoint::CompLuGreState(bool calc_g) {
 	PHSceneIf* scene = GetScene();
 	double dt = scene->GetTimeStep();
 	if (frictionModel >= FrictionModel::LUGRE) {
@@ -162,46 +163,47 @@ void PHContactPoint::CompLuGreState() {
 		// Get relative velocity
 		//v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
 		v = Vec3d(vjrel[1] + dv[1], vjrel[2] + dv[2], req*(vjrel[3] + dv[3]));
-
-		// Plast Elastic Model
+		
 #if 0
+		// Elasto-Plastic Model
 		const double z_ba = 0.8*normalForce / sigma0;
 		double alpha = 0.0f;
 		if (z_ba < z.norm()) {
 			alpha = 1.0f;
 		}
 #endif
-		if (v.norm() < 1.0e-4){
-			v = Vec3d::Zero();
-		}
 		lgs.v = v;
 
-		// g(T)
-		g = 1.0f;
-		// D = 1 + dt * sigma0 * |v| / g(v)
-		Vec3d dgdv = Vec3d::Zero();
-		switch (frictionModel) {
-		case FrictionModel::LUGRE:
-			g = timeVaryA + timeVaryB * exp(- pow(v.norm() / timeVaryC, 2));
-			dgdv = -2.0f * timeVaryB * exp(-pow(v.norm() / timeVaryC, 2)) * (v / (timeVaryC * timeVaryC));
-			break;
+		if (calc_g) {
+			// g(T)
+			g = 1.0f;
+			// D = 1 + dt * sigma0 * |v| / g(v)
+			Vec3d dgdv = Vec3d::Zero();
+			switch (frictionModel) {
+			case FrictionModel::LUGRE:
+				g = timeVaryA + timeVaryB * exp(-pow(v.norm() / timeVaryC, 2));
+				dgdv = Vec3d::Zero();
+				//dgdv = -2.0f * timeVaryB * exp(-pow(v.norm() / timeVaryC, 2)) * (v / (timeVaryC * timeVaryC));
+				break;
 
-		case FrictionModel::LUGRE_TV:
-			g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
-			dgdv = -(dt * sigma0 * T_p) / g * timeVaryC * timeVaryB / (timeVaryC * T_p + 1) * (v.unit());
-			break;
+			case FrictionModel::LUGRE_TV:
+				g = timeVaryA + timeVaryB * log(timeVaryC * T_p + 1);
+				dgdv = -(dt * sigma0 * T_p) / g * timeVaryC * timeVaryB / (timeVaryC * T_p + 1) * (v.unit());
+				break;
 
-		case FrictionModel::LUGRE_OC:
-			// TODO
+			case FrictionModel::LUGRE_OC:
+				// TODO
 
-			break;
+				break;
+			}
+
+			if (v.norm() < 1.0e-9) {
+				dDdv.col(0) = dt * sigma0 * (Vec3d(1.0, 1.0, 1.0).unit() / g);
+			}
+			else
+				dDdv.col(0) = dt * sigma0 * (v.unit() * g - v.norm() * dgdv) / (g * g);
 		}
 
-		if (v.norm() < 1.0e-4) {
-			dgdv = Vec3d::Zero();
-		}
-		else
-			dDdv.col(0) = dt* sigma0* (v.unit() * g - v.norm() * dgdv) / (g * g);
 
 		// T
 		// dT/dt = 1 - (sigma0 * |v|) / g(T) * T
@@ -228,7 +230,8 @@ void PHContactPoint::CompLuGreState() {
 
 		lgs.z = z;
 		lgs.dz = dz;
-		shapePair->LuGreState = lgs;
+		if(!calc_g)
+			shapePair->LuGreState = lgs;
 
 	}
 }
@@ -273,24 +276,18 @@ void PHContactPoint::CompBias(){
 
 	if (frictionModel >= LUGRE) {
 		// LuGre initial Bias
-		CompLuGreState();
+		CompLuGreState(true);
 		CompLuGreDfDvInv();
 		Vec3d db2 = dfdvInv * frictionForce - v;
 		db[1] = db2.x;
 		db[2] = db2.y;
-		db[3] = db2.z / req;
-		//db[1] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
-		//db[2] = (1.0 / (sigma1 + sigma0 * dt)) * sigma0 * z_p.x;
+		//db[3] = db2.z / req;
 		PHSceneIf* scene = GetScene();
 		double dt = scene->GetTimeStep();
-		if (true) {
-			//Matrix2d dfdvInv = CompLuGreDfDvInv();
-			//Vec2d dfdvInv = 1.0f * CompLuGreDfDvInv() * Vec2d(1.0f, 1.0f);
-			dA[1] = -dfdvInv[0][0] / dt;
-			dA[2] = -dfdvInv[1][1] / dt;
-			dA[3] = -dfdvInv[2][2] / dt / (req*req);
-			//CompLuGreState();
-		}
+		
+		dA[1] = -dfdvInv[0][0] / dt;
+		dA[2] = -dfdvInv[1][1] / dt;
+		//dA[3] = -dfdvInv[2][2] / dt / (req*req);
 	}
 }
 
@@ -343,20 +340,25 @@ bool PHContactPoint::Iterate() {
 		fx = 1.0e-6;
 
 	// y, z, rotation friction
-	for (int n = 1; n < 4; ++n) {
+	for (int n = 1; n < 3; ++n) {
 		i = n;
-
 		dA[i] += engine->regularization;
 		Ainv[i] = engine->accelSOR / (A[i] + dA[i] / (fx / dt));
 
 		//std::cout << "Axis[" << i << "] f: " << f[i] << " Ainv: " << Ainv[i] << " b: " << b[i] << " dA: " << dA[i] << std::endl;
 
 		// Gauss-Seidel Update
-		dv[i] = J[0].row(i) * solid[0]->dv +J[1].row(i) * solid[1]->dv;
+		dv[i] = J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv;
+
 		res[i] = b[i] + dv[i];
-		res[i] -= dfdvInv.row(i-1) * Matrix3d::Diag(1.0f, 1.0f, 1.0f/(req)) * f.sub_vector(1, Vec3d())  / fx;
-		if (i == 3)
-			res[i] /= req;
+		//res[i] -= dfdvInv.row(i-1) * Matrix3d::Diag(1.0f, 1.0f, 1.0f/(req)) * f.sub_vector(1, Vec3d())  / fx;
+		Vec3d f_vec = f.sub_vector(1, Vec3d()); // [f1, f2, tau]
+		Vec3d f_normalized = Matrix3d::Diag(1.0f, 1.0f, 1.0f / req) * f_vec; // [N, N, N]
+		Vec3d v_delta = dfdvInv * f_normalized; // [m/s, m/s, m/s]
+
+		double scale = (i == 3) ? (1.0 / req) : 1.0;
+		res[i] -= (v_delta[i - 1] * scale) / fx;
+
 		fnew[i] = f[i] - Ainv[i] * res[i];
 
 		// Projection
@@ -370,8 +372,9 @@ bool PHContactPoint::Iterate() {
 			updated = true;
 			CompResponse(df[i], i);
 		}
-	}	
-	for (int n = 4; n < axes.size(); ++n) {
+	}
+
+	for (int n = 3; n < axes.size(); ++n) {
 		i = n;
 
 		dA[i] += engine->regularization;
@@ -394,7 +397,8 @@ bool PHContactPoint::Iterate() {
 			CompResponse(df[i], i);
 		}
 	}
-	CompLuGreState();
+
+	CompLuGreState(false);
 	return updated;
 }
 
@@ -471,6 +475,4 @@ bool PHContactPoint::ProjectionCorrection(double& F_, int i){
 		//F = 0;
 	}
 	return false;
-}
-
-}
+}}
