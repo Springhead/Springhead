@@ -162,7 +162,8 @@ void PHContactPoint::CompLuGreState(bool calc_g) {
 		PHLuGreSt lgs = shapePair->LuGreState;
 		// Get relative velocity
 		//v = lgs.rot * Vec2d(vjrel[1], vjrel[2]);
-		v = Vec3d(vjrel[1] + dv[1], vjrel[2] + dv[2], req*(vjrel[3] + dv[3]));
+		Vec6d dv0 = J[0] * solid[0]->dv0 + J[1] * solid[1]->dv0;
+		v = Vec3d(vjrel[1] + dv[1] + dv0[1], vjrel[2] + dv[2] + dv0[2], req * (vjrel[3] + dv[3] + dv0[3]));
 		
 #if 0
 		// Elasto-Plastic Model
