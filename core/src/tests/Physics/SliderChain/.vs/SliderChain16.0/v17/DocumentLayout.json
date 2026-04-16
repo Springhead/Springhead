@@ -1,0 +1,72 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderChain\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointLimit.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE3A6FF1-B5A2-494B-9E94-043B27634464}|SliderChain16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderChain\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE3A6FF1-B5A2-494B-9E94-043B27634464}|SliderChain16.0.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHConstraintEngine.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PHJointLimit.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointLimit.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHJointLimit.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointLimit.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHJointLimit.cpp",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAEsAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-16T08:46:53.901Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderChain\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderChain\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAAAIkAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-03T04:58:17.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PHConstraintEngine.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHConstraintEngine.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHConstraintEngine.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHConstraintEngine.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHConstraintEngine.cpp",
+              "ViewState": "AgIAAFkCAAAAAAAAAAASwHwCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-03T05:13:25.603Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

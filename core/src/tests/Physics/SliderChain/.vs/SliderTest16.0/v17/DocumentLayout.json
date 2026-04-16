@@ -1,0 +1,214 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderTest\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DE3A6FF1-B5A2-494B-9E94-043B27634464}|SliderTest16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderTest\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE3A6FF1-B5A2-494B-9E94-043B27634464}|SliderTest16.0.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHConstraintEngine.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{755660BE-3B1E-416B-B795-4F653C83A43A}|..\\..\\..\\Framework\\Framework16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Framework\\SprFrameworkDecl.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PhysicsStub.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointMotor.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointMotor.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHSliderJoint.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHScene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJoint.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{755660BE-3B1E-416B-B795-4F653C83A43A}|..\\..\\..\\Framework\\Framework16.0.vcxproj|C:\\USERS\\HASEL\\SPRINGHEAD\\CORE\\INCLUDE\\PHYSICS\\SPRPHJOINT.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{755660BE-3B1E-416B-B795-4F653C83A43A}|..\\..\\..\\Framework\\Framework16.0.vcxproj|C:\\USERS\\HASEL\\SPRINGHEAD\\CORE\\SRC\\PHYSICS\\PHYSICSDECL.HPP||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B91F83-DF0A-473D-9C3B-059673CD2046}|..\\..\\..\\Physics\\Physics16.0.vcxproj|C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHSpring.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderTest\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\tests\\Physics\\SliderTest\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAANkAAAAAAAAAAAAAAG4BAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-12T14:50:50.958Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PHJointMotor.h",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointMotor.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHJointMotor.h",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointMotor.h",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHJointMotor.h",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAAAEoAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-13T06:35:01.559Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PHJointMotor.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointMotor.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHJointMotor.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJointMotor.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHJointMotor.cpp",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-03-13T06:34:16.994Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PhysicsStub.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PhysicsStub.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PhysicsStub.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PhysicsStub.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PhysicsStub.cpp",
+              "ViewState": "AgIAADsNAAAAAAAAAAAMwEgNAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-03-13T06:16:27.617Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PHJoint.h",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJoint.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHJoint.h",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHJoint.h",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHJoint.h",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAMwFUAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-13T06:14:18.458Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PHConstraintEngine.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHConstraintEngine.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHConstraintEngine.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHConstraintEngine.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHConstraintEngine.cpp",
+              "ViewState": "AgIAANwAAAAAAAAAAAAlwOcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-02-24T04:53:31.434Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SprFrameworkDecl.hpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Framework\\SprFrameworkDecl.hpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Framework\\SprFrameworkDecl.hpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Framework\\SprFrameworkDecl.hpp",
+              "RelativeToolTip": "..\\..\\..\\Framework\\SprFrameworkDecl.hpp",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAkwGgAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-13T06:10:07.609Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PHScene.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHScene.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHScene.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHScene.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHScene.cpp",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAUwJcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-03-13T05:29:07.089Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PHSliderJoint.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHSliderJoint.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHSliderJoint.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHSliderJoint.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHSliderJoint.cpp",
+              "ViewState": "AgIAABoAAAAAAAAAAAAYwCwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-20T04:51:08.36Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PhysicsDecl.hpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PhysicsDecl.hpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PhysicsDecl.hpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PhysicsDecl.hpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PhysicsDecl.hpp",
+              "ViewState": "AgIAAPcHAAAAAAAAAAAkwP4HAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-13T06:10:11.76Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SprPHJoint.h",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\include\\Physics\\SprPHJoint.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\include\\Physics\\SprPHJoint.h",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\include\\Physics\\SprPHJoint.h",
+              "RelativeToolTip": "..\\..\\..\\..\\include\\Physics\\SprPHJoint.h",
+              "ViewState": "AgIAALkCAAAAAAAAAAAewMMCAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-13T06:13:16.76Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PHSpring.cpp",
+              "DocumentMoniker": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHSpring.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\Physics\\PHSpring.cpp",
+              "ToolTip": "C:\\Users\\hasel\\Springhead\\core\\src\\Physics\\PHSpring.cpp",
+              "RelativeToolTip": "..\\..\\..\\Physics\\PHSpring.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-02-24T04:45:16.461Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
