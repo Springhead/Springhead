@@ -20,3 +20,14 @@
 *.user
 *.opendb
 *.vcxproj.user
+**/.vs/
+core/include/SprUseClosedSrcOrNot.h
+*.i
+*.hpp
+*Stub.cpp
+*.makefile
+**/__pycache__/
+core/src/RunSwig/tmp/
+**/Debug/
+**/Release/
+**/Trace/
