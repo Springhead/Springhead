@@ -99,7 +99,27 @@ void PHSliderJoint::CompBias() {
 }
 
 void PHSliderJoint::CompError() {
+	// Slider の相対位置誤差。
+	// local z が slider の自由軸なので z 成分は拘束しない。
+	B.v() = Xjrel.r;
+	B[2] = 0.0;
 
+	if (!bConstraintY) {
+		B[1] = 0.0;
+	}
+
+	// 相対回転誤差。
+	B.w() = Xjrel.q.RotationHalf();
+
+	if (!bConstraintRollX) {
+		B[3] = 0.0;
+	}
+
+	if (!bConstraintRollZ) {
+		B[5] = 0.0;
+	}
+
+	// 位置LCPでは SetupCorrection() 側で posCorrectionRate が掛かる。
 }
 
 }

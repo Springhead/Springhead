@@ -72,6 +72,8 @@ struct PHJointMotorState {
 
 class PHJointMotor : public PHConstraintBase, public PHJointMotorState {
 public:
+	const double epsilon = 1e-10;	// バネ・ダンパ係数を0と見なす閾値
+
 	SPR_OBJECTDEF1(PHJointMotor, PHConstraintBase);
 	ACCESS_STATE1(PHJointMotor, PHConstraintBase);
 	bool IsYielded() {

@@ -41,17 +41,16 @@ void PH1DJointLimit::SetupAxisIndex(){
 }
 
 void PH1DJointLimit::Setup(){
-	if(onLower || onUpper){
+	if (onLower || onUpper) {
 		double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
 		dA[0] = tmp * joint->GetScene()->GetTimeStepInv();
 		db[0] = tmp * spring * diff;
 
-		A   [0] = joint->A[joint->movableAxes[0]];
+		A[0] = joint->A[joint->movableAxes[0]];
 		Ainv[0] = 1.0 / (A[0] + dA[0]);
 
 		f[0] *= axes.IsContinued(0) ? joint->engine->shrinkRate : 0;
 	}
-
 }
 
 bool PH1DJointLimit::Iterate(){
@@ -59,9 +58,19 @@ bool PH1DJointLimit::Iterate(){
 		return false;
 
 	int i = joint->movableAxes[0];
+
+	double current_dv = 0.0;
+	for (int k = 0; k < 2; ++k) {
+		if (joint->solidState[k] != 0) { // 剛体が動的な場合
+			const double* j_row = (const double*)joint->J[k].row(i);
+			const double* s_dv = (const double*)joint->solid[k]->dv;
+			current_dv += j_row[0] * s_dv[0] + j_row[1] * s_dv[1] + j_row[2] * s_dv[2] +
+				j_row[3] * s_dv[3] + j_row[4] * s_dv[4] + j_row[5] * s_dv[5];
+		}
+	}
 	
 	// Gauss-Seidel Update
-	res [0] = joint->b[i] + db[0] + dA[0]*f[0] + joint->dv[i];
+	res[0] = joint->b[i] + db[0] + dA[0] * f[0] + current_dv;
 	fnew[0] = f[0] - joint->engine->accelSOR * Ainv[0] * res[0];
 	
 	// Projection

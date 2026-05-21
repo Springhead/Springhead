@@ -228,7 +228,7 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 // PHConstraintEngine
 PHConstraintEngineDesc::PHConstraintEngineDesc() {
 	method = PHSceneDesc::SOLVER_GS;	//	This initial value will override by PHSceneDesc::method
-	numIter = 15;
+	numIter = 0;
 	numIterCorrection = 0;
 	numIterContactCorrection = 0;
 	velCorrectionRate = 0.3;
@@ -252,8 +252,11 @@ PHConstraintEngine::PHConstraintEngine(UTPerformanceMeasureIf* pm):
 	timeSetup(pm->Count("setup")),
 	timeIterate(pm->Count("iterate"))
 {
-	dfEps         = 1.0e-12;
+	dfEps         = 1.0e-18;
 	renderContact = true;
+	iterLogCallback = NULL;
+	iterLogUserData = NULL;
+	currentLogStep = 0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -570,7 +573,13 @@ void PHConstraintEngine::Setup(){
 					// Motorを先に入れないとMotorに対してLimitがかからない
 					for (size_t j = 0; j < jnt1D->motors.size(); j++){
 						if (jnt1D->motors[j]){
-							cons_base.push_back(jnt1D->motors[j]);
+							auto m = jnt1D->motors[j];
+							PHNDJointMotorParam<1> p; m->GetParams(p);
+							double K = p.spring[0];
+							double D = p.damper[0];
+							if (K >= m->epsilon || D >= m->epsilon) {
+								cons_base.push_back(jnt1D->motors[j]);
+							}
 						}
 					}
 					/*
@@ -651,26 +660,57 @@ void PHConstraintEngine::SetupCorrection(){
 		cons_base[i]->SetupCorrection();
 }
 
-void PHConstraintEngine::Iterate(){
-	int n;
-	for(n = 0; n < numIter; n++){
-		int nupdated = 0;
-        for(int i = 0; i < (int)cons_base.size(); i++)
-			nupdated += (int)cons_base[i]->Iterate();
+void PHConstraintEngine::LogConstraintIteration(
+	const char* phase,
+	int iter,
+	int constraintIndex,
+	PHConstraintBase* constraint
+) {
+	if (!iterLogCallback) {
+		return;
+	}
 
-		if(nupdated == 0)
+	PHConstraintIterLog log;
+	log.step = currentLogStep;
+	log.phase = phase;
+	log.iter = iter;
+	log.constraintIndex = constraintIndex;
+	log.constraint = constraint;
+
+	iterLogCallback(log, iterLogUserData);
+}
+
+void PHConstraintEngine::Iterate() {
+	for (int n = 0; n < numIter; n++) {
+		int nupdated = 0;
+
+		for (int i = 0; i < (int)cons_base.size(); i++) {
+			bool updated = cons_base[i]->Iterate();
+			nupdated += updated ? 1 : 0;
+
+			LogConstraintIteration("velocity", n, i, cons_base[i]);
+		}
+
+		if (nupdated == 0) {
 			break;
+		}
 	}
 }
 
-void PHConstraintEngine::IterateCorrection(){
-	for(int n = 0; n != numIterCorrection; ++n){
-        int nupdated = 0;
-        for(int i = 0; i < (int)cons_base.size(); i++)
-			nupdated += cons_base[i]->IterateCorrection();
+void PHConstraintEngine::IterateCorrection() {
+	for (int n = 0; n != numIterCorrection; ++n) {
+		int nupdated = 0;
 
-		if(nupdated == 0)
+		for (int i = 0; i < (int)cons_base.size(); i++) {
+			bool updated = cons_base[i]->IterateCorrection();
+			nupdated += updated ? 1 : 0;
+
+			LogConstraintIteration("position", n, i, cons_base[i]);
+		}
+
+		if (nupdated == 0) {
 			break;
+		}
 	}
 }
 

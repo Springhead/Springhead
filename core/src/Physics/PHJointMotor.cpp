@@ -17,8 +17,6 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
-// バネ・ダンパ係数を0と見なす閾値
-const double epsilon = 1e-10;
 //const double inf     = 1e+10;
 const double inf     = 1e+32;	//	2022.01.13 strong spring was needed. (hasevr)
 

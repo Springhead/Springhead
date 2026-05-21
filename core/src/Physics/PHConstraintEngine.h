@@ -68,6 +68,21 @@ public:
 	}
 };
 
+class PHConstraintBase;
+
+struct PHConstraintIterLog {
+	int step;
+	const char* phase;       // "velocity" or "position"
+	int iter;
+	int constraintIndex;
+	PHConstraintBase* constraint;
+};
+
+typedef void (*PHConstraintIterLogCallback)(
+	const PHConstraintIterLog& log,
+	void* userData
+	);
+
 /// Solidの組
 class PHConstraintEngine;
 
@@ -118,6 +133,18 @@ public:
 	UTLongLong& timeSetup;
 	UTLongLong& timeIterate;
 	DUMPLABEL(ptimersEnd)
+
+protected:
+	PHConstraintIterLogCallback iterLogCallback;
+	void* iterLogUserData;
+	int currentLogStep;
+
+	void LogConstraintIteration(
+		const char* phase,
+		int iter,
+		int constraintIndex,
+		PHConstraintBase* constraint
+	);
 		
 public:
 	PHConstraintEngine(UTPerformanceMeasureIf* pm = UTPerformanceMeasureIf::GetInstance("global"));
@@ -187,6 +214,23 @@ public:
 	} contactInfoQueue;
 	void UpdateContactInfoQueue();
 	DUMPLABEL(contactInfoQueueEnd)
+
+	void SetIterLogCallback(PHConstraintIterLogCallback cb, void* userData) {
+		iterLogCallback = cb;
+		iterLogUserData = userData;
+	}
+
+	void SetCurrentLogStep(int s) {
+		currentLogStep = s;
+	}
+
+	void SetNumIterCorrectionExperiment(int n) {
+		numIterCorrection = n;
+	}
+
+	int GetNumIterCorrectionExperiment() const {
+		return numIterCorrection;
+	}
 };
 
 }	//	namespace Spr
