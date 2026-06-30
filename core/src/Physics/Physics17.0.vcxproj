@@ -407,6 +407,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LuGre\coordinateConverter.cpp" />
+    <ClCompile Include="LuGre\PHLuGreParametersData.cpp" />
     <ClCompile Include="PHBallJoint.cpp" />
     <ClCompile Include="PHBody.cpp" />
     <ClCompile Include="PHConstraint.cpp" />
